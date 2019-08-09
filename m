@@ -2,78 +2,115 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBF0C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 19:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EABC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 19:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94E10214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 19:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AEC9214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 19:44:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="rVihWVM5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfHITnw (ORCPT
+        id S1726628AbfHIToK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 15:43:52 -0400
-Received: from mga04.intel.com ([192.55.52.120]:12176 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725927AbfHITnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 15:43:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 12:43:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,366,1559545200"; 
-   d="scan'208";a="169405835"
-Received: from wulili-mobl1.ger.corp.intel.com ([10.249.36.9])
-  by orsmga008.jf.intel.com with ESMTP; 09 Aug 2019 12:43:45 -0700
-Message-ID: <93400d11833bd42c4be0b846416ff1f469904784.camel@linux.intel.com>
-Subject: Re: [PATCH v3 1/4] tpm: Add a flag to indicate TPM power is
- managed by firmware
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stephen Boyd <swboyd@chromium.org>, Peter Huewe <peterhuewe@gmx.de>
-Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Andrey Pronin <apronin@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>
-In-Reply-To: <20190806220750.86597-2-swboyd@chromium.org>
-References: <20190806220750.86597-1-swboyd@chromium.org>
-         <20190806220750.86597-2-swboyd@chromium.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160
- Espoo
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 9 Aug 2019 15:44:10 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36559 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfHIToI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 15:44:08 -0400
+Received: by mail-ot1-f66.google.com with SMTP id k18so4861576otr.3
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 12:44:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AwTeQv0nkF8ZzkbuQwNoI5oM1jAqjP+SUKLHmshqgU4=;
+        b=rVihWVM562FWHeevrHmURj44PEleWt0ASN0AHKY6Hov5uYsCDz6oAGJ08b5H+EjqCD
+         hrjmBpOMNbBTXqmeCjkz46TBjIJrLkXjEjT+pVCiYGb3t70pJZ2s6SOhfMQAgipiQcfh
+         voXpiKFXiOl4fpATrz2qU7P+Vg3vo2ah//XnRDQOufMi7c8/E93rAoGgLk+1pT8eIesw
+         585O3KBYW/5zl+F/ep6RKtKY1WSoGGTwUAiTU/eKHm+FE0rZel3W99kgCKtIDv2+gsT6
+         wOOIjgW/HCzR2ZqBx4Wu4gcauVBAzX3ll5QJUQsdIRWzbWiBDlsl1aGpBEBpZSKJ+Urg
+         5L/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AwTeQv0nkF8ZzkbuQwNoI5oM1jAqjP+SUKLHmshqgU4=;
+        b=Ttx/2Go12GlHdE0FeW6DvdB0DvmLCH+y2LpgPQiEJqf/n35NFR2ZPLN3YY94o2yp2l
+         LR9XOIxPlKXpf9DPBQETxON/FYRw4QAqr6EC+E5NVKcwZd+DQaYsCwSD66/qKoErPK83
+         J5FRbYB8SAVFpbZ62BPPBaHjIJoli7A9jA+/Tng+TDbTHzdRReSWzyseru2Y41kMzC1a
+         fE/UKngDIT2QhtFFnY7feTrxDycNc8MTA+Uu4DR9YsdMHJefqooRvlZh6UMBmnIjqjmn
+         /9wMxnjeYnIAGMleG1mt89D+n3YF6Y4XW2rfegH9zLCJD16OXOTuhxoU8EqhJ4a07zUI
+         aiWQ==
+X-Gm-Message-State: APjAAAWMREQtiukyOr9qhSwUryfJK49Q2XATsThKASiauBMn84/Vr+VO
+        ASGx0TNdp4jCodPp1Ybc+m0iHpdhzsuy49OlU4rVQw==
+X-Google-Smtp-Source: APXvYqwmGWxKnhH0pu0CdmdtkY9MWiQA2sqa6Y0AXYzLsTz11/rPRS6N91uTv6hH5s8O/RR8/YTXeJBAlToJ8WjZMUg=
+X-Received: by 2002:aca:d80a:: with SMTP id p10mr7522848oig.105.1565379847824;
+ Fri, 09 Aug 2019 12:44:07 -0700 (PDT)
 MIME-Version: 1.0
-Date:   Fri, 09 Aug 2019 21:02:01 +0300
-User-Agent: Evolution 3.32.1-2 
-Content-Transfer-Encoding: 7bit
+References: <20190809162956.488941-1-arnd@arndb.de> <20190809163334.489360-1-arnd@arndb.de>
+ <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com> <20190809183658.GA13294@shell.armlinux.org.uk>
+In-Reply-To: <20190809183658.GA13294@shell.armlinux.org.uk>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 9 Aug 2019 12:43:56 -0700
+Message-ID: <CAPcyv4juKU5TLU+3=xAw0Hq=6EeLSxKA4C9kR1YqEV8XuH7e2Q@mail.gmail.com>
+Subject: Re: [PATCH 1/7] [RFC] ARM: remove Intel iop33x and iop13xx support
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>, soc@kernel.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, Martin Michlmayr <tbm@cyrius.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-08-06 at 15:07 -0700, Stephen Boyd wrote:
-> On some platforms, the TPM power is managed by firmware and therefore we
-> don't need to stop the TPM on suspend when going to a light version of
-> suspend such as S0ix ("freeze" suspend state). Add a chip flag to
-> indicate this so that certain platforms can probe for the usage of this
-> light suspend and avoid touching the TPM state across suspend/resume.
+On Fri, Aug 9, 2019 at 11:37 AM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Fri, Aug 09, 2019 at 11:34:12AM -0700, Dan Williams wrote:
+> > [ add Martin (if cyrius.com address is still valid) ]
+> >
+> > On Fri, Aug 9, 2019 at 9:35 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > >
+> > > There are three families of IOP machines we support in Linux: iop32x
+> > > (which includes EP80219), iop33x and iop13xx (aka IOP34x aka WP8134x).
+> > >
+> > > All products we support in the kernel are based on the first of these,
+> > > iop32x, the other families only ever supported the Intel reference
+> > > boards but no actual machine anyone could ever buy.
+> > >
+> > > While one could clearly make them all three work in a single kernel
+> > > with some work, this takes the easy way out, removing the later two
+> > > platforms entirely, under the assumption that there are no remaining
+> > > users.
+> > >
+> > > Earlier versions of OpenWRT and Debian both had support for iop32x
+> > > but not the others, and they both dropped iop32x as well in their 2015
+> > > releases.
+> > >
+> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > > ---
+> > > I'm just guessing that iop32x is still needed, and the other two are
+> > > not. If anyone disagrees with that assessment, let me know so we
+> > > can come up with an alternative approach.
+> >
+> > I'm not sure who would scream if iop32x support went away as well, but
+> > I have not followed this space in years hence copying Martin.
+> >
+> > In any event:
+> >
+> > Acked-by: Dan Williams <dan.j.williams@intel.com>
+>
+> Those of us who have and still run Thecus N2100's, for example?
 
-The commit message should mention the new constant.
-
-> +	if (chip->flags & TPM_CHIP_FLAG_FIRMWARE_POWER_MANAGED)
-> +		if (!pm_suspend_via_firmware())
-
-Why both checks are needed?
-
-If both checks are needed, you could write it as a single
-conditional statement:
-
-if (chip->flags & TPM_CHIP_FLAG_FIRMWARE_POWER_MANAGED &&
-    !pm_suspend_via_firmware())
-
-/Jarkko
-
+Nice! Good to hear.
