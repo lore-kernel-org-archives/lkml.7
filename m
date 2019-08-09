@@ -2,101 +2,126 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC67C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC91BC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15171214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF255214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:34:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yu0o583l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407124AbfHINdr (ORCPT
+        id S2436495AbfHINeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:33:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43460 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436493AbfHINdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:33:45 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B61F8308FEC1;
-        Fri,  9 Aug 2019 13:33:45 +0000 (UTC)
-Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E41A260BF3;
-        Fri,  9 Aug 2019 13:33:44 +0000 (UTC)
-Date:   Fri, 9 Aug 2019 09:33:43 -0400
-From:   Phil Auld <pauld@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH] sched: use rq_lock/unlock in online_fair_sched_group
-Message-ID: <20190809133342.GA18727@pauld.bos.csb>
-References: <20190801133749.11033-1-pauld@redhat.com>
- <20190806130334.GO2349@hirez.programming.kicks-ass.net>
+        Fri, 9 Aug 2019 09:34:23 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37097 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406662AbfHINeW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:34:22 -0400
+Received: by mail-wr1-f68.google.com with SMTP id b3so5883661wro.4
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 06:34:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qSHE3Aj4iM6gYhcmQoszjlvxEipz13Xj0eMmdWnUjX4=;
+        b=Yu0o583lxOO+XUf2AITZ1N5l0tYfk1WvYSXvAR3SFKvigp3L3PzzRmfYRfdQZqsQ9O
+         E5CvPLOQGwPhPHlGVGzSVJI15zrAVCAwNG/a7tQWfE0fAGNI02zATJQcNs3mOL1b5Cmt
+         E98z36FIDVVoKrvjZhf9t1RdI52O8xp5Peapj6eKbtkSHjHJrldSLtp6P3SsPrA7JiPo
+         YQQO9HnnzIx3S8E4AGcLFLCh/MYqAPXNPI6oIY/4ksmEjR+Tlun7oLoQMu8yFyISoqWp
+         GI1IVYQuLfTM6ivInkNP8FJFhXQnD7I/ddTsPCXvTdAL1tLjzebQ5YMMhHqR1mNGAqRB
+         02wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qSHE3Aj4iM6gYhcmQoszjlvxEipz13Xj0eMmdWnUjX4=;
+        b=D3popDL8qWkYUoo3oNZV0b0q5yHWv7q1Xv7c8rcr4rcVlgoIZBXn1IgIaQkWHcSBdl
+         ynO6vQcimtlikG7QA7viY1XpAQUiyNSsLbLuz673iq4kgGmO8Iq9P30KtuY9bMjZ7h11
+         8M/FGHE2obUj10C/7ARYF8zIyA2Z90gFHVtdtLolHwbwQjDGrL2Pg/7wBpiTW87+Noxc
+         OkR7RDTYzA9UW0wRXIcEGWGFTWIR6jTxjMreP3sepJ1kMcM6UMsVv3LjcGvxoDxD/DR8
+         vc89KrPL0wq2cqcn2WfdytEXQaiw0EV+4CUQSwVUXkbuTWzmiqs+IOJoc52Enbth464l
+         0kYA==
+X-Gm-Message-State: APjAAAXvtUkd+Bi+W3QJdEVjDOTG7bAK6HzTbmEvf+gZUq/9Zl+NaKcQ
+        0jSgEk8sP5U+L9c+ePM8jye6bA==
+X-Google-Smtp-Source: APXvYqwNQlOjhdPJDabvXd+VV6Zz3w7TyVWQM5OdLcX6FI7/n+FZYKjSAvVJLzJ9hcSUKvagWbXgrQ==
+X-Received: by 2002:a5d:52c5:: with SMTP id r5mr23636282wrv.146.1565357660850;
+        Fri, 09 Aug 2019 06:34:20 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id y18sm5674641wmi.23.2019.08.09.06.34.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Aug 2019 06:34:19 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     vkoul@kernel.org, broonie@kernel.org
+Cc:     bgoswami@codeaurora.org, plai@codeaurora.org,
+        pierre-louis.bossart@linux.intel.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, lgirdwood@gmail.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 0/4] ASoC: codecs: Add WSA881x Smart Speaker amplifier support
+Date:   Fri,  9 Aug 2019 14:34:03 +0100
+Message-Id: <20190809133407.25918-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806130334.GO2349@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 09 Aug 2019 13:33:45 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 03:03:34PM +0200 Peter Zijlstra wrote:
-> On Thu, Aug 01, 2019 at 09:37:49AM -0400, Phil Auld wrote:
-> > Enabling WARN_DOUBLE_CLOCK in /sys/kernel/debug/sched_features causes
-> 
-> ISTR there were more issues; but it sure is good to start picking them
-> off.
-> 
+Thanks for reviewing v2 patchset, here is v3 with addressing the comments in v2.
 
-Following up on this I hit another in rt.c which looks like:
+This patchset adds support to WSA8810/WSA8815 Class-D Smart Speaker
+Amplifier which is SoundWire interfaced.
+This also adds support to some missing bits in SoundWire bus layer like
+Device Tree support.
 
-[  156.348854] Call Trace:
-[  156.351301]  <IRQ>
-[  156.353322]  sched_rt_period_timer+0x124/0x350
-[  156.357766]  ? sched_rt_rq_enqueue+0x90/0x90
-[  156.362037]  __hrtimer_run_queues+0xfb/0x270
-[  156.366303]  hrtimer_interrupt+0x122/0x270
-[  156.370403]  smp_apic_timer_interrupt+0x6a/0x140
-[  156.375022]  apic_timer_interrupt+0xf/0x20
-[  156.379119]  </IRQ>
+This patchset along with DB845c machine driver and WCD934x codec driver
+has been tested on SDM845 SoC based DragonBoard DB845c with two
+WSA8810 speakers.
 
-It looks like the same issue of not using the rq_lock* wrappers and
-hence not using the pinning. From looking at the code there is at 
-least one potential hit in deadline.c in the push_dl_task path with 
-find_lock_later_rq but I have not hit that in practice.
+Most of the code in this driver is rework of Qualcomm downstream drivers
+used in Andriod. Credits to Banajit Goswami and Patrick Lai's Team.
 
-This commit, which introduced the warning, seems to imply that the use
-of the rq_lock* wrappers is required, at least for any sections that will
-call update_rq_clock:
-
-commit 26ae58d23b94a075ae724fd18783a3773131cfbc
-Author: Peter Zijlstra <peterz@infradead.org>
-Date:   Mon Oct 3 16:53:49 2016 +0200
-
-    sched/core: Add WARNING for multiple update_rq_clock() calls
-    
-    Now that we have no missing calls, add a warning to find multiple
-    calls.
-    
-    By having only a single update_rq_clock() call per rq-lock section,
-    the section appears 'atomic' wrt time.
-
-
-Is that the case? Otherwise we have these false positives.
-
-I can spin up patches if so. 
-
+TODO:
+	Add thermal sensor support in WSA881x.
 
 Thanks,
-Phil
+srini
 
+Changes since v2:
+- Updated compatible string to include LinkID.
+- udpdated wsa driver to not register/unregister component in SoundWire
+ status callbacks.
+- Updated few minor coding style review comments.
+
+Changes since v1 RFC:
+- bindings document renamed to slave.txt
+- fix error code from dt slave parsing
+
+Srinivas Kandagatla (4):
+  dt-bindings: soundwire: add slave bindings
+  soundwire: core: add device tree support for slave devices
+  dt-bindings: ASoC: Add WSA881x bindings
+  ASoC: codecs: add wsa881x amplifier support
+
+ .../bindings/sound/qcom,wsa881x.txt           |   24 +
+ .../devicetree/bindings/soundwire/slave.txt   |   51 +
+ drivers/soundwire/bus.c                       |    2 +
+ drivers/soundwire/bus.h                       |    1 +
+ drivers/soundwire/slave.c                     |   44 +
+ sound/soc/codecs/Kconfig                      |   10 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/wsa881x.c                    | 1134 +++++++++++++++++
+ 8 files changed, 1268 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.txt
+ create mode 100644 Documentation/devicetree/bindings/soundwire/slave.txt
+ create mode 100644 sound/soc/codecs/wsa881x.c
 
 -- 
+2.21.0
+
