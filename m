@@ -2,98 +2,172 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B14AC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 217DFC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2485120C01
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6BE92166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:05:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDHhR8NC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbfHIUCl convert rfc822-to-8bit (ORCPT
+        id S1726505AbfHIUFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 16:02:41 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:51731 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725860AbfHIUCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 16:02:40 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 464x3z4F4Tz9vBnX;
-        Fri,  9 Aug 2019 22:02:39 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id YXoWW-H0Xvcu; Fri,  9 Aug 2019 22:02:39 +0200 (CEST)
-Received: from vm-hermes.si.c-s.fr (vm-hermes.si.c-s.fr [192.168.25.253])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 464x3z37Mgz9vBnS;
-        Fri,  9 Aug 2019 22:02:39 +0200 (CEST)
-Received: by vm-hermes.si.c-s.fr (Postfix, from userid 33)
-        id 855AB98C; Fri,  9 Aug 2019 22:03:01 +0200 (CEST)
-Received: from mry91-4-88-160-8-182.fbx.proxad.net
- (mry91-4-88-160-8-182.fbx.proxad.net [88.160.8.182]) by messagerie.si.c-s.fr
- (Horde Framework) with HTTP; Fri, 09 Aug 2019 22:03:01 +0200
-Date:   Fri, 09 Aug 2019 22:03:01 +0200
-Message-ID: <20190809220301.Horde.AR6y4Bx4WGIq58V9K0En9g4@messagerie.si.c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        kbuild test robot <lkp@intel.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH] powerpc: fix inline asm constraints for dcbz
-References: <87h873zs88.fsf@concordia.ellerman.id.au>
- <20190809182106.62130-1-ndesaulniers@google.com>
- <CAK8P3a3LynWTbpV8=VPm2TqgNM2MnoEyCPJd0PL2D+tcZqJgHg@mail.gmail.com>
-In-Reply-To: <CAK8P3a3LynWTbpV8=VPm2TqgNM2MnoEyCPJd0PL2D+tcZqJgHg@mail.gmail.com>
-User-Agent: Internet Messaging Program (IMP) H5 (6.2.3)
-Content-Type: text/plain; charset=UTF-8; format=flowed; DelSp=Yes
+        Fri, 9 Aug 2019 16:05:49 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34625 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbfHIUFt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 16:05:49 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 31so99325121wrm.1;
+        Fri, 09 Aug 2019 13:05:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5aZ6nPjZggF+jzuY+IlnKBeULmKBMTJ+DxW3V3rlEc0=;
+        b=NDHhR8NCG8Qn1R2Bt1HpyvZvJcLxlsMyMAN//KNAm8gvOGnrr7l6q95SaBk4dWXNuE
+         MYZHrSikm6xpum4FWCgD/uRL6vwAmqTDDyXlFWZzl4LAwHU54n+eLMXIbCos5R+qcj6U
+         okX6qvnSTNEC12ysbEYZcrdFGJ2Xx0RJ98Op+8ZqzWgdJqO05dmh4E6VC855hf10+AlL
+         g4CDLeAo6IqS/05oRlVzj/on/if6iAsJ2gJDMdZee0m31Jv/QM1OnUaET22UXMdDL6pG
+         o7s9QByFsmQSz7gL2zWRuyEOiTtaR/5MzJ0wWb6lPtD2CKumnLAaaYqkfXTBJ+iBDiU9
+         7LJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5aZ6nPjZggF+jzuY+IlnKBeULmKBMTJ+DxW3V3rlEc0=;
+        b=TgcJiK96zIRIxjSOTQ6xiEUDWl9LG2v3wi+B/tbISjxzvpoY7NYY77kNVe2XKo1RqD
+         fKkHY0MbtkzjiHqKHvHNZybINt1Hz1BkPozuIZ9M5lr88/iTRIRJ534hnoRIKw2V62qj
+         5REzS0SXCnselER/Krns1xptO4zZGWDzFKQH0Vcrg7hXjVOfRRpZ+eET341RD9wEOih+
+         8RAA6EJITKpcc7ci0ZXyGTqpOXC+nZLY6VMuT1ThTtg1+5YPk00AOmKzJOEzNWrYp3FI
+         wyDepBr3wTi/700SjVC7c82eBJ+cCHdG9MJn4aDr2soodHOXQ8qqi3fhJ/KPoaUqLITd
+         uNGA==
+X-Gm-Message-State: APjAAAXKDUW4sOBdeD1tUJR8JvYQkrSuXxfE2bEqjwMDT4wUMkenEBnr
+        G7ZQgsNOAYpJac3Ifv1lu98=
+X-Google-Smtp-Source: APXvYqzu6i93OF14Xy9akpmrTnshCEIKOhybVPy7hWroeZ+iNCczRiVKBZubbPzytFq4Fp4E+Y0D7A==
+X-Received: by 2002:a5d:4804:: with SMTP id l4mr14135722wrq.111.1565381146938;
+        Fri, 09 Aug 2019 13:05:46 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f2f:3200:2994:d24a:66a1:e0e5? (p200300EA8F2F32002994D24A66A1E0E5.dip0.t-ipconnect.de. [2003:ea:8f2f:3200:2994:d24a:66a1:e0e5])
+        by smtp.googlemail.com with ESMTPSA id o11sm269068wrw.19.2019.08.09.13.05.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 13:05:46 -0700 (PDT)
+Subject: Re: [PATCH net] net: phy: rtl8211f: do a double read to get real time
+ link status
+To:     Yonglong Liu <liuyonglong@huawei.com>, Andrew Lunn <andrew@lunn.ch>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxarm@huawei.com,
+        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
+        shiju.jose@huawei.com
+References: <1565183772-44268-1-git-send-email-liuyonglong@huawei.com>
+ <d67831ab-8902-a653-3db9-b2f55adacabd@gmail.com>
+ <e663235c-93eb-702d-5a9c-8f781d631c42@huawei.com>
+ <080b68c7-abe6-d142-da4b-26e8a7d4dc19@gmail.com>
+ <c15f820b-cc80-9a93-4c48-1b60bc14f73a@huawei.com>
+ <b1140603-f05b-2373-445f-c1d7a43ff012@gmail.com>
+ <20190808194049.GM27917@lunn.ch>
+ <26e2c5c9-915c-858b-d091-e5bfa7ab6a5b@gmail.com>
+ <20190808203415.GO27917@lunn.ch>
+ <414c6809-86a3-506c-b7b0-a32b7cd72fd6@huawei.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <7f18113e-268b-6a4a-af83-236cfa337fcd@gmail.com>
+Date:   Fri, 9 Aug 2019 22:05:38 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <414c6809-86a3-506c-b7b0-a32b7cd72fd6@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> a écrit :
-
-> On Fri, Aug 9, 2019 at 8:21 PM 'Nick Desaulniers' via Clang Built
-> Linux <clang-built-linux@googlegroups.com> wrote:
->
->>  static inline void dcbz(void *addr)
->>  {
->> -       __asm__ __volatile__ ("dcbz %y0" : : "Z"(*(u8 *)addr) : "memory");
->> +       __asm__ __volatile__ ("dcbz %y0" : "=Z"(*(u8 *)addr) :: "memory");
->>  }
+On 09.08.2019 06:57, Yonglong Liu wrote:
+> 
+> 
+> On 2019/8/9 4:34, Andrew Lunn wrote:
+>> On Thu, Aug 08, 2019 at 10:01:39PM +0200, Heiner Kallweit wrote:
+>>> On 08.08.2019 21:40, Andrew Lunn wrote:
+>>>>> @@ -568,6 +568,11 @@ int phy_start_aneg(struct phy_device *phydev)
+>>>>>  	if (err < 0)
+>>>>>  		goto out_unlock;
+>>>>>  
+>>>>> +	/* The PHY may not yet have cleared aneg-completed and link-up bit
+>>>>> +	 * w/o this delay when the following read is done.
+>>>>> +	 */
+>>>>> +	usleep_range(1000, 2000);
+>>>>> +
+>>>>
+>>>> Hi Heiner
+>>>>
+>>>> Does 802.3 C22 say anything about this?
+>>>>
+>>> C22 says:
+>>> "The Auto-Negotiation process shall be restarted by setting bit 0.9 to a logic one. This bit is self-
+>>> clearing, and a PHY shall return a value of one in bit 0.9 until the Auto-Negotiation process has been
+>>> initiated."
+>>>
+>>> Maybe we should read bit 0.9 in genphy_update_link() after having read BMSR and report
+>>> aneg-complete and link-up as false (no matter of their current value) if 0.9 is set.
 >>
->>  static inline void dcbi(void *addr)
->>  {
->> -       __asm__ __volatile__ ("dcbi %y0" : : "Z"(*(u8 *)addr) : "memory");
->> +       __asm__ __volatile__ ("dcbi %y0" : "=Z"(*(u8 *)addr) :: "memory");
->>  }
->
-> I think the result of the discussion was that an output argument only kind-of
-> makes sense for dcbz, but for the others it's really an input, and clang is
-> wrong in the way it handles the "Z" constraint by making a copy, which it
-> doesn't do for "m".
->
-> I'm not sure whether it's correct to use "m" instead of "Z" here, which
-> would be a better workaround if that works. More importantly though,
-> clang really needs to be fixed to handle "Z" correctly.
+>> Yes. That sounds sensible.
+>>
+>>      Andrew
+>>
+>> .
+>>
+> 
+> Hi Heiner:
+> 	I have test more than 50 times, it works. Previously less
+> than 20 times must be recurrence. so I think this patch solved the
+> problem.
+> 	And I checked about 40 times of the time gap between read
+> and autoneg started, all of them is more than 2ms, as below:
+> 
+>   kworker/u257:1-670   [015] ....    27.182632: mdio_access: mii-0000:bd:00.3 write phy:0x07 reg:0x00 val:0x1240
+>   kworker/u257:1-670   [015] ....    27.184670: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x7989
+> 
+> 
 
-As the benefit is null, I think the best is probably to reverse my  
-original commit until at least CLang is fixed, as initialy suggested  
-by mpe
+Instead of using this fixed delay, the following experimental patch
+considers that fact that between triggering aneg start and actual
+start of aneg (incl. clearing aneg-complete bit) Clause 22 requires
+a PHY to keep bit 0.9 (aneg restart) set.
+Could you please test this instead of the fixed-delay patch?
 
-Christophe
+Thanks, Heiner
 
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index b039632de..163295dbc 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -1741,7 +1741,17 @@ EXPORT_SYMBOL(genphy_aneg_done);
+  */
+ int genphy_update_link(struct phy_device *phydev)
+ {
+-	int status;
++	int status = 0, bmcr;
++
++	bmcr = phy_read(phydev, MII_BMCR);
++	if (bmcr < 0)
++		return bmcr;
++
++	/* Autoneg is being started, therefore disregard BMSR value and
++	 * report link as down.
++	 */
++	if (bmcr & BMCR_ANRESTART)
++		goto done;
+ 
+ 	/* The link state is latched low so that momentary link
+ 	 * drops can be detected. Do not double-read the status
+-- 
+2.22.0
 
 
