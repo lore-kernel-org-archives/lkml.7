@@ -2,105 +2,122 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8C8C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CC7C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B56B2171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69B842171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:14:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405709AbfHIHNO (ORCPT
+        id S2405736AbfHIHOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 03:13:14 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35458 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbfHIHNN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 03:13:13 -0400
-Received: by mail-wm1-f66.google.com with SMTP id l2so4645034wmg.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 00:13:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JPMru+DldOJ85ZY2JuNQlO53huOOt1b/0sJ9I75q88k=;
-        b=lM0Jm0LOOcMFkp1h1wbbV7VmhMMKktxt2WZ2xr7dZtuWKABDzgSUy33P9OpQyHNzor
-         WsYI0muzFr/N52EeKFTDUi2HLcQ2Iiwo8+F3JaWrIbRsCKW6W3+vIBxUtJD0ynUkRO3Q
-         IDP54nZaAwowEfLcO6JGm66t+9G6AXRmu6NO5rvbe8YB5U7H01H2viK/4o0eJKgd9gtu
-         JoQeMYnFIqHcYwcA7DCwvHqHRp1QmpuPMwuR8B27DCo81fxVuUO5JHe1m18s5vLtdgin
-         UCUH1iAl1YMw32SrvYJ46XU2ka35dkrZbsz6aSdqN9HisllRMlzxpRGXLm54ntFrjnPX
-         fprg==
-X-Gm-Message-State: APjAAAXBP+fIdNqX7sLEouQ5GTYLc0zbVpZmc7tYAjkD3y6n0Mnaotfk
-        oZpbSE41krbquPjTjTX0wIJhmg==
-X-Google-Smtp-Source: APXvYqywjE6hw+0imzPjaJlEkA09vFA4fTJ10U5u/KPSEJCk6cBa6tIoFPfTzERohdJIc6srHR8IYw==
-X-Received: by 2002:a1c:c78d:: with SMTP id x135mr8917567wmf.82.1565334791047;
-        Fri, 09 Aug 2019 00:13:11 -0700 (PDT)
-Received: from localhost.localdomain ([151.38.139.48])
-        by smtp.gmail.com with ESMTPSA id q124sm6708226wma.33.2019.08.09.00.13.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 09 Aug 2019 00:13:10 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 09:13:06 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
-        bristot@redhat.com, balsini@android.com, dvyukov@google.com,
-        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org
-Subject: Re: [RFC][PATCH 12/13] sched/deadline: Introduce deadline servers
-Message-ID: <20190809071306.GL29310@localhost.localdomain>
-References: <20190726145409.947503076@infradead.org>
- <20190726161358.056107990@infradead.org>
- <34710762-f813-3913-0e55-fde7c91c6c2d@arm.com>
- <20190808075635.GB17205@worktop.programming.kicks-ass.net>
- <20cc05d3-0d0f-a558-2bbe-3b72527dd9bc@arm.com>
- <20190808084652.GG29310@localhost.localdomain>
- <20190808103109.GF2369@hirez.programming.kicks-ass.net>
+        Fri, 9 Aug 2019 03:14:41 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60362 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725954AbfHIHOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 03:14:40 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3DBCDBFB3BEAEDC60BD7;
+        Fri,  9 Aug 2019 15:14:30 +0800 (CST)
+Received: from [127.0.0.1] (10.63.139.185) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 9 Aug 2019
+ 15:14:23 +0800
+Subject: Re: [PATCH v3 0/7] crypto: hisilicon: Add HiSilicon QM and ZIP
+ controller driver
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+References: <1564732676-35987-1-git-send-email-wangzhou1@hisilicon.com>
+ <20190809061946.GN10392@gondor.apana.org.au>
+CC:     <davem@davemloft.net>, <linux-crypto@vger.kernel.org>,
+        <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>
+From:   Zhou Wang <wangzhou1@hisilicon.com>
+Message-ID: <5D4D1D4E.2070906@hisilicon.com>
+Date:   Fri, 9 Aug 2019 15:14:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808103109.GF2369@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190809061946.GN10392@gondor.apana.org.au>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.63.139.185]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/08/19 12:31, Peter Zijlstra wrote:
-> On Thu, Aug 08, 2019 at 10:46:52AM +0200, Juri Lelli wrote:
-> > On 08/08/19 10:11, Dietmar Eggemann wrote:
+On 2019/8/9 14:19, Herbert Xu wrote:
+> On Fri, Aug 02, 2019 at 03:57:49PM +0800, Zhou Wang wrote:
+>> This series adds HiSilicon QM and ZIP controller driver in crypto subsystem.
+>>
+>> A simple QM/ZIP driver which helps to provide an example for a general
+>> accelerator framework is under review in community[1]. Based on this simple
+>> driver, this series adds HW v2 support, PCI passthrough, PCI/misc error
+>> handler, debug support. But unlike [1], driver in this patchset only registers
+>> to crypto subsystem.
+>>
+>> There will be a long discussion about above accelerator framework in the
+>> process of upstreaming. So let's firstly review and upstream QM/ZIP crypto
+>> driver.
+>>
+>> Changes v2 -> v3:
+>> - Change to register zlib/gzip to crypto acomp.
+>> - As acomp is using sgl interface, add a common hardware sgl module which
+>>   also can be used in other HiSilicon accelerator drivers.
+>> - Change irq thread to work queue in the flow of irq handler in QM.
+>> - Split SRIOV and debugfs out for the convenience of review.
+>> - rebased on v5.3-rc1.
+>> - Some tiny fixes.
+>>
+>> Links:
+>> - v2  https://lkml.org/lkml/2019/1/23/358
+>> - v1  https://lwn.net/Articles/775484/
+>> - rfc https://lkml.org/lkml/2018/12/13/290
+>>
+>> Note: this series is based on https://lkml.org/lkml/2019/7/23/1135
+>>
+>> Reference:
+>> [1] https://lkml.org/lkml/2018/11/12/1951
+>>
+>> Zhou Wang (7):
+>>   crypto: hisilicon: Add queue management driver for HiSilicon QM module
+>>   crypto: hisilicon: Add hardware SGL support
+>>   crypto: hisilicon: Add HiSilicon ZIP accelerator support
+>>   crypto: hisilicon: Add SRIOV support for ZIP
+>>   Documentation: Add debugfs doc for hisi_zip
+>>   crypto: hisilicon: Add debugfs for ZIP and QM
+>>   MAINTAINERS: add maintainer for HiSilicon QM and ZIP controller driver
+>>
+>>  Documentation/ABI/testing/debugfs-hisi-zip |   50 +
+>>  MAINTAINERS                                |   11 +
+>>  drivers/crypto/hisilicon/Kconfig           |   23 +
+>>  drivers/crypto/hisilicon/Makefile          |    3 +
+>>  drivers/crypto/hisilicon/qm.c              | 1912 ++++++++++++++++++++++++++++
+>>  drivers/crypto/hisilicon/qm.h              |  215 ++++
+>>  drivers/crypto/hisilicon/sgl.c             |  214 ++++
+>>  drivers/crypto/hisilicon/sgl.h             |   24 +
+>>  drivers/crypto/hisilicon/zip/Makefile      |    2 +
+>>  drivers/crypto/hisilicon/zip/zip.h         |   71 ++
+>>  drivers/crypto/hisilicon/zip/zip_crypto.c  |  651 ++++++++++
+>>  drivers/crypto/hisilicon/zip/zip_main.c    | 1013 +++++++++++++++
+>>  12 files changed, 4189 insertions(+)
+>>  create mode 100644 Documentation/ABI/testing/debugfs-hisi-zip
+>>  create mode 100644 drivers/crypto/hisilicon/qm.c
+>>  create mode 100644 drivers/crypto/hisilicon/qm.h
+>>  create mode 100644 drivers/crypto/hisilicon/sgl.c
+>>  create mode 100644 drivers/crypto/hisilicon/sgl.h
+>>  create mode 100644 drivers/crypto/hisilicon/zip/Makefile
+>>  create mode 100644 drivers/crypto/hisilicon/zip/zip.h
+>>  create mode 100644 drivers/crypto/hisilicon/zip/zip_crypto.c
+>>  create mode 100644 drivers/crypto/hisilicon/zip/zip_main.c
 > 
-> > > What about the fast path in pick_next_task()?
-> > > 
-> > > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > > index bffe849b5a42..f1ea6ae16052 100644
-> > > --- a/kernel/sched/core.c
-> > > +++ b/kernel/sched/core.c
-> > > @@ -3742,6 +3742,9 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
-> > >                 if (unlikely(!p))
-> > >                         p = idle_sched_class.pick_next_task(rq, prev, rf);
-> > >  
-> > > +               if (p->sched_class == &fair_sched_class && p->server)
-> > > +                       p->server = NULL;
-> > > +
-> > 
-> > Hummm, but then who sets it back to the correct server. AFAIU
-> > update_curr() needs a ->server to do the correct DL accounting?
-> 
-> The above looks ok.
-> 
-> The pick_next_task_dl() when it selects a server will set ->server.
+> All applied.  Thanks.
 
-OK. Yesterday's IRC conversation resolved my perplexity about this
-point. I tried to summarize what I've got in the comment below (which we
-might want to add on top of Dietmar's fix).
+Many thanks.
 
---->8---
- /*
-  * Since we are executing the fast path it means that the DL
-  * server was throttled and we'll now be scheduled w/o it. So,
-  * reset p's pointer to it (accounting won't be performed, as
-  * it wouldn't make sense while server is thottled).
-  */
+Zhou
+
+> 
+
