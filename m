@@ -2,207 +2,270 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CF7C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAE1C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1707F214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFC9F214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:56:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8BUD3iR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436488AbfHIN4Y (ORCPT
+        id S2436552AbfHIN4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:56:24 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:23046
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726297AbfHIN4X (ORCPT
+        Fri, 9 Aug 2019 09:56:54 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34467 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406680AbfHIN4x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:56:23 -0400
-X-IronPort-AV: E=Sophos;i="5.64,364,1559512800"; 
-   d="scan'208";a="316021726"
-Received: from portablejulia.rsr.lip6.fr ([132.227.76.63])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:56:19 +0200
-Date:   Fri, 9 Aug 2019 15:56:18 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: julia@hadrien
-To:     Alexander Popov <alex.popov@linux.com>
-cc:     Jann Horn <jannh@google.com>, Jens Axboe <axboe@kernel.dk>,
-        Jiri Kosina <jikos@kernel.org>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>,
-        Denis Efremov <efremov@linux.com>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>, cocci@systeme.lip6.fr
-Subject: Re: [PATCH] floppy: fix usercopy direction
-In-Reply-To: <9ced7a06-5048-ad1a-3428-c8f943f7469c@linux.com>
-Message-ID: <alpine.DEB.2.21.1908091555090.2946@hadrien>
-References: <20190326220348.61172-1-jannh@google.com> <9ced7a06-5048-ad1a-3428-c8f943f7469c@linux.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 9 Aug 2019 09:56:53 -0400
+Received: by mail-wr1-f68.google.com with SMTP id 31so98370663wrm.1;
+        Fri, 09 Aug 2019 06:56:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SyGzgPeV2cqSMjYBuBKF6/eQKkTEeklJKW44zco+T5s=;
+        b=b8BUD3iRlukt+AC6WHEjsQdqOJKqABs5a2SLsPOGYzpR83LYpyc/eVcX1bqM7odd77
+         4SDiccmZtTRzoW6Vh28oQ0Y4y612qD8seKQObwsjPN/H7s5IxufhP2QMSGGjGUJe+lmv
+         wN1Jfsufz0+2ETHpE426xPC2OBcDT6U+nQdIUBjUvL0BWm8eiPuAavJXrszoHYYLMCjN
+         uRZbggZYik4Kxrfdm9OjdZvOEU96LJrAhDyJw3+DTqq8vBycYyjcKYrlkKVMYQA0Omrh
+         mJsxMXncuWS8P/8micapWBhgtrcGBZae6+2gQo0XNcf6bqrt3AqxmyC41Am5USiQ7UQD
+         tVcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SyGzgPeV2cqSMjYBuBKF6/eQKkTEeklJKW44zco+T5s=;
+        b=gjZ4DnxuGZMLMpREGJtXqU9PTcMRNfgdb5fLf6QVAQx7hnaFZrL1zhy7VG7PKcRkeJ
+         nihOONAQy8Hzhg3Bf78humcfzlBVWZs6YjJ6fLPpLssDduxYkbbinLMlRoP5B7h0cM6N
+         q66GDKwjVtZzuUgaI0yov1IGezZIepVkEa+Pnsyv/GmzS1n539pCpl2bXpSAB38m9w5P
+         I9j4A54diHau9UeYQIYL+FGlsmc+j+VMsZCqu18gQmF2LAMekXyv7Ohyeefs2uk5OQF1
+         BIBumxOQk3Q3w3TXte0zr6DFm60UXmYeDHVqsKmncS8+DYEWYGVV81NdDrJZ2Lo5bDKM
+         nT2Q==
+X-Gm-Message-State: APjAAAXgGAEK8PcYDA0xBaaHb1IVvIw0CZE2HSlQ3NsWE0BKoOGkLNDK
+        aiMWftVVOg0ha1FpEEUdb76+wrEB
+X-Google-Smtp-Source: APXvYqzsqfgj3Oucq766WtYTQWwrXMrS+7czUHGMVkVZUtAA2iq/RL5jGcE9Os+XuXn76TRIneq75g==
+X-Received: by 2002:a5d:604d:: with SMTP id j13mr9481397wrt.244.1565359009399;
+        Fri, 09 Aug 2019 06:56:49 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.34.218])
+        by smtp.googlemail.com with ESMTPSA id t14sm4837628wrv.12.2019.08.09.06.56.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 06:56:48 -0700 (PDT)
+Subject: Re: [PATCH v8 14/21] clk: tegra210: Add suspend and resume support
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-15-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <a21b7464-62c3-8461-04c2-a0e863bdde85@gmail.com>
+Date:   Fri, 9 Aug 2019 16:56:45 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1565308020-31952-15-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+09.08.2019 2:46, Sowjanya Komatineni пишет:
+> This patch adds support for clk: tegra210: suspend-resume.
+> 
+> All the CAR controller settings are lost on suspend when core
+> power goes off.
+> 
+> This patch has implementation for saving and restoring all PLLs
+> and clocks context during system suspend and resume to have the
+> clocks back to same state for normal operation.
+> 
+> Clock driver suspend and resume are registered as syscore_ops as clocks
+> restore need to happen before the other drivers resume to have all their
+> clocks back to the same state as before suspend.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/clk/tegra/clk-tegra210.c | 103 +++++++++++++++++++++++++++++++++++++--
+>  drivers/clk/tegra/clk.c          |  64 ++++++++++++++++++++++++
+>  drivers/clk/tegra/clk.h          |   3 ++
+>  3 files changed, 166 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+> index 998bf60b219a..8dd6f4f4debb 100644
+> --- a/drivers/clk/tegra/clk-tegra210.c
+> +++ b/drivers/clk/tegra/clk-tegra210.c
+> @@ -9,13 +9,13 @@
+>  #include <linux/clkdev.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> +#include <linux/syscore_ops.h>
+>  #include <linux/delay.h>
+>  #include <linux/export.h>
+>  #include <linux/mutex.h>
+>  #include <linux/clk/tegra.h>
+>  #include <dt-bindings/clock/tegra210-car.h>
+>  #include <dt-bindings/reset/tegra210-car.h>
+> -#include <linux/iopoll.h>
+>  #include <linux/sizes.h>
+>  #include <soc/tegra/pmc.h>
+>  
+> @@ -220,11 +220,15 @@
+>  #define CLK_M_DIVISOR_SHIFT 2
+>  #define CLK_M_DIVISOR_MASK 0x3
+>  
+> +#define CLK_MASK_ARM	0x44
+> +#define MISC_CLK_ENB	0x48
+> +
+>  #define RST_DFLL_DVCO 0x2f4
+>  #define DVFS_DFLL_RESET_SHIFT 0
+>  
+>  #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
+>  #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
+> +#define CPU_SOFTRST_CTRL 0x380
+>  
+>  #define LVL2_CLK_GATE_OVRA 0xf8
+>  #define LVL2_CLK_GATE_OVRC 0x3a0
+> @@ -2825,6 +2829,7 @@ static int tegra210_enable_pllu(void)
+>  	struct tegra_clk_pll_freq_table *fentry;
+>  	struct tegra_clk_pll pllu;
+>  	u32 reg;
+> +	int ret;
+>  
+>  	for (fentry = pll_u_freq_table; fentry->input_rate; fentry++) {
+>  		if (fentry->input_rate == pll_ref_freq)
+> @@ -2853,9 +2858,14 @@ static int tegra210_enable_pllu(void)
+>  	reg |= PLL_ENABLE;
+>  	writel(reg, clk_base + PLLU_BASE);
+>  
+> -	readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
+> -					  reg & PLL_BASE_LOCK, 2, 1000);
+> -	if (!(reg & PLL_BASE_LOCK)) {
+> +	/*
+> +	 * During clocks resume, same PLLU init and enable sequence get
+> +	 * executed. So, readx_poll_timeout_atomic can't be used here as it
+> +	 * uses ktime_get() and timekeeping resume doesn't happen by that
+> +	 * time. So, using tegra210_wait_for_mask for PLL LOCK.
+> +	 */
+> +	ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
+> +	if (ret) {
+>  		pr_err("Timed out waiting for PLL_U to lock\n");
+>  		return -ETIMEDOUT;
+>  	}
+> @@ -3288,6 +3298,84 @@ static void tegra210_disable_cpu_clock(u32 cpu)
+>  }
+>  
+>  #ifdef CONFIG_PM_SLEEP
+> +/*
+> + * This array lists mask values for each peripheral clk bank
+> + * to mask out reserved bits during the clocks state restore
+> + * on SC7 resume to prevent accidental writes to these reserved
+> + * bits.
+> + */
+> +static u32 periph_clk_rsvd_mask[TEGRA210_CAR_BANK_COUNT] = {
 
+Should be more natural to have a "valid_mask" instead of "rsvd_mask".
 
-On Fri, 9 Aug 2019, Alexander Popov wrote:
+What's actually wrong with touching of the reserved bits? They must be NO-OP.. or the
+reserved bits are actually some kind of "secret" bits? If those bits have some use-case
+outside of Silicon HW (like FPGA simulation), then this doesn't matter for upstream and you
+have to keep the workaround locally in the downstream kernel or whatever.
 
-> Hello everyone!
->
-> On 27.03.2019 1:03, Jann Horn wrote:
-> > As sparse points out, these two copy_from_user() should actually be
-> > copy_to_user().
->
-> I've spent some time on these bugs, but it turned out that they are already public.
->
-> I think Jann's patch is lost, it is not applied to the mainline.
-> So I add a new floppy maintainer Denis Efremov to CC.
->
-> These bugs on x86_64 cause memset for the userspace memory from the kernelspace.
-> That is funny:
->  - access_ok for the copy_from_user source (2nd argument) returns zero;
->  - copy_from_user tries to erase the destination (1st argument);
->  - but the destination is in the userspace instead of kernelspace.
->
-> So we have:
-> [   40.937098] BUG: unable to handle page fault for address: 0000000041414242
-> [   40.938714] #PF: supervisor write access in kernel mode
-> [   40.939951] #PF: error_code(0x0002) - not-present page
-> [   40.941121] PGD 7963f067 P4D 7963f067 PUD 0
-> [   40.942107] Oops: 0002 [#1] SMP NOPTI
-> [   40.942968] CPU: 0 PID: 292 Comm: d Not tainted 5.3.0-rc3+ #7
-> [   40.944288] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-> Ubuntu-1.8.2-1ubuntu1 04/01/2014
-> [   40.946478] RIP: 0010:__memset+0x24/0x30
-> [   40.947394] Code: 90 90 90 90 90 90 0f 1f 44 00 00 49 89 f9 48 89 d1 83 e2 07
-> 48 c1 e9 03 40 0f b6 f6 48 b8 01 01 01 01 01 01 01 01 48 0f af c6 <f3> 48 ab 89
-> d1 f3 aa 4c 89 c8 c3 90 49 89 f9 40 88 f0 48 89 d1 f3
-> [   40.951721] RSP: 0018:ffffc900003dbd58 EFLAGS: 00010206
-> [   40.952941] RAX: 0000000000000000 RBX: 0000000000000034 RCX: 0000000000000006
-> [   40.954592] RDX: 0000000000000004 RSI: 0000000000000000 RDI: 0000000041414242
-> [   40.956169] RBP: 0000000041414242 R08: ffffffff8200bd80 R09: 0000000041414242
-> [   40.957753] R10: 0000000000121806 R11: ffff88807da28ab0 R12: ffffc900003dbd7c
-> [   40.959407] R13: 0000000000000001 R14: 0000000041414242 R15: 0000000041414242
-> [   40.961062] FS:  00007f91115c4440(0000) GS:ffff88807da00000(0000)
-> knlGS:0000000000000000
-> [   40.962603] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   40.963695] CR2: 0000000041414242 CR3: 000000007c584000 CR4: 00000000000006f0
-> [   40.965004] Call Trace:
-> [   40.965459]  _copy_from_user+0x51/0x60
-> [   40.966141]  compat_getdrvstat+0x124/0x170
-> [   40.966781]  fd_compat_ioctl+0x69c/0x6d0
-> [   40.967423]  ? selinux_file_ioctl+0x16f/0x210
-> [   40.968117]  compat_blkdev_ioctl+0x21d/0x8f0
-> [   40.968864]  __x32_compat_sys_ioctl+0x99/0x250
-> [   40.969659]  do_syscall_64+0x4a/0x110
-> [   40.970337]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->
->
-> I haven't found a way to exploit it.
->
-> > Fixes: 229b53c9bf4e ("take floppy compat ioctls to sodding floppy.c")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Jann Horn <jannh@google.com>
-> > Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-> > ---
-> > compile-tested only
->
-> Acked-by: Alexander Popov <alex.popov@linux.com>
->
-> >  drivers/block/floppy.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-> > index 95f608d1a098..8c641245ff12 100644
-> > --- a/drivers/block/floppy.c
-> > +++ b/drivers/block/floppy.c
-> > @@ -3749,7 +3749,7 @@ static int compat_getdrvprm(int drive,
-> >  	v.native_format = UDP->native_format;
-> >  	mutex_unlock(&floppy_mutex);
-> >
-> > -	if (copy_from_user(arg, &v, sizeof(struct compat_floppy_drive_params)))
-> > +	if (copy_to_user(arg, &v, sizeof(struct compat_floppy_drive_params)))
-> >  		return -EFAULT;
-> >  	return 0;
-> >  }
-> > @@ -3785,7 +3785,7 @@ static int compat_getdrvstat(int drive, bool poll,
-> >  	v.bufblocks = UDRS->bufblocks;
-> >  	mutex_unlock(&floppy_mutex);
-> >
-> > -	if (copy_from_user(arg, &v, sizeof(struct compat_floppy_drive_struct)))
-> > +	if (copy_to_user(arg, &v, sizeof(struct compat_floppy_drive_struct)))
-> >  		return -EFAULT;
-> >  	return 0;
-> >  Eintr:
-> >
->
-> I also wrote a coccinelle rule for detecting similar bugs (adding coccinelle
-> experts to CC).
->
->
-> virtual report
->
-> @cfu@
+> +	0x23282006,
+> +	0x782e0c18,
+> +	0x0c012c05,
+> +	0x003e7304,
+> +	0x86c04800,
+> +	0xc0199000,
+> +	0x03e03800,
+> +};
+> +
+> +#define car_readl(_base, _off) readl_relaxed(clk_base + (_base) + ((_off) * 4))
+> +#define car_writel(_val, _base, _off) \
+> +		writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
+> +
+> +static u32 spare_reg_ctx, misc_clk_enb_ctx, clk_msk_arm_ctx;
+> +static u32 cpu_softrst_ctx[3];
+> +
+> +static int tegra210_clk_suspend(void)
+> +{
+> +	unsigned int i;
+> +
+> +	clk_save_context();
+> +
+> +	/*
+> +	 * Save the bootloader configured clock registers SPARE_REG0,
+> +	 * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL.
+> +	 */
+> +	spare_reg_ctx = readl_relaxed(clk_base + SPARE_REG0);
+> +	misc_clk_enb_ctx = readl_relaxed(clk_base + MISC_CLK_ENB);
+> +	clk_msk_arm_ctx = readl_relaxed(clk_base + CLK_MASK_ARM);
+> +
+> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
+> +		cpu_softrst_ctx[i] = car_readl(CPU_SOFTRST_CTRL, i);
+> +
+> +	tegra_clk_periph_suspend();
+> +	return 0;
+> +}
+> +
+> +static void tegra210_clk_resume(void)
+> +{
+> +	unsigned int i;
+> +
+> +	tegra_clk_osc_resume(clk_base);
+> +
+> +	/*
+> +	 * Restore the bootloader configured clock registers SPARE_REG0,
+> +	 * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL from saved context.
+> +	 */
+> +	writel_relaxed(spare_reg_ctx, clk_base + SPARE_REG0);
+> +	writel_relaxed(misc_clk_enb_ctx, clk_base + MISC_CLK_ENB);
+> +	writel_relaxed(clk_msk_arm_ctx, clk_base + CLK_MASK_ARM);
+> +
+> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
+> +		car_writel(cpu_softrst_ctx[i], CPU_SOFTRST_CTRL, i);
+> +
+> +	fence_udelay(5, clk_base);
+> +
+> +	/* enable all the clocks before changing the clock sources */
+> +	tegra_clk_periph_force_on(periph_clk_rsvd_mask);
 
-You can replace the above line with @cfu exists@.  You want to find the
-existence of such a call, not ensure that the call occurs on every
-control-flow path, which is the default.
+Why clocks need to be enabled before changing the sources?
 
-Do you want this rule to go into the kernel?
+> +	/* wait for all writes to happen to have all the clocks enabled */
+> +	wmb();
 
-julia
+fence_udelay() has exactly the same barrier at the very beginning of readl(), no need to
+duplicate it here.
 
-> identifier f;
-> type t;
-> identifier v;
-> position decl_p;
-> position copy_p;
-> @@
->
-> f(..., t v@decl_p, ...)
-> {
-> <+...
-> copy_from_user@copy_p(v, ...)
-> ...+>
-> }
->
-> @script:python@
-> f << cfu.f;
-> t << cfu.t;
-> v << cfu.v;
-> decl_p << cfu.decl_p;
-> copy_p << cfu.copy_p;
-> @@
->
-> if '__user' in t:
->   msg0 = "function \"" + f + "\" has arg \"" + v + "\" of type \"" + t + "\""
->   coccilib.report.print_report(decl_p[0], msg0)
->   msg1 = "copy_from_user uses \"" + v + "\" as the destination. What a shame!\n"
->   coccilib.report.print_report(copy_p[0], msg1)
->
->
-> The rule output:
->
-> ./drivers/block/floppy.c:3756:49-52: function "compat_getdrvprm" has arg "arg"
-> of type "struct compat_floppy_drive_params __user *"
-> ./drivers/block/floppy.c:3783:5-19: copy_from_user uses "arg" as the
-> destination. What a shame!
->
-> ./drivers/block/floppy.c:3789:49-52: function "compat_getdrvstat" has arg "arg"
-> of type "struct compat_floppy_drive_struct __user *"
-> ./drivers/block/floppy.c:3819:5-19: copy_from_user uses "arg" as the
-> destination. What a shame!
->
->
-> Best regards,
-> Alexander
->
+> +	fence_udelay(2, clk_base);
+> +
+> +	/* restore PLLs and all peripheral clock rates */
+> +	tegra210_init_pllu();
+
+Why USB PLL need to be restored at first?
+
+> +	clk_restore_context();
+> +
+> +	/* restore all peripheral clocks enable and reset state */
+> +	tegra_clk_periph_resume();
+> +}
+
+[snip]
