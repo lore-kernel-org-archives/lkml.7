@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6EFC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC50C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93CC121874
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 869E1217F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358462;
-	bh=p/4xwpgrZuT6q8fvaxHR7cf0bzeVGoZXrrFyuzABWEw=;
+	s=default; t=1565358466;
+	bh=SJOB4R5aZzWIG3LHq9WYbcWrMIlfc+ou/bJmVPU/X2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q1KaG+MOvDq1wWf7++o/e2e4iGyK3+ahHQPUd9MKc8jMu8iHpW9NMRxYqfmQtXPqh
-	 4y5PfdFzpxCOjPIpToX84XMVYsHdayXSAlbBymQ89aim4I0kbyOF/cxfIz7RWf8qDg
-	 OLNpoR8coLy3WpPqSVMoZlhANDqD+GixxUohojJQ=
+	b=PiILkg7d3EQJBnRoqA7jtf44q21POEdIYlZV4q6aVhMwIH9RHzfzMDB7l7hG5vd5X
+	 hj/lbn+IWJz3gG1IhRXe6lO3ZFu8VZT+DYwE6ltjGMqkH0//5e2AAWlrJqqav79ash
+	 NUl8ZexTWZHaPnks2PqiCZua1JXannCUdVXVD/rQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407278AbfHINrl (ORCPT
+        id S2436618AbfHINrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:47:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37612 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:47:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436610AbfHINrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:47:35 -0400
+        id S2407279AbfHINrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:47:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EE7A2171F;
-        Fri,  9 Aug 2019 13:47:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00CEE2086D;
+        Fri,  9 Aug 2019 13:47:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358453;
-        bh=p/4xwpgrZuT6q8fvaxHR7cf0bzeVGoZXrrFyuzABWEw=;
+        s=default; t=1565358461;
+        bh=SJOB4R5aZzWIG3LHq9WYbcWrMIlfc+ou/bJmVPU/X2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zaS0iCuMkpGpC6d3gZB0Ia5fhxGU47yE6BpRTaLMZqmdvNUfZp3zyalTylOOmpzto
-         lf7UIIjNVJnF5ztoU7fLt5G3qMR2F/aZPaVNhiXoIYvLlkXEcy4gEog/v7pAUNQ+yX
-         X87rJ3Dqe5CH35+Kt+c7Db8LU8n0jdi187IYyphw=
+        b=dmtGPPVRp/q91LY1MwOQlBE9kLG894UJpjqbWqOtSE6SEfs0+nw5arZNSMDIg993e
+         /BcQenTCYtcEyQhKhvC77+qtooVKX7TQ+LGz7TZDP2cZJbSMY2Fp8BaDesvikuUNxT
+         ZJlu9/YwpCFj+BEUiA2Ou3nyxpdtCKfsoDFlT/KE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        stable@vger.kernel.org, Andrew Cooper <andrew.cooper3@citrix.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@intel.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.9 29/32] x86/speculation: Prepare entry code for Spectre v1 swapgs mitigations
-Date:   Fri,  9 Aug 2019 15:45:32 +0200
-Message-Id: <20190809133923.865538682@linuxfoundation.org>
+Subject: [PATCH 4.9 32/32] x86/speculation/swapgs: Exclude ATOMs from speculation through SWAPGS
+Date:   Fri,  9 Aug 2019 15:45:35 +0200
+Message-Id: <20190809133923.957917253@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190809133922.945349906@linuxfoundation.org>
 References: <20190809133922.945349906@linuxfoundation.org>
@@ -61,213 +62,155 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 18ec54fdd6d18d92025af097cd042a75cf0ea24c upstream.
+commit f36cf386e3fec258a341d446915862eded3e13d8 upstream.
 
-Spectre v1 isn't only about array bounds checks.  It can affect any
-conditional checks.  The kernel entry code interrupt, exception, and NMI
-handlers all have conditional swapgs checks.  Those may be problematic in
-the context of Spectre v1, as kernel code can speculatively run with a user
-GS.
+Intel provided the following information:
 
-For example:
+ On all current Atom processors, instructions that use a segment register
+ value (e.g. a load or store) will not speculatively execute before the
+ last writer of that segment retires. Thus they will not use a
+ speculatively written segment value.
 
-	if (coming from user space)
-		swapgs
-	mov %gs:<percpu_offset>, %reg
-	mov (%reg), %reg1
+That means on ATOMs there is no speculation through SWAPGS, so the SWAPGS
+entry paths can be excluded from the extra LFENCE if PTI is disabled.
 
-When coming from user space, the CPU can speculatively skip the swapgs, and
-then do a speculative percpu load using the user GS value.  So the user can
-speculatively force a read of any kernel value.  If a gadget exists which
-uses the percpu value as an address in another load/store, then the
-contents of the kernel value may become visible via an L1 side channel
-attack.
+Create a separate bug flag for the through SWAPGS speculation and mark all
+out-of-order ATOMs and AMD/HYGON CPUs as not affected. The in-order ATOMs
+are excluded from the whole mitigation mess anyway.
 
-A similar attack exists when coming from kernel space.  The CPU can
-speculatively do the swapgs, causing the user GS to get used for the rest
-of the speculative window.
-
-The mitigation is similar to a traditional Spectre v1 mitigation, except:
-
-  a) index masking isn't possible; because the index (percpu offset)
-     isn't user-controlled; and
-
-  b) an lfence is needed in both the "from user" swapgs path and the
-     "from kernel" non-swapgs path (because of the two attacks described
-     above).
-
-The user entry swapgs paths already have SWITCH_TO_KERNEL_CR3, which has a
-CR3 write when PTI is enabled.  Since CR3 writes are serializing, the
-lfences can be skipped in those cases.
-
-On the other hand, the kernel entry swapgs paths don't depend on PTI.
-
-To avoid unnecessary lfences for the user entry case, create two separate
-features for alternative patching:
-
-  X86_FEATURE_FENCE_SWAPGS_USER
-  X86_FEATURE_FENCE_SWAPGS_KERNEL
-
-Use these features in entry code to patch in lfences where needed.
-
-The features aren't enabled yet, so there's no functional change.
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Reported-by: Andrew Cooper <andrew.cooper3@citrix.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Dave Hansen <dave.hansen@intel.com>
-[bwh: Backported to 4.9:
- - Assign the CPU feature bits from word 7
- - Add FENCE_SWAPGS_KERNEL_ENTRY to NMI entry, since it does not
-   use paranoid_entry
- - Include <asm/cpufeatures.h> in calling.h
- - Adjust context]
+Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+[bwh: Backported to 4.4:
+ - There's no whitelist entry (or any support) for Hygon CPUs
+ - Adjust context, indentation]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/entry/calling.h           |   18 ++++++++++++++++++
- arch/x86/entry/entry_64.S          |   21 +++++++++++++++++++--
- arch/x86/include/asm/cpufeatures.h |    3 ++-
- 3 files changed, 39 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/cpufeatures.h |    1 
+ arch/x86/kernel/cpu/bugs.c         |   18 +++------------
+ arch/x86/kernel/cpu/common.c       |   42 +++++++++++++++++++++++--------------
+ 3 files changed, 32 insertions(+), 29 deletions(-)
 
---- a/arch/x86/entry/calling.h
-+++ b/arch/x86/entry/calling.h
-@@ -1,4 +1,5 @@
- #include <linux/jump_label.h>
-+#include <asm/cpufeatures.h>
- 
- /*
- 
-@@ -201,6 +202,23 @@ For 32-bit we have the following convent
- 	.byte 0xf1
- 	.endm
- 
-+/*
-+ * Mitigate Spectre v1 for conditional swapgs code paths.
-+ *
-+ * FENCE_SWAPGS_USER_ENTRY is used in the user entry swapgs code path, to
-+ * prevent a speculative swapgs when coming from kernel space.
-+ *
-+ * FENCE_SWAPGS_KERNEL_ENTRY is used in the kernel entry non-swapgs code path,
-+ * to prevent the swapgs from getting speculatively skipped when coming from
-+ * user space.
-+ */
-+.macro FENCE_SWAPGS_USER_ENTRY
-+	ALTERNATIVE "", "lfence", X86_FEATURE_FENCE_SWAPGS_USER
-+.endm
-+.macro FENCE_SWAPGS_KERNEL_ENTRY
-+	ALTERNATIVE "", "lfence", X86_FEATURE_FENCE_SWAPGS_KERNEL
-+.endm
-+
- #endif /* CONFIG_X86_64 */
- 
- /*
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -420,6 +420,7 @@ END(irq_entries_start)
- 	 * tracking that we're in kernel mode.
- 	 */
- 	SWAPGS
-+	FENCE_SWAPGS_USER_ENTRY
- 	SWITCH_KERNEL_CR3
- 
- 	/*
-@@ -433,8 +434,10 @@ END(irq_entries_start)
- 	TRACE_IRQS_OFF
- 
- 	CALL_enter_from_user_mode
--
-+	jmpq	2f
- 1:
-+	FENCE_SWAPGS_KERNEL_ENTRY
-+2:
- 	/*
- 	 * Save previous stack pointer, optionally switch to interrupt stack.
- 	 * irq_count is used to check if a CPU is already on an interrupt stack
-@@ -1004,6 +1007,13 @@ ENTRY(paranoid_entry)
- 	movq	%rax, %cr3
- 2:
- #endif
-+	/*
-+	 * The above doesn't do an unconditional CR3 write, even in the PTI
-+	 * case.  So do an lfence to prevent GS speculation, regardless of
-+	 * whether PTI is enabled.
-+	 */
-+	FENCE_SWAPGS_KERNEL_ENTRY
-+
- 	ret
- END(paranoid_entry)
- 
-@@ -1065,6 +1075,7 @@ ENTRY(error_entry)
- 	 * from user mode due to an IRET fault.
- 	 */
- 	SWAPGS
-+	FENCE_SWAPGS_USER_ENTRY
- 
- .Lerror_entry_from_usermode_after_swapgs:
- 	/*
-@@ -1076,6 +1087,8 @@ ENTRY(error_entry)
- 	CALL_enter_from_user_mode
- 	ret
- 
-+.Lerror_entry_done_lfence:
-+	FENCE_SWAPGS_KERNEL_ENTRY
- .Lerror_entry_done:
- 	TRACE_IRQS_OFF
- 	ret
-@@ -1094,7 +1107,7 @@ ENTRY(error_entry)
- 	cmpq	%rax, RIP+8(%rsp)
- 	je	.Lbstep_iret
- 	cmpq	$.Lgs_change, RIP+8(%rsp)
--	jne	.Lerror_entry_done
-+	jne	.Lerror_entry_done_lfence
- 
- 	/*
- 	 * hack: .Lgs_change can fail with user gsbase.  If this happens, fix up
-@@ -1102,6 +1115,7 @@ ENTRY(error_entry)
- 	 * .Lgs_change's error handler with kernel gsbase.
- 	 */
- 	SWAPGS
-+	FENCE_SWAPGS_USER_ENTRY
- 	jmp .Lerror_entry_done
- 
- .Lbstep_iret:
-@@ -1115,6 +1129,7 @@ ENTRY(error_entry)
- 	 * Switch to kernel gsbase:
- 	 */
- 	SWAPGS
-+	FENCE_SWAPGS_USER_ENTRY
- 
- 	/*
- 	 * Pretend that the exception came from user mode: set up pt_regs
-@@ -1211,6 +1226,7 @@ ENTRY(nmi)
- 	 * to switch CR3 here.
- 	 */
- 	cld
-+	FENCE_SWAPGS_USER_ENTRY
- 	movq	%rsp, %rdx
- 	movq	PER_CPU_VAR(cpu_current_top_of_stack), %rsp
- 	pushq	5*8(%rdx)	/* pt_regs->ss */
-@@ -1499,6 +1515,7 @@ end_repeat_nmi:
- 	movq	%rax, %cr3
- 2:
- #endif
-+	FENCE_SWAPGS_KERNEL_ENTRY
- 
- 	/* paranoidentry do_nmi, 0; without TRACE_IRQS_OFF */
- 	call	do_nmi
 --- a/arch/x86/include/asm/cpufeatures.h
 +++ b/arch/x86/include/asm/cpufeatures.h
-@@ -192,7 +192,8 @@
+@@ -356,5 +356,6 @@
+ #define X86_BUG_L1TF		X86_BUG(18) /* CPU is affected by L1 Terminal Fault */
+ #define X86_BUG_MDS		X86_BUG(19) /* CPU is affected by Microarchitectural data sampling */
+ #define X86_BUG_MSBDS_ONLY	X86_BUG(20) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
++#define X86_BUG_SWAPGS		X86_BUG(21) /* CPU is affected by speculation through SWAPGS */
  
- #define X86_FEATURE_HW_PSTATE	( 7*32+ 8) /* AMD HW-PState */
- #define X86_FEATURE_PROC_FEEDBACK ( 7*32+ 9) /* AMD ProcFeedbackInterface */
+ #endif /* _ASM_X86_CPUFEATURES_H */
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -281,18 +281,6 @@ static const char * const spectre_v1_str
+ 	[SPECTRE_V1_MITIGATION_AUTO] = "Mitigation: usercopy/swapgs barriers and __user pointer sanitization",
+ };
+ 
+-static bool is_swapgs_serializing(void)
+-{
+-	/*
+-	 * Technically, swapgs isn't serializing on AMD (despite it previously
+-	 * being documented as such in the APM).  But according to AMD, %gs is
+-	 * updated non-speculatively, and the issuing of %gs-relative memory
+-	 * operands will be blocked until the %gs update completes, which is
+-	 * good enough for our purposes.
+-	 */
+-	return boot_cpu_data.x86_vendor == X86_VENDOR_AMD;
+-}
 -
-+#define X86_FEATURE_FENCE_SWAPGS_USER	( 7*32+10) /* "" LFENCE in user entry SWAPGS path */
-+#define X86_FEATURE_FENCE_SWAPGS_KERNEL	( 7*32+11) /* "" LFENCE in kernel entry SWAPGS path */
- #define X86_FEATURE_RETPOLINE	( 7*32+12) /* "" Generic Retpoline mitigation for Spectre variant 2 */
- #define X86_FEATURE_RETPOLINE_AMD ( 7*32+13) /* "" AMD Retpoline mitigation for Spectre variant 2 */
+ /*
+  * Does SMAP provide full mitigation against speculative kernel access to
+  * userspace?
+@@ -343,9 +331,11 @@ static void __init spectre_v1_select_mit
+ 			 * PTI as the CR3 write in the Meltdown mitigation
+ 			 * is serializing.
+ 			 *
+-			 * If neither is there, mitigate with an LFENCE.
++			 * If neither is there, mitigate with an LFENCE to
++			 * stop speculation through swapgs.
+ 			 */
+-			if (!is_swapgs_serializing() && !boot_cpu_has(X86_FEATURE_KAISER))
++			if (boot_cpu_has_bug(X86_BUG_SWAPGS) &&
++			    !boot_cpu_has(X86_FEATURE_KAISER))
+ 				setup_force_cpu_cap(X86_FEATURE_FENCE_SWAPGS_USER);
+ 
+ 			/*
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -897,6 +897,7 @@ static void identify_cpu_without_cpuid(s
+ #define NO_L1TF		BIT(3)
+ #define NO_MDS		BIT(4)
+ #define MSBDS_ONLY	BIT(5)
++#define NO_SWAPGS	BIT(6)
+ 
+ #define VULNWL(_vendor, _family, _model, _whitelist)	\
+ 	{ X86_VENDOR_##_vendor, _family, _model, X86_FEATURE_ANY, _whitelist }
+@@ -920,29 +921,37 @@ static const __initconst struct x86_cpu_
+ 	VULNWL_INTEL(ATOM_BONNELL,		NO_SPECULATION),
+ 	VULNWL_INTEL(ATOM_BONNELL_MID,		NO_SPECULATION),
+ 
+-	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY),
+-	VULNWL_INTEL(ATOM_SILVERMONT_X,		NO_SSB | NO_L1TF | MSBDS_ONLY),
+-	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF | MSBDS_ONLY),
+-	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY),
+-	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF | MSBDS_ONLY),
+-	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF | MSBDS_ONLY),
++	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
++	VULNWL_INTEL(ATOM_SILVERMONT_X,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
++	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
++	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
++	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
++	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
+ 
+ 	VULNWL_INTEL(CORE_YONAH,		NO_SSB),
+ 
+-	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF | MSBDS_ONLY),
++	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
+ 
+-	VULNWL_INTEL(ATOM_GOLDMONT,		NO_MDS | NO_L1TF),
+-	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_MDS | NO_L1TF),
+-	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_MDS | NO_L1TF),
++	VULNWL_INTEL(ATOM_GOLDMONT,		NO_MDS | NO_L1TF | NO_SWAPGS),
++	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_MDS | NO_L1TF | NO_SWAPGS),
++	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_MDS | NO_L1TF | NO_SWAPGS),
++
++	/*
++	 * Technically, swapgs isn't serializing on AMD (despite it previously
++	 * being documented as such in the APM).  But according to AMD, %gs is
++	 * updated non-speculatively, and the issuing of %gs-relative memory
++	 * operands will be blocked until the %gs update completes, which is
++	 * good enough for our purposes.
++	 */
+ 
+ 	/* AMD Family 0xf - 0x12 */
+-	VULNWL_AMD(0x0f,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
+-	VULNWL_AMD(0x10,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
+-	VULNWL_AMD(0x11,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
+-	VULNWL_AMD(0x12,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
++	VULNWL_AMD(0x0f,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
++	VULNWL_AMD(0x10,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
++	VULNWL_AMD(0x11,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
++	VULNWL_AMD(0x12,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
+ 
+ 	/* FAMILY_ANY must be last, otherwise 0x0f - 0x12 matches won't work */
+-	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS),
++	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS),
+ 	{}
+ };
+ 
+@@ -979,6 +988,9 @@ static void __init cpu_set_bug_bits(stru
+ 			setup_force_cpu_bug(X86_BUG_MSBDS_ONLY);
+ 	}
+ 
++	if (!cpu_matches(NO_SWAPGS))
++		setup_force_cpu_bug(X86_BUG_SWAPGS);
++
+ 	if (cpu_matches(NO_MELTDOWN))
+ 		return;
  
 
 
