@@ -2,372 +2,150 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93FCC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2169AC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 887A22171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5EBB2171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:25:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="s2iQn4J9"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dGJHoLsJ";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eYLwW1nY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406052AbfHIJX3 (ORCPT
+        id S2406018AbfHIJZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 05:23:29 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:21540 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727063AbfHIJX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 05:23:29 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 464ftP6KdQz9vBnS;
-        Fri,  9 Aug 2019 11:23:25 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=s2iQn4J9; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id X6yYNi38oEOR; Fri,  9 Aug 2019 11:23:25 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 464ftP59vtz9vBnC;
-        Fri,  9 Aug 2019 11:23:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1565342605; bh=MSN2VoVfRF+Vi8Bs7k+Ix9wLxyM2N+3Scm0HUsXVt4g=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=s2iQn4J9iUC4jJ0nOmjMZvjXkAZqkNK1NQeIPfvSLi3kzN1GLjEqGmqhBEuxCjbKe
-         cmtcbmtuOt1Cdx7t4fBnaDyidzMXh6oH7v1JDd47smujjCuGJWuM9gTP7+pqyViVxX
-         RTg0UNkHDHqewqStxMAweW5u0iPf6j8nGVcKEHIs=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BF5268B887;
-        Fri,  9 Aug 2019 11:23:26 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id VuXIUSzOOgWO; Fri,  9 Aug 2019 11:23:26 +0200 (CEST)
-Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 867B08B886;
-        Fri,  9 Aug 2019 11:23:26 +0200 (CEST)
-Subject: Re: [PATCH 2/2] powerpc: Convert flush_icache_range to C
-To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Fri, 9 Aug 2019 05:25:39 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:52648 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbfHIJZj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 05:25:39 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x799P9N0022012;
+        Fri, 9 Aug 2019 09:25:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=u6x3As4MfXMR9e0DcE2E84qHWZeCd3YYNsZEqIVy7JI=;
+ b=dGJHoLsJeMw/LWqkhHNg5bQw8vsxKHMMxnPMOFgS5jJC0t+vdOk5seVj1XdGpTkpyE0s
+ pz90pdXmmEF1ACv8tSLFCnjbc4UGMsYsTqwp6ZH/bvXx2T+Q2eeezI03DnXzU1ntQOwW
+ ipyz5mr4Re7aXTq0+1P+x4+zQA9h6LxDOPJjepZPdFPAYmHzh+AMBf1O0liali8aq2SU
+ TYwXT6V1y+pOQzQIE+JHzNkeMy2XE22p1949uJYpK9VH/jIx8kmunylLYGRp1p5G9NPd
+ wpGiwncqgPCwXvo09uQjd26L9bX6VNTdcvjTO04W7VPSHNKq1OEqHCrCp8s5oYSmYEKK ng== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=u6x3As4MfXMR9e0DcE2E84qHWZeCd3YYNsZEqIVy7JI=;
+ b=eYLwW1nYy+4c7mCmQNyEKl5skNe6Q46zP6oeUYCdlMeVkyaJ+glRKyPWyW8gtfZRDXc3
+ fOC7tG+9qzVbBvnYnWa3t2HyP2iQ8Nl4yfE/de18ZMIiwfKnRno+cWnW6XtD1EAjMxPi
+ J5hg7vVeMWPd0sB8Ou/3AFcbt+zB+qrNOD5iVxksWGHmJYzKhwCMdonHcclYRRLxPLRT
+ ctC5qBvrX8LQTEkTE+4Y3OlEjKAlLpozFjypLMNlCvJHTyt7ofRQ2zicdF9Sn/f4VVG0
+ Q4dJ99i4i1COlU61/554g2Xa2yGMW2WAYREoCUAZ3T1OECTwksSw9+MAX7zzn4a8Kwb6 YQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2u8hgp6e6q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 09 Aug 2019 09:25:29 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x799NWab024056;
+        Fri, 9 Aug 2019 09:25:28 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2u8pj8w5b6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 09 Aug 2019 09:25:28 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x799PPeQ022647;
+        Fri, 9 Aug 2019 09:25:26 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 09 Aug 2019 02:25:25 -0700
+Date:   Fri, 9 Aug 2019 12:25:16 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Hridya Valsaraju <hridya@google.com>
+Cc:     devel@driverdev.osuosl.org, kernel-team@android.com,
+        Todd Kjos <tkjos@android.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Qian Cai <cai@lca.pw>, Allison Randal <allison@lohutok.net>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190809004658.22512-1-alastair@au1.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <ee96e072-d212-3653-7544-716e7eea4992@c-s.fr>
-Date:   Fri, 9 Aug 2019 11:23:26 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        linux-kernel@vger.kernel.org,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Martijn Coenen <maco@android.com>,
+        Christian Brauner <christian@brauner.io>
+Subject: Re: [PATCH v2 1/2] binder: Add default binder devices through
+ binderfs when configured
+Message-ID: <20190809092516.GQ1974@kadam>
+References: <20190806184007.60739-1-hridya@google.com>
+ <20190806184007.60739-2-hridya@google.com>
+ <20190807110204.GL1974@kadam>
+ <CA+wgaPNSWbJi3feygHixJX5cLUnQFH0tVSnBrrGQYtE7LUZPzQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190809004658.22512-1-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+wgaPNSWbJi3feygHixJX5cLUnQFH0tVSnBrrGQYtE7LUZPzQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9343 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908090096
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9343 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908090096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 09/08/2019 à 02:46, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
+On Wed, Aug 07, 2019 at 09:51:46AM -0700, Hridya Valsaraju wrote:
+> On Wed, Aug 7, 2019 at 4:02 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> >
+> > On Tue, Aug 06, 2019 at 11:40:05AM -0700, Hridya Valsaraju wrote:
+> > > @@ -467,6 +466,9 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
+> > >       int ret;
+> > >       struct binderfs_info *info;
+> > >       struct inode *inode = NULL;
+> > > +     struct binderfs_device device_info = { 0 };
+> > > +     const char *name;
+> > > +     size_t len;
+> > >
+> > >       sb->s_blocksize = PAGE_SIZE;
+> > >       sb->s_blocksize_bits = PAGE_SHIFT;
+> > > @@ -521,7 +523,24 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
+> > >       if (!sb->s_root)
+> > >               return -ENOMEM;
+> > >
+> > > -     return binderfs_binder_ctl_create(sb);
+> > > +     ret = binderfs_binder_ctl_create(sb);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +
+> > > +     name = binder_devices_param;
+> > > +     for (len = strcspn(name, ","); len > 0; len = strcspn(name, ",")) {
+> > > +             strscpy(device_info.name, name, len + 1);
+> > > +             ret = binderfs_binder_device_create(inode, NULL, &device_info);
+> > > +             if (ret)
+> > > +                     return ret;
+> >
+> > We should probably clean up before returning...  The error handling code
+> > would probably be tricky to write though and it's not super common.
 > 
-> Similar to commit 22e9c88d486a
-> ("powerpc/64: reuse PPC32 static inline flush_dcache_range()")
-> this patch converts flush_icache_range to C.
+> Thank you for taking a look Dan. Did you mean cleaning up the default
+> devices that were already created? They will actually be cleaned up by
+> binderfs_evict_inode() during the super block's cleanup since the
+> mount operation will fail due to an error here.
 
-Should we also convert __flush_dcache_icache() which does exactly the 
-same but on a full page ? We could most likely use the same code, ie 
-call flush_icache_range() from __flush_dcache_icache() ?
+Yeah.  I meant the binderfs_binder_device_create() from previous
+iterations through this loop.
 
-> 
-> This was done as we discovered a long-standing bug where the
-> length of the range was truncated due to using a 32 bit shift
-> instead of a 64 bit one.
-> 
-> By converting this function to C, it becomes easier to maintain.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
->   arch/powerpc/include/asm/cache.h      | 35 +++++++++++++--
->   arch/powerpc/include/asm/cacheflush.h | 63 +++++++++++++++++++++++----
->   arch/powerpc/kernel/misc_64.S         | 55 -----------------------
+Good to know that it's handled.  Thanks for taking the time to look at
+this.
 
-There is also a flush_icache_range() in arch/powerpc/kernel/misc_32.S, 
-it must be converted as well.
+regards,
+dan carpenter
 
->   3 files changed, 85 insertions(+), 68 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/cache.h b/arch/powerpc/include/asm/cache.h
-> index b3388d95f451..d3d7077b75e2 100644
-> --- a/arch/powerpc/include/asm/cache.h
-> +++ b/arch/powerpc/include/asm/cache.h
-> @@ -55,25 +55,46 @@ struct ppc64_caches {
->   
->   extern struct ppc64_caches ppc64_caches;
->   
-> -static inline u32 l1_cache_shift(void)
-> +static inline u32 l1_dcache_shift(void)
->   {
->   	return ppc64_caches.l1d.log_block_size;
->   }
->   
-> -static inline u32 l1_cache_bytes(void)
-> +static inline u32 l1_dcache_bytes(void)
->   {
->   	return ppc64_caches.l1d.block_size;
->   }
-> +
-> +static inline u32 l1_icache_shift(void)
-> +{
-> +	return ppc64_caches.l1i.log_block_size;
-> +}
-> +
-> +static inline u32 l1_icache_bytes(void)
-> +{
-> +	return ppc64_caches.l1i.block_size;
-> +}
->   #else
-> -static inline u32 l1_cache_shift(void)
-> +static inline u32 l1_dcache_shift(void)
->   {
->   	return L1_CACHE_SHIFT;
->   }
->   
-> -static inline u32 l1_cache_bytes(void)
-> +static inline u32 l1_dcache_bytes(void)
->   {
->   	return L1_CACHE_BYTES;
->   }
-> +
-> +static inline u32 l1_icache_shift(void)
-> +{
-> +	return L1_CACHE_SHIFT;
-> +}
-> +
-> +static inline u32 l1_icache_bytes(void)
-> +{
-> +	return L1_CACHE_BYTES;
-> +}
-> +
-
-Could the above adds/changes be a separate patch ?
-
->   #endif
->   #endif /* ! __ASSEMBLY__ */
->   
-> @@ -124,6 +145,12 @@ static inline void dcbst(void *addr)
->   {
->   	__asm__ __volatile__ ("dcbst %y0" : : "Z"(*(u8 *)addr) : "memory");
->   }
-> +
-> +static inline void icbi(void *addr)
-> +{
-> +	__asm__ __volatile__ ("icbi %y0" : : "Z"(*(u8 *)addr) : "memory");
-> +}
-> +
-
-Commit 6c5875843b87c3ad ("") is likely to be reverted in the near future 
-due to a bug in CLANG and because it has no real benefit in our use cases.
-
-So maybe you should consider using the previous format when adding icbi() ?
-
-Should you also add iccci() in order to handle the 4xx part from misc_32 ?
-
->   #endif /* !__ASSEMBLY__ */
->   #endif /* __KERNEL__ */
->   #endif /* _ASM_POWERPC_CACHE_H */
-> diff --git a/arch/powerpc/include/asm/cacheflush.h b/arch/powerpc/include/asm/cacheflush.h
-> index eef388f2659f..f68e75a6dc4b 100644
-> --- a/arch/powerpc/include/asm/cacheflush.h
-> +++ b/arch/powerpc/include/asm/cacheflush.h
-> @@ -42,7 +42,6 @@ extern void flush_dcache_page(struct page *page);
->   #define flush_dcache_mmap_lock(mapping)		do { } while (0)
->   #define flush_dcache_mmap_unlock(mapping)	do { } while (0)
->   
-> -extern void flush_icache_range(unsigned long, unsigned long);
->   extern void flush_icache_user_range(struct vm_area_struct *vma,
->   				    struct page *page, unsigned long addr,
->   				    int len);
-> @@ -57,14 +56,17 @@ static inline void __flush_dcache_icache_phys(unsigned long physaddr)
->   }
->   #endif
->   
-> -/*
-> - * Write any modified data cache blocks out to memory and invalidate them.
-> +/**
-> + * flush_dcache_range: Write any modified data cache blocks out to memory and invalidate them.
->    * Does not invalidate the corresponding instruction cache blocks.
-> + *
-> + * @start: the start address
-> + * @stop: the stop address (exclusive)
->    */
->   static inline void flush_dcache_range(unsigned long start, unsigned long stop)
->   {
-> -	unsigned long shift = l1_cache_shift();
-> -	unsigned long bytes = l1_cache_bytes();
-> +	unsigned long shift = l1_dcache_shift();
-> +	unsigned long bytes = l1_dcache_bytes();
->   	void *addr = (void *)(start & ~(bytes - 1));
->   	unsigned long size = stop - (unsigned long)addr + (bytes - 1);
->   	unsigned long i;
-> @@ -82,6 +84,49 @@ static inline void flush_dcache_range(unsigned long start, unsigned long stop)
->   		isync();
->   }
->   
-> +/**
-> + * flush_icache_range: Write any modified data cache blocks out to memory
-> + * and invalidate the corresponding blocks in the instruction cache
-> + *
-> + * Generic code will call this after writing memory, before executing from it.
-> + *
-> + * @start: the start address
-> + * @stop: the stop address (exclusive)
-> + */
-> +static inline void flush_icache_range(unsigned long start, unsigned long stop)
-
-Wondering if it doesn't start to be a bit big for an inline function. 
-Not sure thought. Maybe the addr and size calculation should remain 
-inlined in order to benefit from constant inputs while the two loops and 
-sync stuff around them could be a dedicated function ?
-
-> +{
-> +	unsigned long shift = l1_dcache_shift();
-> +	unsigned long bytes = l1_dcache_bytes();
-> +	void *addr = (void *)(start & ~(bytes - 1));
-> +	unsigned long size = stop - (unsigned long)addr + (bytes - 1);
-> +	unsigned long i;
-> +
-> +	if (cpu_has_feature(CPU_FTR_COHERENT_ICACHE)) {
-> +		mb(); /* sync */
-> +		icbi((void *)start);
-> +		mb(); /* sync */
-> +		isync();
-> +		return;
-> +	}
-> +
-> +	/* Flush the data cache to memory */
-> +	for (i = 0; i < size >> shift; i++, addr += bytes)
-> +		dcbst(addr);
-> +
-> +	mb();	/* sync */
-> +
-> +	shift = l1_icache_shift();
-> +	bytes = l1_icache_bytes();
-> +	addr = (void *)(start & ~(bytes - 1));
-> +	size = stop - (unsigned long)addr + (bytes - 1);
-> +
-> +	/* Now invalidate the instruction cache */
-> +	for (i = 0; i < size >> shift; i++, addr += bytes)
-> +		icbi(addr);
-> +
-> +	isync();
-> +}
-
-Don't forget to also take misc_32 into account.
-
-Christophe
-
-> +
->   /*
->    * Write any modified data cache blocks out to memory.
->    * Does not invalidate the corresponding cache lines (especially for
-> @@ -89,8 +134,8 @@ static inline void flush_dcache_range(unsigned long start, unsigned long stop)
->    */
->   static inline void clean_dcache_range(unsigned long start, unsigned long stop)
->   {
-> -	unsigned long shift = l1_cache_shift();
-> -	unsigned long bytes = l1_cache_bytes();
-> +	unsigned long shift = l1_dcache_shift();
-> +	unsigned long bytes = l1_dcache_bytes();
->   	void *addr = (void *)(start & ~(bytes - 1));
->   	unsigned long size = stop - (unsigned long)addr + (bytes - 1);
->   	unsigned long i;
-> @@ -108,8 +153,8 @@ static inline void clean_dcache_range(unsigned long start, unsigned long stop)
->   static inline void invalidate_dcache_range(unsigned long start,
->   					   unsigned long stop)
->   {
-> -	unsigned long shift = l1_cache_shift();
-> -	unsigned long bytes = l1_cache_bytes();
-> +	unsigned long shift = l1_dcache_shift();
-> +	unsigned long bytes = l1_dcache_bytes();
->   	void *addr = (void *)(start & ~(bytes - 1));
->   	unsigned long size = stop - (unsigned long)addr + (bytes - 1);
->   	unsigned long i;
-> diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
-> index 9bc0aa9aeb65..999828e86bba 100644
-> --- a/arch/powerpc/kernel/misc_64.S
-> +++ b/arch/powerpc/kernel/misc_64.S
-> @@ -54,61 +54,6 @@ PPC64_CACHES:
->   	.tc		ppc64_caches[TC],ppc64_caches
->   	.section	".text"
->   
-> -/*
-> - * Write any modified data cache blocks out to memory
-> - * and invalidate the corresponding instruction cache blocks.
-> - *
-> - * flush_icache_range(unsigned long start, unsigned long stop)
-> - *
-> - *   flush all bytes from start through stop-1 inclusive
-> - */
-> -
-> -_GLOBAL_TOC(flush_icache_range)
-> -BEGIN_FTR_SECTION
-> -	PURGE_PREFETCHED_INS
-> -	blr
-> -END_FTR_SECTION_IFSET(CPU_FTR_COHERENT_ICACHE)
-> -/*
-> - * Flush the data cache to memory
-> - *
-> - * Different systems have different cache line sizes
-> - * and in some cases i-cache and d-cache line sizes differ from
-> - * each other.
-> - */
-> - 	ld	r10,PPC64_CACHES@toc(r2)
-> -	lwz	r7,DCACHEL1BLOCKSIZE(r10)/* Get cache block size */
-> -	addi	r5,r7,-1
-> -	andc	r6,r3,r5		/* round low to line bdy */
-> -	subf	r8,r6,r4		/* compute length */
-> -	add	r8,r8,r5		/* ensure we get enough */
-> -	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of cache block size */
-> -	srd.	r8,r8,r9		/* compute line count */
-> -	beqlr				/* nothing to do? */
-> -	mtctr	r8
-> -1:	dcbst	0,r6
-> -	add	r6,r6,r7
-> -	bdnz	1b
-> -	sync
-> -
-> -/* Now invalidate the instruction cache */
-> -	
-> -	lwz	r7,ICACHEL1BLOCKSIZE(r10)	/* Get Icache block size */
-> -	addi	r5,r7,-1
-> -	andc	r6,r3,r5		/* round low to line bdy */
-> -	subf	r8,r6,r4		/* compute length */
-> -	add	r8,r8,r5
-> -	lwz	r9,ICACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of Icache block size */
-> -	srd.	r8,r8,r9		/* compute line count */
-> -	beqlr				/* nothing to do? */
-> -	mtctr	r8
-> -2:	icbi	0,r6
-> -	add	r6,r6,r7
-> -	bdnz	2b
-> -	isync
-> -	blr
-> -_ASM_NOKPROBE_SYMBOL(flush_icache_range)
-> -EXPORT_SYMBOL(flush_icache_range)
-> -
->   /*
->    * Flush a particular page from the data cache to RAM.
->    * Note: this is necessary because the instruction cache does *not*
-> 
