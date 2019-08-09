@@ -2,110 +2,99 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F71C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72180C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E42F6214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DAFC214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:29:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kdszIFnC"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JPo0s4zQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436669AbfHIR3N (ORCPT
+        id S2436701AbfHIR3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 13:29:13 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44525 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436582AbfHIR3M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 13:29:12 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i18so46185549pgl.11;
-        Fri, 09 Aug 2019 10:29:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FUrszxfu12TYz4RSVAJdRYMRyY1/E4H2D0WlNLvKSkU=;
-        b=kdszIFnCo6sZZCcRhyiqMMSZhlU8v9rxWv4gClrYhWcMSOFFyiNSwbUzdaAjCk0RGj
-         jpZpkE50HqF55Vq3vd/tqgnYNVGXou0jM7Vw3SyRlfYcGheZBxa6TJuvs9P+k2xOzRxf
-         ohVGmJ5t0+s6BU+tYqq/KEXmo9Tj3otw8BO8XS0cRmrarLZyZgTjQEcqOJMAw3z4FZiu
-         mn6glH3aeIXR3mpcuOPegWlySanHChSNkE4WM/wJWZ6k0Hwins7b/RjM9rQWkCoZeL8u
-         P0raqZHkk8UlURJTbOPbIzpoB2KMoTyigkkjH6MeGiz0NeoiTpWiCPYe3yK5BQgX41Dh
-         g+0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FUrszxfu12TYz4RSVAJdRYMRyY1/E4H2D0WlNLvKSkU=;
-        b=fvhxnTgpZ4QuYqLmkbMTGKRmzrvO1u1OowfZUepou7ZKVMqpqmqHV4mdPfp5fHEI71
-         ePxXG8FdIGuRhfzZWTogTNWcbEg0E25ZtTf38IkLwUnh9c2u/XFQZ2f2PPdY7N+il2pg
-         wTfC7zR7f+1vcdnmxNKUPAQZcudNQMl8/dinup7N4CxB3qcUOpMl3U0wBVR1aWhqLjQ/
-         4RE8Xulm0RRPsmxQqAiKSbLWt7hc6099YoiVyuC3MQxVteQqeX3sbsdL7F701KwhB/tK
-         bHds+yS65yTkMX6O1ZFbQPLNT+AU1I4kjFTarGoVxGSvb6wG3kz4t1sZMEIx5GSygnJM
-         wM1Q==
-X-Gm-Message-State: APjAAAW2rWT6YEdXjd/P8HAyX0q5o/sRU8qCf9i+Q3yiaRspkgUN/RCZ
-        tPgrJkXmQZhJt4gjsLB8u+QyH84S55Dhv94C4iw=
-X-Google-Smtp-Source: APXvYqxBYUW+814s+7lrviU0TmD+7hu5PuAQYHJhVfj/j8HK6bW+t1XT1YwWM5b+aguA27df/H70hLt2izbcuuCAT+0=
-X-Received: by 2002:a17:90a:b883:: with SMTP id o3mr10416653pjr.50.1565371751473;
- Fri, 09 Aug 2019 10:29:11 -0700 (PDT)
+        Fri, 9 Aug 2019 13:29:21 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:55038 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436582AbfHIR3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 13:29:20 -0400
+Received: from zn.tnic (p200300EC2F0BAF00B1329C581B3162A4.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:af00:b132:9c58:1b31:62a4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 47D3E1EC0B07;
+        Fri,  9 Aug 2019 19:29:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565371759;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=lPOAxolSCgoaWZk1kS26/9P2YdNN990Xnj6QZv/OKPs=;
+        b=JPo0s4zQc0LOr/iSubZgHo+6UW032/vJHsP9WcS+UDI/EnyKB7AGlEFb7DrhdJD4cli6iC
+        sZqU61sBSSuNLzfnRg5ex3ZGW7tmyKd8j9lDzuY+hgp7tyGkJDC9I1HDWP6QtPzLrAe7a5
+        9gnFutMjJSQIZda43F1Zd+d+GgVlqyQ=
+Date:   Fri, 9 Aug 2019 19:30:03 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Thomas Garnier <thgarnie@chromium.org>
+Cc:     kernel-hardening@lists.openwall.com, kristen@linux.intel.com,
+        keescook@chromium.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Juergen Gross <jgross@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Maran Wilson <maran.wilson@oracle.com>,
+        Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 08/11] x86/boot/64: Adapt assembly for PIE support
+Message-ID: <20190809173003.GG2152@zn.tnic>
+References: <20190730191303.206365-1-thgarnie@chromium.org>
+ <20190730191303.206365-9-thgarnie@chromium.org>
 MIME-Version: 1.0
-References: <000000000000a244b3058f9dc7d6@google.com> <4616850c-bf9e-d32a-3cfb-dbbaec5e17f2@I-love.SAKURA.ne.jp>
- <CACT4Y+Y7d29kA1fpS13QvSopknuChPANRc9evxeWiJd-zkyNug@mail.gmail.com>
-In-Reply-To: <CACT4Y+Y7d29kA1fpS13QvSopknuChPANRc9evxeWiJd-zkyNug@mail.gmail.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Fri, 9 Aug 2019 10:29:00 -0700
-Message-ID: <CAM_iQpVUZGrz_w2Mv1YzCZaOpi9WdhJAZm_=ZkWRame=6odoog@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in tomoyo_socket_sendmsg_permission
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzbot <syzbot+b91501546ab4037f685f@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-hams <linux-hams@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190730191303.206365-9-thgarnie@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 1:53 AM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Fri, Aug 9, 2019 at 12:08 AM Tetsuo Handa
-> <penguin-kernel@i-love.sakura.ne.jp> wrote:
-> >
-> > On 2019/08/09 1:45, syzbot wrote:
-> > > Hello,
-> > >
-> > > syzbot found the following crash on:
-> > >
-> > > HEAD commit:    107e47cc vrf: make sure skb->data contains ip header to ma..
-> > > git tree:       net
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=139506d8600000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=4dba67bf8b8c9ad7
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=b91501546ab4037f685f
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > This is not TOMOYO's bug. LSM modules expect that "struct sock" does not go away.
-> >
-> > Also, another use-after-free (presumably on the same "struct sock") was concurrently
-> > inflight at nr_insert_socket() in net/netrom/af_netrom.c . Thus, suspecting netrom's bug.
->
-> There is a number of UAFs/refcount bugs in nr sockets lately. Most
-> likely it's the same issue them. Most of them were bisected to:
->
-> commit c8c8218ec5af5d2598381883acbefbf604e56b5e
-> Date: Thu Jun 27 21:30:58 2019 +0000
->   netrom: fix a memory leak in nr_rx_frame()
+chOn Tue, Jul 30, 2019 at 12:12:52PM -0700, Thomas Garnier wrote:
+> Change the assembly code to use only relative references of symbols for the
+> kernel to be PIE compatible.
+> 
+> Early at boot, the kernel is mapped at a temporary address while preparing
+> the page table. To know the changes needed for the page table with KASLR,
 
-The UAF introduced by this commit has been fixed. There is
-another UAF in netrom which exists long before the above commit,
-it is not fixed. The last time I looked at it, it seems related to the
-state machine used by netrom sockets, so it is not easy.
+These manipulations need to be done regardless of whether KASLR is
+enabled or not. You're basically accomodating them to PIE.
 
-Thanks,
+> the boot code calculate the difference between the expected address of the
+
+calculates
+
+> kernel and the one chosen by KASLR. It does not work with PIE because all
+> symbols in code are relatives. Instead of getting the future relocated
+> virtual address, you will get the current temporary mapping.
+
+Please avoid "you", "we" etc personal pronouns in commit messages.
+
+> Instructions were changed to have absolute 64-bit references.
+
+From Documentation/process/submitting-patches.rst:
+
+ "Describe your changes in imperative mood, e.g. "make xyzzy do frotz"
+  instead of "[This patch] makes xyzzy do frotz" or "[I] changed xyzzy
+  to do frotz", as if you are giving orders to the codebase to change
+  its behaviour."
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
