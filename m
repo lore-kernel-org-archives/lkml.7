@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EA0C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 455DDC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3964D2171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121C921874
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358358;
-	bh=gi3Zm5emnuS+/DM/ZYSaemXFMiaIkmW1AufkD4DTDV0=;
+	s=default; t=1565358361;
+	bh=9I+jFTe4CVg4SBn5kIG4JbU+BfzvJ6nCCHzgfhtmeII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZUn5La4sMpT7H5T2YwYzDSGGXa5Yd2MYtNXzOq8Rvi0A9rKj39L4ENly0keBxtfwR
-	 csDivq0naKWQn3PRsYTIOM4FbYtVW1efPTlitwaqgwOXIt8t6kbEnw6CF7FfqzY5C1
-	 CbMQu5Vt1iDiA4gsTW4wCw8uAAuKHm0frTumnPFc=
+	b=WE2NEi15N2ZCF+54iz4XnxrzLj2y/d5sncIwpvR/77zyi/T58O92//u9RcPIWmXhJ
+	 ZnNtixVcvpUAO3qaf5WKWSc3FWDrf4C2ZnRmjV2npIPRno+W8VbSiaVtXZctr1i/ad
+	 p3fxGfcy4XtzAjXzMTORfjKndsEtNJDCqA4U9Xwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406801AbfHINp5 (ORCPT
+        id S2406824AbfHINqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:45:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35370 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:46:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406779AbfHINpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:45:54 -0400
+        id S2406518AbfHINp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:45:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD40C20B7C;
-        Fri,  9 Aug 2019 13:45:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EACB820B7C;
+        Fri,  9 Aug 2019 13:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358353;
-        bh=gi3Zm5emnuS+/DM/ZYSaemXFMiaIkmW1AufkD4DTDV0=;
+        s=default; t=1565358358;
+        bh=9I+jFTe4CVg4SBn5kIG4JbU+BfzvJ6nCCHzgfhtmeII=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JzoIeixPJS3JSLfBFhWv142PMCIQlDfIAIczrL1bx8AS7LvBA+XkUBkSKqVDda3P0
-         JWPXPWCtGa3pFoDyuwpV4kSLUWRqwp/kA1mS0QBldWWqched1gBfauvuw0y7lkrLXm
-         mfXsGQdV1ZXHaCMSgMR2gk0OTOoTlRxcfrJ2uzFQ=
+        b=MWZDm30JAicLH6IV/C8MRnt0u05ubfre9Xj8yX8NFrvayxVsN1NFqFUToJIlHYWE1
+         f8Lud7JuI/i4VAO4PLYdGzfoO2ZOp4tHUEcb0GrSH0+CCLxejNO36dPw8RZnoy9B2o
+         wLlK55oX/FgEbWoc0QP8tg+DGM9cLbGyF/B3MKao=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 13/21] compat_ioctl: pppoe: fix PPPOEIOCSFWD handling
-Date:   Fri,  9 Aug 2019 15:45:17 +0200
-Message-Id: <20190809134242.122468009@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.4 15/21] spi: bcm2835: Fix 3-wire mode if DMA is enabled
+Date:   Fri,  9 Aug 2019 15:45:19 +0200
+Message-Id: <20190809134242.195463204@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190809134241.565496442@linuxfoundation.org>
 References: <20190809134241.565496442@linuxfoundation.org>
@@ -60,132 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Lukas Wunner <lukas@wunner.de>
 
-[ Upstream commit 055d88242a6046a1ceac3167290f054c72571cd9 ]
+commit 8d8bef50365847134b51c1ec46786bc2873e4e47 upstream.
 
-Support for handling the PPPOEIOCSFWD ioctl in compat mode was added in
-linux-2.5.69 along with hundreds of other commands, but was always broken
-sincen only the structure is compatible, but the command number is not,
-due to the size being sizeof(size_t), or at first sizeof(sizeof((struct
-sockaddr_pppox)), which is different on 64-bit architectures.
+Commit 6935224da248 ("spi: bcm2835: enable support of 3-wire mode")
+added 3-wire support to the BCM2835 SPI driver by setting the REN bit
+(Read Enable) in the CS register when receiving data.  The REN bit puts
+the transmitter in high-impedance state.  The driver recognizes that
+data is to be received by checking whether the rx_buf of a transfer is
+non-NULL.
 
-Guillaume Nault adds:
+Commit 3ecd37edaa2a ("spi: bcm2835: enable dma modes for transfers
+meeting certain conditions") subsequently broke 3-wire support because
+it set the SPI_MASTER_MUST_RX flag which causes spi_map_msg() to replace
+rx_buf with a dummy buffer if it is NULL.  As a result, rx_buf is
+*always* non-NULL if DMA is enabled.
 
-  And the implementation was broken until 2016 (see 29e73269aa4d ("pppoe:
-  fix reference counting in PPPoE proxy")), and nobody ever noticed. I
-  should probably have removed this ioctl entirely instead of fixing it.
-  Clearly, it has never been used.
+Reinstate 3-wire support by not only checking whether rx_buf is non-NULL,
+but also checking that it is not the dummy buffer.
 
-Fix it by adding a compat_ioctl handler for all pppoe variants that
-translates the command number and then calls the regular ioctl function.
-
-All other ioctl commands handled by pppoe are compatible between 32-bit
-and 64-bit, and require compat_ptr() conversion.
-
-This should apply to all stable kernels.
-
-Acked-by: Guillaume Nault <g.nault@alphalink.fr>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 3ecd37edaa2a ("spi: bcm2835: enable dma modes for transfers meeting certain conditions")
+Reported-by: Nuno Sá <nuno.sa@analog.com>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v4.2+
+Cc: Martin Sperl <kernel@martin.sperl.org>
+Acked-by: Stefan Wahren <wahrenst@gmx.net>
+Link: https://lore.kernel.org/r/328318841455e505370ef8ecad97b646c033dc8a.1562148527.git.lukas@wunner.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ppp/pppoe.c  |    3 +++
- drivers/net/ppp/pppox.c  |   13 +++++++++++++
- drivers/net/ppp/pptp.c   |    3 +++
- fs/compat_ioctl.c        |    3 ---
- include/linux/if_pppox.h |    3 +++
- net/l2tp/l2tp_ppp.c      |    3 +++
- 6 files changed, 25 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ppp/pppoe.c
-+++ b/drivers/net/ppp/pppoe.c
-@@ -1152,6 +1152,9 @@ static const struct proto_ops pppoe_ops
- 	.recvmsg	= pppoe_recvmsg,
- 	.mmap		= sock_no_mmap,
- 	.ioctl		= pppox_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl	= pppox_compat_ioctl,
-+#endif
- };
+---
+ drivers/spi/spi-bcm2835.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/drivers/spi/spi-bcm2835.c
++++ b/drivers/spi/spi-bcm2835.c
+@@ -554,7 +554,8 @@ static int bcm2835_spi_transfer_one(stru
+ 	bcm2835_wr(bs, BCM2835_SPI_CLK, cdiv);
  
- static const struct pppox_proto pppoe_proto = {
---- a/drivers/net/ppp/pppox.c
-+++ b/drivers/net/ppp/pppox.c
-@@ -22,6 +22,7 @@
- #include <linux/string.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
-+#include <linux/compat.h>
- #include <linux/errno.h>
- #include <linux/netdevice.h>
- #include <linux/net.h>
-@@ -103,6 +104,18 @@ int pppox_ioctl(struct socket *sock, uns
- 
- EXPORT_SYMBOL(pppox_ioctl);
- 
-+#ifdef CONFIG_COMPAT
-+int pppox_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
-+{
-+	if (cmd == PPPOEIOCSFWD32)
-+		cmd = PPPOEIOCSFWD;
-+
-+	return pppox_ioctl(sock, cmd, (unsigned long)compat_ptr(arg));
-+}
-+
-+EXPORT_SYMBOL(pppox_compat_ioctl);
-+#endif
-+
- static int pppox_create(struct net *net, struct socket *sock, int protocol,
- 			int kern)
- {
---- a/drivers/net/ppp/pptp.c
-+++ b/drivers/net/ppp/pptp.c
-@@ -674,6 +674,9 @@ static const struct proto_ops pptp_ops =
- 	.recvmsg    = sock_no_recvmsg,
- 	.mmap       = sock_no_mmap,
- 	.ioctl      = pppox_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl = pppox_compat_ioctl,
-+#endif
- };
- 
- static const struct pppox_proto pppox_pptp_proto = {
---- a/fs/compat_ioctl.c
-+++ b/fs/compat_ioctl.c
-@@ -1016,9 +1016,6 @@ COMPATIBLE_IOCTL(PPPIOCDISCONN)
- COMPATIBLE_IOCTL(PPPIOCATTCHAN)
- COMPATIBLE_IOCTL(PPPIOCGCHAN)
- COMPATIBLE_IOCTL(PPPIOCGL2TPSTATS)
--/* PPPOX */
--COMPATIBLE_IOCTL(PPPOEIOCSFWD)
--COMPATIBLE_IOCTL(PPPOEIOCDFWD)
- /* ppdev */
- COMPATIBLE_IOCTL(PPSETMODE)
- COMPATIBLE_IOCTL(PPRSTATUS)
---- a/include/linux/if_pppox.h
-+++ b/include/linux/if_pppox.h
-@@ -84,6 +84,9 @@ extern int register_pppox_proto(int prot
- extern void unregister_pppox_proto(int proto_num);
- extern void pppox_unbind_sock(struct sock *sk);/* delete ppp-channel binding */
- extern int pppox_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg);
-+extern int pppox_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg);
-+
-+#define PPPOEIOCSFWD32    _IOW(0xB1 ,0, compat_size_t)
- 
- /* PPPoX socket states */
- enum {
---- a/net/l2tp/l2tp_ppp.c
-+++ b/net/l2tp/l2tp_ppp.c
-@@ -1805,6 +1805,9 @@ static const struct proto_ops pppol2tp_o
- 	.recvmsg	= pppol2tp_recvmsg,
- 	.mmap		= sock_no_mmap,
- 	.ioctl		= pppox_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl = pppox_compat_ioctl,
-+#endif
- };
- 
- static const struct pppox_proto pppol2tp_proto = {
+ 	/* handle all the 3-wire mode */
+-	if ((spi->mode & SPI_3WIRE) && (tfr->rx_buf))
++	if (spi->mode & SPI_3WIRE && tfr->rx_buf &&
++	    tfr->rx_buf != master->dummy_rx)
+ 		cs |= BCM2835_SPI_CS_REN;
+ 	else
+ 		cs &= ~BCM2835_SPI_CS_REN;
 
 
