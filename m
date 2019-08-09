@@ -2,114 +2,81 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF66C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 791C4C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80B162084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:39:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H0Xa35QG"
+	by mail.kernel.org (Postfix) with ESMTP id 4576421743
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406622AbfHILjh (ORCPT
+        id S2406630AbfHILkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 07:39:37 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43345 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbfHILjg (ORCPT
+        Fri, 9 Aug 2019 07:40:55 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:56339 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405999AbfHILky (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 07:39:36 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y17so67246712ljk.10;
-        Fri, 09 Aug 2019 04:39:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AQJyB8h4B7rOWZbk5WXfwukwf2zyCOzcC9K/huoManI=;
-        b=H0Xa35QGHgBqAsebCDW9Dn/N5OmODk95lSH57TnY2TIdEZ6gE2Drtibg07AxHtpsHP
-         RxdKMCD0dtERN5sFIBQRIzyZg3Ki0c2joQ7IdkgpH2IBBykAANExfqkZIClV8rzCG0JR
-         M6Hgzgh1pGOXCcDTySVShrotrCoM9Xk5z75EBeFIwYqpVDw18ZLnLZ0eBpC8DExWsX2E
-         JFwiyd2R6Xy5Pjn1h+BURTU86IqXxmYbcn1TbV4uI77VngstOxlZCdMaYWigNfUUsckf
-         30ru51gn541989iet0WsUqIM8FFdOXVBEQ6KDASRmvNS9g5y1jCqAopYdJX3g5HmiLWJ
-         ypAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AQJyB8h4B7rOWZbk5WXfwukwf2zyCOzcC9K/huoManI=;
-        b=glu8pKjIHHXyO1mZV4y21JEiRXP8cb6A2IrlbLXDcE5BH7wxg/Lze5zN6BNAI/nHkn
-         9GK6oXgsyTjHjQJFD8rO3Bu2qdalVq9ODqA8NtZtFuiEhXN634YtvsTQEzCuhKUHh9JQ
-         NzrKTWIYDHr6vidFItOQ2KFnb1P4Vb3N+icTZAkgTw5jF7R2BJ6v9am4kyHdBRP312j0
-         iWKyq4s3/nHePhVZeikOKRluipAij12HUpnet46bR59lCA9kFbD4sCurpbn1wE3IO63p
-         rX2nFTG4S3JuNkB3QaI8pNFiR5iG1DG6K7BHKEajLGGWcmzZ/vnMzC/H2nNfkxn7b+D4
-         8eVA==
-X-Gm-Message-State: APjAAAU2v6gZyzrvZydyfpXYW7V5y3osCyilV22H5+6aAhHMmm3LaLDh
-        //e4A0b7CGHFsa3zksODbHPAJGJH
-X-Google-Smtp-Source: APXvYqysTFs3vR72El2ESsAVoDjXGL13f7YH0IhJmCSoNL/XhcpTMUDHfPKD3pLu3UIlhqnr2Cg68A==
-X-Received: by 2002:a2e:93c8:: with SMTP id p8mr10954071ljh.6.1565350773511;
-        Fri, 09 Aug 2019 04:39:33 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.218])
-        by smtp.googlemail.com with ESMTPSA id 141sm450768ljf.32.2019.08.09.04.39.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 04:39:32 -0700 (PDT)
-Subject: Re: [PATCH v8 02/21] pinctrl: tegra: Add write barrier after all
- pinctrl register writes
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-3-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c71faafa-51db-f11a-1e56-c4b79a7468d1@gmail.com>
-Date:   Fri, 9 Aug 2019 14:39:31 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 9 Aug 2019 07:40:54 -0400
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 7E55410000D;
+        Fri,  9 Aug 2019 11:40:51 +0000 (UTC)
+Date:   Fri, 9 Aug 2019 13:40:50 +0200
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>, davem@davemloft.net,
+        sd@queasysnail.net, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+        alexandre.belloni@bootlin.com, camelia.groza@nxp.com,
+        Simon.Edelhaus@aquantia.com
+Subject: Re: [PATCH net-next v2 0/9] net: macsec: initial support for
+ hardware offloading
+Message-ID: <20190809114050.GA5285@kwain>
+References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
+ <20190809112344.5anl7wq5df5ctj26@lx-anielsen.microsemi.net>
 MIME-Version: 1.0
-In-Reply-To: <1565308020-31952-3-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190809112344.5anl7wq5df5ctj26@lx-anielsen.microsemi.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-09.08.2019 2:46, Sowjanya Komatineni пишет:
-> This patch adds write barrier after all pinctrl register writes
-> during resume to make sure all pinctrl changes are complete.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/pinctrl/tegra/pinctrl-tegra.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-> index 982ee634b3b1..f49fe29fb6df 100644
-> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-> @@ -677,6 +677,8 @@ static int tegra_pinctrl_resume(struct device *dev)
->  			writel_relaxed(*backup_regs++, regs++);
->  	}
->  
-> +	/* make sure all the pinmux register writes are complete */
-> +	wmb();
->  	return 0;
->  }
->  
-> 
+Hi Allan,
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+On Fri, Aug 09, 2019 at 01:23:47PM +0200, Allan W. Nielsen wrote:
+> 
+> I have done a first read through of your patch and it looks good to me.
+> 
+> The only thing which confused me is all the references to Ocelot.
+> 
+> As far as I can see, this is a driver for the vsc8584 PHY in the Viper family.
+> The Ocelot confusion is properly because you are developing it on an Ocelot
+> board. But this is actually a modded board, the official PCB 120 and PCB123 has
+> a different pin compatible PHY without MACsec.
+> 
+> FYI: In the Viper family we have VSC8575, VSC8582, VSC8584, VSC8562 and VSC8564.
+> 
+> VSC8575, does not have MACsec, but all other does, and they are binary
+> compatible (it is the same die instantiated 2 or 4 times, with or without
+> MACsec/SyncE).
+> 
+> I beleive it is only the commit comments which needs to be addressed.
+
+That's right, I mixed up Ocelot and the actual PHY names. I'll look for
+Ocelot references in the patches and I'll fix it in v3.
+
+Thanks for spotting this,
+Antoine
+
+-- 
+Antoine T�nart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
