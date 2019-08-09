@@ -2,130 +2,99 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A4FC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1806FC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFC522171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:10:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digidescorp.com header.i=@digidescorp.com header.b="XfAUru9P"
+	by mail.kernel.org (Postfix) with ESMTP id E72262171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:12:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407016AbfHIOK0 (ORCPT
+        id S2406822AbfHIOMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 10:10:26 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46394 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406676AbfHIOK0 (ORCPT
+        Fri, 9 Aug 2019 10:12:07 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:60215 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726157AbfHIOMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 10:10:26 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z17so14593546otk.13
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 07:10:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digidescorp.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=sFzEgBCgJT493SaxnOb117IOl77QcgyD2XDCyFZJhjM=;
-        b=XfAUru9PE7Is30K0L/F7RDQ/2lo9HY1lcGomf3bYb+tYQF1MnoxK0WWcV4qeTJRiHZ
-         YzROcaOQuFgPhPLwGwsmlQrlrubUPvCGkgya2AsvNImaXRjffwE3l9m78Nw+3jObHV6X
-         3komzoYtyhuUH1iWS7BuVndopr+AVKiEZej6o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=sFzEgBCgJT493SaxnOb117IOl77QcgyD2XDCyFZJhjM=;
-        b=nD1oA8HLLVtF+vOIQ9LeyVEETjXeCheoo3UDHSw/qT7qHW74oK2fZiBhAvKDdmj+kS
-         FRLISef5iHAE0aQ7s2TbgsJRdaMliSo5d2jFa1rq1JnUrnbRtYMPhKkbY+soWZKWgD2e
-         BHuF6PE7/lGMupq/6impcWwRomSnxWxtnMCFkPVuHV5yZMIwZcoR2evZ5OufbFdIFyFX
-         zNgAqFwuxqaHMIAC7rWmtrNMiqL6G8AuRvn7k5PTYWwC3STmskarBSMAu0+Xv3TMMQAS
-         0+9fmc1aXHTKLAcnS/oNZ4XocoJGEV3cITNb0L2NGu0pGwf/G+quq9emvHOAaFL3o+kJ
-         Ud/w==
-X-Gm-Message-State: APjAAAWsoIS2Wegs3qkDqwIV3dHkNbmc8Hmvu0B1Mqg2f3SKJzWxkwuS
-        FvIK0gt2nNDro+OtaLYOtZ3qNWLFXAQ=
-X-Google-Smtp-Source: APXvYqwgq5ySQefqy4F02sXLhlwpuB89tEADOxixbbzYOUubknvpumY9VDJXBYwgGALGCSJdhYTNWg==
-X-Received: by 2002:a5d:80cd:: with SMTP id h13mr21732104ior.259.1565359825460;
-        Fri, 09 Aug 2019 07:10:25 -0700 (PDT)
-Received: from [10.10.6.59] ([50.73.98.161])
-        by smtp.googlemail.com with ESMTPSA id y5sm101732845ioc.86.2019.08.09.07.10.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 07:10:25 -0700 (PDT)
-Subject: Re: [PATCH] udf: reduce leakage of blocks related to named streams
-To:     Jan Kara <jack@suse.cz>
-Cc:     Jan Kara <jack@suse.com>, Steve Magnani <steve@digidescorp.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190807133258.12432-1-steve@digidescorp.com>
- <20190809130527.GD17568@quack2.suse.cz>
-From:   Steve Magnani <steve.magnani@digidescorp.com>
-Message-ID: <83cf0e5e-2695-8748-9269-6e4d01114285@digidescorp.com>
-Date:   Fri, 9 Aug 2019 09:10:24 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190809130527.GD17568@quack2.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Fri, 9 Aug 2019 10:12:07 -0400
+X-UUID: 725620696fd34fab965989687eb53529-20190809
+X-UUID: 725620696fd34fab965989687eb53529-20190809
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 735304464; Fri, 09 Aug 2019 22:11:58 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 9 Aug 2019 22:11:58 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 9 Aug 2019 22:11:58 +0800
+Message-ID: <1565359918.12824.20.camel@mtkswgap22>
+Subject: Re: [RFC PATCH v2] mm: slub: print kernel addresses in slub debug
+ messages
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        "Tobin C . Harding" <me@tobin.cc>,
+        Kees Cook <keescook@chromium.org>
+Date:   Fri, 9 Aug 2019 22:11:58 +0800
+In-Reply-To: <20190809024644.GL5482@bombadil.infradead.org>
+References: <20190809010837.24166-1-miles.chen@mediatek.com>
+         <20190809024644.GL5482@bombadil.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+MIME-Version: 1.0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jan -
+On Thu, 2019-08-08 at 19:46 -0700, Matthew Wilcox wrote:
+> On Fri, Aug 09, 2019 at 09:08:37AM +0800, miles.chen@mediatek.com wrote:
+> > Possible approaches are:
+> > 1. stop printing kernel addresses
+> > 2. print with %pK,
+> > 3. print with %px.
+> 
+> No.  The point of obscuring kernel addresses is that if the attacker manages to find a way to get the kernel to spit out some debug messages that we shouldn't
+> leak all this extra information.
 
-Thanks for the feedback.
+got it.
+> 
+> > 4. do nothing
+> 
+> 5. Find something more useful to print.
 
-On 8/9/19 8:05 AM, Jan Kara wrote:
-> On Wed 07-08-19 08:32:58,  Steven J. Magnani  wrote:
->> From: Steve Magnani <steve@digidescorp.com>
->>
->> Windows is capable of creating UDF files having named streams.
->> One example is the "Zone.Identifier" stream attached automatically
->> to files downloaded from a network. See:
->>    https://msdn.microsoft.com/en-us/library/dn392609.aspx
->>
->> Modification of a file having one or more named streams in Linux causes
->> the stream directory to become detached from the file, essentially leaking
->> all blocks pertaining to the file's streams. Worse, an attempt to delete
->> the file causes its directory entry (FID) to be deleted, but because the
->> driver believes that a hard link to the file remains, the Extended File
->> Entry (EFE) and all extents of the file itself remain allocated. Since
->> there is no hard link, after the FID has been deleted all of these blocks
->> are unreachable (leaked).
->>
->> ...
->>
->> For this case, this partial solution reduces the number of blocks leaked
->> during file deletion to just one (the EFE containing the stream data).
->>
->>
-> Thanks for the patch! I was thinking about this and rather than this
-> partial fix, I'd prefer to fail the last unlink of an inode with
-> a named-stream directory with EOPNOTSUPP. Later we can properly handle this
-> and walk the named-stream directory and remove all associated EFEs for the
-> named streams. After all named-stream directories are restricted to not
-> have any subdirectories, hardlinks, or anything similarly fancy so the walk
-> should not be *that* hard to implement.
->
-Maybe not but it's more work than I am able to take on anytime soon.
-Absent a complete solution, how to handle this is a judgement call.
-Since Windows seems to attach a Zone.Identifier stream to _all_ files
-downloaded from a network, and since interchange between Windows and Linux
-via USB Mass Storage is a somewhat common (or at least desirable) use case
-for UDF, this issue seemed fairly serious from a user perspective. Leaking
-all the blocks of a file on delete is pretty bad. Leaking a single block is
-still bad, but much less so. One could argue that prohibiting deletion of
-files with named streams is nearly as bad as leaking all the blocks - in
-both cases, within Linux, none of the file's blocks can be reused.
-That's pretty limiting for users. It's too limiting for my use cases.
+agree
+> 
+> > INFO: Slab 0x(____ptrval____) objects=25 used=10 fp=0x(____ptrval____)
+> 
+> ... you don't have any randomness on your platform?
 
-------------------------------------------------------------------------
-Steven J. Magnani               "I claim this network for MARS!
-www.digidescorp.com              Earthling, return my space modulator!"
+We have randomized base on our platforms.
 
-#include <standard.disclaimer>
+> But if you have randomness, at least some of these "pointers" are valuable
+> because you can compare them against "pointers" printed by other parts
+> of the kernel.
+
+Understood. Keep current %p, do not leak kernel addresses.
+
+I'll collect more cases and see if we really need some extra
+information. (maybe the @offset in current message is enough)
+
+
+thanks for your comments!
+
+
 
