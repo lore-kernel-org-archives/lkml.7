@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B88C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EA0C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6485214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3964D2171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358354;
-	bh=ffO+6krTQU9boY6/1ecq4KfowMD+tJ0GV06nU+/fuJ0=;
+	s=default; t=1565358358;
+	bh=gi3Zm5emnuS+/DM/ZYSaemXFMiaIkmW1AufkD4DTDV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JyVIORe1OnB8bgFWRxxsRhStv5loK/O4lKUFS0lOn22Idi64zdGexUavRbl7Vdldf
-	 1aoX7U0mN+dcv8Z85NDTryeaoXYyCyH/DMJjyO60ziL26GtzC99FYEIqKVuUlXaDuy
-	 GVahHclKoJCxIo1A0tKY+G1npLNT8dCzJUD1hPNQ=
+	b=ZUn5La4sMpT7H5T2YwYzDSGGXa5Yd2MYtNXzOq8Rvi0A9rKj39L4ENly0keBxtfwR
+	 csDivq0naKWQn3PRsYTIOM4FbYtVW1efPTlitwaqgwOXIt8t6kbEnw6CF7FfqzY5C1
+	 CbMQu5Vt1iDiA4gsTW4wCw8uAAuKHm0frTumnPFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406778AbfHINpx (ORCPT
+        id S2406801AbfHINp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:45:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35320 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:45:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbfHINpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:45:51 -0400
+        id S2406779AbfHINpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:45:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44067214C6;
-        Fri,  9 Aug 2019 13:45:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD40C20B7C;
+        Fri,  9 Aug 2019 13:45:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358350;
-        bh=ffO+6krTQU9boY6/1ecq4KfowMD+tJ0GV06nU+/fuJ0=;
+        s=default; t=1565358353;
+        bh=gi3Zm5emnuS+/DM/ZYSaemXFMiaIkmW1AufkD4DTDV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sJL3LzB35llayGqgs6TbUl4pOqsHEkWKHEnrLjv+RZO6xLiWUGbuaUlDQKrnR08HH
-         6VRaGJthofqM0Bi6cYYXgfdeGOgDEpdnOD3fiIsIyii8i3q8rscAQLp+qY7Cx/ZH6z
-         E4rusWNQ301QK0EQF5K2NYaz8w5GU2Qv547bQzu0=
+        b=JzoIeixPJS3JSLfBFhWv142PMCIQlDfIAIczrL1bx8AS7LvBA+XkUBkSKqVDda3P0
+         JWPXPWCtGa3pFoDyuwpV4kSLUWRqwp/kA1mS0QBldWWqched1gBfauvuw0y7lkrLXm
+         mfXsGQdV1ZXHaCMSgMR2gk0OTOoTlRxcfrJ2uzFQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
-        Manish Chopra <manishc@marvell.com>,
+        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
+        Arnd Bergmann <arnd@arndb.de>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 12/21] bnx2x: Disable multi-cos feature.
-Date:   Fri,  9 Aug 2019 15:45:16 +0200
-Message-Id: <20190809134242.085004682@linuxfoundation.org>
+Subject: [PATCH 4.4 13/21] compat_ioctl: pppoe: fix PPPOEIOCSFWD handling
+Date:   Fri,  9 Aug 2019 15:45:17 +0200
+Message-Id: <20190809134242.122468009@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190809134241.565496442@linuxfoundation.org>
 References: <20190809134241.565496442@linuxfoundation.org>
@@ -61,35 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit d1f0b5dce8fda09a7f5f04c1878f181d548e42f5 ]
+[ Upstream commit 055d88242a6046a1ceac3167290f054c72571cd9 ]
 
-Commit 3968d38917eb ("bnx2x: Fix Multi-Cos.") which enabled multi-cos
-feature after prolonged time in driver added some regression causing
-numerous issues (sudden reboots, tx timeout etc.) reported by customers.
-We plan to backout this commit and submit proper fix once we have root
-cause of issues reported with this feature enabled.
+Support for handling the PPPOEIOCSFWD ioctl in compat mode was added in
+linux-2.5.69 along with hundreds of other commands, but was always broken
+sincen only the structure is compatible, but the command number is not,
+due to the size being sizeof(size_t), or at first sizeof(sizeof((struct
+sockaddr_pppox)), which is different on 64-bit architectures.
 
-Fixes: 3968d38917eb ("bnx2x: Fix Multi-Cos.")
-Signed-off-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
-Signed-off-by: Manish Chopra <manishc@marvell.com>
+Guillaume Nault adds:
+
+  And the implementation was broken until 2016 (see 29e73269aa4d ("pppoe:
+  fix reference counting in PPPoE proxy")), and nobody ever noticed. I
+  should probably have removed this ioctl entirely instead of fixing it.
+  Clearly, it has never been used.
+
+Fix it by adding a compat_ioctl handler for all pppoe variants that
+translates the command number and then calls the regular ioctl function.
+
+All other ioctl commands handled by pppoe are compatible between 32-bit
+and 64-bit, and require compat_ptr() conversion.
+
+This should apply to all stable kernels.
+
+Acked-by: Guillaume Nault <g.nault@alphalink.fr>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ppp/pppoe.c  |    3 +++
+ drivers/net/ppp/pppox.c  |   13 +++++++++++++
+ drivers/net/ppp/pptp.c   |    3 +++
+ fs/compat_ioctl.c        |    3 ---
+ include/linux/if_pppox.h |    3 +++
+ net/l2tp/l2tp_ppp.c      |    3 +++
+ 6 files changed, 25 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-@@ -1957,7 +1957,7 @@ u16 bnx2x_select_queue(struct net_device
- 	}
+--- a/drivers/net/ppp/pppoe.c
++++ b/drivers/net/ppp/pppoe.c
+@@ -1152,6 +1152,9 @@ static const struct proto_ops pppoe_ops
+ 	.recvmsg	= pppoe_recvmsg,
+ 	.mmap		= sock_no_mmap,
+ 	.ioctl		= pppox_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl	= pppox_compat_ioctl,
++#endif
+ };
  
- 	/* select a non-FCoE queue */
--	return fallback(dev, skb) % (BNX2X_NUM_ETH_QUEUES(bp) * bp->max_cos);
-+	return fallback(dev, skb) % (BNX2X_NUM_ETH_QUEUES(bp));
- }
+ static const struct pppox_proto pppoe_proto = {
+--- a/drivers/net/ppp/pppox.c
++++ b/drivers/net/ppp/pppox.c
+@@ -22,6 +22,7 @@
+ #include <linux/string.h>
+ #include <linux/module.h>
+ #include <linux/kernel.h>
++#include <linux/compat.h>
+ #include <linux/errno.h>
+ #include <linux/netdevice.h>
+ #include <linux/net.h>
+@@ -103,6 +104,18 @@ int pppox_ioctl(struct socket *sock, uns
  
- void bnx2x_set_num_queues(struct bnx2x *bp)
+ EXPORT_SYMBOL(pppox_ioctl);
+ 
++#ifdef CONFIG_COMPAT
++int pppox_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
++{
++	if (cmd == PPPOEIOCSFWD32)
++		cmd = PPPOEIOCSFWD;
++
++	return pppox_ioctl(sock, cmd, (unsigned long)compat_ptr(arg));
++}
++
++EXPORT_SYMBOL(pppox_compat_ioctl);
++#endif
++
+ static int pppox_create(struct net *net, struct socket *sock, int protocol,
+ 			int kern)
+ {
+--- a/drivers/net/ppp/pptp.c
++++ b/drivers/net/ppp/pptp.c
+@@ -674,6 +674,9 @@ static const struct proto_ops pptp_ops =
+ 	.recvmsg    = sock_no_recvmsg,
+ 	.mmap       = sock_no_mmap,
+ 	.ioctl      = pppox_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl = pppox_compat_ioctl,
++#endif
+ };
+ 
+ static const struct pppox_proto pppox_pptp_proto = {
+--- a/fs/compat_ioctl.c
++++ b/fs/compat_ioctl.c
+@@ -1016,9 +1016,6 @@ COMPATIBLE_IOCTL(PPPIOCDISCONN)
+ COMPATIBLE_IOCTL(PPPIOCATTCHAN)
+ COMPATIBLE_IOCTL(PPPIOCGCHAN)
+ COMPATIBLE_IOCTL(PPPIOCGL2TPSTATS)
+-/* PPPOX */
+-COMPATIBLE_IOCTL(PPPOEIOCSFWD)
+-COMPATIBLE_IOCTL(PPPOEIOCDFWD)
+ /* ppdev */
+ COMPATIBLE_IOCTL(PPSETMODE)
+ COMPATIBLE_IOCTL(PPRSTATUS)
+--- a/include/linux/if_pppox.h
++++ b/include/linux/if_pppox.h
+@@ -84,6 +84,9 @@ extern int register_pppox_proto(int prot
+ extern void unregister_pppox_proto(int proto_num);
+ extern void pppox_unbind_sock(struct sock *sk);/* delete ppp-channel binding */
+ extern int pppox_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg);
++extern int pppox_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg);
++
++#define PPPOEIOCSFWD32    _IOW(0xB1 ,0, compat_size_t)
+ 
+ /* PPPoX socket states */
+ enum {
+--- a/net/l2tp/l2tp_ppp.c
++++ b/net/l2tp/l2tp_ppp.c
+@@ -1805,6 +1805,9 @@ static const struct proto_ops pppol2tp_o
+ 	.recvmsg	= pppol2tp_recvmsg,
+ 	.mmap		= sock_no_mmap,
+ 	.ioctl		= pppox_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl = pppox_compat_ioctl,
++#endif
+ };
+ 
+ static const struct pppox_proto pppol2tp_proto = {
 
 
