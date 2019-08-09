@@ -6,95 +6,170 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78CEC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1157DC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 959932166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0D392166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:40:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437146AbfHISik (ORCPT
+        id S2407508AbfHISkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:38:40 -0400
-Received: from bmailout2.hostsharing.net ([83.223.78.240]:51331 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407437AbfHISik (ORCPT
+        Fri, 9 Aug 2019 14:40:41 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23530 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726255AbfHISkl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:38:40 -0400
-X-Greylist: delayed 586 seconds by postgrey-1.27 at vger.kernel.org; Fri, 09 Aug 2019 14:38:39 EDT
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 76C062800935A;
-        Fri,  9 Aug 2019 20:28:52 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 42430DFE15; Fri,  9 Aug 2019 20:28:52 +0200 (CEST)
-Date:   Fri, 9 Aug 2019 20:28:52 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Subject: Re: [PATCH] PCI: pciehp: Avoid returning prematurely from sysfs
- requests
-Message-ID: <20190809182852.rkkhng7d5m5xf3tp@wunner.de>
-References: <4174210466e27eb7e2243dd1d801d5f75baaffd8.1565345211.git.lukas@wunner.de>
- <f26a6667-5474-895f-f9ba-1f812c44270e@linux.intel.com>
+        Fri, 9 Aug 2019 14:40:41 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x79IR33c140935;
+        Fri, 9 Aug 2019 14:39:58 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u9c4xd7h3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 09 Aug 2019 14:39:58 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x79ITB5W146749;
+        Fri, 9 Aug 2019 14:39:58 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u9c4xd7gd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 09 Aug 2019 14:39:58 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x79IQ7xP012651;
+        Fri, 9 Aug 2019 18:39:56 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma04wdc.us.ibm.com with ESMTP id 2u51w6e1am-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 09 Aug 2019 18:39:56 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x79Idutr42074496
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 9 Aug 2019 18:39:56 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 59E46B2067;
+        Fri,  9 Aug 2019 18:39:56 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2AD96B2064;
+        Fri,  9 Aug 2019 18:39:56 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  9 Aug 2019 18:39:56 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id E665216C9A5F; Fri,  9 Aug 2019 11:39:57 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 11:39:57 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, rostedt@goodmis.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com
+Subject: Re: [PATCH RFC tip/core/rcu 14/14] rcu/nohz: Make multi_cpu_stop()
+ enable tick on all online CPUs
+Message-ID: <20190809183957.GH28441@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190805080531.GH2349@hirez.programming.kicks-ass.net>
+ <20190805145448.GI28441@linux.ibm.com>
+ <20190805155024.GK2332@hirez.programming.kicks-ass.net>
+ <20190805174800.GK28441@linux.ibm.com>
+ <20190806180824.GA28448@linux.ibm.com>
+ <20190807214131.GA15124@linux.ibm.com>
+ <20190808203541.GA8160@linux.ibm.com>
+ <20190808213012.GA28773@linux.ibm.com>
+ <20190809165120.GA5668@linux.ibm.com>
+ <20190809180721.GA255533@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f26a6667-5474-895f-f9ba-1f812c44270e@linux.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190809180721.GA255533@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-09_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908090182
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 10:28:15AM -0700, sathyanarayanan kuppuswamy wrote:
-> On 8/9/19 3:28 AM, Lukas Wunner wrote:
-> > A sysfs request to enable or disable a PCIe hotplug slot should not
-> > return before it has been carried out.  That is sought to be achieved
-> > by waiting until the controller's "pending_events" have been cleared.
+On Fri, Aug 09, 2019 at 02:07:21PM -0400, Joel Fernandes wrote:
+> On Fri, Aug 09, 2019 at 09:51:20AM -0700, Paul E. McKenney wrote:
+> > > > > And of course I forgot to dump out the online CPUs, so I really had no
+> > > > > idea whether or not all the CPUs were accounted for.  I added tracing
+> > > > > to dump out the online CPUs at the beginning of __stop_cpus() and then
+> > > > > reworked it a few times to get the problem to happen in reasonable time.
+> > > > > Please see below for the resulting annotated trace.
+> > > > > 
+> > > > > I was primed to expect a lost IPI, perhaps due to yet another qemu bug,
+> > > > > but all the migration threads are running within about 2 milliseconds.
+> > > > > It is then almost two minutes(!) until the next trace message.
+> > > > > 
+> > > > > Looks like time to (very carefully!) instrument multi_cpu_stop().
+> > > > > 
+> > > > > Of course, if you have any ideas, please do not keep them a secret!
+> > > > 
+> > > > Functionally, multi_cpu_stop() is working fine, according to the trace
+> > > > below (search for a line beginning with TAB).  But somehow CPU 2 took
+> > > > almost three -minutes- to do one iteration of the loop.  The prime suspect
+> > > > in that loop is cpu_relax() due to the hypervisor having an opportunity
+> > > > to do something at that point.  The commentary below (again, search for
+> > > > a line beginning with TAB) gives my analysis.
+> > > > 
+> > > > Of course, if I am correct, it should be possible to catch cpu_relax()
+> > > > in the act.  That is the next step, give or take the Heisenbuggy nature
+> > > > of this beast.
+> > > > 
+> > > > Another thing for me to try is to run longer with !NO_HZ_FULL, just in
+> > > > case the earlier runs just got lucky.
+> > > > 
+> > > > Thoughts?
+> > > 
+> > > And it really can happen:
+> > > 
+> > > [ 1881.467922] migratio-33      4...1 1879530317us : stop_machine_yield: cpu_relax() took 756140 ms
+> > > 
+> > > The previous timestamp was 1123391100us, so the cpu_relax() is almost
+> > > exactly the full delay.
+> > > 
+> > > But another instance stalled for many minutes without a ten-second
+> > > cpu_relax().  So it is not just cpu_relax() causing trouble.  I could
+> > > rationalize that vCPU preemption being at fault...
+> > > 
+> > > And my diagnostic patch is below, just in case I am doing something
+> > > stupid with that.
 > > 
-> > However the IRQ thread pciehp_ist() clears the "pending_events" before
-> > it acts on them.  If pciehp_sysfs_enable_slot() / _disable_slot() happen
-> > to check the "pending_events" after they have been cleared but while
-> > pciehp_ist() is still running, the functions may return prematurely
-> > with an incorrect return value.
+> > I did a 12-hour run with the same configuration except for leaving out the
+> > "nohz_full=1-7" kernel parameter without problems (aside from the RCU CPU
+> > stall warnings due to the ftrace_dump() at the end of the run -- isn't
+> > there some way to clear the ftrace buffer without actually printing it?).
 > 
-> Can this be fixed by changing the sequence of clearing the pending_events in
-> pciehp_ist() ?
+> I think if tracing_reset_all_online_cpus() is exposed, then calling that with
+> the appropriate locks held can reset the ftrace ring buffer and clear the
+> trace. Steve, is there a better way?
 
-It can't.  The processing logic is such that pciehp_ist() atomically
-removes bits from pending_events and acts upon them.  Simultaneously, new
-events may be queued up by adding bits to pending_events (through a
-hardirq handled by pciehp_isr(), through a sysfs request, etc).
-Those will be handled in an additional iteration of pciehp_ist().
+On the off-chance that it helps, here is my use case:
 
-If I'd delay removing bits from pending_events, I then couldn't tell if
-new events have accumulated while others have been processed.
-E.g. a PDS event may occur while another one is being processed.
-The second PDS events may signify a card removal immediately after
-the card has been brought up.  It's crucial not to lose the second PDS
-event but act properly on it by bringing the slot down again.
+o	I have a race condition that becomes extremely unlikely if
+	I leave tracing enabled at all times.
 
-This way of processing events also allows me to easily filter events.
-E.g. we tolerate link flaps occurring during the first 100 ms after
-enabling the slot simply by atomically removing bits from pending_events
-at a certain point.  See commit 6c35a1ac3da6 ("PCI: pciehp: Tolerate
-initially unstable link").
+o	I therefore enable tracing at the beginning of a CPU-hotplug
+	removal.
 
-Now what I *could* do would be to make the events currently being
-processed public, e.g. by adding an "atomic_t current_events" to
-struct controller.  Then I could wait in pciehp_sysfs_enable_slot() /
-_disable_slot() until both "pending_events" and "current_events"
-becomes empty.  But it would basically amount to the same as this patch,
-and we don't really need to know *which* events are being processed,
-only the *fact* that events are being processed.
+o	At the end of that CPU-hotplug removal, I disable tracing.
 
-Let me know if you have further questions regarding the pciehp
-processing logic.
+o	I can test whether the problem occurred without affecting its
+	probability.  If it occurred, I want to dump only that portion
+	of the trace buffer since enabling it above.  If the problem
+	did not occur, I want to flush (not dump) the trace buffer.
 
-Thanks,
+o	I cannot reasonably just make the trace buffer small because
+	the number of events in a given occurrence of the problem
+	can vary widely.
 
-Lukas
+							Thanx, Paul
