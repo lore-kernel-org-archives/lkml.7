@@ -2,113 +2,132 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67DAC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E22C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 907C220B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E2F20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:50:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="GvjdEwV3";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yEXkWiFl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729490AbfHIVrt (ORCPT
+        id S1726840AbfHIVux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 17:47:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53960 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728576AbfHIVrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 17:47:49 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0364FB2CD;
-        Fri,  9 Aug 2019 21:47:49 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D5BA060BF3;
-        Fri,  9 Aug 2019 21:47:47 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH net] rxrpc: Fix local refcounting
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     dhowells@redhat.com, jaltman@auristor.com,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Fri, 09 Aug 2019 22:47:47 +0100
-Message-ID: <156538726702.16201.13552536596121161945.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 09 Aug 2019 21:47:49 +0000 (UTC)
+        Fri, 9 Aug 2019 17:50:53 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:55411 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726022AbfHIVux (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 17:50:53 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 0FBA6217F;
+        Fri,  9 Aug 2019 17:50:52 -0400 (EDT)
+Received: from imap36 ([10.202.2.86])
+  by compute4.internal (MEProxy); Fri, 09 Aug 2019 17:50:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=FDGxDXPN2SUWSByp360DMt/uwwjigIP
+        j7nZHao0b4BQ=; b=GvjdEwV3qRM4CESVG0xWRLWI+29GB62ehpRrK+x3nuOIi5a
+        mHPCzGYWfwN9TkAsQZ4XvUZTaStNK1mv36vHvcjITLHY0LlsZAZeVDUjok8o/oQq
+        y0rH4YITtaQ/mrv8oLnsqUIRKb3k8YkCjsxsG8WolCtNo08JfH0XUE+OeT9mZz4j
+        R8eqbSyrUG1uIbJ5tY/kZC7wtOwGZZJ//Eplln7vVIOLKK2H8q2V6zesXW0NbYRI
+        dlbfRjM7CJEdnhEeom2oqjZKAmplN+TzBfvqQ5pOcfmNz9SykzWEeDhlG3ksvroG
+        gMn917unXh3lkwxOyWsu7lvZScEp9eQr7D1kQAQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=FDGxDX
+        PN2SUWSByp360DMt/uwwjigIPj7nZHao0b4BQ=; b=yEXkWiFliuHufd+e/NWJ+C
+        Kq+eZ7OyUsY+ojUw77LB/IztX4BmPuyQcTpILsfqoGEIxhm+sk6o/F/Tl1mzkkoh
+        +FwcV0KLTwWY2Pq1o2oQJg1myRpD2wJJ4SRgJI8InfpoX2yKLwFXYbH9PnYAaX6f
+        AOMlPq3LmQYN/6M5k3IbUZ7tcl5Toao71ahIat/ZawnoTyMUI5Q/Q1bjGJnyc44a
+        B+hl5u2aTXTVdb/NRBFvdsHBs15EDzYHW9JxMt9+o/srORGBb2ARlKoMt3Ec09Rt
+        8Yt5Y7UBL3hHmo/Y0BLyxrrLLwYAhKXfkF66u6QH7/8boKblqXH6ZSD6575/ZDvg
+        ==
+X-ME-Sender: <xms:uepNXUBa663m5lMWIokKDpec0gV4YYlA9CMZSojoFMunsI1dUEm-rw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddruddukedgtdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdlfeehmdenucfjughrpefofgggkfgjfhffhffvufgtsehttdertder
+    reejnecuhfhrohhmpedfffgrnhhivghlucgiuhdfuceougiguhesugiguhhuuhdrgiihii
+    eqnecurfgrrhgrmhepmhgrihhlfhhrohhmpegugihusegugihuuhhurdighiiinecuvehl
+    uhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:uepNXWPC0mlX1bW0ZGEYU8i0AFWf58ThG1pB7G1JlZpZjxHRdxr-hg>
+    <xmx:uepNXSb8f8nO-pgfI8mr3vPoAoqoWkKdYbFd4JPEPdxNKuL_xvthdg>
+    <xmx:uepNXdM7YU35B3D3M5qQ3ek6f6kU8Uh9quxLTwTAdbVMhrSxdpj8Nw>
+    <xmx:vOpNXeFCwkHBQIthWTWG25US4NNj6wnIApLqLX81bLvGrnQGSE-BkA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 0446B12200A2; Fri,  9 Aug 2019 17:50:48 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-809-g8e5c451-fmstable-20190809v1
+Mime-Version: 1.0
+Message-Id: <3429be0c-1a10-452e-a566-bf02db72f5ba@www.fastmail.com>
+In-Reply-To: <20190809214642.12078-1-dxu@dxuuu.xyz>
+References: <20190809214642.12078-1-dxu@dxuuu.xyz>
+Date:   Fri, 09 Aug 2019 14:50:47 -0700
+From:   "Daniel Xu" <dxu@dxuuu.xyz>
+To:     "Song Liu" <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
+        "Andrii Nakryiko" <andriin@fb.com>, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org
+Cc:     ast@fb.com, alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org
+Subject: =?UTF-8?Q?Re:_[PATCH_v2_bpf-next_0/4]_tracing/probe:_Add_PERF=5FEVENT=5F?=
+ =?UTF-8?Q?IOC=5FQUERY=5FPROBE?=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix rxrpc_unuse_local() to handle a NULL local pointer as it can be called
-on an unbound socket on which rx->local is not yet set.
+On Fri, Aug 9, 2019, at 2:47 PM, Daniel Xu wrote:
+> It's useful to know [uk]probe's nmissed and nhit stats. For example with
+> tracing tools, it's important to know when events may have been lost.
+> debugfs currently exposes a control file to get this information, but
+> it is not compatible with probes registered with the perf API.
+> 
+> While bpf programs may be able to manually count nhit, there is no way
+> to gather nmissed. In other words, it is currently not possible to
+> retrieve information about FD-based probes.
+> 
+> This patch adds a new ioctl that lets users query nmissed (as well as
+> nhit for completeness). We currently only add support for [uk]probes
+> but leave the possibility open for other probes like tracepoint.
+> 
+> v1 -> v2:
+> - More descriptive cover letter
+> - Make API more generic and support uprobes as well
+> - Use casters/getters for libbpf instead of single getter
+> - Fix typos
+> - Remove size field from ioctl struct
+> - Split out libbpf.h sync to tools dir to separate commit
+> 
+> Daniel Xu (4):
+>   tracing/probe: Add PERF_EVENT_IOC_QUERY_PROBE ioctl
+>   libbpf: Add helpers to extract perf fd from bpf_link
+>   tracing/probe: Sync perf_event.h to tools
+>   tracing/probe: Add self test for PERF_EVENT_IOC_QUERY_PROBE
+> 
+>  include/linux/trace_events.h                  |  12 +++
+>  include/uapi/linux/perf_event.h               |  19 ++++
+>  kernel/events/core.c                          |  20 ++++
+>  kernel/trace/trace_kprobe.c                   |  23 ++++
+>  kernel/trace/trace_uprobe.c                   |  23 ++++
+>  tools/include/uapi/linux/perf_event.h         |  19 ++++
+>  tools/lib/bpf/libbpf.c                        |  19 ++++
+>  tools/lib/bpf/libbpf.h                        |   8 ++
+>  tools/lib/bpf/libbpf.map                      |   6 ++
+>  .../selftests/bpf/prog_tests/attach_probe.c   | 102 ++++++++++++++++++
+>  10 files changed, 251 insertions(+)
+> 
+> -- 
+> 2.20.1
+> 
+>
 
-The following reproduced (includes omitted):
+CC PeterZ, whose email I misspelled. Apologies.
 
-	int main(void)
-	{
-		socket(AF_RXRPC, SOCK_DGRAM, AF_INET);
-		return 0;
-	}
-
-causes the following oops to occur:
-
-	BUG: kernel NULL pointer dereference, address: 0000000000000010
-	...
-	RIP: 0010:rxrpc_unuse_local+0x8/0x1b
-	...
-	Call Trace:
-	 rxrpc_release+0x2b5/0x338
-	 __sock_release+0x37/0xa1
-	 sock_close+0x14/0x17
-	 __fput+0x115/0x1e9
-	 task_work_run+0x72/0x98
-	 do_exit+0x51b/0xa7a
-	 ? __context_tracking_exit+0x4e/0x10e
-	 do_group_exit+0xab/0xab
-	 __x64_sys_exit_group+0x14/0x17
-	 do_syscall_64+0x89/0x1d4
-	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Reported-by: syzbot+20dee719a2e090427b5f@syzkaller.appspotmail.com
-Fixes: 730c5fd42c1e ("rxrpc: Fix local endpoint refcounting")
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Jeffrey Altman <jaltman@auristor.com>
----
-
- net/rxrpc/local_object.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
-index 9798159ee65f..c9db3e762d8d 100644
---- a/net/rxrpc/local_object.c
-+++ b/net/rxrpc/local_object.c
-@@ -402,11 +402,13 @@ void rxrpc_unuse_local(struct rxrpc_local *local)
- {
- 	unsigned int au;
- 
--	au = atomic_dec_return(&local->active_users);
--	if (au == 0)
--		rxrpc_queue_local(local);
--	else
--		rxrpc_put_local(local);
-+	if (local) {
-+		au = atomic_dec_return(&local->active_users);
-+		if (au == 0)
-+			rxrpc_queue_local(local);
-+		else
-+			rxrpc_put_local(local);
-+	}
- }
- 
- /*
-
+Daniel
