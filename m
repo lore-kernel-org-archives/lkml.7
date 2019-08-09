@@ -2,121 +2,135 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90259C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC71FC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55F432086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:57:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565341073;
-	bh=WhCZBZ7GL7FuXItOSWw08QcVy2bjQAwFsx03QiPnbXQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Dntub/ff/Jpo/cGDqaOZu61KQIGSZN522lS/OBW8n9kHPRLpaS8Om6L/Ke63wlnw0
-	 XMOPotI95FizB1IutwiLHA0VQMfMJPN8D0+/coyTYd8gsyDbxaAup/nxRuqL2//h9W
-	 ZFWaWM4jSv05lHvSne7CP+czO/KsgBxvECIMLN5s=
+	by mail.kernel.org (Postfix) with ESMTP id 9402F20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:59:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ldApItJf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406039AbfHII5w (ORCPT
+        id S2406041AbfHII7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 04:57:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48468 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405982AbfHII5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 04:57:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EA141AFDB;
-        Fri,  9 Aug 2019 08:57:49 +0000 (UTC)
-Date:   Fri, 9 Aug 2019 10:57:48 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     ndrw <ndrw.xf@redhazel.co.uk>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Artem S. Tashkinov" <aros@gmx.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Subject: Re: Let's talk about the elephant in the room - the Linux kernel's
- inability to gracefully handle low memory pressure
-Message-ID: <20190809085748.GN18351@dhcp22.suse.cz>
-References: <CAJuCfpFmOzj-gU1NwoQFmS_pbDKKd2XN=CS1vUV4gKhYCJOUtw@mail.gmail.com>
- <20190806220150.GA22516@cmpxchg.org>
- <20190807075927.GO11812@dhcp22.suse.cz>
- <20190807205138.GA24222@cmpxchg.org>
- <20190808114826.GC18351@dhcp22.suse.cz>
- <806F5696-A8D6-481D-A82F-49DEC1F2B035@redhazel.co.uk>
- <20190808163228.GE18351@dhcp22.suse.cz>
- <5FBB0A26-0CFE-4B88-A4F2-6A42E3377EDB@redhazel.co.uk>
- <20190808185925.GH18351@dhcp22.suse.cz>
- <08e5d007-a41a-e322-5631-b89978b9cc20@redhazel.co.uk>
+        Fri, 9 Aug 2019 04:59:04 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:35525 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726134AbfHII7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 04:59:03 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 464fLD5lq8z9v0hl;
+        Fri,  9 Aug 2019 10:59:00 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=ldApItJf; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id ysu8ZTG-4UXw; Fri,  9 Aug 2019 10:59:00 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 464fLD4h0Qz9v0hj;
+        Fri,  9 Aug 2019 10:59:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1565341140; bh=v9a6CunqkztcWhEahCiUv20a19QATmRm8swNBF4mU4o=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ldApItJf3Z3ekgov7QP6o8AuQtiTl6eP4FvdFirhNkFnWjxjoW5euJ3XJ2BFzpmc4
+         nrqok56fz4+jVeKILC5UYoAss+g6BrHZ/xGP1de/uYy89moaD3Bwacr/xYPGLlXhN2
+         BYlvKI9Ijdgy3jGpuZUS2+HhoHvyAKdGfhVCQbgE=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CD8378B881;
+        Fri,  9 Aug 2019 10:59:01 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id VKVLaEo4TvUq; Fri,  9 Aug 2019 10:59:01 +0200 (CEST)
+Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8A8D08B7A1;
+        Fri,  9 Aug 2019 10:59:01 +0200 (CEST)
+Subject: Re: [PATCH 1/2] powerpc: Allow flush_icache_range to work across
+ ranges >4GB
+To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     stable@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20190809004548.22445-1-alastair@au1.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <a9bcc457-9f9b-7010-6796-fb263135f8bc@c-s.fr>
+Date:   Fri, 9 Aug 2019 10:59:01 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <08e5d007-a41a-e322-5631-b89978b9cc20@redhazel.co.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190809004548.22445-1-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 08-08-19 22:59:32, ndrw wrote:
-> On 08/08/2019 19:59, Michal Hocko wrote:
-> > Well, I am afraid that implementing anything like that in the kernel
-> > will lead to many regressions and bug reports. People tend to have very
-> > different opinions on when it is suitable to kill a potentially
-> > important part of a workload just because memory gets low.
+
+
+Le 09/08/2019 à 02:45, Alastair D'Silva a écrit :
+> From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> Are you proposing having a zero memory reserve or not having such option at
-> all? I'm fine with the current default (zero reserve/margin).
-
-We already do have a reserve (min_free_kbytes). That gives kswapd some
-room to perform reclaim in the background without obvious latencies to
-allocating tasks (well CPU still be used so there is still some effect).
-
-Kswapd tries to keep a balance and free memory low but still with some
-room to satisfy an immediate memory demand. Once kswapd doesn't catch up
-with the memory demand we dive into the direct reclaim and that is where
-people usually see latencies coming from.
-
-The main problem here is that it is hard to tell from a single
-allocation latency that we have a bigger problem. As already said, the
-usual trashing scenario doesn't show problem during the reclaim because
-pages can be freed up very efficiently. The problem is that they are
-refaulted very quickly so we are effectively rotating working set like
-crazy. Compare that to a normal used-once streaming IO workload which is
-generating a lot of page cache that can be recycled in a similar pace
-but a working set doesn't get freed. Free memory figures will look very
-similar in both cases.
-
-> I strongly prefer forcing OOM killer when the system is still running
-> normally. Not just for preventing stalls: in my limited testing I found the
-> OOM killer on a stalled system rather inaccurate, occasionally killing
-> system services etc. I had much better experience with earlyoom.
-
-Good that earlyoom works for you. All I am saying is that this is not
-generally applicable heuristic because we do care about a larger variety
-of workloads. I should probably emphasise that the OOM killer is there
-as a _last resort_ hand break when something goes terribly wrong. It
-operates at times when any user intervention would be really hard
-because there is a lack of resources to be actionable.
-
-[...]
-> > > > PSI is giving you a matric that tells you how much time you
-> > > > spend on the memory reclaim. So you can start watching the system from
-> > > > lower utilization already.
+> When calling flush_icache_range with a size >4GB, we were masking
+> off the upper 32 bits, so we would incorrectly flush a range smaller
+> than intended.
 > 
-> I've tested it on a system with 45GB of RAM, SSD, swap disabled (my
-> intention was to approximate a worst-case scenario) and it didn't really
-> detect stall before it happened. I can see some activity after reaching
-> ~42GB, the system remains fully responsive until it suddenly freezes and
-> requires sysrq-f.
+> This patch replaces the 32 bit shifts with 64 bit ones, so that
+> the full size is accounted for.
+> 
+> Heads-up for backporters: the old version of flush_dcache_range is
+> subject to a similar bug (this has since been replaced with a C
+> implementation).
 
-This is a useful feedback! What was your workload? Which kernel version?
+Can you submit a patch to stable, explaining this ?
 
--- 
-Michal Hocko
-SUSE Labs
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+
+Should add:
+
+Cc: stable@vger.kernel.org
+
+Christophe
+
+> ---
+>   arch/powerpc/kernel/misc_64.S | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
+> index b55a7b4cb543..9bc0aa9aeb65 100644
+> --- a/arch/powerpc/kernel/misc_64.S
+> +++ b/arch/powerpc/kernel/misc_64.S
+> @@ -82,7 +82,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_COHERENT_ICACHE)
+>   	subf	r8,r6,r4		/* compute length */
+>   	add	r8,r8,r5		/* ensure we get enough */
+>   	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of cache block size */
+> -	srw.	r8,r8,r9		/* compute line count */
+> +	srd.	r8,r8,r9		/* compute line count */
+>   	beqlr				/* nothing to do? */
+>   	mtctr	r8
+>   1:	dcbst	0,r6
+> @@ -98,7 +98,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_COHERENT_ICACHE)
+>   	subf	r8,r6,r4		/* compute length */
+>   	add	r8,r8,r5
+>   	lwz	r9,ICACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of Icache block size */
+> -	srw.	r8,r8,r9		/* compute line count */
+> +	srd.	r8,r8,r9		/* compute line count */
+>   	beqlr				/* nothing to do? */
+>   	mtctr	r8
+>   2:	icbi	0,r6
+> 
