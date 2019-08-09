@@ -3,199 +3,160 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A125C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 23:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBBDC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 23:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C511B20859
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 23:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F1720859
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 23:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfHIXxW (ORCPT
+        id S1727948AbfHIXxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 19:53:22 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57328 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfHIXxW (ORCPT
+        Fri, 9 Aug 2019 19:53:45 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:55799 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726053AbfHIXxo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 19:53:22 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id 889DF28C40D
-Subject: Re: [PATCH 0/3] Collapse vimc into single monolithic driver
-To:     Shuah Khan <skhan@linuxfoundation.org>, mchehab@kernel.org,
-        helen.koike@collabora.com, hverkuil@xs4all.nl,
-        laurent.pinchart@ideasonboard.com
-Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-References: <cover.1565386363.git.skhan@linuxfoundation.org>
-From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
-Message-ID: <3118bc46-14ac-8015-9a6c-a8dfcdcea940@collabora.com>
-Date:   Fri, 9 Aug 2019 20:52:23 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 9 Aug 2019 19:53:44 -0400
+Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id DAF307E93B3;
+        Sat, 10 Aug 2019 09:53:39 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hwEgR-0001ae-PY; Sat, 10 Aug 2019 09:52:31 +1000
+Date:   Sat, 10 Aug 2019 09:52:31 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     ira.weiny@intel.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 01/19] fs/locks: Export F_LAYOUT lease to user
+ space
+Message-ID: <20190809235231.GC7777@dread.disaster.area>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-2-ira.weiny@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <cover.1565386363.git.skhan@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809225833.6657-2-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=U9j2fOsc8QPwp6X3jq8A:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Shuah,
-
-Thanks for the patch, I did some comments below.
-
-On 8/9/19 6:45 PM, Shuah Khan wrote:
-> vimc uses Component API to split the driver into functional components.
-> The real hardware resembles a monolith structure than component and
-> component structure added a level of complexity making it hard to
-> maintain without adding any real benefit.
->     
-> The sensor is one vimc component that would makes sense to be a separate
-> module to closely align with the real hardware. It would be easier to
-> collapse vimc into single monolithic driver first and then split the
-> sensor off as a separate module.
+On Fri, Aug 09, 2019 at 03:58:15PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> This patch series emoves the component API and makes minimal changes to
-> the code base preserving the functional division of the code structure.
-> Preserving the functional structure allows us to split the sensor off
-> as a separate module in the future.
+> In order to support an opt-in policy for users to allow long term pins
+> of FS DAX pages we need to export the LAYOUT lease to user space.
 > 
-> Major design elements in this change are:
->     - Use existing struct vimc_ent_config and struct vimc_pipeline_config
->       to drive the initialization of the functional components.
->     - Make vimc_ent_config global by moving it to vimc.h
->     - Add two new hooks add and rm to initialize and register, unregister
->       and free subdevs.
->     - All component API is now gone and bind and unbind hooks are modified
->       to do "add" and "rm" with minimal changes to just add and rm subdevs.
->     - vimc-core's bind and unbind are now register and unregister.
->     - vimc-core invokes "add" hooks from its vimc_register_devices().
->       The "add" hooks remain the same and register subdevs. They don't
->       create platform devices of their own and use vimc's pdev.dev as
->       their reference device. The "add" hooks save their vimc_ent_device(s)
->       in the corresponding vimc_ent_config.
->     - vimc-core invokes "rm" hooks from its unregister to unregister subdevs
->       and cleanup.
->     - vimc-core invokes "add" and "rm" hooks with pointer to struct vimc_device
->       and the corresponding struct vimc_ent_config pointer.
->     
-> The following configure and stream test works on all devices.
->     
->     media-ctl -d platform:vimc -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
->     media-ctl -d platform:vimc -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
->     media-ctl -d platform:vimc -V '"Sensor B":0[fmt:SBGGR8_1X8/640x480]'
->     media-ctl -d platform:vimc -V '"Debayer B":0[fmt:SBGGR8_1X8/640x480]'
->     
->     v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v width=1920,height=1440
->     v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v pixelformat=BA81
->     v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v pixelformat=BA81
->     
->     v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video1
->     v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video2
->     v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video3
+> This is the first of 2 new lease flags which must be used to allow a
+> long term pin to be made on a file.
 > 
-> The third patch in the series fixes a general protection fault found
-> when rmmod is done while stream is active.
-
-I applied your patch on top of media_tree/master and I did some testing.
-Not sure if I did something wrong, but just adding and removing the
-module generated a kernel panic:
-
-~# modprobe vimc
-~# rmmod vimc
-[   16.452974] stack segment: 0000 [#1] SMP PTI
-[   16.453688] CPU: 0 PID: 2038 Comm: rmmod Not tainted 5.3.0-rc2+ #36
-[   16.454678] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.12.0-20181126_142135-anatol 04/01/2014
-[   16.456191] RIP: 0010:kfree+0x4d/0x240
-
-<registers values...>
-
-[   16.469188] Call Trace:
-[   16.469666]  vimc_remove+0x35/0x90 [vimc]
-[   16.470436]  platform_drv_remove+0x1f/0x40
-[   16.471233]  device_release_driver_internal+0xd3/0x1b0
-[   16.472184]  driver_detach+0x37/0x6b
-[   16.472882]  bus_remove_driver+0x50/0xc1
-[   16.473569]  vimc_exit+0xc/0xca0 [vimc]
-[   16.474231]  __x64_sys_delete_module+0x18d/0x240
-[   16.475036]  do_syscall_64+0x43/0x110
-[   16.475656]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   16.476504] RIP: 0033:0x7fceb8dafa4b
-
-<registers values...>
-
-[   16.484853] Modules linked in: vimc(-) videobuf2_vmalloc
-videobuf2_memops v4l2_tpg videobuf2_v4l2 videobuf2_common
-[   16.486187] ---[ end trace 91e5e0894e254d49 ]---
-[   16.486758] RIP: 0010:kfree+0x4d/0x240
-
-<registers values...>
-
-fish: “rmmod vimc” terminated by signal SIGSEGV (Address boundary error)
-
-I just added the module after booting, no other action was made. Here is
-how my `git log --oneline` looks like:
-
-897d708e922b media: vimc: Fix gpf in rmmod path when stream is active
-2e4a5ad8ad6d media: vimc: Collapse component structure into a single
-monolithic driver
-7c8da1687e92 media: vimc: move private defines to a common header
-97299a303532 media: Remove dev_err() usage after platform_get_irq()
-25a3d6bac6b9 media: adv7511/cobalt: rename driver name to adv7511-v4l2
-...
-
+> After the complete series:
 > 
-> vimc_print_dot (--print-dot) topology after this change:
-> digraph board {
-> 	rankdir=TB
-> 	n00000001 [label="{{} | Sensor A\n/dev/v4l-subdev0 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
-> 	n00000001:port0 -> n00000005:port0 [style=bold]
-> 	n00000001:port0 -> n0000000b [style=bold]
-> 	n00000003 [label="{{} | Sensor B\n/dev/v4l-subdev1 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
-> 	n00000003:port0 -> n00000008:port0 [style=bold]
-> 	n00000003:port0 -> n0000000f [style=bold]
-> 	n00000005 [label="{{<port0> 0} | Debayer A\n/dev/v4l-subdev2 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-> 	n00000005:port1 -> n00000015:port0
-> 	n00000008 [label="{{<port0> 0} | Debayer B\n/dev/v4l-subdev3 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-> 	n00000008:port1 -> n00000015:port0 [style=dashed]
-> 	n0000000b [label="Raw Capture 0\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
-> 	n0000000f [label="Raw Capture 1\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
-> 	n00000013 [label="{{} | RGB/YUV Input\n/dev/v4l-subdev4 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
-> 	n00000013:port0 -> n00000015:port0 [style=dashed]
-> 	n00000015 [label="{{<port0> 0} | Scaler\n/dev/v4l-subdev5 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-> 	n00000015:port1 -> n00000018 [style=bold]
-> 	n00000018 [label="RGB/YUV Capture\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
-> }
-
-Since the topology changed, it would be nice to change in the
-documentation as well. The current dot file can be found at
-`Documentation/media/v4l-drivers/vimc.dot` and it's rendered at this
-page: https://www.kernel.org/doc/html/latest/media/v4l-drivers/vimc.html
-
-Thanks,
-	André
-
+> 0) Registrations to Device DAX char devs are not affected
 > 
-> Shuah Khan (3):
->   media: vimc: move private defines to a common header
->   media: vimc: Collapse component structure into a single monolithic
->     driver
->   media: vimc: Fix gpf in rmmod path when stream is active
+> 1) The user has to opt in to allowing page pins on a file with an exclusive
+>    layout lease.  Both exclusive and layout lease flags are user visible now.
 > 
->  drivers/media/platform/vimc/Makefile       |   7 +-
->  drivers/media/platform/vimc/vimc-capture.c |  96 ++----------
->  drivers/media/platform/vimc/vimc-common.c  |   2 +-
->  drivers/media/platform/vimc/vimc-core.c    | 174 +++++++--------------
->  drivers/media/platform/vimc/vimc-debayer.c |  84 ++--------
->  drivers/media/platform/vimc/vimc-scaler.c  |  83 ++--------
->  drivers/media/platform/vimc/vimc-sensor.c  |  82 ++--------
->  drivers/media/platform/vimc/vimc.h         | 121 ++++++++++++++
->  8 files changed, 230 insertions(+), 419 deletions(-)
->  create mode 100644 drivers/media/platform/vimc/vimc.h
+> 2) page pins will fail if the lease is not active when the file back page is
+>    encountered.
 > 
+> 3) Any truncate or hole punch operation on a pinned DAX page will fail.
+> 
+> 4) The user has the option of holding the lease or releasing it.  If they
+>    release it no other pin calls will work on the file.
+> 
+> 5) Closing the file is ok.
+> 
+> 6) Unmapping the file is ok
+> 
+> 7) Pins against the files are tracked back to an owning file or an owning mm
+>    depending on the internal subsystem needs.  With RDMA there is an owning
+>    file which is related to the pined file.
+> 
+> 8) Only RDMA is currently supported
+> 
+> 9) Truncation of pages which are not actively pinned nor covered by a lease
+>    will succeed.
 
+This has nothing to do with layout leases or what they provide
+access arbitration over. Layout leases have _nothing_ to do with
+page pinning or RDMA - they arbitrate behaviour the file offset ->
+physical block device mapping within the filesystem and the
+behaviour that will occur when a specific lease is held.
+
+The commit descripting needs to describe what F_LAYOUT actually
+protects, when they'll get broken, etc, not how RDMA is going to use
+it.
+
+> @@ -2022,8 +2030,26 @@ static int do_fcntl_add_lease(unsigned int fd, struct file *filp, long arg)
+>  	struct file_lock *fl;
+>  	struct fasync_struct *new;
+>  	int error;
+> +	unsigned int flags = 0;
+> +
+> +	/*
+> +	 * NOTE on F_LAYOUT lease
+> +	 *
+> +	 * LAYOUT lease types are taken on files which the user knows that
+> +	 * they will be pinning in memory for some indeterminate amount of
+> +	 * time.
+
+Indeed, layout leases have nothing to do with pinning of memory.
+That's something an application taht uses layout leases might do,
+but it largely irrelevant to the functionality layout leases
+provide. What needs to be done here is explain what the layout lease
+API actually guarantees w.r.t. the physical file layout, not what
+some application is going to do with a lease. e.g.
+
+	The layout lease F_RDLCK guarantees that the holder will be
+	notified that the physical file layout is about to be
+	changed, and that it needs to release any resources it has
+	over the range of this lease, drop the lease and then
+	request it again to wait for the kernel to finish whatever
+	it is doing on that range.
+
+	The layout lease F_RDLCK also allows the holder to modify
+	the physical layout of the file. If an operation from the
+	lease holder occurs that would modify the layout, that lease
+	holder does not get notification that a change will occur,
+	but it will block until all other F_RDLCK leases have been
+	released by their holders before going ahead.
+
+	If there is a F_WRLCK lease held on the file, then a F_RDLCK
+	holder will fail any operation that may modify the physical
+	layout of the file. F_WRLCK provides exclusive physical
+	modification access to the holder, guaranteeing nothing else
+	will change the layout of the file while it holds the lease.
+
+	The F_WRLCK holder can change the physical layout of the
+	file if it so desires, this will block while F_RDLCK holders
+	are notified and release their leases before the
+	modification will take place.
+
+We need to define the semantics we expose to userspace first.....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
