@@ -2,132 +2,96 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235B2C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0838C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01FAF2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA0292089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436861AbfHIPvp (ORCPT
+        id S2436860AbfHIPxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 11:51:45 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53532 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436723AbfHIPvp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 11:51:45 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 9 Aug 2019 11:53:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55192 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436682AbfHIPxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 11:53:32 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E1DC928CF3E;
-        Fri,  9 Aug 2019 16:51:42 +0100 (BST)
-Date:   Fri, 9 Aug 2019 17:51:40 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        linux-spi@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] spi: npcm-fiu: add NPCM FIU controller driver
-Message-ID: <20190809175140.77747c8d@collabora.com>
-In-Reply-To: <CAP6Zq1hc0kNHzCE6tcLZdv7NcNWEdn5nh=Wzd8pdbZTuj31Hbg@mail.gmail.com>
-References: <20190808131448.349161-1-tmaimon77@gmail.com>
-        <20190808131448.349161-3-tmaimon77@gmail.com>
-        <20190808173232.4d79d698@collabora.com>
-        <CAP6Zq1iW0C0FDOoqmn5r_xk5HQFWw+GgLfeapvt-8mB50N2Vvg@mail.gmail.com>
-        <20190809172557.346e7c41@collabora.com>
-        <CAP6Zq1hc0kNHzCE6tcLZdv7NcNWEdn5nh=Wzd8pdbZTuj31Hbg@mail.gmail.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2028930832DA;
+        Fri,  9 Aug 2019 15:53:32 +0000 (UTC)
+Received: from treble (ovpn-124-159.rdu2.redhat.com [10.10.124.159])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5730F60BF3;
+        Fri,  9 Aug 2019 15:53:31 +0000 (UTC)
+Date:   Fri, 9 Aug 2019 10:53:29 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [arnd-playground:randconfig-5.3-rc2 32/347]
+ fs/reiserfs/prints.o: warning: objtool: __reiserfs_error()+0x80: unreachable
+ instruction
+Message-ID: <20190809155329.vqbquhjhz25khrgx@treble>
+References: <201908090321.bRMBBE6A%lkp@intel.com>
+ <CAK8P3a0FT1FCkvik++TJxnp8=36+9EW-tjo0UXdGPZxw_MMPfQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0FT1FCkvik++TJxnp8=36+9EW-tjo0UXdGPZxw_MMPfQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 09 Aug 2019 15:53:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 9 Aug 2019 18:47:08 +0300
-Tomer Maimon <tmaimon77@gmail.com> wrote:
-
-> On Fri, 9 Aug 2019 at 18:26, Boris Brezillon <boris.brezillon@collabora.com>
-> wrote:
-> 
-> > On Fri, 9 Aug 2019 18:26:23 +0300
-> > Tomer Maimon <tmaimon77@gmail.com> wrote:
-> >  
-> > > Hi Boris,
-> > >
-> > > Thanks a lot for your comment.
-> > >
-> > > On Thu, 8 Aug 2019 at 18:32, Boris Brezillon <
-> > boris.brezillon@collabora.com>
-> > > wrote:
-> > >  
-> > > > On Thu,  8 Aug 2019 16:14:48 +0300
-> > > > Tomer Maimon <tmaimon77@gmail.com> wrote:
-> > > >
-> > > >  
-> > > > > +
-> > > > > +static const struct spi_controller_mem_ops npcm_fiu_mem_ops = {
-> > > > > +     .exec_op = npcm_fiu_exec_op,  
-> > > >
-> > > > No npcm_supports_op()? That's suspicious, especially after looking at
-> > > > the npcm_fiu_exec_op() (and the functions called from there) where the
-> > > > requested ->buswidth seems to be completely ignored...
-> > > >
-> > > > Sorry but I do not fully understand it, do you mean a support for the  
-> > > buswidth?
-> > > If yes it been done in the UMA functions as follow:
-> > >
-> > >                 uma_cfg |= ilog2(op->cmd.buswidth);
-> > >                 uma_cfg |= ilog2(op->addr.buswidth) <<
-> > >                         NPCM_FIU_UMA_CFG_ADBPCK_SHIFT;
-> > >                 uma_cfg |= ilog2(op->data.buswidth) <<
-> > >                         NPCM_FIU_UMA_CFG_WDBPCK_SHIFT;
-> > >                 uma_cfg |= op->addr.nbytes <<  
-> > NPCM_FIU_UMA_CFG_ADDSIZ_SHIFT;  
-> > >                 regmap_write(fiu->regmap, NPCM_FIU_UMA_ADDR,  
-> > op->addr.val);  
-> > >  
+On Thu, Aug 08, 2019 at 10:45:34PM +0200, Arnd Bergmann wrote:
+> On Thu, Aug 8, 2019 at 9:06 PM kbuild test robot <lkp@intel.com> wrote:
 > >
-> > Hm, the default supports_op() implementation might be just fine for
-> > your use case. But there's one thing you still need to check: the
-> > number of addr cycles (or address size as you call it in this driver).
-> > Looks like your IP is limited to 4 address cycles, if I'm right, you
-> > should reject any operation that have op->addr.nbytes > 4. I also
-> >  
-> Indeed our IP limited to 4 address cycle (bytes) do we have NOR Flash with
-> more than 32bit address?
-
-spi-mem is not only about spi-nor, it can be used for any kind of
-memory (NOR, NAND, SRAM, ...) or even to communicate with an FGPA, so
-yes, you have to take care of that.
-
-> I will add this limitation thanks!
+> > tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/arnd/playground.git randconfig-5.3-rc2
+> > head:   bfe9aede7372c8310a9bf31963460c9dd11d1f82
+> > commit: 97919a3ec80e9841c4bbac14a80e8b9d482666d4 [32/347] [SUBMITTED 20190718] reiserfs: fix code unwinding with clang
+> > config: x86_64-lkp (attached as .config)
+> > compiler: gcc-7 (Debian 7.4.0-10) 7.4.0
+> > reproduce:
+> >         git checkout 97919a3ec80e9841c4bbac14a80e8b9d482666d4
+> >         # save the attached .config to linux build tree
+> >         make ARCH=x86_64
+> >
+> > If you fix the issue, kindly add following tag
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> >
+> > All warnings (new ones prefixed by >>):
+> >
+> > >> fs/reiserfs/namei.o: warning: objtool: entry_points_to_object()+0x117: unreachable instruction
+> > --
+> > >> fs/reiserfs/do_balan.o: warning: objtool: get_FEB()+0x55: unreachable instruction
+> > >> fs/reiserfs/prints.o: warning: objtool: __reiserfs_error()+0x80: unreachable instruction
+> > >> fs/reiserfs/lbalance.o: warning: objtool: leaf_move_items()+0x210: unreachable instruction
+> > >> fs/reiserfs/fix_node.o: warning: objtool: create_virtual_node()+0x295: unreachable instruction
+> > >> fs/reiserfs/inode.o: warning: objtool: reiserfs_update_sd_size()+0x26b: unreachable instruction
+> > >> fs/reiserfs/ibalance.o: warning: objtool: balance_internal()+0x30d: unreachable instruction
+> > >> fs/reiserfs/stree.o: warning: objtool: reiserfs_cut_from_item()+0x239: unreachable instruction
+> > >> fs/reiserfs/tail_conversion.o: warning: objtool: direct2indirect()+0x29c: unreachable instruction
+> > >> fs/reiserfs/item_ops.o: warning: objtool: direntry_check_left()+0x5d: unreachable instruction
+> > >> fs/reiserfs/journal.o: warning: objtool: flush_commit_list()+0x552: unreachable instruction
 > 
-> > wonder if there's a limitation on the data size you can have on a
-> > single transfer. If there's one you should implement ->adjust_op() too.
-> >  
-> there is a limitation in a single transfer but I handle it in the
-> npcm_fiu_manualwrite
-> function.
-> Do you suggest to use ->adjust_op() instead?
+> Great fun. The patch I did was my workaround for a related problem with clang,
+> see below.
+> 
+> Josh, is this warning above something you are interested in? I don't
+> think it happens in mainline, but it could happen anywhere. I think
+> the patch below can be dropped once clang is fixed, but I have so far
+> been unable to build a new compiler for testing.
 
-Yes, should be exposed through ->adjust_op() => the caller needs to
-know when a new operation (one containing an opcode+address) is issued,
-because sometimes such splits are not supported by the memory.
+From a brief glance I think you need to remove __reiserfs_panic from
+objtool's global_noreturns[] array.
 
+-- 
+Josh
