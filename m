@@ -2,73 +2,138 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D31C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08670C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 059CD208C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3863208C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:10:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VD+Ar1DI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405706AbfHIHIh (ORCPT
+        id S2405718AbfHIHKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 03:08:37 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55033 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbfHIHIh (ORCPT
+        Fri, 9 Aug 2019 03:10:09 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33292 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405601AbfHIHKJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 03:08:37 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1hvz0l-0007YS-IM; Fri, 09 Aug 2019 09:08:27 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Fri, 9 Aug 2019 03:10:09 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n190so4586320pgn.0;
+        Fri, 09 Aug 2019 00:10:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HPwG7pkcc5DZ98Mz2Gg0sM/TpTfIkaOBCUuZftqf1/w=;
+        b=VD+Ar1DIRNtDCEqE2Yx4SwfjH51ak++dbdeaIqAr4Dwa/udxcfurZPOEeYFRIVL0qL
+         ol6/odHAXtRsHeVmgEfNubI3Tckewc6r6ZaiGry0fgOC72HS0pNdgQRabl+xjYJAXS/7
+         AXmRHh72D4ZVst+BzEQfkfihNv+Z1J/QKZvpPylay0xtN3VGzhqeRCuTs+bZjoC5VGNl
+         ShkKFVAYMe5BOIBXtriMkuNzF3iU5pQo/SFNiJoKZLxmlD2TT4EpWevxvtQTUJ8szD69
+         mBBjrAfRenCRvuk/iZHlaS9y/lGDRIgxrJH14vbALQD0jZiTvA7YjUtRy9vdAqZvfV6H
+         qjhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HPwG7pkcc5DZ98Mz2Gg0sM/TpTfIkaOBCUuZftqf1/w=;
+        b=SovMV8+a5Tgqpz0Qld1iJKYRw9B4s5m92Wg52ZUyT/NE6OiqumV2Z8Bkl9LKAjxLkw
+         /anzKkMCXCKlmIp0c0OObAa0FPbY+6+vZ/Iqc88ka2UgS2MLdd71fgdWIzw/GHKfbhCY
+         dAgg6OyCO1WfyqLoJlrdzIVUZDtkcjDBBfrVlRukbWDkDjgrOYh9R2wXDgimt02KGKN9
+         h5ljGktAH1Jp24OGu7rsWfYbzMA8Fwjd4Vwysu7JxSSsFcygavt/R7ff0/h4uYUS0naN
+         NjxlyJvB2locebFuS+zx0H9qmUcR0Q5GlQ2aodLPhL1G/7qLUTz/aBYpHT1LwANDwjLG
+         Db+Q==
+X-Gm-Message-State: APjAAAXQJtahMYSRHzW539caA95zS5pHPjiiYNvSBkaRbqndhxrcjngp
+        GUklpu0esD9fvBuWHP9OtM4=
+X-Google-Smtp-Source: APXvYqx8b9QDL7gRE+a7XxAMhAJCg1WcAncDZoI70N/8WLtTRd1kO2iLQoNjxiNy3Te275dWnJSgTA==
+X-Received: by 2002:a17:90a:1c17:: with SMTP id s23mr8029916pjs.108.1565334608346;
+        Fri, 09 Aug 2019 00:10:08 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id e7sm215529pfn.72.2019.08.09.00.10.03
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 09 Aug 2019 00:10:07 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jessica Yu <jeyu@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
         Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [RFC PATCH v4 9/9] printk: use a new ringbuffer implementation
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
-        <20190807222634.1723-10-john.ogness@linutronix.de>
-        <CAHk-=wiKTn-BMpp4w645XqmFBEtUXe84+TKc6aRMPbvFwUjA=A@mail.gmail.com>
-        <20190809061437.GE2332@hirez.programming.kicks-ass.net>
-Date:   Fri, 09 Aug 2019 09:08:25 +0200
-In-Reply-To: <20190809061437.GE2332@hirez.programming.kicks-ass.net> (Peter
-        Zijlstra's message of "Fri, 9 Aug 2019 08:14:37 +0200")
-Message-ID: <87mugix1cm.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-pm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v4 0/8] Replace strncmp with str_has_prefix
+Date:   Fri,  9 Aug 2019 15:10:00 +0800
+Message-Id: <20190809071000.17059-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-08-09, Peter Zijlstra <peterz@infradead.org> wrote:
->> End result: a DRAM buffer can work, but is not "reliable".
->> Particularly if you turn power on and off, data retention of DRAM is
->> iffy. But it's possible, at least in theory.
->> 
->> So I have a patch that implements a "stupid ring buffer" for thisa
->> case, with absolutely zero data structures (because in the presense of
->> DRAM corruption, all you can get is "hopefully only slightly garbled
->> ASCII".
->
-> Note that you can hook this into printk as a fake early serial device;
-> just have the serial device write to the DRAM buffer.
+The commit 72921427d46b
+("string.h: Add str_has_prefix() helper function")
+introduced str_has_prefix() to substitute error-prone
+strncmp(str, const, len).
 
-Or the other way around, implement a fake console to handle writing the
-messages (as they are being emitted from printk) to some special
-area. Then the messages would even be pre-processed so that all
-meta-data is already in ASCII form.
+strncmp(str, const, len) is easy to have error in len
+because of counting error or sizeof(const) without - 1.
 
-John Ogness
+These patches replace such pattern with str_has_prefix()
+to avoid hard coded constant length and sizeof.
+
+Besides, str_has_prefix() returns the length of prefix
+when the comparison returns true.
+We can use this return value to substitute some hard-coding.
+
+Changelog:
+
+v1 -> v2:
+  - Revise the description.
+  - Use the return value of str_has_prefix() to eliminate
+    hard coding.
+  - Remove possible false positives and add newly detected
+    one in upstream.
+
+v2 -> v3:
+  - Revise the description.
+  - Remove else uses in printk.c.
+
+v3 -> v4:
+  - Eliminate assignments in if conditions.
+
+Chuhong Yuan (8):
+  dma: debug: Replace strncmp with str_has_prefix
+  module: Replace strncmp with str_has_prefix
+  PM/sleep: Replace strncmp with str_has_prefix
+  printk: Replace strncmp with str_has_prefix
+  reboot: Replace strncmp with str_has_prefix
+  sched: Replace strncmp with str_has_prefix
+  userns: Replace strncmp with str_has_prefix
+  watchdog: Replace strncmp with str_has_prefix
+
+ kernel/dma/debug.c       |  2 +-
+ kernel/module.c          |  2 +-
+ kernel/power/main.c      |  2 +-
+ kernel/printk/braille.c  | 15 +++++++++++----
+ kernel/printk/printk.c   | 22 ++++++++++++++++------
+ kernel/reboot.c          |  7 +++++--
+ kernel/sched/debug.c     |  6 ++++--
+ kernel/sched/isolation.c | 11 +++++++----
+ kernel/user_namespace.c  | 20 ++++++++++++--------
+ kernel/watchdog.c        |  8 ++++----
+ 10 files changed, 62 insertions(+), 33 deletions(-)
+
+-- 
+2.20.1
+
