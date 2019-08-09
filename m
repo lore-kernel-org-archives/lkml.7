@@ -2,231 +2,215 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D1DC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C54C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1C7E21743
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:10:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="kvq0Dm6c";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="yGf8mb0Y"
+	by mail.kernel.org (Postfix) with ESMTP id 64E19208C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:12:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406917AbfHINJm (ORCPT
+        id S2406893AbfHINMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:09:42 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:49598 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726232AbfHINJl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:09:41 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x79D0EcC029185;
-        Fri, 9 Aug 2019 06:09:25 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=fxX4Tsn6LVutoNTKFtMDUBvTa6O/M8Ax7D8Tbf0dUvY=;
- b=kvq0Dm6ceY/ampMFrTYJDmyl1fXSMugZhPhCfMY+5ZBMlMcils1c7v+tHzm4QYx5laKX
- FVagN67QTH7PeqLIcQdXLulSUdhzqxGqCX/lhD0wLMLEwgdInEsG7YdUaDKWasnFhxyP
- TmtLGvI+GCHtI/leb+G1K/mGMnoQF+pcfjjYSHdfoG6Xp6eDXBKtcg4Y49poA0Wdd8FO
- 4n2D9Nx8XhY3IoelkZRssC8NnETH++Pn7hefA5MutyBFwhfTF8WGxPVvtD6068PZrgOt
- Q+gciiJmVKVuoamcp34N90MlCt4pADPJg4qZ66nlgVtHlz9aK5ow1Sk1K/Hc2ZragFhY 4g== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2u59sm8283-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 09 Aug 2019 06:09:25 -0700
-Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Fri, 9 Aug
- 2019 06:09:23 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.56) by
- SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Fri, 9 Aug 2019 06:09:23 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bAPAhOgLevyG+yxAETXVjRUj6FMvxnSUM5gC9E2oV/33bhimf/zy3pDi6xAhotBzjwy98o+/9qLmY72QN+rnmSzqpKpOMQ3Ubtop8gNgRe8LGBM0qwN53IiWuUj1l2m2uYngN+9jEZWL2I65PsiYh40x0zzHYnzw7ghE9dS3zMtuiM3NG9I7ZwvPu0gTpuaVcU0lld3mUMz4FyoaDRNDwo7AoG8Z0c1uk+RbJlmEbSP4vbMT2eSbHKe10MBMIcAiT90Irivgree0oRRTSe2VDIzTLaxk5qoBqVTUsjKDuP4xg96qoheH/4bIocHESILj8GLNkw/SPkwF35kqLVZOCw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fxX4Tsn6LVutoNTKFtMDUBvTa6O/M8Ax7D8Tbf0dUvY=;
- b=SNlTUs0HxD2cjYTPhuDzu96p8ErUFYIuDvUQo8Dzq9HE7jJTntO7xlwN/BFWLzdrTymU3v/vsl55GW1Rq1o3BpNeWGIh7N4AZePt/oFOG1OaXCJCQeE3CEjUGE5t4Hidgdktp9lqeVk/gLCDqjhqcVMSub3zvc0jLW5cXQ2c5ieKGBaVkWks+o1IfhNJKcAXNJXk13pMoVZqeEjs8IDA+9IUW8vNL/6xmEaRB587JNq4/rq3i5iIv8a/vD9J1p5M/hKxz3dyhA1pLlivrG2Fl1CE43qiNyLn2Dwag9ficbSpM/kY06vY02pDMHPbNLdCLs7nOwhPW1MDunx/vcILVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fxX4Tsn6LVutoNTKFtMDUBvTa6O/M8Ax7D8Tbf0dUvY=;
- b=yGf8mb0Y2Tk8w5XbxSZDaDw5GP6BFDReZifVkqpqvszAp5DoJLYLiQ+20hdn0Aw9pYXz915RhBPRWzn8vW++0sG72TM+lgadBGPB6CfaI9Y8WVg/Jg9w+8oX9RBggCIl7vKZHOFl/wbIN0OJJBZUAFN493N3lUNoHEmOeqT+Nm0=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
- MN2PR18MB3007.namprd18.prod.outlook.com (20.179.84.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.14; Fri, 9 Aug 2019 13:09:18 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::1b3:8b34:63fe:aad2]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::1b3:8b34:63fe:aad2%6]) with mapi id 15.20.2157.020; Fri, 9 Aug 2019
- 13:09:18 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     James Morse <james.morse@arm.com>
-CC:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 15/24] EDAC, ghes: Extract numa node information for
- each dimm
-Thread-Topic: [PATCH v2 15/24] EDAC, ghes: Extract numa node information for
- each dimm
-Thread-Index: AQHVTrOm854iEL00CEyw4GqX+x+zlA==
-Date:   Fri, 9 Aug 2019 13:09:18 +0000
-Message-ID: <20190809130911.bkflwxbeslhmdxu5@rric.localdomain>
-References: <20190624150758.6695-1-rrichter@marvell.com>
- <20190624150758.6695-16-rrichter@marvell.com>
- <f878201f-f8fd-0f2a-5072-ba60c64eefaf@arm.com>
-In-Reply-To: <f878201f-f8fd-0f2a-5072-ba60c64eefaf@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR05CA0139.eurprd05.prod.outlook.com
- (2603:10a6:7:28::26) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:16c::25)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 352d2d3f-7162-48a6-6669-08d71ccac948
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB3007;
-x-ms-traffictypediagnostic: MN2PR18MB3007:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <MN2PR18MB30077816CBEC3A71E5F76E68D9D60@MN2PR18MB3007.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01244308DF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(376002)(136003)(366004)(396003)(346002)(51914003)(199004)(189003)(8676002)(6306002)(53936002)(66066001)(316002)(14454004)(7736002)(26005)(6116002)(3846002)(54906003)(6486002)(6436002)(229853002)(6512007)(9686003)(102836004)(66946007)(52116002)(5660300002)(6506007)(386003)(478600001)(66476007)(66556008)(53546011)(64756008)(66446008)(1076003)(99286004)(186003)(76176011)(86362001)(966005)(305945005)(8936002)(2906002)(6916009)(81156014)(81166006)(25786009)(6246003)(4326008)(71200400001)(71190400001)(14444005)(256004)(486006)(476003)(446003)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3007;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ANFJ5LvhZWWWMkdIbCRMYR58ohCU4+V9JVGLbViGqvioOub8cO5pO+JQQ0FI9hAvI1VmoNQx/3Bov3QazJO3hHOH7/QGom37+5CzPleEjY1gmcBjEMSmw2ohPReGzJJpzldPHDV4PXLOBHZJWZEEx2BOKMLjrIqI11BD1mEU5CMRO7lvj85mPxIam39faBb6S6rqzLG8f15Wc4Yy2naFZTwEfgev+Uq9dAxvD0kni8bog30DE08DMOqhErhgByzIebprB3PttyMaVJq5usCpByHA0BJYd3O21dIYd1/NF6/zEpBYsU3gD11pzZh++aC8bFMyruT/a0A8ekRGEnwawYUCf4kB9EXu7NnJ8t3/O6CDxH+yBfbANP8eqYhjX7WGpa0B6Dx4f9X8k/ovEw6JoB6GCAz01gLGYmjCJVLb2L0=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <EAFA02575F54F74CA1B6FA1F6122027A@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 9 Aug 2019 09:12:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52150 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726157AbfHINMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:12:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F2F91B023;
+        Fri,  9 Aug 2019 13:12:18 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id F10761E46DD; Fri,  9 Aug 2019 15:05:27 +0200 (CEST)
+Date:   Fri, 9 Aug 2019 15:05:27 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     " Steven J. Magnani " <steve.magnani@digidescorp.com>
+Cc:     Jan Kara <jack@suse.com>, Steve Magnani <steve@digidescorp.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] udf: reduce leakage of blocks related to named streams
+Message-ID: <20190809130527.GD17568@quack2.suse.cz>
+References: <20190807133258.12432-1-steve@digidescorp.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 352d2d3f-7162-48a6-6669-08d71ccac948
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Aug 2019 13:09:18.5449
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YeIjwkozRbh8Dsvgo1AyuUE0V1WVNKd1tV0KujVAw89Ndn3kFyj+7X5nwT4Pgfqb21bdYDwmyAU67msIBORTQQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3007
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:5.22.84,1.0.8
- definitions=2019-08-09_03:2019-08-09,2019-08-09 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807133258.12432-1-steve@digidescorp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
+On Wed 07-08-19 08:32:58,  Steven J. Magnani  wrote:
+> From: Steve Magnani <steve@digidescorp.com>
+> 
+> Windows is capable of creating UDF files having named streams.
+> One example is the "Zone.Identifier" stream attached automatically
+> to files downloaded from a network. See:
+>   https://msdn.microsoft.com/en-us/library/dn392609.aspx
+> 
+> Modification of a file having one or more named streams in Linux causes
+> the stream directory to become detached from the file, essentially leaking
+> all blocks pertaining to the file's streams. Worse, an attempt to delete
+> the file causes its directory entry (FID) to be deleted, but because the
+> driver believes that a hard link to the file remains, the Extended File
+> Entry (EFE) and all extents of the file itself remain allocated. Since
+> there is no hard link, after the FID has been deleted all of these blocks
+> are unreachable (leaked).
+> 
+> A complete solution to this problem involves walking the File Identifiers
+> in the file's stream directory and freeing all extents allocated to each
+> named stream (each of which involves a walk of arbitrary length). As the
+> complete solution is quite complex, for now just settle for retaining the
+> stream directory attachment during file modification, and being able to
+> reclaim the blocks of the file, its Extended File Entry, and its Stream
+> Directory EFE during file deletion.
+> 
+> The UDF structures used by Windows to attach a simple Zone.Identifier
+> named stream to a file are:
+> * A stream directory EFE containing an "in ICB" Zone.Identifier FID,
+>   which references
+> * An EFE with "in ICB" stream data
+> 
+> For this case, this partial solution reduces the number of blocks leaked
+> during file deletion to just one (the EFE containing the stream data).
+> 
+> Signed-off-by: Steven J. Magnani <steve@digidescorp.com>
 
-On 02.08.19 18:05:07, James Morse wrote:
-> On 24/06/2019 16:09, Robert Richter wrote:
-> > In a later patch we want to have one mc device per node. This patch
-> > extracts the numa node information for each dimm. This is done by
-> > collecting the physical address ranges from the DMI table (Memory
-> > Array Mapped Address - Type 19 of SMBIOS spec). The node information
-> > for a physical address is already know to a numa aware system (e.g. by
-> > using the ACPI _PXM method or the ACPI SRAT table), so based on the PA
-> > we can assign the node id to the dimms.
->=20
-> I really don't like the way this depends on the rest of the kernel's NUMA=
- support.
-> mm's policies around the placement of data change with these settings, th=
-at shouldn't
-> matter here. Reporting physical errors shouldn't be influenced by mm's pl=
-acement policy.
->=20
-> pfn_valid() is a sore subject on arm64, it will return false for random p=
-ages that the
-> firmware is using, or wrote data to with unusual memory attributes. Depen=
-ding on it makes
-> this code fragile...
->=20
->=20
-> > A fallback that disables numa is implemented in case the node
-> > information is inconsistent.
->=20
-> ... which is why you need a fallback.
+Thanks for the patch! I was thinking about this and rather than this
+partial fix, I'd prefer to fail the last unlink of an inode with
+a named-stream directory with EOPNOTSUPP. Later we can properly handle this
+and walk the named-stream directory and remove all associated EFEs for the
+named streams. After all named-stream directories are restricted to not
+have any subdirectories, hardlinks, or anything similarly fancy so the walk
+should not be *that* hard to implement.
 
-I don't agree here. pfn_valid() and page_to_nid() are reliable used in
-numa systems to identify the node of a physical address. Same is used
-here. If firmware does not provide consistent topology data, numa
-would not work either and a non-numa fallback is in place. You say
-this code is fragile, which would mean numa code is fragile too, but
-it isn't.
+								Honza
 
-Node information and the 1:1 mapping between node and an edac mc
-device are essential for error handling. All other drivers have one mc
-device per node. If you don't follow this topology layout you will
-have significant differences in the ghes error handling compared to
-other drivers. But this driver (and arm64 systems) should provide a
-similar functionality.
-
-> All this makes it difficult to explain why this things view of memory is =
-as it is.
-> Making the RAS/edac code unpredictable like this is a hard sell.
->=20
-> You need to squint through Kconfig, SRAT and the UEFI memory map.
-> (due to pfn_valid(): the behaviour here can change over a reboot)
->=20
->=20
-> Can we 'just' use the type-16 handle to group the DIMMs?
->=20
-> As an illustration:
-> http://www.linux-arm.org/git?p=3Dlinux-jm.git;a=3Dshortlog;h=3Drefs/heads=
-/edac_ghes_2level_dimms/v0
-
-I have looked into your code. You group all dimms under md0 and have
-an additional layer for the phys mem arrays. This ignores the cper
-layers (node, card, module). The way you add the layer may cause the
-creation of dimm entries under md0 that even do not exist in the dmi
-table. But dimms and their labels created by edac should reflect the
-system as described in the dmi table.
-
-My code creates one mdX device per node and groups the dimms under
-them according to the dmi table. For this it further parses the
-physical address range of the memory arrays and extracts the numa node
-from it. I don't see what is wrong with that. The only added
-dependency is the node lookup which is used somewhere else in the
-kernel anyway on numa systems. But it provides a much better grouping
-of hardware errors, which is then similar to other drivers.
-
-I think your concern is more about code complexity, so I will go
-through my code and keep it as simple as possible.
-
-> This reflects the SMBIOS tables on my NUMA desktop, and doesn't depend on=
- any of the
-> above. I'd be interested to know what is missing from this approach.
->=20
-> (which numa node? I don't think we need to know the mapping of mcX<->nid =
-up front. We can
-> find it from the faulting physical address when we get an error report).
->=20
->=20
-> N.B, your mail is still arriving base64 encoded. It looks like this:
-> https://lore.kernel.org/linux-edac/20190624150758.6695-16-rrichter@marvel=
-l.com/raw
->=20
-> Lei Wang found:
-> > Ah I found if without explicit "--transfer-encoding=3D7bit" when do "gi=
-t
-> > send-mail", my ubuntu box sent out base64 by default.
->=20
-> (but his mail didn't get archived for some reason)
-
-Thanks for the note, I will check the encoding.
-
-Thank you for review.
-
--Robert
+> 
+> --- a/fs/udf/udf_i.h	2019-07-26 11:35:28.257563879 -0500
+> +++ b/fs/udf/udf_i.h	2019-08-06 14:35:55.579654263 -0500
+> @@ -42,12 +42,15 @@ struct udf_inode_info {
+>  	unsigned		i_efe : 1;	/* extendedFileEntry */
+>  	unsigned		i_use : 1;	/* unallocSpaceEntry */
+>  	unsigned		i_strat4096 : 1;
+> -	unsigned		reserved : 26;
+> +	unsigned		i_streamdir : 1;
+> +	unsigned		reserved : 25;
+>  	union {
+>  		struct short_ad	*i_sad;
+>  		struct long_ad		*i_lad;
+>  		__u8		*i_data;
+>  	} i_ext;
+> +	struct kernel_lb_addr		i_locStreamdir;
+> +	__u64			i_lenStreams;
+>  	struct rw_semaphore	i_data_sem;
+>  	struct udf_ext_cache cached_extent;
+>  	/* Spinlock for protecting extent cache */
+> --- a/fs/udf/super.c	2019-07-26 11:35:28.253563792 -0500
+> +++ b/fs/udf/super.c	2019-08-06 15:04:30.851086957 -0500
+> @@ -151,9 +151,13 @@ static struct inode *udf_alloc_inode(str
+>  
+>  	ei->i_unique = 0;
+>  	ei->i_lenExtents = 0;
+> +	ei->i_lenStreams = 0;
+>  	ei->i_next_alloc_block = 0;
+>  	ei->i_next_alloc_goal = 0;
+>  	ei->i_strat4096 = 0;
+> +	ei->i_streamdir = 0;
+> +	ei->i_locStreamdir.logicalBlockNum = 0xFFFFFFFF;
+> +	ei->i_locStreamdir.partitionReferenceNum = 0xFFFF;
+>  	init_rwsem(&ei->i_data_sem);
+>  	ei->cached_extent.lstart = -1;
+>  	spin_lock_init(&ei->i_extent_cache_lock);
+> --- a/fs/udf/inode.c	2019-07-26 11:35:28.253563792 -0500
+> +++ b/fs/udf/inode.c	2019-08-06 15:04:30.851086957 -0500
+> @@ -132,7 +132,7 @@ void udf_evict_inode(struct inode *inode
+>  	struct udf_inode_info *iinfo = UDF_I(inode);
+>  	int want_delete = 0;
+>  
+> -	if (!inode->i_nlink && !is_bad_inode(inode)) {
+> +	if ((inode->i_nlink == iinfo->i_streamdir) && !is_bad_inode(inode)) {
+>  		want_delete = 1;
+>  		udf_setsize(inode, 0);
+>  		udf_update_inode(inode, IS_SYNC(inode));
+> @@ -1485,6 +1485,10 @@ reread:
+>  		iinfo->i_lenEAttr = le32_to_cpu(fe->lengthExtendedAttr);
+>  		iinfo->i_lenAlloc = le32_to_cpu(fe->lengthAllocDescs);
+>  		iinfo->i_checkpoint = le32_to_cpu(fe->checkpoint);
+> +		iinfo->i_streamdir = 0;
+> +		iinfo->i_lenStreams = 0;
+> +		iinfo->i_locStreamdir.logicalBlockNum = 0xFFFFFFFF;
+> +		iinfo->i_locStreamdir.partitionReferenceNum = 0xFFFF;
+>  	} else {
+>  		inode->i_blocks = le64_to_cpu(efe->logicalBlocksRecorded) <<
+>  		    (inode->i_sb->s_blocksize_bits - 9);
+> @@ -1498,6 +1502,16 @@ reread:
+>  		iinfo->i_lenEAttr = le32_to_cpu(efe->lengthExtendedAttr);
+>  		iinfo->i_lenAlloc = le32_to_cpu(efe->lengthAllocDescs);
+>  		iinfo->i_checkpoint = le32_to_cpu(efe->checkpoint);
+> +
+> +		/* Named streams */
+> +		iinfo->i_streamdir = (efe->streamDirectoryICB.extLength != 0);
+> +		iinfo->i_locStreamdir =
+> +			lelb_to_cpu(efe->streamDirectoryICB.extLocation);
+> +		iinfo->i_lenStreams = le64_to_cpu(efe->objectSize);
+> +		if (iinfo->i_lenStreams >= inode->i_size)
+> +			iinfo->i_lenStreams -= inode->i_size;
+> +		else
+> +			iinfo->i_lenStreams = 0;
+>  	}
+>  	inode->i_generation = iinfo->i_unique;
+>  
+> @@ -1760,9 +1774,19 @@ static int udf_update_inode(struct inode
+>  		       iinfo->i_ext.i_data,
+>  		       inode->i_sb->s_blocksize -
+>  					sizeof(struct extendedFileEntry));
+> -		efe->objectSize = cpu_to_le64(inode->i_size);
+> +		efe->objectSize =
+> +			cpu_to_le64(inode->i_size + iinfo->i_lenStreams);
+>  		efe->logicalBlocksRecorded = cpu_to_le64(lb_recorded);
+>  
+> +		if (iinfo->i_streamdir) {
+> +			struct long_ad *icb_lad = &efe->streamDirectoryICB;
+> +
+> +			icb_lad->extLocation =
+> +				cpu_to_lelb(iinfo->i_locStreamdir);
+> +			icb_lad->extLength =
+> +				cpu_to_le32(inode->i_sb->s_blocksize);
+> +		}
+> +
+>  		udf_adjust_time(iinfo, inode->i_atime);
+>  		udf_adjust_time(iinfo, inode->i_mtime);
+>  		udf_adjust_time(iinfo, inode->i_ctime);
+> --- a/fs/udf/ialloc.c	2019-07-26 11:35:28.253563792 -0500
+> +++ b/fs/udf/ialloc.c	2019-08-06 15:04:30.851086957 -0500
+> @@ -31,6 +31,7 @@ void udf_free_inode(struct inode *inode)
+>  	struct super_block *sb = inode->i_sb;
+>  	struct udf_sb_info *sbi = UDF_SB(sb);
+>  	struct logicalVolIntegrityDescImpUse *lvidiu = udf_sb_lvidiu(sb);
+> +	struct udf_inode_info *iinfo = UDF_I(inode);
+>  
+>  	if (lvidiu) {
+>  		mutex_lock(&sbi->s_alloc_mutex);
+> @@ -42,7 +43,13 @@ void udf_free_inode(struct inode *inode)
+>  		mutex_unlock(&sbi->s_alloc_mutex);
+>  	}
+>  
+> -	udf_free_blocks(sb, NULL, &UDF_I(inode)->i_location, 0, 1);
+> +	udf_free_blocks(sb, NULL, &iinfo->i_location, 0, 1);
+> +	if (iinfo->i_streamdir) {
+> +		udf_free_blocks(sb, NULL, &iinfo->i_locStreamdir, 0, 1);
+> +		udf_warn(inode->i_sb,
+> +			 "Leaking unsupported stream blocks for inode %lu\n",
+> +			 inode->i_ino);
+> +	}
+>  }
+>  
+>  struct inode *udf_new_inode(struct inode *dir, umode_t mode)
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
