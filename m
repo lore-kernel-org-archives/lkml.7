@@ -2,83 +2,81 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA50C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C00C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73C47206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CDFB21743
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:37:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="jSX9rhUl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405882AbfHIHhU (ORCPT
+        id S2405894AbfHIHhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 03:37:20 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:60644 "EHLO inva021.nxp.com"
+        Fri, 9 Aug 2019 03:37:23 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:46872 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405856AbfHIHhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 03:37:15 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3C73520034E;
-        Fri,  9 Aug 2019 09:37:13 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E7BBB200348;
-        Fri,  9 Aug 2019 09:37:04 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9CBE440293;
-        Fri,  9 Aug 2019 15:36:54 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux@armlinux.org.uk,
-        otavio@ossystems.com.br, leonard.crestez@nxp.com,
-        schnitzeltony@gmail.com, u.kleine-koenig@pengutronix.de,
-        jan.tuerk@emtrion.com, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 4/4] ARM: dts: imx7ulp: Add wdog1 node
-Date:   Fri,  9 Aug 2019 15:14:02 +0800
-Message-Id: <1565334842-28161-4-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1565334842-28161-1-git-send-email-Anson.Huang@nxp.com>
-References: <1565334842-28161-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S2405881AbfHIHhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 03:37:21 -0400
+Received: from zn.tnic (p200300EC2F0BAF001CD97DA1D84759A1.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:af00:1cd9:7da1:d847:59a1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D88331EC0503;
+        Fri,  9 Aug 2019 09:37:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565336240;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=ZppeEZaFY6xSLbiFc5H8vVrCDN0qMD4mc9pMNB2IsBw=;
+        b=jSX9rhUl+h8KeSjXmO+aau7bHshPqlQJXYeMYC0XYdlJRX0Fj0QLbGuVP5CTXlNl8tR4A8
+        WkI/bT2dCrljsJybGXf47QeYuYAFGilBatibEgUntW1eNNcTpirpvMlk1K30fzrhPHXaR/
+        y3flv9z9rD0UiZOh9BZ2J3edP+15iJI=
+Date:   Fri, 9 Aug 2019 09:38:07 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Reinette Chatre <reinette.chatre@intel.com>
+Cc:     tglx@linutronix.de, fenghua.yu@intel.com, tony.luck@intel.com,
+        kuo-lang.tseng@intel.com, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 09/10] x86/resctrl: Pseudo-lock portions of multiple
+ resources
+Message-ID: <20190809073807.GC2152@zn.tnic>
+References: <cover.1564504901.git.reinette.chatre@intel.com>
+ <c0095fd15488d87be06deddf43abb4a2834dc7e6.1564504902.git.reinette.chatre@intel.com>
+ <20190807152511.GB24328@zn.tnic>
+ <e9145623-bf5a-b96c-d802-7b61caa406e0@intel.com>
+ <20190808084416.GC20745@zn.tnic>
+ <a69981df-80f5-d8cf-e118-2ee639dcdb77@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <a69981df-80f5-d8cf-e118-2ee639dcdb77@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add wdog1 node to support watchdog driver.
+On Thu, Aug 08, 2019 at 01:13:46PM -0700, Reinette Chatre wrote:
+> There is a locking order dependency between cpu_hotplug_lock and
+> rdtgroup_mutex (cpu_hotplug_lock before rdtgroup_mutex) that has to be
+> maintained. To do so in this flow you will find cpus_read_lock() in
+> rdtgroup_schemata_write(), so quite a distance from where it is needed.
+> 
+> Perhaps I should add a comment at the location where the lock is
+> required to document where the lock is obtained?
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx7ulp.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Even better - you can add:
 
-diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
-index 6859a3a..1fdb5a35 100644
---- a/arch/arm/boot/dts/imx7ulp.dtsi
-+++ b/arch/arm/boot/dts/imx7ulp.dtsi
-@@ -264,6 +264,16 @@
- 			#clock-cells = <1>;
- 		};
- 
-+		wdog1: wdog@403d0000 {
-+			compatible = "fsl,imx7ulp-wdt";
-+			reg = <0x403d0000 0x10000>;
-+			interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
-+			assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
-+			assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
-+			timeout-sec = <40>;
-+		};
-+
- 		pcc2: clock-controller@403f0000 {
- 			compatible = "fsl,imx7ulp-pcc2";
- 			reg = <0x403f0000 0x10000>;
+	lockdep_assert_cpus_held();
+
+above it which documents *and* checks too. :-)
+
 -- 
-2.7.4
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
