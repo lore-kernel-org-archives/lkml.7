@@ -2,116 +2,146 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2AFC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 01:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE11C0650F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 01:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C93D2166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 01:16:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565313379;
-	bh=scLmnQyYjQdqJKQg3lLERdoWVkYkvWnTENkGxn++vlg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Bohers5Z+34Q8+xMajn2tWLmI92AtqU0C8aBAiN8q0T/xAoysH20YM3R+I4wZsabR
-	 zpX7ODw2tnsOb8l0WXnhPboEfk8W6GlryR+TdjoolU1fDzIfc/FEpce6oPfpzZcNnr
-	 mYZ1O4Jpp49lrAtDc27mt7IDh5yh2O+y4L8zg1yU=
+	by mail.kernel.org (Postfix) with ESMTP id A91C92166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 01:16:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="TdIoBBgo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405326AbfHIBQS (ORCPT
+        id S2405368AbfHIBQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 21:16:18 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46311 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404985AbfHIBQR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 21:16:17 -0400
-Received: by mail-lf1-f68.google.com with SMTP id z15so63970819lfh.13
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 18:16:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vyYz4kjl/LS+Ci6YYkBH2OKrNgCeFV+hR/bEG0IyHAQ=;
-        b=Kn0WlAb/wp3bAUOI96M7Exz3gGG32qjs/NPQYgfbcxV3+0/4J5fCBe/zZt1NF37w6R
-         8Payd0Ku2hgCMW1gwbGsvKYkOEqJjaLAW1aillp0bjCdeTin4d8JVCVOd47C4AexqJXG
-         /YMyaVNugz2Bkd6DvSp+FnUyqwZ2qKYaukD24=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vyYz4kjl/LS+Ci6YYkBH2OKrNgCeFV+hR/bEG0IyHAQ=;
-        b=meK0b9bvyWuPffAZuQOpiFnacPg3VekPJuwhuCXPwOXXf3U1B0hrvP6x7Afle8Yg7M
-         pfiNAB7LqPhw6LzdgHvxsUw3hmqTdr13Luenoz9qnC/GeirIpjvzcQs0XXkA1U9uv5Yx
-         c9GsdRrRgb7Ny3R0/vXSn6X48yyeljBsnVkmMxSRPm8owaBzlfPj6GtAxHeRTdnYjGzt
-         U6BmkfjtiKHLzuHjFfuwz1nbwVP+C+LhH5hMKMghnTfwK9Y73DMSFO4hzBQlylhjHds9
-         MlmQKsr2jA80eGGvfbVqnBh7zxe7VwBWnARRhwg33nMsVmE0sn79FB50fBdzhh88tA+H
-         dqNQ==
-X-Gm-Message-State: APjAAAWhzStBxHjrBKrcyNxgyFgJtfWuCbYJULUbXrlSbqe9YbtQzrCq
-        7hRADICTSuImta7hCrRLCQ9llW8Qje0=
-X-Google-Smtp-Source: APXvYqxyCoggK/pSVUbVz0hRcdhBwMjdHO+16aBImZOzJZOPOTKWH1+nsJu27j/kqKjVxmrY1pRdHQ==
-X-Received: by 2002:a19:914c:: with SMTP id y12mr10852432lfj.108.1565313375163;
-        Thu, 08 Aug 2019 18:16:15 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id x2sm16309764lfg.12.2019.08.08.18.16.13
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 08 Aug 2019 18:16:14 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id j17so14225798lfp.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 18:16:13 -0700 (PDT)
-X-Received: by 2002:a19:641a:: with SMTP id y26mr10787490lfb.29.1565313373711;
- Thu, 08 Aug 2019 18:16:13 -0700 (PDT)
+        Thu, 8 Aug 2019 21:16:28 -0400
+Received: from mail-eopbgr1310134.outbound.protection.outlook.com ([40.107.131.134]:44410
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404985AbfHIBQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 21:16:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Z5KHzKDeee8shw+MSNtrHEmkO2JovDlqwq5ByRgk/DPHMihRGSLeF+mrAvszYqgEY5N99k52LC17Bd+XgEEWveP6nRjyEiXvblUo85zASYQljyHIu0vDdkS7Od8oq0ga7nVw2fWTEKWsBQpb9i9H6WRaaiDfEpSN9YU3MobFY3zQ0U+gh5NQ1NSLXxy/IOTv7YPszrtLFj+f9S9EsPBQrZzOpQ8lmioL6QI+dtzJ2hyCqFxQVsI7Pe1X0U4J7Gvw0MpSjZ2AeBYD77aKy+poPbi187XGWj7inCA5a9zRWJU8fnLiFdwDWMzXN/RhrmDxJmf6dCWZHQYEOmXj4giFRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K/KFFF8I8F5vWqJ+gtFvkdL1t5UTAKiMHkWiKpUIfyc=;
+ b=FObFYv/pnt7xPR2yPAJgrdEwqTVFbiD3CQYw6PWI2BOQxgO6vr/6BypL8CauYGDixQvrITIA3ckTm/cGAG9Gezv76JeyIj6I7u2DbLfZ5Gk1JhM2qrLAJ1/qvQRtmTqkEuWz9bw95E6Nmib3ikFS1UnH3FDblwkqyT4mjZav8wnXI4X3C1YoJJhxH8nQ+s+1fUSusnaJ6DSC8jLtihlJuiHb9isZFfe/d788HDYh3qGCfUGKT/tauquV+Psfnss4NiHpj6qEzJNDNY4EwtLlzlLfKH4z2V8pEfhqgnA7MNcna76N0s84YmhXEtmbKMpPersvHK6L9j0BVh8oMByNeA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K/KFFF8I8F5vWqJ+gtFvkdL1t5UTAKiMHkWiKpUIfyc=;
+ b=TdIoBBgonCF+/DmsmcniuhzMrx4o8wCEyeHYCjcLSJjv/jvWVHwo00GhGVrYSNAhp6+3GNCDnfSE1NDpdKOM3Z1MUXlj8jtVVbdLWETyc/21sziUm68d9y4GNuREK0ASxatkpWWSKAaEYRzMmbHAktuZDaMx3fgRKm+9Mf6Ypho=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0108.APCP153.PROD.OUTLOOK.COM (10.170.188.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.2; Fri, 9 Aug 2019 01:16:01 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d44e:57b7:d8fc:e91c]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d44e:57b7:d8fc:e91c%7]) with mapi id 15.20.2157.001; Fri, 9 Aug 2019
+ 01:16:01 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     David Miller <davem@davemloft.net>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+Subject: RE: [PATCH net] hv_netvsc: Fix a warning of suspicious RCU usage
+Thread-Topic: [PATCH net] hv_netvsc: Fix a warning of suspicious RCU usage
+Thread-Index: AdVMFVwGFODpycnVS02FuESxq+YKEgCOleUAAAAOXBA=
+Date:   Fri, 9 Aug 2019 01:16:01 +0000
+Message-ID: <PU1P153MB0169755705D5291E5E9D3A03BFD60@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <PU1P153MB0169AECABF6094A3E7BEE381BFD50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20190808.181350.1331633709956960086.davem@davemloft.net>
+In-Reply-To: <20190808.181350.1331633709956960086.davem@davemloft.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-09T01:15:58.0388211Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b3c71bd6-6461-425b-aada-43e5f758ed2b;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:0:c9b5:49d6:29e2:b6ef]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d459aa6e-6b04-40c5-d718-08d71c672471
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600158)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:PU1P153MB0108;
+x-ms-traffictypediagnostic: PU1P153MB0108:|PU1P153MB0108:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB0108E1F6247F1D209D05FB73BFD60@PU1P153MB0108.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:483;
+x-forefront-prvs: 01244308DF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(4636009)(376002)(346002)(396003)(39860400002)(366004)(136003)(189003)(199004)(11346002)(478600001)(14454004)(2906002)(22452003)(66476007)(316002)(76116006)(33656002)(55016002)(8990500004)(9686003)(229853002)(14444005)(256004)(7416002)(6436002)(53936002)(6116002)(99286004)(54906003)(486006)(86362001)(6246003)(7696005)(8936002)(7736002)(52536014)(74316002)(4744005)(81156014)(10290500003)(10090500001)(25786009)(4326008)(81166006)(5660300002)(71200400001)(46003)(476003)(186003)(64756008)(66446008)(8676002)(6506007)(53546011)(6916009)(71190400001)(446003)(305945005)(66556008)(66946007)(76176011)(102836004)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0108;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: X0/UGWbnypCoMU7n72D/EMJeIxlJD11rMpoMgGx43kprKK6IBJ1BdM9v9HNGVHrl9rWbkIrXJ2Ul+5lVNQ45YdTs5Gelkhq6RGgiSdjjS661uyFavhNKRw9ZT1YB5K2KiYeKHcnJCzfmGUA4LgWAcbZmkEus0mPtj9YP77pt4yJngCxb3Har6WXXozdGCwBStkKLFjTwFksNWS8bAlqxZYk42K7bdhcPEad9hKEv/MTgXfL2DbCVNSMci/J9PKxkMvK/nFyhQfqXDH/wGplOX+9JuLL+RsSFLTMz5ky/Geb7N1sn2itNNLkiLxupqzXizrvW6njcKsyOmTqCdTRWDRcIxwhct7fD5YL7Y5NYwXZZ69SeltD4o8eAC0db+5Cz61kpkSUmOEfkSDoueXrA8U47IhaF4imc+GJ0iO5cc1E=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
- <20190807222634.1723-10-john.ogness@linutronix.de> <CAHk-=wiKTn-BMpp4w645XqmFBEtUXe84+TKc6aRMPbvFwUjA=A@mail.gmail.com>
- <874l2rclmw.fsf@linutronix.de> <CAHk-=wiRN9v7UmhbTZgskh-MLyY2f0-8Zi3fUziy+GpZnj2i3w@mail.gmail.com>
- <20190808194523.6f83e087@gandalf.local.home> <CAHk-=wiRpvRg6dpEWqaB20QUFRq8or0-AGgkjvisygptRE64UA@mail.gmail.com>
- <20190808204841.5afcad46@gandalf.local.home>
-In-Reply-To: <20190808204841.5afcad46@gandalf.local.home>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 8 Aug 2019 18:15:57 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whNcrysjJYPDFhKAc4tvd80XGAyh95oZeAY6bmzpv3G-A@mail.gmail.com>
-Message-ID: <CAHk-=whNcrysjJYPDFhKAc4tvd80XGAyh95oZeAY6bmzpv3G-A@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 9/9] printk: use a new ringbuffer implementation
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d459aa6e-6b04-40c5-d718-08d71c672471
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Aug 2019 01:16:01.0646
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /xYreHWKSr9JxAEA+Vgw9bJLnyA50YB6Nn4QNmHspzWg3zd7IgbyjkaE4zRvmZp0Hd4c/45OxgL9yIH1p3/5Ow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 8, 2019 at 5:48 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> I've never tried, but are you saying that even with the "10 second
-> hold" the laptop's DRAM may still have old data that is accessible?
+> From: David Miller <davem@davemloft.net>
+> Sent: Thursday, August 8, 2019 6:14 PM
+> To: Dexuan Cui <decui@microsoft.com>
+> Cc: netdev@vger.kernel.org; Haiyang Zhang <haiyangz@microsoft.com>;
+> Stephen Hemminger <sthemmin@microsoft.com>; sashal@kernel.org; KY
+> Srinivasan <kys@microsoft.com>; Michael Kelley <mikelley@microsoft.com>;
+> linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org; olaf@aepfle.d=
+e;
+> apw@canonical.com; jasowang@redhat.com; vkuznets
+> <vkuznets@redhat.com>; marcelo.cerri@canonical.com
+> Subject: Re: [PATCH net] hv_netvsc: Fix a warning of suspicious RCU usage
+>=20
+> From: Dexuan Cui <decui@microsoft.com>
+> Date: Tue, 6 Aug 2019 05:17:44 +0000
+>=20
+> >
+> > This fixes a warning of "suspicious rcu_dereference_check() usage"
+> > when nload runs.
+> >
+> > Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
+> > Signed-off-by: Dexuan Cui <decui@microsoft.com>
+>=20
+> Please resend with appropriate fixes tag.
 
-The power doesn't go off when you *start* the 10s hold. It goes off
-after ten seconds.
+Will do shortly.
 
-So power is off only for the time it then takes you to press the power
-button again to turn it on again. So just a second or two if you react
-quickly to the "ok, power light finally went off". Longer if you
-don't.
-
-But yes, DRAM has retention time in the seconds. See for example
-
-    https://www.pdl.cmu.edu/PDL-FTP/NVM/dram-retention_isca13.pdf
-
-and look at the kinds of times they are looking at - their graphs
-aren't in  milliseconds, they are in 1-5 seconds (and the retention is
-pretty high for that time).
-
-But I don't know what a power-off-in-laptop scenario really looks like..
-
-            Linus
+Thanks,
+-- Dexuan
