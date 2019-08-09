@@ -2,159 +2,106 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E59EFC32757
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20492C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC57020C01
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F414E208C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:58:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbfHIW6s (ORCPT
+        id S1729814AbfHIW6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 18:58:48 -0400
-Received: from mga02.intel.com ([134.134.136.20]:7086 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729534AbfHIW6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 18:58:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:45 -0700
-X-IronPort-AV: E=Sophos;i="5.64,367,1559545200"; 
-   d="scan'208";a="183030758"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:44 -0700
-From:   ira.weiny@intel.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org,
-        Ira Weiny <ira.weiny@intel.com>
-Subject: [RFC PATCH v2 03/19] mm/gup: Pass flags down to __gup_device_huge* calls
-Date:   Fri,  9 Aug 2019 15:58:17 -0700
-Message-Id: <20190809225833.6657-4-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190809225833.6657-1-ira.weiny@intel.com>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
+        Fri, 9 Aug 2019 18:58:50 -0400
+Received: from smtprelay0145.hostedemail.com ([216.40.44.145]:47251 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729533AbfHIW6q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 18:58:46 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id BC25C1801C4F4;
+        Fri,  9 Aug 2019 22:58:44 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: net87_4c35b90f10723
+X-Filterd-Recvd-Size: 3471
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Fri,  9 Aug 2019 22:58:43 +0000 (UTC)
+Message-ID: <7c4db60a2b1976a92b5c824c7d24c4c77aa57278.camel@perches.com>
+Subject: Re: checkpatch.pl should suggest __section
+From:   Joe Perches <joe@perches.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Fri, 09 Aug 2019 15:58:41 -0700
+In-Reply-To: <CAKwvOdmNdvgv=+P1CU36fG+trETojmPEXSMmAmX2TY0e67X-Wg@mail.gmail.com>
+References: <CAKwvOdmNdvgv=+P1CU36fG+trETojmPEXSMmAmX2TY0e67X-Wg@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+On Fri, 2019-08-09 at 15:21 -0700, Nick Desaulniers wrote:
+> Hi Joe,
+> While debugging:
+> https://github.com/ClangBuiltLinux/linux/issues/619
+> we found a bunch of places where __section is not used but could be,
+> and uses a string literal when it probably should not be.
+> 
+> Just a thought that maybe checkpatch.pl could warn if
+> `__attribute__((section` appeared in the added diff, and suggest
+> __section? Then further warn to not use `""` for the section name?
 
-In order to support checking for a layout lease on a FS DAX inode these
-calls need to know if FOLL_LONGTERM was specified.
+Hmm, that makes me wonder about the existing __section uses
+_with_ a quote are actually in the proper sections.
 
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+$ git grep -n -P '\b__section\s*\(\s*"'
+arch/arm64/kernel/smp_spin_table.c:22:volatile unsigned long __section(".mmuoff.data.read")
+arch/s390/boot/startup.c:49:static struct diag210 _diag210_tmp_dma __section(".dma.data");
+include/linux/compiler.h:27:                            __section("_ftrace_annotated_branch")   \
+include/linux/compiler.h:63:            __section("_ftrace_branch")             \
+include/linux/compiler.h:121:#define __annotate_jump_table __section(".rodata..c_jump_table")
+include/linux/compiler.h:158:   __section("___kentry" "+" #sym )                        \
+include/linux/compiler.h:301:   static void * __section(".discard.addressable") __used \
+include/linux/export.h:107:     static int __ksym_marker_##sym[0] __section(".discard.ksym") __used
+include/linux/srcutree.h:127:           __section("___srcu_struct_ptrs") = &name
+
+Maybe there should also be a __section("<foo>") test too.
+
+Anyway, how about:
 ---
- mm/gup.c | 26 +++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
+ scripts/checkpatch.pl | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/mm/gup.c b/mm/gup.c
-index b6a293bf1267..80423779a50a 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1881,7 +1881,8 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 1cdacb4fd207..8e6693ca772c 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -5901,6 +5901,15 @@ sub process {
+ 			     "__aligned(size) is preferred over __attribute__((aligned(size)))\n" . $herecurr);
+ 		}
  
- #if defined(CONFIG_ARCH_HAS_PTE_DEVMAP) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
- static int __gup_device_huge(unsigned long pfn, unsigned long addr,
--		unsigned long end, struct page **pages, int *nr)
-+		unsigned long end, struct page **pages, int *nr,
-+		unsigned int flags)
- {
- 	int nr_start = *nr;
- 	struct dev_pagemap *pgmap = NULL;
-@@ -1907,30 +1908,33 @@ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
- }
- 
- static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
--		unsigned long end, struct page **pages, int *nr)
-+		unsigned long end, struct page **pages, int *nr,
-+		unsigned int flags)
- {
- 	unsigned long fault_pfn;
- 	int nr_start = *nr;
- 
- 	fault_pfn = pmd_pfn(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
--	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr))
-+	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr, flags))
- 		return 0;
- 
- 	if (unlikely(pmd_val(orig) != pmd_val(*pmdp))) {
- 		undo_dev_pagemap(nr, nr_start, pages);
- 		return 0;
- 	}
++# Check for __attribute__ section, prefer __section (without quotes)
++		if ($realfile !~ m@\binclude/uapi/@ &&
++		    $line =~ /\b__attribute__\s*\(\s*\(.*_*section_*\s*\(\s*("[^"]*")/) {
++			my $old = substr($rawline, $-[1], $+[1] - $-[1]);
++			my $new = substr($old, 1, -1);
++			WARN("PREFER_SECTION",
++			     "__section($new) is preferred over __attribute__((section($old)))\n" . $herecurr);
++		}
 +
- 	return 1;
- }
- 
- static int __gup_device_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
--		unsigned long end, struct page **pages, int *nr)
-+		unsigned long end, struct page **pages, int *nr,
-+		unsigned int flags)
- {
- 	unsigned long fault_pfn;
- 	int nr_start = *nr;
- 
- 	fault_pfn = pud_pfn(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
--	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr))
-+	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr, flags))
- 		return 0;
- 
- 	if (unlikely(pud_val(orig) != pud_val(*pudp))) {
-@@ -1941,14 +1945,16 @@ static int __gup_device_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
- }
- #else
- static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
--		unsigned long end, struct page **pages, int *nr)
-+		unsigned long end, struct page **pages, int *nr,
-+		unsigned int flags)
- {
- 	BUILD_BUG();
- 	return 0;
- }
- 
- static int __gup_device_huge_pud(pud_t pud, pud_t *pudp, unsigned long addr,
--		unsigned long end, struct page **pages, int *nr)
-+		unsigned long end, struct page **pages, int *nr,
-+		unsigned int flags)
- {
- 	BUILD_BUG();
- 	return 0;
-@@ -2051,7 +2057,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
- 	if (pmd_devmap(orig)) {
- 		if (unlikely(flags & FOLL_LONGTERM))
- 			return 0;
--		return __gup_device_huge_pmd(orig, pmdp, addr, end, pages, nr);
-+		return __gup_device_huge_pmd(orig, pmdp, addr, end, pages, nr,
-+					     flags);
- 	}
- 
- 	refs = 0;
-@@ -2092,7 +2099,8 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
- 	if (pud_devmap(orig)) {
- 		if (unlikely(flags & FOLL_LONGTERM))
- 			return 0;
--		return __gup_device_huge_pud(orig, pudp, addr, end, pages, nr);
-+		return __gup_device_huge_pud(orig, pudp, addr, end, pages, nr,
-+					     flags);
- 	}
- 
- 	refs = 0;
--- 
-2.20.1
+ # Check for __attribute__ format(printf, prefer __printf
+ 		if ($realfile !~ m@\binclude/uapi/@ &&
+ 		    $line =~ /\b__attribute__\s*\(\s*\(\s*format\s*\(\s*printf/) {
+
+
 
