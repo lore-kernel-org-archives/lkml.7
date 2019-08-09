@@ -2,103 +2,140 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 330AAC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A068C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14BAD2166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E24C32171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:34:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405956AbfHIIdo (ORCPT
+        id S2405979AbfHIIel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 04:33:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37894 "EHLO mx1.suse.de"
+        Fri, 9 Aug 2019 04:34:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38264 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726054AbfHIIdn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 04:33:43 -0400
+        id S1726054AbfHIIek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 04:34:40 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CF469AFBB;
-        Fri,  9 Aug 2019 08:33:41 +0000 (UTC)
-Date:   Fri, 9 Aug 2019 10:33:40 +0200
-From:   Jean Delvare <jdelvare@suse.de>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Linux I2C <linux-i2c@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org,
-        Andrew Cooks <acooks@rationali.st>, linux-acpi@vger.kernel.org,
-        platypus-sw@opengear.com, "Tobin C . Harding" <me@tobin.cc>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Will Wagner <willw@carallon.com>
-Subject: Re: [PATCH v5 0/3] Enable ACPI-defined peripherals on i2c-piix4
- SMBus
-Message-ID: <20190809103340.2ef24523@endymion>
-In-Reply-To: <b013c33b-da11-ce5e-08d4-0b24a8575109@metux.net>
-References: <20190802145109.38dd4045@endymion>
-        <b013c33b-da11-ce5e-08d4-0b24a8575109@metux.net>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        by mx1.suse.de (Postfix) with ESMTP id DD89FAE49;
+        Fri,  9 Aug 2019 08:34:36 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id DC04B1E437E; Fri,  9 Aug 2019 10:34:35 +0200 (CEST)
+Date:   Fri, 9 Aug 2019 10:34:35 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Michal Hocko <mhocko@kernel.org>, Jan Kara <jack@suse.cz>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Matthew Wilcox <willy@infradead.org>, john.hubbard@gmail.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
+        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
+        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: Re: [PATCH 00/34] put_user_pages(): miscellaneous call sites
+Message-ID: <20190809083435.GA17568@quack2.suse.cz>
+References: <20190802022005.5117-1-jhubbard@nvidia.com>
+ <20190802091244.GD6461@dhcp22.suse.cz>
+ <20190802124146.GL25064@quack2.suse.cz>
+ <20190802142443.GB5597@bombadil.infradead.org>
+ <20190802145227.GQ25064@quack2.suse.cz>
+ <076e7826-67a5-4829-aae2-2b90f302cebd@nvidia.com>
+ <20190807083726.GA14658@quack2.suse.cz>
+ <20190807084649.GQ11812@dhcp22.suse.cz>
+ <20190808023637.GA1508@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808023637.GA1508@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Enrico,
-
-On Thu, 8 Aug 2019 11:17:53 +0200, Enrico Weigelt, metux IT consult wrote:
-> On 02.08.19 14:51, Jean Delvare wrote:
-> > These patches fix a couple of issues with the i2c-piix4 driver on
-> > AMD Family 16h Model 30h SoCs and add ACPI-based enumeration to the
-> > i2c-piix4 driver.  
+On Wed 07-08-19 19:36:37, Ira Weiny wrote:
+> On Wed, Aug 07, 2019 at 10:46:49AM +0200, Michal Hocko wrote:
+> > > So I think your debug option and my suggested renaming serve a bit
+> > > different purposes (and thus both make sense). If you do the renaming, you
+> > > can just grep to see unconverted sites. Also when someone merges new GUP
+> > > user (unaware of the new rules) while you switch GUP to use pins instead of
+> > > ordinary references, you'll get compilation error in case of renaming
+> > > instead of hard to debug refcount leak without the renaming. And such
+> > > conflict is almost bound to happen given the size of GUP patch set... Also
+> > > the renaming serves against the "coding inertia" - i.e., GUP is around for
+> > > ages so people just use it without checking any documentation or comments.
+> > > After switching how GUP works, what used to be correct isn't anymore so
+> > > renaming the function serves as a warning that something has really
+> > > changed.
+> > 
+> > Fully agreed!
 > 
-> Can you tell a little bit more about what devices are behind the smbus ?
-> I recall the G-412 SoCs (such as on apu2+ boards) have an Hudson inside
-> and fall into this category. (I'll have to check when back in office),
-> so (as the apu2 platform driver maintainer) I'm very interested in this.
+> Ok Prior to this I've been basing all my work for the RDMA/FS DAX stuff in
+> Johns put_user_pages()...  (Including when I proposed failing truncate with a
+> lease in June [1])
+> 
+> However, based on the suggestions in that thread it became clear that a new
+> interface was going to need to be added to pass in the "RDMA file" information
+> to GUP to associate file pins with the correct processes...
+> 
+> I have many drawings on my white board with "a whole lot of lines" on them to
+> make sure that if a process opens a file, mmaps it, pins it with RDMA, _closes_
+> it, and ummaps it; that the resulting file pin can still be traced back to the
+> RDMA context and all the processes which may have access to it....  No matter
+> where the original context may have come from.  I believe I have accomplished
+> that.
+> 
+> Before I go on, I would like to say that the "imbalance" of get_user_pages()
+> and put_page() bothers me from a purist standpoint...  However, since this
+> discussion cropped up I went ahead and ported my work to Linus' current master
+> (5.3-rc3+) and in doing so I only had to steal a bit of Johns code...  Sorry
+> John...  :-(
+> 
+> I don't have the commit messages all cleaned up and I know there may be some
+> discussion on these new interfaces but I wanted to throw this series out there
+> because I think it may be what Jan and Michal are driving at (or at least in
+> that direction.
+> 
+> Right now only RDMA and DAX FS's are supported.  Other users of GUP will still
+> fail on a DAX file and regular files will still be at risk.[2]
+> 
+> I've pushed this work (based 5.3-rc3+ (33920f1ec5bf)) here[3]:
+> 
+> https://github.com/weiny2/linux-kernel/tree/linus-rdmafsdax-b0-v3
+> 
+> I think the most relevant patch to this conversation is:
+> 
+> https://github.com/weiny2/linux-kernel/commit/5d377653ba5cf11c3b716f904b057bee6641aaf6
+> 
+> I stole Jans suggestion for a name as the name I used while prototyping was
+> pretty bad...  So Thanks Jan...  ;-)
 
-Unfortunately not. I only picked up from where Andrew Cooks left, due
-to me being way too slow to review his patches. I did not want his work
-to be lost. I was able to test the first 2 patches which fix bugs, but
-not the 3rd one which deals with ACPI devices. There does not seem to
-be any such device on the 2 test machines I have remotely access to.
+For your function, I'd choose a name like vaddr_pin_leased_pages() so that
+association with a lease is clear from the name :) Also I'd choose the
+counterpart to be vaddr_unpin_leased_page[s](). Especially having put_page in
+the name looks confusing to me...
 
-> Does the probing need some special BIOS support (or do the necessary
-> table entries already come from aegesa) ?
-
-I assume that ACPI devices are declared in one of the ACPI tables, so
-it comes from the "BIOS", yes, whatever form it takes these days.
-
-> I have to admit, I'm still confused by the AMD documentation - haven't
-> found a clear documentation on what peripherals exactly are in the
-> G-412 SoC, just puzzled together that the FCH seems to be an Hudson,
-> probably v2. There also seems to be some relation between smbus and
-> gpio, but the gpio's are directly memory-mapped - no idea whether they
-> just share the same base address register or the gpios are really behind
-> smbus and some hw logic directy maps them into mmio space ...
-> Do you happen to have some more information on that ?
-
-I remember noticing long ago that SMBus ports were using GPIO pins, so
-these pins could be used for SMBus or for any other purpose. I could
-not find any way to figure out from the registers if a given pin pair
-was used for SMBus or not, which is pretty bad because it means we are
-blindly instantiating ALL possible SMBus ports even if some of the pins
-are used for a completely different purpose. It was over 1 year ago
-though, so I don't remember the details, and my findings then may not
-apply to the most recent hardware.
-
-> By the way: I'm considering collecting some hw documentation in the
-> kernel tree (maybe Documentation/hardware/...) - do you folks think
-> that's a good idea ?
-
-No. Only documentation specifically related to the Linux kernel should
-live in the kernel tree. OS-neutral documentation must go somewhere
-else.
+								Honza
 
 -- 
-Jean Delvare
-SUSE L3 Support
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
