@@ -2,156 +2,155 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9193CC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 360ABC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD342171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:25:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cf5fmB7m"
+	by mail.kernel.org (Postfix) with ESMTP id 04DFB2171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:28:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565357295;
+	bh=5H5b7y+4EokoM0HkClMwlRbqVVUaENMdf+M7pdtzgA0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JjCeP4D6IV0/+RGuevd2AKMSX+o7ZmYWEGS4A00VIYiFF+Lp12kqMvJycbnZLwBu6
+	 XckdDHSjuyrC3a4BHJr4u8hlWDTS+fImNUTIot+kTwMKPhxwplQs7rzWdmhW4HS7EA
+	 gCqT3nGA1lRfAhupVvPb6WyQ+ChfkfCw83JKCQWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407081AbfHINZb (ORCPT
+        id S2407084AbfHIN2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:25:31 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:40408 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406273AbfHINZa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:25:30 -0400
-Received: by mail-qk1-f193.google.com with SMTP id s145so71595691qke.7;
-        Fri, 09 Aug 2019 06:25:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2ZrY/b4WntgdLGp44kkX12ktRp+3EYn+/QxZioshkhU=;
-        b=Cf5fmB7mzINWWtrGpKp//JYl/uShFrRYFRezo/n+I+yOCKP6rkv6U92vt0YdSYbgSo
-         0BhJVMNKmLB+Gs4wXSgvOj+yXSLtGc1lg5dzWXvSCXyOzMpG3CDDUkrieA0maDrwwWY5
-         fWvyhyNA88Ohw/5spZ+0mSk51Mlnn/vXYgsedRAN219VgyMt0gcD1xKOAYd3rQWcP8N9
-         1+6tStmEY6eLumRqFIcvMMPSXVpywmgg5emaN9h/TqI+sCJu+MLhkeP0lUy1LMd/44pt
-         0EArm9PRrnH6wdGOlUrqqg09ViTBXGWEIt/pwRfVbtrGWCkDorcBu6qePEDjmcXb/E0r
-         Betg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2ZrY/b4WntgdLGp44kkX12ktRp+3EYn+/QxZioshkhU=;
-        b=SQOfEPs5p0680gDlJzvZyRsTs2yLZliarEY4D2dCk1EnDMU6JUX3smVwbFN6l9cTby
-         DCVkeYWnZlZv8hgetM+b3tJzgQN+f5Pg+JxNz4et55mdkJDcVpZAVLc7x64MXzNRiQr4
-         cYOwgpQExKK/vwU53Nblj2P3izetXqN15ycrQw/cWG6PqJBbltuOCzrUh2ndDA7Pkeab
-         o6aa/OBe7FFer5+83KogClgRcBFkkMn33KzOYe4yXV5RbqQ0vrMqfgyNxl3OthORGUP7
-         dxrjQzj5ugo8kg8PgD+ohm0lLpQJTnzfThP6pi+7UJBTr2++qtmdIMJzG46mdBD2yKTq
-         ZV6A==
-X-Gm-Message-State: APjAAAU3NdAOrH4OMwaSxBS/NR5hHOznR2jIwMRbxLNZbzkzEq7Q0SnA
-        FWcAR/JeEVV+aXia5ObVKGM=
-X-Google-Smtp-Source: APXvYqwFMz2xOQB1F9Th3KiEIo21jHYwJ4apOW05gm1IGEUJFXLHHHJDAkaGMO/oVYNrOB9QG70F7Q==
-X-Received: by 2002:a37:c87:: with SMTP id 129mr16707779qkm.240.1565357129652;
-        Fri, 09 Aug 2019 06:25:29 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id z18sm39964608qki.110.2019.08.09.06.25.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 06:25:29 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 8885440340; Fri,  9 Aug 2019 10:25:22 -0300 (-03)
-Date:   Fri, 9 Aug 2019 10:25:22 -0300
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH] perf trace: Fix segmentation fault when access syscall
- info
-Message-ID: <20190809132522.GB20899@kernel.org>
-References: <20190809104752.27338-1-leo.yan@linaro.org>
+        Fri, 9 Aug 2019 09:28:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55152 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726091AbfHIN2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:28:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DDE1214C6;
+        Fri,  9 Aug 2019 13:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565357292;
+        bh=5H5b7y+4EokoM0HkClMwlRbqVVUaENMdf+M7pdtzgA0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oxB3Emcyz8XTPMJKE3Y0ERvCS3wx3MpN4HaZYeFBjqS8FG4CZT8m8P1NeKaiqiw2g
+         a9zHd52yoo+fRNoy4aQfLm9DfU2BVXZj8f81DtNHf+dtP4quAWeOFSci/xnCEVebMm
+         NME5uEl0BR2gU5/vRVgQhTn4PmcIyOQZq4sUTsYg=
+Date:   Fri, 9 Aug 2019 15:28:09 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Joe Burmeister <joe.burmeister@devtank.co.uk>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Add optional chip erase functionality to AT25 EEPROM
+ driver.
+Message-ID: <20190809132809.GA30876@kroah.com>
+References: <20190809125358.24440-1-joe.burmeister@devtank.co.uk>
+ <20190809130005.GA13962@kroah.com>
+ <d6534808-aa41-0bf0-a516-cee9bbd8e97a@devtank.co.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190809104752.27338-1-leo.yan@linaro.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <d6534808-aa41-0bf0-a516-cee9bbd8e97a@devtank.co.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Aug 09, 2019 at 06:47:52PM +0800, Leo Yan escreveu:
-> 'perf trace' reports the segmentation fault as below on Arm64:
+On Fri, Aug 09, 2019 at 02:18:24PM +0100, Joe Burmeister wrote:
+> Hi Greg,
 > 
->   # perf trace -e string -e augmented_raw_syscalls.c
->   LLVM: dumping tools/perf/examples/bpf/augmented_raw_syscalls.o
->   perf: Segmentation fault
->   Obtained 12 stack frames.
->   perf(sighandler_dump_stack+0x47) [0xaaaaac96ac87]
->   linux-vdso.so.1(+0x5b7) [0xffffadbeb5b7]
->   /lib/aarch64-linux-gnu/libc.so.6(strlen+0x10) [0xfffface7d5d0]
->   /lib/aarch64-linux-gnu/libc.so.6(_IO_vfprintf+0x1ac7) [0xfffface49f97]
->   /lib/aarch64-linux-gnu/libc.so.6(__vsnprintf_chk+0xc7) [0xffffacedfbe7]
->   perf(scnprintf+0x97) [0xaaaaac9ca3ff]
->   perf(+0x997bb) [0xaaaaac8e37bb]
->   perf(cmd_trace+0x28e7) [0xaaaaac8ec09f]
->   perf(+0xd4a13) [0xaaaaac91ea13]
->   perf(main+0x62f) [0xaaaaac8a147f]
->   /lib/aarch64-linux-gnu/libc.so.6(__libc_start_main+0xe3) [0xfffface22d23]
->   perf(+0x57723) [0xaaaaac8a1723]
->   Segmentation fault
+> On 09/08/2019 14:00, Greg Kroah-Hartman wrote:
+> > On Fri, Aug 09, 2019 at 01:53:55PM +0100, Joe Burmeister wrote:
+> > > +static void _eeprom_at25_store_erase_locked(struct at25_data *at25)
+> > > +{
+> > > +	unsigned long	timeout, retries;
+> > > +	int				sr, status;
+> > > +	u8	cp;
+> > > +
+> > > +	cp = AT25_WREN;
+> > > +	status = spi_write(at25->spi, &cp, 1);
+> > > +	if (status < 0) {
+> > > +		dev_dbg(&at25->spi->dev, "ERASE WREN --> %d\n", status);
+> > > +		return;
+> > > +	}
+> > > +	cp = at25->erase_instr;
+> > > +	status = spi_write(at25->spi, &cp, 1);
+> > > +	if (status < 0) {
+> > > +		dev_dbg(&at25->spi->dev, "CHIP_ERASE --> %d\n", status);
+> > > +		return;
+> > > +	}
+> > > +	/* Wait for non-busy status */
+> > > +	timeout = jiffies + msecs_to_jiffies(ERASE_TIMEOUT);
+> > > +	retries = 0;
+> > > +	do {
+> > > +		sr = spi_w8r8(at25->spi, AT25_RDSR);
+> > > +		if (sr < 0 || (sr & AT25_SR_nRDY)) {
+> > > +			dev_dbg(&at25->spi->dev,
+> > > +				"rdsr --> %d (%02x)\n", sr, sr);
+> > > +			/* at HZ=100, this is sloooow */
+> > > +			msleep(1);
+> > > +			continue;
+> > > +		}
+> > > +		if (!(sr & AT25_SR_nRDY))
+> > > +			return;
+> > > +	} while (retries++ < 200 || time_before_eq(jiffies, timeout));
+> > > +
+> > > +	if ((sr < 0) || (sr & AT25_SR_nRDY)) {
+> > > +		dev_err(&at25->spi->dev,
+> > > +			"chip erase, timeout after %u msecs\n",
+> > > +			jiffies_to_msecs(jiffies -
+> > > +				(timeout - ERASE_TIMEOUT)));
+> > > +		status = -ETIMEDOUT;
+> > > +		return;
+> > > +	}
+> > > +}
+> > > +
+> > > +
+> > No need for 2 lines :(
 > 
-> This issue is introduced by commit 30a910d7d3e0 ("perf trace:
-> Preallocate the syscall table"), it allocates trace->syscalls.table[]
-> array and the element count is 'trace->sctbl->syscalls.nr_entries';
-> but on Arm64, the system call number is not continuously used; e.g. the
-> syscall maximum id is 436 but the real entries is only 281.  So the
-> table is allocated with 'nr_entries' as the element count, but it
-> accesses the table with the syscall id, which might be out of the bound
-> of the array and cause the segmentation fault.
+> Sorry, other coding conventions I'm used to.
+
+checkpatch.pl should have warned you about this, you did run that before
+sending your patch out, right?
+
+> > > +static ssize_t eeprom_at25_store_erase(struct device *dev,
+> > > +					 struct device_attribute *attr,
+> > > +					 const char *buf, size_t count)
+> > > +{
+> > > +	struct at25_data *at25 = dev_get_drvdata(dev);
+> > > +	int erase = 0;
+> > > +
+> > > +	sscanf(buf, "%d", &erase);
+> > > +	if (erase) {
+> > > +		mutex_lock(&at25->lock);
+> > > +		_eeprom_at25_store_erase_locked(at25);
+> > > +		mutex_unlock(&at25->lock);
+> > > +	}
+> > > +
+> > > +	return count;
+> > > +}
+> > > +
+> > > +static DEVICE_ATTR(erase, S_IWUSR, NULL, eeprom_at25_store_erase);
+> > > +
+> > > +
+> > Same here.
+> > 
+> > Also, where is the Documentation/ABI/ update for the new sysfs file?
 > 
-> This patch allocates trace->syscalls.table[] with the element count is
-> 'trace->sctbl->syscalls.max_id + 1', this allows any id to access the
-> table without out of the bound.
-
-Thanks a lot! My bad, that is why we have that max_id there, I forgot
-about it and since I tested so far only on x86_64... applied to
-perf/core, since it is only on:
-
-[acme@quaco perf]$ git tag --contains 30a910d7d3e0
-perf-core-for-mingo-5.4-20190729
-[acme@quaco perf]$
-
-- Arnaldo
- 
-> Fixes: 30a910d7d3e0 ("perf trace: Preallocate the syscall table")
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  tools/perf/builtin-trace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> There isn't anything for the existing SPI EEPROM stuff I can see.
 > 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 75eb3811e942..d553d06a9aeb 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -1492,7 +1492,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
->  	const char *name = syscalltbl__name(trace->sctbl, id);
->  
->  	if (trace->syscalls.table == NULL) {
-> -		trace->syscalls.table = calloc(trace->sctbl->syscalls.nr_entries, sizeof(*sc));
-> +		trace->syscalls.table = calloc(trace->sctbl->syscalls.max_id + 1, sizeof(*sc));
->  		if (trace->syscalls.table == NULL)
->  			return -ENOMEM;
->  	}
-> -- 
-> 2.17.1
+> Would I have to document what was already there to add my bit?
 
--- 
+Yes, someone has to, sorry :)
 
-- Arnaldo
+thanks,
+
+greg k-h
