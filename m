@@ -2,132 +2,113 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26400C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 06:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B31FDC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 06:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED36020C01
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 06:35:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="Ko8CXqC3"
+	by mail.kernel.org (Postfix) with ESMTP id 80C1C20C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 06:40:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565332836;
+	bh=JICce7ZE0IlFX5w611YV9nbuvP6Q94yyb0UJ4gSpMys=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dcopIptH9nGJTdhrLdgrtlZR4RWIglNdVdAYnp9N77hUsa6sLei92NonB63VrBk5E
+	 Be7yUnf9n228eZ0xkv2vxxOLiIenQIUgUO9eXi0JHn7f9Xe4uNNQWX//UGc/lyRwhv
+	 JVMSjbb4H0M/YBuDk94POEiR9r0QY1aIs8nXH27Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405484AbfHIGfb (ORCPT
+        id S2405497AbfHIGkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 02:35:31 -0400
-Received: from cmta18.telus.net ([209.171.16.91]:39916 "EHLO cmta18.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727063AbfHIGfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 02:35:31 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id vyUohmq4Y7TgTvyUqhyzUZ; Fri, 09 Aug 2019 00:35:29 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1565332529; bh=l4QjEOhaIO0qn/E25uPtBEV8pXfGDw3ibKcIcvx0glg=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=Ko8CXqC3X73X/TylDbjxHfajbTievNnOmrX7jyB5DGpEOLjkwLi13Z87MfZD5XMAO
-         EnWedXB7n+vlB72olWOpkLS0eyni4NcUokJE0ETl8ZFdb8DSCMhLDlsifRUPSbOfoE
-         iiTyGh4SHs188Tuu3j1XPODq/AkRav95LMMx9vMOFHqH5TVXECazmXivEGVYHDknKr
-         Ii0SotleoAjjnvaBtnudlU6o4I3K9axs9Mrpoyj001enR96DV3zSDmGrQbSr+4zvbw
-         dWv3imZZLQomxW6FgSk0x1kcvxxgYUslotS1KyNkjS2xdlJggw4sPIFMWb4bjz312A
-         x6fRTroBt7nEw==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=e6N4tph/ c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=kj9zAlcOel0A:10 a=aatUQebYAAAA:8 a=PNFDcKh4-V1H6LwEEroA:9 a=CjuIK1q_8ugA:10
- a=7715FyvI7WU-l6oqrZBK:22
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Viresh Kumar'" <viresh.kumar@linaro.org>
-Cc:     <linux-pm@vger.kernel.org>,
-        "'Vincent Guittot'" <vincent.guittot@linaro.org>,
-        <linux-kernel@vger.kernel.org>,
-        "'Rafael Wysocki'" <rjw@rjwysocki.net>,
-        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        "'Len Brown'" <lenb@kernel.org>
-References: <70fce19e43bb825c3b2546e1211d262a59ae7378.1565161495.git.viresh.kumar@linaro.org> <e789eceae3f32a66fff923daeb85b33b88f21fe1.1565161495.git.viresh.kumar@linaro.org> <000601d54e05$e93d0130$bbb70390$@net> <20190809021607.j4qj3jm72gbisvqh@vireshk-i7>
-In-Reply-To: <20190809021607.j4qj3jm72gbisvqh@vireshk-i7>
-Subject: RE: [PATCH V4 2/2] cpufreq: intel_pstate: Implement QoS supported freq constraints
-Date:   Thu, 8 Aug 2019 23:35:25 -0700
-Message-ID: <001f01d54e7c$a22395d0$e66ac170$@net>
+        Fri, 9 Aug 2019 02:40:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35444 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726212AbfHIGkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 02:40:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CF531ABD2;
+        Fri,  9 Aug 2019 06:40:33 +0000 (UTC)
+Date:   Fri, 9 Aug 2019 08:40:32 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Edward Chron <echron@arista.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        David Rientjes <rientjes@google.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Ivan Delalande <colona@arista.com>
+Subject: Re: [PATCH] mm/oom: Add killed process selection information
+Message-ID: <20190809064032.GJ18351@dhcp22.suse.cz>
+References: <20190808183247.28206-1-echron@arista.com>
+ <20190808185119.GF18351@dhcp22.suse.cz>
+ <CAM3twVT0_f++p1jkvGuyMYtaYtzgEiaUtb8aYNCmNScirE4=og@mail.gmail.com>
+ <20190808200715.GI18351@dhcp22.suse.cz>
+ <CAM3twVS7tqcHmHqjzJqO5DEsxzLfBaYF0FjVP+Jjb1ZS4rA9qA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdVOWGxlCwZEXTO5Q3+73ydAwQ87uAAIW9cA
-X-CMAE-Envelope: MS4wfBg1mTLhUptGM5pCS9mv5bDHbtdRoVilruwf2K5Y2XV4U2u00NuHVOJsaTz2T+FJo/8VMpBc+3ekl+iAs/NtrJ6Av/Hihkhm1YRolHEEBYAdPmVnaiQ+
- d7UEdBGaP0xicyw7az4JlIH7qnnwROH3ysVG0pRPIlW6CY9Ns3IXW/50Zk0yg7PAiGo1lBZXtiUbh0G1qymIU0SZ/SHn93l7bOtppJVVEInWxROHrDk2kgJj
- M0yI+BajE2S6CDeNeFTYQZVXZQ+M1ucSGc4QKGjVGfvCQjpguV2j/DnYoZ2x1x6ID+3rYScmA+t+ZIjRzvRpyytqOkZQHBu1FIgLPgI4ZwKNJJO/A4O3DPaw
- tikCZYyExHWi3lCfl626pSHVQkRN1taYYfQvi/dgLwGTvM9F3bY=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM3twVS7tqcHmHqjzJqO5DEsxzLfBaYF0FjVP+Jjb1ZS4rA9qA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019.08.08 19:16 Viresh Kumar wrote:
-> On 08-08-19, 09:25, Doug Smythies wrote:
->> On 2019.08.07 00:06 Viresh Kumar wrote:
->> Tested by: Doug Smythies <dsmythies@telus.net>
->> Thermald seems to now be working O.K. for all the governors.
->
-> Thanks for testing Doug.
-> 
->> I do note that if one sets
->> /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq
->> It seems to override subsequent attempts via
->> /sys/devices/system/cpu/intel_pstate/max_perf_pct.
->> Myself, I find this confusing.
->> 
->> So the question becomes which one is the "master"?
->
-> No one is master, cpufreq takes all the requests for frequency
-> constraints and tries to set the value based on aggregation of all. So
-> for max frequency, the lowest value wins and is shown up in sysfs.
->
-> So, everything looks okay to me.
+[Again, please do not top post - it makes a mess of any longer
+discussion]
 
-O.K. While I understand the explanations, I still struggle with
-this scenario:
- 
-doug@s15:~/temp$ cat /sys/devices/system/cpu/intel_pstate/max_perf_pct
-50    <<< Note: 50% = 1.9 GHz in my system)
-doug@s15:~/temp$ grep . /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq
-/sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq:1900000
-/sys/devices/system/cpu/cpufreq/policy1/scaling_max_freq:1900000
-/sys/devices/system/cpu/cpufreq/policy2/scaling_max_freq:1900000
-/sys/devices/system/cpu/cpufreq/policy3/scaling_max_freq:1900000
-/sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq:1900000
-/sys/devices/system/cpu/cpufreq/policy5/scaling_max_freq:1900000
-/sys/devices/system/cpu/cpufreq/policy6/scaling_max_freq:1900000
-/sys/devices/system/cpu/cpufreq/policy7/scaling_max_freq:1900000
+On Thu 08-08-19 15:15:12, Edward Chron wrote:
+> In our experience far more (99.9%+) OOM events are not kernel issues,
+> they're user task memory issues.
+> Properly maintained Linux kernel only rarely have issues.
+> So useful information about the killed task, displayed in a manner
+> that can be quickly digested, is very helpful.
+> But it turns out the totalpages parameter is also critical to make
+> sense of what is shown.
 
-At this point I am not certain what I'll get if I try to
-set max_perf_pct to 100%, nor do I know how to find out
-with a user command.
+We already do print that information (see mem_cgroup_print_oom_meminfo
+resp. show_mem).
 
-So, I'll try it:
+> So if we report the fooWidget task was using ~15% of memory (I know
+> this is just an approximation but it is often an adequate metric) we
+> often can tell just from that the number is larger than expected so we
+> can start there.
+> Even though the % is a ballpark number, if you are familiar with the
+> tasks on your system and approximately how much memory you expect them
+> to use you can often tell if memory usage is excessive.
+> This is not always the case but it is a fair amount of the time.
+> So the % of memory field is helpful. But we've found we need totalpages as well.
+> The totalpages effects the % of memory the task uses.
 
-doug@s15:~/temp$ echo 100 | sudo tee /sys/devices/system/cpu/intel_pstate/max_perf_pct
-100
-doug@s15:~/temp$ cat /sys/devices/system/cpu/intel_pstate/max_perf_pct
-100  <<< Note: 100% = 3.8 GHz in my system)
-doug@s15:~/temp$ grep . /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq
-/sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq:2200000
-/sys/devices/system/cpu/cpufreq/policy1/scaling_max_freq:2200000
-/sys/devices/system/cpu/cpufreq/policy2/scaling_max_freq:2200000
-/sys/devices/system/cpu/cpufreq/policy3/scaling_max_freq:2200000
-/sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq:2200000
-/sys/devices/system/cpu/cpufreq/policy5/scaling_max_freq:2200000
-/sys/devices/system/cpu/cpufreq/policy6/scaling_max_freq:2200000
-/sys/devices/system/cpu/cpufreq/policy7/scaling_max_freq:2200000
+Is it too difficult to calculate that % from the data available in the
+existing report? I would expect this would be a quite simple script
+which I would consider a better than changing the kernel code.
 
-I guess I had set it sometime earlier, forgot, and then didn't
-get 3.8 Ghz as I had expected via max_perf_pct.
+[...]
+> The oom_score tells us how Linux calculated the score for the task,
+> the oom_score_adj effects this so it is helpful to have that in
+> conjunction with the oom_score.
+> If the adjust is high it can tell us that the task was acting as a
+> canary and so it's oom_score is high even though it's memory
+> utilization can be modest or low.
 
-... Doug
+I am sorry but I still do not get it. How are you going to use that
+information without seeing other eligible tasks. oom_score is just a
+normalized memory usage + some heuristics potentially (we have given a
+discount to root processes until just recently). So this value only
+makes sense to the kernel oom killer implementation. Note that the
+equation might change in the future (that has happen in the past several
+times) so looking at the value in isolation might be quite misleading.
 
-
+I can see some point in printing oom_score_adj, though. Seeing biased -
+one way or the other - tasks being selected might confirm the setting is
+reasonable or otherwise (e.g. seeing tasks with negative scores will
+give an indication that they might be not biased enough). Then you can
+go and check the eligible tasks dump and see what happened. So this part
+makes some sense to me.
+-- 
+Michal Hocko
+SUSE Labs
