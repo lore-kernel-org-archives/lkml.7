@@ -2,397 +2,437 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD827C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B6CC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1FC921743
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB3B4214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:29:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728667AbfHIU3C (ORCPT
+        id S1728838AbfHIU3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 16:29:02 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:37939 "EHLO
+        Fri, 9 Aug 2019 16:29:06 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:56971 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728252AbfHIU26 (ORCPT
+        with ESMTP id S1728556AbfHIU3E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 16:28:58 -0400
+        Fri, 9 Aug 2019 16:29:04 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MekvV-1iTrd20yAf-00ajkH; Fri, 09 Aug 2019 22:28:53 +0200
+ 1M26iv-1htiWo404n-002Ur7; Fri, 09 Aug 2019 22:28:36 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     soc@kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [PATCH 10/16] Input: remove w90x900 keyboard driver
-Date:   Fri,  9 Aug 2019 22:27:38 +0200
-Message-Id: <20190809202749.742267-11-arnd@arndb.de>
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 06/16] watchdog: remove w90x900 driver
+Date:   Fri,  9 Aug 2019 22:27:34 +0200
+Message-Id: <20190809202749.742267-7-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20190809202749.742267-1-arnd@arndb.de>
 References: <20190809202749.742267-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:B9uf6nqpqCvt0g4bgHe/VJ7Oo6T7W9PFQuUHXJDWTVtHG4RP0qf
- Vfoz0D9TXzkrIeFexgI+WIlXO2Ph0b8WOgm4nMKp2JG7NdYO83kO+uimIwU7tXgnv4XPEZe
- agiL6hHosEsJ4040lDCLURCq05wZikhAQ751INNMF62qNOasLqtJVnpqEDhIRZ4m5AW5rgc
- hx79LJpnFlT30eZXC4+aA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ZFggz2mqPK0=:agiv6d5BGkL6g/2pK3NKpj
- gh83uUZUs39coUEYJBkz9q69Ly4mdR/7DOfQigWMx/hk5zZNZjQbIaeofZpa8cNY4Q7GleN4R
- 6bFZnci+Qk0rsKNM9RvzvQLnnvMD3mxsfoHxqjeWaiT0fyG9CEsdCFxRWlp9LA0AlPWe9mUwa
- g5y5Cr4OwWVrcONj7iI+iT5BmPczYfIwEPlvjtyhz8f1ECEsIPBRbvDhwAqMIPOkzQZhSvffg
- WXop0t3NQ6MEF3SAe4dQOvd+f5UF4228tgLw8+amBAqeUKLw8dUQFkuI539pX19CNEoPDvPwu
- f7A/fyH38Yi5onmB5OQMSz1ZX1RZVUW/HUCriWyBFI6ARDSMkaWuAUBK2F2iDE12mOvJydu+I
- ZUGaUbJPIxKH/bamkY7Tca9Slnsxj3S0rN/5ICs/QRaBZps+uJ0O67Cr1/ivfMBJax+xmqepG
- JKHhC5IDfSMnYa9IzUkQ3SqlTWbXQV+HqswXCsqFiJanXtbyJla0E4rmkYkl9nuMHuYBrKcc+
- 9IVfc3mJuwGGMuVyQ6Je2iUwiNjbdMzGnXBMdjVoA3duBGYRL0BOz3YbTH7C0UqVenA7XAZNh
- 9sjNmEIAvaerksVkfRai01Owwx1JnGn64/KbB2XdXTSaJ3qwv3gugUcuh+4GKekuchao88PhB
- Fs9R/Y2L4+rSgsOWoVEQYatGUIoeDZ8nNe6KgfJ7X21yxrjdOC4DU8JHWzuSPrKR3AVdiWTMM
- uPJFO/jHqC3tLzU5zUfD4obiem3WBPcZH4+VXQ==
+X-Provags-ID: V03:K1:4aZZJ0adOC4gNbJNr72QyItZi8IyivyiRyv6tRpgrjVP+CGv1cv
+ 2uO0jATNpCZk/ogPQlZbBKnYr7D679/NRP4wiAo9nJm0x+zBB9ZkQLJxTFOurIoJW5a0MIS
+ 1bCLvs+82yAUazyFXUIpU1JraDmICYVRBTLPZ4XUa9MJlL+plsL1ZJdU35WHbBHKKLouJg+
+ c/buwbH2Oi1MOTjKiLOWQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:TIiZUlyO4KI=:xMX0wJO46U8BafJBRrX1L/
+ euv754YHVVFavyBFIjjId75wTHZUlzd/xcQYQCKFrHI8HwI2Nk+1VpMHwpiidDMsbIuqGFsms
+ Gbe1hSoKiA+0Fo3+LncljjMgrxOBRV0Ee9XIuaCTs62/o6RlJ2r/RyukzmfwnLGrpzHMBL4vu
+ VeyCLPVbYwashUqOhk1KawscikvyHW8z8cDuNgejY9/grpcG/VxVeYWrAnWIu/cOUK8WP+TvN
+ mkwLcp39r8KWQei7FGv6LUGupcRhy0wqdGcwZLCkr9TnjjjeX5h9gOCGjIDnmS3mRxOW9l5cS
+ IypKV4hU+8kRNEJhrtPR3yZCJPBxFUeFRP6sn7X2AtR7mPzdHCkxMSd2q3+4vWMxyUGUdB2W7
+ Q7Sn6zljTYK/7tzoy7oAl4fa558Fjhk0ZRfv+jNscYRLNCsLcc14msVQGzn53FPDAFx8mKaqH
+ YC3vCTFUL1Dj+2kIyVDVVqUHGIdUZGmhhrFJrBJRZ3oGRqfj4PUS/JJCvwMUMaDMgM7PKwT7V
+ oU+m1EgG+kwXLGu4GzIfFNa0C01nVGxrN9WJx40RCLHPF0GZwgXzVzXKSDpxMLlLdz6jRl31b
+ fZoU/APAHpv8T1/y82xau+xvtPQNqA7P4jajDxMjm2/tsaER8yUbmKsje0gdPhyawgStqSDI/
+ 0jiCJt/8db5+bQywyof9SDTRsioCZS92yVX+G0YSm6PgBS17tYHVQdCsiS8IluwcvvKmUal23
+ 8X9iTCz5GpwIeTKgwkAe5yGk86NM1D2m4HCn8g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ARM w90x900 platform is getting removed, so this driver is obsolete.
+The ARM w90x900 platform is getting removed, so this driver is obsolete
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/input/keyboard/Kconfig               |  11 -
- drivers/input/keyboard/Makefile              |   1 -
- drivers/input/keyboard/w90p910_keypad.c      | 264 -------------------
- include/linux/platform_data/keypad-w90p910.h |  16 --
- 4 files changed, 292 deletions(-)
- delete mode 100644 drivers/input/keyboard/w90p910_keypad.c
- delete mode 100644 include/linux/platform_data/keypad-w90p910.h
+ .../watchdog/watchdog-parameters.rst          |  10 -
+ drivers/watchdog/Kconfig                      |   9 -
+ drivers/watchdog/Makefile                     |   1 -
+ drivers/watchdog/nuc900_wdt.c                 | 302 ------------------
+ 4 files changed, 322 deletions(-)
+ delete mode 100644 drivers/watchdog/nuc900_wdt.c
 
-diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-index 8e9c3ea9d5e7..c1da129a4eb5 100644
---- a/drivers/input/keyboard/Kconfig
-+++ b/drivers/input/keyboard/Kconfig
-@@ -731,17 +731,6 @@ config KEYBOARD_XTKBD
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called xtkbd.
+diff --git a/Documentation/watchdog/watchdog-parameters.rst b/Documentation/watchdog/watchdog-parameters.rst
+index 226aba56f704..223c99361a30 100644
+--- a/Documentation/watchdog/watchdog-parameters.rst
++++ b/Documentation/watchdog/watchdog-parameters.rst
+@@ -366,16 +366,6 @@ nic7018_wdt:
  
--config KEYBOARD_W90P910
--	tristate "W90P910 Matrix Keypad support"
--	depends on ARCH_W90X900
--	select INPUT_MATRIXKMAP
+ -------------------------------------------------
+ 
+-nuc900_wdt:
+-    heartbeat:
+-	Watchdog heartbeats in seconds.
+-	(default = 15)
+-    nowayout:
+-	Watchdog cannot be stopped once started
+-	(default=kernel config parameter)
+-
+--------------------------------------------------
+-
+ omap_wdt:
+     timer_margin:
+ 	initial watchdog timeout (in seconds)
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index e631f1ae303a..0e64f501ef30 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -655,15 +655,6 @@ config STMP3XXX_RTC_WATCHDOG
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called stmp3xxx_rtc_wdt.
+ 
+-config NUC900_WATCHDOG
+-	tristate "Nuvoton NUC900 watchdog"
+-	depends on ARCH_W90X900 || COMPILE_TEST
 -	help
--	  Say Y here to enable the matrix keypad on evaluation board
--	  based on W90P910.
--
+-	  Say Y here if to include support for the watchdog timer
+-	  for the Nuvoton NUC900 series SoCs.
 -	  To compile this driver as a module, choose M here: the
--	  module will be called w90p910_keypad.
+-	  module will be called nuc900_wdt.
 -
- config KEYBOARD_CROS_EC
- 	tristate "ChromeOS EC keyboard"
- 	select INPUT_MATRIXKMAP
-diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
-index 06a0af6efeae..9510325c0c5d 100644
---- a/drivers/input/keyboard/Makefile
-+++ b/drivers/input/keyboard/Makefile
-@@ -68,4 +68,3 @@ obj-$(CONFIG_KEYBOARD_TEGRA)		+= tegra-kbc.o
- obj-$(CONFIG_KEYBOARD_TM2_TOUCHKEY)	+= tm2-touchkey.o
- obj-$(CONFIG_KEYBOARD_TWL4030)		+= twl4030_keypad.o
- obj-$(CONFIG_KEYBOARD_XTKBD)		+= xtkbd.o
--obj-$(CONFIG_KEYBOARD_W90P910)		+= w90p910_keypad.o
-diff --git a/drivers/input/keyboard/w90p910_keypad.c b/drivers/input/keyboard/w90p910_keypad.c
+ config TS4800_WATCHDOG
+ 	tristate "TS-4800 Watchdog"
+ 	depends on HAS_IOMEM && OF
+diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+index 85f55ec76f8d..b5a0aed537af 100644
+--- a/drivers/watchdog/Makefile
++++ b/drivers/watchdog/Makefile
+@@ -63,7 +63,6 @@ obj-$(CONFIG_RN5T618_WATCHDOG) += rn5t618_wdt.o
+ obj-$(CONFIG_COH901327_WATCHDOG) += coh901327_wdt.o
+ obj-$(CONFIG_NPCM7XX_WATCHDOG) += npcm_wdt.o
+ obj-$(CONFIG_STMP3XXX_RTC_WATCHDOG) += stmp3xxx_rtc_wdt.o
+-obj-$(CONFIG_NUC900_WATCHDOG) += nuc900_wdt.o
+ obj-$(CONFIG_TS4800_WATCHDOG) += ts4800_wdt.o
+ obj-$(CONFIG_TS72XX_WATCHDOG) += ts72xx_wdt.o
+ obj-$(CONFIG_IMX2_WDT) += imx2_wdt.o
+diff --git a/drivers/watchdog/nuc900_wdt.c b/drivers/watchdog/nuc900_wdt.c
 deleted file mode 100644
-index c88d05d6108a..000000000000
---- a/drivers/input/keyboard/w90p910_keypad.c
+index db124cebe838..000000000000
+--- a/drivers/watchdog/nuc900_wdt.c
 +++ /dev/null
-@@ -1,264 +0,0 @@
+@@ -1,302 +0,0 @@
 -// SPDX-License-Identifier: GPL-2.0-only
 -/*
-- * Copyright (c) 2008-2009 Nuvoton technology corporation.
+- * Copyright (c) 2009 Nuvoton technology corporation.
 - *
 - * Wan ZongShun <mcuos.com@gmail.com>
 - */
 -
--#include <linux/kernel.h>
--#include <linux/module.h>
--#include <linux/interrupt.h>
--#include <linux/input.h>
--#include <linux/device.h>
--#include <linux/platform_device.h>
--#include <linux/clk.h>
--#include <linux/err.h>
+-#include <linux/bitops.h>
+-#include <linux/errno.h>
+-#include <linux/fs.h>
 -#include <linux/io.h>
+-#include <linux/clk.h>
+-#include <linux/kernel.h>
+-#include <linux/miscdevice.h>
+-#include <linux/module.h>
+-#include <linux/moduleparam.h>
+-#include <linux/platform_device.h>
 -#include <linux/slab.h>
+-#include <linux/interrupt.h>
+-#include <linux/types.h>
+-#include <linux/watchdog.h>
+-#include <linux/uaccess.h>
 -
--#include <linux/platform_data/keypad-w90p910.h>
+-#define REG_WTCR		0x1c
+-#define WTCLK			(0x01 << 10)
+-#define WTE			(0x01 << 7)	/*wdt enable*/
+-#define WTIS			(0x03 << 4)
+-#define WTIF			(0x01 << 3)
+-#define WTRF			(0x01 << 2)
+-#define WTRE			(0x01 << 1)
+-#define WTR			(0x01 << 0)
+-/*
+- * The watchdog time interval can be calculated via following formula:
+- * WTIS		real time interval (formula)
+- * 0x00		((2^ 14 ) * ((external crystal freq) / 256))seconds
+- * 0x01		((2^ 16 ) * ((external crystal freq) / 256))seconds
+- * 0x02		((2^ 18 ) * ((external crystal freq) / 256))seconds
+- * 0x03		((2^ 20 ) * ((external crystal freq) / 256))seconds
+- *
+- * The external crystal freq is 15Mhz in the nuc900 evaluation board.
+- * So 0x00 = +-0.28 seconds, 0x01 = +-1.12 seconds, 0x02 = +-4.48 seconds,
+- * 0x03 = +- 16.92 seconds..
+- */
+-#define WDT_HW_TIMEOUT		0x02
+-#define WDT_TIMEOUT		(HZ/2)
+-#define WDT_HEARTBEAT		15
 -
--/* Keypad Interface Control Registers */
--#define KPI_CONF		0x00
--#define KPI_3KCONF		0x04
--#define KPI_LPCONF		0x08
--#define KPI_STATUS		0x0C
+-static int heartbeat = WDT_HEARTBEAT;
+-module_param(heartbeat, int, 0);
+-MODULE_PARM_DESC(heartbeat, "Watchdog heartbeats in seconds. "
+-	"(default = " __MODULE_STRING(WDT_HEARTBEAT) ")");
 -
--#define IS1KEY			(0x01 << 16)
--#define INTTR			(0x01 << 21)
--#define KEY0R			(0x0f << 3)
--#define KEY0C			0x07
--#define DEBOUNCE_BIT		0x08
--#define KSIZE0			(0x01 << 16)
--#define KSIZE1			(0x01 << 17)
--#define KPSEL			(0x01 << 19)
--#define ENKP			(0x01 << 18)
+-static bool nowayout = WATCHDOG_NOWAYOUT;
+-module_param(nowayout, bool, 0);
+-MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started "
+-	"(default=" __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
 -
--#define KGET_RAW(n)		(((n) & KEY0R) >> 3)
--#define KGET_COLUMN(n)		((n) & KEY0C)
--
--#define W90P910_NUM_ROWS	8
--#define W90P910_NUM_COLS	8
--#define W90P910_ROW_SHIFT	3
--
--struct w90p910_keypad {
--	const struct w90p910_keypad_platform_data *pdata;
--	struct clk *clk;
--	struct input_dev *input_dev;
--	void __iomem *mmio_base;
--	int irq;
--	unsigned short keymap[W90P910_NUM_ROWS * W90P910_NUM_COLS];
+-struct nuc900_wdt {
+-	struct clk	 *wdt_clock;
+-	struct platform_device *pdev;
+-	void __iomem	 *wdt_base;
+-	char		 expect_close;
+-	struct timer_list timer;
+-	spinlock_t       wdt_lock;
+-	unsigned long next_heartbeat;
 -};
 -
--static void w90p910_keypad_scan_matrix(struct w90p910_keypad *keypad,
--							unsigned int status)
+-static unsigned long nuc900wdt_busy;
+-static struct nuc900_wdt *nuc900_wdt;
+-
+-static inline void nuc900_wdt_keepalive(void)
 -{
--	struct input_dev *input_dev = keypad->input_dev;
--	unsigned int row = KGET_RAW(status);
--	unsigned int col = KGET_COLUMN(status);
--	unsigned int code = MATRIX_SCAN_CODE(row, col, W90P910_ROW_SHIFT);
--	unsigned int key = keypad->keymap[code];
+-	unsigned int val;
 -
--	input_event(input_dev, EV_MSC, MSC_SCAN, code);
--	input_report_key(input_dev, key, 1);
--	input_sync(input_dev);
+-	spin_lock(&nuc900_wdt->wdt_lock);
 -
--	input_event(input_dev, EV_MSC, MSC_SCAN, code);
--	input_report_key(input_dev, key, 0);
--	input_sync(input_dev);
+-	val = __raw_readl(nuc900_wdt->wdt_base + REG_WTCR);
+-	val |= (WTR | WTIF);
+-	__raw_writel(val, nuc900_wdt->wdt_base + REG_WTCR);
+-
+-	spin_unlock(&nuc900_wdt->wdt_lock);
 -}
 -
--static irqreturn_t w90p910_keypad_irq_handler(int irq, void *dev_id)
+-static inline void nuc900_wdt_start(void)
 -{
--	struct w90p910_keypad *keypad = dev_id;
--	unsigned int  kstatus, val;
+-	unsigned int val;
 -
--	kstatus = __raw_readl(keypad->mmio_base + KPI_STATUS);
+-	spin_lock(&nuc900_wdt->wdt_lock);
 -
--	val = INTTR | IS1KEY;
+-	val = __raw_readl(nuc900_wdt->wdt_base + REG_WTCR);
+-	val |= (WTRE | WTE | WTR | WTCLK | WTIF);
+-	val &= ~WTIS;
+-	val |= (WDT_HW_TIMEOUT << 0x04);
+-	__raw_writel(val, nuc900_wdt->wdt_base + REG_WTCR);
 -
--	if (kstatus & val)
--		w90p910_keypad_scan_matrix(keypad, kstatus);
+-	spin_unlock(&nuc900_wdt->wdt_lock);
 -
--	return IRQ_HANDLED;
+-	nuc900_wdt->next_heartbeat = jiffies + heartbeat * HZ;
+-	mod_timer(&nuc900_wdt->timer, jiffies + WDT_TIMEOUT);
 -}
 -
--static int w90p910_keypad_open(struct input_dev *dev)
+-static inline void nuc900_wdt_stop(void)
 -{
--	struct w90p910_keypad *keypad = input_get_drvdata(dev);
--	const struct w90p910_keypad_platform_data *pdata = keypad->pdata;
--	unsigned int val, config;
+-	unsigned int val;
 -
--	/* Enable unit clock */
--	clk_enable(keypad->clk);
+-	del_timer(&nuc900_wdt->timer);
 -
--	val = __raw_readl(keypad->mmio_base + KPI_CONF);
--	val |= (KPSEL | ENKP);
--	val &= ~(KSIZE0 | KSIZE1);
+-	spin_lock(&nuc900_wdt->wdt_lock);
 -
--	config = pdata->prescale | (pdata->debounce << DEBOUNCE_BIT);
+-	val = __raw_readl(nuc900_wdt->wdt_base + REG_WTCR);
+-	val &= ~WTE;
+-	__raw_writel(val, nuc900_wdt->wdt_base + REG_WTCR);
 -
--	val |= config;
+-	spin_unlock(&nuc900_wdt->wdt_lock);
+-}
 -
--	__raw_writel(val, keypad->mmio_base + KPI_CONF);
+-static inline void nuc900_wdt_ping(void)
+-{
+-	nuc900_wdt->next_heartbeat = jiffies + heartbeat * HZ;
+-}
+-
+-static int nuc900_wdt_open(struct inode *inode, struct file *file)
+-{
+-
+-	if (test_and_set_bit(0, &nuc900wdt_busy))
+-		return -EBUSY;
+-
+-	nuc900_wdt_start();
+-
+-	return stream_open(inode, file);
+-}
+-
+-static int nuc900_wdt_close(struct inode *inode, struct file *file)
+-{
+-	if (nuc900_wdt->expect_close == 42)
+-		nuc900_wdt_stop();
+-	else {
+-		dev_crit(&nuc900_wdt->pdev->dev,
+-			"Unexpected close, not stopping watchdog!\n");
+-		nuc900_wdt_ping();
+-	}
+-
+-	nuc900_wdt->expect_close = 0;
+-	clear_bit(0, &nuc900wdt_busy);
+-	return 0;
+-}
+-
+-static const struct watchdog_info nuc900_wdt_info = {
+-	.identity	= "nuc900 watchdog",
+-	.options	= WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
+-						WDIOF_MAGICCLOSE,
+-};
+-
+-static long nuc900_wdt_ioctl(struct file *file,
+-					unsigned int cmd, unsigned long arg)
+-{
+-	void __user *argp = (void __user *)arg;
+-	int __user *p = argp;
+-	int new_value;
+-
+-	switch (cmd) {
+-	case WDIOC_GETSUPPORT:
+-		return copy_to_user(argp, &nuc900_wdt_info,
+-				sizeof(nuc900_wdt_info)) ? -EFAULT : 0;
+-	case WDIOC_GETSTATUS:
+-	case WDIOC_GETBOOTSTATUS:
+-		return put_user(0, p);
+-
+-	case WDIOC_KEEPALIVE:
+-		nuc900_wdt_ping();
+-		return 0;
+-
+-	case WDIOC_SETTIMEOUT:
+-		if (get_user(new_value, p))
+-			return -EFAULT;
+-
+-		heartbeat = new_value;
+-		nuc900_wdt_ping();
+-
+-		return put_user(new_value, p);
+-	case WDIOC_GETTIMEOUT:
+-		return put_user(heartbeat, p);
+-	default:
+-		return -ENOTTY;
+-	}
+-}
+-
+-static ssize_t nuc900_wdt_write(struct file *file, const char __user *data,
+-						size_t len, loff_t *ppos)
+-{
+-	if (!len)
+-		return 0;
+-
+-	/* Scan for magic character */
+-	if (!nowayout) {
+-		size_t i;
+-
+-		nuc900_wdt->expect_close = 0;
+-
+-		for (i = 0; i < len; i++) {
+-			char c;
+-			if (get_user(c, data + i))
+-				return -EFAULT;
+-			if (c == 'V') {
+-				nuc900_wdt->expect_close = 42;
+-				break;
+-			}
+-		}
+-	}
+-
+-	nuc900_wdt_ping();
+-	return len;
+-}
+-
+-static void nuc900_wdt_timer_ping(struct timer_list *unused)
+-{
+-	if (time_before(jiffies, nuc900_wdt->next_heartbeat)) {
+-		nuc900_wdt_keepalive();
+-		mod_timer(&nuc900_wdt->timer, jiffies + WDT_TIMEOUT);
+-	} else
+-		dev_warn(&nuc900_wdt->pdev->dev, "Will reset the machine !\n");
+-}
+-
+-static const struct file_operations nuc900wdt_fops = {
+-	.owner		= THIS_MODULE,
+-	.llseek		= no_llseek,
+-	.unlocked_ioctl	= nuc900_wdt_ioctl,
+-	.open		= nuc900_wdt_open,
+-	.release	= nuc900_wdt_close,
+-	.write		= nuc900_wdt_write,
+-};
+-
+-static struct miscdevice nuc900wdt_miscdev = {
+-	.minor		= WATCHDOG_MINOR,
+-	.name		= "watchdog",
+-	.fops		= &nuc900wdt_fops,
+-};
+-
+-static int nuc900wdt_probe(struct platform_device *pdev)
+-{
+-	int ret = 0;
+-
+-	nuc900_wdt = devm_kzalloc(&pdev->dev, sizeof(*nuc900_wdt),
+-				GFP_KERNEL);
+-	if (!nuc900_wdt)
+-		return -ENOMEM;
+-
+-	nuc900_wdt->pdev = pdev;
+-
+-	spin_lock_init(&nuc900_wdt->wdt_lock);
+-
+-	nuc900_wdt->wdt_base = devm_platform_ioremap_resource(pdev, 0);
+-	if (IS_ERR(nuc900_wdt->wdt_base))
+-		return PTR_ERR(nuc900_wdt->wdt_base);
+-
+-	nuc900_wdt->wdt_clock = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(nuc900_wdt->wdt_clock)) {
+-		dev_err(&pdev->dev, "failed to find watchdog clock source\n");
+-		return PTR_ERR(nuc900_wdt->wdt_clock);
+-	}
+-
+-	clk_enable(nuc900_wdt->wdt_clock);
+-
+-	timer_setup(&nuc900_wdt->timer, nuc900_wdt_timer_ping, 0);
+-
+-	ret = misc_register(&nuc900wdt_miscdev);
+-	if (ret) {
+-		dev_err(&pdev->dev, "err register miscdev on minor=%d (%d)\n",
+-			WATCHDOG_MINOR, ret);
+-		goto err_clk;
+-	}
+-
+-	return 0;
+-
+-err_clk:
+-	clk_disable(nuc900_wdt->wdt_clock);
+-	return ret;
+-}
+-
+-static int nuc900wdt_remove(struct platform_device *pdev)
+-{
+-	misc_deregister(&nuc900wdt_miscdev);
+-
+-	clk_disable(nuc900_wdt->wdt_clock);
 -
 -	return 0;
 -}
 -
--static void w90p910_keypad_close(struct input_dev *dev)
--{
--	struct w90p910_keypad *keypad = input_get_drvdata(dev);
--
--	/* Disable clock unit */
--	clk_disable(keypad->clk);
--}
--
--static int w90p910_keypad_probe(struct platform_device *pdev)
--{
--	const struct w90p910_keypad_platform_data *pdata =
--						dev_get_platdata(&pdev->dev);
--	const struct matrix_keymap_data *keymap_data;
--	struct w90p910_keypad *keypad;
--	struct input_dev *input_dev;
--	struct resource *res;
--	int irq;
--	int error;
--
--	if (!pdata) {
--		dev_err(&pdev->dev, "no platform data defined\n");
--		return -EINVAL;
--	}
--
--	keymap_data = pdata->keymap_data;
--
--	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		dev_err(&pdev->dev, "failed to get keypad irq\n");
--		return -ENXIO;
--	}
--
--	keypad = kzalloc(sizeof(struct w90p910_keypad), GFP_KERNEL);
--	input_dev = input_allocate_device();
--	if (!keypad || !input_dev) {
--		dev_err(&pdev->dev, "failed to allocate driver data\n");
--		error = -ENOMEM;
--		goto failed_free;
--	}
--
--	keypad->pdata = pdata;
--	keypad->input_dev = input_dev;
--	keypad->irq = irq;
--
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (res == NULL) {
--		dev_err(&pdev->dev, "failed to get I/O memory\n");
--		error = -ENXIO;
--		goto failed_free;
--	}
--
--	res = request_mem_region(res->start, resource_size(res), pdev->name);
--	if (res == NULL) {
--		dev_err(&pdev->dev, "failed to request I/O memory\n");
--		error = -EBUSY;
--		goto failed_free;
--	}
--
--	keypad->mmio_base = ioremap(res->start, resource_size(res));
--	if (keypad->mmio_base == NULL) {
--		dev_err(&pdev->dev, "failed to remap I/O memory\n");
--		error = -ENXIO;
--		goto failed_free_res;
--	}
--
--	keypad->clk = clk_get(&pdev->dev, NULL);
--	if (IS_ERR(keypad->clk)) {
--		dev_err(&pdev->dev, "failed to get keypad clock\n");
--		error = PTR_ERR(keypad->clk);
--		goto failed_free_io;
--	}
--
--	/* set multi-function pin for w90p910 kpi. */
--	mfp_set_groupi(&pdev->dev);
--
--	input_dev->name = pdev->name;
--	input_dev->id.bustype = BUS_HOST;
--	input_dev->open = w90p910_keypad_open;
--	input_dev->close = w90p910_keypad_close;
--	input_dev->dev.parent = &pdev->dev;
--
--	error = matrix_keypad_build_keymap(keymap_data, NULL,
--					   W90P910_NUM_ROWS, W90P910_NUM_COLS,
--					   keypad->keymap, input_dev);
--	if (error) {
--		dev_err(&pdev->dev, "failed to build keymap\n");
--		goto failed_put_clk;
--	}
--
--	error = request_irq(keypad->irq, w90p910_keypad_irq_handler,
--			    0, pdev->name, keypad);
--	if (error) {
--		dev_err(&pdev->dev, "failed to request IRQ\n");
--		goto failed_put_clk;
--	}
--
--	__set_bit(EV_REP, input_dev->evbit);
--	input_set_capability(input_dev, EV_MSC, MSC_SCAN);
--	input_set_drvdata(input_dev, keypad);
--
--	/* Register the input device */
--	error = input_register_device(input_dev);
--	if (error) {
--		dev_err(&pdev->dev, "failed to register input device\n");
--		goto failed_free_irq;
--	}
--
--	platform_set_drvdata(pdev, keypad);
--	return 0;
--
--failed_free_irq:
--	free_irq(irq, keypad);
--failed_put_clk:
--	clk_put(keypad->clk);
--failed_free_io:
--	iounmap(keypad->mmio_base);
--failed_free_res:
--	release_mem_region(res->start, resource_size(res));
--failed_free:
--	input_free_device(input_dev);
--	kfree(keypad);
--	return error;
--}
--
--static int w90p910_keypad_remove(struct platform_device *pdev)
--{
--	struct w90p910_keypad *keypad = platform_get_drvdata(pdev);
--	struct resource *res;
--
--	free_irq(keypad->irq, keypad);
--
--	clk_put(keypad->clk);
--
--	input_unregister_device(keypad->input_dev);
--
--	iounmap(keypad->mmio_base);
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	release_mem_region(res->start, resource_size(res));
--
--	kfree(keypad);
--
--	return 0;
--}
--
--static struct platform_driver w90p910_keypad_driver = {
--	.probe		= w90p910_keypad_probe,
--	.remove		= w90p910_keypad_remove,
+-static struct platform_driver nuc900wdt_driver = {
+-	.probe		= nuc900wdt_probe,
+-	.remove		= nuc900wdt_remove,
 -	.driver		= {
--		.name	= "nuc900-kpi",
+-		.name	= "nuc900-wdt",
 -	},
 -};
--module_platform_driver(w90p910_keypad_driver);
+-
+-module_platform_driver(nuc900wdt_driver);
 -
 -MODULE_AUTHOR("Wan ZongShun <mcuos.com@gmail.com>");
--MODULE_DESCRIPTION("w90p910 keypad driver");
+-MODULE_DESCRIPTION("Watchdog driver for NUC900");
 -MODULE_LICENSE("GPL");
--MODULE_ALIAS("platform:nuc900-keypad");
-diff --git a/include/linux/platform_data/keypad-w90p910.h b/include/linux/platform_data/keypad-w90p910.h
-deleted file mode 100644
-index 206ca4ecd93f..000000000000
---- a/include/linux/platform_data/keypad-w90p910.h
-+++ /dev/null
-@@ -1,16 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __ASM_ARCH_W90P910_KEYPAD_H
--#define __ASM_ARCH_W90P910_KEYPAD_H
--
--#include <linux/input/matrix_keypad.h>
--
--extern void mfp_set_groupi(struct device *dev);
--
--struct w90p910_keypad_platform_data {
--	const struct matrix_keymap_data *keymap_data;
--
--	unsigned int	prescale;
--	unsigned int	debounce;
--};
--
--#endif /* __ASM_ARCH_W90P910_KEYPAD_H */
+-MODULE_ALIAS("platform:nuc900-wdt");
 -- 
 2.20.0
 
