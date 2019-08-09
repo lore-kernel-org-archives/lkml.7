@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC01DC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795F5C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 775FE21783
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F32F21783
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358388;
-	bh=6UxfYpK0qSYNYk4aE4AYe/piWuilHAcBgxnRuaLEmOM=;
+	s=default; t=1565358391;
+	bh=9wN9JrVFYDFNBYWRcwBDglMOdMwuJf9QjnLxMyzYnxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jaTqYS8S747GrkimpCifwM7nxuAsLw2kQsPvi2ncdT0lanykcYm0UUc95smayVZCR
-	 MvmxxE5iA33yGq5Js9wNwPHH6eooTE2rwpk1B+pZ70O8sICjHnjMAAVtSPME/HQeFh
-	 yAL8VeSIu+ktensKNixwECq89EbqwmTx2KOO2irI=
+	b=oc5RjUNy0zOVp8emzcPaSAyVZoPfa+eDUyzQAtGpvNjtHEzEMZrap5TawackTLNhn
+	 FIBRkZFtW1Vu592+ogVyjgeIlSpQ3ELhx8rJwnDAjeMjasZE9p/bVYwn/E2MKL8XQU
+	 r+e4XrbXJVn0Hwk4cVnYJKvbZ+tWvhK/EPtfbr1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436500AbfHINq1 (ORCPT
+        id S2407072AbfHINqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:46:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35894 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:46:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406984AbfHINqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:46:20 -0400
+        id S2406994AbfHINqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:46:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DE54214C6;
-        Fri,  9 Aug 2019 13:46:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1477921773;
+        Fri,  9 Aug 2019 13:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358378;
-        bh=6UxfYpK0qSYNYk4aE4AYe/piWuilHAcBgxnRuaLEmOM=;
+        s=default; t=1565358381;
+        bh=9wN9JrVFYDFNBYWRcwBDglMOdMwuJf9QjnLxMyzYnxs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AQbDjLh7CQhL/rI686TdYRkfFpkvyMoEVceg0sJSwY057lpiqfGctssoa6tKdh1lg
-         /R9juK0E2b2Z7XfgR1PXm5ZFhMM60k5UE46lnpb//I+zqARViljwmwZKSqC/IwJI2S
-         rl89d1NBS6LS7VsYYTQrIjqkeCSTnRSA47zvzNC8=
+        b=SQHLKo8OlE8SwErLuJsbyXHZYkQ8sAjExtv5FZzA0H1uBRqBaQk8wa8g9BOX+kAhj
+         AVQfcJI4QXWerYYZf8apDI4LcEERwjQZjuBfrU7QFCFNN9w8WrgUaqD+d0XwGOKNvs
+         ty1DfvLEXIFvqHHDlvc+EyDgcMH5b0ji/QQZB0XY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org, Taras Kondratiuk <takondra@cisco.com>,
+        Ying Xue <ying.xue@windriver.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 08/21] net: fix ifindex collision during namespace removal
-Date:   Fri,  9 Aug 2019 15:45:12 +0200
-Message-Id: <20190809134241.921747969@linuxfoundation.org>
+Subject: [PATCH 4.4 09/21] tipc: compat: allow tipc commands without arguments
+Date:   Fri,  9 Aug 2019 15:45:13 +0200
+Message-Id: <20190809134241.960788942@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190809134241.565496442@linuxfoundation.org>
 References: <20190809134241.565496442@linuxfoundation.org>
@@ -59,132 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Pirko <jiri@mellanox.com>
+From: Taras Kondratiuk <takondra@cisco.com>
 
-[ Upstream commit 55b40dbf0e76b4bfb9d8b3a16a0208640a9a45df ]
+[ Upstream commit 4da5f0018eef4c0de31675b670c80e82e13e99d1 ]
 
-Commit aca51397d014 ("netns: Fix arbitrary net_device-s corruptions
-on net_ns stop.") introduced a possibility to hit a BUG in case device
-is returning back to init_net and two following conditions are met:
-1) dev->ifindex value is used in a name of another "dev%d"
-   device in init_net.
-2) dev->name is used by another device in init_net.
+Commit 2753ca5d9009 ("tipc: fix uninit-value in tipc_nl_compat_doit")
+broke older tipc tools that use compat interface (e.g. tipc-config from
+tipcutils package):
 
-Under real life circumstances this is hard to get. Therefore this has
-been present happily for over 10 years. To reproduce:
+% tipc-config -p
+operation not supported
 
-$ ip a
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-       valid_lft forever preferred_lft forever
-    inet6 ::1/128 scope host
-       valid_lft forever preferred_lft forever
-2: dummy0: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
-    link/ether 86:89:3f:86:61:29 brd ff:ff:ff:ff:ff:ff
-3: enp0s2: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
-    link/ether 52:54:00:12:34:56 brd ff:ff:ff:ff:ff:ff
-$ ip netns add ns1
-$ ip -n ns1 link add dummy1ns1 type dummy
-$ ip -n ns1 link add dummy2ns1 type dummy
-$ ip link set enp0s2 netns ns1
-$ ip -n ns1 link set enp0s2 name dummy0
-[  100.858894] virtio_net virtio0 dummy0: renamed from enp0s2
-$ ip link add dev4 type dummy
-$ ip -n ns1 a
-1: lo: <LOOPBACK> mtu 65536 qdisc noop state DOWN group default qlen 1000
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-2: dummy1ns1: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
-    link/ether 16:63:4c:38:3e:ff brd ff:ff:ff:ff:ff:ff
-3: dummy2ns1: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
-    link/ether aa:9e:86:dd:6b:5d brd ff:ff:ff:ff:ff:ff
-4: dummy0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
-    link/ether 52:54:00:12:34:56 brd ff:ff:ff:ff:ff:ff
-$ ip a
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-       valid_lft forever preferred_lft forever
-    inet6 ::1/128 scope host
-       valid_lft forever preferred_lft forever
-2: dummy0: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
-    link/ether 86:89:3f:86:61:29 brd ff:ff:ff:ff:ff:ff
-4: dev4: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
-    link/ether 5a:e1:4a:b6:ec:f8 brd ff:ff:ff:ff:ff:ff
-$ ip netns del ns1
-[  158.717795] default_device_exit: failed to move dummy0 to init_net: -17
-[  158.719316] ------------[ cut here ]------------
-[  158.720591] kernel BUG at net/core/dev.c:9824!
-[  158.722260] invalid opcode: 0000 [#1] SMP KASAN PTI
-[  158.723728] CPU: 0 PID: 56 Comm: kworker/u2:1 Not tainted 5.3.0-rc1+ #18
-[  158.725422] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
-[  158.727508] Workqueue: netns cleanup_net
-[  158.728915] RIP: 0010:default_device_exit.cold+0x1d/0x1f
-[  158.730683] Code: 84 e8 18 c9 3e fe 0f 0b e9 70 90 ff ff e8 36 e4 52 fe 89 d9 4c 89 e2 48 c7 c6 80 d6 25 84 48 c7 c7 20 c0 25 84 e8 f4 c8 3e
-[  158.736854] RSP: 0018:ffff8880347e7b90 EFLAGS: 00010282
-[  158.738752] RAX: 000000000000003b RBX: 00000000ffffffef RCX: 0000000000000000
-[  158.741369] RDX: 0000000000000000 RSI: ffffffff8128013d RDI: ffffed10068fcf64
-[  158.743418] RBP: ffff888033550170 R08: 000000000000003b R09: fffffbfff0b94b9c
-[  158.745626] R10: fffffbfff0b94b9b R11: ffffffff85ca5cdf R12: ffff888032f28000
-[  158.748405] R13: dffffc0000000000 R14: ffff8880335501b8 R15: 1ffff110068fcf72
-[  158.750638] FS:  0000000000000000(0000) GS:ffff888036000000(0000) knlGS:0000000000000000
-[  158.752944] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  158.755245] CR2: 00007fe8b45d21d0 CR3: 00000000340b4005 CR4: 0000000000360ef0
-[  158.757654] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  158.760012] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  158.762758] Call Trace:
-[  158.763882]  ? dev_change_net_namespace+0xbb0/0xbb0
-[  158.766148]  ? devlink_nl_cmd_set_doit+0x520/0x520
-[  158.768034]  ? dev_change_net_namespace+0xbb0/0xbb0
-[  158.769870]  ops_exit_list.isra.0+0xa8/0x150
-[  158.771544]  cleanup_net+0x446/0x8f0
-[  158.772945]  ? unregister_pernet_operations+0x4a0/0x4a0
-[  158.775294]  process_one_work+0xa1a/0x1740
-[  158.776896]  ? pwq_dec_nr_in_flight+0x310/0x310
-[  158.779143]  ? do_raw_spin_lock+0x11b/0x280
-[  158.780848]  worker_thread+0x9e/0x1060
-[  158.782500]  ? process_one_work+0x1740/0x1740
-[  158.784454]  kthread+0x31b/0x420
-[  158.786082]  ? __kthread_create_on_node+0x3f0/0x3f0
-[  158.788286]  ret_from_fork+0x3a/0x50
-[  158.789871] ---[ end trace defd6c657c71f936 ]---
-[  158.792273] RIP: 0010:default_device_exit.cold+0x1d/0x1f
-[  158.795478] Code: 84 e8 18 c9 3e fe 0f 0b e9 70 90 ff ff e8 36 e4 52 fe 89 d9 4c 89 e2 48 c7 c6 80 d6 25 84 48 c7 c7 20 c0 25 84 e8 f4 c8 3e
-[  158.804854] RSP: 0018:ffff8880347e7b90 EFLAGS: 00010282
-[  158.807865] RAX: 000000000000003b RBX: 00000000ffffffef RCX: 0000000000000000
-[  158.811794] RDX: 0000000000000000 RSI: ffffffff8128013d RDI: ffffed10068fcf64
-[  158.816652] RBP: ffff888033550170 R08: 000000000000003b R09: fffffbfff0b94b9c
-[  158.820930] R10: fffffbfff0b94b9b R11: ffffffff85ca5cdf R12: ffff888032f28000
-[  158.825113] R13: dffffc0000000000 R14: ffff8880335501b8 R15: 1ffff110068fcf72
-[  158.829899] FS:  0000000000000000(0000) GS:ffff888036000000(0000) knlGS:0000000000000000
-[  158.834923] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  158.838164] CR2: 00007fe8b45d21d0 CR3: 00000000340b4005 CR4: 0000000000360ef0
-[  158.841917] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  158.845149] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+The commit started to reject TIPC netlink compat messages that do not
+have attributes. It is too restrictive because some of such messages are
+valid (they don't need any arguments):
 
-Fix this by checking if a device with the same name exists in init_net
-and fallback to original code - dev%d to allocate name - in case it does.
+% grep 'tx none' include/uapi/linux/tipc_config.h
+#define  TIPC_CMD_NOOP              0x0000    /* tx none, rx none */
+#define  TIPC_CMD_GET_MEDIA_NAMES   0x0002    /* tx none, rx media_name(s) */
+#define  TIPC_CMD_GET_BEARER_NAMES  0x0003    /* tx none, rx bearer_name(s) */
+#define  TIPC_CMD_SHOW_PORTS        0x0006    /* tx none, rx ultra_string */
+#define  TIPC_CMD_GET_REMOTE_MNG    0x4003    /* tx none, rx unsigned */
+#define  TIPC_CMD_GET_MAX_PORTS     0x4004    /* tx none, rx unsigned */
+#define  TIPC_CMD_GET_NETID         0x400B    /* tx none, rx unsigned */
+#define  TIPC_CMD_NOT_NET_ADMIN     0xC001    /* tx none, rx none */
 
-This was found using syzkaller.
+This patch relaxes the original fix and rejects messages without
+arguments only if such arguments are expected by a command (reg_type is
+non zero).
 
-Fixes: aca51397d014 ("netns: Fix arbitrary net_device-s corruptions on net_ns stop.")
-Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+Fixes: 2753ca5d9009 ("tipc: fix uninit-value in tipc_nl_compat_doit")
+Cc: stable@vger.kernel.org
+Signed-off-by: Taras Kondratiuk <takondra@cisco.com>
+Acked-by: Ying Xue <ying.xue@windriver.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/dev.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/tipc/netlink_compat.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -7768,6 +7768,8 @@ static void __net_exit default_device_ex
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -55,6 +55,7 @@ struct tipc_nl_compat_msg {
+ 	int rep_type;
+ 	int rep_size;
+ 	int req_type;
++	int req_size;
+ 	struct net *net;
+ 	struct sk_buff *rep;
+ 	struct tlv_desc *req;
+@@ -252,7 +253,8 @@ static int tipc_nl_compat_dumpit(struct
+ 	int err;
+ 	struct sk_buff *arg;
  
- 		/* Push remaining network devices to init_net */
- 		snprintf(fb_name, IFNAMSIZ, "dev%d", dev->ifindex);
-+		if (__dev_get_by_name(&init_net, fb_name))
-+			snprintf(fb_name, IFNAMSIZ, "dev%%d");
- 		err = dev_change_net_namespace(dev, &init_net, fb_name);
- 		if (err) {
- 			pr_emerg("%s: failed to move %s to init_net: %d\n",
+-	if (msg->req_type && !TLV_CHECK_TYPE(msg->req, msg->req_type))
++	if (msg->req_type && (!msg->req_size ||
++			      !TLV_CHECK_TYPE(msg->req, msg->req_type)))
+ 		return -EINVAL;
+ 
+ 	msg->rep = tipc_tlv_alloc(msg->rep_size);
+@@ -345,7 +347,8 @@ static int tipc_nl_compat_doit(struct ti
+ {
+ 	int err;
+ 
+-	if (msg->req_type && !TLV_CHECK_TYPE(msg->req, msg->req_type))
++	if (msg->req_type && (!msg->req_size ||
++			      !TLV_CHECK_TYPE(msg->req, msg->req_type)))
+ 		return -EINVAL;
+ 
+ 	err = __tipc_nl_compat_doit(cmd, msg);
+@@ -1192,8 +1195,8 @@ static int tipc_nl_compat_recv(struct sk
+ 		goto send;
+ 	}
+ 
+-	len = nlmsg_attrlen(req_nlh, GENL_HDRLEN + TIPC_GENL_HDRLEN);
+-	if (!len || !TLV_OK(msg.req, len)) {
++	msg.req_size = nlmsg_attrlen(req_nlh, GENL_HDRLEN + TIPC_GENL_HDRLEN);
++	if (msg.req_size && !TLV_OK(msg.req, msg.req_size)) {
+ 		msg.rep = tipc_get_err_tlv(TIPC_CFG_NOT_SUPPORTED);
+ 		err = -EOPNOTSUPP;
+ 		goto send;
 
 
