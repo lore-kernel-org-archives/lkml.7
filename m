@@ -2,451 +2,172 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E119FC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3F1C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7F80208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB82A2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:33:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="QZwdk3T/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407044AbfHIMcq (ORCPT
+        id S2406843AbfHIMdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 08:32:46 -0400
-Received: from mga14.intel.com ([192.55.52.115]:27717 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406805AbfHIMcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 08:32:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 05:32:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,364,1559545200"; 
-   d="scan'208";a="165994652"
-Received: from um.fi.intel.com (HELO localhost) ([10.237.72.183])
-  by orsmga007.jf.intel.com with ESMTP; 09 Aug 2019 05:32:40 -0700
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-kernel@vger.kernel.org, jolsa@redhat.com,
-        alexander.shishkin@linux.intel.com
-Subject: Re: [PATCH v1 4/6] perf: Allow using AUX data in perf samples
-In-Reply-To: <20180621201632.GE27616@hirez.programming.kicks-ass.net>
-References: <20180612075117.65420-1-alexander.shishkin@linux.intel.com> <20180612075117.65420-5-alexander.shishkin@linux.intel.com> <20180614202022.GC12217@hirez.programming.kicks-ass.net> <20180619104725.bqvs7uwzhb4ihyxy@um.fi.intel.com> <20180621201632.GE27616@hirez.programming.kicks-ass.net>
-Date:   Fri, 09 Aug 2019 15:32:39 +0300
-Message-ID: <87lfw234ew.fsf@ashishki-desk.ger.corp.intel.com>
+        Fri, 9 Aug 2019 08:33:12 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:51970 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2406516AbfHIMdM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 08:33:12 -0400
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x79CSKB8016853;
+        Fri, 9 Aug 2019 08:33:02 -0400
+Received: from nam04-sn1-obe.outbound.protection.outlook.com (mail-sn1nam04lp2058.outbound.protection.outlook.com [104.47.44.58])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2u7wxfqd5f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 09 Aug 2019 08:33:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eT+W4+ImJuQN4hpg6G0qQ+y/YbNFRhOXzI7H9G9e09dilboKWrL9HTRFc6+9kQAwDms7UJRYTiSSo+TM8TRI2iqrRq9r7WEz+y0t7xzm8wl3jriwOV7/IckSg85LCL3Ox7TD2HUr0O6Ro3pQDvxxC3lKTtPwpMRXaJwk6otH9WaR83DvwXNVHWwubaJ3d+ggBInxq2oPvd8QyTQQ1LUQt8/oczDZ/MnD1EPug7LZvlRc1i+1hsdVC3Sfgsj4YPdYYYwW3cArznmdskPnTS0a2KgvHcHTRPahZ9rSLq+AdobMjgt19R6gbjt0bi/rEenkj4+RQdMEw4D5avuj2RXBfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+zcIaZ6+KFP8nEjThb0+lgzamIiLnYupVGY0V9OHkzg=;
+ b=MCq3EGDxpl9oFapK9UDVaoh2XSQTJV0xohatVvzZyERWDCI7hDnFQmyM3oYBfx6plWXsNlKMZr5g4HI+rfbo0uh0ZpwI4driz50vGlqB60LRJgDwFlgUcjIcOEhs0MljpatBIaWFQf/69OaHUJBGxvvOmm0cqmK9iHnvWNf7kbKuaaBk6sx1wG3I5iFUlpT92AOX1xqRDq92mdFlF9dffr6Q+gOfrfamTPY7JOrq6kGZxyrb0yaOgZESyHs1F++ZtGUEBJklYV5Lq9J3MUlhZiEpzS23ryK1qVpI9RSH7l9WeyZRx6qzTWz9W5RfYwojJagiuZzg++zo+1G43Hp3Vg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+zcIaZ6+KFP8nEjThb0+lgzamIiLnYupVGY0V9OHkzg=;
+ b=QZwdk3T/rt9NDoSPLfs6yN2GLt++76z06b0+HCemG2QQ7/WteTfRmka8B1m0VPPLCEZ5jkHWY3WKHwtvaH/R/emXDxVRwGDgE2RFHahodBGKveTK26+K9L3OoZPDpOQ23QHX4TMY522NxC269Cjo5qS9wI61juBJXys0uxb80DI=
+Received: from CY1PR03CA0021.namprd03.prod.outlook.com (2603:10b6:600::31) by
+ DM6PR03MB5371.namprd03.prod.outlook.com (2603:10b6:5:24c::21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.16; Fri, 9 Aug 2019 12:33:01 +0000
+Received: from BL2NAM02FT030.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::201) by CY1PR03CA0021.outlook.office365.com
+ (2603:10b6:600::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.14 via Frontend
+ Transport; Fri, 9 Aug 2019 12:33:00 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ BL2NAM02FT030.mail.protection.outlook.com (10.152.77.172) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2157.15
+ via Frontend Transport; Fri, 9 Aug 2019 12:33:00 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x79CWvNT013132
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Fri, 9 Aug 2019 05:32:57 -0700
+Received: from NWD2MBX7.ad.analog.com ([fe80::190e:f9c1:9a22:9663]) by
+ NWD2HUBCAS7.ad.analog.com ([fe80::595b:ced1:cc03:539d%12]) with mapi id
+ 14.03.0415.000; Fri, 9 Aug 2019 08:33:00 -0400
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "davem@davemloft.net" <davem@davemloft.net>
+CC:     "andrew@lunn.ch" <andrew@lunn.ch>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 00/15] net: phy: adin: add support for Analog Devices
+ PHYs
+Thread-Topic: [PATCH v2 00/15] net: phy: adin: add support for Analog
+ Devices PHYs
+Thread-Index: AQHVTeUQ6709knvDyk+00n5WA4151abx1E6AgAEwG4A=
+Date:   Fri, 9 Aug 2019 12:32:59 +0000
+Message-ID: <b5bce55e4c19e0cd0b848f14c413586ef5c53514.camel@analog.com>
+References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
+         <20190808.112431.1358324079415442430.davem@davemloft.net>
+In-Reply-To: <20190808.112431.1358324079415442430.davem@davemloft.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.48.65.113]
+x-adiroutedonprem: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9E4521D3B1665946A42C0E06EA68FCA8@analog.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(39860400002)(376002)(346002)(396003)(2980300002)(189003)(199004)(50466002)(126002)(7696005)(47776003)(11346002)(2616005)(476003)(446003)(426003)(336012)(436003)(86362001)(486006)(5660300002)(2501003)(356004)(23676004)(102836004)(6246003)(4326008)(26005)(2486003)(229853002)(8936002)(76176011)(186003)(478600001)(118296001)(246002)(70586007)(70206006)(5640700003)(966005)(316002)(106002)(3846002)(6116002)(2906002)(36756003)(1730700003)(6916009)(8676002)(2351001)(6306002)(14454004)(54906003)(305945005)(7636002)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB5371;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bb99609d-39ce-4ea3-9839-08d71cc5b755
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328)(7193020);SRVR:DM6PR03MB5371;
+X-MS-TrafficTypeDiagnostic: DM6PR03MB5371:
+X-MS-Exchange-PUrlCount: 2
+X-Microsoft-Antispam-PRVS: <DM6PR03MB5371A9CBE0702B236F40AD65F9D60@DM6PR03MB5371.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 01244308DF
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: 1UurWGloNHnYKArDW/3in0IMOFQKbwlI5YkwSjIQcT6cdMGt9faLUYfOkscfEHO4aAiTmiL+EH/3bb3xYi7R9N1f62iWPtg56aoAlS02YVtnSkcufxVoKmSErZFu+iAMEngQcdaAqqx0OzvijF01nQpvMC13jypDdHIqvUSwdt8L9uPRyUq+ch+Z26JEuFaLzmBXxGB/9MAlrU/c0cIuS5prARtPXm+jZR1gsmoZoTHNB6IfHRI1xotpY9Xdjirfq2DXGmhyECryq0U418lMw5b2aWPlvm8hv+Rhg+BGQUUGWCQ2cQCMqMr9WIejwz6x/l6VwDTvvU0yotAvvrCMrpL1qHMJ36UGrKtRo3s1X1pGIk8PdwrANcLSsN00DHCKHti+miawkFDBA+WkPpzvdvjxCe76ZeOp/ynU5/dS7s4=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2019 12:33:00.5078
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb99609d-39ce-4ea3-9839-08d71cc5b755
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB5371
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-09_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908090129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
-
-> On Tue, Jun 19, 2018 at 01:47:25PM +0300, Alexander Shishkin wrote:
->> Right, the SW stuff may then race with event_function_call() stuff. Hmm.
->> For the HW stuff, I'm hoping that some kind of a sleight of hand may
->> suffice. Let me think some more.
->
-> I currently don't see how the SW driven snapshot can ever work, see my
-> comment on the last patch.
-
-Yes, this should be solved by grouping, similarly PEBS->PT.
-
->> > Why can't you just snapshot the current location and let the thing
->> > 'run' ?
->> 
->> Because the buffer will overwrite itself and the location will be useless.
->
-> Not if it's large enough ;-)
->
->> We don't write the AUX data out in this 'mode' at all, only the samples,
->> which allows for much less data in the resulting perf.data, less work for
->> the consumer, less IO bandwidth etc, and as a bonus, no AUX-related
->> interrupts.
->> 
->> But actually, even to snapshot the location we need to stop the event.
->
-> Maybe new methods that should only be called from NMI context? 
-
-Right, I went with that and added a ->snapshot_aux() method that can't
-change any states or do anything that would affect the operation of
-potentially preempted in-IRQ callbacks. So, if NMI hits in the middle of
-->stop() or whatnot, we should be fine. Some context: in AUX overwrite
-mode (aka "snapshot mode") we don't get PT related NMIs, the only NMIs
-are from the HW events for which we're writing samples. We use the cpu
-local ->handle_nmi (a kind of misnomer) to tell us if the NMI hit
-between ->start() and ->stop() and we can safely take the sample.
-
-The other problem is sampling SW events, that would require a ctx->lock
-to prevent racing with event_function_call()s from other cpus, resulting
-in somewhat cringy "if (!in_nmi()) raw_spin_lock(...)", but I don't have
-better idea as to how to handle that.
-
-The whole thing is squashed into one patch below for convenience.
-
-From df0b5efd9c24a9e4477a3501331888c4b4682588 Mon Sep 17 00:00:00 2001
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Date: Tue, 12 Jun 2018 10:51:15 +0300
-Subject: [RFC v0] perf, pt: Allow using AUX data in perf samples
-
----
- arch/x86/events/intel/pt.c      |  40 +++++++++
- include/linux/perf_event.h      |  15 ++++
- include/uapi/linux/perf_event.h |   7 +-
- kernel/events/core.c            | 139 +++++++++++++++++++++++++++++++-
- kernel/events/internal.h        |   1 +
- 5 files changed, 200 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-index d58124d93e5f..a7318c29242e 100644
---- a/arch/x86/events/intel/pt.c
-+++ b/arch/x86/events/intel/pt.c
-@@ -1413,6 +1413,45 @@ static void pt_event_stop(struct perf_event *event, int mode)
- 	}
- }
- 
-+static long pt_event_snapshot_aux(struct perf_event *event,
-+				  struct perf_output_handle *handle,
-+				  unsigned long size)
-+{
-+	struct pt *pt = this_cpu_ptr(&pt_ctx);
-+	struct pt_buffer *buf = perf_get_aux(&pt->handle);
-+	unsigned long from = 0, to;
-+	long ret;
-+
-+	if (!buf->snapshot)
-+		return 0;
-+
-+	/*
-+	 * Here, handle_nmi tells us if the tracing is on
-+	 */
-+	if (!READ_ONCE(pt->handle_nmi))
-+		return 0;
-+
-+	pt_config_stop(event);
-+
-+	pt_read_offset(buf);
-+	pt_update_head(pt);
-+
-+	to = local_read(&buf->data_size);
-+	if (to < size)
-+		from = buf->nr_pages << PAGE_SHIFT;
-+	from += to - size;
-+
-+	ret = perf_output_copy_aux(&pt->handle, handle, from, to);
-+
-+	/*
-+	 * If the tracing was on, restart it.
-+	 */
-+	if (READ_ONCE(pt->handle_nmi))
-+		pt_config(event);
-+
-+	return ret;
-+}
-+
- static void pt_event_del(struct perf_event *event, int mode)
- {
- 	pt_event_stop(event, PERF_EF_UPDATE);
-@@ -1532,6 +1571,7 @@ static __init int pt_init(void)
- 	pt_pmu.pmu.del			 = pt_event_del;
- 	pt_pmu.pmu.start		 = pt_event_start;
- 	pt_pmu.pmu.stop			 = pt_event_stop;
-+	pt_pmu.pmu.snapshot_aux		 = pt_event_snapshot_aux;
- 	pt_pmu.pmu.read			 = pt_event_read;
- 	pt_pmu.pmu.setup_aux		 = pt_buffer_setup_aux;
- 	pt_pmu.pmu.free_aux		 = pt_buffer_free_aux;
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 9c8b70e8dc99..48ad35da73cd 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -103,6 +103,10 @@ struct perf_branch_stack {
- 	struct perf_branch_entry	entries[0];
- };
- 
-+struct perf_aux_record {
-+	u64		size;
-+};
-+
- struct task_struct;
- 
- /*
-@@ -248,6 +252,8 @@ struct perf_event;
- #define PERF_PMU_CAP_NO_EXCLUDE			0x80
- #define PERF_PMU_CAP_AUX_OUTPUT			0x100
- 
-+struct perf_output_handle;
-+
- /**
-  * struct pmu - generic performance monitoring unit
-  */
-@@ -422,6 +428,13 @@ struct pmu {
- 	 */
- 	void (*free_aux)		(void *aux); /* optional */
- 
-+	/*
-+	 * Fun stuff
-+	 */
-+	long (*snapshot_aux)		(struct perf_event *event,
-+					 struct perf_output_handle *handle,
-+					 unsigned long size);
-+
- 	/*
- 	 * Validate address range filters: make sure the HW supports the
- 	 * requested configuration and number of filters; return 0 if the
-@@ -960,6 +973,7 @@ struct perf_sample_data {
- 		u32	reserved;
- 	}				cpu_entry;
- 	struct perf_callchain_entry	*callchain;
-+	struct perf_aux_record		aux;
- 
- 	/*
- 	 * regs_user may point to task_pt_regs or to regs_user_copy, depending
-@@ -992,6 +1006,7 @@ static inline void perf_sample_data_init(struct perf_sample_data *data,
- 	data->weight = 0;
- 	data->data_src.val = PERF_MEM_NA;
- 	data->txn = 0;
-+	data->aux.size = 0;
- }
- 
- extern void perf_output_sample(struct perf_output_handle *handle,
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index bb7b271397a6..947f49d46f0d 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -141,8 +141,9 @@ enum perf_event_sample_format {
- 	PERF_SAMPLE_TRANSACTION			= 1U << 17,
- 	PERF_SAMPLE_REGS_INTR			= 1U << 18,
- 	PERF_SAMPLE_PHYS_ADDR			= 1U << 19,
-+	PERF_SAMPLE_AUX				= 1U << 20,
- 
--	PERF_SAMPLE_MAX = 1U << 20,		/* non-ABI */
-+	PERF_SAMPLE_MAX = 1U << 21,		/* non-ABI */
- 
- 	__PERF_SAMPLE_CALLCHAIN_EARLY		= 1ULL << 63, /* non-ABI; internal use */
- };
-@@ -300,6 +301,7 @@ enum perf_event_read_format {
- 					/* add: sample_stack_user */
- #define PERF_ATTR_SIZE_VER4	104	/* add: sample_regs_intr */
- #define PERF_ATTR_SIZE_VER5	112	/* add: aux_watermark */
-+#define PERF_ATTR_SIZE_VER6	120	/* add: aux_sample_size */
- 
- /*
-  * Hardware event_id to monitor via a performance monitoring event:
-@@ -425,6 +427,7 @@ struct perf_event_attr {
- 	__u32	aux_watermark;
- 	__u16	sample_max_stack;
- 	__u16	__reserved_2;	/* align to __u64 */
-+	__u64	aux_sample_size;
- };
- 
- /*
-@@ -864,6 +867,8 @@ enum perf_event_type {
- 	 *	{ u64			abi; # enum perf_sample_regs_abi
- 	 *	  u64			regs[weight(mask)]; } && PERF_SAMPLE_REGS_INTR
- 	 *	{ u64			phys_addr;} && PERF_SAMPLE_PHYS_ADDR
-+	 *	{ u64			size;
-+	 *	  char			data[size]; } && PERF_SAMPLE_AUX
- 	 * };
- 	 */
- 	PERF_RECORD_SAMPLE			= 9,
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index d72b756b4ccb..9754c1af51a4 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1953,7 +1953,10 @@ static int perf_get_aux_event(struct perf_event *event,
- 	if (!group_leader)
- 		return 0;
- 
--	if (!perf_aux_output_match(event, group_leader))
-+	if (event->attr.aux_output && !perf_aux_output_match(event, group_leader))
-+		return 0;
-+
-+	if (event->attr.aux_sample_size && !group_leader->pmu->snapshot_aux)
- 		return 0;
- 
- 	if (!atomic_long_inc_not_zero(&group_leader->refcount))
-@@ -6150,6 +6153,103 @@ perf_output_sample_ustack(struct perf_output_handle *handle, u64 dump_size,
- 	}
- }
- 
-+static unsigned long perf_aux_sample_size(struct perf_event *event,
-+					  struct perf_sample_data *data,
-+					  size_t size)
-+{
-+	struct perf_event *sampler = event->aux_event;
-+	struct ring_buffer *rb;
-+
-+	data->aux.size = 0;
-+
-+	if (!sampler)
-+		goto out;
-+
-+	if (WARN_ON_ONCE(READ_ONCE(sampler->state) != PERF_EVENT_STATE_ACTIVE))
-+		goto out;
-+
-+	if (WARN_ON_ONCE(READ_ONCE(sampler->oncpu) != smp_processor_id()))
-+		goto out;
-+
-+	rb = ring_buffer_get(sampler);
-+	if (!rb)
-+		goto out;
-+
-+	size = min(size, perf_aux_size(rb));
-+	data->aux.size = ALIGN(size, sizeof(u64));
-+	ring_buffer_put(rb);
-+
-+out:
-+	return data->aux.size;
-+}
-+
-+int perf_pmu_aux_sample_output(struct perf_event *event,
-+			       struct perf_output_handle *handle,
-+			       unsigned long size)
-+{
-+	unsigned long flags;
-+	int ret;
-+
-+	/*
-+	 * NMI vs IRQ
-+	 *
-+	 * Normal ->start()/->stop() callbacks run in IRQ mode in scheduler
-+	 * paths. If we start calling them in NMI context, they may race with
-+	 * the IRQ ones, that is, for example, re-starting an event that's just
-+	 * been stopped.
-+	 */
-+	if (!in_nmi())
-+		raw_spin_lock_irqsave(&event->ctx->lock, flags);
-+
-+	ret = event->pmu->snapshot_aux(event, handle, size);
-+
-+	if (!in_nmi())
-+		raw_spin_unlock_irqrestore(&event->ctx->lock, flags);
-+
-+	return ret;
-+}
-+
-+static void perf_aux_sample_output(struct perf_event *event,
-+				   struct perf_output_handle *handle,
-+				   struct perf_sample_data *data)
-+{
-+	struct perf_event *sampler = event->aux_event;
-+	unsigned long pad;
-+	struct ring_buffer *rb;
-+	int ret;
-+
-+	if (WARN_ON_ONCE(!sampler || !data->aux.size))
-+		return;
-+
-+	rb = ring_buffer_get(sampler);
-+	if (!rb)
-+		return;
-+
-+	if (READ_ONCE(rb->aux_in_sampling))
-+		goto out_put;
-+
-+	WRITE_ONCE(rb->aux_in_sampling, 1);
-+
-+	ret = perf_pmu_aux_sample_output(sampler, handle, data->aux.size);
-+	if (ret < 0) {
-+		pr_warn_ratelimited("failed to copy trace data\n");
-+		goto out_clear;
-+	}
-+
-+	pad = data->aux.size - ret;
-+	if (pad) {
-+		u64 p = 0;
-+
-+		perf_output_copy(handle, &p, pad);
-+	}
-+
-+out_clear:
-+	WRITE_ONCE(rb->aux_in_sampling, 0);
-+
-+out_put:
-+	ring_buffer_put(rb);
-+}
-+
- static void __perf_event_header__init_id(struct perf_event_header *header,
- 					 struct perf_sample_data *data,
- 					 struct perf_event *event)
-@@ -6469,6 +6569,13 @@ void perf_output_sample(struct perf_output_handle *handle,
- 	if (sample_type & PERF_SAMPLE_PHYS_ADDR)
- 		perf_output_put(handle, data->phys_addr);
- 
-+	if (sample_type & PERF_SAMPLE_AUX) {
-+		perf_output_put(handle, data->aux.size);
-+
-+		if (data->aux.size)
-+			perf_aux_sample_output(event, handle, data);
-+	}
-+
- 	if (!event->attr.watermark) {
- 		int wakeup_events = event->attr.wakeup_events;
- 
-@@ -6657,6 +6764,32 @@ void perf_prepare_sample(struct perf_event_header *header,
- 
- 	if (sample_type & PERF_SAMPLE_PHYS_ADDR)
- 		data->phys_addr = perf_virt_to_phys(data->addr);
-+
-+	if (sample_type & PERF_SAMPLE_AUX) {
-+		u64 size;
-+
-+		header->size += sizeof(u64); /* size */
-+
-+		/*
-+		 * Given the 16bit nature of header::size, an AUX sample can
-+		 * easily overflow it, what with all the preceding sample bits.
-+		 * Make sure this doesn't happen by using up to U16_MAX bytes
-+		 * per sample in total (rounded down to 8 byte boundary).
-+		 */
-+		size = min_t(size_t, U16_MAX - header->size,
-+			     event->attr.aux_sample_size);
-+		size = rounddown(size, 8);
-+		size = perf_aux_sample_size(event, data, size);
-+
-+		WARN_ON_ONCE(size + header->size > U16_MAX);
-+		header->size += size;
-+	}
-+	/*
-+	 * If you're adding more sample types here, you likely need to do
-+	 * something about the overflowing header::size, like repurpose the
-+	 * lowest 3 bits of size, which should be always zero at the moment.
-+	 */
-+	WARN_ON_ONCE(header->size & 7);
- }
- 
- static __always_inline int
-@@ -11171,9 +11304,12 @@ SYSCALL_DEFINE5(perf_event_open,
- 		}
- 	}
- 
- 	if (event->attr.aux_output && !perf_get_aux_event(event, group_leader))
- 		goto err_locked;
- 
-+	if (event->attr.aux_sample_size && !perf_get_aux_event(event, group_leader))
-+		goto err_locked;
-+
- 	/*
- 	 * Must be under the same ctx::mutex as perf_install_in_context(),
- 	 * because we need to serialize with concurrent event creation.
-diff --git a/kernel/events/internal.h b/kernel/events/internal.h
-index 3aef4191798c..747d67f130cb 100644
---- a/kernel/events/internal.h
-+++ b/kernel/events/internal.h
-@@ -50,6 +50,7 @@ struct ring_buffer {
- 	unsigned long			aux_mmap_locked;
- 	void				(*free_aux)(void *);
- 	refcount_t			aux_refcount;
-+	int				aux_in_sampling;
- 	void				**aux_pages;
- 	void				*aux_priv;
- 
--- 
-2.20.1
-
+T24gVGh1LCAyMDE5LTA4LTA4IGF0IDExOjI0IC0wNzAwLCBEYXZpZCBNaWxsZXIgd3JvdGU6DQo+
+IFtFeHRlcm5hbF0NCj4gDQo+IEZyb206IEFsZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFy
+ZGVsZWFuQGFuYWxvZy5jb20+DQo+IERhdGU6IFRodSwgOCBBdWcgMjAxOSAxNTozMDoxMSArMDMw
+MA0KPiANCj4gPiBUaGlzIGNoYW5nZXNldCBhZGRzIHN1cHBvcnQgZm9yIEFuYWxvZyBEZXZpY2Vz
+IEluZHVzdHJpYWwgRXRoZXJuZXQgUEhZcy4NCj4gPiBQYXJ0aWN1bGFybHkgdGhlIFBIWXMgdGhp
+cyBkcml2ZXIgYWRkcyBzdXBwb3J0IGZvcjoNCj4gPiAgKiBBRElOMTIwMCAtIFJvYnVzdCwgSW5k
+dXN0cmlhbCwgTG93IFBvd2VyIDEwLzEwMCBFdGhlcm5ldCBQSFkNCj4gPiAgKiBBRElOMTMwMCAt
+IFJvYnVzdCwgSW5kdXN0cmlhbCwgTG93IExhdGVuY3kgMTAvMTAwLzEwMDAgR2lnYWJpdA0KPiA+
+ICAgIEV0aGVybmV0IFBIWQ0KPiA+IA0KPiA+IFRoZSAyIGNoaXBzIGFyZSBwaW4gJiByZWdpc3Rl
+ciBjb21wYXRpYmxlIHdpdGggb25lIGFub3RoZXIuIFRoZSBtYWluDQo+ID4gZGlmZmVyZW5jZSBi
+ZWluZyB0aGF0IEFESU4xMjAwIGRvZXNuJ3Qgb3BlcmF0ZSBpbiBnaWdhYml0IG1vZGUuDQo+ID4g
+DQo+ID4gVGhlIGNoaXBzIGNhbiBiZSBvcGVyYXRlZCBieSB0aGUgR2VuZXJpYyBQSFkgZHJpdmVy
+IGFzIHdlbGwgdmlhIHRoZQ0KPiA+IHN0YW5kYXJkIElFRUUgUEhZIHJlZ2lzdGVycyAoMHgwMDAw
+IC0gMHgwMDBGKSB3aGljaCBhcmUgc3VwcG9ydGVkIGJ5IHRoZQ0KPiA+IGtlcm5lbCBhcyB3ZWxs
+LiBUaGlzIGFzc3VtZXMgdGhhdCBjb25maWd1cmF0aW9uIG9mIHRoZSBQSFkgaGFzIGJlZW4gZG9u
+ZQ0KPiA+IGNvbXBsZXRlbHkgaW4gSFcsIGFjY29yZGluZyB0byBzcGVjLCBpLmUuIG5vIGV4dHJh
+IFNXIGNvbmZpZ3VyYXRpb24NCj4gPiByZXF1aXJlZC4NCj4gPiANCj4gPiBUaGlzIGNoYW5nZXNl
+dCBhbHNvIGltcGxlbWVudHMgdGhlIGFiaWxpdHkgdG8gY29uZmlndXJlIHRoZSBjaGlwcyB2aWEg
+U1cNCj4gPiByZWdpc3RlcnMuDQo+ID4gDQo+ID4gRGF0YXNoZWV0czoNCj4gPiAgIGh0dHBzOi8v
+d3d3LmFuYWxvZy5jb20vbWVkaWEvZW4vdGVjaG5pY2FsLWRvY3VtZW50YXRpb24vZGF0YS1zaGVl
+dHMvQURJTjEzMDAucGRmDQo+ID4gICBodHRwczovL3d3dy5hbmFsb2cuY29tL21lZGlhL2VuL3Rl
+Y2huaWNhbC1kb2N1bWVudGF0aW9uL2RhdGEtc2hlZXRzL0FESU4xMjAwLnBkZg0KPiA+IA0KPiA+
+IFNpZ25lZC1vZmYtYnk6IEFsZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFu
+YWxvZy5jb20+DQo+IA0KPiBJIHRoaW5rLCBhdCBhIG1pbmltdW0sIHRoZSBjMjIgdnMuIGM0NSBp
+c3N1ZXMgbmVlZCB0byBiZSBkaXNjdXNzZWQgbW9yZQ0KPiBhbmQgZXZlbiBpZiBubyBjb2RlIGNo
+YW5nZXMgb2NjdXIgdGhlcmUgaXMgZGVmaW5pdGVseSBzb21lIGFkanVzdG1lbnRzDQo+IGFuZCBj
+bGFpcmlmaWNhdGlvbnMgdGhhdCBuZWVkIHRvIG9jY3VyIG9uIHRoaXMgaXNzdWUgaW4gdGhlIGNv
+bW1pdA0KPiBtZXNzYWdlcyBhbmQvb3IgZG9jdW1lbnRhdGlvbi4NCg0KSSBndWVzcyBJJ2xsIGRy
+b3AvZGVmZXIgc29tZSBvZiB0aGUgQzQ1IHN0dWZmIGZvciBub3cuDQpJIGRvbid0IGtub3cgaG93
+IGRlY2lzaW9ucyB3ZXJlIGRvbmUgd2hlbiB0aGUgY2hpcHMgd2VyZSBjcmVhdGVkLg0KSSBhbSB0
+b2xkIHRoYXQgQzQ1IHdvcmtzLCBidXQgSSBtYXkgbmVlZCB0byBmaW5kIG91dCBtb3JlIG9uIG15
+IGVuZCwgc2luY2UgSSBhbSBhbHNvIG5ldyB0by91bmNsZWFyIG9uIHNvbWUgaXRlbXMuDQoNCltN
+eSBwZXJzb25hbCBmZWVsaW5nIGFib3V0IHRoaXNdDQpJIHRoaW5rIHRoZXJlIGFyZSBzb21lIGNv
+bmZ1c2lvbnMgW2ludGVybmFsbHkgb24gb3VyIHNpZGVdIGFib3V0IHdoYXQgQzQ1IGlzIGFuZCBo
+b3cgaXQgc2hvdWxkIGJlIGRvbmUuDQpJIGd1ZXNzIGl0J3MgcGFydCBvZiBkZXZlbG9waW5nIGtu
+b3dsZWRnZS9za2lsbHMgZm9yIGRldmVsb3BpbmcgUEhZcyBhcyBhIGNvbXBhbnkuDQpUaGVyZSdz
+IHBsZW50eSBvZiBrbm93bGVkZ2UgZm9yIGhvdyB0byBkbyB0aGUgZWxlY3RyaWNhbCwgbG93LXBv
+d2VyLXN0dWZmLCBldGMsIGFuZCBldmVuIHRoZSBkYXRhc2hlZXQgc29tZXRpbWVzIGZlZWxzDQps
+aWtlIGl0J3MgZm9yIGFuIEFEQy9EQUMuDQpbTXkgcGVyc29uYWwgZmVlbGluZyBhYm91dCB0aGlz
+XQ0KDQpUaGFua3MNCkFsZXgNCg==
