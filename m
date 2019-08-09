@@ -2,103 +2,74 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F028BC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42031C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBE4E2171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:23:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565338990;
-	bh=1okwpqC+xULEKEvMgauX6zGIX8vtFdzoxl3bprFKYYo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vlbhaCDAnUmd3SxCcJF1OtmTwqu8DdpEuj7z5ZfQp9Z81y3OXOXAgLEtpm2bU4T3a
-	 2rZ7sE/O2Y3BM+2UTj3WpOFhzWrAie9erYAxvnsbZICA6Y+gGfve8aw0Cu1xsfQolT
-	 mKETPCL+UttlIeJWiaX2cnQHZs+ZFdoN+4LvF2hU=
+	by mail.kernel.org (Postfix) with ESMTP id 166092166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:23:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405945AbfHIIXJ (ORCPT
+        id S2405952AbfHIIXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 04:23:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34146 "EHLO mx1.suse.de"
+        Fri, 9 Aug 2019 04:23:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34436 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405915AbfHIIXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 04:23:09 -0400
+        id S1726014AbfHIIXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 04:23:44 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C33ACAF50;
-        Fri,  9 Aug 2019 08:23:07 +0000 (UTC)
-Date:   Fri, 9 Aug 2019 10:23:07 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jerome Glisse <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Black <daniel@linux.ibm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: [PATCH 1/3] mm/mlock.c: convert put_page() to put_user_page*()
-Message-ID: <20190809082307.GL18351@dhcp22.suse.cz>
-References: <20190805222019.28592-1-jhubbard@nvidia.com>
- <20190805222019.28592-2-jhubbard@nvidia.com>
- <20190807110147.GT11812@dhcp22.suse.cz>
- <01b5ed91-a8f7-6b36-a068-31870c05aad6@nvidia.com>
- <20190808062155.GF11812@dhcp22.suse.cz>
- <875dca95-b037-d0c7-38bc-4b4c4deea2c7@suse.cz>
- <306128f9-8cc6-761b-9b05-578edf6cce56@nvidia.com>
- <d1ecb0d4-ea6a-637d-7029-687b950b783f@nvidia.com>
- <420a5039-a79c-3872-38ea-807cedca3b8a@suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <420a5039-a79c-3872-38ea-807cedca3b8a@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        by mx1.suse.de (Postfix) with ESMTP id 4D506AF50;
+        Fri,  9 Aug 2019 08:23:43 +0000 (UTC)
+Date:   Fri, 09 Aug 2019 10:23:42 +0200
+Message-ID: <s5hv9v6hhm9.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [alsa-devel] Regression in next with codec unload and      snd_soc_component_get/put
+In-Reply-To: <20190809074643.GB52127@atomide.com>
+References: <20190809070003.GA52127@atomide.com>
+        <s5hwofmhkbs.wl-tiwai@suse.de>
+        <20190809074643.GB52127@atomide.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 09-08-19 10:12:48, Vlastimil Babka wrote:
-> On 8/9/19 12:59 AM, John Hubbard wrote:
-> >>> That's true. However, I'm not sure munlocking is where the
-> >>> put_user_page() machinery is intended to be used anyway? These are
-> >>> short-term pins for struct page manipulation, not e.g. dirtying of page
-> >>> contents. Reading commit fc1d8e7cca2d I don't think this case falls
-> >>> within the reasoning there. Perhaps not all GUP users should be
-> >>> converted to the planned separate GUP tracking, and instead we should
-> >>> have a GUP/follow_page_mask() variant that keeps using get_page/put_page?
-> >>>  
-> >>
-> >> Interesting. So far, the approach has been to get all the gup callers to
-> >> release via put_user_page(), but if we add in Jan's and Ira's vaddr_pin_pages()
-> >> wrapper, then maybe we could leave some sites unconverted.
-> >>
-> >> However, in order to do so, we would have to change things so that we have
-> >> one set of APIs (gup) that do *not* increment a pin count, and another set
-> >> (vaddr_pin_pages) that do. 
-> >>
-> >> Is that where we want to go...?
-> >>
+On Fri, 09 Aug 2019 09:46:43 +0200,
+Tony Lindgren wrote:
 > 
-> We already have a FOLL_LONGTERM flag, isn't that somehow related? And if
-> it's not exactly the same thing, perhaps a new gup flag to distinguish
-> which kind of pinning to use?
+> * Takashi Iwai <tiwai@suse.de> [190809 07:25]:
+> > On Fri, 09 Aug 2019 09:00:03 +0200,
+> > Tony Lindgren wrote:
+> > > 
+> > > Hi,
+> > > 
+> > > Looks like commit 4a81e8f30d0b ("ASoC: soc-component: add
+> > > snd_soc_component_get/put()") causes a regression where trying
+> > > to rmmod a codec driver fails with module is in use error after
+> > > rmmod of snd-soc-audio-graph-card for example.
+> > > 
+> > > Any ideas what goes wrong there?
+> > 
+> > There is an obvious typo: soc_cleanup_component() should call
+> > snd_soc_component_module_put_when_remove() instead of *_close().
+> 
+> Making that change locally seems to fix it thanks.
 
-Agreed. This is a shiny example how forcing all existing gup users into
-the new scheme is subotimal at best. Not the mention the overal
-fragility mention elsewhere. I dislike the conversion even more now.
+... and it was already fixed in the later commit 0e36f36b04e7
+"ASoC: soc-core: fix module_put() warning in soc_cleanup_component".
 
-Sorry if this was already discussed already but why the new pinning is
-not bound to FOLL_LONGTERM (ideally hidden by an interface so that users
-do not have to care about the flag) only?
--- 
-Michal Hocko
-SUSE Labs
+
+Takashi
