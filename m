@@ -2,261 +2,251 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 844E7C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C4AC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696042086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 501C32086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:44:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xp6CIOgI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405964AbfHISm5 (ORCPT
+        id S2406726AbfHISoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:42:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38748 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726168AbfHISm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:42:57 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 06A773069609;
-        Fri,  9 Aug 2019 18:42:56 +0000 (UTC)
-Received: from redhat.com (ovpn-125-104.rdu2.redhat.com [10.10.125.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 25B23F6E9;
-        Fri,  9 Aug 2019 18:42:55 +0000 (UTC)
-Date:   Fri, 9 Aug 2019 14:42:53 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Subject: Re: [PATCH v4 03/10] livepatch: Add klp-convert tool
-Message-ID: <20190809184253.GA31811@redhat.com>
-References: <20190509143859.9050-1-joe.lawrence@redhat.com>
- <20190509143859.9050-4-joe.lawrence@redhat.com>
- <CAK7LNAT3qZ8EESs0eEtaezjgjzRa1XqoAAxpKh_sLi_JPJie2A@mail.gmail.com>
- <CAK7LNAToLyKSk9C0hwuMRxDK8yjJtghi_y6fH1p0+wK7N1wKow@mail.gmail.com>
+        Fri, 9 Aug 2019 14:44:22 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:45656 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfHISoV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 14:44:21 -0400
+Received: by mail-qt1-f193.google.com with SMTP id f7so3897506qtq.12
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 11:44:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vEuL2EbGOVGMLn0kU1w+hsZbPb98Gl+S1kfZ1qfhHFA=;
+        b=Xp6CIOgIk3oDjKzavwAl88b8bezmjuL6Genksw2JvgrEM8Z2cf2+0wHWBvZdyvc4OL
+         9UUGuhUOBtJVBTWPPzwp5b9vdRV0qUlUW5YfH109IfVaaSbfsSM/76YeBCGflRe8lcTZ
+         VmfX20SGtnC0CvSfpzGXdh/3aLHp4w5B0N81o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vEuL2EbGOVGMLn0kU1w+hsZbPb98Gl+S1kfZ1qfhHFA=;
+        b=dYvWS7jwsy3atVb6lOYau0G7yNeOOHxSvG761JOsKjyynbFhXAb4s0C4Vklsp/7HsO
+         5EON0lo3XLnWQ5Qkn+h/+xW4KAz1uudlgnJofE+Pk9xBn+4qetI8pam9WMnrjSDwQL8D
+         GMxmeqJBrD9NzXy1dJuz2F+D2rdSc2P1WvVKoMOhIjcv595zhgh7TzDRj5DgFp3kdaV4
+         UZYS+IOWSNcAdJy0N+kNOjezo2cyF2F18ZzgtaYqzqces4xhgK6q1EeQCdNoW6CExI8L
+         ilcWued0HGgoBcfsV/vQXC58JuinYv0iaxtxiV9vRfY+MCaTE/gEdzxiXwTE7sQzaNnk
+         nwVw==
+X-Gm-Message-State: APjAAAVAZI73L6JFnk1aRLpjvuV/CAJ4BABqKI26gNhwOXKiSqbd7hAk
+        GyUj7PaMu2RJc6BWqAxD3Y3r2nIzlos8VrVJcR4AOmqUuAI=
+X-Google-Smtp-Source: APXvYqxaQ/rW76Rpp5DfBAiCzkWHmV5FzYB1SRSbWqo08gJ62yizkR/UqId4EXjNeD5gLNa2lhDCNxH6197a8vbXJUY=
+X-Received: by 2002:ac8:768b:: with SMTP id g11mr19907262qtr.182.1565376260532;
+ Fri, 09 Aug 2019 11:44:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAToLyKSk9C0hwuMRxDK8yjJtghi_y6fH1p0+wK7N1wKow@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 09 Aug 2019 18:42:56 +0000 (UTC)
+References: <000000000000e3e6d7058fb2c624@google.com>
+In-Reply-To: <000000000000e3e6d7058fb2c624@google.com>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Fri, 9 Aug 2019 11:44:09 -0700
+Message-ID: <CACeCKafa5OkV=Mj0sBvr_oQeT5HBe9CRcT1g7BKqzECXv7ODvg@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in usb_kill_urb
+To:     syzbot <syzbot+22ae4e3b9fcc8a5c153a@syzkaller.appspotmail.com>
+Cc:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 12:36:05PM +0900, Masahiro Yamada wrote:
-> On Wed, Jul 31, 2019 at 11:50 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > On Thu, May 9, 2019 at 11:39 PM Joe Lawrence <joe.lawrence@redhat.com> wrote:
-> > >
-> > > From: Josh Poimboeuf <jpoimboe@redhat.com>
-> > >
-> > > Livepatches may use symbols which are not contained in its own scope,
-> > > and, because of that, may end up compiled with relocations that will
-> > > only be resolved during module load. Yet, when the referenced symbols
-> > > are not exported, solving this relocation requires information on the
-> > > object that holds the symbol (either vmlinux or modules) and its
-> > > position inside the object, as an object may contain multiple symbols
-> > > with the same name. Providing such information must be done
-> > > accordingly to what is specified in
-> > > Documentation/livepatch/module-elf-format.txt.
-> > >
-> > > Currently, there is no trivial way to embed the required information
-> > > as requested in the final livepatch elf object. klp-convert solves
-> > > this problem in two different forms: (i) by relying on Symbols.list,
-> > > which is built during kernel compilation, to automatically infer the
-> > > relocation targeted symbol, and, when such inference is not possible
-> > > (ii) by using annotations in the elf object to convert the relocation
-> > > accordingly to the specification, enabling it to be handled by the
-> > > livepatch loader.
-> > >
-> > > Given the above, create scripts/livepatch to hold tools developed for
-> > > livepatches and add source files for klp-convert there.
-> > >
-> > > The core file of klp-convert is scripts/livepatch/klp-convert.c, which
-> > > implements the heuristics used to solve the relocations and the
-> > > conversion of unresolved symbols into the expected format, as defined
-> > > in [1].
-> > >
-> > > klp-convert receives as arguments the Symbols.list file, an input
-> > > livepatch module to be converted and the output name for the converted
-> > > livepatch. When it starts running, klp-convert parses Symbols.list and
-> > > builds two internal lists of symbols, one containing the exported and
-> > > another containing the non-exported symbols. Then, by parsing the rela
-> > > sections in the elf object, klp-convert identifies which symbols must
-> > > be converted, which are those unresolved and that do not have a
-> > > corresponding exported symbol, and attempts to convert them
-> > > accordingly to the specification.
-> > >
-> > > By using Symbols.list, klp-convert identifies which symbols have names
-> > > that only appear in a single kernel object, thus being capable of
-> > > resolving these cases without the intervention of the developer. When
-> > > various homonymous symbols exist through kernel objects, it is not
-> > > possible to infer the right one, thus klp-convert falls back into
-> > > using developer annotations. If these were not provided, then the tool
-> > > will print a list with all acceptable targets for the symbol being
-> > > processed.
-> > >
-> > > Annotations in the context of klp-convert are accessible as struct
-> > > klp_module_reloc entries in sections named
-> > > .klp.module_relocs.<objname>. These entries are pairs of symbol
-> > > references and positions which are to be resolved against definitions
-> > > in <objname>.
-> > >
-> > > Define the structure klp_module_reloc in
-> > > include/linux/uapi/livepatch.h allowing developers to annotate the
-> > > livepatch source code with it.
-> > >
-> > > klp-convert relies on libelf and on a list implementation. Add files
-> > > scripts/livepatch/elf.c and scripts/livepatch/elf.h, which are a
-> > > libelf interfacing layer and scripts/livepatch/list.h, which is a
-> > > list implementation.
-> > >
-> > > Update Makefiles to correctly support the compilation of the new tool,
-> > > update MAINTAINERS file and add a .gitignore file.
-> > >
-> > > [1] - Documentation/livepatch/module-elf-format.txt
-> > >
-> > > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> > > Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> > > Signed-off-by: Joao Moreira <jmoreira@suse.de>
-> > > Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
-> > > ---
-> > >  MAINTAINERS                     |   1 +
-> > >  include/uapi/linux/livepatch.h  |   5 +
-> > >  scripts/Makefile                |   1 +
-> > >  scripts/livepatch/.gitignore    |   1 +
-> > >  scripts/livepatch/Makefile      |   7 +
-> > >  scripts/livepatch/elf.c         | 753 ++++++++++++++++++++++++++++++++
-> > >  scripts/livepatch/elf.h         |  73 ++++
-> > >  scripts/livepatch/klp-convert.c | 713 ++++++++++++++++++++++++++++++
-> > >  scripts/livepatch/klp-convert.h |  39 ++
-> > >  scripts/livepatch/list.h        | 391 +++++++++++++++++
-> > >  10 files changed, 1984 insertions(+)
-> > >  create mode 100644 scripts/livepatch/.gitignore
-> > >  create mode 100644 scripts/livepatch/Makefile
-> > >  create mode 100644 scripts/livepatch/elf.c
-> > >  create mode 100644 scripts/livepatch/elf.h
-> > >  create mode 100644 scripts/livepatch/klp-convert.c
-> > >  create mode 100644 scripts/livepatch/klp-convert.h
-> > >  create mode 100644 scripts/livepatch/list.h
-> > >
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index 52842fa37261..c1587e1cc385 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -9022,6 +9022,7 @@ F:        arch/x86/kernel/livepatch.c
-> > >  F:     Documentation/livepatch/
-> > >  F:     Documentation/ABI/testing/sysfs-kernel-livepatch
-> > >  F:     samples/livepatch/
-> > > +F:     scripts/livepatch/
-> > >  F:     tools/testing/selftests/livepatch/
-> > >  L:     live-patching@vger.kernel.org
-> > >  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching.git
-> > > diff --git a/include/uapi/linux/livepatch.h b/include/uapi/linux/livepatch.h
-> > > index e19430918a07..1c364d42d38e 100644
-> > > --- a/include/uapi/linux/livepatch.h
-> > > +++ b/include/uapi/linux/livepatch.h
-> > > @@ -12,4 +12,9 @@
-> > >  #define KLP_RELA_PREFIX                ".klp.rela."
-> > >  #define KLP_SYM_PREFIX         ".klp.sym."
-> > >
-> > > +struct klp_module_reloc {
-> > > +       void *sym;
-> > > +       unsigned int sympos;
-> > > +} __attribute__((packed));
-> > > +
-> > >  #endif /* _UAPI_LIVEPATCH_H */
-> > > diff --git a/scripts/Makefile b/scripts/Makefile
-> > > index 9d442ee050bd..bf9ce74b70b0 100644
-> > > --- a/scripts/Makefile
-> > > +++ b/scripts/Makefile
-> > > @@ -39,6 +39,7 @@ build_unifdef: $(obj)/unifdef
-> > >  subdir-$(CONFIG_GCC_PLUGINS) += gcc-plugins
-> > >  subdir-$(CONFIG_MODVERSIONS) += genksyms
-> > >  subdir-$(CONFIG_SECURITY_SELINUX) += selinux
-> > > +subdir-$(CONFIG_LIVEPATCH)   += livepatch
-> > >
-> > >  # Let clean descend into subdirs
-> > >  subdir-        += basic dtc gdb kconfig mod package
-> > > diff --git a/scripts/livepatch/.gitignore b/scripts/livepatch/.gitignore
-> > > new file mode 100644
-> > > index 000000000000..dc22fe4b6a5b
-> > > --- /dev/null
-> > > +++ b/scripts/livepatch/.gitignore
-> > > @@ -0,0 +1 @@
-> > > +klp-convert
-> > > diff --git a/scripts/livepatch/Makefile b/scripts/livepatch/Makefile
-> > > new file mode 100644
-> > > index 000000000000..2842ecdba3fd
-> > > --- /dev/null
-> > > +++ b/scripts/livepatch/Makefile
-> > > @@ -0,0 +1,7 @@
-> > > +hostprogs-y                    := klp-convert
-> > > +always                         := $(hostprogs-y)
-> > > +
-> > > +klp-convert-objs               := klp-convert.o elf.o
-> > > +
-> > > +HOST_EXTRACFLAGS               := -g -I$(INSTALL_HDR_PATH)/include -Wall
-> >
-> > This looks strange.
-> >
-> > Theoretically, you cannot include headers in $(INSTALL_HDR_PATH)/include
-> > from host programs.
-> >
-> > headers_install works for the target architecture, not host architecture.
-> > This may cause a strange result when you are cross-compiling the kernel.
-> >
-> > BTW, which header in $(INSTALL_HDR_PATH)/include do you need to include ?
-> >
-> >
-> > Also, -Wall is redundant because it is set by the top-level Makefile.
-> 
-> 
-> I deleted HOST_EXTRACFLAGS entirely,
-> and I was still able to build klp-convert.
-> 
-> 
-> What is the purpose of '-g' ?
-> If it is only needed for local debugging,
-> it should be removed from the upstream code, in my opinion.
-> 
+(Sorry for the resend, I was in HTML mode earlier :S)
+Hi,
 
-HOST_EXTRACFLAGS looks like it was present in the patchset from the
-early RFC days and inherited through each revision.
+I'm trying to get up to speed on USB kernel code. Sounds like
+dev->intf should have been set to NULL for the error path in
+ld_usb_probe() ?
 
-These are the files that the klp-convert code includes, mostly typical C
-usercode headers like stdio.h and a few local headers like elf.h:
+https://elixir.bootlin.com/linux/latest/source/drivers/usb/misc/ldusb.c#L666
 
-  % grep -h '^#include' scripts/livepatch/*.{c,h} | sort -u
-  #include "elf.h"
-  #include <fcntl.h>
-  #include <gelf.h>
-  #include "klp-convert.h"
-  #include "list.h"
-  #include <stdbool.h>
-  #include <stdio.h>
-  #include <stdlib.h>
-  #include <string.h>
-  #include <sys/stat.h>
-  #include <sys/types.h>
-  #include <unistd.h>
 
-If HOST_EXTRACFLAGS is really unneeded, we can easily drop it in the
-next patchset version.
-
-I haven't tried cross-compiling yet, but that is a good thing to note
-for future testing.
-
-Thanks,
-
--- Joe
+On Fri, Aug 9, 2019 at 10:48 AM syzbot
+<syzbot+22ae4e3b9fcc8a5c153a@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1799392c600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
+> dashboard link: https://syzkaller.appspot.com/bug?extid=22ae4e3b9fcc8a5c153a
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1134c802600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13278c4a600000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+22ae4e3b9fcc8a5c153a@syzkaller.appspotmail.com
+>
+> ==================================================================
+> BUG: KASAN: use-after-free in atomic_read
+> include/asm-generic/atomic-instrumented.h:26 [inline]
+> BUG: KASAN: use-after-free in usb_kill_urb drivers/usb/core/urb.c:695
+> [inline]
+> BUG: KASAN: use-after-free in usb_kill_urb+0x24b/0x2c0
+> drivers/usb/core/urb.c:687
+> Read of size 4 at addr ffff8881d635b110 by task syz-executor672/1999
+>
+> CPU: 1 PID: 1999 Comm: syz-executor672 Not tainted 5.3.0-rc2+ #25
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xca/0x13e lib/dump_stack.c:113
+>   print_address_description+0x6a/0x32c mm/kasan/report.c:351
+>   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
+>   kasan_report+0xe/0x12 mm/kasan/common.c:612
+>   check_memory_region_inline mm/kasan/generic.c:185 [inline]
+>   check_memory_region+0x128/0x190 mm/kasan/generic.c:192
+>   atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+>   usb_kill_urb drivers/usb/core/urb.c:695 [inline]
+>   usb_kill_urb+0x24b/0x2c0 drivers/usb/core/urb.c:687
+>   ld_usb_abort_transfers+0xb7/0x1d0 drivers/usb/misc/ldusb.c:196
+>   ld_usb_release+0x19f/0x400 drivers/usb/misc/ldusb.c:406
+>   __fput+0x2d7/0x840 fs/file_table.c:280
+>   task_work_run+0x13f/0x1c0 kernel/task_work.c:113
+>   exit_task_work include/linux/task_work.h:22 [inline]
+>   do_exit+0x8ef/0x2c50 kernel/exit.c:878
+>   do_group_exit+0x125/0x340 kernel/exit.c:982
+>   __do_sys_exit_group kernel/exit.c:993 [inline]
+>   __se_sys_exit_group kernel/exit.c:991 [inline]
+>   __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:991
+>   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x440418
+> Code: 00 00 be 3c 00 00 00 eb 19 66 0f 1f 84 00 00 00 00 00 48 89 d7 89 f0
+> 0f 05 48 3d 00 f0 ff ff 77 21 f4 48 89 d7 44 89 c0 0f 05 <48> 3d 00 f0 ff
+> ff 76 e0 f7 d8 64 41 89 01 eb d8 0f 1f 84 00 00 00
+> RSP: 002b:00007ffe884abf88 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000440418
+> RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+> RBP: 00000000004bff50 R08: 00000000000000e7 R09: ffffffffffffffd0
+> R10: 0000000000000064 R11: 0000000000000246 R12: 0000000000000001
+> R13: 00000000006d2180 R14: 0000000000000000 R15: 0000000000000000
+>
+> Allocated by task 22:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:69
+>   set_track mm/kasan/common.c:77 [inline]
+>   __kasan_kmalloc mm/kasan/common.c:487 [inline]
+>   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
+>   kmalloc include/linux/slab.h:557 [inline]
+>   usb_alloc_urb+0x65/0xb0 drivers/usb/core/urb.c:73
+>   ld_usb_probe+0x3e1/0xa65 drivers/usb/misc/ldusb.c:708
+>   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+>   really_probe+0x281/0x650 drivers/base/dd.c:548
+>   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:882
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2114
+>   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+>   really_probe+0x281/0x650 drivers/base/dd.c:548
+>   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:882
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2114
+>   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+>   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+>   port_event drivers/usb/core/hub.c:5359 [inline]
+>   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+>   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+>   kthread+0x318/0x420 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> Freed by task 22:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:69
+>   set_track mm/kasan/common.c:77 [inline]
+>   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
+>   slab_free_hook mm/slub.c:1423 [inline]
+>   slab_free_freelist_hook mm/slub.c:1470 [inline]
+>   slab_free mm/slub.c:3012 [inline]
+>   kfree+0xe4/0x2f0 mm/slub.c:3953
+>   urb_destroy drivers/usb/core/urb.c:26 [inline]
+>   kref_put include/linux/kref.h:65 [inline]
+>   usb_free_urb.part.0+0x7a/0xc0 drivers/usb/core/urb.c:95
+>   usb_free_urb+0x1b/0x30 drivers/usb/core/urb.c:94
+>   ld_usb_delete+0x3f/0x130 drivers/usb/misc/ldusb.c:211
+>   ld_usb_probe+0x728/0xa65 drivers/usb/misc/ldusb.c:744
+>   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+>   really_probe+0x281/0x650 drivers/base/dd.c:548
+>   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:882
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2114
+>   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+>   really_probe+0x281/0x650 drivers/base/dd.c:548
+>   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:882
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2114
+>   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+>   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+>   port_event drivers/usb/core/hub.c:5359 [inline]
+>   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+>   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+>   kthread+0x318/0x420 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> The buggy address belongs to the object at ffff8881d635b100
+>   which belongs to the cache kmalloc-192 of size 192
+> The buggy address is located 16 bytes inside of
+>   192-byte region [ffff8881d635b100, ffff8881d635b1c0)
+> The buggy address belongs to the page:
+> page:ffffea000758d6c0 refcount:1 mapcount:0 mapping:ffff8881da002a00
+> index:0x0
+> flags: 0x200000000000200(slab)
+> raw: 0200000000000200 dead000000000100 dead000000000122 ffff8881da002a00
+> raw: 0000000000000000 0000000080100010 00000001ffffffff 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>   ffff8881d635b000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   ffff8881d635b080: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+> > ffff8881d635b100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                           ^
+>   ffff8881d635b180: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>   ffff8881d635b200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ==================================================================
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
