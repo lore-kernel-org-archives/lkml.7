@@ -2,126 +2,163 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA33C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E825C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A8B20C01
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156CA20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:43:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KyVK5awF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TVc46H13"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406886AbfHIQmt (ORCPT
+        id S2407065AbfHIQnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 12:42:49 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39192 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfHIQms (ORCPT
+        Fri, 9 Aug 2019 12:43:24 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:46986 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbfHIQnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 12:42:48 -0400
-Received: by mail-pf1-f195.google.com with SMTP id f17so42350345pfn.6;
-        Fri, 09 Aug 2019 09:42:48 -0700 (PDT)
+        Fri, 9 Aug 2019 12:43:23 -0400
+Received: by mail-yb1-f193.google.com with SMTP id w196so7941303ybe.13;
+        Fri, 09 Aug 2019 09:43:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lQR64lsM2F4GHE16CB+rGeKc+DaWwGBd1G+dV7Mx9vQ=;
-        b=KyVK5awF6Kfdm70TtcKte/vbR/UqeyC/LQEtp6sXplFv36hDRFUfnjY/dUtHRt4SGI
-         /HoG6wzxkF3lILfFeMSfqggAhIRHHaenBEWEC1z1bGxyUknckb8djkEOc1tMURDE17g6
-         ih9F4hpbuqn31LdRl49mXJZI6O7jT6uW/F8BVxQMioRqLROdfNpTtpk+r1FjfFvIvBud
-         Yy4wxLPzgcfVx+S8Jk2dmdWAa72kPMmiQfVTZD+uvI8IVRjfzhj7lXesnncnSSCbJfA+
-         PU75xc5L+I0WP1cI7q/nCIQyywurDQSTBknAbd2qd7VNxtCI7ggKxcmuh/r8FKa2wzfF
-         1hJA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ee6sLT3QKOZ9HPHIVStB6Oq32MyzNxKnALFXSGrvSq8=;
+        b=TVc46H13EkACc3tRJRH6cBRCNVjYa2zB2vR159T3lp5a1c5olUpKlZnIBVNszXgoH1
+         4ZYzEqbf51kW6xTSVXjf7JFshEao6DydD6v4wZxngF1uvPtjQXNQMOVBZLBEiMxeSLau
+         hDXQqmkPTnFuZEwaZXzfFWhQfdcikA9mAgaYFLwvdykxKXrjT38hchsN1ZvScRI7A41Z
+         P1T6mxZFb6e/57eIJAg7SIwC4HVvhyTPbawIBCEmk9ff7DLLmJAady1ToLm9I7mmbgpq
+         kxma1KWCJkIGeLivc9Dq/zhamVaRBUDGvIlg8VVOQqmgE+/2vVR8puFkGJxMpl6LT07R
+         uXqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lQR64lsM2F4GHE16CB+rGeKc+DaWwGBd1G+dV7Mx9vQ=;
-        b=Oy4cZHy+Vj0j6Mdb7NooYiOIq/Ww0DBmQSdKNHgzZs2lQzsMUDhnCHGeq882vj3IEO
-         E3RO2h70PTyZmToc95yKMEh60KNBEv4jGGAcOeF67WqAhKZHQqubaFg9oDxK1LAMf2Fh
-         eqtCuPG0HoI3TpsaEFBVUUfqF0kodUmLvH6heHYJTC90pOBsyzumpz02VsvkOXKYW/8p
-         d5is5VVJAsQC1fZpD0YRcVhCB/3xBj32VCSVzz1ZNXqcRQLaxzH2iXMQsjWYs11T5F/H
-         fNLMttGzl7J5XX5QH7olLVfvoUU5pONhTCdw/eady6J+WFPO66I5IL0A439hWzTTOW9h
-         i79g==
-X-Gm-Message-State: APjAAAVeAk8MVUhsKF9K9nvKrUTT0BVL7yK3gqGkhW6Xqy9VXf0me2gW
-        unqcPDXgUyDlUS3NRXfI8oI=
-X-Google-Smtp-Source: APXvYqzikkhASYL+yHYO3qlFUUkyWSKcPxDKgLjky1s0KPej6LcMb0qkFFsxJEXHw1pDKKiVJJ0u9w==
-X-Received: by 2002:a65:448a:: with SMTP id l10mr17950446pgq.327.1565368967690;
-        Fri, 09 Aug 2019 09:42:47 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f12sm82607856pgq.52.2019.08.09.09.42.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 09:42:46 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 09:42:45 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     wim@linux-watchdog.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux@armlinux.org.uk, otavio@ossystems.com.br,
-        leonard.crestez@nxp.com, schnitzeltony@gmail.com,
-        u.kleine-koenig@pengutronix.de, jan.tuerk@emtrion.com,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH 1/4] dt-bindings: watchdog: Add i.MX7ULP bindings
-Message-ID: <20190809164245.GA17136@roeck-us.net>
-References: <1565334842-28161-1-git-send-email-Anson.Huang@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ee6sLT3QKOZ9HPHIVStB6Oq32MyzNxKnALFXSGrvSq8=;
+        b=ilKmT8Eimd75aULfsNj9ou5YEoBNW2P23zdsKDxla61bm/zUJmxrbgc9O8R92vU24X
+         EU6OY2++g8p1tu86QLb0jwB/0TgYKc/U92a5xOYGn7xcD+jwExcLsI9YF9nZpab23NLd
+         sSEdO8Xh8VOaAp9KdAyh2iUup4oD2Cd0H7mghMaIaTmgBp3Yjv8w/rSm437IfHVwTM/T
+         CHYsmTNTzSTkob6ygikMHldM8ZQJPudQ/KdJ0c40WQY8xYZ4ayM+EJhcJwq0KucmoSEp
+         nP+X4HUOCRuTi5BCd/WkMjcOa1Hlgvk0oHlF/DTDHOLgXv3L3x3+lk7L0oHh7pU85Tn4
+         uv0g==
+X-Gm-Message-State: APjAAAWzBgJdvoOq7c5D+kODTSsZjZL7gOqtg8JGHBUvusb2ZOJuZuNc
+        sUvZqKM7WpPl0n50YoRvBASchVe1zya4SNHe9r0=
+X-Google-Smtp-Source: APXvYqyWd8Bd2MlCSQQlILPFLseAUONgO+0QnP6HjK5IX+v5Uz2uOP3Djl3F53pUiWu2hsshGUt7B65HXUjxQqXWX6U=
+X-Received: by 2002:a25:d44c:: with SMTP id m73mr9201782ybf.126.1565369002163;
+ Fri, 09 Aug 2019 09:43:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1565334842-28161-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190731153443.4984-1-acgoide@tycho.nsa.gov> <CAHC9VhQUoDwBiLi+BiW=_Px18v3xMhhGYDD2mLdu9YZJDWw1yg@mail.gmail.com>
+ <CAOQ4uxigYZunXgq0BubRFNM51Kh_g3wrtyNH77PozUX+3sM=aQ@mail.gmail.com> <e69f95ba-3da7-380a-ef14-cc866172d79a@tycho.nsa.gov>
+In-Reply-To: <e69f95ba-3da7-380a-ef14-cc866172d79a@tycho.nsa.gov>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Fri, 9 Aug 2019 19:43:09 +0300
+Message-ID: <CAOQ4uxh4+SDCF7HHwSxGFx01ZyJ43VSLhLM2dDFY2AQ0HkkuvA@mail.gmail.com>
+Subject: Re: [Non-DoD Source] Re: [PATCH] fanotify, inotify, dnotify,
+ security: add security hook for fs notifications
+To:     Aaron Goidel <acgoide@tycho.nsa.gov>
+Cc:     Paul Moore <paul@paul-moore.com>, selinux@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>, Jan Kara <jack@suse.cz>,
+        James Morris <jmorris@namei.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 03:13:59PM +0800, Anson Huang wrote:
-> Add the watchdog bindings for Freescale i.MX7ULP.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  .../bindings/watchdog/fsl-imx7ulp-wdt.txt          | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
-> new file mode 100644
-> index 0000000..d83fc5c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
-> @@ -0,0 +1,22 @@
-> +* Freescale i.MX7ULP Watchdog Timer (WDT) Controller
-> +
-> +Required properties:
-> +- compatible : Should be "fsl,imx7ulp-wdt"
-> +- reg : Should contain WDT registers location and length
-> +- interrupts : Should contain WDT interrupt
-> +- clocks: Should contain a phandle pointing to the gated peripheral clock.
+> >>> +       switch (flags & FANOTIFY_MARK_TYPE_BITS) {
+> >>> +       case FAN_MARK_MOUNT:
+> >>> +               obj_type = FSNOTIFY_OBJ_TYPE_VFSMOUNT;
+> >>> +               break;
+> >>> +       case FAN_MARK_FILESYSTEM:
+> >>> +               obj_type = FSNOTIFY_OBJ_TYPE_SB;
+> >>> +               break;
+> >>> +       case FAN_MARK_INODE:
+> >>> +               obj_type = FSNOTIFY_OBJ_TYPE_INODE;
+> >>> +               break;
+> >>> +       default:
+> >>> +               ret = -EINVAL;
+> >>> +               goto out;
+> >>> +       }
+> >
+> > Sorry, I just can't stand this extra switch statement here.
+> > Please initialize obj_type at the very first switch statement in
+> > do_fanotify_mark() and pass it to fanotify_find_path().
+> > Preferably also make it a helper that returns either
+> > valid obj_type or <0 for error.
+> >
+> >
+> I have no problem moving the initialization of obj_type up one level to
+> do_fanotify_mark(). I don't think that a helper is necessary at this
+> juncture as this logic seems to only exist in one place. Should this
+> change, then there would be merit to having a separate function.
 
-The driver as submitted does not include clock or interrupt handling.
-Why are those properties listed as mandatory if they are not really
-needed (nor used) ?
+Ok.
 
-> +
-> +Optional properties:
-> +- timeout-sec : Contains the watchdog timeout in seconds
-> +
-> +Examples:
-> +
-> +wdog1: wdog@403d0000 {
-> +	compatible = "fsl,imx7ulp-wdt";
-> +	reg = <0x403d0000 0x10000>;
-> +	interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
-> +	assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
-> +	assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
-> +	timeout-sec = <40>;
-> +};
-> -- 
-> 2.7.4
-> 
+> >>> +
+> >>> +       ret = security_path_notify(path, mask, obj_type);
+> >>>          if (ret)
+> >>>                  path_put(path);
+> >
+> > It is probably best to mask out FANOTIFY_EVENT_FLAGS
+> > when calling the hook. Although FAN_EVENT_ON_CHILD
+> > and FAN_ONDIR do map to corresponding FS_ constants,
+> > the security hooks from dnotify and inotify do not pass these
+> > flags, so the security module cannot use them as reliable
+> > information, so it will have to assume that they have been
+> > requested anyway.
+> >
+> > Alternatively, make sure that dnotify/inotify security hooks
+> > always set these two flags, by fixing up and using the
+> > dnotify/inotify arg_to_mask conversion helpers before calling
+> > the security hook.
+> >
+> I think that at this point either approach you mentioned makes just as
+> much sense. If it's all the same to you, Amir, I'll just change the
+> caller in fanotify to include (mask) & ~(FANOTIFY_EVENT_FLAGS)
+
+On second look, let's go with (mask & ALL_FSNOTIFY_EVENTS)
+It seems simpler and more appropriate way to convert to FS_ flags.
+
+[...]
+> >>>
+> >>> -       ret = inotify_find_inode(pathname, &path, flags);
+> >>> +       ret = inotify_find_inode(pathname, &path, flags, mask);
+> >
+> > Please use (mask & IN_ALL_EVENTS) for converting to common FS_ flags
+> > or use the inotify_arg_to_mask() conversion helper, which contains more
+> > details irrelevant for the security hook.
+> > Otherwise mask may contain flags like IN_MASK_CREATE, which mean
+> > different things on different backends and the security module cannot tell
+> > the difference.
+> >
+> > Also note that at this point, before inotify_arg_to_mask(), the mask does
+> > not yet contain FS_EVENT_ON_CHILD, which could be interesting for
+> > the security hook (fanotify users can opt-in with FAN_EVENT_ON_CHILD).
+> > Not a big deal though as security hook can assume the worse
+> > (that events on child are requested).
+> >
+> I'll use (mask & IN_ALL_EVENTS).
+
+OK.
+
+>
+> I can implement the changes in the ways I mentioned above. I don't see a
+> need for anything more in the cases you brought up since none of them
+> change the logic of the hook itself or would make a substantive
+> difference to the operation of the hook given its current implementation.
+>
+
+Agree. If more flags are needed for LSMs they could be added later.
+
+Thanks,
+Amir.
