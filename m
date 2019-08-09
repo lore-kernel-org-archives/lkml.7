@@ -2,183 +2,187 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFD0C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC094C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFFE42184E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B476F20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:36:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="kOgMToIM"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="oLqPhtdY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbfHIVgG (ORCPT
+        id S1727869AbfHIVgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 17:36:06 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.43]:41236 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726137AbfHIVgG (ORCPT
+        Fri, 9 Aug 2019 17:36:47 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46589 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfHIVgr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 17:36:06 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 2E749400D280B
-        for <linux-kernel@vger.kernel.org>; Fri,  9 Aug 2019 16:36:05 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id wCYPhErIu3Qi0wCYPhxZDK; Fri, 09 Aug 2019 16:36:05 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=QhASz6VP6WyWa0L9JmhlLkbGHSWbRKkyw1FDFUxOnoo=; b=kOgMToIMcetsjSewWZkmO81iIl
-        rQGJN9h91Az6qrJSlw+gj0nCgSOWdbaoevEESf8qUv4kLi+vsRxJIAdDjr1ywk3sNEzQMROmdJMHN
-        nlwgiqqdokGD/Y/mY4in1jiw/tgMHzMv3iDIqq6Qjx7l/KpSBvAoyVHR1uPx+4c2Fvq7sH3S3b0ER
-        w3bgcbnllCustUYyA15juxKxUJi+w/zhm1sM8vyDwFyjL8doXVEJRNBEynEpLPsJd8k0cF9MqnSAq
-        OHlUBaZBQDtyMTyL7psnKPdkyHHzfd1VMUx/x3IRH+7oBEMU+cH0gf3EExN6mvATzZHVS9AgeEV1v
-        SyZt9khA==;
-Received: from 187-162-252-62.static.axtel.net ([187.162.252.62]:54456 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hwCYO-001kX8-Pv; Fri, 09 Aug 2019 16:36:04 -0500
-Subject: Re: [PATCH] sh: Drop -Werror from kernel Makefile
-To:     Guenter Roeck <linux@roeck-us.net>, Rich Felker <dalias@libc.org>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1564971263-21562-1-git-send-email-linux@roeck-us.net>
- <20190805032441.GO9017@brightrain.aerifal.cx>
- <20190809195630.GA15606@roeck-us.net>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <5f26547f-b48e-4b9f-b8ef-858283915e3d@embeddedor.com>
-Date:   Fri, 9 Aug 2019 16:36:01 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 9 Aug 2019 17:36:47 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c3so23565492pfa.13
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 14:36:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/aPM+dGjqbF/twu7tNDtqtaJN6yd/7yU4c7+a2/cJxw=;
+        b=oLqPhtdYAogfpwokAq0y9xZzUtFmKpJVD7GORU7Y4b6sAwR117XaTK37RJPo12PHgG
+         qW5oZhdXQwmz8EjCib2Jicn1UEeY/E3wpbNYGGOsDL2BO+1m+vLZ0446PwAulggiJOUA
+         0zL4giNtUJtQSiAlNsOGQC2p+AoSkGKRWBVLU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/aPM+dGjqbF/twu7tNDtqtaJN6yd/7yU4c7+a2/cJxw=;
+        b=Bq6Ii5KRMChU8VLbhIz/wvXj9ln5UjC0ZnpWCWgSvEf41pV9nvTjm1haXCmEv1O9uI
+         IDh44HjmZa2ujAzESZc7wSriH0EH71bUszhE5yT+rFNYcSrI0HungzaWGXENODcHT0Eq
+         hRR79q0Wej0Cpl23guNRQ9Y7s45HQXmC0IKWoYLb195cjgVctirdXIE3NAmpdSp/XvS2
+         Nxx1e41FQR08D6UKDccPdC7fHW51aCGcT6TlfW/YftbvfwBW3MlHkafMUXS3YZniugOy
+         ICQUtabveUqvL8I2ldkGT+WXJM8wyqT84Jic+e4Ktf8Ge6wQ4rpeqGAonOmTT91ML46C
+         ZSCA==
+X-Gm-Message-State: APjAAAUwGYyYFs/j2UwukJs28HiZgny26mPPLD73sc/nSYMMxFhCMYJ+
+        +HY55f9h+qE/nHwb0vxtw8gW7w==
+X-Google-Smtp-Source: APXvYqyhTj+wnZ2r/4zniW+vG+t30nHJkSlUrAs/aUpsNA6Acpb/Z+cqyKSnfKeMhAu4WJlr1McazA==
+X-Received: by 2002:a62:3895:: with SMTP id f143mr23417327pfa.116.1565386605846;
+        Fri, 09 Aug 2019 14:36:45 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id a10sm5050392pfl.159.2019.08.09.14.36.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 09 Aug 2019 14:36:45 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 17:36:43 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Byungchul Park <byungchul.park@lge.com>,
+        linux-kernel@vger.kernel.org, Rao Shoaib <rao.shoaib@oracle.com>,
+        max.byungchul.park@gmail.com, kernel-team@android.com,
+        kernel-team@lge.com, Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC v1 1/2] rcu/tree: Add basic support for kfree_rcu
+ batching
+Message-ID: <20190809213643.GG255533@google.com>
+References: <20190807094504.GB169551@google.com>
+ <20190807175215.GE28441@linux.ibm.com>
+ <20190808095232.GA30401@X58A-UD3R>
+ <20190808125607.GB261256@google.com>
+ <20190808233014.GA184373@google.com>
+ <20190809151619.GD28441@linux.ibm.com>
+ <20190809153924.GB211412@google.com>
+ <20190809163346.GF28441@linux.ibm.com>
+ <20190809202226.GC255533@google.com>
+ <20190809204217.GN28441@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190809195630.GA15606@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.252.62
-X-Source-L: No
-X-Exim-ID: 1hwCYO-001kX8-Pv
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-252-62.static.axtel.net ([192.168.43.131]) [187.162.252.62]:54456
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809204217.GN28441@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter,
-
-On 8/9/19 2:56 PM, Guenter Roeck wrote:
-> On Sun, Aug 04, 2019 at 11:24:41PM -0400, Rich Felker wrote:
->> On Sun, Aug 04, 2019 at 07:14:23PM -0700, Guenter Roeck wrote:
->>> Since commit a035d552a93b ("Makefile: Globally enable fall-through
->>> warning"), all sh builds fail with errors such as
->>>
->>> arch/sh/kernel/disassemble.c: In function 'print_sh_insn':
->>> arch/sh/kernel/disassemble.c:478:8: error: this statement may fall through
->>>
->>> Since this effectively disables all build and boot tests for the
->>> architecture, let's drop -Werror from the sh kernel Makefile until
->>> the problems are fixed.
->>>
->>> Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
->>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
->>
->> Acked-by: Rich Felker <dalias@libc.org>
->>
-> Any chance to get this or a similar patch applied soon ? All sh builds
-> in mainline and -next are still broken.
+On Fri, Aug 09, 2019 at 01:42:17PM -0700, Paul E. McKenney wrote:
+> > Also, I can go back to 500M if I just keep KFREE_DRAIN_JIFFIES at HZ/50. So I
+> > am quite happy about that. I think I can declare that the "let list grow
+> > indefinitely" design works quite well even with an insanely heavily loaded
+> > case of every CPU in a 16CPU system with 500M memory, indefinitely doing
+> > kfree_rcu()in a tight loop with appropriate cond_resched(). And I am like
+> > thinking - wow how does this stuff even work at such insane scales :-D
 > 
-
-If no one cares, I can add it to my tree and include it in my pull-request
-for 5.3-rc4.
-
-I would just need your Tested-by.
-
-Thanks
---
-Gustavo
-
-> Thanks,
-> Guenter
+> A lot of work by a lot of people over a long period of time.  On their
+> behalf, I thank you for the implied compliment.  So once this patch gets
+> in, perhaps you will have complimented yourself as well.  ;-)
 > 
->>> ---
->>>  arch/sh/kernel/Makefile | 2 --
->>>  1 file changed, 2 deletions(-)
->>>
->>> diff --git a/arch/sh/kernel/Makefile b/arch/sh/kernel/Makefile
->>> index 59673f8a3379..ef65f0625c6c 100644
->>> --- a/arch/sh/kernel/Makefile
->>> +++ b/arch/sh/kernel/Makefile
->>> @@ -47,5 +47,3 @@ obj-$(CONFIG_DWARF_UNWINDER)	+= dwarf.o
->>>  obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o perf_callchain.o
->>>  obj-$(CONFIG_DMA_NONCOHERENT)	+= dma-coherent.o
->>>  obj-$(CONFIG_HAVE_HW_BREAKPOINT)		+= hw_breakpoint.o
->>> -
->>> -ccflags-y := -Werror
->>> -- 
->>> 2.7.4
+> But more work is needed, and will continue to be as new workloads,
+> compiler optimizations, and hardware appears.  And it would be good to
+> try this on a really big system at some point.
+
+Cool!
+
+> > > > > o	Along with the above boot parameter, use "rcutree.use_softirq=0"
+> > > > > 	to cause RCU to use kthreads instead of softirq.  (You might well
+> > > > > 	find issues in priority setting as well, but might as well find
+> > > > > 	them now if so!)
+> > > > 
+> > > > Doesn't think one actually reduce the priority of the core RCU work? softirq
+> > > > will always have higher priority than any there. So wouldn't that have the
+> > > > effect of not reclaiming things fast enough? (Or, in my case not scheduling
+> > > > the rcu_work which does the reclaim).
+> > > 
+> > > For low kfree_rcu() loads, yes, it increases overhead due to the need
+> > > for context switches instead of softirq running at the tail end of an
+> > > interrupt.  But for high kfree_rcu() loads, it gets you realtime priority
+> > > (in conjunction with "rcutree.kthread_prio=", that is).
+> > 
+> > I meant for high kfree_rcu() loads, a softirq context executing RCU callback
+> > is still better from the point of view of the callback running because the
+> > softirq will run above all else (higher than the highest priority task) so
+> > use_softirq=0 would be a down grade from that perspective if something higher
+> > than rcutree.kthread_prio is running on the CPU. So unless kthread_prio is
+> > set to the highest prio, then softirq running would work better. Did I miss
+> > something?
+> 
+> Under heavy load, softirq stops running at the tail end of interrupts and
+> is instead run within the context of a per-CPU ksoftirqd kthread.  At normal
+> SCHED_OTHER priority.
+
+Ah, yes. Agreed!
+
+> > > > > o	With any of the above, invoke rcu_momentary_dyntick_idle() along
+> > > > > 	with cond_resched() in your kfree_rcu() loop.  This simulates
+> > > > > 	a trip to userspace for nohz_full CPUs, so if this helps for
+> > > > > 	non-nohz_full CPUs, adjustments to the kernel might be called for.
+> > 
+> > I did not try this yet. But I am thinking why would this help in nohz_idle
+> > case? In nohz_idle we already have the tick active when CPU is idle. I guess
+> > it is because there may be a long time that elapses before
+> > rcu_data.rcu_need_heavy_qs == true ?
+> 
+> Under your heavy rcuperf load, none of the CPUs would ever be idle.  Nor
+> would they every be in nohz_full userspace context, either.
+
+Sorry I made a typo, I meant 'tick active when CPU is non-idle for NOHZ_IDLE
+systems' above.
+
+> In contrast, a heavy duty userspace-driven workload would transition to
+> and from userspace for each kfree_rcu(), and that would increment the
+> dyntick-idle count on each transition to and from userspace.  Adding the
+> rcu_momentary_dyntick_idle() emulates a pair of such transitions.
+
+But even if we're in kernel mode and not transitioning, I thought the FQS
+loop (rcu_implicit_dynticks_qs() function) would set need_heavy_qs to true at
+2 * jiffies_to_sched_qs.
+
+Hmm, I forgot that jiffies_to_sched_qs can be quite large I guess. You're
+right, we could call rcu_momentary_dyntick_idle() in advance before waiting
+for FQS loop to do the setting of need_heavy_qs.
+
+Or, am I missing something with the rcu_momentary_dyntick_idle() point you
+made?
+
+thanks,
+
+ - Joel
+
+
+> 
+> 							Thanx, Paul
+> 
+> > > > Ok, will try it.
+> > > > 
+> > > > Save these bullet points for future reference! ;-)  thanks,
+> > > 
+> > > I guess this is helping me to prepare for Plumbers.  ;-)
+> > 
+> > :-)
+> > 
+> > thanks, Paul!
+> > 
+> >  - Joel
+> > 
+> 
