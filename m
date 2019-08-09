@@ -2,151 +2,107 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1251FC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6C4C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF63620B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E61021773
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:45:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oAF16Iev"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407106AbfHIQpm (ORCPT
+        id S2407163AbfHIQps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 12:45:42 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:59504 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406412AbfHIQpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 12:45:42 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 2B1D1FB03;
-        Fri,  9 Aug 2019 18:45:40 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id zG0agjQGW3tZ; Fri,  9 Aug 2019 18:45:38 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id BDFB241D9E; Fri,  9 Aug 2019 18:45:37 +0200 (CEST)
-Date:   Fri, 9 Aug 2019 18:45:37 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Ville Baillie <vmbaillie@googlemail.com>
-Cc:     marex@denx.de, stefan@agner.ch, airlied@linux.ie, daniel@ffwll.ch,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Robert Chiras <robert.chiras@nxp.com>
-Subject: Re: [PATCH] mxsfb: allow attachment of display bridges
-Message-ID: <20190809164537.GA4212@bogon.m.sigxcpu.org>
-References: <20190801111853.GA24574@villeb-dev>
+        Fri, 9 Aug 2019 12:45:48 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36110 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406412AbfHIQps (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 12:45:48 -0400
+Received: by mail-pl1-f194.google.com with SMTP id k8so45196805plt.3;
+        Fri, 09 Aug 2019 09:45:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fC+iWISyIRlxP292OZH7zhhrRFIGkbHzKrFLem5U1lY=;
+        b=oAF16IevzBmL62Db1ftInsD9CLosBzDAv6rOEQD6wm0JR07KcQ0nm3AKN/itNFTK9K
+         ZAucyqnzy7OC0OENgbB4zRzYJ+YkytSc5SOyH23AGTLiL8Uuqk+7vh37bgu886MXjA9U
+         ZAcZ6SggTXeYwqTUP1kXlXkFoyY1J8Y2NhAezuGNfNobDN9Kyp1T8JPoet7SQAkF+491
+         T0c6LSMYq/vgj8R9BF18KqToJeKh0i6cnRs/WglBCJ9MehPr7mAbmzgxIf43MjLGwlmK
+         OSslpqj4aAT6d/FxDuWxR4B1gNnFUGu4Z98T6hXdNGDkO4KUpQf3tos2ZRZb0nYgBKur
+         /iSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fC+iWISyIRlxP292OZH7zhhrRFIGkbHzKrFLem5U1lY=;
+        b=HWzz4vpFPvohlZFK3v6BlKTMcOkc2jmDZPQRGTtoO1imWIsrVKVCPDOWJjk84KBfiJ
+         tiw6BMtxvan9Vaa3qbh0fdXxmLO/Y1z7XMF7ZSziTwtlpUKMfEkc/gGknJQoOPHExlYU
+         0n+A+oCeBNvUN0LlbxfBQ3Lli0cznF9SMK5A2VF4NDfx7CoPkEczqj3TwOV6l4fZtDZi
+         dfohokaJ4EbdKSmAPofRaUmWgTJTnYdbtrSPsHqORJQ70mPtYIAm24z2/e6j7pmifWNO
+         N6YH/jlxMrd+UOBiKpFFYLiFZlp7dpKaM9/LzhbiIlOUTPyKkGdWrtmYCAtbA+Rv2ri8
+         QfaA==
+X-Gm-Message-State: APjAAAX7EpR1GPbq6Bf51R838uYjemu2eDEWza/QWx/IAXT/rwRxOqMR
+        MBikrizB8ozfzWXSHdeMRZo=
+X-Google-Smtp-Source: APXvYqxwsoHu7zSgLhchshilKocyRaYoyNg1d/GhuABSgIm8BHJyzpulwft+131qAKPDwvn5pF5zOw==
+X-Received: by 2002:a17:902:7686:: with SMTP id m6mr19955746pll.239.1565369146822;
+        Fri, 09 Aug 2019 09:45:46 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id i3sm105240142pfo.138.2019.08.09.09.45.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 09 Aug 2019 09:45:46 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 09:45:44 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     benjamin.tissoires@redhat.com, grawity@gmail.com, dev@pp3345.net,
+        lyude@redhat.com, teika@gmx.com, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] Input: synaptics - Fix a typo - synpatics --> synaptics
+Message-ID: <20190809164544.GM178933@dtor-ws>
+References: <20190809150814.24793-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190801111853.GA24574@villeb-dev>
+In-Reply-To: <20190809150814.24793-1-christophe.jaillet@wanadoo.fr>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Thu, Aug 01, 2019 at 11:18:53AM +0000, Ville Baillie wrote:
-> ---
->  drivers/gpu/drm/mxsfb/mxsfb_drv.c | 20 ++++++++++++++++----
->  drivers/gpu/drm/mxsfb/mxsfb_drv.h |  1 +
->  drivers/gpu/drm/mxsfb/mxsfb_out.c | 14 +++++++++++---
->  3 files changed, 28 insertions(+), 7 deletions(-)
+On Fri, Aug 09, 2019 at 05:08:14PM +0200, Christophe JAILLET wrote:
+> This should be 'synaptics', not 'synpatics'
 > 
-> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-> index 6fafc90da4ec..c19a7b7aa3a6 100644
-> --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-> +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-> @@ -229,10 +229,22 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
->  		goto err_vblank;
->  	}
->  
-> -	ret = drm_panel_attach(mxsfb->panel, &mxsfb->connector);
-> -	if (ret) {
-> -		dev_err(drm->dev, "Cannot connect panel\n");
-> -		goto err_vblank;
-> +	if (mxsfb->panel) {
-> +		ret = drm_panel_attach(mxsfb->panel, &mxsfb->connector);
-> +		if (ret) {
-> +			dev_err(drm->dev, "Cannot connect panel\n");
-> +			goto err_vblank;
-> +		}
-> +	} else if (mxsfb->bridge) {
-> +		ret = drm_bridge_attach(&mxsfb->pipe.encoder, mxsfb->bridge,
-> +				NULL);
-> +		if (ret) {
-> +			dev_err(drm->dev, "Cannot connect bridge\n");
-> +			goto err_vblank;
-> +		}
-> +	} else {
-> +		dev_err(drm->dev, "No panel or bridge\n");
-> +		return -EINVAL;
->  	}
->  
->  	drm->mode_config.min_width	= MXSFB_MIN_XRES;
-> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.h b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-> index d975300dca05..436fe4bbb47a 100644
-> --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-> +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-> @@ -29,6 +29,7 @@ struct mxsfb_drm_private {
->  	struct drm_simple_display_pipe	pipe;
->  	struct drm_connector		connector;
->  	struct drm_panel		*panel;
-> +	struct drm_bridge		*bridge;
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+
+Applied, thank you.
+
+> ---
+>  drivers/input/mouse/synaptics.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
+> index b6da0c1267e3..bbd799c7b058 100644
+> --- a/drivers/input/mouse/synaptics.c
+> +++ b/drivers/input/mouse/synaptics.c
+> @@ -191,7 +191,7 @@ static const char * const forcepad_pnp_ids[] = {
 >  };
 >  
->  int mxsfb_setup_crtc(struct drm_device *dev);
-> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_out.c b/drivers/gpu/drm/mxsfb/mxsfb_out.c
-> index 91e76f9cead6..77e03eb0fca6 100644
-> --- a/drivers/gpu/drm/mxsfb/mxsfb_out.c
-> +++ b/drivers/gpu/drm/mxsfb/mxsfb_out.c
-> @@ -78,9 +78,11 @@ int mxsfb_create_output(struct drm_device *drm)
+>  /*
+> - * Send a command to the synpatics touchpad by special commands
+> + * Send a command to the synaptics touchpad by special commands
+>   */
+>  static int synaptics_send_cmd(struct psmouse *psmouse, u8 cmd, u8 *param)
 >  {
->  	struct mxsfb_drm_private *mxsfb = drm->dev_private;
->  	struct drm_panel *panel;
-> +	struct drm_bridge *bridge;
->  	int ret;
->  
-> -	ret = drm_of_find_panel_or_bridge(drm->dev->of_node, 0, 0, &panel, NULL);
-> +	ret = drm_of_find_panel_or_bridge(drm->dev->of_node, 0, 0, &panel,
-> +			&bridge);
->  	if (ret)
->  		return ret;
->  
-> @@ -91,8 +93,14 @@ int mxsfb_create_output(struct drm_device *drm)
->  	ret = drm_connector_init(drm, &mxsfb->connector,
->  				 &mxsfb_panel_connector_funcs,
->  				 DRM_MODE_CONNECTOR_Unknown);
-> -	if (!ret)
-> -		mxsfb->panel = panel;
-> +	if (!ret) {
-> +		if (panel)
-> +			mxsfb->panel = panel;
-> +		else if (bridge)
-> +			mxsfb->bridge = bridge;
-> +		else
-> +			return -EINVAL;
-> +	}
->  
->  	return ret;
->  }
 > -- 
-> 2.17.1
-
-Robert Chiras posted bridge support for mxsfb back in June:
-
-    https://patchwork.freedesktop.org/patch/314430/?series=62822&rev=1
-
-Cheers,
- -- Guido
-
+> 2.20.1
 > 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+-- 
+Dmitry
