@@ -2,225 +2,268 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E439C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A48CC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C0C021773
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:36:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="hV0WkIxy"
+	by mail.kernel.org (Postfix) with ESMTP id 1367C214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:37:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436520AbfHINgh (ORCPT
+        id S2436540AbfHINhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:36:37 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:13020 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2406779AbfHINgg (ORCPT
+        Fri, 9 Aug 2019 09:37:00 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43961 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406778AbfHINg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:36:36 -0400
-Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x79DN1Cr026384;
-        Fri, 9 Aug 2019 09:36:29 -0400
-Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2055.outbound.protection.outlook.com [104.47.45.55])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2u7wxfqk07-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 09 Aug 2019 09:36:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jqewSLuXlaPHay4jVyWbTRtLXFz9miE4eLGlqRuRrIShnakyawonwuldAiCEqTQMdwURSHUp3WH2QzORvNY9zV8HAyDGZvNWJWNnRJdRxC8v06C2lxn2HQBI4e2OVt/rKFUupR0mKLlnw7bxJMdK05dRNGeaO4o/L0eof06h3ogPIwiCv+pnxSYp1pDziB3dy9rQzNtddsm1NOy2h7hNcEOsdd1NWnfSFrn9SDabV0qS4mRHzrJBnOPjsg9DFuHIdRaHTf9Vk7PAW1yDu1xsfrnsYHLBncPL8O3v9iR4ubncJVgjSKGaj41P3cJ9t8HQDSKD5MG5Dh183QnO7DEBIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xpxz53QW0BqFdEDmfraPY70UZ81PF8uuq174FIgxsIk=;
- b=S7hhej2JpsMFIsQvA7aYa//21GgD+qhwPyRlqroImV61FPIVQqYHlRGiTSep8FbeFoQvinuKoonslBUJuwHu8IgvwdSJPAP4bNH6UyLs2f2ABcUvghJvN3InlJDKTtNWy8+gJFTJ01QK7JFLKWCLZ7wO7i//0Y7G4y/uHaId26RQKU12R5wFLG/EcW3W2O7CVHaXoANJbijzdYGwAV8zbdB2MfLKvZsMKsqsmUOlFsZs/GuezOZWB4a4kNZOh/0b5DDeMH8Ze5yNRY4vAeQg7l8jRyzMEDPf0KfpXoW+tutYZ0ONmuTOCxaA7gMQjxNqdmZ+nGOCOG5HgHfiUQukTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xpxz53QW0BqFdEDmfraPY70UZ81PF8uuq174FIgxsIk=;
- b=hV0WkIxynjRMTASebqOVP+h7CaGrsnIsQxVsGYa2oc8HO+raS5nWkKt0fF99B4irZXOuMJFK92RLJLgZSA1C9Q9TZhac6A7mD5CL956pFcF9ZqlP4uD+alYYkFrVmcqgBroI/liMi1owrS8x+jGnTeBuaaZu+3e59tWxQSZwgY4=
-Received: from BN6PR03CA0024.namprd03.prod.outlook.com (2603:10b6:404:23::34)
- by BYAPR03MB4840.namprd03.prod.outlook.com (2603:10b6:a03:138::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.13; Fri, 9 Aug
- 2019 13:36:26 +0000
-Received: from CY1NAM02FT015.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::207) by BN6PR03CA0024.outlook.office365.com
- (2603:10b6:404:23::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.16 via Frontend
- Transport; Fri, 9 Aug 2019 13:36:26 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- CY1NAM02FT015.mail.protection.outlook.com (10.152.75.146) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2157.15
- via Frontend Transport; Fri, 9 Aug 2019 13:36:25 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x79DaPuP025781
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Fri, 9 Aug 2019 06:36:25 -0700
-Received: from saturn.ad.analog.com (10.48.65.113) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Fri, 9 Aug 2019 09:36:24 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <davem@davemloft.net>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <f.fainelli@gmail.com>,
-        <hkallweit1@gmail.com>, <andrew@lunn.ch>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v3 14/14] dt-bindings: net: add bindings for ADIN PHY driver
-Date:   Fri, 9 Aug 2019 16:35:52 +0300
-Message-ID: <20190809133552.21597-15-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190809133552.21597-1-alexandru.ardelean@analog.com>
-References: <20190809133552.21597-1-alexandru.ardelean@analog.com>
+        Fri, 9 Aug 2019 09:36:57 -0400
+Received: by mail-lf1-f65.google.com with SMTP id c19so69554953lfm.10;
+        Fri, 09 Aug 2019 06:36:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from:openpgp
+         :autocrypt:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=W/e3FaKnyiiHnPYNMIM+3ocFb3MozK25GrlOTfW37lE=;
+        b=cJUXzQ+EngxNSXGmZQeAzeS0lGTPIc/2xzp+oVRkZlx2693kcD9MghwO11xgZITeUC
+         lQNwc6IHYMUrylvdj8cCsIXOHRlmZY3YO19eVZOER5v+lKBSzguMasyvm6PTl2VqJJPb
+         fN7PGdCs1hu1wS8Fn5LgWKF7V5xrJ4o45PIYxZEqx7fI4LwTrjoRsiI9owYrQPd9CnVJ
+         Gyu8WF6aEoqPFEBLXXKDuTS7MQz6qBwhoMmIWX2WJi/EbVK/EUSgaUAmriqAYbFkalg8
+         V1yTNLnPU9Kx/4PVd23I0b5R0rCLKS8hMLPcksRvh3n+76xVAbgyS8ZSjfWN53Ghi0fL
+         dxLQ==
+X-Gm-Message-State: APjAAAWzgJN+1cfGphhbqKU4GoAQBiXU4UpGnscTLiO0qRbjmZzPUjry
+        BkaW6B05S41ALf+sICNOiNc=
+X-Google-Smtp-Source: APXvYqy8kM4WZJhFhhgNKZ0v33EjUbjFKiHw3L61zhVj+IgMT7WanUaTrOMeuGJ3cvIngDqLgpP8wQ==
+X-Received: by 2002:a19:a419:: with SMTP id q25mr13024216lfc.136.1565357815476;
+        Fri, 09 Aug 2019 06:36:55 -0700 (PDT)
+Received: from [192.168.42.52] ([213.87.147.2])
+        by smtp.gmail.com with ESMTPSA id a70sm19395997ljf.57.2019.08.09.06.36.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 06:36:54 -0700 (PDT)
+Reply-To: alex.popov@linux.com
+Subject: Re: [PATCH] floppy: fix usercopy direction
+To:     Jann Horn <jannh@google.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     Jiri Kosina <jikos@kernel.org>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>,
+        Denis Efremov <efremov@linux.com>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>, cocci@systeme.lip6.fr
+References: <20190326220348.61172-1-jannh@google.com>
+From:   Alexander Popov <alex.popov@linux.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=alex.popov@linux.com; prefer-encrypt=mutual; keydata=
+ mQINBFX15q4BEADZartsIW3sQ9R+9TOuCFRIW+RDCoBWNHhqDLu+Tzf2mZevVSF0D5AMJW4f
+ UB1QigxOuGIeSngfmgLspdYe2Kl8+P8qyfrnBcS4hLFyLGjaP7UVGtpUl7CUxz2Hct3yhsPz
+ ID/rnCSd0Q+3thrJTq44b2kIKqM1swt/F2Er5Bl0B4o5WKx4J9k6Dz7bAMjKD8pHZJnScoP4
+ dzKPhrytN/iWM01eRZRc1TcIdVsRZC3hcVE6OtFoamaYmePDwWTRhmDtWYngbRDVGe3Tl8bT
+ 7BYN7gv7Ikt7Nq2T2TOfXEQqr9CtidxBNsqFEaajbFvpLDpUPw692+4lUbQ7FL0B1WYLvWkG
+ cVysClEyX3VBSMzIG5eTF0Dng9RqItUxpbD317ihKqYL95jk6eK6XyI8wVOCEa1V3MhtvzUo
+ WGZVkwm9eMVZ05GbhzmT7KHBEBbCkihS+TpVxOgzvuV+heCEaaxIDWY/k8u4tgbrVVk+tIVG
+ 99v1//kNLqd5KuwY1Y2/h2MhRrfxqGz+l/f/qghKh+1iptm6McN//1nNaIbzXQ2Ej34jeWDa
+ xAN1C1OANOyV7mYuYPNDl5c9QrbcNGg3D6gOeGeGiMn11NjbjHae3ipH8MkX7/k8pH5q4Lhh
+ Ra0vtJspeg77CS4b7+WC5jlK3UAKoUja3kGgkCrnfNkvKjrkEwARAQABtCZBbGV4YW5kZXIg
+ UG9wb3YgPGFsZXgucG9wb3ZAbGludXguY29tPokCQAQTAQoAKgIbIwIeAQIXgAULCQgHAwUV
+ CgkICwUWAgMBAAUJB8+UXAUCWgsUegIZAQAKCRCODp3rvH6PqqpOEACX+tXHOgMJ6fGxaNJZ
+ HkKRFR/9AGP1bxp5QS528Sd6w17bMMQ87V5NSFUsTMPMcbIoO73DganKQ3nN6tW0ZvDTKpRt
+ pBUCUP8KPqNvoSs3kkskaQgNQ3FXv46YqPZ7DoYj9HevY9NUyGLwCTEWD2ER5zKuNbI2ek82
+ j4rwdqXn9kqqBf1ExAoEsszeNHzTKRl2d+bXuGDcOdpnOi7avoQfwi/O0oapR+goxz49Oeov
+ YFf1EVaogHjDBREaqiqJ0MSKexfVBt8RD9ev9SGSIMcwfhgUHhMTX2JY/+6BXnUbzVcHD6HR
+ EgqVGn/0RXfJIYmFsjH0Z6cHy34Vn+aqcGa8faztPnmkA/vNfhw8k5fEE7VlBqdEY8YeOiza
+ hHdpaUi4GofNy/GoHIqpz16UulMjGB5SBzgsYKgCO+faNBrCcBrscWTl1aJfSNJvImuS1JhB
+ EQnl/MIegxyBBRsH68x5BCffERo4FjaG0NDCmZLjXPOgMvl3vRywHLdDZThjAea3pwdGUq+W
+ C77i7tnnUqgK7P9i+nEKwNWZfLpfjYgH5JE/jOgMf4tpHvO6fu4AnOffdz3kOxDyi+zFLVcz
+ rTP5b46aVjI7D0dIDTIaCKUT+PfsLnJmP18x7dU/gR/XDcUaSEbWU3D9u61AvxP47g7tN5+a
+ 5pFIJhJ44JLk6I5H/bkCDQRV9eauARAArcUVf6RdT14hkm0zT5TPc/3BJc6PyAghV/iCoPm8
+ kbzjKBIK80NvGodDeUV0MnQbX40jjFdSI0m96HNt86FtifQ3nwuW/BtS8dk8+lakRVwuTgMb
+ hJWmXqKMFdVRCbjdyLbZWpdPip0WGND6p5i801xgPRmI8P6e5e4jBO4Cx1ToIFyJOzD/jvtb
+ UhH9t5/naKUGa5BD9gSkguooXVOFvPdvKQKca19S7bb9hzjySh63H4qlbhUrG/7JGhX+Lr3g
+ DwuAGrrFIV0FaVyIPGZ8U2fjLKpcBC7/lZJv0jRFpZ9CjHefILxt7NGxPB9hk2iDt2tE6jSl
+ GNeloDYJUVItFmG+/giza2KrXmDEFKl+/mwfjRI/+PHR8PscWiB7S1zhsVus3DxhbM2mAK4x
+ mmH4k0wNfgClh0Srw9zCU2CKJ6YcuRLi/RAAiyoxBb9wnSuQS5KkxoT32LRNwfyMdwlEtQGp
+ WtC/vBI13XJVabx0Oalx7NtvRCcX1FX9rnKVjSFHX5YJ48heAd0dwRVmzOGL/EGywb1b9Q3O
+ IWe9EFF8tmWV/JHs2thMz492qTHA5pm5JUsHQuZGBhBU+GqdOkdkFvujcNu4w7WyuEITBFAh
+ 5qDiGkvY9FU1OH0fWQqVU/5LHNizzIYN2KjU6529b0VTVGb4e/M0HglwtlWpkpfQzHMAEQEA
+ AYkCJQQYAQIADwUCVfXmrgIbDAUJCWYBgAAKCRCODp3rvH6PqrZtEACKsd/UUtpKmy4mrZwl
+ 053nWp7+WCE+S9ke7CFytmXoMWf1CIrcQTk5cmdBmB4E0l3sr/DgKlJ8UrHTdRLcZZnbVqur
+ +fnmVeQy9lqGkaIZvx/iXVYUqhT3+DNj9Zkjrynbe5pLsrGyxYWfsPRVL6J4mQatChadjuLw
+ 7/WC6PBmWkRA2SxUVpxFEZlirpbboYWLSXk9I3JmS5/iJ+P5kHYiB0YqYkd1twFXXxixv1GB
+ Zi/idvWTK7x6/bUh0AAGTKc5zFhyR4DJRGROGlFTAYM3WDoa9XbrHXsggJDLNoPZJTj9DMww
+ u28SzHLvR3t2pY1dT61jzKNDLoE3pjvzgLKF/Olif0t7+m0IPKY+8umZvUEhJ9CAUcoFPCfG
+ tEbL6t1xrcsT7dsUhZpkIX0Qc77op8GHlfNd/N6wZUt19Vn9G8B6xrH+dinc0ylUc4+4yxt6
+ 6BsiEzma6Ah5jexChYIwaB5Oi21yjc6bBb4l6z01WWJQ052OGaOBzi+tS5iGmc5DWH4/pFqX
+ OIkgJVVgjPv2y41qV66QJJEi2wT4WUKLY1zA9s6KXbt8dVSzJsNFvsrAoFdtzc8v6uqCo0/W
+ f0Id8MBKoqN5FniTHWNxYX6b2dFwq8i5Rh6Oxc6q75Kg8279+co3/tLCkU6pGga28K7tUP2z
+ h9AUWENlnWJX/YhP8IkCJQQYAQoADwIbDAUCWgsSOgUJB9eShwAKCRCODp3rvH6PqtoND/41
+ ozCKAS4WWBBCU6AYLm2SoJ0EGhg1kIf9VMiqy5PKlSrAnW5yl4WJQcv5wER/7EzvZ49Gj8aG
+ uRWfz3lyQU8dH2KG6KLilDFCZF0mViEo2C7O4QUx5xmbpMUq41fWjY947Xvd3QDisc1T1/7G
+ uNBAALEZdqzwnKsT9G27e9Cd3AW3KsLAD4MhsALFARg6OuuwDCbLl6k5fu++26PEqORGtpJQ
+ rRBWan9ZWb/Y57P126IVIylWiH6vt6iEPlaEHBU8H9+Z0WF6wJ5rNz9gR6GhZhmo1qsyNedD
+ 1HzOsXQhvCinsErpZs99VdZSF3d54dac8ypH4hvbjSmXZjY3Sblhyc6RLYlru5UXJFh7Hy+E
+ TMuCg3hIVbdyFSDkvxVlvhHgUSf8+Uk3Ya4MO4a5l9ElUqxpSqYH7CvuwkG+mH5mN8tK3CCd
+ +aKPCxUFfil62DfTa7YgLovr7sHQB+VMQkNDPXleC+amNqJb423L8M2sfCi9gw/lA1ha6q80
+ ydgbcFEkNjqz4OtbrSwEHMy/ADsUWksYuzVbw7/pQTc6OAskESBr5igP7B/rIACUgiIjdOVB
+ ktD1IQcezrDcuzVCIpuq8zC6LwLm7V1Tr6zfU9FWwnqzoQeQZH4QlP7MBuOeswCpxIl07mz9
+ jXz/74kjFsyRgZA+d6a1pGtOwITEBxtxxg==
+Message-ID: <9ced7a06-5048-ad1a-3428-c8f943f7469c@linux.com>
+Date:   Fri, 9 Aug 2019 16:36:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(396003)(136003)(39860400002)(376002)(2980300002)(199004)(189003)(106002)(44832011)(7696005)(336012)(110136005)(47776003)(5660300002)(26005)(54906003)(486006)(2616005)(476003)(126002)(316002)(4326008)(70586007)(70206006)(11346002)(1076003)(446003)(356004)(6666004)(76176011)(51416003)(6306002)(53376002)(305945005)(2906002)(36756003)(50226002)(2201001)(86362001)(50466002)(8936002)(7636002)(186003)(14444005)(48376002)(246002)(8676002)(107886003)(478600001)(966005)(2870700001)(426003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4840;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 62996f1b-3624-48c6-10e4-08d71cce93c2
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BYAPR03MB4840;
-X-MS-TrafficTypeDiagnostic: BYAPR03MB4840:
-X-MS-Exchange-PUrlCount: 3
-X-Microsoft-Antispam-PRVS: <BYAPR03MB48409915AA3BFA83B859C31CF9D60@BYAPR03MB4840.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-Forefront-PRVS: 01244308DF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: TbfFGwNxEXfcsIlxAnsXK0fcl1SybqL83AZJi6am7sciOsbv7yycQle7NVkl6b9dxU57iDy9jtUF5UnMoyuqj1LoDIVPvgOZALXQ91RMP3ggkMyHN42LhQeOb/vA4mDA/m9YIfmcoxMcB5goTWx/yMWoM8tJP0VLJ2ochcx0C8v6JjbDbt3FIPVwrGHCPE3YDRoA8M4kCUDtTcB1wNxeZ3rS8lpJfVrBGzgP+nu8xtsX9t83V3qojrIkMhnT3xD1wlWJv7YtL7zuzlpm1cdF79L+0WEEIzWTttJSMh35xQ3tzd5oAwo4aMpzlEtoO4SvyvGweuSv+GtmXsva9Uu+fhabyy8PDhClpLNysmC7iuIuIejhJnW87aegd+mv0vrsPNZDzY5tGCTwpTt6n8v66Epq7iYuVwQZBqwDzCWOkkQ=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2019 13:36:25.8419
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62996f1b-3624-48c6-10e4-08d71cce93c2
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4840
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-09_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908090138
+In-Reply-To: <20190326220348.61172-1-jannh@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change adds bindings for the Analog Devices ADIN PHY driver, detailing
-all the properties implemented by the driver.
+Hello everyone!
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- .../devicetree/bindings/net/adi,adin.yaml     | 73 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 74 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/adi,adin.yaml
+On 27.03.2019 1:03, Jann Horn wrote:
+> As sparse points out, these two copy_from_user() should actually be
+> copy_to_user().
 
-diff --git a/Documentation/devicetree/bindings/net/adi,adin.yaml b/Documentation/devicetree/bindings/net/adi,adin.yaml
-new file mode 100644
-index 000000000000..69375cb28e92
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/adi,adin.yaml
-@@ -0,0 +1,73 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/adi,adin.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices ADIN1200/ADIN1300 PHY
-+
-+maintainers:
-+  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-+
-+description: |
-+  Bindings for Analog Devices Industrial Ethernet PHYs
-+
-+allOf:
-+  - $ref: ethernet-phy.yaml#
-+
-+properties:
-+  adi,rx-internal-delay-ps:
-+    description: |
-+      RGMII RX Clock Delay used only when PHY operates in RGMII mode with
-+      internal delay (phy-mode is 'rgmii-id' or 'rgmii-rxid') in pico-seconds.
-+    enum: [ 1600, 1800, 2000, 2200, 2400 ]
-+    default: 2000
-+
-+  adi,tx-internal-delay-ps:
-+    description: |
-+      RGMII TX Clock Delay used only when PHY operates in RGMII mode with
-+      internal delay (phy-mode is 'rgmii-id' or 'rgmii-txid') in pico-seconds.
-+    enum: [ 1600, 1800, 2000, 2200, 2400 ]
-+    default: 2000
-+
-+  adi,fifo-depth-bits:
-+    description: |
-+      When operating in RMII mode, this option configures the FIFO depth.
-+    enum: [ 4, 8, 12, 16, 20, 24 ]
-+    default: 8
-+
-+  adi,disable-energy-detect:
-+    description: |
-+      Disables Energy Detect Powerdown Mode (default disabled, i.e energy detect
-+      is enabled if this property is unspecified)
-+    type: boolean
-+
-+examples:
-+  - |
-+    ethernet {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        phy-mode = "rgmii-id";
-+
-+        ethernet-phy@0 {
-+            reg = <0>;
-+
-+            adi,rx-internal-delay-ps = <1800>;
-+            adi,tx-internal-delay-ps = <2200>;
-+        };
-+    };
-+  - |
-+    ethernet {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        phy-mode = "rmii";
-+
-+        ethernet-phy@1 {
-+            reg = <1>;
-+
-+            adi,fifo-depth-bits = <16>;
-+            adi,disable-energy-detect;
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e8aa8a667864..fd9ab61c2670 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -944,6 +944,7 @@ L:	netdev@vger.kernel.org
- W:	http://ez.analog.com/community/linux-device-drivers
- S:	Supported
- F:	drivers/net/phy/adin.c
-+F:	Documentation/devicetree/bindings/net/adi,adin.yaml
- 
- ANALOG DEVICES INC ADIS DRIVER LIBRARY
- M:	Alexandru Ardelean <alexandru.ardelean@analog.com>
--- 
-2.20.1
+I've spent some time on these bugs, but it turned out that they are already public.
 
+I think Jann's patch is lost, it is not applied to the mainline.
+So I add a new floppy maintainer Denis Efremov to CC.
+
+These bugs on x86_64 cause memset for the userspace memory from the kernelspace.
+That is funny:
+ - access_ok for the copy_from_user source (2nd argument) returns zero;
+ - copy_from_user tries to erase the destination (1st argument);
+ - but the destination is in the userspace instead of kernelspace.
+
+So we have:
+[   40.937098] BUG: unable to handle page fault for address: 0000000041414242
+[   40.938714] #PF: supervisor write access in kernel mode
+[   40.939951] #PF: error_code(0x0002) - not-present page
+[   40.941121] PGD 7963f067 P4D 7963f067 PUD 0
+[   40.942107] Oops: 0002 [#1] SMP NOPTI
+[   40.942968] CPU: 0 PID: 292 Comm: d Not tainted 5.3.0-rc3+ #7
+[   40.944288] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+Ubuntu-1.8.2-1ubuntu1 04/01/2014
+[   40.946478] RIP: 0010:__memset+0x24/0x30
+[   40.947394] Code: 90 90 90 90 90 90 0f 1f 44 00 00 49 89 f9 48 89 d1 83 e2 07
+48 c1 e9 03 40 0f b6 f6 48 b8 01 01 01 01 01 01 01 01 48 0f af c6 <f3> 48 ab 89
+d1 f3 aa 4c 89 c8 c3 90 49 89 f9 40 88 f0 48 89 d1 f3
+[   40.951721] RSP: 0018:ffffc900003dbd58 EFLAGS: 00010206
+[   40.952941] RAX: 0000000000000000 RBX: 0000000000000034 RCX: 0000000000000006
+[   40.954592] RDX: 0000000000000004 RSI: 0000000000000000 RDI: 0000000041414242
+[   40.956169] RBP: 0000000041414242 R08: ffffffff8200bd80 R09: 0000000041414242
+[   40.957753] R10: 0000000000121806 R11: ffff88807da28ab0 R12: ffffc900003dbd7c
+[   40.959407] R13: 0000000000000001 R14: 0000000041414242 R15: 0000000041414242
+[   40.961062] FS:  00007f91115c4440(0000) GS:ffff88807da00000(0000)
+knlGS:0000000000000000
+[   40.962603] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   40.963695] CR2: 0000000041414242 CR3: 000000007c584000 CR4: 00000000000006f0
+[   40.965004] Call Trace:
+[   40.965459]  _copy_from_user+0x51/0x60
+[   40.966141]  compat_getdrvstat+0x124/0x170
+[   40.966781]  fd_compat_ioctl+0x69c/0x6d0
+[   40.967423]  ? selinux_file_ioctl+0x16f/0x210
+[   40.968117]  compat_blkdev_ioctl+0x21d/0x8f0
+[   40.968864]  __x32_compat_sys_ioctl+0x99/0x250
+[   40.969659]  do_syscall_64+0x4a/0x110
+[   40.970337]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+
+I haven't found a way to exploit it.
+
+> Fixes: 229b53c9bf4e ("take floppy compat ioctls to sodding floppy.c")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jann Horn <jannh@google.com>
+> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+> ---
+> compile-tested only
+
+Acked-by: Alexander Popov <alex.popov@linux.com>
+
+>  drivers/block/floppy.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+> index 95f608d1a098..8c641245ff12 100644
+> --- a/drivers/block/floppy.c
+> +++ b/drivers/block/floppy.c
+> @@ -3749,7 +3749,7 @@ static int compat_getdrvprm(int drive,
+>  	v.native_format = UDP->native_format;
+>  	mutex_unlock(&floppy_mutex);
+>  
+> -	if (copy_from_user(arg, &v, sizeof(struct compat_floppy_drive_params)))
+> +	if (copy_to_user(arg, &v, sizeof(struct compat_floppy_drive_params)))
+>  		return -EFAULT;
+>  	return 0;
+>  }
+> @@ -3785,7 +3785,7 @@ static int compat_getdrvstat(int drive, bool poll,
+>  	v.bufblocks = UDRS->bufblocks;
+>  	mutex_unlock(&floppy_mutex);
+>  
+> -	if (copy_from_user(arg, &v, sizeof(struct compat_floppy_drive_struct)))
+> +	if (copy_to_user(arg, &v, sizeof(struct compat_floppy_drive_struct)))
+>  		return -EFAULT;
+>  	return 0;
+>  Eintr:
+> 
+
+I also wrote a coccinelle rule for detecting similar bugs (adding coccinelle
+experts to CC).
+
+
+virtual report
+
+@cfu@
+identifier f;
+type t;
+identifier v;
+position decl_p;
+position copy_p;
+@@
+
+f(..., t v@decl_p, ...)
+{
+<+...
+copy_from_user@copy_p(v, ...)
+...+>
+}
+
+@script:python@
+f << cfu.f;
+t << cfu.t;
+v << cfu.v;
+decl_p << cfu.decl_p;
+copy_p << cfu.copy_p;
+@@
+
+if '__user' in t:
+  msg0 = "function \"" + f + "\" has arg \"" + v + "\" of type \"" + t + "\""
+  coccilib.report.print_report(decl_p[0], msg0)
+  msg1 = "copy_from_user uses \"" + v + "\" as the destination. What a shame!\n"
+  coccilib.report.print_report(copy_p[0], msg1)
+
+
+The rule output:
+
+./drivers/block/floppy.c:3756:49-52: function "compat_getdrvprm" has arg "arg"
+of type "struct compat_floppy_drive_params __user *"
+./drivers/block/floppy.c:3783:5-19: copy_from_user uses "arg" as the
+destination. What a shame!
+
+./drivers/block/floppy.c:3789:49-52: function "compat_getdrvstat" has arg "arg"
+of type "struct compat_floppy_drive_struct __user *"
+./drivers/block/floppy.c:3819:5-19: copy_from_user uses "arg" as the
+destination. What a shame!
+
+
+Best regards,
+Alexander
