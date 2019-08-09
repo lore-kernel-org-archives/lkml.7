@@ -2,236 +2,476 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD78BC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A6DC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B332166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E088F214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:42:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K4GBGaP8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbfHIUmY (ORCPT
+        id S1728054AbfHIUmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 16:42:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22346 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726232AbfHIUmX (ORCPT
+        Fri, 9 Aug 2019 16:42:31 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33808 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfHIUmb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 16:42:23 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x79KgK6E091052
-        for <linux-kernel@vger.kernel.org>; Fri, 9 Aug 2019 16:42:22 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u9du6cr81-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 16:42:22 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Fri, 9 Aug 2019 21:42:20 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 9 Aug 2019 21:42:16 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x79KgF7v52822498
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 9 Aug 2019 20:42:15 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C8858B2068;
-        Fri,  9 Aug 2019 20:42:15 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 900A7B2064;
-        Fri,  9 Aug 2019 20:42:15 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  9 Aug 2019 20:42:15 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 7A76F16C9A68; Fri,  9 Aug 2019 13:42:17 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 13:42:17 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Byungchul Park <byungchul.park@lge.com>,
-        linux-kernel@vger.kernel.org, Rao Shoaib <rao.shoaib@oracle.com>,
-        max.byungchul.park@gmail.com, kernel-team@android.com,
-        kernel-team@lge.com, Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC v1 1/2] rcu/tree: Add basic support for kfree_rcu
- batching
-Reply-To: paulmck@linux.ibm.com
-References: <20190806235631.GU28441@linux.ibm.com>
- <20190807094504.GB169551@google.com>
- <20190807175215.GE28441@linux.ibm.com>
- <20190808095232.GA30401@X58A-UD3R>
- <20190808125607.GB261256@google.com>
- <20190808233014.GA184373@google.com>
- <20190809151619.GD28441@linux.ibm.com>
- <20190809153924.GB211412@google.com>
- <20190809163346.GF28441@linux.ibm.com>
- <20190809202226.GC255533@google.com>
+        Fri, 9 Aug 2019 16:42:31 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b13so46635469pfo.1;
+        Fri, 09 Aug 2019 13:42:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=D/ZBnMmyvKTjL8M+ZZPM7TA/D/QoaoFKXZgmMvT+2ng=;
+        b=K4GBGaP8orn8dc9p0AvtXl7R4BpDM8AtprkFdyCs+lxAqTi4Plz8JtAuuyR7+tPr+i
+         a5aZ00dyZyxbWqlmPoLAtr1OL5upFx0u7gk6JLzmvKuhNPx4E0Ykus1//WlVQfVoKW7m
+         TJIP+iuJw5jHv1ScjRTT8YpI5lC5mmt0g38Bg0jcbxGjMJAksPnMq53p00GZ9mbZd5Ar
+         ZTjJgCElUkMKz3eFqvtgPIStOv+Yx6Vv23aPLgU0VjlySd5gkmE36uRq4jlqilytQMbr
+         eeIhZsqu9BtcLPEtggGN4LJyS7tLvl5EAI9KLsh03oiOzxzhyEnMeRBKU/keuM0Ue3dV
+         Wl5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=D/ZBnMmyvKTjL8M+ZZPM7TA/D/QoaoFKXZgmMvT+2ng=;
+        b=BtsW8lJNYPCr5ktO3DUoHSWAnde7bqVY+RTv1mL4If5OFuzbCSOrR12y7HXA4seNH4
+         tcEFjDe3RrpOucC+xhIlAP+HEIbS7jTmZL3gGlD4/VdTqhs3c/t84Y7xiUbqttXWwtGl
+         +vy8+GmSBraGGQ0oc0nFB0CJtDnkLYBKYRiJc07D8gK+P4w8fFtBNoLFX/uyAOsciukj
+         +v1nsXzWa/GYdY4Vg64RCxiMAYosXgQiKyy5Dt9RtiQjYI9KyQWX4CiYexyxfutQgPjS
+         syA01F+jtuGO3AY3h5E9gE8JFvnp4iEXoAbZMJ7k4IrWIXQhGgCVa2/WUaztFPfUV73p
+         URAA==
+X-Gm-Message-State: APjAAAV4h/LuRW78THMDmIvfEe614dK2ndu+qYY5LvVw5JwJPs6Cn7Qm
+        NoF3x88g5LGAS7RvKq2M4Fw=
+X-Google-Smtp-Source: APXvYqxcCLBMZIy0vfPqwRT2cShrb5WWMQF8sLd0yDUksEv4yJWRMZNA8pblYqji0pfFZ/WKnF7dVg==
+X-Received: by 2002:a62:1b0c:: with SMTP id b12mr23078866pfb.17.1565383350346;
+        Fri, 09 Aug 2019 13:42:30 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j10sm68952095pfn.188.2019.08.09.13.42.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 13:42:29 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 13:42:27 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     soc@kernel.org, Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/16] watchdog: remove ks8695 driver
+Message-ID: <20190809204227.GA19839@roeck-us.net>
+References: <20190809202749.742267-1-arnd@arndb.de>
+ <20190809202749.742267-5-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190809202226.GC255533@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19080920-2213-0000-0000-000003BA9234
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011575; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01244474; UDB=6.00656569; IPR=6.01025957;
- MB=3.00028113; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-09 20:42:20
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080920-2214-0000-0000-00005F96334C
-Message-Id: <20190809204217.GN28441@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-09_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908090202
+In-Reply-To: <20190809202749.742267-5-arnd@arndb.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 04:22:26PM -0400, Joel Fernandes wrote:
-> On Fri, Aug 09, 2019 at 09:33:46AM -0700, Paul E. McKenney wrote:
-> > On Fri, Aug 09, 2019 at 11:39:24AM -0400, Joel Fernandes wrote:
-> > > On Fri, Aug 09, 2019 at 08:16:19AM -0700, Paul E. McKenney wrote:
-> > > > On Thu, Aug 08, 2019 at 07:30:14PM -0400, Joel Fernandes wrote:
-> > > [snip]
-> > > > > > But I could make it something like:
-> > > > > > 1. Letting ->head grow if ->head_free busy
-> > > > > > 2. If head_free is busy, then just queue/requeue the monitor to try again.
-> > > > > > 
-> > > > > > This would even improve performance, but will still risk going out of memory.
-> > > > > 
-> > > > > It seems I can indeed hit an out of memory condition once I changed it to
-> > > > > "letting list grow" (diff is below which applies on top of this patch) while
-> > > > > at the same time removing the schedule_timeout(2) and replacing it with
-> > > > > cond_resched() in the rcuperf test.  I think the reason is the rcuperf test
-> > > > > starves the worker threads that are executing in workqueue context after a
-> > > > > grace period and those are unable to get enough CPU time to kfree things fast
-> > > > > enough. But I am not fully sure about it and need to test/trace more to
-> > > > > figure out why this is happening.
-> > > > > 
-> > > > > If I add back the schedule_uninterruptibe_timeout(2) call, the out of memory
-> > > > > situation goes away.
-> > > > > 
-> > > > > Clearly we need to do more work on this patch.
-> > > > > 
-> > > > > In the regular kfree_rcu_no_batch() case, I don't hit this issue. I believe
-> > > > > that since the kfree is happening in softirq context in the _no_batch() case,
-> > > > > it fares better. The question then I guess is how do we run the rcu_work in a
-> > > > > higher priority context so it is not starved and runs often enough. I'll
-> > > > > trace more.
-> > > > > 
-> > > > > Perhaps I can also lower the priority of the rcuperf threads to give the
-> > > > > worker thread some more room to run and see if anything changes. But I am not
-> > > > > sure then if we're preparing the code for the real world with such
-> > > > > modifications.
-> > > > > 
-> > > > > Any thoughts?
-> > > > 
-> > > > Several!  With luck, perhaps some are useful.  ;-)
-> > > > 
-> > > > o	Increase the memory via kvm.sh "--memory 1G" or more.  The
-> > > > 	default is "--memory 500M".
-> > > 
-> > > Thanks, this definitely helped.
+On Fri, Aug 09, 2019 at 10:27:32PM +0200, Arnd Bergmann wrote:
+> The platform is getting removed, so there are no remaining
+> users of this driver.
 > 
-> Also, I can go back to 500M if I just keep KFREE_DRAIN_JIFFIES at HZ/50. So I
-> am quite happy about that. I think I can declare that the "let list grow
-> indefinitely" design works quite well even with an insanely heavily loaded
-> case of every CPU in a 16CPU system with 500M memory, indefinitely doing
-> kfree_rcu()in a tight loop with appropriate cond_resched(). And I am like
-> thinking - wow how does this stuff even work at such insane scales :-D
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-A lot of work by a lot of people over a long period of time.  On their
-behalf, I thank you for the implied compliment.  So once this patch gets
-in, perhaps you will have complimented yourself as well.  ;-)
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 
-But more work is needed, and will continue to be as new workloads,
-compiler optimizations, and hardware appears.  And it would be good to
-try this on a really big system at some point.
+Please let me know if this should be applied through the watchdog tree.
+For now I'll assume it will be applied together with the rest of the
+series.
 
-> > > > o	Leave a CPU free to run things like the RCU grace-period kthread.
-> > > > 	You might also need to bind that kthread to that CPU.
-> > > > 
-> > > > o	Alternatively, use the "rcutree.kthread_prio=" boot parameter to
-> > > > 	boost the RCU kthreads to real-time priority.  This won't do
-> > > > 	anything for ksoftirqd, though.
-> > > 
-> > > I will try these as well.
+> ---
+>  .../watchdog/watchdog-parameters.rst          |   9 -
+>  drivers/watchdog/Kconfig                      |   7 -
+>  drivers/watchdog/Makefile                     |   1 -
+>  drivers/watchdog/ks8695_wdt.c                 | 319 ------------------
+>  4 files changed, 336 deletions(-)
+>  delete mode 100644 drivers/watchdog/ks8695_wdt.c
 > 
-> kthread_prio=50 definitely reduced the probability of OOM but it still
-> occurred.
-
-OK, interesting.
-
-> > > > o	Along with the above boot parameter, use "rcutree.use_softirq=0"
-> > > > 	to cause RCU to use kthreads instead of softirq.  (You might well
-> > > > 	find issues in priority setting as well, but might as well find
-> > > > 	them now if so!)
-> > > 
-> > > Doesn't think one actually reduce the priority of the core RCU work? softirq
-> > > will always have higher priority than any there. So wouldn't that have the
-> > > effect of not reclaiming things fast enough? (Or, in my case not scheduling
-> > > the rcu_work which does the reclaim).
-> > 
-> > For low kfree_rcu() loads, yes, it increases overhead due to the need
-> > for context switches instead of softirq running at the tail end of an
-> > interrupt.  But for high kfree_rcu() loads, it gets you realtime priority
-> > (in conjunction with "rcutree.kthread_prio=", that is).
+> diff --git a/Documentation/watchdog/watchdog-parameters.rst b/Documentation/watchdog/watchdog-parameters.rst
+> index a3985cc5aeda..226aba56f704 100644
+> --- a/Documentation/watchdog/watchdog-parameters.rst
+> +++ b/Documentation/watchdog/watchdog-parameters.rst
+> @@ -301,15 +301,6 @@ ixp4xx_wdt:
+>  
+>  -------------------------------------------------
+>  
+> -ks8695_wdt:
+> -    wdt_time:
+> -	Watchdog time in seconds. (default=5)
+> -    nowayout:
+> -	Watchdog cannot be stopped once started
+> -	(default=kernel config parameter)
+> -
+> --------------------------------------------------
+> -
+>  machzwd:
+>      nowayout:
+>  	Watchdog cannot be stopped once started
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 8188963a405b..e631f1ae303a 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -477,13 +477,6 @@ config IXP4XX_WATCHDOG
+>  
+>  	  Say N if you are unsure.
+>  
+> -config KS8695_WATCHDOG
+> -	tristate "KS8695 watchdog"
+> -	depends on ARCH_KS8695
+> -	help
+> -	  Watchdog timer embedded into KS8695 processor. This will reboot your
+> -	  system when the timeout is reached.
+> -
+>  config HAVE_S3C2410_WATCHDOG
+>  	bool
+>  	help
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index 7caa920e7e60..85f55ec76f8d 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -49,7 +49,6 @@ obj-$(CONFIG_21285_WATCHDOG) += wdt285.o
+>  obj-$(CONFIG_977_WATCHDOG) += wdt977.o
+>  obj-$(CONFIG_FTWDT010_WATCHDOG) += ftwdt010_wdt.o
+>  obj-$(CONFIG_IXP4XX_WATCHDOG) += ixp4xx_wdt.o
+> -obj-$(CONFIG_KS8695_WATCHDOG) += ks8695_wdt.o
+>  obj-$(CONFIG_S3C2410_WATCHDOG) += s3c2410_wdt.o
+>  obj-$(CONFIG_SA1100_WATCHDOG) += sa1100_wdt.o
+>  obj-$(CONFIG_SAMA5D4_WATCHDOG) += sama5d4_wdt.o
+> diff --git a/drivers/watchdog/ks8695_wdt.c b/drivers/watchdog/ks8695_wdt.c
+> deleted file mode 100644
+> index 1550ce3c5702..000000000000
+> --- a/drivers/watchdog/ks8695_wdt.c
+> +++ /dev/null
+> @@ -1,319 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0-only
+> -/*
+> - * Watchdog driver for Kendin/Micrel KS8695.
+> - *
+> - * (C) 2007 Andrew Victor
+> - */
+> -
+> -#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> -
+> -#include <linux/bitops.h>
+> -#include <linux/errno.h>
+> -#include <linux/fs.h>
+> -#include <linux/init.h>
+> -#include <linux/kernel.h>
+> -#include <linux/miscdevice.h>
+> -#include <linux/module.h>
+> -#include <linux/moduleparam.h>
+> -#include <linux/platform_device.h>
+> -#include <linux/types.h>
+> -#include <linux/watchdog.h>
+> -#include <linux/io.h>
+> -#include <linux/uaccess.h>
+> -#include <mach/hardware.h>
+> -
+> -#define KS8695_TMR_OFFSET	(0xF0000 + 0xE400)
+> -#define KS8695_TMR_VA		(KS8695_IO_VA + KS8695_TMR_OFFSET)
+> -
+> -/*
+> - * Timer registers
+> - */
+> -#define KS8695_TMCON		(0x00)		/* Timer Control Register */
+> -#define KS8695_T0TC		(0x08)		/* Timer 0 Timeout Count Register */
+> -#define TMCON_T0EN		(1 << 0)	/* Timer 0 Enable */
+> -
+> -/* Timer0 Timeout Counter Register */
+> -#define T0TC_WATCHDOG		(0xff)		/* Enable watchdog mode */
+> -
+> -#define WDT_DEFAULT_TIME	5	/* seconds */
+> -#define WDT_MAX_TIME		171	/* seconds */
+> -
+> -static int wdt_time = WDT_DEFAULT_TIME;
+> -static bool nowayout = WATCHDOG_NOWAYOUT;
+> -
+> -module_param(wdt_time, int, 0);
+> -MODULE_PARM_DESC(wdt_time, "Watchdog time in seconds. (default="
+> -					__MODULE_STRING(WDT_DEFAULT_TIME) ")");
+> -
+> -#ifdef CONFIG_WATCHDOG_NOWAYOUT
+> -module_param(nowayout, bool, 0);
+> -MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+> -				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+> -#endif
+> -
+> -
+> -static unsigned long ks8695wdt_busy;
+> -static DEFINE_SPINLOCK(ks8695_lock);
+> -
+> -/* ......................................................................... */
+> -
+> -/*
+> - * Disable the watchdog.
+> - */
+> -static inline void ks8695_wdt_stop(void)
+> -{
+> -	unsigned long tmcon;
+> -
+> -	spin_lock(&ks8695_lock);
+> -	/* disable timer0 */
+> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
+> -	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
+> -	spin_unlock(&ks8695_lock);
+> -}
+> -
+> -/*
+> - * Enable and reset the watchdog.
+> - */
+> -static inline void ks8695_wdt_start(void)
+> -{
+> -	unsigned long tmcon;
+> -	unsigned long tval = wdt_time * KS8695_CLOCK_RATE;
+> -
+> -	spin_lock(&ks8695_lock);
+> -	/* disable timer0 */
+> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
+> -	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
+> -
+> -	/* program timer0 */
+> -	__raw_writel(tval | T0TC_WATCHDOG, KS8695_TMR_VA + KS8695_T0TC);
+> -
+> -	/* re-enable timer0 */
+> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
+> -	__raw_writel(tmcon | TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
+> -	spin_unlock(&ks8695_lock);
+> -}
+> -
+> -/*
+> - * Reload the watchdog timer.  (ie, pat the watchdog)
+> - */
+> -static inline void ks8695_wdt_reload(void)
+> -{
+> -	unsigned long tmcon;
+> -
+> -	spin_lock(&ks8695_lock);
+> -	/* disable, then re-enable timer0 */
+> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
+> -	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
+> -	__raw_writel(tmcon | TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
+> -	spin_unlock(&ks8695_lock);
+> -}
+> -
+> -/*
+> - * Change the watchdog time interval.
+> - */
+> -static int ks8695_wdt_settimeout(int new_time)
+> -{
+> -	/*
+> -	 * All counting occurs at KS8695_CLOCK_RATE / 128 = 0.256 Hz
+> -	 *
+> -	 * Since WDV is a 16-bit counter, the maximum period is
+> -	 * 65536 / 0.256 = 256 seconds.
+> -	 */
+> -	if ((new_time <= 0) || (new_time > WDT_MAX_TIME))
+> -		return -EINVAL;
+> -
+> -	/* Set new watchdog time. It will be used when
+> -	   ks8695_wdt_start() is called. */
+> -	wdt_time = new_time;
+> -	return 0;
+> -}
+> -
+> -/* ......................................................................... */
+> -
+> -/*
+> - * Watchdog device is opened, and watchdog starts running.
+> - */
+> -static int ks8695_wdt_open(struct inode *inode, struct file *file)
+> -{
+> -	if (test_and_set_bit(0, &ks8695wdt_busy))
+> -		return -EBUSY;
+> -
+> -	ks8695_wdt_start();
+> -	return stream_open(inode, file);
+> -}
+> -
+> -/*
+> - * Close the watchdog device.
+> - * If CONFIG_WATCHDOG_NOWAYOUT is NOT defined then the watchdog is also
+> - *  disabled.
+> - */
+> -static int ks8695_wdt_close(struct inode *inode, struct file *file)
+> -{
+> -	/* Disable the watchdog when file is closed */
+> -	if (!nowayout)
+> -		ks8695_wdt_stop();
+> -	clear_bit(0, &ks8695wdt_busy);
+> -	return 0;
+> -}
+> -
+> -static const struct watchdog_info ks8695_wdt_info = {
+> -	.identity	= "ks8695 watchdog",
+> -	.options	= WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING,
+> -};
+> -
+> -/*
+> - * Handle commands from user-space.
+> - */
+> -static long ks8695_wdt_ioctl(struct file *file, unsigned int cmd,
+> -							unsigned long arg)
+> -{
+> -	void __user *argp = (void __user *)arg;
+> -	int __user *p = argp;
+> -	int new_value;
+> -
+> -	switch (cmd) {
+> -	case WDIOC_GETSUPPORT:
+> -		return copy_to_user(argp, &ks8695_wdt_info,
+> -					sizeof(ks8695_wdt_info)) ? -EFAULT : 0;
+> -	case WDIOC_GETSTATUS:
+> -	case WDIOC_GETBOOTSTATUS:
+> -		return put_user(0, p);
+> -	case WDIOC_SETOPTIONS:
+> -		if (get_user(new_value, p))
+> -			return -EFAULT;
+> -		if (new_value & WDIOS_DISABLECARD)
+> -			ks8695_wdt_stop();
+> -		if (new_value & WDIOS_ENABLECARD)
+> -			ks8695_wdt_start();
+> -		return 0;
+> -	case WDIOC_KEEPALIVE:
+> -		ks8695_wdt_reload();	/* pat the watchdog */
+> -		return 0;
+> -	case WDIOC_SETTIMEOUT:
+> -		if (get_user(new_value, p))
+> -			return -EFAULT;
+> -		if (ks8695_wdt_settimeout(new_value))
+> -			return -EINVAL;
+> -		/* Enable new time value */
+> -		ks8695_wdt_start();
+> -		/* Return current value */
+> -		return put_user(wdt_time, p);
+> -	case WDIOC_GETTIMEOUT:
+> -		return put_user(wdt_time, p);
+> -	default:
+> -		return -ENOTTY;
+> -	}
+> -}
+> -
+> -/*
+> - * Pat the watchdog whenever device is written to.
+> - */
+> -static ssize_t ks8695_wdt_write(struct file *file, const char *data,
+> -						size_t len, loff_t *ppos)
+> -{
+> -	ks8695_wdt_reload();		/* pat the watchdog */
+> -	return len;
+> -}
+> -
+> -/* ......................................................................... */
+> -
+> -static const struct file_operations ks8695wdt_fops = {
+> -	.owner		= THIS_MODULE,
+> -	.llseek		= no_llseek,
+> -	.unlocked_ioctl	= ks8695_wdt_ioctl,
+> -	.open		= ks8695_wdt_open,
+> -	.release	= ks8695_wdt_close,
+> -	.write		= ks8695_wdt_write,
+> -};
+> -
+> -static struct miscdevice ks8695wdt_miscdev = {
+> -	.minor		= WATCHDOG_MINOR,
+> -	.name		= "watchdog",
+> -	.fops		= &ks8695wdt_fops,
+> -};
+> -
+> -static int ks8695wdt_probe(struct platform_device *pdev)
+> -{
+> -	int res;
+> -
+> -	if (ks8695wdt_miscdev.parent)
+> -		return -EBUSY;
+> -	ks8695wdt_miscdev.parent = &pdev->dev;
+> -
+> -	res = misc_register(&ks8695wdt_miscdev);
+> -	if (res)
+> -		return res;
+> -
+> -	pr_info("KS8695 Watchdog Timer enabled (%d seconds%s)\n",
+> -		wdt_time, nowayout ? ", nowayout" : "");
+> -	return 0;
+> -}
+> -
+> -static int ks8695wdt_remove(struct platform_device *pdev)
+> -{
+> -	misc_deregister(&ks8695wdt_miscdev);
+> -	ks8695wdt_miscdev.parent = NULL;
+> -
+> -	return 0;
+> -}
+> -
+> -static void ks8695wdt_shutdown(struct platform_device *pdev)
+> -{
+> -	ks8695_wdt_stop();
+> -}
+> -
+> -#ifdef CONFIG_PM
+> -
+> -static int ks8695wdt_suspend(struct platform_device *pdev, pm_message_t message)
+> -{
+> -	ks8695_wdt_stop();
+> -	return 0;
+> -}
+> -
+> -static int ks8695wdt_resume(struct platform_device *pdev)
+> -{
+> -	if (ks8695wdt_busy)
+> -		ks8695_wdt_start();
+> -	return 0;
+> -}
+> -
+> -#else
+> -#define ks8695wdt_suspend NULL
+> -#define ks8695wdt_resume	NULL
+> -#endif
+> -
+> -static struct platform_driver ks8695wdt_driver = {
+> -	.probe		= ks8695wdt_probe,
+> -	.remove		= ks8695wdt_remove,
+> -	.shutdown	= ks8695wdt_shutdown,
+> -	.suspend	= ks8695wdt_suspend,
+> -	.resume		= ks8695wdt_resume,
+> -	.driver		= {
+> -		.name	= "ks8695_wdt",
+> -	},
+> -};
+> -
+> -static int __init ks8695_wdt_init(void)
+> -{
+> -	/* Check that the heartbeat value is within range;
+> -	   if not reset to the default */
+> -	if (ks8695_wdt_settimeout(wdt_time)) {
+> -		ks8695_wdt_settimeout(WDT_DEFAULT_TIME);
+> -		pr_info("ks8695_wdt: wdt_time value must be 1 <= wdt_time <= %i"
+> -					", using %d\n", wdt_time, WDT_MAX_TIME);
+> -	}
+> -	return platform_driver_register(&ks8695wdt_driver);
+> -}
+> -
+> -static void __exit ks8695_wdt_exit(void)
+> -{
+> -	platform_driver_unregister(&ks8695wdt_driver);
+> -}
+> -
+> -module_init(ks8695_wdt_init);
+> -module_exit(ks8695_wdt_exit);
+> -
+> -MODULE_AUTHOR("Andrew Victor");
+> -MODULE_DESCRIPTION("Watchdog driver for KS8695");
+> -MODULE_LICENSE("GPL");
+> -MODULE_ALIAS("platform:ks8695_wdt");
+> -- 
+> 2.20.0
 > 
-> I meant for high kfree_rcu() loads, a softirq context executing RCU callback
-> is still better from the point of view of the callback running because the
-> softirq will run above all else (higher than the highest priority task) so
-> use_softirq=0 would be a down grade from that perspective if something higher
-> than rcutree.kthread_prio is running on the CPU. So unless kthread_prio is
-> set to the highest prio, then softirq running would work better. Did I miss
-> something?
-
-Under heavy load, softirq stops running at the tail end of interrupts and
-is instead run within the context of a per-CPU ksoftirqd kthread.  At normal
-SCHED_OTHER priority.
-
-> > > > o	With any of the above, invoke rcu_momentary_dyntick_idle() along
-> > > > 	with cond_resched() in your kfree_rcu() loop.  This simulates
-> > > > 	a trip to userspace for nohz_full CPUs, so if this helps for
-> > > > 	non-nohz_full CPUs, adjustments to the kernel might be called for.
-> 
-> I did not try this yet. But I am thinking why would this help in nohz_idle
-> case? In nohz_idle we already have the tick active when CPU is idle. I guess
-> it is because there may be a long time that elapses before
-> rcu_data.rcu_need_heavy_qs == true ?
-
-Under your heavy rcuperf load, none of the CPUs would ever be idle.  Nor
-would they every be in nohz_full userspace context, either.
-
-In contrast, a heavy duty userspace-driven workload would transition to
-and from userspace for each kfree_rcu(), and that would increment the
-dyntick-idle count on each transition to and from userspace.  Adding the
-rcu_momentary_dyntick_idle() emulates a pair of such transitions.
-
-							Thanx, Paul
-
-> > > Ok, will try it.
-> > > 
-> > > Save these bullet points for future reference! ;-)  thanks,
-> > 
-> > I guess this is helping me to prepare for Plumbers.  ;-)
-> 
-> :-)
-> 
-> thanks, Paul!
-> 
->  - Joel
-> 
-
