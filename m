@@ -2,156 +2,171 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC227C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD1BC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89C8A2184E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D20272070D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:38:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IdDRpBzO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bTbqj9ZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbfHIWgl (ORCPT
+        id S1728445AbfHIWif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 18:36:41 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46510 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfHIWgk (ORCPT
+        Fri, 9 Aug 2019 18:38:35 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35697 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbfHIWif (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 18:36:40 -0400
-Received: by mail-wr1-f66.google.com with SMTP id z1so99556184wru.13;
-        Fri, 09 Aug 2019 15:36:39 -0700 (PDT)
+        Fri, 9 Aug 2019 18:38:35 -0400
+Received: by mail-ed1-f65.google.com with SMTP id w20so96582181edd.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 15:38:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=fvKIxSYIddDWQf6VIWwU2gRyHhiEehS8mDHcQsKbXzs=;
-        b=IdDRpBzOrMNWuYDjQ6P4tI9SgYZ12OhST86/DzvyGE0OHsdfoziLsACizUMa75Mkj3
-         bnmYymRsA62LDisDr1NOARRT5gmXXm0fVO/znsLS05y8UsxPidA/TMXjmXMPVw3kuAQY
-         Q2KdsBA+ABfQAXA6NcX5wR4f8YcOhVkVCIQlWGEzaFM93AD3RkpZ34olLEmehup3tFPk
-         5lQaOU6BrOKb4IIz1nPN7PfjZhp63UIhOBv/mMC7KVuy14ScAck81BnIWKtdnkSvH95K
-         FKyl0ogOJmifT4MHLzarjq2LgYfNr2CENFmhjpNkA4AiTCl0vbuw3wcHwhnXWFZwCpNY
-         UGug==
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Vu3fnCcoCE+ex8fQgUjUcYvR6FHd62qNPU0Diyzu0d4=;
+        b=bTbqj9ZWHPadfN6LLOC9UMICB5kn/HMYHcah/VdkJ/91n1gdgYl9iCXaQ7+lQyW+iU
+         /K9XhJT30UZbEJMacPFWpAeI8DzdC069Ch3c9bGObt3hligarrSU8qzeQ5X/678mKBoc
+         Z1fzSV8oCwH4k0VOyax8HnmUKubyvnoe7mbD0YvqH2Cxd04mdlVxHaZxaSKv3xYhh24R
+         BeRWhhEpwlCqp32XN+4C/QWrPwwH8y3m0VmGlR+QxE9JvEmED6a8ktkqxR5+bYoNcbCd
+         6iooou0Ntw80/fJX+swWTbkSMtIl2hWXtIPceMxbTWWIMAU9C8UH8cL7ESqccjToJees
+         i7AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=fvKIxSYIddDWQf6VIWwU2gRyHhiEehS8mDHcQsKbXzs=;
-        b=E+Ihubvmq9wE13mv7ox4rNIh6sawcTc/8WZXTxEhVbLMIMw24+nNubYa695UEyzBo8
-         nH1Cz+tBYntyTzMV0yMgk1YQOn46Pge60nSLFzRVsrC80sWJStsLg4Brlrl+jjqv29tF
-         GOjlCvLUB8DAbRJC0ngZpvE4UES42xh80Xq4I2cdb6YyjC0XhyJMe5P4mT4kNfXt7bl3
-         3lkspdLg43p7MW6dZvHuos4Wv8G6AO+VqTI1w2Zc32W1AVR1ayQavVKLrYOzqDZuLmdu
-         BTDnDhu5LmAsrcMIkskO9f0ioJYowdv482se2whN32DQuw6g60ALZkXFp6UKeoDKTzqK
-         SIKQ==
-X-Gm-Message-State: APjAAAXFyPSlpRslBGVhDOuAVq+46SM4nGcpR3eOJh13VjYRrwPWzW0B
-        1fQQCMcEDEJnCXGAbxaU9F081ayr
-X-Google-Smtp-Source: APXvYqwv8W0D/t4I6A6Fxht9VJKtklqtrHDaiY0CA343Vfmq0Jk4MfNXSYF59MxwVnMeQOmzWifQHA==
-X-Received: by 2002:a5d:6981:: with SMTP id g1mr6291575wru.193.1565390198261;
-        Fri, 09 Aug 2019 15:36:38 -0700 (PDT)
-Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id g25sm7642951wmk.18.2019.08.09.15.36.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 15:36:36 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, rkrcmar@redhat.com,
-        kvm@vger.kernel.org
-Subject: [GIT PULL] KVM fixes for Linux 5.3-rc4
-Date:   Sat, 10 Aug 2019 00:36:35 +0200
-Message-Id: <1565390195-16920-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Vu3fnCcoCE+ex8fQgUjUcYvR6FHd62qNPU0Diyzu0d4=;
+        b=S/uUGc4ghfYfpVoVe4u0cFb+nR9yIXey+UPI19c2Y7DTuQ167ym2yF5xpxDgKxn9Jc
+         mPqqZbai/YRn5l1xcBMNV3joSKaxe4sWXfbbhWDvf7VTWjTzWCkiigXR52z6Hp9k4o5/
+         49bg+YGuU3DC2AKzdeY5biuzzN2VGbYqMVyK7LElxDgMBwnHMnw2dU6+G87SAA/UUrUN
+         tPLz0g15nNCqkrYkthkzq4gcR8YkAabhFg/6xETwQ+nf7XlGRF+voYeclBqMQOaPGLPc
+         RZf74KLzKOhOCfPQQ9wBrY/OAiOG1GJto98KNYdldiXGQmoValJ5zhHjqq4OWzaMv/38
+         g9tQ==
+X-Gm-Message-State: APjAAAVahq3eG9apbOZ/ZdPD8i0sFJOrwNGuxBB3p8hkacdHV2/wtwER
+        aJe1fveBeyhCg4UK3oCtMfk=
+X-Google-Smtp-Source: APXvYqwTXWKUACHXvHZ7TN1OHxj0u36CHorImMUpkKzD4WXEIyslj5fUFmHkCwO5SN7ReKkm4X6XbA==
+X-Received: by 2002:a17:906:fc5:: with SMTP id c5mr20644991ejk.129.1565390313150;
+        Fri, 09 Aug 2019 15:38:33 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id t2sm22840571eda.95.2019.08.09.15.38.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 09 Aug 2019 15:38:32 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 22:38:31 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>
+Cc:     "bp@suse.de" <bp@suse.de>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "osalvador@suse.de" <osalvador@suse.de>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "richardw.yang@linux.intel.com" <richardw.yang@linux.intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
+Subject: Re: Resend [PATCH] kernel/resource.c: invalidate parent when freed
+ resource has childs
+Message-ID: <20190809223831.fk4uyrzscr366syr@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <1565278859475.1962@mentor.com>
+ <1565358624103.3694@mentor.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565358624103.3694@mentor.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Fri, Aug 09, 2019 at 01:50:24PM +0000, Schmid, Carsten wrote:
+>When a resource is freed and has children, the childrens are
+>left without any hint that their parent is no more valid.
+>This caused at least one use-after-free in the xhci-hcd using
+>ext-caps driver when platform code released platform devices.
+>
+>Fix this by setting child's parent to zero and warn.
+>
+>Signed-off-by: Carsten Schmid <carsten_schmid@mentor.com>
+>---
+>Rationale:
+>When hunting for the root cause of a crash on a 4.14.86 kernel, i
+>have found the root cause and checked it being still present
+>upstream. Our case:
+>Having xhci-hcd and intel_xhci_usb_sw active we can see in
+>/proc/meminfo: (exceirpt)
+>  b3c00000-b3c0ffff : 0000:00:15.0
+>    b3c00000-b3c0ffff : xhci-hcd
+>      b3c08070-b3c0846f : intel_xhci_usb_sw
+>intel_xhci_usb_sw being a child of xhci-hcd.
+>
+>Doing an unbind command
+>echo 0000:00:15.0 > /sys/bus/pci/drivers/xhci_hcd/unbind
+>leads to xhci-hcd being freed in __release_region.
+>The intel_xhci_usb_sw resource is accessed in platform code
+>in platform_device_del with
+>                for (i = 0; i < pdev->num_resources; i++) {
+>                        struct resource *r = &pdev->resource[i];
+>                        if (r->parent)
+>                                release_resource(r);
+>                }
+>as the resource's parent has not been updated, the release_resource
+>uses the parent:
+>        p = &old->parent->child;
+>which is now invalid.
+>Fix this by marking the parent invalid in the child and give a warning
+>in dmesg.
+>---
+>Advised by Greg (thanks):
+>Try resending it with at least the people who get_maintainer.pl says has
+>touched that file last in it. [CS:done]
+>
+>Also, Linus is the unofficial resource.c maintainer.  I think he has a
+>set of userspace testing scripts for changes somewhere, so you should
+> cc: him too.  And might as well add me :) [CS:done]
+>
+> thanks,
+>
+> greg k-h
+>---
+> kernel/resource.c | 9 +++++++++
+> 1 file changed, 9 insertions(+)
+>
+>diff --git a/kernel/resource.c b/kernel/resource.c
+>index 158f04ec1d4f..95340cb0b1c2 100644
+>--- a/kernel/resource.c
+>+++ b/kernel/resource.c
+>@@ -1200,6 +1200,15 @@ void __release_region(struct resource *parent, resource_size_t start,
+>                        write_unlock(&resource_lock);
+>                        if (res->flags & IORESOURCE_MUXED)
+>                                wake_up(&muxed_resource_wait);
+>+
+>+                       write_lock(&resource_lock);
+>+                       if (res->child) {
 
-The following changes since commit 266e85a5ec9100dcd9ae03601453bbc96fefee5d:
+In theory, child may have siblings. Would it be possible to have several
+devices under xhci-hcd?
 
-  KVM: X86: Boost queue head vCPU to mitigate lock waiter preemption (2019-07-24 13:56:53 +0200)
+>+                               printk(KERN_WARNING "__release_region: %s has child %s,"
+>+                                               "invalidating childs parent\n",
+>+                                               res->name, res->child->name);
+>+                               res->child->parent = NULL;
+>+                       }
+>+                       write_unlock(&resource_lock);
+>                        free_resource(res);
+>                        return;
+>                }
+>--
+>2.17.1
 
-are available in the git repository at:
-
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-
-for you to fetch changes up to a738b5e75b4c13be3485c82eb62c30047aa9f164:
-
-  Merge tag 'kvmarm-fixes-for-5.3-2' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD (2019-08-09 16:53:50 +0200)
-
-----------------------------------------------------------------
-
-Bugfixes (arm and x86) and cleanups.
-
-----------------------------------------------------------------
-Alexandru Elisei (1):
-      KVM: arm/arm64: vgic: Reevaluate level sensitive interrupts on enable
-
-Anders Roxell (3):
-      arm64: KVM: regmap: Fix unexpected switch fall-through
-      KVM: arm: vgic-v3: Mark expected switch fall-through
-      arm64: KVM: hyp: debug-sr: Mark expected switch fall-through
-
-Greg KH (1):
-      KVM: no need to check return value of debugfs_create functions
-
-Marc Zyngier (3):
-      KVM: arm/arm64: Sync ICH_VMCR_EL2 back when about to block
-      KVM: arm64: Don't write junk to sysregs on reset
-      KVM: arm: Don't write junk to CP15 registers on reset
-
-Naresh Kamboju (1):
-      selftests: kvm: Adding config fragments
-
-Paolo Bonzini (5):
-      KVM: remove kvm_arch_has_vcpu_debugfs()
-      x86: kvm: remove useless calls to kvm_para_available
-      kvm: remove unnecessary PageReserved check
-      Merge tag 'kvmarm-fixes-for-5.3' of git://git.kernel.org/.../kvmarm/kvmarm into HEAD
-      Merge tag 'kvmarm-fixes-for-5.3-2' of git://git.kernel.org/.../kvmarm/kvmarm into HEAD
-
-Thomas Huth (1):
-      KVM: selftests: Update gitignore file for latest changes
-
-Wanpeng Li (3):
-      KVM: LAPIC: Don't need to wakeup vCPU twice afer timer fire
-      KVM: Check preempted_in_kernel for involuntary preemption
-      KVM: Fix leak vCPU's VMCS value into other pCPU
-
-Zenghui Yu (2):
-      KVM: arm/arm64: Introduce kvm_pmu_vcpu_init() to setup PMU counter index
-      KVM: arm64: Update kvm_arm_exception_class and esr_class_str for new EC
-
- arch/arm/kvm/coproc.c                  | 23 ++++++++-----
- arch/arm64/include/asm/kvm_arm.h       |  7 ++--
- arch/arm64/kernel/traps.c              |  1 +
- arch/arm64/kvm/hyp/debug-sr.c          | 30 +++++++++++++++++
- arch/arm64/kvm/regmap.c                |  5 +++
- arch/arm64/kvm/sys_regs.c              | 32 ++++++++++--------
- arch/mips/kvm/mips.c                   | 10 ------
- arch/powerpc/kvm/powerpc.c             | 15 +++------
- arch/s390/kvm/kvm-s390.c               | 10 ------
- arch/x86/include/asm/kvm_host.h        |  3 ++
- arch/x86/kernel/kvm.c                  |  8 -----
- arch/x86/kvm/debugfs.c                 | 46 ++++++++-----------------
- arch/x86/kvm/lapic.c                   |  8 -----
- arch/x86/kvm/svm.c                     |  6 ++++
- arch/x86/kvm/vmx/vmx.c                 |  6 ++++
- arch/x86/kvm/x86.c                     | 16 +++++++++
- include/kvm/arm_pmu.h                  |  2 ++
- include/kvm/arm_vgic.h                 |  1 +
- include/linux/kvm_host.h               |  6 ++--
- tools/testing/selftests/kvm/.gitignore |  3 +-
- tools/testing/selftests/kvm/config     |  3 ++
- virt/kvm/arm/arm.c                     | 18 +++++++---
- virt/kvm/arm/hyp/vgic-v3-sr.c          |  8 +++++
- virt/kvm/arm/pmu.c                     | 18 ++++++++--
- virt/kvm/arm/vgic/vgic-mmio.c          | 16 +++++++++
- virt/kvm/arm/vgic/vgic-v2.c            |  9 ++++-
- virt/kvm/arm/vgic/vgic-v3.c            |  7 +++-
- virt/kvm/arm/vgic/vgic.c               | 11 ++++++
- virt/kvm/arm/vgic/vgic.h               |  2 ++
- virt/kvm/kvm_main.c                    | 61 ++++++++++++++++++++--------------
- 30 files changed, 249 insertions(+), 142 deletions(-)
+-- 
+Wei Yang
+Help you, Help me
