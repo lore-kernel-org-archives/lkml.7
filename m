@@ -2,87 +2,190 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDB9C0650F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A059BC0650F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CEC121743
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565311263;
-	bh=WGQG5Pfhg6CrPeE3yWQ62soOdtDALodm0wFNhFzQ5sQ=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=1KIYVsCnReWRyPZVaYVdTRuaE/F2Q1kL/ra7GcuyOmxmpLXz/THTV2bTjshQ1i/Zv
-	 GMtD49FYhLB7nXZcjw3a0BZnxwEDrM6FtwiBwERMOn4Qq//FuBIctS6ygHRZXxQlcM
-	 jvDn8ZcACXBKTj87eoOTpc4Mm4CaiKS0oYpbbtCA=
+	by mail.kernel.org (Postfix) with ESMTP id 5C30020C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:45:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWTRQBLM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405023AbfHIAlC (ORCPT
+        id S2405075AbfHIApX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 20:41:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34046 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729418AbfHIAlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 20:41:02 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E3B9208C4;
-        Fri,  9 Aug 2019 00:41:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565311261;
-        bh=WGQG5Pfhg6CrPeE3yWQ62soOdtDALodm0wFNhFzQ5sQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=BNdFUlat7aT4TOx3F0d69r8Bcrrx6TSvEEOpSbJekXUBK3JOm41g+rfZLDYpu7kyp
-         OOr3LOY8sag1ft/xNdJsU0tCtDPnlM+kglU8KgNUMrse8WyqGz0YPeywi0cDBasa6I
-         nVijl0ifSp0MWhoUXdpXVrInlIVV4KTyfHfrdyVY=
-Subject: Re: [PATCH 4.14 00/33] 4.14.138-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190808190453.582417307@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <39ecdf5b-9875-3efe-9137-347b8f990b5c@kernel.org>
-Date:   Thu, 8 Aug 2019 18:41:00 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 8 Aug 2019 20:45:23 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39996 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729419AbfHIApX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 20:45:23 -0400
+Received: by mail-qt1-f194.google.com with SMTP id a15so94176221qtn.7;
+        Thu, 08 Aug 2019 17:45:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YbIEMZbtzCXpq/MNUh4eWzpCyaArIiGShovNn2U+vxo=;
+        b=TWTRQBLMTs6ciccZhps1ttQ4fZK9Xg7OiSrrrWfMirmK8xJ1bxCJPHElOVKTZbV9RG
+         tBqrG87zGb1uf/pCL70VCfLQUaV9UwEDQzySbKg44Z7P3vA/7dQxpQ10LZ/q4sWzxlwi
+         pZxeveZiN9a81X1gWRWphTmCjhVyP6ng0hbBx/JxMfw2wKacH6NVuG4BuGsHNmtOfliw
+         yVaAgLeRYgonkZA4hfrwFGL+jVXjGWXhJpBIaJTsu2lzloJmYm4GB0bkxJ+fWK28VZ50
+         pTGVkcKndbe6jXzjGwipjRuXIb862pi2AMKyNrwoQbBDuP4lww3krG4YPtjwkj1RkPV5
+         woDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YbIEMZbtzCXpq/MNUh4eWzpCyaArIiGShovNn2U+vxo=;
+        b=aQZAeiXij5WITWInYo064129NMTHLkJjvjVjkVd6DdZKgK/3EYxNO8Y0sDEzWdgP+Y
+         ITW3kkdttwVicIjzUl2trJc7ASGbK0nUmyc/acFfPV3q3ZdWOkdYSCabm0Ad5c1Jz4HZ
+         quyvsAqP1TNvpHkq1JcSG6J/1yak3lMW3V24nfBM2Vzf7u3moq4HmQ1FvKY3O3c980Ze
+         iFkXeNvfHr/OEvewERL9CAYmn2+ZS1nnGkec7fwXeH4WEJtF41XWdC9wpwJy+3SU+IOd
+         BJO6Pha+8pKC2yD9yR7aWdiI5JLIzLfF7Jl1zOYijDMTyoPiDLVgRbPTpXJ/US4w8OE+
+         Vndw==
+X-Gm-Message-State: APjAAAWFToEWfnbvgUSMk14m/CVtGeIBlVv9yvOpjHockrfcas+KyGeG
+        7F0G7DdexIYy6l1IKQa4KTQ=
+X-Google-Smtp-Source: APXvYqygRXht2AbFPnYF6rY+qxqh/NxMhl/JPp04DrEq4iH55DI/mUE6Vxr7898TFiPui0U9W9OipQ==
+X-Received: by 2002:a0c:e1cd:: with SMTP id v13mr15727930qvl.245.1565311521542;
+        Thu, 08 Aug 2019 17:45:21 -0700 (PDT)
+Received: from localhost.localdomain ([177.220.172.117])
+        by smtp.gmail.com with ESMTPSA id w62sm38405674qkd.30.2019.08.08.17.45.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 17:45:20 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id DF7E2C0ABC; Thu,  8 Aug 2019 21:45:17 -0300 (-03)
+Date:   Thu, 8 Aug 2019 21:45:17 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Pravin Shelar <pshelar@ovn.org>
+Cc:     Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+13210896153522fe1ee5@syzkaller.appspotmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        ovs dev <dev@openvswitch.org>, linux-kernel@vger.kernel.org,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: memory leak in internal_dev_create
+Message-ID: <20190809004517.GD4063@localhost.localdomain>
+References: <20190806115932.3044-1-hdanton@sina.com>
+ <CAOrHB_BmuAxdch-nbaTS-1eXN-0goUb5UXtYDr==0KeM9vVsRw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190808190453.582417307@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOrHB_BmuAxdch-nbaTS-1eXN-0goUb5UXtYDr==0KeM9vVsRw@mail.gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/8/19 1:05 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.138 release.
-> There are 33 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, Aug 07, 2019 at 01:32:40PM -0700, Pravin Shelar wrote:
+> On Tue, Aug 6, 2019 at 5:00 AM Hillf Danton <hdanton@sina.com> wrote:
+> >
+> >
+> > On Tue, 06 Aug 2019 01:58:05 -0700
+> > > Hello,
+> > >
+> > > syzbot found the following crash on:
+> > >
 > 
-> Responses should be made by Sat 10 Aug 2019 07:03:19 PM UTC.
-> Anything received after that time might be too late.
+> ...
+> > > BUG: memory leak
+> > > unreferenced object 0xffff8881228ca500 (size 128):
+> > >    comm "syz-executor032", pid 7015, jiffies 4294944622 (age 7.880s)
+> > >    hex dump (first 32 bytes):
+> > >      00 f0 27 18 81 88 ff ff 80 ac 8c 22 81 88 ff ff  ..'........"....
+> > >      40 b7 23 17 81 88 ff ff 00 00 00 00 00 00 00 00  @.#.............
+> > >    backtrace:
+> > >      [<000000000eb78212>] kmemleak_alloc_recursive  include/linux/kmemleak.h:43 [inline]
+> > >      [<000000000eb78212>] slab_post_alloc_hook mm/slab.h:522 [inline]
+> > >      [<000000000eb78212>] slab_alloc mm/slab.c:3319 [inline]
+> > >      [<000000000eb78212>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
+> > >      [<00000000006ea6c6>] kmalloc include/linux/slab.h:552 [inline]
+> > >      [<00000000006ea6c6>] kzalloc include/linux/slab.h:748 [inline]
+> > >      [<00000000006ea6c6>] ovs_vport_alloc+0x37/0xf0  net/openvswitch/vport.c:130
+> > >      [<00000000f9a04a7d>] internal_dev_create+0x24/0x1d0  net/openvswitch/vport-internal_dev.c:164
+> > >      [<0000000056ee7c13>] ovs_vport_add+0x81/0x190  net/openvswitch/vport.c:199
+> > >      [<000000005434efc7>] new_vport+0x19/0x80 net/openvswitch/datapath.c:194
+> > >      [<00000000b7b253f1>] ovs_dp_cmd_new+0x22f/0x410  net/openvswitch/datapath.c:1614
+> > >      [<00000000e0988518>] genl_family_rcv_msg+0x2ab/0x5b0  net/netlink/genetlink.c:629
+> > >      [<00000000d0cc9347>] genl_rcv_msg+0x54/0x9c net/netlink/genetlink.c:654
+> > >      [<000000006694b647>] netlink_rcv_skb+0x61/0x170  net/netlink/af_netlink.c:2477
+> > >      [<0000000088381f37>] genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
+> > >      [<00000000dad42a47>] netlink_unicast_kernel  net/netlink/af_netlink.c:1302 [inline]
+> > >      [<00000000dad42a47>] netlink_unicast+0x1ec/0x2d0  net/netlink/af_netlink.c:1328
+> > >      [<0000000067e6b079>] netlink_sendmsg+0x270/0x480  net/netlink/af_netlink.c:1917
+> > >      [<00000000aab08a47>] sock_sendmsg_nosec net/socket.c:637 [inline]
+> > >      [<00000000aab08a47>] sock_sendmsg+0x54/0x70 net/socket.c:657
+> > >      [<000000004cb7c11d>] ___sys_sendmsg+0x393/0x3c0 net/socket.c:2311
+> > >      [<00000000c4901c63>] __sys_sendmsg+0x80/0xf0 net/socket.c:2356
+> > >      [<00000000c10abb2d>] __do_sys_sendmsg net/socket.c:2365 [inline]
+> > >      [<00000000c10abb2d>] __se_sys_sendmsg net/socket.c:2363 [inline]
+> > >      [<00000000c10abb2d>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2363
+> >
+> >
+> > Always free vport manually unless register_netdevice() succeeds.
+> >
+> > --- a/net/openvswitch/vport-internal_dev.c
+> > +++ b/net/openvswitch/vport-internal_dev.c
+> > @@ -137,7 +137,7 @@ static void do_setup(struct net_device *
+> >         netdev->priv_flags |= IFF_LIVE_ADDR_CHANGE | IFF_OPENVSWITCH |
+> >                               IFF_NO_QUEUE;
+> >         netdev->needs_free_netdev = true;
+> > -       netdev->priv_destructor = internal_dev_destructor;
+> > +       netdev->priv_destructor = NULL;
+> >         netdev->ethtool_ops = &internal_dev_ethtool_ops;
+> >         netdev->rtnl_link_ops = &internal_dev_link_ops;
+> >
+> > @@ -159,7 +159,6 @@ static struct vport *internal_dev_create
+> >         struct internal_dev *internal_dev;
+> >         struct net_device *dev;
+> >         int err;
+> > -       bool free_vport = true;
+> >
+> >         vport = ovs_vport_alloc(0, &ovs_internal_vport_ops, parms);
+> >         if (IS_ERR(vport)) {
+> > @@ -190,10 +189,9 @@ static struct vport *internal_dev_create
+> >
+> >         rtnl_lock();
+> >         err = register_netdevice(vport->dev);
+> > -       if (err) {
+> > -               free_vport = false;
+> > +       if (err)
+> >                 goto error_unlock;
+> > -       }
+> > +       vport->dev->priv_destructor = internal_dev_destructor;
+> >
+> I am not sure why have you moved this assignment out of do_setup().
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.138-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
+> Otherwise patch looks good to me.
 > 
-> thanks,
-> 
-> greg k-h
-> 
+> Thanks.
 
-Compiled and booted on my test system. No dmesg regressions.
+Seems it's to avoid re-introducing the issue that was fixed by:
 
-thanks,
--- Shuah
+commit 309b66970ee2abf721ecd0876a48940fa0b99a35
+Author: Taehee Yoo <ap420073@gmail.com>
+Date:   Sun Jun 9 23:26:21 2019 +0900
+
+    net: openvswitch: do not free vport if register_netdevice() is failed.
+
+A Fixes: 309b66970ee2a  is welcomed then.
+
+> >         dev_set_promiscuity(vport->dev, 1);
+> >         rtnl_unlock();
+> > @@ -207,8 +205,7 @@ error_unlock:
+> >  error_free_netdev:
+> >         free_netdev(dev);
+> >  error_free_vport:
+> > -       if (free_vport)
+> > -               ovs_vport_free(vport);
+> > +       ovs_vport_free(vport);
+> >  error:
+> >         return ERR_PTR(err);
+> >  }
+> > --
+> >
+> 
