@@ -6,73 +6,77 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBA9C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6806DC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C81462171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3696B2171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405388AbfHIFbi (ORCPT
+        id S2405437AbfHIFce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 01:31:38 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:56150 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfHIFbi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 01:31:38 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3FB9E142E8E07;
-        Thu,  8 Aug 2019 22:31:37 -0700 (PDT)
-Date:   Thu, 08 Aug 2019 22:31:36 -0700 (PDT)
-Message-Id: <20190808.223136.1507513183278607177.davem@davemloft.net>
-To:     yuehaibing@huawei.com
-Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
-        dave.taht@gmail.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH net-next] fq_codel: remove set but not used variables
- 'prev_ecn_mark' and 'prev_drop_count'
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190807131055.66668-1-yuehaibing@huawei.com>
-References: <20190807131055.66668-1-yuehaibing@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 08 Aug 2019 22:31:37 -0700 (PDT)
+        Fri, 9 Aug 2019 01:32:34 -0400
+Received: from mga03.intel.com ([134.134.136.65]:48559 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725890AbfHIFcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 01:32:33 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 22:32:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,364,1559545200"; 
+   d="scan'208";a="193315385"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga001.fm.intel.com with ESMTP; 08 Aug 2019 22:32:29 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 03/22] ARM: omap1: move omap15xx local bus handling to usb.c
+In-Reply-To: <20190808212234.2213262-4-arnd@arndb.de>
+References: <20190808212234.2213262-1-arnd@arndb.de> <20190808212234.2213262-4-arnd@arndb.de>
+Date:   Fri, 09 Aug 2019 08:32:28 +0300
+Message-ID: <87y302ewer.fsf@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogWXVlSGFpYmluZyA8eXVlaGFpYmluZ0BodWF3ZWkuY29tPg0KRGF0ZTogV2VkLCA3IEF1
-ZyAyMDE5IDIxOjEwOjU1ICswODAwDQoNCj4gRml4ZXMgZ2NjICctV3VudXNlZC1idXQtc2V0LXZh
-cmlhYmxlJyB3YXJuaW5nOg0KPiANCj4gbmV0L3NjaGVkL3NjaF9mcV9jb2RlbC5jOiBJbiBmdW5j
-dGlvbiBmcV9jb2RlbF9kZXF1ZXVlOg0KPiBuZXQvc2NoZWQvc2NoX2ZxX2NvZGVsLmM6Mjg4OjIz
-OiB3YXJuaW5nOiB2YXJpYWJsZSBwcmV2X2Vjbl9tYXJrIHNldCBidXQgbm90IHVzZWQgWy1XdW51
-c2VkLWJ1dC1zZXQtdmFyaWFibGVdDQo+IG5ldC9zY2hlZC9zY2hfZnFfY29kZWwuYzoyODg6Njog
-d2FybmluZzogdmFyaWFibGUgcHJldl9kcm9wX2NvdW50IHNldCBidXQgbm90IHVzZWQgWy1XdW51
-c2VkLWJ1dC1zZXQtdmFyaWFibGVdDQo+IA0KPiBUaGV5IGFyZSBub3QgdXNlZCBzaW5jZSBjb21t
-aXQgNzdkZGFmZjIxOGZjICgiZnFfY29kZWw6IEtpbGwNCj4gdXNlbGVzcyBwZXItZmxvdyBkcm9w
-cGVkIHN0YXRpc3RpYyIpDQo+IA0KPiBSZXBvcnRlZC1ieTogSHVsayBSb2JvdCA8aHVsa2NpQGh1
-YXdlaS5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IFl1ZUhhaWJpbmcgPHl1ZWhhaWJpbmdAaHVhd2Vp
-LmNvbT4NCg0KRG8geW91IGV2ZW4gY29tcGlsZSB0ZXN0IHRoaXMgc3R1ZmY/DQoNCiAgQ0MgW01d
-ICBuZXQvc2NoZWQvc2NoX2ZxX2NvZGVsLm8NCm5ldC9zY2hlZC9zY2hfZnFfY29kZWwuYzogSW4g
-ZnVuY3Rpb24goWZxX2NvZGVsX2RlcXVldWWiOg0KbmV0L3NjaGVkL3NjaF9mcV9jb2RlbC5jOjMw
-OTo0MjogZXJyb3I6IKFwcmV2X2Ryb3BfY291bnSiIHVuZGVjbGFyZWQgKGZpcnN0IHVzZSBpbiB0
-aGlzIGZ1bmN0aW9uKTsgZGlkIHlvdSBtZWFuIKFwYWdlX3JlZl9jb3VudKI/DQogIGZsb3ctPmRy
-b3BwZWQgKz0gcS0+Y3N0YXRzLmRyb3BfY291bnQgLSBwcmV2X2Ryb3BfY291bnQ7DQogICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBefn5+fn5+fn5+fn5+fn4NCiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBhZ2VfcmVmX2NvdW50DQpuZXQv
-c2NoZWQvc2NoX2ZxX2NvZGVsLmM6MzA5OjQyOiBub3RlOiBlYWNoIHVuZGVjbGFyZWQgaWRlbnRp
-ZmllciBpcyByZXBvcnRlZCBvbmx5IG9uY2UgZm9yIGVhY2ggZnVuY3Rpb24gaXQgYXBwZWFycyBp
-bg0KbmV0L3NjaGVkL3NjaF9mcV9jb2RlbC5jOjMxMDo0MDogZXJyb3I6IKFwcmV2X2Vjbl9tYXJr
-oiB1bmRlY2xhcmVkIChmaXJzdCB1c2UgaW4gdGhpcyBmdW5jdGlvbik7IGRpZCB5b3UgbWVhbiCh
-cG1kX3Bmbl9tYXNroj8NCiAgZmxvdy0+ZHJvcHBlZCArPSBxLT5jc3RhdHMuZWNuX21hcmsgLSBw
-cmV2X2Vjbl9tYXJrOw0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF5+
-fn5+fn5+fn5+fn4NCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwbWRf
-cGZuX21hc2sNCm1ha2VbMV06ICoqKiBbc2NyaXB0cy9NYWtlZmlsZS5idWlsZDoyNzQ6IG5ldC9z
-Y2hlZC9zY2hfZnFfY29kZWwub10gRXJyb3IgMQ0KbWFrZTogKioqIFtNYWtlZmlsZToxNzY5OiBu
-ZXQvc2NoZWQvc2NoX2ZxX2NvZGVsLm9dIEVycm9yIDINCg==
+Arnd Bergmann <arnd@arndb.de> writes:
+
+> The mach/memory.h file only exists to implement a dma offset for "Local
+> Bus" devices, and that consists of the OHCI USB controller for practical
+> purposes.
+>
+> The generic dma-mapping interface has gained this exact feature some
+> years ago and can do it much more efficiently, so replace the complex
+> __arch_virt_to_dma/__arch_dma_to_pfn/... logic with a much simpler boot
+> time initialization.
+>
+> This should also make any code that performs dma mapping calls at
+> runtime much more efficient, by eliminating the strcmp() along with
+> the computation.
+>
+> Similar, a portion of the ohci-omap driver is just there for configuring
+> the memory translation, this too can get moved into usb.c
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+For all of these patches related to usb:
+
+Acked-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+
+Thanks for cleaning this up, Arnd.
+
+-- 
+balbi
