@@ -2,99 +2,155 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72180C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A46C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DAFC214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:29:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JPo0s4zQ"
+	by mail.kernel.org (Postfix) with ESMTP id 5917F20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:30:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436701AbfHIR3V (ORCPT
+        id S2406775AbfHIRa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 13:29:21 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:55038 "EHLO mail.skyhub.de"
+        Fri, 9 Aug 2019 13:30:58 -0400
+Received: from mga05.intel.com ([192.55.52.43]:64925 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436582AbfHIR3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 13:29:20 -0400
-Received: from zn.tnic (p200300EC2F0BAF00B1329C581B3162A4.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:af00:b132:9c58:1b31:62a4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 47D3E1EC0B07;
-        Fri,  9 Aug 2019 19:29:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1565371759;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=lPOAxolSCgoaWZk1kS26/9P2YdNN990Xnj6QZv/OKPs=;
-        b=JPo0s4zQc0LOr/iSubZgHo+6UW032/vJHsP9WcS+UDI/EnyKB7AGlEFb7DrhdJD4cli6iC
-        sZqU61sBSSuNLzfnRg5ex3ZGW7tmyKd8j9lDzuY+hgp7tyGkJDC9I1HDWP6QtPzLrAe7a5
-        9gnFutMjJSQIZda43F1Zd+d+GgVlqyQ=
-Date:   Fri, 9 Aug 2019 19:30:03 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Thomas Garnier <thgarnie@chromium.org>
-Cc:     kernel-hardening@lists.openwall.com, kristen@linux.intel.com,
-        keescook@chromium.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Juergen Gross <jgross@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Maran Wilson <maran.wilson@oracle.com>,
-        Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 08/11] x86/boot/64: Adapt assembly for PIE support
-Message-ID: <20190809173003.GG2152@zn.tnic>
-References: <20190730191303.206365-1-thgarnie@chromium.org>
- <20190730191303.206365-9-thgarnie@chromium.org>
+        id S1726157AbfHIRa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 13:30:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 10:30:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,366,1559545200"; 
+   d="scan'208";a="186726085"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 09 Aug 2019 10:30:56 -0700
+Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
+        by linux.intel.com (Postfix) with ESMTP id 65B2D580417;
+        Fri,  9 Aug 2019 10:30:56 -0700 (PDT)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH] PCI: pciehp: Avoid returning prematurely from sysfs
+ requests
+To:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xiongfeng Wang <wangxiongfeng2@huawei.com>
+References: <4174210466e27eb7e2243dd1d801d5f75baaffd8.1565345211.git.lukas@wunner.de>
+From:   sathyanarayanan kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <f26a6667-5474-895f-f9ba-1f812c44270e@linux.intel.com>
+Date:   Fri, 9 Aug 2019 10:28:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190730191303.206365-9-thgarnie@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <4174210466e27eb7e2243dd1d801d5f75baaffd8.1565345211.git.lukas@wunner.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-chOn Tue, Jul 30, 2019 at 12:12:52PM -0700, Thomas Garnier wrote:
-> Change the assembly code to use only relative references of symbols for the
-> kernel to be PIE compatible.
-> 
-> Early at boot, the kernel is mapped at a temporary address while preparing
-> the page table. To know the changes needed for the page table with KASLR,
+Hi,
 
-These manipulations need to be done regardless of whether KASLR is
-enabled or not. You're basically accomodating them to PIE.
-
-> the boot code calculate the difference between the expected address of the
-
-calculates
-
-> kernel and the one chosen by KASLR. It does not work with PIE because all
-> symbols in code are relatives. Instead of getting the future relocated
-> virtual address, you will get the current temporary mapping.
-
-Please avoid "you", "we" etc personal pronouns in commit messages.
-
-> Instructions were changed to have absolute 64-bit references.
-
-From Documentation/process/submitting-patches.rst:
-
- "Describe your changes in imperative mood, e.g. "make xyzzy do frotz"
-  instead of "[This patch] makes xyzzy do frotz" or "[I] changed xyzzy
-  to do frotz", as if you are giving orders to the codebase to change
-  its behaviour."
-
-Thx.
+On 8/9/19 3:28 AM, Lukas Wunner wrote:
+> A sysfs request to enable or disable a PCIe hotplug slot should not
+> return before it has been carried out.  That is sought to be achieved
+> by waiting until the controller's "pending_events" have been cleared.
+>
+> However the IRQ thread pciehp_ist() clears the "pending_events" before
+> it acts on them.  If pciehp_sysfs_enable_slot() / _disable_slot() happen
+> to check the "pending_events" after they have been cleared but while
+> pciehp_ist() is still running, the functions may return prematurely
+> with an incorrect return value.
+Can this be fixed by changing the sequence of clearing the 
+pending_events in pciehp_ist() ?
+>
+> Fix by introducing an "ist_running" flag which must be false before a
+> sysfs request is allowed to return.
+>
+> Fixes: 32a8cef274fe ("PCI: pciehp: Enable/disable exclusively from IRQ thread")
+> Link: https://lore.kernel.org/linux-pci/1562226638-54134-1-git-send-email-wangxiongfeng2@huawei.com
+> Reported-and-tested-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> Cc: stable@vger.kernel.org # v4.19+
+> ---
+>   drivers/pci/hotplug/pciehp.h      | 2 ++
+>   drivers/pci/hotplug/pciehp_ctrl.c | 6 ++++--
+>   drivers/pci/hotplug/pciehp_hpc.c  | 2 ++
+>   3 files changed, 8 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+> index 8c51a04b8083..e316bde45c7b 100644
+> --- a/drivers/pci/hotplug/pciehp.h
+> +++ b/drivers/pci/hotplug/pciehp.h
+> @@ -72,6 +72,7 @@ extern int pciehp_poll_time;
+>    * @reset_lock: prevents access to the Data Link Layer Link Active bit in the
+>    *	Link Status register and to the Presence Detect State bit in the Slot
+>    *	Status register during a slot reset which may cause them to flap
+> + * @ist_running: flag to keep user request waiting while IRQ thread is running
+>    * @request_result: result of last user request submitted to the IRQ thread
+>    * @requester: wait queue to wake up on completion of user request,
+>    *	used for synchronous slot enable/disable request via sysfs
+> @@ -101,6 +102,7 @@ struct controller {
+>   
+>   	struct hotplug_slot hotplug_slot;	/* hotplug core interface */
+>   	struct rw_semaphore reset_lock;
+> +	unsigned int ist_running;
+>   	int request_result;
+>   	wait_queue_head_t requester;
+>   };
+> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+> index 631ced0ab28a..1ce9ce335291 100644
+> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+> @@ -368,7 +368,8 @@ int pciehp_sysfs_enable_slot(struct hotplug_slot *hotplug_slot)
+>   		ctrl->request_result = -ENODEV;
+>   		pciehp_request(ctrl, PCI_EXP_SLTSTA_PDC);
+>   		wait_event(ctrl->requester,
+> -			   !atomic_read(&ctrl->pending_events));
+> +			   !atomic_read(&ctrl->pending_events) &&
+> +			   !ctrl->ist_running);
+>   		return ctrl->request_result;
+>   	case POWERON_STATE:
+>   		ctrl_info(ctrl, "Slot(%s): Already in powering on state\n",
+> @@ -401,7 +402,8 @@ int pciehp_sysfs_disable_slot(struct hotplug_slot *hotplug_slot)
+>   		mutex_unlock(&ctrl->state_lock);
+>   		pciehp_request(ctrl, DISABLE_SLOT);
+>   		wait_event(ctrl->requester,
+> -			   !atomic_read(&ctrl->pending_events));
+> +			   !atomic_read(&ctrl->pending_events) &&
+> +			   !ctrl->ist_running);
+>   		return ctrl->request_result;
+>   	case POWEROFF_STATE:
+>   		ctrl_info(ctrl, "Slot(%s): Already in powering off state\n",
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index bd990e3371e3..9e2d7688e8cc 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -608,6 +608,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
+>   	irqreturn_t ret;
+>   	u32 events;
+>   
+> +	ctrl->ist_running = true;
+>   	pci_config_pm_runtime_get(pdev);
+>   
+>   	/* rerun pciehp_isr() if the port was inaccessible on interrupt */
+> @@ -654,6 +655,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
+>   	up_read(&ctrl->reset_lock);
+>   
+>   	pci_config_pm_runtime_put(pdev);
+> +	ctrl->ist_running = false;
+>   	wake_up(&ctrl->requester);
+>   	return IRQ_HANDLED;
+>   }
 
 -- 
-Regards/Gruss,
-    Boris.
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
