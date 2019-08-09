@@ -2,69 +2,69 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C33C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 111D4C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63FC52171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E15B22171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:35:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405493AbfHIFcu (ORCPT
+        id S2405490AbfHIFfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 01:32:50 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:56178 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbfHIFcu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 01:32:50 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id AF1831433DB45;
-        Thu,  8 Aug 2019 22:32:47 -0700 (PDT)
-Date:   Thu, 08 Aug 2019 22:32:47 -0700 (PDT)
-Message-Id: <20190808.223247.493228946898420743.davem@davemloft.net>
-To:     yuehaibing@huawei.com
-Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
-        dave.taht@gmail.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH net-next] fq_codel: remove set but not used variables
- 'prev_ecn_mark' and 'prev_drop_count'
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190808.223136.1507513183278607177.davem@davemloft.net>
-References: <20190807131055.66668-1-yuehaibing@huawei.com>
-        <20190808.223136.1507513183278607177.davem@davemloft.net>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 08 Aug 2019 22:32:48 -0700 (PDT)
+        Fri, 9 Aug 2019 01:35:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46326 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726212AbfHIFfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 01:35:41 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 76B7B8E90C;
+        Fri,  9 Aug 2019 05:35:41 +0000 (UTC)
+Received: from [10.72.12.241] (ovpn-12-241.pek2.redhat.com [10.72.12.241])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F54C60BF3;
+        Fri,  9 Aug 2019 05:35:33 +0000 (UTC)
+Subject: Re: [PATCH V4 0/9] Fixes for metadata accelreation
+To:     David Miller <davem@davemloft.net>
+Cc:     mst@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, jgg@ziepe.ca
+References: <20190807070617.23716-1-jasowang@redhat.com>
+ <20190808.221543.450194346419371363.davem@davemloft.net>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <1aaec9aa-7832-35e2-a58d-99bcc2998ce8@redhat.com>
+Date:   Fri, 9 Aug 2019 13:35:32 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190808.221543.450194346419371363.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 09 Aug 2019 05:35:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogRGF2aWQgTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0Pg0KRGF0ZTogVGh1LCAwOCBB
-dWcgMjAxOSAyMjozMTozNiAtMDcwMCAoUERUKQ0KDQo+IEZyb206IFl1ZUhhaWJpbmcgPHl1ZWhh
-aWJpbmdAaHVhd2VpLmNvbT4NCj4gRGF0ZTogV2VkLCA3IEF1ZyAyMDE5IDIxOjEwOjU1ICswODAw
-DQo+IA0KPj4gRml4ZXMgZ2NjICctV3VudXNlZC1idXQtc2V0LXZhcmlhYmxlJyB3YXJuaW5nOg0K
-Pj4gDQo+PiBuZXQvc2NoZWQvc2NoX2ZxX2NvZGVsLmM6IEluIGZ1bmN0aW9uIGZxX2NvZGVsX2Rl
-cXVldWU6DQo+PiBuZXQvc2NoZWQvc2NoX2ZxX2NvZGVsLmM6Mjg4OjIzOiB3YXJuaW5nOiB2YXJp
-YWJsZSBwcmV2X2Vjbl9tYXJrIHNldCBidXQgbm90IHVzZWQgWy1XdW51c2VkLWJ1dC1zZXQtdmFy
-aWFibGVdDQo+PiBuZXQvc2NoZWQvc2NoX2ZxX2NvZGVsLmM6Mjg4OjY6IHdhcm5pbmc6IHZhcmlh
-YmxlIHByZXZfZHJvcF9jb3VudCBzZXQgYnV0IG5vdCB1c2VkIFstV3VudXNlZC1idXQtc2V0LXZh
-cmlhYmxlXQ0KPj4gDQo+PiBUaGV5IGFyZSBub3QgdXNlZCBzaW5jZSBjb21taXQgNzdkZGFmZjIx
-OGZjICgiZnFfY29kZWw6IEtpbGwNCj4+IHVzZWxlc3MgcGVyLWZsb3cgZHJvcHBlZCBzdGF0aXN0
-aWMiKQ0KPj4gDQo+PiBSZXBvcnRlZC1ieTogSHVsayBSb2JvdCA8aHVsa2NpQGh1YXdlaS5jb20+
-DQo+PiBTaWduZWQtb2ZmLWJ5OiBZdWVIYWliaW5nIDx5dWVoYWliaW5nQGh1YXdlaS5jb20+DQo+
-IA0KPiBEbyB5b3UgZXZlbiBjb21waWxlIHRlc3QgdGhpcyBzdHVmZj8NCj4gDQo+ICAgQ0MgW01d
-ICBuZXQvc2NoZWQvc2NoX2ZxX2NvZGVsLm8NCj4gbmV0L3NjaGVkL3NjaF9mcV9jb2RlbC5jOiBJ
-biBmdW5jdGlvbiChZnFfY29kZWxfZGVxdWV1ZaI6DQo+IG5ldC9zY2hlZC9zY2hfZnFfY29kZWwu
-YzozMDk6NDI6IGVycm9yOiChcHJldl9kcm9wX2NvdW50oiB1bmRlY2xhcmVkIChmaXJzdCB1c2Ug
-aW4gdGhpcyBmdW5jdGlvbik7IGRpZCB5b3UgbWVhbiChcGFnZV9yZWZfY291bnSiPw0KDQpOZXZl
-ciBtaW5kLCB0aGlzIGlzIG15IGZhdWx0Lg0KDQpJIHdhcyBidWlsZCB0ZXN0aW5nIHRoZSBwYXRj
-aCBvbiB0aGUgd3JvbmcgdHJlZSwgSSdtIHZlcnkgc29ycnkuDQo=
+
+On 2019/8/9 下午1:15, David Miller wrote:
+> From: Jason Wang <jasowang@redhat.com>
+> Date: Wed,  7 Aug 2019 03:06:08 -0400
+>
+>> This series try to fix several issues introduced by meta data
+>> accelreation series. Please review.
+>   ...
+>
+> My impression is that patch #7 will be changed to use spinlocks so there
+> will be a v5.
+>
+
+Yes. V5 is on the way.
+
+Thanks
+
