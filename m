@@ -2,124 +2,91 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D92DC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2615C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CBFB2086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 889672086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:47:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PTqDgTfJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436690AbfHISqq (ORCPT
+        id S2406983AbfHISra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:46:46 -0400
-Received: from mga11.intel.com ([192.55.52.93]:6049 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbfHISqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:46:45 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 11:46:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,366,1559545200"; 
-   d="scan'208";a="199479996"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga004.fm.intel.com with ESMTP; 09 Aug 2019 11:46:44 -0700
-Date:   Fri, 9 Aug 2019 11:46:44 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH v3 6/7] x86: KVM: svm: eliminate weird goto from
- vmrun_interception()
-Message-ID: <20190809184644.GF10541@linux.intel.com>
-References: <20190808173051.6359-1-vkuznets@redhat.com>
- <20190808173051.6359-7-vkuznets@redhat.com>
+        Fri, 9 Aug 2019 14:47:30 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:36560 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfHISra (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 14:47:30 -0400
+Received: by mail-ua1-f67.google.com with SMTP id v20so38091967uao.3;
+        Fri, 09 Aug 2019 11:47:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hvM3NNhwGMvvfx2MkO3/MD3iVuNxF0JxJmKT+PwR5W4=;
+        b=PTqDgTfJDI6Ddsg4uDOHOgkzKF5/hMMju2mgUT5LWN/QtY3UlV+Emsr5Gsq0+5Aiyk
+         a5B/DizHQFb3ToCirXCgirmD2ZL/kujDPSeRwLFuHFxseSmIjVeQTtFGq+7KKngtRQME
+         4fTt39ovBiycauq1jhnjSYvQLxj8m7SLQfRwddnOwSWWczWOpiMbmp7t/bHwpNeSRc9A
+         mFQQSyUtW74/eTrUGjKQzl5KBGXvUam+SfiDeg1vfoIDSqavsAW5HcQgatUjUA+RhH/b
+         4nrKK01T3GAGEY/r4AWLwlxPfjzV8hrVBpqpDBOd3wR4ZhL/8seT2Tkzlbxakk5qdc5m
+         YYgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hvM3NNhwGMvvfx2MkO3/MD3iVuNxF0JxJmKT+PwR5W4=;
+        b=KxnBlETVhqf0w9jsNVsowl2yAqkCUP+5KKQmBEWZhFzThE0QZwpBZ8ql+H6qsaZC4C
+         dHPicKsLu+Mjpk2eRsR/U1gSuMdk+DlHorypn25i9hGfzfVsdc/AzDZH7QIjbMa6r0Kf
+         mLUUpm1FOATWPvndKK5jGGbQFzX3IRJ+TpXDvL/ytWRX05pN9fTEsduy6Z1Q7bk2EhUd
+         qvGRBzszCtnk5gzVBJhZVjBz1/XbdUNy7J1zyFF4Hk2gluvI8ETqza+mGCYyEr0iWT9h
+         v2K1wiNC3l0LXT+QTEkBcAShIFY0GZQpChMMzcU7N/tT5x/nRvUUm96X5JrOxacucItC
+         nOhg==
+X-Gm-Message-State: APjAAAU2lwlXGkJMFIhvy8vNXdJyy6ktoE6By7MqdlLeF0ONVepX+kXG
+        IMsm7u1fm48Uh6o3CnwnCWBwhCkucv4tVk8DA2U=
+X-Google-Smtp-Source: APXvYqwNUvZ4tnZE9Es0itFcZvDe8vvnYLoMxGxU87idwaNvgZecJqPAN9crbxDKWeXxjDKCOPx4blroSe5rCFlGgXw=
+X-Received: by 2002:ab0:4108:: with SMTP id j8mr14248017uad.104.1565376448875;
+ Fri, 09 Aug 2019 11:47:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808173051.6359-7-vkuznets@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190808172226.18306-1-chris@chris-wilson.co.uk>
+In-Reply-To: <20190808172226.18306-1-chris@chris-wilson.co.uk>
+From:   Matthew Auld <matthew.william.auld@gmail.com>
+Date:   Fri, 9 Aug 2019 19:47:02 +0100
+Message-ID: <CAM0jSHP0BZJyJO3JeMqPDK=eYhS-Az6i6fGFz1tUQgaErA7mfA@mail.gmail.com>
+Subject: Re: [Intel-gfx] [PATCH] drm/i915: Stop reconfiguring our shmemfs mountpoint
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Hugh Dickins <hughd@google.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Matthew Auld <matthew.auld@intel.com>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 07:30:50PM +0200, Vitaly Kuznetsov wrote:
-> Regardless of whether or not nested_svm_vmrun_msrpm() fails, we return 1
-> from vmrun_interception() so there's no point in doing goto. Also,
-> nested_svm_vmrun_msrpm() call can be made from nested_svm_vmrun() where
-> other nested launch issues are handled.
-> 
-> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  arch/x86/kvm/svm.c | 23 +++++++++--------------
->  1 file changed, 9 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 6d16d1898810..43bc4a5e4948 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -3658,6 +3658,15 @@ static bool nested_svm_vmrun(struct vcpu_svm *svm)
->  
->  	enter_svm_guest_mode(svm, vmcb_gpa, nested_vmcb, &map);
->  
-> +	if (!nested_svm_vmrun_msrpm(svm)) {
-> +		svm->vmcb->control.exit_code    = SVM_EXIT_ERR;
-> +		svm->vmcb->control.exit_code_hi = 0;
-> +		svm->vmcb->control.exit_info_1  = 0;
-> +		svm->vmcb->control.exit_info_2  = 0;
-> +
-> +		nested_svm_vmexit(svm);
-> +	}
-> +
->  	return true;
-
-nested_svm_vmrun() no longer needs a return value, it just needs to return
-early.  But making it 'void' just to change it to 'int' in the next patch
-is a bit gratuitous, so what about changing it to return an 'int' in this
-patch?
-
-That'd also eliminate the funky
-
-	if (!nested_svm_vmrun(svm))
-		return 1;
-
-	return 1;
-
-chunk in vmrun_interception() that temporarily exists until patch 7/7.
-
->  }
->  
-> @@ -3740,20 +3749,6 @@ static int vmrun_interception(struct vcpu_svm *svm)
->  	if (!nested_svm_vmrun(svm))
->  		return 1;
->  
-> -	if (!nested_svm_vmrun_msrpm(svm))
-> -		goto failed;
-> -
-> -	return 1;
-> -
-> -failed:
-> -
-> -	svm->vmcb->control.exit_code    = SVM_EXIT_ERR;
-> -	svm->vmcb->control.exit_code_hi = 0;
-> -	svm->vmcb->control.exit_info_1  = 0;
-> -	svm->vmcb->control.exit_info_2  = 0;
-> -
-> -	nested_svm_vmexit(svm);
-> -
->  	return 1;
->  }
->  
-> -- 
-> 2.20.1
-> 
+On Thu, 8 Aug 2019 at 18:23, Chris Wilson <chris@chris-wilson.co.uk> wrote:
+>
+> The filesystem reconfigure API is undergoing a transition, breaking our
+> current code. As we only set the default options, we can simply remove
+> the call to s_op->remount_fs(). In the future, when HW permits, we can
+> try re-enabling huge page support, albeit as suggested with new per-file
+> controls.
+>
+> Reported-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Suggested-by: Hugh Dickins <hughd@google.com>
+> Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+> Cc: Matthew Auld <matthew.auld@intel.com>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Reviewed-by: Matthew Auld <matthew.auld@intel.com>
