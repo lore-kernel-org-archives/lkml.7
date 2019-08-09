@@ -2,76 +2,125 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2408DC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 174CFC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F22CE2086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE2382166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:37:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436947AbfHIShc (ORCPT
+        id S2436992AbfHIShi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:37:32 -0400
-Received: from mga04.intel.com ([192.55.52.120]:7513 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436899AbfHIShb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:37:31 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 11:37:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,366,1559545200"; 
-   d="scan'208";a="374571640"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga005.fm.intel.com with ESMTP; 09 Aug 2019 11:37:30 -0700
-Date:   Fri, 9 Aug 2019 11:37:30 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH v3 5/7] x86: KVM: svm: remove hardcoded instruction
- length from intercepts
-Message-ID: <20190809183730.GE10541@linux.intel.com>
-References: <20190808173051.6359-1-vkuznets@redhat.com>
- <20190808173051.6359-6-vkuznets@redhat.com>
+        Fri, 9 Aug 2019 14:37:38 -0400
+Received: from smtprelay0210.hostedemail.com ([216.40.44.210]:48310 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2436950AbfHIShh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 14:37:37 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 6A41918224D7B;
+        Fri,  9 Aug 2019 18:37:35 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: fall77_7c2fc6493ef15
+X-Filterd-Recvd-Size: 4313
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Fri,  9 Aug 2019 18:37:33 +0000 (UTC)
+Message-ID: <2e93e4057d1f95680bdd6f7f7d754800b7c87ac9.camel@perches.com>
+Subject: Re: Resend [PATCH] kernel/resource.c: invalidate parent when freed
+ resource has childs
+From:   Joe Perches <joe@perches.com>
+To:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
+        "bp@suse.de" <bp@suse.de>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "osalvador@suse.de" <osalvador@suse.de>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "richardw.yang@linux.intel.com" <richardw.yang@linux.intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
+Date:   Fri, 09 Aug 2019 11:37:31 -0700
+In-Reply-To: <1565358624103.3694@mentor.com>
+References: <1565278859475.1962@mentor.com> <1565358624103.3694@mentor.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808173051.6359-6-vkuznets@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 07:30:49PM +0200, Vitaly Kuznetsov wrote:
-> Various intercepts hard-code the respective instruction lengths to optimize
-> skip_emulated_instruction(): when next_rip is pre-set we skip
-> kvm_emulate_instruction(vcpu, EMULTYPE_SKIP). The optimization is, however,
-> incorrect: different (redundant) prefixes could be used to enlarge the
-> instruction. We can't really avoid decoding.
+On Fri, 2019-08-09 at 13:50 +0000, Schmid, Carsten wrote:
+> When a resource is freed and has children, the childrens are
+> left without any hint that their parent is no more valid.
+> This caused at least one use-after-free in the xhci-hcd using
+> ext-caps driver when platform code released platform devices.
 > 
-> svm->next_rip is not used when CPU supports 'nrips' (X86_FEATURE_NRIPS)
-> feature: next RIP is provided in VMCB. The feature is not really new
-> (Opteron G3s had it already) and the change should have zero affect.
+> Fix this by setting child's parent to zero and warn.
 > 
-> Remove manual svm->next_rip setting with hard-coded instruction lengths.
-> The only case where we now use svm->next_rip is EXIT_IOIO: the instruction
-> length is provided to us by hardware.
-> 
-> Hardcoded RIP advancement remains in vmrun_interception(), this is going to
-> be taken care of separately.
-> 
-> Reported-by: Jim Mattson <jmattson@google.com>
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Signed-off-by: Carsten Schmid <carsten_schmid@mentor.com>
 > ---
+> Rationale:
+> When hunting for the root cause of a crash on a 4.14.86 kernel, i
+> have found the root cause and checked it being still present
+> upstream. Our case:
+> Having xhci-hcd and intel_xhci_usb_sw active we can see in
+> /proc/meminfo: (exceirpt)
+>   b3c00000-b3c0ffff : 0000:00:15.0
+>     b3c00000-b3c0ffff : xhci-hcd
+>       b3c08070-b3c0846f : intel_xhci_usb_sw
+> intel_xhci_usb_sw being a child of xhci-hcd.
+> 
+> Doing an unbind command
+> echo 0000:00:15.0 > /sys/bus/pci/drivers/xhci_hcd/unbind
+> leads to xhci-hcd being freed in __release_region.
+> The intel_xhci_usb_sw resource is accessed in platform code
+> in platform_device_del with
+>                 for (i = 0; i < pdev->num_resources; i++) {
+>                         struct resource *r = &pdev->resource[i];
+>                         if (r->parent)
+>                                 release_resource(r);
+>                 }
+> as the resource's parent has not been updated, the release_resource
+> uses the parent:
+>         p = &old->parent->child;
+> which is now invalid.
+> Fix this by marking the parent invalid in the child and give a warning
+> in dmesg.
+> ---
+> Advised by Greg (thanks):
+> Try resending it with at least the people who get_maintainer.pl says has
+> touched that file last in it. [CS:done]
+> 
+> Also, Linus is the unofficial resource.c maintainer.  I think he has a
+> set of userspace testing scripts for changes somewhere, so you should
+>  cc: him too.  And might as well add me :) [CS:done]
+[]
+> diff --git a/kernel/resource.c b/kernel/resource.c
+[]
+> @@ -1200,6 +1200,15 @@ void __release_region(struct resource *parent, resource_size_t start,
+>                         write_unlock(&resource_lock);
+>                         if (res->flags & IORESOURCE_MUXED)
+>                                 wake_up(&muxed_resource_wait);
+> +
+> +                       write_lock(&resource_lock);
+> +                       if (res->child) {
+> +                               printk(KERN_WARNING "__release_region: %s has child %s,"
+> +                                               "invalidating childs parent\n",
+> +                                               res->name, res->child->name);
 
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Please coalesce the format because there is likely an unintentional
+missing space after the comma, and use pr_warn, %s and __func__
+
+				pr_warn("%s: %s has child %s, invalidating child's parent\n",
+					__func__, res->name, res->child->name);
+
+
