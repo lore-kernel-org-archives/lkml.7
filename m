@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0FAC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D420C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CDF5208C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69199208C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:59:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731279AbfHIW7p (ORCPT
+        id S1730284AbfHIW7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 18:59:45 -0400
-Received: from mga05.intel.com ([192.55.52.43]:23658 "EHLO mga05.intel.com"
+        Fri, 9 Aug 2019 18:59:00 -0400
+Received: from mga18.intel.com ([134.134.136.126]:35143 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730266AbfHIW7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 18:59:06 -0400
+        id S1730032AbfHIW64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 18:58:56 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:59:06 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:54 -0700
 X-IronPort-AV: E=Sophos;i="5.64,367,1559545200"; 
-   d="scan'208";a="375343545"
+   d="scan'208";a="350623637"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:59:05 -0700
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:54 -0700
 From:   ira.weiny@intel.com
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
@@ -41,9 +41,9 @@ Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
         linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
         linux-ext4@vger.kernel.org, linux-mm@kvack.org,
         Ira Weiny <ira.weiny@intel.com>
-Subject: [RFC PATCH v2 16/19] RDMA/uverbs: Add back pointer to system file object
-Date:   Fri,  9 Aug 2019 15:58:30 -0700
-Message-Id: <20190809225833.6657-17-ira.weiny@intel.com>
+Subject: [RFC PATCH v2 09/19] mm/gup: Introduce vaddr_pin structure
+Date:   Fri,  9 Aug 2019 15:58:23 -0700
+Message-Id: <20190809225833.6657-10-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190809225833.6657-1-ira.weiny@intel.com>
 References: <20190809225833.6657-1-ira.weiny@intel.com>
@@ -56,42 +56,172 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-In order for MRs to be tracked against the open verbs context the ufile
-needs to have a pointer to hand to the GUP code.
+Some subsystems need to pass owning file information to GUP calls to
+allow for GUP to associate the "owning file" to any files being pinned
+within the GUP call.
 
-No references need to be taken as this should be valid for the lifetime
-of the context.
+Introduce an object to specify this information and pass it down through
+some of the GUP call stack.
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
- drivers/infiniband/core/uverbs.h      | 1 +
- drivers/infiniband/core/uverbs_main.c | 1 +
- 2 files changed, 2 insertions(+)
+ include/linux/mm.h |  9 +++++++++
+ mm/gup.c           | 36 ++++++++++++++++++++++--------------
+ 2 files changed, 31 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/infiniband/core/uverbs.h b/drivers/infiniband/core/uverbs.h
-index 1e5aeb39f774..e802ba8c67d6 100644
---- a/drivers/infiniband/core/uverbs.h
-+++ b/drivers/infiniband/core/uverbs.h
-@@ -163,6 +163,7 @@ struct ib_uverbs_file {
- 	struct page *disassociate_page;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 04f22722b374..befe150d17be 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -971,6 +971,15 @@ static inline bool is_zone_device_page(const struct page *page)
+ }
+ #endif
  
- 	struct xarray		idr;
-+	struct file             *sys_file; /* backpointer to system file object */
- };
++/**
++ * @f_owner The file who "owns this GUP"
++ * @mm The mm who "owns this GUP"
++ */
++struct vaddr_pin {
++	struct file *f_owner;
++	struct mm_struct *mm;
++};
++
+ #ifdef CONFIG_DEV_PAGEMAP_OPS
+ void __put_devmap_managed_page(struct page *page);
+ DECLARE_STATIC_KEY_FALSE(devmap_managed_key);
+diff --git a/mm/gup.c b/mm/gup.c
+index 0b05e22ac05f..7a449500f0a6 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1005,7 +1005,8 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
+ 						struct page **pages,
+ 						struct vm_area_struct **vmas,
+ 						int *locked,
+-						unsigned int flags)
++						unsigned int flags,
++						struct vaddr_pin *vaddr_pin)
+ {
+ 	long ret, pages_done;
+ 	bool lock_dropped;
+@@ -1165,7 +1166,8 @@ long get_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
  
- struct ib_uverbs_event {
-diff --git a/drivers/infiniband/core/uverbs_main.c b/drivers/infiniband/core/uverbs_main.c
-index 11c13c1381cf..002c24e0d4db 100644
---- a/drivers/infiniband/core/uverbs_main.c
-+++ b/drivers/infiniband/core/uverbs_main.c
-@@ -1092,6 +1092,7 @@ static int ib_uverbs_open(struct inode *inode, struct file *filp)
- 	INIT_LIST_HEAD(&file->umaps);
+ 	return __get_user_pages_locked(tsk, mm, start, nr_pages, pages, vmas,
+ 				       locked,
+-				       gup_flags | FOLL_TOUCH | FOLL_REMOTE);
++				       gup_flags | FOLL_TOUCH | FOLL_REMOTE,
++				       NULL);
+ }
+ EXPORT_SYMBOL(get_user_pages_remote);
  
- 	filp->private_data = file;
-+	file->sys_file = filp;
- 	list_add_tail(&file->list, &dev->uverbs_file_list);
- 	mutex_unlock(&dev->lists_mutex);
- 	srcu_read_unlock(&dev->disassociate_srcu, srcu_key);
+@@ -1320,7 +1322,8 @@ static long __get_user_pages_locked(struct task_struct *tsk,
+ 		struct mm_struct *mm, unsigned long start,
+ 		unsigned long nr_pages, struct page **pages,
+ 		struct vm_area_struct **vmas, int *locked,
+-		unsigned int foll_flags)
++		unsigned int foll_flags,
++		struct vaddr_pin *vaddr_pin)
+ {
+ 	struct vm_area_struct *vma;
+ 	unsigned long vm_flags;
+@@ -1504,7 +1507,7 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
+ 		 */
+ 		nr_pages = __get_user_pages_locked(tsk, mm, start, nr_pages,
+ 						   pages, vmas, NULL,
+-						   gup_flags);
++						   gup_flags, NULL);
+ 
+ 		if ((nr_pages > 0) && migrate_allow) {
+ 			drain_allow = true;
+@@ -1537,7 +1540,8 @@ static long __gup_longterm_locked(struct task_struct *tsk,
+ 				  unsigned long nr_pages,
+ 				  struct page **pages,
+ 				  struct vm_area_struct **vmas,
+-				  unsigned int gup_flags)
++				  unsigned int gup_flags,
++				  struct vaddr_pin *vaddr_pin)
+ {
+ 	struct vm_area_struct **vmas_tmp = vmas;
+ 	unsigned long flags = 0;
+@@ -1558,7 +1562,7 @@ static long __gup_longterm_locked(struct task_struct *tsk,
+ 	}
+ 
+ 	rc = __get_user_pages_locked(tsk, mm, start, nr_pages, pages,
+-				     vmas_tmp, NULL, gup_flags);
++				     vmas_tmp, NULL, gup_flags, vaddr_pin);
+ 
+ 	if (gup_flags & FOLL_LONGTERM) {
+ 		memalloc_nocma_restore(flags);
+@@ -1588,10 +1592,11 @@ static __always_inline long __gup_longterm_locked(struct task_struct *tsk,
+ 						  unsigned long nr_pages,
+ 						  struct page **pages,
+ 						  struct vm_area_struct **vmas,
+-						  unsigned int flags)
++						  unsigned int flags,
++						  struct vaddr_pin *vaddr_pin)
+ {
+ 	return __get_user_pages_locked(tsk, mm, start, nr_pages, pages, vmas,
+-				       NULL, flags);
++				       NULL, flags, vaddr_pin);
+ }
+ #endif /* CONFIG_FS_DAX || CONFIG_CMA */
+ 
+@@ -1607,7 +1612,8 @@ long get_user_pages(unsigned long start, unsigned long nr_pages,
+ 		struct vm_area_struct **vmas)
+ {
+ 	return __gup_longterm_locked(current, current->mm, start, nr_pages,
+-				     pages, vmas, gup_flags | FOLL_TOUCH);
++				     pages, vmas, gup_flags | FOLL_TOUCH,
++				     NULL);
+ }
+ EXPORT_SYMBOL(get_user_pages);
+ 
+@@ -1647,7 +1653,7 @@ long get_user_pages_locked(unsigned long start, unsigned long nr_pages,
+ 
+ 	return __get_user_pages_locked(current, current->mm, start, nr_pages,
+ 				       pages, NULL, locked,
+-				       gup_flags | FOLL_TOUCH);
++				       gup_flags | FOLL_TOUCH, NULL);
+ }
+ EXPORT_SYMBOL(get_user_pages_locked);
+ 
+@@ -1684,7 +1690,7 @@ long get_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
+ 
+ 	down_read(&mm->mmap_sem);
+ 	ret = __get_user_pages_locked(current, mm, start, nr_pages, pages, NULL,
+-				      &locked, gup_flags | FOLL_TOUCH);
++				      &locked, gup_flags | FOLL_TOUCH, NULL);
+ 	if (locked)
+ 		up_read(&mm->mmap_sem);
+ 	return ret;
+@@ -2377,7 +2383,8 @@ int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
+ EXPORT_SYMBOL_GPL(__get_user_pages_fast);
+ 
+ static int __gup_longterm_unlocked(unsigned long start, int nr_pages,
+-				   unsigned int gup_flags, struct page **pages)
++				   unsigned int gup_flags, struct page **pages,
++				   struct vaddr_pin *vaddr_pin)
+ {
+ 	int ret;
+ 
+@@ -2389,7 +2396,8 @@ static int __gup_longterm_unlocked(unsigned long start, int nr_pages,
+ 		down_read(&current->mm->mmap_sem);
+ 		ret = __gup_longterm_locked(current, current->mm,
+ 					    start, nr_pages,
+-					    pages, NULL, gup_flags);
++					    pages, NULL, gup_flags,
++					    vaddr_pin);
+ 		up_read(&current->mm->mmap_sem);
+ 	} else {
+ 		ret = get_user_pages_unlocked(start, nr_pages,
+@@ -2448,7 +2456,7 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+ 		pages += nr;
+ 
+ 		ret = __gup_longterm_unlocked(start, nr_pages - nr,
+-					      gup_flags, pages);
++					      gup_flags, pages, NULL);
+ 
+ 		/* Have to be a bit careful with return values */
+ 		if (nr > 0) {
 -- 
 2.20.1
 
