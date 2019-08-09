@@ -2,137 +2,132 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 428F6C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 472E2C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE1E2171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:50:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jS9A76Gu"
+	by mail.kernel.org (Postfix) with ESMTP id 22BAF21773
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:52:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565373140;
+	bh=r8Bq+SnZpJUmLQaBOnbYN2UKuU7ICvpXGqhmlnMNdCU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ghwQooic4ho1jko/OlwvSar9rzu3B6yvUCga5LVKLwm5aretNpNsucZy4WC2CYw7e
+	 +2BMr/9x6MooZ+854QVMsuxxHOLuyUiKCoV4joMKp4+vwKt91asUqmDyAqJVUZ8LCy
+	 nxG/YyvbI4zGdaGgRuAijZIMK+sYDU3XVH+VcOXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407613AbfHIRug (ORCPT
+        id S2436740AbfHIRwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 13:50:36 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42735 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407597AbfHIRug (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 13:50:36 -0400
-Received: by mail-lf1-f68.google.com with SMTP id s19so7430921lfb.9;
-        Fri, 09 Aug 2019 10:50:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0Sw/1ZpNovS8GPU6ODyACBRq1n5M5z9Hj/A0TEehRpc=;
-        b=jS9A76GubJnVatO7k3NABYv63ju5mshD/TETrek1lijcq/jbSPQCt6zahaAWnXevhi
-         Gt6zxeNBm23WDf41yPsrBCZcRGf0PGbMhEn43V8NLayKWAd+n+fKOjOTTYpnDho7TUwU
-         gFRC3NcdK6Ui3znt2gGHAkBpj7IkNGqhiKiLvCH8SyYg37UV0MDRsOum5FA8AoCEbEsv
-         /EMozayAvs4Alfg7ObXiQwZ6zjKgqq/9GaOSVbJV0jJbQQYvW6VF6B+b07HufvoSizqb
-         h1PfZQjl44IjfYzBsZ1OMxDYapaC1GH1VL/F0T9g4QIqfaY2vG+WsduozIsEBMe8WZQn
-         ACZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0Sw/1ZpNovS8GPU6ODyACBRq1n5M5z9Hj/A0TEehRpc=;
-        b=E1MAkXKNVWTXt93r0ryZaKW2wf7jnJVgsQ3FfYctq9lpRiBaJVytrR8sECzN44FZ8d
-         c0FoU5iEKEOPffbMxdUIuFvya37DrDDwcorqKDsRPbsQo2pLYb4GwEW3TSefOOItegir
-         jLv2pcRYJXeIqJFDvqlddotB7IjyQ3XE/0HdDQUtu8Ri/KRYR3NkYAF2FWmcRZhVT4E8
-         GqitGsU5bplK74mKCrK0c8IGdCVxqqN6rRpIvxZgGcjntTRKsNxRR2g8tkolpRgEoAT2
-         08dDUAc+gixvEq1M0ph+FeOMvR7cJ9/853aPxasz0K92IAqaUa2QjH1JqzVq0Iwol17M
-         jCzg==
-X-Gm-Message-State: APjAAAWBzLjkwx+95LQ9F+qOcFX9ErmR6k6Qb7LftHEYB8R88YhMQ4I5
-        Ss/l2eRi53sQttFGzOUB7MNC0ILM
-X-Google-Smtp-Source: APXvYqxJ2RH0RMGbbTsBtD933maGRq1K3ihY3m2mpFLa4f7qn+LwKlmB0ArkeMtMq1u5Y+44ybD6CA==
-X-Received: by 2002:ac2:5dd6:: with SMTP id x22mr13071555lfq.92.1565373033199;
-        Fri, 09 Aug 2019 10:50:33 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.218])
-        by smtp.googlemail.com with ESMTPSA id u21sm19568030lju.2.2019.08.09.10.50.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 10:50:32 -0700 (PDT)
-Subject: Re: [PATCH v8 05/21] clk: tegra: pll: Save and restore pll context
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-6-git-send-email-skomatineni@nvidia.com>
- <68f65db6-44b7-1c75-2633-4a2fffd62a92@gmail.com>
- <dd20aa34-d838-40c4-9edd-bbe5973053f3@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <2eecf4ff-802d-7e0e-d971-0257fae4e3a2@gmail.com>
-Date:   Fri, 9 Aug 2019 20:50:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 9 Aug 2019 13:52:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52114 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726628AbfHIRwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 13:52:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 97480ADCB;
+        Fri,  9 Aug 2019 17:52:16 +0000 (UTC)
+Date:   Fri, 9 Aug 2019 19:52:10 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jerome Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Black <daniel@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: Re: [PATCH 1/3] mm/mlock.c: convert put_page() to put_user_page*()
+Message-ID: <20190809175210.GR18351@dhcp22.suse.cz>
+References: <20190805222019.28592-2-jhubbard@nvidia.com>
+ <20190807110147.GT11812@dhcp22.suse.cz>
+ <01b5ed91-a8f7-6b36-a068-31870c05aad6@nvidia.com>
+ <20190808062155.GF11812@dhcp22.suse.cz>
+ <875dca95-b037-d0c7-38bc-4b4c4deea2c7@suse.cz>
+ <306128f9-8cc6-761b-9b05-578edf6cce56@nvidia.com>
+ <d1ecb0d4-ea6a-637d-7029-687b950b783f@nvidia.com>
+ <420a5039-a79c-3872-38ea-807cedca3b8a@suse.cz>
+ <20190809082307.GL18351@dhcp22.suse.cz>
+ <20190809135813.GF17568@quack2.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <dd20aa34-d838-40c4-9edd-bbe5973053f3@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809135813.GF17568@quack2.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-09.08.2019 20:39, Sowjanya Komatineni пишет:
+On Fri 09-08-19 15:58:13, Jan Kara wrote:
+> On Fri 09-08-19 10:23:07, Michal Hocko wrote:
+> > On Fri 09-08-19 10:12:48, Vlastimil Babka wrote:
+> > > On 8/9/19 12:59 AM, John Hubbard wrote:
+> > > >>> That's true. However, I'm not sure munlocking is where the
+> > > >>> put_user_page() machinery is intended to be used anyway? These are
+> > > >>> short-term pins for struct page manipulation, not e.g. dirtying of page
+> > > >>> contents. Reading commit fc1d8e7cca2d I don't think this case falls
+> > > >>> within the reasoning there. Perhaps not all GUP users should be
+> > > >>> converted to the planned separate GUP tracking, and instead we should
+> > > >>> have a GUP/follow_page_mask() variant that keeps using get_page/put_page?
+> > > >>>  
+> > > >>
+> > > >> Interesting. So far, the approach has been to get all the gup callers to
+> > > >> release via put_user_page(), but if we add in Jan's and Ira's vaddr_pin_pages()
+> > > >> wrapper, then maybe we could leave some sites unconverted.
+> > > >>
+> > > >> However, in order to do so, we would have to change things so that we have
+> > > >> one set of APIs (gup) that do *not* increment a pin count, and another set
+> > > >> (vaddr_pin_pages) that do. 
+> > > >>
+> > > >> Is that where we want to go...?
+> > > >>
+> > > 
+> > > We already have a FOLL_LONGTERM flag, isn't that somehow related? And if
+> > > it's not exactly the same thing, perhaps a new gup flag to distinguish
+> > > which kind of pinning to use?
+> > 
+> > Agreed. This is a shiny example how forcing all existing gup users into
+> > the new scheme is subotimal at best. Not the mention the overal
+> > fragility mention elsewhere. I dislike the conversion even more now.
+> > 
+> > Sorry if this was already discussed already but why the new pinning is
+> > not bound to FOLL_LONGTERM (ideally hidden by an interface so that users
+> > do not have to care about the flag) only?
 > 
-> On 8/9/19 4:33 AM, Dmitry Osipenko wrote:
->> 09.08.2019 2:46, Sowjanya Komatineni пишет:
->>> This patch implements save and restore of PLL context.
->>>
->>> During system suspend, core power goes off and looses the settings
->>> of the Tegra CAR controller registers.
->>>
->>> So during suspend entry pll context is stored and on resume it is
->>> restored back along with its state.
->>>
->>> Acked-by: Thierry Reding <treding@nvidia.com>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>   drivers/clk/tegra/clk-pll.c | 88 ++++++++++++++++++++++++++++-----------------
->>>   drivers/clk/tegra/clk.h     |  2 ++
->>>   2 files changed, 58 insertions(+), 32 deletions(-)
->>>
->>> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
->>> index 1583f5fc992f..e52add2bbdbb 100644
->>> --- a/drivers/clk/tegra/clk-pll.c
->>> +++ b/drivers/clk/tegra/clk-pll.c
->>> @@ -1008,6 +1008,28 @@ static unsigned long clk_plle_recalc_rate(struct clk_hw *hw,
->>>       return rate;
->>>   }
->>>   +static void tegra_clk_pll_restore_context(struct clk_hw *hw)
->>> +{
->>> +    struct tegra_clk_pll *pll = to_clk_pll(hw);
->>> +    struct clk_hw *parent = clk_hw_get_parent(hw);
->>> +    unsigned long parent_rate = clk_hw_get_rate(parent);
->>> +    unsigned long rate = clk_hw_get_rate(hw);
->>> +    u32 val;
->>> +
->>> +    if (clk_pll_is_enabled(hw))
->>> +        return;
->>> +
->>> +    if (pll->params->set_defaults)
->>> +        pll->params->set_defaults(pll);
->>> +
->>> +    clk_pll_set_rate(hw, rate, parent_rate);
->>> +
->>> +    if (!__clk_get_enable_count(hw->clk))
->> What about orphaned clocks? Is enable_count > 0 for them?
-> There are no orphaned pll clocks.
+> The new tracking cannot be bound to FOLL_LONGTERM. Anything that gets page
+> reference and then touches page data (e.g. direct IO) needs the new kind of
+> tracking so that filesystem knows someone is messing with the page data.
+> So what John is trying to address is a different (although related) problem
+> to someone pinning a page for a long time.
 
-Sorry, I meant the "clk_ignore_unused".
+OK, I see. Thanks for the clarification.
+
+> In principle, I'm not strongly opposed to a new FOLL flag to determine
+> whether a pin or an ordinary page reference will be acquired at least as an
+> internal implementation detail inside mm/gup.c. But I would really like to
+> discourage new GUP users taking just page reference as the most clueless
+> users (drivers) usually need a pin in the sense John implements. So in
+> terms of API I'd strongly prefer to deprecate GUP as an API, provide
+> vaddr_pin_pages() for drivers to get their buffer pages pinned and then for
+> those few users who really know what they are doing (and who are not
+> interested in page contents) we can have APIs like follow_page() to get a
+> page reference from a virtual address.
+
+Yes, going with a dedicated API sounds much better to me. Whether a
+dedicated FOLL flag is used internally is not that important. I am also
+for making the underlying gup to be really internal to the core kernel.
+
+Thanks!
+-- 
+Michal Hocko
+SUSE Labs
