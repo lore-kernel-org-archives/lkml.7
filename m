@@ -2,491 +2,198 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF37C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCEDC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27F1A2070D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC422214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:37:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d0j3vxG5"
+	dkim=pass (1024-bit key) header.d=towerbridgetechnology.onmicrosoft.com header.i=@towerbridgetechnology.onmicrosoft.com header.b="E/Kj2b5B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407505AbfHIRfy (ORCPT
+        id S2407373AbfHIRhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 13:35:54 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44984 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406967AbfHIRfx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 13:35:53 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i18so46193404pgl.11;
-        Fri, 09 Aug 2019 10:35:53 -0700 (PDT)
+        Fri, 9 Aug 2019 13:37:32 -0400
+Received: from mail-eopbgr760118.outbound.protection.outlook.com ([40.107.76.118]:60740
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406606AbfHIRhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 13:37:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lQUmL38nmEvV31LAH2NJNKyd5ZnJkc519hoDyw+9gLKlXVuyB+xWFRXoF8GVY7IAGxG6lVL45HOcOAIo9X2oMomJuSmaTpxeI73Tm2+RhR3sHxS3/7m/t7QdJDoCCPguYAgmUu/Ljafh58FpxkzHkBpNBoYdeFx3YbDz99r13eNvUfa/XZI4+/aFqLTQAdrgN/w+gl8pqgmjS9Psv/iFGFgVAWq66sNkL9Qd2uJUnRqoGXa4N4EBhvh9kc7MkEmVljYiwJlaHT7hNUHwXa3mnN7Fm0bk1iE851GnQeAZZ8W1lD4s9DZlFxNi34IcD6GhegJPvkLjo8xtcfgzhtpiVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FPmTa1IVwAlnaQ2T5o4S/A8TEHamvSIf73w5sViDFL8=;
+ b=bIncvhSjiHZRDpKqE4cdpXmNsK/rmAZGNaS09324S53X53yhBX2W+QJOEgLe6+UGKAydhC/ZZHxaXYmZzivRuIb1TQlSqWhXkwXvk844Qcl+ReJSgJVtHEZYmsFsxL7fa5HxoTGL/AGOCoagAd0UeGt/9gFWH2XL3TBJlQhKtXRF94VlrUNf4oU9d8d+H3XIw3fj2DcqnmTcqC3Km7+aPJ2wU2ZCPahhERSBD3tTABEgQpHGVUngiGza+ae9i1I3sauXHZ/mJePIPvKlZlAV5qVe5HLWXtqV5HlnDgCWZ3a0q+RNFX2fG71ogQSVidN+ZDNCEP6EteldYFRnWXuh/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=bayhubtech.com;dmarc=pass action=none
+ header.from=bayhubtech.com;dkim=pass header.d=bayhubtech.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding:user-agent;
-        bh=qzYGuZWP3aLdngpqnd3vf+G4H/tLWZqTA1rVf9Nan6g=;
-        b=d0j3vxG5n2YA1bw1PUOJZMP5n5WHt3Jt5yAiU1Na9U/Gc3sZrLAwZaZSFsh+xEF9fk
-         alwCDlKJ5+9J07MC/31zQSHi8YB4DYkMelixCDscZ8dDgyW0RkDUcIm8j3hYVFdzfJuR
-         bjx5BjcYrR0drGFOVj+q+6p1EEt4qIaZVSaMAIv8tN8FMPsaQYZ1DY6hvUWPTDmNE2JC
-         +2Pp+4UinrQO75HXkTRvMy6098xo3rK5dnAb6TEVjBeXVANWxsJlB10coAR0LltyK7wW
-         uOH7G/Evvi/pehG3z7V6Fab/Vgd2TTN4sGeBcxlTWMpgS1RPCoriFYzq/OcK9hQF88h5
-         U0gQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=qzYGuZWP3aLdngpqnd3vf+G4H/tLWZqTA1rVf9Nan6g=;
-        b=RguZIIQ7987e+7Xp4X0cfp2BNa9NCfSdxGeOTE9RoOlGtPPZFk8Qgz9SQulWU7JvR9
-         EoMwze4ugqvEfKVUvjE/7ApBBplFABuC37H9ci4qL0jfl4QLKhoQXy7GiiexESY8xtIp
-         IrTaw0ZUn+cTYXUbKg7pXn0ayTSn1r0cNyAxsNfXE4NyiFYrJBI+NX7nGJOxilgQcXjK
-         rYtwejoXhWNDOwaDrYZK/GKDukxszBLWXFnToQ9U8AV2plObG3DnFoJ0qRzeEy0glp9g
-         e02g/vWVK/mgQtL+YNpIhd5+szcb35VEfwYCE2yfp+N01c9R+24yiPLJynqXkeRfPQsL
-         tJxA==
-X-Gm-Message-State: APjAAAVK5bG9tWK92wCeXBm17n9m7akffSruoRhpC9KaDaW+VVUWGt6r
-        wecXK0+MVaL1EpH+CF7FWATxKTfT
-X-Google-Smtp-Source: APXvYqxb8YZSdko1/7GpPTsNrbCoHPjzLriSMCXBhQ/R9PTqi8hfuhRiOcJNuJlUV7ybaVGRaR56jQ==
-X-Received: by 2002:a62:8343:: with SMTP id h64mr4649688pfe.170.1565372152034;
-        Fri, 09 Aug 2019 10:35:52 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id v184sm91395655pgd.34.2019.08.09.10.35.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 10:35:51 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 10:35:48 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     linux-input@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, benjamin.tissoires@redhat.com
-Subject: [PATCH] Input: add support for polling to input devices
-Message-ID: <20190809173548.GA32693@dtor-ws>
+ d=towerbridgetechnology.onmicrosoft.com;
+ s=selector2-towerbridgetechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FPmTa1IVwAlnaQ2T5o4S/A8TEHamvSIf73w5sViDFL8=;
+ b=E/Kj2b5BbWPVAVDjE3fsZqS4jHuFaYV1d9mrwFjLpuP0RMHIlwu/wG52+hud3IikGf5+igtDZrmn/SZAGR4zIk5eFFAt0pif38uG7IttkojJ7Gv50uWCxGB7lbBuDFuQmiZmYhfFH+ZQmvIqeqQnApG7D9B0Ooep8YzPb/iHFO4=
+Received: from MWHPR16MB1455.namprd16.prod.outlook.com (10.175.5.21) by
+ MWHPR16MB1453.namprd16.prod.outlook.com (10.175.3.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.17; Fri, 9 Aug 2019 17:37:28 +0000
+Received: from MWHPR16MB1455.namprd16.prod.outlook.com
+ ([fe80::48f4:c6d9:3a8:e7dd]) by MWHPR16MB1455.namprd16.prod.outlook.com
+ ([fe80::48f4:c6d9:3a8:e7dd%4]) with mapi id 15.20.2157.020; Fri, 9 Aug 2019
+ 17:37:28 +0000
+From:   "Shirley Her (SC)" <shirley.her@bayhubtech.com>
+To:     "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "Chevron Li (WH)" <chevron.li@bayhubtech.com>,
+        "Shaper Liu (WH)" <shaper.liu@bayhubtech.com>,
+        "Xiaoguang Yu (WH)" <xiaoguang.yu@bayhubtech.com>,
+        "Max Huang (SC)" <max.huang@bayhubtech.com>,
+        "Shirley Her (SC)" <shirley.her@bayhubtech.com>
+Subject: [PATCH V6 1/3] mmc: sdhci: Change O2 Host PLL and DLL register name
+Thread-Topic: [PATCH V6 1/3] mmc: sdhci: Change O2 Host PLL and DLL register
+ name
+Thread-Index: AQHVTtkdH7jLrtWrg0qlL9dujbetyg==
+Date:   Fri, 9 Aug 2019 17:37:28 +0000
+Message-ID: <1565372245-4598-1-git-send-email-shirley.her@bayhubtech.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR01CA0023.prod.exchangelabs.com (2603:10b6:a02:80::36)
+ To MWHPR16MB1455.namprd16.prod.outlook.com (2603:10b6:320:28::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shirley.her@bayhubtech.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-originating-ip: [209.36.105.184]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b36c8144-2f93-42f5-7919-08d71cf03f89
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR16MB1453;
+x-ms-traffictypediagnostic: MWHPR16MB1453:
+x-microsoft-antispam-prvs: <MWHPR16MB14532B3389818C097CFBC1368BD60@MWHPR16MB1453.namprd16.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:541;
+x-forefront-prvs: 01244308DF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39840400004)(376002)(346002)(136003)(366004)(396003)(199004)(189003)(64756008)(66446008)(54906003)(53936002)(305945005)(66066001)(8676002)(7736002)(2201001)(110136005)(71200400001)(71190400001)(476003)(508600001)(66556008)(66476007)(66946007)(316002)(107886003)(6512007)(6436002)(36756003)(8936002)(6486002)(2501003)(14454004)(14444005)(86362001)(256004)(486006)(50226002)(5660300002)(81166006)(81156014)(3846002)(6116002)(6506007)(386003)(2906002)(102836004)(4326008)(52116002)(2616005)(99286004)(25786009)(186003)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR16MB1453;H:MWHPR16MB1455.namprd16.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: bayhubtech.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: DWdHKikN+hxBFwFForn3NkZ4UCR/oAVLX+pbzonZ+C3D93AkI7m5qMzUczU2vXuWtpE/r8iTC0K19CBaDZtZ2ZetLqHgJEKjJryo+6ww6sLn36AOfGb+ce9eUV3RizxxJhKoLgEuMvmNPCILtr+tOg0aTr6GkXkxHQiMd3U3i6t9L/37n2NkxhGp0Ofk11bAVp33zJdlCkY5d/y24h52XpfkIRph795eQ9lQdwGqLK26IdVnMni0UjUPODXf0p+uNoIqYgWOcM6Udq7HEOVgxRNwSOCTKmMoeg8m04IHAfEBjrlbYkOrnhjQ13Jn7BBU6ZN7SXaOXPpr/k0Gbpy0i4UVITcTOnj5t7sRkgG/OnOARP2Aezi6tStcys10Cfyt+zwwwhSccM+PwpyXDzYT1M77ji8BkxancEr5Yf9rXvo=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: bayhubtech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b36c8144-2f93-42f5-7919-08d71cf03f89
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Aug 2019 17:37:28.3495
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0a7aae2b-8f2e-44df-ba2f-42de7f93c642
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7G1XzgtCBjXgd032C/Gj8WLunSK0cH/D0scLUrGwg03onMOcr62eANH6iZA+nUzf+3lL+7ER4QhGyC9qlQ8JukUyIwpnKZ5J05SuhMA/CfA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR16MB1453
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Separating "normal" and "polled" input devices was a mistake, as often we
-want to allow the very same device work on both interrupt-driven and
-polled mode, depending on the board on which the device is used.
+Change register name O2_PLL_WDT_CONTROL1 to O2_PLL_DLL_WDT_CONTROL1
 
-This introduces new APIs:
-
-- input_setup_polling
-- input_set_poll_interval
-- input_set_min_poll_interval
-- input_set_max_poll_interval
-
-These new APIs allow switching an input device into polled mode with sysfs
-attributes matching drivers using input_polled_dev APIs that will be
-eventually removed.
-
-Tested-by: Michal Vokáč <michal.vokac@ysoft.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by:Shirley Her <shirley.her@bayhubtech.com>
 ---
- drivers/input/Makefile       |   2 +-
- drivers/input/input-poller.c | 208 +++++++++++++++++++++++++++++++++++
- drivers/input/input-poller.h |  18 +++
- drivers/input/input.c        |  36 ++++--
- include/linux/input.h        |  12 ++
- 5 files changed, 268 insertions(+), 8 deletions(-)
+change in V6:
+ 1. change subject and commit message to match the patch
+ 2. change register name O2_PLL_WDT_CONTROL1 to O2_PLL_DLL_WDT_CONTROL1
 
-diff --git a/drivers/input/Makefile b/drivers/input/Makefile
-index 40de6a7be641..e35650930371 100644
---- a/drivers/input/Makefile
-+++ b/drivers/input/Makefile
-@@ -6,7 +6,7 @@
- # Each configuration option enables a list of files.
- 
- obj-$(CONFIG_INPUT)		+= input-core.o
--input-core-y := input.o input-compat.o input-mt.o ff-core.o
-+input-core-y := input.o input-compat.o input-mt.o input-poller.o ff-core.o
- 
- obj-$(CONFIG_INPUT_FF_MEMLESS)	+= ff-memless.o
- obj-$(CONFIG_INPUT_POLLDEV)	+= input-polldev.o
-diff --git a/drivers/input/input-poller.c b/drivers/input/input-poller.c
-new file mode 100644
-index 000000000000..e041adb04f5a
---- /dev/null
-+++ b/drivers/input/input-poller.c
-@@ -0,0 +1,208 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Support for polling mode for input devices.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/input.h>
-+#include <linux/jiffies.h>
-+#include <linux/mutex.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+#include <linux/workqueue.h>
-+#include "input-poller.h"
-+
-+struct input_dev_poller {
-+	void (*poll)(struct input_dev *dev);
-+
-+	unsigned int poll_interval; /* msec */
-+	unsigned int poll_interval_max; /* msec */
-+	unsigned int poll_interval_min; /* msec */
-+
-+	struct input_dev *input;
-+	struct delayed_work work;
-+};
-+
-+static void input_dev_poller_queue_work(struct input_dev_poller *poller)
-+{
-+	unsigned long delay;
-+
-+	delay = msecs_to_jiffies(poller->poll_interval);
-+	if (delay >= HZ)
-+		delay = round_jiffies_relative(delay);
-+
-+	queue_delayed_work(system_freezable_wq, &poller->work, delay);
-+}
-+
-+static void input_dev_poller_work(struct work_struct *work)
-+{
-+	struct input_dev_poller *poller =
-+		container_of(work, struct input_dev_poller, work.work);
-+
-+	poller->poll(poller->input);
-+	input_dev_poller_queue_work(poller);
-+}
-+
-+void input_dev_poller_finalize(struct input_dev_poller *poller)
-+{
-+	if (!poller->poll_interval)
-+		poller->poll_interval = 500;
-+	if (!poller->poll_interval_max)
-+		poller->poll_interval_max = poller->poll_interval;
-+}
-+
-+void input_dev_poller_start(struct input_dev_poller *poller)
-+{
-+	/* Only start polling if polling is enabled */
-+	if (poller->poll_interval > 0) {
-+		poller->poll(poller->input);
-+		input_dev_poller_queue_work(poller);
-+	}
-+}
-+
-+void input_dev_poller_stop(struct input_dev_poller *poller)
-+{
-+	cancel_delayed_work_sync(&poller->work);
-+}
-+
-+int input_setup_polling(struct input_dev *dev,
-+			void (*poll_fn)(struct input_dev *dev))
-+{
-+	struct input_dev_poller *poller;
-+
-+	poller = kzalloc(sizeof(*poller), GFP_KERNEL);
-+	if (!poller) {
-+		dev_err(dev->dev.parent ?: &dev->dev,
-+			"%s: unable to allocate poller structure\n", __func__);
-+		return -ENOMEM;
-+	}
-+
-+	INIT_DELAYED_WORK(&poller->work, input_dev_poller_work);
-+	poller->input = dev;
-+	poller->poll = poll_fn;
-+
-+	dev->poller = poller;
-+	return 0;
-+}
-+EXPORT_SYMBOL(input_setup_polling);
-+
-+static bool input_dev_ensure_poller(struct input_dev *dev)
-+{
-+	if (!dev->poller) {
-+		dev_err(dev->dev.parent ?: &dev->dev,
-+			"poller structure has not been set up\n");
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+void input_set_poll_interval(struct input_dev *dev, unsigned int interval)
-+{
-+	if (input_dev_ensure_poller(dev))
-+		dev->poller->poll_interval = interval;
-+}
-+EXPORT_SYMBOL(input_set_poll_interval);
-+
-+void input_set_min_poll_interval(struct input_dev *dev, unsigned int interval)
-+{
-+	if (input_dev_ensure_poller(dev))
-+		dev->poller->poll_interval_min = interval;
-+}
-+EXPORT_SYMBOL(input_set_min_poll_interval);
-+
-+void input_set_max_poll_interval(struct input_dev *dev, unsigned int interval)
-+{
-+	if (input_dev_ensure_poller(dev))
-+		dev->poller->poll_interval_max = interval;
-+}
-+EXPORT_SYMBOL(input_set_max_poll_interval);
-+
-+/* SYSFS interface */
-+
-+static ssize_t input_dev_get_poll_interval(struct device *dev,
-+					   struct device_attribute *attr,
-+					   char *buf)
-+{
-+	struct input_dev *input = to_input_dev(dev);
-+
-+	return sprintf(buf, "%d\n", input->poller->poll_interval);
-+}
-+
-+static ssize_t input_dev_set_poll_interval(struct device *dev,
-+					   struct device_attribute *attr,
-+					   const char *buf, size_t count)
-+{
-+	struct input_dev *input = to_input_dev(dev);
-+	struct input_dev_poller *poller = input->poller;
-+	unsigned int interval;
-+	int err;
-+
-+	err = kstrtouint(buf, 0, &interval);
-+	if (err)
-+		return err;
-+
-+	if (interval < poller->poll_interval_min)
-+		return -EINVAL;
-+
-+	if (interval > poller->poll_interval_max)
-+		return -EINVAL;
-+
-+	mutex_lock(&input->mutex);
-+
-+	poller->poll_interval = interval;
-+
-+	if (input->users) {
-+		cancel_delayed_work_sync(&poller->work);
-+		if (poller->poll_interval > 0)
-+			input_dev_poller_queue_work(poller);
-+	}
-+
-+	mutex_unlock(&input->mutex);
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR(poll, S_IRUGO | S_IWUSR,
-+		   input_dev_get_poll_interval, input_dev_set_poll_interval);
-+
-+static ssize_t input_dev_get_poll_max(struct device *dev,
-+				      struct device_attribute *attr, char *buf)
-+{
-+	struct input_dev *input = to_input_dev(dev);
-+
-+	return sprintf(buf, "%d\n", input->poller->poll_interval_max);
-+}
-+
-+static DEVICE_ATTR(max, S_IRUGO, input_dev_get_poll_max, NULL);
-+
-+static ssize_t input_dev_get_poll_min(struct device *dev,
-+				     struct device_attribute *attr, char *buf)
-+{
-+	struct input_dev *input = to_input_dev(dev);
-+
-+	return sprintf(buf, "%d\n", input->poller->poll_interval_min);
-+}
-+
-+static DEVICE_ATTR(min, S_IRUGO, input_dev_get_poll_min, NULL);
-+
-+static umode_t input_poller_attrs_visible(struct kobject *kobj,
-+					  struct attribute *attr, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct input_dev *input = to_input_dev(dev);
-+
-+	return input->poller ? attr->mode : 0;
-+}
-+
-+static struct attribute *input_poller_attrs[] = {
-+	&dev_attr_poll.attr,
-+	&dev_attr_max.attr,
-+	&dev_attr_min.attr,
-+	NULL
-+};
-+
-+struct attribute_group input_poller_attribute_group = {
-+	.is_visible	= input_poller_attrs_visible,
-+	.attrs		= input_poller_attrs,
-+};
-diff --git a/drivers/input/input-poller.h b/drivers/input/input-poller.h
-new file mode 100644
-index 000000000000..e3fca0be1d32
---- /dev/null
-+++ b/drivers/input/input-poller.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef _INPUT_POLLER_H
-+#define _INPUT_POLLER_H
-+
-+/*
-+ * Support for polling mode for input devices.
-+ */
-+#include <linux/sysfs.h>
-+
-+struct input_dev_poller;
-+
-+void input_dev_poller_finalize(struct input_dev_poller *poller);
-+void input_dev_poller_start(struct input_dev_poller *poller);
-+void input_dev_poller_stop(struct input_dev_poller *poller);
-+
-+extern struct attribute_group input_poller_attribute_group;
-+
-+#endif /* _INPUT_POLLER_H */
-diff --git a/drivers/input/input.c b/drivers/input/input.c
-index 7494a0dede79..c08aa3596144 100644
---- a/drivers/input/input.c
-+++ b/drivers/input/input.c
-@@ -24,6 +24,7 @@
- #include <linux/mutex.h>
- #include <linux/rcupdate.h>
- #include "input-compat.h"
-+#include "input-poller.h"
- 
- MODULE_AUTHOR("Vojtech Pavlik <vojtech@suse.cz>");
- MODULE_DESCRIPTION("Input core");
-@@ -603,20 +604,31 @@ int input_open_device(struct input_handle *handle)
- 
- 	handle->open++;
- 
--	if (!dev->users++ && dev->open)
--		retval = dev->open(dev);
-+	if (dev->users++) {
-+		/*
-+		 * Device is already opened, so we can exit immediately and
-+		 * report success.
-+		 */
-+		goto out;
-+	}
- 
--	if (retval) {
--		dev->users--;
--		if (!--handle->open) {
-+	if (dev->open) {
-+		retval = dev->open(dev);
-+		if (retval) {
-+			dev->users--;
-+			handle->open--;
- 			/*
- 			 * Make sure we are not delivering any more events
- 			 * through this handle
- 			 */
- 			synchronize_rcu();
-+			goto out;
- 		}
- 	}
- 
-+	if (dev->poller)
-+		input_dev_poller_start(dev->poller);
-+
-  out:
- 	mutex_unlock(&dev->mutex);
- 	return retval;
-@@ -655,8 +667,13 @@ void input_close_device(struct input_handle *handle)
- 
- 	__input_release_device(handle);
- 
--	if (!--dev->users && dev->close)
--		dev->close(dev);
-+	if (!--dev->users) {
-+		if (dev->poller)
-+			input_dev_poller_stop(dev->poller);
-+
-+		if (dev->close)
-+			dev->close(dev);
-+	}
- 
- 	if (!--handle->open) {
- 		/*
-@@ -1502,6 +1519,7 @@ static const struct attribute_group *input_dev_attr_groups[] = {
- 	&input_dev_attr_group,
- 	&input_dev_id_attr_group,
- 	&input_dev_caps_attr_group,
-+	&input_poller_attribute_group,
- 	NULL
- };
- 
-@@ -1511,6 +1529,7 @@ static void input_dev_release(struct device *device)
- 
- 	input_ff_destroy(dev);
- 	input_mt_destroy_slots(dev);
-+	kfree(dev->poller);
- 	kfree(dev->absinfo);
- 	kfree(dev->vals);
- 	kfree(dev);
-@@ -2175,6 +2194,9 @@ int input_register_device(struct input_dev *dev)
- 	if (!dev->setkeycode)
- 		dev->setkeycode = input_default_setkeycode;
- 
-+	if (dev->poller)
-+		input_dev_poller_finalize(dev->poller);
-+
- 	error = device_add(&dev->dev);
- 	if (error)
- 		goto err_free_vals;
-diff --git a/include/linux/input.h b/include/linux/input.h
-index e95a439d8bd5..94f277cd806a 100644
---- a/include/linux/input.h
-+++ b/include/linux/input.h
-@@ -21,6 +21,8 @@
- #include <linux/timer.h>
- #include <linux/mod_devicetable.h>
- 
-+struct input_dev_poller;
-+
- /**
-  * struct input_value - input value representation
-  * @type: type of value (EV_KEY, EV_ABS, etc)
-@@ -71,6 +73,8 @@ enum input_clock_type {
-  *	not sleep
-  * @ff: force feedback structure associated with the device if device
-  *	supports force feedback effects
-+ * @poller: poller structure associated with the device if device is
-+ *	set up to use polling mode
-  * @repeat_key: stores key code of the last key pressed; used to implement
-  *	software autorepeat
-  * @timer: timer for software autorepeat
-@@ -156,6 +160,8 @@ struct input_dev {
- 
- 	struct ff_device *ff;
- 
-+	struct input_dev_poller *poller;
-+
- 	unsigned int repeat_key;
- 	struct timer_list timer;
- 
-@@ -372,6 +378,12 @@ void input_unregister_device(struct input_dev *);
- 
- void input_reset_device(struct input_dev *);
- 
-+int input_setup_polling(struct input_dev *dev,
-+			void (*poll_fn)(struct input_dev *dev));
-+void input_set_poll_interval(struct input_dev *dev, unsigned int interval);
-+void input_set_min_poll_interval(struct input_dev *dev, unsigned int interval);
-+void input_set_max_poll_interval(struct input_dev *dev, unsigned int interval);
-+
- int __must_check input_register_handler(struct input_handler *);
- void input_unregister_handler(struct input_handler *);
- 
--- 
-2.23.0.rc1.153.gdeed80330f-goog
+change in V5:
+ 1. split 2 patches into 3 patches
+ 2. make dll_adjust_count start from 0
+ 3. fix ret overwritten issue
+ 4. use break instead of goto
 
+change in V4:
+ 1. add a bug fix for V3
 
--- 
-Dmitry
+change in V3:
+ 1. add more explanation in dll_recovery and execute_tuning function
+ 2. move dll_adjust_count to O2_host struct
+ 3. fix some coding style error
+ 4. renaming O2_PLL_WDT_CONTROL1 TO O2_PLL_DLL_WDT_CONTROL1
+
+change in V2:
+ 1. use usleep_range instead of udelay
+ 2. move dll_adjust_count to sdhci-pci-o2micro.c
+
+chagne in V1:
+ 1. add error recovery function to relock DLL with correct phase
+ 2. retuning HS200 after DLL locked
+---
+ drivers/mmc/host/sdhci-pci-o2micro.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-=
+pci-o2micro.c
+index 9dc4548..b3a33d9 100644
+--- a/drivers/mmc/host/sdhci-pci-o2micro.c
++++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+@@ -51,7 +51,7 @@
+ #define O2_SD_VENDOR_SETTING2	0x1C8
+ #define O2_SD_HW_TUNING_DISABLE	BIT(4)
+=20
+-#define O2_PLL_WDT_CONTROL1	0x1CC
++#define O2_PLL_DLL_WDT_CONTROL1	0x1CC
+ #define  O2_PLL_FORCE_ACTIVE	BIT(18)
+ #define  O2_PLL_LOCK_STATUS	BIT(14)
+ #define  O2_PLL_SOFT_RESET	BIT(12)
+@@ -316,23 +316,23 @@ static void sdhci_o2_enable_internal_clock(struct sdh=
+ci_host *host)
+ 	u32 scratch32;
+=20
+ 	/* PLL software reset */
+-	scratch32 =3D sdhci_readl(host, O2_PLL_WDT_CONTROL1);
++	scratch32 =3D sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
+ 	scratch32 |=3D O2_PLL_SOFT_RESET;
+-	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
++	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+ 	udelay(1);
+ 	scratch32 &=3D ~(O2_PLL_SOFT_RESET);
+-	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
++	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+=20
+ 	/* PLL force active */
+ 	scratch32 |=3D O2_PLL_FORCE_ACTIVE;
+-	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
++	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+=20
+ 	/* Wait max 20 ms */
+ 	timeout =3D ktime_add_ms(ktime_get(), 20);
+ 	while (1) {
+ 		bool timedout =3D ktime_after(ktime_get(), timeout);
+=20
+-		scratch =3D sdhci_readw(host, O2_PLL_WDT_CONTROL1);
++		scratch =3D sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1);
+ 		if (scratch & O2_PLL_LOCK_STATUS)
+ 			break;
+ 		if (timedout) {
+@@ -350,9 +350,9 @@ static void sdhci_o2_enable_internal_clock(struct sdhci=
+_host *host)
+=20
+ out:
+ 	/* Cancel PLL force active */
+-	scratch32 =3D sdhci_readl(host, O2_PLL_WDT_CONTROL1);
++	scratch32 =3D sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
+ 	scratch32 &=3D ~O2_PLL_FORCE_ACTIVE;
+-	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
++	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+ }
+=20
+ static int sdhci_o2_get_cd(struct mmc_host *mmc)
+--=20
+2.7.4
+
