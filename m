@@ -2,372 +2,144 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9C4C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC45EC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFED820820
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCA3420820
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:41:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406698AbfHIOlb (ORCPT
+        id S2406803AbfHIOle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 10:41:31 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37339 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406219AbfHIOlb (ORCPT
+        Fri, 9 Aug 2019 10:41:34 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:60337 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfHIOlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 9 Aug 2019 10:41:31 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hw657-0006jk-L2; Fri, 09 Aug 2019 16:41:25 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hw656-0000VK-JT; Fri, 09 Aug 2019 16:41:24 +0200
-Date:   Fri, 9 Aug 2019 16:41:24 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
-Subject: Re: [PATCH 2/2] pwm: sprd: Add Spreadtrum PWM support
-Message-ID: <20190809144124.3as3rtctlywxkudr@pengutronix.de>
-References: <6a38a3655bc8100764d85cb04dea5c2546a311e1.1565168564.git.baolin.wang@linaro.org>
- <40127356a1acd1f2ff1be1d8a120b305a4e17af4.1565168564.git.baolin.wang@linaro.org>
- <20190809091013.vguj4wty7qiab64t@pengutronix.de>
- <CAMz4kuLQsrBWjta1s=ZRPgxUd0_+_f-GbJV138tccuMLg2XCLA@mail.gmail.com>
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MkW10-1ibFNJ1O5W-00m6H3; Fri, 09 Aug 2019 16:40:55 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     soc@kernel.org
+Cc:     Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Guenter Roeck <linux@roeck-us.net>, linux-gpio@vger.kernel.org,
+        netdev@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: [PATCH v2 00/13] v2: ARM: move lpc32xx to multiplatform
+Date:   Fri,  9 Aug 2019 16:40:26 +0200
+Message-Id: <20190809144043.476786-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMz4kuLQsrBWjta1s=ZRPgxUd0_+_f-GbJV138tccuMLg2XCLA@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-Provags-ID: V03:K1:EDVZmvF9arLwN7tfCBk9s4OVXP20FvpzsVOImPPefg+0CLYE69K
+ gQAFFbE132roeOF6ToiNpoEiuz6MoXQQoc5ph+0VQSsr2DOk/xyOnFdZ2yMpZ8kHXXDBjmX
+ A8C1gOPJ7TLLjUPO1DDoXFvV90K+Q0ox7QSuSMrwxO7Jb3D1G7p8BVK5xTzCRV9mr0GgrzD
+ OwFVQkMOVFv8a5Cr1SW2Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DPoVW4gPjGQ=:8tG2AyA6Pk3b3tvngr6K5k
+ UMk3gPJV3BUtXv9nOJp7EvdBEwjSP1CtrdEXCNtEjUcawe0Pjf8Oy+Oz54J4+/x4CR/2rvHPa
+ gpdlQvCpws7DVMLQkcUgXF5nXU3i3nqr3aQlv9+MQBVPsOeC/4KDgkmDIlZVkpN4ynr4u7ucB
+ pu5WfQYm7lX8z2DvSWk7Jn/rSFxWFoWsN9AI3xUZs6pqAkjISwm7g1zj0r3DeZkxcnrFNH1IC
+ Egz1Ue13UnEuIbxdnowFCmkpbfHazRhxw48ERNB90saDpeer/Sfiohh/EdYsJRhBmP3r4qGIs
+ +hPd1B4v+tUWpAYpMDyNtJRuDSdY172Id6TFWwTfK2VuLkB9ao+/dWU4SVVvT+AlgJOv7mrag
+ yxf03FHvK+XpX2qgcpa4cziL54bf9OI7XmWHKooibuT2eSYSJ6U7TKh1q5rLi0sM21XV5X9vo
+ NoPD1teaUKJgXdmJzymvD8djLtwU5kyqACDEpfMdtI6Jz+NGrX4mbKeXFeREvcJy2hzyr3cHO
+ tqwe/jezzuaak1my9LxlhwtyAkQsThdCtdGwZAEEHIwEfIIVldDpQcLW3O9CM/DuL7mzrW4MG
+ QI+sI9RMaYFn11ATDc0BslmVI9Ed0tLk9mabp6wQUA8VioOBGUNQHUwI/Ach2uOPRo8wIWgEw
+ 4n28RI2aSzpaniC2eJhokOSjmOmfgSaC4kke4SvZJSNAMYdtJBvft9fpIWnThM9b34xRSoZTc
+ hGLgRyCeKuJkOaJQNWoTa81HQn+8nkhKCeCXPw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Baolin,
+Version 2 contains some minor changes based on earlier feedback
+and from the 0day build bot testing on other architectures. The
+only patch that changed significantly is the one for the gpio driver.
 
-On Fri, Aug 09, 2019 at 06:06:21PM +0800, Baolin Wang wrote:
-> On Fri, 9 Aug 2019 at 17:10, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Thu, Aug 08, 2019 at 04:59:39PM +0800, Baolin Wang wrote:
-> > > +{
-> > > +     struct sprd_pwm_chip *spc =
-> > > +             container_of(chip, struct sprd_pwm_chip, chip);
-> > > +     struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
-> > > +     u64 div, tmp;
-> > > +     u32 prescale, duty;
-> > > +     int ret;
-> > > +
-> > > +     /*
-> > > +      * NOTE: the clocks to PWM channel has to be enabled first before
-> > > +      * writing to the registers.
-> > > +      */
-> > > +     if (!chn->clk_enabled) {
-> > > +             ret = clk_bulk_prepare_enable(SPRD_PWM_NUM_CLKS, chn->clks);
-> >
-> > Do you really need to enable all 8 clocks to configure a single channel?
-> 
-> We have 4 channels, and each channel use 2 clocks, so here only enable
-> 2 clocks, see SPRD_PWM_NUM_CLKS.
+I would suggest we merge this version into the soc tree directly
+if there are no further concerns.
 
-Ah, I thought SPRD_PWM_NUM_CLKS was 8.
+      Arnd
 
-> > > +             if (ret) {
-> > > +                     dev_err(spc->dev, "failed to enable pwm%u clock\n",
-> > > +                             pwm->hwpwm);
-> > > +                     return ret;
-> > > +             }
-> > > +
-> > > +             chn->clk_enabled = true;
-> > > +     }
-> > > +
-> > > +     duty = duty_ns * SPRD_PWM_MOD_MAX / period_ns;
-> >
-> > @Baolin: until we're there that there are framework requirements how to
-> > round, please document at least how you do it here. Also describing the
-> > underlying concepts would be good for the driver reader.
-> >
-> > Something like:
-> >
-> > /*
-> >  * The hardware provides a counter that is feed by the source clock.
-> >  * The period length is (PRESCALE + 1) * MOD counter steps.
-> >  * The duty cycle length is (PRESCALE + 1) * DUTY counter steps.
-> >  *
-> >  * To keep the maths simple we're always using MOD = MOD_MAX.
-> >  * The value for PRESCALE is selected such that the resulting period
-> >  * gets the maximal length not bigger than the requested one with the
-> >  * given settings (MOD = MOD_MAX and input clock).
-> >  */
-> 
-> Yes, totally agree with you. I will add some documentation for our
-> controller's setting.
-> 
-> >
-> > @Thierry: having a framework guideline here would be good. Or still
-> > better a guideline and a debug setting that notices drivers stepping out
-> > of line.
-> >
-> > I assume using MOD = 0 is forbidden?
-> >
-> > > +     /*
-> > > +      * According to the datasheet, the period_ns calculation formula
-> > > +      * should be:
-> > > +      * period_ns = 10^9 * (prescale + 1) * mod / clk_rate
-> > > +      *
-> > > +      * Then we can get the prescale formula:
-> > > +      * prescale = (period_ns * clk_rate) / (10^9 * mod) -1
-> > > +      */
-> > > +     tmp = chn->clk_rate * period_ns;
-> > > +     div = 1000000000ULL * SPRD_PWM_MOD_MAX;
-> >
-> > Please use NSEC_PER_SEC instead of 1000000000ULL.
-> 
-> Sure.
-> 
-> >
-> > > +     prescale = div64_u64(tmp, div) - 1;
-> >
-> > If tmp is smaller than div you end up with prescale = 0xffffffff which
-> > should be catched. What if prescale > 0xffff?
-> 
-> Usually we can not meet this case, but you are right, the prescale has
-> a limit according to the register definition. So will add a validation
-> here.
-> 
-> >
-> > > +     sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_MOD, SPRD_PWM_MOD_MAX);
-> > > +     sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_DUTY, duty);
-> >
-> > You're losing precision here as you always use SPRD_PWM_MOD_MAX, right?
-> > (Just for my understanding, if this simpler approach is good enough
-> > here that's fine.)
-> 
-> Yes, SPRD_PWM_MOD_MAX is good enough.
+Arnd Bergmann (12):
+  usb: ohci-nxp: enable compile-testing
+  usb: udc: lpc32xx: allow compile-testing
+  watchdog: pnx4008_wdt: allow compile-testing
+  serial: lpc32xx_hs: allow compile-testing
+  gpio: lpc32xx: allow building on non-lpc32xx targets
+  net: lpc-enet: factor out iram access
+  net: lpc-enet: move phy setup into platform code
+  net: lpc-enet: fix printk format strings
+  net: lpc-enet: allow compile testing
+  serial: lpc32xx: allow compile testing
+  ARM: lpc32xx: clean up header files
+  ARM: lpc32xx: allow multiplatform build
 
-ok.
- 
-> >
-> > > +     sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_PAT_LOW, SPRD_PWM_REG_MSK);
-> > > +     sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_PAT_HIGH, SPRD_PWM_REG_MSK);
-> >
-> > Please describe these two registers in a short comment.
-> 
-> Sure.
-> 
-> >
-> > > +     sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_PRESCALE, prescale);
-> >
-> > Is the configuration here atomic in the sense that the write of DUTY
-> > above only gets effective when PRESCALE is written? If not, please add
-> 
-> Yes.
-> 
-> > a describing paragraph at the top of the driver similar to what is
-> > written in pwm-sifive.c. When the PWM is already running before, how
-> > does a configuration change effects the output? Is the currently running
-> > period completed?
-> 
-> Anyway, I'll add some comments to explain how it works.
+kbuild test robot (1):
+  net: lpc-enet: fix badzero.cocci warnings
 
-I'd apreciate if you'd stick to the format in pwm-sifive.c to make it
-easier to grep for that.
- 
-> > > +static void sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> > > +                            struct pwm_state *state)
-> > > +{
-> > > +     struct sprd_pwm_chip *spc =
-> > > +             container_of(chip, struct sprd_pwm_chip, chip);
-> > > +     struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
-> > > +     u32 enabled, duty, prescale;
-> > > +     u64 tmp;
-> > > +     int ret;
-> > > +
-> > > +     ret = clk_bulk_prepare_enable(SPRD_PWM_NUM_CLKS, chn->clks);
-> > > +     if (ret) {
-> > > +             dev_err(spc->dev, "failed to enable pwm%u clocks\n",
-> > > +                     pwm->hwpwm);
-> > > +             return;
-> > > +     }
-> > > +
-> > > +     chn->clk_enabled = true;
-> > > +
-> > > +     duty = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_DUTY) & SPRD_PWM_REG_MSK;
-> > > +     prescale = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE) & SPRD_PWM_REG_MSK;
-> > > +     enabled = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_ENABLE) & SPRD_PWM_ENABLE_BIT;
-> > > +
-> > > +     /*
-> > > +      * According to the datasheet, the period_ns and duty_ns calculation
-> > > +      * formula should be:
-> > > +      * period_ns = 10^9 * (prescale + 1) * mod / clk_rate
-> > > +      * duty_ns = 10^9 * (prescale + 1) * duty / clk_rate
-> > > +      */
-> > > +     tmp = (prescale + 1) * 1000000000ULL * SPRD_PWM_MOD_MAX;
-> > > +     state->period = div64_u64(tmp, chn->clk_rate);
-> >
-> > This is not idempotent. If you apply the configuration that is returned
-> > here this shouldn't result in a reconfiguration.
-> 
-> Since we may configure the  PWM in bootloader, so in kernel part we
-> should get current PWM state to avoid reconfiguration if state
-> configuration are same.
-
-This is also important as some consumers might do something like:
-
-	state = pwm_get_state(mypwm)
-	if (something):
-		state->duty = 0
-	else:
-		state->duty = state->period / 2
-	pwm_set_state(mypwm, state)
-
-and then period shouldn't get smaller in each step.
-(This won't happen as of now because the PWM framework caches the last
-state that was set and returns this for pwm_get_state. Still getting
-this right would be good.)
-
-> > > +     tmp = (prescale + 1) * 1000000000ULL * duty;
-> > > +     state->duty_cycle = div64_u64(tmp, chn->clk_rate);
-> > > +
-> > > +     state->enabled = !!enabled;
-> > > +
-> > > +     /* Disable PWM clocks if the PWM channel is not in enable state. */
-> > > +     if (!enabled) {
-> > > +             clk_bulk_disable_unprepare(SPRD_PWM_NUM_CLKS, chn->clks);
-> > > +             chn->clk_enabled = false;
-> > > +     }
-> > > +}
-> > > +
-> > > +static const struct pwm_ops sprd_pwm_ops = {
-> > > +     .config = sprd_pwm_config,
-> > > +     .enable = sprd_pwm_enable,
-> > > +     .disable = sprd_pwm_disable,
-> > > +     .get_state = sprd_pwm_get_state,
-> > > +     .owner = THIS_MODULE,
-> > > +};
-> > > +
-> > > +static int sprd_pwm_clk_init(struct sprd_pwm_chip *spc)
-> > > +{
-> > > +     struct clk *clk_parent, *clk_pwm;
-> > > +     int ret, i, clk_index = 0;
-> > > +
-> > > +     clk_parent = devm_clk_get(spc->dev, "source");
-> > > +     if (IS_ERR(clk_parent)) {
-> > > +             dev_err(spc->dev, "failed to get source clock\n");
-> > > +             return PTR_ERR(clk_parent);
-> > > +     }
-> > > +
-> > > +     for (i = 0; i < SPRD_PWM_NUM; i++) {
-> > > +             struct sprd_pwm_chn *chn = &spc->chn[i];
-> > > +             int j;
-> > > +
-> > > +             for (j = 0; j < SPRD_PWM_NUM_CLKS; ++j)
-> > > +                     chn->clks[j].id = sprd_pwm_clks[clk_index++];
-> > > +
-> > > +             ret = devm_clk_bulk_get(spc->dev, SPRD_PWM_NUM_CLKS, chn->clks);
-> > > +             if (ret) {
-> > > +                     if (ret == -ENOENT)
-> > > +                             break;
-> >
-> > devm_clk_bulk_get_optional ? I'm sure you don't want to get all 8 clocks
-> > 8 times.
-> 
-> This is not optional, each channel has 2 required clocks, and we have
-> 4 channels. (SPRD_PWM_NUM_CLKS == 2)
-
-I see. Currently it is not possible to use channel 2 if there are no
-clocks for channel 0, right? There is no hardware related problem here,
-just a shortcoming of the driver?
-
-> > > +
-> > > +                     dev_err(spc->dev, "failed to get channel clocks\n");
-> > > +                     return ret;
-> > > +             }
-> > > +
-> > > +             clk_pwm = chn->clks[1].clk;
-> >
-> > This 1 looks suspicious. Are you using all clocks provided in the dtb at
-> > all? You're not using i in the loop at all, this doesn't look right.
-> 
-> Like I said above, each channel has 2 clocks: enable clock and pwm
-> clock, the 2nd clock of each channel's bulk clocks is the pwm clock,
-> which is used to set the source clock. I know this's not easy to read,
-> so do you have any good suggestion?
-
-Not sure this is easily possible to rework to make this clearer.
- 
-Do these clks have different uses? e.g. one to enable register access
-and the other to enable the pwm output? If so just using
-devm_clk_bulk_get isn't the right thing because you should be able know
-if clks[0] or clks[1] is the one you need to enable the output (or
-register access).
-
-> > > +             if (!clk_set_parent(clk_pwm, clk_parent))
-> > > +                     chn->clk_rate = clk_get_rate(clk_pwm);
-> > > +             else
-> > > +                     chn->clk_rate = SPRD_PWM_DEFAULT_CLK;
-> >
-> > I don't know all the clock framework details, but I think there are
-> > better ways to ensure that a given clock is used as parent for another
-> > given clock. Please read the chapter about "Assigned clock parents and
-> > rates" in the clock bindings and check if this could be used for the
-> > purpose here and so simplify the driver.
-> 
-> Actually there are many other drivers set the parent clock like this,
-> and we want a default clock if failed to set the parent clock.
-
-These might be older than the clk framework capabilities, or the
-reviewers didn't pay attention to this detail; both shouldn't be a
-reason to not make it better here.
-
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static int sprd_pwm_remove(struct platform_device *pdev)
-> > > +{
-> > > +     struct sprd_pwm_chip *spc = platform_get_drvdata(pdev);
-> > > +     int i;
-> > > +
-> > > +     for (i = 0; i < spc->num_pwms; i++)
-> > > +             pwm_disable(&spc->chip.pwms[i]);
-> >
-> > This is wrong. You must not call pwm_disable here. It's the consumer's
-> > responsibility to disable the hardware.
-> 
-> Emm, I saw some drivers did like this, like pwm-spear.c.
-> Could you elaborate on what's the problem if the driver issues pwm_disable?
-
-This is a function to be called from code that called pwm_get before
-(i.e. pwm consumers). This just doesn't explode because up to now the
-PWM framework is only a thin wrapper around the lowlevel driver
-callbacks.
-
-The reasoning is similar to what I wrote in commit
-f82d15e223403b05fffb33ba792b87a8620f6fee. I'd like to have a PWM_DEBUG
-setting that catches such problems but the discussion with Thierry to
-even document the expectations is stuck, see
-https://patchwork.ozlabs.org/patch/1021566/.
-
-Best regards
-Uwe
+ arch/arm/Kconfig                              |  17 +--
+ arch/arm/configs/lpc32xx_defconfig            |   2 +
+ arch/arm/mach-lpc32xx/Kconfig                 |  11 ++
+ arch/arm/mach-lpc32xx/common.c                |  24 +++-
+ arch/arm/mach-lpc32xx/common.h                |   1 -
+ arch/arm/mach-lpc32xx/include/mach/board.h    |  15 ---
+ .../mach-lpc32xx/include/mach/entry-macro.S   |  28 -----
+ arch/arm/mach-lpc32xx/include/mach/hardware.h |  25 ----
+ .../mach-lpc32xx/include/mach/uncompress.h    |  50 --------
+ .../{include/mach/platform.h => lpc32xx.h}    |  18 ++-
+ arch/arm/mach-lpc32xx/pm.c                    |   3 +-
+ arch/arm/mach-lpc32xx/serial.c                |  33 ++++-
+ arch/arm/mach-lpc32xx/suspend.S               |   3 +-
+ drivers/gpio/Kconfig                          |   7 ++
+ drivers/gpio/Makefile                         |   2 +-
+ drivers/gpio/gpio-lpc32xx.c                   | 118 ++++++++++--------
+ drivers/net/ethernet/nxp/Kconfig              |   2 +-
+ drivers/net/ethernet/nxp/lpc_eth.c            |  45 +++----
+ drivers/tty/serial/Kconfig                    |   3 +-
+ drivers/tty/serial/lpc32xx_hs.c               |  37 +-----
+ drivers/usb/gadget/udc/Kconfig                |   3 +-
+ drivers/usb/gadget/udc/lpc32xx_udc.c          |   3 +-
+ drivers/usb/host/Kconfig                      |   3 +-
+ drivers/usb/host/ohci-nxp.c                   |  25 ++--
+ drivers/watchdog/Kconfig                      |   2 +-
+ drivers/watchdog/pnx4008_wdt.c                |   1 -
+ include/linux/soc/nxp/lpc32xx-misc.h          |  33 +++++
+ 27 files changed, 242 insertions(+), 272 deletions(-)
+ create mode 100644 arch/arm/mach-lpc32xx/Kconfig
+ delete mode 100644 arch/arm/mach-lpc32xx/include/mach/board.h
+ delete mode 100644 arch/arm/mach-lpc32xx/include/mach/entry-macro.S
+ delete mode 100644 arch/arm/mach-lpc32xx/include/mach/hardware.h
+ delete mode 100644 arch/arm/mach-lpc32xx/include/mach/uncompress.h
+ rename arch/arm/mach-lpc32xx/{include/mach/platform.h => lpc32xx.h} (98%)
+ create mode 100644 include/linux/soc/nxp/lpc32xx-misc.h
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.20.0
+
+Cc: soc@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Sylvain Lemieux <slemieux.tyco@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-gpio@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-serial@vger.kernel.org
+Cc: linux-usb@vger.kernel.org
+Cc: linux-watchdog@vger.kernel.org
+
