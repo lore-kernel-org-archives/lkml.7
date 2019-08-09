@@ -2,196 +2,139 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6BEC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE529C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 262EF2086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC0202086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:50:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="fjqFKtOS";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="L/4AicPF"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="L7TkHwiT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407274AbfHIQup (ORCPT
+        id S2407352AbfHIQuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 12:50:45 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:5430 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726157AbfHIQup (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 12:50:45 -0400
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x79GnrEe029773;
-        Fri, 9 Aug 2019 09:50:30 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=eMQ16HGJ9hpN3Q1U8SopVeewX7T50QmuoR83d3J3v24=;
- b=fjqFKtOSj8wVZfcc//TfZ6vMR3X0AySMnbnJP8ua2GceP7xfLXuD0a+jHASDDnlbnBig
- 3B9xmHpJmETHoZ/ytnTMRJtuUvsmY5PbWFNrMDY6zb/72JyL3jLIPJAn38Rbv8Xbd3ql
- eXZoM84yaAn3KN31F1xeS7PzF2/IOZNZodU= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2u9930s1xc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 09 Aug 2019 09:50:30 -0700
-Received: from ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) by
- ash-exhub204.TheFacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 9 Aug 2019 09:50:29 -0700
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 9 Aug 2019 09:50:28 -0700
+        Fri, 9 Aug 2019 12:50:52 -0400
+Received: from mail-eopbgr740070.outbound.protection.outlook.com ([40.107.74.70]:27616
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726157AbfHIQuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 12:50:52 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GE7aZTwG+01l6VJpZRfW8x76KcwHTuK7gzabiaTII+PuN/u4l5gSXo/cHXmtyo1FJTgdLIdoHdyvqeghC8c0Mtv8V+GtOJEuID6tNXTfqRArNO1wZW4WvdJG4TLVCdlECKxtlFgP+tcYZS9vKqCtfPFRZ454a12Osuf20/TQEk3ECb0OpyWH19YU2uBKmAnB5G3jPt08xWOpPTJ/i+Eb9N+KoJHrSi2VKtW5VOC1JE8eHrV7wwhedgaIWzS2p+4cmegWCSLYh+6ctAM091Qc/pUuG/bk2jsliaBFJQWukw8iBEed33sEUHcmy0q+YHAC+M+ICWu408/sCvB6R1J6sQ==
+ b=P3p0XdxFd5PNk0B1Dx1necgwDcqjnWZb5RcXWqFvpNz915ZSLnRnW+u0hPtc4GtCPC9dbP6qmp2O45xG+Xi9kTrWTCWfr6ZkIKWS7zBU9dowBuVQh8EDTVv/URhhvqw8lW9IUGvz3LtuyjWGZUOeT1+XXsIe7ekuvCHDqD5dmGSrDA4yCgcfEJHXebXpUJNsXl0KracAqKgNp8d01FoxFtdm7rB5CfWzzwdEDei0tBj9Jx5o6n6XRuMp8jre+mIv8tYIYk5T46+GWEcQNGyF4FQjFO2OV9uYAIwDGmTzwNlRQBRIedLSHagH0OYxoj4sBBPSd4B8z98og2dJDnzWLA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eMQ16HGJ9hpN3Q1U8SopVeewX7T50QmuoR83d3J3v24=;
- b=T4eUQJi+01y/IoCTz/MmLIQuemk0x+kVhuMe8WOCM8sSw1GZBZw+uA16BTLDoKFrmndH+TwOhiVE49OescPGpRZJeTJG4krP8r+F2cXJswGKvXm2qQ9jbHbXhXuSvYWoIfvLMylOqkAQ3zIOGQXE9IcrM7DrZDuSNGmhGRcqIkm7hUC1f+cWkrLiTASe8RKXp0mPFK3ZXhsi3tuPLb7FKrfEQn9pVcsc2J9Y2FZN3liXZFfUlfNMa3OUqF+FsqKseHisOAZR+K2PuwoGjDm7VU7uU98mtE5+BYZ0nO1PsXZIOdxTyuMRZoKl8OjaqesuHNV9lIYKHoDJEb6h09ucww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
+ bh=CHX32SBVQElESdgeTaGUtts5k30Jli91KfK+qmfEGKw=;
+ b=CY5aTmGFqnbWmUB7RErtkLpdXY/UWEnjXG4W2U/VfQal1q2D66v4TK1zTaHjXDEHkDGrzM/4S2MXOUK3w+lRYxfe8GMmTLpI0Jxwa8AtYVPR6NVwGzM9/OYj+9lIB7s1EDzqvgx2KRkwAaPKlxHrkhiDVgNlbZ6xAtYLkw0+jSW7vDC8hodxRMnm8mOsRATbzM8UPzhpr0nhw/jsYFIsNvagZGJVhOjSxzr6UNJktgApu9tGWhWYA9VBYe0A/ER6JiMv+t1P/Jn4OLPFJBW4B6yRZpiZDnoSXn7CcyL0weIDk6f03PPnTsY81CJw//5ciLPjWLNWemf41cq+PyOCLw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=amd.com;dmarc=pass action=none header.from=amd.com;dkim=pass
+ header.d=amd.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eMQ16HGJ9hpN3Q1U8SopVeewX7T50QmuoR83d3J3v24=;
- b=L/4AicPFC38K6Tfcmhzewd7L397Mb/Z0GFWO0uTk3coOeMPdAHhXk/8w76RpYhA3gYtG+ZK5T9MK0qJ/8WZi2CXqmUiGvYZpjF2T2fsNmzyy1qMxMj+yVYD+VGL6RY+8QPeRrtrecTFaNUCns/AQ9T1WoCSFrbX7GFVrxN+cAko=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
- MWHPR15MB1278.namprd15.prod.outlook.com (10.175.3.143) with Microsoft SMTP
+ bh=CHX32SBVQElESdgeTaGUtts5k30Jli91KfK+qmfEGKw=;
+ b=L7TkHwiTcbkBVA/+2lYWaF3v7btNClHoe7w0Dna6Fqb5LV9gEc74XEG5MGeD9sjOXj/i1jgmOWfOAUFeiBsevST4rIYBV7rdbgwJ3rc1W8okt0L980FcaqtM4RUUXer+4ray5jsIMfgasp99SDLYmfAABclOd4qfdPTJkjCybmM=
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
+ DM6PR12MB3113.namprd12.prod.outlook.com (20.178.31.19) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.15; Fri, 9 Aug 2019 16:50:27 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::79c8:442d:b528:802d]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::79c8:442d:b528:802d%9]) with mapi id 15.20.2157.020; Fri, 9 Aug 2019
- 16:50:27 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        Kernel Team <Kernel-team@fb.com>,
-        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
-        "srikar@linux.vnet.ibm.com" <srikar@linux.vnet.ibm.com>
-Subject: Re: [PATCH v12 3/6] mm, thp: introduce FOLL_SPLIT_PMD
-Thread-Topic: [PATCH v12 3/6] mm, thp: introduce FOLL_SPLIT_PMD
-Thread-Index: AQHVTXk1mNBIE/jl/kWGntKwDXuhGKbxdEOAgAAKuICAAYcWAIAABBIA
-Date:   Fri, 9 Aug 2019 16:50:27 +0000
-Message-ID: <4193FF07-3191-45D1-9F3E-90F08945389F@fb.com>
-References: <20190807233729.3899352-1-songliubraving@fb.com>
- <20190807233729.3899352-4-songliubraving@fb.com>
- <20190808163745.GC7934@redhat.com>
- <48316E06-10B2-439C-AD10-3EC8C86C259C@fb.com>
- <20190809163551.GB21489@redhat.com>
-In-Reply-To: <20190809163551.GB21489@redhat.com>
+ 15.20.2136.12; Fri, 9 Aug 2019 16:50:49 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::9c3d:8593:906c:e4f7]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::9c3d:8593:906c:e4f7%6]) with mapi id 15.20.2157.015; Fri, 9 Aug 2019
+ 16:50:49 +0000
+From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+To:     Joerg Roedel <joro@8bytes.org>
+CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        "bp@alien8.de" <bp@alien8.de>, Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 3/3] iommu: Disable passthrough mode when SME is active
+Thread-Topic: [PATCH 3/3] iommu: Disable passthrough mode when SME is active
+Thread-Index: AQHVTsZIO8GEDV51QUKwXSImTUrW96bzB5aA
+Date:   Fri, 9 Aug 2019 16:50:48 +0000
+Message-ID: <7f383631-ce2c-e7c2-ceff-e7418bf8ff29@amd.com>
+References: <20190809152233.2829-1-joro@8bytes.org>
+ <20190809152233.2829-4-joro@8bytes.org>
+In-Reply-To: <20190809152233.2829-4-joro@8bytes.org>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.104.11)
-x-originating-ip: [2620:10d:c090:200::1:68ef]
+x-clientproxiedby: SN6PR06CA0032.namprd06.prod.outlook.com
+ (2603:10b6:805:8e::45) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:182::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.159.242]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 58c7bd01-5570-4ad0-87a3-08d71ce9ae86
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1278;
-x-ms-traffictypediagnostic: MWHPR15MB1278:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR15MB1278B18CAD00B067F8DCA3D2B3D60@MWHPR15MB1278.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-ms-office365-filtering-correlation-id: 5318726a-6675-4e3e-bad2-08d71ce9bb00
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3113;
+x-ms-traffictypediagnostic: DM6PR12MB3113:
+x-microsoft-antispam-prvs: <DM6PR12MB311343100FF35E3664177311ECD60@DM6PR12MB3113.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
 x-forefront-prvs: 01244308DF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(39860400002)(376002)(396003)(366004)(189003)(199004)(66946007)(6116002)(2906002)(6246003)(99286004)(4326008)(81166006)(64756008)(6436002)(14454004)(229853002)(81156014)(6486002)(256004)(54906003)(76176011)(53936002)(46003)(33656002)(57306001)(71200400001)(102836004)(6512007)(71190400001)(36756003)(478600001)(5660300002)(76116006)(8676002)(66446008)(66556008)(8936002)(6916009)(66476007)(50226002)(305945005)(11346002)(2616005)(186003)(25786009)(446003)(316002)(486006)(6506007)(7736002)(53546011)(476003)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1278;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(396003)(136003)(366004)(376002)(346002)(199004)(189003)(478600001)(25786009)(2616005)(86362001)(76176011)(102836004)(486006)(6512007)(186003)(476003)(11346002)(229853002)(6486002)(6116002)(2906002)(3846002)(14454004)(256004)(14444005)(6246003)(53936002)(6916009)(52116002)(99286004)(4326008)(66066001)(26005)(8936002)(66446008)(54906003)(36756003)(64756008)(5660300002)(66476007)(66556008)(66946007)(316002)(305945005)(71200400001)(446003)(31686004)(81156014)(8676002)(81166006)(53546011)(31696002)(6436002)(386003)(6506007)(7736002)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3113;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Oh6Ko+BliASGksdyzMnq4YiKojCPe5VDPU3Q4EmUmHPq0Lp09gHc81uQ4zdDhBsCxYn/lX35+i73h4M5DpWOccTUpHlXptUmT9UMGC2wZ2pmL6jjgnEQYo0Z9myNmUXTrEQ0KO1BSTtNVbJT74DpsgqkrC+RhETtVswH33k/BP3KfiBQV+VWdn0BsLoTRTNmuMNFVv+W4jK3CXct613xTzU8qAxm0DDGC1/PglkRLMcF+DryLZg7aLmecBVhzdMl0bdduJy0nHGtCgeN0mTMdKBxXlMbFvR9sWZUJbZIQfrquy4zgYgTKxzfzm5Ch+CEt/+LMy4017pbMqq4v653mx4k1djx1o+yrZGjgiIIdkitb0vb+kKKS9Q33QZyQdHrGYhTe/0e4w8cZQGaJAtzY/Qvfysx0T9EuMd2Mgc8Wfw=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <70C0E4356A74DB439318F9359B85B812@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: 1VornK6UV0TVifiRmnW6xHqROpj2GYd41YgqW2JsoJa0ijYsZMp7e3/4a/CsnSu5CrGQoMxq9p6MRt3p7ldGEvyMkpCs7xVSTR2KZ47VVBBUM+cZvAVZ5xvNUM8dGAMwHgsquJ0/rcqHlmfdK9wAmJULzyrqLMz5fIkOfg849ZgGpFau8iE4P8WaTWb+HSmHkM0bAqW7RTsQ3Vh1i3lswd3pqdOTlHs7St5gazBfaKP69Zx1a9W3g0T0AmXGP0x6zTVdDFkJUfkolazfzWKlVZbuCUqgO1xpCEQCHNDhTwFSpkaH7F5PvO5lTsUlJuDbjIVPVbA/HSJw4eFvh+QlIL/cy0bJTQwkmDt+1Mk7hEkkLwroeRO5rDPQ3HcML7wQ1xCnsQpLAg0iwGKr3uVSi36QWVIr99OhA4uWqrR8fqE=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DEB52BBA38B43F4B863084D137BFABE7@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 58c7bd01-5570-4ad0-87a3-08d71ce9ae86
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Aug 2019 16:50:27.4655
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5318726a-6675-4e3e-bad2-08d71ce9bb00
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Aug 2019 16:50:48.8528
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DITPPfoeUMhhlfNkCjtfTziI3ptcuAFybei6FUxVh0D+v8dNzjbhyG5C7jmRm36WjCEx6fFNKVnt5pM85Z/vIw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1278
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-09_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=886 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908090165
-X-FB-Internal: deliver
+X-MS-Exchange-CrossTenant-userprincipalname: YrmnfTeufK0bExbMiuvOoJ4u7QpHLVhfph9fuABfO0R9AloT8QtuZol0U9ypHNSkou9VRDPTsPJg4CjX6JDfcw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On Aug 9, 2019, at 9:35 AM, Oleg Nesterov <oleg@redhat.com> wrote:
->=20
-> On 08/08, Song Liu wrote:
->>=20
->>> On Aug 8, 2019, at 9:37 AM, Oleg Nesterov <oleg@redhat.com> wrote:
->>>=20
->>> On 08/07, Song Liu wrote:
->>>>=20
->>>> @@ -399,7 +399,7 @@ static struct page *follow_pmd_mask(struct vm_area=
-_struct *vma,
->>>> 		spin_unlock(ptl);
->>>> 		return follow_page_pte(vma, address, pmd, flags, &ctx->pgmap);
->>>> 	}
->>>> -	if (flags & FOLL_SPLIT) {
->>>> +	if (flags & (FOLL_SPLIT | FOLL_SPLIT_PMD)) {
->>>> 		int ret;
->>>> 		page =3D pmd_page(*pmd);
->>>> 		if (is_huge_zero_page(page)) {
->>>> @@ -408,7 +408,7 @@ static struct page *follow_pmd_mask(struct vm_area=
-_struct *vma,
->>>> 			split_huge_pmd(vma, pmd, address);
->>>> 			if (pmd_trans_unstable(pmd))
->>>> 				ret =3D -EBUSY;
->>>> -		} else {
->>>> +		} else if (flags & FOLL_SPLIT) {
->>>> 			if (unlikely(!try_get_page(page))) {
->>>> 				spin_unlock(ptl);
->>>> 				return ERR_PTR(-ENOMEM);
->>>> @@ -420,6 +420,10 @@ static struct page *follow_pmd_mask(struct vm_are=
-a_struct *vma,
->>>> 			put_page(page);
->>>> 			if (pmd_none(*pmd))
->>>> 				return no_page_table(vma, flags);
->>>> +		} else {  /* flags & FOLL_SPLIT_PMD */
->>>> +			spin_unlock(ptl);
->>>> +			split_huge_pmd(vma, pmd, address);
->>>> +			ret =3D pte_alloc(mm, pmd) ? -ENOMEM : 0;
->>>> 		}
->>>=20
->>> Can't resist, let me repeat that I do not like this patch because imo
->>> it complicates this code for no reason.
->>=20
->> Personally, I don't think this is more complicated than your version.
->=20
-> I do, but of course this is subjective.
->=20
->> Also, if some code calls follow_pmd_mask() with flags contains both
->> FOLL_SPLIT and FOLL_SPLIT_PMD, we should honor FOLL_SPLIT and split the
->> huge page.
->=20
-> Heh. why not other way around?
-
-Because FOLL_SPLIT splits both the page and the pmd. FOLL_SPLIT_PMD=20
-only splits the pmd, so it is a subset of FOLL_SPLIT. When the user
-sets both, we should split both the page and the pmd.=20
-
-Thanks,
-Song
-
+T24gOC85LzE5IDEwOjIyIEFNLCBKb2VyZyBSb2VkZWwgd3JvdGU6DQo+IEZyb206IEpvZXJnIFJv
+ZWRlbCA8anJvZWRlbEBzdXNlLmRlPg0KPiANCj4gVXNpbmcgUGFzc3Rocm91Z2ggbW9kZSB3aGVu
+IFNNRSBpcyBhY3RpdmUgY2F1c2VzIGNlcnRhaW4NCj4gZGV2aWNlcyB0byB1c2UgdGhlIFNXSU9U
+TEIgYm91bmNlIGJ1ZmZlci4gVGhlIGJvdW5jZSBidWZmZXINCj4gY29kZSBoYXMgYW4gdXBwZXIg
+bGltaXQgb2YgMjU2a2IgZm9yIHRoZSBzaXplIG9mIERNQQ0KPiBhbGxvY2F0aW9ucywgd2hpY2gg
+aXMgdG9vIHNtYWxsIGZvciBjZXJ0YWluIGRldmljZXMgYW5kDQo+IGNhdXNlcyB0aGVtIHRvIGZh
+aWwuDQo+IA0KPiBXaXRoIHRoaXMgcGF0Y2ggd2UgZW5hYmxlIElPTU1VIGJ5IGRlZmF1bHQgd2hl
+biBTTUUgaXMNCj4gYWN0aXZlIGluIHRoZSBzeXN0ZW0sIG1ha2luZyB0aGUgZGVmYXVsdCBjb25m
+aWd1cmF0aW9uIHdvcmsNCj4gZm9yIG1vcmUgc3lzdGVtcyB0aGFuIGl0IGRvZXMgbm93Lg0KPiAN
+Cj4gVXNlcnMgdGhhdCBkb24ndCB3YW50IElPTU1VcyB0byBiZSBlbmFibGVkIHN0aWxsIGNhbiBk
+aXNhYmxlDQo+IHRoZW0gd2l0aCBrZXJuZWwgcGFyYW1ldGVycy4NCj4gDQo+IFNpZ25lZC1vZmYt
+Ynk6IEpvZXJnIFJvZWRlbCA8anJvZWRlbEBzdXNlLmRlPg0KPiAtLS0NCj4gICBkcml2ZXJzL2lv
+bW11L2lvbW11LmMgfCA2ICsrKysrKw0KPiAgIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMo
+KykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L2lvbW11LmMgYi9kcml2ZXJzL2lv
+bW11L2lvbW11LmMNCj4gaW5kZXggNjJjYWU2ZGIwOTcwLi5mYmUxYWE1MWJjZTkgMTAwNjQ0DQo+
+IC0tLSBhL2RyaXZlcnMvaW9tbXUvaW9tbXUuYw0KPiArKysgYi9kcml2ZXJzL2lvbW11L2lvbW11
+LmMNCj4gQEAgLTEwNCw2ICsxMDQsMTIgQEAgc3RhdGljIGludCBfX2luaXQgaW9tbXVfc3Vic3lz
+X2luaXQodm9pZCkNCj4gICAJZWxzZQ0KPiAgIAkJaW9tbXVfZGVmX2RvbWFpbl90eXBlID0gSU9N
+TVVfRE9NQUlOX0RNQTsNCj4gICANCj4gKwlpZiAoKGlvbW11X2RlZl9kb21haW5fdHlwZSA9PSBJ
+T01NVV9ET01BSU5fSURFTlRJVFkpICYmDQo+ICsJICAgIHNtZV9hY3RpdmUoKSkgew0KPiArCQlw
+cl9pbmZvKCJTTUUgZGV0ZWN0ZWQgLSBEaXNhYmxpbmcgZGVmYXVsdCBJT01NVSBwYXNzdGhyb3Vn
+aFxuIik7DQo+ICsJCWlvbW11X2RlZl9kb21haW5fdHlwZSA9IElPTU1VX0RPTUFJTl9ETUE7DQoN
+ClNob3VsZCB0aGlzIGFsc28gY2xlYXIgdGhlIGlvbW11X3Bhc3NfdGhyb3VnaCB2YXJpYWJsZSAo
+dGhlIG9uZSBzZXQgYnkgdGhlDQppb21tdSBrZXJuZWwgcGFyYW1ldGVyIGluIGFyY2gveDg2L2tl
+cm5lbC9wY2ktZG1hLmMpPw0KDQpJIGd1ZXNzIHRoaXMgaXMgbW9yZSBhcHBsaWNhYmxlIHRvIHRo
+ZSBvcmlnaW5hbCBwYXRjaHNldCB0aGF0IGNyZWF0ZWQgdGhlDQpDT05GSUdfSU9NTVVfREVGQVVM
+VF9QQVNTVEhST1VHSCBvcHRpb24sIGJ1dCBzaG91bGQgdGhlIGRlZmF1bHQNCnBhc3N0aHJvdWdo
+IHN1cHBvcnQgYmUgbW9kaWZpZWQgc28gdGhhdCB5b3UgZG9uJ3QgaGF2ZSB0byBzcGVjaWZ5IG11
+bHRpcGxlDQprZXJuZWwgcGFyYW1ldGVycyB0byBjaGFuZ2UgaXQ/DQoNClJpZ2h0IG5vdywgaWYg
+Q09ORklHX0lPTU1VX0RFRkFVTFRfUEFTU1RIUk9VR0ggaXMgc2V0IHRvIHllcywgeW91IGNhbid0
+DQpqdXN0IHNwZWNpZnkgaW9tbXU9bm9wdCB0byBlbmFibGUgdGhlIElPTU1VLiBZb3UgaGF2ZSB0
+byBhbHNvIHNwZWNpZnkNCmlvbW11LnBhc3N0aHJvdWdoPTAuIERvIHdlIHdhbnQgdG8gZml4IHRo
+YXQgc28gdGhhdCBqdXN0IHNwZWNpZnlpbmcNCmlvbW11PW5vcHQgb3IgaW9tbXUucGFzc3Rocm91
+Z2g9MCBkb2VzIHdoYXQgaXMgbmVlZGVkPw0KDQpUaGFua3MsDQpUb20NCg0KPiArCX0NCj4gKw0K
+PiAgIAlwcl9pbmZvKCJEZWZhdWx0IGRvbWFpbiB0eXBlOiAlc1xuIiwNCj4gICAJCWlvbW11X2Rv
+bWFpbl90eXBlX3N0cihpb21tdV9kZWZfZG9tYWluX3R5cGUpKTsNCj4gICANCj4gDQo=
