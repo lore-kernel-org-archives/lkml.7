@@ -2,106 +2,83 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A32C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83746C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85D162166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53CA62166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:46:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406616AbfHILo7 (ORCPT
+        id S2406631AbfHILqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 07:44:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:46226 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726537AbfHILo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 07:44:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C12CD1596;
-        Fri,  9 Aug 2019 04:44:57 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1DD783F575;
-        Fri,  9 Aug 2019 04:44:53 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 12:44:51 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC V2 0/1] mm/debug: Add tests for architecture exported page
- table helpers
-Message-ID: <20190809114450.GF48423@lakrids.cambridge.arm.com>
-References: <1565335998-22553-1-git-send-email-anshuman.khandual@arm.com>
- <20190809101632.GM5482@bombadil.infradead.org>
+        Fri, 9 Aug 2019 07:46:08 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:1391 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726157AbfHILqH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 07:46:07 -0400
+X-IronPort-AV: E=Sophos;i="5.64,364,1559491200"; 
+   d="scan'208";a="73306026"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 09 Aug 2019 19:46:05 +0800
+Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
+        by cn.fujitsu.com (Postfix) with ESMTP id 08F1C4CE030E;
+        Fri,  9 Aug 2019 19:46:07 +0800 (CST)
+Received: from TSAO.g08.fujitsu.local (10.167.226.60) by
+ G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Fri, 9 Aug 2019 19:46:06 +0800
+From:   Cao jin <caoj.fnst@cn.fujitsu.com>
+To:     <linux-kernel@vger.kernel.org>, <x86@kernel.org>
+CC:     <tglx@linutronix.de>, <bp@alien8.de>, <hpa@zytor.com>,
+        <mingo@redhat.com>
+Subject: [PATCH] x86/fixmap: update stale comments
+Date:   Fri, 9 Aug 2019 19:46:12 +0800
+Message-ID: <20190809114612.2569-1-caoj.fnst@cn.fujitsu.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190809101632.GM5482@bombadil.infradead.org>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Type: text/plain
+X-Originating-IP: [10.167.226.60]
+X-yoursite-MailScanner-ID: 08F1C4CE030E.AC805
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 03:16:33AM -0700, Matthew Wilcox wrote:
-> On Fri, Aug 09, 2019 at 01:03:17PM +0530, Anshuman Khandual wrote:
-> > Should alloc_gigantic_page() be made available as an interface for general
-> > use in the kernel. The test module here uses very similar implementation from
-> > HugeTLB to allocate a PUD aligned memory block. Similar for mm_alloc() which
-> > needs to be exported through a header.
-> 
-> Why are you allocating memory at all instead of just using some
-> known-to-exist PFNs like I suggested?
+Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
+---
+ arch/x86/include/asm/fixmap.h | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-IIUC the issue is that there aren't necessarily known-to-exist PFNs that
-are sufficiently aligned -- they may not even exist.
+diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
+index 9da8cccdf3fb..0c47aa82e2e2 100644
+--- a/arch/x86/include/asm/fixmap.h
++++ b/arch/x86/include/asm/fixmap.h
+@@ -42,8 +42,7 @@
+  * Because of this, FIXADDR_TOP x86 integration was left as later work.
+  */
+ #ifdef CONFIG_X86_32
+-/* used by vmalloc.c, vsyscall.lds.S.
+- *
++/*
+  * Leave one empty page between vmalloc'ed areas and
+  * the start of the fixmap.
+  */
+@@ -120,7 +119,7 @@ enum fixed_addresses {
+ 	 * before ioremap() is functional.
+ 	 *
+ 	 * If necessary we round it up to the next 512 pages boundary so
+-	 * that we can have a single pgd entry and a single pte table:
++	 * that we can have a single pmd entry and a single pte table:
+ 	 */
+ #define NR_FIX_BTMAPS		64
+ #define FIX_BTMAPS_SLOTS	8
+-- 
+2.17.0
 
-For example, with 64K pages, a PMD covers 512M. The kernel image is
-(generally) smaller than 512M, and will be mapped at page granularity.
-In that case, any PMD entry for a kernel symbol address will point to
-the PTE level table, and that will only necessarily be page-aligned, as
-any P?D level table is only necessarily page-aligned.
 
-In the same configuration, you could have less than 512M of total
-memory, and none of this memory is necessarily aligned to 512M. So
-beyond the PTE level, I don't think you can guarantee a known-to-exist
-valid PFN.
 
-I also believe that synthetic PFNs could fail pfn_valid(), so that might
-cause us pain too...
-
-Thanks,
-Mark.
