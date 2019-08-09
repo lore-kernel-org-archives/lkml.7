@@ -2,110 +2,232 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773BAC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A2EC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54834208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC44B208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:15:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565352918;
+	bh=y2AblsgyH90W9uanPM1iy1YMwgP785dob1plVrMLN3c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vgWgh907cbu+xg6Sf9cU2Eb8M8JDcw6UABgikE1c/gh42UGuWOHlr9kgQY0iQ7yIO
+	 o/wuFV+U3V9RKLPuSLJ/1MXQERmnxcqMYNs3MhcVkXhy+g5vA1MUEV38EKb3TSs8xd
+	 9zdwFWefBk4CIyp8frDm67vZv6MdybHmpmAKNu1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406770AbfHIMOa (ORCPT
+        id S2406758AbfHIMPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 08:14:30 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:20868 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbfHIMO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 08:14:29 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 679A0A1879;
-        Fri,  9 Aug 2019 14:14:28 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
-        with ESMTP id GAVsWbOOM3vL; Fri,  9 Aug 2019 14:14:23 +0200 (CEST)
-Message-ID: <0d59b0745db9dae17af0122cbb08f82540da652b.camel@carmenbianca.eu>
-Subject: Re: REUSE/SPDX: Invalid LicenseRef in Linux sources
-From:   Carmen Bianca Bakker <carmen@carmenbianca.eu>
-To:     Charlemagne Lasse <charlemagnelasse@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Basil Peace <grv87@yandex.ru>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keith Maxwell <keith.maxwell@gmail.com>,
-        Matija =?UTF-8?Q?=C5=A0uklje?= <matija.suklje@liferay.com>
-Date:   Fri, 09 Aug 2019 14:14:20 +0200
-In-Reply-To: <CAFGhKbwJVv23Mwd7ruo8JCC-0U3BdNRwnxih9zgFSCyPe=jnoA@mail.gmail.com>
-References: <CAFGhKbwJVv23Mwd7ruo8JCC-0U3BdNRwnxih9zgFSCyPe=jnoA@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-CVrLfDxRx7v5iRG0hf5e"
+        Fri, 9 Aug 2019 08:15:17 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42570 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfHIMPR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 08:15:17 -0400
+Received: by mail-ot1-f65.google.com with SMTP id l15so131744057otn.9;
+        Fri, 09 Aug 2019 05:15:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CPhQEfpz2L9VudZCV93fBfsiwCxuI7FC2IEWQ3k3cwk=;
+        b=bu9o1lxop2dB53R9PaxhTZb0axc1le/joJNESDWnIh+/6kOvvya3BVVtT9xjy8/7LS
+         lKe3qmqO7kCy5YMkYDx0UPICb+Y27//RuWt3ww8LuydVGdwi3zXbKuojrfalmVaS5opP
+         dvBxkt/hn1a+A27ChN/G1g43wKA5xa4TBxRbL9CymNXE9X2CyOeW2kptbjqwJXPTLIo3
+         GTdCHiIbobI3xKt4FwVWyGmAkeJEpw9MuVzDI6R0zBhMsH8Wbszl3Z0RE+2J6Px66r3j
+         79w8892bMoThOw8pEvzTw3MIVgj9/GRmCGb9uXfzh6Njyg1q1gwnuWbNWmpvLDkhegpK
+         0YyA==
+X-Gm-Message-State: APjAAAXNX4MeOr+QZRjCr4E2uMsihkSKokDnK3zP9Lts/Zefi4Ib/SGD
+        o2Wd8fYFRLKTU5p1O93HZXMbscK7f/QTCOWwRXI=
+X-Google-Smtp-Source: APXvYqxNJ013eLC09yGsgapHlLqfUe7REnVobb2QQ0Zm5fWHeXii/Qw7Uj++14PuKNVdHPErOsjLrF24st3nrgHmFx4=
+X-Received: by 2002:aca:d907:: with SMTP id q7mr5752039oig.68.1565352915951;
+ Fri, 09 Aug 2019 05:15:15 -0700 (PDT)
 MIME-Version: 1.0
+References: <5997740.FPbUVk04hV@kreacher> <CGME20190809120052eucas1p11b56806662ef4f4efb82a152ad651481@eucas1p1.samsung.com>
+ <74514118.QN1Ey1fWSL@kreacher> <1b181f35-29c3-c6ce-6c42-ae55e890579e@samsung.com>
+In-Reply-To: <1b181f35-29c3-c6ce-6c42-ae55e890579e@samsung.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 9 Aug 2019 14:15:04 +0200
+Message-ID: <CAJZ5v0h_Bem4U46tgJyE7k+uHFN7viqUo10Vgh+UWZf_C1qD2g@mail.gmail.com>
+Subject: Re: [PATCH v3 8/8] ACPI: PM: s2idle: Execute LPS0 _DSM functions with
+ suspended devices
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 9, 2019 at 2:00 PM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
+>
+> Hi Rafael,
+>
+> On 2019-08-02 12:45, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > According to Section 3.5 of the "Intel Low Power S0 Idle" document [1],
+> > Function 5 of the LPS0 _DSM is expected to be invoked when the system
+> > configuration matches the criteria for entering the target low-power
+> > state of the platform.  In particular, this means that all devices
+> > should be suspended and in low-power states already when that function
+> > is invoked.
+> >
+> > This is not the case currently, however, because Function 5 of the
+> > LPS0 _DSM is invoked by it before the "noirq" phase of device suspend,
+> > which means that some devices may not have been put into low-power
+> > states yet at that point.  That is a consequence of the previous
+> > design of the suspend-to-idle flow that allowed the "noirq" phase of
+> > device suspend and the "noirq" phase of device resume to be carried
+> > out for multiple times while "suspended" (if any spurious wakeup
+> > events were detected) and the point of the LPS0 _DSM Function 5
+> > invocation was chosen so as to call it (and LPS0 _DSM Function 6
+> > analogously) once per suspend-resume cycle (regardless of how many
+> > times the "noirq" phases of device suspend and resume were carried
+> > out while "suspended").
+> >
+> > Now that the suspend-to-idle flow has been redesigned to carry out
+> > the "noirq" phases of device suspend and resume once in each cycle,
+> > the code can be reordered to follow the specification that it is
+> > based on more closely.
+> >
+> > For this purpose, add ->prepare_late and ->restore_early platform
+> > callbacks for suspend-to-idle, to be executed, respectively, after
+> > the "noirq" phase of suspending devices and before the "noirq"
+> > phase of resuming them and make ACPI use them for the invocation
+> > of LPS0 _DSM functions as appropriate.
+> >
+> > While at it, move the LPS0 entry requirements check to be made
+> > before invoking Functions 3 and 5 of the LPS0 _DSM (also once
+> > per cycle) as follows from the specification [1].
+> >
+> > Link: https://uefi.org/sites/default/files/resources/Intel_ACPI_Low_Power_S0_Idle.pdf # [1]
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >
+> > In v2 this was patch 2.
+> >
+> > ---
+> >   drivers/acpi/sleep.c    |   36 ++++++++++++++++++++++++------------
+> >   include/linux/suspend.h |    2 ++
+> >   kernel/power/suspend.c  |   12 +++++++++---
+> >   3 files changed, 35 insertions(+), 15 deletions(-)
+> >
+> > Index: linux-pm/drivers/acpi/sleep.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/acpi/sleep.c
+> > +++ linux-pm/drivers/acpi/sleep.c
+> > @@ -954,11 +954,6 @@ static int acpi_s2idle_begin(void)
+> >
+> >   static int acpi_s2idle_prepare(void)
+> >   {
+> > -     if (lps0_device_handle && !sleep_no_lps0) {
+> > -             acpi_sleep_run_lps0_dsm(ACPI_LPS0_SCREEN_OFF);
+> > -             acpi_sleep_run_lps0_dsm(ACPI_LPS0_ENTRY);
+> > -     }
+> > -
+> >       if (acpi_sci_irq_valid())
+> >               enable_irq_wake(acpi_sci_irq);
+> >
+> > @@ -972,11 +967,22 @@ static int acpi_s2idle_prepare(void)
+> >       return 0;
+> >   }
+> >
+> > -static void acpi_s2idle_wake(void)
+> > +static int acpi_s2idle_prepare_late(void)
+> >   {
+> > -     if (lps0_device_handle && !sleep_no_lps0 && pm_debug_messages_on)
+> > +     if (!lps0_device_handle || sleep_no_lps0)
+> > +             return 0;
+> > +
+> > +     if (pm_debug_messages_on)
+> >               lpi_check_constraints();
+> >
+> > +     acpi_sleep_run_lps0_dsm(ACPI_LPS0_SCREEN_OFF);
+> > +     acpi_sleep_run_lps0_dsm(ACPI_LPS0_ENTRY);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static void acpi_s2idle_wake(void)
+> > +{
+> >       /*
+> >        * If IRQD_WAKEUP_ARMED is set for the SCI at this point, the SCI has
+> >        * not triggered while suspended, so bail out.
+> > @@ -1011,6 +1017,15 @@ static void acpi_s2idle_wake(void)
+> >       rearm_wake_irq(acpi_sci_irq);
+> >   }
+> >
+> > +static void acpi_s2idle_restore_early(void)
+> > +{
+> > +     if (!lps0_device_handle || sleep_no_lps0)
+> > +             return;
+> > +
+> > +     acpi_sleep_run_lps0_dsm(ACPI_LPS0_EXIT);
+> > +     acpi_sleep_run_lps0_dsm(ACPI_LPS0_SCREEN_ON);
+> > +}
+> > +
+> >   static void acpi_s2idle_restore(void)
+> >   {
+> >       s2idle_wakeup = false;
+> > @@ -1021,11 +1036,6 @@ static void acpi_s2idle_restore(void)
+> >
+> >       if (acpi_sci_irq_valid())
+> >               disable_irq_wake(acpi_sci_irq);
+> > -
+> > -     if (lps0_device_handle && !sleep_no_lps0) {
+> > -             acpi_sleep_run_lps0_dsm(ACPI_LPS0_EXIT);
+> > -             acpi_sleep_run_lps0_dsm(ACPI_LPS0_SCREEN_ON);
+> > -     }
+> >   }
+> >
+> >   static void acpi_s2idle_end(void)
+> > @@ -1036,7 +1046,9 @@ static void acpi_s2idle_end(void)
+> >   static const struct platform_s2idle_ops acpi_s2idle_ops = {
+> >       .begin = acpi_s2idle_begin,
+> >       .prepare = acpi_s2idle_prepare,
+> > +     .prepare_late = acpi_s2idle_prepare_late,
+> >       .wake = acpi_s2idle_wake,
+> > +     .restore_early = acpi_s2idle_restore_early,
+> >       .restore = acpi_s2idle_restore,
+> >       .end = acpi_s2idle_end,
+> >   };
+> > Index: linux-pm/kernel/power/suspend.c
+> > ===================================================================
+> > --- linux-pm.orig/kernel/power/suspend.c
+> > +++ linux-pm/kernel/power/suspend.c
+> > @@ -253,13 +253,19 @@ static int platform_suspend_prepare_late
+> >
+> >   static int platform_suspend_prepare_noirq(suspend_state_t state)
+> >   {
+> > -     return state != PM_SUSPEND_TO_IDLE && suspend_ops->prepare_late ?
+> > -             suspend_ops->prepare_late() : 0;
+> > +     if (state == PM_SUSPEND_TO_IDLE) {
+> > +             if (s2idle_ops && s2idle_ops->prepare_late)
+> > +                     return s2idle_ops->prepare_late();
 
---=-CVrLfDxRx7v5iRG0hf5e
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This should be
 
-Je ven, 2019-08-09 je 11:30 +0200, Charlemagne Lasse skribis:
-> When I run the reuse lint tool on the current linux sources, I get
-> following error
->=20
-> reuse.project - WARNING - Could not resolve SPDX identifier of
-> LICENSES/deprecated/GPL-1.0, resolving to LicenseRef-Unknown0
-> reuse.project - WARNING - Could not resolve SPDX identifier of
-> LICENSES/exceptions/GCC-exception-2.0, resolving to
-> LicenseRef-Unknown1
-> reuse.project - WARNING - Could not resolve SPDX identifier of
-> LICENSES/preferred/LGPL-2.0, resolving to LicenseRef-Unknown2
-> reuse.project - WARNING - Could not resolve SPDX identifier of
-> LICENSES/preferred/LGPL-2.1, resolving to LicenseRef-Unknown3
-> reuse.project - WARNING - Could not resolve SPDX identifier of
-> LICENSES/preferred/GPL-2.0, resolving to LicenseRef-Unknown4
-> reuse.project - WARNING - Could not resolve SPDX identifier of
-> LICENSES/dual/Apache-2.0, resolving to LicenseRef-Unknown5
-> reuse.project - WARNING - Could not resolve SPDX identifier of
-> LICENSES/dual/MPL-1.1, resolving to LicenseRef-Unknown6
-> reuse.project - WARNING - Could not resolve SPDX identifier of
-> LICENSES/dual/CDDL-1.0, resolving to LicenseRef-Unknown7
->=20
-> Can you please help to fix the problem
+return s2idle_ops && s2idle_ops->prepare_late ? s2idle_ops->prepare_late() : 0;
 
-The REUSE Spec mandates a file extension. The kernel isn't perfectly
-compliant, and doesn't aim to be compliant.
+> > +     }
+> > +     return suspend_ops->prepare_late ? suspend_ops->prepare_late() : 0;
+>
+> This unconditionally references suspend_ops here, what wasn't done
+> earlier. On one of my test boards (OdroidXU) it causes following NULL
+> pointer dereference since Linux next-20190809 (the first -next, which
+> contains this patch):
 
-Kindly,
-Carmen
-
-
---=-CVrLfDxRx7v5iRG0hf5e
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEaOz9p2Grh2PLV5z6duum9rbqLskFAl1NY5wACgkQduum9rbq
-Lskctg/+OAW8+sXFXIv6PQGs1b6IVgtI5nGKyGg5v89clHTACdSnaABN24Du5nnh
-qssyVVRWXQa/15gpmK4TzmZtBpPvEyCM+RBV6soAFGoPQ4vGXw2ctV9Y45jf0atq
-sLPBQR1AihnAxGhpCa865M0ILbgDB1TvloXb2AgUSnkWT0+VkjURPY2mDargF/jT
-G2DzWwrwllujCM0BMkrzb2t+IYTr8MROdw6ailOfo/F83bvokCVUN0ufTL9ezFsA
-022lGaLoXvUl8cV4DAjdlImyAb1R32unTJggcIYuWOnOxqQiU5MvIBBoLbZ3i/7A
-V50nqTAF96U1REU7n1BjNVtBz+G15D9XJJFxs7LGHbeFve6v/Zh7Yo8xe5R0bzv6
-thiXDmtbvFA0/TaIOlONG/MahQxzw7TBqHdCrgYVArV2EVsdvyyrPKvylem+UL/8
-JNmxJnaB5ELMBhkyLoXG5hUeWMELQJydT8kaAJ/HQaikZt58aJpmMhFGvrS7iYIC
-smY/CVTF85/LN56TtS33vLVH6pU+38Xpq3IB0dmxK7fd6GrIgdjqNWfEO/4VksBM
-JzJwQYNau9UypfWGO7ye9kDOVAJYCKt+ijGRUKL8ozvYOv7kpjHf9fMMn2aSWY5p
-32E5zgvhdDPh2O7ZVq2m4I8cQcZSD3wpejMQEbFiVNEIKw6SQRA=
-=cfbi
------END PGP SIGNATURE-----
-
---=-CVrLfDxRx7v5iRG0hf5e--
-
+Sorry about this, will fix early next week.
