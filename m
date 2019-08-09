@@ -2,160 +2,208 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA08C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7038C0650F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11B03216C8
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:04:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ig+OAtP2"
+	by mail.kernel.org (Postfix) with ESMTP id 99DDF217F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:04:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405399AbfHIDEB (ORCPT
+        id S2405405AbfHIDEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 23:04:01 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42624 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404533AbfHIDEA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 23:04:00 -0400
-Received: by mail-pg1-f194.google.com with SMTP id t132so45094947pgb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 20:04:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tkv9lR0hAtLKOW5gkirlFYTKguflMZvyPqUX9XJEFP8=;
-        b=ig+OAtP2gw5ZGHC7kb/G98hh1FK4Wc2v1ulYMIqyuuB6U+aEQ7jDqrZ8+nunqgl9qt
-         /gqgfZC0z3eeznbxr4Hsmatv8pY/Z8Y1IY/kKL85tzlhKcx24pVXNM9df3jmdz9+/ngu
-         lUDBmY65fid2RtFO3K7RM4pFiDfPNf7B3PEdd/IfblT1GhnK8cMSa6TkqALPRM8A1N3n
-         nQPaXYSBA7yKqsy7yEI2T2iYNjK6WJ3z9JVa8OCLatuyyleapeWvVYHKKXwSx7ke0Cgi
-         R4g8yd/9XhVruVrmgHEr6l9FSgmRHILnwq/BfoCp2CrrbEfxxnoBQUPaJsVfMshYVqfY
-         1SKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tkv9lR0hAtLKOW5gkirlFYTKguflMZvyPqUX9XJEFP8=;
-        b=tA+vRuOeQmzrxc9S9qzR2eRLZZDTbetCmzXN5lbRwV9ZdFeKjP7Rd++bd/+RuPbdHu
-         B48LDKitWs928/Ks4DKoHXzxDTQc0kHAL0yKR/uYPy9Atibwl8HQwTsN7hT2SED9kf7T
-         dHXoHPYifwTz4ZDEgwcn+i1uZiKFL6iddR6l1khV4QSImeLmFOfl+F3MCYCVrGjWqM8q
-         H+GnDMAVAxg7M//SYJzpSlDXFP/T8RafZqVavtad06OjffXlqZz05LfEYmerueKBcMRS
-         pEKAgzO0dSJa7KpjCJkn9bxsSndOmU8SWKWoYPEwzwDgNXZyRmNCdt5c7BI7/gveqFgv
-         uG4Q==
-X-Gm-Message-State: APjAAAUNVLsKdvrO/DUWzUhrUf9I/esl68NkOc+j/PdOeXSMqo5vBP9u
-        3tCO7rGRSet2hCDe4GFpS8s=
-X-Google-Smtp-Source: APXvYqzwYr2SVNpMMxAdcYQ9Urz+CDCc1DrarrFpT95gsVVoB6V3ZEsbz1CDkRRDaCJFCxXzwu+Icw==
-X-Received: by 2002:a63:f357:: with SMTP id t23mr15859793pgj.421.1565319839914;
-        Thu, 08 Aug 2019 20:03:59 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id o14sm3556284pjp.19.2019.08.08.20.03.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 08 Aug 2019 20:03:59 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] regulator: core: Add devres versions of regulator_enable/disable
-Date:   Fri,  9 Aug 2019 11:03:52 +0800
-Message-Id: <20190809030352.8387-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 8 Aug 2019 23:04:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49212 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733140AbfHIDEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 23:04:37 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 51D764F1BA;
+        Fri,  9 Aug 2019 03:04:36 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-27.pek2.redhat.com [10.72.8.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7DFB019C70;
+        Fri,  9 Aug 2019 03:04:30 +0000 (UTC)
+Date:   Fri, 9 Aug 2019 11:04:25 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jon Derrick <jonathan.derrick@intel.com>
+Subject: Re: [PATCH] genirq/affinity: report extra vectors on uneven nodes
+Message-ID: <20190809030424.GA17485@ming.t460p>
+References: <20190807201051.32662-1-jonathan.derrick@intel.com>
+ <alpine.DEB.2.21.1908080903360.2882@nanos.tec.linutronix.de>
+ <20190808163224.GB27077@localhost.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808163224.GB27077@localhost.localdomain>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 09 Aug 2019 03:04:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I wrote a coccinelle script to detect possible chances
-of utilizing devm_() APIs to simplify the driver.
-The script found 147 drivers in total and 22 of them
-have be patched.
+On Thu, Aug 08, 2019 at 10:32:24AM -0600, Keith Busch wrote:
+> On Thu, Aug 08, 2019 at 09:04:28AM +0200, Thomas Gleixner wrote:
+> > On Wed, 7 Aug 2019, Jon Derrick wrote:
+> > > The current irq spreading algorithm spreads vectors amongst cpus evenly
+> > > per node. If a node has more cpus than another node, the extra vectors
+> > > being spread may not be reported back to the caller.
+> > > 
+> > > This is most apparent with the NVMe driver and nr_cpus < vectors, where
+> > > the underreporting results in the caller's WARN being triggered:
+> > > 
+> > > irq_build_affinity_masks()
+> > > ...
+> > > 	if (nr_present < numvecs)
+> > > 		WARN_ON(nr_present + nr_others < numvecs);
+> > > 
+> > > Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+> > > ---
+> > >  kernel/irq/affinity.c | 7 +++++--
+> > >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
+> > > index 4352b08ae48d..9beafb8c7e92 100644
+> > > --- a/kernel/irq/affinity.c
+> > > +++ b/kernel/irq/affinity.c
+> > > @@ -127,7 +127,8 @@ static int __irq_build_affinity_masks(unsigned int startvec,
+> > >  	}
+> > >  
+> > >  	for_each_node_mask(n, nodemsk) {
+> > > -		unsigned int ncpus, v, vecs_to_assign, vecs_per_node;
+> > > +		unsigned int ncpus, v, vecs_to_assign, total_vecs_to_assign,
+> > > +			vecs_per_node;
+> > >  
+> > >  		/* Spread the vectors per node */
+> > >  		vecs_per_node = (numvecs - (curvec - firstvec)) / nodes;
+> > > @@ -141,14 +142,16 @@ static int __irq_build_affinity_masks(unsigned int startvec,
+> > >  
+> > >  		/* Account for rounding errors */
+> > >  		extra_vecs = ncpus - vecs_to_assign * (ncpus / vecs_to_assign);
+> > > +		total_vecs_to_assign = vecs_to_assign + extra_vecs;
+> > >  
+> > > -		for (v = 0; curvec < last_affv && v < vecs_to_assign;
+> > > +		for (v = 0; curvec < last_affv && v < total_vecs_to_assign;
+> > >  		     curvec++, v++) {
+> > >  			cpus_per_vec = ncpus / vecs_to_assign;
+> > >  
+> > >  			/* Account for extra vectors to compensate rounding errors */
+> > >  			if (extra_vecs) {
+> > >  				cpus_per_vec++;
+> > > +				v++;
+> > >  				--extra_vecs;
+> > >  			}
+> > >  			irq_spread_init_one(&masks[curvec].mask, nmsk,
+> > > -- 
+> 
+> This looks like it will break the spread to non-present CPUs since
+> it's not accurately reporting how many vectors were assigned for the
+> present spread.
+> 
+> I think the real problem is the spread's vecs_per_node doesn't account
+> which nodes contribute more CPUs than others. For example:
+> 
+>   Node 0 has 32 CPUs
+>   Node 1 has 8 CPUs
+>   Assign 32 vectors
+> 
+> The current algorithm assigns 16 vectors to node 0 because vecs_per_node
+> is calculated as 32 vectors / 2 nodes on the first iteration. The
+> subsequent iteration for node 1 gets 8 vectors because it has only 8
+> CPUs, leaving 8 vectors unassigned.
+> 
+> A more fair spread would give node 0 the remaining 8 vectors. This
+> optimization, however, is a bit more complex than the current algorithm,
+> which is probably why it wasn't done, so I think the warning should just
+> be removed.
 
-Within the 125 left ones, at least 31 of them (24.8%)
-are hindered from benefiting from devm_() APIs because
-of lack of a devres version of regulator_enable().
+Another policy is to assign vectors among nodes according to the
+following ratio:
 
-Therefore I implemented devm_regulator_enable/disable()
-to make more drivers possible to use devm_() APIs.
+	ncpus in this node / total ncpus in un-assigned nodes  
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/regulator/devres.c | 55 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+I have tried the following patch, looks it works fine:
 
-diff --git a/drivers/regulator/devres.c b/drivers/regulator/devres.c
-index 3ea1c170f840..507151a71fd3 100644
---- a/drivers/regulator/devres.c
-+++ b/drivers/regulator/devres.c
-@@ -115,6 +115,61 @@ void devm_regulator_put(struct regulator *regulator)
+diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
+index 6fef48033f96..a598f20701a3 100644
+--- a/kernel/irq/affinity.c
++++ b/kernel/irq/affinity.c
+@@ -94,6 +94,28 @@ static int get_nodes_in_cpumask(cpumask_var_t *node_to_cpumask,
+ 	return nodes;
  }
- EXPORT_SYMBOL_GPL(devm_regulator_put);
  
-+static void devm_regulator_off(struct device *dev, void *res)
++static int nodes_cpus(unsigned start_node, const nodemask_t nodemsk,
++		const cpumask_var_t *node_to_cpumask,
++		const struct cpumask *cpu_mask, struct cpumask *nmsk)
 +{
-+	regulator_disable(*(struct regulator **)res);
-+}
++	unsigned n, ncpus, total_cpus = 0;
 +
-+/**
-+ * devm_regulator_enable - Resource managed regulator_enable()
-+ * @regulator: regulator to enable
-+ *
-+ * Managed regulator_enable(). Regulator enabled is automatically
-+ * disabled on driver detach. See regulator_enable() for more
-+ * information.
-+ */
-+int devm_regulator_enable(struct device *dev, struct regulator *regulator)
-+{
-+	struct regulator **ptr;
-+	int ret;
++	for_each_node_mask(n, nodemsk) {
++		if (n < start_node)
++			continue;
 +
-+	ptr = devres_alloc(devm_regulator_off, sizeof(*ptr), GFP_KERNEL);
-+	if (!ptr)
-+		return -ENOMEM;
++		/* Get the cpus on this node which are in the mask */
++		cpumask_and(nmsk, cpu_mask, node_to_cpumask[n]);
 +
-+	ret = regulator_enable(regulator);
-+	if (!ret) {
-+		*ptr = regulator;
-+		devres_add(dev, ptr);
-+	} else {
-+		devres_free(ptr);
++		/* Calculate the number of cpus per vector */
++		ncpus = cpumask_weight(nmsk);
++
++		total_cpus += ncpus;
 +	}
 +
-+	return ret;
++	return total_cpus;
 +}
-+EXPORT_SYMBOL_GPL(devm_regulator_enable);
 +
-+/**
-+ * devm_regulator_disable - Resource managed regulator_disable()
-+ * @regulator: regulator to disable
-+ *
-+ * Disable a regulator enabled by devm_regulator_enable().
-+ * Normally this function will not need to be called and the
-+ * resource management code will ensure that the regulator is
-+ * disabled.
-+ */
-+void devm_regulator_disable(struct regulator *regulator)
-+{
-+	int rc;
+ static int __irq_build_affinity_masks(unsigned int startvec,
+ 				      unsigned int numvecs,
+ 				      unsigned int firstvec,
+@@ -128,15 +150,25 @@ static int __irq_build_affinity_masks(unsigned int startvec,
+ 
+ 	for_each_node_mask(n, nodemsk) {
+ 		unsigned int ncpus, v, vecs_to_assign, vecs_per_node;
+-
+-		/* Spread the vectors per node */
+-		vecs_per_node = (numvecs - (curvec - firstvec)) / nodes;
++		unsigned int ncpus_left = nodes_cpus(n, nodemsk,
++				node_to_cpumask, cpu_mask, nmsk);
+ 
+ 		/* Get the cpus on this node which are in the mask */
+ 		cpumask_and(nmsk, cpu_mask, node_to_cpumask[n]);
+ 
+ 		/* Calculate the number of cpus per vector */
+ 		ncpus = cpumask_weight(nmsk);
 +
-+	rc = devres_release(regulator->dev, devm_regulator_off,
-+			    devm_regulator_match, regulator);
++		/*
++		 * Spread the vectors per node, and node with more CPUs will be
++		 * assigned to more vectors
++		 */
++		vecs_per_node = (numvecs - (curvec - firstvec)) * ncpus / ncpus_left;
 +
-+	if (rc != 0)
-+		WARN_ON(rc);
-+}
-+EXPORT_SYMBOL_GPL(devm_regulator_disable);
++		/* at least assign one vector for this node */
++		if (!vecs_per_node)
++			vecs_per_node = 1;
 +
- struct regulator_bulk_devres {
- 	struct regulator_bulk_data *consumers;
- 	int num_consumers;
--- 
-2.20.1
+ 		vecs_to_assign = min(vecs_per_node, ncpus);
+ 
+ 		/* Account for rounding errors */
+@@ -160,7 +192,6 @@ static int __irq_build_affinity_masks(unsigned int startvec,
+ 			break;
+ 		if (curvec >= last_affv)
+ 			curvec = firstvec;
+-		--nodes;
+ 	}
+ 	return done;
+ }
 
+
+thanks,
+Ming
