@@ -2,116 +2,109 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F50C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B140C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D79D2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 665F420B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:39:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="btgHICFc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437456AbfHIQfz (ORCPT
+        id S2437191AbfHIQjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 12:35:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54606 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437226AbfHIQfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 12:35:55 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BEBED300BEAC;
-        Fri,  9 Aug 2019 16:35:54 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 00E1B19C70;
-        Fri,  9 Aug 2019 16:35:52 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri,  9 Aug 2019 18:35:54 +0200 (CEST)
-Date:   Fri, 9 Aug 2019 18:35:52 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        Kernel Team <Kernel-team@fb.com>,
-        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
-        "srikar@linux.vnet.ibm.com" <srikar@linux.vnet.ibm.com>
-Subject: Re: [PATCH v12 3/6] mm, thp: introduce FOLL_SPLIT_PMD
-Message-ID: <20190809163551.GB21489@redhat.com>
-References: <20190807233729.3899352-1-songliubraving@fb.com>
- <20190807233729.3899352-4-songliubraving@fb.com>
- <20190808163745.GC7934@redhat.com>
- <48316E06-10B2-439C-AD10-3EC8C86C259C@fb.com>
+        Fri, 9 Aug 2019 12:39:33 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40552 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437094AbfHIQjc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 12:39:32 -0400
+Received: by mail-ot1-f66.google.com with SMTP id l15so77701103oth.7
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 09:39:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CikhgCxe5YHX0c3F28QN7MAGvPAtgLNBsm2uQo1hLD0=;
+        b=btgHICFcCUxPl6D9I8cv8GHpDwrNnZfc0toIv36RpNA6sM6aRbW7JK+RL7MY7vx6cQ
+         ulcmH6aZbBZ7PVYZRkbprh65Ce29zF+FlETeZck1Xe83EP9G+Qdu9A0J7DxlcUKWxKtH
+         n1hcpUP6onuyWpBKc0ArYdjNP2ihj3W3NT/BzYZ05r4r39ufzzLEAEijCePWKjm0IhYi
+         dwwmjTjfFuClvAyaGFaTcaIz0i8h9o3BqYcXcztpUXcZgSVVz7bVuAt39mryY0fPT/BN
+         y8a51j/EZPgx1B4pZ+wD1Fvxlf3dC4UCYSsmEb5WTcDyL40t+VXkFs3n2FiCM6UjBavk
+         QggA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CikhgCxe5YHX0c3F28QN7MAGvPAtgLNBsm2uQo1hLD0=;
+        b=YmYyHc2JPziHpjhYZP+6bdftyDdWRIBYkmaiffo70SvrRA/1mVtcWJqZFzpJZFBs9M
+         f/3q5XnIb2zMmE1I8B4Je0Z3mSjhsqXEsKUguE4CUd96nzUkYRYsSIgsV0YKCGEwyMT1
+         zODAoJEHfcUb4dFtiot7Uk/nruytarrk6+aTPvngm2/Gc+VZueZ300oXQp/KM1X7yqRK
+         aD5rtr2ECJMReqAMGkSLKweHdup7ChemPET187QQIPatvjU2CH03QeuhBZCPmtFyKD7N
+         AJSQEP1edK5gpTxZbJ9fqOEn18exH6dbUe4Di6m9PVTQq/m7+muu/KHbblKN0IiT5qFL
+         sTmw==
+X-Gm-Message-State: APjAAAWKvAkDmW3GN3EiELIMcc3GwLQx+Z1gluV+bwi3slCDw4P8AjbK
+        1Bcyp6oKo7riaSdJTeIFYARCWwuPZim2aPzkiHQRYA==
+X-Google-Smtp-Source: APXvYqxwLpoE/tc3o62UOQlp4MxHt/gGVuPES6o5jLGsvs8jO6hTe+N8rC2/0es03Xs8vz2GcFCsFP96KEZXcmGwrF8=
+X-Received: by 2002:a02:c65a:: with SMTP id k26mr12576081jan.18.1565368771480;
+ Fri, 09 Aug 2019 09:39:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <48316E06-10B2-439C-AD10-3EC8C86C259C@fb.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 09 Aug 2019 16:35:54 +0000 (UTC)
+References: <1565336051-31793-1-git-send-email-pbonzini@redhat.com> <20190809161937.GB10541@linux.intel.com>
+In-Reply-To: <20190809161937.GB10541@linux.intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Fri, 9 Aug 2019 09:39:19 -0700
+Message-ID: <CALMp9eT+biHFQDygxk4aNg2huP_DHG=BTPYnbmLsY9bfGcwi0g@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: add KVM x86 reviewers
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/08, Song Liu wrote:
+On Fri, Aug 9, 2019 at 9:19 AM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
 >
-> > On Aug 8, 2019, at 9:37 AM, Oleg Nesterov <oleg@redhat.com> wrote:
+> On Fri, Aug 09, 2019 at 09:34:11AM +0200, Paolo Bonzini wrote:
+> > This is probably overdone---KVM x86 has quite a few contributors that
+> > usually review each other's patches, which is really helpful to me.
+> > Formalize this by listing them as reviewers.  I am including people
+> > with various expertise:
 > >
-> > On 08/07, Song Liu wrote:
-> >>
-> >> @@ -399,7 +399,7 @@ static struct page *follow_pmd_mask(struct vm_area_struct *vma,
-> >> 		spin_unlock(ptl);
-> >> 		return follow_page_pte(vma, address, pmd, flags, &ctx->pgmap);
-> >> 	}
-> >> -	if (flags & FOLL_SPLIT) {
-> >> +	if (flags & (FOLL_SPLIT | FOLL_SPLIT_PMD)) {
-> >> 		int ret;
-> >> 		page = pmd_page(*pmd);
-> >> 		if (is_huge_zero_page(page)) {
-> >> @@ -408,7 +408,7 @@ static struct page *follow_pmd_mask(struct vm_area_struct *vma,
-> >> 			split_huge_pmd(vma, pmd, address);
-> >> 			if (pmd_trans_unstable(pmd))
-> >> 				ret = -EBUSY;
-> >> -		} else {
-> >> +		} else if (flags & FOLL_SPLIT) {
-> >> 			if (unlikely(!try_get_page(page))) {
-> >> 				spin_unlock(ptl);
-> >> 				return ERR_PTR(-ENOMEM);
-> >> @@ -420,6 +420,10 @@ static struct page *follow_pmd_mask(struct vm_area_struct *vma,
-> >> 			put_page(page);
-> >> 			if (pmd_none(*pmd))
-> >> 				return no_page_table(vma, flags);
-> >> +		} else {  /* flags & FOLL_SPLIT_PMD */
-> >> +			spin_unlock(ptl);
-> >> +			split_huge_pmd(vma, pmd, address);
-> >> +			ret = pte_alloc(mm, pmd) ? -ENOMEM : 0;
-> >> 		}
+> > - Joerg for SVM (with designated reviewers, it makes more sense to have
+> > him in the main KVM/x86 stanza)
 > >
-> > Can't resist, let me repeat that I do not like this patch because imo
-> > it complicates this code for no reason.
->
-> Personally, I don't think this is more complicated than your version.
-
-I do, but of course this is subjective.
-
-> Also, if some code calls follow_pmd_mask() with flags contains both
-> FOLL_SPLIT and FOLL_SPLIT_PMD, we should honor FOLL_SPLIT and split the
-> huge page.
-
-Heh. why not other way around?
-
-> Of course, there is no code that sets both flags.
-
-and of course, nobody should ever pass both FOLL_SPLIT and FOLL_SPLIT_PMD,
-perhaps this deserves a warning.
-
-Not to mention that it would be nice to kill FOLL_SPLIT which has a single
-user, but this is another story.
-
-Oleg.
-
+> > - Sean for MMU and VMX
+> >
+> > - Jim for VMX
+> >
+> > - Vitaly for Hyper-V and possibly SVM
+> >
+> > - Wanpeng for LAPIC and paravirtualization.
+> >
+> > Please ack if you are okay with this arrangement, otherwise speak up.
+> >
+> > In other news, Radim is going to leave Red Hat soon.  However, he has
+> > not been very much involved in upstream KVM development for some time,
+> > and in the immediate future he is still going to help maintain kvm/queue
+> > while I am on vacation.  Since not much is going to change, I will let
+> > him decide whether he wants to keep the maintainer role after he leaves.
+> >
+> > Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> > Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> > Cc: Wanpeng Li <wanpengli@tencent.com>
+> > Cc: Jim Mattson <jmattson@google.com>
+> > Cc: Joerg Roedel <joro@8bytes.org>
+> > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> > ---
+Acked-by: Jim Mattson <jmattson@google.com>
