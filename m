@@ -2,144 +2,128 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E11FC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B8DC41514
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7532171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 795E421783
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:45:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r+rAYd5A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406099AbfHIJoq (ORCPT
+        id S2406157AbfHIJpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 05:44:46 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:34063 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730233AbfHIJop (ORCPT
+        Fri, 9 Aug 2019 05:45:03 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33791 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730233AbfHIJpC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 05:44:45 -0400
-X-Originating-IP: 81.250.144.103
-Received: from [10.30.1.20] (lneuilly-657-1-5-103.w81-250.abo.wanadoo.fr [81.250.144.103])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 5865C6000D;
-        Fri,  9 Aug 2019 09:44:39 +0000 (UTC)
-Subject: Re: [PATCH v6 09/14] mips: Properly account for stack randomization
- and stack guard gap
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        James Hogan <jhogan@kernel.org>,
-        linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <20190808061756.19712-1-alex@ghiti.fr>
- <20190808061756.19712-10-alex@ghiti.fr>
- <bd67507e-8a5b-34b5-1a33-5500bbb724b2@cogentembedded.com>
-From:   Alexandre Ghiti <alex@ghiti.fr>
-Message-ID: <91e31484-b268-2c90-1dd1-98cec349af6c@ghiti.fr>
-Date:   Fri, 9 Aug 2019 11:44:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 9 Aug 2019 05:45:02 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n190so4790071pgn.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 02:45:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ge9zDnKeP5Zu0nmntU1cSXLgT4EnpnKS+7IQa6koc8o=;
+        b=r+rAYd5AMY5icdk4MZb2mTfCNXTc5DxqZTHJiYkRCv6khogb6xombKcpNQLr8sZkxS
+         rIABZfWtmM3nuRZm9qPBOmb6LzDdi86ahUCXSA1JjScEYA638D1V2QOp4xPXZDgXZQFK
+         vHiE36+IR97fV1aAfPm9vTE8VI5zWkxFalMtMoj3ZToR4qRCL4Jq/yBNzmysUyY6ovT5
+         Rxy3V21jraMU24Oq/8rdc3KMP92DnWLMysM1N5RjEoDNiB0A1UNa3HBTZph2Ah4MAdSN
+         wwM3NAmIR3Zr9vKpGHgBiq2W2sCerpYlL0Sq1dqBmN720+/ku3xrD8LvtFQ7NMEnIU5Z
+         kqhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ge9zDnKeP5Zu0nmntU1cSXLgT4EnpnKS+7IQa6koc8o=;
+        b=cyANpzgTKfsxAlIYyRhFW5J/DlAxbiruUHm7YLhUvlxoDo5pibSRpZNbZyUKFu9Uut
+         gf3aYoqIc+6Xk6rDMoKpWYOKZ34aRW3egJdA7gue1tB7EG4y9HIZ4nhDxWF3b+A+PGGo
+         4eaLpEvXDRKFUeyGthYnDFYjiJOSG7yWGaM0UBJ05mWb4J0IgJSBZ5rYUK7EsDcSEpWN
+         Sqf85dsPwqJh+rSoiTdKr0F+OSzK6F304qKgd3vWjAUuydrJwCwxpYYsuZL9wZCs4w0m
+         eqBgdkwRA8vni9GqgQnhVyVQtYGlt7HxsEOckwZlAnZo9dBEvm5mZR4MmANkh03KjtDa
+         Cfgw==
+X-Gm-Message-State: APjAAAV8TD1LEGr1T77DRn66Kd3xr3WM204sT47s8iqEuHI+TQwBeWP6
+        S6QYsBPE+WVCwbz7htp2kr8=
+X-Google-Smtp-Source: APXvYqxT1PLVMyiCnMcyJVwKgIa9oFlTOOytPuC0Zu8U6Kfk//cGcEpNvnMrzMvBp3DQturQVby8YA==
+X-Received: by 2002:a62:e308:: with SMTP id g8mr21369420pfh.162.1565343902160;
+        Fri, 09 Aug 2019 02:45:02 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.33])
+        by smtp.gmail.com with ESMTPSA id 64sm98698155pfe.128.2019.08.09.02.44.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 02:45:01 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 15:14:51 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org, sivanich@sgi.com,
+        ira.weiny@intel.com, jglisse@redhat.com,
+        william.kucharski@oracle.com, hch@lst.de,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [Linux-kernel-mentees][PATCH v4 1/1] sgi-gru: Remove *pte_lookup
+ functions
+Message-ID: <20190809094451.GB22457@bharath12345-Inspiron-5559>
+References: <1565290555-14126-1-git-send-email-linux.bhar@gmail.com>
+ <1565290555-14126-2-git-send-email-linux.bhar@gmail.com>
+ <b659042a-f2c3-df3c-4182-bb7dd5156bc1@nvidia.com>
+ <97a93739-783a-cf26-8384-a87c7d8bf75e@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <bd67507e-8a5b-34b5-1a33-5500bbb724b2@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: fr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <97a93739-783a-cf26-8384-a87c7d8bf75e@nvidia.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/8/19 11:16 AM, Sergei Shtylyov wrote:
-> Hello!
->
-> On 08.08.2019 9:17, Alexandre Ghiti wrote:
->
->> This commit takes care of stack randomization and stack guard gap when
->> computing mmap base address and checks if the task asked for 
->> randomization.
->>
->> This fixes the problem uncovered and not fixed for arm here:
->> https://lkml.kernel.org/r/20170622200033.25714-1-riel@redhat.com
->>
->> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
->> Acked-by: Kees Cook <keescook@chromium.org>
->> Acked-by: Paul Burton <paul.burton@mips.com>
->> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
->> ---
->>   arch/mips/mm/mmap.c | 14 ++++++++++++--
->>   1 file changed, 12 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/mips/mm/mmap.c b/arch/mips/mm/mmap.c
->> index d79f2b432318..f5c778113384 100644
->> --- a/arch/mips/mm/mmap.c
->> +++ b/arch/mips/mm/mmap.c
->> @@ -21,8 +21,9 @@ unsigned long shm_align_mask = PAGE_SIZE - 1;    /* 
->> Sane caches */
->>   EXPORT_SYMBOL(shm_align_mask);
->>     /* gap between mmap and stack */
->> -#define MIN_GAP (128*1024*1024UL)
->> -#define MAX_GAP ((TASK_SIZE)/6*5)
->> +#define MIN_GAP        (128*1024*1024UL)
->> +#define MAX_GAP        ((TASK_SIZE)/6*5)
->
->    Could add spaces around *, while touching this anyway? And parens
-> around TASK_SIZE shouldn't be needed...
->
+On Thu, Aug 08, 2019 at 04:30:48PM -0700, John Hubbard wrote:
+> On 8/8/19 4:21 PM, John Hubbard wrote:
+> > On 8/8/19 11:55 AM, Bharath Vedartham wrote:
+> > ...
+> >>  	if (is_gru_paddr(paddr))
+> >>  		goto inval;
+> >> -	paddr = paddr & ~((1UL << ps) - 1);
+> >> +	paddr = paddr & ~((1UL << *pageshift) - 1);
+> >>  	*gpa = uv_soc_phys_ram_to_gpa(paddr);
+> >> -	*pageshift = ps;
+> > 
+> > Why are you no longer setting *pageshift? There are a couple of callers
+> > that both use this variable.
+> > 
+> > 
+> 
+> ...and once that's figured out, I can fix it up here and send it up with 
+> the next misc callsites series. I'm also inclined to make the commit
+> log read more like this:
+> 
+> sgi-gru: Remove *pte_lookup functions, convert to put_user_page*()
+> 
+> For pages that were retained via get_user_pages*(), release those pages
+> via the new put_user_page*() routines, instead of via put_page() or
+> release_pages().
+> 
+> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+> ("mm: introduce put_user_page*(), placeholder versions").
+> 
+> As part of this conversion, the *pte_lookup functions can be removed and
+> be easily replaced with get_user_pages_fast() functions. In the case of
+> atomic lookup, __get_user_pages_fast() is used, because it does not fall
+> back to the slow path: get_user_pages(). get_user_pages_fast(), on the other
+> hand, first calls __get_user_pages_fast(), but then falls back to the
+> slow path if __get_user_pages_fast() fails.
+> 
+> Also: remove unnecessary CONFIG_HUGETLB ifdefs.
+Sounds great! I will send the next version with an updated changelog!
 
-I did not fix checkpatch warnings here since this code gets removed 
-afterwards.
-
-
->> +#define STACK_RND_MASK    (0x7ff >> (PAGE_SHIFT - 12))
->>     static int mmap_is_legacy(struct rlimit *rlim_stack)
->>   {
->> @@ -38,6 +39,15 @@ static int mmap_is_legacy(struct rlimit *rlim_stack)
->>   static unsigned long mmap_base(unsigned long rnd, struct rlimit 
->> *rlim_stack)
->>   {
->>       unsigned long gap = rlim_stack->rlim_cur;
->> +    unsigned long pad = stack_guard_gap;
->> +
->> +    /* Account for stack randomization if necessary */
->> +    if (current->flags & PF_RANDOMIZE)
->> +        pad += (STACK_RND_MASK << PAGE_SHIFT);
->
->    Parens not needed here.
-
-
-Belt and braces approach here as I'm never sure about priorities.
-
-Thanks for your time,
-
-Alex
-
-
->
->> +
->> +    /* Values close to RLIM_INFINITY can overflow. */
->> +    if (gap + pad > gap)
->> +        gap += pad;
->>         if (gap < MIN_GAP)
->>           gap = MIN_GAP;
->>
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+Thank you
+Bharath
+> 
+> thanks,
+> -- 
+> John Hubbard
+> NVIDIA
