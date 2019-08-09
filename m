@@ -2,162 +2,143 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CF3C32756
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3945CC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC4220C01
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:23:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SJkVka8g"
+	by mail.kernel.org (Postfix) with ESMTP id E391A214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:24:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407431AbfHIQXZ (ORCPT
+        id S2436626AbfHIQYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 12:23:25 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:3035 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407405AbfHIQXY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 12:23:24 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4d9dfc0001>; Fri, 09 Aug 2019 09:23:24 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 09 Aug 2019 09:23:22 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 09 Aug 2019 09:23:22 -0700
-Received: from [10.2.167.88] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 9 Aug
- 2019 16:23:21 +0000
-Subject: Re: [PATCH v8 19/21] soc/tegra: pmc: Configure deep sleep control
- settings
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-20-git-send-email-skomatineni@nvidia.com>
- <57ed54cd-bf57-cab1-eb63-8548761640de@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <275f3685-bc53-38ff-c778-cf2ea588e5a5@nvidia.com>
-Date:   Fri, 9 Aug 2019 09:23:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 9 Aug 2019 12:24:30 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:58878 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406171AbfHIQYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 12:24:30 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 8677FFB06;
+        Fri,  9 Aug 2019 18:24:26 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id zhSWzhnDUXoG; Fri,  9 Aug 2019 18:24:24 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id B0B2540B40; Fri,  9 Aug 2019 18:24:23 +0200 (CEST)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH v2 1/3] arm64: imx8mq: add imx8mq iomux-gpr field defines
+Date:   Fri,  9 Aug 2019 18:24:21 +0200
+Message-Id: <e0562d8bb4098dc4cdb4023b41fb75b312be22a5.1565367567.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1565367567.git.agx@sigxcpu.org>
+References: <cover.1565367567.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-In-Reply-To: <57ed54cd-bf57-cab1-eb63-8548761640de@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565367804; bh=hZlKkX1rFr4vL+pJND2gxRlDf4kcTv5t7znratg6u9E=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=SJkVka8g7pDkab2VphrL2rmAmK5iXvcQ05yk3qkKTv3xk4y3vUoBg/pRkL3nWidRN
-         5oiE+oirqHYJS+K+KJFSToQ7i7sCrAbjVP6LflqEOf7/PFpjEuCR/CS120Tlm4UKWF
-         admBMJgXBi4e0v/n+PqESkWFCAGHv5ndT77VICIqXja+08Cg+hAiq9WgpEUDN6MIuB
-         f4XvEanilPyGjZp81Au9pHkxlKQO/WFLl2dftnl38Me4HaR/WB4prpS25quawOpctt
-         yszooDw8n76ZdYfVywL8u3Vciydmc3ezjp+2wBcs4tbMS8Xejdw3WWIzKGrwkmJIcE
-         pbyST3xXUvLcw==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This adds all the gpr registers and the define needed for selecting
+the input source in the imx-nwl drm bridge.
 
-On 8/9/19 6:23 AM, Dmitry Osipenko wrote:
-> 09.08.2019 2:46, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> Tegra210 and prior Tegra chips have deep sleep entry and wakeup related
->> timings which are platform specific that should be configured before
->> entering into deep sleep.
->>
->> Below are the timing specific configurations for deep sleep entry and
->> wakeup.
->> - Core rail power-on stabilization timer
->> - OSC clock stabilization timer after SOC rail power is stabilized.
->> - Core power off time is the minimum wake delay to keep the system
->>    in deep sleep state irrespective of any quick wake event.
->>
->> These values depends on the discharge time of regulators and turn OFF
->> time of the PMIC to allow the complete system to finish entering into
->> deep sleep state.
->>
->> These values vary based on the platform design and are specified
->> through the device tree.
->>
->> This patch has implementation to configure these timings which are must
->> to have for proper deep sleep and wakeup operations.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   drivers/soc/tegra/pmc.c | 13 ++++++++++++-
->>   1 file changed, 12 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->> index e013ada7e4e9..9a78d8417367 100644
->> --- a/drivers/soc/tegra/pmc.c
->> +++ b/drivers/soc/tegra/pmc.c
->> @@ -88,6 +88,8 @@
->>  =20
->>   #define PMC_CPUPWRGOOD_TIMER		0xc8
->>   #define PMC_CPUPWROFF_TIMER		0xcc
->> +#define PMC_COREPWRGOOD_TIMER		0x3c
->> +#define PMC_COREPWROFF_TIMER		0xe0
->>  =20
->>   #define PMC_PWR_DET_VALUE		0xe4
->>  =20
->> @@ -2277,7 +2279,7 @@ static const struct tegra_pmc_regs tegra20_pmc_reg=
-s =3D {
->>  =20
->>   static void tegra20_pmc_init(struct tegra_pmc *pmc)
->>   {
->> -	u32 value;
->> +	u32 value, osc, pmu, off;
->>  =20
->>   	/* Always enable CPU power request */
->>   	value =3D tegra_pmc_readl(pmc, PMC_CNTRL);
->> @@ -2303,6 +2305,15 @@ static void tegra20_pmc_init(struct tegra_pmc *pm=
-c)
->>   	value =3D tegra_pmc_readl(pmc, PMC_CNTRL);
->>   	value |=3D PMC_CNTRL_SYSCLK_OE;
->>   	tegra_pmc_writel(pmc, value, PMC_CNTRL);
->> +
->> +	osc =3D DIV_ROUND_UP(pmc->core_osc_time * 8192, 1000000);
->> +	pmu =3D DIV_ROUND_UP(pmc->core_pmu_time * 32768, 1000000);
->> +	off =3D DIV_ROUND_UP(pmc->core_off_time * 32768, 1000000);
->> +	if (osc && pmu)
->> +		tegra_pmc_writel(pmc, ((osc << 8) & 0xff00) | (pmu & 0xff),
->> +				 PMC_COREPWRGOOD_TIMER);
->> +	if (off)
->> +		tegra_pmc_writel(pmc, off, PMC_COREPWROFF_TIMER);
-> The osc/pmu/off values are undefined if they are not defined in device-tr=
-ee. I suppose this
-> need to be corrected in tegra_pmc_parse_dt() if the values really matter =
-even if LP0 suspend
-> isn't supported in device-tree.
->
-> And I'm also not sure what's wrong with setting 0 for the timers.
->
-These settings are for SC7 only and will not have any impact in normal=20
-state.
->>   }
->>  =20
->>   static void tegra20_pmc_setup_irq_polarity(struct tegra_pmc *pmc,
->>
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+---
+ include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h | 62 ++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+ create mode 100644 include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h
+
+diff --git a/include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h b/include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h
+new file mode 100644
+index 000000000000..62e85ffacfad
+--- /dev/null
++++ b/include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h
+@@ -0,0 +1,62 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2017 NXP
++ *               2019 Purism SPC
++ */
++
++#ifndef __LINUX_IMX8MQ_IOMUXC_GPR_H
++#define __LINUX_IMX8MQ_IOMUXC_GPR_H
++
++#define IOMUXC_GPR0	0x00
++#define IOMUXC_GPR1	0x04
++#define IOMUXC_GPR2	0x08
++#define IOMUXC_GPR3	0x0c
++#define IOMUXC_GPR4	0x10
++#define IOMUXC_GPR5	0x14
++#define IOMUXC_GPR6	0x18
++#define IOMUXC_GPR7	0x1c
++#define IOMUXC_GPR8	0x20
++#define IOMUXC_GPR9	0x24
++#define IOMUXC_GPR10	0x28
++#define IOMUXC_GPR11	0x2c
++#define IOMUXC_GPR12	0x30
++#define IOMUXC_GPR13	0x34
++#define IOMUXC_GPR14	0x38
++#define IOMUXC_GPR15	0x3c
++#define IOMUXC_GPR16	0x40
++#define IOMUXC_GPR17	0x44
++#define IOMUXC_GPR18	0x48
++#define IOMUXC_GPR19	0x4c
++#define IOMUXC_GPR20	0x50
++#define IOMUXC_GPR21	0x54
++#define IOMUXC_GPR22	0x58
++#define IOMUXC_GPR23	0x5c
++#define IOMUXC_GPR24	0x60
++#define IOMUXC_GPR25	0x64
++#define IOMUXC_GPR26	0x68
++#define IOMUXC_GPR27	0x6c
++#define IOMUXC_GPR28	0x70
++#define IOMUXC_GPR29	0x74
++#define IOMUXC_GPR30	0x78
++#define IOMUXC_GPR31	0x7c
++#define IOMUXC_GPR32	0x80
++#define IOMUXC_GPR33	0x84
++#define IOMUXC_GPR34	0x88
++#define IOMUXC_GPR35	0x8c
++#define IOMUXC_GPR36	0x90
++#define IOMUXC_GPR37	0x94
++#define IOMUXC_GPR38	0x98
++#define IOMUXC_GPR39	0x9c
++#define IOMUXC_GPR40	0xa0
++#define IOMUXC_GPR41	0xa4
++#define IOMUXC_GPR42	0xa8
++#define IOMUXC_GPR43	0xac
++#define IOMUXC_GPR44	0xb0
++#define IOMUXC_GPR45	0xb4
++#define IOMUXC_GPR46	0xb8
++#define IOMUXC_GPR47	0xbc
++
++/* i.MX8Mq iomux gpr register field defines */
++#define IMX8MQ_GPR13_MIPI_MUX_SEL		BIT(2)
++
++#endif /* __LINUX_IMX8MQ_IOMUXC_GPR_H */
+-- 
+2.20.1
+
