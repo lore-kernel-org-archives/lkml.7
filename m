@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFB1C32756
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A67AC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2CE2214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F78D214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358425;
-	bh=VfjukXimkLBJ7zj57fr8FMKr1+qhPqWQu8e8nmqmtAM=;
+	s=default; t=1565358431;
+	bh=ysiWeaoHbrPiKXosfAsunSS0T59udO5eWCZTrhZjvbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1wtl6pDHzLx2StJI06H7oJFlS4muYKHkw6PnpfnASoOAhtlVbY2t0uqN8WXSwek2j
-	 Z1ILox1cO78lLmsYweDBABilOfn2yHXDseGjz4BwM4EN2Ws1L+2S1RTJb0/ZiozZRT
-	 lOvVsUTuuUpCcNKNUuEw3dgOpr9kf13NzCpwSUbs=
+	b=rUjCfzX+JzVoBzBrExiZr6teRdVITHXDhZbsPe7BA75d5Wt9N3dsusPZv3njDz/r5
+	 tHTiDDRHHB8QM8QtOXBJToNRUiV6ktsktg59LBFKA6YIBlp9dJfkBOTpxBQgjky7ni
+	 UkffFt4Bu8o0KgEVxa67rVSnZt1QMrwvsSvnhVu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407206AbfHINrE (ORCPT
+        id S2436580AbfHINrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:47:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36900 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:47:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407191AbfHINrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:47:01 -0400
+        id S2436568AbfHINrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:47:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C262C214C6;
-        Fri,  9 Aug 2019 13:46:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DA48214C6;
+        Fri,  9 Aug 2019 13:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358420;
-        bh=VfjukXimkLBJ7zj57fr8FMKr1+qhPqWQu8e8nmqmtAM=;
+        s=default; t=1565358422;
+        bh=ysiWeaoHbrPiKXosfAsunSS0T59udO5eWCZTrhZjvbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ybN8nFUI+vUjfwX8073IXaA9lucszVWGe1JoOFuAkum/0Kl2TXYQf1Ick0vBGnqGF
-         GmZXpdWefFg3cBlvuJzcw1jG77O3V03CASk8fgeAnGp9lFAGCFwkq086NSZdaKaiFm
-         yzTopgzOFwCBLkTMt5PLfYD0wUI4tUKv5ZleiYO0=
+        b=i5R9RL3fy2gH8DMZx010CArOuALEYsYvlV9tyASH8JvnQNI94Dav2PIz2sqo922W9
+         wn4K25TetUyZM3epytsSFKHun/2sMU2iYKPwSX7V2Fv0k5+12tBdj9nq2/gOEVNwui
+         pp05eSRrRbeXnF+568EUnI+JmDO3TxUP/J66cT/A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        stable@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 17/32] net: bridge: mcast: dont delete permanent entries when fast leave is enabled
-Date:   Fri,  9 Aug 2019 15:45:20 +0200
-Message-Id: <20190809133923.514427197@linuxfoundation.org>
+Subject: [PATCH 4.9 18/32] net: fix ifindex collision during namespace removal
+Date:   Fri,  9 Aug 2019 15:45:21 +0200
+Message-Id: <20190809133923.543227438@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190809133922.945349906@linuxfoundation.org>
 References: <20190809133922.945349906@linuxfoundation.org>
@@ -60,58 +59,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+From: Jiri Pirko <jiri@mellanox.com>
 
-[ Upstream commit 5c725b6b65067909548ac9ca9bc777098ec9883d ]
+[ Upstream commit 55b40dbf0e76b4bfb9d8b3a16a0208640a9a45df ]
 
-When permanent entries were introduced by the commit below, they were
-exempt from timing out and thus igmp leave wouldn't affect them unless
-fast leave was enabled on the port which was added before permanent
-entries existed. It shouldn't matter if fast leave is enabled or not
-if the user added a permanent entry it shouldn't be deleted on igmp
-leave.
+Commit aca51397d014 ("netns: Fix arbitrary net_device-s corruptions
+on net_ns stop.") introduced a possibility to hit a BUG in case device
+is returning back to init_net and two following conditions are met:
+1) dev->ifindex value is used in a name of another "dev%d"
+   device in init_net.
+2) dev->name is used by another device in init_net.
 
-Before:
-$ echo 1 > /sys/class/net/eth4/brport/multicast_fast_leave
-$ bridge mdb add dev br0 port eth4 grp 229.1.1.1 permanent
-$ bridge mdb show
-dev br0 port eth4 grp 229.1.1.1 permanent
+Under real life circumstances this is hard to get. Therefore this has
+been present happily for over 10 years. To reproduce:
 
-< join and leave 229.1.1.1 on eth4 >
+$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: dummy0: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 86:89:3f:86:61:29 brd ff:ff:ff:ff:ff:ff
+3: enp0s2: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 52:54:00:12:34:56 brd ff:ff:ff:ff:ff:ff
+$ ip netns add ns1
+$ ip -n ns1 link add dummy1ns1 type dummy
+$ ip -n ns1 link add dummy2ns1 type dummy
+$ ip link set enp0s2 netns ns1
+$ ip -n ns1 link set enp0s2 name dummy0
+[  100.858894] virtio_net virtio0 dummy0: renamed from enp0s2
+$ ip link add dev4 type dummy
+$ ip -n ns1 a
+1: lo: <LOOPBACK> mtu 65536 qdisc noop state DOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: dummy1ns1: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 16:63:4c:38:3e:ff brd ff:ff:ff:ff:ff:ff
+3: dummy2ns1: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether aa:9e:86:dd:6b:5d brd ff:ff:ff:ff:ff:ff
+4: dummy0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 52:54:00:12:34:56 brd ff:ff:ff:ff:ff:ff
+$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: dummy0: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 86:89:3f:86:61:29 brd ff:ff:ff:ff:ff:ff
+4: dev4: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 5a:e1:4a:b6:ec:f8 brd ff:ff:ff:ff:ff:ff
+$ ip netns del ns1
+[  158.717795] default_device_exit: failed to move dummy0 to init_net: -17
+[  158.719316] ------------[ cut here ]------------
+[  158.720591] kernel BUG at net/core/dev.c:9824!
+[  158.722260] invalid opcode: 0000 [#1] SMP KASAN PTI
+[  158.723728] CPU: 0 PID: 56 Comm: kworker/u2:1 Not tainted 5.3.0-rc1+ #18
+[  158.725422] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
+[  158.727508] Workqueue: netns cleanup_net
+[  158.728915] RIP: 0010:default_device_exit.cold+0x1d/0x1f
+[  158.730683] Code: 84 e8 18 c9 3e fe 0f 0b e9 70 90 ff ff e8 36 e4 52 fe 89 d9 4c 89 e2 48 c7 c6 80 d6 25 84 48 c7 c7 20 c0 25 84 e8 f4 c8 3e
+[  158.736854] RSP: 0018:ffff8880347e7b90 EFLAGS: 00010282
+[  158.738752] RAX: 000000000000003b RBX: 00000000ffffffef RCX: 0000000000000000
+[  158.741369] RDX: 0000000000000000 RSI: ffffffff8128013d RDI: ffffed10068fcf64
+[  158.743418] RBP: ffff888033550170 R08: 000000000000003b R09: fffffbfff0b94b9c
+[  158.745626] R10: fffffbfff0b94b9b R11: ffffffff85ca5cdf R12: ffff888032f28000
+[  158.748405] R13: dffffc0000000000 R14: ffff8880335501b8 R15: 1ffff110068fcf72
+[  158.750638] FS:  0000000000000000(0000) GS:ffff888036000000(0000) knlGS:0000000000000000
+[  158.752944] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  158.755245] CR2: 00007fe8b45d21d0 CR3: 00000000340b4005 CR4: 0000000000360ef0
+[  158.757654] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  158.760012] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  158.762758] Call Trace:
+[  158.763882]  ? dev_change_net_namespace+0xbb0/0xbb0
+[  158.766148]  ? devlink_nl_cmd_set_doit+0x520/0x520
+[  158.768034]  ? dev_change_net_namespace+0xbb0/0xbb0
+[  158.769870]  ops_exit_list.isra.0+0xa8/0x150
+[  158.771544]  cleanup_net+0x446/0x8f0
+[  158.772945]  ? unregister_pernet_operations+0x4a0/0x4a0
+[  158.775294]  process_one_work+0xa1a/0x1740
+[  158.776896]  ? pwq_dec_nr_in_flight+0x310/0x310
+[  158.779143]  ? do_raw_spin_lock+0x11b/0x280
+[  158.780848]  worker_thread+0x9e/0x1060
+[  158.782500]  ? process_one_work+0x1740/0x1740
+[  158.784454]  kthread+0x31b/0x420
+[  158.786082]  ? __kthread_create_on_node+0x3f0/0x3f0
+[  158.788286]  ret_from_fork+0x3a/0x50
+[  158.789871] ---[ end trace defd6c657c71f936 ]---
+[  158.792273] RIP: 0010:default_device_exit.cold+0x1d/0x1f
+[  158.795478] Code: 84 e8 18 c9 3e fe 0f 0b e9 70 90 ff ff e8 36 e4 52 fe 89 d9 4c 89 e2 48 c7 c6 80 d6 25 84 48 c7 c7 20 c0 25 84 e8 f4 c8 3e
+[  158.804854] RSP: 0018:ffff8880347e7b90 EFLAGS: 00010282
+[  158.807865] RAX: 000000000000003b RBX: 00000000ffffffef RCX: 0000000000000000
+[  158.811794] RDX: 0000000000000000 RSI: ffffffff8128013d RDI: ffffed10068fcf64
+[  158.816652] RBP: ffff888033550170 R08: 000000000000003b R09: fffffbfff0b94b9c
+[  158.820930] R10: fffffbfff0b94b9b R11: ffffffff85ca5cdf R12: ffff888032f28000
+[  158.825113] R13: dffffc0000000000 R14: ffff8880335501b8 R15: 1ffff110068fcf72
+[  158.829899] FS:  0000000000000000(0000) GS:ffff888036000000(0000) knlGS:0000000000000000
+[  158.834923] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  158.838164] CR2: 00007fe8b45d21d0 CR3: 00000000340b4005 CR4: 0000000000360ef0
+[  158.841917] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  158.845149] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-$ bridge mdb show
-$
+Fix this by checking if a device with the same name exists in init_net
+and fallback to original code - dev%d to allocate name - in case it does.
 
-After:
-$ echo 1 > /sys/class/net/eth4/brport/multicast_fast_leave
-$ bridge mdb add dev br0 port eth4 grp 229.1.1.1 permanent
-$ bridge mdb show
-dev br0 port eth4 grp 229.1.1.1 permanent
+This was found using syzkaller.
 
-< join and leave 229.1.1.1 on eth4 >
-
-$ bridge mdb show
-dev br0 port eth4 grp 229.1.1.1 permanent
-
-Fixes: ccb1c31a7a87 ("bridge: add flags to distinguish permanent mdb entires")
-Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Fixes: aca51397d014 ("netns: Fix arbitrary net_device-s corruptions on net_ns stop.")
+Signed-off-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bridge/br_multicast.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/core/dev.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/bridge/br_multicast.c
-+++ b/net/bridge/br_multicast.c
-@@ -1489,6 +1489,9 @@ br_multicast_leave_group(struct net_brid
- 			if (p->port != port)
- 				continue;
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -8296,6 +8296,8 @@ static void __net_exit default_device_ex
  
-+			if (p->flags & MDB_PG_FLAGS_PERMANENT)
-+				break;
-+
- 			rcu_assign_pointer(*pp, p->next);
- 			hlist_del_init(&p->mglist);
- 			del_timer(&p->timer);
+ 		/* Push remaining network devices to init_net */
+ 		snprintf(fb_name, IFNAMSIZ, "dev%d", dev->ifindex);
++		if (__dev_get_by_name(&init_net, fb_name))
++			snprintf(fb_name, IFNAMSIZ, "dev%%d");
+ 		err = dev_change_net_namespace(dev, &init_net, fb_name);
+ 		if (err) {
+ 			pr_emerg("%s: failed to move %s to init_net: %d\n",
 
 
