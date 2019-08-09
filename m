@@ -2,167 +2,271 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D588C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A0FC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D195208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:31:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nktvAwFw"
+	by mail.kernel.org (Postfix) with ESMTP id EC5A6208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:32:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406398AbfHIKb3 (ORCPT
+        id S2406403AbfHIKcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 06:31:29 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43300 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbfHIKb3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 06:31:29 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x79AVNBF054950;
-        Fri, 9 Aug 2019 05:31:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1565346683;
-        bh=PaGvXL+jFcPb4Nr5wkFP8Iz5YbwTuScL/oOSQEj3g74=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=nktvAwFwZjYUDSf4eu0gS+Tq/TsETd5wR0LFkEEdluqwWk9/zxNYqIDbhxCsLmTAd
-         7AlZkrtOPpOB9Iq18g9qOnuZ4CrehZJ2KXhZKzS7l17Dp4+fzkXzU5ghsKQHJaLYki
-         zQU4oqLsea9yyj7m2WJHABePzxhSeOf6GHzKcrH8=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x79AVNo9128199
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 9 Aug 2019 05:31:23 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 9 Aug
- 2019 05:31:22 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 9 Aug 2019 05:31:22 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x79AVKoe110112;
-        Fri, 9 Aug 2019 05:31:20 -0500
-Subject: Re: [PATCH] usb: dwc3: remove generic PHYs forwarding for XHCI device
-To:     Felipe Balbi <balbi@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        <linux-usb@vger.kernel.org>, <linux-samsung-soc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-References: <CGME20190719093045eucas1p1a1c6f26ae4103e9ed283fff2396beaef@eucas1p1.samsung.com>
- <20190719093037.16181-1-m.szyprowski@samsung.com> <87h86rn7r9.fsf@gmail.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <754c3127-dd78-3afd-e047-68404d6ebec5@ti.com>
-Date:   Fri, 9 Aug 2019 13:31:19 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <87h86rn7r9.fsf@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 9 Aug 2019 06:32:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41570 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2405723AbfHIKcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 06:32:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DA51BAFF0;
+        Fri,  9 Aug 2019 10:32:42 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: [PATCH v4 1/9] w1: add 1-wire master driver for IP block found in SGI ASICs
+Date:   Fri,  9 Aug 2019 12:32:23 +0200
+Message-Id: <20190809103235.16338-2-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.13.7
+In-Reply-To: <20190809103235.16338-1-tbogendoerfer@suse.de>
+References: <20190809103235.16338-1-tbogendoerfer@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Starting with SGI Origin machines nearly every new SGI ASIC contains
+an 1-Wire master. They are used for attaching One-Wire prom devices,
+which contain information about part numbers, revision numbers,
+serial number etc. and MAC addresses for ethernet interfaces.
+This patch adds a master driver to support this IP block.
+It also adds an extra field dev_id to struct w1_bus_master, which
+could be in used in slave drivers for creating unique device names.
 
-On 08/08/2019 15:47, Felipe Balbi wrote:
-> 
-> Hi,
-> 
-> Marek Szyprowski <m.szyprowski@samsung.com> writes:
-> 
->> Commit 08f871a3aca2 ("usb: dwc3: host: convey the PHYs to xhci") added
->> forwarding of the generic PHYs from DWC3 core to the instantiated XHCI-plat
->> device. However XHCI(-plat) driver never gained support for generic PHYs,
->> thus the lookup added by that commit is never used. In meantime the commit
->> d64ff406e51e ("usb: dwc3: use bus->sysdev for DMA configuration")
->> incorrectly changed the device used for creating lookup, making the lookup
->> useless and generic PHYs inaccessible from XHCI device.
->>
->> However since commit 178a0bce05cb ("usb: core: hcd: integrate the PHY
->> wrapper into the HCD core") USB HCD already handles generic PHYs acquired
->> from the HCD's 'sysdev', which in this case is DWC3 core device. This means
->> that creating any custom lookup entries for XHCI driver is no longer needed
->> and can be simply removed.
->>
->> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> ---
->>  drivers/usb/dwc3/host.c | 22 ++++------------------
->>  1 file changed, 4 insertions(+), 18 deletions(-)
->>
->> diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
->> index f55947294f7c..8deea8c91e03 100644
->> --- a/drivers/usb/dwc3/host.c
->> +++ b/drivers/usb/dwc3/host.c
->> @@ -85,7 +85,7 @@ int dwc3_host_init(struct dwc3 *dwc)
->>  						DWC3_XHCI_RESOURCES_NUM);
->>  	if (ret) {
->>  		dev_err(dwc->dev, "couldn't add resources to xHCI device\n");
->> -		goto err1;
->> +		goto err;
->>  	}
->>  
->>  	memset(props, 0, sizeof(struct property_entry) * ARRAY_SIZE(props));
->> @@ -112,37 +112,23 @@ int dwc3_host_init(struct dwc3 *dwc)
->>  		ret = platform_device_add_properties(xhci, props);
->>  		if (ret) {
->>  			dev_err(dwc->dev, "failed to add properties to xHCI\n");
->> -			goto err1;
->> +			goto err;
->>  		}
->>  	}
->>  
->> -	phy_create_lookup(dwc->usb2_generic_phy, "usb2-phy",
->> -			  dev_name(dwc->dev));
->> -	phy_create_lookup(dwc->usb3_generic_phy, "usb3-phy",
->> -			  dev_name(dwc->dev));
->> -
->>  	ret = platform_device_add(xhci);
->>  	if (ret) {
->>  		dev_err(dwc->dev, "failed to register xHCI device\n");
->> -		goto err2;
->> +		goto err;
->>  	}
->>  
->>  	return 0;
->> -err2:
->> -	phy_remove_lookup(dwc->usb2_generic_phy, "usb2-phy",
->> -			  dev_name(dwc->dev));
->> -	phy_remove_lookup(dwc->usb3_generic_phy, "usb3-phy",
->> -			  dev_name(dwc->dev));
->> -err1:
->> +err:
->>  	platform_device_put(xhci);
->>  	return ret;
->>  }
->>  
->>  void dwc3_host_exit(struct dwc3 *dwc)
->>  {
->> -	phy_remove_lookup(dwc->usb2_generic_phy, "usb2-phy",
->> -			  dev_name(dwc->dev));
->> -	phy_remove_lookup(dwc->usb3_generic_phy, "usb3-phy",
->> -			  dev_name(dwc->dev));
->>  	platform_device_unregister(dwc->xhci);
->>  }
-> 
-> Roger, could you verify that this doesn't regress any of your platforms?
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+---
+ drivers/w1/masters/Kconfig           |   9 +++
+ drivers/w1/masters/Makefile          |   1 +
+ drivers/w1/masters/sgi_w1.c          | 130 +++++++++++++++++++++++++++++++++++
+ include/linux/platform_data/sgi-w1.h |  15 ++++
+ include/linux/w1.h                   |   2 +
+ 5 files changed, 157 insertions(+)
+ create mode 100644 drivers/w1/masters/sgi_w1.c
+ create mode 100644 include/linux/platform_data/sgi-w1.h
 
-Patch is fine with our platforms.
-
+diff --git a/drivers/w1/masters/Kconfig b/drivers/w1/masters/Kconfig
+index 7ae260577901..24b9a8e05f64 100644
+--- a/drivers/w1/masters/Kconfig
++++ b/drivers/w1/masters/Kconfig
+@@ -65,5 +65,14 @@ config HDQ_MASTER_OMAP
+ 	  Say Y here if you want support for the 1-wire or HDQ Interface
+ 	  on an OMAP processor.
+ 
++config W1_MASTER_SGI
++	tristate "SGI ASIC driver"
++	help
++	  Say Y here if you want support for your 1-wire devices using
++	  SGI ASIC 1-Wire interface
++
++	  This support is also available as a module.  If so, the module
++	  will be called sgi_w1.
++
+ endmenu
+ 
+diff --git a/drivers/w1/masters/Makefile b/drivers/w1/masters/Makefile
+index 18954cae4256..dae629b7ab49 100644
+--- a/drivers/w1/masters/Makefile
++++ b/drivers/w1/masters/Makefile
+@@ -11,3 +11,4 @@ obj-$(CONFIG_W1_MASTER_MXC)		+= mxc_w1.o
+ obj-$(CONFIG_W1_MASTER_DS1WM)		+= ds1wm.o
+ obj-$(CONFIG_W1_MASTER_GPIO)		+= w1-gpio.o
+ obj-$(CONFIG_HDQ_MASTER_OMAP)		+= omap_hdq.o
++obj-$(CONFIG_W1_MASTER_SGI)		+= sgi_w1.o
+diff --git a/drivers/w1/masters/sgi_w1.c b/drivers/w1/masters/sgi_w1.c
+new file mode 100644
+index 000000000000..1b2d96b945be
+--- /dev/null
++++ b/drivers/w1/masters/sgi_w1.c
+@@ -0,0 +1,130 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * sgi_w1.c - w1 master driver for one wire support in SGI ASICs
++ */
++
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/jiffies.h>
++#include <linux/module.h>
++#include <linux/mod_devicetable.h>
++#include <linux/platform_device.h>
++#include <linux/platform_data/sgi-w1.h>
++
++#include <linux/w1.h>
++
++#define MCR_RD_DATA	BIT(0)
++#define MCR_DONE	BIT(1)
++
++#define MCR_PACK(pulse, sample) (((pulse) << 10) | ((sample) << 2))
++
++struct sgi_w1_device {
++	u32 __iomem *mcr;
++	struct w1_bus_master bus_master;
++	char dev_id[64];
++};
++
++static u8 sgi_w1_wait(u32 __iomem *mcr)
++{
++	u32 mcr_val;
++
++	do {
++		mcr_val = readl(mcr);
++	} while (!(mcr_val & MCR_DONE));
++
++	return (mcr_val & MCR_RD_DATA) ? 1 : 0;
++}
++
++/*
++ * this is the low level routine to
++ * reset the device on the One Wire interface
++ * on the hardware
++ */
++static u8 sgi_w1_reset_bus(void *data)
++{
++	struct sgi_w1_device *dev = data;
++	u8 ret;
++
++	writel(MCR_PACK(520, 65), dev->mcr);
++	ret = sgi_w1_wait(dev->mcr);
++	udelay(500); /* recovery time */
++	return ret;
++}
++
++/*
++ * this is the low level routine to read/write a bit on the One Wire
++ * interface on the hardware. It does write 0 if parameter bit is set
++ * to 0, otherwise a write 1/read.
++ */
++static u8 sgi_w1_touch_bit(void *data, u8 bit)
++{
++	struct sgi_w1_device *dev = data;
++	u8 ret;
++
++	if (bit)
++		writel(MCR_PACK(6, 13), dev->mcr);
++	else
++		writel(MCR_PACK(80, 30), dev->mcr);
++
++	ret = sgi_w1_wait(dev->mcr);
++	if (bit)
++		udelay(100); /* recovery */
++	return ret;
++}
++
++static int sgi_w1_probe(struct platform_device *pdev)
++{
++	struct sgi_w1_device *sdev;
++	struct sgi_w1_platform_data *pdata;
++	struct resource *res;
++
++	sdev = devm_kzalloc(&pdev->dev, sizeof(struct sgi_w1_device),
++			    GFP_KERNEL);
++	if (!sdev)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	sdev->mcr = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(sdev->mcr))
++		return PTR_ERR(sdev->mcr);
++
++	sdev->bus_master.data = sdev;
++	sdev->bus_master.reset_bus = sgi_w1_reset_bus;
++	sdev->bus_master.touch_bit = sgi_w1_touch_bit;
++
++	pdata = dev_get_platdata(&pdev->dev);
++	if (pdata) {
++		strlcpy(sdev->dev_id, pdata->dev_id, sizeof(sdev->dev_id));
++		sdev->bus_master.dev_id = sdev->dev_id;
++	}
++
++	platform_set_drvdata(pdev, sdev);
++
++	return w1_add_master_device(&sdev->bus_master);
++}
++
++/*
++ * disassociate the w1 device from the driver
++ */
++static int sgi_w1_remove(struct platform_device *pdev)
++{
++	struct sgi_w1_device *sdev = platform_get_drvdata(pdev);
++
++	w1_remove_master_device(&sdev->bus_master);
++
++	return 0;
++}
++
++static struct platform_driver sgi_w1_driver = {
++	.driver = {
++		.name = "sgi_w1",
++	},
++	.probe = sgi_w1_probe,
++	.remove = sgi_w1_remove,
++};
++module_platform_driver(sgi_w1_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Thomas Bogendoerfer");
++MODULE_DESCRIPTION("Driver for One-Wire IP in SGI ASICs");
+diff --git a/include/linux/platform_data/sgi-w1.h b/include/linux/platform_data/sgi-w1.h
+new file mode 100644
+index 000000000000..fc6b92e0b942
+--- /dev/null
++++ b/include/linux/platform_data/sgi-w1.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * SGI One-Wire (W1) IP
++ */
++
++#ifndef PLATFORM_DATA_SGI_W1_H
++#define PLATFORM_DATA_SGI_W1_H
++
++#include <asm/sn/types.h>
++
++struct sgi_w1_platform_data {
++	char dev_id[64];
++};
++
++#endif /* PLATFORM_DATA_SGI_W1_H */
+diff --git a/include/linux/w1.h b/include/linux/w1.h
+index e0b5156f78fd..89843e9f634c 100644
+--- a/include/linux/w1.h
++++ b/include/linux/w1.h
+@@ -150,6 +150,8 @@ struct w1_bus_master {
+ 
+ 	void		(*search)(void *, struct w1_master *,
+ 		u8, w1_slave_found_callback);
++
++	char		*dev_id;
+ };
+ 
+ /**
 -- 
-cheers,
--roger
+2.13.7
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
