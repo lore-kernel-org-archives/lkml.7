@@ -2,59 +2,56 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7BBC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EB7C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6794214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0278B2171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358344;
-	bh=vYrHU7Em3sK4QdBU/nAAU7PAM2WVowkqOO32qOfyNvE=;
+	s=default; t=1565358349;
+	bh=nD31jO9i+Ksl0ih0bdxsGGZ7r1uRwlVrdDU7Q2V65V0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ej2HhjjMwsbMo2NR90tFBwwJXe1DdCZJ5i7VaJX2g0Gy5YpDNTQyDryzW/ZqExdBR
-	 /S2h3DRHtuM3IbSlmE3OsE/qUu4ywBBBMo+jzMq3MSSqYX8Kbj92SNgdRUVbe5YDC3
-	 URsaljfOMcx3QjnhdUKOTl8tqHowFB6snVuoeJ8k=
+	b=DlmRJF4gtnfpVNvMXlyH1SZswMYrop7M/nIziyMDGsLRWO60gAH1Dro9we1GgOWOb
+	 yWWgu7mBoJlamnA+O70pMc76sLKgEbqMgOb605K1lk8f78gmIphiKJrsYN1WUS7qsY
+	 o9hTXZnG37HcWDwdb/JO9kq1cadIzhrXSBVmn828=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406658AbfHINpo (ORCPT
+        id S2406713AbfHINps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:45:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35194 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:45:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbfHINpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:45:43 -0400
+        id S1726037AbfHINpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:45:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B82D20B7C;
-        Fri,  9 Aug 2019 13:45:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26BE6214C6;
+        Fri,  9 Aug 2019 13:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358343;
-        bh=vYrHU7Em3sK4QdBU/nAAU7PAM2WVowkqOO32qOfyNvE=;
+        s=default; t=1565358345;
+        bh=nD31jO9i+Ksl0ih0bdxsGGZ7r1uRwlVrdDU7Q2V65V0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yMeRfa9tWfS8DvnHbIsYBfhciOckTfAPgCylHobHVroBw/+yFJkx7AH8G3mR2YbIK
-         HU4NkiU+wwusg5+iciannmiI5xwpM59eKpgtT2kXo0Gsr/MEIO2yooSMRd9qe9VqWy
-         PkVnXnMCVXZfDaIYRRqkdZj3D0cB3PE6B00CcQnE=
+        b=Zn8l+gPu1BjH9OInnLoEaCTtHwYGz2Sh27jNbuBIPZlToGi+dFzrHffkYovnaRsnf
+         AMRH+RylQpM7N01Zd8VaiMZI4OrKWwAS5Vx+Av6+vTbr2khxDnGujpvK5IbstxlZIQ
+         iiEYEZRr91bU+9g2pVpKdteavkvJDYnQaBgvYjSk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shanker Donthineni <shankerd@codeaurora.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 01/21] arm64: cpufeature: Fix CTR_EL0 field definitions
-Date:   Fri,  9 Aug 2019 15:45:05 +0200
-Message-Id: <20190809134241.628430873@linuxfoundation.org>
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 10/21] net: sched: Fix a possible null-pointer dereference in dequeue_func()
+Date:   Fri,  9 Aug 2019 15:45:14 +0200
+Message-Id: <20190809134242.004869565@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190809134241.565496442@linuxfoundation.org>
 References: <20190809134241.565496442@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,51 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit be68a8aaf925aaf35574260bf820bb09d2f9e07f upstream.
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-Our field definitions for CTR_EL0 suffer from a number of problems:
+[ Upstream commit 051c7b39be4a91f6b7d8c4548444e4b850f1f56c ]
 
-  - The IDC and DIC fields are missing, which causes us to enable CTR
-    trapping on CPUs with either of these returning non-zero values.
+In dequeue_func(), there is an if statement on line 74 to check whether
+skb is NULL:
+    if (skb)
 
-  - The ERG is FTR_LOWER_SAFE, whereas it should be treated like CWG as
-    FTR_HIGHER_SAFE so that applications can use it to avoid false sharing.
+When skb is NULL, it is used on line 77:
+    prefetch(&skb->end);
 
-  - [nit] A RES1 field is described as "RAO"
+Thus, a possible null-pointer dereference may occur.
 
-This patch updates the CTR_EL0 field definitions to fix these issues.
+To fix this bug, skb->end is used when skb is not NULL.
 
-Cc: <stable@vger.kernel.org> # 4.4.y only
-Cc: Shanker Donthineni <shankerd@codeaurora.org>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This bug is found by a static analysis tool STCheck written by us.
+
+Fixes: 76e3cc126bb2 ("codel: Controlled Delay AQM")
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/kernel/cpufeature.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ net/sched/sch_codel.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index c1eddc07d9968..fff0bf2f889e1 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -126,10 +126,12 @@ static struct arm64_ftr_bits ftr_id_aa64mmfr1[] = {
- };
+--- a/net/sched/sch_codel.c
++++ b/net/sched/sch_codel.c
+@@ -68,7 +68,8 @@ static struct sk_buff *dequeue(struct co
+ {
+ 	struct sk_buff *skb = __skb_dequeue(&sch->q);
  
- static struct arm64_ftr_bits ftr_ctr[] = {
--	U_ARM64_FTR_BITS(FTR_STRICT, FTR_EXACT, 31, 1, 1),	/* RAO */
--	ARM64_FTR_BITS(FTR_STRICT, FTR_EXACT, 28, 3, 0),
-+	U_ARM64_FTR_BITS(FTR_STRICT, FTR_EXACT, 31, 1, 1),	/* RES1 */
-+	ARM64_FTR_BITS(FTR_STRICT, FTR_EXACT, 30, 1, 0),
-+	U_ARM64_FTR_BITS(FTR_STRICT, FTR_LOWER_SAFE, 29, 1, 1),	/* DIC */
-+	U_ARM64_FTR_BITS(FTR_STRICT, FTR_LOWER_SAFE, 28, 1, 1),	/* IDC */
- 	U_ARM64_FTR_BITS(FTR_STRICT, FTR_HIGHER_SAFE, 24, 4, 0),	/* CWG */
--	U_ARM64_FTR_BITS(FTR_STRICT, FTR_LOWER_SAFE, 20, 4, 0),	/* ERG */
-+	U_ARM64_FTR_BITS(FTR_STRICT, FTR_HIGHER_SAFE, 20, 4, 0),	/* ERG */
- 	U_ARM64_FTR_BITS(FTR_STRICT, FTR_LOWER_SAFE, 16, 4, 1),	/* DminLine */
- 	/*
- 	 * Linux can handle differing I-cache policies. Userspace JITs will
--- 
-2.20.1
-
+-	prefetch(&skb->end); /* we'll need skb_shinfo() */
++	if (skb)
++		prefetch(&skb->end); /* we'll need skb_shinfo() */
+ 	return skb;
+ }
+ 
 
 
