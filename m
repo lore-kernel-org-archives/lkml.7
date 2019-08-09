@@ -6,57 +6,57 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847FDC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C96C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF702089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C9E72089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:43:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405520AbfHIFmO (ORCPT
+        id S2405570AbfHIFnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 01:42:14 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:56290 "EHLO
+        Fri, 9 Aug 2019 01:43:55 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:56316 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbfHIFmO (ORCPT
+        with ESMTP id S2405542AbfHIFnz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 01:42:14 -0400
+        Fri, 9 Aug 2019 01:43:55 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 787B81449A656;
-        Thu,  8 Aug 2019 22:42:13 -0700 (PDT)
-Date:   Thu, 08 Aug 2019 22:42:13 -0700 (PDT)
-Message-Id: <20190808.224213.1161867916822706934.davem@davemloft.net>
-To:     yuehaibing@huawei.com
-Cc:     j.vosburgh@gmail.com, vfalico@gmail.com, andy@greyhouse.net,
-        jiri@resnulli.us, jay.vosburgh@canonical.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v2] team: Add vlan tx offload to hw_enc_features
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 65A631449CBB2;
+        Thu,  8 Aug 2019 22:43:54 -0700 (PDT)
+Date:   Thu, 08 Aug 2019 22:43:53 -0700 (PDT)
+Message-Id: <20190808.224353.2118603027227019314.davem@davemloft.net>
+To:     huangfq.daxian@gmail.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net: tundra: tsi108: use spin_lock_irqsave instead
+ of spin_lock_irq in IRQ context
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190808062247.38352-1-yuehaibing@huawei.com>
-References: <20190807023808.51976-1-yuehaibing@huawei.com>
-        <20190808062247.38352-1-yuehaibing@huawei.com>
+In-Reply-To: <20190809053539.8341-1-huangfq.daxian@gmail.com>
+References: <20190809053539.8341-1-huangfq.daxian@gmail.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 08 Aug 2019 22:42:13 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 08 Aug 2019 22:43:54 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Thu, 8 Aug 2019 14:22:47 +0800
+From: Fuqian Huang <huangfq.daxian@gmail.com>
+Date: Fri,  9 Aug 2019 13:35:39 +0800
 
-> We should also enable team's vlan tx offload in hw_enc_features,
-> pass the vlan packets to the slave devices with vlan tci, let the
-> slave handle vlan tunneling offload implementation.
+> As spin_unlock_irq will enable interrupts.
+> Function tsi108_stat_carry is called from interrupt handler tsi108_irq.
+> Interrupts are enabled in interrupt handler.
+> Use spin_lock_irqsave/spin_unlock_irqrestore instead of spin_(un)lock_irq
+> in IRQ context to avoid this.
 > 
-> Fixes: 3268e5cb494d ("team: Advertise tunneling offload features")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 > ---
-> v2: fix commit log typo
+> Changes in v2:
+>   - Preserve reverse christmas tree ordering of local variables.
 
-Applied and queued up for -stable.
+Applied, thanks.
