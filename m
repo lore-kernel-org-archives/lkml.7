@@ -2,177 +2,128 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6209C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F88C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 986F22171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 944B22173C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:27:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yeu28Y/H"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WEir+432"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404991AbfHIDVE (ORCPT
+        id S2405078AbfHID1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 23:21:04 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38384 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729307AbfHIDVD (ORCPT
+        Thu, 8 Aug 2019 23:27:44 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46014 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727611AbfHID1o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 23:21:03 -0400
-Received: by mail-lj1-f194.google.com with SMTP id r9so90778487ljg.5
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 20:21:02 -0700 (PDT)
+        Thu, 8 Aug 2019 23:27:44 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r1so45243777pfq.12
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 20:27:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=msEHT0iv566xvf+vfMcGL2ig2A7ZI1+K3ZvkoXORsXQ=;
-        b=yeu28Y/HVFnVOJpo0PmViLj53in91wGhXbdhDpm0Lxf20TkJHrP0rDvKE0ENrT7i9g
-         +NsxCSeiu2cb9cgFoN632kaSccSm5pC4PCE4IQfHvqHQxHeDcsSKZ2812hSNE4r6BA76
-         pwBFIpVWHDG6+kN5joAifP8UaK4/srYMYruCxT1MbghmeKOecY1sHWiYvd32npHYN/l9
-         661mkEogmCmyEqP1uy7I4DO14+Plv4z30DWBwZTLx+mnT0paxrU9T59rf6wbDVZVSbGP
-         q6i9ix7cvTOgxLOt5SNLHJlL/bL6aGMwNFajW4+mirf1Q0M5LwEFpNgkhKbQKsey7pcO
-         a9eA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=v5m7Msw6nF9vdn6sxJ12YYLnKtWCnR8AC90/6IDMe8c=;
+        b=WEir+432H/f7d295W8cxOvBj5Ne5OdMecu8yIUZ8ffg8mVDnPKdF7zr4fXKhU1n0DA
+         Ps3iuLwfFIeka+oIiYMoDbhDEv5h8IIKGh6RWjxZTO1flxJ19GAtgIqMtb0jcpmeU0Wa
+         e5TAGfXxHzrYfh22/43JydGwM8R2jK52gGMc2PIcKY9g16F5JvvjvfCjux50aM8bKtyc
+         BvZdSOZW7huCpZz00oXmIm2QAL2lizKouCqh014aMFVfTz5LvQB2rjupUjss3fgCzIfQ
+         MUyIwYaiOHwq06V984f+Y3NexhfuQOJmC24HH9AgewjH8yMmlG8Ql+xLfjv5BmcvVyk8
+         5YDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=msEHT0iv566xvf+vfMcGL2ig2A7ZI1+K3ZvkoXORsXQ=;
-        b=XV/zHshkQJZtWxA7011R/Lz6vpymL6hY+QBJoGGHmd8W54xfwEW6QDnOoXz5o+OVPl
-         AOJFk9qmK9RscI1fRlUMlHEjfFbha1SaZhO2SguGO9teaKnAdNl3pRKDvTFpPdCYd16r
-         D1PHE786qgUtPRKkFs4wU/M+app8y8pqwSgq897jyD68cxMK2FqMR63cfdKQQdtHgnnD
-         coEm8e23bMfTErxK2nmRfDKDgqtFlOpyi162rvMWWMoIJKq7nxGi9q3vso7FmAALM/rM
-         ABF37hQTlvUKRfo8TGs3UnFHNzODnDnI4Zel2AhXyasAL3UlTKu/oChUSuYYf4Tdb5yV
-         gjWQ==
-X-Gm-Message-State: APjAAAVjOx7wvLEcXGmuTjjeP9G8GZl6AMtWBZ//QVxGkmK6+9r6XkEA
-        ONt17s6HXrxGhVapxUYSAEwMbYdFP74E2aDtehFTW29u1QJ23A==
-X-Google-Smtp-Source: APXvYqxTtAKv4kkyenJgwEgxe75lkiGyiF4zxBFZFw9N98GBv1cf9aftyNYCWMS3dEp3l+tAM8ZrVTrcGF84oUP4Md4=
-X-Received: by 2002:a2e:8559:: with SMTP id u25mr709400ljj.224.1565320861762;
- Thu, 08 Aug 2019 20:21:01 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=v5m7Msw6nF9vdn6sxJ12YYLnKtWCnR8AC90/6IDMe8c=;
+        b=WjN80fztVK6g4K9Tsuj6LaoxCFa6vCgrLh0EMRG3gcbVVZp8g5LH7f/35IIHhnYeNk
+         jFzKrqZUpKYQfMKIUj3sW45dJ3IX5+u9vqHu4PVNPs8PepKPSiIXxwfl3qGkPZFY/ujt
+         +szpLd1T4M1dVJ3evfu4cLTF/rJi4QwO78OezYnuVqVN4AdZvYB/fJADu2KkLLaRTSRz
+         B9BGH91QXkZCPtMOiTCnj8C03r6rVEtcXY7vX7yAJCqEOr0qwO11Oxa1AOKpXtxRdYQi
+         9AUtTnS0+1KQsCI8IBSbkrKbCYu2ncSTfLKf1L9W6QEVvK68UuY6t487A7Z51yT1scoA
+         DCMQ==
+X-Gm-Message-State: APjAAAWdkPN5TNWAZDTaYiUFgbzE5xSzLL0JimEN2HEgtc0jVscj+tZp
+        Mi1N+eckWTnqHREg7XaJ4AuTbA==
+X-Google-Smtp-Source: APXvYqzNvZFJvhvFbH2thlotSUGSz9ktBlepD6RKn5dOv6s6nOnmPWoEm8xbcV+82utj/F9bml8lkg==
+X-Received: by 2002:a17:90a:f98a:: with SMTP id cq10mr7303114pjb.43.1565321263372;
+        Thu, 08 Aug 2019 20:27:43 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id e9sm1040807pfh.155.2019.08.08.20.27.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 20:27:42 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 20:29:15 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] regulator: dt-bindings: Add PM8150x compatibles
+Message-ID: <20190809032915.GK26807@tuxbook-pro>
+References: <20190808093343.5600-1-vkoul@kernel.org>
 MIME-Version: 1.0
-References: <20190808190453.827571908@linuxfoundation.org>
-In-Reply-To: <20190808190453.827571908@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 9 Aug 2019 08:50:49 +0530
-Message-ID: <CA+G9fYvkMFfbBPd_VV89Cme1VtQk6hcZ22a6Qi4p+dKV0CbW3w@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/45] 4.19.66-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808093343.5600-1-vkoul@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 9 Aug 2019 at 00:39, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.66 release.
-> There are 45 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat 10 Aug 2019 07:03:19 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.66-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Thu 08 Aug 02:33 PDT 2019, Vinod Koul wrote:
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+> Add PM8150, PM8150L and PM8009 compatibles for these PMICs found
+> in some Qualcomm platforms.
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  .../devicetree/bindings/regulator/qcom,rpmh-regulator.txt | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+> index 14d2eee96b3d..1a9cab50503a 100644
+> --- a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+> +++ b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+> @@ -25,6 +25,9 @@ Supported regulator node names:
+>  	PM8998:		smps1 - smps13, ldo1 - ldo28, lvs1 - lvs2
+>  	PMI8998:	bob
+>  	PM8005:		smps1 - smps4
+> +	PM8150:		smps1 - smps10, ldo1 - ldo18
+> +	PM8150L:	smps1 - smps8, ldo1 - ldo11, bob, flash, rgb
+> +	PM8009:		smps1 - smps2, ld01 - ldo7
 
-Summary
-------------------------------------------------------------------------
+Please maintain the sort order.
 
-kernel: 4.19.66-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: d43238541496ae2b216aaac84e0933bb06eeb0a6
-git describe: v4.19.64-128-gd43238541496
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.64-128-gd43238541496
+Apart from that
 
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-No regressions (compared to build v4.19.64)
+Regards,
+Bjorn
 
-No fixes (compared to build v4.19.64)
-
-Ran 23168 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-commands-tests
-* ltp-fs-tests
-* ltp-math-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+>  
+>  ========================
+>  First Level Nodes - PMIC
+> @@ -35,7 +38,10 @@ First Level Nodes - PMIC
+>  	Value type: <string>
+>  	Definition: Must be one of: "qcom,pm8998-rpmh-regulators",
+>  		    "qcom,pmi8998-rpmh-regulators" or
+> -		    "qcom,pm8005-rpmh-regulators".
+> +		    "qcom,pm8005-rpmh-regulators" or
+> +		    "qcom,pm8150-rpmh-regulators" or
+> +		    "qcom,pm8150l-rpmh-regulators" or
+> +		    "qcom,pm8009-rpmh-regulators".
+>  
+>  - qcom,pmic-id
+>  	Usage:      required
+> -- 
+> 2.20.1
+> 
