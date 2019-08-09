@@ -6,108 +6,75 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3FFC31E40
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0169C41514
 	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 06:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A132F2166E
+	by mail.kernel.org (Postfix) with ESMTP id C33252171F
 	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 06:49:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405627AbfHIGs7 (ORCPT
+        id S2405654AbfHIGtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 02:48:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44328 "EHLO mx1.redhat.com"
+        Fri, 9 Aug 2019 02:49:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39386 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405239AbfHIGs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 02:48:59 -0400
+        id S2405239AbfHIGtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 02:49:07 -0400
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0227130860DE;
-        Fri,  9 Aug 2019 06:48:59 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 493D7C074111;
+        Fri,  9 Aug 2019 06:49:07 +0000 (UTC)
 Received: from dhcp201-121.englab.pnq.redhat.com (unknown [10.65.16.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D44661001925;
-        Fri,  9 Aug 2019 06:48:54 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7870C1001925;
+        Fri,  9 Aug 2019 06:48:59 +0000 (UTC)
 From:   Pankaj Gupta <pagupta@redhat.com>
 To:     amit@kernel.org, mst@redhat.com
 Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
         virtualization@lists.linux-foundation.org, jasowang@redhat.com,
         linux-kernel@vger.kernel.org, pagupta@redhat.com,
         xiaohli@redhat.com
-Subject: [PATCH v3 1/2] virtio_console: free unused buffers with port delete
-Date:   Fri,  9 Aug 2019 12:18:46 +0530
-Message-Id: <20190809064847.28918-2-pagupta@redhat.com>
+Subject: [PATCH v3 2/2] virtio: decrement avail idx with buffer detach for packed ring
+Date:   Fri,  9 Aug 2019 12:18:47 +0530
+Message-Id: <20190809064847.28918-3-pagupta@redhat.com>
 In-Reply-To: <20190809064847.28918-1-pagupta@redhat.com>
 References: <20190809064847.28918-1-pagupta@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 09 Aug 2019 06:48:59 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 09 Aug 2019 06:49:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit a7a69ec0d8e4 ("virtio_console: free buffers after reset")
-deferred detaching of unused buffer to virtio device unplug time.
-This causes unplug/replug of single port in virtio device with an
-error "Error allocating inbufs\n". As we don't free the unused buffers
-attached with the port. Re-plug the same port tries to allocate new
-buffers in virtqueue and results in this error if queue is full.
-This patch removes the unused buffers in vq's when we unplug the port.
-This is the best we can do as we cannot call device_reset because virtio
-device is still active.
+This patch decrements 'next_avail_idx' count when detaching a buffer
+from vq for packed ring code. Split ring code already does this in
+virtqueue_detach_unused_buf_split function. This updates the
+'next_avail_idx' to the previous correct index after an unused buffer
+is detatched from the vq.
 
-Reported-by: Xiaohui Li <xiaohli@redhat.com>
-Fixes: a7a69ec0d8e4 ("virtio_console: free buffers after reset")
-Cc: stable@vger.kernel.org
 Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
 ---
- drivers/char/virtio_console.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/virtio/virtio_ring.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
-index 7270e7b69262..e8be82f1bae9 100644
---- a/drivers/char/virtio_console.c
-+++ b/drivers/char/virtio_console.c
-@@ -1494,15 +1494,25 @@ static void remove_port(struct kref *kref)
- 	kfree(port);
- }
- 
-+static void remove_unused_bufs(struct virtqueue *vq)
-+{
-+	struct port_buffer *buf;
+diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+index c8be1c4f5b55..7c69181113e2 100644
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -1537,6 +1537,12 @@ static void *virtqueue_detach_unused_buf_packed(struct virtqueue *_vq)
+ 		/* detach_buf clears data, so grab it now. */
+ 		buf = vq->packed.desc_state[i].data;
+ 		detach_buf_packed(vq, i, NULL);
++		vq->packed.next_avail_idx--;
++		if (vq->packed.next_avail_idx < 0) {
++			vq->packed.next_avail_idx = vq->packed.vring.num - 1;
++			vq->packed.avail_wrap_counter ^= 1;
++		}
 +
-+	while ((buf = virtqueue_detach_unused_buf(vq)))
-+		free_buf(buf, true);
-+}
-+
- static void remove_port_data(struct port *port)
- {
- 	spin_lock_irq(&port->inbuf_lock);
- 	/* Remove unused data this port might have received. */
- 	discard_port_data(port);
-+	remove_unused_bufs(port->in_vq);
- 	spin_unlock_irq(&port->inbuf_lock);
- 
- 	spin_lock_irq(&port->outvq_lock);
- 	reclaim_consumed_buffers(port);
-+	remove_unused_bufs(port->out_vq);
- 	spin_unlock_irq(&port->outvq_lock);
- }
- 
-@@ -1938,11 +1948,9 @@ static void remove_vqs(struct ports_device *portdev)
- 	struct virtqueue *vq;
- 
- 	virtio_device_for_each_vq(portdev->vdev, vq) {
--		struct port_buffer *buf;
- 
- 		flush_bufs(vq, true);
--		while ((buf = virtqueue_detach_unused_buf(vq)))
--			free_buf(buf, true);
-+		remove_unused_bufs(vq);
+ 		END_USE(vq);
+ 		return buf;
  	}
- 	portdev->vdev->config->del_vqs(portdev->vdev);
- 	kfree(portdev->in_vqs);
 -- 
-2.21.0
+2.20.1
 
