@@ -2,131 +2,92 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C69C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CBAC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E6A320C01
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4BCF208C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:36:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="oO6Uf+91"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EVE36FFx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436663AbfHIPg1 (ORCPT
+        id S2436680AbfHIPgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 11:36:27 -0400
-Received: from mail-eopbgr10123.outbound.protection.outlook.com ([40.107.1.123]:51167
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2436647AbfHIPg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 11:36:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cosUpkA5XUaks1bZaB+Ct5O9BlDd0uPceUdPJQT/iyoXFfY7O2piHyI4vR/KeSI0/1gWBLTEF2y4d2i3+1/ckiwC1+zVwVp2HrgyAlsyMrEC6dH2M7iK2IZAWmafjF7MCpRaiKJ/18UKvxPcvyRlruExlGC/KFbLoNpegNF4bY36rX62FvnV8wE/1DWkGfYy9buwR/yfAhKOnzDEU6Sn8uuaunKNF4x1OpUHEwafG2G6tUJiZZP3zjWHg5BwdHRS47VooFHuPhdvrhtM1o6JcJLOlESHIm/jBJ9iWsVhekQV19WiSojOjwIltqwtoMr0CPOfL+ucpZgVSuuL0gPYHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ftYVBfTn48LJEHq0oFZdrW7pRJZck54rV3Jt4E2DgVU=;
- b=baxKcfrbPSFx5/gJof/iwIpnYOWIw0h7CUr5nkfTclNDMwc6laV1S3+1InwjOyL+XkXLNE3SKJEvsH3zyMJoxYCgmgRllh8TdB096ODVxXo8kwMyQy9l/fpZVLk45SwqTLd9fUL5zxfPNU0Cmb2vi65pCjOJes078AAOTboc+S3cgEr4BcAogLSZ1CsLHNjFoczZeLSJayaih+e0nW2fN+ZY0ZwhVo0c63C44Fd+W0z7Scj9HxxD2yEjoQvE+ilc5QWJKlfKgeQlg1dUIuoo8Z3HwEdp0+fML8NO9RIaa8SS+o0cE1pI2MFhmA5Qmaw9ZAiQaeLj82Ufb7XXoQRDXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ftYVBfTn48LJEHq0oFZdrW7pRJZck54rV3Jt4E2DgVU=;
- b=oO6Uf+91amGTpzyANWJps8+tcwog/D0JT80I898v+hirZs8iPrpIKlYpfDMfluG+YtHQkDmI1xpZImpF3fnjYCoZCzuNEt/p4wMkN+8LGsRSPtMSfqg66nshS2+mLJKlFUYjEowkt9ngCBREuKz0Wb2NznR+FzImP5/acnLlER0=
-Received: from VI1PR05MB6415.eurprd05.prod.outlook.com (20.179.27.139) by
- VI1PR05MB4909.eurprd05.prod.outlook.com (20.177.51.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.20; Fri, 9 Aug 2019 15:36:22 +0000
-Received: from VI1PR05MB6415.eurprd05.prod.outlook.com
- ([fe80::f1b2:353a:da9b:c19a]) by VI1PR05MB6415.eurprd05.prod.outlook.com
- ([fe80::f1b2:353a:da9b:c19a%4]) with mapi id 15.20.2157.020; Fri, 9 Aug 2019
- 15:36:22 +0000
-From:   Marcel Ziswiler <marcel.ziswiler@toradex.com>
-To:     Max Krummenacher <max.krummenacher@toradex.com>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>
-Subject: Re: [PATCH v3 13/21] ARM: dts: imx6-colibri: Add missing pinmuxing to
- Toradex eval board
-Thread-Topic: [PATCH v3 13/21] ARM: dts: imx6-colibri: Add missing pinmuxing
- to Toradex eval board
-Thread-Index: AQHVTPnS33I5w2Yy6025DybA7v+Vgqby9m+A
-Date:   Fri, 9 Aug 2019 15:36:22 +0000
-Message-ID: <5d73b3ebb81f1245dbc70ff0b81c9f724605df67.camel@toradex.com>
-References: <20190807082556.5013-1-philippe.schenker@toradex.com>
-         <20190807082556.5013-14-philippe.schenker@toradex.com>
-In-Reply-To: <20190807082556.5013-14-philippe.schenker@toradex.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=marcel.ziswiler@toradex.com; 
-x-originating-ip: [2a01:2a8:8501:4d00:ca5b:76ff:fedf:3c49]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1e1a4e8a-1735-4e7a-bd3a-08d71cdf54f0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR05MB4909;
-x-ms-traffictypediagnostic: VI1PR05MB4909:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB4909B3C8E138E6F97CDEA7BFFBD60@VI1PR05MB4909.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 01244308DF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(346002)(396003)(376002)(39850400004)(199004)(189003)(186003)(256004)(6506007)(446003)(11346002)(102836004)(6116002)(46003)(76176011)(2616005)(118296001)(478600001)(476003)(44832011)(71200400001)(71190400001)(66446008)(8936002)(66476007)(66556008)(486006)(66946007)(64756008)(2906002)(91956017)(76116006)(2501003)(25786009)(4326008)(53936002)(6512007)(86362001)(2201001)(305945005)(99286004)(7736002)(14454004)(7416002)(6436002)(36756003)(6486002)(5660300002)(110136005)(316002)(6246003)(54906003)(229853002)(8676002)(81166006)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB4909;H:VI1PR05MB6415.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: N8wHnQ0MaBYVOVt9xdX1OvTCk4KQu/jZywODrwDYFHx6e4zMrvukUaSpRROlDvaAXgm+qm6ciUUBNwbwMtPzHuhX0X6SKsaSxGykdvp3rY+9T8iDphXqjkENGKSDXEu+kY2v0763eG+ALWYc5ho5V3v8zjV9csP3SVBLkjDLWrlvQh6gHXXB4C+2FvxdUmSQTIUP12Z+1CwaSUG8Fh0QvhIiFzXciWjn/LfWnmE1q9DxIOZ7ggTfM0cNUcBFuToxi0wX8ezPIfNVqtMsMpTKJXRbvIqcERgch4QgL14ZpJd6Qq+fpseCiUbMn3R/FjN48rGgyH5o7ekjK3mmiZVmHidWiPUL3Nx9kRgZ8ZboZHy18QYIppJnlKZ50z3dek3I+OpKHH6u+lwGMBW7096WzBqWgq7AjutGTczyP7QGu2w=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A7D47342D1EA724FB392960A66DA4C3D@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 9 Aug 2019 11:36:48 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46357 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436647AbfHIPgr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 11:36:47 -0400
+Received: by mail-pl1-f196.google.com with SMTP id c2so45090918plz.13;
+        Fri, 09 Aug 2019 08:36:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kIsfn1cHexosA2amwU2vZ25ZZTkSoeu7iIbObHsLJWE=;
+        b=EVE36FFxpkAzEZS576eT+dO7wNy60OgrMowGbTBV7R7lncd/9Akw5AyvzRV0OQuCLM
+         69OCjU3cwKvUwPvXt1ygsT60oijQVcl7pdN2z/8H+VPnbn3Oc3Zeped4Tem/QweuUTZO
+         gxUQULGI9CO3VpZ+hfk3Y8qKMgzzaO78zJhjVIbClPgLI6urt/By3nLcA+yPjE1S6rxd
+         yvzzBUgnvhjh1WoD9GBGp13A4q93ZwFWyC9RfIK9Hz3m+7fGOnltOoYSfeOUMNvSYXkj
+         7kA40G7ZCm4u85yEysarIP4W2KosPdZsarPFCAXAH7B3mPlFYgBQImJHQbqjsV3oTk9/
+         1vig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kIsfn1cHexosA2amwU2vZ25ZZTkSoeu7iIbObHsLJWE=;
+        b=P+y0pehzskR6StUABHQAUhj/OloUYC1nBppgoUJsuENV6gHA6hSCX1heyPzOexVjNM
+         7fu31fOIBvaBJ2wd6w21CROlStPPefTCvZn1aCKKKLM5rnHvl7+3oHLCJ41BKnTXqv9/
+         I/oASB7hDWVaJaJ3fcDEROSegvKfZgeUlzD4+e+lQyZFfV/G9R3ty6AvyWkmV1CPZEc7
+         V2GjCTmCvAM7M5sFLJJocQWLz5m/d+QiOwKOzq1EzfRPuzgBgXYe3ip4az8NX2VdWkbd
+         +pIiBwl/O8cKmvl0nlvGNVqFx5Rc0RziqusRRoAmkQydVWqjlJLMfrv8sd6lfTc3AApE
+         T7xQ==
+X-Gm-Message-State: APjAAAUO5aeqFH3vo86gsQnVh5n/iESadCxxyApYTp3VNqjHlXlGPys3
+        pP8deSPaH5V4niScqv+wDfs=
+X-Google-Smtp-Source: APXvYqwLX4VJ2RWwcO7y/Vrcun6CgzaD4sBSHZhvtjTkV1LkwAau2StXD3gaHXnQAEcx3KF54VgWbA==
+X-Received: by 2002:a17:902:5c3:: with SMTP id f61mr18193958plf.98.1565365006788;
+        Fri, 09 Aug 2019 08:36:46 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r13sm167351403pfr.25.2019.08.09.08.36.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 08:36:45 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 08:36:44 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/33] 4.14.138-stable review
+Message-ID: <20190809153644.GA3823@roeck-us.net>
+References: <20190808190453.582417307@linuxfoundation.org>
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e1a4e8a-1735-4e7a-bd3a-08d71cdf54f0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Aug 2019 15:36:22.2833
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5ElbfHBPn4+dD82lO5ibimKmWa60K/GFeZKuS4yxLKwtaZL+GRhMQgRxM8NaskHeA6C/KzpVQrtHu0zLcfwowVg1DvGIur9U8SDMXzuir+I=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4909
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808190453.582417307@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA4LTA3IGF0IDA4OjI2ICswMDAwLCBQaGlsaXBwZSBTY2hlbmtlciB3cm90
-ZToNCj4gVGhpcyBwYXRjaCBhZGRzIHNvbWUgbWlzc2luZyBwaW5tdXhpbmcgdGhhdCBpcyBpbiB0
-aGUgY29saWJyaQ0KPiBzdGFuZGFyZCB0byB0aGUgZHRzLg0KPiANCj4gU2lnbmVkLW9mZi1ieTog
-UGhpbGlwcGUgU2NoZW5rZXIgPHBoaWxpcHBlLnNjaGVua2VyQHRvcmFkZXguY29tPg0KDQpBY2tl
-ZC1ieTogTWFyY2VsIFppc3dpbGVyIDxtYXJjZWwuemlzd2lsZXJAdG9yYWRleC5jb20+DQoNCj4g
-LS0tDQo+IA0KPiBDaGFuZ2VzIGluIHYzOiBOb25lDQo+IENoYW5nZXMgaW4gdjI6DQo+IC0gQ29t
-bWl0IHRpdGxlDQo+IA0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRsLWNvbGlicmktZXZhbC12
-My5kdHMgfCA4ICsrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspDQo+
-IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRsLWNvbGlicmktZXZhbC12
-My5kdHMNCj4gYi9hcmNoL2FybS9ib290L2R0cy9pbXg2ZGwtY29saWJyaS1ldmFsLXYzLmR0cw0K
-PiBpbmRleCA3NjNmYjVlOTBiZDMuLmU3YTJkOGMzYjJkNCAxMDA2NDQNCj4gLS0tIGEvYXJjaC9h
-cm0vYm9vdC9kdHMvaW14NmRsLWNvbGlicmktZXZhbC12My5kdHMNCj4gKysrIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvaW14NmRsLWNvbGlicmktZXZhbC12My5kdHMNCj4gQEAgLTE5MSw2ICsxOTEsMTQg
-QEANCj4gIH07DQo+ICANCj4gICZpb211eGMgew0KPiArCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVs
-dCI7DQo+ICsJcGluY3RybC0wID0gPA0KPiArCQkmcGluY3RybF93ZWltX2dwaW9fMSAmcGluY3Ry
-bF93ZWltX2dwaW9fMg0KPiArCQkmcGluY3RybF93ZWltX2dwaW9fMyAmcGluY3RybF93ZWltX2dw
-aW9fNA0KPiArCQkmcGluY3RybF93ZWltX2dwaW9fNSAmcGluY3RybF93ZWltX2dwaW9fNg0KPiAr
-CQkmcGluY3RybF91c2JoX29jXzEgJnBpbmN0cmxfdXNiY19pZF8xDQo+ICsJPjsNCj4gKw0KPiAg
-CXBpbmN0cmxfcGNhcF8xOiBwY2FwLTEgew0KPiAgCQlmc2wscGlucyA9IDwNCj4gIAkJCU1YNlFE
-TF9QQURfR1BJT185X19HUElPMV9JTzA5CTB4MWIwYjAgLyoNCj4gU09ESU1NIDI4ICovDQo=
+On Thu, Aug 08, 2019 at 09:05:07PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.138 release.
+> There are 33 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat 10 Aug 2019 07:03:19 PM UTC.
+> Anything received after that time might be too late.
+> 
+
+Build results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 372 pass: 372 fail: 0
+
+Guenter
