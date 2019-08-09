@@ -2,163 +2,146 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3AFC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B376C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C381321783
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF8CB21874
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:52:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SNwo9M1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406340AbfHIJwj (ORCPT
+        id S2406053AbfHIJws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 05:52:39 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4216 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726185AbfHIJwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 05:52:00 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 156824C5ED0F75942E68;
-        Fri,  9 Aug 2019 17:51:58 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Fri, 9 Aug 2019
- 17:51:49 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
-        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>
-CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
-        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
-        <zhaohongjiang@huawei.com>, Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH v6 00/12] implement KASLR for powerpc/fsl_booke/32
-Date:   Fri, 9 Aug 2019 18:07:48 +0800
-Message-ID: <20190809100800.5426-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.17.2
+        Fri, 9 Aug 2019 05:52:48 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44322 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbfHIJws (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 05:52:48 -0400
+Received: by mail-pf1-f193.google.com with SMTP id t16so45747870pfe.11
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 02:52:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=coff5jRP+4bBeGfReMXie4tO+oyayDQ9HMdvtmpclDQ=;
+        b=SNwo9M1MUx6gatXbQ7l9iO1/w+TnVFKCahmmqUAYpyW9H+8n0Cdqfx30RczFbZbRGj
+         bf4EOgN0mZk5UpfmOEHDh9Tqi+85r9Nx5aBsfBeQVn6CWgEA5sJK+u1L8ocrYKIIthNn
+         2F6M14ipEGBeiPzEROFicAyK7hD9eS/vDy9NYueghQjNprsW0sNm7IxHUP7ML9lzMRIH
+         D8m+LDEHZAb3IFfADaHEHE9SI18Ug5QC84E2WuAMCubC9xOKIVg/6C6m6/cA1MrJ6iDp
+         0M2Cu2ZuV6JQ9NroGGxGfIvGnRa51kvggywzGBfPcsxpBtJp4gQpVeeEHXR2l75EPd2T
+         bx7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=coff5jRP+4bBeGfReMXie4tO+oyayDQ9HMdvtmpclDQ=;
+        b=rQqvBDpx9nkIGzg4c+OtSLZxwAnwNMPk/+pTg5cTFUMORN7wXbNLPMqfdbEn+KmQUr
+         iqGEgs65O3S4haSSBS23Xm5wZprjNclBOn/JMgU7NkvTGnp9AzbaY5qKP0t7kCx0eo7t
+         pW2MuODeCo6nogln3Q+eabgcTW/W23z8SBHm93Ntxq69iR2/hl1E6NoURhZO9CNZNgQc
+         5DlOOa46zVTejBzCoBNZB+evj5Y/fdRaahtAM6Zzpzo6VzfBooBn1MYeJqoGvpIBHLZL
+         O+aDkUDQ4sw/2MUeD4HWwZGuhpnNhq6cE4um89E1KY7DUczspN32sZV5dJv1WnW1jaJk
+         0WnQ==
+X-Gm-Message-State: APjAAAVRp/jxrOOXM2EUpa41bs7Nh0ovzZzxmH7O5IslYSduL8slanRB
+        0SGwxI2jHHLKgrDOHRRrtg8=
+X-Google-Smtp-Source: APXvYqwIP7s3exCajcO3pdPQNdIVdIQ8rixRSXZeeayKqB7Lsr3Vn55iMwIIXCcgoE6PDKAdW4jOHg==
+X-Received: by 2002:a65:654d:: with SMTP id a13mr16525591pgw.196.1565344367473;
+        Fri, 09 Aug 2019 02:52:47 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.33])
+        by smtp.gmail.com with ESMTPSA id e24sm7992122pgk.21.2019.08.09.02.52.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 02:52:47 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 15:22:36 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org, sivanich@sgi.com,
+        ira.weiny@intel.com, jglisse@redhat.com,
+        william.kucharski@oracle.com, hch@lst.de,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [Linux-kernel-mentees][PATCH v4 1/1] sgi-gru: Remove *pte_lookup
+ functions
+Message-ID: <20190809095236.GC22457@bharath12345-Inspiron-5559>
+References: <1565290555-14126-1-git-send-email-linux.bhar@gmail.com>
+ <1565290555-14126-2-git-send-email-linux.bhar@gmail.com>
+ <b659042a-f2c3-df3c-4182-bb7dd5156bc1@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b659042a-f2c3-df3c-4182-bb7dd5156bc1@nvidia.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series implements KASLR for powerpc/fsl_booke/32, as a security
-feature that deters exploit attempts relying on knowledge of the location
-of kernel internals.
+On Thu, Aug 08, 2019 at 04:21:44PM -0700, John Hubbard wrote:
+> On 8/8/19 11:55 AM, Bharath Vedartham wrote:
+> ...
+> >  static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
+> >  		    int write, int atomic, unsigned long *gpa, int *pageshift)
+> >  {
+> >  	struct mm_struct *mm = gts->ts_mm;
+> >  	struct vm_area_struct *vma;
+> >  	unsigned long paddr;
+> > -	int ret, ps;
+> > +	int ret;
+> > +	struct page *page;
+> >  
+> >  	vma = find_vma(mm, vaddr);
+> >  	if (!vma)
+> > @@ -263,21 +187,33 @@ static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
+> >  
+> >  	/*
+> >  	 * Atomic lookup is faster & usually works even if called in non-atomic
+> > -	 * context.
+> > +	 * context. get_user_pages_fast does atomic lookup before falling back to
+> > +	 * slow gup.
+> >  	 */
+> >  	rmb();	/* Must/check ms_range_active before loading PTEs */
+> > -	ret = atomic_pte_lookup(vma, vaddr, write, &paddr, &ps);
+> > -	if (ret) {
+> > -		if (atomic)
+> > +	if (atomic) {
+> > +		ret = __get_user_pages_fast(vaddr, 1, write, &page);
+> > +		if (!ret)
+> >  			goto upm;
+> > -		if (non_atomic_pte_lookup(vma, vaddr, write, &paddr, &ps))
+> > +	} else {
+> > +		ret = get_user_pages_fast(vaddr, 1, write ? FOLL_WRITE : 0, &page);
+> > +		if (!ret)
+> >  			goto inval;
+> >  	}
+> > +
+> > +	paddr = page_to_phys(page);
+> > +	put_user_page(page);
+> > +
+> > +	if (unlikely(is_vm_hugetlb_page(vma)))
+> > +		*pageshift = HPAGE_SHIFT;
+> > +	else
+> > +		*pageshift = PAGE_SHIFT;
+> > +
+> >  	if (is_gru_paddr(paddr))
+> >  		goto inval;
+> > -	paddr = paddr & ~((1UL << ps) - 1);
+> > +	paddr = paddr & ~((1UL << *pageshift) - 1);
+> >  	*gpa = uv_soc_phys_ram_to_gpa(paddr);
+> > -	*pageshift = ps;
+> 
+> Why are you no longer setting *pageshift? There are a couple of callers
+> that both use this variable.
+I ll send v5 once your convinced by my argument that ps is not necessary
+to set *pageshift and that *pageshift is being set.
 
-Since CONFIG_RELOCATABLE has already supported, what we need to do is
-map or copy kernel to a proper place and relocate. Freescale Book-E
-parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1
-entries are not suitable to map the kernel directly in a randomized
-region, so we chose to copy the kernel to a proper place and restart to
-relocate.
-
-Entropy is derived from the banner and timer base, which will change every
-build and boot. This not so much safe so additionally the bootloader may
-pass entropy via the /chosen/kaslr-seed node in device tree.
-
-We will use the first 512M of the low memory to randomize the kernel
-image. The memory will be split in 64M zones. We will use the lower 8
-bit of the entropy to decide the index of the 64M zone. Then we chose a
-16K aligned offset inside the 64M zone to put the kernel in.
-
-    KERNELBASE
-
-        |-->   64M   <--|
-        |               |
-        +---------------+    +----------------+---------------+
-        |               |....|    |kernel|    |               |
-        +---------------+    +----------------+---------------+
-        |                         |
-        |----->   offset    <-----|
-
-                              kernstart_virt_addr
-
-We also check if we will overlap with some areas like the dtb area, the
-initrd area or the crashkernel area. If we cannot find a proper area,
-kaslr will be disabled and boot from the original kernel.
-
-Changes since v5:
- - Rename M_IF_NEEDED to MAS2_M_IF_NEEDED
- - Define some global variable as __ro_after_init
- - Replace kimage_vaddr with kernstart_virt_addr
- - Depend on RELOCATABLE, not select it
- - Modify the comment block below the SPDX tag
- - Remove some useless headers in kaslr_booke.c and move is_second_reloc
-   declarationto mmu_decl.h
- - Remove DBG() and use pr_debug() and rewrite comment above get_boot_seed().
- - Add a patch to document the KASLR implementation.
- - Split a patch from patch #10 which exports kaslr offset in VMCOREINFO ELF notes.
- - Remove extra logic around finding nokaslr string in cmdline.
- - Make regions static global and __initdata
-
-Changes since v4:
- - Add Reviewed-by tag from Christophe
- - Remove an unnecessary cast
- - Remove unnecessary parenthesis
- - Fix checkpatch warning
-
-Changes since v3:
- - Add Reviewed-by and Tested-by tag from Diana
- - Change the comment in fsl_booke_entry_mapping.S to be consistent
-   with the new code.
-
-Changes since v2:
- - Remove unnecessary #ifdef
- - Use SZ_64M instead of0x4000000
- - Call early_init_dt_scan_chosen() to init boot_command_line
- - Rename kaslr_second_init() to kaslr_late_init()
-
-Changes since v1:
- - Remove some useless 'extern' keyword.
- - Replace EXPORT_SYMBOL with EXPORT_SYMBOL_GPL
- - Improve some assembly code
- - Use memzero_explicit instead of memset
- - Use boot_command_line and remove early_command_line
- - Do not print kaslr offset if kaslr is disabled
-
-Jason Yan (12):
-  powerpc: unify definition of M_IF_NEEDED
-  powerpc: move memstart_addr and kernstart_addr to init-common.c
-  powerpc: introduce kernstart_virt_addr to store the kernel base
-  powerpc/fsl_booke/32: introduce create_tlb_entry() helper
-  powerpc/fsl_booke/32: introduce reloc_kernel_entry() helper
-  powerpc/fsl_booke/32: implement KASLR infrastructure
-  powerpc/fsl_booke/32: randomize the kernel image offset
-  powerpc/fsl_booke/kaslr: clear the original kernel if randomized
-  powerpc/fsl_booke/kaslr: support nokaslr cmdline parameter
-  powerpc/fsl_booke/kaslr: dump out kernel offset information on panic
-  powerpc/fsl_booke/kaslr: export offset in VMCOREINFO ELF notes
-  powerpc/fsl_booke/32: Document KASLR implementation
-
- Documentation/powerpc/kaslr-booke32.rst       |  42 ++
- arch/powerpc/Kconfig                          |  11 +
- arch/powerpc/include/asm/nohash/mmu-book3e.h  |  10 +
- arch/powerpc/include/asm/page.h               |   7 +
- arch/powerpc/kernel/Makefile                  |   1 +
- arch/powerpc/kernel/early_32.c                |   2 +-
- arch/powerpc/kernel/exceptions-64e.S          |  12 +-
- arch/powerpc/kernel/fsl_booke_entry_mapping.S |  27 +-
- arch/powerpc/kernel/head_fsl_booke.S          |  55 ++-
- arch/powerpc/kernel/kaslr_booke.c             | 393 ++++++++++++++++++
- arch/powerpc/kernel/machine_kexec.c           |   1 +
- arch/powerpc/kernel/misc_64.S                 |   7 +-
- arch/powerpc/kernel/setup-common.c            |  20 +
- arch/powerpc/mm/init-common.c                 |   7 +
- arch/powerpc/mm/init_32.c                     |   5 -
- arch/powerpc/mm/init_64.c                     |   5 -
- arch/powerpc/mm/mmu_decl.h                    |  11 +
- arch/powerpc/mm/nohash/fsl_booke.c            |   8 +-
- 18 files changed, 572 insertions(+), 52 deletions(-)
- create mode 100644 Documentation/powerpc/kaslr-booke32.rst
- create mode 100644 arch/powerpc/kernel/kaslr_booke.c
-
--- 
-2.17.2
-
+Thank you
+Bharath
+> 
+> thanks,
+> -- 
+> John Hubbard
+> NVIDIA
