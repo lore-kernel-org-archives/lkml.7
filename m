@@ -2,136 +2,136 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DF2C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D62C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA3020C01
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C359720C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:21:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h4wFQh0I"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ehV5teT2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbfHIWUg (ORCPT
+        id S1728539AbfHIWVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 18:20:36 -0400
-Received: from mail-pf1-f181.google.com ([209.85.210.181]:41541 "EHLO
-        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfHIWUe (ORCPT
+        Fri, 9 Aug 2019 18:21:19 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:37724 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfHIWVT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 18:20:34 -0400
-Received: by mail-pf1-f181.google.com with SMTP id m30so46763975pff.8;
-        Fri, 09 Aug 2019 15:20:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding:user-agent;
-        bh=yWau7YU+ZUfTifU715n6+E78gOBN34cf0QBHWjhMEdw=;
-        b=h4wFQh0InRYXp9htTypd5kqsYpfnEr1mPy6ky76IydzSZV3x42JM7uS9twJNS8SoE+
-         rGPDd6fIMiJVeR4ev2acQZLDqlYLDgN6yS23rNZ252XJI+8/1EaON6YDIXz1cQk75Js/
-         E8zmnizSowVZ6wmSE6neY5K6XufkOlJs5j5G8CU1TeKom9+PpzY6IxJ9IzDChIT7HBNh
-         fU9RoslRae1VCrqhDUvCI+904SC3E8c6ILPyWKw41BcKrVqMMX/o+mJT57HyAZ/hZ3Eu
-         3XvP13jwXgyfbJcRPc+xzikfcYMPpFUZeEELqQwfr+fcLyYWbx/7E6mErTUSdLtu0FMC
-         TgwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=yWau7YU+ZUfTifU715n6+E78gOBN34cf0QBHWjhMEdw=;
-        b=fuo63BT2SBvcGje1ZqLAQZXqcym0LpeBlTJtwjt1JDxCXiEE7KAjmgKIYAHJtL/89R
-         cMQzsM1TD3YLE++mq1KhD3XrdJlp9j9XoQ5mnxR40kqxawneDuPXlHSBo4ltRYSnpuZ7
-         /wdhp/I4OpRAVMHhZyFsLwv8Tv30kOq8AqQHSiNS62W4jbEdcoXaExW+vHsoD5ctwiVG
-         YQ28pVBlpj288AeQ0dc7lcsfGXuipGmFJkqWUjAWYUEGiqy64Oy4kCPGNskSCPsd9rg0
-         iZOxJmRLG9he/fpJIdu1D6j4kgnaAVzzt40RbTve30Shw7/hLK9czFVfoXMOFKUe+1Ji
-         fu6A==
-X-Gm-Message-State: APjAAAVlqZR/BFN1rHmsRrw9VmJ7kUVyHITR87966znUTHVui9dsoROB
-        CC1n+tI7ZgAffSqZVjBpxS0=
-X-Google-Smtp-Source: APXvYqyxnxOI3p+sxIoZEIOrWszQDrDcbW7VNAsQas0ES+giI17pJvDOx+oaXlfGvxtl0CdktwftAQ==
-X-Received: by 2002:a17:90a:7148:: with SMTP id g8mr11705511pjs.51.1565389233037;
-        Fri, 09 Aug 2019 15:20:33 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id h20sm245256pfq.156.2019.08.09.15.20.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 15:20:32 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 15:20:30 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [git pull] Input updates for v5.3-rc3
-Message-ID: <20190809222030.GA20442@dtor-ws>
+        Fri, 9 Aug 2019 18:21:19 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x79MLDhL021121;
+        Fri, 9 Aug 2019 17:21:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565389273;
+        bh=0sRKy0ahKs6KSh6b8fYHSjedNqmA9zJmx8GJm3JPAbA=;
+        h=From:To:CC:Subject:Date;
+        b=ehV5teT2Z/L2AK55GBDmjtWhaRlrqNkVDmF64pBhmYrjqUl3QTiFZLPpqzvpOmL21
+         THMrNPqWM8jk+5B0+oQBKSqxpS3MNqEvfd2FOTj+IhMdhpH4tPdUNeJB9MPGFdaniT
+         yQowAC48yFxNy7F38U1ym5iMCAptFcw+peOyaE+Y=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x79MLDNG095931
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 9 Aug 2019 17:21:13 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 9 Aug
+ 2019 17:21:13 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 9 Aug 2019 17:21:13 -0500
+Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x79MLCgL080777;
+        Fri, 9 Aug 2019 17:21:12 -0500
+Received: from localhost (irmo.dhcp.ti.com [128.247.58.153])
+        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x79MLCZ28077;
+        Fri, 9 Aug 2019 17:21:12 -0500 (CDT)
+From:   Suman Anna <s-anna@ti.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Suman Anna <s-anna@ti.com>
+Subject: [PATCH] remoteproc: Add a sysfs interface for name
+Date:   Fri, 9 Aug 2019 17:20:57 -0500
+Message-ID: <20190809222057.13924-1-s-anna@ti.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+This patch adds a sysfs interface that provides the name of the
+remote processor to userspace. This allows the userspace to identify
+a remote processor as the remoteproc devices themselves are created
+based on probe order and can change from one boot to another or
+at runtime.
 
-Please pull from:
+The name is made available in debugfs originally, and is being
+retained for now. This can be cleaned up after couple of releases
+once users get familiar with the new interface.
 
-	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+ Documentation/ABI/testing/sysfs-class-remoteproc | 10 ++++++++++
+ drivers/remoteproc/remoteproc_sysfs.c            | 11 +++++++++++
+ 2 files changed, 21 insertions(+)
 
-to receive updates for the input subsystem. You will get:
-
-- newer systems with Elan touchpads will be switched over to SMBus
-- HP Spectre X360 will be using SMbus/RMI4
-- checks for invalid USB descriptors in kbtab and iforce
-- build fixes for applespi driver (misconfigs)
-
-Thanks!
-
-Changelog:
----------
-
-Arnd Bergmann (1):
-      Input: applespi - select CRC16 module
-
-Dmitry Torokhov (2):
-      Input: elantech - annotate fall-through case in elantech_use_host_notify()
-      Input: synaptics - enable RMI mode for HP Spectre X360
-
-Gustavo A. R. Silva (1):
-      Input: applespi - use struct_size() helper
-
-Kai-Heng Feng (1):
-      Input: elantech - enable SMBus on new (2018+) systems
-
-Nikolas Nyby (1):
-      Input: applespi - fix trivial typo in struct description
-
-Oliver Neukum (3):
-      Input: usbtouchscreen - initialize PM mutex before using it
-      Input: kbtab - sanity check for endpoint type
-      Input: iforce - add sanity checks
-
-Ronald Tschalär (1):
-      Input: applespi - fix warnings detected by sparse
-
-YueHaibing (1):
-      Input: applespi - add dependency on LEDS_CLASS
-
-Diffstat:
---------
-
- drivers/input/joystick/iforce/iforce-usb.c |  5 +++
- drivers/input/keyboard/Kconfig             |  2 ++
- drivers/input/keyboard/applespi.c          | 29 +++++++++-------
- drivers/input/mouse/elantech.c             | 55 ++++++++++++++----------------
- drivers/input/mouse/synaptics.c            |  1 +
- drivers/input/tablet/kbtab.c               |  6 ++--
- drivers/input/touchscreen/usbtouchscreen.c |  2 ++
- 7 files changed, 56 insertions(+), 44 deletions(-)
-
-Thanks.
-
-
+diff --git a/Documentation/ABI/testing/sysfs-class-remoteproc b/Documentation/ABI/testing/sysfs-class-remoteproc
+index c3afe9fab646..36094fbeb974 100644
+--- a/Documentation/ABI/testing/sysfs-class-remoteproc
++++ b/Documentation/ABI/testing/sysfs-class-remoteproc
+@@ -48,3 +48,13 @@ Description:	Remote processor state
+ 
+ 		Writing "stop" will attempt to halt the remote processor and
+ 		return it to the "offline" state.
++
++What:		/sys/class/remoteproc/.../name
++Date:		August 2019
++KernelVersion:	5.4
++Contact:	Suman Anna <s-anna@ti.com>
++Description:	Remote processor name
++
++		Reports the name of the remote processor. This can be used by
++		userspace in exactly identifying a remote processor and ease
++		up the usage in modifying the 'firmware' or 'state' files.
+diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
+index fa4131930106..7f8536b73295 100644
+--- a/drivers/remoteproc/remoteproc_sysfs.c
++++ b/drivers/remoteproc/remoteproc_sysfs.c
+@@ -113,9 +113,20 @@ static ssize_t state_store(struct device *dev,
+ }
+ static DEVICE_ATTR_RW(state);
+ 
++/* Expose the name of the remote processor via sysfs */
++static ssize_t name_show(struct device *dev, struct device_attribute *attr,
++			 char *buf)
++{
++	struct rproc *rproc = to_rproc(dev);
++
++	return sprintf(buf, "%s\n", rproc->name);
++}
++static DEVICE_ATTR_RO(name);
++
+ static struct attribute *rproc_attrs[] = {
+ 	&dev_attr_firmware.attr,
+ 	&dev_attr_state.attr,
++	&dev_attr_name.attr,
+ 	NULL
+ };
+ 
 -- 
-Dmitry
+2.22.0
+
