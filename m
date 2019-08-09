@@ -2,186 +2,291 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A099DC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D064EC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CF4120B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A01F220B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:18:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="euTzh+U2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436841AbfHISSN (ORCPT
+        id S2437004AbfHISSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:18:13 -0400
-Received: from mail-ot1-f69.google.com ([209.85.210.69]:50101 "EHLO
-        mail-ot1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407073AbfHISSI (ORCPT
+        Fri, 9 Aug 2019 14:18:22 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33601 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436690AbfHISSV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:18:08 -0400
-Received: by mail-ot1-f69.google.com with SMTP id l7so70555723otj.16
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 11:18:08 -0700 (PDT)
+        Fri, 9 Aug 2019 14:18:21 -0400
+Received: by mail-lf1-f66.google.com with SMTP id x3so70264921lfc.0;
+        Fri, 09 Aug 2019 11:18:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=E8y8IXxBU1Y+QO/+Z71ZJ5cdap8FRJZXKelTnTfTFa0=;
+        b=euTzh+U2GMc3WnxhTxHx7xKEo8TD8kayctwddiyX9IhODbilWoLMK6Z6H1t/e0YfBy
+         djt4zvB6/bCnP4IdYTlZCsrusFa7rjkvxrm/wOYXLwudNBF94fFMXbElVxxzdv3jp/up
+         VlleztW3YbYTsZEjHn5vrmBv0I1MaKNdfrXJIdyN4zqyOGh+dS9VDS2pD6dsze838/4X
+         Se/9cGgZgj0pCmovfDaQn2g2UpnOAFv+C/J2suNDa/2QpHUcGuzMGld0VUlUFzHwmOlS
+         mlR2gAx+58wo/yu+6Q9kDXqYRLMT4gm0ORqrHbEBprO/SSMgVQEgLao5pT108JVQ35Qw
+         yxtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Y2L+nyfU2q8wHXsbDGxBb0OTl9a2LvGPbF4amlYpYck=;
-        b=dNXyWVBg6MgAzqlkhYe9GMH2c9EG3b9DlDLRL13mYKG5VU1qwuZR/ozCDRxwbnjDTC
-         xGd1j0v7EPG6zbfnNAyfN1UfAt0QrRTt6X4ZW2b64EinYh1BHaDc5C1gxb95YRFH/ZC7
-         /Tvm9CVopxJYPkicktowDmtEbaKbPDfbsa2RtnDGFWGdjrJecYIbk8gYMGk/Pjgbn28t
-         CLQOt13ykDiP6KMPaz8D3SzzEsOOPEBQeJGRP2BZvbBae4Li5/5ZiLED726Kj1yq3tQq
-         1oazvvQiDt+3aIbaX7ndkY0hSN2AyT01gxZew+m/QsTEi8lRLIMt2jB2d+hHMmfD51VM
-         3uCg==
-X-Gm-Message-State: APjAAAVQfYffHziSHf21l/uw7ax/m8GgSND4VvN0vtIzKkRxBYi2OOD/
-        wOW6ZJpyi98mEKmTqr0S7n26asJCzho/P42RF5QqFaDRkGvz
-X-Google-Smtp-Source: APXvYqztRd/lbloiqUkFenFyig+D96woBzsopwy0n5xUOd9frwUELiEUZNPGdhjoSEBfFRT1kUw+YcmDD/Pnyz4Ljb4NU1/P+ucD
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=E8y8IXxBU1Y+QO/+Z71ZJ5cdap8FRJZXKelTnTfTFa0=;
+        b=gn0eZHjr7YoqgcvldPexjjMvbBgAZmLCJzTvl7zyVpimXAWx2J8M0Y5JdfsZrda6iJ
+         cqV4tiZr76cS/vmTg0m0c2/QtIz1iZV9isCFdXjUaDsw2ihakQkSRHU3UHyOAjPHsb/e
+         v2EGSUzdaIGwTGC5ivacvgsCdb09K8DnsDJWJMu+BYhaR66lzsVNAdjR+fH1IWz3TCB1
+         41OsRgVFmPGRYlN7f2Yy3FwUouMFCaSEQ42Kc3MptSa5V0SkkuN9NpQUo1eoXpHjKQK0
+         mzyvIHhFtS06e/vGqgFOksJJ4QyJOi+oXTE/8LV1f6jZMJbfH6OfHiutoJ2lulqhQiP5
+         /swQ==
+X-Gm-Message-State: APjAAAUxlpD5utmD6siflpMlwcNwRthYHzk/dIp/RqKWZ83jLnMS2xu7
+        v34c3qrdx/i8cM0i/X/g9Cmwzqvf
+X-Google-Smtp-Source: APXvYqySaKU/e4oRuB2ismLcDn7BqjcUfVKWHaA4Ebi/dHnqGHREG7WunIHs1KVPYE/oFCygkVFlrg==
+X-Received: by 2002:ac2:4c12:: with SMTP id t18mr13526812lfq.134.1565374697788;
+        Fri, 09 Aug 2019 11:18:17 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.34.218])
+        by smtp.googlemail.com with ESMTPSA id k23sm16344839ljg.90.2019.08.09.11.18.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 11:18:17 -0700 (PDT)
+Subject: Re: [PATCH v8 14/21] clk: tegra210: Add suspend and resume support
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-15-git-send-email-skomatineni@nvidia.com>
+ <a21b7464-62c3-8461-04c2-a0e863bdde85@gmail.com>
+ <7d101ec9-c559-8b40-1764-6bf67a9c7a7a@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <aa823801-00c7-df88-0f63-45338bffa854@gmail.com>
+Date:   Fri, 9 Aug 2019 21:18:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9386:: with SMTP id c6mr15947872iol.81.1565374687687;
- Fri, 09 Aug 2019 11:18:07 -0700 (PDT)
-Date:   Fri, 09 Aug 2019 11:18:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000333f53058fb33243@google.com>
-Subject: KASAN: out-of-bounds Read in hidraw_ioctl
-From:   syzbot <syzbot+f817d84b72194c4a5fe2@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
-        jikos@kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <7d101ec9-c559-8b40-1764-6bf67a9c7a7a@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+09.08.2019 19:19, Sowjanya Komatineni пишет:
+> 
+> On 8/9/19 6:56 AM, Dmitry Osipenko wrote:
+>> 09.08.2019 2:46, Sowjanya Komatineni пишет:
+>>> This patch adds support for clk: tegra210: suspend-resume.
+>>>
+>>> All the CAR controller settings are lost on suspend when core
+>>> power goes off.
+>>>
+>>> This patch has implementation for saving and restoring all PLLs
+>>> and clocks context during system suspend and resume to have the
+>>> clocks back to same state for normal operation.
+>>>
+>>> Clock driver suspend and resume are registered as syscore_ops as clocks
+>>> restore need to happen before the other drivers resume to have all their
+>>> clocks back to the same state as before suspend.
+>>>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>>   drivers/clk/tegra/clk-tegra210.c | 103 +++++++++++++++++++++++++++++++++++++--
+>>>   drivers/clk/tegra/clk.c          |  64 ++++++++++++++++++++++++
+>>>   drivers/clk/tegra/clk.h          |   3 ++
+>>>   3 files changed, 166 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+>>> index 998bf60b219a..8dd6f4f4debb 100644
+>>> --- a/drivers/clk/tegra/clk-tegra210.c
+>>> +++ b/drivers/clk/tegra/clk-tegra210.c
+>>> @@ -9,13 +9,13 @@
+>>>   #include <linux/clkdev.h>
+>>>   #include <linux/of.h>
+>>>   #include <linux/of_address.h>
+>>> +#include <linux/syscore_ops.h>
+>>>   #include <linux/delay.h>
+>>>   #include <linux/export.h>
+>>>   #include <linux/mutex.h>
+>>>   #include <linux/clk/tegra.h>
+>>>   #include <dt-bindings/clock/tegra210-car.h>
+>>>   #include <dt-bindings/reset/tegra210-car.h>
+>>> -#include <linux/iopoll.h>
+>>>   #include <linux/sizes.h>
+>>>   #include <soc/tegra/pmc.h>
+>>>   @@ -220,11 +220,15 @@
+>>>   #define CLK_M_DIVISOR_SHIFT 2
+>>>   #define CLK_M_DIVISOR_MASK 0x3
+>>>   +#define CLK_MASK_ARM    0x44
+>>> +#define MISC_CLK_ENB    0x48
+>>> +
+>>>   #define RST_DFLL_DVCO 0x2f4
+>>>   #define DVFS_DFLL_RESET_SHIFT 0
+>>>     #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
+>>>   #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
+>>> +#define CPU_SOFTRST_CTRL 0x380
+>>>     #define LVL2_CLK_GATE_OVRA 0xf8
+>>>   #define LVL2_CLK_GATE_OVRC 0x3a0
+>>> @@ -2825,6 +2829,7 @@ static int tegra210_enable_pllu(void)
+>>>       struct tegra_clk_pll_freq_table *fentry;
+>>>       struct tegra_clk_pll pllu;
+>>>       u32 reg;
+>>> +    int ret;
+>>>         for (fentry = pll_u_freq_table; fentry->input_rate; fentry++) {
+>>>           if (fentry->input_rate == pll_ref_freq)
+>>> @@ -2853,9 +2858,14 @@ static int tegra210_enable_pllu(void)
+>>>       reg |= PLL_ENABLE;
+>>>       writel(reg, clk_base + PLLU_BASE);
+>>>   -    readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
+>>> -                      reg & PLL_BASE_LOCK, 2, 1000);
+>>> -    if (!(reg & PLL_BASE_LOCK)) {
+>>> +    /*
+>>> +     * During clocks resume, same PLLU init and enable sequence get
+>>> +     * executed. So, readx_poll_timeout_atomic can't be used here as it
+>>> +     * uses ktime_get() and timekeeping resume doesn't happen by that
+>>> +     * time. So, using tegra210_wait_for_mask for PLL LOCK.
+>>> +     */
+>>> +    ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
+>>> +    if (ret) {
+>>>           pr_err("Timed out waiting for PLL_U to lock\n");
+>>>           return -ETIMEDOUT;
+>>>       }
+>>> @@ -3288,6 +3298,84 @@ static void tegra210_disable_cpu_clock(u32 cpu)
+>>>   }
+>>>     #ifdef CONFIG_PM_SLEEP
+>>> +/*
+>>> + * This array lists mask values for each peripheral clk bank
+>>> + * to mask out reserved bits during the clocks state restore
+>>> + * on SC7 resume to prevent accidental writes to these reserved
+>>> + * bits.
+>>> + */
+>>> +static u32 periph_clk_rsvd_mask[TEGRA210_CAR_BANK_COUNT] = {
+>> Should be more natural to have a "valid_mask" instead of "rsvd_mask".
+>>
+>> What's actually wrong with touching of the reserved bits? They must be NO-OP.. or the
+>> reserved bits are actually some kind of "secret" bits? If those bits have some use-case
+>> outside of Silicon HW (like FPGA simulation), then this doesn't matter for upstream and you
+>> have to keep the workaround locally in the downstream kernel or whatever.
+> 
+> Will rename as valid_mask.
+> 
+> some bits in these registers are undefined and is not good to write to these bits as they
+> can cause pslverr.
 
-syzbot found the following crash on:
+Okay, it should be explained in the comment.
 
-HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=126120e2600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
-dashboard link: https://syzkaller.appspot.com/bug?extid=f817d84b72194c4a5fe2
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Is it possible to disable trapping of changing the undefined bits?
 
-Unfortunately, I don't have any reproducer for this crash yet.
+>>
+>>> +    0x23282006,
+>>> +    0x782e0c18,
+>>> +    0x0c012c05,
+>>> +    0x003e7304,
+>>> +    0x86c04800,
+>>> +    0xc0199000,
+>>> +    0x03e03800,
+>>> +};
+>>> +
+>>> +#define car_readl(_base, _off) readl_relaxed(clk_base + (_base) + ((_off) * 4))
+>>> +#define car_writel(_val, _base, _off) \
+>>> +        writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
+>>> +
+>>> +static u32 spare_reg_ctx, misc_clk_enb_ctx, clk_msk_arm_ctx;
+>>> +static u32 cpu_softrst_ctx[3];
+>>> +
+>>> +static int tegra210_clk_suspend(void)
+>>> +{
+>>> +    unsigned int i;
+>>> +
+>>> +    clk_save_context();
+>>> +
+>>> +    /*
+>>> +     * Save the bootloader configured clock registers SPARE_REG0,
+>>> +     * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL.
+>>> +     */
+>>> +    spare_reg_ctx = readl_relaxed(clk_base + SPARE_REG0);
+>>> +    misc_clk_enb_ctx = readl_relaxed(clk_base + MISC_CLK_ENB);
+>>> +    clk_msk_arm_ctx = readl_relaxed(clk_base + CLK_MASK_ARM);
+>>> +
+>>> +    for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
+>>> +        cpu_softrst_ctx[i] = car_readl(CPU_SOFTRST_CTRL, i);
+>>> +
+>>> +    tegra_clk_periph_suspend();
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static void tegra210_clk_resume(void)
+>>> +{
+>>> +    unsigned int i;
+>>> +
+>>> +    tegra_clk_osc_resume(clk_base);
+>>> +
+>>> +    /*
+>>> +     * Restore the bootloader configured clock registers SPARE_REG0,
+>>> +     * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL from saved context.
+>>> +     */
+>>> +    writel_relaxed(spare_reg_ctx, clk_base + SPARE_REG0);
+>>> +    writel_relaxed(misc_clk_enb_ctx, clk_base + MISC_CLK_ENB);
+>>> +    writel_relaxed(clk_msk_arm_ctx, clk_base + CLK_MASK_ARM);
+>>> +
+>>> +    for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
+>>> +        car_writel(cpu_softrst_ctx[i], CPU_SOFTRST_CTRL, i);
+>>> +
+>>> +    fence_udelay(5, clk_base);
+>>> +
+>>> +    /* enable all the clocks before changing the clock sources */
+>>> +    tegra_clk_periph_force_on(periph_clk_rsvd_mask);
+>> Why clocks need to be enabled before changing the sources?
+> 
+> To prevent glitchless frequency switch, Tegra clock programming recommended sequence is to
+> change MUX control or divisor or both with the clocks running.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f817d84b72194c4a5fe2@syzkaller.appspotmail.com
+This should be explained in the comment.
 
-==================================================================
-BUG: KASAN: out-of-bounds in hidraw_ioctl+0x609/0xae0  
-drivers/hid/hidraw.c:380
-Read of size 4 at addr ffff8881cb9fc018 by task syz-executor.1/3309
+> Actual state of clocks before suspend are restored later after all PLL's and peripheral
+> clocks are restored.
+> 
+>>
+>>> +    /* wait for all writes to happen to have all the clocks enabled */
+>>> +    wmb();
+>> fence_udelay() has exactly the same barrier at the very beginning of readl(), no need to
+>> duplicate it here.
 
-CPU: 1 PID: 3309 Comm: syz-executor.1 Not tainted 5.3.0-rc2+ #25
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x6a/0x32c mm/kasan/report.c:351
-  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
-  kasan_report+0xe/0x12 mm/kasan/common.c:612
-  hidraw_ioctl+0x609/0xae0 drivers/hid/hidraw.c:380
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
-  ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459829
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f877bde2c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
-RDX: 0000000020001300 RSI: 0000000080044801 RDI: 0000000000000004
-RBP: 000000000075c118 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f877bde36d4
-R13: 00000000004c2206 R14: 00000000004d5610 R15: 00000000ffffffff
+Actually, readl does the rmb() and it should be a more correct variant of fencing because it
+actually ensures that the write reached hardware. I suppose that something like fence_udelay
+should be used for the pinctrl as well.
 
-Allocated by task 2751:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:487 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
-  slab_post_alloc_hook mm/slab.h:520 [inline]
-  slab_alloc_node mm/slub.c:2766 [inline]
-  __kmalloc_node_track_caller+0xd0/0x230 mm/slub.c:4361
-  __kmalloc_reserve.isra.0+0x39/0xe0 net/core/skbuff.c:141
-  __alloc_skb+0xef/0x5a0 net/core/skbuff.c:209
-  alloc_skb include/linux/skbuff.h:1055 [inline]
-  alloc_uevent_skb+0x7b/0x210 lib/kobject_uevent.c:289
-  uevent_net_broadcast_untagged lib/kobject_uevent.c:325 [inline]
-  kobject_uevent_net_broadcast lib/kobject_uevent.c:408 [inline]
-  kobject_uevent_env+0x8ee/0x1160 lib/kobject_uevent.c:592
-  device_del+0x6b2/0xb10 drivers/base/core.c:2298
-  usb_disconnect+0x4c3/0x8d0 drivers/usb/core/hub.c:2225
-  hub_port_connect drivers/usb/core/hub.c:4949 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>>> +    fence_udelay(2, clk_base);
+>>> +
+>>> +    /* restore PLLs and all peripheral clock rates */
+>>> +    tegra210_init_pllu();
+>> Why USB PLL need to be restored at first?
+> USB PLL restore is independent to all other clocks restore. So this can be done either
+> before clk_restore_context or even after.
 
-Freed by task 238:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
-  slab_free_hook mm/slub.c:1423 [inline]
-  slab_free_freelist_hook mm/slub.c:1470 [inline]
-  slab_free mm/slub.c:3012 [inline]
-  kfree+0xe4/0x2f0 mm/slub.c:3953
-  skb_free_head+0x8b/0xa0 net/core/skbuff.c:591
-  skb_release_data+0x41f/0x7c0 net/core/skbuff.c:611
-  skb_release_all+0x46/0x60 net/core/skbuff.c:665
-  __kfree_skb net/core/skbuff.c:679 [inline]
-  consume_skb net/core/skbuff.c:838 [inline]
-  consume_skb+0xd9/0x320 net/core/skbuff.c:832
-  skb_free_datagram+0x16/0xf0 net/core/datagram.c:328
-  netlink_recvmsg+0x65e/0xee0 net/netlink/af_netlink.c:1996
-  sock_recvmsg_nosec net/socket.c:871 [inline]
-  sock_recvmsg net/socket.c:889 [inline]
-  sock_recvmsg+0xca/0x110 net/socket.c:885
-  ___sys_recvmsg+0x271/0x5a0 net/socket.c:2480
-  __sys_recvmsg+0xe9/0x1b0 net/socket.c:2537
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Then why not to implement restore_context for PLLU?
 
-The buggy address belongs to the object at ffff8881cb9fc000
-  which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 24 bytes inside of
-  1024-byte region [ffff8881cb9fc000, ffff8881cb9fc400)
-The buggy address belongs to the page:
-page:ffffea00072e7f00 refcount:1 mapcount:0 mapping:ffff8881da002280  
-index:0x0 compound_mapcount: 0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da002280
-raw: 0000000000000000 00000000000e000e 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
+>>> +    clk_restore_context();
+>>> +
+>>> +    /* restore all peripheral clocks enable and reset state */
+>>> +    tegra_clk_periph_resume();
+>>> +}
+>> [snip]
 
-Memory state around the buggy address:
-  ffff8881cb9fbf00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-  ffff8881cb9fbf80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> ffff8881cb9fc000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                             ^
-  ffff8881cb9fc080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881cb9fc100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
