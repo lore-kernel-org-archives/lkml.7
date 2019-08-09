@@ -2,134 +2,226 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B467DC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40B1C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9129F2171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AABA92171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:18:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=devtank-co-uk.20150623.gappssmtp.com header.i=@devtank-co-uk.20150623.gappssmtp.com header.b="zIW8ddVR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436473AbfHINS1 (ORCPT
+        id S2436485AbfHINSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:18:27 -0400
-Received: from mail-ot1-f71.google.com ([209.85.210.71]:55441 "EHLO
-        mail-ot1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406863AbfHINSI (ORCPT
+        Fri, 9 Aug 2019 09:18:31 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37289 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436470AbfHINS3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:18:08 -0400
-Received: by mail-ot1-f71.google.com with SMTP id p7so68712043otk.22
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 06:18:07 -0700 (PDT)
+        Fri, 9 Aug 2019 09:18:29 -0400
+Received: by mail-wr1-f66.google.com with SMTP id b3so5836591wro.4
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 06:18:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=devtank-co-uk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=42uV7DurzBGNdoHGvTqQVRhcHK8QAjR3iIUcZK+4LkY=;
+        b=zIW8ddVR27zXLKH9fZhIInf53B0Gh7iwnxOugtzCHM95gAdCzwDF13gpIHDMDlAxDG
+         uCr8usHYX04M3ywP/J0JIo2qJxb9F/86DE1NRBV691y34xB+FdwlA+IrFHEL33I9RDVZ
+         wTJZEiWixNjcgubZnEc0DNqZ+snRpjCjwyYqe4UOANHawkW346V+GKb7jrxlsAlCsU4W
+         EyLEuQx2TYEpRlQX8b80QwT7Ox7h6z9jfom/tnVcpEf9b7zMszSNpD3qS57KfObMI5BK
+         KJl330eUZ3OG9pRM5vCZk/r57nWk4hynC8W0vXJjQT5oH+HkpPhfLv6nKNjJocSjLfOl
+         vXPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=nWHe0S+V90Nx6X3NKPT0jWYFZ1rMcSIf8jk+Kp2biVo=;
-        b=d8QA12E+msG7nLFKbRcsOdajcESh4lhWPhQuYXh6WHQCr76epFoFu2KKvhWrAM1byp
-         Lem1raww6yCRHuIdacRHDUBduFwPUnoY6ERAGZkeP+W5J2UnQ5rUSNhs9uUDq+Z50Vs0
-         qHulv1w8IFIrfiXZbunm3SR98+62g0m8aon1YC2lcUfvtQW/wJAv9XYWyfHymVeS3u+B
-         CJjVNgTevPF3vGhp1EeN/OhPNjKze+NbSzulKSMPoeQBu7ej9ZNotHeqvbZGw+ksYftq
-         qRSQGgNfrP5uke3Q39qYYPe4Md9ywvf/vUVLmqggGBjVH8tSvlDTU0SDMyAoR6uP9lYn
-         o3GQ==
-X-Gm-Message-State: APjAAAVPCAoQunsfzo4y+44+wl6bfF2ZvGdy72aatxRnaRtcUMHDwJOe
-        3w1rr0UAbEHTlH+cOeQVMQFUQMYizsBH4BaA7bOk5y62U64L
-X-Google-Smtp-Source: APXvYqxisCa09pCrUIJdr2jqOhsEVR7LdHBnNo9Fx9xC3D5Lxz1QB4qiba5wbjN0sZ2U+eyNQuDXVpj6b39bFVCn06UPrELPUJEV
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=42uV7DurzBGNdoHGvTqQVRhcHK8QAjR3iIUcZK+4LkY=;
+        b=cHOS2xjViJ5sjiwBvgQN4QidXD+8DC2hEq5Rjvc1YL/g6imIVk9Ak3moyOv3VpMR7C
+         uYLxjKn8Nho83WN4RA83tQNr88UZVPIJp/PtMx+7mf7rmEKWjUmqQMbo746HcW1xe3Ip
+         IrTZcb/i7JgCIJfMzXB8wNXHcvzSZCJDkkAQsSKQcBV183bUX8F/csq9Wdaz4i1z1PVU
+         RfNGGJ5s6t7WuvDdpfp9OAmuPSnfhFwreLoygf5ji8pSJmjPw2q2XiwEnEDQwgYAFF0Y
+         TYVKhCFemSzICQREOrAsqOrBLQCYfRN5JXyJP8mS48F2doTpCnPWS0H42TYQJ8jW9Vsm
+         ggsg==
+X-Gm-Message-State: APjAAAUCJgGX9Pb2Fkf/7D4UZjs50UTt0t6zfsaUCDLICIZGvzJRNieU
+        3YG+9lRyEGko3+5wOM+vkgq/7chReWA=
+X-Google-Smtp-Source: APXvYqwRA0Oy4xrGac8+CSZ14Q0cld46PVL/7rOY6ivBnGJYCE949LN1UmjoX6+QqoQDc0cBrqPHEA==
+X-Received: by 2002:adf:eb51:: with SMTP id u17mr23274490wrn.257.1565356706219;
+        Fri, 09 Aug 2019 06:18:26 -0700 (PDT)
+Received: from [192.168.200.229] ([141.105.200.141])
+        by smtp.gmail.com with ESMTPSA id d17sm6187647wrm.52.2019.08.09.06.18.25
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 06:18:25 -0700 (PDT)
+Subject: Re: [PATCH] Add optional chip erase functionality to AT25 EEPROM
+ driver.
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190809125358.24440-1-joe.burmeister@devtank.co.uk>
+ <20190809130005.GA13962@kroah.com>
+From:   Joe Burmeister <joe.burmeister@devtank.co.uk>
+Message-ID: <d6534808-aa41-0bf0-a516-cee9bbd8e97a@devtank.co.uk>
+Date:   Fri, 9 Aug 2019 14:18:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:104:: with SMTP id s4mr20896182iot.200.1565356687343;
- Fri, 09 Aug 2019 06:18:07 -0700 (PDT)
-Date:   Fri, 09 Aug 2019 06:18:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004bcc0d058faf01c4@google.com>
-Subject: WARNING in em28xx_usb_disconnect
-From:   syzbot <syzbot+b7f57261c521087d89bb@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
-        mchehab@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190809130005.GA13962@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Greg,
 
-syzbot found the following crash on:
+On 09/08/2019 14:00, Greg Kroah-Hartman wrote:
+> On Fri, Aug 09, 2019 at 01:53:55PM +0100, Joe Burmeister wrote:
+>> +static void _eeprom_at25_store_erase_locked(struct at25_data *at25)
+>> +{
+>> +	unsigned long	timeout, retries;
+>> +	int				sr, status;
+>> +	u8	cp;
+>> +
+>> +	cp = AT25_WREN;
+>> +	status = spi_write(at25->spi, &cp, 1);
+>> +	if (status < 0) {
+>> +		dev_dbg(&at25->spi->dev, "ERASE WREN --> %d\n", status);
+>> +		return;
+>> +	}
+>> +	cp = at25->erase_instr;
+>> +	status = spi_write(at25->spi, &cp, 1);
+>> +	if (status < 0) {
+>> +		dev_dbg(&at25->spi->dev, "CHIP_ERASE --> %d\n", status);
+>> +		return;
+>> +	}
+>> +	/* Wait for non-busy status */
+>> +	timeout = jiffies + msecs_to_jiffies(ERASE_TIMEOUT);
+>> +	retries = 0;
+>> +	do {
+>> +		sr = spi_w8r8(at25->spi, AT25_RDSR);
+>> +		if (sr < 0 || (sr & AT25_SR_nRDY)) {
+>> +			dev_dbg(&at25->spi->dev,
+>> +				"rdsr --> %d (%02x)\n", sr, sr);
+>> +			/* at HZ=100, this is sloooow */
+>> +			msleep(1);
+>> +			continue;
+>> +		}
+>> +		if (!(sr & AT25_SR_nRDY))
+>> +			return;
+>> +	} while (retries++ < 200 || time_before_eq(jiffies, timeout));
+>> +
+>> +	if ((sr < 0) || (sr & AT25_SR_nRDY)) {
+>> +		dev_err(&at25->spi->dev,
+>> +			"chip erase, timeout after %u msecs\n",
+>> +			jiffies_to_msecs(jiffies -
+>> +				(timeout - ERASE_TIMEOUT)));
+>> +		status = -ETIMEDOUT;
+>> +		return;
+>> +	}
+>> +}
+>> +
+>> +
+> No need for 2 lines :(
 
-HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=15ef3cba600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
-dashboard link: https://syzkaller.appspot.com/bug?extid=b7f57261c521087d89bb
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16ceae36600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12816f26600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b7f57261c521087d89bb@syzkaller.appspotmail.com
-
-usb 1-1: USB disconnect, device number 2
-em28xx 1-1:1.153: Disconnecting em28xx #1
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 12 at kernel/workqueue.c:3031  
-__flush_work.cold+0x2c/0x36 kernel/workqueue.c:3031
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc2+ #25
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  panic+0x2a3/0x6da kernel/panic.c:219
-  __warn.cold+0x20/0x4a kernel/panic.c:576
-  report_bug+0x262/0x2a0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1026
-RIP: 0010:__flush_work.cold+0x2c/0x36 kernel/workqueue.c:3031
-Code: 9a 22 00 48 c7 c7 20 e4 c5 85 e8 d9 3a 0d 00 0f 0b 45 31 e4 e9 98 86  
-ff ff e8 51 9a 22 00 48 c7 c7 20 e4 c5 85 e8 be 3a 0d 00 <0f> 0b 45 31 e4  
-e9 7d 86 ff ff e8 36 9a 22 00 48 c7 c7 20 e4 c5 85
-RSP: 0018:ffff8881da20f720 EFLAGS: 00010286
-RAX: 0000000000000024 RBX: dffffc0000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8128a0fd RDI: ffffed103b441ed6
-RBP: ffff8881da20f888 R08: 0000000000000024 R09: fffffbfff11acd9a
-R10: fffffbfff11acd99 R11: ffffffff88d66ccf R12: 0000000000000000
-R13: 0000000000000001 R14: ffff8881c6685df8 R15: ffff8881d2a85b78
-  flush_request_modules drivers/media/usb/em28xx/em28xx-cards.c:3325 [inline]
-  em28xx_usb_disconnect.cold+0x280/0x2a6  
-drivers/media/usb/em28xx/em28xx-cards.c:4023
-  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
-  __device_release_driver drivers/base/dd.c:1120 [inline]
-  device_release_driver_internal+0x404/0x4c0 drivers/base/dd.c:1151
-  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
-  device_del+0x420/0xb10 drivers/base/core.c:2288
-  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
-  usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
-  hub_port_connect drivers/usb/core/hub.c:4949 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+Sorry, other coding conventions I'm used to.
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+>> +static ssize_t eeprom_at25_store_erase(struct device *dev,
+>> +					 struct device_attribute *attr,
+>> +					 const char *buf, size_t count)
+>> +{
+>> +	struct at25_data *at25 = dev_get_drvdata(dev);
+>> +	int erase = 0;
+>> +
+>> +	sscanf(buf, "%d", &erase);
+>> +	if (erase) {
+>> +		mutex_lock(&at25->lock);
+>> +		_eeprom_at25_store_erase_locked(at25);
+>> +		mutex_unlock(&at25->lock);
+>> +	}
+>> +
+>> +	return count;
+>> +}
+>> +
+>> +static DEVICE_ATTR(erase, S_IWUSR, NULL, eeprom_at25_store_erase);
+>> +
+>> +
+> Same here.
+>
+> Also, where is the Documentation/ABI/ update for the new sysfs file?
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+There isn't anything for the existing SPI EEPROM stuff I can see.
+
+Would I have to document what was already there to add my bit?
+
+
+>>   static int at25_probe(struct spi_device *spi)
+>>   {
+>>   	struct at25_data	*at25 = NULL;
+>> @@ -311,6 +379,7 @@ static int at25_probe(struct spi_device *spi)
+>>   	int			err;
+>>   	int			sr;
+>>   	int			addrlen;
+>> +	int			has_erase;
+>>   
+>>   	/* Chip description */
+>>   	if (!spi->dev.platform_data) {
+>> @@ -352,6 +421,9 @@ static int at25_probe(struct spi_device *spi)
+>>   	spi_set_drvdata(spi, at25);
+>>   	at25->addrlen = addrlen;
+>>   
+>> +	/* Optional chip erase instruction */
+>> +	device_property_read_u8(&spi->dev, "chip_erase_instruction", &at25->erase_instr);
+>> +
+>>   	at25->nvmem_config.name = dev_name(&spi->dev);
+>>   	at25->nvmem_config.dev = &spi->dev;
+>>   	at25->nvmem_config.read_only = chip.flags & EE_READONLY;
+>> @@ -370,17 +442,22 @@ static int at25_probe(struct spi_device *spi)
+>>   	if (IS_ERR(at25->nvmem))
+>>   		return PTR_ERR(at25->nvmem);
+>>   
+>> -	dev_info(&spi->dev, "%d %s %s eeprom%s, pagesize %u\n",
+>> +	has_erase = (!(chip.flags & EE_READONLY) && at25->erase_instr);
+>> +
+>> +	dev_info(&spi->dev, "%d %s %s eeprom%s, pagesize %u%s\n",
+>>   		(chip.byte_len < 1024) ? chip.byte_len : (chip.byte_len / 1024),
+>>   		(chip.byte_len < 1024) ? "Byte" : "KByte",
+>>   		at25->chip.name,
+>>   		(chip.flags & EE_READONLY) ? " (readonly)" : "",
+>> -		at25->chip.page_size);
+>> +		at25->chip.page_size, (has_erase)?" <has erase>":"");
+>> +
+>> +	if (has_erase && device_create_file(&spi->dev, &dev_attr_erase))
+>> +		dev_err(&spi->dev, "can't create erase interface\n");
+> You just raced with userspace and lost :(
+>
+> Please create an attribute group and add it to the .dev_groups pointer
+> in struct driver so it can be created properly in a race-free manner.
+>
+> See the thread at:
+> 	https://lore.kernel.org/r/20190731124349.4474-2-gregkh@linuxfoundation.org
+> for the details on how to do that.
+
+Clearly I didn't know about that. I'll do some reading when I've got a 
+bit of time and try a again.
+
+
+> thanks,
+>
+> greg k-h
+
+Cheers,
+
+Joe
+
