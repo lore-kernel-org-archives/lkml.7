@@ -2,187 +2,259 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC094C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C5FC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B476F20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F6072086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:38:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="oLqPhtdY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fA4UXBof"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbfHIVgr (ORCPT
+        id S1728442AbfHIVie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 17:36:47 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46589 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbfHIVgr (ORCPT
+        Fri, 9 Aug 2019 17:38:34 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:55870 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728261AbfHIVie (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 17:36:47 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c3so23565492pfa.13
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 14:36:46 -0700 (PDT)
+        Fri, 9 Aug 2019 17:38:34 -0400
+Received: by mail-pl1-f202.google.com with SMTP id q11so58099250pll.22
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 14:38:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/aPM+dGjqbF/twu7tNDtqtaJN6yd/7yU4c7+a2/cJxw=;
-        b=oLqPhtdYAogfpwokAq0y9xZzUtFmKpJVD7GORU7Y4b6sAwR117XaTK37RJPo12PHgG
-         qW5oZhdXQwmz8EjCib2Jicn1UEeY/E3wpbNYGGOsDL2BO+1m+vLZ0446PwAulggiJOUA
-         0zL4giNtUJtQSiAlNsOGQC2p+AoSkGKRWBVLU=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=xA4sS4X8FQOcKXsaLmxwZyVjI3eJo4lwqwVNVh8IS+4=;
+        b=fA4UXBofzcCuH8Ox2KDQK0BxsPfpGm7973kzLcneUP3vYQowr/+NJ+nNUg5QRpKn8Y
+         3W68DrLgQdzpAFciU5sYMCVnhzZ3KswD/8BJDIRwTo6TUjOLK3K2dZFE66tQSD1h2AA4
+         zy9iDurswmTQS/NNCJWI6FZbV6Gsrb3Mqc6InzTFO79yVNpfuIbUNxPRqY4FC2nmTmdY
+         VnfiDHzpltInJ88rHqirfJ54cJIn3QWGf1oDK3aJ3hNmClHJY5s8u8zC3zV37UtRnld7
+         5pecTAQ3ygzGi1caKsDJgyonQMCEYGYntdtEeU8mX8Gy2zBk8VQ6zL2avzbsfAHoN2gH
+         WrYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/aPM+dGjqbF/twu7tNDtqtaJN6yd/7yU4c7+a2/cJxw=;
-        b=Bq6Ii5KRMChU8VLbhIz/wvXj9ln5UjC0ZnpWCWgSvEf41pV9nvTjm1haXCmEv1O9uI
-         IDh44HjmZa2ujAzESZc7wSriH0EH71bUszhE5yT+rFNYcSrI0HungzaWGXENODcHT0Eq
-         hRR79q0Wej0Cpl23guNRQ9Y7s45HQXmC0IKWoYLb195cjgVctirdXIE3NAmpdSp/XvS2
-         Nxx1e41FQR08D6UKDccPdC7fHW51aCGcT6TlfW/YftbvfwBW3MlHkafMUXS3YZniugOy
-         ICQUtabveUqvL8I2ldkGT+WXJM8wyqT84Jic+e4Ktf8Ge6wQ4rpeqGAonOmTT91ML46C
-         ZSCA==
-X-Gm-Message-State: APjAAAUwGYyYFs/j2UwukJs28HiZgny26mPPLD73sc/nSYMMxFhCMYJ+
-        +HY55f9h+qE/nHwb0vxtw8gW7w==
-X-Google-Smtp-Source: APXvYqyhTj+wnZ2r/4zniW+vG+t30nHJkSlUrAs/aUpsNA6Acpb/Z+cqyKSnfKeMhAu4WJlr1McazA==
-X-Received: by 2002:a62:3895:: with SMTP id f143mr23417327pfa.116.1565386605846;
-        Fri, 09 Aug 2019 14:36:45 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id a10sm5050392pfl.159.2019.08.09.14.36.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 14:36:45 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 17:36:43 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Byungchul Park <byungchul.park@lge.com>,
-        linux-kernel@vger.kernel.org, Rao Shoaib <rao.shoaib@oracle.com>,
-        max.byungchul.park@gmail.com, kernel-team@android.com,
-        kernel-team@lge.com, Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC v1 1/2] rcu/tree: Add basic support for kfree_rcu
- batching
-Message-ID: <20190809213643.GG255533@google.com>
-References: <20190807094504.GB169551@google.com>
- <20190807175215.GE28441@linux.ibm.com>
- <20190808095232.GA30401@X58A-UD3R>
- <20190808125607.GB261256@google.com>
- <20190808233014.GA184373@google.com>
- <20190809151619.GD28441@linux.ibm.com>
- <20190809153924.GB211412@google.com>
- <20190809163346.GF28441@linux.ibm.com>
- <20190809202226.GC255533@google.com>
- <20190809204217.GN28441@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190809204217.GN28441@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=xA4sS4X8FQOcKXsaLmxwZyVjI3eJo4lwqwVNVh8IS+4=;
+        b=V+HWMXQIcB9QLG9EnmpcjvLg11Qmb3sMrLnS5gHX9l8jKEjyzdD/TXIs28/KM8mPne
+         R+SvRuDuP42y0p1dDuTI6htqtXAnII0hVb3+/vprwC4qd9zANH9Dhmu+HBXlYLC/cFvg
+         F5j5JqYxUCY94lxiRIGNZ5AsivJkeoYuHxT6vpbp6jJ2qWXy+qKFeguAQxf8QUbcHPKc
+         LnpLzeJmxFSiIfTb7gDPeJT6O43FbFwKRqT4KXwLGMGzVt3mxyLtmF8yjvbYc2jBKPQL
+         5PF6bD0aB6lbsd3q0V8M1Py4g9QGqsafzLr5NPk81ncSAQJUoR4jsgQn4oLF5UVWz/xm
+         gtNA==
+X-Gm-Message-State: APjAAAWAtyicCyk2t6MczqwGmgotXyDEg7o+COVZ3jbQ+mvvzWiQpJ8k
+        p+TXMJradt2D3lxvpNgdRxCPXLGZ6wRrIvk1
+X-Google-Smtp-Source: APXvYqwxBo8gk0xscIsZMbqcPDBwOjLUfEANF/KXXEv5uX61h79LJVfKhfhgmzb5/EeNB3vwZs2c8qk79C+kWMH0
+X-Received: by 2002:a63:3281:: with SMTP id y123mr18805072pgy.72.1565386712674;
+ Fri, 09 Aug 2019 14:38:32 -0700 (PDT)
+Date:   Fri,  9 Aug 2019 14:38:28 -0700
+Message-Id: <20190809213828.202833-1-henryburns@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+Subject: [PATCH v2] mm/z3fold.c: Fix race between migration and destruction
+From:   Henry Burns <henryburns@google.com>
+To:     Vitaly Wool <vitalywool@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Vitaly Vul <vitaly.vul@sony.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Henry Burns <henrywolfeburns@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Henry Burns <henryburns@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 01:42:17PM -0700, Paul E. McKenney wrote:
-> > Also, I can go back to 500M if I just keep KFREE_DRAIN_JIFFIES at HZ/50. So I
-> > am quite happy about that. I think I can declare that the "let list grow
-> > indefinitely" design works quite well even with an insanely heavily loaded
-> > case of every CPU in a 16CPU system with 500M memory, indefinitely doing
-> > kfree_rcu()in a tight loop with appropriate cond_resched(). And I am like
-> > thinking - wow how does this stuff even work at such insane scales :-D
-> 
-> A lot of work by a lot of people over a long period of time.  On their
-> behalf, I thank you for the implied compliment.  So once this patch gets
-> in, perhaps you will have complimented yourself as well.  ;-)
-> 
-> But more work is needed, and will continue to be as new workloads,
-> compiler optimizations, and hardware appears.  And it would be good to
-> try this on a really big system at some point.
+In z3fold_destroy_pool() we call destroy_workqueue(&pool->compact_wq).
+However, we have no guarantee that migration isn't happening in the
+background at that time.
 
-Cool!
+Migration directly calls queue_work_on(pool->compact_wq), if destruction
+wins that race we are using a destroyed workqueue.
 
-> > > > > o	Along with the above boot parameter, use "rcutree.use_softirq=0"
-> > > > > 	to cause RCU to use kthreads instead of softirq.  (You might well
-> > > > > 	find issues in priority setting as well, but might as well find
-> > > > > 	them now if so!)
-> > > > 
-> > > > Doesn't think one actually reduce the priority of the core RCU work? softirq
-> > > > will always have higher priority than any there. So wouldn't that have the
-> > > > effect of not reclaiming things fast enough? (Or, in my case not scheduling
-> > > > the rcu_work which does the reclaim).
-> > > 
-> > > For low kfree_rcu() loads, yes, it increases overhead due to the need
-> > > for context switches instead of softirq running at the tail end of an
-> > > interrupt.  But for high kfree_rcu() loads, it gets you realtime priority
-> > > (in conjunction with "rcutree.kthread_prio=", that is).
-> > 
-> > I meant for high kfree_rcu() loads, a softirq context executing RCU callback
-> > is still better from the point of view of the callback running because the
-> > softirq will run above all else (higher than the highest priority task) so
-> > use_softirq=0 would be a down grade from that perspective if something higher
-> > than rcutree.kthread_prio is running on the CPU. So unless kthread_prio is
-> > set to the highest prio, then softirq running would work better. Did I miss
-> > something?
-> 
-> Under heavy load, softirq stops running at the tail end of interrupts and
-> is instead run within the context of a per-CPU ksoftirqd kthread.  At normal
-> SCHED_OTHER priority.
+Signed-off-by: Henry Burns <henryburns@google.com>
+---
+ Changelog since v1:
+ - Fixed a bug where migration could still queue work after we have
+   waited for it to drain. (added z3fold_pool->destroying in the
+   process)
 
-Ah, yes. Agreed!
+ mm/z3fold.c | 89 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 89 insertions(+)
 
-> > > > > o	With any of the above, invoke rcu_momentary_dyntick_idle() along
-> > > > > 	with cond_resched() in your kfree_rcu() loop.  This simulates
-> > > > > 	a trip to userspace for nohz_full CPUs, so if this helps for
-> > > > > 	non-nohz_full CPUs, adjustments to the kernel might be called for.
-> > 
-> > I did not try this yet. But I am thinking why would this help in nohz_idle
-> > case? In nohz_idle we already have the tick active when CPU is idle. I guess
-> > it is because there may be a long time that elapses before
-> > rcu_data.rcu_need_heavy_qs == true ?
-> 
-> Under your heavy rcuperf load, none of the CPUs would ever be idle.  Nor
-> would they every be in nohz_full userspace context, either.
+diff --git a/mm/z3fold.c b/mm/z3fold.c
+index 78447cecfffa..6b32c94c4ca1 100644
+--- a/mm/z3fold.c
++++ b/mm/z3fold.c
+@@ -40,6 +40,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
++#include <linux/wait.h>
+ #include <linux/zpool.h>
+ 
+ /*
+@@ -143,6 +144,8 @@ struct z3fold_header {
+  * @release_wq:	workqueue for safe page release
+  * @work:	work_struct for safe page release
+  * @inode:	inode for z3fold pseudo filesystem
++ * @destroying: bool to stop migration once we start destruction
++ * @isolated: int to count the number of pages currently in isolation
+  *
+  * This structure is allocated at pool creation time and maintains metadata
+  * pertaining to a particular z3fold pool.
+@@ -161,8 +164,11 @@ struct z3fold_pool {
+ 	const struct zpool_ops *zpool_ops;
+ 	struct workqueue_struct *compact_wq;
+ 	struct workqueue_struct *release_wq;
++	struct wait_queue_head isolate_wait;
+ 	struct work_struct work;
+ 	struct inode *inode;
++	bool destroying;
++	int isolated;
+ };
+ 
+ /*
+@@ -772,6 +778,7 @@ static struct z3fold_pool *z3fold_create_pool(const char *name, gfp_t gfp,
+ 		goto out_c;
+ 	spin_lock_init(&pool->lock);
+ 	spin_lock_init(&pool->stale_lock);
++	init_waitqueue_head(&pool->isolate_wait);
+ 	pool->unbuddied = __alloc_percpu(sizeof(struct list_head)*NCHUNKS, 2);
+ 	if (!pool->unbuddied)
+ 		goto out_pool;
+@@ -811,6 +818,15 @@ static struct z3fold_pool *z3fold_create_pool(const char *name, gfp_t gfp,
+ 	return NULL;
+ }
+ 
++static bool pool_isolated_are_drained(struct z3fold_pool *pool)
++{
++	bool ret;
++
++	spin_lock(&pool->lock);
++	ret = pool->isolated == 0;
++	spin_unlock(&pool->lock);
++	return ret;
++}
+ /**
+  * z3fold_destroy_pool() - destroys an existing z3fold pool
+  * @pool:	the z3fold pool to be destroyed
+@@ -820,6 +836,22 @@ static struct z3fold_pool *z3fold_create_pool(const char *name, gfp_t gfp,
+ static void z3fold_destroy_pool(struct z3fold_pool *pool)
+ {
+ 	kmem_cache_destroy(pool->c_handle);
++	/*
++	 * We set pool-> destroying under lock to ensure that
++	 * z3fold_page_isolate() sees any changes to destroying. This way we
++	 * avoid the need for any memory barriers.
++	 */
++
++	spin_lock(&pool->lock);
++	pool->destroying = true;
++	spin_unlock(&pool->lock);
++
++	/*
++	 * We need to ensure that no pages are being migrated while we destroy
++	 * these workqueues, as migration can queue work on either of the
++	 * workqueues.
++	 */
++	wait_event(pool->isolate_wait, !pool_isolated_are_drained(pool));
+ 
+ 	/*
+ 	 * We need to destroy pool->compact_wq before pool->release_wq,
+@@ -1317,6 +1349,28 @@ static u64 z3fold_get_pool_size(struct z3fold_pool *pool)
+ 	return atomic64_read(&pool->pages_nr);
+ }
+ 
++/*
++ * z3fold_dec_isolated() expects to be called while pool->lock is held.
++ */
++static void z3fold_dec_isolated(struct z3fold_pool *pool)
++{
++	assert_spin_locked(&pool->lock);
++	VM_BUG_ON(pool->isolated <= 0);
++	pool->isolated--;
++
++	/*
++	 * If we have no more isolated pages, we have to see if
++	 * z3fold_destroy_pool() is waiting for a signal.
++	 */
++	if (pool->isolated == 0 && waitqueue_active(&pool->isolate_wait))
++		wake_up_all(&pool->isolate_wait);
++}
++
++static void z3fold_inc_isolated(struct z3fold_pool *pool)
++{
++	pool->isolated++;
++}
++
+ static bool z3fold_page_isolate(struct page *page, isolate_mode_t mode)
+ {
+ 	struct z3fold_header *zhdr;
+@@ -1343,6 +1397,33 @@ static bool z3fold_page_isolate(struct page *page, isolate_mode_t mode)
+ 		spin_lock(&pool->lock);
+ 		if (!list_empty(&page->lru))
+ 			list_del(&page->lru);
++		/*
++		 * We need to check for destruction while holding pool->lock, as
++		 * otherwise destruction could see 0 isolated pages, and
++		 * proceed.
++		 */
++		if (unlikely(pool->destroying)) {
++			spin_unlock(&pool->lock);
++			/*
++			 * If this page isn't stale, somebody else holds a
++			 * reference to it. Let't drop our refcount so that they
++			 * can call the release logic.
++			 */
++			if (unlikely(kref_put(&zhdr->refcount,
++					      release_z3fold_page_locked))) {
++				/*
++				 * If we get here we have kref problems, so we
++				 * should freak out.
++				 */
++				WARN(1, "Z3fold is experiencing kref problems\n");
++				return false;
++			}
++			z3fold_page_unlock(zhdr);
++			return false;
++		}
++
++
++		z3fold_inc_isolated(pool);
+ 		spin_unlock(&pool->lock);
+ 		z3fold_page_unlock(zhdr);
+ 		return true;
+@@ -1417,6 +1498,10 @@ static int z3fold_page_migrate(struct address_space *mapping, struct page *newpa
+ 
+ 	queue_work_on(new_zhdr->cpu, pool->compact_wq, &new_zhdr->work);
+ 
++	spin_lock(&pool->lock);
++	z3fold_dec_isolated(pool);
++	spin_unlock(&pool->lock);
++
+ 	page_mapcount_reset(page);
+ 	put_page(page);
+ 	return 0;
+@@ -1436,10 +1521,14 @@ static void z3fold_page_putback(struct page *page)
+ 	INIT_LIST_HEAD(&page->lru);
+ 	if (kref_put(&zhdr->refcount, release_z3fold_page_locked)) {
+ 		atomic64_dec(&pool->pages_nr);
++		spin_lock(&pool->lock);
++		z3fold_dec_isolated(pool);
++		spin_unlock(&pool->lock);
+ 		return;
+ 	}
+ 	spin_lock(&pool->lock);
+ 	list_add(&page->lru, &pool->lru);
++	z3fold_dec_isolated(pool);
+ 	spin_unlock(&pool->lock);
+ 	z3fold_page_unlock(zhdr);
+ }
+-- 
+2.23.0.rc1.153.gdeed80330f-goog
 
-Sorry I made a typo, I meant 'tick active when CPU is non-idle for NOHZ_IDLE
-systems' above.
-
-> In contrast, a heavy duty userspace-driven workload would transition to
-> and from userspace for each kfree_rcu(), and that would increment the
-> dyntick-idle count on each transition to and from userspace.  Adding the
-> rcu_momentary_dyntick_idle() emulates a pair of such transitions.
-
-But even if we're in kernel mode and not transitioning, I thought the FQS
-loop (rcu_implicit_dynticks_qs() function) would set need_heavy_qs to true at
-2 * jiffies_to_sched_qs.
-
-Hmm, I forgot that jiffies_to_sched_qs can be quite large I guess. You're
-right, we could call rcu_momentary_dyntick_idle() in advance before waiting
-for FQS loop to do the setting of need_heavy_qs.
-
-Or, am I missing something with the rcu_momentary_dyntick_idle() point you
-made?
-
-thanks,
-
- - Joel
-
-
-> 
-> 							Thanx, Paul
-> 
-> > > > Ok, will try it.
-> > > > 
-> > > > Save these bullet points for future reference! ;-)  thanks,
-> > > 
-> > > I guess this is helping me to prepare for Plumbers.  ;-)
-> > 
-> > :-)
-> > 
-> > thanks, Paul!
-> > 
-> >  - Joel
-> > 
-> 
