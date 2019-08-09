@@ -2,276 +2,116 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00928C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 461D5C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D05522086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C80C2171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:52:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DCezGss2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406898AbfHINv4 (ORCPT
+        id S2406933AbfHINw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:51:56 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4655 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726037AbfHINv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:51:56 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id ACB5A78427CCE41A010A;
-        Fri,  9 Aug 2019 21:51:52 +0800 (CST)
-Received: from [127.0.0.1] (10.184.12.158) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Fri, 9 Aug 2019
- 21:51:43 +0800
-Subject: Re: [PATCH 9/9] arm64: Retrieve stolen time as paravirtualized guest
-To:     Steven Price <steven.price@arm.com>
-CC:     <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        <linux-doc@vger.kernel.org>, Russell King <linux@armlinux.org.uk>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Will Deacon <will@kernel.org>, <kvmarm@lists.cs.columbia.edu>
-References: <20190802145017.42543-1-steven.price@arm.com>
- <20190802145017.42543-10-steven.price@arm.com>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <5d763c8e-9c06-c448-2644-25bfa0e57e8c@huawei.com>
-Date:   Fri, 9 Aug 2019 21:51:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
- Thunderbird/64.0
+        Fri, 9 Aug 2019 09:52:29 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59464 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbfHINw2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:52:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=EreDrMASgymCoOwex2lDSh6PBVp8vwwZo8lBW7Dx+AU=; b=DCezGss28UrQwdHuY2bFdI4p4
+        S1IQudbzVnxD+07DxZGKpMaIkZjBN26Cdg8l2/Fs8GMFEeX1pJqh0qZAiUghQaE6El6M1XDplTDve
+        EJJcjL9sO79CkY0k30aJUEJAymr58OsH+p8EsukYG7F9sRPnn0G8pCmZVLattID9zhXymV5yWXtFQ
+        ciqngFSM0ntk8BRdLo5xQ4zieBSWsCrkihQ+/ft5+CPIVKlVlUX+N97pCSyIU0MATtJ4kwuaN/o18
+        WCkKlxmfNm5M1Hch5V2lnDpS3brZehU45KR0NW0dNC4+r+Ph0RyNwH7KE6Q/WHvIQU+odBuHV4vuK
+        lstsiJ0Mg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hw5JK-0002PQ-U7; Fri, 09 Aug 2019 13:52:02 +0000
+Date:   Fri, 9 Aug 2019 06:52:02 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC V2 0/1] mm/debug: Add tests for architecture exported page
+ table helpers
+Message-ID: <20190809135202.GN5482@bombadil.infradead.org>
+References: <1565335998-22553-1-git-send-email-anshuman.khandual@arm.com>
+ <20190809101632.GM5482@bombadil.infradead.org>
+ <a5aab7ff-f7fd-9cc1-6e37-e4185eee65ac@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190802145017.42543-10-steven.price@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a5aab7ff-f7fd-9cc1-6e37-e4185eee65ac@arm.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/2 22:50, Steven Price wrote:
-> Enable paravirtualization features when running under a hypervisor
-> supporting the PV_TIME_ST hypercall.
+On Fri, Aug 09, 2019 at 04:05:07PM +0530, Anshuman Khandual wrote:
+> On 08/09/2019 03:46 PM, Matthew Wilcox wrote:
+> > On Fri, Aug 09, 2019 at 01:03:17PM +0530, Anshuman Khandual wrote:
+> >> Should alloc_gigantic_page() be made available as an interface for general
+> >> use in the kernel. The test module here uses very similar implementation from
+> >> HugeTLB to allocate a PUD aligned memory block. Similar for mm_alloc() which
+> >> needs to be exported through a header.
+> > 
+> > Why are you allocating memory at all instead of just using some
+> > known-to-exist PFNs like I suggested?
 > 
-> For each (v)CPU, we ask the hypervisor for the location of a shared
-> page which the hypervisor will use to report stolen time to us. We set
-> pv_time_ops to the stolen time function which simply reads the stolen
-> value from the shared page for a VCPU. We guarantee single-copy
-> atomicity using READ_ONCE which means we can also read the stolen
-> time for another VCPU than the currently running one while it is
-> potentially being updated by the hypervisor.
-> 
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->   arch/arm64/kernel/Makefile |   1 +
->   arch/arm64/kernel/kvm.c    | 155 +++++++++++++++++++++++++++++++++++++
->   include/linux/cpuhotplug.h |   1 +
->   3 files changed, 157 insertions(+)
->   create mode 100644 arch/arm64/kernel/kvm.c
-> 
-> diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-> index 478491f07b4f..eb36edf9b930 100644
-> --- a/arch/arm64/kernel/Makefile
-> +++ b/arch/arm64/kernel/Makefile
-> @@ -63,6 +63,7 @@ obj-$(CONFIG_CRASH_CORE)		+= crash_core.o
->   obj-$(CONFIG_ARM_SDE_INTERFACE)		+= sdei.o
->   obj-$(CONFIG_ARM64_SSBD)		+= ssbd.o
->   obj-$(CONFIG_ARM64_PTR_AUTH)		+= pointer_auth.o
-> +obj-$(CONFIG_PARAVIRT)			+= kvm.o
->   
->   obj-y					+= vdso/ probes/
->   obj-$(CONFIG_COMPAT_VDSO)		+= vdso32/
-> diff --git a/arch/arm64/kernel/kvm.c b/arch/arm64/kernel/kvm.c
-> new file mode 100644
-> index 000000000000..245398c79dae
-> --- /dev/null
-> +++ b/arch/arm64/kernel/kvm.c
-> @@ -0,0 +1,155 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2019 Arm Ltd.
-> +
-> +#define pr_fmt(fmt) "kvmarm-pv: " fmt
-> +
-> +#include <linux/arm-smccc.h>
-> +#include <linux/cpuhotplug.h>
-> +#include <linux/io.h>
-> +#include <linux/printk.h>
-> +#include <linux/psci.h>
-> +#include <linux/reboot.h>
-> +#include <linux/slab.h>
-> +
-> +#include <asm/paravirt.h>
-> +#include <asm/pvclock-abi.h>
-> +#include <asm/smp_plat.h>
-> +
-> +struct kvmarm_stolen_time_region {
-> +	struct pvclock_vcpu_stolen_time_info *kaddr;
-> +};
-> +
-> +static DEFINE_PER_CPU(struct kvmarm_stolen_time_region, stolen_time_region);
-> +
-> +static bool steal_acc = true;
-> +static int __init parse_no_stealacc(char *arg)
-> +{
-> +	steal_acc = false;
-> +	return 0;
-> +}
-> +early_param("no-steal-acc", parse_no_stealacc);
-> +
-> +/* return stolen time in ns by asking the hypervisor */
-> +static u64 kvm_steal_clock(int cpu)
-> +{
-> +	struct kvmarm_stolen_time_region *reg;
-> +
-> +	reg = per_cpu_ptr(&stolen_time_region, cpu);
-> +	if (!reg->kaddr) {
-> +		pr_warn_once("stolen time enabled but not configured for cpu %d\n",
-> +			     cpu);
-> +		return 0;
-> +	}
-> +
-> +	return le64_to_cpu(READ_ONCE(reg->kaddr->stolen_time));
-> +}
-> +
-> +static int disable_stolen_time_current_cpu(void)
-> +{
-> +	struct kvmarm_stolen_time_region *reg;
-> +
-> +	reg = this_cpu_ptr(&stolen_time_region);
-> +	if (!reg->kaddr)
-> +		return 0;
-> +
-> +	memunmap(reg->kaddr);
-> +	memset(reg, 0, sizeof(*reg));
-> +
-> +	return 0;
-> +}
-> +
-> +static int stolen_time_dying_cpu(unsigned int cpu)
-> +{
-> +	return disable_stolen_time_current_cpu();
-> +}
-> +
-> +static int init_stolen_time_cpu(unsigned int cpu)
-> +{
-> +	struct kvmarm_stolen_time_region *reg;
-> +	struct arm_smccc_res res;
-> +
-> +	reg = this_cpu_ptr(&stolen_time_region);
-> +
-> +	if (reg->kaddr)
-> +		return 0;
-> +
-> +	arm_smccc_1_1_invoke(ARM_SMCCC_HV_PV_TIME_ST, &res);
-> +
-> +	if ((long)res.a0 < 0)
-> +		return -EINVAL;
+> We needed PFN to be PUD aligned for pfn_pud() and PMD aligned for mk_pmd().
+> Now walking the kernel page table for a known symbol like kernel_init()
 
-Hi Steven,
+I didn't say to walk the kernel page table.  I said to call virt_to_pfn()
+for a known symbol like kernel_init().
 
-Since userspace is not involved yet (right?), no one will create the
-PV_TIME device for guest (and no one will specify the IPA of the shared
-stolen time region), and I guess we will get a "not supported" error
-here.
+> as you had suggested earlier we might encounter page table page entries at PMD
+> and PUD which might not be PMD or PUD aligned respectively. It seemed to me
+> that alignment requirement is applicable only for mk_pmd() and pfn_pud()
+> which create large mappings at those levels but that requirement does not
+> exist for page table pages pointing to next level. Is not that correct ? Or
+> I am missing something here ?
 
-So what should we do if we want to test this series now?  Any userspace
-tools?  If no, do you have any plans for userspace developing? ;-)
-
-
-Thanks,
-zenghui
-
-> +
-> +	reg->kaddr = memremap(res.a0,
-> +			sizeof(struct pvclock_vcpu_stolen_time_info),
-> +			MEMREMAP_WB);
-> +
-> +	if (reg->kaddr == NULL) {
-> +		pr_warn("Failed to map stolen time data structure\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (le32_to_cpu(reg->kaddr->revision) != 0 ||
-> +			le32_to_cpu(reg->kaddr->attributes) != 0) {
-> +		pr_warn("Unexpected revision or attributes in stolen time data\n");
-> +		return -ENXIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int kvm_arm_init_stolen_time(void)
-> +{
-> +	int ret;
-> +
-> +	ret = cpuhp_setup_state(CPUHP_AP_ARM_KVMPV_STARTING,
-> +				"hypervisor/kvmarm/pv:starting",
-> +				init_stolen_time_cpu, stolen_time_dying_cpu);
-> +	if (ret < 0)
-> +		return ret;
-> +	return 0;
-> +}
-> +
-> +static bool has_kvm_steal_clock(void)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	/* To detect the presence of PV time support we require SMCCC 1.1+ */
-> +	if (psci_ops.smccc_version < SMCCC_VERSION_1_1)
-> +		return false;
-> +
-> +	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
-> +			     ARM_SMCCC_HV_PV_FEATURES, &res);
-> +
-> +	if (res.a0 != SMCCC_RET_SUCCESS)
-> +		return false;
-> +
-> +	arm_smccc_1_1_invoke(ARM_SMCCC_HV_PV_FEATURES,
-> +			     ARM_SMCCC_HV_PV_TIME_ST, &res);
-> +
-> +	if (res.a0 != SMCCC_RET_SUCCESS)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +static int __init kvm_guest_init(void)
-> +{
-> +	int ret = 0;
-> +
-> +	if (!has_kvm_steal_clock())
-> +		return 0;
-> +
-> +	ret = kvm_arm_init_stolen_time();
-> +	if (ret)
-> +		return ret;
-> +
-> +	pv_ops.time.steal_clock = kvm_steal_clock;
-> +
-> +	static_key_slow_inc(&paravirt_steal_enabled);
-> +	if (steal_acc)
-> +		static_key_slow_inc(&paravirt_steal_rq_enabled);
-> +
-> +	pr_info("using stolen time PV\n");
-> +
-> +	return 0;
-> +}
-> +early_initcall(kvm_guest_init);
-> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-> index 068793a619ca..89d75edb5750 100644
-> --- a/include/linux/cpuhotplug.h
-> +++ b/include/linux/cpuhotplug.h
-> @@ -136,6 +136,7 @@ enum cpuhp_state {
->   	/* Must be the last timer callback */
->   	CPUHP_AP_DUMMY_TIMER_STARTING,
->   	CPUHP_AP_ARM_XEN_STARTING,
-> +	CPUHP_AP_ARM_KVMPV_STARTING,
->   	CPUHP_AP_ARM_CORESIGHT_STARTING,
->   	CPUHP_AP_ARM64_ISNDEP_STARTING,
->   	CPUHP_AP_SMPCFD_DYING,
-> 
+Just clear the bottom bits off the PFN until you get a PMD or PUD aligned
+PFN.  It's really not hard.
 
