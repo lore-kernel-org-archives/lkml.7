@@ -2,54 +2,51 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B009C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EADEC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0310217F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 322E5217F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358456;
-	bh=e2DIQVMMi3yR2vEVsSG5Vk16/gOOU9jsKQN4DNooXhM=;
+	s=default; t=1565358460;
+	bh=xX/SrCJ3apGXbDfEE6AWqJiExOw9IYv7bvYaVh6py3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AB6pW10xQ4iIKa9rkuiF9Iy8MYpLHXWkyC7aFHPToApvWwlcHhU5KFQQY3ez7/DVl
-	 v36wvw1dubx45NMMtTG4txujkMtp35cynLYlB9HERtYb7CL/h1LwAg+8wBlfXVhYbj
-	 5/GscalFTej1MK/hYZweVHuF5x6Pq24gFoIBReno=
+	b=etkpyaVw8QDuV3Y5BxKk90hZVQet+2Kt0EKOsv0pDunjyR+78X5GfOhaRdrP6+FW7
+	 aNL4BLXEOOnZgjFSz40cULYGe9i5koPjA4sqfQqrq+4VhBqNh457MqbVOGYQxegxuh
+	 B+37vzrUkXLy+ZyBhir1gO6qimXEZ7hDEFRztrhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436612AbfHINre (ORCPT
+        id S2407269AbfHINrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:47:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37410 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:47:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406726AbfHINrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:47:24 -0400
+        id S2407250AbfHINr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:47:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCB68218BE;
-        Fri,  9 Aug 2019 13:47:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79E312086D;
+        Fri,  9 Aug 2019 13:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358443;
-        bh=e2DIQVMMi3yR2vEVsSG5Vk16/gOOU9jsKQN4DNooXhM=;
+        s=default; t=1565358446;
+        bh=xX/SrCJ3apGXbDfEE6AWqJiExOw9IYv7bvYaVh6py3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uJF+SvxaisyqF05yMBVpcDEKNXaaolvVZBrLoILvetoqBiq9VF6XbB/swN6AL5X3A
-         UWOXcX1A8RnA3oVaKXg8nKcd2z6N0RNpsJHqsV/3D4aW+CLeoPoi1prlLG10EMgUob
-         mCy39thsx/cuJhAU/Ly+gXvGHF8idWEYk1K9Oa/0=
+        b=LsGQeZfESHTvjSnGwwGxQyQ8R4mIXkK9ONxzZWqH+6MxvQqaXeG8K6xJdPNn/OE0A
+         EEIdeGdfCA4XfLDVSQQnmBHbpVf7cePKfxgPa9xNxXDL+5jDFUDg7/95xYJPErE6Kc
+         bAN7RzraDN6e6J25Wf1P+N0qguKZPn1zQfTgGp00=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Bart Van Assche <bart.vanassche@wdc.com>,
-        xiao jin <jin.xiao@intel.com>, Jens Axboe <axboe@kernel.dk>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Alessio Balsini <balsini@android.com>
-Subject: [PATCH 4.9 26/32] block: blk_init_allocated_queue() set q->fq as NULL in the fail case
-Date:   Fri,  9 Aug 2019 15:45:29 +0200
-Message-Id: <20190809133923.771602436@linuxfoundation.org>
+        stable@vger.kernel.org, Sebastian Parschauer <s.parschauer@gmx.de>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.9 09/32] HID: Add quirk for HP X1200 PIXART OEM mouse
+Date:   Fri,  9 Aug 2019 15:45:12 +0200
+Message-Id: <20190809133923.247902230@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190809133922.945349906@linuxfoundation.org>
 References: <20190809133922.945349906@linuxfoundation.org>
@@ -62,48 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: xiao jin <jin.xiao@intel.com>
+From: Sebastian Parschauer <s.parschauer@gmx.de>
 
-commit 54648cf1ec2d7f4b6a71767799c45676a138ca24 upstream.
+commit 49869d2ea9eecc105a10724c1abf035151a3c4e2 upstream.
 
-We find the memory use-after-free issue in __blk_drain_queue()
-on the kernel 4.14. After read the latest kernel 4.18-rc6 we
-think it has the same problem.
+The PixArt OEM mice are known for disconnecting every minute in
+runlevel 1 or 3 if they are not always polled. So add quirk
+ALWAYS_POLL for this one as well.
 
-Memory is allocated for q->fq in the blk_init_allocated_queue().
-If the elevator init function called with error return, it will
-run into the fail case to free the q->fq.
+Jonathan Teh (@jonathan-teh) reported and tested the quirk.
+Reference: https://github.com/sriemer/fix-linux-mouse/issues/15
 
-Then the __blk_drain_queue() uses the same memory after the free
-of the q->fq, it will lead to the unpredictable event.
-
-The patch is to set q->fq as NULL in the fail case of
-blk_init_allocated_queue().
-
-Fixes: commit 7c94e1c157a2 ("block: introduce blk_flush_queue to drive flush machinery")
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Bart Van Assche <bart.vanassche@wdc.com>
-Signed-off-by: xiao jin <jin.xiao@intel.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-[groeck: backport to v4.4.y/v4.9.y (context change)]
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Alessio Balsini <balsini@android.com>
+Signed-off-by: Sebastian Parschauer <s.parschauer@gmx.de>
+CC: stable@vger.kernel.org
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-core.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/hid/hid-ids.h           |    1 +
+ drivers/hid/usbhid/hid-quirks.c |    1 +
+ 2 files changed, 2 insertions(+)
 
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -881,6 +881,7 @@ blk_init_allocated_queue(struct request_
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -509,6 +509,7 @@
+ #define USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0A4A	0x0a4a
+ #define USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0B4A	0x0b4a
+ #define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE		0x134a
++#define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0641	0x0641
  
- fail:
- 	blk_free_flush_queue(q->fq);
-+	q->fq = NULL;
- 	return NULL;
- }
- EXPORT_SYMBOL(blk_init_allocated_queue);
+ #define USB_VENDOR_ID_HUION		0x256c
+ #define USB_DEVICE_ID_HUION_TABLET	0x006e
+--- a/drivers/hid/usbhid/hid-quirks.c
++++ b/drivers/hid/usbhid/hid-quirks.c
+@@ -98,6 +98,7 @@ static const struct hid_blacklist {
+ 	{ USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0A4A, HID_QUIRK_ALWAYS_POLL },
+ 	{ USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0B4A, HID_QUIRK_ALWAYS_POLL },
+ 	{ USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE, HID_QUIRK_ALWAYS_POLL },
++	{ USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0641, HID_QUIRK_ALWAYS_POLL },
+ 	{ USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_C077, HID_QUIRK_ALWAYS_POLL },
+ 	{ USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_KEYBOARD_G710_PLUS, HID_QUIRK_NOGET },
+ 	{ USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_MOUSE_C01A, HID_QUIRK_ALWAYS_POLL },
 
 
