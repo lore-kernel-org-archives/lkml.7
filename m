@@ -2,154 +2,182 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4852C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5278C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 764DD20C01
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:37:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="KP5CaivD"
+	by mail.kernel.org (Postfix) with ESMTP id 82C3620B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:40:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436599AbfHINhd (ORCPT
+        id S2406404AbfHINkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:37:33 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:56314 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726152AbfHINgN (ORCPT
+        Fri, 9 Aug 2019 09:40:24 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53042 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbfHINkX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:36:13 -0400
-Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x79DNAec026401;
-        Fri, 9 Aug 2019 09:36:04 -0400
-Received: from nam05-dm3-obe.outbound.protection.outlook.com (mail-dm3nam05lp2050.outbound.protection.outlook.com [104.47.49.50])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2u7wxfqjx3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 09 Aug 2019 09:36:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F3HL5qw1lAvFC+B17eImfHI8n4t1DKp1BwJD3oifBiKGL7e3bRcS2oqUmIk5shjfYIVnCYx2w2oVZU0qrT1EjHS36C31rkOR0IbPwyl6VBcKICeHeN5O5vmQY1avovRqWycESZRdcMiUw2AA1S3aBfppPZCWkvTZqhsMADgT5LzqCCT4PogURah+lobcGIV53ZRL599MeyjZf6Ad5BmbsqYkazQQAnPuIcVvaity525jwudkKyEMKXLc9unwgbiBCT3uz6K+kFOA4cVQS3s22U0f0Y+aUSXFZhfKzr2EdVYC6MprucUymKRip/c24L8Iobn0AkLv/14wOwJ/SmLEsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FrjxvRtCBvH3YgNsCipq3plw/6ll60cR2lNQo14Ia0A=;
- b=NZH/pExR+7dohxp6y0VwYgaztWHya1hxbrqLilTO3kDZgQpIml5rwYR5c62nWFzmRIEP3ODtvfT20hmLVrfKBELAaeMRsfN5lhYvyQlkQ68VNOA9C8cM+Ndcq5ArtAeeQXYwboG0vSyqKd1WDTRD85ly/0LYOaYsZvFDD1yMQg7a9+pVQQflg1eyBxXZI6GAlbe4Dhl8/NwZWJg6t7E6zm8ukAA5Y+GrthfS2Qd6hUy4FKR9qE6VbSaaVK36CIVCfz9u03AfWZczMhD1E2rQzP8dWm2PwbetJ2VZHRnO2fAtlis3Ka50pBOeSAxalO4zcywx8JrTPLtJmGWekIJ58w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FrjxvRtCBvH3YgNsCipq3plw/6ll60cR2lNQo14Ia0A=;
- b=KP5CaivDCB/1X2ra9NSN0zDHzo08Y59KI6cUvh/k1so9AtgEKBfgA8um8bJyxBqm7HtE+P9TTEfYNNzhDVTsW9W4aL/AaGaSiS7ZawWe+CEk9qREz5ho3vhOTFkOm94MkK69SavE8E3V9uILdVmb1d8GjExoSL73WJC7g9XtcjY=
-Received: from BL0PR03CA0020.namprd03.prod.outlook.com (2603:10b6:208:2d::33)
- by CY1PR03MB2347.namprd03.prod.outlook.com (2a01:111:e400:c616::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.20; Fri, 9 Aug
- 2019 13:36:02 +0000
-Received: from CY1NAM02FT037.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::202) by BL0PR03CA0020.outlook.office365.com
- (2603:10b6:208:2d::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2157.18 via Frontend
- Transport; Fri, 9 Aug 2019 13:36:02 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- CY1NAM02FT037.mail.protection.outlook.com (10.152.75.77) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2157.15
- via Frontend Transport; Fri, 9 Aug 2019 13:36:01 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x79Da10C025634
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Fri, 9 Aug 2019 06:36:01 -0700
-Received: from saturn.ad.analog.com (10.48.65.113) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Fri, 9 Aug 2019 09:36:00 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <davem@davemloft.net>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <f.fainelli@gmail.com>,
-        <hkallweit1@gmail.com>, <andrew@lunn.ch>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v3 02/14] net: phy: adin: hook genphy_{suspend,resume} into the driver
-Date:   Fri, 9 Aug 2019 16:35:40 +0300
-Message-ID: <20190809133552.21597-3-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190809133552.21597-1-alexandru.ardelean@analog.com>
-References: <20190809133552.21597-1-alexandru.ardelean@analog.com>
+        Fri, 9 Aug 2019 09:40:23 -0400
+Received: by mail-wm1-f65.google.com with SMTP id s3so5777058wms.2;
+        Fri, 09 Aug 2019 06:40:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1GjhzdeWS6zwKaticm/ck6X2PyUe8cCKSvA0Ii8gVJ8=;
+        b=Aw9SLfUVP5cOP2gpn/aejBKCQ/9qiB8edbrJ6BdDBR4X3EQfABgHy3xVxgnQyxQa7j
+         TJv8117M2M5RDn2AJ2kZI7Nbx+8lHVV1jIkz42Kx27WQd0IeMcyM6H2XeNd9cALhett3
+         RXZc5J7kU9vzJOV2BkeOwoxdVIck4IAKm3cvUBprJfSeBpjxjso6F1ulfpeP+l1zaDK/
+         Rru+O3cgGSHPaRSJoqxF4IpBildM7Mjcvth6fzpgfpueJeiXTVvgw317YuaH9WGUFvWp
+         SHOlWJuj9wfyEhRVd0W6KBoCBCRJ+lqUmksIpzmv8p+Qjvt8TEiJae3rjrYVMYLjK+Z6
+         jGCA==
+X-Gm-Message-State: APjAAAU6KMZCPxrKehdY1ztyG+llPCiOnxjUHBYsTDPuBqjFiIESN7Og
+        OmYUEZ6mUlkhtbLoiT3kaQU=
+X-Google-Smtp-Source: APXvYqwmVbhA3YyFKBHjQq3419RKW9VXrP89JRalqVn7N1inyQLmj/OLZhI2Chz+DG2tXNTSxHWrOg==
+X-Received: by 2002:a1c:5f0a:: with SMTP id t10mr11496714wmb.14.1565358020739;
+        Fri, 09 Aug 2019 06:40:20 -0700 (PDT)
+Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.gmail.com with ESMTPSA id x18sm6021764wmi.12.2019.08.09.06.40.19
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 06:40:20 -0700 (PDT)
+Subject: Re: UBSAN: Undefined behaviour in drivers/block/floppy.c:1495:32
+To:     Kyungtae Kim <kt0755@gmail.com>
+Cc:     axboe@kernel.dk, jikos@kernel.org,
+        Byoungyoung Lee <lifeasageek@gmail.com>,
+        DaeRyong Jeong <threeearcat@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller@googlegroups.com
+References: <CAEAjamtML1yMLL0DsV5JkD1H6P0Yg19F2DVq+_c-u09RaCKuDw@mail.gmail.com>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <b71cf216-0881-5c69-abb8-c689536d1835@linux.com>
+Date:   Fri, 9 Aug 2019 16:40:18 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <CAEAjamtML1yMLL0DsV5JkD1H6P0Yg19F2DVq+_c-u09RaCKuDw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(396003)(39860400002)(136003)(346002)(2980300002)(189003)(199004)(4744005)(15650500001)(2870700001)(26005)(7696005)(51416003)(76176011)(478600001)(5660300002)(316002)(4326008)(106002)(110136005)(356004)(6666004)(36756003)(305945005)(107886003)(246002)(47776003)(8676002)(7636002)(54906003)(44832011)(2201001)(48376002)(486006)(14444005)(426003)(2906002)(50226002)(336012)(476003)(126002)(11346002)(446003)(2616005)(1076003)(186003)(70586007)(70206006)(86362001)(8936002)(50466002)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:CY1PR03MB2347;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 26c9ccbf-5914-4d6d-a4ac-08d71cce854c
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:CY1PR03MB2347;
-X-MS-TrafficTypeDiagnostic: CY1PR03MB2347:
-X-Microsoft-Antispam-PRVS: <CY1PR03MB23476FA8C33D5DF3F4F95B59F9D60@CY1PR03MB2347.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:849;
-X-Forefront-PRVS: 01244308DF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: vADP6U56ccKko05t6U/OvDbtFCs5DgKQCHAXFgcDp6d6jGXjPsenTiO+2kdH0zlbA3sdPCuEV2yzkVBZ1ZZnKlhkHcxpLlue+g1kKE7TFGGBM4drVcMt3fuEhhm39TP/lfWGXlh8E6F0KaRWL3+aC14p8oe8nnd/arGaO3ZFEEeABjZjyhymbRN6XAB0oHyA4dPLkJ56TXrbtckpjaEr3CLQZrbADx2QVAgYVeNSmurx4HtZZeGgYsnRNRVZXVfsK+LZib4sB9C8/IhU1lgOHRrygIzGJtyqhkyn1vNBG6Wr4gqjPE4wXGCjOX1UBMyFJMTcZI/QbKM2XhklfS+xLnujwAUcdDglQ30bo8quEzZfQNjb0kGFhTmIdU+3pE+tHteOuAzSErJ2B8KozixiRKqZA4TA1Yr4xYQu02c+JpI=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2019 13:36:01.6113
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 26c9ccbf-5914-4d6d-a4ac-08d71cce854c
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR03MB2347
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-09_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908090138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The chip supports standard suspend/resume via BMCR reg.
-Hook these functions into the `adin` driver.
+Hi!
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/net/phy/adin.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Sorry for the late response. But I think I could add some useful info,
+because I also analyzed this report from syzkaller.
 
-diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index 6d7af4743957..fc0148ba4b94 100644
---- a/drivers/net/phy/adin.c
-+++ b/drivers/net/phy/adin.c
-@@ -26,6 +26,8 @@ static struct phy_driver adin_driver[] = {
- 		.config_init	= adin_config_init,
- 		.config_aneg	= genphy_config_aneg,
- 		.read_status	= genphy_read_status,
-+		.resume		= genphy_resume,
-+		.suspend	= genphy_suspend,
- 	},
- 	{
- 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1300),
-@@ -33,6 +35,8 @@ static struct phy_driver adin_driver[] = {
- 		.config_init	= adin_config_init,
- 		.config_aneg	= genphy_config_aneg,
- 		.read_status	= genphy_read_status,
-+		.resume		= genphy_resume,
-+		.suspend	= genphy_suspend,
- 	},
- };
- 
--- 
-2.20.1
+I don't think that we could fix this UBSAN warning with this patch. If you look
+at the lines right before your check you will find another check of cmd_count
+with clarifying comment:
 
+        if (ptr->cmd_count > 33)
+                        /* the command may now also take up the space
+                         * initially intended for the reply & the
+                         * reply count. Needed for long 82078 commands
+                         * such as RESTORE, which takes ... 17 command
+                         * bytes. Murphy's law #137: When you reserve
+                         * 16 bytes for a structure, you'll one day
+                         * discover that you really need 17...
+                         */
+                return -EINVAL;
+
+        for (i = 0; i < 16; i++)
+                ptr->reply[i] = 0;
+        ptr->resultcode = 0;
+
+And a little bit more details about (from include/uapi/linux/fd.h):
+struct floppy_raw_cmd {
+...
+        unsigned char cmd_count;                                                 
+        unsigned char cmd[16];                                                   
+        unsigned char reply_count;                                               
+        unsigned char reply[16];
+...
+}
+
+So, cmd[16] + reply_count[1] + reply[16] == 33.
+
+Thus, this behavior is intentional, we could not fix it this way and it's already
+a part of UAPI.
+
+But thank you for analyzing the report!
+
+Denis
+
+On 23.10.2018 02:20, Kyungtae Kim wrote:
+> We report a bug found in v4.19-rc2 (v4.19-rc8 as well):
+> UBSAN: Undefined behaviour in drivers/block/floppy.c:1495:32
+> 
+> kernel config: https://kt0755.github.io/etc/config_v2-4.19
+> repro: https://kt0755.github.io/etc/repro.b4076.c
+> 
+> Analysis:
+> 
+> struct floppy_raw_cmd {
+>    unsigned char cmd_count;
+>    unsigned char cmd[16];
+>   ...
+> };
+> 
+> for (i=0; i<raw_cmd->cmd_count; i++)
+>     output_byte(raw_cmd->cmd[i])
+> 
+> In driver/block/floppy.c:1495, the code snippet above is trying to
+> write some bytes to the floppy disk controller, depending on "cmd_count".
+> As you see "struct floppy_raw_cmd" above, the size of array “cmd” is
+> fixed as 16.
+> The thing is, there is no boundary check for the index of array "cmd"
+> when this is used. Besides, "cmd_count" can be manipulated by raw_cmd_ioctl
+> which is derived from ioctl system call.
+> We observed that cmd_count is set at line 2540 (or 2111), but that is
+> after such a bug arose in our experiment. So by manipulating system call
+> ioctl,
+> user program can have illegitimate memory access.
+> 
+> The following is a simple patch to stop this. (This might not be the
+> best.)
+> 
+> diff --git a/linux-4.19-rc2/drivers/block/floppy.c
+> b/linux-4.19-rc2/drivers/block/floppy.c
+> index f2b6f4d..a3610c9 100644
+> --- a/linux-4.19-rc2/drivers/block/floppy.c
+> +++ b/linux-4.19-rc2/drivers/block/floppy.c
+> @@ -3149,6 +3149,8 @@ static int raw_cmd_copyin(int cmd, void __user *param,
+>                          */
+>                 return -EINVAL;
+> 
+> +       if (ptr->cmd_count > ARRAY_SIZE(ptr->cmd)) {
+> +               return -EINVAL;
+> +
+>         for (i = 0; i < 16; i++)
+>                 ptr->reply[i] = 0;
+>         ptr->resultcode = 0;
+> 
+> 
+> Crash log
+> ==================================================================
+> UBSAN: Undefined behaviour in drivers/block/floppy.c:1495:32
+> index 16 is out of range for type 'unsigned char [16]'
+> CPU: 0 PID: 2420 Comm: kworker/u4:3 Not tainted 4.19.0-rc2 #1
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+> Workqueue: floppy fd_timer_workfn
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0xd2/0x148 lib/dump_stack.c:113
+>  ubsan_epilogue+0x12/0x94 lib/ubsan.c:159
+>  __ubsan_handle_out_of_bounds+0x174/0x1b8 lib/ubsan.c:386
+>  setup_rw_floppy+0xbd9/0xe60 drivers/block/floppy.c:1495
+>  seek_floppy drivers/block/floppy.c:1605 [inline]
+>  floppy_ready+0x61a/0x2230 drivers/block/floppy.c:1917
+>  fd_timer_workfn+0x1a/0x20 drivers/block/floppy.c:994
+>  process_one_work+0xa0c/0x1820 kernel/workqueue.c:2153
+>  worker_thread+0x8f/0xd20 kernel/workqueue.c:2296
+>  kthread+0x3a3/0x470 kernel/kthread.c:246
+>  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:413
+> ==================================================================
+> 
