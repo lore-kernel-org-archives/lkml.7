@@ -2,367 +2,165 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42688C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B834C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFCA7214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC4052086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:06:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437057AbfHIQGD (ORCPT
+        id S2437066AbfHIQGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 12:06:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37082 "EHLO mx1.redhat.com"
+        Fri, 9 Aug 2019 12:06:38 -0400
+Received: from viti.kaiser.cx ([85.214.81.225]:41474 "EHLO viti.kaiser.cx"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436882AbfHIQGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 12:06:03 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 80D81308FEC1;
-        Fri,  9 Aug 2019 16:06:02 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4525B5D9D3;
-        Fri,  9 Aug 2019 16:06:01 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH net 2/2] rxrpc: Don't bother generating maxSkew in the ACK
- packet
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 09 Aug 2019 17:06:00 +0100
-Message-ID: <156536676047.17478.4311933006996701836.stgit@warthog.procyon.org.uk>
-In-Reply-To: <156536674651.17478.15139844428920800280.stgit@warthog.procyon.org.uk>
-References: <156536674651.17478.15139844428920800280.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 09 Aug 2019 16:06:02 +0000 (UTC)
+        id S2436958AbfHIQGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 12:06:38 -0400
+Received: from dslb-188-096-144-190.188.096.pools.vodafone-ip.de ([188.96.144.190] helo=martin-debian-1.paytec.ch)
+        by viti.kaiser.cx with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <martin@kaiser.cx>)
+        id 1hw7PU-0003zu-A6; Fri, 09 Aug 2019 18:06:32 +0200
+From:   Martin Kaiser <martin@kaiser.cx>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Lars-Peter Clausen <lars@metafoo.de>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Martin Kaiser <martin@kaiser.cx>
+Subject: [PATCH] iio: potentiometer: max5432: update the non-volatile position
+Date:   Fri,  9 Aug 2019 18:06:17 +0200
+Message-Id: <20190809160617.21035-1-martin@kaiser.cx>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't bother generating maxSkew in the ACK packet as it has been obsolete
-since AFS 3.1.
+Keep track of the wiper position that was set by user space. Store the
+current wiper position in the chip's non-volatile register when the
+system is rebooted. This will be the initial position next time the
+max5432 chip is powered.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Jeffrey Altman <jaltman@auristor.com>
+Update the register in the i2c client's shutdown function. Unlike the
+remove function, shutdown is called when the system is rebooted. It's
+safe to send an i2c message in the shutdown function.
+
+Skip the update if user space never changed the wiper position.
+
+Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 ---
+The patch is against the testing branch in
+git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
+It seems that this branch is not merged into linux-next.
 
- net/rxrpc/af_rxrpc.c    |    2 +-
- net/rxrpc/ar-internal.h |    3 +--
- net/rxrpc/call_event.c  |   15 ++++++---------
- net/rxrpc/input.c       |   43 ++++++++++++++++---------------------------
- net/rxrpc/output.c      |    3 +--
- net/rxrpc/recvmsg.c     |    6 +++---
- 6 files changed, 28 insertions(+), 44 deletions(-)
+ drivers/iio/potentiometer/max5432.c | 43 +++++++++++++++++++++++++++++++++----
+ 1 file changed, 39 insertions(+), 4 deletions(-)
 
-diff --git a/net/rxrpc/af_rxrpc.c b/net/rxrpc/af_rxrpc.c
-index 8c9bd3ae9edf..0dbbfd1b6487 100644
---- a/net/rxrpc/af_rxrpc.c
-+++ b/net/rxrpc/af_rxrpc.c
-@@ -402,7 +402,7 @@ EXPORT_SYMBOL(rxrpc_kernel_check_life);
-  */
- void rxrpc_kernel_probe_life(struct socket *sock, struct rxrpc_call *call)
+diff --git a/drivers/iio/potentiometer/max5432.c b/drivers/iio/potentiometer/max5432.c
+index 641b1821fdf6..73449078c89b 100644
+--- a/drivers/iio/potentiometer/max5432.c
++++ b/drivers/iio/potentiometer/max5432.c
+@@ -16,16 +16,33 @@
+ 
+ /* All chip variants have 32 wiper positions. */
+ #define MAX5432_MAX_POS 31
++/*
++ * Initial value when the wiper position is unknown.
++ * (The chip does not support reading the current position.)
++ */
++#define MAX5432_INVALID_POS (MAX5432_MAX_POS + 1)
+ 
+ #define MAX5432_OHM_50K   (50  * 1000)
+ #define MAX5432_OHM_100K  (100 * 1000)
+ 
+ /* Update the volatile (currently active) setting. */
+ #define MAX5432_CMD_VREG  0x11
++/*
++ * Update the non-volatile setting that's used to initialize the wiper
++ * at startup.
++ */
++#define MAX5432_CMD_NVREG 0x21
++
++/*
++ * Wiper position is in bits D7-D3 of the data byte.
++ * (D2-D0 are don't care bits.)
++ */
++#define WIPER_POS_DATA(pos) ((pos) << 3)
+ 
+ struct max5432_data {
+ 	struct i2c_client *client;
+ 	unsigned long ohm;
++	u8 wiper_pos;
+ };
+ 
+ static const struct iio_chan_spec max5432_channels[] = {
+@@ -63,7 +80,6 @@ static int max5432_write_raw(struct iio_dev *indio_dev,
+ 			int val, int val2, long mask)
  {
--	rxrpc_propose_ACK(call, RXRPC_ACK_PING, 0, 0, true, false,
-+	rxrpc_propose_ACK(call, RXRPC_ACK_PING, 0, true, false,
- 			  rxrpc_propose_ack_ping_for_check_life);
- 	rxrpc_send_ack_packet(call, true, NULL);
+ 	struct max5432_data *data = iio_priv(indio_dev);
+-	u8 data_byte;
+ 
+ 	if (mask != IIO_CHAN_INFO_RAW)
+ 		return -EINVAL;
+@@ -74,10 +90,10 @@ static int max5432_write_raw(struct iio_dev *indio_dev,
+ 	if (val2 != 0)
+ 		return -EINVAL;
+ 
+-	/* Wiper position is in bits D7-D3. (D2-D0 are don't care bits.) */
+-	data_byte = val << 3;
++	data->wiper_pos = val;
++
+ 	return i2c_smbus_write_byte_data(data->client, chan->address,
+-			data_byte);
++			WIPER_POS_DATA(data->wiper_pos));
  }
-diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
-index 9796c45d2f6a..145335611af6 100644
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -650,7 +650,6 @@ struct rxrpc_call {
  
- 	/* receive-phase ACK management */
- 	u8			ackr_reason;	/* reason to ACK */
--	u16			ackr_skew;	/* skew on packet being ACK'd */
- 	rxrpc_serial_t		ackr_serial;	/* serial of packet being ACK'd */
- 	rxrpc_serial_t		ackr_first_seq;	/* first sequence number received */
- 	rxrpc_seq_t		ackr_prev_seq;	/* previous sequence number received */
-@@ -744,7 +743,7 @@ int rxrpc_reject_call(struct rxrpc_sock *);
- /*
-  * call_event.c
-  */
--void rxrpc_propose_ACK(struct rxrpc_call *, u8, u16, u32, bool, bool,
-+void rxrpc_propose_ACK(struct rxrpc_call *, u8, u32, bool, bool,
- 		       enum rxrpc_propose_ack_trace);
- void rxrpc_process_call(struct work_struct *);
+ static const struct iio_info max5432_info = {
+@@ -101,6 +117,7 @@ static int max5432_probe(struct i2c_client *client,
+ 	data = iio_priv(indio_dev);
+ 	data->client = client;
+ 	data->ohm = (unsigned long)of_device_get_match_data(dev);
++	data->wiper_pos = MAX5432_INVALID_POS;
  
-diff --git a/net/rxrpc/call_event.c b/net/rxrpc/call_event.c
-index bc2adeb3acb9..c767679bfa5d 100644
---- a/net/rxrpc/call_event.c
-+++ b/net/rxrpc/call_event.c
-@@ -43,8 +43,7 @@ static void rxrpc_propose_ping(struct rxrpc_call *call,
-  * propose an ACK be sent
-  */
- static void __rxrpc_propose_ACK(struct rxrpc_call *call, u8 ack_reason,
--				u16 skew, u32 serial, bool immediate,
--				bool background,
-+				u32 serial, bool immediate, bool background,
- 				enum rxrpc_propose_ack_trace why)
- {
- 	enum rxrpc_propose_ack_outcome outcome = rxrpc_propose_ack_use;
-@@ -69,14 +68,12 @@ static void __rxrpc_propose_ACK(struct rxrpc_call *call, u8 ack_reason,
- 		if (RXRPC_ACK_UPDATEABLE & (1 << ack_reason)) {
- 			outcome = rxrpc_propose_ack_update;
- 			call->ackr_serial = serial;
--			call->ackr_skew = skew;
- 		}
- 		if (!immediate)
- 			goto trace;
- 	} else if (prior > rxrpc_ack_priority[call->ackr_reason]) {
- 		call->ackr_reason = ack_reason;
- 		call->ackr_serial = serial;
--		call->ackr_skew = skew;
- 	} else {
- 		outcome = rxrpc_propose_ack_subsume;
- 	}
-@@ -137,11 +134,11 @@ static void __rxrpc_propose_ACK(struct rxrpc_call *call, u8 ack_reason,
-  * propose an ACK be sent, locking the call structure
-  */
- void rxrpc_propose_ACK(struct rxrpc_call *call, u8 ack_reason,
--		       u16 skew, u32 serial, bool immediate, bool background,
-+		       u32 serial, bool immediate, bool background,
- 		       enum rxrpc_propose_ack_trace why)
- {
- 	spin_lock_bh(&call->lock);
--	__rxrpc_propose_ACK(call, ack_reason, skew, serial,
-+	__rxrpc_propose_ACK(call, ack_reason, serial,
- 			    immediate, background, why);
- 	spin_unlock_bh(&call->lock);
+ 	indio_dev->dev.parent = dev;
+ 	indio_dev->info = &max5432_info;
+@@ -111,6 +128,23 @@ static int max5432_probe(struct i2c_client *client,
+ 	return devm_iio_device_register(dev, indio_dev);
  }
-@@ -239,7 +236,7 @@ static void rxrpc_resend(struct rxrpc_call *call, unsigned long now_j)
- 		ack_ts = ktime_sub(now, call->acks_latest_ts);
- 		if (ktime_to_ns(ack_ts) < call->peer->rtt)
- 			goto out;
--		rxrpc_propose_ACK(call, RXRPC_ACK_PING, 0, 0, true, false,
-+		rxrpc_propose_ACK(call, RXRPC_ACK_PING, 0, true, false,
- 				  rxrpc_propose_ack_ping_for_lost_ack);
- 		rxrpc_send_ack_packet(call, true, NULL);
- 		goto out;
-@@ -372,7 +369,7 @@ void rxrpc_process_call(struct work_struct *work)
- 	if (time_after_eq(now, t)) {
- 		trace_rxrpc_timer(call, rxrpc_timer_exp_keepalive, now);
- 		cmpxchg(&call->keepalive_at, t, now + MAX_JIFFY_OFFSET);
--		rxrpc_propose_ACK(call, RXRPC_ACK_PING, 0, 0, true, true,
-+		rxrpc_propose_ACK(call, RXRPC_ACK_PING, 0, true, true,
- 				  rxrpc_propose_ack_ping_for_keepalive);
- 		set_bit(RXRPC_CALL_EV_PING, &call->events);
- 	}
-@@ -407,7 +404,7 @@ void rxrpc_process_call(struct work_struct *work)
- 	send_ack = NULL;
- 	if (test_and_clear_bit(RXRPC_CALL_EV_ACK_LOST, &call->events)) {
- 		call->acks_lost_top = call->tx_top;
--		rxrpc_propose_ACK(call, RXRPC_ACK_PING, 0, 0, true, false,
-+		rxrpc_propose_ACK(call, RXRPC_ACK_PING, 0, true, false,
- 				  rxrpc_propose_ack_ping_for_lost_ack);
- 		send_ack = &call->acks_lost_ping;
- 	}
-diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
-index ee95d1cd1cdf..dd47d465d1d3 100644
---- a/net/rxrpc/input.c
-+++ b/net/rxrpc/input.c
-@@ -196,15 +196,14 @@ static void rxrpc_congestion_management(struct rxrpc_call *call,
-  * Ping the other end to fill our RTT cache and to retrieve the rwind
-  * and MTU parameters.
-  */
--static void rxrpc_send_ping(struct rxrpc_call *call, struct sk_buff *skb,
--			    int skew)
-+static void rxrpc_send_ping(struct rxrpc_call *call, struct sk_buff *skb)
- {
- 	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
- 	ktime_t now = skb->tstamp;
  
- 	if (call->peer->rtt_usage < 3 ||
- 	    ktime_before(ktime_add_ms(call->peer->rtt_last_req, 1000), now))
--		rxrpc_propose_ACK(call, RXRPC_ACK_PING, skew, sp->hdr.serial,
-+		rxrpc_propose_ACK(call, RXRPC_ACK_PING, sp->hdr.serial,
- 				  true, true,
- 				  rxrpc_propose_ack_ping_for_params);
- }
-@@ -419,8 +418,7 @@ static void rxrpc_input_dup_data(struct rxrpc_call *call, rxrpc_seq_t seq,
- /*
-  * Process a DATA packet, adding the packet to the Rx ring.
-  */
--static void rxrpc_input_data(struct rxrpc_call *call, struct sk_buff *skb,
--			     u16 skew)
-+static void rxrpc_input_data(struct rxrpc_call *call, struct sk_buff *skb)
- {
- 	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
- 	enum rxrpc_call_state state;
-@@ -600,11 +598,11 @@ static void rxrpc_input_data(struct rxrpc_call *call, struct sk_buff *skb,
++static void max5432_shutdown(struct i2c_client *client)
++{
++	struct iio_dev *indio_dev;
++	struct max5432_data *data;
++
++	indio_dev = i2c_get_clientdata(client);
++	if (!indio_dev)
++		return;
++
++	data = iio_priv(indio_dev);
++	if (data->wiper_pos == MAX5432_INVALID_POS)
++		return;
++
++	i2c_smbus_write_byte_data(client, MAX5432_CMD_NVREG,
++			WIPER_POS_DATA(data->wiper_pos));
++}
++
+ static const struct of_device_id max5432_dt_ids[] = {
+ 	{ .compatible = "maxim,max5432", .data = (void *)MAX5432_OHM_50K  },
+ 	{ .compatible = "maxim,max5433", .data = (void *)MAX5432_OHM_100K },
+@@ -126,6 +160,7 @@ static struct i2c_driver max5432_driver = {
+ 		.of_match_table = of_match_ptr(max5432_dt_ids),
+ 	},
+ 	.probe = max5432_probe,
++	.shutdown = max5432_shutdown,
+ };
  
- ack:
- 	if (ack)
--		rxrpc_propose_ACK(call, ack, skew, ack_serial,
-+		rxrpc_propose_ACK(call, ack, ack_serial,
- 				  immediate_ack, true,
- 				  rxrpc_propose_ack_input_data);
- 	else
--		rxrpc_propose_ACK(call, RXRPC_ACK_DELAY, skew, serial,
-+		rxrpc_propose_ACK(call, RXRPC_ACK_DELAY, serial,
- 				  false, true,
- 				  rxrpc_propose_ack_input_data);
- 
-@@ -822,8 +820,7 @@ static void rxrpc_input_soft_acks(struct rxrpc_call *call, u8 *acks,
-  * soft-ACK means that the packet may be discarded and retransmission
-  * requested.  A phase is complete when all packets are hard-ACK'd.
-  */
--static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb,
--			    u16 skew)
-+static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
- {
- 	struct rxrpc_ack_summary summary = { 0 };
- 	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
-@@ -867,11 +864,11 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb,
- 	if (buf.ack.reason == RXRPC_ACK_PING) {
- 		_proto("Rx ACK %%%u PING Request", sp->hdr.serial);
- 		rxrpc_propose_ACK(call, RXRPC_ACK_PING_RESPONSE,
--				  skew, sp->hdr.serial, true, true,
-+				  sp->hdr.serial, true, true,
- 				  rxrpc_propose_ack_respond_to_ping);
- 	} else if (sp->hdr.flags & RXRPC_REQUEST_ACK) {
- 		rxrpc_propose_ACK(call, RXRPC_ACK_REQUESTED,
--				  skew, sp->hdr.serial, true, true,
-+				  sp->hdr.serial, true, true,
- 				  rxrpc_propose_ack_respond_to_ack);
- 	}
- 
-@@ -948,7 +945,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb,
- 	    RXRPC_TX_ANNO_LAST &&
- 	    summary.nr_acks == call->tx_top - hard_ack &&
- 	    rxrpc_is_client_call(call))
--		rxrpc_propose_ACK(call, RXRPC_ACK_PING, skew, sp->hdr.serial,
-+		rxrpc_propose_ACK(call, RXRPC_ACK_PING, sp->hdr.serial,
- 				  false, true,
- 				  rxrpc_propose_ack_ping_for_lost_reply);
- 
-@@ -1004,7 +1001,7 @@ static void rxrpc_input_abort(struct rxrpc_call *call, struct sk_buff *skb)
-  * Process an incoming call packet.
-  */
- static void rxrpc_input_call_packet(struct rxrpc_call *call,
--				    struct sk_buff *skb, u16 skew)
-+				    struct sk_buff *skb)
- {
- 	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
- 	unsigned long timo;
-@@ -1023,11 +1020,11 @@ static void rxrpc_input_call_packet(struct rxrpc_call *call,
- 
- 	switch (sp->hdr.type) {
- 	case RXRPC_PACKET_TYPE_DATA:
--		rxrpc_input_data(call, skb, skew);
-+		rxrpc_input_data(call, skb);
- 		break;
- 
- 	case RXRPC_PACKET_TYPE_ACK:
--		rxrpc_input_ack(call, skb, skew);
-+		rxrpc_input_ack(call, skb);
- 		break;
- 
- 	case RXRPC_PACKET_TYPE_BUSY:
-@@ -1181,7 +1178,6 @@ int rxrpc_input_packet(struct sock *udp_sk, struct sk_buff *skb)
- 	struct rxrpc_peer *peer = NULL;
- 	struct rxrpc_sock *rx = NULL;
- 	unsigned int channel;
--	int skew = 0;
- 
- 	_enter("%p", udp_sk);
- 
-@@ -1309,15 +1305,8 @@ int rxrpc_input_packet(struct sock *udp_sk, struct sk_buff *skb)
- 			goto out;
- 		}
- 
--		/* Note the serial number skew here */
--		skew = (int)sp->hdr.serial - (int)conn->hi_serial;
--		if (skew >= 0) {
--			if (skew > 0)
--				conn->hi_serial = sp->hdr.serial;
--		} else {
--			skew = -skew;
--			skew = min(skew, 65535);
--		}
-+		if ((int)sp->hdr.serial - (int)conn->hi_serial > 0)
-+			conn->hi_serial = sp->hdr.serial;
- 
- 		/* Call-bound packets are routed by connection channel. */
- 		channel = sp->hdr.cid & RXRPC_CHANNELMASK;
-@@ -1380,11 +1369,11 @@ int rxrpc_input_packet(struct sock *udp_sk, struct sk_buff *skb)
- 		call = rxrpc_new_incoming_call(local, rx, skb);
- 		if (!call)
- 			goto reject_packet;
--		rxrpc_send_ping(call, skb, skew);
-+		rxrpc_send_ping(call, skb);
- 		mutex_unlock(&call->user_mutex);
- 	}
- 
--	rxrpc_input_call_packet(call, skb, skew);
-+	rxrpc_input_call_packet(call, skb);
- 	goto discard;
- 
- discard:
-diff --git a/net/rxrpc/output.c b/net/rxrpc/output.c
-index 948e3fe249ec..369e516c4bdf 100644
---- a/net/rxrpc/output.c
-+++ b/net/rxrpc/output.c
-@@ -87,7 +87,7 @@ static size_t rxrpc_fill_out_ack(struct rxrpc_connection *conn,
- 	*_top = top;
- 
- 	pkt->ack.bufferSpace	= htons(8);
--	pkt->ack.maxSkew	= htons(call->ackr_skew);
-+	pkt->ack.maxSkew	= htons(0);
- 	pkt->ack.firstPacket	= htonl(hard_ack + 1);
- 	pkt->ack.previousPacket	= htonl(call->ackr_prev_seq);
- 	pkt->ack.serial		= htonl(serial);
-@@ -228,7 +228,6 @@ int rxrpc_send_ack_packet(struct rxrpc_call *call, bool ping,
- 			if (ping)
- 				clear_bit(RXRPC_CALL_PINGING, &call->flags);
- 			rxrpc_propose_ACK(call, pkt->ack.reason,
--					  ntohs(pkt->ack.maxSkew),
- 					  ntohl(pkt->ack.serial),
- 					  false, true,
- 					  rxrpc_propose_ack_retry_tx);
-diff --git a/net/rxrpc/recvmsg.c b/net/rxrpc/recvmsg.c
-index 5abf46cf9e6c..9a7e1bc9791d 100644
---- a/net/rxrpc/recvmsg.c
-+++ b/net/rxrpc/recvmsg.c
-@@ -141,7 +141,7 @@ static void rxrpc_end_rx_phase(struct rxrpc_call *call, rxrpc_serial_t serial)
- 	ASSERTCMP(call->rx_hard_ack, ==, call->rx_top);
- 
- 	if (call->state == RXRPC_CALL_CLIENT_RECV_REPLY) {
--		rxrpc_propose_ACK(call, RXRPC_ACK_IDLE, 0, serial, false, true,
-+		rxrpc_propose_ACK(call, RXRPC_ACK_IDLE, serial, false, true,
- 				  rxrpc_propose_ack_terminal_ack);
- 		//rxrpc_send_ack_packet(call, false, NULL);
- 	}
-@@ -159,7 +159,7 @@ static void rxrpc_end_rx_phase(struct rxrpc_call *call, rxrpc_serial_t serial)
- 		call->state = RXRPC_CALL_SERVER_ACK_REQUEST;
- 		call->expect_req_by = jiffies + MAX_JIFFY_OFFSET;
- 		write_unlock_bh(&call->state_lock);
--		rxrpc_propose_ACK(call, RXRPC_ACK_DELAY, 0, serial, false, true,
-+		rxrpc_propose_ACK(call, RXRPC_ACK_DELAY, serial, false, true,
- 				  rxrpc_propose_ack_processing_op);
- 		break;
- 	default:
-@@ -212,7 +212,7 @@ static void rxrpc_rotate_rx_window(struct rxrpc_call *call)
- 		if (after_eq(hard_ack, call->ackr_consumed + 2) ||
- 		    after_eq(top, call->ackr_seen + 2) ||
- 		    (hard_ack == top && after(hard_ack, call->ackr_consumed)))
--			rxrpc_propose_ACK(call, RXRPC_ACK_DELAY, 0, serial,
-+			rxrpc_propose_ACK(call, RXRPC_ACK_DELAY, serial,
- 					  true, true,
- 					  rxrpc_propose_ack_rotate_rx);
- 		if (call->ackr_reason && call->ackr_reason != RXRPC_ACK_DELAY)
+ module_i2c_driver(max5432_driver);
+-- 
+2.11.0
 
