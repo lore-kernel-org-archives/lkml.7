@@ -2,272 +2,126 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 689EAC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BF8C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3178F2171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:49:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358555;
-	bh=SD3gc0RxDtOmEAVSJ/BEmU++zbgiLp/zqEl+cGGU/aU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EXjUrm+l/exKxXOsNAF0YDFY0IHWP7ZDEdk5W3u9HhXeECOse/LZHeDwPHWsywYRD
-	 /qKENpSQSrLz0VVnp/HadnvYoVErEgpAMZLkIyOPVnAh1TR7/y009GpWOtYzIvY+kk
-	 /F6sO3jlcg6Q4dUSgxy2iMNoiScRN9yISWp8raKM=
+	by mail.kernel.org (Postfix) with ESMTP id 8314B2171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:49:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a4W0NpB7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436514AbfHINtO (ORCPT
+        id S2407321AbfHINtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:49:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36072 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436499AbfHINq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:49:12 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46066 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436496AbfHINq1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 9 Aug 2019 09:46:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A3902086D;
-        Fri,  9 Aug 2019 13:46:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358386;
-        bh=SD3gc0RxDtOmEAVSJ/BEmU++zbgiLp/zqEl+cGGU/aU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0DtGeGh6WNH445O+iblZFNp71+F4sT9y8kKAfs/CTZWbYeux22fsRn79HDGbNRO0o
-         pvigfr4OV9aLeKsM8arCBn58vgDX+k30eY4xCkhc+Q41ACkXzX/PLV2T3ffMVSfvG/
-         BbffJoc7/sJOyTQMjlGntP4TNEBVu1JmaWbipb74=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 18/21] x86/speculation: Prepare entry code for Spectre v1 swapgs mitigations
-Date:   Fri,  9 Aug 2019 15:45:22 +0200
-Message-Id: <20190809134242.317726553@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190809134241.565496442@linuxfoundation.org>
-References: <20190809134241.565496442@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-ed1-f68.google.com with SMTP id x19so89100996eda.12
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 06:46:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LyignUp7I1w3k1JhRB7hSSaZmUScIlvleAzqEtH71gA=;
+        b=a4W0NpB7Ky7ZNvyTrbh1FeBLRkzD3aPh58RS1Yx4bs/BVTnp45+DINWMGfkbq8hq7Q
+         Y3Z4bdj5hgCTeGW+PRshMaXOMxfFs+yMLbXwPTZLqJTcO/dIrpBRkUNMwIYuvyefgxLE
+         ghaZnnGxRRWhYKHkI/uJzl52jBCmY6GTaX4J6IMtYXbQlVLgECyZntsud91yKcOGxjq1
+         ATUWqTH0gQtzKxNRtGFOYFydwjEzo49N/C0g2sw3KGDcPT84ORGadNZJiyoF1tdgy86l
+         pT+EYQrZCc/tezrHEA9IExUAHvjCjPlw9d1k0TydyGhC6W7edZj2zop9pkCTsz+j9sKa
+         GMoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LyignUp7I1w3k1JhRB7hSSaZmUScIlvleAzqEtH71gA=;
+        b=E6/E093iNzfh1IkVjH+MGFmj3Za8JrapJa0hKg9DPmktU1mj/yynOBVXwppSEx3Dzz
+         lmE78Pku1PFVernVEtbMNd0wSZc5YxxOny37Yb7dHlpQe9ZXZH/OM5fNW1ALW7bvlipK
+         cnrBfxDhPQ2OK7R05WwgDxNANGv/GgaV76JAzkfBecyRRNcgNxQFyXopvce02q9Xf0aq
+         Ge+1HhAsyjstofw2ESy0OO8zh+ruIeyOTu9Gbjb8qd569r/gHvhCl9QBknGoSKz0cW/F
+         1eM+2eov9fFgnLRYzdSMeRDZB5/C1inCSjJMeYsoyMBR+gigV1prCwHUfnmFAk3vJPPs
+         81xA==
+X-Gm-Message-State: APjAAAWobaXrzhtelQFkQG2o+B4HIWIGA2/I8lr3wiSMz5Cle4WorVUX
+        Q5Qyf3zSRM2pagJbckVLN0o=
+X-Google-Smtp-Source: APXvYqxaz13nFHHrpZp/JtkeyPbtXPvJTVD23pHrWjqDjJb17ei5Rg0+DU4QM5tQfP2jLc7hWf/1lw==
+X-Received: by 2002:aa7:ccd6:: with SMTP id y22mr21987171edt.274.1565358386098;
+        Fri, 09 Aug 2019 06:46:26 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id c15sm16018545ejs.17.2019.08.09.06.46.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 09 Aug 2019 06:46:25 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 13:46:24 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, osalvador@suse.de,
+        pasha.tatashin@oracle.com, mhocko@suse.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/sparse: use __nr_to_section(section_nr) to get
+ mem_section
+Message-ID: <20190809134624.htv6jws7hphs4tvz@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20190809010242.29797-1-richardw.yang@linux.intel.com>
+ <e17278f0-94dc-e0c6-379b-b7694cec3247@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e17278f0-94dc-e0c6-379b-b7694cec3247@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+On Fri, Aug 09, 2019 at 02:39:59PM +0530, Anshuman Khandual wrote:
+>
+>
+>On 08/09/2019 06:32 AM, Wei Yang wrote:
+>> __pfn_to_section is defined as __nr_to_section(pfn_to_section_nr(pfn)).
+>
+>Right.
+>
+>> 
+>> Since we already get section_nr, it is not necessary to get mem_section
+>> from start_pfn. By doing so, we reduce one redundant operation.
+>> 
+>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>
+>Looks right.
+>
+>With this applied, memory hot add still works on arm64.
 
-commit 18ec54fdd6d18d92025af097cd042a75cf0ea24c upstream.
+Thanks for your test.
 
-Spectre v1 isn't only about array bounds checks.  It can affect any
-conditional checks.  The kernel entry code interrupt, exception, and NMI
-handlers all have conditional swapgs checks.  Those may be problematic in
-the context of Spectre v1, as kernel code can speculatively run with a user
-GS.
+>
+>Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>
+>> ---
+>>  mm/sparse.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>> diff --git a/mm/sparse.c b/mm/sparse.c
+>> index 72f010d9bff5..95158a148cd1 100644
+>> --- a/mm/sparse.c
+>> +++ b/mm/sparse.c
+>> @@ -867,7 +867,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
+>>  	 */
+>>  	page_init_poison(pfn_to_page(start_pfn), sizeof(struct page) * nr_pages);
+>>  
+>> -	ms = __pfn_to_section(start_pfn);
+>> +	ms = __nr_to_section(section_nr);
+>>  	set_section_nid(section_nr, nid);
+>>  	section_mark_present(ms);
+>>  
+>> 
 
-For example:
-
-	if (coming from user space)
-		swapgs
-	mov %gs:<percpu_offset>, %reg
-	mov (%reg), %reg1
-
-When coming from user space, the CPU can speculatively skip the swapgs, and
-then do a speculative percpu load using the user GS value.  So the user can
-speculatively force a read of any kernel value.  If a gadget exists which
-uses the percpu value as an address in another load/store, then the
-contents of the kernel value may become visible via an L1 side channel
-attack.
-
-A similar attack exists when coming from kernel space.  The CPU can
-speculatively do the swapgs, causing the user GS to get used for the rest
-of the speculative window.
-
-The mitigation is similar to a traditional Spectre v1 mitigation, except:
-
-  a) index masking isn't possible; because the index (percpu offset)
-     isn't user-controlled; and
-
-  b) an lfence is needed in both the "from user" swapgs path and the
-     "from kernel" non-swapgs path (because of the two attacks described
-     above).
-
-The user entry swapgs paths already have SWITCH_TO_KERNEL_CR3, which has a
-CR3 write when PTI is enabled.  Since CR3 writes are serializing, the
-lfences can be skipped in those cases.
-
-On the other hand, the kernel entry swapgs paths don't depend on PTI.
-
-To avoid unnecessary lfences for the user entry case, create two separate
-features for alternative patching:
-
-  X86_FEATURE_FENCE_SWAPGS_USER
-  X86_FEATURE_FENCE_SWAPGS_KERNEL
-
-Use these features in entry code to patch in lfences where needed.
-
-The features aren't enabled yet, so there's no functional change.
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Dave Hansen <dave.hansen@intel.com>
-[bwh: Backported to 4.4:
- - Assign the CPU feature bits from word 7
- - Add FENCE_SWAPGS_KERNEL_ENTRY to NMI entry, since it does not
-   use paranoid_entry
- - Include <asm/cpufeatures.h> in calling.h
- - Adjust context]
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/entry/calling.h           |   19 +++++++++++++++++++
- arch/x86/entry/entry_64.S          |   21 +++++++++++++++++++--
- arch/x86/include/asm/cpufeatures.h |    3 +++
- 3 files changed, 41 insertions(+), 2 deletions(-)
-
---- a/arch/x86/entry/calling.h
-+++ b/arch/x86/entry/calling.h
-@@ -1,3 +1,5 @@
-+#include <asm/cpufeatures.h>
-+
- /*
- 
-  x86 function call convention, 64-bit:
-@@ -199,6 +201,23 @@ For 32-bit we have the following convent
- 	.byte 0xf1
- 	.endm
- 
-+/*
-+ * Mitigate Spectre v1 for conditional swapgs code paths.
-+ *
-+ * FENCE_SWAPGS_USER_ENTRY is used in the user entry swapgs code path, to
-+ * prevent a speculative swapgs when coming from kernel space.
-+ *
-+ * FENCE_SWAPGS_KERNEL_ENTRY is used in the kernel entry non-swapgs code path,
-+ * to prevent the swapgs from getting speculatively skipped when coming from
-+ * user space.
-+ */
-+.macro FENCE_SWAPGS_USER_ENTRY
-+	ALTERNATIVE "", "lfence", X86_FEATURE_FENCE_SWAPGS_USER
-+.endm
-+.macro FENCE_SWAPGS_KERNEL_ENTRY
-+	ALTERNATIVE "", "lfence", X86_FEATURE_FENCE_SWAPGS_KERNEL
-+.endm
-+
- #else /* CONFIG_X86_64 */
- 
- /*
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -551,6 +551,7 @@ END(irq_entries_start)
- 	 * tracking that we're in kernel mode.
- 	 */
- 	SWAPGS
-+	FENCE_SWAPGS_USER_ENTRY
- 	SWITCH_KERNEL_CR3
- 
- 	/*
-@@ -566,8 +567,10 @@ END(irq_entries_start)
- #ifdef CONFIG_CONTEXT_TRACKING
- 	call enter_from_user_mode
- #endif
--
-+	jmpq	2f
- 1:
-+	FENCE_SWAPGS_KERNEL_ENTRY
-+2:
- 	/*
- 	 * Save previous stack pointer, optionally switch to interrupt stack.
- 	 * irq_count is used to check if a CPU is already on an interrupt stack
-@@ -1077,6 +1080,13 @@ ENTRY(paranoid_entry)
- 	movq	%rax, %cr3
- 2:
- #endif
-+	/*
-+	 * The above doesn't do an unconditional CR3 write, even in the PTI
-+	 * case.  So do an lfence to prevent GS speculation, regardless of
-+	 * whether PTI is enabled.
-+	 */
-+	FENCE_SWAPGS_KERNEL_ENTRY
-+
- 	ret
- END(paranoid_entry)
- 
-@@ -1138,6 +1148,7 @@ ENTRY(error_entry)
- 	 * from user mode due to an IRET fault.
- 	 */
- 	SWAPGS
-+	FENCE_SWAPGS_USER_ENTRY
- 
- .Lerror_entry_from_usermode_after_swapgs:
- 	/*
-@@ -1151,6 +1162,8 @@ ENTRY(error_entry)
- #endif
- 	ret
- 
-+.Lerror_entry_done_lfence:
-+	FENCE_SWAPGS_KERNEL_ENTRY
- .Lerror_entry_done:
- 	TRACE_IRQS_OFF
- 	ret
-@@ -1169,7 +1182,7 @@ ENTRY(error_entry)
- 	cmpq	%rax, RIP+8(%rsp)
- 	je	.Lbstep_iret
- 	cmpq	$gs_change, RIP+8(%rsp)
--	jne	.Lerror_entry_done
-+	jne	.Lerror_entry_done_lfence
- 
- 	/*
- 	 * hack: gs_change can fail with user gsbase.  If this happens, fix up
-@@ -1177,6 +1190,7 @@ ENTRY(error_entry)
- 	 * gs_change's error handler with kernel gsbase.
- 	 */
- 	SWAPGS
-+	FENCE_SWAPGS_USER_ENTRY
- 	jmp .Lerror_entry_done
- 
- .Lbstep_iret:
-@@ -1190,6 +1204,7 @@ ENTRY(error_entry)
- 	 * Switch to kernel gsbase:
- 	 */
- 	SWAPGS
-+	FENCE_SWAPGS_USER_ENTRY
- 
- 	/*
- 	 * Pretend that the exception came from user mode: set up pt_regs
-@@ -1286,6 +1301,7 @@ ENTRY(nmi)
- 	 * to switch CR3 here.
- 	 */
- 	cld
-+	FENCE_SWAPGS_USER_ENTRY
- 	movq	%rsp, %rdx
- 	movq	PER_CPU_VAR(cpu_current_top_of_stack), %rsp
- 	pushq	5*8(%rdx)	/* pt_regs->ss */
-@@ -1574,6 +1590,7 @@ end_repeat_nmi:
- 	movq	%rax, %cr3
- 2:
- #endif
-+	FENCE_SWAPGS_KERNEL_ENTRY
- 
- 	/* paranoidentry do_nmi, 0; without TRACE_IRQS_OFF */
- 	call	do_nmi
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -192,6 +192,9 @@
- #define X86_FEATURE_HW_PSTATE	( 7*32+ 8) /* AMD HW-PState */
- #define X86_FEATURE_PROC_FEEDBACK ( 7*32+ 9) /* AMD ProcFeedbackInterface */
- 
-+#define X86_FEATURE_FENCE_SWAPGS_USER	( 7*32+10) /* "" LFENCE in user entry SWAPGS path */
-+#define X86_FEATURE_FENCE_SWAPGS_KERNEL	( 7*32+11) /* "" LFENCE in kernel entry SWAPGS path */
-+
- #define X86_FEATURE_RETPOLINE	( 7*32+12) /* "" Generic Retpoline mitigation for Spectre variant 2 */
- #define X86_FEATURE_RETPOLINE_AMD ( 7*32+13) /* "" AMD Retpoline mitigation for Spectre variant 2 */
- 
-
-
+-- 
+Wei Yang
+Help you, Help me
