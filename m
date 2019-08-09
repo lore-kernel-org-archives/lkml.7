@@ -2,291 +2,142 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D064EC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3252DC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A01F220B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A5CC20C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:18:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="euTzh+U2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t4ojcX4z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437004AbfHISSW (ORCPT
+        id S2437059AbfHISSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:18:22 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33601 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436690AbfHISSV (ORCPT
+        Fri, 9 Aug 2019 14:18:39 -0400
+Received: from mail-qt1-f202.google.com ([209.85.160.202]:36424 "EHLO
+        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbfHISSi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:18:21 -0400
-Received: by mail-lf1-f66.google.com with SMTP id x3so70264921lfc.0;
-        Fri, 09 Aug 2019 11:18:18 -0700 (PDT)
+        Fri, 9 Aug 2019 14:18:38 -0400
+Received: by mail-qt1-f202.google.com with SMTP id q26so89703034qtr.3
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 11:18:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=E8y8IXxBU1Y+QO/+Z71ZJ5cdap8FRJZXKelTnTfTFa0=;
-        b=euTzh+U2GMc3WnxhTxHx7xKEo8TD8kayctwddiyX9IhODbilWoLMK6Z6H1t/e0YfBy
-         djt4zvB6/bCnP4IdYTlZCsrusFa7rjkvxrm/wOYXLwudNBF94fFMXbElVxxzdv3jp/up
-         VlleztW3YbYTsZEjHn5vrmBv0I1MaKNdfrXJIdyN4zqyOGh+dS9VDS2pD6dsze838/4X
-         Se/9cGgZgj0pCmovfDaQn2g2UpnOAFv+C/J2suNDa/2QpHUcGuzMGld0VUlUFzHwmOlS
-         mlR2gAx+58wo/yu+6Q9kDXqYRLMT4gm0ORqrHbEBprO/SSMgVQEgLao5pT108JVQ35Qw
-         yxtg==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=1tTOS0Kr72a3ig2rpitn9bCmZeR/zOLT1qe1/3whgEM=;
+        b=t4ojcX4zM3ReDMDWCqGhCTvaqHBK+DuPIlzAdeiU72qvxO9xy9fn1Q6XpZm7bG1TY9
+         DcTgReEoKCXV6hx6uhDkgrOBydyAG7m95uH2GgH+MpjoY5dBW1XlJuSLaiClxd80i9wQ
+         uGWlwouFz2kNGMsP82G5m5c3QdsA3UTgtCzOWJZbC62mlfPkPyeTb/PGohfZneqJjjII
+         e4TziFLEBwXH8c7dph/NR4Cf/P3BHtpNUUqq70fVcaV4P871k09OTx/GBiyEROIIHgAO
+         qjIIeON5PngXGZ9T/XsUQBgx8jcAvK93OCFYAvJHYk8d6nDQ7VHqphneeXOaVwdVn+9U
+         YyWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=E8y8IXxBU1Y+QO/+Z71ZJ5cdap8FRJZXKelTnTfTFa0=;
-        b=gn0eZHjr7YoqgcvldPexjjMvbBgAZmLCJzTvl7zyVpimXAWx2J8M0Y5JdfsZrda6iJ
-         cqV4tiZr76cS/vmTg0m0c2/QtIz1iZV9isCFdXjUaDsw2ihakQkSRHU3UHyOAjPHsb/e
-         v2EGSUzdaIGwTGC5ivacvgsCdb09K8DnsDJWJMu+BYhaR66lzsVNAdjR+fH1IWz3TCB1
-         41OsRgVFmPGRYlN7f2Yy3FwUouMFCaSEQ42Kc3MptSa5V0SkkuN9NpQUo1eoXpHjKQK0
-         mzyvIHhFtS06e/vGqgFOksJJ4QyJOi+oXTE/8LV1f6jZMJbfH6OfHiutoJ2lulqhQiP5
-         /swQ==
-X-Gm-Message-State: APjAAAUxlpD5utmD6siflpMlwcNwRthYHzk/dIp/RqKWZ83jLnMS2xu7
-        v34c3qrdx/i8cM0i/X/g9Cmwzqvf
-X-Google-Smtp-Source: APXvYqySaKU/e4oRuB2ismLcDn7BqjcUfVKWHaA4Ebi/dHnqGHREG7WunIHs1KVPYE/oFCygkVFlrg==
-X-Received: by 2002:ac2:4c12:: with SMTP id t18mr13526812lfq.134.1565374697788;
-        Fri, 09 Aug 2019 11:18:17 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.218])
-        by smtp.googlemail.com with ESMTPSA id k23sm16344839ljg.90.2019.08.09.11.18.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 11:18:17 -0700 (PDT)
-Subject: Re: [PATCH v8 14/21] clk: tegra210: Add suspend and resume support
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-15-git-send-email-skomatineni@nvidia.com>
- <a21b7464-62c3-8461-04c2-a0e863bdde85@gmail.com>
- <7d101ec9-c559-8b40-1764-6bf67a9c7a7a@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <aa823801-00c7-df88-0f63-45338bffa854@gmail.com>
-Date:   Fri, 9 Aug 2019 21:18:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <7d101ec9-c559-8b40-1764-6bf67a9c7a7a@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=1tTOS0Kr72a3ig2rpitn9bCmZeR/zOLT1qe1/3whgEM=;
+        b=qOl+iNhLXYyJLuGMBpn0fGx3fdmtlHT/YOmzjft0+uypxwOm47ospAKtN4/Geudg6m
+         4g76Yeb2rs2Hnlj8XcfwMnor0f0bjFZobr/Rbhx0qwbDyW9vQJrBTYcyCqhleAzp/0v0
+         IkbXM/nv1EtT1WljTOTcnLB+hNJrvRF/3kSLTK0okK4tDl9mOfFISqVSvwuk5+zPjj4+
+         aGV9j48JGUqz02jrmERNo9uND1V2EQtmelz+QPwgGmm8xw4M6ZFPAod3jHg27RY72hqq
+         qOxJhmcHvzWrVNdRdi29Ydz9zVqpgIsvwIIyapdLplhq/+/lIePVbVS2FmKy4eJ7vLI2
+         YTHA==
+X-Gm-Message-State: APjAAAWszIV0mzIcWuOR8cDvL/YPA11F68xUC4N7kPkSoDuKYDMHjDJa
+        cRJB4zwvA8fNFC7fMKL2A80Pp7EE/hFNUeLK
+X-Google-Smtp-Source: APXvYqw2K/VdYvQblbTHJHxoM6dqlB8YfnUUHpG4eYjJSnSc4X/YL0P/7AjXqV062axKFffWbIEPqpGDJf00/gB/
+X-Received: by 2002:a37:5e04:: with SMTP id s4mr15541529qkb.268.1565374717530;
+ Fri, 09 Aug 2019 11:18:37 -0700 (PDT)
+Date:   Fri,  9 Aug 2019 11:17:50 -0700
+Message-Id: <20190809181751.219326-1-henryburns@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+Subject: [PATCH 1/2 v2] mm/zsmalloc.c: Migration can leave pages in ZS_EMPTY indefinitely
+From:   Henry Burns <henryburns@google.com>
+To:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jonathan Adams <jwadams@google.com>,
+        HenryBurns <henrywolfeburns@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Henry Burns <henryburns@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-09.08.2019 19:19, Sowjanya Komatineni пишет:
-> 
-> On 8/9/19 6:56 AM, Dmitry Osipenko wrote:
->> 09.08.2019 2:46, Sowjanya Komatineni пишет:
->>> This patch adds support for clk: tegra210: suspend-resume.
->>>
->>> All the CAR controller settings are lost on suspend when core
->>> power goes off.
->>>
->>> This patch has implementation for saving and restoring all PLLs
->>> and clocks context during system suspend and resume to have the
->>> clocks back to same state for normal operation.
->>>
->>> Clock driver suspend and resume are registered as syscore_ops as clocks
->>> restore need to happen before the other drivers resume to have all their
->>> clocks back to the same state as before suspend.
->>>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>   drivers/clk/tegra/clk-tegra210.c | 103 +++++++++++++++++++++++++++++++++++++--
->>>   drivers/clk/tegra/clk.c          |  64 ++++++++++++++++++++++++
->>>   drivers/clk/tegra/clk.h          |   3 ++
->>>   3 files changed, 166 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
->>> index 998bf60b219a..8dd6f4f4debb 100644
->>> --- a/drivers/clk/tegra/clk-tegra210.c
->>> +++ b/drivers/clk/tegra/clk-tegra210.c
->>> @@ -9,13 +9,13 @@
->>>   #include <linux/clkdev.h>
->>>   #include <linux/of.h>
->>>   #include <linux/of_address.h>
->>> +#include <linux/syscore_ops.h>
->>>   #include <linux/delay.h>
->>>   #include <linux/export.h>
->>>   #include <linux/mutex.h>
->>>   #include <linux/clk/tegra.h>
->>>   #include <dt-bindings/clock/tegra210-car.h>
->>>   #include <dt-bindings/reset/tegra210-car.h>
->>> -#include <linux/iopoll.h>
->>>   #include <linux/sizes.h>
->>>   #include <soc/tegra/pmc.h>
->>>   @@ -220,11 +220,15 @@
->>>   #define CLK_M_DIVISOR_SHIFT 2
->>>   #define CLK_M_DIVISOR_MASK 0x3
->>>   +#define CLK_MASK_ARM    0x44
->>> +#define MISC_CLK_ENB    0x48
->>> +
->>>   #define RST_DFLL_DVCO 0x2f4
->>>   #define DVFS_DFLL_RESET_SHIFT 0
->>>     #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
->>>   #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
->>> +#define CPU_SOFTRST_CTRL 0x380
->>>     #define LVL2_CLK_GATE_OVRA 0xf8
->>>   #define LVL2_CLK_GATE_OVRC 0x3a0
->>> @@ -2825,6 +2829,7 @@ static int tegra210_enable_pllu(void)
->>>       struct tegra_clk_pll_freq_table *fentry;
->>>       struct tegra_clk_pll pllu;
->>>       u32 reg;
->>> +    int ret;
->>>         for (fentry = pll_u_freq_table; fentry->input_rate; fentry++) {
->>>           if (fentry->input_rate == pll_ref_freq)
->>> @@ -2853,9 +2858,14 @@ static int tegra210_enable_pllu(void)
->>>       reg |= PLL_ENABLE;
->>>       writel(reg, clk_base + PLLU_BASE);
->>>   -    readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
->>> -                      reg & PLL_BASE_LOCK, 2, 1000);
->>> -    if (!(reg & PLL_BASE_LOCK)) {
->>> +    /*
->>> +     * During clocks resume, same PLLU init and enable sequence get
->>> +     * executed. So, readx_poll_timeout_atomic can't be used here as it
->>> +     * uses ktime_get() and timekeeping resume doesn't happen by that
->>> +     * time. So, using tegra210_wait_for_mask for PLL LOCK.
->>> +     */
->>> +    ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
->>> +    if (ret) {
->>>           pr_err("Timed out waiting for PLL_U to lock\n");
->>>           return -ETIMEDOUT;
->>>       }
->>> @@ -3288,6 +3298,84 @@ static void tegra210_disable_cpu_clock(u32 cpu)
->>>   }
->>>     #ifdef CONFIG_PM_SLEEP
->>> +/*
->>> + * This array lists mask values for each peripheral clk bank
->>> + * to mask out reserved bits during the clocks state restore
->>> + * on SC7 resume to prevent accidental writes to these reserved
->>> + * bits.
->>> + */
->>> +static u32 periph_clk_rsvd_mask[TEGRA210_CAR_BANK_COUNT] = {
->> Should be more natural to have a "valid_mask" instead of "rsvd_mask".
->>
->> What's actually wrong with touching of the reserved bits? They must be NO-OP.. or the
->> reserved bits are actually some kind of "secret" bits? If those bits have some use-case
->> outside of Silicon HW (like FPGA simulation), then this doesn't matter for upstream and you
->> have to keep the workaround locally in the downstream kernel or whatever.
-> 
-> Will rename as valid_mask.
-> 
-> some bits in these registers are undefined and is not good to write to these bits as they
-> can cause pslverr.
+In zs_page_migrate() we call putback_zspage() after we have finished
+migrating all pages in this zspage. However, the return value is ignored.
+If a zs_free() races in between zs_page_isolate() and zs_page_migrate(),
+freeing the last object in the zspage, putback_zspage() will leave the page
+in ZS_EMPTY for potentially an unbounded amount of time.
 
-Okay, it should be explained in the comment.
+To fix this, we need to do the same thing as zs_page_putback() does:
+schedule free_work to occur.  To avoid duplicated code, move the
+sequence to a new putback_zspage_deferred() function which both
+zs_page_migrate() and zs_page_putback() call.
 
-Is it possible to disable trapping of changing the undefined bits?
+Fixes: 48b4800a1c6a ("zsmalloc: page migration support")
+Signed-off-by: Henry Burns <henryburns@google.com>
+---
+ Changelog since v1:
+ - Moved the comment from putback_zspage_deferred() to
+   zs_page_putback().
 
->>
->>> +    0x23282006,
->>> +    0x782e0c18,
->>> +    0x0c012c05,
->>> +    0x003e7304,
->>> +    0x86c04800,
->>> +    0xc0199000,
->>> +    0x03e03800,
->>> +};
->>> +
->>> +#define car_readl(_base, _off) readl_relaxed(clk_base + (_base) + ((_off) * 4))
->>> +#define car_writel(_val, _base, _off) \
->>> +        writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
->>> +
->>> +static u32 spare_reg_ctx, misc_clk_enb_ctx, clk_msk_arm_ctx;
->>> +static u32 cpu_softrst_ctx[3];
->>> +
->>> +static int tegra210_clk_suspend(void)
->>> +{
->>> +    unsigned int i;
->>> +
->>> +    clk_save_context();
->>> +
->>> +    /*
->>> +     * Save the bootloader configured clock registers SPARE_REG0,
->>> +     * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL.
->>> +     */
->>> +    spare_reg_ctx = readl_relaxed(clk_base + SPARE_REG0);
->>> +    misc_clk_enb_ctx = readl_relaxed(clk_base + MISC_CLK_ENB);
->>> +    clk_msk_arm_ctx = readl_relaxed(clk_base + CLK_MASK_ARM);
->>> +
->>> +    for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
->>> +        cpu_softrst_ctx[i] = car_readl(CPU_SOFTRST_CTRL, i);
->>> +
->>> +    tegra_clk_periph_suspend();
->>> +    return 0;
->>> +}
->>> +
->>> +static void tegra210_clk_resume(void)
->>> +{
->>> +    unsigned int i;
->>> +
->>> +    tegra_clk_osc_resume(clk_base);
->>> +
->>> +    /*
->>> +     * Restore the bootloader configured clock registers SPARE_REG0,
->>> +     * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL from saved context.
->>> +     */
->>> +    writel_relaxed(spare_reg_ctx, clk_base + SPARE_REG0);
->>> +    writel_relaxed(misc_clk_enb_ctx, clk_base + MISC_CLK_ENB);
->>> +    writel_relaxed(clk_msk_arm_ctx, clk_base + CLK_MASK_ARM);
->>> +
->>> +    for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
->>> +        car_writel(cpu_softrst_ctx[i], CPU_SOFTRST_CTRL, i);
->>> +
->>> +    fence_udelay(5, clk_base);
->>> +
->>> +    /* enable all the clocks before changing the clock sources */
->>> +    tegra_clk_periph_force_on(periph_clk_rsvd_mask);
->> Why clocks need to be enabled before changing the sources?
-> 
-> To prevent glitchless frequency switch, Tegra clock programming recommended sequence is to
-> change MUX control or divisor or both with the clocks running.
+ mm/zsmalloc.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-This should be explained in the comment.
-
-> Actual state of clocks before suspend are restored later after all PLL's and peripheral
-> clocks are restored.
-> 
->>
->>> +    /* wait for all writes to happen to have all the clocks enabled */
->>> +    wmb();
->> fence_udelay() has exactly the same barrier at the very beginning of readl(), no need to
->> duplicate it here.
-
-Actually, readl does the rmb() and it should be a more correct variant of fencing because it
-actually ensures that the write reached hardware. I suppose that something like fence_udelay
-should be used for the pinctrl as well.
-
->>> +    fence_udelay(2, clk_base);
->>> +
->>> +    /* restore PLLs and all peripheral clock rates */
->>> +    tegra210_init_pllu();
->> Why USB PLL need to be restored at first?
-> USB PLL restore is independent to all other clocks restore. So this can be done either
-> before clk_restore_context or even after.
-
-Then why not to implement restore_context for PLLU?
-
->>> +    clk_restore_context();
->>> +
->>> +    /* restore all peripheral clocks enable and reset state */
->>> +    tegra_clk_periph_resume();
->>> +}
->> [snip]
+diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+index 57fbb7ced69f..5105b9b66653 100644
+--- a/mm/zsmalloc.c
++++ b/mm/zsmalloc.c
+@@ -1862,6 +1862,18 @@ static void dec_zspage_isolation(struct zspage *zspage)
+ 	zspage->isolated--;
+ }
+ 
++static void putback_zspage_deferred(struct zs_pool *pool,
++				    struct size_class *class,
++				    struct zspage *zspage)
++{
++	enum fullness_group fg;
++
++	fg = putback_zspage(class, zspage);
++	if (fg == ZS_EMPTY)
++		schedule_work(&pool->free_work);
++
++}
++
+ static void replace_sub_page(struct size_class *class, struct zspage *zspage,
+ 				struct page *newpage, struct page *oldpage)
+ {
+@@ -2031,7 +2043,7 @@ static int zs_page_migrate(struct address_space *mapping, struct page *newpage,
+ 	 * the list if @page is final isolated subpage in the zspage.
+ 	 */
+ 	if (!is_zspage_isolated(zspage))
+-		putback_zspage(class, zspage);
++		putback_zspage_deferred(pool, class, zspage);
+ 
+ 	reset_page(page);
+ 	put_page(page);
+@@ -2077,14 +2089,13 @@ static void zs_page_putback(struct page *page)
+ 	spin_lock(&class->lock);
+ 	dec_zspage_isolation(zspage);
+ 	if (!is_zspage_isolated(zspage)) {
+-		fg = putback_zspage(class, zspage);
+ 		/*
+ 		 * Due to page_lock, we cannot free zspage immediately
+ 		 * so let's defer.
+ 		 */
+-		if (fg == ZS_EMPTY)
+-			schedule_work(&pool->free_work);
++		putback_zspage_deferred(pool, class, zspage);
+ 	}
++
+ 	spin_unlock(&class->lock);
+ }
+ 
+-- 
+2.23.0.rc1.153.gdeed80330f-goog
 
