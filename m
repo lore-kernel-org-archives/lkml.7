@@ -2,145 +2,146 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD91C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6D4C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C47E02086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF1E32086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:03:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406406AbfHILCI (ORCPT
+        id S2406434AbfHILDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 07:02:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35284 "EHLO mx1.redhat.com"
+        Fri, 9 Aug 2019 07:03:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:45526 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726363AbfHILCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 07:02:08 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A13D530941C4;
-        Fri,  9 Aug 2019 11:02:07 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-117-120.ams2.redhat.com [10.36.117.120])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F06E60481;
-        Fri,  9 Aug 2019 11:02:01 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH v2] drivers/base/memory.c: Don't store end_section_nr in memory blocks
-Date:   Fri,  9 Aug 2019 13:02:00 +0200
-Message-Id: <20190809110200.2746-1-david@redhat.com>
+        id S2406247AbfHILDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 07:03:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE7EA1596;
+        Fri,  9 Aug 2019 04:03:20 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2357D3F575;
+        Fri,  9 Aug 2019 04:03:19 -0700 (PDT)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     linux-pm@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LAKML <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v2 0/8] ARM: psci: cpuidle: PSCI CPUidle rework
+Date:   Fri,  9 Aug 2019 12:03:06 +0100
+Message-Id: <cover.1565348376.git.lorenzo.pieralisi@arm.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190722153745.32446-1-lorenzo.pieralisi@arm.com>
+References: <20190722153745.32446-1-lorenzo.pieralisi@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 09 Aug 2019 11:02:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each memory block spans the same amount of sections/pages/bytes. The size
-is determined before the first memory block is created. No need to store
-what we can easily calculate - and the calculations even look simpler now.
+v2 of a previous posting:
 
-Michal brought up the idea of variable-sized memory blocks. However, if
-we ever implement something like this, we will need an API compatibility
-switch and reworks at various places (most code assumes a fixed memory
-block size). So let's cleanup what we have right now.
+v1: https://lore.kernel.org/linux-pm/20190722153745.32446-1-lorenzo.pieralisi@arm.com/
 
-While at it, fix the variable naming in register_mem_sect_under_node() -
-we no longer talk about a single section.
+v1->v2:
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+- Split config files updates into separate patches
+- Fixed minor memory leaks/bisectability issues
+
+Original cover letter
 ---
 
-v1 -> v2:
-- Drop the macro for calculating the pfns per memory block
+Current PSCI CPUidle driver is built on top of the generic ARM
+CPUidle infrastructure that relies on the architectural back-end
+idle operations to initialize and enter idle states.
 
----
- drivers/base/memory.c  |  1 -
- drivers/base/node.c    | 10 +++++-----
- include/linux/memory.h |  1 -
- mm/memory_hotplug.c    |  2 +-
- 4 files changed, 6 insertions(+), 8 deletions(-)
+On ARM64 systems, PSCI is the only interface the kernel ever uses
+to enter idle states, so, having to rely on a generic ARM CPUidle
+driver when there is and there will always be only one method
+for entering idle states proved to be overkill, more so given
+that on ARM 32-bit systems (that can also enable the generic
+ARM CPUidle driver) only one additional idle back-end was
+ever added:
 
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 154d5d4a0779..cb80f2bdd7de 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -670,7 +670,6 @@ static int init_memory_block(struct memory_block **memory,
- 		return -ENOMEM;
- 
- 	mem->start_section_nr = block_id * sections_per_block;
--	mem->end_section_nr = mem->start_section_nr + sections_per_block - 1;
- 	mem->state = state;
- 	start_pfn = section_nr_to_pfn(mem->start_section_nr);
- 	mem->phys_device = arch_get_memory_phys_device(start_pfn);
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index 840c95baa1d8..257449cf061f 100644
---- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -756,13 +756,13 @@ static int __ref get_nid_for_pfn(unsigned long pfn)
- static int register_mem_sect_under_node(struct memory_block *mem_blk,
- 					 void *arg)
- {
-+	unsigned long memory_block_pfns = memory_block_size_bytes() / PAGE_SIZE;
-+	unsigned long start_pfn = section_nr_to_pfn(mem_blk->start_section_nr);
-+	unsigned long end_pfn = start_pfn + memory_block_pfns - 1;
- 	int ret, nid = *(int *)arg;
--	unsigned long pfn, sect_start_pfn, sect_end_pfn;
-+	unsigned long pfn;
- 
--	sect_start_pfn = section_nr_to_pfn(mem_blk->start_section_nr);
--	sect_end_pfn = section_nr_to_pfn(mem_blk->end_section_nr);
--	sect_end_pfn += PAGES_PER_SECTION - 1;
--	for (pfn = sect_start_pfn; pfn <= sect_end_pfn; pfn++) {
-+	for (pfn = start_pfn; pfn <= end_pfn; pfn++) {
- 		int page_nid;
- 
- 		/*
-diff --git a/include/linux/memory.h b/include/linux/memory.h
-index 02e633f3ede0..704215d7258a 100644
---- a/include/linux/memory.h
-+++ b/include/linux/memory.h
-@@ -25,7 +25,6 @@
- 
- struct memory_block {
- 	unsigned long start_section_nr;
--	unsigned long end_section_nr;
- 	unsigned long state;		/* serialized by the dev->lock */
- 	int section_count;		/* serialized by mem_sysfs_mutex */
- 	int online_type;		/* for passing data to online routine */
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 9a82e12bd0e7..db33a0ffcb1f 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1650,7 +1650,7 @@ static int check_memblock_offlined_cb(struct memory_block *mem, void *arg)
- 		phys_addr_t beginpa, endpa;
- 
- 		beginpa = PFN_PHYS(section_nr_to_pfn(mem->start_section_nr));
--		endpa = PFN_PHYS(section_nr_to_pfn(mem->end_section_nr + 1))-1;
-+		endpa = beginpa + memory_block_size_bytes() - 1;
- 		pr_warn("removing memory fails, because memory [%pa-%pa] is onlined\n",
- 			&beginpa, &endpa);
- 
+drivers/soc/qcom/spm.c
+
+and it can be easily converted to a full-fledged CPUidle driver
+without requiring the generic ARM CPUidle framework.
+
+Furthermore, the generic ARM CPUidle infrastructure forces the
+PSCI firmware layer to keep CPUidle specific information in it,
+which does not really fit its purpose that should be kernel
+control/data structure agnostic.
+
+Lastly, the interface between the generic ARM CPUidle driver and
+the arch back-end requires an idle state index to be passed to
+suspend operations, with idle states back-end internals (such
+as idle state parameters) hidden in architectural back-ends and
+not available to the generic ARM CPUidle driver.
+
+To improve the above mentioned shortcomings, implement a stand
+alone PSCI CPUidle driver; this improves the current kernel
+code from several perspective:
+
+- Move CPUidle internal knowledge into CPUidle driver out of
+  the PSCI firmware interface
+- Give the PSCI CPUidle driver control over power state parameters,
+  in particular in preparation for PSCI OSI support
+- Remove generic CPUidle operations infrastructure from the kernel
+
+This patchset does not go as far as removing the generic ARM CPUidle
+infrastructure in order to collect feedback on the new approach
+before completing the removal from the kernel, the generic and PSCI
+CPUidle driver are left to co-exist.
+
+Tested on Juno platform with both DT and ACPI boot firmwares.
+
+Cc: Will Deacon <will@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+
+Lorenzo Pieralisi (8):
+  ARM: cpuidle: Remove useless header include
+  ARM: cpuidle: Remove overzealous error logging
+  drivers: firmware: psci: Decouple checker from generic ARM CPUidle
+  ARM: psci: cpuidle: Introduce PSCI CPUidle driver
+  ARM: psci: cpuidle: Enable PSCI CPUidle driver
+  PSCI: cpuidle: Refactor CPU suspend power_state parameter handling
+  arm64: defconfig: Enable the PSCI CPUidle driver
+  ARM: imx_v6_v7_defconfig: Enable the PSCI CPUidle driver
+
+ MAINTAINERS                          |   8 +
+ arch/arm/configs/imx_v6_v7_defconfig |   1 +
+ arch/arm64/configs/defconfig         |   1 +
+ arch/arm64/kernel/cpuidle.c          |  50 +++++-
+ arch/arm64/kernel/psci.c             |   4 -
+ drivers/cpuidle/Kconfig.arm          |  10 ++
+ drivers/cpuidle/Makefile             |   1 +
+ drivers/cpuidle/cpuidle-arm.c        |  13 +-
+ drivers/cpuidle/cpuidle-psci.c       | 236 +++++++++++++++++++++++++++
+ drivers/firmware/psci/psci.c         | 167 +------------------
+ drivers/firmware/psci/psci_checker.c |  16 +-
+ include/linux/cpuidle.h              |  17 +-
+ include/linux/psci.h                 |   4 +-
+ 13 files changed, 342 insertions(+), 186 deletions(-)
+ create mode 100644 drivers/cpuidle/cpuidle-psci.c
+
 -- 
 2.21.0
 
