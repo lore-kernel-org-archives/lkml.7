@@ -2,92 +2,91 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0821EC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBE1C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C96FC20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:14:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DIodWpzp"
+	by mail.kernel.org (Postfix) with ESMTP id 1916720B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:15:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405899AbfHIIOw (ORCPT
+        id S2405920AbfHIIPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 04:14:52 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47635 "EHLO ozlabs.org"
+        Fri, 9 Aug 2019 04:15:00 -0400
+Received: from verein.lst.de ([213.95.11.211]:53322 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbfHIIOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 04:14:52 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 464dMF2qLqz9s3Z;
-        Fri,  9 Aug 2019 18:14:49 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565338490;
-        bh=CaBI3pRW72rTTPLhhgx4VE8Io7Njb78GeFi0yPGLEes=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DIodWpzpmHHasSK4mdCmcv2rqXlo8OvaGtk01/EEOTRCxLA5F2OfE6P78zx+S33GF
-         BOuM9hQ3BTZzJz8l8LEuNoVqHLpinlKEYe9XZMWEeD0LHnl2FF8EUTJS1hmTYuWgN2
-         N8pev8WlPJbK5Q/dNoCegFj88sOAWNMJfUEHPRx++e6MsdoDlkgeb+EWJwrzS3NCtn
-         GKeHKlCdNFauUIAuqI6jZZnmppGQU5bUIILdX5ONUfH4P9s8wP+aVnazXv8hStHz4S
-         ao3bciItVVLoVQC1XF4nZrHoiUkdOcUinEyTXL3DuSQC3pwVbttqBHKOcfN61YLM7t
-         DEvyqXiaukZBA==
-Date:   Fri, 9 Aug 2019 18:14:46 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Tree for Aug 8
-Message-ID: <20190809181446.19125f6e@canb.auug.org.au>
-In-Reply-To: <CAK7LNASzxcicBPM5OkScnwHPef_7X=oiuO_0xCH3f55ACYZEWw@mail.gmail.com>
-References: <20190808181739.62f257ed@canb.auug.org.au>
-        <20190808225316.GA3725@osiris>
-        <CAK7LNASzxcicBPM5OkScnwHPef_7X=oiuO_0xCH3f55ACYZEWw@mail.gmail.com>
+        id S1726054AbfHIIPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 04:15:00 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 8901768B05; Fri,  9 Aug 2019 10:14:55 +0200 (CEST)
+Date:   Fri, 9 Aug 2019 10:14:55 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Christoph Hellwig <hch@lst.de>, Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] drm: add cache support for arm64
+Message-ID: <20190809081455.GA21967@lst.de>
+References: <20190805211451.20176-1-robdclark@gmail.com> <20190806084821.GA17129@lst.de> <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com> <20190806155044.GC25050@lst.de> <CAJs_Fx6uztwDy2PqRy3Tc9p12k8r_ovS2tAcsMV6HqnAp=Ggug@mail.gmail.com> <20190807062545.GF6627@lst.de> <CAKMK7uH1O3q8VUftikipGH6ACPoT-8tbV1Zwo-8WL=wUHiqsoQ@mail.gmail.com> <20190808095506.GA32621@lst.de> <20190808115808.GN7444@phenom.ffwll.local>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/kLHSecfJwxkAcT.4nyFawqk";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808115808.GN7444@phenom.ffwll.local>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/kLHSecfJwxkAcT.4nyFawqk
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Aug 08, 2019 at 01:58:08PM +0200, Daniel Vetter wrote:
+> > > We use shmem to get at swappable pages. We generally just assume that
+> > > the gpu can get at those pages, but things fall apart in fun ways:
+> > > - some setups somehow inject bounce buffers. Some drivers just give
+> > > up, others try to allocate a pool of pages with dma_alloc_coherent.
+> > > - some devices are misdesigned and can't access as much as the cpu. We
+> > > allocate using GFP_DMA32 to fix that.
+> > 
+> > Well, for shmem you can't really call allocators directly, right?
+> 
+> We can pass gfp flags to shmem_read_mapping_page_gfp, which is just about
+> enough for the 2 cases on intel platforms where the gpu can only access
+> 4G, but the cpu has way more.
 
-Hi Masahiro,
+Right.  And that works for architectures without weird DMA offsets and
+devices that exactly have a 32-bit DMA limit.  It falls flat for all
+the more complex ones unfortunately.
 
-On Fri, 9 Aug 2019 13:44:19 +0900 Masahiro Yamada <yamada.masahiro@socionex=
-t.com> wrote:
->
-> Stephen, could you revert this commit for today's linux-next ?
+> > But userspace malloc really means dma_map_* anyway, so not really
+> > relevant for memory allocations.
+> 
+> It does tie in, since we'll want a dma_map which fails if a direct mapping
+> isn't possible. It also helps the driver code a lot if we could use the
+> same low-level flushing functions between our own memory (whatever that
+> is) and anon pages from malloc. And in all the cases if it's not possible,
+> we want a failure, not elaborate attempts at hiding the differences
+> between all possible architectures out there.
 
-Sorry, I discovered your email too late :-(
+At the very lowest level all goes down to the same three primitives we
+talked about anyway, but there are different ways how they are combined.
+For the streaming mappins looks at the table in arch/arc/mm/dma.c I
+mentioned earlier.  For memory that is prepared for just mmaping to
+userspace without a kernel user we'll always do a wb+inv.  But as the
+other subthread shows we'll need to eventually look into unmapping
+(or remapping with the same attributes) of that memory in kernel space
+to avoid speculation bugs (or just invalid combination on x86 where
+we check for that), so the API will be a little more complex.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/kLHSecfJwxkAcT.4nyFawqk
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1NK3YACgkQAVBC80lX
-0GxC4Af7BK+6gfT7f+T3AnnYkhBnfRSaWw46H1C71ZUQ5qMtI6yc0WXxqoxcILfu
-Nq/yMeUFPeO9B1anhdnaPcdPs3qVgIp3zCHpHnHKVxo2ki0tLuBCRuO33fx8x/EA
-U6wmRlirbbuZbncLSzWVpu7oR9vWG3CDk8BpyIBEHW4oJMMZ/jkyhCMG5nnB3ZHe
-rPuWavR9BHzBcIpenuQXtHh7Hh+5uEfmWdYHuETn+0o5D5+7xZz7Wohzvn2JR5Je
-iAPUugcJQfuZ/yh7iix72sjk7Ywwwiemslyv/m8n8ub1uOQeKkrZ5oaOXEsLEIsv
-vkJXEt+hLKtW81w+4gp4lSnPmm9ojw==
-=3Rq3
------END PGP SIGNATURE-----
-
---Sig_/kLHSecfJwxkAcT.4nyFawqk--
+Btw, are all DRM drivers using vmf_insert_* to pre-populate the mapping
+like the MSM case, or are some doing dynamic faulting from
+vm_ops->fault?
