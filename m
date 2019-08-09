@@ -2,59 +2,53 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA210C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6768FC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6862086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32A6D2086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358490;
-	bh=wghxmeAPHzsujAz79/ipyVQr0oFzQXLpRvGjhXLRHZM=;
+	s=default; t=1565358493;
+	bh=NWFGBnycL8uzqaGsMoa5HzevcduLPy3AxTT/XwpP9uE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lke+Ua9jb/3JD2hqeN8xrg/gstCt+W+m50UEPYFJw7qf5IRqc+oVuzY5c9FaM36gx
-	 mMS0pQWVpWWeVPaENH3+7Q6mMJa/PhCKZKdH9fVqV39fsdImI7UobKW9UfhiG3Zxjo
-	 8Bn7ai8Y75vZjhvNqBViHluqVbONQurjVDsyaGXg=
+	b=duHeUjPlH1Yq4sLP2K4eCDvbA3fQts8fKQfxly54m4znQaSdQcpZm+r6Ie9OAhZkH
+	 phCr0IHrjlWmmc2OcxfEIhKZzj+uCGDQLgjsZ5gTrOvxOXFoCpTU4xly+EDdW7sWL1
+	 Xy9VirwOdH/W9C/+DIxkZgKapCGxXPQG3wzvv8tQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436692AbfHINsJ (ORCPT
+        id S2436672AbfHINsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:48:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38214 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:48:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436666AbfHINsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:48:02 -0400
+        id S2436665AbfHINsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:48:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 887972086D;
-        Fri,  9 Aug 2019 13:48:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1964E21874;
+        Fri,  9 Aug 2019 13:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358482;
-        bh=wghxmeAPHzsujAz79/ipyVQr0oFzQXLpRvGjhXLRHZM=;
+        s=default; t=1565358479;
+        bh=NWFGBnycL8uzqaGsMoa5HzevcduLPy3AxTT/XwpP9uE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WJUs7m8sN3ZUh0mxuG9PdGwo4OA2F62sfS8Fjvy+26WMothE2wmDiujmSn903TxVd
-         lgnN5JcfkDtvXmWbkg1zRtE6v13FbV3n4nmjRKxji05yr/g139SVMQkErvpuJx9qL7
-         NWTaV0Biid+tn1bIpsP3r7Lp14P6f/y2t2U1jo1I=
+        b=Nmqjh4ch+kPvyCRFAboh3eNn8kBGP++xdwhRxrmNhPUf+tqR0iAVe2Umz1kNCspV+
+         VmhqT7f436+7rhG2ov7q1C0i+MHEcu9IBtx2f7u9pFKyHxhUcjZGQJ0HEMHmg1gFmA
+         jr6Dy6aPWB9xjj0nxMUoPNYXhS1ngwd7UkHStSYI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Andrew Prout <aprout@ll.mit.edu>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        Neal Cardwell <ncardwell@google.com>,
-        Yuchung Cheng <ycheng@google.com>,
-        Christoph Paasch <cpaasch@apple.com>,
-        Jonathan Looney <jtl@netflix.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 07/32] tcp: be more careful in tcp_fragment()
-Date:   Fri,  9 Aug 2019 15:45:10 +0200
-Message-Id: <20190809133923.184065453@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+88533dc8b582309bf3ee@syzkaller.appspotmail.com,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 16/32] net: bridge: delete local fdb on device init failure
+Date:   Fri,  9 Aug 2019 15:45:19 +0200
+Message-Id: <20190809133923.485610963@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190809133922.945349906@linuxfoundation.org>
 References: <20190809133922.945349906@linuxfoundation.org>
@@ -67,109 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b617158dc096709d8600c53b6052144d12b89fab ]
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-Some applications set tiny SO_SNDBUF values and expect
-TCP to just work. Recent patches to address CVE-2019-11478
-broke them in case of losses, since retransmits might
-be prevented.
+[ Upstream commit d7bae09fa008c6c9a489580db0a5a12063b97f97 ]
 
-We should allow these flows to make progress.
+On initialization failure we have to delete the local fdb which was
+inserted due to the default pvid creation. This problem has been present
+since the inception of default_pvid. Note that currently there are 2 cases:
+1) in br_dev_init() when br_multicast_init() fails
+2) if register_netdevice() fails after calling ndo_init()
 
-This patch allows the first and last skb in retransmit queue
-to be split even if memory limits are hit.
+This patch takes care of both since br_vlan_flush() is called on both
+occasions. Also the new fdb delete would be a no-op on normal bridge
+device destruction since the local fdb would've been already flushed by
+br_dev_delete(). This is not an issue for ports since nbp_vlan_init() is
+called last when adding a port thus nothing can fail after it.
 
-It also adds the some room due to the fact that tcp_sendmsg()
-and tcp_sendpage() might overshoot sk_wmem_queued by about one full
-TSO skb (64KB size). Note this allowance was already present
-in stable backports for kernels < 4.15
-
-Note for < 4.15 backports :
- tcp_rtx_queue_tail() will probably look like :
-
-static inline struct sk_buff *tcp_rtx_queue_tail(const struct sock *sk)
-{
-	struct sk_buff *skb = tcp_send_head(sk);
-
-	return skb ? tcp_write_queue_prev(sk, skb) : tcp_write_queue_tail(sk);
-}
-
-Fixes: f070ef2ac667 ("tcp: tcp_fragment() should apply sane memory limits")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Andrew Prout <aprout@ll.mit.edu>
-Tested-by: Andrew Prout <aprout@ll.mit.edu>
-Tested-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Tested-by: Michal Kubecek <mkubecek@suse.cz>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Acked-by: Yuchung Cheng <ycheng@google.com>
-Acked-by: Christoph Paasch <cpaasch@apple.com>
-Cc: Jonathan Looney <jtl@netflix.com>
+Reported-by: syzbot+88533dc8b582309bf3ee@syzkaller.appspotmail.com
+Fixes: 5be5a2df40f0 ("bridge: Add filtering support for default_pvid")
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/tcp.h     | 17 +++++++++++++++++
- net/ipv4/tcp_output.c | 11 ++++++++++-
- 2 files changed, 27 insertions(+), 1 deletion(-)
+ net/bridge/br_vlan.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 1eda31f7f013b..a474213ca015b 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -1595,6 +1595,23 @@ static inline void tcp_check_send_head(struct sock *sk, struct sk_buff *skb_unli
- 		tcp_sk(sk)->highest_sack = NULL;
- }
+--- a/net/bridge/br_vlan.c
++++ b/net/bridge/br_vlan.c
+@@ -622,6 +622,11 @@ void br_vlan_flush(struct net_bridge *br
  
-+static inline struct sk_buff *tcp_rtx_queue_head(const struct sock *sk)
-+{
-+	struct sk_buff *skb = tcp_write_queue_head(sk);
-+
-+	if (skb == tcp_send_head(sk))
-+		skb = NULL;
-+
-+	return skb;
-+}
-+
-+static inline struct sk_buff *tcp_rtx_queue_tail(const struct sock *sk)
-+{
-+	struct sk_buff *skb = tcp_send_head(sk);
-+
-+	return skb ? tcp_write_queue_prev(sk, skb) : tcp_write_queue_tail(sk);
-+}
-+
- static inline void __tcp_add_write_queue_tail(struct sock *sk, struct sk_buff *skb)
- {
- 	__skb_queue_tail(&sk->sk_write_queue, skb);
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 0c195b0f42169..9ddb05b98312c 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -1175,6 +1175,7 @@ int tcp_fragment(struct sock *sk, struct sk_buff *skb, u32 len,
- 	struct tcp_sock *tp = tcp_sk(sk);
- 	struct sk_buff *buff;
- 	int nsize, old_factor;
-+	long limit;
- 	int nlen;
- 	u8 flags;
+ 	ASSERT_RTNL();
  
-@@ -1185,7 +1186,15 @@ int tcp_fragment(struct sock *sk, struct sk_buff *skb, u32 len,
- 	if (nsize < 0)
- 		nsize = 0;
- 
--	if (unlikely((sk->sk_wmem_queued >> 1) > sk->sk_sndbuf + 0x20000)) {
-+	/* tcp_sendmsg() can overshoot sk_wmem_queued by one full size skb.
-+	 * We need some allowance to not penalize applications setting small
-+	 * SO_SNDBUF values.
-+	 * Also allow first and last skb in retransmit queue to be split.
++	/* delete auto-added default pvid local fdb before flushing vlans
++	 * otherwise it will be leaked on bridge device init failure
 +	 */
-+	limit = sk->sk_sndbuf + 2 * SKB_TRUESIZE(GSO_MAX_SIZE);
-+	if (unlikely((sk->sk_wmem_queued >> 1) > limit &&
-+		     skb != tcp_rtx_queue_head(sk) &&
-+		     skb != tcp_rtx_queue_tail(sk))) {
- 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPWQUEUETOOBIG);
- 		return -ENOMEM;
- 	}
--- 
-2.20.1
-
++	br_fdb_delete_by_port(br, NULL, 0, 1);
++
+ 	vg = br_vlan_group(br);
+ 	__vlan_flush(vg);
+ 	RCU_INIT_POINTER(br->vlgrp, NULL);
 
 
