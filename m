@@ -2,95 +2,129 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9050DC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41018C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 620ED21783
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A192084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:06:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406565AbfHILDy (ORCPT
+        id S2406470AbfHILGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 07:03:54 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4229 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2406470AbfHILDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 07:03:52 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 40E64786FB91D940B113;
-        Fri,  9 Aug 2019 19:03:48 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 9 Aug 2019
- 19:03:38 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <perex@perex.cz>, <tiwai@suse.com>, <broonie@kernel.org>,
-        <lgirdwood@gmail.com>, <pierre-louis.bossart@linux.intel.com>,
-        <yang.jie@linux.intel.com>
-CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2] ASoC: SOF: Intel: Add missing include file hdac_hda.h
-Date:   Fri, 9 Aug 2019 19:01:00 +0800
-Message-ID: <20190809110100.71236-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20190809095550.71040-1-yuehaibing@huawei.com>
-References: <20190809095550.71040-1-yuehaibing@huawei.com>
+        Fri, 9 Aug 2019 07:06:10 -0400
+Received: from mail-ot1-f71.google.com ([209.85.210.71]:41814 "EHLO
+        mail-ot1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406272AbfHILGJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 07:06:09 -0400
+Received: by mail-ot1-f71.google.com with SMTP id a8so67969208oti.8
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 04:06:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=zVTRlB/x5YQjuHlXNkGeEct8hD4cekTY0n9YojkyFDU=;
+        b=njUAqIWdjbL8sSE83GSY/bSwBWrxV9VzllBIwHJLofR8RmAa3KcdxzhBK5u8gBbmJW
+         x+87MuzneJ7IUOP03bfygi+GLTdTwComiWlTLlxGJ7tSyH/qctJBJAopvK3pYhGtFmWN
+         pNwfrvv0Laj93chR7frulJehK2FA4qOu6cFucbVzj3hvdclFeHdxAo7c3ipMZoZBKKfV
+         R0L6O+obklXkt+PCe3T3gNswEWhyz+S/0PFkVKsk0JJBJ/Hws1Vasw+5cW5Hc92FMxin
+         mnOVxubJDpH2V7+LxmkjE45IictKgJTPGt9eL0d+RDKdgrCTX7bYiBjxf9vve9AftEXF
+         HoKg==
+X-Gm-Message-State: APjAAAUmy2j87MDeddfox+ZXhUmYNGESa7SwyFM+eNtfOD61QiMREjij
+        ZV/0z8XBxk5zFsF9GChg2/ZzjSnzfHmTZxNoaFqKvboAa5HQ
+X-Google-Smtp-Source: APXvYqy3Q85weNwM4JYCgJFzoo+N1LJJCD2xUNX+lEyYV85+yaBrOpyhVocQSVRI2cA+GCFcEH9eK0j49dfHLsOIwiLTUmuXkheu
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a02:4e05:: with SMTP id r5mr22339509jaa.27.1565348768322;
+ Fri, 09 Aug 2019 04:06:08 -0700 (PDT)
+Date:   Fri, 09 Aug 2019 04:06:08 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000492086058fad2979@google.com>
+Subject: BUG: corrupted list in rxrpc_local_processor
+From:   syzbot <syzbot+193e29e9387ea5837f1d@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dhowells@redhat.com,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building with SND_SOC_SOF_HDA_AUDIO_CODEC fails:
+Hello,
 
-sound/soc/sof/intel/hda-bus.c: In function sof_hda_bus_init:
-sound/soc/sof/intel/hda-bus.c:16:25: error: implicit declaration of function
- snd_soc_hdac_hda_get_ops; did you mean snd_soc_jack_add_gpiods? [-Werror=implicit-function-declaration]
- #define sof_hda_ext_ops snd_soc_hdac_hda_get_ops()
+syzbot found the following crash on:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Suggested-by: Takashi Iwai <tiwai@suse.de>
-Fixes: d4ff1b3917a5 ('ASoC: SOF: Intel: Initialize hdaudio bus properly")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+HEAD commit:    87b983f5 Add linux-next specific files for 20190809
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=161309c2600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=28eea330e11df0eb
+dashboard link: https://syzkaller.appspot.com/bug?extid=193e29e9387ea5837f1d
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+193e29e9387ea5837f1d@syzkaller.appspotmail.com
+
+list_del corruption. prev->next should be ffff8880a4570da0, but was  
+ffff88808c74b6e0
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:51!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.3.0-rc3-next-20190809 #63
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: krxrpcd rxrpc_local_processor
+RIP: 0010:__list_del_entry_valid.cold+0xf/0x4f lib/list_debug.c:51
+Code: e8 f9 73 1d fe 0f 0b 48 89 f1 48 c7 c7 c0 6f e6 87 4c 89 e6 e8 e5 73  
+1d fe 0f 0b 4c 89 f6 48 c7 c7 60 71 e6 87 e8 d4 73 1d fe <0f> 0b 4c 89 ea  
+4c 89 f6 48 c7 c7 a0 70 e6 87 e8 c0 73 1d fe 0f 0b
+RSP: 0018:ffff8880a9a47cc0 EFLAGS: 00010286
+RAX: 0000000000000054 RBX: ffff8880a4570db8 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815bb706 RDI: ffffed1015348f8a
+RBP: ffff8880a9a47cd8 R08: 0000000000000054 R09: ffffed1015d260d9
+R10: ffffed1015d260d8 R11: ffff8880ae9306c7 R12: ffff888074400878
+R13: ffff888074400878 R14: ffff8880a4570da0 R15: ffff88809509e580
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000400200 CR3: 000000006f1ac000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  __list_del_entry include/linux/list.h:131 [inline]
+  list_del_init include/linux/list.h:190 [inline]
+  rxrpc_local_destroyer net/rxrpc/local_object.c:427 [inline]
+  rxrpc_local_processor+0x251/0x830 net/rxrpc/local_object.c:463
+  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace c8e00778000f001d ]---
+RIP: 0010:__list_del_entry_valid.cold+0xf/0x4f lib/list_debug.c:51
+Code: e8 f9 73 1d fe 0f 0b 48 89 f1 48 c7 c7 c0 6f e6 87 4c 89 e6 e8 e5 73  
+1d fe 0f 0b 4c 89 f6 48 c7 c7 60 71 e6 87 e8 d4 73 1d fe <0f> 0b 4c 89 ea  
+4c 89 f6 48 c7 c7 a0 70 e6 87 e8 c0 73 1d fe 0f 0b
+RSP: 0018:ffff8880a9a47cc0 EFLAGS: 00010286
+RAX: 0000000000000054 RBX: ffff8880a4570db8 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815bb706 RDI: ffffed1015348f8a
+RBP: ffff8880a9a47cd8 R08: 0000000000000054 R09: ffffed1015d260d9
+R10: ffffed1015d260d8 R11: ffff8880ae9306c7 R12: ffff888074400878
+R13: ffff888074400878 R14: ffff8880a4570da0 R15: ffff88809509e580
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b32f22000 CR3: 000000006f1ac000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
-v2: remove unused include from hda.c
----
- sound/soc/sof/intel/hda-bus.c | 1 +
- sound/soc/sof/intel/hda.c     | 3 ---
- 2 files changed, 1 insertion(+), 3 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/sound/soc/sof/intel/hda-bus.c b/sound/soc/sof/intel/hda-bus.c
-index 0caec3a..1d2babd 100644
---- a/sound/soc/sof/intel/hda-bus.c
-+++ b/sound/soc/sof/intel/hda-bus.c
-@@ -13,6 +13,7 @@
- #include "hda.h"
- 
- #if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA_AUDIO_CODEC)
-+#include "../../codecs/hdac_hda.h"
- #define sof_hda_ext_ops	snd_soc_hdac_hda_get_ops()
- #else
- #define sof_hda_ext_ops	NULL
-diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
-index 368254b..ebf2777 100644
---- a/sound/soc/sof/intel/hda.c
-+++ b/sound/soc/sof/intel/hda.c
-@@ -23,9 +23,6 @@
- #include <sound/sof/xtensa.h>
- #include "../ops.h"
- #include "hda.h"
--#if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA_AUDIO_CODEC)
--#include "../../codecs/hdac_hda.h"
--#endif
- 
- #if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
- #include <sound/soc-acpi-intel-match.h>
--- 
-2.7.4
-
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
