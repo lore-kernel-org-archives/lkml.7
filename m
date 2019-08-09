@@ -2,74 +2,77 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D76C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 19:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3572EC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 19:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DBCF20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 19:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06BF821880
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 19:29:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JsGevr6F";
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Cai3YE3s"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fQ/FPMr1";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="txi+f+au"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfHIT3S (ORCPT
+        id S1726519AbfHIT3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 15:29:18 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50594 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfHIT3Q (ORCPT
+        Fri, 9 Aug 2019 15:29:19 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:46034 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfHIT3Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 9 Aug 2019 15:29:16 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x79JIbuB170462;
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x79JIcNJ157279;
         Fri, 9 Aug 2019 19:29:07 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2019-08-05; bh=qy8Hj53Xb1Dfh7O7VOv0dgBCkLnskXSxJx2txNy1KfQ=;
- b=JsGevr6FC4QjGUTTA76pyDACP1sX0fQfr1zjm+IiO4tI8cyPz4AZL9FGqG1etgGUSFTW
- 9ET5b/96hdUEW93BGbHXIj4K0KVSkOQRCB504uQs5z561siCV8YFTvUuRzrqVrGaJfE9
- SjtmOpFjHx92OrOpuh3DzCgXT1uY5EqZgAFgYXd4xOJPp3XNa2ohw3MM7HbHbjldNNKn
- +Cr3e1KGqoKwwOsxPqcC2LW2nVdRt4pXg9Qz/izJTw4rpc++OJlb+KlIPDrv6AH/lDX5
- YZ+zFQJTOy5MBwdstqol5Z0UzxYnmM8xStC2cQZgWLusbf6Fw7J6ASyutkxmyswfKgLO fQ== 
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=cP1lKqCv0m7pam9tebxXo/dg9KekB6e4yuCInD6+caE=;
+ b=fQ/FPMr1Ss3eHpewFAbQQhqDVOSD9fOh0Co9WGV6C8A3i5hVaZtc+zix++vGSsvPVdm/
+ xLQQ0wEYOUfY8j+tR04Kac5dRl5s6D2OdhgBAEM07aJ0+UyrhhltXzhWw8QduBZA+LSw
+ UMqbEDkjtrC9iVb9XU9RVSEud4eYRwPHuyY4CEeJkkDviB3+IwME4A4UvS7psCRDBkSl
+ hWSPdXpIAmOZxmYTQRiYuIploShpXT9xtYOj2AbU29xYYlkg9+G3Slzza40TsmsWytYh
+ 4Gst0i6sgeKJRlbYODOEblOHHVeJxr8s4WWSzY94EWosMG1PsbAjrxBr3pjRR5tyeJUR SQ== 
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2018-07-02; bh=qy8Hj53Xb1Dfh7O7VOv0dgBCkLnskXSxJx2txNy1KfQ=;
- b=Cai3YE3sSvSOhoAV1ti3U/JkV2Pvc3SG1ck6OKO8MbRz03fXi7rAVuCxR0g8MclYKG4L
- 46nw3TEBf84Wn42wyt9xQVP9xtkVPbvnF3O7xJVwDYY0MxQ301ZNbJUfChzmUwZ+0xOn
- mubNAnkH0rlllZB/gC70h/dDJGptlSvdoK1YTtGBa1L1ffCju5nSVMg87YuTHJPZ+YWx
- XbixtWILHT/n8pQqYJi5XCLZU8e68VoFybRwPzfmVxYb3SoJPLRou1NVJ0T+xupOaQUz
- pNsA7Gxk0hQ2Z1vQuIPLt/adlt6hfDg4h/E2jGEAoQMshpCnbQHbXTBRUhVM20F5x4wV 7Q== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2u8hgp9pwf-1
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2018-07-02;
+ bh=cP1lKqCv0m7pam9tebxXo/dg9KekB6e4yuCInD6+caE=;
+ b=txi+f+au5w37CRvs2HgnKjiRQgNwWceGT9awkbUgLS/e7hkC9MKKFbqpP/cqbIf7a37C
+ h/ypGybwBGdwm2mVxCgHArfBAiojPa0aY0TN/VeXsqVXQ2gcNJ8uQ9DvJlYWke93A1Ve
+ 4fdcbcr4qhWgEFD2agRqsYAllALcWxLcALc5QZviYyH7VT6a4u3dtPzIGTCfTC3x4CkP
+ JijxOrU0oN+2bIkuqc+nMLdW04zokSgn8ZtZKu7FwuC9WrSExJVEbST1VPxA+thzQpOP
+ XtzBwV4JbVuPJ32pi8tkt58FCD4DgEesTu395PdnEEAtrkErzNVg66dOYs1JhQO2GMU9 XQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2u8hps9kxk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Fri, 09 Aug 2019 19:29:06 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x79JIwjH035307;
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x79JHxjv067816;
         Fri, 9 Aug 2019 19:29:06 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2u8x1h34ws-1
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2u8pj9fsu6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Fri, 09 Aug 2019 19:29:05 +0000
 Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x79JT3Gr017790;
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x79JT4qA015018;
         Fri, 9 Aug 2019 19:29:04 GMT
 Received: from localhost.localdomain (/73.60.114.248)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 09 Aug 2019 12:29:03 -0700
+        with ESMTP ; Fri, 09 Aug 2019 12:29:04 -0700
 From:   Daniel Jordan <daniel.m.jordan@oracle.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         Steffen Klassert <steffen.klassert@secunet.com>
 Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] padata: always acquire cpu_hotplug_lock before pinst->lock
-Date:   Fri,  9 Aug 2019 15:28:56 -0400
-Message-Id: <20190809192857.26585-1-daniel.m.jordan@oracle.com>
+Subject: [PATCH 2/2] padata: validate cpumask without removed CPU during offline
+Date:   Fri,  9 Aug 2019 15:28:57 -0400
+Message-Id: <20190809192857.26585-2-daniel.m.jordan@oracle.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190809192857.26585-1-daniel.m.jordan@oracle.com>
+References: <20190809192857.26585-1-daniel.m.jordan@oracle.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9344 signatures=668685
@@ -88,124 +91,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On a 5.2 kernel, lockdep complains when offlining a CPU and writing to a
-parallel_cpumask sysfs file.
+Configuring an instance's parallel mask without any online CPUs...
 
+  echo 2 > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
   echo 0 > /sys/devices/system/cpu/cpu1/online
-  echo ff > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
 
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.2.0-padata-base+ #19 Not tainted
-  ------------------------------------------------------
-  cpuhp/1/13 is trying to acquire lock:
-  ...  (&pinst->lock){+.+.}, at: padata_cpu_prep_down+0x37/0x70
+...crashes like this:
 
-  but task is already holding lock:
-  ...  (cpuhp_state-down){+.+.}, at: cpuhp_thread_fun+0x34/0x240
+  divide error: 0000 [#1] SMP PTI
+  CPU: 4 PID: 281 Comm: modprobe Not tainted 5.2.0-padata-base+ #25
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-<snip>
+  RIP: 0010:padata_do_parallel+0xf1/0x270
+  ...
+  Call Trace:
+   pcrypt_do_parallel+0xed/0x1e0 [pcrypt]
+   pcrypt_aead_encrypt+0xbf/0xd0 [pcrypt]
+   do_mult_aead_op+0x68/0x112 [tcrypt]
+   test_mb_aead_speed.constprop.0.cold+0x21a/0x55a [tcrypt]
+   do_test+0x2280/0x4ca2 [tcrypt]
+   tcrypt_mod_init+0x55/0x1000 [tcrypt]
+   ...
 
-  which lock already depends on the new lock.
+The cpumask_weight call in padata_cpu_hash returns 0, causing the
+division error, because the mask has no CPUs, which is expected in this
+situation.  The problem is __padata_remove_cpu doesn't mark the instance
+PADATA_INVALID as expected, which would have made padata_do_parallel
+return error before doing the division, because it checks for valid
+masks too early.
 
-padata doesn't take cpu_hotplug_lock and pinst->lock in a consistent
-order.  Which should be first?  CPU hotplug calls into padata with
-cpu_hotplug_lock already held, so it should have priority.
+Fix by moving the checks after the masks have been adjusted for the
+offlined CPU.  Only do the second check if the first succeeded to avoid
+inadvertently clearing PADATA_INVALID.
 
-Remove the cpu_hotplug_lock acquisition from __padata_stop and hoist it
-up to padata_stop, before pd->lock is taken.  That fixes a
-recursive acquisition of cpu_hotplug_lock in padata_remove_cpu at the
-same time:
-
-  padata_remove_cpu
-    mutex_lock(&pinst->lock)
-    get_online_cpus()
-    __padata_remove_cpu
-      __padata_stop
-        get_online_cpus()
-
-The rest is just switching the order where the two locks are taken
-together.
-
-Fixes: 6751fb3c0e0c ("padata: Use get_online_cpus/put_online_cpus")
-Fixes: 65ff577e6b6e ("padata: Rearrange set_cpumask functions")
+Fixes: 33e54450683c ("padata: Handle empty padata cpumasks")
 Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
 Cc: Herbert Xu <herbert@gondor.apana.org.au>
 Cc: Steffen Klassert <steffen.klassert@secunet.com>
 Cc: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
-
-Hello, these two patches are based on all padata fixes now in cryptodev-2.6.
-
- kernel/padata.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ kernel/padata.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/padata.c b/kernel/padata.c
-index b60cc3dcee58..d056276a96ce 100644
+index d056276a96ce..2ab3b7402643 100644
 --- a/kernel/padata.c
 +++ b/kernel/padata.c
-@@ -487,9 +487,7 @@ static void __padata_stop(struct padata_instance *pinst)
+@@ -702,10 +702,7 @@ static int __padata_remove_cpu(struct padata_instance *pinst, int cpu)
+ 	struct parallel_data *pd = NULL;
  
- 	synchronize_rcu();
+ 	if (cpumask_test_cpu(cpu, cpu_online_mask)) {
+-
+-		if (!padata_validate_cpumask(pinst, pinst->cpumask.pcpu) ||
+-		    !padata_validate_cpumask(pinst, pinst->cpumask.cbcpu))
+-			__padata_stop(pinst);
++		__padata_stop(pinst);
  
--	get_online_cpus();
- 	padata_flush_queues(pinst->pd);
--	put_online_cpus();
- }
+ 		pd = padata_alloc_pd(pinst, pinst->cpumask.pcpu,
+ 				     pinst->cpumask.cbcpu);
+@@ -716,6 +713,8 @@ static int __padata_remove_cpu(struct padata_instance *pinst, int cpu)
  
- /* Replace the internal control structure with a new one. */
-@@ -614,8 +612,8 @@ int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
- 	struct cpumask *serial_mask, *parallel_mask;
- 	int err = -EINVAL;
+ 		cpumask_clear_cpu(cpu, pd->cpumask.cbcpu);
+ 		cpumask_clear_cpu(cpu, pd->cpumask.pcpu);
++		if (padata_validate_cpumask(pinst, pd->cpumask.pcpu))
++			padata_validate_cpumask(pinst, pd->cpumask.cbcpu);
+ 	}
  
--	mutex_lock(&pinst->lock);
- 	get_online_cpus();
-+	mutex_lock(&pinst->lock);
- 
- 	switch (cpumask_type) {
- 	case PADATA_CPU_PARALLEL:
-@@ -633,8 +631,8 @@ int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
- 	err =  __padata_set_cpumasks(pinst, parallel_mask, serial_mask);
- 
- out:
--	put_online_cpus();
- 	mutex_unlock(&pinst->lock);
-+	put_online_cpus();
- 
- 	return err;
- }
-@@ -669,9 +667,11 @@ EXPORT_SYMBOL(padata_start);
-  */
- void padata_stop(struct padata_instance *pinst)
- {
-+	get_online_cpus();
- 	mutex_lock(&pinst->lock);
- 	__padata_stop(pinst);
- 	mutex_unlock(&pinst->lock);
-+	put_online_cpus();
- }
- EXPORT_SYMBOL(padata_stop);
- 
-@@ -739,18 +739,18 @@ int padata_remove_cpu(struct padata_instance *pinst, int cpu, int mask)
- 	if (!(mask & (PADATA_CPU_SERIAL | PADATA_CPU_PARALLEL)))
- 		return -EINVAL;
- 
-+	get_online_cpus();
- 	mutex_lock(&pinst->lock);
- 
--	get_online_cpus();
- 	if (mask & PADATA_CPU_SERIAL)
- 		cpumask_clear_cpu(cpu, pinst->cpumask.cbcpu);
- 	if (mask & PADATA_CPU_PARALLEL)
- 		cpumask_clear_cpu(cpu, pinst->cpumask.pcpu);
- 
- 	err = __padata_remove_cpu(pinst, cpu);
--	put_online_cpus();
- 
- 	mutex_unlock(&pinst->lock);
-+	put_online_cpus();
- 
- 	return err;
- }
+ 	return 0;
 -- 
 2.22.0
 
