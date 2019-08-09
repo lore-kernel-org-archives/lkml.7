@@ -2,63 +2,71 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5043C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40952C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B6E2086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00B432171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:15:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437031AbfHIQMf (ORCPT
+        id S2437239AbfHIQPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 12:12:35 -0400
-Received: from www62.your-server.de ([213.133.104.62]:59688 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406171AbfHIQMe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 12:12:34 -0400
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hw7VA-0002sq-6F; Fri, 09 Aug 2019 18:12:24 +0200
-Received: from [178.193.45.231] (helo=pc-63.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hw7V9-0002DH-Vh; Fri, 09 Aug 2019 18:12:24 +0200
-Subject: Re: [PATCH v2 bpf-next] xdp: xdp_umem: fix umem pages mapping for
- 32bits systems
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        bjorn.topel@intel.com, magnus.karlsson@intel.com
-Cc:     davem@davemloft.net, ast@kernel.org, john.fastabend@gmail.com,
-        hawk@kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190808093803.4918-1-ivan.khoronzhuk@linaro.org>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <0854fff0-4e21-c78e-b2a6-7f76364a70d2@iogearbox.net>
-Date:   Fri, 9 Aug 2019 18:12:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 9 Aug 2019 12:15:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:49598 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437127AbfHIQPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 12:15:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E43D15A2;
+        Fri,  9 Aug 2019 09:15:17 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA8623F575;
+        Fri,  9 Aug 2019 09:15:16 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 17:15:14 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] arm64 fixes for 5.3-rc4
+Message-ID: <20190809161513.GA42536@arrakis.emea.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190808093803.4918-1-ivan.khoronzhuk@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25536/Fri Aug  9 10:22:54 2019)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/8/19 11:38 AM, Ivan Khoronzhuk wrote:
-> Use kmap instead of page_address as it's not always in low memory.
-> 
-> Acked-by: Björn Töpel <bjorn.topel@intel.com>
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Hi Linus,
 
-Applied, thanks!
+Please pull the arm64 fix below. Thanks.
+
+The following changes since commit e21a712a9685488f5ce80495b37b9fdbe96c230d:
+
+  Linux 5.3-rc3 (2019-08-04 18:40:12 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
+
+for you to fetch changes up to 30e235389faadb9e3d918887b1f126155d7d761d:
+
+  arm64: mm: add missing PTE_SPECIAL in pte_mkdevmap on arm64 (2019-08-08 18:38:20 +0100)
+
+----------------------------------------------------------------
+Fix bad_pte warning caused by pte_mkdevmap() not setting PTE_SPECIAL.
+
+----------------------------------------------------------------
+Jia He (1):
+      arm64: mm: add missing PTE_SPECIAL in pte_mkdevmap on arm64
+
+ arch/arm64/include/asm/pgtable.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+-- 
+Catalin
