@@ -2,130 +2,142 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E66AFC0650F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E39EC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C556A2171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81037216C8
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:53:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405144AbfHIAtc (ORCPT
+        id S2405133AbfHIAxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 20:49:32 -0400
-Received: from mga17.intel.com ([192.55.52.151]:41567 "EHLO mga17.intel.com"
+        Thu, 8 Aug 2019 20:53:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55492 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729418AbfHIAtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 20:49:32 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 17:49:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,363,1559545200"; 
-   d="scan'208";a="169164465"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga008.jf.intel.com with ESMTP; 08 Aug 2019 17:49:29 -0700
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH 1/2] iommu/vt-d: Detach domain before using a private one
-To:     Alex Williamson <alex.williamson@redhat.com>
-References: <20190806001409.3293-1-baolu.lu@linux.intel.com>
- <20190808141030.323b4a0a@x1.home>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <d7431e18-a999-51db-2a3a-1f633e81c309@linux.intel.com>
-Date:   Fri, 9 Aug 2019 08:48:36 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1733258AbfHIAxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 20:53:21 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7822AC08EC00;
+        Fri,  9 Aug 2019 00:53:20 +0000 (UTC)
+Received: from whitewolf.redhat.com (ovpn-120-190.rdu2.redhat.com [10.10.120.190])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DFB3360BEC;
+        Fri,  9 Aug 2019 00:53:13 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     nouveau@lists.freedesktop.org
+Cc:     William Lewis <minutemaidpark@hotmail.com>,
+        Bohdan Milar <bmilar@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        David Airlie <airlied@redhat.com>,
+        Jerry Zuo <Jerry.Zuo@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Juston Li <juston.li@intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Karol Herbst <karolherbst@gmail.com>,
+        Ilia Mirkin <imirkin@alum.mit.edu>, stable@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] drm/nouveau: Only recalculate PBN/VCPI on mode/connector changes
+Date:   Thu,  8 Aug 2019 20:53:05 -0400
+Message-Id: <20190809005307.18391-1-lyude@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190808141030.323b4a0a@x1.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 09 Aug 2019 00:53:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+I -thought- I had fixed this entirely, but it looks like that I didn't
+test this thoroughly enough as we apparently still make one big mistake
+with nv50_msto_atomic_check() - we don't handle the following scenario:
 
-On 8/9/19 4:10 AM, Alex Williamson wrote:
-> On Tue,  6 Aug 2019 08:14:08 +0800
-> Lu Baolu <baolu.lu@linux.intel.com> wrote:
-> 
->> When the default domain of a group doesn't work for a device,
->> the iommu driver will try to use a private domain. The domain
->> which was previously attached to the device must be detached.
->>
->> Cc: Ashok Raj <ashok.raj@intel.com>
->> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Cc: Kevin Tian <kevin.tian@intel.com>
->> Cc: Alex Williamson <alex.williamson@redhat.com>
->> Fixes: 942067f1b6b97 ("iommu/vt-d: Identify default domains replaced with private")
->> Reported-by: Alex Williamson <alex.williamson@redhat.com>
->> Link: https://lkml.org/lkml/2019/8/2/1379
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> ---
-> 
-> Tested-by: Alex Williamson <alex.williamson@redhat.com>
-> 
-> This series resolves the issue I reported against:
->   iommu/vt-d: Cleanup get_valid_domain_for_dev()
+* CRTC #1 has n VCPI allocated to it, is attached to connector DP-4
+  which is attached to encoder #1. enabled=y active=n
+* CRTC #1 is changed from DP-4 to DP-5, causing:
+  * DP-4 crtc=#1→NULL (VCPI n→0)
+  * DP-5 crtc=NULL→#1
+  * CRTC #1 steals encoder #1 back from DP-4 and gives it to DP-5
+  * CRTC #1 maintains the same mode as before, just with a different
+    connector
+* mode_changed=n connectors_changed=y
+  (we _SHOULD_ do VCPI 0→n here, but don't)
 
-Thank you for testing it.
+Once the above scenario is repeated once, we'll attempt freeing VCPI
+from the connector that we didn't allocate due to the connectors
+changing, but the mode staying the same. Sigh.
 
-Best regards,
-Baolu
+Since nv50_msto_atomic_check() has broken a few times now, let's rethink
+things a bit to be more careful: limit both VCPI/PBN allocations to
+mode_changed || connectors_changed, since neither VCPI or PBN should
+ever need to change outside of routing and mode changes.
 
-> 
-> Thanks,
-> Alex
-> 
->>   drivers/iommu/intel-iommu.c | 6 +++++-
->>   1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
->> index 3e22fa6ae8c8..37259b7f95a7 100644
->> --- a/drivers/iommu/intel-iommu.c
->> +++ b/drivers/iommu/intel-iommu.c
->> @@ -3449,6 +3449,7 @@ static bool iommu_need_mapping(struct device *dev)
->>   				dmar_domain = to_dmar_domain(domain);
->>   				dmar_domain->flags |= DOMAIN_FLAG_LOSE_CHILDREN;
->>   			}
->> +			dmar_remove_one_dev_info(dev);
->>   			get_private_domain_for_dev(dev);
->>   		}
->>   
->> @@ -4803,7 +4804,8 @@ static void dmar_remove_one_dev_info(struct device *dev)
->>   
->>   	spin_lock_irqsave(&device_domain_lock, flags);
->>   	info = dev->archdata.iommu;
->> -	__dmar_remove_one_dev_info(info);
->> +	if (info)
->> +		__dmar_remove_one_dev_info(info);
->>   	spin_unlock_irqrestore(&device_domain_lock, flags);
->>   }
->>   
->> @@ -5281,6 +5283,7 @@ static int intel_iommu_add_device(struct device *dev)
->>   		if (device_def_domain_type(dev) == IOMMU_DOMAIN_IDENTITY) {
->>   			ret = iommu_request_dm_for_dev(dev);
->>   			if (ret) {
->> +				dmar_remove_one_dev_info(dev);
->>   				dmar_domain->flags |= DOMAIN_FLAG_LOSE_CHILDREN;
->>   				domain_add_dev_info(si_domain, dev);
->>   				dev_info(dev,
->> @@ -5291,6 +5294,7 @@ static int intel_iommu_add_device(struct device *dev)
->>   		if (device_def_domain_type(dev) == IOMMU_DOMAIN_DMA) {
->>   			ret = iommu_request_dma_domain_for_dev(dev);
->>   			if (ret) {
->> +				dmar_remove_one_dev_info(dev);
->>   				dmar_domain->flags |= DOMAIN_FLAG_LOSE_CHILDREN;
->>   				if (!get_private_domain_for_dev(dev)) {
->>   					dev_warn(dev,
-> 
-> 
+Changes since v1:
+* Fix accidental reversal of clock and bpp arguments in
+  drm_dp_calc_pbn_mode() - William Lewis
+
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Reported-by: Bohdan Milar <bmilar@redhat.com>
+Tested-by: Bohdan Milar <bmilar@redhat.com>
+Fixes: 232c9eec417a ("drm/nouveau: Use atomic VCPI helpers for MST")
+References: 412e85b60531 ("drm/nouveau: Only release VCPI slots on mode changes")
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Ben Skeggs <bskeggs@redhat.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: David Airlie <airlied@redhat.com>
+Cc: Jerry Zuo <Jerry.Zuo@amd.com>
+Cc: Harry Wentland <harry.wentland@amd.com>
+Cc: Juston Li <juston.li@intel.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Karol Herbst <karolherbst@gmail.com>
+Cc: Ilia Mirkin <imirkin@alum.mit.edu>
+Cc: <stable@vger.kernel.org> # v5.1+
+---
+ drivers/gpu/drm/nouveau/dispnv50/disp.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+index 126703816794..5c36c75232e6 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -771,16 +771,20 @@ nv50_msto_atomic_check(struct drm_encoder *encoder,
+ 	struct nv50_head_atom *asyh = nv50_head_atom(crtc_state);
+ 	int slots;
+ 
+-	/* When restoring duplicated states, we need to make sure that the
+-	 * bw remains the same and avoid recalculating it, as the connector's
+-	 * bpc may have changed after the state was duplicated
+-	 */
+-	if (!state->duplicated)
+-		asyh->dp.pbn =
+-			drm_dp_calc_pbn_mode(crtc_state->adjusted_mode.clock,
+-					     connector->display_info.bpc * 3);
++	if (crtc_state->mode_changed || crtc_state->connectors_changed) {
++		/*
++		 * When restoring duplicated states, we need to make sure that
++		 * the bw remains the same and avoid recalculating it, as the
++		 * connector's bpc may have changed after the state was
++		 * duplicated
++		 */
++		if (!state->duplicated) {
++			const int bpp = connector->display_info.bpc * 3;
++			const int clock = crtc_state->adjusted_mode.clock;
++
++			asyh->dp.pbn = drm_dp_calc_pbn_mode(clock, bpp);
++		}
+ 
+-	if (crtc_state->mode_changed) {
+ 		slots = drm_dp_atomic_find_vcpi_slots(state, &mstm->mgr,
+ 						      mstc->port,
+ 						      asyh->dp.pbn);
+-- 
+2.21.0
+
