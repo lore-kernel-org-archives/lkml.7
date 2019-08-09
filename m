@@ -2,129 +2,256 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A90FC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBB1C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBFA7208C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 417FB208C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:45:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="XTfDr7+J"
+	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="MPtRUHNF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436811AbfHIPnT (ORCPT
+        id S2436787AbfHIPpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 11:43:19 -0400
-Received: from mail-eopbgr30133.outbound.protection.outlook.com ([40.107.3.133]:56387
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2436646AbfHIPnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 11:43:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FLLVC7nmStCxQTjdNrdGQ8UfwMzx8OAjpMHeDTqUMcwYgXvd0Qo112b+OoBu+XzH8+BCfljhyMXkx9bp5xpJIf6UBlQ3J/nm36RW8KDL8crIgMh7Liqb1Aew8QJDestS0ljodWxnGz/p+K4JxyEZ9ckjaNoB0eBnkZhHUvVIkKB5fDeab+Cw+EVyUSfhnG3fFOK1NGnL+tQJZd94/iOVCraQLL2L1jJkcZYWNIdTdVW40SrRlHT2kij0M3NEciH+OWYf6KHpj0gNTWnDDg/jErGkYgRxFDzM29JXVNGxGMnPdraSR0Voc46XX8noMJ+9Uh/smdX6v+OexLsw2ayQKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y4y1JdZ9/yl0cE7140GCL8o8T5/ImPXruaQp1egAGZQ=;
- b=N2Fu+sW7467UaFvdB94YYGvSOAOc8yByVej4BUY4ao8qZF8LY/LUq3Z2fZUfMQWqrfPNVWYGGh94nXbgHxTjqLxlx70Imnp335i6FYQs7jMjEWF/Cpu14w56IHiy6Y6NIVjITCm6bLkHBpfAHOH2aRKOcj8dC/QOe6T+lKykncrr+yeCR4QOPknounduCAiHWS4DktDAOx3IzsPjCES/sD/hQ3/DKqqq162fHBx+boUz0GHYPEFlHOqadRx6DxV9NtSRkM4wbPQUfU4M5hAXVvnsTpTESMJ+CZH+fo4kCmBIxcHR0YyFNABzV7ldbz8CSB091OlKL8emuBJB0rqZhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=toradex.com;dmarc=pass action=none
- header.from=toradex.com;dkim=pass header.d=toradex.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y4y1JdZ9/yl0cE7140GCL8o8T5/ImPXruaQp1egAGZQ=;
- b=XTfDr7+JxZ0iVbrljub9x+UutPNJcl8vh661E9+UVwcM1eaCwvR+R7/AEimLvW3RGjUBylD18/EaR5jMulFQ2rZABn8Onfz+rl3Ov3RwmQDdSZwib7T2OSJCHC0hxGT1Ri/fEAQMN9BZ1SUWkWLY41XjzWxdbm7wCxBMjqMjzqo=
-Received: from VI1PR05MB6415.eurprd05.prod.outlook.com (20.179.27.139) by
- VI1PR05MB5823.eurprd05.prod.outlook.com (20.178.122.225) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.16; Fri, 9 Aug 2019 15:43:13 +0000
-Received: from VI1PR05MB6415.eurprd05.prod.outlook.com
- ([fe80::f1b2:353a:da9b:c19a]) by VI1PR05MB6415.eurprd05.prod.outlook.com
- ([fe80::f1b2:353a:da9b:c19a%4]) with mapi id 15.20.2157.020; Fri, 9 Aug 2019
- 15:43:13 +0000
-From:   Marcel Ziswiler <marcel.ziswiler@toradex.com>
-To:     Max Krummenacher <max.krummenacher@toradex.com>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>
-Subject: Re: [PATCH v3 16/21] ARM: dts: imx6ull-colibri: Add watchdog
-Thread-Topic: [PATCH v3 16/21] ARM: dts: imx6ull-colibri: Add watchdog
-Thread-Index: AQHVTPnV79tSXC+1fEesojD6I0AgYaby+FkA
-Date:   Fri, 9 Aug 2019 15:43:13 +0000
-Message-ID: <1012c9f70373cb4f87f75d8c636029f0871e55c9.camel@toradex.com>
-References: <20190807082556.5013-1-philippe.schenker@toradex.com>
-         <20190807082556.5013-17-philippe.schenker@toradex.com>
-In-Reply-To: <20190807082556.5013-17-philippe.schenker@toradex.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=marcel.ziswiler@toradex.com; 
-x-originating-ip: [2a01:2a8:8501:4d00:ca5b:76ff:fedf:3c49]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6558519a-f369-4161-6e61-08d71ce049d5
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR05MB5823;
-x-ms-traffictypediagnostic: VI1PR05MB5823:
-x-microsoft-antispam-prvs: <VI1PR05MB58237FA01D0BD9842349ED8EFBD60@VI1PR05MB5823.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 01244308DF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39850400004)(396003)(366004)(346002)(136003)(376002)(189003)(199004)(478600001)(66446008)(2201001)(81156014)(36756003)(46003)(2501003)(446003)(86362001)(7416002)(14454004)(25786009)(8676002)(118296001)(6246003)(99286004)(6116002)(8936002)(81166006)(66556008)(66946007)(76176011)(66476007)(64756008)(6506007)(229853002)(71190400001)(305945005)(110136005)(76116006)(102836004)(53936002)(6486002)(6512007)(91956017)(2906002)(6436002)(11346002)(486006)(476003)(44832011)(4326008)(256004)(71200400001)(54906003)(5660300002)(2616005)(7736002)(186003)(316002)(32563001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB5823;H:VI1PR05MB6415.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: qhSPlkvEBFZLCmenbUFLM7zdKVG5fH6f90mC0m6bhePP1SwWXd/6Z4W/9gDRbZEZBib+RDBh+S4TLCqIaAJ1EC8Ymul6Ioq4lbNCIJU9xdBYbHurHUz1ddoFlfOlbhFVm90lz7+J6Te4VDfkmsI/Iyc0Oja8E4cZP7j5moaB+SqFYFMhWcFhfw8i5HXwfRXcaNkD3T5OQu6bB7DEzGayxuh4Sr2DKWn0jldg9RNQUthnJQczqZI+F2AHVOYl+NICnxWla4L57g1rC7GQP2Uq6WnGCAU/+V3aXTDyjxL2cIcr563uX8SEMP2NMaUqkH50efyUpTZU4gGo6DKN6H/Khhme6vitnFy+VKzNRYMU7ZA2eYy8ExjNaynycQI7SB/vHEO2dmWzYMS0VmbDpfQ4KDHjxApz3s8rKRZSF9YOF7s=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9EEF78776F113A40AA7D891B9AAA5C6C@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 9 Aug 2019 11:45:33 -0400
+Received: from UHIL19PA38.eemsg.mail.mil ([214.24.21.197]:27340 "EHLO
+        UHIL19PA38.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436676AbfHIPpd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 11:45:33 -0400
+X-EEMSG-check-017: 10709605|UHIL19PA38_ESA_OUT04.csd.disa.mil
+X-IronPort-AV: E=Sophos;i="5.64,364,1559520000"; 
+   d="scan'208";a="10709605"
+Received: from emsm-gh1-uea10.ncsc.mil ([214.29.60.2])
+  by UHIL19PA38.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 09 Aug 2019 15:45:31 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
+  s=tycho.nsa.gov; t=1565365531; x=1596901531;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=iAwPIyCv6EMhtrpUiGtE4QQ+Ii514WgfVvyDq94vE68=;
+  b=MPtRUHNFRONx9sXINxTpi87+wa22VJklgDt5fjF91kMep1X66IGQL4NH
+   flKv9/ACaHO2xVytwiV/LX/Mo+jjneCHD7wEDcb5JwUkOXWC31iXPnZ4X
+   iGQllhrwoyT3OSn6vASrbgmutWm9e+s3ot+ubG9OBSjYvp4kE6sbgflMt
+   E2ccgP3mq5BD9hGYq3ZeamwefCxN3bU2tI44auKy8OKiH4Fq/94f+8pJk
+   5FM5rW/OcqzqIYm6fMCeM1801muXNsKZ4lZvRqGciDPOBF6rmTp8vYOb/
+   RiLP4ZQQMZIJn5Ota7UPy9aJOWAW6QJ4b+7Bz/TF14DdAht4JuCwd0b5y
+   w==;
+X-IronPort-AV: E=Sophos;i="5.64,364,1559520000"; 
+   d="scan'208";a="26635903"
+IronPort-PHdr: =?us-ascii?q?9a23=3ABBP9uRHBnVZkvUA+RSMK1J1GYnF86YWxBRYc79?=
+ =?us-ascii?q?8ds5kLTJ76pM+zbnLW6fgltlLVR4KTs6sC17OM9fm5BidQsN6oizMrSNR0TR?=
+ =?us-ascii?q?gLiMEbzUQLIfWuLgnFFsPsdDEwB89YVVVorDmROElRH9viNRWJ+iXhpTEdFQ?=
+ =?us-ascii?q?/iOgVrO+/7BpDdj9it1+C15pbffxhEiCCybL9vMhm6txjdutQUjIdtKas8zg?=
+ =?us-ascii?q?bCr2dVdehR2W5mP0+YkQzm5se38p5j8iBQtOwk+sVdT6j0fLk2QKJBAjg+PG?=
+ =?us-ascii?q?87+MPktR/YTQuS/XQcSXkZkgBJAwfe8h73WIr6vzbguep83CmaOtD2TawxVD?=
+ =?us-ascii?q?+/4apnVAPkhSEaPDMi7mrZltJ/g75aoBK5phxw3YjUYJ2ONPFjeq/RZM4WSX?=
+ =?us-ascii?q?ZdUspUUSFODJm8b48SBOQfO+hWoZT2q18XoRawAQSgAeXiwSJKiHDrx603y/?=
+ =?us-ascii?q?kvHx/I3AIgHNwAvnrbo9r3O6gOXu6417XIwDfZYv9KxTvw5orFfxY8qv+MR7?=
+ =?us-ascii?q?Jwds/RxFEzGgzflFWQrorlNC6U2OQKsmiU8vRvVeaygGMgsQ5+vjevxsAtio?=
+ =?us-ascii?q?bUmI0Y0UzE9CVlz4Y1It20Ukh7YcW+H5dKuCGaMJV2T9okTmp1uyg60qULtY?=
+ =?us-ascii?q?O0cSUF0pgqxwPTZ+aZf4WH/B7vTvudLDFlj3x/Yr2/nQy98U24x+35Ucm7zU?=
+ =?us-ascii?q?hFozJektnJqnANzxvT6tWbSvdl/keuxzKP1wfL5+FYO080j6vbK4M6wrIqip?=
+ =?us-ascii?q?oSsVjMHi/xmEnsiq+Zal4k9fSy5+TiY7XmooeQN45yig7gLqQjgtGzDOs3Pw?=
+ =?us-ascii?q?QUX2WX5P6w2KPs8EHnWrlGk+U6kqzDv5DbIcQbqLS5AwhQ0os78RmwEzim0N?=
+ =?us-ascii?q?MZnXYaMl1IYw6Hjoj1NFHOJ/D0F/G/g0+2nztxyPDGOaPhDo3XLnffiLfhYa?=
+ =?us-ascii?q?p960lExQor199f+pZUB6oZIP3pR0/xsMXUDho+Mwyz2eboFs9x2Z8ZWWKKGq?=
+ =?us-ascii?q?WZKr/dsUeU5uIzJOmBfJUauDP8K/g/5fPjg345mVsGcKmm2JsYcnG4HvB8L0?=
+ =?us-ascii?q?qFZnrsh88LEX0WsQomUOzqlFqCXCZIZ3msW6I85zc7CJ+pDIrYWICtj6KO3D?=
+ =?us-ascii?q?2hEp1VeG9GEFaMHmnsd4meXPcMci2SKNd7kjMYTbihV5Mh1Ra2uQ/+yrpnKP?=
+ =?us-ascii?q?fU+yIBuZL4ytd6+/DTlQsz9TxoD8WRymSNT2ZpkWMVQz85wrtyoVJyylidy6?=
+ =?us-ascii?q?h0mf9YGsJJ5/NPTAg6MYTQz+tgC9D9QgjBZMuGSE66QtW6BjE8VtYxw94IY0?=
+ =?us-ascii?q?ZgFNSulx7D3zG3DLALibyEGpg0/7nC33j+Ocl90WzK1Ko/gFk8RMtAK2mmir?=
+ =?us-ascii?q?R49wjJCI7Di1+ZmLqydaQAwC7N83+OwneOvEFfXg9/T6HFXXQEZkbNt9T2+F?=
+ =?us-ascii?q?7NT7+0BrQ7KAdO1cmCKq5SYN3zkVpGXOvjOMjZY2+pmWe/HwqHxrCXYYrxZm?=
+ =?us-ascii?q?UdxzvSBFIYnAES5XyGLxQxBj+9o2LCCzxjDVDvY0br8elksnO7T1Q0whqMb0?=
+ =?us-ascii?q?J70rq65B8VieabS/MJ0bIOoD0hpClsHFahw9LWDMKNpw5gfKVafNM8705L1W?=
+ =?us-ascii?q?HHuAxnOJyvMaRii0UAcwR4oUzuzQ97CoZensgwqnMl0g5yJbif0FNbeDPLla?=
+ =?us-ascii?q?z3b4XeN2262ReocaOejknXzdK+4q4S7LE9rFL5sUeiEU90tz1O1thPm1Sb4p?=
+ =?us-ascii?q?nREAcTV9qlW0M27UchprXybSw05oeS3nppZ/qaqDjHjvsgHuwjgjmnfttSNO?=
+ =?us-ascii?q?vQHQT9FMwWCuCyOecqnB6vdRtCM+dMov1nd/i6fueLjfb4dN1rmyir2CEeu9?=
+ =?us-ascii?q?Fw?=
+X-IPAS-Result: =?us-ascii?q?A2AcBwBtlE1d/wHyM5BmHAEBAQQBAQcEAQGBZ4FuKoE+A?=
+ =?us-ascii?q?TIqhB6PcwEBAQEBBoEJLX6IXQ6RIQkBAQEBAQEBAQE0AQIBAYQ/AoJhIzgTA?=
+ =?us-ascii?q?QQBAQEEAQEDAQkBAWyFM4I6KQGCZwECAyMVNgkCEAsYAgIfBwICITYGAQwGA?=
+ =?us-ascii?q?gEBglMMP4FrAwkUq12BMoVJgkcNX4FJgQwoi2QXeIEHgREngjY1PoIagWQSG?=
+ =?us-ascii?q?IMnglgEjluFYF2VbUAJgh+LXIRag3MGG4Iwhy+EFIpFjVGJVpA4IYFYKwgCG?=
+ =?us-ascii?q?AghDzuCbIJ6jikjAzCBBgEBizcNFweCJQEB?=
+Received: from tarius.tycho.ncsc.mil ([144.51.242.1])
+  by EMSM-GH1-UEA10.NCSC.MIL with ESMTP; 09 Aug 2019 15:44:40 +0000
+Received: from moss-callisto.infosec.tycho.ncsc.mil (moss-callisto [192.168.25.136])
+        by tarius.tycho.ncsc.mil (8.14.4/8.14.4) with ESMTP id x79FicR2012207;
+        Fri, 9 Aug 2019 11:44:38 -0400
+Subject: Re: [Non-DoD Source] Re: [PATCH] fanotify, inotify, dnotify,
+ security: add security hook for fs notifications
+To:     Paul Moore <paul@paul-moore.com>,
+        Amir Goldstein <amir73il@gmail.com>
+Cc:     selinux@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>, Jan Kara <jack@suse.cz>,
+        James Morris <jmorris@namei.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190731153443.4984-1-acgoide@tycho.nsa.gov>
+ <CAHC9VhQUoDwBiLi+BiW=_Px18v3xMhhGYDD2mLdu9YZJDWw1yg@mail.gmail.com>
+ <CAOQ4uxigYZunXgq0BubRFNM51Kh_g3wrtyNH77PozUX+3sM=aQ@mail.gmail.com>
+ <CAHC9VhRpTuL2Lj1VFwHW4YLpx0hJVSxMnXefooHqsxpEUg6-0A@mail.gmail.com>
+From:   Aaron Goidel <acgoide@tycho.nsa.gov>
+Message-ID: <03ad3773-bea7-77de-0a1f-4bd6f41d3211@tycho.nsa.gov>
+Date:   Fri, 9 Aug 2019 11:44:38 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6558519a-f369-4161-6e61-08d71ce049d5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Aug 2019 15:43:13.2201
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VWYWJXtxSSsaiB2lnaORjIAY2pdTTR//YDKYrHmZngsGlAK4A2sOTngC7grtKK5PihpFztsb9/+xGJ8/tSjLeveceE2VXwBtEldoroq4Tes=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5823
+In-Reply-To: <CAHC9VhRpTuL2Lj1VFwHW4YLpx0hJVSxMnXefooHqsxpEUg6-0A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA4LTA3IGF0IDA4OjI2ICswMDAwLCBQaGlsaXBwZSBTY2hlbmtlciB3cm90
-ZToNCj4gVGhpcyBwYXRjaCBhZGRzIHRoZSB3YXRjaGRvZyB0byB0aGUgaW14NnVsbC1jb2xpYnJp
-IGRldmljZXRyZWUNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIFNjaGVua2VyIDxwaGls
-aXBwZS5zY2hlbmtlckB0b3JhZGV4LmNvbT4NCg0KQWNrZWQtYnk6IE1hcmNlbCBaaXN3aWxlciA8
-bWFyY2VsLnppc3dpbGVyQHRvcmFkZXguY29tPg0KDQo+IC0tLQ0KPiANCj4gQ2hhbmdlcyBpbiB2
-MzogTm9uZQ0KPiBDaGFuZ2VzIGluIHYyOiBOb25lDQo+IA0KPiAgYXJjaC9hcm0vYm9vdC9kdHMv
-aW14NnVsbC1jb2xpYnJpLmR0c2kgfCAxMiArKysrKysrKysrKysNCj4gIDEgZmlsZSBjaGFuZ2Vk
-LCAxMiBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMv
-aW14NnVsbC1jb2xpYnJpLmR0c2kNCj4gYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLWNvbGli
-cmkuZHRzaQ0KPiBpbmRleCAxZjExMmVjNTVlNWMuLmUzMjIwMjk4ZGQ2ZiAxMDA2NDQNCj4gLS0t
-IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLmR0c2kNCj4gKysrIGIvYXJjaC9h
-cm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLmR0c2kNCj4gQEAgLTE5OSw2ICsxOTksMTIgQEAN
-Cj4gIAlhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDwwPiwgPDE5ODAwMDAwMD47DQo+ICB9Ow0KPiAg
-DQo+ICsmd2RvZzEgew0KPiArCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+ICsJcGluY3Ry
-bC0wID0gPCZwaW5jdHJsX3dkb2c+Ow0KPiArCWZzbCxleHQtcmVzZXQtb3V0cHV0Ow0KPiArfTsN
-Cj4gKw0KPiAgJmlvbXV4YyB7DQo+ICAJcGluY3RybF9jYW5faW50OiBjYW5pbnQtZ3JwIHsNCj4g
-IAkJZnNsLHBpbnMgPSA8DQo+IEBAIC01MDYsNiArNTEyLDEyIEBADQo+ICAJCQlNWDZVTF9QQURf
-R1BJTzFfSU8wM19fT1NDMzJLXzMyS19PVVQJMHgxNA0KPiAgCQk+Ow0KPiAgCX07DQo+ICsNCj4g
-KwlwaW5jdHJsX3dkb2c6IHdkb2ctZ3JwIHsNCj4gKwkJZnNsLHBpbnMgPSA8DQo+ICsJCQlNWDZV
-TF9QQURfTENEX1JFU0VUX19XRE9HMV9XRE9HX0FOWSAgICAweDMwYjANCj4gKwkJPjsNCj4gKwl9
-Ow0KPiAgfTsNCj4gIA0KPiAgJmlvbXV4Y19zbnZzIHsNCg==
+
+
+On 8/9/19 8:55 AM, Paul Moore wrote:
+> On Fri, Aug 9, 2019 at 5:06 AM Amir Goldstein <amir73il@gmail.com> wrote:
+>> On Thu, Aug 8, 2019 at 9:33 PM Paul Moore <paul@paul-moore.com> wrote:
+>>> On Wed, Jul 31, 2019 at 11:35 AM Aaron Goidel <acgoide@tycho.nsa.gov> wrote:
+>>>> As of now, setting watches on filesystem objects has, at most, applied a
+>>>> check for read access to the inode, and in the case of fanotify, requires
+>>>> CAP_SYS_ADMIN. No specific security hook or permission check has been
+>>>> provided to control the setting of watches. Using any of inotify, dnotify,
+>>>> or fanotify, it is possible to observe, not only write-like operations, but
+>>>> even read access to a file. Modeling the watch as being merely a read from
+>>>> the file is insufficient for the needs of SELinux. This is due to the fact
+>>>> that read access should not necessarily imply access to information about
+>>>> when another process reads from a file. Furthermore, fanotify watches grant
+>>>> more power to an application in the form of permission events. While
+>>>> notification events are solely, unidirectional (i.e. they only pass
+>>>> information to the receiving application), permission events are blocking.
+>>>> Permission events make a request to the receiving application which will
+>>>> then reply with a decision as to whether or not that action may be
+>>>> completed. This causes the issue of the watching application having the
+>>>> ability to exercise control over the triggering process. Without drawing a
+>>>> distinction within the permission check, the ability to read would imply
+>>>> the greater ability to control an application. Additionally, mount and
+>>>> superblock watches apply to all files within the same mount or superblock.
+>>>> Read access to one file should not necessarily imply the ability to watch
+>>>> all files accessed within a given mount or superblock.
+>>>>
+>>>> In order to solve these issues, a new LSM hook is implemented and has been
+>>>> placed within the system calls for marking filesystem objects with inotify,
+>>>> fanotify, and dnotify watches. These calls to the hook are placed at the
+>>>> point at which the target path has been resolved and are provided with the
+>>>> path struct, the mask of requested notification events, and the type of
+>>>> object on which the mark is being set (inode, superblock, or mount). The
+>>>> mask and obj_type have already been translated into common FS_* values
+>>>> shared by the entirety of the fs notification infrastructure. The path
+>>>> struct is passed rather than just the inode so that the mount is available,
+>>>> particularly for mount watches. This also allows for use of the hook by
+>>>> pathname-based security modules. However, since the hook is intended for
+>>>> use even by inode based security modules, it is not placed under the
+>>>> CONFIG_SECURITY_PATH conditional. Otherwise, the inode-based security
+>>>> modules would need to enable all of the path hooks, even though they do not
+>>>> use any of them.
+>>>>
+>>>> This only provides a hook at the point of setting a watch, and presumes
+>>>> that permission to set a particular watch implies the ability to receive
+>>>> all notification about that object which match the mask. This is all that
+>>>> is required for SELinux. If other security modules require additional hooks
+>>>> or infrastructure to control delivery of notification, these can be added
+>>>> by them. It does not make sense for us to propose hooks for which we have
+>>>> no implementation. The understanding that all notifications received by the
+>>>> requesting application are all strictly of a type for which the application
+>>>> has been granted permission shows that this implementation is sufficient in
+>>>> its coverage.
+>>>>
+>>>> Security modules wishing to provide complete control over fanotify must
+>>>> also implement a security_file_open hook that validates that the access
+>>>> requested by the watching application is authorized. Fanotify has the issue
+>>>> that it returns a file descriptor with the file mode specified during
+>>>> fanotify_init() to the watching process on event. This is already covered
+>>>> by the LSM security_file_open hook if the security module implements
+>>>> checking of the requested file mode there. Otherwise, a watching process
+>>>> can obtain escalated access to a file for which it has not been authorized.
+>>>>
+>>>> The selinux_path_notify hook implementation works by adding five new file
+>>>> permissions: watch, watch_mount, watch_sb, watch_reads, and watch_with_perm
+>>>> (descriptions about which will follow), and one new filesystem permission:
+>>>> watch (which is applied to superblock checks). The hook then decides which
+>>>> subset of these permissions must be held by the requesting application
+>>>> based on the contents of the provided mask and the obj_type. The
+>>>> selinux_file_open hook already checks the requested file mode and therefore
+>>>> ensures that a watching process cannot escalate its access through
+>>>> fanotify.
+>>>>
+>>>> The watch, watch_mount, and watch_sb permissions are the baseline
+>>>> permissions for setting a watch on an object and each are a requirement for
+>>>> any watch to be set on a file, mount, or superblock respectively. It should
+>>>> be noted that having either of the other two permissions (watch_reads and
+>>>> watch_with_perm) does not imply the watch, watch_mount, or watch_sb
+>>>> permission. Superblock watches further require the filesystem watch
+>>>> permission to the superblock. As there is no labeled object in view for
+>>>> mounts, there is no specific check for mount watches beyond watch_mount to
+>>>> the inode. Such a check could be added in the future, if a suitable labeled
+>>>> object existed representing the mount.
+>>>>
+>>>> The watch_reads permission is required to receive notifications from
+>>>> read-exclusive events on filesystem objects. These events include accessing
+>>>> a file for the purpose of reading and closing a file which has been opened
+>>>> read-only. This distinction has been drawn in order to provide a direct
+>>>> indication in the policy for this otherwise not obvious capability. Read
+>>>> access to a file should not necessarily imply the ability to observe read
+>>>> events on a file.
+>>>>
+>>>> Finally, watch_with_perm only applies to fanotify masks since it is the
+>>>> only way to set a mask which allows for the blocking, permission event.
+>>>> This permission is needed for any watch which is of this type. Though
+>>>> fanotify requires CAP_SYS_ADMIN, this is insufficient as it gives implicit
+>>>> trust to root, which we do not do, and does not support least privilege.
+>>>>
+>>>> Signed-off-by: Aaron Goidel <acgoide@tycho.nsa.gov>
+>>>> ---
+>>>>   fs/notify/dnotify/dnotify.c         | 15 +++++++--
+>>>>   fs/notify/fanotify/fanotify_user.c  | 27 +++++++++++++++--
+>>>>   fs/notify/inotify/inotify_user.c    | 13 ++++++--
+>>>>   include/linux/lsm_hooks.h           |  9 +++++-
+>>>>   include/linux/security.h            | 10 ++++--
+>>>>   security/security.c                 |  6 ++++
+>>>>   security/selinux/hooks.c            | 47 +++++++++++++++++++++++++++++
+>>>>   security/selinux/include/classmap.h |  5 +--
+>>>>   8 files changed, 120 insertions(+), 12 deletions(-)
+>>>
+>>> Other than Casey's comments, and ACK, I'm not seeing much commentary
+>>> on this patch so FS and LSM folks consider this your last chance - if
+>>> I don't hear any objections by the end of this week I'll plan on
+>>> merging this into selinux/next next week.
+>>
+>> Please consider it is summer time so people may be on vacation like I was...
+> 
+> This is one of the reasons why I was speaking to the mailing list and
+> not a particular individual :)
+> 
+>> First a suggestion, take it or leave it.
+>> The name of the hook _notify() seems misleading to me.
+>> naming the hook security_path_watch() seems much more
+>> appropriate and matching the name of the constants FILE__WATCH
+>> used by selinux.
+> 
+> I guess I'm not too bothered by either name, Aaron?  FWIW, if I was
+> writing this hook, I would probably name it
+> security_fsnotify_path(...).
+> 
+
+While I'm not necessarily attached to the name, I feel as though 
+"misleading" is too strong a word here. Notify seems to be an 
+appropriate enough term to me as every call to the hook, and thus all 
+the logic to which the hook adds security, lives in the notify/ subtree.
+
+-- 
+Aaron
