@@ -2,108 +2,89 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDA4C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21C7C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1AAE2171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:50:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B7sZuZnK"
+	by mail.kernel.org (Postfix) with ESMTP id A67632171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405976AbfHIJuA (ORCPT
+        id S2405926AbfHIJuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 05:50:00 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34445 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730233AbfHIJuA (ORCPT
+        Fri, 9 Aug 2019 05:50:09 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56015 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405953AbfHIJuH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 05:50:00 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b13so45774180pfo.1;
-        Fri, 09 Aug 2019 02:49:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=M4LYnoEJb207t6aRi5HbsF+k6e61KxB5f8QClUX5QIY=;
-        b=B7sZuZnKX9erQAhbjqw7MPqVXJ1QGVCBauMPHnwn+8d3Y70ibLxR/VuXgfpYq9U9Mq
-         wD8WP7IsMY8UxnPc9tSz1arJGz58NG2i1+8Ovm6bDASpvLwtIx7EqiRHbqd5z81IOSOo
-         hZkiEuKO68UxMRliSf6XwL91l0//eBIA9WlFNXDV3m0098aAO1Na+2cDI+kRVDTvdc+/
-         a6QEINj1di2Qdd4kWjRbSsR0nNyqhAy7a/+lqeLbSLqlSgrLOrcOFgsrh0fv9XjQuQQY
-         IBlcnU5AVTnC4ZyWAHVEXqjgfB5cDOIhQYh4DroPRCVAwMXxAG2WgjaJqh70Mh15ZxCj
-         YyvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=M4LYnoEJb207t6aRi5HbsF+k6e61KxB5f8QClUX5QIY=;
-        b=qVIzXcun/XLV0do0vaLR5EyMlFqLL8nH1fmQd3ysvotRC/sygyuWLwoNU/wM5sksZQ
-         oMq1M0LHFpIb++VoOxuOah4jmvg2Pf31wgqGIVLczFW1PEEHt34hn3IIUOXsT6yfNi1R
-         h6YPW5iSSHSsLaNTvd40P9XQAhmiMEFGXdKS8Nx5IaRqLqNqPNJgnJ16+hc+erDea+Oo
-         lGgYqq2eoQhJKPFa6bqAdfLM+3hj8gsFQc7vU5K9A2kaUM951eu0xmsz65iuQGHvpjgb
-         uBwGagLaxRTVLIUCBX0hm6y4kx+ZyOKzPzAWIzRLsMJP8EaTJPEGXk6RNkvEKzC+Vhc6
-         EBOw==
-X-Gm-Message-State: APjAAAUr6kPNZE4BEiAhRDkDKjmNCUiNEttRvfof6Oqqfi3/IKSNQrs3
-        MpPrfstxgoP96SQQOFzPbX0=
-X-Google-Smtp-Source: APXvYqwEf426bx7Lg/Kot7Q5FVKeANn4QigqsluEKd28l6me5MSvuWJJG/VFDpcQRQSVOu+dGsRYmg==
-X-Received: by 2002:a17:90a:2305:: with SMTP id f5mr8964682pje.128.1565344199350;
-        Fri, 09 Aug 2019 02:49:59 -0700 (PDT)
-Received: from localhost.corp.microsoft.com ([167.220.255.114])
-        by smtp.googlemail.com with ESMTPSA id b16sm159653631pfo.54.2019.08.09.02.49.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 09 Aug 2019 02:49:58 -0700 (PDT)
-From:   lantianyu1986@gmail.com
-X-Google-Original-From: Tianyu.Lan@microsoft.com
-To:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        michael.h.kelley@microsoft.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vkuznets@redhat.com
-Subject: [PATCH 0/3] KVM/Hyper-V: Add Hyper-V direct tlb flush support
-Date:   Fri,  9 Aug 2019 17:49:36 +0800
-Message-Id: <20190809094939.76093-1-Tianyu.Lan@microsoft.com>
-X-Mailer: git-send-email 2.14.5
+        Fri, 9 Aug 2019 05:50:07 -0400
+Received: from p200300ddd71876457e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7645:7e7a:91ff:fec9:8e25])
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hw1X0-0003bf-Nf; Fri, 09 Aug 2019 11:49:54 +0200
+Date:   Fri, 9 Aug 2019 11:49:49 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+cc:     =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arch/x86/kernel/cpu/umwait.c - remove unused variable
+In-Reply-To: <20190809004438.GA56628@romley-ivt3.sc.intel.com>
+Message-ID: <alpine.DEB.2.21.1908091147290.21433@nanos.tec.linutronix.de>
+References: <79734.1565272329@turing-police> <alpine.DEB.2.21.1908082158580.2882@nanos.tec.linutronix.de> <141835.1565295884@turing-police> <alpine.DEB.2.21.1908082229010.2882@nanos.tec.linutronix.de> <20190809004438.GA56628@romley-ivt3.sc.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323329-718199243-1565344194=:21433"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
+--8323329-718199243-1565344194=:21433
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-This patchset is to add Hyper-V direct tlb support in KVM. Hyper-V
-in L0 can delegate L1 hypervisor to handle tlb flush request from
-L2 guest when direct tlb flush is enabled in L1.
+On Thu, 8 Aug 2019, Fenghua Yu wrote:
+> On Thu, Aug 08, 2019 at 10:32:38PM +0200, Thomas Gleixner wrote:
+> > Valdis,
+> > 
+> > On Thu, 8 Aug 2019, Valdis Klētnieks wrote:
+> > > On Thu, 08 Aug 2019 22:04:03 +0200, Thomas Gleixner said: It isn't 
+> > > clear that whatever is doing the device_initcall()s will be able to 
+> > > do any reasonable recovery if we return an error, so any error 
+> > > recovery is going to have to happen before the function returns. It 
+> > > might make sense to do an 'if (ret) return;' before going further in 
+> > > the function, but given the comment a few lines further down about 
+> > > ignoring errors, it was apparently considered more important to 
+> > > struggle through and register stuff in sysfs even if umwait was 
+> > > broken....
+> > 
+> > I missed that when going through it.
+> > 
+> > The right thing to do is to have a cpu_offline callback which clears 
+> > the umwait MSR. That covers also the failure in the cpu hotplug setup. 
+> > Then handling an error return makes sense and keeps everything in a 
+> > workable shape.
+> 
+> When cpu is offline, the MSR won't be used. We don't need to clear it, right?
 
-Patch 2 introduces new cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH to enable
-feature from user space. User space should enable this feature only
-when Hyper-V hypervisor capability is exposed to guest and KVM profile
-is hided. There is a parameter conflict between KVM and Hyper-V hypercall.
-We hope L2 guest doesn't use KVM hypercall when the feature is
-enabled. Detail please see comment of new API "KVM_CAP_HYPERV_DIRECT_TLBFLUSH"
+Groan. If soemthing goes wrong when registering the hotplug callback, what
+undoes the MSR setup which might have happened and what takes care of it on
+cpus coming online later? Exactly nothing. Then you have a non-consistent
+behaviour.
 
-Tianyu Lan (2):
-  x86/Hyper-V: Fix definition of struct hv_vp_assist_page
-  KVM/Hyper-V: Add new KVM cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH
+Make stuff symmmetric and correct and not optimized for the sunshine case.
 
-Vitaly Kuznetsov (1):
-  KVM/Hyper-V/VMX: Add direct tlb flush support
+Thanks,
 
- Documentation/virtual/kvm/api.txt  | 10 ++++++++++
- arch/x86/include/asm/hyperv-tlfs.h | 24 +++++++++++++++++++-----
- arch/x86/include/asm/kvm_host.h    |  2 ++
- arch/x86/kvm/vmx/evmcs.h           |  2 ++
- arch/x86/kvm/vmx/vmx.c             | 38 ++++++++++++++++++++++++++++++++++++++
- arch/x86/kvm/x86.c                 |  8 ++++++++
- include/linux/kvm_host.h           |  1 +
- include/uapi/linux/kvm.h           |  1 +
- 8 files changed, 81 insertions(+), 5 deletions(-)
-
--- 
-2.14.2
-
+	tglx
+--8323329-718199243-1565344194=:21433--
