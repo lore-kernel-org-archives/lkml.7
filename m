@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC50C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2EDC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 869E1217F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8F7021783
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358466;
-	bh=SJOB4R5aZzWIG3LHq9WYbcWrMIlfc+ou/bJmVPU/X2E=;
+	s=default; t=1565358469;
+	bh=8AqG7ieUPkUuhCqZXmd44lbtH44NYq5D2oVblWSaJFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PiILkg7d3EQJBnRoqA7jtf44q21POEdIYlZV4q6aVhMwIH9RHzfzMDB7l7hG5vd5X
-	 hj/lbn+IWJz3gG1IhRXe6lO3ZFu8VZT+DYwE6ltjGMqkH0//5e2AAWlrJqqav79ash
-	 NUl8ZexTWZHaPnks2PqiCZua1JXannCUdVXVD/rQ=
+	b=2GKAubQm0lH5Vra7cdKcPlObEtEhhXj6yhOqnldwbNa8J7GYidRMCtTvmKuPf12tN
+	 xRc1otpQRk+opEdYkHbt7TJrkCivdGn8JuSUNE3QfaoXRjeYeLfmy8BL5vZoa8EzCl
+	 Kwk5KOwnNl+4fyqbAoWYznyCaKhGON6DIWnakqg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436618AbfHINrp (ORCPT
+        id S2436638AbfHINrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:47:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37774 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:47:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407279AbfHINrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:47:42 -0400
+        id S2406849AbfHINro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:47:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00CEE2086D;
-        Fri,  9 Aug 2019 13:47:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90C6621874;
+        Fri,  9 Aug 2019 13:47:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358461;
-        bh=SJOB4R5aZzWIG3LHq9WYbcWrMIlfc+ou/bJmVPU/X2E=;
+        s=default; t=1565358464;
+        bh=8AqG7ieUPkUuhCqZXmd44lbtH44NYq5D2oVblWSaJFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dmtGPPVRp/q91LY1MwOQlBE9kLG894UJpjqbWqOtSE6SEfs0+nw5arZNSMDIg993e
-         /BcQenTCYtcEyQhKhvC77+qtooVKX7TQ+LGz7TZDP2cZJbSMY2Fp8BaDesvikuUNxT
-         ZJlu9/YwpCFj+BEUiA2Ou3nyxpdtCKfsoDFlT/KE=
+        b=LZWqwu1zYw55X7xz6Tt8ftcJbEOw62MdyOS406/sf5+E7dUv4HWsPw5kPoOiniywG
+         Wdrgggic8rALIdsZUCkF9dWY1796rjeHZuvdy0oUIRQpV3xGV93ONB5B5dCYRrVdft
+         IkE3gu46M6eJTuq7d00EyGby+Djk7kx/I/XPpfqY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Cooper <andrew.cooper3@citrix.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.9 32/32] x86/speculation/swapgs: Exclude ATOMs from speculation through SWAPGS
-Date:   Fri,  9 Aug 2019 15:45:35 +0200
-Message-Id: <20190809133923.957917253@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.9 10/32] RDMA: Directly cast the sockaddr union to sockaddr
+Date:   Fri,  9 Aug 2019 15:45:13 +0200
+Message-Id: <20190809133923.280736045@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190809133922.945349906@linuxfoundation.org>
 References: <20190809133922.945349906@linuxfoundation.org>
@@ -62,155 +58,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit f36cf386e3fec258a341d446915862eded3e13d8 upstream.
+commit 641114d2af312d39ca9bbc2369d18a5823da51c6 upstream.
 
-Intel provided the following information:
+gcc 9 now does allocation size tracking and thinks that passing the member
+of a union and then accessing beyond that member's bounds is an overflow.
 
- On all current Atom processors, instructions that use a segment register
- value (e.g. a load or store) will not speculatively execute before the
- last writer of that segment retires. Thus they will not use a
- speculatively written segment value.
+Instead of using the union member, use the entire union with a cast to
+get to the sockaddr. gcc will now know that the memory extends the full
+size of the union.
 
-That means on ATOMs there is no speculation through SWAPGS, so the SWAPGS
-entry paths can be excluded from the extra LFENCE if PTI is disabled.
-
-Create a separate bug flag for the through SWAPGS speculation and mark all
-out-of-order ATOMs and AMD/HYGON CPUs as not affected. The in-order ATOMs
-are excluded from the whole mitigation mess anyway.
-
-Reported-by: Andrew Cooper <andrew.cooper3@citrix.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-[bwh: Backported to 4.4:
- - There's no whitelist entry (or any support) for Hygon CPUs
- - Adjust context, indentation]
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/include/asm/cpufeatures.h |    1 
- arch/x86/kernel/cpu/bugs.c         |   18 +++------------
- arch/x86/kernel/cpu/common.c       |   42 +++++++++++++++++++++++--------------
- 3 files changed, 32 insertions(+), 29 deletions(-)
 
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -356,5 +356,6 @@
- #define X86_BUG_L1TF		X86_BUG(18) /* CPU is affected by L1 Terminal Fault */
- #define X86_BUG_MDS		X86_BUG(19) /* CPU is affected by Microarchitectural data sampling */
- #define X86_BUG_MSBDS_ONLY	X86_BUG(20) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
-+#define X86_BUG_SWAPGS		X86_BUG(21) /* CPU is affected by speculation through SWAPGS */
+---
+ drivers/infiniband/core/addr.c           |   15 +++++++--------
+ drivers/infiniband/hw/ocrdma/ocrdma_ah.c |    5 ++---
+ drivers/infiniband/hw/ocrdma/ocrdma_hw.c |    5 ++---
+ 3 files changed, 11 insertions(+), 14 deletions(-)
+
+--- a/drivers/infiniband/core/addr.c
++++ b/drivers/infiniband/core/addr.c
+@@ -735,14 +735,13 @@ int rdma_addr_find_l2_eth_by_grh(const u
+ 	struct net_device *dev;
  
- #endif /* _ASM_X86_CPUFEATURES_H */
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -281,18 +281,6 @@ static const char * const spectre_v1_str
- 	[SPECTRE_V1_MITIGATION_AUTO] = "Mitigation: usercopy/swapgs barriers and __user pointer sanitization",
- };
+ 	union {
+-		struct sockaddr     _sockaddr;
+ 		struct sockaddr_in  _sockaddr_in;
+ 		struct sockaddr_in6 _sockaddr_in6;
+ 	} sgid_addr, dgid_addr;
  
--static bool is_swapgs_serializing(void)
--{
--	/*
--	 * Technically, swapgs isn't serializing on AMD (despite it previously
--	 * being documented as such in the APM).  But according to AMD, %gs is
--	 * updated non-speculatively, and the issuing of %gs-relative memory
--	 * operands will be blocked until the %gs update completes, which is
--	 * good enough for our purposes.
--	 */
--	return boot_cpu_data.x86_vendor == X86_VENDOR_AMD;
--}
--
- /*
-  * Does SMAP provide full mitigation against speculative kernel access to
-  * userspace?
-@@ -343,9 +331,11 @@ static void __init spectre_v1_select_mit
- 			 * PTI as the CR3 write in the Meltdown mitigation
- 			 * is serializing.
- 			 *
--			 * If neither is there, mitigate with an LFENCE.
-+			 * If neither is there, mitigate with an LFENCE to
-+			 * stop speculation through swapgs.
- 			 */
--			if (!is_swapgs_serializing() && !boot_cpu_has(X86_FEATURE_KAISER))
-+			if (boot_cpu_has_bug(X86_BUG_SWAPGS) &&
-+			    !boot_cpu_has(X86_FEATURE_KAISER))
- 				setup_force_cpu_cap(X86_FEATURE_FENCE_SWAPGS_USER);
  
- 			/*
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -897,6 +897,7 @@ static void identify_cpu_without_cpuid(s
- #define NO_L1TF		BIT(3)
- #define NO_MDS		BIT(4)
- #define MSBDS_ONLY	BIT(5)
-+#define NO_SWAPGS	BIT(6)
+-	rdma_gid2ip(&sgid_addr._sockaddr, sgid);
+-	rdma_gid2ip(&dgid_addr._sockaddr, dgid);
++	rdma_gid2ip((struct sockaddr *)&sgid_addr, sgid);
++	rdma_gid2ip((struct sockaddr *)&dgid_addr, dgid);
  
- #define VULNWL(_vendor, _family, _model, _whitelist)	\
- 	{ X86_VENDOR_##_vendor, _family, _model, X86_FEATURE_ANY, _whitelist }
-@@ -920,29 +921,37 @@ static const __initconst struct x86_cpu_
- 	VULNWL_INTEL(ATOM_BONNELL,		NO_SPECULATION),
- 	VULNWL_INTEL(ATOM_BONNELL_MID,		NO_SPECULATION),
+ 	memset(&dev_addr, 0, sizeof(dev_addr));
+ 	if (if_index)
+@@ -751,8 +750,9 @@ int rdma_addr_find_l2_eth_by_grh(const u
  
--	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY),
--	VULNWL_INTEL(ATOM_SILVERMONT_X,		NO_SSB | NO_L1TF | MSBDS_ONLY),
--	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF | MSBDS_ONLY),
--	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY),
--	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF | MSBDS_ONLY),
--	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF | MSBDS_ONLY),
-+	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_SILVERMONT_X,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
-+	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
-+	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
+ 	ctx.addr = &dev_addr;
+ 	init_completion(&ctx.comp);
+-	ret = rdma_resolve_ip(&self, &sgid_addr._sockaddr, &dgid_addr._sockaddr,
+-			&dev_addr, 1000, resolve_cb, &ctx);
++	ret = rdma_resolve_ip(&self, (struct sockaddr *)&sgid_addr,
++			      (struct sockaddr *)&dgid_addr, &dev_addr, 1000,
++			      resolve_cb, &ctx);
+ 	if (ret)
+ 		return ret;
  
- 	VULNWL_INTEL(CORE_YONAH,		NO_SSB),
+@@ -782,16 +782,15 @@ int rdma_addr_find_smac_by_sgid(union ib
+ 	int ret = 0;
+ 	struct rdma_dev_addr dev_addr;
+ 	union {
+-		struct sockaddr     _sockaddr;
+ 		struct sockaddr_in  _sockaddr_in;
+ 		struct sockaddr_in6 _sockaddr_in6;
+ 	} gid_addr;
  
--	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF | MSBDS_ONLY),
-+	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
+-	rdma_gid2ip(&gid_addr._sockaddr, sgid);
++	rdma_gid2ip((struct sockaddr *)&gid_addr, sgid);
  
--	VULNWL_INTEL(ATOM_GOLDMONT,		NO_MDS | NO_L1TF),
--	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_MDS | NO_L1TF),
--	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_MDS | NO_L1TF),
-+	VULNWL_INTEL(ATOM_GOLDMONT,		NO_MDS | NO_L1TF | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_MDS | NO_L1TF | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_MDS | NO_L1TF | NO_SWAPGS),
-+
-+	/*
-+	 * Technically, swapgs isn't serializing on AMD (despite it previously
-+	 * being documented as such in the APM).  But according to AMD, %gs is
-+	 * updated non-speculatively, and the issuing of %gs-relative memory
-+	 * operands will be blocked until the %gs update completes, which is
-+	 * good enough for our purposes.
-+	 */
+ 	memset(&dev_addr, 0, sizeof(dev_addr));
+ 	dev_addr.net = &init_net;
+-	ret = rdma_translate_ip(&gid_addr._sockaddr, &dev_addr, vlan_id);
++	ret = rdma_translate_ip((struct sockaddr *)&gid_addr, &dev_addr, vlan_id);
+ 	if (ret)
+ 		return ret;
  
- 	/* AMD Family 0xf - 0x12 */
--	VULNWL_AMD(0x0f,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
--	VULNWL_AMD(0x10,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
--	VULNWL_AMD(0x11,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
--	VULNWL_AMD(0x12,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
-+	VULNWL_AMD(0x0f,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
-+	VULNWL_AMD(0x10,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
-+	VULNWL_AMD(0x11,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
-+	VULNWL_AMD(0x12,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
+--- a/drivers/infiniband/hw/ocrdma/ocrdma_ah.c
++++ b/drivers/infiniband/hw/ocrdma/ocrdma_ah.c
+@@ -82,7 +82,6 @@ static inline int set_av_attr(struct ocr
+ 	u8 nxthdr = 0x11;
+ 	struct iphdr ipv4;
+ 	union {
+-		struct sockaddr     _sockaddr;
+ 		struct sockaddr_in  _sockaddr_in;
+ 		struct sockaddr_in6 _sockaddr_in6;
+ 	} sgid_addr, dgid_addr;
+@@ -131,9 +130,9 @@ static inline int set_av_attr(struct ocr
+ 		ipv4.tot_len = htons(0);
+ 		ipv4.ttl = attr->grh.hop_limit;
+ 		ipv4.protocol = nxthdr;
+-		rdma_gid2ip(&sgid_addr._sockaddr, sgid);
++		rdma_gid2ip((struct sockaddr *)&sgid_addr, sgid);
+ 		ipv4.saddr = sgid_addr._sockaddr_in.sin_addr.s_addr;
+-		rdma_gid2ip(&dgid_addr._sockaddr, &attr->grh.dgid);
++		rdma_gid2ip((struct sockaddr *)&dgid_addr, &attr->grh.dgid);
+ 		ipv4.daddr = dgid_addr._sockaddr_in.sin_addr.s_addr;
+ 		memcpy((u8 *)ah->av + eth_sz, &ipv4, sizeof(struct iphdr));
+ 	} else {
+--- a/drivers/infiniband/hw/ocrdma/ocrdma_hw.c
++++ b/drivers/infiniband/hw/ocrdma/ocrdma_hw.c
+@@ -2505,7 +2505,6 @@ static int ocrdma_set_av_params(struct o
+ 	u32 vlan_id = 0xFFFF;
+ 	u8 mac_addr[6], hdr_type;
+ 	union {
+-		struct sockaddr     _sockaddr;
+ 		struct sockaddr_in  _sockaddr_in;
+ 		struct sockaddr_in6 _sockaddr_in6;
+ 	} sgid_addr, dgid_addr;
+@@ -2550,8 +2549,8 @@ static int ocrdma_set_av_params(struct o
  
- 	/* FAMILY_ANY must be last, otherwise 0x0f - 0x12 matches won't work */
--	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS),
-+	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS),
- 	{}
- };
- 
-@@ -979,6 +988,9 @@ static void __init cpu_set_bug_bits(stru
- 			setup_force_cpu_bug(X86_BUG_MSBDS_ONLY);
- 	}
- 
-+	if (!cpu_matches(NO_SWAPGS))
-+		setup_force_cpu_bug(X86_BUG_SWAPGS);
-+
- 	if (cpu_matches(NO_MELTDOWN))
- 		return;
- 
+ 	hdr_type = ib_gid_to_network_type(sgid_attr.gid_type, &sgid);
+ 	if (hdr_type == RDMA_NETWORK_IPV4) {
+-		rdma_gid2ip(&sgid_addr._sockaddr, &sgid);
+-		rdma_gid2ip(&dgid_addr._sockaddr, &ah_attr->grh.dgid);
++		rdma_gid2ip((struct sockaddr *)&sgid_addr, &sgid);
++		rdma_gid2ip((struct sockaddr *)&dgid_addr, &ah_attr->grh.dgid);
+ 		memcpy(&cmd->params.dgid[0],
+ 		       &dgid_addr._sockaddr_in.sin_addr.s_addr, 4);
+ 		memcpy(&cmd->params.sgid[0],
 
 
