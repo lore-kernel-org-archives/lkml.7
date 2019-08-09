@@ -2,208 +2,123 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A82FDC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D02FBC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA2D21874
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:59:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="b4Y1YUbd"
+	by mail.kernel.org (Postfix) with ESMTP id 7ED392089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:00:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565366428;
+	bh=byqXegla2HVwRkU/YlZedvOvaHdsOygN1SRXIfsWjzc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TkPNn7RNrN8aVNX6sqLvwQRAs/8CX7NHfp6V6tXDT1RyftFGEQV/4C7cAoFtzpY0e
+	 fpDgc7L6KaFqxyAOFDHajmzegmbHf/MEartPOnUGq4NyoAQhicN4Uov0VJR/U4n/rT
+	 0tPmk2fO/hNyg0fRrwASvzOrHdEyp/hXutx6qedk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436904AbfHIP7D (ORCPT
+        id S2436925AbfHIQA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 11:59:03 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:37483 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407409AbfHIP7C (ORCPT
+        Fri, 9 Aug 2019 12:00:27 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38300 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436681AbfHIQA0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 11:59:02 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190809155900euoutp0101002d69dbf1d9fbd1dc11b30facc5a9~5TGSkJZQC2239222392euoutp01A
-        for <linux-kernel@vger.kernel.org>; Fri,  9 Aug 2019 15:59:00 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190809155900euoutp0101002d69dbf1d9fbd1dc11b30facc5a9~5TGSkJZQC2239222392euoutp01A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1565366340;
-        bh=4YzeeKKPFr++N86ARxVSHPawyKjy2TYXNkKlduZSeco=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=b4Y1YUbd7XSyLjsTr1HDcsailVX08NqdKKoNI/YTrEUY1sIfhw9Rm/vWHZHZgs860
-         uMh3LOKK/PARXFc10V8wDXCeQdAKPtVWu2A4tugsGOde3c0jAKjr8k5+3gELiGUHDb
-         vY3cAl6yzntpCKzOA2hHP+mNwGbiTdDpbtTJW2sU=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190809155859eucas1p120faf243c7885b7a47062ef416ad8219~5TGRwjGNE1518415184eucas1p1f;
-        Fri,  9 Aug 2019 15:58:59 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 01.BE.04374.3489D4D5; Fri,  9
-        Aug 2019 16:58:59 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190809155858eucas1p1b86dfa70fce2366fb99e85dd585a2cdc~5TGRBaTGC1518515185eucas1p1n;
-        Fri,  9 Aug 2019 15:58:58 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190809155858eusmtrp12b9fcab5ac2f2878f93826e4e2e4c5ff~5TGQy8qOJ2026120261eusmtrp1N;
-        Fri,  9 Aug 2019 15:58:58 +0000 (GMT)
-X-AuditID: cbfec7f5-4f7ff70000001116-84-5d4d9843cc42
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id C2.27.04117.2489D4D5; Fri,  9
-        Aug 2019 16:58:58 +0100 (BST)
-Received: from [106.120.51.75] (unknown [106.120.51.75]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190809155858eusmtip22c7f5a027df8a3d1a2bb827e52f25a5f~5TGQNGUDp0941309413eusmtip2P;
-        Fri,  9 Aug 2019 15:58:58 +0000 (GMT)
-Subject: Re: [PATCH v2 0/9] Exynos Adaptive Supply Voltage support
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>, krzk@kernel.org,
-        robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
-        kgene@kernel.org, pankaj.dubey@samsung.com,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, b.zolnierkie@samsung.com
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <562dd2e7-2b24-8492-d1c1-2dc4973f07be@samsung.com>
-Date:   Fri, 9 Aug 2019 17:58:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Fri, 9 Aug 2019 12:00:26 -0400
+Received: by mail-lj1-f193.google.com with SMTP id r9so92532851ljg.5
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 09:00:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=82Cb8KU5pdOeKmjLeh4TKVu4zgRDfxjUZ199bGrU4aM=;
+        b=EGzmlqYyEKP+GRNNIQtRf9/Zmf02DAJzgUCe61CjlwR0xDNa/vwL4PM82Q5u8nooip
+         ntaH45KfblduWkM5AVyFbE65jmPaTx/MNM93KmbwWGzHbS9BQUULkFANWUhOT00yHDxX
+         KZOwl99pcNie47caZ4/Mg9PKG0/A+riIIlEJk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=82Cb8KU5pdOeKmjLeh4TKVu4zgRDfxjUZ199bGrU4aM=;
+        b=RZle8tT2PwDM+vnTCdU+dfQtR5dnLRA85S7rdD1Q4rqINL9VGEz3MpfrxlaMiHNrPQ
+         FKcup1PP3qeV69aiRuqIRU7PtfFzV9Jig4xpdcVIem77fkPFWfrKd2sJl5jTcGv8h0nr
+         J3K2306ULaxNE510nkyJNCvfBB9Xe5ya6l8ggGxZQAisnT770sX1YKnV5ul4taQhSwok
+         qvkcALX349Syr5Up4ksjXX9nFc5ApLshyyZAFa0k1YTRH65XRMRXD/thQ3e3BJg4KAtx
+         x5i+hs0+DVGZuNpfspSmFk6anvNBKZLYm0rMWkHBl97v7Tw5vpuVEmdqlMdPgSE5TZbn
+         aP4w==
+X-Gm-Message-State: APjAAAXHxe1IQhvAfmo48ML1FqqLFltaoNsf13vtZxcYnzADp5DHbOrK
+        xFZluUlaWLPdQTOH2Yk4djUMDAyeHW0=
+X-Google-Smtp-Source: APXvYqw5OMAOuRIanCQz2iFpJRif7dylp94A0O/dT6SHwiqKsaF9x+TAAaklb8PaQrW35jPWF38Qgg==
+X-Received: by 2002:a2e:9c19:: with SMTP id s25mr11684793lji.188.1565366424135;
+        Fri, 09 Aug 2019 09:00:24 -0700 (PDT)
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
+        by smtp.gmail.com with ESMTPSA id f23sm1179992lfc.25.2019.08.09.09.00.21
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 09:00:21 -0700 (PDT)
+Received: by mail-lf1-f42.google.com with SMTP id x3so69985552lfc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 09:00:21 -0700 (PDT)
+X-Received: by 2002:a19:641a:: with SMTP id y26mr12874406lfb.29.1565366420690;
+ Fri, 09 Aug 2019 09:00:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190725022343.p7lqalrh5svxvtu2@vireshk-i7>
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRT23e69u96aXKe1k4nBMiIhTfq6fSBa/hiBpUFghejSi0p+savW
-        7EdiKbnmtEK0YThMUEc6nWbmN3NulaakJqYNJS1KGYQfWGmW8xr573me85z3POfwkkJJL+5F
-        Jqaks8oURZKMoLBm68+Bg2dLw6IO5T3xZhpKjThTbhnAmcLpOSEzOFgvYkzTozgz3FpGMAsF
-        FsSUDnYKmFqLXcRUPF8UMbkdFhHTsCRnGqesRLBYbjLkE/KPo+2EvLHytlzbZEDyBZNPOH6F
-        Oh3HJiVmssqAoBgqQVOdj6eV+NwsL5/AslENqBFJAn0ENPZUNaJICV2NoHj4Kc6TRQTG3q8E
-        TxYQ2AccAjVy3ehw6IY2C1UIbL8qhDxxIOjWL4icLg/6DLSvLBHOGZ60H3z7wDplIf1eAK1L
-        G5igA6GgV4ucWEwHQb3esGHHaF8otqc55R10JMxP9eC8xR1eP57BnNiVPgGTjRrEPymFnMUa
-        nMd74IWjbCMO0OMiGL9buRk6FKxDaoLHHjBraxLx2Bv6HmkwvuEOAk3bhIgnRQgmbXrEu05B
-        j+0d7kwnpA+AsTWAl0NAO2IR8Hd0gzGHOx/CDR42lwh5WQz38iS82xdWDCWbcbzg/swfrAjJ
-        dFtW021ZR7dlHd3/uXqEGZCUzeCS41nucAp7w59TJHMZKfH+sanJJrT+ufrWbEstqHP1mhnR
-        JJJtF3fnhkVJcEUmp0o2IyCFMk/xCLkuieMUqixWmRqtzEhiOTPaTWIyqfiWy9RVCR2vSGev
-        s2waq/xXFZCuXtmobKgu4vIz6i2o1qg64/G9HkUxQeGyvl2OT+n9wS/PrdjmFsNHIupWoweo
-        8/aQ2sKx5f5lirvwitYZR7oSf/vNU1XtP+K6kqSx+xRZkW1teuyobdulN/HNLvurPneYv1da
-        wzQXJx7kaKUaVWbhyTZ7qMowu5NsVPd/Oaat1bbIMC5BEegnVHKKv0yxV1hYAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOIsWRmVeSWpSXmKPExsVy+t/xe7pOM3xjDZ6uU7PYOGM9q8X8I+dY
-        Lfofv2a2OH9+A7vFpsfXWC0u75rDZvG59wijxYzz+5gs1h65y26xaOsXdovWvUfYLTZ+9bDY
-        /OAYmwOvx6ZVnWwed67tYfPYvKTeo2/LKkaPz5vkAlij9GyK8ktLUhUy8otLbJWiDS2M9Awt
-        LfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DJ6VnSyFkyXq5g//zZLA+NKiS5GTg4JAROJ
-        t7MusYHYQgJLGSXWNxp0MXIAxaUk5rcoQZQIS/y51gVUwgVU8ppR4tXbC2D1wgJOEnt+f2UD
-        qRcR0JJ4eTMVpIZZ4CqTxOI9l1ggGhYxSSw5fQysgU3AUKL3aB8jiM0rYCexYcEqsGYWARWJ
-        qXcLQMKiAhESh3fMgioRlDg58wkLiM0pYClxf3MPWJxZQF3iz7xLzBC2uETTl5WsELa8xPa3
-        c5gnMArNQtI+C0nLLCQts5C0LGBkWcUoklpanJueW2ykV5yYW1yal66XnJ+7iREYqduO/dyy
-        g7HrXfAhRgEORiUe3gOtvrFCrIllxZW5hxglOJiVRHivcACFeFMSK6tSi/Lji0pzUosPMZoC
-        /TaRWUo0OR+YRPJK4g1NDc0tLA3Njc2NzSyUxHk7BA7GCAmkJ5akZqemFqQWwfQxcXBKNTBW
-        euVN+fYmQ1773/l7cyR/1jxbrXhLltlhyem3L/N3LL79yHBFgeNLkf/Cs4NN3keEzvqXVTBv
-        zgbes75GyvEtJftPyD6tmbtsk4seY3PB+zeLwzPkLau3T9e5791Z0191Yt7xtR5cIbeZ94pu
-        Tth6VmVWT6rXtblJ02IFBB9Os1y3vsrATFZDiaU4I9FQi7moOBEAdP93MOoCAAA=
-X-CMS-MailID: 20190809155858eucas1p1b86dfa70fce2366fb99e85dd585a2cdc
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190718143117eucas1p1e534b9075d10fbbbe427c66192205eb1
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190718143117eucas1p1e534b9075d10fbbbe427c66192205eb1
-References: <CGME20190718143117eucas1p1e534b9075d10fbbbe427c66192205eb1@eucas1p1.samsung.com>
-        <20190718143044.25066-1-s.nawrocki@samsung.com>
-        <20190723020450.z2pqwetkn2tfhacq@vireshk-i7>
-        <5ef302a4-5bbf-483d-dfdf-cf76f6f69cee@samsung.com>
-        <20190725022343.p7lqalrh5svxvtu2@vireshk-i7>
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+ <20190807222634.1723-10-john.ogness@linutronix.de> <CAHk-=wiKTn-BMpp4w645XqmFBEtUXe84+TKc6aRMPbvFwUjA=A@mail.gmail.com>
+ <874l2rclmw.fsf@linutronix.de> <CAHk-=wiRN9v7UmhbTZgskh-MLyY2f0-8Zi3fUziy+GpZnj2i3w@mail.gmail.com>
+ <20190808194523.6f83e087@gandalf.local.home> <CAHk-=wiRpvRg6dpEWqaB20QUFRq8or0-AGgkjvisygptRE64UA@mail.gmail.com>
+ <20190808204841.5afcad46@gandalf.local.home> <CAHk-=whNcrysjJYPDFhKAc4tvd80XGAyh95oZeAY6bmzpv3G-A@mail.gmail.com>
+ <alpine.DEB.2.21.1908091306520.21433@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1908091306520.21433@nanos.tec.linutronix.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 9 Aug 2019 09:00:04 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiDzz+KU-ArqpnzjYkvDtKWjUqMfiiJXpXhgYU+Wd0r-w@mail.gmail.com>
+Message-ID: <CAHk-=wiDzz+KU-ArqpnzjYkvDtKWjUqMfiiJXpXhgYU+Wd0r-w@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 9/9] printk: use a new ringbuffer implementation
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Viresh,
-
-On 7/25/19 04:23, Viresh Kumar wrote:
-> On 24-07-19, 15:10, Marek Szyprowski wrote:
->> On 2019-07-23 04:04, Viresh Kumar wrote:
->>> On 18-07-19, 16:30, Sylwester Nawrocki wrote:
->>>> This is second iteration of patch series adding ASV (Adaptive Supply
->>>> Voltage) support for Exynos SoCs. The first one can be found at:
->>>> https://lore.kernel.org/lkml/20190404171735.12815-1-s.nawrocki@samsung.com
->>>>
->>>> The main changes comparing to the first (RFC) version are:
->>>>   - moving ASV data tables from DT to the driver,
->>>>   - converting the chipid and the ASV drivers to use regmap,
->>>>   - converting the ASV driver to proper platform driver.
->>>>
->>>> I tried the opp-supported-hw bitmask approach as in the Qualcomm CPUFreq
->>>> DT bindings but it resulted in too many OPPs and DT nodes, around 200
->>>> per CPU cluster. So the ASV OPP tables are now in the ASV driver, as in
->>>> downstream kernels.
->>> 
->>> Hmm. Can you explain why do you have so many OPPs? How many
->>> frequencies do you actually support per cluster and what all varies
->>> per frequency based on hw ? How many hw version do u have ?
->>
->> For big cores there are 20 frequencies (2100MHz .. 200MHz). Each SoC 
->> might belong to one of the 3 production 'sets' and each set contains 14 
->> so called 'asv groups', which assign the certain voltage values for each 
->> of those 20 frequencies (the lower asv group means lower voltage needed 
->> for given frequency).
+On Fri, Aug 9, 2019 at 4:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> There is another property which might be useful in this case:
-> "opp-microvolt-<name>" and then you can use API
-> dev_pm_opp_set_prop_name() to choose which voltage value to apply to
-> all OPPs.
+> >
+> > But I don't know what a power-off-in-laptop scenario really looks like..
+>
+> That's random behaviour. It's hardware & BIOS & value add. What do you
+> expect?
+>
+> I tried on a few machines. My laptop does not retain any useful information
+> and on some server box (which takes ages to boot) the memory is squeaky
+> clean, i.e. the BIOS wiped it already. Some others worked with a two second
+> delay between turning the remote power switch on and off.
 
-Thank you for your suggestions.
+You were there at the Intel meeting, weren't you?
 
-For some Exynos SoC variants the algorithm of selecting CPU voltage supply
-is a bit more complex than just selecting a column in the frequency/voltage 
-matrix, i.e. selecting a set of voltage values for whole frequency range.
+This is all about the fact that "we're not getting sane and reliable
+debug facilities for remote debugging". We haven't gotten them over
+two decades, we're not seeing it in the future either.
 
-Frequency range could be divided into sub-ranges and to each such a sub-range 
-part of different column could be assigned, depending on data fused in 
-the CHIPID block registers.
+So what if we _can_ get an ACPI update and in the next decade your
+laptop _will_ have a memory area that doesn't get scribbled over?
 
-We could create OPP node for each frequency and specify all needed voltages 
-as a list of "opp-microvolt-<name>" properties but apart from the fact that 
-it would have been quite many properties, e.g. 42 (3 tables * 14 columns), 
-only for some SoC types the dev_pm_opp_set_prop_name() approach could be 
-used. We would need to be able to set opp-microvolt-* property name 
-separately for each frequency (OPP).
+Does it work today? Yes it does, but only for very special cases
+(basically warm reboot with "fast boot" enabled).
 
-Probably most future proof would be a DT binding where we could still 
-re-create those Exynos-specific ASV tables from DT. For example add named 
-opp-microvolt-* properties or something similar to hold rows of each ASV 
-table. But that conflicts with "operating-points-v2" binding, where 
-multiple OPP voltage values are described by just named properties and 
-multiple entries correspond to min/target/max.
+But they are special cases that may be things that can be extended
+upon without any actual hardware changes.
 
-opp_table0 {
-	compatible = "...", "operating-points-v2";
-	opp-shared;
-	opp-2100000000 {
-		opp-hz = /bits/ 64 <1800000000>;
-		opp-microvolt = <...>;
-		opp-microvolt-t1 = <1362500>, <1350000>, ....;
-		opp-microvolt-t2 = <1362500>, <1360000>, ....;
-		opp-microvolt-t3 = <1362500>, <1340000>, ....;
-	};
-	...
-	opp-200000000 {
-		opp-hz = /bits/ 64 <200000000>;
-		opp-microvolt = <...>;
-		opp-microvolt-t1 = <900000>, <900000>, ....;
-		opp-microvolt-t2 = <900000>, <900000>, ....;
-		opp-microvolt-t3 = <900000>, <900000>, ....;
-	};
-};
-
-I might be missing some information now on how those Exynos ASV tables 
-are used on other SoCs that would need to be supported.
-
-There will be even more data to include when adding support for the Body
-Bias voltage, for each CPU supply voltage we could possibly have 
-corresponding Body Bias voltage.
-
--- 
-Thanks,
-Sylwester
+                  Linus
