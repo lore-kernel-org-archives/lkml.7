@@ -2,105 +2,101 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5510BC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4C1C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21ECC2086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358529;
-	bh=5O/qCdf5EeoEXV+hINy4coar5n+yKm8x+R7wXINU+U8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qkMAx8HnvJBTTIzHk0xBcru++0o4S7CWiHfqVd3iuCff6qV5DFUl8bBAJViKKIc/e
-	 M8dWZ7fpmybnmb7/cUadluFnTo2wh1o3ULdxZ4fOEnptxpZduaRMIJWULsVaFzAREA
-	 L9548pIfyTbX1+3d9QT/G8Tbo4mJ1pgp5f+ALQtM=
+	by mail.kernel.org (Postfix) with ESMTP id 3DA542086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dAKPX25M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436590AbfHINrO (ORCPT
+        id S2407254AbfHINsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:47:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436577AbfHINrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:47:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8109A214C6;
-        Fri,  9 Aug 2019 13:47:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358428;
-        bh=5O/qCdf5EeoEXV+hINy4coar5n+yKm8x+R7wXINU+U8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iXMD4B0RTMe0DnBVRIJ2I0vMXPw6sGkEcpvI5bZ8LuCAh25CAmXRXF3zd+1tPibjs
-         5Zthbcj9v/iz5AftRxQHDoAMsfeixxCEzgrD4ESB4ZxrEjnzCnGbSu4NZUBmdY2R+X
-         1wochU3mfRAiwNwjQtey6OAKuVTj2Gp812lNlhbo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 20/32] net: sched: Fix a possible null-pointer dereference in dequeue_func()
-Date:   Fri,  9 Aug 2019 15:45:23 +0200
-Message-Id: <20190809133923.599973260@linuxfoundation.org>
+        Fri, 9 Aug 2019 09:48:55 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37474 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407117AbfHINsw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:48:52 -0400
+Received: by mail-ed1-f66.google.com with SMTP id w13so95108296eds.4;
+        Fri, 09 Aug 2019 06:48:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yR+5s19H5XCk7doKkod5jfqUZgK48EnsW+tAB5UH8bw=;
+        b=dAKPX25MR2kQZQZvgVKx5T7q/vyxdZRYsqbQOt+mcp3EMtuwhvqwBkUfQiyBRGsHqF
+         JsGiM+VsbPyY4TLT88JdaiQgPm11MSsTwFypm09G/XbjHMtgAI8sEOSkJuP0dfzFZmb+
+         QTU8CoazveBoQTaPgIKLAfSUPELNsMuxVuMsqVQ4CL6aZPr8AgA/NF0mCRaXe12bXCuO
+         iEHhhbzoFQ8cjB58nQHrPW3J4o1kUDQDVayMIsJCgoM0O/R/mBRD87Da8CSzPk8uyeKo
+         5wN+b6qjcwEnPz3ydmuo2uilF8fhh+r3aY4g1tZhc/fMO0tbTt4+3M1pBA6NUetzjNLG
+         Hqvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yR+5s19H5XCk7doKkod5jfqUZgK48EnsW+tAB5UH8bw=;
+        b=QqA4xDf+6bVbvwLzTw/qIMdGCNTZFkEPKjVcNWvZiZ84uhflx2s9uQlTEZAiR5aqee
+         hhBnIrGvgnJg97/8KLmVRCSVwcZ6xBCHcKiWHQkuT5e6yZ3eeoyZldAOSRFoNWyV3x0v
+         vcer5aGy7tMRM/Hanq7CG1NwMH8zOEssYCtBqAFccw9dLxfZMNUe68ZcYaB8More4FaB
+         SyKxBPR4V0XR/Mhh3UTCsLBxWy8szrLoW1NCtKUwPSAXCihK90oKZVd/x19M174b29Gi
+         5IehTVbvStcYb1Z46zIm/0XbMYyoTu90faH0LZxgnXGlnlAOMcYH4IO5ADizdAb51878
+         k02Q==
+X-Gm-Message-State: APjAAAX2L0MznT+J5q64nJBc7m6MU95VeaaR+Hb7kf17mnwGoXDzS4XQ
+        hMLSuBcvUz3I6USPZet+sn8=
+X-Google-Smtp-Source: APXvYqx9OCKX+nWFkLmri91BqlVkrRygPvan6hB0ETflRbvT1wRyzTakPMOjjsr4Zd4n2oNcNVUNvQ==
+X-Received: by 2002:a50:f5f5:: with SMTP id x50mr21466114edm.89.1565358530524;
+        Fri, 09 Aug 2019 06:48:50 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id rv16sm15937818ejb.79.2019.08.09.06.48.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 09 Aug 2019 06:48:49 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] pwm: Fixes for v5.3-rc4
+Date:   Fri,  9 Aug 2019 15:48:48 +0200
+Message-Id: <20190809134848.18297-1-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190809133922.945349906@linuxfoundation.org>
-References: <20190809133922.945349906@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+Hi Linus,
 
-[ Upstream commit 051c7b39be4a91f6b7d8c4548444e4b850f1f56c ]
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
-In dequeue_func(), there is an if statement on line 74 to check whether
-skb is NULL:
-    if (skb)
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
 
-When skb is NULL, it is used on line 77:
-    prefetch(&skb->end);
+are available in the Git repository at:
 
-Thus, a possible null-pointer dereference may occur.
+  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.3-rc4
 
-To fix this bug, skb->end is used when skb is not NULL.
+for you to fetch changes up to 6cf9481b440da6d6d86bd8e4c99a8b553b9d1271:
 
-This bug is found by a static analysis tool STCheck written by us.
+  pwm: Fallback to the static lookup-list when acpi_pwm_get fails (2019-08-08 13:17:38 +0200)
 
-Fixes: 76e3cc126bb2 ("codel: Controlled Delay AQM")
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sched/sch_codel.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Thanks,
+Thierry
 
---- a/net/sched/sch_codel.c
-+++ b/net/sched/sch_codel.c
-@@ -71,10 +71,10 @@ static struct sk_buff *dequeue_func(stru
- 	struct Qdisc *sch = ctx;
- 	struct sk_buff *skb = __qdisc_dequeue_head(&sch->q);
- 
--	if (skb)
-+	if (skb) {
- 		sch->qstats.backlog -= qdisc_pkt_len(skb);
--
--	prefetch(&skb->end); /* we'll need skb_shinfo() */
-+		prefetch(&skb->end); /* we'll need skb_shinfo() */
-+	}
- 	return skb;
- }
- 
+----------------------------------------------------------------
+pwm: Fixes for v5.3-rc4
 
+This contains a single fix for a backlight brightness regression
+introduced in v5.3-rc1.
 
+----------------------------------------------------------------
+Hans de Goede (1):
+      pwm: Fallback to the static lookup-list when acpi_pwm_get fails
+
+ drivers/pwm/core.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
