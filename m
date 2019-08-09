@@ -2,168 +2,187 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE63EC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 811E0C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1D212085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B6A420C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:33:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PpZY5iBb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407510AbfHISbt (ORCPT
+        id S2436881AbfHISdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:31:49 -0400
-Received: from mga04.intel.com ([192.55.52.120]:7052 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436791AbfHISbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:31:48 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 11:31:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,366,1559545200"; 
-   d="scan'208";a="374570158"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga005.fm.intel.com with ESMTP; 09 Aug 2019 11:31:47 -0700
-Date:   Fri, 9 Aug 2019 11:31:47 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH v3 2/7] x86: kvm: svm: propagate errors from
- skip_emulated_instruction()
-Message-ID: <20190809183146.GD10541@linux.intel.com>
-References: <20190808173051.6359-1-vkuznets@redhat.com>
- <20190808173051.6359-3-vkuznets@redhat.com>
+        Fri, 9 Aug 2019 14:33:31 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:10517 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405723AbfHISda (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 14:33:30 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4dbc7a0002>; Fri, 09 Aug 2019 11:33:30 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 09 Aug 2019 11:33:28 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 09 Aug 2019 11:33:28 -0700
+Received: from [10.2.167.88] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 9 Aug
+ 2019 18:33:27 +0000
+Subject: Re: [PATCH v8 11/21] clk: tegra: clk-dfll: Add suspend and resume
+ support
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-12-git-send-email-skomatineni@nvidia.com>
+ <eb4fdab8-aba3-7f0c-a391-d751674fd03e@gmail.com>
+ <29a85a35-10ff-2d43-d148-9dba1ee25869@nvidia.com>
+ <84a0d46a-bca2-1000-a2a6-8890ee702dd3@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <9902aa72-3f18-9840-35ad-137293d2e26c@nvidia.com>
+Date:   Fri, 9 Aug 2019 11:33:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808173051.6359-3-vkuznets@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <84a0d46a-bca2-1000-a2a6-8890ee702dd3@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565375610; bh=RL3xW/QV8ig+4LOtDKUXlwGYg2LoxLMNhawJPeDdkro=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=PpZY5iBbGEvm7gAPal8Gj+kjDjdYIKM7c5m+y3squ6PxdfK5512ANCp1yXGF7WkGK
+         8MkEkIKzaxbXdfOt2lUUbaALPWiLC6HhZbFtcCaRlPHX99vikblmdxalGwDVbqrWPY
+         vMdiOYXR5FAtwHBK1UFt3pT6F/M49X0MM5AFCm80KTjs2EY/5n4DYtKz3kAuiPCch8
+         UEujoW4PLGOiPOY3Agj/Q24f+7i34V83GgK/b/DmLrxsJgLJbXmdUtUC65GPuXU56m
+         FXvfyS94TS6MFriG1tBDlKSloKPwddwBZO2oL++f/jMty0h6HqoqosjFY0YQ0ydsaC
+         ZlHwkkyO/A7SA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 07:30:46PM +0200, Vitaly Kuznetsov wrote:
-> On AMD, kvm_x86_ops->skip_emulated_instruction(vcpu) can, in theory,
-> fail: in !nrips case we call kvm_emulate_instruction(EMULTYPE_SKIP).
-> Currently, we only do printk(KERN_DEBUG) when this happens and this
-> is not ideal. Propagate the error up the stack.
-> 
-> On VMX, skip_emulated_instruction() doesn't fail, we have two call
-> sites calling it explicitly: handle_exception_nmi() and
-> handle_task_switch(), we can just ignore the result.
-> 
-> On SVM, we also have two explicit call sites:
-> svm_queue_exception() and it seems we don't need to do anything there as
-> we check if RIP was advanced or not. In task_switch_interception(),
-> however, we are better off not proceeding to kvm_task_switch() in case
-> skip_emulated_instruction() failed.
-> 
-> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
 
-...
+On 8/9/19 11:00 AM, Dmitry Osipenko wrote:
+> 09.08.2019 19:39, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 8/9/19 5:23 AM, Dmitry Osipenko wrote:
+>>> 09.08.2019 2:46, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> This patch implements DFLL suspend and resume operation.
+>>>>
+>>>> During system suspend entry, CPU clock will switch CPU to safe
+>>>> clock source of PLLP and disables DFLL clock output.
+>>>>
+>>>> DFLL driver suspend confirms DFLL disable state and errors out on
+>>>> being active.
+>>>>
+>>>> DFLL is re-initialized during the DFLL driver resume as it goes
+>>>> through complete reset during suspend entry.
+>>>>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>>  =C2=A0 drivers/clk/tegra/clk-dfll.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 56 ++++++++++++++++++=
+++++++++++++
+>>>>  =C2=A0 drivers/clk/tegra/clk-dfll.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 ++
+>>>>  =C2=A0 drivers/clk/tegra/clk-tegra124-dfll-fcpu.c |=C2=A0 1 +
+>>>>  =C2=A0 3 files changed, 59 insertions(+)
+>>>>
+>>>> diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll=
+.c
+>>>> index f8688c2ddf1a..eb298a5d7be9 100644
+>>>> --- a/drivers/clk/tegra/clk-dfll.c
+>>>> +++ b/drivers/clk/tegra/clk-dfll.c
+>>>> @@ -1487,6 +1487,7 @@ static int dfll_init(struct tegra_dfll *td)
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 td->last_unrounded_rate =3D 0;
+>>>>  =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pm_runtime_enable(td->dev);
+>>>> +=C2=A0=C2=A0=C2=A0 pm_runtime_irq_safe(td->dev);
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pm_runtime_get_sync(td->dev);
+>>>>  =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dfll_set_mode(td, DFLL_DISABLED=
+);
+>>>> @@ -1513,6 +1514,61 @@ static int dfll_init(struct tegra_dfll *td)
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>>>>  =C2=A0 }
+>>>>  =C2=A0 +/**
+>>>> + * tegra_dfll_suspend - check DFLL is disabled
+>>>> + * @dev: DFLL device *
+>>>> + *
+>>>> + * DFLL clock should be disabled by the CPUFreq driver. So, make
+>>>> + * sure it is disabled and disable all clocks needed by the DFLL.
+>>>> + */
+>>>> +int tegra_dfll_suspend(struct device *dev)
+>>>> +{
+>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_dfll *td =3D dev_get_drvdata(dev);
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 if (dfll_is_running(td)) {
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(td->dev, "dfll is =
+enabled while shouldn't be\n");
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EBUSY;
+>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 reset_control_assert(td->dvco_rst);
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>>> +}
+>>>> +EXPORT_SYMBOL(tegra_dfll_suspend);
+>>>> +
+>>>> +/**
+>>>> + * tegra_dfll_resume - reinitialize DFLL on resume
+>>>> + * @dev: DFLL instance
+>>>> + *
+>>>> + * DFLL is disabled and reset during suspend and resume.
+>>>> + * So, reinitialize the DFLL IP block back for use.
+>>>> + * DFLL clock is enabled later in closed loop mode by CPUFreq
+>>>> + * driver before switching its clock source to DFLL output.
+>>>> + */
+>>>> +int tegra_dfll_resume(struct device *dev)
+>>>> +{
+>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_dfll *td =3D dev_get_drvdata(dev);
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 reset_control_deassert(td->dvco_rst);
+>>> This doesn't look right because I assume that DFLL resetting is
+>>> synchronous and thus clk should be enabled in order for reset to
+>>> propagate inside hardware.
+>>>
+>>>> +=C2=A0=C2=A0=C2=A0 pm_runtime_get_sync(td->dev);
+>>> Hence it will be better to remove the above reset_control_deassert() an=
+d
+>>> add here:
+>>>
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0reset_control_reset(td->dvco_rst);
+>> By the time dfll resume happens, dfll controller clock will already be e=
+nabled.
+>>
+>> so doing reset de-assert before pm_runtime seems ok.
+> I don't see what enables the DFLL clock because it should be enabled by t=
+he CPUFreq driver
+> on resume from suspend and resume happens after resuming of the DFLL driv=
+er.
 
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 074385c86c09..2579e7a6d59d 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1473,7 +1473,7 @@ static int vmx_rtit_ctl_check(struct kvm_vcpu *vcpu, u64 data)
->  }
->  
->  
-> -static void skip_emulated_instruction(struct kvm_vcpu *vcpu)
-> +static int skip_emulated_instruction(struct kvm_vcpu *vcpu)
->  {
->  	unsigned long rip;
->  
-> @@ -1483,6 +1483,8 @@ static void skip_emulated_instruction(struct kvm_vcpu *vcpu)
->  
->  	/* skipping an emulated instruction also counts */
->  	vmx_set_interrupt_shadow(vcpu, 0);
-> +
-> +	return EMULATE_DONE;
->  }
->  
->  static void vmx_clear_hlt(struct kvm_vcpu *vcpu)
-> @@ -4547,7 +4549,7 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
->  			vcpu->arch.dr6 &= ~DR_TRAP_BITS;
->  			vcpu->arch.dr6 |= dr6 | DR6_RTM;
->  			if (is_icebp(intr_info))
-> -				skip_emulated_instruction(vcpu);
-> +				(void)skip_emulated_instruction(vcpu);
->  
->  			kvm_queue_exception(vcpu, DB_VECTOR);
->  			return 1;
-> @@ -5057,7 +5059,7 @@ static int handle_task_switch(struct kvm_vcpu *vcpu)
->  	if (!idt_v || (type != INTR_TYPE_HARD_EXCEPTION &&
->  		       type != INTR_TYPE_EXT_INTR &&
->  		       type != INTR_TYPE_NMI_INTR))
-> -		skip_emulated_instruction(vcpu);
-> +		(void)skip_emulated_instruction(vcpu);
+dvco_rst is part of peripheral clocks and all peripheral clocks are=20
+restored by clk-tegra210 driver which happens before dfll driver resume.
 
-Maybe a silly idea, but what if we squash the return value in a dedicated
-helper, with a big "DO NOT USE" comment above the int-returning function, e.g.:
+So dfll rst thru part of peripheral clock enable is set prior to dfll=20
+reset deassertion
 
-static int __skip_emulated_instruction(struct kvm_vcpu *vcpu)
-{
-	unsigned long rip;
-
-	rip = kvm_rip_read(vcpu);
-	rip += vmcs_read32(VM_EXIT_INSTRUCTION_LEN);
-	kvm_rip_write(vcpu, rip);
-
-	/* skipping an emulated instruction also counts */
-	vmx_set_interrupt_shadow(vcpu, 0);
-
-	return EMULATE_DONE;
-}
-
-static inline void skip_emulated_instruction(struct kvm_vcpu *vcpu)
-{
-	(void)__skip_emulated_instruction(vcpu);
-}
-
-
-Alternatively, the inner function could be void, but on my system that
-adds an extra call in the wrapper, i.e. in the kvm_skip_emulated...()
-path.  The above approach generates the same code as your patch, e.g.
-allows the compiler to decide whether or not to inline the meat of the
-code.
-
->  	if (kvm_task_switch(vcpu, tss_selector,
->  			    type == INTR_TYPE_SOFT_INTR ? idt_index : -1, reason,
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index c6d951cbd76c..a97818b1111d 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -6383,9 +6383,11 @@ static void kvm_vcpu_do_singlestep(struct kvm_vcpu *vcpu, int *r)
->  int kvm_skip_emulated_instruction(struct kvm_vcpu *vcpu)
->  {
->  	unsigned long rflags = kvm_x86_ops->get_rflags(vcpu);
-> -	int r = EMULATE_DONE;
-> +	int r;
->  
-> -	kvm_x86_ops->skip_emulated_instruction(vcpu);
-> +	r = kvm_x86_ops->skip_emulated_instruction(vcpu);
-> +	if (r != EMULATE_DONE)
-
-This should probably be wrapped with unlikely.
-
-> +		return 0;
->  
->  	/*
->  	 * rflags is the old, "raw" value of the flags.  The new value has
-> -- 
-> 2.20.1
-> 
