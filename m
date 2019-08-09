@@ -2,162 +2,137 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 358ECC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 06:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DBEC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 06:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE29C2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 06:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7E2D2089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 06:26:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=labbott.name header.i=@labbott.name header.b="fHEi8ItR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405629AbfHIGYd (ORCPT
+        id S2405659AbfHIG0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 02:24:33 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:27684 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405510AbfHIGYc (ORCPT
+        Fri, 9 Aug 2019 02:26:23 -0400
+Received: from mail-wm1-f41.google.com ([209.85.128.41]:34352 "EHLO
+        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726212AbfHIG0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 02:24:32 -0400
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 4WJWT/wn23UaX1GruXfR9JWONyV8gpdACAqNbsaU56BfyDoKB9oqw0TBvKTRWDSJtM45HNXvmR
- PCny3sTrieA/QzIbhiw9MNXvBxe+Q3d6fZ9F9ztirfIQNviUe2I8d+9+zwFdZqiWwqzUZTvgVO
- SOunDtl8u4x9hkFsVFCpplWx/2NHJqeigh8IaT0yHgODbEkhJ7dQHglbndmI9BcsoLP/equ0+t
- ZCbCvESXz5Pb6xcRGdrbuxWk8mqpkmBvWCOVGS0MjunxqdHRfA4q/himzCT8vJtHhl/2XoKovZ
- HMw=
-X-IronPort-AV: E=Sophos;i="5.64,364,1559545200"; 
-   d="scan'208";a="43015337"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Aug 2019 23:24:27 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 8 Aug 2019 23:24:27 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Thu, 8 Aug 2019 23:24:27 -0700
-Date:   Fri, 9 Aug 2019 08:23:22 +0200
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-CC:     Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>,
-        "Nicolas Ferre - M43238" <Nicolas.Ferre@microchip.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-Subject: Re: [PATCH 2/2] ARM: dts: at91: sama5d27_som1_ek: add mmc
- capabilities for SDMMC0
-Message-ID: <20190809062322.syuieymdqjs4e7lh@M43218.corp.atmel.com>
-Mail-Followup-To: Adrian Hunter <adrian.hunter@intel.com>,
-        Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>,
-        Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-References: <1565252928-28994-1-git-send-email-eugen.hristev@microchip.com>
- <1565252928-28994-2-git-send-email-eugen.hristev@microchip.com>
- <20190808124217.wrmcxohw5i6ju2qe@M43218.corp.atmel.com>
- <04fd74c3-a828-1064-b77b-f3de07a26190@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <04fd74c3-a828-1064-b77b-f3de07a26190@intel.com>
-User-Agent: NeoMutt/20180716
+        Fri, 9 Aug 2019 02:26:23 -0400
+Received: by mail-wm1-f41.google.com with SMTP id e8so5205334wme.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 23:26:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=labbott.name; s=google;
+        h=from:content-transfer-encoding:mime-version:subject:message-id:date
+         :to;
+        bh=vlxK8xDF4eNfC+oTwctLwIffFn6g/NeBo57WGK7Q3gU=;
+        b=fHEi8ItRXEH/I4wxHxtW4ITnNFkpvjVZZMGFKyggEvNZzVRgHk1fxjtYu/gomMxN/D
+         B48LnR5SmYQhOr9i4hZadsH8OodwBgRbKoMPjN++kN1r9rNI2sERCqvZHmADKjSZh93D
+         Yagfuj5oWKal7SxL8D0C1juwSSbv8nA9weBmY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:to;
+        bh=vlxK8xDF4eNfC+oTwctLwIffFn6g/NeBo57WGK7Q3gU=;
+        b=XYPdpXAJO+uP+yoXyUB5PnM1WHIFEa6XyXGq0pNjqPSggs2/uesXMGzcwPJ7astmAQ
+         oYe9E5vW+b5uFopj5Hgmr8duX9UNTunSv6/XIkll/9OhyPPbOwQvaL1H7of1XqdDHLYb
+         kHIUrYh0hCZIWf5og5hT4Z67l1VeYK7JJPb5ge7+9SZd2AqfH53Mu8wO51J2EkxXVouC
+         r04BI3zmum5hxi7NmJeBKj4nwvdV6yBH+gYEFnvyO/8pJ8IgRSC21Iwglk9Z9ZkWqW0m
+         il4EGEkoP7b3q27H/opiQMyW+fYaoMMa3Q2ppyteSrOj/2bRcrBOl4wG6eq5jW7bnNHS
+         TK7g==
+X-Gm-Message-State: APjAAAUlxosd6mogSzSV0u429yx7Fwv9RyNZfFiD0l+2ApUquN4AIeoC
+        L86alvPC3yaujTXEusN7TceJ3EF872Lr1A==
+X-Google-Smtp-Source: APXvYqy+VHCMBB/YKlRF1ljpLoc+8qx7vl52S3hq1JbUuAtgC79mFPsq+3d7V9FI2wEu5atQJj6U0g==
+X-Received: by 2002:a1c:7e85:: with SMTP id z127mr8919055wmc.95.1565331980471;
+        Thu, 08 Aug 2019 23:26:20 -0700 (PDT)
+Received: from [192.168.200.9] ([193.68.39.228])
+        by smtp.gmail.com with ESMTPSA id i66sm6698428wmg.2.2019.08.08.23.26.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 08 Aug 2019 23:26:19 -0700 (PDT)
+From:   Laura Abbott <laura@labbott.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Linux Foundation Technical Advisory Board Elections -- Call for
+ nominations
+Message-Id: <DD187286-CEBE-44B3-A992-F84FC9C9CD26@labbott.name>
+Date:   Fri, 9 Aug 2019 02:26:18 -0400
+To:     linux-kernel@vger.kernel.org
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 03:57:30PM +0300, Adrian Hunter wrote:
-> On 8/08/19 3:42 PM, Ludovic Desroches wrote:
-> > On Thu, Aug 08, 2019 at 10:35:43AM +0200, Eugen Hristev - M18282 wrote:
-> >> From: Eugen Hristev <eugen.hristev@microchip.com>
-> >>
-> >> Add mmc capabilities for SDMMC0 for this board.
-> >> With this enabled, eMMC connected card is detected as:
-> >>
-> >> mmc0: new DDR MMC card at address 0001
-> >>
-> >> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> > Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-> > 
-> > I am interested to have the some insights about the use of sd-uhs-*
-> > properties.
-> > 
-> > Our IP can't deal with 1V8 by itself. It has a 1V8SEL signal which can
-> > be used as the logic control input of a mux. So even if the IP claims
-> > to support UHS modes, it depends on the board.
-> > 
-> > Are the sd-uhs-* properties a way to deal with this? I tend to think no
-> > as sdhci_setup_host() will set the caps depending on the content of the
-> > capabilities register. Do we have to use the SDHCI_QUIRK_MISSING_CAPS
-> > quirk or sdhci-caps/sdhci-caps-mask?
-> 
-> There is "no-1-8-v" which it looks like sdhci-of-at91.c already supports:
-> 
->   sdhci_at91_probe() -> sdhci_get_of_property() -> sdhci_get_property()
-> 
->     	if (device_property_present(dev, "no-1-8-v"))
-> 		host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
-> 
+Hello everyone,
 
-Right, I forgot this property. Thanks.
+Friendly reminder that the TAB elections are coming soon:
 
-Eugen, do you see cases we can't cover with this property?
+The Linux Foundation Technical Advisory Board (TAB) serves as the
+interface between the kernel development community and the Linux
+Foundation. The TAB advises the Foundation on kernel-related matters,
+helps member companies learn to work with the community, and works to
+resolve community-related problems before they get out of hand.  We
+also support the Code of Conduct committee in their mission.
 
-Regards
+The board has ten members, one of whom sits on the Linux Foundation
+board of directors.
 
-Ludovic
+The election to select five TAB members will be held at the 2019 Kernel =
+Summit
+in Lisbon, Portugal September 9-11. As has been announced[2], we are =
+moving to
+an electronic voting system this year. Further details about the exact =
+voting
+procedures will be coming soon. Anyone is eligible to stand for =
+election,
+simply send your nomination to:
 
-> 
-> > 
-> > Regards
-> > 
-> > Ludovic
-> > 
-> >> ---
-> >>  arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-> >> index 149e539..194b3a3 100644
-> >> --- a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-> >> +++ b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-> >> @@ -54,6 +54,7 @@
-> >>  
-> >>  		sdmmc0: sdio-host@a0000000 {
-> >>  			bus-width = <8>;
-> >> +			mmc-ddr-3_3v;
-> >>  			pinctrl-names = "default";
-> >>  			pinctrl-0 = <&pinctrl_sdmmc0_default>;
-> >>  			status = "okay";
-> >> -- 
-> >> 2.7.4
-> >>
-> > 
-> 
+tech-board-discuss at lists.linux-foundation.org
+
+With your nomination, please include a short candidate statement. This =
+candidate
+statement should focus on why you are running and what you hope to =
+accomplish
+on the TAB. We will be collecting these statements and making them =
+publicly=20
+available.
+
+The deadline for receiving nominations is 9am GMT+1 on September 9th =
+(the first
+day of Kernel Summit). Due to the use of electronic voting, this will be =
+a hard
+deadline!
+
+Current TAB members, and their election year:
+
+Jon Corbet		2017
+Greg Kroah-Hartman	2017
+Steven Rostedt		2017
+Ted Tso			2017
+Tim Bird		2017
+
+Chris Mason		2018
+Laura Abbott		2018
+Olof Johansson		2018
+Kees Cook		2018
+Dan Williams		2018
+
+The five slots from 2017 are all up for election.  As always, please
+let us know if you have questions, and please do consider running.
+
+Thanks,
+Laura
+
+[1] TAB members sit for a term of two years, and half of the board is
+up for election every year. Five of the seats are up for election now.
+The other five are halfway through their term and will be up for
+election next year.
+
+[2] =
+https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2019-July/0065=
+82.html=
