@@ -2,57 +2,58 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=FUZZY_XPILL,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D95E4C32757
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB1FC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F48E214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1164121743
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:29:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbfHIU3N (ORCPT
+        id S1729505AbfHIU3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 16:29:13 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:49271 "EHLO
+        Fri, 9 Aug 2019 16:29:22 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:60313 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728557AbfHIU3L (ORCPT
+        with ESMTP id S1728985AbfHIU3R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 16:29:11 -0400
+        Fri, 9 Aug 2019 16:29:17 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MuDPh-1iA0OY0Dhl-00uayf; Fri, 09 Aug 2019 22:29:03 +0200
+ 1MV6G6-1hmnLD3sJC-00SB7i; Fri, 09 Aug 2019 22:29:06 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     soc@kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH 13/16] net: remove w90p910-ether driver
-Date:   Fri,  9 Aug 2019 22:27:41 +0200
-Message-Id: <20190809202749.742267-14-arnd@arndb.de>
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [PATCH 14/16] rtc: remove w90x900/nuc900 driver
+Date:   Fri,  9 Aug 2019 22:27:42 +0200
+Message-Id: <20190809202749.742267-15-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20190809202749.742267-1-arnd@arndb.de>
 References: <20190809202749.742267-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:39BAN02nCz1ofCbKvZlpc/4Xe9xSvAEwlWywZOcI+NkOaWFWNdY
- oUPXzobb7RlDSgPWYOKFuXdoXMTJsx/F/08SrOp0Gs90dOUHSkec5eWoZRusxNU+2wWfAS+
- ycSriXD2TMACVvLq8zSIM5iSeViejSIFE0RPbSVTXjg7IgiDwh1O5TgptFZi3I97WdoovqA
- qBs/DfKurqs+tfVZ/NUQA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1CI+tS9/2pc=:NEPS4X7LIK2kV+s59bZqOM
- nGp7OnDzWW1SQsA4XD81ZbOihX0fax5teFy6bSjblbFWE+pdcXzvys1HP1nuMt53gxRRNZJAB
- CWGU3bKjN8B1qJq9akEAq9ek13r4yHN4qRcE8mSmeab+xlAXEgERHx+snesKG5u7Zxhej6Hnp
- +6PxESEKxJg3dVV2uuIOZliV9uiBeVmLoCvA7eFM0DALdVlJf6aM4LsPg2SymSsjj48W4ikt+
- b4Xnqnuxy0r8AxkhM8lowwhNYkiWBsXK39JAGz61CX+tr5M6/bJgAvN50NTw2a9fiJC+PdQbr
- eAX+hABAPVxnlcRum7zUSJAV26N7ujZG5jQ6YJnQxaLkca2PXOX5bptovpJvM7EO+21mI2ppp
- kUHkwvRwQinrOhyPIU4W2fcXBMdcm4/q1szRIlzMoTp2BBC95CicZsFlIhdhwK0iBvEPf2EdK
- H+QpXCvmuAgFEYRJHywMVVg/sICdliyN7dvgv7CqqDXZCWSbU5N+Md/TTfVrIWvft3vZgTPrz
- i0Zx8xZySQfsjifQtYsA9xn9bY5V4vHMNHEmFWIakw+qExCOgp3CFn8lEin72BmeER3Ceb7YD
- /E/LF3vqQ7jc/bJTxa8OEbwFJZ9Q1yKY/VfRJHFafDA9CetM6G+jtl3Bh/jJWE5L4JodBxeZS
- Z9DE3/k9HnJYzLI3oUNEYzGXUfbP6YSY1tXouN1fGIWzXaJpy3OSJxEl+x1RHxxmlP8dPUrM1
- X4NBrwQca9zZMHrIW4V4vja6GQKrkp95ciLx9g==
+X-Provags-ID: V03:K1:G8qc/wYNLtJbkuHPeqI/QzOt8e9lF3Tmm4TBFiQWdZlmGL8c/cp
+ uogjri1+5d1ebyNGebf3HL2775NUYtbTwPNEdG6HjjGSa3v+fdZWaNB5xvRmCWZvBOlzhFK
+ 02BZy0I0AwwEX4ltQ3LXfCkwRPDAR2DDdrqPqhXkPFH8+gDCCLcEbxe8EgvxTkgp+6wtjLB
+ PWonxDLwlz2h1Km/+kpHQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6WFg8zv6ofE=:u2heJHDISJ0KANbIVxC8fY
+ OXFKBbZSGDola/OaViuqgSk1YxYZIbOLhDLB1RkAOngCyX8BwbA1QI+42sQLGnfclJtiBqOv0
+ TsrS54687OMHU3eIf0YBb+GYjy6TdQ28Zbj4Xi6MJd1W2ulGBlgkCa/ZXaMushUI0y/Kil9XL
+ sw5uaGjdK9PA496+DHU+ibjt6gcsUaGO+bYe3BdahvShf4RKVib2uqB5SK7gwk9Y+7pJX9iQx
+ PfVXh57E6D3OTeLrM6QkamcJWMfCU1tQtkiKTOTYee62i/HorzSE8t2VzJoKavi3KbCC2XrY4
+ Ue4nh6qBjHAqcXKyp9dIOxsviInlLzHe4cBrICmBOj9xPdEUNhG7qVe01bZvKGbuEXaOnn2nG
+ zSbHglhQ2l0eD//ZtMcyqD+kbqdO+qj5hv2ORitZzjS9rcqlbf9KX2AXtaAYYGHnlCxrItkXx
+ 2W/p8ZYslRZYcB5tPT9e1wrzBE6hvHZq/PtbZdvIeBMnBm1//Mhid815/r+VYL0JaumdZHWVz
+ rzsISkJRfIqsccyHQocofq2OYF23omZkA0GiJhFoqNDkflC1th3FKD/udsth/fPlfgvRkOCOq
+ 0WC0rMgDfWA7L/oJCA0++O8dUJZVphqEN0rxAI+buCDP026NiP7nu4+cE2LocDPH/wPdp1NV4
+ gYUh1CFgOXgL/HyLz8q61WfIpgwcnVcn8cTm9ktf7XYKA7idtjyqrtG19W33mxxEC3tu0MHrB
+ sBXETIP7FcjvU6fHtrm47wQ130fl/jAH2kAcrg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,93 +63,48 @@ The ARM w90x900 platform is getting removed, so this driver is obsolete.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/net/ethernet/Kconfig                 |    1 -
- drivers/net/ethernet/Makefile                |    1 -
- drivers/net/ethernet/nuvoton/Kconfig         |   29 -
- drivers/net/ethernet/nuvoton/Makefile        |    6 -
- drivers/net/ethernet/nuvoton/w90p910_ether.c | 1082 ------------------
- 5 files changed, 1119 deletions(-)
- delete mode 100644 drivers/net/ethernet/nuvoton/Kconfig
- delete mode 100644 drivers/net/ethernet/nuvoton/Makefile
- delete mode 100644 drivers/net/ethernet/nuvoton/w90p910_ether.c
+ drivers/rtc/Kconfig      |   7 -
+ drivers/rtc/Makefile     |   1 -
+ drivers/rtc/rtc-nuc900.c | 271 ---------------------------------------
+ 3 files changed, 279 deletions(-)
+ delete mode 100644 drivers/rtc/rtc-nuc900.c
 
-diff --git a/drivers/net/ethernet/Kconfig b/drivers/net/ethernet/Kconfig
-index 93a2d4deb27c..dc9dee55976b 100644
---- a/drivers/net/ethernet/Kconfig
-+++ b/drivers/net/ethernet/Kconfig
-@@ -151,7 +151,6 @@ config NET_NETX
- 	  To compile this driver as a module, choose M here. The module
- 	  will be called netx-eth.
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index e72f65b61176..2805cbb32ade 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -1247,13 +1247,6 @@ config RTC_DRV_AB8500
+ 	  Select this to enable the ST-Ericsson AB8500 power management IC RTC
+ 	  support. This chip contains a battery- and capacitor-backed RTC.
  
--source "drivers/net/ethernet/nuvoton/Kconfig"
- source "drivers/net/ethernet/nvidia/Kconfig"
- source "drivers/net/ethernet/nxp/Kconfig"
- source "drivers/net/ethernet/oki-semi/Kconfig"
-diff --git a/drivers/net/ethernet/Makefile b/drivers/net/ethernet/Makefile
-index fb9155cffcff..4bc3c95562bf 100644
---- a/drivers/net/ethernet/Makefile
-+++ b/drivers/net/ethernet/Makefile
-@@ -65,7 +65,6 @@ obj-$(CONFIG_NET_VENDOR_NETERION) += neterion/
- obj-$(CONFIG_NET_VENDOR_NETRONOME) += netronome/
- obj-$(CONFIG_NET_VENDOR_NI) += ni/
- obj-$(CONFIG_NET_NETX) += netx-eth.o
--obj-$(CONFIG_NET_VENDOR_NUVOTON) += nuvoton/
- obj-$(CONFIG_NET_VENDOR_NVIDIA) += nvidia/
- obj-$(CONFIG_LPC_ENET) += nxp/
- obj-$(CONFIG_NET_VENDOR_OKI) += oki-semi/
-diff --git a/drivers/net/ethernet/nuvoton/Kconfig b/drivers/net/ethernet/nuvoton/Kconfig
+-config RTC_DRV_NUC900
+-	tristate "NUC910/NUC920 RTC driver"
+-	depends on ARCH_W90X900 || COMPILE_TEST
+-	help
+-	  If you say yes here you get support for the RTC subsystem of the
+-	  NUC910/NUC920 used in embedded systems.
+-
+ config RTC_DRV_OPAL
+ 	tristate "IBM OPAL RTC driver"
+ 	depends on PPC_POWERNV
+diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+index 6b09c21dc1b6..9fe0e938272c 100644
+--- a/drivers/rtc/Makefile
++++ b/drivers/rtc/Makefile
+@@ -113,7 +113,6 @@ obj-$(CONFIG_RTC_DRV_MT7622)	+= rtc-mt7622.o
+ obj-$(CONFIG_RTC_DRV_MV)	+= rtc-mv.o
+ obj-$(CONFIG_RTC_DRV_MXC)	+= rtc-mxc.o
+ obj-$(CONFIG_RTC_DRV_MXC_V2)	+= rtc-mxc_v2.o
+-obj-$(CONFIG_RTC_DRV_NUC900)	+= rtc-nuc900.o
+ obj-$(CONFIG_RTC_DRV_OMAP)	+= rtc-omap.o
+ obj-$(CONFIG_RTC_DRV_OPAL)	+= rtc-opal.o
+ obj-$(CONFIG_RTC_DRV_PALMAS)	+= rtc-palmas.o
+diff --git a/drivers/rtc/rtc-nuc900.c b/drivers/rtc/rtc-nuc900.c
 deleted file mode 100644
-index 325e26c549f8..000000000000
---- a/drivers/net/ethernet/nuvoton/Kconfig
+index 49cc4058614d..000000000000
+--- a/drivers/rtc/rtc-nuc900.c
 +++ /dev/null
-@@ -1,29 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--#
--# Nuvoton network device configuration
--#
--
--config NET_VENDOR_NUVOTON
--	bool "Nuvoton devices"
--	default y
--	depends on ARM && ARCH_W90X900
--	---help---
--	  If you have a network (Ethernet) card belonging to this class, say Y.
--
--	  Note that the answer to this question doesn't directly affect the
--	  kernel: saying N will just cause the configurator to skip all
--	  the questions about Nuvoton cards. If you say Y, you will be asked
--	  for your specific card in the following questions.
--
--if NET_VENDOR_NUVOTON
--
--config W90P910_ETH
--	tristate "Nuvoton w90p910 Ethernet support"
--	depends on ARM && ARCH_W90X900
--	select PHYLIB
--	select MII
--	---help---
--	  Say Y here if you want to use built-in Ethernet ports
--	  on w90p910 processor.
--
--endif # NET_VENDOR_NUVOTON
-diff --git a/drivers/net/ethernet/nuvoton/Makefile b/drivers/net/ethernet/nuvoton/Makefile
-deleted file mode 100644
-index 66f6e728d54b..000000000000
---- a/drivers/net/ethernet/nuvoton/Makefile
-+++ /dev/null
-@@ -1,6 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--#
--# Makefile for the Nuvoton network device drivers.
--#
--
--obj-$(CONFIG_W90P910_ETH) += w90p910_ether.o
-diff --git a/drivers/net/ethernet/nuvoton/w90p910_ether.c b/drivers/net/ethernet/nuvoton/w90p910_ether.c
-deleted file mode 100644
-index 3d73970b3a2e..000000000000
---- a/drivers/net/ethernet/nuvoton/w90p910_ether.c
-+++ /dev/null
-@@ -1,1082 +0,0 @@
+@@ -1,271 +0,0 @@
 -// SPDX-License-Identifier: GPL-2.0-only
 -/*
 - * Copyright (c) 2008-2009 Nuvoton technology corporation.
@@ -158,1079 +114,268 @@ index 3d73970b3a2e..000000000000
 -
 -#include <linux/module.h>
 -#include <linux/init.h>
--#include <linux/interrupt.h>
--#include <linux/mii.h>
--#include <linux/netdevice.h>
--#include <linux/etherdevice.h>
--#include <linux/skbuff.h>
--#include <linux/ethtool.h>
 -#include <linux/platform_device.h>
--#include <linux/clk.h>
--#include <linux/gfp.h>
+-#include <linux/slab.h>
+-#include <linux/rtc.h>
+-#include <linux/delay.h>
+-#include <linux/io.h>
+-#include <linux/bcd.h>
 -
--#define DRV_MODULE_NAME		"w90p910-emc"
--#define DRV_MODULE_VERSION	"0.1"
+-/* RTC Control Registers */
+-#define REG_RTC_INIR		0x00
+-#define REG_RTC_AER		0x04
+-#define REG_RTC_FCR		0x08
+-#define REG_RTC_TLR		0x0C
+-#define REG_RTC_CLR		0x10
+-#define REG_RTC_TSSR		0x14
+-#define REG_RTC_DWR		0x18
+-#define REG_RTC_TAR		0x1C
+-#define REG_RTC_CAR		0x20
+-#define REG_RTC_LIR		0x24
+-#define REG_RTC_RIER		0x28
+-#define REG_RTC_RIIR		0x2C
+-#define REG_RTC_TTR		0x30
 -
--/* Ethernet MAC Registers */
--#define REG_CAMCMR		0x00
--#define REG_CAMEN		0x04
--#define REG_CAMM_BASE		0x08
--#define REG_CAML_BASE		0x0c
--#define REG_TXDLSA		0x88
--#define REG_RXDLSA		0x8C
--#define REG_MCMDR		0x90
--#define REG_MIID		0x94
--#define REG_MIIDA		0x98
--#define REG_FFTCR		0x9C
--#define REG_TSDR		0xa0
--#define REG_RSDR		0xa4
--#define REG_DMARFC		0xa8
--#define REG_MIEN		0xac
--#define REG_MISTA		0xb0
--#define REG_CTXDSA		0xcc
--#define REG_CTXBSA		0xd0
--#define REG_CRXDSA		0xd4
--#define REG_CRXBSA		0xd8
+-#define RTCSET			0x01
+-#define AERRWENB		0x10000
+-#define INIRRESET		0xa5eb1357
+-#define AERPOWERON		0xA965
+-#define AERPOWEROFF		0x0000
+-#define LEAPYEAR		0x0001
+-#define TICKENB			0x80
+-#define TICKINTENB		0x0002
+-#define ALARMINTENB		0x0001
+-#define MODE24			0x0001
 -
--/* mac controller bit */
--#define MCMDR_RXON		0x01
--#define MCMDR_ACP		(0x01 << 3)
--#define MCMDR_SPCRC		(0x01 << 5)
--#define MCMDR_TXON		(0x01 << 8)
--#define MCMDR_FDUP		(0x01 << 18)
--#define MCMDR_ENMDC		(0x01 << 19)
--#define MCMDR_OPMOD		(0x01 << 20)
--#define SWR			(0x01 << 24)
--
--/* cam command regiser */
--#define CAMCMR_AUP		0x01
--#define CAMCMR_AMP		(0x01 << 1)
--#define CAMCMR_ABP		(0x01 << 2)
--#define CAMCMR_CCAM		(0x01 << 3)
--#define CAMCMR_ECMP		(0x01 << 4)
--#define CAM0EN			0x01
--
--/* mac mii controller bit */
--#define MDCCR			(0x0a << 20)
--#define PHYAD			(0x01 << 8)
--#define PHYWR			(0x01 << 16)
--#define PHYBUSY			(0x01 << 17)
--#define PHYPRESP		(0x01 << 18)
--#define CAM_ENTRY_SIZE		0x08
--
--/* rx and tx status */
--#define TXDS_TXCP		(0x01 << 19)
--#define RXDS_CRCE		(0x01 << 17)
--#define RXDS_PTLE		(0x01 << 19)
--#define RXDS_RXGD		(0x01 << 20)
--#define RXDS_ALIE		(0x01 << 21)
--#define RXDS_RP			(0x01 << 22)
--
--/* mac interrupt status*/
--#define MISTA_EXDEF		(0x01 << 19)
--#define MISTA_TXBERR		(0x01 << 24)
--#define MISTA_TDU		(0x01 << 23)
--#define MISTA_RDU		(0x01 << 10)
--#define MISTA_RXBERR		(0x01 << 11)
--
--#define ENSTART			0x01
--#define ENRXINTR		0x01
--#define ENRXGD			(0x01 << 4)
--#define ENRXBERR		(0x01 << 11)
--#define ENTXINTR		(0x01 << 16)
--#define ENTXCP			(0x01 << 18)
--#define ENTXABT			(0x01 << 21)
--#define ENTXBERR		(0x01 << 24)
--#define ENMDC			(0x01 << 19)
--#define PHYBUSY			(0x01 << 17)
--#define MDCCR_VAL		0xa00000
--
--/* rx and tx owner bit */
--#define RX_OWEN_DMA		(0x01 << 31)
--#define RX_OWEN_CPU		(~(0x03 << 30))
--#define TX_OWEN_DMA		(0x01 << 31)
--#define TX_OWEN_CPU		(~(0x01 << 31))
--
--/* tx frame desc controller bit */
--#define MACTXINTEN		0x04
--#define CRCMODE			0x02
--#define PADDINGMODE		0x01
--
--/* fftcr controller bit */
--#define TXTHD 			(0x03 << 8)
--#define BLENGTH			(0x01 << 20)
--
--/* global setting for driver */
--#define RX_DESC_SIZE		50
--#define TX_DESC_SIZE		10
--#define MAX_RBUFF_SZ		0x600
--#define MAX_TBUFF_SZ		0x600
--#define TX_TIMEOUT		(HZ/2)
--#define DELAY			1000
--#define CAM0			0x0
--
--static int w90p910_mdio_read(struct net_device *dev, int phy_id, int reg);
--
--struct w90p910_rxbd {
--	unsigned int sl;
--	unsigned int buffer;
--	unsigned int reserved;
--	unsigned int next;
+-struct nuc900_rtc {
+-	int			irq_num;
+-	void __iomem		*rtc_reg;
+-	struct rtc_device	*rtcdev;
 -};
 -
--struct w90p910_txbd {
--	unsigned int mode;
--	unsigned int buffer;
--	unsigned int sl;
--	unsigned int next;
+-struct nuc900_bcd_time {
+-	int bcd_sec;
+-	int bcd_min;
+-	int bcd_hour;
+-	int bcd_mday;
+-	int bcd_mon;
+-	int bcd_year;
 -};
 -
--struct recv_pdesc {
--	struct w90p910_rxbd desclist[RX_DESC_SIZE];
--	char recv_buf[RX_DESC_SIZE][MAX_RBUFF_SZ];
+-static irqreturn_t nuc900_rtc_interrupt(int irq, void *_rtc)
+-{
+-	struct nuc900_rtc *rtc = _rtc;
+-	unsigned long events = 0, rtc_irq;
+-
+-	rtc_irq = __raw_readl(rtc->rtc_reg + REG_RTC_RIIR);
+-
+-	if (rtc_irq & ALARMINTENB) {
+-		rtc_irq &= ~ALARMINTENB;
+-		__raw_writel(rtc_irq, rtc->rtc_reg + REG_RTC_RIIR);
+-		events |= RTC_AF | RTC_IRQF;
+-	}
+-
+-	if (rtc_irq & TICKINTENB) {
+-		rtc_irq &= ~TICKINTENB;
+-		__raw_writel(rtc_irq, rtc->rtc_reg + REG_RTC_RIIR);
+-		events |= RTC_UF | RTC_IRQF;
+-	}
+-
+-	rtc_update_irq(rtc->rtcdev, 1, events);
+-
+-	return IRQ_HANDLED;
+-}
+-
+-static int *check_rtc_access_enable(struct nuc900_rtc *nuc900_rtc)
+-{
+-	unsigned int timeout = 0x1000;
+-	__raw_writel(INIRRESET, nuc900_rtc->rtc_reg + REG_RTC_INIR);
+-
+-	mdelay(10);
+-
+-	__raw_writel(AERPOWERON, nuc900_rtc->rtc_reg + REG_RTC_AER);
+-
+-	while (!(__raw_readl(nuc900_rtc->rtc_reg + REG_RTC_AER) & AERRWENB)
+-								&& --timeout)
+-		mdelay(1);
+-
+-	if (!timeout)
+-		return ERR_PTR(-EPERM);
+-
+-	return NULL;
+-}
+-
+-static void nuc900_rtc_bcd2bin(unsigned int timereg,
+-			       unsigned int calreg, struct rtc_time *tm)
+-{
+-	tm->tm_mday	= bcd2bin(calreg >> 0);
+-	tm->tm_mon	= bcd2bin(calreg >> 8);
+-	tm->tm_year	= bcd2bin(calreg >> 16) + 100;
+-
+-	tm->tm_sec	= bcd2bin(timereg >> 0);
+-	tm->tm_min	= bcd2bin(timereg >> 8);
+-	tm->tm_hour	= bcd2bin(timereg >> 16);
+-}
+-
+-static void nuc900_rtc_bin2bcd(struct device *dev, struct rtc_time *settm,
+-						struct nuc900_bcd_time *gettm)
+-{
+-	gettm->bcd_mday = bin2bcd(settm->tm_mday) << 0;
+-	gettm->bcd_mon  = bin2bcd(settm->tm_mon) << 8;
+-
+-	if (settm->tm_year < 100) {
+-		dev_warn(dev, "The year will be between 1970-1999, right?\n");
+-		gettm->bcd_year = bin2bcd(settm->tm_year) << 16;
+-	} else {
+-		gettm->bcd_year = bin2bcd(settm->tm_year - 100) << 16;
+-	}
+-
+-	gettm->bcd_sec  = bin2bcd(settm->tm_sec) << 0;
+-	gettm->bcd_min  = bin2bcd(settm->tm_min) << 8;
+-	gettm->bcd_hour = bin2bcd(settm->tm_hour) << 16;
+-}
+-
+-static int nuc900_alarm_irq_enable(struct device *dev, unsigned int enabled)
+-{
+-	struct nuc900_rtc *rtc = dev_get_drvdata(dev);
+-
+-	if (enabled)
+-		__raw_writel(__raw_readl(rtc->rtc_reg + REG_RTC_RIER)|
+-				(ALARMINTENB), rtc->rtc_reg + REG_RTC_RIER);
+-	else
+-		__raw_writel(__raw_readl(rtc->rtc_reg + REG_RTC_RIER)&
+-				(~ALARMINTENB), rtc->rtc_reg + REG_RTC_RIER);
+-
+-	return 0;
+-}
+-
+-static int nuc900_rtc_read_time(struct device *dev, struct rtc_time *tm)
+-{
+-	struct nuc900_rtc *rtc = dev_get_drvdata(dev);
+-	unsigned int timeval, clrval;
+-
+-	timeval = __raw_readl(rtc->rtc_reg + REG_RTC_TLR);
+-	clrval	= __raw_readl(rtc->rtc_reg + REG_RTC_CLR);
+-
+-	nuc900_rtc_bcd2bin(timeval, clrval, tm);
+-
+-	return 0;
+-}
+-
+-static int nuc900_rtc_set_time(struct device *dev, struct rtc_time *tm)
+-{
+-	struct nuc900_rtc *rtc = dev_get_drvdata(dev);
+-	struct nuc900_bcd_time gettm;
+-	unsigned long val;
+-	int *err;
+-
+-	nuc900_rtc_bin2bcd(dev, tm, &gettm);
+-
+-	err = check_rtc_access_enable(rtc);
+-	if (IS_ERR(err))
+-		return PTR_ERR(err);
+-
+-	val = gettm.bcd_mday | gettm.bcd_mon | gettm.bcd_year;
+-	__raw_writel(val, rtc->rtc_reg + REG_RTC_CLR);
+-
+-	val = gettm.bcd_sec | gettm.bcd_min | gettm.bcd_hour;
+-	__raw_writel(val, rtc->rtc_reg + REG_RTC_TLR);
+-
+-	return 0;
+-}
+-
+-static int nuc900_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+-{
+-	struct nuc900_rtc *rtc = dev_get_drvdata(dev);
+-	unsigned int timeval, carval;
+-
+-	timeval = __raw_readl(rtc->rtc_reg + REG_RTC_TAR);
+-	carval	= __raw_readl(rtc->rtc_reg + REG_RTC_CAR);
+-
+-	nuc900_rtc_bcd2bin(timeval, carval, &alrm->time);
+-
+-	return rtc_valid_tm(&alrm->time);
+-}
+-
+-static int nuc900_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+-{
+-	struct nuc900_rtc *rtc = dev_get_drvdata(dev);
+-	struct nuc900_bcd_time tm;
+-	unsigned long val;
+-	int *err;
+-
+-	nuc900_rtc_bin2bcd(dev, &alrm->time, &tm);
+-
+-	err = check_rtc_access_enable(rtc);
+-	if (IS_ERR(err))
+-		return PTR_ERR(err);
+-
+-	val = tm.bcd_mday | tm.bcd_mon | tm.bcd_year;
+-	__raw_writel(val, rtc->rtc_reg + REG_RTC_CAR);
+-
+-	val = tm.bcd_sec | tm.bcd_min | tm.bcd_hour;
+-	__raw_writel(val, rtc->rtc_reg + REG_RTC_TAR);
+-
+-	return 0;
+-}
+-
+-static const struct rtc_class_ops nuc900_rtc_ops = {
+-	.read_time = nuc900_rtc_read_time,
+-	.set_time = nuc900_rtc_set_time,
+-	.read_alarm = nuc900_rtc_read_alarm,
+-	.set_alarm = nuc900_rtc_set_alarm,
+-	.alarm_irq_enable = nuc900_alarm_irq_enable,
 -};
 -
--struct tran_pdesc {
--	struct w90p910_txbd desclist[TX_DESC_SIZE];
--	char tran_buf[TX_DESC_SIZE][MAX_TBUFF_SZ];
--};
--
--struct  w90p910_ether {
--	struct recv_pdesc *rdesc;
--	struct tran_pdesc *tdesc;
--	dma_addr_t rdesc_phys;
--	dma_addr_t tdesc_phys;
--	struct platform_device *pdev;
+-static int __init nuc900_rtc_probe(struct platform_device *pdev)
+-{
 -	struct resource *res;
--	struct sk_buff *skb;
--	struct clk *clk;
--	struct clk *rmiiclk;
--	struct mii_if_info mii;
--	struct timer_list check_timer;
--	void __iomem *reg;
--	int rxirq;
--	int txirq;
--	unsigned int cur_tx;
--	unsigned int cur_rx;
--	unsigned int finish_tx;
--	unsigned int rx_packets;
--	unsigned int rx_bytes;
--	unsigned int start_tx_ptr;
--	unsigned int start_rx_ptr;
--	unsigned int linkflag;
--};
+-	struct nuc900_rtc *nuc900_rtc;
 -
--static void update_linkspeed_register(struct net_device *dev,
--				unsigned int speed, unsigned int duplex)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--	unsigned int val;
--
--	val = __raw_readl(ether->reg + REG_MCMDR);
--
--	if (speed == SPEED_100) {
--		/* 100 full/half duplex */
--		if (duplex == DUPLEX_FULL) {
--			val |= (MCMDR_OPMOD | MCMDR_FDUP);
--		} else {
--			val |= MCMDR_OPMOD;
--			val &= ~MCMDR_FDUP;
--		}
--	} else {
--		/* 10 full/half duplex */
--		if (duplex == DUPLEX_FULL) {
--			val |= MCMDR_FDUP;
--			val &= ~MCMDR_OPMOD;
--		} else {
--			val &= ~(MCMDR_FDUP | MCMDR_OPMOD);
--		}
--	}
--
--	__raw_writel(val, ether->reg + REG_MCMDR);
--}
--
--static void update_linkspeed(struct net_device *dev)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--	struct platform_device *pdev;
--	unsigned int bmsr, bmcr, lpa, speed, duplex;
--
--	pdev = ether->pdev;
--
--	if (!mii_link_ok(&ether->mii)) {
--		ether->linkflag = 0x0;
--		netif_carrier_off(dev);
--		dev_warn(&pdev->dev, "%s: Link down.\n", dev->name);
--		return;
--	}
--
--	if (ether->linkflag == 1)
--		return;
--
--	bmsr = w90p910_mdio_read(dev, ether->mii.phy_id, MII_BMSR);
--	bmcr = w90p910_mdio_read(dev, ether->mii.phy_id, MII_BMCR);
--
--	if (bmcr & BMCR_ANENABLE) {
--		if (!(bmsr & BMSR_ANEGCOMPLETE))
--			return;
--
--		lpa = w90p910_mdio_read(dev, ether->mii.phy_id, MII_LPA);
--
--		if ((lpa & LPA_100FULL) || (lpa & LPA_100HALF))
--			speed = SPEED_100;
--		else
--			speed = SPEED_10;
--
--		if ((lpa & LPA_100FULL) || (lpa & LPA_10FULL))
--			duplex = DUPLEX_FULL;
--		else
--			duplex = DUPLEX_HALF;
--
--	} else {
--		speed = (bmcr & BMCR_SPEED100) ? SPEED_100 : SPEED_10;
--		duplex = (bmcr & BMCR_FULLDPLX) ? DUPLEX_FULL : DUPLEX_HALF;
--	}
--
--	update_linkspeed_register(dev, speed, duplex);
--
--	dev_info(&pdev->dev, "%s: Link now %i-%s\n", dev->name, speed,
--			(duplex == DUPLEX_FULL) ? "FullDuplex" : "HalfDuplex");
--	ether->linkflag = 0x01;
--
--	netif_carrier_on(dev);
--}
--
--static void w90p910_check_link(struct timer_list *t)
--{
--	struct w90p910_ether *ether = from_timer(ether, t, check_timer);
--	struct net_device *dev = ether->mii.dev;
--
--	update_linkspeed(dev);
--	mod_timer(&ether->check_timer, jiffies + msecs_to_jiffies(1000));
--}
--
--static void w90p910_write_cam(struct net_device *dev,
--				unsigned int x, unsigned char *pval)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--	unsigned int msw, lsw;
--
--	msw = (pval[0] << 24) | (pval[1] << 16) | (pval[2] << 8) | pval[3];
--
--	lsw = (pval[4] << 24) | (pval[5] << 16);
--
--	__raw_writel(lsw, ether->reg + REG_CAML_BASE + x * CAM_ENTRY_SIZE);
--	__raw_writel(msw, ether->reg + REG_CAMM_BASE + x * CAM_ENTRY_SIZE);
--}
--
--static int w90p910_init_desc(struct net_device *dev)
--{
--	struct w90p910_ether *ether;
--	struct w90p910_txbd  *tdesc;
--	struct w90p910_rxbd  *rdesc;
--	struct platform_device *pdev;
--	unsigned int i;
--
--	ether = netdev_priv(dev);
--	pdev = ether->pdev;
--
--	ether->tdesc = dma_alloc_coherent(&pdev->dev, sizeof(struct tran_pdesc),
--					  &ether->tdesc_phys, GFP_KERNEL);
--	if (!ether->tdesc)
+-	nuc900_rtc = devm_kzalloc(&pdev->dev, sizeof(struct nuc900_rtc),
+-				GFP_KERNEL);
+-	if (!nuc900_rtc)
 -		return -ENOMEM;
 -
--	ether->rdesc = dma_alloc_coherent(&pdev->dev, sizeof(struct recv_pdesc),
--					  &ether->rdesc_phys, GFP_KERNEL);
--	if (!ether->rdesc) {
--		dma_free_coherent(&pdev->dev, sizeof(struct tran_pdesc),
--				  ether->tdesc, ether->tdesc_phys);
--		return -ENOMEM;
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	nuc900_rtc->rtc_reg = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(nuc900_rtc->rtc_reg))
+-		return PTR_ERR(nuc900_rtc->rtc_reg);
+-
+-	platform_set_drvdata(pdev, nuc900_rtc);
+-
+-	nuc900_rtc->rtcdev = devm_rtc_device_register(&pdev->dev, pdev->name,
+-						&nuc900_rtc_ops, THIS_MODULE);
+-	if (IS_ERR(nuc900_rtc->rtcdev)) {
+-		dev_err(&pdev->dev, "rtc device register failed\n");
+-		return PTR_ERR(nuc900_rtc->rtcdev);
 -	}
 -
--	for (i = 0; i < TX_DESC_SIZE; i++) {
--		unsigned int offset;
--
--		tdesc = &(ether->tdesc->desclist[i]);
--
--		if (i == TX_DESC_SIZE - 1)
--			offset = offsetof(struct tran_pdesc, desclist[0]);
--		else
--			offset = offsetof(struct tran_pdesc, desclist[i + 1]);
--
--		tdesc->next = ether->tdesc_phys + offset;
--		tdesc->buffer = ether->tdesc_phys +
--			offsetof(struct tran_pdesc, tran_buf[i]);
--		tdesc->sl = 0;
--		tdesc->mode = 0;
--	}
--
--	ether->start_tx_ptr = ether->tdesc_phys;
--
--	for (i = 0; i < RX_DESC_SIZE; i++) {
--		unsigned int offset;
--
--		rdesc = &(ether->rdesc->desclist[i]);
--
--		if (i == RX_DESC_SIZE - 1)
--			offset = offsetof(struct recv_pdesc, desclist[0]);
--		else
--			offset = offsetof(struct recv_pdesc, desclist[i + 1]);
--
--		rdesc->next = ether->rdesc_phys + offset;
--		rdesc->sl = RX_OWEN_DMA;
--		rdesc->buffer = ether->rdesc_phys +
--			offsetof(struct recv_pdesc, recv_buf[i]);
--	  }
--
--	ether->start_rx_ptr = ether->rdesc_phys;
--
--	return 0;
--}
--
--static void w90p910_set_fifo_threshold(struct net_device *dev)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--	unsigned int val;
--
--	val = TXTHD | BLENGTH;
--	__raw_writel(val, ether->reg + REG_FFTCR);
--}
--
--static void w90p910_return_default_idle(struct net_device *dev)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--	unsigned int val;
--
--	val = __raw_readl(ether->reg + REG_MCMDR);
--	val |= SWR;
--	__raw_writel(val, ether->reg + REG_MCMDR);
--}
--
--static void w90p910_trigger_rx(struct net_device *dev)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--
--	__raw_writel(ENSTART, ether->reg + REG_RSDR);
--}
--
--static void w90p910_trigger_tx(struct net_device *dev)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--
--	__raw_writel(ENSTART, ether->reg + REG_TSDR);
--}
--
--static void w90p910_enable_mac_interrupt(struct net_device *dev)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--	unsigned int val;
--
--	val = ENTXINTR | ENRXINTR | ENRXGD | ENTXCP;
--	val |= ENTXBERR | ENRXBERR | ENTXABT;
--
--	__raw_writel(val, ether->reg + REG_MIEN);
--}
--
--static void w90p910_get_and_clear_int(struct net_device *dev,
--							unsigned int *val)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--
--	*val = __raw_readl(ether->reg + REG_MISTA);
--	__raw_writel(*val, ether->reg + REG_MISTA);
--}
--
--static void w90p910_set_global_maccmd(struct net_device *dev)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--	unsigned int val;
--
--	val = __raw_readl(ether->reg + REG_MCMDR);
--	val |= MCMDR_SPCRC | MCMDR_ENMDC | MCMDR_ACP | ENMDC;
--	__raw_writel(val, ether->reg + REG_MCMDR);
--}
--
--static void w90p910_enable_cam(struct net_device *dev)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--	unsigned int val;
--
--	w90p910_write_cam(dev, CAM0, dev->dev_addr);
--
--	val = __raw_readl(ether->reg + REG_CAMEN);
--	val |= CAM0EN;
--	__raw_writel(val, ether->reg + REG_CAMEN);
--}
--
--static void w90p910_enable_cam_command(struct net_device *dev)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--	unsigned int val;
--
--	val = CAMCMR_ECMP | CAMCMR_ABP | CAMCMR_AMP;
--	__raw_writel(val, ether->reg + REG_CAMCMR);
--}
--
--static void w90p910_enable_tx(struct net_device *dev, unsigned int enable)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--	unsigned int val;
--
--	val = __raw_readl(ether->reg + REG_MCMDR);
--
--	if (enable)
--		val |= MCMDR_TXON;
--	else
--		val &= ~MCMDR_TXON;
--
--	__raw_writel(val, ether->reg + REG_MCMDR);
--}
--
--static void w90p910_enable_rx(struct net_device *dev, unsigned int enable)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--	unsigned int val;
--
--	val = __raw_readl(ether->reg + REG_MCMDR);
--
--	if (enable)
--		val |= MCMDR_RXON;
--	else
--		val &= ~MCMDR_RXON;
--
--	__raw_writel(val, ether->reg + REG_MCMDR);
--}
--
--static void w90p910_set_curdest(struct net_device *dev)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--
--	__raw_writel(ether->start_rx_ptr, ether->reg + REG_RXDLSA);
--	__raw_writel(ether->start_tx_ptr, ether->reg + REG_TXDLSA);
--}
--
--static void w90p910_reset_mac(struct net_device *dev)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--
--	w90p910_enable_tx(dev, 0);
--	w90p910_enable_rx(dev, 0);
--	w90p910_set_fifo_threshold(dev);
--	w90p910_return_default_idle(dev);
--
--	if (!netif_queue_stopped(dev))
--		netif_stop_queue(dev);
--
--	w90p910_init_desc(dev);
--
--	netif_trans_update(dev); /* prevent tx timeout */
--	ether->cur_tx = 0x0;
--	ether->finish_tx = 0x0;
--	ether->cur_rx = 0x0;
--
--	w90p910_set_curdest(dev);
--	w90p910_enable_cam(dev);
--	w90p910_enable_cam_command(dev);
--	w90p910_enable_mac_interrupt(dev);
--	w90p910_enable_tx(dev, 1);
--	w90p910_enable_rx(dev, 1);
--	w90p910_trigger_tx(dev);
--	w90p910_trigger_rx(dev);
--
--	netif_trans_update(dev); /* prevent tx timeout */
--
--	if (netif_queue_stopped(dev))
--		netif_wake_queue(dev);
--}
--
--static void w90p910_mdio_write(struct net_device *dev,
--					int phy_id, int reg, int data)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--	struct platform_device *pdev;
--	unsigned int val, i;
--
--	pdev = ether->pdev;
--
--	__raw_writel(data, ether->reg + REG_MIID);
--
--	val = (phy_id << 0x08) | reg;
--	val |= PHYBUSY | PHYWR | MDCCR_VAL;
--	__raw_writel(val, ether->reg + REG_MIIDA);
--
--	for (i = 0; i < DELAY; i++) {
--		if ((__raw_readl(ether->reg + REG_MIIDA) & PHYBUSY) == 0)
--			break;
--	}
--
--	if (i == DELAY)
--		dev_warn(&pdev->dev, "mdio write timed out\n");
--}
--
--static int w90p910_mdio_read(struct net_device *dev, int phy_id, int reg)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--	struct platform_device *pdev;
--	unsigned int val, i, data;
--
--	pdev = ether->pdev;
--
--	val = (phy_id << 0x08) | reg;
--	val |= PHYBUSY | MDCCR_VAL;
--	__raw_writel(val, ether->reg + REG_MIIDA);
--
--	for (i = 0; i < DELAY; i++) {
--		if ((__raw_readl(ether->reg + REG_MIIDA) & PHYBUSY) == 0)
--			break;
--	}
--
--	if (i == DELAY) {
--		dev_warn(&pdev->dev, "mdio read timed out\n");
--		data = 0xffff;
--	} else {
--		data = __raw_readl(ether->reg + REG_MIID);
--	}
--
--	return data;
--}
--
--static int w90p910_set_mac_address(struct net_device *dev, void *addr)
--{
--	struct sockaddr *address = addr;
--
--	if (!is_valid_ether_addr(address->sa_data))
--		return -EADDRNOTAVAIL;
--
--	memcpy(dev->dev_addr, address->sa_data, dev->addr_len);
--	w90p910_write_cam(dev, CAM0, dev->dev_addr);
--
--	return 0;
--}
--
--static int w90p910_ether_close(struct net_device *dev)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--	struct platform_device *pdev;
--
--	pdev = ether->pdev;
--
--	dma_free_coherent(&pdev->dev, sizeof(struct recv_pdesc),
--					ether->rdesc, ether->rdesc_phys);
--	dma_free_coherent(&pdev->dev, sizeof(struct tran_pdesc),
--					ether->tdesc, ether->tdesc_phys);
--
--	netif_stop_queue(dev);
--
--	del_timer_sync(&ether->check_timer);
--	clk_disable(ether->rmiiclk);
--	clk_disable(ether->clk);
--
--	free_irq(ether->txirq, dev);
--	free_irq(ether->rxirq, dev);
--
--	return 0;
--}
--
--static int w90p910_send_frame(struct net_device *dev,
--					unsigned char *data, int length)
--{
--	struct w90p910_ether *ether;
--	struct w90p910_txbd *txbd;
--	struct platform_device *pdev;
--	unsigned char *buffer;
--
--	ether = netdev_priv(dev);
--	pdev = ether->pdev;
--
--	txbd = &ether->tdesc->desclist[ether->cur_tx];
--	buffer = ether->tdesc->tran_buf[ether->cur_tx];
--
--	if (length > 1514) {
--		dev_err(&pdev->dev, "send data %d bytes, check it\n", length);
--		length = 1514;
--	}
--
--	txbd->sl = length & 0xFFFF;
--
--	memcpy(buffer, data, length);
--
--	txbd->mode = TX_OWEN_DMA | PADDINGMODE | CRCMODE | MACTXINTEN;
--
--	w90p910_enable_tx(dev, 1);
--
--	w90p910_trigger_tx(dev);
--
--	if (++ether->cur_tx >= TX_DESC_SIZE)
--		ether->cur_tx = 0;
--
--	txbd = &ether->tdesc->desclist[ether->cur_tx];
--
--	if (txbd->mode & TX_OWEN_DMA)
--		netif_stop_queue(dev);
--
--	return 0;
--}
--
--static int w90p910_ether_start_xmit(struct sk_buff *skb, struct net_device *dev)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--
--	if (!(w90p910_send_frame(dev, skb->data, skb->len))) {
--		ether->skb = skb;
--		dev_consume_skb_irq(skb);
--		return 0;
--	}
--	return -EAGAIN;
--}
--
--static irqreturn_t w90p910_tx_interrupt(int irq, void *dev_id)
--{
--	struct w90p910_ether *ether;
--	struct w90p910_txbd  *txbd;
--	struct platform_device *pdev;
--	struct net_device *dev;
--	unsigned int cur_entry, entry, status;
--
--	dev = dev_id;
--	ether = netdev_priv(dev);
--	pdev = ether->pdev;
--
--	w90p910_get_and_clear_int(dev, &status);
--
--	cur_entry = __raw_readl(ether->reg + REG_CTXDSA);
--
--	entry = ether->tdesc_phys +
--		offsetof(struct tran_pdesc, desclist[ether->finish_tx]);
--
--	while (entry != cur_entry) {
--		txbd = &ether->tdesc->desclist[ether->finish_tx];
--
--		if (++ether->finish_tx >= TX_DESC_SIZE)
--			ether->finish_tx = 0;
--
--		if (txbd->sl & TXDS_TXCP) {
--			dev->stats.tx_packets++;
--			dev->stats.tx_bytes += txbd->sl & 0xFFFF;
--		} else {
--			dev->stats.tx_errors++;
--		}
--
--		txbd->sl = 0x0;
--		txbd->mode = 0x0;
--
--		if (netif_queue_stopped(dev))
--			netif_wake_queue(dev);
--
--		entry = ether->tdesc_phys +
--			offsetof(struct tran_pdesc, desclist[ether->finish_tx]);
--	}
--
--	if (status & MISTA_EXDEF) {
--		dev_err(&pdev->dev, "emc defer exceed interrupt\n");
--	} else if (status & MISTA_TXBERR) {
--		dev_err(&pdev->dev, "emc bus error interrupt\n");
--		w90p910_reset_mac(dev);
--	} else if (status & MISTA_TDU) {
--		if (netif_queue_stopped(dev))
--			netif_wake_queue(dev);
--	}
--
--	return IRQ_HANDLED;
--}
--
--static void netdev_rx(struct net_device *dev)
--{
--	struct w90p910_ether *ether;
--	struct w90p910_rxbd *rxbd;
--	struct platform_device *pdev;
--	struct sk_buff *skb;
--	unsigned char *data;
--	unsigned int length, status, val, entry;
--
--	ether = netdev_priv(dev);
--	pdev = ether->pdev;
--
--	rxbd = &ether->rdesc->desclist[ether->cur_rx];
--
--	do {
--		val = __raw_readl(ether->reg + REG_CRXDSA);
--
--		entry = ether->rdesc_phys +
--			offsetof(struct recv_pdesc, desclist[ether->cur_rx]);
--
--		if (val == entry)
--			break;
--
--		status = rxbd->sl;
--		length = status & 0xFFFF;
--
--		if (status & RXDS_RXGD) {
--			data = ether->rdesc->recv_buf[ether->cur_rx];
--			skb = netdev_alloc_skb(dev, length + 2);
--			if (!skb) {
--				dev->stats.rx_dropped++;
--				return;
--			}
--
--			skb_reserve(skb, 2);
--			skb_put(skb, length);
--			skb_copy_to_linear_data(skb, data, length);
--			skb->protocol = eth_type_trans(skb, dev);
--			dev->stats.rx_packets++;
--			dev->stats.rx_bytes += length;
--			netif_rx(skb);
--		} else {
--			dev->stats.rx_errors++;
--
--			if (status & RXDS_RP) {
--				dev_err(&pdev->dev, "rx runt err\n");
--				dev->stats.rx_length_errors++;
--			} else if (status & RXDS_CRCE) {
--				dev_err(&pdev->dev, "rx crc err\n");
--				dev->stats.rx_crc_errors++;
--			} else if (status & RXDS_ALIE) {
--				dev_err(&pdev->dev, "rx alignment err\n");
--				dev->stats.rx_frame_errors++;
--			} else if (status & RXDS_PTLE) {
--				dev_err(&pdev->dev, "rx longer err\n");
--				dev->stats.rx_over_errors++;
--			}
--		}
--
--		rxbd->sl = RX_OWEN_DMA;
--		rxbd->reserved = 0x0;
--
--		if (++ether->cur_rx >= RX_DESC_SIZE)
--			ether->cur_rx = 0;
--
--		rxbd = &ether->rdesc->desclist[ether->cur_rx];
--
--	} while (1);
--}
--
--static irqreturn_t w90p910_rx_interrupt(int irq, void *dev_id)
--{
--	struct net_device *dev;
--	struct w90p910_ether  *ether;
--	struct platform_device *pdev;
--	unsigned int status;
--
--	dev = dev_id;
--	ether = netdev_priv(dev);
--	pdev = ether->pdev;
--
--	w90p910_get_and_clear_int(dev, &status);
--
--	if (status & MISTA_RDU) {
--		netdev_rx(dev);
--		w90p910_trigger_rx(dev);
--
--		return IRQ_HANDLED;
--	} else if (status & MISTA_RXBERR) {
--		dev_err(&pdev->dev, "emc rx bus error\n");
--		w90p910_reset_mac(dev);
--	}
--
--	netdev_rx(dev);
--	return IRQ_HANDLED;
--}
--
--static int w90p910_ether_open(struct net_device *dev)
--{
--	struct w90p910_ether *ether;
--	struct platform_device *pdev;
--
--	ether = netdev_priv(dev);
--	pdev = ether->pdev;
--
--	w90p910_reset_mac(dev);
--	w90p910_set_fifo_threshold(dev);
--	w90p910_set_curdest(dev);
--	w90p910_enable_cam(dev);
--	w90p910_enable_cam_command(dev);
--	w90p910_enable_mac_interrupt(dev);
--	w90p910_set_global_maccmd(dev);
--	w90p910_enable_rx(dev, 1);
--
--	clk_enable(ether->rmiiclk);
--	clk_enable(ether->clk);
--
--	ether->rx_packets = 0x0;
--	ether->rx_bytes = 0x0;
--
--	if (request_irq(ether->txirq, w90p910_tx_interrupt,
--						0x0, pdev->name, dev)) {
--		dev_err(&pdev->dev, "register irq tx failed\n");
--		return -EAGAIN;
--	}
--
--	if (request_irq(ether->rxirq, w90p910_rx_interrupt,
--						0x0, pdev->name, dev)) {
--		dev_err(&pdev->dev, "register irq rx failed\n");
--		free_irq(ether->txirq, dev);
--		return -EAGAIN;
--	}
--
--	mod_timer(&ether->check_timer, jiffies + msecs_to_jiffies(1000));
--	netif_start_queue(dev);
--	w90p910_trigger_rx(dev);
--
--	dev_info(&pdev->dev, "%s is OPENED\n", dev->name);
--
--	return 0;
--}
--
--static void w90p910_ether_set_multicast_list(struct net_device *dev)
--{
--	struct w90p910_ether *ether;
--	unsigned int rx_mode;
--
--	ether = netdev_priv(dev);
--
--	if (dev->flags & IFF_PROMISC)
--		rx_mode = CAMCMR_AUP | CAMCMR_AMP | CAMCMR_ABP | CAMCMR_ECMP;
--	else if ((dev->flags & IFF_ALLMULTI) || !netdev_mc_empty(dev))
--		rx_mode = CAMCMR_AMP | CAMCMR_ABP | CAMCMR_ECMP;
--	else
--		rx_mode = CAMCMR_ECMP | CAMCMR_ABP;
--	__raw_writel(rx_mode, ether->reg + REG_CAMCMR);
--}
--
--static int w90p910_ether_ioctl(struct net_device *dev,
--						struct ifreq *ifr, int cmd)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--	struct mii_ioctl_data *data = if_mii(ifr);
--
--	return generic_mii_ioctl(&ether->mii, data, cmd, NULL);
--}
--
--static void w90p910_get_drvinfo(struct net_device *dev,
--					struct ethtool_drvinfo *info)
--{
--	strlcpy(info->driver, DRV_MODULE_NAME, sizeof(info->driver));
--	strlcpy(info->version, DRV_MODULE_VERSION, sizeof(info->version));
--}
--
--static int w90p910_get_link_ksettings(struct net_device *dev,
--				      struct ethtool_link_ksettings *cmd)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--
--	mii_ethtool_get_link_ksettings(&ether->mii, cmd);
--
--	return 0;
--}
--
--static int w90p910_set_link_ksettings(struct net_device *dev,
--				      const struct ethtool_link_ksettings *cmd)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--	return mii_ethtool_set_link_ksettings(&ether->mii, cmd);
--}
--
--static int w90p910_nway_reset(struct net_device *dev)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--	return mii_nway_restart(&ether->mii);
--}
--
--static u32 w90p910_get_link(struct net_device *dev)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--	return mii_link_ok(&ether->mii);
--}
--
--static const struct ethtool_ops w90p910_ether_ethtool_ops = {
--	.get_drvinfo	= w90p910_get_drvinfo,
--	.nway_reset	= w90p910_nway_reset,
--	.get_link	= w90p910_get_link,
--	.get_link_ksettings = w90p910_get_link_ksettings,
--	.set_link_ksettings = w90p910_set_link_ksettings,
--};
--
--static const struct net_device_ops w90p910_ether_netdev_ops = {
--	.ndo_open		= w90p910_ether_open,
--	.ndo_stop		= w90p910_ether_close,
--	.ndo_start_xmit		= w90p910_ether_start_xmit,
--	.ndo_set_rx_mode	= w90p910_ether_set_multicast_list,
--	.ndo_set_mac_address	= w90p910_set_mac_address,
--	.ndo_do_ioctl		= w90p910_ether_ioctl,
--	.ndo_validate_addr	= eth_validate_addr,
--};
--
--static void get_mac_address(struct net_device *dev)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--	struct platform_device *pdev;
--	char addr[ETH_ALEN];
--
--	pdev = ether->pdev;
--
--	addr[0] = 0x00;
--	addr[1] = 0x02;
--	addr[2] = 0xac;
--	addr[3] = 0x55;
--	addr[4] = 0x88;
--	addr[5] = 0xa8;
--
--	if (is_valid_ether_addr(addr))
--		memcpy(dev->dev_addr, &addr, ETH_ALEN);
--	else
--		dev_err(&pdev->dev, "invalid mac address\n");
--}
--
--static int w90p910_ether_setup(struct net_device *dev)
--{
--	struct w90p910_ether *ether = netdev_priv(dev);
--
--	dev->netdev_ops = &w90p910_ether_netdev_ops;
--	dev->ethtool_ops = &w90p910_ether_ethtool_ops;
--
--	dev->tx_queue_len = 16;
--	dev->dma = 0x0;
--	dev->watchdog_timeo = TX_TIMEOUT;
--
--	get_mac_address(dev);
--
--	ether->cur_tx = 0x0;
--	ether->cur_rx = 0x0;
--	ether->finish_tx = 0x0;
--	ether->linkflag = 0x0;
--	ether->mii.phy_id = 0x01;
--	ether->mii.phy_id_mask = 0x1f;
--	ether->mii.reg_num_mask = 0x1f;
--	ether->mii.dev = dev;
--	ether->mii.mdio_read = w90p910_mdio_read;
--	ether->mii.mdio_write = w90p910_mdio_write;
--
--	timer_setup(&ether->check_timer, w90p910_check_link, 0);
--
--	return 0;
--}
--
--static int w90p910_ether_probe(struct platform_device *pdev)
--{
--	struct w90p910_ether *ether;
--	struct net_device *dev;
--	int error;
--
--	dev = alloc_etherdev(sizeof(struct w90p910_ether));
--	if (!dev)
--		return -ENOMEM;
--
--	ether = netdev_priv(dev);
--
--	ether->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (ether->res == NULL) {
--		dev_err(&pdev->dev, "failed to get I/O memory\n");
--		error = -ENXIO;
--		goto failed_free;
--	}
--
--	if (!request_mem_region(ether->res->start,
--				resource_size(ether->res), pdev->name)) {
--		dev_err(&pdev->dev, "failed to request I/O memory\n");
--		error = -EBUSY;
--		goto failed_free;
--	}
--
--	ether->reg = ioremap(ether->res->start, resource_size(ether->res));
--	if (ether->reg == NULL) {
--		dev_err(&pdev->dev, "failed to remap I/O memory\n");
--		error = -ENXIO;
--		goto failed_free_mem;
--	}
--
--	ether->txirq = platform_get_irq(pdev, 0);
--	if (ether->txirq < 0) {
--		dev_err(&pdev->dev, "failed to get ether tx irq\n");
--		error = -ENXIO;
--		goto failed_free_io;
--	}
--
--	ether->rxirq = platform_get_irq(pdev, 1);
--	if (ether->rxirq < 0) {
--		dev_err(&pdev->dev, "failed to get ether rx irq\n");
--		error = -ENXIO;
--		goto failed_free_io;
--	}
--
--	platform_set_drvdata(pdev, dev);
--
--	ether->clk = clk_get(&pdev->dev, NULL);
--	if (IS_ERR(ether->clk)) {
--		dev_err(&pdev->dev, "failed to get ether clock\n");
--		error = PTR_ERR(ether->clk);
--		goto failed_free_io;
--	}
--
--	ether->rmiiclk = clk_get(&pdev->dev, "RMII");
--	if (IS_ERR(ether->rmiiclk)) {
--		dev_err(&pdev->dev, "failed to get ether clock\n");
--		error = PTR_ERR(ether->rmiiclk);
--		goto failed_put_clk;
--	}
--
--	ether->pdev = pdev;
--
--	w90p910_ether_setup(dev);
--
--	error = register_netdev(dev);
--	if (error != 0) {
--		dev_err(&pdev->dev, "Register EMC w90p910 FAILED\n");
--		error = -ENODEV;
--		goto failed_put_rmiiclk;
+-	__raw_writel(__raw_readl(nuc900_rtc->rtc_reg + REG_RTC_TSSR) | MODE24,
+-					nuc900_rtc->rtc_reg + REG_RTC_TSSR);
+-
+-	nuc900_rtc->irq_num = platform_get_irq(pdev, 0);
+-	if (devm_request_irq(&pdev->dev, nuc900_rtc->irq_num,
+-			nuc900_rtc_interrupt, 0, "nuc900rtc", nuc900_rtc)) {
+-		dev_err(&pdev->dev, "NUC900 RTC request irq failed\n");
+-		return -EBUSY;
 -	}
 -
 -	return 0;
--failed_put_rmiiclk:
--	clk_put(ether->rmiiclk);
--failed_put_clk:
--	clk_put(ether->clk);
--failed_free_io:
--	iounmap(ether->reg);
--failed_free_mem:
--	release_mem_region(ether->res->start, resource_size(ether->res));
--failed_free:
--	free_netdev(dev);
--	return error;
 -}
 -
--static int w90p910_ether_remove(struct platform_device *pdev)
--{
--	struct net_device *dev = platform_get_drvdata(pdev);
--	struct w90p910_ether *ether = netdev_priv(dev);
--
--	unregister_netdev(dev);
--
--	clk_put(ether->rmiiclk);
--	clk_put(ether->clk);
--
--	iounmap(ether->reg);
--	release_mem_region(ether->res->start, resource_size(ether->res));
--
--	del_timer_sync(&ether->check_timer);
--
--	free_netdev(dev);
--	return 0;
--}
--
--static struct platform_driver w90p910_ether_driver = {
--	.probe		= w90p910_ether_probe,
--	.remove		= w90p910_ether_remove,
+-static struct platform_driver nuc900_rtc_driver = {
 -	.driver		= {
--		.name	= "nuc900-emc",
+-		.name	= "nuc900-rtc",
 -	},
 -};
 -
--module_platform_driver(w90p910_ether_driver);
+-module_platform_driver_probe(nuc900_rtc_driver, nuc900_rtc_probe);
 -
 -MODULE_AUTHOR("Wan ZongShun <mcuos.com@gmail.com>");
--MODULE_DESCRIPTION("w90p910 MAC driver!");
+-MODULE_DESCRIPTION("nuc910/nuc920 RTC driver");
 -MODULE_LICENSE("GPL");
--MODULE_ALIAS("platform:nuc900-emc");
--
+-MODULE_ALIAS("platform:nuc900-rtc");
 -- 
 2.20.0
 
