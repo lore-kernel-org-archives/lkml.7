@@ -2,270 +2,120 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAE1C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A01BC32756
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFC9F214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:56:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8BUD3iR"
+	by mail.kernel.org (Postfix) with ESMTP id 7863021743
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:58:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436552AbfHIN4y (ORCPT
+        id S2406850AbfHIN6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:56:54 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34467 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406680AbfHIN4x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:56:53 -0400
-Received: by mail-wr1-f68.google.com with SMTP id 31so98370663wrm.1;
-        Fri, 09 Aug 2019 06:56:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SyGzgPeV2cqSMjYBuBKF6/eQKkTEeklJKW44zco+T5s=;
-        b=b8BUD3iRlukt+AC6WHEjsQdqOJKqABs5a2SLsPOGYzpR83LYpyc/eVcX1bqM7odd77
-         4SDiccmZtTRzoW6Vh28oQ0Y4y612qD8seKQObwsjPN/H7s5IxufhP2QMSGGjGUJe+lmv
-         wN1Jfsufz0+2ETHpE426xPC2OBcDT6U+nQdIUBjUvL0BWm8eiPuAavJXrszoHYYLMCjN
-         uRZbggZYik4Kxrfdm9OjdZvOEU96LJrAhDyJw3+DTqq8vBycYyjcKYrlkKVMYQA0Omrh
-         mJsxMXncuWS8P/8micapWBhgtrcGBZae6+2gQo0XNcf6bqrt3AqxmyC41Am5USiQ7UQD
-         tVcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SyGzgPeV2cqSMjYBuBKF6/eQKkTEeklJKW44zco+T5s=;
-        b=gjZ4DnxuGZMLMpREGJtXqU9PTcMRNfgdb5fLf6QVAQx7hnaFZrL1zhy7VG7PKcRkeJ
-         nihOONAQy8Hzhg3Bf78humcfzlBVWZs6YjJ6fLPpLssDduxYkbbinLMlRoP5B7h0cM6N
-         q66GDKwjVtZzuUgaI0yov1IGezZIepVkEa+Pnsyv/GmzS1n539pCpl2bXpSAB38m9w5P
-         I9j4A54diHau9UeYQIYL+FGlsmc+j+VMsZCqu18gQmF2LAMekXyv7Ohyeefs2uk5OQF1
-         BIBumxOQk3Q3w3TXte0zr6DFm60UXmYeDHVqsKmncS8+DYEWYGVV81NdDrJZ2Lo5bDKM
-         nT2Q==
-X-Gm-Message-State: APjAAAXgGAEK8PcYDA0xBaaHb1IVvIw0CZE2HSlQ3NsWE0BKoOGkLNDK
-        aiMWftVVOg0ha1FpEEUdb76+wrEB
-X-Google-Smtp-Source: APXvYqzsqfgj3Oucq766WtYTQWwrXMrS+7czUHGMVkVZUtAA2iq/RL5jGcE9Os+XuXn76TRIneq75g==
-X-Received: by 2002:a5d:604d:: with SMTP id j13mr9481397wrt.244.1565359009399;
-        Fri, 09 Aug 2019 06:56:49 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.218])
-        by smtp.googlemail.com with ESMTPSA id t14sm4837628wrv.12.2019.08.09.06.56.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 06:56:48 -0700 (PDT)
-Subject: Re: [PATCH v8 14/21] clk: tegra210: Add suspend and resume support
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-15-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a21b7464-62c3-8461-04c2-a0e863bdde85@gmail.com>
-Date:   Fri, 9 Aug 2019 16:56:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 9 Aug 2019 09:58:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47208 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726037AbfHIN6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:58:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C3118ACC2;
+        Fri,  9 Aug 2019 13:58:14 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id E87631E46DD; Fri,  9 Aug 2019 15:58:13 +0200 (CEST)
+Date:   Fri, 9 Aug 2019 15:58:13 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jerome Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Black <daniel@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: Re: [PATCH 1/3] mm/mlock.c: convert put_page() to put_user_page*()
+Message-ID: <20190809135813.GF17568@quack2.suse.cz>
+References: <20190805222019.28592-1-jhubbard@nvidia.com>
+ <20190805222019.28592-2-jhubbard@nvidia.com>
+ <20190807110147.GT11812@dhcp22.suse.cz>
+ <01b5ed91-a8f7-6b36-a068-31870c05aad6@nvidia.com>
+ <20190808062155.GF11812@dhcp22.suse.cz>
+ <875dca95-b037-d0c7-38bc-4b4c4deea2c7@suse.cz>
+ <306128f9-8cc6-761b-9b05-578edf6cce56@nvidia.com>
+ <d1ecb0d4-ea6a-637d-7029-687b950b783f@nvidia.com>
+ <420a5039-a79c-3872-38ea-807cedca3b8a@suse.cz>
+ <20190809082307.GL18351@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <1565308020-31952-15-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809082307.GL18351@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-09.08.2019 2:46, Sowjanya Komatineni пишет:
-> This patch adds support for clk: tegra210: suspend-resume.
+On Fri 09-08-19 10:23:07, Michal Hocko wrote:
+> On Fri 09-08-19 10:12:48, Vlastimil Babka wrote:
+> > On 8/9/19 12:59 AM, John Hubbard wrote:
+> > >>> That's true. However, I'm not sure munlocking is where the
+> > >>> put_user_page() machinery is intended to be used anyway? These are
+> > >>> short-term pins for struct page manipulation, not e.g. dirtying of page
+> > >>> contents. Reading commit fc1d8e7cca2d I don't think this case falls
+> > >>> within the reasoning there. Perhaps not all GUP users should be
+> > >>> converted to the planned separate GUP tracking, and instead we should
+> > >>> have a GUP/follow_page_mask() variant that keeps using get_page/put_page?
+> > >>>  
+> > >>
+> > >> Interesting. So far, the approach has been to get all the gup callers to
+> > >> release via put_user_page(), but if we add in Jan's and Ira's vaddr_pin_pages()
+> > >> wrapper, then maybe we could leave some sites unconverted.
+> > >>
+> > >> However, in order to do so, we would have to change things so that we have
+> > >> one set of APIs (gup) that do *not* increment a pin count, and another set
+> > >> (vaddr_pin_pages) that do. 
+> > >>
+> > >> Is that where we want to go...?
+> > >>
+> > 
+> > We already have a FOLL_LONGTERM flag, isn't that somehow related? And if
+> > it's not exactly the same thing, perhaps a new gup flag to distinguish
+> > which kind of pinning to use?
 > 
-> All the CAR controller settings are lost on suspend when core
-> power goes off.
+> Agreed. This is a shiny example how forcing all existing gup users into
+> the new scheme is subotimal at best. Not the mention the overal
+> fragility mention elsewhere. I dislike the conversion even more now.
 > 
-> This patch has implementation for saving and restoring all PLLs
-> and clocks context during system suspend and resume to have the
-> clocks back to same state for normal operation.
-> 
-> Clock driver suspend and resume are registered as syscore_ops as clocks
-> restore need to happen before the other drivers resume to have all their
-> clocks back to the same state as before suspend.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-tegra210.c | 103 +++++++++++++++++++++++++++++++++++++--
->  drivers/clk/tegra/clk.c          |  64 ++++++++++++++++++++++++
->  drivers/clk/tegra/clk.h          |   3 ++
->  3 files changed, 166 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
-> index 998bf60b219a..8dd6f4f4debb 100644
-> --- a/drivers/clk/tegra/clk-tegra210.c
-> +++ b/drivers/clk/tegra/clk-tegra210.c
-> @@ -9,13 +9,13 @@
->  #include <linux/clkdev.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
-> +#include <linux/syscore_ops.h>
->  #include <linux/delay.h>
->  #include <linux/export.h>
->  #include <linux/mutex.h>
->  #include <linux/clk/tegra.h>
->  #include <dt-bindings/clock/tegra210-car.h>
->  #include <dt-bindings/reset/tegra210-car.h>
-> -#include <linux/iopoll.h>
->  #include <linux/sizes.h>
->  #include <soc/tegra/pmc.h>
->  
-> @@ -220,11 +220,15 @@
->  #define CLK_M_DIVISOR_SHIFT 2
->  #define CLK_M_DIVISOR_MASK 0x3
->  
-> +#define CLK_MASK_ARM	0x44
-> +#define MISC_CLK_ENB	0x48
-> +
->  #define RST_DFLL_DVCO 0x2f4
->  #define DVFS_DFLL_RESET_SHIFT 0
->  
->  #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
->  #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
-> +#define CPU_SOFTRST_CTRL 0x380
->  
->  #define LVL2_CLK_GATE_OVRA 0xf8
->  #define LVL2_CLK_GATE_OVRC 0x3a0
-> @@ -2825,6 +2829,7 @@ static int tegra210_enable_pllu(void)
->  	struct tegra_clk_pll_freq_table *fentry;
->  	struct tegra_clk_pll pllu;
->  	u32 reg;
-> +	int ret;
->  
->  	for (fentry = pll_u_freq_table; fentry->input_rate; fentry++) {
->  		if (fentry->input_rate == pll_ref_freq)
-> @@ -2853,9 +2858,14 @@ static int tegra210_enable_pllu(void)
->  	reg |= PLL_ENABLE;
->  	writel(reg, clk_base + PLLU_BASE);
->  
-> -	readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
-> -					  reg & PLL_BASE_LOCK, 2, 1000);
-> -	if (!(reg & PLL_BASE_LOCK)) {
-> +	/*
-> +	 * During clocks resume, same PLLU init and enable sequence get
-> +	 * executed. So, readx_poll_timeout_atomic can't be used here as it
-> +	 * uses ktime_get() and timekeeping resume doesn't happen by that
-> +	 * time. So, using tegra210_wait_for_mask for PLL LOCK.
-> +	 */
-> +	ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
-> +	if (ret) {
->  		pr_err("Timed out waiting for PLL_U to lock\n");
->  		return -ETIMEDOUT;
->  	}
-> @@ -3288,6 +3298,84 @@ static void tegra210_disable_cpu_clock(u32 cpu)
->  }
->  
->  #ifdef CONFIG_PM_SLEEP
-> +/*
-> + * This array lists mask values for each peripheral clk bank
-> + * to mask out reserved bits during the clocks state restore
-> + * on SC7 resume to prevent accidental writes to these reserved
-> + * bits.
-> + */
-> +static u32 periph_clk_rsvd_mask[TEGRA210_CAR_BANK_COUNT] = {
+> Sorry if this was already discussed already but why the new pinning is
+> not bound to FOLL_LONGTERM (ideally hidden by an interface so that users
+> do not have to care about the flag) only?
 
-Should be more natural to have a "valid_mask" instead of "rsvd_mask".
+The new tracking cannot be bound to FOLL_LONGTERM. Anything that gets page
+reference and then touches page data (e.g. direct IO) needs the new kind of
+tracking so that filesystem knows someone is messing with the page data.
+So what John is trying to address is a different (although related) problem
+to someone pinning a page for a long time.
 
-What's actually wrong with touching of the reserved bits? They must be NO-OP.. or the
-reserved bits are actually some kind of "secret" bits? If those bits have some use-case
-outside of Silicon HW (like FPGA simulation), then this doesn't matter for upstream and you
-have to keep the workaround locally in the downstream kernel or whatever.
+In principle, I'm not strongly opposed to a new FOLL flag to determine
+whether a pin or an ordinary page reference will be acquired at least as an
+internal implementation detail inside mm/gup.c. But I would really like to
+discourage new GUP users taking just page reference as the most clueless
+users (drivers) usually need a pin in the sense John implements. So in
+terms of API I'd strongly prefer to deprecate GUP as an API, provide
+vaddr_pin_pages() for drivers to get their buffer pages pinned and then for
+those few users who really know what they are doing (and who are not
+interested in page contents) we can have APIs like follow_page() to get a
+page reference from a virtual address.
 
-> +	0x23282006,
-> +	0x782e0c18,
-> +	0x0c012c05,
-> +	0x003e7304,
-> +	0x86c04800,
-> +	0xc0199000,
-> +	0x03e03800,
-> +};
-> +
-> +#define car_readl(_base, _off) readl_relaxed(clk_base + (_base) + ((_off) * 4))
-> +#define car_writel(_val, _base, _off) \
-> +		writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
-> +
-> +static u32 spare_reg_ctx, misc_clk_enb_ctx, clk_msk_arm_ctx;
-> +static u32 cpu_softrst_ctx[3];
-> +
-> +static int tegra210_clk_suspend(void)
-> +{
-> +	unsigned int i;
-> +
-> +	clk_save_context();
-> +
-> +	/*
-> +	 * Save the bootloader configured clock registers SPARE_REG0,
-> +	 * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL.
-> +	 */
-> +	spare_reg_ctx = readl_relaxed(clk_base + SPARE_REG0);
-> +	misc_clk_enb_ctx = readl_relaxed(clk_base + MISC_CLK_ENB);
-> +	clk_msk_arm_ctx = readl_relaxed(clk_base + CLK_MASK_ARM);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
-> +		cpu_softrst_ctx[i] = car_readl(CPU_SOFTRST_CTRL, i);
-> +
-> +	tegra_clk_periph_suspend();
-> +	return 0;
-> +}
-> +
-> +static void tegra210_clk_resume(void)
-> +{
-> +	unsigned int i;
-> +
-> +	tegra_clk_osc_resume(clk_base);
-> +
-> +	/*
-> +	 * Restore the bootloader configured clock registers SPARE_REG0,
-> +	 * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL from saved context.
-> +	 */
-> +	writel_relaxed(spare_reg_ctx, clk_base + SPARE_REG0);
-> +	writel_relaxed(misc_clk_enb_ctx, clk_base + MISC_CLK_ENB);
-> +	writel_relaxed(clk_msk_arm_ctx, clk_base + CLK_MASK_ARM);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
-> +		car_writel(cpu_softrst_ctx[i], CPU_SOFTRST_CTRL, i);
-> +
-> +	fence_udelay(5, clk_base);
-> +
-> +	/* enable all the clocks before changing the clock sources */
-> +	tegra_clk_periph_force_on(periph_clk_rsvd_mask);
-
-Why clocks need to be enabled before changing the sources?
-
-> +	/* wait for all writes to happen to have all the clocks enabled */
-> +	wmb();
-
-fence_udelay() has exactly the same barrier at the very beginning of readl(), no need to
-duplicate it here.
-
-> +	fence_udelay(2, clk_base);
-> +
-> +	/* restore PLLs and all peripheral clock rates */
-> +	tegra210_init_pllu();
-
-Why USB PLL need to be restored at first?
-
-> +	clk_restore_context();
-> +
-> +	/* restore all peripheral clocks enable and reset state */
-> +	tegra_clk_periph_resume();
-> +}
-
-[snip]
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
