@@ -2,138 +2,101 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC378C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5395BC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE9C208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:33:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J0WuyV2z"
+	by mail.kernel.org (Postfix) with ESMTP id 17418208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:34:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565350457;
+	bh=xvzM+rNMezOxa0Bnv95q/aeInbHv/3aA5R7Clz8rzHM=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=flkAslDiM6qtvGUvI81b1fqxJC61mv4f7of2Fe9cL+qyc/2cMrAS2t+42O2FAWOmN
+	 PGbHORyFfCmjmPELNHWzxzMjEoJEat0NMEFFYRppvor3ntAWu43gjZv8lz+fFMyZse
+	 6X55ogs+T9BQe0vsO15/BapspeuawfZFhGpHn6To=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406509AbfHILdY (ORCPT
+        id S2406533AbfHILeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 07:33:24 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39895 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405723AbfHILdY (ORCPT
+        Fri, 9 Aug 2019 07:34:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47026 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbfHILeP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 07:33:24 -0400
-Received: by mail-lf1-f68.google.com with SMTP id x3so15512581lfn.6;
-        Fri, 09 Aug 2019 04:33:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=s7beGUmfSnbzLxpw4htUELaVzRk7z/GPctQgdAnGulM=;
-        b=J0WuyV2z3eLsE+RnZT5RKYBfKG96Iu0QqpOw8ph+yxHMliD+YSQ04GqnCsdbnpXlmg
-         IIEi6blIqHhOyWkp8m3XGNzCE3916muRHSh8Yb5Up4Y34TMohdJn1r6F4dC495GrpLq5
-         o/RjPi/vYNu7TOyqQ6UbRZjJdsDKCsVnOY6sKyjIghIcAKJ57c+gs6pq5uNqbl9nCrfj
-         TV+BXb3zXqfd++z8yEPCCUPtrmNKpmz+n86DJbpYn5e65j61EMXRqq+UOb2qtFnFdML8
-         OgBPARTMIiN+1TdXAggB9hx1T60qMuMecbUgTaTpt+yesC8h3F6uw2yI5xHgWnqe1Ihp
-         /aMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=s7beGUmfSnbzLxpw4htUELaVzRk7z/GPctQgdAnGulM=;
-        b=Zm7XLuzWijmOIZEE+pHoIcLBzGuO82ClOOIYVWJbmwlTmovFEIcPVodwL28UaXLMpu
-         xtucuFFjXrXNbhL/ChlCiGTxmSx4ypOC1MslX5Uhl3op59+SINHk6vbesIBlTrQOZfSn
-         e17UKiIS0lwvYdUSe1TbzjS/7pPB/Hj4EkPy53tTYjoJK4VLALlRWPQM2SV7JBjt9SLQ
-         30x8bXRvqvWe+VUCgYomL3RKoO6YcD1IYtnZj12LSKgALvd1x4yDGTlJvuZmtEQ2A6Pv
-         WVb6Qkeiyi+TM5s+hiVfBNgxqaoqRbUTRS3wHcYuaj4uMv6wVWXht0d05YSFQ5ZWQHIO
-         QHJQ==
-X-Gm-Message-State: APjAAAWxg0wSfNWfBR5UYI7p80zdHXieR0dPzDUzN01Zs1wHcEvhuscQ
-        doZ9HBIZC7vHI6rzqi74+4UgUDGf
-X-Google-Smtp-Source: APXvYqwtQgfLjaNzX9n/3y+a0SCTRTrv3UhJKrqsYAyQjGbYLM67NNU3PwQptdso2nKkef/My3Wz7A==
-X-Received: by 2002:ac2:484e:: with SMTP id 14mr12245198lfy.50.1565350400760;
-        Fri, 09 Aug 2019 04:33:20 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.218])
-        by smtp.googlemail.com with ESMTPSA id p13sm19436242ljc.39.2019.08.09.04.33.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 04:33:19 -0700 (PDT)
-Subject: Re: [PATCH v8 05/21] clk: tegra: pll: Save and restore pll context
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-6-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <68f65db6-44b7-1c75-2633-4a2fffd62a92@gmail.com>
-Date:   Fri, 9 Aug 2019 14:33:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 9 Aug 2019 07:34:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=sWHbXyMzoEuVyq10lfOyRbyxdV133+TtRJ6b0uPtWz8=; b=daZWmeBN8e9GGRVFEIgn+dvOP
+        oMCTXkNDn2JfvAFRz+wGlsiap1blgf3EGKlZqqRTWSOSlFbfR25up2J2IDLXQZhnTXF75KBvjuE/H
+        +4AhCvXt7abPbiT4RsqIDS/13EKSGFGHwrlYFGRC+SOTSSZ8q6t5Ps0RoXxppov/OP+y/VDSiama4
+        lScIWxzTZcdgagd8c5/dFwSROkvDoMru7vdmaKx6H0vCC5lxK/FdiV6NI8uic7iTY0ssyJe+LXY5l
+        twyq4Q83mfflXwwfv9bSgVxy+sDYBpBfqAoyEz8YnI0QHCX/a62oNISITo6h6twI6JKZ+VlFCgxQd
+        C/ZixeG5g==;
+Received: from [179.162.52.10] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hw39x-0002yh-Nv; Fri, 09 Aug 2019 11:34:14 +0000
+Date:   Fri, 9 Aug 2019 08:34:10 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL for v5.3-rc4] media fixes
+Message-ID: <20190809083410.3997c6b5@coco.lan>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1565308020-31952-6-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-09.08.2019 2:46, Sowjanya Komatineni пишет:
-> This patch implements save and restore of PLL context.
-> 
-> During system suspend, core power goes off and looses the settings
-> of the Tegra CAR controller registers.
-> 
-> So during suspend entry pll context is stored and on resume it is
-> restored back along with its state.
-> 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-pll.c | 88 ++++++++++++++++++++++++++++-----------------
->  drivers/clk/tegra/clk.h     |  2 ++
->  2 files changed, 58 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
-> index 1583f5fc992f..e52add2bbdbb 100644
-> --- a/drivers/clk/tegra/clk-pll.c
-> +++ b/drivers/clk/tegra/clk-pll.c
-> @@ -1008,6 +1008,28 @@ static unsigned long clk_plle_recalc_rate(struct clk_hw *hw,
->  	return rate;
->  }
->  
-> +static void tegra_clk_pll_restore_context(struct clk_hw *hw)
-> +{
-> +	struct tegra_clk_pll *pll = to_clk_pll(hw);
-> +	struct clk_hw *parent = clk_hw_get_parent(hw);
-> +	unsigned long parent_rate = clk_hw_get_rate(parent);
-> +	unsigned long rate = clk_hw_get_rate(hw);
-> +	u32 val;
-> +
-> +	if (clk_pll_is_enabled(hw))
-> +		return;
-> +
-> +	if (pll->params->set_defaults)
-> +		pll->params->set_defaults(pll);
-> +
-> +	clk_pll_set_rate(hw, rate, parent_rate);
-> +
-> +	if (!__clk_get_enable_count(hw->clk))
+Hi Linus,
 
-What about orphaned clocks? Is enable_count > 0 for them?
+Please pull from:
+   git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media media/v5.3-3
 
-> +		clk_pll_disable(hw);
-> +	else
-> +		clk_pll_enable(hw);
-> +}
+For a fix at the vivid CEC support.
 
-[snip]
+-
+
+Last attempt failed due to a mix of factors related to using a different
+machine for the pull request. Sorry for that.
+
+Thanks,
+Mauro
+
+---
+
+The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
+
+  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v5.3-3
+
+for you to fetch changes up to 92f5b0313e37e2b37aaf8f0bb75b6c50eafb5808:
+
+  media: vivid: fix missing cec adapter name (2019-07-30 11:47:51 -0400)
+
+----------------------------------------------------------------
+media updates for v5.3-rc1
+
+----------------------------------------------------------------
+Hans Verkuil (1):
+      media: vivid: fix missing cec adapter name
+
+ drivers/media/platform/vivid/vivid-core.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
