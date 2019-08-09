@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A703C0650F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 914B7C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4482173C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707E22173C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:34:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405515AbfHICeT (ORCPT
+        id S2405502AbfHICeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 22:34:19 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59036 "EHLO huawei.com"
+        Thu, 8 Aug 2019 22:34:17 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59004 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405098AbfHICdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2405079AbfHICdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 8 Aug 2019 22:33:35 -0400
 Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 33DA942F6152FFBCED8D;
+        by Forcepoint Email with ESMTP id 300C7C494ACFE6CAC635;
         Fri,  9 Aug 2019 10:33:32 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 9 Aug 2019 10:33:24 +0800
+ 14.3.439.0; Fri, 9 Aug 2019 10:33:22 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
+        <linuxarm@huawei.com>, Yufeng Mo <moyufeng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 08/12] net: hns3: add check for max TX BD num for tso and non-tso case
-Date:   Fri, 9 Aug 2019 10:31:14 +0800
-Message-ID: <1565317878-31806-9-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 04/12] net: hns3: add input length check for debugfs write function
+Date:   Fri, 9 Aug 2019 10:31:10 +0800
+Message-ID: <1565317878-31806-5-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1565317878-31806-1-git-send-email-tanhuazhong@huawei.com>
 References: <1565317878-31806-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,128 +46,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Yufeng Mo <moyufeng@huawei.com>
 
-Hardware supports up to 8 TX BD for non-TSO skb and 63 TX
-BD for TSO skb. Currently hns3 driver does not check the max
-BD num that required by a skb before filling desc, which may
-cause the hardware to issue a RAS error throug PCIe AER.
+If the input length reaches the maximum value of size_t, the reverse is
+triggered when 1 is added. In addition, there is no need to have such a
+large length. Therefore, the input length should be checked and the value
+should be less than or equal to 1024.
 
-This patch adds the max BD num check before filling desc,
-if the bd num is not within the hardware limit, it will
-record the error by ring->stats.sw_err_cnt counter and
-free the skb.
-
-This patch also cleans up the hns3_nic_bd_num function by
-changing the return type and removing an unnecessary check.
-
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
 Reviewed-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 38 ++++++++++---------------
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h |  3 +-
- 2 files changed, 17 insertions(+), 24 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index b2a668d..df08f9e 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1186,28 +1186,20 @@ static int hns3_fill_desc(struct hns3_enet_ring *ring, void *priv,
- 	return 0;
- }
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
+index a4b9372..7996dcc 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
+@@ -8,6 +8,7 @@
+ #include "hns3_enet.h"
  
--static int hns3_nic_bd_num(struct sk_buff *skb)
-+static unsigned int hns3_nic_bd_num(struct sk_buff *skb)
- {
--	int size = skb_headlen(skb);
--	int i, bd_num;
-+	unsigned int bd_num;
-+	int i;
+ #define HNS3_DBG_READ_LEN 256
++#define HNS3_DBG_WRITE_LEN 1024
  
- 	/* if the total len is within the max bd limit */
- 	if (likely(skb->len <= HNS3_MAX_BD_SIZE))
- 		return skb_shinfo(skb)->nr_frags + 1;
+ static struct dentry *hns3_dbgfs_root;
  
--	bd_num = hns3_tx_bd_count(size);
-+	bd_num = hns3_tx_bd_count(skb_headlen(skb));
+@@ -322,6 +323,9 @@ static ssize_t hns3_dbg_cmd_write(struct file *filp, const char __user *buffer,
+ 	    test_bit(HNS3_NIC_STATE_RESETTING, &priv->state))
+ 		return 0;
  
- 	for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
- 		skb_frag_t *frag = &skb_shinfo(skb)->frags[i];
--		int frag_bd_num;
--
--		size = skb_frag_size(frag);
--		frag_bd_num = hns3_tx_bd_count(size);
--
--		if (unlikely(frag_bd_num > HNS3_MAX_BD_PER_FRAG))
--			return -ENOMEM;
--
--		bd_num += frag_bd_num;
-+		bd_num += hns3_tx_bd_count(skb_frag_size(frag));
- 	}
- 
- 	return bd_num;
-@@ -1228,7 +1220,7 @@ static unsigned int hns3_gso_hdr_len(struct sk_buff *skb)
-  */
- static bool hns3_skb_need_linearized(struct sk_buff *skb)
- {
--	int bd_limit = HNS3_MAX_BD_PER_FRAG - 1;
-+	int bd_limit = HNS3_MAX_BD_NUM_NORMAL - 1;
- 	unsigned int tot_len = 0;
- 	int i;
- 
-@@ -1258,21 +1250,16 @@ static int hns3_nic_maybe_stop_tx(struct hns3_enet_ring *ring,
- 				  struct sk_buff **out_skb)
- {
- 	struct sk_buff *skb = *out_skb;
--	int bd_num;
-+	unsigned int bd_num;
- 
- 	bd_num = hns3_nic_bd_num(skb);
--	if (bd_num < 0)
--		return bd_num;
--
--	if (unlikely(bd_num > HNS3_MAX_BD_PER_FRAG)) {
-+	if (unlikely(bd_num > HNS3_MAX_BD_NUM_NORMAL)) {
- 		struct sk_buff *new_skb;
- 
--		if (skb_is_gso(skb) && !hns3_skb_need_linearized(skb))
-+		if (skb_is_gso(skb) && bd_num <= HNS3_MAX_BD_NUM_TSO &&
-+		    !hns3_skb_need_linearized(skb))
- 			goto out;
- 
--		bd_num = hns3_tx_bd_count(skb->len);
--		if (unlikely(ring_space(ring) < bd_num))
--			return -EBUSY;
- 		/* manual split the send packet */
- 		new_skb = skb_copy(skb, GFP_ATOMIC);
- 		if (!new_skb)
-@@ -1280,6 +1267,11 @@ static int hns3_nic_maybe_stop_tx(struct hns3_enet_ring *ring,
- 		dev_kfree_skb_any(skb);
- 		*out_skb = new_skb;
- 
-+		bd_num = hns3_nic_bd_num(new_skb);
-+		if ((skb_is_gso(new_skb) && bd_num > HNS3_MAX_BD_NUM_TSO) ||
-+		    (!skb_is_gso(new_skb) && bd_num > HNS3_MAX_BD_NUM_NORMAL))
-+			return -ENOMEM;
++	if (count > HNS3_DBG_WRITE_LEN)
++		return -ENOSPC;
 +
- 		u64_stats_update_begin(&ring->syncp);
- 		ring->stats.tx_copy++;
- 		u64_stats_update_end(&ring->syncp);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-index a76712c..5b0ee1f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-@@ -195,7 +195,8 @@ enum hns3_nic_state {
- #define HNS3_VECTOR_INITED			1
- 
- #define HNS3_MAX_BD_SIZE			65535
--#define HNS3_MAX_BD_PER_FRAG			8
-+#define HNS3_MAX_BD_NUM_NORMAL			8
-+#define HNS3_MAX_BD_NUM_TSO			63
- #define HNS3_MAX_BD_PER_PKT			MAX_SKB_FRAGS
- 
- #define HNS3_VECTOR_GL0_OFFSET			0x100
+ 	cmd_buf = kzalloc(count + 1, GFP_KERNEL);
+ 	if (!cmd_buf)
+ 		return count;
 -- 
 2.7.4
 
