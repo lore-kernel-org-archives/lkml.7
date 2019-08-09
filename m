@@ -2,89 +2,113 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21C7C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09422C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A67632171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD0612171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:50:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h6eqP/nx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405926AbfHIJuJ (ORCPT
+        id S2406120AbfHIJuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 05:50:09 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56015 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405953AbfHIJuH (ORCPT
+        Fri, 9 Aug 2019 05:50:14 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46213 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbfHIJuL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 05:50:07 -0400
-Received: from p200300ddd71876457e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7645:7e7a:91ff:fec9:8e25])
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hw1X0-0003bf-Nf; Fri, 09 Aug 2019 11:49:54 +0200
-Date:   Fri, 9 Aug 2019 11:49:49 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-cc:     =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arch/x86/kernel/cpu/umwait.c - remove unused variable
-In-Reply-To: <20190809004438.GA56628@romley-ivt3.sc.intel.com>
-Message-ID: <alpine.DEB.2.21.1908091147290.21433@nanos.tec.linutronix.de>
-References: <79734.1565272329@turing-police> <alpine.DEB.2.21.1908082158580.2882@nanos.tec.linutronix.de> <141835.1565295884@turing-police> <alpine.DEB.2.21.1908082229010.2882@nanos.tec.linutronix.de> <20190809004438.GA56628@romley-ivt3.sc.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-718199243-1565344194=:21433"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Fri, 9 Aug 2019 05:50:11 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c3so22637288pfa.13;
+        Fri, 09 Aug 2019 02:50:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=7v0ZD4FYjg+FLfVFwXErFZLQw9JsPi1WdJqMJoDQ0Kw=;
+        b=h6eqP/nxme/nZg+0hsUYCcZRnSHf8WbQUAHog3lSQRpBom3rDrlXJqX1pTDK12paRq
+         8dWJ5+pbjSdEm2n2z7uHFUBdD0pSP5aBP2fOmwDfg41Yftp0fC8yK8HInLzaRWvedu93
+         D+buGG6pQKrkV/tyyRw8e2HXD2Gx/XM5BzcTVMfqhts3OaqGBzslQjiWV+NOck4tD18n
+         A7aJSN15EhJE8mEwGDRmDBk/NgVw+erBPgAMXN+J9CNII0xkuWD9qM3oreuk6ro3zLgQ
+         WwwttAGA15oXzkQnc5ep7RTrNx3ytDujwer033FjqMBy5jLy8dLTZyXmO84Lafw3YFSy
+         67vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=7v0ZD4FYjg+FLfVFwXErFZLQw9JsPi1WdJqMJoDQ0Kw=;
+        b=FwJ9/OLZfiw/6l7hOLt6/j/E4rPCb2S+fUAYJbZCoyOg0AOXizVtZYIZYAv661n/pu
+         vlay98WCvPYgReaoNOsPUvlszn8RDe6JuP/CqJ8bi7eW4UyUmELBxZRTnpxD0Bzjc/Co
+         CbtgiNQSki+IfFk4IXYw/hpgLDFUp9O50qu/i2gQm5F2wV054o5NlBv65vv/Ranfpicu
+         WFCjipE7Td5a3v8RzwrcvzN0a6f4Gl4W3t9M/iewXMf00AA4iAn5BjsD3GsZFIiwzZJZ
+         4RXF2j4ekTkarY4Q86S4o7SQ2mRRYM8N6BoSQjRl3lk6GknwUoLjYJ+p/Yi3WVra33PL
+         QnQg==
+X-Gm-Message-State: APjAAAXKR1xrSi1DlDrNisafC4AHlVIhlQbUYw1wsCBx+k7kndf6Ntad
+        QVGpzbVFWLsQ+HY/kaDkAQk=
+X-Google-Smtp-Source: APXvYqzJYTLIIenoOenCuRR+DQnHHmHD6but+0dBLC+f7ZT2ifGPMWCBbfe4gry2mBwdZvuOsdfexQ==
+X-Received: by 2002:a62:e806:: with SMTP id c6mr20676847pfi.158.1565344210665;
+        Fri, 09 Aug 2019 02:50:10 -0700 (PDT)
+Received: from localhost.corp.microsoft.com ([167.220.255.114])
+        by smtp.googlemail.com with ESMTPSA id b16sm159653631pfo.54.2019.08.09.02.50.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 09 Aug 2019 02:50:10 -0700 (PDT)
+From:   lantianyu1986@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, vkuznets@redhat.com
+Subject: [PATCH 1/3] x86/Hyper-V: Fix definition of struct hv_vp_assist_page
+Date:   Fri,  9 Aug 2019 17:49:37 +0800
+Message-Id: <20190809094939.76093-2-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
+In-Reply-To: <20190809094939.76093-1-Tianyu.Lan@microsoft.com>
+References: <20190809094939.76093-1-Tianyu.Lan@microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
---8323329-718199243-1565344194=:21433
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+The struct hv_vp_assist_page was defined incorrectly.
+The "vtl_control" should be u64[3], "nested_enlightenments_control"
+should be a u64 and there is 7 reserved bytes following "enlighten_vmentry".
+This patch is to fix it.
 
-On Thu, 8 Aug 2019, Fenghua Yu wrote:
-> On Thu, Aug 08, 2019 at 10:32:38PM +0200, Thomas Gleixner wrote:
-> > Valdis,
-> > 
-> > On Thu, 8 Aug 2019, Valdis Klētnieks wrote:
-> > > On Thu, 08 Aug 2019 22:04:03 +0200, Thomas Gleixner said: It isn't 
-> > > clear that whatever is doing the device_initcall()s will be able to 
-> > > do any reasonable recovery if we return an error, so any error 
-> > > recovery is going to have to happen before the function returns. It 
-> > > might make sense to do an 'if (ret) return;' before going further in 
-> > > the function, but given the comment a few lines further down about 
-> > > ignoring errors, it was apparently considered more important to 
-> > > struggle through and register stuff in sysfs even if umwait was 
-> > > broken....
-> > 
-> > I missed that when going through it.
-> > 
-> > The right thing to do is to have a cpu_offline callback which clears 
-> > the umwait MSR. That covers also the failure in the cpu hotplug setup. 
-> > Then handling an error return makes sense and keeps everything in a 
-> > workable shape.
-> 
-> When cpu is offline, the MSR won't be used. We don't need to clear it, right?
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+---
+ arch/x86/include/asm/hyperv-tlfs.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Groan. If soemthing goes wrong when registering the hotplug callback, what
-undoes the MSR setup which might have happened and what takes care of it on
-cpus coming online later? Exactly nothing. Then you have a non-consistent
-behaviour.
+diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+index af78cd72b8f3..a79703c56ebe 100644
+--- a/arch/x86/include/asm/hyperv-tlfs.h
++++ b/arch/x86/include/asm/hyperv-tlfs.h
+@@ -517,11 +517,11 @@ struct hv_timer_message_payload {
+ /* Define virtual processor assist page structure. */
+ struct hv_vp_assist_page {
+ 	__u32 apic_assist;
+-	__u32 reserved;
+-	__u64 vtl_control[2];
++	__u32 reserved1;
++	__u64 vtl_control[3];
+ 	__u64 nested_enlightenments_control[2];
+-	__u32 enlighten_vmentry;
+-	__u32 padding;
++	__u8 enlighten_vmentry;
++	__u8 reserved2[7];
+ 	__u64 current_nested_vmcs;
+ } __packed;
+ 
+-- 
+2.14.2
 
-Make stuff symmmetric and correct and not optimized for the sunshine case.
-
-Thanks,
-
-	tglx
---8323329-718199243-1565344194=:21433--
