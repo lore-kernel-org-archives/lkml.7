@@ -6,61 +6,72 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96320C41514
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 861AFC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40AD4214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3540F20C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565368521;
-	bh=419T7J4k04LmxtI6IPhOmUj3dbhoV69tdbHRuMz03Jg=;
+	s=default; t=1565368528;
+	bh=h8yvuZKp/qw8bEdg0bWJTyQ7WnGy6ktEzKdG6fMM9VE=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=2dbfDf/1i5Big7eeOSgfUexYKfh/2Dqa/9pnYBg6N0Su62CvK46sXzNeFZtM+mf5/
-	 VMkiDmcRuIKGzVYLRskQWq2S6Lhb/qQovITljRX86unNEoVGVp5U5w5z+b5lk9Emsn
-	 bbIEJbIeJ9OXfrMZcRsTt/1NqqtzQCYA+2tEyyoA=
+	b=KbtJas7AfbBD6YoYCYz4Od9z3WN+cWkA7WZW1OL/GlTh11LZboxOCiYbYxvQ3IzaW
+	 cRWPSKALQk/8rfDoIWQyOfy1OWY6knrYIFxtUih0SMuQlh/wue+Ip3Wu7yeCEN0ZE1
+	 wBXx9DECIYAULDfPIFb4XdA2FhNxY2w9CMtD5mUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437390AbfHIQfU (ORCPT
+        id S2437350AbfHIQfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 12:35:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437343AbfHIQfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 9 Aug 2019 12:35:12 -0400
-Subject: Re: [GIT PULL] arm64 fixes for 5.3-rc4
+Received: from mail.kernel.org ([198.145.29.99]:50626 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437309AbfHIQfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 12:35:08 -0400
+Subject: Re: [GIT] Crypto Fixes for 5.3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565368511;
-        bh=419T7J4k04LmxtI6IPhOmUj3dbhoV69tdbHRuMz03Jg=;
+        s=default; t=1565368507;
+        bh=h8yvuZKp/qw8bEdg0bWJTyQ7WnGy6ktEzKdG6fMM9VE=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=jx6W+d++wIGb0nsUYq8WVk8lkMQ7Js5/BGWkyHBDFnJZtmxdiMHT6/SzKIHkIw5t6
-         pTXJlwDfShFJ1OcP8fdddiLbkBEGSU9sgYZGIJPP/SstGpWPD4Cxg+RxTYq5sAGM/Q
-         ai/rU/rczTpIzp7b+Jj8cAw8pLfEvPZs1D6n70uE=
+        b=jgUBbpC1BfHogbhUqwTIijlz0UQBHCBT1z/GEilZdVa0HJBti9oE3xXRwdXfjoRmM
+         /PV4pMudKZg4PifJZpj+a4ayjf8Msyoi/4oW2Qo/WfFXfwFu97+81ZT2XLw0/XATrH
+         WtySJ/Bo8iGrqQypCgO77HJohjgzAXhgIOF076UI=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190809161513.GA42536@arrakis.emea.arm.com>
-References: <20190809161513.GA42536@arrakis.emea.arm.com>
+In-Reply-To: <20190809061548.GA10530@gondor.apana.org.au>
+References: <20180622145403.6ltjip7che227fuo@gondor.apana.org.au>
+ <20180829033353.agnzxra3jk2r2mzg@gondor.apana.org.au>
+ <20181116063146.e7a3mep3ghnfltxe@gondor.apana.org.au>
+ <20181207061409.xflg423nknleuddw@gondor.apana.org.au>
+ <20190118104006.ye5amhxkgd4xrbmc@gondor.apana.org.au>
+ <20190201054204.ehl7u7aaqmkdh5b6@gondor.apana.org.au>
+ <20190215024738.fynl64d5u5htcy2l@gondor.apana.org.au>
+ <20190312045818.bgpiuxogmaxyscdv@gondor.apana.org.au>
+ <20190515060552.ecfwhazt2fnthepg@gondor.apana.org.au>
+ <20190719031206.nxyxk4vj6dg7hwxg@gondor.apana.org.au>
+ <20190809061548.GA10530@gondor.apana.org.au>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190809161513.GA42536@arrakis.emea.arm.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
-X-PR-Tracked-Commit-Id: 30e235389faadb9e3d918887b1f126155d7d761d
+X-PR-Tracked-Message-Id: <20190809061548.GA10530@gondor.apana.org.au>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+X-PR-Tracked-Commit-Id: e2664ecbb2f26225ac6646876f2899558ffb2604
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 15a555a4b8be26683d77df8d5dbe8ac83f5ec3a6
-Message-Id: <156536851143.6429.291425612357631279.pr-tracker-bot@kernel.org>
-Date:   Fri, 09 Aug 2019 16:35:11 +0000
-To:     Catalin Marinas <catalin.marinas@arm.com>
+X-PR-Merge-Commit-Id: e577dc152e232c78e5774e4c9b5486a04561920b
+Message-Id: <156536850756.6429.4109081202813215233.pr-tracker-bot@kernel.org>
+Date:   Fri, 09 Aug 2019 16:35:07 +0000
+To:     Herbert Xu <herbert@gondor.apana.org.au>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 9 Aug 2019 17:15:14 +0100:
+The pull request you sent on Fri, 9 Aug 2019 16:15:48 +1000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
+> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/15a555a4b8be26683d77df8d5dbe8ac83f5ec3a6
+https://git.kernel.org/torvalds/c/e577dc152e232c78e5774e4c9b5486a04561920b
 
 Thank you!
 
