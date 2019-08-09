@@ -2,160 +2,203 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BB3C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B219C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 051242171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D966B21783
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:18:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=SILICOMLTD.onmicrosoft.com header.i=@SILICOMLTD.onmicrosoft.com header.b="dXuH0bbx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L0pZUfH1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407047AbfHIOSG (ORCPT
+        id S2407055AbfHIOS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 10:18:06 -0400
-Received: from mail-eopbgr70108.outbound.protection.outlook.com ([40.107.7.108]:57577
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726342AbfHIOSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 10:18:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YmU60R/nfyFdm6Go1YZz//r3hVSPs+kcCgRE5VbUj9QiTWfI10DtF08qLVQ3LXtqnuZj2MJUrFYfHbvgxJkvxWL2UVwHKVBdwZ3lUCtuE042LFzLx+kIrrHk94yhIV6NoG4/3ra3RHSJd4GXe9MK5kGT6V+pBsJE4wAClu0naJ8fjg7u7UUw/KqI//h7H8QzXy/d7Hq7H4auG4aGA5IlFU8xRNekwDSAk+nmAeXYRH9KOrUxAIrcdmDAI6HIp15+EwRkgGStlb0MuazvVNwmzpt2QdPM4ktpaJ0cm7Jth740clFWvwR0mwB0taEZmC20YXFZJSWvoBjXSY4gy5xw1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mXoCPzRbQxbsytNpL3OhZfoVEDOMrThQSOQ2RkQUfcA=;
- b=RwS8GMKx4bG8vapcUpRj4DXC1UqFWnYmV1o5Sd4DBegeg4ibeVOwgBWyMajqPHbyIGxfO9Jvd9fBo6d5GbIuV91vQ/YddDH5MSkkkJNF74/dVN/OiIwUQvGm7fj2nKYjCkpFTSCtiFSJjjcpjQw6cNyRrzKKhfl12TNOn6SW+Z/w8XAFr9jWMTJNdb+iJ2gj7MS52C0y3/LH1oWUqYyIgAn7vY6NHrWiHjol/GOV6GFdHZuDIKuk7TQ8p3qZSridv3MT4vWfh1918PYgUSeDcY0BHxvzHZd9G+hhY0YXRysFMw2vIkcobSNTXahb/G4DF0XSE9+nX++oFtPq6Gr7LQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silicom-usa.com; dmarc=pass action=none
- header.from=silicom-usa.com; dkim=pass header.d=silicom-usa.com; arc=none
+        Fri, 9 Aug 2019 10:18:58 -0400
+Received: from mail-ua1-f53.google.com ([209.85.222.53]:35751 "EHLO
+        mail-ua1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbfHIOS6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 10:18:58 -0400
+Received: by mail-ua1-f53.google.com with SMTP id j21so37797486uap.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 07:18:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=SILICOMLTD.onmicrosoft.com; s=selector2-SILICOMLTD-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mXoCPzRbQxbsytNpL3OhZfoVEDOMrThQSOQ2RkQUfcA=;
- b=dXuH0bbx8fr5Uj2118e5i0SbAf81SkhRxbWHy+7m2od7SkkBxzNIzrlm9SKMM2TsEQt5Ni76yBmK+XjaPukVRqy5X8qo6El/6yVrbw0DPhHp1llJ8lPaPDEPzLl3e3U+vqKdM6qPlbBt4wXnQxByaZ+UjE89DoCdsoX7tZjvA50=
-Received: from VI1PR0402MB2717.eurprd04.prod.outlook.com (10.175.22.139) by
- VI1PR0402MB3774.eurprd04.prod.outlook.com (52.134.15.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.20; Fri, 9 Aug 2019 14:18:02 +0000
-Received: from VI1PR0402MB2717.eurprd04.prod.outlook.com
- ([fe80::eca9:e1f:eca7:8439]) by VI1PR0402MB2717.eurprd04.prod.outlook.com
- ([fe80::eca9:e1f:eca7:8439%9]) with mapi id 15.20.2157.020; Fri, 9 Aug 2019
- 14:18:02 +0000
-From:   Stephen Douthit <stephend@silicom-usa.com>
-To:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>
-CC:     Stephen Douthit <stephend@silicom-usa.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] EDAC, pnd2: Fix ioremap() size in dnv_rd_reg()
-Thread-Topic: [PATCH] EDAC, pnd2: Fix ioremap() size in dnv_rd_reg()
-Thread-Index: AQHVTr1AyXwgab8zJESZbW4mAIpUAw==
-Date:   Fri, 9 Aug 2019 14:18:02 +0000
-Message-ID: <20190809141737.15580-1-stephend@silicom-usa.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BN6PR2001CA0027.namprd20.prod.outlook.com
- (2603:10b6:405:16::13) To VI1PR0402MB2717.eurprd04.prod.outlook.com
- (2603:10a6:800:b4::11)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=stephend@silicom-usa.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.21.0
-x-originating-ip: [96.82.2.57]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 05df1eaa-ba6a-4ca9-3518-08d71cd4632e
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0402MB3774;
-x-ms-traffictypediagnostic: VI1PR0402MB3774:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB3774A486D226329E6452B69A94D60@VI1PR0402MB3774.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 01244308DF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(346002)(396003)(136003)(39840400004)(189003)(199004)(50226002)(8936002)(486006)(2906002)(66066001)(6512007)(2616005)(476003)(316002)(3846002)(99286004)(6436002)(110136005)(54906003)(25786009)(6486002)(14454004)(53936002)(6116002)(256004)(478600001)(7736002)(86362001)(305945005)(81156014)(81166006)(8676002)(14444005)(102836004)(66446008)(5660300002)(4326008)(66946007)(66476007)(64756008)(36756003)(66556008)(6506007)(386003)(52116002)(26005)(71190400001)(71200400001)(186003)(1076003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0402MB3774;H:VI1PR0402MB2717.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: silicom-usa.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: nfMnYUERkUg8EP7GvWNs7kDB86wLEipnLWa5Me52iOgodzM0iNYO7ILewRSN2gwNCeaIJMLzF0VBG3BjISCAXnw8PFcefwbGNcEJb0Pb0r0UktyAXb4vVTwWiN+BMxrn32rU1hpWH+G5lzYyxT6zqmqu/uqjUUza79jYRMQqTe8M3NTjos2bhfIWURf8KwhQ3La2IX9t957uLzDdKthXUHlhOooi/XcEN1Z5sP2F9vvtUy1mnkZDAjPmZZ/M56N2D+etYnbsi+kjNmEP5p0gBJpQ7SQEMCmFvp9R2zgH6Nt0aTUrbs/u99MmInNcB8jkKLQ63osrE+rxjJ1KXHlT53ZO8TA0HmJLYYecByvdmDbm0xysCa5u7YwsoHknrvc0QEKysOqs9JIMdgii9IYi01Y4tGfHoee66+xXyYHUzm4=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v2WWG/iOTt94dMfB50rJSprelDOAYAI1KzIRPSZeDWw=;
+        b=L0pZUfH1Uew/sDujE8pVsgpmSmCUSh/9v+Pm7AP7dGoWu3bbFxKnx/3EcFxtHRPa3t
+         UfWE4qPsSieR1Oe2PcbiK5Y2dvSwWL2G7KsbVvBkddBqYDBIGYApL7PtXBXwpRc7/a69
+         iqhUPNJ96VGAcIh0004onXloMthwIiwxNhghfaBPVb7Qj2OcPaSaOWn59wyvdV6yIHoE
+         FISEPK2OWvJZH+HIlCd443YXuwMuV3Sbj8iQkVW9ezjUn4rshGiDPuiSblhbEGzLQoSd
+         Owk2Ct8izWotiIN0D8dVtpAjDFF8znMsSw8tWksjOdwKeSnOAYW7A3SHCaXm8QzvqymQ
+         QLvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v2WWG/iOTt94dMfB50rJSprelDOAYAI1KzIRPSZeDWw=;
+        b=q9FV3bsneBT6+zl67MbzvWzMjivKd6ktNEIvyBwWWf3JepdS6Tv2NRMcfws8KWJMyg
+         pwrLFM66qY8V6/Qxhyhnz4Sa005vjWqsnrWC9VBtdlxhlH6oGCDmEuBHCZp4BflC4Xh3
+         Sj7H5XYbifeQXP5s7t/EytDfFrQXE3XLidgt1FhdnrLuDHkehsb7YvzsN3ghSme7kBy1
+         TQCV+h1rRy4zW8c84t6SzkTnpUrP//vtEh9ZBWOZoJqZgFAtw7DfT2Cnjx1E/mSwR/VG
+         cUc2Tm/vjaQ02X5UYN8Wnqxgn+Fhf3YdKMnKCOgwjIS3R4vBRsHIEOYrKlfDZboMGx+U
+         MRQg==
+X-Gm-Message-State: APjAAAWpMFs2FvnYJspi24vF4a+sQxAF+5zUNe7pFdi6bTeeOvuI0WvF
+        OKDNKqmr2z9UrF/EKyzhaf7HlFn41HpFyeN/qxQ=
+X-Google-Smtp-Source: APXvYqwPqrzwFtGX8NI73Jdcu/90zyRirukekqbQj1hpKKql3cvsF4mO9y3zDSB4f5aWhKn0nUHkZu30WEPW9VtTdLo=
+X-Received: by 2002:ab0:30ae:: with SMTP id b14mr2034666uam.22.1565360336786;
+ Fri, 09 Aug 2019 07:18:56 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: silicom-usa.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05df1eaa-ba6a-4ca9-3518-08d71cd4632e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Aug 2019 14:18:02.0960
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c9e326d8-ce47-4930-8612-cc99d3c87ad1
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xGPj2o197h/0xpFYOatlg1N2WOFxsOgIREdt/tGCKsqp9NYOVLsNbv2l1pjGFJSJw+eP5UdhnSzkc7+lx8M+RYCN3fa5P3cvTpFDlq0dYGk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3774
+References: <20190807075927.GO11812@dhcp22.suse.cz> <20190807205138.GA24222@cmpxchg.org>
+ <20190808114826.GC18351@dhcp22.suse.cz> <806F5696-A8D6-481D-A82F-49DEC1F2B035@redhazel.co.uk>
+ <20190808163228.GE18351@dhcp22.suse.cz> <5FBB0A26-0CFE-4B88-A4F2-6A42E3377EDB@redhazel.co.uk>
+ <20190808185925.GH18351@dhcp22.suse.cz> <08e5d007-a41a-e322-5631-b89978b9cc20@redhazel.co.uk>
+ <20190809085748.GN18351@dhcp22.suse.cz> <cdb392ee-e192-c136-41cb-48d9e4e4bf47@redhazel.co.uk>
+ <20190809105016.GP18351@dhcp22.suse.cz>
+In-Reply-To: <20190809105016.GP18351@dhcp22.suse.cz>
+From:   Pintu Agarwal <pintu.ping@gmail.com>
+Date:   Fri, 9 Aug 2019 19:48:45 +0530
+Message-ID: <CAOuPNLiQ7je5DKwTBqxRHoeu_rchFGrBcb1Cdy2Rczt_VsMaNg@mail.gmail.com>
+Subject: Re: Let's talk about the elephant in the room - the Linux kernel's
+ inability to gracefully handle low memory pressure
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     ndrw <ndrw.xf@redhazel.co.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Artem S. Tashkinov" <aros@gmx.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Pintu Kumar <pintu.ping@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Depending on how BIOS has marked the reserved region containing the 32KB
-MCHBAR you can get warnings like:
+[...]
 
-resource sanity check: requesting [mem 0xfed10000-0xfed1ffff], which spans =
-more than reserved [mem 0xfed10000-0xfed17fff]
-caller dnv_rd_reg+0xc8/0x240 [pnd2_edac] mapping multiple BARs
+Hi,
 
-Not all of the mmio regions used in dnv_rd_reg() are the same size.  The
-MCHBAR window is 32KB and the sideband ports are 64KB.  Pass the correct
-size to ioremap() depending on which resource we're reading from.
+This is an interesting topic for me so I would like to join the conversation.
+I will be glad if I can be of any help here either in testing PSI, or
+verifying some scenarios and observation.
 
-Signed-off-by: Stephen Douthit <stephend@silicom-usa.com>
----
- drivers/edac/pnd2_edac.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+I have some experience working with low memory embedded devices, like
+RAM as low as 128MB, 256MB, less than 1GB mostly, with/without
+Display, DRM/Graphics support.
+Along with ZRAM as swap space configured as 25% of RAM size.
+The eMMC storage space is also as low as 4GB or 8GB max.
 
-diff --git a/drivers/edac/pnd2_edac.c b/drivers/edac/pnd2_edac.c
-index 903a4f1fadcc..0153c730750e 100644
---- a/drivers/edac/pnd2_edac.c
-+++ b/drivers/edac/pnd2_edac.c
-@@ -268,11 +268,14 @@ static u64 get_sideband_reg_base_addr(void)
- 	}
- }
-=20
-+#define DNV_MCHBAR_SIZE  0x8000
-+#define DNV_SB_PORT_SIZE 0x10000
- static int dnv_rd_reg(int port, int off, int op, void *data, size_t sz, ch=
-ar *name)
- {
- 	struct pci_dev *pdev;
- 	char *base;
- 	u64 addr;
-+	unsigned long size;
-=20
- 	if (op =3D=3D 4) {
- 		pdev =3D pci_get_device(PCI_VENDOR_ID_INTEL, 0x1980, NULL);
-@@ -287,15 +290,17 @@ static int dnv_rd_reg(int port, int off, int op, void=
- *data, size_t sz, char *na
- 			addr =3D get_mem_ctrl_hub_base_addr();
- 			if (!addr)
- 				return -ENODEV;
-+			size =3D DNV_MCHBAR_SIZE;
- 		} else {
- 			/* MMIO via sideband register base address */
- 			addr =3D get_sideband_reg_base_addr();
- 			if (!addr)
- 				return -ENODEV;
- 			addr +=3D (port << 16);
-+			size =3D DNV_SB_PORT_SIZE;
- 		}
-=20
--		base =3D ioremap((resource_size_t)addr, 0x10000);
-+		base =3D ioremap((resource_size_t)addr, size);
- 		if (!base)
- 			return -ENODEV;
-=20
---=20
-2.21.0
+So, I have experienced this sluggishness, hang, OOM kill issues quite
+a number of times.
+So, I would like to share my experience and observation here.
 
+Recently, I have been exploring the PSI feature on my ARM
+Qemu/Beagle-Bone environment, so I can share some feedback for this as
+well.
+
+The system sluggish behavior can result from 4 types (specially on
+smart phone devices):
+* memory allocation pressure
+* I/O pressure
+* Scheduling pressure
+* Network pressure
+
+I think the topic of concern here is: memory pressure.
+So, I would like to share some thoughts about this.
+
+* In my opinion, memory pressure should be internal to the system and
+not visible to the end users.
+* The pressure metrics can very from system to system, so its
+difficult to apply single policy.
+* I guess this is the time to apply "Machine Learning" and "Artificial
+Intelligence" into the system :)
+
+* The memory pressure starts with how many times and how quickly
+system is entering the slow-path.
+  Thus slow-path monitoring may give some clue about pressure building
+in the system.
+  Thus I use to use slow-path-counter.
+  Too much of slow-path in the beginning itself indicates that this
+system needs to be re-designed.
+
+* The system should be avoided to entering slow-path again and again
+thus avoiding pressure.
+  If this happens then its time to reclaim memory in large chunk,
+rather than in smaller chunk.
+  May be its time to think about shrink_all_memory() knob in kernel.
+  It can be run as bottom-half processing, may be from cgroups.
+
+* Some experiment were done in the past. Interested people can check this paper:
+  http://events17.linuxfoundation.org/sites/events/files/slides/%5BELC-2015%5D-System-wide-Memory-Defragmenter.pdf
+
+* The system is already behaving sluggish even before it enters oom-kill stage.
+  So, most of the time oom stage is skipped, not occurred, or its just
+looping around.
+  Thus, some kind of oom-monitoring may help to gather some suspect.
+  Thats the reason I proposed to use something called
+oom-stall-counter. That means system entering oom, but not possibly
+oom-kill.
+  If this counter is updated means we assume that system started
+behaving sluggish.
+
+* A oom-kill-counter can also help in determining how much of killing
+happening in kernel space.
+  Example: If PSI pressure is building up and this counter is not updating...
+  But in any case system-daemon should be avoided from killing.
+
+* Some killing policy should be left to user space. So a standard
+system-daemon (or kthread) should be designed along the line.
+  It should be configured dynamically based on the system and oom-score.
+  As my previous experience, in Tizen, we have used something called:
+resourced daemon.
+  https://git.tizen.org/cgit/platform/core/system/resourced/tree/src/memory?h=tizen
+
+* Instead of static policy there should be something called "Dynamic
+Low Memory Manager" (DLLM) policy.
+  That is at every stage (slow-path, swapping, compaction-fail,
+reclaim-fail, oom) some action can be taken.
+  Earlier this event was triggered using vmpressure, but now it can
+replace with PSI.
+
+* Another major culprit with sluggish in the long run is, the
+system-daemon occupying all of swap space and never releasing it.
+  So, even if the kill applications due to oom, it may not help much.
+Since daemons will never be killed.
+  So, I proposed something called "Dynamic Swappiness", where
+swappiness of daemons came be lowered dynamically, while normal
+application have higher values.
+  In the past I have done several experiments on this, soon I will be
+publishing a paper on it.
+
+* May be it is helpful to understand better, if we start from a very
+minimal scale (just 64MB to 512MB RAM) with busy-box.
+  If we can tune this perfectly, than large scale will automatically
+have no issues.
+
+With respect to PSI, here are my observations:
+* PSI memory threshold (10, 60, 300) are too high for an embedded system.
+  I think these settings should be dynamic, or user configurable, or
+there should be on more entry for 1s or lesser.
+* PSI memory values are updated after the oom-kill in kernel had
+already happened, that means sluggish already occurred.
+  So, I have to utilize the "total" field and monitor the difference manually.
+  Like the difference between previous-total and next-total is more
+than 100ms and rising, then we suspect OOM.
+* Currently, PSI values are system-wide. That is, after sluggish
+occurred, it is difficult to predict, which task causes sluggish.
+  So, I was thinking to add new entry to capture task details as well.
+
+
+These are some of my opinion. It may or may not be applicable directly.
+Further brain-storming or discussions might be required.
+
+
+
+Regards,
+Pintu
