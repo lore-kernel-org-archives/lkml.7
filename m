@@ -2,364 +2,247 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1329EC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B63EFC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB43E21773
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D28F2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:16:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="MkkcGqzT"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="IXmhVvgz";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="jPuyQuRi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbfHIWPc (ORCPT
+        id S1729331AbfHIWQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 18:15:32 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39359 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfHIWPb (ORCPT
+        Fri, 9 Aug 2019 18:16:46 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:4070 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726078AbfHIWQo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 18:15:31 -0400
-Received: by mail-ot1-f65.google.com with SMTP id r21so132421155otq.6
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 15:15:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JkkxpeYogxXt1mAu9NfkWOylpyT0aB0+PMOJ/u4YL0k=;
-        b=MkkcGqzTu3e9mcxM7I4NW6mUWWhZ/xFNhvsFLKBQQLXfMZWBRcxGmVcNh3XUL5lIjE
-         wyJ5H1TvOOD2eLuVSubZek/sJPiyn0u/C8yRUcwtvTVaq64wb7dGK7Y8rlhdgDmnOJbP
-         IxYRa7bWnYsBNeVd3NCncS6WsbV/forkBBx1tLN5RcAeMOjXIbiIFy90qn8opVVOInln
-         /c+vUwrt2wjYLCSGZ5BpIpXegEF3RQF+MuFTK8Ri7xBEUI0mCxrnd5/Yrq4hwyDW0Z/l
-         nWXm1uVsqMTlfWLFcRvpBZjZmborq+Z3hhOf9Rm38atGeHZ7gZWOAMFe27errm+ALtdQ
-         OWBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JkkxpeYogxXt1mAu9NfkWOylpyT0aB0+PMOJ/u4YL0k=;
-        b=Kf3Y4l8r/C9PawENK58W9W2rUhdOHJgApZLo7JXN+EjWPVP7ooj8chv7Qf741rvH9X
-         i6Y+YmvvVFScnlopdTBRwcnFDY05FuCwToSoPSmTtNK7/xwAi1ts4X7pSqdSRRoJPAGt
-         jC0TZrHGcz71GeLNLGoADw/1f7M3yDPlc7Ta9v2cvWM7vmhBFMU9c+UrWAxifVRYO/qG
-         XQ+eZGnqmDIyC/4aQcffYOr7hRe5sGn9+i+8ucs8+adPesVBMuZIds4SF/Swj2bbMBIp
-         UA/eilQWEtRQRKfCcu+M0rdT2qReE1y3ZtmBDFMR8EpF9c5JPZwBOeLGD87KsHrllrPF
-         5WLw==
-X-Gm-Message-State: APjAAAXDJbamk1D++dJ3paOrHWInPRwTKDEk+2tqwgo0t1Ehn6kzczk+
-        26RGdAiPOGp+3xT9WOUm9u/F4uWEoJqqHse2dEVRZFyiQlp4LG+NYeignkezxxtJ/ADGZIzLxHb
-        pQnYo7kITGVB3orzyDarUslVhaZN8y63JYJ/PIatV2t8P3qaM0uj7dnbVx0ccDMP2soeZH1HDXc
-        a6Zs18wiurpWSWJSc8CYiRZ13G4ji0oPLpXPrPmOrZUWizVEVbrg==
-X-Google-Smtp-Source: APXvYqygiWAvzs+XwfWDcS9/U4eJkrGFRaRPRPl2jO/Nf5OVj6YjcXANa+2MEs1vWxo/RfkPYDXpisH2fyhFzzNnBVM=
-X-Received: by 2002:a6b:fb09:: with SMTP id h9mr5161130iog.15.1565388930450;
- Fri, 09 Aug 2019 15:15:30 -0700 (PDT)
+        Fri, 9 Aug 2019 18:16:44 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x79MAD7Y029339;
+        Fri, 9 Aug 2019 15:16:33 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=SaLB17UQAS+WnHOzJGrxGm8aUSHBz+aZ1gS1748JKr4=;
+ b=IXmhVvgz2YJ42+VWqfaxkkMfzYnx3O1g0WnScAt0iEtyIQkjyvFu24CRyNBQWPntfUiN
+ FJITIvP11RL8EXLvRMS5T1/r63RHQH+E7KIrzt6e2RBpCvx07pRLng1zUR87Wn7l8nS7
+ M20rHp1dOCBn12WDpg6gPYJNQKDtxK9DrsY= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2u9d5jh7rm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 09 Aug 2019 15:16:33 -0700
+Received: from ash-exhub204.TheFacebook.com (2620:10d:c0a8:83::4) by
+ ash-exhub104.TheFacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 9 Aug 2019 15:16:32 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 9 Aug 2019 15:16:31 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IiFvaCb8W3d0NrJPzobcICX156pql9xUH9+P8V+wKcE9fXNlSaYAsFC9mE4jEhjo8162bZRUt9JXLNiKtEFtjcOw8MPvUyMu/H++BGAn0fxVhGhAQkV7BTfXitz7b2Oq4Haez97CF6LuBrGXV2DB/d3yq8Rlm3gRTQKs5al5uhx/Dot8qO1V3k26od8gs/4MjUPBBqfu77Io/EgbIdBXiXoQG/gRtFKqRqp6+IhWQvncfhwwgmjDRy7lPUMiGbjjgKOko7QEyN8n841NoaMaYalxCTRl+vjRstFGMK524lBq57j7jBjRvo4kpT5qa6Q4UCT7Xe89yIzY49ByDl1WHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SaLB17UQAS+WnHOzJGrxGm8aUSHBz+aZ1gS1748JKr4=;
+ b=Eedwnu7QbqXe1ihDCJuz8mptoZNqjX92K1FrVPXBAjCDbfC5K1p3yWzkRILmrOvxTO4ZH6ZJY++TaUyjXmbzqi+WkWuz1aUbGP17Sbg8huVQtXx+3APiy5XD2MveHwuTSr8/m+tvC03c9ZwcDVi9H5akmlAGUfV4cb03jA+LJLWz2QP5hHJrFZSiYvuchIOhZv4/Z8Y/ptlmY52jN7ZTHfewfu8AmjeijuPGr07Q43YsIf6U8Nc/B0Dfk+GFv8+kteeiJC0C+UmqVGx8+gWp/FeyqGtqjGttgdbRwNSfpkRfgIoQsJwWLhewrST/Rj22tFUU6l7ocvDydue2eks8Lg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SaLB17UQAS+WnHOzJGrxGm8aUSHBz+aZ1gS1748JKr4=;
+ b=jPuyQuRiKeN6Wft5rdA+dJTSkx2XAM3l/JwfC7GeI+lGdscBpj+Dyh0Uohwi6PGU2NIqpNEjAgqa2oKCzM3MU5nag59ayAcvMUFVxx7Y1EvDvM16QWrE0pf1RQbUrhn3I7zeCv24OdBxxSdR2wWaRSXMcSB6t+7he0duGytWNq0=
+Received: from MWHPR15MB1216.namprd15.prod.outlook.com (10.175.2.17) by
+ MWHPR15MB1149.namprd15.prod.outlook.com (10.175.3.9) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.14; Fri, 9 Aug 2019 22:16:30 +0000
+Received: from MWHPR15MB1216.namprd15.prod.outlook.com
+ ([fe80::2971:619a:860e:b6cc]) by MWHPR15MB1216.namprd15.prod.outlook.com
+ ([fe80::2971:619a:860e:b6cc%2]) with mapi id 15.20.2157.020; Fri, 9 Aug 2019
+ 22:16:30 +0000
+From:   Tao Ren <taoren@fb.com>
+To:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arun Parameswaran <arun.parameswaran@broadcom.com>,
+        Justin Chen <justinpopo6@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
+Subject: Re: [Potential Spoof] Re: [PATCH net-next v6 3/3] net: phy: broadcom:
+ add 1000Base-X support for BCM54616S
+Thread-Topic: [Potential Spoof] Re: [PATCH net-next v6 3/3] net: phy:
+ broadcom: add 1000Base-X support for BCM54616S
+Thread-Index: AQHVTnXbR0omRCjy/0G0ZEtUvAlu56bzQySAgAAJTAD//4/tAIAAgh+AgAAExgA=
+Date:   Fri, 9 Aug 2019 22:16:30 +0000
+Message-ID: <a2c54cdd-51c9-49a6-3fe8-be6983dc8736@fb.com>
+References: <20190809054411.1015962-1-taoren@fb.com>
+ <97cd059c-d98e-1392-c814-f3bd628e6366@gmail.com>
+ <e556dd17-ef85-3c61-bc08-17db02d9a5dc@fb.com>
+ <8f0e172b-575c-dab8-b695-c33dfc78fa8f@fb.com>
+ <d398ca57-575c-6e88-49a5-bf49cddfa2f0@gmail.com>
+In-Reply-To: <d398ca57-575c-6e88-49a5-bf49cddfa2f0@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR02CA0048.namprd02.prod.outlook.com
+ (2603:10b6:301:60::37) To MWHPR15MB1216.namprd15.prod.outlook.com
+ (2603:10b6:320:22::17)
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::3:e1ee]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a5173dfc-12de-4a34-8ed3-08d71d173aaf
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1149;
+x-ms-traffictypediagnostic: MWHPR15MB1149:
+x-microsoft-antispam-prvs: <MWHPR15MB1149288C55DC38894D246408B2D60@MWHPR15MB1149.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01244308DF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(376002)(366004)(396003)(39860400002)(199004)(189003)(305945005)(6436002)(25786009)(14454004)(81166006)(46003)(8676002)(316002)(110136005)(64126003)(7416002)(6486002)(5660300002)(58126008)(8936002)(81156014)(65956001)(65806001)(6512007)(36756003)(6246003)(64756008)(66446008)(66946007)(66476007)(71200400001)(53936002)(66556008)(71190400001)(76176011)(2906002)(478600001)(446003)(99286004)(11346002)(2201001)(52116002)(65826007)(6506007)(53546011)(486006)(14444005)(31696002)(256004)(31686004)(186003)(386003)(86362001)(102836004)(2501003)(6116002)(476003)(2616005)(229853002)(7736002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1149;H:MWHPR15MB1216.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: u8CbTASGjyCSfN6ajVJPjTccRfpmg6rt1Ni7NTvHD0gAnRAXGlHw3mfLYY8r2ri1Aa+gTcuafIlP+GnPuZc3LGGtVQWTIAKyTmCF8wXWrOY/2ZVQnd6d9/pCmzGhx/kg8OaaOwPHGpb3SP4S+5hUnHYTbdOjP+F6ZfdAbCZDb1jxgEFm1UA7zQdAkuLjBzfcuBnBYi2ULWKo7sMcwMAF142KWjcnG88j6wswGrg29NldTMyJR8AFAGgW9oGsOYHephfxH4111GlrAzvtcFBFqNYrBWawJ9sSeVpDdYRZXo9viMRqGCmL5EtOrWewTtBqmNAiu5KFNflNjH01ejrKC8tzdj9hdrz3Jk6VFU3g+Vq58a8rspaiKsCrpfH3KMidIHAsPIuQM+qVIP7JAyTAaFG0HaEVRg5uGsC4iE9Z5wg=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A4BF245E96ABE541B6AA18483512B02F@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190808183247.28206-1-echron@arista.com> <20190808185119.GF18351@dhcp22.suse.cz>
- <CAM3twVT0_f++p1jkvGuyMYtaYtzgEiaUtb8aYNCmNScirE4=og@mail.gmail.com>
- <20190808200715.GI18351@dhcp22.suse.cz> <CAM3twVS7tqcHmHqjzJqO5DEsxzLfBaYF0FjVP+Jjb1ZS4rA9qA@mail.gmail.com>
- <20190809064032.GJ18351@dhcp22.suse.cz>
-In-Reply-To: <20190809064032.GJ18351@dhcp22.suse.cz>
-From:   Edward Chron <echron@arista.com>
-Date:   Fri, 9 Aug 2019 15:15:18 -0700
-Message-ID: <CAM3twVRCTLdn+Lhcr+4ZdY3nYVvXFe1O19UR9H121W34H=oV7g@mail.gmail.com>
-Subject: Re: [PATCH] mm/oom: Add killed process selection information
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        David Rientjes <rientjes@google.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Ivan Delalande <colona@arista.com>
-Content-Type: text/plain; charset="UTF-8"
-X-CLOUD-SEC-AV-Info: arista,google_mail,monitor
-X-CLOUD-SEC-AV-Sent: true
-X-Gm-Spam: 0
-X-Gm-Phishy: 0
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5173dfc-12de-4a34-8ed3-08d71d173aaf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Aug 2019 22:16:30.5250
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fb6rVp6RuXg9tNyzSf1acD9Eto0VWs4hsLzWkK6NLiHrZVNH3ZOiCytNAhghiU31
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1149
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-09_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908090215
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry about top posting, responses inline.
-
-On Thu, Aug 8, 2019 at 11:40 PM Michal Hocko <mhocko@kernel.org> wrote:
->
-> [Again, please do not top post - it makes a mess of any longer
-> discussion]
->
-> On Thu 08-08-19 15:15:12, Edward Chron wrote:
-> > In our experience far more (99.9%+) OOM events are not kernel issues,
-> > they're user task memory issues.
-> > Properly maintained Linux kernel only rarely have issues.
-> > So useful information about the killed task, displayed in a manner
-> > that can be quickly digested, is very helpful.
-> > But it turns out the totalpages parameter is also critical to make
-> > sense of what is shown.
->
-> We already do print that information (see mem_cgroup_print_oom_meminfo
-> resp. show_mem).
->
-> > So if we report the fooWidget task was using ~15% of memory (I know
-> > this is just an approximation but it is often an adequate metric) we
-> > often can tell just from that the number is larger than expected so we
-> > can start there.
-> > Even though the % is a ballpark number, if you are familiar with the
-> > tasks on your system and approximately how much memory you expect them
-> > to use you can often tell if memory usage is excessive.
-> > This is not always the case but it is a fair amount of the time.
-> > So the % of memory field is helpful. But we've found we need totalpages as well.
-> > The totalpages effects the % of memory the task uses.
->
-> Is it too difficult to calculate that % from the data available in the
-> existing report? I would expect this would be a quite simple script
-> which I would consider a better than changing the kernel code.
->
-
-Depending on your environment the answer is yes, we don't have the full
-/var/log/messages (dmesg buffer) readily available so it can be painful.
-
-If you live in the data center world with large numbers of servers and
-switches it's very common that you are sent select messages on your
-laptop or phone because you can't possibly log in and check all of your
-systems.
-
-Logs get moved off servers and in some cases the servers run diskless
-and the logs are sent through the network else where.
-
-So it is optimal if you only have to go and find the correct log and search
-or run your script(s) when you absolutely need to, not on every OOM event.
-
-That is the whole point of triage and triage is easier when you have
-relevant information to decide which events require action and with what
-priority.
-
-The OOM Killed message is the one message that we have go to
-the console and or is sent as SNMP alert to the Admin to let the
-Admin know that a server or switch has suffered a low memory OOM
-event.
-
-Maybe a few examples would be helpful to show why the few extra
-bits of information would be helpful in such an environment.
-
-For example if we see serverA and serverB are taking oom events
-with the fooWidget being killed, something along the lines of
-the following you will get message likes this:
-
-Jul 21 20:07:48 serverA kernel: Out of memory: Killed process 2826
- (fooWidget) total-vm:10493400kB, anon-rss:10492996kB, file-rss:128kB,
- shmem-rss:0kB memory-usage:32.0% oom_score: 320 oom_score_adj:0
- total-pages: 32791748kB
-
-Jul 21 20:13:51 serverB kernel: Out of memory: Killed process 2911
- (fooWidget) total-vm:11149196kB, anon-rss:11148508kB, file-rss:128kB,
- shmem-rss:0kB memory-usage:34.0% oom_score: 340 oom_score_adj:0
- total-pages: 32791748kB
-
-It is often possible to recognize that fooWidget is using more memory than
-expected on those systems and you can act on that possibly without ever
-having to hunt down the log and run a script or otherwise analyze the
-log. The % of memory and memory size can often be helpful to understand
-if the numbers look reasonable or not. Maybe the application was updated
-on just the those systems which explains why we don't see issues on the
-other servers running that application, possible application memory leak.
-
-Another example of an application being targeted where the extra
-information is helpful:
-
-Aug  6 09:37:21 serverC kernel: Killed process 7583
-(fooWidget) total-vm:528408kB, anon-rss:527144kB, file-rss:32kB,
-shmem-rss:0kB, memory-usage:1.6% oom_score:16 oom_score_adj:0
-total-pages: 32579088kB
-
-Here the fooWidget process is only using about ~1.6% of the memory
-resources. Note that is has zero oom_score_adj and that Linux
-calculated the oom_score to be 16 so no boosts the oom_score of
-16 was the highest memory consuming process on the system.
-If that is a reasonable size for this application, we know that
-if we want to debug this further we'll need to access the log in
-this case. Either we have a number of applications consuming enough
-memory to drive a low memory OOM event or a process consuming
-more memory has an OOM adjust that lowers it's score and avoids
-making it a target but may help to drive the system to OOM.
-Again here the information provided was useful to provide a quick
-triage of the OOM event and we can act accordingly.
-
-You can also imagine that if for example systemd-udev gets OOM killed,
-well that should really grab your attention:
-
-Jul 21 20:08:11 serverX kernel: Out of memory: Killed process 2911
- (systemd-udevd) total-vm:83128kB, anon-rss:80520kB, file-rss:128kB,
- shmem-rss:0kB memory-usage:0.1% oom_score: 1001 oom_score_adj:1000
- total-pages: 8312512kB
-
-Here we see an obvious issue: systemd-udevd is a critical system app
-and it should not have an oom_score_adj: 1000 that clearly has been changed
-it should be -1000. So we'll need to track down what happened there.
-Also this is an 8GB system so it may be running some low priority offload
-work for example, so we may not need to prioritize finding out why the
-system ran low on memory, though we will want to try and track down
-why the oom_score_adj was changed from unkillable to most favored.
-Possibly a script or command error.
-
-I can give you additional examples of cases where 1st order triage
-of OOM events are aided by having the additional information present
-on the OOM Kill message if you need them to justify adding these
-fields.
-
-> [...]
-> > The oom_score tells us how Linux calculated the score for the task,
-> > the oom_score_adj effects this so it is helpful to have that in
-> > conjunction with the oom_score.
-> > If the adjust is high it can tell us that the task was acting as a
-> > canary and so it's oom_score is high even though it's memory
-> > utilization can be modest or low.
->
-> I am sorry but I still do not get it. How are you going to use that
-> information without seeing other eligible tasks. oom_score is just a
-> normalized memory usage + some heuristics potentially (we have given a
-> discount to root processes until just recently). So this value only
-> makes sense to the kernel oom killer implementation. Note that the
-> equation might change in the future (that has happen in the past several
-> times) so looking at the value in isolation might be quite misleading.
-
-We've been through the change where oom_scores went from -17 to 16
-to -1000 to 1000. This was the change David Rientjes from Google made
-back around 2010.
-
-This was not a problem for us then and if you change again in the future
-(though the current implementation seems quite reasonable) it shouldn't
-be an issue for us going forward or for anyone else that can use the
-additional information in the OOM Kill message we're proposing. Here
-is why, looking at the proposed message:
-
-Jul 21 20:07:48 yoursystem kernel: Out of memory: Killed process 2826
- (processname) total-vm:1056800kB, anon-rss:1052784kB, file-rss:4kB,
- shmem-rss:0kB memory-usage:3.2% oom_score:1032 oom_score_adj:1000
- total-pages: 32791748kB
-
-Let me go through each field again, apologies for stating much that
-you already know, but just to be clear:
-
-oom_score_adj: Useful to document the adjustment at the time of the OOM
-                          event. Also useful in helping to document
-the oom_score.
-                          Really should have been included from day
-one in my opinion.
-oom_score: The value, using your internal algorithm - documented with
-                    source code, so its no secret, and is used to
-select the task
-                    to kill on the OOM event. Having this and the % of
-memory used
-                    tells us whether any additional adjustments were made to the
-                    process. As you can see from the sample messages that I've
-                    given: oom_score is % of memory, plus (+-
-adjustment value)
-                               + any internal adjustment.
-                   Since David's implementation became the OOM algorithm
-                   there was only one such adjustment the 3% root oom_score
-                   reduction. That was added and then removed. If it came
-                   back or others were added it would be reflected in the
-                   oom_score. That is why having oom_score and  % memory
-                   together would be quite helpful.
-% memory: Simple to calculate for the kernel at the time of the OOM
-                    event this documents how much memory the task was
-                    using and is easier for humans to read and digest than
-                    total-vm:1056800kB, anon-rss:1052784kB, file-rss:4kB,
-                    shmem-rss:0kB though these fields are useful to know
-                    Strictly speaking if you provide the totalpages in the
-                    output we can calculate the % of memory used except
-                    that oom_badness calculate this as rss + pte + swap
-                    and that is not exactly what you provide in the kill
-                    message. Since oom_badness calculates this and
-                    there is little overhead in printing it it would better to
-                    have the kernel print it. If the calculation changes
-                    for some reason then it would print the value it
-                   calculates. Knowing how much memory a task was
-                   using seems quite valuable to an algorithm like
-                   OOM so it seems unlikely that it won't matter.
-totalpages: Gives the size of the memory+swap (if any) at the
-                   time event. Quite useful to have that with the
-                   kill message and it is readily available.
-
-That's all we're asking. I hope I have explained why it is useful to
-have these values with the kill message. Gosh, all the fields you
-print are included in the OOM output, assuming you print all the
-per task information, you could remove them and make the same
-argument your making to me now, those are printed somewhere
-else (probably). However, we would prefer you keep them in the
-message and add the additional fields if possible.
-
-Now what about the oom_score value changing that you mentioned?
-What if you toss David's OOM Kill algorithm for a new algorithm?
-That could happen. What happens to the message and how do we
-tell things have changed?
-
-A different oom_score requires a different oom adjustment variable.
-I hope we can agree on that and history supports this.
-
-As you recall when David's algorithm was brought in, the Kernel OOM
-team took good care of us. They added a new adjustment value:
-oom_score_adj. As you'll recall the previous oom adjustment variable
-was oom_adj. To keep user level code from breaking the Kernel OOM
-developers provided a conversion so that if your application set
-oom_adj = -17 the Linux OOM code internally set oom_score_adj = -1000.
-They had a conversion that handled all the values. Eventually the
-deprecated oom_adj field was removed, but it was around for several years.
-
-It is true that you can change the OOM algorithm but not
-overnight. If it does happen when you update the code in the kernel
-you can change the oom_score_adj: header to be oom_new_adj: or
-whatever you wise guys and gals decide to call it. This will tell us
-definitively what the oom_score that you're printing means, because
-we know which version of the Linux kernel we're running, you told us
-by the naming in this message. If small adjustments occur like the
-3% reduction in oom_score that was present for a while for tasks with
-root privilege (but it didn't last), that will be included in the oom_score
-and since we'd also like % of memory, it won't confuse anything.
-
-Further, you export oom_score through the /proc/pid/oom_score
-interface. How the score is calculated could change but it is
-accessible. It's accessible for a reason, it's useful to know how
-the OOM algorithm scores a task and that can be used to help
-set appropriate oom adjustment values. This because what the
-oom_score means is in fact well documented. It needs to.
-Otherwise, the oom adjustment value becomes impossible to
-use intelligently. Thanks to David Rientjes et al for making this so.
-
-One of the really nice design points of David Rientjes implementation
-is that it is very straight forward to use and understand. So hopefully
-if there is a change in the future it's to something that is just as easy
-to use and to understand.
-
->
-> I can see some point in printing oom_score_adj, though. Seeing biased -
-> one way or the other - tasks being selected might confirm the setting is
-> reasonable or otherwise (e.g. seeing tasks with negative scores will
-> give an indication that they might be not biased enough). Then you can
-> go and check the eligible tasks dump and see what happened. So this part
-> makes some sense to me.
-
-Agreed, the oom_score_adj is sorely needed and should be included.
-
-In Summary:
-----------------
-I hope I have presented a reasonable enough argument for the proposed
-additional parameters.
-
-If you need more information I will be oblige as quickly as I can.
-
-Of course it is your call what you are willing to include.
-Any of the parameters suggested would be useful and we'll gladly take whatever
-you can allow.
-
-Again, Thank-you for your time and your consideration.
-
-Best wishes,
-
--Edward Chron
-Arista Networks
-
-> --
-> Michal Hocko
-> SUSE Labs
+T24gOC85LzE5IDI6NTkgUE0sIEhlaW5lciBLYWxsd2VpdCB3cm90ZToNCj4gT24gMDkuMDguMjAx
+OSAyMzoxMywgVGFvIFJlbiB3cm90ZToNCj4+IE9uIDgvOS8xOSAxOjU0IFBNLCBUYW8gUmVuIHdy
+b3RlOg0KPj4+IEhpIEhlaW5lciwNCj4+Pg0KPj4+IE9uIDgvOS8xOSAxOjIxIFBNLCBIZWluZXIg
+S2FsbHdlaXQgd3JvdGU6DQo+Pj4+IE9uIDA5LjA4LjIwMTkgMDc6NDQsIFRhbyBSZW4gd3JvdGU6
+DQo+Pj4+PiBUaGUgQkNNNTQ2MTZTIFBIWSBjYW5ub3Qgd29yayBwcm9wZXJseSBpbiBSR01JSS0+
+MTAwMEJhc2UtS1ggbW9kZSAoZm9yDQo+Pj4+PiBleGFtcGxlLCBvbiBGYWNlYm9vayBDTU0gQk1D
+IHBsYXRmb3JtKSwgbWFpbmx5IGJlY2F1c2UgZ2VucGh5IGZ1bmN0aW9ucw0KPj4+Pj4gYXJlIGRl
+c2lnbmVkIGZvciBjb3BwZXIgbGlua3MsIGFuZCAxMDAwQmFzZS1YIChjbGF1c2UgMzcpIGF1dG8g
+bmVnb3RpYXRpb24NCj4+Pj4+IG5lZWRzIHRvIGJlIGhhbmRsZWQgZGlmZmVyZW50bHkuDQo+Pj4+
+Pg0KPj4+Pj4gVGhpcyBwYXRjaCBlbmFibGVzIDEwMDBCYXNlLVggc3VwcG9ydCBmb3IgQkNNNTQ2
+MTZTIGJ5IGN1c3RvbWl6aW5nIDMNCj4+Pj4+IGRyaXZlciBjYWxsYmFja3M6DQo+Pj4+Pg0KPj4+
+Pj4gICAtIHByb2JlOiBwcm9iZSBjYWxsYmFjayBkZXRlY3RzIFBIWSdzIG9wZXJhdGlvbiBtb2Rl
+IGJhc2VkIG9uDQo+Pj4+PiAgICAgSU5URVJGX1NFTFsxOjBdIHBpbnMgYW5kIDEwMDBYLzEwMEZY
+IHNlbGVjdGlvbiBiaXQgaW4gU2VyREVTIDEwMC1GWA0KPj4+Pj4gICAgIENvbnRyb2wgcmVnaXN0
+ZXIuDQo+Pj4+Pg0KPj4+Pj4gICAtIGNvbmZpZ19hbmVnOiBjYWxscyBnZW5waHlfYzM3X2NvbmZp
+Z19hbmVnIHdoZW4gdGhlIFBIWSBpcyBydW5uaW5nIGluDQo+Pj4+PiAgICAgMTAwMEJhc2UtWCBt
+b2RlOyBvdGhlcndpc2UsIGdlbnBoeV9jb25maWdfYW5lZyB3aWxsIGJlIGNhbGxlZC4NCj4+Pj4+
+DQo+Pj4+PiAgIC0gcmVhZF9zdGF0dXM6IGNhbGxzIGdlbnBoeV9jMzdfcmVhZF9zdGF0dXMgd2hl
+biB0aGUgUEhZIGlzIHJ1bm5pbmcgaW4NCj4+Pj4+ICAgICAxMDAwQmFzZS1YIG1vZGU7IG90aGVy
+d2lzZSwgZ2VucGh5X3JlYWRfc3RhdHVzIHdpbGwgYmUgY2FsbGVkLg0KPj4+Pj4NCj4+Pj4+IFNp
+Z25lZC1vZmYtYnk6IFRhbyBSZW4gPHRhb3JlbkBmYi5jb20+DQo+Pj4+PiAtLS0NCj4+Pj4+ICBD
+aGFuZ2VzIGluIHY2Og0KPj4+Pj4gICAtIG5vdGhpbmcgY2hhbmdlZC4NCj4+Pj4+ICBDaGFuZ2Vz
+IGluIHY1Og0KPj4+Pj4gICAtIGluY2x1ZGUgSGVpbmVyJ3MgcGF0Y2ggIm5ldDogcGh5OiBhZGQg
+c3VwcG9ydCBmb3IgY2xhdXNlIDM3DQo+Pj4+PiAgICAgYXV0by1uZWdvdGlhdGlvbiIgaW50byB0
+aGUgc2VyaWVzLg0KPj4+Pj4gICAtIHVzZSBnZW5waHlfYzM3X2NvbmZpZ19hbmVnIGFuZCBnZW5w
+aHlfYzM3X3JlYWRfc3RhdHVzIGluIEJDTTU0NjE2Uw0KPj4+Pj4gICAgIFBIWSBkcml2ZXIncyBj
+YWxsYmFjayB3aGVuIHRoZSBQSFkgaXMgcnVubmluZyBpbiAxMDAwQmFzZS1YIG1vZGUuDQo+Pj4+
+PiAgQ2hhbmdlcyBpbiB2NDoNCj4+Pj4+ICAgLSBhZGQgYmNtNTQ2MTZzX2NvbmZpZ19hbmVnXzEw
+MDBieCgpIHRvIGRlYWwgd2l0aCBhdXRvIG5lZ290aWF0aW9uIGluDQo+Pj4+PiAgICAgMTAwMEJh
+c2UtWCBtb2RlLg0KPj4+Pj4gIENoYW5nZXMgaW4gdjM6DQo+Pj4+PiAgIC0gcmVuYW1lIGJjbTU0
+ODJfcmVhZF9zdGF0dXMgdG8gYmNtNTR4eF9yZWFkX3N0YXR1cyBzbyB0aGUgY2FsbGJhY2sgY2Fu
+DQo+Pj4+PiAgICAgYmUgc2hhcmVkIGJ5IEJDTTU0ODIgYW5kIEJDTTU0NjE2Uy4NCj4+Pj4+ICBD
+aGFuZ2VzIGluIHYyOg0KPj4+Pj4gICAtIEF1dG8tZGV0ZWN0IFBIWSBvcGVyYXRpb24gbW9kZSBp
+bnN0ZWFkIG9mIHBhc3NpbmcgRFQgbm9kZS4NCj4+Pj4+ICAgLSBtb3ZlIFBIWSBtb2RlIGF1dG8t
+ZGV0ZWN0IGxvZ2ljIGZyb20gY29uZmlnX2luaXQgdG8gcHJvYmUgY2FsbGJhY2suDQo+Pj4+PiAg
+IC0gb25seSBzZXQgc3BlZWQgKG5vdCBpbmNsdWRpbmcgZHVwbGV4KSBpbiByZWFkX3N0YXR1cyBj
+YWxsYmFjay4NCj4+Pj4+ICAgLSB1cGRhdGUgcGF0Y2ggZGVzY3JpcHRpb24gd2l0aCBtb3JlIGJh
+Y2tncm91bmQgdG8gYXZvaWQgY29uZnVzaW9uLg0KPj4+Pj4gICAtIHBhdGNoICMxIGluIHRoZSBz
+ZXJpZXMgKCJuZXQ6IHBoeTogYnJvYWRjb206IHNldCBmZWF0dXJlcyBleHBsaWNpdGx5DQo+Pj4+
+PiAgICAgZm9yIEJDTTU0NjE2IikgaXMgZHJvcHBlZDogdGhlIGZpeCBzaG91bGQgZ28gdG8gZ2V0
+X2ZlYXR1cmVzIGNhbGxiYWNrDQo+Pj4+PiAgICAgd2hpY2ggbWF5IHBvdGVudGlhbGx5IGRlcGVu
+ZCBvbiB0aGlzIHBhdGNoLg0KPj4+Pj4NCj4+Pj4+ICBkcml2ZXJzL25ldC9waHkvYnJvYWRjb20u
+YyB8IDU0ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tDQo+Pj4+PiAgaW5j
+bHVkZS9saW51eC9icmNtcGh5LmggICAgfCAxMCArKysrKy0tDQo+Pj4+PiAgMiBmaWxlcyBjaGFu
+Z2VkLCA1OCBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQ0KPj4+Pj4NCj4+Pj4+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL25ldC9waHkvYnJvYWRjb20uYyBiL2RyaXZlcnMvbmV0L3BoeS9icm9h
+ZGNvbS5jDQo+Pj4+PiBpbmRleCA5MzdkMDA1OWU4YWMuLmZiZDc2YTMxYzE0MiAxMDA2NDQNCj4+
+Pj4+IC0tLSBhL2RyaXZlcnMvbmV0L3BoeS9icm9hZGNvbS5jDQo+Pj4+PiArKysgYi9kcml2ZXJz
+L25ldC9waHkvYnJvYWRjb20uYw0KPj4+Pj4gQEAgLTM4Myw5ICszODMsOSBAQCBzdGF0aWMgaW50
+IGJjbTU0ODJfY29uZmlnX2luaXQoc3RydWN0IHBoeV9kZXZpY2UgKnBoeWRldikNCj4+Pj4+ICAJ
+CS8qDQo+Pj4+PiAgCQkgKiBTZWxlY3QgMTAwMEJBU0UtWCByZWdpc3RlciBzZXQgKHByaW1hcnkg
+U2VyRGVzKQ0KPj4+Pj4gIAkJICovDQo+Pj4+PiAtCQlyZWcgPSBiY21fcGh5X3JlYWRfc2hhZG93
+KHBoeWRldiwgQkNNNTQ4Ml9TSERfTU9ERSk7DQo+Pj4+PiAtCQliY21fcGh5X3dyaXRlX3NoYWRv
+dyhwaHlkZXYsIEJDTTU0ODJfU0hEX01PREUsDQo+Pj4+PiAtCQkJCSAgICAgcmVnIHwgQkNNNTQ4
+Ml9TSERfTU9ERV8xMDAwQlgpOw0KPj4+Pj4gKwkJcmVnID0gYmNtX3BoeV9yZWFkX3NoYWRvdyhw
+aHlkZXYsIEJDTTU0WFhfU0hEX01PREUpOw0KPj4+Pj4gKwkJYmNtX3BoeV93cml0ZV9zaGFkb3co
+cGh5ZGV2LCBCQ001NFhYX1NIRF9NT0RFLA0KPj4+Pj4gKwkJCQkgICAgIHJlZyB8IEJDTTU0WFhf
+U0hEX01PREVfMTAwMEJYKTsNCj4+Pj4+ICANCj4+Pj4+ICAJCS8qDQo+Pj4+PiAgCQkgKiBMRUQx
+PUFDVElWSVRZTEVELCBMRUQzPUxJTktTUERbMl0NCj4+Pj4+IEBAIC00NTEsMTIgKzQ1MSw0NCBA
+QCBzdGF0aWMgaW50IGJjbTU0ODFfY29uZmlnX2FuZWcoc3RydWN0IHBoeV9kZXZpY2UgKnBoeWRl
+dikNCj4+Pj4+ICAJcmV0dXJuIHJldDsNCj4+Pj4+ICB9DQo+Pj4+PiAgDQo+Pj4+PiArc3RhdGlj
+IGludCBiY201NDYxNnNfcHJvYmUoc3RydWN0IHBoeV9kZXZpY2UgKnBoeWRldikNCj4+Pj4+ICt7
+DQo+Pj4+PiArCWludCB2YWwsIGludGZfc2VsOw0KPj4+Pj4gKw0KPj4+Pj4gKwl2YWwgPSBiY21f
+cGh5X3JlYWRfc2hhZG93KHBoeWRldiwgQkNNNTRYWF9TSERfTU9ERSk7DQo+Pj4+PiArCWlmICh2
+YWwgPCAwKQ0KPj4+Pj4gKwkJcmV0dXJuIHZhbDsNCj4+Pj4+ICsNCj4+Pj4+ICsJLyogVGhlIFBI
+WSBpcyBzdHJhcHBlZCBpbiBSR01JSSB0byBmaWJlciBtb2RlIHdoZW4gSU5URVJGX1NFTFsxOjBd
+DQo+Pj4+PiArCSAqIGlzIDAxYi4NCj4+Pj4+ICsJICovDQo+Pj4+PiArCWludGZfc2VsID0gKHZh
+bCAmIEJDTTU0WFhfU0hEX0lOVEZfU0VMX01BU0spID4+IDE7DQo+Pj4+PiArCWlmIChpbnRmX3Nl
+bCA9PSAxKSB7DQo+Pj4+PiArCQl2YWwgPSBiY21fcGh5X3JlYWRfc2hhZG93KHBoeWRldiwgQkNN
+NTQ2MTZTX1NIRF8xMDBGWF9DVFJMKTsNCj4+Pj4+ICsJCWlmICh2YWwgPCAwKQ0KPj4+Pj4gKwkJ
+CXJldHVybiB2YWw7DQo+Pj4+PiArDQo+Pj4+PiArCQkvKiBCaXQgMCBvZiB0aGUgU2VyRGVzIDEw
+MC1GWCBDb250cm9sIHJlZ2lzdGVyLCB3aGVuIHNldA0KPj4+Pj4gKwkJICogdG8gMSwgc2V0cyB0
+aGUgTUlJL1JHTUlJIC0+IDEwMEJBU0UtRlggY29uZmlndXJhdGlvbi4NCj4+Pj4+ICsJCSAqIFdo
+ZW4gdGhpcyBiaXQgaXMgc2V0IHRvIDAsIGl0IHNldHMgdGhlIEdNSUkvUkdNSUkgLT4NCj4+Pj4+
+ICsJCSAqIDEwMDBCQVNFLVggY29uZmlndXJhdGlvbi4NCj4+Pj4+ICsJCSAqLw0KPj4+Pj4gKwkJ
+aWYgKCEodmFsICYgQkNNNTQ2MTZTXzEwMEZYX01PREUpKQ0KPj4+Pj4gKwkJCXBoeWRldi0+ZGV2
+X2ZsYWdzIHw9IFBIWV9CQ01fRkxBR1NfTU9ERV8xMDAwQlg7DQo+Pj4+PiArCX0NCj4+Pj4+ICsN
+Cj4+Pj4+ICsJcmV0dXJuIDA7DQo+Pj4+PiArfQ0KPj4+Pj4gKw0KPj4+Pj4gIHN0YXRpYyBpbnQg
+YmNtNTQ2MTZzX2NvbmZpZ19hbmVnKHN0cnVjdCBwaHlfZGV2aWNlICpwaHlkZXYpDQo+Pj4+PiAg
+ew0KPj4+Pj4gIAlpbnQgcmV0Ow0KPj4+Pj4gIA0KPj4+Pj4gIAkvKiBBbmVnIGZpcnNseS4gKi8N
+Cj4+Pj4+IC0JcmV0ID0gZ2VucGh5X2NvbmZpZ19hbmVnKHBoeWRldik7DQo+Pj4+PiArCWlmIChw
+aHlkZXYtPmRldl9mbGFncyAmIFBIWV9CQ01fRkxBR1NfTU9ERV8xMDAwQlgpDQo+Pj4+PiArCQly
+ZXQgPSBnZW5waHlfYzM3X2NvbmZpZ19hbmVnKHBoeWRldik7DQo+Pj4+PiArCWVsc2UNCj4+Pj4+
+ICsJCXJldCA9IGdlbnBoeV9jb25maWdfYW5lZyhwaHlkZXYpOw0KPj4+Pj4gIA0KPj4+Pg0KPj4+
+PiBJJ20ganVzdCB3b25kZXJpbmcgd2hldGhlciBpdCBuZWVkcyB0byBiZSBjb25zaWRlcmVkIHRo
+YXQgMTAwYmFzZS1GWA0KPj4+PiBkb2Vzbid0IHN1cHBvcnQgYXV0by1uZWdvdGlhdGlvbi4gSSBz
+dXBwb3NlIEJNU1IgcmVwb3J0cyBhbmVnIGFzDQo+Pj4+IHN1cHBvcnRlZCwgdGhlcmVmb3JlIHBo
+eWxpYiB3aWxsIHVzZSBhbmVnIHBlciBkZWZhdWx0Lg0KPj4+PiBOb3Qgc3VyZSB3aG8gY291bGQg
+c2V0IDEwMEJhc2UtRlggbW9kZSB3aGVuLCBidXQgbWF5YmUgYXQgdGhhdCBwbGFjZQ0KPj4+PiBh
+bHNvIHBoeWRldi0+YXV0b25lZyBuZWVkcyB0byBiZSBjbGVhcmVkLiBEaWQgeW91IHRlc3QgMTAw
+QmFzZS1GWCBtb2RlPw0KPj4+DQo+Pj4gSSdtIGRvdWJ0aW5nIGlmIDEwMEJhc2UtRlggd29ya3Mu
+IEJlc2lkZXMgYXV0by1uZWdvdGlhdGlvbiwgMTAwQmFzZS1GWCBDb250cm9sL1N0YXR1cyByZWdp
+c3RlcnMgYXJlIGRlZmluZWQgaW4gc2hhZG93IHJlZ2lzdGVyIGluc3RlYWQgb2YgTUlJX0JNQ1Ig
+YW5kIE1JSV9CTVNSLg0KPj4+DQo+Pj4gVW5mb3J0dW5hdGVseSBJIGRvbid0IGhhdmUgZW52aXJv
+bm1lbnQgdG8gdGVzdCAxMDBCYXNlLUZYIGFuZCB0aGF0J3Mgd2h5IEkgb25seSBtYWtlIGNoYW5n
+ZXMgd2hlbiB0aGUgUEhZIGlzIHdvcmtpbmcgaW4gMTAwMFggbW9kZS4NCj4+DQo+PiBJIGNhbiBw
+cmVwYXJlIGEgcGF0Y2ggZm9yIDEwMEJhc2UtRlggYmFzZWQgb24gbXkgdW5kZXJzdGFuZGluZyBv
+ZiBiY201NDYxNnMgZGF0YXNoZWV0LCBidXQgdGhlIHBhdGNoIHdvdWxkIGJlIGp1c3QgY29tcGls
+ZS10ZXN0ZWQgDQo+Pg0KPiBTdXBwb3J0IGZvciAxMDAwQmFzZS1YIHNob3VsZCBiZSBzdWZmaWNp
+ZW50LiBCZXN0IG1lbnRpb24gdGhlIG1pc3Npbmcgc3VwcG9ydCBmb3INCj4gMTAwQmFzZS1GWCBp
+biB0aGUgY29tbWl0IG1lc3NhZ2UgYW5kIGF0IGEgc3VpdGVkIHBsYWNlIGluIHRoZSBkcml2ZXIg
+Y29kZS4NCg0KTWFrZSBzZW5zZS4gV2lsbCBkbyBpdCBzb29uLg0KDQoNClRoYW5rcywNCg0KVGFv
+DQo=
