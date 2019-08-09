@@ -2,119 +2,179 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 363A4C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2133C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00986214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A3E2086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:58:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oaMUzgnk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rMxaNl5A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbfHIU5y (ORCPT
+        id S1727642AbfHIU6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 16:57:54 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33134 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfHIU5x (ORCPT
+        Fri, 9 Aug 2019 16:58:49 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:42222 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfHIU6t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 16:57:53 -0400
-Received: by mail-ot1-f65.google.com with SMTP id q20so137586476otl.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 13:57:53 -0700 (PDT)
+        Fri, 9 Aug 2019 16:58:49 -0400
+Received: by mail-pg1-f201.google.com with SMTP id l12so13715131pgt.9
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 13:58:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=oOFZs7lWd/cRN6ArflLZND+4GUEsB210O2v04GTqqFo=;
-        b=oaMUzgnkhQr8vDqzN541ro79UdzcKWW6RPUgaYRCoEUrv2bw3hFwhciMuc/FZdo5rD
-         vxMv49GFSKxSdt8Guqkl3Ym6D8NQAmj6ZogWqxgFOIOGN12mqRCCvqwrbBbrIFOD37y6
-         M8RFhPFm8h2kqEcagvwI1ThRn2pW3BdZ4bWVhjR2aCUZMabFWTTkHEC+DlulLPsBkURQ
-         J0N4hEZBmjU0BxVSkNq5NHcKLgXOHBc/TjM+c2Dd9gJEOJcM2D3+BJTM+E7rwtry6ONZ
-         dZKKJ/RYUEo65s59sGogF3VXgWK0crDgh1g5Ht0zprHVMqVwqRhhHk2rQfVwWDNTQrMI
-         6Lrw==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=eBQXEUJ4xG90qgyQmq59kEIpLR58l2iNnVeP+k7a23g=;
+        b=rMxaNl5AsKq6YNwTXpua2sqDDA43FqhpUtJC7gyxqzGgupGFiMHIUyB7l/nDHPs2OE
+         K1BnIyyLb4DD+tUtFKgJFNisQHq2ugAQS39MnTZyf86sdiRJxTaX2Se11M5G2oXCq1Wg
+         0XavWtwnmGlFHooR8j5BIhZ/+SzDyom/Ot0q/CX4iFTq/lDouinbfWVfjYMDvCGJ+yos
+         2GA2CzGK6mxom7oMSYSMg6U4hpjfeX1ncO5zQwsj3yXdv6Ms/GHmfhu1tt8sOp+y1p0G
+         kDb1s2/Z7cxAzLMyBY+zRoZu3brFFWE0QBlXQA+vq0Xo3kTawHhb3EjzQLimYqVmEKZ0
+         p4gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oOFZs7lWd/cRN6ArflLZND+4GUEsB210O2v04GTqqFo=;
-        b=r3jfspSbBm/Fo5ti3pmcxCaVIrBMr7WBhSIm3AkvGXAueP5uPWpWYS805KwyopL6wr
-         rfRYERXp+gk0NNmTQC2riyiIzE8PGTMVvooExW1FEj+22Afxc2j+J99hR21jB6qEYPx3
-         70wBavu5umKqxR92HRLhO2Oj06CvK5hh/llUyzDaM399Mgzfl7oR69vP66pWIeFk7BSS
-         J94Y9l3ORyXKF5I/7IMhUpI/6dfyC8KYuixW1ZmdJm9UpfD7/Gj/pI0jiAKn6krdZGYG
-         TSiw3PaUC4P3SHOnWw8iIwvBKsKB2TbNRNkjRdlS/P3gOvAjwfZGa7MLXaeQlOpaVMdO
-         wmcg==
-X-Gm-Message-State: APjAAAWX61hayxNyE42YwOGF7qSHE0Oll+zXWI5vwTxL/Bx7lodUsRsu
-        6gjJWszR9zC303IM6T+2Li8TVniUaaEJB2NZVuEa4KI4/sM=
-X-Google-Smtp-Source: APXvYqzJcsa9ICi+fQi0Gyqrx84T4EuV0wmUdDvyiJ6cpsg1nCPtkM6vHL+J8zfsreYU1640rrFmz2rWtDYW2f3D/OU=
-X-Received: by 2002:a9d:6216:: with SMTP id g22mr18398597otj.349.1565384272566;
- Fri, 09 Aug 2019 13:57:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190808194002.226688-1-almasrymina@google.com>
- <20190809112738.GB13061@blackbody.suse.cz> <CAHS8izNM3jYFWHY5UJ7cmJ402f-RKXzQ=JFHpD7EkvpAdC2_SA@mail.gmail.com>
- <fc420531-f0fe-8df5-57fe-71a686bf2a71@oracle.com>
-In-Reply-To: <fc420531-f0fe-8df5-57fe-71a686bf2a71@oracle.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Fri, 9 Aug 2019 13:57:41 -0700
-Message-ID: <CAHS8izN9BFASse_pjLEhQzWwofjRv+JQ5Z=ZiR6Wywn2USLELA@mail.gmail.com>
-Subject: Re: [RFC PATCH] hugetlbfs: Add hugetlb_cgroup reservation limits
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
-        shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>, akpm@linux-foundation.org,
-        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        cgroups@vger.kernel.org
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=eBQXEUJ4xG90qgyQmq59kEIpLR58l2iNnVeP+k7a23g=;
+        b=V+0KJMLco33WkCg7O9hTIIvv7bK1F2/JKhaerHxGLaarH/2PqFqWURcxousqaLFhco
+         ONioKHx6V6Jp4TiTIESQGo31XHDVDibqRMLBdcYqwj+YKkRc6byM8vvrnNeA+Mm08Vne
+         mLwIf7lqN/qZmlzYkYgba8/xHUvRsMTmRbCp6QIyCw/7yjV46uSbSRYBtawe9latHaUq
+         jmhLrDJXBrEz1vmLsGcYBecRFOHmvrSxUOfLWlGVsjgyLP4LR37AeprU7ixxYcZuUND7
+         M5GhjHxcdHSxo/WqTpJtmKjlJMQmMQvYo1m8Fob6mFgfzL5Y1xpTh+hEfPsu/Asq5h6z
+         X1JA==
+X-Gm-Message-State: APjAAAVn36Nf8iyt7zFpI5lVLvaWye/+6RbYXschODJeyY2CuDqZqRGA
+        XRxBW4KypA0fcw6xULw/f2DxJhW/Yf3aHD6cZSpe/w==
+X-Google-Smtp-Source: APXvYqypvyr+nXY4Gz4HIOztkBZe1d5v+Q3txrKEylftEPnO3VwNYP/ngFop0XxwT2lDHqMwviPg9WFhIha741OGjCVzag==
+X-Received: by 2002:a63:484a:: with SMTP id x10mr18952600pgk.430.1565384328279;
+ Fri, 09 Aug 2019 13:58:48 -0700 (PDT)
+Date:   Fri,  9 Aug 2019 13:58:22 -0700
+In-Reply-To: <20190808111246.GA29211@linux-8ccs>
+Message-Id: <20190809205822.109793-1-matthewgarrett@google.com>
+Mime-Version: 1.0
+References: <20190808111246.GA29211@linux-8ccs>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+Subject: [PATCH V39] Lock down module params that specify hardware parameters
+ (eg. ioport)
+From:   Matthew Garrett <matthewgarrett@google.com>
+To:     jmorris@namei.org
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Matthew Garrett <mjg59@google.com>,
+        Kees Cook <keescook@chromium.org>, Jessica Yu <jeyu@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 1:39 PM Mike Kravetz <mike.kravetz@oracle.com> wrote=
-:
->
-> On 8/9/19 11:05 AM, Mina Almasry wrote:
-> > On Fri, Aug 9, 2019 at 4:27 AM Michal Koutn=C3=BD <mkoutny@suse.com> wr=
-ote:
-> >>> Alternatives considered:
-> >>> [...]
-> >> (I did not try that but) have you considered:
-> >> 3) MAP_POPULATE while you're making the reservation,
-> >
-> > I have tried this, and the behaviour is not great. Basically if
-> > userspace mmaps more memory than its cgroup limit allows with
-> > MAP_POPULATE, the kernel will reserve the total amount requested by
-> > the userspace, it will fault in up to the cgroup limit, and then it
-> > will SIGBUS the task when it tries to access the rest of its
-> > 'reserved' memory.
-> >
-> > So for example:
-> > - if /proc/sys/vm/nr_hugepages =3D=3D 10, and
-> > - your cgroup limit is 5 pages, and
-> > - you mmap(MAP_POPULATE) 7 pages.
-> >
-> > Then the kernel will reserve 7 pages, and will fault in 5 of those 7
-> > pages, and will SIGBUS you when you try to access the remaining 2
-> > pages. So the problem persists. Folks would still like to know they
-> > are crossing the limits on mmap time.
->
-> If you got the failure at mmap time in the MAP_POPULATE case would this
-> be useful?
->
-> Just thinking that would be a relatively simple change.
+From: David Howells <dhowells@redhat.com>
 
-Not quite, unfortunately. A subset of the folks that want to use
-hugetlb memory, don't want to use MAP_POPULATE (IIRC, something about
-mmaping a huge amount of hugetlb memory at their jobs' startup, and
-doing that with MAP_POPULATE adds so much to their startup time that
-it is prohibitively expensive - but that's just what I vaguely recall
-offhand. I can get you the details if you're interested).
+Provided an annotation for module parameters that specify hardware
+parameters (such as io ports, iomem addresses, irqs, dma channels, fixed
+dma buffers and other types).
 
-> --
-> Mike Kravetz
+Suggested-by: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Jessica Yu <jeyu@kernel.org>
+---
+ include/linux/security.h     |  1 +
+ kernel/params.c              | 21 ++++++++++++++++-----
+ security/lockdown/lockdown.c |  1 +
+ 3 files changed, 18 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 8f7048395114..43fa3486522b 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -113,6 +113,7 @@ enum lockdown_reason {
+ 	LOCKDOWN_ACPI_TABLES,
+ 	LOCKDOWN_PCMCIA_CIS,
+ 	LOCKDOWN_TIOCSSERIAL,
++	LOCKDOWN_MODULE_PARAMETERS,
+ 	LOCKDOWN_INTEGRITY_MAX,
+ 	LOCKDOWN_CONFIDENTIALITY_MAX,
+ };
+diff --git a/kernel/params.c b/kernel/params.c
+index cf448785d058..8e56f8b12d8f 100644
+--- a/kernel/params.c
++++ b/kernel/params.c
+@@ -12,6 +12,7 @@
+ #include <linux/err.h>
+ #include <linux/slab.h>
+ #include <linux/ctype.h>
++#include <linux/security.h>
+ 
+ #ifdef CONFIG_SYSFS
+ /* Protects all built-in parameters, modules use their own param_lock */
+@@ -96,13 +97,19 @@ bool parameq(const char *a, const char *b)
+ 	return parameqn(a, b, strlen(a)+1);
+ }
+ 
+-static void param_check_unsafe(const struct kernel_param *kp)
++static bool param_check_unsafe(const struct kernel_param *kp)
+ {
++	if (kp->flags & KERNEL_PARAM_FL_HWPARAM &&
++	    security_locked_down(LOCKDOWN_MODULE_PARAMETERS))
++		return false;
++
+ 	if (kp->flags & KERNEL_PARAM_FL_UNSAFE) {
+ 		pr_notice("Setting dangerous option %s - tainting kernel\n",
+ 			  kp->name);
+ 		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
+ 	}
++
++	return true;
+ }
+ 
+ static int parse_one(char *param,
+@@ -132,8 +139,10 @@ static int parse_one(char *param,
+ 			pr_debug("handling %s with %p\n", param,
+ 				params[i].ops->set);
+ 			kernel_param_lock(params[i].mod);
+-			param_check_unsafe(&params[i]);
+-			err = params[i].ops->set(val, &params[i]);
++			if (param_check_unsafe(&params[i]))
++				err = params[i].ops->set(val, &params[i]);
++			else
++				err = -EPERM;
+ 			kernel_param_unlock(params[i].mod);
+ 			return err;
+ 		}
+@@ -553,8 +562,10 @@ static ssize_t param_attr_store(struct module_attribute *mattr,
+ 		return -EPERM;
+ 
+ 	kernel_param_lock(mk->mod);
+-	param_check_unsafe(attribute->param);
+-	err = attribute->param->ops->set(buf, attribute->param);
++	if (param_check_unsafe(attribute->param))
++		err = attribute->param->ops->set(buf, attribute->param);
++	else
++		err = -EPERM;
+ 	kernel_param_unlock(mk->mod);
+ 	if (!err)
+ 		return len;
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index 00a3a6438dd2..5177938cfa0d 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -28,6 +28,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+ 	[LOCKDOWN_ACPI_TABLES] = "modifying ACPI tables",
+ 	[LOCKDOWN_PCMCIA_CIS] = "direct PCMCIA CIS storage",
+ 	[LOCKDOWN_TIOCSSERIAL] = "reconfiguration of serial port IO",
++	[LOCKDOWN_MODULE_PARAMETERS] = "unsafe module parameters",
+ 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+ 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+ };
+-- 
+2.23.0.rc1.153.gdeed80330f-goog
+
