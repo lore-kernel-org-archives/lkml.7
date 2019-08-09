@@ -2,327 +2,136 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F64C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9E4C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6F57208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D484208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:34:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406552AbfHIKdh (ORCPT
+        id S2406319AbfHIKeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 06:33:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41698 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405948AbfHIKcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 06:32:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E925AAFFB;
-        Fri,  9 Aug 2019 10:32:44 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: [PATCH v4 4/9] MIPS: PCI: refactor ioc3 special handling
-Date:   Fri,  9 Aug 2019 12:32:26 +0200
-Message-Id: <20190809103235.16338-5-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.13.7
-In-Reply-To: <20190809103235.16338-1-tbogendoerfer@suse.de>
-References: <20190809103235.16338-1-tbogendoerfer@suse.de>
+        Fri, 9 Aug 2019 06:34:00 -0400
+Received: from mailout2.hostsharing.net ([83.223.78.233]:46121 "EHLO
+        mailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405928AbfHIKd7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 06:33:59 -0400
+X-Greylist: delayed 311 seconds by postgrey-1.27 at vger.kernel.org; Fri, 09 Aug 2019 06:33:57 EDT
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by mailout2.hostsharing.net (Postfix) with ESMTPS id 67DDC1005998E;
+        Fri,  9 Aug 2019 12:28:44 +0200 (CEST)
+Received: from localhost (unknown [89.246.108.87])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by h08.hostsharing.net (Postfix) with ESMTPSA id 0B2136133AB0;
+        Fri,  9 Aug 2019 12:28:44 +0200 (CEST)
+X-Mailbox-Line: From 4174210466e27eb7e2243dd1d801d5f75baaffd8 Mon Sep 17 00:00:00 2001
+Message-Id: <4174210466e27eb7e2243dd1d801d5f75baaffd8.1565345211.git.lukas@wunner.de>
+From:   Lukas Wunner <lukas@wunner.de>
+Date:   Fri, 9 Aug 2019 12:28:43 +0200
+Subject: [PATCH] PCI: pciehp: Avoid returning prematurely from sysfs requests
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xiongfeng Wang <wangxiongfeng2@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refactored code to only have one ioc3 special handling for read
-access and one for write access.
+A sysfs request to enable or disable a PCIe hotplug slot should not
+return before it has been carried out.  That is sought to be achieved
+by waiting until the controller's "pending_events" have been cleared.
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+However the IRQ thread pciehp_ist() clears the "pending_events" before
+it acts on them.  If pciehp_sysfs_enable_slot() / _disable_slot() happen
+to check the "pending_events" after they have been cleared but while
+pciehp_ist() is still running, the functions may return prematurely
+with an incorrect return value.
+
+Fix by introducing an "ist_running" flag which must be false before a
+sysfs request is allowed to return.
+
+Fixes: 32a8cef274fe ("PCI: pciehp: Enable/disable exclusively from IRQ thread")
+Link: https://lore.kernel.org/linux-pci/1562226638-54134-1-git-send-email-wangxiongfeng2@huawei.com
+Reported-and-tested-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v4.19+
 ---
- arch/mips/pci/pci-xtalk-bridge.c | 167 +++++++++++++++------------------------
- 1 file changed, 62 insertions(+), 105 deletions(-)
+ drivers/pci/hotplug/pciehp.h      | 2 ++
+ drivers/pci/hotplug/pciehp_ctrl.c | 6 ++++--
+ drivers/pci/hotplug/pciehp_hpc.c  | 2 ++
+ 3 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/pci/pci-xtalk-bridge.c b/arch/mips/pci/pci-xtalk-bridge.c
-index bcf7f559789a..7b4d40354ee7 100644
---- a/arch/mips/pci/pci-xtalk-bridge.c
-+++ b/arch/mips/pci/pci-xtalk-bridge.c
-@@ -20,16 +20,50 @@
-  * Most of the IOC3 PCI config register aren't present
-  * we emulate what is needed for a normal PCI enumeration
-  */
--static u32 emulate_ioc3_cfg(int where, int size)
-+static int ioc3_cfg_rd(void *addr, int where, int size, u32 *value)
- {
--	if (size == 1 && where == 0x3d)
--		return 0x01;
--	else if (size == 2 && where == 0x3c)
--		return 0x0100;
--	else if (size == 4 && where == 0x3c)
--		return 0x00000100;
-+	u32 cf, shift, mask;
+diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+index 8c51a04b8083..e316bde45c7b 100644
+--- a/drivers/pci/hotplug/pciehp.h
++++ b/drivers/pci/hotplug/pciehp.h
+@@ -72,6 +72,7 @@ extern int pciehp_poll_time;
+  * @reset_lock: prevents access to the Data Link Layer Link Active bit in the
+  *	Link Status register and to the Presence Detect State bit in the Slot
+  *	Status register during a slot reset which may cause them to flap
++ * @ist_running: flag to keep user request waiting while IRQ thread is running
+  * @request_result: result of last user request submitted to the IRQ thread
+  * @requester: wait queue to wake up on completion of user request,
+  *	used for synchronous slot enable/disable request via sysfs
+@@ -101,6 +102,7 @@ struct controller {
  
--	return 0;
-+	switch (where & ~3) {
-+	case 0x00 ... 0x10:
-+	case 0x40 ... 0x44:
-+		if (get_dbe(cf, (u32 *)addr))
-+			return PCIBIOS_DEVICE_NOT_FOUND;
-+		break;
-+	case 0x3c:
-+		/* emulate sane interrupt pin value */
-+		cf = 0x00000100;
-+		break;
-+	default:
-+		cf = 0;
-+		break;
-+	}
-+	shift = (where & 3) << 3;
-+	mask = 0xffffffffU >> ((4 - size) << 3);
-+	*value = (cf >> shift) & mask;
-+
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+static int ioc3_cfg_wr(void *addr, int where, int size, u32 value)
-+{
-+	u32 cf, shift, mask, smask;
-+
-+	if ((where >= 0x14 && where < 0x40) || (where >= 0x48))
-+		return PCIBIOS_SUCCESSFUL;
-+
-+	if (get_dbe(cf, (u32 *)addr))
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+
-+	shift = ((where & 3) << 3);
-+	mask = (0xffffffffU >> ((4 - size) << 3));
-+	smask = mask << shift;
-+
-+	cf = (cf & ~smask) | ((value & mask) << shift);
-+	if (put_dbe(cf, (u32 *)addr))
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+
-+	return PCIBIOS_SUCCESSFUL;
+ 	struct hotplug_slot hotplug_slot;	/* hotplug core interface */
+ 	struct rw_semaphore reset_lock;
++	unsigned int ist_running;
+ 	int request_result;
+ 	wait_queue_head_t requester;
+ };
+diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+index 631ced0ab28a..1ce9ce335291 100644
+--- a/drivers/pci/hotplug/pciehp_ctrl.c
++++ b/drivers/pci/hotplug/pciehp_ctrl.c
+@@ -368,7 +368,8 @@ int pciehp_sysfs_enable_slot(struct hotplug_slot *hotplug_slot)
+ 		ctrl->request_result = -ENODEV;
+ 		pciehp_request(ctrl, PCI_EXP_SLTSTA_PDC);
+ 		wait_event(ctrl->requester,
+-			   !atomic_read(&ctrl->pending_events));
++			   !atomic_read(&ctrl->pending_events) &&
++			   !ctrl->ist_running);
+ 		return ctrl->request_result;
+ 	case POWERON_STATE:
+ 		ctrl_info(ctrl, "Slot(%s): Already in powering on state\n",
+@@ -401,7 +402,8 @@ int pciehp_sysfs_disable_slot(struct hotplug_slot *hotplug_slot)
+ 		mutex_unlock(&ctrl->state_lock);
+ 		pciehp_request(ctrl, DISABLE_SLOT);
+ 		wait_event(ctrl->requester,
+-			   !atomic_read(&ctrl->pending_events));
++			   !atomic_read(&ctrl->pending_events) &&
++			   !ctrl->ist_running);
+ 		return ctrl->request_result;
+ 	case POWEROFF_STATE:
+ 		ctrl_info(ctrl, "Slot(%s): Already in powering off state\n",
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index bd990e3371e3..9e2d7688e8cc 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -608,6 +608,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
+ 	irqreturn_t ret;
+ 	u32 events;
+ 
++	ctrl->ist_running = true;
+ 	pci_config_pm_runtime_get(pdev);
+ 
+ 	/* rerun pciehp_isr() if the port was inaccessible on interrupt */
+@@ -654,6 +655,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
+ 	up_read(&ctrl->reset_lock);
+ 
+ 	pci_config_pm_runtime_put(pdev);
++	ctrl->ist_running = false;
+ 	wake_up(&ctrl->requester);
+ 	return IRQ_HANDLED;
  }
- 
- static void bridge_disable_swapping(struct pci_dev *dev)
-@@ -64,7 +98,7 @@ static int pci_conf0_read_config(struct pci_bus *bus, unsigned int devfn,
- 	int slot = PCI_SLOT(devfn);
- 	int fn = PCI_FUNC(devfn);
- 	void *addr;
--	u32 cf, shift, mask;
-+	u32 cf;
- 	int res;
- 
- 	addr = &bridge->b_type0_cfg_dev[slot].f[fn].c[PCI_VENDOR_ID];
-@@ -75,8 +109,10 @@ static int pci_conf0_read_config(struct pci_bus *bus, unsigned int devfn,
- 	 * IOC3 is broken beyond belief ...  Don't even give the
- 	 * generic PCI code a chance to look at it for real ...
- 	 */
--	if (cf == (PCI_VENDOR_ID_SGI | (PCI_DEVICE_ID_SGI_IOC3 << 16)))
--		goto is_ioc3;
-+	if (cf == (PCI_VENDOR_ID_SGI | (PCI_DEVICE_ID_SGI_IOC3 << 16))) {
-+		addr = &bridge->b_type0_cfg_dev[slot].f[fn].l[where >> 2];
-+		return ioc3_cfg_rd(addr, where, size, value);
-+	}
- 
- 	addr = &bridge->b_type0_cfg_dev[slot].f[fn].c[where ^ (4 - size)];
- 
-@@ -88,26 +124,6 @@ static int pci_conf0_read_config(struct pci_bus *bus, unsigned int devfn,
- 		res = get_dbe(*value, (u32 *)addr);
- 
- 	return res ? PCIBIOS_DEVICE_NOT_FOUND : PCIBIOS_SUCCESSFUL;
--
--is_ioc3:
--
--	/*
--	 * IOC3 special handling
--	 */
--	if ((where >= 0x14 && where < 0x40) || (where >= 0x48)) {
--		*value = emulate_ioc3_cfg(where, size);
--		return PCIBIOS_SUCCESSFUL;
--	}
--
--	addr = &bridge->b_type0_cfg_dev[slot].f[fn].l[where >> 2];
--	if (get_dbe(cf, (u32 *)addr))
--		return PCIBIOS_DEVICE_NOT_FOUND;
--
--	shift = ((where & 3) << 3);
--	mask = (0xffffffffU >> ((4 - size) << 3));
--	*value = (cf >> shift) & mask;
--
--	return PCIBIOS_SUCCESSFUL;
- }
- 
- static int pci_conf1_read_config(struct pci_bus *bus, unsigned int devfn,
-@@ -119,7 +135,7 @@ static int pci_conf1_read_config(struct pci_bus *bus, unsigned int devfn,
- 	int slot = PCI_SLOT(devfn);
- 	int fn = PCI_FUNC(devfn);
- 	void *addr;
--	u32 cf, shift, mask;
-+	u32 cf;
- 	int res;
- 
- 	bridge_write(bc, b_pci_cfg, (busno << 16) | (slot << 11));
-@@ -131,8 +147,10 @@ static int pci_conf1_read_config(struct pci_bus *bus, unsigned int devfn,
- 	 * IOC3 is broken beyond belief ...  Don't even give the
- 	 * generic PCI code a chance to look at it for real ...
- 	 */
--	if (cf == (PCI_VENDOR_ID_SGI | (PCI_DEVICE_ID_SGI_IOC3 << 16)))
--		goto is_ioc3;
-+	if (cf == (PCI_VENDOR_ID_SGI | (PCI_DEVICE_ID_SGI_IOC3 << 16))) {
-+		addr = &bridge->b_type1_cfg.c[(fn << 8) | (where & ~3)];
-+		return ioc3_cfg_rd(addr, where, size, value);
-+	}
- 
- 	addr = &bridge->b_type1_cfg.c[(fn << 8) | (where ^ (4 - size))];
- 
-@@ -144,26 +162,6 @@ static int pci_conf1_read_config(struct pci_bus *bus, unsigned int devfn,
- 		res = get_dbe(*value, (u32 *)addr);
- 
- 	return res ? PCIBIOS_DEVICE_NOT_FOUND : PCIBIOS_SUCCESSFUL;
--
--is_ioc3:
--
--	/*
--	 * IOC3 special handling
--	 */
--	if ((where >= 0x14 && where < 0x40) || (where >= 0x48)) {
--		*value = emulate_ioc3_cfg(where, size);
--		return PCIBIOS_SUCCESSFUL;
--	}
--
--	addr = &bridge->b_type1_cfg.c[(fn << 8) | where];
--	if (get_dbe(cf, (u32 *)addr))
--		return PCIBIOS_DEVICE_NOT_FOUND;
--
--	shift = ((where & 3) << 3);
--	mask = (0xffffffffU >> ((4 - size) << 3));
--	*value = (cf >> shift) & mask;
--
--	return PCIBIOS_SUCCESSFUL;
- }
- 
- static int pci_read_config(struct pci_bus *bus, unsigned int devfn,
-@@ -183,7 +181,7 @@ static int pci_conf0_write_config(struct pci_bus *bus, unsigned int devfn,
- 	int slot = PCI_SLOT(devfn);
- 	int fn = PCI_FUNC(devfn);
- 	void *addr;
--	u32 cf, shift, mask, smask;
-+	u32 cf;
- 	int res;
- 
- 	addr = &bridge->b_type0_cfg_dev[slot].f[fn].c[PCI_VENDOR_ID];
-@@ -194,8 +192,10 @@ static int pci_conf0_write_config(struct pci_bus *bus, unsigned int devfn,
- 	 * IOC3 is broken beyond belief ...  Don't even give the
- 	 * generic PCI code a chance to look at it for real ...
- 	 */
--	if (cf == (PCI_VENDOR_ID_SGI | (PCI_DEVICE_ID_SGI_IOC3 << 16)))
--		goto is_ioc3;
-+	if (cf == (PCI_VENDOR_ID_SGI | (PCI_DEVICE_ID_SGI_IOC3 << 16))) {
-+		addr = &bridge->b_type0_cfg_dev[slot].f[fn].l[where >> 2];
-+		return ioc3_cfg_wr(addr, where, size, value);
-+	}
- 
- 	addr = &bridge->b_type0_cfg_dev[slot].f[fn].c[where ^ (4 - size)];
- 
-@@ -210,29 +210,6 @@ static int pci_conf0_write_config(struct pci_bus *bus, unsigned int devfn,
- 		return PCIBIOS_DEVICE_NOT_FOUND;
- 
- 	return PCIBIOS_SUCCESSFUL;
--
--is_ioc3:
--
--	/*
--	 * IOC3 special handling
--	 */
--	if ((where >= 0x14 && where < 0x40) || (where >= 0x48))
--		return PCIBIOS_SUCCESSFUL;
--
--	addr = &bridge->b_type0_cfg_dev[slot].f[fn].l[where >> 2];
--
--	if (get_dbe(cf, (u32 *)addr))
--		return PCIBIOS_DEVICE_NOT_FOUND;
--
--	shift = ((where & 3) << 3);
--	mask = (0xffffffffU >> ((4 - size) << 3));
--	smask = mask << shift;
--
--	cf = (cf & ~smask) | ((value & mask) << shift);
--	if (put_dbe(cf, (u32 *)addr))
--		return PCIBIOS_DEVICE_NOT_FOUND;
--
--	return PCIBIOS_SUCCESSFUL;
- }
- 
- static int pci_conf1_write_config(struct pci_bus *bus, unsigned int devfn,
-@@ -244,7 +221,7 @@ static int pci_conf1_write_config(struct pci_bus *bus, unsigned int devfn,
- 	int fn = PCI_FUNC(devfn);
- 	int busno = bus->number;
- 	void *addr;
--	u32 cf, shift, mask, smask;
-+	u32 cf;
- 	int res;
- 
- 	bridge_write(bc, b_pci_cfg, (busno << 16) | (slot << 11));
-@@ -256,8 +233,10 @@ static int pci_conf1_write_config(struct pci_bus *bus, unsigned int devfn,
- 	 * IOC3 is broken beyond belief ...  Don't even give the
- 	 * generic PCI code a chance to look at it for real ...
- 	 */
--	if (cf == (PCI_VENDOR_ID_SGI | (PCI_DEVICE_ID_SGI_IOC3 << 16)))
--		goto is_ioc3;
-+	if (cf == (PCI_VENDOR_ID_SGI | (PCI_DEVICE_ID_SGI_IOC3 << 16))) {
-+		addr = &bridge->b_type0_cfg_dev[slot].f[fn].l[where >> 2];
-+		return ioc3_cfg_wr(addr, where, size, value);
-+	}
- 
- 	addr = &bridge->b_type1_cfg.c[(fn << 8) | (where ^ (4 - size))];
- 
-@@ -272,28 +251,6 @@ static int pci_conf1_write_config(struct pci_bus *bus, unsigned int devfn,
- 		return PCIBIOS_DEVICE_NOT_FOUND;
- 
- 	return PCIBIOS_SUCCESSFUL;
--
--is_ioc3:
--
--	/*
--	 * IOC3 special handling
--	 */
--	if ((where >= 0x14 && where < 0x40) || (where >= 0x48))
--		return PCIBIOS_SUCCESSFUL;
--
--	addr = &bridge->b_type0_cfg_dev[slot].f[fn].l[where >> 2];
--	if (get_dbe(cf, (u32 *)addr))
--		return PCIBIOS_DEVICE_NOT_FOUND;
--
--	shift = ((where & 3) << 3);
--	mask = (0xffffffffU >> ((4 - size) << 3));
--	smask = mask << shift;
--
--	cf = (cf & ~smask) | ((value & mask) << shift);
--	if (put_dbe(cf, (u32 *)addr))
--		return PCIBIOS_DEVICE_NOT_FOUND;
--
--	return PCIBIOS_SUCCESSFUL;
- }
- 
- static int pci_write_config(struct pci_bus *bus, unsigned int devfn,
 -- 
-2.13.7
+2.20.1
 
