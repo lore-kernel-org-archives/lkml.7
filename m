@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2F7C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 689EAC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2670C2086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3178F2171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358548;
-	bh=JRJVzti7Tmrfl8P7VV+NTCqTq97sX3M4T117wwdkuxU=;
+	s=default; t=1565358555;
+	bh=SD3gc0RxDtOmEAVSJ/BEmU++zbgiLp/zqEl+cGGU/aU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IppM56455cPUEYqu6aICgQSSgAtcX11TpZ1slax6i4Cs268K0wX3s11XVjtk7PuUP
-	 gJkqV1oxpCBhScF9bizMWQmQwqZCotysGSH4XYrRKbfSNlW6G5zEHPvb56alZKPa7q
-	 WKPPRNqEfXjaROwj+bwCPwPPt9UwYCpD101L+lqE=
+	b=EXjUrm+l/exKxXOsNAF0YDFY0IHWP7ZDEdk5W3u9HhXeECOse/LZHeDwPHWsywYRD
+	 /qKENpSQSrLz0VVnp/HadnvYoVErEgpAMZLkIyOPVnAh1TR7/y009GpWOtYzIvY+kk
+	 /F6sO3jlcg6Q4dUSgxy2iMNoiScRN9yISWp8raKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407203AbfHINtH (ORCPT
+        id S2436514AbfHINtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:49:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36400 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:49:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406599AbfHINqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:46:40 -0400
+        id S2436499AbfHINq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:46:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CFA821783;
-        Fri,  9 Aug 2019 13:46:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A3902086D;
+        Fri,  9 Aug 2019 13:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358399;
-        bh=JRJVzti7Tmrfl8P7VV+NTCqTq97sX3M4T117wwdkuxU=;
+        s=default; t=1565358386;
+        bh=SD3gc0RxDtOmEAVSJ/BEmU++zbgiLp/zqEl+cGGU/aU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dh5SyEk/6bZAU7utqSaK0RrZ7oo5Xcgxm4rg/pW+L5zwRXTRo7Ygugi3Xnl3oc9aQ
-         mGBQM8vlQ8rR62CEUHJYtmyARaGqtGV+8XXYcidMMP8ik0Z11vRLHlxYU50+vE3XyG
-         OLCIgPTij7o9SxoqMByJYO9Nnq9NyNf5O2sWIzlQ=
+        b=0DtGeGh6WNH445O+iblZFNp71+F4sT9y8kKAfs/CTZWbYeux22fsRn79HDGbNRO0o
+         pvigfr4OV9aLeKsM8arCBn58vgDX+k30eY4xCkhc+Q41ACkXzX/PLV2T3ffMVSfvG/
+         BbffJoc7/sJOyTQMjlGntP4TNEBVu1JmaWbipb74=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.9 01/32] scsi: fcoe: Embed fc_rport_priv in fcoe_rport structure
-Date:   Fri,  9 Aug 2019 15:45:04 +0200
-Message-Id: <20190809133923.010789078@linuxfoundation.org>
+        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 18/21] x86/speculation: Prepare entry code for Spectre v1 swapgs mitigations
+Date:   Fri,  9 Aug 2019 15:45:22 +0200
+Message-Id: <20190809134242.317726553@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190809133922.945349906@linuxfoundation.org>
-References: <20190809133922.945349906@linuxfoundation.org>
+In-Reply-To: <20190809134241.565496442@linuxfoundation.org>
+References: <20190809134241.565496442@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,217 +61,213 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.de>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit 023358b136d490ca91735ac6490db3741af5a8bd upstream.
+commit 18ec54fdd6d18d92025af097cd042a75cf0ea24c upstream.
 
-Gcc-9 complains for a memset across pointer boundaries, which happens as
-the code tries to allocate a flexible array on the stack.  Turns out we
-cannot do this without relying on gcc-isms, so with this patch we'll embed
-the fc_rport_priv structure into fcoe_rport, can use the normal
-'container_of' outcast, and will only have to do a memset over one
-structure.
+Spectre v1 isn't only about array bounds checks.  It can affect any
+conditional checks.  The kernel entry code interrupt, exception, and NMI
+handlers all have conditional swapgs checks.  Those may be problematic in
+the context of Spectre v1, as kernel code can speculatively run with a user
+GS.
 
-Signed-off-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+For example:
+
+	if (coming from user space)
+		swapgs
+	mov %gs:<percpu_offset>, %reg
+	mov (%reg), %reg1
+
+When coming from user space, the CPU can speculatively skip the swapgs, and
+then do a speculative percpu load using the user GS value.  So the user can
+speculatively force a read of any kernel value.  If a gadget exists which
+uses the percpu value as an address in another load/store, then the
+contents of the kernel value may become visible via an L1 side channel
+attack.
+
+A similar attack exists when coming from kernel space.  The CPU can
+speculatively do the swapgs, causing the user GS to get used for the rest
+of the speculative window.
+
+The mitigation is similar to a traditional Spectre v1 mitigation, except:
+
+  a) index masking isn't possible; because the index (percpu offset)
+     isn't user-controlled; and
+
+  b) an lfence is needed in both the "from user" swapgs path and the
+     "from kernel" non-swapgs path (because of the two attacks described
+     above).
+
+The user entry swapgs paths already have SWITCH_TO_KERNEL_CR3, which has a
+CR3 write when PTI is enabled.  Since CR3 writes are serializing, the
+lfences can be skipped in those cases.
+
+On the other hand, the kernel entry swapgs paths don't depend on PTI.
+
+To avoid unnecessary lfences for the user entry case, create two separate
+features for alternative patching:
+
+  X86_FEATURE_FENCE_SWAPGS_USER
+  X86_FEATURE_FENCE_SWAPGS_KERNEL
+
+Use these features in entry code to patch in lfences where needed.
+
+The features aren't enabled yet, so there's no functional change.
+
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Dave Hansen <dave.hansen@intel.com>
+[bwh: Backported to 4.4:
+ - Assign the CPU feature bits from word 7
+ - Add FENCE_SWAPGS_KERNEL_ENTRY to NMI entry, since it does not
+   use paranoid_entry
+ - Include <asm/cpufeatures.h> in calling.h
+ - Adjust context]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/scsi/fcoe/fcoe_ctlr.c |   51 ++++++++++++++++--------------------------
- drivers/scsi/libfc/fc_rport.c |    5 +++-
- include/scsi/libfcoe.h        |    1 
- 3 files changed, 25 insertions(+), 32 deletions(-)
+ arch/x86/entry/calling.h           |   19 +++++++++++++++++++
+ arch/x86/entry/entry_64.S          |   21 +++++++++++++++++++--
+ arch/x86/include/asm/cpufeatures.h |    3 +++
+ 3 files changed, 41 insertions(+), 2 deletions(-)
 
---- a/drivers/scsi/fcoe/fcoe_ctlr.c
-+++ b/drivers/scsi/fcoe/fcoe_ctlr.c
-@@ -1984,7 +1984,7 @@ EXPORT_SYMBOL_GPL(fcoe_wwn_from_mac);
-  */
- static inline struct fcoe_rport *fcoe_ctlr_rport(struct fc_rport_priv *rdata)
- {
--	return (struct fcoe_rport *)(rdata + 1);
-+	return container_of(rdata, struct fcoe_rport, rdata);
- }
+--- a/arch/x86/entry/calling.h
++++ b/arch/x86/entry/calling.h
+@@ -1,3 +1,5 @@
++#include <asm/cpufeatures.h>
++
+ /*
  
- /**
-@@ -2244,7 +2244,7 @@ static void fcoe_ctlr_vn_start(struct fc
-  */
- static int fcoe_ctlr_vn_parse(struct fcoe_ctlr *fip,
- 			      struct sk_buff *skb,
--			      struct fc_rport_priv *rdata)
-+			      struct fcoe_rport *frport)
- {
- 	struct fip_header *fiph;
- 	struct fip_desc *desc = NULL;
-@@ -2252,16 +2252,12 @@ static int fcoe_ctlr_vn_parse(struct fco
- 	struct fip_wwn_desc *wwn = NULL;
- 	struct fip_vn_desc *vn = NULL;
- 	struct fip_size_desc *size = NULL;
--	struct fcoe_rport *frport;
- 	size_t rlen;
- 	size_t dlen;
- 	u32 desc_mask = 0;
- 	u32 dtype;
- 	u8 sub;
+  x86 function call convention, 64-bit:
+@@ -199,6 +201,23 @@ For 32-bit we have the following convent
+ 	.byte 0xf1
+ 	.endm
  
--	memset(rdata, 0, sizeof(*rdata) + sizeof(*frport));
--	frport = fcoe_ctlr_rport(rdata);
++/*
++ * Mitigate Spectre v1 for conditional swapgs code paths.
++ *
++ * FENCE_SWAPGS_USER_ENTRY is used in the user entry swapgs code path, to
++ * prevent a speculative swapgs when coming from kernel space.
++ *
++ * FENCE_SWAPGS_KERNEL_ENTRY is used in the kernel entry non-swapgs code path,
++ * to prevent the swapgs from getting speculatively skipped when coming from
++ * user space.
++ */
++.macro FENCE_SWAPGS_USER_ENTRY
++	ALTERNATIVE "", "lfence", X86_FEATURE_FENCE_SWAPGS_USER
++.endm
++.macro FENCE_SWAPGS_KERNEL_ENTRY
++	ALTERNATIVE "", "lfence", X86_FEATURE_FENCE_SWAPGS_KERNEL
++.endm
++
+ #else /* CONFIG_X86_64 */
+ 
+ /*
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -551,6 +551,7 @@ END(irq_entries_start)
+ 	 * tracking that we're in kernel mode.
+ 	 */
+ 	SWAPGS
++	FENCE_SWAPGS_USER_ENTRY
+ 	SWITCH_KERNEL_CR3
+ 
+ 	/*
+@@ -566,8 +567,10 @@ END(irq_entries_start)
+ #ifdef CONFIG_CONTEXT_TRACKING
+ 	call enter_from_user_mode
+ #endif
 -
- 	fiph = (struct fip_header *)skb->data;
- 	frport->flags = ntohs(fiph->fip_flags);
++	jmpq	2f
+ 1:
++	FENCE_SWAPGS_KERNEL_ENTRY
++2:
+ 	/*
+ 	 * Save previous stack pointer, optionally switch to interrupt stack.
+ 	 * irq_count is used to check if a CPU is already on an interrupt stack
+@@ -1077,6 +1080,13 @@ ENTRY(paranoid_entry)
+ 	movq	%rax, %cr3
+ 2:
+ #endif
++	/*
++	 * The above doesn't do an unconditional CR3 write, even in the PTI
++	 * case.  So do an lfence to prevent GS speculation, regardless of
++	 * whether PTI is enabled.
++	 */
++	FENCE_SWAPGS_KERNEL_ENTRY
++
+ 	ret
+ END(paranoid_entry)
  
-@@ -2324,15 +2320,17 @@ static int fcoe_ctlr_vn_parse(struct fco
- 			if (dlen != sizeof(struct fip_wwn_desc))
- 				goto len_err;
- 			wwn = (struct fip_wwn_desc *)desc;
--			rdata->ids.node_name = get_unaligned_be64(&wwn->fd_wwn);
-+			frport->rdata.ids.node_name =
-+				get_unaligned_be64(&wwn->fd_wwn);
- 			break;
- 		case FIP_DT_VN_ID:
- 			if (dlen != sizeof(struct fip_vn_desc))
- 				goto len_err;
- 			vn = (struct fip_vn_desc *)desc;
- 			memcpy(frport->vn_mac, vn->fd_mac, ETH_ALEN);
--			rdata->ids.port_id = ntoh24(vn->fd_fc_id);
--			rdata->ids.port_name = get_unaligned_be64(&vn->fd_wwpn);
-+			frport->rdata.ids.port_id = ntoh24(vn->fd_fc_id);
-+			frport->rdata.ids.port_name =
-+				get_unaligned_be64(&vn->fd_wwpn);
- 			break;
- 		case FIP_DT_FC4F:
- 			if (dlen != sizeof(struct fip_fc4_feat))
-@@ -2670,16 +2668,13 @@ static int fcoe_ctlr_vn_recv(struct fcoe
- {
- 	struct fip_header *fiph;
- 	enum fip_vn2vn_subcode sub;
--	struct {
--		struct fc_rport_priv rdata;
--		struct fcoe_rport frport;
--	} buf;
-+	struct fcoe_rport frport = { };
- 	int rc;
+@@ -1138,6 +1148,7 @@ ENTRY(error_entry)
+ 	 * from user mode due to an IRET fault.
+ 	 */
+ 	SWAPGS
++	FENCE_SWAPGS_USER_ENTRY
  
- 	fiph = (struct fip_header *)skb->data;
- 	sub = fiph->fip_subcode;
+ .Lerror_entry_from_usermode_after_swapgs:
+ 	/*
+@@ -1151,6 +1162,8 @@ ENTRY(error_entry)
+ #endif
+ 	ret
  
--	rc = fcoe_ctlr_vn_parse(fip, skb, &buf.rdata);
-+	rc = fcoe_ctlr_vn_parse(fip, skb, &frport);
- 	if (rc) {
- 		LIBFCOE_FIP_DBG(fip, "vn_recv vn_parse error %d\n", rc);
- 		goto drop;
-@@ -2688,19 +2683,19 @@ static int fcoe_ctlr_vn_recv(struct fcoe
- 	mutex_lock(&fip->ctlr_mutex);
- 	switch (sub) {
- 	case FIP_SC_VN_PROBE_REQ:
--		fcoe_ctlr_vn_probe_req(fip, &buf.rdata);
-+		fcoe_ctlr_vn_probe_req(fip, &frport.rdata);
- 		break;
- 	case FIP_SC_VN_PROBE_REP:
--		fcoe_ctlr_vn_probe_reply(fip, &buf.rdata);
-+		fcoe_ctlr_vn_probe_reply(fip, &frport.rdata);
- 		break;
- 	case FIP_SC_VN_CLAIM_NOTIFY:
--		fcoe_ctlr_vn_claim_notify(fip, &buf.rdata);
-+		fcoe_ctlr_vn_claim_notify(fip, &frport.rdata);
- 		break;
- 	case FIP_SC_VN_CLAIM_REP:
--		fcoe_ctlr_vn_claim_resp(fip, &buf.rdata);
-+		fcoe_ctlr_vn_claim_resp(fip, &frport.rdata);
- 		break;
- 	case FIP_SC_VN_BEACON:
--		fcoe_ctlr_vn_beacon(fip, &buf.rdata);
-+		fcoe_ctlr_vn_beacon(fip, &frport.rdata);
- 		break;
- 	default:
- 		LIBFCOE_FIP_DBG(fip, "vn_recv unknown subcode %d\n", sub);
-@@ -2724,22 +2719,18 @@ drop:
-  */
- static int fcoe_ctlr_vlan_parse(struct fcoe_ctlr *fip,
- 			      struct sk_buff *skb,
--			      struct fc_rport_priv *rdata)
-+			      struct fcoe_rport *frport)
- {
- 	struct fip_header *fiph;
- 	struct fip_desc *desc = NULL;
- 	struct fip_mac_desc *macd = NULL;
- 	struct fip_wwn_desc *wwn = NULL;
--	struct fcoe_rport *frport;
- 	size_t rlen;
- 	size_t dlen;
- 	u32 desc_mask = 0;
- 	u32 dtype;
- 	u8 sub;
++.Lerror_entry_done_lfence:
++	FENCE_SWAPGS_KERNEL_ENTRY
+ .Lerror_entry_done:
+ 	TRACE_IRQS_OFF
+ 	ret
+@@ -1169,7 +1182,7 @@ ENTRY(error_entry)
+ 	cmpq	%rax, RIP+8(%rsp)
+ 	je	.Lbstep_iret
+ 	cmpq	$gs_change, RIP+8(%rsp)
+-	jne	.Lerror_entry_done
++	jne	.Lerror_entry_done_lfence
  
--	memset(rdata, 0, sizeof(*rdata) + sizeof(*frport));
--	frport = fcoe_ctlr_rport(rdata);
--
- 	fiph = (struct fip_header *)skb->data;
- 	frport->flags = ntohs(fiph->fip_flags);
+ 	/*
+ 	 * hack: gs_change can fail with user gsbase.  If this happens, fix up
+@@ -1177,6 +1190,7 @@ ENTRY(error_entry)
+ 	 * gs_change's error handler with kernel gsbase.
+ 	 */
+ 	SWAPGS
++	FENCE_SWAPGS_USER_ENTRY
+ 	jmp .Lerror_entry_done
  
-@@ -2793,7 +2784,8 @@ static int fcoe_ctlr_vlan_parse(struct f
- 			if (dlen != sizeof(struct fip_wwn_desc))
- 				goto len_err;
- 			wwn = (struct fip_wwn_desc *)desc;
--			rdata->ids.node_name = get_unaligned_be64(&wwn->fd_wwn);
-+			frport->rdata.ids.node_name =
-+				get_unaligned_be64(&wwn->fd_wwn);
- 			break;
- 		default:
- 			LIBFCOE_FIP_DBG(fip, "unexpected descriptor type %x "
-@@ -2904,22 +2896,19 @@ static int fcoe_ctlr_vlan_recv(struct fc
- {
- 	struct fip_header *fiph;
- 	enum fip_vlan_subcode sub;
--	struct {
--		struct fc_rport_priv rdata;
--		struct fcoe_rport frport;
--	} buf;
-+	struct fcoe_rport frport = { };
- 	int rc;
+ .Lbstep_iret:
+@@ -1190,6 +1204,7 @@ ENTRY(error_entry)
+ 	 * Switch to kernel gsbase:
+ 	 */
+ 	SWAPGS
++	FENCE_SWAPGS_USER_ENTRY
  
- 	fiph = (struct fip_header *)skb->data;
- 	sub = fiph->fip_subcode;
--	rc = fcoe_ctlr_vlan_parse(fip, skb, &buf.rdata);
-+	rc = fcoe_ctlr_vlan_parse(fip, skb, &frport);
- 	if (rc) {
- 		LIBFCOE_FIP_DBG(fip, "vlan_recv vlan_parse error %d\n", rc);
- 		goto drop;
- 	}
- 	mutex_lock(&fip->ctlr_mutex);
- 	if (sub == FIP_SC_VL_REQ)
--		fcoe_ctlr_vlan_disc_reply(fip, &buf.rdata);
-+		fcoe_ctlr_vlan_disc_reply(fip, &frport.rdata);
- 	mutex_unlock(&fip->ctlr_mutex);
+ 	/*
+ 	 * Pretend that the exception came from user mode: set up pt_regs
+@@ -1286,6 +1301,7 @@ ENTRY(nmi)
+ 	 * to switch CR3 here.
+ 	 */
+ 	cld
++	FENCE_SWAPGS_USER_ENTRY
+ 	movq	%rsp, %rdx
+ 	movq	PER_CPU_VAR(cpu_current_top_of_stack), %rsp
+ 	pushq	5*8(%rdx)	/* pt_regs->ss */
+@@ -1574,6 +1590,7 @@ end_repeat_nmi:
+ 	movq	%rax, %cr3
+ 2:
+ #endif
++	FENCE_SWAPGS_KERNEL_ENTRY
  
- drop:
---- a/drivers/scsi/libfc/fc_rport.c
-+++ b/drivers/scsi/libfc/fc_rport.c
-@@ -127,12 +127,15 @@ static struct fc_rport_priv *fc_rport_cr
- 					     u32 port_id)
- {
- 	struct fc_rport_priv *rdata;
-+	size_t rport_priv_size = sizeof(*rdata);
+ 	/* paranoidentry do_nmi, 0; without TRACE_IRQS_OFF */
+ 	call	do_nmi
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -192,6 +192,9 @@
+ #define X86_FEATURE_HW_PSTATE	( 7*32+ 8) /* AMD HW-PState */
+ #define X86_FEATURE_PROC_FEEDBACK ( 7*32+ 9) /* AMD ProcFeedbackInterface */
  
- 	rdata = lport->tt.rport_lookup(lport, port_id);
- 	if (rdata)
- 		return rdata;
++#define X86_FEATURE_FENCE_SWAPGS_USER	( 7*32+10) /* "" LFENCE in user entry SWAPGS path */
++#define X86_FEATURE_FENCE_SWAPGS_KERNEL	( 7*32+11) /* "" LFENCE in kernel entry SWAPGS path */
++
+ #define X86_FEATURE_RETPOLINE	( 7*32+12) /* "" Generic Retpoline mitigation for Spectre variant 2 */
+ #define X86_FEATURE_RETPOLINE_AMD ( 7*32+13) /* "" AMD Retpoline mitigation for Spectre variant 2 */
  
--	rdata = kzalloc(sizeof(*rdata) + lport->rport_priv_size, GFP_KERNEL);
-+	if (lport->rport_priv_size > 0)
-+		rport_priv_size = lport->rport_priv_size;
-+	rdata = kzalloc(rport_priv_size, GFP_KERNEL);
- 	if (!rdata)
- 		return NULL;
- 
---- a/include/scsi/libfcoe.h
-+++ b/include/scsi/libfcoe.h
-@@ -241,6 +241,7 @@ struct fcoe_fcf {
-  * @vn_mac:	VN_Node assigned MAC address for data
-  */
- struct fcoe_rport {
-+	struct fc_rport_priv rdata;
- 	unsigned long time;
- 	u16 fcoe_len;
- 	u16 flags;
 
 
