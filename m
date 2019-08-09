@@ -2,162 +2,204 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12F6C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C0CC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF5C2070D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53C6B214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:05:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eVFI3JOH"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="KyEGCBRD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437123AbfHIREs (ORCPT
+        id S2437162AbfHIRFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 13:04:48 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34072 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437086AbfHIREs (ORCPT
+        Fri, 9 Aug 2019 13:05:05 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:59874 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437086AbfHIRFE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 13:04:48 -0400
-Received: by mail-ed1-f66.google.com with SMTP id s49so60860079edb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 10:04:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SVm+IxX6yGNetZ1noaOGvk3cck8u8/5E12taR+hrzuY=;
-        b=eVFI3JOH5DluCznSfwkv+tvmdDi7A08we5AJVmkQ5ei6VmnaURk3d65Wft9KmpteKx
-         TcORgXt18VKv1O0PIZmsknj/A16wO3RINuCPiqUeKYBGi2ynlI5/wsiySsjMfnwtj4KI
-         HfwO/tIsTVZwDvjVfpHj97G0WB76mlWM/DGFM9jjak2x0l0TPjDyHXnS6n9UB0E1kHvk
-         Cn+OUDO7/XsyxQ0ChaoVGrkpjF3aAMuQ48RbRW86R5W2qpcZIhvno5FOKuor7XK2l8n+
-         CdHtml7t3Xw+dOTWEF8tSMovQmD+0wsA/nwjqLecI1dKB0/M1UTMFEP4ih2g/jXpSm7g
-         0+HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SVm+IxX6yGNetZ1noaOGvk3cck8u8/5E12taR+hrzuY=;
-        b=C/xKWmscVq8a8GsDs9TjKZg1u35ZeMS1bJ+sYFK0xgUudRug18uRjabZsFH96i4buZ
-         ZUBQ7hRQo/fi7cDXUGAIi4egnAnmWtEXltl2I2dQxM7fX5Qunv49T1I/mGGqV3FujVYU
-         QKFUCQOCjiWDhT4NczLvRPJJ+D19odEzJNMpTcMrSz6H0Lj30+DKe77G5kAyBtvMuAAo
-         PCMnXl9VV7JAq/foUiccel1wr11kB94U1KIbMigQPAfX8R+yIdlY7eSKEDGEiCIg17E7
-         gZA3flC04zZd0//xGNWqHWfGXmoeBJ1eMRVZWt8/+23CcWvNd8FFEvEbWeO2KQUkzXOM
-         ZLCA==
-X-Gm-Message-State: APjAAAUrwFtbXHksy5xJ5J7z9kmwRX2+UYuOFlUnOhiv6KFQjpTSJXRX
-        ciEK5w5ILCx1qp4DZaym3OUmxomt393PRC2yqKo=
-X-Google-Smtp-Source: APXvYqwyAO3PHh8CsDP/fgKOS5XeSiKM21hhrMAiXJHObVwafrosM1WwbUVs2nV7MshcFxRnNZXx7jRoEr2WYPYpVHs=
-X-Received: by 2002:aa7:ca54:: with SMTP id j20mr23149212edt.50.1565370286475;
- Fri, 09 Aug 2019 10:04:46 -0700 (PDT)
+        Fri, 9 Aug 2019 13:05:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1565370302; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ujX0iA9Z9xPJJ23+DKST7S4VIRynKN5s6HjiqNe7lIc=;
+        b=KyEGCBRD9oSQGnis+Gnx7CO48LLy+zQ8qaMvm+Uqlluat7LreuGFr9bfZB++zqEf/9C3BS
+        P3Mj1CLJuNS/o0+of5649sNXy2hqHcIMztQrMvQ/8jN8cwGV5q8xKy+jqM9QG4Rn3Rcfsh
+        z64mLRPYDhdXS4Vz50x55s5WcSS7zhU=
+Date:   Fri, 09 Aug 2019 19:04:56 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 1/7] pwm: jz4740: Obtain regmap from parent node
+To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Malaterre <malat@debian.org>,
+        Artur Rojek <contact@artur-rojek.eu>
+Message-Id: <1565370296.2091.1@crapouillou.net>
+In-Reply-To: <20190809165147.wf7f5jfsvycysm5h@pengutronix.de>
+References: <20190809123031.24219-1-paul@crapouillou.net>
+        <20190809123031.24219-2-paul@crapouillou.net>
+        <20190809165147.wf7f5jfsvycysm5h@pengutronix.de>
 MIME-Version: 1.0
-References: <20190809071051.17387-1-hslester96@gmail.com> <e10b37c6-25fa-e584-b943-07aa32725198@arm.com>
-In-Reply-To: <e10b37c6-25fa-e584-b943-07aa32725198@arm.com>
-From:   Chuhong Yuan <hslester96@gmail.com>
-Date:   Sat, 10 Aug 2019 01:04:35 +0800
-Message-ID: <CANhBUQ1LaEKDBrUWZZ_+SUWDTx9u6bTi0vaK-C4aLMFN3dUD=Q@mail.gmail.com>
-Subject: Re: [PATCH v4 6/8] sched: Replace strncmp with str_has_prefix
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 7:31 PM Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
-> On 09/08/2019 08:10, Chuhong Yuan wrote:
-> > strncmp(str, const, len) is error-prone because len
-> > is easy to have typo.
-> > The example is the hard-coded len has counting error
-> > or sizeof(const) forgets - 1.
-> > So we prefer using newly introduced str_has_prefix()
-> > to substitute such strncmp to make code better.
-> >
-> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
->
-> I tried to have a look at the series as a whole but it's not properly
-> threaded (or at least doesn't appear as such on lore), which makes it
-> unnecessarily annoying to review.
->
-> Please make sure to use git-send-email, which should properly thread all
-> patches (IOW make them in-reply-to the cover letter).
->
+Hi Uwe,
 
-I have used git-send-email to send the series with a cover letter.
-The cover letter is here:
-https://lkml.org/lkml/2019/8/9/108
 
-Indeed I find the series are not in the same thread, I am not sure
-what is wrong with them.
+Le ven. 9 ao=FBt 2019 =E0 18:51, Uwe =3D?iso-8859-1?q?Kleine-K=3DF6nig?=3D=20
+<u.kleine-koenig@pengutronix.de> a =E9crit :
+> On Fri, Aug 09, 2019 at 02:30:25PM +0200, Paul Cercueil wrote:
+>>  The TCU registers are shared between a handful of drivers, accessing
+>>  them through the same regmap.
+>>=20
+>>  While this driver is devicetree-compatible, it is never (as of now)
+>>  probed from devicetree, so this change does not introduce a ABI=20
+>> problem
+>>  with current devicetree files.
+>=20
+> If you adapt the binding also update the binding doc please.
 
->
-> Other than that, I stared at it and it seems fine. It's not that helpful
-> here since I doubt any of these prefixes will change in the near feature,
-> but hey, why not.
->
-> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
->
-> > ---
-> > Changes in v4:
-> >   - Eliminate assignments in if conditions.
-> >
-> >  kernel/sched/debug.c     |  6 ++++--
-> >  kernel/sched/isolation.c | 11 +++++++----
-> >  2 files changed, 11 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-> > index f7e4579e746c..a03900523e5d 100644
-> > --- a/kernel/sched/debug.c
-> > +++ b/kernel/sched/debug.c
-> > @@ -102,10 +102,12 @@ static int sched_feat_set(char *cmp)
-> >  {
-> >       int i;
-> >       int neg = 0;
-> > +     size_t len;
-> >
-> > -     if (strncmp(cmp, "NO_", 3) == 0) {
-> > +     len = str_has_prefix(cmp, "NO_");
-> > +     if (len) {
-> >               neg = 1;
-> > -             cmp += 3;
-> > +             cmp += len;
-> >       }
-> >
-> >       i = match_string(sched_feat_names, __SCHED_FEAT_NR, cmp);
-> > diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-> > index ccb28085b114..ea2ead4b1906 100644
-> > --- a/kernel/sched/isolation.c
-> > +++ b/kernel/sched/isolation.c
-> > @@ -141,16 +141,19 @@ __setup("nohz_full=", housekeeping_nohz_full_setup);
-> >  static int __init housekeeping_isolcpus_setup(char *str)
-> >  {
-> >       unsigned int flags = 0;
-> > +     size_t len;
-> >
-> >       while (isalpha(*str)) {
-> > -             if (!strncmp(str, "nohz,", 5)) {
-> > -                     str += 5;
-> > +             len = str_has_prefix(str, "nohz,");
-> > +             if (len) {
-> > +                     str += len;
-> >                       flags |= HK_FLAG_TICK;
-> >                       continue;
-> >               }
-> >
-> > -             if (!strncmp(str, "domain,", 7)) {
-> > -                     str += 7;
-> > +             len = str_has_prefix(str, "domain,");
-> > +             if (len) {
-> > +                     str += len;
-> >                       flags |= HK_FLAG_DOMAIN;
-> >                       continue;
-> >               }
-> >
+It's already updated, in mips-next, so it'll be in the next -rc1.
+
+
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  Tested-by: Mathieu Malaterre <malat@debian.org>
+>>  Tested-by: Artur Rojek <contact@artur-rojek.eu>
+>=20
+> nitpick: put your S-o-b line after the other tags you added.
+>=20
+>>  ---
+>>   drivers/pwm/Kconfig      |  1 +
+>>   drivers/pwm/pwm-jz4740.c | 80=20
+>> ++++++++++++++++++++++++++--------------
+>>   2 files changed, 53 insertions(+), 28 deletions(-)
+>>=20
+>>  diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+>>  index a7e57516959e..cc4df0ec978a 100644
+>>  --- a/drivers/pwm/Kconfig
+>>  +++ b/drivers/pwm/Kconfig
+>>  @@ -225,6 +225,7 @@ config PWM_IMX_TPM
+>>   config PWM_JZ4740
+>>   	tristate "Ingenic JZ47xx PWM support"
+>>   	depends on MACH_INGENIC
+>>  +	select MFD_SYSCON
+>>   	help
+>>   	  Generic PWM framework driver for Ingenic JZ47xx based
+>>   	  machines.
+>>  diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+>>  index f901e8a0d33d..7aea5e0c6e18 100644
+>>  --- a/drivers/pwm/pwm-jz4740.c
+>>  +++ b/drivers/pwm/pwm-jz4740.c
+>>  @@ -8,18 +8,20 @@
+>>   #include <linux/err.h>
+>>   #include <linux/gpio.h>
+>>   #include <linux/kernel.h>
+>>  +#include <linux/mfd/ingenic-tcu.h>
+>>  +#include <linux/mfd/syscon.h>
+>>   #include <linux/module.h>
+>>   #include <linux/of_device.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/pwm.h>
+>>  -
+>>  -#include <asm/mach-jz4740/timer.h>
+>>  +#include <linux/regmap.h>
+>>=20
+>>   #define NUM_PWM 8
+>>=20
+>>   struct jz4740_pwm_chip {
+>>   	struct pwm_chip chip;
+>>   	struct clk *clk;
+>>  +	struct regmap *map;
+>>   };
+>>=20
+>>   static inline struct jz4740_pwm_chip *to_jz4740(struct pwm_chip=20
+>> *chip)
+>>  @@ -29,6 +31,8 @@ static inline struct jz4740_pwm_chip=20
+>> *to_jz4740(struct pwm_chip *chip)
+>>=20
+>>   static int jz4740_pwm_request(struct pwm_chip *chip, struct=20
+>> pwm_device *pwm)
+>>   {
+>>  +	struct jz4740_pwm_chip *jz =3D to_jz4740(chip);
+>>  +
+>>   	/*
+>>   	 * Timers 0 and 1 are used for system tasks, so they are=20
+>> unavailable
+>>   	 * for use as PWMs.
+>>  @@ -36,50 +40,53 @@ static int jz4740_pwm_request(struct pwm_chip=20
+>> *chip, struct pwm_device *pwm)
+>>   	if (pwm->hwpwm < 2)
+>>   		return -EBUSY;
+>>=20
+>>  -	jz4740_timer_start(pwm->hwpwm);
+>>  +	regmap_write(jz->map, TCU_REG_TSCR, BIT(pwm->hwpwm));
+>=20
+> jz4740_timer_start does
+>=20
+> 	writel(BIT(timer), jz4740_timer_base + JZ_REG_TIMER_STOP_CLEAR);
+>=20
+> with
+>=20
+> #define JZ_REG_TIMER_STOP_CLEAR         0x2C
+>=20
+> and
+>=20
+> #define TCU_REG_TSCR            0x3c
+>=20
+> I wonder why the offsets are different.
+
+The offset are different because the base is different.
+
+
+>>=20
+>>   	return 0;
+>>   }
+>>=20
+>>   static void jz4740_pwm_free(struct pwm_chip *chip, struct=20
+>> pwm_device *pwm)
+>>   {
+>>  -	jz4740_timer_set_ctrl(pwm->hwpwm, 0);
+>>  +	struct jz4740_pwm_chip *jz =3D to_jz4740(chip);
+>>=20
+>>  -	jz4740_timer_stop(pwm->hwpwm);
+>>  +	regmap_write(jz->map, TCU_REG_TSCR, BIT(pwm->hwpwm));
+>=20
+> jz4740_timer_set_ctrl writes to offset (((pwm->hwpwm) * 0x10) + 0x3C)
+> and jz4740_timer_stop to offset 0x1c. The regmap_write doesn't do both
+> of them but instead writes to offset 0x3c.
+
+I guess it should have been TCU_REG_TSSR ("Timer Stop Set Register") and
+I didn't notice because the next patch drops this write anyway.
+
+I'll do as you suggested in your other reply and swap the two patches if
+it makes things easier, it'll get rid of this write.
+
+
+> So this doesn't seem to be a 1:1 conversion. This either needs fixing,
+> splitting into several patches or a better commit log.
+>=20
+> Stopping my review here.
+>=20
+> Best regards
+> Uwe
+>=20
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=F6nig       =20
+>     |
+> Industrial Linux Solutions                 |=20
+> http://www.pengutronix.de/  |
+
+=
+
