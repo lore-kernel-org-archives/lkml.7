@@ -2,104 +2,110 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEA5C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E605C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57FA920C01
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3939E2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:37:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="RN61SRAe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="FI1vTkLp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436582AbfHISgb (ORCPT
+        id S2436892AbfHIShS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:36:31 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:38458 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2407406AbfHISgb (ORCPT
+        Fri, 9 Aug 2019 14:37:18 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:33524 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407617AbfHIShR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:36:31 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 9CBA0C0B9F;
-        Fri,  9 Aug 2019 18:36:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1565375791; bh=nCNzho8v5alI/6i+1aHygJFRglDtTEl398Nq+I6/yIg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RN61SRAeyCRovJOdAw3w51pIzr4qX27Evn2Gxk1CVaM57hiZFcd9XGZUG/vwmBudU
-         EC7v0tXdh6Y3nAn826Tmywch55W4daNIOp7Is1PWy9ANjOhLxHBfxLxAle+HWj8FAM
-         BvucbXYt9OA4DKv/jvd9Qfc5lXmAdhNADV84ow6C0i1yaZP+Qw3ZreOSqLswCX42sS
-         5tOwiEt7847Q+lkFRf+Kq0whtADYQ4VqBAAqncXm8CfQtUazD38g6WyqnCqlOByswC
-         qwmdu4MAxM594bAQXHiuTb3dcSH2J61qbwq4h8bJxa4Q/qiKyhdBIAyXyf/36/MqcX
-         b/DVojavfeMHg==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 4E0CAA0057;
-        Fri,  9 Aug 2019 18:36:27 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 00/12] net: stmmac: Improvements for -next
-Date:   Fri,  9 Aug 2019 20:36:08 +0200
-Message-Id: <cover.1565375521.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 9 Aug 2019 14:37:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=IGx1tU/8oZZB3pB47GcI0li+Dcw0am8UumHeTJgqBsA=; b=FI1vTkLp5g159Uj8cKQ9M9yPg
+        5o1Cnqp19oMJ6nrpK4zw0M1TH8cDtseJ969So98LRY7NxqWnT2GtIvCesWJy5YogAvFlQcwVLFf9m
+        MdzBWgIc6Eqi9mNeGKEbCZ9AbhgxE+I9yycgXHBgxA5104BGeZr1YZid8L4JBbwIYV/BtyAyk1euz
+        KwZgttgdk5EEc6iqpUf2Bvj3Duy/uTnZNEIAJhQsO9IeHKI/u7syQ7tOl0+F2VQniPR2YGbBcT+Ft
+        8Xy5MdDaQ7/hyU4s3LkVh3XzSZpYapT3CopyQgW0n2gy4ZTERYvKaCunp9i2GpwSUkZmulS+XvQ7r
+        dl2HpuDSQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:42960)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hw9lA-0003Lr-PB; Fri, 09 Aug 2019 19:37:04 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hw9l4-0003t7-5w; Fri, 09 Aug 2019 19:36:58 +0100
+Date:   Fri, 9 Aug 2019 19:36:58 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, soc@kernel.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, Martin Michlmayr <tbm@cyrius.com>
+Subject: Re: [PATCH 1/7] [RFC] ARM: remove Intel iop33x and iop13xx support
+Message-ID: <20190809183658.GA13294@shell.armlinux.org.uk>
+References: <20190809162956.488941-1-arnd@arndb.de>
+ <20190809163334.489360-1-arnd@arndb.de>
+ <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Couple of improvements for -next tree. More info in commit logs.
+On Fri, Aug 09, 2019 at 11:34:12AM -0700, Dan Williams wrote:
+> [ add Martin (if cyrius.com address is still valid) ]
+> 
+> On Fri, Aug 9, 2019 at 9:35 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > There are three families of IOP machines we support in Linux: iop32x
+> > (which includes EP80219), iop33x and iop13xx (aka IOP34x aka WP8134x).
+> >
+> > All products we support in the kernel are based on the first of these,
+> > iop32x, the other families only ever supported the Intel reference
+> > boards but no actual machine anyone could ever buy.
+> >
+> > While one could clearly make them all three work in a single kernel
+> > with some work, this takes the easy way out, removing the later two
+> > platforms entirely, under the assumption that there are no remaining
+> > users.
+> >
+> > Earlier versions of OpenWRT and Debian both had support for iop32x
+> > but not the others, and they both dropped iop32x as well in their 2015
+> > releases.
+> >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> > I'm just guessing that iop32x is still needed, and the other two are
+> > not. If anyone disagrees with that assessment, let me know so we
+> > can come up with an alternative approach.
+> 
+> I'm not sure who would scream if iop32x support went away as well, but
+> I have not followed this space in years hence copying Martin.
+> 
+> In any event:
+> 
+> Acked-by: Dan Williams <dan.j.williams@intel.com>
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
-
-Jose Abreu (12):
-  net: stmmac: Get correct timestamp values from XGMAC
-  net: stmmac: Prepare to add Split Header support
-  net: stmmac: xgmac: Correctly return that RX descriptor is not last
-    one
-  net: stmmac: Add Split Header support and enable it in XGMAC cores
-  net: stmmac: Add a counter for Split Header packets
-  net: stmmac: dwxgmac: Add Flexible PPS support
-  net: stmmac: Add ethtool register dump for XGMAC cores
-  net: stmmac: Add support for SA Insertion/Replacement in XGMAC cores
-  net: stmmac: selftests: Add tests for SA Insertion/Replacement
-  net: stmmac: xgmac: Add EEE support
-  net: stmmac: Add support for VLAN Insertion Offload
-  net: stmmac: selftests: Add selftest for VLAN TX Offload
-
- drivers/net/ethernet/stmicro/stmmac/common.h       |  10 +
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |  56 ++++
- .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 189 +++++++++++++-
- .../net/ethernet/stmicro/stmmac/dwxgmac2_descs.c   |  88 ++++++-
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |  31 ++-
- drivers/net/ethernet/stmicro/stmmac/hwif.h         |  30 +++
- drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  10 +
- .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |  25 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 282 ++++++++++++++++-----
- .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 194 +++++++++++++-
- 10 files changed, 824 insertions(+), 91 deletions(-)
+Those of us who have and still run Thecus N2100's, for example?
 
 -- 
-2.7.4
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
