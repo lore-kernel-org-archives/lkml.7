@@ -2,127 +2,160 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C80C0650F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA08C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64D8F216C8
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11B03216C8
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:04:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fP6dn5Zw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ig+OAtP2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404896AbfHICzC (ORCPT
+        id S2405399AbfHIDEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 22:55:02 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43489 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729503AbfHICzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 22:55:02 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 464VGC2vJhz9sND;
-        Fri,  9 Aug 2019 12:54:59 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565319299;
-        bh=N6x42FJqLLtf5AJTJ8N9Ouj0LI/pvxasYl0hdfaKxdw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fP6dn5ZwosFfv5RFrhyZUlWBC/cuaOg7VTE5SXlIbFtbSZ3M2N5lw+i8xKQw5h+kC
-         tFvSBBdQWOCgQZUsIRURSLVp4UgCbwe8TvVx3thji5w4ghN/d/JhQTN0m4MVylwmUx
-         UlmNOWci3rZxGzpmEZW6OsWNcnYzZ4RvN/uPKI/OA4YGlx+JhktxQY7oWx6VpRbmuW
-         9LSjEeL4w0oSRL82iu776tXgksEqoTlxP0wOCnO91HBKSXMO+lKjPAJBZbzWw18dTi
-         S59xAOD0P779B922uYLwDlCs1NTHhCPX3T7Ty+HAqGgABcXaMq3dQf6QuZo5Yb8X3m
-         w1XcWZjvsl2Ow==
-Date:   Fri, 9 Aug 2019 12:54:58 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the sound tree
-Message-ID: <20190809125458.6c7aaa6c@canb.auug.org.au>
+        Thu, 8 Aug 2019 23:04:01 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42624 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404533AbfHIDEA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 23:04:00 -0400
+Received: by mail-pg1-f194.google.com with SMTP id t132so45094947pgb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 20:04:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tkv9lR0hAtLKOW5gkirlFYTKguflMZvyPqUX9XJEFP8=;
+        b=ig+OAtP2gw5ZGHC7kb/G98hh1FK4Wc2v1ulYMIqyuuB6U+aEQ7jDqrZ8+nunqgl9qt
+         /gqgfZC0z3eeznbxr4Hsmatv8pY/Z8Y1IY/kKL85tzlhKcx24pVXNM9df3jmdz9+/ngu
+         lUDBmY65fid2RtFO3K7RM4pFiDfPNf7B3PEdd/IfblT1GhnK8cMSa6TkqALPRM8A1N3n
+         nQPaXYSBA7yKqsy7yEI2T2iYNjK6WJ3z9JVa8OCLatuyyleapeWvVYHKKXwSx7ke0Cgi
+         R4g8yd/9XhVruVrmgHEr6l9FSgmRHILnwq/BfoCp2CrrbEfxxnoBQUPaJsVfMshYVqfY
+         1SKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tkv9lR0hAtLKOW5gkirlFYTKguflMZvyPqUX9XJEFP8=;
+        b=tA+vRuOeQmzrxc9S9qzR2eRLZZDTbetCmzXN5lbRwV9ZdFeKjP7Rd++bd/+RuPbdHu
+         B48LDKitWs928/Ks4DKoHXzxDTQc0kHAL0yKR/uYPy9Atibwl8HQwTsN7hT2SED9kf7T
+         dHXoHPYifwTz4ZDEgwcn+i1uZiKFL6iddR6l1khV4QSImeLmFOfl+F3MCYCVrGjWqM8q
+         H+GnDMAVAxg7M//SYJzpSlDXFP/T8RafZqVavtad06OjffXlqZz05LfEYmerueKBcMRS
+         pEKAgzO0dSJa7KpjCJkn9bxsSndOmU8SWKWoYPEwzwDgNXZyRmNCdt5c7BI7/gveqFgv
+         uG4Q==
+X-Gm-Message-State: APjAAAUNVLsKdvrO/DUWzUhrUf9I/esl68NkOc+j/PdOeXSMqo5vBP9u
+        3tCO7rGRSet2hCDe4GFpS8s=
+X-Google-Smtp-Source: APXvYqzwYr2SVNpMMxAdcYQ9Urz+CDCc1DrarrFpT95gsVVoB6V3ZEsbz1CDkRRDaCJFCxXzwu+Icw==
+X-Received: by 2002:a63:f357:: with SMTP id t23mr15859793pgj.421.1565319839914;
+        Thu, 08 Aug 2019 20:03:59 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id o14sm3556284pjp.19.2019.08.08.20.03.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 20:03:59 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] regulator: core: Add devres versions of regulator_enable/disable
+Date:   Fri,  9 Aug 2019 11:03:52 +0800
+Message-Id: <20190809030352.8387-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/S8foUJF8H+=wKJ0yGK/NO+X";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/S8foUJF8H+=wKJ0yGK/NO+X
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+I wrote a coccinelle script to detect possible chances
+of utilizing devm_() APIs to simplify the driver.
+The script found 147 drivers in total and 22 of them
+have be patched.
 
-Hi all,
+Within the 125 left ones, at least 31 of them (24.8%)
+are hindered from benefiting from devm_() APIs because
+of lack of a devres version of regulator_enable().
 
-After merging the sound tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+Therefore I implemented devm_regulator_enable/disable()
+to make more drivers possible to use devm_() APIs.
 
-sound/hda/hdac_bus.c: In function 'snd_hdac_aligned_read':
-sound/hda/hdac_bus.c:228:6: error: implicit declaration of function 'readl'=
-; did you mean 'd_real'? [-Werror=3Dimplicit-function-declaration]
-  v =3D readl(aligned_addr);
-      ^~~~~
-      d_real
-sound/hda/hdac_bus.c: In function 'snd_hdac_aligned_write':
-sound/hda/hdac_bus.c:244:2: error: implicit declaration of function 'writel=
-' [-Werror=3Dimplicit-function-declaration]
-  writel(v, aligned_addr);
-  ^~~~~~
-
-Caused by commit
-
-  19abfefd4c76 ("ALSA: hda: Direct MMIO accesses")
-
-I have applied the following patch for today:
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Fri, 9 Aug 2019 12:50:25 +1000
-Subject: [PATCH] ALSA: hda: readl/writel need linux/io.h
-
-Fixes: 19abfefd4c76 ("ALSA: hda: Direct MMIO accesses")
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- sound/hda/hdac_bus.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/regulator/devres.c | 55 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
-diff --git a/sound/hda/hdac_bus.c b/sound/hda/hdac_bus.c
-index dc2523ef7d98..cd25e2b3f7f2 100644
---- a/sound/hda/hdac_bus.c
-+++ b/sound/hda/hdac_bus.c
-@@ -4,6 +4,7 @@
-  */
-=20
- #include <linux/init.h>
-+#include <linux/io.h>
- #include <linux/device.h>
- #include <linux/module.h>
- #include <linux/export.h>
---=20
+diff --git a/drivers/regulator/devres.c b/drivers/regulator/devres.c
+index 3ea1c170f840..507151a71fd3 100644
+--- a/drivers/regulator/devres.c
++++ b/drivers/regulator/devres.c
+@@ -115,6 +115,61 @@ void devm_regulator_put(struct regulator *regulator)
+ }
+ EXPORT_SYMBOL_GPL(devm_regulator_put);
+ 
++static void devm_regulator_off(struct device *dev, void *res)
++{
++	regulator_disable(*(struct regulator **)res);
++}
++
++/**
++ * devm_regulator_enable - Resource managed regulator_enable()
++ * @regulator: regulator to enable
++ *
++ * Managed regulator_enable(). Regulator enabled is automatically
++ * disabled on driver detach. See regulator_enable() for more
++ * information.
++ */
++int devm_regulator_enable(struct device *dev, struct regulator *regulator)
++{
++	struct regulator **ptr;
++	int ret;
++
++	ptr = devres_alloc(devm_regulator_off, sizeof(*ptr), GFP_KERNEL);
++	if (!ptr)
++		return -ENOMEM;
++
++	ret = regulator_enable(regulator);
++	if (!ret) {
++		*ptr = regulator;
++		devres_add(dev, ptr);
++	} else {
++		devres_free(ptr);
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(devm_regulator_enable);
++
++/**
++ * devm_regulator_disable - Resource managed regulator_disable()
++ * @regulator: regulator to disable
++ *
++ * Disable a regulator enabled by devm_regulator_enable().
++ * Normally this function will not need to be called and the
++ * resource management code will ensure that the regulator is
++ * disabled.
++ */
++void devm_regulator_disable(struct regulator *regulator)
++{
++	int rc;
++
++	rc = devres_release(regulator->dev, devm_regulator_off,
++			    devm_regulator_match, regulator);
++
++	if (rc != 0)
++		WARN_ON(rc);
++}
++EXPORT_SYMBOL_GPL(devm_regulator_disable);
++
+ struct regulator_bulk_devres {
+ 	struct regulator_bulk_data *consumers;
+ 	int num_consumers;
+-- 
 2.20.1
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/S8foUJF8H+=wKJ0yGK/NO+X
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1M4IIACgkQAVBC80lX
-0Gy2cAf/QU6iCDbKpCqx2f0EepphckuXKMSJU4qM+MdkhBZLSppQSFrQ5O0ce1MG
-4OFFDSCXqT5Hsug/eGJlmInZPQ37JdU9wEuPNdZFs8nkEkJZfS2WSfuiZXbP6GAl
-r+TvaCPvZ4SWMsPgY9WnNuMp+WBdBSrKH4ZHPyBQFZiWLOqHiIPf5JoavgiXeZmQ
-m5r2Nf+741eDbG3bDwsrocRzELiYQSBmCwlLzOjN8wGQ42n2XXGnblrwKvpiJ3qw
-oA6h7goZYdT3NlYT+mqSIctq9aqs7EmgYcnSUo8h5chQWT856CRrrIcWzIdTuNOf
-gFBlygd5WZrgXL2/8S0us8E7EyLsfw==
-=Nfo2
------END PGP SIGNATURE-----
-
---Sig_/S8foUJF8H+=wKJ0yGK/NO+X--
