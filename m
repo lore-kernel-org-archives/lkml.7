@@ -2,87 +2,92 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6B5C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 06:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC2AC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 06:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10E5E208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 06:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E4D6208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 06:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405589AbfHIGP6 (ORCPT
+        id S2405599AbfHIGRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 02:15:58 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:37334 "EHLO fornost.hmeau.com"
+        Fri, 9 Aug 2019 02:17:50 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:37370 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbfHIGP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 02:15:57 -0400
+        id S1725879AbfHIGRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 02:17:50 -0400
 Received: from gondolin.me.apana.org.au ([192.168.0.6] helo=gondolin.hengli.com.au)
         by fornost.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hvyBr-0007DS-4g; Fri, 09 Aug 2019 16:15:51 +1000
+        id 1hvyDf-0007Fd-AL; Fri, 09 Aug 2019 16:17:43 +1000
 Received: from herbert by gondolin.hengli.com.au with local (Exim 4.80)
         (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hvyBo-0002lT-Mb; Fri, 09 Aug 2019 16:15:48 +1000
-Date:   Fri, 9 Aug 2019 16:15:48 +1000
+        id 1hvyDc-0002nN-JR; Fri, 09 Aug 2019 16:17:40 +1000
+Date:   Fri, 9 Aug 2019 16:17:40 +1000
 From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [GIT] Crypto Fixes for 5.3
-Message-ID: <20190809061548.GA10530@gondor.apana.org.au>
-References: <20180622145403.6ltjip7che227fuo@gondor.apana.org.au>
- <20180829033353.agnzxra3jk2r2mzg@gondor.apana.org.au>
- <20181116063146.e7a3mep3ghnfltxe@gondor.apana.org.au>
- <20181207061409.xflg423nknleuddw@gondor.apana.org.au>
- <20190118104006.ye5amhxkgd4xrbmc@gondor.apana.org.au>
- <20190201054204.ehl7u7aaqmkdh5b6@gondor.apana.org.au>
- <20190215024738.fynl64d5u5htcy2l@gondor.apana.org.au>
- <20190312045818.bgpiuxogmaxyscdv@gondor.apana.org.au>
- <20190515060552.ecfwhazt2fnthepg@gondor.apana.org.au>
- <20190719031206.nxyxk4vj6dg7hwxg@gondor.apana.org.au>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matt Mackall <mpm@selenic.com>
+Subject: Re: [PATCH v6 03/57] hwrng: Remove dev_err() usage after
+ platform_get_irq()
+Message-ID: <20190809061740.GG10392@gondor.apana.org.au>
+References: <20190730181557.90391-1-swboyd@chromium.org>
+ <20190730181557.90391-4-swboyd@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190719031206.nxyxk4vj6dg7hwxg@gondor.apana.org.au>
+In-Reply-To: <20190730181557.90391-4-swboyd@chromium.org>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus: 
+On Tue, Jul 30, 2019 at 11:15:03AM -0700, Stephen Boyd wrote:
+> We don't need dev_err() messages when platform_get_irq() fails now that
+> platform_get_irq() prints an error message itself when something goes
+> wrong. Let's remove these prints with a simple semantic patch.
+> 
+> // <smpl>
+> @@
+> expression ret;
+> struct platform_device *E;
+> @@
+> 
+> ret =
+> (
+> platform_get_irq(E, ...)
+> |
+> platform_get_irq_byname(E, ...)
+> );
+> 
+> if ( \( ret < 0 \| ret <= 0 \) )
+> {
+> (
+> -if (ret != -EPROBE_DEFER)
+> -{ ...
+> -dev_err(...);
+> -... }
+> |
+> ...
+> -dev_err(...);
+> )
+> ...
+> }
+> // </smpl>
+> 
+> While we're here, remove braces on if statements that only have one
+> statement (manually).
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Matt Mackall <mpm@selenic.com>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 
-This push fixes a number of bugs in the ccp driver.
-
-
-The following changes since commit cf144f81a99d1a3928f90b0936accfd3f45c9a0a:
-
-  padata: use smp_mb in padata_reorder to avoid orphaned padata jobs (2019-07-18 13:39:54 +0800)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
-
-for you to fetch changes up to e2664ecbb2f26225ac6646876f2899558ffb2604:
-
-  crypto: ccp - Ignore tag length when decrypting GCM ciphertext (2019-08-02 14:36:36 +1000)
-
-----------------------------------------------------------------
-Gary R Hook (3):
-      crypto: ccp - Fix oops by properly managing allocated structures
-      crypto: ccp - Add support for valid authsize values less than 16
-      crypto: ccp - Ignore tag length when decrypting GCM ciphertext
-
- drivers/crypto/ccp/ccp-crypto-aes-galois.c |   14 ++++++++++++
- drivers/crypto/ccp/ccp-ops.c               |   33 ++++++++++++++++++++--------
- include/linux/ccp.h                        |    2 ++
- 3 files changed, 40 insertions(+), 9 deletions(-)
-
-Thanks,
+Please resend via linux-crypto.  Thanks.
 -- 
 Email: Herbert Xu <herbert@gondor.apana.org.au>
 Home Page: http://gondor.apana.org.au/~herbert/
