@@ -2,78 +2,108 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E2BC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2A2C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4E72166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0DC2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:25:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406410AbfHIKYM (ORCPT
+        id S2406418AbfHIKZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 06:24:12 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33811 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbfHIKYM (ORCPT
+        Fri, 9 Aug 2019 06:25:19 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50902 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406209AbfHIKZT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 06:24:12 -0400
-Received: by mail-wr1-f68.google.com with SMTP id 31so97781582wrm.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 03:24:10 -0700 (PDT)
+        Fri, 9 Aug 2019 06:25:19 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v15so5182248wml.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 03:25:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TRs9/vnl2x2fSDyEARf9rQa4tsoVDu7LpU0anhH+GLg=;
-        b=Amog/8v9JziCSpkaV4yN8bfEfDQUsErMmObe0d0cHNZFgBTGctJqbjgoRQvRlDGpcS
-         uIB7h1i8x3Zl9UQI4Jms85ziej2Igo6gvD4WBNk6vCb4KOYR4KHOvyftDsQN1NBsj7v+
-         Ai16/jMt8L3BkBrJXvybBSTyQzdasXaQmRANEnxwBQRnzNeYffsKowgs5hF+z+hiV9My
-         MEOh+S//EEAy3+88YaNhopeapKVy5/fVZa+L0GDCqdVZ5crR+enjY8TliVWuSvVUhRBI
-         5dusLsfaIZI/rdroP947J3M5eNELNGvsxYGqFrmcS5CC2vtqX/vvi7TP6FV40cz6Ni1F
-         cenQ==
-X-Gm-Message-State: APjAAAW4DObqL/iims3WW/tbu4nttBjRsl/MA7zeZlaNoBDKfWJjiT0r
-        EcmweKgRccgqxaJtsKsbz1zqEg==
-X-Google-Smtp-Source: APXvYqx+uVkNssaIPX1SaKsQj+Z2Ktk1Buf8b3UqK4gB/0g65Hj8oHdWFOkI3Ei7n/L7LZzoAnP6iw==
-X-Received: by 2002:a5d:4a45:: with SMTP id v5mr15381943wrs.108.1565346250170;
-        Fri, 09 Aug 2019 03:24:10 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id l25sm5040146wme.13.2019.08.09.03.24.09
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 03:24:09 -0700 (PDT)
-Subject: Re: [PATCH] KVM: LAPIC: Periodically revaluate appropriate
- lapic_timer_advance_ns
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-References: <1565329531-12327-1-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <fad8ceed-8b98-8fc4-5b6a-63bbca4059a8@redhat.com>
-Date:   Fri, 9 Aug 2019 12:24:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=9RMmhoSUrN0Bhtv9fCJWAnol3TBLl1D92lZ0b8FvEvQ=;
+        b=twza2qsVbp6P6Fmeb/VVe8M+YggEXNLnzTYJ8nhjtCrvSYxS1h8J/EbShEh2xTpKSN
+         C9nznaJ1b4r7vSv82nRyngwYyB9yXFQP+QGqR6tJppZARKUMYNZ6ru+qWO4R5k64UZN4
+         BRKeagbfkHNfhuLmplM+E6ZWtVb7WYTk9UNlSQZqURZBcZq4ObipHKL2ugeSNkOGqv03
+         e1qSS4sm+PoGoGKoiuPQdakN2Y0G+NZhYhW9JtpdpVMyJUFWsh6pkqJPD9R6x+gCZJCQ
+         216OKfK8HTTpp4ZLVPsVALo42Fa7V5J8WgTTSPlIQvfas3rotAXzaa95vOIygjQ+J7rs
+         cNRg==
+X-Gm-Message-State: APjAAAUkFHsGPKKNfqYACNT38Kw/WEuwLCAphS6N4+p2J4OPKYKYg4Mo
+        yxbaIYtLRH9muOUNAVoXnkWadQ==
+X-Google-Smtp-Source: APXvYqyJ40a5L04Ns0aHchac7p2jnJnwM+yb5T8gVpHG3KVtOStxdWUTnYLvrdmG+zuCj+G/jj4KJg==
+X-Received: by 2002:a1c:7606:: with SMTP id r6mr9682972wmc.118.1565346317107;
+        Fri, 09 Aug 2019 03:25:17 -0700 (PDT)
+Received: from vitty.brq.redhat.com (ip-89-176-127-93.net.upcbroadband.cz. [89.176.127.93])
+        by smtp.gmail.com with ESMTPSA id u6sm5604014wml.9.2019.08.09.03.25.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 09 Aug 2019 03:25:16 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     lantianyu1986@gmail.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, pbonzini@redhat.com,
+        rkrcmar@redhat.com, corbet@lwn.net, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, sashal@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, michael.h.kelley@microsoft.com
+Subject: Re: [PATCH 1/3] x86/Hyper-V: Fix definition of struct hv_vp_assist_page
+In-Reply-To: <20190809094939.76093-2-Tianyu.Lan@microsoft.com>
+References: <20190809094939.76093-1-Tianyu.Lan@microsoft.com> <20190809094939.76093-2-Tianyu.Lan@microsoft.com>
+Date:   Fri, 09 Aug 2019 12:25:14 +0200
+Message-ID: <87tvaqbppx.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1565329531-12327-1-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/08/19 07:45, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
-> 
-> Even if for realtime CPUs, cache line bounces, frequency scaling, presence 
-> of higher-priority RT tasks, etc can cause different response. These 
-> interferences should be considered and periodically revaluate whether 
-> or not the lapic_timer_advance_ns value is the best, do nothing if it is,
-> otherwise recaluate again. 
+lantianyu1986@gmail.com writes:
 
-How much fluctuation do you observe between different runs?
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>
+> The struct hv_vp_assist_page was defined incorrectly.
+> The "vtl_control" should be u64[3], "nested_enlightenments_control"
+> should be a u64 and there is 7 reserved bytes following "enlighten_vmentry".
+> This patch is to fix it.
+>
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> ---
+>  arch/x86/include/asm/hyperv-tlfs.h | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> index af78cd72b8f3..a79703c56ebe 100644
+> --- a/arch/x86/include/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> @@ -517,11 +517,11 @@ struct hv_timer_message_payload {
+>  /* Define virtual processor assist page structure. */
+>  struct hv_vp_assist_page {
+>  	__u32 apic_assist;
+> -	__u32 reserved;
+> -	__u64 vtl_control[2];
+> +	__u32 reserved1;
+> +	__u64 vtl_control[3];
+>  	__u64 nested_enlightenments_control[2];
 
-Paolo
+In PATCH3 you define 'struct hv_nested_enlightenments_control' and it is
+64bit long, not 128. We should change it here too as ...
+
+> -	__u32 enlighten_vmentry;
+
+enlighten_vmentry filed will get a very different offset breaking
+Enlightened VMCS.
+
+> -	__u32 padding;
+> +	__u8 enlighten_vmentry;
+> +	__u8 reserved2[7];
+>  	__u64 current_nested_vmcs;
+>  } __packed;
+
+-- 
+Vitaly
