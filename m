@@ -2,123 +2,212 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B88C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B2DC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E92E9217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E07702171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:16:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407323AbfHIPND (ORCPT
+        id S2407237AbfHIPQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 11:13:03 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:54882 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726342AbfHIPNC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 11:13:02 -0400
-Received: (qmail 1813 invoked by uid 2102); 9 Aug 2019 11:13:00 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 9 Aug 2019 11:13:00 -0400
-Date:   Fri, 9 Aug 2019 11:13:00 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Greg KH <gregkh@linuxfoundation.org>
-cc:     Kees Cook <keescook@chromium.org>,
-        syzbot <syzbot+45b2f40f0778cfa7634e@syzkaller.appspotmail.com>,
-        Michael Hund <mhund@ld-didactic.de>,
-        <akpm@linux-foundation.org>, <andreyknvl@google.com>, <cai@lca.pw>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-usb@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>,
-        <tglx@linutronix.de>
-Subject: Re: BUG: bad usercopy in ld_usb_read
-In-Reply-To: <20190809085545.GB21320@kroah.com>
-Message-ID: <Pine.LNX.4.44L0.1908091100580.1630-100000@iolanthe.rowland.org>
+        Fri, 9 Aug 2019 11:16:08 -0400
+Received: from mga09.intel.com ([134.134.136.24]:2361 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726037AbfHIPQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 11:16:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 08:16:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,364,1559545200"; 
+   d="scan'208";a="193407232"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 09 Aug 2019 08:16:07 -0700
+Received: from [10.252.0.91] (abudanko-mobl.ccr.corp.intel.com [10.252.0.91])
+        by linux.intel.com (Postfix) with ESMTP id 302325801AB;
+        Fri,  9 Aug 2019 08:16:03 -0700 (PDT)
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: [PATCH v1 0/3] collect LBR callstack together with thread stack data
+Organization: Intel Corp.
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <ec5fe6b1-a116-fb60-42c6-dc8a9dedfc15@linux.intel.com>
+Date:   Fri, 9 Aug 2019 18:16:02 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 9 Aug 2019, Greg KH wrote:
 
-> On Thu, Aug 08, 2019 at 04:06:32PM -0700, Kees Cook wrote:
-> > On Thu, Aug 08, 2019 at 02:46:54PM +0200, Greg KH wrote:
-> > > On Thu, Aug 08, 2019 at 05:38:06AM -0700, syzbot wrote:
-> > > > Hello,
-> > > > 
-> > > > syzbot found the following crash on:
-> > > > 
-> > > > HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-> > > > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=13aeaece600000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
-> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=45b2f40f0778cfa7634e
-> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > 
-> > > > Unfortunately, I don't have any reproducer for this crash yet.
-> > > > 
-> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > Reported-by: syzbot+45b2f40f0778cfa7634e@syzkaller.appspotmail.com
-> > > > 
-> > > > ldusb 6-1:0.124: Read buffer overflow, -131383996186150 bytes dropped
-> > > 
-> > > That's a funny number :)
-> > > 
-> > > Nice overflow found, I see you are now starting to fuzz the char device
-> > > nodes of usb drivers...
-> > > 
-> > > Michael, care to fix this up?
-> > 
-> > This looks like the length in the read-from-device buffer is unchecked:
-> > 
-> >         /* actual_buffer contains actual_length + interrupt_in_buffer */
-> >         actual_buffer = (size_t *)(dev->ring_buffer + dev->ring_tail * (sizeof(size_t)+dev->interrupt_in_endpoint_size));
-> >         bytes_to_read = min(count, *actual_buffer);
-> >         if (bytes_to_read < *actual_buffer)
-> >                 dev_warn(&dev->intf->dev, "Read buffer overflow, %zd bytes dropped\n",
-> >                          *actual_buffer-bytes_to_read);
-> > 
-> >         /* copy one interrupt_in_buffer from ring_buffer into userspace */
-> >         if (copy_to_user(buffer, actual_buffer+1, bytes_to_read)) {
-> >                 retval = -EFAULT;
-> >                 goto unlock_exit;
-> >         }
-> > 
-> > I assume what's stored at actual_buffer is bogus and needs validation
-> > somewhere before it's actually used. (If not here, maybe where ever the
-> > write into the buffer originally happens?)
-> 
-> I think it should be verified here, as that's when it is parsed.  The
-> data is written to the buffer in ld_usb_interrupt_in_callback() but it
-> does not "know" how to parse it at that location.
+The patch set unblocks collection of LBR call stack data simultaneously with
+raw thread stack data by --call-graph dwarf,SIZE option:
 
-I looked at this bug report, and it is very puzzling.
+  $perf record -g --call-graph dwarf,1024 -j stack,u -- stack_test
 
-Yes, the value stored in *actual_buffer is written in
-ld_usb_interrupt_in_callback(), but the value is simply
-urb->actual_length and therefore does not need any validation.  The 
-URB's transfer_buffer_length is taken from 
-dev->interrupt_in_endpoint_size, which comes from usb_endpoint_maxp() 
-and therefore cannot be larger than 2048.
+Collected LBR call stack can be used to augment dwarf call stack calculated 
+from the raw thread stack data and to provide more comprehensive call stack 
+information for cases when collected SIZE is not enough to cover complete 
+thread stack.
 
-(On the other hand, actual_buffer might not be aligned on a 32-bit 
-address.  For x86, of course, this doesn't matter, but it can affect 
-other architectures.)
+Such cases are typical for workloads that allocate large arrays of data on 
+its threads stacks or the possible SIZE to collect can't be large enough due 
+to workload nature or system configuration and this is where hardware 
+captured LBR call stacks can provide missing stack frames. Possible dwarf plus 
+LBR call stacks consolidation algorithm description follows.
 
-Furthermore, the computation leading to the dev_warn() involves only
-size_t types and therefore is carried out entirely using unsigned
-arithmetic.  The warning's format string uses %zd instead of %zu;  
-that's why the number showed up as negative but doesn't explain why it
-looks so funny.
+With this patch set perf report command UI currently ignores collected LBR 
+call stack data and still provides dwarf based call stacks information.
 
-In fact, I don't see why any of the computations here should overflow
-or wrap around, or even give rise to a negative value.  If syzbot had a
-reproducer we could get more debugging output -- but it doesn't.
+===========================================================================
 
-Alan Stern
+Overview:
+
+   Legend:
+
+   THS - thread stack
+   CTX - thread register context
+   SWS - software stack
+   SSF - skipped stack frames
+   PSS - Perf sample stack
+
+   ip,sp,bp - HW registers values
+   d        - allocated stack regions
+   kip      - ip address in the kernel space
+   K        - captured thread stack size
+
+        THS
+
+       -----
+       |   |<-stack bottom
+        ... 
+       |---|
+       |ip4|
+       |---|         PSS = SWS(THS(K))
+       |   |
+   --> |   |
+   |   |d3 |                  user/
+   |   |---|         user PSS kernel PSS
+   |   |ip3|         ------   ------
+   |   |---|         |SSF |   |SSF |
+   |   |   |          ....     ....
+   |   |   |         ------   ------
+   |   |d2 |         | -1 |   | -1 |
+       |---|   user  ------   ------
+   K   |ip2|   CTX   |ip3 |   |ip3 |
+       |---|         |----|   |----|
+   |   |d1 |   ...   |ip2 | , |ip2 |
+   |   |---|  |---|  |----|   |----|
+   |   |ip1|  |bp0|  |ip1 |   |ip1 |
+   |   |---|  |---|  |----|   |----|
+   |   |   |  |ip0|->|ip0 |   |ip0 |<-user stack top
+   |   |   |  |---|  ------   ------
+   |   |   |<-|sp0|<-stack    |kip0|<-kernel stack bottom
+   --> -----  -----   top     |----|
+                              |kip1|
+                              |----|
+		              |kip2|
+		              |----|
+                               ....
+			      |    |<-kernel stack top
+                              ------
+
+Algorithm details:
+
+   Legend:
+
+   HWS - hardware stack
+   K-SWS - kernel software stack
+
+			 BRANCH
+			 TABLE
+
+		 HWS      ip   ip
+			  from to
+		 ------  -----------
+		 |ip7`|  |ip7`|    |
+		 |----|  |----|----|
+		 |ip6`|  |ip6`|    |
+	user PSS |----|  |----|----|
+		 |ip5`|  |ip5`|    |
+	------   |----|  |----|----|
+	| -1 |   |ip4`|  |ip4`|    |
+	------   |----|  |----|----|
+	|ip3 |~~~|ip3`|  |ip3`|    |
+	|----|   |----|  |----|----|
+	|ip2 |~~~|ip2`|  |ip2`|    |
+	|----| 	 |----|  |----|----|
+	|ip1 |~~~|ip1`|  |ip1`|ip0`|
+	|----| 	 |----|  -----------
+	|ip0 |~~~|ip0`|<---------'
+	------   ------
+
+	1. if (sym(ipj) == sym(ipj`)), j=0-3 ===> user PSS
+	2. ipj`                      , j=4-7 ===> user PSS
+
+Augmented PSS = A_SWS(SWS(THS(K)), HWS):
+
+	         user/
+       user PSS  kernel PSS
+
+	------   ------
+	|ip7`|   |ip7`|<-user PSS bottom
+	|----|   |----|
+	|ip6`|   |ip6`|
+	|----|   |----|
+    HWS	|ip5`|   |ip5`|
+	|----|   |----|
+	|ip4`|   |ip4`|
+	------   ------
+	|ip3 |   |ip3 |
+	|----|   |----|
+    SWS |ip2 |   |ip2 |
+	|----|   |----|
+	|ip1 |   |ip1 |
+	|----|   |----|
+	|ip0 |   |ip0 |<-user PSS top
+	------   ------
+		 |kip0|<-kernel PSS bottom
+		 |----|
+		 |kip1|
+	   K-SWS |----|
+		 |kip2|
+		 |----|
+		 |kip3|<-kernel PSS top
+		 ------
+
+                  APSS
+
+===========================================================================
+
+---
+Alexey Budankov (3):
+  perf record: enable LBR callstack capture jointly with thread stack
+  perf report: dump LBR callstack data by -D jointly with thread stack
+  perf report: prefer dwarf callstacks to LBR ones when captured both
+
+ tools/perf/builtin-report.c            |  2 ++
+ tools/perf/util/parse-branch-options.c |  1 +
+ tools/perf/util/session.c              | 31 ++++++++++++++++----------
+ 3 files changed, 22 insertions(+), 12 deletions(-)
+
+-- 
+2.20.1
 
