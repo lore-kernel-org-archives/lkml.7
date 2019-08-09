@@ -2,101 +2,148 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FA2C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC1BC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B2E52166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565339540;
-	bh=VhHWr98ioYMV+zk7RcYtkMcWJVNdHu4NCx2fXJ3129M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GO6Gwb06Ga4gcF0x/PaYsAA2COrP+KtbVEad4Wf+kwe6q0+d0+DS8DT79LUZxI+Qk
-	 KtKWDhU6hIJCMhEGft6mHYVjtvAZwOo5NaiVggJo9QDVA7Mq66OQlUnP6M9LS8goA8
-	 4q13N8ySqeG6oYMLMjGJsDuYxFDfeBq/fG7WYo04=
+	by mail.kernel.org (Postfix) with ESMTP id 3B8862166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:33:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405821AbfHIIcT (ORCPT
+        id S2405921AbfHIIc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 04:32:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37384 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726059AbfHIIcS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 04:32:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8E435AF3F;
-        Fri,  9 Aug 2019 08:32:17 +0000 (UTC)
-Date:   Fri, 9 Aug 2019 10:32:16 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     kirill.shutemov@linux.intel.com, hannes@cmpxchg.org,
-        vbabka@suse.cz, rientjes@google.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH 1/2 -mm] mm: account lazy free pages separately
-Message-ID: <20190809083216.GM18351@dhcp22.suse.cz>
-References: <1565308665-24747-1-git-send-email-yang.shi@linux.alibaba.com>
+        Fri, 9 Aug 2019 04:32:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:43420 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726059AbfHIIc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 04:32:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 18895344;
+        Fri,  9 Aug 2019 01:32:58 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 149613F706;
+        Fri,  9 Aug 2019 01:32:56 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 09:32:51 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Qian Cai <cai@lca.pw>, will@kernel.org, catalin.marinas@arm.com,
+        linux-arm-kernel@lists.infradead.org,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Explicitly marking initializer overrides (was "Re: [PATCH]
+ arm64/cache: silence -Woverride-init warnings")
+Message-ID: <20190809083251.GA48423@lakrids.cambridge.arm.com>
+References: <20190808032916.879-1-cai@lca.pw>
+ <20190808103808.GC46901@lakrids.cambridge.arm.com>
+ <20190808170916.GA32668@archlinux-threadripper>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1565308665-24747-1-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190808170916.GA32668@archlinux-threadripper>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 09-08-19 07:57:44, Yang Shi wrote:
-> When doing partial unmap to THP, the pages in the affected range would
-> be considered to be reclaimable when memory pressure comes in.  And,
-> such pages would be put on deferred split queue and get minus from the
-> memory statistics (i.e. /proc/meminfo).
+On Thu, Aug 08, 2019 at 10:09:16AM -0700, Nathan Chancellor wrote:
+> On Thu, Aug 08, 2019 at 11:38:08AM +0100, Mark Rutland wrote:
+> > On Wed, Aug 07, 2019 at 11:29:16PM -0400, Qian Cai wrote:
+> > > The commit 155433cb365e ("arm64: cache: Remove support for ASID-tagged
+> > > VIVT I-caches") introduced some compiation warnings from GCC (and
+> > > Clang) with -Winitializer-overrides),
+> > > 
+> > > arch/arm64/kernel/cpuinfo.c:38:26: warning: initialized field
+> > > overwritten [-Woverride-init]
+> > > [ICACHE_POLICY_VIPT]  = "VIPT",
+> > >                         ^~~~~~
+> > > arch/arm64/kernel/cpuinfo.c:38:26: note: (near initialization for
+> > > 'icache_policy_str[2]')
+> > > arch/arm64/kernel/cpuinfo.c:39:26: warning: initialized field
+> > > overwritten [-Woverride-init]
+> > > [ICACHE_POLICY_PIPT]  = "PIPT",
+> > >                         ^~~~~~
+> > > arch/arm64/kernel/cpuinfo.c:39:26: note: (near initialization for
+> > > 'icache_policy_str[3]')
+> > > arch/arm64/kernel/cpuinfo.c:40:27: warning: initialized field
+> > > overwritten [-Woverride-init]
+> > > [ICACHE_POLICY_VPIPT]  = "VPIPT",
+> > >                          ^~~~~~~
+> > > arch/arm64/kernel/cpuinfo.c:40:27: note: (near initialization for
+> > > 'icache_policy_str[0]')
+> > > 
+> > > because it initializes icache_policy_str[0 ... 3] twice. Since
+> > > arm64 developers are keen to keep the style of initializing a static
+> > > array with a non-zero pattern first, just disable those warnings for
+> > > both GCC and Clang of this file.
+> > > 
+> > > Fixes: 155433cb365e ("arm64: cache: Remove support for ASID-tagged VIVT I-caches")
+> > > Signed-off-by: Qian Cai <cai@lca.pw>
+> > 
+> > This is _not_ a fix, and should not require backporting to stable trees.
+> > 
+> > What about all the other instances that we have in mainline?
+> > 
+> > I really don't think that we need to go down this road; we're just going
+> > to end up adding this to every file that happens to include a header
+> > using this scheme...
+> > 
+> > Please just turn this off by default for clang.
+> > 
+> > If we want to enable this, we need a mechanism to permit overridable
+> > assignments as we use range initializers for.
+> > 
+> > Thanks,
+> > Mark.
+> > 
 > 
-> For example, when doing THP split test, /proc/meminfo would show:
+> For what it's worth, this is disabled by default for clang in the
+> kernel:
 > 
-> Before put on lazy free list:
-> MemTotal:       45288336 kB
-> MemFree:        43281376 kB
-> MemAvailable:   43254048 kB
-> ...
-> Active(anon):    1096296 kB
-> Inactive(anon):     8372 kB
-> ...
-> AnonPages:       1096264 kB
-> ...
-> AnonHugePages:   1056768 kB
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/Makefile.extrawarn?h=v5.3-rc3#n69
 > 
-> After put on lazy free list:
-> MemTotal:       45288336 kB
-> MemFree:        43282612 kB
-> MemAvailable:   43255284 kB
-> ...
-> Active(anon):    1094228 kB
-> Inactive(anon):     8372 kB
-> ...
-> AnonPages:         49668 kB
-> ...
-> AnonHugePages:     10240 kB
-> 
-> The THPs confusingly look disappeared although they are still on LRU if
-> you are not familair the tricks done by kernel.
+> It only becomes visible with clang at W=1 because that section doesn't
+> get applied. It becomes visible with GCC at W=1 because of -Wextra.
 
-Is this a fallout of the recent deferred freeing work?
+Thanks for clarifying that!
 
-> Accounted the lazy free pages to NR_LAZYFREE, and show them in meminfo
-> and other places.  With the change the /proc/meminfo would look like:
-> Before put on lazy free list:
+Do you know if there's any existing mechanism that we can use to silence
+the warning on a per-assignment basis? Either to say that an assignment
+can be overridden, or that the assignment is expected to override an
+existing assignment?
 
-The name is really confusing because I have thought of MADV_FREE immediately.
+If not, who would be able to look at adding a mechanism to clang for
+this?
 
-> +LazyFreePages: Cleanly freeable pages under memory pressure (i.e. deferred
-> +               split THP).
+If we could have some attribute or intrinsic that we could wrap like:
 
-What does that mean actually? I have hard time imagine what cleanly
-freeable pages mean.
--- 
-Michal Hocko
-SUSE Labs
+struct foo f = {
+	.bar __defaultval = <default>,
+	.bar = <newval>,		// no warning
+	.bar = <anotherval>,		// warning
+};
+
+... or:
+
+struct foo f = {
+	.bar = <default>,
+	.bar __override = <newval>,	// no warning
+	.bar = <anotherval>,		// warning
+};
+
+... or:
+	
+	.bar = OVERRIDE(<newval>),	// no warning
+
+... or:
+	OVERRIDE(.bar) = <newval>,	// no warning
+
+... then I think it would be possible to make use of the warning
+effectively, as we could distinguish intentional overrides from
+unintentional ones, and annotating assignments in this way doesn't seem
+onerous to me.
+
+Thanks,
+Mark.
