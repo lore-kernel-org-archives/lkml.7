@@ -2,146 +2,208 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B534C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 19:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9330C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 19:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD38A21743
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 19:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 973C720C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 19:55:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfHITwM (ORCPT
+        id S1726618AbfHITzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 15:52:12 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:45550 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725904AbfHITwM (ORCPT
+        Fri, 9 Aug 2019 15:55:25 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:37337 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfHITzZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 15:52:12 -0400
-Received: from pps.filterd (m0150241.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x79JpGgd022894;
-        Fri, 9 Aug 2019 19:51:56 GMT
-Received: from g2t2353.austin.hpe.com (g2t2353.austin.hpe.com [15.233.44.26])
-        by mx0a-002e3701.pphosted.com with ESMTP id 2u9ecx8b8v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 09 Aug 2019 19:51:56 +0000
-Received: from G2W6311.americas.hpqcorp.net (g2w6311.austin.hp.com [16.197.64.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by g2t2353.austin.hpe.com (Postfix) with ESMTPS id 97B288D;
-        Fri,  9 Aug 2019 19:51:47 +0000 (UTC)
-Received: from G4W9335.americas.hpqcorp.net (16.208.33.85) by
- G2W6311.americas.hpqcorp.net (16.197.64.53) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 9 Aug 2019 19:51:21 +0000
-Received: from G9W9210.americas.hpqcorp.net (2002:10dc:429b::10dc:429b) by
- G4W9335.americas.hpqcorp.net (2002:10d0:2155::10d0:2155) with Microsoft SMTP
- Server (TLS) id 15.0.1367.3; Fri, 9 Aug 2019 19:51:21 +0000
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (15.241.52.12) by
- G9W9210.americas.hpqcorp.net (16.220.66.155) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3 via Frontend Transport; Fri, 9 Aug 2019 19:51:21 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iSrAeyRg8LrGhqZ7CVKIy+bW0iUJ1H0t793MPWQo/xv2UAyFxXBXRJdIfWE0N95bKNvj6tlQ21UivwiSuQpYyXrrnW2ySt9Ii5KGuwiQ4SsVL9kW/iV3eh/xOO0NdK/kSJGnqBRqGGprjqBwKtQdaE0JuioCO7cH+ZS7/R15C8g3RUwLYFEY21gFm8TNk/flYo9CyvzvetXsAp7xEzaDuRqW2nAa1zWXNauRR1dqFcrEaReycT53ydAx1qYSrAwJI4fX3cJGTldUmBbY1g3fIX47hcqF1jAZjwcpoPbtH7WuJnLzS7YMK9v+3qp2qnWeSOX9oLq23zoUTY1aiuFRYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wdDigpzb0QWPV7tjL2qpLZee/jU4jhPGu7+QZHuoUeA=;
- b=AMxVjMdoTlz+Jy7rbtXQK5lieWVQjfZzdk5oIhOWGocBQNi7nJ+cnKEW3SuBxCxHHrre28SCoRAwO8WOc8JNWsXdm5YIM8DahUeZFEK7786WrwrORM5wh6Ww3+PX2qnPn+0H4i3WskHCUZG+RP48Tchvffdxc/1wmaVFNWUUfycXmJEpCjg6dMHnUAf7HJRgq44GrVmjEZRbeRCqbwDV9bkZ4eBt0UfoRQHT1vgzLmxSlLmbKmTUJNEF/1TrZMX5axDA5iRodE88uMO+bzXWmd3+MWQ24uIhNQk+DqDxbQKG1MGhBZVWJJj0B8tuIuHpZFFb98CVhIT/b9fH+otDKw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hpe.com; dmarc=pass action=none header.from=hpe.com; dkim=pass
- header.d=hpe.com; arc=none
-Received: from TU4PR8401MB0607.NAMPRD84.PROD.OUTLOOK.COM (10.169.44.19) by
- TU4PR8401MB0413.NAMPRD84.PROD.OUTLOOK.COM (10.169.43.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.13; Fri, 9 Aug 2019 19:51:17 +0000
-Received: from TU4PR8401MB0607.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::9cc4:8a7f:f761:f990]) by TU4PR8401MB0607.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::9cc4:8a7f:f761:f990%11]) with mapi id 15.20.2157.020; Fri, 9 Aug 2019
- 19:51:17 +0000
-From:   "Kani, Toshi" <toshi.kani@hpe.com>
-To:     "isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>,
-        "bp@alien8.de" <bp@alien8.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "fei1.li@intel.com" <fei1.li@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH 0/3] x86/mtrr, pat: make PAT independent from MTRR
-Thread-Topic: [PATCH 0/3] x86/mtrr, pat: make PAT independent from MTRR
-Thread-Index: AQHVTmYqsSEI/GfXwEqOxUs01+wmX6byZTeAgADT14A=
-Date:   Fri, 9 Aug 2019 19:51:17 +0000
-Message-ID: <3355d77da5e094ad1d3149b9236cdd204486fd69.camel@hpe.com>
-References: <cover.1565300606.git.isaku.yamahata@gmail.com>
-         <20190809070647.GA2152@zn.tnic>
-In-Reply-To: <20190809070647.GA2152@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [15.219.163.3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 074fc8b0-3437-4ded-6fa1-08d71d02f1ac
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TU4PR8401MB0413;
-x-ms-traffictypediagnostic: TU4PR8401MB0413:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <TU4PR8401MB04130F26B283D4E1D79C1FCB82D60@TU4PR8401MB0413.NAMPRD84.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 01244308DF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(376002)(366004)(346002)(39860400002)(199004)(189003)(76176011)(71200400001)(118296001)(71190400001)(305945005)(229853002)(7736002)(8676002)(14444005)(256004)(36756003)(102836004)(2906002)(3846002)(6116002)(99286004)(186003)(6506007)(26005)(966005)(14454004)(478600001)(6246003)(446003)(486006)(476003)(2616005)(81166006)(11346002)(25786009)(81156014)(2501003)(8936002)(6306002)(6512007)(53936002)(86362001)(110136005)(5660300002)(316002)(6436002)(66946007)(66066001)(66556008)(66446008)(76116006)(64756008)(6486002)(54906003)(66476007)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:TU4PR8401MB0413;H:TU4PR8401MB0607.NAMPRD84.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hpe.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /zdGGbIppAytn83di0duNqqFV0bms+CQVpXhdtJ+MVIIquf4IYEUn0sjZd3gNnLQd3BZHXZtiIKS3vmJBlVvdjGOk/548ufsnPO7ewmZHi9vwatOtJwrA6eGxkUnozr+fDb1h2esFMN7JUrX5zDNdbyQ/Md471GWbzzrON2twAm8SGzv/0NqloufZCsoh8jXageyZ4Z0+F3xd6cLaaUJcuSnl/rpTWViQlrY6XlqyXP051bzlZjTTQR3hCz1CWJ9PfsITst+Q/GkPqUelmqEzhmVMxhzzK7cKYvJYMfoFDa2CLkaJeC7QMSqOfF7E4PfXqEVpeAmefqxtLvRspiT9XB+h/Kqd8/cbnYqyA5PohnLh9qs3xu12BgwuAUtqJu0BOr1uhX+f6fTSby8kVVOVGszzRfrM0pzEAxG5FDLmzQ=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <528CA9DAEB99514EBB209FE89CF12429@NAMPRD84.PROD.OUTLOOK.COM>
-X-MS-Exchange-CrossTenant-Network-Message-Id: 074fc8b0-3437-4ded-6fa1-08d71d02f1ac
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Aug 2019 19:51:17.7174
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 105b2061-b669-4b31-92ac-24d304d195dc
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qFNEIVaJ+EyhWVPNi+MJes5FfMLewAI7UQEjDawLjBppiezrUNNb2/E/3h3Yji6dSK1Sv+pSkgjXjdvqPU0PUQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TU4PR8401MB0413
-X-OriginatorOrg: hpe.com
-Content-Transfer-Encoding: base64
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Fri, 9 Aug 2019 15:55:25 -0400
+Received: by mail-qk1-f194.google.com with SMTP id s14so2175561qkm.4;
+        Fri, 09 Aug 2019 12:55:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dnOilxMk2SUL76Uue/BpGe79hjdo4enHEg4ADIUo9fQ=;
+        b=rdGrp1ubfX6NWQYb6HqUhk2L8V9iDyYxp8j6ml2JDs4JDn8cqBAaUTZRFARG2Gi+E/
+         FBHo8nqlGbAq1NlHRlQYgk66c1EdK3WtZX/WkE3BbQfMo+5icTLUfLSQdPlBZ96O852w
+         8KZ0PeriB2ngDPr/cGMpa5JD1erZANLuAkejKJEeoeDAN+XDZ98wAFx6v9VwPYTEhY8N
+         P7DekPKSc8ZjQXZpk40zso0GvwMkXbLGlDmkGUaFpyDERP11HSMbWLBC0wM255PHWSuu
+         R1UGUcK/np9N6NC2EuEBvY4CbftOXr4L4iHupv7cMCxTschj1Yx1Jr3tm9zlj1Q9PGt7
+         SsIg==
+X-Gm-Message-State: APjAAAW+PpR4Rrf6tJEPYK8O3LJY93tkxOmmooZYim/9chcyx13BfBZU
+        OF8/yI7wLB9ou1hd5dcLtmR7DRzXzDCh5c8UjfU=
+X-Google-Smtp-Source: APXvYqwAu5/r0mHWormPvLY7YMy/YQGg6b0vzBOW6n/lxhXedE7IhmTuQUWTlOO73gdZw7G2QGBV7Ro3F8/PmGWkabE=
+X-Received: by 2002:a05:620a:b:: with SMTP id j11mr20047492qki.352.1565380523825;
+ Fri, 09 Aug 2019 12:55:23 -0700 (PDT)
 MIME-Version: 1.0
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-09_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=468 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908090194
+References: <20190808212234.2213262-1-arnd@arndb.de> <CGME20190808212453epcas2p44ff418662ee1acf428c6842ee4488f9f@epcas2p4.samsung.com>
+ <20190808212234.2213262-3-arnd@arndb.de> <55c9608d-68c4-17f6-2682-7668d5d7720a@samsung.com>
+ <CAK8P3a3grFEGr33s327yNMabK5=1kCJc3k7y55dhzQx9sTvkyQ@mail.gmail.com> <487da98d-a862-0207-289a-bca8ff18e51a@samsung.com>
+In-Reply-To: <487da98d-a862-0207-289a-bca8ff18e51a@samsung.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 9 Aug 2019 21:55:07 +0200
+Message-ID: <CAK8P3a0_v1XM-fH5TOr-osrdLOsfYGbG8VCqktuSgUU7jKtgNQ@mail.gmail.com>
+Subject: Re: [PATCH 02/22] ARM: omap1: make omapfb standalone compilable
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA4LTA5IGF0IDA5OjA2ICswMjAwLCBCb3Jpc2xhdiBQZXRrb3Ygd3JvdGU6
-DQo+IE9uIFRodSwgQXVnIDA4LCAyMDE5IGF0IDA4OjU0OjE3UE0gLTA3MDAsIElzYWt1IFlhbWFo
-YXRhIHdyb3RlOg0KPiA+IE1ha2UgUEFUKFBhZ2UgQXR0cmlidXRlIFRhYmxlKSBpbmRlcGVuZGVu
-dCBmcm9tDQo+ID4gTVRSUihNZW1vcnkgVHlwZSBSYW5nZSBSZWdpc3RlcikuDQo+ID4gU29tZSBl
-bnZpcm9ubWVudHMgKG1haW5seSB2aXJ0dWFsIG9uZXMpIHN1cHBvcnQgb25seSBQQVQsIGJ1dCBu
-b3QgTVRSUg0KPiA+IGJlY2F1c2UgUEFUIHJlcGxhY2VzIE1UUlIuDQo+ID4gSXQncyB0cmlja3kg
-YW5kIG5vIGdhaW4gdG8gc3VwcG9ydCBib3RoIE1UUlIgYW5kIFBBVCBleGNlcHQgY29tcGF0aWJp
-bGl0eS4NCj4gPiBTbyBzb21lIFZNIHRlY2hub2xvZ2llcyBkb24ndCBzdXBwb3J0IE1UUlIsIGJ1
-dCBvbmx5IFBBVC4NCg0KSSBkbyBub3QgdGhpbmsgaXQgaXMgdGVjaG5pY2FsbHkgY29ycmVjdCBv
-biBiYXJlIG1ldGFsLiAgQUZBSUssIE1UUlIgaXMNCnN0aWxsIHRoZSBvbmx5IHdheSB0byBzZXR1
-cCBjYWNoZSBhdHRyaWJ1dGUgaW4gcmVhbC1tb2RlLCB3aGljaCBCSU9TIFNNSQ0KaGFuZGxlciBy
-ZWxpZXMgb24gaW4gU01NLg0KDQo+ID4gVGhpcyBwYXRjaCBzZXJpZXMgbWFrZXMgUEFUIGF2YWls
-YWJsZSBvbiBzdWNoIGVudmlyb25tZW50cyB3aXRob3V0IE1UUlIuDQo+IA0KPiBBbmQgdGhpcyAi
-anVzdGlmaWNhdGlvbiIgaXMgbm90IGV2ZW4gdHJ5aW5nLiBXaGljaCAiVk0gdGVjaG5vbG9naWVz
-IiBhcmUNCj4gdGhvc2U/IFdoeSBkbyB3ZSBjYXJlPyBXaGF0J3MgdGhlIGltcGFjdD8gV2h5IGRv
-IHdlIHdhbnQgdGhpcz8NCj4gDQo+IFlvdSBuZWVkIHRvIHNlbGwgdGhpcyBwcm9wZXJseS4NCg0K
-QWdyZWVkLiAgSWYgdGhlIHNpdHVhdGlvbiBpcyBzdGlsbCB0aGUgc2FtZSwgWGVuIGRvZXMgbm90
-IHN1cHBvcnQgTVRSUiwNCmFuZCB0aGUga2VybmVsIHNldHMgdGhlIFBBVCB0YWJsZSB0byB0aGUg
-QklPUyBoYW5kLW9mZiBzdGF0ZSB3aGVuIE1UUlINCmlzIGRpc2FibGVkLiAgVGhlIGNoYW5nZSBi
-ZWxvdyBhY2NvbW1vZGF0ZWQgdGhlIGZhY3QgdGhhdCBYZW4gaHlwZXJ2aXNvcg0KZW5hYmxlcyBX
-QyBiZWZvcmUgaGFuZC1vZmYsIHdoaWNoIGlzIGRpZmZlcmVudCBmcm9tIHRoZSBkZWZhdWx0IEJJ
-T1MNCmhhbmQtb2ZmIHN0YXRlLiAgVGhlIGtlcm5lbCBkb2VzIG5vdCBzdXBwb3J0IHNldHRpbmcg
-UEFUIHdoZW4gTVRSUiBpcw0KZGlzYWJsZWQgZHVlIHRvIHRoZSBkZXBlbmRlbmN5IElzYWt1IG1l
-bnRpb25lZC4NCg0KDQpodHRwczovL3d3dy5tYWlsLWFyY2hpdmUuY29tL2xpbnV4LWtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmcvbXNnMTEwNzA5NC5odG1sDQoNCg0KLVRvc2hpDQoNCg==
+On Fri, Aug 9, 2019 at 4:36 PM Bartlomiej Zolnierkiewicz
+<b.zolnierkie@samsung.com> wrote:
+> On 8/9/19 1:43 PM, Arnd Bergmann wrote:
+
+> >
+> > That would have been ok as well, but having the addition here was
+> > intentional and seems more logical to me as this is where the headers
+> > get moved around.
+> I see that this is an optimization for making the patch series more
+> compact but I think that this addition logically belongs to patch #9
+> (which adds support for COMPILE_TEST) where the new code is required.
+>
+> Moreover patch description for patch #2 lacks any comment about this
+> addition being a preparation for changes in patch #9 so I was quite
+> puzzled about its purpose when seeing it first.
+>
+> Therefore please have mercy on the poor/stupid reviewer and don't do
+> such optimizations intentionally (or at least describe them properly
+> somewhere).. ;-)
+
+Ok, I looked at it some more and agree that you are right. I've split it
+up further now into patches that make more sense by themselves:
+
+commit ad71cdc54404ecde2e88678ee6bc7ae7fb8aec97
+Author: Arnd Bergmann <arnd@arndb.de>
+Date:   Tue Aug 6 16:08:34 2019 +0200
+
+    fbdev: omap: avoid using mach/*.h files
+
+    All the headers we actually need are now in include/linux/soc,
+    so use those versions instead and allow compile-testing on
+    other architectures.
+
+    Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+ drivers/video/backlight/Kconfig          | 4 ++--
+ drivers/video/backlight/omap1_bl.c       | 4 ++--
+ drivers/video/fbdev/omap/Kconfig         | 4 ++--
+ drivers/video/fbdev/omap/lcd_ams_delta.c | 2 +-
+ drivers/video/fbdev/omap/lcd_dma.c       | 3 ++-
+ drivers/video/fbdev/omap/lcd_inn1510.c   | 2 +-
+ drivers/video/fbdev/omap/lcd_osk.c       | 4 ++--
+ drivers/video/fbdev/omap/lcdc.c          | 2 ++
+ drivers/video/fbdev/omap/omapfb_main.c   | 3 +--
+ drivers/video/fbdev/omap/sossi.c         | 1 +
+ 10 files changed, 16 insertions(+), 13 deletions(-)
+
+commit 959e0d68751757e84dd703f60405c7268763dba4
+Author: Arnd Bergmann <arnd@arndb.de>
+Date:   Fri Aug 9 21:27:01 2019 +0200
+
+    fbdev: omap: pass irqs as resource
+
+    To avoid relying on the mach/irqs.h header, stop using
+    OMAP_LCDC_IRQ and INT_1610_SoSSI_MATCH directly in the driver
+    code, but instead pass these as resources.
+
+    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+ arch/arm/mach-omap1/fb.c               | 19 ++++++++++++++++++-
+ drivers/video/fbdev/omap/lcdc.c        |  6 +++---
+ drivers/video/fbdev/omap/omapfb.h      |  2 ++
+ drivers/video/fbdev/omap/omapfb_main.c | 16 +++++++++++++++-
+ drivers/video/fbdev/omap/sossi.c       |  2 +-
+ 5 files changed, 39 insertions(+), 6 deletions(-)
+
+
+commit 6643f7a7da3ca7ce8f2ff094fecab7a0fd706acf
+Author: Arnd Bergmann <arnd@arndb.de>
+Date:   Fri Aug 9 21:42:31 2019 +0200
+
+    ARM: omap1: declare a dummy omap_set_dma_priority
+
+    omapfb calls directly into the omap_set_dma_priority() function in
+    the DMA driver. This prevents compile-testing omapfb on other
+    architectures. Add an inline function next to the other ones
+    for non-omap configurations.
+
+    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+ include/linux/omap-dma.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit 154bfb7ddcecdbca66d9a086776a3108831ef0b9
+Author: Arnd Bergmann <arnd@arndb.de>
+Date:   Mon Aug 5 23:15:37 2019 +0200
+
+    ARM: omap1: move lcd_dma code into omapfb driver
+
+    The omapfb driver is split into platform specific code for omap1, and
+    driver code that is also specific to omap1.
+
+    Moving both parts into the driver directory simplifies the structure
+    and avoids the dependency on certain omap machine header files.
+
+    As mach/lcd_dma.h can not be included from include/linux/omap-dma.h
+    any more now, move the omap_lcd_dma_running() declaration into the
+    omap-dma header, which matches where it is defined.
+
+    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+ arch/arm/mach-omap1/Makefile
+   |  4 ----
+ arch/arm/mach-omap1/include/mach/lcdc.h
+   | 44 --------------------------------------------
+ drivers/video/fbdev/Makefile
+   |  2 +-
+ drivers/video/fbdev/omap/Makefile
+   |  5 +++++
+ {arch/arm/mach-omap1 => drivers/video/fbdev/omap}/lcd_dma.c
+   |  4 +++-
+ {arch/arm/mach-omap1/include/mach =>
+drivers/video/fbdev/omap}/lcd_dma.h |  2 --
+ drivers/video/fbdev/omap/lcdc.c
+   |  2 +-
+ drivers/video/fbdev/omap/lcdc.h
+   | 35 +++++++++++++++++++++++++++++++++++
+ drivers/video/fbdev/omap/sossi.c                                         |  1 +
+ include/linux/omap-dma.h
+   |  4 ++--
+ 10 files changed, 48 insertions(+), 55 deletions(-)
+
+commit b8ddb98d29a43fecb4387d0d8218935cb1997a28
+Author: Arnd Bergmann <arnd@arndb.de>
+Date:   Tue Aug 6 14:59:00 2019 +0200
+
+    ARM: omap1: innovator: pass lcd control address as pdata
+
+    To avoid using the mach/omap1510.h header file, pass the correct
+    address as platform data.
+
+    Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+ arch/arm/mach-omap1/board-innovator.c  | 3 +++
+ drivers/video/fbdev/omap/lcd_inn1510.c | 7 +++++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+The resulting code is the same as before, I'll post that again along
+the rest of the series next week. Should I add your Ack to each
+patch already?
+
+       Arnd
