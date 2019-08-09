@@ -2,94 +2,372 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69AF0C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C93FCC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 486802173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 887A22171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:23:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="s2iQn4J9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405992AbfHIJWK (ORCPT
+        id S2406052AbfHIJX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 05:22:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:44050 "EHLO foss.arm.com"
+        Fri, 9 Aug 2019 05:23:29 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:21540 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732885AbfHIJWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 05:22:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2483B15A2;
-        Fri,  9 Aug 2019 02:22:09 -0700 (PDT)
-Received: from dawn-kernel.cambridge.arm.com (unknown [10.1.197.116])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D8F53F575;
-        Fri,  9 Aug 2019 02:22:08 -0700 (PDT)
-Subject: Re: [PATCH] coresight: tmc-etr: Remove perf_data check.
-To:     yabinc@google.com, mathieu.poirier@linaro.org,
-        alexander.shishkin@linux.intel.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190808193122.76679-1-yabinc@google.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <84df6071-ef7e-c3d6-6ffa-fcfcbab0c8e6@arm.com>
-Date:   Fri, 9 Aug 2019 10:22:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        id S1727063AbfHIJX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 05:23:29 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 464ftP6KdQz9vBnS;
+        Fri,  9 Aug 2019 11:23:25 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=s2iQn4J9; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id X6yYNi38oEOR; Fri,  9 Aug 2019 11:23:25 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 464ftP59vtz9vBnC;
+        Fri,  9 Aug 2019 11:23:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1565342605; bh=MSN2VoVfRF+Vi8Bs7k+Ix9wLxyM2N+3Scm0HUsXVt4g=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=s2iQn4J9iUC4jJ0nOmjMZvjXkAZqkNK1NQeIPfvSLi3kzN1GLjEqGmqhBEuxCjbKe
+         cmtcbmtuOt1Cdx7t4fBnaDyidzMXh6oH7v1JDd47smujjCuGJWuM9gTP7+pqyViVxX
+         RTg0UNkHDHqewqStxMAweW5u0iPf6j8nGVcKEHIs=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BF5268B887;
+        Fri,  9 Aug 2019 11:23:26 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id VuXIUSzOOgWO; Fri,  9 Aug 2019 11:23:26 +0200 (CEST)
+Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 867B08B886;
+        Fri,  9 Aug 2019 11:23:26 +0200 (CEST)
+Subject: Re: [PATCH 2/2] powerpc: Convert flush_icache_range to C
+To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Qian Cai <cai@lca.pw>, Allison Randal <allison@lohutok.net>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20190809004658.22512-1-alastair@au1.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <ee96e072-d212-3653-7544-716e7eea4992@c-s.fr>
+Date:   Fri, 9 Aug 2019 11:23:26 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190808193122.76679-1-yabinc@google.com>
+In-Reply-To: <20190809004658.22512-1-alastair@au1.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yabin,
 
 
-Thank you for the analysis and the patch.
-
-On 08/08/2019 20:31, Yabin Cui wrote:
-> When tracing etm data of multiple threads on multiple cpus through
-> perf interface, each cpu has a unique etr_perf_buffer while sharing
-> the same etr device. There is no guarantee that the last cpu starts
-> etm tracing also stops last. So the perf_data check is no longer valid.
+Le 09/08/2019 à 02:46, Alastair D'Silva a écrit :
+> From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> Signed-off-by: Yabin Cui <yabinc@google.com>
+> Similar to commit 22e9c88d486a
+> ("powerpc/64: reuse PPC32 static inline flush_dcache_range()")
+> this patch converts flush_icache_range to C.
+
+Should we also convert __flush_dcache_icache() which does exactly the 
+same but on a full page ? We could most likely use the same code, ie 
+call flush_icache_range() from __flush_dcache_icache() ?
+
+> 
+> This was done as we discovered a long-standing bug where the
+> length of the range was truncated due to using a 32 bit shift
+> instead of a 64 bit one.
+> 
+> By converting this function to C, it becomes easier to maintain.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 > ---
->   drivers/hwtracing/coresight/coresight-tmc-etr.c | 9 ---------
->   drivers/hwtracing/coresight/coresight-tmc.h     | 2 --
->   2 files changed, 11 deletions(-)
+>   arch/powerpc/include/asm/cache.h      | 35 +++++++++++++--
+>   arch/powerpc/include/asm/cacheflush.h | 63 +++++++++++++++++++++++----
+>   arch/powerpc/kernel/misc_64.S         | 55 -----------------------
+
+There is also a flush_icache_range() in arch/powerpc/kernel/misc_32.S, 
+it must be converted as well.
+
+>   3 files changed, 85 insertions(+), 68 deletions(-)
 > 
-> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> index 17006705287a..0418440e0141 100644
-> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> @@ -1484,20 +1484,12 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
->   		goto out;
->   	}
+> diff --git a/arch/powerpc/include/asm/cache.h b/arch/powerpc/include/asm/cache.h
+> index b3388d95f451..d3d7077b75e2 100644
+> --- a/arch/powerpc/include/asm/cache.h
+> +++ b/arch/powerpc/include/asm/cache.h
+> @@ -55,25 +55,46 @@ struct ppc64_caches {
 >   
-> -	if (WARN_ON(drvdata->perf_data != etr_perf)) {
-> -		lost = true;
-> -		spin_unlock_irqrestore(&drvdata->spinlock, flags);
-> -		goto out;
-> -	}
+>   extern struct ppc64_caches ppc64_caches;
+>   
+> -static inline u32 l1_cache_shift(void)
+> +static inline u32 l1_dcache_shift(void)
+>   {
+>   	return ppc64_caches.l1d.log_block_size;
+>   }
+>   
+> -static inline u32 l1_cache_bytes(void)
+> +static inline u32 l1_dcache_bytes(void)
+>   {
+>   	return ppc64_caches.l1d.block_size;
+>   }
+> +
+> +static inline u32 l1_icache_shift(void)
+> +{
+> +	return ppc64_caches.l1i.log_block_size;
+> +}
+> +
+> +static inline u32 l1_icache_bytes(void)
+> +{
+> +	return ppc64_caches.l1i.block_size;
+> +}
+>   #else
+> -static inline u32 l1_cache_shift(void)
+> +static inline u32 l1_dcache_shift(void)
+>   {
+>   	return L1_CACHE_SHIFT;
+>   }
+>   
+> -static inline u32 l1_cache_bytes(void)
+> +static inline u32 l1_dcache_bytes(void)
+>   {
+>   	return L1_CACHE_BYTES;
+>   }
+> +
+> +static inline u32 l1_icache_shift(void)
+> +{
+> +	return L1_CACHE_SHIFT;
+> +}
+> +
+> +static inline u32 l1_icache_bytes(void)
+> +{
+> +	return L1_CACHE_BYTES;
+> +}
+> +
+
+Could the above adds/changes be a separate patch ?
+
+>   #endif
+>   #endif /* ! __ASSEMBLY__ */
+>   
+> @@ -124,6 +145,12 @@ static inline void dcbst(void *addr)
+>   {
+>   	__asm__ __volatile__ ("dcbst %y0" : : "Z"(*(u8 *)addr) : "memory");
+>   }
+> +
+> +static inline void icbi(void *addr)
+> +{
+> +	__asm__ __volatile__ ("icbi %y0" : : "Z"(*(u8 *)addr) : "memory");
+> +}
+> +
+
+Commit 6c5875843b87c3ad ("") is likely to be reverted in the near future 
+due to a bug in CLANG and because it has no real benefit in our use cases.
+
+So maybe you should consider using the previous format when adding icbi() ?
+
+Should you also add iccci() in order to handle the 4xx part from misc_32 ?
+
+>   #endif /* !__ASSEMBLY__ */
+>   #endif /* __KERNEL__ */
+>   #endif /* _ASM_POWERPC_CACHE_H */
+> diff --git a/arch/powerpc/include/asm/cacheflush.h b/arch/powerpc/include/asm/cacheflush.h
+> index eef388f2659f..f68e75a6dc4b 100644
+> --- a/arch/powerpc/include/asm/cacheflush.h
+> +++ b/arch/powerpc/include/asm/cacheflush.h
+> @@ -42,7 +42,6 @@ extern void flush_dcache_page(struct page *page);
+>   #define flush_dcache_mmap_lock(mapping)		do { } while (0)
+>   #define flush_dcache_mmap_unlock(mapping)	do { } while (0)
+>   
+> -extern void flush_icache_range(unsigned long, unsigned long);
+>   extern void flush_icache_user_range(struct vm_area_struct *vma,
+>   				    struct page *page, unsigned long addr,
+>   				    int len);
+> @@ -57,14 +56,17 @@ static inline void __flush_dcache_icache_phys(unsigned long physaddr)
+>   }
+>   #endif
+>   
+> -/*
+> - * Write any modified data cache blocks out to memory and invalidate them.
+> +/**
+> + * flush_dcache_range: Write any modified data cache blocks out to memory and invalidate them.
+>    * Does not invalidate the corresponding instruction cache blocks.
+> + *
+> + * @start: the start address
+> + * @stop: the stop address (exclusive)
+>    */
+>   static inline void flush_dcache_range(unsigned long start, unsigned long stop)
+>   {
+> -	unsigned long shift = l1_cache_shift();
+> -	unsigned long bytes = l1_cache_bytes();
+> +	unsigned long shift = l1_dcache_shift();
+> +	unsigned long bytes = l1_dcache_bytes();
+>   	void *addr = (void *)(start & ~(bytes - 1));
+>   	unsigned long size = stop - (unsigned long)addr + (bytes - 1);
+>   	unsigned long i;
+> @@ -82,6 +84,49 @@ static inline void flush_dcache_range(unsigned long start, unsigned long stop)
+>   		isync();
+>   }
+>   
+> +/**
+> + * flush_icache_range: Write any modified data cache blocks out to memory
+> + * and invalidate the corresponding blocks in the instruction cache
+> + *
+> + * Generic code will call this after writing memory, before executing from it.
+> + *
+> + * @start: the start address
+> + * @stop: the stop address (exclusive)
+> + */
+> +static inline void flush_icache_range(unsigned long start, unsigned long stop)
+
+Wondering if it doesn't start to be a bit big for an inline function. 
+Not sure thought. Maybe the addr and size calculation should remain 
+inlined in order to benefit from constant inputs while the two loops and 
+sync stuff around them could be a dedicated function ?
+
+> +{
+> +	unsigned long shift = l1_dcache_shift();
+> +	unsigned long bytes = l1_dcache_bytes();
+> +	void *addr = (void *)(start & ~(bytes - 1));
+> +	unsigned long size = stop - (unsigned long)addr + (bytes - 1);
+> +	unsigned long i;
+> +
+> +	if (cpu_has_feature(CPU_FTR_COHERENT_ICACHE)) {
+> +		mb(); /* sync */
+> +		icbi((void *)start);
+> +		mb(); /* sync */
+> +		isync();
+> +		return;
+> +	}
+> +
+> +	/* Flush the data cache to memory */
+> +	for (i = 0; i < size >> shift; i++, addr += bytes)
+> +		dcbst(addr);
+> +
+> +	mb();	/* sync */
+> +
+> +	shift = l1_icache_shift();
+> +	bytes = l1_icache_bytes();
+> +	addr = (void *)(start & ~(bytes - 1));
+> +	size = stop - (unsigned long)addr + (bytes - 1);
+> +
+> +	/* Now invalidate the instruction cache */
+> +	for (i = 0; i < size >> shift; i++, addr += bytes)
+> +		icbi(addr);
+> +
+> +	isync();
+> +}
+
+Don't forget to also take misc_32 into account.
+
+Christophe
+
+> +
+>   /*
+>    * Write any modified data cache blocks out to memory.
+>    * Does not invalidate the corresponding cache lines (especially for
+> @@ -89,8 +134,8 @@ static inline void flush_dcache_range(unsigned long start, unsigned long stop)
+>    */
+>   static inline void clean_dcache_range(unsigned long start, unsigned long stop)
+>   {
+> -	unsigned long shift = l1_cache_shift();
+> -	unsigned long bytes = l1_cache_bytes();
+> +	unsigned long shift = l1_dcache_shift();
+> +	unsigned long bytes = l1_dcache_bytes();
+>   	void *addr = (void *)(start & ~(bytes - 1));
+>   	unsigned long size = stop - (unsigned long)addr + (bytes - 1);
+>   	unsigned long i;
+> @@ -108,8 +153,8 @@ static inline void clean_dcache_range(unsigned long start, unsigned long stop)
+>   static inline void invalidate_dcache_range(unsigned long start,
+>   					   unsigned long stop)
+>   {
+> -	unsigned long shift = l1_cache_shift();
+> -	unsigned long bytes = l1_cache_bytes();
+> +	unsigned long shift = l1_dcache_shift();
+> +	unsigned long bytes = l1_dcache_bytes();
+>   	void *addr = (void *)(start & ~(bytes - 1));
+>   	unsigned long size = stop - (unsigned long)addr + (bytes - 1);
+>   	unsigned long i;
+> diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
+> index 9bc0aa9aeb65..999828e86bba 100644
+> --- a/arch/powerpc/kernel/misc_64.S
+> +++ b/arch/powerpc/kernel/misc_64.S
+> @@ -54,61 +54,6 @@ PPC64_CACHES:
+>   	.tc		ppc64_caches[TC],ppc64_caches
+>   	.section	".text"
+>   
+> -/*
+> - * Write any modified data cache blocks out to memory
+> - * and invalidate the corresponding instruction cache blocks.
+> - *
+> - * flush_icache_range(unsigned long start, unsigned long stop)
+> - *
+> - *   flush all bytes from start through stop-1 inclusive
+> - */
 > -
-
-I think some sort of sanity check is a good idea to make sure we don't loose the
-context. Even when different CPUs have different etr_perf buffer, the underlying
-etr_buf should be the same. So, we should be able to simply convert the check
-to, something like :
-
-	struct etr_perf_buffer *perf_buf = drvdata->perf_data;
-
-	...
-
-	if (WARN_ON(perf_buf->etr_buf != etr_perf->buf)) {
-		....
-	}
-
-Does that solve the problem for you ?
-
-Suzuki
+> -_GLOBAL_TOC(flush_icache_range)
+> -BEGIN_FTR_SECTION
+> -	PURGE_PREFETCHED_INS
+> -	blr
+> -END_FTR_SECTION_IFSET(CPU_FTR_COHERENT_ICACHE)
+> -/*
+> - * Flush the data cache to memory
+> - *
+> - * Different systems have different cache line sizes
+> - * and in some cases i-cache and d-cache line sizes differ from
+> - * each other.
+> - */
+> - 	ld	r10,PPC64_CACHES@toc(r2)
+> -	lwz	r7,DCACHEL1BLOCKSIZE(r10)/* Get cache block size */
+> -	addi	r5,r7,-1
+> -	andc	r6,r3,r5		/* round low to line bdy */
+> -	subf	r8,r6,r4		/* compute length */
+> -	add	r8,r8,r5		/* ensure we get enough */
+> -	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of cache block size */
+> -	srd.	r8,r8,r9		/* compute line count */
+> -	beqlr				/* nothing to do? */
+> -	mtctr	r8
+> -1:	dcbst	0,r6
+> -	add	r6,r6,r7
+> -	bdnz	1b
+> -	sync
+> -
+> -/* Now invalidate the instruction cache */
+> -	
+> -	lwz	r7,ICACHEL1BLOCKSIZE(r10)	/* Get Icache block size */
+> -	addi	r5,r7,-1
+> -	andc	r6,r3,r5		/* round low to line bdy */
+> -	subf	r8,r6,r4		/* compute length */
+> -	add	r8,r8,r5
+> -	lwz	r9,ICACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of Icache block size */
+> -	srd.	r8,r8,r9		/* compute line count */
+> -	beqlr				/* nothing to do? */
+> -	mtctr	r8
+> -2:	icbi	0,r6
+> -	add	r6,r6,r7
+> -	bdnz	2b
+> -	isync
+> -	blr
+> -_ASM_NOKPROBE_SYMBOL(flush_icache_range)
+> -EXPORT_SYMBOL(flush_icache_range)
+> -
+>   /*
+>    * Flush a particular page from the data cache to RAM.
+>    * Note: this is necessary because the instruction cache does *not*
+> 
