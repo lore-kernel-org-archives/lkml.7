@@ -2,138 +2,139 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53915C0650F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E59D8C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E0B12171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:46:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WaAJIxvx"
+	by mail.kernel.org (Postfix) with ESMTP id C02702171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:49:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404778AbfHICqx (ORCPT
+        id S2404900AbfHICtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 22:46:53 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37592 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733140AbfHICqx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 22:46:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=k9ysUCj8sFdxJhtdA1rA7e9UmHUPqdKijogVrakBrS8=; b=WaAJIxvxqLMJwq4r0MuB186tS
-        eB35TdZihw8we7T+6rzfXNcdc1BFrSHTsICCgF9IYxPFMXnH51MOTuYcDuzIEQFJTMbpdZHz7kU4l
-        1gXCVm3zmGNat8g+4gEFOmlEJuABJAdswqsBLhwukirmbwfQV0VJh1UOgKcKX0IHlCnqa9ftb3GN5
-        anKRc6DAtdHrlXV80dZ8UTLKLtWWw6siF34Vuvs30NBWsAIUoDuZlJjPXL5Z3iyVaI9c8MyiBg6a+
-        ZzMgnF9fEFZkYUNsrMbPcS0zzVnVA5rZwBUyx3/flkMtA4BlYIqbgSIAqMmX6Ch8YNSw7wcyQUOQo
-        SWWUHUk+A==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hvuvU-0008Bg-Kn; Fri, 09 Aug 2019 02:46:44 +0000
-Date:   Thu, 8 Aug 2019 19:46:44 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     miles.chen@mediatek.com
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        wsd_upstream@mediatek.com, "Tobin C . Harding" <me@tobin.cc>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [RFC PATCH v2] mm: slub: print kernel addresses in slub debug
- messages
-Message-ID: <20190809024644.GL5482@bombadil.infradead.org>
-References: <20190809010837.24166-1-miles.chen@mediatek.com>
+        Thu, 8 Aug 2019 22:49:24 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48888 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729476AbfHICtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 22:49:24 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E46D8D91BFA54964D24E;
+        Fri,  9 Aug 2019 10:33:31 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.132) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 9 Aug 2019 10:33:22 +0800
+From:   Huazhong Tan <tanhuazhong@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 02/12] net: hns3: fix interrupt clearing error for VF
+Date:   Fri, 9 Aug 2019 10:31:08 +0800
+Message-ID: <1565317878-31806-3-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1565317878-31806-1-git-send-email-tanhuazhong@huawei.com>
+References: <1565317878-31806-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190809010837.24166-1-miles.chen@mediatek.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.132]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 09:08:37AM +0800, miles.chen@mediatek.com wrote:
-> Possible approaches are:
-> 1. stop printing kernel addresses
-> 2. print with %pK,
-> 3. print with %px.
+Currently, VF driver has two kinds of interrupts, reset & CMDQ RX.
+For revision 0x21, according to the UM, each interrupt should be
+cleared by write 0 to the corresponding bit, but the implementation
+writes 0 to the whole register in fact, it will clear other
+interrupt at the same time, then the VF will loss the interrupt.
+But for revision 0x20, this interrupt clear register is a read &
+write register, for compatible, we just keep the old implementation
+for 0x20.
 
-No.  The point of obscuring kernel addresses is that if the attacker manages to find a way to get the kernel to spit out some debug messages that we shouldn't
-leak all this extra information.
+This patch fixes it, also, adds a new register for reading the interrupt
+status according to hardware user manual.
 
-> 4. do nothing
+Fixes: e2cb1dec9779 ("net: hns3: Add HNS3 VF HCL(Hardware Compatibility Layer) Support")
+Fixes: b90fcc5bd904 ("net: hns3: add reset handling for VF when doing Core/Global/IMP reset")
 
-5. Find something more useful to print.
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Reviewed-by: Yunsheng Lin <linyunsheng@huawei.com>
+---
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 28 +++++++++++++++-------
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |  2 ++
+ 2 files changed, 21 insertions(+), 9 deletions(-)
 
-> INFO: Slab 0x(____ptrval____) objects=25 used=10 fp=0x(____ptrval____)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index ce82b2b..d8b8281 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -1889,21 +1889,20 @@ static void hclgevf_clear_event_cause(struct hclgevf_dev *hdev, u32 regclr)
+ static enum hclgevf_evt_cause hclgevf_check_evt_cause(struct hclgevf_dev *hdev,
+ 						      u32 *clearval)
+ {
+-	u32 val, cmdq_src_reg, rst_ing_reg;
++	u32 val, cmdq_stat_reg, rst_ing_reg;
+ 
+ 	/* fetch the events from their corresponding regs */
+-	cmdq_src_reg = hclgevf_read_dev(&hdev->hw,
+-					HCLGEVF_VECTOR0_CMDQ_SRC_REG);
++	cmdq_stat_reg = hclgevf_read_dev(&hdev->hw,
++					 HCLGEVF_VECTOR0_CMDQ_STAT_REG);
+ 
+-	if (BIT(HCLGEVF_VECTOR0_RST_INT_B) & cmdq_src_reg) {
++	if (BIT(HCLGEVF_VECTOR0_RST_INT_B) & cmdq_stat_reg) {
+ 		rst_ing_reg = hclgevf_read_dev(&hdev->hw, HCLGEVF_RST_ING);
+ 		dev_info(&hdev->pdev->dev,
+ 			 "receive reset interrupt 0x%x!\n", rst_ing_reg);
+ 		set_bit(HNAE3_VF_RESET, &hdev->reset_pending);
+ 		set_bit(HCLGEVF_RESET_PENDING, &hdev->reset_state);
+ 		set_bit(HCLGEVF_STATE_CMD_DISABLE, &hdev->state);
+-		cmdq_src_reg &= ~BIT(HCLGEVF_VECTOR0_RST_INT_B);
+-		*clearval = cmdq_src_reg;
++		*clearval = ~(1U << HCLGEVF_VECTOR0_RST_INT_B);
+ 		hdev->rst_stats.vf_rst_cnt++;
+ 		/* set up VF hardware reset status, its PF will clear
+ 		 * this status when PF has initialized done.
+@@ -1915,9 +1914,20 @@ static enum hclgevf_evt_cause hclgevf_check_evt_cause(struct hclgevf_dev *hdev,
+ 	}
+ 
+ 	/* check for vector0 mailbox(=CMDQ RX) event source */
+-	if (BIT(HCLGEVF_VECTOR0_RX_CMDQ_INT_B) & cmdq_src_reg) {
+-		cmdq_src_reg &= ~BIT(HCLGEVF_VECTOR0_RX_CMDQ_INT_B);
+-		*clearval = cmdq_src_reg;
++	if (BIT(HCLGEVF_VECTOR0_RX_CMDQ_INT_B) & cmdq_stat_reg) {
++		/* for revision 0x21, clearing interrupt is writing bit 0
++		 * to the clear register, writing bit 1 means to keep the
++		 * old value.
++		 * for revision 0x20, the clear register is a read & write
++		 * register, so we should just write 0 to the bit we are
++		 * handling, and keep other bits as cmdq_stat_reg.
++		 */
++		if (hdev->pdev->revision >= 0x21)
++			*clearval = ~(1U << HCLGEVF_VECTOR0_RX_CMDQ_INT_B);
++		else
++			*clearval = cmdq_stat_reg &
++				    ~BIT(HCLGEVF_VECTOR0_RX_CMDQ_INT_B);
++
+ 		return HCLGEVF_VECTOR0_EVENT_MBX;
+ 	}
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+index f0736b0..4ccf107 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+@@ -87,6 +87,8 @@
+ 
+ /* Vector0 interrupt CMDQ event source register(RW) */
+ #define HCLGEVF_VECTOR0_CMDQ_SRC_REG	0x27100
++/* Vector0 interrupt CMDQ event status register(RO) */
++#define HCLGEVF_VECTOR0_CMDQ_STAT_REG	0x27104
+ /* CMDQ register bits for RX event(=MBX event) */
+ #define HCLGEVF_VECTOR0_RX_CMDQ_INT_B	1
+ /* RST register bits for RESET event */
+-- 
+2.7.4
 
-... you don't have any randomness on your platform?
-
-> INFO: Object 0x(____ptrval____) @offset=1408 fp=0x(____ptrval____)
-> Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-> Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-> Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-> Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-> Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-> Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-> Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-> Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-> Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b a5
-> Redzone (____ptrval____): bb bb bb bb bb bb bb bb
-> Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
-> Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
-> Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
-> Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
-> ...
-> FIX kmalloc-128: Object at 0x(____ptrval____) not freed
-
-But if you have randomness, at least some of these "pointers" are valuable
-because you can compare them against "pointers" printed by other parts
-of the kernel.
-
-> After this patch:
-> 
-> INFO: Slab 0xffffffbf00f57000 objects=25 used=23 fp=0xffffffc03d5c3500
-> INFO: Object 0xffffffc03d5c3500 @offset=13568 fp=0xffffffc03d5c0800
-> Redzone 00000000: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-> Redzone 00000010: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-> Redzone 00000020: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-> Redzone 00000030: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-> Redzone 00000040: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-> Redzone 00000050: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-> Redzone 00000060: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-> Redzone 00000070: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-> Object 00000000: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object 00000010: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object 00000020: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object 00000030: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object 00000040: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object 00000050: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object 00000060: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-> Object 00000070: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b a5
-> Redzone 00000000: bb bb bb bb bb bb bb bb
-> Padding 00000000: 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
-> Padding 00000010: 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
-> Padding 00000020: 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
-> Padding 00000030: 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
-> ...
-> FIX kmalloc-128: Object at 0xffffffc03d5c3500 not freed
-
-It looks prettier, but I'm not convinced it's more useful.  Unless your
-platform lacks randomness ...
