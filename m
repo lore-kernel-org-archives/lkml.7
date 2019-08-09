@@ -2,95 +2,82 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C8DC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A31C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A554208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8787020C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:14:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZPSYG2y1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbfHIWOD (ORCPT
+        id S1729241AbfHIWOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 18:14:03 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:38798 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725985AbfHIWOD (ORCPT
+        Fri, 9 Aug 2019 18:14:24 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41075 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfHIWOY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 18:14:03 -0400
-Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 6AD0036420D;
-        Sat, 10 Aug 2019 08:13:56 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hwD7w-000108-Ua; Sat, 10 Aug 2019 08:12:48 +1000
-Date:   Sat, 10 Aug 2019 08:12:48 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-btrfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] block: annotate refault stalls from IO submission
-Message-ID: <20190809221248.GK7689@dread.disaster.area>
-References: <20190808190300.GA9067@cmpxchg.org>
+        Fri, 9 Aug 2019 18:14:24 -0400
+Received: by mail-pg1-f196.google.com with SMTP id x15so36152949pgg.8
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 15:14:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sTGM+jKd0j/u9kKivj5QkkT0ws6UqJeC4LOf3qyOSiA=;
+        b=ZPSYG2y1FubHnMCujvzkNF9nNq1g/qGihS3NYDYHfoowc1sONFpcYWNKJOsWswrUN7
+         8X8J/DAdY5e1GK43gVcXEcONfn6JKlZjPIK/cEJU4xZkkY9E5BlJ6rMEabiwiqyTt5L5
+         rRSCuTe8ibPBWDXs7+ytP5eND2MMvLdBCH/7MAdvGJhqBodhDlT5k3zLaZUh/dI29U1c
+         6H463+QhLY3jWsJLFnrg2zH2XJPDoMlh1jfs641LcfynH4fwV6mRqFQ+xh+fvDTlBrIa
+         t91uYfy0NeJKWYGCvHaGKnIaHtSOa8x6k5c6o8FGkyvGMWwPrBhNC4OLlUTCaJZDsQM8
+         HUrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sTGM+jKd0j/u9kKivj5QkkT0ws6UqJeC4LOf3qyOSiA=;
+        b=cMla38lzQ7XZZrtXLR9YGaO2+LyDf2UO9CINDu6w6KHpK0wNHAHA7TGL/GMZo/7qB/
+         Zoi+0Meu8c46xK3qPkAvUxzHQvJ8863juypvv1GEV3i6Kstafmg7UzwnHiZNahosbMbU
+         vd449JrMw/9jHTkmBPZPkqeqlJvfhD0ZBaEGaB/knvYdeqWII73GxkWlZHKQdCkpHPpk
+         fDn/BPeG5nHiQYKcNYtuEd3ioki4Ks3JrtCfgkhsIClK96rPI8tGO4SoO174gdbm9HRR
+         naP1BR9kKqxhPBMpZOcdeb4GJ1IA3iPyhppJsh2zQbLv5+gwIudN+eXzWS0OL99BQ4uB
+         NjVA==
+X-Gm-Message-State: APjAAAVDEJ1YGQf4JHTS5bQAnHWqE0SdsVmqoMymnckOgu1UtIv/19s5
+        tapyQyRcFozGNkYhK8/MoefQqZk2EpsN4Ax1z3wq8g==
+X-Google-Smtp-Source: APXvYqxitIf75C0kIneyrNkgvFG5aI1vCR6XBvjt3uLYaXSyX1fAscaC6qULNBcaWiY/708qdARMbGa5q8vlVOwuBME=
+X-Received: by 2002:aa7:8085:: with SMTP id v5mr6610774pff.165.1565388863281;
+ Fri, 09 Aug 2019 15:14:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808190300.GA9067@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
-        a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
-        a=7-415B0cAAAA:8 a=tU5beferOtS2JaHV9NYA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+References: <20190808032916.879-1-cai@lca.pw> <20190808103808.GC46901@lakrids.cambridge.arm.com>
+ <D2A2F2B9-0563-4DF6-8E77-F191A768CE4E@lca.pw> <20190809085332.GB48423@lakrids.cambridge.arm.com>
+In-Reply-To: <20190809085332.GB48423@lakrids.cambridge.arm.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 9 Aug 2019 15:14:11 -0700
+Message-ID: <CAKwvOdnbZNeCHbvYMgBd-mw0Q3eP-AxM9dqWmM3pZ_BrDaTzbg@mail.gmail.com>
+Subject: Re: [PATCH] arm64/cache: silence -Woverride-init warnings
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Qian Cai <cai@lca.pw>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 03:03:00PM -0400, Johannes Weiner wrote:
-> psi tracks the time tasks wait for refaulting pages to become
-> uptodate, but it does not track the time spent submitting the IO. The
-> submission part can be significant if backing storage is contended or
-> when cgroup throttling (io.latency) is in effect - a lot of time is
+On Fri, Aug 9, 2019 at 1:53 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> * Find a mechanism to suppress the warning on a per-assignment (not
+>   per-file) basis, without altering the structure of the existing code.
 
-Or the wbt is throttling.
+#pragma push/pop can be used to suppress warnings in a localized
+section of a translation unit.
 
-> spent in submit_bio(). In that case, we underreport memory pressure.
-> 
-> Annotate submit_bio() to account submission time as memory stall when
-> the bio is reading userspace workingset pages.
-
-PAtch looks fine to me, but it raises another question w.r.t. IO
-stalls and reclaim pressure feedback to the vm: how do we make use
-of the pressure stall infrastructure to track inode cache pressure
-and stalls?
-
-With the congestion_wait() and wait_iff_congested() being entire
-non-functional for block devices since 5.0, there is no IO load
-based feedback going into memory reclaim from shrinkers that might
-require IO to free objects before they can be reclaimed. This is
-directly analogous to page reclaim writing back dirty pages from
-the LRU, and as I understand it one of things the PSI is supposed
-to be tracking.
-
-Lots of workloads create inode cache pressure and often it can
-dominate the time spent in memory reclaim, so it would seem to me
-that having PSI only track/calculate pressure and stalls from LRU
-pages misses a fair chunk of the memory pressure and reclaim stalls
-that can be occurring.
-
-Any thoughts of how we might be able to integrate more of the system
-caches into the PSI infrastructure, Johannes?
-
-Cheers,
-
-Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+Thanks,
+~Nick Desaulniers
