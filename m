@@ -2,145 +2,261 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C852DC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 844E7C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05A072166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:41:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DWPweNNh"
+	by mail.kernel.org (Postfix) with ESMTP id 696042086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:42:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407540AbfHISlu (ORCPT
+        id S2405964AbfHISm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:41:50 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:32965 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbfHISlu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:41:50 -0400
-Received: by mail-ot1-f68.google.com with SMTP id q20so136192950otl.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 11:41:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=65V1JuI2VA80cQiA+hQRPmXIFv0sktRgZklgyYT7uA0=;
-        b=DWPweNNhV4+ruQv9Ddd4zqB9w0vtKDVgapB/ZVHrS05Sn8qP4BmMIriNe0wx9XQBGH
-         hOF76QgLBKdnwg6w3+Dkuq+ngwyXRP42e/T1eL02kQNGDu00IXab7lmWTo0QiBysr9E/
-         TeZlVF/M1hklUCmW09cFplmzLG5DScXSOgnbkJACjKVnylHr2s87Eta7YTGr9m2xvVN8
-         qRoINJQcSrSlsguzfhx7xCQRiujtA2/A+kve2xletz9rb8leO26rubFGhWdtoxPAfIJS
-         QrRzC4jGVAGQLe/Khw7yFoWPIhCpLPo4hC5Ujj2mu3KCwC/8PxZjQ2eu95XsZzEB7vE8
-         Y8Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=65V1JuI2VA80cQiA+hQRPmXIFv0sktRgZklgyYT7uA0=;
-        b=a7Mh7h2QZimzJx+zOs2FfrFaVt36gDo4Bandt1PURZT5qfJDDgPIOCD+ngVOEikKyk
-         8lLQxxHlu8S9kL/zu4RApHOHPJ8YHUVCcE6ubkuehPBXK+m0rrfIASPgA+HeLwWsjY9D
-         OfixZ2up8ZVRgAM+7kzHsVjFsJynOx5xqO+h9mXhoyU3/sgY3O48TaSR9XsNb4CcUig2
-         uPg3N2GUVQmYAIDw0BU7CdujNeYEpq2de5IGW3CLbCbrtwGFShDOPITMlC0H8m5Ybtgn
-         ovPo+g+IKYTfmybma9AbJejBK9hTVEDRiXTud3VS8K6Md2roGyaut5UcbTCpABM673rJ
-         3Obw==
-X-Gm-Message-State: APjAAAVp6l0JX4ev/numu0Vu6uMci4QnM5xG6iuhfVwRTFkbapJK0LMT
-        lu/SIUCRE0rkoF7DWfUWajf5FsTWXaRlZGVZ9TF+mA==
-X-Google-Smtp-Source: APXvYqxofUvcQ8atqUEUAeawzR1iYVttn85OBd+PtUiLhtQNlBMyJ9X3QlcGqVql+JVlFOO7UV4cffGfKEsIucd9ydw=
-X-Received: by 2002:a9d:73d0:: with SMTP id m16mr20182380otk.190.1565376108768;
- Fri, 09 Aug 2019 11:41:48 -0700 (PDT)
+        Fri, 9 Aug 2019 14:42:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38748 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726168AbfHISm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 14:42:57 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 06A773069609;
+        Fri,  9 Aug 2019 18:42:56 +0000 (UTC)
+Received: from redhat.com (ovpn-125-104.rdu2.redhat.com [10.10.125.104])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 25B23F6E9;
+        Fri,  9 Aug 2019 18:42:55 +0000 (UTC)
+Date:   Fri, 9 Aug 2019 14:42:53 -0400
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Subject: Re: [PATCH v4 03/10] livepatch: Add klp-convert tool
+Message-ID: <20190809184253.GA31811@redhat.com>
+References: <20190509143859.9050-1-joe.lawrence@redhat.com>
+ <20190509143859.9050-4-joe.lawrence@redhat.com>
+ <CAK7LNAT3qZ8EESs0eEtaezjgjzRa1XqoAAxpKh_sLi_JPJie2A@mail.gmail.com>
+ <CAK7LNAToLyKSk9C0hwuMRxDK8yjJtghi_y6fH1p0+wK7N1wKow@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190808222727.132744-1-hridya@google.com> <20190808222727.132744-3-hridya@google.com>
- <20190809145508.GD16262@kroah.com> <20190809181439.qrs2k7l23ot4am4s@wittgenstein>
-In-Reply-To: <20190809181439.qrs2k7l23ot4am4s@wittgenstein>
-From:   Hridya Valsaraju <hridya@google.com>
-Date:   Fri, 9 Aug 2019 11:41:12 -0700
-Message-ID: <CA+wgaPPK0fY2a+pCEFHrw8p8WCb459yw41s_6xppWFfEa=P7Og@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] binder: Validate the default binderfs device names.
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAToLyKSk9C0hwuMRxDK8yjJtghi_y6fH1p0+wK7N1wKow@mail.gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 09 Aug 2019 18:42:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 11:14 AM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
->
-> On Fri, Aug 09, 2019 at 04:55:08PM +0200, Greg Kroah-Hartman wrote:
-> > On Thu, Aug 08, 2019 at 03:27:26PM -0700, Hridya Valsaraju wrote:
-> > > Length of a binderfs device name cannot exceed BINDERFS_MAX_NAME.
-> > > This patch adds a check in binderfs_init() to ensure the same
-> > > for the default binder devices that will be created in every
-> > > binderfs instance.
+On Wed, Jul 31, 2019 at 12:36:05PM +0900, Masahiro Yamada wrote:
+> On Wed, Jul 31, 2019 at 11:50 AM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > On Thu, May 9, 2019 at 11:39 PM Joe Lawrence <joe.lawrence@redhat.com> wrote:
 > > >
-> > > Co-developed-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > > Signed-off-by: Hridya Valsaraju <hridya@google.com>
+> > > From: Josh Poimboeuf <jpoimboe@redhat.com>
+> > >
+> > > Livepatches may use symbols which are not contained in its own scope,
+> > > and, because of that, may end up compiled with relocations that will
+> > > only be resolved during module load. Yet, when the referenced symbols
+> > > are not exported, solving this relocation requires information on the
+> > > object that holds the symbol (either vmlinux or modules) and its
+> > > position inside the object, as an object may contain multiple symbols
+> > > with the same name. Providing such information must be done
+> > > accordingly to what is specified in
+> > > Documentation/livepatch/module-elf-format.txt.
+> > >
+> > > Currently, there is no trivial way to embed the required information
+> > > as requested in the final livepatch elf object. klp-convert solves
+> > > this problem in two different forms: (i) by relying on Symbols.list,
+> > > which is built during kernel compilation, to automatically infer the
+> > > relocation targeted symbol, and, when such inference is not possible
+> > > (ii) by using annotations in the elf object to convert the relocation
+> > > accordingly to the specification, enabling it to be handled by the
+> > > livepatch loader.
+> > >
+> > > Given the above, create scripts/livepatch to hold tools developed for
+> > > livepatches and add source files for klp-convert there.
+> > >
+> > > The core file of klp-convert is scripts/livepatch/klp-convert.c, which
+> > > implements the heuristics used to solve the relocations and the
+> > > conversion of unresolved symbols into the expected format, as defined
+> > > in [1].
+> > >
+> > > klp-convert receives as arguments the Symbols.list file, an input
+> > > livepatch module to be converted and the output name for the converted
+> > > livepatch. When it starts running, klp-convert parses Symbols.list and
+> > > builds two internal lists of symbols, one containing the exported and
+> > > another containing the non-exported symbols. Then, by parsing the rela
+> > > sections in the elf object, klp-convert identifies which symbols must
+> > > be converted, which are those unresolved and that do not have a
+> > > corresponding exported symbol, and attempts to convert them
+> > > accordingly to the specification.
+> > >
+> > > By using Symbols.list, klp-convert identifies which symbols have names
+> > > that only appear in a single kernel object, thus being capable of
+> > > resolving these cases without the intervention of the developer. When
+> > > various homonymous symbols exist through kernel objects, it is not
+> > > possible to infer the right one, thus klp-convert falls back into
+> > > using developer annotations. If these were not provided, then the tool
+> > > will print a list with all acceptable targets for the symbol being
+> > > processed.
+> > >
+> > > Annotations in the context of klp-convert are accessible as struct
+> > > klp_module_reloc entries in sections named
+> > > .klp.module_relocs.<objname>. These entries are pairs of symbol
+> > > references and positions which are to be resolved against definitions
+> > > in <objname>.
+> > >
+> > > Define the structure klp_module_reloc in
+> > > include/linux/uapi/livepatch.h allowing developers to annotate the
+> > > livepatch source code with it.
+> > >
+> > > klp-convert relies on libelf and on a list implementation. Add files
+> > > scripts/livepatch/elf.c and scripts/livepatch/elf.h, which are a
+> > > libelf interfacing layer and scripts/livepatch/list.h, which is a
+> > > list implementation.
+> > >
+> > > Update Makefiles to correctly support the compilation of the new tool,
+> > > update MAINTAINERS file and add a .gitignore file.
+> > >
+> > > [1] - Documentation/livepatch/module-elf-format.txt
+> > >
+> > > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > > Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> > > Signed-off-by: Joao Moreira <jmoreira@suse.de>
+> > > Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
 > > > ---
-> > >  drivers/android/binderfs.c | 12 ++++++++++++
-> > >  1 file changed, 12 insertions(+)
+> > >  MAINTAINERS                     |   1 +
+> > >  include/uapi/linux/livepatch.h  |   5 +
+> > >  scripts/Makefile                |   1 +
+> > >  scripts/livepatch/.gitignore    |   1 +
+> > >  scripts/livepatch/Makefile      |   7 +
+> > >  scripts/livepatch/elf.c         | 753 ++++++++++++++++++++++++++++++++
+> > >  scripts/livepatch/elf.h         |  73 ++++
+> > >  scripts/livepatch/klp-convert.c | 713 ++++++++++++++++++++++++++++++
+> > >  scripts/livepatch/klp-convert.h |  39 ++
+> > >  scripts/livepatch/list.h        | 391 +++++++++++++++++
+> > >  10 files changed, 1984 insertions(+)
+> > >  create mode 100644 scripts/livepatch/.gitignore
+> > >  create mode 100644 scripts/livepatch/Makefile
+> > >  create mode 100644 scripts/livepatch/elf.c
+> > >  create mode 100644 scripts/livepatch/elf.h
+> > >  create mode 100644 scripts/livepatch/klp-convert.c
+> > >  create mode 100644 scripts/livepatch/klp-convert.h
+> > >  create mode 100644 scripts/livepatch/list.h
 > > >
-> > > diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-> > > index aee46dd1be91..55c5adb87585 100644
-> > > --- a/drivers/android/binderfs.c
-> > > +++ b/drivers/android/binderfs.c
-> > > @@ -570,6 +570,18 @@ static struct file_system_type binder_fs_type = {
-> > >  int __init init_binderfs(void)
-> > >  {
-> > >     int ret;
-> > > +   const char *name;
-> > > +   size_t len;
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 52842fa37261..c1587e1cc385 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -9022,6 +9022,7 @@ F:        arch/x86/kernel/livepatch.c
+> > >  F:     Documentation/livepatch/
+> > >  F:     Documentation/ABI/testing/sysfs-kernel-livepatch
+> > >  F:     samples/livepatch/
+> > > +F:     scripts/livepatch/
+> > >  F:     tools/testing/selftests/livepatch/
+> > >  L:     live-patching@vger.kernel.org
+> > >  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching.git
+> > > diff --git a/include/uapi/linux/livepatch.h b/include/uapi/linux/livepatch.h
+> > > index e19430918a07..1c364d42d38e 100644
+> > > --- a/include/uapi/linux/livepatch.h
+> > > +++ b/include/uapi/linux/livepatch.h
+> > > @@ -12,4 +12,9 @@
+> > >  #define KLP_RELA_PREFIX                ".klp.rela."
+> > >  #define KLP_SYM_PREFIX         ".klp.sym."
+> > >
+> > > +struct klp_module_reloc {
+> > > +       void *sym;
+> > > +       unsigned int sympos;
+> > > +} __attribute__((packed));
 > > > +
-> > > +   /* Verify that the default binderfs device names are valid. */
+> > >  #endif /* _UAPI_LIVEPATCH_H */
+> > > diff --git a/scripts/Makefile b/scripts/Makefile
+> > > index 9d442ee050bd..bf9ce74b70b0 100644
+> > > --- a/scripts/Makefile
+> > > +++ b/scripts/Makefile
+> > > @@ -39,6 +39,7 @@ build_unifdef: $(obj)/unifdef
+> > >  subdir-$(CONFIG_GCC_PLUGINS) += gcc-plugins
+> > >  subdir-$(CONFIG_MODVERSIONS) += genksyms
+> > >  subdir-$(CONFIG_SECURITY_SELINUX) += selinux
+> > > +subdir-$(CONFIG_LIVEPATCH)   += livepatch
+> > >
+> > >  # Let clean descend into subdirs
+> > >  subdir-        += basic dtc gdb kconfig mod package
+> > > diff --git a/scripts/livepatch/.gitignore b/scripts/livepatch/.gitignore
+> > > new file mode 100644
+> > > index 000000000000..dc22fe4b6a5b
+> > > --- /dev/null
+> > > +++ b/scripts/livepatch/.gitignore
+> > > @@ -0,0 +1 @@
+> > > +klp-convert
+> > > diff --git a/scripts/livepatch/Makefile b/scripts/livepatch/Makefile
+> > > new file mode 100644
+> > > index 000000000000..2842ecdba3fd
+> > > --- /dev/null
+> > > +++ b/scripts/livepatch/Makefile
+> > > @@ -0,0 +1,7 @@
+> > > +hostprogs-y                    := klp-convert
+> > > +always                         := $(hostprogs-y)
+> > > +
+> > > +klp-convert-objs               := klp-convert.o elf.o
+> > > +
+> > > +HOST_EXTRACFLAGS               := -g -I$(INSTALL_HDR_PATH)/include -Wall
 > >
-> > And by "valid" you only mean "not bigger than BINDERFS_MAX_NAME, right?
+> > This looks strange.
 > >
-> > > +   name = binder_devices_param;
-> > > +   for (len = strcspn(name, ","); len > 0; len = strcspn(name, ",")) {
-> > > +           if (len > BINDERFS_MAX_NAME)
-> > > +                   return -E2BIG;
-> > > +           name += len;
-> > > +           if (*name == ',')
-> > > +                   name++;
-> > > +   }
+> > Theoretically, you cannot include headers in $(INSTALL_HDR_PATH)/include
+> > from host programs.
 > >
-> > We already tokenize the binderfs device names in binder_init(), why not
-> > check this there instead?  Parsing the same string over and over isn't
-> > the nicest.
->
-> non-binderfs binder devices do not have their limit set to
-> BINDERFS_NAME_MAX. That's why the check has likely been made specific to
-> binderfs binder devices which do have that limit.
+> > headers_install works for the target architecture, not host architecture.
+> > This may cause a strange result when you are cross-compiling the kernel.
+> >
+> > BTW, which header in $(INSTALL_HDR_PATH)/include do you need to include ?
+> >
+> >
+> > Also, -Wall is redundant because it is set by the top-level Makefile.
+> 
+> 
+> I deleted HOST_EXTRACFLAGS entirely,
+> and I was still able to build klp-convert.
+> 
+> 
+> What is the purpose of '-g' ?
+> If it is only needed for local debugging,
+> it should be removed from the upstream code, in my opinion.
+> 
 
+HOST_EXTRACFLAGS looks like it was present in the patchset from the
+early RFC days and inherited through each revision.
 
-Thank you Greg and Christian, for taking another look. Yes,
-non-binderfs binder devices not having this limitation is the reason
-why the check was made specific to binderfs devices. Also, when
-CONFIG_ANDROID_BINDERFS is set, patch 1/2 disabled the same string
-being parsed in binder_init().
+These are the files that the klp-convert code includes, mostly typical C
+usercode headers like stdio.h and a few local headers like elf.h:
 
->
-> But, in practice, 255 is the standard path-part limit that no-one really
-> exceeds especially not for stuff such as device nodes which usually have
-> rather standard naming schemes (e.g. binder, vndbinder, hwbinder, etc.).
-> So yes, we can move that check before both the binderfs binder device
-> and non-binderfs binder device parsing code and treat it as a generic
-> check.
-> Then we can also backport that check as you requested in the other mail.
-> Unless Hridya or Todd have objections, of course.
+  % grep -h '^#include' scripts/livepatch/*.{c,h} | sort -u
+  #include "elf.h"
+  #include <fcntl.h>
+  #include <gelf.h>
+  #include "klp-convert.h"
+  #include "list.h"
+  #include <stdbool.h>
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <string.h>
+  #include <sys/stat.h>
+  #include <sys/types.h>
+  #include <unistd.h>
 
-I do not have any objections to adding a generic check in binder_init() instead.
+If HOST_EXTRACFLAGS is really unneeded, we can easily drop it in the
+next patchset version.
 
->
-> Christian
+I haven't tried cross-compiling yet, but that is a good thing to note
+for future testing.
+
+Thanks,
+
+-- Joe
