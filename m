@@ -2,133 +2,185 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873F4C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096D1C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62B352084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C53FA21882
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:09:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BCDWU66f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406495AbfHILGP (ORCPT
+        id S2406451AbfHILJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 07:06:15 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39180 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406272AbfHILGN (ORCPT
+        Fri, 9 Aug 2019 07:09:16 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:44924 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727063AbfHILJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 07:06:13 -0400
-Received: by mail-ed1-f65.google.com with SMTP id e16so1325622edv.6
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 04:06:12 -0700 (PDT)
+        Fri, 9 Aug 2019 07:09:16 -0400
+Received: by mail-ed1-f68.google.com with SMTP id k8so94539029edr.11;
+        Fri, 09 Aug 2019 04:09:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5PC18GBlTDNbjiv1Dgese6hBxfN55ahXT6uAwoWW/Dw=;
+        b=BCDWU66fS5xO1T/pFmAB/FqIVpTiPoWRpF2B6ZCpBTb6oYk4k5PL5KaHu08VYJkA9z
+         /Qx82QDRi58M5fwbqys6ifwRXfjWseTjJYrrXmtQo4LncxyX8WITejRU1NxT/V7SXM4o
+         jm8ywCGf1R0rn2Z4D5A49k+kkMVNc8xjfn6umj9W/plQfI4QWYdoJ8sgYnLwh6QmUyH7
+         EF3f6wjr7hA1XAHRJKNnuTxVW7LHbxpj+4XdzzfjNpF/HHvlR2UszScyrQ1BWnFs//+e
+         WRm9Jv6EmePFO20gAZ4rjIiUkWwd4s6QrtmxjZjh7+lc/A1zZpLDcMv2fYeAg8nHRg7/
+         DM2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/xMfMLN5n9NvXBMPK4Z+02UCjCT+IDFZNmUQWYyXvps=;
-        b=Kt8IA2lpJppeEakM8liCtYspBQwNKo127VD6PbKtsK2mosUdXxtzxGMm03I9F+w7lE
-         GUjMlgPg+7IMpztowbfnZ5MOmW3OC71LfbaDWbwHCIe2kUjW3ZTY+TafGId8AUU+KFeD
-         HQ4nMhIc95qArbD3nf8Ihhh/6U8MOAHhln6cJ6TlCUlnxlAzDUCLFE6MbHqhffDWXaSK
-         PAtdkkZ65i9+XymZdeQyAaHNjhndxJRREnWHaxZLzbPLRwurr0MEZiikEtm8Kq1pgFTv
-         88UB5gIBuEI4qmbnmjj/2l6bYXcRpGP29y/mXFVURUqA4/kygpqdSZT72CMSBJTXP0/P
-         2aZA==
-X-Gm-Message-State: APjAAAUCFUCew6LUtGkQL1niKRUvgVHDgVpqFooplXml3FKV1+bp2+J5
-        pyP51rIJS9O2d/GXPpZHxAydnQ==
-X-Google-Smtp-Source: APXvYqziQCq15NyoQmGg7IA4VdqjjKmJ5ahYUASWddAObX+FQ83zvRjVHKzSYF8TdPbAQj7hgpZ+sQ==
-X-Received: by 2002:a50:eb4d:: with SMTP id z13mr21172946edp.271.1565348772094;
-        Fri, 09 Aug 2019 04:06:12 -0700 (PDT)
-Received: from localhost.localdomain ([62.140.137.140])
-        by smtp.gmail.com with ESMTPSA id a67sm22197012edf.6.2019.08.09.04.06.08
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 04:06:11 -0700 (PDT)
-Subject: Re: [PATCH] extcon-intel-cht-wc: Don't reset USB data connection at
- probe
-To:     Yauhen Kharuzhy <jekhor@gmail.com>, linux-kernel@vger.kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <20190808220129.2737-1-jekhor@gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <fbe20a5f-0f64-cadf-2c1e-88a468d54a07@redhat.com>
-Date:   Fri, 9 Aug 2019 13:06:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5PC18GBlTDNbjiv1Dgese6hBxfN55ahXT6uAwoWW/Dw=;
+        b=SIYxxx8cvoMfP9dt8zEL2xSWc3pfHuxIbL7aqcDeqANcghnHb4VeMz+eTTQeLUm0k3
+         GO5MMcS6dio8ulaDUiBpZHQK3Ro+oM+2ldmDPbHEB1LaOZoc5GSZpiCjdUX8YJTZM+tW
+         FryQTSkyn8f8l2Dc0Fko2uykYUK0PuVxtWGIjuIZgRMAJPaqRSGNwRNGrTpeJh087XnM
+         EQNwLP0wGpEK1S94mpxqfclIL4FA4p9bbmmZ3nNbZBAWOVjJLCRdewQ31dfP2uu96DNi
+         u3lVzahkL7KIHJSHfkU5uj1XiltuN1fF8mMBhThIoIhG01AIyI6OsoxfVXNTDcko2ZQ+
+         7FlQ==
+X-Gm-Message-State: APjAAAW7nrdva5XiKmDLGXvl5NjuKXodGXQbq3YktIAQCy0tVUaW6xN2
+        Rv2egZTD52QkgUsACefeUUVM6rRCTeHUyQ8Kbdk=
+X-Google-Smtp-Source: APXvYqx3KC3U3PMHmPzEGRlwh1/OayXq2z4tGQAH8H4jaGGY1TEg7oUii/6DD027cmZATRVXDPZrL8Z3HOH1a9aWjfk=
+X-Received: by 2002:a17:907:2069:: with SMTP id qp9mr6955088ejb.90.1565348954110;
+ Fri, 09 Aug 2019 04:09:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190808220129.2737-1-jekhor@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190809005754.23009-1-git@andred.net> <CA+h21hp-K0ryB39O4X9n-mCwapiXoWy5WP6ZsvswgcDy-WBYVw@mail.gmail.com>
+ <14396bfacec0c4877cb0ea9009dc92b33c169cac.camel@andred.net>
+In-Reply-To: <14396bfacec0c4877cb0ea9009dc92b33c169cac.camel@andred.net>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Fri, 9 Aug 2019 14:09:02 +0300
+Message-ID: <CA+h21hq69YyG3zcs2dzKJBNv-UwDPZ3ARQF9Y++9sLsvf472rg@mail.gmail.com>
+Subject: Re: [PATCH] net: phy: at803x: stop switching phy delay config needlessly
+To:     =?UTF-8?Q?Andr=C3=A9_Draszik?= <git@andred.net>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Andre,
 
-On 8/9/19 12:01 AM, Yauhen Kharuzhy wrote:
-> Intel Cherry Trail Whiskey Cove extcon driver connect USB data lines to
-> PMIC at driver probing for further charger detection. This causes reset of
-> USB data sessions and removing all devices from bus. If system was
-> booted from Live CD or USB dongle, this makes system unusable.
-> 
-> Check if USB ID pin is floating and re-route data lines in this case
-> only, don't touch otherwise.
-> 
-> Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
-> ---
->   drivers/extcon/extcon-intel-cht-wc.c | 16 ++++++++++++++--
->   1 file changed, 14 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/extcon/extcon-intel-cht-wc.c b/drivers/extcon/extcon-intel-cht-wc.c
-> index 9d32150e68db..3ae573e93e6e 100644
-> --- a/drivers/extcon/extcon-intel-cht-wc.c
-> +++ b/drivers/extcon/extcon-intel-cht-wc.c
-> @@ -338,6 +338,7 @@ static int cht_wc_extcon_probe(struct platform_device *pdev)
->   	struct intel_soc_pmic *pmic = dev_get_drvdata(pdev->dev.parent);
->   	struct cht_wc_extcon_data *ext;
->   	unsigned long mask = ~(CHT_WC_PWRSRC_VBUS | CHT_WC_PWRSRC_USBID_MASK);
-> +	int pwrsrc_sts, id;
->   	int irq, ret;
->   
->   	irq = platform_get_irq(pdev, 0);
-> @@ -387,8 +388,19 @@ static int cht_wc_extcon_probe(struct platform_device *pdev)
->   		goto disable_sw_control;
->   	}
->   
-> -	/* Route D+ and D- to PMIC for initial charger detection */
-> -	cht_wc_extcon_set_phymux(ext, MUX_SEL_PMIC);
-> +	ret = regmap_read(ext->regmap, CHT_WC_PWRSRC_STS, &pwrsrc_sts);
-> +	if (ret) {
-> +		dev_err(ext->dev, "Error reading pwrsrc status: %d\n", ret);
-> +		goto disable_sw_control;
-> +	}
-> +
-> +	id = cht_wc_extcon_get_id(ext, pwrsrc_sts);
-> +
-> +	/* If no USB host or device connected, route D+ and D- to PMIC for
-> +	 * initial charger detection
-> +	 */
-> +	if (id == INTEL_USB_ID_FLOAT)
-> +		cht_wc_extcon_set_phymux(ext, MUX_SEL_PMIC);
+On Fri, 9 Aug 2019 at 13:00, Andr=C3=A9 Draszik <git@andred.net> wrote:
+>
+> Hi Vladimir,
+>
+> On Fri, 2019-08-09 at 12:43 +0300, Vladimir Oltean wrote:
+> > Hi Andre,
+> >
+> > On Fri, 9 Aug 2019 at 03:58, Andr=C3=A9 Draszik <git@andred.net> wrote:
+> > > This driver does a funny dance disabling and re-enabling
+> > > RX and/or TX delays. In any of the RGMII-ID modes, it first
+> > > disables the delays, just to re-enable them again right
+> > > away. This looks like a needless exercise.
+> > >
+> > > Just enable the respective delays when in any of the
+> > > relevant 'id' modes, and disable them otherwise.
+> > >
+> > > Also, remove comments which don't add anything that can't be
+> > > seen by looking at the code.
+> > >
+> > > Signed-off-by: Andr=C3=A9 Draszik <git@andred.net>
+> > > CC: Andrew Lunn <andrew@lunn.ch>
+> > > CC: Florian Fainelli <f.fainelli@gmail.com>
+> > > CC: Heiner Kallweit <hkallweit1@gmail.com>
+> > > CC: "David S. Miller" <davem@davemloft.net>
+> > > CC: netdev@vger.kernel.org
+> > > ---
+> >
+> > Is there any particular problem you're facing? Does this make any diffe=
+rence?
+>
+> This is a clean-up, reducing the number of lines and if statements
+> by removing unnecessary code paths and comments.
+>
 
-The check here should be != INTEL_USB_ID_GND, when we are connected as
-device we are charging from the host we are connected to and the port
-we are connected to may be a CDP (charging downstream port) instead of
-a SDP (standard downstream port) allowing us to charge at 1.5A instead
-of 0.5A, also != INTEL_USB_ID_GND matches the condition used in
-cht_wc_extcon_pwrsrc_event to determine if we should continue with
-charger detection there.
+Ok. Did checkpatch not complain about the braces which you left open
+around a single line?
 
-Like your other patch I will try to give this one a  test-run tomorrow.
+>
+> Cheers,
+> Andre'
+>
+>
+> >
+> > >  drivers/net/phy/at803x.c | 26 ++++++--------------------
+> > >  1 file changed, 6 insertions(+), 20 deletions(-)
+> > >
+> > > diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+> > > index 222ccd9ecfce..2ab51f552e92 100644
+> > > --- a/drivers/net/phy/at803x.c
+> > > +++ b/drivers/net/phy/at803x.c
+> > > @@ -257,35 +257,21 @@ static int at803x_config_init(struct phy_device=
+ *phydev)
+> > >          *   after HW reset: RX delay enabled and TX delay disabled
+> > >          *   after SW reset: RX delay enabled, while TX delay retains=
+ the
+> > >          *   value before reset.
+> > > -        *
+> > > -        * So let's first disable the RX and TX delays in PHY and ena=
+ble
+> > > -        * them based on the mode selected (this also takes care of R=
+GMII
+> > > -        * mode where we expect delays to be disabled)
+> > >          */
+> > > -
+> > > -       ret =3D at803x_disable_rx_delay(phydev);
+> > > -       if (ret < 0)
+> > > -               return ret;
+> > > -       ret =3D at803x_disable_tx_delay(phydev);
+> > > -       if (ret < 0)
+> > > -               return ret;
+> > > -
+> > >         if (phydev->interface =3D=3D PHY_INTERFACE_MODE_RGMII_ID ||
+> > >             phydev->interface =3D=3D PHY_INTERFACE_MODE_RGMII_RXID) {
+> > > -               /* If RGMII_ID or RGMII_RXID are specified enable RX =
+delay,
+> > > -                * otherwise keep it disabled
+> > > -                */
+> > >                 ret =3D at803x_enable_rx_delay(phydev);
+> > > -               if (ret < 0)
+> > > -                       return ret;
+> > > +       } else {
+> > > +               ret =3D at803x_disable_rx_delay(phydev);
+> > >         }
+> > > +       if (ret < 0)
+> > > +               return ret;
+> > >
+> > >         if (phydev->interface =3D=3D PHY_INTERFACE_MODE_RGMII_ID ||
+> > >             phydev->interface =3D=3D PHY_INTERFACE_MODE_RGMII_TXID) {
+> > > -               /* If RGMII_ID or RGMII_TXID are specified enable TX =
+delay,
+> > > -                * otherwise keep it disabled
+> > > -                */
+> > >                 ret =3D at803x_enable_tx_delay(phydev);
+> > > +       } else {
+> > > +               ret =3D at803x_disable_tx_delay(phydev);
+> > >         }
+> > >
+> > >         return ret;
+> > > --
+> > > 2.20.1
+> > >
+> >
+> > Regards,
+> > -Vladimir
+>
 
-Regards,
-
-Hans
-
-
->   
->   	/* Get initial state */
->   	cht_wc_extcon_pwrsrc_event(ext);
-> 
+Thanks,
+-Vladimir
