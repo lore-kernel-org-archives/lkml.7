@@ -2,236 +2,132 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FE6C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B6AC32757
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6732166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7AF2184E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:16:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565342178;
+	bh=TV6APTnpfV3NfB2dQiDb6/LNtdcZ4qHbPaHm2cq8Boc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RpAFBdkHtUDn1xdQRDgamqncU+i8ME2a4eu7bKgYX6g5t9E0jJy7qJYLFzgBdiLCA
+	 1B60UL28j7/UzIJe1AWMXuYBgcBpwiMLpBXhJgb10GkE8qngrlLSFNds4PMP2duk1X
+	 y3XuzKteKXzoEnNhqPxKp0M/ElI2daAL5V2ISvT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406118AbfHIJLK (ORCPT
+        id S2406090AbfHIJQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 05:11:10 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:38350 "EHLO huawei.com"
+        Fri, 9 Aug 2019 05:16:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60362 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405991AbfHIJLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 05:11:09 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3196522D7CAED50D4FE6;
-        Fri,  9 Aug 2019 17:11:07 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Fri, 9 Aug 2019
- 17:10:56 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <perex@perex.cz>, <tiwai@suse.com>, <broonie@kernel.org>,
-        <rfontana@redhat.com>, <kstewart@linuxfoundation.org>,
-        <allison@lohutok.net>, <armijn@tjaldur.nl>
-CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] ALSA: Au88x0 - remove some unused const variables
-Date:   Fri, 9 Aug 2019 17:06:20 +0800
-Message-ID: <20190809090620.70496-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S2405641AbfHIJQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 05:16:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EAA78B011;
+        Fri,  9 Aug 2019 09:16:14 +0000 (UTC)
+Date:   Fri, 9 Aug 2019 11:16:14 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jerome Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Black <daniel@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: Re: [PATCH 1/3] mm/mlock.c: convert put_page() to put_user_page*()
+Message-ID: <20190809091614.GO18351@dhcp22.suse.cz>
+References: <20190805222019.28592-2-jhubbard@nvidia.com>
+ <20190807110147.GT11812@dhcp22.suse.cz>
+ <01b5ed91-a8f7-6b36-a068-31870c05aad6@nvidia.com>
+ <20190808062155.GF11812@dhcp22.suse.cz>
+ <875dca95-b037-d0c7-38bc-4b4c4deea2c7@suse.cz>
+ <306128f9-8cc6-761b-9b05-578edf6cce56@nvidia.com>
+ <d1ecb0d4-ea6a-637d-7029-687b950b783f@nvidia.com>
+ <420a5039-a79c-3872-38ea-807cedca3b8a@suse.cz>
+ <20190809082307.GL18351@dhcp22.suse.cz>
+ <a83e4449-fc8d-7771-1b78-2fa645fa0772@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a83e4449-fc8d-7771-1b78-2fa645fa0772@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sound/pci/au88x0/au88x0_xtalk.c:121:28: warning: asXtalkWideCoefsRightXt defined but not used [-Wunused-const-variable=]
-sound/pci/au88x0/au88x0_xtalk.c:152:28: warning: asXtalkNarrowCoefsRightXt defined but not used [-Wunused-const-variable=]
-sound/pci/au88x0/au88x0_xtalk.c:175:28: warning: asXtalkCoefsNegPipe defined but not used [-Wunused-const-variable=]
-sound/pci/au88x0/au88x0_xtalk.c:183:28: warning: asXtalkCoefsNumTest defined but not used [-Wunused-const-variable=]
-sound/pci/au88x0/au88x0_xtalk.c:191:28: warning: asXtalkCoefsDenTest defined but not used [-Wunused-const-variable=]
-sound/pci/au88x0/au88x0_xtalk.c:199:28: warning: asXtalkOutStateTest defined but not used [-Wunused-const-variable=]
-sound/pci/au88x0/au88x0_xtalk.c:20:20: warning: sXtalkWideKRightXt defined but not used [-Wunused-const-variable=]
-sound/pci/au88x0/au88x0_xtalk.c:231:28: warning: asDiamondCoefsRightXt defined but not used [-Wunused-const-variable=]
-sound/pci/au88x0/au88x0_xtalk.c:24:20: warning: sXtalkWideShiftRightXt defined but not used [-Wunused-const-variable=]
-sound/pci/au88x0/au88x0_xtalk.c:30:20: warning: sXtalkNarrowKRightXt defined but not used [-Wunused-const-variable=]
-sound/pci/au88x0/au88x0_xtalk.c:34:20: warning: sXtalkNarrowShiftRightXt defined but not used [-Wunused-const-variable=]
-sound/pci/au88x0/au88x0_xtalk.c:38:28: warning: asXtalkGainsDefault defined but not used [-Wunused-const-variable=]
-sound/pci/au88x0/au88x0_xtalk.c:43:28: warning: asXtalkGainsTest defined but not used [-Wunused-const-variable=]
-sound/pci/au88x0/au88x0_xtalk.c:48:28: warning: asXtalkGains1Chan defined but not used [-Wunused-const-variable=]
-sound/pci/au88x0/au88x0_xtalk.c:67:28: warning: alXtalkDlineTest defined but not used [-Wunused-const-variable=]
-sound/pci/au88x0/au88x0_xtalk.c:77:30: warning: asXtalkInStateTest defined but not used [-Wunused-const-variable=]
-sound/pci/au88x0/au88x0_xtalk.c:92:20: warning: sDiamondKRightXt defined but not used [-Wunused-const-variable=]
-sound/pci/au88x0/au88x0_xtalk.c:96:20: warning: sDiamondShiftRightXt defined but not used [-Wunused-const-variable=]
+On Fri 09-08-19 02:05:15, John Hubbard wrote:
+> On 8/9/19 1:23 AM, Michal Hocko wrote:
+> > On Fri 09-08-19 10:12:48, Vlastimil Babka wrote:
+> > > On 8/9/19 12:59 AM, John Hubbard wrote:
+> > > > > > That's true. However, I'm not sure munlocking is where the
+> > > > > > put_user_page() machinery is intended to be used anyway? These are
+> > > > > > short-term pins for struct page manipulation, not e.g. dirtying of page
+> > > > > > contents. Reading commit fc1d8e7cca2d I don't think this case falls
+> > > > > > within the reasoning there. Perhaps not all GUP users should be
+> > > > > > converted to the planned separate GUP tracking, and instead we should
+> > > > > > have a GUP/follow_page_mask() variant that keeps using get_page/put_page?
+> > > > > 
+> > > > > Interesting. So far, the approach has been to get all the gup callers to
+> > > > > release via put_user_page(), but if we add in Jan's and Ira's vaddr_pin_pages()
+> > > > > wrapper, then maybe we could leave some sites unconverted.
+> > > > > 
+> > > > > However, in order to do so, we would have to change things so that we have
+> > > > > one set of APIs (gup) that do *not* increment a pin count, and another set
+> > > > > (vaddr_pin_pages) that do.
+> > > > > 
+> > > > > Is that where we want to go...?
+> > > > > 
+> > > 
+> > > We already have a FOLL_LONGTERM flag, isn't that somehow related? And if
+> > > it's not exactly the same thing, perhaps a new gup flag to distinguish
+> > > which kind of pinning to use?
+> > 
+> > Agreed. This is a shiny example how forcing all existing gup users into
+> > the new scheme is subotimal at best. Not the mention the overal
+> > fragility mention elsewhere. I dislike the conversion even more now.
+> > 
+> > Sorry if this was already discussed already but why the new pinning is
+> > not bound to FOLL_LONGTERM (ideally hidden by an interface so that users
+> > do not have to care about the flag) only?
+> > 
+> 
+> Oh, it's been discussed alright, but given how some of the discussions have gone,
+> I certainly am not surprised that there are still questions and criticisms!
+> Especially since I may have misunderstood some of the points, along the way.
+> It's been quite a merry go round. :)
 
-They are never used, so can be removed.
+Yeah, I've tried to follow them but just gave up at some point.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- sound/pci/au88x0/au88x0_xtalk.c | 85 -----------------------------------------
- 1 file changed, 85 deletions(-)
+> Anyway, what I'm hearing now is: for gup(FOLL_LONGTERM), apply the pinned tracking.
+> And therefore only do put_user_page() on pages that were pinned with
+> FOLL_LONGTERM. For short term pins, let the locking do what it will:
+> things can briefly block and all will be well.
+> 
+> Also, that may or may not come with a wrapper function, courtesy of Jan
+> and Ira.
+> 
+> Is that about right? It's late here, but I don't immediately recall any
+> problems with doing it that way...
 
-diff --git a/sound/pci/au88x0/au88x0_xtalk.c b/sound/pci/au88x0/au88x0_xtalk.c
-index 084fcbf..143646c 100644
---- a/sound/pci/au88x0/au88x0_xtalk.c
-+++ b/sound/pci/au88x0/au88x0_xtalk.c
-@@ -17,39 +17,20 @@
- static short const sXtalkWideKLeftEq = 0x269C;
- static short const sXtalkWideKRightEq = 0x269C;
- static short const sXtalkWideKLeftXt = 0xF25E;
--static short const sXtalkWideKRightXt = 0xF25E;
- static short const sXtalkWideShiftLeftEq = 1;
- static short const sXtalkWideShiftRightEq = 1;
- static short const sXtalkWideShiftLeftXt = 0;
--static short const sXtalkWideShiftRightXt = 0;
- static unsigned short const wXtalkWideLeftDelay = 0xd;
- static unsigned short const wXtalkWideRightDelay = 0xd;
- static short const sXtalkNarrowKLeftEq = 0x468D;
- static short const sXtalkNarrowKRightEq = 0x468D;
- static short const sXtalkNarrowKLeftXt = 0xF82E;
--static short const sXtalkNarrowKRightXt = 0xF82E;
- static short const sXtalkNarrowShiftLeftEq = 0x3;
- static short const sXtalkNarrowShiftRightEq = 0x3;
- static short const sXtalkNarrowShiftLeftXt = 0;
--static short const sXtalkNarrowShiftRightXt = 0;
- static unsigned short const wXtalkNarrowLeftDelay = 0x7;
- static unsigned short const wXtalkNarrowRightDelay = 0x7;
- 
--static xtalk_gains_t const asXtalkGainsDefault = {
--	0x4000, 0x4000, 0x4000, 0x4000, 0x4000,
--	0x4000, 0x4000, 0x4000, 0x4000,	0x4000
--};
--
--static xtalk_gains_t const asXtalkGainsTest = {
--	0x7fff, 0x8000, 0x0000, 0x0000, 0x0001,
--	0xffff, 0x4000, 0xc000, 0x0002, 0xfffe
--};
--
--static xtalk_gains_t const asXtalkGains1Chan = {
--	0x7FFF, 0, 0, 0, 0,
--	0x7FFF, 0, 0, 0, 0,
--};
--
- // Input gain for 4 A3D slices. One possible input pair is left zero.
- static xtalk_gains_t const asXtalkGainsAllChan = {
- 	0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0,
-@@ -64,20 +45,11 @@ static xtalk_dline_t const alXtalkDlineZeros = {
- 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- };
--static xtalk_dline_t const alXtalkDlineTest = {
--	0x0000fc18, 0xfff03e8, 0x000186a0, 0xfffe7960, 1, 0xffffffff, 0, 0,
--	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
--	0, 0, 0, 0, 0, 0, 0, 0
--};
- 
- static xtalk_instate_t const asXtalkInStateZeros = {
- 	0, 0, 0, 0
- };
- 
--static xtalk_instate_t const asXtalkInStateTest = {
--	0x0080, 0xff80, 0x0001, 0xffff
--};
--
- static xtalk_state_t const asXtalkOutStateZeros = {
- 	{0, 0, 0, 0},
- 	{0, 0, 0, 0},
-@@ -89,11 +61,9 @@ static xtalk_state_t const asXtalkOutStateZeros = {
- static short const sDiamondKLeftEq = 0x401d;
- static short const sDiamondKRightEq = 0x401d;
- static short const sDiamondKLeftXt = 0xF90E;
--static short const sDiamondKRightXt = 0xF90E;
- static short const sDiamondShiftLeftEq = 1;
- static short const sDiamondShiftRightEq = 1;
- static short const sDiamondShiftLeftXt = 0;
--static short const sDiamondShiftRightXt = 0;
- static unsigned short const wDiamondLeftDelay = 0xb;
- static unsigned short const wDiamondRightDelay = 0xb;
- 
-@@ -118,13 +88,6 @@ static xtalk_coefs_t const asXtalkWideCoefsLeftXt = {
- 	{0x77dc, 0xc79e, 0xffb8, 0x000a, 0},
- 	{0, 0, 0, 0, 0}
- };
--static xtalk_coefs_t const asXtalkWideCoefsRightXt = {
--	{0x55c6, 0xc97b, 0x005b, 0x0047, 0},
--	{0x6a60, 0xca20, 0xffc6, 0x0040, 0},
--	{0x6411, 0xd711, 0xfca1, 0x0190, 0},
--	{0x77dc, 0xc79e, 0xffb8, 0x000a, 0},
--	{0, 0, 0, 0, 0}
--};
- static xtalk_coefs_t const asXtalkNarrowCoefsLeftEq = {
- 	{0x50B5, 0xD07C, 0x026D, 0xFD21, 0},
- 	{0x460F, 0xE44F, 0xF75E, 0xEFA6, 0},
-@@ -149,14 +112,6 @@ static xtalk_coefs_t const asXtalkNarrowCoefsLeftXt = {
- 	{0, 0, 0, 0, 0}
- };
- 
--static xtalk_coefs_t const asXtalkNarrowCoefsRightXt = {
--	{0x3CB2, 0xDF49, 0xF6EA, 0x095B, 0},
--	{0x6777, 0xC915, 0xFEAF, 0x00B1, 0},
--	{0x7762, 0xC7D9, 0x025B, 0xFDA6, 0},
--	{0x6B7A, 0xD2AA, 0xF2FB, 0x0B64, 0},
--	{0, 0, 0, 0, 0}
--};
--
- static xtalk_coefs_t const asXtalkCoefsZeros = {
- 	{0, 0, 0, 0, 0},
- 	{0, 0, 0, 0, 0},
-@@ -172,37 +127,6 @@ static xtalk_coefs_t const asXtalkCoefsPipe = {
- 	{0, 0, 0x0FA0, 0, 0},
- 	{0, 0, 0x1180, 0, 0},
- };
--static xtalk_coefs_t const asXtalkCoefsNegPipe = {
--	{0, 0, 0xF380, 0, 0},
--	{0, 0, 0xF380, 0, 0},
--	{0, 0, 0xF380, 0, 0},
--	{0, 0, 0xF380, 0, 0},
--	{0, 0, 0xF200, 0, 0}
--};
--
--static xtalk_coefs_t const asXtalkCoefsNumTest = {
--	{0, 0, 0xF380, 0x8000, 0x6D60},
--	{0, 0, 0, 0, 0},
--	{0, 0, 0, 0, 0},
--	{0, 0, 0, 0, 0},
--	{0, 0, 0, 0, 0}
--};
--
--static xtalk_coefs_t const asXtalkCoefsDenTest = {
--	{0xC000, 0x2000, 0x4000, 0, 0},
--	{0, 0, 0, 0, 0},
--	{0, 0, 0, 0, 0},
--	{0, 0, 0, 0, 0},
--	{0, 0, 0, 0, 0}
--};
--
--static xtalk_state_t const asXtalkOutStateTest = {
--	{0x7FFF, 0x0004, 0xFFFC, 0},
--	{0xFE00, 0x0008, 0xFFF8, 0x4000},
--	{0x0200, 0x0010, 0xFFF0, 0xC000},
--	{0x8000, 0x0020, 0xFFE0, 0},
--	{0, 0, 0, 0}
--};
- 
- static xtalk_coefs_t const asDiamondCoefsLeftEq = {
- 	{0x0F1E, 0x2D05, 0xF8E3, 0x07C8, 0},
-@@ -228,15 +152,6 @@ static xtalk_coefs_t const asDiamondCoefsLeftXt = {
- 	{0, 0, 0, 0, 0}
- };
- 
--static xtalk_coefs_t const asDiamondCoefsRightXt = {
--	{0x3B50, 0xFE08, 0xF959, 0x0060, 0},
--	{0x9FCB, 0xD8F1, 0x00A2, 0x003A, 0},
--	{0, 0, 0, 0, 0},
--	{0, 0, 0, 0, 0},
--	{0, 0, 0, 0, 0}
--};
--
-- /**/
- /* XTalk EQ and XT */
- static void
- vortex_XtalkHw_SetLeftEQ(vortex_t * vortex, short arg_0, short arg_4,
+Yes that makes more sense to me. Whoever needs that tracking should
+opt-in for it. Otherwise you just risk problems like the one discussed
+in the mlock path (because we do a strange stuff in the name of
+performance) and a never ending whack a mole where new users do not
+follow the new API usage and that results in all sorts of weird issues.
+
+Thanks!
 -- 
-2.7.4
-
-
+Michal Hocko
+SUSE Labs
