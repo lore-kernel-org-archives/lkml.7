@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C25C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9B7C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9D0C2171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E622171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406121AbfHIJwA (ORCPT
+        id S2406211AbfHIJwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 05:52:00 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4217 "EHLO huawei.com"
+        Fri, 9 Aug 2019 05:52:03 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4214 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732885AbfHIJv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 05:51:59 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2F6FE46AAED47B7556F8;
+        id S2406125AbfHIJwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 05:52:01 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 086CDDCAC1ABFA942FFF;
         Fri,  9 Aug 2019 17:51:58 +0800 (CST)
 Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
  (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Fri, 9 Aug 2019
@@ -35,9 +35,9 @@ CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
         <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
         <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
         <zhaohongjiang@huawei.com>, Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH v6 03/12] powerpc: introduce kernstart_virt_addr to store the kernel base
-Date:   Fri, 9 Aug 2019 18:07:51 +0800
-Message-ID: <20190809100800.5426-4-yanaijie@huawei.com>
+Subject: [PATCH v6 02/12] powerpc: move memstart_addr and kernstart_addr to init-common.c
+Date:   Fri, 9 Aug 2019 18:07:50 +0800
+Message-ID: <20190809100800.5426-3-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20190809100800.5426-1-yanaijie@huawei.com>
 References: <20190809100800.5426-1-yanaijie@huawei.com>
@@ -50,8 +50,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now the kernel base is a fixed value - KERNELBASE. To support KASLR, we
-need a variable to store the kernel base.
+These two variables are both defined in init_32.c and init_64.c. Move
+them to init-common.c and make them __ro_after_init.
 
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 Cc: Diana Craciun <diana.craciun@nxp.com>
@@ -65,36 +65,59 @@ Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
 Tested-by: Diana Craciun <diana.craciun@nxp.com>
 ---
- arch/powerpc/include/asm/page.h | 2 ++
- arch/powerpc/mm/init-common.c   | 2 ++
- 2 files changed, 4 insertions(+)
+ arch/powerpc/mm/init-common.c | 5 +++++
+ arch/powerpc/mm/init_32.c     | 5 -----
+ arch/powerpc/mm/init_64.c     | 5 -----
+ 3 files changed, 5 insertions(+), 10 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
-index 0d52f57fca04..4d32d1b561d6 100644
---- a/arch/powerpc/include/asm/page.h
-+++ b/arch/powerpc/include/asm/page.h
-@@ -315,6 +315,8 @@ void arch_free_page(struct page *page, int order);
- 
- struct vm_area_struct;
- 
-+extern unsigned long kernstart_virt_addr;
-+
- #include <asm-generic/memory_model.h>
- #endif /* __ASSEMBLY__ */
- #include <asm/slice.h>
 diff --git a/arch/powerpc/mm/init-common.c b/arch/powerpc/mm/init-common.c
-index e223da482c0c..42ef7a6e6098 100644
+index a84da92920f7..e223da482c0c 100644
 --- a/arch/powerpc/mm/init-common.c
 +++ b/arch/powerpc/mm/init-common.c
-@@ -25,6 +25,8 @@ phys_addr_t memstart_addr __ro_after_init = (phys_addr_t)~0ull;
- EXPORT_SYMBOL_GPL(memstart_addr);
- phys_addr_t kernstart_addr __ro_after_init;
- EXPORT_SYMBOL_GPL(kernstart_addr);
-+unsigned long kernstart_virt_addr __ro_after_init = KERNELBASE;
-+EXPORT_SYMBOL_GPL(kernstart_virt_addr);
+@@ -21,6 +21,11 @@
+ #include <asm/pgtable.h>
+ #include <asm/kup.h>
  
++phys_addr_t memstart_addr __ro_after_init = (phys_addr_t)~0ull;
++EXPORT_SYMBOL_GPL(memstart_addr);
++phys_addr_t kernstart_addr __ro_after_init;
++EXPORT_SYMBOL_GPL(kernstart_addr);
++
  static bool disable_kuep = !IS_ENABLED(CONFIG_PPC_KUEP);
  static bool disable_kuap = !IS_ENABLED(CONFIG_PPC_KUAP);
+ 
+diff --git a/arch/powerpc/mm/init_32.c b/arch/powerpc/mm/init_32.c
+index b04896a88d79..872df48ae41b 100644
+--- a/arch/powerpc/mm/init_32.c
++++ b/arch/powerpc/mm/init_32.c
+@@ -56,11 +56,6 @@
+ phys_addr_t total_memory;
+ phys_addr_t total_lowmem;
+ 
+-phys_addr_t memstart_addr = (phys_addr_t)~0ull;
+-EXPORT_SYMBOL(memstart_addr);
+-phys_addr_t kernstart_addr;
+-EXPORT_SYMBOL(kernstart_addr);
+-
+ #ifdef CONFIG_RELOCATABLE
+ /* Used in __va()/__pa() */
+ long long virt_phys_offset;
+diff --git a/arch/powerpc/mm/init_64.c b/arch/powerpc/mm/init_64.c
+index a44f6281ca3a..c836f1269ee7 100644
+--- a/arch/powerpc/mm/init_64.c
++++ b/arch/powerpc/mm/init_64.c
+@@ -63,11 +63,6 @@
+ 
+ #include <mm/mmu_decl.h>
+ 
+-phys_addr_t memstart_addr = ~0;
+-EXPORT_SYMBOL_GPL(memstart_addr);
+-phys_addr_t kernstart_addr;
+-EXPORT_SYMBOL_GPL(kernstart_addr);
+-
+ #ifdef CONFIG_SPARSEMEM_VMEMMAP
+ /*
+  * Given an address within the vmemmap, determine the pfn of the page that
 -- 
 2.17.2
 
