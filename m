@@ -2,188 +2,114 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA08C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 215BFC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 682E521743
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:00:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565355610;
-	bh=iDWm4tx1wC6eLb9RWMaVgsIMEJY2hF+w7j8VkSayoo8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=p1garxFvawvK3UcaG5Epim5s3kP2QQhTXeU7JxStXuZk+nQBA/gbOUy+Mv2ZznU2y
-	 ZLXm62eLF/nfA5Ru48I1cEgp3sKek+yDxxZ1iBZxGAjCIJqoYfRVyAU9UgPgWFOVnX
-	 IKgbUzoSeEQpJC5wxm5sfsZbIKZIUnHauHtOoBqY=
+	by mail.kernel.org (Postfix) with ESMTP id EA29C20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:02:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Xjg2ACyH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406979AbfHINAJ (ORCPT
+        id S2406958AbfHINC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:00:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbfHINAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:00:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DCF020B7C;
-        Fri,  9 Aug 2019 13:00:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565355607;
-        bh=iDWm4tx1wC6eLb9RWMaVgsIMEJY2hF+w7j8VkSayoo8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QZK6BTSHaAol78GPo+Y5GRnYjKPVwg3rODZUsyUhYlZ5M85m65KYBBe3xgYzevA81
-         BySmSkonFQQiLBQX4n7PX5CZHLSdLYqP8Oe6LWMTsSfFKgwWnLzjIIslNgKGVPNDOW
-         nIpYL1s1RL1gPqpxZw0yCwtywrc+Vtx0Q8ocJiXY=
-Date:   Fri, 9 Aug 2019 15:00:05 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Joe Burmeister <joe.burmeister@devtank.co.uk>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Add optional chip erase functionality to AT25 EEPROM
- driver.
-Message-ID: <20190809130005.GA13962@kroah.com>
-References: <20190809125358.24440-1-joe.burmeister@devtank.co.uk>
+        Fri, 9 Aug 2019 09:02:56 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46933 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406273AbfHINC4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:02:56 -0400
+Received: by mail-wr1-f66.google.com with SMTP id z1so98176937wru.13
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 06:02:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=guKBWWb3eeZ7l9sjmmrFhL2DHqTLBp7eL7U+EUACDM8=;
+        b=Xjg2ACyHEuYzp7VVPyYXDDOpLZ7hCP/FwuXUsYIVKWH7tM0BC7WOlwO7zKUjhYotVP
+         rHGLALHOhALV6DiB2heE8wKNPFy6F/JLb1mOJg8mfJV4pN3jzj2GIc5OOISpmByP0f9l
+         wysMSu1etTSz9InGf+eX9NjVFvEiji/0GfFMni4Wp1A7v+duNuFbkHfqvADKqI589VDr
+         R2iezcgxY2AGfVSmA2YqjtQKLCdYh3EU2LFVgr+pz9+KM0dNG/94LYvjCp62k0ny+gmJ
+         5BallfcItdto7cNXHWjDaU/XR7ykQadkqJPsMKJsw9lyk73fUcJ4CtvCc+IJQjVnot3M
+         Lz8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=guKBWWb3eeZ7l9sjmmrFhL2DHqTLBp7eL7U+EUACDM8=;
+        b=oEp9Ak7IpSuFqLGpPMpjTZe0jTINmXzC/W/uhvnxotAWEy6M+OHHfvCXid3YnMvH6+
+         rn43/kqGjh9L1MjTUqh6WKKVCK+1TexyFFDf+nHrGtG6eL4m3eM2zmgBUHih7nSzicjl
+         lY237ysB4AusFbrQvCcDO745PPj0GUNQQ+bkwX4l3OXb7NyUUgrSqXB4KxxDkclTSvRA
+         CQlMbn/zawanW8U7CptpePYfyw91WC2vbaRrjSIaRFAtzYt7t3onjdqRVs9NW61jql9t
+         +J2gg9SVarSNif4emEE7RfEKjLDUDwF+MS3RXF9Wm8xoO4xcv47OrcG8kMjQTW8Jy0cL
+         0EOw==
+X-Gm-Message-State: APjAAAUHgCxa81fy+qw/kMa6ZxAxzeXaVqn95O6MVQk2W1seFpjPcsQD
+        hnt4ARJZhiI6uP0EXEX7yYwGoA==
+X-Google-Smtp-Source: APXvYqxUWEqrAbLvbnYlAsqu5B1nR64GqnOYDQyeEk0f7fVfQpAONB4B8gK0T4HcpGUquzK6j54zXg==
+X-Received: by 2002:adf:e790:: with SMTP id n16mr23176826wrm.120.1565355773854;
+        Fri, 09 Aug 2019 06:02:53 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id t24sm7932983wmj.14.2019.08.09.06.02.52
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 09 Aug 2019 06:02:53 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>, sboyd@kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 0/4] clk: meson: g12a: add support for DVFS
+In-Reply-To: <7hzhkje4ov.fsf@baylibre.com>
+References: <20190731084019.8451-1-narmstrong@baylibre.com> <7hzhkje4ov.fsf@baylibre.com>
+Date:   Fri, 09 Aug 2019 15:02:52 +0200
+Message-ID: <1jy302o5j7.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190809125358.24440-1-joe.burmeister@devtank.co.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 01:53:55PM +0100, Joe Burmeister wrote:
-> +static void _eeprom_at25_store_erase_locked(struct at25_data *at25)
-> +{
-> +	unsigned long	timeout, retries;
-> +	int				sr, status;
-> +	u8	cp;
-> +
-> +	cp = AT25_WREN;
-> +	status = spi_write(at25->spi, &cp, 1);
-> +	if (status < 0) {
-> +		dev_dbg(&at25->spi->dev, "ERASE WREN --> %d\n", status);
-> +		return;
-> +	}
-> +	cp = at25->erase_instr;
-> +	status = spi_write(at25->spi, &cp, 1);
-> +	if (status < 0) {
-> +		dev_dbg(&at25->spi->dev, "CHIP_ERASE --> %d\n", status);
-> +		return;
-> +	}
-> +	/* Wait for non-busy status */
-> +	timeout = jiffies + msecs_to_jiffies(ERASE_TIMEOUT);
-> +	retries = 0;
-> +	do {
-> +		sr = spi_w8r8(at25->spi, AT25_RDSR);
-> +		if (sr < 0 || (sr & AT25_SR_nRDY)) {
-> +			dev_dbg(&at25->spi->dev,
-> +				"rdsr --> %d (%02x)\n", sr, sr);
-> +			/* at HZ=100, this is sloooow */
-> +			msleep(1);
-> +			continue;
-> +		}
-> +		if (!(sr & AT25_SR_nRDY))
-> +			return;
-> +	} while (retries++ < 200 || time_before_eq(jiffies, timeout));
-> +
-> +	if ((sr < 0) || (sr & AT25_SR_nRDY)) {
-> +		dev_err(&at25->spi->dev,
-> +			"chip erase, timeout after %u msecs\n",
-> +			jiffies_to_msecs(jiffies -
-> +				(timeout - ERASE_TIMEOUT)));
-> +		status = -ETIMEDOUT;
-> +		return;
-> +	}
-> +}
-> +
-> +
+On Thu 08 Aug 2019 at 14:18, Kevin Hilman <khilman@baylibre.com> wrote:
 
-No need for 2 lines :(
+> Neil Armstrong <narmstrong@baylibre.com> writes:
+>
+>> The G12A/G12B Socs embeds a specific clock tree for each CPU cluster :
+>> cpu_clk / cpub_clk
+>> |   \- cpu_clk_dyn
+>> |      |  \- cpu_clk_premux0
+>> |      |        |- cpu_clk_postmux0
+>> |      |        |    |- cpu_clk_dyn0_div
+>> |      |        |    \- xtal/fclk_div2/fclk_div3
+>> |      |        \- xtal/fclk_div2/fclk_div3
+>> |      \- cpu_clk_premux1
+>> |            |- cpu_clk_postmux1
+>> |            |    |- cpu_clk_dyn1_div
+>> |            |    \- xtal/fclk_div2/fclk_div3
+>> |            \- xtal/fclk_div2/fclk_div3
+>> \ sys_pll / sys1_pll
+>>
+>> This patchset adds notifiers on cpu_clk / cpub_clk, cpu_clk_dyn,
+>> cpu_clk_premux0 and sys_pll / sys1_pll to permit change frequency of
+>> the CPU clock in a safe way as recommended by the vendor Documentation
+>> and reference code.
+>>
+>> This patchset :
+>> - introduces needed core and meson clk changes
+>> - adds the clock notifiers
+>>
+>> Dependencies:
+>> - None
+>
+> nit: this doesn't apply to v5.3-rc, but appears to apply on
+> clk-meson/v5.4/drivers, so it appears to be dependent on the cleanups
+> from Alex.
 
-> +static ssize_t eeprom_at25_store_erase(struct device *dev,
-> +					 struct device_attribute *attr,
-> +					 const char *buf, size_t count)
-> +{
-> +	struct at25_data *at25 = dev_get_drvdata(dev);
-> +	int erase = 0;
-> +
-> +	sscanf(buf, "%d", &erase);
-> +	if (erase) {
-> +		mutex_lock(&at25->lock);
-> +		_eeprom_at25_store_erase_locked(at25);
-> +		mutex_unlock(&at25->lock);
-> +	}
-> +
-> +	return count;
-> +}
-> +
-> +static DEVICE_ATTR(erase, S_IWUSR, NULL, eeprom_at25_store_erase);
-> +
-> +
+Indeed, Applied on top of this.
 
-Same here.
-
-Also, where is the Documentation/ABI/ update for the new sysfs file?
-
->  static int at25_probe(struct spi_device *spi)
->  {
->  	struct at25_data	*at25 = NULL;
-> @@ -311,6 +379,7 @@ static int at25_probe(struct spi_device *spi)
->  	int			err;
->  	int			sr;
->  	int			addrlen;
-> +	int			has_erase;
->  
->  	/* Chip description */
->  	if (!spi->dev.platform_data) {
-> @@ -352,6 +421,9 @@ static int at25_probe(struct spi_device *spi)
->  	spi_set_drvdata(spi, at25);
->  	at25->addrlen = addrlen;
->  
-> +	/* Optional chip erase instruction */
-> +	device_property_read_u8(&spi->dev, "chip_erase_instruction", &at25->erase_instr);
-> +
->  	at25->nvmem_config.name = dev_name(&spi->dev);
->  	at25->nvmem_config.dev = &spi->dev;
->  	at25->nvmem_config.read_only = chip.flags & EE_READONLY;
-> @@ -370,17 +442,22 @@ static int at25_probe(struct spi_device *spi)
->  	if (IS_ERR(at25->nvmem))
->  		return PTR_ERR(at25->nvmem);
->  
-> -	dev_info(&spi->dev, "%d %s %s eeprom%s, pagesize %u\n",
-> +	has_erase = (!(chip.flags & EE_READONLY) && at25->erase_instr);
-> +
-> +	dev_info(&spi->dev, "%d %s %s eeprom%s, pagesize %u%s\n",
->  		(chip.byte_len < 1024) ? chip.byte_len : (chip.byte_len / 1024),
->  		(chip.byte_len < 1024) ? "Byte" : "KByte",
->  		at25->chip.name,
->  		(chip.flags & EE_READONLY) ? " (readonly)" : "",
-> -		at25->chip.page_size);
-> +		at25->chip.page_size, (has_erase)?" <has erase>":"");
-> +
-> +	if (has_erase && device_create_file(&spi->dev, &dev_attr_erase))
-> +		dev_err(&spi->dev, "can't create erase interface\n");
-
-You just raced with userspace and lost :(
-
-Please create an attribute group and add it to the .dev_groups pointer
-in struct driver so it can be created properly in a race-free manner.
-
-See the thread at:
-	https://lore.kernel.org/r/20190731124349.4474-2-gregkh@linuxfoundation.org
-for the details on how to do that.
-
-thanks,
-
-greg k-h
+>
+> Kevin
