@@ -4,262 +4,192 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E03BDC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05562C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B24D420820
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE48520820
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:46:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407226AbfHIOqO (ORCPT
+        id S2407229AbfHIOql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 10:46:14 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:40925 "EHLO
+        Fri, 9 Aug 2019 10:46:41 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:37867 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406127AbfHIOqO (ORCPT
+        with ESMTP id S1726342AbfHIOql (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 10:46:14 -0400
+        Fri, 9 Aug 2019 10:46:41 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MpTpc-1if78t25mO-00py9b; Fri, 09 Aug 2019 16:45:59 +0200
+ 1M91Tq-1hzxWA3eR4-0068fZ; Fri, 09 Aug 2019 16:46:32 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     soc@kernel.org, Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+To:     soc@kernel.org
+Cc:     Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2 12/13] ARM: lpc32xx: clean up header files
-Date:   Fri,  9 Aug 2019 16:40:38 +0200
-Message-Id: <20190809144043.476786-13-arnd@arndb.de>
+Subject: [PATCH v2 13/13] ARM: lpc32xx: allow multiplatform build
+Date:   Fri,  9 Aug 2019 16:40:39 +0200
+Message-Id: <20190809144043.476786-14-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20190809144043.476786-1-arnd@arndb.de>
 References: <20190809144043.476786-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:gUv5Djd/kUqZty7AwE14hMF4BlO136N+kfe2FDOX9t6V9ZTl3xJ
- RyDl101DmZmiqt6fWRNui6ntR+M8v6PNq36iqqfyAIEP4TNYQgNva6vtZMNBiqQ5whyMYJl
- uME5uFSbE50zOjXnMdLR0vuRF67iM6tFcgPcX4lSproSYFO+rw88afqDIy4juJQlXKUZE0t
- wesLQIQyeBR+lrUPQBxYg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4LZhuL+dm+4=:3OE/ZUQHPHOVTVdznznZXx
- F2OyfC2OjeZoVmm9lNylI73g6dCm780+Ipwl1Jdi2DPqBHoI8GoIw+bBlr2VltLNH6i0vr1q8
- rIF/ySmGXW7tZMB0VllI3+/4vxM8OUyrN6FY6GJ6s+D2Vc8ebnqqAVSRkz6wr0fw7Tw1e6/iV
- 44ggRUunEJPwvBl7QtfDFC/qMfm0HGOVMYVKS54R4WSUElA+rnXSN1KKFzrT4NSDePDoKCZtS
- BvCspyedjyK/lMqDDQ9lCcokNNtEJ/pG0dzskxpw/QgrWoQBYsKP8j9FE/oqseoUDJW8t5u7a
- weT9b0bBW8olKPCKmcqPk5g1u7lvm8WvJqNfegItKNeunq1T6YMzyh3xy5FH0psNAOaKeOkDV
- zs5wlKCRUSyJtZk3qc+hRSebTZtQXIFXZXywAYiXFoav/E2JBbefh/yDJwBHwGYt0Sj7LNT4m
- WtWKrDFA4qwAwtjbLZQwCRiATSD95DmAIkB4wwwwZXGAijS9uW3rHvry1L//1C7l9JTIdbAfj
- 149HFxwj+/+v5cn805YbC9cXL8BL2skeJz4ITkeL0cC+b7tIc3S6LB/lhkoBAaWnuWMmYnMiE
- QzTXlj+kILJ3jL6TzzPDHVjeV8H4Oxfh4Xm5NS7DmNIRjI7URFYufNbf9yi6WkSEH47AEDN0H
- s/W7fKBWJQl9WozDUmfJSOo5bIGRbo99oghLJCpkag3UMvXddho/VUu7TRFKEjcvc3TXuQ5SU
- IVVDb8PCe6GE4A6py4qZkRfx3pWAjSE1AADxWg==
+X-Provags-ID: V03:K1:ZpjjCgarnGP5OJJp7WqQXWJgBqErfvsp1pHllIlsTishTCM846M
+ jagMW25mCiPe3qu3M4uGN7g2QnCf34G9GnKrz0TqjJSnZ6Q+XkjB4nyDo8UTs99GPTy1W9+
+ mVhPZdrw8O3cYMWo/365dZVg+gK46PHAFFZYy5FcyFbaoNKm8JEbKDRWzI+ikSvh3TL8+cg
+ t0242PhtMh68LzzfofLMA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mGfmQMJJPbM=:2+AUq2ZbO8MpEuFsuTDE3V
+ /Wrx2sOiWCbaNdmELUyYovk+spLUFWeBJMcah1lTc/GaQWLv64cDA7p+pJhQU4qDQsG0z0y0I
+ xJ+E2H4bWCF9ELfnBmJXulydXgn40JBRN+5CBpvShd4XY2ctVQdg+qcB9yBrbTMiN4IVpgh/4
+ f9hlw1NtkFuWgeYybeBQsuy535prRveYOqn2BCIAHxWmNhVj2CnKNv7ySWPomminyBKgZzux/
+ MEsPCXPyYE/YyiWzyd8yjazfKr2FnKM4swS6YKHb112HOSiNeznqxMN+xHdkxwcpj3sCJ+LlY
+ CPWDK3UjP5TVfjV1LqPv2KZ/na1PR8D8rFVXg+LhqIKob9WbGqbMegl/7RY0V0gvu91gjopSD
+ L6El8+Nw//G9NySUkDuXFpqtz4UENAMjsh/zXKos7xmjywn0OjUZRpg7uCvjF8cVt3YkwTzbl
+ 1yq7KtY2EJ/whp1KqtUdsIx5Lu7LwFECQqD4Q8dtMkbUs4aWzv1RG7Eio+XFkGYXuO0z770u9
+ kWPktzcKQiO8GyxwAfXLOUckSaY4p9ZRkx4Z/avI+Yj3xjd+5dZfc0vVe6wv/5mDy4gknfzk3
+ mBjH1tEAGc56m/qRIA0MBCL2aGZRE9jXwZlIOOkyKqIwiFdxReT/NqQx/QYBfZtvHOkegNXIJ
+ UYIb7QJA7jST+yVcIsmS21pomW9dsHq0mU/CkxqloLr9nM9K8+0A1AIvjMxyNOCZVYxPDJvIn
+ c0GsggycoOG0ikntFiudD2ZptPiVcBa4VsmlEA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All device drivers have stopped relying on mach/*.h headers,
-so move the remaining headers into arch/arm/mach-lpc32xx/lpc32xx.h
-to prepare for multiplatform builds.
+All preparation work is done, so the platform can finally
+be moved into ARCH_MULTIPLATFORM. This requires a small
+change to the defconfig file to enable the platform.
 
-The mach/entry-macro.S file has been unused for a long time now
-and can simply get removed.
-
-Acked-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/arm/mach-lpc32xx/common.c                |  3 +-
- .../mach-lpc32xx/include/mach/entry-macro.S   | 28 -------------------
- arch/arm/mach-lpc32xx/include/mach/hardware.h | 25 -----------------
- .../mach-lpc32xx/include/mach/uncompress.h    |  4 +--
- .../{include/mach/platform.h => lpc32xx.h}    | 18 ++++++++++--
- arch/arm/mach-lpc32xx/pm.c                    |  3 +-
- arch/arm/mach-lpc32xx/serial.c                |  3 +-
- arch/arm/mach-lpc32xx/suspend.S               |  3 +-
- 8 files changed, 21 insertions(+), 66 deletions(-)
- delete mode 100644 arch/arm/mach-lpc32xx/include/mach/entry-macro.S
- delete mode 100644 arch/arm/mach-lpc32xx/include/mach/hardware.h
- rename arch/arm/mach-lpc32xx/{include/mach/platform.h => lpc32xx.h} (98%)
+ arch/arm/Kconfig                              | 17 +------
+ arch/arm/configs/lpc32xx_defconfig            |  1 +
+ arch/arm/mach-lpc32xx/Kconfig                 | 11 +++++
+ .../mach-lpc32xx/include/mach/uncompress.h    | 48 -------------------
+ 4 files changed, 14 insertions(+), 63 deletions(-)
+ create mode 100644 arch/arm/mach-lpc32xx/Kconfig
+ delete mode 100644 arch/arm/mach-lpc32xx/include/mach/uncompress.h
 
-diff --git a/arch/arm/mach-lpc32xx/common.c b/arch/arm/mach-lpc32xx/common.c
-index a475339333c1..304ea61a0716 100644
---- a/arch/arm/mach-lpc32xx/common.c
-+++ b/arch/arm/mach-lpc32xx/common.c
-@@ -13,8 +13,7 @@
- #include <asm/mach/map.h>
- #include <asm/system_info.h>
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 33b00579beff..65808e17cb3b 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -478,21 +478,6 @@ config ARCH_W90X900
+ 	  <http://www.nuvoton.com/hq/enu/ProductAndSales/ProductLines/
+ 		ConsumerElectronicsIC/ARMMicrocontroller/ARMMicrocontroller>
  
--#include <mach/hardware.h>
--#include <mach/platform.h>
-+#include "lpc32xx.h"
- #include "common.h"
+-config ARCH_LPC32XX
+-	bool "NXP LPC32XX"
+-	select ARM_AMBA
+-	select CLKDEV_LOOKUP
+-	select CLKSRC_LPC32XX
+-	select COMMON_CLK
+-	select CPU_ARM926T
+-	select GENERIC_CLOCKEVENTS
+-	select GENERIC_IRQ_MULTI_HANDLER
+-	select GPIOLIB
+-	select SPARSE_IRQ
+-	select USE_OF
+-	help
+-	  Support for the NXP LPC32XX family of processors
+-
+ config ARCH_PXA
+ 	bool "PXA2xx/PXA3xx-based"
+ 	depends on MMU
+@@ -746,6 +731,8 @@ source "arch/arm/mach-keystone/Kconfig"
  
- /*
-diff --git a/arch/arm/mach-lpc32xx/include/mach/entry-macro.S b/arch/arm/mach-lpc32xx/include/mach/entry-macro.S
+ source "arch/arm/mach-ks8695/Kconfig"
+ 
++source "arch/arm/mach-lpc32xx/Kconfig"
++
+ source "arch/arm/mach-mediatek/Kconfig"
+ 
+ source "arch/arm/mach-meson/Kconfig"
+diff --git a/arch/arm/configs/lpc32xx_defconfig b/arch/arm/configs/lpc32xx_defconfig
+index 3772d5a8975a..09deb57db942 100644
+--- a/arch/arm/configs/lpc32xx_defconfig
++++ b/arch/arm/configs/lpc32xx_defconfig
+@@ -12,6 +12,7 @@ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_SYSCTL_SYSCALL=y
+ CONFIG_EMBEDDED=y
+ CONFIG_SLAB=y
++# CONFIG_ARCH_MULTI_V7 is not set
+ CONFIG_ARCH_LPC32XX=y
+ CONFIG_AEABI=y
+ CONFIG_ZBOOT_ROM_TEXT=0x0
+diff --git a/arch/arm/mach-lpc32xx/Kconfig b/arch/arm/mach-lpc32xx/Kconfig
+new file mode 100644
+index 000000000000..ec87c65f4536
+--- /dev/null
++++ b/arch/arm/mach-lpc32xx/Kconfig
+@@ -0,0 +1,11 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++config ARCH_LPC32XX
++	bool "NXP LPC32XX"
++	depends on ARCH_MULTI_V5
++	select ARM_AMBA
++	select CLKSRC_LPC32XX
++	select CPU_ARM926T
++	select GPIOLIB
++	help
++	  Support for the NXP LPC32XX family of processors
+diff --git a/arch/arm/mach-lpc32xx/include/mach/uncompress.h b/arch/arm/mach-lpc32xx/include/mach/uncompress.h
 deleted file mode 100644
-index eec0f5f7e722..000000000000
---- a/arch/arm/mach-lpc32xx/include/mach/entry-macro.S
+index 74b7aa0da0e4..000000000000
+--- a/arch/arm/mach-lpc32xx/include/mach/uncompress.h
 +++ /dev/null
-@@ -1,28 +0,0 @@
+@@ -1,48 +0,0 @@
 -/* SPDX-License-Identifier: GPL-2.0-or-later */
 -/*
-- * arch/arm/mach-lpc32xx/include/mach/entry-macro.S
+- * arch/arm/mach-lpc32xx/include/mach/uncompress.h
 - *
 - * Author: Kevin Wells <kevin.wells@nxp.com>
 - *
 - * Copyright (C) 2010 NXP Semiconductors
 - */
 -
--#include <mach/hardware.h>
--#include <mach/platform.h>
+-#ifndef __ASM_ARM_ARCH_UNCOMPRESS_H
+-#define __ASM_ARM_ARCH_UNCOMPRESS_H
 -
--#define LPC32XX_INTC_MASKED_STATUS_OFS	0x8
--
--	.macro  get_irqnr_preamble, base, tmp
--	ldr	\base, =IO_ADDRESS(LPC32XX_MIC_BASE)
--	.endm
+-#include <linux/io.h>
 -
 -/*
-- * Return IRQ number in irqnr. Also return processor Z flag status in CPSR
-- * as set if an interrupt is pending.
-- */
--	.macro	get_irqnr_and_base, irqnr, irqstat, base, tmp
--	ldr	\irqstat, [\base, #LPC32XX_INTC_MASKED_STATUS_OFS]
--	clz	\irqnr, \irqstat
--	rsb	\irqnr, \irqnr, #31
--	teq	\irqstat, #0
--	.endm
-diff --git a/arch/arm/mach-lpc32xx/include/mach/hardware.h b/arch/arm/mach-lpc32xx/include/mach/hardware.h
-deleted file mode 100644
-index 4866f096ffce..000000000000
---- a/arch/arm/mach-lpc32xx/include/mach/hardware.h
-+++ /dev/null
-@@ -1,25 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- * arch/arm/mach-lpc32xx/include/mach/hardware.h
-- *
-- * Copyright (c) 2005 MontaVista Software, Inc. <source@mvista.com>
+- * Uncompress output is hardcoded to standard UART 5
 - */
 -
--#ifndef __ASM_ARCH_HARDWARE_H
--#define __ASM_ARCH_HARDWARE_H
+-#define UART_FIFO_CTL_TX_RESET	(1 << 2)
+-#define UART_STATUS_TX_MT	(1 << 6)
+-#define LPC32XX_UART5_BASE	0x40090000
 -
--/*
-- * Start of virtual addresses for IO devices
-- */
--#define IO_BASE		0xF0000000
+-#define _UARTREG(x)		(void __iomem *)(LPC32XX_UART5_BASE + (x))
 -
--/*
-- * This macro relies on fact that for all HW i/o addresses bits 20-23 are 0
-- */
--#define IO_ADDRESS(x)	IOMEM(((((x) & 0xff000000) >> 4) | ((x) & 0xfffff)) |\
--			 IO_BASE)
+-#define LPC32XX_UART_DLLFIFO_O	0x00
+-#define LPC32XX_UART_IIRFCR_O	0x08
+-#define LPC32XX_UART_LSR_O	0x14
 -
--#define io_p2v(x)	((void __iomem *) (unsigned long) IO_ADDRESS(x))
--#define io_v2p(x)	((((x) & 0x0ff00000) << 4) | ((x) & 0x000fffff))
+-static inline void putc(int ch)
+-{
+-	/* Wait for transmit FIFO to empty */
+-	while ((__raw_readl(_UARTREG(LPC32XX_UART_LSR_O)) &
+-		UART_STATUS_TX_MT) == 0)
+-		;
+-
+-	__raw_writel((u32) ch, _UARTREG(LPC32XX_UART_DLLFIFO_O));
+-}
+-
+-static inline void flush(void)
+-{
+-	__raw_writel(__raw_readl(_UARTREG(LPC32XX_UART_IIRFCR_O)) |
+-		UART_FIFO_CTL_TX_RESET, _UARTREG(LPC32XX_UART_IIRFCR_O));
+-}
+-
+-/* NULL functions; we don't presently need them */
+-#define arch_decomp_setup()
 -
 -#endif
-diff --git a/arch/arm/mach-lpc32xx/include/mach/uncompress.h b/arch/arm/mach-lpc32xx/include/mach/uncompress.h
-index a568812a0b91..74b7aa0da0e4 100644
---- a/arch/arm/mach-lpc32xx/include/mach/uncompress.h
-+++ b/arch/arm/mach-lpc32xx/include/mach/uncompress.h
-@@ -12,15 +12,13 @@
- 
- #include <linux/io.h>
- 
--#include <mach/hardware.h>
--#include <mach/platform.h>
--
- /*
-  * Uncompress output is hardcoded to standard UART 5
-  */
- 
- #define UART_FIFO_CTL_TX_RESET	(1 << 2)
- #define UART_STATUS_TX_MT	(1 << 6)
-+#define LPC32XX_UART5_BASE	0x40090000
- 
- #define _UARTREG(x)		(void __iomem *)(LPC32XX_UART5_BASE + (x))
- 
-diff --git a/arch/arm/mach-lpc32xx/include/mach/platform.h b/arch/arm/mach-lpc32xx/lpc32xx.h
-similarity index 98%
-rename from arch/arm/mach-lpc32xx/include/mach/platform.h
-rename to arch/arm/mach-lpc32xx/lpc32xx.h
-index 1c53790444fc..5eeb884a1993 100644
---- a/arch/arm/mach-lpc32xx/include/mach/platform.h
-+++ b/arch/arm/mach-lpc32xx/lpc32xx.h
-@@ -7,8 +7,8 @@
-  * Copyright (C) 2010 NXP Semiconductors
-  */
- 
--#ifndef __ASM_ARCH_PLATFORM_H
--#define __ASM_ARCH_PLATFORM_H
-+#ifndef __ARM_LPC32XX_H
-+#define __ARM_LPC32XX_H
- 
- #define _SBF(f, v)				((v) << (f))
- #define _BIT(n)					_SBF(n, 1)
-@@ -700,4 +700,18 @@
- #define LPC32XX_USB_OTG_DEV_CLOCK_ON	_BIT(1)
- #define LPC32XX_USB_OTG_HOST_CLOCK_ON	_BIT(0)
- 
-+/*
-+ * Start of virtual addresses for IO devices
-+ */
-+#define IO_BASE		0xF0000000
-+
-+/*
-+ * This macro relies on fact that for all HW i/o addresses bits 20-23 are 0
-+ */
-+#define IO_ADDRESS(x)	IOMEM(((((x) & 0xff000000) >> 4) | ((x) & 0xfffff)) |\
-+			 IO_BASE)
-+
-+#define io_p2v(x)	((void __iomem *) (unsigned long) IO_ADDRESS(x))
-+#define io_v2p(x)	((((x) & 0x0ff00000) << 4) | ((x) & 0x000fffff))
-+
- #endif
-diff --git a/arch/arm/mach-lpc32xx/pm.c b/arch/arm/mach-lpc32xx/pm.c
-index 32bca351a73b..b27fa1b9f56c 100644
---- a/arch/arm/mach-lpc32xx/pm.c
-+++ b/arch/arm/mach-lpc32xx/pm.c
-@@ -70,8 +70,7 @@
- 
- #include <asm/cacheflush.h>
- 
--#include <mach/hardware.h>
--#include <mach/platform.h>
-+#include "lpc32xx.h"
- #include "common.h"
- 
- #define TEMP_IRAM_AREA  IO_ADDRESS(LPC32XX_IRAM_BASE)
-diff --git a/arch/arm/mach-lpc32xx/serial.c b/arch/arm/mach-lpc32xx/serial.c
-index cfb35e5691cd..3e765c4bf986 100644
---- a/arch/arm/mach-lpc32xx/serial.c
-+++ b/arch/arm/mach-lpc32xx/serial.c
-@@ -16,8 +16,7 @@
- #include <linux/clk.h>
- #include <linux/io.h>
- 
--#include <mach/hardware.h>
--#include <mach/platform.h>
-+#include "lpc32xx.h"
- #include "common.h"
- 
- #define LPC32XX_SUART_FIFO_SIZE	64
-diff --git a/arch/arm/mach-lpc32xx/suspend.S b/arch/arm/mach-lpc32xx/suspend.S
-index 374f9f07fe48..3f0a8282ef6f 100644
---- a/arch/arm/mach-lpc32xx/suspend.S
-+++ b/arch/arm/mach-lpc32xx/suspend.S
-@@ -11,8 +11,7 @@
-  */
- #include <linux/linkage.h>
- #include <asm/assembler.h>
--#include <mach/platform.h>
--#include <mach/hardware.h>
-+#include "lpc32xx.h"
- 
- /* Using named register defines makes the code easier to follow */
- #define WORK1_REG			r0
 -- 
 2.20.0
 
