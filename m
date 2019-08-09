@@ -2,134 +2,151 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C12EC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 768A1C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E446121743
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:02:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565373769;
-	bh=zjxzQg1FYFOSF2KDukJpcV6tr6z25l9Qqt1DenSM7G0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tyxWP0RG+58DerX2Gyl5dd2my+tMvYnTIuZUkNbGFSqJInApQO71nCGTdjU+hdlT8
-	 N0IKLH3qyP8pxdVi9BD4vcu2t4uHmxgG3S1JXVaKWcFDyNb3Ui28Au0TQv57OqxXhu
-	 8CC5eMCOT+DLKEbKW5MSDrt9DCVtFMguYGAP4iqw=
+	by mail.kernel.org (Postfix) with ESMTP id 4D2342166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:04:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Lm48/h4n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437359AbfHISCr (ORCPT
+        id S2437303AbfHISEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:02:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56890 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2437155AbfHISCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:02:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 25050AF89;
-        Fri,  9 Aug 2019 18:02:46 +0000 (UTC)
-Date:   Fri, 9 Aug 2019 20:02:38 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     kirill.shutemov@linux.intel.com, hannes@cmpxchg.org,
-        vbabka@suse.cz, rientjes@google.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH 1/2 -mm] mm: account lazy free pages separately
-Message-ID: <20190809180238.GS18351@dhcp22.suse.cz>
-References: <1565308665-24747-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190809083216.GM18351@dhcp22.suse.cz>
- <1a3c4185-c7ab-8d6f-8191-77dce02025a7@linux.alibaba.com>
+        Fri, 9 Aug 2019 14:04:48 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:13666 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfHISEr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 14:04:47 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4db5c00001>; Fri, 09 Aug 2019 11:04:48 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 09 Aug 2019 11:04:47 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 09 Aug 2019 11:04:47 -0700
+Received: from [10.2.165.207] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 9 Aug
+ 2019 18:04:46 +0000
+Subject: Re: [Linux-kernel-mentees][PATCH v4 1/1] sgi-gru: Remove *pte_lookup
+ functions
+To:     Bharath Vedartham <linux.bhar@gmail.com>
+CC:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>, <sivanich@sgi.com>,
+        <ira.weiny@intel.com>, <jglisse@redhat.com>,
+        <william.kucharski@oracle.com>, <hch@lst.de>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel-mentees@lists.linuxfoundation.org>
+References: <1565290555-14126-1-git-send-email-linux.bhar@gmail.com>
+ <1565290555-14126-2-git-send-email-linux.bhar@gmail.com>
+ <b659042a-f2c3-df3c-4182-bb7dd5156bc1@nvidia.com>
+ <20190809094406.GA22457@bharath12345-Inspiron-5559>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <f2f928f1-2747-e693-1a7f-14ad5f57fef5@nvidia.com>
+Date:   Fri, 9 Aug 2019 11:03:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1a3c4185-c7ab-8d6f-8191-77dce02025a7@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190809094406.GA22457@bharath12345-Inspiron-5559>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565373888; bh=g0FmRWOVSQw+ovYa/Gu5Q2BPMATNeZLwtOFaVN9ZPw0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Lm48/h4n/E5d/oO1iuhNqiTdYfI3bWD99pXlSulIAVr+7+NFRBRx04unypjYa1LXI
+         Qu4NX+U659GBezGwaMcDXMJU0olVDQx+bBlgV+unRtfatA4yS2dWJxVAXe/iowCU4x
+         0GAz9g4BgSU+xFpBfQVrsgoJPYC5iS30AC3Opk/9+2XoJDfHTPY12Ub/9+JxFl6irE
+         KcsFlVYTcES6cGUQKT3HWrC/e0R6pQqwaF3SLlUyeXHHoS6q3AkNvxCzBgk8SbSyTj
+         pO7Z0ED/1Dy0mBD1w54rbULkdwFKXtgUu6IGkQ7U0H1qrJd68vPLFJvdGloq1H30oh
+         sfUnjNFy9oqKA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 09-08-19 09:19:13, Yang Shi wrote:
+On 8/9/19 2:44 AM, Bharath Vedartham wrote:
+> On Thu, Aug 08, 2019 at 04:21:44PM -0700, John Hubbard wrote:
+>> On 8/8/19 11:55 AM, Bharath Vedartham wrote:
+>> ...
+>>>   static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
+>>>   		    int write, int atomic, unsigned long *gpa, int *pageshift)
+>>>   {
+>>>   	struct mm_struct *mm = gts->ts_mm;
+>>>   	struct vm_area_struct *vma;
+>>>   	unsigned long paddr;
+>>> -	int ret, ps;
+>>> +	int ret;
+>>> +	struct page *page;
+>>>   
+>>>   	vma = find_vma(mm, vaddr);
+>>>   	if (!vma)
+>>> @@ -263,21 +187,33 @@ static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
+>>>   
+>>>   	/*
+>>>   	 * Atomic lookup is faster & usually works even if called in non-atomic
+>>> -	 * context.
+>>> +	 * context. get_user_pages_fast does atomic lookup before falling back to
+>>> +	 * slow gup.
+>>>   	 */
+>>>   	rmb();	/* Must/check ms_range_active before loading PTEs */
+>>> -	ret = atomic_pte_lookup(vma, vaddr, write, &paddr, &ps);
+>>> -	if (ret) {
+>>> -		if (atomic)
+>>> +	if (atomic) {
+>>> +		ret = __get_user_pages_fast(vaddr, 1, write, &page);
+>>> +		if (!ret)
+>>>   			goto upm;
+>>> -		if (non_atomic_pte_lookup(vma, vaddr, write, &paddr, &ps))
+>>> +	} else {
+>>> +		ret = get_user_pages_fast(vaddr, 1, write ? FOLL_WRITE : 0, &page);
+>>> +		if (!ret)
+>>>   			goto inval;
+>>>   	}
+>>> +
+>>> +	paddr = page_to_phys(page);
+>>> +	put_user_page(page);
+>>> +
+>>> +	if (unlikely(is_vm_hugetlb_page(vma)))
+>>> +		*pageshift = HPAGE_SHIFT;
+>>> +	else
+>>> +		*pageshift = PAGE_SHIFT;
+>>> +
+>>>   	if (is_gru_paddr(paddr))
+>>>   		goto inval;
+>>> -	paddr = paddr & ~((1UL << ps) - 1);
+>>> +	paddr = paddr & ~((1UL << *pageshift) - 1);
+>>>   	*gpa = uv_soc_phys_ram_to_gpa(paddr);
+>>> -	*pageshift = ps;
+>>
+>> Why are you no longer setting *pageshift? There are a couple of callers
+>> that both use this variable.
+> Hi John,
 > 
+> I did set *pageshift. The if statement above sets *pageshift. ps was
+> used to retrive the pageshift value when the pte_lookup functions were
+> present. ps was passed by reference to those functions and set by them.
+> But here since we are trying to remove those functions, we don't need ps
+> and we directly set *pageshift to HPAGE_SHIFT or PAGE_SHIFT based on the
+> type of vma.
 > 
-> On 8/9/19 1:32 AM, Michal Hocko wrote:
-> > On Fri 09-08-19 07:57:44, Yang Shi wrote:
-> > > When doing partial unmap to THP, the pages in the affected range would
-> > > be considered to be reclaimable when memory pressure comes in.  And,
-> > > such pages would be put on deferred split queue and get minus from the
-> > > memory statistics (i.e. /proc/meminfo).
-> > > 
-> > > For example, when doing THP split test, /proc/meminfo would show:
-> > > 
-> > > Before put on lazy free list:
-> > > MemTotal:       45288336 kB
-> > > MemFree:        43281376 kB
-> > > MemAvailable:   43254048 kB
-> > > ...
-> > > Active(anon):    1096296 kB
-> > > Inactive(anon):     8372 kB
-> > > ...
-> > > AnonPages:       1096264 kB
-> > > ...
-> > > AnonHugePages:   1056768 kB
-> > > 
-> > > After put on lazy free list:
-> > > MemTotal:       45288336 kB
-> > > MemFree:        43282612 kB
-> > > MemAvailable:   43255284 kB
-> > > ...
-> > > Active(anon):    1094228 kB
-> > > Inactive(anon):     8372 kB
-> > > ...
-> > > AnonPages:         49668 kB
-> > > ...
-> > > AnonHugePages:     10240 kB
-> > > 
-> > > The THPs confusingly look disappeared although they are still on LRU if
-> > > you are not familair the tricks done by kernel.
-> > Is this a fallout of the recent deferred freeing work?
+> Hope this clears things up?
 > 
-> This series follows up the discussion happened when reviewing "Make deferred
-> split shrinker memcg aware".
 
-OK, so it is a pre-existing problem. Thanks!
+Right you are, sorry for overlooking that. Looks good.
 
-> David Rientjes suggested deferred split THP should be accounted into
-> available memory since they would be shrunk when memory pressure comes in,
-> just like MADV_FREE pages. For the discussion, please refer to:
-> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg2010115.html
-
-Thanks for the reference.
-
-> 
-> > 
-> > > Accounted the lazy free pages to NR_LAZYFREE, and show them in meminfo
-> > > and other places.  With the change the /proc/meminfo would look like:
-> > > Before put on lazy free list:
-> > The name is really confusing because I have thought of MADV_FREE immediately.
-> 
-> Yes, I agree. We may use a more specific name, i.e. DeferredSplitTHP.
-> 
-> > 
-> > > +LazyFreePages: Cleanly freeable pages under memory pressure (i.e. deferred
-> > > +               split THP).
-> > What does that mean actually? I have hard time imagine what cleanly
-> > freeable pages mean.
-> 
-> Like deferred split THP and MADV_FREE pages, they could be reclaimed during
-> memory pressure.
-> 
-> If you just go with "DeferredSplitTHP", these ambiguity would go away.
-
-I have to study the code some more but is there any reason why those
-pages are not accounted as proper THPs anymore? Sure they are partially
-unmaped but they are still THPs so why cannot we keep them accounted
-like that. Having a new counter to reflect that sounds like papering
-over the problem to me. But as I've said I might be missing something
-important here.
-
+thanks,
 -- 
-Michal Hocko
-SUSE Labs
+John Hubbard
+NVIDIA
