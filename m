@@ -2,190 +2,129 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A059BC0650F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 351A7C0650F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C30020C01
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:45:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWTRQBLM"
+	by mail.kernel.org (Postfix) with ESMTP id 121F72075B
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:46:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405075AbfHIApX (ORCPT
+        id S2405120AbfHIAqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 20:45:23 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:39996 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729419AbfHIApX (ORCPT
+        Thu, 8 Aug 2019 20:46:24 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46854 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404676AbfHIAqY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 20:45:23 -0400
-Received: by mail-qt1-f194.google.com with SMTP id a15so94176221qtn.7;
-        Thu, 08 Aug 2019 17:45:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YbIEMZbtzCXpq/MNUh4eWzpCyaArIiGShovNn2U+vxo=;
-        b=TWTRQBLMTs6ciccZhps1ttQ4fZK9Xg7OiSrrrWfMirmK8xJ1bxCJPHElOVKTZbV9RG
-         tBqrG87zGb1uf/pCL70VCfLQUaV9UwEDQzySbKg44Z7P3vA/7dQxpQ10LZ/q4sWzxlwi
-         pZxeveZiN9a81X1gWRWphTmCjhVyP6ng0hbBx/JxMfw2wKacH6NVuG4BuGsHNmtOfliw
-         yVaAgLeRYgonkZA4hfrwFGL+jVXjGWXhJpBIaJTsu2lzloJmYm4GB0bkxJ+fWK28VZ50
-         pTGVkcKndbe6jXzjGwipjRuXIb862pi2AMKyNrwoQbBDuP4lww3krG4YPtjwkj1RkPV5
-         woDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YbIEMZbtzCXpq/MNUh4eWzpCyaArIiGShovNn2U+vxo=;
-        b=aQZAeiXij5WITWInYo064129NMTHLkJjvjVjkVd6DdZKgK/3EYxNO8Y0sDEzWdgP+Y
-         ITW3kkdttwVicIjzUl2trJc7ASGbK0nUmyc/acFfPV3q3ZdWOkdYSCabm0Ad5c1Jz4HZ
-         quyvsAqP1TNvpHkq1JcSG6J/1yak3lMW3V24nfBM2Vzf7u3moq4HmQ1FvKY3O3c980Ze
-         iFkXeNvfHr/OEvewERL9CAYmn2+ZS1nnGkec7fwXeH4WEJtF41XWdC9wpwJy+3SU+IOd
-         BJO6Pha+8pKC2yD9yR7aWdiI5JLIzLfF7Jl1zOYijDMTyoPiDLVgRbPTpXJ/US4w8OE+
-         Vndw==
-X-Gm-Message-State: APjAAAWFToEWfnbvgUSMk14m/CVtGeIBlVv9yvOpjHockrfcas+KyGeG
-        7F0G7DdexIYy6l1IKQa4KTQ=
-X-Google-Smtp-Source: APXvYqygRXht2AbFPnYF6rY+qxqh/NxMhl/JPp04DrEq4iH55DI/mUE6Vxr7898TFiPui0U9W9OipQ==
-X-Received: by 2002:a0c:e1cd:: with SMTP id v13mr15727930qvl.245.1565311521542;
-        Thu, 08 Aug 2019 17:45:21 -0700 (PDT)
-Received: from localhost.localdomain ([177.220.172.117])
-        by smtp.gmail.com with ESMTPSA id w62sm38405674qkd.30.2019.08.08.17.45.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 08 Aug 2019 17:45:20 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id DF7E2C0ABC; Thu,  8 Aug 2019 21:45:17 -0300 (-03)
-Date:   Thu, 8 Aug 2019 21:45:17 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Pravin Shelar <pshelar@ovn.org>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+13210896153522fe1ee5@syzkaller.appspotmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        ovs dev <dev@openvswitch.org>, linux-kernel@vger.kernel.org,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: memory leak in internal_dev_create
-Message-ID: <20190809004517.GD4063@localhost.localdomain>
-References: <20190806115932.3044-1-hdanton@sina.com>
- <CAOrHB_BmuAxdch-nbaTS-1eXN-0goUb5UXtYDr==0KeM9vVsRw@mail.gmail.com>
+        Thu, 8 Aug 2019 20:46:24 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x790fwlc083441
+        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 20:46:23 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u8unx5m1q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 20:46:22 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Fri, 9 Aug 2019 01:46:21 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 9 Aug 2019 01:46:16 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x790kFjm40632548
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 9 Aug 2019 00:46:15 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C07F411C052;
+        Fri,  9 Aug 2019 00:46:15 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 705FC11C050;
+        Fri,  9 Aug 2019 00:46:15 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  9 Aug 2019 00:46:15 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 6F82CA01F3;
+        Fri,  9 Aug 2019 10:46:12 +1000 (AEST)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     stable@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] powerpc: Allow flush_icache_range to work across ranges >4GB
+Date:   Fri,  9 Aug 2019 10:45:47 +1000
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOrHB_BmuAxdch-nbaTS-1eXN-0goUb5UXtYDr==0KeM9vVsRw@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19080900-0028-0000-0000-0000038D8163
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080900-0029-0000-0000-0000244F8599
+Message-Id: <20190809004548.22445-1-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-08_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=804 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908090004
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 01:32:40PM -0700, Pravin Shelar wrote:
-> On Tue, Aug 6, 2019 at 5:00 AM Hillf Danton <hdanton@sina.com> wrote:
-> >
-> >
-> > On Tue, 06 Aug 2019 01:58:05 -0700
-> > > Hello,
-> > >
-> > > syzbot found the following crash on:
-> > >
-> 
-> ...
-> > > BUG: memory leak
-> > > unreferenced object 0xffff8881228ca500 (size 128):
-> > >    comm "syz-executor032", pid 7015, jiffies 4294944622 (age 7.880s)
-> > >    hex dump (first 32 bytes):
-> > >      00 f0 27 18 81 88 ff ff 80 ac 8c 22 81 88 ff ff  ..'........"....
-> > >      40 b7 23 17 81 88 ff ff 00 00 00 00 00 00 00 00  @.#.............
-> > >    backtrace:
-> > >      [<000000000eb78212>] kmemleak_alloc_recursive  include/linux/kmemleak.h:43 [inline]
-> > >      [<000000000eb78212>] slab_post_alloc_hook mm/slab.h:522 [inline]
-> > >      [<000000000eb78212>] slab_alloc mm/slab.c:3319 [inline]
-> > >      [<000000000eb78212>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
-> > >      [<00000000006ea6c6>] kmalloc include/linux/slab.h:552 [inline]
-> > >      [<00000000006ea6c6>] kzalloc include/linux/slab.h:748 [inline]
-> > >      [<00000000006ea6c6>] ovs_vport_alloc+0x37/0xf0  net/openvswitch/vport.c:130
-> > >      [<00000000f9a04a7d>] internal_dev_create+0x24/0x1d0  net/openvswitch/vport-internal_dev.c:164
-> > >      [<0000000056ee7c13>] ovs_vport_add+0x81/0x190  net/openvswitch/vport.c:199
-> > >      [<000000005434efc7>] new_vport+0x19/0x80 net/openvswitch/datapath.c:194
-> > >      [<00000000b7b253f1>] ovs_dp_cmd_new+0x22f/0x410  net/openvswitch/datapath.c:1614
-> > >      [<00000000e0988518>] genl_family_rcv_msg+0x2ab/0x5b0  net/netlink/genetlink.c:629
-> > >      [<00000000d0cc9347>] genl_rcv_msg+0x54/0x9c net/netlink/genetlink.c:654
-> > >      [<000000006694b647>] netlink_rcv_skb+0x61/0x170  net/netlink/af_netlink.c:2477
-> > >      [<0000000088381f37>] genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
-> > >      [<00000000dad42a47>] netlink_unicast_kernel  net/netlink/af_netlink.c:1302 [inline]
-> > >      [<00000000dad42a47>] netlink_unicast+0x1ec/0x2d0  net/netlink/af_netlink.c:1328
-> > >      [<0000000067e6b079>] netlink_sendmsg+0x270/0x480  net/netlink/af_netlink.c:1917
-> > >      [<00000000aab08a47>] sock_sendmsg_nosec net/socket.c:637 [inline]
-> > >      [<00000000aab08a47>] sock_sendmsg+0x54/0x70 net/socket.c:657
-> > >      [<000000004cb7c11d>] ___sys_sendmsg+0x393/0x3c0 net/socket.c:2311
-> > >      [<00000000c4901c63>] __sys_sendmsg+0x80/0xf0 net/socket.c:2356
-> > >      [<00000000c10abb2d>] __do_sys_sendmsg net/socket.c:2365 [inline]
-> > >      [<00000000c10abb2d>] __se_sys_sendmsg net/socket.c:2363 [inline]
-> > >      [<00000000c10abb2d>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2363
-> >
-> >
-> > Always free vport manually unless register_netdevice() succeeds.
-> >
-> > --- a/net/openvswitch/vport-internal_dev.c
-> > +++ b/net/openvswitch/vport-internal_dev.c
-> > @@ -137,7 +137,7 @@ static void do_setup(struct net_device *
-> >         netdev->priv_flags |= IFF_LIVE_ADDR_CHANGE | IFF_OPENVSWITCH |
-> >                               IFF_NO_QUEUE;
-> >         netdev->needs_free_netdev = true;
-> > -       netdev->priv_destructor = internal_dev_destructor;
-> > +       netdev->priv_destructor = NULL;
-> >         netdev->ethtool_ops = &internal_dev_ethtool_ops;
-> >         netdev->rtnl_link_ops = &internal_dev_link_ops;
-> >
-> > @@ -159,7 +159,6 @@ static struct vport *internal_dev_create
-> >         struct internal_dev *internal_dev;
-> >         struct net_device *dev;
-> >         int err;
-> > -       bool free_vport = true;
-> >
-> >         vport = ovs_vport_alloc(0, &ovs_internal_vport_ops, parms);
-> >         if (IS_ERR(vport)) {
-> > @@ -190,10 +189,9 @@ static struct vport *internal_dev_create
-> >
-> >         rtnl_lock();
-> >         err = register_netdevice(vport->dev);
-> > -       if (err) {
-> > -               free_vport = false;
-> > +       if (err)
-> >                 goto error_unlock;
-> > -       }
-> > +       vport->dev->priv_destructor = internal_dev_destructor;
-> >
-> I am not sure why have you moved this assignment out of do_setup().
-> 
-> Otherwise patch looks good to me.
-> 
-> Thanks.
+From: Alastair D'Silva <alastair@d-silva.org>
 
-Seems it's to avoid re-introducing the issue that was fixed by:
+When calling flush_icache_range with a size >4GB, we were masking
+off the upper 32 bits, so we would incorrectly flush a range smaller
+than intended.
 
-commit 309b66970ee2abf721ecd0876a48940fa0b99a35
-Author: Taehee Yoo <ap420073@gmail.com>
-Date:   Sun Jun 9 23:26:21 2019 +0900
+This patch replaces the 32 bit shifts with 64 bit ones, so that
+the full size is accounted for.
 
-    net: openvswitch: do not free vport if register_netdevice() is failed.
+Heads-up for backporters: the old version of flush_dcache_range is
+subject to a similar bug (this has since been replaced with a C
+implementation).
 
-A Fixes: 309b66970ee2a  is welcomed then.
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+---
+ arch/powerpc/kernel/misc_64.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> >         dev_set_promiscuity(vport->dev, 1);
-> >         rtnl_unlock();
-> > @@ -207,8 +205,7 @@ error_unlock:
-> >  error_free_netdev:
-> >         free_netdev(dev);
-> >  error_free_vport:
-> > -       if (free_vport)
-> > -               ovs_vport_free(vport);
-> > +       ovs_vport_free(vport);
-> >  error:
-> >         return ERR_PTR(err);
-> >  }
-> > --
-> >
-> 
+diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
+index b55a7b4cb543..9bc0aa9aeb65 100644
+--- a/arch/powerpc/kernel/misc_64.S
++++ b/arch/powerpc/kernel/misc_64.S
+@@ -82,7 +82,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_COHERENT_ICACHE)
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5		/* ensure we get enough */
+ 	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of cache block size */
+-	srw.	r8,r8,r9		/* compute line count */
++	srd.	r8,r8,r9		/* compute line count */
+ 	beqlr				/* nothing to do? */
+ 	mtctr	r8
+ 1:	dcbst	0,r6
+@@ -98,7 +98,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_COHERENT_ICACHE)
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5
+ 	lwz	r9,ICACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of Icache block size */
+-	srw.	r8,r8,r9		/* compute line count */
++	srd.	r8,r8,r9		/* compute line count */
+ 	beqlr				/* nothing to do? */
+ 	mtctr	r8
+ 2:	icbi	0,r6
+-- 
+2.21.0
+
