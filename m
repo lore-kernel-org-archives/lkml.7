@@ -2,147 +2,172 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E4FC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0EBC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E5320B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 930FA2085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:08:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pcYp9yfI";
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UefUInbU"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VPi+kpqy";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VgLe7xqr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728007AbfHIVAd (ORCPT
+        id S1726696AbfHIVI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 17:00:33 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:57842 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfHIVAc (ORCPT
+        Fri, 9 Aug 2019 17:08:27 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:45396 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbfHIVI0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 17:00:32 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x79KxT2t044817;
-        Fri, 9 Aug 2019 21:00:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=9sLztaDMB8aeSX3WL8ufO6Qlj+pu4SLKowKGxHUAYS8=;
- b=pcYp9yfI3GuKYjG0G1hZnUZ4mlVzJhMn8SDnFIAzHBL80YDKrjzKOIYK5jCrJnoZCC7T
- RRO8mCE2iaWu46snuI9l0EoYMXANzjdEMQ57i1CRXiO6XGPmABWxu2DmDbWlcq7LKuyz
- yNF6hBnc83a66hJimNA6UgiMfpJe0JRVQWDKBFil0LYD8mLzdiOg2n96TIJwiX282nbH
- c9Pjrfahh0u7DRAhZHcOitDBo33YQph1lvHMNnfypeliX/9mlv6NZyaXOU7uSuk/Yyl5
- 5vi7kruxTckNH64kZyDfpogI8yEcQJ7JtVKRpFpngUgaLve2gShL6D1Z25RDCpAIQ70n Cw== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=9sLztaDMB8aeSX3WL8ufO6Qlj+pu4SLKowKGxHUAYS8=;
- b=UefUInbUUZVRUhWHdFjDeVmYihsfyeb61d47cAMjPnlxeMdTTxQ76xdZCw2SPU++rVKt
- bG0sK1hFkwkSCJS/zxMt/pdcl0734OhVrIAp8qyhNAOUQkwXW/GeHY8WNyXFIgRV/pV7
- 86uwKsYH94fY2QX0WVToNPbbsBB1VL+XOdq9/mjdldNniAKHzPrIzYiec+dKe36ZfSW7
- 15CKaLG/oZyet44aTb2NcVFdZ7b934CoDlRI8j4hKxohV9Hh6dP84fv3f65XPbtYhZq7
- PCFCjFg8zoSvpYzoXE4PerYHA7HB53JMytkkEs8emfM8PAk1NNjTa1dy7pcK1wejnL69 hw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2u8hpsa0jb-1
+        Fri, 9 Aug 2019 17:08:26 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x79L5ckN070468;
+        Fri, 9 Aug 2019 21:08:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=qPGkfFOzCb8gidKvwQnil0iLWuNYNpWlWuUd78n126c=;
+ b=VPi+kpqy0bi3E9ra/RYYGrfhuQgzF7z+//srmIaL+tCfXJ35FGn/4vcqn/1T05mJXxLd
+ YIjGYfJbUxhJPrOgtzeoKfTQoB/YpIAZhvZdvjYCOzfKZu33yVpHOUtEeFthlA+8hE7v
+ YletivaSHwBNNRLnqHcvOra4hJKYBDadgVP1UQbBPTpT3FDgT35hEYu2/Sz69QEKgaUB
+ JV6B3IYPrvaFh3p5XKEYOrHbBVDFIMCx6nJXhZ3KnaYUkJWjYbNh+B61S70ZliMaEi3B
+ 8Qfmg1z0/anJu2lOTkd45QRDDH8kIpWomV6uWI6qqHS3KYpDIrHpcq4F1mSUGlgLKUpt lg== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2018-07-02;
+ bh=qPGkfFOzCb8gidKvwQnil0iLWuNYNpWlWuUd78n126c=;
+ b=VgLe7xqr47J3KwzCUURxYaKc0fZO3TdQT9zUVnIs1dSjA94hBriLCvOlJOVmk7JoZS9f
+ U+EfgT/NkB6rM1KcouHBKM2lck2twbzXUVE2/ZMhFeLdkObfuF21kRH9P1gNKNxviGtp
+ s840uWwedscVlhuw5n12MXMc7okF0f5rLYeD1ossyRGAGi9Zz++wAkdzYC5km0Idq5Mp
+ WfyQW1GBqUpL8sOobw3TITDkBd5vr6fwDkUFqfy6mAOWDDA2jox56XTbNd3bArO1MzTp
+ RZmMDJtofx2tfU08RpCiShqoct14NbE9UH/xJPW8aMgHPwZmiorG/CiNNtlvWD211sZk fA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2u8hasj5rq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 09 Aug 2019 21:00:24 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x79KvYJo172016;
-        Fri, 9 Aug 2019 21:00:24 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2u8pj9jvyc-1
+        Fri, 09 Aug 2019 21:08:15 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x79L49hm015714;
+        Fri, 9 Aug 2019 21:06:15 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2u8x9fwp4b-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 09 Aug 2019 21:00:24 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x79L0NTc027268;
-        Fri, 9 Aug 2019 21:00:23 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
+        Fri, 09 Aug 2019 21:06:15 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x79L6DGG016522;
+        Fri, 9 Aug 2019 21:06:14 GMT
+Received: from localhost.localdomain (/73.60.114.248)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 09 Aug 2019 14:00:23 -0700
-Subject: Re: [RFC PATCH] hugetlbfs: Add hugetlb_cgroup reservation limits
-To:     Mina Almasry <almasrymina@google.com>
-Cc:     =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>, akpm@linux-foundation.org,
-        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        cgroups@vger.kernel.org
-References: <20190808194002.226688-1-almasrymina@google.com>
- <20190809112738.GB13061@blackbody.suse.cz>
- <CAHS8izNM3jYFWHY5UJ7cmJ402f-RKXzQ=JFHpD7EkvpAdC2_SA@mail.gmail.com>
- <fc420531-f0fe-8df5-57fe-71a686bf2a71@oracle.com>
- <CAHS8izN9BFASse_pjLEhQzWwofjRv+JQ5Z=ZiR6Wywn2USLELA@mail.gmail.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <af6a8c43-e286-5360-61f3-6d306d8f1951@oracle.com>
-Date:   Fri, 9 Aug 2019 14:00:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        with ESMTP ; Fri, 09 Aug 2019 14:06:13 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] padata: validate cpumask without removed CPU during offline
+Date:   Fri,  9 Aug 2019 17:06:03 -0400
+Message-Id: <20190809210603.20900-1-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190809192857.26585-2-daniel.m.jordan@oracle.com>
+References: <20190809192857.26585-2-daniel.m.jordan@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHS8izN9BFASse_pjLEhQzWwofjRv+JQ5Z=ZiR6Wywn2USLELA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9344 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=509
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908090205
+ engine=8.0.1-1906280000 definitions=main-1908090206
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9344 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=533 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908090205
+ definitions=main-1908090206
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/9/19 1:57 PM, Mina Almasry wrote:
-> On Fri, Aug 9, 2019 at 1:39 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->>
->> On 8/9/19 11:05 AM, Mina Almasry wrote:
->>> On Fri, Aug 9, 2019 at 4:27 AM Michal Koutný <mkoutny@suse.com> wrote:
->>>>> Alternatives considered:
->>>>> [...]
->>>> (I did not try that but) have you considered:
->>>> 3) MAP_POPULATE while you're making the reservation,
->>>
->>> I have tried this, and the behaviour is not great. Basically if
->>> userspace mmaps more memory than its cgroup limit allows with
->>> MAP_POPULATE, the kernel will reserve the total amount requested by
->>> the userspace, it will fault in up to the cgroup limit, and then it
->>> will SIGBUS the task when it tries to access the rest of its
->>> 'reserved' memory.
->>>
->>> So for example:
->>> - if /proc/sys/vm/nr_hugepages == 10, and
->>> - your cgroup limit is 5 pages, and
->>> - you mmap(MAP_POPULATE) 7 pages.
->>>
->>> Then the kernel will reserve 7 pages, and will fault in 5 of those 7
->>> pages, and will SIGBUS you when you try to access the remaining 2
->>> pages. So the problem persists. Folks would still like to know they
->>> are crossing the limits on mmap time.
->>
->> If you got the failure at mmap time in the MAP_POPULATE case would this
->> be useful?
->>
->> Just thinking that would be a relatively simple change.
-> 
-> Not quite, unfortunately. A subset of the folks that want to use
-> hugetlb memory, don't want to use MAP_POPULATE (IIRC, something about
-> mmaping a huge amount of hugetlb memory at their jobs' startup, and
-> doing that with MAP_POPULATE adds so much to their startup time that
-> it is prohibitively expensive - but that's just what I vaguely recall
-> offhand. I can get you the details if you're interested).
+Configuring an instance's parallel mask without any online CPUs...
 
-Yes, MAP_POPULATE can get expensive as you will need to zero all those
-huge pages.
+  echo 2 > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
+  echo 0 > /sys/devices/system/cpu/cpu1/online
 
+...crashes like this:
+
+  divide error: 0000 [#1] SMP PTI
+  CPU: 4 PID: 281 Comm: modprobe Not tainted 5.2.0-padata-base+ #25
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-<snip>
+  RIP: 0010:padata_do_parallel+0xf1/0x270
+  ...
+  Call Trace:
+   pcrypt_do_parallel+0xed/0x1e0 [pcrypt]
+   pcrypt_aead_encrypt+0xbf/0xd0 [pcrypt]
+   do_mult_aead_op+0x68/0x112 [tcrypt]
+   test_mb_aead_speed.constprop.0.cold+0x21a/0x55a [tcrypt]
+   do_test+0x2280/0x4ca2 [tcrypt]
+   tcrypt_mod_init+0x55/0x1000 [tcrypt]
+   ...
+
+The cpumask_weight call in padata_cpu_hash returns 0, causing the
+division error, because the mask has no CPUs, which is expected in this
+situation.  The problem is __padata_remove_cpu doesn't mark the instance
+PADATA_INVALID as expected, which would have made padata_do_parallel
+return error before doing the division, because it checks for valid
+masks too early.
+
+Fix by moving the checks after the masks have been adjusted for the
+offlined CPU.  Only do the second check if the first succeeded to avoid
+inadvertently clearing PADATA_INVALID.
+
+Stop the instance unconditionally and start again if the masks are
+valid.  Stopping the instance only after an invalid mask is found risks
+this div-by-0 crash since a padata_do_parallel call in another task
+could happen between cpumask_clear_cpu and padata_validate_cpumask.
+
+Fixes: 33e54450683c ("padata: Handle empty padata cpumasks")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+
+v2: Don't leave the instance stopped if the masks are valid.
+
+ kernel/padata.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/padata.c b/kernel/padata.c
+index d056276a96ce..01460ea1d160 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -702,10 +702,7 @@ static int __padata_remove_cpu(struct padata_instance *pinst, int cpu)
+ 	struct parallel_data *pd = NULL;
+ 
+ 	if (cpumask_test_cpu(cpu, cpu_online_mask)) {
+-
+-		if (!padata_validate_cpumask(pinst, pinst->cpumask.pcpu) ||
+-		    !padata_validate_cpumask(pinst, pinst->cpumask.cbcpu))
+-			__padata_stop(pinst);
++		__padata_stop(pinst);
+ 
+ 		pd = padata_alloc_pd(pinst, pinst->cpumask.pcpu,
+ 				     pinst->cpumask.cbcpu);
+@@ -716,6 +713,9 @@ static int __padata_remove_cpu(struct padata_instance *pinst, int cpu)
+ 
+ 		cpumask_clear_cpu(cpu, pd->cpumask.cbcpu);
+ 		cpumask_clear_cpu(cpu, pd->cpumask.pcpu);
++		if (padata_validate_cpumask(pinst, pd->cpumask.pcpu) &&
++		    padata_validate_cpumask(pinst, pd->cpumask.cbcpu))
++			__padata_start(pinst);
+ 	}
+ 
+ 	return 0;
 -- 
-Mike Kravetz
+2.22.0
+
