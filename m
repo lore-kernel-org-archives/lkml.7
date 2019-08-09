@@ -2,74 +2,75 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02CCC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB14C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C46392171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E51712166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfHIU2R (ORCPT
+        id S1727611AbfHIU2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 16:28:17 -0400
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:37231 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbfHIU2R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 16:28:17 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 895A8101E69DC;
-        Fri,  9 Aug 2019 22:28:15 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 35D09DFE15; Fri,  9 Aug 2019 22:28:15 +0200 (CEST)
-Date:   Fri, 9 Aug 2019 22:28:15 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Subject: Re: [PATCH] PCI: pciehp: Avoid returning prematurely from sysfs
- requests
-Message-ID: <20190809202815.4jtpdsnnmztins34@wunner.de>
-References: <4174210466e27eb7e2243dd1d801d5f75baaffd8.1565345211.git.lukas@wunner.de>
- <20190809193216.GD28515@localhost.localdomain>
+        Fri, 9 Aug 2019 16:28:21 -0400
+Received: from mga11.intel.com ([192.55.52.93]:13225 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725860AbfHIU2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 16:28:18 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 13:28:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,366,1559545200"; 
+   d="scan'208";a="166108401"
+Received: from wulili-mobl1.ger.corp.intel.com ([10.249.36.9])
+  by orsmga007.jf.intel.com with ESMTP; 09 Aug 2019 13:28:14 -0700
+Message-ID: <f441fd9a5452bf2943e5dbe6d74b5d5f26016a90.camel@linux.intel.com>
+Subject: Re: [PATCH v3 2/4] tpm: tpm_tis_spi: Export functionality to other
+ drivers
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stephen Boyd <swboyd@chromium.org>, Peter Huewe <peterhuewe@gmx.de>
+Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Andrey Pronin <apronin@chromium.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Alexander Steffen <Alexander.Steffen@infineon.com>
+Date:   Fri, 09 Aug 2019 23:28:13 +0300
+In-Reply-To: <20190806220750.86597-3-swboyd@chromium.org>
+References: <20190806220750.86597-1-swboyd@chromium.org>
+         <20190806220750.86597-3-swboyd@chromium.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190809193216.GD28515@localhost.localdomain>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 01:32:16PM -0600, Keith Busch wrote:
-> On Fri, Aug 09, 2019 at 12:28:43PM +0200, Lukas Wunner wrote:
-> > A sysfs request to enable or disable a PCIe hotplug slot should not
-> > return before it has been carried out.  That is sought to be achieved
-> > by waiting until the controller's "pending_events" have been cleared.
-> > 
-> > However the IRQ thread pciehp_ist() clears the "pending_events" before
-> > it acts on them.  If pciehp_sysfs_enable_slot() / _disable_slot() happen
-> > to check the "pending_events" after they have been cleared but while
-> > pciehp_ist() is still running, the functions may return prematurely
-> > with an incorrect return value.
-> > 
-> > Fix by introducing an "ist_running" flag which must be false before a
-> > sysfs request is allowed to return.
-> 
-> Can you instead just call synchronize_irq(ctrl->pcie->irq) after the
-> pending events is cleared?
+On Tue, 2019-08-06 at 15:07 -0700, Stephen Boyd wrote:
+> We want to use most of the code in this driver, except we want to modify
+> the flow control and idle behavior. Let's "libify" this driver so that
+> another driver can call the code in here and slightly tweak the
+> behavior.
 
-You mean call synchronize_irq() from pciehp_sysfs_enable_slot() /
-disable_slot()?  That's a good idea, let me think that through and
-try to make it work that way.
+Neither "libifying" nor "slightly tweaking" gives an idea what the
+commit does. A great commit message should be in imperative form
+describe what it does and why in as plain english as possible.
 
-Thanks!
+Often commit messages are seen just as a necessary bad and not much
+energy is spent on them but for a maitainer solid commit messages have
+an indispensable value.
 
-Lukas
+> +	void (*pre_transfer)(struct tpm_tis_spi_phy *phy);
+
+Adding a new calback should be a commit of its own.
+
+/Jarkko
+
