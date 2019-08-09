@@ -2,52 +2,51 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B201EC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2E6C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88DE9217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1770217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358369;
-	bh=eLO/e/KA4TzDwacNEE2MlDgRix+GcyiN1TH0oGPTiMc=;
+	s=default; t=1565358373;
+	bh=zMmiBR71GlW3l1nMHrzxMH4Vf1MCCTt/NYA9dWdzv7s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZlckySuTD/1Uhvol3xUfco/8w9NllQ4J6I7Ivt3/J296cGqVQ+lpwnTVZ3MUOFpIv
-	 e/qq6g083K9wv0K8WYpssexi+NkB35pq2Lr9KjVEuMw+azu8zfsF6FvwBZCZdrLcsC
-	 68Ksyz5pOoOVLBLe75JXBLDDxyolfwAdTlRNyDh0=
+	b=esHhQQPaa8aOR8pkbYtBv7pU8topVYDqnDZtFk0psQlnt5333KDDH61T7VDKuNNb2
+	 HEYWWPw0lupJm5qeDTUC8uQuj+7sSma1PY5UchMIUjHBAVtxFj+KGR2TuBmqam1aZu
+	 PKVbM1sOX8nIhCM0M3Qr/lH9WCyAdptmMJ4/0zyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406912AbfHINqI (ORCPT
+        id S2406943AbfHINqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:46:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35624 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:46:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406518AbfHINqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:46:07 -0400
+        id S2406518AbfHINqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:46:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6DD8217D7;
-        Fri,  9 Aug 2019 13:46:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D2A3217F4;
+        Fri,  9 Aug 2019 13:46:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358366;
-        bh=eLO/e/KA4TzDwacNEE2MlDgRix+GcyiN1TH0oGPTiMc=;
+        s=default; t=1565358368;
+        bh=zMmiBR71GlW3l1nMHrzxMH4Vf1MCCTt/NYA9dWdzv7s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KZAup71aPhHloq96BLsiWIO3gr36c/hec21mq+uJNfAdm0yiOz0hTw6jfF/Ig7FEG
-         fylFCbAdB56lfTcxrUL/ekm3zKGX/xSPbwKo95sPhqJtjDXBpJWUH9p0x7lUM7i7Po
-         hJxvWbihicG6nlNKogM3IFHnuVm2C6n3Ed4qKfAw=
+        b=JHJeqBAezbBKAud2c0tj05cZJJq0Be3eWZdADA61a03rQ77G7OFZPVLS6p4qCu66y
+         mnS7wagkT3gsVpg5TLDjQ7kuj8bYQSziy18UT2VDJDdcemNnVgmK8eZGdo99DUgXIe
+         ZnJZt1iZQ3zkfO7T7xp2wT94NMMDMPx8sAjO2Ccc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phil Turnbull <phil.turnbull@oracle.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 03/21] netfilter: nfnetlink_acct: validate NFACCT_QUOTA parameter
-Date:   Fri,  9 Aug 2019 15:45:07 +0200
-Message-Id: <20190809134241.707489370@linuxfoundation.org>
+        stable@vger.kernel.org, Sebastian Parschauer <s.parschauer@gmx.de>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.4 04/21] HID: Add quirk for HP X1200 PIXART OEM mouse
+Date:   Fri,  9 Aug 2019 15:45:08 +0200
+Message-Id: <20190809134241.751925322@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190809134241.565496442@linuxfoundation.org>
 References: <20190809134241.565496442@linuxfoundation.org>
@@ -60,30 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit eda3fc50daa93b08774a18d51883c5a5d8d85e15 ]
+From: Sebastian Parschauer <s.parschauer@gmx.de>
 
-If a quota bit is set in NFACCT_FLAGS but the NFACCT_QUOTA parameter is
-missing then a NULL pointer dereference is triggered. CAP_NET_ADMIN is
-required to trigger the bug.
+commit 49869d2ea9eecc105a10724c1abf035151a3c4e2 upstream.
 
-Signed-off-by: Phil Turnbull <phil.turnbull@oracle.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The PixArt OEM mice are known for disconnecting every minute in
+runlevel 1 or 3 if they are not always polled. So add quirk
+ALWAYS_POLL for this one as well.
+
+Jonathan Teh (@jonathan-teh) reported and tested the quirk.
+Reference: https://github.com/sriemer/fix-linux-mouse/issues/15
+
+Signed-off-by: Sebastian Parschauer <s.parschauer@gmx.de>
+CC: stable@vger.kernel.org
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/netfilter/nfnetlink_acct.c |    2 ++
- 1 file changed, 2 insertions(+)
 
---- a/net/netfilter/nfnetlink_acct.c
-+++ b/net/netfilter/nfnetlink_acct.c
-@@ -97,6 +97,8 @@ nfnl_acct_new(struct sock *nfnl, struct
- 			return -EINVAL;
- 		if (flags & NFACCT_F_OVERQUOTA)
- 			return -EINVAL;
-+		if ((flags & NFACCT_F_QUOTA) && !tb[NFACCT_QUOTA])
-+			return -EINVAL;
+---
+ drivers/hid/hid-ids.h           |    1 +
+ drivers/hid/usbhid/hid-quirks.c |    1 +
+ 2 files changed, 2 insertions(+)
+
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -470,6 +470,7 @@
+ #define USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0A4A	0x0a4a
+ #define USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0B4A	0x0b4a
+ #define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE		0x134a
++#define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0641	0x0641
  
- 		size += sizeof(u64);
- 	}
+ #define USB_VENDOR_ID_HUION		0x256c
+ #define USB_DEVICE_ID_HUION_TABLET	0x006e
+--- a/drivers/hid/usbhid/hid-quirks.c
++++ b/drivers/hid/usbhid/hid-quirks.c
+@@ -82,6 +82,7 @@ static const struct hid_blacklist {
+ 	{ USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0A4A, HID_QUIRK_ALWAYS_POLL },
+ 	{ USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0B4A, HID_QUIRK_ALWAYS_POLL },
+ 	{ USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE, HID_QUIRK_ALWAYS_POLL },
++	{ USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0641, HID_QUIRK_ALWAYS_POLL },
+ 	{ USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_C077, HID_QUIRK_ALWAYS_POLL },
+ 	{ USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_KEYBOARD_G710_PLUS, HID_QUIRK_NOGET },
+ 	{ USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_MOUSE_C01A, HID_QUIRK_ALWAYS_POLL },
 
 
