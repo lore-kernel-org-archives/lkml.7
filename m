@@ -6,58 +6,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D43C0650F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3A1C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F12C2171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E941D2173C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:13:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404940AbfHIDMg (ORCPT
+        id S2405001AbfHIDND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 23:12:36 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39302 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729307AbfHIDMf (ORCPT
+        Thu, 8 Aug 2019 23:13:03 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46900 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404958AbfHIDND (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 23:12:35 -0400
-Received: by mail-wr1-f66.google.com with SMTP id t16so6706421wra.6;
-        Thu, 08 Aug 2019 20:12:34 -0700 (PDT)
+        Thu, 8 Aug 2019 23:13:03 -0400
+Received: by mail-wr1-f68.google.com with SMTP id z1so96836744wru.13
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 20:13:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=EGHNJ41q8Xk+rxqslkgHM8iSCXHrbORbX9tN8p2H7Dg=;
-        b=LXwyjzgmbqWLxl7RnRdnV9VukxwLGVefvMXj/ntON8hHJuBW/PhA/Q8KogmmFOCYCJ
-         H9cBh6nMxQXTViMQ2Xc/fXpIyVPDJsnc3B8v+8Swzx12pNUy/5A4+SSzc/168thwKdgw
-         6uY0WNfWgPeYbXLIyfm8C0+8dz5pVz0Fnl/CP5ej6M5EqhEvpcEPg9CJF2wduqI9nOmR
-         +bIkqm3SHsOjfUZswjQ1TnPJ8CimkshskiAhlX5PHQeDEbfG3y1obiZI3Erygr2R89oX
-         +JdYj5/2czVxSZyZeBibevRSHXlRpWdSYhCLrOSJjgQ0cP2tz+ST3ZaPKyY6sWJ6rGnM
-         yPhQ==
-X-Gm-Message-State: APjAAAWX2BR9sG8r1ZfsMYG4dqHgV/HdAVIfS41D9gM29Gna5S2IBYM4
-        KCbGaslYGHJ4y4C+zGsJGNrtNBVQRRCjGQ==
-X-Google-Smtp-Source: APXvYqyEWcvAnhF4Ue9wN4qIrQ6LTTi30ZSRVlF3B9zoC2iuTwaAv0Ylfl09QVksRxGknvXGG4p0/A==
-X-Received: by 2002:a5d:46d1:: with SMTP id g17mr7959113wrs.131.1565320353238;
-        Thu, 08 Aug 2019 20:12:33 -0700 (PDT)
+        bh=uonr7JGvdCWxCXj+k6k7pRPYOSgXIk19KhW6G51a7QQ=;
+        b=d0tecrJwZbMRlnIIPBH4bv10bWdENjG3fbgjRip0V+KitFqb7bUx8cyREvjX409UCE
+         +hDBjlEVikIN6fbCio/ls4+jwfBqPihfxo1H2RrUKFexNo1xGzx9RRYA2vclntJUsoR2
+         s/oomIkAPaceMRLwaLo/4i4yH+gX7+EmP9V8kg0rQslO9XuV3j3O9OvKaWDNs0ss0zWb
+         PSUFdyXwoLKJ7PfrKvpoUQ5l9HtYoy4qWUOvpsIBd5JGflscmqm1zOwAIaumGqXPfklq
+         WBHo1AgErUXKw20pdKaX8FofvM/3R47seTBj676kwD2Zfkvukz8XLrQschqfmv4l2bmI
+         9i4g==
+X-Gm-Message-State: APjAAAVjS2+zT1WE+u7vjp50CXn4FxkCaAmsS4o/dMoJJz/XQA9mta42
+        FpLLRXVCECDA168edyOau3fzKJIv8sw3WA==
+X-Google-Smtp-Source: APXvYqxTo5Q9T2mOXycuvfbxR4lb1X0KpEpQKQKLAhovI4Yky74FgaZTgY7LTdrzkcmNh0U1VAJxjQ==
+X-Received: by 2002:adf:fe10:: with SMTP id n16mr20512822wrr.92.1565320380703;
+        Thu, 08 Aug 2019 20:13:00 -0700 (PDT)
 Received: from tfsielt31850.garage.tyco.com ([79.97.20.138])
-        by smtp.gmail.com with ESMTPSA id t19sm4798565wmi.29.2019.08.08.20.12.31
+        by smtp.gmail.com with ESMTPSA id l14sm119815wrn.42.2019.08.08.20.12.59
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 08 Aug 2019 20:12:32 -0700 (PDT)
+        Thu, 08 Aug 2019 20:13:00 -0700 (PDT)
 From:   =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
-        Ilya Ledvich <ilya@compulab.co.il>,
-        Igor Grinberg <grinberg@compulab.co.il>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] ARM: dts: imx7d: cl-som-imx7: make ethernet work again
-Date:   Fri,  9 Aug 2019 04:12:27 +0100
-Message-Id: <20190809031227.3319-1-git@andred.net>
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] ARM: imx: stop adjusting ar8031 phy tx delay
+Date:   Fri,  9 Aug 2019 04:12:56 +0100
+Message-Id: <20190809031256.3594-1-git@andred.net>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -67,68 +68,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recent changes to the atheros at803x driver caused
-ethernet to stop working on this board.
-In particular commit 6d4cd041f0af
+Recent changes to the Atheros at803x driver cause
+the approach taken here to stop working because
+commit 6d4cd041f0af
 ("net: phy: at803x: disable delay only for RGMII mode")
 and commit cd28d1d6e52e
 ("net: phy: at803x: Disable phy delay for RGMII mode")
 fix the AR8031 driver to configure the phy's (RX/TX)
 delays as per the 'phy-mode' in the device tree.
 
-This now prevents ethernet from working on this board.
+In particular, the phy tx (and rx) delays are updated
+again as per the 'phy-mode' *after* the code in here
+runs.
 
-It used to work before those commits, because the
-AR8031 comes out of reset with RX delay enabled, and
-the at803x driver didn't touch the delay configuration
-at all when "rgmii" mode was selected, and because
-arch/arm/mach-imx/mach-imx7d.c:ar8031_phy_fixup()
-unconditionally enables TX delay.
+Things worked before above commits, because the AR8031
+comes out of reset with RX delay enabled, and the
+at803x driver didn't touch the delay configuration at
+all when "rgmii" mode was selected.
 
-Since above commits ar8031_phy_fixup() also has no
-effect anymore, and the end-result is that all delays
-are disabled in the phy, no ethernet.
+It appears the code in here tries to make device
+trees work that incorrectly specify "rgmii", but
+that can't work any more and it is imperative since
+above commits to have the phy-mode configured
+correctly in the device tree.
 
-Update the device tree to restore functionality.
+I suspect there are a few imx7d based boards using
+the ar8031 phy and phy-mode = "rgmii", but given I
+don't know which ones exactly, I am not in a
+position to update the respective device trees.
+
+Hence this patch is simply removing the superfluous
+code from the imx7d initialisation. An alternative
+could be to add a warning instead, but that would
+penalize all boards that have been updated already.
 
 Signed-off-by: André Draszik <git@andred.net>
-CC: Ilya Ledvich <ilya@compulab.co.il>
-CC: Igor Grinberg <grinberg@compulab.co.il>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
+CC: Russell King <linux@armlinux.org.uk>
 CC: Shawn Guo <shawnguo@kernel.org>
 CC: Sascha Hauer <s.hauer@pengutronix.de>
 CC: Pengutronix Kernel Team <kernel@pengutronix.de>
 CC: Fabio Estevam <festevam@gmail.com>
 CC: NXP Linux Team <linux-imx@nxp.com>
-CC: devicetree@vger.kernel.org
+CC: Kate Stewart <kstewart@linuxfoundation.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Leonard Crestez <leonard.crestez@nxp.com>
 CC: linux-arm-kernel@lists.infradead.org
 ---
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/mach-imx/mach-imx7d.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index e61567437d73..62d5e9a4a781 100644
---- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -44,7 +44,7 @@
- 			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
- 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
- 	assigned-clock-rates = <0>, <100000000>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&ethphy0>;
- 	fsl,magic-packet;
- 	status = "okay";
-@@ -70,7 +70,7 @@
- 			  <&clks IMX7D_ENET2_TIME_ROOT_CLK>;
- 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
- 	assigned-clock-rates = <0>, <100000000>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&ethphy1>;
- 	fsl,magic-packet;
- 	status = "okay";
+diff --git a/arch/arm/mach-imx/mach-imx7d.c b/arch/arm/mach-imx/mach-imx7d.c
+index 95713450591a..ebb27592a9f7 100644
+--- a/arch/arm/mach-imx/mach-imx7d.c
++++ b/arch/arm/mach-imx/mach-imx7d.c
+@@ -30,12 +30,6 @@ static int ar8031_phy_fixup(struct phy_device *dev)
+ 	val &= ~(0x1 << 8);
+ 	phy_write(dev, 0xe, val);
+ 
+-	/* introduce tx clock delay */
+-	phy_write(dev, 0x1d, 0x5);
+-	val = phy_read(dev, 0x1e);
+-	val |= 0x0100;
+-	phy_write(dev, 0x1e, val);
+-
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
