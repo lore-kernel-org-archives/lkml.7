@@ -2,95 +2,158 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19063C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 288B0C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9F4E2166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 051BF2171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:00:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406138AbfHIKAI (ORCPT
+        id S2406246AbfHIKAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 06:00:08 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4652 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2406037AbfHIKAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 06:00:08 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id AA1DC8056351D9C7BCC4;
-        Fri,  9 Aug 2019 18:00:06 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Fri, 9 Aug 2019
- 18:00:02 +0800
-Subject: Re: [alsa-devel] [PATCH -next] ALSA: Au88x0 - remove some unused
- const variables
-To:     Takashi Iwai <tiwai@suse.de>
-References: <20190809090620.70496-1-yuehaibing@huawei.com>
- <s5hk1bmhe9t.wl-tiwai@suse.de>
-CC:     <perex@perex.cz>, <tiwai@suse.com>, <broonie@kernel.org>,
-        <rfontana@redhat.com>, <kstewart@linuxfoundation.org>,
-        <allison@lohutok.net>, <armijn@tjaldur.nl>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <85696583-655b-06dd-d851-c8bfdaab7924@huawei.com>
-Date:   Fri, 9 Aug 2019 18:00:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Fri, 9 Aug 2019 06:00:46 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38873 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbfHIKAq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 06:00:46 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m125so1036006wmm.3;
+        Fri, 09 Aug 2019 03:00:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=LCdSOwFwrhZScC72O9wronCj2Ku4lPGGJvmSIWng7Ms=;
+        b=WMlY2/odH9qGgAJpKidendcn3iak2xV4QhOj79pGSLjRn5JpufASioUk7DCw6QPRfA
+         hG0aYW1IoLkmanjdlxg8lYJmZWiecNJ9Rr4Zwgwoplud7OlebfCRLc+8/u8j0aZkMDqs
+         KU2MRNSNwGC6KMscUx/3wmJn8r1CvAQ2+gDYIbKYzUuEBvDrr/lf8mQLc4p0ImBvzm/+
+         vJshF2Q/mxigGU5LdKbMgqSD9lVlclE7jspbWjMSYfkFn4DQnzDyD2Cl9eHgD8gxxcQe
+         xSdmfLZ0oCJ5naB6QAqwiQM9iPKSAEUc6EPplzRT2tPX4Hr1RNwV2sNkQRIWgd3+5e4P
+         1k6g==
+X-Gm-Message-State: APjAAAWOMtPeKR4g8Cc8fDTGpE7+pjTR/o3BE0GGYFKWUo8BBwnAS7tg
+        tZjiBjsD1TSS3o8qGmFNhs4=
+X-Google-Smtp-Source: APXvYqzGzhFouxT/8NZZD7GEWCvzyCO9KA8bYUP5Um9qrm5dBO/yvcaJBGmAkOPRvJT1N6u6g0PpFQ==
+X-Received: by 2002:a1c:6a17:: with SMTP id f23mr9702686wmc.91.1565344844302;
+        Fri, 09 Aug 2019 03:00:44 -0700 (PDT)
+Received: from 1aq-andre ([77.107.218.170])
+        by smtp.gmail.com with ESMTPSA id w23sm5060001wmi.45.2019.08.09.03.00.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 09 Aug 2019 03:00:43 -0700 (PDT)
+Message-ID: <14396bfacec0c4877cb0ea9009dc92b33c169cac.camel@andred.net>
+Subject: Re: [PATCH] net: phy: at803x: stop switching phy delay config
+ needlessly
+From:   =?ISO-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>
+Date:   Fri, 09 Aug 2019 11:00:05 +0100
+In-Reply-To: <CA+h21hp-K0ryB39O4X9n-mCwapiXoWy5WP6ZsvswgcDy-WBYVw@mail.gmail.com>
+References: <20190809005754.23009-1-git@andred.net>
+         <CA+h21hp-K0ryB39O4X9n-mCwapiXoWy5WP6ZsvswgcDy-WBYVw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <s5hk1bmhe9t.wl-tiwai@suse.de>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/9 17:35, Takashi Iwai wrote:
-> On Fri, 09 Aug 2019 11:06:20 +0200,
-> YueHaibing wrote:
->>
->> sound/pci/au88x0/au88x0_xtalk.c:121:28: warning: asXtalkWideCoefsRightXt defined but not used [-Wunused-const-variable=]
->> sound/pci/au88x0/au88x0_xtalk.c:152:28: warning: asXtalkNarrowCoefsRightXt defined but not used [-Wunused-const-variable=]
->> sound/pci/au88x0/au88x0_xtalk.c:175:28: warning: asXtalkCoefsNegPipe defined but not used [-Wunused-const-variable=]
->> sound/pci/au88x0/au88x0_xtalk.c:183:28: warning: asXtalkCoefsNumTest defined but not used [-Wunused-const-variable=]
->> sound/pci/au88x0/au88x0_xtalk.c:191:28: warning: asXtalkCoefsDenTest defined but not used [-Wunused-const-variable=]
->> sound/pci/au88x0/au88x0_xtalk.c:199:28: warning: asXtalkOutStateTest defined but not used [-Wunused-const-variable=]
->> sound/pci/au88x0/au88x0_xtalk.c:20:20: warning: sXtalkWideKRightXt defined but not used [-Wunused-const-variable=]
->> sound/pci/au88x0/au88x0_xtalk.c:231:28: warning: asDiamondCoefsRightXt defined but not used [-Wunused-const-variable=]
->> sound/pci/au88x0/au88x0_xtalk.c:24:20: warning: sXtalkWideShiftRightXt defined but not used [-Wunused-const-variable=]
->> sound/pci/au88x0/au88x0_xtalk.c:30:20: warning: sXtalkNarrowKRightXt defined but not used [-Wunused-const-variable=]
->> sound/pci/au88x0/au88x0_xtalk.c:34:20: warning: sXtalkNarrowShiftRightXt defined but not used [-Wunused-const-variable=]
->> sound/pci/au88x0/au88x0_xtalk.c:38:28: warning: asXtalkGainsDefault defined but not used [-Wunused-const-variable=]
->> sound/pci/au88x0/au88x0_xtalk.c:43:28: warning: asXtalkGainsTest defined but not used [-Wunused-const-variable=]
->> sound/pci/au88x0/au88x0_xtalk.c:48:28: warning: asXtalkGains1Chan defined but not used [-Wunused-const-variable=]
->> sound/pci/au88x0/au88x0_xtalk.c:67:28: warning: alXtalkDlineTest defined but not used [-Wunused-const-variable=]
->> sound/pci/au88x0/au88x0_xtalk.c:77:30: warning: asXtalkInStateTest defined but not used [-Wunused-const-variable=]
->> sound/pci/au88x0/au88x0_xtalk.c:92:20: warning: sDiamondKRightXt defined but not used [-Wunused-const-variable=]
->> sound/pci/au88x0/au88x0_xtalk.c:96:20: warning: sDiamondShiftRightXt defined but not used [-Wunused-const-variable=]
-> 
-> Some of them are rather a bug, likely the wrong register and data is
-> used (left instead of right).  They have to be fixed instead of
-> removing.
-> 
-> And some are indeed unused, but I'd leave them with ifdef or such.
-> Such magical values do have some meaning (as the driver code was the
-> result from reverse-engineering) and blindly removing it also loses
-> the information -- though, the driver is tad old and likely broken, so
-> practically seen no big impact.
+Hi Vladimir,
 
-Agree, just leave them this, Thanks!
+On Fri, 2019-08-09 at 12:43 +0300, Vladimir Oltean wrote:
+> Hi Andre,
+> 
+> On Fri, 9 Aug 2019 at 03:58, André Draszik <git@andred.net> wrote:
+> > This driver does a funny dance disabling and re-enabling
+> > RX and/or TX delays. In any of the RGMII-ID modes, it first
+> > disables the delays, just to re-enable them again right
+> > away. This looks like a needless exercise.
+> > 
+> > Just enable the respective delays when in any of the
+> > relevant 'id' modes, and disable them otherwise.
+> > 
+> > Also, remove comments which don't add anything that can't be
+> > seen by looking at the code.
+> > 
+> > Signed-off-by: André Draszik <git@andred.net>
+> > CC: Andrew Lunn <andrew@lunn.ch>
+> > CC: Florian Fainelli <f.fainelli@gmail.com>
+> > CC: Heiner Kallweit <hkallweit1@gmail.com>
+> > CC: "David S. Miller" <davem@davemloft.net>
+> > CC: netdev@vger.kernel.org
+> > ---
+> 
+> Is there any particular problem you're facing? Does this make any difference?
+
+This is a clean-up, reducing the number of lines and if statements
+by removing unnecessary code paths and comments.
+
+
+Cheers,
+Andre'
+
 
 > 
+> >  drivers/net/phy/at803x.c | 26 ++++++--------------------
+> >  1 file changed, 6 insertions(+), 20 deletions(-)
+> > 
+> > diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+> > index 222ccd9ecfce..2ab51f552e92 100644
+> > --- a/drivers/net/phy/at803x.c
+> > +++ b/drivers/net/phy/at803x.c
+> > @@ -257,35 +257,21 @@ static int at803x_config_init(struct phy_device *phydev)
+> >          *   after HW reset: RX delay enabled and TX delay disabled
+> >          *   after SW reset: RX delay enabled, while TX delay retains the
+> >          *   value before reset.
+> > -        *
+> > -        * So let's first disable the RX and TX delays in PHY and enable
+> > -        * them based on the mode selected (this also takes care of RGMII
+> > -        * mode where we expect delays to be disabled)
+> >          */
+> > -
+> > -       ret = at803x_disable_rx_delay(phydev);
+> > -       if (ret < 0)
+> > -               return ret;
+> > -       ret = at803x_disable_tx_delay(phydev);
+> > -       if (ret < 0)
+> > -               return ret;
+> > -
+> >         if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+> >             phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID) {
+> > -               /* If RGMII_ID or RGMII_RXID are specified enable RX delay,
+> > -                * otherwise keep it disabled
+> > -                */
+> >                 ret = at803x_enable_rx_delay(phydev);
+> > -               if (ret < 0)
+> > -                       return ret;
+> > +       } else {
+> > +               ret = at803x_disable_rx_delay(phydev);
+> >         }
+> > +       if (ret < 0)
+> > +               return ret;
+> > 
+> >         if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+> >             phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID) {
+> > -               /* If RGMII_ID or RGMII_TXID are specified enable TX delay,
+> > -                * otherwise keep it disabled
+> > -                */
+> >                 ret = at803x_enable_tx_delay(phydev);
+> > +       } else {
+> > +               ret = at803x_disable_tx_delay(phydev);
+> >         }
+> > 
+> >         return ret;
+> > --
+> > 2.20.1
+> > 
 > 
-> thanks,
-> 
-> Takashi
-> 
-> .
-> 
+> Regards,
+> -Vladimir
 
