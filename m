@@ -2,169 +2,132 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFCCC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 739EFC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEA342089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 436E92089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:03:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F2iKZ4lO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UAy9ZliJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbfHIWDn (ORCPT
+        id S1728880AbfHIWDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 18:03:43 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40255 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfHIWDn (ORCPT
+        Fri, 9 Aug 2019 18:03:54 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:33695 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfHIWDx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 18:03:43 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w10so46489723pgj.7
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 15:03:42 -0700 (PDT)
+        Fri, 9 Aug 2019 18:03:53 -0400
+Received: by mail-pg1-f202.google.com with SMTP id a21so53591464pgv.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 15:03:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4YE5LFpbQmY5CUf9HiiZAitomsRy44hXFJVcN3+uc3g=;
-        b=F2iKZ4lOk3Ih5R8vAeqlbdrBc0o0/2oPVqnxRiWVqXjqSSkS0hpJwY8/YpKGOaysmn
-         S7RZmGdJWCcjYz5bky70ydz7Ay2uw/D5UfOz58OF/e09ambmcuAy/7caWD6Gu/8MZQDD
-         kVqtz0SfTVti/fNY1P+4wOxv9CyVCfKZW/JhCEIdShv7eyoDF0003q3Qz5cDaNO/oV+8
-         ocxCDTmnNj6lX9aKWMtmKBid2xr8N7AmyTYIAQSf2rpqUIxrXM6haG3j8DFCDjmQTg9z
-         YMtbBY7z9XoMpxQTQAeQanKoqciXuUF8/jLaNvyJvHQlxiHfytWc3UIpLanxf2sUkmtH
-         mUHA==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=u8woyYEIswYwSZI+RYUkZJav0hcCzSUKciws/3A8eFI=;
+        b=UAy9ZliJfC3GBJda6OupIsMHCFcE4vNQm2ZAXWx+g5D+Xc+o6gxSBXsGdAj1BhAOjY
+         hSwd/IwvlqOvSdqSMQOmX9p/+rpqBYA08jtB9SYYVtWwVhP7F0S622nlMFQWmNLSOXa3
+         xK91hSiDK4QDyJzR0q2MhImhCKHoS3RNPrDf6KkCrCzwJ9qA7xvxtKRhQmrAjnEm4sf9
+         /2O4fsBnrhfr0f7F3ao8dLP9ZWeAKno01jBit4kG+8z8xxpdQrLtWxrKEPh5HqYs6E3a
+         L6e15UPxTBSSjZnDQZBhDAF4sY05lkmSxhnOiLpve//mGS5PNXfR1Sq+Vwdl1F283s11
+         EXHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4YE5LFpbQmY5CUf9HiiZAitomsRy44hXFJVcN3+uc3g=;
-        b=WSDK/oRgphPETQ0YXKMW4TODcwqnWQDzUYybTvignEcY0eMIqYTn0aP+D3PfaR4rHB
-         hKTrsMKhNGjFZIEPtC/yWyvm5CylOjcqhcGfKeGtKb/v33C9OZVVS7gc9mWrRmgRRWIi
-         BBDTh9BiCj9oVoFOLe9yEHIZQO09TUvvgrNX6dz5F9acQeDK4FwVlqPED5kkvc35fUoH
-         Wdk9BlLdXpdYk+GywmQ6olGp7foLRLQIQWJDuV7nq+egaWNlNiL80/lAHz/RdGYQZUpd
-         gPoDuEkMa0i14BfaYK6duASxrrVrMGgULDFIDljUNQ8dUh9OgsC98gqB53wG653Y0jf9
-         3H4Q==
-X-Gm-Message-State: APjAAAWVuw/O+xh8XwXXQLyZDyBJEsHP19De710ZPJK+G4AZ2NvM1IGl
-        aM5iNOm+stym2HfSorR6dQK0pk2Ix/YNKNSw8oiq1DvnVyl1bg==
-X-Google-Smtp-Source: APXvYqzoA3qP5cLMx/N6kQkj8ONKAvUo3SkoeRrc9oKrOALvTgOH+HjnoEMS8kqTYGRPlpr+JSvGRCE1qbTPLaobk8c=
-X-Received: by 2002:a63:61cd:: with SMTP id v196mr19675034pgb.263.1565388221708;
- Fri, 09 Aug 2019 15:03:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <87h873zs88.fsf@concordia.ellerman.id.au> <20190809182106.62130-1-ndesaulniers@google.com>
- <CAK8P3a3LynWTbpV8=VPm2TqgNM2MnoEyCPJd0PL2D+tcZqJgHg@mail.gmail.com>
- <20190809220301.Horde.AR6y4Bx4WGIq58V9K0En9g4@messagerie.si.c-s.fr> <CAK8P3a1AwmAe+PpHTRmN153fhG4ZkF_pb+240rj1ZAg-S6SKeg@mail.gmail.com>
-In-Reply-To: <CAK8P3a1AwmAe+PpHTRmN153fhG4ZkF_pb+240rj1ZAg-S6SKeg@mail.gmail.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=u8woyYEIswYwSZI+RYUkZJav0hcCzSUKciws/3A8eFI=;
+        b=FD0XAcyrh15UEM6P5Bth/7t3CWGdX9ZnuF+UXT1zyJSJUJnSYqu4ERGV4Yc9Zq5d2i
+         Be4U/VsMIdBjL7MZLRFZsa83D++s2ARNadbSFiWB9+mHkc/g2kLabu0SPGPK7g23fq9Q
+         ke8EhSVJuAqfUl+2obEsQJXmOsfsGKKPsQXEhaJNe/iXBKxmExRhUIqx75IIcTB6gSwM
+         bm7nf0RYKDmZVG1u1GhhqMAq3vBdpRxLZEX2VM+AYRvnc9xdsEHgBnAZjdzsENTtYD5F
+         NwOOYjMVqHnfBdVbzAyuPpUy2zlc77J7Y6pCGJzxI2/dGKL5rFei0iJMFcYyZCVLLzwJ
+         3Z9w==
+X-Gm-Message-State: APjAAAVcU6UHXobLxznPgfVvX1F3E3jCv3XfseW4pzNin8VX6Z50PS44
+        3DFCj1HcaQm3oBICA6STmmNhUfU4prwTyPtYv5M=
+X-Google-Smtp-Source: APXvYqzyM1XJN7FOkuZaGwj9xH3x7cZlnraGtnkG5xN3p+7O5NNPZIyQr9Gfn94WugA8q8zgwEwvJofBRod2VyPs1Tc=
+X-Received: by 2002:a63:6a81:: with SMTP id f123mr19637717pgc.348.1565388232571;
+ Fri, 09 Aug 2019 15:03:52 -0700 (PDT)
+Date:   Fri,  9 Aug 2019 15:03:47 -0700
+In-Reply-To: <20190809220301.Horde.AR6y4Bx4WGIq58V9K0En9g4@messagerie.si.c-s.fr>
+Message-Id: <20190809220348.127314-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <20190809220301.Horde.AR6y4Bx4WGIq58V9K0En9g4@messagerie.si.c-s.fr>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+Subject: [PATCH v3] Revert "powerpc: slightly improve cache helpers"
 From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 9 Aug 2019 15:03:30 -0700
-Message-ID: <CAKwvOdmhUPTUPa3=_AQ04zEDTsScduqOM29TfK656riAb_t=rQ@mail.gmail.com>
-Subject: Re: [PATCH] powerpc: fix inline asm constraints for dcbz
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        kbuild test robot <lkp@intel.com>,
+To:     mpe@ellerman.id.au
+Cc:     christophe.leroy@c-s.fr, segher@kernel.crashing.org, arnd@arndb.de,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
+        kbuild test robot <lkp@intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 1:13 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Fri, Aug 9, 2019 at 10:02 PM Christophe Leroy
-> <christophe.leroy@c-s.fr> wrote:
-> >
-> > Arnd Bergmann <arnd@arndb.de> a =C3=A9crit :
-> > > On Fri, Aug 9, 2019 at 8:21 PM 'Nick Desaulniers' via Clang Built
-> > > Linux <clang-built-linux@googlegroups.com> wrote:
-> > >
-> > >>  static inline void dcbz(void *addr)
-> > >>  {
-> > >> -       __asm__ __volatile__ ("dcbz %y0" : : "Z"(*(u8 *)addr) : "mem=
-ory");
-> > >> +       __asm__ __volatile__ ("dcbz %y0" : "=3DZ"(*(u8 *)addr) :: "m=
-emory");
-> > >>  }
-> > >>
-> > >>  static inline void dcbi(void *addr)
-> > >>  {
-> > >> -       __asm__ __volatile__ ("dcbi %y0" : : "Z"(*(u8 *)addr) : "mem=
-ory");
-> > >> +       __asm__ __volatile__ ("dcbi %y0" : "=3DZ"(*(u8 *)addr) :: "m=
-emory");
-> > >>  }
-> > >
-> > > I think the result of the discussion was that an output argument only=
- kind-of
-> > > makes sense for dcbz, but for the others it's really an input, and cl=
-ang is
-> > > wrong in the way it handles the "Z" constraint by making a copy, whic=
-h it
-> > > doesn't do for "m".
-> > >
-> > > I'm not sure whether it's correct to use "m" instead of "Z" here, whi=
-ch
-> > > would be a better workaround if that works. More importantly though,
-> > > clang really needs to be fixed to handle "Z" correctly.
-> >
-> > As the benefit is null, I think the best is probably to reverse my
-> > original commit until at least CLang is fixed, as initialy suggested
-> > by mpe
->
-> Yes, makes sense.
->
-> There is one other use of the "Z" constraint, so on top of the revert, I
-> think it might be helpful if Nick could check if the patch below makes
-> any difference with clang and, if it does, whether the current version
-> is broken.
->
->        Arnd
->
-> diff --git a/arch/powerpc/include/asm/io.h b/arch/powerpc/include/asm/io.=
-h
-> index 23e5d5d16c7e..28b467779328 100644
-> --- a/arch/powerpc/include/asm/io.h
-> +++ b/arch/powerpc/include/asm/io.h
-> @@ -106,7 +106,7 @@ static inline u##size name(const volatile u##size
-> __iomem *addr)    \
->  {                                                                      \
->         u##size ret;                                                    \
->         __asm__ __volatile__("sync;"#insn" %0,%y1;twi 0,%0,0;isync"     \
-> -               : "=3Dr" (ret) : "Z" (*addr) : "memory");                =
- \
-> +               : "=3Dr" (ret) : "m" (*addr) : "memory");                =
- \
->         return ret;                                                     \
->  }
->
-> @@ -114,7 +114,7 @@ static inline u##size name(const volatile u##size
-> __iomem *addr)    \
->  static inline void name(volatile u##size __iomem *addr, u##size val)   \
->  {                                                                      \
->         __asm__ __volatile__("sync;"#insn" %1,%y0"                      \
-> -               : "=3DZ" (*addr) : "r" (val) : "memory");                =
- \
-> +               : "=3Dm" (*addr) : "r" (val) : "memory");                =
- \
->         mmiowb_set_pending();                                           \
->  }
+This reverts commit 6c5875843b87c3adea2beade9d1b8b3d4523900a.
 
-Does not work:
-https://travis-ci.com/ClangBuiltLinux/continuous-integration/builds/1226548=
-99
-https://github.com/ClangBuiltLinux/continuous-integration/pull/197/files#di=
-ff-40bd16e3188587e4d648c30e0c2d6d37
+Work around Clang bug preventing ppc32 from booting.
 
---=20
-Thanks,
-~Nick Desaulniers
+Link: https://bugs.llvm.org/show_bug.cgi?id=42762
+Link: https://github.com/ClangBuiltLinux/linux/issues/593
+Debugged-by: Nathan Chancellor <natechancellor@gmail.com>
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+Changes V2 -> V3:
+* Just revert, as per Christophe.
+Changes V1 -> V2:
+* Change to ouput paremeter.
+
+
+ arch/powerpc/include/asm/cache.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/cache.h b/arch/powerpc/include/asm/cache.h
+index b3388d95f451..45e3137ccd71 100644
+--- a/arch/powerpc/include/asm/cache.h
++++ b/arch/powerpc/include/asm/cache.h
+@@ -107,22 +107,22 @@ extern void _set_L3CR(unsigned long);
+ 
+ static inline void dcbz(void *addr)
+ {
+-	__asm__ __volatile__ ("dcbz %y0" : : "Z"(*(u8 *)addr) : "memory");
++	__asm__ __volatile__ ("dcbz 0, %0" : : "r"(addr) : "memory");
+ }
+ 
+ static inline void dcbi(void *addr)
+ {
+-	__asm__ __volatile__ ("dcbi %y0" : : "Z"(*(u8 *)addr) : "memory");
++	__asm__ __volatile__ ("dcbi 0, %0" : : "r"(addr) : "memory");
+ }
+ 
+ static inline void dcbf(void *addr)
+ {
+-	__asm__ __volatile__ ("dcbf %y0" : : "Z"(*(u8 *)addr) : "memory");
++	__asm__ __volatile__ ("dcbf 0, %0" : : "r"(addr) : "memory");
+ }
+ 
+ static inline void dcbst(void *addr)
+ {
+-	__asm__ __volatile__ ("dcbst %y0" : : "Z"(*(u8 *)addr) : "memory");
++	__asm__ __volatile__ ("dcbst 0, %0" : : "r"(addr) : "memory");
+ }
+ #endif /* !__ASSEMBLY__ */
+ #endif /* __KERNEL__ */
+-- 
+2.23.0.rc1.153.gdeed80330f-goog
+
