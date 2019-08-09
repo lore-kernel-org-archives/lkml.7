@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62009C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4064CC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0C2208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16FD4208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:32:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565353933;
-	bh=7AX3nQPSH9YK3LMRSCtcE+eng8J4tKNVuszPkKudXNY=;
+	s=default; t=1565353938;
+	bh=F3gH/2U5N508N96Fa0WPfRL9AkWww6dcYeAo+KlnLJ0=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=pWtrvVYKyNaTJ7sSsenw9jgic4c+EXdsaA3BeuqaytMTpJp3iJe9sr2E6aKDBvsWf
-	 dioff4MxXiwPfxSsJ9rV0mDdfIE4YSEkh1PcyPbnJLfVoyX8sr+qK0ryit0mhqudKG
-	 R1AwzoAv66oQ+T1NmrtNLO1+RnFMdAH9oyuA0SyA=
+	b=2TxYZoXmRyfJN2lwZEIdbRJF1C8zV/jpIne8NaLEslCpkKUxMFtZRGH+eonEQuX9H
+	 xz1G39N/9BlJRcI8zEpHcAANNr6rQWMjIrGqH4BbDjQz6U4xP5pQhCF310cdbjN22U
+	 VfJsNPiwqs+obyetFgmjNJfjrmVG3ymUdPTOsGIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407020AbfHIMcM (ORCPT
+        id S2436466AbfHIMcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 08:32:12 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59274 "EHLO
+        Fri, 9 Aug 2019 08:32:15 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59406 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406970AbfHIMcC (ORCPT
+        with ESMTP id S2406996AbfHIMcF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 08:32:02 -0400
+        Fri, 9 Aug 2019 08:32:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=yjI9BHjJiM6QPyHI374iDRWW1Y55n+A5l+wSxkkmzSQ=; b=gjZ/ALnhSceO
-        kEv0GZ22UZvBLYLfFHjAXGCEDcYFlEmmBaoIPZUKCNspWuIuytzah7sZM1VFy2NE29ZwScteW3Xi0
-        DcfE7NBN1advJfNqn44Sj/s6QaasLpBxcuRa3B7qbpaQADBv4ckQFm9YIp7fMb+9qqtEM0GVs4jEH
-        XtbAw=;
+        List-Archive; bh=KkMWdWdaZPGt8q4/51AC+gNMwtToOnoRdH8VMCOgM9g=; b=O18c1zr3Vr1e
+        BraQLZz7D3x4DwmSGP0bu0tuanXkRWnksVm1bAyMpDE4gydDcGA77mL1l0v+UbBgCrTfMatTh0H7j
+        d86REthYs9NGJrb/ZSN3hhlvcZXMIoJcpx44MJo3CL/uTXNlaKWsndN9aF56690R6YSnZJi7Y24xV
+        vua5Q=;
 Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1hw43q-000623-F0; Fri, 09 Aug 2019 12:31:58 +0000
+        id 1hw43l-00061B-Ag; Fri, 09 Aug 2019 12:31:53 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id D16DD274303D; Fri,  9 Aug 2019 13:31:57 +0100 (BST)
+        id AA2A0274303D; Fri,  9 Aug 2019 13:31:52 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Applied "regulator: qcom-rpmh: Update PMIC modes for PMIC5" to the regulator tree
-In-Reply-To: <20190809073616.1235-4-vkoul@kernel.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        Hulk Robot <hulkci@huawei.com>, lgirdwood@gmail.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Mark Brown <broonie@kernel.org>, matthias.bgg@gmail.com,
+        perex@perex.cz, pierre-louis.bossart@linux.intel.com,
+        tiwai@suse.com
+Subject: Applied "ASoC: mt6351: remove unused variable 'mt_lineout_control'" to the asoc tree
+In-Reply-To: <20190809080234.23332-1-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190809123157.D16DD274303D@ypsilon.sirena.org.uk>
-Date:   Fri,  9 Aug 2019 13:31:57 +0100 (BST)
+Message-Id: <20190809123152.AA2A0274303D@ypsilon.sirena.org.uk>
+Date:   Fri,  9 Aug 2019 13:31:52 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,11 +66,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: qcom-rpmh: Update PMIC modes for PMIC5
+   ASoC: mt6351: remove unused variable 'mt_lineout_control'
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,153 +91,40 @@ to this mail.
 Thanks,
 Mark
 
-From 610f29e5cc0e8d5864dd049b0b3576d9437ae7b4 Mon Sep 17 00:00:00 2001
-From: Vinod Koul <vkoul@kernel.org>
-Date: Fri, 9 Aug 2019 13:06:16 +0530
-Subject: [PATCH] regulator: qcom-rpmh: Update PMIC modes for PMIC5
+From bc8d9f737fc01cce913f1cc215b7e66f01697e52 Mon Sep 17 00:00:00 2001
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Fri, 9 Aug 2019 16:02:34 +0800
+Subject: [PATCH] ASoC: mt6351: remove unused variable 'mt_lineout_control'
 
-Add the PMIC5 modes and use them pmic5 ldo and smps
+sound/soc/codecs/mt6351.c:1070:38: warning:
+ mt_lineout_control defined but not used [-Wunused-const-variable=]
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Link: https://lore.kernel.org/r/20190809073616.1235-4-vkoul@kernel.org
+It is never used, so can be removed.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Link: https://lore.kernel.org/r/20190809080234.23332-1-yuehaibing@huawei.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/qcom-rpmh-regulator.c | 52 +++++++++++++++++++++----
- 1 file changed, 45 insertions(+), 7 deletions(-)
+ sound/soc/codecs/mt6351.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
-index 391ed844a251..db6c085da65e 100644
---- a/drivers/regulator/qcom-rpmh-regulator.c
-+++ b/drivers/regulator/qcom-rpmh-regulator.c
-@@ -50,6 +50,20 @@ enum rpmh_regulator_type {
- #define PMIC4_BOB_MODE_AUTO			2
- #define PMIC4_BOB_MODE_PWM			3
+diff --git a/sound/soc/codecs/mt6351.c b/sound/soc/codecs/mt6351.c
+index 4b3ce01c5a93..5c0536eb1044 100644
+--- a/sound/soc/codecs/mt6351.c
++++ b/sound/soc/codecs/mt6351.c
+@@ -1066,11 +1066,6 @@ static int mt_mic_bias_2_event(struct snd_soc_dapm_widget *w,
+ 	return 0;
+ }
  
-+#define PMIC5_LDO_MODE_RETENTION		3
-+#define PMIC5_LDO_MODE_LPM			4
-+#define PMIC5_LDO_MODE_HPM			7
-+
-+#define PMIC5_SMPS_MODE_RETENTION		3
-+#define PMIC5_SMPS_MODE_PFM			4
-+#define PMIC5_SMPS_MODE_AUTO			6
-+#define PMIC5_SMPS_MODE_PWM			7
-+
-+#define PMIC5_BOB_MODE_PASS			2
-+#define PMIC5_BOB_MODE_PFM			4
-+#define PMIC5_BOB_MODE_AUTO			6
-+#define PMIC5_BOB_MODE_PWM			7
-+
- /**
-  * struct rpmh_vreg_hw_data - RPMh regulator hardware configurations
-  * @regulator_type:		RPMh accelerator type used to manage this
-@@ -488,6 +502,14 @@ static const int pmic_mode_map_pmic4_ldo[REGULATOR_MODE_STANDBY + 1] = {
- 	[REGULATOR_MODE_FAST]    = -EINVAL,
- };
- 
-+static const int pmic_mode_map_pmic5_ldo[REGULATOR_MODE_STANDBY + 1] = {
-+	[REGULATOR_MODE_INVALID] = -EINVAL,
-+	[REGULATOR_MODE_STANDBY] = PMIC5_LDO_MODE_RETENTION,
-+	[REGULATOR_MODE_IDLE]    = PMIC5_LDO_MODE_LPM,
-+	[REGULATOR_MODE_NORMAL]  = PMIC5_LDO_MODE_HPM,
-+	[REGULATOR_MODE_FAST]    = -EINVAL,
-+};
-+
- static unsigned int rpmh_regulator_pmic4_ldo_of_map_mode(unsigned int rpmh_mode)
- {
- 	unsigned int mode;
-@@ -518,6 +540,14 @@ static const int pmic_mode_map_pmic4_smps[REGULATOR_MODE_STANDBY + 1] = {
- 	[REGULATOR_MODE_FAST]    = PMIC4_SMPS_MODE_PWM,
- };
- 
-+static const int pmic_mode_map_pmic5_smps[REGULATOR_MODE_STANDBY + 1] = {
-+	[REGULATOR_MODE_INVALID] = -EINVAL,
-+	[REGULATOR_MODE_STANDBY] = PMIC5_SMPS_MODE_RETENTION,
-+	[REGULATOR_MODE_IDLE]    = PMIC5_SMPS_MODE_PFM,
-+	[REGULATOR_MODE_NORMAL]  = PMIC5_SMPS_MODE_AUTO,
-+	[REGULATOR_MODE_FAST]    = PMIC5_SMPS_MODE_PWM,
-+};
-+
- static unsigned int
- rpmh_regulator_pmic4_smps_of_map_mode(unsigned int rpmh_mode)
- {
-@@ -552,6 +582,14 @@ static const int pmic_mode_map_pmic4_bob[REGULATOR_MODE_STANDBY + 1] = {
- 	[REGULATOR_MODE_FAST]    = PMIC4_BOB_MODE_PWM,
- };
- 
-+static const int pmic_mode_map_pmic5_bob[REGULATOR_MODE_STANDBY + 1] = {
-+	[REGULATOR_MODE_INVALID] = -EINVAL,
-+	[REGULATOR_MODE_STANDBY] = -EINVAL,
-+	[REGULATOR_MODE_IDLE]    = PMIC5_BOB_MODE_PFM,
-+	[REGULATOR_MODE_NORMAL]  = PMIC5_BOB_MODE_AUTO,
-+	[REGULATOR_MODE_FAST]    = PMIC5_BOB_MODE_PWM,
-+};
-+
- static unsigned int rpmh_regulator_pmic4_bob_of_map_mode(unsigned int rpmh_mode)
- {
- 	unsigned int mode;
-@@ -643,7 +681,7 @@ static const struct rpmh_vreg_hw_data pmic5_pldo = {
- 	.voltage_range = REGULATOR_LINEAR_RANGE(1504000, 0, 255, 8000),
- 	.n_voltages = 256,
- 	.hpm_min_load_uA = 10000,
--	.pmic_mode_map = pmic_mode_map_pmic4_ldo,
-+	.pmic_mode_map = pmic_mode_map_pmic5_ldo,
- 	.of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
- };
- 
-@@ -653,7 +691,7 @@ static const struct rpmh_vreg_hw_data pmic5_pldo_lv = {
- 	.voltage_range = REGULATOR_LINEAR_RANGE(1504000, 0, 62, 8000),
- 	.n_voltages = 63,
- 	.hpm_min_load_uA = 10000,
--	.pmic_mode_map = pmic_mode_map_pmic4_ldo,
-+	.pmic_mode_map = pmic_mode_map_pmic5_ldo,
- 	.of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
- };
- 
-@@ -663,7 +701,7 @@ static const struct rpmh_vreg_hw_data pmic5_nldo = {
- 	.voltage_range = REGULATOR_LINEAR_RANGE(320000, 0, 123, 8000),
- 	.n_voltages = 124,
- 	.hpm_min_load_uA = 30000,
--	.pmic_mode_map = pmic_mode_map_pmic4_ldo,
-+	.pmic_mode_map = pmic_mode_map_pmic5_ldo,
- 	.of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
- };
- 
-@@ -672,7 +710,7 @@ static const struct rpmh_vreg_hw_data pmic5_hfsmps510 = {
- 	.ops = &rpmh_regulator_vrm_ops,
- 	.voltage_range = REGULATOR_LINEAR_RANGE(320000, 0, 215, 8000),
- 	.n_voltages = 216,
--	.pmic_mode_map = pmic_mode_map_pmic4_smps,
-+	.pmic_mode_map = pmic_mode_map_pmic5_smps,
- 	.of_map_mode = rpmh_regulator_pmic4_smps_of_map_mode,
- };
- 
-@@ -681,7 +719,7 @@ static const struct rpmh_vreg_hw_data pmic5_ftsmps510 = {
- 	.ops = &rpmh_regulator_vrm_ops,
- 	.voltage_range = REGULATOR_LINEAR_RANGE(300000, 0, 263, 4000),
- 	.n_voltages = 264,
--	.pmic_mode_map = pmic_mode_map_pmic4_smps,
-+	.pmic_mode_map = pmic_mode_map_pmic5_smps,
- 	.of_map_mode = rpmh_regulator_pmic4_smps_of_map_mode,
- };
- 
-@@ -690,7 +728,7 @@ static const struct rpmh_vreg_hw_data pmic5_hfsmps515 = {
- 	.ops = &rpmh_regulator_vrm_ops,
- 	.voltage_range = REGULATOR_LINEAR_RANGE(2800000, 0, 4, 1600),
- 	.n_voltages = 5,
--	.pmic_mode_map = pmic_mode_map_pmic4_smps,
-+	.pmic_mode_map = pmic_mode_map_pmic5_smps,
- 	.of_map_mode = rpmh_regulator_pmic4_smps_of_map_mode,
- };
- 
-@@ -699,7 +737,7 @@ static const struct rpmh_vreg_hw_data pmic5_bob = {
- 	.ops = &rpmh_regulator_vrm_bypass_ops,
- 	.voltage_range = REGULATOR_LINEAR_RANGE(300000, 0, 135, 32000),
- 	.n_voltages = 136,
--	.pmic_mode_map = pmic_mode_map_pmic4_bob,
-+	.pmic_mode_map = pmic_mode_map_pmic5_bob,
- 	.of_map_mode = rpmh_regulator_pmic4_bob_of_map_mode,
- };
- 
+-/* DAPM Kcontrols */
+-static const struct snd_kcontrol_new mt_lineout_control =
+-	SOC_DAPM_SINGLE("Switch", MT6351_AUDDEC_ANA_CON3,
+-			RG_AUDLOLPWRUP_VAUDP32_BIT, 1, 0);
+-
+ /* DAPM Widgets */
+ static const struct snd_soc_dapm_widget mt6351_dapm_widgets[] = {
+ 	/* Digital Clock */
 -- 
 2.20.1
 
