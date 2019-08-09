@@ -2,201 +2,110 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F20C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773BAC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E424208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:13:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YNpI9pug"
+	by mail.kernel.org (Postfix) with ESMTP id 54834208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:14:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406743AbfHIMNe (ORCPT
+        id S2406770AbfHIMOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 08:13:34 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43412 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406717AbfHIMNc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 08:13:32 -0400
-Received: by mail-lf1-f67.google.com with SMTP id c19so69372428lfm.10
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 05:13:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=v4HP1f9I8mZkiZqFopwmMMkehyPq4NgMHQsfAEytrfU=;
-        b=YNpI9pugYlzXXWEm7gvqKyZ01t+lvLxfzMQZiq59XfUVgFGPJSbUlfe4rqqKT0qjZt
-         zP+128kHF9/RGUY6FezeDq/qvifSWqPdbxljDgOC6D0oM8xlzrh7EitXNjyYbu72NoyD
-         G1RBLtHBAE+yXmg9p0uod0qMvwQtig15ihwTFoSKcE3N3OTQca80egF+ZDEK65CBdIXr
-         5zHyABz9YSHvgVqC25nm+rkOuCOP+yAb8dhnX3YrQhv1yCjgzE3VLXDeM4FZSz+hZFtn
-         l98vNV9rA0UNUpZJAJeWj8ITArn9q0Hx5MF4ploQT5yqdCdbYb+aWSCvTBvCayZWihjb
-         egbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=v4HP1f9I8mZkiZqFopwmMMkehyPq4NgMHQsfAEytrfU=;
-        b=ZXOF4rSggwotDjpeaxZu73RS48wR8xo+LK/IjtCq9TQ/EzaFF/Y/wQH7ahBpRBySg8
-         RxHKNeedulANNQ+TqUuC/5RfzVRNQn7WsA5MfFDE0Zz+qL42hsZGOaSZ/eGVMCmsiYYh
-         gdsfr5KcWn1FG+QbpFhULLn2Wb7lwCfpzYPzPddKJbWcP8XjRim80+zRWTj0xpegmH5S
-         xAybMgrVf+m4MoNiLmrz3cIuowS0zttcCYm51VP+4yjVIt0tAi5lKbkamZJDgIfQ5MrN
-         54BLMSFWK7tOF3HxMM5ISt6QI+sBpyP5rCZgf/9D++5NE2FgyBg+Wjp6DsXgW93o8/ui
-         +bYw==
-X-Gm-Message-State: APjAAAWSsOITQpOIfGgVXymf9L/ruY/o3Q8CdOKK5FvUTL7YVqI+UQp1
-        IeAcYWF+QZMyXLayo4yLxhPT4g==
-X-Google-Smtp-Source: APXvYqxmjyKjeMK8fWu72LvCNug/pYb/vqLExyqM5AiKSKKLOIVnzMvhRgy2sxOc2Cwh6GXm5loGfw==
-X-Received: by 2002:ac2:54bc:: with SMTP id w28mr11690638lfk.17.1565352809592;
-        Fri, 09 Aug 2019 05:13:29 -0700 (PDT)
-Received: from localhost.localdomain ([37.157.136.206])
-        by smtp.googlemail.com with ESMTPSA id f23sm1083425lfc.25.2019.08.09.05.13.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 09 Aug 2019 05:13:29 -0700 (PDT)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     linux-pm@vger.kernel.org, evgreen@chromium.org
-Cc:     daidavid1@codeaurora.org, vincent.guittot@linaro.org,
-        bjorn.andersson@linaro.org, amit.kucheria@linaro.org,
-        dianders@chromium.org, seansw@qti.qualcomm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org
-Subject: [PATCH v3 1/3] interconnect: Add support for path tags
-Date:   Fri,  9 Aug 2019 15:13:23 +0300
-Message-Id: <20190809121325.8138-2-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190809121325.8138-1-georgi.djakov@linaro.org>
-References: <20190809121325.8138-1-georgi.djakov@linaro.org>
+        Fri, 9 Aug 2019 08:14:30 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:20868 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbfHIMO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 08:14:29 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id 679A0A1879;
+        Fri,  9 Aug 2019 14:14:28 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
+        with ESMTP id GAVsWbOOM3vL; Fri,  9 Aug 2019 14:14:23 +0200 (CEST)
+Message-ID: <0d59b0745db9dae17af0122cbb08f82540da652b.camel@carmenbianca.eu>
+Subject: Re: REUSE/SPDX: Invalid LicenseRef in Linux sources
+From:   Carmen Bianca Bakker <carmen@carmenbianca.eu>
+To:     Charlemagne Lasse <charlemagnelasse@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Basil Peace <grv87@yandex.ru>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keith Maxwell <keith.maxwell@gmail.com>,
+        Matija =?UTF-8?Q?=C5=A0uklje?= <matija.suklje@liferay.com>
+Date:   Fri, 09 Aug 2019 14:14:20 +0200
+In-Reply-To: <CAFGhKbwJVv23Mwd7ruo8JCC-0U3BdNRwnxih9zgFSCyPe=jnoA@mail.gmail.com>
+References: <CAFGhKbwJVv23Mwd7ruo8JCC-0U3BdNRwnxih9zgFSCyPe=jnoA@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-CVrLfDxRx7v5iRG0hf5e"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Consumers may have use cases with different bandwidth requirements based
-on the system or driver state. The consumer driver can append a specific
-tag to the path and pass this information to the interconnect platform
-driver to do the aggregation based on this state.
 
-Introduce icc_set_tag() function that will allow the consumers to append
-an optional tag to each path. The aggregation of these tagged paths is
-platform specific.
+--=-CVrLfDxRx7v5iRG0hf5e
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- drivers/interconnect/core.c           | 24 +++++++++++++++++++++++-
- drivers/interconnect/qcom/sdm845.c    |  2 +-
- include/linux/interconnect-provider.h |  4 ++--
- include/linux/interconnect.h          |  5 +++++
- 4 files changed, 31 insertions(+), 4 deletions(-)
+Je ven, 2019-08-09 je 11:30 +0200, Charlemagne Lasse skribis:
+> When I run the reuse lint tool on the current linux sources, I get
+> following error
+>=20
+> reuse.project - WARNING - Could not resolve SPDX identifier of
+> LICENSES/deprecated/GPL-1.0, resolving to LicenseRef-Unknown0
+> reuse.project - WARNING - Could not resolve SPDX identifier of
+> LICENSES/exceptions/GCC-exception-2.0, resolving to
+> LicenseRef-Unknown1
+> reuse.project - WARNING - Could not resolve SPDX identifier of
+> LICENSES/preferred/LGPL-2.0, resolving to LicenseRef-Unknown2
+> reuse.project - WARNING - Could not resolve SPDX identifier of
+> LICENSES/preferred/LGPL-2.1, resolving to LicenseRef-Unknown3
+> reuse.project - WARNING - Could not resolve SPDX identifier of
+> LICENSES/preferred/GPL-2.0, resolving to LicenseRef-Unknown4
+> reuse.project - WARNING - Could not resolve SPDX identifier of
+> LICENSES/dual/Apache-2.0, resolving to LicenseRef-Unknown5
+> reuse.project - WARNING - Could not resolve SPDX identifier of
+> LICENSES/dual/MPL-1.1, resolving to LicenseRef-Unknown6
+> reuse.project - WARNING - Could not resolve SPDX identifier of
+> LICENSES/dual/CDDL-1.0, resolving to LicenseRef-Unknown7
+>=20
+> Can you please help to fix the problem
 
-diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index 871eb4bc4efc..251354bb7fdc 100644
---- a/drivers/interconnect/core.c
-+++ b/drivers/interconnect/core.c
-@@ -29,6 +29,7 @@ static struct dentry *icc_debugfs_dir;
-  * @req_node: entry in list of requests for the particular @node
-  * @node: the interconnect node to which this constraint applies
-  * @dev: reference to the device that sets the constraints
-+ * @tag: path tag (optional)
-  * @avg_bw: an integer describing the average bandwidth in kBps
-  * @peak_bw: an integer describing the peak bandwidth in kBps
-  */
-@@ -36,6 +37,7 @@ struct icc_req {
- 	struct hlist_node req_node;
- 	struct icc_node *node;
- 	struct device *dev;
-+	u32 tag;
- 	u32 avg_bw;
- 	u32 peak_bw;
- };
-@@ -204,7 +206,7 @@ static int aggregate_requests(struct icc_node *node)
- 	node->peak_bw = 0;
- 
- 	hlist_for_each_entry(r, &node->req_list, req_node)
--		p->aggregate(node, r->avg_bw, r->peak_bw,
-+		p->aggregate(node, r->tag, r->avg_bw, r->peak_bw,
- 			     &node->avg_bw, &node->peak_bw);
- 
- 	return 0;
-@@ -385,6 +387,26 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
- }
- EXPORT_SYMBOL_GPL(of_icc_get);
- 
-+/**
-+ * icc_set_tag() - set an optional tag on a path
-+ * @path: the path we want to tag
-+ * @tag: the tag value
-+ *
-+ * This function allows consumers to append a tag to the requests associated
-+ * with a path, so that a different aggregation could be done based on this tag.
-+ */
-+void icc_set_tag(struct icc_path *path, u32 tag)
-+{
-+	int i;
-+
-+	if (!path)
-+		return;
-+
-+	for (i = 0; i < path->num_nodes; i++)
-+		path->reqs[i].tag = tag;
-+}
-+EXPORT_SYMBOL_GPL(icc_set_tag);
-+
- /**
-  * icc_set_bw() - set bandwidth constraints on an interconnect path
-  * @path: reference to the path returned by icc_get()
-diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
-index 4915b78da673..fb526004c82e 100644
---- a/drivers/interconnect/qcom/sdm845.c
-+++ b/drivers/interconnect/qcom/sdm845.c
-@@ -626,7 +626,7 @@ static void bcm_aggregate(struct qcom_icc_bcm *bcm)
- 	bcm->dirty = false;
- }
- 
--static int qcom_icc_aggregate(struct icc_node *node, u32 avg_bw,
-+static int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
- 			      u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
- {
- 	size_t i;
-diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
-index 63caccadc2db..4ee19fd41568 100644
---- a/include/linux/interconnect-provider.h
-+++ b/include/linux/interconnect-provider.h
-@@ -45,8 +45,8 @@ struct icc_provider {
- 	struct list_head	provider_list;
- 	struct list_head	nodes;
- 	int (*set)(struct icc_node *src, struct icc_node *dst);
--	int (*aggregate)(struct icc_node *node, u32 avg_bw, u32 peak_bw,
--			 u32 *agg_avg, u32 *agg_peak);
-+	int (*aggregate)(struct icc_node *node, u32 tag, u32 avg_bw,
-+			 u32 peak_bw, u32 *agg_avg, u32 *agg_peak);
- 	struct icc_node* (*xlate)(struct of_phandle_args *spec, void *data);
- 	struct device		*dev;
- 	int			users;
-diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
-index dc25864755ba..d70a914cba11 100644
---- a/include/linux/interconnect.h
-+++ b/include/linux/interconnect.h
-@@ -30,6 +30,7 @@ struct icc_path *icc_get(struct device *dev, const int src_id,
- struct icc_path *of_icc_get(struct device *dev, const char *name);
- void icc_put(struct icc_path *path);
- int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
-+void icc_set_tag(struct icc_path *path, u32 tag);
- 
- #else
- 
-@@ -54,6 +55,10 @@ static inline int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
- 	return 0;
- }
- 
-+static inline void icc_set_tag(struct icc_path *path, u32 tag)
-+{
-+}
-+
- #endif /* CONFIG_INTERCONNECT */
- 
- #endif /* __LINUX_INTERCONNECT_H */
+The REUSE Spec mandates a file extension. The kernel isn't perfectly
+compliant, and doesn't aim to be compliant.
+
+Kindly,
+Carmen
+
+
+--=-CVrLfDxRx7v5iRG0hf5e
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEaOz9p2Grh2PLV5z6duum9rbqLskFAl1NY5wACgkQduum9rbq
+Lskctg/+OAW8+sXFXIv6PQGs1b6IVgtI5nGKyGg5v89clHTACdSnaABN24Du5nnh
+qssyVVRWXQa/15gpmK4TzmZtBpPvEyCM+RBV6soAFGoPQ4vGXw2ctV9Y45jf0atq
+sLPBQR1AihnAxGhpCa865M0ILbgDB1TvloXb2AgUSnkWT0+VkjURPY2mDargF/jT
+G2DzWwrwllujCM0BMkrzb2t+IYTr8MROdw6ailOfo/F83bvokCVUN0ufTL9ezFsA
+022lGaLoXvUl8cV4DAjdlImyAb1R32unTJggcIYuWOnOxqQiU5MvIBBoLbZ3i/7A
+V50nqTAF96U1REU7n1BjNVtBz+G15D9XJJFxs7LGHbeFve6v/Zh7Yo8xe5R0bzv6
+thiXDmtbvFA0/TaIOlONG/MahQxzw7TBqHdCrgYVArV2EVsdvyyrPKvylem+UL/8
+JNmxJnaB5ELMBhkyLoXG5hUeWMELQJydT8kaAJ/HQaikZt58aJpmMhFGvrS7iYIC
+smY/CVTF85/LN56TtS33vLVH6pU+38Xpq3IB0dmxK7fd6GrIgdjqNWfEO/4VksBM
+JzJwQYNau9UypfWGO7ye9kDOVAJYCKt+ijGRUKL8ozvYOv7kpjHf9fMMn2aSWY5p
+32E5zgvhdDPh2O7ZVq2m4I8cQcZSD3wpejMQEbFiVNEIKw6SQRA=
+=cfbi
+-----END PGP SIGNATURE-----
+
+--=-CVrLfDxRx7v5iRG0hf5e--
+
