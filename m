@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA09C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CAAC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A42A2086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 786FE2086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbfHJUwQ (ORCPT
+        id S1727512AbfHJUwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:52:16 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54148 "EHLO
+        Sat, 10 Aug 2019 16:52:14 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54150 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726582AbfHJUnw (ORCPT
+        by vger.kernel.org with ESMTP id S1726587AbfHJUnw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:52 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDM-00053h-Q6; Sat, 10 Aug 2019 21:43:48 +0100
+        id 1hwYDM-00053e-Q6; Sat, 10 Aug 2019 21:43:48 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-0003b3-Rm; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDJ-0003b8-SR; Sat, 10 Aug 2019 21:43:45 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Simon Wunderlich" <sw@simonwunderlich.de>,
-        "Sven Eckelmann" <sven@narfation.org>
+        "Sven Eckelmann" <sven@narfation.org>,
+        "Simon Wunderlich" <sw@simonwunderlich.de>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.970365987@decadent.org.uk>
+Message-ID: <lsq.1565469607.336708598@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 045/157] batman-adv: Reduce claim hash refcnt only
+Subject: [PATCH 3.16 046/157] batman-adv: Reduce tt_local hash refcnt only
  for removed entry
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
@@ -58,7 +58,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sven Eckelmann <sven@narfation.org>
 
-commit 4ba104f468bbfc27362c393815d03aa18fb7a20f upstream.
+commit 3d65b9accab4a7ed5038f6df403fbd5e298398c7 upstream.
 
 The batadv_hash_remove is a function which searches the hashtable for an
 entry using a needle, a hashtable bucket selection function and a compare
@@ -66,7 +66,7 @@ function. It will lock the bucket list and delete an entry when the compare
 function matches it with the needle. It returns the pointer to the
 hlist_node which matches or NULL when no entry matches the needle.
 
-The batadv_bla_del_claim is not itself protected in anyway to avoid that
+The batadv_tt_local_remove is not itself protected in anyway to avoid that
 any other function is modifying the hashtable between the search for the
 entry and the call to batadv_hash_remove. It can therefore happen that the
 entry either doesn't exist anymore or an entry was deleted which is not the
@@ -81,46 +81,50 @@ this problem as:
 
   refcount_t: underflow; use-after-free.
 
-Fixes: 23721387c409 ("batman-adv: add basic bridge loop avoidance code")
+Fixes: ef72706a0543 ("batman-adv: protect tt_local_entry from concurrent delete events")
 Signed-off-by: Sven Eckelmann <sven@narfation.org>
 Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-[bwh: Backported to 3.16: keep using batadv_claim_free_ref()]
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/batman-adv/bridge_loop_avoidance.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ net/batman-adv/translation-table.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
---- a/net/batman-adv/bridge_loop_avoidance.c
-+++ b/net/batman-adv/bridge_loop_avoidance.c
-@@ -677,6 +677,8 @@ static void batadv_bla_del_claim(struct
- 				 const uint8_t *mac, const unsigned short vid)
+--- a/net/batman-adv/translation-table.c
++++ b/net/batman-adv/translation-table.c
+@@ -1021,9 +1021,10 @@ uint16_t batadv_tt_local_remove(struct b
+ 				const uint8_t *addr, unsigned short vid,
+ 				const char *message, bool roaming)
  {
- 	struct batadv_bla_claim search_claim, *claim;
-+	struct batadv_bla_claim *claim_removed_entry;
-+	struct hlist_node *claim_removed_node;
++	struct batadv_tt_local_entry *tt_removed_entry;
+ 	struct batadv_tt_local_entry *tt_local_entry;
+ 	uint16_t flags, curr_flags = BATADV_NO_FLAGS;
+-	void *tt_entry_exists;
++	struct hlist_node *tt_removed_node;
  
- 	ether_addr_copy(search_claim.addr, mac);
- 	search_claim.vid = vid;
-@@ -687,10 +689,18 @@ static void batadv_bla_del_claim(struct
- 	batadv_dbg(BATADV_DBG_BLA, bat_priv, "bla_del_claim(): %pM, vid %d\n",
- 		   mac, BATADV_PRINT_VID(vid));
+ 	tt_local_entry = batadv_tt_local_hash_find(bat_priv, addr, vid);
+ 	if (!tt_local_entry)
+@@ -1052,15 +1053,18 @@ uint16_t batadv_tt_local_remove(struct b
+ 	 */
+ 	batadv_tt_local_event(bat_priv, tt_local_entry, BATADV_TT_CLIENT_DEL);
  
--	batadv_hash_remove(bat_priv->bla.claim_hash, batadv_compare_claim,
--			   batadv_choose_claim, claim);
--	batadv_claim_free_ref(claim); /* reference from the hash is gone */
-+	claim_removed_node = batadv_hash_remove(bat_priv->bla.claim_hash,
-+						batadv_compare_claim,
-+						batadv_choose_claim, claim);
-+	if (!claim_removed_node)
-+		goto free_claim;
+-	tt_entry_exists = batadv_hash_remove(bat_priv->tt.local_hash,
++	tt_removed_node = batadv_hash_remove(bat_priv->tt.local_hash,
+ 					     batadv_compare_tt,
+ 					     batadv_choose_tt,
+ 					     &tt_local_entry->common);
+-	if (!tt_entry_exists)
++	if (!tt_removed_node)
+ 		goto out;
  
-+	/* reference from the hash is gone */
-+	claim_removed_entry = hlist_entry(claim_removed_node,
-+					  struct batadv_bla_claim, hash_entry);
-+	batadv_claim_free_ref(claim_removed_entry);
-+
-+free_claim:
- 	/* don't need the reference from hash_find() anymore */
- 	batadv_claim_free_ref(claim);
- }
+-	/* extra call to free the local tt entry */
+-	batadv_tt_local_entry_free_ref(tt_local_entry);
++	/* drop reference of remove hash entry */
++	tt_removed_entry = hlist_entry(tt_removed_node,
++				       struct batadv_tt_local_entry,
++				       common.hash_entry);
++	batadv_tt_local_entry_free_ref(tt_removed_entry);
+ 
+ out:
+ 	if (tt_local_entry)
 
