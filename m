@@ -7,37 +7,40 @@ X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A513C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C797C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE02217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FDB52166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:16:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="FMK7V/iz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="JJlAnzhv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726273AbfHJMQ2 (ORCPT
+        id S1726335AbfHJMQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 08:16:28 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:38556 "EHLO
+        Sat, 10 Aug 2019 08:16:36 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:38790 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725927AbfHJMQ2 (ORCPT
+        with ESMTP id S1725927AbfHJMQf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 08:16:28 -0400
+        Sat, 10 Aug 2019 08:16:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1565439384; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1565439385; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=YL9REanpshHiQGVAOtq8+VNk67aJvWqlrOh2zu4VPHU=;
-        b=FMK7V/izxsb10EWVN4YHBEeXeZ5U9mc30TqAbdMc138ioT8EGcejKidWj1sa7AuNlcBhwy
-        dva52MvlnEilgTdWzZRC9xudfHMLdD4zga5qn86Y1VKp0byCD0RPloiP+AQf+NIOY9rVk/
-        wJNUgOaObYsdI0ki8vspBK9F624R59I=
+         in-reply-to:in-reply-to:references:references;
+        bh=ObqmLnyvR7akU/D+s02O+7y4dD+NKGIoJ1VwRGXpEuI=;
+        b=JJlAnzhvB88pNb+TMjglYE/GF6uPYL6yfOB9TnBfYv54FNN9yt4WS137spYa5ryEJx3lTg
+        3lOka2WUVjHIcfMetWO8jsfD5mgI+cn4PL44+7QCTICzpyblW8cL7DkPt/YiVXjjiiCU0m
+        Wq8rDvbpAuTNmCD2+j46tgenerfDg4Q=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Ulf Hansson <ulf.hansson@linaro.org>
 Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
         od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 1/2] mmc: jz4740: Code cleanup
-Date:   Sat, 10 Aug 2019 14:16:07 +0200
-Message-Id: <20190810121608.24145-1-paul@crapouillou.net>
+Subject: [PATCH 2/2] mmc: jz4740: Drop dependency on arch header
+Date:   Sat, 10 Aug 2019 14:16:08 +0200
+Message-Id: <20190810121608.24145-2-paul@crapouillou.net>
+In-Reply-To: <20190810121608.24145-1-paul@crapouillou.net>
+References: <20190810121608.24145-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,50 +48,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix wrong code indentation which made the code hard to read, and fix
-return with value in void function.
+We don't need to set the 'slave_id' anymore - that field is never read
+by the DMA driver.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/mmc/host/jz4740_mmc.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/mmc/host/jz4740_mmc.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
-index ffdbfaadd3f2..59f81e8afcce 100644
+index 59f81e8afcce..7ff2034d739a 100644
 --- a/drivers/mmc/host/jz4740_mmc.c
 +++ b/drivers/mmc/host/jz4740_mmc.c
-@@ -186,9 +186,9 @@ static void jz4740_mmc_write_irq_reg(struct jz4740_mmc_host *host,
- 				     uint32_t val)
- {
- 	if (host->version >= JZ_MMC_JZ4780)
--		return writel(val, host->base + JZ_REG_MMC_IREG);
-+		writel(val, host->base + JZ_REG_MMC_IREG);
- 	else
--		return writew(val, host->base + JZ_REG_MMC_IREG);
-+		writew(val, host->base + JZ_REG_MMC_IREG);
- }
+@@ -25,8 +25,6 @@
  
- static uint32_t jz4740_mmc_read_irq_reg(struct jz4740_mmc_host *host)
-@@ -820,14 +820,14 @@ static irqreturn_t jz_mmc_irq(int irq, void *devid)
- 			del_timer(&host->timeout_timer);
+ #include <asm/cacheflush.h>
  
- 			if (status & JZ_MMC_STATUS_TIMEOUT_RES) {
--					cmd->error = -ETIMEDOUT;
-+				cmd->error = -ETIMEDOUT;
- 			} else if (status & JZ_MMC_STATUS_CRC_RES_ERR) {
--					cmd->error = -EIO;
-+				cmd->error = -EIO;
- 			} else if (status & (JZ_MMC_STATUS_CRC_READ_ERROR |
- 				    JZ_MMC_STATUS_CRC_WRITE_ERROR)) {
--					if (cmd->data)
--							cmd->data->error = -EIO;
--					cmd->error = -EIO;
-+				if (cmd->data)
-+					cmd->data->error = -EIO;
-+				cmd->error = -EIO;
- 			}
+-#include <asm/mach-jz4740/dma.h>
+-
+ #define JZ_REG_MMC_STRPCL	0x00
+ #define JZ_REG_MMC_STATUS	0x04
+ #define JZ_REG_MMC_CLKRT	0x08
+@@ -292,11 +290,9 @@ static int jz4740_mmc_start_dma_transfer(struct jz4740_mmc_host *host,
+ 	if (data->flags & MMC_DATA_WRITE) {
+ 		conf.direction = DMA_MEM_TO_DEV;
+ 		conf.dst_addr = host->mem_res->start + JZ_REG_MMC_TXFIFO;
+-		conf.slave_id = JZ4740_DMA_TYPE_MMC_TRANSMIT;
+ 	} else {
+ 		conf.direction = DMA_DEV_TO_MEM;
+ 		conf.src_addr = host->mem_res->start + JZ_REG_MMC_RXFIFO;
+-		conf.slave_id = JZ4740_DMA_TYPE_MMC_RECEIVE;
+ 	}
  
- 			jz4740_mmc_set_irq_enabled(host, irq_reg, false);
+ 	sg_count = jz4740_mmc_prepare_dma_data(host, data, COOKIE_MAPPED);
 -- 
 2.21.0.593.g511ec345e18
 
