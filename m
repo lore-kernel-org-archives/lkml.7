@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E33FAC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55801C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C088820B7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3686D20B7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbfHJUym (ORCPT
+        id S1727301AbfHJUyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:54:42 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53786 "EHLO
+        Sat, 10 Aug 2019 16:54:40 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53754 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726469AbfHJUns (ORCPT
+        by vger.kernel.org with ESMTP id S1726383AbfHJUns (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:48 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDI-00052u-O7; Sat, 10 Aug 2019 21:43:44 +0100
+        id 1hwYDI-00052w-OS; Sat, 10 Aug 2019 21:43:44 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDI-0003Xu-Ev; Sat, 10 Aug 2019 21:43:44 +0100
+        id 1hwYDI-0003Y3-IE; Sat, 10 Aug 2019 21:43:44 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Ludovic Desroches" <ludovic.desroches@microchip.com>,
-        "Georg Ottinger" <g.ottinger@abatec.at>,
-        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>
+        "Frank Sorenson" <fsorenso@redhat.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        "Lukas Czerner" <lczerner@redhat.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.533012668@decadent.org.uk>
+Message-ID: <lsq.1565469607.221652928@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 006/157] iio: adc: at91: disable adc channel
- interrupt in timeout case
+Subject: [PATCH 3.16 008/157] ext4: fix data corruption caused by
+ unaligned direct AIO
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,66 +57,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Georg Ottinger <g.ottinger@abatec.at>
+From: Lukas Czerner <lczerner@redhat.com>
 
-commit 09c6bdee51183a575bf7546890c8c137a75a2b44 upstream.
+commit 372a03e01853f860560eade508794dd274e9b390 upstream.
 
-Having a brief look at at91_adc_read_raw() it is obvious that in the case
-of a timeout the setting of AT91_ADC_CHDR and AT91_ADC_IDR registers is
-omitted. If 2 different channels are queried we can end up with a
-situation where two interrupts are enabled, but only one interrupt is
-cleared in the interrupt handler. Resulting in a interrupt loop and a
-system hang.
+Ext4 needs to serialize unaligned direct AIO because the zeroing of
+partial blocks of two competing unaligned AIOs can result in data
+corruption.
 
-Signed-off-by: Georg Ottinger <g.ottinger@abatec.at>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+However it decides not to serialize if the potentially unaligned aio is
+past i_size with the rationale that no pending writes are possible past
+i_size. Unfortunately if the i_size is not block aligned and the second
+unaligned write lands past i_size, but still into the same block, it has
+the potential of corrupting the previous unaligned write to the same
+block.
+
+This is (very simplified) reproducer from Frank
+
+    // 41472 = (10 * 4096) + 512
+    // 37376 = 41472 - 4096
+
+    ftruncate(fd, 41472);
+    io_prep_pwrite(iocbs[0], fd, buf[0], 4096, 37376);
+    io_prep_pwrite(iocbs[1], fd, buf[1], 4096, 41472);
+
+    io_submit(io_ctx, 1, &iocbs[1]);
+    io_submit(io_ctx, 1, &iocbs[2]);
+
+    io_getevents(io_ctx, 2, 2, events, NULL);
+
+Without this patch the 512B range from 40960 up to the start of the
+second unaligned write (41472) is going to be zeroed overwriting the data
+written by the first write. This is a data corruption.
+
+00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+*
+00009200  30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 30
+*
+0000a000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+*
+0000a200  31 31 31 31 31 31 31 31  31 31 31 31 31 31 31 31
+
+With this patch the data corruption is avoided because we will recognize
+the unaligned_aio and wait for the unwritten extent conversion.
+
+00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+*
+00009200  30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 30
+*
+0000a200  31 31 31 31 31 31 31 31  31 31 31 31 31 31 31 31
+*
+0000b200
+
+Reported-by: Frank Sorenson <fsorenso@redhat.com>
+Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: e9e3bcecf44c ("ext4: serialize unaligned asynchronous DIO")
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/iio/adc/at91_adc.c | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ fs/ext4/file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/iio/adc/at91_adc.c
-+++ b/drivers/iio/adc/at91_adc.c
-@@ -702,23 +702,29 @@ static int at91_adc_read_raw(struct iio_
- 		ret = wait_event_interruptible_timeout(st->wq_data_avail,
- 						       st->done,
- 						       msecs_to_jiffies(1000));
--		if (ret == 0)
--			ret = -ETIMEDOUT;
--		if (ret < 0) {
--			mutex_unlock(&st->lock);
--			return ret;
--		}
--
--		*val = st->last_value;
+--- a/fs/ext4/file.c
++++ b/fs/ext4/file.c
+@@ -79,7 +79,7 @@ ext4_unaligned_aio(struct inode *inode,
+ 	struct super_block *sb = inode->i_sb;
+ 	int blockmask = sb->s_blocksize - 1;
  
-+		/* Disable interrupts, regardless if adc conversion was
-+		 * successful or not
-+		 */
- 		at91_adc_writel(st, AT91_ADC_CHDR,
- 				AT91_ADC_CH(chan->channel));
- 		at91_adc_writel(st, AT91_ADC_IDR, BIT(chan->channel));
+-	if (pos >= i_size_read(inode))
++	if (pos >= ALIGN(i_size_read(inode), sb->s_blocksize))
+ 		return 0;
  
--		st->last_value = 0;
--		st->done = false;
-+		if (ret > 0) {
-+			/* a valid conversion took place */
-+			*val = st->last_value;
-+			st->last_value = 0;
-+			st->done = false;
-+			ret = IIO_VAL_INT;
-+		} else if (ret == 0) {
-+			/* conversion timeout */
-+			dev_err(&idev->dev, "ADC Channel %d timeout.\n",
-+				chan->channel);
-+			ret = -ETIMEDOUT;
-+		}
-+
- 		mutex_unlock(&st->lock);
--		return IIO_VAL_INT;
-+		return ret;
- 
- 	case IIO_CHAN_INFO_SCALE:
- 		*val = st->vref_mv;
+ 	if ((pos | iov_iter_alignment(from)) & blockmask)
 
