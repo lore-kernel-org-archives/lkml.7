@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88361C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608A6C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A086208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C2FE208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbfHJUsQ (ORCPT
+        id S1727471AbfHJUsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:48:16 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54878 "EHLO
+        Sat, 10 Aug 2019 16:48:22 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54840 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726807AbfHJUoB (ORCPT
+        by vger.kernel.org with ESMTP id S1726798AbfHJUoB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:44:01 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDW-00053q-Qz; Sat, 10 Aug 2019 21:43:58 +0100
+        id 1hwYDW-00053s-Qz; Sat, 10 Aug 2019 21:43:58 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDN-0003i8-IC; Sat, 10 Aug 2019 21:43:49 +0100
+        id 1hwYDN-0003iS-PJ; Sat, 10 Aug 2019 21:43:49 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,22 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Willem de Bruijn" <willemb@google.com>,
-        "David Laight" <David.Laight@aculab.com>
+        "Borislav Petkov" <bp@alien8.de>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Brian Gerst" <brgerst@gmail.com>,
+        "Denys Vlasenko" <dvlasenk@redhat.com>,
+        "Ingo Molnar" <mingo@kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Andy Lutomirski" <luto@amacapital.net>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.702055650@decadent.org.uk>
+Message-ID: <lsq.1565469607.539176798@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 118/157] packet: in recvmsg msg_name return at least
- sizeof sockaddr_ll
+Subject: [PATCH 3.16 122/157] x86/asm/entry/64: Disentangle
+ error_entry/exit gsbase/ebx/usermode code
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,63 +64,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Willem de Bruijn <willemb@google.com>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit b2cf86e1563e33a14a1c69b3e508d15dc12f804c upstream.
+commit 539f5113650068ba221197f190267ab727296ef5 upstream.
 
-Packet send checks that msg_name is at least sizeof sockaddr_ll.
-Packet recv must return at least this length, so that its output
-can be passed unmodified to packet send.
+The error_entry/error_exit code to handle gsbase and whether we
+return to user mdoe was a mess:
 
-This ceased to be true since adding support for lladdr longer than
-sll_addr. Since, the return value uses true address length.
+ - error_sti was misnamed.  In particular, it did not enable interrupts.
 
-Always return at least sizeof sockaddr_ll, even if address length
-is shorter. Zero the padding bytes.
+ - Error handling for gs_change was hopelessly tangled the normal
+   usermode path.  Separate it out.  This saves a branch in normal
+   entries from kernel mode.
 
-Change v1->v2: do not overwrite zeroed padding again. use copy_len.
+ - The comments were bad.
 
-Fixes: 0fb375fb9b93 ("[AF_PACKET]: Allow for > 8 byte hardware addresses.")
-Suggested-by: David Laight <David.Laight@aculab.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: adjust context]
+Fix it up.  As a nice side effect, there's now a code path that
+happens on error entries from user mode.  We'll use it soon.
+
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/f1be898ab93360169fb845ab85185948832209ee.1433878454.git.luto@kernel.org
+[ Prettified it, clarified comments some more. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+[bwh: Backported to 3.16 as dependency of commit 18ec54fdd6d1
+ "x86/speculation: Prepare entry code for Spectre v1 swapgs mitigations":
+ - We do not use %ebx as a flag since we already have a backport of commit
+   b3681dd548d0 "x86/entry/64: Remove %ebx handling from error_entry/exit",
+   so don't add the comments about that
+ - Adjust filename, context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/packet/af_packet.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -3027,19 +3027,28 @@ static int packet_recvmsg(struct kiocb *
- 	sock_recv_ts_and_drops(msg, sk, skb);
- 
- 	if (msg->msg_name) {
-+		int copy_len;
+--- a/arch/x86/kernel/entry_64.S
++++ b/arch/x86/kernel/entry_64.S
+@@ -1446,9 +1446,11 @@ ENTRY(error_entry)
+ 	SWITCH_KERNEL_CR3
+ 	testl $3,CS+8(%rsp)
+ 	je error_kernelspace
+-error_swapgs:
 +
- 		/* If the address length field is there to be filled
- 		 * in, we fill it in now.
- 		 */
- 		if (sock->type == SOCK_PACKET) {
- 			__sockaddr_check_size(sizeof(struct sockaddr_pkt));
- 			msg->msg_namelen = sizeof(struct sockaddr_pkt);
-+			copy_len = msg->msg_namelen;
- 		} else {
- 			struct sockaddr_ll *sll = &PACKET_SKB_CB(skb)->sa.ll;
- 			msg->msg_namelen = sll->sll_halen +
- 				offsetof(struct sockaddr_ll, sll_addr);
-+			copy_len = msg->msg_namelen;
-+			if (msg->msg_namelen < sizeof(struct sockaddr_ll)) {
-+				memset(msg->msg_name +
-+				       offsetof(struct sockaddr_ll, sll_addr),
-+				       0, sizeof(sll->sll_addr));
-+				msg->msg_namelen = sizeof(struct sockaddr_ll);
-+			}
- 		}
--		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa,
--		       msg->msg_namelen);
-+		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa, copy_len);
- 	}
++	/* We entered from user mode */
+ 	SWAPGS
+-error_sti:
++
++error_entry_done:
+ 	TRACE_IRQS_OFF
+ 	ret
  
- 	if (pkt_sk(sk)->auxdata) {
+@@ -1466,8 +1468,15 @@ error_kernelspace:
+ 	cmpq %rax,RIP+8(%rsp)
+ 	je bstep_iret
+ 	cmpq $gs_change,RIP+8(%rsp)
+-	je error_swapgs
+-	jmp error_sti
++	jne	error_entry_done
++
++	/*
++	 * hack: gs_change can fail with user gsbase.  If this happens, fix up
++	 * gsbase and proceed.  We'll fix up the exception and land in
++	 * gs_change's error handler with kernel gsbase.
++	 */
++	SWAPGS
++	jmp	error_entry_done
+ 
+ bstep_iret:
+ 	/* Fix truncated RIP */
+@@ -1475,11 +1484,20 @@ bstep_iret:
+ 	/* fall through */
+ 
+ error_bad_iret:
++	/*
++	 * We came from an IRET to user mode, so we have user gsbase.
++	 * Switch to kernel gsbase:
++	 */
+ 	SWAPGS
++
++	/*
++	 * Pretend that the exception came from user mode: set up pt_regs
++	 * as if we faulted immediately after IRET.
++	 */
+ 	mov %rsp,%rdi
+ 	call fixup_bad_iret
+ 	mov %rax,%rsp
+-	jmp error_sti
++	jmp	error_entry_done
+ 	CFI_ENDPROC
+ END(error_entry)
+ 
 
