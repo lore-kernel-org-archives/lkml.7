@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C730C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E839C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E339A2086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F9C6208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbfHJUyO (ORCPT
+        id S1726602AbfHJUyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:54:14 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53788 "EHLO
+        Sat, 10 Aug 2019 16:54:17 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53764 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726472AbfHJUns (ORCPT
+        by vger.kernel.org with ESMTP id S1726441AbfHJUns (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:48 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDI-00052r-Li; Sat, 10 Aug 2019 21:43:44 +0100
+        id 1hwYDJ-00053J-9v; Sat, 10 Aug 2019 21:43:45 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDI-0003Xf-Bc; Sat, 10 Aug 2019 21:43:44 +0100
+        id 1hwYDI-0003Ys-SL; Sat, 10 Aug 2019 21:43:44 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Michael Hennerich" <michael.hennerich@analog.com>,
-        "Leonard Pollak" <leonardp@tr-host.de>,
-        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>
+        "Finn Thain" <fthain@telegraphics.com.au>,
+        "David S. Miller" <davem@davemloft.net>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.393019235@decadent.org.uk>
+Message-ID: <lsq.1565469607.473255390@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 003/157] Staging: iio: meter: fixed typo
+Subject: [PATCH 3.16 018/157] mac8390: Fix mmio access size probe
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,31 +55,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Leonard Pollak <leonardp@tr-host.de>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-commit 0a8a29be499cbb67df79370aaf5109085509feb8 upstream.
+commit bb9e5c5bcd76f4474eac3baf643d7a39f7bac7bb upstream.
 
-This patch fixes an obvious typo, which will cause erroneously returning the Peak
-Voltage instead of the Peak Current.
+The bug that Stan reported is as follows. After a restart, a 16-bit NIC
+may be incorrectly identified as a 32-bit NIC and stop working.
 
-Signed-off-by: Leonard Pollak <leonardp@tr-host.de>
-Acked-by: Michael Hennerich <michael.hennerich@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-[bwh: Backported to 3.16: adjust context]
+mac8390 slot.E: Memory length resource not found, probing
+mac8390 slot.E: Farallon EtherMac II-C (type farallon)
+mac8390 slot.E: MAC 00:00:c5:30:c2:99, IRQ 61, 32 KB shared memory at 0xfeed0000, 32-bit access.
+
+The bug never arises after a cold start and only intermittently after a
+warm start. (I didn't investigate why the bug is intermittent.)
+
+It turns out that memcpy_toio() is deprecated and memcmp_withio() also
+has issues. Replacing these calls with mmio accessors fixes the problem.
+
+Reported-and-tested-by: Stan Johnson <userm57@yahoo.com>
+Fixes: 2964db0f5904 ("m68k: Mac DP8390 update")
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/staging/iio/meter/ade7854.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/8390/mac8390.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
---- a/drivers/staging/iio/meter/ade7854.c
-+++ b/drivers/staging/iio/meter/ade7854.c
-@@ -269,7 +269,7 @@ static IIO_DEV_ATTR_VPEAK(S_IWUSR | S_IR
- static IIO_DEV_ATTR_IPEAK(S_IWUSR | S_IRUGO,
- 		ade7854_read_32bit,
- 		ade7854_write_32bit,
--		ADE7854_VPEAK);
-+		ADE7854_IPEAK);
- static IIO_DEV_ATTR_APHCAL(S_IWUSR | S_IRUGO,
- 		ade7854_read_16bit,
- 		ade7854_write_16bit,
+--- a/drivers/net/ethernet/8390/mac8390.c
++++ b/drivers/net/ethernet/8390/mac8390.c
+@@ -153,8 +153,6 @@ static void dayna_block_input(struct net
+ static void dayna_block_output(struct net_device *dev, int count,
+ 			       const unsigned char *buf, int start_page);
+ 
+-#define memcmp_withio(a, b, c)	memcmp((a), (void *)(b), (c))
+-
+ /* Slow Sane (16-bit chunk memory read/write) Cabletron uses this */
+ static void slow_sane_get_8390_hdr(struct net_device *dev,
+ 				   struct e8390_pkt_hdr *hdr, int ring_page);
+@@ -241,19 +239,26 @@ static enum mac8390_type __init mac8390_
+ 
+ static enum mac8390_access __init mac8390_testio(volatile unsigned long membase)
+ {
+-	unsigned long outdata = 0xA5A0B5B0;
+-	unsigned long indata =  0x00000000;
++	u32 outdata = 0xA5A0B5B0;
++	u32 indata = 0;
++
+ 	/* Try writing 32 bits */
+-	memcpy_toio((void __iomem *)membase, &outdata, 4);
+-	/* Now compare them */
+-	if (memcmp_withio(&outdata, membase, 4) == 0)
++	nubus_writel(outdata, membase);
++	/* Now read it back */
++	indata = nubus_readl(membase);
++	if (outdata == indata)
+ 		return ACCESS_32;
++
++	outdata = 0xC5C0D5D0;
++	indata = 0;
++
+ 	/* Write 16 bit output */
+ 	word_memcpy_tocard(membase, &outdata, 4);
+ 	/* Now read it back */
+ 	word_memcpy_fromcard(&indata, membase, 4);
+ 	if (outdata == indata)
+ 		return ACCESS_16;
++
+ 	return ACCESS_UNKNOWN;
+ }
+ 
 
