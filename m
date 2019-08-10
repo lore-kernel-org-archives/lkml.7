@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A953AC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E24FC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A15521874
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AC75208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfHJUoN (ORCPT
+        id S1726966AbfHJUoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:44:13 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54288 "EHLO
+        Sat, 10 Aug 2019 16:44:15 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54360 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726634AbfHJUny (ORCPT
+        by vger.kernel.org with ESMTP id S1726685AbfHJUnz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:43:54 -0400
+        Sat, 10 Aug 2019 16:43:55 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDP-00053L-66; Sat, 10 Aug 2019 21:43:51 +0100
+        id 1hwYDQ-00053s-4z; Sat, 10 Aug 2019 21:43:52 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDM-0003fo-Eo; Sat, 10 Aug 2019 21:43:48 +0100
+        id 1hwYDN-0003hU-6u; Sat, 10 Aug 2019 21:43:49 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Zhiqiang Liu" <liuzhiqiang26@huawei.com>,
-        "Jie Liu" <liujie165@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Miaohe Lin" <linmiaohe@huawei.com>,
-        "Qiang Ning" <ningqiang1@huawei.com>
+        cj.chengjian@huawei.com, "Xie XiuQi" <xiexiuqi@huawei.com>,
+        "Ingo Molnar" <mingo@kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.25428937@decadent.org.uk>
+Message-ID: <lsq.1565469607.537023530@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 095/157] tipc: set sysctl_tipc_rmem and named_timeout
- right range
+Subject: [PATCH 3.16 110/157] sched/numa: Fix a possible divide-by-zero
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,42 +58,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jie Liu <liujie165@huawei.com>
+From: Xie XiuQi <xiexiuqi@huawei.com>
 
-commit 4bcd4ec1017205644a2697bccbc3b5143f522f5f upstream.
+commit a860fa7b96e1a1c974556327aa1aee852d434c21 upstream.
 
-We find that sysctl_tipc_rmem and named_timeout do not have the right minimum
-setting. sysctl_tipc_rmem should be larger than zero, like sysctl_tcp_rmem.
-And named_timeout as a timeout setting should be not less than zero.
+sched_clock_cpu() may not be consistent between CPUs. If a task
+migrates to another CPU, then se.exec_start is set to that CPU's
+rq_clock_task() by update_stats_curr_start(). Specifically, the new
+value might be before the old value due to clock skew.
 
-Fixes: cc79dd1ba9c10 ("tipc: change socket buffer overflow control to respect sk_rcvbuf")
-Fixes: a5325ae5b8bff ("tipc: add name distributor resiliency queue")
-Signed-off-by: Jie Liu <liujie165@huawei.com>
-Reported-by: Qiang Ning <ningqiang1@huawei.com>
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: only the tipc_rmem sysctl exists here]
+So then if in numa_get_avg_runtime() the expression:
+
+  'now - p->last_task_numa_placement'
+
+ends up as -1, then the divider '*period + 1' in task_numa_placement()
+is 0 and things go bang. Similar to update_curr(), check if time goes
+backwards to avoid this.
+
+[ peterz: Wrote new changelog. ]
+[ mingo: Tweaked the code comment. ]
+
+Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: cj.chengjian@huawei.com
+Link: http://lkml.kernel.org/r/20190425080016.GX11158@hirez.programming.kicks-ass.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/net/tipc/sysctl.c
-+++ b/net/tipc/sysctl.c
-@@ -37,6 +37,7 @@
- 
- #include <linux/sysctl.h>
- 
-+static int one = 1;
- static struct ctl_table_header *tipc_ctl_hdr;
- 
- static struct ctl_table tipc_table[] = {
-@@ -45,7 +46,8 @@ static struct ctl_table tipc_table[] = {
- 		.data		= &sysctl_tipc_rmem,
- 		.maxlen		= sizeof(sysctl_tipc_rmem),
- 		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1         = &one,
- 	},
- 	{}
- };
+ kernel/sched/fair.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1503,6 +1503,10 @@ static u64 numa_get_avg_runtime(struct t
+ 	if (p->last_task_numa_placement) {
+ 		delta = runtime - p->last_sum_exec_runtime;
+ 		*period = now - p->last_task_numa_placement;
++
++		/* Avoid time going backwards, prevent potential divide error: */
++		if (unlikely((s64)*period < 0))
++			*period = 0;
+ 	} else {
+ 		delta = p->se.avg.runnable_avg_sum;
+ 		*period = p->se.avg.runnable_avg_period;
 
