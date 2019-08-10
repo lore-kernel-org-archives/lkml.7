@@ -6,30 +6,31 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D131EC433FF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F33B2C32756
 	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9F84217F4
+	by mail.kernel.org (Postfix) with ESMTP id D50A020B7C
 	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:08:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbfHJUIE (ORCPT
+        id S1726424AbfHJUIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:08:04 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58351 "EHLO
+        Sat, 10 Aug 2019 16:08:05 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58360 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfHJUIE (ORCPT
+        with ESMTP id S1726169AbfHJUIE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:08:04 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hwXej-0007tJ-P7; Sat, 10 Aug 2019 22:08:01 +0200
+        id 1hwXek-0007tb-JY; Sat, 10 Aug 2019 22:08:02 +0200
 Date:   Sat, 10 Aug 2019 20:01:51 -0000
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] core/urgent for 5.3-rc4
-Message-ID: <156546731194.17538.17422312639927927426.tglx@nanos.tec.linutronix.de>
+Subject: [GIT pull] sched/urgent for 5.3-rc4
+References: <156546731194.17538.17422312639927927426.tglx@nanos.tec.linutronix.de>
+Message-ID: <156546731194.17538.15988994782634770420.tglx@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -37,80 +38,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-please pull the latest core-urgent-for-linus git tree from:
+please pull the latest sched-urgent-for-linus git tree from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-urgent-for-linus
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-urgent-for-linus
 
-up to:  e6a9522ac3ff: drm/i915: Remove redundant user_access_end() from __copy_from_user() error path
+up to:  04e048cf09d7: sched/psi: Do not require setsched permission from the trigger creator
 
-A fix for code outside the scope of tip. The recent objtool
-fixes/enhancements unearthed a unbalanced CLAC in the i915 driver. Chris
-asked me to pick the fix up and route it through.
+Three fixlets for the scheduler:
+
+ - Avoid double bandwidth accounting in the push & pull code
+
+ - Use a sane FIFO priority for the Pressure Stall Information (PSI) thread.
+ 
+ - Avoid permission checks when setting the scheduler params for the PSI thread
 
 Thanks,
 
 	tglx
 
 ------------------>
-Josh Poimboeuf (1):
-      drm/i915: Remove redundant user_access_end() from __copy_from_user() error path
+Dietmar Eggemann (1):
+      sched/deadline: Fix double accounting of rq/running bw in push & pull
+
+Peter Zijlstra (1):
+      sched/psi: Reduce psimon FIFO priority
+
+Suren Baghdasaryan (1):
+      sched/psi: Do not require setsched permission from the trigger creator
 
 
- drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+ kernel/sched/deadline.c | 8 --------
+ kernel/sched/psi.c      | 4 ++--
+ 2 files changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-index 5fae0e50aad0..41dab9ea33cd 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-@@ -1628,6 +1628,7 @@ static int check_relocations(const struct drm_i915_gem_exec_object2 *entry)
- 
- static int eb_copy_relocations(const struct i915_execbuffer *eb)
- {
-+	struct drm_i915_gem_relocation_entry *relocs;
- 	const unsigned int count = eb->buffer_count;
- 	unsigned int i;
- 	int err;
-@@ -1635,7 +1636,6 @@ static int eb_copy_relocations(const struct i915_execbuffer *eb)
- 	for (i = 0; i < count; i++) {
- 		const unsigned int nreloc = eb->exec[i].relocation_count;
- 		struct drm_i915_gem_relocation_entry __user *urelocs;
--		struct drm_i915_gem_relocation_entry *relocs;
- 		unsigned long size;
- 		unsigned long copied;
- 
-@@ -1663,14 +1663,8 @@ static int eb_copy_relocations(const struct i915_execbuffer *eb)
- 
- 			if (__copy_from_user((char *)relocs + copied,
- 					     (char __user *)urelocs + copied,
--					     len)) {
--end_user:
--				user_access_end();
--end:
--				kvfree(relocs);
--				err = -EFAULT;
--				goto err;
--			}
-+					     len))
-+				goto end;
- 
- 			copied += len;
- 		} while (copied < size);
-@@ -1699,10 +1693,14 @@ static int eb_copy_relocations(const struct i915_execbuffer *eb)
- 
- 	return 0;
- 
-+end_user:
-+	user_access_end();
-+end:
-+	kvfree(relocs);
-+	err = -EFAULT;
- err:
- 	while (i--) {
--		struct drm_i915_gem_relocation_entry *relocs =
--			u64_to_ptr(typeof(*relocs), eb->exec[i].relocs_ptr);
-+		relocs = u64_to_ptr(typeof(*relocs), eb->exec[i].relocs_ptr);
- 		if (eb->exec[i].relocation_count)
- 			kvfree(relocs);
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index ef5b9f6b1d42..46122edd8552 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -2088,17 +2088,13 @@ static int push_dl_task(struct rq *rq)
  	}
+ 
+ 	deactivate_task(rq, next_task, 0);
+-	sub_running_bw(&next_task->dl, &rq->dl);
+-	sub_rq_bw(&next_task->dl, &rq->dl);
+ 	set_task_cpu(next_task, later_rq->cpu);
+-	add_rq_bw(&next_task->dl, &later_rq->dl);
+ 
+ 	/*
+ 	 * Update the later_rq clock here, because the clock is used
+ 	 * by the cpufreq_update_util() inside __add_running_bw().
+ 	 */
+ 	update_rq_clock(later_rq);
+-	add_running_bw(&next_task->dl, &later_rq->dl);
+ 	activate_task(later_rq, next_task, ENQUEUE_NOCLOCK);
+ 	ret = 1;
+ 
+@@ -2186,11 +2182,7 @@ static void pull_dl_task(struct rq *this_rq)
+ 			resched = true;
+ 
+ 			deactivate_task(src_rq, p, 0);
+-			sub_running_bw(&p->dl, &src_rq->dl);
+-			sub_rq_bw(&p->dl, &src_rq->dl);
+ 			set_task_cpu(p, this_cpu);
+-			add_rq_bw(&p->dl, &this_rq->dl);
+-			add_running_bw(&p->dl, &this_rq->dl);
+ 			activate_task(this_rq, p, 0);
+ 			dmin = p->dl.deadline;
+ 
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index 7acc632c3b82..23fbbcc414d5 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -1051,7 +1051,7 @@ struct psi_trigger *psi_trigger_create(struct psi_group *group,
+ 
+ 	if (!rcu_access_pointer(group->poll_kworker)) {
+ 		struct sched_param param = {
+-			.sched_priority = MAX_RT_PRIO - 1,
++			.sched_priority = 1,
+ 		};
+ 		struct kthread_worker *kworker;
+ 
+@@ -1061,7 +1061,7 @@ struct psi_trigger *psi_trigger_create(struct psi_group *group,
+ 			mutex_unlock(&group->trigger_lock);
+ 			return ERR_CAST(kworker);
+ 		}
+-		sched_setscheduler(kworker->task, SCHED_FIFO, &param);
++		sched_setscheduler_nocheck(kworker->task, SCHED_FIFO, &param);
+ 		kthread_init_delayed_work(&group->poll_work,
+ 				psi_poll_work);
+ 		rcu_assign_pointer(group->poll_kworker, kworker);
 
