@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4010C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C12C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2A83208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71C7620B7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727675AbfHJUvU (ORCPT
+        id S1727526AbfHJUva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:51:20 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54322 "EHLO
+        Sat, 10 Aug 2019 16:51:30 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54316 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726674AbfHJUny (ORCPT
+        by vger.kernel.org with ESMTP id S1726672AbfHJUny (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:54 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDI-00052v-Ob; Sat, 10 Aug 2019 21:43:44 +0100
+        id 1hwYDK-00053e-1u; Sat, 10 Aug 2019 21:43:46 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDI-0003Xz-Gi; Sat, 10 Aug 2019 21:43:44 +0100
+        id 1hwYDJ-0003Zg-8G; Sat, 10 Aug 2019 21:43:45 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,20 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Kan Liang" <kan.liang@linux.intel.com>,
-        "Jiri Olsa" <jolsa@redhat.com>,
-        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Andi Kleen" <ak@linux.intel.com>,
-        "Stephane Eranian" <eranian@google.com>
+        "Alexei Starovoitov" <ast@kernel.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        "Changbin Du" <changbin.du@gmail.com>,
+        "Jiri Olsa" <jolsa@kernel.org>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        "Arnaldo Carvalho de Melo" <acme@redhat.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.924357434@decadent.org.uk>
+Message-ID: <lsq.1565469607.899433724@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 007/157] perf/core: Restore mmap record type correctly
+Subject: [PATCH 3.16 028/157] perf tests: Fix a memory leak in
+ test__perf_evsel__tp_sched_test()
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,57 +62,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Stephane Eranian <eranian@google.com>
+From: Changbin Du <changbin.du@gmail.com>
 
-commit d9c1bb2f6a2157b38e8eb63af437cb22701d31ee upstream.
+commit d982b33133284fa7efa0e52ae06b88f9be3ea764 upstream.
 
-On mmap(), perf_events generates a RECORD_MMAP record and then checks
-which events are interested in this record. There are currently 2
-versions of mmap records: RECORD_MMAP and RECORD_MMAP2. MMAP2 is larger.
-The event configuration controls which version the user level tool
-accepts.
+  =================================================================
+  ==20875==ERROR: LeakSanitizer: detected memory leaks
 
-If the event->attr.mmap2=1 field then MMAP2 record is returned.  The
-perf_event_mmap_output() takes care of this. It checks attr->mmap2 and
-corrects the record fields before putting it in the sampling buffer of
-the event.  At the end the function restores the modified MMAP record
-fields.
+  Direct leak of 1160 byte(s) in 1 object(s) allocated from:
+      #0 0x7f1b6fc84138 in calloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee138)
+      #1 0x55bd50005599 in zalloc util/util.h:23
+      #2 0x55bd500068f5 in perf_evsel__newtp_idx util/evsel.c:327
+      #3 0x55bd4ff810fc in perf_evsel__newtp /home/work/linux/tools/perf/util/evsel.h:216
+      #4 0x55bd4ff81608 in test__perf_evsel__tp_sched_test tests/evsel-tp-sched.c:69
+      #5 0x55bd4ff528e6 in run_test tests/builtin-test.c:358
+      #6 0x55bd4ff52baf in test_and_print tests/builtin-test.c:388
+      #7 0x55bd4ff543fe in __cmd_test tests/builtin-test.c:583
+      #8 0x55bd4ff5572f in cmd_test tests/builtin-test.c:722
+      #9 0x55bd4ffc4087 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+      #10 0x55bd4ffc45c6 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+      #11 0x55bd4ffc49ca in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+      #12 0x55bd4ffc5138 in main /home/changbin/work/linux/tools/perf/perf.c:520
+      #13 0x7f1b6e34809a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
 
-The problem is that the function restores the size but not the type.
-Thus, if a subsequent event only accepts MMAP type, then it would
-instead receive an MMAP2 record with a size of MMAP record.
+  Indirect leak of 19 byte(s) in 1 object(s) allocated from:
+      #0 0x7f1b6fc83f30 in __interceptor_malloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedf30)
+      #1 0x7f1b6e3ac30f in vasprintf (/lib/x86_64-linux-gnu/libc.so.6+0x8830f)
 
-This patch fixes the problem by restoring the record type on exit.
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Fixes: 13d7a2410fa6 ("perf: Add attr->mmap2 attribute to an event")
-Link: http://lkml.kernel.org/r/20190307185233.225521-1-eranian@google.com
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 6a6cd11d4e57 ("perf test: Add test for the sched tracepoint format fields")
+Link: http://lkml.kernel.org/r/20190316080556.3075-17-changbin.du@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- kernel/events/core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/tests/evsel-tp-sched.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5445,6 +5445,7 @@ static void perf_event_mmap_output(struc
- 	struct perf_output_handle handle;
- 	struct perf_sample_data sample;
- 	int size = mmap_event->event_id.header.size;
-+	u32 type = mmap_event->event_id.header.type;
- 	int ret;
+--- a/tools/perf/tests/evsel-tp-sched.c
++++ b/tools/perf/tests/evsel-tp-sched.c
+@@ -77,5 +77,6 @@ int test__perf_evsel__tp_sched_test(void
+ 	if (perf_evsel__test_field(evsel, "target_cpu", 4, true))
+ 		ret = -1;
  
- 	if (!perf_event_mmap_match(event, data))
-@@ -5488,6 +5489,7 @@ static void perf_event_mmap_output(struc
- 	perf_output_end(&handle);
- out:
- 	mmap_event->event_id.header.size = size;
-+	mmap_event->event_id.header.type = type;
++	perf_evsel__delete(evsel);
+ 	return ret;
  }
- 
- static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
 
