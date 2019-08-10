@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F8EC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD47C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566B720B7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9174F20B7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfHJUs4 (ORCPT
+        id S1727520AbfHJUs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:48:56 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54750 "EHLO
+        Sat, 10 Aug 2019 16:48:58 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54788 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726768AbfHJUoA (ORCPT
+        by vger.kernel.org with ESMTP id S1726791AbfHJUoA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:44:00 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDV-00053O-Co; Sat, 10 Aug 2019 21:43:57 +0100
+        id 1hwYDV-00053h-Iz; Sat, 10 Aug 2019 21:43:57 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDO-0003jW-CT; Sat, 10 Aug 2019 21:43:50 +0100
+        id 1hwYDN-0003iX-QU; Sat, 10 Aug 2019 21:43:49 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,27 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com,
-        "Vladis Dronov" <vdronov@redhat.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        "Denys Vlasenko" <vda.linux@googlemail.com>,
+        "Borislav Petkov" <bp@alien8.de>,
+        "Brian Gerst" <brgerst@gmail.com>,
+        "Frederic Weisbecker" <fweisbec@gmail.com>,
         "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Marcel Holtmann" <marcel@holtmann.org>,
-        "Yu-Chen, Cho" <acho@suse.com>
+        "Oleg Nesterov" <oleg@redhat.com>,
+        "Kees Cook" <keescook@chromium.org>,
+        "Denys Vlasenko" <dvlasenk@redhat.com>,
+        "Ingo Molnar" <mingo@kernel.org>, paulmck@linux.vnet.ibm.com,
+        "Andy Lutomirski" <luto@amacapital.net>,
+        "Rik van Riel" <riel@redhat.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.541662992@decadent.org.uk>
+Message-ID: <lsq.1565469607.917544612@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 135/157] Bluetooth: hci_uart: check for missing tty
- operations
+Subject: [PATCH 3.16 123/157] x86/entry/64: Really create an
+ error-entry-from-usermode code path
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,76 +69,113 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Vladis Dronov <vdronov@redhat.com>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit b36a1552d7319bbfd5cf7f08726c23c5c66d4f73 upstream.
+commit cb6f64ed5a04036eef07e70b57dd5dd78f2fbcef upstream.
 
-Certain ttys operations (pty_unix98_ops) lack tiocmget() and tiocmset()
-functions which are called by the certain HCI UART protocols (hci_ath,
-hci_bcm, hci_intel, hci_mrvl, hci_qca) via hci_uart_set_flow_control()
-or directly. This leads to an execution at NULL and can be triggered by
-an unprivileged user. Fix this by adding a helper function and a check
-for the missing tty operations in the protocols code.
+In 539f51136500 ("x86/asm/entry/64: Disentangle error_entry/exit
+gsbase/ebx/usermode code"), I arranged the code slightly wrong
+-- IRET faults would skip the code path that was intended to
+execute on all error entries from user mode.  Fix it up.
 
-This fixes CVE-2019-10207. The Fixes: lines list commits where calls to
-tiocm[gs]et() or hci_uart_set_flow_control() were added to the HCI UART
-protocols.
+While we're at it, make all the labels in error_entry local.
 
-Link: https://syzkaller.appspot.com/bug?id=1b42faa2848963564a5b1b7f8c837ea7b55ffa50
-Reported-by: syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com
-Fixes: b3190df62861 ("Bluetooth: Support for Atheros AR300x serial chip")
-Fixes: 118612fb9165 ("Bluetooth: hci_bcm: Add suspend/resume PM functions")
-Fixes: ff2895592f0f ("Bluetooth: hci_intel: Add Intel baudrate configuration support")
-Fixes: 162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
-Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990")
-Signed-off-by: Vladis Dronov <vdronov@redhat.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Reviewed-by: Yu-Chen, Cho <acho@suse.com>
-Tested-by: Yu-Chen, Cho <acho@suse.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-[bwh: Backported to 3.16:
- - Only hci_ath is affected
- - There is no serdev support]
+This does not fix a bug, but we'll need it, and it slightly
+shrinks the code.
+
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: Denys Vlasenko <vda.linux@googlemail.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: paulmck@linux.vnet.ibm.com
+Link: http://lkml.kernel.org/r/91e17891e49fa3d61357eadc451529ad48143ee1.1435952415.git.luto@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+[bwh: Backported to 3.16 as dependency of commit 18ec54fdd6d1
+ "x86/speculation: Prepare entry code for Spectre v1 swapgs mitigations":
+ - Adjust filename, context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/drivers/bluetooth/hci_ath.c
-+++ b/drivers/bluetooth/hci_ath.c
-@@ -112,6 +112,9 @@ static int ath_open(struct hci_uart *hu)
+ arch/x86/kernel/entry_64.S | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
+
+--- a/arch/x86/kernel/entry_64.S
++++ b/arch/x86/kernel/entry_64.S
+@@ -1445,12 +1445,17 @@ ENTRY(error_entry)
+ 	 */
+ 	SWITCH_KERNEL_CR3
+ 	testl $3,CS+8(%rsp)
+-	je error_kernelspace
++	jz	.Lerror_kernelspace
  
- 	BT_DBG("hu %p", hu);
+-	/* We entered from user mode */
++.Lerror_entry_from_usermode_swapgs:
++	/*
++	 * We entered from user mode or we're pretending to have entered
++	 * from user mode due to an IRET fault.
++	 */
+ 	SWAPGS
  
-+	if (!hci_uart_has_flow_control(hu))
-+		return -EOPNOTSUPP;
-+
- 	ath = kzalloc(sizeof(*ath), GFP_KERNEL);
- 	if (!ath)
- 		return -ENOMEM;
---- a/drivers/bluetooth/hci_ldisc.c
-+++ b/drivers/bluetooth/hci_ldisc.c
-@@ -261,6 +261,15 @@ static int hci_uart_send_frame(struct hc
- 	return 0;
- }
+-error_entry_done:
++.Lerror_entry_from_usermode_after_swapgs:
++.Lerror_entry_done:
+ 	TRACE_IRQS_OFF
+ 	ret
  
-+/* Check the underlying device or tty has flow control support */
-+bool hci_uart_has_flow_control(struct hci_uart *hu)
-+{
-+	if (hu->tty->driver->ops->tiocmget && hu->tty->driver->ops->tiocmset)
-+		return true;
-+
-+	return false;
-+}
-+
- /* ------ LDISC part ------ */
- /* hci_uart_tty_open
-  *
---- a/drivers/bluetooth/hci_uart.h
-+++ b/drivers/bluetooth/hci_uart.h
-@@ -90,6 +90,7 @@ int hci_uart_register_proto(struct hci_u
- int hci_uart_unregister_proto(struct hci_uart_proto *p);
- int hci_uart_tx_wakeup(struct hci_uart *hu);
- int hci_uart_init_ready(struct hci_uart *hu);
-+bool hci_uart_has_flow_control(struct hci_uart *hu);
+@@ -1460,30 +1465,29 @@ error_entry_done:
+  * truncated RIP for IRET exceptions returning to compat mode. Check
+  * for these here too.
+  */
+-error_kernelspace:
++.Lerror_kernelspace:
+ 	leaq native_irq_return_iret(%rip),%rcx
+ 	cmpq %rcx,RIP+8(%rsp)
+-	je error_bad_iret
++	je	.Lerror_bad_iret
+ 	movl %ecx,%eax	/* zero extend */
+ 	cmpq %rax,RIP+8(%rsp)
+-	je bstep_iret
++	je	.Lbstep_iret
+ 	cmpq $gs_change,RIP+8(%rsp)
+-	jne	error_entry_done
++	jne	.Lerror_entry_done
  
- #ifdef CONFIG_BT_HCIUART_H4
- int h4_init(void);
+ 	/*
+ 	 * hack: gs_change can fail with user gsbase.  If this happens, fix up
+ 	 * gsbase and proceed.  We'll fix up the exception and land in
+ 	 * gs_change's error handler with kernel gsbase.
+ 	 */
+-	SWAPGS
+-	jmp	error_entry_done
++	jmp	.Lerror_entry_from_usermode_swapgs
+ 
+-bstep_iret:
++.Lbstep_iret:
+ 	/* Fix truncated RIP */
+ 	movq %rcx,RIP+8(%rsp)
+ 	/* fall through */
+ 
+-error_bad_iret:
++.Lerror_bad_iret:
+ 	/*
+ 	 * We came from an IRET to user mode, so we have user gsbase.
+ 	 * Switch to kernel gsbase:
+@@ -1497,7 +1501,7 @@ error_bad_iret:
+ 	mov %rsp,%rdi
+ 	call fixup_bad_iret
+ 	mov %rax,%rsp
+-	jmp	error_entry_done
++	jmp	.Lerror_entry_from_usermode_after_swapgs
+ 	CFI_ENDPROC
+ END(error_entry)
+ 
 
