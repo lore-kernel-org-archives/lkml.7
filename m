@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70A9C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972FEC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87AC22086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7461F2086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbfHJUxK (ORCPT
+        id S1727457AbfHJUxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:53:10 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53800 "EHLO
+        Sat, 10 Aug 2019 16:53:14 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53910 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726476AbfHJUnt (ORCPT
+        by vger.kernel.org with ESMTP id S1726515AbfHJUnt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:49 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-000538-5r; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDK-00053u-9q; Sat, 10 Aug 2019 21:43:46 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDI-0003YO-Ms; Sat, 10 Aug 2019 21:43:44 +0100
+        id 1hwYDJ-0003aU-ID; Sat, 10 Aug 2019 21:43:45 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jack Morgenstein" <jackm@dev.mellanox.co.il>,
-        "Jason Gunthorpe" <jgg@mellanox.com>,
-        "Leon Romanovsky" <leonro@mellanox.com>
+        "Ashok Raj" <ashok.raj@intel.com>,
+        "Joerg Roedel" <jroedel@suse.de>, "mark gross" <mgross@intel.com>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        "Jacob Pan" <jacob.jun.pan@linux.intel.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.576492022@decadent.org.uk>
+Message-ID: <lsq.1565469607.357977088@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 012/157] IB/mlx4: Fix race condition between catas
- error reset and aliasguid flows
+Subject: [PATCH 3.16 038/157] iommu/vt-d: Check capability before
+ disabling protected memory
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,34 +58,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jack Morgenstein <jackm@dev.mellanox.co.il>
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-commit 587443e7773e150ae29e643ee8f41a1eed226565 upstream.
+commit 5bb71fc790a88d063507dc5d445ab8b14e845591 upstream.
 
-Code review revealed a race condition which could allow the catas error
-flow to interrupt the alias guid query post mechanism at random points.
-Thiis is fixed by doing cancel_delayed_work_sync() instead of
-cancel_delayed_work() during the alias guid mechanism destroy flow.
+The spec states in 10.4.16 that the Protected Memory Enable
+Register should be treated as read-only for implementations
+not supporting protected memory regions (PLMR and PHMR fields
+reported as Clear in the Capability register).
 
-Fixes: a0c64a17aba8 ("mlx4: Add alias_guid mechanism")
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: mark gross <mgross@intel.com>
+Suggested-by: Ashok Raj <ashok.raj@intel.com>
+Fixes: f8bab73515ca5 ("intel-iommu: PMEN support")
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/infiniband/hw/mlx4/alias_GUID.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/intel-iommu.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/infiniband/hw/mlx4/alias_GUID.c
-+++ b/drivers/infiniband/hw/mlx4/alias_GUID.c
-@@ -579,8 +579,8 @@ void mlx4_ib_destroy_alias_guid_service(
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -1394,6 +1394,9 @@ static void iommu_disable_protect_mem_re
+ 	u32 pmen;
  	unsigned long flags;
  
- 	for (i = 0 ; i < dev->num_ports; i++) {
--		cancel_delayed_work(&dev->sriov.alias_guid.ports_guid[i].alias_guid_work);
- 		det = &sriov->alias_guid.ports_guid[i];
-+		cancel_delayed_work_sync(&det->alias_guid_work);
- 		spin_lock_irqsave(&sriov->alias_guid.ag_work_lock, flags);
- 		while (!list_empty(&det->cb_list)) {
- 			cb_ctx = list_entry(det->cb_list.next,
++	if (!cap_plmr(iommu->cap) && !cap_phmr(iommu->cap))
++		return;
++
+ 	raw_spin_lock_irqsave(&iommu->register_lock, flags);
+ 	pmen = readl(iommu->reg + DMAR_PMEN_REG);
+ 	pmen &= ~DMA_PMEN_EPM;
 
