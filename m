@@ -2,74 +2,101 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8746C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 11:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E180BC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 11:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85B2120B7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 11:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0E962166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 11:24:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbfHJLNN (ORCPT
+        id S1726135AbfHJLYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 07:13:13 -0400
-Received: from verein.lst.de ([213.95.11.211]:33898 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725858AbfHJLNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 07:13:12 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 2801368BFE; Sat, 10 Aug 2019 13:13:09 +0200 (CEST)
-Date:   Sat, 10 Aug 2019 13:13:08 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Subject: Re: [PATCH] nouveau/hmm: map pages after migration
-Message-ID: <20190810111308.GB26349@lst.de>
-References: <20190807150214.3629-1-rcampbell@nvidia.com> <20190808070701.GC29382@lst.de> <0b96a8d8-86b5-3ce0-db95-669963c1f8a7@nvidia.com>
+        Sat, 10 Aug 2019 07:24:08 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:60555 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfHJLYH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 07:24:07 -0400
+Received: from 79.184.254.29.ipv4.supernova.orange.pl (79.184.254.29) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
+ id 280ae9cb69888997; Sat, 10 Aug 2019 13:24:05 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] PM: suspend: Fix platform_suspend_prepare_noirq()
+Date:   Sat, 10 Aug 2019 13:24:04 +0200
+Message-ID: <1929036.rkDPr3nAr5@kreacher>
+In-Reply-To: <1b181f35-29c3-c6ce-6c42-ae55e890579e@samsung.com>
+References: <5997740.FPbUVk04hV@kreacher> <CGME20190809120052eucas1p11b56806662ef4f4efb82a152ad651481@eucas1p1.samsung.com> <1b181f35-29c3-c6ce-6c42-ae55e890579e@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0b96a8d8-86b5-3ce0-db95-669963c1f8a7@nvidia.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 02:29:34PM -0700, Ralph Campbell wrote:
->>>   {
->>>   	struct nouveau_fence *fence;
->>>   	unsigned long addr = args->start, nr_dma = 0, i;
->>>     	for (i = 0; addr < args->end; i++) {
->>>   		args->dst[i] = nouveau_dmem_migrate_copy_one(drm, args->vma,
->>> -				addr, args->src[i], &dma_addrs[nr_dma]);
->>> +				args->src[i], &dma_addrs[nr_dma], &pfns[i]);
->>
->> Nit: I find the &pfns[i] way to pass the argument a little weird to read.
->> Why not "pfns + i"?
->
-> OK, will do in v2.
-> Should I convert to "dma_addrs + nr_dma" too?
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-I'll fix it up for v3 of the migrate_vma series.  This is a leftover
-from passing an args structure.
+After commit ac9eafbe930a ("ACPI: PM: s2idle: Execute LPS0 _DSM
+functions with suspended devices"), a NULL pointer may be dereferenced
+if suspend-to-idle is attempted on a platform without "traditional"
+suspend support due to invalid fall-through in
+platform_suspend_prepare_noirq().
 
-On something vaguely related to this patch:
+Fix that and while at it add missing braces in platform_resume_noirq().
 
-You use the NVIF_VMM_PFNMAP_V0_V* defines from nvif/if000c.h, which are
-a little odd as we only ever set these bits, but they also don't seem
-to appear to be in values that are directly fed to the hardware.
+Fixes: ac9eafbe930a ("ACPI: PM: s2idle: Execute LPS0 _DSM functions with suspended devices")
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
 
-On the other hand mmu/vmm.h defines a set of NVIF_VMM_PFNMAP_V0_*
-constants with similar names and identical values, and those are used
-in mmu/vmmgp100.c and what appears to finally do the low-level dma
-mapping and talking to the hardware.  Are these two sets of constants
-supposed to be the same?  Are the actual hardware values or just a
-driver internal interface?
+Commit ac9eafbe930a is in linux-next only at this point.
+
+---
+ kernel/power/suspend.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+Index: linux-pm/kernel/power/suspend.c
+===================================================================
+--- linux-pm.orig/kernel/power/suspend.c
++++ linux-pm/kernel/power/suspend.c
+@@ -253,10 +253,10 @@ static int platform_suspend_prepare_late
+ 
+ static int platform_suspend_prepare_noirq(suspend_state_t state)
+ {
+-	if (state == PM_SUSPEND_TO_IDLE) {
+-		if (s2idle_ops && s2idle_ops->prepare_late)
+-			return s2idle_ops->prepare_late();
+-	}
++	if (state == PM_SUSPEND_TO_IDLE)
++		return s2idle_ops && s2idle_ops->prepare_late ?
++			s2idle_ops->prepare_late() : 0;
++
+ 	return suspend_ops->prepare_late ? suspend_ops->prepare_late() : 0;
+ }
+ 
+@@ -265,8 +265,9 @@ static void platform_resume_noirq(suspen
+ 	if (state == PM_SUSPEND_TO_IDLE) {
+ 		if (s2idle_ops && s2idle_ops->restore_early)
+ 			s2idle_ops->restore_early();
+-	} else if (suspend_ops->wake)
++	} else if (suspend_ops->wake) {
+ 		suspend_ops->wake();
++	}
+ }
+ 
+ static void platform_resume_early(suspend_state_t state)
+
+
+
