@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A14C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CADEC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1982086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D5992086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbfHJUwZ (ORCPT
+        id S1727753AbfHJUwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:52:25 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54130 "EHLO
+        Sat, 10 Aug 2019 16:52:24 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54128 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726578AbfHJUnw (ORCPT
+        by vger.kernel.org with ESMTP id S1726571AbfHJUnw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:52 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDN-00053s-56; Sat, 10 Aug 2019 21:43:49 +0100
+        id 1hwYDM-00053p-Pt; Sat, 10 Aug 2019 21:43:48 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDK-0003bn-8n; Sat, 10 Aug 2019 21:43:46 +0100
+        id 1hwYDK-0003bX-2a; Sat, 10 Aug 2019 21:43:46 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Sean Christopherson" <sean.j.christopherson@intel.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>
+        "Jens Remus" <jremus@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Steffen Maier" <maier@linux.ibm.com>,
+        "Benjamin Block" <bblock@linux.ibm.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.308888712@decadent.org.uk>
+Message-ID: <lsq.1565469607.332619319@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 054/157] KVM: Reject device ioctls from processes
- other than the VM's creator
+Subject: [PATCH 3.16 051/157] scsi: zfcp: fix scsi_eh host reset with
+ port_forced ERP for non-NPIV FCP devices
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,75 +58,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Steffen Maier <maier@linux.ibm.com>
 
-commit ddba91801aeb5c160b660caed1800eb3aef403f8 upstream.
+commit 242ec1455151267fe35a0834aa9038e4c4670884 upstream.
 
-KVM's API requires thats ioctls must be issued from the same process
-that created the VM.  In other words, userspace can play games with a
-VM's file descriptors, e.g. fork(), SCM_RIGHTS, etc..., but only the
-creator can do anything useful.  Explicitly reject device ioctls that
-are issued by a process other than the VM's creator, and update KVM's
-API documentation to extend its requirements to device ioctls.
+Suppose more than one non-NPIV FCP device is active on the same channel.
+Send I/O to storage and have some of the pending I/O run into a SCSI
+command timeout, e.g. due to bit errors on the fibre. Now the error
+situation stops. However, we saw FCP requests continue to timeout in the
+channel. The abort will be successful, but the subsequent TUR fails.
+Scsi_eh starts. The LUN reset fails. The target reset fails.  The host
+reset only did an FCP device recovery. However, for non-NPIV FCP devices,
+this does not close and reopen ports on the SAN-side if other non-NPIV FCP
+device(s) share the same open ports.
 
-Fixes: 852b6d57dc7f ("kvm: add device control API")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+In order to resolve the continuing FCP request timeouts, we need to
+explicitly close and reopen ports on the SAN-side.
+
+This was missing since the beginning of zfcp in v2.6.0 history commit
+ea127f975424 ("[PATCH] s390 (7/7): zfcp host adapter.").
+
+Note: The FSF requests for forced port reopen could run into FSF request
+timeouts due to other reasons. This would trigger an internal FCP device
+recovery. Pending forced port reopen recoveries would get dismissed. So
+some ports might not get fully reopened during this host reset handler.
+However, subsequent I/O would trigger the above described escalation and
+eventually all ports would be forced reopen to resolve any continuing FCP
+request timeouts due to earlier bit errors.
+
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- Documentation/virtual/kvm/api.txt | 16 +++++++++++-----
- virt/kvm/kvm_main.c               |  3 +++
- 2 files changed, 14 insertions(+), 5 deletions(-)
+ drivers/s390/scsi/zfcp_erp.c  | 14 ++++++++++++++
+ drivers/s390/scsi/zfcp_ext.h  |  2 ++
+ drivers/s390/scsi/zfcp_scsi.c |  4 ++++
+ 3 files changed, 20 insertions(+)
 
---- a/Documentation/virtual/kvm/api.txt
-+++ b/Documentation/virtual/kvm/api.txt
-@@ -13,7 +13,7 @@ of a virtual machine.  The ioctls belong
+--- a/drivers/s390/scsi/zfcp_erp.c
++++ b/drivers/s390/scsi/zfcp_erp.c
+@@ -652,6 +652,20 @@ static void zfcp_erp_strategy_memwait(st
+ 	add_timer(&erp_action->timer);
+ }
  
-  - VM ioctls: These query and set attributes that affect an entire virtual
-    machine, for example memory layout.  In addition a VM ioctl is used to
--   create virtual cpus (vcpus).
-+   create virtual cpus (vcpus) and devices.
- 
-    Only run VM ioctls from the same process (address space) that was used
-    to create the VM.
-@@ -24,6 +24,11 @@ of a virtual machine.  The ioctls belong
-    Only run vcpu ioctls from the same thread that was used to create the
-    vcpu.
- 
-+ - device ioctls: These query and set attributes that control the operation
-+   of a single device.
++void zfcp_erp_port_forced_reopen_all(struct zfcp_adapter *adapter,
++				     int clear, char *dbftag)
++{
++	unsigned long flags;
++	struct zfcp_port *port;
 +
-+   device ioctls must be issued from the same process (address space) that
-+   was used to create the VM.
- 
- 2. File descriptors
- -------------------
-@@ -32,10 +37,11 @@ The kvm API is centered around file desc
- open("/dev/kvm") obtains a handle to the kvm subsystem; this handle
- can be used to issue system ioctls.  A KVM_CREATE_VM ioctl on this
- handle will create a VM file descriptor which can be used to issue VM
--ioctls.  A KVM_CREATE_VCPU ioctl on a VM fd will create a virtual cpu
--and return a file descriptor pointing to it.  Finally, ioctls on a vcpu
--fd can be used to control the vcpu, including the important task of
--actually running guest code.
-+ioctls.  A KVM_CREATE_VCPU or KVM_CREATE_DEVICE ioctl on a VM fd will
-+create a virtual cpu or device and return a file descriptor pointing to
-+the new resource.  Finally, ioctls on a vcpu or device fd can be used
-+to control the vcpu or device.  For vcpus, this includes the important
-+task of actually running guest code.
- 
- In general file descriptors can be migrated among processes by means
- of fork() and the SCM_RIGHTS facility of unix domain socket.  These
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2240,6 +2240,9 @@ static long kvm_device_ioctl(struct file
++	write_lock_irqsave(&adapter->erp_lock, flags);
++	read_lock(&adapter->port_list_lock);
++	list_for_each_entry(port, &adapter->port_list, list)
++		_zfcp_erp_port_forced_reopen(port, clear, dbftag);
++	read_unlock(&adapter->port_list_lock);
++	write_unlock_irqrestore(&adapter->erp_lock, flags);
++}
++
+ static void _zfcp_erp_port_reopen_all(struct zfcp_adapter *adapter,
+ 				      int clear, char *id)
  {
- 	struct kvm_device *dev = filp->private_data;
+--- a/drivers/s390/scsi/zfcp_ext.h
++++ b/drivers/s390/scsi/zfcp_ext.h
+@@ -68,6 +68,8 @@ extern void zfcp_erp_clear_port_status(s
+ extern int  zfcp_erp_port_reopen(struct zfcp_port *, int, char *);
+ extern void zfcp_erp_port_shutdown(struct zfcp_port *, int, char *);
+ extern void zfcp_erp_port_forced_reopen(struct zfcp_port *, int, char *);
++extern void zfcp_erp_port_forced_reopen_all(struct zfcp_adapter *adapter,
++					    int clear, char *dbftag);
+ extern void zfcp_erp_set_lun_status(struct scsi_device *, u32);
+ extern void zfcp_erp_clear_lun_status(struct scsi_device *, u32);
+ extern void zfcp_erp_lun_reopen(struct scsi_device *, int, char *);
+--- a/drivers/s390/scsi/zfcp_scsi.c
++++ b/drivers/s390/scsi/zfcp_scsi.c
+@@ -347,6 +347,10 @@ static int zfcp_scsi_eh_host_reset_handl
+ 	struct zfcp_adapter *adapter = zfcp_sdev->port->adapter;
+ 	int ret = SUCCESS, fc_ret;
  
-+	if (dev->kvm->mm != current->mm)
-+		return -EIO;
-+
- 	switch (ioctl) {
- 	case KVM_SET_DEVICE_ATTR:
- 		return kvm_device_ioctl_attr(dev, dev->ops->set_attr, arg);
++	if (!(adapter->connection_features & FSF_FEATURE_NPIV_MODE)) {
++		zfcp_erp_port_forced_reopen_all(adapter, 0, "schrh_p");
++		zfcp_erp_wait(adapter);
++	}
+ 	zfcp_erp_adapter_reopen(adapter, 0, "schrh_1");
+ 	zfcp_erp_wait(adapter);
+ 	fc_ret = fc_block_scsi_eh(scpnt);
 
