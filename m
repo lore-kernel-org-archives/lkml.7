@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15122C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FDCC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB8FF208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0548F21734
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfHJUrJ (ORCPT
+        id S1727154AbfHJUrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:47:09 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55086 "EHLO
+        Sat, 10 Aug 2019 16:47:13 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55084 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726858AbfHJUoE (ORCPT
+        by vger.kernel.org with ESMTP id S1726852AbfHJUoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:44:04 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDZ-00053q-OT; Sat, 10 Aug 2019 21:44:01 +0100
+        id 1hwYDZ-00053u-TS; Sat, 10 Aug 2019 21:44:02 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDL-0003e2-PZ; Sat, 10 Aug 2019 21:43:47 +0100
+        id 1hwYDL-0003eB-QT; Sat, 10 Aug 2019 21:43:47 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,21 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Colin Ian King" <colin.king@canonical.com>
+        "Tejun Heo" <tj@kernel.org>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Frederic Weisbecker" <frederic@kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Lai Jiangshan" <jiangshanlai@gmail.com>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        "Ingo Molnar" <mingo@kernel.org>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.831407213@decadent.org.uk>
+Message-ID: <lsq.1565469607.807087769@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 082/157] vxge: fix return of a free'd memblock on a
- failed dma mapping
+Subject: [PATCH 3.16 083/157] locking/lockdep: Add IRQs disabled/enabled
+ assertion APIs: lockdep_assert_irqs_enabled()/disabled()
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,32 +63,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Frederic Weisbecker <frederic@kernel.org>
 
-commit 0a2c34f18c94b596562bf3d019fceab998b8b584 upstream.
+commit f54bb2ec02c839f6bfe3e8d438cd93d30b4809dd upstream.
 
-Currently if a pci dma mapping failure is detected a free'd
-memblock address is returned rather than a NULL (that indicates
-an error). Fix this by ensuring NULL is returned on this error case.
+Checking whether IRQs are enabled or disabled is a very common sanity
+check, however not free of overhead especially on fastpath where such
+assertion is very common.
 
-Addresses-Coverity: ("Use after free")
-Fixes: 528f727279ae ("vxge: code cleanup and reorganization")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: adjust context]
+Lockdep is a good host for such concurrency correctness check and it
+even already tracks down IRQs disablement state. Just reuse its
+machinery. This will allow us to get rid of the flags pop and check
+overhead from fast path when kernel is built for production.
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: David S . Miller <davem@davemloft.net>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Tejun Heo <tj@kernel.org>
+Link: http://lkml.kernel.org/r/1509980490-4285-2-git-send-email-frederic@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/ethernet/neterion/vxge/vxge-config.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/lockdep.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
---- a/drivers/net/ethernet/neterion/vxge/vxge-config.c
-+++ b/drivers/net/ethernet/neterion/vxge/vxge-config.c
-@@ -2381,6 +2381,7 @@ static void *__vxge_hw_blockpool_malloc(
- 			vxge_os_dma_free(devh->pdev, memblock,
- 				&dma_object->acc_handle);
- 			status = VXGE_HW_ERR_OUT_OF_MEMORY;
-+			memblock = NULL;
- 			goto exit;
- 		}
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -525,9 +525,24 @@ do {									\
+ 	lock_acquire(&(lock)->dep_map, 0, 0, 1, 1, NULL, _THIS_IP_);	\
+ 	lock_release(&(lock)->dep_map, 0, _THIS_IP_);			\
+ } while (0)
++
++#define lockdep_assert_irqs_enabled()	do {				\
++		WARN_ONCE(debug_locks && !current->lockdep_recursion &&	\
++			  !current->hardirqs_enabled,			\
++			  "IRQs not enabled as expected\n");		\
++	} while (0)
++
++#define lockdep_assert_irqs_disabled()	do {				\
++		WARN_ONCE(debug_locks && !current->lockdep_recursion &&	\
++			  current->hardirqs_enabled,			\
++			  "IRQs not disabled as expected\n");		\
++	} while (0)
++
+ #else
+ # define might_lock(lock) do { } while (0)
+ # define might_lock_read(lock) do { } while (0)
++# define lockdep_assert_irqs_enabled() do { } while (0)
++# define lockdep_assert_irqs_disabled() do { } while (0)
+ #endif
  
+ #ifdef CONFIG_PROVE_RCU
 
