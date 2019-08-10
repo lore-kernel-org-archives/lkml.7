@@ -2,214 +2,140 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2220C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 05:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BBAC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 05:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62E1A217F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 05:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F7F7217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 05:24:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rO8fh5d1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="N3h2CNG+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725862AbfHJFUz (ORCPT
+        id S1725865AbfHJFYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 01:20:55 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43810 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbfHJFUy (ORCPT
+        Sat, 10 Aug 2019 01:24:48 -0400
+Received: from gateway36.websitewelcome.com ([192.185.194.2]:20075 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725730AbfHJFYs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 01:20:54 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i189so47113961pfg.10;
-        Fri, 09 Aug 2019 22:20:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vCsZ0PUnHs9X6E+H649TATEMkEAfcQAEW4STfpgMP9A=;
-        b=rO8fh5d1udF9jjI9wNP6a/eo3y9gsdKSGShy/3uXD+5E3Rv8bKfPqP48YfAv4P5tFW
-         24tEm862r084m6K+F7vkLHZtrYbu3uH0VhZb72L+BdzQjWPoCkI4y1M159wW8cXg6/2h
-         SC0Fx0K287Y3JtrFAsTZlU3R+VSHnKwnGZ5ySnsK0T3Q4vbA3Egs8Ap6y8rqofK9b3AJ
-         gPSf+KCf1hxHSIoSMnBE4syof28Ql4tc/y5Z9TbqnzXpC/AjoJDPbc5RUaS1wFxKuvk9
-         JFNQU+0dR2OqYRYK4dqCw52NBiuopwRsUrV41gZIXeL31nxCrOIipbyQZ4PZyEiup97Q
-         T+5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vCsZ0PUnHs9X6E+H649TATEMkEAfcQAEW4STfpgMP9A=;
-        b=aa5s2wmXquRQ2zwo7UmTzBiBcfENyMpjKQZL5TK98kRwdorGA5Ox8Ols7lQ8sjn1sP
-         KDEu3GRdvLUM/w9b1MG6w01xZQLDsoiT1s/YCY8+ukGytvesPll2WqaQqtJtOrr2Xw/D
-         1dNVHzMp0a9Hj92TC9jD3Xp6L0/ilwMnhkYlzVlki7mjSR6Q/NjWj48+3FxtaJXzHNsg
-         ZeV0H5W/LTzb05UwcttU2SP0tGDgobqj3NT1OWnGYrbAupvebvg5RJUmJOWd28J+hvst
-         NqGGUYgtyJ/c17LCpA625xU3Lo+XfeyuH0B8kQqIiyvSD7ZV5ixS+3AWY+5Aj/JhPY2H
-         Ziww==
-X-Gm-Message-State: APjAAAWSzgUeYmK0mf/4hlk6upEVgX3reVY7ZRHBcXYYIc6tBR66uDcV
-        yDDcrh0+mGJrFVlyng1AdMs=
-X-Google-Smtp-Source: APXvYqylqJg+lOXNG/X7r1SmMXsjDbYwCILG7+M8gI8MG1Dx/AOhqRqPQFUJzL+GG9pxAM3o9gEOUg==
-X-Received: by 2002:a63:204b:: with SMTP id r11mr20600578pgm.121.1565414453897;
-        Fri, 09 Aug 2019 22:20:53 -0700 (PDT)
-Received: from [192.168.1.70] (c-73-231-235-122.hsd1.ca.comcast.net. [73.231.235.122])
-        by smtp.gmail.com with ESMTPSA id x24sm95073669pgl.84.2019.08.09.22.20.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 22:20:53 -0700 (PDT)
-Subject: Re: [PATCH v9 0/7] Solve postboot supplier cleanup and optimize probe
- ordering
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        David Collins <collinsd@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>
-References: <20190731221721.187713-1-saravanak@google.com>
- <919b66e9-9708-de34-41cd-e448838b130c@gmail.com>
- <CAGETcx8LqeOXD5zPsLuxoG5pR9VZ_v=PQfRf-aFwCSaW4kwoxA@mail.gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <7a0ee940-f81f-36b9-93e7-2b4c242360c9@gmail.com>
-Date:   Fri, 9 Aug 2019 22:20:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 10 Aug 2019 01:24:48 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 7E5F6400C5AC5
+        for <linux-kernel@vger.kernel.org>; Fri,  9 Aug 2019 23:49:33 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id wJryhB8uY90onwJryh0ZDd; Sat, 10 Aug 2019 00:24:46 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=oERw7Zagc8e+GcpWT+JUI3LRQ5Inl5suTHBjA9dFT1Y=; b=N3h2CNG+7Ct2r5p4HjdwBf1409
+        KXCpj98BX8dgLCPc1bG1xhp2Jxv0DjaQAZZOp2omtmbTz1bAMRIMOIJczO4Vzn90trbTr9218c/s/
+        g+pOuC4QnJuC0o6/Hlqz+7DlgduHQ3ELVVEZey5zACJXt2O3QgjaL+rJRge0iSXjj8VjWBc1JTvKS
+        wKBVw9rBigNwxgRi962iPjGcyeAdyquNpHfhvWF62XieWnQgup9nddNBlM878i2W2WNGM24sBVxrZ
+        /W3JqFaUXuIsz5GDCYzw2SiQRVUBvr1kA7OBd6FWOAKpzY1LYIUn+ALdURUg9tyib8h7mY5dwE0dt
+        A2J91y+w==;
+Received: from [187.192.11.120] (port=56878 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hwJru-000l1G-T2; Sat, 10 Aug 2019 00:24:43 -0500
+Date:   Sat, 10 Aug 2019 00:24:42 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>
+Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Joe Perches <joe@perches.com>
+Subject: [PATCH v2] sh: kernel: disassemble: Mark expected switch
+ fall-throughs
+Message-ID: <20190810052442.GA21354@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <CAGETcx8LqeOXD5zPsLuxoG5pR9VZ_v=PQfRf-aFwCSaW4kwoxA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hwJru-000l1G-T2
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:56878
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 15
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/9/19 10:00 PM, Saravana Kannan wrote:
-> On Fri, Aug 9, 2019 at 7:57 PM Frank Rowand <frowand.list@gmail.com> wrote:
->>
->> Hi Saravana,
->>
->> On 7/31/19 3:17 PM, Saravana Kannan wrote:
->>> Add device-links to track functional dependencies between devices
->>> after they are created (but before they are probed) by looking at
->>> their common DT bindings like clocks, interconnects, etc.
->>>
->>> Having functional dependencies automatically added before the devices
->>> are probed, provides the following benefits:
->>>
->>> - Optimizes device probe order and avoids the useless work of
->>>   attempting probes of devices that will not probe successfully
->>>   (because their suppliers aren't present or haven't probed yet).
->>>
->>>   For example, in a commonly available mobile SoC, registering just
->>>   one consumer device's driver at an initcall level earlier than the
->>>   supplier device's driver causes 11 failed probe attempts before the
->>>   consumer device probes successfully. This was with a kernel with all
->>>   the drivers statically compiled in. This problem gets a lot worse if
->>>   all the drivers are loaded as modules without direct symbol
->>>   dependencies.
->>>
->>> - Supplier devices like clock providers, interconnect providers, etc
->>>   need to keep the resources they provide active and at a particular
->>>   state(s) during boot up even if their current set of consumers don't
->>>   request the resource to be active. This is because the rest of the
->>>   consumers might not have probed yet and turning off the resource
->>>   before all the consumers have probed could lead to a hang or
->>>   undesired user experience.
->>>
->>>   Some frameworks (Eg: regulator) handle this today by turning off
->>>   "unused" resources at late_initcall_sync and hoping all the devices
->>>   have probed by then. This is not a valid assumption for systems with
->>>   loadable modules. Other frameworks (Eg: clock) just don't handle
->>>   this due to the lack of a clear signal for when they can turn off
->>>   resources. This leads to downstream hacks to handle cases like this
->>>   that can easily be solved in the upstream kernel.
->>>
->>>   By linking devices before they are probed, we give suppliers a clear
->>>   count of the number of dependent consumers. Once all of the
->>>   consumers are active, the suppliers can turn off the unused
->>>   resources without making assumptions about the number of consumers.
->>>
->>> By default we just add device-links to track "driver presence" (probe
->>> succeeded) of the supplier device. If any other functionality provided
->>> by device-links are needed, it is left to the consumer/supplier
->>> devices to change the link when they probe.
->>>
->>> v1 -> v2:
->>> - Drop patch to speed up of_find_device_by_node()
->>> - Drop depends-on property and use existing bindings
->>>
->>> v2 -> v3:
->>> - Refactor the code to have driver core initiate the linking of devs
->>> - Have driver core link consumers to supplier before it's probed
->>> - Add support for drivers to edit the device links before probing
->>>
->>> v3 -> v4:
->>> - Tested edit_links() on system with cyclic dependency. Works.
->>> - Added some checks to make sure device link isn't attempted from
->>>   parent device node to child device node.
->>> - Added way to pause/resume sync_state callbacks across
->>>   of_platform_populate().
->>> - Recursively parse DT node to create device links from parent to
->>>   suppliers of parent and all child nodes.
->>>
->>> v4 -> v5:
->>> - Fixed copy-pasta bugs with linked list handling
->>> - Walk up the phandle reference till I find an actual device (needed
->>>   for regulators to work)
->>> - Added support for linking devices from regulator DT bindings
->>> - Tested the whole series again to make sure cyclic dependencies are
->>>   broken with edit_links() and regulator links are created properly.
->>>
->>> v5 -> v6:
->>> - Split, squashed and reordered some of the patches.
->>> - Refactored the device linking code to follow the same code pattern for
->>>   any property.
->>>
->>> v6 -> v7:
->>> - No functional changes.
->>> - Renamed i to index
->>> - Added comment to clarify not having to check property name for every
->>>   index
->>> - Added "matched" variable to clarify code. No functional change.
->>> - Added comments to include/linux/device.h for add_links()
->>>
->>> v7 -> v8:
->>> - Rebased on top of linux-next to handle device link changes in [1]
->>>
->>
->>
->>> v8 -> v9:
->>> - Fixed kbuild test bot reported errors (docs and const)
->>
->> Some maintainers have strong opinions about whether change logs should be:
->>
->>   (1) only in patch 0
->>   (2) only in the specific patches that are changed
->>   (3) both in patch 0 and in the specific patches that are changed.
->>
->> I can adapt to any of the three styles.  But for style "(1)" please
->> list which specific patch has changed for each item in the change list.
->>
-> 
-> Thanks for the context Frank. I'm okay with (1) or (2) but I'll stick
-> with (1) for this series. Didn't realize there were options (2) and
-> (3). Since you started reviewing from v7, I'll do that in the future
-> updates? Also, I haven't forgotten your emails. Just tied up with
-> something else for a few days. I'll get to your emails next week.
+Remove logically dead code and mark switch cases where we are expecting
+to fall through.
 
-Yes, starting with future updates is fine, no need to redo the v9
-change logs.
+Fix the following warnings (Building: defconfig sh):
 
-No problem on the timing.  I figured you were busy or away from the
-internet.
+arch/sh/kernel/disassemble.c:478:8: warning: this statement may fall
+through [-Wimplicit-fallthrough=]
+arch/sh/kernel/disassemble.c:487:8: warning: this statement may fall
+through [-Wimplicit-fallthrough=]
+arch/sh/kernel/disassemble.c:496:8: warning: this statement may fall
+through [-Wimplicit-fallthrough=]
 
--Frank
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+Changes in v2:
+ - Remove logically dead code. Pointed out by Joe Perches.
 
-> 
-> Thanks,
-> Saravana
-> 
+NOTE: If no one cares, I'll apply this to my tree and queue it up
+      for 5.3-rc4.
+
+ arch/sh/kernel/disassemble.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/arch/sh/kernel/disassemble.c b/arch/sh/kernel/disassemble.c
+index defebf1a9c8a..845543780cc5 100644
+--- a/arch/sh/kernel/disassemble.c
++++ b/arch/sh/kernel/disassemble.c
+@@ -475,8 +475,6 @@ static void print_sh_insn(u32 memaddr, u16 insn)
+ 				printk("dbr");
+ 				break;
+ 			case FD_REG_N:
+-				if (0)
+-					goto d_reg_n;
+ 			case F_REG_N:
+ 				printk("fr%d", rn);
+ 				break;
+@@ -488,7 +486,7 @@ static void print_sh_insn(u32 memaddr, u16 insn)
+ 					printk("xd%d", rn & ~1);
+ 					break;
+ 				}
+-			d_reg_n:
++				/* else, fall through */
+ 			case D_REG_N:
+ 				printk("dr%d", rn);
+ 				break;
+@@ -497,6 +495,7 @@ static void print_sh_insn(u32 memaddr, u16 insn)
+ 					printk("xd%d", rm & ~1);
+ 					break;
+ 				}
++				/* else, fall through */
+ 			case D_REG_M:
+ 				printk("dr%d", rm);
+ 				break;
+-- 
+2.22.0
 
