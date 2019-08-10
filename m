@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 702FBC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC585C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E491208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCFF3208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfHJUqw (ORCPT
+        id S1727373AbfHJUqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:46:52 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55296 "EHLO
+        Sat, 10 Aug 2019 16:46:50 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55322 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726893AbfHJUoH (ORCPT
+        by vger.kernel.org with ESMTP id S1726907AbfHJUoH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:44:07 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDb-00058O-VO; Sat, 10 Aug 2019 21:44:04 +0100
+        id 1hwYDd-00053s-2W; Sat, 10 Aug 2019 21:44:05 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDL-0003dg-GN; Sat, 10 Aug 2019 21:43:47 +0100
+        id 1hwYDK-0003cV-NP; Sat, 10 Aug 2019 21:43:46 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        linux-block@vger.kernel.org,
-        "=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?=" <jglisse@redhat.com>,
-        "Jens Axboe" <axboe@kernel.dk>,
-        "Chaitanya Kulkarni" <chaitanya.kulkarni@wdc.com>
+        "Steffen Klassert" <steffen.klassert@secunet.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.283676874@decadent.org.uk>
+Message-ID: <lsq.1565469607.511217105@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 078/157] block: do not leak memory in bio_copy_user_iov()
+Subject: [PATCH 3.16 063/157] xfrm4: Fix uninitialized memory read in
+ _decode_session4
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,36 +55,111 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jérôme Glisse <jglisse@redhat.com>
+From: Steffen Klassert <steffen.klassert@secunet.com>
 
-commit a3761c3c91209b58b6f33bf69dd8bb8ec0c9d925 upstream.
+commit 8742dc86d0c7a9628117a989c11f04a9b6b898f3 upstream.
 
-When bio_add_pc_page() fails in bio_copy_user_iov() we should free
-the page we just allocated otherwise we are leaking it.
+We currently don't reload pointers pointing into skb header
+after doing pskb_may_pull() in _decode_session4(). So in case
+pskb_may_pull() changed the pointers, we read from random
+memory. Fix this by putting all the needed infos on the
+stack, so that we don't need to access the header pointers
+after doing pskb_may_pull().
 
-Cc: linux-block@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- block/bio.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ net/ipv4/xfrm4_policy.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1216,8 +1216,11 @@ struct bio *bio_copy_user_iov(struct req
- 			}
- 		}
+--- a/net/ipv4/xfrm4_policy.c
++++ b/net/ipv4/xfrm4_policy.c
+@@ -103,7 +103,8 @@ static void
+ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ {
+ 	const struct iphdr *iph = ip_hdr(skb);
+-	u8 *xprth = skb_network_header(skb) + iph->ihl * 4;
++	int ihl = iph->ihl;
++	u8 *xprth = skb_network_header(skb) + ihl * 4;
+ 	struct flowi4 *fl4 = &fl->u.ip4;
+ 	int oif = 0;
  
--		if (bio_add_pc_page(q, bio, page, bytes, offset) < bytes)
-+		if (bio_add_pc_page(q, bio, page, bytes, offset) < bytes) {
-+			if (!map_data)
-+				__free_page(page);
+@@ -114,6 +115,11 @@ _decode_session4(struct sk_buff *skb, st
+ 	fl4->flowi4_mark = skb->mark;
+ 	fl4->flowi4_oif = reverse ? skb->skb_iif : oif;
+ 
++	fl4->flowi4_proto = iph->protocol;
++	fl4->daddr = reverse ? iph->saddr : iph->daddr;
++	fl4->saddr = reverse ? iph->daddr : iph->saddr;
++	fl4->flowi4_tos = iph->tos;
++
+ 	if (!ip_is_fragment(iph)) {
+ 		switch (iph->protocol) {
+ 		case IPPROTO_UDP:
+@@ -125,7 +131,7 @@ _decode_session4(struct sk_buff *skb, st
+ 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+ 				__be16 *ports;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ports = (__be16 *)xprth;
+ 
+ 				fl4->fl4_sport = ports[!!reverse];
+@@ -138,7 +144,7 @@ _decode_session4(struct sk_buff *skb, st
+ 			    pskb_may_pull(skb, xprth + 2 - skb->data)) {
+ 				u8 *icmp;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				icmp = xprth;
+ 
+ 				fl4->fl4_icmp_type = icmp[0];
+@@ -151,7 +157,7 @@ _decode_session4(struct sk_buff *skb, st
+ 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+ 				__be32 *ehdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ehdr = (__be32 *)xprth;
+ 
+ 				fl4->fl4_ipsec_spi = ehdr[0];
+@@ -163,7 +169,7 @@ _decode_session4(struct sk_buff *skb, st
+ 			    pskb_may_pull(skb, xprth + 8 - skb->data)) {
+ 				__be32 *ah_hdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ah_hdr = (__be32 *)xprth;
+ 
+ 				fl4->fl4_ipsec_spi = ah_hdr[1];
+@@ -175,7 +181,7 @@ _decode_session4(struct sk_buff *skb, st
+ 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+ 				__be16 *ipcomp_hdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ipcomp_hdr = (__be16 *)xprth;
+ 
+ 				fl4->fl4_ipsec_spi = htonl(ntohs(ipcomp_hdr[1]));
+@@ -188,7 +194,7 @@ _decode_session4(struct sk_buff *skb, st
+ 				__be16 *greflags;
+ 				__be32 *gre_hdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				greflags = (__be16 *)xprth;
+ 				gre_hdr = (__be32 *)xprth;
+ 
+@@ -205,10 +211,6 @@ _decode_session4(struct sk_buff *skb, st
  			break;
-+		}
+ 		}
+ 	}
+-	fl4->flowi4_proto = iph->protocol;
+-	fl4->daddr = reverse ? iph->saddr : iph->daddr;
+-	fl4->saddr = reverse ? iph->daddr : iph->saddr;
+-	fl4->flowi4_tos = iph->tos;
+ }
  
- 		len -= bytes;
- 		offset = 0;
+ static inline int xfrm4_garbage_collect(struct dst_ops *ops)
 
