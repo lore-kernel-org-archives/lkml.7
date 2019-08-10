@@ -2,163 +2,132 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3384AC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 09:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36340C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 09:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF212166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 09:47:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U+zov0oA"
+	by mail.kernel.org (Postfix) with ESMTP id 0B6502166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 09:51:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726165AbfHJJrb (ORCPT
+        id S1726195AbfHJJv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 05:47:31 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35913 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbfHJJrb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 05:47:31 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g67so7650463wme.1
-        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 02:47:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Iij52VdnIxKgrAmCJ+5BwvJNqGzmX18SaZQUx0VGI7E=;
-        b=U+zov0oAsWTx1mE4/BAWgExHMXrejokAEI7u5t01zaiXTbB8p3ZfIb3o2HHrx9s4sL
-         71ThlcdFFJacToU4yrwtlas/NzEXjEDdeKIUrcChsLeWa/WaKnnRAOtLrgPldaOatSPP
-         pusExBj4sYtbNT+GBXRprENtseLiYu7zZj0V3UoP+i+pJ6kaCMcxr17dxK50Ve+zz+HA
-         SnpTYvWek49cDA7CoLawA+hJJSsPxhV+8aiX9MsbOyBNh1/W7zWyPZTlOEvTdNQ0kq46
-         GqqCUqJ2HRo3AqyRe0bKmzp3GPtL4Z9c7Jek8XZQULqDsM7s3m20sNjn5PFC7FTohl17
-         QNGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Iij52VdnIxKgrAmCJ+5BwvJNqGzmX18SaZQUx0VGI7E=;
-        b=lNJLj+mDquQaRApfJUWe1px+Is5S3s2GUncdllqREFvQWxqiDjrO5ml49FszPbTT7x
-         DVnlajYlmgEvj22hu3VtS3qrDb3Lk4A4HcoLYlSdCi2uFPbNWFglmPgv9uUBiUjgIfU0
-         SWDnkBfuvcvnszN0QNH/xGbw4EeBdGi6K+XedBT0fGFoA3/93KcRChGcNF1q9D4Pp0Nv
-         ZZ9auyu9aTkdduNWteX4sYQGxc8ZqdEe/J1a84CJSwAThw0oIWGNGEmxXj3nG+KruhOc
-         88E0IxvZyFcogx7WtBLpGjkRqUQOS2s86r0uMiuXumD2CqQ0alQQ3QYPlVgq4MRUAPaT
-         UgPw==
-X-Gm-Message-State: APjAAAUvpIKCXcGy+IqO9Bh4aSCzyjLMT2RTmRme79R/ZJH7mEBFvvAP
-        L6E2hbC59DMGCh7cjKOenk0HKZuZxBXT9Hhensw=
-X-Google-Smtp-Source: APXvYqw5QlCtgYF1ORpUnKZHcUFEQKWYjdN4hoYseKoTaCF3MzytysQQ+RwpOSlNm9vDP+xK2Q1hGLyOYc8onem2TyM=
-X-Received: by 2002:a1c:c915:: with SMTP id f21mr15212246wmb.173.1565430449202;
- Sat, 10 Aug 2019 02:47:29 -0700 (PDT)
+        Sat, 10 Aug 2019 05:51:28 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4230 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725497AbfHJJv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 05:51:28 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 0D3BBBDE911666C3C49A;
+        Sat, 10 Aug 2019 17:51:26 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Sat, 10 Aug 2019
+ 17:51:15 +0800
+From:   Zhihao Cheng <chengzhihao1@huawei.com>
+To:     <richard@nod.at>, <yi.zhang@huawei.com>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <chengzhihao1@huawei.com>
+Subject: [PATCH RFC v2] ubi: ubi_wl_get_peb: Increase the number of attempts while getting PEB
+Date:   Sat, 10 Aug 2019 17:57:41 +0800
+Message-ID: <1565431061-145460-1-git-send-email-chengzhihao1@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <e0e9478e-62a5-ca24-3b12-58f7d056383e@huawei.com>
- <a98ba3d0-5596-664a-a1ee-5777cff0ddd9@kernel.org> <6fd4d706-b66d-6390-749a-8a06b17cb487@huawei.com>
- <alpine.DEB.2.21.1907221723450.2082@nanos.tec.linutronix.de> <8e1201a7-3e69-e048-6aa3-3b87e86d55ac@huawei.com>
-In-Reply-To: <8e1201a7-3e69-e048-6aa3-3b87e86d55ac@huawei.com>
-From:   Ming Lei <tom.leiming@gmail.com>
-Date:   Sat, 10 Aug 2019 17:47:17 +0800
-Message-ID: <CACVXFVPMZpUrDORA4YDQiwd+VG-OoOhv1G0NeeqSdz7Udfzryg@mail.gmail.com>
-Subject: Re: About threaded interrupt handler CPU affinity
-To:     John Garry <john.garry@huawei.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        chenxiang <chenxiang66@hisilicon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 1:40 AM John Garry <john.garry@huawei.com> wrote:
->
-> On 22/07/2019 16:34, Thomas Gleixner wrote:
-> > John,
-> >
->
-> Hi Thomas,
->
-> > On Mon, 22 Jul 2019, John Garry wrote:
-> >> On 22/07/2019 15:41, Marc Zyngier wrote:
-> >>> On 22/07/2019 15:14, John Garry wrote:
-> >>>> I have a question on commit cbf8699996a6 ("genirq: Let irq thread follow
-> >>>> the effective hard irq affinity"), if you could kindly check:
-> >>>>
-> >>>> Here we set the thread affinity to be the same as the hard interrupt
-> >>>> affinity. For an arm64 system with GIC ITS, this will be a single CPU,
-> >>>> the lowest in the interrupt affinity mask. So, in this case, effectively
-> >>>> the thread will be bound to a single CPU. I think APIC is the same for
-> >>>> this.
-> >>>>
-> >>>> The commit message describes the problem that we solve here is that the
-> >>>> thread may become affine to a different CPU to the hard interrupt - does
-> >>>> it mean that the thread CPU mask could not cover that of the hard
-> >>>> interrupt? I couldn't follow the reason.
-> >>>
-> >>> Assume a 4 CPU system. If the interrupt affinity is on CPU0-1, you could
-> >>> end up with the effective interrupt affinity on CPU0 (which would be
-> >>> typical of the ITS), and the thread running on CPU1. Not great.
-> >>
-> >> Sure, not great. But the thread can possibly still run on CPU0.
-> >
-> > Sure. It could, but it's up to the scheduler to decide. In general it's the
-> > right thing to run the threaded handler on the CPU which handles the
-> > interrupt.
->
-> I'd agree.
->
-> >With single CPU affinity thats surely a limitation.
-> >
-> >>>> We have experimented with fixing the thread mask to be the same as the
-> >>>> interrupt mask (we're using managed interrupts), like before, and get a
-> >>>> significant performance boost at high IO datarates on our storage
-> >>>> controller - like ~11%.
-> >>>
-> >>> My understanding is that this patch does exactly that. Does it result in
-> >>> a regression?
-> >>
-> >> Not in the strictest sense for us, I don't know about others. Currently we use
-> >> tasklets, and we find that the CPUs servicing the interrupts (and hence
-> >> tasklets) are heavily loaded. We experience the same for when experimenting
-> >> with threaded interrupt handlers - which would be as expected.
-> >>
-> >> But, when we make the change as mentioned, our IOPS goes from ~3M -> 3.4M.
-> >
-> > So your interrupt is affined to more than one CPU, but due to the ITS
-> > limitation the effective affinity is a single CPU, which in turn restricts
-> > the thread handler affinity to the same single CPU.
->
-> Even though this is an ITS limitation, the same thing is effectively
-> done for x86 APIC as policy, right? I'm referring to commit fdba46ffb4c2
-> ("x86/apic: Get rid of multi CPU affinity")
->
->   If you lift that
-> > restriction and let it be affine to the full affinity set of the interrupt
-> > then you get better performance, right?
->
-> Right
->
->   Probably because the other CPU(s)
-> > in the affinity set are less loaded than the one which handles the hard
-> > interrupt.
->
-> I will look to get some figures for CPU loading to back this up.
->
-> >
-> > This is heavily use case dependent I assume, so making this a general
-> > change is perhaps not a good idea, but we could surely make this optional.
->
-> That sounds reasonable. So would the idea be to enable this optionally
-> at the request threaded irq call?
+Running stress test io_paral (A pressure ubi test in mtd-utils) on an
+UBI device with fewer PEBs (fastmap enabled) may cause ENOSPC errors and
+make UBI device read-only, but there are still free PEBs on the UBI
+device. This problem can be easily reproduced by performing the following
+steps on a 2-core machine:
+  $ modprobe nandsim first_id_byte=0x20 second_id_byte=0x33 parts=80
+  $ modprobe ubi mtd="0,0" fm_autoconvert
+  $ ./io_paral /dev/ubi0
 
-I'd suggest to do it for managed IRQ at default, because managed IRQ affinity
-is NUMA locality and setup gracefully. And the idea behind is good since the IRQ
-handler should have been run in the specified CPUs, especially the thread part
-often takes more CPU.
+We may see the following verbose:
+(output)
+  [io_paral] update_volume():108: failed to write 380 bytes at offset
+  95920 of volume 2
+  [io_paral] update_volume():109: update: 97088 bytes
+  [io_paral] write_thread():227: function pwrite() failed with error 28
+  (No space left on device)
+  [io_paral] write_thread():229: cannot write 15872 bytes to offs 31744,
+  wrote -1
+(dmesg)
+  ubi0 error: ubi_wl_get_peb [ubi]: Unable to get a free PEB from user WL
+  pool
+  ubi0 warning: ubi_eba_write_leb [ubi]: switch to read-only mode
+  CPU: 0 PID: 2027 Comm: io_paral Not tainted 5.3.0-rc2-00001-g5986cd0 #9
+  ubi0 warning: try_write_vid_and_data [ubi]: failed to write VID header
+  to LEB 2:5, PEB 18
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0
+  -0-ga698c8995f-prebuilt.qemu.org 04/01/2014
+  Call Trace:
+    dump_stack+0x85/0xba
+    ubi_eba_write_leb+0xa1e/0xa40 [ubi]
+    vol_cdev_write+0x307/0x520 [ubi]
+    vfs_write+0xfa/0x280
+    ksys_pwrite64+0xc5/0xe0
+    __x64_sys_pwrite64+0x22/0x30
+    do_syscall_64+0xbf/0x440
 
+In function ubi_wl_get_peb, the operation of filling the pool
+(ubi_update_fastmap) with free PEBs and fetching a free PEB from the pool
+is not atomic. After thread A filling the pool with free PEB, free PEB may
+be taken away by thread B. When thread A checks the expression again, the
+condition is still unsatisfactory. At this time, there may still be free
+PEBs on UBI that can be filled into the pool.
 
-Thanks,
-Ming Lei
+This patch increases the number of attempts to obtain PEB. An extreme
+case (No free PEBs left after creating test volumes) has been tested on
+different type of machines for 100 times. The biggest number of attempts
+are shown below:
+
+             x86_64     arm64
+  2-core        4         4
+  4-core        8         4
+  8-core        4         4
+
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+---
+ drivers/mtd/ubi/fastmap-wl.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/mtd/ubi/fastmap-wl.c b/drivers/mtd/ubi/fastmap-wl.c
+index d9e2e3a..c44c847 100644
+--- a/drivers/mtd/ubi/fastmap-wl.c
++++ b/drivers/mtd/ubi/fastmap-wl.c
+@@ -196,7 +196,7 @@ static int produce_free_peb(struct ubi_device *ubi)
+  */
+ int ubi_wl_get_peb(struct ubi_device *ubi)
+ {
+-	int ret, retried = 0;
++	int ret, attempts = 0;
+ 	struct ubi_fm_pool *pool = &ubi->fm_pool;
+ 	struct ubi_fm_pool *wl_pool = &ubi->fm_wl_pool;
+ 
+@@ -221,12 +221,12 @@ int ubi_wl_get_peb(struct ubi_device *ubi)
+ 
+ 	if (pool->used == pool->size) {
+ 		spin_unlock(&ubi->wl_lock);
+-		if (retried) {
++		attempts++;
++		if (attempts == 10) {
+ 			ubi_err(ubi, "Unable to get a free PEB from user WL pool");
+ 			ret = -ENOSPC;
+ 			goto out;
+ 		}
+-		retried = 1;
+ 		up_read(&ubi->fm_eba_sem);
+ 		ret = produce_free_peb(ubi);
+ 		if (ret < 0) {
+-- 
+2.7.4
+
