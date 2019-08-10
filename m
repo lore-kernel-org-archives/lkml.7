@@ -2,70 +2,67 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6A1C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 00:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 057C6C31E40
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 00:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00AFA21743
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 00:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE6B221743
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 00:21:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="shcMcSyH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sNNT5BHd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730677AbfHJAV0 (ORCPT
+        id S1729277AbfHJAUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 20:21:26 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43612 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729712AbfHJAUq (ORCPT
+        Fri, 9 Aug 2019 20:20:44 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:32850 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfHJAUo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 20:20:46 -0400
-Received: by mail-pl1-f196.google.com with SMTP id 4so38576133pld.10;
-        Fri, 09 Aug 2019 17:20:46 -0700 (PDT)
+        Fri, 9 Aug 2019 20:20:44 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g2so46876201pfq.0;
+        Fri, 09 Aug 2019 17:20:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=QXigDLRw3f4Zeh3h3qtvUDbXQuQlDC/z8RUtgr8saEo=;
-        b=shcMcSyHlCtZ2biVIOjEACzdBrr0xp5X+p+4JKaZr17niQ5yt6yaT8E2tL/xnmzNPB
-         RSTGvpAe6rPxgCbw3owUy4oOpfL6RPSyePOUfPQiiKACTaMGRDhMjNKmxN7bDXkFMsW8
-         I7tNgqOYXq94DYF+kDidzguZZFRa785ZpQfCPoqgMeYxpLXdNx9hJ3N075CyFZjqEsIJ
-         U2yee6//BSGPFlcLdbok/mQkyL/Av6+iiYBhsngf/hUDYNiB7WnHcGvvS2S+wGBMWSWb
-         q72G+1jTTvzvD25dL8J8XsuFwvVhViaEt9BqRPdNYz6zEWfyz4oNUr8tzlARtrSmP2+z
-         1BoA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4NuHpiKrcfvxS/mGiY/BxI3FRO/IKvPbBP1wbHbbV9M=;
+        b=sNNT5BHdi1Q+lGPk4v4j14rp1DiKU+zKERT+HuNqBhQCK8ndNh5r4OMksck+rYsnFw
+         9672qRaWp9d1ar2rbgyc9+QXuJR34YJUp/XwwX+BnCRnUeeXKhwse1qlhgKKfn2T5Brn
+         JdTpAPzNtiCkBVZhieFIICculFf/4iTyqyELuHFNr8YoRDCsgx5Rr+K6BruAMJOGfCSX
+         6Q+yvoR0mRnl6Rbas9QTZAu4i72PrJ5xx8I7WVXTAAoySdYp09a7UxGibIM5s7qhJtVS
+         I1FtlKyeHyzjzyBZIpFZfro70g4Etc6dgNxnNQZzsBeFaMV4yGJ+y5gO5sKvV9NQFmQc
+         EE6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QXigDLRw3f4Zeh3h3qtvUDbXQuQlDC/z8RUtgr8saEo=;
-        b=QXkL9qmRKjdzS+PbquDlrPCmFmhKe8ghH/zDcn5VDSeNVw84gorSYHNmh3pQGoVxse
-         /wK2RLP2RRB3nx8hE6xEKXbxD9bQ/QGqTydTiUmbTGoLkrA93RMbgglf1Fbh8HThrell
-         XqENgB9WTnel3XpMiUZ/uf1uegPnhsp0UYeH9b648eDmde031pc+6XfuHtrBC9C+1r3B
-         lOOjBOS8kIX9a8S9r57rlXvAS48VDaMYPpTxP29GLV3Cpe2gVJG4nZeTgidSWGCuzSdu
-         OZF53NuIRIZoN/db7BRMjKlbXljSabhV4IH4gHMLvPZUafSTyRNCKsuaZ8jN5EtSeCgT
-         kyTA==
-X-Gm-Message-State: APjAAAXEJAmJDxGmIfM2U2JVEo42jA7WcyBFPDeV6jUDC9dt6IplSWlM
-        jUh9GYcBty7HJWUP5LIQluVGyr6+
-X-Google-Smtp-Source: APXvYqy887Z5vEQ/4RXyoil8/ailm/mP/GjCkGpVBukZ1TaBQNd39Z9swNhT6ETg/S0Eq2UcncfNqw==
-X-Received: by 2002:a17:902:2f:: with SMTP id 44mr22043692pla.5.1565396445433;
-        Fri, 09 Aug 2019 17:20:45 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4NuHpiKrcfvxS/mGiY/BxI3FRO/IKvPbBP1wbHbbV9M=;
+        b=incDnfxka+TjsYb47X1UfDhSP4CblVcAe05TvJ7HfWpvZUMHtTbgRihvhjGJ0+53AO
+         Dl23wBtrl0LG+ODWDEtMbv3r6uSlfD1E5sT4A3MNM0ogF5bTfvygmferzjV8mzoF4XSq
+         5RvZWeAIws1/RnAIclFtgoDFDbi7zACRYYBo9afYVAdc4JkA5iFTXyBbdFpocrs+FBmE
+         bQoK8o+Z8u+CKz+ZrJg2+/S53jsHBu6ddIyOaSf6sF2UFRcrUEaLndFzHVhGX+iYRE+V
+         iLbJNXtqj8SmVFtS8imPpj1VwkXC/DL/Ljb2VhV9UFJVSvhpaxjdCELP9P6Xb+b8LvZr
+         MsWg==
+X-Gm-Message-State: APjAAAXmkP0FpTWi4HBozNtMJyX2lTylIXPTAMNYU9tLgHlWJRy5T615
+        AT2A8U3tUr23SGy18fKtDBI=
+X-Google-Smtp-Source: APXvYqzlqJraQYMHJWBI0YDZEIHyFTieBXoKRfFKVTThdOlmHn4H2bejShVmhmsJn6Vctc5guIT2sQ==
+X-Received: by 2002:aa7:8b11:: with SMTP id f17mr24382380pfd.19.1565396442927;
+        Fri, 09 Aug 2019 17:20:42 -0700 (PDT)
 Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id v185sm110701150pfb.14.2019.08.09.17.20.44
+        by smtp.gmail.com with ESMTPSA id v185sm110701150pfb.14.2019.08.09.17.20.42
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 17:20:45 -0700 (PDT)
+        Fri, 09 Aug 2019 17:20:42 -0700 (PDT)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 04/11] Input: bu21013_ts - annotate supend/resume methods as __maybe_unused
-Date:   Fri,  9 Aug 2019 17:20:32 -0700
-Message-Id: <20190810002039.95876-5-dmitry.torokhov@gmail.com>
+Subject: [PATCH 00/11] Face lift for bu21013_ts driver
+Date:   Fri,  9 Aug 2019 17:20:28 -0700
+Message-Id: <20190810002039.95876-1-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
-In-Reply-To: <20190810002039.95876-1-dmitry.torokhov@gmail.com>
-References: <20190810002039.95876-1-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,67 +70,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead if #ifdef-ing out suspend and resume methods, let's mark
-them as __maybe_unused to get better compile time coverage.
+Hi Linus,
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/input/touchscreen/bu21013_ts.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+So your patch has prompted me to take a look at the driver and
+try to clean it up. I am sure I screwed up somewhere, but you said
+you have the device, so please take a look at the series and
+see if you can salvage them
 
-diff --git a/drivers/input/touchscreen/bu21013_ts.c b/drivers/input/touchscreen/bu21013_ts.c
-index e9cb020ed725..0bdadd24296f 100644
---- a/drivers/input/touchscreen/bu21013_ts.c
-+++ b/drivers/input/touchscreen/bu21013_ts.c
-@@ -634,7 +634,6 @@ static int bu21013_remove(struct i2c_client *client)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM
- /**
-  * bu21013_suspend() - suspend the touch screen controller
-  * @dev: pointer to device structure
-@@ -642,7 +641,7 @@ static int bu21013_remove(struct i2c_client *client)
-  * This function is used to suspend the
-  * touch panel controller and returns integer
-  */
--static int bu21013_suspend(struct device *dev)
-+static int __maybe_unused bu21013_suspend(struct device *dev)
- {
- 	struct bu21013_ts *ts = dev_get_drvdata(dev);
- 	struct i2c_client *client = ts->client;
-@@ -665,7 +664,7 @@ static int bu21013_suspend(struct device *dev)
-  * This function is used to resume the touch panel
-  * controller and returns integer.
-  */
--static int bu21013_resume(struct device *dev)
-+static int __maybe_unused bu21013_resume(struct device *dev)
- {
- 	struct bu21013_ts *ts = dev_get_drvdata(dev);
- 	struct i2c_client *client = ts->client;
-@@ -693,11 +692,7 @@ static int bu21013_resume(struct device *dev)
- 	return 0;
- }
- 
--static const struct dev_pm_ops bu21013_dev_pm_ops = {
--	.suspend = bu21013_suspend,
--	.resume  = bu21013_resume,
--};
--#endif
-+static SIMPLE_DEV_PM_OPS(bu21013_dev_pm_ops, bu21013_suspend, bu21013_resume);
- 
- static const struct i2c_device_id bu21013_id[] = {
- 	{ DRIVER_TP, 0 },
-@@ -708,9 +703,7 @@ MODULE_DEVICE_TABLE(i2c, bu21013_id);
- static struct i2c_driver bu21013_driver = {
- 	.driver	= {
- 		.name	=	DRIVER_TP,
--#ifdef CONFIG_PM
- 		.pm	=	&bu21013_dev_pm_ops,
--#endif
- 	},
- 	.probe		=	bu21013_probe,
- 	.remove		=	bu21013_remove,
+Thanks!
+
+Dmitry Torokhov (10):
+  ARM: ux500: improve BU21013 touchpad bindings
+  Input: bu21013_ts - rename some variables
+  Input: bu21013_ts - annotate supend/resume methods as __maybe_unused
+  Input: bu21013_ts - remove useless comments
+  Input: bu21013_ts - convert to using managed resources
+  Input: bu21013_ts - remove support for platform data
+  Input: bu21013_ts - use interrupt from I2C client
+  Input: bu21013_ts - fix suspend when wake source
+  Input: bu21013_ts - switch to using MT-B (slotted) protocol
+  Input: bu21013_ts - switch to using standard touchscreen properties
+
+Linus Walleij (1):
+  Input: bu21013_ts - convert to use GPIO descriptors
+
+ .../bindings/input/touchscreen/bu21013.txt    |  27 +-
+ arch/arm/boot/dts/ste-hrefprev60-stuib.dts    |  14 +-
+ arch/arm/boot/dts/ste-hrefv60plus-stuib.dts   |  14 +-
+ drivers/input/touchscreen/bu21013_ts.c        | 740 ++++++++----------
+ include/linux/input/bu21013.h                 |  34 -
+ 5 files changed, 362 insertions(+), 467 deletions(-)
+ delete mode 100644 include/linux/input/bu21013.h
+
 -- 
-2.23.0.rc1.153.gdeed80330f-goog
-
+Dmitry
