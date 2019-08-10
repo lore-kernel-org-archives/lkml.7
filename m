@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BBAC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06629C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B1E208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D22F2208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727568AbfHJUvg (ORCPT
+        id S1726663AbfHJUnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:51:36 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54306 "EHLO
+        Sat, 10 Aug 2019 16:43:53 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53842 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726670AbfHJUny (ORCPT
+        by vger.kernel.org with ESMTP id S1726497AbfHJUnt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:43:54 -0400
+        Sat, 10 Aug 2019 16:43:49 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDP-00053i-IA; Sat, 10 Aug 2019 21:43:51 +0100
+        id 1hwYDK-00053p-3Z; Sat, 10 Aug 2019 21:43:46 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDM-0003gp-RM; Sat, 10 Aug 2019 21:43:48 +0100
+        id 1hwYDJ-0003a5-EA; Sat, 10 Aug 2019 21:43:45 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Johannes Berg" <johannes.berg@intel.com>,
-        syzbot+4ece1a28b8f4730547c9@syzkaller.appspotmail.com
+        "Marco Felsch" <m.felsch@pengutronix.de>,
+        "Christian Hemp" <c.hemp@phytec.de>,
+        "Shawn Guo" <shawnguo@kernel.org>,
+        "Stefan Christ" <s.christ@phytec.de>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.885250051@decadent.org.uk>
+Message-ID: <lsq.1565469607.308764277@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 103/157] mac80211: don't attempt to rename ERR_PTR()
- debugfs dirs
+Subject: [PATCH 3.16 033/157] ARM: dts: pfla02: increase phy reset duration
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,34 +57,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-commit 517879147493a5e1df6b89a50f708f1133fcaddb upstream.
+commit 032f85c9360fb1a08385c584c2c4ed114b33c260 upstream.
 
-We need to dereference the directory to get its parent to
-be able to rename it, so it's clearly not safe to try to
-do this with ERR_PTR() pointers. Skip in this case.
+Increase the reset duration to ensure correct phy functionality. The
+reset duration is taken from barebox commit 52fdd510de ("ARM: dts:
+pfla02: use long enough reset for ethernet phy"):
 
-It seems that this is most likely what was causing the
-report by syzbot, but I'm not entirely sure as it didn't
-come with a reproducer this time.
+  Use a longer reset time for ethernet phy Micrel KSZ9031RNX. Otherwise a
+  small percentage of modules have 'transmission timeouts' errors like
 
-Reported-by: syzbot+4ece1a28b8f4730547c9@syzkaller.appspotmail.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+  barebox@Phytec phyFLEX-i.MX6 Quad Carrier-Board:/ ifup eth0
+  warning: No MAC address set. Using random address 7e:94:4d:02:f8:f3
+  eth0: 1000Mbps full duplex link detected
+  eth0: transmission timeout
+  T eth0: transmission timeout
+  T eth0: transmission timeout
+  T eth0: transmission timeout
+  T eth0: transmission timeout
+
+Cc: Stefan Christ <s.christ@phytec.de>
+Cc: Christian Hemp <c.hemp@phytec.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Fixes: 3180f956668e ("ARM: dts: Phytec imx6q pfla02 and pbab01 support")
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/mac80211/debugfs_netdev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/mac80211/debugfs_netdev.c
-+++ b/net/mac80211/debugfs_netdev.c
-@@ -735,7 +735,7 @@ void ieee80211_debugfs_rename_netdev(str
- 
- 	dir = sdata->vif.debugfs_dir;
- 
--	if (!dir)
-+	if (IS_ERR_OR_NULL(dir))
- 		return;
- 
- 	sprintf(buf, "netdev:%s", sdata->name);
+--- a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
+@@ -302,6 +302,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+ 	phy-mode = "rgmii";
++	phy-reset-duration = <10>; /* in msecs */
+ 	phy-reset-gpios = <&gpio3 23 GPIO_ACTIVE_LOW>;
+ 	status = "disabled";
+ };
 
