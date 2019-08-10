@@ -2,184 +2,289 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B627C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 05:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FF3C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 05:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C121C217F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 05:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73039217F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 05:17:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="hAFeGZYU"
+	dkim=pass (2048-bit key) header.d=jaseg.net header.i=@jaseg.net header.b="tFXYp5+D";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mkYbFRki"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726094AbfHJFPL (ORCPT
+        id S1726132AbfHJFRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 01:15:11 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.210]:17711 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725601AbfHJFPK (ORCPT
+        Sat, 10 Aug 2019 01:17:15 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:44133 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725372AbfHJFRO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 01:15:10 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 159FD400D083A
-        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 00:14:06 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id wJhehU6x6dnCewJhehvJDP; Sat, 10 Aug 2019 00:14:06 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=0scEsN2TKcDwufWuYhM8NM5jsVBtjwHr1jaX3PCcoEg=; b=hAFeGZYUbwM2X0RDLLRl47Q62I
-        u5hY3vXFp4+SssoBr2TjzkABcy3vMOtdQW9nn4kQ4SXn56ckBpsE7jKgcY+nFStVIc6Fr14WALN74
-        CAJxQOYTeXqeKTH48kSiMp1DC8dMVE3CjvNyuCXqAr1bHsvCAUL+BOYZ2BXJ3wa2HdiDDYDxfsqYw
-        W8YWLix1EbQA7Y+qlh7+/nnXpSibEiBIjyfjnRU6mbv5gwmgLMG1kq3BKEaM3k8dB7D3VZ5lGVqCU
-        fYhWwJNegmgL2DqWpWFe/MR2/kvJU/D6DPJyuaEhx9HW1LApyPxscZUX+wj0pAutYU2nxPZ9nRtwm
-        4egKURPw==;
-Received: from [187.192.11.120] (port=38488 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hwJhd-000gRh-NL; Sat, 10 Aug 2019 00:14:05 -0500
-Subject: Re: [PATCH] sh: kernel: disassemble: Mark expected switch
- fall-throughs
-To:     Joe Perches <joe@perches.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>
-Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>
-References: <20190810050153.GA13927@embeddedor>
- <996bc110024500842a627ea75cb43b7cd00ef36c.camel@perches.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <9f8dd34d-373c-eaf9-00ec-436745a1a025@embeddedor.com>
-Date:   Sat, 10 Aug 2019 00:14:02 -0500
+        Sat, 10 Aug 2019 01:17:14 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 02CCD558;
+        Sat, 10 Aug 2019 01:17:10 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Sat, 10 Aug 2019 01:17:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jaseg.net; h=
+        subject:to:cc:references:from:message-id:date:mime-version
+        :in-reply-to:content-type:content-transfer-encoding; s=fm3; bh=T
+        LKyPNFTsFZjFD5Cr/7Cre9egz8NoqCwoZLt4puyBJE=; b=tFXYp5+DPG8iNQeyE
+        BBRQZZxMl+6qafobzbg/5E1c/C/jKA3xW0LBN1RKPIWbByAEwlfmXAs1k0vei4rV
+        6t4mZ8Zd8sv5kG7S04c52vczT/aHj6xhrgC8cIsu2Smdrrd2qovtL4vQvOfuU2GB
+        eG7/ZOde6VfKHp6YZYtAuY47m89JyyCk+wLmvDFhPubRK8OeP4xWE3pxQvD+5Fhp
+        Id/8afpIEAjClRSO4ZOFE+8K8xM7qj6YrXGKMoGVdD6fg8qDxGhjTAVlyvL8K2XD
+        z6TqfI1bJ+SOVfGoCYwhJNG6S1PqV39E8PEVuFcRhlfwnUyEuma2gJiFPKB2GM+C
+        OSx7w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=TLKyPNFTsFZjFD5Cr/7Cre9egz8NoqCwoZLt4puyB
+        JE=; b=mkYbFRkiHlbE3Aedt/y7fbg5aAahol580ZkKuqQE5juraz24gPeTsnASU
+        L9KjzfRCAb7UVbAuLEkMyl2yYhcTC/p3wGJt0q5/uw/TLinoOtcIYHOJ6bBcbLyR
+        j608EB7pfRkK0t6UE95G5NLJ+qm3EsYati4hMxCmueAO1XTvMPBYBKtzbAp1/cT2
+        bUw4b8rtdloWy1k+5DweyqpxlE+QNb/4gaZT2ijmnt1EgbPdKh56iughZF6e8hrh
+        0h5OZtDxUQmckZVvSNVCi4GwrP9GshEnXmzzJZqWI06j3+294OW4extnDldSAaXK
+        a6zcPHqvRixR6YUnkfyPHtpH5ZIGg==
+X-ME-Sender: <xms:VVNOXW-1owb8VEeJc0OqzmekYfQBs9k3Zk741bxFDfzp4Yfsl5AoCw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddruddukedgleeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepuffvfhfhkffffgggjggtgfesthekredttdefjeenucfhrhhomheplfgrnhgp
+    ufgvsggrshhtihgrnhgpifpnthhtvgcuoehlihhnuhigsehjrghsvghgrdhnvghtqeenuc
+    ffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrghenucfkphepiedtrdejuddrieef
+    rdejheenucfrrghrrghmpehmrghilhhfrhhomheplhhinhhugiesjhgrshgvghdrnhgvth
+    enucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:VVNOXW17m3d6V1OcPod5QW_J38jZ3uwZtwBJytwIrwGr0UgtoQOvsA>
+    <xmx:VVNOXT-FZlpYqvi0eJeMDvMzkb95fV18xv71hn6A9wFnWHnfvQE8MA>
+    <xmx:VVNOXWsWoHSvneIDHyjemrct3K2KIXQyue5hX5vcWgO_QbRRNSbVzw>
+    <xmx:VlNOXUtNhyO_UZk2JMy0uKZDvmtB4CirJ_hB87q7LyUKZY9BNo0XSg>
+Received: from [10.137.0.16] (softbank060071063075.bbtec.net [60.71.63.75])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3738880059;
+        Sat, 10 Aug 2019 01:17:08 -0400 (EDT)
+Subject: Re: [PATCH 6/6] drm: tiny: gdepaper: add driver for 2/3 color epaper
+ displays
+To:     =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
+        dri-devel@lists.freedesktop.org
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel@vger.kernel.org
+References: <95b64347-fbc8-ba3d-79da-9de2557ff95e@jaseg.net>
+ <604c82ee-af16-5f34-b229-5e919c4adfdc@tronnes.org>
+From:   =?UTF-8?Q?Jan_Sebastian_G=c3=b6tte?= <linux@jaseg.net>
+Message-ID: <7ebf06e2-fe24-a4fb-25ff-77ce1ee3ae16@jaseg.net>
+Date:   Sat, 10 Aug 2019 14:17:06 +0900
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <996bc110024500842a627ea75cb43b7cd00ef36c.camel@perches.com>
+In-Reply-To: <604c82ee-af16-5f34-b229-5e919c4adfdc@tronnes.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hwJhd-000gRh-NL
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [187.192.11.120]:38488
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Noralf,
 
+thank you for your comments. I've incorporated your suggestions into my draft.
 
-On 8/10/19 12:08 AM, Joe Perches wrote:
-> On Sat, 2019-08-10 at 00:01 -0500, Gustavo A. R. Silva wrote:
->> Mark switch cases where we are expecting to fall through.
->>
->> Fix the following warnings (Building: defconfig sh):
-> []
->> diff --git a/arch/sh/kernel/disassemble.c b/arch/sh/kernel/disassemble.c
-> []
->> @@ -477,6 +477,7 @@ static void print_sh_insn(u32 memaddr, u16 insn)
->>  			case FD_REG_N:
->>  				if (0)
->>  					goto d_reg_n;
+On 8/7/19 1:06 AM, Noralf Trønnes wrote:
+[...]
+
+>> +static int gdepaper_probe(struct spi_device *spi)
+>> +{
+>> +	struct device *dev = &spi->dev;
+>> +	struct device_node *np = dev->of_node;
+>> +	const struct of_device_id *of_id;
+>> +	struct drm_device *drm;
+>> +	struct drm_display_mode *mode;
+>> +	struct gdepaper *epap;
+>> +	const struct gdepaper_type_descriptor *type_desc;
+>> +	int ret;
+>> +	size_t bufsize;
+>> +
+>> +	of_id = of_match_node(gdepaper_of_match, np);
+>> +	if (WARN_ON(of_id == NULL)) {
+>> +		dev_warn(dev, "dt node didn't match, aborting probe\n");
+>> +		return -EINVAL;
+>> +	}
+>> +	type_desc = of_id->data;
+>> +
+>> +	dev_dbg(dev, "Probing gdepaper module\n");
+>> +	epap = kzalloc(sizeof(*epap), GFP_KERNEL);
+>> +	if (!epap)
+>> +		return -ENOMEM;
+>> +
+>> +	epap->enabled = false;
+>> +	mutex_init(&epap->cmdlock);
+>> +	epap->tx_buf = NULL;
+>> +	epap->spi = spi;
+>> +
+>> +	drm = &epap->drm;
+>> +	ret = devm_drm_dev_init(dev, drm, &gdepaper_driver);
+>> +	if (ret) {
+>> +		dev_warn(dev, "failed to init drm dev\n");
+>> +		goto err_free;
+>> +	}
+>> +
+>> +	drm_mode_config_init(drm);
+>> +
+>> +	epap->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+>> +	if (IS_ERR(epap->reset)) {
+>> +		dev_err(dev, "Failed to get reset GPIO\n");
+>> +		ret = PTR_ERR(epap->reset);
+>> +		goto err_free;
+>> +	}
+>> +
+>> +	epap->busy = devm_gpiod_get(dev, "busy", GPIOD_IN);
+>> +	if (IS_ERR(epap->busy)) {
+>> +		dev_err(dev, "Failed to get busy GPIO\n");
+>> +		ret = PTR_ERR(epap->busy);
+>> +		goto err_free;
+>> +	}
+>> +
+>> +	epap->dc = devm_gpiod_get(dev, "dc", GPIOD_OUT_LOW);
+>> +	if (IS_ERR(epap->dc)) {
+>> +		dev_err(dev, "Failed to get dc GPIO\n");
+>> +		ret = PTR_ERR(epap->dc);
+>> +		goto err_free;
+>> +	}
+>> +
+>> +	epap->spi_speed_hz = 2000000;
+>> +	epap->pll_div = 1;
+>> +	epap->framerate_mHz = 81850;
+>> +	epap->rfp.vg_lv = GDEP_PWR_VGHL_16V;
+>> +	epap->rfp.vcom_sel = 0;
+>> +	epap->rfp.vdh_bw_mv = 11000; /* drive high level, b/w pixel */
+>> +	epap->rfp.vdh_col_mv = 4200; /* drive high level, red/yellow pixel */
+>> +	epap->rfp.vdl_mv = -11000; /* drive low level */
+>> +	epap->rfp.border_data_sel = 2; /* "vbd" */
+>> +	epap->rfp.data_polarity = 0; /* "ddx" */
+>> +	epap->rfp.vcom_dc_mv = -1000;
+>> +	epap->rfp.vcom_data_ivl_hsync = 10; /* hsync periods */
+>> +	epap->rfp.use_otp_luts_flag = 1;
+>> +	epap->ss_param[0] = 0x07;
+>> +	epap->ss_param[1] = 0x07;
+>> +	epap->ss_param[2] = 0x17;
+>> +	epap->controller_res = GDEP_CTRL_RES_320X300;
+>> +
+>> +	ret = gdepaper_of_read_luts(epap, np, dev);
+>> +	if (ret) {
+>> +		dev_warn(dev, "can't read LUTs from dt\n");
+>> +		goto err_free;
+>> +	}
+>> +
+>> +	of_property_read_u32(np, "controller-resolution",
+>> +			&epap->controller_res);
+>> +	of_property_read_u32(np, "spi-speed-hz", &epap->spi_speed_hz);
+>> +	epap->partial_update_en = of_property_read_bool(np, "partial-update");
+>> +	ret = of_property_read_u32(np, "colors", &epap->display_colors);
+>> +	if (ret == -EINVAL) {
+>> +		if (type_desc) {
+>> +			epap->display_colors = type_desc->colors;
+>> +
+>> +		} else {
+>> +			dev_err(dev, "colors must be set in dt\n");
+>> +			ret = -EINVAL;
+>> +			goto err_free;
+>> +		}
+>> +	} else if (ret) {
+>> +		dev_err(dev, "Invalid dt colors property\n");
+>> +		goto err_free;
+>> +	}
+>> +	if (epap->display_colors < 0 ||
+>> +			epap->display_colors >= GDEPAPER_COL_END) {
+>> +		dev_err(dev, "invalid colors value\n");
+>> +		ret = -EINVAL;
+>> +		goto err_free;
+>> +	}
+>> +	epap->mirror_x = of_property_read_bool(np, "mirror-x");
+>> +	epap->mirror_y = of_property_read_bool(np, "mirror-y");
+>> +	of_property_read_u32(np, "pll-div", &epap->pll_div);
+>> +	of_property_read_u32(np, "fps-millihertz", &epap->framerate_mHz);
+>> +	of_property_read_u32(np, "vghl-level", &epap->rfp.vg_lv);
+>> +	epap->vds_en = !of_property_read_bool(np, "vds-external");
+>> +	epap->vdg_en = !of_property_read_bool(np, "vdg-external");
+>> +	of_property_read_u32(np, "vcom", &epap->rfp.vcom_sel);
+>> +	of_property_read_u32(np, "vdh-bw-millivolts", &epap->rfp.vdh_bw_mv);
+>> +	of_property_read_u32(np, "vdh-color-millivolts", &epap->rfp.vdh_col_mv);
+>> +	of_property_read_u32(np, "vdl-millivolts", &epap->rfp.vdl_mv);
+>> +	of_property_read_u32(np, "border-data", &epap->rfp.border_data_sel);
+>> +	of_property_read_u32(np, "data-polarity", &epap->rfp.data_polarity);
+>> +	ret = of_property_read_u8_array(np, "boost-soft-start",
+>> +			(u8 *)&epap->ss_param, sizeof(epap->ss_param));
+>> +	if (ret && ret != -EINVAL)
+>> +		dev_err(dev, "invalid boost-soft-start value, ignoring\n");
+>> +	of_property_read_u32(np, "vcom-data-interval-periods",
+>> +			&epap->rfp.vcom_data_ivl_hsync);
 > 
-> Might as well remove this if (0) goto,
-> remove the added comment
+> Why do you need these DT properties when you define compatibles for all
+> the panels, can't you include these settings in the type descriptor?
+	I allowed for these to be overridden in case there is some panel that's not listed on the mfg's (quite chaotic) website. Looking at this some more I think I'll remove some of these though.
+
+I'll leave vds-external/vgs-external since they depend on circuitry around the panel and thus should be in DT. boost-soft-start is largely undocumented and I don't know what they might be useful for, but I feel it could depend on the booster inductors and voltage regulator connected to the panel, so it should be in DT.
+
+Those ending up in the refresh params struct are refresh-related and thus application-specific. Most of these come with probably sane defaults, so to initialize a display at a minimum you only need either the type (compatible=gdew...) or the dimensions (px, mm) and color scheme.
+
+>> +
+>> +	/* Accept both positive and negative notation */
+>> +	if (epap->rfp.vdl_mv < 0)
+>> +		epap->rfp.vdl_mv = -epap->rfp.vdl_mv;
+>> +	if (epap->rfp.vcom_dc_mv < 0)
+>> +		epap->rfp.vcom_dc_mv = -epap->rfp.vcom_dc_mv;
+>> +
+>> +	/* (from mipi-dbi.c:)
+>> +	 * Even though it's not the SPI device that does DMA (the master does),
+>> +	 * the dma mask is necessary for the dma_alloc_wc() in
+>> +	 * drm_gem_cma_create(). The dma_addr returned will be a physical
+>> +	 * address which might be different from the bus address, but this is
+>> +	 * not a problem since the address will not be used.
+>> +	 * The virtual address is used in the transfer and the SPI core
+>> +	 * re-maps it on the SPI master device using the DMA streaming API
+>> +	 * (spi_map_buf()).
+>> +	 */
+>> +	if (!dev->coherent_dma_mask) {
+>> +		ret = dma_coerce_mask_and_coherent(dev, DMA_BIT_MASK(32));
+>> +		if (ret) {
+>> +			dev_warn(dev, "Failed to set dma mask %d\n", ret);
+>> +			goto err_free;
+>> +		}
+>> +	}
+>> +
+>> +	mode = gdepaper_of_read_mode(type_desc, np, dev);
+>> +	if (IS_ERR(mode)) {
+>> +		dev_warn(dev, "Failed to read mode: %ld\n", PTR_ERR(mode));
+>> +		ret = PTR_ERR(mode);
+>> +		goto err_free;
+>> +	}
+>> +
+>> +	/* 8 pixels per byte, bit-packed */
+>> +	bufsize = (mode->vdisplay * mode->hdisplay + 7)/8;
 > 
-
-You're right. I'll respin and stop working this Friday midnight.
-
->> +				/* else, fall through */
->>  			case F_REG_N:
->>  				printk("fr%d", rn);
->>  				break;
->> @@ -488,6 +489,7 @@ static void print_sh_insn(u32 memaddr, u16 insn)
->>  					printk("xd%d", rn & ~1);
->>  					break;
->>  				}
->> +				/* else, fall through */
->>  			d_reg_n:
+> DIV_ROUND_UP(mode->vdisplay * mode->hdisplay, 8)
 > 
-> and remove this only use of d_reg_n
+>> +	epap->tx_buf = devm_kmalloc(drm->dev, bufsize, GFP_KERNEL);
+>> +	if (!epap->tx_buf) {
+>> +		ret = -ENOMEM;
+>> +		goto err_free;
+>> +	}
+>> +
+>> +	/* TODO rotation support? */
+>> +	ret = tinydrm_display_pipe_init(drm, &epap->pipe, &gdepaper_pipe_funcs,
+>> +					DRM_MODE_CONNECTOR_VIRTUAL,
+>> +					gdepaper_formats,
+>> +					ARRAY_SIZE(gdepaper_formats), mode, 0);
 > 
-
-Sure.
-
-Thanks
---
-Gustavo
-
->>  			case D_REG_N:
->>  				printk("dr%d", rn);
->> @@ -497,6 +499,7 @@ static void print_sh_insn(u32 memaddr, u16 insn)
->>  					printk("xd%d", rm & ~1);
->>  					break;
->>  				}
->> +				/* else, fall through */
->>  			case D_REG_M:
->>  				printk("dr%d", rm);
->>  				break;
+> tinydrm_display_pipe_init() is gone now, here's how I replaced it in the
+> other e-ink driver:
 > 
+> drm/tinydrm/repaper: Don't use tinydrm_display_pipe_init()
+> https://cgit.freedesktop.org/drm/drm-misc/commit?id=1321db837549a0ff9dc2c95ff76c46770f7f02a1
+Thank you. I found an almost identical solution.
+
+- Jan
