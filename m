@@ -2,218 +2,230 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 853DDC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 15:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A77C41514
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 16:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CAD2208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 15:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF3A5206C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 16:02:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Jzfo/uJj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ujgT0NfZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbfHJPzy (ORCPT
+        id S1726246AbfHJQCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 11:55:54 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:35857 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbfHJPzx (ORCPT
+        Sat, 10 Aug 2019 12:02:51 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34427 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbfHJQCv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 11:55:53 -0400
-Received: from grover.flets-west.jp (softbank126125143222.bbtec.net [126.125.143.222]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x7AFrG96009713;
-        Sun, 11 Aug 2019 00:53:26 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x7AFrG96009713
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1565452407;
-        bh=jmtnAlp5r/W1VjpdNwYulBR6vPbBBKflh9Un7xceSbI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jzfo/uJj4NDRwhMy9Cn70CvntcZFbN6G6bFTZlu8kAYtHICAFeeYFz4NS04n8DNNu
-         rJ+kowmP2XYeu+aeeYvcbvpoU93G2NaNNmIQdsgic1q3dyblTr6LYyDVM8JOS8aexK
-         OXtIvT8XwRBsdpf3REmEBZLVzPtzIiUN62DPDzyt1hE6pDblo9pcPtgiUs9dt4uK20
-         ksK7dunb1OxclzbzrtP5gfNdMkNRoM6b2X0FU+5wybzF5Ah/xX55Iu0F5q9xojCLq6
-         wwHzoWU6Im4BsdX2MgcOgp/ik9Nl5yt/qWvcv4tUfk2by7i59R90blvFjyqWOJCxST
-         /kpvVLZUdCcPg==
-X-Nifty-SrcIP: [126.125.143.222]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Sam Ravnborg <sam@ravnborg.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Boris Pismenny <borisp@mellanox.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Igor Russkikh <igor.russkikh@aquantia.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        oss-drivers@netronome.com
-Subject: [PATCH 11/11] treewide: remove dummy Makefiles for single targets
-Date:   Sun, 11 Aug 2019 00:53:07 +0900
-Message-Id: <20190810155307.29322-12-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190810155307.29322-1-yamada.masahiro@socionext.com>
-References: <20190810155307.29322-1-yamada.masahiro@socionext.com>
+        Sat, 10 Aug 2019 12:02:51 -0400
+Received: by mail-ot1-f66.google.com with SMTP id n5so144384296otk.1
+        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 09:02:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=+RIEl06ySyLSnlx8jSsdqHWCv3Y0byPqxjldRRobvLM=;
+        b=ujgT0NfZs3NhG8cLMnUlIJzkdkAudel90cnisjM24pLGXv8ON9I6oTn11XFTe0OXt8
+         rzY1PnXuJoO2K+qIb/CDY88xUggcL9q/uCl0eJUvuRF8w+aLVLOvhJdl1b5HTAstv92F
+         og1AapRKUwQWceXQOF139omG11h5SYalG2IEVxOD0dd44ac0ac7VwgM6LaYi31/rnLgT
+         ICEP+diL/OYDKM7HgnBRZ78XCFruCKvmKqTHZwKfIXLNciQHRoJ+dfNBeVpBRxlI2oBC
+         c4OwKVLySyQNCdwFQLaOX5dthSg+ULkBK4/aL4IttViMICckb8BAREPbC+Tj69S9kDTC
+         gBAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=+RIEl06ySyLSnlx8jSsdqHWCv3Y0byPqxjldRRobvLM=;
+        b=fvrzZkvccxveDqKbfI6MOI/brJHPxN/z9dIHYUzJfJ4CUbkx+/hUfvmT/5KV9WePtB
+         Zcl8JWX8ZuZaweKQnnKxZsiTPDKXpaarCbACJir2DUJAiCGuaqsJ1U2JQvoy+Fzhzp9r
+         AWWbkdKEqTWB5jnNzdZTWwIW6cQGZ5etCJ4A7Rcyn1AJSooqRw2DM+J/PgzAk3cSfUu8
+         QNtkoZokszl7kRSxo5w4+++1spQ0LqI8aL2gz0UnVl1F2db4bu0BWtxeaKEsXT1HvxMe
+         A3ivesBmgQogZRspQuftmoDzPrvKFj5+J+0MwiI1TxWu3QJLmLww+YdvzuFr5hXLRVh5
+         fNoQ==
+X-Gm-Message-State: APjAAAWEt5YC5Wzt7KC5ayYVv4AN+ZWdO3I5IYdW4kns8367UlZTJD1T
+        6wSOFzbItRXzkfFfExkcoo308Q==
+X-Google-Smtp-Source: APXvYqx59ifhEPEV2tLfxvbXw9OBiOOBi47mUgYWtczqhpttzemRCHxW3xpeq/WPzFYQypsRrj/bMw==
+X-Received: by 2002:a02:a703:: with SMTP id k3mr28032262jam.12.1565452969652;
+        Sat, 10 Aug 2019 09:02:49 -0700 (PDT)
+Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
+        by smtp.gmail.com with ESMTPSA id p3sm156289916iom.7.2019.08.10.09.02.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 10 Aug 2019 09:02:48 -0700 (PDT)
+Date:   Sat, 10 Aug 2019 11:02:47 -0500
+From:   Dan Rue <dan.rue@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, shuah@kernel.org,
+        patches@kernelci.org, lkft-triage@lists.linaro.org,
+        ben.hutchings@codethink.co.uk, stable@vger.kernel.org,
+        akpm@linux-foundation.org, torvalds@linux-foundation.org,
+        linux@roeck-us.net
+Subject: Re: [PATCH 4.4 00/21] 4.4.189-stable review
+Message-ID: <20190810160247.6dx3k63wwps7gdpr@xps.therub.org>
+Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, shuah@kernel.org,
+        patches@kernelci.org, lkft-triage@lists.linaro.org,
+        ben.hutchings@codethink.co.uk, stable@vger.kernel.org,
+        akpm@linux-foundation.org, torvalds@linux-foundation.org,
+        linux@roeck-us.net
+References: <20190809134241.565496442@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190809134241.565496442@linuxfoundation.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the single target build descends into sub-directories
-in the same ways as the normal build, these dummy Makefiles
-are not needed any more.
+On Fri, Aug 09, 2019 at 03:45:04PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.189 release.
+> There are 21 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun 11 Aug 2019 01:42:28 PM UTC.
+> Anything received after that time might be too late.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Results from Linaro’s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
- drivers/net/ethernet/aquantia/atlantic/hw_atl/Makefile      | 2 --
- drivers/net/ethernet/mellanox/mlx5/core/accel/Makefile      | 2 --
- drivers/net/ethernet/mellanox/mlx5/core/diag/Makefile       | 2 --
- drivers/net/ethernet/mellanox/mlx5/core/en/Makefile         | 2 --
- drivers/net/ethernet/mellanox/mlx5/core/en/xsk/Makefile     | 1 -
- drivers/net/ethernet/mellanox/mlx5/core/en_accel/Makefile   | 2 --
- drivers/net/ethernet/mellanox/mlx5/core/fpga/Makefile       | 2 --
- drivers/net/ethernet/mellanox/mlx5/core/ipoib/Makefile      | 2 --
- drivers/net/ethernet/mellanox/mlx5/core/lib/Makefile        | 2 --
- drivers/net/ethernet/netronome/nfp/bpf/Makefile             | 2 --
- drivers/net/ethernet/netronome/nfp/flower/Makefile          | 2 --
- drivers/net/ethernet/netronome/nfp/nfpcore/Makefile         | 2 --
- drivers/net/ethernet/netronome/nfp/nfpcore/nfp6000/Makefile | 2 --
- drivers/net/ethernet/netronome/nfp/nic/Makefile             | 2 --
- 14 files changed, 27 deletions(-)
- delete mode 100644 drivers/net/ethernet/aquantia/atlantic/hw_atl/Makefile
- delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/accel/Makefile
- delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/diag/Makefile
- delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en/Makefile
- delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en/xsk/Makefile
- delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en_accel/Makefile
- delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/fpga/Makefile
- delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/ipoib/Makefile
- delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/lib/Makefile
- delete mode 100644 drivers/net/ethernet/netronome/nfp/bpf/Makefile
- delete mode 100644 drivers/net/ethernet/netronome/nfp/flower/Makefile
- delete mode 100644 drivers/net/ethernet/netronome/nfp/nfpcore/Makefile
- delete mode 100644 drivers/net/ethernet/netronome/nfp/nfpcore/nfp6000/Makefile
- delete mode 100644 drivers/net/ethernet/netronome/nfp/nic/Makefile
+Note that test counts are a bit lower than previous because we are
+having some infrastructure/lab issue with our qemu/x86 environments.
+There is no evidence that it's kernel related.
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/Makefile b/drivers/net/ethernet/aquantia/atlantic/hw_atl/Makefile
-deleted file mode 100644
-index 805fa28f391a..000000000000
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/Makefile
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--# kbuild requires Makefile in a directory to build individual objects
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/accel/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/accel/Makefile
-deleted file mode 100644
-index c78512eed8d7..000000000000
---- a/drivers/net/ethernet/mellanox/mlx5/core/accel/Makefile
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--subdir-ccflags-y += -I$(src)/..
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/diag/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/diag/Makefile
-deleted file mode 100644
-index c78512eed8d7..000000000000
---- a/drivers/net/ethernet/mellanox/mlx5/core/diag/Makefile
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--subdir-ccflags-y += -I$(src)/..
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/en/Makefile
-deleted file mode 100644
-index c78512eed8d7..000000000000
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/Makefile
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--subdir-ccflags-y += -I$(src)/..
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/Makefile
-deleted file mode 100644
-index 5ee42991900a..000000000000
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/Makefile
-+++ /dev/null
-@@ -1 +0,0 @@
--subdir-ccflags-y += -I$(src)/../..
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/Makefile
-deleted file mode 100644
-index c78512eed8d7..000000000000
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/Makefile
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--subdir-ccflags-y += -I$(src)/..
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/fpga/Makefile
-deleted file mode 100644
-index c78512eed8d7..000000000000
---- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/Makefile
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--subdir-ccflags-y += -I$(src)/..
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/Makefile
-deleted file mode 100644
-index c78512eed8d7..000000000000
---- a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/Makefile
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--subdir-ccflags-y += -I$(src)/..
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/lib/Makefile
-deleted file mode 100644
-index c78512eed8d7..000000000000
---- a/drivers/net/ethernet/mellanox/mlx5/core/lib/Makefile
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--subdir-ccflags-y += -I$(src)/..
-diff --git a/drivers/net/ethernet/netronome/nfp/bpf/Makefile b/drivers/net/ethernet/netronome/nfp/bpf/Makefile
-deleted file mode 100644
-index 805fa28f391a..000000000000
---- a/drivers/net/ethernet/netronome/nfp/bpf/Makefile
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--# kbuild requires Makefile in a directory to build individual objects
-diff --git a/drivers/net/ethernet/netronome/nfp/flower/Makefile b/drivers/net/ethernet/netronome/nfp/flower/Makefile
-deleted file mode 100644
-index 805fa28f391a..000000000000
---- a/drivers/net/ethernet/netronome/nfp/flower/Makefile
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--# kbuild requires Makefile in a directory to build individual objects
-diff --git a/drivers/net/ethernet/netronome/nfp/nfpcore/Makefile b/drivers/net/ethernet/netronome/nfp/nfpcore/Makefile
-deleted file mode 100644
-index 805fa28f391a..000000000000
---- a/drivers/net/ethernet/netronome/nfp/nfpcore/Makefile
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--# kbuild requires Makefile in a directory to build individual objects
-diff --git a/drivers/net/ethernet/netronome/nfp/nfpcore/nfp6000/Makefile b/drivers/net/ethernet/netronome/nfp/nfpcore/nfp6000/Makefile
-deleted file mode 100644
-index 805fa28f391a..000000000000
---- a/drivers/net/ethernet/netronome/nfp/nfpcore/nfp6000/Makefile
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--# kbuild requires Makefile in a directory to build individual objects
-diff --git a/drivers/net/ethernet/netronome/nfp/nic/Makefile b/drivers/net/ethernet/netronome/nfp/nic/Makefile
-deleted file mode 100644
-index 805fa28f391a..000000000000
---- a/drivers/net/ethernet/netronome/nfp/nic/Makefile
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--# kbuild requires Makefile in a directory to build individual objects
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.4.189-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+git branch: linux-4.4.y
+git commit: ab9a14a0618d99ad7e0b7e589a97f3421ac4d662
+git describe: v4.4.187-45-gab9a14a0618d
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/build/v4.4.187-45-gab9a14a0618d
+
+
+No regressions (compared to build v4.4.187)
+
+
+No fixes (compared to build v4.4.187)
+
+Ran 16774 total tests in the following environments and test suites.
+
+Environments
+--------------
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-open-posix-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* network-basic-tests
+* perf
+* prep-tmp-disk
+* spectre-meltdown-checker-test
+* kvm-unit-tests
+* v4l2-compliance
+* install-android-platform-tools-r2600
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.4.189-rc1
+git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
+git branch: 4.4.189-rc1-hikey-20190809-523
+git commit: ffbfd13890f25f989c107e0a79063ff644d02753
+git describe: 4.4.189-rc1-hikey-20190809-523
+Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4-oe/build/4.4.189-rc1-hikey-20190809-523
+
+
+No regressions (compared to build 4.4.189-rc1-hikey-20190809-522)
+
+
+No fixes (compared to build 4.4.189-rc1-hikey-20190809-522)
+
+Ran 1550 total tests in the following environments and test suites.
+
+Environments
+--------------
+- hi6220-hikey - arm64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+
 -- 
-2.17.1
-
+Linaro LKFT
+https://lkft.linaro.org
