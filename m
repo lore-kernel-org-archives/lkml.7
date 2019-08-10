@@ -2,95 +2,155 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C48C41514
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9C6C433FF
 	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 01:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 095B3217F5
+	by mail.kernel.org (Postfix) with ESMTP id 34CA52166E
 	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 01:55:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="el0TijmM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729721AbfHJBo6 (ORCPT
+        id S1729629AbfHJBvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 21:44:58 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:38895 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfHJBo5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 21:44:57 -0400
-Received: by mail-ed1-f66.google.com with SMTP id r12so62180085edo.5
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 18:44:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Hba0YbyURevY2P3XTePra775mSMcCjjlB5vVgIy6gjI=;
-        b=el0TijmMk/+XrZfsG46YQwvSxHXt319zM49YflOTMztmA+89S5Lfgta4z8J+Kt2+vh
-         jPOTSbQeETNk48Ysk10IIOlzLc7j6JZeKhFnpjRsQVYfPXxGyQckZr8iut+4vE4FtPjK
-         IJPUH3SBTfZdTUpZEoF4QmJMYj5o6tXY3Up3C7/yb0uoFdQf3Eu9jsd6OV1jrwzhXbvC
-         h5lvkvfIo5Vw0rOWi73GVc+Nb1eN+TG+7BvY8+4RFKpY3h67nHjWzmOFA1QWKOfPmiPj
-         gOFGH5zsottQ/TBYOnOYt2hW7MlPdI5d4stKCuxmyRWxYCi48ktuiLjSRZ6pHf4xe7fB
-         MazQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Hba0YbyURevY2P3XTePra775mSMcCjjlB5vVgIy6gjI=;
-        b=QsAJBBLtDNdDqp/xjYq7U6szC3+vyyxTaGhCvkd2R11g48c96tfmLl8hqW9UOC8nEn
-         R4AXH7IQ95Aeuon+0YH+6slDr/HcKN0XlvOcw87dPQw4ZuNlnbLo1/bMoqJAIW6tFXTg
-         ge07zPjBz1mDw4EVEQj4dhJyJo09oUXUshQGNro6pFAKgMS7kffyNVwq5syYKEisY+cu
-         DWqKBhs7GXdgt6JsFJwhtIF04fcMk/btQNMk4wCN+bxIl5ilv8wDe1nu8he9zZjGb9JN
-         uaHV7beZ+yDJdO6u4pW+LLh8ZP/OZCSHNlr0ZStKbh+sY1eAzBchQ8uL/WCqh/g4bqd6
-         sDrg==
-X-Gm-Message-State: APjAAAXfWkBjnjOduy3BLScO3yAPwzvZqKs956bh2srgA9bcVMrV7BL+
-        qda09xtMTgeVHu5qyD5FXzqAw7tUQ7UPBmz/q3U=
-X-Google-Smtp-Source: APXvYqz9uHUowNi7bb5V4sqy1jH7GExpXtBq6lg4IKumx3FWS8tXSJrfSb5dlgwUG0fe/l6LpXNR5VAB0zR3iADDQoE=
-X-Received: by 2002:a17:906:4890:: with SMTP id v16mr21526067ejq.296.1565401496166;
- Fri, 09 Aug 2019 18:44:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190809030352.8387-1-hslester96@gmail.com> <20190809151114.GD3963@sirena.co.uk>
-In-Reply-To: <20190809151114.GD3963@sirena.co.uk>
-From:   Chuhong Yuan <hslester96@gmail.com>
-Date:   Sat, 10 Aug 2019 09:44:45 +0800
-Message-ID: <CANhBUQ09+q9_=7nMs63w4KRLGOhW1=z-AnuwOzAnUrWRY6uC6A@mail.gmail.com>
-Subject: Re: [PATCH] regulator: core: Add devres versions of regulator_enable/disable
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 9 Aug 2019 21:51:42 -0400
+Received: from mga07.intel.com ([134.134.136.100]:28007 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726870AbfHJBvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 21:51:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 18:51:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,367,1559545200"; 
+   d="scan'208";a="193505036"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga001.fm.intel.com with ESMTP; 09 Aug 2019 18:51:41 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     "Thomas Gleixner" <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+        "Valdis Kletnieks" <valdis.kletnieks@vt.edu>,
+        "x86" <x86@kernel.org>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>
+Cc:     Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH] x86/umwait: Fix error handling in umwait_init()
+Date:   Fri,  9 Aug 2019 18:40:37 -0700
+Message-Id: <1565401237-60936-1-git-send-email-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.5.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 11:11 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Fri, Aug 09, 2019 at 11:03:52AM +0800, Chuhong Yuan wrote:
-> > I wrote a coccinelle script to detect possible chances
-> > of utilizing devm_() APIs to simplify the driver.
-> > The script found 147 drivers in total and 22 of them
-> > have be patched.
->
-> > Within the 125 left ones, at least 31 of them (24.8%)
-> > are hindered from benefiting from devm_() APIs because
-> > of lack of a devres version of regulator_enable().
->
-> I'm not super keen on managed versions of these functions since they're
-> very likely to cause reference counting issues between the probe/remove
-> path and the suspend/resume path which aren't obvious from the code, I'm
-> especially worried about double frees on release.
+Currently, failure of cpuhp_setup_state() is ignored and the syscore
+ops and the control interfaces can still be added even after the
+failure. But, this error handling will cause a few issues:
 
-I find that 29 of 31 cases I found call regulator_disable() only when encounter
-probe failure or in .remove.
-So I think the devm versions of regulator_enable/disable() will not cause big
-problems.
+1. The CPUs may have different values in the IA32_UMWAIT_CONTROL
+   MSR because there is no way to roll back the control MSR on
+   the CPUs which already set the MSR before the failure.
+2. If the sysfs interface is added successfully, there will be a mismatch
+   between the global control value and the control MSR:
+   - The interface shows the default global control value. But,
+     the control MSR is not set to the value because the CPU online
+     function, which is supposed to set the MSR to the value,
+     is not installed.
+   - If the sysadmin changes the global control value through
+     the interface, the control MSR on all current online CPUs is
+     set to the new value. But, the control MSR on newly onlined CPUs
+     after the value change will not be set to the new value due to
+     lack of the CPU online function.
+3. On resume from suspend/hibernation, the boot CPU restores the control
+   MSR to the global control value through the syscore ops. But, the
+   control MSR on all APs is not set due to lake of the CPU online
+   function.
 
-I even found a driver to forget to disable regulator when encounter
-probe failure,
-which is drivers/iio/adc/ti-adc128s052.c.
-And a devm version of regulator_enable() can prevent such mistakes.
+To solve the issues and enforce consistent behavior on the failure
+of the CPU hotplug setup, make the following changes:
+
+1. Cache the original control MSR value which is configured by
+   hardware or BIOS before kernel boot. This value is likely to
+   be 0. But it could be a different number as well. Cache the
+   control MSR only once before the MSR is changed.
+2. Add the CPU offline function so that the MSR is restored to the
+   original control value on all CPUs on the failure.
+3. On the failure, exit from cpumait_init() so that the syscore ops
+   and the control interfaces are not added.
+
+Reported-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+---
+ arch/x86/kernel/cpu/umwait.c | 39 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 38 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
+index 6a204e7336c1..95581f4cf6d8 100644
+--- a/arch/x86/kernel/cpu/umwait.c
++++ b/arch/x86/kernel/cpu/umwait.c
+@@ -17,6 +17,12 @@
+  */
+ static u32 umwait_control_cached = UMWAIT_CTRL_VAL(100000, UMWAIT_C02_ENABLE);
+ 
++/*
++ * Cache the original IA32_UMWAIT_CONTROL MSR value which is configured by
++ * hardware or BIOS before kernel boot.
++ */
++static u32 orig_umwait_control_cached __read_mostly;
++
+ /*
+  * Serialize access to umwait_control_cached and IA32_UMWAIT_CONTROL MSR in
+  * the sysfs write functions.
+@@ -52,6 +58,23 @@ static int umwait_cpu_online(unsigned int cpu)
+ 	return 0;
+ }
+ 
++/*
++ * The CPU hotplug callback sets the control MSR to the original control
++ * value.
++ */
++static int umwait_cpu_offline(unsigned int cpu)
++{
++	/*
++	 * This code is protected by the CPU hotplug already and
++	 * orig_umwait_control_cached is never changed after it caches
++	 * the original control MSR value in umwait_init(). So there
++	 * is no race condition here.
++	 */
++	wrmsr(MSR_IA32_UMWAIT_CONTROL, orig_umwait_control_cached, 0);
++
++	return 0;
++}
++
+ /*
+  * On resume, restore IA32_UMWAIT_CONTROL MSR on the boot processor which
+  * is the only active CPU at this time. The MSR is set up on the APs via the
+@@ -185,8 +208,22 @@ static int __init umwait_init(void)
+ 	if (!boot_cpu_has(X86_FEATURE_WAITPKG))
+ 		return -ENODEV;
+ 
++	/*
++	 * Cache the original control MSR value before the control MSR is
++	 * changed. This is the only place where orig_umwait_control_cached
++	 * is modified.
++	 */
++	rdmsrl(MSR_IA32_UMWAIT_CONTROL, orig_umwait_control_cached);
++
+ 	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "umwait:online",
+-				umwait_cpu_online, NULL);
++				umwait_cpu_online, umwait_cpu_offline);
++	if (ret < 0) {
++		/*
++		 * On failure, the control MSR on all CPUs has the
++		 * original control value.
++		 */
++		return ret;
++	}
+ 
+ 	register_syscore_ops(&umwait_syscore_ops);
+ 
+-- 
+2.19.1
+
