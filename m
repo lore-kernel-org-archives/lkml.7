@@ -2,123 +2,72 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF774C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 14:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3679C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 14:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C49E42086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 14:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77F12087B
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 14:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbfHJOS2 (ORCPT
+        id S1726261AbfHJO6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 10:18:28 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:44079 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725862AbfHJOS1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 10:18:27 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R881e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0TZ5UoG6_1565446689;
-Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0TZ5UoG6_1565446689)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 10 Aug 2019 22:18:10 +0800
-Date:   Sat, 10 Aug 2019 22:18:09 +0800
-From:   Aaron Lu <aaron.lu@linux.alibaba.com>
-To:     Tim Chen <tim.c.chen@linux.intel.com>
-Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-Message-ID: <20190810141808.GB73644@aaronlu>
-References: <20190619183302.GA6775@sinkpad>
- <20190718100714.GA469@aaronlu>
- <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
- <20190725143003.GA992@aaronlu>
- <20190726152101.GA27884@sinkpad>
- <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
- <20190802153715.GA18075@sinkpad>
- <f4778816-69e5-146c-2a30-ec42e7f1677f@linux.intel.com>
- <20190808125516.GA67687@aaronlu>
- <9e6f3170-2607-6ff7-3367-8f36d1d8f862@linux.intel.com>
+        Sat, 10 Aug 2019 10:58:24 -0400
+Received: from ms.lwn.net ([45.79.88.28]:54206 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726024AbfHJO6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 10:58:24 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id EA68D2EF;
+        Sat, 10 Aug 2019 14:58:22 +0000 (UTC)
+Date:   Sat, 10 Aug 2019 08:58:21 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
+Cc:     linux-doc@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Documentation/networking/af_xdp: Inhibit reference to
+ struct socket
+Message-ID: <20190810085821.11cee8b0@lwn.net>
+In-Reply-To: <20190810121738.19587-1-j.neuschaefer@gmx.net>
+References: <20190810121738.19587-1-j.neuschaefer@gmx.net>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9e6f3170-2607-6ff7-3367-8f36d1d8f862@linux.intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 09:39:45AM -0700, Tim Chen wrote:
-> On 8/8/19 5:55 AM, Aaron Lu wrote:
-> > On Mon, Aug 05, 2019 at 08:55:28AM -0700, Tim Chen wrote:
-> >> On 8/2/19 8:37 AM, Julien Desfossez wrote:
-> >>> We tested both Aaron's and Tim's patches and here are our results.
-> 
-> > 
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 26fea68f7f54..542974a8da18 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -3888,7 +3888,7 @@ next_class:;
-> >  		WARN_ON_ONCE(!rq_i->core_pick);
-> >  
-> >  		if (is_idle_task(rq_i->core_pick) && rq_i->nr_running)
-> > -			rq->core_forceidle = true;
-> > +			rq_i->core_forceidle = true;
-> 
-> Good catch!
-> 
-> >  
-> >  		rq_i->core_pick->core_occupation = occ;
-> > 
-> > With this fixed and together with the patch to let schedule always
-> > happen, your latest 2 patches work well for the 10s cpuhog test I
-> > described previously:
-> > https://lore.kernel.org/lkml/20190725143003.GA992@aaronlu/
-> 
-> That's encouraging.  You are talking about my patches
-> that try to keep the force idle time between sibling threads
-> balanced, right?
+On Sat, 10 Aug 2019 14:17:37 +0200
+Jonathan Neuschäfer <j.neuschaefer@gmx.net> wrote:
 
-Yes.
+> With the recent change to auto-detect function names, Sphinx parses
+> socket() as a reference to the in-kernel definition of socket. It then
+> decides that struct socket is a good match, which was obviously not
+> intended in this case, because the text speaks about the syscall with
+> the same name.
+> 
+> Prevent socket() from being misinterpreted by wrapping it in ``inline
+> literal`` quotes.
+> 
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 
-> > 
-> > overloaded workload without any cpu binding doesn't work well though, I
-> > haven't taken a closer look yet.
-> > 
-> 
-> I think we need a load balancing scheme among the cores that will try
-> to minimize force idle.
+Thanks for looking at that.  The better fix, though, would be to add
+socket() to the Skipfuncs array in Documentation/sphinx/automarkup.py.
+Then it will do the right thing everywhere without the need to add markup
+to the RST files.
 
-Agree.
+Thanks,
 
-> 
-> One possible metric to measure load compatibility imbalance that leads to
-> force idle is 
-> 
-> Say i, j are sibling threads of a cpu core
-> imbalanace = \sum_tagged_cgroup  abs(Load_cgroup_cpui - Load_cgroup_cpuj)
-> 
-> This gives us a metric to decide if migrating a task will improve
-> load compatability imbalance.  As we already track cgroup load on a CPU,
-> it should be doable without adding too much overhead.
+jon
