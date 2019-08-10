@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 972FEC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449DAC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7461F2086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DBE12086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfHJUxO (ORCPT
+        id S1727594AbfHJUxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:53:14 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53910 "EHLO
+        Sat, 10 Aug 2019 16:53:19 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53900 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726515AbfHJUnt (ORCPT
+        by vger.kernel.org with ESMTP id S1726516AbfHJUnt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:49 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDK-00053u-9q; Sat, 10 Aug 2019 21:43:46 +0100
+        id 1hwYDK-00053a-0P; Sat, 10 Aug 2019 21:43:46 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-0003aU-ID; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDJ-0003Zb-7R; Sat, 10 Aug 2019 21:43:45 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Ashok Raj" <ashok.raj@intel.com>,
-        "Joerg Roedel" <jroedel@suse.de>, "mark gross" <mgross@intel.com>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        "Jacob Pan" <jacob.jun.pan@linux.intel.com>
+        "Jann Horn" <jannh@google.com>, "Michal Hocko" <mhocko@suse.com>,
+        "Tejun Heo" <tj@kernel.org>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.357977088@decadent.org.uk>
+Message-ID: <lsq.1565469607.192118175@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 038/157] iommu/vt-d: Check capability before
- disabling protected memory
+Subject: [PATCH 3.16 027/157] device_cgroup: fix RCU imbalance in error case
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,36 +55,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Jann Horn <jannh@google.com>
 
-commit 5bb71fc790a88d063507dc5d445ab8b14e845591 upstream.
+commit 0fcc4c8c044e117ac126ab6df4138ea9a67fa2a9 upstream.
 
-The spec states in 10.4.16 that the Protected Memory Enable
-Register should be treated as read-only for implementations
-not supporting protected memory regions (PLMR and PHMR fields
-reported as Clear in the Capability register).
+When dev_exception_add() returns an error (due to a failed memory
+allocation), make sure that we move the RCU preemption count back to where
+it was before we were called. We dropped the RCU read lock inside the loop
+body, so we can't just "break".
 
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: mark gross <mgross@intel.com>
-Suggested-by: Ashok Raj <ashok.raj@intel.com>
-Fixes: f8bab73515ca5 ("intel-iommu: PMEN support")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+sparse complains about this, too:
+
+$ make -s C=2 security/device_cgroup.o
+./include/linux/rcupdate.h:647:9: warning: context imbalance in
+'propagate_exception' - unexpected unlock
+
+Fixes: d591fb56618f ("device_cgroup: simplify cgroup tree walk in propagate_exception()")
+Signed-off-by: Jann Horn <jannh@google.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/iommu/intel-iommu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ security/device_cgroup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -1394,6 +1394,9 @@ static void iommu_disable_protect_mem_re
- 	u32 pmen;
- 	unsigned long flags;
- 
-+	if (!cap_plmr(iommu->cap) && !cap_phmr(iommu->cap))
-+		return;
-+
- 	raw_spin_lock_irqsave(&iommu->register_lock, flags);
- 	pmen = readl(iommu->reg + DMAR_PMEN_REG);
- 	pmen &= ~DMA_PMEN_EPM;
+--- a/security/device_cgroup.c
++++ b/security/device_cgroup.c
+@@ -568,7 +568,7 @@ static int propagate_exception(struct de
+ 		    devcg->behavior == DEVCG_DEFAULT_ALLOW) {
+ 			rc = dev_exception_add(devcg, ex);
+ 			if (rc)
+-				break;
++				return rc;
+ 		} else {
+ 			/*
+ 			 * in the other possible cases:
 
