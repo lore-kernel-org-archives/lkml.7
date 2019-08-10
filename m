@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7279C32756
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3F3C32756
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA260208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C375208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfHJUoD (ORCPT
+        id S1727231AbfHJUr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:44:03 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54114 "EHLO
+        Sat, 10 Aug 2019 16:47:59 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55014 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726566AbfHJUnv (ORCPT
+        by vger.kernel.org with ESMTP id S1726835AbfHJUoD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:43:51 -0400
+        Sat, 10 Aug 2019 16:44:03 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDM-00053t-V1; Sat, 10 Aug 2019 21:43:49 +0100
+        id 1hwYDY-00053h-Ec; Sat, 10 Aug 2019 21:44:00 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-0003at-Pu; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDM-0003fZ-Br; Sat, 10 Aug 2019 21:43:48 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,19 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Hulk Robot" <hulkci@huawei.com>, "Jan Kara" <jack@suse.cz>,
-        "zhangyi (F)" <yi.zhang@huawei.com>,
-        "Theodore Ts'o" <tytso@mit.edu>
+        "Ingo Molnar" <mingo@kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Ben Segall" <bsegall@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Phil Auld" <pauld@redhat.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Anton Blanchard" <anton@ozlabs.org>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.761898531@decadent.org.uk>
+Message-ID: <lsq.1565469607.586954811@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 043/157] ext4: brelse all indirect buffer in
- ext4_ind_remove_space()
+Subject: [PATCH 3.16 093/157] sched/fair: Limit sched_cfs_period_timer()
+ loop to avoid hard lockup
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,67 +61,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "zhangyi (F)" <yi.zhang@huawei.com>
+From: Phil Auld <pauld@redhat.com>
 
-commit 674a2b27234d1b7afcb0a9162e81b2e53aeef217 upstream.
+commit 2e8e19226398db8265a8e675fcc0118b9e80c9e8 upstream.
 
-All indirect buffers get by ext4_find_shared() should be released no
-mater the branch should be freed or not. But now, we forget to release
-the lower depth indirect buffers when removing space from the same
-higher depth indirect block. It will lead to buffer leak and futher
-more, it may lead to quota information corruption when using old quota,
-consider the following case.
+With extremely short cfs_period_us setting on a parent task group with a large
+number of children the for loop in sched_cfs_period_timer() can run until the
+watchdog fires. There is no guarantee that the call to hrtimer_forward_now()
+will ever return 0.  The large number of children can make
+do_sched_cfs_period_timer() take longer than the period.
 
- - Create and mount an empty ext4 filesystem without extent and quota
-   features,
- - quotacheck and enable the user & group quota,
- - Create some files and write some data to them, and then punch hole
-   to some files of them, it may trigger the buffer leak problem
-   mentioned above.
- - Disable quota and run quotacheck again, it will create two new
-   aquota files and write the checked quota information to them, which
-   probably may reuse the freed indirect block(the buffer and page
-   cache was not freed) as data block.
- - Enable quota again, it will invoke
-   vfs_load_quota_inode()->invalidate_bdev() to try to clean unused
-   buffers and pagecache. Unfortunately, because of the buffer of quota
-   data block is still referenced, quota code cannot read the up to date
-   quota info from the device and lead to quota information corruption.
+ NMI watchdog: Watchdog detected hard LOCKUP on cpu 24
+ RIP: 0010:tg_nop+0x0/0x10
+  <IRQ>
+  walk_tg_tree_from+0x29/0xb0
+  unthrottle_cfs_rq+0xe0/0x1a0
+  distribute_cfs_runtime+0xd3/0xf0
+  sched_cfs_period_timer+0xcb/0x160
+  ? sched_cfs_slack_timer+0xd0/0xd0
+  __hrtimer_run_queues+0xfb/0x270
+  hrtimer_interrupt+0x122/0x270
+  smp_apic_timer_interrupt+0x6a/0x140
+  apic_timer_interrupt+0xf/0x20
+  </IRQ>
 
-This problem can be reproduced by xfstests generic/231 on ext3 file
-system or ext4 file system without extent and quota features.
+To prevent this we add protection to the loop that detects when the loop has run
+too many times and scales the period and quota up, proportionally, so that the timer
+can complete before then next period expires.  This preserves the relative runtime
+quota while preventing the hard lockup.
 
-This patch fix this problem by releasing the missing indirect buffers,
-in ext4_ind_remove_space().
+A warning is issued reporting this state and the new values.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Phil Auld <pauld@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Anton Blanchard <anton@ozlabs.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190319130005.25492-1-pauld@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/ext4/indirect.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ kernel/sched/fair.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
---- a/fs/ext4/indirect.c
-+++ b/fs/ext4/indirect.c
-@@ -1481,10 +1481,14 @@ end_range:
- 					   partial->p + 1,
- 					   partial2->p,
- 					   (chain+n-1) - partial);
--			BUFFER_TRACE(partial->bh, "call brelse");
--			brelse(partial->bh);
--			BUFFER_TRACE(partial2->bh, "call brelse");
--			brelse(partial2->bh);
-+			while (partial > chain) {
-+				BUFFER_TRACE(partial->bh, "call brelse");
-+				brelse(partial->bh);
-+			}
-+			while (partial2 > chain2) {
-+				BUFFER_TRACE(partial2->bh, "call brelse");
-+				brelse(partial2->bh);
-+			}
- 			return 0;
- 		}
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3704,6 +3704,8 @@ static enum hrtimer_restart sched_cfs_sl
+ 	return HRTIMER_NORESTART;
+ }
  
++extern const u64 max_cfs_quota_period;
++
+ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+ {
+ 	struct cfs_bandwidth *cfs_b =
+@@ -3711,6 +3713,7 @@ static enum hrtimer_restart sched_cfs_pe
+ 	ktime_t now;
+ 	int overrun;
+ 	int idle = 0;
++	int count = 0;
+ 
+ 	raw_spin_lock(&cfs_b->lock);
+ 	for (;;) {
+@@ -3720,6 +3723,28 @@ static enum hrtimer_restart sched_cfs_pe
+ 		if (!overrun)
+ 			break;
+ 
++		if (++count > 3) {
++			u64 new, old = ktime_to_ns(cfs_b->period);
++
++			new = (old * 147) / 128; /* ~115% */
++			new = min(new, max_cfs_quota_period);
++
++			cfs_b->period = ns_to_ktime(new);
++
++			/* since max is 1s, this is limited to 1e9^2, which fits in u64 */
++			cfs_b->quota *= new;
++			cfs_b->quota = div64_u64(cfs_b->quota, old);
++
++			pr_warn_ratelimited(
++	"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
++				smp_processor_id(),
++				div_u64(new, NSEC_PER_USEC),
++				div_u64(cfs_b->quota, NSEC_PER_USEC));
++
++			/* reset count so we don't come right back in here */
++			count = 0;
++		}
++
+ 		idle = do_sched_cfs_period_timer(cfs_b, overrun);
+ 	}
+ 	raw_spin_unlock(&cfs_b->lock);
 
