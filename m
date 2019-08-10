@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C01C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E42A0C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B63D208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C248A208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727037AbfHJUo1 (ORCPT
+        id S1727089AbfHJUod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:44:27 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54808 "EHLO
+        Sat, 10 Aug 2019 16:44:33 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54868 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726796AbfHJUoA (ORCPT
+        by vger.kernel.org with ESMTP id S1726806AbfHJUoB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:44:00 -0400
+        Sat, 10 Aug 2019 16:44:01 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDV-00053Y-Kn; Sat, 10 Aug 2019 21:43:57 +0100
+        id 1hwYDW-00053r-KH; Sat, 10 Aug 2019 21:43:58 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDN-0003ig-T0; Sat, 10 Aug 2019 21:43:49 +0100
+        id 1hwYDN-0003iD-K8; Sat, 10 Aug 2019 21:43:49 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Dave Hansen" <dave.hansen@intel.com>,
-        "Josh Poimboeuf" <jpoimboe@redhat.com>
+        "David Laight" <David.Laight@aculab.com>,
+        "Willem de Bruijn" <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.17941817@decadent.org.uk>
+Message-ID: <lsq.1565469607.152150829@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 125/157] x86/speculation: Prepare entry code for
- Spectre v1 swapgs mitigations
+Subject: [PATCH 3.16 119/157] packet: validate msg_namelen in send directly
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,215 +56,96 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Willem de Bruijn <willemb@google.com>
 
-commit 18ec54fdd6d18d92025af097cd042a75cf0ea24c upstream.
+commit 486efdc8f6ce802b27e15921d2353cc740c55451 upstream.
 
-Spectre v1 isn't only about array bounds checks.  It can affect any
-conditional checks.  The kernel entry code interrupt, exception, and NMI
-handlers all have conditional swapgs checks.  Those may be problematic in
-the context of Spectre v1, as kernel code can speculatively run with a user
-GS.
+Packet sockets in datagram mode take a destination address. Verify its
+length before passing to dev_hard_header.
 
-For example:
+Prior to 2.6.14-rc3, the send code ignored sll_halen. This is
+established behavior. Directly compare msg_namelen to dev->addr_len.
 
-	if (coming from user space)
-		swapgs
-	mov %gs:<percpu_offset>, %reg
-	mov (%reg), %reg1
+Change v1->v2: initialize addr in all paths
 
-When coming from user space, the CPU can speculatively skip the swapgs, and
-then do a speculative percpu load using the user GS value.  So the user can
-speculatively force a read of any kernel value.  If a gadget exists which
-uses the percpu value as an address in another load/store, then the
-contents of the kernel value may become visible via an L1 side channel
-attack.
-
-A similar attack exists when coming from kernel space.  The CPU can
-speculatively do the swapgs, causing the user GS to get used for the rest
-of the speculative window.
-
-The mitigation is similar to a traditional Spectre v1 mitigation, except:
-
-  a) index masking isn't possible; because the index (percpu offset)
-     isn't user-controlled; and
-
-  b) an lfence is needed in both the "from user" swapgs path and the
-     "from kernel" non-swapgs path (because of the two attacks described
-     above).
-
-The user entry swapgs paths already have SWITCH_TO_KERNEL_CR3, which has a
-CR3 write when PTI is enabled.  Since CR3 writes are serializing, the
-lfences can be skipped in those cases.
-
-On the other hand, the kernel entry swapgs paths don't depend on PTI.
-
-To avoid unnecessary lfences for the user entry case, create two separate
-features for alternative patching:
-
-  X86_FEATURE_FENCE_SWAPGS_USER
-  X86_FEATURE_FENCE_SWAPGS_KERNEL
-
-Use these features in entry code to patch in lfences where needed.
-
-The features aren't enabled yet, so there's no functional change.
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Dave Hansen <dave.hansen@intel.com>
-[bwh: Backported to 3.16:
- - Assign the CPU feature bits from word 7
- - Add FENCE_SWAPGS_KERNEL_ENTRY to NMI entry, since it does not
-   use paranoid_entry
- - Add a return after .Lerror_entry_from_usermode_after_swapgs, done
-   upstream by commit f10750536fa7 "x86/entry/64: Fix irqflag tracing wrt
-   context tracking"
- - Include <asm/cpufeatures.h> in calling.h
- - Adjust filenames, context]
+Fixes: 6b8d95f1795c4 ("packet: validate address length if non-zero")
+Suggested-by: David Laight <David.Laight@aculab.com>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/arch/x86/include/asm/calling.h
-+++ b/arch/x86/include/asm/calling.h
-@@ -47,6 +47,7 @@ For 32-bit we have the following convent
- */
+ net/packet/af_packet.c | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
+
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -2278,8 +2278,8 @@ static int tpacket_snd(struct packet_soc
+ 	void *ph;
+ 	DECLARE_SOCKADDR(struct sockaddr_ll *, saddr, msg->msg_name);
+ 	bool need_wait = !(msg->msg_flags & MSG_DONTWAIT);
++	unsigned char *addr = NULL;
+ 	int tp_len, size_max;
+-	unsigned char *addr;
+ 	int len_sum = 0;
+ 	int status = TP_STATUS_AVAILABLE;
+ 	int hlen, tlen;
+@@ -2289,7 +2289,6 @@ static int tpacket_snd(struct packet_soc
+ 	if (likely(saddr == NULL)) {
+ 		dev	= packet_cached_dev_get(po);
+ 		proto	= po->num;
+-		addr	= NULL;
+ 	} else {
+ 		err = -EINVAL;
+ 		if (msg->msg_namelen < sizeof(struct sockaddr_ll))
+@@ -2299,10 +2298,13 @@ static int tpacket_snd(struct packet_soc
+ 						sll_addr)))
+ 			goto out;
+ 		proto	= saddr->sll_protocol;
+-		addr	= saddr->sll_halen ? saddr->sll_addr : NULL;
+ 		dev = dev_get_by_index(sock_net(&po->sk), saddr->sll_ifindex);
+-		if (addr && dev && saddr->sll_halen < dev->addr_len)
+-			goto out_put;
++		if (po->sk.sk_socket->type == SOCK_DGRAM) {
++			if (dev && msg->msg_namelen < dev->addr_len +
++				   offsetof(struct sockaddr_ll, sll_addr))
++				goto out_put;
++			addr = saddr->sll_addr;
++		}
+ 	}
  
- #include <asm/dwarf2.h>
-+#include <asm/cpufeatures.h>
+ 	err = -ENXIO;
+@@ -2435,7 +2437,7 @@ static int packet_snd(struct socket *soc
+ 	struct sk_buff *skb;
+ 	struct net_device *dev;
+ 	__be16 proto;
+-	unsigned char *addr;
++	unsigned char *addr = NULL;
+ 	int err, reserve = 0;
+ 	struct virtio_net_hdr vnet_hdr = { 0 };
+ 	int offset = 0;
+@@ -2453,7 +2455,6 @@ static int packet_snd(struct socket *soc
+ 	if (likely(saddr == NULL)) {
+ 		dev	= packet_cached_dev_get(po);
+ 		proto	= po->num;
+-		addr	= NULL;
+ 	} else {
+ 		err = -EINVAL;
+ 		if (msg->msg_namelen < sizeof(struct sockaddr_ll))
+@@ -2461,10 +2462,13 @@ static int packet_snd(struct socket *soc
+ 		if (msg->msg_namelen < (saddr->sll_halen + offsetof(struct sockaddr_ll, sll_addr)))
+ 			goto out;
+ 		proto	= saddr->sll_protocol;
+-		addr	= saddr->sll_halen ? saddr->sll_addr : NULL;
+ 		dev = dev_get_by_index(sock_net(sk), saddr->sll_ifindex);
+-		if (addr && dev && saddr->sll_halen < dev->addr_len)
+-			goto out_unlock;
++		if (sock->type == SOCK_DGRAM) {
++			if (dev && msg->msg_namelen < dev->addr_len +
++				   offsetof(struct sockaddr_ll, sll_addr))
++				goto out_unlock;
++			addr = saddr->sll_addr;
++		}
+ 	}
  
- #ifdef CONFIG_X86_64
- 
-@@ -195,6 +196,23 @@ For 32-bit we have the following convent
- 	.byte 0xf1
- 	.endm
- 
-+/*
-+ * Mitigate Spectre v1 for conditional swapgs code paths.
-+ *
-+ * FENCE_SWAPGS_USER_ENTRY is used in the user entry swapgs code path, to
-+ * prevent a speculative swapgs when coming from kernel space.
-+ *
-+ * FENCE_SWAPGS_KERNEL_ENTRY is used in the kernel entry non-swapgs code path,
-+ * to prevent the swapgs from getting speculatively skipped when coming from
-+ * user space.
-+ */
-+.macro FENCE_SWAPGS_USER_ENTRY
-+	ALTERNATIVE "", "lfence", X86_FEATURE_FENCE_SWAPGS_USER
-+.endm
-+.macro FENCE_SWAPGS_KERNEL_ENTRY
-+	ALTERNATIVE "", "lfence", X86_FEATURE_FENCE_SWAPGS_KERNEL
-+.endm
-+
- #else /* CONFIG_X86_64 */
- 
- /*
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -183,7 +183,8 @@
- #define X86_FEATURE_DTHERM	( 7*32+ 7) /* Digital Thermal Sensor */
- #define X86_FEATURE_HW_PSTATE	( 7*32+ 8) /* AMD HW-PState */
- #define X86_FEATURE_PROC_FEEDBACK ( 7*32+ 9) /* AMD ProcFeedbackInterface */
--
-+#define X86_FEATURE_FENCE_SWAPGS_USER	( 7*32+10) /* "" LFENCE in user entry SWAPGS path */
-+#define X86_FEATURE_FENCE_SWAPGS_KERNEL	( 7*32+11) /* "" LFENCE in kernel entry SWAPGS path */
- #define X86_FEATURE_RETPOLINE	( 7*32+12) /* "" Generic Retpoline mitigation for Spectre variant 2 */
- #define X86_FEATURE_RETPOLINE_AMD ( 7*32+13) /* "" AMD Retpoline mitigation for Spectre variant 2 */
- 
---- a/arch/x86/kernel/entry_64.S
-+++ b/arch/x86/kernel/entry_64.S
-@@ -265,14 +265,19 @@ ENDPROC(native_usergs_sysret64)
- 	testl $3, CS-RBP(%rsi)
- 	je 1f
- 	SWAPGS
-+	FENCE_SWAPGS_USER_ENTRY
- 	SWITCH_KERNEL_CR3
-+	jmpq	2f
-+1:
-+	FENCE_SWAPGS_KERNEL_ENTRY
-+2:
- 	/*
- 	 * irq_count is used to check if a CPU is already on an interrupt stack
- 	 * or not. While this is essentially redundant with preempt_count it is
- 	 * a little cheaper to use a separate counter in the PDA (short of
- 	 * moving irq_enter into assembly, which would be too much work)
- 	 */
--1:	incl PER_CPU_VAR(irq_count)
-+	incl PER_CPU_VAR(irq_count)
- 	cmovzq PER_CPU_VAR(irq_stack_ptr),%rsp
- 	CFI_DEF_CFA_REGISTER	rsi
- 
-@@ -337,6 +342,13 @@ ENTRY(save_paranoid)
- 	movq	%rax, %cr3
- 2:
- #endif
-+	/*
-+	 * The above doesn't do an unconditional CR3 write, even in the PTI
-+	 * case.  So do an lfence to prevent GS speculation, regardless of
-+	 * whether PTI is enabled.
-+	 */
-+	FENCE_SWAPGS_KERNEL_ENTRY
-+
- 	ret
- 	CFI_ENDPROC
- END(save_paranoid)
-@@ -1452,8 +1464,19 @@ ENTRY(error_entry)
- 	 * from user mode due to an IRET fault.
- 	 */
- 	SWAPGS
-+	FENCE_SWAPGS_USER_ENTRY
- 
- .Lerror_entry_from_usermode_after_swapgs:
-+	/*
-+	 * We need to tell lockdep that IRQs are off.  We can't do this until
-+	 * we fix gsbase, and we should do it before enter_from_user_mode
-+	 * (which can take locks).
-+	 */
-+	TRACE_IRQS_OFF
-+	ret
-+
-+.Lerror_entry_done_lfence:
-+	FENCE_SWAPGS_KERNEL_ENTRY
- .Lerror_entry_done:
- 	TRACE_IRQS_OFF
- 	ret
-@@ -1472,7 +1495,7 @@ ENTRY(error_entry)
- 	cmpq %rax,RIP+8(%rsp)
- 	je	.Lbstep_iret
- 	cmpq $gs_change,RIP+8(%rsp)
--	jne	.Lerror_entry_done
-+	jne	.Lerror_entry_done_lfence
- 
- 	/*
- 	 * hack: gs_change can fail with user gsbase.  If this happens, fix up
-@@ -1480,6 +1503,7 @@ ENTRY(error_entry)
- 	 * gs_change's error handler with kernel gsbase.
- 	 */
- 	SWAPGS
-+	FENCE_SWAPGS_USER_ENTRY
- 	jmp .Lerror_entry_done
- 
- .Lbstep_iret:
-@@ -1493,6 +1517,7 @@ ENTRY(error_entry)
- 	 * Switch to kernel gsbase:
- 	 */
- 	SWAPGS
-+	FENCE_SWAPGS_USER_ENTRY
- 
- 	/*
- 	 * Pretend that the exception came from user mode: set up pt_regs
-@@ -1601,6 +1626,7 @@ ENTRY(nmi)
- 	 * to switch CR3 here.
- 	 */
- 	cld
-+	FENCE_SWAPGS_USER_ENTRY
- 	movq	%rsp, %rdx
- 	movq	PER_CPU_VAR(kernel_stack), %rsp
- 	addq	$KERNEL_STACK_OFFSET, %rsp
-@@ -1646,6 +1672,7 @@ ENTRY(nmi)
- 	movq	%rax, %cr3
- 2:
- #endif
-+	FENCE_SWAPGS_KERNEL_ENTRY
- 	call	do_nmi
- 
- #ifdef CONFIG_PAGE_TABLE_ISOLATION
+ 	err = -ENXIO;
 
