@@ -2,88 +2,136 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD82C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 16:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFCFC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 16:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5D0208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 16:34:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="vPI0sG28"
+	by mail.kernel.org (Postfix) with ESMTP id 6DE6B208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 16:38:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbfHJQee (ORCPT
+        id S1726322AbfHJQiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 12:34:34 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:50070 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726048AbfHJQed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 12:34:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=+XcaMz3hAkMIn2mjsZcblkOPoXKXhcojqLISCOkCUxQ=; b=vPI0sG28vl7QxUcf0hhxI0WYXF
-        zim5qzVIM0aXJoJCEWqSSxaNlAc9m/XlGqdfTW9uD5It+DeiZly+fvrlV7GmQjlmf5QQbIPBkCQpg
-        XqFPfJuRgd4rjaGcsiuBp1UNhlDWezw2Qq8qU/NcVjnL/x13S0w5DEMEW+GUALZAGv9M=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hwUJz-0008N0-GI; Sat, 10 Aug 2019 18:34:23 +0200
-Date:   Sat, 10 Aug 2019 18:34:23 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Antoine Tenart <antoine.tenart@bootlin.com>
-Cc:     davem@davemloft.net, sd@queasysnail.net, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
-        camelia.groza@nxp.com, Simon.Edelhaus@aquantia.com
-Subject: Re: [PATCH net-next v2 6/9] net: macsec: hardware offloading
- infrastructure
-Message-ID: <20190810163423.GA30120@lunn.ch>
-References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
- <20190808140600.21477-7-antoine.tenart@bootlin.com>
+        Sat, 10 Aug 2019 12:38:15 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:49029 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726112AbfHJQiO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 12:38:14 -0400
+X-UUID: 4354e03d6b6c4d93b3e200d25d7fc4d8-20190811
+X-UUID: 4354e03d6b6c4d93b3e200d25d7fc4d8-20190811
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <houlong.wei@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 629964535; Sun, 11 Aug 2019 00:38:05 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sun, 11 Aug
+ 2019 00:38:03 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sun, 11 Aug 2019 00:38:01 +0800
+Message-ID: <1565455081.19079.36.camel@mhfsdcap03>
+Subject: Re: [PATCH v11 09/12] soc: mediatek: cmdq: define the instruction
+ struct
+From:   houlong wei <houlong.wei@mediatek.com>
+To:     Bibby Hsieh =?UTF-8?Q?=28=E8=AC=9D=E6=BF=9F=E9=81=A0=29?= 
+        <Bibby.Hsieh@mediatek.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        CK Hu =?UTF-8?Q?=28=E8=83=A1=E4=BF=8A=E5=85=89=29?= 
+        <ck.hu@mediatek.com>, "Daniel Kurtz" <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "Nicolas Boichat" <drinkcat@chromium.org>,
+        YT Shen =?UTF-8?Q?=28=E6=B2=88=E5=B2=B3=E9=9C=86=29?= 
+        <Yt.Shen@mediatek.com>,
+        Daoyuan Huang =?UTF-8?Q?=28=E9=BB=83=E9=81=93=E5=8E=9F=29?= 
+        <Daoyuan.Huang@mediatek.com>,
+        Jiaguang Zhang =?UTF-8?Q?=28=E5=BC=A0=E5=8A=A0=E5=B9=BF=29?= 
+        <Jiaguang.Zhang@mediatek.com>,
+        Dennis-YC Hsieh =?UTF-8?Q?=28=E8=AC=9D=E5=AE=87=E5=93=B2=29?= 
+        <Dennis-YC.Hsieh@mediatek.com>,
+        Ginny Chen =?UTF-8?Q?=28=E9=99=B3=E6=B2=BB=E5=82=91=29?= 
+        <ginny.chen@mediatek.com>, <houlong.wei@mediatek.com>
+Date:   Sun, 11 Aug 2019 00:38:01 +0800
+In-Reply-To: <1565453520.19079.17.camel@mhfsdcap03>
+References: <20190729070106.9332-1-bibby.hsieh@mediatek.com>
+         <20190729070106.9332-10-bibby.hsieh@mediatek.com>
+         <1565453520.19079.17.camel@mhfsdcap03>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808140600.21477-7-antoine.tenart@bootlin.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 8232FFF279301A39457DCF48E56192120E1B5723579B6362CE045B6813A8FDA22000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 04:05:57PM +0200, Antoine Tenart wrote:
-> This patch introduces the MACsec hardware offloading infrastructure.
+On Sun, 2019-08-11 at 00:12 +0800, houlong wei wrote:
+> Hi Bibby, I have inline comment in function cmdq_pkt_write_mask().
 > 
-> The main idea here is to re-use the logic and data structures of the
-> software MACsec implementation. This allows not to duplicate definitions
-> and structure storing the same kind of information. It also allows to
-> use a unified genlink interface for both MACsec implementations (so that
-> the same userspace tool, `ip macsec`, is used with the same arguments).
-> The MACsec offloading support cannot be disabled if an interface
-> supports it at the moment.
-> 
-> The MACsec configuration is passed to device drivers supporting it
-> through macsec_hw_offload() which is called from the MACsec genl
-> helpers. This function calls the macsec ops of PHY and Ethernet
-> drivers in two steps
+> On Mon, 2019-07-29 at 15:01 +0800, Bibby Hsieh wrote:
+> > Define an instruction structure for gce driver to append command.
+> > This structure can make the client's code more readability.
+> > 
+> > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> > Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> > ---
+> >  drivers/soc/mediatek/mtk-cmdq-helper.c   | 103 +++++++++++++++--------
+> >  include/linux/mailbox/mtk-cmdq-mailbox.h |   2 +
+> >  2 files changed, 72 insertions(+), 33 deletions(-)
+> > 
+> > diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> > index 7aa0517ff2f3..0886c4967ca4 100644
+> > --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> > +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> > @@ -9,12 +9,24 @@
+> >  #include <linux/mailbox_controller.h>
+> >  #include <linux/soc/mediatek/mtk-cmdq.h>
+[...]
+> >  
+> >  int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
+> >  			u16 offset, u32 value, u32 mask)
+> >  {
+> > +	struct cmdq_instruction *inst;
+> >  	u32 offset_mask = offset;
+> > -	int err = 0;
+> >  
+> >  	if (mask != 0xffffffff) {
+> > -		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
+> > +		inst = cmdq_pkt_append_command(pkt);
+> > +		if (!inst)
+> > +			return -ENOMEM;
+> > +
+> > +		inst->op = CMDQ_CODE_MASK;
+> > +		inst->mask = ~mask;
 
-Hi Antoine, Igor
+> >  		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
+> >  	}
+> > -	err |= cmdq_pkt_write(pkt, value, subsys, offset_mask);
+> >  
+> > -	return err;
+> > +	return cmdq_pkt_write(pkt, subsys, offset_mask, value);
 
-It is great that you are thinking how a MAC driver would make use of
-this. But on the flip side, we don't usual add an API unless there is
-a user. And as far as i see, you only add a PHY level implementation,
-not a MAC level.
+We need add a type conversion here, (u8)offset_mask, for your new
+function type. Er... it's better to remove local variable 'offset_mask'
+and replace it with 'offset'.
 
-Igor, what is your interest here? I know the Aquantia PHY can do
-MACsec, but i guess you are more interested in the atlantic and AQC111
-MAC drivers which hide the PHY behind firmware rather than make use of
-the Linux aquantia PHY driver. Are you likely to be contributing a MAC
-driver level implementation of MACsec soon?
+> >  }
+[...]
 
-Thanks
-       Andrew
+
