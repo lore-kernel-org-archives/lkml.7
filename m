@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A08C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4D8C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91AC82166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 963152166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfHJUtQ (ORCPT
+        id S1727540AbfHJUtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:49:16 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54622 "EHLO
+        Sat, 10 Aug 2019 16:49:11 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54738 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726753AbfHJUn6 (ORCPT
+        by vger.kernel.org with ESMTP id S1726767AbfHJUn7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:43:58 -0400
+        Sat, 10 Aug 2019 16:43:59 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDT-00053s-9x; Sat, 10 Aug 2019 21:43:55 +0100
+        id 1hwYDV-00053j-Cl; Sat, 10 Aug 2019 21:43:57 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDO-0003kd-PO; Sat, 10 Aug 2019 21:43:50 +0100
+        id 1hwYDO-0003jL-8o; Sat, 10 Aug 2019 21:43:50 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Roman Kagan" <rkagan@virtuozzo.com>,
-        "Denis V. Lunev" <den@openvz.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "Igor Redko" <redkoi@virtuozzo.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>
+        "Jason Wang" <jasowang@redhat.com>,
+        "Stefan Hajnoczi" <stefanha@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.617883725@decadent.org.uk>
+Message-ID: <lsq.1565469607.806417010@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 143/157] mm/page_alloc.c: calculate 'available'
- memory in a separate function
+Subject: [PATCH 3.16 133/157] vhost_net: fix possible infinite loop
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,150 +56,110 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Igor Redko <redkoi@virtuozzo.com>
+From: Jason Wang <jasowang@redhat.com>
 
-commit d02bd27bd33dd7e8d22594cd568b81be0cb584cd upstream.
+commit e2412c07f8f3040593dfb88207865a3cd58680c0 upstream.
 
-Add a new field, VIRTIO_BALLOON_S_AVAIL, to virtio_balloon memory
-statistics protocol, corresponding to 'Available' in /proc/meminfo.
+When the rx buffer is too small for a packet, we will discard the vq
+descriptor and retry it for the next packet:
 
-It indicates to the hypervisor how big the balloon can be inflated
-without pushing the guest system to swap.  This metric would be very
-useful in VM orchestration software to improve memory management of
-different VMs under overcommit.
+while ((sock_len = vhost_net_rx_peek_head_len(net, sock->sk,
+					      &busyloop_intr))) {
+...
+	/* On overrun, truncate and discard */
+	if (unlikely(headcount > UIO_MAXIOV)) {
+		iov_iter_init(&msg.msg_iter, READ, vq->iov, 1, 1);
+		err = sock->ops->recvmsg(sock, &msg,
+					 1, MSG_DONTWAIT | MSG_TRUNC);
+		pr_debug("Discarded rx packet: len %zd\n", sock_len);
+		continue;
+	}
+...
+}
 
-This patch (of 2):
+This makes it possible to trigger a infinite while..continue loop
+through the co-opreation of two VMs like:
 
-Factor out calculation of the available memory counter into a separate
-exportable function, in order to be able to use it in other parts of the
-kernel.
+1) Malicious VM1 allocate 1 byte rx buffer and try to slow down the
+   vhost process as much as possible e.g using indirect descriptors or
+   other.
+2) Malicious VM2 generate packets to VM1 as fast as possible
 
-In particular, it appears a relevant metric to report to the hypervisor
-via virtio-balloon statistics interface (in a followup patch).
+Fixing this by checking against weight at the end of RX and TX
+loop. This also eliminate other similar cases when:
 
-Signed-off-by: Igor Redko <redkoi@virtuozzo.com>
-Signed-off-by: Denis V. Lunev <den@openvz.org>
-Reviewed-by: Roman Kagan <rkagan@virtuozzo.com>
-Cc: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-[bwh: Backported to 3.16 as dependency of commit a1078e821b60
- "xen: let alloc_xenballooned_pages() fail if not enough memory free"]
+- userspace is consuming the packets in the meanwhile
+- theoretical TOCTOU attack if guest moving avail index back and forth
+  to hit the continue after vhost find guest just add new buffers
+
+This addresses CVE-2019-3900.
+
+Fixes: d8316f3991d20 ("vhost: fix total length when packets are too short")
+Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+[bwh: Backported to 3.16:
+ - Both Tx modes are handled in one loop in handle_tx()
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/proc/meminfo.c  | 31 +------------------------------
- include/linux/mm.h |  1 +
- mm/page_alloc.c    | 43 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 45 insertions(+), 30 deletions(-)
+ drivers/vhost/net.c | 29 +++++++++++++----------------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
 
---- a/fs/proc/meminfo.c
-+++ b/fs/proc/meminfo.c
-@@ -27,10 +27,7 @@ static int meminfo_proc_show(struct seq_
- 	struct vmalloc_info vmi;
- 	long cached;
- 	long available;
--	unsigned long pagecache;
--	unsigned long wmark_low = 0;
- 	unsigned long pages[NR_LRU_LISTS];
--	struct zone *zone;
- 	int lru;
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -369,7 +369,7 @@ static void handle_tx(struct vhost_net *
+ 	hdr_size = nvq->vhost_hlen;
+ 	zcopy = nvq->ubufs;
  
- /*
-@@ -51,33 +48,7 @@ static int meminfo_proc_show(struct seq_
- 	for (lru = LRU_BASE; lru < NR_LRU_LISTS; lru++)
- 		pages[lru] = global_page_state(NR_LRU_BASE + lru);
- 
--	for_each_zone(zone)
--		wmark_low += zone->watermark[WMARK_LOW];
--
--	/*
--	 * Estimate the amount of memory available for userspace allocations,
--	 * without causing swapping.
--	 */
--	available = i.freeram - totalreserve_pages;
--
--	/*
--	 * Not all the page cache can be freed, otherwise the system will
--	 * start swapping. Assume at least half of the page cache, or the
--	 * low watermark worth of cache, needs to stay.
--	 */
--	pagecache = pages[LRU_ACTIVE_FILE] + pages[LRU_INACTIVE_FILE];
--	pagecache -= min(pagecache / 2, wmark_low);
--	available += pagecache;
--
--	/*
--	 * Part of the reclaimable slab consists of items that are in use,
--	 * and cannot be freed. Cap this estimate at the low watermark.
--	 */
--	available += global_page_state(NR_SLAB_RECLAIMABLE) -
--		     min(global_page_state(NR_SLAB_RECLAIMABLE) / 2, wmark_low);
--
--	if (available < 0)
--		available = 0;
-+	available = si_mem_available();
- 
- 	/*
- 	 * Tagged format, for easy grepping and expansion.
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1699,6 +1699,7 @@ extern int __meminit init_per_zone_wmark
- extern void mem_init(void);
- extern void __init mmap_init(void);
- extern void show_mem(unsigned int flags);
-+extern long si_mem_available(void);
- extern void si_meminfo(struct sysinfo * val);
- extern void si_meminfo_node(struct sysinfo *val, int nid);
- 
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3072,6 +3072,49 @@ static inline void show_node(struct zone
- 		printk("Node %d ", zone_to_nid(zone));
+-	for (;;) {
++	do {
+ 		/* Release DMAs done buffers first */
+ 		if (zcopy)
+ 			vhost_zerocopy_signal_used(net, vq);
+@@ -457,9 +457,7 @@ static void handle_tx(struct vhost_net *
+ 			vhost_zerocopy_signal_used(net, vq);
+ 		total_len += len;
+ 		vhost_net_tx_packet(net);
+-		if (vhost_exceeds_weight(vq, ++sent_pkts, total_len))
+-			break;
+-	}
++	} while (likely(!vhost_exceeds_weight(vq, ++sent_pkts, total_len)));
+ out:
+ 	mutex_unlock(&vq->mutex);
  }
+@@ -595,7 +593,10 @@ static void handle_rx(struct vhost_net *
+ 		vq->log : NULL;
+ 	mergeable = vhost_has_feature(vq, VIRTIO_NET_F_MRG_RXBUF);
  
-+long si_mem_available(void)
-+{
-+	long available;
-+	unsigned long pagecache;
-+	unsigned long wmark_low = 0;
-+	unsigned long pages[NR_LRU_LISTS];
-+	struct zone *zone;
-+	int lru;
+-	while ((sock_len = peek_head_len(sock->sk))) {
++	do {
++		sock_len = peek_head_len(sock->sk);
++		if (!sock_len)
++			break;
+ 		sock_len += sock_hlen;
+ 		vhost_len = sock_len + vhost_hlen;
+ 		headcount = get_rx_bufs(vq, vq->heads, vhost_len,
+@@ -665,9 +666,8 @@ static void handle_rx(struct vhost_net *
+ 		if (unlikely(vq_log))
+ 			vhost_log_write(vq, vq_log, log, vhost_len);
+ 		total_len += vhost_len;
+-		if (unlikely(vhost_exceeds_weight(vq, ++recv_pkts, total_len)))
+-			break;
+-	}
++	} while (likely(!vhost_exceeds_weight(vq, ++recv_pkts, total_len)));
 +
-+	for (lru = LRU_BASE; lru < NR_LRU_LISTS; lru++)
-+		pages[lru] = global_page_state(NR_LRU_BASE + lru);
-+
-+	for_each_zone(zone)
-+		wmark_low += zone->watermark[WMARK_LOW];
-+
-+	/*
-+	 * Estimate the amount of memory available for userspace allocations,
-+	 * without causing swapping.
-+	 */
-+	available = global_page_state(NR_FREE_PAGES) - totalreserve_pages;
-+
-+	/*
-+	 * Not all the page cache can be freed, otherwise the system will
-+	 * start swapping. Assume at least half of the page cache, or the
-+	 * low watermark worth of cache, needs to stay.
-+	 */
-+	pagecache = pages[LRU_ACTIVE_FILE] + pages[LRU_INACTIVE_FILE];
-+	pagecache -= min(pagecache / 2, wmark_low);
-+	available += pagecache;
-+
-+	/*
-+	 * Part of the reclaimable slab consists of items that are in use,
-+	 * and cannot be freed. Cap this estimate at the low watermark.
-+	 */
-+	available += global_page_state(NR_SLAB_RECLAIMABLE) -
-+		     min(global_page_state(NR_SLAB_RECLAIMABLE) / 2, wmark_low);
-+
-+	if (available < 0)
-+		available = 0;
-+	return available;
-+}
-+EXPORT_SYMBOL_GPL(si_mem_available);
-+
- void si_meminfo(struct sysinfo *val)
- {
- 	val->totalram = totalram_pages;
+ out:
+ 	mutex_unlock(&vq->mutex);
+ }
+@@ -737,7 +737,7 @@ static int vhost_net_open(struct inode *
+ 		n->vqs[i].sock_hlen = 0;
+ 	}
+ 	vhost_dev_init(dev, vqs, VHOST_NET_VQ_MAX,
+-		       VHOST_NET_WEIGHT, VHOST_NET_PKT_WEIGHT);
++		       VHOST_NET_PKT_WEIGHT, VHOST_NET_WEIGHT);
+ 
+ 	vhost_poll_init(n->poll + VHOST_NET_VQ_TX, handle_tx_net, POLLOUT, dev);
+ 	vhost_poll_init(n->poll + VHOST_NET_VQ_RX, handle_rx_net, POLLIN, dev);
 
