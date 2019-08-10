@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 707A8C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3B9C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 525B8208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78903208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfHJUoS (ORCPT
+        id S1727023AbfHJUoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:44:18 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54338 "EHLO
+        Sat, 10 Aug 2019 16:44:24 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54542 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726497AbfHJUnz (ORCPT
+        by vger.kernel.org with ESMTP id S1726730AbfHJUn5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:43:55 -0400
+        Sat, 10 Aug 2019 16:43:57 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDP-00053P-66; Sat, 10 Aug 2019 21:43:51 +0100
+        id 1hwYDS-00053e-LR; Sat, 10 Aug 2019 21:43:54 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDM-0003fz-HD; Sat, 10 Aug 2019 21:43:48 +0100
+        id 1hwYDO-0003l3-UX; Sat, 10 Aug 2019 21:43:50 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,19 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Steven Rostedt" <rostedt@goodmis.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Andrea Righi" <righi.andrea@gmail.com>,
-        "Ingo Molnar" <mingo@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Masami Hiramatsu" <mhiramat@kernel.org>
+        "David S. Miller" <davem@davemloft.net>,
+        "Vlad Yasevich" <vyasevich@gmail.com>,
+        "Vladislav Yasevich" <vyasevic@redhat.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.962374818@decadent.org.uk>
+Message-ID: <lsq.1565469607.265297102@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 096/157] x86/kprobes: Verify stack frame on kretprobe
+Subject: [PATCH 3.16 147/157] Revert "drivers/net, ipv6: Select IPv6
+ fragment idents for virtio UFO packets"
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -61,109 +57,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Vlad Yasevich <vyasevich@gmail.com>
 
-commit 3ff9c075cc767b3060bdac12da72fc94dd7da1b8 upstream.
+commit 72f6510745592c87f612f62ae4f16bb002934df4 upstream.
 
-Verify the stack frame pointer on kretprobe trampoline handler,
-If the stack frame pointer does not match, it skips the wrong
-entry and tries to find correct one.
+This reverts commit 5188cd44c55db3e92cd9e77a40b5baa7ed4340f7.
 
-This can happen if user puts the kretprobe on the function
-which can be used in the path of ftrace user-function call.
-Such functions should not be probed, so this adds a warning
-message that reports which function should be blacklisted.
+Now that GSO layer can track if fragment id has been selected
+and can allocate one if necessary, we don't need to do this in
+tap and macvtap.  This reverts most of the code and only keeps
+the new ipv6 fragment id generation function that is still needed.
 
-Tested-by: Andrea Righi <righi.andrea@gmail.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/155094059185.6137.15527904013362842072.stgit@devbox
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 3d0ad09412ff (drivers/net: Disable UFO through virtio)
+Signed-off-by: Vladislav Yasevich <vyasevic@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kernel/kprobes/core.c | 26 ++++++++++++++++++++++++++
- include/linux/kprobes.h        |  1 +
- 2 files changed, 27 insertions(+)
+ drivers/net/macvtap.c | 3 ---
+ drivers/net/tun.c     | 6 +-----
+ 2 files changed, 1 insertion(+), 8 deletions(-)
 
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -494,6 +494,7 @@ void arch_prepare_kretprobe(struct kretp
- 	unsigned long *sara = stack_addr(regs);
+--- a/drivers/net/macvtap.c
++++ b/drivers/net/macvtap.c
+@@ -16,7 +16,6 @@
+ #include <linux/idr.h>
+ #include <linux/fs.h>
  
- 	ri->ret_addr = (kprobe_opcode_t *) *sara;
-+	ri->fp = sara;
+-#include <net/ipv6.h>
+ #include <net/net_namespace.h>
+ #include <net/rtnetlink.h>
+ #include <net/sock.h>
+@@ -571,8 +570,6 @@ static int macvtap_skb_from_vnet_hdr(str
+ 			break;
+ 		case VIRTIO_NET_HDR_GSO_UDP:
+ 			gso_type = SKB_GSO_UDP;
+-			if (skb->protocol == htons(ETH_P_IPV6))
+-				ipv6_proxy_select_ident(skb);
+ 			break;
+ 		default:
+ 			return -EINVAL;
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -65,7 +65,6 @@
+ #include <linux/nsproxy.h>
+ #include <linux/virtio_net.h>
+ #include <linux/rcupdate.h>
+-#include <net/ipv6.h>
+ #include <net/net_namespace.h>
+ #include <net/netns/generic.h>
+ #include <net/rtnetlink.h>
+@@ -1143,8 +1142,6 @@ static ssize_t tun_get_user(struct tun_s
+ 		break;
+ 	}
  
- 	/* Replace the return addr with trampoline addr */
- 	*sara = (unsigned long) &kretprobe_trampoline;
-@@ -696,15 +697,21 @@ __visible __used void *trampoline_handle
- 	unsigned long flags, orig_ret_address = 0;
- 	unsigned long trampoline_address = (unsigned long)&kretprobe_trampoline;
- 	kprobe_opcode_t *correct_ret_addr = NULL;
-+	void *frame_pointer;
-+	bool skipped = false;
+-	skb_reset_network_header(skb);
+-
+ 	if (gso.gso_type != VIRTIO_NET_HDR_GSO_NONE) {
+ 		pr_debug("GSO!\n");
+ 		switch (gso.gso_type & ~VIRTIO_NET_HDR_GSO_ECN) {
+@@ -1156,8 +1153,6 @@ static ssize_t tun_get_user(struct tun_s
+ 			break;
+ 		case VIRTIO_NET_HDR_GSO_UDP:
+ 			skb_shinfo(skb)->gso_type = SKB_GSO_UDP;
+-			if (skb->protocol == htons(ETH_P_IPV6))
+-				ipv6_proxy_select_ident(skb);
+ 			break;
+ 		default:
+ 			tun->dev->stats.rx_frame_errors++;
+@@ -1187,6 +1182,7 @@ static ssize_t tun_get_user(struct tun_s
+ 		skb_shinfo(skb)->tx_flags |= SKBTX_SHARED_FRAG;
+ 	}
  
- 	INIT_HLIST_HEAD(&empty_rp);
- 	kretprobe_hash_lock(current, &head, &flags);
- 	/* fixup registers */
- #ifdef CONFIG_X86_64
- 	regs->cs = __KERNEL_CS;
-+	/* On x86-64, we use pt_regs->sp for return address holder. */
-+	frame_pointer = &regs->sp;
- #else
- 	regs->cs = __KERNEL_CS | get_kernel_rpl();
- 	regs->gs = 0;
-+	/* On x86-32, we use pt_regs->flags for return address holder. */
-+	frame_pointer = &regs->flags;
- #endif
- 	regs->ip = trampoline_address;
- 	regs->orig_ax = ~0UL;
-@@ -726,8 +733,25 @@ __visible __used void *trampoline_handle
- 		if (ri->task != current)
- 			/* another task is sharing our hash bucket */
- 			continue;
-+		/*
-+		 * Return probes must be pushed on this hash list correct
-+		 * order (same as return order) so that it can be poped
-+		 * correctly. However, if we find it is pushed it incorrect
-+		 * order, this means we find a function which should not be
-+		 * probed, because the wrong order entry is pushed on the
-+		 * path of processing other kretprobe itself.
-+		 */
-+		if (ri->fp != frame_pointer) {
-+			if (!skipped)
-+				pr_warn("kretprobe is stacked incorrectly. Trying to fixup.\n");
-+			skipped = true;
-+			continue;
-+		}
++	skb_reset_network_header(skb);
+ 	skb_probe_transport_header(skb, 0);
  
- 		orig_ret_address = (unsigned long)ri->ret_addr;
-+		if (skipped)
-+			pr_warn("%ps must be blacklisted because of incorrect kretprobe order\n",
-+				ri->rp->kp.addr);
- 
- 		if (orig_ret_address != trampoline_address)
- 			/*
-@@ -745,6 +769,8 @@ __visible __used void *trampoline_handle
- 		if (ri->task != current)
- 			/* another task is sharing our hash bucket */
- 			continue;
-+		if (ri->fp != frame_pointer)
-+			continue;
- 
- 		orig_ret_address = (unsigned long)ri->ret_addr;
- 		if (ri->rp && ri->rp->handler) {
---- a/include/linux/kprobes.h
-+++ b/include/linux/kprobes.h
-@@ -197,6 +197,7 @@ struct kretprobe_instance {
- 	struct kretprobe *rp;
- 	kprobe_opcode_t *ret_addr;
- 	struct task_struct *task;
-+	void *fp;
- 	char data[0];
- };
- 
+ 	rxhash = skb_get_hash(skb);
 
