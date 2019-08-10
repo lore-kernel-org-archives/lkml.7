@@ -2,177 +2,151 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F794C32756
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 04:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E75A8C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 04:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D61312184E
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 04:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9A972084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 04:16:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="mm/Rc/HM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="rloOt8Qr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726024AbfHJEPw (ORCPT
+        id S1726116AbfHJEQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 00:15:52 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50230 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbfHJEPw (ORCPT
+        Sat, 10 Aug 2019 00:16:14 -0400
+Received: from gateway36.websitewelcome.com ([192.185.195.25]:34823 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725372AbfHJEQO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 00:15:52 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v15so7481419wml.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 21:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=+qj7EUcYz3FNqSrNroWaAalx/eOSDdrVyfm5FTyqBLo=;
-        b=mm/Rc/HMBHpZA+KktzCQQ0sjznnpH21WH4+DekUlLgQ3iO5mVKu8lf5wmPnxxyKZGu
-         NQVhKORwV3CYCxHabLXxoH2OpxjUdHlUl+tVCRfnGWcmlsXK6X0QCD2lbwKGIcUSJBxL
-         U8Nx4OCMKCbumDDXxguEnRKNiaD923I83KEJaCDBjWgz6LTV1YBjlbecn58yz77+d0B3
-         QLlwb2ZA9Yl+Y0SO/qQU6CtHYKbLIJSarLcl7AmwS2obPNdCNGBsrDbwp2mvAW6Z4jdM
-         ThbNQG3ZSJIZyF7LS0p4xMrrE1r20UR/fq9i9QYYxGLdYuIWT6pH9Yj9JilVH/Op7S9s
-         wR0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=+qj7EUcYz3FNqSrNroWaAalx/eOSDdrVyfm5FTyqBLo=;
-        b=bs3rKrtCLI3YCsawKzKK2Won44Jc8mTkXXjcSiuT2L5wwEOzcgsDLZW51Iz418z08E
-         DRV6TbgT7KSQIMuG+NpePulMd1P9fJMvZ2Lwy+5OXJOUZAZwtgHyJNtyCaLrFfXrJjCG
-         nSL6U1Pb+eDdFuyDicah0F3ecVgJlupL+PLlWDeR3oj5URWG/rA/mNveCpaS1PPG7f6d
-         2ADovWF9aQ03Rqa09+0drBl7GViH0fKJErih/jlu3CsLfGIk8q7oK6w812rbjkdNP1yV
-         Ta9kJ/yOzc5W9VZGFAdmI4XGtlfBGzWJhbJI6LDdi20KnOIEYUoghrgLh+GqCIsscPSv
-         2DRw==
-X-Gm-Message-State: APjAAAXJzsR/SucuFmg0Npkjfqg1VMIKuqoHBzI1XyfjhpFASZC8T2lc
-        K9ZWU/0pN3Q0eGqTHGQktu5k/w==
-X-Google-Smtp-Source: APXvYqzQoMzapDZkJiehf15kPhaasvhGoK/3j0FGX2MRnqjfASYsEUrmb53rIg+eaJnfXhsoBNbErw==
-X-Received: by 2002:a1c:3142:: with SMTP id x63mr14344389wmx.169.1565410550414;
-        Fri, 09 Aug 2019 21:15:50 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id a84sm10208674wmf.29.2019.08.09.21.15.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 21:15:49 -0700 (PDT)
-Message-ID: <5d4e44f5.1c69fb81.f4831.5307@mx.google.com>
-Date:   Fri, 09 Aug 2019 21:15:49 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Sat, 10 Aug 2019 00:16:14 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 24297400C98F4
+        for <linux-kernel@vger.kernel.org>; Fri,  9 Aug 2019 22:40:59 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id wInchgMQciQerwInch3ITc; Fri, 09 Aug 2019 23:16:12 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=NxiF3xr+Hr1WaF07ZmyWES9WkPZH5m+fizTEj/FCeAg=; b=rloOt8QrMtdR3b7FUOXmcJyEXc
+        /XkhD9mX6oLaVWStFM1LOJ5aimns/0wdRYhX1DFBoaMc0853hxk6kSFUBGgez10URYocpPI+Y7JZm
+        Pho9Mkrk0dKDcLibKQnIpmMqYhYQquVbSUtceZcpPfD1fcmjElRWF+8fNOpmVn4zYZix7IQzthD+B
+        c6KPniUKKUE9zQVHALs6g9IlIyplZstkhfQOYUMWYwGracezHzrUB1kunW1N7tOOgMQA+xcRM0Ko2
+        t5OIlsdSkhgKAVELsptaQxHXTq1/WrsY0hzOGjvXgpHNhGcJThYm1zr8TFsoXkn0F1nQdQdhpFh+u
+        ptYRjvsw==;
+Received: from [187.192.11.120] (port=56154 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hwInb-000FGj-8T; Fri, 09 Aug 2019 23:16:11 -0500
+Date:   Fri, 9 Aug 2019 23:16:10 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [GIT PULL] Wimplicit-fallthrough patches for 5.3-rc4
+Message-ID: <20190810041610.GA27921@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v4.4.188-22-gab9a14a0618d
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Report-Type: boot
-X-Kernelci-Branch: linux-4.4.y
-In-Reply-To: <20190809134241.565496442@linuxfoundation.org>
-References: <20190809134241.565496442@linuxfoundation.org>
-Subject: Re: [PATCH 4.4 00/21] 4.4.189-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hwInb-000FGj-8T
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:56154
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.4.y boot: 94 boots: 2 failed, 82 passed with 9 offline, 1=
- conflict (v4.4.188-22-gab9a14a0618d)
+The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.4.y/kernel/v4.4.188-22-gab9a14a0618d/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.4.y=
-/kernel/v4.4.188-22-gab9a14a0618d/
+  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
 
-Tree: stable-rc
-Branch: linux-4.4.y
-Git Describe: v4.4.188-22-gab9a14a0618d
-Git Commit: ab9a14a0618d99ad7e0b7e589a97f3421ac4d662
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 46 unique boards, 20 SoC families, 14 builds out of 190
+are available in the Git repository at:
 
-Boot Regressions Detected:
+  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/Wimplicit-fallthrough-5.3-rc4
 
-arm:
+for you to fetch changes up to 1f7585f30a3af595ac07f610b807c738c9e3baab:
 
-    bcm2835_defconfig:
-        gcc-8:
-          bcm2835-rpi-b:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.4.18=
-7-23-g462a4b2bd3bf - first fail: v4.4.187-40-geae076a61a51)
+  ARM: ep93xx: Mark expected switch fall-through (2019-08-09 19:53:35 -0500)
 
-    sama5_defconfig:
-        gcc-8:
-          at91-sama5d4_xplained:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.4.18=
-7-23-g462a4b2bd3bf - first fail: v4.4.187-40-geae076a61a51)
+----------------------------------------------------------------
+Wimplicit-fallthrough patches for 5.3-rc4
 
-arm64:
+Hi Linus,
 
-    defconfig:
-        gcc-8:
-          apq8016-sbc:
-              lab-baylibre-seattle: failing since 1 day (last pass: v4.4.18=
-7-23-g462a4b2bd3bf - first fail: v4.4.187-40-geae076a61a51)
+Please, pull the following patches that mark switch cases where we are
+expecting to fall through.
 
-Boot Failures Detected:
+ - Fix fall-through warnings in arm, sparc64, mips, i386 and s390.
 
-arm64:
-    defconfig:
-        gcc-8:
-            qcom-qdf2400: 1 failed lab
+Thanks
 
-arm:
-    multi_v7_defconfig:
-        gcc-8:
-            stih410-b2120: 1 failed lab
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Offline Platforms:
+----------------------------------------------------------------
+Gustavo A. R. Silva (17):
+      ARM/hw_breakpoint: Mark expected switch fall-throughs
+      ARM: tegra: Mark expected switch fall-through
+      ARM: alignment: Mark expected switch fall-throughs
+      ARM: OMAP: dma: Mark expected switch fall-throughs
+      mfd: db8500-prcmu: Mark expected switch fall-throughs
+      mfd: omap-usb-host: Mark expected switch fall-throughs
+      ARM: signal: Mark expected switch fall-through
+      watchdog: Mark expected switch fall-throughs
+      watchdog: scx200_wdt: Mark expected switch fall-through
+      watchdog: wdt977: Mark expected switch fall-through
+      crypto: ux500/crypt: Mark expected switch fall-throughs
+      s390/net: Mark expected switch fall-throughs
+      watchdog: riowd: Mark expected switch fall-through
+      video: fbdev: omapfb_main: Mark expected switch fall-throughs
+      pcmcia: db1xxx_ss: Mark expected switch fall-throughs
+      scsi: fas216: Mark expected switch fall-throughs
+      ARM: ep93xx: Mark expected switch fall-through
 
-arm64:
-
-    defconfig:
-        gcc-8
-            apq8016-sbc: 1 offline lab
-
-arm:
-
-    bcm2835_defconfig:
-        gcc-8
-            bcm2835-rpi-b: 1 offline lab
-
-    sama5_defconfig:
-        gcc-8
-            at91-sama5d4_xplained: 1 offline lab
-
-    multi_v7_defconfig:
-        gcc-8
-            alpine-db: 1 offline lab
-            at91-sama5d4_xplained: 1 offline lab
-            bcm4708-smartrg-sr400ac: 1 offline lab
-            socfpga_cyclone5_de0_sockit: 1 offline lab
-            sun5i-r8-chip: 1 offline lab
-
-    sunxi_defconfig:
-        gcc-8
-            sun5i-r8-chip: 1 offline lab
-
-Conflicting Boot Failure Detected: (These likely are not failures as other =
-labs are reporting PASS. Needs review.)
-
-x86_64:
-    x86_64_defconfig:
-        qemu:
-            lab-baylibre: PASS (gcc-8)
-            lab-mhart: PASS (gcc-8)
-            lab-linaro-lkft: FAIL (gcc-8)
-            lab-drue: PASS (gcc-8)
-            lab-collabora: PASS (gcc-8)
-
----
-For more info write to <info@kernelci.org>
+ arch/arm/kernel/hw_breakpoint.c        |  5 +++++
+ arch/arm/kernel/signal.c               |  1 +
+ arch/arm/mach-ep93xx/crunch.c          |  1 +
+ arch/arm/mach-tegra/reset.c            |  2 +-
+ arch/arm/mm/alignment.c                |  4 +++-
+ arch/arm/plat-omap/dma.c               | 14 +++++---------
+ drivers/crypto/ux500/cryp/cryp.c       |  6 ++++++
+ drivers/mfd/db8500-prcmu.c             |  2 ++
+ drivers/mfd/omap-usb-host.c            |  4 ++--
+ drivers/pcmcia/db1xxx_ss.c             |  4 ++++
+ drivers/s390/net/ctcm_fsms.c           |  1 +
+ drivers/s390/net/ctcm_mpc.c            |  3 +++
+ drivers/s390/net/qeth_l2_main.c        |  2 +-
+ drivers/scsi/arm/fas216.c              |  8 ++++++++
+ drivers/video/fbdev/omap/omapfb_main.c |  8 ++++++++
+ drivers/watchdog/ar7_wdt.c             |  1 +
+ drivers/watchdog/pcwd.c                |  2 +-
+ drivers/watchdog/riowd.c               |  2 +-
+ drivers/watchdog/sb_wdog.c             |  1 +
+ drivers/watchdog/scx200_wdt.c          |  1 +
+ drivers/watchdog/wdt.c                 |  2 +-
+ drivers/watchdog/wdt977.c              |  2 +-
+ 22 files changed, 58 insertions(+), 18 deletions(-)
