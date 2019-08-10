@@ -2,314 +2,116 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05EDC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 07:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B99CC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 07:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8A2208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 07:22:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JUllOmye"
+	by mail.kernel.org (Postfix) with ESMTP id DDEA6208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 07:22:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfHJHWV (ORCPT
+        id S1726373AbfHJHWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 03:22:21 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36012 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbfHJHWT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 03:22:19 -0400
-Received: by mail-pg1-f195.google.com with SMTP id l21so46934779pgm.3
-        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 00:22:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=910+jA2CCo8T9/juoYypHUZPc1nu2oE10wZ3w1PIFww=;
-        b=JUllOmyelcml2fbv0psniUaXJxuBW7cOyTv7VROwRN6J/dznwqPYuP79xNKOXex5//
-         wVfM8gpHaL5+zAlbF4R+IG9Ark3NBqFknH07y8vGIHiKWIhbzKBQujPL2gjym2yRi2bj
-         X/e7XrNBwyLTW/2/nE5oYWJQ40ZsnI25P9JKtkAWwX+FE+WIiJZKj5sND7eFLJOKFs5/
-         pbRT5Vi9fT42TiEouZee2mLn2OZBjeiaJAnz1Bf6Xi6BjNBjDt7DTumVnI4ocB/WdIhL
-         +y/ZClPgYqOXvTvq7N4lfI+VQ3Z1UFgEZJf/TXGBYMcO3chS2nOlHpcX/SGMzwtaOi6+
-         k1sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=910+jA2CCo8T9/juoYypHUZPc1nu2oE10wZ3w1PIFww=;
-        b=QfoUmSPfKdwIZGNuk0nyR4DvPFJ6fH/VjMyJ8ECqpCH8pr2JSHC/uD+ClICJMt3s9o
-         oVasogUuMXif6FGnMFam1HZHtcKwMwu5wgP+pK67PA0wPteajgyKRfo4yXFnlGPhAB3I
-         Ii9MNqLrTljPe1KF4Fz7tvZI0+HO3yjkB7o/ClUsIXAHvvS2ZDzwBQEqsGHpCHNneBpJ
-         kCam+m1AKPCeN6NE658s6RYQ1ItKxjMbHloeXbG4PAiewLzzZ0l+kO4ue/hGXmNkZyDF
-         W6E4ONFmupiMzqHmzP0OBFtOCKJjMw8wr+HxlK9Ps02Ni9xtLY4OZXmOIdtb2YDRAZru
-         UAcQ==
-X-Gm-Message-State: APjAAAWlcfh8nfTZdF73BodrZGD36mzIB4JaoXcBFyRnycQE+aUW1/VI
-        KHqyvLFIXlrf9fcPFhLycnrWxw==
-X-Google-Smtp-Source: APXvYqzpjvY4BjDadYCMqHrv1MJzz0JDe+YRk/7XW3b9rbhquZ9IcNOaVCNZ1MOjgi3GDQDP+DHzFw==
-X-Received: by 2002:a62:174a:: with SMTP id 71mr26588503pfx.140.1565421738783;
-        Sat, 10 Aug 2019 00:22:18 -0700 (PDT)
-Received: from localhost.localdomain (li456-16.members.linode.com. [50.116.10.16])
-        by smtp.gmail.com with ESMTPSA id l17sm24872660pgj.44.2019.08.10.00.22.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 10 Aug 2019 00:22:18 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        David Miller <davem@davemloft.net>,
-        Milian Wolff <milian.wolff@kdab.com>,
-        Donald Yandt <donald.yandt@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Wei Li <liwei391@huawei.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Mark Drayton <mbd@fb.com>,
-        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v4 2/2] perf machine: arm/arm64: Improve completeness for kernel address space
-Date:   Sat, 10 Aug 2019 15:21:35 +0800
-Message-Id: <20190810072135.27072-3-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190810072135.27072-1-leo.yan@linaro.org>
-References: <20190810072135.27072-1-leo.yan@linaro.org>
+        Sat, 10 Aug 2019 03:22:50 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:49716 "EHLO mail5.wrs.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbfHJHWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 03:22:50 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x7A7MCJn019665
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Sat, 10 Aug 2019 00:22:23 -0700
+Received: from pek-lpg-core2.corp.ad.wrs.com (128.224.153.41) by
+ ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+ 14.3.468.0; Sat, 10 Aug 2019 00:22:02 -0700
+From:   <zhe.he@windriver.com>
+To:     <jeyu@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <zhe.he@windriver.com>
+Subject: [PATCH] module: Fix load failure when CONFIG_STRICT_MODULE_RWX is diabled
+Date:   Sat, 10 Aug 2019 15:22:00 +0800
+Message-ID: <1565421720-316924-1-git-send-email-zhe.he@windriver.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arm and arm64 architecture reserve some memory regions prior to the
-symbol '_stext' and these memory regions later will be used by device
-module and BPF jit.  The current code misses to consider these memory
-regions thus any address in the regions will be taken as user space
-mode, but perf cannot find the corresponding dso with the wrong CPU
-mode so we misses to generate samples for device module and BPF
-related trace data.
+From: He Zhe <zhe.he@windriver.com>
 
-This patch parse the link scripts to get the memory size prior to start
-address and reduce this size from 'machine>->kernel_start', then can
-get a fixed up kernel start address which contain memory regions for
-device module and BPF.  Finally, machine__get_kernel_start() can reflect
-more complete kernel memory regions and perf can successfully generate
-samples.
+When loading modules with CONFIG_ARCH_HAS_STRICT_MODULE_RWX enabled and
+CONFIG_STRICT_MODULE_RWX disabled, the memory allocated for modules would
+not be page-aligned and cause the following BUG during frob_text.
 
-The reason for parsing the link scripts is Arm architecture changes text
-offset dependent on different platforms, which define multiple text
-offsets in $kernel/arch/arm/Makefile.  This offset is decided when build
-kernel and the final value is extended in the link script, so we can
-extract the used value from the link script.  We use the same way to
-parse arm64 link script as well.  If fail to find the link script, the
-pre start memory size is assumed as zero, in this case it has no any
-change caused with this patch.
+------------[ cut here ]------------
+kernel BUG at kernel/module.c:1907!
+Internal error: Oops - BUG: 0 [#1] ARM
+Modules linked in:
+CPU: 0 PID: 89 Comm: systemd-modules Not tainted 5.3.0-rc2 #1
+Hardware name: ARM-Versatile (Device Tree Support)
+PC is at frob_text.constprop.0+0x2c/0x40
+LR is at load_module+0x14b4/0x1d28
+pc : [<c0082930>]    lr : [<c0084bb0>]    psr: 20000013
+sp : ce44fe58  ip : 00000000  fp : 00000000
+r10: 00000000  r9 : ce44feb8  r8 : 00000000
+r7 : 00000001  r6 : bf00032c  r5 : ce44ff40  r4 : bf000320
+r3 : bf000400  r2 : 00000fff  r1 : 00000220  r0 : bf000000
+Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+Control: 00093177  Table: 0e4c0000  DAC: 00000051
+Process systemd-modules (pid: 89, stack limit = 0x9fccc8dc)
+Stack: (0xce44fe58 to 0xce450000)
+fe40:                                                       00000000 cf1b05b8
+fe60: 00000001 ce47cf08 bf002754 c07ae5d8 d0a2a484 bf002060 bf0004f8 00000000
+fe80: b6d17910 c017cf1c ce47cf00 d0a29000 ce47cf00 ce44ff34 000014fc 00000000
+fea0: 00000000 00000000 bf00025c 00000001 00000000 00000000 6e72656b 00006c65
+fec0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+fee0: 00000000 00000000 00000000 00000000 00000000 c0ac9048 7fffffff 00000000
+ff00: b6d17910 00000005 0000017b c0009208 ce44e000 00000000 b6ebfe54 c008562c
+ff20: 7fffffff 00000000 00000003 cefd28f8 00000001 d0a29000 000014fc 00000000
+ff40: d0a292cb d0a29380 d0a29000 000014fc d0a29f0c d0a29d90 d0a29a60 00000520
+ff60: 00000710 00000718 00000826 00000000 00000000 00000000 00000708 00000023
+ff80: 00000024 0000001c 00000000 00000016 00000000 c0ac9048 0041c620 00000000
+ffa0: 00000000 c0009000 0041c620 00000000 00000005 b6d17910 00000000 00000000
+ffc0: 0041c620 00000000 00000000 0000017b 0041f078 00000000 004098b0 b6ebfe54
+ffe0: bedb6bc8 bedb6bb8 b6d0f91c b6c945a0 60000010 00000005 00000000 00000000
+[<c0082930>] (frob_text.constprop.0) from [<c0084bb0>] (load_module+0x14b4/0x1d28)
+[<c0084bb0>] (load_module) from [<c008562c>] (sys_finit_module+0xa0/0xc4)
+[<c008562c>] (sys_finit_module) from [<c0009000>] (ret_fast_syscall+0x0/0x50)
+Exception stack(0xce44ffa8 to 0xce44fff0)
+ffa0:                   0041c620 00000000 00000005 b6d17910 00000000 00000000
+ffc0: 0041c620 00000000 00000000 0000017b 0041f078 00000000 004098b0 b6ebfe54
+ffe0: bedb6bc8 bedb6bb8 b6d0f91c b6c945a0
+Code: e7f001f2 e5931008 e1110002 0a000001 (e7f001f2)
+---[ end trace e904557128d9aed5 ]---
 
-Below is detailed info for testing this patch:
+This patch enables page-aligned allocation when
+CONFIG_ARCH_HAS_STRICT_MODULE_RWX is enabled.
 
-- Install or build LLVM/Clang;
-
-- Configure perf with ~/.perfconfig:
-
-  root@debian:~# cat ~/.perfconfig
-  # this file is auto-generated.
-  [llvm]
-          clang-path = /mnt/build/llvm-build/build/install/bin/clang
-          kbuild-dir = /mnt/linux-kernel/linux-cs-dev/
-          clang-opt = "-g"
-          dump-obj = true
-
-  [trace]
-          show_zeros = yes
-          show_duration = no
-          no_inherit = yes
-          show_timestamp = no
-          show_arg_names = no
-          args_alignment = 40
-          show_prefix = yes
-
-- Run 'perf trace' command with eBPF event:
-
-  root@debian:~# perf trace -e string \
-      -e $kernel/tools/perf/examples/bpf/augmented_raw_syscalls.c
-
-- Read eBPF program memory mapping in kernel:
-
-  root@debian:~# echo 1 > /proc/sys/net/core/bpf_jit_kallsyms
-  root@debian:~# cat /proc/kallsyms | grep -E "bpf_prog_.+_sys_[enter|exit]"
-  ffff00000008a0d0 t bpf_prog_e470211b846088d5_sys_enter  [bpf]
-  ffff00000008c6a4 t bpf_prog_29c7ae234d79bd5c_sys_exit   [bpf]
-
-- Launch any program which accesses file system frequently so can hit
-  the system calls trace flow with eBPF event;
-
-- Capture CoreSight trace data with filtering eBPF program:
-
-  root@debian:~# perf record -e cs_etm/@tmc_etr0/ \
-	--filter 'filter 0xffff00000008a0d0/0x800' -a sleep 5s
-
-- Decode the eBPF program symbol 'bpf_prog_f173133dc38ccf87_sys_enter':
-
-  root@debian:~# perf script -F,ip,sym
-  Frame deformatter: Found 4 FSYNCS
-                  0 [unknown]
-   ffff00000008a1ac bpf_prog_e470211b846088d5_sys_enter
-   ffff00000008a250 bpf_prog_e470211b846088d5_sys_enter
-                  0 [unknown]
-   ffff00000008a124 bpf_prog_e470211b846088d5_sys_enter
-                  0 [unknown]
-   ffff00000008a14c bpf_prog_e470211b846088d5_sys_enter
-   ffff00000008a13c bpf_prog_e470211b846088d5_sys_enter
-   ffff00000008a14c bpf_prog_e470211b846088d5_sys_enter
-                  0 [unknown]
-   ffff00000008a180 bpf_prog_e470211b846088d5_sys_enter
-                  0 [unknown]
-   ffff00000008a1ac bpf_prog_e470211b846088d5_sys_enter
-   ffff00000008a190 bpf_prog_e470211b846088d5_sys_enter
-   ffff00000008a1ac bpf_prog_e470211b846088d5_sys_enter
-   ffff00000008a250 bpf_prog_e470211b846088d5_sys_enter
-                  0 [unknown]
-   ffff00000008a124 bpf_prog_e470211b846088d5_sys_enter
-                  0 [unknown]
-   ffff00000008a14c bpf_prog_e470211b846088d5_sys_enter
-                  0 [unknown]
-   ffff00000008a180 bpf_prog_e470211b846088d5_sys_enter
-   [...]
-
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: coresight@lists.linaro.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Fixes: 93651f80dcb6 ("modules: fix compile error if don't have strict module rwx")
+Signed-off-by: He Zhe <zhe.he@windriver.com>
 ---
- tools/perf/Makefile.config           | 22 ++++++++++++++++++++++
- tools/perf/arch/arm/util/Build       |  2 ++
- tools/perf/arch/arm/util/machine.c   | 17 +++++++++++++++++
- tools/perf/arch/arm64/util/Build     |  1 +
- tools/perf/arch/arm64/util/machine.c | 17 +++++++++++++++++
- 5 files changed, 59 insertions(+)
- create mode 100644 tools/perf/arch/arm/util/machine.c
- create mode 100644 tools/perf/arch/arm64/util/machine.c
+ kernel/module.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index e4988f49ea79..76e0ad0b4fd2 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -51,6 +51,17 @@ endif
- ifeq ($(SRCARCH),arm)
-   NO_PERF_REGS := 0
-   LIBUNWIND_LIBS = -lunwind -lunwind-arm
-+  PRE_START_SIZE := 0
-+  ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/kernel/vmlinux.lds),)
-+    # Extract info from lds:
-+    #   . = ((0xC0000000)) + 0x00208000;
-+    # PRE_START_SIZE := 0x00208000
-+    PRE_START_SIZE := $(shell egrep ' \. \= \({2}0x[0-9a-fA-F]+\){2}' \
-+      $(srctree)/arch/$(SRCARCH)/kernel/vmlinux.lds | \
-+      sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
-+      awk -F' ' '{printf "0x%x", $$2}' 2>/dev/null)
-+  endif
-+  CFLAGS += -DARM_PRE_START_SIZE=$(PRE_START_SIZE)
- endif
- 
- ifeq ($(SRCARCH),arm64)
-@@ -58,6 +69,17 @@ ifeq ($(SRCARCH),arm64)
-   NO_SYSCALL_TABLE := 0
-   CFLAGS += -I$(OUTPUT)arch/arm64/include/generated
-   LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
-+  PRE_START_SIZE := 0
-+  ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/kernel/vmlinux.lds),)
-+    # Extract info from lds:
-+    #  . = ((((((((0xffffffffffffffff)) - (((1)) << (48)) + 1) + (0)) + (0x08000000))) + (0x08000000))) + 0x00080000;
-+    # PRE_START_SIZE := (0x08000000 + 0x08000000 + 0x00080000) = 0x10080000
-+    PRE_START_SIZE := $(shell egrep ' \. \= \({8}0x[0-9a-fA-F]+\){2}' \
-+      $(srctree)/arch/$(SRCARCH)/kernel/vmlinux.lds | \
-+      sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
-+      awk -F' ' '{printf "0x%x", $$6+$$7+$$8}' 2>/dev/null)
-+  endif
-+  CFLAGS += -DARM_PRE_START_SIZE=$(PRE_START_SIZE)
- endif
- 
- ifeq ($(SRCARCH),csky)
-diff --git a/tools/perf/arch/arm/util/Build b/tools/perf/arch/arm/util/Build
-index 296f0eac5e18..efa6b768218a 100644
---- a/tools/perf/arch/arm/util/Build
-+++ b/tools/perf/arch/arm/util/Build
-@@ -1,3 +1,5 @@
-+perf-y += machine.o
-+
- perf-$(CONFIG_DWARF) += dwarf-regs.o
- 
- perf-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind.o
-diff --git a/tools/perf/arch/arm/util/machine.c b/tools/perf/arch/arm/util/machine.c
-new file mode 100644
-index 000000000000..db172894e4ea
---- /dev/null
-+++ b/tools/perf/arch/arm/util/machine.c
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/types.h>
-+#include <linux/string.h>
-+#include <stdlib.h>
-+
-+#include "../../util/machine.h"
-+
-+void arch__fix_kernel_text_start(u64 *start)
-+{
-+	/*
-+	 * On arm, the 16MB virtual memory space prior to 'kernel_start' is
-+	 * allocated to device modules, a PMD table if CONFIG_HIGHMEM is
-+	 * enabled and a PGD table.  To reflect the complete kernel address
-+	 * space, compensate the pre-defined regions for kernel start address.
-+	 */
-+	*start = *start - ARM_PRE_START_SIZE;
-+}
-diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
-index 3cde540d2fcf..8081fb8a7b3d 100644
---- a/tools/perf/arch/arm64/util/Build
-+++ b/tools/perf/arch/arm64/util/Build
-@@ -1,4 +1,5 @@
- perf-y += header.o
-+perf-y += machine.o
- perf-y += sym-handling.o
- perf-$(CONFIG_DWARF)     += dwarf-regs.o
- perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
-diff --git a/tools/perf/arch/arm64/util/machine.c b/tools/perf/arch/arm64/util/machine.c
-new file mode 100644
-index 000000000000..61058dca8c5a
---- /dev/null
-+++ b/tools/perf/arch/arm64/util/machine.c
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/types.h>
-+#include <linux/string.h>
-+#include <stdlib.h>
-+
-+#include "../../util/machine.h"
-+
-+void arch__fix_kernel_text_start(u64 *start)
-+{
-+	/*
-+	 * On arm64, the root PGD table, device module memory region and
-+	 * BPF jit region are prior to 'kernel_start'.  To reflect the
-+	 * complete kernel address space, compensate these pre-defined
-+	 * regions for kernel start address.
-+	 */
-+	*start = *start - ARM_PRE_START_SIZE;
-+}
+diff --git a/kernel/module.c b/kernel/module.c
+index 5933395..9ee9342 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -65,9 +65,9 @@
+ /*
+  * Modules' sections will be aligned on page boundaries
+  * to ensure complete separation of code and data, but
+- * only when CONFIG_STRICT_MODULE_RWX=y
++ * only when CONFIG_ARCH_HAS_STRICT_MODULE_RWX=y
+  */
+-#ifdef CONFIG_STRICT_MODULE_RWX
++#ifdef CONFIG_ARCH_HAS_STRICT_MODULE_RWX
+ # define debug_align(X) ALIGN(X, PAGE_SIZE)
+ #else
+ # define debug_align(X) (X)
 -- 
-2.17.1
+2.7.4
 
