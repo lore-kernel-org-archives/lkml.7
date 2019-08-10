@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7EE5C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190F5C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 773B5208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6DFD2086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727711AbfHJUwE (ORCPT
+        id S1727700AbfHJUwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:52:04 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54166 "EHLO
+        Sat, 10 Aug 2019 16:52:03 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54164 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726594AbfHJUnw (ORCPT
+        by vger.kernel.org with ESMTP id S1726595AbfHJUnw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:52 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDN-00053m-7p; Sat, 10 Aug 2019 21:43:49 +0100
+        id 1hwYDN-00053r-8Z; Sat, 10 Aug 2019 21:43:49 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDK-0003br-A3; Sat, 10 Aug 2019 21:43:46 +0100
+        id 1hwYDJ-0003az-Qx; Sat, 10 Aug 2019 21:43:45 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Konrad Rzeszutek Wilk" <konrad.wilk@oracle.com>,
-        "Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?=" <rkrcmar@redhat.com>,
-        "Jim Mattson" <jmattson@google.com>
+        "Alexandru Ardelean" <alexandru.ardelean@analog.com>,
+        "Dragos Bogdan" <dragos.bogdan@analog.com>,
+        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.160863860@decadent.org.uk>
+Message-ID: <lsq.1565469607.438808068@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 055/157] kvm: x86: IA32_ARCH_CAPABILITIES is always
- supported
+Subject: [PATCH 3.16 044/157] iio: ad_sigma_delta: select channel when
+ reading register
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,47 +57,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jim Mattson <jmattson@google.com>
+From: Dragos Bogdan <dragos.bogdan@analog.com>
 
-commit 1eaafe91a0df4157521b6417b3dd8430bf5f52f0 upstream.
+commit fccfb9ce70ed4ea7a145f77b86de62e38178517f upstream.
 
-If there is a possibility that a VM may migrate to a Skylake host,
-then the hypervisor should report IA32_ARCH_CAPABILITIES.RSBA[bit 2]
-as being set (future work, of course). This implies that
-CPUID.(EAX=7,ECX=0):EDX.ARCH_CAPABILITIES[bit 29] should be
-set. Therefore, kvm should report this CPUID bit as being supported
-whether or not the host supports it.  Userspace is still free to clear
-the bit if it chooses.
+The desired channel has to be selected in order to correctly fill the
+buffer with the corresponding data.
+The `ad_sd_write_reg()` already does this, but for the
+`ad_sd_read_reg_raw()` this was omitted.
 
-For more information on RSBA, see Intel's white paper, "Retpoline: A
-Branch Target Injection Mitigation" (Document Number 337131-001),
-currently available at https://bugzilla.kernel.org/show_bug.cgi?id=199511.
-
-Since the IA32_ARCH_CAPABILITIES MSR is emulated in kvm, there is no
-dependency on hardware support for this feature.
-
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Fixes: 28c1c9fabf48 ("KVM/VMX: Emulate MSR_IA32_ARCH_CAPABILITIES")
-Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
-[bwh: Backported to 3.16: adjust context]
+Fixes: af3008485ea03 ("iio:adc: Add common code for ADI Sigma Delta devices")
+Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kvm/cpuid.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/iio/adc/ad_sigma_delta.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -395,6 +395,11 @@ static inline int __do_cpuid_ent(struct
- 			entry->ebx |= F(TSC_ADJUST);
- 			entry->edx &= kvm_cpuid_7_0_edx_x86_features;
- 			cpuid_mask(&entry->edx, 10);
-+			/*
-+			 * We emulate ARCH_CAPABILITIES in software even
-+			 * if the host doesn't support it.
-+			 */
-+			entry->edx |= F(ARCH_CAPABILITIES);
- 		} else {
- 			entry->ebx = 0;
- 			entry->edx = 0;
+--- a/drivers/iio/adc/ad_sigma_delta.c
++++ b/drivers/iio/adc/ad_sigma_delta.c
+@@ -121,6 +121,7 @@ static int ad_sd_read_reg_raw(struct ad_
+ 	if (sigma_delta->info->has_registers) {
+ 		data[0] = reg << sigma_delta->info->addr_shift;
+ 		data[0] |= sigma_delta->info->read_mask;
++		data[0] |= sigma_delta->comm;
+ 		spi_message_add_tail(&t[0], &m);
+ 	}
+ 	spi_message_add_tail(&t[1], &m);
 
