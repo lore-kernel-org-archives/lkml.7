@@ -7,41 +7,42 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6826EC32756
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DB2C32758
 	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 08:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF23208C4
+	by mail.kernel.org (Postfix) with ESMTP id 6A12B217D7
 	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 08:43:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="jK4hN7ld"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="BjYC8ivD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbfHJIm4 (ORCPT
+        id S1726336AbfHJInA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 04:42:56 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:21815 "EHLO rere.qmqm.pl"
+        Sat, 10 Aug 2019 04:43:00 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:38123 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726146AbfHJImy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 04:42:54 -0400
+        id S1726204AbfHJIm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 04:42:57 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 465FvQ0mfGz6q;
-        Sat, 10 Aug 2019 10:41:22 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 465FvS6stYzfH;
+        Sat, 10 Aug 2019 10:41:24 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1565426482; bh=G7R5e0R8xvaPUp5VxDgIxn2z2zA6lF8ZjDv/d5wGWZ4=;
+        t=1565426485; bh=C+9Erl6/2fjjlTshmwRgC3WjqRobpDMKu9Dc2cO33B8=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=jK4hN7ldot/gkRoFcHO/XX7LC6g4B4iBuE2/xFMOGngBKJI+jnCudz7V8gs0dgBNr
-         UmN2xQK5YVs2jtvcCDMky860A7WHkK5rTgghV3/nP72sdMytCTuWg8zKhQYvfS+ZRt
-         A+4S4chNCsT0adsEvmBmz7OoAOzTO9tn92UoJUsZYKdfZMOgmcYxizPiTIQDHeQhEG
-         ANq80oW7WQON3iRmjpusek96cxCb3cqd7dtdgi4mcHduB8QYCU5Qap/UPOZJLQnuJM
-         xa1uAwahb7enCFhxy/XwRpiTiaBzRKh5iYW01ZH9MWSlbh6MThgNMTu9KvCaln7Cwk
-         kuNjbUEql8YPQ==
+        b=BjYC8ivDX5FV9PuRKHdA045kGCbOOu01YRyyB+aBja91errK4Aqq9KgFkpGipczLI
+         gVKrLMTSHBRuywRT/oIMFe/f2gTp1EGM2R6ov1blA4lIyFbg9KSKRE1aulUjF0n4sj
+         3K1NRBUwtdxuLw8k3De9hheAiqynSOTfUQ49kvn5svvF1t+hxnt1DFXBM6/piOrI9w
+         X+pC0ZF2b3hOkd84JLg+07sAxZEvwYuOqlP/CCFsx6F7s7ezuEypTHv/QIMCR2pZ6V
+         7Zy1K04Jo75YYhewsGrqOELCC1C+nzZqHaK7/MLBFla+2Ix1LsiUFO6bhrG4gov2GW
+         SP2chTKR2U3ww==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.100.3 at mail
-Date:   Sat, 10 Aug 2019 10:42:50 +0200
-Message-Id: <15b3e89a888a24d90647dc5d93820bf5b80c9a06.1565426370.git.mirq-linux@rere.qmqm.pl>
+Date:   Sat, 10 Aug 2019 10:42:53 +0200
+Message-Id: <b94e4fc52570e1aef9ab1eb01c72044a942255b8.1565426370.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1565426370.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1565426370.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v6 3/7] usb: gadget: u_serial: make OBEX port not a console
+Subject: [PATCH v6 7/7] usb: gadget: u_serial: use mutex for serialising
+ open()s
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -54,90 +55,240 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prevent OBEX serial port from ever becoming a console. Console messages
-will definitely break the protocol, and since you have to instantiate
-the port making it explicitly for OBEX, there is no point in allowing
-console to break it by mistake.
+Remove home-made waiting mechanism from gs_open() and rely on
+portmaster's mutex to do the job.
+
+Note: This releases thread waiting on close() when another thread
+open()s simultaneously.
 
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
-  v6: rebased on balbi/testing/next
-  v5: no changes
-  v4: no changes
-  v3: rename gserial_alloc_line_raw() -> gserial_alloc_line_no_console()
-  v2: change of API
-    + commit message massage
+  v6: initial revision, new in the patchset
 
 ---
- drivers/usb/gadget/function/f_obex.c   |  2 +-
- drivers/usb/gadget/function/u_serial.c | 16 ++++++++++++----
- drivers/usb/gadget/function/u_serial.h |  1 +
- 3 files changed, 14 insertions(+), 5 deletions(-)
+ drivers/usb/gadget/function/u_serial.c | 112 ++++++++-----------------
+ 1 file changed, 37 insertions(+), 75 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/f_obex.c b/drivers/usb/gadget/function/f_obex.c
-index 55b7f57d2dc7..ab26d84ed95e 100644
---- a/drivers/usb/gadget/function/f_obex.c
-+++ b/drivers/usb/gadget/function/f_obex.c
-@@ -432,7 +432,7 @@ static struct usb_function_instance *obex_alloc_inst(void)
- 		return ERR_PTR(-ENOMEM);
- 
- 	opts->func_inst.free_func_inst = obex_free_inst;
--	ret = gserial_alloc_line(&opts->port_num);
-+	ret = gserial_alloc_line_no_console(&opts->port_num);
- 	if (ret) {
- 		kfree(opts);
- 		return ERR_PTR(ret);
 diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
-index 94f6999e8262..62280c23cde2 100644
+index a248ed0fd5d2..f986e5c55974 100644
 --- a/drivers/usb/gadget/function/u_serial.c
 +++ b/drivers/usb/gadget/function/u_serial.c
-@@ -1180,7 +1180,7 @@ void gserial_free_line(unsigned char port_num)
- }
- EXPORT_SYMBOL_GPL(gserial_free_line);
+@@ -104,7 +104,6 @@ struct gs_port {
+ 	struct gs_console	*console;
+ #endif
  
--int gserial_alloc_line(unsigned char *line_num)
-+int gserial_alloc_line_no_console(unsigned char *line_num)
+-	bool			openclose;	/* open/close in progress */
+ 	u8			port_num;
+ 
+ 	struct list_head	read_pool;
+@@ -588,82 +587,45 @@ static int gs_open(struct tty_struct *tty, struct file *file)
  {
- 	struct usb_cdc_line_coding	coding;
- 	struct gs_port			*port;
-@@ -1221,12 +1221,20 @@ int gserial_alloc_line(unsigned char *line_num)
- 		goto err;
- 	}
- 	*line_num = port_num;
+ 	int		port_num = tty->index;
+ 	struct gs_port	*port;
+-	int		status;
++	int		status = 0;
+ 
+-	do {
+-		mutex_lock(&ports[port_num].lock);
+-		port = ports[port_num].port;
+-		if (!port)
+-			status = -ENODEV;
+-		else {
+-			spin_lock_irq(&port->port_lock);
++	mutex_lock(&ports[port_num].lock);
++	port = ports[port_num].port;
++	if (!port) {
++		status = -ENODEV;
++		goto out;
++	}
+ 
+-			/* already open?  Great. */
+-			if (port->port.count) {
+-				status = 0;
+-				port->port.count++;
 -
--	if (!port_num)
--		gs_console_init(port);
- err:
- 	return ret;
+-			/* currently opening/closing? wait ... */
+-			} else if (port->openclose) {
+-				status = -EBUSY;
+-
+-			/* ... else we do the work */
+-			} else {
+-				status = -EAGAIN;
+-				port->openclose = true;
+-			}
+-			spin_unlock_irq(&port->port_lock);
+-		}
+-		mutex_unlock(&ports[port_num].lock);
+-
+-		switch (status) {
+-		default:
+-			/* fully handled */
+-			return status;
+-		case -EAGAIN:
+-			/* must do the work */
+-			break;
+-		case -EBUSY:
+-			/* wait for EAGAIN task to finish */
+-			msleep(1);
+-			/* REVISIT could have a waitchannel here, if
+-			 * concurrent open performance is important
+-			 */
+-			break;
+-		}
+-	} while (status != -EAGAIN);
+-
+-	/* Do the "real open" */
+ 	spin_lock_irq(&port->port_lock);
+ 
+ 	/* allocate circular buffer on first open */
+ 	if (!kfifo_initialized(&port->port_write_buf)) {
+ 
+ 		spin_unlock_irq(&port->port_lock);
++
++		/*
++		 * portmaster's mutex still protects from simultaneous open(),
++		 * and close() can't happen, yet.
++		 */
++
+ 		status = kfifo_alloc(&port->port_write_buf,
+ 				     WRITE_BUF_SIZE, GFP_KERNEL);
+-		spin_lock_irq(&port->port_lock);
+-
+ 		if (status) {
+ 			pr_debug("gs_open: ttyGS%d (%p,%p) no buffer\n",
+-				port->port_num, tty, file);
+-			port->openclose = false;
+-			goto exit_unlock_port;
++				 port_num, tty, file);
++			goto out;
+ 		}
++
++		spin_lock_irq(&port->port_lock);
+ 	}
+ 
+-	/* REVISIT if REMOVED (ports[].port NULL), abort the open
+-	 * to let rmmod work faster (but this way isn't wrong).
+-	 */
+-
+-	/* REVISIT maybe wait for "carrier detect" */
++	/* already open?  Great. */
++	if (port->port.count++)
++		goto exit_unlock_port;
+ 
+ 	tty->driver_data = port;
+ 	port->port.tty = tty;
+ 
+-	port->port.count = 1;
+-	port->openclose = false;
+-
+ 	/* if connected, start the I/O stream */
+ 	if (port->port_usb) {
+ 		struct gserial	*gser = port->port_usb;
+@@ -677,20 +639,21 @@ static int gs_open(struct tty_struct *tty, struct file *file)
+ 
+ 	pr_debug("gs_open: ttyGS%d (%p,%p)\n", port->port_num, tty, file);
+ 
+-	status = 0;
+-
+ exit_unlock_port:
+ 	spin_unlock_irq(&port->port_lock);
++out:
++	mutex_unlock(&ports[port_num].lock);
+ 	return status;
  }
-+EXPORT_SYMBOL_GPL(gserial_alloc_line_no_console);
-+
-+int gserial_alloc_line(unsigned char *line_num)
-+{
-+	int ret = gserial_alloc_line_no_console(line_num);
-+
-+	if (!ret && !*line_num)
-+		gs_console_init(ports[*line_num].port);
-+
-+	return ret;
-+}
- EXPORT_SYMBOL_GPL(gserial_alloc_line);
  
- /**
-diff --git a/drivers/usb/gadget/function/u_serial.h b/drivers/usb/gadget/function/u_serial.h
-index 9acaac1cbb75..8b472b0c8cb4 100644
---- a/drivers/usb/gadget/function/u_serial.h
-+++ b/drivers/usb/gadget/function/u_serial.h
-@@ -54,6 +54,7 @@ struct usb_request *gs_alloc_req(struct usb_ep *ep, unsigned len, gfp_t flags);
- void gs_free_req(struct usb_ep *, struct usb_request *req);
+-static int gs_writes_finished(struct gs_port *p)
++static int gs_close_flush_done(struct gs_port *p)
+ {
+ 	int cond;
  
- /* management of individual TTY ports */
-+int gserial_alloc_line_no_console(unsigned char *port_line);
- int gserial_alloc_line(unsigned char *port_line);
- void gserial_free_line(unsigned char port_line);
+-	/* return true on disconnect or empty buffer */
++	/* return true on disconnect or empty buffer or if raced with open() */
+ 	spin_lock_irq(&p->port_lock);
+-	cond = (p->port_usb == NULL) || !kfifo_len(&p->port_write_buf);
++	cond = p->port_usb == NULL || !kfifo_len(&p->port_write_buf) ||
++		p->port.count > 1;
+ 	spin_unlock_irq(&p->port_lock);
  
+ 	return cond;
+@@ -704,6 +667,7 @@ static void gs_close(struct tty_struct *tty, struct file *file)
+ 	spin_lock_irq(&port->port_lock);
+ 
+ 	if (port->port.count != 1) {
++raced_with_open:
+ 		if (port->port.count == 0)
+ 			WARN_ON(1);
+ 		else
+@@ -713,12 +677,6 @@ static void gs_close(struct tty_struct *tty, struct file *file)
+ 
+ 	pr_debug("gs_close: ttyGS%d (%p,%p) ...\n", port->port_num, tty, file);
+ 
+-	/* mark port as closing but in use; we can drop port lock
+-	 * and sleep if necessary
+-	 */
+-	port->openclose = true;
+-	port->port.count = 0;
+-
+ 	gser = port->port_usb;
+ 	if (gser && gser->disconnect)
+ 		gser->disconnect(gser);
+@@ -729,9 +687,13 @@ static void gs_close(struct tty_struct *tty, struct file *file)
+ 	if (kfifo_len(&port->port_write_buf) > 0 && gser) {
+ 		spin_unlock_irq(&port->port_lock);
+ 		wait_event_interruptible_timeout(port->drain_wait,
+-					gs_writes_finished(port),
++					gs_close_flush_done(port),
+ 					GS_CLOSE_TIMEOUT * HZ);
+ 		spin_lock_irq(&port->port_lock);
++
++		if (port->port.count != 1)
++			goto raced_with_open;
++
+ 		gser = port->port_usb;
+ 	}
+ 
+@@ -744,10 +706,9 @@ static void gs_close(struct tty_struct *tty, struct file *file)
+ 	else
+ 		kfifo_reset(&port->port_write_buf);
+ 
++	port->port.count = 0;
+ 	port->port.tty = NULL;
+ 
+-	port->openclose = false;
+-
+ 	pr_debug("gs_close: ttyGS%d (%p,%p) done!\n",
+ 			port->port_num, tty, file);
+ 
+@@ -1207,8 +1168,9 @@ static int gs_closed(struct gs_port *port)
+ 	int cond;
+ 
+ 	spin_lock_irq(&port->port_lock);
+-	cond = (port->port.count == 0) && !port->openclose;
++	cond = port->port.count == 0;
+ 	spin_unlock_irq(&port->port_lock);
++
+ 	return cond;
+ }
+ 
+@@ -1413,7 +1375,7 @@ void gserial_disconnect(struct gserial *gser)
+ 
+ 	port->port_usb = NULL;
+ 	gser->ioport = NULL;
+-	if (port->port.count > 0 || port->openclose) {
++	if (port->port.count > 0) {
+ 		wake_up_interruptible(&port->drain_wait);
+ 		if (port->port.tty)
+ 			tty_hangup(port->port.tty);
+@@ -1426,7 +1388,7 @@ void gserial_disconnect(struct gserial *gser)
+ 
+ 	/* finally, free any unused/unusable I/O buffers */
+ 	spin_lock_irqsave(&port->port_lock, flags);
+-	if (port->port.count == 0 && !port->openclose)
++	if (port->port.count == 0)
+ 		kfifo_free(&port->port_write_buf);
+ 	gs_free_requests(gser->out, &port->read_pool, NULL);
+ 	gs_free_requests(gser->out, &port->read_queue, NULL);
 -- 
 2.20.1
 
