@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A01AC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B85C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1DAD20B7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5658820B7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbfHJUyp (ORCPT
+        id S1727891AbfHJUys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:54:45 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53794 "EHLO
+        Sat, 10 Aug 2019 16:54:48 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53744 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726477AbfHJUns (ORCPT
+        by vger.kernel.org with ESMTP id S1726251AbfHJUns (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:48 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDK-00053h-4F; Sat, 10 Aug 2019 21:43:46 +0100
+        id 1hwYDJ-00053S-H3; Sat, 10 Aug 2019 21:43:45 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-0003Zl-9Z; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDJ-0003ZC-2G; Sat, 10 Aug 2019 21:43:45 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Hulk Robot" <hulkci@huawei.com>,
-        "YueHaibing" <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
+        "Johan Hovold" <johan@kernel.org>,
+        "George McCollister" <george.mccollister@gmail.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.156035753@decadent.org.uk>
+Message-ID: <lsq.1565469607.32960424@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 029/157] net-sysfs: call dev_hold if kobject_init_and_add
- success
+Subject: [PATCH 3.16 022/157] USB: serial: ftdi_sio: add additional
+ NovaTech products
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,62 +56,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: George McCollister <george.mccollister@gmail.com>
 
-commit a3e23f719f5c4a38ffb3d30c8d7632a4ed8ccd9e upstream.
+commit 422c2537ba9d42320f8ab6573940269f87095320 upstream.
 
-In netdev_queue_add_kobject and rx_queue_add_kobject,
-if sysfs_create_group failed, kobject_put will call
-netdev_queue_release to decrease dev refcont, however
-dev_hold has not be called. So we will see this while
-unregistering dev:
+Add PIDs for the NovaTech OrionLX+ and Orion I/O so they can be
+automatically detected.
 
-unregister_netdevice: waiting for bcsh0 to become free. Usage count = -1
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: d0d668371679 ("net: don't decrement kobj reference count on init failure")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: adjust context]
+Signed-off-by: George McCollister <george.mccollister@gmail.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/core/net-sysfs.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/usb/serial/ftdi_sio.c     | 2 ++
+ drivers/usb/serial/ftdi_sio_ids.h | 4 +++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -788,6 +788,8 @@ static int rx_queue_add_kobject(struct n
- 	if (error)
- 		return error;
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -617,6 +617,8 @@ static const struct usb_device_id id_tab
+ 		.driver_info = (kernel_ulong_t)&ftdi_jtag_quirk },
+ 	{ USB_DEVICE(FTDI_VID, FTDI_NT_ORIONLXM_PID),
+ 		.driver_info = (kernel_ulong_t)&ftdi_jtag_quirk },
++	{ USB_DEVICE(FTDI_VID, FTDI_NT_ORIONLX_PLUS_PID) },
++	{ USB_DEVICE(FTDI_VID, FTDI_NT_ORION_IO_PID) },
+ 	{ USB_DEVICE(FTDI_VID, FTDI_SYNAPSE_SS200_PID) },
+ 	{ USB_DEVICE(FTDI_VID, FTDI_CUSTOMWARE_MINIPLEX_PID) },
+ 	{ USB_DEVICE(FTDI_VID, FTDI_CUSTOMWARE_MINIPLEX2_PID) },
+--- a/drivers/usb/serial/ftdi_sio_ids.h
++++ b/drivers/usb/serial/ftdi_sio_ids.h
+@@ -566,7 +566,9 @@
+ /*
+  * NovaTech product ids (FTDI_VID)
+  */
+-#define FTDI_NT_ORIONLXM_PID	0x7c90	/* OrionLXm Substation Automation Platform */
++#define FTDI_NT_ORIONLXM_PID		0x7c90	/* OrionLXm Substation Automation Platform */
++#define FTDI_NT_ORIONLX_PLUS_PID	0x7c91	/* OrionLX+ Substation Automation Platform */
++#define FTDI_NT_ORION_IO_PID		0x7c92	/* Orion I/O */
  
-+	dev_hold(queue->dev);
-+
- 	if (net->sysfs_rx_queue_group) {
- 		error = sysfs_create_group(kobj, net->sysfs_rx_queue_group);
- 		if (error) {
-@@ -797,7 +799,6 @@ static int rx_queue_add_kobject(struct n
- 	}
- 
- 	kobject_uevent(kobj, KOBJ_ADD);
--	dev_hold(queue->dev);
- 
- 	return error;
- }
-@@ -1146,6 +1147,8 @@ static int netdev_queue_add_kobject(stru
- 	if (error)
- 		return error;
- 
-+	dev_hold(queue->dev);
-+
- #ifdef CONFIG_BQL
- 	error = sysfs_create_group(kobj, &dql_group);
- 	if (error) {
-@@ -1155,7 +1158,6 @@ static int netdev_queue_add_kobject(stru
- #endif
- 
- 	kobject_uevent(kobj, KOBJ_ADD);
--	dev_hold(queue->dev);
- 
- 	return 0;
- }
+ /*
+  * Synapse Wireless product ids (FTDI_VID)
 
