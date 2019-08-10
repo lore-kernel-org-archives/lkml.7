@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6483C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DF4C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BDD9208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90061208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfHJUro (ORCPT
+        id S1727441AbfHJUrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:47:44 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55058 "EHLO
+        Sat, 10 Aug 2019 16:47:49 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55042 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726842AbfHJUoE (ORCPT
+        by vger.kernel.org with ESMTP id S1726839AbfHJUoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:44:04 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDZ-00053r-KD; Sat, 10 Aug 2019 21:44:01 +0100
+        id 1hwYDY-00053O-Eh; Sat, 10 Aug 2019 21:44:00 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDM-0003eW-0E; Sat, 10 Aug 2019 21:43:48 +0100
+        id 1hwYDN-0003hs-Cy; Sat, 10 Aug 2019 21:43:49 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        syzbot+b75b85111c10b8d680f1@syzkaller.appspotmail.com,
-        "Alan Stern" <stern@rowland.harvard.edu>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+        "David S. Miller" <davem@davemloft.net>,
+        "Willem de Bruijn" <willemb@google.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.299747206@decadent.org.uk>
+Message-ID: <lsq.1565469607.427495790@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 086/157] USB: core: Fix unterminated string returned
- by usb_string()
+Subject: [PATCH 3.16 115/157] ipv6: invert flowlabel sharing check in
+ process and user mode
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,47 +56,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Willem de Bruijn <willemb@google.com>
 
-commit c01c348ecdc66085e44912c97368809612231520 upstream.
+commit 95c169251bf734aa555a1e8043e4d88ec97a04ec upstream.
 
-Some drivers (such as the vub300 MMC driver) expect usb_string() to
-return a properly NUL-terminated string, even when an error occurs.
-(In fact, vub300's probe routine doesn't bother to check the return
-code from usb_string().)  When the driver goes on to use an
-unterminated string, it leads to kernel errors such as
-stack-out-of-bounds, as found by the syzkaller USB fuzzer.
+A request for a flowlabel fails in process or user exclusive mode must
+fail if the caller pid or uid does not match. Invert the test.
 
-An out-of-range string index argument is not at all unlikely, given
-that some devices don't provide string descriptors and therefore list
-0 as the value for their string indexes.  This patch makes
-usb_string() return a properly terminated empty string along with the
--EINVAL error code when an out-of-range index is encountered.
+Previously, the test was unsafe wrt PID recycling, but indeed tested
+for inequality: fl1->owner != fl->owner
 
-And since a USB string index is a single-byte value, indexes >= 256
-are just as invalid as values of 0 or below.
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-by: syzbot+b75b85111c10b8d680f1@syzkaller.appspotmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 4f82f45730c68 ("net ip6 flowlabel: Make owner a union of struct pid* and kuid_t")
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/core/message.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/ipv6/ip6_flowlabel.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/core/message.c
-+++ b/drivers/usb/core/message.c
-@@ -822,9 +822,11 @@ int usb_string(struct usb_device *dev, i
+--- a/net/ipv6/ip6_flowlabel.c
++++ b/net/ipv6/ip6_flowlabel.c
+@@ -630,9 +630,9 @@ recheck:
+ 				if (fl1->share == IPV6_FL_S_EXCL ||
+ 				    fl1->share != fl->share ||
+ 				    ((fl1->share == IPV6_FL_S_PROCESS) &&
+-				     (fl1->owner.pid == fl->owner.pid)) ||
++				     (fl1->owner.pid != fl->owner.pid)) ||
+ 				    ((fl1->share == IPV6_FL_S_USER) &&
+-				     uid_eq(fl1->owner.uid, fl->owner.uid)))
++				     !uid_eq(fl1->owner.uid, fl->owner.uid)))
+ 					goto release;
  
- 	if (dev->state == USB_STATE_SUSPENDED)
- 		return -EHOSTUNREACH;
--	if (size <= 0 || !buf || !index)
-+	if (size <= 0 || !buf)
- 		return -EINVAL;
- 	buf[0] = 0;
-+	if (index <= 0 || index >= 256)
-+		return -EINVAL;
- 	tbuf = kmalloc(256, GFP_NOIO);
- 	if (!tbuf)
- 		return -ENOMEM;
+ 				err = -ENOMEM;
 
