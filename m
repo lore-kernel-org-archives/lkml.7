@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06629C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F97CC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D22F2208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 003E82166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfHJUnx (ORCPT
+        id S1726626AbfHJUnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 10 Aug 2019 16:43:53 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53842 "EHLO
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53768 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726497AbfHJUnt (ORCPT
+        by vger.kernel.org with ESMTP id S1726457AbfHJUns (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:43:49 -0400
+        Sat, 10 Aug 2019 16:43:48 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDK-00053p-3Z; Sat, 10 Aug 2019 21:43:46 +0100
+        id 1hwYDI-00052t-LC; Sat, 10 Aug 2019 21:43:44 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-0003a5-EA; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDI-0003Xp-DW; Sat, 10 Aug 2019 21:43:44 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Marco Felsch" <m.felsch@pengutronix.de>,
-        "Christian Hemp" <c.hemp@phytec.de>,
-        "Shawn Guo" <shawnguo@kernel.org>,
-        "Stefan Christ" <s.christ@phytec.de>
+        "Lars-Peter Clausen" <lars@metafoo.de>,
+        "Alexandru Ardelean" <alexandru.ardelean@analog.com>,
+        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.308764277@decadent.org.uk>
+Message-ID: <lsq.1565469607.318012602@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 033/157] ARM: dts: pfla02: increase phy reset duration
+Subject: [PATCH 3.16 005/157] iio: Fix scan mask selection
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,44 +56,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-commit 032f85c9360fb1a08385c584c2c4ed114b33c260 upstream.
+commit 20ea39ef9f2f911bd01c69519e7d69cfec79fde3 upstream.
 
-Increase the reset duration to ensure correct phy functionality. The
-reset duration is taken from barebox commit 52fdd510de ("ARM: dts:
-pfla02: use long enough reset for ethernet phy"):
+The trialmask is expected to have all bits set to 0 after allocation.
+Currently kmalloc_array() is used which does not zero the memory and so
+random bits are set. This results in random channels being enabled when
+they shouldn't. Replace kmalloc_array() with kcalloc() which has the same
+interface but zeros the memory.
 
-  Use a longer reset time for ethernet phy Micrel KSZ9031RNX. Otherwise a
-  small percentage of modules have 'transmission timeouts' errors like
+Note the fix is actually required earlier than the below fixes tag, but
+will require a manual backport due to move from kmalloc to kmalloc_array.
 
-  barebox@Phytec phyFLEX-i.MX6 Quad Carrier-Board:/ ifup eth0
-  warning: No MAC address set. Using random address 7e:94:4d:02:f8:f3
-  eth0: 1000Mbps full duplex link detected
-  eth0: transmission timeout
-  T eth0: transmission timeout
-  T eth0: transmission timeout
-  T eth0: transmission timeout
-  T eth0: transmission timeout
-
-Cc: Stefan Christ <s.christ@phytec.de>
-Cc: Christian Hemp <c.hemp@phytec.de>
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Fixes: 3180f956668e ("ARM: dts: Phytec imx6q pfla02 and pbab01 support")
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Fixes commit 057ac1acdfc4 ("iio: Use kmalloc_array() in iio_scan_mask_set()").
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iio/industrialio-buffer.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-@@ -302,6 +302,7 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet>;
- 	phy-mode = "rgmii";
-+	phy-reset-duration = <10>; /* in msecs */
- 	phy-reset-gpios = <&gpio3 23 GPIO_ACTIVE_LOW>;
- 	status = "disabled";
- };
+--- a/drivers/iio/industrialio-buffer.c
++++ b/drivers/iio/industrialio-buffer.c
+@@ -836,9 +836,8 @@ int iio_scan_mask_set(struct iio_dev *in
+ 	const unsigned long *mask;
+ 	unsigned long *trialmask;
+ 
+-	trialmask = kmalloc_array(BITS_TO_LONGS(indio_dev->masklength),
+-				  sizeof(*trialmask),
+-				  GFP_KERNEL);
++	trialmask = kcalloc(BITS_TO_LONGS(indio_dev->masklength),
++			    sizeof(*trialmask), GFP_KERNEL);
+ 	if (trialmask == NULL)
+ 		return -ENOMEM;
+ 	if (!indio_dev->masklength) {
 
