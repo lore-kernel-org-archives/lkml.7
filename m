@@ -2,180 +2,194 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19142C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 22:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD97C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 22:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0C9221743
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 22:01:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NUcrHdVO"
+	by mail.kernel.org (Postfix) with ESMTP id BB779208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 22:07:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbfHJWBP (ORCPT
+        id S1726476AbfHJWHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 18:01:15 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45288 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfHJWBO (ORCPT
+        Sat, 10 Aug 2019 18:07:18 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12384 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725863AbfHJWHS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 18:01:14 -0400
-Received: by mail-ot1-f68.google.com with SMTP id m97so12721260otm.12
-        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 15:01:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CKSBDb3n2Zw/j8kWgy95XapjnDr9kx+5JJx/IJIa8C8=;
-        b=NUcrHdVOutsZBY/9WFTG0qmyK4Pv+ynw61exCRXGPu4QidGG4QRnMuzfvhUu4CTm5+
-         LBz0d2+yyKpuXU/u8m58dPJXV2KpiikkKgNrk8yy5Kmgq+wXhz9UU7aU3uPtKXzrFPl4
-         Uu49ni8D5+tQwgLiVAZ7tIN2GsoxkxtYVSDWeGaim9N80nxj3cpnVNFWTUINaec9HC2w
-         sZIG+ZnSKDOwLQ44s4Fx7hqoFAOqHPCHKUSGuypcc88/J9Cuh0bOK5RjjClR4OYtXXX1
-         XNTB//O3ZxXOb8ugK43J+tV03Ay3CYIoqDeLg2wTgRn14F/4Mrz1bSvxeIKsvExmUbXQ
-         rvyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CKSBDb3n2Zw/j8kWgy95XapjnDr9kx+5JJx/IJIa8C8=;
-        b=ibfld68MZDybmRUnGnwwLSOPAAkEosd1FvehFmvt+CWT0iHTZHyA7kEH8bBeYOpaOP
-         fFy6NA97UGFCQkfETmWnUgnnY+uAHqaXF25zW/fbteDILlf8A8UT3Et6gDVzInbAe0ZD
-         d8ia22asUWsmAxNpdSR8fBsQd+7weCnu/jFoq75G0DlWLs/4Bj76OnQ4folgU6ANtMuu
-         MWE6RgVSciIAQNA2VIBKkqaHLQy9HeYUVIZ5VrA2pwCSXM9SaAp1FrZILp0tevT44+kW
-         R6LJrZ+00Kpj7Oxq9JzZozS+FAWXLEHws0KO9gJtFtYYKQukhu0b/pMT389ioHS/6udW
-         y1Zw==
-X-Gm-Message-State: APjAAAVxV81xHZckrJctgEWrhoBzsnPVDLH8XMgbF+9mWtVIIgbbBUi1
-        tVRi5M5YNdmaRb1SWu9BdCRA8ODCv4Q3pkFh5dCxXg==
-X-Google-Smtp-Source: APXvYqz0uGRd+OhDQQzhvps5/ie3QYUxGJ4pkAuGl0z6CDhEr4NK2GSI4SjZWju6OEg2EGL2jIXdS1whMQ9aB6RYVjA=
-X-Received: by 2002:aca:190b:: with SMTP id l11mr11116656oii.67.1565474472697;
- Sat, 10 Aug 2019 15:01:12 -0700 (PDT)
+        Sat, 10 Aug 2019 18:07:18 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7AM6x9a099321
+        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 18:07:17 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u9r2pbymp-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 18:07:16 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
+        Sat, 10 Aug 2019 23:07:14 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 10 Aug 2019 23:07:12 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7AM7A6540829368
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 10 Aug 2019 22:07:10 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 67EFF4C046;
+        Sat, 10 Aug 2019 22:07:10 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 411074C044;
+        Sat, 10 Aug 2019 22:07:06 +0000 (GMT)
+Received: from ram.ibm.com (unknown [9.85.188.164])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sat, 10 Aug 2019 22:07:05 +0000 (GMT)
+Date:   Sat, 10 Aug 2019 15:07:02 -0700
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        linuxppc-devel@lists.ozlabs.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Alexey Kardashevskiy <aik@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Reply-To: Ram Pai <linuxram@us.ibm.com>
+References: <87zhrj8kcp.fsf@morokweng.localdomain>
+ <20190810143038-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-References: <20190808231340.53601-1-almasrymina@google.com>
- <f0a5afe9-2586-38c9-9a6d-8a2b7b288b50@oracle.com> <CAHS8izOKmaOETBd_545Zex=KFNjYOvf3dCzcMRUEXnnhYCK5bw@mail.gmail.com>
- <71a29844-7367-44c4-23be-eff26ac80467@oracle.com>
-In-Reply-To: <71a29844-7367-44c4-23be-eff26ac80467@oracle.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Sat, 10 Aug 2019 15:01:01 -0700
-Message-ID: <CAHS8izPGhHS+=qnf7Vy=C8kXQ=7v7XH3uEVitrW6ARRYU6iDdg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 0/5] hugetlb_cgroup: Add hugetlb_cgroup reservation limits
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>, akpm@linux-foundation.org,
-        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
-        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
-        cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190810143038-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19081022-4275-0000-0000-000003579D45
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19081022-4276-0000-0000-00003869A755
+Message-Id: <20190810220702.GA5964@ram.ibm.com>
+Subject: RE: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-10_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908100247
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 10, 2019 at 11:58 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->
-> On 8/9/19 12:42 PM, Mina Almasry wrote:
-> > On Fri, Aug 9, 2019 at 10:54 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
-> >> On 8/8/19 4:13 PM, Mina Almasry wrote:
-> >>> Problem:
-> >>> Currently tasks attempting to allocate more hugetlb memory than is available get
-> >>> a failure at mmap/shmget time. This is thanks to Hugetlbfs Reservations [1].
-> >>> However, if a task attempts to allocate hugetlb memory only more than its
-> >>> hugetlb_cgroup limit allows, the kernel will allow the mmap/shmget call,
-> >>> but will SIGBUS the task when it attempts to fault the memory in.
-> <snip>
-> >> I believe tracking reservations for shared mappings can get quite complicated.
-> >> The hugetlbfs reservation code around shared mappings 'works' on the basis
-> >> that shared mapping reservations are global.  As a result, reservations are
-> >> more associated with the inode than with the task making the reservation.
-> >
-> > FWIW, I found it not too bad. And my tests at least don't detect an
-> > anomaly around shared mappings. The key I think is that I'm tracking
-> > cgroup to uncharge on the file_region entry inside the resv_map, so we
-> > know who allocated each file_region entry exactly and we can uncharge
-> > them when the entry is region_del'd.
-> >
-> >> For example, consider a file of size 4 hugetlb pages.
-> >> Task A maps the first 2 pages, and 2 reservations are taken.  Task B maps
-> >> all 4 pages, and 2 additional reservations are taken.  I am not really sure
-> >> of the desired semantics here for reservation limits if A and B are in separate
-> >> cgroups.  Should B be charged for 4 or 2 reservations?
-> >
-> > Task A's cgroup is charged 2 pages to its reservation usage.
-> > Task B's cgroup is charged 2 pages to its reservation usage.
->
-> OK,
-> Suppose Task B's cgroup allowed 2 huge pages reservation and 2 huge pages
-> allocation.  The mmap would succeed, but Task B could potentially need to
-> allocate more than 2 huge pages.  So, when faulting in more than 2 huge
-> pages B would get a SIGBUS.  Correct?  Or, am I missing something?
->
-> Perhaps reservation charge should always be the same as map size/maximum
-> allocation size?
+On Sat, Aug 10, 2019 at 02:57:17PM -0400, Michael S. Tsirkin wrote:
+> On Tue, Jan 29, 2019 at 03:08:12PM -0200, Thiago Jung Bauermann wrote:
+> > 
+> > Hello,
+> > 
+> > With Christoph's rework of the DMA API that recently landed, the patch
+> > below is the only change needed in virtio to make it work in a POWER
+> > secure guest under the ultravisor.
+> > 
+> > The other change we need (making sure the device's dma_map_ops is NULL
+> > so that the dma-direct/swiotlb code is used) can be made in
+> > powerpc-specific code.
+> > 
+> > Of course, I also have patches (soon to be posted as RFC) which hook up
+> > <linux/mem_encrypt.h> to the powerpc secure guest support code.
+> > 
+> > What do you think?
+> > 
+> > >From d0629a36a75c678b4a72b853f8f7f8c17eedd6b3 Mon Sep 17 00:00:00 2001
+> > From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> > Date: Thu, 24 Jan 2019 22:08:02 -0200
+> > Subject: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
+> > 
+> > The host can't access the guest memory when it's encrypted, so using
+> > regular memory pages for the ring isn't an option. Go through the DMA API.
+> > 
+> > Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> > ---
+> >  drivers/virtio/virtio_ring.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> > index cd7e755484e3..321a27075380 100644
+> > --- a/drivers/virtio/virtio_ring.c
+> > +++ b/drivers/virtio/virtio_ring.c
+> > @@ -259,8 +259,11 @@ static bool vring_use_dma_api(struct virtio_device *vdev)
+> >  	 * not work without an even larger kludge.  Instead, enable
+> >  	 * the DMA API if we're a Xen guest, which at least allows
+> >  	 * all of the sensible Xen configurations to work correctly.
+> > +	 *
+> > +	 * Also, if guest memory is encrypted the host can't access
+> > +	 * it directly. In this case, we'll need to use the DMA API.
+> >  	 */
+> > -	if (xen_domain())
+> > +	if (xen_domain() || sev_active())
+> >  		return true;
+> > 
+> >  	return false;
+> 
+> So I gave this lots of thought, and I'm coming round to
+> basically accepting something very similar to this patch.
+> 
+> But not exactly like this :).
+> 
+> Let's see what are the requirements.
+> 
+> If
+> 
+> 1. We do not trust the device (so we want to use a bounce buffer with it)
+> 2. DMA address is also a physical address of a buffer
+> 
+> then we should use DMA API with virtio.
+> 
+> 
+> sev_active() above is one way to put (1).  I can't say I love it but
+> it's tolerable.
+> 
+> 
+> But we also want promise from DMA API about 2.
+> 
+> 
+> Without promise 2 we simply can't use DMA API with a legacy device.
+> 
+> 
+> Otherwise, on a SEV system with an IOMMU which isn't 1:1
+> and with a virtio device without ACCESS_PLATFORM, we are trying
+> to pass a virtual address, and devices without ACCESS_PLATFORM
+> can only access CPU physical addresses.
+> 
+> So something like:
+> 
+> dma_addr_is_phys_addr?
 
-I'm thinking this would work similar to how other shared memory like
-tmpfs is accounted for right now. I.e. if a task conducts an operation
-that causes memory to be allocated then that task is charged for that
-memory, and if another task uses memory that has already been
-allocated and charged by another task, then it can use the memory
-without being charged.
 
-So in case of hugetlb memory, if a task is mmaping memory that causes
-a new reservation to be made, and new entries to be created in the
-resv_map for the shared mapping, then that task gets charged. If the
-task is mmaping memory that is already reserved or faulted, then it
-reserves or faults it without getting charged.
+On our Secure pseries platform,  dma address is physical address and this
+proposal will help us, use DMA API. 
 
-In the example above, in chronological order:
-- Task A mmaps 2 hugetlb pages, gets charged 2 hugetlb reservations.
-- Task B mmaps 4 hugetlb pages, gets charged only 2 hugetlb
-reservations because the first 2 are charged already and can be used
-without incurring a charge.
-- Task B accesses 4 hugetlb pages, gets charged *4* hugetlb faults,
-since none of the 4 pages are faulted in yet. If the task is only
-allowed 2 hugetlb page faults then it will actually get a SIGBUS.
-- Task A accesses 4 hugetlb pages, gets charged no faults, since all
-the hugetlb faults is charged to Task B.
+On our normal pseries platform, dma address is physical address too.
+But we do not necessarily need to use the DMA API.  We can use the DMA
+API, but our handlers will do the same thing, the generic virtio handlers
+would do. If there is an opt-out option; even when dma addr is same as
+physical addr, than there will be less code duplication.
 
-So, yes, I can see a scenario where userspace still gets SIGBUS'd, but
-I think that's fine because:
-1. Notice that the SIGBUS is due to the faulting limit, and not the
-reservation limit, so we're not regressing the status quo per say.
-Folks using the fault limit today understand the SIGBUS risk.
-2. the way I expect folks to use this is to use 'reservation limits'
-to partition the available hugetlb memory on the machine using it and
-forgo using the existing fault limits. Using both at the same time I
-think would be a superuser feature for folks that really know what
-they are doing, and understand the risk of SIGBUS that comes with
-using the existing fault limits.
-3. I expect userspace to in general handle this correctly because
-there are similar challenges with all shared memory and accounting of
-it, even in tmpfs, I think.
+Would something like this be better.
 
-I would not like to charge the full reservation to every process that
-does the mmap. Think of this, much more common scenario: Task A and B
-are supposed to collaborate on a 10 hugetlb pages of data. Task B
-should not access any hugetlb memory other than the memory it is
-working on with Task A, so:
+(dma_addr_is_phys_addr  && arch_want_to_use_dma_api()) ?
 
-1. Task A is put in a cgroup with 10 hugetlb pages reservation limit.
-2. Task B is put in a cgroup with 0 hugetlb pages of reservation limit.
-3. Task A mmaps 10 hugetlb pages of hugetlb memory, and notifies Task
-B that it is done.
-4. Task B, due to programmer error, tries to mmap hugetlb memory
-beyond what Task A set up for it, it gets denied at mmap time by the
-cgroup reservation limit.
-5. Task B mmaps the same 10 hugetlb pages of memory and starts working
-on them. The mmap succeeds because Task B is not charged anything.
 
-If we were charging the full reservation to both Tasks A and B, then
-both A and B would have be in cgroups that allow 10 pages of hugetlb
-reservations, and the mmap in step 4 would succeed, and we
-accidentally overcommitted the amount of hugetlb memory available.
+RP
 
-> --
-> Mike Kravetz
+
+> -- 
+> MST
+
+-- 
+Ram Pai
+
