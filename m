@@ -2,110 +2,129 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 253AFC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 19:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9E5C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 19:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E87D7208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 19:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A594B2085B
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 19:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726165AbfHJTU1 (ORCPT
+        id S1726365AbfHJT1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 15:20:27 -0400
-Received: from smtprelay0069.hostedemail.com ([216.40.44.69]:46310 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726052AbfHJTU1 (ORCPT
+        Sat, 10 Aug 2019 15:27:47 -0400
+Received: from smtp08.smtpout.orange.fr ([80.12.242.130]:41473 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbfHJT1r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 15:20:27 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id B155B180A7F88;
-        Sat, 10 Aug 2019 19:20:25 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: war91_78006327e2207
-X-Filterd-Recvd-Size: 2979
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 10 Aug 2019 19:20:24 +0000 (UTC)
-Message-ID: <d45d8c64ece1da4a2463afa91ea21dc9150a26c7.camel@perches.com>
-Subject: Re: [PATCH v2 1/2] linux/bits.h: Clarify macro argument names
-From:   Joe Perches <joe@perches.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Sat, 10 Aug 2019 12:20:23 -0700
-In-Reply-To: <CAK7LNASA1CszgXAvH78qnLOr11Po97s090rGujnNQ=zTHaSDDA@mail.gmail.com>
-References: <20190731190309.19909-1-rikard.falkeborn@gmail.com>
-         <20190801230358.4193-1-rikard.falkeborn@gmail.com>
-         <CAK7LNASA1CszgXAvH78qnLOr11Po97s090rGujnNQ=zTHaSDDA@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Sat, 10 Aug 2019 15:27:47 -0400
+Received: from belgarion ([90.76.53.202])
+        by mwinf5d31 with ME
+        id nXTS2000D4MlyVm03XTeb7; Sat, 10 Aug 2019 21:27:43 +0200
+X-ME-Helo: belgarion
+X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
+X-ME-Date: Sat, 10 Aug 2019 21:27:43 +0200
+X-ME-IP: 90.76.53.202
+From:   Robert Jarzmik <robert.jarzmik@free.fr>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     dan.j.williams@intel.com, vkoul@kernel.org,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] dma: pxa_dma: no need to check return value of debugfs_create functions
+References: <20190612122557.24158-1-gregkh@linuxfoundation.org>
+        <20190612122557.24158-4-gregkh@linuxfoundation.org>
+X-URL:  http://belgarath.falguerolles.org/
+Date:   Sat, 10 Aug 2019 21:27:26 +0200
+In-Reply-To: <20190612122557.24158-4-gregkh@linuxfoundation.org> (Greg
+        Kroah-Hartman's message of "Wed, 12 Jun 2019 14:25:55 +0200")
+Message-ID: <87tvaorfc1.fsf@belgarion.home>
+User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-08 at 12:46 +0900, Masahiro Yamada wrote:
-> On Fri, Aug 2, 2019 at 8:04 AM Rikard Falkeborn
-> <rikard.falkeborn@gmail.com> wrote:
-> > Be a little more verbose to improve readability.
-> > 
-> > Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-> 
-> BTW, I do not understand what the improvement is.
-> I tend to regard this as a noise commit.
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 
-Non verbose naming clarity is good.
+Hi Greg,
 
-Perhaps adding kernel-doc is good too.
+> When calling debugfs functions, there is no need to ever check the
+> return value.  The function can work or not, but the code logic should
+> never do something different based on this.
+>
+> Also, because there is no need to save the file dentry, remove the
+> variable that was saving it as it was never even being used once set.
+>
+> Cc: Daniel Mack <daniel@zonque.org>
+> Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
+> Cc: Robert Jarzmik <robert.jarzmik@free.fr>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: dmaengine@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  drivers/dma/pxa_dma.c | 56 +++++++++----------------------------------
+>  1 file changed, 11 insertions(+), 45 deletions(-)
+>
+> diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
+> index b429642f3e7a..0f698f49ee26 100644
+> --- a/drivers/dma/pxa_dma.c
+> +++ b/drivers/dma/pxa_dma.c
+> @@ -132,7 +132,6 @@ struct pxad_device {
+>  	spinlock_t			phy_lock;	/* Phy association */
+>  #ifdef CONFIG_DEBUG_FS
+>  	struct dentry			*dbgfs_root;
+> -	struct dentry			*dbgfs_state;
+>  	struct dentry			**dbgfs_chan;
+>  #endif
+>  };
+> @@ -326,31 +325,18 @@ static struct dentry *pxad_dbg_alloc_chan(struct pxad_device *pdev,
+>  					     int ch, struct dentry *chandir)
+>  {
+>  	char chan_name[11];
+> -	struct dentry *chan, *chan_state = NULL, *chan_descr = NULL;
+> -	struct dentry *chan_reqs = NULL;
+> +	struct dentry *chan;
+>  	void *dt;
+>  
+>  	scnprintf(chan_name, sizeof(chan_name), "%d", ch);
+>  	chan = debugfs_create_dir(chan_name, chandir);
+>  	dt = (void *)&pdev->phys[ch];
+>  
+> -	if (chan)
+> -		chan_state = debugfs_create_file("state", 0400, chan, dt,
+> -						 &chan_state_fops);
+> -	if (chan_state)
+> -		chan_descr = debugfs_create_file("descriptors", 0400, chan, dt,
+> -						 &descriptors_fops);
+> -	if (chan_descr)
+> -		chan_reqs = debugfs_create_file("requesters", 0400, chan, dt,
+> -						&requester_chan_fops);
+> -	if (!chan_reqs)
+> -		goto err_state;
+> +	debugfs_create_file("state", 0400, chan, dt, &chan_state_fops);
+> +	debugfs_create_file("descriptors", 0400, chan, dt, &descriptors_fops);
+> +	debugfs_create_file("requesters", 0400, chan, dt, &requester_chan_fops);
 
-> 
-> > ---
-> > Changes in v2:
-> >   - This patch is new in v2
-> > 
-> >  include/linux/bits.h | 16 ++++++++--------
-> >  1 file changed, 8 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/include/linux/bits.h b/include/linux/bits.h
-> > index 669d69441a62..d4466aa42a9c 100644
-> > --- a/include/linux/bits.h
-> > +++ b/include/linux/bits.h
-> > @@ -14,16 +14,16 @@
-> >  #define BITS_PER_BYTE          8
-> > 
-> >  /*
-> > - * Create a contiguous bitmask starting at bit position @l and ending at
-> > - * position @h. For example
-> > + * Create a contiguous bitmask starting at bit position @low and ending at
-> > + * position @high. For example
-> >   * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-> >   */
-> > -#define GENMASK(h, l) \
-> > -       (((~UL(0)) - (UL(1) << (l)) + 1) & \
-> > -        (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
-> > +#define GENMASK(high, low) \
-> > +       (((~UL(0)) - (UL(1) << (low)) + 1) & \
-> > +        (~UL(0) >> (BITS_PER_LONG - 1 - (high))))
-> > 
-> > -#define GENMASK_ULL(h, l) \
-> > -       (((~ULL(0)) - (ULL(1) << (l)) + 1) & \
-> > -        (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
-> > +#define GENMASK_ULL(high, low) \
-> > +       (((~ULL(0)) - (ULL(1) << (low)) + 1) & \
-> > +        (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (high))))
-> > 
-> >  #endif /* __LINUX_BITS_H */
-> > --
-> > 2.22.0
-> > 
-> 
-> 
+This is not strictly equivalent.
+Imagine that the debugfs_create_dir() fails and returns NULL :
+ - in the former case, neither "state", "descriptors" nor "requesters" would be
+   created
+ - in the new code, "state", "descriptors" nor "requesters" will be created in
+   the debugfs root directory
 
+Apart from that it looks fine.
+
+Cheers.
+
+-- 
+Robert
