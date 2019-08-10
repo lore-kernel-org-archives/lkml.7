@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FDCC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62460C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0548F21734
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40E33208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbfHJUrN (ORCPT
+        id S1726996AbfHJUrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:47:13 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55084 "EHLO
+        Sat, 10 Aug 2019 16:47:12 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55094 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726852AbfHJUoE (ORCPT
+        by vger.kernel.org with ESMTP id S1726859AbfHJUoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:44:04 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDZ-00053u-TS; Sat, 10 Aug 2019 21:44:02 +0100
+        id 1hwYDZ-00053m-TS; Sat, 10 Aug 2019 21:44:02 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDL-0003eB-QT; Sat, 10 Aug 2019 21:43:47 +0100
+        id 1hwYDL-0003eJ-SS; Sat, 10 Aug 2019 21:43:47 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,21 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Tejun Heo" <tj@kernel.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Frederic Weisbecker" <frederic@kernel.org>,
+        "Thomas Lendacky" <thomas.lendacky@amd.com>,
         "Thomas Gleixner" <tglx@linutronix.de>,
-        "Lai Jiangshan" <jiangshanlai@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        "Ingo Molnar" <mingo@kernel.org>
+        "Mikhail Gavrilov" <mikhail.v.gavrilov@gmail.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.807087769@decadent.org.uk>
+Message-ID: <lsq.1565469607.972476944@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 083/157] locking/lockdep: Add IRQs disabled/enabled
- assertion APIs: lockdep_assert_irqs_enabled()/disabled()
+Subject: [PATCH 3.16 084/157] x86/speculation: Prevent deadlock on
+ ssb_state::lock
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -63,59 +57,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Frederic Weisbecker <frederic@kernel.org>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit f54bb2ec02c839f6bfe3e8d438cd93d30b4809dd upstream.
+commit 2f5fb19341883bb6e37da351bc3700489d8506a7 upstream.
 
-Checking whether IRQs are enabled or disabled is a very common sanity
-check, however not free of overhead especially on fastpath where such
-assertion is very common.
+Mikhail reported a lockdep splat related to the AMD specific ssb_state
+lock:
 
-Lockdep is a good host for such concurrency correctness check and it
-even already tracks down IRQs disablement state. Just reuse its
-machinery. This will allow us to get rid of the flags pop and check
-overhead from fast path when kernel is built for production.
+  CPU0                       CPU1
+  lock(&st->lock);
+                             local_irq_disable();
+                             lock(&(&sighand->siglock)->rlock);
+                             lock(&st->lock);
+  <Interrupt>
+     lock(&(&sighand->siglock)->rlock);
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: David S . Miller <davem@davemloft.net>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Tejun Heo <tj@kernel.org>
-Link: http://lkml.kernel.org/r/1509980490-4285-2-git-send-email-frederic@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+  *** DEADLOCK ***
+
+The connection between sighand->siglock and st->lock comes through seccomp,
+which takes st->lock while holding sighand->siglock.
+
+Make sure interrupts are disabled when __speculation_ctrl_update() is
+invoked via prctl() -> speculation_ctrl_update(). Add a lockdep assert to
+catch future offenders.
+
+Fixes: 1f50ddb4f418 ("x86/speculation: Handle HT correctly on AMD")
+Reported-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: Thomas Lendacky <thomas.lendacky@amd.com>
+Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1904141948200.4917@nanos.tec.linutronix.de
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- include/linux/lockdep.h | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/x86/kernel/process.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -525,9 +525,24 @@ do {									\
- 	lock_acquire(&(lock)->dep_map, 0, 0, 1, 1, NULL, _THIS_IP_);	\
- 	lock_release(&(lock)->dep_map, 0, _THIS_IP_);			\
- } while (0)
-+
-+#define lockdep_assert_irqs_enabled()	do {				\
-+		WARN_ONCE(debug_locks && !current->lockdep_recursion &&	\
-+			  !current->hardirqs_enabled,			\
-+			  "IRQs not enabled as expected\n");		\
-+	} while (0)
-+
-+#define lockdep_assert_irqs_disabled()	do {				\
-+		WARN_ONCE(debug_locks && !current->lockdep_recursion &&	\
-+			  current->hardirqs_enabled,			\
-+			  "IRQs not disabled as expected\n");		\
-+	} while (0)
-+
- #else
- # define might_lock(lock) do { } while (0)
- # define might_lock_read(lock) do { } while (0)
-+# define lockdep_assert_irqs_enabled() do { } while (0)
-+# define lockdep_assert_irqs_disabled() do { } while (0)
- #endif
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -351,6 +351,8 @@ static __always_inline void __speculatio
+ 	u64 msr = x86_spec_ctrl_base;
+ 	bool updmsr = false;
  
- #ifdef CONFIG_PROVE_RCU
++	lockdep_assert_irqs_disabled();
++
+ 	/*
+ 	 * If TIF_SSBD is different, select the proper mitigation
+ 	 * method. Note that if SSBD mitigation is disabled or permanentely
+@@ -402,10 +404,12 @@ static unsigned long speculation_ctrl_up
+ 
+ void speculation_ctrl_update(unsigned long tif)
+ {
++	unsigned long flags;
++
+ 	/* Forced update. Make sure all relevant TIF flags are different */
+-	preempt_disable();
++	local_irq_save(flags);
+ 	__speculation_ctrl_update(~tif, tif);
+-	preempt_enable();
++	local_irq_restore(flags);
+ }
+ 
+ /* Called from seccomp/prctl update */
 
