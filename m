@@ -2,94 +2,89 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0003AC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 08:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B67C6C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 08:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC2912084C
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 08:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839F5218A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 08:20:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EijfoWzQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xyRgTEG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbfHJISm (ORCPT
+        id S1726131AbfHJIUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 04:18:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41208 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbfHJISm (ORCPT
+        Sat, 10 Aug 2019 04:20:18 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38813 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbfHJIUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 04:18:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GMe3cJeR3x4cOsIIHg7bFNCkA/K5StIKgfeCxVBHL3I=; b=EijfoWzQchoSmnjIXxQUy7X3a
-        BdO3QDy1XsyViRMM4c2khWGMKE/iLJZLsdE2toRCuwOD14l+4wkdfv82GPPv/EX+WVAkJ2o7d43XC
-        ZCVDF95BVDhTh3UBqZMjoVTGRX0XXxobgArCuiFLtwTF4BUiMynE8g95tP3lQyGDwtOceVsIifpKk
-        vPMHAllgYPyg3grsQEBVtM7Rzox2zstTOhVdS6x43TvBWhz0fnq5YBIN96i0Rv18HVa0uOxVUxk7G
-        DGzeOmIfXXRQKRBWpJPBVv/vql8f3/6dquFBusP2aZ4I1IUmQv1AHiE/cCvNPYZDUnkDEirqBtk+I
-        UPXrS0oXQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hwMaA-0001Ok-V2; Sat, 10 Aug 2019 08:18:34 +0000
-Date:   Sat, 10 Aug 2019 01:18:34 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julia Cartwright <julia@ni.com>, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Joel Becker <jlbec@evilplan.org>
-Subject: Re: [patch V2 0/7] fs: Substitute bit-spinlocks for PREEMPT_RT and
- debugging
-Message-ID: <20190810081834.GB30426@infradead.org>
-References: <20190801010126.245731659@linutronix.de>
- <20190802075612.GA20962@infradead.org>
- <alpine.DEB.2.21.1908021107090.2285@nanos.tec.linutronix.de>
- <20190806061119.GA17492@infradead.org>
- <alpine.DEB.2.21.1908080858460.2882@nanos.tec.linutronix.de>
- <20190808072807.GA25259@infradead.org>
- <alpine.DEB.2.21.1908080953170.2882@nanos.tec.linutronix.de>
+        Sat, 10 Aug 2019 04:20:18 -0400
+Received: by mail-lf1-f68.google.com with SMTP id h28so71098272lfj.5
+        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 01:20:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2vQnFwQNyVp0MJ6ZA472G3A4Wc8Umh59hbB35xxA2KY=;
+        b=xyRgTEG01oxAM6kN3jiwijjpejYs6si4w5U6ne3GUJERc2vRfDRBTIkQDJjJqxDolK
+         0bLfKfPb3JCYWf66fSjaqCWEhYLa9ycbxRMraqUJswxo9XOPg2BIpaClQ0f73JcLyEel
+         wEnlWiq7C+xmB+M/WcGbHGjA8kxNsahgwIdQW7GjRBhTFb7aTceZi8h2lgO57lgqCa8d
+         LLRBFebUb2L3VvHb4mCQFOjF8j0sxr/z+Astq+efuh3CLGgNJRcXqdJjUeS1veFlDXrA
+         /VoCRELA/ui1hkqfMSw/IObCC0GWhKbL193R8e8nS43qChlzbYB/dfC9rOinU1R9gHyZ
+         QEnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2vQnFwQNyVp0MJ6ZA472G3A4Wc8Umh59hbB35xxA2KY=;
+        b=DbDmBZvQI875BLnBHFpiqjiqL80of6Dhe3OXSFy/C59zihh4jOVP7kIAzYU46ytLlM
+         h0zl/wIPAGlcJDsUGDe5N4XQTgRFA5gf7Uf3TdgFdazEXJl7Ox7wuBbssMj3/eA8ebqb
+         dPA/1oIUksCC4OcnfOfxeqBk5YvmxuAXMRmLKXtT5MjhdS1ciRzaORlKzNkhgqT4dNxo
+         ZBSzgq6AQjycEC9Ts29bfPQsb32b6fkBBojhwomcgXGbQaNivxJAC7vSSQ0Dc3O+KfMy
+         6IGprwhP7TXgDMYTTeKk9orCXuPQSCU9/aOg8R9NHvCcNSRhspl/TlD97sczVfGmkmLZ
+         +CoQ==
+X-Gm-Message-State: APjAAAWh2kXSV/29Lho9wTje7HXx7gjfwBR271JS41zyA4d5658+zXxH
+        2Md1Rl2cq8Xp+e/m5hpMJrr3kXiLK5KN1E522aLQ9g==
+X-Google-Smtp-Source: APXvYqzE1mTpjud1QXbttRnYvBm9iSV2zfdjY1xkGmTm69zvHpAT1DCI81jjIuPyyV8Cd8bHwU5cUrdUSfa0v+ozqu4=
+X-Received: by 2002:ac2:5dd6:: with SMTP id x22mr14657379lfq.92.1565425216308;
+ Sat, 10 Aug 2019 01:20:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1908080953170.2882@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20190730181557.90391-1-swboyd@chromium.org> <20190730181557.90391-32-swboyd@chromium.org>
+In-Reply-To: <20190730181557.90391-32-swboyd@chromium.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 10 Aug 2019 10:20:05 +0200
+Message-ID: <CACRpkdZhdp7_ou9XiiAq7OAuXDxE6zr-rHuhEZPi+ErSiLKdLA@mail.gmail.com>
+Subject: Re: [PATCH v6 31/57] pci: Remove dev_err() usage after platform_get_irq()
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 09:54:03AM +0200, Thomas Gleixner wrote:
-> > I know.  But the problem here is that normally PG_locked is used together 
-> > with wait_on_page_bit_*, but this one instances uses the bit spinlock
-> > helpers.  This is the equivalent of calling spin_lock on a struct mutex
-> > rather than having a mutex_lock_spin helper for this case.
-> 
-> Yes, I know :(
+On Tue, Jul 30, 2019 at 8:19 PM Stephen Boyd <swboyd@chromium.org> wrote:
 
-But this means we should exclude slub from the bit_spin_lock removal.
-It really should use it's own version of it anyhow insted of pretending
-that the page lock is a bit spinlock.
+> We don't need dev_err() messages when platform_get_irq() fails now that
+> platform_get_irq() prints an error message itself when something goes
+> wrong. Let's remove these prints with a simple semantic patch.
+(...)
+> While we're here, remove braces on if statements that only have one
+> statement (manually).
+>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 
-> 
-> > Does SLUB work on -rt at all?
-> 
-> It's the only allocator we support with a few tweaks :)
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-What do you do about this particular piece of code there?
+Yours,
+Linus Walleij
