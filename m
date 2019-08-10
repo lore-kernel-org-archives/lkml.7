@@ -2,122 +2,189 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126C9C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D844EC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7D1F217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9641121743
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:29:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=AQUANTIA1COM.onmicrosoft.com header.i=@AQUANTIA1COM.onmicrosoft.com header.b="kxQ5hKIi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IXiPzTER"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbfHJMTl (ORCPT
+        id S1726246AbfHJM3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 08:19:41 -0400
-Received: from mail-eopbgr700066.outbound.protection.outlook.com ([40.107.70.66]:41696
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725862AbfHJMTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 08:19:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QevZvSyQUaRjQ9CCVYvs1zsX2G6t+/Jf8lGDkjRDnqkmbjFISlmJZGcelutz6fV82gBXfsr8GTSdaCzGfMyOY2iNcAeYOs5xqY5giUKZBUvqjQirCC7lqBb/oJ/309yw9pZwuwg0JsDl5wTwVRinXQoMc7YwVwpeP1z+vtC3kOEWOEkLCsGdvYLBUXYlG1Q5bRm6CQbRTrqabBVXFMi1uaQi/vUbmHdOQEl4yX1gNRr9FFpDbvH/++RLGLGvRDjXN11omiS99ePWqwgsbfUykDiYWTKtWMBbBgRJQZpi8sSnJd6Ua/MMr9tw7lTivhHcqzYF8wh3px3aFb1c5nUuaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NrqUq2hA2iavuzbEZyIn9Ths0MJwHaE9VfP1Pjika6Y=;
- b=LFZqSY3DQ2LwSMNxolroJcYbulEjtE3aM3wsEnBB0dpyQLdBxt5iQB5kXK8jE7dO66k5c8UqH87uHYIwTscBHdOxwHvSzzFq6SdZ9Cpt/ouluyFqrG21HB+IiautTG1EKycc7iT4o8nosb1+YODRr9Bquvt/KPwvedNs0vfxgPCdao8RD5VMZS79TtdSpX1d+heLW24ofiVfatGsOeVg8VCLbTwVBvbtx8YtHBK0CnmCYE86/6ZjuJvVbGmfby4d+xg/XhF0jZ1glIS8zzu6z+jGjKA7dGxqp+0ngaE5exN8CnJei47N41Zo6DMzmzvD50A6U4sCGascXIXx1L1O3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=aquantia.com;dmarc=pass action=none
- header.from=aquantia.com;dkim=pass header.d=aquantia.com;arc=none
+        Sat, 10 Aug 2019 08:29:52 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33785 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725927AbfHJM3w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 08:29:52 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n9so100705540wru.0
+        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 05:29:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=AQUANTIA1COM.onmicrosoft.com; s=selector2-AQUANTIA1COM-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NrqUq2hA2iavuzbEZyIn9Ths0MJwHaE9VfP1Pjika6Y=;
- b=kxQ5hKIiV2xyk9fxcIsd1CE5+e7S2DhuthpqymJBiIMokK0SNZiSjpL50DNF9RGa7yIcoLAE34AgPA2lp/RVG0eZZa8Ocwf6eICAavXcVsDZuHWDrnyZoB3hLrITx6YkjVP7OC/jDPsTofHn9KTgHgoPISuXrzj1xPg2hDsU5t4=
-Received: from BYAPR11MB2902.namprd11.prod.outlook.com (20.177.225.222) by
- BYAPR11MB3495.namprd11.prod.outlook.com (20.177.226.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.17; Sat, 10 Aug 2019 12:19:36 +0000
-Received: from BYAPR11MB2902.namprd11.prod.outlook.com
- ([fe80::456b:e2ae:2452:5e4]) by BYAPR11MB2902.namprd11.prod.outlook.com
- ([fe80::456b:e2ae:2452:5e4%7]) with mapi id 15.20.2157.020; Sat, 10 Aug 2019
- 12:19:36 +0000
-From:   Igor Russkikh <Igor.Russkikh@aquantia.com>
-To:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "sd@queasysnail.net" <sd@queasysnail.net>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
-        "camelia.groza@nxp.com" <camelia.groza@nxp.com>,
-        Simon Edelhaus <Simon.Edelhaus@aquantia.com>,
-        Pavel Belous <Pavel.Belous@aquantia.com>
-Subject: Re: [PATCH net-next v2 2/9] net: macsec: move some definitions in a
- dedicated header
-Thread-Topic: [PATCH net-next v2 2/9] net: macsec: move some definitions in a
- dedicated header
-Thread-Index: AQHVT3XZFGqYdsGcdk29olv9OVfArw==
-Date:   Sat, 10 Aug 2019 12:19:36 +0000
-Message-ID: <9f65de8e-bf62-f9b0-5aba-69c0f92df1ca@aquantia.com>
-References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
- <20190808140600.21477-3-antoine.tenart@bootlin.com>
-In-Reply-To: <20190808140600.21477-3-antoine.tenart@bootlin.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0101CA0019.eurprd01.prod.exchangelabs.com
- (2603:10a6:3:77::29) To BYAPR11MB2902.namprd11.prod.outlook.com
- (2603:10b6:a03:89::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Igor.Russkikh@aquantia.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [95.79.108.179]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 56b18b83-486a-4743-01f2-08d71d8d0210
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR11MB3495;
-x-ms-traffictypediagnostic: BYAPR11MB3495:
-x-microsoft-antispam-prvs: <BYAPR11MB34955AE092F32EF86BB55E5798D10@BYAPR11MB3495.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 012570D5A0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39840400004)(376002)(346002)(366004)(396003)(189003)(199004)(229853002)(7736002)(7416002)(3846002)(305945005)(6486002)(2501003)(14454004)(5660300002)(31686004)(66066001)(6116002)(66446008)(2201001)(66476007)(66556008)(66946007)(64756008)(44832011)(476003)(486006)(102836004)(81166006)(81156014)(11346002)(2616005)(53936002)(446003)(6246003)(107886003)(8676002)(52116002)(4326008)(25786009)(76176011)(6436002)(99286004)(478600001)(8936002)(186003)(26005)(6512007)(6506007)(86362001)(386003)(316002)(36756003)(31696002)(110136005)(14444005)(4744005)(256004)(54906003)(71200400001)(2906002)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR11MB3495;H:BYAPR11MB2902.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: aquantia.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: A9mqcZs9tCiRicgP9QJDw0WBEXunUSZ3lDG3GVIc3qhH3bWDMD0lOaPnVh/LfhzoCeDsclanQQ5ffBvcebicJHjF4yPwMWFrJtScGiEzOpJkZAjfJhkadmFEyBGJ2jjO5z3TL+gHHYZoqkXCfcfn+kNRgr0zohUOD+V2tzsTROBDfQtUSROIfQJG7Wi9uWxokOIy1bdwwjmzdSLIOnjZH3VGDsqaey9rh6ll1Fy06f6hKciIQJ4KHvT3XTfdxd2WZ5bvygc97la1tkVqFg5vOgzBNguhjjbb5Up38APzi6mrk712wB+QgKFWrknCXeaQnDPSct8AC5a/AZPLx5Cy0ospIrqZdkKZqjGyAaRYSTzMlT7+O5E6EtQdEFQ95GE2Hqpin+tQPwQyEkYX8OffB8g1gkMoaGxWBn1p2uPpq/8=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <012AFB20D7964A418A07DAE3483531A6@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: aquantia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56b18b83-486a-4743-01f2-08d71d8d0210
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Aug 2019 12:19:36.1210
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 83e2e134-991c-4ede-8ced-34d47e38e6b1
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FJ3Sm2TvXSndZZqEUokTOCx94VO1FbGMBphOnWkjb8m+EbzEMn5Qf8fKcFDgbmTD7+fz4DnyUIUJ1X6KWl5cNQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3495
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=spJElzY7kjLhrjMT5WS/OhSTdJ8Bv/vXy8bGwAmPiFM=;
+        b=IXiPzTERXFLCOyyOgrt3dYXmfqObi+rHWIJpmnh9zdJGzeUCHrnwHPf7i8P7ceWlVh
+         akibYEptevg66CZtKvLrvu6ckMEyawyAmcxvldxQpEAWigcFMY+jbUo328g7h6hd2Tfy
+         9BK9GSbfu2GgwWPnJjXCwAMEOFxmskKdo0C3ClYvM56SvfDuBrvRrVjArj8XPR119g1x
+         g/52fqrCZeXLB0nEIVKWo5a5B5Je3nFr+jNsXTzuleC/LMjCZAn7xd86wN8CbX9TWOYx
+         bncI47MSjXHPKOd2VfTpRL79wCk1XPt1/pLNbDSjVqELG57389tpMvREAgPLlmSIdJgV
+         OmZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=spJElzY7kjLhrjMT5WS/OhSTdJ8Bv/vXy8bGwAmPiFM=;
+        b=mhyMGQQh7kQwQhqeRdpGhYTb/JO6XuU9wG4TUNB0zXd+l2tdgg7Yz/RRWqQT9InFhu
+         9LmnfPK+JeK8y9tIhWOj8kSwTzR3V5HQ9ahgYChxrJ6a5iLASIpmiqhoG69rPDFezSBJ
+         x8RYhRm3IetwEXCkl8ffeEdnP9o9yvcZO6XNG8d6uAIX+xWu6b0zSpfS9uuTsqfIXmgU
+         Ha3S4F/NneNATLzTnc4bNBUb1KgaWPkO16KgeDsO5L/4b50UM1ashPUi3JAAZk+oM+Fr
+         KBy3eSOTH1uJ9y0F9E05fq7dhUPN4KFaXiclkOEVEtId+0JQ5LfeaqjYu7UV3rJVIsaR
+         tZSQ==
+X-Gm-Message-State: APjAAAXLQaOwKLcWLxXmg7jAoXl7rWAnkhqQ0PXx3u2MPe7U0lnldz3v
+        SEnrl+y58Nk86emILDkWXbPT4GZJi+8=
+X-Google-Smtp-Source: APXvYqxG0xfOllIE/MkSGeHZmstQsSReVx0FWbTAwUH1ZuUVHR6I6huxny/Rk2+55KK5O2HgbIc6DQ==
+X-Received: by 2002:a5d:4206:: with SMTP id n6mr29868296wrq.110.1565440188921;
+        Sat, 10 Aug 2019 05:29:48 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id k9sm48340057wrd.46.2019.08.10.05.29.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 10 Aug 2019 05:29:48 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH 1/2] habanalabs: fix endianness handling for internal QMAN submission
+Date:   Sat, 10 Aug 2019 15:29:45 +0300
+Message-Id: <20190810122946.28641-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpIaSBBbnRvaW5lLA0KDQpPdmVyYWxsIGdvb2QgbG9va2luZyBwYXRjaHNldCwgZ3JlYXQhDQoN
-Cj4gKy8qKg0KPiArICogc3RydWN0IG1hY3NlY190eF9zYSAtIHRyYW5zbWl0IHNlY3VyZSBhc3Nv
-Y2lhdGlvbg0KPiArICogQGFjdGl2ZToNCj4gKyAqIEBuZXh0X3BuOiBwYWNrZXQgbnVtYmVyIHRv
-IHVzZSBmb3IgdGhlIG5leHQgcGFja2V0DQo+ICsgKiBAbG9jazogcHJvdGVjdHMgbmV4dF9wbiBt
-YW5pcHVsYXRpb25zDQo+ICsgKiBAa2V5OiBrZXkgc3RydWN0dXJlDQo+ICsgKiBAc3RhdHM6IHBl
-ci1TQSBzdGF0cw0KPiArICovDQo+ICtzdHJ1Y3QgbWFjc2VjX3R4X3NhIHsNCj4gKwlzdHJ1Y3Qg
-bWFjc2VjX2tleSBrZXk7DQo+ICsJc3BpbmxvY2tfdCBsb2NrOw0KPiArCXUzMiBuZXh0X3BuOw0K
-PiArCXJlZmNvdW50X3QgcmVmY250Ow0KPiArCWJvb2wgYWN0aXZlOw0KPiArCWJvb2wgb2ZmbG9h
-ZGVkOw0KDQpJIGRvbid0IHNlZSB0aGlzIGBvZmZsb2FkZWRgIGZpZWxkIGJlaW5nIHVzZWQgYW55
-d2hlcmUuIElzIHRoaXMgbmVlZGVkPw0KDQpSZWdhcmRzLA0KICBJZ29yDQo=
+The PQs of internal H/W queues (QMANs) can be located in different memory
+areas for different ASICs. Therefore, when writing PQEs, we need to use
+the correct function according to the location of the PQ. e.g. if the PQ
+is located in the device's memory (SRAM or DRAM), we need to use
+memcpy_toio() so it would work in architectures that have separate
+address ranges for IO memory.
+
+This patch makes the code that writes the PQE to be ASIC-specific so we
+can handle this properly per ASIC.
+
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Tested-by: Ben Segal <bpsegal20@gmail.com>
+---
+ drivers/misc/habanalabs/goya/goya.c  |  7 ++++---
+ drivers/misc/habanalabs/goya/goyaP.h |  2 +-
+ drivers/misc/habanalabs/habanalabs.h |  9 +++++++--
+ drivers/misc/habanalabs/hw_queue.c   | 14 +++++---------
+ 4 files changed, 17 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index e8b1142910e0..b39b9c98fe1d 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -2729,9 +2729,10 @@ void goya_ring_doorbell(struct hl_device *hdev, u32 hw_queue_id, u32 pi)
+ 				GOYA_ASYNC_EVENT_ID_PI_UPDATE);
+ }
+ 
+-void goya_flush_pq_write(struct hl_device *hdev, u64 *pq, u64 exp_val)
++void goya_pqe_write(struct hl_device *hdev, __le64 *pqe, struct hl_bd *bd)
+ {
+-	/* Not needed in Goya */
++	/* The QMANs are on the SRAM so need to copy to IO space */
++	memcpy_toio((void __iomem *) pqe, bd, sizeof(struct hl_bd));
+ }
+ 
+ static void *goya_dma_alloc_coherent(struct hl_device *hdev, size_t size,
+@@ -5048,7 +5049,7 @@ static const struct hl_asic_funcs goya_funcs = {
+ 	.resume = goya_resume,
+ 	.cb_mmap = goya_cb_mmap,
+ 	.ring_doorbell = goya_ring_doorbell,
+-	.flush_pq_write = goya_flush_pq_write,
++	.pqe_write = goya_pqe_write,
+ 	.asic_dma_alloc_coherent = goya_dma_alloc_coherent,
+ 	.asic_dma_free_coherent = goya_dma_free_coherent,
+ 	.get_int_queue_base = goya_get_int_queue_base,
+diff --git a/drivers/misc/habanalabs/goya/goyaP.h b/drivers/misc/habanalabs/goya/goyaP.h
+index f8c611883dc1..d7f48c9c41cd 100644
+--- a/drivers/misc/habanalabs/goya/goyaP.h
++++ b/drivers/misc/habanalabs/goya/goyaP.h
+@@ -177,7 +177,7 @@ int goya_late_init(struct hl_device *hdev);
+ void goya_late_fini(struct hl_device *hdev);
+ 
+ void goya_ring_doorbell(struct hl_device *hdev, u32 hw_queue_id, u32 pi);
+-void goya_flush_pq_write(struct hl_device *hdev, u64 *pq, u64 exp_val);
++void goya_pqe_write(struct hl_device *hdev, __le64 *pqe, struct hl_bd *bd);
+ void goya_update_eq_ci(struct hl_device *hdev, u32 val);
+ void goya_restore_phase_topology(struct hl_device *hdev);
+ int goya_context_switch(struct hl_device *hdev, u32 asid);
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
+index 6a4c64b97f38..ce83adafcf2d 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -441,7 +441,11 @@ enum hl_pll_frequency {
+  * @resume: handles IP specific H/W or SW changes for resume.
+  * @cb_mmap: maps a CB.
+  * @ring_doorbell: increment PI on a given QMAN.
+- * @flush_pq_write: flush PQ entry write if necessary, WARN if flushing failed.
++ * @pqe_write: Write the PQ entry to the PQ. This is ASIC-specific
++ *             function because the PQs are located in different memory areas
++ *             per ASIC (SRAM, DRAM, Host memory) and therefore, the method of
++ *             writing the PQE must match the destination memory area
++ *             properties.
+  * @asic_dma_alloc_coherent: Allocate coherent DMA memory by calling
+  *                           dma_alloc_coherent(). This is ASIC function because
+  *                           its implementation is not trivial when the driver
+@@ -510,7 +514,8 @@ struct hl_asic_funcs {
+ 	int (*cb_mmap)(struct hl_device *hdev, struct vm_area_struct *vma,
+ 			u64 kaddress, phys_addr_t paddress, u32 size);
+ 	void (*ring_doorbell)(struct hl_device *hdev, u32 hw_queue_id, u32 pi);
+-	void (*flush_pq_write)(struct hl_device *hdev, u64 *pq, u64 exp_val);
++	void (*pqe_write)(struct hl_device *hdev, __le64 *pqe,
++			struct hl_bd *bd);
+ 	void* (*asic_dma_alloc_coherent)(struct hl_device *hdev, size_t size,
+ 					dma_addr_t *dma_handle, gfp_t flag);
+ 	void (*asic_dma_free_coherent)(struct hl_device *hdev, size_t size,
+diff --git a/drivers/misc/habanalabs/hw_queue.c b/drivers/misc/habanalabs/hw_queue.c
+index e3b5517897ea..5f5673b74985 100644
+--- a/drivers/misc/habanalabs/hw_queue.c
++++ b/drivers/misc/habanalabs/hw_queue.c
+@@ -290,23 +290,19 @@ static void int_hw_queue_schedule_job(struct hl_cs_job *job)
+ 	struct hl_device *hdev = job->cs->ctx->hdev;
+ 	struct hl_hw_queue *q = &hdev->kernel_queues[job->hw_queue_id];
+ 	struct hl_bd bd;
+-	u64 *pi, *pbd = (u64 *) &bd;
++	__le64 *pi;
+ 
+ 	bd.ctl = 0;
+-	bd.len = __cpu_to_le32(job->job_cb_size);
+-	bd.ptr = __cpu_to_le64((u64) (uintptr_t) job->user_cb);
++	bd.len = cpu_to_le32(job->job_cb_size);
++	bd.ptr = cpu_to_le64((u64) (uintptr_t) job->user_cb);
+ 
+-	pi = (u64 *) (uintptr_t) (q->kernel_address +
++	pi = (__le64 *) (uintptr_t) (q->kernel_address +
+ 		((q->pi & (q->int_queue_len - 1)) * sizeof(bd)));
+ 
+-	pi[0] = pbd[0];
+-	pi[1] = pbd[1];
+-
+ 	q->pi++;
+ 	q->pi &= ((q->int_queue_len << 1) - 1);
+ 
+-	/* Flush PQ entry write. Relevant only for specific ASICs */
+-	hdev->asic_funcs->flush_pq_write(hdev, pi, pbd[0]);
++	hdev->asic_funcs->pqe_write(hdev, pi, &bd);
+ 
+ 	hdev->asic_funcs->ring_doorbell(hdev, q->hw_queue_id, q->pi);
+ }
+-- 
+2.17.1
+
