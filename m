@@ -2,113 +2,326 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4CDC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDF1C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48DC62166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:18:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CdH0XEmI"
+	by mail.kernel.org (Postfix) with ESMTP id DAAF32166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:19:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565439563;
+	bh=vT7kLSctAdMRNYhpT9/uKl+pHR9X+36ROb5tVQteH1k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VnkjygOIaQG1OELTaEFUww/258tOkNlR4ZSQHK6VEgcw3PjEzv8nL5TEAgwAgb01f
+	 In8e6A92m//LEgM5XRsiFQ6LvW3Red4LUb7fc5cOxqKUt9sC0zz+c1ugtmRNmnJ2ri
+	 nCN49ScG7DWmebb/+xU6J0yx3kPsQfCswwpLIB+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbfHJMS3 (ORCPT
+        id S1726396AbfHJMTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 08:18:29 -0400
-Received: from mout.gmx.net ([212.227.15.18]:52629 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbfHJMS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 08:18:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1565439477;
-        bh=NL9xpuLCPw2UG54ukrtShb+O4fzltpo4dN4xnfCDCyM=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=CdH0XEmIu0hzeCVHGf9Sekbf4nWTBdwvMV6lYwFcHuEf7w61qKOJN+x4p0XC4oEUh
-         o1ubxjlPWBDGW9lK0EUDbX/jLDrFAA7zreWIllgJjAcymt1t78Rv+SgZFb4aIc9kAF
-         XlvKDEg8c5qUSGG49ZUirQMtQ2XBHQHA0ZXFHUa4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M9Wuk-1hzhZJ0nx6-005cHp; Sat, 10
- Aug 2019 14:17:57 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-doc@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Documentation/networking/af_xdp: Inhibit reference to struct socket
-Date:   Sat, 10 Aug 2019 14:17:37 +0200
-Message-Id: <20190810121738.19587-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
+        Sat, 10 Aug 2019 08:19:21 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45579 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfHJMTV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 08:19:21 -0400
+Received: by mail-ot1-f67.google.com with SMTP id m97so9558536otm.12;
+        Sat, 10 Aug 2019 05:19:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0uKqbMKY9etVt/K8NqzTXUIEa91wHYZJJ5dxzLOMVcA=;
+        b=lxtBB5sLGygMxloMk8ONnUwKfF3P2O9kVHjn0sp/gYvtaHvc/qApOKP91g2M3cg8yx
+         8DVqgaETji/nLZHDw1D1i7GYBxRI8OPuKGs8AP/mmeKysU4DQwGrhMYqk62WfRB9Bmll
+         umZ4lpzPu3tvK5RaWYF1RAXx1dxVil6kTKoo5J/ExfVGxQgsrh6PxsvFG3B93jqNW0FS
+         CaWGayVfVWp0UMP0NUE8FTttOXyS+eISyis/3braSSxiltvoB/PTcPL6xsIuY0LnfJNR
+         QtbQNlctMMFgIXzLg28RZ899gleUWq2rvxwjiCBoLooUxT0ipZxhZBbmO/HSxuMD8E6U
+         tKvQ==
+X-Gm-Message-State: APjAAAVzsnud36wPpmlcUCcD6jMxVd6snkEpNMCSOpmSi9Tf/+ec/NmV
+        kvB82K3aQW5Y4h6u0UvT7LeGxSWWt0KbdMUBwWQ=
+X-Google-Smtp-Source: APXvYqy2UpogvI2PpXFujEoMkyxR9oiIUv3tZkrRpozRQTlycuY3yBWNoqxdtJ+mxd81FJCUXR5Ner48REcMsL60xkA=
+X-Received: by 2002:a05:6830:154:: with SMTP id j20mr4910717otp.266.1565439560183;
+ Sat, 10 Aug 2019 05:19:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:cgePj4l+CjuwW5sL+l5xjBAo2oA6r0xqbKiNRsIcFbb/Me+bhcP
- 3okZNFqCTQzPdqhA1VRGhKi7JyaYkSVm1/rWGrS8Sr0WzeTxenTfgx6hO6gFxbwvyKX+qoA
- nJkpSeaoEiYXoXhGN0qmnMPVC71bFcTbvX/1+GvMCK8oARXi4O6agBDTPm2/6KNPvWOpCsk
- +EX8gcUCw3RN8IIryApSg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mD4RS0ZWWFM=:zsgdsjRIOwcW3rld9Y+v/d
- HEOmA4JSUMWkBK3ld9Ng2Jv1NrpAzmXwTj70+1lJYZod8ohd2/Zj6FWKjt7R5NNZyoiQ4YchW
- KalfaK+NjUF4aIB+J47kMZY54V4sgZLFcsCOHvBEcHiOTl8zx3bPCDo2XrO3a+XRe/hSX6Z+f
- EJDawmm1MM9U7T/F7rMXrJ/hAsAdymuYW27sNfHhDx/YbZuOJV/WdS0q20SSWLFNRO6qIPcrM
- 80ako/3DCjjD993TK8rXOth2i6luMQzw5K4dwYkNz6QQ1zkspzok1uoVE00o1yvh/o8K3o3H9
- JPNyKUKvBQy01lKoLy2GUVGK0h6IT+G+VvR5zvUfeu33YMef+afpyruIB3yT6ia6kIBqi8C2i
- ku/Vz0S5FFWM5GkefyxmGJQB4R7EpNvfPL+Zgmehzf59Bf98KoV+leyStcEpfM+ckKOMjc0M0
- qcQ0ZIjBDJr5s+25MiMVIT14EMQVi4M4Xe76SBOMcaRiwlFPHAzsPcSZ1Cr/bea5z992Uk+nJ
- uEumN7DkLx3mthCiqjOmg8G6kwdgL16LrWk5gROTIo4AceS6+Ka1iEgq+h4CQElixlSE8ktMz
- 8nDBYdGPKg3eG9JmMc9S5/+RJKKnVdr2Hnz8xUujpyjQfOBp0qtos+evgXwSqRwdk8Xj4Zhe8
- p+EXlnZD0jYEIwSowH2mnvDiSBiEhLepcKIc6k3uYRJSAqZaKYH6LaO6Lpkfc/s3qJVgovuB9
- exBngWYPzms1MgetLT7vJ3eBQJwib/ujfpYrBTo5LPvmigvMx07tpZZz+i8ZQilhvPm+ehRRZ
- +MA7V9/EbSFBERnqhil7h3LrP6V9VmtDI41xCFDxLqkZUKLAdQafSInMDyjckKT/+e+ycxjgi
- x9pq85R2tsfkYNQjBWPphyNkAtJm8PsF6Dn5aSmtC/BRHsRA0UsnFdFQi8e7mkfubhOEQ6vqR
- LPthj0OK0NbqN3Zruv2i2KYymvzLy+eNeO3N3xMzKzLYaTEgDS4J/Vr70A6Y0BEdF2r75hNPx
- gcns0DO3Ip0dxb3JYPTQD0v3x63ANrI1GcPxr1C2UvhsQnEbQGLTayEiJKjNTRGtSd28EY+2E
- lukB0VFVn44wkM5+jmMWsQnb9QSC9qcDjd7Qn05swmuCGs2D5wc45KqPxqpijRvpsgvRFS86e
- znFDk=
+References: <cover.1563862014.git.viresh.kumar@linaro.org> <524de8ace0596e68a24b57b3b4043c707db32ca7.1563862014.git.viresh.kumar@linaro.org>
+ <20190809023445.xn3mlv5qxjgz6bpp@vireshk-i7>
+In-Reply-To: <20190809023445.xn3mlv5qxjgz6bpp@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sat, 10 Aug 2019 14:19:09 +0200
+Message-ID: <CAJZ5v0i9oO1M4m7WsKDFkpTEOkbiONWunT6UfqjhgSkBcrbEKA@mail.gmail.com>
+Subject: Re: [PATCH V2 04/10] cpufreq: powerpc_cbe: Switch to QoS requests
+ instead of cpufreq notifier
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the recent change to auto-detect function names, Sphinx parses
-socket() as a reference to the in-kernel definition of socket. It then
-decides that struct socket is a good match, which was obviously not
-intended in this case, because the text speaks about the syscall with
-the same name.
+On Fri, Aug 9, 2019 at 4:34 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 23-07-19, 11:44, Viresh Kumar wrote:
+> > The cpufreq core now takes the min/max frequency constraints via QoS
+> > requests and the CPUFREQ_ADJUST notifier shall get removed later on.
+> >
+> > Switch over to using the QoS request for maximum frequency constraint
+> > for ppc_cbe_cpufreq driver.
+> >
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > ---
+> >  drivers/cpufreq/ppc_cbe_cpufreq.c     | 19 +++++-
+> >  drivers/cpufreq/ppc_cbe_cpufreq.h     |  8 +++
+> >  drivers/cpufreq/ppc_cbe_cpufreq_pmi.c | 96 +++++++++++++++++----------
+> >  3 files changed, 86 insertions(+), 37 deletions(-)
 
-Prevent socket() from being misinterpreted by wrapping it in ``inline
-literal`` quotes.
+OK, picked up from email this time, but in the future please let
+Patchwork pick up new versions of patches.
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- Documentation/networking/af_xdp.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks!
 
-diff --git a/Documentation/networking/af_xdp.rst b/Documentation/networkin=
-g/af_xdp.rst
-index eeedc2e826aa..54f179ee6c33 100644
-=2D-- a/Documentation/networking/af_xdp.rst
-+++ b/Documentation/networking/af_xdp.rst
-@@ -20,7 +20,7 @@ bpf_redirect_map() function. AF_XDP sockets enable the p=
-ossibility for
- XDP programs to redirect frames to a memory buffer in a user-space
- application.
-
--An AF_XDP socket (XSK) is created with the normal socket()
-+An AF_XDP socket (XSK) is created with the normal ``socket()``
- syscall. Associated with each XSK are two rings: the RX ring and the
- TX ring. A socket can receive packets on the RX ring and it can send
- packets on the TX ring. These rings are registered and sized with the
-=2D-
-2.20.1
-
+> -------------------------8<-------------------------
+> From b84e1c119d63ab842c9e4f3acbc3aec22efa866d Mon Sep 17 00:00:00 2001
+> Message-Id: <b84e1c119d63ab842c9e4f3acbc3aec22efa866d.1565318034.git.viresh.kumar@linaro.org>
+> From: Viresh Kumar <viresh.kumar@linaro.org>
+> Date: Fri, 5 Jul 2019 15:49:48 +0530
+> Subject: [PATCH] cpufreq: powerpc_cbe: Switch to QoS requests instead of
+>  cpufreq notifier
+>
+> The cpufreq core now takes the min/max frequency constraints via QoS
+> requests and the CPUFREQ_ADJUST notifier shall get removed later on.
+>
+> Switch over to using the QoS request for maximum frequency constraint
+> for ppc_cbe_cpufreq driver.
+>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+> - dev_pm_qos_update_request() can return 1 on success
+>  drivers/cpufreq/ppc_cbe_cpufreq.c     | 19 +++++-
+>  drivers/cpufreq/ppc_cbe_cpufreq.h     |  8 +++
+>  drivers/cpufreq/ppc_cbe_cpufreq_pmi.c | 96 +++++++++++++++++----------
+>  3 files changed, 86 insertions(+), 37 deletions(-)
+>
+> diff --git a/drivers/cpufreq/ppc_cbe_cpufreq.c b/drivers/cpufreq/ppc_cbe_cpufreq.c
+> index b83f36febf03..c58abb4cca3a 100644
+> --- a/drivers/cpufreq/ppc_cbe_cpufreq.c
+> +++ b/drivers/cpufreq/ppc_cbe_cpufreq.c
+> @@ -110,6 +110,13 @@ static int cbe_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>  #endif
+>
+>         policy->freq_table = cbe_freqs;
+> +       cbe_cpufreq_pmi_policy_init(policy);
+> +       return 0;
+> +}
+> +
+> +static int cbe_cpufreq_cpu_exit(struct cpufreq_policy *policy)
+> +{
+> +       cbe_cpufreq_pmi_policy_exit(policy);
+>         return 0;
+>  }
+>
+> @@ -129,6 +136,7 @@ static struct cpufreq_driver cbe_cpufreq_driver = {
+>         .verify         = cpufreq_generic_frequency_table_verify,
+>         .target_index   = cbe_cpufreq_target,
+>         .init           = cbe_cpufreq_cpu_init,
+> +       .exit           = cbe_cpufreq_cpu_exit,
+>         .name           = "cbe-cpufreq",
+>         .flags          = CPUFREQ_CONST_LOOPS,
+>  };
+> @@ -139,15 +147,24 @@ static struct cpufreq_driver cbe_cpufreq_driver = {
+>
+>  static int __init cbe_cpufreq_init(void)
+>  {
+> +       int ret;
+> +
+>         if (!machine_is(cell))
+>                 return -ENODEV;
+>
+> -       return cpufreq_register_driver(&cbe_cpufreq_driver);
+> +       cbe_cpufreq_pmi_init();
+> +
+> +       ret = cpufreq_register_driver(&cbe_cpufreq_driver);
+> +       if (ret)
+> +               cbe_cpufreq_pmi_exit();
+> +
+> +       return ret;
+>  }
+>
+>  static void __exit cbe_cpufreq_exit(void)
+>  {
+>         cpufreq_unregister_driver(&cbe_cpufreq_driver);
+> +       cbe_cpufreq_pmi_exit();
+>  }
+>
+>  module_init(cbe_cpufreq_init);
+> diff --git a/drivers/cpufreq/ppc_cbe_cpufreq.h b/drivers/cpufreq/ppc_cbe_cpufreq.h
+> index 9d973519d669..00cd8633b0d9 100644
+> --- a/drivers/cpufreq/ppc_cbe_cpufreq.h
+> +++ b/drivers/cpufreq/ppc_cbe_cpufreq.h
+> @@ -20,6 +20,14 @@ int cbe_cpufreq_set_pmode_pmi(int cpu, unsigned int pmode);
+>
+>  #if IS_ENABLED(CONFIG_CPU_FREQ_CBE_PMI)
+>  extern bool cbe_cpufreq_has_pmi;
+> +void cbe_cpufreq_pmi_policy_init(struct cpufreq_policy *policy);
+> +void cbe_cpufreq_pmi_policy_exit(struct cpufreq_policy *policy);
+> +void cbe_cpufreq_pmi_init(void);
+> +void cbe_cpufreq_pmi_exit(void);
+>  #else
+>  #define cbe_cpufreq_has_pmi (0)
+> +static inline void cbe_cpufreq_pmi_policy_init(struct cpufreq_policy *policy) {}
+> +static inline void cbe_cpufreq_pmi_policy_exit(struct cpufreq_policy *policy) {}
+> +static inline void cbe_cpufreq_pmi_init(void) {}
+> +static inline void cbe_cpufreq_pmi_exit(void) {}
+>  #endif
+> diff --git a/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c b/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c
+> index 97c8ee4614b7..bc9dd30395c4 100644
+> --- a/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c
+> +++ b/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/timer.h>
+>  #include <linux/init.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/pm_qos.h>
+>
+>  #include <asm/processor.h>
+>  #include <asm/prom.h>
+> @@ -24,8 +25,6 @@
+>
+>  #include "ppc_cbe_cpufreq.h"
+>
+> -static u8 pmi_slow_mode_limit[MAX_CBE];
+> -
+>  bool cbe_cpufreq_has_pmi = false;
+>  EXPORT_SYMBOL_GPL(cbe_cpufreq_has_pmi);
+>
+> @@ -65,64 +64,89 @@ EXPORT_SYMBOL_GPL(cbe_cpufreq_set_pmode_pmi);
+>
+>  static void cbe_cpufreq_handle_pmi(pmi_message_t pmi_msg)
+>  {
+> +       struct cpufreq_policy *policy;
+> +       struct dev_pm_qos_request *req;
+>         u8 node, slow_mode;
+> +       int cpu, ret;
+>
+>         BUG_ON(pmi_msg.type != PMI_TYPE_FREQ_CHANGE);
+>
+>         node = pmi_msg.data1;
+>         slow_mode = pmi_msg.data2;
+>
+> -       pmi_slow_mode_limit[node] = slow_mode;
+> +       cpu = cbe_node_to_cpu(node);
+>
+>         pr_debug("cbe_handle_pmi: node: %d max_freq: %d\n", node, slow_mode);
+> -}
+> -
+> -static int pmi_notifier(struct notifier_block *nb,
+> -                                      unsigned long event, void *data)
+> -{
+> -       struct cpufreq_policy *policy = data;
+> -       struct cpufreq_frequency_table *cbe_freqs = policy->freq_table;
+> -       u8 node;
+> -
+> -       /* Should this really be called for CPUFREQ_ADJUST and CPUFREQ_NOTIFY
+> -        * policy events?)
+> -        */
+> -       node = cbe_cpu_to_node(policy->cpu);
+> -
+> -       pr_debug("got notified, event=%lu, node=%u\n", event, node);
+>
+> -       if (pmi_slow_mode_limit[node] != 0) {
+> -               pr_debug("limiting node %d to slow mode %d\n",
+> -                        node, pmi_slow_mode_limit[node]);
+> +       policy = cpufreq_cpu_get(cpu);
+> +       if (!policy) {
+> +               pr_warn("cpufreq policy not found cpu%d\n", cpu);
+> +               return;
+> +       }
+>
+> -               cpufreq_verify_within_limits(policy, 0,
+> +       req = policy->driver_data;
+>
+> -                       cbe_freqs[pmi_slow_mode_limit[node]].frequency);
+> -       }
+> +       ret = dev_pm_qos_update_request(req,
+> +                       policy->freq_table[slow_mode].frequency);
+> +       if (ret < 0)
+> +               pr_warn("Failed to update freq constraint: %d\n", ret);
+> +       else
+> +               pr_debug("limiting node %d to slow mode %d\n", node, slow_mode);
+>
+> -       return 0;
+> +       cpufreq_cpu_put(policy);
+>  }
+>
+> -static struct notifier_block pmi_notifier_block = {
+> -       .notifier_call = pmi_notifier,
+> -};
+> -
+>  static struct pmi_handler cbe_pmi_handler = {
+>         .type                   = PMI_TYPE_FREQ_CHANGE,
+>         .handle_pmi_message     = cbe_cpufreq_handle_pmi,
+>  };
+>
+> +void cbe_cpufreq_pmi_policy_init(struct cpufreq_policy *policy)
+> +{
+> +       struct dev_pm_qos_request *req;
+> +       int ret;
+> +
+> +       if (!cbe_cpufreq_has_pmi)
+> +               return;
+> +
+> +       req = kzalloc(sizeof(*req), GFP_KERNEL);
+> +       if (!req)
+> +               return;
+> +
+> +       ret = dev_pm_qos_add_request(get_cpu_device(policy->cpu), req,
+> +                                    DEV_PM_QOS_MAX_FREQUENCY,
+> +                                    policy->freq_table[0].frequency);
+> +       if (ret < 0) {
+> +               pr_err("Failed to add freq constraint (%d)\n", ret);
+> +               kfree(req);
+> +               return;
+> +       }
+>
+> +       policy->driver_data = req;
+> +}
+> +EXPORT_SYMBOL_GPL(cbe_cpufreq_pmi_policy_init);
+>
+> -static int __init cbe_cpufreq_pmi_init(void)
+> +void cbe_cpufreq_pmi_policy_exit(struct cpufreq_policy *policy)
+>  {
+> -       cbe_cpufreq_has_pmi = pmi_register_handler(&cbe_pmi_handler) == 0;
+> +       struct dev_pm_qos_request *req = policy->driver_data;
+>
+> -       if (!cbe_cpufreq_has_pmi)
+> -               return -ENODEV;
+> +       if (cbe_cpufreq_has_pmi) {
+> +               dev_pm_qos_remove_request(req);
+> +               kfree(req);
+> +       }
+> +}
+> +EXPORT_SYMBOL_GPL(cbe_cpufreq_pmi_policy_exit);
+>
+> -       cpufreq_register_notifier(&pmi_notifier_block, CPUFREQ_POLICY_NOTIFIER);
+> +void cbe_cpufreq_pmi_init(void)
+> +{
+> +       if (!pmi_register_handler(&cbe_pmi_handler))
+> +               cbe_cpufreq_has_pmi = true;
+> +}
+> +EXPORT_SYMBOL_GPL(cbe_cpufreq_pmi_init);
+>
+> -       return 0;
+> +void cbe_cpufreq_pmi_exit(void)
+> +{
+> +       pmi_unregister_handler(&cbe_pmi_handler);
+> +       cbe_cpufreq_has_pmi = false;
+>  }
+> -device_initcall(cbe_cpufreq_pmi_init);
+> +EXPORT_SYMBOL_GPL(cbe_cpufreq_pmi_exit);
