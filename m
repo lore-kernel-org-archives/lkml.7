@@ -2,155 +2,109 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9C6C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 01:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5995C31E40
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 02:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34CA52166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 01:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BCBF2184E
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 02:11:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FL77Urip"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbfHJBvm (ORCPT
+        id S1729292AbfHJCLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 21:51:42 -0400
-Received: from mga07.intel.com ([134.134.136.100]:28007 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726870AbfHJBvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 21:51:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 18:51:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,367,1559545200"; 
-   d="scan'208";a="193505036"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Aug 2019 18:51:41 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
-        "Valdis Kletnieks" <valdis.kletnieks@vt.edu>,
-        "x86" <x86@kernel.org>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH] x86/umwait: Fix error handling in umwait_init()
-Date:   Fri,  9 Aug 2019 18:40:37 -0700
-Message-Id: <1565401237-60936-1-git-send-email-fenghua.yu@intel.com>
-X-Mailer: git-send-email 2.5.0
+        Fri, 9 Aug 2019 22:11:00 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:34751 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbfHJCLA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 22:11:00 -0400
+Received: by mail-ua1-f66.google.com with SMTP id c4so11593609uad.1;
+        Fri, 09 Aug 2019 19:10:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=r5ZiGDUJysMSy5g0gynp2TrC20BGlewp8HsLSN7ffk8=;
+        b=FL77UripyK2JGBg7lbm4yBwPyR/uhKBWEjMLXCGcS82ysvs9SOUHzLlvwNgwNBPKUa
+         TVx09NokQZxaE86ehBb6PEMOqMb02bvqW8zmI/NAxQ4FSVDgaSYE9LO0ha1KCrNbQRAS
+         uD8A04dxv+Ep45+sqz5FdvF8DPGq0ZClUJAsw4fKlaLZwTijleRjy2wCXYj7LnAAQFEh
+         zU8FmXF+0nfgfpsF3x24KnE31keTah77bDGZ1O/USSAGlAbhZahP9NPSZDdBRhPl14bc
+         ir7zLl+bJpBJ2/1iGWYHil4GyJyUGwR6JNK5hBE4TO+xzQH2NI7wX7Yn0CbVzt8lLmBC
+         pZMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=r5ZiGDUJysMSy5g0gynp2TrC20BGlewp8HsLSN7ffk8=;
+        b=d3YcoyRobWDah3hgy88+lXalBUy5kpHd/PvoX0oS7KomDoZ9poxIFgXDLzvsCdAcC7
+         0HigTMlxHhguxUK3g+Q4+UdRJFvycECEffvtNfDBaFpX1JPraNY5WQwx5gqephHImycW
+         FmQ/AbmXlIFRy4WTBaqo0DYu/ZLs8x6vSs4rMiDnpowD0de1wnmO564+xlDryntQ787+
+         Kr7CpHM/ZcqOdwXsJ34Uu5Ab1PlMN7/uuDVScNCqW1998AO1zbbFrWcIUXMBFuMZUUfy
+         oAQH3AFurlXn3HMXJ0t0ROYEXixz41uX8VZnm3UDD4QKKt6hYVHxL+nNM9dYTbnXOkY0
+         O+qA==
+X-Gm-Message-State: APjAAAU09KJ0HwgvYmuzhTlvKU1Un/c/KoAvJFBFvZVBHlmEIiwGw/jw
+        +L0Hp9J2HVRnmvDfgoU7QopayRG2X/HUsFVN/Zw=
+X-Google-Smtp-Source: APXvYqzR5drDaLVLbg2/oBp/s6h+SGAHZcqbzc5ANb4s8BBJ7ISVgq5EWUWIt+GsVtBgL809J4mbht0XxEhGc8Jli5o=
+X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr14819703uag.40.1565403058784;
+ Fri, 09 Aug 2019 19:10:58 -0700 (PDT)
+MIME-Version: 1.0
+From:   Masahiro YAMADA <masahir0yamad@gmail.com>
+Date:   Sat, 10 Aug 2019 11:10:22 +0900
+Message-ID: <CAK7LNAQGV+CFP6o3_iQNH3x6boXWH=2JN8j7WPJbtyi=eF6=dg@mail.gmail.com>
+Subject: [GIT PULL] Kbuild fixes for v5.3-rc4
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        masahiroy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, failure of cpuhp_setup_state() is ignored and the syscore
-ops and the control interfaces can still be added even after the
-failure. But, this error handling will cause a few issues:
+Hi Linus,
 
-1. The CPUs may have different values in the IA32_UMWAIT_CONTROL
-   MSR because there is no way to roll back the control MSR on
-   the CPUs which already set the MSR before the failure.
-2. If the sysfs interface is added successfully, there will be a mismatch
-   between the global control value and the control MSR:
-   - The interface shows the default global control value. But,
-     the control MSR is not set to the value because the CPU online
-     function, which is supposed to set the MSR to the value,
-     is not installed.
-   - If the sysadmin changes the global control value through
-     the interface, the control MSR on all current online CPUs is
-     set to the new value. But, the control MSR on newly onlined CPUs
-     after the value change will not be set to the new value due to
-     lack of the CPU online function.
-3. On resume from suspend/hibernation, the boot CPU restores the control
-   MSR to the global control value through the syscore ops. But, the
-   control MSR on all APs is not set due to lake of the CPU online
-   function.
+Please pull more Kbuild fixes.
+Thanks!
 
-To solve the issues and enforce consistent behavior on the failure
-of the CPU hotplug setup, make the following changes:
 
-1. Cache the original control MSR value which is configured by
-   hardware or BIOS before kernel boot. This value is likely to
-   be 0. But it could be a different number as well. Cache the
-   control MSR only once before the MSR is changed.
-2. Add the CPU offline function so that the MSR is restored to the
-   original control value on all CPUs on the failure.
-3. On the failure, exit from cpumait_init() so that the syscore ops
-   and the control interfaces are not added.
+The following changes since commit e21a712a9685488f5ce80495b37b9fdbe96c230d:
 
-Reported-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
----
- arch/x86/kernel/cpu/umwait.c | 39 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
+  Linux 5.3-rc3 (2019-08-04 18:40:12 -0700)
 
-diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
-index 6a204e7336c1..95581f4cf6d8 100644
---- a/arch/x86/kernel/cpu/umwait.c
-+++ b/arch/x86/kernel/cpu/umwait.c
-@@ -17,6 +17,12 @@
-  */
- static u32 umwait_control_cached = UMWAIT_CTRL_VAL(100000, UMWAIT_C02_ENABLE);
- 
-+/*
-+ * Cache the original IA32_UMWAIT_CONTROL MSR value which is configured by
-+ * hardware or BIOS before kernel boot.
-+ */
-+static u32 orig_umwait_control_cached __read_mostly;
-+
- /*
-  * Serialize access to umwait_control_cached and IA32_UMWAIT_CONTROL MSR in
-  * the sysfs write functions.
-@@ -52,6 +58,23 @@ static int umwait_cpu_online(unsigned int cpu)
- 	return 0;
- }
- 
-+/*
-+ * The CPU hotplug callback sets the control MSR to the original control
-+ * value.
-+ */
-+static int umwait_cpu_offline(unsigned int cpu)
-+{
-+	/*
-+	 * This code is protected by the CPU hotplug already and
-+	 * orig_umwait_control_cached is never changed after it caches
-+	 * the original control MSR value in umwait_init(). So there
-+	 * is no race condition here.
-+	 */
-+	wrmsr(MSR_IA32_UMWAIT_CONTROL, orig_umwait_control_cached, 0);
-+
-+	return 0;
-+}
-+
- /*
-  * On resume, restore IA32_UMWAIT_CONTROL MSR on the boot processor which
-  * is the only active CPU at this time. The MSR is set up on the APs via the
-@@ -185,8 +208,22 @@ static int __init umwait_init(void)
- 	if (!boot_cpu_has(X86_FEATURE_WAITPKG))
- 		return -ENODEV;
- 
-+	/*
-+	 * Cache the original control MSR value before the control MSR is
-+	 * changed. This is the only place where orig_umwait_control_cached
-+	 * is modified.
-+	 */
-+	rdmsrl(MSR_IA32_UMWAIT_CONTROL, orig_umwait_control_cached);
-+
- 	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "umwait:online",
--				umwait_cpu_online, NULL);
-+				umwait_cpu_online, umwait_cpu_offline);
-+	if (ret < 0) {
-+		/*
-+		 * On failure, the control MSR on all CPUs has the
-+		 * original control value.
-+		 */
-+		return ret;
-+	}
- 
- 	register_syscore_ops(&umwait_syscore_ops);
- 
--- 
-2.19.1
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+tags/kbuild-fixes-v5.3-3
+
+for you to fetch changes up to c07d8d47bca1b325102fa2be3a463075f7b051d9:
+
+  kbuild: show hint if subdir-y/m is used to visit module Makefile
+(2019-08-10 01:45:31 +0900)
+
+----------------------------------------------------------------
+Kbuild fixes for v5.3 (3rd)
+
+ - revive single target %.ko
+
+ - do not create built-in.a where it is unneeded
+
+ - do not create modules.order where it is unneeded
+
+ - show a warning if subdir-y/m is used to visit a module Makefile
+
+----------------------------------------------------------------
+Masahiro Yamada (4):
+      kbuild: revive single target %.ko
+      kbuild: fix false-positive need-builtin calculation
+      kbuild: generate modules.order only in directories visited by obj-y/m
+      kbuild: show hint if subdir-y/m is used to visit module Makefile
+
+ Makefile                 | 13 ++++++++++++-
+ scripts/Makefile.build   | 11 ++++++++++-
+ scripts/Makefile.modpost |  6 ++----
+ 3 files changed, 24 insertions(+), 6 deletions(-)
