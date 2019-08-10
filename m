@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33911C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5EDC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14AFA2086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 411962086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbfHJUwz (ORCPT
+        id S1727436AbfHJUxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:52:55 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54016 "EHLO
+        Sat, 10 Aug 2019 16:53:06 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53808 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726543AbfHJUnu (ORCPT
+        by vger.kernel.org with ESMTP id S1726484AbfHJUnt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:43:50 -0400
+        Sat, 10 Aug 2019 16:43:49 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-00053Y-UY; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDJ-00053i-W9; Sat, 10 Aug 2019 21:43:46 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-0003ZW-6m; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDJ-0003Zq-Ap; Sat, 10 Aug 2019 21:43:45 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Hoan Nguyen An" <na-hoan@jinso.co.jp>
+        "David S. Miller" <davem@davemloft.net>,
+        "Eric Dumazet" <edumazet@google.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.565559628@decadent.org.uk>
+Message-ID: <lsq.1565469607.968836065@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 026/157] serial: sh-sci: Fix setting SCSCR_TIE while
- transferring data
+Subject: [PATCH 3.16 030/157] tcp: do not use ipv6 header for ipv4 flow
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,45 +55,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hoan Nguyen An <na-hoan@jinso.co.jp>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 93bcefd4c6bad4c69dbc4edcd3fbf774b24d930d upstream.
+commit 89e4130939a20304f4059ab72179da81f5347528 upstream.
 
-We disable transmission interrupt (clear SCSCR_TIE) after all data has been transmitted
-(if uart_circ_empty(xmit)). While transmitting, if the data is still in the tty buffer,
-re-enable the SCSCR_TIE bit, which was done at sci_start_tx().
-This is unnecessary processing, wasting CPU operation if the data transmission length is large.
-And further, transmit end, FIFO empty bits disabling have also been performed in the step above.
+When a dual stack tcp listener accepts an ipv4 flow,
+it should not attempt to use an ipv6 header or tcp_v6_iif() helper.
 
-Signed-off-by: Hoan Nguyen An <na-hoan@jinso.co.jp>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 1397ed35f22d ("ipv6: add flowinfo for tcp6 pkt_options for all cases")
+Fixes: df3687ffc665 ("ipv6: add the IPV6_FL_F_REFLECT flag to IPV6_FL_A_GET")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 [bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/tty/serial/sh-sci.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ net/ipv6/tcp_ipv6.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -633,19 +633,9 @@ static void sci_transmit_chars(struct ua
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -1183,11 +1183,11 @@ static struct sock *tcp_v6_syn_recv_sock
+ 		newnp->ipv6_fl_list = NULL;
+ 		newnp->pktoptions  = NULL;
+ 		newnp->opt	   = NULL;
+-		newnp->mcast_oif   = inet6_iif(skb);
+-		newnp->mcast_hops  = ipv6_hdr(skb)->hop_limit;
+-		newnp->rcv_flowinfo = ip6_flowinfo(ipv6_hdr(skb));
++		newnp->mcast_oif   = inet_iif(skb);
++		newnp->mcast_hops  = ip_hdr(skb)->ttl;
++		newnp->rcv_flowinfo = 0;
+ 		if (np->repflow)
+-			newnp->flow_label = ip6_flowlabel(ipv6_hdr(skb));
++			newnp->flow_label = 0;
  
- 	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
- 		uart_write_wakeup(port);
--	if (uart_circ_empty(xmit)) {
-+	if (uart_circ_empty(xmit))
- 		sci_stop_tx(port);
--	} else {
--		ctrl = serial_port_in(port, SCSCR);
- 
--		if (port->type != PORT_SCI) {
--			serial_port_in(port, SCxSR); /* Dummy read */
--			serial_port_out(port, SCxSR, SCxSR_TDxE_CLEAR(port));
--		}
--
--		ctrl |= SCSCR_TIE;
--		serial_port_out(port, SCSCR, ctrl);
--	}
- }
- 
- /* On SH3, SCIF may read end-of-break as a space->mark char */
+ 		/*
+ 		 * No need to charge this sock to the relevant IPv6 refcnt debug socks count
 
