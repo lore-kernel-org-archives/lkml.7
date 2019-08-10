@@ -2,89 +2,183 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE98FC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 04:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F404EC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 04:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A3D21883
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 04:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB690217F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 04:31:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="sXXjLrXz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725848AbfHJEaD (ORCPT
+        id S1726024AbfHJEbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 00:30:03 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:33346 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfHJEaD (ORCPT
+        Sat, 10 Aug 2019 00:31:31 -0400
+Received: from gateway34.websitewelcome.com ([192.185.148.196]:17765 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725372AbfHJEbb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 00:30:03 -0400
-Received: by mail-yb1-f194.google.com with SMTP id b16so4923846ybq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 21:30:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Qpn09Q2IPVk1Zallzy6o+fiJZ4cg6kBGPdGeFP8iFUE=;
-        b=eAkSRHdkpyACyVy1Arrycn9F87Kc5dtUNHYy9/0CZiE9yn0+gK0E0ON0uWfbu+HyNJ
-         4WDlcQlVtIlO3j/dWUN7qMyyHP1Y5G6bbcf0ij3qAtfuhRypH+8sKnbaV7YXWuJxEKjR
-         kWom8ONJPf1dYr3QNx+fvTgGutMv6L7zMclJTuohy/7ecCuHPytpmWoTLWTLHXkn/IYI
-         0a4ntwCLnM9NtRlnrVvOgEZ5awfTf5Am2HSPIdXgJso+dT3pvM+uVQIi+LPfyPzeFnwS
-         AYUZhodIHweMJecJNmfXZyYZMOjfoX2ZI0UBM6qiipvdCO+X6uqI+w963YBOgD3FdDNz
-         pIKg==
-X-Gm-Message-State: APjAAAVZzOtkA7ZIEkUIf1yYcOxPPpKNNPHmePf/9fCQn8lEmlz9A242
-        WBRBD7wYFPGM3aciOzDVdLw=
-X-Google-Smtp-Source: APXvYqwfKHOcF3+5sX+39qBI1GTLIQlNHuIdHvEGVBed9ILaHTwHRCaZUAl2NSo9E1anp4YT+mluow==
-X-Received: by 2002:a25:8489:: with SMTP id v9mr14978725ybk.1.1565411402054;
-        Fri, 09 Aug 2019 21:30:02 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id p141sm22736227ywg.78.2019.08.09.21.30.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 09 Aug 2019 21:30:00 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        alsa-devel@alsa-project.org (moderated list:SOUND),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ALSA: hda - Fix a memory leak bug
-Date:   Fri,  9 Aug 2019 23:29:48 -0500
-Message-Id: <1565411390-2684-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        Sat, 10 Aug 2019 00:31:31 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id 889CA665D2
+        for <linux-kernel@vger.kernel.org>; Fri,  9 Aug 2019 23:31:29 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id wJ2Phszwj4FKpwJ2Ph0eUB; Fri, 09 Aug 2019 23:31:29 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=xVjR7vWbpBKkEv3o46r1i8OO5LzweDEZA1vdhDITNAQ=; b=sXXjLrXzTn9K1onRshMm1dn7qM
+        rjQTzLwiw15toZ3XO1FPmJpcB9GFpxy3hxPQYYbKMz0vc481yWH5Jc6Z1mEsLNQMziZNzxzR7euRu
+        KTstw1wAV/oRJ2OA+qmsCOaphiZa0JdHl7The1jDTOqAbMzl8pEyz1xsmpD+89ysACV7C1CW3FSiA
+        eK5dxu+f650saA+pgbP0ILpGs9YbgUz198v19AUohKB7YWdChs+VCJWcHUN2nbObisYoF3RvLPLxp
+        4SJUsiJZdV01TACY2bSHhTfovDjCmXMZm2g/g0OiDIR5WQOG25A3FOBtvH+4s95DEafYQ+rEG6Qqh
+        XhtwfkSQ==;
+Received: from [187.192.11.120] (port=38118 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hwJ2P-000MOY-6I; Fri, 09 Aug 2019 23:31:29 -0500
+Subject: Re: [PATCH] sh: Drop -Werror from kernel Makefile
+To:     Joe Perches <joe@perches.com>, Guenter Roeck <linux@roeck-us.net>
+Cc:     Rich Felker <dalias@libc.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1564971263-21562-1-git-send-email-linux@roeck-us.net>
+ <20190805032441.GO9017@brightrain.aerifal.cx>
+ <20190809195630.GA15606@roeck-us.net>
+ <5f26547f-b48e-4b9f-b8ef-858283915e3d@embeddedor.com>
+ <20190809215608.GA11065@roeck-us.net>
+ <6a06245f-33f2-1d92-0d0e-c8b270dc24af@embeddedor.com>
+ <667995275e6a1cbcdaa93029c1b33e6b52fc6803.camel@perches.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <afceec12-e5eb-42b7-c67e-0dc5a23affdf@embeddedor.com>
+Date:   Fri, 9 Aug 2019 23:31:27 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <667995275e6a1cbcdaa93029c1b33e6b52fc6803.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hwJ2P-000MOY-6I
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [187.192.11.120]:38118
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 10
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In snd_hda_parse_generic_codec(), 'spec' is allocated through kzalloc().
-Then, the pin widgets in 'codec' are parsed. However, if the parsing
-process fails, 'spec' is not deallocated, leading to a memory leak.
 
-To fix the above issue, free 'spec' before returning the error.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- sound/pci/hda/hda_generic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 8/9/19 11:20 PM, Joe Perches wrote:
+> On Fri, 2019-08-09 at 21:47 -0500, Gustavo A. R. Silva wrote:
+>> On 8/9/19 4:56 PM, Guenter Roeck wrote:
+>>> On Fri, Aug 09, 2019 at 04:36:01PM -0500, Gustavo A. R. Silva wrote:
+>>>> On 8/9/19 2:56 PM, Guenter Roeck wrote:
+>>>>> On Sun, Aug 04, 2019 at 11:24:41PM -0400, Rich Felker wrote:
+>>>>>> On Sun, Aug 04, 2019 at 07:14:23PM -0700, Guenter Roeck wrote:
+>>>>>>> Since commit a035d552a93b ("Makefile: Globally enable fall-through
+>>>>>>> warning"), all sh builds fail with errors such as
+>>>>>>>
+>>>>>>> arch/sh/kernel/disassemble.c: In function 'print_sh_insn':
+>>>>>>> arch/sh/kernel/disassemble.c:478:8: error: this statement may fall through
+>>>>>>>
+>>>>>>> Since this effectively disables all build and boot tests for the
+>>>>>>> architecture, let's drop -Werror from the sh kernel Makefile until
+>>>>>>> the problems are fixed.
+> []
+>> On second thought it seems to me that this is not a good idea, at least
+>> for mainline. For the time being I'll take this patch for linux-next only.
+>>
+>> Who is the maintainer of sh?
+> 
+> But whoever it may be, isn't particularly active.
+> 
+> MAINTAINERS-SUPERH
+> MAINTAINERS-M:  Yoshinori Sato <ysato@users.sourceforge.jp>
+> MAINTAINERS-M:  Rich Felker <dalias@libc.org>
+> MAINTAINERS-L:  linux-sh@vger.kernel.org
+> MAINTAINERS-Q:  http://patchwork.kernel.org/project/linux-sh/list/
+> MAINTAINERS-S:  Maintained
+> MAINTAINERS-F:  Documentation/sh/
+> MAINTAINERS:F:  arch/sh/
+> MAINTAINERS-F:  drivers/sh/
+> 
+>> The best solution is to fix those fall-through warnings you see. Could you
+>> please send me all the warnings you see? I can try to fix them.
+> 
+> It's true it's a warning, but adding -Werror is rarely
+> a good idea as gcc error output can change with every
+> version.
+> 
 
-diff --git a/sound/pci/hda/hda_generic.c b/sound/pci/hda/hda_generic.c
-index 485edab..8f2beb1 100644
---- a/sound/pci/hda/hda_generic.c
-+++ b/sound/pci/hda/hda_generic.c
-@@ -6100,7 +6100,7 @@ static int snd_hda_parse_generic_codec(struct hda_codec *codec)
- 
- 	err = snd_hda_parse_pin_defcfg(codec, &spec->autocfg, NULL, 0);
- 	if (err < 0)
--		return err;
-+		goto error;
- 
- 	err = snd_hda_gen_parse_auto_config(codec, &spec->autocfg);
- 	if (err < 0)
--- 
-2.7.4
+In the meantime I'll install sh4 and fix those warnings.
 
+--
+Gustavo
