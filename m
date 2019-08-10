@@ -2,59 +2,172 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E95F7C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 10:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF1DC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 10:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D0620B7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 10:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF492166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 10:28:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nPLGPNaw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfHJKUn (ORCPT
+        id S1726116AbfHJK20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 06:20:43 -0400
-Received: from ozlabs.org ([203.11.71.1]:40149 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbfHJKUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 06:20:34 -0400
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 465J5r1JLQz9sNk; Sat, 10 Aug 2019 20:20:32 +1000 (AEST)
-X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 9616dda1aaddb2080122aaeab96ad7fc064e36b4
-In-Reply-To: <20190801225251.17864-1-leonardo@linux.ibm.com>
-To:     Leonardo Bras <leonardo@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     Nathan Lynch <nathanl@linux.ibm.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Sat, 10 Aug 2019 06:28:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57488 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbfHJK20 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 06:28:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KlWmJ/XZlWJnVQ3DuZFsqlb7tqR57nj8nY1TzMTzeEM=; b=nPLGPNawWzHcQsB51+cwTAmSS
+        7bkh38dfmYxojbWyaH8qidZdKJ2NKuXJILM2kRfEirMXVr0JP0rLj2ZzVgPdHhelWnYSiBme1DFs4
+        GnH29JnYdE5I2r/VPybHKjnjCe0r21JY/OW1dQG8CykvZSksrvPFfQdKDgKONZNHYtM1/UtZX9q88
+        dinPcPx0X30dwBipYzIoaLt1azYQLIkeK5Tkr/n2BTv7e7qUo7EgLuY2XEKn7OIN0EFsHT7QIL0U+
+        6wd19ZnlbbpFvqCSn/394XFEEnYfLFVGaCiqrvy3RBBXsjQ6wj10O7nOqNmGtyWbU7OiR5fhUo3qx
+        gEyVVMZBg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hwObc-0008Cz-I6; Sat, 10 Aug 2019 10:28:12 +0000
+Date:   Sat, 10 Aug 2019 03:28:12 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Alan Stern <stern@rowland.harvard.edu>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Leonardo Bras <leonardo@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/1] pseries/hotplug-memory.c: Replace nested ifs by switch-case
-Message-Id: <465J5r1JLQz9sNk@ozlabs.org>
-Date:   Sat, 10 Aug 2019 20:20:32 +1000 (AEST)
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-usb@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 03/22] ARM: omap1: move omap15xx local bus handling to
+ usb.c
+Message-ID: <20190810102812.GA25939@infradead.org>
+References: <20190808212234.2213262-1-arnd@arndb.de>
+ <20190808212234.2213262-4-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808212234.2213262-4-arnd@arndb.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-01 at 22:52:51 UTC, Leonardo Bras wrote:
-> I noticed these nested ifs can be easily replaced by switch-cases,
-> which can improve readability.
-> 
-> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
+Thanks for doing this!  The odd platforms have always been very
+confusing.
 
-Series applied to powerpc next, thanks.
+> diff --git a/arch/arm/mach-omap1/include/mach/omap1510.h b/arch/arm/mach-omap1/include/mach/omap1510.h
+> index 3d235244bf5c..7af9c0c7c5ab 100644
+> --- a/arch/arm/mach-omap1/include/mach/omap1510.h
+> +++ b/arch/arm/mach-omap1/include/mach/omap1510.h
+> @@ -159,4 +159,3 @@
+>  #define OMAP1510_INT_FPGA23		(OMAP_FPGA_IRQ_BASE + 23)
+>  
+>  #endif /*  __ASM_ARCH_OMAP15XX_H */
+> -
 
-https://git.kernel.org/powerpc/c/9616dda1aaddb2080122aaeab96ad7fc064e36b4
+Spurious whitespace change?
 
-cheers
+> diff --git a/arch/arm/mach-omap1/usb.c b/arch/arm/mach-omap1/usb.c
+> index d8e9bbda8f7b..740c876ae46b 100644
+> --- a/arch/arm/mach-omap1/usb.c
+> +++ b/arch/arm/mach-omap1/usb.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/init.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/io.h>
+> +#include <linux/delay.h>
+>  
+>  #include <asm/irq.h>
+>  
+> @@ -127,6 +128,7 @@ omap_otg_init(struct omap_usb_config *config)
+>  
+>  		syscon &= ~HST_IDLE_EN;
+>  		ohci_device->dev.platform_data = config;
+> +
+>  		status = platform_device_register(ohci_device);
+
+Same here.
+
+> +#define OMAP1510_LB_OFFSET	   UL(0x30000000)
+> +#define OMAP1510_LB_DMA_PFN_OFFSET ((OMAP1510_LB_OFFSET - PAGE_OFFSET) >> PAGE_SHIFT)
+
+Overly long line.
+
+> +/*
+> + * OMAP-1510 specific Local Bus clock on/off
+> + */
+> +static int omap_1510_local_bus_power(int on)
+> +{
+> +	if (on) {
+> +		omap_writel((1 << 1) | (1 << 0), OMAP1510_LB_MMU_CTL);
+> +		udelay(200);
+> +	} else {
+> +		omap_writel(0, OMAP1510_LB_MMU_CTL);
+> +	}
+> +
+> +	return 0;
+> +}
+
+The caller never checks the const return value, and on is always true as
+well.  In fact it seems like omap_1510_local_bus_power and
+omap_1510_local_bus_init could probably just be merged into the caller.
+
+> +
+> +/*
+> + * OMAP-1510 specific Local Bus initialization
+> + * NOTE: This assumes 32MB memory size in OMAP1510LB_MEMSIZE.
+> + *       See also arch/mach-omap/memory.h for __virt_to_dma() and
+> + *       __dma_to_virt() which need to match with the physical
+> + *       Local Bus address below.
+
+I think that NOTE is out of date, as __virt_to_dma and __dma_to_virt
+don't exist anymore.
+
+> +static int omap_1510_local_bus_init(void)
+> +{
+> +	unsigned int tlb;
+> +	unsigned long lbaddr, physaddr;
+> +
+> +	omap_writel((omap_readl(OMAP1510_LB_CLOCK_DIV) & 0xfffffff8) | 0x4,
+> +	       OMAP1510_LB_CLOCK_DIV);
+> +
+> +	/* Configure the Local Bus MMU table */
+> +	for (tlb = 0; tlb < OMAP1510_LB_MEMSIZE; tlb++) {
+> +		lbaddr = tlb * 0x00100000 + OMAP1510_LB_OFFSET;
+> +		physaddr = tlb * 0x00100000 + PHYS_OFFSET;
+> +		omap_writel((lbaddr & 0x0fffffff) >> 22, OMAP1510_LB_MMU_CAM_H);
+> +		omap_writel(((lbaddr & 0x003ffc00) >> 6) | 0xc,
+> +		       OMAP1510_LB_MMU_CAM_L);
+> +		omap_writel(physaddr >> 16, OMAP1510_LB_MMU_RAM_H);
+> +		omap_writel((physaddr & 0x0000fc00) | 0x300, OMAP1510_LB_MMU_RAM_L);
+
+Another > 80 chars line.
+
+> +		omap_writel(tlb << 4, OMAP1510_LB_MMU_LCK);
+> +		omap_writel(0x1, OMAP1510_LB_MMU_LD_TLB);
+> +	}
+> +
+> +	/* Enable the walking table */
+> +	omap_writel(omap_readl(OMAP1510_LB_MMU_CTL) | (1 << 3), OMAP1510_LB_MMU_CTL);
+
+One more.
+
+> +	udelay(200);
+> +
+> +	return 0;
+
+The return value is ignored.
