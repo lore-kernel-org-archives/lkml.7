@@ -2,32 +2,33 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 271D2C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCBAC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0538A208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 612BE21743
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbfHJUqs (ORCPT
+        id S1727407AbfHJUqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:46:48 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55298 "EHLO
+        Sat, 10 Aug 2019 16:46:52 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55354 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726896AbfHJUoH (ORCPT
+        by vger.kernel.org with ESMTP id S1726909AbfHJUoH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:44:07 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDb-00053O-W2; Sat, 10 Aug 2019 21:44:04 +0100
+        id 1hwYDc-00053P-0z; Sat, 10 Aug 2019 21:44:04 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDL-0003dn-HG; Sat, 10 Aug 2019 21:43:47 +0100
+        id 1hwYDL-0003dc-EA; Sat, 10 Aug 2019 21:43:47 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +36,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Nikolay Aleksandrov" <nikolay@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>
+        "Bob Moore" <robert.moore@intel.com>,
+        "Erik Schmauss" <erik.schmauss@intel.com>,
+        "Michael J Gruber" <mjg@fedoraproject.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.585020956@decadent.org.uk>
+Message-ID: <lsq.1565469607.941232992@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 079/157] net: bridge: multicast: use rcu to access
- port list from br_multicast_start_querier
+Subject: [PATCH 3.16 077/157] ACPICA: Namespace: remove address node from
+ global list after method termination
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,40 +59,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+From: Erik Schmauss <erik.schmauss@intel.com>
 
-commit c5b493ce192bd7a4e7bd073b5685aad121eeef82 upstream.
+commit c5781ffbbd4f742a58263458145fe7f0ac01d9e0 upstream.
 
-br_multicast_start_querier() walks over the port list but it can be
-called from a timer with only multicast_lock held which doesn't protect
-the port list, so use RCU to walk over it.
+ACPICA commit b233720031a480abd438f2e9c643080929d144c3
 
-Fixes: c83b8fab06fc ("bridge: Restart queries when last querier expires")
-Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+ASL operation_regions declare a range of addresses that it uses. In a
+perfect world, the range of addresses should be used exclusively by
+the AML interpreter. The OS can use this information to decide which
+drivers to load so that the AML interpreter and device drivers use
+different regions of memory.
+
+During table load, the address information is added to a global
+address range list. Each node in this list contains an address range
+as well as a namespace node of the operation_region. This list is
+deleted at ACPI shutdown.
+
+Unfortunately, ASL operation_regions can be declared inside of control
+methods. Although this is not recommended, modern firmware contains
+such code. New module level code changes unintentionally removed the
+functionality of adding and removing nodes to the global address
+range list.
+
+A few months ago, support for adding addresses has been re-
+implemented. However, the removal of the address range list was
+missed and resulted in some systems to crash due to the address list
+containing bogus namespace nodes from operation_regions declared in
+control methods. In order to fix the crash, this change removes
+dynamic operation_regions after control method termination.
+
+Link: https://github.com/acpica/acpica/commit/b2337200
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=202475
+Fixes: 4abb951b73ff ("ACPICA: AML interpreter: add region addresses in global list during initialization")
+Reported-by: Michael J Gruber <mjg@fedoraproject.org>
+Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
+Signed-off-by: Bob Moore <robert.moore@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/bridge/br_multicast.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/acpi/acpica/nsobject.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/net/bridge/br_multicast.c
-+++ b/net/bridge/br_multicast.c
-@@ -2036,7 +2036,8 @@ static void br_multicast_start_querier(s
- 
- 	__br_multicast_open(br, query);
- 
--	list_for_each_entry(port, &br->port_list, list) {
-+	rcu_read_lock();
-+	list_for_each_entry_rcu(port, &br->port_list, list) {
- 		if (port->state == BR_STATE_DISABLED ||
- 		    port->state == BR_STATE_BLOCKING)
- 			continue;
-@@ -2048,6 +2049,7 @@ static void br_multicast_start_querier(s
- 			br_multicast_enable(&port->ip6_own_query);
- #endif
+--- a/drivers/acpi/acpica/nsobject.c
++++ b/drivers/acpi/acpica/nsobject.c
+@@ -222,6 +222,10 @@ void acpi_ns_detach_object(struct acpi_n
+ 		}
  	}
-+	rcu_read_unlock();
- }
  
- int br_multicast_toggle(struct net_bridge *br, unsigned long val)
++	if (obj_desc->common.type == ACPI_TYPE_REGION) {
++		acpi_ut_remove_address_range(obj_desc->region.space_id, node);
++	}
++
+ 	/* Clear the Node entry in all cases */
+ 
+ 	node->object = NULL;
 
