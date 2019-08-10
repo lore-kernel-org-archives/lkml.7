@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B77C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DF1C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B35A2208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF85208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbfHJUq1 (ORCPT
+        id S1727348AbfHJUqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:46:27 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55362 "EHLO
+        Sat, 10 Aug 2019 16:46:42 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55278 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726911AbfHJUoH (ORCPT
+        by vger.kernel.org with ESMTP id S1726888AbfHJUoH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:44:07 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDd-00053m-42; Sat, 10 Aug 2019 21:44:05 +0100
+        id 1hwYDc-00053Y-0z; Sat, 10 Aug 2019 21:44:04 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDK-0003cb-PJ; Sat, 10 Aug 2019 21:43:46 +0100
+        id 1hwYDL-0003dE-4b; Sat, 10 Aug 2019 21:43:47 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,19 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Valentin Schneider" <valentin.schneider@arm.com>,
-        "Mike Galbraith" <efault@gmx.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Ingo Molnar" <mingo@kernel.org>,
-        "Mel Gorman" <mgorman@techsingularity.net>,
-        "Thomas Gleixner" <tglx@linutronix.de>
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Andre Przywara" <andre.przywara@arm.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.727370332@decadent.org.uk>
+Message-ID: <lsq.1565469607.605915355@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 064/157] sched/fair: Do not re-read ->h_load_next
- during hierarchical load calculation
+Subject: [PATCH 3.16 072/157] PCI: Add function 1 DMA alias quirk for
+ Marvell 9170 SATA controller
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -61,80 +56,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mel Gorman <mgorman@techsingularity.net>
+From: Andre Przywara <andre.przywara@arm.com>
 
-commit 0e9f02450da07fc7b1346c8c32c771555173e397 upstream.
+commit 9cde402a59770a0669d895399c13407f63d7d209 upstream.
 
-A NULL pointer dereference bug was reported on a distribution kernel but
-the same issue should be present on mainline kernel. It occured on s390
-but should not be arch-specific.  A partial oops looks like:
+There is a Marvell 88SE9170 PCIe SATA controller I found on a board here.
+Some quick testing with the ARM SMMU enabled reveals that it suffers from
+the same requester ID mixup problems as the other Marvell chips listed
+already.
 
-  Unable to handle kernel pointer dereference in virtual kernel address space
-  ...
-  Call Trace:
-    ...
-    try_to_wake_up+0xfc/0x450
-    vhost_poll_wakeup+0x3a/0x50 [vhost]
-    __wake_up_common+0xbc/0x178
-    __wake_up_common_lock+0x9e/0x160
-    __wake_up_sync_key+0x4e/0x60
-    sock_def_readable+0x5e/0x98
+Add the PCI vendor/device ID to the list of chips which need the
+workaround.
 
-The bug hits any time between 1 hour to 3 days. The dereference occurs
-in update_cfs_rq_h_load when accumulating h_load. The problem is that
-cfq_rq->h_load_next is not protected by any locking and can be updated
-by parallel calls to task_h_load. Depending on the compiler, code may be
-generated that re-reads cfq_rq->h_load_next after the check for NULL and
-then oops when reading se->avg.load_avg. The dissassembly showed that it
-was possible to reread h_load_next after the check for NULL.
-
-While this does not appear to be an issue for later compilers, it's still
-an accident if the correct code is generated. Full locking in this path
-would have high overhead so this patch uses READ_ONCE to read h_load_next
-only once and check for NULL before dereferencing. It was confirmed that
-there were no further oops after 10 days of testing.
-
-As Peter pointed out, it is also necessary to use WRITE_ONCE() to avoid any
-potential problems with store tearing.
-
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mike Galbraith <efault@gmx.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 685207963be9 ("sched: Move h_load calculation to task_h_load()")
-Link: https://lkml.kernel.org/r/20190319123610.nsivgf3mjbjjesxb@techsingularity.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-[bwh: Backported to 3.16: use ACCESS_ONCE()]
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- kernel/sched/fair.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pci/quirks.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5487,10 +5487,10 @@ static void update_cfs_rq_h_load(struct
- 	if (cfs_rq->last_h_load_update == now)
- 		return;
- 
--	cfs_rq->h_load_next = NULL;
-+	ACCESS_ONCE(cfs_rq->h_load_next) = NULL;
- 	for_each_sched_entity(se) {
- 		cfs_rq = cfs_rq_of(se);
--		cfs_rq->h_load_next = se;
-+		ACCESS_ONCE(cfs_rq->h_load_next) = se;
- 		if (cfs_rq->last_h_load_update == now)
- 			break;
- 	}
-@@ -5500,7 +5500,7 @@ static void update_cfs_rq_h_load(struct
- 		cfs_rq->last_h_load_update = now;
- 	}
- 
--	while ((se = cfs_rq->h_load_next) != NULL) {
-+	while ((se = ACCESS_ONCE(cfs_rq->h_load_next)) != NULL) {
- 		load = cfs_rq->h_load;
- 		load = div64_ul(load * se->avg.load_avg_contrib,
- 				cfs_rq->runnable_load_avg + 1);
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -3514,6 +3514,8 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_M
+ /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c14 */
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9130,
+ 			 quirk_dma_func1_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9170,
++			 quirk_dma_func1_alias);
+ /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c47 + c57 */
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9172,
+ 			 quirk_dma_func1_alias);
 
