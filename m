@@ -2,103 +2,184 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A884C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF8BC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA94E2085B
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D15E62085B
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:37:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sdfxzAMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbfHJUdR (ORCPT
+        id S1726455AbfHJUhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:33:17 -0400
-Received: from smtprelay0037.hostedemail.com ([216.40.44.37]:46205 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726024AbfHJUdR (ORCPT
+        Sat, 10 Aug 2019 16:37:08 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38418 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfHJUhI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:33:17 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 5A0FA1802913B;
-        Sat, 10 Aug 2019 20:33:15 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: dust49_1c42199401b48
-X-Filterd-Recvd-Size: 3048
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf15.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 10 Aug 2019 20:33:14 +0000 (UTC)
-Message-ID: <4398924f28a58fca296d101dae11e7accce80656.camel@perches.com>
-Subject: Re: [PATCH] Makefile: Convert -Wimplicit-fallthrough=3 to just
- -Wimplicit-fallthrough for clang
-From:   Joe Perches <joe@perches.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Date:   Sat, 10 Aug 2019 13:33:12 -0700
-In-Reply-To: <6a5f470c1375289908c37632572c4aa60d6486fa.camel@perches.com>
-References: <c0005a09c89c20093ac699c97e7420331ec46b01.camel@perches.com>
-         <9c7a79b4d21aea52464d00c8fa4e4b92638560b6.camel@perches.com>
-         <CAHk-=wiL7jqYNfYrNikgBw3byY+Zn37-8D8yR=WUu0x=_2BpZA@mail.gmail.com>
-         <6a5f470c1375289908c37632572c4aa60d6486fa.camel@perches.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Sat, 10 Aug 2019 16:37:08 -0400
+Received: by mail-ot1-f67.google.com with SMTP id d17so145884795oth.5;
+        Sat, 10 Aug 2019 13:37:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jucnTNtmH8/DZ4WEOho6QZPjcUdP4+w0e+PDI8VoSe8=;
+        b=sdfxzAMklg19nbBRvR7b/SyJ2lx3tBZc/bOKSlH4x1QeUPXaL8KC/Dcv6EuBdaTeVL
+         x//XZTEPF72qqYRwHnK3/j6iVfEZno/YG5mOa7Uj9QzDlS6RcgQD5AXGatkdYK576KBr
+         D2zWjvNLEz2T0ffgyRJmVNEcugLr6Nu/AhJ4HCPyddpRP6CxbDboQXtWzHlKydb9zRQL
+         Riv6FDAgGgjVuYghsdiuUaLk0AlXVeakV4e7fmaERqQlJhnfcJoKx8z0MUw6C1lOoUvk
+         wNjXa8UWzEjgrUqOm8wHuuo8OCh3pQvHUaBGizMHyj3tXQew2FD1lKSKzyT9bakopmfi
+         3xGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jucnTNtmH8/DZ4WEOho6QZPjcUdP4+w0e+PDI8VoSe8=;
+        b=HyTmndnUQA1YkCY0HLEWQay1mnVjplJjTlFCJdYyoF/cjg7OUosGbBa2ktQVnjXOry
+         osRcOY8bE8N71t6fAuRa+7S4+ddgmwrjYdqBN3h9tQ9HxQ9y1JZNBR2bGMuKnDepBl+X
+         zHiOq8uFo9smN1kCQF6KNDaqlw9mhjlh69uVa2ZzPwB/yHPei7Wr1seZ6naJNTS/gpl2
+         aixcBWH9tNKsKMnkoJ1pmxm4SxOZgaIGabDu+u7F/wfehrkwtRltzt9o0PQivix2H6Yq
+         MQPGr93o0xYFLtSA+izaqG7BGf5q8Pyup2LrZCs2PU1vNryWyNBMwJ4FBii0a+QcrrTt
+         C85Q==
+X-Gm-Message-State: APjAAAWvxTKxqeYLQDqG/6vSsr7eYxHFA2Pi1ox/lNc8PSElCn6Jf5hh
+        Ux/Qw0Xo0h23yXRIubknmMnhJADEe7zc/q4BJRtGU2Br
+X-Google-Smtp-Source: APXvYqwVH7AZegtiTKp16y6T54m5AFpdAElZ8MiuT0cJGR+Z8AVZcQj55YDRuf8crr90KNtUvZLI5tQMzRQRy86jpZQ=
+X-Received: by 2002:a5d:85c3:: with SMTP id e3mr27018354ios.265.1565469426677;
+ Sat, 10 Aug 2019 13:37:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190730014924.2193-1-deepa.kernel@gmail.com> <20190730014924.2193-6-deepa.kernel@gmail.com>
+ <12c095e595836a7ff7f2c7b2a32cb5544dd29b55.camel@codethink.co.uk>
+In-Reply-To: <12c095e595836a7ff7f2c7b2a32cb5544dd29b55.camel@codethink.co.uk>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Sat, 10 Aug 2019 13:36:55 -0700
+Message-ID: <CABeXuvriT7qhkKT0KMXrBsHqsj3b1BpRt6n-pfAnMVCHb=yBeg@mail.gmail.com>
+Subject: Re: [Y2038] [PATCH 05/20] utimes: Clamp the timestamps before update
+To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-08-10 at 13:18 -0700, Joe Perches wrote:
-> On Sat, 2019-08-10 at 12:44 -0700, Linus Torvalds wrote:
-> > On Sat, Aug 10, 2019 at 12:32 PM Joe Perches <joe@perches.com> wrote:
-> > > What does it take for this sort of patch to be applied by you?
-> > 
-> > The basic rule tends to be: "normal channels".
-> []
-> > I pulled from Gustavo earlier today to add a few more expected switch
-> > fall-through's, I guess I can take this Makefile change directly.
-> 
-> Thanks. It's simple enough.
-> 
-> There are classes of patches generated by scripts that have
-> no real mechanism to be applied today.
-> 
-> For instance: global coccinelle scripted changes to use stracpy
-> https://lore.kernel.org/lkml/alpine.DEB.2.21.1907251747560.2494@hadrien/
-> 
-> and trivial scripted changes to MAINTAINERS
-> https://lore.kernel.org/lkml/6482e6546dc328ec47b07dba9a78a9573ebb3e56.camel@perches.com/
-> 
-> that are basically impossible to be applied by anyone but you.
-> 
-> Otherwise there are hundreds of little micro patches most of
-> which would not otherwise be applied.
-> 
-> There should be some process available to get these treewide
-> or difficult to keep up-to-date and apply patches handled.
-> 
-> I believe these sorts of scripted patches should ideally
-> be handled immediately before an RC1 so other trees can be 
-> synchronized in the simplest way possible.
+On Mon, Aug 5, 2019 at 6:30 AM Ben Hutchings
+<ben.hutchings@codethink.co.uk> wrote:
+>
+> On Mon, 2019-07-29 at 18:49 -0700, Deepa Dinamani wrote:
+> > POSIX is ambiguous on the behavior of timestamps for
+> > futimens, utimensat and utimes. Whether to return an
+> > error or silently clamp a timestamp beyond the range
+> > supported by the underlying filesystems is not clear.
+> >
+> > POSIX.1 section for futimens, utimensat and utimes says:
+> > (http://pubs.opengroup.org/onlinepubs/9699919799/functions/futimens.html)
+> >
+> > The file's relevant timestamp shall be set to the greatest
+> > value supported by the file system that is not greater
+> > than the specified time.
+> >
+> > If the tv_nsec field of a timespec structure has the special
+> > value UTIME_NOW, the file's relevant timestamp shall be set
+> > to the greatest value supported by the file system that is
+> > not greater than the current time.
+> >
+> > [EINVAL]
+> >     A new file timestamp would be a value whose tv_sec
+> >     component is not a value supported by the file system.
+> >
+> > The patch chooses to clamp the timestamps according to the
+> > filesystem timestamp ranges and does not return an error.
+> > This is in line with the behavior of utime syscall also
+> > since the POSIX page(http://pubs.opengroup.org/onlinepubs/009695399/functions/utime.html)
+> > for utime does not mention returning an error or clamping like above.
+> >
+> > Same for utimes http://pubs.opengroup.org/onlinepubs/009695399/functions/utimes.html
+> >
+> > Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+> > ---
+> >  fs/utimes.c | 17 +++++++++++++----
+> >  1 file changed, 13 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/fs/utimes.c b/fs/utimes.c
+> > index 350c9c16ace1..4c1a2ce90bbc 100644
+> > --- a/fs/utimes.c
+> > +++ b/fs/utimes.c
+> > @@ -21,6 +21,7 @@ static int utimes_common(const struct path *path, struct timespec64 *times)
+> >       int error;
+> >       struct iattr newattrs;
+> >       struct inode *inode = path->dentry->d_inode;
+> > +     struct super_block *sb = inode->i_sb;
+> >       struct inode *delegated_inode = NULL;
+> >
+> >       error = mnt_want_write(path->mnt);
+> > @@ -36,16 +37,24 @@ static int utimes_common(const struct path *path, struct timespec64 *times)
+> >               if (times[0].tv_nsec == UTIME_OMIT)
+> >                       newattrs.ia_valid &= ~ATTR_ATIME;
+> >               else if (times[0].tv_nsec != UTIME_NOW) {
+> > -                     newattrs.ia_atime.tv_sec = times[0].tv_sec;
+> > -                     newattrs.ia_atime.tv_nsec = times[0].tv_nsec;
+> > +                     newattrs.ia_atime.tv_sec =
+> > +                             clamp(times[0].tv_sec, sb->s_time_min, sb->s_time_max);
+> > +                     if (times[0].tv_sec == sb->s_time_max || times[0].tv_sec == sb->s_time_min)
+>
+> This is testing the un-clamped value.
+>
+> > +                             newattrs.ia_atime.tv_nsec = 0;
+> > +                     else
+> > +                             newattrs.ia_atime.tv_nsec = times[0].tv_nsec;
+> >                       newattrs.ia_valid |= ATTR_ATIME_SET;
+> >               }
+> >
+> >               if (times[1].tv_nsec == UTIME_OMIT)
+> >                       newattrs.ia_valid &= ~ATTR_MTIME;
+> >               else if (times[1].tv_nsec != UTIME_NOW) {
+> > -                     newattrs.ia_mtime.tv_sec = times[1].tv_sec;
+> > -                     newattrs.ia_mtime.tv_nsec = times[1].tv_nsec;
+> > +                     newattrs.ia_mtime.tv_sec =
+> > +                             clamp(times[1].tv_sec, sb->s_time_min, sb->s_time_max);
+> > +                     if (times[1].tv_sec >= sb->s_time_max || times[1].tv_sec == sb->s_time_min)
+>
+> Similarly here, for the minimum.
+>
+> I suggest testing for clamping like this:
+>
+>                         if (newattrs.ia_atime.tv_sec != times[0].tv_sec)
+>                                 ...
+>                         if (newattrs.ia_mtime.tv_sec != times[1].tv_sec)
+>                                 ...
+>
+> Ben.
+>
+> > +                             newattrs.ia_mtime.tv_nsec = 0;
+> > +                     else
+> > +                             newattrs.ia_mtime.tv_nsec = times[1].tv_nsec;
+> >                       newattrs.ia_valid |= ATTR_MTIME_SET;
+> >               }
 
-Hey Stephen
+Darrick pointed out that maybe we could use timestamp_truncate() here to clamp.
+I think it is ok to truncate to the right granularity also here.
+setattr callbacks do it already. So the diff here looks like below:
 
-Question for you about a possible -next process change.
+-                       newattrs.ia_atime.tv_sec =
+-                               clamp(times[0].tv_sec, sb->s_time_min,
+sb->s_time_max);
+-                       if (times[0].tv_sec == sb->s_time_max ||
+times[0].tv_sec == sb->s_time_min)
+-                               newattrs.ia_atime.tv_nsec = 0;
+-                       else
+-                               newattrs.ia_atime.tv_nsec = times[0].tv_nsec;
++                       newattrs.ia_atime = timestamp_truncate(times[0], inode);
 
-Would it be reasonable to have some mechanism to script
-treewide patches to generate and apply after Andrew Morton's
-mmotm patches are applied to -next?
-
-This could allow treewide scripted patches to have
-compilation and test coverage before possibly being
-applied to Linus' tree.
-
-What would be necessary to allow this?
-
+Thanks,
+Deepa
