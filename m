@@ -2,172 +2,47 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF1DC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 10:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA92C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 11:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF492166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 10:28:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nPLGPNaw"
+	by mail.kernel.org (Postfix) with ESMTP id C30C02084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 11:10:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbfHJK20 (ORCPT
+        id S1726112AbfHJLIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 06:28:26 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57488 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbfHJK20 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 06:28:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KlWmJ/XZlWJnVQ3DuZFsqlb7tqR57nj8nY1TzMTzeEM=; b=nPLGPNawWzHcQsB51+cwTAmSS
-        7bkh38dfmYxojbWyaH8qidZdKJ2NKuXJILM2kRfEirMXVr0JP0rLj2ZzVgPdHhelWnYSiBme1DFs4
-        GnH29JnYdE5I2r/VPybHKjnjCe0r21JY/OW1dQG8CykvZSksrvPFfQdKDgKONZNHYtM1/UtZX9q88
-        dinPcPx0X30dwBipYzIoaLt1azYQLIkeK5Tkr/n2BTv7e7qUo7EgLuY2XEKn7OIN0EFsHT7QIL0U+
-        6wd19ZnlbbpFvqCSn/394XFEEnYfLFVGaCiqrvy3RBBXsjQ6wj10O7nOqNmGtyWbU7OiR5fhUo3qx
-        gEyVVMZBg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hwObc-0008Cz-I6; Sat, 10 Aug 2019 10:28:12 +0000
-Date:   Sat, 10 Aug 2019 03:28:12 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-usb@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 03/22] ARM: omap1: move omap15xx local bus handling to
- usb.c
-Message-ID: <20190810102812.GA25939@infradead.org>
-References: <20190808212234.2213262-1-arnd@arndb.de>
- <20190808212234.2213262-4-arnd@arndb.de>
+        Sat, 10 Aug 2019 07:08:06 -0400
+Received: from verein.lst.de ([213.95.11.211]:33875 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725845AbfHJLIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 07:08:05 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 2D25368BFE; Sat, 10 Aug 2019 13:08:02 +0200 (CEST)
+Date:   Sat, 10 Aug 2019 13:08:01 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/9] nouveau: simplify nouveau_dmem_migrate_to_ram
+Message-ID: <20190810110801.GA26349@lst.de>
+References: <20190808153346.9061-1-hch@lst.de> <20190808153346.9061-7-hch@lst.de> <08112ecb-0984-9e32-a463-e731bc014747@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190808212234.2213262-4-arnd@arndb.de>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <08112ecb-0984-9e32-a463-e731bc014747@nvidia.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for doing this!  The odd platforms have always been very
-confusing.
-
-> diff --git a/arch/arm/mach-omap1/include/mach/omap1510.h b/arch/arm/mach-omap1/include/mach/omap1510.h
-> index 3d235244bf5c..7af9c0c7c5ab 100644
-> --- a/arch/arm/mach-omap1/include/mach/omap1510.h
-> +++ b/arch/arm/mach-omap1/include/mach/omap1510.h
-> @@ -159,4 +159,3 @@
->  #define OMAP1510_INT_FPGA23		(OMAP_FPGA_IRQ_BASE + 23)
->  
->  #endif /*  __ASM_ARCH_OMAP15XX_H */
-> -
-
-Spurious whitespace change?
-
-> diff --git a/arch/arm/mach-omap1/usb.c b/arch/arm/mach-omap1/usb.c
-> index d8e9bbda8f7b..740c876ae46b 100644
-> --- a/arch/arm/mach-omap1/usb.c
-> +++ b/arch/arm/mach-omap1/usb.c
-> @@ -10,6 +10,7 @@
->  #include <linux/init.h>
->  #include <linux/platform_device.h>
->  #include <linux/io.h>
-> +#include <linux/delay.h>
->  
->  #include <asm/irq.h>
->  
-> @@ -127,6 +128,7 @@ omap_otg_init(struct omap_usb_config *config)
->  
->  		syscon &= ~HST_IDLE_EN;
->  		ohci_device->dev.platform_data = config;
-> +
->  		status = platform_device_register(ohci_device);
-
-Same here.
-
-> +#define OMAP1510_LB_OFFSET	   UL(0x30000000)
-> +#define OMAP1510_LB_DMA_PFN_OFFSET ((OMAP1510_LB_OFFSET - PAGE_OFFSET) >> PAGE_SHIFT)
-
-Overly long line.
-
-> +/*
-> + * OMAP-1510 specific Local Bus clock on/off
-> + */
-> +static int omap_1510_local_bus_power(int on)
-> +{
-> +	if (on) {
-> +		omap_writel((1 << 1) | (1 << 0), OMAP1510_LB_MMU_CTL);
-> +		udelay(200);
-> +	} else {
-> +		omap_writel(0, OMAP1510_LB_MMU_CTL);
-> +	}
-> +
-> +	return 0;
-> +}
-
-The caller never checks the const return value, and on is always true as
-well.  In fact it seems like omap_1510_local_bus_power and
-omap_1510_local_bus_init could probably just be merged into the caller.
-
-> +
-> +/*
-> + * OMAP-1510 specific Local Bus initialization
-> + * NOTE: This assumes 32MB memory size in OMAP1510LB_MEMSIZE.
-> + *       See also arch/mach-omap/memory.h for __virt_to_dma() and
-> + *       __dma_to_virt() which need to match with the physical
-> + *       Local Bus address below.
-
-I think that NOTE is out of date, as __virt_to_dma and __dma_to_virt
-don't exist anymore.
-
-> +static int omap_1510_local_bus_init(void)
-> +{
-> +	unsigned int tlb;
-> +	unsigned long lbaddr, physaddr;
-> +
-> +	omap_writel((omap_readl(OMAP1510_LB_CLOCK_DIV) & 0xfffffff8) | 0x4,
-> +	       OMAP1510_LB_CLOCK_DIV);
-> +
-> +	/* Configure the Local Bus MMU table */
-> +	for (tlb = 0; tlb < OMAP1510_LB_MEMSIZE; tlb++) {
-> +		lbaddr = tlb * 0x00100000 + OMAP1510_LB_OFFSET;
-> +		physaddr = tlb * 0x00100000 + PHYS_OFFSET;
-> +		omap_writel((lbaddr & 0x0fffffff) >> 22, OMAP1510_LB_MMU_CAM_H);
-> +		omap_writel(((lbaddr & 0x003ffc00) >> 6) | 0xc,
-> +		       OMAP1510_LB_MMU_CAM_L);
-> +		omap_writel(physaddr >> 16, OMAP1510_LB_MMU_RAM_H);
-> +		omap_writel((physaddr & 0x0000fc00) | 0x300, OMAP1510_LB_MMU_RAM_L);
-
-Another > 80 chars line.
-
-> +		omap_writel(tlb << 4, OMAP1510_LB_MMU_LCK);
-> +		omap_writel(0x1, OMAP1510_LB_MMU_LD_TLB);
-> +	}
-> +
-> +	/* Enable the walking table */
-> +	omap_writel(omap_readl(OMAP1510_LB_MMU_CTL) | (1 << 3), OMAP1510_LB_MMU_CTL);
-
-One more.
-
-> +	udelay(200);
-> +
-> +	return 0;
-
-The return value is ignored.
+Thanks, I've added the fixups for v3.
