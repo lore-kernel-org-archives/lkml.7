@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE85C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A774C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DCDB2166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B1192166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:45:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbfHJUod (ORCPT
+        id S1727066AbfHJUob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:44:33 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54872 "EHLO
+        Sat, 10 Aug 2019 16:44:31 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54748 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726805AbfHJUoB (ORCPT
+        by vger.kernel.org with ESMTP id S1726771AbfHJUoA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:44:01 -0400
+        Sat, 10 Aug 2019 16:44:00 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDW-00053m-R0; Sat, 10 Aug 2019 21:43:58 +0100
+        id 1hwYDV-00053L-Co; Sat, 10 Aug 2019 21:43:57 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDN-0003iI-Lu; Sat, 10 Aug 2019 21:43:49 +0100
+        id 1hwYDO-0003ja-E8; Sat, 10 Aug 2019 21:43:50 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Al Viro" <viro@zeniv.linux.org.uk>
+        "Grant Hernandez" <granthernandez@google.com>,
+        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.999591096@decadent.org.uk>
+Message-ID: <lsq.1565469607.103998787@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 120/157] ufs: fix braino in ufs_get_inode_gid() for
- solaris UFS flavour
+Subject: [PATCH 3.16 136/157] Input: gtco - bounds check collection indent
+ level
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,31 +56,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Grant Hernandez <granthernandez@google.com>
 
-commit 4e9036042fedaffcd868d7f7aa948756c48c637d upstream.
+commit 2a017fd82c5402b3c8df5e3d6e5165d9e6147dc1 upstream.
 
-To choose whether to pick the GID from the old (16bit) or new (32bit)
-field, we should check if the old gid field is set to 0xffff.  Mainline
-checks the old *UID* field instead - cut'n'paste from the corresponding
-code in ufs_get_inode_uid().
+The GTCO tablet input driver configures itself from an HID report sent
+via USB during the initial enumeration process. Some debugging messages
+are generated during the parsing. A debugging message indentation
+counter is not bounds checked, leading to the ability for a specially
+crafted HID report to cause '-' and null bytes be written past the end
+of the indentation array. As long as the kernel has CONFIG_DYNAMIC_DEBUG
+enabled, this code will not be optimized out.  This was discovered
+during code review after a previous syzkaller bug was found in this
+driver.
 
-Fixes: 252e211e90ce
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Grant Hernandez <granthernandez@google.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/ufs/util.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/tablet/gtco.c | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
---- a/fs/ufs/util.h
-+++ b/fs/ufs/util.h
-@@ -228,7 +228,7 @@ ufs_get_inode_gid(struct super_block *sb
- 	case UFS_UID_44BSD:
- 		return fs32_to_cpu(sb, inode->ui_u3.ui_44.ui_gid);
- 	case UFS_UID_EFT:
--		if (inode->ui_u1.oldids.ui_suid == 0xFFFF)
-+		if (inode->ui_u1.oldids.ui_sgid == 0xFFFF)
- 			return fs32_to_cpu(sb, inode->ui_u3.ui_sun.ui_gid);
- 		/* Fall through */
- 	default:
+--- a/drivers/input/tablet/gtco.c
++++ b/drivers/input/tablet/gtco.c
+@@ -78,6 +78,7 @@ Scott Hill shill@gtcocalcomp.com
+ 
+ /* Max size of a single report */
+ #define REPORT_MAX_SIZE       10
++#define MAX_COLLECTION_LEVELS  10
+ 
+ 
+ /* Bitmask whether pen is in range */
+@@ -224,8 +225,7 @@ static void parse_hid_report_descriptor(
+ 	char  maintype = 'x';
+ 	char  globtype[12];
+ 	int   indent = 0;
+-	char  indentstr[10] = "";
+-
++	char  indentstr[MAX_COLLECTION_LEVELS + 1] = { 0 };
+ 
+ 	dev_dbg(ddev, "======>>>>>>PARSE<<<<<<======\n");
+ 
+@@ -351,6 +351,13 @@ static void parse_hid_report_descriptor(
+ 			case TAG_MAIN_COL_START:
+ 				maintype = 'S';
+ 
++				if (indent == MAX_COLLECTION_LEVELS) {
++					dev_err(ddev, "Collection level %d would exceed limit of %d\n",
++						indent + 1,
++						MAX_COLLECTION_LEVELS);
++					break;
++				}
++
+ 				if (data == 0) {
+ 					dev_dbg(ddev, "======>>>>>> Physical\n");
+ 					strcpy(globtype, "Physical");
+@@ -370,8 +377,15 @@ static void parse_hid_report_descriptor(
+ 				break;
+ 
+ 			case TAG_MAIN_COL_END:
+-				dev_dbg(ddev, "<<<<<<======\n");
+ 				maintype = 'E';
++
++				if (indent == 0) {
++					dev_err(ddev, "Collection level already at zero\n");
++					break;
++				}
++
++				dev_dbg(ddev, "<<<<<<======\n");
++
+ 				indent--;
+ 				for (x = 0; x < indent; x++)
+ 					indentstr[x] = '-';
 
