@@ -2,87 +2,134 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B02C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 06:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 639B1C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 07:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 291CE208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 06:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E1F217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 07:01:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565420505;
+	bh=Lpl1tv0ZPmCHKs7Wm3c2RiDk3aHvcWbSYtNcAGiA+0U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=atCItTUgIG1jnh4f3N8Ency2dzvuOSfzAutGxTNnvoyZBCCK41pcPFaWDB6EvpaTf
+	 F8BLStTYPH13FaDwWouJ7vn3DZg944BoL/KLk5BLVQMenUZpW93tT7+um5nomWGbx3
+	 Md4Tp/n3xlPbOpI4+QvtybeGIchyEB+OHHPspM5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbfHJG7G (ORCPT
+        id S1726144AbfHJHBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 02:59:06 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46946 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbfHJG7F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 02:59:05 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z17so22830794otk.13;
-        Fri, 09 Aug 2019 23:59:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jCiIkAHQv04Yhu2YlExm6Y+RKbCmTgvVHfMoq6E68UA=;
-        b=eyIACgnUF8YpkqDIM1zd6v5ND29rfboXy15POXc3Ln9mSIwFRHRJiY63eGjeW1wvbU
-         1GfkzlL0+FaeKB+1Dw6mz1cOjbmftelvd+arsmv9qjsn+ju05mCtFlp5qDU+EaAPnv87
-         Nw5EhrhUrqVBv0+n77nnzWKjcag9nzMObR8MlTZ+UZ1dIqAd77pyTJ9paZPGMYew3Ntd
-         /LppDGUAlfjyUZQAiVBdqHWCxEzdg+m8z3VZ90e2Kxn0z1BkruIHPcokzfCQ0gTza0CT
-         4MF6fJTL8ZyUwY5IAZqu98Uero08ytYpbT9bL0iRLHQDPJh7nO6WlxZ3tugnzoLCHtR8
-         xvRQ==
-X-Gm-Message-State: APjAAAXX2AIWjSwqz4A39hoDIbEt4/n0fxpsSX8BK3lkwrIXcUXQM2Mk
-        C846+Qti5Kf4mSBovZKwzO6JXf11GtuOMcyhPW0=
-X-Google-Smtp-Source: APXvYqzQL2QVOjIqeka+4Ecte5cpEweDrJl7zSog7SaRU49m2YOMldmuib9eXa77Xvnfs1Wvn5jBdn3tpy7PYudki18=
-X-Received: by 2002:a9d:5c11:: with SMTP id o17mr19824177otk.107.1565420344701;
- Fri, 09 Aug 2019 23:59:04 -0700 (PDT)
+        Sat, 10 Aug 2019 03:01:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47208 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725468AbfHJHBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 03:01:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C6D4208C3;
+        Sat, 10 Aug 2019 07:01:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565420502;
+        bh=Lpl1tv0ZPmCHKs7Wm3c2RiDk3aHvcWbSYtNcAGiA+0U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zMKgCX6LTZ31whgaOUfHvBf9ZWrBfv2zLYsXsSblyjUxKJebQYh8KYYTWI3UOV7qt
+         dzN6g7/4eqEWD5AaZlC2GiaVjFV59uIBtJp2uRvAOJzsB9uRE+/j6+rniM6EHu3Azz
+         V+l4x6Nd7uKQ16n5stC3fHQb2+ixMWY4Znv5M2v4=
+Date:   Sat, 10 Aug 2019 09:01:39 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [PATCH 1/3] soundwire: add debugfs support
+Message-ID: <20190810070139.GA6896@kroah.com>
+References: <20190809224341.15726-1-pierre-louis.bossart@linux.intel.com>
+ <20190809224341.15726-2-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-References: <20190810052442.GA21354@embeddedor>
-In-Reply-To: <20190810052442.GA21354@embeddedor>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sat, 10 Aug 2019 08:58:53 +0200
-Message-ID: <CAMuHMdWsu56u_HmwMSTy3N0_uKN0ngi4pmuXoX0y5iU7Y=L=6g@mail.gmail.com>
-Subject: Re: [PATCH v2] sh: kernel: disassemble: Mark expected switch fall-throughs
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809224341.15726-2-pierre-louis.bossart@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 10, 2019 at 7:26 AM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
-> Remove logically dead code and mark switch cases where we are expecting
-> to fall through.
->
-> Fix the following warnings (Building: defconfig sh):
->
-> arch/sh/kernel/disassemble.c:478:8: warning: this statement may fall
-> through [-Wimplicit-fallthrough=]
-> arch/sh/kernel/disassemble.c:487:8: warning: this statement may fall
-> through [-Wimplicit-fallthrough=]
-> arch/sh/kernel/disassemble.c:496:8: warning: this statement may fall
-> through [-Wimplicit-fallthrough=]
->
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+On Fri, Aug 09, 2019 at 05:43:39PM -0500, Pierre-Louis Bossart wrote:
+> Add base debugfs mechanism for SoundWire bus by creating soundwire
+> root and master-N and slave-x hierarchy.
+> 
+> Also add SDW Slave SCP, DP0 and DP-N register debug file.
+> 
+> Registers not implemented will print as "XX"
+> 
+> Credits: this patch is based on an earlier internal contribution by
+> Vinod Koul, Sanyog Kale, Shreyas Nc and Hardik Shah.
+> 
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/Makefile    |   5 ++
+>  drivers/soundwire/bus.c       |   6 ++
+>  drivers/soundwire/bus.h       |  24 ++++++
+>  drivers/soundwire/bus_type.c  |   3 +
+>  drivers/soundwire/debugfs.c   | 151 ++++++++++++++++++++++++++++++++++
+>  drivers/soundwire/slave.c     |   1 +
+>  include/linux/soundwire/sdw.h |   4 +
+>  7 files changed, 194 insertions(+)
+>  create mode 100644 drivers/soundwire/debugfs.c
+> 
+> diff --git a/drivers/soundwire/Makefile b/drivers/soundwire/Makefile
+> index fd99a831b92a..05d4cb9ef7d6 100644
+> --- a/drivers/soundwire/Makefile
+> +++ b/drivers/soundwire/Makefile
+> @@ -5,6 +5,11 @@
+>  
+>  #Bus Objs
+>  soundwire-bus-objs := bus_type.o bus.o slave.o mipi_disco.o stream.o
+> +
+> +ifdef CONFIG_DEBUG_FS
+> +soundwire-bus-objs += debugfs.o
+> +endif
+> +
+>  obj-$(CONFIG_SOUNDWIRE_BUS) += soundwire-bus.o
+>  
+>  #Cadence Objs
+> diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
+> index 49f64b2115b9..89d5f1537d9b 100644
+> --- a/drivers/soundwire/bus.c
+> +++ b/drivers/soundwire/bus.c
+> @@ -49,6 +49,8 @@ int sdw_add_bus_master(struct sdw_bus *bus)
+>  		}
+>  	}
+>  
+> +	bus->debugfs = sdw_bus_debugfs_init(bus);
+> +
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+It's "nicer" to just put that assignment into sdw_bus_debugfs_init().
 
-Gr{oetje,eeting}s,
+That way you just call the function, no need to return anything.
 
-                        Geert
+>  	/*
+>  	 * Device numbers in SoundWire are 0 through 15. Enumeration device
+>  	 * number (0), Broadcast device number (15), Group numbers (12 and
+> @@ -109,6 +111,8 @@ static int sdw_delete_slave(struct device *dev, void *data)
+>  	struct sdw_slave *slave = dev_to_sdw_dev(dev);
+>  	struct sdw_bus *bus = slave->bus;
+>  
+> +	sdw_slave_debugfs_exit(slave->debugfs);
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Same here, just pass in slave:
+	sdw_slave_debugfs_exit(slave);
+and have that function remove the debugfs entry in the structure.  That
+way, if you are really paranoid about size, you could even drop the
+debugfs structure member from non-debugfs builds without any changes to
+bus.c or other non-debugfs files.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+thanks,
+
+greg k-h
