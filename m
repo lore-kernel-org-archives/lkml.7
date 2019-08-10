@@ -2,136 +2,98 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFCFC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 16:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E04F7C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 16:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE6B208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 16:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA2AB2086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 16:53:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="SPCYlbua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbfHJQiP (ORCPT
+        id S1726284AbfHJQxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 12:38:15 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:49029 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726112AbfHJQiO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 12:38:14 -0400
-X-UUID: 4354e03d6b6c4d93b3e200d25d7fc4d8-20190811
-X-UUID: 4354e03d6b6c4d93b3e200d25d7fc4d8-20190811
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <houlong.wei@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 629964535; Sun, 11 Aug 2019 00:38:05 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sun, 11 Aug
- 2019 00:38:03 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sun, 11 Aug 2019 00:38:01 +0800
-Message-ID: <1565455081.19079.36.camel@mhfsdcap03>
-Subject: Re: [PATCH v11 09/12] soc: mediatek: cmdq: define the instruction
- struct
-From:   houlong wei <houlong.wei@mediatek.com>
-To:     Bibby Hsieh =?UTF-8?Q?=28=E8=AC=9D=E6=BF=9F=E9=81=A0=29?= 
-        <Bibby.Hsieh@mediatek.com>
-CC:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        CK Hu =?UTF-8?Q?=28=E8=83=A1=E4=BF=8A=E5=85=89=29?= 
-        <ck.hu@mediatek.com>, "Daniel Kurtz" <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Nicolas Boichat" <drinkcat@chromium.org>,
-        YT Shen =?UTF-8?Q?=28=E6=B2=88=E5=B2=B3=E9=9C=86=29?= 
-        <Yt.Shen@mediatek.com>,
-        Daoyuan Huang =?UTF-8?Q?=28=E9=BB=83=E9=81=93=E5=8E=9F=29?= 
-        <Daoyuan.Huang@mediatek.com>,
-        Jiaguang Zhang =?UTF-8?Q?=28=E5=BC=A0=E5=8A=A0=E5=B9=BF=29?= 
-        <Jiaguang.Zhang@mediatek.com>,
-        Dennis-YC Hsieh =?UTF-8?Q?=28=E8=AC=9D=E5=AE=87=E5=93=B2=29?= 
-        <Dennis-YC.Hsieh@mediatek.com>,
-        Ginny Chen =?UTF-8?Q?=28=E9=99=B3=E6=B2=BB=E5=82=91=29?= 
-        <ginny.chen@mediatek.com>, <houlong.wei@mediatek.com>
-Date:   Sun, 11 Aug 2019 00:38:01 +0800
-In-Reply-To: <1565453520.19079.17.camel@mhfsdcap03>
-References: <20190729070106.9332-1-bibby.hsieh@mediatek.com>
-         <20190729070106.9332-10-bibby.hsieh@mediatek.com>
-         <1565453520.19079.17.camel@mhfsdcap03>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sat, 10 Aug 2019 12:53:24 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:50096 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726055AbfHJQxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 12:53:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=R+FrOScjgqWFPYA+Dkx4oVR46AIH2TukJZy2hZOrqjA=; b=SPCYlbuaSCO3P01rKQpLtrFPxL
+        75S33xCqXjDZsncoQRo/tdJhCsH5dS8CMn2N4qTeWnRP3gxVV6hXlgy8CEJet+1NwU51j6N6gf3py
+        ecz1jCdjhKfYaLzHsUTztK7h+9PJMT4CjgLrUBBfYuPIRWOhX4b946vwJ1UL2f0JTu7w=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hwUcH-0008R0-Rn; Sat, 10 Aug 2019 18:53:17 +0200
+Date:   Sat, 10 Aug 2019 18:53:17 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     davem@davemloft.net, sd@queasysnail.net, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
+        camelia.groza@nxp.com, Simon.Edelhaus@aquantia.com
+Subject: Re: [PATCH net-next v2 8/9] net: phy: mscc: macsec initialization
+Message-ID: <20190810165317.GB30120@lunn.ch>
+References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
+ <20190808140600.21477-9-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 8232FFF279301A39457DCF48E56192120E1B5723579B6362CE045B6813A8FDA22000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808140600.21477-9-antoine.tenart@bootlin.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-08-11 at 00:12 +0800, houlong wei wrote:
-> Hi Bibby, I have inline comment in function cmdq_pkt_write_mask().
-> 
-> On Mon, 2019-07-29 at 15:01 +0800, Bibby Hsieh wrote:
-> > Define an instruction structure for gce driver to append command.
-> > This structure can make the client's code more readability.
-> > 
-> > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> > Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> > ---
-> >  drivers/soc/mediatek/mtk-cmdq-helper.c   | 103 +++++++++++++++--------
-> >  include/linux/mailbox/mtk-cmdq-mailbox.h |   2 +
-> >  2 files changed, 72 insertions(+), 33 deletions(-)
-> > 
-> > diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> > index 7aa0517ff2f3..0886c4967ca4 100644
-> > --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> > +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> > @@ -9,12 +9,24 @@
-> >  #include <linux/mailbox_controller.h>
-> >  #include <linux/soc/mediatek/mtk-cmdq.h>
-[...]
-> >  
-> >  int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
-> >  			u16 offset, u32 value, u32 mask)
-> >  {
-> > +	struct cmdq_instruction *inst;
-> >  	u32 offset_mask = offset;
-> > -	int err = 0;
-> >  
-> >  	if (mask != 0xffffffff) {
-> > -		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
-> > +		inst = cmdq_pkt_append_command(pkt);
-> > +		if (!inst)
-> > +			return -ENOMEM;
-> > +
-> > +		inst->op = CMDQ_CODE_MASK;
-> > +		inst->mask = ~mask;
+> The MACsec read and write functions are wrapped into two versions: one
+> called during the init phase, and the other one later on. This is
+> because the init functions in the Microsemi Ocelot PHY driver are called
+> while the MDIO bus lock is taken.
 
-> >  		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
-> >  	}
-> > -	err |= cmdq_pkt_write(pkt, value, subsys, offset_mask);
-> >  
-> > -	return err;
-> > +	return cmdq_pkt_write(pkt, subsys, offset_mask, value);
+Hi Antoine
 
-We need add a type conversion here, (u8)offset_mask, for your new
-function type. Er... it's better to remove local variable 'offset_mask'
-and replace it with 'offset'.
+It is nice you have wrapped it all up, but it is still messy. Sometime
+in the future, we should maybe take another look at adding the concept
+of initialisation of a package, before the initialization of the PHYs
+in the package.
 
-> >  }
-[...]
+> +static u32 __vsc8584_macsec_phy_read(struct phy_device *phydev,
+> +				     enum macsec_bank bank, u32 reg, bool init)
+> +{
+> +	u32 val, val_l = 0, val_h = 0;
+> +	unsigned long deadline;
+> +	int rc;
+> +
+> +	if (!init) {
+> +		rc = phy_select_page(phydev, MSCC_PHY_PAGE_MACSEC);
+> +		if (rc < 0)
+> +			goto failed;
+> +	} else {
+> +		__phy_write_page(phydev, MSCC_PHY_PAGE_MACSEC);
+> +	}
 
+...
 
+> +	if (!init) {
+> +failed:
+> +		phy_restore_page(phydev, rc, rc);
+> +	} else {
+> +		__phy_write_page(phydev, MSCC_PHY_PAGE_STANDARD);
+> +	}
+
+Having the failed label inside the if is correct, but i think it is
+potentially dangerous for future modifications to this function. I
+would move the label before the if. I doubt it makes any difference to
+the generated code, but it might prevent future bugs.
+
+    Andrew
