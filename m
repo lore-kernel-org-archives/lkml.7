@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-15.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC67C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 11:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3315C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 11:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B33021743
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 11:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E4320880
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 11:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565437922;
-	bh=4YROqdvrywxnjFklnTwQaN4gMQkKYxLAhH+wie1vDwA=;
+	s=default; t=1565437975;
+	bh=ELQN+mT/SvWtPwffTxC5jZQThBIxCndcXEesU6BJNso=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=BwjatO//c2pH+e1XijRkgAyW9ityXhRAfGO5KtW7yPl9QMrBGOWzkc5vF5T7/gXnE
-	 tqibpgHqo+YPxiHhqr3kPNCtvfkRqcZqbI5bAktrtiMLodqghd7klz5DHTOCaP0dhS
-	 Dh/JoshIAp/XJePfffUDSqqn5eA2epqp9PsTeEvA=
+	b=TrVP5Rf522GTPmXmUgiB+oTv/szv0Pqjnr8GizMhWurcrsd8FnT+AEx66IuwxWwax
+	 PNDjhew3rFShlF9e8r/F2xa0BVSW4PynY9M0KVt8bLe+0xaFDerKka1Rs05fDY0ovg
+	 i02WymakdpgZmWkqXx4gHD4qu+nhrShNrXGpRR54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbfHJLv7 (ORCPT
+        id S1726261AbfHJLw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 07:51:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47638 "EHLO mail.kernel.org"
+        Sat, 10 Aug 2019 07:52:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbfHJLv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 07:51:58 -0400
+        id S1725845AbfHJLwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 07:52:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55BB421743;
-        Sat, 10 Aug 2019 11:51:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E001220880;
+        Sat, 10 Aug 2019 11:52:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565437917;
-        bh=4YROqdvrywxnjFklnTwQaN4gMQkKYxLAhH+wie1vDwA=;
+        s=default; t=1565437944;
+        bh=ELQN+mT/SvWtPwffTxC5jZQThBIxCndcXEesU6BJNso=;
         h=Date:From:To:Cc:Subject:From;
-        b=PlyOqBUoFfq+rb1fi+XKKQNEbJUxrjMBdon65nf5pQ5c1wcmpPQxJwhe0VQ4A7ps0
-         1NEOsa6mdSjLIS1eKhZM7JDSmAFUDx2q3c48Wn3AFLYDFjr0S3XvAqpy6Wrojh5vFp
-         0x9S7mYB0ajpL0Z0NJ39GC769FjPxMV0WSYoTWHY=
-Date:   Sat, 10 Aug 2019 13:51:55 +0200
+        b=SQUhg8N8q5shtxRmfHTPB9NcQxRKGo3G3Cbl9wZIWcYgegpCnI5yU9joQeg6bPABo
+         7E7Ab4uws1YUAprDEZyT1Y9rKj07aOVLpnfXS6rNzb2felOvfN8TLcRcaDbr7iXM6v
+         VfFsEc5C7+Yzrfjl0szdh1g3gWG/24YntsprHpyg=
+Date:   Sat, 10 Aug 2019 13:52:22 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: [GIT PULL] USB fixes for 5.3-rc4
-Message-ID: <20190810115155.GA5792@kroah.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     devel@linuxdriverproject.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Staging/IIO driver fixes for 5.3-rc4
+Message-ID: <20190810115222.GA5874@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
@@ -56,78 +57,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
-  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.3-rc4
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git tags/staging-5.3-rc4
 
-for you to fetch changes up to 27709ae4e2fe6cf7da2ae45e718e190c5433342b:
+for you to fetch changes up to 09f6109ff4f8003af3370dfee0f73fcf6d20087a:
 
-  usb: setup authorized_default attributes using usb_bus_notify (2019-08-08 16:07:34 +0200)
+  Merge tag 'iio-fixes-for-5.3a' of git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio into staging-linus (2019-07-28 11:07:26 +0200)
 
 ----------------------------------------------------------------
-USB fixes for 5.3-rc4
+Staging / IIO driver fixes for 5.3-rc4
 
-Here are some small USB fixes for 5.3-rc4.
+Here are some small staging and IIO driver fixes for 5.3-rc4.
 
-The "biggest" one here is moving code from one file to another in order
-to fix a long-standing race condition with the creation of sysfs files
-for USB devices.  Turns out that there are now userspace tools out there
-that are hitting this long-known bug, so it's time to fix them.
-Thankfully the tool-maker in this case fixed the issue :)
+Nothing major, just resolutions for a number of small reported issues,
+full details in the shortlog.
 
-The other patches in here are all fixes for reported issues.  Now that
-syzbot knows how to fuzz USB drivers better, and is starting to now fuzz
-the userspace facing side of them at the same time, there will be more
-and more small fixes like these coming, which is a good thing.
-
-All of these have been in linux-next with no reported issues.
+All have been in linux-next for a while with no reported issues.
 
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ----------------------------------------------------------------
-Gavin Li (1):
-      usb: usbfs: fix double-free of usb memory upon submiturb error
+Adham Abozaeid (1):
+      staging: wilc1000: flush the workqueue before deinit the host
 
-Guenter Roeck (2):
-      usb: typec: tcpm: Add NULL check before dereferencing config
-      usb: typec: tcpm: Ignore unsupported/unknown alternate mode requests
+Arnd Bergmann (1):
+      iio: adc: gyroadc: fix uninitialized return code
 
-Heikki Krogerus (1):
-      usb: typec: ucsi: ccg: Fix uninitilized symbol error
+Christophe JAILLET (1):
+      staging: unisys: visornic: Update the description of 'poll_for_irq()'
 
-Li Jun (2):
-      usb: typec: tcpm: free log buf memory when remove debug file
-      usb: typec: tcpm: remove tcpm dir if no children
+Greg Kroah-Hartman (1):
+      Merge tag 'iio-fixes-for-5.3a' of git://git.kernel.org/.../jic23/iio into staging-linus
 
-Mathias Nyman (1):
-      xhci: Fix NULL pointer dereference at endpoint zero reset.
+Gwendal Grignou (1):
+      iio: cros_ec_accel_legacy: Fix incorrect channel setting
 
-Oliver Neukum (2):
-      Revert "USB: rio500: simplify locking"
-      usb: iowarrior: fix deadlock on disconnect
+Ivan Bornyakov (1):
+      staging: gasket: apex: fix copy-paste typo
 
-Suzuki K Poulose (1):
-      usb: yurex: Fix use-after-free in yurex_delete
+Jan Sebastian Götte (1):
+      Staging: fbtft: Fix GPIO handling
 
-Thiébaud Weksteen (1):
-      usb: setup authorized_default attributes using usb_bus_notify
+Jean-Baptiste Maneyrol (1):
+      iio: imu: mpu6050: add missing available scan masks
 
-Yoshihiro Shimoda (1):
-      usb: host: xhci-rcar: Fix timeout in xhci_suspend()
+Joe Perches (1):
+      iio: adc: max9611: Fix misuse of GENMASK macro
 
- drivers/usb/core/devio.c          |   2 -
- drivers/usb/core/hcd.c            | 123 --------------------------------------
- drivers/usb/core/sysfs.c          | 121 +++++++++++++++++++++++++++++++++++++
- drivers/usb/core/usb.h            |   5 ++
- drivers/usb/host/xhci-rcar.c      |   9 ++-
- drivers/usb/host/xhci.c           |  10 ++++
- drivers/usb/misc/iowarrior.c      |   7 ++-
- drivers/usb/misc/rio500.c         |  43 ++++++++-----
- drivers/usb/misc/yurex.c          |   2 +-
- drivers/usb/typec/tcpm/tcpm.c     |  58 ++++++++++++------
- drivers/usb/typec/ucsi/ucsi_ccg.c |   2 +-
- 11 files changed, 217 insertions(+), 165 deletions(-)
+Maarten ter Huurne (1):
+      IIO: Ingenic JZ47xx: Set clock divider on probe
+
+Mauro Carvalho Chehab (1):
+      docs: generic-counter.rst: fix broken references for ABI file
+
+Phil Reid (2):
+      Staging: fbtft: Fix probing of gpio descriptor
+      Staging: fbtft: Fix reset assertion when using gpio descriptor
+
+Tetsuo Handa (1):
+      staging: android: ion: Bail out upon SIGKILL when allocating memory.
+
+ Documentation/driver-api/generic-counter.rst      |  4 +-
+ drivers/iio/accel/cros_ec_accel_legacy.c          |  1 -
+ drivers/iio/adc/ingenic-adc.c                     | 54 +++++++++++++++++++++++
+ drivers/iio/adc/max9611.c                         |  2 +-
+ drivers/iio/adc/rcar-gyroadc.c                    |  4 +-
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c        | 43 ++++++++++++++++++
+ drivers/staging/android/ion/ion_page_pool.c       |  3 ++
+ drivers/staging/fbtft/fb_bd663474.c               |  2 +-
+ drivers/staging/fbtft/fb_ili9163.c                |  2 +-
+ drivers/staging/fbtft/fb_ili9325.c                |  2 +-
+ drivers/staging/fbtft/fb_s6d1121.c                |  2 +-
+ drivers/staging/fbtft/fb_ssd1289.c                |  2 +-
+ drivers/staging/fbtft/fb_ssd1331.c                |  4 +-
+ drivers/staging/fbtft/fb_upd161704.c              |  2 +-
+ drivers/staging/fbtft/fbtft-bus.c                 |  2 +-
+ drivers/staging/fbtft/fbtft-core.c                | 47 +++++++++-----------
+ drivers/staging/gasket/apex_driver.c              |  2 +-
+ drivers/staging/unisys/visornic/visornic_main.c   |  3 +-
+ drivers/staging/wilc1000/wilc_wfi_cfgoperations.c |  1 +
+ 19 files changed, 140 insertions(+), 42 deletions(-)
