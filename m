@@ -2,134 +2,149 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64170C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 18:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F99C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 18:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 450752085B
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 18:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D6AD2086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 18:18:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbfHJSPI (ORCPT
+        id S1726195AbfHJSSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 14:15:08 -0400
-Received: from mail-ot1-f69.google.com ([209.85.210.69]:34605 "EHLO
-        mail-ot1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbfHJSPH (ORCPT
+        Sat, 10 Aug 2019 14:18:55 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:38706 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbfHJSSz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 14:15:07 -0400
-Received: by mail-ot1-f69.google.com with SMTP id a26so1837653otl.1
-        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 11:15:06 -0700 (PDT)
+        Sat, 10 Aug 2019 14:18:55 -0400
+Received: by mail-qk1-f195.google.com with SMTP id u190so10533114qkh.5
+        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 11:18:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=MsmEXwped4cbyL6h6bs/KZ2LTHxX7J5FpxmhjfgV7og=;
-        b=gsS7Qhb89P8vPn4wpyvuv/+I4ZKZ+9bheX2rSYRrDgXoYjrBcu30a0ykCFDmr+q0p4
-         sk56yoRnGZF941dpBHsGUl6rfrD9PEVVC8s3Y3eFYrk5idlk4DvjEQf2hcFUaAGnPGHt
-         ht5oseP+GJCpgPYX84FYrwlJHfFKOlvO1oVaxRQTk3UX3x0tq+sZMTZslKJ9hCn2fKp3
-         CUmkXasvC+vpaxh9F8G7opV5X3Da+k16Zre73KuOOgGFnMzT0pTrIh5ECIWJg+ZABSDF
-         iYGJ4OL0S9VDQ3+OSGRyosjZc3V5DIJ9g4CRMGD+3eq/UuHVSmM7Tf6PLUd+MyYRDTCY
-         gGoA==
-X-Gm-Message-State: APjAAAVELb9xzHKfAeO8IfnzxbS15BFUABGvKZvuJQ9PKIhFIyKbzrPL
-        ZReCnPVJynBwk7cj+RrrxBfvBUmX/gQExy350+UWrsogK+lB
-X-Google-Smtp-Source: APXvYqzuX78j5MZdD9NknMDpWZDKRcpJUyudMpGZijC4CslADfAYaMDlmkJ3ExpZNosBtrPKqQzkTaBIJ6YYhsvueATdKqFCgLX8
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zrZ1MFWBUD8XpJlN1HdMmxALzKrZiqQ/CZQqHhvjihk=;
+        b=HhafgA1EfIzS4Ky8cRGe3B89Xr40uZJFhu1PrBNoBJagG82/2bSCslMGRiJaGVQRai
+         Dj8JmYyHHDL3zxxEWs3QxnXjzuM6ch3H/Em5iJZvBPqJjD6xy6c1pEhvRE9T1M9LxOe3
+         X7dU1pJfWu6V7sm49PIxw2TEYs1pH925JG3g/EQcLodPE0EQ0lDwl+bcBOTTLmiZBiZA
+         lI/JGGXKhjCvNI//fQLoZwzEkaChonG4ByvBJ5jchGnRpE0O3/j1wWORtnMs5EHNpo86
+         eJwuUaz7gMRjl5Du1i2lLv3EPgEro8IU60HKLMhhJo0eKj0RHA4QpU9I/hp9o4mF2Uv1
+         sVRQ==
+X-Gm-Message-State: APjAAAXjnvipz4AxU+z3iq89m4QSe212t3DgcQ4SFWYXl/zg5H9N5BZd
+        rm/kOfLQ9N5+xW+vFxnz3sNrrQ==
+X-Google-Smtp-Source: APXvYqxQg0u/NQTm7d1bARb/j41E1mdpTfaO2VyPaTxGh/hPAt/cL+vAJQTT2RzTO83w5xAmYimPfA==
+X-Received: by 2002:a37:5f82:: with SMTP id t124mr22052496qkb.180.1565461134184;
+        Sat, 10 Aug 2019 11:18:54 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id b18sm40602281qkc.112.2019.08.10.11.18.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 10 Aug 2019 11:18:53 -0700 (PDT)
+Date:   Sat, 10 Aug 2019 14:18:48 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Pankaj Gupta <pagupta@redhat.com>
+Cc:     amit@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
+        virtualization@lists.linux-foundation.org, jasowang@redhat.com,
+        linux-kernel@vger.kernel.org, xiaohli@redhat.com
+Subject: Re: [PATCH v3 1/2] virtio_console: free unused buffers with port
+ delete
+Message-ID: <20190810141019-mutt-send-email-mst@kernel.org>
+References: <20190809064847.28918-1-pagupta@redhat.com>
+ <20190809064847.28918-2-pagupta@redhat.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:c6a9:: with SMTP id o9mr29951040jan.90.1565460906127;
- Sat, 10 Aug 2019 11:15:06 -0700 (PDT)
-Date:   Sat, 10 Aug 2019 11:15:06 -0700
-In-Reply-To: <0000000000005c056c058f9a5437@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000383acd058fc745d8@google.com>
-Subject: Re: BUG: bad usercopy in ld_usb_read
-From:   syzbot <syzbot+45b2f40f0778cfa7634e@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, allison@lohutok.net,
-        andreyknvl@google.com, cai@lca.pw, gregkh@linuxfoundation.org,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-usb@vger.kernel.org,
-        mhund@ld-didactic.de, stern@rowland.harvard.edu,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809064847.28918-2-pagupta@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Fri, Aug 09, 2019 at 12:18:46PM +0530, Pankaj Gupta wrote:
+> The commit a7a69ec0d8e4 ("virtio_console: free buffers after reset")
+> deferred detaching of unused buffer to virtio device unplug time.
+> This causes unplug/replug of single port in virtio device with an
+> error "Error allocating inbufs\n". As we don't free the unused buffers
+> attached with the port. Re-plug the same port tries to allocate new
+> buffers in virtqueue and results in this error if queue is full.
 
-HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=17cf0b16600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
-dashboard link: https://syzkaller.appspot.com/bug?extid=45b2f40f0778cfa7634e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=151bab16600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=148f8cd2600000
+So why not reuse the buffers that are already there in this case?
+Seems quite possible.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+45b2f40f0778cfa7634e@syzkaller.appspotmail.com
+> This patch removes the unused buffers in vq's when we unplug the port.
+> This is the best we can do as we cannot call device_reset because virtio
+> device is still active.
+> 
+> Reported-by: Xiaohui Li <xiaohli@redhat.com>
+> Fixes: a7a69ec0d8e4 ("virtio_console: free buffers after reset")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
 
-ldusb 4-1:0.28: Read buffer overflow, -3222596215958809898 bytes dropped
-usercopy: Kernel memory exposure attempt detected from process stack  
-(offset 0, size 2147479552)!
-------------[ cut here ]------------
-kernel BUG at mm/usercopy.c:98!
-invalid opcode: 0000 [#1] SMP KASAN
-CPU: 1 PID: 2023 Comm: syz-executor861 Not tainted 5.3.0-rc2+ #25
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:usercopy_abort+0xb9/0xbb mm/usercopy.c:98
-Code: e8 c1 f7 d6 ff 49 89 d9 4d 89 e8 4c 89 e1 41 56 48 89 ee 48 c7 c7 e0  
-f3 cd 85 ff 74 24 08 41 57 48 8b 54 24 20 e8 15 98 c1 ff <0f> 0b e8 95 f7  
-d6 ff e8 80 9f fd ff 8b 54 24 04 49 89 d8 4c 89 e1
-RSP: 0018:ffff8881cbda7c40 EFLAGS: 00010282
-RAX: 0000000000000061 RBX: ffffffff85cdf100 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8128a0fd RDI: ffffed10397b4f7a
-RBP: ffffffff85cdf2c0 R08: 0000000000000061 R09: fffffbfff11acda1
-R10: fffffbfff11acda0 R11: ffffffff88d66d07 R12: ffffffff85cdf4e0
-R13: ffffffff85cdf100 R14: 000000007ffff000 R15: ffffffff85cdf100
-FS:  00007f10bb76a700(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f7135a49000 CR3: 00000001d20e8000 CR4: 00000000001406e0
-Call Trace:
-  __check_object_size mm/usercopy.c:276 [inline]
-  __check_object_size.cold+0x91/0xba mm/usercopy.c:250
-  check_object_size include/linux/thread_info.h:119 [inline]
-  check_copy_size include/linux/thread_info.h:150 [inline]
-  copy_to_user include/linux/uaccess.h:151 [inline]
-  ld_usb_read+0x304/0x780 drivers/usb/misc/ldusb.c:495
-  __vfs_read+0x76/0x100 fs/read_write.c:425
-  vfs_read+0x1ea/0x430 fs/read_write.c:461
-  ksys_read+0x1e8/0x250 fs/read_write.c:587
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x446e19
-Code: e8 ec e7 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 3b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f10bb769d98 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 00000000006dbc38 RCX: 0000000000446e19
-RDX: 00000000ffffffbc RSI: 0000000020000040 RDI: 0000000000000004
-RBP: 00000000006dbc30 R08: 0000000000000000 R09: 0000000000000000
-R10: 000000000000000f R11: 0000000000000246 R12: 00000000006dbc3c
-R13: 0001002402090100 R14: 000048c920200f11 R15: 08983baa00000112
-Modules linked in:
----[ end trace 93f3613883c53c00 ]---
-RIP: 0010:usercopy_abort+0xb9/0xbb mm/usercopy.c:98
-Code: e8 c1 f7 d6 ff 49 89 d9 4d 89 e8 4c 89 e1 41 56 48 89 ee 48 c7 c7 e0  
-f3 cd 85 ff 74 24 08 41 57 48 8b 54 24 20 e8 15 98 c1 ff <0f> 0b e8 95 f7  
-d6 ff e8 80 9f fd ff 8b 54 24 04 49 89 d8 4c 89 e1
-RSP: 0018:ffff8881cbda7c40 EFLAGS: 00010282
-RAX: 0000000000000061 RBX: ffffffff85cdf100 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8128a0fd RDI: ffffed10397b4f7a
-RBP: ffffffff85cdf2c0 R08: 0000000000000061 R09: fffffbfff11acda1
-R10: fffffbfff11acda0 R11: ffffffff88d66d07 R12: ffffffff85cdf4e0
-R13: ffffffff85cdf100 R14: 000000007ffff000 R15: ffffffff85cdf100
-FS:  00007f10bb76a700(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f7135a49000 CR3: 00000001d20e8000 CR4: 00000000001406e0
+This is really a revert of a7a69ec0d8e4, just tagged confusingly.
 
+And the original is also supposed to be a bugfix.
+So how will the original bug be fixed?
+
+"this is the best we can do" is rarely the case.
+
+I am not necessarily against the revert. But if we go that way then what
+we need to do is specify the behaviour in the spec, since strict spec
+compliance is exactly what the original patch was addressing.
+
+In particular, we'd document that console has a special property that
+when port is detached virtqueue is considered stopped, device must not
+use any buffers, and it is legal to take buffers out of the device.
+
+
+
+> ---
+>  drivers/char/virtio_console.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
+> index 7270e7b69262..e8be82f1bae9 100644
+> --- a/drivers/char/virtio_console.c
+> +++ b/drivers/char/virtio_console.c
+> @@ -1494,15 +1494,25 @@ static void remove_port(struct kref *kref)
+>  	kfree(port);
+>  }
+>  
+> +static void remove_unused_bufs(struct virtqueue *vq)
+> +{
+> +	struct port_buffer *buf;
+> +
+> +	while ((buf = virtqueue_detach_unused_buf(vq)))
+> +		free_buf(buf, true);
+> +}
+> +
+>  static void remove_port_data(struct port *port)
+>  {
+>  	spin_lock_irq(&port->inbuf_lock);
+>  	/* Remove unused data this port might have received. */
+>  	discard_port_data(port);
+> +	remove_unused_bufs(port->in_vq);
+>  	spin_unlock_irq(&port->inbuf_lock);
+>  
+>  	spin_lock_irq(&port->outvq_lock);
+>  	reclaim_consumed_buffers(port);
+> +	remove_unused_bufs(port->out_vq);
+>  	spin_unlock_irq(&port->outvq_lock);
+>  }
+>  
+> @@ -1938,11 +1948,9 @@ static void remove_vqs(struct ports_device *portdev)
+>  	struct virtqueue *vq;
+>  
+>  	virtio_device_for_each_vq(portdev->vdev, vq) {
+> -		struct port_buffer *buf;
+>  
+>  		flush_bufs(vq, true);
+> -		while ((buf = virtqueue_detach_unused_buf(vq)))
+> -			free_buf(buf, true);
+> +		remove_unused_bufs(vq);
+>  	}
+>  	portdev->vdev->config->del_vqs(portdev->vdev);
+>  	kfree(portdev->in_vqs);
+> -- 
+> 2.21.0
