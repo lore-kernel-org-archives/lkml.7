@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B85C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D81C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5658820B7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23BC72086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbfHJUys (ORCPT
+        id S1727872AbfHJUyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:54:48 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53744 "EHLO
+        Sat, 10 Aug 2019 16:54:43 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53776 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726251AbfHJUns (ORCPT
+        by vger.kernel.org with ESMTP id S1726460AbfHJUns (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:48 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-00053S-H3; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDJ-00053G-C7; Sat, 10 Aug 2019 21:43:45 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-0003ZC-2G; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDI-0003Yn-Qt; Sat, 10 Aug 2019 21:43:44 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Johan Hovold" <johan@kernel.org>,
-        "George McCollister" <george.mccollister@gmail.com>
+        "Geert Uytterhoeven" <geert@linux-m68k.org>,
+        "Greg Ungerer" <gerg@linux-m68k.org>,
+        "David S. Miller" <davem@davemloft.net>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.32960424@decadent.org.uk>
+Message-ID: <lsq.1565469607.685698016@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 022/157] USB: serial: ftdi_sio: add additional
- NovaTech products
+Subject: [PATCH 3.16 017/157] net: mac8390: Use standard memcpy_{from,to}io()
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,43 +56,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: George McCollister <george.mccollister@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-commit 422c2537ba9d42320f8ab6573940269f87095320 upstream.
+commit 4042cd756e193f49469d31a23d5b85c4dca2a3b6 upstream.
 
-Add PIDs for the NovaTech OrionLX+ and Orion I/O so they can be
-automatically detected.
+The mac8390 driver defines its own variants of memcpy_fromio() and
+memcpy_toio(), using similar implementations, but different function
+signatures.
 
-Signed-off-by: George McCollister <george.mccollister@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Remove the custom definitions of memcpy_fromio() and memcpy_toio(), and
+adjust all callers to the standard signatures.
+
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Acked-by: David S. Miller <davem@davemloft.net>
+Acked-by: Greg Ungerer <gerg@linux-m68k.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/serial/ftdi_sio.c     | 2 ++
- drivers/usb/serial/ftdi_sio_ids.h | 4 +++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/8390/mac8390.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -617,6 +617,8 @@ static const struct usb_device_id id_tab
- 		.driver_info = (kernel_ulong_t)&ftdi_jtag_quirk },
- 	{ USB_DEVICE(FTDI_VID, FTDI_NT_ORIONLXM_PID),
- 		.driver_info = (kernel_ulong_t)&ftdi_jtag_quirk },
-+	{ USB_DEVICE(FTDI_VID, FTDI_NT_ORIONLX_PLUS_PID) },
-+	{ USB_DEVICE(FTDI_VID, FTDI_NT_ORION_IO_PID) },
- 	{ USB_DEVICE(FTDI_VID, FTDI_SYNAPSE_SS200_PID) },
- 	{ USB_DEVICE(FTDI_VID, FTDI_CUSTOMWARE_MINIPLEX_PID) },
- 	{ USB_DEVICE(FTDI_VID, FTDI_CUSTOMWARE_MINIPLEX2_PID) },
---- a/drivers/usb/serial/ftdi_sio_ids.h
-+++ b/drivers/usb/serial/ftdi_sio_ids.h
-@@ -566,7 +566,9 @@
- /*
-  * NovaTech product ids (FTDI_VID)
-  */
--#define FTDI_NT_ORIONLXM_PID	0x7c90	/* OrionLXm Substation Automation Platform */
-+#define FTDI_NT_ORIONLXM_PID		0x7c90	/* OrionLXm Substation Automation Platform */
-+#define FTDI_NT_ORIONLX_PLUS_PID	0x7c91	/* OrionLX+ Substation Automation Platform */
-+#define FTDI_NT_ORION_IO_PID		0x7c92	/* Orion I/O */
+--- a/drivers/net/ethernet/8390/mac8390.c
++++ b/drivers/net/ethernet/8390/mac8390.c
+@@ -153,9 +153,6 @@ static void dayna_block_input(struct net
+ static void dayna_block_output(struct net_device *dev, int count,
+ 			       const unsigned char *buf, int start_page);
  
- /*
-  * Synapse Wireless product ids (FTDI_VID)
+-#define memcpy_fromio(a, b, c)	memcpy((a), (void *)(b), (c))
+-#define memcpy_toio(a, b, c)	memcpy((void *)(a), (b), (c))
+-
+ #define memcmp_withio(a, b, c)	memcmp((a), (void *)(b), (c))
+ 
+ /* Slow Sane (16-bit chunk memory read/write) Cabletron uses this */
+@@ -247,7 +244,7 @@ static enum mac8390_access __init mac839
+ 	unsigned long outdata = 0xA5A0B5B0;
+ 	unsigned long indata =  0x00000000;
+ 	/* Try writing 32 bits */
+-	memcpy_toio(membase, &outdata, 4);
++	memcpy_toio((void __iomem *)membase, &outdata, 4);
+ 	/* Now compare them */
+ 	if (memcmp_withio(&outdata, membase, 4) == 0)
+ 		return ACCESS_32;
+@@ -742,7 +739,7 @@ static void sane_get_8390_hdr(struct net
+ 			      struct e8390_pkt_hdr *hdr, int ring_page)
+ {
+ 	unsigned long hdr_start = (ring_page - WD_START_PG)<<8;
+-	memcpy_fromio(hdr, dev->mem_start + hdr_start, 4);
++	memcpy_fromio(hdr, (void __iomem *)dev->mem_start + hdr_start, 4);
+ 	/* Fix endianness */
+ 	hdr->count = swab16(hdr->count);
+ }
+@@ -756,13 +753,16 @@ static void sane_block_input(struct net_
+ 	if (xfer_start + count > ei_status.rmem_end) {
+ 		/* We must wrap the input move. */
+ 		int semi_count = ei_status.rmem_end - xfer_start;
+-		memcpy_fromio(skb->data, dev->mem_start + xfer_base,
++		memcpy_fromio(skb->data,
++			      (void __iomem *)dev->mem_start + xfer_base,
+ 			      semi_count);
+ 		count -= semi_count;
+-		memcpy_fromio(skb->data + semi_count, ei_status.rmem_start,
+-			      count);
++		memcpy_fromio(skb->data + semi_count,
++			      (void __iomem *)ei_status.rmem_start, count);
+ 	} else {
+-		memcpy_fromio(skb->data, dev->mem_start + xfer_base, count);
++		memcpy_fromio(skb->data,
++			      (void __iomem *)dev->mem_start + xfer_base,
++			      count);
+ 	}
+ }
+ 
+@@ -771,7 +771,7 @@ static void sane_block_output(struct net
+ {
+ 	long shmem = (start_page - WD_START_PG)<<8;
+ 
+-	memcpy_toio(dev->mem_start + shmem, buf, count);
++	memcpy_toio((void __iomem *)dev->mem_start + shmem, buf, count);
+ }
+ 
+ /* dayna block input/output */
 
