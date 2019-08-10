@@ -2,153 +2,143 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E65C32751
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF949C32756
 	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 18:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 163A42086A
+	by mail.kernel.org (Postfix) with ESMTP id 9FEB720B7C
 	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 18:58:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XNvddTvu";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="3mM++sKZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726165AbfHJS50 (ORCPT
+        id S1726209AbfHJS6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 14:57:26 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35505 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbfHJS50 (ORCPT
+        Sat, 10 Aug 2019 14:58:45 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59454 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725863AbfHJS6p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 14:57:26 -0400
-Received: by mail-qk1-f195.google.com with SMTP id r21so74294234qke.2
-        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 11:57:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=n6gqfGDHe7+MTEnADmz166g2MOtyyjqswDo8TxgNKgo=;
-        b=Q6ifeRUiJq/FlCl5IBuzL5lNwagaKSUMnyZ8bqTaIw7CF4rI61xezB1u4usfoeP5bn
-         JIbPoiOqhQfExHGQRChBRHTn+4Ypx3TfEpabKUZFNr+1QjLi9p+R6hCCIUalZcimu8su
-         1+PWhSEuywpvY1JVmIKNZbBgTsSHf8j1k64MRE8FM38H+eNUDM0cELPmPywemY+BXpak
-         nb0nR8HkzFLkA35Oyjv+c/SYHVRvJQ1HRHdmvWgQSyxbCxXSKXOXnRH+Zgz7hKLZpTqq
-         9ttIiwvHRbPR65WbG/5ljkAbTE/nlICu7AqpltSusmkLBKkaIMxtR/oaG14EnBR1sL3F
-         1rSQ==
-X-Gm-Message-State: APjAAAVAX+FKvVlMApeu/tPDhcJAYY3cE/zKCWoNT7uLuA1sIseOBm2q
-        OrxYyjrZ6Ck/iEeplSkw4KJu6Q==
-X-Google-Smtp-Source: APXvYqwuyeU8UtFCpYJUCrWlfgo5mzoYufqwOGAgTcpKSjKBKpcYs8i84bGcIhjBa4714/V3v9R2eQ==
-X-Received: by 2002:a05:620a:1f0:: with SMTP id x16mr12879248qkn.11.1565463444927;
-        Sat, 10 Aug 2019 11:57:24 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id l3sm100152qkb.67.2019.08.10.11.57.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 10 Aug 2019 11:57:23 -0700 (PDT)
-Date:   Sat, 10 Aug 2019 14:57:17 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        linuxppc-devel@lists.ozlabs.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alexey Kardashevskiy <aik@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ram Pai <linuxram@us.ibm.com>
-Subject: Re: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
-Message-ID: <20190810143038-mutt-send-email-mst@kernel.org>
-References: <87zhrj8kcp.fsf@morokweng.localdomain>
+        Sat, 10 Aug 2019 14:58:45 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7AIwZRj138068;
+        Sat, 10 Aug 2019 18:58:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=9Kvou7nXU35uL9YTviEvgLeoRHiA9PhMGEANGocDyTQ=;
+ b=XNvddTvuSX42e9Bx6XI7qBNi6FdGuvw6eDcxPeN1dZEeq398Lg9ds1v+NBkz33ekJe7f
+ fIM9MI37VDjrDEZ7ka8s6VqIAYkBiC8m3excUvNRWdOz3HHednTY8cGbC7qn5NREF2bt
+ IQfOH+SlafYp/lSVcpqDrBlNJyWhgDQVemijSe6Bo66M8bLn2LGNADzuVHtw+X/AGbLg
+ vuciZKPpFoZWMZKv8ku19r8PGX8d1tFOkcKhGrH+yVlPU7stAkAwLu8RZ4gBxwu4HHGG
+ Rc8SrS3AoCaT2avj1b3lcls2SbKsOgUTfNvDH+gb82fw0vdGII7tbTq8+rSIRbZYdu5Y DA== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=9Kvou7nXU35uL9YTviEvgLeoRHiA9PhMGEANGocDyTQ=;
+ b=3mM++sKZGEyvNYSdOX/GSKo+KkyrsMOPKlb50IE2wtVkX6sFZCl2HcNZWU1pwukw3ivo
+ 9rtXp7iVHNXLcJn37OiVJkv4+pyl7Dq3kP6q7IVQ5qdvvmFCGsCNb5C5zdqdXxONWRl2
+ lMaZ74cOjZRtavVOkLDUuAyJg3GjoW6ESf3l1dYGT96/giNjl/+A85CIH9gwSOEjbl1w
+ XQCyDoPaK/iwrp1Ik8j/iySHQBuHf0ElT8DAu8xa9zmdJ9qiMKuqYyyfUraV9OPHdah9
+ ufZyfnyLaF4ohL6FMEo+TVqwVsG7XyXhP1w/MevZI5OpPsRrKQViJG1MCgWlQcnGAGQY UA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2u9nbt1tw6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 10 Aug 2019 18:58:34 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7AIwUvE096682;
+        Sat, 10 Aug 2019 18:58:31 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2u9m08xu25-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 10 Aug 2019 18:58:30 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7AIwJjt024062;
+        Sat, 10 Aug 2019 18:58:19 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 10 Aug 2019 11:58:19 -0700
+Subject: Re: [RFC PATCH v2 0/5] hugetlb_cgroup: Add hugetlb_cgroup reservation
+ limits
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>, akpm@linux-foundation.org,
+        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
+        cgroups@vger.kernel.org
+References: <20190808231340.53601-1-almasrymina@google.com>
+ <f0a5afe9-2586-38c9-9a6d-8a2b7b288b50@oracle.com>
+ <CAHS8izOKmaOETBd_545Zex=KFNjYOvf3dCzcMRUEXnnhYCK5bw@mail.gmail.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <71a29844-7367-44c4-23be-eff26ac80467@oracle.com>
+Date:   Sat, 10 Aug 2019 11:58:17 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87zhrj8kcp.fsf@morokweng.localdomain>
+In-Reply-To: <CAHS8izOKmaOETBd_545Zex=KFNjYOvf3dCzcMRUEXnnhYCK5bw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9345 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908100211
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9345 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908100211
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 29, 2019 at 03:08:12PM -0200, Thiago Jung Bauermann wrote:
+On 8/9/19 12:42 PM, Mina Almasry wrote:
+> On Fri, Aug 9, 2019 at 10:54 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>> On 8/8/19 4:13 PM, Mina Almasry wrote:
+>>> Problem:
+>>> Currently tasks attempting to allocate more hugetlb memory than is available get
+>>> a failure at mmap/shmget time. This is thanks to Hugetlbfs Reservations [1].
+>>> However, if a task attempts to allocate hugetlb memory only more than its
+>>> hugetlb_cgroup limit allows, the kernel will allow the mmap/shmget call,
+>>> but will SIGBUS the task when it attempts to fault the memory in.
+<snip>
+>> I believe tracking reservations for shared mappings can get quite complicated.
+>> The hugetlbfs reservation code around shared mappings 'works' on the basis
+>> that shared mapping reservations are global.  As a result, reservations are
+>> more associated with the inode than with the task making the reservation.
 > 
-> Hello,
+> FWIW, I found it not too bad. And my tests at least don't detect an
+> anomaly around shared mappings. The key I think is that I'm tracking
+> cgroup to uncharge on the file_region entry inside the resv_map, so we
+> know who allocated each file_region entry exactly and we can uncharge
+> them when the entry is region_del'd.
 > 
-> With Christoph's rework of the DMA API that recently landed, the patch
-> below is the only change needed in virtio to make it work in a POWER
-> secure guest under the ultravisor.
+>> For example, consider a file of size 4 hugetlb pages.
+>> Task A maps the first 2 pages, and 2 reservations are taken.  Task B maps
+>> all 4 pages, and 2 additional reservations are taken.  I am not really sure
+>> of the desired semantics here for reservation limits if A and B are in separate
+>> cgroups.  Should B be charged for 4 or 2 reservations?
 > 
-> The other change we need (making sure the device's dma_map_ops is NULL
-> so that the dma-direct/swiotlb code is used) can be made in
-> powerpc-specific code.
-> 
-> Of course, I also have patches (soon to be posted as RFC) which hook up
-> <linux/mem_encrypt.h> to the powerpc secure guest support code.
-> 
-> What do you think?
-> 
-> >From d0629a36a75c678b4a72b853f8f7f8c17eedd6b3 Mon Sep 17 00:00:00 2001
-> From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-> Date: Thu, 24 Jan 2019 22:08:02 -0200
-> Subject: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
-> 
-> The host can't access the guest memory when it's encrypted, so using
-> regular memory pages for the ring isn't an option. Go through the DMA API.
-> 
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-> ---
->  drivers/virtio/virtio_ring.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> index cd7e755484e3..321a27075380 100644
-> --- a/drivers/virtio/virtio_ring.c
-> +++ b/drivers/virtio/virtio_ring.c
-> @@ -259,8 +259,11 @@ static bool vring_use_dma_api(struct virtio_device *vdev)
->  	 * not work without an even larger kludge.  Instead, enable
->  	 * the DMA API if we're a Xen guest, which at least allows
->  	 * all of the sensible Xen configurations to work correctly.
-> +	 *
-> +	 * Also, if guest memory is encrypted the host can't access
-> +	 * it directly. In this case, we'll need to use the DMA API.
->  	 */
-> -	if (xen_domain())
-> +	if (xen_domain() || sev_active())
->  		return true;
-> 
->  	return false;
+> Task A's cgroup is charged 2 pages to its reservation usage.
+> Task B's cgroup is charged 2 pages to its reservation usage.
 
-So I gave this lots of thought, and I'm coming round to
-basically accepting something very similar to this patch.
+OK,
+Suppose Task B's cgroup allowed 2 huge pages reservation and 2 huge pages
+allocation.  The mmap would succeed, but Task B could potentially need to
+allocate more than 2 huge pages.  So, when faulting in more than 2 huge
+pages B would get a SIGBUS.  Correct?  Or, am I missing something?
 
-But not exactly like this :).
-
-Let's see what are the requirements.
-
-If
-
-1. We do not trust the device (so we want to use a bounce buffer with it)
-2. DMA address is also a physical address of a buffer
-
-then we should use DMA API with virtio.
-
-
-sev_active() above is one way to put (1).  I can't say I love it but
-it's tolerable.
-
-
-But we also want promise from DMA API about 2.
-
-
-Without promise 2 we simply can't use DMA API with a legacy device.
-
-
-Otherwise, on a SEV system with an IOMMU which isn't 1:1
-and with a virtio device without ACCESS_PLATFORM, we are trying
-to pass a virtual address, and devices without ACCESS_PLATFORM
-can only access CPU physical addresses.
-
-So something like:
-
-dma_addr_is_phys_addr?
-
-
-
+Perhaps reservation charge should always be the same as map size/maximum
+allocation size?
 -- 
-MST
+Mike Kravetz
