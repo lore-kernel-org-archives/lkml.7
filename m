@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B31C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CDFC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92D3A2086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 888CB208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbfHJUwp (ORCPT
+        id S1727401AbfHJUwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:52:45 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54106 "EHLO
+        Sat, 10 Aug 2019 16:52:43 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54086 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726565AbfHJUnv (ORCPT
+        by vger.kernel.org with ESMTP id S1726177AbfHJUnv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:51 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDM-00053L-Gx; Sat, 10 Aug 2019 21:43:48 +0100
+        id 1hwYDM-00053O-H4; Sat, 10 Aug 2019 21:43:48 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-0003ae-KQ; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDJ-0003ao-Mt; Sat, 10 Aug 2019 21:43:45 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Iwai" <tiwai@suse.de>,
-        syzbot+d4503ae45b65c5bc1194@syzkaller.appspotmail.com
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Mathias Nyman" <mathias.nyman@linux.intel.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.88518302@decadent.org.uk>
+Message-ID: <lsq.1565469607.630985287@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 040/157] ALSA: pcm: Fix possible OOB access in PCM
- oss plugins
+Subject: [PATCH 3.16 042/157] xhci: Don't let USB3 ports stuck in polling
+ state prevent suspend
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,102 +56,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit ca0214ee2802dd47239a4e39fb21c5b00ef61b22 upstream.
+commit d92f2c59cc2cbca6bfb2cc54882b58ba76b15fd4 upstream.
 
-The PCM OSS emulation converts and transfers the data on the fly via
-"plugins".  The data is converted over the dynamically allocated
-buffer for each plugin, and recently syzkaller caught OOB in this
-flow.
+Commit 2f31a67f01a8 ("usb: xhci: Prevent bus suspend if a port connect
+change or polling state is detected") was intended to prevent ports that
+were still link training from being forced to U3 suspend state mid
+enumeration.
+This solved enumeration issues for devices with slow link training.
 
-Although the bisection by syzbot pointed out to the commit
-65766ee0bf7f ("ALSA: oss: Use kvzalloc() for local buffer
-allocations"), this is merely a commit to replace vmalloc() with
-kvmalloc(), hence it can't be the cause.  The further debug action
-revealed that this happens in the case where a slave PCM doesn't
-support only the stereo channels while the OSS stream is set up for a
-mono channel.  Below is a brief explanation:
+Turns out some devices are stuck in the link training/polling state,
+and thus that patch will prevent suspend completely for these devices.
+This is seen with USB3 card readers in some MacBooks.
 
-At each OSS parameter change, the driver sets up the PCM hw_params
-again in snd_pcm_oss_change_params_lock().  This is also the place
-where plugins are created and local buffers are allocated.  The
-problem is that the plugins are created before the final hw_params is
-determined.  Namely, two snd_pcm_hw_param_near() calls for setting the
-period size and periods may influence on the final result of channels,
-rates, etc, too, while the current code has already created plugins
-beforehand with the premature values.  So, the plugin believes that
-channels=1, while the actual I/O is with channels=2, which makes the
-driver reading/writing over the allocated buffer size.
+Instead of preventing suspend, give some time to complete the link
+training. On successful training the port will end up as connected
+and enabled.
+If port instead is stuck in link training the bus suspend will continue
+suspending after 360ms (10 * 36ms) timeout (tPollingLFPSTimeout).
 
-The fix is simply to move the plugin allocation code after the final
-hw_params call.
+Original patch was sent to stable, this one should go there as well
 
-Reported-by: syzbot+d4503ae45b65c5bc1194@syzkaller.appspotmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 2f31a67f01a8 ("usb: xhci: Prevent bus suspend if a port connect change or polling state is detected")
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 [bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/core/oss/pcm_oss.c | 43 ++++++++++++++++++++--------------------
- 1 file changed, 22 insertions(+), 21 deletions(-)
+ drivers/usb/host/xhci-hub.c | 19 ++++++++++++-------
+ drivers/usb/host/xhci.h     |  8 ++++++++
+ 2 files changed, 20 insertions(+), 7 deletions(-)
 
---- a/sound/core/oss/pcm_oss.c
-+++ b/sound/core/oss/pcm_oss.c
-@@ -951,6 +951,28 @@ static int snd_pcm_oss_change_params_loc
- 	oss_frame_size = snd_pcm_format_physical_width(params_format(params)) *
- 			 params_channels(params) / 8;
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -1199,20 +1199,25 @@ int xhci_bus_suspend(struct usb_hcd *hcd
+ 	port_index = max_ports;
+ 	while (port_index--) {
+ 		u32 t1, t2;
+-
++		int retries = 10;
++retry:
+ 		t1 = readl(port_array[port_index]);
+ 		t2 = xhci_port_state_to_neutral(t1);
+ 		portsc_buf[port_index] = 0;
  
-+	err = snd_pcm_oss_period_size(substream, params, sparams);
-+	if (err < 0)
-+		goto failure;
-+
-+	n = snd_pcm_plug_slave_size(substream, runtime->oss.period_bytes / oss_frame_size);
-+	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIOD_SIZE, n, NULL);
-+	if (err < 0)
-+		goto failure;
-+
-+	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIODS,
-+				     runtime->oss.periods, NULL);
-+	if (err < 0)
-+		goto failure;
-+
-+	snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_DROP, NULL);
-+
-+	err = snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_HW_PARAMS, sparams);
-+	if (err < 0) {
-+		pcm_dbg(substream->pcm, "HW_PARAMS failed: %i\n", err);
-+		goto failure;
-+	}
-+
- #ifdef CONFIG_SND_PCM_OSS_PLUGINS
- 	snd_pcm_oss_plugin_clear(substream);
- 	if (!direct) {
-@@ -985,27 +1007,6 @@ static int snd_pcm_oss_change_params_loc
- 	}
- #endif
+-		/* Bail out if a USB3 port has a new device in link training */
+-		if ((hcd->speed >= HCD_USB3) &&
++		/*
++		 * Give a USB3 port in link training time to finish, but don't
++		 * prevent suspend as port might be stuck
++		 */
++		if ((hcd->speed >= HCD_USB3) && retries-- &&
+ 		    (t1 & PORT_PLS_MASK) == XDEV_POLLING) {
+-			bus_state->bus_suspended = 0;
+ 			spin_unlock_irqrestore(&xhci->lock, flags);
+-			xhci_dbg(xhci, "Bus suspend bailout, port in polling\n");
+-			return -EBUSY;
++			msleep(XHCI_PORT_POLLING_LFPS_TIME);
++			spin_lock_irqsave(&xhci->lock, flags);
++			xhci_dbg(xhci, "port %d polling in bus suspend, waiting\n",
++				 port_index);
++			goto retry;
+ 		}
+-
+ 		/* suspend ports in U0, or bail out for new connect changes */
+ 		if ((t1 & PORT_PE) && (t1 & PORT_PLS_MASK) == XDEV_U0) {
+ 			if ((t1 & PORT_CSC) && wake_enabled) {
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -413,6 +413,14 @@ struct xhci_op_regs {
+  */
+ #define XHCI_DEFAULT_BESL	4
  
--	err = snd_pcm_oss_period_size(substream, params, sparams);
--	if (err < 0)
--		goto failure;
--
--	n = snd_pcm_plug_slave_size(substream, runtime->oss.period_bytes / oss_frame_size);
--	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIOD_SIZE, n, NULL);
--	if (err < 0)
--		goto failure;
--
--	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIODS,
--				     runtime->oss.periods, NULL);
--	if (err < 0)
--		goto failure;
--
--	snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_DROP, NULL);
--
--	if ((err = snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_HW_PARAMS, sparams)) < 0) {
--		pcm_dbg(substream->pcm, "HW_PARAMS failed: %i\n", err);
--		goto failure;
--	}
--
- 	memset(sw_params, 0, sizeof(*sw_params));
- 	if (runtime->oss.trigger) {
- 		sw_params->start_threshold = 1;
++/*
++ * USB3 specification define a 360ms tPollingLFPSTiemout for USB3 ports
++ * to complete link training. usually link trainig completes much faster
++ * so check status 10 times with 36ms sleep in places we need to wait for
++ * polling to complete.
++ */
++#define XHCI_PORT_POLLING_LFPS_TIME  36
++
+ /**
+  * struct xhci_intr_reg - Interrupt Register Set
+  * @irq_pending:	IMAN - Interrupt Management Register.  Used to enable
 
