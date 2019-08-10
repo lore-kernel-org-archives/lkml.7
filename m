@@ -2,135 +2,93 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E64DEC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 18:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 019EBC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 18:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7493208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 18:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB3462085A
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 18:43:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="djjZFzw3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fuf4h2He"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbfHJSfa (ORCPT
+        id S1726131AbfHJSnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 14:35:30 -0400
-Received: from mout.web.de ([212.227.15.14]:35001 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726052AbfHJSfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 14:35:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1565462119;
-        bh=ClcsgZcBpTWpisq2aBlR99g7Xv6O/DaYowW9PyHr/D0=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=djjZFzw3ei+T77kSfSToBPwRi2/p9hyGy9HmQcF/l/0tmwT97JaAwOihGqajBEsv2
-         Zp4tu9wPni4Pcg90ll3p8AG0H9sWfpaA2Mbz+6uWz9xM9+a5J9/UJK53vtGtQ/XRBm
-         OcJZJ3vt+B/3W7AVVk5LzSzvocGhBr/RUY/TmKvg=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [10.0.0.33] ([85.71.157.74]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LoYFm-1iXVj32WLK-00gVkG; Sat, 10
- Aug 2019 20:35:19 +0200
-Subject: Re: Re: [PATCH] KVM/nSVM: properly map nested VMCB
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        KarimAllah Ahmed <karahmed@amazon.de>
-References: <20190604160939.17031-1-vkuznets@redhat.com>
- <b46872ce-5305-aa25-9593-d882da3c0872@redhat.com>
-From:   Jiri Palecek <jpalecek@web.de>
-Message-ID: <6282e1bf-1eaa-450d-7f6a-b868ebab09d0@web.de>
-Date:   Sat, 10 Aug 2019 20:35:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 10 Aug 2019 14:43:14 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36699 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfHJSnO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 14:43:14 -0400
+Received: by mail-lf1-f66.google.com with SMTP id j17so17751532lfp.3
+        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 11:43:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Rja8RYLbYO7zdEZxlKWhvUwl1THkfzex1o6FWwU5HWU=;
+        b=Fuf4h2HebdunXfRvEP80YJvHhIewGfgdnw0LmcDJGL9f/jrWf72Sq17b0GASMz/a79
+         N38+yaX7pbq4Q7tLvaqtyRpSjcSXBXHCNSWjvSOyHp24qXve02WyIs4jVz3h6v0X6wfp
+         kjJQlTFsg4LcACEBLvkSvgE0UzOKNLSRsl+u6aw6csyf9PFAeEgPA8dAAXtYdN0u18ud
+         g1prOvDxbwsmwnPFzc99lpYs1LNd7RKLUAS7Okl960DHwwoSMa3S4ZUr7Zzjz/JJMsCb
+         kBFiPOvbkd34VI7I4WMmP7PLYeToualVwOYZ+CNT4XGbifCn937po6t42nXnXAydwMLT
+         kfkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Rja8RYLbYO7zdEZxlKWhvUwl1THkfzex1o6FWwU5HWU=;
+        b=TUJ6+RZhExZqf57cEkPc+1OUa8FJxUH3h6oeEbfxggOFUFQ77XSSIdJjxfhQU1UYfV
+         EhGvNYQFOxBNN3u+0Kxr+bp0YTqKlzDZ1zsrzwRX+oxExX7KmLxn9n0hqHWq7YF0gAbp
+         kgh6LJiZKiLKrhOmwYCs3KNwPchclWRou8/0dc/bIcRjbG9SoMtjjORBoNPevcL0NVy1
+         UJh0zzzl3qJyRJINdPfV6oIDm04trL1PI9ewIUCmyGG913hPsGxMYmLmOIydVtx1vDxe
+         TDeZ2M47rGXbtPoBr7kH1eh31kuVd0eqiCQJQdR+VMc6bzDBNyjfOCYcjsGpECaDwZB1
+         BBzg==
+X-Gm-Message-State: APjAAAXhls3vGpNhP+lLnptQXeYfBmMtv7ELX28IWdBJ6T7+6ij1WXVo
+        ZuJLXw4l925/wLAioFEUASI=
+X-Google-Smtp-Source: APXvYqzaIZatV/01OI21+CvMkfrtBJnxCn9A6iH6H9F7KW8SrKPZ9io68sT/X9yWdVYzOlmcs2l/tg==
+X-Received: by 2002:ac2:4ac4:: with SMTP id m4mr15625643lfp.172.1565462592193;
+        Sat, 10 Aug 2019 11:43:12 -0700 (PDT)
+Received: from rikard (h-158-174-186-115.NA.cust.bahnhof.se. [158.174.186.115])
+        by smtp.gmail.com with ESMTPSA id s19sm19730754lji.38.2019.08.10.11.43.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 10 Aug 2019 11:43:11 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+X-Google-Original-From: Rikard Falkeborn <rikard.falkeborn>
+Date:   Sat, 10 Aug 2019 20:43:07 +0200
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] linux/bits.h: Clarify macro argument names
+Message-ID: <20190810184307.GA2353@rikard>
+References: <20190731190309.19909-1-rikard.falkeborn@gmail.com>
+ <20190801230358.4193-1-rikard.falkeborn@gmail.com>
+ <CAK7LNASA1CszgXAvH78qnLOr11Po97s090rGujnNQ=zTHaSDDA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <b46872ce-5305-aa25-9593-d882da3c0872@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Provags-ID: V03:K1:PrKfiV5mxtkabqbPaVWia6IFnx5OzaY5dTBH1LErOTB8pChwSCZ
- psO0ZpsXNC12X9IVse9dw/SuqpLBURF0KKWCSLPcOgjpfnNvakWEBnN5VihWxLMSRLU+scs
- O84JJkJLiVdEdmnE1z9C9BMGomItH66f0xA1K9Kj0tuU1CJpXxqa1DflzLyj5hnI/kiYsxX
- wfDMPvDQMLF8vhRYf2FxQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:QPlJry2+Ygs=:s/SvDwrjGjlZvU8QcZ/q9K
- adTRhgEcvQeSylq7mulXIcItqtKGzszIaQ/t1M9ufLCn+GeMH3pQRgin2HfdVhnUeW1HK3Qq1
- ncCgfX13Uon5cBg/A0ZVg+j3ElQFdF0YGRggn0SmxSrUQCtRioD0Zg76Nojf7H7x86X1a+lEh
- LyjHeRSfAjur96NSywDgpSEXrkzVC1aUXslMTqXX4QGH/IKxvtbNBo3r13xtRfaHJt5zjbD11
- S8CwlJYKbWdtMKpHfFKnXccpYLTYixzO/8Q0r52ysDmhx5ZVA+L1P7LIumhoZqjSrjSbGZ+/8
- yLOAxtjL+Ex/rxhT491m+bM90yxCqO5E3xRimz1i+cQSF7PBBXDeun4adpgctkn3Km2petYSk
- EFKmxbOc0QAmnxE87UkjI5xAkNtfejjSQtJcspDq2HRmtm+/6LxMOq+lVxkDK8yItnMTRyGP7
- 5/fBb6yEw4xx/ECU8K2oXycnedNiwi6UJSauv4rYES0olHsNlSbuXw3XpVZjA7cYcDvM1HPB2
- uZkM2/frkf/A9qELVmsYblYkwYrNf5jEYP6ofn++Rk6G1UU/J3KmsKU9/ld/2tXda63RKHcrq
- 7wVKS8UHhoWHVG352ACbmwlvyJLo9c9hEkLv+b4NNjxXrcuvIhoDV+OmBto9I6ysRjzKbIdgD
- rdjHfbNnvSD6xii0XONKYASdSbliYdkGgHos1wNDYYCBneaEGVJSjqkrMM19NoZD/nTg41QPv
- slAWgDrlp0W06yx80N4Tzlgm28VA3Lil0DvxrZGnhKT/3cpdwuqROQPEu/KJgcQo5r9yZiwjM
- tS2GdjPkiAi1XVMqx56oZVkCD3BN+bZ6UpM2e9U4cSogNJWQpbDO3PF6vuMqzR7bjeZVJnaQl
- Q8pgxgp29/NfpG9ItvchdBzczP0IVfVb+xHOSuDPhNV6eUxhjsJE63x1F/TazzNeWZ6rGMlbm
- NBGkS31PscsWp6vSwCb8/UDBYnxIpz6XMTl4C73ukYbQNEfb3fgxZcWU0Vez8JMFKf4iqNkDY
- jbwuEDoNXHhs3k0zKcMMKpeNutxe+cvqtqgIEZSIcZWkoQvCIP1gLF2ZcwpD5JgTOAX+l1hiP
- ErL8SVGKd6GctOBjvLpIsVPCjIyn56EQeOQsqw0JBfgxIngzW9M4Zuxj5tRbFkSkX3ng6AGUA
- X7r5k=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNASA1CszgXAvH78qnLOr11Po97s090rGujnNQ=zTHaSDDA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Aug 08, 2019 at 12:46:45PM +0900, Masahiro Yamada wrote:
+> On Fri, Aug 2, 2019 at 8:04 AM Rikard Falkeborn
+> <rikard.falkeborn@gmail.com> wrote:
+> >
+> > Be a little more verbose to improve readability.
+> >
+> > Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> 
+> BTW, I do not understand what the improvement is.
+> I tend to regard this as a noise commit.
 
-On 04. 06. 19 19:27, Paolo Bonzini wrote:
-> On 04/06/19 18:09, Vitaly Kuznetsov wrote:
->> Commit 8c5fbf1a7231 ("KVM/nSVM: Use the new mapping API for mapping gue=
-st
->> memory") broke nested SVM completely: kvm_vcpu_map()'s second parameter=
- is
->> GFN so vmcb_gpa needs to be converted with gpa_to_gfn(), not the other =
-way
->> around.
->>
->> Fixes: 8c5fbf1a7231 ("KVM/nSVM: Use the new mapping API for mapping gue=
-st memory")
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> ---
->>   arch/x86/kvm/svm.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
->> index 735b8c01895e..5beca1030c9a 100644
->> --- a/arch/x86/kvm/svm.c
->> +++ b/arch/x86/kvm/svm.c
->> @@ -3293,7 +3293,7 @@ static int nested_svm_vmexit(struct vcpu_svm *svm=
-)
->>   				       vmcb->control.exit_int_info_err,
->>   				       KVM_ISA_SVM);
->>
->> -	rc =3D kvm_vcpu_map(&svm->vcpu, gfn_to_gpa(svm->nested.vmcb), &map);
->> +	rc =3D kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(svm->nested.vmcb), &map);
->>   	if (rc) {
->>   		if (rc =3D=3D -EINVAL)
->>   			kvm_inject_gp(&svm->vcpu, 0);
->> @@ -3583,7 +3583,7 @@ static bool nested_svm_vmrun(struct vcpu_svm *svm=
-)
->>
->>   	vmcb_gpa =3D svm->vmcb->save.rax;
->>
->> -	rc =3D kvm_vcpu_map(&svm->vcpu, gfn_to_gpa(vmcb_gpa), &map);
->> +	rc =3D kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(vmcb_gpa), &map);
->>   	if (rc) {
->>   		if (rc =3D=3D -EINVAL)
->>   			kvm_inject_gp(&svm->vcpu, 0);
->>
-> Oops.  Queued, thanks.
-
-Given that this fix didn't make it to 5.2, and its straightforwardness,
-could you send it to stable for inclusion?
-
-Regards
-
- =C2=A0=C2=A0=C2=A0 Jiri Palecek
-
-
+Fair enough, I'll drop it and keep l and h as argument names.
