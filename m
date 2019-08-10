@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55801C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10602C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3686D20B7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E159920B7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727301AbfHJUyk (ORCPT
+        id S1727702AbfHJUyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:54:40 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53754 "EHLO
+        Sat, 10 Aug 2019 16:54:39 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53780 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726383AbfHJUns (ORCPT
+        by vger.kernel.org with ESMTP id S1726463AbfHJUns (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:48 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDI-00052w-OS; Sat, 10 Aug 2019 21:43:44 +0100
+        id 1hwYDJ-00053L-JC; Sat, 10 Aug 2019 21:43:45 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDI-0003Y3-IE; Sat, 10 Aug 2019 21:43:44 +0100
+        id 1hwYDI-0003Yx-Tc; Sat, 10 Aug 2019 21:43:44 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Frank Sorenson" <fsorenso@redhat.com>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        "Lukas Czerner" <lczerner@redhat.com>
+        "Li Shuang" <shuali@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Xin Long" <lucien.xin@gmail.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.221652928@decadent.org.uk>
+Message-ID: <lsq.1565469607.137194373@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 008/157] ext4: fix data corruption caused by
- unaligned direct AIO
+Subject: [PATCH 3.16 019/157] sctp: get sctphdr by offset in
+ sctp_compute_cksum
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,76 +57,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Lukas Czerner <lczerner@redhat.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit 372a03e01853f860560eade508794dd274e9b390 upstream.
+commit 273160ffc6b993c7c91627f5a84799c66dfe4dee upstream.
 
-Ext4 needs to serialize unaligned direct AIO because the zeroing of
-partial blocks of two competing unaligned AIOs can result in data
-corruption.
+sctp_hdr(skb) only works when skb->transport_header is set properly.
 
-However it decides not to serialize if the potentially unaligned aio is
-past i_size with the rationale that no pending writes are possible past
-i_size. Unfortunately if the i_size is not block aligned and the second
-unaligned write lands past i_size, but still into the same block, it has
-the potential of corrupting the previous unaligned write to the same
-block.
+But in Netfilter, skb->transport_header for ipv6 is not guaranteed
+to be right value for sctphdr. It would cause to fail to check the
+checksum for sctp packets.
 
-This is (very simplified) reproducer from Frank
+So fix it by using offset, which is always right in all places.
 
-    // 41472 = (10 * 4096) + 512
-    // 37376 = 41472 - 4096
+v1->v2:
+  - Fix the changelog.
 
-    ftruncate(fd, 41472);
-    io_prep_pwrite(iocbs[0], fd, buf[0], 4096, 37376);
-    io_prep_pwrite(iocbs[1], fd, buf[1], 4096, 41472);
-
-    io_submit(io_ctx, 1, &iocbs[1]);
-    io_submit(io_ctx, 1, &iocbs[2]);
-
-    io_getevents(io_ctx, 2, 2, events, NULL);
-
-Without this patch the 512B range from 40960 up to the start of the
-second unaligned write (41472) is going to be zeroed overwriting the data
-written by the first write. This is a data corruption.
-
-00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
-*
-00009200  30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 30
-*
-0000a000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
-*
-0000a200  31 31 31 31 31 31 31 31  31 31 31 31 31 31 31 31
-
-With this patch the data corruption is avoided because we will recognize
-the unaligned_aio and wait for the unwritten extent conversion.
-
-00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
-*
-00009200  30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 30
-*
-0000a200  31 31 31 31 31 31 31 31  31 31 31 31 31 31 31 31
-*
-0000b200
-
-Reported-by: Frank Sorenson <fsorenso@redhat.com>
-Signed-off-by: Lukas Czerner <lczerner@redhat.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Fixes: e9e3bcecf44c ("ext4: serialize unaligned asynchronous DIO")
+Fixes: e6d8b64b34aa ("net: sctp: fix and consolidate SCTP checksumming code")
+Reported-by: Li Shuang <shuali@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/ext4/file.c | 2 +-
+ include/net/sctp/checksum.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ext4/file.c
-+++ b/fs/ext4/file.c
-@@ -79,7 +79,7 @@ ext4_unaligned_aio(struct inode *inode,
- 	struct super_block *sb = inode->i_sb;
- 	int blockmask = sb->s_blocksize - 1;
- 
--	if (pos >= i_size_read(inode))
-+	if (pos >= ALIGN(i_size_read(inode), sb->s_blocksize))
- 		return 0;
- 
- 	if ((pos | iov_iter_alignment(from)) & blockmask)
+--- a/include/net/sctp/checksum.h
++++ b/include/net/sctp/checksum.h
+@@ -61,7 +61,7 @@ static inline __wsum sctp_csum_combine(_
+ static inline __le32 sctp_compute_cksum(const struct sk_buff *skb,
+ 					unsigned int offset)
+ {
+-	struct sctphdr *sh = sctp_hdr(skb);
++	struct sctphdr *sh = (struct sctphdr *)(skb->data + offset);
+ 	const struct skb_checksum_ops ops = {
+ 		.update  = sctp_csum_update,
+ 		.combine = sctp_csum_combine,
 
