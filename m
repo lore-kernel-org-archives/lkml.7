@@ -2,86 +2,95 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A901C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 10:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F24C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 10:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE21217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 10:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5469F20B7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 10:13:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565432002;
+	bh=xxIhXdXrNYgZy+a1g/JRW7MbrkKrZsW0bGELVlqKFBw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y+njDuPP+vJm+bRo/0NbvhhE7Hmw6c+Wr4+73e1z0JXA7UkE/eNcaGl03shOk9FQA
+	 91sSCZ4sLgGo5uutVDFFZr1cJmZzZpVyJRDVzOS08YhqLSUPZoM7UEPUBB3w/yg7kA
+	 buppuRjLCHQ9Ci6DmNMtYehuAzbN5ShQQtF9UxjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbfHJKMf (ORCPT
+        id S1726271AbfHJKNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 06:12:35 -0400
-Received: from bmailout2.hostsharing.net ([83.223.78.240]:38555 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbfHJKMe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 06:12:34 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        Sat, 10 Aug 2019 06:13:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57162 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725468AbfHJKNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 06:13:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 596A02800B6CA;
-        Sat, 10 Aug 2019 12:12:32 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 259F91DD45E; Sat, 10 Aug 2019 12:12:32 +0200 (CEST)
-Date:   Sat, 10 Aug 2019 12:12:32 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Subject: Re: [PATCH] PCI: pciehp: Avoid returning prematurely from sysfs
- requests
-Message-ID: <20190810101232.3fdqrbi3tdd27dwx@wunner.de>
-References: <4174210466e27eb7e2243dd1d801d5f75baaffd8.1565345211.git.lukas@wunner.de>
- <20190809193216.GD28515@localhost.localdomain>
- <20190809202815.4jtpdsnnmztins34@wunner.de>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B843F20B7C;
+        Sat, 10 Aug 2019 10:13:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565431999;
+        bh=xxIhXdXrNYgZy+a1g/JRW7MbrkKrZsW0bGELVlqKFBw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ctNhXmpSiavk41/UgdlWjh3DR1JDGpe5VWInUhTHszrusWwCkZaAmxC6jIUdY2FHV
+         WOR9mLzjaFF7r1+VZHaHZ09n8gH+N129bspBw9zh8UeR3rEg+hamoROySGQMbpy+uU
+         TY6AqrvLV+JiYnGsRTGCsiaRfmDNOW2q7ucmvdHo=
+Date:   Sat, 10 Aug 2019 12:13:16 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Hui Peng <benquike@gmail.com>
+Cc:     kvalo@codeaurora.org, davem@davemloft.net,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] Fix a NULL-ptr-deref bug in
+ ath6kl_usb_alloc_urb_from_pipe
+Message-ID: <20190810101316.GA25650@kroah.com>
+References: <20190804002905.11292-1-benquike@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190809202815.4jtpdsnnmztins34@wunner.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190804002905.11292-1-benquike@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 10:28:15PM +0200, Lukas Wunner wrote:
-> On Fri, Aug 09, 2019 at 01:32:16PM -0600, Keith Busch wrote:
-> > On Fri, Aug 09, 2019 at 12:28:43PM +0200, Lukas Wunner wrote:
-> > > A sysfs request to enable or disable a PCIe hotplug slot should not
-> > > return before it has been carried out.  That is sought to be achieved
-> > > by waiting until the controller's "pending_events" have been cleared.
-> > > 
-> > > However the IRQ thread pciehp_ist() clears the "pending_events" before
-> > > it acts on them.  If pciehp_sysfs_enable_slot() / _disable_slot() happen
-> > > to check the "pending_events" after they have been cleared but while
-> > > pciehp_ist() is still running, the functions may return prematurely
-> > > with an incorrect return value.
-> > > 
-> > > Fix by introducing an "ist_running" flag which must be false before a
-> > > sysfs request is allowed to return.
-> > 
-> > Can you instead just call synchronize_irq(ctrl->pcie->irq) after the
-> > pending events is cleared?
+On Sat, Aug 03, 2019 at 08:29:04PM -0400, Hui Peng wrote:
+> The `ar_usb` field of `ath6kl_usb_pipe_usb_pipe` objects
+> are initialized to point to the containing `ath6kl_usb` object
+> according to endpoint descriptors read from the device side, as shown
+> below in `ath6kl_usb_setup_pipe_resources`:
 > 
-> You mean call synchronize_irq() from pciehp_sysfs_enable_slot() /
-> disable_slot()?  That's a good idea, let me think that through and
-> try to make it work that way.
+> for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
+> 	endpoint = &iface_desc->endpoint[i].desc;
+> 
+> 	// get the address from endpoint descriptor
+> 	pipe_num = ath6kl_usb_get_logical_pipe_num(ar_usb,
+> 						endpoint->bEndpointAddress,
+> 						&urbcount);
+> 	......
+> 	// select the pipe object
+> 	pipe = &ar_usb->pipes[pipe_num];
+> 
+> 	// initialize the ar_usb field
+> 	pipe->ar_usb = ar_usb;
+> }
+> 
+> The driver assumes that the addresses reported in endpoint
+> descriptors from device side  to be complete. If a device is
+> malicious and does not report complete addresses, it may trigger
+> NULL-ptr-deref `ath6kl_usb_alloc_urb_from_pipe` and
+> `ath6kl_usb_free_urb_to_pipe`.
+> 
+> This patch fixes the bug by preventing potential NULL-ptr-deref.
+> 
+> Signed-off-by: Hui Peng <benquike@gmail.com>
+> Reported-by: Hui Peng <benquike@gmail.com>
+> Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
 
-After a bit of thinking:
-
-synchronize_irq() doesn't work for poll mode.
-
-A secondary concern is that if the IRQ is shared, synchronize_irq()
-waits for all the other (unrelated) IRQ threads to finish,
-i.e. longer than necessary.
-
-So I can't think of a better way to solve this.
-
-Thanks,
-
-Lukas
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
