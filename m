@@ -2,140 +2,268 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3428C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 00:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C83C31E40
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 00:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3FF12166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 00:45:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o9+sM2gW"
+	by mail.kernel.org (Postfix) with ESMTP id 513E12166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 00:48:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565398117;
+	bh=8knKnN5NvOEmPnMLcZSF8WYpy6HGhXAHy4YEOjEoWqA=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=ZNFw3Nk7vqSaNcYXOjfGB9CrZSlYV4OTTB1Btq1yZdl8II2kTQTkQdx6vvNsZ0fVd
+	 xSMu6Z7c9zrRZn3h1QJcYF5Zgu9fPNcKmOULi1trzRljKWoX159nrWk5B9soXLF6z0
+	 0x+xAl3xUiDMcasVhEziVb7+L/AXtYq8RPZeqzIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfHJApC (ORCPT
+        id S1729103AbfHJAsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 20:45:02 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:43025 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726263AbfHJApC (ORCPT
+        Fri, 9 Aug 2019 20:48:36 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40125 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfHJAsf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 20:45:02 -0400
-Received: by mail-ed1-f65.google.com with SMTP id e3so96874440edr.10
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 17:45:01 -0700 (PDT)
+        Fri, 9 Aug 2019 20:48:35 -0400
+Received: by mail-ot1-f66.google.com with SMTP id l15so82198824oth.7
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 17:48:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CBUazHhddmZsxB0Hoiw4zvE6oiR+uVF7ClLhkcMSvXE=;
-        b=o9+sM2gWtH4nJNfa/ID1tZFd5YZrs+EQ2XTzzc8MRVuVVTA5BwAGFAlnpd5iZ8kUuY
-         JFIOeVjTsxEDmWNk1ERHIkLM/axY1dpLapJEOzNmRgXTAGACf3SsCI80WvZc0gOd9L2y
-         Qj+VO3ouupoO4iMEo2OJll/NQGly6ipuRh8ZC1kuBniID9Lx/WsK18+Vytqlskug7+xg
-         teu1x5AG7k/kuPR1d6mzzEuc/jvvVxJvo4iCHfrP1yM++mAx6jFoQtW+Ychtq3IMvA6n
-         Qk+TtA7XOZqiZE7xt3miSyeyC4Hi2Zob6bbWIjGp0PHxO4+Wx+GnO0VDeFxDUWxn89nm
-         nhmQ==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WebZ25TRZtkhIa50lHla/qWQXpBkJ9sflP4Hbz+vD+Y=;
+        b=HuvBXVEeCNJWw84wz2l726tE2rPCX5b7UhwTqnMzb+iFWOIISsomNj5hTBeUAArs6w
+         ITfd8inpKFZDKwzvk1EseKDSy/vZpWS0eHB+GHYdBDb96BuhJhczv9qUfKF9C9WMXWw7
+         065nUqfWjU48xMlevxVY3Ah9SOSSwUzJ/S8HI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CBUazHhddmZsxB0Hoiw4zvE6oiR+uVF7ClLhkcMSvXE=;
-        b=aw1t9GN/JNjkcYm1pMq44jyyledtsUIzSvQp3NeHUz+F1tZzOWmjuCxLMy1LFi3YCM
-         1P7gYUk7G92ylweRAJbAZ8AgTnz0lbrSMxWjmMIO77saMsc7awsiUl72PF7gHPcGeeW9
-         8Dj4TOXH9o/psTNwGfkqdPMy20EtQ0fcR8ARsQoEPHhNkSG9ZewKAHi83F3ogVM4UyaX
-         Mlc38/2qoSP4bgE8JG4ne+xtGuwRcoQxhf8jGBOtVnlwjNQVUppiGQaHTExtVHKUnalY
-         w/AReRUr2vsGN+Zq+26zy7JQzbh5YKYkgy4cyU2t5LeNqYht8zxy+i+9mJ/P6eMmlEPV
-         TFoA==
-X-Gm-Message-State: APjAAAXeN/rw3NYUJNOKinVP8kqmrJA8nCPCCjfaG8TWXXqXAxkY2wdC
-        9RFrwdtEn9BBbHSjfJSDQNA=
-X-Google-Smtp-Source: APXvYqwc5zeDof/0wVv2MTgVSE/98pvnyBzX5Dlh2llXGxDkO7mButCFccinA+hkG1IkLj7WC+uq8Q==
-X-Received: by 2002:a17:906:2401:: with SMTP id z1mr20929355eja.292.1565397900414;
-        Fri, 09 Aug 2019 17:45:00 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id u9sm22940007edm.71.2019.08.09.17.44.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 09 Aug 2019 17:44:59 -0700 (PDT)
-Date:   Sat, 10 Aug 2019 00:44:58 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
-        "bp@suse.de" <bp@suse.de>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "osalvador@suse.de" <osalvador@suse.de>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "richardw.yang@linux.intel.com" <richardw.yang@linux.intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: Re: Resend [PATCH] kernel/resource.c: invalidate parent when freed
- resource has childs
-Message-ID: <20190810004458.mio4vp3nk6jl2hyh@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <1565278859475.1962@mentor.com>
- <1565358624103.3694@mentor.com>
- <20190809223831.fk4uyrzscr366syr@master>
- <CAHk-=wi_9sdMxurjZ1MbNnxt-pA=dqoyf8Fdn9aYc8xvjjnTBg@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WebZ25TRZtkhIa50lHla/qWQXpBkJ9sflP4Hbz+vD+Y=;
+        b=bVIuCfs6acw7N2FrQuWMo7/JVGLrTEKNTzig6D1UHkLgzX3NG3y6N3z2ZBQt0MeJAj
+         6Xa9Ym/jPa2BmTy16NUdZirhioGEvG7PEsCMA2MLocH/TWxTMIuAGFMrfeSsgGFzTauR
+         YmPIPy4s7bKH4Zuv0Ej8iVEAd15NV1hvaHlWkkr8ba6+Cyf5e3pUJOd5ZqnFxpiNZtSp
+         sLMKCKDlSqbQ8TbDeRXAF7Ni13t3x/ek9m6KDmsZ4NPz5USRkEs5RiFhTyjzo7BEOVPF
+         F07W2xu1WcqIvkrgbX+MBjOMt9KICtwKnHl1pXs0udCkpJplm2IRHi6zsIQeaIXaKrU4
+         8w3w==
+X-Gm-Message-State: APjAAAU82xHByZlYBJXpINkFyxG/OgeZOJlOBAiRUBWT3lTTXtdNcaE8
+        2fUDMvPY6luhgX/6q1hogwlDwQ==
+X-Google-Smtp-Source: APXvYqxDK6ADZuMJjzYO20j/ly4fmcARa1eZmgkezIM1D1cjRzbn+HSuwH5lcb+MB3iNlDBLSkcOlw==
+X-Received: by 2002:a6b:ce19:: with SMTP id p25mr9257284iob.201.1565398114400;
+        Fri, 09 Aug 2019 17:48:34 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id w5sm6219382iom.33.2019.08.09.17.48.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 17:48:33 -0700 (PDT)
+Subject: Re: [PATCH 0/3] Collapse vimc into single monolithic driver
+To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        mchehab@kernel.org, helen.koike@collabora.com, hverkuil@xs4all.nl,
+        laurent.pinchart@ideasonboard.com
+Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        kernel@collabora.com,
+        "skh >> Shuah Khan" <skhan@linuxfoundation.org>
+References: <cover.1565386363.git.skhan@linuxfoundation.org>
+ <3118bc46-14ac-8015-9a6c-a8dfcdcea940@collabora.com>
+ <4e9b8eb3-23c5-62ea-07dc-b51acb238dee@linuxfoundation.org>
+ <15badf5e-49fa-7fbe-de6b-296e9a7f5cd9@collabora.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <daca7cbc-7ace-71e1-c797-c4db9c4f79a8@linuxfoundation.org>
+Date:   Fri, 9 Aug 2019 18:48:32 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wi_9sdMxurjZ1MbNnxt-pA=dqoyf8Fdn9aYc8xvjjnTBg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <15badf5e-49fa-7fbe-de6b-296e9a7f5cd9@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 03:45:59PM -0700, Linus Torvalds wrote:
->On Fri, Aug 9, 2019 at 3:38 PM Wei Yang <richard.weiyang@gmail.com> wrote:
+On 8/9/19 6:24 PM, André Almeida wrote:
+> On 8/9/19 9:17 PM, Shuah Khan wrote:
+>> Hi Andre,
 >>
->> In theory, child may have siblings. Would it be possible to have several
->> devices under xhci-hcd?
->
->I'm less interested in the xhci-hcd case - which I certainly *hope* is
->fixed already? - than in "if this happens somewhere else".
->
+>> On 8/9/19 5:52 PM, André Almeida wrote:
+>>> Hello Shuah,
+>>>
+>>> Thanks for the patch, I did some comments below.
+>>>
+>>> On 8/9/19 6:45 PM, Shuah Khan wrote:
+>>>> vimc uses Component API to split the driver into functional components.
+>>>> The real hardware resembles a monolith structure than component and
+>>>> component structure added a level of complexity making it hard to
+>>>> maintain without adding any real benefit.
+>>>>       The sensor is one vimc component that would makes sense to be a
+>>>> separate
+>>>> module to closely align with the real hardware. It would be easier to
+>>>> collapse vimc into single monolithic driver first and then split the
+>>>> sensor off as a separate module.
+>>>>
+>>>> This patch series emoves the component API and makes minimal changes to
+>>>> the code base preserving the functional division of the code structure.
+>>>> Preserving the functional structure allows us to split the sensor off
+>>>> as a separate module in the future.
+>>>>
+>>>> Major design elements in this change are:
+>>>>       - Use existing struct vimc_ent_config and struct
+>>>> vimc_pipeline_config
+>>>>         to drive the initialization of the functional components.
+>>>>       - Make vimc_ent_config global by moving it to vimc.h
+>>>>       - Add two new hooks add and rm to initialize and register,
+>>>> unregister
+>>>>         and free subdevs.
+>>>>       - All component API is now gone and bind and unbind hooks are
+>>>> modified
+>>>>         to do "add" and "rm" with minimal changes to just add and rm
+>>>> subdevs.
+>>>>       - vimc-core's bind and unbind are now register and unregister.
+>>>>       - vimc-core invokes "add" hooks from its vimc_register_devices().
+>>>>         The "add" hooks remain the same and register subdevs. They don't
+>>>>         create platform devices of their own and use vimc's pdev.dev as
+>>>>         their reference device. The "add" hooks save their
+>>>> vimc_ent_device(s)
+>>>>         in the corresponding vimc_ent_config.
+>>>>       - vimc-core invokes "rm" hooks from its unregister to unregister
+>>>> subdevs
+>>>>         and cleanup.
+>>>>       - vimc-core invokes "add" and "rm" hooks with pointer to struct
+>>>> vimc_device
+>>>>         and the corresponding struct vimc_ent_config pointer.
+>>>>       The following configure and stream test works on all devices.
+>>>>            media-ctl -d platform:vimc -V '"Sensor
+>>>> A":0[fmt:SBGGR8_1X8/640x480]'
+>>>>       media-ctl -d platform:vimc -V '"Debayer
+>>>> A":0[fmt:SBGGR8_1X8/640x480]'
+>>>>       media-ctl -d platform:vimc -V '"Sensor
+>>>> B":0[fmt:SBGGR8_1X8/640x480]'
+>>>>       media-ctl -d platform:vimc -V '"Debayer
+>>>> B":0[fmt:SBGGR8_1X8/640x480]'
+>>>>            v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v
+>>>> width=1920,height=1440
+>>>>       v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v pixelformat=BA81
+>>>>       v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v pixelformat=BA81
+>>>>            v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video1
+>>>>       v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video2
+>>>>       v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video3
+>>>>
+>>>> The third patch in the series fixes a general protection fault found
+>>>> when rmmod is done while stream is active.
+>>>
+>>> I applied your patch on top of media_tree/master and I did some testing.
+>>> Not sure if I did something wrong, but just adding and removing the
+>>> module generated a kernel panic:
+>>
+>> Thanks for testing.
+>>
+>> Odd. I tested modprobe and rmmod both.I was working on Linux 5.3-rc2.
+>> I will apply these to media latest and work from there. I have to
+>> rebase these on top of the reverts from Lucas and Helen
+> 
+> Ok, please let me know if I succeeded to reproduce.
+> 
+>>>
+>>> ~# modprobe vimc
+>>> ~# rmmod vimc
+>>> [   16.452974] stack segment: 0000 [#1] SMP PTI
+>>> [   16.453688] CPU: 0 PID: 2038 Comm: rmmod Not tainted 5.3.0-rc2+ #36
+>>> [   16.454678] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+>>> BIOS 1.12.0-20181126_142135-anatol 04/01/2014
+>>> [   16.456191] RIP: 0010:kfree+0x4d/0x240
+>>>
+>>> <registers values...>
+>>>
+>>> [   16.469188] Call Trace:
+>>> [   16.469666]  vimc_remove+0x35/0x90 [vimc]
+>>> [   16.470436]  platform_drv_remove+0x1f/0x40
+>>> [   16.471233]  device_release_driver_internal+0xd3/0x1b0
+>>> [   16.472184]  driver_detach+0x37/0x6b
+>>> [   16.472882]  bus_remove_driver+0x50/0xc1
+>>> [   16.473569]  vimc_exit+0xc/0xca0 [vimc]
+>>> [   16.474231]  __x64_sys_delete_module+0x18d/0x240
+>>> [   16.475036]  do_syscall_64+0x43/0x110
+>>> [   16.475656]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>> [   16.476504] RIP: 0033:0x7fceb8dafa4b
+>>>
+>>> <registers values...>
+>>>
+>>> [   16.484853] Modules linked in: vimc(-) videobuf2_vmalloc
+>>> videobuf2_memops v4l2_tpg videobuf2_v4l2 videobuf2_common
+>>> [   16.486187] ---[ end trace 91e5e0894e254d49 ]---
+>>> [   16.486758] RIP: 0010:kfree+0x4d/0x240
+>>>
+>>> <registers values...>
+>>>
+>>> fish: “rmmod vimc” terminated by signal SIGSEGV (Address boundary error)
+>>>
+>>> I just added the module after booting, no other action was made. Here is
+>>> how my `git log --oneline` looks like:
+>>>
+>>> 897d708e922b media: vimc: Fix gpf in rmmod path when stream is active
+>>> 2e4a5ad8ad6d media: vimc: Collapse component structure into a single
+>>> monolithic driver
+>>> 7c8da1687e92 media: vimc: move private defines to a common header
+>>> 97299a303532 media: Remove dev_err() usage after platform_get_irq()
+>>> 25a3d6bac6b9 media: adv7511/cobalt: rename driver name to adv7511-v4l2
+>>> ...
+>>>
+>>>>
+>>>> vimc_print_dot (--print-dot) topology after this change:
+>>>> digraph board {
+>>>>      rankdir=TB
+>>>>      n00000001 [label="{{} | Sensor A\n/dev/v4l-subdev0 | {<port0>
+>>>> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+>>>>      n00000001:port0 -> n00000005:port0 [style=bold]
+>>>>      n00000001:port0 -> n0000000b [style=bold]
+>>>>      n00000003 [label="{{} | Sensor B\n/dev/v4l-subdev1 | {<port0>
+>>>> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+>>>>      n00000003:port0 -> n00000008:port0 [style=bold]
+>>>>      n00000003:port0 -> n0000000f [style=bold]
+>>>>      n00000005 [label="{{<port0> 0} | Debayer A\n/dev/v4l-subdev2 |
+>>>> {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+>>>>      n00000005:port1 -> n00000015:port0
+>>>>      n00000008 [label="{{<port0> 0} | Debayer B\n/dev/v4l-subdev3 |
+>>>> {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+>>>>      n00000008:port1 -> n00000015:port0 [style=dashed]
+>>>>      n0000000b [label="Raw Capture 0\n/dev/video1", shape=box,
+>>>> style=filled, fillcolor=yellow]
+>>>>      n0000000f [label="Raw Capture 1\n/dev/video2", shape=box,
+>>>> style=filled, fillcolor=yellow]
+>>>>      n00000013 [label="{{} | RGB/YUV Input\n/dev/v4l-subdev4 |
+>>>> {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+>>>>      n00000013:port0 -> n00000015:port0 [style=dashed]
+>>>>      n00000015 [label="{{<port0> 0} | Scaler\n/dev/v4l-subdev5 |
+>>>> {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+>>>>      n00000015:port1 -> n00000018 [style=bold]
+>>>>      n00000018 [label="RGB/YUV Capture\n/dev/video3", shape=box,
+>>>> style=filled, fillcolor=yellow]
+>>>> }
+>>>
+>>> Since the topology changed, it would be nice to change in the
+>>> documentation as well. The current dot file can be found at
+>>> `Documentation/media/v4l-drivers/vimc.dot` and it's rendered at this
+>>> page: https://www.kernel.org/doc/html/latest/media/v4l-drivers/vimc.html
+>>>
+>>
+>> Topology shouldn't have changed. No changes to links or pads etc.
+>> I will take a look to be sure. I agree that if topology changes
+>> document should be updated.
+> 
+> If you "diff" the current dot with the dot you generated, you will see
+> some differences. The main difference is that "RGB/YUV Input" was a
+> device "/dev/video2/", and now it a subdevice "/dev/v4l-subdev4".
+> 
 
-Agree, this is what I want to say.
+Yeah. I should have saved dot before my changes and compare. The goal is
+to not change anything. I will make sure topology doesn't change.
 
->So if we do want to remove the parent (which may be a good idea with a
->warning), and want to make sure that the children are really removed
->from the resource hierarchy, we should do somethiing like
->
->  static bool detach_children(struct resource *res)
->  {
->        res = res->child;
->        if (!res)
->                return false;
->        do {
->                res->parent = NULL;
->                res = res->sibling;
->        } while (res);
->        return true;
->  }
->
->and then we could write the __release_region() warning as
->
->        /* You should not release a resource that has children */
->        WARN_ON_ONCE(detach_children(res));
->
+Thanks again for testing these patches quickly.
 
-I am thinking about why this could happen.
+thanks,
+-- Shuah
 
-To guard the core kernel code, it looks reasonable.
-
->or something?
->
->NOTE! The above is entirely untested, and written purely in my mail
->reader. It might be seriously buggy, including not compiling, or doing
->odd things. See it more as a "maybe something like this" code snippet
->example than any kind of final form.
->
->               Linus
-
--- 
-Wei Yang
-Help you, Help me
