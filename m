@@ -2,93 +2,93 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D97C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 10:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A07C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 10:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAC97217D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 10:05:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ARgPw8jB"
+	by mail.kernel.org (Postfix) with ESMTP id 24ADD20B7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 10:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbfHJKF2 (ORCPT
+        id S1726135AbfHJKLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 06:05:28 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:40609 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfHJKF1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 06:05:27 -0400
-Received: by mail-yb1-f195.google.com with SMTP id j6so6562222ybm.7;
-        Sat, 10 Aug 2019 03:05:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JP7W5WK+7O8UWLHKfnIKNGxUzPugVshGAQQJJ/lIEdQ=;
-        b=ARgPw8jBtEOfUUCP0QUMQnUZIb0RZvaQohBqNEQQNwUVaeBY+yr31H4L8tptZkpDP6
-         tSr4Ztc3i917jqFGaf12VmIQwsboSP4PutA8I7OVbQWEOQB2CBwajbtc0F1dsuUs11jF
-         FP542joD3/D0ce+JmIylQIoC07LR1nuccS3jvpgTWxmCK9nxjNgYASbvqQ4Y7BX5Rp8j
-         dLTxsZnBHc567gmAU4iUYvn0QqyF8e9KUygtUy5Iq1Xo/CiF7I/5bMKibrj7W7JXIn8w
-         dH7lrdXrkXHxHqaqNqPTU3vLgpRqQD6/TK/VLAcOtNs+es/onSyAEcEk29q0Qjc7mJ2K
-         fBlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JP7W5WK+7O8UWLHKfnIKNGxUzPugVshGAQQJJ/lIEdQ=;
-        b=tw7ZOQlIi4DwKM7a4b2ZzgpQeGwEfJOvFDJ4j/EF2x6YKce/MRBhP+pb277NG2rPIu
-         BMuQVhLWliN4Mdn9G5vddcOZp+39cE7FcxpAOufUIoPqpF5wPzvrAAed14C9YTFjM8aC
-         8bdBusgewWuhryyxV1G7XzB7ogCRCeAxiBZBxZYEOcb5hONl5xpyPECaB5ujkAiUZ2Qh
-         77aJ7XDaXsB53XMhkwiMJ7Y5H6BrbMZ/rwK61xcnqSypXAhYMuh58LhhhgeRmEWrytZ7
-         Rqnopcj39WXzzpRJrIWzuVyCYIv8UjKo6P/OvhpmNrlL1+yALVI5Ev3nCkM+7CmjMI4t
-         NEPA==
-X-Gm-Message-State: APjAAAW0rx3PI4BmMCs69jPKl3O9aPCOwcIj3+MT503+TaEc8PQBbRKb
-        PzwU2by+P+u3XIYSrHsPWTu+s5XOqDPrkGfyLOo=
-X-Google-Smtp-Source: APXvYqz1hzOKzpjqep9z6bTqZcppD82BCobutxjBB9Lp0e+pfqMfQOv5Qv6TGKag4Duv4RQprg+ZPH7rclwh6m3xYJQ=
-X-Received: by 2002:a25:9203:: with SMTP id b3mr10506054ybo.14.1565431526544;
- Sat, 10 Aug 2019 03:05:26 -0700 (PDT)
+        Sat, 10 Aug 2019 06:11:53 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43789 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725858AbfHJKLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 06:11:53 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 465Hvp1Lwmz9sDQ;
+        Sat, 10 Aug 2019 20:11:49 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.3-4 tag
+Date:   Sat, 10 Aug 2019 20:11:49 +1000
+Message-ID: <87imr5s522.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-References: <20190731153443.4984-1-acgoide@tycho.nsa.gov> <CAHC9VhQUoDwBiLi+BiW=_Px18v3xMhhGYDD2mLdu9YZJDWw1yg@mail.gmail.com>
- <CAOQ4uxigYZunXgq0BubRFNM51Kh_g3wrtyNH77PozUX+3sM=aQ@mail.gmail.com> <CAHC9VhRpTuL2Lj1VFwHW4YLpx0hJVSxMnXefooHqsxpEUg6-0A@mail.gmail.com>
-In-Reply-To: <CAHC9VhRpTuL2Lj1VFwHW4YLpx0hJVSxMnXefooHqsxpEUg6-0A@mail.gmail.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Sat, 10 Aug 2019 13:05:15 +0300
-Message-ID: <CAOQ4uxiGNXbZ-DWeXTkNM4ySFbBbo1XOF1=3pjknsf+EjbNuOw@mail.gmail.com>
-Subject: Re: [PATCH] fanotify, inotify, dnotify, security: add security hook
- for fs notifications
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Aaron Goidel <acgoide@tycho.nsa.gov>, selinux@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>, Jan Kara <jack@suse.cz>,
-        James Morris <jmorris@namei.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > Other than Casey's comments, and ACK, I'm not seeing much commentary
-> > > on this patch so FS and LSM folks consider this your last chance - if
-> > > I don't hear any objections by the end of this week I'll plan on
-> > > merging this into selinux/next next week.
-> >
-> > Please consider it is summer time so people may be on vacation like I was...
->
-> This is one of the reasons why I was speaking to the mailing list and
-> not a particular individual :)
->
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
-Jan is fsnotify maintainer, so I think you should wait for an explicit ACK
-from Jan or just merge the hook definition and ask Jan to merge to
-fsnotify security hooks.
+Hi Linus,
 
-Thanks,
-Amir.
+Please pull another powerpc fix for 5.3:
+
+The following changes since commit d7e23b887f67178c4f840781be7a6aa6aeb52ab1:
+
+  powerpc/kasan: fix early boot failure on PPC32 (2019-07-31 22:02:52 +1000)
+
+are available in the git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.3-4
+
+for you to fetch changes up to ed4289e8b48845888ee46377bd2b55884a55e60b:
+
+  Revert "powerpc: slightly improve cache helpers" (2019-07-31 22:56:27 +1000)
+
+- ------------------------------------------------------------------
+powerpc fixes for 5.3 #4
+
+Just one fix, a revert of a commit that was meant to be a minor improvement to
+some inline asm, but ended up having no real benefit with GCC and broke booting
+32-bit machines when using Clang.
+
+Thanks to:
+  Arnd Bergmann, Christophe Leroy, Nathan Chancellor, Nick Desaulniers, Segher
+  Boessenkool.
+
+- ------------------------------------------------------------------
+Michael Ellerman (1):
+      Revert "powerpc: slightly improve cache helpers"
+
+
+ arch/powerpc/include/asm/cache.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAl1OmC4ACgkQUevqPMjh
+pYBuKw/9H4ZMZpetAqOfJgfpByyhXlNRFriW1QS+KkMjjI60ZY1QYwZNFhZsUs8P
+chpAvGnLv6zuJafOQ1hlxFa7wc70LTc/RRDRwWPFdtWdDl54OB3YvwFP2do2b/7D
+gDtqCRMWTgtWdLx7ZpDk3qSN2mDxPRss//FO/UqtkTzNWh2LsQr9sbTZHc0BsIa/
+VAyEZSGeFMkUBHjuCKoqyMZAc0aBk7HmJ4LN8zFGH6CtY05c1TBA4rN0qBnGBQI9
+upNUgwbG2/vVS3t5YgHzHbrC8KfX+/8Oqo6ePLVlH39g0+wvp6avTeZDwrA7ZHtR
+wNzHBxlLIpphOSRDr/fQk6yd69rVVbK14DZk3UHaz2qqyBkj3LxlRHKFIYWmPwoi
+6E01ovThjSiHyxN1oPJfI1TXmhualhOlER9RTHPYsA20SnFYqAwH+TCydzuhvwAO
+ueWSqKjK7O+KNhR1QJ3PGD6LIUWiPLMBG0a860Jg9oJ28/X5ZU/UqxBunoYUyQg+
+u5bBViUtMkD8d7LEfQjvHSW9IpIRA/N2Y5cHTtmQxPEgspI/t/jXAxLEgkOBVkS2
+kJoljNsTNFfKnyTD4v7zh5AABZquy5kyGLFBywQuloJ/7Jc4U3rBOqvRQ+f55E3s
+naAU0Pf27Bob6VKKNPVeWP5OhPuYZ8YXHnvZ/fpcrYpA/k+xYsg=
+=Dzq1
+-----END PGP SIGNATURE-----
