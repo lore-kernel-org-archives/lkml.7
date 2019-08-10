@@ -2,85 +2,113 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C797C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4CDC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FDB52166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48DC62166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:18:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="JJlAnzhv"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CdH0XEmI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbfHJMQg (ORCPT
+        id S1726363AbfHJMS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 08:16:36 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:38790 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725927AbfHJMQf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 08:16:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1565439385; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ObqmLnyvR7akU/D+s02O+7y4dD+NKGIoJ1VwRGXpEuI=;
-        b=JJlAnzhvB88pNb+TMjglYE/GF6uPYL6yfOB9TnBfYv54FNN9yt4WS137spYa5ryEJx3lTg
-        3lOka2WUVjHIcfMetWO8jsfD5mgI+cn4PL44+7QCTICzpyblW8cL7DkPt/YiVXjjiiCU0m
-        Wq8rDvbpAuTNmCD2+j46tgenerfDg4Q=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 2/2] mmc: jz4740: Drop dependency on arch header
-Date:   Sat, 10 Aug 2019 14:16:08 +0200
-Message-Id: <20190810121608.24145-2-paul@crapouillou.net>
-In-Reply-To: <20190810121608.24145-1-paul@crapouillou.net>
-References: <20190810121608.24145-1-paul@crapouillou.net>
+        Sat, 10 Aug 2019 08:18:29 -0400
+Received: from mout.gmx.net ([212.227.15.18]:52629 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbfHJMS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 08:18:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1565439477;
+        bh=NL9xpuLCPw2UG54ukrtShb+O4fzltpo4dN4xnfCDCyM=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=CdH0XEmIu0hzeCVHGf9Sekbf4nWTBdwvMV6lYwFcHuEf7w61qKOJN+x4p0XC4oEUh
+         o1ubxjlPWBDGW9lK0EUDbX/jLDrFAA7zreWIllgJjAcymt1t78Rv+SgZFb4aIc9kAF
+         XlvKDEg8c5qUSGG49ZUirQMtQ2XBHQHA0ZXFHUa4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M9Wuk-1hzhZJ0nx6-005cHp; Sat, 10
+ Aug 2019 14:17:57 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-doc@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Documentation/networking/af_xdp: Inhibit reference to struct socket
+Date:   Sat, 10 Aug 2019 14:17:37 +0200
+Message-Id: <20190810121738.19587-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:cgePj4l+CjuwW5sL+l5xjBAo2oA6r0xqbKiNRsIcFbb/Me+bhcP
+ 3okZNFqCTQzPdqhA1VRGhKi7JyaYkSVm1/rWGrS8Sr0WzeTxenTfgx6hO6gFxbwvyKX+qoA
+ nJkpSeaoEiYXoXhGN0qmnMPVC71bFcTbvX/1+GvMCK8oARXi4O6agBDTPm2/6KNPvWOpCsk
+ +EX8gcUCw3RN8IIryApSg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mD4RS0ZWWFM=:zsgdsjRIOwcW3rld9Y+v/d
+ HEOmA4JSUMWkBK3ld9Ng2Jv1NrpAzmXwTj70+1lJYZod8ohd2/Zj6FWKjt7R5NNZyoiQ4YchW
+ KalfaK+NjUF4aIB+J47kMZY54V4sgZLFcsCOHvBEcHiOTl8zx3bPCDo2XrO3a+XRe/hSX6Z+f
+ EJDawmm1MM9U7T/F7rMXrJ/hAsAdymuYW27sNfHhDx/YbZuOJV/WdS0q20SSWLFNRO6qIPcrM
+ 80ako/3DCjjD993TK8rXOth2i6luMQzw5K4dwYkNz6QQ1zkspzok1uoVE00o1yvh/o8K3o3H9
+ JPNyKUKvBQy01lKoLy2GUVGK0h6IT+G+VvR5zvUfeu33YMef+afpyruIB3yT6ia6kIBqi8C2i
+ ku/Vz0S5FFWM5GkefyxmGJQB4R7EpNvfPL+Zgmehzf59Bf98KoV+leyStcEpfM+ckKOMjc0M0
+ qcQ0ZIjBDJr5s+25MiMVIT14EMQVi4M4Xe76SBOMcaRiwlFPHAzsPcSZ1Cr/bea5z992Uk+nJ
+ uEumN7DkLx3mthCiqjOmg8G6kwdgL16LrWk5gROTIo4AceS6+Ka1iEgq+h4CQElixlSE8ktMz
+ 8nDBYdGPKg3eG9JmMc9S5/+RJKKnVdr2Hnz8xUujpyjQfOBp0qtos+evgXwSqRwdk8Xj4Zhe8
+ p+EXlnZD0jYEIwSowH2mnvDiSBiEhLepcKIc6k3uYRJSAqZaKYH6LaO6Lpkfc/s3qJVgovuB9
+ exBngWYPzms1MgetLT7vJ3eBQJwib/ujfpYrBTo5LPvmigvMx07tpZZz+i8ZQilhvPm+ehRRZ
+ +MA7V9/EbSFBERnqhil7h3LrP6V9VmtDI41xCFDxLqkZUKLAdQafSInMDyjckKT/+e+ycxjgi
+ x9pq85R2tsfkYNQjBWPphyNkAtJm8PsF6Dn5aSmtC/BRHsRA0UsnFdFQi8e7mkfubhOEQ6vqR
+ LPthj0OK0NbqN3Zruv2i2KYymvzLy+eNeO3N3xMzKzLYaTEgDS4J/Vr70A6Y0BEdF2r75hNPx
+ gcns0DO3Ip0dxb3JYPTQD0v3x63ANrI1GcPxr1C2UvhsQnEbQGLTayEiJKjNTRGtSd28EY+2E
+ lukB0VFVn44wkM5+jmMWsQnb9QSC9qcDjd7Qn05swmuCGs2D5wc45KqPxqpijRvpsgvRFS86e
+ znFDk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't need to set the 'slave_id' anymore - that field is never read
-by the DMA driver.
+With the recent change to auto-detect function names, Sphinx parses
+socket() as a reference to the in-kernel definition of socket. It then
+decides that struct socket is a good match, which was obviously not
+intended in this case, because the text speaks about the syscall with
+the same name.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/mmc/host/jz4740_mmc.c | 4 ----
- 1 file changed, 4 deletions(-)
+Prevent socket() from being misinterpreted by wrapping it in ``inline
+literal`` quotes.
 
-diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
-index 59f81e8afcce..7ff2034d739a 100644
---- a/drivers/mmc/host/jz4740_mmc.c
-+++ b/drivers/mmc/host/jz4740_mmc.c
-@@ -25,8 +25,6 @@
- 
- #include <asm/cacheflush.h>
- 
--#include <asm/mach-jz4740/dma.h>
--
- #define JZ_REG_MMC_STRPCL	0x00
- #define JZ_REG_MMC_STATUS	0x04
- #define JZ_REG_MMC_CLKRT	0x08
-@@ -292,11 +290,9 @@ static int jz4740_mmc_start_dma_transfer(struct jz4740_mmc_host *host,
- 	if (data->flags & MMC_DATA_WRITE) {
- 		conf.direction = DMA_MEM_TO_DEV;
- 		conf.dst_addr = host->mem_res->start + JZ_REG_MMC_TXFIFO;
--		conf.slave_id = JZ4740_DMA_TYPE_MMC_TRANSMIT;
- 	} else {
- 		conf.direction = DMA_DEV_TO_MEM;
- 		conf.src_addr = host->mem_res->start + JZ_REG_MMC_RXFIFO;
--		conf.slave_id = JZ4740_DMA_TYPE_MMC_RECEIVE;
- 	}
- 
- 	sg_count = jz4740_mmc_prepare_dma_data(host, data, COOKIE_MAPPED);
--- 
-2.21.0.593.g511ec345e18
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ Documentation/networking/af_xdp.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/networking/af_xdp.rst b/Documentation/networkin=
+g/af_xdp.rst
+index eeedc2e826aa..54f179ee6c33 100644
+=2D-- a/Documentation/networking/af_xdp.rst
++++ b/Documentation/networking/af_xdp.rst
+@@ -20,7 +20,7 @@ bpf_redirect_map() function. AF_XDP sockets enable the p=
+ossibility for
+ XDP programs to redirect frames to a memory buffer in a user-space
+ application.
+
+-An AF_XDP socket (XSK) is created with the normal socket()
++An AF_XDP socket (XSK) is created with the normal ``socket()``
+ syscall. Associated with each XSK are two rings: the RX ring and the
+ TX ring. A socket can receive packets on the RX ring and it can send
+ packets on the TX ring. These rings are registered and sized with the
+=2D-
+2.20.1
 
