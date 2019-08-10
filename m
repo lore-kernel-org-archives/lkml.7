@@ -2,119 +2,232 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39FEC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 00:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C31CC31E40
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 00:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAE1820C01
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 00:11:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="KECCdmkn"
+	by mail.kernel.org (Postfix) with ESMTP id 64FBB21743
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 00:17:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565396245;
+	bh=YJzxSUVuzx/b+bsNhcZqqi2GIXDPnogn4OpQWzpI/YY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=Xo5TScSic+GSv2xNGovD3f/q9+uUKNZ/sS3SmlqqzyjmUNw6mxrFq+J3TALHkTVIg
+	 zQGBGrYsHXZJtmkxQeZb0l5FFvpwFTB3OjK+gai2pukGsHobOdYyUEl8+63vPpbGvA
+	 YkSdy66d6eYJEgWpvUGRoLKqujQ8FJEbfti8oDgw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbfHJALk (ORCPT
+        id S1726842AbfHJARQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 20:11:40 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37619 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfHJALk (ORCPT
+        Fri, 9 Aug 2019 20:17:16 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36434 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfHJARP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 20:11:40 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d1so13794777pgp.4
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 17:11:40 -0700 (PDT)
+        Fri, 9 Aug 2019 20:17:15 -0400
+Received: by mail-ot1-f68.google.com with SMTP id k18so7132299otr.3
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 17:17:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=EuQ/R3CppOBh2T1D6FSE6/gAUMLd+emlPXZ8P0KlK4E=;
-        b=KECCdmknzaH0Ve1akzRhLGqPfYzLSqiQZzqIGqUTh+SAcO6Q19ScBeUTVGmT9Kn2fi
-         wuc/H+9Zvt1RiYlS2YMjELwda9ElQG3tetwgpwSLKyc3GMze7p3oJ/iAFf+mlr04fS3p
-         4SoG8g9Vg49LMc+XN9CN2yjxwMYkHbcBup94eMKinNVLCmVJIOstAPR1bTlg+BvjkpIY
-         cd36ZXrgFEWiqQp6BRzMLy0rpNVl0ji479pxHPF2OWsm4aIthkJshQrCEUBBzGGR6KqN
-         xCB5+OxoXjeEhzq/eUA6LgN2F98/tP71hoMrI7Rz306vlRZd504t0Hj1N10xjJOIG5GQ
-         EZNQ==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bYU7wWDHU/E+dxU/71TcEcByM3kGZIhEVcfJHNX6wKo=;
+        b=Hw6OrODIucOylupjtMt99T6A1LgwZQ0TeuqUJMb60m15/mkgJQV89H9p5+4p+s+cCy
+         wGmg1Tk1cc1sIuYPAiQVmcqWLBr7s6PaYByt3CEVn5kijEfXwyjf+DjyvTFY1I9cGlzg
+         IbD1Ivx6uqyVehbTDPa3bNNOMN1o9F0BFMqU8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=EuQ/R3CppOBh2T1D6FSE6/gAUMLd+emlPXZ8P0KlK4E=;
-        b=QczVjmMDoAVAgk2/S2eOVMFpKFLtb6M+PwLlkZqvWUU3MKNnf/syoE9GrgVC2hUrJX
-         6MRJPirA/ZCUDKat93qltspiVfh1VkqrY3M7UH88liM6621n0tD+j2CNuT77Id+yauPm
-         lf5eo/Eye5qTxspKRxgV2hOJX2Dj5FJKA6ONeWsG8nUCib/kwQ+WMPSrJ1rQ3UoQ2iKo
-         LgeRhv4VYdpjF00zTprd6SVI+85F01rUZzYRBN4H4pGAXIct5rSRmYOQ5qFMa0LmcV/f
-         biWUvu4D/bO+CPuOKZKJt8RRZU+YicXRmj8hEDelw+gLY4dj5Yre6giPpdToLlYAmSVm
-         RklA==
-X-Gm-Message-State: APjAAAXYRvcQORbvMMjG4XRU918xCN9gEY8m4sghZmXWJFtPA6wHlUgS
-        hy2qcoVPyt/Jq79RWabeQgWKRw==
-X-Google-Smtp-Source: APXvYqwfo3bJUKvTH7g4ZfJhFp6Q9sQXhh6NsNs21MEaB/aVJYLW2l4lX40Zlrs3JJt56T2EbsbNBA==
-X-Received: by 2002:a62:82c1:: with SMTP id w184mr24770723pfd.8.1565395899475;
-        Fri, 09 Aug 2019 17:11:39 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:b873:707a:e893:cdb3])
-        by smtp.gmail.com with ESMTPSA id k14sm25201452pgb.78.2019.08.09.17.11.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 09 Aug 2019 17:11:38 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Guillaume La Roque <glaroque@baylibre.com>,
-        daniel.lezcano@linaro.org
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 0/6] Add support of New Amlogic temperature sensor for G12 SoCs
-In-Reply-To: <20190806130506.8753-1-glaroque@baylibre.com>
-References: <20190806130506.8753-1-glaroque@baylibre.com>
-Date:   Fri, 09 Aug 2019 17:11:37 -0700
-Message-ID: <7hd0hd3mme.fsf@baylibre.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bYU7wWDHU/E+dxU/71TcEcByM3kGZIhEVcfJHNX6wKo=;
+        b=ZsIzB4imj7hBkkNQu6ltWUPPoyBpOMNnDPteABWPQY84ceuqXFuTCzUR3wfQ4iK5ku
+         h22s1RwMWTCvJIe9Gj2D4zLWzlvlobmHUX+QS0p6f7iFM8Ch+Eign4nr90f3W6+8fMT7
+         t9BBSR8OeDuTMa8F0uo38DqT0nxW+dvaylvnlxnduRT7VvcAEux8RagXSZTObR0mI5X+
+         fExlrNI3EsfANsoX9XZgK62Q3doWlO/F9ke1b8bfqxtHRRoBj04WU6Vj/gd93DGxiK0c
+         8hrPXkSf1zMcSP/GaOe0Ir2GuJ4at19ii9I5X4+1t6Ay1fSqzSala1czAfcVMjjwtrV2
+         YozQ==
+X-Gm-Message-State: APjAAAUIxNVcQb3R0eyIsHb9GJYh9V9Wj8pwh4E7MPXYibPaAyJPCOE7
+        FNlQUfSpltMM0IfpVVQxFLtgPw==
+X-Google-Smtp-Source: APXvYqz6V9qbh3z95MLLAToQCDlolkXHXGULRHHRHKXIcVR6j/RErdGmMPWSD17JnUy0d9lsAYV0ug==
+X-Received: by 2002:a05:6638:3d2:: with SMTP id r18mr25683769jaq.13.1565396234137;
+        Fri, 09 Aug 2019 17:17:14 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id p10sm133200057iob.54.2019.08.09.17.17.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 17:17:13 -0700 (PDT)
+Subject: Re: [PATCH 0/3] Collapse vimc into single monolithic driver
+To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        mchehab@kernel.org, helen.koike@collabora.com, hverkuil@xs4all.nl,
+        laurent.pinchart@ideasonboard.com
+Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        skhan@linuxfoundation.org
+References: <cover.1565386363.git.skhan@linuxfoundation.org>
+ <3118bc46-14ac-8015-9a6c-a8dfcdcea940@collabora.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <4e9b8eb3-23c5-62ea-07dc-b51acb238dee@linuxfoundation.org>
+Date:   Fri, 9 Aug 2019 18:17:11 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <3118bc46-14ac-8015-9a6c-a8dfcdcea940@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guillaume La Roque <glaroque@baylibre.com> writes:
+Hi Andre,
 
-> This patchs series add support of New Amlogic temperature sensor and minimal
-> thermal zone for SEI510 and ODROID-N2 boards.
->
-> First implementation was doing on IIO[1] but after comments i move on thermal framework.
-> Formulas and calibration values come from amlogic.
->
-> Changes since v2:
->   - fix yaml documention 
->   - remove unneeded status variable for temperature-sensor node
->   - rework driver after Martin review
->   - add some information in commit message
->
-> Changes since v1:
->   - fix enum vs const in documentation
->   - fix error with thermal-sensor-cells value set to 1 instead of 0
->   - add some dependencies needed to add cooling-maps
->
-> Dependencies :
-> - patch 3,4 & 5: depends on Neil's patch and series :
->               - missing dwc2 phy-names[2]
->               - patchsets to add DVFS on G12a[3] which have deps on [4] and [5]
->
-> [1] https://lore.kernel.org/linux-amlogic/20190604144714.2009-1-glaroque@baylibre.com/
-> [2] https://lore.kernel.org/linux-amlogic/20190625123647.26117-1-narmstrong@baylibre.com/
-> [3] https://lore.kernel.org/linux-amlogic/20190729132622.7566-1-narmstrong@baylibre.com/
-> [4] https://lore.kernel.org/linux-amlogic/20190731084019.8451-5-narmstrong@baylibre.com/
-> [5] https://lore.kernel.org/linux-amlogic/20190729132622.7566-3-narmstrong@baylibre.com/
+On 8/9/19 5:52 PM, André Almeida wrote:
+> Hello Shuah,
+> 
+> Thanks for the patch, I did some comments below.
+> 
+> On 8/9/19 6:45 PM, Shuah Khan wrote:
+>> vimc uses Component API to split the driver into functional components.
+>> The real hardware resembles a monolith structure than component and
+>> component structure added a level of complexity making it hard to
+>> maintain without adding any real benefit.
+>>      
+>> The sensor is one vimc component that would makes sense to be a separate
+>> module to closely align with the real hardware. It would be easier to
+>> collapse vimc into single monolithic driver first and then split the
+>> sensor off as a separate module.
+>>
+>> This patch series emoves the component API and makes minimal changes to
+>> the code base preserving the functional division of the code structure.
+>> Preserving the functional structure allows us to split the sensor off
+>> as a separate module in the future.
+>>
+>> Major design elements in this change are:
+>>      - Use existing struct vimc_ent_config and struct vimc_pipeline_config
+>>        to drive the initialization of the functional components.
+>>      - Make vimc_ent_config global by moving it to vimc.h
+>>      - Add two new hooks add and rm to initialize and register, unregister
+>>        and free subdevs.
+>>      - All component API is now gone and bind and unbind hooks are modified
+>>        to do "add" and "rm" with minimal changes to just add and rm subdevs.
+>>      - vimc-core's bind and unbind are now register and unregister.
+>>      - vimc-core invokes "add" hooks from its vimc_register_devices().
+>>        The "add" hooks remain the same and register subdevs. They don't
+>>        create platform devices of their own and use vimc's pdev.dev as
+>>        their reference device. The "add" hooks save their vimc_ent_device(s)
+>>        in the corresponding vimc_ent_config.
+>>      - vimc-core invokes "rm" hooks from its unregister to unregister subdevs
+>>        and cleanup.
+>>      - vimc-core invokes "add" and "rm" hooks with pointer to struct vimc_device
+>>        and the corresponding struct vimc_ent_config pointer.
+>>      
+>> The following configure and stream test works on all devices.
+>>      
+>>      media-ctl -d platform:vimc -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
+>>      media-ctl -d platform:vimc -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
+>>      media-ctl -d platform:vimc -V '"Sensor B":0[fmt:SBGGR8_1X8/640x480]'
+>>      media-ctl -d platform:vimc -V '"Debayer B":0[fmt:SBGGR8_1X8/640x480]'
+>>      
+>>      v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v width=1920,height=1440
+>>      v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v pixelformat=BA81
+>>      v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v pixelformat=BA81
+>>      
+>>      v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video1
+>>      v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video2
+>>      v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video3
+>>
+>> The third patch in the series fixes a general protection fault found
+>> when rmmod is done while stream is active.
+> 
+> I applied your patch on top of media_tree/master and I did some testing.
+> Not sure if I did something wrong, but just adding and removing the
+> module generated a kernel panic:
 
-Thank you for the detailed list of dependencies!  Much appreciated.
+Thanks for testing.
 
-With all the deps, I tested this on sei510 and odroid-n2, and basic
-functionality seems to work.
+Odd. I tested modprobe and rmmod both.I was working on Linux 5.3-rc2.
+I will apply these to media latest and work from there. I have to
+rebase these on top of the reverts from Lucas and Helen
+> 
+> ~# modprobe vimc
+> ~# rmmod vimc
+> [   16.452974] stack segment: 0000 [#1] SMP PTI
+> [   16.453688] CPU: 0 PID: 2038 Comm: rmmod Not tainted 5.3.0-rc2+ #36
+> [   16.454678] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+> BIOS 1.12.0-20181126_142135-anatol 04/01/2014
+> [   16.456191] RIP: 0010:kfree+0x4d/0x240
+> 
+> <registers values...>
+> 
+> [   16.469188] Call Trace:
+> [   16.469666]  vimc_remove+0x35/0x90 [vimc]
+> [   16.470436]  platform_drv_remove+0x1f/0x40
+> [   16.471233]  device_release_driver_internal+0xd3/0x1b0
+> [   16.472184]  driver_detach+0x37/0x6b
+> [   16.472882]  bus_remove_driver+0x50/0xc1
+> [   16.473569]  vimc_exit+0xc/0xca0 [vimc]
+> [   16.474231]  __x64_sys_delete_module+0x18d/0x240
+> [   16.475036]  do_syscall_64+0x43/0x110
+> [   16.475656]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [   16.476504] RIP: 0033:0x7fceb8dafa4b
+> 
+> <registers values...>
+> 
+> [   16.484853] Modules linked in: vimc(-) videobuf2_vmalloc
+> videobuf2_memops v4l2_tpg videobuf2_v4l2 videobuf2_common
+> [   16.486187] ---[ end trace 91e5e0894e254d49 ]---
+> [   16.486758] RIP: 0010:kfree+0x4d/0x240
+> 
+> <registers values...>
+> 
+> fish: “rmmod vimc” terminated by signal SIGSEGV (Address boundary error)
+> 
+> I just added the module after booting, no other action was made. Here is
+> how my `git log --oneline` looks like:
+> 
+> 897d708e922b media: vimc: Fix gpf in rmmod path when stream is active
+> 2e4a5ad8ad6d media: vimc: Collapse component structure into a single
+> monolithic driver
+> 7c8da1687e92 media: vimc: move private defines to a common header
+> 97299a303532 media: Remove dev_err() usage after platform_get_irq()
+> 25a3d6bac6b9 media: adv7511/cobalt: rename driver name to adv7511-v4l2
+> ...
+> 
+>>
+>> vimc_print_dot (--print-dot) topology after this change:
+>> digraph board {
+>> 	rankdir=TB
+>> 	n00000001 [label="{{} | Sensor A\n/dev/v4l-subdev0 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+>> 	n00000001:port0 -> n00000005:port0 [style=bold]
+>> 	n00000001:port0 -> n0000000b [style=bold]
+>> 	n00000003 [label="{{} | Sensor B\n/dev/v4l-subdev1 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+>> 	n00000003:port0 -> n00000008:port0 [style=bold]
+>> 	n00000003:port0 -> n0000000f [style=bold]
+>> 	n00000005 [label="{{<port0> 0} | Debayer A\n/dev/v4l-subdev2 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+>> 	n00000005:port1 -> n00000015:port0
+>> 	n00000008 [label="{{<port0> 0} | Debayer B\n/dev/v4l-subdev3 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+>> 	n00000008:port1 -> n00000015:port0 [style=dashed]
+>> 	n0000000b [label="Raw Capture 0\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
+>> 	n0000000f [label="Raw Capture 1\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
+>> 	n00000013 [label="{{} | RGB/YUV Input\n/dev/v4l-subdev4 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+>> 	n00000013:port0 -> n00000015:port0 [style=dashed]
+>> 	n00000015 [label="{{<port0> 0} | Scaler\n/dev/v4l-subdev5 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+>> 	n00000015:port1 -> n00000018 [style=bold]
+>> 	n00000018 [label="RGB/YUV Capture\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
+>> }
+> 
+> Since the topology changed, it would be nice to change in the
+> documentation as well. The current dot file can be found at
+> `Documentation/media/v4l-drivers/vimc.dot` and it's rendered at this
+> page: https://www.kernel.org/doc/html/latest/media/v4l-drivers/vimc.html
+> 
 
-As discussed off-list: it would be nice to have an example of how
-cpufreq could be used as a cooling device for hot temperatures.  The
-vendor kernel has some trip points that could be included as examples,
-or even included as extra patches.
+Topology shouldn't have changed. No changes to links or pads etc.
+I will take a look to be sure. I agree that if topology changes
+document should be updated.
 
-Also the driver patch is missing the two main thermal maintainers, so
-please resend at least the driver and bindings including them.
-
-
-Kevin
+thanks,
+-- Shuah
