@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D31C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30020C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 481E821743
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0331D21743
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:45:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbfHJUo3 (ORCPT
+        id S1727012AbfHJUoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:44:29 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54766 "EHLO
+        Sat, 10 Aug 2019 16:44:23 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54470 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726780AbfHJUoA (ORCPT
+        by vger.kernel.org with ESMTP id S1726712AbfHJUn4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:44:00 -0400
+        Sat, 10 Aug 2019 16:43:56 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDV-00053e-Kk; Sat, 10 Aug 2019 21:43:57 +0100
+        id 1hwYDQ-00053m-5v; Sat, 10 Aug 2019 21:43:52 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDN-0003il-UB; Sat, 10 Aug 2019 21:43:49 +0100
+        id 1hwYDN-0003hj-9p; Sat, 10 Aug 2019 21:43:49 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,20 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Josh Poimboeuf" <jpoimboe@redhat.com>,
-        "Dave Hansen" <dave.hansen@intel.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Kees Cook" <keescook@chromium.org>,
+        "YueHaibing" <yuehaibing@huawei.com>,
+        "Luis Chamberlain" <mcgrof@kernel.org>,
+        "Alexey Dobriyan" <adobriyan@gmail.com>,
+        "Hulk Robot" <hulkci@huawei.com>,
+        "Al Viro" <viro@zeniv.linux.org.uk>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.23673488@decadent.org.uk>
+Message-ID: <lsq.1565469607.734328974@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 126/157] x86/speculation: Enable Spectre v1 swapgs
- mitigations
+Subject: [PATCH 3.16 113/157] fs/proc/proc_sysctl.c: Fix a NULL pointer
+ dereference
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,261 +62,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit a2059825986a1c8143fd6698774fa9d83733bb11 upstream.
+commit 89189557b47b35683a27c80ee78aef18248eefb4 upstream.
 
-The previous commit added macro calls in the entry code which mitigate the
-Spectre v1 swapgs issue if the X86_FEATURE_FENCE_SWAPGS_* features are
-enabled.  Enable those features where applicable.
+Syzkaller report this:
 
-The mitigations may be disabled with "nospectre_v1" or "mitigations=off".
+  sysctl could not get directory: /net//bridge -12
+  kasan: CONFIG_KASAN_INLINE enabled
+  kasan: GPF could be caused by NULL-ptr deref or user memory access
+  general protection fault: 0000 [#1] SMP KASAN PTI
+  CPU: 1 PID: 7027 Comm: syz-executor.0 Tainted: G         C        5.1.0-rc3+ #8
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+  RIP: 0010:__write_once_size include/linux/compiler.h:220 [inline]
+  RIP: 0010:__rb_change_child include/linux/rbtree_augmented.h:144 [inline]
+  RIP: 0010:__rb_erase_augmented include/linux/rbtree_augmented.h:186 [inline]
+  RIP: 0010:rb_erase+0x5f4/0x19f0 lib/rbtree.c:459
+  Code: 00 0f 85 60 13 00 00 48 89 1a 48 83 c4 18 5b 5d 41 5c 41 5d 41 5e 41 5f c3 48 89 f2 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 75 0c 00 00 4d 85 ed 4c 89 2e 74 ce 4c 89 ea 48
+  RSP: 0018:ffff8881bb507778 EFLAGS: 00010206
+  RAX: dffffc0000000000 RBX: ffff8881f224b5b8 RCX: ffffffff818f3f6a
+  RDX: 000000000000000a RSI: 0000000000000050 RDI: ffff8881f224b568
+  RBP: 0000000000000000 R08: ffffed10376a0ef4 R09: ffffed10376a0ef4
+  R10: 0000000000000001 R11: ffffed10376a0ef4 R12: ffff8881f224b558
+  R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+  FS:  00007f3e7ce13700(0000) GS:ffff8881f7300000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00007fd60fbe9398 CR3: 00000001cb55c001 CR4: 00000000007606e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  PKRU: 55555554
+  Call Trace:
+   erase_entry fs/proc/proc_sysctl.c:178 [inline]
+   erase_header+0xe3/0x160 fs/proc/proc_sysctl.c:207
+   start_unregistering fs/proc/proc_sysctl.c:331 [inline]
+   drop_sysctl_table+0x558/0x880 fs/proc/proc_sysctl.c:1631
+   get_subdir fs/proc/proc_sysctl.c:1022 [inline]
+   __register_sysctl_table+0xd65/0x1090 fs/proc/proc_sysctl.c:1335
+   br_netfilter_init+0x68/0x1000 [br_netfilter]
+   do_one_initcall+0xbc/0x47d init/main.c:901
+   do_init_module+0x1b5/0x547 kernel/module.c:3456
+   load_module+0x6405/0x8c10 kernel/module.c:3804
+   __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
+   do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  Modules linked in: br_netfilter(+) backlight comedi(C) hid_sensor_hub max3100 ti_ads8688 udc_core fddi snd_mona leds_gpio rc_streamzap mtd pata_netcell nf_log_common rc_winfast udp_tunnel snd_usbmidi_lib snd_usb_toneport snd_usb_line6 snd_rawmidi snd_seq_device snd_hwdep videobuf2_v4l2 videobuf2_common videodev media videobuf2_vmalloc videobuf2_memops rc_gadmei_rm008z 8250_of smm665 hid_tmff hid_saitek hwmon_vid rc_ati_tv_wonder_hd_600 rc_core pata_pdc202xx_old dn_rtmsg as3722 ad714x_i2c ad714x snd_soc_cs4265 hid_kensington panel_ilitek_ili9322 drm drm_panel_orientation_quirks ipack cdc_phonet usbcore phonet hid_jabra hid extcon_arizona can_dev industrialio_triggered_buffer kfifo_buf industrialio adm1031 i2c_mux_ltc4306 i2c_mux ipmi_msghandler mlxsw_core snd_soc_cs35l34 snd_soc_core snd_pcm_dmaengine snd_pcm snd_timer ac97_bus snd_compress snd soundcore gpio_da9055 uio ecdh_generic mdio_thunder of_mdio fixed_phy libphy mdio_cavium iptable_security iptable_raw iptable_mangle
+   iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_filter bpfilter ip6_vti ip_vti ip_gre ipip sit tunnel4 ip_tunnel hsr veth netdevsim vxcan batman_adv cfg80211 rfkill chnl_net caif nlmon dummy team bonding vcan bridge stp llc ip6_gre gre ip6_tunnel tunnel6 tun joydev mousedev ppdev tpm kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel aesni_intel ide_pci_generic piix aes_x86_64 crypto_simd cryptd ide_core glue_helper input_leds psmouse intel_agp intel_gtt serio_raw ata_generic i2c_piix4 agpgart pata_acpi parport_pc parport floppy rtc_cmos sch_fq_codel ip_tables x_tables sha1_ssse3 sha1_generic ipv6 [last unloaded: br_netfilter]
+  Dumping ftrace buffer:
+     (ftrace buffer empty)
+  ---[ end trace 68741688d5fbfe85 ]---
 
-There are different features which can affect the risk of attack:
+commit 23da9588037e ("fs/proc/proc_sysctl.c: fix NULL pointer
+dereference in put_links") forgot to handle start_unregistering() case,
+while header->parent is NULL, it calls erase_header() and as seen in the
+above syzkaller call trace, accessing &header->parent->root will trigger
+a NULL pointer dereference.
 
-- When FSGSBASE is enabled, unprivileged users are able to place any
-  value in GS, using the wrgsbase instruction.  This means they can
-  write a GS value which points to any value in kernel space, which can
-  be useful with the following gadget in an interrupt/exception/NMI
-  handler:
+As that commit explained, there is also no need to call
+start_unregistering() if header->parent is NULL.
 
-	if (coming from user space)
-		swapgs
-	mov %gs:<percpu_offset>, %reg1
-	// dependent load or store based on the value of %reg
-	// for example: mov %(reg1), %reg2
-
-  If an interrupt is coming from user space, and the entry code
-  speculatively skips the swapgs (due to user branch mistraining), it
-  may speculatively execute the GS-based load and a subsequent dependent
-  load or store, exposing the kernel data to an L1 side channel leak.
-
-  Note that, on Intel, a similar attack exists in the above gadget when
-  coming from kernel space, if the swapgs gets speculatively executed to
-  switch back to the user GS.  On AMD, this variant isn't possible
-  because swapgs is serializing with respect to future GS-based
-  accesses.
-
-  NOTE: The FSGSBASE patch set hasn't been merged yet, so the above case
-	doesn't exist quite yet.
-
-- When FSGSBASE is disabled, the issue is mitigated somewhat because
-  unprivileged users must use prctl(ARCH_SET_GS) to set GS, which
-  restricts GS values to user space addresses only.  That means the
-  gadget would need an additional step, since the target kernel address
-  needs to be read from user space first.  Something like:
-
-	if (coming from user space)
-		swapgs
-	mov %gs:<percpu_offset>, %reg1
-	mov (%reg1), %reg2
-	// dependent load or store based on the value of %reg2
-	// for example: mov %(reg2), %reg3
-
-  It's difficult to audit for this gadget in all the handlers, so while
-  there are no known instances of it, it's entirely possible that it
-  exists somewhere (or could be introduced in the future).  Without
-  tooling to analyze all such code paths, consider it vulnerable.
-
-  Effects of SMAP on the !FSGSBASE case:
-
-  - If SMAP is enabled, and the CPU reports RDCL_NO (i.e., not
-    susceptible to Meltdown), the kernel is prevented from speculatively
-    reading user space memory, even L1 cached values.  This effectively
-    disables the !FSGSBASE attack vector.
-
-  - If SMAP is enabled, but the CPU *is* susceptible to Meltdown, SMAP
-    still prevents the kernel from speculatively reading user space
-    memory.  But it does *not* prevent the kernel from reading the
-    user value from L1, if it has already been cached.  This is probably
-    only a small hurdle for an attacker to overcome.
-
-Thanks to Dave Hansen for contributing the speculative_smap() function.
-
-Thanks to Andrew Cooper for providing the inside scoop on whether swapgs
-is serializing on AMD.
-
-[ tglx: Fixed the USER fence decision and polished the comment as suggested
-  	by Dave Hansen ]
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Dave Hansen <dave.hansen@intel.com>
-[bwh: Backported to 3.16:
- - Check for X86_FEATURE_KAISER instead of X86_FEATURE_PTI
- - mitigations= parameter is x86-only here
- - powerpc doesn't have Spectre mitigations
- - Don't use __ro_after_init
- - Adjust filename, context]
+Link: http://lkml.kernel.org/r/20190409153622.28112-1-yuehaibing@huawei.com
+Fixes: 23da9588037e ("fs/proc/proc_sysctl.c: fix NULL pointer dereference in put_links")
+Fixes: 0e47c99d7fe25 ("sysctl: Replace root_list with links between sysctl_table_sets")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -1917,6 +1917,7 @@ bytes respectively. Such letter suffixes
- 				improves system performance, but it may also
- 				expose users to several CPU vulnerabilities.
- 				Equivalent to: nopti [X86]
-+					       nospectre_v1 [X86]
- 					       nospectre_v2 [X86]
- 					       spectre_v2_user=off [X86]
- 					       spec_store_bypass_disable=off [X86]
-@@ -2215,6 +2216,10 @@ bytes respectively. Such letter suffixes
- 			register save and restore. The kernel will only save
- 			legacy floating-point registers on task switch.
+ fs/proc/proc_sysctl.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -1550,9 +1550,11 @@ static void drop_sysctl_table(struct ctl
+ 	if (--header->nreg)
+ 		return;
  
-+	nospectre_v1	[X86] Disable mitigations for Spectre Variant 1
-+			(bounds check bypass). With this option data leaks are
-+			possible in the system.
-+
- 	nospectre_v2	[X86] Disable all mitigations for the Spectre variant 2
- 			(indirect branch prediction) vulnerability. System may
- 			allow data leaks with this option, which is equivalent
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -30,6 +30,7 @@
- #include <asm/intel-family.h>
- #include <asm/e820.h>
- 
-+static void __init spectre_v1_select_mitigation(void);
- static void __init spectre_v2_select_mitigation(void);
- static void __init ssb_select_mitigation(void);
- static void __init l1tf_select_mitigation(void);
-@@ -148,17 +149,11 @@ void __init check_bugs(void)
- 	if (boot_cpu_has(X86_FEATURE_STIBP))
- 		x86_spec_ctrl_mask |= SPEC_CTRL_STIBP;
- 
--	/* Select the proper spectre mitigation before patching alternatives */
-+	/* Select the proper CPU mitigations before patching alternatives: */
-+	spectre_v1_select_mitigation();
- 	spectre_v2_select_mitigation();
--
--	/*
--	 * Select proper mitigation for any exposure to the Speculative Store
--	 * Bypass vulnerability.
--	 */
- 	ssb_select_mitigation();
--
- 	l1tf_select_mitigation();
--
- 	mds_select_mitigation();
- 
- 	arch_smt_update();
-@@ -318,6 +313,108 @@ static int __init mds_cmdline(char *str)
- early_param("mds", mds_cmdline);
- 
- #undef pr_fmt
-+#define pr_fmt(fmt)     "Spectre V1 : " fmt
-+
-+enum spectre_v1_mitigation {
-+	SPECTRE_V1_MITIGATION_NONE,
-+	SPECTRE_V1_MITIGATION_AUTO,
-+};
-+
-+static enum spectre_v1_mitigation spectre_v1_mitigation =
-+	SPECTRE_V1_MITIGATION_AUTO;
-+
-+static const char * const spectre_v1_strings[] = {
-+	[SPECTRE_V1_MITIGATION_NONE] = "Vulnerable: __user pointer sanitization and usercopy barriers only; no swapgs barriers",
-+	[SPECTRE_V1_MITIGATION_AUTO] = "Mitigation: usercopy/swapgs barriers and __user pointer sanitization",
-+};
-+
-+static bool is_swapgs_serializing(void)
-+{
-+	/*
-+	 * Technically, swapgs isn't serializing on AMD (despite it previously
-+	 * being documented as such in the APM).  But according to AMD, %gs is
-+	 * updated non-speculatively, and the issuing of %gs-relative memory
-+	 * operands will be blocked until the %gs update completes, which is
-+	 * good enough for our purposes.
-+	 */
-+	return boot_cpu_data.x86_vendor == X86_VENDOR_AMD;
-+}
-+
-+/*
-+ * Does SMAP provide full mitigation against speculative kernel access to
-+ * userspace?
-+ */
-+static bool smap_works_speculatively(void)
-+{
-+	if (!boot_cpu_has(X86_FEATURE_SMAP))
-+		return false;
-+
-+	/*
-+	 * On CPUs which are vulnerable to Meltdown, SMAP does not
-+	 * prevent speculative access to user data in the L1 cache.
-+	 * Consider SMAP to be non-functional as a mitigation on these
-+	 * CPUs.
-+	 */
-+	if (boot_cpu_has(X86_BUG_CPU_MELTDOWN))
-+		return false;
-+
-+	return true;
-+}
-+
-+static void __init spectre_v1_select_mitigation(void)
-+{
-+	if (!boot_cpu_has_bug(X86_BUG_SPECTRE_V1) || cpu_mitigations_off()) {
-+		spectre_v1_mitigation = SPECTRE_V1_MITIGATION_NONE;
-+		return;
+-	if (parent)
++	if (parent) {
+ 		put_links(header);
+-	start_unregistering(header);
++		start_unregistering(header);
 +	}
 +
-+	if (spectre_v1_mitigation == SPECTRE_V1_MITIGATION_AUTO) {
-+		/*
-+		 * With Spectre v1, a user can speculatively control either
-+		 * path of a conditional swapgs with a user-controlled GS
-+		 * value.  The mitigation is to add lfences to both code paths.
-+		 *
-+		 * If FSGSBASE is enabled, the user can put a kernel address in
-+		 * GS, in which case SMAP provides no protection.
-+		 *
-+		 * [ NOTE: Don't check for X86_FEATURE_FSGSBASE until the
-+		 *	   FSGSBASE enablement patches have been merged. ]
-+		 *
-+		 * If FSGSBASE is disabled, the user can only put a user space
-+		 * address in GS.  That makes an attack harder, but still
-+		 * possible if there's no SMAP protection.
-+		 */
-+		if (!smap_works_speculatively()) {
-+			/*
-+			 * Mitigation can be provided from SWAPGS itself or
-+			 * PTI as the CR3 write in the Meltdown mitigation
-+			 * is serializing.
-+			 *
-+			 * If neither is there, mitigate with an LFENCE.
-+			 */
-+			if (!is_swapgs_serializing() && !boot_cpu_has(X86_FEATURE_KAISER))
-+				setup_force_cpu_cap(X86_FEATURE_FENCE_SWAPGS_USER);
-+
-+			/*
-+			 * Enable lfences in the kernel entry (non-swapgs)
-+			 * paths, to prevent user entry from speculatively
-+			 * skipping swapgs.
-+			 */
-+			setup_force_cpu_cap(X86_FEATURE_FENCE_SWAPGS_KERNEL);
-+		}
-+	}
-+
-+	pr_info("%s\n", spectre_v1_strings[spectre_v1_mitigation]);
-+}
-+
-+static int __init nospectre_v1_cmdline(char *str)
-+{
-+	spectre_v1_mitigation = SPECTRE_V1_MITIGATION_NONE;
-+	return 0;
-+}
-+early_param("nospectre_v1", nospectre_v1_cmdline);
-+
-+#undef pr_fmt
- #define pr_fmt(fmt)     "Spectre V2 : " fmt
+ 	if (!--header->count)
+ 		kfree_rcu(header, rcu);
  
- static enum spectre_v2_mitigation spectre_v2_enabled = SPECTRE_V2_NONE;
-@@ -1210,7 +1307,7 @@ static ssize_t cpu_show_common(struct de
- 		break;
- 
- 	case X86_BUG_SPECTRE_V1:
--		return sprintf(buf, "Mitigation: __user pointer sanitization\n");
-+		return sprintf(buf, "%s\n", spectre_v1_strings[spectre_v1_mitigation]);
- 
- 	case X86_BUG_SPECTRE_V2:
- 		return sprintf(buf, "%s%s%s%s%s%s\n", spectre_v2_strings[spectre_v2_enabled],
 
