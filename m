@@ -2,79 +2,80 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 965B1C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 08:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A22CEC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 08:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F158208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 08:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70988217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 08:42:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="TYC+KmTL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726024AbfHJIhc (ORCPT
+        id S1726114AbfHJImv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 04:37:32 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36913 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbfHJIhb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 04:37:31 -0400
-Received: by mail-qk1-f196.google.com with SMTP id s14so3099549qkm.4;
-        Sat, 10 Aug 2019 01:37:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SfSLgCnqpc/WM1GqrvF/G7Golq4Tsd0KkkiO9gDWwfM=;
-        b=I5+U5NtDrXSadrgTl0w6Xfwf7EVlKPEqGaH83D9EVzdZrV47tqTaxdGAI/PctgyWDj
-         QsG2Xbpm8KKxSWjnyjiC3OY0+irYIiUBJeG7wjI158JDGPKSIDQS7+M1M3g6uAZrsen5
-         ebrZGp0WKcoDHV3//schxebOETX84zyRevi4vMhdlF/7ZTXCpayHK9/nqB04OngDGOL6
-         R0ow3S0YMy+9P2BFQXKgxidmqizTf1VN2hYTu/Azftwa1BvXsHe82bVxSSol05iTbxTK
-         HUiSbgf5t+U/ddEQ6k6WQ8jUb2N+83cRNzwfgKj+3JsMBa8cBehClAsbLAtrWam41Zic
-         c9HQ==
-X-Gm-Message-State: APjAAAV+NUyjuPw5WQ42KgofF0MUndVjUmnVZF8CF6BJrUgwsz5+iVsh
-        m/HsvlsSGQ0Bzgyvrps9cGs0pY5w8j4bT4BGDWc=
-X-Google-Smtp-Source: APXvYqzhR32Ka29FgJwVblR/FtuBmLOPpfMS6RiFA0SBwglvDwGDijW6+Oln3ZpLuc+hkkW/5wgQ1CxsgweTfcOzQwI=
-X-Received: by 2002:a37:984:: with SMTP id 126mr15919398qkj.3.1565426250665;
- Sat, 10 Aug 2019 01:37:30 -0700 (PDT)
+        Sat, 10 Aug 2019 04:42:51 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:19943 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725497AbfHJImu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 04:42:50 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 465FvM3cyDz6q;
+        Sat, 10 Aug 2019 10:41:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1565426479; bh=PVk1v4GgHvJZbQuvUfM4PS4zUT/EbZlO47ifuNqQpsQ=;
+        h=Date:From:Subject:To:Cc:From;
+        b=TYC+KmTLTA9uxs1C96BElSKXuP1M4QW/GHMHAqkFZe9Bpm+Y9QIOtW1gsHspIb2jd
+         tU9GVxKa1uQYZeNjWm/pfOumhjsMrBF0QKUGqyU9z4dPfzsUu/uN2LG/6xr7ZJmZk7
+         C1G7BEhcPau/NYfeD3Fx8SBdAhoTD/at/zA1udpKkvn46hMRXTqE1ZQv4ww5O+adGc
+         2iNuuybDAq8+9oaE+vevt+BQycmNtTXAHXnjBqDi4R0Ze7WUDQb000KSAmthYon7Ju
+         AoVjhUIoyO1mxtnlSjSplxrZN/REVGzEuSCyjM4nW2EUahpCye7C9Xowa7T0xSYFmx
+         YXSs5XMY05yLA==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.100.3 at mail
+Date:   Sat, 10 Aug 2019 10:42:47 +0200
+Message-Id: <cover.1565426370.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH v6 0/7] usb: gadget: u_serial: console improvements
 MIME-Version: 1.0
-References: <20190809202749.742267-1-arnd@arndb.de> <20190809202749.742267-5-arnd@arndb.de>
- <20190809204227.GA19839@roeck-us.net>
-In-Reply-To: <20190809204227.GA19839@roeck-us.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 10 Aug 2019 10:37:14 +0200
-Message-ID: <CAK8P3a35Aa3-LKi+uWh5SJQpYKqd5VsTw6BhwTxwWW=Vh5B+Mw@mail.gmail.com>
-Subject: Re: [PATCH 04/16] watchdog: remove ks8695 driver
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     soc@kernel.org, Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     linux-usb@vger.kernel.org
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 10:42 PM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On Fri, Aug 09, 2019 at 10:27:32PM +0200, Arnd Bergmann wrote:
-> > The platform is getting removed, so there are no remaining
-> > users of this driver.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> Acked-by: Guenter Roeck <linux@roeck-us.net>
->
-> Please let me know if this should be applied through the watchdog tree.
-> For now I'll assume it will be applied together with the rest of the
-> series.
+This series makes it possible to have more control over console using
+USB serial gadget ports. This can be useful when you need more than
+one USB console or are configuring multiple serial port function via
+configfs.
 
-For this series, my preference is that you apply the patches through
-the subsystem tree as there are no dependencies.
+The patches are against balbi/testing/next tree. You can also pull from:
+   https://rere.qmqm.pl/git/linux  usb-console
 
-Thanks,
+Michał Mirosław (7):
+  usb: gadget: u_serial: add missing port entry locking
+  usb: gadget: u_serial: reimplement console support
+  usb: gadget: u_serial: make OBEX port not a console
+  usb: gadget: u_serial: allow more console gadget ports
+  usb: gadget: u_serial: diagnose missed console messages
+  usb: gadget: legacy/serial: allow dynamic removal
+  usb: gadget: u_serial: use mutex for serialising open()s
 
-     Arnd
+ drivers/usb/gadget/function/f_acm.c    |  21 +
+ drivers/usb/gadget/function/f_obex.c   |   2 +-
+ drivers/usb/gadget/function/f_serial.c |  21 +
+ drivers/usb/gadget/function/u_serial.c | 532 +++++++++++++------------
+ drivers/usb/gadget/function/u_serial.h |   8 +
+ drivers/usb/gadget/legacy/serial.c     |  49 ++-
+ 6 files changed, 370 insertions(+), 263 deletions(-)
+
+-- 
+2.20.1
+
