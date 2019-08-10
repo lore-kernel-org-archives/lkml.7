@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F19EC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 009A0C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA20B2166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFE76208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbfHJUn4 (ORCPT
+        id S1726808AbfHJUoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:43:56 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53836 "EHLO
+        Sat, 10 Aug 2019 16:44:01 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53954 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726496AbfHJUnt (ORCPT
+        by vger.kernel.org with ESMTP id S1726530AbfHJUnt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:49 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDK-00053s-7s; Sat, 10 Aug 2019 21:43:46 +0100
+        id 1hwYDJ-00053P-Kb; Sat, 10 Aug 2019 21:43:45 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-0003aK-GS; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDJ-0003Z7-1I; Sat, 10 Aug 2019 21:43:45 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Iwai" <tiwai@suse.de>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+        "Kohji Okuno" <okuno.kohji@jp.panasonic.com>,
+        "Shawn Guo" <shawnguo@kernel.org>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.570627698@decadent.org.uk>
+Message-ID: <lsq.1565469607.702416996@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 036/157] ALSA: rawmidi: Fix potential Spectre v1
- vulnerability
+Subject: [PATCH 3.16 021/157] ARM: imx6q: cpuidle: fix bug that CPU might
+ not wake up at expected time
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,50 +56,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Kohji Okuno <okuno.kohji@jp.panasonic.com>
 
-commit 2b1d9c8f87235f593826b9cf46ec10247741fff9 upstream.
+commit 91740fc8242b4f260cfa4d4536d8551804777fae upstream.
 
-info->stream is indirectly controlled by user-space, hence leading to
-a potential exploitation of the Spectre variant 1 vulnerability.
+In the current cpuidle implementation for i.MX6q, the CPU that sets
+'WAIT_UNCLOCKED' and the CPU that returns to 'WAIT_CLOCKED' are always
+the same. While the CPU that sets 'WAIT_UNCLOCKED' is in IDLE state of
+"WAIT", if the other CPU wakes up and enters IDLE state of "WFI"
+istead of "WAIT", this CPU can not wake up at expired time.
+ Because, in the case of "WFI", the CPU must be waked up by the local
+timer interrupt. But, while 'WAIT_UNCLOCKED' is set, the local timer
+is stopped, when all CPUs execute "wfi" instruction. As a result, the
+local timer interrupt is not fired.
+ In this situation, this CPU will wake up by IRQ different from local
+timer. (e.g. broacast timer)
 
-This issue was detected with the help of Smatch:
+So, this fix changes CPU to return to 'WAIT_CLOCKED'.
 
-sound/core/rawmidi.c:604 __snd_rawmidi_info_select() warn: potential spectre issue 'rmidi->streams' [r] (local cap)
-
-Fix this by sanitizing info->stream before using it to index
-rmidi->streams.
-
-Notice that given that speculation windows are large, the policy is
-to kill the speculation on the first load and not worry if it can be
-completed with a dependent load/store [1].
-
-[1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-[bwh: Backported to 3.16: adjust context]
+Signed-off-by: Kohji Okuno <okuno.kohji@jp.panasonic.com>
+Fixes: e5f9dec8ff5f ("ARM: imx6q: support WAIT mode using cpuidle")
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+[bwh: Backported to 3.16: use imx6q_set_lpm() instead of imx6_set_lpm()]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/core/rawmidi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/mach-imx/cpuidle-imx6q.c | 27 ++++++++++-----------------
+ 1 file changed, 10 insertions(+), 17 deletions(-)
 
---- a/sound/core/rawmidi.c
-+++ b/sound/core/rawmidi.c
-@@ -29,6 +29,7 @@
- #include <linux/mutex.h>
- #include <linux/module.h>
- #include <linux/delay.h>
-+#include <linux/nospec.h>
- #include <sound/rawmidi.h>
- #include <sound/info.h>
- #include <sound/control.h>
-@@ -601,6 +602,7 @@ static int __snd_rawmidi_info_select(str
- 		return -ENXIO;
- 	if (info->stream < 0 || info->stream > 1)
- 		return -EINVAL;
-+	info->stream = array_index_nospec(info->stream, 2);
- 	pstr = &rmidi->streams[info->stream];
- 	if (pstr->substream_count == 0)
- 		return -ENOENT;
+--- a/arch/arm/mach-imx/cpuidle-imx6q.c
++++ b/arch/arm/mach-imx/cpuidle-imx6q.c
+@@ -14,30 +14,23 @@
+ #include "common.h"
+ #include "cpuidle.h"
+ 
+-static atomic_t master = ATOMIC_INIT(0);
+-static DEFINE_SPINLOCK(master_lock);
++static int num_idle_cpus = 0;
++static DEFINE_SPINLOCK(cpuidle_lock);
+ 
+ static int imx6q_enter_wait(struct cpuidle_device *dev,
+ 			    struct cpuidle_driver *drv, int index)
+ {
+-	if (atomic_inc_return(&master) == num_online_cpus()) {
+-		/*
+-		 * With this lock, we prevent other cpu to exit and enter
+-		 * this function again and become the master.
+-		 */
+-		if (!spin_trylock(&master_lock))
+-			goto idle;
++	spin_lock(&cpuidle_lock);
++	if (++num_idle_cpus == num_online_cpus())
+ 		imx6q_set_lpm(WAIT_UNCLOCKED);
+-		cpu_do_idle();
+-		imx6q_set_lpm(WAIT_CLOCKED);
+-		spin_unlock(&master_lock);
+-		goto done;
+-	}
++	spin_unlock(&cpuidle_lock);
+ 
+-idle:
+ 	cpu_do_idle();
+-done:
+-	atomic_dec(&master);
++
++	spin_lock(&cpuidle_lock);
++	if (num_idle_cpus-- == num_online_cpus())
++		imx6q_set_lpm(WAIT_CLOCKED);
++	spin_unlock(&cpuidle_lock);
+ 
+ 	return index;
+ }
 
