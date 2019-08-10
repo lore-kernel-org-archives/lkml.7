@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6571CC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7016C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4236B208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 977C0208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfHJUsh (ORCPT
+        id S1727306AbfHJUsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:48:37 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54768 "EHLO
+        Sat, 10 Aug 2019 16:48:39 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54780 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726781AbfHJUoA (ORCPT
+        by vger.kernel.org with ESMTP id S1726785AbfHJUoA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:44:00 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDV-00053p-Ko; Sat, 10 Aug 2019 21:43:57 +0100
+        id 1hwYDT-00053q-9P; Sat, 10 Aug 2019 21:43:55 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDO-0003j6-5T; Sat, 10 Aug 2019 21:43:50 +0100
+        id 1hwYDO-0003kW-Om; Sat, 10 Aug 2019 21:43:50 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jason Wang" <jasowang@redhat.com>,
-        "Paolo Abeni" <pabeni@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
+        "Johannes Weiner" <hannes@cmpxchg.org>,
+        "Rik van Riel" <riel@redhat.com>, "Michal Hocko" <mhocko@suse.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Mel Gorman" <mgorman@suse.de>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.938280604@decadent.org.uk>
+Message-ID: <lsq.1565469607.576161906@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 130/157] vhost_net: use packet weight for rx handler, too
+Subject: [PATCH 3.16 142/157] proc: meminfo: estimate available memory
+ more conservatively
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,90 +58,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Johannes Weiner <hannes@cmpxchg.org>
 
-commit db688c24eada63b1efe6d0d7d835e5c3bdd71fd3 upstream.
+commit 84ad5802a33a4964a49b8f7d24d80a214a096b19 upstream.
 
-Similar to commit a2ac99905f1e ("vhost-net: set packet weight of
-tx polling to 2 * vq size"), we need a packet-based limit for
-handler_rx, too - elsewhere, under rx flood with small packets,
-tx can be delayed for a very long time, even without busypolling.
+The MemAvailable item in /proc/meminfo is to give users a hint of how
+much memory is allocatable without causing swapping, so it excludes the
+zones' low watermarks as unavailable to userspace.
 
-The pkt limit applied to handle_rx must be the same applied by
-handle_tx, or we will get unfair scheduling between rx and tx.
-Tying such limit to the queue length makes it less effective for
-large queue length values and can introduce large process
-scheduler latencies, so a constant valued is used - likewise
-the existing bytes limit.
+However, for a userspace allocation, kswapd will actually reclaim until
+the free pages hit a combination of the high watermark and the page
+allocator's lowmem protection that keeps a certain amount of DMA and
+DMA32 memory from userspace as well.
 
-The selected limit has been validated with PVP[1] performance
-test with different queue sizes:
+Subtract the full amount we know to be unavailable to userspace from the
+number of free pages when calculating MemAvailable.
 
-queue size		256	512	1024
-
-baseline		366	354	362
-weight 128		715	723	670
-weight 256		740	745	733
-weight 512		600	460	583
-weight 1024		423	427	418
-
-A packet weight of 256 gives peek performances in under all the
-tested scenarios.
-
-No measurable regression in unidirectional performance tests has
-been detected.
-
-[1] https://developers.redhat.com/blog/2017/06/05/measuring-and-comparing-open-vswitch-performance/
-
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: adjust context]
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Rik van Riel <riel@redhat.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/vhost/net.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ fs/proc/meminfo.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -40,8 +40,10 @@ MODULE_PARM_DESC(experimental_zcopytx, "
- #define VHOST_NET_WEIGHT 0x80000
+--- a/fs/proc/meminfo.c
++++ b/fs/proc/meminfo.c
+@@ -57,11 +57,8 @@ static int meminfo_proc_show(struct seq_
+ 	/*
+ 	 * Estimate the amount of memory available for userspace allocations,
+ 	 * without causing swapping.
+-	 *
+-	 * Free memory cannot be taken below the low watermark, before the
+-	 * system starts swapping.
+ 	 */
+-	available = i.freeram - wmark_low;
++	available = i.freeram - totalreserve_pages;
  
- /* Max number of packets transferred before requeueing the job.
-- * Using this limit prevents one virtqueue from starving rx. */
--#define VHOST_NET_PKT_WEIGHT(vq) ((vq)->num * 2)
-+ * Using this limit prevents one virtqueue from starving others with small
-+ * pkts.
-+ */
-+#define VHOST_NET_PKT_WEIGHT 256
- 
- /* MAX number of TX used buffers for outstanding zerocopy */
- #define VHOST_MAX_PEND 128
-@@ -456,7 +458,7 @@ static void handle_tx(struct vhost_net *
- 		total_len += len;
- 		vhost_net_tx_packet(net);
- 		if (unlikely(total_len >= VHOST_NET_WEIGHT) ||
--		    unlikely(++sent_pkts >= VHOST_NET_PKT_WEIGHT(vq))) {
-+		    unlikely(++sent_pkts >= VHOST_NET_PKT_WEIGHT)) {
- 			vhost_poll_queue(&vq->poll);
- 			break;
- 		}
-@@ -581,6 +583,7 @@ static void handle_rx(struct vhost_net *
- 	size_t vhost_hlen, sock_hlen;
- 	size_t vhost_len, sock_len;
- 	struct socket *sock;
-+	int recv_pkts = 0;
- 
- 	mutex_lock(&vq->mutex);
- 	sock = vq->private_data;
-@@ -665,7 +668,8 @@ static void handle_rx(struct vhost_net *
- 		if (unlikely(vq_log))
- 			vhost_log_write(vq, vq_log, log, vhost_len);
- 		total_len += vhost_len;
--		if (unlikely(total_len >= VHOST_NET_WEIGHT)) {
-+		if (unlikely(total_len >= VHOST_NET_WEIGHT) ||
-+		    unlikely(++recv_pkts >= VHOST_NET_PKT_WEIGHT)) {
- 			vhost_poll_queue(&vq->poll);
- 			break;
- 		}
+ 	/*
+ 	 * Not all the page cache can be freed, otherwise the system will
 
