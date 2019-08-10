@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9B1C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80429C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C62C208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5749E208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727153AbfHJUoo (ORCPT
+        id S1727142AbfHJUom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:44:44 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55332 "EHLO
+        Sat, 10 Aug 2019 16:44:42 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55066 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726901AbfHJUoI (ORCPT
+        by vger.kernel.org with ESMTP id S1726845AbfHJUoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:44:08 -0400
+        Sat, 10 Aug 2019 16:44:04 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDd-00053u-3S; Sat, 10 Aug 2019 21:44:05 +0100
+        id 1hwYDY-00053e-Ke; Sat, 10 Aug 2019 21:44:00 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDK-0003cf-Qz; Sat, 10 Aug 2019 21:43:46 +0100
+        id 1hwYDM-0003ee-41; Sat, 10 Aug 2019 21:43:48 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Nikolay Borisov" <nborisov@suse.com>,
-        "Anand Jain" <anand.jain@oracle.com>,
-        "David Sterba" <dsterba@suse.com>
+        "Ian Abbott" <abbotti@mev.co.uk>,
+        syzbot+54c2f58f15fe6876b6ad@syzkaller.appspotmail.com,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.524371688@decadent.org.uk>
+Message-ID: <lsq.1565469607.121049315@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 065/157] btrfs: prop: fix vanished compression
- property after failed set
+Subject: [PATCH 3.16 087/157] staging: comedi: vmk80xx: Fix use of
+ uninitialized semaphore
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,45 +57,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Anand Jain <anand.jain@oracle.com>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 272e5326c7837697882ce3162029ba893059b616 upstream.
+commit 08b7c2f9208f0e2a32159e4e7a4831b7adb10a3e upstream.
 
-The compression property resets to NULL, instead of the old value if we
-fail to set the new compression parameter.
+If `vmk80xx_auto_attach()` returns an error, the core comedi module code
+will call `vmk80xx_detach()` to clean up.  If `vmk80xx_auto_attach()`
+successfully allocated the comedi device private data,
+`vmk80xx_detach()` assumes that a `struct semaphore limit_sem` contained
+in the private data has been initialized and uses it.  Unfortunately,
+there are a couple of places where `vmk80xx_auto_attach()` can return an
+error after allocating the device private data but before initializing
+the semaphore, so this assumption is invalid.  Fix it by initializing
+the semaphore just after allocating the private data in
+`vmk80xx_auto_attach()` before any other errors can be returned.
 
-  $ btrfs prop get /btrfs compression
-    compression=lzo
-  $ btrfs prop set /btrfs compression zli
-    ERROR: failed to set compression for /btrfs: Invalid argument
-  $ btrfs prop get /btrfs compression
+I believe this was the cause of the following syzbot crash report
+<https://syzkaller.appspot.com/bug?extid=54c2f58f15fe6876b6ad>:
 
-This is because the compression property ->validate() is successful for
-'zli' as the strncmp() used the length passed from the userspace.
+usb 1-1: config 0 has no interface number 0
+usb 1-1: New USB device found, idVendor=10cf, idProduct=8068, bcdDevice=e6.8d
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+vmk80xx 1-1:0.117: driver 'vmk80xx' failed to auto-configure device.
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xe8/0x16e lib/dump_stack.c:113
+ assign_lock_key kernel/locking/lockdep.c:786 [inline]
+ register_lock_class+0x11b8/0x1250 kernel/locking/lockdep.c:1095
+ __lock_acquire+0xfb/0x37c0 kernel/locking/lockdep.c:3582
+ lock_acquire+0x10d/0x2f0 kernel/locking/lockdep.c:4211
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x44/0x60 kernel/locking/spinlock.c:152
+ down+0x12/0x80 kernel/locking/semaphore.c:58
+ vmk80xx_detach+0x59/0x100 drivers/staging/comedi/drivers/vmk80xx.c:829
+ comedi_device_detach+0xed/0x800 drivers/staging/comedi/drivers.c:204
+ comedi_device_cleanup.part.0+0x68/0x140 drivers/staging/comedi/comedi_fops.c:156
+ comedi_device_cleanup drivers/staging/comedi/comedi_fops.c:187 [inline]
+ comedi_free_board_dev.part.0+0x16/0x90 drivers/staging/comedi/comedi_fops.c:190
+ comedi_free_board_dev drivers/staging/comedi/comedi_fops.c:189 [inline]
+ comedi_release_hardware_device+0x111/0x140 drivers/staging/comedi/comedi_fops.c:2880
+ comedi_auto_config.cold+0x124/0x1b0 drivers/staging/comedi/drivers.c:1068
+ usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
+ really_probe+0x2da/0xb10 drivers/base/dd.c:509
+ driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+ __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+ bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+ __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+ bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+ device_add+0xad2/0x16e0 drivers/base/core.c:2106
+ usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
+ generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
+ usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
+ really_probe+0x2da/0xb10 drivers/base/dd.c:509
+ driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+ __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+ bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+ __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+ bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+ device_add+0xad2/0x16e0 drivers/base/core.c:2106
+ usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
+ hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+ port_event drivers/usb/core/hub.c:5350 [inline]
+ hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
+ process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+ worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+ kthread+0x313/0x420 kernel/kthread.c:253
+ ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
 
-Fix it by using the expected string length in strncmp().
-
-Fixes: 63541927c8d1 ("Btrfs: add support for inode properties")
-Fixes: 5c1aab1dd544 ("btrfs: Add zstd support")
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-[bwh: Backported to 3.16: "zstd" is not supported]
+Reported-by: syzbot+54c2f58f15fe6876b6ad@syzkaller.appspotmail.com
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/fs/btrfs/props.c
-+++ b/fs/btrfs/props.c
-@@ -378,9 +378,9 @@ int btrfs_subvol_inherit_props(struct bt
+ drivers/staging/comedi/drivers/vmk80xx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/staging/comedi/drivers/vmk80xx.c
++++ b/drivers/staging/comedi/drivers/vmk80xx.c
+@@ -872,6 +872,8 @@ static int vmk80xx_auto_attach(struct co
  
- static int prop_compression_validate(const char *value, size_t len)
- {
--	if (!strncmp("lzo", value, len))
-+	if (!strncmp("lzo", value, 3))
- 		return 0;
--	else if (!strncmp("zlib", value, len))
-+	else if (!strncmp("zlib", value, 4))
- 		return 0;
+ 	devpriv->model = boardinfo->model;
  
- 	return -EINVAL;
++	sema_init(&devpriv->limit_sem, 8);
++
+ 	ret = vmk80xx_find_usb_endpoints(dev);
+ 	if (ret)
+ 		return ret;
+@@ -880,8 +882,6 @@ static int vmk80xx_auto_attach(struct co
+ 	if (ret)
+ 		return ret;
+ 
+-	sema_init(&devpriv->limit_sem, 8);
+-
+ 	usb_set_intfdata(intf, devpriv);
+ 
+ 	if (devpriv->model == VMK8061_MODEL) {
 
