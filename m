@@ -6,40 +6,43 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01513C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6571CC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0C25208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4236B208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfHJUsc (ORCPT
+        id S1727484AbfHJUsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:48:32 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54842 "EHLO
+        Sat, 10 Aug 2019 16:48:37 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54768 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726799AbfHJUoB (ORCPT
+        by vger.kernel.org with ESMTP id S1726781AbfHJUoA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:44:01 -0400
+        Sat, 10 Aug 2019 16:44:00 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDW-00053u-Qy; Sat, 10 Aug 2019 21:43:58 +0100
+        id 1hwYDV-00053p-Ko; Sat, 10 Aug 2019 21:43:57 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDN-0003iN-NT; Sat, 10 Aug 2019 21:43:49 +0100
+        id 1hwYDO-0003j6-5T; Sat, 10 Aug 2019 21:43:50 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Jason Wang" <jasowang@redhat.com>,
+        "Paolo Abeni" <pabeni@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.360144767@decadent.org.uk>
+Message-ID: <lsq.1565469607.938280604@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 121/157] x86: cpufeatures: Renumber feature word 7
+Subject: [PATCH 3.16 130/157] vhost_net: use packet weight for rx handler, too
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -53,64 +56,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: Paolo Abeni <pabeni@redhat.com>
 
-Use the same bit numbers for all features that are also present in
-4.4.y and 4.9.y, to make further backports slightly easier.
+commit db688c24eada63b1efe6d0d7d835e5c3bdd71fd3 upstream.
 
+Similar to commit a2ac99905f1e ("vhost-net: set packet weight of
+tx polling to 2 * vq size"), we need a packet-based limit for
+handler_rx, too - elsewhere, under rx flood with small packets,
+tx can be delayed for a very long time, even without busypolling.
+
+The pkt limit applied to handle_rx must be the same applied by
+handle_tx, or we will get unfair scheduling between rx and tx.
+Tying such limit to the queue length makes it less effective for
+large queue length values and can introduce large process
+scheduler latencies, so a constant valued is used - likewise
+the existing bytes limit.
+
+The selected limit has been validated with PVP[1] performance
+test with different queue sizes:
+
+queue size		256	512	1024
+
+baseline		366	354	362
+weight 128		715	723	670
+weight 256		740	745	733
+weight 512		600	460	583
+weight 1024		423	427	418
+
+A packet weight of 256 gives peek performances in under all the
+tested scenarios.
+
+No measurable regression in unidirectional performance tests has
+been detected.
+
+[1] https://developers.redhat.com/blog/2017/06/05/measuring-and-comparing-open-vswitch-performance/
+
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -177,29 +177,32 @@
- #define X86_FEATURE_ARAT	( 7*32+ 1) /* Always Running APIC Timer */
- #define X86_FEATURE_CPB		( 7*32+ 2) /* AMD Core Performance Boost */
- #define X86_FEATURE_EPB		( 7*32+ 3) /* IA32_ENERGY_PERF_BIAS support */
--#define X86_FEATURE_XSAVEOPT	( 7*32+ 4) /* Optimized Xsave */
-+#define X86_FEATURE_INVPCID_SINGLE ( 7*32+4) /* Effectively INVPCID && CR4.PCIDE=1 */
- #define X86_FEATURE_PLN		( 7*32+ 5) /* Intel Power Limit Notification */
- #define X86_FEATURE_PTS		( 7*32+ 6) /* Intel Package Thermal Status */
- #define X86_FEATURE_DTHERM	( 7*32+ 7) /* Digital Thermal Sensor */
- #define X86_FEATURE_HW_PSTATE	( 7*32+ 8) /* AMD HW-PState */
- #define X86_FEATURE_PROC_FEEDBACK ( 7*32+ 9) /* AMD ProcFeedbackInterface */
--#define X86_FEATURE_INVPCID_SINGLE ( 7*32+10) /* Effectively INVPCID && CR4.PCIDE=1 */
--#define X86_FEATURE_RSB_CTXSW	( 7*32+11) /* "" Fill RSB on context switches */
--#define X86_FEATURE_USE_IBPB	( 7*32+12) /* "" Indirect Branch Prediction Barrier enabled */
--#define X86_FEATURE_USE_IBRS_FW ( 7*32+13) /* "" Use IBRS during runtime firmware calls */
--#define X86_FEATURE_SPEC_STORE_BYPASS_DISABLE ( 7*32+14) /* "" Disable Speculative Store Bypass. */
--#define X86_FEATURE_LS_CFG_SSBD	( 7*32+15) /* "" AMD SSBD implementation */
--#define X86_FEATURE_IBRS	( 7*32+16) /* Indirect Branch Restricted Speculation */
--#define X86_FEATURE_IBPB	( 7*32+17) /* Indirect Branch Prediction Barrier */
--#define X86_FEATURE_STIBP	( 7*32+18) /* Single Thread Indirect Branch Predictors */
--#define X86_FEATURE_MSR_SPEC_CTRL ( 7*32+19) /* "" MSR SPEC_CTRL is implemented */
--#define X86_FEATURE_SSBD	( 7*32+20) /* Speculative Store Bypass Disable */
--#define X86_FEATURE_ZEN		( 7*32+21) /* "" CPU is AMD family 0x17 (Zen) */
--#define X86_FEATURE_L1TF_PTEINV	( 7*32+22) /* "" L1TF workaround PTE inversion */
--#define X86_FEATURE_IBRS_ENHANCED ( 7*32+23) /* Enhanced IBRS */
--#define X86_FEATURE_RETPOLINE	( 7*32+29) /* "" Generic Retpoline mitigation for Spectre variant 2 */
--#define X86_FEATURE_RETPOLINE_AMD ( 7*32+30) /* "" AMD Retpoline mitigation for Spectre variant 2 */
--/* Because the ALTERNATIVE scheme is for members of the X86_FEATURE club... */
-+
-+#define X86_FEATURE_RETPOLINE	( 7*32+12) /* "" Generic Retpoline mitigation for Spectre variant 2 */
-+#define X86_FEATURE_RETPOLINE_AMD ( 7*32+13) /* "" AMD Retpoline mitigation for Spectre variant 2 */
-+
-+#define X86_FEATURE_XSAVEOPT	( 7*32+15) /* Optimized Xsave */
-+#define X86_FEATURE_MSR_SPEC_CTRL ( 7*32+16) /* "" MSR SPEC_CTRL is implemented */
-+#define X86_FEATURE_SSBD	( 7*32+17) /* Speculative Store Bypass Disable */
-+
-+#define X86_FEATURE_RSB_CTXSW	( 7*32+19) /* "" Fill RSB on context switches */
-+
-+#define X86_FEATURE_USE_IBPB	( 7*32+21) /* "" Indirect Branch Prediction Barrier enabled */
-+#define X86_FEATURE_USE_IBRS_FW ( 7*32+22) /* "" Use IBRS during runtime firmware calls */
-+#define X86_FEATURE_SPEC_STORE_BYPASS_DISABLE ( 7*32+23) /* "" Disable Speculative Store Bypass. */
-+#define X86_FEATURE_LS_CFG_SSBD	( 7*32+24) /* "" AMD SSBD implementation */
-+#define X86_FEATURE_IBRS	( 7*32+25) /* Indirect Branch Restricted Speculation */
-+#define X86_FEATURE_IBPB	( 7*32+26) /* Indirect Branch Prediction Barrier */
-+#define X86_FEATURE_STIBP	( 7*32+27) /* Single Thread Indirect Branch Predictors */
-+#define X86_FEATURE_ZEN		( 7*32+28) /* "" CPU is AMD family 0x17 (Zen) */
-+#define X86_FEATURE_L1TF_PTEINV	( 7*32+29) /* "" L1TF workaround PTE inversion */
-+#define X86_FEATURE_IBRS_ENHANCED ( 7*32+30) /* Enhanced IBRS */
- #define X86_FEATURE_KAISER	( 7*32+31) /* CONFIG_PAGE_TABLE_ISOLATION w/o nokaiser */
+ drivers/vhost/net.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -40,8 +40,10 @@ MODULE_PARM_DESC(experimental_zcopytx, "
+ #define VHOST_NET_WEIGHT 0x80000
  
- /* Virtualization flags: Linux defined, word 8 */
+ /* Max number of packets transferred before requeueing the job.
+- * Using this limit prevents one virtqueue from starving rx. */
+-#define VHOST_NET_PKT_WEIGHT(vq) ((vq)->num * 2)
++ * Using this limit prevents one virtqueue from starving others with small
++ * pkts.
++ */
++#define VHOST_NET_PKT_WEIGHT 256
+ 
+ /* MAX number of TX used buffers for outstanding zerocopy */
+ #define VHOST_MAX_PEND 128
+@@ -456,7 +458,7 @@ static void handle_tx(struct vhost_net *
+ 		total_len += len;
+ 		vhost_net_tx_packet(net);
+ 		if (unlikely(total_len >= VHOST_NET_WEIGHT) ||
+-		    unlikely(++sent_pkts >= VHOST_NET_PKT_WEIGHT(vq))) {
++		    unlikely(++sent_pkts >= VHOST_NET_PKT_WEIGHT)) {
+ 			vhost_poll_queue(&vq->poll);
+ 			break;
+ 		}
+@@ -581,6 +583,7 @@ static void handle_rx(struct vhost_net *
+ 	size_t vhost_hlen, sock_hlen;
+ 	size_t vhost_len, sock_len;
+ 	struct socket *sock;
++	int recv_pkts = 0;
+ 
+ 	mutex_lock(&vq->mutex);
+ 	sock = vq->private_data;
+@@ -665,7 +668,8 @@ static void handle_rx(struct vhost_net *
+ 		if (unlikely(vq_log))
+ 			vhost_log_write(vq, vq_log, log, vhost_len);
+ 		total_len += vhost_len;
+-		if (unlikely(total_len >= VHOST_NET_WEIGHT)) {
++		if (unlikely(total_len >= VHOST_NET_WEIGHT) ||
++		    unlikely(++recv_pkts >= VHOST_NET_PKT_WEIGHT)) {
+ 			vhost_poll_queue(&vq->poll);
+ 			break;
+ 		}
 
