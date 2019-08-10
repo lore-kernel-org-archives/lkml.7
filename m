@@ -2,151 +2,97 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 753D8C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 04:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E9AC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 04:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB652085A
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 04:20:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="LELmaU8C"
+	by mail.kernel.org (Postfix) with ESMTP id 4A1A6217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 04:20:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725865AbfHJEUl (ORCPT
+        id S1726084AbfHJEUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 00:20:41 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39152 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfHJEUk (ORCPT
+        Sat, 10 Aug 2019 00:20:53 -0400
+Received: from smtprelay0219.hostedemail.com ([216.40.44.219]:57877 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725554AbfHJEUw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 00:20:40 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b7so45788933pls.6
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 21:20:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=h7j/foufibETlQ32Z6k1SCaiRJ77bkt8Ugo9Yq1rOBs=;
-        b=LELmaU8C8kq7Jesri6jDhMUwdSSKzx0v9ZrWloFMXKBdKIpVGs9ZHFnY3vNJhHefON
-         6fV0bHgiDtPqYNmyWMyqaTvki4/yoZt7Ow7v3scvKrqqR/7vPnp7gbn8slIZx9bB5y1y
-         K76QrEO/0rdGM0i4+KURajBCae1j05tJ07vAM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h7j/foufibETlQ32Z6k1SCaiRJ77bkt8Ugo9Yq1rOBs=;
-        b=U+GwFXj+yKBJllWW1SiXHlc79Y3FiEsCVw0tP+vSlU1FWbsZP4Z2eFxTHHuX4y8/aw
-         vF36uV81Vw06JpFGjdSwB0jcdnIW02yTpgn79rVULq61pAAVsoXmhFhHAC2xTyIIt3j0
-         XZYUUeahNOz8y8gEebKaoB3SdWgtXbVoCfDldZCtszVBT25bruXtoMj5TtB2ple05DLW
-         Yyulu7WHQgW28zO1B5o+wdBIv2yNkqwEFjNeelVEYzkblnRZkq1eMakLcnbghy86rRP6
-         K+KWFQ5qm9J97KAFckK7nGa986FNjXALSnFKMnFYTP3XkYuZ7bpnVfcXkcUeu0D0weyZ
-         SEAw==
-X-Gm-Message-State: APjAAAXy5FHcgWZOMrsgGaUo2pliKO1RX4ddmknj5XVksTtutMVdmgdr
-        3KwsEeFS86DvhWtr6wtIIaFCgw==
-X-Google-Smtp-Source: APXvYqzylXTMf4R3RurcOFNnUxOcppWw+otI4cOKgAJvywb04K+frk4LRL4jHUmzlUev1UeCWzjF/g==
-X-Received: by 2002:a17:902:ab83:: with SMTP id f3mr22382047plr.122.1565410840068;
-        Fri, 09 Aug 2019 21:20:40 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id d12sm67076005pfn.11.2019.08.09.21.20.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 21:20:39 -0700 (PDT)
-Date:   Sat, 10 Aug 2019 00:20:37 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, Rao Shoaib <rao.shoaib@oracle.com>,
-        max.byungchul.park@gmail.com, byungchul.park@lge.com,
-        kernel-team@android.com, kernel-team@lge.com,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC v1 1/2] rcu/tree: Add basic support for kfree_rcu
- batching
-Message-ID: <20190810042037.GA175783@google.com>
-References: <20190806212041.118146-1-joel@joelfernandes.org>
- <20190806235631.GU28441@linux.ibm.com>
- <20190807094504.GB169551@google.com>
- <20190807175215.GE28441@linux.ibm.com>
- <20190810024232.GA183658@google.com>
- <20190810033814.GP28441@linux.ibm.com>
+        Sat, 10 Aug 2019 00:20:52 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 29E67181D33FB;
+        Sat, 10 Aug 2019 04:20:51 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: vest68_7baf73a3d031c
+X-Filterd-Recvd-Size: 2960
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 10 Aug 2019 04:20:49 +0000 (UTC)
+Message-ID: <667995275e6a1cbcdaa93029c1b33e6b52fc6803.camel@perches.com>
+Subject: Re: [PATCH] sh: Drop -Werror from kernel Makefile
+From:   Joe Perches <joe@perches.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     Rich Felker <dalias@libc.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 09 Aug 2019 21:20:48 -0700
+In-Reply-To: <6a06245f-33f2-1d92-0d0e-c8b270dc24af@embeddedor.com>
+References: <1564971263-21562-1-git-send-email-linux@roeck-us.net>
+         <20190805032441.GO9017@brightrain.aerifal.cx>
+         <20190809195630.GA15606@roeck-us.net>
+         <5f26547f-b48e-4b9f-b8ef-858283915e3d@embeddedor.com>
+         <20190809215608.GA11065@roeck-us.net>
+         <6a06245f-33f2-1d92-0d0e-c8b270dc24af@embeddedor.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190810033814.GP28441@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 08:38:14PM -0700, Paul E. McKenney wrote:
-> On Fri, Aug 09, 2019 at 10:42:32PM -0400, Joel Fernandes wrote:
-> > On Wed, Aug 07, 2019 at 10:52:15AM -0700, Paul E. McKenney wrote:
-> > [snip] 
-> > > > > > @@ -3459,6 +3645,8 @@ void __init rcu_init(void)
-> > > > > >  {
-> > > > > >  	int cpu;
-> > > > > >  
-> > > > > > +	kfree_rcu_batch_init();
-> > > > > 
-> > > > > What happens if someone does a kfree_rcu() before this point?  It looks
-> > > > > like it should work, but have you tested it?
-> > > > > 
-> > > > > >  	rcu_early_boot_tests();
-> > > > > 
-> > > > > For example, by testing it in rcu_early_boot_tests() and moving the
-> > > > > call to kfree_rcu_batch_init() here.
-> > > > 
-> > > > I have not tried to do the kfree_rcu() this early. I will try it out.
-> > > 
-> > > Yeah, well, call_rcu() this early came as a surprise to me back in the
-> > > day, so...  ;-)
-> > 
-> > I actually did get surprised as well!
-> > 
-> > It appears the timers are not fully initialized so the really early
-> > kfree_rcu() call from rcu_init() does cause a splat about an initialized
-> > timer spinlock (even though future kfree_rcu()s and the system are working
-> > fine all the way into the torture tests).
-> > 
-> > I think to resolve this, we can just not do batching until early_initcall,
-> > during which I have an initialization function which switches batching on.
-> > >From that point it is safe.
+On Fri, 2019-08-09 at 21:47 -0500, Gustavo A. R. Silva wrote:
+> On 8/9/19 4:56 PM, Guenter Roeck wrote:
+> > On Fri, Aug 09, 2019 at 04:36:01PM -0500, Gustavo A. R. Silva wrote:
+> > > On 8/9/19 2:56 PM, Guenter Roeck wrote:
+> > > > On Sun, Aug 04, 2019 at 11:24:41PM -0400, Rich Felker wrote:
+> > > > > On Sun, Aug 04, 2019 at 07:14:23PM -0700, Guenter Roeck wrote:
+> > > > > > Since commit a035d552a93b ("Makefile: Globally enable fall-through
+> > > > > > warning"), all sh builds fail with errors such as
+> > > > > > 
+> > > > > > arch/sh/kernel/disassemble.c: In function 'print_sh_insn':
+> > > > > > arch/sh/kernel/disassemble.c:478:8: error: this statement may fall through
+> > > > > > 
+> > > > > > Since this effectively disables all build and boot tests for the
+> > > > > > architecture, let's drop -Werror from the sh kernel Makefile until
+> > > > > > the problems are fixed.
+[]
+> On second thought it seems to me that this is not a good idea, at least
+> for mainline. For the time being I'll take this patch for linux-next only.
 > 
-> Just go ahead and batch, but don't bother with the timer until
-> after single-threaded boot is done.  For example, you could check
-> rcu_scheduler_active similar to how sync_rcu_exp_select_cpus() does.
-> (See kernel/rcu/tree_exp.h.)
+> Who is the maintainer of sh?
 
-Cool, that works nicely and I tested it. Actually I made it such that we
-don't need to batch even, before the scheduler is up. I don't see any benefit
-of that unless we can see a kfree_rcu() flood happening that early at boot
-which seems highly doubtful as a real world case.
+But whoever it may be, isn't particularly active.
 
-> If needed, use an early_initcall() to handle the case where early boot
-> kfree_rcu() calls needed to set the timer but could not.
+MAINTAINERS-SUPERH
+MAINTAINERS-M:  Yoshinori Sato <ysato@users.sourceforge.jp>
+MAINTAINERS-M:  Rich Felker <dalias@libc.org>
+MAINTAINERS-L:  linux-sh@vger.kernel.org
+MAINTAINERS-Q:  http://patchwork.kernel.org/project/linux-sh/list/
+MAINTAINERS-S:  Maintained
+MAINTAINERS-F:  Documentation/sh/
+MAINTAINERS:F:  arch/sh/
+MAINTAINERS-F:  drivers/sh/
 
-And it would also need this complexity of early_initcall.
+> The best solution is to fix those fall-through warnings you see. Could you
+> please send me all the warnings you see? I can try to fix them.
 
-> > Below is the diff on top of this patch, I think this should be good but let
-> > me know if anything looks odd to you. I tested it and it works.
-> 
-> Keep in mind that a call_rcu() callback can't possibly be invoked until
-> quite some time after the scheduler is up and running.  So it will be
-> a lot simpler to just skip setting the timer during early boot.
+It's true it's a warning, but adding -Werror is rarely
+a good idea as gcc error output can change with every
+version.
 
-Sure. Skipping batching would skip the timer too :-D
-
-If in the future, batching is needed this early, then I am happy to add an
-early_initcall to setup the timer for any batched calls that could not setup
-the timer. Hope that is ok with you?
-
-thanks,
-
- - Joel
-
-[snip]
 
