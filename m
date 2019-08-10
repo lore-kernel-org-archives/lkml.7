@@ -2,87 +2,88 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A64EC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 07:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C55C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 07:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBF58217F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 07:09:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565420953;
-	bh=p0UXi5jlbcF7bmE2fgD2iuaEiQDHVwlnBHdKGXSI3JU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NfAI8lQUTXi4llzRB7GTm8E5IQJyRn4bqGWUb+b8FofnFEl4BCvGVXy2tvuJKPKqu
-	 PsWbcadOzOCJiDlNeKSWH04n9vSiYkhZBUDUg6PwzapRlsLlsMc8cOqobeblRmiVD2
-	 XnsmQB8NS3KwcM+OQTgUe58OiO0DJUuLerElxhaM=
+	by mail.kernel.org (Postfix) with ESMTP id 656E32089E
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 07:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbfHJHJM (ORCPT
+        id S1726116AbfHJHNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 03:09:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbfHJHJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 03:09:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 641712089E;
-        Sat, 10 Aug 2019 07:09:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565420950;
-        bh=p0UXi5jlbcF7bmE2fgD2iuaEiQDHVwlnBHdKGXSI3JU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e53XEIDXaB5XYUVveX3PR6Zu8miEigROCFbI962PF8rpoxs/X6CCLmBOMezLmRRJT
-         Pk9amNebvkGrK/5Qg4z+aODFQkzsf3eda/h72omXrYHs5HzBD6waws41p9JwVWumNm
-         XadIexPe7qg894jsvEm6ptSqVUOQTq5PegknJoh0=
-Date:   Sat, 10 Aug 2019 09:09:08 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     shuah <shuah@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 00/32] 4.9.189-stable review
-Message-ID: <20190810070908.GE6896@kroah.com>
-References: <20190809133922.945349906@linuxfoundation.org>
- <f6ab9977-49df-af3f-6bab-0eafc1b4c44f@kernel.org>
+        Sat, 10 Aug 2019 03:13:25 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:55552 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfHJHNY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 03:13:24 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 6B60C80309; Sat, 10 Aug 2019 09:13:09 +0200 (CEST)
+Date:   Sat, 10 Aug 2019 09:13:22 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     linux-leds@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH 1/2] leds: Add flag to keep trigger always
+Message-ID: <20190810071322.GA13760@amd>
+References: <1565398367-11811-1-git-send-email-gurus@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
 Content-Disposition: inline
-In-Reply-To: <f6ab9977-49df-af3f-6bab-0eafc1b4c44f@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1565398367-11811-1-git-send-email-gurus@codeaurora.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 04:07:14PM -0600, shuah wrote:
-> On 8/9/19 7:45 AM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 4.9.189 release.
-> > There are 32 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sun 11 Aug 2019 01:38:45 PM UTC.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.189-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
-> 
-> Compiled and booted on my test system. No dmesg regressions.
 
-Thanks for testing both of these and letting me know.
+--mYCpIKhGyMATD0i+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-greg k-h
+On Fri 2019-08-09 17:52:46, Guru Das Srinagesh wrote:
+> From: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+>=20
+> Commit 0013b23d66a2768f5babbb0ea9f03ab067a990d8 ("leds: disable triggers
+> on brightness set") removes the trigger on an LED class device when
+> brightness is set to 0. However, there are some LED class devices which
+> need the trigger not to be removed. In a use case like camera flash,
+> camera flash driver passes in a trigger device to LED class driver. If
+> the trigger is removed when the brightness is set to 0, this will affect
+> the clients using those triggers. Hence add a flag to always keep the
+> trigger even when brightness is set to 0.
+
+No.
+
+Yes, it would affect those clients. Don't do it, then. It is
+root-only operation.
+
+								Pavel
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--mYCpIKhGyMATD0i+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1ObpIACgkQMOfwapXb+vIyZACeNsncZlIDhabxznoann5+bOiF
+GKkAmwapQY3q+Lq4t5fDxUCHnJWgB8T0
+=LSOI
+-----END PGP SIGNATURE-----
+
+--mYCpIKhGyMATD0i+--
