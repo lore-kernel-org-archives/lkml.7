@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EF1C32756
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88361C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5358208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A086208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfHJUsK (ORCPT
+        id S1727465AbfHJUsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:48:10 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54992 "EHLO
+        Sat, 10 Aug 2019 16:48:16 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54878 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726825AbfHJUoD (ORCPT
+        by vger.kernel.org with ESMTP id S1726807AbfHJUoB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:44:03 -0400
+        Sat, 10 Aug 2019 16:44:01 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDY-00053L-9x; Sat, 10 Aug 2019 21:44:00 +0100
+        id 1hwYDW-00053q-Qz; Sat, 10 Aug 2019 21:43:58 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDM-0003gM-JK; Sat, 10 Aug 2019 21:43:48 +0100
+        id 1hwYDN-0003i8-IC; Sat, 10 Aug 2019 21:43:49 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,19 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Masami Hiramatsu" <mhiramat@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@kernel.org>,
-        "Andrea Righi" <righi.andrea@gmail.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Steven Rostedt" <rostedt@goodmis.org>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>
+        "David S. Miller" <davem@davemloft.net>,
+        "Willem de Bruijn" <willemb@google.com>,
+        "David Laight" <David.Laight@aculab.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.507169080@decadent.org.uk>
+Message-ID: <lsq.1565469607.702055650@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 098/157] x86/kprobes: Avoid kretprobe recursion bug
+Subject: [PATCH 3.16 118/157] packet: in recvmsg msg_name return at least
+ sizeof sockaddr_ll
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -61,105 +57,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Willem de Bruijn <willemb@google.com>
 
-commit b191fa96ea6dc00d331dcc28c1f7db5e075693a0 upstream.
+commit b2cf86e1563e33a14a1c69b3e508d15dc12f804c upstream.
 
-Avoid kretprobe recursion loop bg by setting a dummy
-kprobes to current_kprobe per-CPU variable.
+Packet send checks that msg_name is at least sizeof sockaddr_ll.
+Packet recv must return at least this length, so that its output
+can be passed unmodified to packet send.
 
-This bug has been introduced with the asm-coded trampoline
-code, since previously it used another kprobe for hooking
-the function return placeholder (which only has a nop) and
-trampoline handler was called from that kprobe.
+This ceased to be true since adding support for lladdr longer than
+sll_addr. Since, the return value uses true address length.
 
-This revives the old lost kprobe again.
+Always return at least sizeof sockaddr_ll, even if address length
+is shorter. Zero the padding bytes.
 
-With this fix, we don't see deadlock anymore.
+Change v1->v2: do not overwrite zeroed padding again. use copy_len.
 
-And you can see that all inner-called kretprobe are skipped.
-
-  event_1                                  235               0
-  event_2                                19375           19612
-
-The 1st column is recorded count and the 2nd is missed count.
-Above shows (event_1 rec) + (event_2 rec) ~= (event_2 missed)
-(some difference are here because the counter is racy)
-
-Reported-by: Andrea Righi <righi.andrea@gmail.com>
-Tested-by: Andrea Righi <righi.andrea@gmail.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: c9becf58d935 ("[PATCH] kretprobe: kretprobe-booster")
-Link: http://lkml.kernel.org/r/155094064889.6137.972160690963039.stgit@devbox
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 0fb375fb9b93 ("[AF_PACKET]: Allow for > 8 byte hardware addresses.")
+Suggested-by: David Laight <David.Laight@aculab.com>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 [bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kernel/kprobes/core.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ net/packet/af_packet.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -686,11 +686,16 @@ static void __used kretprobe_trampoline_
- NOKPROBE_SYMBOL(kretprobe_trampoline_holder);
- NOKPROBE_SYMBOL(kretprobe_trampoline);
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -3027,19 +3027,28 @@ static int packet_recvmsg(struct kiocb *
+ 	sock_recv_ts_and_drops(msg, sk, skb);
  
-+static struct kprobe kretprobe_kprobe = {
-+	.addr = (void *)kretprobe_trampoline,
-+};
+ 	if (msg->msg_name) {
++		int copy_len;
 +
- /*
-  * Called from kretprobe_trampoline
-  */
- __visible __used void *trampoline_handler(struct pt_regs *regs)
- {
-+	struct kprobe_ctlblk *kcb;
- 	struct kretprobe_instance *ri = NULL;
- 	struct hlist_head *head, empty_rp;
- 	struct hlist_node *tmp;
-@@ -700,6 +705,17 @@ __visible __used void *trampoline_handle
- 	void *frame_pointer;
- 	bool skipped = false;
- 
-+	preempt_disable();
-+
-+	/*
-+	 * Set a dummy kprobe for avoiding kretprobe recursion.
-+	 * Since kretprobe never run in kprobe handler, kprobe must not
-+	 * be running at this point.
-+	 */
-+	kcb = get_kprobe_ctlblk();
-+	__this_cpu_write(current_kprobe, &kretprobe_kprobe);
-+	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-+
- 	INIT_HLIST_HEAD(&empty_rp);
- 	kretprobe_hash_lock(current, &head, &flags);
- 	/* fixup registers */
-@@ -775,10 +791,9 @@ __visible __used void *trampoline_handle
- 		orig_ret_address = (unsigned long)ri->ret_addr;
- 		if (ri->rp && ri->rp->handler) {
- 			__this_cpu_write(current_kprobe, &ri->rp->kp);
--			get_kprobe_ctlblk()->kprobe_status = KPROBE_HIT_ACTIVE;
- 			ri->ret_addr = correct_ret_addr;
- 			ri->rp->handler(ri, regs);
--			__this_cpu_write(current_kprobe, NULL);
-+			__this_cpu_write(current_kprobe, &kretprobe_kprobe);
+ 		/* If the address length field is there to be filled
+ 		 * in, we fill it in now.
+ 		 */
+ 		if (sock->type == SOCK_PACKET) {
+ 			__sockaddr_check_size(sizeof(struct sockaddr_pkt));
+ 			msg->msg_namelen = sizeof(struct sockaddr_pkt);
++			copy_len = msg->msg_namelen;
+ 		} else {
+ 			struct sockaddr_ll *sll = &PACKET_SKB_CB(skb)->sa.ll;
+ 			msg->msg_namelen = sll->sll_halen +
+ 				offsetof(struct sockaddr_ll, sll_addr);
++			copy_len = msg->msg_namelen;
++			if (msg->msg_namelen < sizeof(struct sockaddr_ll)) {
++				memset(msg->msg_name +
++				       offsetof(struct sockaddr_ll, sll_addr),
++				       0, sizeof(sll->sll_addr));
++				msg->msg_namelen = sizeof(struct sockaddr_ll);
++			}
  		}
+-		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa,
+-		       msg->msg_namelen);
++		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa, copy_len);
+ 	}
  
- 		recycle_rp_inst(ri, &empty_rp);
-@@ -794,6 +809,9 @@ __visible __used void *trampoline_handle
- 
- 	kretprobe_hash_unlock(current, &flags);
- 
-+	__this_cpu_write(current_kprobe, NULL);
-+	preempt_enable();
-+
- 	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
- 		hlist_del(&ri->hlist);
- 		kfree(ri);
+ 	if (pkt_sk(sk)->auxdata) {
 
