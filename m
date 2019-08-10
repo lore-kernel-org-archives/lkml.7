@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB55C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8182C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD82F208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8FEE208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:45:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbfHJUpq (ORCPT
+        id S1727226AbfHJUpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:45:46 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55422 "EHLO
+        Sat, 10 Aug 2019 16:45:47 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55416 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726916AbfHJUoI (ORCPT
+        by vger.kernel.org with ESMTP id S1726913AbfHJUoI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:44:08 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDe-00058O-Oo; Sat, 10 Aug 2019 21:44:06 +0100
+        id 1hwYDb-00053t-W6; Sat, 10 Aug 2019 21:44:04 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDK-0003cL-Jz; Sat, 10 Aug 2019 21:43:46 +0100
+        id 1hwYDL-0003cz-0r; Sat, 10 Aug 2019 21:43:47 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,12 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Steffen Klassert" <steffen.klassert@secunet.com>
+        "Tokunori Ikegami" <ikegami_to@yahoo.co.jp>,
+        "Richard Weinberger" <richard@nod.at>,
+        "Liu Jian" <liujian56@huawei.com>,
+        "Yi Huaijie" <yihuaijie@huawei.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.680261960@decadent.org.uk>
+Message-ID: <lsq.1565469607.292130683@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 061/157] xfrm4: Fix header checks in _decode_session4.
+Subject: [PATCH 3.16 069/157] mtd: cfi: fix deadloop in cfi_cmdset_0002.c
+ do_write_buffer
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -54,74 +58,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Steffen Klassert <steffen.klassert@secunet.com>
+From: Liu Jian <liujian56@huawei.com>
 
-commit 1a14f1e5550a341f76e5c8f596e9b5f8a886dfbc upstream.
+commit d9b8a67b3b95a5c5aae6422b8113adc1c2485f2b upstream.
 
-We skip the header informations if the data pointer points
-already behind the header in question for some protocols.
-This is because we call pskb_may_pull with a negative value
-converted to unsigened int from pskb_may_pull in this case.
-Skipping the header informations can lead to incorrect policy
-lookups, so fix it by a check of the data pointer position
-before we call pskb_may_pull.
+In function do_write_buffer(), in the for loop, there is a case
+chip_ready() returns 1 while chip_good() returns 0, so it never
+break the loop.
+To fix this, chip_good() is enough and it should timeout if it stay
+bad for a while.
 
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fixes: dfeae1073583("mtd: cfi_cmdset_0002: Change write buffer to check correct value")
+Signed-off-by: Yi Huaijie <yihuaijie@huawei.com>
+Signed-off-by: Liu Jian <liujian56@huawei.com>
+Reviewed-by: Tokunori Ikegami <ikegami_to@yahoo.co.jp>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/ipv4/xfrm4_policy.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/mtd/chips/cfi_cmdset_0002.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/xfrm4_policy.c
-+++ b/net/ipv4/xfrm4_policy.c
-@@ -131,7 +131,8 @@ _decode_session4(struct sk_buff *skb, st
+--- a/drivers/mtd/chips/cfi_cmdset_0002.c
++++ b/drivers/mtd/chips/cfi_cmdset_0002.c
+@@ -1538,7 +1538,11 @@ static int __xipram do_write_buffer(stru
+ 			continue;
+ 		}
+ 
+-		if (time_after(jiffies, timeo) && !chip_ready(map, adr))
++		/*
++		 * We check "time_after" and "!chip_good" before checking "chip_good" to avoid
++		 * the failure due to scheduling.
++		 */
++		if (time_after(jiffies, timeo) && !chip_good(map, adr, datum))
  			break;
  
- 		case IPPROTO_ICMP:
--			if (pskb_may_pull(skb, xprth + 2 - skb->data)) {
-+			if (xprth + 2 < skb->data ||
-+			    pskb_may_pull(skb, xprth + 2 - skb->data)) {
- 				u8 *icmp = xprth;
- 
- 				fl4->fl4_icmp_type = icmp[0];
-@@ -140,7 +141,8 @@ _decode_session4(struct sk_buff *skb, st
- 			break;
- 
- 		case IPPROTO_ESP:
--			if (pskb_may_pull(skb, xprth + 4 - skb->data)) {
-+			if (xprth + 4 < skb->data ||
-+			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
- 				__be32 *ehdr = (__be32 *)xprth;
- 
- 				fl4->fl4_ipsec_spi = ehdr[0];
-@@ -148,7 +150,8 @@ _decode_session4(struct sk_buff *skb, st
- 			break;
- 
- 		case IPPROTO_AH:
--			if (pskb_may_pull(skb, xprth + 8 - skb->data)) {
-+			if (xprth + 8 < skb->data ||
-+			    pskb_may_pull(skb, xprth + 8 - skb->data)) {
- 				__be32 *ah_hdr = (__be32 *)xprth;
- 
- 				fl4->fl4_ipsec_spi = ah_hdr[1];
-@@ -156,7 +159,8 @@ _decode_session4(struct sk_buff *skb, st
- 			break;
- 
- 		case IPPROTO_COMP:
--			if (pskb_may_pull(skb, xprth + 4 - skb->data)) {
-+			if (xprth + 4 < skb->data ||
-+			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
- 				__be16 *ipcomp_hdr = (__be16 *)xprth;
- 
- 				fl4->fl4_ipsec_spi = htonl(ntohs(ipcomp_hdr[1]));
-@@ -164,7 +168,8 @@ _decode_session4(struct sk_buff *skb, st
- 			break;
- 
- 		case IPPROTO_GRE:
--			if (pskb_may_pull(skb, xprth + 12 - skb->data)) {
-+			if (xprth + 12 < skb->data ||
-+			    pskb_may_pull(skb, xprth + 12 - skb->data)) {
- 				__be16 *greflags = (__be16 *)xprth;
- 				__be32 *gre_hdr = (__be32 *)xprth;
- 
+ 		if (chip_good(map, adr, datum)) {
 
