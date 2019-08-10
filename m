@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1DFC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BBAC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB17208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40B1E208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfHJUvh (ORCPT
+        id S1727568AbfHJUvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:51:37 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54302 "EHLO
+        Sat, 10 Aug 2019 16:51:36 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54306 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726668AbfHJUny (ORCPT
+        by vger.kernel.org with ESMTP id S1726670AbfHJUny (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:54 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDP-00053p-IH; Sat, 10 Aug 2019 21:43:51 +0100
+        id 1hwYDP-00053i-IA; Sat, 10 Aug 2019 21:43:51 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDM-0003gk-QC; Sat, 10 Aug 2019 21:43:48 +0100
+        id 1hwYDM-0003gp-RM; Sat, 10 Aug 2019 21:43:48 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Florian Westphal" <fw@strlen.de>,
-        syzbot+659574e7bcc7f7eb4df7@syzkaller.appspotmail.com,
-        "Pablo Neira Ayuso" <pablo@netfilter.org>
+        "Johannes Berg" <johannes.berg@intel.com>,
+        syzbot+4ece1a28b8f4730547c9@syzkaller.appspotmail.com
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.328511265@decadent.org.uk>
+Message-ID: <lsq.1565469607.885250051@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 102/157] netfilter: ebtables: CONFIG_COMPAT: drop a
- bogus WARN_ON
+Subject: [PATCH 3.16 103/157] mac80211: don't attempt to rename ERR_PTR()
+ debugfs dirs
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,32 +56,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Florian Westphal <fw@strlen.de>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit 7caa56f006e9d712b44f27b32520c66420d5cbc6 upstream.
+commit 517879147493a5e1df6b89a50f708f1133fcaddb upstream.
 
-It means userspace gave us a ruleset where there is some other
-data after the ebtables target but before the beginning of the next rule.
+We need to dereference the directory to get its parent to
+be able to rename it, so it's clearly not safe to try to
+do this with ERR_PTR() pointers. Skip in this case.
 
-Fixes: 81e675c227ec ("netfilter: ebtables: add CONFIG_COMPAT support")
-Reported-by: syzbot+659574e7bcc7f7eb4df7@syzkaller.appspotmail.com
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+It seems that this is most likely what was causing the
+report by syzbot, but I'm not entirely sure as it didn't
+come with a reproducer this time.
+
+Reported-by: syzbot+4ece1a28b8f4730547c9@syzkaller.appspotmail.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/bridge/netfilter/ebtables.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/mac80211/debugfs_netdev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -2011,7 +2011,8 @@ static int ebt_size_mwt(struct compat_eb
- 		if (match_kern)
- 			match_kern->match_size = ret;
+--- a/net/mac80211/debugfs_netdev.c
++++ b/net/mac80211/debugfs_netdev.c
+@@ -735,7 +735,7 @@ void ieee80211_debugfs_rename_netdev(str
  
--		if (WARN_ON(type == EBT_COMPAT_TARGET && size_left))
-+		/* rule should have no remaining data after target */
-+		if (type == EBT_COMPAT_TARGET && size_left)
- 			return -EINVAL;
+ 	dir = sdata->vif.debugfs_dir;
  
- 		match32 = (struct compat_ebt_entry_mwt *) buf;
+-	if (!dir)
++	if (IS_ERR_OR_NULL(dir))
+ 		return;
+ 
+ 	sprintf(buf, "netdev:%s", sdata->name);
 
