@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D8DC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D671C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69C41208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 159BC208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbfHJUue (ORCPT
+        id S1727422AbfHJUum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:50:34 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54518 "EHLO
+        Sat, 10 Aug 2019 16:50:42 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54380 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726719AbfHJUn5 (ORCPT
+        by vger.kernel.org with ESMTP id S1726698AbfHJUn4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:43:57 -0400
+        Sat, 10 Aug 2019 16:43:56 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDS-00053L-6K; Sat, 10 Aug 2019 21:43:54 +0100
+        id 1hwYDP-00053t-QH; Sat, 10 Aug 2019 21:43:51 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDP-0003lJ-0l; Sat, 10 Aug 2019 21:43:51 +0100
+        id 1hwYDN-0003hE-0R; Sat, 10 Aug 2019 21:43:49 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Vlad Yasevich" <vyasevich@gmail.com>,
-        "Vladislav Yasevich" <vyasevic@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
+        "Alan Stern" <stern@rowland.harvard.edu>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.411774246@decadent.org.uk>
+Message-ID: <lsq.1565469607.737701998@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 149/157] ipv6: Make __ipv6_select_ident static
+Subject: [PATCH 3.16 107/157] USB: yurex: Fix protection fault after
+ device removal
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,43 +56,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Vlad Yasevich <vyasevich@gmail.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 8381eacf5c3b35cf7755f4bc521c4d56d24c1cd9 upstream.
+commit ef61eb43ada6c1d6b94668f0f514e4c268093ff3 upstream.
 
-Make __ipv6_select_ident() static as it isn't used outside
-the file.
+The syzkaller USB fuzzer found a general-protection-fault bug in the
+yurex driver.  The fault occurs when a device has been unplugged; the
+driver's interrupt-URB handler logs an error message referring to the
+device by name, after the device has been unregistered and its name
+deallocated.
 
-Fixes: 0508c07f5e0c9 (ipv6: Select fragment id during UFO segmentation if not set.)
-Signed-off-by: Vladislav Yasevich <vyasevic@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This problem is caused by the fact that the interrupt URB isn't
+cancelled until the driver's private data structure is released, which
+can happen long after the device is gone.  The cure is to make sure
+that the interrupt URB is killed before yurex_disconnect() returns;
+this is exactly the sort of thing that usb_poison_urb() was meant for.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-and-tested-by: syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- include/net/ipv6.h     | 2 --
- net/ipv6/output_core.c | 3 ++-
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ drivers/usb/misc/yurex.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/include/net/ipv6.h
-+++ b/include/net/ipv6.h
-@@ -688,8 +688,6 @@ static inline int ipv6_addr_diff(const s
- 	return __ipv6_addr_diff(a1, a2, sizeof(struct in6_addr));
- }
+--- a/drivers/usb/misc/yurex.c
++++ b/drivers/usb/misc/yurex.c
+@@ -332,6 +332,7 @@ static void yurex_disconnect(struct usb_
+ 	usb_deregister_dev(interface, &yurex_class);
  
--u32 __ipv6_select_ident(u32 hashrnd, struct in6_addr *dst,
--			struct in6_addr *src);
- void ipv6_select_ident(struct frag_hdr *fhdr, struct rt6_info *rt);
- void ipv6_proxy_select_ident(struct sk_buff *skb);
- 
---- a/net/ipv6/output_core.c
-+++ b/net/ipv6/output_core.c
-@@ -9,7 +9,8 @@
- #include <net/addrconf.h>
- #include <net/secure_seq.h>
- 
--u32 __ipv6_select_ident(u32 hashrnd, struct in6_addr *dst, struct in6_addr *src)
-+static u32 __ipv6_select_ident(u32 hashrnd, struct in6_addr *dst,
-+			       struct in6_addr *src)
- {
- 	u32 hash, id;
- 
+ 	/* prevent more I/O from starting */
++	usb_poison_urb(dev->urb);
+ 	mutex_lock(&dev->io_mutex);
+ 	dev->interface = NULL;
+ 	mutex_unlock(&dev->io_mutex);
 
