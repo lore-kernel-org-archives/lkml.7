@@ -2,125 +2,109 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 900C6C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A51F2C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C6AD21743
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0B921743
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:36:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="rTHyDJ7q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbfHJMeM (ORCPT
+        id S1726284AbfHJMgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 08:34:12 -0400
-Received: from 68.66.241.172.static.a2webhosting.com ([68.66.241.172]:49384
-        "EHLO vps.redhazel.co.uk" rhost-flags-OK-FAIL-OK-OK)
-        by vger.kernel.org with ESMTP id S1726024AbfHJMeJ (ORCPT
+        Sat, 10 Aug 2019 08:36:39 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:55526 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbfHJMgi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 08:34:09 -0400
-Received: from [192.168.1.66] (unknown [212.159.68.143])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by vps.redhazel.co.uk (Postfix) with ESMTPSA id 063771C000AA;
-        Sat, 10 Aug 2019 13:34:07 +0100 (BST)
-Subject: Re: Let's talk about the elephant in the room - the Linux kernel's
- inability to gracefully handle low memory pressure
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Artem S. Tashkinov" <aros@gmx.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-References: <20190807075927.GO11812@dhcp22.suse.cz>
- <20190807205138.GA24222@cmpxchg.org> <20190808114826.GC18351@dhcp22.suse.cz>
- <806F5696-A8D6-481D-A82F-49DEC1F2B035@redhazel.co.uk>
- <20190808163228.GE18351@dhcp22.suse.cz>
- <5FBB0A26-0CFE-4B88-A4F2-6A42E3377EDB@redhazel.co.uk>
- <20190808185925.GH18351@dhcp22.suse.cz>
- <08e5d007-a41a-e322-5631-b89978b9cc20@redhazel.co.uk>
- <20190809085748.GN18351@dhcp22.suse.cz>
- <cdb392ee-e192-c136-41cb-48d9e4e4bf47@redhazel.co.uk>
- <20190809105016.GP18351@dhcp22.suse.cz>
-From:   ndrw <ndrw.xf@redhazel.co.uk>
-Message-ID: <33407eca-3c05-5900-0353-761db62feeea@redhazel.co.uk>
-Date:   Sat, 10 Aug 2019 13:34:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 10 Aug 2019 08:36:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1565440596; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=BEr5l4JPOZyPmVVF/LZABMpxhGWMLaTgTctoWoKASFs=;
+        b=rTHyDJ7qGIsSXSF8NuJvA2RDAnWouonN8GllsfKG9Rgv5Rvo7iLvFJawUeFaiMrw9xEKOj
+        0GZ29pNQvb2Pc7JwZfJIeOO1Hvl1qdTmeZkKwCEY0fePe3Rv870wjWVDe9utwEXqJJD30O
+        xDsqyCQRY36yu7xcnu2r2FZ32B6yG7k=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2] clk: ingenic: Use CLK_OF_DECLARE_DRIVER macro
+Date:   Sat, 10 Aug 2019 14:36:20 +0200
+Message-Id: <20190810123620.27238-1-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <20190809105016.GP18351@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/08/2019 11:50, Michal Hocko wrote:
-> We try to protect low amount of cache. Have a look at get_scan_count
-> function. But the exact amount of the cache to be protected is really
-> hard to know wihtout a crystal ball or understanding of the workload.
-> The kernel doesn't have neither of the two.
+By using CLK_OF_DECLARE_DRIVER instead of the CLK_OF_DECLARE macro, we
+allow the driver to probe also as a platform driver.
 
-Thank you. I'm familiarizing myself with the code. Is there anyone I 
-could discuss some details with? I don't want to create too much noise here.
+While this driver does not have code to probe as a platform driver, this
+is still useful for probing children devices in the case where the
+device node is compatible with "simple-mfd".
 
-For example, are file pages created by mmaping files and are anon page 
-exclusively allocated on heap (RW data)? If so, where do "streaming IO" 
-pages belong to?
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
 
-> We have been thinking about this problem for a long time and couldn't
-> come up with anything much better than we have now. PSI is the most recent
-> improvement in that area. If you have better ideas then patches are
-> always welcome.
+Notes:
+    v2: Rebased on v5.3-rc3
 
-In general, I found there are very few user accessible knobs for 
-adjusting caching, especially in the pre-OOM phase. On the other hand, 
-swapping, dirty page caching, have many options or can even be disabled 
-completely.
+ drivers/clk/ingenic/jz4725b-cgu.c | 2 +-
+ drivers/clk/ingenic/jz4740-cgu.c  | 2 +-
+ drivers/clk/ingenic/jz4770-cgu.c  | 2 +-
+ drivers/clk/ingenic/jz4780-cgu.c  | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-For example, I would like to try disabling/limiting eviction of some/all 
-file pages (for example exec pages) akin to disabling swapping, but 
-there is no such mechanism. Yes, there would likely be problems with 
-large RO mmapped files that would need to be addressed, but in many 
-applications users would be interested in having such options.
-
-Adjusting how aggressive/conservative the system should be with the OOM 
-killer also falls into this category.
-
->> [OOM killer accuracy]
-> That is a completely orthogonal problem, I am afraid. So far we have
-> been discussing _when_ to trigger OOM killer. This is _who_ to kill. I
-> haven't heard any recent examples that the victim selection would be way
-> off and killing something obviously incorrect.
-
-You are right. I've assumed earlyoom is more accurate because of OOM 
-killer performing better on a system that isn't stalled yet (perhaps it 
-does). But actually, earlyoom doesn't trigger OOM killer at all:
-
-https://github.com/rfjakob/earlyoom#why-not-trigger-the-kernel-oom-killer
-
-Apparently some applications (chrome and electron-based tools) set their 
-oom_score_adj incorrectly - this matches my observations of OOM killer 
-behavior:
-
-https://bugs.chromium.org/p/chromium/issues/detail?id=333617
-
-> Something that other people can play with to reproduce the issue would
-> be more than welcome.
-
-This is the script I used. It reliably reproduces the issue: 
-https://github.com/ndrw6/import_postcodes/blob/master/import_postcodes.py 
-but it has quite a few dependencies, needs some input data and, in 
-general, does a lot more than just fill up the memory. I will try to 
-come up with something simpler.
-
-Best regards,
-
-ndrw
-
+diff --git a/drivers/clk/ingenic/jz4725b-cgu.c b/drivers/clk/ingenic/jz4725b-cgu.c
+index 2642d36d1e2c..a3b4635f6278 100644
+--- a/drivers/clk/ingenic/jz4725b-cgu.c
++++ b/drivers/clk/ingenic/jz4725b-cgu.c
+@@ -257,4 +257,4 @@ static void __init jz4725b_cgu_init(struct device_node *np)
+ 
+ 	ingenic_cgu_register_syscore_ops(cgu);
+ }
+-CLK_OF_DECLARE(jz4725b_cgu, "ingenic,jz4725b-cgu", jz4725b_cgu_init);
++CLK_OF_DECLARE_DRIVER(jz4725b_cgu, "ingenic,jz4725b-cgu", jz4725b_cgu_init);
+diff --git a/drivers/clk/ingenic/jz4740-cgu.c b/drivers/clk/ingenic/jz4740-cgu.c
+index 4c0a20949c2c..dd86296fb8c1 100644
+--- a/drivers/clk/ingenic/jz4740-cgu.c
++++ b/drivers/clk/ingenic/jz4740-cgu.c
+@@ -241,4 +241,4 @@ static void __init jz4740_cgu_init(struct device_node *np)
+ 
+ 	ingenic_cgu_register_syscore_ops(cgu);
+ }
+-CLK_OF_DECLARE(jz4740_cgu, "ingenic,jz4740-cgu", jz4740_cgu_init);
++CLK_OF_DECLARE_DRIVER(jz4740_cgu, "ingenic,jz4740-cgu", jz4740_cgu_init);
+diff --git a/drivers/clk/ingenic/jz4770-cgu.c b/drivers/clk/ingenic/jz4770-cgu.c
+index eebc1bea3841..956dd653a43d 100644
+--- a/drivers/clk/ingenic/jz4770-cgu.c
++++ b/drivers/clk/ingenic/jz4770-cgu.c
+@@ -443,4 +443,4 @@ static void __init jz4770_cgu_init(struct device_node *np)
+ }
+ 
+ /* We only probe via devicetree, no need for a platform driver */
+-CLK_OF_DECLARE(jz4770_cgu, "ingenic,jz4770-cgu", jz4770_cgu_init);
++CLK_OF_DECLARE_DRIVER(jz4770_cgu, "ingenic,jz4770-cgu", jz4770_cgu_init);
+diff --git a/drivers/clk/ingenic/jz4780-cgu.c b/drivers/clk/ingenic/jz4780-cgu.c
+index 8c67f89df25e..ea905ff72bf0 100644
+--- a/drivers/clk/ingenic/jz4780-cgu.c
++++ b/drivers/clk/ingenic/jz4780-cgu.c
+@@ -725,4 +725,4 @@ static void __init jz4780_cgu_init(struct device_node *np)
+ 
+ 	ingenic_cgu_register_syscore_ops(cgu);
+ }
+-CLK_OF_DECLARE(jz4780_cgu, "ingenic,jz4780-cgu", jz4780_cgu_init);
++CLK_OF_DECLARE_DRIVER(jz4780_cgu, "ingenic,jz4780-cgu", jz4780_cgu_init);
+-- 
+2.21.0.593.g511ec345e18
 
