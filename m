@@ -2,207 +2,84 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6DAC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F41FDC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5077F208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6993208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KUr9xOzW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727424AbfHJUrb (ORCPT
+        id S1727425AbfHJUrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:47:31 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55034 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726836AbfHJUoE (ORCPT
+        Sat, 10 Aug 2019 16:47:39 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33253 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbfHJUrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:44:04 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDY-00058O-Eh; Sat, 10 Aug 2019 21:44:00 +0100
-Received: from ben by deadeye with local (Exim 4.92)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDN-0003hy-EP; Sat, 10 Aug 2019 21:43:49 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Sat, 10 Aug 2019 16:47:22 -0400
+Received: by mail-ot1-f67.google.com with SMTP id q20so145672199otl.0;
+        Sat, 10 Aug 2019 13:47:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5j1WOyiF8SuI/K9sc0sg2QlEKDu+SHpvsRnF7h1iTVg=;
+        b=KUr9xOzWnC/gL8k9K0IAZ4y9qVw4oXDTy8DYpXm3gjKZggxFIUKEBAgU2GqTIBCffP
+         8rb6vgW2Jz5mcHtGIQlBE2HcHKb9cCJaWwmN96EW9C/yx+TJabHxWCTRtQ6AklX0Rarn
+         lumHFQluwWtdQGT2PISpMAzTKQmR5Gxnumrg7hsiJnlLVf2M5tYVPoo7RktMBEiRj2EP
+         QEt6dEgQNFUPSzyQbitXnYd1Gy/fKCrutWwL1MJ7QGhLWfd+iNzm4rX9Y3Pzvm4Y9VFT
+         H9UyBc4OoePbB4F0vCCoAd7+QnP/eesVF+IQl64BjmbJ2zNl0QvOeA58B9pjatPHIEix
+         kHow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5j1WOyiF8SuI/K9sc0sg2QlEKDu+SHpvsRnF7h1iTVg=;
+        b=TbDej6UYdk2PxoSjvuO7+PC1jvAD2zJiKsMc6zmQuY+XUlGNGXfjKixYAt7VY5tYCY
+         CN0onQ3qag4rJx03o71IZOIFhvIHPxBXH6TZC2limYyBNx9OPDKJswV2yp7MfWZs9aha
+         JlexM9HqfTxOPYDXqFL343APIs5uKspILRlLRmPRrFvq7l79IgM27fS46U+6YBCVcvkZ
+         Qcl+YkHd4yjKrSRcTXVHrUrI/axbHu+vKB1bMa9Z0df8aRDveisp2oDcISjtYd/TGDu5
+         aej+dBSJCAzntwmd4R8RkRtfrqinPvqxszY32so+DhIPN/DtNC5L9O9SKl+MMeI+x72C
+         R6Ww==
+X-Gm-Message-State: APjAAAUmgRRFvhKtQ5p15gSgyk5nuafjfJqPdQHYKq29E5c0tcke1Gno
+        K40QlircZTXm6ee11vXz/4q+fCQo//Qg914N0sA6yw==
+X-Google-Smtp-Source: APXvYqzcwCc7bIeiO/j07C8FaJX6CnNQvE3nUs/oCycy00nyxBs+rjvzo05eebzsq6aum8gP9IL47hR8VLp/QFLCS0U=
+X-Received: by 2002:a5e:8210:: with SMTP id l16mr27792136iom.240.1565470041896;
+ Sat, 10 Aug 2019 13:47:21 -0700 (PDT)
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Eric Dumazet" <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "syzbot" <syzkaller@googlegroups.com>
-Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.485122702@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 116/157] ipv6/flowlabel: wait rcu grace period before
- put_pid()
-In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+References: <20190730014924.2193-1-deepa.kernel@gmail.com> <20190730014924.2193-5-deepa.kernel@gmail.com>
+ <eb2027cdccc0a0ff0a9d061fa8dd04a927c63819.camel@codethink.co.uk>
+In-Reply-To: <eb2027cdccc0a0ff0a9d061fa8dd04a927c63819.camel@codethink.co.uk>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Sat, 10 Aug 2019 13:47:10 -0700
+Message-ID: <CABeXuvrFze2-vDWyoFApoHK=yRWEZaNiYCy_DR+q3GZhty+MWg@mail.gmail.com>
+Subject: Re: [Y2038] [PATCH 04/20] mount: Add mount warning for impending
+ timestamp expiry
+To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.72-rc1 review patch.  If anyone has any objections, please let me know.
+> This doesn't seem like a helpful way to log the time.  Maybe use
+> time64_to_tm() to convert to "broken down" time and then print it with
+> "%ptR"... but that wants struct rtc_time.  If you apply the attached
+> patch, however, you should then be able to print struct tm with
+> "%ptT".
 
-------------------
+OK. Will print a more user friendly date string here.
 
-From: Eric Dumazet <edumazet@google.com>
-
-commit 6c0afef5fb0c27758f4d52b2210c61b6bd8b4470 upstream.
-
-syzbot was able to catch a use-after-free read in pid_nr_ns() [1]
-
-ip6fl_seq_show() seems to use RCU protection, dereferencing fl->owner.pid
-but fl_free() releases fl->owner.pid before rcu grace period is started.
-
-[1]
-
-BUG: KASAN: use-after-free in pid_nr_ns+0x128/0x140 kernel/pid.c:407
-Read of size 4 at addr ffff888094012a04 by task syz-executor.0/18087
-
-CPU: 0 PID: 18087 Comm: syz-executor.0 Not tainted 5.1.0-rc6+ #89
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
- kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
- __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
- pid_nr_ns+0x128/0x140 kernel/pid.c:407
- ip6fl_seq_show+0x2f8/0x4f0 net/ipv6/ip6_flowlabel.c:794
- seq_read+0xad3/0x1130 fs/seq_file.c:268
- proc_reg_read+0x1fe/0x2c0 fs/proc/inode.c:227
- do_loop_readv_writev fs/read_write.c:701 [inline]
- do_loop_readv_writev fs/read_write.c:688 [inline]
- do_iter_read+0x4a9/0x660 fs/read_write.c:922
- vfs_readv+0xf0/0x160 fs/read_write.c:984
- kernel_readv fs/splice.c:358 [inline]
- default_file_splice_read+0x475/0x890 fs/splice.c:413
- do_splice_to+0x12a/0x190 fs/splice.c:876
- splice_direct_to_actor+0x2d2/0x970 fs/splice.c:953
- do_splice_direct+0x1da/0x2a0 fs/splice.c:1062
- do_sendfile+0x597/0xd00 fs/read_write.c:1443
- __do_sys_sendfile64 fs/read_write.c:1498 [inline]
- __se_sys_sendfile64 fs/read_write.c:1490 [inline]
- __x64_sys_sendfile64+0x15a/0x220 fs/read_write.c:1490
- do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458da9
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f300d24bc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000458da9
-RDX: 00000000200000c0 RSI: 0000000000000008 RDI: 0000000000000007
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 000000000000005a R11: 0000000000000246 R12: 00007f300d24c6d4
-R13: 00000000004c5fa3 R14: 00000000004da748 R15: 00000000ffffffff
-
-Allocated by task 17543:
- save_stack+0x45/0xd0 mm/kasan/common.c:75
- set_track mm/kasan/common.c:87 [inline]
- __kasan_kmalloc mm/kasan/common.c:497 [inline]
- __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:470
- kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:505
- slab_post_alloc_hook mm/slab.h:437 [inline]
- slab_alloc mm/slab.c:3393 [inline]
- kmem_cache_alloc+0x11a/0x6f0 mm/slab.c:3555
- alloc_pid+0x55/0x8f0 kernel/pid.c:168
- copy_process.part.0+0x3b08/0x7980 kernel/fork.c:1932
- copy_process kernel/fork.c:1709 [inline]
- _do_fork+0x257/0xfd0 kernel/fork.c:2226
- __do_sys_clone kernel/fork.c:2333 [inline]
- __se_sys_clone kernel/fork.c:2327 [inline]
- __x64_sys_clone+0xbf/0x150 kernel/fork.c:2327
- do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 7789:
- save_stack+0x45/0xd0 mm/kasan/common.c:75
- set_track mm/kasan/common.c:87 [inline]
- __kasan_slab_free+0x102/0x150 mm/kasan/common.c:459
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:467
- __cache_free mm/slab.c:3499 [inline]
- kmem_cache_free+0x86/0x260 mm/slab.c:3765
- put_pid.part.0+0x111/0x150 kernel/pid.c:111
- put_pid+0x20/0x30 kernel/pid.c:105
- fl_free+0xbe/0xe0 net/ipv6/ip6_flowlabel.c:102
- ip6_fl_gc+0x295/0x3e0 net/ipv6/ip6_flowlabel.c:152
- call_timer_fn+0x190/0x720 kernel/time/timer.c:1325
- expire_timers kernel/time/timer.c:1362 [inline]
- __run_timers kernel/time/timer.c:1681 [inline]
- __run_timers kernel/time/timer.c:1649 [inline]
- run_timer_softirq+0x652/0x1700 kernel/time/timer.c:1694
- __do_softirq+0x266/0x95a kernel/softirq.c:293
-
-The buggy address belongs to the object at ffff888094012a00
- which belongs to the cache pid_2 of size 88
-The buggy address is located 4 bytes inside of
- 88-byte region [ffff888094012a00, ffff888094012a58)
-The buggy address belongs to the page:
-page:ffffea0002500480 count:1 mapcount:0 mapping:ffff88809a483080 index:0xffff888094012980
-flags: 0x1fffc0000000200(slab)
-raw: 01fffc0000000200 ffffea00018a3508 ffffea0002524a88 ffff88809a483080
-raw: ffff888094012980 ffff888094012000 000000010000001b 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff888094012900: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
- ffff888094012980: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
->ffff888094012a00: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
-                   ^
- ffff888094012a80: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
- ffff888094012b00: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
-
-Fixes: 4f82f45730c6 ("net ip6 flowlabel: Make owner a union of struct pid * and kuid_t")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: Move the release_net() call too, not that it does
- anything.]
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
----
---- a/net/ipv6/ip6_flowlabel.c
-+++ b/net/ipv6/ip6_flowlabel.c
-@@ -94,16 +94,22 @@ static struct ip6_flowlabel *fl_lookup(s
- 	return fl;
- }
- 
-+static void fl_free_rcu(struct rcu_head *head)
-+{
-+	struct ip6_flowlabel *fl = container_of(head, struct ip6_flowlabel, rcu);
-+
-+	if (fl->share == IPV6_FL_S_PROCESS)
-+		put_pid(fl->owner.pid);
-+	release_net(fl->fl_net);
-+	kfree(fl->opt);
-+	kfree(fl);
-+}
-+
- 
- static void fl_free(struct ip6_flowlabel *fl)
- {
--	if (fl) {
--		if (fl->share == IPV6_FL_S_PROCESS)
--			put_pid(fl->owner.pid);
--		release_net(fl->fl_net);
--		kfree(fl->opt);
--		kfree_rcu(fl, rcu);
--	}
-+	if (fl)
-+		call_rcu(&fl->rcu, fl_free_rcu);
- }
- 
- static void fl_release(struct ip6_flowlabel *fl)
-
+Thanks,
+-Deepa
