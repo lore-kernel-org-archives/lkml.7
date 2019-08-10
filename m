@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4285BC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6DAC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1766E208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5077F208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfHJUr3 (ORCPT
+        id S1727424AbfHJUrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:47:29 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55054 "EHLO
+        Sat, 10 Aug 2019 16:47:31 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55034 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726841AbfHJUoE (ORCPT
+        by vger.kernel.org with ESMTP id S1726836AbfHJUoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:44:04 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDY-00053i-KT; Sat, 10 Aug 2019 21:44:00 +0100
+        id 1hwYDY-00058O-Eh; Sat, 10 Aug 2019 21:44:00 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDM-0003fP-9m; Sat, 10 Aug 2019 21:43:48 +0100
+        id 1hwYDN-0003hy-EP; Sat, 10 Aug 2019 21:43:49 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Aurelien Aptel" <aaptel@suse.com>,
-        "Steve French" <stfrench@microsoft.com>,
-        "Pavel Shilovsky" <pshilov@microsoft.com>
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Eric Dumazet" <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "syzbot" <syzkaller@googlegroups.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.46415781@decadent.org.uk>
+Message-ID: <lsq.1565469607.485122702@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 092/157] CIFS: keep FileInfo handle live during
- oplock break
+Subject: [PATCH 3.16 116/157] ipv6/flowlabel: wait rcu grace period before
+ put_pid()
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,176 +58,151 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Aurelien Aptel <aaptel@suse.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit b98749cac4a695f084a5ff076f4510b23e353ecd upstream.
+commit 6c0afef5fb0c27758f4d52b2210c61b6bd8b4470 upstream.
 
-In the oplock break handler, writing pending changes from pages puts
-the FileInfo handle. If the refcount reaches zero it closes the handle
-and waits for any oplock break handler to return, thus causing a deadlock.
+syzbot was able to catch a use-after-free read in pid_nr_ns() [1]
 
-To prevent this situation:
+ip6fl_seq_show() seems to use RCU protection, dereferencing fl->owner.pid
+but fl_free() releases fl->owner.pid before rcu grace period is started.
 
-* We add a wait flag to cifsFileInfo_put() to decide whether we should
-  wait for running/pending oplock break handlers
+[1]
 
-* We keep an additionnal reference of the SMB FileInfo handle so that
-  for the rest of the handler putting the handle won't close it.
-  - The ref is bumped everytime we queue the handler via the
-    cifs_queue_oplock_break() helper.
-  - The ref is decremented at the end of the handler
+BUG: KASAN: use-after-free in pid_nr_ns+0x128/0x140 kernel/pid.c:407
+Read of size 4 at addr ffff888094012a04 by task syz-executor.0/18087
 
-This bug was triggered by xfstest 464.
+CPU: 0 PID: 18087 Comm: syz-executor.0 Not tainted 5.1.0-rc6+ #89
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
+ kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+ __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
+ pid_nr_ns+0x128/0x140 kernel/pid.c:407
+ ip6fl_seq_show+0x2f8/0x4f0 net/ipv6/ip6_flowlabel.c:794
+ seq_read+0xad3/0x1130 fs/seq_file.c:268
+ proc_reg_read+0x1fe/0x2c0 fs/proc/inode.c:227
+ do_loop_readv_writev fs/read_write.c:701 [inline]
+ do_loop_readv_writev fs/read_write.c:688 [inline]
+ do_iter_read+0x4a9/0x660 fs/read_write.c:922
+ vfs_readv+0xf0/0x160 fs/read_write.c:984
+ kernel_readv fs/splice.c:358 [inline]
+ default_file_splice_read+0x475/0x890 fs/splice.c:413
+ do_splice_to+0x12a/0x190 fs/splice.c:876
+ splice_direct_to_actor+0x2d2/0x970 fs/splice.c:953
+ do_splice_direct+0x1da/0x2a0 fs/splice.c:1062
+ do_sendfile+0x597/0xd00 fs/read_write.c:1443
+ __do_sys_sendfile64 fs/read_write.c:1498 [inline]
+ __se_sys_sendfile64 fs/read_write.c:1490 [inline]
+ __x64_sys_sendfile64+0x15a/0x220 fs/read_write.c:1490
+ do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458da9
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f300d24bc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000458da9
+RDX: 00000000200000c0 RSI: 0000000000000008 RDI: 0000000000000007
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 000000000000005a R11: 0000000000000246 R12: 00007f300d24c6d4
+R13: 00000000004c5fa3 R14: 00000000004da748 R15: 00000000ffffffff
 
-Also important fix to address the various reports of
-oops in smb2_push_mandatory_locks
+Allocated by task 17543:
+ save_stack+0x45/0xd0 mm/kasan/common.c:75
+ set_track mm/kasan/common.c:87 [inline]
+ __kasan_kmalloc mm/kasan/common.c:497 [inline]
+ __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:470
+ kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:505
+ slab_post_alloc_hook mm/slab.h:437 [inline]
+ slab_alloc mm/slab.c:3393 [inline]
+ kmem_cache_alloc+0x11a/0x6f0 mm/slab.c:3555
+ alloc_pid+0x55/0x8f0 kernel/pid.c:168
+ copy_process.part.0+0x3b08/0x7980 kernel/fork.c:1932
+ copy_process kernel/fork.c:1709 [inline]
+ _do_fork+0x257/0xfd0 kernel/fork.c:2226
+ __do_sys_clone kernel/fork.c:2333 [inline]
+ __se_sys_clone kernel/fork.c:2327 [inline]
+ __x64_sys_clone+0xbf/0x150 kernel/fork.c:2327
+ do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Signed-off-by: Aurelien Aptel <aaptel@suse.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Freed by task 7789:
+ save_stack+0x45/0xd0 mm/kasan/common.c:75
+ set_track mm/kasan/common.c:87 [inline]
+ __kasan_slab_free+0x102/0x150 mm/kasan/common.c:459
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:467
+ __cache_free mm/slab.c:3499 [inline]
+ kmem_cache_free+0x86/0x260 mm/slab.c:3765
+ put_pid.part.0+0x111/0x150 kernel/pid.c:111
+ put_pid+0x20/0x30 kernel/pid.c:105
+ fl_free+0xbe/0xe0 net/ipv6/ip6_flowlabel.c:102
+ ip6_fl_gc+0x295/0x3e0 net/ipv6/ip6_flowlabel.c:152
+ call_timer_fn+0x190/0x720 kernel/time/timer.c:1325
+ expire_timers kernel/time/timer.c:1362 [inline]
+ __run_timers kernel/time/timer.c:1681 [inline]
+ __run_timers kernel/time/timer.c:1649 [inline]
+ run_timer_softirq+0x652/0x1700 kernel/time/timer.c:1694
+ __do_softirq+0x266/0x95a kernel/softirq.c:293
+
+The buggy address belongs to the object at ffff888094012a00
+ which belongs to the cache pid_2 of size 88
+The buggy address is located 4 bytes inside of
+ 88-byte region [ffff888094012a00, ffff888094012a58)
+The buggy address belongs to the page:
+page:ffffea0002500480 count:1 mapcount:0 mapping:ffff88809a483080 index:0xffff888094012980
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea00018a3508 ffffea0002524a88 ffff88809a483080
+raw: ffff888094012980 ffff888094012000 000000010000001b 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888094012900: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
+ ffff888094012980: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
+>ffff888094012a00: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
+                   ^
+ ffff888094012a80: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
+ ffff888094012b00: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
+
+Fixes: 4f82f45730c6 ("net ip6 flowlabel: Make owner a union of struct pid * and kuid_t")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16: Move the release_net() call too, not that it does
+ anything.]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/cifs/cifsglob.h |  2 ++
- fs/cifs/file.c     | 30 +++++++++++++++++++++++++-----
- fs/cifs/misc.c     | 25 +++++++++++++++++++++++--
- fs/cifs/smb2misc.c |  6 +++---
- 4 files changed, 53 insertions(+), 10 deletions(-)
-
---- a/fs/cifs/cifsglob.h
-+++ b/fs/cifs/cifsglob.h
-@@ -1092,6 +1092,7 @@ cifsFileInfo_get_locked(struct cifsFileI
+--- a/net/ipv6/ip6_flowlabel.c
++++ b/net/ipv6/ip6_flowlabel.c
+@@ -94,16 +94,22 @@ static struct ip6_flowlabel *fl_lookup(s
+ 	return fl;
  }
  
- struct cifsFileInfo *cifsFileInfo_get(struct cifsFileInfo *cifs_file);
-+void _cifsFileInfo_put(struct cifsFileInfo *cifs_file, bool wait_oplock_hdlr);
- void cifsFileInfo_put(struct cifsFileInfo *cifs_file);
- 
- #define CIFS_CACHE_READ_FLG	1
-@@ -1579,6 +1580,7 @@ GLOBAL_EXTERN spinlock_t gidsidlock;
- #endif /* CONFIG_CIFS_ACL */
- 
- void cifs_oplock_break(struct work_struct *work);
-+void cifs_queue_oplock_break(struct cifsFileInfo *cfile);
- 
- extern const struct slow_work_ops cifs_oplock_break_ops;
- extern struct workqueue_struct *cifsiod_wq;
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -359,13 +359,31 @@ cifsFileInfo_get(struct cifsFileInfo *ci
- 	return cifs_file;
- }
- 
--/*
-- * Release a reference on the file private data. This may involve closing
-- * the filehandle out on the server. Must be called without holding
-- * tcon->open_file_lock and cifs_file->file_info_lock.
-+/**
-+ * cifsFileInfo_put - release a reference of file priv data
-+ *
-+ * Always potentially wait for oplock handler. See _cifsFileInfo_put().
-  */
- void cifsFileInfo_put(struct cifsFileInfo *cifs_file)
- {
-+	_cifsFileInfo_put(cifs_file, true);
++static void fl_free_rcu(struct rcu_head *head)
++{
++	struct ip6_flowlabel *fl = container_of(head, struct ip6_flowlabel, rcu);
++
++	if (fl->share == IPV6_FL_S_PROCESS)
++		put_pid(fl->owner.pid);
++	release_net(fl->fl_net);
++	kfree(fl->opt);
++	kfree(fl);
 +}
 +
-+/**
-+ * _cifsFileInfo_put - release a reference of file priv data
-+ *
-+ * This may involve closing the filehandle @cifs_file out on the
-+ * server. Must be called without holding tcon->open_file_lock and
-+ * cifs_file->file_info_lock.
-+ *
-+ * If @wait_for_oplock_handler is true and we are releasing the last
-+ * reference, wait for any running oplock break handler of the file
-+ * and cancel any pending one. If calling this function from the
-+ * oplock break handler, you need to pass false.
-+ *
-+ */
-+void _cifsFileInfo_put(struct cifsFileInfo *cifs_file, bool wait_oplock_handler)
-+{
- 	struct inode *inode = cifs_file->dentry->d_inode;
- 	struct cifs_tcon *tcon = tlink_tcon(cifs_file->tlink);
- 	struct TCP_Server_Info *server = tcon->ses->server;
-@@ -412,7 +430,8 @@ void cifsFileInfo_put(struct cifsFileInf
  
- 	spin_unlock(&tcon->open_file_lock);
- 
--	oplock_break_cancelled = cancel_work_sync(&cifs_file->oplock_break);
-+	oplock_break_cancelled = wait_oplock_handler ?
-+		cancel_work_sync(&cifs_file->oplock_break) : false;
- 
- 	if (!tcon->need_reconnect && !cifs_file->invalidHandle) {
- 		struct TCP_Server_Info *server = tcon->ses->server;
-@@ -3701,6 +3720,7 @@ void cifs_oplock_break(struct work_struc
- 							     cinode);
- 		cifs_dbg(FYI, "Oplock release rc = %d\n", rc);
- 	}
-+	_cifsFileInfo_put(cfile, false /* do not wait for ourself */);
- 	cifs_done_oplock_break(cinode);
- }
- 
---- a/fs/cifs/misc.c
-+++ b/fs/cifs/misc.c
-@@ -477,8 +477,7 @@ is_valid_oplock_break(char *buffer, stru
- 					   CIFS_INODE_DOWNGRADE_OPLOCK_TO_L2,
- 					   &pCifsInode->flags);
- 
--				queue_work(cifsoplockd_wq,
--					   &netfile->oplock_break);
-+				cifs_queue_oplock_break(netfile);
- 				netfile->oplock_break_cancelled = false;
- 
- 				spin_unlock(&tcon->open_file_lock);
-@@ -610,6 +609,28 @@ void cifs_put_writer(struct cifsInodeInf
- 	spin_unlock(&cinode->writers_lock);
- }
- 
-+/**
-+ * cifs_queue_oplock_break - queue the oplock break handler for cfile
-+ *
-+ * This function is called from the demultiplex thread when it
-+ * receives an oplock break for @cfile.
-+ *
-+ * Assumes the tcon->open_file_lock is held.
-+ * Assumes cfile->file_info_lock is NOT held.
-+ */
-+void cifs_queue_oplock_break(struct cifsFileInfo *cfile)
-+{
-+	/*
-+	 * Bump the handle refcount now while we hold the
-+	 * open_file_lock to enforce the validity of it for the oplock
-+	 * break handler. The matching put is done at the end of the
-+	 * handler.
-+	 */
-+	cifsFileInfo_get(cfile);
-+
-+	queue_work(cifsoplockd_wq, &cfile->oplock_break);
-+}
-+
- void cifs_done_oplock_break(struct cifsInodeInfo *cinode)
+ static void fl_free(struct ip6_flowlabel *fl)
  {
- 	clear_bit(CIFS_INODE_PENDING_OPLOCK_BREAK, &cinode->flags);
---- a/fs/cifs/smb2misc.c
-+++ b/fs/cifs/smb2misc.c
-@@ -458,7 +458,7 @@ smb2_tcon_has_lease(struct cifs_tcon *tc
- 			clear_bit(CIFS_INODE_DOWNGRADE_OPLOCK_TO_L2,
- 				  &cinode->flags);
+-	if (fl) {
+-		if (fl->share == IPV6_FL_S_PROCESS)
+-			put_pid(fl->owner.pid);
+-		release_net(fl->fl_net);
+-		kfree(fl->opt);
+-		kfree_rcu(fl, rcu);
+-	}
++	if (fl)
++		call_rcu(&fl->rcu, fl_free_rcu);
+ }
  
--		queue_work(cifsoplockd_wq, &cfile->oplock_break);
-+		cifs_queue_oplock_break(cfile);
- 		kfree(lw);
- 		return true;
- 	}
-@@ -602,8 +602,8 @@ smb2_is_valid_oplock_break(char *buffer,
- 					   CIFS_INODE_DOWNGRADE_OPLOCK_TO_L2,
- 					   &cinode->flags);
- 				spin_unlock(&cfile->file_info_lock);
--				queue_work(cifsoplockd_wq,
--					   &cfile->oplock_break);
-+
-+				cifs_queue_oplock_break(cfile);
- 
- 				spin_unlock(&tcon->open_file_lock);
- 				spin_unlock(&cifs_tcp_ses_lock);
+ static void fl_release(struct ip6_flowlabel *fl)
 
