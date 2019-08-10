@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62460C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DBDC41514
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40E33208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC721208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfHJUrM (ORCPT
+        id S1727199AbfHJUrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:47:12 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55094 "EHLO
+        Sat, 10 Aug 2019 16:47:23 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55060 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726859AbfHJUoE (ORCPT
+        by vger.kernel.org with ESMTP id S1726843AbfHJUoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:44:04 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDZ-00053m-TS; Sat, 10 Aug 2019 21:44:02 +0100
+        id 1hwYDY-00053W-El; Sat, 10 Aug 2019 21:44:00 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDL-0003eJ-SS; Sat, 10 Aug 2019 21:43:47 +0100
+        id 1hwYDM-0003eo-5i; Sat, 10 Aug 2019 21:43:48 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Thomas Lendacky" <thomas.lendacky@amd.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Mikhail Gavrilov" <mikhail.v.gavrilov@gmail.com>
+        "Ian Abbott" <abbotti@mev.co.uk>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.972476944@decadent.org.uk>
+Message-ID: <lsq.1565469607.711785637@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 084/157] x86/speculation: Prevent deadlock on
- ssb_state::lock
+Subject: [PATCH 3.16 088/157] staging: comedi: vmk80xx: Fix possible
+ double-free of ->usb_rx_buf
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,65 +56,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 2f5fb19341883bb6e37da351bc3700489d8506a7 upstream.
+commit 663d294b4768bfd89e529e069bffa544a830b5bf upstream.
 
-Mikhail reported a lockdep splat related to the AMD specific ssb_state
-lock:
+`vmk80xx_alloc_usb_buffers()` is called from `vmk80xx_auto_attach()` to
+allocate RX and TX buffers for USB transfers.  It allocates
+`devpriv->usb_rx_buf` followed by `devpriv->usb_tx_buf`.  If the
+allocation of `devpriv->usb_tx_buf` fails, it frees
+`devpriv->usb_rx_buf`,  leaving the pointer set dangling, and returns an
+error.  Later, `vmk80xx_detach()` will be called from the core comedi
+module code to clean up.  `vmk80xx_detach()` also frees both
+`devpriv->usb_rx_buf` and `devpriv->usb_tx_buf`, but
+`devpriv->usb_rx_buf` may have already been freed, leading to a
+double-free error.  Fix it by removing the call to
+`kfree(devpriv->usb_rx_buf)` from `vmk80xx_alloc_usb_buffers()`, relying
+on `vmk80xx_detach()` to free the memory.
 
-  CPU0                       CPU1
-  lock(&st->lock);
-                             local_irq_disable();
-                             lock(&(&sighand->siglock)->rlock);
-                             lock(&st->lock);
-  <Interrupt>
-     lock(&(&sighand->siglock)->rlock);
-
-  *** DEADLOCK ***
-
-The connection between sighand->siglock and st->lock comes through seccomp,
-which takes st->lock while holding sighand->siglock.
-
-Make sure interrupts are disabled when __speculation_ctrl_update() is
-invoked via prctl() -> speculation_ctrl_update(). Add a lockdep assert to
-catch future offenders.
-
-Fixes: 1f50ddb4f418 ("x86/speculation: Handle HT correctly on AMD")
-Reported-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Thomas Lendacky <thomas.lendacky@amd.com>
-Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1904141948200.4917@nanos.tec.linutronix.de
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kernel/process.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/staging/comedi/drivers/vmk80xx.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -351,6 +351,8 @@ static __always_inline void __speculatio
- 	u64 msr = x86_spec_ctrl_base;
- 	bool updmsr = false;
+--- a/drivers/staging/comedi/drivers/vmk80xx.c
++++ b/drivers/staging/comedi/drivers/vmk80xx.c
+@@ -757,10 +757,8 @@ static int vmk80xx_alloc_usb_buffers(str
  
-+	lockdep_assert_irqs_disabled();
-+
- 	/*
- 	 * If TIF_SSBD is different, select the proper mitigation
- 	 * method. Note that if SSBD mitigation is disabled or permanentely
-@@ -402,10 +404,12 @@ static unsigned long speculation_ctrl_up
+ 	size = le16_to_cpu(devpriv->ep_tx->wMaxPacketSize);
+ 	devpriv->usb_tx_buf = kzalloc(size, GFP_KERNEL);
+-	if (!devpriv->usb_tx_buf) {
+-		kfree(devpriv->usb_rx_buf);
++	if (!devpriv->usb_tx_buf)
+ 		return -ENOMEM;
+-	}
  
- void speculation_ctrl_update(unsigned long tif)
- {
-+	unsigned long flags;
-+
- 	/* Forced update. Make sure all relevant TIF flags are different */
--	preempt_disable();
-+	local_irq_save(flags);
- 	__speculation_ctrl_update(~tif, tif);
--	preempt_enable();
-+	local_irq_restore(flags);
+ 	return 0;
  }
- 
- /* Called from seccomp/prctl update */
 
