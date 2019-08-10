@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13824C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03551C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB502208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9222208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727567AbfHJUtf (ORCPT
+        id S1727574AbfHJUth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:49:35 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54614 "EHLO
+        Sat, 10 Aug 2019 16:49:37 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54636 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726751AbfHJUn6 (ORCPT
+        by vger.kernel.org with ESMTP id S1726755AbfHJUn6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:58 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDT-00053m-9o; Sat, 10 Aug 2019 21:43:55 +0100
+        id 1hwYDT-00053u-9y; Sat, 10 Aug 2019 21:43:55 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDO-0003jk-Hy; Sat, 10 Aug 2019 21:43:50 +0100
+        id 1hwYDO-0003jf-G0; Sat, 10 Aug 2019 21:43:50 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Willy Tarreau" <w@1wt.eu>, "Denis Efremov" <efremov@ispras.ru>
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        "Michael Neuling" <mikey@neuling.org>,
+        "Praveen Pandey" <Praveen.Pandey@in.ibm.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.827914321@decadent.org.uk>
+Message-ID: <lsq.1565469607.372546052@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 138/157] floppy: fix div-by-zero in setup_format_params
+Subject: [PATCH 3.16 137/157] powerpc/tm: Fix oops on sigreturn on systems
+ without TM
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,57 +57,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Denis Efremov <efremov@ispras.ru>
+From: Michael Neuling <mikey@neuling.org>
 
-commit f3554aeb991214cbfafd17d55e2bfddb50282e32 upstream.
+commit f16d80b75a096c52354c6e0a574993f3b0dfbdfe upstream.
 
-This fixes a divide by zero error in the setup_format_params function of
-the floppy driver.
+On systems like P9 powernv where we have no TM (or P8 booted with
+ppc_tm=off), userspace can construct a signal context which still has
+the MSR TS bits set. The kernel tries to restore this context which
+results in the following crash:
 
-Two consecutive ioctls can trigger the bug: The first one should set the
-drive geometry with such .sect and .rate values for the F_SECT_PER_TRACK
-to become zero.  Next, the floppy format operation should be called.
+  Unexpected TM Bad Thing exception at c0000000000022fc (msr 0x8000000102a03031) tm_scratch=800000020280f033
+  Oops: Unrecoverable exception, sig: 6 [#1]
+  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+  Modules linked in:
+  CPU: 0 PID: 1636 Comm: sigfuz Not tainted 5.2.0-11043-g0a8ad0ffa4 #69
+  NIP:  c0000000000022fc LR: 00007fffb2d67e48 CTR: 0000000000000000
+  REGS: c00000003fffbd70 TRAP: 0700   Not tainted  (5.2.0-11045-g7142b497d8)
+  MSR:  8000000102a03031 <SF,VEC,VSX,FP,ME,IR,DR,LE,TM[E]>  CR: 42004242  XER: 00000000
+  CFAR: c0000000000022e0 IRQMASK: 0
+  GPR00: 0000000000000072 00007fffb2b6e560 00007fffb2d87f00 0000000000000669
+  GPR04: 00007fffb2b6e728 0000000000000000 0000000000000000 00007fffb2b6f2a8
+  GPR08: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+  GPR12: 0000000000000000 00007fffb2b76900 0000000000000000 0000000000000000
+  GPR16: 00007fffb2370000 00007fffb2d84390 00007fffea3a15ac 000001000a250420
+  GPR20: 00007fffb2b6f260 0000000010001770 0000000000000000 0000000000000000
+  GPR24: 00007fffb2d843a0 00007fffea3a14a0 0000000000010000 0000000000800000
+  GPR28: 00007fffea3a14d8 00000000003d0f00 0000000000000000 00007fffb2b6e728
+  NIP [c0000000000022fc] rfi_flush_fallback+0x7c/0x80
+  LR [00007fffb2d67e48] 0x7fffb2d67e48
+  Call Trace:
+  Instruction dump:
+  e96a0220 e96a02a8 e96a0330 e96a03b8 394a0400 4200ffdc 7d2903a6 e92d0c00
+  e94d0c08 e96d0c10 e82d0c18 7db242a6 <4c000024> 7db243a6 7db142a6 f82d0c18
 
-A floppy disk is not required to be inserted.  An unprivileged user
-could trigger the bug if the device is accessible.
+The problem is the signal code assumes TM is enabled when
+CONFIG_PPC_TRANSACTIONAL_MEM is enabled. This may not be the case as
+with P9 powernv or if `ppc_tm=off` is used on P8.
 
-The patch checks F_SECT_PER_TRACK for a non-zero value in the
-set_geometry function.  The proper check should involve a reasonable
-upper limit for the .sect and .rate fields, but it could change the
-UAPI.
+This means any local user can crash the system.
 
-The patch also checks F_SECT_PER_TRACK in the setup_format_params, and
-cancels the formatting operation in case of zero.
+Fix the problem by returning a bad stack frame to the user if they try
+to set the MSR TS bits with sigreturn() on systems where TM is not
+supported.
 
-The bug was found by syzkaller.
+Found with sigfuz kernel selftest on P9.
 
-Signed-off-by: Denis Efremov <efremov@ispras.ru>
-Tested-by: Willy Tarreau <w@1wt.eu>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+This fixes CVE-2019-13648.
+
+Fixes: 2b0a576d15e0 ("powerpc: Add new transactional memory state to the signal context")
+Reported-by: Praveen Pandey <Praveen.Pandey@in.ibm.com>
+Signed-off-by: Michael Neuling <mikey@neuling.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190719050502.405-1-mikey@neuling.org
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/block/floppy.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/powerpc/kernel/signal_32.c | 3 +++
+ arch/powerpc/kernel/signal_64.c | 5 +++++
+ 2 files changed, 8 insertions(+)
 
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -2113,6 +2113,9 @@ static void setup_format_params(int trac
- 	raw_cmd->kernel_data = floppy_track_buffer;
- 	raw_cmd->length = 4 * F_SECT_PER_TRACK;
+--- a/arch/powerpc/kernel/signal_32.c
++++ b/arch/powerpc/kernel/signal_32.c
+@@ -1274,6 +1274,9 @@ long sys_rt_sigreturn(int r3, int r4, in
+ 			goto bad;
  
-+	if (!F_SECT_PER_TRACK)
-+		return;
+ 		if (MSR_TM_ACTIVE(msr_hi<<32)) {
++			/* Trying to start TM on non TM system */
++			if (!cpu_has_feature(CPU_FTR_TM))
++				goto bad;
+ 			/* We only recheckpoint on return if we're
+ 			 * transaction.
+ 			 */
+--- a/arch/powerpc/kernel/signal_64.c
++++ b/arch/powerpc/kernel/signal_64.c
+@@ -702,6 +702,11 @@ int sys_rt_sigreturn(unsigned long r3, u
+ 	if (MSR_TM_ACTIVE(msr)) {
+ 		/* We recheckpoint on return. */
+ 		struct ucontext __user *uc_transact;
 +
- 	/* allow for about 30ms for data transport per track */
- 	head_shift = (F_SECT_PER_TRACK + 5) / 6;
- 
-@@ -3235,6 +3238,8 @@ static int set_geometry(unsigned int cmd
- 	/* sanity checking for parameters. */
- 	if (g->sect <= 0 ||
- 	    g->head <= 0 ||
-+	    /* check for zero in F_SECT_PER_TRACK */
-+	    (unsigned char)((g->sect << 2) >> FD_SIZECODE(g)) == 0 ||
- 	    g->track <= 0 || g->track > UDP->tracks >> STRETCH(g) ||
- 	    /* check if reserved bits are set */
- 	    (g->stretch & ~(FD_STRETCH | FD_SWAPSIDES | FD_SECTBASEMASK)) != 0)
++		/* Trying to start TM on non TM system */
++		if (!cpu_has_feature(CPU_FTR_TM))
++			goto badframe;
++
+ 		if (__get_user(uc_transact, &uc->uc_link))
+ 			goto badframe;
+ 		if (restore_tm_sigcontexts(regs, &uc->uc_mcontext,
 
