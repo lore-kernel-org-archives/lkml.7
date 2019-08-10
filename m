@@ -2,186 +2,215 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2033AC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 02:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACCAC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 02:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C834A21743
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 02:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC59217F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 02:57:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="uMcSRGYu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hM96Sb0B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729712AbfHJCr1 (ORCPT
+        id S1726094AbfHJC5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 22:47:27 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.210]:20486 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726870AbfHJCr0 (ORCPT
+        Fri, 9 Aug 2019 22:57:46 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44681 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfHJC5q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 22:47:26 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 4418D400C3410
-        for <linux-kernel@vger.kernel.org>; Fri,  9 Aug 2019 21:47:25 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id wHPhhGuIN3Qi0wHPhhzZsP; Fri, 09 Aug 2019 21:47:25 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=FLFdeAKzGRXDIPNzhc+h/WVNgNfBJFq2yFAvCNbGFIY=; b=uMcSRGYuAG+L2KW+D/9an+Aj6s
-        nmHEQrwaM0rhWBFcRGmZTgcnmzfpdmBMMaBvUxLxcHb8cjZdMYzDVGlSmCAkxPG+D6RFVoDlnofq6
-        ysA9RIuHBTVBtQFnxiNSVSCQt8BmclvwB3TlkgyWI8O2p6ZAqcTSTeR4z6FNMAprtfAsLLPcCPd1C
-        JzRV06tZr/MZpPrtta5CMy1A5Z8Pd1J5+7pepTgLZvIbVheBTedELpA01MU+2+GS1x053Vqq4dYhS
-        MOMpoUiv3sUE39BMr26zJUBCpOjLc1xvYr/m9s4lWgi2vIdSC4INKYthAwo0f/01UhQgYH3IcXDcU
-        W1elK7iw==;
-Received: from [187.192.11.120] (port=35624 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hwHPg-003y1H-Tt; Fri, 09 Aug 2019 21:47:25 -0500
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Rich Felker <dalias@libc.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1564971263-21562-1-git-send-email-linux@roeck-us.net>
- <20190805032441.GO9017@brightrain.aerifal.cx>
- <20190809195630.GA15606@roeck-us.net>
- <5f26547f-b48e-4b9f-b8ef-858283915e3d@embeddedor.com>
- <20190809215608.GA11065@roeck-us.net>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [PATCH] sh: Drop -Werror from kernel Makefile
-Message-ID: <6a06245f-33f2-1d92-0d0e-c8b270dc24af@embeddedor.com>
-Date:   Fri, 9 Aug 2019 21:47:23 -0500
+        Fri, 9 Aug 2019 22:57:46 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t16so46971497pfe.11;
+        Fri, 09 Aug 2019 19:57:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kQcn7trNekDj0qqTtDkSs96HNHs6dudjhS459W20OWo=;
+        b=hM96Sb0BYW/n/w11bIADqi7mwIwqUS+dBKttzYw4hWbql5ALkH5BSFvdfVEzHEp6Jp
+         0NCyPcckjd4ksM+HtzUM4OTyhbRfo58Nnx/pR7k1/WOpBHvitgL8PosUcZZNt5FMrNuU
+         ghhTMw2N/JaYr2nkCoHSeJZq3syjmqLtDRo5owDJA4ZB0k0IevX/G/yedx3j8g3tqGec
+         QBhySOvX4QgXE5R76K8ohI1g8LCxCqbBMQL5dlx0RvfTCOLhKGIinaymYoH9tWn0viE9
+         L2giVnaAcuxt6x+z+Pm0DWPWxWSsNT/QzajTq5V4AhvhtF7ewa6ZQxF1nTYIlntN3Ff0
+         F1RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kQcn7trNekDj0qqTtDkSs96HNHs6dudjhS459W20OWo=;
+        b=SJnrtt1MKTMZT1c+MqlkAwSlZ/0qkTZzpsOQRg6ariy3/PMRBh60qVf8zUlyR3Te17
+         8HwSM8BYT2ft/LBFrFhquSBpMw5OJYh1tkiq/HkPZ8nv0VTPvUBmTwlus7pZwBlwbqyv
+         FzYs4FVpPJlxqLPvUTYP6M/MiZHfYLxSZNaMpxfCIRFaPTMSmItniq62686vqSMC88HA
+         zFl17Q1OvXgcW+GzAzRyso8i+S57BOCQ3jBlnbdWndgLHT/J45XXXP2KJ7RcWTIiZvt+
+         +T7SGMzAeUuM0fYGRCKErldsz5+iulVKCQZfoNgVbWDj+qbseJF1TspW6izM4PEnW4Un
+         219w==
+X-Gm-Message-State: APjAAAWDJaH6IgHFooGY18gdRcgPlcCAxoSp9pFlpkxJYnWGMXjZgNRP
+        oE7+eI4mEkoG1tnLzt8BC0w=
+X-Google-Smtp-Source: APXvYqyODM1aXn3F0N5dKbLQNYVoL+RPmQnATl8faybWKMxo9YzKkJEhSTG1H5dvEuw5VlZHE876og==
+X-Received: by 2002:a65:64cf:: with SMTP id t15mr19721356pgv.88.1565405865533;
+        Fri, 09 Aug 2019 19:57:45 -0700 (PDT)
+Received: from [192.168.1.70] (c-73-231-235-122.hsd1.ca.comcast.net. [73.231.235.122])
+        by smtp.gmail.com with ESMTPSA id m13sm4112400pfh.36.2019.08.09.19.57.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 19:57:44 -0700 (PDT)
+Subject: Re: [PATCH v9 0/7] Solve postboot supplier cleanup and optimize probe
+ ordering
+To:     Saravana Kannan <saravanak@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Collins <collinsd@codeaurora.org>,
+        kernel-team@android.com
+References: <20190731221721.187713-1-saravanak@google.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <919b66e9-9708-de34-41cd-e448838b130c@gmail.com>
+Date:   Fri, 9 Aug 2019 19:57:43 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190809215608.GA11065@roeck-us.net>
+In-Reply-To: <20190731221721.187713-1-saravanak@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hwHPg-003y1H-Tt
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [187.192.11.120]:35624
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guenter,
+Hi Saravana,
 
-On 8/9/19 4:56 PM, Guenter Roeck wrote:
-> On Fri, Aug 09, 2019 at 04:36:01PM -0500, Gustavo A. R. Silva wrote:
->> Hi Guenter,
->>
->> On 8/9/19 2:56 PM, Guenter Roeck wrote:
->>> On Sun, Aug 04, 2019 at 11:24:41PM -0400, Rich Felker wrote:
->>>> On Sun, Aug 04, 2019 at 07:14:23PM -0700, Guenter Roeck wrote:
->>>>> Since commit a035d552a93b ("Makefile: Globally enable fall-through
->>>>> warning"), all sh builds fail with errors such as
->>>>>
->>>>> arch/sh/kernel/disassemble.c: In function 'print_sh_insn':
->>>>> arch/sh/kernel/disassemble.c:478:8: error: this statement may fall through
->>>>>
->>>>> Since this effectively disables all build and boot tests for the
->>>>> architecture, let's drop -Werror from the sh kernel Makefile until
->>>>> the problems are fixed.
->>>>>
->>>>> Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
->>>>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
->>>>
->>>> Acked-by: Rich Felker <dalias@libc.org>
->>>>
->>> Any chance to get this or a similar patch applied soon ? All sh builds
->>> in mainline and -next are still broken.
->>>
->>
->> If no one cares, I can add it to my tree and include it in my pull-request
->> for 5.3-rc4.
->>
->> I would just need your Tested-by.
->>
+On 7/31/19 3:17 PM, Saravana Kannan wrote:
+> Add device-links to track functional dependencies between devices
+> after they are created (but before they are probed) by looking at
+> their common DT bindings like clocks, interconnects, etc.
 > 
-> Sure:
+> Having functional dependencies automatically added before the devices
+> are probed, provides the following benefits:
 > 
-> Tested-by: Guenter Roeck <linux@roeck-us.net>
+> - Optimizes device probe order and avoids the useless work of
+>   attempting probes of devices that will not probe successfully
+>   (because their suppliers aren't present or haven't probed yet).
 > 
-> [ Applied to ToT and built sh:{defconfig,allnoconfig,tinyconfig} ]
+>   For example, in a commonly available mobile SoC, registering just
+>   one consumer device's driver at an initcall level earlier than the
+>   supplier device's driver causes 11 failed probe attempts before the
+>   consumer device probes successfully. This was with a kernel with all
+>   the drivers statically compiled in. This problem gets a lot worse if
+>   all the drivers are loaded as modules without direct symbol
+>   dependencies.
+> 
+> - Supplier devices like clock providers, interconnect providers, etc
+>   need to keep the resources they provide active and at a particular
+>   state(s) during boot up even if their current set of consumers don't
+>   request the resource to be active. This is because the rest of the
+>   consumers might not have probed yet and turning off the resource
+>   before all the consumers have probed could lead to a hang or
+>   undesired user experience.
+> 
+>   Some frameworks (Eg: regulator) handle this today by turning off
+>   "unused" resources at late_initcall_sync and hoping all the devices
+>   have probed by then. This is not a valid assumption for systems with
+>   loadable modules. Other frameworks (Eg: clock) just don't handle
+>   this due to the lack of a clear signal for when they can turn off
+>   resources. This leads to downstream hacks to handle cases like this
+>   that can easily be solved in the upstream kernel.
+> 
+>   By linking devices before they are probed, we give suppliers a clear
+>   count of the number of dependent consumers. Once all of the
+>   consumers are active, the suppliers can turn off the unused
+>   resources without making assumptions about the number of consumers.
+> 
+> By default we just add device-links to track "driver presence" (probe
+> succeeded) of the supplier device. If any other functionality provided
+> by device-links are needed, it is left to the consumer/supplier
+> devices to change the link when they probe.
+> 
+> v1 -> v2:
+> - Drop patch to speed up of_find_device_by_node()
+> - Drop depends-on property and use existing bindings
+> 
+> v2 -> v3:
+> - Refactor the code to have driver core initiate the linking of devs
+> - Have driver core link consumers to supplier before it's probed
+> - Add support for drivers to edit the device links before probing
+> 
+> v3 -> v4:
+> - Tested edit_links() on system with cyclic dependency. Works.
+> - Added some checks to make sure device link isn't attempted from
+>   parent device node to child device node.
+> - Added way to pause/resume sync_state callbacks across
+>   of_platform_populate().
+> - Recursively parse DT node to create device links from parent to
+>   suppliers of parent and all child nodes.
+> 
+> v4 -> v5:
+> - Fixed copy-pasta bugs with linked list handling
+> - Walk up the phandle reference till I find an actual device (needed
+>   for regulators to work)
+> - Added support for linking devices from regulator DT bindings
+> - Tested the whole series again to make sure cyclic dependencies are
+>   broken with edit_links() and regulator links are created properly.
+> 
+> v5 -> v6:
+> - Split, squashed and reordered some of the patches.
+> - Refactored the device linking code to follow the same code pattern for
+>   any property.
+> 
+> v6 -> v7:
+> - No functional changes.
+> - Renamed i to index
+> - Added comment to clarify not having to check property name for every
+>   index
+> - Added "matched" variable to clarify code. No functional change.
+> - Added comments to include/linux/device.h for add_links()
+> 
+> v7 -> v8:
+> - Rebased on top of linux-next to handle device link changes in [1]
 > 
 
-On second thought it seems to me that this is not a good idea, at least
-for mainline. For the time being I'll take this patch for linux-next only.
 
-Who is the maintainer of sh?
+> v8 -> v9:
+> - Fixed kbuild test bot reported errors (docs and const)
 
-The best solution is to fix those fall-through warnings you see. Could you
-please send me all the warnings you see? I can try to fix them.
+Some maintainers have strong opinions about whether change logs should be:
 
-Thanks!
---
-Gustavo
+  (1) only in patch 0
+  (2) only in the specific patches that are changed
+  (3) both in patch 0 and in the specific patches that are changed.
+
+I can adapt to any of the three styles.  But for style "(1)" please
+list which specific patch has changed for each item in the change list.
+
+-Frank
+
+
+> 
+> [1] - https://lore.kernel.org/lkml/2305283.AStDPdUUnE@kreacher/
+> 
+> -Saravana
+> 
+> 
+> Saravana Kannan (7):
+>   driver core: Add support for linking devices during device addition
+>   driver core: Add edit_links() callback for drivers
+>   of/platform: Add functional dependency link from DT bindings
+>   driver core: Add sync_state driver/bus callback
+>   of/platform: Pause/resume sync state during init and
+>     of_platform_populate()
+>   of/platform: Create device links for all child-supplier depencencies
+>   of/platform: Don't create device links for default busses
+> 
+>  .../admin-guide/kernel-parameters.txt         |   5 +
+>  drivers/base/core.c                           | 168 ++++++++++++++++
+>  drivers/base/dd.c                             |  29 +++
+>  drivers/of/platform.c                         | 189 ++++++++++++++++++
+>  include/linux/device.h                        |  60 ++++++
+>  5 files changed, 451 insertions(+)
+> 
+
