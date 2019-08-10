@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 009A0C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD45FC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFE76208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4550208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfHJUoB (ORCPT
+        id S1726890AbfHJUoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:44:01 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53954 "EHLO
+        Sat, 10 Aug 2019 16:44:06 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54274 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726530AbfHJUnt (ORCPT
+        by vger.kernel.org with ESMTP id S1726457AbfHJUnx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:43:49 -0400
+        Sat, 10 Aug 2019 16:43:53 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-00053P-Kb; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDM-00053Y-Ss; Sat, 10 Aug 2019 21:43:48 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-0003Z7-1I; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDJ-0003bN-WD; Sat, 10 Aug 2019 21:43:46 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Kohji Okuno" <okuno.kohji@jp.panasonic.com>,
-        "Shawn Guo" <shawnguo@kernel.org>
+        "Heiner Kallweit" <hkallweit1@gmail.com>,
+        "Phil Reid" <preid@electromag.com.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "liweihang" <liweihang@hisilicon.com>,
+        "Florian Fainelli" <f.fainelli@gmail.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.702416996@decadent.org.uk>
+Message-ID: <lsq.1565469607.97542613@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 021/157] ARM: imx6q: cpuidle: fix bug that CPU might
- not wake up at expected time
+Subject: [PATCH 3.16 049/157] net: phy: don't clear BMCR in genphy_soft_reset
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,74 +58,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kohji Okuno <okuno.kohji@jp.panasonic.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-commit 91740fc8242b4f260cfa4d4536d8551804777fae upstream.
+commit d29f5aa0bc0c321e1b9e4658a2a7e08e885da52a upstream.
 
-In the current cpuidle implementation for i.MX6q, the CPU that sets
-'WAIT_UNCLOCKED' and the CPU that returns to 'WAIT_CLOCKED' are always
-the same. While the CPU that sets 'WAIT_UNCLOCKED' is in IDLE state of
-"WAIT", if the other CPU wakes up and enters IDLE state of "WFI"
-istead of "WAIT", this CPU can not wake up at expired time.
- Because, in the case of "WFI", the CPU must be waked up by the local
-timer interrupt. But, while 'WAIT_UNCLOCKED' is set, the local timer
-is stopped, when all CPUs execute "wfi" instruction. As a result, the
-local timer interrupt is not fired.
- In this situation, this CPU will wake up by IRQ different from local
-timer. (e.g. broacast timer)
+So far we effectively clear the BMCR register. Some PHY's can deal
+with this (e.g. because they reset BMCR to a default as part of a
+soft-reset) whilst on others this causes issues because e.g. the
+autoneg bit is cleared. Marvell is an example, see also thread [0].
+So let's be a little bit more gentle and leave all bits we're not
+interested in as-is. This change is needed for PHY drivers to
+properly deal with the original patch.
 
-So, this fix changes CPU to return to 'WAIT_CLOCKED'.
+[0] https://marc.info/?t=155264050700001&r=1&w=2
 
-Signed-off-by: Kohji Okuno <okuno.kohji@jp.panasonic.com>
-Fixes: e5f9dec8ff5f ("ARM: imx6q: support WAIT mode using cpuidle")
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-[bwh: Backported to 3.16: use imx6q_set_lpm() instead of imx6_set_lpm()]
+Fixes: 6e2d85ec0559 ("net: phy: Stop with excessive soft reset")
+Tested-by: Phil Reid <preid@electromag.com.au>
+Tested-by: liweihang <liweihang@hisilicon.com>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16: open-code phy_set_bits()]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/arm/mach-imx/cpuidle-imx6q.c | 27 ++++++++++-----------------
- 1 file changed, 10 insertions(+), 17 deletions(-)
-
---- a/arch/arm/mach-imx/cpuidle-imx6q.c
-+++ b/arch/arm/mach-imx/cpuidle-imx6q.c
-@@ -14,30 +14,23 @@
- #include "common.h"
- #include "cpuidle.h"
- 
--static atomic_t master = ATOMIC_INIT(0);
--static DEFINE_SPINLOCK(master_lock);
-+static int num_idle_cpus = 0;
-+static DEFINE_SPINLOCK(cpuidle_lock);
- 
- static int imx6q_enter_wait(struct cpuidle_device *dev,
- 			    struct cpuidle_driver *drv, int index)
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -1072,7 +1072,10 @@ int genphy_soft_reset(struct phy_device
  {
--	if (atomic_inc_return(&master) == num_online_cpus()) {
--		/*
--		 * With this lock, we prevent other cpu to exit and enter
--		 * this function again and become the master.
--		 */
--		if (!spin_trylock(&master_lock))
--			goto idle;
-+	spin_lock(&cpuidle_lock);
-+	if (++num_idle_cpus == num_online_cpus())
- 		imx6q_set_lpm(WAIT_UNCLOCKED);
--		cpu_do_idle();
--		imx6q_set_lpm(WAIT_CLOCKED);
--		spin_unlock(&master_lock);
--		goto done;
--	}
-+	spin_unlock(&cpuidle_lock);
+ 	int ret;
  
--idle:
- 	cpu_do_idle();
--done:
--	atomic_dec(&master);
-+
-+	spin_lock(&cpuidle_lock);
-+	if (num_idle_cpus-- == num_online_cpus())
-+		imx6q_set_lpm(WAIT_CLOCKED);
-+	spin_unlock(&cpuidle_lock);
+-	ret = phy_write(phydev, MII_BMCR, BMCR_RESET);
++	ret = phy_read(phydev, MII_BMCR);
++	if (ret < 0)
++		return ret;
++	ret = phy_write(phydev, MII_BMCR, ret | BMCR_RESET);
+ 	if (ret < 0)
+ 		return ret;
  
- 	return index;
- }
 
