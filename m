@@ -2,92 +2,81 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA3AC41514
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 15:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF77C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 15:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A125B2087B
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 15:45:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9F21208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 15:54:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTzTVzq6"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="IQHZVwb0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfHJPpa (ORCPT
+        id S1726246AbfHJPyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 11:45:30 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45075 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfHJPpa (ORCPT
+        Sat, 10 Aug 2019 11:54:21 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:34077 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfHJPyV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 11:45:30 -0400
-Received: by mail-pl1-f196.google.com with SMTP id y8so4045016plr.12;
-        Sat, 10 Aug 2019 08:45:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=g8EryOusqX/mFfSa4kBJXrjKexBE7DMaLxTAFZHSwh0=;
-        b=hTzTVzq6wfwgn4jt3dReWCS/nTWpJWkqQrtotcq+Fxi1r2AfpMbWQZsv7gztQkFV2d
-         7gQW1k1m2I7P/tHFROQjRavaA3kYGwqSILh88b+KEMMJwmrfswVAsHs4/Ix9Rooro3eA
-         wg30rWESUC/ScvmVWsEoa5Ujv7uuL4UNzyvM2mQg9ze6Xr7vdOBIZAUvizdUaRprhtyG
-         9Z4SZB+MBfCTsG5vRMguOFqo/6Kz9pQnr/zfcxtswzUsSU6Flq/S0qrAeBhac6yKI7x4
-         1/BeezTtwhoBIveSGK5sXTePGLIIkUUjjJEPDyS68aPILUi5pi9xmK4RH9zzihLrT/OW
-         s91A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=g8EryOusqX/mFfSa4kBJXrjKexBE7DMaLxTAFZHSwh0=;
-        b=hR9DQiUr4WpP5q73t0jxGUC6Qlevxe48kUediZPH7ph6BlzTGxdE2pm1lRHLls0snT
-         OvTUtg+ICR/v0QPqvKF+c1vqQMSz9L0l3xaCWvkrkhMi9JEyrDO8nHg4rB2YvQU5wl+w
-         +fhMCYr6CuGYG6jG19lstk0C/MdxqlMMBOfQV23PBygJtlS1jznszFoUJu99LosueBIw
-         KYFemroIqeH7S/DO9P8EkRMfNcBTVhSELUsWO3XSSpirLhGkgINnRc/UOJ/P/nWXDKf4
-         dXpWZsfgMYHjw/1Jds8ultRpvRjHOvuKJhdEmMdiBbqBSkuzypRRx7FxmuasNOH/pdkI
-         s0pg==
-X-Gm-Message-State: APjAAAVVHdTSObSvLxDVEpQZudvuafOIgIoPkcjaQQSjdGKjLCC1iS/P
-        i2aMFwdv3L3RyZ4VwI+lsCM=
-X-Google-Smtp-Source: APXvYqw6d8N9ayb1YObIvxMPmMRDFKablVAPi/LHX6THrFMeG6J+gfSvKoskgkzIbwZxqCugMsoAFA==
-X-Received: by 2002:a17:902:82c4:: with SMTP id u4mr24797136plz.196.1565451929651;
-        Sat, 10 Aug 2019 08:45:29 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m9sm156631605pgr.24.2019.08.10.08.45.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 10 Aug 2019 08:45:29 -0700 (PDT)
-Date:   Sat, 10 Aug 2019 08:45:28 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 00/32] 4.9.189-stable review
-Message-ID: <20190810154528.GB11992@roeck-us.net>
-References: <20190809133922.945349906@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190809133922.945349906@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Sat, 10 Aug 2019 11:54:21 -0400
+Received: from grover.flets-west.jp (softbank126125143222.bbtec.net [126.125.143.222]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id x7AFrG8v009713;
+        Sun, 11 Aug 2019 00:53:19 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x7AFrG8v009713
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1565452399;
+        bh=d/Z7awvrYGMGgW5gebyxG8uA/SddYL0ui4DyfJdxS5Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IQHZVwb0Bl/e5zBR92jGac/U7vVDzGHJ0MAp4usJPEVqFBobrgakJoA2YHNYi7T9A
+         q+l8IWsSyck9kt7sqAGBwq7FhSN1y7Aj8EJO2KvpSfqrAhGc/bf6tMAcHkvNZ/KIX/
+         ay4Wk/O5fGoP78N0PatHXVWEUWLCAaibZnIsbGXBYubZgpoqEFbrgHIV56GW2GtM2b
+         WWy8ZWOGDtzDvr4BlY7CSXu+qVsESw5LMEtF1+F/ryDorkPY9/Bh8bswIIO8SETBWy
+         mu2zyDhXj9n6yYOQC0rkJ+Dfsc30wR0J2yWxXOev+7GZCCTR9dlXiHmU1J1wkSiUbR
+         Mr3BPcS2/TS5Q==
+X-Nifty-SrcIP: [126.125.143.222]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>, Sam Ravnborg <sam@ravnborg.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 02/11] kbuild: refactor part-of-module more
+Date:   Sun, 11 Aug 2019 00:52:58 +0900
+Message-Id: <20190810155307.29322-3-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190810155307.29322-1-yamada.masahiro@socionext.com>
+References: <20190810155307.29322-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 03:45:03PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.189 release.
-> There are 32 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun 11 Aug 2019 01:38:45 PM UTC.
-> Anything received after that time might be too late.
-> 
+Make it even shorter.
 
-Build results:
-	total: 172 pass: 172 fail: 0
-Qemu test results:
-	total: 356 pass: 356 fail: 0
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Guenter
+ scripts/Makefile.build | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 2f66ed388d1c..64e47a9a54c5 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -98,8 +98,7 @@ endif
+ # ---------------------------------------------------------------------------
+ 
+ # Default is built-in, unless we know otherwise
+-$(foreach x, i ll lst o s symtypes, $(patsubst %.o,%.$(x),$(real-obj-m))): \
+-	part-of-module := y
++part-of-module = $(if $(filter $(basename $@).o, $(real-obj-m)),y)
+ 
+ modkern_cflags =                                          \
+ 	$(if $(part-of-module),                           \
+-- 
+2.17.1
+
