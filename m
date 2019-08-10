@@ -2,108 +2,167 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B837C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 17:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0926AC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 17:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 399DD2085A
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 17:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D10A72085A
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 17:59:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbfHJRwp (ORCPT
+        id S1726145AbfHJR7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 13:52:45 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44428 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbfHJRwp (ORCPT
+        Sat, 10 Aug 2019 13:59:34 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25994 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725788AbfHJR7e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 13:52:45 -0400
-Received: by mail-qt1-f194.google.com with SMTP id 44so67956208qtg.11
-        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 10:52:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=66SEGc5TGIf1NyUu+jEpEXEpotUOCLnMVCZU4G+UmoQ=;
-        b=N7EPlGS0oIhLxQzS9jiUUGFCu8BJE968WoFou6uedErTnVHJZoVDz4cfZVYfsZgkuF
-         2efdGAWQwrwscCKAdOKaU/BQU881iD8i1ZJjankF8NuKVu8ek8mXEphD0JZ1CBLKQ4VR
-         yIxfguBhFsBWIX/boq6NRhVuqt5pN8hM8Igj0rLzRrJnluRLJe7LSVrhtPjqwnt/bO9j
-         9uLAfmCMWvfanXar8XSjFD+Zc0vtk+WxitgJ1bC3MCrP4tzgYUosrdqKL7ePifGzNZut
-         8ziV3itVdraqfwLCjif6S7nSjKTcemjay4q546/XGBv+9bP17FXrRSabRukOejuG1TT1
-         zteg==
-X-Gm-Message-State: APjAAAUqrojdD2dOG0HICD6Mzi9EJujPeixAmpPQ2tIYGookuNQRk5ei
-        qgCo4lqWCo23PTrwBCfMmMh/wg==
-X-Google-Smtp-Source: APXvYqyu+J3eoZAKc/L0K7nzHrnvjWmGtHdW7l8r8vj9yQS0QK9zcmeYBT3jtDeUTZAm2K2OrM0azQ==
-X-Received: by 2002:ac8:2fc8:: with SMTP id m8mr23627567qta.269.1565459564445;
-        Sat, 10 Aug 2019 10:52:44 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id a135sm45568245qkg.72.2019.08.10.10.52.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 10 Aug 2019 10:52:43 -0700 (PDT)
-Date:   Sat, 10 Aug 2019 13:52:38 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, jgg@ziepe.ca
-Subject: Re: [PATCH V5 0/9] Fixes for vhost metadata acceleration
-Message-ID: <20190810134948-mutt-send-email-mst@kernel.org>
-References: <20190809054851.20118-1-jasowang@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190809054851.20118-1-jasowang@redhat.com>
+        Sat, 10 Aug 2019 13:59:34 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7AHuiFp139762
+        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 13:59:32 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u9qjc7y1b-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 13:59:32 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sourabhjain@linux.ibm.com>;
+        Sat, 10 Aug 2019 18:59:31 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 10 Aug 2019 18:59:28 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7AHxQL949676360
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 10 Aug 2019 17:59:26 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B43BCA405B;
+        Sat, 10 Aug 2019 17:59:26 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EA01EA405C;
+        Sat, 10 Aug 2019 17:59:19 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.199.50.95])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sat, 10 Aug 2019 17:59:19 +0000 (GMT)
+From:   Sourabh Jain <sourabhjain@linux.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     linuxppc-dev@lists.ozlabs.org, mahesh@linux.vnet.ibm.com,
+        hbathini@linux.ibm.com, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, corbet@lwn.net,
+        Sourabh Jain <sourabhjain@linux.ibm.com>
+Subject: [PATCH v3] powerpc/fadump: sysfs for fadump memory reservation
+Date:   Sat, 10 Aug 2019 23:29:05 +0530
+X-Mailer: git-send-email 2.17.2
+X-TM-AS-GCONF: 00
+x-cbid: 19081017-0008-0000-0000-0000030788CC
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19081017-0009-0000-0000-00004A259485
+Message-Id: <20190810175905.7761-1-sourabhjain@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-10_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908100201
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 01:48:42AM -0400, Jason Wang wrote:
-> Hi all:
-> 
-> This series try to fix several issues introduced by meta data
-> accelreation series. Please review.
-> 
-> Changes from V4:
-> - switch to use spinlock synchronize MMU notifier with accessors
-> 
-> Changes from V3:
-> - remove the unnecessary patch
-> 
-> Changes from V2:
-> - use seqlck helper to synchronize MMU notifier with vhost worker
-> 
-> Changes from V1:
-> - try not use RCU to syncrhonize MMU notifier with vhost worker
-> - set dirty pages after no readers
-> - return -EAGAIN only when we find the range is overlapped with
->   metadata
-> 
-> Jason Wang (9):
->   vhost: don't set uaddr for invalid address
->   vhost: validate MMU notifier registration
->   vhost: fix vhost map leak
->   vhost: reset invalidate_count in vhost_set_vring_num_addr()
->   vhost: mark dirty pages during map uninit
->   vhost: don't do synchronize_rcu() in vhost_uninit_vq_maps()
->   vhost: do not use RCU to synchronize MMU notifier with worker
->   vhost: correctly set dirty pages in MMU notifiers callback
->   vhost: do not return -EAGAIN for non blocking invalidation too early
-> 
->  drivers/vhost/vhost.c | 202 +++++++++++++++++++++++++-----------------
->  drivers/vhost/vhost.h |   6 +-
->  2 files changed, 122 insertions(+), 86 deletions(-)
+Add a sys interface to allow querying the memory reserved by
+fadump for saving the crash dump.
 
-This generally looks more solid.
+Add an ABI doc entry for new sysfs interface.
+   - /sys/kernel/fadump_mem_reserved
 
-But this amounts to a significant overhaul of the code.
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+---
+Changelog:
+v1 -> v2:
+  - Added ABI doc for new sysfs interface.
 
-At this point how about we revert 7f466032dc9e5a61217f22ea34b2df932786bbfc
-for this release, and then re-apply a corrected version
-for the next one?
+v2 -> v3:
+  - Updated the ABI documentation.
+---
 
+ Documentation/ABI/testing/sysfs-kernel-fadump    |  6 ++++++
+ Documentation/powerpc/firmware-assisted-dump.rst |  5 +++++
+ arch/powerpc/kernel/fadump.c                     | 14 ++++++++++++++
+ 3 files changed, 25 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-kernel-fadump
 
-> -- 
-> 2.18.1
+diff --git a/Documentation/ABI/testing/sysfs-kernel-fadump b/Documentation/ABI/testing/sysfs-kernel-fadump
+new file mode 100644
+index 000000000000..ec034939475b
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-kernel-fadump
+@@ -0,0 +1,6 @@
++What:		/sys/kernel/fadump_mem_reserved
++Date:		August 2019
++Contact:	linuxppc-dev@lists.ozlabs.org
++Description:	read only
++		Provide information about the amount of memory
++		reserved by fadump to save the crash dump.
+diff --git a/Documentation/powerpc/firmware-assisted-dump.rst b/Documentation/powerpc/firmware-assisted-dump.rst
+index 9ca12830a48e..a5dfb20d4dc3 100644
+--- a/Documentation/powerpc/firmware-assisted-dump.rst
++++ b/Documentation/powerpc/firmware-assisted-dump.rst
+@@ -222,6 +222,11 @@ Here is the list of files under kernel sysfs:
+     be handled and vmcore will not be captured. This interface can be
+     easily integrated with kdump service start/stop.
+ 
++ /sys/kernel/fadump_mem_reserved
++
++   This is used to display the memory reserved by fadump for saving the
++   crash dump.
++
+  /sys/kernel/fadump_release_mem
+     This file is available only when fadump is active during
+     second kernel. This is used to release the reserved memory
+diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+index 4eab97292cc2..cd373d1d4b82 100644
+--- a/arch/powerpc/kernel/fadump.c
++++ b/arch/powerpc/kernel/fadump.c
+@@ -1514,6 +1514,13 @@ static ssize_t fadump_enabled_show(struct kobject *kobj,
+ 	return sprintf(buf, "%d\n", fw_dump.fadump_enabled);
+ }
+ 
++static ssize_t fadump_mem_reserved_show(struct kobject *kobj,
++					struct kobj_attribute *attr,
++					char *buf)
++{
++	return sprintf(buf, "%ld\n", fw_dump.reserve_dump_area_size);
++}
++
+ static ssize_t fadump_register_show(struct kobject *kobj,
+ 					struct kobj_attribute *attr,
+ 					char *buf)
+@@ -1632,6 +1639,9 @@ static struct kobj_attribute fadump_attr = __ATTR(fadump_enabled,
+ static struct kobj_attribute fadump_register_attr = __ATTR(fadump_registered,
+ 						0644, fadump_register_show,
+ 						fadump_register_store);
++static struct kobj_attribute fadump_mem_reserved_attr =
++			__ATTR(fadump_mem_reserved, 0444,
++			       fadump_mem_reserved_show, NULL);
+ 
+ DEFINE_SHOW_ATTRIBUTE(fadump_region);
+ 
+@@ -1663,6 +1673,10 @@ static void fadump_init_files(void)
+ 			printk(KERN_ERR "fadump: unable to create sysfs file"
+ 				" fadump_release_mem (%d)\n", rc);
+ 	}
++	rc = sysfs_create_file(kernel_kobj, &fadump_mem_reserved_attr.attr);
++	if (rc)
++		pr_err("unable to create sysfs file fadump_mem_reserved (%d)\n",
++		       rc);
+ 	return;
+ }
+ 
+-- 
+2.17.2
+
