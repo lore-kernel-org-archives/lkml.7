@@ -2,360 +2,272 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DF9C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 14:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D51AC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 14:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CFAC20B7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 14:14:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rX88nVNe"
+	by mail.kernel.org (Postfix) with ESMTP id D2EB52085B
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 14:16:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbfHJOOi (ORCPT
+        id S1726293AbfHJOQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 10:14:38 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:57214 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbfHJOOh (ORCPT
+        Sat, 10 Aug 2019 10:16:16 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:41477 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725862AbfHJOQQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 10:14:37 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5536F67;
-        Sat, 10 Aug 2019 16:14:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1565446474;
-        bh=bSif1YUXdro/ri2Eo/hCoZ/bPT1nH7AYvUtuX1zxJVc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rX88nVNe4tp7g4UFh28oVuvXOLwkmI1337WGUPcWEtL+R63qc4UNuW5A++iGb6gmS
-         Ael0LZAiF5xWpeFDvCZSlxeH6LSEzaY8ca0w84XRvlBOZT9s9iZc7a9U5dfCvTxLOa
-         +hDo/eqpUoFJ90Q02Tw/ESir0JUih1GyRRJBaii4=
-Date:   Sat, 10 Aug 2019 17:14:32 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     mchehab@kernel.org, helen.koike@collabora.com, hverkuil@xs4all.nl,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH 1/3] media: vimc: move private defines to a common header
-Message-ID: <20190810141432.GA30451@pendragon.ideasonboard.com>
-References: <cover.1565386363.git.skhan@linuxfoundation.org>
- <142cc5a6a10f75ed97de8b2d9b1e73b034a88b2f.1565386363.git.skhan@linuxfoundation.org>
+        Sat, 10 Aug 2019 10:16:16 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0TZ5d3qr_1565446556;
+Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0TZ5d3qr_1565446556)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 10 Aug 2019 22:16:04 +0800
+Date:   Sat, 10 Aug 2019 22:15:56 +0800
+From:   Aaron Lu <aaron.lu@linux.alibaba.com>
+To:     Tim Chen <tim.c.chen@linux.intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+Message-ID: <20190810141556.GA73644@aaronlu>
+References: <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
+ <20190802153715.GA18075@sinkpad>
+ <f4778816-69e5-146c-2a30-ec42e7f1677f@linux.intel.com>
+ <20190806032418.GA54717@aaronlu>
+ <e1c4a7ed-822e-93cb-ff1d-6a0842db115f@linux.intel.com>
+ <20190806171241.GQ2349@hirez.programming.kicks-ass.net>
+ <21933a50-f796-3d28-664c-030cb7c98431@linux.intel.com>
+ <20190808064731.GA5121@aaronlu>
+ <70d1ff90-9be9-7b05-f1ff-e751f266183b@linux.intel.com>
+ <b7a83fcb-5c34-9794-5688-55c52697fd84@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <142cc5a6a10f75ed97de8b2d9b1e73b034a88b2f.1565386363.git.skhan@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <b7a83fcb-5c34-9794-5688-55c52697fd84@linux.intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuah,
-
-Thank you for the patch.
-
-On Fri, Aug 09, 2019 at 03:45:41PM -0600, Shuah Khan wrote:
-> In preparation for collapsing the component driver structure into
-> a monolith, move private device structure defines to a new common
-> header file.
-
-Apart from the vimc_device structure, this doesn't seem to be needed.
-I'd rather keep each structure private to the .c file that handles it,
-and only share vimc_device globally.
-
-> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> ---
->  drivers/media/platform/vimc/vimc-capture.c |  21 +----
->  drivers/media/platform/vimc/vimc-core.c    |  18 +---
->  drivers/media/platform/vimc/vimc-debayer.c |  16 +---
->  drivers/media/platform/vimc/vimc-scaler.c  |  15 +--
->  drivers/media/platform/vimc/vimc-sensor.c  |  13 +--
->  drivers/media/platform/vimc/vimc.h         | 102 +++++++++++++++++++++
->  6 files changed, 107 insertions(+), 78 deletions(-)
->  create mode 100644 drivers/media/platform/vimc/vimc.h
+On Thu, Aug 08, 2019 at 02:42:57PM -0700, Tim Chen wrote:
+> On 8/8/19 10:27 AM, Tim Chen wrote:
+> > On 8/7/19 11:47 PM, Aaron Lu wrote:
+> >> On Tue, Aug 06, 2019 at 02:19:57PM -0700, Tim Chen wrote:
+> >>> +void account_core_idletime(struct task_struct *p, u64 exec)
+> >>> +{
+> >>> +	const struct cpumask *smt_mask;
+> >>> +	struct rq *rq;
+> >>> +	bool force_idle, refill;
+> >>> +	int i, cpu;
+> >>> +
+> >>> +	rq = task_rq(p);
+> >>> +	if (!sched_core_enabled(rq) || !p->core_cookie)
+> >>> +		return;
+> >>
+> >> I don't see why return here for untagged task. Untagged task can also
+> >> preempt tagged task and force a CPU thread enter idle state.
+> >> Untagged is just another tag to me, unless we want to allow untagged
+> >> task to coschedule with a tagged task.
+> > 
+> > You are right.  This needs to be fixed.
+> > 
 > 
-> diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
-> index 664855708fdf..c52fc5d97c2d 100644
-> --- a/drivers/media/platform/vimc/vimc-capture.c
-> +++ b/drivers/media/platform/vimc/vimc-capture.c
-> @@ -13,6 +13,7 @@
->  #include <media/videobuf2-core.h>
->  #include <media/videobuf2-vmalloc.h>
->  
-> +#include "vimc.h"
->  #include "vimc-common.h"
->  #include "vimc-streamer.h"
->  
-> @@ -44,26 +45,6 @@ static const u32 vimc_cap_supported_pixfmt[] = {
->  	V4L2_PIX_FMT_SRGGB12,
->  };
->  
-> -struct vimc_cap_device {
-> -	struct vimc_ent_device ved;
-> -	struct video_device vdev;
-> -	struct device *dev;
-> -	struct v4l2_pix_format format;
-> -	struct vb2_queue queue;
-> -	struct list_head buf_list;
-> -	/*
-> -	 * NOTE: in a real driver, a spin lock must be used to access the
-> -	 * queue because the frames are generated from a hardware interruption
-> -	 * and the isr is not allowed to sleep.
-> -	 * Even if it is not necessary a spinlock in the vimc driver, we
-> -	 * use it here as a code reference
-> -	 */
-> -	spinlock_t qlock;
-> -	struct mutex lock;
-> -	u32 sequence;
-> -	struct vimc_stream stream;
-> -};
-> -
->  static const struct v4l2_pix_format fmt_default = {
->  	.width = 640,
->  	.height = 480,
-> diff --git a/drivers/media/platform/vimc/vimc-core.c b/drivers/media/platform/vimc/vimc-core.c
-> index 571c55aa0e16..c9b351472272 100644
-> --- a/drivers/media/platform/vimc/vimc-core.c
-> +++ b/drivers/media/platform/vimc/vimc-core.c
-> @@ -12,6 +12,7 @@
->  #include <media/media-device.h>
->  #include <media/v4l2-device.h>
->  
-> +#include "vimc.h"
->  #include "vimc-common.h"
->  
->  #define VIMC_MDEV_MODEL_NAME "VIMC MDEV"
-> @@ -24,23 +25,6 @@
->  	.flags = link_flags,					\
->  }
->  
-> -struct vimc_device {
-> -	/* The platform device */
-> -	struct platform_device pdev;
-> -
-> -	/* The pipeline configuration */
-> -	const struct vimc_pipeline_config *pipe_cfg;
-> -
-> -	/* The Associated media_device parent */
-> -	struct media_device mdev;
-> -
-> -	/* Internal v4l2 parent device*/
-> -	struct v4l2_device v4l2_dev;
-> -
-> -	/* Subdevices */
-> -	struct platform_device **subdevs;
-> -};
-> -
->  /* Structure which describes individual configuration for each entity */
->  struct vimc_ent_config {
->  	const char *name;
-> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
-> index 00598fbf3cba..750752bb173c 100644
-> --- a/drivers/media/platform/vimc/vimc-debayer.c
-> +++ b/drivers/media/platform/vimc/vimc-debayer.c
-> @@ -13,6 +13,7 @@
->  #include <linux/v4l2-mediabus.h>
->  #include <media/v4l2-subdev.h>
->  
-> +#include "vimc.h"
->  #include "vimc-common.h"
->  
->  #define VIMC_DEB_DRV_NAME "vimc-debayer"
-> @@ -44,21 +45,6 @@ struct vimc_deb_pix_map {
->  	enum vimc_deb_rgb_colors order[2][2];
->  };
->  
-> -struct vimc_deb_device {
-> -	struct vimc_ent_device ved;
-> -	struct v4l2_subdev sd;
-> -	struct device *dev;
-> -	/* The active format */
-> -	struct v4l2_mbus_framefmt sink_fmt;
-> -	u32 src_code;
-> -	void (*set_rgb_src)(struct vimc_deb_device *vdeb, unsigned int lin,
-> -			    unsigned int col, unsigned int rgb[3]);
-> -	/* Values calculated when the stream starts */
-> -	u8 *src_frame;
-> -	const struct vimc_deb_pix_map *sink_pix_map;
-> -	unsigned int sink_bpp;
-> -};
-> -
->  static const struct v4l2_mbus_framefmt sink_fmt_default = {
->  	.width = 640,
->  	.height = 480,
-> diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
-> index c7123a45c55b..fe99b9102ada 100644
-> --- a/drivers/media/platform/vimc/vimc-scaler.c
-> +++ b/drivers/media/platform/vimc/vimc-scaler.c
-> @@ -13,6 +13,7 @@
->  #include <linux/v4l2-mediabus.h>
->  #include <media/v4l2-subdev.h>
->  
-> +#include "vimc.h"
->  #include "vimc-common.h"
->  
->  #define VIMC_SCA_DRV_NAME "vimc-scaler"
-> @@ -31,20 +32,6 @@ static const u32 vimc_sca_supported_pixfmt[] = {
->  	V4L2_PIX_FMT_ARGB32,
->  };
->  
-> -struct vimc_sca_device {
-> -	struct vimc_ent_device ved;
-> -	struct v4l2_subdev sd;
-> -	struct device *dev;
-> -	/* NOTE: the source fmt is the same as the sink
-> -	 * with the width and hight multiplied by mult
-> -	 */
-> -	struct v4l2_mbus_framefmt sink_fmt;
-> -	/* Values calculated when the stream starts */
-> -	u8 *src_frame;
-> -	unsigned int src_line_size;
-> -	unsigned int bpp;
-> -};
-> -
->  static const struct v4l2_mbus_framefmt sink_fmt_default = {
->  	.width = 640,
->  	.height = 480,
-> diff --git a/drivers/media/platform/vimc/vimc-sensor.c b/drivers/media/platform/vimc/vimc-sensor.c
-> index 51359472eef2..6c57b1e262f9 100644
-> --- a/drivers/media/platform/vimc/vimc-sensor.c
-> +++ b/drivers/media/platform/vimc/vimc-sensor.c
-> @@ -16,22 +16,11 @@
->  #include <media/v4l2-subdev.h>
->  #include <media/tpg/v4l2-tpg.h>
->  
-> +#include "vimc.h"
->  #include "vimc-common.h"
->  
->  #define VIMC_SEN_DRV_NAME "vimc-sensor"
->  
-> -struct vimc_sen_device {
-> -	struct vimc_ent_device ved;
-> -	struct v4l2_subdev sd;
-> -	struct device *dev;
-> -	struct tpg_data tpg;
-> -	struct task_struct *kthread_sen;
-> -	u8 *frame;
-> -	/* The active format */
-> -	struct v4l2_mbus_framefmt mbus_format;
-> -	struct v4l2_ctrl_handler hdl;
-> -};
-> -
->  static const struct v4l2_mbus_framefmt fmt_default = {
->  	.width = 640,
->  	.height = 480,
-> diff --git a/drivers/media/platform/vimc/vimc.h b/drivers/media/platform/vimc/vimc.h
-> new file mode 100644
-> index 000000000000..a5adebdda941
-> --- /dev/null
-> +++ b/drivers/media/platform/vimc/vimc.h
-> @@ -0,0 +1,102 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + *
-> + * Copyright (C) 2019 Shuah Khan <skhan@linuxfoundation.org>
-> + *
-> + */
-> +
-> +/*
-> + * This file defines vimc driver device and sub-device structures.
-> + */
-> +
-> +#ifndef _VIMC_H_
-> +#define _VIMC_H_
-> +
-> +#include <linux/platform_device.h>
-> +#include <media/media-device.h>
-> +#include <media/v4l2-device.h>
-> +#include <media/videobuf2-core.h>
-> +#include <media/tpg/v4l2-tpg.h>
-> +#include <media/v4l2-ctrls.h>
-> +
-> +#include "vimc-common.h"
-> +
-> +struct vimc_cap_device {
-> +	struct vimc_ent_device ved;
-> +	struct video_device vdev;
-> +	struct device *dev;
-> +	struct v4l2_pix_format format;
-> +	struct vb2_queue queue;
-> +	struct list_head buf_list;
-> +	/*
-> +	 * NOTE: in a real driver, a spin lock must be used to access the
-> +	 * queue because the frames are generated from a hardware interruption
-> +	 * and the isr is not allowed to sleep.
-> +	 * Even if it is not necessary a spinlock in the vimc driver, we
-> +	 * use it here as a code reference
-> +	 */
-> +	spinlock_t qlock;
-> +	struct mutex lock;
-> +	u32 sequence;
-> +	struct vimc_stream stream;
-> +};
-> +
-> +struct vimc_sca_device {
-> +	struct vimc_ent_device ved;
-> +	struct v4l2_subdev sd;
-> +	struct device *dev;
-> +	/* NOTE: the source fmt is the same as the sink
-> +	 * with the width and hight multiplied by mult
-> +	 */
-> +	struct v4l2_mbus_framefmt sink_fmt;
-> +	/* Values calculated when the stream starts */
-> +	u8 *src_frame;
-> +	unsigned int src_line_size;
-> +	unsigned int bpp;
-> +};
-> +
-> +struct vimc_deb_device {
-> +	struct vimc_ent_device ved;
-> +	struct v4l2_subdev sd;
-> +	struct device *dev;
-> +	/* The active format */
-> +	struct v4l2_mbus_framefmt sink_fmt;
-> +	u32 src_code;
-> +	void (*set_rgb_src)(struct vimc_deb_device *vdeb, unsigned int lin,
-> +			    unsigned int col, unsigned int rgb[3]);
-> +	/* Values calculated when the stream starts */
-> +	u8 *src_frame;
-> +	const struct vimc_deb_pix_map *sink_pix_map;
-> +	unsigned int sink_bpp;
-> +};
-> +
-> +struct vimc_sen_device {
-> +	struct vimc_ent_device ved;
-> +	struct v4l2_subdev sd;
-> +	struct device *dev;
-> +	struct tpg_data tpg;
-> +	struct task_struct *kthread_sen;
-> +	u8 *frame;
-> +	/* The active format */
-> +	struct v4l2_mbus_framefmt mbus_format;
-> +	struct v4l2_ctrl_handler hdl;
-> +};
-> +
-> +struct vimc_device {
-> +	/* The platform device */
-> +	struct platform_device pdev;
-> +
-> +	/* The pipeline configuration */
-> +	const struct vimc_pipeline_config *pipe_cfg;
-> +
-> +	/* The Associated media_device parent */
-> +	struct media_device mdev;
-> +
-> +	/* Internal v4l2 parent device*/
-> +	struct v4l2_device v4l2_dev;
-> +
-> +	/* Subdevices */
-> +	struct platform_device **subdevs;
-> +};
-> +
-> +#endif
+> Here's the updated patchset, including Aaron's fix and also
+> added accounting of force idle time by deadline and rt tasks.
 
+I have two other small changes that I think are worth sending out.
+
+The first simplify logic in pick_task() and the 2nd avoid task pick all
+over again when max is preempted. I also refined the previous hack patch to
+make schedule always happen only for root cfs rq. Please see below for
+details, thanks.
+
+patch1:
+
+From cea56db35fe9f393c357cdb1bdcb2ef9b56cfe97 Mon Sep 17 00:00:00 2001
+From: Aaron Lu <ziqian.lzq@antfin.com>
+Date: Mon, 5 Aug 2019 21:21:25 +0800
+Subject: [PATCH 1/3] sched/core: simplify pick_task()
+
+No need to special case !cookie case in pick_task(), we just need to
+make it possible to return idle in sched_core_find() for !cookie query.
+And cookie_pick will always have less priority than class_pick, so
+remove the redundant check of prio_less(cookie_pick, class_pick).
+
+Signed-off-by: Aaron Lu <ziqian.lzq@antfin.com>
+---
+ kernel/sched/core.c | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 90655c9ad937..84fec9933b74 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -186,6 +186,8 @@ static struct task_struct *sched_core_find(struct rq *rq, unsigned long cookie)
+ 	 * The idle task always matches any cookie!
+ 	 */
+ 	match = idle_sched_class.pick_task(rq);
++	if (!cookie)
++		goto out;
+ 
+ 	while (node) {
+ 		node_task = container_of(node, struct task_struct, core_node);
+@@ -199,7 +201,7 @@ static struct task_struct *sched_core_find(struct rq *rq, unsigned long cookie)
+ 			node = node->rb_left;
+ 		}
+ 	}
+-
++out:
+ 	return match;
+ }
+ 
+@@ -3657,18 +3659,6 @@ pick_task(struct rq *rq, const struct sched_class *class, struct task_struct *ma
+ 	if (!class_pick)
+ 		return NULL;
+ 
+-	if (!cookie) {
+-		/*
+-		 * If class_pick is tagged, return it only if it has
+-		 * higher priority than max.
+-		 */
+-		if (max && class_pick->core_cookie &&
+-		    prio_less(class_pick, max))
+-			return idle_sched_class.pick_task(rq);
+-
+-		return class_pick;
+-	}
+-
+ 	/*
+ 	 * If class_pick is idle or matches cookie, return early.
+ 	 */
+@@ -3682,8 +3672,7 @@ pick_task(struct rq *rq, const struct sched_class *class, struct task_struct *ma
+ 	 * the core (so far) and it must be selected, otherwise we must go with
+ 	 * the cookie pick in order to satisfy the constraint.
+ 	 */
+-	if (prio_less(cookie_pick, class_pick) &&
+-	    (!max || prio_less(max, class_pick)))
++	if (!max || prio_less(max, class_pick))
+ 		return class_pick;
+ 
+ 	return cookie_pick;
 -- 
-Regards,
+2.19.1.3.ge56e4f7
 
-Laurent Pinchart
+patch2:
+
+From 487950dc53a40d5c566602f775ce46a0bab7a412 Mon Sep 17 00:00:00 2001
+From: Aaron Lu <ziqian.lzq@antfin.com>
+Date: Fri, 9 Aug 2019 14:48:01 +0800
+Subject: [PATCH 2/3] sched/core: no need to pick again after max is preempted
+
+When sibling's task preempts current max, there is no need to do the
+pick all over again - the preempted cpu could just pick idle and done.
+
+Signed-off-by: Aaron Lu <ziqian.lzq@antfin.com>
+---
+ kernel/sched/core.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 84fec9933b74..e88583860abe 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3756,7 +3756,6 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 	 * order.
+ 	 */
+ 	for_each_class(class) {
+-again:
+ 		for_each_cpu_wrap(i, smt_mask, cpu) {
+ 			struct rq *rq_i = cpu_rq(i);
+ 			struct task_struct *p;
+@@ -3828,10 +3827,10 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 						if (j == i)
+ 							continue;
+ 
+-						cpu_rq(j)->core_pick = NULL;
++						cpu_rq(j)->core_pick = idle_sched_class.pick_task(cpu_rq(j));
+ 					}
+ 					occ = 1;
+-					goto again;
++					goto out;
+ 				} else {
+ 					/*
+ 					 * Once we select a task for a cpu, we
+@@ -3846,7 +3845,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 		}
+ next_class:;
+ 	}
+-
++out:
+ 	rq->core->core_pick_seq = rq->core->core_task_seq;
+ 	next = rq->core_pick;
+ 	rq->core_sched_seq = rq->core->core_pick_seq;
+-- 
+2.19.1.3.ge56e4f7
+
+patch3:
+
+From 2d396d99e0dd7157b0b4f7a037c8b84ed135ea56 Mon Sep 17 00:00:00 2001
+From: Aaron Lu <ziqian.lzq@antfin.com>
+Date: Thu, 25 Jul 2019 19:57:21 +0800
+Subject: [PATCH 3/3] sched/fair: make tick based schedule always happen
+
+When a hyperthread is forced idle and the other hyperthread has a single
+CPU intensive task running, the running task can occupy the hyperthread
+for a long time with no scheduling point and starve the other
+hyperthread.
+
+Fix this temporarily by always checking if the task has exceed its
+timeslice and if so, for root cfs_rq, do a schedule.
+
+Signed-off-by: Aaron Lu <ziqian.lzq@antfin.com>
+---
+ kernel/sched/fair.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 26d29126d6a5..b1f0defdad91 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4011,6 +4011,9 @@ check_preempt_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr)
+ 		return;
+ 	}
+ 
++	if (cfs_rq->nr_running <= 1)
++		return;
++
+ 	/*
+ 	 * Ensure that a task that missed wakeup preemption by a
+ 	 * narrow margin doesn't have to wait for a full slice.
+@@ -4179,7 +4182,7 @@ entity_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr, int queued)
+ 		return;
+ #endif
+ 
+-	if (cfs_rq->nr_running > 1)
++	if (cfs_rq->nr_running > 1 || cfs_rq->tg == &root_task_group)
+ 		check_preempt_tick(cfs_rq, curr);
+ }
+ 
+-- 
+2.19.1.3.ge56e4f7
+
