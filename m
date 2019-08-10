@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553C7C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BC7C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B3B6208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94DB620B7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:54:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfHJUyY (ORCPT
+        id S1727831AbfHJUy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:54:24 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53812 "EHLO
+        Sat, 10 Aug 2019 16:54:27 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53806 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726487AbfHJUns (ORCPT
+        by vger.kernel.org with ESMTP id S1726481AbfHJUns (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:48 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDK-00053j-6D; Sat, 10 Aug 2019 21:43:46 +0100
+        id 1hwYDK-00053m-8X; Sat, 10 Aug 2019 21:43:46 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-0003Zv-CT; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDJ-0003a0-DP; Sat, 10 Aug 2019 21:43:45 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -36,12 +36,12 @@ From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
         "David S. Miller" <davem@davemloft.net>,
-        "Eric Dumazet" <edumazet@google.com>
+        "Arnd Bergmann" <arnd@arndb.de>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.490919960@decadent.org.uk>
+Message-ID: <lsq.1565469607.966493490@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 031/157] dccp: do not use ipv6 header for ipv4 flow
+Subject: [PATCH 3.16 032/157] 3c515: fix integer overflow warning
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,33 +55,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit e0aa67709f89d08c8d8e5bdd9e0b649df61d0090 upstream.
+commit fb6fafbc7de4a813bb5364358bbe27f71e62b24a upstream.
 
-When a dual stack dccp listener accepts an ipv4 flow,
-it should not attempt to use an ipv6 header or
-inet6_iif() helper.
+clang points out a harmless signed integer overflow:
 
-Fixes: 3df80d9320bc ("[DCCP]: Introduce DCCPv6")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+drivers/net/ethernet/3com/3c515.c:1530:66: error: implicit conversion from 'int' to 'short' changes value from 32783 to -32753 [-Werror,-Wconstant-conversion]
+                new_mode = SetRxFilter | RxStation | RxMulticast | RxBroadcast | RxProm;
+                         ~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~
+drivers/net/ethernet/3com/3c515.c:1532:52: error: implicit conversion from 'int' to 'short' changes value from 32775 to -32761 [-Werror,-Wconstant-conversion]
+                new_mode = SetRxFilter | RxStation | RxMulticast | RxBroadcast;
+                         ~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+drivers/net/ethernet/3com/3c515.c:1534:38: error: implicit conversion from 'int' to 'short' changes value from 32773 to -32763 [-Werror,-Wconstant-conversion]
+                new_mode = SetRxFilter | RxStation | RxBroadcast;
+                         ~ ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+
+Make the variable unsigned to avoid the overflow.
+
+Fixes: Linux-2.1.128pre1
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/dccp/ipv6.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/3com/3c515.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/dccp/ipv6.c
-+++ b/net/dccp/ipv6.c
-@@ -491,8 +491,8 @@ static struct sock *dccp_v6_request_recv
- 		newnp->ipv6_mc_list = NULL;
- 		newnp->ipv6_ac_list = NULL;
- 		newnp->ipv6_fl_list = NULL;
--		newnp->mcast_oif   = inet6_iif(skb);
--		newnp->mcast_hops  = ipv6_hdr(skb)->hop_limit;
-+		newnp->mcast_oif   = inet_iif(skb);
-+		newnp->mcast_hops  = ip_hdr(skb)->ttl;
+--- a/drivers/net/ethernet/3com/3c515.c
++++ b/drivers/net/ethernet/3com/3c515.c
+@@ -1524,7 +1524,7 @@ static void update_stats(int ioaddr, str
+ static void set_rx_mode(struct net_device *dev)
+ {
+ 	int ioaddr = dev->base_addr;
+-	short new_mode;
++	unsigned short new_mode;
  
- 		/*
- 		 * No need to charge this sock to the relevant IPv6 refcnt debug socks count
+ 	if (dev->flags & IFF_PROMISC) {
+ 		if (corkscrew_debug > 3)
 
