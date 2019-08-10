@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF123C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A08C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 818002166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91AC82166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbfHJUtN (ORCPT
+        id S1727555AbfHJUtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:49:13 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54710 "EHLO
+        Sat, 10 Aug 2019 16:49:16 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54622 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726761AbfHJUn7 (ORCPT
+        by vger.kernel.org with ESMTP id S1726753AbfHJUn6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:43:59 -0400
+        Sat, 10 Aug 2019 16:43:58 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDV-00058O-Br; Sat, 10 Aug 2019 21:43:57 +0100
+        id 1hwYDT-00053s-9x; Sat, 10 Aug 2019 21:43:55 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDO-0003jG-7m; Sat, 10 Aug 2019 21:43:50 +0100
+        id 1hwYDO-0003kd-PO; Sat, 10 Aug 2019 21:43:50 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        "Jason Wang" <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
+        "Roman Kagan" <rkagan@virtuozzo.com>,
+        "Denis V. Lunev" <den@openvz.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "Igor Redko" <redkoi@virtuozzo.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.210832900@decadent.org.uk>
+Message-ID: <lsq.1565469607.617883725@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 132/157] vhost: introduce vhost_exceeds_weight()
+Subject: [PATCH 3.16 143/157] mm/page_alloc.c: calculate 'available'
+ memory in a separate function
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,155 +59,150 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jason Wang <jasowang@redhat.com>
+From: Igor Redko <redkoi@virtuozzo.com>
 
-commit e82b9b0727ff6d665fff2d326162b460dded554d upstream.
+commit d02bd27bd33dd7e8d22594cd568b81be0cb584cd upstream.
 
-We used to have vhost_exceeds_weight() for vhost-net to:
+Add a new field, VIRTIO_BALLOON_S_AVAIL, to virtio_balloon memory
+statistics protocol, corresponding to 'Available' in /proc/meminfo.
 
-- prevent vhost kthread from hogging the cpu
-- balance the time spent between TX and RX
+It indicates to the hypervisor how big the balloon can be inflated
+without pushing the guest system to swap.  This metric would be very
+useful in VM orchestration software to improve memory management of
+different VMs under overcommit.
 
-This function could be useful for vsock and scsi as well. So move it
-to vhost.c. Device must specify a weight which counts the number of
-requests, or it can also specific a byte_weight which counts the
-number of bytes that has been processed.
+This patch (of 2):
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-[bwh: Backported to 3.16:
- - Drop changes to vhost_vsock
- - In vhost_net, both Tx modes are handled in one loop in handle_tx()
- - Adjust context]
+Factor out calculation of the available memory counter into a separate
+exportable function, in order to be able to use it in other parts of the
+kernel.
+
+In particular, it appears a relevant metric to report to the hypervisor
+via virtio-balloon statistics interface (in a followup patch).
+
+Signed-off-by: Igor Redko <redkoi@virtuozzo.com>
+Signed-off-by: Denis V. Lunev <den@openvz.org>
+Reviewed-by: Roman Kagan <rkagan@virtuozzo.com>
+Cc: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[bwh: Backported to 3.16 as dependency of commit a1078e821b60
+ "xen: let alloc_xenballooned_pages() fail if not enough memory free"]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -335,12 +335,6 @@ static void vhost_zerocopy_callback(stru
- 	rcu_read_unlock_bh();
- }
+ fs/proc/meminfo.c  | 31 +------------------------------
+ include/linux/mm.h |  1 +
+ mm/page_alloc.c    | 43 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 45 insertions(+), 30 deletions(-)
+
+--- a/fs/proc/meminfo.c
++++ b/fs/proc/meminfo.c
+@@ -27,10 +27,7 @@ static int meminfo_proc_show(struct seq_
+ 	struct vmalloc_info vmi;
+ 	long cached;
+ 	long available;
+-	unsigned long pagecache;
+-	unsigned long wmark_low = 0;
+ 	unsigned long pages[NR_LRU_LISTS];
+-	struct zone *zone;
+ 	int lru;
  
--static bool vhost_exceeds_weight(int pkts, int total_len)
--{
--	return total_len >= VHOST_NET_WEIGHT ||
--	       pkts >= VHOST_NET_PKT_WEIGHT;
--}
+ /*
+@@ -51,33 +48,7 @@ static int meminfo_proc_show(struct seq_
+ 	for (lru = LRU_BASE; lru < NR_LRU_LISTS; lru++)
+ 		pages[lru] = global_page_state(NR_LRU_BASE + lru);
+ 
+-	for_each_zone(zone)
+-		wmark_low += zone->watermark[WMARK_LOW];
 -
- /* Expects to be always run from workqueue - which acts as
-  * read-size critical section for our kind of RCU. */
- static void handle_tx(struct vhost_net *net)
-@@ -463,10 +457,8 @@ static void handle_tx(struct vhost_net *
- 			vhost_zerocopy_signal_used(net, vq);
- 		total_len += len;
- 		vhost_net_tx_packet(net);
--		if (unlikely(vhost_exceeds_weight(++sent_pkts, total_len))) {
--			vhost_poll_queue(&vq->poll);
-+		if (vhost_exceeds_weight(vq, ++sent_pkts, total_len))
- 			break;
--		}
- 	}
- out:
- 	mutex_unlock(&vq->mutex);
-@@ -673,10 +665,8 @@ static void handle_rx(struct vhost_net *
- 		if (unlikely(vq_log))
- 			vhost_log_write(vq, vq_log, log, vhost_len);
- 		total_len += vhost_len;
--		if (unlikely(vhost_exceeds_weight(++recv_pkts, total_len))) {
--			vhost_poll_queue(&vq->poll);
-+		if (unlikely(vhost_exceeds_weight(vq, ++recv_pkts, total_len)))
- 			break;
--		}
- 	}
- out:
- 	mutex_unlock(&vq->mutex);
-@@ -746,7 +736,8 @@ static int vhost_net_open(struct inode *
- 		n->vqs[i].vhost_hlen = 0;
- 		n->vqs[i].sock_hlen = 0;
- 	}
--	vhost_dev_init(dev, vqs, VHOST_NET_VQ_MAX);
-+	vhost_dev_init(dev, vqs, VHOST_NET_VQ_MAX,
-+		       VHOST_NET_WEIGHT, VHOST_NET_PKT_WEIGHT);
+-	/*
+-	 * Estimate the amount of memory available for userspace allocations,
+-	 * without causing swapping.
+-	 */
+-	available = i.freeram - totalreserve_pages;
+-
+-	/*
+-	 * Not all the page cache can be freed, otherwise the system will
+-	 * start swapping. Assume at least half of the page cache, or the
+-	 * low watermark worth of cache, needs to stay.
+-	 */
+-	pagecache = pages[LRU_ACTIVE_FILE] + pages[LRU_INACTIVE_FILE];
+-	pagecache -= min(pagecache / 2, wmark_low);
+-	available += pagecache;
+-
+-	/*
+-	 * Part of the reclaimable slab consists of items that are in use,
+-	 * and cannot be freed. Cap this estimate at the low watermark.
+-	 */
+-	available += global_page_state(NR_SLAB_RECLAIMABLE) -
+-		     min(global_page_state(NR_SLAB_RECLAIMABLE) / 2, wmark_low);
+-
+-	if (available < 0)
+-		available = 0;
++	available = si_mem_available();
  
- 	vhost_poll_init(n->poll + VHOST_NET_VQ_TX, handle_tx_net, POLLOUT, dev);
- 	vhost_poll_init(n->poll + VHOST_NET_VQ_RX, handle_rx_net, POLLIN, dev);
---- a/drivers/vhost/scsi.c
-+++ b/drivers/vhost/scsi.c
-@@ -60,6 +60,12 @@
- #define TCM_VHOST_PREALLOC_UPAGES 2048
- #define TCM_VHOST_PREALLOC_PROT_SGLS 512
+ 	/*
+ 	 * Tagged format, for easy grepping and expansion.
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1699,6 +1699,7 @@ extern int __meminit init_per_zone_wmark
+ extern void mem_init(void);
+ extern void __init mmap_init(void);
+ extern void show_mem(unsigned int flags);
++extern long si_mem_available(void);
+ extern void si_meminfo(struct sysinfo * val);
+ extern void si_meminfo_node(struct sysinfo *val, int nid);
  
-+/* Max number of requests before requeueing the job.
-+ * Using this limit prevents one virtqueue from starving others with
-+ * request.
-+ */
-+#define VHOST_SCSI_WEIGHT 256
-+
- struct vhost_scsi_inflight {
- 	/* Wait for the flush operation to finish */
- 	struct completion comp;
-@@ -1576,7 +1582,8 @@ static int vhost_scsi_open(struct inode
- 		vqs[i] = &vs->vqs[i].vq;
- 		vs->vqs[i].vq.handle_kick = vhost_scsi_handle_kick;
- 	}
--	vhost_dev_init(&vs->dev, vqs, VHOST_SCSI_MAX_VQ);
-+	vhost_dev_init(&vs->dev, vqs, VHOST_SCSI_MAX_VQ,
-+		       VHOST_SCSI_WEIGHT, 0);
- 
- 	tcm_vhost_init_inflight(vs, NULL);
- 
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -292,8 +292,24 @@ static void vhost_dev_free_iovecs(struct
- 		vhost_vq_free_iovecs(dev->vqs[i]);
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -3072,6 +3072,49 @@ static inline void show_node(struct zone
+ 		printk("Node %d ", zone_to_nid(zone));
  }
  
-+bool vhost_exceeds_weight(struct vhost_virtqueue *vq,
-+			  int pkts, int total_len)
++long si_mem_available(void)
 +{
-+	struct vhost_dev *dev = vq->dev;
++	long available;
++	unsigned long pagecache;
++	unsigned long wmark_low = 0;
++	unsigned long pages[NR_LRU_LISTS];
++	struct zone *zone;
++	int lru;
 +
-+	if ((dev->byte_weight && total_len >= dev->byte_weight) ||
-+	    pkts >= dev->weight) {
-+		vhost_poll_queue(&vq->poll);
-+		return true;
-+	}
++	for (lru = LRU_BASE; lru < NR_LRU_LISTS; lru++)
++		pages[lru] = global_page_state(NR_LRU_BASE + lru);
 +
-+	return false;
++	for_each_zone(zone)
++		wmark_low += zone->watermark[WMARK_LOW];
++
++	/*
++	 * Estimate the amount of memory available for userspace allocations,
++	 * without causing swapping.
++	 */
++	available = global_page_state(NR_FREE_PAGES) - totalreserve_pages;
++
++	/*
++	 * Not all the page cache can be freed, otherwise the system will
++	 * start swapping. Assume at least half of the page cache, or the
++	 * low watermark worth of cache, needs to stay.
++	 */
++	pagecache = pages[LRU_ACTIVE_FILE] + pages[LRU_INACTIVE_FILE];
++	pagecache -= min(pagecache / 2, wmark_low);
++	available += pagecache;
++
++	/*
++	 * Part of the reclaimable slab consists of items that are in use,
++	 * and cannot be freed. Cap this estimate at the low watermark.
++	 */
++	available += global_page_state(NR_SLAB_RECLAIMABLE) -
++		     min(global_page_state(NR_SLAB_RECLAIMABLE) / 2, wmark_low);
++
++	if (available < 0)
++		available = 0;
++	return available;
 +}
-+EXPORT_SYMBOL_GPL(vhost_exceeds_weight);
++EXPORT_SYMBOL_GPL(si_mem_available);
 +
- void vhost_dev_init(struct vhost_dev *dev,
--		    struct vhost_virtqueue **vqs, int nvqs)
-+		    struct vhost_virtqueue **vqs, int nvqs,
-+		    int weight, int byte_weight)
+ void si_meminfo(struct sysinfo *val)
  {
- 	struct vhost_virtqueue *vq;
- 	int i;
-@@ -308,6 +324,8 @@ void vhost_dev_init(struct vhost_dev *de
- 	spin_lock_init(&dev->work_lock);
- 	INIT_LIST_HEAD(&dev->work_list);
- 	dev->worker = NULL;
-+	dev->weight = weight;
-+	dev->byte_weight = byte_weight;
- 
- 	for (i = 0; i < dev->nvqs; ++i) {
- 		vq = dev->vqs[i];
---- a/drivers/vhost/vhost.h
-+++ b/drivers/vhost/vhost.h
-@@ -123,9 +123,13 @@ struct vhost_dev {
- 	spinlock_t work_lock;
- 	struct list_head work_list;
- 	struct task_struct *worker;
-+	int weight;
-+	int byte_weight;
- };
- 
--void vhost_dev_init(struct vhost_dev *, struct vhost_virtqueue **vqs, int nvqs);
-+bool vhost_exceeds_weight(struct vhost_virtqueue *vq, int pkts, int total_len);
-+void vhost_dev_init(struct vhost_dev *, struct vhost_virtqueue **vqs,
-+		    int nvqs, int weight, int byte_weight);
- long vhost_dev_set_owner(struct vhost_dev *dev);
- bool vhost_dev_has_owner(struct vhost_dev *dev);
- long vhost_dev_check_owner(struct vhost_dev *);
+ 	val->totalram = totalram_pages;
 
