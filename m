@@ -2,51 +2,53 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F404EC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 04:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EBEC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 04:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB690217F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 04:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04BFD2089E
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 04:43:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="sXXjLrXz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="FgyPHLaF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726024AbfHJEbb (ORCPT
+        id S1725907AbfHJEnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 00:31:31 -0400
-Received: from gateway34.websitewelcome.com ([192.185.148.196]:17765 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725372AbfHJEbb (ORCPT
+        Sat, 10 Aug 2019 00:43:22 -0400
+Received: from gateway31.websitewelcome.com ([192.185.143.35]:40536 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725730AbfHJEnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 00:31:31 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id 889CA665D2
-        for <linux-kernel@vger.kernel.org>; Fri,  9 Aug 2019 23:31:29 -0500 (CDT)
+        Sat, 10 Aug 2019 00:43:22 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id D17BB1058E
+        for <linux-kernel@vger.kernel.org>; Fri,  9 Aug 2019 23:43:20 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id wJ2Phszwj4FKpwJ2Ph0eUB; Fri, 09 Aug 2019 23:31:29 -0500
+        id wJDshTsaAdnCewJDshv5AI; Fri, 09 Aug 2019 23:43:20 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=xVjR7vWbpBKkEv3o46r1i8OO5LzweDEZA1vdhDITNAQ=; b=sXXjLrXzTn9K1onRshMm1dn7qM
-        rjQTzLwiw15toZ3XO1FPmJpcB9GFpxy3hxPQYYbKMz0vc481yWH5Jc6Z1mEsLNQMziZNzxzR7euRu
-        KTstw1wAV/oRJ2OA+qmsCOaphiZa0JdHl7The1jDTOqAbMzl8pEyz1xsmpD+89ysACV7C1CW3FSiA
-        eK5dxu+f650saA+pgbP0ILpGs9YbgUz198v19AUohKB7YWdChs+VCJWcHUN2nbObisYoF3RvLPLxp
-        4SJUsiJZdV01TACY2bSHhTfovDjCmXMZm2g/g0OiDIR5WQOG25A3FOBtvH+4s95DEafYQ+rEG6Qqh
-        XhtwfkSQ==;
-Received: from [187.192.11.120] (port=38118 helo=[192.168.43.131])
+        bh=jNPEaYnHCISUpzL8rSKJSo1L0UnHhybBfeaApoLWE54=; b=FgyPHLaFMBuDN+uYhbVnBeuacU
+        TAAF/OLgixORAslR5qQ2E00iwc1smkWC9L+VhnKBtrkj6eTKZtPjcVBCeip9X1gsMYwQOOPItf01K
+        gYVaGt/MuMn/yvBS2zfeUHwfU5ARldEghR32qR6alI8yf+3r0artiS+LwqveXoEjbp6+d4YrX0lWf
+        YouGtIxFDBVFv9qW64477hsPuQwWXIMQGR987KUtMdr/cswqPqsw4JGR6PIAvMLxoWNvI01st9u+M
+        gjT23lms/CAz9h1cYaMyYMPgUl0kEaeeLoBd5WkFCoQpgamd3tKR26n0GxX1SEW6Sp16o9JpmD5k5
+        gZeQjUsw==;
+Received: from [187.192.11.120] (port=38232 helo=[192.168.43.131])
         by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1hwJ2P-000MOY-6I; Fri, 09 Aug 2019 23:31:29 -0500
+        id 1hwJDs-000R4e-FT; Fri, 09 Aug 2019 23:43:20 -0500
 Subject: Re: [PATCH] sh: Drop -Werror from kernel Makefile
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 To:     Joe Perches <joe@perches.com>, Guenter Roeck <linux@roeck-us.net>
 Cc:     Rich Felker <dalias@libc.org>,
         Yoshinori Sato <ysato@users.sourceforge.jp>,
@@ -58,7 +60,7 @@ References: <1564971263-21562-1-git-send-email-linux@roeck-us.net>
  <20190809215608.GA11065@roeck-us.net>
  <6a06245f-33f2-1d92-0d0e-c8b270dc24af@embeddedor.com>
  <667995275e6a1cbcdaa93029c1b33e6b52fc6803.camel@perches.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+ <afceec12-e5eb-42b7-c67e-0dc5a23affdf@embeddedor.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=gustavo@embeddedor.com; keydata=
  mQINBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
@@ -103,12 +105,12 @@ Autocrypt: addr=gustavo@embeddedor.com; keydata=
  YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
  GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
  VtSixD1uOgytAP7RWS474w==
-Message-ID: <afceec12-e5eb-42b7-c67e-0dc5a23affdf@embeddedor.com>
-Date:   Fri, 9 Aug 2019 23:31:27 -0500
+Message-ID: <32a4fa83-db72-f0b0-85ab-03f360a555a8@embeddedor.com>
+Date:   Fri, 9 Aug 2019 23:43:19 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <667995275e6a1cbcdaa93029c1b33e6b52fc6803.camel@perches.com>
+In-Reply-To: <afceec12-e5eb-42b7-c67e-0dc5a23affdf@embeddedor.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -120,13 +122,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.192.11.120
 X-Source-L: No
-X-Exim-ID: 1hwJ2P-000MOY-6I
+X-Exim-ID: 1hwJDs-000R4e-FT
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [187.192.11.120]:38118
+X-Source-Sender: ([192.168.43.131]) [187.192.11.120]:38232
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
+X-Email-Count: 16
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -136,49 +138,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 8/9/19 11:20 PM, Joe Perches wrote:
-> On Fri, 2019-08-09 at 21:47 -0500, Gustavo A. R. Silva wrote:
->> On 8/9/19 4:56 PM, Guenter Roeck wrote:
->>> On Fri, Aug 09, 2019 at 04:36:01PM -0500, Gustavo A. R. Silva wrote:
->>>> On 8/9/19 2:56 PM, Guenter Roeck wrote:
->>>>> On Sun, Aug 04, 2019 at 11:24:41PM -0400, Rich Felker wrote:
->>>>>> On Sun, Aug 04, 2019 at 07:14:23PM -0700, Guenter Roeck wrote:
->>>>>>> Since commit a035d552a93b ("Makefile: Globally enable fall-through
->>>>>>> warning"), all sh builds fail with errors such as
->>>>>>>
->>>>>>> arch/sh/kernel/disassemble.c: In function 'print_sh_insn':
->>>>>>> arch/sh/kernel/disassemble.c:478:8: error: this statement may fall through
->>>>>>>
->>>>>>> Since this effectively disables all build and boot tests for the
->>>>>>> architecture, let's drop -Werror from the sh kernel Makefile until
->>>>>>> the problems are fixed.
-> []
->> On second thought it seems to me that this is not a good idea, at least
->> for mainline. For the time being I'll take this patch for linux-next only.
+On 8/9/19 11:31 PM, Gustavo A. R. Silva wrote:
+> 
+> 
+> On 8/9/19 11:20 PM, Joe Perches wrote:
+>> On Fri, 2019-08-09 at 21:47 -0500, Gustavo A. R. Silva wrote:
+>>> On 8/9/19 4:56 PM, Guenter Roeck wrote:
+>>>> On Fri, Aug 09, 2019 at 04:36:01PM -0500, Gustavo A. R. Silva wrote:
+>>>>> On 8/9/19 2:56 PM, Guenter Roeck wrote:
+>>>>>> On Sun, Aug 04, 2019 at 11:24:41PM -0400, Rich Felker wrote:
+>>>>>>> On Sun, Aug 04, 2019 at 07:14:23PM -0700, Guenter Roeck wrote:
+>>>>>>>> Since commit a035d552a93b ("Makefile: Globally enable fall-through
+>>>>>>>> warning"), all sh builds fail with errors such as
+>>>>>>>>
+>>>>>>>> arch/sh/kernel/disassemble.c: In function 'print_sh_insn':
+>>>>>>>> arch/sh/kernel/disassemble.c:478:8: error: this statement may fall through
+>>>>>>>>
+>>>>>>>> Since this effectively disables all build and boot tests for the
+>>>>>>>> architecture, let's drop -Werror from the sh kernel Makefile until
+>>>>>>>> the problems are fixed.
+>> []
+>>> On second thought it seems to me that this is not a good idea, at least
+>>> for mainline. For the time being I'll take this patch for linux-next only.
+>>>
+>>> Who is the maintainer of sh?
 >>
->> Who is the maintainer of sh?
+>> But whoever it may be, isn't particularly active.
+>>
+>> MAINTAINERS-SUPERH
+>> MAINTAINERS-M:  Yoshinori Sato <ysato@users.sourceforge.jp>
+>> MAINTAINERS-M:  Rich Felker <dalias@libc.org>
+>> MAINTAINERS-L:  linux-sh@vger.kernel.org
+>> MAINTAINERS-Q:  http://patchwork.kernel.org/project/linux-sh/list/
+>> MAINTAINERS-S:  Maintained
+>> MAINTAINERS-F:  Documentation/sh/
+>> MAINTAINERS:F:  arch/sh/
+>> MAINTAINERS-F:  drivers/sh/
+>>
+>>> The best solution is to fix those fall-through warnings you see. Could you
+>>> please send me all the warnings you see? I can try to fix them.
+>>
+>> It's true it's a warning, but adding -Werror is rarely
+>> a good idea as gcc error output can change with every
+>> version.
+>>
 > 
-> But whoever it may be, isn't particularly active.
-> 
-> MAINTAINERS-SUPERH
-> MAINTAINERS-M:  Yoshinori Sato <ysato@users.sourceforge.jp>
-> MAINTAINERS-M:  Rich Felker <dalias@libc.org>
-> MAINTAINERS-L:  linux-sh@vger.kernel.org
-> MAINTAINERS-Q:  http://patchwork.kernel.org/project/linux-sh/list/
-> MAINTAINERS-S:  Maintained
-> MAINTAINERS-F:  Documentation/sh/
-> MAINTAINERS:F:  arch/sh/
-> MAINTAINERS-F:  drivers/sh/
-> 
->> The best solution is to fix those fall-through warnings you see. Could you
->> please send me all the warnings you see? I can try to fix them.
-> 
-> It's true it's a warning, but adding -Werror is rarely
-> a good idea as gcc error output can change with every
-> version.
+> In the meantime I'll install sh4 and fix those warnings.
 > 
 
-In the meantime I'll install sh4 and fix those warnings.
+Well, I think it has paid off. It seems there is an ancient bug right there:
+
+diff --git a/arch/sh/kernel/hw_breakpoint.c b/arch/sh/kernel/hw_breakpoint.c
+index 3bd010b4c55f..f10d64311127 100644
+--- a/arch/sh/kernel/hw_breakpoint.c
++++ b/arch/sh/kernel/hw_breakpoint.c
+@@ -157,6 +157,7 @@ int arch_bp_generic_fields(int sh_len, int sh_type,
+        switch (sh_type) {
+        case SH_BREAKPOINT_READ:
+                *gen_type = HW_BREAKPOINT_R;
++               break;
+        case SH_BREAKPOINT_WRITE:
+                *gen_type = HW_BREAKPOINT_W;
+                break;
 
 --
 Gustavo
