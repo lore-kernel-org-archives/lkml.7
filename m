@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94619C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A561C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 691C22086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A26C2086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbfHJUxw (ORCPT
+        id S1727801AbfHJUxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:53:52 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53854 "EHLO
+        Sat, 10 Aug 2019 16:53:55 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53872 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726500AbfHJUnt (ORCPT
+        by vger.kernel.org with ESMTP id S1726506AbfHJUnt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:49 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-00053V-Mj; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDI-000534-W9; Sat, 10 Aug 2019 21:43:45 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-0003ZH-3f; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDI-0003YJ-MF; Sat, 10 Aug 2019 21:43:44 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Aditya Pakki" <pakki001@umn.edu>
+        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
+        "Jean-Francois Dagenais" <jeff.dagenais@gmail.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.780753132@decadent.org.uk>
+Message-ID: <lsq.1565469607.848644193@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 023/157] serial: max310x: Fix to avoid potential NULL
- pointer dereference
+Subject: [PATCH 3.16 011/157] iio: dac: mcp4725: add missing powerdown
+ bits in store eeprom
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,29 +57,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
 
-commit 3a10e3dd52e80b9a97a3346020024d17b2c272d6 upstream.
+commit 06003531502d06bc89d32528f6ec96bf978790f9 upstream.
 
-of_match_device can return a NULL pointer when matching device is not
-found. This patch avoids a scenario causing NULL pointer derefernce.
+When issuing the write DAC register and write eeprom command, the two
+powerdown bits (PD0 and PD1) are assumed by the chip to be present in
+the bytes sent. Leaving them at 0 implies "powerdown disabled" which is
+a different state that the current one. By adding the current state of
+the powerdown in the i2c write, the chip will correctly power-on exactly
+like as it is at the moment of store_eeprom call.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This is documented in MCP4725's datasheet, FIGURE 6-2: "Write Commands
+for DAC Input Register and EEPROM" and MCP4726's datasheet, FIGURE 6-3:
+"Write All Memory Command".
+
+Signed-off-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+Acked-by: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/tty/serial/max310x.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iio/dac/mcp4725.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/tty/serial/max310x.c
-+++ b/drivers/tty/serial/max310x.c
-@@ -1324,6 +1324,8 @@ static int max310x_spi_probe(struct spi_
- 	if (spi->dev.of_node) {
- 		const struct of_device_id *of_id =
- 			of_match_device(max310x_dt_ids, &spi->dev);
-+		if (!of_id)
-+			return -ENODEV;
+--- a/drivers/iio/dac/mcp4725.c
++++ b/drivers/iio/dac/mcp4725.c
+@@ -86,6 +86,7 @@ static ssize_t mcp4725_store_eeprom(stru
+ 		return 0;
  
- 		devtype = (struct max310x_devtype *)of_id->data;
- 	} else {
+ 	inoutbuf[0] = 0x60; /* write EEPROM */
++	inoutbuf[0] |= data->powerdown ? ((data->powerdown_mode + 1) << 1) : 0;
+ 	inoutbuf[1] = data->dac_value >> 4;
+ 	inoutbuf[2] = (data->dac_value & 0xf) << 4;
+ 
 
