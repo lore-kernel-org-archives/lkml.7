@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D84C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1DFC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31B0620B7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BB17208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbfHJUvd (ORCPT
+        id S1727698AbfHJUvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:51:33 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54326 "EHLO
+        Sat, 10 Aug 2019 16:51:37 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54302 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726673AbfHJUny (ORCPT
+        by vger.kernel.org with ESMTP id S1726668AbfHJUny (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:54 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDK-00053w-AF; Sat, 10 Aug 2019 21:43:46 +0100
+        id 1hwYDP-00053p-IH; Sat, 10 Aug 2019 21:43:51 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-0003aZ-J9; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDM-0003gk-QC; Sat, 10 Aug 2019 21:43:48 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "" <peterz@infradead.org>, "Chen Jie" <chenjie6@huawei.com>,
-        "" <dvhart@infradead.org>, "" <zengweilin@huawei.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>
+        "Florian Westphal" <fw@strlen.de>,
+        syzbot+659574e7bcc7f7eb4df7@syzkaller.appspotmail.com,
+        "Pablo Neira Ayuso" <pablo@netfilter.org>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.880857944@decadent.org.uk>
+Message-ID: <lsq.1565469607.328511265@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 039/157] futex: Ensure that futex address is aligned
- in handle_futex_death()
+Subject: [PATCH 3.16 102/157] netfilter: ebtables: CONFIG_COMPAT: drop a
+ bogus WARN_ON
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,44 +57,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Chen Jie <chenjie6@huawei.com>
+From: Florian Westphal <fw@strlen.de>
 
-commit 5a07168d8d89b00fe1760120714378175b3ef992 upstream.
+commit 7caa56f006e9d712b44f27b32520c66420d5cbc6 upstream.
 
-The futex code requires that the user space addresses of futexes are 32bit
-aligned. sys_futex() checks this in futex_get_keys() but the robust list
-code has no alignment check in place.
+It means userspace gave us a ruleset where there is some other
+data after the ebtables target but before the beginning of the next rule.
 
-As a consequence the kernel crashes on architectures with strict alignment
-requirements in handle_futex_death() when trying to cmpxchg() on an
-unaligned futex address which was retrieved from the robust list.
-
-[ tglx: Rewrote changelog, proper sizeof() based alignement check and add
-  	comment ]
-
-Fixes: 0771dfefc9e5 ("[PATCH] lightweight robust futexes: core")
-Signed-off-by: Chen Jie <chenjie6@huawei.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: <dvhart@infradead.org>
-Cc: <peterz@infradead.org>
-Cc: <zengweilin@huawei.com>
-Link: https://lkml.kernel.org/r/1552621478-119787-1-git-send-email-chenjie6@huawei.com
+Fixes: 81e675c227ec ("netfilter: ebtables: add CONFIG_COMPAT support")
+Reported-by: syzbot+659574e7bcc7f7eb4df7@syzkaller.appspotmail.com
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- kernel/futex.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/bridge/netfilter/ebtables.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -2909,6 +2909,10 @@ int handle_futex_death(u32 __user *uaddr
- {
- 	u32 uval, uninitialized_var(nval), mval;
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -2011,7 +2011,8 @@ static int ebt_size_mwt(struct compat_eb
+ 		if (match_kern)
+ 			match_kern->match_size = ret;
  
-+	/* Futex address must be 32bit aligned */
-+	if ((((unsigned long)uaddr) % sizeof(*uaddr)) != 0)
-+		return -1;
-+
- retry:
- 	if (get_user(uval, uaddr))
- 		return -1;
+-		if (WARN_ON(type == EBT_COMPAT_TARGET && size_left))
++		/* rule should have no remaining data after target */
++		if (type == EBT_COMPAT_TARGET && size_left)
+ 			return -EINVAL;
+ 
+ 		match32 = (struct compat_ebt_entry_mwt *) buf;
 
