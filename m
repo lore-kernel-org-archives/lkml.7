@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81271C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2502FC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 615CD208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0561F21734
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727660AbfHJUuz (ORCPT
+        id S1727652AbfHJUuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:50:55 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54362 "EHLO
+        Sat, 10 Aug 2019 16:50:54 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54430 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726688AbfHJUnz (ORCPT
+        by vger.kernel.org with ESMTP id S1726703AbfHJUnz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:55 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDQ-00053u-5u; Sat, 10 Aug 2019 21:43:52 +0100
+        id 1hwYDP-00058M-8C; Sat, 10 Aug 2019 21:43:51 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDN-0003ho-BT; Sat, 10 Aug 2019 21:43:49 +0100
+        id 1hwYDO-0003jp-Jq; Sat, 10 Aug 2019 21:43:50 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com,
         "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "David Miller" <davem@davemloft.net>
+        "Denis Efremov" <efremov@ispras.ru>, "Willy Tarreau" <w@1wt.eu>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.349357644@decadent.org.uk>
+Message-ID: <lsq.1565469607.238740986@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 114/157] slip: make slhc_free() silently accept an
- error pointer
+Subject: [PATCH 3.16 139/157] floppy: fix out-of-bounds read in
+ next_valid_format
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,46 +56,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Denis Efremov <efremov@ispras.ru>
 
-commit baf76f0c58aec435a3a864075b8f6d8ee5d1f17e upstream.
+commit 5635f897ed83fd539df78e98ba69ee91592f9bb8 upstream.
 
-This way, slhc_free() accepts what slhc_init() returns, whether that is
-an error or not.
+This fixes a global out-of-bounds read access in the next_valid_format
+function of the floppy driver.
 
-In particular, the pattern in sl_alloc_bufs() is
+The values from autodetect field of the struct floppy_drive_params are
+used as indices for the floppy_type array in the next_valid_format
+function 'floppy_type[DP->autodetect[probed_format]].sect'.
 
-        slcomp = slhc_init(16, 16);
-        ...
-        slhc_free(slcomp);
+To trigger the bug, one could use a value out of range and set the drive
+parameters with the FDSETDRVPRM ioctl.  A floppy disk is not required to
+be inserted.
 
-for the error handling path, and rather than complicate that code, just
-make it ok to always free what was returned by the init function.
+CAP_SYS_ADMIN is required to call FDSETDRVPRM.
 
-That's what the code used to do before commit 4ab42d78e37a ("ppp, slip:
-Validate VJ compression slot parameters completely") when slhc_init()
-just returned NULL for the error case, with no actual indication of the
-details of the error.
+The patch adds the check for values of the autodetect field to be in the
+'0 <= x < ARRAY_SIZE(floppy_type)' range of the floppy_type array indices.
 
-Reported-by: syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com
-Fixes: 4ab42d78e37a ("ppp, slip: Validate VJ compression slot parameters completely")
-Acked-by: Ben Hutchings <ben@decadent.org.uk>
-Cc: David Miller <davem@davemloft.net>
+The bug was found by syzkaller.
+
+Signed-off-by: Denis Efremov <efremov@ispras.ru>
+Tested-by: Willy Tarreau <w@1wt.eu>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[bwh: Backported to 3.16: Drop changes in compat_setdrvprm(), as compat
+ ioctls go via fd_ioctl_locked() after translation in compat_ioctl.c.]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/slip/slhc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/net/slip/slhc.c
-+++ b/drivers/net/slip/slhc.c
-@@ -153,7 +153,7 @@ out_fail:
- void
- slhc_free(struct slcompress *comp)
- {
--	if ( comp == NULLSLCOMPR )
-+	if ( IS_ERR_OR_NULL(comp) )
- 		return;
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -3383,6 +3383,20 @@ static int fd_getgeo(struct block_device
+ 	return 0;
+ }
  
- 	if ( comp->tstate != NULLSLSTATE )
++static bool valid_floppy_drive_params(const short autodetect[8])
++{
++	size_t floppy_type_size = ARRAY_SIZE(floppy_type);
++	size_t i = 0;
++
++	for (i = 0; i < 8; ++i) {
++		if (autodetect[i] < 0 ||
++		    autodetect[i] >= floppy_type_size)
++			return false;
++	}
++
++	return true;
++}
++
+ static int fd_locked_ioctl(struct block_device *bdev, fmode_t mode, unsigned int cmd,
+ 		    unsigned long param)
+ {
+@@ -3509,6 +3523,8 @@ static int fd_locked_ioctl(struct block_
+ 		SUPBOUND(size, strlen((const char *)outparam) + 1);
+ 		break;
+ 	case FDSETDRVPRM:
++		if (!valid_floppy_drive_params(inparam.dp.autodetect))
++			return -EINVAL;
+ 		*UDP = inparam.dp;
+ 		break;
+ 	case FDGETDRVPRM:
 
