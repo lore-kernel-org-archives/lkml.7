@@ -2,169 +2,126 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D621C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 21:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCAFC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 21:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A65C2184E
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 21:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA572085B
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 21:18:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i0s5tj1C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbfHJVLN (ORCPT
+        id S1726548AbfHJVSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 17:11:13 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:47409 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725863AbfHJVLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 17:11:13 -0400
-Received: from [192.168.0.6] (ip5f5bd16e.dynamic.kabel-deutschland.de [95.91.209.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id A18E6201A3C38;
-        Sat, 10 Aug 2019 23:11:10 +0200 (CEST)
-Subject: Re: [Linux 5.2.x] /sys/kernel/debug/tracing/events/power/cpu_idle/id:
- BUG: kernel NULL pointer dereference, address: 0000000000000000
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>
-Cc:     x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org
-References: <4b54ff1e-f18b-3c58-7caa-945a0775c24c@molgen.mpg.de>
- <alpine.DEB.2.21.1908101910280.7324@nanos.tec.linutronix.de>
- <01c7bc6b-dc6d-5eca-401a-8869e02f7c2a@molgen.mpg.de>
-Message-ID: <e18e2a11-ea96-a612-48cd-877fa307115f@molgen.mpg.de>
-Date:   Sat, 10 Aug 2019 23:11:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 10 Aug 2019 17:18:06 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39793 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfHJVSF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 17:18:05 -0400
+Received: by mail-ot1-f65.google.com with SMTP id r21so139991209otq.6;
+        Sat, 10 Aug 2019 14:18:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2aM8t3WhsaooH6EEZEJW0NsTgNSeJNjQFlo07zB0t00=;
+        b=i0s5tj1C46sBobVdbSPsy1m8MpWVhnyMzFOhTUQUB51kGRgwelP8hmCkJpNiClOONK
+         rkDNNymwtNfBGIOwc0+M0YON4W4D/SO5hMPiCsxBgivLkz3uSPcBR+vJDqF2kayWf+HS
+         hsn46uqrMoOec12ORT9ueoLxtFyt2iBsRhixZYKhbxixFyAa2vy2gYtYWnQkFceXsuqw
+         oSOmAV9DBd8ZG/rrUC4RiDo9Icqtm/hGNg9YVdiqSlz9dCl5imIpAPIhf0xX+4j6wuzv
+         0Oo3p5HeSdkbQhTLNPev+9gzk5FC/ldoY2+TQ79XNvn26YvJjekzcmQ+MkWAJQYPjgfp
+         GT0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2aM8t3WhsaooH6EEZEJW0NsTgNSeJNjQFlo07zB0t00=;
+        b=DspXDOAdv5dj8SzKN/N9bWbyv8u1mp2+f1XgfjSJv5DJTOiKmXRRN1ntO7kaCnneqM
+         pDmh6ztauYS4sXOceIctu+j3UUEKaiQal8L0/fvlu1u+HLEDS379HOhlk8KXhy1kdl7S
+         ro1zBx6LHVXPojIJVdrsYbNRZAAk/Byiz7admpoUbm9BBy/vr3eXAbM5iv1Xlh2a9Nza
+         beH9NTOBdpzioEQH0yQGiroB8gsf81bEIjaxGjOSoFwIvSaQo3qKhDgMjhvlgixVeMdf
+         ZrQIld8vCctFbkfRQpd0/0x9c5vMrNivHnBikdhMRgMuu0HXv4tfWfDmcHghWcSgmAdr
+         gydQ==
+X-Gm-Message-State: APjAAAUiElqgGNZhaQwdDk+v6lBNnB8q9Vo/dihFJ6My3VPEWUAlF2tG
+        lgjoKFbzXZ5BSNKowaV5UwXZv/6vtBvYU69F+Xc=
+X-Google-Smtp-Source: APXvYqwUjNy0XboHs0xSwGayID+rdnMFYzrqtC1LXm1bn6Gm4sTNY3tq0OSCovSgmEeTLTSL2ARUYNoyPKaUq5SqHFI=
+X-Received: by 2002:a02:16c5:: with SMTP id a188mr12946978jaa.86.1565471884546;
+ Sat, 10 Aug 2019 14:18:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <01c7bc6b-dc6d-5eca-401a-8869e02f7c2a@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
+References: <20190731174252.18041-1-andrew.smirnov@gmail.com>
+ <20190731174252.18041-5-andrew.smirnov@gmail.com> <20190731180938.GA3885@roeck-us.net>
+In-Reply-To: <20190731180938.GA3885@roeck-us.net>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Sat, 10 Aug 2019 14:17:52 -0700
+Message-ID: <CAHQ1cqFNju7+GSFvUwZ1Vtt_TW=1qDj9eqbJ3fUb1R7jZoF-XA@mail.gmail.com>
+Subject: Re: [PATCH 4/5] watchdog: ziirave_wdt: Don't bail out on unexpected
+ timeout value
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-watchdog@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
+        Rick Ramstetter <rick@anteaterllc.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+ INTEL IDLE DRIVER]
+On Wed, Jul 31, 2019 at 11:09 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On Wed, Jul 31, 2019 at 10:42:51AM -0700, Andrey Smirnov wrote:
+> > Reprogramming bootloader on watchdog MCU will result in reported
+> > default timeout value of "0". That in turn will be unnecesarily
+>
+> unnecessarily
+>
+> > rejected by the driver as invalid device (-ENODEV). Simplify probe to
+> > just read stored timeout value, clamp it to an acceptable range and
+> > program the value unconditionally to fix the above.
+> >
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Guenter Roeck <linux@roeck-us.net>
+> > Cc: Rick Ramstetter <rick@anteaterllc.com>
+> > Cc: linux-watchdog@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  drivers/watchdog/ziirave_wdt.c | 22 +++++++++-------------
+> >  1 file changed, 9 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/drivers/watchdog/ziirave_wdt.c b/drivers/watchdog/ziirave_wdt.c
+> > index 89ce6982ba53..33c8d2eadada 100644
+> > --- a/drivers/watchdog/ziirave_wdt.c
+> > +++ b/drivers/watchdog/ziirave_wdt.c
+> > @@ -667,22 +667,18 @@ static int ziirave_wdt_probe(struct i2c_client *client,
+> >                       return val;
+> >               }
+> >
+> > -             if (val < ZIIRAVE_TIMEOUT_MIN)
+> > -                     return -ENODEV;
+> > -
+> > -             w_priv->wdd.timeout = val;
+> > -     } else {
+> > -             ret = ziirave_wdt_set_timeout(&w_priv->wdd,
+> > -                                           w_priv->wdd.timeout);
+> > -             if (ret) {
+> > -                     dev_err(&client->dev, "Failed to set timeout\n");
+> > -                     return ret;
+> > -             }
+> > +             w_priv->wdd.timeout = clamp(val, ZIIRAVE_TIMEOUT_MIN,
+> > +                                         ZIIRAVE_TIMEOUT_MAX);
+>
+> Are you sure ? Effectively that will set the timeout to the minimum,
+> ie three seconds. It might be better to define and set some default.
+> Your call, of course.
+>
 
-Dear Linux folks,
+It doesn't really matter in my use-case (set timeout is a no-op),  but
+it sounds like a better approach, so I'll change it in v2.
 
-
-On 10.08.19 20:28, Paul Menzel wrote:
-
-> On 10.08.19 19:31, Thomas Gleixner wrote:
-> 
->> On Sat, 10 Aug 2019, Paul Menzel wrote:
->>>
->>> I have no idea, who to report this to, so I please refer me to the 
->>> correct
->>> list.
->>
->> I have no idea yet either :)
->>
->>> With Linux 5.2.7 from Debian Sid/unstable and PowerTOP 2.10, executing
->>>
->>>      sudo powertop --auto-tune
->>>
->>> causes a NULL pointer dereference, and the graphical session crashes 
->>> due to an
->>> effect on the i915 driver. It worked in the past with the 4.19 series 
->>> from
->>> Debian.
->>>
->>> Here is the trace, and please find all Linux kernel logs attached.
->>>
->>>> [ 2027.170589] BUG: kernel NULL pointer dereference, address:
->>>> 0000000000000000
->>>> [ 2027.170600] #PF: supervisor instruction fetch in kernel mode
->>>> [ 2027.170604] #PF: error_code(0x0010) - not-present page
->>>> [ 2027.170609] PGD 0 P4D 0 [ 2027.170619] Oops: 0010 [#1] SMP PTI
->> ...
->>>> [ 2027.170730]  do_dentry_open+0x13a/0x370
->>
->> If you have compiled with debug info, please decode the line:
->>
->>    linux/scripts/faddr2line vmlinux do_dentry_open+0x13a/0x370
->>
->> That gives us the fops pointer which is NULL.
-> 
-> Hah, luckily it’s reproducible.
-> 
-> ```
-> $ scripts/faddr2line /usr/lib/debug/boot/vmlinux-5.2.0-2-amd64 
-> do_dentry_open+0x13a/0x370
-> do_dentry_open+0x13a/0x370:
-> do_dentry_open at fs/open.c:799
-> ```
-> 
->>>> [ 2027.170745]  path_openat+0x2c6/0x1480
->>>> [ 2027.170757]  ? terminate_walk+0xe6/0x100
->>>> [ 2027.170767]  ? path_lookupat.isra.48+0xa3/0x220
->>>> [ 2027.170779]  ? reuse_swap_page+0x105/0x320
->>>> [ 2027.170791]  do_filp_open+0x93/0x100
->>>> [ 2027.170804]  ? __check_object_size+0x15d/0x189
->>>> [ 2027.170816]  do_sys_open+0x184/0x220
->>>> [ 2027.170828]  do_syscall_64+0x53/0x130
->>>> [ 2027.170837]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>
->> That's an open crashing. We just don't know which file. Is the machine
->> completely hosed after that or is it just the graphics stuff dying?
-> 
-> No, the graphical login manager showed up, and I could log back in, and 
-> continue using hte machine.
-> 
->> If it's not completely dead then instead of running it from your 
->> graphical
->> desktop you could switch to a VGA terminal Alt+Ctrl+F1 (or whatever
->> function key your distro maps to) after boot and run powertop with strace
->> from there:
->>
->>    strace -f -o xxx.log powertop
->>
->> With a bit of luck xxx.log should contain the information about the 
->> file it
->> tries to open.
-> 
-> ```
-> 2157  access("/sys/class/drm/card0/power/rc6_residency_ms", R_OK) = 0
-> 2157  openat(AT_FDCWD, 
-> "/sys/kernel/debug/tracing/events/power/cpu_idle/id", O_RDONLY) = ?
-> 2157  +++ killed by SIGKILL +++
-> ```
-> 
->> Alternatively if you have a serial console you can enable the
->> sys_enter_open* tracepoints:
->>
->> # echo 1 >/sys/kernel/debug/tracing/events/syscalls/sys_enter_open
->> # echo 1 >/sys/kernel/debug/tracing/events/syscalls/sys_enter_openat
->>
->> Either add 'ftrace_dump_on_oops' to the kernel command line or enable it
->> from the shell:
->>
->> # echo 1 > /proc/sys/kernel/ftrace_dump_on_oops
->>
->> Then run powertop. After the crash it will take some time to spill out 
->> the trace buffer over serial, but it will pinpoint the offending file.
-> 
-> I do not have serial console on this device.
-
-For the record. It is also reproducible with Linux 5.2.6, and trying to 
-print the file contents with cat already fails.
-
-```
-$ sudo ls -l /sys/kernel/debug/tracing/events/power/cpu_idle/id
--r--r--r-- 1 root root 0 Aug 10 23:05 
-/sys/kernel/debug/tracing/events/power/cpu_idle/id
-$ sudo cat /sys/kernel/debug/tracing/events/power/cpu_idle/id
-Killed
-```
-
-
-Kind regards,
-
-Paul
+Thanks,
+Andrey Smirnov
