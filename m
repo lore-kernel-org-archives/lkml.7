@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 137FCC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F8EC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCA5621743
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 566B720B7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:48:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfHJUsx (ORCPT
+        id S1727107AbfHJUs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:48:53 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54816 "EHLO
+        Sat, 10 Aug 2019 16:48:56 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54750 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726797AbfHJUoA (ORCPT
+        by vger.kernel.org with ESMTP id S1726768AbfHJUoA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:44:00 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDV-00053i-Kj; Sat, 10 Aug 2019 21:43:57 +0100
+        id 1hwYDV-00053O-Co; Sat, 10 Aug 2019 21:43:57 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDO-0003iw-2I; Sat, 10 Aug 2019 21:43:50 +0100
+        id 1hwYDO-0003jW-CT; Sat, 10 Aug 2019 21:43:50 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Andrew Cooper" <andrew.cooper3@citrix.com>,
-        "Josh Poimboeuf" <jpoimboe@redhat.com>,
-        "Tyler Hicks" <tyhicks@canonical.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>
+        syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com,
+        "Vladis Dronov" <vdronov@redhat.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Marcel Holtmann" <marcel@holtmann.org>,
+        "Yu-Chen, Cho" <acho@suse.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.413104328@decadent.org.uk>
+Message-ID: <lsq.1565469607.541662992@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 128/157] x86/speculation/swapgs: Exclude ATOMs from
- speculation through SWAPGS
+Subject: [PATCH 3.16 135/157] Bluetooth: hci_uart: check for missing tty
+ operations
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,154 +59,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Vladis Dronov <vdronov@redhat.com>
 
-commit f36cf386e3fec258a341d446915862eded3e13d8 upstream.
+commit b36a1552d7319bbfd5cf7f08726c23c5c66d4f73 upstream.
 
-Intel provided the following information:
+Certain ttys operations (pty_unix98_ops) lack tiocmget() and tiocmset()
+functions which are called by the certain HCI UART protocols (hci_ath,
+hci_bcm, hci_intel, hci_mrvl, hci_qca) via hci_uart_set_flow_control()
+or directly. This leads to an execution at NULL and can be triggered by
+an unprivileged user. Fix this by adding a helper function and a check
+for the missing tty operations in the protocols code.
 
- On all current Atom processors, instructions that use a segment register
- value (e.g. a load or store) will not speculatively execute before the
- last writer of that segment retires. Thus they will not use a
- speculatively written segment value.
+This fixes CVE-2019-10207. The Fixes: lines list commits where calls to
+tiocm[gs]et() or hci_uart_set_flow_control() were added to the HCI UART
+protocols.
 
-That means on ATOMs there is no speculation through SWAPGS, so the SWAPGS
-entry paths can be excluded from the extra LFENCE if PTI is disabled.
-
-Create a separate bug flag for the through SWAPGS speculation and mark all
-out-of-order ATOMs and AMD/HYGON CPUs as not affected. The in-order ATOMs
-are excluded from the whole mitigation mess anyway.
-
-Reported-by: Andrew Cooper <andrew.cooper3@citrix.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Link: https://syzkaller.appspot.com/bug?id=1b42faa2848963564a5b1b7f8c837ea7b55ffa50
+Reported-by: syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com
+Fixes: b3190df62861 ("Bluetooth: Support for Atheros AR300x serial chip")
+Fixes: 118612fb9165 ("Bluetooth: hci_bcm: Add suspend/resume PM functions")
+Fixes: ff2895592f0f ("Bluetooth: hci_intel: Add Intel baudrate configuration support")
+Fixes: 162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
+Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990")
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Reviewed-by: Yu-Chen, Cho <acho@suse.com>
+Tested-by: Yu-Chen, Cho <acho@suse.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 [bwh: Backported to 3.16:
- - There's no whitelist entry (or any support) for Hygon CPUs
- - Use the next available X86_BUG number
- - Adjust context, indentation]
+ - Only hci_ath is affected
+ - There is no serdev support]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/include/asm/cpufeatures.h |  1 +
- arch/x86/kernel/cpu/bugs.c         | 18 +++----------
- arch/x86/kernel/cpu/common.c       | 42 +++++++++++++++++++-----------
- 3 files changed, 32 insertions(+), 29 deletions(-)
-
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -278,5 +278,6 @@
- #define X86_BUG_L1TF		X86_BUG(9) /* CPU is affected by L1 Terminal Fault */
- #define X86_BUG_MDS		X86_BUG(10) /* CPU is affected by Microarchitectural data sampling */
- #define X86_BUG_MSBDS_ONLY	X86_BUG(11) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
-+#define X86_BUG_SWAPGS		X86_BUG(12) /* CPU is affected by speculation through SWAPGS */
+--- a/drivers/bluetooth/hci_ath.c
++++ b/drivers/bluetooth/hci_ath.c
+@@ -112,6 +112,9 @@ static int ath_open(struct hci_uart *hu)
  
- #endif /* _ASM_X86_CPUFEATURES_H */
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -328,18 +328,6 @@ static const char * const spectre_v1_str
- 	[SPECTRE_V1_MITIGATION_AUTO] = "Mitigation: usercopy/swapgs barriers and __user pointer sanitization",
- };
+ 	BT_DBG("hu %p", hu);
  
--static bool is_swapgs_serializing(void)
--{
--	/*
--	 * Technically, swapgs isn't serializing on AMD (despite it previously
--	 * being documented as such in the APM).  But according to AMD, %gs is
--	 * updated non-speculatively, and the issuing of %gs-relative memory
--	 * operands will be blocked until the %gs update completes, which is
--	 * good enough for our purposes.
--	 */
--	return boot_cpu_data.x86_vendor == X86_VENDOR_AMD;
--}
--
- /*
-  * Does SMAP provide full mitigation against speculative kernel access to
-  * userspace?
-@@ -390,9 +378,11 @@ static void __init spectre_v1_select_mit
- 			 * PTI as the CR3 write in the Meltdown mitigation
- 			 * is serializing.
- 			 *
--			 * If neither is there, mitigate with an LFENCE.
-+			 * If neither is there, mitigate with an LFENCE to
-+			 * stop speculation through swapgs.
- 			 */
--			if (!is_swapgs_serializing() && !boot_cpu_has(X86_FEATURE_KAISER))
-+			if (boot_cpu_has_bug(X86_BUG_SWAPGS) &&
-+			    !boot_cpu_has(X86_FEATURE_KAISER))
- 				setup_force_cpu_cap(X86_FEATURE_FENCE_SWAPGS_USER);
- 
- 			/*
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -813,6 +813,7 @@ static void identify_cpu_without_cpuid(s
- #define NO_L1TF		BIT(3)
- #define NO_MDS		BIT(4)
- #define MSBDS_ONLY	BIT(5)
-+#define NO_SWAPGS	BIT(6)
- 
- #define VULNWL(_vendor, _family, _model, _whitelist)	\
- 	{ X86_VENDOR_##_vendor, _family, _model, X86_FEATURE_ANY, _whitelist }
-@@ -836,29 +837,37 @@ static const __initconst struct x86_cpu_
- 	VULNWL_INTEL(ATOM_BONNELL,		NO_SPECULATION),
- 	VULNWL_INTEL(ATOM_BONNELL_MID,		NO_SPECULATION),
- 
--	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY),
--	VULNWL_INTEL(ATOM_SILVERMONT_X,		NO_SSB | NO_L1TF | MSBDS_ONLY),
--	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF | MSBDS_ONLY),
--	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY),
--	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF | MSBDS_ONLY),
--	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF | MSBDS_ONLY),
-+	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_SILVERMONT_X,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
-+	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
-+	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
- 
- 	VULNWL_INTEL(CORE_YONAH,		NO_SSB),
- 
--	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF | MSBDS_ONLY),
-+	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF | MSBDS_ONLY | NO_SWAPGS),
- 
--	VULNWL_INTEL(ATOM_GOLDMONT,		NO_MDS | NO_L1TF),
--	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_MDS | NO_L1TF),
--	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_MDS | NO_L1TF),
-+	VULNWL_INTEL(ATOM_GOLDMONT,		NO_MDS | NO_L1TF | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_MDS | NO_L1TF | NO_SWAPGS),
-+	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_MDS | NO_L1TF | NO_SWAPGS),
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
 +
-+	/*
-+	 * Technically, swapgs isn't serializing on AMD (despite it previously
-+	 * being documented as such in the APM).  But according to AMD, %gs is
-+	 * updated non-speculatively, and the issuing of %gs-relative memory
-+	 * operands will be blocked until the %gs update completes, which is
-+	 * good enough for our purposes.
-+	 */
+ 	ath = kzalloc(sizeof(*ath), GFP_KERNEL);
+ 	if (!ath)
+ 		return -ENOMEM;
+--- a/drivers/bluetooth/hci_ldisc.c
++++ b/drivers/bluetooth/hci_ldisc.c
+@@ -261,6 +261,15 @@ static int hci_uart_send_frame(struct hc
+ 	return 0;
+ }
  
- 	/* AMD Family 0xf - 0x12 */
--	VULNWL_AMD(0x0f,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
--	VULNWL_AMD(0x10,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
--	VULNWL_AMD(0x11,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
--	VULNWL_AMD(0x12,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
-+	VULNWL_AMD(0x0f,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
-+	VULNWL_AMD(0x10,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
-+	VULNWL_AMD(0x11,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
-+	VULNWL_AMD(0x12,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS),
- 
- 	/* FAMILY_ANY must be last, otherwise 0x0f - 0x12 matches won't work */
--	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS),
-+	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS),
- 	{}
- };
- 
-@@ -895,6 +904,9 @@ static void __init cpu_set_bug_bits(stru
- 			setup_force_cpu_bug(X86_BUG_MSBDS_ONLY);
- 	}
- 
-+	if (!cpu_matches(NO_SWAPGS))
-+		setup_force_cpu_bug(X86_BUG_SWAPGS);
++/* Check the underlying device or tty has flow control support */
++bool hci_uart_has_flow_control(struct hci_uart *hu)
++{
++	if (hu->tty->driver->ops->tiocmget && hu->tty->driver->ops->tiocmset)
++		return true;
 +
- 	if (cpu_matches(NO_MELTDOWN))
- 		return;
++	return false;
++}
++
+ /* ------ LDISC part ------ */
+ /* hci_uart_tty_open
+  *
+--- a/drivers/bluetooth/hci_uart.h
++++ b/drivers/bluetooth/hci_uart.h
+@@ -90,6 +90,7 @@ int hci_uart_register_proto(struct hci_u
+ int hci_uart_unregister_proto(struct hci_uart_proto *p);
+ int hci_uart_tx_wakeup(struct hci_uart *hu);
+ int hci_uart_init_ready(struct hci_uart *hu);
++bool hci_uart_has_flow_control(struct hci_uart *hu);
  
+ #ifdef CONFIG_BT_HCIUART_H4
+ int h4_init(void);
 
