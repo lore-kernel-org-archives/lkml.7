@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2502FC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B476AC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0561F21734
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E935208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbfHJUuy (ORCPT
+        id S1727229AbfHJUut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:50:54 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54430 "EHLO
+        Sat, 10 Aug 2019 16:50:49 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54448 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726703AbfHJUnz (ORCPT
+        by vger.kernel.org with ESMTP id S1726708AbfHJUn4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:43:55 -0400
+        Sat, 10 Aug 2019 16:43:56 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDP-00058M-8C; Sat, 10 Aug 2019 21:43:51 +0100
+        id 1hwYDP-00053a-SU; Sat, 10 Aug 2019 21:43:51 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDO-0003jp-Jq; Sat, 10 Aug 2019 21:43:50 +0100
+        id 1hwYDM-0003gS-KR; Sat, 10 Aug 2019 21:43:48 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Roman Gushchin" <guro@fb.com>, "Jann Horn" <jannh@google.com>,
         "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Denis Efremov" <efremov@ispras.ru>, "Willy Tarreau" <w@1wt.eu>
+        "Vlastimil Babka" <vbabka@suse.cz>,
+        "Konstantin Khlebnikov" <khlebnikov@yandex-team.ru>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.238740986@decadent.org.uk>
+Message-ID: <lsq.1565469607.109860941@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 139/157] floppy: fix out-of-bounds read in
- next_valid_format
+Subject: [PATCH 3.16 099/157] mm/vmstat.c: fix /proc/vmstat format for
+ CONFIG_DEBUG_TLBFLUSH=y CONFIG_SMP=n
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,65 +58,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Denis Efremov <efremov@ispras.ru>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-commit 5635f897ed83fd539df78e98ba69ee91592f9bb8 upstream.
+commit e8277b3b52240ec1caad8e6df278863e4bf42eac upstream.
 
-This fixes a global out-of-bounds read access in the next_valid_format
-function of the floppy driver.
+Commit 58bc4c34d249 ("mm/vmstat.c: skip NR_TLB_REMOTE_FLUSH* properly")
+depends on skipping vmstat entries with empty name introduced in
+7aaf77272358 ("mm: don't show nr_indirectly_reclaimable in
+/proc/vmstat") but reverted in b29940c1abd7 ("mm: rename and change
+semantics of nr_indirectly_reclaimable_bytes").
 
-The values from autodetect field of the struct floppy_drive_params are
-used as indices for the floppy_type array in the next_valid_format
-function 'floppy_type[DP->autodetect[probed_format]].sect'.
+So skipping no longer works and /proc/vmstat has misformatted lines " 0".
 
-To trigger the bug, one could use a value out of range and set the drive
-parameters with the FDSETDRVPRM ioctl.  A floppy disk is not required to
-be inserted.
+This patch simply shows debug counters "nr_tlb_remote_*" for UP.
 
-CAP_SYS_ADMIN is required to call FDSETDRVPRM.
-
-The patch adds the check for values of the autodetect field to be in the
-'0 <= x < ARRAY_SIZE(floppy_type)' range of the floppy_type array indices.
-
-The bug was found by syzkaller.
-
-Signed-off-by: Denis Efremov <efremov@ispras.ru>
-Tested-by: Willy Tarreau <w@1wt.eu>
+Link: http://lkml.kernel.org/r/155481488468.467.4295519102880913454.stgit@buzz
+Fixes: 58bc4c34d249 ("mm/vmstat.c: skip NR_TLB_REMOTE_FLUSH* properly")
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Jann Horn <jannh@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-[bwh: Backported to 3.16: Drop changes in compat_setdrvprm(), as compat
- ioctls go via fd_ioctl_locked() after translation in compat_ioctl.c.]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -3383,6 +3383,20 @@ static int fd_getgeo(struct block_device
- 	return 0;
- }
- 
-+static bool valid_floppy_drive_params(const short autodetect[8])
-+{
-+	size_t floppy_type_size = ARRAY_SIZE(floppy_type);
-+	size_t i = 0;
-+
-+	for (i = 0; i < 8; ++i) {
-+		if (autodetect[i] < 0 ||
-+		    autodetect[i] >= floppy_type_size)
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
- static int fd_locked_ioctl(struct block_device *bdev, fmode_t mode, unsigned int cmd,
- 		    unsigned long param)
- {
-@@ -3509,6 +3523,8 @@ static int fd_locked_ioctl(struct block_
- 		SUPBOUND(size, strlen((const char *)outparam) + 1);
- 		break;
- 	case FDSETDRVPRM:
-+		if (!valid_floppy_drive_params(inparam.dp.autodetect))
-+			return -EINVAL;
- 		*UDP = inparam.dp;
- 		break;
- 	case FDGETDRVPRM:
+ mm/vmstat.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -861,13 +861,8 @@ const char * const vmstat_text[] = {
+ 	"thp_zero_page_alloc_failed",
+ #endif
+ #ifdef CONFIG_DEBUG_TLBFLUSH
+-#ifdef CONFIG_SMP
+ 	"nr_tlb_remote_flush",
+ 	"nr_tlb_remote_flush_received",
+-#else
+-	"", /* nr_tlb_remote_flush */
+-	"", /* nr_tlb_remote_flush_received */
+-#endif /* CONFIG_SMP */
+ 	"nr_tlb_local_flush_all",
+ 	"nr_tlb_local_flush_one",
+ #endif /* CONFIG_DEBUG_TLBFLUSH */
 
