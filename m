@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7B8C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E1AC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF411208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D93F0208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:50:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbfHJUuO (ORCPT
+        id S1727590AbfHJUuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:50:14 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54522 "EHLO
+        Sat, 10 Aug 2019 16:50:06 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54550 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726727AbfHJUn5 (ORCPT
+        by vger.kernel.org with ESMTP id S1726735AbfHJUn5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:57 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDS-00058O-7q; Sat, 10 Aug 2019 21:43:54 +0100
+        id 1hwYDS-00053Y-LQ; Sat, 10 Aug 2019 21:43:54 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDP-0003m0-86; Sat, 10 Aug 2019 21:43:51 +0100
+        id 1hwYDO-0003kk-Q4; Sat, 10 Aug 2019 21:43:50 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Flavio Leitner" <fbl@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric Dumazet" <edumazet@google.com>,
-        "Hannes Frederic Sowa" <hannes@stressinduktion.org>
+        "Juergen Gross" <jgross@suse.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.563481538@decadent.org.uk>
+Message-ID: <lsq.1565469607.648207322@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 153/157] ipv6: hash net ptr into fragmentation bucket
- selection
+Subject: [PATCH 3.16 144/157] xen: let alloc_xenballooned_pages() fail if
+ not enough memory free
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,140 +55,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hannes Frederic Sowa <hannes@stressinduktion.org>
+From: Juergen Gross <jgross@suse.com>
 
-commit 5a352dd0a3aac03b443c94828dfd7144261c8636 upstream.
+commit a1078e821b605813b63bf6bca414a85f804d5c66 upstream.
 
-As namespaces are sometimes used with overlapping ip address ranges,
-we should also use the namespace as input to the hash to select the ip
-fragmentation counter bucket.
+Instead of trying to allocate pages with GFP_USER in
+add_ballooned_pages() check the available free memory via
+si_mem_available(). GFP_USER is far less limiting memory exhaustion
+than the test via si_mem_available().
 
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Flavio Leitner <fbl@redhat.com>
-Signed-off-by: Hannes Frederic Sowa <hannes@stressinduktion.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This will avoid dom0 running out of memory due to excessive foreign
+page mappings especially on ARM and on x86 in PVH mode, as those don't
+have a pre-ballooned area which can be used for foreign mappings.
+
+As the normal ballooning suffers from the same problem don't balloon
+down more than si_mem_available() pages in one iteration. At the same
+time limit the default maximum number of retries.
+
+This is part of XSA-300.
+
+Signed-off-by: Juergen Gross <jgross@suse.com>
+[bwh: Backported to 3.16: adjust context, indentation]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- include/net/ipv6.h     |  5 +++--
- net/ipv6/ip6_output.c  |  6 +++---
- net/ipv6/output_core.c | 14 ++++++++------
- net/ipv6/udp_offload.c |  4 ++--
- 4 files changed, 16 insertions(+), 13 deletions(-)
+ drivers/xen/balloon.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
---- a/include/net/ipv6.h
-+++ b/include/net/ipv6.h
-@@ -688,8 +688,9 @@ static inline int ipv6_addr_diff(const s
- 	return __ipv6_addr_diff(a1, a2, sizeof(struct in6_addr));
- }
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -502,8 +502,15 @@ static void balloon_process(struct work_
+ 				state = reserve_additional_memory(credit);
+ 		}
  
--void ipv6_select_ident(struct frag_hdr *fhdr, struct rt6_info *rt);
--void ipv6_proxy_select_ident(struct sk_buff *skb);
-+void ipv6_select_ident(struct net *net, struct frag_hdr *fhdr,
-+		       struct rt6_info *rt);
-+void ipv6_proxy_select_ident(struct net *net, struct sk_buff *skb);
+-		if (credit < 0)
+-			state = decrease_reservation(-credit, GFP_BALLOON);
++		if (credit < 0) {
++			long n_pages;
++
++			n_pages = min(-credit, si_mem_available());
++			state = decrease_reservation(n_pages, GFP_BALLOON);
++			if (state == BP_DONE && n_pages != -credit &&
++			    n_pages < totalreserve_pages)
++				state = BP_EAGAIN;
++		}
  
- int ip6_dst_hoplimit(struct dst_entry *dst);
+ 		state = update_schedule(state);
  
---- a/net/ipv6/ip6_output.c
-+++ b/net/ipv6/ip6_output.c
-@@ -632,7 +632,7 @@ int ip6_fragment(struct sk_buff *skb, in
- 		skb_reset_network_header(skb);
- 		memcpy(skb_network_header(skb), tmp_hdr, hlen);
+@@ -561,6 +568,9 @@ int alloc_xenballooned_pages(int nr_page
+ 			enum bp_state st;
+ 			if (page)
+ 				balloon_append(page);
++			if (si_mem_available() < nr_pages)
++				return -ENOMEM;
++
+ 			st = decrease_reservation(nr_pages - pgno,
+ 					highmem ? GFP_HIGHUSER : GFP_USER);
+ 			if (st != BP_DONE)
+@@ -692,7 +702,7 @@ static int __init balloon_init(void)
+ 	balloon_stats.schedule_delay = 1;
+ 	balloon_stats.max_schedule_delay = 32;
+ 	balloon_stats.retry_count = 1;
+-	balloon_stats.max_retry_count = RETRY_UNLIMITED;
++	balloon_stats.max_retry_count = 4;
  
--		ipv6_select_ident(fh, rt);
-+		ipv6_select_ident(net, fh, rt);
- 		fh->nexthdr = nexthdr;
- 		fh->reserved = 0;
- 		fh->frag_off = htons(IP6_MF);
-@@ -785,7 +785,7 @@ slow_path:
- 		fh->nexthdr = nexthdr;
- 		fh->reserved = 0;
- 		if (!frag_id) {
--			ipv6_select_ident(fh, rt);
-+			ipv6_select_ident(net, fh, rt);
- 			frag_id = fh->identification;
- 		} else
- 			fh->identification = frag_id;
-@@ -1079,7 +1079,7 @@ static inline int ip6_ufo_append_data(st
- 	skb_shinfo(skb)->gso_size = (mtu - fragheaderlen -
- 				     sizeof(struct frag_hdr)) & ~7;
- 	skb_shinfo(skb)->gso_type = SKB_GSO_UDP;
--	ipv6_select_ident(&fhdr, rt);
-+	ipv6_select_ident(sock_net(sk), &fhdr, rt);
- 	skb_shinfo(skb)->ip6_frag_id = fhdr.identification;
- 
- append:
---- a/net/ipv6/output_core.c
-+++ b/net/ipv6/output_core.c
-@@ -9,13 +9,14 @@
- #include <net/addrconf.h>
- #include <net/secure_seq.h>
- 
--static u32 __ipv6_select_ident(u32 hashrnd, struct in6_addr *dst,
--			       struct in6_addr *src)
-+static u32 __ipv6_select_ident(struct net *net, u32 hashrnd,
-+			       struct in6_addr *dst, struct in6_addr *src)
- {
- 	u32 hash, id;
- 
- 	hash = __ipv6_addr_jhash(dst, hashrnd);
- 	hash = __ipv6_addr_jhash(src, hash);
-+	hash ^= net_hash_mix(net);
- 
- 	/* Treat id of 0 as unset and if we get 0 back from ip_idents_reserve,
- 	 * set the hight order instead thus minimizing possible future
-@@ -36,7 +37,7 @@ static u32 __ipv6_select_ident(u32 hashr
-  *
-  * The network header must be set before calling this.
-  */
--void ipv6_proxy_select_ident(struct sk_buff *skb)
-+void ipv6_proxy_select_ident(struct net *net, struct sk_buff *skb)
- {
- 	static u32 ip6_proxy_idents_hashrnd __read_mostly;
- 	struct in6_addr buf[2];
-@@ -53,20 +54,21 @@ void ipv6_proxy_select_ident(struct sk_b
- 	net_get_random_once(&ip6_proxy_idents_hashrnd,
- 			    sizeof(ip6_proxy_idents_hashrnd));
- 
--	id = __ipv6_select_ident(ip6_proxy_idents_hashrnd,
-+	id = __ipv6_select_ident(net, ip6_proxy_idents_hashrnd,
- 				 &addrs[1], &addrs[0]);
- 	skb_shinfo(skb)->ip6_frag_id = htonl(id);
- }
- EXPORT_SYMBOL_GPL(ipv6_proxy_select_ident);
- 
--void ipv6_select_ident(struct frag_hdr *fhdr, struct rt6_info *rt)
-+void ipv6_select_ident(struct net *net, struct frag_hdr *fhdr,
-+		       struct rt6_info *rt)
- {
- 	static u32 ip6_idents_hashrnd __read_mostly;
- 	u32 id;
- 
- 	net_get_random_once(&ip6_idents_hashrnd, sizeof(ip6_idents_hashrnd));
- 
--	id = __ipv6_select_ident(ip6_idents_hashrnd, &rt->rt6i_dst.addr,
-+	id = __ipv6_select_ident(net, ip6_idents_hashrnd, &rt->rt6i_dst.addr,
- 				 &rt->rt6i_src.addr);
- 	fhdr->identification = htonl(id);
- }
---- a/net/ipv6/udp_offload.c
-+++ b/net/ipv6/udp_offload.c
-@@ -77,7 +77,7 @@ static struct sk_buff *udp6_ufo_fragment
- 
- 		/* Set the IPv6 fragment id if not set yet */
- 		if (!skb_shinfo(skb)->ip6_frag_id)
--			ipv6_proxy_select_ident(skb);
-+			ipv6_proxy_select_ident(dev_net(skb->dev), skb);
- 
- 		segs = NULL;
- 		goto out;
-@@ -125,7 +125,7 @@ static struct sk_buff *udp6_ufo_fragment
- 		fptr->nexthdr = nexthdr;
- 		fptr->reserved = 0;
- 		if (!skb_shinfo(skb)->ip6_frag_id)
--			ipv6_proxy_select_ident(skb);
-+			ipv6_proxy_select_ident(dev_net(skb->dev), skb);
- 		fptr->identification = skb_shinfo(skb)->ip6_frag_id;
- 
- 		/* Fragment the skb. ipv6 header and the remaining fields of the
+ #ifdef CONFIG_XEN_BALLOON_MEMORY_HOTPLUG
+ 	balloon_stats.hotplug_pages = 0;
 
