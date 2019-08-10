@@ -2,118 +2,82 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562CDC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 05:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C6BC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 05:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2982921880
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 05:32:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oH/Pf9Mt"
+	by mail.kernel.org (Postfix) with ESMTP id B7181217F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 05:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbfHJFch (ORCPT
+        id S1726057AbfHJFyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 01:32:37 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41671 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfHJFcg (ORCPT
+        Sat, 10 Aug 2019 01:54:17 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57982 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbfHJFyR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 01:32:36 -0400
-Received: by mail-pl1-f193.google.com with SMTP id m9so45610661pls.8;
-        Fri, 09 Aug 2019 22:32:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=71DUVtj5Cvg/Wok9dZsUDEqRY7qzU/CKNT9zSocN+ao=;
-        b=oH/Pf9MtSMDZkluj4qQKlvh6Kv8FriGzPN9CjiWS1WBhMkpRogJ5AYRzjRkOt+MO9y
-         DensadzKBFHj3agCJgnb3xMpazh9MI43ilUc0NXpzI7eyC0gmIAhzJp5zvR0IQrsdymo
-         nJIPKVISeubH+rufmf3Lc/KYui2pUCc3Zyhu8DXu9KDooJesZmLnC+5g1bJlVOetHSS1
-         Woq5wOdnef8MHDFi4DP/rUQLksb2NhiKvjWqfWI6ehlkuoq12Kn+A80ApJodRlFiTsUR
-         1fy4fS7ySH71Gaelyza0+EmuwftY6JgenWu8GsFN/nwMdBTweYeMYDt6TksRya0JxO5C
-         3SCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=71DUVtj5Cvg/Wok9dZsUDEqRY7qzU/CKNT9zSocN+ao=;
-        b=V29Dr9ILk6NhD4XdXoSr2FUkFgOFvVTNnu7Uqy2HRCClB09UkTe1K+H0swzb588c4e
-         Hhwfn5p//+3qdlxpcXgdmZb61/E7UuOkkHIndToKYPuPpm4kfb5+uHGBIUeO0jdTGUvf
-         Tb2Abu4P5Tjy4HVWOn/2w0MuqtIEW4zza7DAKrLhuFjUGQvR+koLI2e3vckugOb1bRJu
-         DYRrEtm+6Lnrd/k10wrYNrBIfu+ALWqDc7EwJpieyxuwEyYIdQDKLdSADEb6KUyLKhhR
-         xaqam4jVT1Mzql4BSv6qKQq6thGlEGu5Dak5qvlamYQQdTClrQqkvHuOW8KWMYoSblhB
-         wBIg==
-X-Gm-Message-State: APjAAAX3DVBEGBdSx4UeCkIO67DST8Fehr81bKkobu2oibhh1+0+ynI+
-        vf9ymKJjRICuPX+ZNpAa6kQ=
-X-Google-Smtp-Source: APXvYqzx2x2due+dcKfhyyCVT9miXzJYXimf/VWFq0pAMOqAFhvOtdO+BDXCCX1MutojsCyob5lLGg==
-X-Received: by 2002:a17:902:4383:: with SMTP id j3mr16103296pld.69.1565415155840;
-        Fri, 09 Aug 2019 22:32:35 -0700 (PDT)
-Received: from localhost ([202.182.106.211])
-        by smtp.gmail.com with ESMTPSA id 16sm26554443pfc.66.2019.08.09.22.32.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 09 Aug 2019 22:32:35 -0700 (PDT)
-From:   Yangtao Li <tiny.windzz@gmail.com>
-To:     rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        nicolas.ferre@microchip.com
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH v5 13/18] thermal: sun8i: add thermal driver for A64
-Date:   Sat, 10 Aug 2019 05:32:32 +0000
-Message-Id: <20190810053232.6125-1-tiny.windzz@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 10 Aug 2019 01:54:17 -0400
+Received: from p200300ddd71876237e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7623:7e7a:91ff:fec9:8e25])
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hwKKP-0001qU-GQ; Sat, 10 Aug 2019 07:54:09 +0200
+Date:   Sat, 10 Aug 2019 07:53:56 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [RFC PATCH v4 9/9] printk: use a new ringbuffer implementation
+In-Reply-To: <CAHk-=wiG55kT0MRprt+Opbpcc=ebugC_rz4d6-whtAGXri3TwQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1908100745260.7324@nanos.tec.linutronix.de>
+References: <20190807222634.1723-1-john.ogness@linutronix.de> <20190807222634.1723-10-john.ogness@linutronix.de> <CAHk-=wiKTn-BMpp4w645XqmFBEtUXe84+TKc6aRMPbvFwUjA=A@mail.gmail.com> <20190809061437.GE2332@hirez.programming.kicks-ass.net>
+ <CAHk-=wiG55kT0MRprt+Opbpcc=ebugC_rz4d6-whtAGXri3TwQ@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Khoruzhick <anarsoul@gmail.com>
+On Fri, 9 Aug 2019, Linus Torvalds wrote:
+> On Thu, Aug 8, 2019 at 11:14 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > Note that you can hook this into printk as a fake early serial device;
+> > just have the serial device write to the DRAM buffer.
+> 
+> No, you really really can't.
+...
+> Even the "early console" stuff tries to honor serialization by
+> console_lock and console_suspended etc. Or things like the "I'm in the
+> middle of the scheduler, so I won't be doing any real logging".
 
-Thermal sensor controller in A64 is similar to H3, but it has 3 sensors.
-Extend H3 functions to add support for multiple sensors.
+If you think of it as the classic console you are right. What Peter has in
+mind is the extra stuff on top of this buffer patchset, which implements
+emergency write to consoles. That's an extra callback in the console
+struct, which can be invoked in such situations igoring context and console
+lock completely.
 
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
----
- drivers/thermal/sun8i_thermal.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Right now we have an implementation for serial only, but that already is
+useful. I nicely got (minimaly garbled) crash dumps out of an NMI
+handler. With the current mainline console code the machine just hung.
 
-diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-index 41ce8cdc0546..3259081da841 100644
---- a/drivers/thermal/sun8i_thermal.c
-+++ b/drivers/thermal/sun8i_thermal.c
-@@ -515,6 +515,17 @@ static const struct ths_thermal_chip sun8i_h3_ths = {
- 	.irq_ack = sun8i_h3_irq_ack,
- };
- 
-+static const struct ths_thermal_chip sun50i_a64_ths = {
-+	.sensor_num = 3,
-+	.offset = -2170,
-+	.scale = -117,
-+	.has_mod_clk = true,
-+	.temp_data_base = SUN8I_THS_TEMP_DATA,
-+	.calibrate = sun8i_h3_ths_calibrate,
-+	.init = sun8i_h3_thermal_init,
-+	.irq_ack = sun8i_h3_irq_ack,
-+};
-+
- static const struct ths_thermal_chip sun50i_h6_ths = {
- 	.sensor_num = 2,
- 	.offset = -2794,
-@@ -528,6 +539,7 @@ static const struct ths_thermal_chip sun50i_h6_ths = {
- 
- static const struct of_device_id of_ths_match[] = {
- 	{ .compatible = "allwinner,sun8i-h3-ths", .data = &sun8i_h3_ths },
-+	{ .compatible = "allwinner,sun50i-a64-ths", .data = &sun50i_a64_ths },
- 	{ .compatible = "allwinner,sun50i-h6-ths", .data = &sun50i_h6_ths },
- 	{ /* sentinel */ },
- };
--- 
-2.17.1
+So with this scheme we actually could hook your smart buffer into the
+console stuff and still achieve what you want.
 
+Thanks,
+
+	tglx
