@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC5EC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7EE5C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B881208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 773B5208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfHJUvx (ORCPT
+        id S1727711AbfHJUwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:51:53 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54180 "EHLO
+        Sat, 10 Aug 2019 16:52:04 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54166 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726601AbfHJUnw (ORCPT
+        by vger.kernel.org with ESMTP id S1726594AbfHJUnw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:52 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDM-00053W-Va; Sat, 10 Aug 2019 21:43:49 +0100
+        id 1hwYDN-00053m-7p; Sat, 10 Aug 2019 21:43:49 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-0003bC-Ta; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDK-0003br-A3; Sat, 10 Aug 2019 21:43:46 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Simon Wunderlich" <sw@simonwunderlich.de>,
-        "Sven Eckelmann" <sven@narfation.org>,
-        "Antonio Quartulli" <a@unstable.cc>,
-        "Martin Weinelt" <martin@linuxlounge.net>
+        "Konrad Rzeszutek Wilk" <konrad.wilk@oracle.com>,
+        "Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?=" <rkrcmar@redhat.com>,
+        "Jim Mattson" <jmattson@google.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.834087516@decadent.org.uk>
+Message-ID: <lsq.1565469607.160863860@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 047/157] batman-adv: Reduce tt_global hash refcnt
- only for removed entry
+Subject: [PATCH 3.16 055/157] kvm: x86: IA32_ARCH_CAPABILITIES is always
+ supported
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,72 +57,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Jim Mattson <jmattson@google.com>
 
-commit f131a56880d10932931e74773fb8702894a94a75 upstream.
+commit 1eaafe91a0df4157521b6417b3dd8430bf5f52f0 upstream.
 
-The batadv_hash_remove is a function which searches the hashtable for an
-entry using a needle, a hashtable bucket selection function and a compare
-function. It will lock the bucket list and delete an entry when the compare
-function matches it with the needle. It returns the pointer to the
-hlist_node which matches or NULL when no entry matches the needle.
+If there is a possibility that a VM may migrate to a Skylake host,
+then the hypervisor should report IA32_ARCH_CAPABILITIES.RSBA[bit 2]
+as being set (future work, of course). This implies that
+CPUID.(EAX=7,ECX=0):EDX.ARCH_CAPABILITIES[bit 29] should be
+set. Therefore, kvm should report this CPUID bit as being supported
+whether or not the host supports it.  Userspace is still free to clear
+the bit if it chooses.
 
-The batadv_tt_global_free is not itself protected in anyway to avoid that
-any other function is modifying the hashtable between the search for the
-entry and the call to batadv_hash_remove. It can therefore happen that the
-entry either doesn't exist anymore or an entry was deleted which is not the
-same object as the needle. In such an situation, the reference counter (for
-the reference stored in the hashtable) must not be reduced for the needle.
-Instead the reference counter of the actually removed entry has to be
-reduced.
+For more information on RSBA, see Intel's white paper, "Retpoline: A
+Branch Target Injection Mitigation" (Document Number 337131-001),
+currently available at https://bugzilla.kernel.org/show_bug.cgi?id=199511.
 
-Otherwise the reference counter will underflow and the object might be
-freed before all its references were dropped. The kref helpers reported
-this problem as:
+Since the IA32_ARCH_CAPABILITIES MSR is emulated in kvm, there is no
+dependency on hardware support for this feature.
 
-  refcount_t: underflow; use-after-free.
-
-Fixes: 7683fdc1e886 ("batman-adv: protect the local and the global trans-tables with rcu")
-Reported-by: Martin Weinelt <martin@linuxlounge.net>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Acked-by: Antonio Quartulli <a@unstable.cc>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Fixes: 28c1c9fabf48 ("KVM/VMX: Emulate MSR_IA32_ARCH_CAPABILITIES")
+Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
 [bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/batman-adv/translation-table.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ arch/x86/kvm/cpuid.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -483,14 +483,26 @@ static void batadv_tt_global_free(struct
- 				  struct batadv_tt_global_entry *tt_global,
- 				  const char *message)
- {
-+	struct batadv_tt_global_entry *tt_removed_entry;
-+	struct hlist_node *tt_removed_node;
-+
- 	batadv_dbg(BATADV_DBG_TT, bat_priv,
- 		   "Deleting global tt entry %pM (vid: %d): %s\n",
- 		   tt_global->common.addr,
- 		   BATADV_PRINT_VID(tt_global->common.vid), message);
- 
--	batadv_hash_remove(bat_priv->tt.global_hash, batadv_compare_tt,
--			   batadv_choose_tt, &tt_global->common);
--	batadv_tt_global_entry_free_ref(tt_global);
-+	tt_removed_node = batadv_hash_remove(bat_priv->tt.global_hash,
-+					     batadv_compare_tt,
-+					     batadv_choose_tt,
-+					     &tt_global->common);
-+	if (!tt_removed_node)
-+		return;
-+
-+	/* drop reference of remove hash entry */
-+	tt_removed_entry = hlist_entry(tt_removed_node,
-+				       struct batadv_tt_global_entry,
-+				       common.hash_entry);
-+	batadv_tt_global_entry_free_ref(tt_removed_entry);
- }
- 
- /**
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -395,6 +395,11 @@ static inline int __do_cpuid_ent(struct
+ 			entry->ebx |= F(TSC_ADJUST);
+ 			entry->edx &= kvm_cpuid_7_0_edx_x86_features;
+ 			cpuid_mask(&entry->edx, 10);
++			/*
++			 * We emulate ARCH_CAPABILITIES in software even
++			 * if the host doesn't support it.
++			 */
++			entry->edx |= F(ARCH_CAPABILITIES);
+ 		} else {
+ 			entry->ebx = 0;
+ 			entry->edx = 0;
 
