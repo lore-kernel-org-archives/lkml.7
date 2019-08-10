@@ -2,114 +2,121 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D3FC32756
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 17:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0593C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 17:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 042362085B
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 17:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8470B2085B
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 17:32:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726253AbfHJRZ4 (ORCPT
+        id S1726187AbfHJRbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 13:25:56 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39490 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfHJRZz (ORCPT
+        Sat, 10 Aug 2019 13:31:55 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58304 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfHJRbz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 13:25:55 -0400
-Received: by mail-ot1-f66.google.com with SMTP id r21so138834954otq.6
-        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 10:25:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=dmrs5pFCBj9On+SbjBpOAPXKaVn0DvMCZgTb4mfkLts=;
-        b=NspqtQ4gxmdz+ii41eWfBkZ+X/acexIfuBbePWZUknrzvxEQx/jTX8S8QqhFW0nTbq
-         ggPix53CEqUlqNb9POv3vDXJPEjjnZ7t/hAqqCzNQlpb8mzMWk32O7aUyQnx2TvElmmd
-         1ezP7yUDRWnPRPqz3FUrl+bTWdWzpQj/vYEZ7izk6lHs112YutZobwWD/ZLw2QfGQGvp
-         uc1V6GBj3ORFyyzLaKZ6GxOfMkwzLYQEAzwSP8WOJjYOGno7D+iCeUI+fDai9ByFnsKl
-         kg/MiLJDXhICCldlE6e+SA3i39p/cWYoEBXzxQrutALqQw4HRLs0/2P5R/ErgBXGvKoS
-         9VRQ==
-X-Gm-Message-State: APjAAAWturrxp7Mub1mZhqUbTwvM/CJF1NWlHg5HgiMLxnv6ptynB6SS
-        5vGYbuT4evwCRtcM82RfUdSFcg==
-X-Google-Smtp-Source: APXvYqxzNa3AT+XtXWSe12rwllYzVp6a5m/K3d0vXyVaEBlsvIRPrdQWFY2OazBw2Glf8Ldnx0zU+w==
-X-Received: by 2002:a05:6638:c8:: with SMTP id w8mr3295587jao.52.1565457954493;
-        Sat, 10 Aug 2019 10:25:54 -0700 (PDT)
-Received: from masetto.ahs3 (c-67-165-232-89.hsd1.co.comcast.net. [67.165.232.89])
-        by smtp.gmail.com with ESMTPSA id x23sm8466137iob.36.2019.08.10.10.25.53
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sat, 10 Aug 2019 10:25:53 -0700 (PDT)
-Reply-To: ahs3@redhat.com
-Subject: Re: [PATCH] ACPI / CPPC: do not require the _PSD method when using
- CPPC
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-References: <20190805170338.29493-1-ahs3@redhat.com>
- <20190807114118.GJ16546@e107155-lin>
-From:   Al Stone <ahs3@redhat.com>
-Organization: Red Hat, Inc.
-Message-ID: <b873db68-a130-ed7f-83e0-4491b1c0ff53@redhat.com>
-Date:   Sat, 10 Aug 2019 11:25:53 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 10 Aug 2019 13:31:55 -0400
+Received: from p200300ddd71876237e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7623:7e7a:91ff:fec9:8e25])
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hwVDb-00076N-2q; Sat, 10 Aug 2019 19:31:51 +0200
+Date:   Sat, 10 Aug 2019 19:31:45 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+cc:     x86@kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [Linux 5.2.7] powertop --auto-tune: BUG: kernel NULL pointer
+ dereference, address: 0000000000000000
+In-Reply-To: <4b54ff1e-f18b-3c58-7caa-945a0775c24c@molgen.mpg.de>
+Message-ID: <alpine.DEB.2.21.1908101910280.7324@nanos.tec.linutronix.de>
+References: <4b54ff1e-f18b-3c58-7caa-945a0775c24c@molgen.mpg.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190807114118.GJ16546@e107155-lin>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/19 5:41 AM, Sudeep Holla wrote:
-> On Mon, Aug 05, 2019 at 11:03:38AM -0600, Al Stone wrote:
->> According to the ACPI 6.3 specification, the _PSD method is optional
->> when using CPPC.  The underlying assumption appears to be that each CPU
->> can change frequency independently from all other CPUs; _PSD is provided
->> to tell the OS that some processors can NOT do that.
->>
->> However, the acpi_get_psd() function returns -ENODEV if there is no _PSD
->> method present, or an ACPI error status if an error occurs when evaluating
->> _PSD, if present.  This essentially makes _PSD mandatory when using CPPC,
->> in violation of the specification, and only on Linux.
->>
->> This has forced some firmware writers to provide a dummy _PSD, even though
->> it is irrelevant, but only because Linux requires it; other OSPMs follow
->> the spec.  We really do not want to have OS specific ACPI tables, though.
->>
->> So, correct acpi_get_psd() so that it does not return an error if there
->> is no _PSD method present, but does return a failure when the method can
->> not be executed properly.  This allows _PSD to be optional as it should
->> be.
->>
-> 
-> Makes sense to me. FWIW,
-> 
-> Reviewed-by: Sudeep Holla < sudeep.holla@arm.com>
-> 
-> --
-> Regards,
-> Sudeep
-> 
+Paul,
 
-Thanks for the review, Sudeep.  All the ARM systems I've seen seem to
-have a _PSD so this hasn't been an issue there.  Some newer platforms
-coming out are starting to use CPPC, though, and took the spec at face
-value :).
+On Sat, 10 Aug 2019, Paul Menzel wrote:
+> 
+> I have no idea, who to report this to, so I please refer me to the correct
+> list.
 
--- 
-ciao,
-al
------------------------------------
-Al Stone
-Software Engineer
-Red Hat, Inc.
-ahs3@redhat.com
------------------------------------
+I have no idea yet either :)
+
+> With Linux 5.2.7 from Debian Sid/unstable and PowerTOP 2.10, executing
+> 
+>     sudo powertop --auto-tune
+> 
+> causes a NULL pointer dereference, and the graphical session crashes due to an
+> effect on the i915 driver. It worked in the past with the 4.19 series from
+> Debian.
+> 
+> Here is the trace, and please find all Linux kernel logs attached.
+> 
+> > [ 2027.170589] BUG: kernel NULL pointer dereference, address:
+> > 0000000000000000
+> > [ 2027.170600] #PF: supervisor instruction fetch in kernel mode
+> > [ 2027.170604] #PF: error_code(0x0010) - not-present page
+> > [ 2027.170609] PGD 0 P4D 0 [ 2027.170619] Oops: 0010 [#1] SMP PTI
+...
+> > [ 2027.170730]  do_dentry_open+0x13a/0x370
+
+If you have compiled with debug info, please decode the line:
+
+  linux/scripts/faddr2line vmlinux do_dentry_open+0x13a/0x370
+
+That gives us the fops pointer which is NULL.
+
+> > [ 2027.170745]  path_openat+0x2c6/0x1480
+> > [ 2027.170757]  ? terminate_walk+0xe6/0x100
+> > [ 2027.170767]  ? path_lookupat.isra.48+0xa3/0x220
+> > [ 2027.170779]  ? reuse_swap_page+0x105/0x320
+> > [ 2027.170791]  do_filp_open+0x93/0x100
+> > [ 2027.170804]  ? __check_object_size+0x15d/0x189
+> > [ 2027.170816]  do_sys_open+0x184/0x220
+> > [ 2027.170828]  do_syscall_64+0x53/0x130
+> > [ 2027.170837]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+That's an open crashing. We just don't know which file. Is the machine
+completely hosed after that or is it just the graphics stuff dying?
+
+If it's not completely dead then instead of running it from your graphical
+desktop you could switch to a VGA terminal Alt+Ctrl+F1 (or whatever
+function key your distro maps to) after boot and run powertop with strace
+from there:
+
+  strace -f -o xxx.log powertop
+
+With a bit of luck xxx.log should contain the information about the file it
+tries to open.
+
+Alternatively if you have a serial console you can enable the
+sys_enter_open* tracepoints:
+
+# echo 1 >/sys/kernel/debug/tracing/events/syscalls/sys_enter_open
+# echo 1 >/sys/kernel/debug/tracing/events/syscalls/sys_enter_openat
+
+Either add 'ftrace_dump_on_oops' to the kernel command line or enable it
+from the shell:
+
+# echo 1 > /proc/sys/kernel/ftrace_dump_on_oops
+
+Then run powertop. After the crash it will take some time to spill out the
+trace buffer over serial, but it will pinpoint the offending file.
+
+Once we know which file it is, we also know who needs to stare at it :)
+
+Thanks,
+
+	tglx
