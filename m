@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B7EC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8404C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A59D2208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B684208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbfHJUqC (ORCPT
+        id S1727325AbfHJUq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:46:02 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55264 "EHLO
+        Sat, 10 Aug 2019 16:46:29 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55266 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726885AbfHJUoH (ORCPT
+        by vger.kernel.org with ESMTP id S1726882AbfHJUoH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:44:07 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDb-00053i-W9; Sat, 10 Aug 2019 21:44:04 +0100
+        id 1hwYDc-00053e-04; Sat, 10 Aug 2019 21:44:04 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDL-0003d9-3E; Sat, 10 Aug 2019 21:43:47 +0100
+        id 1hwYDL-0003d4-24; Sat, 10 Aug 2019 21:43:47 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Iwai" <tiwai@suse.de>,
-        "Guenter Roeck" <groeck@chromium.org>,
-        "Zubin Mithra" <zsm@chromium.org>
+        "Juergen Gross" <jgross@suse.com>,
+        "Dan Carpenter" <dan.carpenter@oracle.com>,
+        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.465476075@decadent.org.uk>
+Message-ID: <lsq.1565469607.426255235@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 071/157] ALSA: seq: Fix OOB-reads from strlcpy
+Subject: [PATCH 3.16 070/157] xen: Prevent buffer overflow in privcmd ioctl
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,50 +56,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Zubin Mithra <zsm@chromium.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 212ac181c158c09038c474ba68068be49caecebb upstream.
+commit 42d8644bd77dd2d747e004e367cb0c895a606f39 upstream.
 
-When ioctl calls are made with non-null-terminated userspace strings,
-strlcpy causes an OOB-read from within strlen. Fix by changing to use
-strscpy instead.
+The "call" variable comes from the user in privcmd_ioctl_hypercall().
+It's an offset into the hypercall_page[] which has (PAGE_SIZE / 32)
+elements.  We need to put an upper bound on it to prevent an out of
+bounds access.
 
-Signed-off-by: Zubin Mithra <zsm@chromium.org>
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 1246ae0bb992 ("xen: add variable hypercall caller")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 [bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/core/seq/seq_clientmgr.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/xen/hypercall.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/sound/core/seq/seq_clientmgr.c
-+++ b/sound/core/seq/seq_clientmgr.c
-@@ -1249,7 +1249,7 @@ static int snd_seq_ioctl_set_client_info
+--- a/arch/x86/include/asm/xen/hypercall.h
++++ b/arch/x86/include/asm/xen/hypercall.h
+@@ -215,6 +215,9 @@ privcmd_call(unsigned call,
+ 	__HYPERCALL_DECLS;
+ 	__HYPERCALL_5ARG(a1, a2, a3, a4, a5);
  
- 	/* fill the info fields */
- 	if (client_info.name[0])
--		strlcpy(client->name, client_info.name, sizeof(client->name));
-+		strscpy(client->name, client_info.name, sizeof(client->name));
- 
- 	client->filter = client_info.filter;
- 	client->event_lost = client_info.event_lost;
-@@ -1564,7 +1564,7 @@ static int snd_seq_ioctl_create_queue(st
- 	/* set queue name */
- 	if (! info.name[0])
- 		snprintf(info.name, sizeof(info.name), "Queue-%d", q->queue);
--	strlcpy(q->name, info.name, sizeof(q->name));
-+	strscpy(q->name, info.name, sizeof(q->name));
- 	queuefree(q);
- 
- 	if (copy_to_user(arg, &info, sizeof(info)))
-@@ -1642,7 +1642,7 @@ static int snd_seq_ioctl_set_queue_info(
- 		queuefree(q);
- 		return -EPERM;
- 	}
--	strlcpy(q->name, info.name, sizeof(q->name));
-+	strscpy(q->name, info.name, sizeof(q->name));
- 	queuefree(q);
- 
- 	return 0;
++	if (call >= PAGE_SIZE / sizeof(hypercall_page[0]))
++		return -EINVAL;
++
+ 	stac();
+ 	asm volatile(CALL_NOSPEC
+ 		     : __HYPERCALL_5PARAM
 
