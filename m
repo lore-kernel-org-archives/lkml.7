@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C86C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE85C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C863F2166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DCDB2166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:45:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbfHJUog (ORCPT
+        id S1727079AbfHJUod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:44:36 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54986 "EHLO
+        Sat, 10 Aug 2019 16:44:33 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54872 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726824AbfHJUoD (ORCPT
+        by vger.kernel.org with ESMTP id S1726805AbfHJUoB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:44:03 -0400
+        Sat, 10 Aug 2019 16:44:01 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDY-00053P-9e; Sat, 10 Aug 2019 21:44:00 +0100
+        id 1hwYDW-00053m-R0; Sat, 10 Aug 2019 21:43:58 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDN-0003hP-4y; Sat, 10 Aug 2019 21:43:49 +0100
+        id 1hwYDN-0003iI-Lu; Sat, 10 Aug 2019 21:43:49 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Shuah Khan" <skhan@linuxfoundation.org>,
-        "Malte Leip" <malte@leip.net>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+        "Al Viro" <viro@zeniv.linux.org.uk>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.616399710@decadent.org.uk>
+Message-ID: <lsq.1565469607.999591096@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 109/157] usb: usbip: fix isoc packet num validation
- in get_pipe
+Subject: [PATCH 3.16 120/157] ufs: fix braino in ufs_get_inode_gid() for
+ solaris UFS flavour
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,76 +55,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Malte Leip <malte@leip.net>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit c409ca3be3c6ff3a1eeb303b191184e80d412862 upstream.
+commit 4e9036042fedaffcd868d7f7aa948756c48c637d upstream.
 
-Change the validation of number_of_packets in get_pipe to compare the
-number of packets to a fixed maximum number of packets allowed, set to
-be 1024. This number was chosen due to it being used by other drivers as
-well, for example drivers/usb/host/uhci-q.c
+To choose whether to pick the GID from the old (16bit) or new (32bit)
+field, we should check if the old gid field is set to 0xffff.  Mainline
+checks the old *UID* field instead - cut'n'paste from the corresponding
+code in ufs_get_inode_uid().
 
-Background/reason:
-The get_pipe function in stub_rx.c validates the number of packets in
-isochronous mode and aborts with an error if that number is too large,
-in order to prevent malicious input from possibly triggering large
-memory allocations. This was previously done by checking whether
-pdu->u.cmd_submit.number_of_packets is bigger than the number of packets
-that would be needed for pdu->u.cmd_submit.transfer_buffer_length bytes
-if all except possibly the last packet had maximum length, given by
-usb_endpoint_maxp(epd) *  usb_endpoint_maxp_mult(epd). This leads to an
-error if URBs with packets shorter than the maximum possible length are
-submitted, which is allowed according to
-Documentation/driver-api/usb/URB.rst and occurs for example with the
-snd-usb-audio driver.
-
-Fixes: c6688ef9f297 ("usbip: fix stub_rx: harden CMD_SUBMIT path to handle malicious input")
-Signed-off-by: Malte Leip <malte@leip.net>
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[bwh: Backported to 3.16: adjust filenames]
+Fixes: 252e211e90ce
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/staging/usbip/stub_rx.c      | 12 +++---------
- drivers/staging/usbip/usbip_common.h |  7 +++++++
- 2 files changed, 10 insertions(+), 9 deletions(-)
+ fs/ufs/util.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/usbip/stub_rx.c
-+++ b/drivers/staging/usbip/stub_rx.c
-@@ -375,16 +375,10 @@ static int get_pipe(struct stub_device *
- 	}
- 
- 	if (usb_endpoint_xfer_isoc(epd)) {
--		/* validate packet size and number of packets */
--		unsigned int maxp, packets, bytes;
--
--		maxp = usb_endpoint_maxp(epd);
--		maxp *= usb_endpoint_maxp_mult(epd);
--		bytes = pdu->u.cmd_submit.transfer_buffer_length;
--		packets = DIV_ROUND_UP(bytes, maxp);
--
-+		/* validate number of packets */
- 		if (pdu->u.cmd_submit.number_of_packets < 0 ||
--		    pdu->u.cmd_submit.number_of_packets > packets) {
-+		    pdu->u.cmd_submit.number_of_packets >
-+		    USBIP_MAX_ISO_PACKETS) {
- 			dev_err(&sdev->udev->dev,
- 				"CMD_SUBMIT: isoc invalid num packets %d\n",
- 				pdu->u.cmd_submit.number_of_packets);
---- a/drivers/staging/usbip/usbip_common.h
-+++ b/drivers/staging/usbip/usbip_common.h
-@@ -134,6 +134,13 @@ extern struct device_attribute dev_attr_
- #define USBIP_DIR_OUT	0x00
- #define USBIP_DIR_IN	0x01
- 
-+/*
-+ * Arbitrary limit for the maximum number of isochronous packets in an URB,
-+ * compare for example the uhci_submit_isochronous function in
-+ * drivers/usb/host/uhci-q.c
-+ */
-+#define USBIP_MAX_ISO_PACKETS 1024
-+
- /**
-  * struct usbip_header_basic - data pertinent to every request
-  * @command: the usbip request type
+--- a/fs/ufs/util.h
++++ b/fs/ufs/util.h
+@@ -228,7 +228,7 @@ ufs_get_inode_gid(struct super_block *sb
+ 	case UFS_UID_44BSD:
+ 		return fs32_to_cpu(sb, inode->ui_u3.ui_44.ui_gid);
+ 	case UFS_UID_EFT:
+-		if (inode->ui_u1.oldids.ui_suid == 0xFFFF)
++		if (inode->ui_u1.oldids.ui_sgid == 0xFFFF)
+ 			return fs32_to_cpu(sb, inode->ui_u3.ui_sun.ui_gid);
+ 		/* Fall through */
+ 	default:
 
