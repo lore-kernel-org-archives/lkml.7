@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C9BC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F19EC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F12D6208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA20B2166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:43:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbfHJUnt (ORCPT
+        id S1726721AbfHJUn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:43:49 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53730 "EHLO
+        Sat, 10 Aug 2019 16:43:56 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53836 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726014AbfHJUnr (ORCPT
+        by vger.kernel.org with ESMTP id S1726496AbfHJUnt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:43:47 -0400
+        Sat, 10 Aug 2019 16:43:49 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDI-00052s-Ks; Sat, 10 Aug 2019 21:43:44 +0100
+        id 1hwYDK-00053s-7s; Sat, 10 Aug 2019 21:43:46 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDI-0003Xk-CL; Sat, 10 Aug 2019 21:43:44 +0100
+        id 1hwYDJ-0003aK-GS; Sat, 10 Aug 2019 21:43:45 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Markus Elfring" <elfring@users.sourceforge.net>,
-        "Jonathan Cameron" <jic23@kernel.org>
+        "Takashi Iwai" <tiwai@suse.de>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.57202441@decadent.org.uk>
+Message-ID: <lsq.1565469607.570627698@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 004/157] iio: Use kmalloc_array() in iio_scan_mask_set()
+Subject: [PATCH 3.16 036/157] ALSA: rawmidi: Fix potential Spectre v1
+ vulnerability
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,37 +56,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Markus Elfring <elfring@users.sourceforge.net>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-commit 057ac1acdfc4743f066fcefe359385cad00549eb upstream.
+commit 2b1d9c8f87235f593826b9cf46ec10247741fff9 upstream.
 
-A multiplication for the size determination of a memory allocation
-indicated that an array data structure should be processed.
-Thus use the corresponding function "kmalloc_array".
+info->stream is indirectly controlled by user-space, hence leading to
+a potential exploitation of the Spectre variant 1 vulnerability.
 
-This issue was detected by using the Coccinelle software.
+This issue was detected with the help of Smatch:
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-Signed-off-by: Jonathan Cameron <jic23@kernel.org>
+sound/core/rawmidi.c:604 __snd_rawmidi_info_select() warn: potential spectre issue 'rmidi->streams' [r] (local cap)
+
+Fix this by sanitizing info->stream before using it to index
+rmidi->streams.
+
+Notice that given that speculation windows are large, the policy is
+to kill the speculation on the first load and not worry if it can be
+completed with a dependent load/store [1].
+
+[1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/iio/industrialio-buffer.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ sound/core/rawmidi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/iio/industrialio-buffer.c
-+++ b/drivers/iio/industrialio-buffer.c
-@@ -836,10 +836,9 @@ int iio_scan_mask_set(struct iio_dev *in
- 	const unsigned long *mask;
- 	unsigned long *trialmask;
- 
--	trialmask = kmalloc(sizeof(*trialmask)*
--			    BITS_TO_LONGS(indio_dev->masklength),
--			    GFP_KERNEL);
--
-+	trialmask = kmalloc_array(BITS_TO_LONGS(indio_dev->masklength),
-+				  sizeof(*trialmask),
-+				  GFP_KERNEL);
- 	if (trialmask == NULL)
- 		return -ENOMEM;
- 	if (!indio_dev->masklength) {
+--- a/sound/core/rawmidi.c
++++ b/sound/core/rawmidi.c
+@@ -29,6 +29,7 @@
+ #include <linux/mutex.h>
+ #include <linux/module.h>
+ #include <linux/delay.h>
++#include <linux/nospec.h>
+ #include <sound/rawmidi.h>
+ #include <sound/info.h>
+ #include <sound/control.h>
+@@ -601,6 +602,7 @@ static int __snd_rawmidi_info_select(str
+ 		return -ENXIO;
+ 	if (info->stream < 0 || info->stream > 1)
+ 		return -EINVAL;
++	info->stream = array_index_nospec(info->stream, 2);
+ 	pstr = &rmidi->streams[info->stream];
+ 	if (pstr->substream_count == 0)
+ 		return -ENOENT;
 
