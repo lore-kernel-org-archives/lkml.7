@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 672A6C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7279C32756
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 485A6208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA260208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfHJUrq (ORCPT
+        id S1726851AbfHJUoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:47:46 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55056 "EHLO
+        Sat, 10 Aug 2019 16:44:03 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54114 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726840AbfHJUoE (ORCPT
+        by vger.kernel.org with ESMTP id S1726566AbfHJUnv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:44:04 -0400
+        Sat, 10 Aug 2019 16:43:51 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDY-00053Y-K7; Sat, 10 Aug 2019 21:44:00 +0100
+        id 1hwYDM-00053t-V1; Sat, 10 Aug 2019 21:43:49 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDM-0003fj-CV; Sat, 10 Aug 2019 21:43:48 +0100
+        id 1hwYDJ-0003at-Pu; Sat, 10 Aug 2019 21:43:45 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com,
-        "Takashi Iwai" <tiwai@suse.de>
+        "Hulk Robot" <hulkci@huawei.com>, "Jan Kara" <jack@suse.cz>,
+        "zhangyi (F)" <yi.zhang@huawei.com>,
+        "Theodore Ts'o" <tytso@mit.edu>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.329556158@decadent.org.uk>
+Message-ID: <lsq.1565469607.761898531@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 094/157] ALSA: core: Fix card races between register
- and disconnect
+Subject: [PATCH 3.16 043/157] ext4: brelse all indirect buffer in
+ ext4_ind_remove_space()
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,73 +57,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: "zhangyi (F)" <yi.zhang@huawei.com>
 
-commit 2a3f7221acddfe1caa9ff09b3a8158c39b2fdeac upstream.
+commit 674a2b27234d1b7afcb0a9162e81b2e53aeef217 upstream.
 
-There is a small race window in the card disconnection code that
-allows the registration of another card with the very same card id.
-This leads to a warning in procfs creation as caught by syzkaller.
+All indirect buffers get by ext4_find_shared() should be released no
+mater the branch should be freed or not. But now, we forget to release
+the lower depth indirect buffers when removing space from the same
+higher depth indirect block. It will lead to buffer leak and futher
+more, it may lead to quota information corruption when using old quota,
+consider the following case.
 
-The problem is that we delete snd_cards and snd_cards_lock entries at
-the very beginning of the disconnection procedure.  This makes the
-slot available to be assigned for another card object while the
-disconnection procedure is being processed.  Then it becomes possible
-to issue a procfs registration with the existing file name although we
-check the conflict beforehand.
+ - Create and mount an empty ext4 filesystem without extent and quota
+   features,
+ - quotacheck and enable the user & group quota,
+ - Create some files and write some data to them, and then punch hole
+   to some files of them, it may trigger the buffer leak problem
+   mentioned above.
+ - Disable quota and run quotacheck again, it will create two new
+   aquota files and write the checked quota information to them, which
+   probably may reuse the freed indirect block(the buffer and page
+   cache was not freed) as data block.
+ - Enable quota again, it will invoke
+   vfs_load_quota_inode()->invalidate_bdev() to try to clean unused
+   buffers and pagecache. Unfortunately, because of the buffer of quota
+   data block is still referenced, quota code cannot read the up to date
+   quota info from the device and lead to quota information corruption.
 
-The fix is simply to move the snd_cards and snd_cards_lock clearances
-at the end of the disconnection procedure.  The references to these
-entries are merely either from the global proc files like
-/proc/asound/cards or from the card registration / disconnection, so
-it should be fine to shift at the very end.
+This problem can be reproduced by xfstests generic/231 on ext3 file
+system or ext4 file system without extent and quota features.
 
-Reported-by: syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+This patch fix this problem by releasing the missing indirect buffers,
+in ext4_ind_remove_space().
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/core/init.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ fs/ext4/indirect.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/sound/core/init.c
-+++ b/sound/core/init.c
-@@ -389,14 +389,7 @@ int snd_card_disconnect(struct snd_card
- 	card->shutdown = 1;
- 	spin_unlock(&card->files_lock);
+--- a/fs/ext4/indirect.c
++++ b/fs/ext4/indirect.c
+@@ -1481,10 +1481,14 @@ end_range:
+ 					   partial->p + 1,
+ 					   partial2->p,
+ 					   (chain+n-1) - partial);
+-			BUFFER_TRACE(partial->bh, "call brelse");
+-			brelse(partial->bh);
+-			BUFFER_TRACE(partial2->bh, "call brelse");
+-			brelse(partial2->bh);
++			while (partial > chain) {
++				BUFFER_TRACE(partial->bh, "call brelse");
++				brelse(partial->bh);
++			}
++			while (partial2 > chain2) {
++				BUFFER_TRACE(partial2->bh, "call brelse");
++				brelse(partial2->bh);
++			}
+ 			return 0;
+ 		}
  
--	/* phase 1: disable fops (user space) operations for ALSA API */
--	mutex_lock(&snd_card_mutex);
--	snd_cards[card->number] = NULL;
--	clear_bit(card->number, snd_cards_lock);
--	mutex_unlock(&snd_card_mutex);
--	
--	/* phase 2: replace file->f_op with special dummy operations */
--	
-+	/* replace file->f_op with special dummy operations */
- 	spin_lock(&card->files_lock);
- 	list_for_each_entry(mfile, &card->files_list, list) {
- 		/* it's critical part, use endless loop */
-@@ -412,7 +405,7 @@ int snd_card_disconnect(struct snd_card
- 	}
- 	spin_unlock(&card->files_lock);	
- 
--	/* phase 3: notify all connected devices about disconnection */
-+	/* notify all connected devices about disconnection */
- 	/* at this point, they cannot respond to any calls except release() */
- 
- #if IS_ENABLED(CONFIG_SND_MIXER_OSS)
-@@ -430,6 +423,13 @@ int snd_card_disconnect(struct snd_card
- 		device_del(&card->card_dev);
- 		card->registered = false;
- 	}
-+
-+	/* disable fops (user space) operations for ALSA API */
-+	mutex_lock(&snd_card_mutex);
-+	snd_cards[card->number] = NULL;
-+	clear_bit(card->number, snd_cards_lock);
-+	mutex_unlock(&snd_card_mutex);
-+
- #ifdef CONFIG_PM
- 	wake_up(&card->power_sleep);
- #endif
 
