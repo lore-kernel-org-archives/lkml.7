@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEA3C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA09C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2809F2086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A42A2086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:52:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbfHJUwW (ORCPT
+        id S1727715AbfHJUwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:52:22 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54124 "EHLO
+        Sat, 10 Aug 2019 16:52:16 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54148 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726573AbfHJUnw (ORCPT
+        by vger.kernel.org with ESMTP id S1726582AbfHJUnw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:52 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDM-00053i-Os; Sat, 10 Aug 2019 21:43:48 +0100
+        id 1hwYDM-00053h-Q6; Sat, 10 Aug 2019 21:43:48 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDK-0003bS-1a; Sat, 10 Aug 2019 21:43:46 +0100
+        id 1hwYDJ-0003b3-Rm; Sat, 10 Aug 2019 21:43:45 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jens Remus" <jremus@linux.ibm.com>,
-        "Steffen Maier" <maier@linux.ibm.com>,
-        "Benjamin Block" <bblock@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
+        "Simon Wunderlich" <sw@simonwunderlich.de>,
+        "Sven Eckelmann" <sven@narfation.org>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.968303007@decadent.org.uk>
+Message-ID: <lsq.1565469607.970365987@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 050/157] scsi: zfcp: fix rport unblock if deleted
- SCSI devices on Scsi_Host
+Subject: [PATCH 3.16 045/157] batman-adv: Reduce claim hash refcnt only
+ for removed entry
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,80 +56,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Steffen Maier <maier@linux.ibm.com>
+From: Sven Eckelmann <sven@narfation.org>
 
-commit fe67888fc007a76b81e37da23ce5bd8fb95890b0 upstream.
+commit 4ba104f468bbfc27362c393815d03aa18fb7a20f upstream.
 
-An already deleted SCSI device can exist on the Scsi_Host and remain there
-because something still holds a reference.  A new SCSI device with the same
-H:C:T:L and FCP device, target port WWPN, and FCP LUN can be created.  When
-we try to unblock an rport, we still find the deleted SCSI device and
-return early because the zfcp_scsi_dev of that SCSI device is not
-ZFCP_STATUS_COMMON_UNBLOCKED. Hence we miss to unblock the rport, even if
-the new proper SCSI device would be in good state.
+The batadv_hash_remove is a function which searches the hashtable for an
+entry using a needle, a hashtable bucket selection function and a compare
+function. It will lock the bucket list and delete an entry when the compare
+function matches it with the needle. It returns the pointer to the
+hlist_node which matches or NULL when no entry matches the needle.
 
-Therefore, skip deleted SCSI devices when iterating the sdevs of the shost.
-[cf. __scsi_device_lookup{_by_target}() or scsi_device_get()]
+The batadv_bla_del_claim is not itself protected in anyway to avoid that
+any other function is modifying the hashtable between the search for the
+entry and the call to batadv_hash_remove. It can therefore happen that the
+entry either doesn't exist anymore or an entry was deleted which is not the
+same object as the needle. In such an situation, the reference counter (for
+the reference stored in the hashtable) must not be reduced for the needle.
+Instead the reference counter of the actually removed entry has to be
+reduced.
 
-The following abbreviated trace sequence can indicate such problem:
+Otherwise the reference counter will underflow and the object might be
+freed before all its references were dropped. The kref helpers reported
+this problem as:
 
-Area           : REC
-Tag            : ersfs_3
-LUN            : 0x4045400300000000
-WWPN           : 0x50050763031bd327
-LUN status     : 0x40000000     not ZFCP_STATUS_COMMON_UNBLOCKED
-Ready count    : n		not incremented yet
-Running count  : 0x00000000
-ERP want       : 0x01
-ERP need       : 0xc1		ZFCP_ERP_ACTION_NONE
+  refcount_t: underflow; use-after-free.
 
-Area           : REC
-Tag            : ersfs_3
-LUN            : 0x4045400300000000
-WWPN           : 0x50050763031bd327
-LUN status     : 0x41000000
-Ready count    : n+1
-Running count  : 0x00000000
-ERP want       : 0x01
-ERP need       : 0x01
-
-...
-
-Area           : REC
-Level          : 4		only with increased trace level
-Tag            : ertru_l
-LUN            : 0x4045400300000000
-WWPN           : 0x50050763031bd327
-LUN status     : 0x40000000
-Request ID     : 0x0000000000000000
-ERP status     : 0x01800000
-ERP step       : 0x1000
-ERP action     : 0x01
-ERP count      : 0x00
-
-NOT followed by a trace record with tag "scpaddy"
-for WWPN 0x50050763031bd327.
-
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-Fixes: 6f2ce1c6af37 ("scsi: zfcp: fix rport unblock race with LUN recovery")
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 23721387c409 ("batman-adv: add basic bridge loop avoidance code")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+[bwh: Backported to 3.16: keep using batadv_claim_free_ref()]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/s390/scsi/zfcp_erp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/batman-adv/bridge_loop_avoidance.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
---- a/drivers/s390/scsi/zfcp_erp.c
-+++ b/drivers/s390/scsi/zfcp_erp.c
-@@ -1313,6 +1313,9 @@ static void zfcp_erp_try_rport_unblock(s
- 		struct zfcp_scsi_dev *zsdev = sdev_to_zfcp(sdev);
- 		int lun_status;
+--- a/net/batman-adv/bridge_loop_avoidance.c
++++ b/net/batman-adv/bridge_loop_avoidance.c
+@@ -677,6 +677,8 @@ static void batadv_bla_del_claim(struct
+ 				 const uint8_t *mac, const unsigned short vid)
+ {
+ 	struct batadv_bla_claim search_claim, *claim;
++	struct batadv_bla_claim *claim_removed_entry;
++	struct hlist_node *claim_removed_node;
  
-+		if (sdev->sdev_state == SDEV_DEL ||
-+		    sdev->sdev_state == SDEV_CANCEL)
-+			continue;
- 		if (zsdev->port != port)
- 			continue;
- 		/* LUN under port of interest */
+ 	ether_addr_copy(search_claim.addr, mac);
+ 	search_claim.vid = vid;
+@@ -687,10 +689,18 @@ static void batadv_bla_del_claim(struct
+ 	batadv_dbg(BATADV_DBG_BLA, bat_priv, "bla_del_claim(): %pM, vid %d\n",
+ 		   mac, BATADV_PRINT_VID(vid));
+ 
+-	batadv_hash_remove(bat_priv->bla.claim_hash, batadv_compare_claim,
+-			   batadv_choose_claim, claim);
+-	batadv_claim_free_ref(claim); /* reference from the hash is gone */
++	claim_removed_node = batadv_hash_remove(bat_priv->bla.claim_hash,
++						batadv_compare_claim,
++						batadv_choose_claim, claim);
++	if (!claim_removed_node)
++		goto free_claim;
+ 
++	/* reference from the hash is gone */
++	claim_removed_entry = hlist_entry(claim_removed_node,
++					  struct batadv_bla_claim, hash_entry);
++	batadv_claim_free_ref(claim_removed_entry);
++
++free_claim:
+ 	/* don't need the reference from hash_find() anymore */
+ 	batadv_claim_free_ref(claim);
+ }
 
