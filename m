@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EFFC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEDDC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2432220B7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FBED217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:46:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfHJUqJ (ORCPT
+        id S1726918AbfHJUqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:46:09 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55342 "EHLO
+        Sat, 10 Aug 2019 16:46:10 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55302 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726899AbfHJUoH (ORCPT
+        by vger.kernel.org with ESMTP id S1726895AbfHJUoH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:44:07 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDc-00053r-92; Sat, 10 Aug 2019 21:44:04 +0100
+        id 1hwYDb-00058M-W5; Sat, 10 Aug 2019 21:44:04 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDK-0003cq-Un; Sat, 10 Aug 2019 21:43:46 +0100
+        id 1hwYDL-0003dT-8p; Sat, 10 Aug 2019 21:43:47 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,12 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Max Filippov" <jcmvbkbc@gmail.com>
+        "Michal Simek" <michal.simek@xilinx.com>,
+        "Jens Axboe" <axboe@kernel.dk>,
+        "Guenter Roeck" <linux@roeck-us.net>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.887281316@decadent.org.uk>
+Message-ID: <lsq.1565469607.217320243@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 067/157] xtensa: fix return_address
+Subject: [PATCH 3.16 075/157] xsysace: Fix error handling in ace_setup
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -54,39 +56,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-commit ada770b1e74a77fff2d5f539bf6c42c25f4784db upstream.
+commit 47b16820c490149c2923e8474048f2c6e7557cab upstream.
 
-return_address returns the address that is one level higher in the call
-stack than requested in its argument, because level 0 corresponds to its
-caller's return address. Use requested level as the number of stack
-frames to skip.
+If xace hardware reports a bad version number, the error handling code
+in ace_setup() calls put_disk(), followed by queue cleanup. However, since
+the disk data structure has the queue pointer set, put_disk() also
+cleans and releases the queue. This results in blk_cleanup_queue()
+accessing an already released data structure, which in turn may result
+in a crash such as the following.
 
-This fixes the address reported by might_sleep and friends.
+[   10.681671] BUG: Kernel NULL pointer dereference at 0x00000040
+[   10.681826] Faulting instruction address: 0xc0431480
+[   10.682072] Oops: Kernel access of bad area, sig: 11 [#1]
+[   10.682251] BE PAGE_SIZE=4K PREEMPT Xilinx Virtex440
+[   10.682387] Modules linked in:
+[   10.682528] CPU: 0 PID: 1 Comm: swapper Tainted: G        W         5.0.0-rc6-next-20190218+ #2
+[   10.682733] NIP:  c0431480 LR: c043147c CTR: c0422ad8
+[   10.682863] REGS: cf82fbe0 TRAP: 0300   Tainted: G        W          (5.0.0-rc6-next-20190218+)
+[   10.683065] MSR:  00029000 <CE,EE,ME>  CR: 22000222  XER: 00000000
+[   10.683236] DEAR: 00000040 ESR: 00000000
+[   10.683236] GPR00: c043147c cf82fc90 cf82ccc0 00000000 00000000 00000000 00000002 00000000
+[   10.683236] GPR08: 00000000 00000000 c04310bc 00000000 22000222 00000000 c0002c54 00000000
+[   10.683236] GPR16: 00000000 00000001 c09aa39c c09021b0 c09021dc 00000007 c0a68c08 00000000
+[   10.683236] GPR24: 00000001 ced6d400 ced6dcf0 c0815d9c 00000000 00000000 00000000 cedf0800
+[   10.684331] NIP [c0431480] blk_mq_run_hw_queue+0x28/0x114
+[   10.684473] LR [c043147c] blk_mq_run_hw_queue+0x24/0x114
+[   10.684602] Call Trace:
+[   10.684671] [cf82fc90] [c043147c] blk_mq_run_hw_queue+0x24/0x114 (unreliable)
+[   10.684854] [cf82fcc0] [c04315bc] blk_mq_run_hw_queues+0x50/0x7c
+[   10.685002] [cf82fce0] [c0422b24] blk_set_queue_dying+0x30/0x68
+[   10.685154] [cf82fcf0] [c0423ec0] blk_cleanup_queue+0x34/0x14c
+[   10.685306] [cf82fd10] [c054d73c] ace_probe+0x3dc/0x508
+[   10.685445] [cf82fd50] [c052d740] platform_drv_probe+0x4c/0xb8
+[   10.685592] [cf82fd70] [c052abb0] really_probe+0x20c/0x32c
+[   10.685728] [cf82fda0] [c052ae58] driver_probe_device+0x68/0x464
+[   10.685877] [cf82fdc0] [c052b500] device_driver_attach+0xb4/0xe4
+[   10.686024] [cf82fde0] [c052b5dc] __driver_attach+0xac/0xfc
+[   10.686161] [cf82fe00] [c0528428] bus_for_each_dev+0x80/0xc0
+[   10.686314] [cf82fe30] [c0529b3c] bus_add_driver+0x144/0x234
+[   10.686457] [cf82fe50] [c052c46c] driver_register+0x88/0x15c
+[   10.686610] [cf82fe60] [c09de288] ace_init+0x4c/0xac
+[   10.686742] [cf82fe80] [c0002730] do_one_initcall+0xac/0x330
+[   10.686888] [cf82fee0] [c09aafd0] kernel_init_freeable+0x34c/0x478
+[   10.687043] [cf82ff30] [c0002c6c] kernel_init+0x18/0x114
+[   10.687188] [cf82ff40] [c000f2f0] ret_from_kernel_thread+0x14/0x1c
+[   10.687349] Instruction dump:
+[   10.687435] 3863ffd4 4bfffd70 9421ffd0 7c0802a6 93c10028 7c9e2378 93e1002c 38810008
+[   10.687637] 7c7f1b78 90010034 4bfffc25 813f008c <81290040> 75290100 4182002c 80810008
+[   10.688056] ---[ end trace 13c9ff51d41b9d40 ]---
 
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Fix the problem by setting the disk queue pointer to NULL before calling
+put_disk(). A more comprehensive fix might be to rearrange the code
+to check the hardware version before initializing data structures,
+but I don't know if this would have undesirable side effects, and
+it would increase the complexity of backporting the fix to older kernels.
+
+Fixes: 74489a91dd43a ("Add support for Xilinx SystemACE CompactFlash interface")
+Acked-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/xtensa/kernel/stacktrace.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/block/xsysace.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/xtensa/kernel/stacktrace.c
-+++ b/arch/xtensa/kernel/stacktrace.c
-@@ -107,10 +107,14 @@ static int return_address_cb(struct stac
- 	return 1;
- }
+--- a/drivers/block/xsysace.c
++++ b/drivers/block/xsysace.c
+@@ -1062,6 +1062,8 @@ static int ace_setup(struct ace_device *
+ 	return 0;
  
-+/*
-+ * level == 0 is for the return address from the caller of this function,
-+ * not from this function itself.
-+ */
- unsigned long return_address(unsigned level)
- {
- 	struct return_addr_data r = {
--		.skip = level + 1,
-+		.skip = level,
- 	};
- 	walk_stackframe(stack_pointer(NULL), return_address_cb, &r);
- 	return r.addr;
+ err_read:
++	/* prevent double queue cleanup */
++	ace->gd->queue = NULL;
+ 	put_disk(ace->gd);
+ err_alloc_disk:
+ 	blk_cleanup_queue(ace->queue);
 
