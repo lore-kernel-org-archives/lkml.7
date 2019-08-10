@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5EDC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70A9C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 411962086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87AC22086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfHJUxG (ORCPT
+        id S1727319AbfHJUxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:53:06 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53808 "EHLO
+        Sat, 10 Aug 2019 16:53:10 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53800 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726484AbfHJUnt (ORCPT
+        by vger.kernel.org with ESMTP id S1726476AbfHJUnt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:49 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-00053i-W9; Sat, 10 Aug 2019 21:43:46 +0100
+        id 1hwYDJ-000538-5r; Sat, 10 Aug 2019 21:43:45 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDJ-0003Zq-Ap; Sat, 10 Aug 2019 21:43:45 +0100
+        id 1hwYDI-0003YO-Ms; Sat, 10 Aug 2019 21:43:44 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric Dumazet" <edumazet@google.com>
+        "Jack Morgenstein" <jackm@dev.mellanox.co.il>,
+        "Jason Gunthorpe" <jgg@mellanox.com>,
+        "Leon Romanovsky" <leonro@mellanox.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.968836065@decadent.org.uk>
+Message-ID: <lsq.1565469607.576492022@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 030/157] tcp: do not use ipv6 header for ipv4 flow
+Subject: [PATCH 3.16 012/157] IB/mlx4: Fix race condition between catas
+ error reset and aliasguid flows
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,40 +57,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-commit 89e4130939a20304f4059ab72179da81f5347528 upstream.
+commit 587443e7773e150ae29e643ee8f41a1eed226565 upstream.
 
-When a dual stack tcp listener accepts an ipv4 flow,
-it should not attempt to use an ipv6 header or tcp_v6_iif() helper.
+Code review revealed a race condition which could allow the catas error
+flow to interrupt the alias guid query post mechanism at random points.
+Thiis is fixed by doing cancel_delayed_work_sync() instead of
+cancel_delayed_work() during the alias guid mechanism destroy flow.
 
-Fixes: 1397ed35f22d ("ipv6: add flowinfo for tcp6 pkt_options for all cases")
-Fixes: df3687ffc665 ("ipv6: add the IPV6_FL_F_REFLECT flag to IPV6_FL_A_GET")
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: adjust context]
+Fixes: a0c64a17aba8 ("mlx4: Add alias_guid mechanism")
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/ipv6/tcp_ipv6.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/infiniband/hw/mlx4/alias_GUID.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -1183,11 +1183,11 @@ static struct sock *tcp_v6_syn_recv_sock
- 		newnp->ipv6_fl_list = NULL;
- 		newnp->pktoptions  = NULL;
- 		newnp->opt	   = NULL;
--		newnp->mcast_oif   = inet6_iif(skb);
--		newnp->mcast_hops  = ipv6_hdr(skb)->hop_limit;
--		newnp->rcv_flowinfo = ip6_flowinfo(ipv6_hdr(skb));
-+		newnp->mcast_oif   = inet_iif(skb);
-+		newnp->mcast_hops  = ip_hdr(skb)->ttl;
-+		newnp->rcv_flowinfo = 0;
- 		if (np->repflow)
--			newnp->flow_label = ip6_flowlabel(ipv6_hdr(skb));
-+			newnp->flow_label = 0;
+--- a/drivers/infiniband/hw/mlx4/alias_GUID.c
++++ b/drivers/infiniband/hw/mlx4/alias_GUID.c
+@@ -579,8 +579,8 @@ void mlx4_ib_destroy_alias_guid_service(
+ 	unsigned long flags;
  
- 		/*
- 		 * No need to charge this sock to the relevant IPv6 refcnt debug socks count
+ 	for (i = 0 ; i < dev->num_ports; i++) {
+-		cancel_delayed_work(&dev->sriov.alias_guid.ports_guid[i].alias_guid_work);
+ 		det = &sriov->alias_guid.ports_guid[i];
++		cancel_delayed_work_sync(&det->alias_guid_work);
+ 		spin_lock_irqsave(&sriov->alias_guid.ag_work_lock, flags);
+ 		while (!list_empty(&det->cb_list)) {
+ 			cb_ctx = list_entry(det->cb_list.next,
 
