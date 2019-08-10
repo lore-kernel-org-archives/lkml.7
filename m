@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F33B2C32756
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6E4C32758
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D50A020B7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02D27217F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:08:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfHJUIF (ORCPT
+        id S1726444AbfHJUIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:08:05 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58360 "EHLO
+        Sat, 10 Aug 2019 16:08:06 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58365 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbfHJUIE (ORCPT
+        with ESMTP id S1726177AbfHJUIF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:08:04 -0400
+        Sat, 10 Aug 2019 16:08:05 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hwXek-0007tb-JY; Sat, 10 Aug 2019 22:08:02 +0200
+        id 1hwXek-0007tk-VP; Sat, 10 Aug 2019 22:08:03 +0200
 Date:   Sat, 10 Aug 2019 20:01:51 -0000
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] sched/urgent for 5.3-rc4
+Subject: [GIT pull] x86/urgent for 5.3-rc4
 References: <156546731194.17538.17422312639927927426.tglx@nanos.tec.linutronix.de>
-Message-ID: <156546731194.17538.15988994782634770420.tglx@nanos.tec.linutronix.de>
+Message-ID: <156546731195.17538.5037114068802413527.tglx@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -38,93 +38,202 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-please pull the latest sched-urgent-for-linus git tree from:
+please pull the latest x86-urgent-for-linus git tree from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-urgent-for-linus
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-for-linus
 
-up to:  04e048cf09d7: sched/psi: Do not require setsched permission from the trigger creator
+up to:  04f5bda84b07: x86/lib/cpu: Address missing prototypes warning
 
-Three fixlets for the scheduler:
+A few fixes for x86:
 
- - Avoid double bandwidth accounting in the push & pull code
+ - Don't reset the carefully adjusted build flags for the purgatory and
+   remove the unwanted flags instead. The 'reset all' approach led to build
+   fails under certain circumstances.
 
- - Use a sane FIFO priority for the Pressure Stall Information (PSI) thread.
- 
- - Avoid permission checks when setting the scheduler params for the PSI thread
+ - Unbreak CLANG build of the purgatory by avoiding the builtin
+   memcpy/memset implementations.
+
+ - Address missing prototype warnings by including the proper header
+
+ - Fix yet more fall-through issues
 
 Thanks,
 
 	tglx
 
 ------------------>
-Dietmar Eggemann (1):
-      sched/deadline: Fix double accounting of rq/running bw in push & pull
+Gustavo A. R. Silva (2):
+      x86/ptrace: Mark expected switch fall-through
+      x86: mtrr: cyrix: Mark expected switch fall-through
 
-Peter Zijlstra (1):
-      sched/psi: Reduce psimon FIFO priority
+Nick Desaulniers (2):
+      x86/purgatory: Do not use __builtin_memcpy and __builtin_memset
+      x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS
 
-Suren Baghdasaryan (1):
-      sched/psi: Do not require setsched permission from the trigger creator
+Valdis Kletnieks (1):
+      x86/lib/cpu: Address missing prototypes warning
 
 
- kernel/sched/deadline.c | 8 --------
- kernel/sched/psi.c      | 4 ++--
- 2 files changed, 2 insertions(+), 10 deletions(-)
+ arch/x86/boot/string.c           |  8 ++++++++
+ arch/x86/kernel/cpu/mtrr/cyrix.c |  1 +
+ arch/x86/kernel/ptrace.c         |  1 +
+ arch/x86/lib/cpu.c               |  1 +
+ arch/x86/purgatory/Makefile      | 36 +++++++++++++++++++++++++++++++-----
+ arch/x86/purgatory/purgatory.c   |  6 ++++++
+ arch/x86/purgatory/string.c      | 23 -----------------------
+ 7 files changed, 48 insertions(+), 28 deletions(-)
+ delete mode 100644 arch/x86/purgatory/string.c
 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index ef5b9f6b1d42..46122edd8552 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -2088,17 +2088,13 @@ static int push_dl_task(struct rq *rq)
+diff --git a/arch/x86/boot/string.c b/arch/x86/boot/string.c
+index 401e30ca0a75..8272a4492844 100644
+--- a/arch/x86/boot/string.c
++++ b/arch/x86/boot/string.c
+@@ -37,6 +37,14 @@ int memcmp(const void *s1, const void *s2, size_t len)
+ 	return diff;
+ }
+ 
++/*
++ * Clang may lower `memcmp == 0` to `bcmp == 0`.
++ */
++int bcmp(const void *s1, const void *s2, size_t len)
++{
++	return memcmp(s1, s2, len);
++}
++
+ int strcmp(const char *str1, const char *str2)
+ {
+ 	const unsigned char *s1 = (const unsigned char *)str1;
+diff --git a/arch/x86/kernel/cpu/mtrr/cyrix.c b/arch/x86/kernel/cpu/mtrr/cyrix.c
+index 4296c702a3f7..72182809b333 100644
+--- a/arch/x86/kernel/cpu/mtrr/cyrix.c
++++ b/arch/x86/kernel/cpu/mtrr/cyrix.c
+@@ -98,6 +98,7 @@ cyrix_get_free_region(unsigned long base, unsigned long size, int replace_reg)
+ 	case 7:
+ 		if (size < 0x40)
+ 			break;
++		/* Else, fall through */
+ 	case 6:
+ 	case 5:
+ 	case 4:
+diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
+index 0fdbe89d0754..3c5bbe8e4120 100644
+--- a/arch/x86/kernel/ptrace.c
++++ b/arch/x86/kernel/ptrace.c
+@@ -201,6 +201,7 @@ static int set_segment_reg(struct task_struct *task,
+ 	case offsetof(struct user_regs_struct, ss):
+ 		if (unlikely(value == 0))
+ 			return -EIO;
++		/* Else, fall through */
+ 
+ 	default:
+ 		*pt_regs_access(task_pt_regs(task), offset) = value;
+diff --git a/arch/x86/lib/cpu.c b/arch/x86/lib/cpu.c
+index 04967cdce5d1..7ad68917a51e 100644
+--- a/arch/x86/lib/cpu.c
++++ b/arch/x86/lib/cpu.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/types.h>
+ #include <linux/export.h>
++#include <asm/cpu.h>
+ 
+ unsigned int x86_family(unsigned int sig)
+ {
+diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+index 3cf302b26332..8901a1f89cf5 100644
+--- a/arch/x86/purgatory/Makefile
++++ b/arch/x86/purgatory/Makefile
+@@ -6,6 +6,9 @@ purgatory-y := purgatory.o stack.o setup-x86_$(BITS).o sha256.o entry64.o string
+ targets += $(purgatory-y)
+ PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
+ 
++$(obj)/string.o: $(srctree)/arch/x86/boot/compressed/string.c FORCE
++	$(call if_changed_rule,cc_o_c)
++
+ $(obj)/sha256.o: $(srctree)/lib/sha256.c FORCE
+ 	$(call if_changed_rule,cc_o_c)
+ 
+@@ -17,11 +20,34 @@ KCOV_INSTRUMENT := n
+ 
+ # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
+ # in turn leaves some undefined symbols like __fentry__ in purgatory and not
+-# sure how to relocate those. Like kexec-tools, use custom flags.
+-
+-KBUILD_CFLAGS := -fno-strict-aliasing -Wall -Wstrict-prototypes -fno-zero-initialized-in-bss -fno-builtin -ffreestanding -c -Os -mcmodel=large
+-KBUILD_CFLAGS += -m$(BITS)
+-KBUILD_CFLAGS += $(call cc-option,-fno-PIE)
++# sure how to relocate those.
++ifdef CONFIG_FUNCTION_TRACER
++CFLAGS_REMOVE_sha256.o		+= $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_purgatory.o	+= $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_string.o		+= $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_kexec-purgatory.o	+= $(CC_FLAGS_FTRACE)
++endif
++
++ifdef CONFIG_STACKPROTECTOR
++CFLAGS_REMOVE_sha256.o		+= -fstack-protector
++CFLAGS_REMOVE_purgatory.o	+= -fstack-protector
++CFLAGS_REMOVE_string.o		+= -fstack-protector
++CFLAGS_REMOVE_kexec-purgatory.o	+= -fstack-protector
++endif
++
++ifdef CONFIG_STACKPROTECTOR_STRONG
++CFLAGS_REMOVE_sha256.o		+= -fstack-protector-strong
++CFLAGS_REMOVE_purgatory.o	+= -fstack-protector-strong
++CFLAGS_REMOVE_string.o		+= -fstack-protector-strong
++CFLAGS_REMOVE_kexec-purgatory.o	+= -fstack-protector-strong
++endif
++
++ifdef CONFIG_RETPOLINE
++CFLAGS_REMOVE_sha256.o		+= $(RETPOLINE_CFLAGS)
++CFLAGS_REMOVE_purgatory.o	+= $(RETPOLINE_CFLAGS)
++CFLAGS_REMOVE_string.o		+= $(RETPOLINE_CFLAGS)
++CFLAGS_REMOVE_kexec-purgatory.o	+= $(RETPOLINE_CFLAGS)
++endif
+ 
+ $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
+ 		$(call if_changed,ld)
+diff --git a/arch/x86/purgatory/purgatory.c b/arch/x86/purgatory/purgatory.c
+index 6d8d5a34c377..b607bda786f6 100644
+--- a/arch/x86/purgatory/purgatory.c
++++ b/arch/x86/purgatory/purgatory.c
+@@ -68,3 +68,9 @@ void purgatory(void)
  	}
- 
- 	deactivate_task(rq, next_task, 0);
--	sub_running_bw(&next_task->dl, &rq->dl);
--	sub_rq_bw(&next_task->dl, &rq->dl);
- 	set_task_cpu(next_task, later_rq->cpu);
--	add_rq_bw(&next_task->dl, &later_rq->dl);
- 
- 	/*
- 	 * Update the later_rq clock here, because the clock is used
- 	 * by the cpufreq_update_util() inside __add_running_bw().
- 	 */
- 	update_rq_clock(later_rq);
--	add_running_bw(&next_task->dl, &later_rq->dl);
- 	activate_task(later_rq, next_task, ENQUEUE_NOCLOCK);
- 	ret = 1;
- 
-@@ -2186,11 +2182,7 @@ static void pull_dl_task(struct rq *this_rq)
- 			resched = true;
- 
- 			deactivate_task(src_rq, p, 0);
--			sub_running_bw(&p->dl, &src_rq->dl);
--			sub_rq_bw(&p->dl, &src_rq->dl);
- 			set_task_cpu(p, this_cpu);
--			add_rq_bw(&p->dl, &this_rq->dl);
--			add_running_bw(&p->dl, &this_rq->dl);
- 			activate_task(this_rq, p, 0);
- 			dmin = p->dl.deadline;
- 
-diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-index 7acc632c3b82..23fbbcc414d5 100644
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -1051,7 +1051,7 @@ struct psi_trigger *psi_trigger_create(struct psi_group *group,
- 
- 	if (!rcu_access_pointer(group->poll_kworker)) {
- 		struct sched_param param = {
--			.sched_priority = MAX_RT_PRIO - 1,
-+			.sched_priority = 1,
- 		};
- 		struct kthread_worker *kworker;
- 
-@@ -1061,7 +1061,7 @@ struct psi_trigger *psi_trigger_create(struct psi_group *group,
- 			mutex_unlock(&group->trigger_lock);
- 			return ERR_CAST(kworker);
- 		}
--		sched_setscheduler(kworker->task, SCHED_FIFO, &param);
-+		sched_setscheduler_nocheck(kworker->task, SCHED_FIFO, &param);
- 		kthread_init_delayed_work(&group->poll_work,
- 				psi_poll_work);
- 		rcu_assign_pointer(group->poll_kworker, kworker);
+ 	copy_backup_region();
+ }
++
++/*
++ * Defined in order to reuse memcpy() and memset() from
++ * arch/x86/boot/compressed/string.c
++ */
++void warn(const char *msg) {}
+diff --git a/arch/x86/purgatory/string.c b/arch/x86/purgatory/string.c
+deleted file mode 100644
+index 01ad43873ad9..000000000000
+--- a/arch/x86/purgatory/string.c
++++ /dev/null
+@@ -1,23 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * Simple string functions.
+- *
+- * Copyright (C) 2014 Red Hat Inc.
+- *
+- * Author:
+- *       Vivek Goyal <vgoyal@redhat.com>
+- */
+-
+-#include <linux/types.h>
+-
+-#include "../boot/string.c"
+-
+-void *memcpy(void *dst, const void *src, size_t len)
+-{
+-	return __builtin_memcpy(dst, src, len);
+-}
+-
+-void *memset(void *dst, int c, size_t len)
+-{
+-	return __builtin_memset(dst, c, len);
+-}
 
