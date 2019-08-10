@@ -2,84 +2,102 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F41FDC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6483C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6993208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KUr9xOzW"
+	by mail.kernel.org (Postfix) with ESMTP id 7BDD9208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbfHJUrj (ORCPT
+        id S1727431AbfHJUro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:47:39 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33253 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726872AbfHJUrW (ORCPT
+        Sat, 10 Aug 2019 16:47:44 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55058 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726842AbfHJUoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:47:22 -0400
-Received: by mail-ot1-f67.google.com with SMTP id q20so145672199otl.0;
-        Sat, 10 Aug 2019 13:47:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5j1WOyiF8SuI/K9sc0sg2QlEKDu+SHpvsRnF7h1iTVg=;
-        b=KUr9xOzWnC/gL8k9K0IAZ4y9qVw4oXDTy8DYpXm3gjKZggxFIUKEBAgU2GqTIBCffP
-         8rb6vgW2Jz5mcHtGIQlBE2HcHKb9cCJaWwmN96EW9C/yx+TJabHxWCTRtQ6AklX0Rarn
-         lumHFQluwWtdQGT2PISpMAzTKQmR5Gxnumrg7hsiJnlLVf2M5tYVPoo7RktMBEiRj2EP
-         QEt6dEgQNFUPSzyQbitXnYd1Gy/fKCrutWwL1MJ7QGhLWfd+iNzm4rX9Y3Pzvm4Y9VFT
-         H9UyBc4OoePbB4F0vCCoAd7+QnP/eesVF+IQl64BjmbJ2zNl0QvOeA58B9pjatPHIEix
-         kHow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5j1WOyiF8SuI/K9sc0sg2QlEKDu+SHpvsRnF7h1iTVg=;
-        b=TbDej6UYdk2PxoSjvuO7+PC1jvAD2zJiKsMc6zmQuY+XUlGNGXfjKixYAt7VY5tYCY
-         CN0onQ3qag4rJx03o71IZOIFhvIHPxBXH6TZC2limYyBNx9OPDKJswV2yp7MfWZs9aha
-         JlexM9HqfTxOPYDXqFL343APIs5uKspILRlLRmPRrFvq7l79IgM27fS46U+6YBCVcvkZ
-         Qcl+YkHd4yjKrSRcTXVHrUrI/axbHu+vKB1bMa9Z0df8aRDveisp2oDcISjtYd/TGDu5
-         aej+dBSJCAzntwmd4R8RkRtfrqinPvqxszY32so+DhIPN/DtNC5L9O9SKl+MMeI+x72C
-         R6Ww==
-X-Gm-Message-State: APjAAAUmgRRFvhKtQ5p15gSgyk5nuafjfJqPdQHYKq29E5c0tcke1Gno
-        K40QlircZTXm6ee11vXz/4q+fCQo//Qg914N0sA6yw==
-X-Google-Smtp-Source: APXvYqzcwCc7bIeiO/j07C8FaJX6CnNQvE3nUs/oCycy00nyxBs+rjvzo05eebzsq6aum8gP9IL47hR8VLp/QFLCS0U=
-X-Received: by 2002:a5e:8210:: with SMTP id l16mr27792136iom.240.1565470041896;
- Sat, 10 Aug 2019 13:47:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190730014924.2193-1-deepa.kernel@gmail.com> <20190730014924.2193-5-deepa.kernel@gmail.com>
- <eb2027cdccc0a0ff0a9d061fa8dd04a927c63819.camel@codethink.co.uk>
-In-Reply-To: <eb2027cdccc0a0ff0a9d061fa8dd04a927c63819.camel@codethink.co.uk>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Sat, 10 Aug 2019 13:47:10 -0700
-Message-ID: <CABeXuvrFze2-vDWyoFApoHK=yRWEZaNiYCy_DR+q3GZhty+MWg@mail.gmail.com>
-Subject: Re: [Y2038] [PATCH 04/20] mount: Add mount warning for impending
- timestamp expiry
-To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
+        Sat, 10 Aug 2019 16:44:04 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hwYDZ-00053r-KD; Sat, 10 Aug 2019 21:44:01 +0100
+Received: from ben by deadeye with local (Exim 4.92)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hwYDM-0003eW-0E; Sat, 10 Aug 2019 21:43:48 +0100
 Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        syzbot+b75b85111c10b8d680f1@syzkaller.appspotmail.com,
+        "Alan Stern" <stern@rowland.harvard.edu>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Date:   Sat, 10 Aug 2019 21:40:07 +0100
+Message-ID: <lsq.1565469607.299747206@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 086/157] USB: core: Fix unterminated string returned
+ by usb_string()
+In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> This doesn't seem like a helpful way to log the time.  Maybe use
-> time64_to_tm() to convert to "broken down" time and then print it with
-> "%ptR"... but that wants struct rtc_time.  If you apply the attached
-> patch, however, you should then be able to print struct tm with
-> "%ptT".
+3.16.72-rc1 review patch.  If anyone has any objections, please let me know.
 
-OK. Will print a more user friendly date string here.
+------------------
 
-Thanks,
--Deepa
+From: Alan Stern <stern@rowland.harvard.edu>
+
+commit c01c348ecdc66085e44912c97368809612231520 upstream.
+
+Some drivers (such as the vub300 MMC driver) expect usb_string() to
+return a properly NUL-terminated string, even when an error occurs.
+(In fact, vub300's probe routine doesn't bother to check the return
+code from usb_string().)  When the driver goes on to use an
+unterminated string, it leads to kernel errors such as
+stack-out-of-bounds, as found by the syzkaller USB fuzzer.
+
+An out-of-range string index argument is not at all unlikely, given
+that some devices don't provide string descriptors and therefore list
+0 as the value for their string indexes.  This patch makes
+usb_string() return a properly terminated empty string along with the
+-EINVAL error code when an out-of-range index is encountered.
+
+And since a USB string index is a single-byte value, indexes >= 256
+are just as invalid as values of 0 or below.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-by: syzbot+b75b85111c10b8d680f1@syzkaller.appspotmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ drivers/usb/core/message.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -822,9 +822,11 @@ int usb_string(struct usb_device *dev, i
+ 
+ 	if (dev->state == USB_STATE_SUSPENDED)
+ 		return -EHOSTUNREACH;
+-	if (size <= 0 || !buf || !index)
++	if (size <= 0 || !buf)
+ 		return -EINVAL;
+ 	buf[0] = 0;
++	if (index <= 0 || index >= 256)
++		return -EINVAL;
+ 	tbuf = kmalloc(256, GFP_NOIO);
+ 	if (!tbuf)
+ 		return -ENOMEM;
+
