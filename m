@@ -2,326 +2,122 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDF1C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 126C9C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAAF32166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:19:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565439563;
-	bh=vT7kLSctAdMRNYhpT9/uKl+pHR9X+36ROb5tVQteH1k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VnkjygOIaQG1OELTaEFUww/258tOkNlR4ZSQHK6VEgcw3PjEzv8nL5TEAgwAgb01f
-	 In8e6A92m//LEgM5XRsiFQ6LvW3Red4LUb7fc5cOxqKUt9sC0zz+c1ugtmRNmnJ2ri
-	 nCN49ScG7DWmebb/+xU6J0yx3kPsQfCswwpLIB+c=
+	by mail.kernel.org (Postfix) with ESMTP id C7D1F217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 12:19:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=AQUANTIA1COM.onmicrosoft.com header.i=@AQUANTIA1COM.onmicrosoft.com header.b="kxQ5hKIi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbfHJMTV (ORCPT
+        id S1726430AbfHJMTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 08:19:21 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45579 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfHJMTV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 08:19:21 -0400
-Received: by mail-ot1-f67.google.com with SMTP id m97so9558536otm.12;
-        Sat, 10 Aug 2019 05:19:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0uKqbMKY9etVt/K8NqzTXUIEa91wHYZJJ5dxzLOMVcA=;
-        b=lxtBB5sLGygMxloMk8ONnUwKfF3P2O9kVHjn0sp/gYvtaHvc/qApOKP91g2M3cg8yx
-         8DVqgaETji/nLZHDw1D1i7GYBxRI8OPuKGs8AP/mmeKysU4DQwGrhMYqk62WfRB9Bmll
-         umZ4lpzPu3tvK5RaWYF1RAXx1dxVil6kTKoo5J/ExfVGxQgsrh6PxsvFG3B93jqNW0FS
-         CaWGayVfVWp0UMP0NUE8FTttOXyS+eISyis/3braSSxiltvoB/PTcPL6xsIuY0LnfJNR
-         QtbQNlctMMFgIXzLg28RZ899gleUWq2rvxwjiCBoLooUxT0ipZxhZBbmO/HSxuMD8E6U
-         tKvQ==
-X-Gm-Message-State: APjAAAVzsnud36wPpmlcUCcD6jMxVd6snkEpNMCSOpmSi9Tf/+ec/NmV
-        kvB82K3aQW5Y4h6u0UvT7LeGxSWWt0KbdMUBwWQ=
-X-Google-Smtp-Source: APXvYqy2UpogvI2PpXFujEoMkyxR9oiIUv3tZkrRpozRQTlycuY3yBWNoqxdtJ+mxd81FJCUXR5Ner48REcMsL60xkA=
-X-Received: by 2002:a05:6830:154:: with SMTP id j20mr4910717otp.266.1565439560183;
- Sat, 10 Aug 2019 05:19:20 -0700 (PDT)
+        Sat, 10 Aug 2019 08:19:41 -0400
+Received: from mail-eopbgr700066.outbound.protection.outlook.com ([40.107.70.66]:41696
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725862AbfHJMTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 08:19:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QevZvSyQUaRjQ9CCVYvs1zsX2G6t+/Jf8lGDkjRDnqkmbjFISlmJZGcelutz6fV82gBXfsr8GTSdaCzGfMyOY2iNcAeYOs5xqY5giUKZBUvqjQirCC7lqBb/oJ/309yw9pZwuwg0JsDl5wTwVRinXQoMc7YwVwpeP1z+vtC3kOEWOEkLCsGdvYLBUXYlG1Q5bRm6CQbRTrqabBVXFMi1uaQi/vUbmHdOQEl4yX1gNRr9FFpDbvH/++RLGLGvRDjXN11omiS99ePWqwgsbfUykDiYWTKtWMBbBgRJQZpi8sSnJd6Ua/MMr9tw7lTivhHcqzYF8wh3px3aFb1c5nUuaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NrqUq2hA2iavuzbEZyIn9Ths0MJwHaE9VfP1Pjika6Y=;
+ b=LFZqSY3DQ2LwSMNxolroJcYbulEjtE3aM3wsEnBB0dpyQLdBxt5iQB5kXK8jE7dO66k5c8UqH87uHYIwTscBHdOxwHvSzzFq6SdZ9Cpt/ouluyFqrG21HB+IiautTG1EKycc7iT4o8nosb1+YODRr9Bquvt/KPwvedNs0vfxgPCdao8RD5VMZS79TtdSpX1d+heLW24ofiVfatGsOeVg8VCLbTwVBvbtx8YtHBK0CnmCYE86/6ZjuJvVbGmfby4d+xg/XhF0jZ1glIS8zzu6z+jGjKA7dGxqp+0ngaE5exN8CnJei47N41Zo6DMzmzvD50A6U4sCGascXIXx1L1O3A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=aquantia.com;dmarc=pass action=none
+ header.from=aquantia.com;dkim=pass header.d=aquantia.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=AQUANTIA1COM.onmicrosoft.com; s=selector2-AQUANTIA1COM-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NrqUq2hA2iavuzbEZyIn9Ths0MJwHaE9VfP1Pjika6Y=;
+ b=kxQ5hKIiV2xyk9fxcIsd1CE5+e7S2DhuthpqymJBiIMokK0SNZiSjpL50DNF9RGa7yIcoLAE34AgPA2lp/RVG0eZZa8Ocwf6eICAavXcVsDZuHWDrnyZoB3hLrITx6YkjVP7OC/jDPsTofHn9KTgHgoPISuXrzj1xPg2hDsU5t4=
+Received: from BYAPR11MB2902.namprd11.prod.outlook.com (20.177.225.222) by
+ BYAPR11MB3495.namprd11.prod.outlook.com (20.177.226.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.17; Sat, 10 Aug 2019 12:19:36 +0000
+Received: from BYAPR11MB2902.namprd11.prod.outlook.com
+ ([fe80::456b:e2ae:2452:5e4]) by BYAPR11MB2902.namprd11.prod.outlook.com
+ ([fe80::456b:e2ae:2452:5e4%7]) with mapi id 15.20.2157.020; Sat, 10 Aug 2019
+ 12:19:36 +0000
+From:   Igor Russkikh <Igor.Russkikh@aquantia.com>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "sd@queasysnail.net" <sd@queasysnail.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
+        "camelia.groza@nxp.com" <camelia.groza@nxp.com>,
+        Simon Edelhaus <Simon.Edelhaus@aquantia.com>,
+        Pavel Belous <Pavel.Belous@aquantia.com>
+Subject: Re: [PATCH net-next v2 2/9] net: macsec: move some definitions in a
+ dedicated header
+Thread-Topic: [PATCH net-next v2 2/9] net: macsec: move some definitions in a
+ dedicated header
+Thread-Index: AQHVT3XZFGqYdsGcdk29olv9OVfArw==
+Date:   Sat, 10 Aug 2019 12:19:36 +0000
+Message-ID: <9f65de8e-bf62-f9b0-5aba-69c0f92df1ca@aquantia.com>
+References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
+ <20190808140600.21477-3-antoine.tenart@bootlin.com>
+In-Reply-To: <20190808140600.21477-3-antoine.tenart@bootlin.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0101CA0019.eurprd01.prod.exchangelabs.com
+ (2603:10a6:3:77::29) To BYAPR11MB2902.namprd11.prod.outlook.com
+ (2603:10b6:a03:89::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Igor.Russkikh@aquantia.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [95.79.108.179]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 56b18b83-486a-4743-01f2-08d71d8d0210
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR11MB3495;
+x-ms-traffictypediagnostic: BYAPR11MB3495:
+x-microsoft-antispam-prvs: <BYAPR11MB34955AE092F32EF86BB55E5798D10@BYAPR11MB3495.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 012570D5A0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39840400004)(376002)(346002)(366004)(396003)(189003)(199004)(229853002)(7736002)(7416002)(3846002)(305945005)(6486002)(2501003)(14454004)(5660300002)(31686004)(66066001)(6116002)(66446008)(2201001)(66476007)(66556008)(66946007)(64756008)(44832011)(476003)(486006)(102836004)(81166006)(81156014)(11346002)(2616005)(53936002)(446003)(6246003)(107886003)(8676002)(52116002)(4326008)(25786009)(76176011)(6436002)(99286004)(478600001)(8936002)(186003)(26005)(6512007)(6506007)(86362001)(386003)(316002)(36756003)(31696002)(110136005)(14444005)(4744005)(256004)(54906003)(71200400001)(2906002)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR11MB3495;H:BYAPR11MB2902.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: aquantia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: A9mqcZs9tCiRicgP9QJDw0WBEXunUSZ3lDG3GVIc3qhH3bWDMD0lOaPnVh/LfhzoCeDsclanQQ5ffBvcebicJHjF4yPwMWFrJtScGiEzOpJkZAjfJhkadmFEyBGJ2jjO5z3TL+gHHYZoqkXCfcfn+kNRgr0zohUOD+V2tzsTROBDfQtUSROIfQJG7Wi9uWxokOIy1bdwwjmzdSLIOnjZH3VGDsqaey9rh6ll1Fy06f6hKciIQJ4KHvT3XTfdxd2WZ5bvygc97la1tkVqFg5vOgzBNguhjjbb5Up38APzi6mrk712wB+QgKFWrknCXeaQnDPSct8AC5a/AZPLx5Cy0ospIrqZdkKZqjGyAaRYSTzMlT7+O5E6EtQdEFQ95GE2Hqpin+tQPwQyEkYX8OffB8g1gkMoaGxWBn1p2uPpq/8=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <012AFB20D7964A418A07DAE3483531A6@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <cover.1563862014.git.viresh.kumar@linaro.org> <524de8ace0596e68a24b57b3b4043c707db32ca7.1563862014.git.viresh.kumar@linaro.org>
- <20190809023445.xn3mlv5qxjgz6bpp@vireshk-i7>
-In-Reply-To: <20190809023445.xn3mlv5qxjgz6bpp@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sat, 10 Aug 2019 14:19:09 +0200
-Message-ID: <CAJZ5v0i9oO1M4m7WsKDFkpTEOkbiONWunT6UfqjhgSkBcrbEKA@mail.gmail.com>
-Subject: Re: [PATCH V2 04/10] cpufreq: powerpc_cbe: Switch to QoS requests
- instead of cpufreq notifier
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: aquantia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56b18b83-486a-4743-01f2-08d71d8d0210
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Aug 2019 12:19:36.1210
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 83e2e134-991c-4ede-8ced-34d47e38e6b1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: FJ3Sm2TvXSndZZqEUokTOCx94VO1FbGMBphOnWkjb8m+EbzEMn5Qf8fKcFDgbmTD7+fz4DnyUIUJ1X6KWl5cNQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3495
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 4:34 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 23-07-19, 11:44, Viresh Kumar wrote:
-> > The cpufreq core now takes the min/max frequency constraints via QoS
-> > requests and the CPUFREQ_ADJUST notifier shall get removed later on.
-> >
-> > Switch over to using the QoS request for maximum frequency constraint
-> > for ppc_cbe_cpufreq driver.
-> >
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > ---
-> >  drivers/cpufreq/ppc_cbe_cpufreq.c     | 19 +++++-
-> >  drivers/cpufreq/ppc_cbe_cpufreq.h     |  8 +++
-> >  drivers/cpufreq/ppc_cbe_cpufreq_pmi.c | 96 +++++++++++++++++----------
-> >  3 files changed, 86 insertions(+), 37 deletions(-)
-
-OK, picked up from email this time, but in the future please let
-Patchwork pick up new versions of patches.
-
-Thanks!
-
-> -------------------------8<-------------------------
-> From b84e1c119d63ab842c9e4f3acbc3aec22efa866d Mon Sep 17 00:00:00 2001
-> Message-Id: <b84e1c119d63ab842c9e4f3acbc3aec22efa866d.1565318034.git.viresh.kumar@linaro.org>
-> From: Viresh Kumar <viresh.kumar@linaro.org>
-> Date: Fri, 5 Jul 2019 15:49:48 +0530
-> Subject: [PATCH] cpufreq: powerpc_cbe: Switch to QoS requests instead of
->  cpufreq notifier
->
-> The cpufreq core now takes the min/max frequency constraints via QoS
-> requests and the CPUFREQ_ADJUST notifier shall get removed later on.
->
-> Switch over to using the QoS request for maximum frequency constraint
-> for ppc_cbe_cpufreq driver.
->
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
-> - dev_pm_qos_update_request() can return 1 on success
->  drivers/cpufreq/ppc_cbe_cpufreq.c     | 19 +++++-
->  drivers/cpufreq/ppc_cbe_cpufreq.h     |  8 +++
->  drivers/cpufreq/ppc_cbe_cpufreq_pmi.c | 96 +++++++++++++++++----------
->  3 files changed, 86 insertions(+), 37 deletions(-)
->
-> diff --git a/drivers/cpufreq/ppc_cbe_cpufreq.c b/drivers/cpufreq/ppc_cbe_cpufreq.c
-> index b83f36febf03..c58abb4cca3a 100644
-> --- a/drivers/cpufreq/ppc_cbe_cpufreq.c
-> +++ b/drivers/cpufreq/ppc_cbe_cpufreq.c
-> @@ -110,6 +110,13 @@ static int cbe_cpufreq_cpu_init(struct cpufreq_policy *policy)
->  #endif
->
->         policy->freq_table = cbe_freqs;
-> +       cbe_cpufreq_pmi_policy_init(policy);
-> +       return 0;
-> +}
-> +
-> +static int cbe_cpufreq_cpu_exit(struct cpufreq_policy *policy)
-> +{
-> +       cbe_cpufreq_pmi_policy_exit(policy);
->         return 0;
->  }
->
-> @@ -129,6 +136,7 @@ static struct cpufreq_driver cbe_cpufreq_driver = {
->         .verify         = cpufreq_generic_frequency_table_verify,
->         .target_index   = cbe_cpufreq_target,
->         .init           = cbe_cpufreq_cpu_init,
-> +       .exit           = cbe_cpufreq_cpu_exit,
->         .name           = "cbe-cpufreq",
->         .flags          = CPUFREQ_CONST_LOOPS,
->  };
-> @@ -139,15 +147,24 @@ static struct cpufreq_driver cbe_cpufreq_driver = {
->
->  static int __init cbe_cpufreq_init(void)
->  {
-> +       int ret;
-> +
->         if (!machine_is(cell))
->                 return -ENODEV;
->
-> -       return cpufreq_register_driver(&cbe_cpufreq_driver);
-> +       cbe_cpufreq_pmi_init();
-> +
-> +       ret = cpufreq_register_driver(&cbe_cpufreq_driver);
-> +       if (ret)
-> +               cbe_cpufreq_pmi_exit();
-> +
-> +       return ret;
->  }
->
->  static void __exit cbe_cpufreq_exit(void)
->  {
->         cpufreq_unregister_driver(&cbe_cpufreq_driver);
-> +       cbe_cpufreq_pmi_exit();
->  }
->
->  module_init(cbe_cpufreq_init);
-> diff --git a/drivers/cpufreq/ppc_cbe_cpufreq.h b/drivers/cpufreq/ppc_cbe_cpufreq.h
-> index 9d973519d669..00cd8633b0d9 100644
-> --- a/drivers/cpufreq/ppc_cbe_cpufreq.h
-> +++ b/drivers/cpufreq/ppc_cbe_cpufreq.h
-> @@ -20,6 +20,14 @@ int cbe_cpufreq_set_pmode_pmi(int cpu, unsigned int pmode);
->
->  #if IS_ENABLED(CONFIG_CPU_FREQ_CBE_PMI)
->  extern bool cbe_cpufreq_has_pmi;
-> +void cbe_cpufreq_pmi_policy_init(struct cpufreq_policy *policy);
-> +void cbe_cpufreq_pmi_policy_exit(struct cpufreq_policy *policy);
-> +void cbe_cpufreq_pmi_init(void);
-> +void cbe_cpufreq_pmi_exit(void);
->  #else
->  #define cbe_cpufreq_has_pmi (0)
-> +static inline void cbe_cpufreq_pmi_policy_init(struct cpufreq_policy *policy) {}
-> +static inline void cbe_cpufreq_pmi_policy_exit(struct cpufreq_policy *policy) {}
-> +static inline void cbe_cpufreq_pmi_init(void) {}
-> +static inline void cbe_cpufreq_pmi_exit(void) {}
->  #endif
-> diff --git a/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c b/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c
-> index 97c8ee4614b7..bc9dd30395c4 100644
-> --- a/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c
-> +++ b/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c
-> @@ -12,6 +12,7 @@
->  #include <linux/timer.h>
->  #include <linux/init.h>
->  #include <linux/of_platform.h>
-> +#include <linux/pm_qos.h>
->
->  #include <asm/processor.h>
->  #include <asm/prom.h>
-> @@ -24,8 +25,6 @@
->
->  #include "ppc_cbe_cpufreq.h"
->
-> -static u8 pmi_slow_mode_limit[MAX_CBE];
-> -
->  bool cbe_cpufreq_has_pmi = false;
->  EXPORT_SYMBOL_GPL(cbe_cpufreq_has_pmi);
->
-> @@ -65,64 +64,89 @@ EXPORT_SYMBOL_GPL(cbe_cpufreq_set_pmode_pmi);
->
->  static void cbe_cpufreq_handle_pmi(pmi_message_t pmi_msg)
->  {
-> +       struct cpufreq_policy *policy;
-> +       struct dev_pm_qos_request *req;
->         u8 node, slow_mode;
-> +       int cpu, ret;
->
->         BUG_ON(pmi_msg.type != PMI_TYPE_FREQ_CHANGE);
->
->         node = pmi_msg.data1;
->         slow_mode = pmi_msg.data2;
->
-> -       pmi_slow_mode_limit[node] = slow_mode;
-> +       cpu = cbe_node_to_cpu(node);
->
->         pr_debug("cbe_handle_pmi: node: %d max_freq: %d\n", node, slow_mode);
-> -}
-> -
-> -static int pmi_notifier(struct notifier_block *nb,
-> -                                      unsigned long event, void *data)
-> -{
-> -       struct cpufreq_policy *policy = data;
-> -       struct cpufreq_frequency_table *cbe_freqs = policy->freq_table;
-> -       u8 node;
-> -
-> -       /* Should this really be called for CPUFREQ_ADJUST and CPUFREQ_NOTIFY
-> -        * policy events?)
-> -        */
-> -       node = cbe_cpu_to_node(policy->cpu);
-> -
-> -       pr_debug("got notified, event=%lu, node=%u\n", event, node);
->
-> -       if (pmi_slow_mode_limit[node] != 0) {
-> -               pr_debug("limiting node %d to slow mode %d\n",
-> -                        node, pmi_slow_mode_limit[node]);
-> +       policy = cpufreq_cpu_get(cpu);
-> +       if (!policy) {
-> +               pr_warn("cpufreq policy not found cpu%d\n", cpu);
-> +               return;
-> +       }
->
-> -               cpufreq_verify_within_limits(policy, 0,
-> +       req = policy->driver_data;
->
-> -                       cbe_freqs[pmi_slow_mode_limit[node]].frequency);
-> -       }
-> +       ret = dev_pm_qos_update_request(req,
-> +                       policy->freq_table[slow_mode].frequency);
-> +       if (ret < 0)
-> +               pr_warn("Failed to update freq constraint: %d\n", ret);
-> +       else
-> +               pr_debug("limiting node %d to slow mode %d\n", node, slow_mode);
->
-> -       return 0;
-> +       cpufreq_cpu_put(policy);
->  }
->
-> -static struct notifier_block pmi_notifier_block = {
-> -       .notifier_call = pmi_notifier,
-> -};
-> -
->  static struct pmi_handler cbe_pmi_handler = {
->         .type                   = PMI_TYPE_FREQ_CHANGE,
->         .handle_pmi_message     = cbe_cpufreq_handle_pmi,
->  };
->
-> +void cbe_cpufreq_pmi_policy_init(struct cpufreq_policy *policy)
-> +{
-> +       struct dev_pm_qos_request *req;
-> +       int ret;
-> +
-> +       if (!cbe_cpufreq_has_pmi)
-> +               return;
-> +
-> +       req = kzalloc(sizeof(*req), GFP_KERNEL);
-> +       if (!req)
-> +               return;
-> +
-> +       ret = dev_pm_qos_add_request(get_cpu_device(policy->cpu), req,
-> +                                    DEV_PM_QOS_MAX_FREQUENCY,
-> +                                    policy->freq_table[0].frequency);
-> +       if (ret < 0) {
-> +               pr_err("Failed to add freq constraint (%d)\n", ret);
-> +               kfree(req);
-> +               return;
-> +       }
->
-> +       policy->driver_data = req;
-> +}
-> +EXPORT_SYMBOL_GPL(cbe_cpufreq_pmi_policy_init);
->
-> -static int __init cbe_cpufreq_pmi_init(void)
-> +void cbe_cpufreq_pmi_policy_exit(struct cpufreq_policy *policy)
->  {
-> -       cbe_cpufreq_has_pmi = pmi_register_handler(&cbe_pmi_handler) == 0;
-> +       struct dev_pm_qos_request *req = policy->driver_data;
->
-> -       if (!cbe_cpufreq_has_pmi)
-> -               return -ENODEV;
-> +       if (cbe_cpufreq_has_pmi) {
-> +               dev_pm_qos_remove_request(req);
-> +               kfree(req);
-> +       }
-> +}
-> +EXPORT_SYMBOL_GPL(cbe_cpufreq_pmi_policy_exit);
->
-> -       cpufreq_register_notifier(&pmi_notifier_block, CPUFREQ_POLICY_NOTIFIER);
-> +void cbe_cpufreq_pmi_init(void)
-> +{
-> +       if (!pmi_register_handler(&cbe_pmi_handler))
-> +               cbe_cpufreq_has_pmi = true;
-> +}
-> +EXPORT_SYMBOL_GPL(cbe_cpufreq_pmi_init);
->
-> -       return 0;
-> +void cbe_cpufreq_pmi_exit(void)
-> +{
-> +       pmi_unregister_handler(&cbe_pmi_handler);
-> +       cbe_cpufreq_has_pmi = false;
->  }
-> -device_initcall(cbe_cpufreq_pmi_init);
-> +EXPORT_SYMBOL_GPL(cbe_cpufreq_pmi_exit);
+DQpIaSBBbnRvaW5lLA0KDQpPdmVyYWxsIGdvb2QgbG9va2luZyBwYXRjaHNldCwgZ3JlYXQhDQoN
+Cj4gKy8qKg0KPiArICogc3RydWN0IG1hY3NlY190eF9zYSAtIHRyYW5zbWl0IHNlY3VyZSBhc3Nv
+Y2lhdGlvbg0KPiArICogQGFjdGl2ZToNCj4gKyAqIEBuZXh0X3BuOiBwYWNrZXQgbnVtYmVyIHRv
+IHVzZSBmb3IgdGhlIG5leHQgcGFja2V0DQo+ICsgKiBAbG9jazogcHJvdGVjdHMgbmV4dF9wbiBt
+YW5pcHVsYXRpb25zDQo+ICsgKiBAa2V5OiBrZXkgc3RydWN0dXJlDQo+ICsgKiBAc3RhdHM6IHBl
+ci1TQSBzdGF0cw0KPiArICovDQo+ICtzdHJ1Y3QgbWFjc2VjX3R4X3NhIHsNCj4gKwlzdHJ1Y3Qg
+bWFjc2VjX2tleSBrZXk7DQo+ICsJc3BpbmxvY2tfdCBsb2NrOw0KPiArCXUzMiBuZXh0X3BuOw0K
+PiArCXJlZmNvdW50X3QgcmVmY250Ow0KPiArCWJvb2wgYWN0aXZlOw0KPiArCWJvb2wgb2ZmbG9h
+ZGVkOw0KDQpJIGRvbid0IHNlZSB0aGlzIGBvZmZsb2FkZWRgIGZpZWxkIGJlaW5nIHVzZWQgYW55
+d2hlcmUuIElzIHRoaXMgbmVlZGVkPw0KDQpSZWdhcmRzLA0KICBJZ29yDQo=
