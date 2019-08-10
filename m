@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03551C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA73EC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9222208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8F25208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbfHJUth (ORCPT
+        id S1727185AbfHJUtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:49:37 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54636 "EHLO
+        Sat, 10 Aug 2019 16:49:49 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54598 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726755AbfHJUn6 (ORCPT
+        by vger.kernel.org with ESMTP id S1726750AbfHJUn6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:58 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDT-00053u-9y; Sat, 10 Aug 2019 21:43:55 +0100
+        id 1hwYDS-00053W-BF; Sat, 10 Aug 2019 21:43:54 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDO-0003jf-G0; Sat, 10 Aug 2019 21:43:50 +0100
+        id 1hwYDP-0003mC-C9; Sat, 10 Aug 2019 21:43:51 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        "Michael Neuling" <mikey@neuling.org>,
-        "Praveen Pandey" <Praveen.Pandey@in.ibm.com>
+        "Eric Dumazet" <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Amit Klein" <aksecurity@gmail.com>,
+        "Benny Pinkas" <benny@pinkas.net>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.372546052@decadent.org.uk>
+Message-ID: <lsq.1565469607.862882638@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 137/157] powerpc/tm: Fix oops on sigreturn on systems
- without TM
+Subject: [PATCH 3.16 155/157] inet: switch IP ID generator to siphash
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,88 +57,146 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Michael Neuling <mikey@neuling.org>
+From: Eric Dumazet <edumazet@google.com>
 
-commit f16d80b75a096c52354c6e0a574993f3b0dfbdfe upstream.
+commit df453700e8d81b1bdafdf684365ee2b9431fb702 upstream.
 
-On systems like P9 powernv where we have no TM (or P8 booted with
-ppc_tm=off), userspace can construct a signal context which still has
-the MSR TS bits set. The kernel tries to restore this context which
-results in the following crash:
+According to Amit Klein and Benny Pinkas, IP ID generation is too weak
+and might be used by attackers.
 
-  Unexpected TM Bad Thing exception at c0000000000022fc (msr 0x8000000102a03031) tm_scratch=800000020280f033
-  Oops: Unrecoverable exception, sig: 6 [#1]
-  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-  Modules linked in:
-  CPU: 0 PID: 1636 Comm: sigfuz Not tainted 5.2.0-11043-g0a8ad0ffa4 #69
-  NIP:  c0000000000022fc LR: 00007fffb2d67e48 CTR: 0000000000000000
-  REGS: c00000003fffbd70 TRAP: 0700   Not tainted  (5.2.0-11045-g7142b497d8)
-  MSR:  8000000102a03031 <SF,VEC,VSX,FP,ME,IR,DR,LE,TM[E]>  CR: 42004242  XER: 00000000
-  CFAR: c0000000000022e0 IRQMASK: 0
-  GPR00: 0000000000000072 00007fffb2b6e560 00007fffb2d87f00 0000000000000669
-  GPR04: 00007fffb2b6e728 0000000000000000 0000000000000000 00007fffb2b6f2a8
-  GPR08: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
-  GPR12: 0000000000000000 00007fffb2b76900 0000000000000000 0000000000000000
-  GPR16: 00007fffb2370000 00007fffb2d84390 00007fffea3a15ac 000001000a250420
-  GPR20: 00007fffb2b6f260 0000000010001770 0000000000000000 0000000000000000
-  GPR24: 00007fffb2d843a0 00007fffea3a14a0 0000000000010000 0000000000800000
-  GPR28: 00007fffea3a14d8 00000000003d0f00 0000000000000000 00007fffb2b6e728
-  NIP [c0000000000022fc] rfi_flush_fallback+0x7c/0x80
-  LR [00007fffb2d67e48] 0x7fffb2d67e48
-  Call Trace:
-  Instruction dump:
-  e96a0220 e96a02a8 e96a0330 e96a03b8 394a0400 4200ffdc 7d2903a6 e92d0c00
-  e94d0c08 e96d0c10 e82d0c18 7db242a6 <4c000024> 7db243a6 7db142a6 f82d0c18
+Even with recent net_hash_mix() fix (netns: provide pure entropy for net_hash_mix())
+having 64bit key and Jenkins hash is risky.
 
-The problem is the signal code assumes TM is enabled when
-CONFIG_PPC_TRANSACTIONAL_MEM is enabled. This may not be the case as
-with P9 powernv or if `ppc_tm=off` is used on P8.
+It is time to switch to siphash and its 128bit keys.
 
-This means any local user can crash the system.
-
-Fix the problem by returning a bad stack frame to the user if they try
-to set the MSR TS bits with sigreturn() on systems where TM is not
-supported.
-
-Found with sigfuz kernel selftest on P9.
-
-This fixes CVE-2019-13648.
-
-Fixes: 2b0a576d15e0 ("powerpc: Add new transactional memory state to the signal context")
-Reported-by: Praveen Pandey <Praveen.Pandey@in.ibm.com>
-Signed-off-by: Michael Neuling <mikey@neuling.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190719050502.405-1-mikey@neuling.org
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Amit Klein <aksecurity@gmail.com>
+Reported-by: Benny Pinkas <benny@pinkas.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/powerpc/kernel/signal_32.c | 3 +++
- arch/powerpc/kernel/signal_64.c | 5 +++++
- 2 files changed, 8 insertions(+)
-
---- a/arch/powerpc/kernel/signal_32.c
-+++ b/arch/powerpc/kernel/signal_32.c
-@@ -1274,6 +1274,9 @@ long sys_rt_sigreturn(int r3, int r4, in
- 			goto bad;
+--- a/include/linux/siphash.h
++++ b/include/linux/siphash.h
+@@ -19,6 +19,11 @@ typedef struct {
+ 	u64 key[2];
+ } siphash_key_t;
  
- 		if (MSR_TM_ACTIVE(msr_hi<<32)) {
-+			/* Trying to start TM on non TM system */
-+			if (!cpu_has_feature(CPU_FTR_TM))
-+				goto bad;
- 			/* We only recheckpoint on return if we're
- 			 * transaction.
- 			 */
---- a/arch/powerpc/kernel/signal_64.c
-+++ b/arch/powerpc/kernel/signal_64.c
-@@ -702,6 +702,11 @@ int sys_rt_sigreturn(unsigned long r3, u
- 	if (MSR_TM_ACTIVE(msr)) {
- 		/* We recheckpoint on return. */
- 		struct ucontext __user *uc_transact;
++static inline bool siphash_key_is_zero(const siphash_key_t *key)
++{
++	return !(key->key[0] | key->key[1]);
++}
 +
-+		/* Trying to start TM on non TM system */
-+		if (!cpu_has_feature(CPU_FTR_TM))
-+			goto badframe;
+ u64 __siphash_aligned(const void *data, size_t len, const siphash_key_t *key);
+ #ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+ u64 __siphash_unaligned(const void *data, size_t len, const siphash_key_t *key);
+--- a/include/net/netns/ipv4.h
++++ b/include/net/netns/ipv4.h
+@@ -7,6 +7,7 @@
+ 
+ #include <linux/uidgid.h>
+ #include <net/inet_frag.h>
++#include <linux/siphash.h>
+ 
+ struct tcpm_hash_bucket;
+ struct ctl_table_header;
+@@ -98,5 +99,6 @@ struct netns_ipv4 {
+ #endif
+ #endif
+ 	atomic_t	rt_genid;
++	siphash_key_t	ip_id_key;
+ };
+ #endif
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -486,15 +486,17 @@ EXPORT_SYMBOL(ip_idents_reserve);
+ 
+ void __ip_select_ident(struct net *net, struct iphdr *iph, int segs)
+ {
+-	static u32 ip_idents_hashrnd __read_mostly;
+ 	u32 hash, id;
+ 
+-	net_get_random_once(&ip_idents_hashrnd, sizeof(ip_idents_hashrnd));
++	/* Note the following code is not safe, but this is okay. */
++	if (unlikely(siphash_key_is_zero(&net->ipv4.ip_id_key)))
++		get_random_bytes(&net->ipv4.ip_id_key,
++				 sizeof(net->ipv4.ip_id_key));
+ 
+-	hash = jhash_3words((__force u32)iph->daddr,
++	hash = siphash_3u32((__force u32)iph->daddr,
+ 			    (__force u32)iph->saddr,
+-			    iph->protocol ^ net_hash_mix(net),
+-			    ip_idents_hashrnd);
++			    iph->protocol,
++			    &net->ipv4.ip_id_key);
+ 	id = ip_idents_reserve(hash, segs);
+ 	iph->id = htons(id);
+ }
+--- a/net/ipv6/output_core.c
++++ b/net/ipv6/output_core.c
+@@ -9,14 +9,24 @@
+ #include <net/addrconf.h>
+ #include <net/secure_seq.h>
+ 
+-static u32 __ipv6_select_ident(struct net *net, u32 hashrnd,
++static u32 __ipv6_select_ident(struct net *net,
+ 			       struct in6_addr *dst, struct in6_addr *src)
+ {
++	const struct {
++		struct in6_addr dst;
++		struct in6_addr src;
++	} __aligned(SIPHASH_ALIGNMENT) combined = {
++		.dst = *dst,
++		.src = *src,
++	};
+ 	u32 hash, id;
+ 
+-	hash = __ipv6_addr_jhash(dst, hashrnd);
+-	hash = __ipv6_addr_jhash(src, hash);
+-	hash ^= net_hash_mix(net);
++	/* Note the following code is not safe, but this is okay. */
++	if (unlikely(siphash_key_is_zero(&net->ipv4.ip_id_key)))
++		get_random_bytes(&net->ipv4.ip_id_key,
++				 sizeof(net->ipv4.ip_id_key));
 +
- 		if (__get_user(uc_transact, &uc->uc_link))
- 			goto badframe;
- 		if (restore_tm_sigcontexts(regs, &uc->uc_mcontext,
++	hash = siphash(&combined, sizeof(combined), &net->ipv4.ip_id_key);
+ 
+ 	/* Treat id of 0 as unset and if we get 0 back from ip_idents_reserve,
+ 	 * set the hight order instead thus minimizing possible future
+@@ -39,7 +49,6 @@ static u32 __ipv6_select_ident(struct ne
+  */
+ void ipv6_proxy_select_ident(struct net *net, struct sk_buff *skb)
+ {
+-	static u32 ip6_proxy_idents_hashrnd __read_mostly;
+ 	struct in6_addr buf[2];
+ 	struct in6_addr *addrs;
+ 	u32 id;
+@@ -51,11 +60,7 @@ void ipv6_proxy_select_ident(struct net
+ 	if (!addrs)
+ 		return;
+ 
+-	net_get_random_once(&ip6_proxy_idents_hashrnd,
+-			    sizeof(ip6_proxy_idents_hashrnd));
+-
+-	id = __ipv6_select_ident(net, ip6_proxy_idents_hashrnd,
+-				 &addrs[1], &addrs[0]);
++	id = __ipv6_select_ident(net, &addrs[1], &addrs[0]);
+ 	skb_shinfo(skb)->ip6_frag_id = htonl(id);
+ }
+ EXPORT_SYMBOL_GPL(ipv6_proxy_select_ident);
+@@ -63,13 +68,9 @@ EXPORT_SYMBOL_GPL(ipv6_proxy_select_iden
+ void ipv6_select_ident(struct net *net, struct frag_hdr *fhdr,
+ 		       struct rt6_info *rt)
+ {
+-	static u32 ip6_idents_hashrnd __read_mostly;
+ 	u32 id;
+ 
+-	net_get_random_once(&ip6_idents_hashrnd, sizeof(ip6_idents_hashrnd));
+-
+-	id = __ipv6_select_ident(net, ip6_idents_hashrnd, &rt->rt6i_dst.addr,
+-				 &rt->rt6i_src.addr);
++	id = __ipv6_select_ident(net, &rt->rt6i_dst.addr, &rt->rt6i_src.addr);
+ 	fhdr->identification = htonl(id);
+ }
+ EXPORT_SYMBOL(ipv6_select_ident);
 
