@@ -2,96 +2,121 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F215BC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E242C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C323520B7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:45:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EnyNaVfR"
+	by mail.kernel.org (Postfix) with ESMTP id 50ED021743
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:45:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfHJUpN (ORCPT
+        id S1726989AbfHJUoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:45:13 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41856 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfHJUpK (ORCPT
+        Sat, 10 Aug 2019 16:44:20 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54438 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726704AbfHJUnz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:45:10 -0400
-Received: by mail-ot1-f67.google.com with SMTP id o101so10889669ota.8;
-        Sat, 10 Aug 2019 13:45:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OxgKq0uvzgCy9T3HtT1FHqYi+XIOfhSX9HlOxN06+Q4=;
-        b=EnyNaVfR6RBYyx+WdJpxHBqOGXStQ1CR0UViT9LmJrhpXHZ5Alpzl4erD6vu8UVFzM
-         I9CJTMHWXU4ehhHPipZ1rmTYULmZPQS9rqB4pma/8MFzAww89hM3o+6zHWAa7dmgisgt
-         4WgI36e6M1CT1qGPrFHWP3AKge2nY1sqhCZyFZ3BT9r5q+aVkdJDQelvthvwqDNcrf3A
-         ukr13yXnMF6hyqJlgsj20W7fvSREYyhh/OXa6WJp4gunXU6tyXU+4l8lfSJsTMBUFAgc
-         g+4efOCXNnsp8NIVq/EGXOAB2FssqWCGILegUSJntnVYC9oC3k1MPhSjmaI3wmHj0vNh
-         OifQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OxgKq0uvzgCy9T3HtT1FHqYi+XIOfhSX9HlOxN06+Q4=;
-        b=pLacBFqNSqow4FejV7dGsE5xePHaWuMdWp3n1tUASRaDftLkHVzPeiQQhUAeeUIbVK
-         DyG+vPRJF68PnBWaxHLCMjWTbvqplmcNwMpqikbBSA6ZUMntVrGoE/TLn+7aTxnlsJ4E
-         kLtrkZQn5970AxH0h8g+8CiAe9MLOelco6jxJFUqZ3KhnYG2A0qRY9iB49k0l8Iph2/7
-         QhycdomXpMVSN/VfmOwLG8AuoI6LXAu0d9MfQnYCw3ZRG/ND+BPWQEDVrCnDBlVAN9vb
-         wr6zxR2c9FrHWy99q8Xcp9MhbaF9yv2QjMGeNgPPwtMTcAinj7U2DNNMQd7EbwUD4pBP
-         z+Nw==
-X-Gm-Message-State: APjAAAWCOmkWaWE/q28XM3AcbXyVIDCMZdJvw5CJvCA2Pr/p6bhHOf3f
-        f8PLpIKbgSsHGO18ElJRviVMGBQVrxEBqKtZ21l5sw==
-X-Google-Smtp-Source: APXvYqyLFLjwXOVFOcYFXPODdfCLOQdnEaEv3OW/QjfpGeANuOjHLCLd/XzqkJzMQdfsBj81W8y7nvyUQG5WyUUUgKs=
-X-Received: by 2002:a02:10:: with SMTP id 16mr15375851jaa.96.1565469909350;
- Sat, 10 Aug 2019 13:45:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190730014924.2193-1-deepa.kernel@gmail.com> <20190730014924.2193-5-deepa.kernel@gmail.com>
- <c508fe0116b77ff0496ebb17a69f756c47be62b7.camel@codethink.co.uk>
-In-Reply-To: <c508fe0116b77ff0496ebb17a69f756c47be62b7.camel@codethink.co.uk>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Sat, 10 Aug 2019 13:44:57 -0700
-Message-ID: <CABeXuvruROn7j1DiCDbP6MLBt9SB4Pp3HoKqcQbUNPDJgGWLgw@mail.gmail.com>
-Subject: Re: [Y2038] [PATCH 04/20] mount: Add mount warning for impending
- timestamp expiry
-To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
+        Sat, 10 Aug 2019 16:43:55 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hwYDP-00058O-Ba; Sat, 10 Aug 2019 21:43:51 +0100
+Received: from ben by deadeye with local (Exim 4.92)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hwYDO-0003jv-Lg; Sat, 10 Aug 2019 21:43:50 +0100
 Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Denis Efremov" <efremov@ispras.ru>, "Willy Tarreau" <w@1wt.eu>
+Date:   Sat, 10 Aug 2019 21:40:07 +0100
+Message-ID: <lsq.1565469607.686847966@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 140/157] floppy: fix invalid pointer dereference in
+ drive_name
+In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 7:14 AM Ben Hutchings
-<ben.hutchings@codethink.co.uk> wrote:
->
-> On Mon, 2019-07-29 at 18:49 -0700, Deepa Dinamani wrote:
-> > The warning reuses the uptime max of 30 years used by the
-> > setitimeofday().
-> >
-> > Note that the warning is only added for new filesystem mounts
-> > through the mount syscall. Automounts do not have the same warning.
-> [...]
->
-> Another thing - perhaps this warning should be suppressed for read-only
-> mounts?
+3.16.72-rc1 review patch.  If anyone has any objections, please let me know.
 
-Many filesystems support read only mounts only. We do fill in right
-granularities and limits for these filesystems as well. In keeping
-with the trend, I have added the warning accordingly. I don't think I
-have a preference either way. But, not warning for the red only mounts
-adds another if case. If you have a strong preference, I could add it
-in.
+------------------
 
--Deepa
+From: Denis Efremov <efremov@ispras.ru>
+
+commit 9b04609b784027968348796a18f601aed9db3789 upstream.
+
+This fixes the invalid pointer dereference in the drive_name function of
+the floppy driver.
+
+The native_format field of the struct floppy_drive_params is used as
+floppy_type array index in the drive_name function.  Thus, the field
+should be checked the same way as the autodetect field.
+
+To trigger the bug, one could use a value out of range and set the drive
+parameters with the FDSETDRVPRM ioctl.  Next, FDGETDRVTYP ioctl should
+be used to call the drive_name.  A floppy disk is not required to be
+inserted.
+
+CAP_SYS_ADMIN is required to call FDSETDRVPRM.
+
+The patch adds the check for a value of the native_format field to be in
+the '0 <= x < ARRAY_SIZE(floppy_type)' range of the floppy_type array
+indices.
+
+The bug was found by syzkaller.
+
+Signed-off-by: Denis Efremov <efremov@ispras.ru>
+Tested-by: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[bwh: Backported to 3.16: Drop changes in compat_setdrvprm(), as compat
+ ioctls go via fd_ioctl_locked() after translation in compat_ioctl.c.]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -3383,7 +3383,8 @@ static int fd_getgeo(struct block_device
+ 	return 0;
+ }
+ 
+-static bool valid_floppy_drive_params(const short autodetect[8])
++static bool valid_floppy_drive_params(const short autodetect[8],
++		int native_format)
+ {
+ 	size_t floppy_type_size = ARRAY_SIZE(floppy_type);
+ 	size_t i = 0;
+@@ -3394,6 +3395,9 @@ static bool valid_floppy_drive_params(co
+ 			return false;
+ 	}
+ 
++	if (native_format < 0 || native_format >= floppy_type_size)
++		return false;
++
+ 	return true;
+ }
+ 
+@@ -3523,7 +3527,8 @@ static int fd_locked_ioctl(struct block_
+ 		SUPBOUND(size, strlen((const char *)outparam) + 1);
+ 		break;
+ 	case FDSETDRVPRM:
+-		if (!valid_floppy_drive_params(inparam.dp.autodetect))
++		if (!valid_floppy_drive_params(inparam.dp.autodetect,
++				inparam.dp.native_format))
+ 			return -EINVAL;
+ 		*UDP = inparam.dp;
+ 		break;
+
