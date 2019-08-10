@@ -2,227 +2,106 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAA2C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 07:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB8BC41514
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 07:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7827A208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 07:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0413A217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 07:39:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="niQjzXtg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbfHJHdl (ORCPT
+        id S1726147AbfHJHjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 03:33:41 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:60163 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfHJHdk (ORCPT
+        Sat, 10 Aug 2019 03:39:45 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43902 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbfHJHjo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 03:33:40 -0400
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
-        (Authenticated sender: pshelar@ovn.org)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id D859C200004;
-        Sat, 10 Aug 2019 07:33:36 +0000 (UTC)
-Received: by mail-vs1-f44.google.com with SMTP id u3so66871174vsh.6;
-        Sat, 10 Aug 2019 00:33:36 -0700 (PDT)
-X-Gm-Message-State: APjAAAWGO3Jre136qwN9DAZDMpubutg09kx0oeAiJJZ/F4oqsUEsei/D
-        4GsJizXtpxFbxCFGEajX8YWSP62X0RAYYCAGJLk=
-X-Google-Smtp-Source: APXvYqy7jxR7AWHnNI17dFYrhZdVymcVm4RFU1BKroVFLQamAoQ4NrtyDJCPRT57FQkWb0jus4Z/nzEHHCzRbv/lbck=
-X-Received: by 2002:a67:1a07:: with SMTP id a7mr15194875vsa.58.1565422415456;
- Sat, 10 Aug 2019 00:33:35 -0700 (PDT)
+        Sat, 10 Aug 2019 03:39:44 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h15so410678ljg.10
+        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 00:39:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AK/YMa4Udhu0TeTUabdaTm8LRtt+TVVYWot+B288Uf0=;
+        b=niQjzXtgqzrHnuK8XNSSBNRpO2CR/Omb5Zr/BEJArkRu1Hu3aP7NGTrfawQAi8xjNq
+         B63012N1cBSRUQoZfggC60spukhH4XFe9z+CHLd/zTBD+uWvjodx3m4yl+T5SanUEOlI
+         tOwDS2cMYCMt0wSqWgvCEYrBCsMYUx5CD0ljhWRrRAUQZxXesR1EkTLV7I7uOCI4sHWN
+         DVaSPJPjwJwZfjENt0rPA/MXLELO8WXSKwvm5JfHwAfYgCcOamlcbJadtdDxn5PtRW3Q
+         9f64OMI57PXiPbFmETcrIgaSJpRgP3/ta/cJetbzOGcTg/PtvtZQVILvere+coTyVejG
+         S7UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AK/YMa4Udhu0TeTUabdaTm8LRtt+TVVYWot+B288Uf0=;
+        b=JiHwlUDR6YqJUOuEa2LTFZVhzaD3c/h3CWaL4fDGlz0E67OcxTMbIUZrHaw2HrSPty
+         76xuE03JHlqyhQ05vt0FVH83qivOUHAWBHZKGdNIm5//MLSZuUjmpOdRUGbbtvnf4r09
+         mZ5WPhK7vtjRWKUmhpNFbxKdeK4K2WD9u69b6xXYU2vPezhCV1p9gP1lNIhmVIKrXzea
+         tBqYdc1athT47a2MYmsCqQ+UlK3/Ms7kbWoEOvDwDkwZANSRB7G7r/k6yXWU7I5Gbp0G
+         m+ZTNhpNrBcQqaCes5MBYOl3jKImflIxv8w0+hUZiAAGV40deHoR4EQJBNJ1G0QzTpA7
+         iPSg==
+X-Gm-Message-State: APjAAAU38K/U/5/dKf67WLNyLZCe5QvcmWGwhBzOygcgV+QsbIyCaWVo
+        mbUD1CrmxNlAlnMhuuYL/4YjNg==
+X-Google-Smtp-Source: APXvYqxqSQEUfu7bZAFnqxkQX6eGcAAC0oG9UXAGDZV2DRYTYAV3Mi+sXLGdmHn8wqr9Vabz4S2gKg==
+X-Received: by 2002:a2e:9dd7:: with SMTP id x23mr7776491ljj.160.1565422782584;
+        Sat, 10 Aug 2019 00:39:42 -0700 (PDT)
+Received: from localhost (c-243c70d5.07-21-73746f28.bbcust.telenor.se. [213.112.60.36])
+        by smtp.gmail.com with ESMTPSA id l22sm19707633ljc.4.2019.08.10.00.39.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 10 Aug 2019 00:39:41 -0700 (PDT)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     mb@lightnvm.io
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH] lightnvm: remove unused variable 'geo'
+Date:   Sat, 10 Aug 2019 09:39:36 +0200
+Message-Id: <20190810073936.28700-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190809035515.13968-1-hdanton@sina.com>
-In-Reply-To: <20190809035515.13968-1-hdanton@sina.com>
-From:   Pravin Shelar <pshelar@ovn.org>
-Date:   Sat, 10 Aug 2019 00:34:55 -0700
-X-Gmail-Original-Message-ID: <CAOrHB_AoBJ37+gFNysZr+v1ySXWZP1CHTw0SDR826fWGgFRZ+g@mail.gmail.com>
-Message-ID: <CAOrHB_AoBJ37+gFNysZr+v1ySXWZP1CHTw0SDR826fWGgFRZ+g@mail.gmail.com>
-Subject: Re: [PATCH] net: openvswitch: free vport unless register_netdevice() succeeds
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     ovs dev <dev@openvswitch.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+13210896153522fe1ee5@syzkaller.appspotmail.com>,
-        Taehee Yoo <ap420073@gmail.com>,
-        Greg Rose <gvrose8192@gmail.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Ying Xue <ying.xue@windriver.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 8, 2019 at 8:55 PM Hillf Danton <hdanton@sina.com> wrote:
->
->
-> syzbot found the following crash on:
->
-> HEAD commit:    1e78030e Merge tag 'mmc-v5.3-rc1' of git://git.kernel.org/..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=148d3d1a600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=30cef20daf3e9977
-> dashboard link: https://syzkaller.appspot.com/bug?extid=13210896153522fe1ee5
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=136aa8c4600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=109ba792600000
->
-> =====================================================================
-> BUG: memory leak
-> unreferenced object 0xffff8881207e4100 (size 128):
->    comm "syz-executor032", pid 7014, jiffies 4294944027 (age 13.830s)
->    hex dump (first 32 bytes):
->      00 70 16 18 81 88 ff ff 80 af 8c 22 81 88 ff ff  .p........."....
->      00 b6 23 17 81 88 ff ff 00 00 00 00 00 00 00 00  ..#.............
->    backtrace:
->      [<000000000eb78212>] kmemleak_alloc_recursive  include/linux/kmemleak.h:43 [inline]
->      [<000000000eb78212>] slab_post_alloc_hook mm/slab.h:522 [inline]
->      [<000000000eb78212>] slab_alloc mm/slab.c:3319 [inline]
->      [<000000000eb78212>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
->      [<00000000006ea6c6>] kmalloc include/linux/slab.h:552 [inline]
->      [<00000000006ea6c6>] kzalloc include/linux/slab.h:748 [inline]
->      [<00000000006ea6c6>] ovs_vport_alloc+0x37/0xf0  net/openvswitch/vport.c:130
->      [<00000000f9a04a7d>] internal_dev_create+0x24/0x1d0  net/openvswitch/vport-internal_dev.c:164
->      [<0000000056ee7c13>] ovs_vport_add+0x81/0x190  net/openvswitch/vport.c:199
->      [<000000005434efc7>] new_vport+0x19/0x80 net/openvswitch/datapath.c:194
->      [<00000000b7b253f1>] ovs_dp_cmd_new+0x22f/0x410  net/openvswitch/datapath.c:1614
->      [<00000000e0988518>] genl_family_rcv_msg+0x2ab/0x5b0  net/netlink/genetlink.c:629
->      [<00000000d0cc9347>] genl_rcv_msg+0x54/0x9c net/netlink/genetlink.c:654
->      [<000000006694b647>] netlink_rcv_skb+0x61/0x170  net/netlink/af_netlink.c:2477
->      [<0000000088381f37>] genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
->      [<00000000dad42a47>] netlink_unicast_kernel  net/netlink/af_netlink.c:1302 [inline]
->      [<00000000dad42a47>] netlink_unicast+0x1ec/0x2d0  net/netlink/af_netlink.c:1328
->      [<0000000067e6b079>] netlink_sendmsg+0x270/0x480  net/netlink/af_netlink.c:1917
->      [<00000000aab08a47>] sock_sendmsg_nosec net/socket.c:637 [inline]
->      [<00000000aab08a47>] sock_sendmsg+0x54/0x70 net/socket.c:657
->      [<000000004cb7c11d>] ___sys_sendmsg+0x393/0x3c0 net/socket.c:2311
->      [<00000000c4901c63>] __sys_sendmsg+0x80/0xf0 net/socket.c:2356
->      [<00000000c10abb2d>] __do_sys_sendmsg net/socket.c:2365 [inline]
->      [<00000000c10abb2d>] __se_sys_sendmsg net/socket.c:2363 [inline]
->      [<00000000c10abb2d>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2363
->
-> BUG: memory leak
-> unreferenced object 0xffff88811723b600 (size 64):
->    comm "syz-executor032", pid 7014, jiffies 4294944027 (age 13.830s)
->    hex dump (first 32 bytes):
->      01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
->      00 00 00 00 00 00 00 00 02 00 00 00 05 35 82 c1  .............5..
->    backtrace:
->      [<00000000352f46d8>] kmemleak_alloc_recursive  include/linux/kmemleak.h:43 [inline]
->      [<00000000352f46d8>] slab_post_alloc_hook mm/slab.h:522 [inline]
->      [<00000000352f46d8>] slab_alloc mm/slab.c:3319 [inline]
->      [<00000000352f46d8>] __do_kmalloc mm/slab.c:3653 [inline]
->      [<00000000352f46d8>] __kmalloc+0x169/0x300 mm/slab.c:3664
->      [<000000008e48f3d1>] kmalloc include/linux/slab.h:557 [inline]
->      [<000000008e48f3d1>] ovs_vport_set_upcall_portids+0x54/0xd0  net/openvswitch/vport.c:343
->      [<00000000541e4f4a>] ovs_vport_alloc+0x7f/0xf0  net/openvswitch/vport.c:139
->      [<00000000f9a04a7d>] internal_dev_create+0x24/0x1d0  net/openvswitch/vport-internal_dev.c:164
->      [<0000000056ee7c13>] ovs_vport_add+0x81/0x190  net/openvswitch/vport.c:199
->      [<000000005434efc7>] new_vport+0x19/0x80 net/openvswitch/datapath.c:194
->      [<00000000b7b253f1>] ovs_dp_cmd_new+0x22f/0x410  net/openvswitch/datapath.c:1614
->      [<00000000e0988518>] genl_family_rcv_msg+0x2ab/0x5b0  net/netlink/genetlink.c:629
->      [<00000000d0cc9347>] genl_rcv_msg+0x54/0x9c net/netlink/genetlink.c:654
->      [<000000006694b647>] netlink_rcv_skb+0x61/0x170  net/netlink/af_netlink.c:2477
->      [<0000000088381f37>] genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
->      [<00000000dad42a47>] netlink_unicast_kernel  net/netlink/af_netlink.c:1302 [inline]
->      [<00000000dad42a47>] netlink_unicast+0x1ec/0x2d0  net/netlink/af_netlink.c:1328
->      [<0000000067e6b079>] netlink_sendmsg+0x270/0x480  net/netlink/af_netlink.c:1917
->      [<00000000aab08a47>] sock_sendmsg_nosec net/socket.c:637 [inline]
->      [<00000000aab08a47>] sock_sendmsg+0x54/0x70 net/socket.c:657
->      [<000000004cb7c11d>] ___sys_sendmsg+0x393/0x3c0 net/socket.c:2311
->      [<00000000c4901c63>] __sys_sendmsg+0x80/0xf0 net/socket.c:2356
->
-> BUG: memory leak
-> unreferenced object 0xffff8881228ca500 (size 128):
->    comm "syz-executor032", pid 7015, jiffies 4294944622 (age 7.880s)
->    hex dump (first 32 bytes):
->      00 f0 27 18 81 88 ff ff 80 ac 8c 22 81 88 ff ff  ..'........"....
->      40 b7 23 17 81 88 ff ff 00 00 00 00 00 00 00 00  @.#.............
->    backtrace:
->      [<000000000eb78212>] kmemleak_alloc_recursive  include/linux/kmemleak.h:43 [inline]
->      [<000000000eb78212>] slab_post_alloc_hook mm/slab.h:522 [inline]
->      [<000000000eb78212>] slab_alloc mm/slab.c:3319 [inline]
->      [<000000000eb78212>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
->      [<00000000006ea6c6>] kmalloc include/linux/slab.h:552 [inline]
->      [<00000000006ea6c6>] kzalloc include/linux/slab.h:748 [inline]
->      [<00000000006ea6c6>] ovs_vport_alloc+0x37/0xf0  net/openvswitch/vport.c:130
->      [<00000000f9a04a7d>] internal_dev_create+0x24/0x1d0  net/openvswitch/vport-internal_dev.c:164
->      [<0000000056ee7c13>] ovs_vport_add+0x81/0x190  net/openvswitch/vport.c:199
->      [<000000005434efc7>] new_vport+0x19/0x80 net/openvswitch/datapath.c:194
->      [<00000000b7b253f1>] ovs_dp_cmd_new+0x22f/0x410  net/openvswitch/datapath.c:1614
->      [<00000000e0988518>] genl_family_rcv_msg+0x2ab/0x5b0  net/netlink/genetlink.c:629
->      [<00000000d0cc9347>] genl_rcv_msg+0x54/0x9c net/netlink/genetlink.c:654
->      [<000000006694b647>] netlink_rcv_skb+0x61/0x170  net/netlink/af_netlink.c:2477
->      [<0000000088381f37>] genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
->      [<00000000dad42a47>] netlink_unicast_kernel  net/netlink/af_netlink.c:1302 [inline]
->      [<00000000dad42a47>] netlink_unicast+0x1ec/0x2d0  net/netlink/af_netlink.c:1328
->      [<0000000067e6b079>] netlink_sendmsg+0x270/0x480  net/netlink/af_netlink.c:1917
->      [<00000000aab08a47>] sock_sendmsg_nosec net/socket.c:637 [inline]
->      [<00000000aab08a47>] sock_sendmsg+0x54/0x70 net/socket.c:657
->      [<000000004cb7c11d>] ___sys_sendmsg+0x393/0x3c0 net/socket.c:2311
->      [<00000000c4901c63>] __sys_sendmsg+0x80/0xf0 net/socket.c:2356
->      [<00000000c10abb2d>] __do_sys_sendmsg net/socket.c:2365 [inline]
->      [<00000000c10abb2d>] __se_sys_sendmsg net/socket.c:2363 [inline]
->      [<00000000c10abb2d>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2363
-> =====================================================================
->
-> The function in net core, register_netdevice(), may fail with vport's
-> destruction callback either invoked or not. After commit 309b66970ee2,
-> the duty to destroy vport is offloaded from the driver OTOH, which ends
-> up in the memory leak reported.
->
-> It is fixed by releasing vport unless device is registered successfully.
-> To do that, the callback assignment is defered until device is registered.
->
-> Reported-by: syzbot+13210896153522fe1ee5@syzkaller.appspotmail.com
-> Fixes: 309b66970ee2 ("net: openvswitch: do not free vport if register_netdevice() is failed.")
-> Cc: Taehee Yoo <ap420073@gmail.com>
-> Cc: Greg Rose <gvrose8192@gmail.com>
-> Cc: Eric Dumazet <eric.dumazet@gmail.com>
-> Cc: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-> Cc: Ying Xue <ying.xue@windriver.com>
-> Cc: Andrey Konovalov <andreyknvl@google.com>
-> Signed-off-by: Hillf Danton <hdanton@sina.com>
-> ---
->
-> --- a/net/openvswitch/vport-internal_dev.c
-> +++ b/net/openvswitch/vport-internal_dev.c
-> @@ -137,7 +137,7 @@ static void do_setup(struct net_device *
->         netdev->priv_flags |= IFF_LIVE_ADDR_CHANGE | IFF_OPENVSWITCH |
->                               IFF_NO_QUEUE;
->         netdev->needs_free_netdev = true;
-> -       netdev->priv_destructor = internal_dev_destructor;
-> +       netdev->priv_destructor = NULL;
->         netdev->ethtool_ops = &internal_dev_ethtool_ops;
->         netdev->rtnl_link_ops = &internal_dev_link_ops;
->
-> @@ -159,7 +159,6 @@ static struct vport *internal_dev_create
->         struct internal_dev *internal_dev;
->         struct net_device *dev;
->         int err;
-> -       bool free_vport = true;
->
->         vport = ovs_vport_alloc(0, &ovs_internal_vport_ops, parms);
->         if (IS_ERR(vport)) {
-> @@ -190,10 +189,9 @@ static struct vport *internal_dev_create
->
->         rtnl_lock();
->         err = register_netdevice(vport->dev);
-> -       if (err) {
-> -               free_vport = false;
-> +       if (err)
->                 goto error_unlock;
-> -       }
-> +       vport->dev->priv_destructor = internal_dev_destructor;
->
+The variable 'geo' is no longer used.
 
-Looks good.
-Acked-by: Pravin B Shelar <pshelar@ovn.org>
+../drivers/lightnvm/pblk-read.c: In function ‘pblk_submit_read_gc’:
+../drivers/lightnvm/pblk-read.c:421:18: warning: unused variable ‘geo’
+ [-Wunused-variable]
+  struct nvm_geo *geo = &dev->geo;
+                  ^~~
 
-Thanks,
-Pravin.
+Rework to remove the unused variable 'geo' and also the unused variable
+'dev' that got unused when the 'geo' variable was removed.
+
+Fixes: ba6f7da99aaf ("lightnvm: remove set but not used variables 'data_len' and 'rq_len'")
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+---
+ drivers/lightnvm/pblk-read.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/lightnvm/pblk-read.c b/drivers/lightnvm/pblk-read.c
+index 0cdc48f9cfbf..8efd14e683dc 100644
+--- a/drivers/lightnvm/pblk-read.c
++++ b/drivers/lightnvm/pblk-read.c
+@@ -417,8 +417,6 @@ static int read_rq_gc(struct pblk *pblk, struct nvm_rq *rqd,
+ 
+ int pblk_submit_read_gc(struct pblk *pblk, struct pblk_gc_rq *gc_rq)
+ {
+-	struct nvm_tgt_dev *dev = pblk->dev;
+-	struct nvm_geo *geo = &dev->geo;
+ 	struct nvm_rq rqd;
+ 	int ret = NVM_IO_OK;
+ 
+-- 
+2.20.1
+
