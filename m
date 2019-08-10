@@ -2,114 +2,1092 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76434C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 03:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D44C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 04:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C9F821743
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 03:52:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="JJQhMIVD"
+	by mail.kernel.org (Postfix) with ESMTP id 8C8062084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 04:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbfHJDw0 (ORCPT
+        id S1725863AbfHJEMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 23:52:26 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44382 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbfHJDwZ (ORCPT
+        Sat, 10 Aug 2019 00:12:30 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59798 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbfHJEM3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 23:52:25 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t16so47012793pfe.11
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 20:52:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=15NUEIPfxy4LwRR5TelorS+dS62B8jUUdc5s/lNpmxI=;
-        b=JJQhMIVDZyr61jL4+f0TUFnFam9hy7bgwggkDHwyCmuEcBayW4l6xwLvxsW5Pp1nnp
-         IHy9L9krlpmljpez5yhql+96E0ryjyQLsyuSa23kbZed6b81LQwZJnrJpGLywb7tn3j5
-         F7dBgJ+jMkstjp2U3vzVqUTJtdETiobaHbQwA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=15NUEIPfxy4LwRR5TelorS+dS62B8jUUdc5s/lNpmxI=;
-        b=aHub3ZCraYHdICrK9cO4WMH19xx1+EGGzPLW0MQ7H9CxPg7HyOgmOB0NXGd823pHmv
-         nje589oK5gWTZJnyfpirN/8U8iBKouW1zK1YWrxy+tIkk/PI/CggGVKeBb9lU9zrpgVl
-         HuahMnP3Io2Dwk5oBnwVGdJ3KhaWoLlqC5rykYegusjb2pvL4eczFWKIoF5gObBbBJrV
-         GDwy+boIYNACwTaPIC5j3P+qdBSx/7FgeTCfJy0TU8FyxaEMEpCNTvR77eHfrgT0x2RN
-         9kRQmVpBwgEk7LdlHLeCHnQLAwLXkxCCzZvPRsa8011dh6QdpbQWg+8+ZB6EHUutqKrC
-         FKYw==
-X-Gm-Message-State: APjAAAWt5RKMUtLHvMB3FLqAli1I7oYVlhZBqBmQoPEhi5lIwB4iIemw
-        0+bwcABs/8vSZZ825OzlnIuXRw==
-X-Google-Smtp-Source: APXvYqyeZHnIrdExpIo6tfFmrtMi1e/igw4kzyIXoHWpoWYQKLY3Ibihz9Jnr/P8Sf4cIzUwJDH0TQ==
-X-Received: by 2002:a17:90a:ba94:: with SMTP id t20mr13045782pjr.116.1565409144758;
-        Fri, 09 Aug 2019 20:52:24 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id g4sm115268192pfo.93.2019.08.09.20.52.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 20:52:23 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 23:52:22 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Byungchul Park <byungchul.park@lge.com>,
-        linux-kernel@vger.kernel.org, Rao Shoaib <rao.shoaib@oracle.com>,
-        max.byungchul.park@gmail.com, kernel-team@android.com,
-        kernel-team@lge.com, Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC v1 1/2] rcu/tree: Add basic support for kfree_rcu
- batching
-Message-ID: <20190810035222.GA157218@google.com>
-References: <20190808095232.GA30401@X58A-UD3R>
- <20190808125607.GB261256@google.com>
- <20190808233014.GA184373@google.com>
- <20190809151619.GD28441@linux.ibm.com>
- <20190809153924.GB211412@google.com>
- <20190809163346.GF28441@linux.ibm.com>
- <20190809202226.GC255533@google.com>
- <20190809204217.GN28441@linux.ibm.com>
- <20190809213643.GG255533@google.com>
- <20190810034027.GR28441@linux.ibm.com>
+        Sat, 10 Aug 2019 00:12:29 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 162AF28CBE2
+Subject: Re: [PATCH 2/3] media: vimc: Collapse component structure into a
+ single monolithic driver
+To:     Shuah Khan <skhan@linuxfoundation.org>, mchehab@kernel.org,
+        hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com
+Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+References: <cover.1565386363.git.skhan@linuxfoundation.org>
+ <c87d018de30b791d7ac30da9d99e1dcfca9b38ea.1565386364.git.skhan@linuxfoundation.org>
+From:   Helen Koike <helen.koike@collabora.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=helen.koike@collabora.com; keydata=
+ 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
+Message-ID: <85223214-5d1f-21b1-8845-3ed312a88f90@collabora.com>
+Date:   Sat, 10 Aug 2019 01:12:14 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190810034027.GR28441@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <c87d018de30b791d7ac30da9d99e1dcfca9b38ea.1565386364.git.skhan@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 08:40:27PM -0700, Paul E. McKenney wrote:
-[snip]
-> > > In contrast, a heavy duty userspace-driven workload would transition to
-> > > and from userspace for each kfree_rcu(), and that would increment the
-> > > dyntick-idle count on each transition to and from userspace.  Adding the
-> > > rcu_momentary_dyntick_idle() emulates a pair of such transitions.
-> > 
-> > But even if we're in kernel mode and not transitioning, I thought the FQS
-> > loop (rcu_implicit_dynticks_qs() function) would set need_heavy_qs to true at
-> > 2 * jiffies_to_sched_qs.
-> > 
-> > Hmm, I forgot that jiffies_to_sched_qs can be quite large I guess. You're
-> > right, we could call rcu_momentary_dyntick_idle() in advance before waiting
-> > for FQS loop to do the setting of need_heavy_qs.
-> > 
-> > Or, am I missing something with the rcu_momentary_dyntick_idle() point you
-> > made?
+Hi Shuah,
+
+Thanks for the patch, just some small comments.
+
+On 8/9/19 6:45 PM, Shuah Khan wrote:
+> vimc uses Component API to split the driver into functional components.
+> The real hardware resembles a monolith structure than component and
+> component structure added a level of complexity making it hard to
+> maintain without adding any real benefit.
 > 
-> The trick is that rcu_momentary_dyntick_idle() directly increments the
-> CPU's dyntick counter, so that the next FQS loop will note that the CPU
-> passed through a quiescent state.  No need for need_heavy_qs in this case.
+> The sensor is one vimc component that would makes sense to be a separate
+> module to closely align with the real hardware. It would be easier to
+> collapse vimc into single monolithic driver first and then split the
+> sensor off as a separate module.
+> 
+> Collapse it into a single monolithic driver removing the Component API.
+> This patch removes the component API and makes minimal changes to the
+> code base preserving the functional division of the code structure.
+> Preserving the functional structure allows us to split the sensor off
+> as a separate module in the future.
+> 
+> Major design elements in this change are:
+> - Use existing struct vimc_ent_config and struct vimc_pipeline_config
+>   to drive the initialization of the functional components.
+> - Make vimc_ent_config global by moving it to vimc.h
+> - Add two new hooks add and rm to initialize and register, unregister
+>   and free subdevs.
+> - All component API is now gone and bind and unbind hooks are modified
+>   to do "add" and "rm" with minimal changes to just add and rm subdevs.
+> - vimc-core's bind and unbind are now register and unregister.
+> - vimc-core invokes "add" hooks from its vimc_register_devices().
+>   The "add" hooks remain the same and register subdevs. They don't
+>   create platform devices of their own and use vimc's pdev.dev as
+>   their reference device. The "add" hooks save their vimc_ent_device(s)
+>   in the corresponding vimc_ent_config.
+> - vimc-core invokes "rm" hooks from its unregister to unregister subdevs
+>   and cleanup.
+> - vimc-core invokes "add" and "rm" hooks with pointer to struct vimc_device
+>   and the corresponding struct vimc_ent_config pointer.
+> 
+> The following configure and stream test works on all devices.
+> 
+> media-ctl -d platform:vimc -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
+> media-ctl -d platform:vimc -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
+> media-ctl -d platform:vimc -V '"Sensor B":0[fmt:SBGGR8_1X8/640x480]'
+> media-ctl -d platform:vimc -V '"Debayer B":0[fmt:SBGGR8_1X8/640x480]'
+> 
+> v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v width=1920,height=1440
+> v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v pixelformat=BA81
+> v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v pixelformat=BA81
+> 
+> v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video1
+> v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video2
+> v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video3
+> 
+> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+> ---
+>  drivers/media/platform/vimc/Makefile       |   7 +-
+>  drivers/media/platform/vimc/vimc-capture.c |  75 ++--------
+>  drivers/media/platform/vimc/vimc-core.c    | 156 ++++++++-------------
+>  drivers/media/platform/vimc/vimc-debayer.c |  68 ++-------
+>  drivers/media/platform/vimc/vimc-scaler.c  |  68 ++-------
+>  drivers/media/platform/vimc/vimc-sensor.c  |  69 ++-------
+>  drivers/media/platform/vimc/vimc.h         |  25 +++-
+>  7 files changed, 125 insertions(+), 343 deletions(-)
+> 
+> diff --git a/drivers/media/platform/vimc/Makefile b/drivers/media/platform/vimc/Makefile
+> index 96d06f030c31..a53b2b532e9f 100644
+> --- a/drivers/media/platform/vimc/Makefile
+> +++ b/drivers/media/platform/vimc/Makefile
+> @@ -1,5 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -vimc-y := vimc-core.o vimc-common.o vimc-streamer.o
+> +vimc-y := vimc-core.o vimc-common.o vimc-streamer.o vimc-capture.o \
+> +		vimc-debayer.o vimc-scaler.o vimc-sensor.o
+> +
+> +obj-$(CONFIG_VIDEO_VIMC) += vimc.o
+>  
+> -obj-$(CONFIG_VIDEO_VIMC) += vimc.o vimc-capture.o vimc-debayer.o \
+> -                vimc-scaler.o vimc-sensor.o
+> diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
+> index c52fc5d97c2d..b7b2d3c3d4f8 100644
+> --- a/drivers/media/platform/vimc/vimc-capture.c
+> +++ b/drivers/media/platform/vimc/vimc-capture.c
+> @@ -5,10 +5,6 @@
+>   * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
+>   */
+>  
+> -#include <linux/component.h>
+> -#include <linux/module.h>
+> -#include <linux/mod_devicetable.h>
+> -#include <linux/platform_device.h>
+>  #include <media/v4l2-ioctl.h>
+>  #include <media/videobuf2-core.h>
+>  #include <media/videobuf2-vmalloc.h>
+> @@ -17,8 +13,6 @@
+>  #include "vimc-common.h"
+>  #include "vimc-streamer.h"
+>  
+> -#define VIMC_CAP_DRV_NAME "vimc-capture"
+> -
+>  static const u32 vimc_cap_supported_pixfmt[] = {
+>  	V4L2_PIX_FMT_BGR24,
+>  	V4L2_PIX_FMT_RGB24,
+> @@ -348,11 +342,11 @@ static void vimc_cap_release(struct video_device *vdev)
+>  	kfree(vcap);
+>  }
+>  
+> -static void vimc_cap_comp_unbind(struct device *comp, struct device *master,
+> -				 void *master_data)
+> +void vimc_cap_rm(struct vimc_device *vimc, struct vimc_ent_config *vent)
+>  {
+> -	struct vimc_ent_device *ved = dev_get_drvdata(comp);
+> -	struct vimc_cap_device *vcap = container_of(ved, struct vimc_cap_device,
+> +	struct vimc_ent_device *ved = vent->ved;
+> +	struct vimc_cap_device *vcap = container_of(ved,
+> +						    struct vimc_cap_device,
+>  						    ved);
+>  
+>  	vb2_queue_release(&vcap->queue);
+> @@ -399,11 +393,9 @@ static void *vimc_cap_process_frame(struct vimc_ent_device *ved,
+>  	return NULL;
+>  }
+>  
+> -static int vimc_cap_comp_bind(struct device *comp, struct device *master,
+> -			      void *master_data)
+> +int vimc_cap_add(struct vimc_device *vimc, struct vimc_ent_config *vent)
+>  {
+> -	struct v4l2_device *v4l2_dev = master_data;
+> -	struct vimc_platform_data *pdata = comp->platform_data;
+> +	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
+>  	struct vimc_cap_device *vcap;
+>  	struct video_device *vdev;
+>  	struct vb2_queue *q;
+> @@ -423,7 +415,7 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
+>  	}
+>  
+>  	/* Initialize the media entity */
+> -	vcap->vdev.entity.name = pdata->entity_name;
+> +	vcap->vdev.entity.name = vent->name;
+>  	vcap->vdev.entity.function = MEDIA_ENT_F_IO_V4L;
+>  	ret = media_entity_pads_init(&vcap->vdev.entity,
+>  				     1, vcap->ved.pads);
+> @@ -447,8 +439,8 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
+>  
+>  	ret = vb2_queue_init(q);
+>  	if (ret) {
+> -		dev_err(comp, "%s: vb2 queue init failed (err=%d)\n",
+> -			pdata->entity_name, ret);
+> +		dev_err(&vimc->pdev.dev, "%s: vb2 queue init failed (err=%d)\n",
+> +			vent->name, ret);
+>  		goto err_clean_m_ent;
+>  	}
+>  
+> @@ -465,8 +457,7 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
+>  	vcap->ved.ent = &vcap->vdev.entity;
+>  	vcap->ved.process_frame = vimc_cap_process_frame;
+>  	vcap->ved.vdev_get_format = vimc_cap_get_format;
+> -	dev_set_drvdata(comp, &vcap->ved);
+> -	vcap->dev = comp;
+> +	vcap->dev = &vimc->pdev.dev;
+>  
+>  	/* Initialize the video_device struct */
+>  	vdev = &vcap->vdev;
+> @@ -479,17 +470,18 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
+>  	vdev->queue = q;
+>  	vdev->v4l2_dev = v4l2_dev;
+>  	vdev->vfl_dir = VFL_DIR_RX;
+> -	strscpy(vdev->name, pdata->entity_name, sizeof(vdev->name));
+> +	strscpy(vdev->name, vent->name, sizeof(vdev->name));
+>  	video_set_drvdata(vdev, &vcap->ved);
+>  
+>  	/* Register the video_device with the v4l2 and the media framework */
+>  	ret = video_register_device(vdev, VFL_TYPE_GRABBER, -1);
+>  	if (ret) {
+> -		dev_err(comp, "%s: video register failed (err=%d)\n",
+> +		dev_err(&vimc->pdev.dev, "%s: video register failed (err=%d)\n",
+>  			vcap->vdev.name, ret);
+>  		goto err_release_queue;
+>  	}
+>  
+> +	vent->ved = &vcap->ved;
+>  	return 0;
+>  
+>  err_release_queue:
+> @@ -503,44 +495,3 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
+>  
+>  	return ret;
+>  }
+> -
+> -static const struct component_ops vimc_cap_comp_ops = {
+> -	.bind = vimc_cap_comp_bind,
+> -	.unbind = vimc_cap_comp_unbind,
+> -};
+> -
+> -static int vimc_cap_probe(struct platform_device *pdev)
+> -{
+> -	return component_add(&pdev->dev, &vimc_cap_comp_ops);
+> -}
+> -
+> -static int vimc_cap_remove(struct platform_device *pdev)
+> -{
+> -	component_del(&pdev->dev, &vimc_cap_comp_ops);
+> -
+> -	return 0;
+> -}
+> -
+> -static const struct platform_device_id vimc_cap_driver_ids[] = {
+> -	{
+> -		.name           = VIMC_CAP_DRV_NAME,
+> -	},
+> -	{ }
+> -};
+> -
+> -static struct platform_driver vimc_cap_pdrv = {
+> -	.probe		= vimc_cap_probe,
+> -	.remove		= vimc_cap_remove,
+> -	.id_table	= vimc_cap_driver_ids,
+> -	.driver		= {
+> -		.name	= VIMC_CAP_DRV_NAME,
+> -	},
+> -};
+> -
+> -module_platform_driver(vimc_cap_pdrv);
+> -
+> -MODULE_DEVICE_TABLE(platform, vimc_cap_driver_ids);
+> -
+> -MODULE_DESCRIPTION("Virtual Media Controller Driver (VIMC) Capture");
+> -MODULE_AUTHOR("Helen Mae Koike Fornazier <helen.fornazier@gmail.com>");
+> -MODULE_LICENSE("GPL");
+> diff --git a/drivers/media/platform/vimc/vimc-core.c b/drivers/media/platform/vimc/vimc-core.c
+> index c9b351472272..3bd89cf38a90 100644
+> --- a/drivers/media/platform/vimc/vimc-core.c
+> +++ b/drivers/media/platform/vimc/vimc-core.c
+> @@ -5,7 +5,6 @@
+>   * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
+>   */
+>  
+> -#include <linux/component.h>
+>  #include <linux/init.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> @@ -25,12 +24,6 @@
+>  	.flags = link_flags,					\
+>  }
+>  
+> -/* Structure which describes individual configuration for each entity */
+> -struct vimc_ent_config {
+> -	const char *name;
+> -	const char *drv;
+> -};
+> -
+>  /* Structure which describes links between entities */
+>  struct vimc_ent_link {
+>  	unsigned int src_ent;
+> @@ -42,7 +35,7 @@ struct vimc_ent_link {
+>  
+>  /* Structure which describes the whole topology */
+>  struct vimc_pipeline_config {
+> -	const struct vimc_ent_config *ents;
+> +	struct vimc_ent_config *ents;
+>  	size_t num_ents;
+>  	const struct vimc_ent_link *links;
+>  	size_t num_links;
+> @@ -52,43 +45,61 @@ struct vimc_pipeline_config {
+>   * Topology Configuration
+>   */
+>  
+> -static const struct vimc_ent_config ent_config[] = {
+> +static struct vimc_ent_config ent_config[] = {
+>  	{
+>  		.name = "Sensor A",
+>  		.drv = "vimc-sensor",
+> +		.add = vimc_sen_add,
+> +		.rm = vimc_sen_rm,
+>  	},
+>  	{
+>  		.name = "Sensor B",
+>  		.drv = "vimc-sensor",
+> +		.add = vimc_sen_add,
+> +		.rm = vimc_sen_rm,
+>  	},
+>  	{
+>  		.name = "Debayer A",
+>  		.drv = "vimc-debayer",
+> +		.add = vimc_deb_add,
+> +		.rm = vimc_deb_rm,
+>  	},
+>  	{
+>  		.name = "Debayer B",
+>  		.drv = "vimc-debayer",
+> +		.add = vimc_deb_add,
+> +		.rm = vimc_deb_rm,
+>  	},
+>  	{
+>  		.name = "Raw Capture 0",
+>  		.drv = "vimc-capture",
+> +		.add = vimc_cap_add,
+> +		.rm = vimc_cap_rm,
+>  	},
+>  	{
+>  		.name = "Raw Capture 1",
+>  		.drv = "vimc-capture",
+> +		.add = vimc_cap_add,
+> +		.rm = vimc_cap_rm,
+>  	},
+>  	{
+>  		.name = "RGB/YUV Input",
+>  		/* TODO: change this to vimc-input when it is implemented */
+>  		.drv = "vimc-sensor",
+> +		.add = vimc_sen_add,
+> +		.rm = vimc_sen_rm,
+>  	},
+>  	{
+>  		.name = "Scaler",
+>  		.drv = "vimc-scaler",
+> +		.add = vimc_sca_add,
+> +		.rm = vimc_sca_rm,
+>  	},
+>  	{
+>  		.name = "RGB/YUV Capture",
+>  		.drv = "vimc-capture",
+> +		.add = vimc_cap_add,
+> +		.rm = vimc_cap_rm,
+>  	},
+>  };
+>  
+> @@ -111,7 +122,7 @@ static const struct vimc_ent_link ent_links[] = {
+>  	VIMC_ENT_LINK(7, 1, 8, 0, MEDIA_LNK_FL_ENABLED | MEDIA_LNK_FL_IMMUTABLE),
+>  };
+>  
+> -static const struct vimc_pipeline_config pipe_cfg = {
+> +static struct vimc_pipeline_config pipe_cfg = {
 
-Yes, that's what I also understand. Thanks for confirming,
+Any special reason why the const was dropped here?
 
- - Joel
+>  	.ents		= ent_config,
+>  	.num_ents	= ARRAY_SIZE(ent_config),
+>  	.links		= ent_links,
+> @@ -128,14 +139,11 @@ static int vimc_create_links(struct vimc_device *vimc)
+>  	/* Initialize the links between entities */
+>  	for (i = 0; i < vimc->pipe_cfg->num_links; i++) {
+>  		const struct vimc_ent_link *link = &vimc->pipe_cfg->links[i];
+> -		/*
+> -		 * TODO: Check another way of retrieving ved struct without
+> -		 * relying on platform_get_drvdata
+> -		 */
+> +
+>  		struct vimc_ent_device *ved_src =
+> -			platform_get_drvdata(vimc->subdevs[link->src_ent]);
+> +			vimc->pipe_cfg->ents[link->src_ent].ved;
+>  		struct vimc_ent_device *ved_sink =
+> -			platform_get_drvdata(vimc->subdevs[link->sink_ent]);
+> +			vimc->pipe_cfg->ents[link->sink_ent].ved;
+>  
+>  		ret = media_create_pad_link(ved_src->ent, link->src_pad,
+>  					    ved_sink->ent, link->sink_pad,
+> @@ -147,13 +155,28 @@ static int vimc_create_links(struct vimc_device *vimc)
+>  	return 0;
+>  }
+>  
+> -static int vimc_comp_bind(struct device *master)
+> +static int vimc_add_subdevs(struct vimc_device *vimc)
+>  {
+> -	struct vimc_device *vimc = container_of(to_platform_device(master),
+> -						struct vimc_device, pdev);
+> -	int ret;
+> +	int i;
 
+unsigned int
 
+> +	int ret = 0;
+
+no need to init to 0, but not a problem either.
+
+> +
+> +	for (i = 0; i < vimc->pipe_cfg->num_ents; i++) {
+> +		dev_dbg(&vimc->pdev.dev, "new entity for %s\n",
+> +			vimc->pipe_cfg->ents[i].name);
+> +		ret = vimc->pipe_cfg->ents[i].add(vimc,
+> +				&vimc->pipe_cfg->ents[i]);
+> +		if (ret) {
+> +			dev_err(&vimc->pdev.dev, "add new entity for %s\n",
+> +				vimc->pipe_cfg->ents[i].name);
+> +			return ret;
+> +		}
+> +	}
+> +	return 0;
+> +}
+>  
+> -	dev_dbg(master, "bind");
+> +static int vimc_register_devices(struct vimc_device *vimc)
+> +{
+> +	int ret;
+>  
+>  	/* Register the v4l2 struct */
+>  	ret = v4l2_device_register(vimc->mdev.dev, &vimc->v4l2_dev);
+> @@ -163,22 +186,20 @@ static int vimc_comp_bind(struct device *master)
+>  		return ret;
+>  	}
+>  
+> -	/* Bind subdevices */
+> -	ret = component_bind_all(master, &vimc->v4l2_dev);
+> -	if (ret)
+> -		goto err_v4l2_unregister;
+> +	/* Invoke enitity config hooks to initialize and register subdevs */
+> +	vimc_add_subdevs(vimc);
+>  
+>  	/* Initialize links */
+>  	ret = vimc_create_links(vimc);
+>  	if (ret)
+> -		goto err_comp_unbind_all;
+> +		goto err_v4l2_unregister;
+>  
+>  	/* Register the media device */
+>  	ret = media_device_register(&vimc->mdev);
+>  	if (ret) {
+>  		dev_err(vimc->mdev.dev,
+>  			"media device register failed (err=%d)\n", ret);
+> -		goto err_comp_unbind_all;
+> +		goto err_v4l2_unregister;
+>  	}
+>  
+>  	/* Expose all subdev's nodes*/
+> @@ -195,98 +216,36 @@ static int vimc_comp_bind(struct device *master)
+>  err_mdev_unregister:
+>  	media_device_unregister(&vimc->mdev);
+>  	media_device_cleanup(&vimc->mdev);
+> -err_comp_unbind_all:
+> -	component_unbind_all(master, NULL);
+>  err_v4l2_unregister:
+>  	v4l2_device_unregister(&vimc->v4l2_dev);
+>  
+>  	return ret;
+>  }
+>  
+> -static void vimc_comp_unbind(struct device *master)
+> +static void vimc_unregister(struct vimc_device *vimc)
+>  {
+> -	struct vimc_device *vimc = container_of(to_platform_device(master),
+> -						struct vimc_device, pdev);
+> -
+> -	dev_dbg(master, "unbind");
+> -
+>  	media_device_unregister(&vimc->mdev);
+>  	media_device_cleanup(&vimc->mdev);
+> -	component_unbind_all(master, NULL);
+>  	v4l2_device_unregister(&vimc->v4l2_dev);
+>  }
+>  
+> -static int vimc_comp_compare(struct device *comp, void *data)
+> -{
+> -	return comp == data;
+> -}
+> -
+> -static struct component_match *vimc_add_subdevs(struct vimc_device *vimc)
+> -{
+> -	struct component_match *match = NULL;
+> -	struct vimc_platform_data pdata;
+> -	int i;
+> -
+> -	for (i = 0; i < vimc->pipe_cfg->num_ents; i++) {
+> -		dev_dbg(&vimc->pdev.dev, "new pdev for %s\n",
+> -			vimc->pipe_cfg->ents[i].drv);
+> -
+> -		strscpy(pdata.entity_name, vimc->pipe_cfg->ents[i].name,
+> -			sizeof(pdata.entity_name));
+> -
+> -		vimc->subdevs[i] = platform_device_register_data(&vimc->pdev.dev,
+> -						vimc->pipe_cfg->ents[i].drv,
+> -						PLATFORM_DEVID_AUTO,
+> -						&pdata,
+> -						sizeof(pdata));
+> -		if (IS_ERR(vimc->subdevs[i])) {
+> -			match = ERR_CAST(vimc->subdevs[i]);
+> -			while (--i >= 0)
+> -				platform_device_unregister(vimc->subdevs[i]);
+> -
+> -			return match;
+> -		}
+> -
+> -		component_match_add(&vimc->pdev.dev, &match, vimc_comp_compare,
+> -				    &vimc->subdevs[i]->dev);
+> -	}
+> -
+> -	return match;
+> -}
+> -
+>  static void vimc_rm_subdevs(struct vimc_device *vimc)
+>  {
+>  	unsigned int i;
+>  
+>  	for (i = 0; i < vimc->pipe_cfg->num_ents; i++)
+> -		platform_device_unregister(vimc->subdevs[i]);
+> +		vimc->pipe_cfg->ents[i].rm(vimc, &vimc->pipe_cfg->ents[i]);
+>  }
+>  
+> -static const struct component_master_ops vimc_comp_ops = {
+> -	.bind = vimc_comp_bind,
+> -	.unbind = vimc_comp_unbind,
+> -};
+> -
+>  static int vimc_probe(struct platform_device *pdev)
+>  {
+>  	struct vimc_device *vimc = container_of(pdev, struct vimc_device, pdev);
+> -	struct component_match *match = NULL;
+> -	int ret;
+> +	int ret = 0;
+>  
+>  	dev_dbg(&pdev->dev, "probe");
+>  
+>  	memset(&vimc->mdev, 0, sizeof(vimc->mdev));
+>  
+> -	/* Create platform_device for each entity in the topology*/
+> -	vimc->subdevs = devm_kcalloc(&vimc->pdev.dev, vimc->pipe_cfg->num_ents,
+> -				     sizeof(*vimc->subdevs), GFP_KERNEL);
+> -	if (!vimc->subdevs)
+> -		return -ENOMEM;
+> -
+> -	match = vimc_add_subdevs(vimc);
+> -	if (IS_ERR(match))
+> -		return PTR_ERR(match);
+> -
+>  	/* Link the media device within the v4l2_device */
+>  	vimc->v4l2_dev.mdev = &vimc->mdev;
+>  
+> @@ -298,16 +257,11 @@ static int vimc_probe(struct platform_device *pdev)
+>  	vimc->mdev.dev = &pdev->dev;
+>  	media_device_init(&vimc->mdev);
+>  
+> -	/* Add self to the component system */
+> -	ret = component_master_add_with_match(&pdev->dev, &vimc_comp_ops,
+> -					      match);
+> -	if (ret) {
+> +	ret = vimc_register_devices(vimc);
+> +	if (ret)
+>  		media_device_cleanup(&vimc->mdev);
+> -		vimc_rm_subdevs(vimc);
+> -		return ret;
+> -	}
+>  
+> -	return 0;
+> +	return ret;
+>  }
+>  
+>  static int vimc_remove(struct platform_device *pdev)
+> @@ -316,8 +270,8 @@ static int vimc_remove(struct platform_device *pdev)
+>  
+>  	dev_dbg(&pdev->dev, "remove");
+>  
+> -	component_master_del(&pdev->dev, &vimc_comp_ops);
+>  	vimc_rm_subdevs(vimc);
+> +	vimc_unregister(vimc);
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
+> index 750752bb173c..b58e0946ac2a 100644
+> --- a/drivers/media/platform/vimc/vimc-debayer.c
+> +++ b/drivers/media/platform/vimc/vimc-debayer.c
+> @@ -5,10 +5,7 @@
+>   * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
+>   */
+>  
+> -#include <linux/component.h>
+>  #include <linux/module.h>
+> -#include <linux/mod_devicetable.h>
+> -#include <linux/platform_device.h>
+>  #include <linux/vmalloc.h>
+>  #include <linux/v4l2-mediabus.h>
+>  #include <media/v4l2-subdev.h>
+> @@ -16,9 +13,7 @@
+>  #include "vimc.h"
+>  #include "vimc-common.h"
+>  
+> -#define VIMC_DEB_DRV_NAME "vimc-debayer"
+> -/* This module only supports transforming a bayer format
+> - * to V4L2_PIX_FMT_RGB24
+> +/* Supports transforming a bayer format to V4L2_PIX_FMT_RGB24
+>   */
+>  #define VIMC_DEB_SRC_PIXFMT V4L2_PIX_FMT_RGB24
+>  #define VIMC_DEB_SRC_MBUS_FMT_DEFAULT MEDIA_BUS_FMT_RGB888_1X24
+> @@ -499,21 +494,19 @@ static const struct v4l2_subdev_internal_ops vimc_deb_int_ops = {
+>  	.release = vimc_deb_release,
+>  };
+>  
+> -static void vimc_deb_comp_unbind(struct device *comp, struct device *master,
+> -				 void *master_data)
+> +void vimc_deb_rm(struct vimc_device *vimc, struct vimc_ent_config *vent)
+>  {
+> -	struct vimc_ent_device *ved = dev_get_drvdata(comp);
+> -	struct vimc_deb_device *vdeb = container_of(ved, struct vimc_deb_device,
+> +	struct vimc_ent_device *ved = vent->ved;
+> +	struct vimc_deb_device *vdeb = container_of(ved,
+> +						    struct vimc_deb_device,
+>  						    ved);
+>  
+>  	vimc_ent_sd_unregister(ved, &vdeb->sd);
+>  }
+>  
+> -static int vimc_deb_comp_bind(struct device *comp, struct device *master,
+> -			      void *master_data)
+> +int vimc_deb_add(struct vimc_device *vimc, struct vimc_ent_config *vent)
+>  {
+> -	struct v4l2_device *v4l2_dev = master_data;
+> -	struct vimc_platform_data *pdata = comp->platform_data;
+> +	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
+>  	struct vimc_deb_device *vdeb;
+>  	int ret;
+>  
+> @@ -524,7 +517,7 @@ static int vimc_deb_comp_bind(struct device *comp, struct device *master,
+>  
+>  	/* Initialize ved and sd */
+>  	ret = vimc_ent_sd_register(&vdeb->ved, &vdeb->sd, v4l2_dev,
+> -				   pdata->entity_name,
+> +				   vent->name,
+>  				   MEDIA_ENT_F_PROC_VIDEO_PIXEL_ENC_CONV, 2,
+>  				   (const unsigned long[2]) {MEDIA_PAD_FL_SINK,
+>  				   MEDIA_PAD_FL_SOURCE},
+> @@ -535,8 +528,7 @@ static int vimc_deb_comp_bind(struct device *comp, struct device *master,
+>  	}
+>  
+>  	vdeb->ved.process_frame = vimc_deb_process_frame;
+> -	dev_set_drvdata(comp, &vdeb->ved);
+> -	vdeb->dev = comp;
+> +	vdeb->dev = &vimc->pdev.dev;
+>  
+>  	/* Initialize the frame format */
+>  	vdeb->sink_fmt = sink_fmt_default;
+> @@ -549,46 +541,6 @@ static int vimc_deb_comp_bind(struct device *comp, struct device *master,
+>  	 */
+>  	vdeb->set_rgb_src = vimc_deb_set_rgb_pix_rgb24;
+>  
+> +	vent->ved = &vdeb->ved;
+>  	return 0;
+>  }
+> -
+> -static const struct component_ops vimc_deb_comp_ops = {
+> -	.bind = vimc_deb_comp_bind,
+> -	.unbind = vimc_deb_comp_unbind,
+> -};
+> -
+> -static int vimc_deb_probe(struct platform_device *pdev)
+> -{
+> -	return component_add(&pdev->dev, &vimc_deb_comp_ops);
+> -}
+> -
+> -static int vimc_deb_remove(struct platform_device *pdev)
+> -{
+> -	component_del(&pdev->dev, &vimc_deb_comp_ops);
+> -
+> -	return 0;
+> -}
+> -
+> -static const struct platform_device_id vimc_deb_driver_ids[] = {
+> -	{
+> -		.name           = VIMC_DEB_DRV_NAME,
+> -	},
+> -	{ }
+> -};
+> -
+> -static struct platform_driver vimc_deb_pdrv = {
+> -	.probe		= vimc_deb_probe,
+> -	.remove		= vimc_deb_remove,
+> -	.id_table	= vimc_deb_driver_ids,
+> -	.driver		= {
+> -		.name	= VIMC_DEB_DRV_NAME,
+> -	},
+> -};
+> -
+> -module_platform_driver(vimc_deb_pdrv);
+> -
+> -MODULE_DEVICE_TABLE(platform, vimc_deb_driver_ids);
+> -
+> -MODULE_DESCRIPTION("Virtual Media Controller Driver (VIMC) Debayer");
+> -MODULE_AUTHOR("Helen Mae Koike Fornazier <helen.fornazier@gmail.com>");
+> -MODULE_LICENSE("GPL");
+> diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
+> index fe99b9102ada..7cd478fee3ae 100644
+> --- a/drivers/media/platform/vimc/vimc-scaler.c
+> +++ b/drivers/media/platform/vimc/vimc-scaler.c
+> @@ -5,10 +5,7 @@
+>   * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
+>   */
+>  
+> -#include <linux/component.h>
+>  #include <linux/module.h>
+> -#include <linux/mod_devicetable.h>
+> -#include <linux/platform_device.h>
+>  #include <linux/vmalloc.h>
+>  #include <linux/v4l2-mediabus.h>
+>  #include <media/v4l2-subdev.h>
+> @@ -16,8 +13,6 @@
+>  #include "vimc.h"
+>  #include "vimc-common.h"
+>  
+> -#define VIMC_SCA_DRV_NAME "vimc-scaler"
+> -
+>  static unsigned int sca_mult = 3;
+>  module_param(sca_mult, uint, 0000);
+>  MODULE_PARM_DESC(sca_mult, " the image size multiplier");
+> @@ -331,22 +326,21 @@ static const struct v4l2_subdev_internal_ops vimc_sca_int_ops = {
+>  	.release = vimc_sca_release,
+>  };
+>  
+> -static void vimc_sca_comp_unbind(struct device *comp, struct device *master,
+> -				 void *master_data)
+> +void vimc_sca_rm(struct vimc_device *vimc, struct vimc_ent_config *vent)
+>  {
+> -	struct vimc_ent_device *ved = dev_get_drvdata(comp);
+> -	struct vimc_sca_device *vsca = container_of(ved, struct vimc_sca_device,
+> +	struct vimc_ent_device *ved = vent->ved;
+> +	struct vimc_sca_device *vsca = container_of(ved,
+> +						    struct vimc_sca_device,
+>  						    ved);
+>  
+> +
+>  	vimc_ent_sd_unregister(ved, &vsca->sd);
+>  }
+>  
+>  
+> -static int vimc_sca_comp_bind(struct device *comp, struct device *master,
+> -			      void *master_data)
+> +int vimc_sca_add(struct vimc_device *vimc, struct vimc_ent_config *vent)
+>  {
+> -	struct v4l2_device *v4l2_dev = master_data;
+> -	struct vimc_platform_data *pdata = comp->platform_data;
+> +	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
+>  	struct vimc_sca_device *vsca;
+>  	int ret;
+>  
+> @@ -357,7 +351,7 @@ static int vimc_sca_comp_bind(struct device *comp, struct device *master,
+>  
+>  	/* Initialize ved and sd */
+>  	ret = vimc_ent_sd_register(&vsca->ved, &vsca->sd, v4l2_dev,
+> -				   pdata->entity_name,
+> +				   vent->name,
+>  				   MEDIA_ENT_F_PROC_VIDEO_SCALER, 2,
+>  				   (const unsigned long[2]) {MEDIA_PAD_FL_SINK,
+>  				   MEDIA_PAD_FL_SOURCE},
+> @@ -368,52 +362,12 @@ static int vimc_sca_comp_bind(struct device *comp, struct device *master,
+>  	}
+>  
+>  	vsca->ved.process_frame = vimc_sca_process_frame;
+> -	dev_set_drvdata(comp, &vsca->ved);
+> -	vsca->dev = comp;
+> +	vsca->dev = &vimc->pdev.dev;
+> +
+> +	vent->ved = &vsca->ved;
+>  
+>  	/* Initialize the frame format */
+>  	vsca->sink_fmt = sink_fmt_default;
+>  
+>  	return 0;
+>  }
+> -
+> -static const struct component_ops vimc_sca_comp_ops = {
+> -	.bind = vimc_sca_comp_bind,
+> -	.unbind = vimc_sca_comp_unbind,
+> -};
+> -
+> -static int vimc_sca_probe(struct platform_device *pdev)
+> -{
+> -	return component_add(&pdev->dev, &vimc_sca_comp_ops);
+> -}
+> -
+> -static int vimc_sca_remove(struct platform_device *pdev)
+> -{
+> -	component_del(&pdev->dev, &vimc_sca_comp_ops);
+> -
+> -	return 0;
+> -}
+> -
+> -static const struct platform_device_id vimc_sca_driver_ids[] = {
+> -	{
+> -		.name           = VIMC_SCA_DRV_NAME,
+> -	},
+> -	{ }
+> -};
+> -
+> -static struct platform_driver vimc_sca_pdrv = {
+> -	.probe		= vimc_sca_probe,
+> -	.remove		= vimc_sca_remove,
+> -	.id_table	= vimc_sca_driver_ids,
+> -	.driver		= {
+> -		.name	= VIMC_SCA_DRV_NAME,
+> -	},
+> -};
+> -
+> -module_platform_driver(vimc_sca_pdrv);
+> -
+> -MODULE_DEVICE_TABLE(platform, vimc_sca_driver_ids);
+> -
+> -MODULE_DESCRIPTION("Virtual Media Controller Driver (VIMC) Scaler");
+> -MODULE_AUTHOR("Helen Mae Koike Fornazier <helen.fornazier@gmail.com>");
+> -MODULE_LICENSE("GPL");
+> diff --git a/drivers/media/platform/vimc/vimc-sensor.c b/drivers/media/platform/vimc/vimc-sensor.c
+> index 6c57b1e262f9..bd237e030a1b 100644
+> --- a/drivers/media/platform/vimc/vimc-sensor.c
+> +++ b/drivers/media/platform/vimc/vimc-sensor.c
+> @@ -5,10 +5,6 @@
+>   * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
+>   */
+>  
+> -#include <linux/component.h>
+> -#include <linux/module.h>
+> -#include <linux/mod_devicetable.h>
+> -#include <linux/platform_device.h>
+>  #include <linux/v4l2-mediabus.h>
+>  #include <linux/vmalloc.h>
+>  #include <media/v4l2-ctrls.h>
+> @@ -19,8 +15,6 @@
+>  #include "vimc.h"
+>  #include "vimc-common.h"
+>  
+> -#define VIMC_SEN_DRV_NAME "vimc-sensor"
+> -
+>  static const struct v4l2_mbus_framefmt fmt_default = {
+>  	.width = 640,
+>  	.height = 480,
+> @@ -268,12 +262,12 @@ static const struct v4l2_subdev_internal_ops vimc_sen_int_ops = {
+>  	.release = vimc_sen_release,
+>  };
+>  
+> -static void vimc_sen_comp_unbind(struct device *comp, struct device *master,
+> -				 void *master_data)
+> +void vimc_sen_rm(struct vimc_device *vimc, struct vimc_ent_config *vent)
+>  {
+> -	struct vimc_ent_device *ved = dev_get_drvdata(comp);
+> -	struct vimc_sen_device *vsen =
+> -				container_of(ved, struct vimc_sen_device, ved);
+> +	struct vimc_ent_device *ved = vent->ved;
+> +	struct vimc_sen_device *vsen = container_of(ved,
+> +						    struct vimc_sen_device,
+> +						    ved);
+>  
+>  	vimc_ent_sd_unregister(ved, &vsen->sd);
+>  }
+> @@ -295,11 +289,9 @@ static const struct v4l2_ctrl_config vimc_sen_ctrl_test_pattern = {
+>  	.qmenu = tpg_pattern_strings,
+>  };
+>  
+> -static int vimc_sen_comp_bind(struct device *comp, struct device *master,
+> -			      void *master_data)
+> +int vimc_sen_add(struct vimc_device *vimc, struct vimc_ent_config *vent)
+>  {
+> -	struct v4l2_device *v4l2_dev = master_data;
+> -	struct vimc_platform_data *pdata = comp->platform_data;
+> +	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
+>  	struct vimc_sen_device *vsen;
+>  	int ret;
+>  
+> @@ -332,7 +324,7 @@ static int vimc_sen_comp_bind(struct device *comp, struct device *master,
+>  
+>  	/* Initialize ved and sd */
+>  	ret = vimc_ent_sd_register(&vsen->ved, &vsen->sd, v4l2_dev,
+> -				   pdata->entity_name,
+> +				   vent->name,
+>  				   MEDIA_ENT_F_CAM_SENSOR, 1,
+>  				   (const unsigned long[1]) {MEDIA_PAD_FL_SOURCE},
+>  				   &vimc_sen_int_ops, &vimc_sen_ops);
+> @@ -340,8 +332,7 @@ static int vimc_sen_comp_bind(struct device *comp, struct device *master,
+>  		goto err_free_hdl;
+>  
+>  	vsen->ved.process_frame = vimc_sen_process_frame;
+> -	dev_set_drvdata(comp, &vsen->ved);
+> -	vsen->dev = comp;
+> +	vsen->dev = &vimc->pdev.dev;
+>  
+>  	/* Initialize the frame format */
+>  	vsen->mbus_format = fmt_default;
+> @@ -353,6 +344,7 @@ static int vimc_sen_comp_bind(struct device *comp, struct device *master,
+>  	if (ret)
+>  		goto err_unregister_ent_sd;
+>  
+> +	vent->ved = &vsen->ved;
+>  	return 0;
+>  
+>  err_unregister_ent_sd:
+> @@ -364,44 +356,3 @@ static int vimc_sen_comp_bind(struct device *comp, struct device *master,
+>  
+>  	return ret;
+>  }
+> -
+> -static const struct component_ops vimc_sen_comp_ops = {
+> -	.bind = vimc_sen_comp_bind,
+> -	.unbind = vimc_sen_comp_unbind,
+> -};
+> -
+> -static int vimc_sen_probe(struct platform_device *pdev)
+> -{
+> -	return component_add(&pdev->dev, &vimc_sen_comp_ops);
+> -}
+> -
+> -static int vimc_sen_remove(struct platform_device *pdev)
+> -{
+> -	component_del(&pdev->dev, &vimc_sen_comp_ops);
+> -
+> -	return 0;
+> -}
+> -
+> -static const struct platform_device_id vimc_sen_driver_ids[] = {
+> -	{
+> -		.name           = VIMC_SEN_DRV_NAME,
+> -	},
+> -	{ }
+> -};
+> -
+> -static struct platform_driver vimc_sen_pdrv = {
+> -	.probe		= vimc_sen_probe,
+> -	.remove		= vimc_sen_remove,
+> -	.id_table	= vimc_sen_driver_ids,
+> -	.driver		= {
+> -		.name	= VIMC_SEN_DRV_NAME,
+> -	},
+> -};
+> -
+> -module_platform_driver(vimc_sen_pdrv);
+> -
+> -MODULE_DEVICE_TABLE(platform, vimc_sen_driver_ids);
+> -
+> -MODULE_DESCRIPTION("Virtual Media Controller Driver (VIMC) Sensor");
+> -MODULE_AUTHOR("Helen Mae Koike Fornazier <helen.fornazier@gmail.com>");
+> -MODULE_LICENSE("GPL");
+> diff --git a/drivers/media/platform/vimc/vimc.h b/drivers/media/platform/vimc/vimc.h
+> index a5adebdda941..cd527c6fe6fc 100644
+> --- a/drivers/media/platform/vimc/vimc.h
+> +++ b/drivers/media/platform/vimc/vimc.h
+> @@ -92,11 +92,30 @@ struct vimc_device {
+>  	/* The Associated media_device parent */
+>  	struct media_device mdev;
+>  
+> -	/* Internal v4l2 parent device*/
+> +	/* Internal v4l2 parent device */
+>  	struct v4l2_device v4l2_dev;
+> +};
+>  
+> -	/* Subdevices */
+> -	struct platform_device **subdevs;
+> +/* Structure which describes individual configuration for each entity */
+> +struct vimc_ent_config {
+> +	const char *name;
+> +	const char *drv;
+
+I was tempted in suggesting to remove this field as it is not being used anymore,
+but it will be usefull for the configfs patch.
+
+Thanks
+Helen
+
+> +	struct vimc_ent_device *ved;
+> +	int (*add)(struct vimc_device *vimc, struct vimc_ent_config *vent);
+> +	void (*rm)(struct vimc_device *vimc, struct vimc_ent_config *vent);
+>  };
+>  
+> +/* prototypes for vimc_ent_config add and rm hooks */
+> +int vimc_cap_add(struct vimc_device *vimc, struct vimc_ent_config *vent);
+> +void vimc_cap_rm(struct vimc_device *vimc, struct vimc_ent_config *vent);
+> +
+> +int vimc_deb_add(struct vimc_device *vimc, struct vimc_ent_config *vent);
+> +void vimc_deb_rm(struct vimc_device *vimc, struct vimc_ent_config *vent);
+> +
+> +int vimc_sca_add(struct vimc_device *vimc, struct vimc_ent_config *vent);
+> +void vimc_sca_rm(struct vimc_device *vimc, struct vimc_ent_config *vent);
+> +
+> +int vimc_sen_add(struct vimc_device *vimc, struct vimc_ent_config *vent);
+> +void vimc_sen_rm(struct vimc_device *vimc, struct vimc_ent_config *vent);
+> +
+>  #endif
+> 
