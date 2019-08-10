@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5823FC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B1CC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F43A208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50105208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:50:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727624AbfHJUur (ORCPT
+        id S1727642AbfHJUuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:50:47 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54398 "EHLO
+        Sat, 10 Aug 2019 16:50:50 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54394 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726702AbfHJUnz (ORCPT
+        by vger.kernel.org with ESMTP id S1726699AbfHJUnz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:55 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDP-00053Y-Sb; Sat, 10 Aug 2019 21:43:51 +0100
+        id 1hwYDP-00053h-S5; Sat, 10 Aug 2019 21:43:51 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDM-0003hA-Vy; Sat, 10 Aug 2019 21:43:48 +0100
+        id 1hwYDM-0003gZ-NA; Sat, 10 Aug 2019 21:43:48 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "syzbot" <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric Dumazet" <edumazet@google.com>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Alan Stern" <stern@rowland.harvard.edu>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.374628338@decadent.org.uk>
+Message-ID: <lsq.1565469607.281970616@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 106/157] net/rose: fix unbound loop in
- rose_loopback_timer()
+Subject: [PATCH 3.16 100/157] USB: core: Fix bug caused by duplicate
+ interface PM usage counter
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,179 +56,219 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 0453c682459583910d611a96de928f4442205493 upstream.
+commit c2b71462d294cf517a0bc6e4fd6424d7cee5596f upstream.
 
-This patch adds a limit on the number of skbs that fuzzers can queue
-into loopback_queue. 1000 packets for rose loopback seems more than enough.
+The syzkaller fuzzer reported a bug in the USB hub driver which turned
+out to be caused by a negative runtime-PM usage counter.  This allowed
+a hub to be runtime suspended at a time when the driver did not expect
+it.  The symptom is a WARNING issued because the hub's status URB is
+submitted while it is already active:
 
-Then, since we now have multiple cpus in most linux hosts,
-we also need to limit the number of skbs rose_loopback_timer()
-can dequeue at each round.
+	URB 0000000031fb463e submitted while active
+	WARNING: CPU: 0 PID: 2917 at drivers/usb/core/urb.c:363
 
-rose_loopback_queue() can be drop-monitor friendly, calling
-consume_skb() or kfree_skb() appropriately.
+The negative runtime-PM usage count was caused by an unfortunate
+design decision made when runtime PM was first implemented for USB.
+At that time, USB class drivers were allowed to unbind from their
+interfaces without balancing the usage counter (i.e., leaving it with
+a positive count).  The core code would take care of setting the
+counter back to 0 before allowing another driver to bind to the
+interface.
 
-Finally, use mod_timer() instead of del_timer() + add_timer()
+Later on when runtime PM was implemented for the entire kernel, the
+opposite decision was made: Drivers were required to balance their
+runtime-PM get and put calls.  In order to maintain backward
+compatibility, however, the USB subsystem adapted to the new
+implementation by keeping an independent usage counter for each
+interface and using it to automatically adjust the normal usage
+counter back to 0 whenever a driver was unbound.
 
-syzbot report was :
+This approach involves duplicating information, but what is worse, it
+doesn't work properly in cases where a USB class driver delays
+decrementing the usage counter until after the driver's disconnect()
+routine has returned and the counter has been adjusted back to 0.
+Doing so would cause the usage counter to become negative.  There's
+even a warning about this in the USB power management documentation!
 
-rcu: INFO: rcu_preempt self-detected stall on CPU
-rcu:    0-...!: (10499 ticks this GP) idle=536/1/0x4000000000000002 softirq=103291/103291 fqs=34
-rcu:     (t=10500 jiffies g=140321 q=323)
-rcu: rcu_preempt kthread starved for 10426 jiffies! g140321 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=1
-rcu: RCU grace-period kthread stack dump:
-rcu_preempt     I29168    10      2 0x80000000
-Call Trace:
- context_switch kernel/sched/core.c:2877 [inline]
- __schedule+0x813/0x1cc0 kernel/sched/core.c:3518
- schedule+0x92/0x180 kernel/sched/core.c:3562
- schedule_timeout+0x4db/0xfd0 kernel/time/timer.c:1803
- rcu_gp_fqs_loop kernel/rcu/tree.c:1971 [inline]
- rcu_gp_kthread+0x962/0x17b0 kernel/rcu/tree.c:2128
- kthread+0x357/0x430 kernel/kthread.c:253
- ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-NMI backtrace for cpu 0
-CPU: 0 PID: 7632 Comm: kworker/0:4 Not tainted 5.1.0-rc5+ #172
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events iterate_cleanup_work
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- nmi_cpu_backtrace.cold+0x63/0xa4 lib/nmi_backtrace.c:101
- nmi_trigger_cpumask_backtrace+0x1be/0x236 lib/nmi_backtrace.c:62
- arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
- trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
- rcu_dump_cpu_stacks+0x183/0x1cf kernel/rcu/tree.c:1223
- print_cpu_stall kernel/rcu/tree.c:1360 [inline]
- check_cpu_stall kernel/rcu/tree.c:1434 [inline]
- rcu_pending kernel/rcu/tree.c:3103 [inline]
- rcu_sched_clock_irq.cold+0x500/0xa4a kernel/rcu/tree.c:2544
- update_process_times+0x32/0x80 kernel/time/timer.c:1635
- tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:161
- tick_sched_timer+0x47/0x130 kernel/time/tick-sched.c:1271
- __run_hrtimer kernel/time/hrtimer.c:1389 [inline]
- __hrtimer_run_queues+0x33e/0xde0 kernel/time/hrtimer.c:1451
- hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1509
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1035 [inline]
- smp_apic_timer_interrupt+0x120/0x570 arch/x86/kernel/apic/apic.c:1060
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:807
-RIP: 0010:__sanitizer_cov_trace_pc+0x0/0x50 kernel/kcov.c:95
-Code: 89 25 b4 6e ec 08 41 bc f4 ff ff ff e8 cd 5d ea ff 48 c7 05 9e 6e ec 08 00 00 00 00 e9 a4 e9 ff ff 90 90 90 90 90 90 90 90 90 <55> 48 89 e5 48 8b 75 08 65 48 8b 04 25 00 ee 01 00 65 8b 15 c8 60
-RSP: 0018:ffff8880ae807ce0 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
-RAX: ffff88806fd40640 RBX: dffffc0000000000 RCX: ffffffff863fbc56
-RDX: 0000000000000100 RSI: ffffffff863fbc1d RDI: ffff88808cf94228
-RBP: ffff8880ae807d10 R08: ffff88806fd40640 R09: ffffed1015d00f8b
-R10: ffffed1015d00f8a R11: 0000000000000003 R12: ffff88808cf941c0
-R13: 00000000fffff034 R14: ffff8882166cd840 R15: 0000000000000000
- rose_loopback_timer+0x30d/0x3f0 net/rose/rose_loopback.c:91
- call_timer_fn+0x190/0x720 kernel/time/timer.c:1325
- expire_timers kernel/time/timer.c:1362 [inline]
- __run_timers kernel/time/timer.c:1681 [inline]
- __run_timers kernel/time/timer.c:1649 [inline]
- run_timer_softirq+0x652/0x1700 kernel/time/timer.c:1694
- __do_softirq+0x266/0x95a kernel/softirq.c:293
- do_softirq_own_stack+0x2a/0x40 arch/x86/entry/entry_64.S:1027
+As it happens, this is exactly what the hub driver does.  The
+kick_hub_wq() routine increments the runtime-PM usage counter, and the
+corresponding decrement is carried out by hub_event() in the context
+of the hub_wq work-queue thread.  This work routine may sometimes run
+after the driver has been unbound from its interface, and when it does
+it causes the usage counter to go negative.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: Also move assignments to
- loopback_timer.{data,function} into rose_loopback_init(), done upstream
- in commit 4966babd904d "net/rose: Convert timers to use timer_setup()".]
+It is not possible for hub_disconnect() to wait for a pending
+hub_event() call to finish, because hub_disconnect() is called with
+the device lock held and hub_event() acquires that lock.  The only
+feasible fix is to reverse the original design decision: remove the
+duplicate interface-specific usage counter and require USB drivers to
+balance their runtime PM gets and puts.  As far as I know, all
+existing drivers currently do this.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-and-tested-by: syzbot+7634edaea4d0b341c625@syzkaller.appspotmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16:
+ - Adjust documentation filename
+ - Don't add ReST markup in documentation
+ - Update use of pm_usage_cnt in poseidon driver, which has been
+   removed upstream]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/rose/rose_loopback.c | 27 ++++++++++++++++-----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
-
---- a/net/rose/rose_loopback.c
-+++ b/net/rose/rose_loopback.c
-@@ -16,15 +16,19 @@
- #include <linux/init.h>
+--- a/Documentation/usb/power-management.txt
++++ b/Documentation/usb/power-management.txt
+@@ -345,11 +345,15 @@ autosuspend the interface's device.  Whe
+ then the interface is considered to be idle, and the kernel may
+ autosuspend the device.
  
- static struct sk_buff_head loopback_queue;
-+#define ROSE_LOOPBACK_LIMIT 1000
- static struct timer_list loopback_timer;
+-Drivers need not be concerned about balancing changes to the usage
+-counter; the USB core will undo any remaining "get"s when a driver
+-is unbound from its interface.  As a corollary, drivers must not call
+-any of the usb_autopm_* functions after their disconnect() routine has
+-returned.
++Drivers must be careful to balance their overall changes to the usage
++counter.  Unbalanced "get"s will remain in effect when a driver is
++unbound from its interface, preventing the device from going into
++runtime suspend should the interface be bound to a driver again.  On
++the other hand, drivers are allowed to achieve this balance by calling
++the usb_autopm_* functions even after their disconnect routine
++has returned -- say from within a work-queue routine -- provided they
++retain an active reference to the interface (via usb_get_intf and
++usb_put_intf).
  
- static void rose_set_loopback_timer(void);
-+static void rose_loopback_timer(unsigned long);
+ Drivers using the async routines are responsible for their own
+ synchronization and mutual exclusion.
+--- a/drivers/usb/core/driver.c
++++ b/drivers/usb/core/driver.c
+@@ -483,11 +483,6 @@ static int usb_unbind_interface(struct d
+ 		pm_runtime_disable(dev);
+ 	pm_runtime_set_suspended(dev);
  
- void rose_loopback_init(void)
- {
- 	skb_queue_head_init(&loopback_queue);
+-	/* Undo any residual pm_autopm_get_interface_* calls */
+-	for (r = atomic_read(&intf->pm_usage_cnt); r > 0; --r)
+-		usb_autopm_put_interface_no_suspend(intf);
+-	atomic_set(&intf->pm_usage_cnt, 0);
+-
+ 	if (!error)
+ 		usb_autosuspend_device(udev);
  
- 	init_timer(&loopback_timer);
-+	loopback_timer.data     = 0;
-+	loopback_timer.function = &rose_loopback_timer;
+@@ -1638,7 +1633,6 @@ void usb_autopm_put_interface(struct usb
+ 	int			status;
+ 
+ 	usb_mark_last_busy(udev);
+-	atomic_dec(&intf->pm_usage_cnt);
+ 	status = pm_runtime_put_sync(&intf->dev);
+ 	dev_vdbg(&intf->dev, "%s: cnt %d -> %d\n",
+ 			__func__, atomic_read(&intf->dev.power.usage_count),
+@@ -1667,7 +1661,6 @@ void usb_autopm_put_interface_async(stru
+ 	int			status;
+ 
+ 	usb_mark_last_busy(udev);
+-	atomic_dec(&intf->pm_usage_cnt);
+ 	status = pm_runtime_put(&intf->dev);
+ 	dev_vdbg(&intf->dev, "%s: cnt %d -> %d\n",
+ 			__func__, atomic_read(&intf->dev.power.usage_count),
+@@ -1689,7 +1682,6 @@ void usb_autopm_put_interface_no_suspend
+ 	struct usb_device	*udev = interface_to_usbdev(intf);
+ 
+ 	usb_mark_last_busy(udev);
+-	atomic_dec(&intf->pm_usage_cnt);
+ 	pm_runtime_put_noidle(&intf->dev);
  }
+ EXPORT_SYMBOL_GPL(usb_autopm_put_interface_no_suspend);
+@@ -1720,8 +1712,6 @@ int usb_autopm_get_interface(struct usb_
+ 	status = pm_runtime_get_sync(&intf->dev);
+ 	if (status < 0)
+ 		pm_runtime_put_sync(&intf->dev);
+-	else
+-		atomic_inc(&intf->pm_usage_cnt);
+ 	dev_vdbg(&intf->dev, "%s: cnt %d -> %d\n",
+ 			__func__, atomic_read(&intf->dev.power.usage_count),
+ 			status);
+@@ -1755,8 +1745,6 @@ int usb_autopm_get_interface_async(struc
+ 	status = pm_runtime_get(&intf->dev);
+ 	if (status < 0 && status != -EINPROGRESS)
+ 		pm_runtime_put_noidle(&intf->dev);
+-	else
+-		atomic_inc(&intf->pm_usage_cnt);
+ 	dev_vdbg(&intf->dev, "%s: cnt %d -> %d\n",
+ 			__func__, atomic_read(&intf->dev.power.usage_count),
+ 			status);
+@@ -1780,7 +1768,6 @@ void usb_autopm_get_interface_no_resume(
+ 	struct usb_device	*udev = interface_to_usbdev(intf);
  
- static int rose_loopback_running(void)
-@@ -34,33 +38,27 @@ static int rose_loopback_running(void)
- 
- int rose_loopback_queue(struct sk_buff *skb, struct rose_neigh *neigh)
- {
--	struct sk_buff *skbn;
-+	struct sk_buff *skbn = NULL;
- 
--	skbn = skb_clone(skb, GFP_ATOMIC);
-+	if (skb_queue_len(&loopback_queue) < ROSE_LOOPBACK_LIMIT)
-+		skbn = skb_clone(skb, GFP_ATOMIC);
- 
--	kfree_skb(skb);
--
--	if (skbn != NULL) {
-+	if (skbn) {
-+		consume_skb(skb);
- 		skb_queue_tail(&loopback_queue, skbn);
- 
- 		if (!rose_loopback_running())
- 			rose_set_loopback_timer();
-+	} else {
-+		kfree_skb(skb);
- 	}
- 
- 	return 1;
+ 	usb_mark_last_busy(udev);
+-	atomic_inc(&intf->pm_usage_cnt);
+ 	pm_runtime_get_noresume(&intf->dev);
  }
+ EXPORT_SYMBOL_GPL(usb_autopm_get_interface_no_resume);
+--- a/drivers/usb/storage/realtek_cr.c
++++ b/drivers/usb/storage/realtek_cr.c
+@@ -767,18 +767,16 @@ static void rts51x_suspend_timer_fn(unsi
+ 		break;
+ 	case RTS51X_STAT_IDLE:
+ 	case RTS51X_STAT_SS:
+-		usb_stor_dbg(us, "RTS51X_STAT_SS, intf->pm_usage_cnt:%d, power.usage:%d\n",
+-			     atomic_read(&us->pusb_intf->pm_usage_cnt),
++		usb_stor_dbg(us, "RTS51X_STAT_SS, power.usage:%d\n",
+ 			     atomic_read(&us->pusb_intf->dev.power.usage_count));
  
--static void rose_loopback_timer(unsigned long);
--
- static void rose_set_loopback_timer(void)
- {
--	del_timer(&loopback_timer);
--
--	loopback_timer.data     = 0;
--	loopback_timer.function = &rose_loopback_timer;
--	loopback_timer.expires  = jiffies + 10;
--
--	add_timer(&loopback_timer);
-+	mod_timer(&loopback_timer, jiffies + 10);
- }
- 
- static void rose_loopback_timer(unsigned long param)
-@@ -71,8 +69,12 @@ static void rose_loopback_timer(unsigned
- 	struct sock *sk;
- 	unsigned short frametype;
- 	unsigned int lci_i, lci_o;
-+	int count;
- 
--	while ((skb = skb_dequeue(&loopback_queue)) != NULL) {
-+	for (count = 0; count < ROSE_LOOPBACK_LIMIT; count++) {
-+		skb = skb_dequeue(&loopback_queue);
-+		if (!skb)
-+			return;
- 		if (skb->len < ROSE_MIN_LEN) {
- 			kfree_skb(skb);
- 			continue;
-@@ -109,6 +111,8 @@ static void rose_loopback_timer(unsigned
- 			kfree_skb(skb);
+-		if (atomic_read(&us->pusb_intf->pm_usage_cnt) > 0) {
++		if (atomic_read(&us->pusb_intf->dev.power.usage_count) > 0) {
+ 			usb_stor_dbg(us, "Ready to enter SS state\n");
+ 			rts51x_set_stat(chip, RTS51X_STAT_SS);
+ 			/* ignore mass storage interface's children */
+ 			pm_suspend_ignore_children(&us->pusb_intf->dev, true);
+ 			usb_autopm_put_interface_async(us->pusb_intf);
+-			usb_stor_dbg(us, "RTS51X_STAT_SS 01, intf->pm_usage_cnt:%d, power.usage:%d\n",
+-				     atomic_read(&us->pusb_intf->pm_usage_cnt),
++			usb_stor_dbg(us, "RTS51X_STAT_SS 01, power.usage:%d\n",
+ 				     atomic_read(&us->pusb_intf->dev.power.usage_count));
  		}
- 	}
-+	if (!skb_queue_empty(&loopback_queue))
-+		mod_timer(&loopback_timer, jiffies + 1);
- }
+ 		break;
+@@ -811,11 +809,10 @@ static void rts51x_invoke_transport(stru
+ 	int ret;
  
- void __exit rose_loopback_clear(void)
+ 	if (working_scsi(srb)) {
+-		usb_stor_dbg(us, "working scsi, intf->pm_usage_cnt:%d, power.usage:%d\n",
+-			     atomic_read(&us->pusb_intf->pm_usage_cnt),
++		usb_stor_dbg(us, "working scsi, power.usage:%d\n",
+ 			     atomic_read(&us->pusb_intf->dev.power.usage_count));
+ 
+-		if (atomic_read(&us->pusb_intf->pm_usage_cnt) <= 0) {
++		if (atomic_read(&us->pusb_intf->dev.power.usage_count) <= 0) {
+ 			ret = usb_autopm_get_interface(us->pusb_intf);
+ 			usb_stor_dbg(us, "working scsi, ret=%d\n", ret);
+ 		}
+--- a/include/linux/usb.h
++++ b/include/linux/usb.h
+@@ -125,7 +125,6 @@ enum usb_interface_condition {
+  * @dev: driver model's view of this device
+  * @usb_dev: if an interface is bound to the USB major, this will point
+  *	to the sysfs representation for that device.
+- * @pm_usage_cnt: PM usage counter for this interface
+  * @reset_ws: Used for scheduling resets from atomic context.
+  * @reset_running: set to 1 if the interface is currently running a
+  *      queued reset so that usb_cancel_queued_reset() doesn't try to
+@@ -186,7 +185,6 @@ struct usb_interface {
+ 
+ 	struct device dev;		/* interface specific device info */
+ 	struct device *usb_dev;
+-	atomic_t pm_usage_cnt;		/* usage counter for autosuspend */
+ 	struct work_struct reset_ws;	/* for resets in atomic context */
+ };
+ #define	to_usb_interface(d) container_of(d, struct usb_interface, dev)
+--- a/drivers/media/usb/tlg2300/pd-common.h
++++ b/drivers/media/usb/tlg2300/pd-common.h
+@@ -257,7 +257,7 @@ void set_debug_mode(struct video_device
+ #else
+ #define in_hibernation(pd) (0)
+ #endif
+-#define get_pm_count(p) (atomic_read(&(p)->interface->pm_usage_cnt))
++#define get_pm_count(p) (atomic_read(&(p)->interface->dev.power.usage_count))
+ 
+ #define log(a, ...) printk(KERN_DEBUG "\t[ %s : %.3d ] "a"\n", \
+ 				__func__, __LINE__,  ## __VA_ARGS__)
 
