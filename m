@@ -2,279 +2,162 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD90C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 13:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3947C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 13:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 743ED21743
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 13:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9704A21743
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 13:20:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pkvPoGww"
+	dkim=pass (1024-bit key) header.d=AQUANTIA1COM.onmicrosoft.com header.i=@AQUANTIA1COM.onmicrosoft.com header.b="Vqcm3QSH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbfHJNSO (ORCPT
+        id S1726410AbfHJNUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 09:18:14 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40674 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725927AbfHJNSO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 09:18:14 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w10so47209590pgj.7;
-        Sat, 10 Aug 2019 06:18:13 -0700 (PDT)
+        Sat, 10 Aug 2019 09:20:38 -0400
+Received: from mail-eopbgr770050.outbound.protection.outlook.com ([40.107.77.50]:54341
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725862AbfHJNUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 09:20:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BfbyvD6wcEO/gNFPdWMSvoV35wtvadTUbcoSk+TwgTq2SQQgTQWfcCxtFbG2F9Iui1CZIwOZ7Ma3G2Ho9Pr0wI3QROw+qL32Ij7TIe1b+UCU9k62vhabqEPGIZeUIGYjJ8y9odWCIIuo6A1osoJhqxltfAKF10gJkkufip553oBqZbhbE7UFI6znd+t68OVZx6bhx7rYHm/dS7vJR55CSDWGRbBt2wjF1DLQvsCIQ1HRkZNKITNlp4EYfh4ipFVNt2Z9cZ3F14c4WIXps8a74LrFgyGW1WMU4rju9y+PHOEVWNo3NisP4nLlDY3v8524Bpqre3pjfn9g8C8V2kRirA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XHAMpVNKHa3MgxmAtPbD/jQ5gNH8piAdrjmipEgCtUM=;
+ b=QFG4AP5MFigJWt0tVOKAMcRPhrp812397pdTg5IeiZZEk9TZDxBH/jJosFBfF5hf9yUQfeQA4uEnHmu6pClrMHji06Gl27A12zTqZX2HhPOHdrUZ8cUyMmSIot9IQXMB2Xh4AizJG5lvnNP3hB1CrrOKzSQBaQLUTfj/sYv5z2bOIlUkB1InqkBzBlPeSrOJCuwZduSIlEyKTlw3iqrt8fZfc5SFPtshHXmTOnkttqRHTmpsohixmDOljEbU9Tjbm+LH9fHGMiMeDeggDxVuoFI3IXl+YQ5PcW7VTv1xTqtMj8E1ORSmOmZJs8gu7J80O/Oqo1ITvmCNEmzeNguEdw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aquantia.com; dmarc=pass action=none header.from=aquantia.com;
+ dkim=pass header.d=aquantia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3NvrY3qoVddy+LNcxJ9KyKM2rwocIx782phIQYmB54w=;
-        b=pkvPoGww5akaFsUTObfrSMZfcG0CeAPquUlg8ix66+R5WB3SmUwE/Qloyvvk2VJI35
-         2Pbf9sQu7sg+Ivvm32S7RiTSaTs5CZ/s5r0FcR8YrX3P8y5N3yshy5VRp5FS+o5CPOMs
-         wJCTT8nA1aPv/X2ZJ5gpIvEpLLvNGKlQX3dVM4CF1N2sJrglvxbP0PcrmJdCzV5Xf30E
-         su8PV05h61oBKtCDxVjhgWdt+f4Q7iS8C8Hna/D1krN9QF12imA59oYlxQXrOOc3UIs+
-         9PPaVsNFSZxUFuesN8iIwJtffY1UQ+mh32tnhXFRG00i6mI2MMAgO2Putn4hn8+hkD2i
-         Q+sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3NvrY3qoVddy+LNcxJ9KyKM2rwocIx782phIQYmB54w=;
-        b=q0+5ImoImkuypBLihme7OmPzO5CSuSRkPu4LAy5F1bieG0JVJjnOH7/YoUJ4znf4Ph
-         vOyo7z5G/PSr75myHcYJKr9fFTrfQm40C8A/c3jvt6Yjos8sUvX+tXwj1m9w8z9D2Hyd
-         65nQ2UhMALToI/1F7jY5p8xJCsNz8l/YHLgMCOpuCeAhwENYI7s+MI+YbcOYDOqVs4+R
-         ZMNBfJAG9dyPb2ssUXK6+XLRllIsiGjtAw7DREQiHZ954J5RILOsiLEBx1au7u3NObC3
-         7OJmtFED3bFnipW68z2ObmIRHLOj/5WdMxYkyKbDAxPsS1djb5lr+8routm7pWOdqa9x
-         e40Q==
-X-Gm-Message-State: APjAAAWmRJ/SlWwvwLgeGfUYbwJI8h7TtIQmQsp+V6VALGm10pV+fblJ
-        NPitIgE6tnbks3RaXgnuVfiZBk6PQsEotnLM2Uc=
-X-Google-Smtp-Source: APXvYqyznzrfX8U9AuOajf53ORRoK9sgkeoRzvEnFmkMHwqNSJnAjRiC2qta8jmYmhRtONZBSBnC+mpwyqtTwDro0jo=
-X-Received: by 2002:a17:90a:35e6:: with SMTP id r93mr14583634pjb.20.1565443092952;
- Sat, 10 Aug 2019 06:18:12 -0700 (PDT)
+ d=AQUANTIA1COM.onmicrosoft.com; s=selector2-AQUANTIA1COM-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XHAMpVNKHa3MgxmAtPbD/jQ5gNH8piAdrjmipEgCtUM=;
+ b=Vqcm3QSH89RVY/ANI0uYCKY4AsUqscCeghelJ91+aKazIjlnogVf+AyTKz3LyVGeqmGqmVWv1Mxn1sQdehvCXkCjhduPr6cUD6gCTJD464mi908vOcZyaUbArY5eFcV2/qaydsoBs1ALcFH6Bho+7ZTMBJCjJCmfw/5QT0/j/g8=
+Received: from BYAPR11MB2902.namprd11.prod.outlook.com (20.177.225.222) by
+ BYAPR11MB2680.namprd11.prod.outlook.com (52.135.227.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.18; Sat, 10 Aug 2019 13:20:32 +0000
+Received: from BYAPR11MB2902.namprd11.prod.outlook.com
+ ([fe80::456b:e2ae:2452:5e4]) by BYAPR11MB2902.namprd11.prod.outlook.com
+ ([fe80::456b:e2ae:2452:5e4%7]) with mapi id 15.20.2157.020; Sat, 10 Aug 2019
+ 13:20:32 +0000
+From:   Igor Russkikh <Igor.Russkikh@aquantia.com>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "sd@queasysnail.net" <sd@queasysnail.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
+        "camelia.groza@nxp.com" <camelia.groza@nxp.com>,
+        Simon Edelhaus <Simon.Edelhaus@aquantia.com>,
+        Pavel Belous <Pavel.Belous@aquantia.com>
+Subject: Re: [PATCH net-next v2 6/9] net: macsec: hardware offloading
+ infrastructure
+Thread-Topic: [PATCH net-next v2 6/9] net: macsec: hardware offloading
+ infrastructure
+Thread-Index: AQHVT35ck9O2Ca3OL0uT1Xyfcpu+cw==
+Date:   Sat, 10 Aug 2019 13:20:32 +0000
+Message-ID: <e96fa4ae-1f2c-c1be-b2d8-060217d8e151@aquantia.com>
+References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
+ <20190808140600.21477-7-antoine.tenart@bootlin.com>
+In-Reply-To: <20190808140600.21477-7-antoine.tenart@bootlin.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1P190CA0060.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:52::49)
+ To BYAPR11MB2902.namprd11.prod.outlook.com (2603:10b6:a03:89::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Igor.Russkikh@aquantia.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [95.79.108.179]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 62153f95-8f55-4c3d-73d4-08d71d958558
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR11MB2680;
+x-ms-traffictypediagnostic: BYAPR11MB2680:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR11MB26801B6707EAB266CEBAC89B98D10@BYAPR11MB2680.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 012570D5A0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39850400004)(366004)(396003)(346002)(136003)(376002)(199004)(189003)(53936002)(7736002)(3846002)(7416002)(14444005)(6116002)(305945005)(31686004)(6512007)(107886003)(6486002)(86362001)(2201001)(6246003)(66946007)(2906002)(8676002)(66556008)(66476007)(229853002)(66446008)(64756008)(5660300002)(6436002)(81166006)(81156014)(8936002)(31696002)(99286004)(2501003)(186003)(44832011)(26005)(446003)(2616005)(11346002)(476003)(36756003)(486006)(54906003)(110136005)(14454004)(25786009)(71200400001)(76176011)(478600001)(71190400001)(66066001)(52116002)(102836004)(53546011)(256004)(316002)(386003)(4326008)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR11MB2680;H:BYAPR11MB2902.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: aquantia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: UkAMWkDpcpG/iC+zyKryTfaL9KKgQ4XGCMUxQC3kUcKl3fQ99x+D2s4Pos08iVa/0OyW3GvtRWTIStL2oZR1iBHkah37sRyLdCASu1uIcKRAd1+p8CUEJzTpGLHTIJzgeyf47PnbobRqLXEgucmfp/FAEHPieBa1ZUiY53NrrCJtISwTM5MBn30OUr/uMESbk3Gj01x6Sds3pkTl/qsKku0WClgfn+nQWoNf3JmsL417z+t8DwQblBqS722LeIFYJHj4XFJOobd8TDenMg/yRNguR151F9tQ8NxNUda4wyvjB2wn24cD70zam450WxJ2sh11mpCB6wIyy/srDSXkUK0/NN8jbp4YRBN1Za10Qw43ZWxvSxFk7DdzGDuJIJOcHFB2A9omIglGrBijDYbQ9ikdRXVnDpSB2ZaMKgQMUOM=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <30BA2D6BB36BEC40A184F6628937F13B@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190809190130.30773-1-kai.heng.feng@canonical.com>
-In-Reply-To: <20190809190130.30773-1-kai.heng.feng@canonical.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 10 Aug 2019 16:18:01 +0300
-Message-ID: <CAHp75VeGs8K+da+4CaqNjm_ci86KoLcmhY8GaJO7jm__J0TcSQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] serial: 8250_pci: Add support for Sunix serial boards
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Morris Ku <morris_ku@sunix.com>,
-        Debbie Liu <debbie_liu@sunix.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: aquantia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62153f95-8f55-4c3d-73d4-08d71d958558
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Aug 2019 13:20:32.4511
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 83e2e134-991c-4ede-8ced-34d47e38e6b1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: stLOgbkh5r02LU4tVRvEg0c9ebgM2H22Ah9/W4cECziqHb2NZcw5JkKKzFdbBII7NsOaWaejjImWPUXGdCfBrw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2680
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 10:05 PM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
->
-> Add support to Sunix serial boards with up to 16 ports.
->
-> Sunix board need its own setup callback instead of using Timedia's, to
-> properly support more than 4 ports.
->
-
-Can you, please, split out the Sunix quirk driver to a separate module
-(see examples like: 8250_exar, 8250_lpss, 8250_mid)?
-And then with a fewer LOCs add a new boards.
-
-> Cc: Morris Ku <morris_ku@sunix.com>
-> Cc: Debbie Liu <debbie_liu@sunix.com>
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
-> v2:
->  use div64_s64() instead of do_div()
->
->  drivers/tty/serial/8250/8250_pci.c  | 93 +++++++++++++++++++++++------
->  drivers/tty/serial/8250/8250_port.c |  8 +++
->  include/uapi/linux/serial_core.h    |  3 +
->  3 files changed, 87 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
-> index 7f740b37700b..b2a5c2228858 100644
-> --- a/drivers/tty/serial/8250/8250_pci.c
-> +++ b/drivers/tty/serial/8250/8250_pci.c
-> @@ -1692,6 +1692,30 @@ pci_wch_ch38x_setup(struct serial_private *priv,
->         return pci_default_setup(priv, board, port, idx);
->  }
->
-> +static int
-> +pci_sunix_setup(struct serial_private *priv,
-> +               const struct pciserial_board *board,
-> +               struct uart_8250_port *port, int idx)
-> +{
-> +       int bar;
-> +       int offset;
-> +
-> +       port->port.flags |= UPF_FIXED_TYPE;
-> +       port->port.type = PORT_SUNIX;
-> +
-> +       if (idx < 4) {
-> +               bar = 0;
-> +               offset = idx * board->uart_offset;
-> +       } else {
-> +               bar = 1;
-> +               idx -= 4;
-> +               idx = div_s64_rem(idx, 4, &offset);
-> +               offset = idx * 64 + offset * board->uart_offset;
-> +       }
-> +
-> +       return setup_port(priv, port, bar, offset, 0);
-> +}
-> +
->  #define PCI_VENDOR_ID_SBSMODULARIO     0x124B
->  #define PCI_SUBVENDOR_ID_SBSMODULARIO  0x124B
->  #define PCI_DEVICE_ID_OCTPRO           0x0001
-> @@ -2289,21 +2313,14 @@ static struct pci_serial_quirk pci_serial_quirks[] __refdata = {
->                 .setup          = pci_timedia_setup,
->         },
->         /*
-> -        * SUNIX (Timedia) cards
-> -        * Do not "probe" for these cards as there is at least one combination
-> -        * card that should be handled by parport_pc that doesn't match the
-> -        * rule in pci_timedia_probe.
-> -        * It is part number is MIO5079A but its subdevice ID is 0x0102.
-> -        * There are some boards with part number SER5037AL that report
-> -        * subdevice ID 0x0002.
-> +        * Sunix PCI serial boards
->          */
->         {
->                 .vendor         = PCI_VENDOR_ID_SUNIX,
->                 .device         = PCI_DEVICE_ID_SUNIX_1999,
->                 .subvendor      = PCI_VENDOR_ID_SUNIX,
->                 .subdevice      = PCI_ANY_ID,
-> -               .init           = pci_timedia_init,
-> -               .setup          = pci_timedia_setup,
-> +               .setup          = pci_sunix_setup,
->         },
->         /*
->          * Xircom cards
-> @@ -2757,6 +2774,11 @@ enum pci_board_num_t {
->         pbn_pericom_PI7C9X7952,
->         pbn_pericom_PI7C9X7954,
->         pbn_pericom_PI7C9X7958,
-> +       pbn_sunix_pci_1s,
-> +       pbn_sunix_pci_2s,
-> +       pbn_sunix_pci_4s,
-> +       pbn_sunix_pci_8s,
-> +       pbn_sunix_pci_16s,
->  };
->
->  /*
-> @@ -3494,6 +3516,31 @@ static struct pciserial_board pci_boards[] = {
->                 .base_baud      = 921600,
->                 .uart_offset    = 0x8,
->         },
-> +       [pbn_sunix_pci_1s] = {
-> +               .num_ports      = 1,
-> +               .base_baud      = 921600,
-> +               .uart_offset    = 0x8,
-> +       },
-> +       [pbn_sunix_pci_2s] = {
-> +               .num_ports      = 2,
-> +               .base_baud      = 921600,
-> +               .uart_offset    = 0x8,
-> +       },
-> +       [pbn_sunix_pci_4s] = {
-> +               .num_ports      = 4,
-> +               .base_baud      = 921600,
-> +               .uart_offset    = 0x8,
-> +       },
-> +       [pbn_sunix_pci_8s] = {
-> +               .num_ports      = 8,
-> +               .base_baud      = 921600,
-> +               .uart_offset    = 0x8,
-> +       },
-> +       [pbn_sunix_pci_16s] = {
-> +               .num_ports      = 16,
-> +               .base_baud      = 921600,
-> +               .uart_offset    = 0x8,
-> +       },
->  };
->
->  static const struct pci_device_id blacklist[] = {
-> @@ -4532,17 +4579,29 @@ static const struct pci_device_id serial_pci_tbl[] = {
->                 pbn_b0_bt_1_921600 },
->
->         /*
-> -        * SUNIX (TIMEDIA)
-> +        * Sunix PCI serial boards
->          */
->         {       PCI_VENDOR_ID_SUNIX, PCI_DEVICE_ID_SUNIX_1999,
-> -               PCI_VENDOR_ID_SUNIX, PCI_ANY_ID,
-> -               PCI_CLASS_COMMUNICATION_SERIAL << 8, 0xffff00,
-> -               pbn_b0_bt_1_921600 },
-> -
-> +               PCI_VENDOR_ID_SUNIX, 0x0001, 0, 0,
-> +               pbn_sunix_pci_1s },
->         {       PCI_VENDOR_ID_SUNIX, PCI_DEVICE_ID_SUNIX_1999,
-> -               PCI_VENDOR_ID_SUNIX, PCI_ANY_ID,
-> -               PCI_CLASS_COMMUNICATION_MULTISERIAL << 8, 0xffff00,
-> -               pbn_b0_bt_1_921600 },
-> +               PCI_VENDOR_ID_SUNIX, 0x0002, 0, 0,
-> +               pbn_sunix_pci_2s },
-> +       {       PCI_VENDOR_ID_SUNIX, PCI_DEVICE_ID_SUNIX_1999,
-> +               PCI_VENDOR_ID_SUNIX, 0x0004, 0, 0,
-> +               pbn_sunix_pci_4s },
-> +       {       PCI_VENDOR_ID_SUNIX, PCI_DEVICE_ID_SUNIX_1999,
-> +               PCI_VENDOR_ID_SUNIX, 0x0084, 0, 0,
-> +               pbn_sunix_pci_4s },
-> +       {       PCI_VENDOR_ID_SUNIX, PCI_DEVICE_ID_SUNIX_1999,
-> +               PCI_VENDOR_ID_SUNIX, 0x0008, 0, 0,
-> +               pbn_sunix_pci_8s },
-> +       {       PCI_VENDOR_ID_SUNIX, PCI_DEVICE_ID_SUNIX_1999,
-> +               PCI_VENDOR_ID_SUNIX, 0x0088, 0, 0,
-> +               pbn_sunix_pci_8s },
-> +       {       PCI_VENDOR_ID_SUNIX, PCI_DEVICE_ID_SUNIX_1999,
-> +               PCI_VENDOR_ID_SUNIX, 0x0010, 0, 0,
-> +               pbn_sunix_pci_16s },
->
->         /*
->          * AFAVLAB serial card, from Harald Welte <laforge@gnumonks.org>
-> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-> index c1cec808571b..8900112ed232 100644
-> --- a/drivers/tty/serial/8250/8250_port.c
-> +++ b/drivers/tty/serial/8250/8250_port.c
-> @@ -308,6 +308,14 @@ static const struct serial8250_config uart_config[] = {
->                 .rxtrig_bytes   = {1, 4, 8, 14},
->                 .flags          = UART_CAP_FIFO,
->         },
-> +       [PORT_SUNIX] = {
-> +               .name           = "Sunix",
-> +               .fifo_size      = 128,
-> +               .tx_loadsz      = 128,
-> +               .fcr            = UART_FCR_ENABLE_FIFO | UART_FCR_R_TRIG_10,
-> +               .rxtrig_bytes   = {1, 32, 64, 112},
-> +               .flags          = UART_CAP_FIFO | UART_CAP_SLEEP,
-> +       },
->  };
->
->  /* Uart divisor latch read */
-> diff --git a/include/uapi/linux/serial_core.h b/include/uapi/linux/serial_core.h
-> index 3cc3af1c2ee1..055626ca0a40 100644
-> --- a/include/uapi/linux/serial_core.h
-> +++ b/include/uapi/linux/serial_core.h
-> @@ -290,4 +290,7 @@
->  /* SiFive UART */
->  #define PORT_SIFIVE_V0 120
->
-> +/* Sunix UART */
-> +#define PORT_SUNIX     121
-> +
->  #endif /* _UAPILINUX_SERIAL_CORE_H */
-> --
-> 2.17.1
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+T24gMDguMDguMjAxOSAxNzowNSwgQW50b2luZSBUZW5hcnQgd3JvdGU6DQoNCj4gVGhlIFJ4IGFu
+ZCBUWCBoYW5kbGVycyBhcmUgbW9kaWZpZWQgdG8gdGFrZSBpbiBhY2NvdW50IHRoZSBzcGVjaWFs
+IGNhc2UNCj4gd2VyZSB0aGUgTUFDc2VjIHRyYW5zZm9ybWF0aW9uIGhhcHBlbnMgaW4gdGhlIGhh
+cmR3YXJlLCB3aGV0aGVyIGluIGEgUEhZDQo+IG9yIGluIGEgTUFDLCBhcyB0aGUgcGFja2V0cyBz
+ZWVuIGJ5IHRoZSBuZXR3b3JraW5nIHN0YWNrIG9uIGJvdGggdGhlDQoNCkRvbid0IHlvdSB0aGlu
+ayB3ZSBtYXkgZXZlbnR1YWxseSBtYXkgbmVlZCB4bWl0IC8gaGFuZGxlX2ZyYW1lIG9wcyB0byBi
+ZQ0KYSBwYXJ0IG9mIG1hY3NlY19vcHM/DQoNClRoYXQgd2F5IHNvZnR3YXJlIG1hY3NlYyBjb3Vs
+ZCBiZSBleHRyYWN0IHRvIGp1c3QgYW5vdGhlciB0eXBlIG9mIG9mZmxvYWQuDQpUaGUgZHJhd2Jh
+Y2sgb2YgY3VycmVudCBjb2RlIGlzIGl0IGRvZXNuJ3Qgc2hvdyBleHBsaWNpdGx5IHRoZSBwYXRo
+IG9mDQpvZmZsb2FkZWQgcGFja2V0cy4gSXQgaXMgaGlkZGVuIGluIGBoYW5kbGVfbm90X21hY3Nl
+Y2AgYW5kIGluDQpgbWFjc2VjX3N0YXJ0X3htaXRgIGJyYW5jaC4gVGhpcyBtYWtlcyBpbmNvcnJl
+Y3QgY291bnRlcnMgdG8gdGljayAoc2VlIG15IGJlbG93DQpjb21tZW50KQ0KDQpBbm90aGVyIHRo
+aW5nIGlzIHRoYXQgYm90aCB4bWl0IC8gbWFjc2VjX2hhbmRsZV9mcmFtZSBjYW4ndCBub3cgYmUg
+Y3VzdG9taXplZA0KYnkgZGV2aWNlIGRyaXZlci4gQnV0IHRoaXMgbWF5IGJlIHJlcXVpcmVkLg0K
+V2UgZm9yIGV4YW1wbGUgaGF2ZSB1c2VjYXNlcyBhbmQgSFcgZmVhdHVyZXMgdG8gYWxsb3cgc3Bl
+Y2lmaWMgZmxvd3MgdG8gYnlwYXNzDQptYWNzZWMgZW5jcnlwdGlvbi4gVGhpcyBpcyBub3JtYWxs
+eSB1c2VkIGZvciBtYWNzZWMga2V5IGNvbnRyb2wgcHJvdG9jb2xzLA0KaWRlbnRpZmllZCBieSBl
+dGhlcnR5cGUuIFlvdXIgcGh5IGlzIGFsc28gY2FwYWJsZSBvbiB0aGF0IGFzIEkgc2VlLg0KDQoN
+Cj4gQEAgLTI1NDYsMTEgKzI4MTQsMTUgQEAgc3RhdGljIG5ldGRldl90eF90IG1hY3NlY19zdGFy
+dF94bWl0KHN0cnVjdCBza19idWZmICpza2IsDQo+ICB7DQo+ICAJc3RydWN0IG1hY3NlY19kZXYg
+Km1hY3NlYyA9IG5ldGRldl9wcml2KGRldik7DQo+ICAJc3RydWN0IG1hY3NlY19zZWN5ICpzZWN5
+ID0gJm1hY3NlYy0+c2VjeTsNCj4gKwlzdHJ1Y3QgbWFjc2VjX3R4X3NjICp0eF9zYyA9ICZzZWN5
+LT50eF9zYzsNCj4gIAlzdHJ1Y3QgcGNwdV9zZWN5X3N0YXRzICpzZWN5X3N0YXRzOw0KPiArCXN0
+cnVjdCBtYWNzZWNfdHhfc2EgKnR4X3NhOw0KPiAgCWludCByZXQsIGxlbjsNCj4gIA0KPiArCXR4
+X3NhID0gbWFjc2VjX3R4c2FfZ2V0KHR4X3NjLT5zYVt0eF9zYy0+ZW5jb2Rpbmdfc2FdKTsNCg0K
+RGVjbGFyZWQsIGJ1dCBub3QgdXNlZD8NCg0KPiAgCS8qIDEwLjUgKi8NCj4gLQlpZiAoIXNlY3kt
+PnByb3RlY3RfZnJhbWVzKSB7DQo+ICsJaWYgKCFzZWN5LT5wcm90ZWN0X2ZyYW1lcyB8fCBtYWNz
+ZWNfZ2V0X29wcyhuZXRkZXZfcHJpdihkZXYpLCBOVUxMKSkgew0KPiAgCQlzZWN5X3N0YXRzID0g
+dGhpc19jcHVfcHRyKG1hY3NlYy0+c3RhdHMpOw0KPiAgCQl1NjRfc3RhdHNfdXBkYXRlX2JlZ2lu
+KCZzZWN5X3N0YXRzLT5zeW5jcCk7DQo+ICAJCXNlY3lfc3RhdHMtPnN0YXRzLk91dFBrdHNVbnRh
+Z2dlZCsrOw0KDQpIZXJlIHlvdSB1c2Ugc2FtZSBgaWZgIGZvciBzdyBhbmQgaHcgZmxvd3MsIHRo
+aXMgbWFraW5nIGBPdXRQa3RzVW50YWdnZWRgDQpjb3VudGVyIGludmFsaWQuDQoNCj4gIAlzdHJ1
+Y3QgbWFjc2VjX2RldiAqbWFjc2VjID0gbWFjc2VjX3ByaXYoZGV2KTsNCj4gLQlzdHJ1Y3QgbmV0
+X2RldmljZSAqcmVhbF9kZXY7DQo+ICsJc3RydWN0IG5ldF9kZXZpY2UgKnJlYWxfZGV2LCAqbG9v
+cF9kZXY7DQo+ICsJc3RydWN0IG1hY3NlY19jb250ZXh0IGN0eDsNCj4gKwljb25zdCBzdHJ1Y3Qg
+bWFjc2VjX29wcyAqb3BzOw0KPiArCXN0cnVjdCBuZXQgKmxvb3BfbmV0Ow0KDQpSZXZlcnNlIENo
+cmlzdG1hcyB0cmVlIGlzIG5vcm1hbGx5IGEgZm9ybWF0dGluZyByZXF1aXJlbWVudCB3aGVyZSBw
+b3NzaWJsZS4NCg0KPiArCWZvcl9lYWNoX25ldChsb29wX25ldCkgew0KPiArCQlmb3JfZWFjaF9u
+ZXRkZXYobG9vcF9uZXQsIGxvb3BfZGV2KSB7DQo+ICsJCQlzdHJ1Y3QgbWFjc2VjX2RldiAqcHJp
+djsNCj4gKw0KPiArCQkJaWYgKCFuZXRpZl9pc19tYWNzZWMobG9vcF9kZXYpKQ0KPiArCQkJCWNv
+bnRpbnVlOw0KPiArDQo+ICsJCQlwcml2ID0gbWFjc2VjX3ByaXYobG9vcF9kZXYpOw0KPiArDQo+
+ICsJCQkvKiBBIGxpbWl0YXRpb24gb2YgdGhlIE1BQ3NlYyBoL3cgb2ZmbG9hZGluZyBpcyBvbmx5
+IGENCj4gKwkJCSAqIHNpbmdsZSBNQUNzZWMgaW50ZXJmYWNlIGNhbiBiZSBjcmVhdGVkIGZvciBh
+IGdpdmVuDQo+ICsJCQkgKiByZWFsIGludGVyZmFjZS4NCj4gKwkJCSAqLw0KPiArCQkJaWYgKG1h
+Y3NlY19nZXRfb3BzKG5ldGRldl9wcml2KGRldiksIE5VTEwpICYmDQo+ICsJCQkgICAgcHJpdi0+
+cmVhbF9kZXYgPT0gcmVhbF9kZXYpDQo+ICsJCQkJcmV0dXJuIC1FQlVTWTsNCj4gKwkJfQ0KPiAr
+CX0NCj4gKw0KDQpUaGVyZSBpcyBubyBuZWVkIHRvIGRvIHRoaXMgc2VhcmNoIGxvb3AgaWYgYG1h
+Y3NlY19nZXRfb3BzKC4uKSA9PSBOVUxMYCA/DQpTbyB5b3UgY2FuIGV4dHJhY3QgdGhpcyBjaGVj
+ayBiZWZvcmUgYGZvcl9lYWNoX25ldGAgZm9yIFNXIG1hY3NlYy4uLg0KDQpSZWdhcmRzLA0KICBJ
+Z29yDQo=
