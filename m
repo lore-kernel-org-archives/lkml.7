@@ -4,80 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCE1C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 10:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC45C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 10:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23C6020B7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 10:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8906C217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 10:20:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbfHJKUc (ORCPT
+        id S1726292AbfHJKUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 06:20:32 -0400
-Received: from ozlabs.org ([203.11.71.1]:36651 "EHLO ozlabs.org"
+        Sat, 10 Aug 2019 06:20:36 -0400
+Received: from ozlabs.org ([203.11.71.1]:41045 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbfHJKUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 06:20:31 -0400
+        id S1726147AbfHJKUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 06:20:33 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 465J5n2jRBz9sNC; Sat, 10 Aug 2019 20:20:29 +1000 (AEST)
+        id 465J5q1gVcz9sNf; Sat, 10 Aug 2019 20:20:31 +1000 (AEST)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 0df3e42167caaf9f8c7b64de3da40a459979afe8
-In-Reply-To: <20190603221157.58502-1-natechancellor@gmail.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
+X-powerpc-patch-commit: 2705ec100b46390851542fa97e920cc21ffaac4f
+In-Reply-To: <85d5d247ce753befd6aa63c473f7823de6520ccd.1564647619.git.christophe.jaillet@wanadoo.fr>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        benh@kernel.crashing.org, paulus@samba.org, allison@lohutok.net,
+        tglx@linutronix.de, clg@kaod.org, groug@kaod.org
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linux-pci@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2] PCI: rpaphp: Avoid a sometimes-uninitialized warning
-Message-Id: <465J5n2jRBz9sNC@ozlabs.org>
-Date:   Sat, 10 Aug 2019 20:20:29 +1000 (AEST)
+Cc:     kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] powerpc/xive: Use GFP_KERNEL instead of GFP_ATOMIC in 'xive_irq_bitmap_add()'
+Message-Id: <465J5q1gVcz9sNf@ozlabs.org>
+Date:   Sat, 10 Aug 2019 20:20:31 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-03 at 22:11:58 UTC, Nathan Chancellor wrote:
-> When building with -Wsometimes-uninitialized, clang warns:
+On Thu, 2019-08-01 at 08:32:31 UTC, Christophe JAILLET wrote:
+> There is no need to use GFP_ATOMIC here. GFP_KERNEL should be enough.
+> GFP_KERNEL is also already used for another allocation just a few lines
+> below.
 > 
-> drivers/pci/hotplug/rpaphp_core.c:243:14: warning: variable 'fndit' is
-> used uninitialized whenever 'for' loop exits because its condition is
-> false [-Wsometimes-uninitialized]
->         for (j = 0; j < entries; j++) {
->                     ^~~~~~~~~~~
-> drivers/pci/hotplug/rpaphp_core.c:256:6: note: uninitialized use occurs
-> here
->         if (fndit)
->             ^~~~~
-> drivers/pci/hotplug/rpaphp_core.c:243:14: note: remove the condition if
-> it is always true
->         for (j = 0; j < entries; j++) {
->                     ^~~~~~~~~~~
-> drivers/pci/hotplug/rpaphp_core.c:233:14: note: initialize the variable
-> 'fndit' to silence this warning
->         int j, fndit;
->                     ^
->                      = 0
-> 
-> fndit is only used to gate a sprintf call, which can be moved into the
-> loop to simplify the code and eliminate the local variable, which will
-> fix this warning.
-> 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/504
-> Fixes: 2fcf3ae508c2 ("hotplug/drc-info: Add code to search ibm,drc-info property")
-> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> Acked-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-> Acked-by: Joel Savitz <jsavitz@redhat.com>
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> Reviewed-by: Cédric Le Goater <clg@kaod.org>
+> Reviewed-by: Greg Kurz <groug@kaod.org>
 
-Applied to powerpc next, thanks.
+Series applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/0df3e42167caaf9f8c7b64de3da40a459979afe8
+https://git.kernel.org/powerpc/c/2705ec100b46390851542fa97e920cc21ffaac4f
 
 cheers
