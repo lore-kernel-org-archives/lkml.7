@@ -2,232 +2,332 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C31CC31E40
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 00:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E026EC433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 00:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64FBB21743
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 00:17:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565396245;
-	bh=YJzxSUVuzx/b+bsNhcZqqi2GIXDPnogn4OpQWzpI/YY=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Xo5TScSic+GSv2xNGovD3f/q9+uUKNZ/sS3SmlqqzyjmUNw6mxrFq+J3TALHkTVIg
-	 zQGBGrYsHXZJtmkxQeZb0l5FFvpwFTB3OjK+gai2pukGsHobOdYyUEl8+63vPpbGvA
-	 YkSdy66d6eYJEgWpvUGRoLKqujQ8FJEbfti8oDgw=
+	by mail.kernel.org (Postfix) with ESMTP id B6796217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 00:18:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TtNjM3ra"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfHJARQ (ORCPT
+        id S1729234AbfHJASf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 20:17:16 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36434 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfHJARP (ORCPT
+        Fri, 9 Aug 2019 20:18:35 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:10947 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfHJASf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 20:17:15 -0400
-Received: by mail-ot1-f68.google.com with SMTP id k18so7132299otr.3
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 17:17:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bYU7wWDHU/E+dxU/71TcEcByM3kGZIhEVcfJHNX6wKo=;
-        b=Hw6OrODIucOylupjtMt99T6A1LgwZQ0TeuqUJMb60m15/mkgJQV89H9p5+4p+s+cCy
-         wGmg1Tk1cc1sIuYPAiQVmcqWLBr7s6PaYByt3CEVn5kijEfXwyjf+DjyvTFY1I9cGlzg
-         IbD1Ivx6uqyVehbTDPa3bNNOMN1o9F0BFMqU8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bYU7wWDHU/E+dxU/71TcEcByM3kGZIhEVcfJHNX6wKo=;
-        b=ZsIzB4imj7hBkkNQu6ltWUPPoyBpOMNnDPteABWPQY84ceuqXFuTCzUR3wfQ4iK5ku
-         h22s1RwMWTCvJIe9Gj2D4zLWzlvlobmHUX+QS0p6f7iFM8Ch+Eign4nr90f3W6+8fMT7
-         t9BBSR8OeDuTMa8F0uo38DqT0nxW+dvaylvnlxnduRT7VvcAEux8RagXSZTObR0mI5X+
-         fExlrNI3EsfANsoX9XZgK62Q3doWlO/F9ke1b8bfqxtHRRoBj04WU6Vj/gd93DGxiK0c
-         8hrPXkSf1zMcSP/GaOe0Ir2GuJ4at19ii9I5X4+1t6Ay1fSqzSala1czAfcVMjjwtrV2
-         YozQ==
-X-Gm-Message-State: APjAAAUIxNVcQb3R0eyIsHb9GJYh9V9Wj8pwh4E7MPXYibPaAyJPCOE7
-        FNlQUfSpltMM0IfpVVQxFLtgPw==
-X-Google-Smtp-Source: APXvYqz6V9qbh3z95MLLAToQCDlolkXHXGULRHHRHKXIcVR6j/RErdGmMPWSD17JnUy0d9lsAYV0ug==
-X-Received: by 2002:a05:6638:3d2:: with SMTP id r18mr25683769jaq.13.1565396234137;
-        Fri, 09 Aug 2019 17:17:14 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id p10sm133200057iob.54.2019.08.09.17.17.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 17:17:13 -0700 (PDT)
-Subject: Re: [PATCH 0/3] Collapse vimc into single monolithic driver
-To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        mchehab@kernel.org, helen.koike@collabora.com, hverkuil@xs4all.nl,
-        laurent.pinchart@ideasonboard.com
-Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        skhan@linuxfoundation.org
-References: <cover.1565386363.git.skhan@linuxfoundation.org>
- <3118bc46-14ac-8015-9a6c-a8dfcdcea940@collabora.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <4e9b8eb3-23c5-62ea-07dc-b51acb238dee@linuxfoundation.org>
-Date:   Fri, 9 Aug 2019 18:17:11 -0600
+        Fri, 9 Aug 2019 20:18:35 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4e0d5a0000>; Fri, 09 Aug 2019 17:18:34 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 09 Aug 2019 17:18:32 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 09 Aug 2019 17:18:32 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 10 Aug
+ 2019 00:18:32 +0000
+Subject: Re: [RFC PATCH v2 11/19] mm/gup: Pass follow_page_context further
+ down the call stack
+To:     <ira.weiny@intel.com>, Andrew Morton <akpm@linux-foundation.org>
+CC:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>, Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>,
+        <linux-xfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-nvdimm@lists.01.org>, <linux-ext4@vger.kernel.org>,
+        <linux-mm@kvack.org>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-12-ira.weiny@intel.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <57000521-cc09-9c33-9fa4-1fae5a3972c2@nvidia.com>
+Date:   Fri, 9 Aug 2019 17:18:31 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <3118bc46-14ac-8015-9a6c-a8dfcdcea940@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190809225833.6657-12-ira.weiny@intel.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565396314; bh=QUPX6W6Ja5LCLWg61hPTCdEnk8Lrgk/e4K1x4QMxbBc=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=TtNjM3ra9Lz+zuhx3QLylPbxdiMF9vyMzN2B8p4ZK/noyxXhJT4PrS1As7dPQi1Ah
+         Y8sNnmF1wIVgb25p0oQCgwaHitWn6mvl6DovAPzkMIn5tRdzVxwy8Wh60FNpa71RKu
+         Kkgd8iYQQmXJjURe3A1uLIdrQd0f0L4TccxSlNgB+Gk/edvuYb4+Z1GYrKg18ewY0L
+         kSl1uZ33dZhqjF0VJ1Ujh6T7yST7jI2KtFY2M9KQCteuSxJzVCGn+wMgCTReUeqD0j
+         Cyz8TXl3ph3d2I7Nt3C5zTtAN7n8m7+CzXByC8jDGPDCvs5YbBM0Pyke8RWoHMk3Dz
+         qVlTKTXHBY1rw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andre,
+On 8/9/19 3:58 PM, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> In preparation for passing more information (vaddr_pin) into
+> follow_page_pte(), follow_devmap_pud(), and follow_devmap_pmd().
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+>  include/linux/huge_mm.h | 17 -----------------
+>  mm/gup.c                | 31 +++++++++++++++----------------
+>  mm/huge_memory.c        |  6 ++++--
+>  mm/internal.h           | 28 ++++++++++++++++++++++++++++
+>  4 files changed, 47 insertions(+), 35 deletions(-)
+> 
+> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> index 45ede62aa85b..b01a20ce0bb9 100644
+> --- a/include/linux/huge_mm.h
+> +++ b/include/linux/huge_mm.h
+> @@ -233,11 +233,6 @@ static inline int hpage_nr_pages(struct page *page)
+>  	return 1;
+>  }
+>  
+> -struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
+> -		pmd_t *pmd, int flags, struct dev_pagemap **pgmap);
+> -struct page *follow_devmap_pud(struct vm_area_struct *vma, unsigned long addr,
+> -		pud_t *pud, int flags, struct dev_pagemap **pgmap);
+> -
+>  extern vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf, pmd_t orig_pmd);
+>  
+>  extern struct page *huge_zero_page;
+> @@ -375,18 +370,6 @@ static inline void mm_put_huge_zero_page(struct mm_struct *mm)
+>  	return;
+>  }
+>  
+> -static inline struct page *follow_devmap_pmd(struct vm_area_struct *vma,
+> -	unsigned long addr, pmd_t *pmd, int flags, struct dev_pagemap **pgmap)
+> -{
+> -	return NULL;
+> -}
+> -
+> -static inline struct page *follow_devmap_pud(struct vm_area_struct *vma,
+> -	unsigned long addr, pud_t *pud, int flags, struct dev_pagemap **pgmap)
+> -{
+> -	return NULL;
+> -}
+> -
+>  static inline bool thp_migration_supported(void)
+>  {
+>  	return false;
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 504af3e9a942..a7a9d2f5278c 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -24,11 +24,6 @@
+>  
+>  #include "internal.h"
+>  
+> -struct follow_page_context {
+> -	struct dev_pagemap *pgmap;
+> -	unsigned int page_mask;
+> -};
+> -
+>  /**
+>   * put_user_pages_dirty_lock() - release and optionally dirty gup-pinned pages
+>   * @pages:  array of pages to be maybe marked dirty, and definitely released.
+> @@ -172,8 +167,9 @@ static inline bool can_follow_write_pte(pte_t pte, unsigned int flags)
+>  
+>  static struct page *follow_page_pte(struct vm_area_struct *vma,
+>  		unsigned long address, pmd_t *pmd, unsigned int flags,
+> -		struct dev_pagemap **pgmap)
+> +		struct follow_page_context *ctx)
+>  {
+> +	struct dev_pagemap **pgmap = &ctx->pgmap;
+>  	struct mm_struct *mm = vma->vm_mm;
+>  	struct page *page;
+>  	spinlock_t *ptl;
+> @@ -363,13 +359,13 @@ static struct page *follow_pmd_mask(struct vm_area_struct *vma,
+>  	}
+>  	if (pmd_devmap(pmdval)) {
+>  		ptl = pmd_lock(mm, pmd);
+> -		page = follow_devmap_pmd(vma, address, pmd, flags, &ctx->pgmap);
+> +		page = follow_devmap_pmd(vma, address, pmd, flags, ctx);
+>  		spin_unlock(ptl);
+>  		if (page)
+>  			return page;
+>  	}
+>  	if (likely(!pmd_trans_huge(pmdval)))
+> -		return follow_page_pte(vma, address, pmd, flags, &ctx->pgmap);
+> +		return follow_page_pte(vma, address, pmd, flags, ctx);
+>  
+>  	if ((flags & FOLL_NUMA) && pmd_protnone(pmdval))
+>  		return no_page_table(vma, flags);
+> @@ -389,7 +385,7 @@ static struct page *follow_pmd_mask(struct vm_area_struct *vma,
+>  	}
+>  	if (unlikely(!pmd_trans_huge(*pmd))) {
+>  		spin_unlock(ptl);
+> -		return follow_page_pte(vma, address, pmd, flags, &ctx->pgmap);
+> +		return follow_page_pte(vma, address, pmd, flags, ctx);
+>  	}
+>  	if (flags & (FOLL_SPLIT | FOLL_SPLIT_PMD)) {
+>  		int ret;
+> @@ -419,7 +415,7 @@ static struct page *follow_pmd_mask(struct vm_area_struct *vma,
+>  		}
+>  
+>  		return ret ? ERR_PTR(ret) :
+> -			follow_page_pte(vma, address, pmd, flags, &ctx->pgmap);
+> +			follow_page_pte(vma, address, pmd, flags, ctx);
+>  	}
+>  	page = follow_trans_huge_pmd(vma, address, pmd, flags);
+>  	spin_unlock(ptl);
+> @@ -456,7 +452,7 @@ static struct page *follow_pud_mask(struct vm_area_struct *vma,
+>  	}
+>  	if (pud_devmap(*pud)) {
+>  		ptl = pud_lock(mm, pud);
+> -		page = follow_devmap_pud(vma, address, pud, flags, &ctx->pgmap);
+> +		page = follow_devmap_pud(vma, address, pud, flags, ctx);
+>  		spin_unlock(ptl);
+>  		if (page)
+>  			return page;
+> @@ -786,7 +782,8 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
+>  static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
+>  		unsigned long start, unsigned long nr_pages,
+>  		unsigned int gup_flags, struct page **pages,
+> -		struct vm_area_struct **vmas, int *nonblocking)
+> +		struct vm_area_struct **vmas, int *nonblocking,
+> +		struct vaddr_pin *vaddr_pin)
 
-On 8/9/19 5:52 PM, André Almeida wrote:
-> Hello Shuah,
-> 
-> Thanks for the patch, I did some comments below.
-> 
-> On 8/9/19 6:45 PM, Shuah Khan wrote:
->> vimc uses Component API to split the driver into functional components.
->> The real hardware resembles a monolith structure than component and
->> component structure added a level of complexity making it hard to
->> maintain without adding any real benefit.
->>      
->> The sensor is one vimc component that would makes sense to be a separate
->> module to closely align with the real hardware. It would be easier to
->> collapse vimc into single monolithic driver first and then split the
->> sensor off as a separate module.
->>
->> This patch series emoves the component API and makes minimal changes to
->> the code base preserving the functional division of the code structure.
->> Preserving the functional structure allows us to split the sensor off
->> as a separate module in the future.
->>
->> Major design elements in this change are:
->>      - Use existing struct vimc_ent_config and struct vimc_pipeline_config
->>        to drive the initialization of the functional components.
->>      - Make vimc_ent_config global by moving it to vimc.h
->>      - Add two new hooks add and rm to initialize and register, unregister
->>        and free subdevs.
->>      - All component API is now gone and bind and unbind hooks are modified
->>        to do "add" and "rm" with minimal changes to just add and rm subdevs.
->>      - vimc-core's bind and unbind are now register and unregister.
->>      - vimc-core invokes "add" hooks from its vimc_register_devices().
->>        The "add" hooks remain the same and register subdevs. They don't
->>        create platform devices of their own and use vimc's pdev.dev as
->>        their reference device. The "add" hooks save their vimc_ent_device(s)
->>        in the corresponding vimc_ent_config.
->>      - vimc-core invokes "rm" hooks from its unregister to unregister subdevs
->>        and cleanup.
->>      - vimc-core invokes "add" and "rm" hooks with pointer to struct vimc_device
->>        and the corresponding struct vimc_ent_config pointer.
->>      
->> The following configure and stream test works on all devices.
->>      
->>      media-ctl -d platform:vimc -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
->>      media-ctl -d platform:vimc -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
->>      media-ctl -d platform:vimc -V '"Sensor B":0[fmt:SBGGR8_1X8/640x480]'
->>      media-ctl -d platform:vimc -V '"Debayer B":0[fmt:SBGGR8_1X8/640x480]'
->>      
->>      v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v width=1920,height=1440
->>      v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v pixelformat=BA81
->>      v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v pixelformat=BA81
->>      
->>      v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video1
->>      v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video2
->>      v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video3
->>
->> The third patch in the series fixes a general protection fault found
->> when rmmod is done while stream is active.
-> 
-> I applied your patch on top of media_tree/master and I did some testing.
-> Not sure if I did something wrong, but just adding and removing the
-> module generated a kernel panic:
+I didn't expect to see more vaddr_pin arg passing, based on the commit
+description. Did you want this as part of patch 9 or 10 instead? If not,
+then let's mention it in the commit description.
 
-Thanks for testing.
-
-Odd. I tested modprobe and rmmod both.I was working on Linux 5.3-rc2.
-I will apply these to media latest and work from there. I have to
-rebase these on top of the reverts from Lucas and Helen
-> 
-> ~# modprobe vimc
-> ~# rmmod vimc
-> [   16.452974] stack segment: 0000 [#1] SMP PTI
-> [   16.453688] CPU: 0 PID: 2038 Comm: rmmod Not tainted 5.3.0-rc2+ #36
-> [   16.454678] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-> BIOS 1.12.0-20181126_142135-anatol 04/01/2014
-> [   16.456191] RIP: 0010:kfree+0x4d/0x240
-> 
-> <registers values...>
-> 
-> [   16.469188] Call Trace:
-> [   16.469666]  vimc_remove+0x35/0x90 [vimc]
-> [   16.470436]  platform_drv_remove+0x1f/0x40
-> [   16.471233]  device_release_driver_internal+0xd3/0x1b0
-> [   16.472184]  driver_detach+0x37/0x6b
-> [   16.472882]  bus_remove_driver+0x50/0xc1
-> [   16.473569]  vimc_exit+0xc/0xca0 [vimc]
-> [   16.474231]  __x64_sys_delete_module+0x18d/0x240
-> [   16.475036]  do_syscall_64+0x43/0x110
-> [   16.475656]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> [   16.476504] RIP: 0033:0x7fceb8dafa4b
-> 
-> <registers values...>
-> 
-> [   16.484853] Modules linked in: vimc(-) videobuf2_vmalloc
-> videobuf2_memops v4l2_tpg videobuf2_v4l2 videobuf2_common
-> [   16.486187] ---[ end trace 91e5e0894e254d49 ]---
-> [   16.486758] RIP: 0010:kfree+0x4d/0x240
-> 
-> <registers values...>
-> 
-> fish: “rmmod vimc” terminated by signal SIGSEGV (Address boundary error)
-> 
-> I just added the module after booting, no other action was made. Here is
-> how my `git log --oneline` looks like:
-> 
-> 897d708e922b media: vimc: Fix gpf in rmmod path when stream is active
-> 2e4a5ad8ad6d media: vimc: Collapse component structure into a single
-> monolithic driver
-> 7c8da1687e92 media: vimc: move private defines to a common header
-> 97299a303532 media: Remove dev_err() usage after platform_get_irq()
-> 25a3d6bac6b9 media: adv7511/cobalt: rename driver name to adv7511-v4l2
-> ...
-> 
->>
->> vimc_print_dot (--print-dot) topology after this change:
->> digraph board {
->> 	rankdir=TB
->> 	n00000001 [label="{{} | Sensor A\n/dev/v4l-subdev0 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
->> 	n00000001:port0 -> n00000005:port0 [style=bold]
->> 	n00000001:port0 -> n0000000b [style=bold]
->> 	n00000003 [label="{{} | Sensor B\n/dev/v4l-subdev1 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
->> 	n00000003:port0 -> n00000008:port0 [style=bold]
->> 	n00000003:port0 -> n0000000f [style=bold]
->> 	n00000005 [label="{{<port0> 0} | Debayer A\n/dev/v4l-subdev2 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
->> 	n00000005:port1 -> n00000015:port0
->> 	n00000008 [label="{{<port0> 0} | Debayer B\n/dev/v4l-subdev3 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
->> 	n00000008:port1 -> n00000015:port0 [style=dashed]
->> 	n0000000b [label="Raw Capture 0\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
->> 	n0000000f [label="Raw Capture 1\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
->> 	n00000013 [label="{{} | RGB/YUV Input\n/dev/v4l-subdev4 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
->> 	n00000013:port0 -> n00000015:port0 [style=dashed]
->> 	n00000015 [label="{{<port0> 0} | Scaler\n/dev/v4l-subdev5 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
->> 	n00000015:port1 -> n00000018 [style=bold]
->> 	n00000018 [label="RGB/YUV Capture\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
->> }
-> 
-> Since the topology changed, it would be nice to change in the
-> documentation as well. The current dot file can be found at
-> `Documentation/media/v4l-drivers/vimc.dot` and it's rendered at this
-> page: https://www.kernel.org/doc/html/latest/media/v4l-drivers/vimc.html
+>  {
+>  	long ret = 0, i = 0;
+>  	struct vm_area_struct *vma = NULL;
+> @@ -797,6 +794,8 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
+>  
+>  	VM_BUG_ON(!!pages != !!(gup_flags & FOLL_GET));
+>  
+> +	ctx.vaddr_pin = vaddr_pin;
+> +
+>  	/*
+>  	 * If FOLL_FORCE is set then do not force a full fault as the hinting
+>  	 * fault information is unrelated to the reference behaviour of a task
+> @@ -1025,7 +1024,7 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
+>  	lock_dropped = false;
+>  	for (;;) {
+>  		ret = __get_user_pages(tsk, mm, start, nr_pages, flags, pages,
+> -				       vmas, locked);
+> +				       vmas, locked, vaddr_pin);
+>  		if (!locked)
+>  			/* VM_FAULT_RETRY couldn't trigger, bypass */
+>  			return ret;
+> @@ -1068,7 +1067,7 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
+>  		lock_dropped = true;
+>  		down_read(&mm->mmap_sem);
+>  		ret = __get_user_pages(tsk, mm, start, 1, flags | FOLL_TRIED,
+> -				       pages, NULL, NULL);
+> +				       pages, NULL, NULL, vaddr_pin);
+>  		if (ret != 1) {
+>  			BUG_ON(ret > 1);
+>  			if (!pages_done)
+> @@ -1226,7 +1225,7 @@ long populate_vma_page_range(struct vm_area_struct *vma,
+>  	 * not result in a stack expansion that recurses back here.
+>  	 */
+>  	return __get_user_pages(current, mm, start, nr_pages, gup_flags,
+> -				NULL, NULL, nonblocking);
+> +				NULL, NULL, nonblocking, NULL);
+>  }
+>  
+>  /*
+> @@ -1311,7 +1310,7 @@ struct page *get_dump_page(unsigned long addr)
+>  
+>  	if (__get_user_pages(current, current->mm, addr, 1,
+>  			     FOLL_FORCE | FOLL_DUMP | FOLL_GET, &page, &vma,
+> -			     NULL) < 1)
+> +			     NULL, NULL) < 1)
+>  		return NULL;
+>  	flush_cache_page(vma, addr, page_to_pfn(page));
+>  	return page;
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index bc1a07a55be1..7e09f2f17ed8 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -916,8 +916,9 @@ static void touch_pmd(struct vm_area_struct *vma, unsigned long addr,
+>  }
+>  
+>  struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
+> -		pmd_t *pmd, int flags, struct dev_pagemap **pgmap)
+> +		pmd_t *pmd, int flags, struct follow_page_context *ctx)
+>  {
+> +	struct dev_pagemap **pgmap = &ctx->pgmap;
+>  	unsigned long pfn = pmd_pfn(*pmd);
+>  	struct mm_struct *mm = vma->vm_mm;
+>  	struct page *page;
+> @@ -1068,8 +1069,9 @@ static void touch_pud(struct vm_area_struct *vma, unsigned long addr,
+>  }
+>  
+>  struct page *follow_devmap_pud(struct vm_area_struct *vma, unsigned long addr,
+> -		pud_t *pud, int flags, struct dev_pagemap **pgmap)
+> +		pud_t *pud, int flags, struct follow_page_context *ctx)
+>  {
+> +	struct dev_pagemap **pgmap = &ctx->pgmap;
+>  	unsigned long pfn = pud_pfn(*pud);
+>  	struct mm_struct *mm = vma->vm_mm;
+>  	struct page *page;
+> diff --git a/mm/internal.h b/mm/internal.h
+> index 0d5f720c75ab..46ada5279856 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -12,6 +12,34 @@
+>  #include <linux/pagemap.h>
+>  #include <linux/tracepoint-defs.h>
+>  
+> +struct follow_page_context {
+> +	struct dev_pagemap *pgmap;
+> +	unsigned int page_mask;
+> +	struct vaddr_pin *vaddr_pin;
+> +};
+> +
+> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
+> +		pmd_t *pmd, int flags, struct follow_page_context *ctx);
+> +struct page *follow_devmap_pud(struct vm_area_struct *vma, unsigned long addr,
+> +		pud_t *pud, int flags, struct follow_page_context *ctx);
+> +#else
+> +static inline struct page *follow_devmap_pmd(struct vm_area_struct *vma,
+> +	unsigned long addr, pmd_t *pmd, int flags,
+> +	struct follow_page_context *ctx)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static inline struct page *follow_devmap_pud(struct vm_area_struct *vma,
+> +	unsigned long addr, pud_t *pud, int flags,
+> +	struct follow_page_context *ctx)
+> +{
+> +	return NULL;
+> +}
+> +#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+> +
+> +
+>  /*
+>   * The set of flags that only affect watermark checking and reclaim
+>   * behaviour. This is used by the MM to obey the caller constraints
 > 
 
-Topology shouldn't have changed. No changes to links or pads etc.
-I will take a look to be sure. I agree that if topology changes
-document should be updated.
+
+
 
 thanks,
--- Shuah
+-- 
+John Hubbard
+NVIDIA
