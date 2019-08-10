@@ -7,41 +7,42 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F128DC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 08:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A616C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 08:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C16F4208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 08:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A2A208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 08:43:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="ZXec2AAp"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="GNj42zQq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbfHJInI (ORCPT
+        id S1726427AbfHJInQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 04:43:08 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:42497 "EHLO rere.qmqm.pl"
+        Sat, 10 Aug 2019 04:43:16 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:61709 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbfHJImz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 04:42:55 -0400
+        id S1725863AbfHJImy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 04:42:54 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 465FvQ6QjnzDq;
-        Sat, 10 Aug 2019 10:41:22 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 465FvR4Js1zZL;
+        Sat, 10 Aug 2019 10:41:23 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1565426483; bh=GPn5XARqd1zn5tX+2/TX87v2oA3wEhgR0YuXSO1JjZA=;
+        t=1565426483; bh=iWOdfybI6mVoNgQPpeg8uc1pEY42f8eimks3ly6go5Y=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=ZXec2AAp1lJsJuACcCtIdsQ8TkNscBPCCQ8inPW02zYCirtSF1PG6vD3pgz9qZjXx
-         CkirJ+nvNPR7wu8LWW5QXZPjr+iwT0JZu967htotG/LMjpaSRwo0jHuLMSoV1gZI6C
-         RLt1VLyffthG3PhwByaRivSYKiR86rd0d8x4pWOx3M4R4QcFepCutpL9y+Eri+QrbC
-         2mGlVIDGewhxWBBahqS6lMxlv5PV00teTU5hQI/e8znhsFQ0aPsKgVX6KFKoMA8d1l
-         mPk6b13wewECZvgA0ZQ9OXdf4mrIVDmz1e0WAAdDUmRPwpaFDjAT6Zp9kfgQc2kDjv
-         S/sXz0cPTmzGw==
+        b=GNj42zQq4K5PMLlfvUTnKy+NDDH4ElnF0y58WhZe0GA9OnCk/E4MaRt+dRjrr/g2V
+         hh1OxIw4qXjz+a6W0Fyi/XdJ5TXghGZ2B6RAHyPzU2b0GlajrUm9wC/4bv3aqMA64d
+         eS65U5e0U7DORcDQp/KcOAxBTXEAQQTI7cLXKWh/TaVNHGYw2EpLTeydyPZLoCZGsx
+         kZJDHRhU0d+H0YogpruZyS68Z3NovYVjxh/NOnyBixO6FYXKM0jJf35hOEPEVe8Ol+
+         xNy7FCS/WXzS7J/zyZYycWBIxQ/IStFvXQJLOk7+7K6GgW9QuYSKaCpQIYknA5mU5r
+         leznt4JzwZfTA==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.100.3 at mail
-Date:   Sat, 10 Aug 2019 10:42:51 +0200
-Message-Id: <34dd968708265f3a522940f67c733b3a91c682a2.1565426370.git.mirq-linux@rere.qmqm.pl>
+Date:   Sat, 10 Aug 2019 10:42:52 +0200
+Message-Id: <12b6da6f4dfafd5ae1d4f556fd27263b3a3a2698.1565426370.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1565426370.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1565426370.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v6 4/7] usb: gadget: u_serial: allow more console gadget ports
+Subject: [PATCH v6 5/7] usb: gadget: u_serial: diagnose missed console
+ messages
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -54,182 +55,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow configuring more than one console using USB serial or ACM gadget.
+Insert markers in console stream marking places where data
+is missing. This makes the hole in the data stand out clearly
+instead of glueing together unrelated messages.
 
-By default, only first (ttyGS0) is a console, but this may be changed
-using function's new "console" attribute.
+Example output as seen from USB host side:
+
+[    0.064078] pinctrl core: registered pin 16 (UART3_RTS_N PC0) on 70000868.pinmux
+[    0.064130] pinctrl
+[missed 114987 bytes]
+[    4.302299] udevd[134]: starting version 3.2.5
+[    4.306845] random: udevd: uninitialized urandom read (16 bytes read)
 
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
   v6: rebased on balbi/testing/next
-  v5: fixed locking in gserial_get_console()
-  v4: fixed locking in gserial_set_console()
-  v3: no changes
-  v2: no changes
+  v5: no changes
+  v4: no changes
+  v3: added example output
+    + lowercase "missed"
+  v2: commit message massage
 
 ---
- drivers/usb/gadget/function/f_acm.c    | 21 +++++++++++
- drivers/usb/gadget/function/f_serial.c | 21 +++++++++++
- drivers/usb/gadget/function/u_serial.c | 48 ++++++++++++++++++++++++++
- drivers/usb/gadget/function/u_serial.h |  7 ++++
- 4 files changed, 97 insertions(+)
+ drivers/usb/gadget/function/u_serial.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/function/f_acm.c b/drivers/usb/gadget/function/f_acm.c
-index 9fc98de83624..7c152c28b26c 100644
---- a/drivers/usb/gadget/function/f_acm.c
-+++ b/drivers/usb/gadget/function/f_acm.c
-@@ -771,6 +771,24 @@ static struct configfs_item_operations acm_item_ops = {
- 	.release                = acm_attr_release,
- };
- 
-+#ifdef CONFIG_U_SERIAL_CONSOLE
-+
-+static ssize_t f_acm_console_store(struct config_item *item,
-+		const char *page, size_t count)
-+{
-+	return gserial_set_console(to_f_serial_opts(item)->port_num,
-+				   page, count);
-+}
-+
-+static ssize_t f_acm_console_show(struct config_item *item, char *page)
-+{
-+	return gserial_get_console(to_f_serial_opts(item)->port_num, page);
-+}
-+
-+CONFIGFS_ATTR(f_acm_, console);
-+
-+#endif /* CONFIG_U_SERIAL_CONSOLE */
-+
- static ssize_t f_acm_port_num_show(struct config_item *item, char *page)
- {
- 	return sprintf(page, "%u\n", to_f_serial_opts(item)->port_num);
-@@ -779,6 +797,9 @@ static ssize_t f_acm_port_num_show(struct config_item *item, char *page)
- CONFIGFS_ATTR_RO(f_acm_, port_num);
- 
- static struct configfs_attribute *acm_attrs[] = {
-+#ifdef CONFIG_U_SERIAL_CONSOLE
-+	&f_acm_attr_console,
-+#endif
- 	&f_acm_attr_port_num,
- 	NULL,
- };
-diff --git a/drivers/usb/gadget/function/f_serial.c b/drivers/usb/gadget/function/f_serial.c
-index c860f30a0ea2..1406255d0865 100644
---- a/drivers/usb/gadget/function/f_serial.c
-+++ b/drivers/usb/gadget/function/f_serial.c
-@@ -266,6 +266,24 @@ static struct configfs_item_operations serial_item_ops = {
- 	.release	= serial_attr_release,
- };
- 
-+#ifdef CONFIG_U_SERIAL_CONSOLE
-+
-+static ssize_t f_serial_console_store(struct config_item *item,
-+		const char *page, size_t count)
-+{
-+	return gserial_set_console(to_f_serial_opts(item)->port_num,
-+				   page, count);
-+}
-+
-+static ssize_t f_serial_console_show(struct config_item *item, char *page)
-+{
-+	return gserial_get_console(to_f_serial_opts(item)->port_num, page);
-+}
-+
-+CONFIGFS_ATTR(f_serial_, console);
-+
-+#endif /* CONFIG_U_SERIAL_CONSOLE */
-+
- static ssize_t f_serial_port_num_show(struct config_item *item, char *page)
- {
- 	return sprintf(page, "%u\n", to_f_serial_opts(item)->port_num);
-@@ -274,6 +292,9 @@ static ssize_t f_serial_port_num_show(struct config_item *item, char *page)
- CONFIGFS_ATTR_RO(f_serial_, port_num);
- 
- static struct configfs_attribute *acm_attrs[] = {
-+#ifdef CONFIG_U_SERIAL_CONSOLE
-+	&f_serial_attr_console,
-+#endif
- 	&f_serial_attr_port_num,
- 	NULL,
- };
 diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
-index 62280c23cde2..0da00546006f 100644
+index 0da00546006f..a248ed0fd5d2 100644
 --- a/drivers/usb/gadget/function/u_serial.c
 +++ b/drivers/usb/gadget/function/u_serial.c
-@@ -1081,6 +1081,54 @@ static void gs_console_exit(struct gs_port *port)
- 	port->console = NULL;
- }
+@@ -88,6 +88,7 @@ struct gs_console {
+ 	spinlock_t		lock;
+ 	struct usb_request	*req;
+ 	struct kfifo		buf;
++	size_t			missed;
+ };
  
-+ssize_t gserial_set_console(unsigned char port_num, const char *page, size_t count)
-+{
-+	struct gs_port *port;
-+	bool enable;
-+	int ret;
+ /*
+@@ -931,6 +932,15 @@ static void __gs_console_push(struct gs_console *cons)
+ 	if (!size)
+ 		return;
+ 
++	if (cons->missed && ep->maxpacket >= 64) {
++		char buf[64];
++		size_t len;
 +
-+	ret = strtobool(page, &enable);
-+	if (ret)
-+		return ret;
-+
-+	mutex_lock(&ports[port_num].lock);
-+	port = ports[port_num].port;
-+
-+	if (WARN_ON(port == NULL)) {
-+		ret = -ENXIO;
-+		goto out;
++		len = sprintf(buf, "\n[missed %zu bytes]\n", cons->missed);
++		kfifo_in(&cons->buf, buf, len);
++		cons->missed = 0;
 +	}
 +
-+	if (enable)
-+		ret = gs_console_init(port);
-+	else
-+		gs_console_exit(port);
-+out:
-+	mutex_unlock(&ports[port_num].lock);
-+
-+	return ret < 0 ? ret : count;
-+}
-+EXPORT_SYMBOL_GPL(gserial_set_console);
-+
-+ssize_t gserial_get_console(unsigned char port_num, char *page)
-+{
-+	struct gs_port *port;
-+	ssize_t ret;
-+
-+	mutex_lock(&ports[port_num].lock);
-+	port = ports[port_num].port;
-+
-+	if (WARN_ON(port == NULL))
-+		ret = -ENXIO;
-+	else
-+		ret = sprintf(page, "%u\n", !!port->console);
-+
-+	mutex_unlock(&ports[port_num].lock);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(gserial_get_console);
-+
- #else
+ 	req->length = size;
+ 	if (usb_ep_queue(ep, req, GFP_ATOMIC))
+ 		req->length = 0;
+@@ -952,10 +962,13 @@ static void gs_console_write(struct console *co,
+ {
+ 	struct gs_console *cons = container_of(co, struct gs_console, console);
+ 	unsigned long flags;
++	size_t n;
  
- static int gs_console_connect(struct gs_port *port)
-diff --git a/drivers/usb/gadget/function/u_serial.h b/drivers/usb/gadget/function/u_serial.h
-index 8b472b0c8cb4..e5b08ab8cf7a 100644
---- a/drivers/usb/gadget/function/u_serial.h
-+++ b/drivers/usb/gadget/function/u_serial.h
-@@ -58,6 +58,13 @@ int gserial_alloc_line_no_console(unsigned char *port_line);
- int gserial_alloc_line(unsigned char *port_line);
- void gserial_free_line(unsigned char port_line);
+ 	spin_lock_irqsave(&cons->lock, flags);
  
-+#ifdef CONFIG_U_SERIAL_CONSOLE
-+
-+ssize_t gserial_set_console(unsigned char port_num, const char *page, size_t count);
-+ssize_t gserial_get_console(unsigned char port_num, char *page);
-+
-+#endif /* CONFIG_U_SERIAL_CONSOLE */
-+
- /* connect/disconnect is handled by individual functions */
- int gserial_connect(struct gserial *, u8 port_num);
- void gserial_disconnect(struct gserial *);
+-	kfifo_in(&cons->buf, buf, count);
++	n = kfifo_in(&cons->buf, buf, count);
++	if (n < count)
++		cons->missed += count - n;
+ 
+ 	if (cons->req && !cons->req->length)
+ 		schedule_work(&cons->work);
 -- 
 2.20.1
 
