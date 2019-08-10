@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA73EC433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F06CC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8F25208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B471208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfHJUtt (ORCPT
+        id S1727435AbfHJUtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:49:49 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54598 "EHLO
+        Sat, 10 Aug 2019 16:49:50 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54574 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726750AbfHJUn6 (ORCPT
+        by vger.kernel.org with ESMTP id S1726496AbfHJUn5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 16:43:58 -0400
+        Sat, 10 Aug 2019 16:43:57 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDS-00053W-BF; Sat, 10 Aug 2019 21:43:54 +0100
+        id 1hwYDS-00058M-6R; Sat, 10 Aug 2019 21:43:54 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDP-0003mC-C9; Sat, 10 Aug 2019 21:43:51 +0100
+        id 1hwYDP-0003lR-3A; Sat, 10 Aug 2019 21:43:51 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Eric Dumazet" <edumazet@google.com>,
+        "Vladislav Yasevich" <vyasevic@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
-        "Amit Klein" <aksecurity@gmail.com>,
-        "Benny Pinkas" <benny@pinkas.net>
+        "Sabrina Dubroca" <sd@queasysnail.net>,
+        "Matt Grant" <matt@mattgrant.net.nz>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.862882638@decadent.org.uk>
+Message-ID: <lsq.1565469607.28529511@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 155/157] inet: switch IP ID generator to siphash
+Subject: [PATCH 3.16 150/157] ipv6: call ipv6_proxy_select_ident instead
+ of ipv6_select_ident in udp6_ufo_fragment
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,146 +58,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-commit df453700e8d81b1bdafdf684365ee2b9431fb702 upstream.
+commit 8e199dfd82ee097b522b00344af6448715d8ee0c upstream.
 
-According to Amit Klein and Benny Pinkas, IP ID generation is too weak
-and might be used by attackers.
+Matt Grant reported frequent crashes in ipv6_select_ident when
+udp6_ufo_fragment is called from openvswitch on a skb that doesn't
+have a dst_entry set.
 
-Even with recent net_hash_mix() fix (netns: provide pure entropy for net_hash_mix())
-having 64bit key and Jenkins hash is risky.
+ipv6_proxy_select_ident generates the frag_id without using the dst
+associated with the skb.  This approach was suggested by Vladislav
+Yasevich.
 
-It is time to switch to siphash and its 128bit keys.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Amit Klein <aksecurity@gmail.com>
-Reported-by: Benny Pinkas <benny@pinkas.net>
+Fixes: 0508c07f5e0c ("ipv6: Select fragment id during UFO segmentation if not set.")
+Cc: Vladislav Yasevich <vyasevic@redhat.com>
+Reported-by: Matt Grant <matt@mattgrant.net.nz>
+Tested-by: Matt Grant <matt@mattgrant.net.nz>
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Acked-by: Vladislav Yasevich <vyasevic@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/include/linux/siphash.h
-+++ b/include/linux/siphash.h
-@@ -19,6 +19,11 @@ typedef struct {
- 	u64 key[2];
- } siphash_key_t;
+ net/ipv6/udp_offload.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+--- a/net/ipv6/udp_offload.c
++++ b/net/ipv6/udp_offload.c
+@@ -124,11 +124,9 @@ static struct sk_buff *udp6_ufo_fragment
+ 		fptr = (struct frag_hdr *)(skb_network_header(skb) + unfrag_ip6hlen);
+ 		fptr->nexthdr = nexthdr;
+ 		fptr->reserved = 0;
+-		if (skb_shinfo(skb)->ip6_frag_id)
+-			fptr->identification = skb_shinfo(skb)->ip6_frag_id;
+-		else
+-			ipv6_select_ident(fptr,
+-					  (struct rt6_info *)skb_dst(skb));
++		if (!skb_shinfo(skb)->ip6_frag_id)
++			ipv6_proxy_select_ident(skb);
++		fptr->identification = skb_shinfo(skb)->ip6_frag_id;
  
-+static inline bool siphash_key_is_zero(const siphash_key_t *key)
-+{
-+	return !(key->key[0] | key->key[1]);
-+}
-+
- u64 __siphash_aligned(const void *data, size_t len, const siphash_key_t *key);
- #ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
- u64 __siphash_unaligned(const void *data, size_t len, const siphash_key_t *key);
---- a/include/net/netns/ipv4.h
-+++ b/include/net/netns/ipv4.h
-@@ -7,6 +7,7 @@
- 
- #include <linux/uidgid.h>
- #include <net/inet_frag.h>
-+#include <linux/siphash.h>
- 
- struct tcpm_hash_bucket;
- struct ctl_table_header;
-@@ -98,5 +99,6 @@ struct netns_ipv4 {
- #endif
- #endif
- 	atomic_t	rt_genid;
-+	siphash_key_t	ip_id_key;
- };
- #endif
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -486,15 +486,17 @@ EXPORT_SYMBOL(ip_idents_reserve);
- 
- void __ip_select_ident(struct net *net, struct iphdr *iph, int segs)
- {
--	static u32 ip_idents_hashrnd __read_mostly;
- 	u32 hash, id;
- 
--	net_get_random_once(&ip_idents_hashrnd, sizeof(ip_idents_hashrnd));
-+	/* Note the following code is not safe, but this is okay. */
-+	if (unlikely(siphash_key_is_zero(&net->ipv4.ip_id_key)))
-+		get_random_bytes(&net->ipv4.ip_id_key,
-+				 sizeof(net->ipv4.ip_id_key));
- 
--	hash = jhash_3words((__force u32)iph->daddr,
-+	hash = siphash_3u32((__force u32)iph->daddr,
- 			    (__force u32)iph->saddr,
--			    iph->protocol ^ net_hash_mix(net),
--			    ip_idents_hashrnd);
-+			    iph->protocol,
-+			    &net->ipv4.ip_id_key);
- 	id = ip_idents_reserve(hash, segs);
- 	iph->id = htons(id);
- }
---- a/net/ipv6/output_core.c
-+++ b/net/ipv6/output_core.c
-@@ -9,14 +9,24 @@
- #include <net/addrconf.h>
- #include <net/secure_seq.h>
- 
--static u32 __ipv6_select_ident(struct net *net, u32 hashrnd,
-+static u32 __ipv6_select_ident(struct net *net,
- 			       struct in6_addr *dst, struct in6_addr *src)
- {
-+	const struct {
-+		struct in6_addr dst;
-+		struct in6_addr src;
-+	} __aligned(SIPHASH_ALIGNMENT) combined = {
-+		.dst = *dst,
-+		.src = *src,
-+	};
- 	u32 hash, id;
- 
--	hash = __ipv6_addr_jhash(dst, hashrnd);
--	hash = __ipv6_addr_jhash(src, hash);
--	hash ^= net_hash_mix(net);
-+	/* Note the following code is not safe, but this is okay. */
-+	if (unlikely(siphash_key_is_zero(&net->ipv4.ip_id_key)))
-+		get_random_bytes(&net->ipv4.ip_id_key,
-+				 sizeof(net->ipv4.ip_id_key));
-+
-+	hash = siphash(&combined, sizeof(combined), &net->ipv4.ip_id_key);
- 
- 	/* Treat id of 0 as unset and if we get 0 back from ip_idents_reserve,
- 	 * set the hight order instead thus minimizing possible future
-@@ -39,7 +49,6 @@ static u32 __ipv6_select_ident(struct ne
-  */
- void ipv6_proxy_select_ident(struct net *net, struct sk_buff *skb)
- {
--	static u32 ip6_proxy_idents_hashrnd __read_mostly;
- 	struct in6_addr buf[2];
- 	struct in6_addr *addrs;
- 	u32 id;
-@@ -51,11 +60,7 @@ void ipv6_proxy_select_ident(struct net
- 	if (!addrs)
- 		return;
- 
--	net_get_random_once(&ip6_proxy_idents_hashrnd,
--			    sizeof(ip6_proxy_idents_hashrnd));
--
--	id = __ipv6_select_ident(net, ip6_proxy_idents_hashrnd,
--				 &addrs[1], &addrs[0]);
-+	id = __ipv6_select_ident(net, &addrs[1], &addrs[0]);
- 	skb_shinfo(skb)->ip6_frag_id = htonl(id);
- }
- EXPORT_SYMBOL_GPL(ipv6_proxy_select_ident);
-@@ -63,13 +68,9 @@ EXPORT_SYMBOL_GPL(ipv6_proxy_select_iden
- void ipv6_select_ident(struct net *net, struct frag_hdr *fhdr,
- 		       struct rt6_info *rt)
- {
--	static u32 ip6_idents_hashrnd __read_mostly;
- 	u32 id;
- 
--	net_get_random_once(&ip6_idents_hashrnd, sizeof(ip6_idents_hashrnd));
--
--	id = __ipv6_select_ident(net, ip6_idents_hashrnd, &rt->rt6i_dst.addr,
--				 &rt->rt6i_src.addr);
-+	id = __ipv6_select_ident(net, &rt->rt6i_dst.addr, &rt->rt6i_src.addr);
- 	fhdr->identification = htonl(id);
- }
- EXPORT_SYMBOL(ipv6_select_ident);
+ 		/* Fragment the skb. ipv6 header and the remaining fields of the
+ 		 * fragment header are updated in ipv6_gso_segment()
 
