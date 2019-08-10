@@ -2,129 +2,71 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9E5C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 19:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4F1C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 19:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A594B2085B
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 19:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08C5921734
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 19:30:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565465410;
+	bh=NlH8zRqvOHFDhA01nuO2JV4+RDVqxAoHCLt841HagGc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=kLGHqbASw5FTzQLL7ivMg926czbPJDEr+RQG2LmhV4lBcGTnrTt3FXifXJ0iXyWVK
+	 EBp22FfweUJXzSIL8pfsPFTuDwMgPcAtq0bBmsGU3nzSC6jIvz2IdQ3SQIXJErq5g6
+	 aCjl+JTDpclVe8LoKiG58SFz55EexktH74CcgyFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbfHJT1r (ORCPT
+        id S1726154AbfHJTaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 15:27:47 -0400
-Received: from smtp08.smtpout.orange.fr ([80.12.242.130]:41473 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbfHJT1r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 15:27:47 -0400
-Received: from belgarion ([90.76.53.202])
-        by mwinf5d31 with ME
-        id nXTS2000D4MlyVm03XTeb7; Sat, 10 Aug 2019 21:27:43 +0200
-X-ME-Helo: belgarion
-X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
-X-ME-Date: Sat, 10 Aug 2019 21:27:43 +0200
-X-ME-IP: 90.76.53.202
-From:   Robert Jarzmik <robert.jarzmik@free.fr>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     dan.j.williams@intel.com, vkoul@kernel.org,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/6] dma: pxa_dma: no need to check return value of debugfs_create functions
-References: <20190612122557.24158-1-gregkh@linuxfoundation.org>
-        <20190612122557.24158-4-gregkh@linuxfoundation.org>
-X-URL:  http://belgarath.falguerolles.org/
-Date:   Sat, 10 Aug 2019 21:27:26 +0200
-In-Reply-To: <20190612122557.24158-4-gregkh@linuxfoundation.org> (Greg
-        Kroah-Hartman's message of "Wed, 12 Jun 2019 14:25:55 +0200")
-Message-ID: <87tvaorfc1.fsf@belgarion.home>
-User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        Sat, 10 Aug 2019 15:30:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37488 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726024AbfHJTaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 15:30:08 -0400
+Subject: Re: [GIT PULL] Wimplicit-fallthrough patches for 5.3-rc4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565465407;
+        bh=NlH8zRqvOHFDhA01nuO2JV4+RDVqxAoHCLt841HagGc=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=AyiYsLJMbbOltPlefX6d0WnfiFoLF46gVBbjzBrUPUKdEt7b8QU1wRLOE+LfyeFbJ
+         iYf8LMhcRYqOdPAjUTDq8rpQ/TNTsznimhf1PQ4fAt9sa/qXSG1/V6Y37XdWS+mWPh
+         eYshgl4aZOL7+DRUfKkM6jwhcNEPkUV5T6BmXqxs=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190810041610.GA27921@embeddedor>
+References: <20190810041610.GA27921@embeddedor>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190810041610.GA27921@embeddedor>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git
+ tags/Wimplicit-fallthrough-5.3-rc4
+X-PR-Tracked-Commit-Id: 1f7585f30a3af595ac07f610b807c738c9e3baab
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: bf1881cf484dd96a97606a804553019f8f08f0d4
+Message-Id: <156546540774.17840.1309326139320334743.pr-tracker-bot@kernel.org>
+Date:   Sat, 10 Aug 2019 19:30:07 +0000
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+The pull request you sent on Fri, 9 Aug 2019 23:16:10 -0500:
 
-Hi Greg,
+> git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/Wimplicit-fallthrough-5.3-rc4
 
-> When calling debugfs functions, there is no need to ever check the
-> return value.  The function can work or not, but the code logic should
-> never do something different based on this.
->
-> Also, because there is no need to save the file dentry, remove the
-> variable that was saving it as it was never even being used once set.
->
-> Cc: Daniel Mack <daniel@zonque.org>
-> Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
-> Cc: Robert Jarzmik <robert.jarzmik@free.fr>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: dmaengine@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/dma/pxa_dma.c | 56 +++++++++----------------------------------
->  1 file changed, 11 insertions(+), 45 deletions(-)
->
-> diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
-> index b429642f3e7a..0f698f49ee26 100644
-> --- a/drivers/dma/pxa_dma.c
-> +++ b/drivers/dma/pxa_dma.c
-> @@ -132,7 +132,6 @@ struct pxad_device {
->  	spinlock_t			phy_lock;	/* Phy association */
->  #ifdef CONFIG_DEBUG_FS
->  	struct dentry			*dbgfs_root;
-> -	struct dentry			*dbgfs_state;
->  	struct dentry			**dbgfs_chan;
->  #endif
->  };
-> @@ -326,31 +325,18 @@ static struct dentry *pxad_dbg_alloc_chan(struct pxad_device *pdev,
->  					     int ch, struct dentry *chandir)
->  {
->  	char chan_name[11];
-> -	struct dentry *chan, *chan_state = NULL, *chan_descr = NULL;
-> -	struct dentry *chan_reqs = NULL;
-> +	struct dentry *chan;
->  	void *dt;
->  
->  	scnprintf(chan_name, sizeof(chan_name), "%d", ch);
->  	chan = debugfs_create_dir(chan_name, chandir);
->  	dt = (void *)&pdev->phys[ch];
->  
-> -	if (chan)
-> -		chan_state = debugfs_create_file("state", 0400, chan, dt,
-> -						 &chan_state_fops);
-> -	if (chan_state)
-> -		chan_descr = debugfs_create_file("descriptors", 0400, chan, dt,
-> -						 &descriptors_fops);
-> -	if (chan_descr)
-> -		chan_reqs = debugfs_create_file("requesters", 0400, chan, dt,
-> -						&requester_chan_fops);
-> -	if (!chan_reqs)
-> -		goto err_state;
-> +	debugfs_create_file("state", 0400, chan, dt, &chan_state_fops);
-> +	debugfs_create_file("descriptors", 0400, chan, dt, &descriptors_fops);
-> +	debugfs_create_file("requesters", 0400, chan, dt, &requester_chan_fops);
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/bf1881cf484dd96a97606a804553019f8f08f0d4
 
-This is not strictly equivalent.
-Imagine that the debugfs_create_dir() fails and returns NULL :
- - in the former case, neither "state", "descriptors" nor "requesters" would be
-   created
- - in the new code, "state", "descriptors" nor "requesters" will be created in
-   the debugfs root directory
-
-Apart from that it looks fine.
-
-Cheers.
+Thank you!
 
 -- 
-Robert
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
