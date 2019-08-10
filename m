@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8979C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7A9C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99BC5208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB87208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:50:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbfHJUtw (ORCPT
+        id S1727598AbfHJUuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:49:52 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54580 "EHLO
+        Sat, 10 Aug 2019 16:50:08 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54538 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726740AbfHJUn5 (ORCPT
+        by vger.kernel.org with ESMTP id S1726729AbfHJUn5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:57 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDS-00053i-Fm; Sat, 10 Aug 2019 21:43:54 +0100
+        id 1hwYDS-00053P-9R; Sat, 10 Aug 2019 21:43:54 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDP-0003mZ-Ic; Sat, 10 Aug 2019 21:43:51 +0100
+        id 1hwYDP-0003lq-6Q; Sat, 10 Aug 2019 21:43:51 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,21 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "chenxiang" <chenxiang66@hisilicon.com>,
-        "John Garry" <john.garry@huawei.com>,
-        "Johannes Thumshirn" <jthumshirn@suse.de>,
-        "Ewan Milne" <emilne@redhat.com>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        "Tomas Henzl" <thenzl@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Hannes Reinecke" <hare@suse.com>,
-        "Christoph Hellwig" <hch@lst.de>, "Jason Yan" <yanaijie@huawei.com>
+        "Hannes Frederic Sowa" <hannes@stressinduktion.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Rick Jones" <rick.jones2@hp.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.672530587@decadent.org.uk>
+Message-ID: <lsq.1565469607.179170197@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 157/157] scsi: libsas: fix a race condition when smp
- task timeout
+Subject: [PATCH 3.16 152/157] ipv4: ip_tunnel: use net namespace from
+ rtable not socket
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -63,62 +57,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jason Yan <yanaijie@huawei.com>
+From: Hannes Frederic Sowa <hannes@stressinduktion.org>
 
-commit b90cd6f2b905905fb42671009dc0e27c310a16ae upstream.
+commit 926a882f6916fd76b6f8ee858d45a2241c5e7999 upstream.
 
-When the lldd is processing the complete sas task in interrupt and set the
-task stat as SAS_TASK_STATE_DONE, the smp timeout timer is able to be
-triggered at the same time. And smp_task_timedout() will complete the task
-wheter the SAS_TASK_STATE_DONE is set or not. Then the sas task may freed
-before lldd end the interrupt process. Thus a use-after-free will happen.
+The socket parameter might legally be NULL, thus sock_net is sometimes
+causing a NULL pointer dereference. Using net_device pointer in dst_entry
+is more reliable.
 
-Fix this by calling the complete() only when SAS_TASK_STATE_DONE is not
-set. And remove the check of the return value of the del_timer(). Once the
-LLDD sets DONE, it must call task->done(), which will call
-smp_task_done()->complete() and the task will be completed and freed
-correctly.
-
-Reported-by: chenxiang <chenxiang66@hisilicon.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-CC: John Garry <john.garry@huawei.com>
-CC: Johannes Thumshirn <jthumshirn@suse.de>
-CC: Ewan Milne <emilne@redhat.com>
-CC: Christoph Hellwig <hch@lst.de>
-CC: Tomas Henzl <thenzl@redhat.com>
-CC: Dan Williams <dan.j.williams@intel.com>
-CC: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: John Garry <john.garry@huawei.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: b6a7719aedd7e5c ("ipv4: hash net ptr into fragmentation bucket selection")
+Reported-by: Rick Jones <rick.jones2@hp.com>
+Cc: Rick Jones <rick.jones2@hp.com>
+Cc: David S. Miller <davem@davemloft.net>
+Signed-off-by: Hannes Frederic Sowa <hannes@stressinduktion.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/scsi/libsas/sas_expander.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ net/ipv4/ip_tunnel_core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -47,17 +47,16 @@ static void smp_task_timedout(unsigned l
- 	unsigned long flags;
+--- a/net/ipv4/ip_tunnel_core.c
++++ b/net/ipv4/ip_tunnel_core.c
+@@ -74,7 +74,8 @@ int iptunnel_xmit(struct sock *sk, struc
+ 	iph->daddr	=	dst;
+ 	iph->saddr	=	src;
+ 	iph->ttl	=	ttl;
+-	__ip_select_ident(sock_net(sk), iph, skb_shinfo(skb)->gso_segs ?: 1);
++	__ip_select_ident(dev_net(rt->dst.dev), iph,
++			  skb_shinfo(skb)->gso_segs ?: 1);
  
- 	spin_lock_irqsave(&task->task_state_lock, flags);
--	if (!(task->task_state_flags & SAS_TASK_STATE_DONE))
-+	if (!(task->task_state_flags & SAS_TASK_STATE_DONE)) {
- 		task->task_state_flags |= SAS_TASK_STATE_ABORTED;
-+		complete(&task->slow_task->completion);
-+	}
- 	spin_unlock_irqrestore(&task->task_state_lock, flags);
--
--	complete(&task->slow_task->completion);
- }
- 
- static void smp_task_done(struct sas_task *task)
- {
--	if (!del_timer(&task->slow_task->timer))
--		return;
-+	del_timer(&task->slow_task->timer);
- 	complete(&task->slow_task->completion);
- }
- 
+ 	err = ip_local_out_sk(sk, skb);
+ 	if (unlikely(net_xmit_eval(err)))
 
