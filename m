@@ -2,120 +2,113 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE26C433FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 08:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A39DC32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 09:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7DAE208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 08:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0DA72166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 09:01:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tFjHxYGs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J4fnE0Lc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbfHJIpg (ORCPT
+        id S1726131AbfHJJBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 04:45:36 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:46718 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfHJIpg (ORCPT
+        Sat, 10 Aug 2019 05:01:15 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38618 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfHJJBO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 04:45:36 -0400
-Received: by mail-yb1-f194.google.com with SMTP id w196so8776570ybe.13;
-        Sat, 10 Aug 2019 01:45:35 -0700 (PDT)
+        Sat, 10 Aug 2019 05:01:14 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r9so94175092ljg.5
+        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 02:01:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4N2DP4l2LpXR0ja9/QlgTCxk89cb9ApRuW6Y7KL7/QM=;
-        b=tFjHxYGsshA6uhC4ZyO8gQA5CGqOklLRWWxRbDw74L/pi+b9ttnCV0SxJXzM1GWIvS
-         F9rYQq1hBhIsaxKOI08ZyaGxkadwK312OhWil5n/UwwkKSmadnu/olRJh1TePylAFF1P
-         4ktVi+A2LsntpLrg+0r5GSjYQS6MoaBf5QcbFDhiWv7xJnDJnGAAFTUKJLcAwhajChY9
-         OyZKinHBA6UhYKPjOgT2ZHjTfw/jp+Njsc09CGDN2oGgyuMarC1b8lJbRsvnx9Il0N93
-         Q2aGmNoPzI8TmYFqu0vVtm5p9ZXDTei6QktQwpM52ZY7q5UI24kSvWdBmw3r3ttiWOfn
-         PRfg==
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=oD/Q6G/6W7nTlypRrPNMZQgnb5/E1uytnbBR5dQIk4Q=;
+        b=J4fnE0Lcep5KmTR/bSIzJSIUS/cLyiUz2x4KsdUfRK5dB/gjcfCfslOEfBcLw52rgs
+         EMviEh1o+yJISGq8uMDk7CV/aA94Xc8NFKmZvsT04xbm7Sv1egPq8EkG8Y+2LLnk1WIp
+         IrB/TgtySjNylZf3B+oeGGmCRQ5VJUeeCWEvcwQRkDF/M4UYAzaIyntpdKQgV9cmmOJa
+         naPD8MS/fUk0c1RBADmraZ/2TGk45RNDcWb63BjppByRH/TKd1nI3hWIfmdgI9rvv+03
+         g+pQxjpAki6ZqDOXULCRgqNYJCi7TMJX7BWhbfllYt1/OR5QjmgVM4VfingW/CpkN85a
+         fK4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4N2DP4l2LpXR0ja9/QlgTCxk89cb9ApRuW6Y7KL7/QM=;
-        b=e0jFvHJrt/Ei0HgtWqj5//2isnrkp+vyAXTitNstIFCReo/eYytWQlBOU+Qh3Eapj2
-         6dDvh3A1IjSzqsiQYeloC6Ryo3QimUeNiQOTBiTiOBsOUIfg+bzhrWKr6Xyym3vIcmuT
-         Pze5YCJ/shKbWejTHE8o5PGJm3TEPI7Sh5UVBP5t152VDcEubxTDjoyJRF5PIyW0Owq2
-         pouUXcKgac/psoQ6mYFfgcDg97iLyVgzebtkqf5BG68JHD/xaU6RfRst67p6yr4fSEtx
-         gYrzcRD6lF3tS+aibUmHP7neV7IzCmvHllivGgNvRNXHXVtDbDSu0QyJYsnXKFe3eILj
-         f7gg==
-X-Gm-Message-State: APjAAAULcyvAW4L7qXx95o9aAJXVAKaDBia8rDbMUM+mi2t30pbRlpur
-        QwaAWjTCvj2X4zwt+RxT73+8vY74dQrJ9mkIbUc=
-X-Google-Smtp-Source: APXvYqwYP1MVAOUz7wJvEpUhVTE97jzCm1T5VZgDMaOxdDC99C9zKxDOMpuB6Lus4uMwey10ooqmjZMMWn1jbSlbvgQ=
-X-Received: by 2002:a25:9109:: with SMTP id v9mr17429940ybl.396.1565426734980;
- Sat, 10 Aug 2019 01:45:34 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=oD/Q6G/6W7nTlypRrPNMZQgnb5/E1uytnbBR5dQIk4Q=;
+        b=BAJf+SsQcapMtMq5+zaUKHimFpbu6nXz5HYVykCQsQ1NC35aYTgCuk8GQph5hXLtE6
+         iVregFqidXvU3tHaaA8PHns5Ndq45OLnpAtfLXclydQmfi6sfIG7D/nV71MJetlQa+xX
+         rOGmgCJlZVOkRbQRHM7KjTTl+8Mp/MB78zSPty9XE4HlaXip7L2HyMQk92oD1qZ/ybin
+         ntAufcBdHOKmPCbCH8tLcPl/Ydw+TGs0enTyMonzsGB4wBPFWPNXcXZoVzWbZHqqHtoO
+         JzzdxbFqhkyhZCZjWqXtd8hefU9/XYNrvNqMy5I/eMWtszO5M4Ayqj4r65UP5KYUWTeL
+         QZmQ==
+X-Gm-Message-State: APjAAAWbevvdaBxj7APQlVFmTAmkK8P1EgUKeuavfAkSNymBMVx+5ujN
+        +WpjAT959I4kC+6GiuErzmU/N3N4eanX4vSq7NhOWg==
+X-Google-Smtp-Source: APXvYqzAONLPdh4o+NouNG/QFJxb4T9bH5J8zHJQGa7JZySBNXe2HJoRmhj4JGiLvN+pM/qj2zTkv397Dbnvlxzplg4=
+X-Received: by 2002:a2e:9048:: with SMTP id n8mr13725271ljg.37.1565427672367;
+ Sat, 10 Aug 2019 02:01:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190527200627.8635-1-peron.clem@gmail.com> <CAJiuCcfUhBxEr=o7VVpPROQZadQh7z1QC0SkWSYt-53Sj3H2qw@mail.gmail.com>
- <CAJiuCcc3_1jZWV7G3+fFQYRZ8b6qcAbnH+K6pkRvww6_D=OMAw@mail.gmail.com> <20190715193842.GC4503@sirena.org.uk>
-In-Reply-To: <20190715193842.GC4503@sirena.org.uk>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Sat, 10 Aug 2019 10:45:23 +0200
-Message-ID: <CAJiuCceYDnyxRLLLLy6Dn6DLTZ+NmSaUnoX1Vmzvgiy0XvF_Fw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/7] Allwinner H6 SPDIF support
-To:     Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Jagan Teki <jagan@amarulasolutions.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 10 Aug 2019 11:01:00 +0200
+Message-ID: <CACRpkdaMp16=-NGxOhe_Gz-vvoZrN7S+CE6zVmD+erVU051kmQ@mail.gmail.com>
+Subject: [GIT PULL] pin control fixes for v5.3
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        YueHaibing <yuehaibing@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Linus,
 
-Sorry, I just discovered that the ASoC patches have been merged into
-the broonie and linus tree in 5.3.
+here are some pin control fixes for the v5.3 development.
 
-I'm still quite new in the sending of patches to the Kernel but
-souldn't be a ack or a mail sent to warn the sender when the series
-are accepted?
+I should have sent earlier, vacation interfered. Thus there
+is a syntax fix I would normally not put in as fix at this point in
+this set, but I think it is no big deal.
 
-Should 5/6/7 patches be picked by Sunxi maintainer?
+Please pull it in!
 
-Thanks,
-Cl=C3=A9ment
+Yours,
+Linus Walleij
 
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
 
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v5.3-2
 
-On Mon, 15 Jul 2019 at 21:38, Mark Brown <broonie@kernel.org> wrote:
->
-> On Mon, Jul 15, 2019 at 09:21:01PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Hi,
-> >
-> > I'm missing ACK from ASoC Maintainers patch 2-3-4.
-> >
-> > It's really small paches, if you could have a look at it.
->
-> Please don't send content free pings and please allow a reasonable time
-> for review.  People get busy, go on holiday, attend conferences and so
-> on so unless there is some reason for urgency (like critical bug fixes)
-> please allow at least a couple of weeks for review.  If there have been
-> review comments then people may be waiting for those to be addressed.
->
-> Sending content free pings adds to the mail volume (if they are seen at
-> all) which is often the problem and since they can't be reviewed
-> directly if something has gone wrong you'll have to resend the patches
-> anyway, so sending again is generally a better approach though there are
-> some other maintainers who like them - if in doubt look at how patches
-> for the subsystem are normally handled.
+for you to fetch changes up to 8c4407de3be44c2a0ec3e316cd3e4a711bc2aaba:
+
+  pinctrl: aspeed: Make aspeed_pinmux_ips static (2019-07-29 23:35:31 +0200)
+
+----------------------------------------------------------------
+Some pin control fixes for the v5.4 series:
+
+- Delay acquisition of regmaps in the Aspeed G5 driver.
+
+- Make a symbol static to reduce compiler noise.
+
+----------------------------------------------------------------
+Andrew Jeffery (1):
+      pinctrl: aspeed-g5: Delay acquisition of regmaps
+
+YueHaibing (1):
+      pinctrl: aspeed: Make aspeed_pinmux_ips static
+
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c |  2 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c | 92 +++++++++++++++++++++---------
+ drivers/pinctrl/aspeed/pinctrl-aspeed.c    | 12 ++--
+ drivers/pinctrl/aspeed/pinmux-aspeed.c     |  2 +-
+ drivers/pinctrl/aspeed/pinmux-aspeed.h     |  5 +-
+ 5 files changed, 75 insertions(+), 38 deletions(-)
