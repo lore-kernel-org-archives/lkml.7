@@ -2,113 +2,74 @@ Return-Path: <SRS0=4CSQ=WG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CABC32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 11:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8746C32751
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 11:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95CCC20B7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 11:12:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="GwC+nAt3"
+	by mail.kernel.org (Postfix) with ESMTP id 85B2120B7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 11:13:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbfHJLM5 (ORCPT
+        id S1726251AbfHJLNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 07:12:57 -0400
-Received: from mout.gmx.net ([212.227.15.15]:58525 "EHLO mout.gmx.net"
+        Sat, 10 Aug 2019 07:13:13 -0400
+Received: from verein.lst.de ([213.95.11.211]:33898 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725858AbfHJLM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 07:12:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1565435553;
-        bh=VYZbAjv0vWAfXOCBhNJs/6WPV7XCNfBYVLbv1rim6Lw=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=GwC+nAt3idEY5K745agHF8oZWlxlYBkSsl05yvl4kaWpRH2C0Xijv07yxngSpUtkJ
-         Mjz0vJQYVpYfVSxGGE560m9j82d8iNd3a8QVIDVtOYPmH0gfyEKX4/naObPQ323R2P
-         fZo5Y5ZLqxRZViLXZYcXxIyujui99xfgKrjRTc+U=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx003
- [212.227.17.190]) with ESMTPSA (Nemesis) id 0MFdDB-1i8lEK09Cf-00Ecay; Sat, 10
- Aug 2019 13:12:33 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     netdev@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: nps_enet: Fix function names in doc comments
-Date:   Sat, 10 Aug 2019 13:11:56 +0200
-Message-Id: <20190810111159.3389-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
+        id S1725858AbfHJLNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 07:13:12 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 2801368BFE; Sat, 10 Aug 2019 13:13:09 +0200 (CEST)
+Date:   Sat, 10 Aug 2019 13:13:08 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Subject: Re: [PATCH] nouveau/hmm: map pages after migration
+Message-ID: <20190810111308.GB26349@lst.de>
+References: <20190807150214.3629-1-rcampbell@nvidia.com> <20190808070701.GC29382@lst.de> <0b96a8d8-86b5-3ce0-db95-669963c1f8a7@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:FevDCI+NuyDs/gMz/C8oKjv1ZEooXHIOuh9e8SvJQGrAvtFBJAc
- ymUajJD4xXJ40VIhqOXJsM2STUjX3HLmMVVqWRpBz2Mgj/EdsLHzeQ5qON8lRMicfjrob4y
- tjWv8PVskE/9uPqQjWNOTetJv6Z/3zKta8zLbIAStOYTHB/6J2jXsfh/UMI84HZBc5V1FYU
- ygWjBmGOGVg287v8T7XMQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:V4ee+rfTwRo=:HhmIFjBEOrV6Cu85ng/rYT
- /a5rgQYSGulVyG1v995bTQI280rbYUdOPPKoTqZwlNlcYCeU9xRlrF50bysFmicmb0R6CZ3JJ
- cPNPexLqOn5KOS1fb7r4cj3to+W8CzO03jgqoLWL32aXmMAm8cVrJd5YNaUpPd2fBAcAuWiVB
- ngCUkwhw5ptR7UhbnjSklJIAYbeb6b9g3FLn9MOt70p9IyBKPILTNIilkrH0zCuIRXjLCZhRp
- AtEUujerjE+skEhlSpX8UT/E8eDXKmnoTHAE6+M4D53I1tQTjx4c+68UlVoWxoF6R4TWlOTvy
- kXtmbD31Jg7h+iPrhNa9RvhV2XjmseVa4pVt+G4USwtpMHwo3RO2JG/l8JlctkYZIzkJl7+0p
- YKc3MYuc7JZa3kX1BLBeh86OuH+JIFCb+3yjQAqotAGh/sLmOHMxakTpl7NKsCCWdaHvBwoqg
- gAopK8/GIVmTaYimw0knB+pH9sw6Sld96WYiVEPPPyt5t8bvsuCdpJMamffOW9CA8W9gc/ZR1
- kbaFFg74FGqd1vgrESlbzu+/OVYk8ld75ZN6n8/Gd7qhUS9aHWDnZ2Nr2rvTrUsUBz/yhxOI+
- WdtictSlJ36avfhCGKVBSk97uEliCkZjb8pr115i2+zF136fyu0ovs6z8UToshIdT3If9PgAw
- SZxyKPN7+0WGiUnfAIqTQD0tkVxYq6/cRlM6krOrXQShmvns1P0brq28xryN9UZX+vqQVWhk6
- 7BLVSJ7dEs/gEqGi4fvax8yRUutvSFqx+3E/yBPqWCdqD51I3Y0F/3czxpi/rSovf8fCGRFtD
- GEva8RQR6n9gnweJFzXiVr/+/fhKRi8rHA1xRe0GMSbbqK0JR+w9ViCZ0S8BkjOoN6WGFu3SF
- sDl2gOB+z+2jiJPzQ6FCcZkWbVsDTpxFae+59jqnZnbqaSSoR0VXe53RKNOMVJ1OQqNO+pI08
- vVqfu6J0wlGdQewtGhArS1AJONq+tMkMrZlWRdawqzO1aQxCVpbBkbA0fREhqCgIenbRlFo2/
- MKGDoF7+tS6MauxKgD4xvlbuvWr3w+AVEvV2gLXTHAGBKh6gZkmzz+bvuLoY9+12NsznWaWvy
- /NbtiT2VsnMhC8fPiDmr5k3kLCTmTPRyGekgZDQ/shZmDvpPTWmFFFB71SJLN3C3Qzi21y2BK
- 7OQDM=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0b96a8d8-86b5-3ce0-db95-669963c1f8a7@nvidia.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adjust the function names in two doc comments to match the corresponding
-functions.
+On Thu, Aug 08, 2019 at 02:29:34PM -0700, Ralph Campbell wrote:
+>>>   {
+>>>   	struct nouveau_fence *fence;
+>>>   	unsigned long addr = args->start, nr_dma = 0, i;
+>>>     	for (i = 0; addr < args->end; i++) {
+>>>   		args->dst[i] = nouveau_dmem_migrate_copy_one(drm, args->vma,
+>>> -				addr, args->src[i], &dma_addrs[nr_dma]);
+>>> +				args->src[i], &dma_addrs[nr_dma], &pfns[i]);
+>>
+>> Nit: I find the &pfns[i] way to pass the argument a little weird to read.
+>> Why not "pfns + i"?
+>
+> OK, will do in v2.
+> Should I convert to "dma_addrs + nr_dma" too?
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- drivers/net/ethernet/ezchip/nps_enet.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I'll fix it up for v3 of the migrate_vma series.  This is a leftover
+from passing an args structure.
 
-diff --git a/drivers/net/ethernet/ezchip/nps_enet.h b/drivers/net/ethernet=
-/ezchip/nps_enet.h
-index 133acca0bf31..092da2d90026 100644
-=2D-- a/drivers/net/ethernet/ezchip/nps_enet.h
-+++ b/drivers/net/ethernet/ezchip/nps_enet.h
-@@ -167,7 +167,7 @@ struct nps_enet_priv {
- };
+On something vaguely related to this patch:
 
- /**
-- * nps_reg_set - Sets ENET register with provided value.
-+ * nps_enet_reg_set - Sets ENET register with provided value.
-  * @priv:       Pointer to EZchip ENET private data structure.
-  * @reg:        Register offset from base address.
-  * @value:      Value to set in register.
-@@ -179,7 +179,7 @@ static inline void nps_enet_reg_set(struct nps_enet_pr=
-iv *priv,
- }
+You use the NVIF_VMM_PFNMAP_V0_V* defines from nvif/if000c.h, which are
+a little odd as we only ever set these bits, but they also don't seem
+to appear to be in values that are directly fed to the hardware.
 
- /**
-- * nps_reg_get - Gets value of specified ENET register.
-+ * nps_enet_reg_get - Gets value of specified ENET register.
-  * @priv:       Pointer to EZchip ENET private data structure.
-  * @reg:        Register offset from base address.
-  *
-=2D-
-2.20.1
-
+On the other hand mmu/vmm.h defines a set of NVIF_VMM_PFNMAP_V0_*
+constants with similar names and identical values, and those are used
+in mmu/vmmgp100.c and what appears to finally do the low-level dma
+mapping and talking to the hardware.  Are these two sets of constants
+supposed to be the same?  Are the actual hardware values or just a
+driver internal interface?
