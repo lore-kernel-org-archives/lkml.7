@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7A9C32751
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95223C433FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB87208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 767EC208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 10 Aug 2019 20:50:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbfHJUuI (ORCPT
+        id S1727605AbfHJUuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 16:50:08 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54538 "EHLO
+        Sat, 10 Aug 2019 16:50:11 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:54558 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726729AbfHJUn5 (ORCPT
+        by vger.kernel.org with ESMTP id S1726736AbfHJUn5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 10 Aug 2019 16:43:57 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDS-00053P-9R; Sat, 10 Aug 2019 21:43:54 +0100
+        id 1hwYDS-00053t-LB; Sat, 10 Aug 2019 21:43:54 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hwYDP-0003lq-6Q; Sat, 10 Aug 2019 21:43:51 +0100
+        id 1hwYDO-0003l9-Vp; Sat, 10 Aug 2019 21:43:50 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Hannes Frederic Sowa" <hannes@stressinduktion.org>,
         "David S. Miller" <davem@davemloft.net>,
-        "Rick Jones" <rick.jones2@hp.com>
+        "Vlad Yasevich" <vyasevich@gmail.com>,
+        "Vladislav Yasevich" <vyasevic@redhat.com>
 Date:   Sat, 10 Aug 2019 21:40:07 +0100
-Message-ID: <lsq.1565469607.179170197@decadent.org.uk>
+Message-ID: <lsq.1565469607.416808818@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 152/157] ipv4: ip_tunnel: use net namespace from
- rtable not socket
+Subject: [PATCH 3.16 148/157] ipv6: Fix fragment id assignment on LE arches.
 In-Reply-To: <lsq.1565469607.188083258@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,35 +56,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hannes Frederic Sowa <hannes@stressinduktion.org>
+From: Vlad Yasevich <vyasevich@gmail.com>
 
-commit 926a882f6916fd76b6f8ee858d45a2241c5e7999 upstream.
+commit 51f30770e50eb787200f30a79105e2615b379334 upstream.
 
-The socket parameter might legally be NULL, thus sock_net is sometimes
-causing a NULL pointer dereference. Using net_device pointer in dst_entry
-is more reliable.
+Recent commit:
+0508c07f5e0c94f38afd5434e8b2a55b84553077
+Author: Vlad Yasevich <vyasevich@gmail.com>
+Date:   Tue Feb 3 16:36:15 2015 -0500
 
-Fixes: b6a7719aedd7e5c ("ipv4: hash net ptr into fragmentation bucket selection")
-Reported-by: Rick Jones <rick.jones2@hp.com>
-Cc: Rick Jones <rick.jones2@hp.com>
-Cc: David S. Miller <davem@davemloft.net>
-Signed-off-by: Hannes Frederic Sowa <hannes@stressinduktion.org>
+    ipv6: Select fragment id during UFO segmentation if not set.
+
+Introduced a bug on LE in how ipv6 fragment id is assigned.
+This was cought by nightly sparce check:
+
+Resolve the following sparce error:
+ net/ipv6/output_core.c:57:38: sparse: incorrect type in assignment
+ (different base types)
+   net/ipv6/output_core.c:57:38:    expected restricted __be32
+[usertype] ip6_frag_id
+   net/ipv6/output_core.c:57:38:    got unsigned int [unsigned]
+[assigned] [usertype] id
+
+Fixes: 0508c07f5e0c9 (ipv6: Select fragment id during UFO segmentation if not set.)
+Signed-off-by: Vladislav Yasevich <vyasevic@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/ipv4/ip_tunnel_core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/ipv6/output_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/ip_tunnel_core.c
-+++ b/net/ipv4/ip_tunnel_core.c
-@@ -74,7 +74,8 @@ int iptunnel_xmit(struct sock *sk, struc
- 	iph->daddr	=	dst;
- 	iph->saddr	=	src;
- 	iph->ttl	=	ttl;
--	__ip_select_ident(sock_net(sk), iph, skb_shinfo(skb)->gso_segs ?: 1);
-+	__ip_select_ident(dev_net(rt->dst.dev), iph,
-+			  skb_shinfo(skb)->gso_segs ?: 1);
+--- a/net/ipv6/output_core.c
++++ b/net/ipv6/output_core.c
+@@ -54,7 +54,7 @@ void ipv6_proxy_select_ident(struct sk_b
  
- 	err = ip_local_out_sk(sk, skb);
- 	if (unlikely(net_xmit_eval(err)))
+ 	id = __ipv6_select_ident(ip6_proxy_idents_hashrnd,
+ 				 &addrs[1], &addrs[0]);
+-	skb_shinfo(skb)->ip6_frag_id = id;
++	skb_shinfo(skb)->ip6_frag_id = htonl(id);
+ }
+ EXPORT_SYMBOL_GPL(ipv6_proxy_select_ident);
+ 
 
