@@ -2,350 +2,67 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C79C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 17:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6314DC0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 17:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF28B2087B
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 17:45:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDCw0Rzg"
+	by mail.kernel.org (Postfix) with ESMTP id 3B78A2087B
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 17:50:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565545809;
+	bh=Rs+Ze9RGfHCINzSg9y8mBa3QLzUFZPvCtOCIK5Q5RiY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=Iazu/vceqNAZIXc1bQoLW4q3BTH2SXN51uAsmEKf27HwN6qNoMOVplZ6C0l/s9XKD
+	 Lm7crXjAl0PsAEMHUliTc7UvMMao8xWEVmbE0OF5EnQG2wfG9WlX3SxIdU4KBp1vTU
+	 CnfN3DTNqCuX07/5xSH+NbYB6yR7vRTqqAS90070=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbfHKRp1 (ORCPT
+        id S1726500AbfHKRuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 13:45:27 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:38536 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbfHKRp1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 13:45:27 -0400
-Received: by mail-ed1-f66.google.com with SMTP id r12so66911857edo.5;
-        Sun, 11 Aug 2019 10:45:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OkeSRQnN4oJ7aQxCKbRmPDsqrGLxx5oJbZpuRmRzFxE=;
-        b=hDCw0RzgUcdGshA30IFBVJ0qwvIFt+P4f/s7LxZr/lxRRlmHje6fZiw1r8nLDNYBZf
-         BLSMQioVCu/kIJMUZoSo8FZUBKlEX3NaQZtRaNpBB6RHzF7ddYeCQYweY/U/iMLJ4a6s
-         V6NH1HEa9HldSxE0scrTfGYtkbpsbO0XBc0QprSibRitbzOmDAU5xBUOX8u4SJt82LCH
-         tJj+Ct9Pwlqkc3W7Y+tMH2t9ivUiTnHaRPrUPTyR9XW/SpLp8bcFrK869tDOexBT+UwM
-         9yISCbiIvgjy9zz3TRATd+SbcvcLDvPQRAmkxrxWorvWWCtxYZkdJlOQyzuLXMUkW89/
-         nlNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OkeSRQnN4oJ7aQxCKbRmPDsqrGLxx5oJbZpuRmRzFxE=;
-        b=FMgeNIOFOHzXD8cRYbZ7Swaiwb5vD3l4x0ANNQ+T9AWrTsXsu3qFT3FxtHvLf6U+PJ
-         DrR7iSt13JDq3tp5ZdtBKjWue94IBFxG9ccrt+XfCY6cjIUOKSD4FSfpLkqdvGLHXI/B
-         CL2SBsmBg1/eBR4saG+Np89T6vdXLGJzCAaIh2gQc+CFRMmsSL89JA0sdTGzYgVACtNu
-         xqMMWSX8VFFVO8LS3O0/d431VTStPuy+SY+JUr89oeiyeIQncvXR5bqGLGpbO1pg+w84
-         /EJtz53oZGgCJZiJOEa9iAnBiCwwDXU+R9gerOTiCc+mmsBgPdLsbrLzup/8By2jSx+W
-         PdCQ==
-X-Gm-Message-State: APjAAAW9R8J7+6GeSnnCDjDieZuBl/E8CWi24gCzXR+fXAJaGuAwEGMy
-        CcJlxC8lLGQRsSk7iPyfTkw=
-X-Google-Smtp-Source: APXvYqxnUEW3Zmsu5QV75FAahLBrsP0cq3QNr0G1kPvfaowEXw/nVeMOCkecD+DLBpUMkhTfFsoNvw==
-X-Received: by 2002:a50:8858:: with SMTP id c24mr136498edc.253.1565545524996;
-        Sun, 11 Aug 2019 10:45:24 -0700 (PDT)
-Received: from localhost.localdomain ([188.187.105.131])
-        by smtp.gmail.com with ESMTPSA id y4sm245868ejj.8.2019.08.11.10.45.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 11 Aug 2019 10:45:24 -0700 (PDT)
-From:   ivan.lazeev@gmail.com
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vanya Lazeev <ivan.lazeev@gmail.com>
-Subject: [PATCH] Fix fTPM on AMD Zen+ CPUs
-Date:   Sun, 11 Aug 2019 20:45:05 +0300
-Message-Id: <20190811174505.27019-1-ivan.lazeev@gmail.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 11 Aug 2019 13:50:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60400 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726047AbfHKRuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 13:50:08 -0400
+Subject: Re: [GIT PULL] NTB bug fixes for v5.3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565545807;
+        bh=Rs+Ze9RGfHCINzSg9y8mBa3QLzUFZPvCtOCIK5Q5RiY=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=aVpcW7ddTGiHViJ2a+h9bfjg5lJkBbsLRDnwp/1ZbAS+Jh2diABCff9uCzPUUg7rW
+         bDCVIKscj5WMuVJmEGAhs0BJAKP55CIPjqJur9s+5SDTWNlDCgFGMo+NiF+2mfFDnN
+         9U/bnZ/46+Fl5TxiSblWEdSHlz7n8xtee3cTk/k8=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190811141703.GA12153@graymalkin>
+References: <20190811141703.GA12153@graymalkin>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190811141703.GA12153@graymalkin>
+X-PR-Tracked-Remote: git://github.com/jonmason/ntb tags/ntb-5.3-bugfixes
+X-PR-Tracked-Commit-Id: 49da065f7b1f27be625de65d6d55bdd22ac6b5c2
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: f6192cb7429211bfaac1178c35607b0c989900b8
+Message-Id: <156554580721.21169.6349916023834124246.pr-tracker-bot@kernel.org>
+Date:   Sun, 11 Aug 2019 17:50:07 +0000
+To:     Jon Mason <jdmason@kudzu.us>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-ntb@googlegroups.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vanya Lazeev <ivan.lazeev@gmail.com>
+The pull request you sent on Sun, 11 Aug 2019 10:17:03 -0400:
 
-The patch is an attempt to make fTPM on AMD Zen CPUs work.
-Bug link: https://bugzilla.kernel.org/show_bug.cgi?id=195657
+> git://github.com/jonmason/ntb tags/ntb-5.3-bugfixes
 
-The problem seems to be that tpm_crb driver doesn't expect tpm command
-and response memory regions to belong to different ACPI resources.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/f6192cb7429211bfaac1178c35607b0c989900b8
 
-Tested on Asrock ITX motherboard with Ryzen 2600X CPU.
-However, I don't have any other hardware to test the changes on and no
-expertise to be sure that other TPMs won't break as a result.
-Hopefully, the patch will be useful.
+Thank you!
 
-Signed-off-by: Vanya Lazeev <ivan.lazeev@gmail.com>
----
- drivers/char/tpm/tpm_crb.c | 146 ++++++++++++++++++++++++++++---------
- 1 file changed, 110 insertions(+), 36 deletions(-)
-
-diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
-index e59f1f91d..73e4b9105 100644
---- a/drivers/char/tpm/tpm_crb.c
-+++ b/drivers/char/tpm/tpm_crb.c
-@@ -91,7 +91,6 @@ enum crb_status {
- struct crb_priv {
- 	u32 sm;
- 	const char *hid;
--	void __iomem *iobase;
- 	struct crb_regs_head __iomem *regs_h;
- 	struct crb_regs_tail __iomem *regs_t;
- 	u8 __iomem *cmd;
-@@ -108,6 +107,13 @@ struct tpm2_crb_smc {
- 	u32 smc_func_id;
- };
- 
-+struct crb_resource {
-+	struct resource io_res;
-+	void __iomem *iobase;
-+
-+	struct list_head link;
-+};
-+
- static bool crb_wait_for_reg_32(u32 __iomem *reg, u32 mask, u32 value,
- 				unsigned long timeout)
- {
-@@ -432,23 +438,69 @@ static const struct tpm_class_ops tpm_crb = {
- 	.req_complete_val = CRB_DRV_STS_COMPLETE,
- };
- 
-+static void crb_free_resource_list(struct list_head *resources)
-+{
-+	struct list_head *position;
-+
-+	list_for_each(position, resources)
-+		kfree(list_entry(position, struct crb_resource, link));
-+}
-+
-+/**
-+ * Checks if resource @io_res contains range with the specified @start and @size
-+ * completely or, when @strict is false, at least it's beginning.
-+ * Non-strict match is needed to work around broken BIOSes that return
-+ * inconsistent values from ACPI regions vs registers.
-+ */
-+static inline bool crb_resource_contains(const struct resource *io_res,
-+					 u64 start, u32 size, bool strict)
-+{
-+	return start >= io_res->start &&
-+		(start + size - 1 <= io_res->end ||
-+		 (!strict && start <= io_res->end));
-+}
-+
-+static struct crb_resource *crb_containing_resource(
-+		const struct list_head *resources,
-+		u64 start, u32 size, bool strict)
-+{
-+	struct list_head *pos;
-+
-+	list_for_each(pos, resources) {
-+		struct crb_resource *cres;
-+
-+		cres = list_entry(pos, struct crb_resource, link);
-+		if (crb_resource_contains(&cres->io_res, start, size, strict))
-+			return cres;
-+	}
-+
-+	return NULL;
-+}
-+
- static int crb_check_resource(struct acpi_resource *ares, void *data)
- {
--	struct resource *io_res = data;
-+	struct list_head *list = data;
-+	struct crb_resource *cres;
- 	struct resource_win win;
- 	struct resource *res = &(win.res);
- 
- 	if (acpi_dev_resource_memory(ares, res) ||
- 	    acpi_dev_resource_address_space(ares, &win)) {
--		*io_res = *res;
--		io_res->name = NULL;
-+		cres = kzalloc(sizeof(*cres), GFP_KERNEL);
-+		if (!cres)
-+			return -ENOMEM;
-+
-+		cres->io_res = *res;
-+		cres->io_res.name = NULL;
-+
-+		list_add_tail(&cres->link, list);
- 	}
- 
- 	return 1;
- }
- 
--static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
--				 struct resource *io_res, u64 start, u32 size)
-+static void __iomem *crb_map_res(struct device *dev, struct crb_resource *cres,
-+				 u64 start, u32 size)
- {
- 	struct resource new_res = {
- 		.start	= start,
-@@ -460,10 +512,16 @@ static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
- 	if (start != new_res.start)
- 		return (void __iomem *) ERR_PTR(-EINVAL);
- 
--	if (!resource_contains(io_res, &new_res))
-+	if (!cres)
- 		return devm_ioremap_resource(dev, &new_res);
- 
--	return priv->iobase + (new_res.start - io_res->start);
-+	if (!cres->iobase) {
-+		cres->iobase = devm_ioremap_resource(dev, &cres->io_res);
-+		if (IS_ERR(cres->iobase))
-+			return cres->iobase;
-+	}
-+
-+	return cres->iobase + (new_res.start - cres->io_res.start);
- }
- 
- /*
-@@ -490,9 +548,9 @@ static u64 crb_fixup_cmd_size(struct device *dev, struct resource *io_res,
- static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
- 		      struct acpi_table_tpm2 *buf)
- {
--	struct list_head resources;
--	struct resource io_res;
-+	struct list_head acpi_resources, crb_resources;
- 	struct device *dev = &device->dev;
-+	struct crb_resource *cres;
- 	u32 pa_high, pa_low;
- 	u64 cmd_pa;
- 	u32 cmd_size;
-@@ -501,21 +559,30 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
- 	u32 rsp_size;
- 	int ret;
- 
--	INIT_LIST_HEAD(&resources);
--	ret = acpi_dev_get_resources(device, &resources, crb_check_resource,
--				     &io_res);
-+	INIT_LIST_HEAD(&acpi_resources);
-+	INIT_LIST_HEAD(&crb_resources);
-+	ret = acpi_dev_get_resources(device, &acpi_resources,
-+				     crb_check_resource, &crb_resources);
- 	if (ret < 0)
--		return ret;
--	acpi_dev_free_resource_list(&resources);
-+		goto out_free_crb_resources;
-+
-+	acpi_dev_free_resource_list(&acpi_resources);
- 
--	if (resource_type(&io_res) != IORESOURCE_MEM) {
-+	if (list_empty(&crb_resources)) {
- 		dev_err(dev, FW_BUG "TPM2 ACPI table does not define a memory resource\n");
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto out_free_crb_resources;
- 	}
- 
--	priv->iobase = devm_ioremap_resource(dev, &io_res);
--	if (IS_ERR(priv->iobase))
--		return PTR_ERR(priv->iobase);
-+	cres = crb_containing_resource(&crb_resources, buf->control_address,
-+				       sizeof(struct crb_regs_tail), true);
-+
-+	priv->regs_t = crb_map_res(dev, cres, buf->control_address,
-+				   sizeof(struct crb_regs_tail));
-+	if (IS_ERR(priv->regs_t)) {
-+		ret = PTR_ERR(priv->regs_t);
-+		goto out_free_crb_resources;
-+	}
- 
- 	/* The ACPI IO region starts at the head area and continues to include
- 	 * the control area, as one nice sane region except for some older
-@@ -523,23 +590,17 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
- 	 */
- 	if ((priv->sm == ACPI_TPM2_COMMAND_BUFFER) ||
- 	    (priv->sm == ACPI_TPM2_MEMORY_MAPPED)) {
--		if (buf->control_address == io_res.start +
-+		if (cres &&
-+		    buf->control_address == cres->io_res.start +
- 		    sizeof(*priv->regs_h))
--			priv->regs_h = priv->iobase;
-+			priv->regs_h = cres->iobase;
- 		else
- 			dev_warn(dev, FW_BUG "Bad ACPI memory layout");
- 	}
- 
- 	ret = __crb_request_locality(dev, priv, 0);
- 	if (ret)
--		return ret;
--
--	priv->regs_t = crb_map_res(dev, priv, &io_res, buf->control_address,
--				   sizeof(struct crb_regs_tail));
--	if (IS_ERR(priv->regs_t)) {
--		ret = PTR_ERR(priv->regs_t);
--		goto out_relinquish_locality;
--	}
-+		goto out_free_crb_resources;
- 
- 	/*
- 	 * PTT HW bug w/a: wake up the device to access
-@@ -552,13 +613,17 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
- 	pa_high = ioread32(&priv->regs_t->ctrl_cmd_pa_high);
- 	pa_low  = ioread32(&priv->regs_t->ctrl_cmd_pa_low);
- 	cmd_pa = ((u64)pa_high << 32) | pa_low;
--	cmd_size = crb_fixup_cmd_size(dev, &io_res, cmd_pa,
--				      ioread32(&priv->regs_t->ctrl_cmd_size));
-+	cmd_size = ioread32(&priv->regs_t->ctrl_cmd_size);
-+
-+	cres = crb_containing_resource(&crb_resources, cmd_pa, cmd_size, false);
-+	if (cres)
-+		cmd_size = crb_fixup_cmd_size(dev, &cres->io_res,
-+					      cmd_pa, cmd_size);
- 
- 	dev_dbg(dev, "cmd_hi = %X cmd_low = %X cmd_size %X\n",
- 		pa_high, pa_low, cmd_size);
- 
--	priv->cmd = crb_map_res(dev, priv, &io_res, cmd_pa, cmd_size);
-+	priv->cmd = crb_map_res(dev, cres, cmd_pa, cmd_size);
- 	if (IS_ERR(priv->cmd)) {
- 		ret = PTR_ERR(priv->cmd);
- 		goto out;
-@@ -566,11 +631,16 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
- 
- 	memcpy_fromio(&__rsp_pa, &priv->regs_t->ctrl_rsp_pa, 8);
- 	rsp_pa = le64_to_cpu(__rsp_pa);
--	rsp_size = crb_fixup_cmd_size(dev, &io_res, rsp_pa,
--				      ioread32(&priv->regs_t->ctrl_rsp_size));
-+	rsp_size = ioread32(&priv->regs_t->ctrl_rsp_size);
-+
-+	cres = crb_containing_resource(&crb_resources, rsp_pa,
-+				       rsp_size, false);
-+	if (cres)
-+		rsp_size = crb_fixup_cmd_size(dev, &cres->io_res,
-+					      rsp_pa, rsp_size);
- 
- 	if (cmd_pa != rsp_pa) {
--		priv->rsp = crb_map_res(dev, priv, &io_res, rsp_pa, rsp_size);
-+		priv->rsp = crb_map_res(dev, cres, rsp_pa, rsp_size);
- 		ret = PTR_ERR_OR_ZERO(priv->rsp);
- 		goto out;
- 	}
-@@ -596,6 +666,10 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
- 
- 	__crb_relinquish_locality(dev, priv, 0);
- 
-+out_free_crb_resources:
-+
-+	crb_free_resource_list(&crb_resources);
-+
- 	return ret;
- }
- 
 -- 
-2.20.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
