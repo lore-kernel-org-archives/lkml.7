@@ -2,66 +2,156 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA77C0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 07:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB1BC0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4187D2173C
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 07:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 853082173C
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565509882;
-	bh=92tTRkyX6XNn8bPjK+nC4h0WKVoRxC7qPIcA/w90siQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OgXcNksJq+iJGnj1d+2eC/GMfCMWgdA9RR4zcb68xiAD5XpsW8WmEY1cr32c91HLB
-	 bcIPi+ReaxmtUnwCux9cZGlgLWj1TobbhJoNfY8bME+y6l89RI7RW7GViDIW+Am38w
-	 QrC8EIqhCt3gl7BtUBypQFFA9knKO6pbf30lA7Io=
+	s=default; t=1565510606;
+	bh=mdfX89J7i+I020yze43/ImZLz3U+e+1AfvwU979Ejv4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=x2NyKbDuEA02r66iE1kHfQXquljxG0DZ6nqhYIVXVAqR0WOc7tTRfvtxBE1XVVh2O
+	 k54kT77A0vFuG9HucxAKMGNriGC7Mpl0gl3otyGZCTlWqyBSgjvFsoWgKCDwzUdqRY
+	 P2s/cIDXppbhkK1w74eLWj56SFMSbFAXW2VbQbUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfHKHvV (ORCPT
+        id S1726313AbfHKIDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 03:51:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56146 "EHLO mail.kernel.org"
+        Sun, 11 Aug 2019 04:03:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbfHKHvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 03:51:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1725810AbfHKIDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 04:03:22 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B55F216F4;
-        Sun, 11 Aug 2019 07:51:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2F5C2085B;
+        Sun, 11 Aug 2019 08:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565509879;
-        bh=92tTRkyX6XNn8bPjK+nC4h0WKVoRxC7qPIcA/w90siQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hKkshs1XQ/Vq7zriEJ6wCZMITxpHTbpxARustYa9oCGpTAqFzWDYesRRoqTtdDzJq
-         DCT4JaQpIzMkZBN6uM9VIgv6/RgtARIqmWcyPFCrzXax3xHsM4R0C+RFMFwGODW8J0
-         lGVZILv2P32AeBA4UnpGAjJCetjsFASCu0m5v8lg=
-Date:   Sun, 11 Aug 2019 09:51:16 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
-        ttayar@habana.ai
-Subject: Re: [PATCH v2] habanalabs: print to kernel log when reset is finished
-Message-ID: <20190811075116.GA6508@kroah.com>
-References: <20190811074653.5655-1-oded.gabbay@gmail.com>
+        s=default; t=1565510601;
+        bh=mdfX89J7i+I020yze43/ImZLz3U+e+1AfvwU979Ejv4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=O+G9jL5g/jV9cBbfxjaGSjkdAfE03ZkSqCWbrXwscD9uIX++wtts46w6Wr435CwXw
+         3VUT199SP6WFjzLkqojQHNi2i3kw6ah5DS8TDxF9dZH1isw3tml8Dwxw9eoD5oaWQv
+         GRYhKtJYlhTiOHJFbmYUYBM9H3/dqyoVbb/hKkoc=
+Date:   Sun, 11 Aug 2019 09:03:15 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        freeman.liu@unisoc.com,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: adc: sc27xx: Change to polling mode to read data
+Message-ID: <20190811090251.5fbd7d75@archlinux>
+In-Reply-To: <CAMz4kuK4GFfOi3vGvFOLdRfmqrwVLDs5CN+Xp_it3jG4=iKi=w@mail.gmail.com>
+References: <1870ea18729f93fb36694affaf7e9443733dd988.1564035575.git.baolin.wang@linaro.org>
+        <20190727182709.037fc595@archlinux>
+        <CAMz4kuLLSYw0JRLRVN-JegxZcK1bdv4K2m4mVu7oep6xfb+xxg@mail.gmail.com>
+        <20190805145037.0a03f21e@archlinux>
+        <CAMz4kuK4GFfOi3vGvFOLdRfmqrwVLDs5CN+Xp_it3jG4=iKi=w@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190811074653.5655-1-oded.gabbay@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 10:46:53AM +0300, Oded Gabbay wrote:
-> Now that we don't print the queue testing messages, we need to print when
-> the reset is finished so whoever looks at the kernel log will know the
-> reset process was finished successfully and the driver is not stuck.
-> 
-> Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+On Tue, 6 Aug 2019 15:39:45 +0800
+Baolin Wang <baolin.wang@linaro.org> wrote:
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Hi Jonathan,
+> 
+> On Mon, 5 Aug 2019 at 21:50, Jonathan Cameron <jic23@kernel.org> wrote:
+> >
+> > On Mon, 29 Jul 2019 10:19:48 +0800
+> > Baolin Wang <baolin.wang@linaro.org> wrote:
+> >  
+> > > Hi Jonathan,
+> > >
+> > > On Sun, 28 Jul 2019 at 01:27, Jonathan Cameron <jic23@kernel.org> wrote:  
+> > > >
+> > > > On Thu, 25 Jul 2019 14:33:50 +0800
+> > > > Baolin Wang <baolin.wang@linaro.org> wrote:
+> > > >  
+> > > > > From: Freeman Liu <freeman.liu@unisoc.com>
+> > > > >
+> > > > > On Spreadtrum platform, the headphone will read one ADC channel multiple
+> > > > > times to identify the headphone type, and the headphone identification is
+> > > > > sensitive of the ADC reading time. And we found it will take longer time
+> > > > > to reading ADC data by using interrupt mode comparing with the polling
+> > > > > mode, thus we should change to polling mode to improve the efficiency
+> > > > > of reading data, which can identify the headphone type successfully.
+> > > > >
+> > > > > Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
+> > > > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>  
+> > > >
+> > > > Hi,
+> > > >
+> > > > My concerns with this sort of approach is that we may be sacrificing power
+> > > > efficiency for some usecases to support one demanding one.
+> > > >
+> > > > The maximum sleep time is 1 second (I think) which is probably too long
+> > > > to poll a register for in general.  
+> > >
+> > > 1 second is the timeout time, that means something wrong when reading
+> > > the data taking 1 second, and we will poll the register status every
+> > > 500 us.
+> > > From the testing, polling mode takes less time than interrupt mode
+> > > when reading ADC data multiple times, so polling mode did not
+> > > sacrifice power
+> > > efficiency.  
+> >
+> > Hmm.  I'll go with a probably on that, depends on interrupt response
+> > latency etc so isn't entirely obvious.  Faster response doesn't necessarily
+> > mean lower power.
+> >  
+> > >  
+> > > > Is there some way we can bound that time and perhaps switch between
+> > > > interrupt and polling modes depending on how long we expect to wait?  
+> > >
+> > > I do not think the interrupt mode is needed any more, since the ADC
+> > > reading is so fast enough usually. Thanks.  
+> > The reason for interrupts in such devices is usually precisely the opposite.
+> >
+> > You do it because things are slow enough that you can go to sleep
+> > for a long time before the interrupt occurs.
+> >
+> > So question becomes whether there are circumstances in which we are
+> > running with long timescales and would benefit from using interrupts.  
+> 
+> From our testing, the ADC version time is usually about 100us, it will
+> be faster to get data if we poll every 50us in this case. But if we
+> change to use interrupt mode, it will take millisecond level time to
+> get data. That will cause problems for those time sensitive scenarios,
+> like headphone detection, that's the main reason we can not use
+> interrupt mode.
+> 
+> For those non-time-sensitive scenarios, yes, I agree with you, the
+> interrupt mode will get a better power efficiency. But ADC driver can
+> not know what scenarios asked by consumers, so changing to polling
+> mode seems the easiest way to solve the problem, and we've applied
+> this patch in our downstream kernel for a while, we did not see any
+> other problem.
+> 
+> Thanks for your comments.
+
+OK. It's not ideal but sometimes such is life ;)
+
+So last question - fix or not?  If a fix, can I have a fixes tag
+please.
+
+Thanks,
+
+Jonathan
+
+> 
+
