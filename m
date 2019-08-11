@@ -2,108 +2,134 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF963C0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 737DEC0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97EFA216F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:23:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RYEuc9J/"
+	by mail.kernel.org (Postfix) with ESMTP id 49CF62173C
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:24:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565511858;
+	bh=HUqE2jicU2f5TLW18jlaxJAUP1YeHMHB74GR0cNbTIE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=h9ZkddxXS7iIpq9zhT+ZDnDgWXPHSrp7eqhGGC5j7wNWta1a4eNiaxuBu9T5cWqwv
+	 tPvZi422CBzh3XJT08EqfEArh8p+1s8QkAkAqXML42x7wWejGfx05j3v83FpBW0SXU
+	 HmvlXxwQ6nU7pLUdxMZGU9YMzWZ+cKU1t2afcmeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbfHKIXJ (ORCPT
+        id S1726516AbfHKIYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 04:23:09 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43628 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfHKIXJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 04:23:09 -0400
-Received: by mail-pf1-f194.google.com with SMTP id v12so463954pfn.10
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 01:23:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Wo4/uRiHIALFdqkgpwktSoLWl4QtwkIFB23okqQapww=;
-        b=RYEuc9J/vOST/W8tZzIQFZNhcC0yZxjak4y3HFNOKsVzosFaj1j7+3cCSOlDO6aLob
-         zYwcRhY0EbmDXngqblcVApgs6Ies9CuaXAimU1RXSz+M1rMSmXKtL7bnCwF2cOQ3Cod5
-         eTnRFr5flDU+XlSS2jM7wFNzqOBCNMIH8WXHE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Wo4/uRiHIALFdqkgpwktSoLWl4QtwkIFB23okqQapww=;
-        b=RfN+YxT4q0a4EMKBE+IabWfzrQq+mrKgeW5lQSLLQBTxeBDnHoCL9ch58t01VpwCyp
-         Z2QELx6yF7uWLwLPuaWHIWn6wy3z0aKHGnzRE2D7CcxwJug7qoYRkUbAvkhLpRjUjaiW
-         Mu5fubJEp4hf7RNoJuu5jNaa/on1W1E2e1DFsn1oTpBzIM/tcv8GlCAQUGrkldjeUbmn
-         xztvL0dWkw0PyYTp/yJ9DmFSb3nGLeaXwqAFZprQJ3FHFj2718nz1ZijBpncojVduVRn
-         9H4Pu9/iNbXCDirOTTL0kPSgmu1viGa1q34XVpy+27BU88Md5enOP8X7s7B9Mjrsdpu5
-         hthQ==
-X-Gm-Message-State: APjAAAXMTAcq1rH82PDQgCA7v2RoZwG9njbIacyQfXMbcftVRCmYF1DU
-        bRLmXtryyqMplQc1Jm2iXgtZDg==
-X-Google-Smtp-Source: APXvYqymMdyFVk+KzTCVYi2Yr41UUABkv/0v1F5H5bRd/n3h6adkpBkfYEJXBbx789agxpQrjrHTlQ==
-X-Received: by 2002:a17:90a:8a15:: with SMTP id w21mr18096468pjn.134.1565511788520;
-        Sun, 11 Aug 2019 01:23:08 -0700 (PDT)
-Received: from ikjn-glaptop.roam.corp.google.com (36-224-206-174.dynamic-ip.hinet.net. [36.224.206.174])
-        by smtp.gmail.com with ESMTPSA id d14sm122742498pfo.154.2019.08.11.01.23.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 11 Aug 2019 01:23:08 -0700 (PDT)
-From:   Ikjoon Jang <ikjn@chromium.org>
-To:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ikjoon Jang <ikjn@chromium.org>
-Subject: [PATCH] xhci: fix memleak on setup address fails.
-Date:   Sun, 11 Aug 2019 16:22:59 +0800
-Message-Id: <20190811082259.48176-1-ikjn@chromium.org>
-X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+        Sun, 11 Aug 2019 04:24:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726481AbfHKIYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 04:24:17 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9D35216F4;
+        Sun, 11 Aug 2019 08:24:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565511856;
+        bh=HUqE2jicU2f5TLW18jlaxJAUP1YeHMHB74GR0cNbTIE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lOe1e06owzyl2ouywaeLtHmVL0DrwjKmJmiHl/a9N4X8pk5zfn5ax64yBBW4LHCBm
+         PXsa12XH5VCfNNDkflAge2itnDiU+2s6bNAa/6Ef01akTp98v0YzZOSP3bmHttbzVl
+         5WMqKtRaD2x1Rwhl+L6c3W2TRXV5JW1Fwrn83Wdg=
+Date:   Sun, 11 Aug 2019 09:24:11 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Stefan Agner <stefan@agner.ch>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: max9611: Fix temperature reading in probe
+Message-ID: <20190811092411.4474796c@archlinux>
+In-Reply-To: <20190806073114.4mujzdvbrgxivizs@uno.localdomain>
+References: <20190805155515.22621-1-jacopo+renesas@jmondi.org>
+        <20190805181244.663585ac@archlinux>
+        <20190806073114.4mujzdvbrgxivizs@uno.localdomain>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xhci re-enables a slot on transaction error in set_address using
-xhci_disable_slot() + xhci_alloc_dev().
+On Tue, 6 Aug 2019 09:31:14 +0200
+Jacopo Mondi <jacopo@jmondi.org> wrote:
 
-But in this case, xhci_alloc_dev() creates debugfs entries upon an
-existing device without cleaning up old entries, thus memory leaks.
+> Hi Jonathan,
+> 
+> On Mon, Aug 05, 2019 at 06:12:44PM +0100, Jonathan Cameron wrote:
+> > On Mon,  5 Aug 2019 17:55:15 +0200
+> > Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> >  
+> > > The max9611 driver reads the die temperature at probe time to validate
+> > > the communication channel. Use the actual read value to perform the test
+> > > instead of the read function return value, which was mistakenly used so
+> > > far.
+> > >
+> > > The temperature reading test was only successful because the 0 return
+> > > value is in the range of supported temperatures.
+> > >
+> > > Fixes: 69780a3bbc0b ("iio: adc: Add Maxim max9611 ADC driver")
+> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>  
+> >
+> > Applied to the fixes-togreg branch of iio.git and marked for
+> > stable.  That'll be a bit fiddly given other changes around this
+> > so we may need to do backports.
+> >  
+> 
+> Indeed, I should have mentioned this patch depends on Joe's
+> ae8cc91a7d85 ("iio: adc: max9611: Fix misuse of GENMASK macro")
+> which is now in linux-next, otherwise it might atually trigger errors
+> due to the wrong mask value.
+> 
+> I wonder if there's a way to keep track of these dependencies for the
+> sake of backporting, or it's an operation that has to be carried out
+> manually...
+A note in the commit message is normally enough as all the stable
+maintainers check that first.  In this particular case both patches
+are marked for stable so will get picked up automatically in the right
+order (hopefully!).
 
-So this patch simply moves calling xhci_debugfs_free_dev() from
-xhci_free_dev() to xhci_disable_slot().
+Thanks,
 
-Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
----
- drivers/usb/host/xhci.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Jonathan
 
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 03d1e552769b..c24c5bf9ef9c 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -3814,7 +3814,6 @@ static void xhci_free_dev(struct usb_hcd *hcd, struct usb_device *udev)
- 		virt_dev->eps[i].ep_state &= ~EP_STOP_CMD_PENDING;
- 		del_timer_sync(&virt_dev->eps[i].stop_cmd_timer);
- 	}
--	xhci_debugfs_remove_slot(xhci, udev->slot_id);
- 	virt_dev->udev = NULL;
- 	ret = xhci_disable_slot(xhci, udev->slot_id);
- 	if (ret)
-@@ -3832,6 +3831,8 @@ int xhci_disable_slot(struct xhci_hcd *xhci, u32 slot_id)
- 	if (!command)
- 		return -ENOMEM;
- 
-+	xhci_debugfs_remove_slot(xhci, slot_id);
-+
- 	spin_lock_irqsave(&xhci->lock, flags);
- 	/* Don't disable the slot if the host controller is dead. */
- 	state = readl(&xhci->op_regs->status);
--- 
-2.23.0.rc1.153.gdeed80330f-goog
+> 
+> Thanks
+>    j
+> 
+> >  
+> > > ---
+> > >  drivers/iio/adc/max9611.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
+> > > index 917223d5ff5b..e9f6b1da1b94 100644
+> > > --- a/drivers/iio/adc/max9611.c
+> > > +++ b/drivers/iio/adc/max9611.c
+> > > @@ -480,7 +480,7 @@ static int max9611_init(struct max9611_dev *max9611)
+> > >  	if (ret)
+> > >  		return ret;
+> > >
+> > > -	regval = ret & MAX9611_TEMP_MASK;
+> > > +	regval &= MAX9611_TEMP_MASK;
+> > >
+> > >  	if ((regval > MAX9611_TEMP_MAX_POS &&
+> > >  	     regval < MAX9611_TEMP_MIN_NEG) ||
+> > > --
+> > > 2.22.0
+> > >  
+> >  
 
