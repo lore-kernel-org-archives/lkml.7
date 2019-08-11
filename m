@@ -2,104 +2,149 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE09AC0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 17:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A50EC0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 17:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0BB12147A
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 17:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D1E2208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 17:24:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QhWmE08j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbfHKRXm (ORCPT
+        id S1726469AbfHKRYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 13:23:42 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:43813 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbfHKRXl (ORCPT
+        Sun, 11 Aug 2019 13:24:32 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35406 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfHKRYb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 13:23:41 -0400
-Received: by mail-yw1-f66.google.com with SMTP id n205so37953992ywb.10;
-        Sun, 11 Aug 2019 10:23:40 -0700 (PDT)
+        Sun, 11 Aug 2019 13:24:31 -0400
+Received: by mail-lf1-f66.google.com with SMTP id p197so72738888lfa.2;
+        Sun, 11 Aug 2019 10:24:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/pMvHtk+M/m2BtPotUFGhDIVPX/VoDUBZOFj7Ex1OpE=;
+        b=QhWmE08jXK6cT0R9qwXBbJVFKcHGm+8TQ1eixjtzcM/wkemUEM1du4hYazrXEndVpT
+         y0FEZWbMqEAdHmGfM1bRGaHecgZyq68XcfRTbistQfxW1J6U5x6Xx24YQPF/XadUGgq2
+         /9ySH0J9qBNlcMecSwyALJoRsuuCtSxh/89GGf23Fq11tcpl0yAJQa3ZjaKBesdfexxR
+         8OFPaSIL2jCvgkgPELZvaoW8Qjrdpqlpsi3K+En/nRc8+S5qLNbAkYUVb98WDKRfJW3I
+         9ZFytBnQ5ZDuEPxfqO1SH2dEHkMVPjMHifu9SMbYaN05ymxxYdAR2TPi5frIslL/unhR
+         xnEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tn6nhjNQ7pdIDBNVvjNcCirLgHTb4d9vEhC1PgN0dmg=;
-        b=Q4HxoqNQmDtNQG+lssU+Y9bv60ghSM7/KASV/auxtsiUOQQACxYd0jfDCBz1zp1otq
-         ijytVPKRnPklz5rW4gVMY3aeiiDfQtjji8tD7gM8kG1/icmXA97OgLeWQEkihf/qYdb7
-         y8eCe0uVu7iPZoScrjjaeCLbdJ9/PqfQ3yN9nhRkkBR4r4YG6G75iVo9i7sb+rhOtbkV
-         jNPhiGyvuk3SfW5cxySYn1787idvlqrp8xL4aJC1RpX+jSkw2kq+7c1oRqhJzpIDBvft
-         y4VhHrNUuMWjyOr9WzAI/FFZUCj77gB/gKx7q41QAC9RLA3+rU6Nyd0Wgeugvnxadrzp
-         I2kQ==
-X-Gm-Message-State: APjAAAV1XJkdQbB6Qsqe6DdRGW8G2GGM51q57+ql/hMISnY7pF4T3eKi
-        viwTBo/I2r/KwEWWLw+pPP5Z+usWh4w=
-X-Google-Smtp-Source: APXvYqyQ0YGPfGErlB97Ql1pCAIUrzC/nGiwLC0F+lrA2nquYsm718zy1jqHZRJ/vG2HIjgexdP3cQ==
-X-Received: by 2002:a81:50c:: with SMTP id 12mr22280201ywf.380.1565544220073;
-        Sun, 11 Aug 2019 10:23:40 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id l4sm1027236ywd.0.2019.08.11.10.23.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 11 Aug 2019 10:23:39 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        xen-devel@lists.xenproject.org (moderated list:XEN BLOCK SUBSYSTEM),
-        linux-block@vger.kernel.org (open list:BLOCK LAYER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] xen/blkback: fix memory leaks
-Date:   Sun, 11 Aug 2019 12:23:22 -0500
-Message-Id: <1565544202-3927-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/pMvHtk+M/m2BtPotUFGhDIVPX/VoDUBZOFj7Ex1OpE=;
+        b=ZZWPW+2IkZNnW+3U4aul1nn44W1GJyhJlcOn4Bxkve/ShvYhwbrjMY1jCQfXID583h
+         MUTkPJDIWohN/8rzc58NYxZxdxmcL99JpJ5JcGp7f5r0u1CCq34DsWGEf5vZ127/nRWX
+         J/SWupMPfWmoxGish6zkULyvgAtq2vtL4AWGh9X4YxlWur8mXvUm/pxLNCi+pPMD9lUe
+         hKMGrsGgTiEecXacfwADhwPsnfRrxQyI3IyibyG98XotIDKk5C0GsaJ04yDLtOV6Ombs
+         f9AtQM8AbV59IoVyICjIQeWsvgJMatgN+9QnlLpNWcGF4Ivudghyy6YYXBlMEilvlb21
+         YyFg==
+X-Gm-Message-State: APjAAAWDx5qhMJwoB+B6QEwElYnynoqNCCTXPJVIV2Pg++6jOBk4KEVn
+        lynxaC4QdXita8rIM7Y4yiO2n41+
+X-Google-Smtp-Source: APXvYqx0eMIALFSSfkzuJmnIRn5B58WB5jzFU9BQ57A8l/Ytm7iKaxoVhpZr+BL1i3f5Su+zBPRzTA==
+X-Received: by 2002:ac2:5976:: with SMTP id h22mr17733445lfp.79.1565544268454;
+        Sun, 11 Aug 2019 10:24:28 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.34.218])
+        by smtp.googlemail.com with ESMTPSA id q1sm20492867ljb.87.2019.08.11.10.24.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 11 Aug 2019 10:24:27 -0700 (PDT)
+Subject: Re: [PATCH v8 05/21] clk: tegra: pll: Save and restore pll context
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-6-git-send-email-skomatineni@nvidia.com>
+ <68f65db6-44b7-1c75-2633-4a2fffd62a92@gmail.com>
+ <dd20aa34-d838-40c4-9edd-bbe5973053f3@nvidia.com>
+ <2eecf4ff-802d-7e0e-d971-0257fae4e3a2@gmail.com>
+ <9096cbca-f647-b0af-2ab8-d48769555c3e@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d289b682-1760-efe1-e6a5-5b51c476f1ed@gmail.com>
+Date:   Sun, 11 Aug 2019 20:24:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <9096cbca-f647-b0af-2ab8-d48769555c3e@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In read_per_ring_refs(), after 'req' and related memory regions are
-allocated, xen_blkif_map() is invoked to map the shared frame, irq, and
-etc. However, if this mapping process fails, no cleanup is performed,
-leading to memory leaks. To fix this issue, invoke the cleanup before
-returning the error.
+09.08.2019 21:50, Sowjanya Komatineni пишет:
+> 
+> On 8/9/19 10:50 AM, Dmitry Osipenko wrote:
+>> 09.08.2019 20:39, Sowjanya Komatineni пишет:
+>>> On 8/9/19 4:33 AM, Dmitry Osipenko wrote:
+>>>> 09.08.2019 2:46, Sowjanya Komatineni пишет:
+>>>>> This patch implements save and restore of PLL context.
+>>>>>
+>>>>> During system suspend, core power goes off and looses the settings
+>>>>> of the Tegra CAR controller registers.
+>>>>>
+>>>>> So during suspend entry pll context is stored and on resume it is
+>>>>> restored back along with its state.
+>>>>>
+>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>> ---
+>>>>>    drivers/clk/tegra/clk-pll.c | 88 ++++++++++++++++++++++++++++-----------------
+>>>>>    drivers/clk/tegra/clk.h     |  2 ++
+>>>>>    2 files changed, 58 insertions(+), 32 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
+>>>>> index 1583f5fc992f..e52add2bbdbb 100644
+>>>>> --- a/drivers/clk/tegra/clk-pll.c
+>>>>> +++ b/drivers/clk/tegra/clk-pll.c
+>>>>> @@ -1008,6 +1008,28 @@ static unsigned long clk_plle_recalc_rate(struct clk_hw *hw,
+>>>>>        return rate;
+>>>>>    }
+>>>>>    +static void tegra_clk_pll_restore_context(struct clk_hw *hw)
+>>>>> +{
+>>>>> +    struct tegra_clk_pll *pll = to_clk_pll(hw);
+>>>>> +    struct clk_hw *parent = clk_hw_get_parent(hw);
+>>>>> +    unsigned long parent_rate = clk_hw_get_rate(parent);
+>>>>> +    unsigned long rate = clk_hw_get_rate(hw);
+>>>>> +    u32 val;
+>>>>> +
+>>>>> +    if (clk_pll_is_enabled(hw))
+>>>>> +        return;
+>>>>> +
+>>>>> +    if (pll->params->set_defaults)
+>>>>> +        pll->params->set_defaults(pll);
+>>>>> +
+>>>>> +    clk_pll_set_rate(hw, rate, parent_rate);
+>>>>> +
+>>>>> +    if (!__clk_get_enable_count(hw->clk))
+>>>> What about orphaned clocks? Is enable_count > 0 for them?
+>>> There are no orphaned pll clocks.
+>> Sorry, I meant the "clk_ignore_unused".
+> 
+> clocks with CLK_IGNORE_UNUSED are taken care by clk driver.
+> 
+> clk_disable_unused checks for clocks with this flag and if they are not enabled it will
+> enable them.
+> 
+> So by the time suspend happens enable_count is > 0
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- drivers/block/xen-blkback/xenbus.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
-index 3ac6a5d..b90dbcd 100644
---- a/drivers/block/xen-blkback/xenbus.c
-+++ b/drivers/block/xen-blkback/xenbus.c
-@@ -965,6 +965,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
- 		}
- 	}
- 
-+	err = -ENOMEM;
- 	for (i = 0; i < nr_grefs * XEN_BLKIF_REQS_PER_PAGE; i++) {
- 		req = kzalloc(sizeof(*req), GFP_KERNEL);
- 		if (!req)
-@@ -987,7 +988,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
- 	err = xen_blkif_map(ring, ring_ref, nr_grefs, evtchn);
- 	if (err) {
- 		xenbus_dev_fatal(dev, err, "mapping ring-ref port %u", evtchn);
--		return err;
-+		goto fail;
- 	}
- 
- 	return 0;
-@@ -1007,8 +1008,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
- 		}
- 		kfree(req);
- 	}
--	return -ENOMEM;
--
-+	return err;
- }
- 
- static int connect_ring(struct backend_info *be)
--- 
-2.7.4
-
+Okay.
