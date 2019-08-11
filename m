@@ -2,133 +2,128 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A66F5C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 02:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E45ACC32751
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 02:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75D3A208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 02:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADFED208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 02:08:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UnPKGYpx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pQjStUAk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfHKCEs (ORCPT
+        id S1726565AbfHKCIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 22:04:48 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39354 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbfHKCEr (ORCPT
+        Sat, 10 Aug 2019 22:08:17 -0400
+Received: from mail-ed1-f47.google.com ([209.85.208.47]:35738 "EHLO
+        mail-ed1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbfHKCIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 22:04:47 -0400
-Received: by mail-wm1-f68.google.com with SMTP id u25so8854134wmc.4
-        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 19:04:46 -0700 (PDT)
+        Sat, 10 Aug 2019 22:08:16 -0400
+Received: by mail-ed1-f47.google.com with SMTP id w20so100118748edd.2;
+        Sat, 10 Aug 2019 19:08:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zhVdjHruZiQl0JBTlSzBUsJPhxHlp6YhNl0glgh5GWg=;
-        b=UnPKGYpx+TU+ogxlV/TpeiXnN2RnqVVrTmR8uQ3CDen4QFsOOIK9V8SlzcYkEUazte
-         l2F5PX5QOOt6cAcpz5WK5C+8+IVKsYtdYvc1SESOoAbqUbUCOZy5ewgfV7J9OnqI5Au2
-         bhngoMM03H4AVJR7djruzCaVgsvPLbAB79swf9Lnl/aAJ9NjsL4ithfDXi6wKXb9GQgi
-         q6wbYo+iEZKFrPNW6nyZWX971NXqknuxgSxq0J0mf2gGZNVzEeC4HT9vF/ww2uKO1O8r
-         L2O3fMHepeFDTFv7GudaKV/hlGoIXqSw+Vsxt2qHp/bWQPIZyupAkWN1Y9JqXXbXqVSy
-         KGWQ==
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to;
+        bh=RP1LWzRuajmzKFCHqaSzfx+dlpKjssOccTd/Pg6x94Y=;
+        b=pQjStUAk0dXclB0KaZ5iJOIZg/GStMfNwGg/nnbV0Wr22jGRxiYitMBnCG7pRajOli
+         cSV1alOcJZo+PSeV/5gjPa2B6ILKlykPwk71yLM1Hm05nY01A1jfJkJTemW3dGZvQPcm
+         ofwqKDap4EFyrqQ+DjUhVgWHqULDNNct3W+gRL57gWIBTPZkiPOT/im8t6viMOfFEamr
+         ZBUgisBezf7qM7U4KS9r20g0qn9kmCHZ7t0/FBps2W2r8Vs/fW0TDcLCTkzqQ+FMWf6d
+         jgbLGRZtDQKpV8jAyLbVstsG9HASAgVnMsVPpF/QUllbQaIKOxuvPQ7ZwJ8hIGd6jye4
+         hfig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zhVdjHruZiQl0JBTlSzBUsJPhxHlp6YhNl0glgh5GWg=;
-        b=U8vmGAZDWuvHFGLBZxEEKUPt4vqOUTdU1xNxW/Bz9EpejnJdv/XuHDMnFBx6sfOhr0
-         JGRMaFF7GfLiy2yQK2es3k0HWOAbhN/jKw8oiBnaj1tuSDSHNbS2hKFjo81/TAjvSLYo
-         fFkG2f8T0PJNqqcxGsK2DVtG7Q9cQ29bjfVvQfozFsWr5GxK9O44w0fNs/034TsP7xYf
-         LeZRWBDogkaA5WaAMzYX4DWll3odNEVMTIgHs21wnWSYPlXNLyknU1KSYA5gFEnhRJcZ
-         VeVjO+rMrr3ICFvQrbMU26LYUx+oACyILCEqXBDnSfJrvZ12wBL1hbOTuA6K9gq7t8RJ
-         fu0g==
-X-Gm-Message-State: APjAAAVW6TvpZEb0V7Bp7yvtVrHjk/0FCjvT5tuMa08XIuhq/CcM4IHo
-        5Tn8OIBe0hCIRg6AgLRVAXI=
-X-Google-Smtp-Source: APXvYqy9tFlsHk5EdA8inHoMhdRt8sYE95/WAvjzORB5AnSy3bPfa/6xv6dzExUc4ylKL+TTEYAFMg==
-X-Received: by 2002:a1c:c188:: with SMTP id r130mr18532943wmf.73.1565489085159;
-        Sat, 10 Aug 2019 19:04:45 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id f197sm1755333wme.22.2019.08.10.19.04.43
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 10 Aug 2019 19:04:44 -0700 (PDT)
-Date:   Sat, 10 Aug 2019 19:04:42 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] Makefile: Convert -Wimplicit-fallthrough=3 to just
- -Wimplicit-fallthrough for clang
-Message-ID: <20190811020442.GA22736@archlinux-threadripper>
-References: <c0005a09c89c20093ac699c97e7420331ec46b01.camel@perches.com>
- <9c7a79b4d21aea52464d00c8fa4e4b92638560b6.camel@perches.com>
- <CAHk-=wiL7jqYNfYrNikgBw3byY+Zn37-8D8yR=WUu0x=_2BpZA@mail.gmail.com>
- <6a5f470c1375289908c37632572c4aa60d6486fa.camel@perches.com>
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to;
+        bh=RP1LWzRuajmzKFCHqaSzfx+dlpKjssOccTd/Pg6x94Y=;
+        b=tI/5zxMTfN2op9xKywLmVfaTjUovPnZCcAz9i4HhpuM2dunhGOOrDwB/PC48tXMHtX
+         asAZCt102Ki4KiHyPad9ZEAH3xNviFdTfcLYJBN/XTnTHDtUeBubZgz2G144qnxLOTV/
+         YVInI4s3Sy7GDxRFOIDbyS6wX1ieDUz+xMGjyUYPsmPeb7Srx42LHnEQ2gMtTUWdVIE6
+         jN9x0uPEw34gbZWsjzjQgmFQT4u3XtOi+qYs9+dfVxS+5a3dbNcpssr/kk5MeLcv104T
+         0f3rvJjXDd4hNjpdx/cq4FsmycR7km/3f7xxbEO6fkL3eXh8SctImUxXfW3Vxx7EkVS1
+         sc2g==
+X-Gm-Message-State: APjAAAWG7gU8Se6MswIbubUceCGqP6+LlolgXBnsgFflYY3/7s9AtK9V
+        b07YU8+yttv7mkYmiq8pZwKSjNSiatbOqgrcadar/kflFeo=
+X-Google-Smtp-Source: APXvYqxexoPqWF5fiyg/W6Z7Mdxv3GsVnhy2+mXXdUwsH61CiLb2bcrPo/hfsa7DE1sdN3yYs5VC0l6oFTW5CFOqewQ=
+X-Received: by 2002:a50:de08:: with SMTP id z8mr9025845edk.121.1565489294608;
+ Sat, 10 Aug 2019 19:08:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6a5f470c1375289908c37632572c4aa60d6486fa.camel@perches.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Received: by 2002:a17:906:2001:0:0:0:0 with HTTP; Sat, 10 Aug 2019 19:08:13
+ -0700 (PDT)
+In-Reply-To: <CABVa4NgWMkJuyB1P5fwQEYHwqBRiySE+fGQpMKt8zbp+xJ8+rw@mail.gmail.com>
+References: <CABVa4NgWMkJuyB1P5fwQEYHwqBRiySE+fGQpMKt8zbp+xJ8+rw@mail.gmail.com>
+From:   James Nylen <jnylen@gmail.com>
+Date:   Sun, 11 Aug 2019 02:08:13 +0000
+Message-ID: <CABVa4NhutjvHPbyaxNeVpJjf-RMJdwEX-Yjk4bkqLC1DN3oXPA@mail.gmail.com>
+Subject: [PATCH] `iwlist scan` fails with many networks available
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="0000000000004e2b98058fcde157"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 10, 2019 at 01:18:22PM -0700, Joe Perches wrote:
-> On Sat, 2019-08-10 at 12:44 -0700, Linus Torvalds wrote:
-> > On Sat, Aug 10, 2019 at 12:32 PM Joe Perches <joe@perches.com> wrote:
-> > > What does it take for this sort of patch to be applied by you?
-> > 
-> > The basic rule tends to be: "normal channels".
-> []
-> > I pulled from Gustavo earlier today to add a few more expected switch
-> > fall-through's, I guess I can take this Makefile change directly.
-> 
-> Thanks. It's simple enough.
-> 
-> There are classes of patches generated by scripts that have
-> no real mechanism to be applied today.
-> 
-> For instance: global coccinelle scripted changes to use stracpy
-> https://lore.kernel.org/lkml/alpine.DEB.2.21.1907251747560.2494@hadrien/
-> 
-> and trivial scripted changes to MAINTAINERS
-> https://lore.kernel.org/lkml/6482e6546dc328ec47b07dba9a78a9573ebb3e56.camel@perches.com/
-> 
-> that are basically impossible to be applied by anyone but you.
-> 
-> Otherwise there are hundreds of little micro patches most of
-> which would not otherwise be applied.
-> 
-> There should be some process available to get these treewide
-> or difficult to keep up-to-date and apply patches handled.
-> 
-> I believe these sorts of scripted patches should ideally
-> be handled immediately before an RC1 so other trees can be 
-> synchronized in the simplest way possible.
-> 
+--0000000000004e2b98058fcde157
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Joe,
+In 5.x it's still possible for `ieee80211_scan_results` (`iwlist
+scan`) to fail when too many wireless networks are available.  This
+code path is used by `wicd`.
 
-On a tangential note, how are you planning on doing the fallthrough
-comment to attribute conversion? The reason I ask is clang does not
-support the comment annotations, meaning that when Nathan Huckleberry's
-patch is applied to clang (which has been accepted [1]), we are going
-to get slammed by the warnings. I just ran an x86 defconfig build at
-296d05cb0d3c with his patch applied and I see 27673 instances of this
-warning... (mostly coming from some header files so nothing crazy but it
-will be super noisy).
+Previously: https://lkml.org/lkml/2017/4/2/192
 
-If you have something to share like a script or patch, I'd be happy to
-test it locally.
+I've been applying this updated patch to my own kernels since 2017 with
+no issues.  I am sure it is not the ideal way to solve this problem, but
+I'm making my fix available in case it helps others.
 
-[1]: https://reviews.llvm.org/D64838
+Please advise on next steps or if this is a dead end.
 
-Cheers,
-Nathan
+--0000000000004e2b98058fcde157
+Content-Type: text/plain; charset="US-ASCII"; name="wireless-scan-less-e2big.diff"
+Content-Disposition: attachment; filename="wireless-scan-less-e2big.diff"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: file0
+
+Y29tbWl0IDhlODBkY2IwZGY3MWFjOGY1ZDM2NDBiY2RiMWJiYTljNzY5M2Q2M2EKQXV0aG9yOiBK
+YW1lcyBOeWxlbiA8am55bGVuQGdtYWlsLmNvbT4KRGF0ZTogICBXZWQgQXByIDI2IDE0OjM4OjU4
+IDIwMTcgKzAyMDAKCiAgICBIYWNrOiBNYWtlIGBpZWVlODAyMTFfc2Nhbl9yZXN1bHRzYCAoYGl3
+bGlzdCBzY2FuYCkgcmV0dXJuIGxlc3MgRTJCSUcKICAgIAogICAgU2VlOiBodHRwczovL2xrbWwu
+b3JnL2xrbWwvMjAxNy80LzIvMTkyCiAgICAKICAgIChhbmQgYnJhbmNoIGBqY24vaGFjay93aXJl
+bGVzcy1zY2FuLW5vLWUyYmlnYCkKICAgIAogICAgVGhpcyBzaG91bGQgcmVhbGx5IGJlIGRvbmUg
+d2l0aCBhIGJpZ2dlciBsaW1pdCBpbnNpZGUgdGhlIGBpd2xpc3RgIGNvZGUKICAgIGluc3RlYWQs
+IGlmIHBvc3NpYmxlIChvciBldmVuIGJldHRlcjogbW9kaWZ5IGB3aWNkYCB0byB1c2UgYGl3IHNj
+YW5gCiAgICBpbnN0ZWFkKS4KCmRpZmYgLS1naXQgYS9uZXQvd2lyZWxlc3Mvc2Nhbi5jIGIvbmV0
+L3dpcmVsZXNzL3NjYW4uYwppbmRleCAyMWJlNTZiMzEyOGUuLjA4ZmE5Y2I2OGY1OSAxMDA2NDQK
+LS0tIGEvbmV0L3dpcmVsZXNzL3NjYW4uYworKysgYi9uZXQvd2lyZWxlc3Mvc2Nhbi5jCkBAIC0x
+Njk5LDYgKzE2OTksNyBAQCBzdGF0aWMgaW50IGllZWU4MDIxMV9zY2FuX3Jlc3VsdHMoc3RydWN0
+IGNmZzgwMjExX3JlZ2lzdGVyZWRfZGV2aWNlICpyZGV2LAogCQkJCSAgc3RydWN0IGl3X3JlcXVl
+c3RfaW5mbyAqaW5mbywKIAkJCQkgIGNoYXIgKmJ1Ziwgc2l6ZV90IGxlbikKIHsKKwljaGFyICpt
+YXliZV9jdXJyZW50X2V2OwogCWNoYXIgKmN1cnJlbnRfZXYgPSBidWY7CiAJY2hhciAqZW5kX2J1
+ZiA9IGJ1ZiArIGxlbjsKIAlzdHJ1Y3QgY2ZnODAyMTFfaW50ZXJuYWxfYnNzICpic3M7CkBAIC0x
+NzA5LDE0ICsxNzEwLDI5IEBAIHN0YXRpYyBpbnQgaWVlZTgwMjExX3NjYW5fcmVzdWx0cyhzdHJ1
+Y3QgY2ZnODAyMTFfcmVnaXN0ZXJlZF9kZXZpY2UgKnJkZXYsCiAKIAlsaXN0X2Zvcl9lYWNoX2Vu
+dHJ5KGJzcywgJnJkZXYtPmJzc19saXN0LCBsaXN0KSB7CiAJCWlmIChidWYgKyBsZW4gLSBjdXJy
+ZW50X2V2IDw9IElXX0VWX0FERFJfTEVOKSB7Ci0JCQllcnIgPSAtRTJCSUc7CisJCQkvLyBCdWZm
+ZXIgdG9vIHNtYWxsIHRvIGhvbGQgYW5vdGhlciBCU1MuICBPbmx5IHJlcG9ydAorCQkJLy8gYW4g
+ZXJyb3IgaWYgd2UgaGF2ZSBub3QgeWV0IHJlYWNoZWQgdGhlIG1heGltdW0KKwkJCS8vIGJ1ZmZl
+ciBzaXplIHRoYXQgYGl3bGlzdGAgY2FuIGhhbmRsZS4KKwkJCWlmIChsZW4gPCAweEZGRkYpIHsK
+KwkJCQllcnIgPSAtRTJCSUc7CisJCQl9CiAJCQlicmVhazsKIAkJfQotCQljdXJyZW50X2V2ID0g
+aWVlZTgwMjExX2JzcygmcmRldi0+d2lwaHksIGluZm8sIGJzcywKLQkJCQkJICAgY3VycmVudF9l
+diwgZW5kX2J1Zik7Ci0JCWlmIChJU19FUlIoY3VycmVudF9ldikpIHsKLQkJCWVyciA9IFBUUl9F
+UlIoY3VycmVudF9ldik7CisJCW1heWJlX2N1cnJlbnRfZXYgPSBpZWVlODAyMTFfYnNzKCZyZGV2
+LT53aXBoeSwgaW5mbywgYnNzLAorCQkJCQkgICAgICAgICBjdXJyZW50X2V2LCBlbmRfYnVmKTsK
+KwkJaWYgKElTX0VSUihtYXliZV9jdXJyZW50X2V2KSkgeworCQkJZXJyID0gUFRSX0VSUihtYXli
+ZV9jdXJyZW50X2V2KTsKKwkJCWlmIChlcnIgPT0gLUUyQklHKSB7CisJCQkJLy8gTGFzdCBCU1Mg
+ZmFpbGVkIHRvIGNvcHkgaW50byBidWZmZXIuICBBcworCQkJCS8vIGFib3ZlLCBvbmx5IHJlcG9y
+dCBhbiBlcnJvciBpZiBgaXdsaXN0YCB3aWxsCisJCQkJLy8gcmV0cnkgYWdhaW4gd2l0aCBhIGxh
+cmdlciBidWZmZXIuCisJCQkJaWYgKGxlbiA+PSAweEZGRkYpIHsKKwkJCQkJZXJyID0gMDsKKwkJ
+CQl9CisJCQl9CiAJCQlicmVhazsKKwkJfSBlbHNlIHsKKwkJCWN1cnJlbnRfZXYgPSBtYXliZV9j
+dXJyZW50X2V2OwogCQl9CiAJfQogCXNwaW5fdW5sb2NrX2JoKCZyZGV2LT5ic3NfbG9jayk7Cg==
+--0000000000004e2b98058fcde157--
