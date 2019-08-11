@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C7CC0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD30C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7871208C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B647217D4
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:05:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbfHKJFV (ORCPT
+        id S1726497AbfHKJFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 05:05:21 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38925 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbfHKJFT (ORCPT
+        Sun, 11 Aug 2019 05:05:25 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38888 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbfHKJFX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 05:05:19 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u17so48012110pgi.6;
-        Sun, 11 Aug 2019 02:05:19 -0700 (PDT)
+        Sun, 11 Aug 2019 05:05:23 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z14so10783708pga.5;
+        Sun, 11 Aug 2019 02:05:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=j3Ifly1foxb2daR0o6J+zTU4WYUy2bJbtxT4XK1OLrg=;
-        b=ZpSGyTg+Pc1nyUjFA5ewHi+L4znya+bvuCp4OFK9cnPbtQUappIWG/yKt0Pc/i5EBr
-         rBxo+jdFT6gFnvSxV22jBemcjuNqjA0sr+sF0fn62bZzmdChaCIn6nZiiAwz9sDmbia+
-         6WjwKP6VWvNkgKTGhYfabk9LdlOk3z6B1zVKEnBRwaZWZ3XRte24R1bgmOII+hqJyd2d
-         FKDPEUPPXxSlT6CwT8QAjDukEOR4jli0c6rOVTMyP3bhw+yjTj1JCHZihZSpAZ7l5YQg
-         748HBKpMKmhlZwOZyfALA2XBOaV5+0OIagSRGjqekRqJ8gH2O55rXPVZ5i2RuW6rPNl9
-         l+tg==
-X-Gm-Message-State: APjAAAXpb1KtFSLgnGoNtVoxNiKNGpQCaJEBRav4pg1jR2Oqz2L1tiFM
-        NooDALi2lmVKJz8oj2fmiHo=
-X-Google-Smtp-Source: APXvYqzoJpamqQrzP8NyckFzL5RrUb9B9dABDLWUcQmAOLk12/iQmd2UHC7uYVwNwUU2GfMYhuCiLQ==
-X-Received: by 2002:a62:c584:: with SMTP id j126mr527338pfg.21.1565514318668;
-        Sun, 11 Aug 2019 02:05:18 -0700 (PDT)
+        bh=DfWUrSqQwgPvfj5wOOKm7TdPELNExyWS4lWHPaxFdi0=;
+        b=g4q31ygIcXH5lZpT9nbUDAitkSqORG0X+XUotkTRBUBNWoOHcv+SOlynEYB5Bn3LhT
+         cam0DGHmkiVbmEnMiUMeSn6VwJwswjFdSWj+wt9q/SeWF7Ol/nfYNnLAa1i9xOz8WEkb
+         gVrm1vhA9RvWqJT6sHQl0G7DXKnq3m/cGEoft6WIasrxEjxJ1hPyO737DnxC8DAMfSxk
+         SSPWtHKWe0SoR1cDg18Oq016quUJqYx/ch2ROP7a98qzFsS9ABa14zdWHmGkjtBofjDh
+         3h2Kj6XCgrjKZrBNKSg8/TJmkToI5mILxgwdMUyn8g34VTj4ZCkpABEIuXUsapjhhsBG
+         w/sA==
+X-Gm-Message-State: APjAAAUhREbGzjndghOSIYKCAJ7qpCHuaxAv3VvmGGXl1+66fhxcxTJv
+        PsWe6lbohfy6sL20nBkO8mo=
+X-Google-Smtp-Source: APXvYqySWWqv4fBguoluEQVEtCnzmJWQIrOn4zc+LscMyjnZJH79c32tcsOXqXbfufs9etIHIFwKbA==
+X-Received: by 2002:aa7:85d6:: with SMTP id z22mr4472397pfn.262.1565514322676;
+        Sun, 11 Aug 2019 02:05:22 -0700 (PDT)
 Received: from archbox.localdomain ([203.88.145.156])
-        by smtp.gmail.com with ESMTPSA id r75sm129923096pfc.18.2019.08.11.02.05.17
+        by smtp.gmail.com with ESMTPSA id f27sm87287978pgm.60.2019.08.11.02.05.21
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 11 Aug 2019 02:05:18 -0700 (PDT)
+        Sun, 11 Aug 2019 02:05:22 -0700 (PDT)
 From:   Bhushan Shah <bshah@kde.org>
 To:     Icenowy Zheng <icenowy@aosc.io>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -50,9 +50,9 @@ To:     Icenowy Zheng <icenowy@aosc.io>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Bhushan Shah <bshah@kde.org>
-Subject: [PATCH 1/2] arm64: allwinner: h6: add I2C nodes
-Date:   Sun, 11 Aug 2019 14:35:02 +0530
-Message-Id: <20190811090503.32396-2-bshah@kde.org>
+Subject: [PATCH 2/2] arm64: allwinner: h6: enable i2c0 in PineH64
+Date:   Sun, 11 Aug 2019 14:35:03 +0530
+Message-Id: <20190811090503.32396-3-bshah@kde.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190811090503.32396-1-bshah@kde.org>
 References: <20190811090503.32396-1-bshah@kde.org>
@@ -61,87 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device-tree nodes for i2c0 to i2c2, and also add relevant pinctrl
-nodes.
+i2c0 bus is exposed by PI-2 BUS in the PineH64, model B.
 
-Suggested-by: Icenowy Zheng <icenowy@aosc.io>
 Signed-off-by: Bhushan Shah <bshah@kde.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 54 ++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index bcecca17d61d..1d9ad3ec0b65 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -329,6 +329,21 @@
- 				function = "hdmi";
- 			};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+index 684d1daa3081..a184361bc10d 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+@@ -160,6 +160,14 @@
+ 	vcc-pg-supply = <&reg_aldo1>;
+ };
  
-+			i2c0_pins: i2c0-pins {
-+				pins = "PD25", "PD26";
-+				function = "i2c0";
-+			};
++&i2c0 {
++	status = "okay";
++};
 +
-+			i2c1_pins: i2c1-pins {
-+				pins = "PH5", "PH6";
-+				function = "i2c1";
-+			};
++&i2c0_pins {
++	bias-pull-up;
++};
 +
-+			i2c2_pins: i2c2-pins {
-+				pins = "PD23", "PD24";
-+				function = "i2c2";
-+			};
-+
- 			mmc0_pins: mmc0-pins {
- 				pins = "PF0", "PF1", "PF2", "PF3",
- 				       "PF4", "PF5";
-@@ -464,6 +479,45 @@
- 			status = "disabled";
- 		};
+ &r_i2c {
+ 	status = "okay";
  
-+		i2c0: i2c@5002000 {
-+			compatible = "allwinner,sun6i-a31-i2c";
-+			reg = <0x05002000 0x400>;
-+			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_I2C0>;
-+			resets = <&ccu RST_BUS_I2C0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c0_pins>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		i2c1: i2c@5002400 {
-+			compatible = "allwinner,sun6i-a31-i2c";
-+			reg = <0x05002400 0x400>;
-+			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_I2C1>;
-+			resets = <&ccu RST_BUS_I2C1>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c1_pins>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		i2c2: i2c@5002800 {
-+			compatible = "allwinner,sun6i-a31-i2c";
-+			reg = <0x05002800 0x400>;
-+			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_I2C2>;
-+			resets = <&ccu RST_BUS_I2C2>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c2_pins>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
- 		emac: ethernet@5020000 {
- 			compatible = "allwinner,sun50i-h6-emac",
- 				     "allwinner,sun50i-a64-emac";
 -- 
 2.17.1
 
