@@ -2,215 +2,130 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31ACAC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7626C32756
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04E53217D4
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 809792084D
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:56:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nPwIydAX"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Irf3nmJb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbfHKJqe (ORCPT
+        id S1726490AbfHKJ4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 05:46:34 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37580 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbfHKJqd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 05:46:33 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w13so100961930eds.4;
-        Sun, 11 Aug 2019 02:46:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=9BeOw8Uu2quOpfN1Fz6s59CWeM59ggKmEfAja51g3bE=;
-        b=nPwIydAXCS1xxU/OjpFyu5qZYYSLyVmpxqnTmBpNsVEra6l+UPhcoNDstyhyg17gfX
-         zuAGgX0gLJoGERvZNYJ0nVZ5msTBmaD/KINjyXrCrJrBqmfap4xmsMFelDWFVx3buoeb
-         +lztWhVT75kcb7CD8Nbo0AONmWxMueY8sB3H9FYwbjmqr/IeQvgA4xm/E6wQ6dCTyomH
-         Em5AvzLdgDgGKIdBR5eYzy+YqAGOSnjQLK+AaxEfOjyJojBhfVTxErFJg9H9p8LHb21O
-         X8vZrov9/HS/zVsCswZ6qBoP3yRxCBI6HgAV5Ps6aWU8AaW+wJJY6tRrXULSBBT/uppv
-         HYVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=9BeOw8Uu2quOpfN1Fz6s59CWeM59ggKmEfAja51g3bE=;
-        b=qYBC2slo8c3MMn22SmJnXzTZMEArOY4k47e+cSKD/JOpmsPu6YJP1QjeuTkTx901KB
-         5RK7ZQjt7DCOF0cho18hYN+ZjVYi2dHntYTg8McwMTPeCLnZegAoFOPK42rYEqhRePNV
-         9XWalV5TjmwZYRWe61k21vuEFRpMTaG9P0slRu1ncnKnlqCq0OixW6dct1Gg9Swz9ELW
-         1UcJqYqFXDU1TFHwQgCM5IxuJVlSSv/f9zkSeWDw07bOEcyK36TZTBhc7Sw1uPVfcc4+
-         hF5S8wwxFpSuL/JqdY7ADZitzXgQw7n1DaYcHhG60IG9rD3K2NYquC6/BvyfiD0y+06H
-         KeyA==
-X-Gm-Message-State: APjAAAW9/RF+KlpOmNrm1w5yf152a3E97ol4t97+z0finQ8Jnzyj+6/h
-        1nK7sj9lHE7bF7XgLoQTDwk/IijJPZo=
-X-Google-Smtp-Source: APXvYqyMrSkzivMD8igLqxNXfU025m0/vmS+bwi0lqjfvd5jzkQ3vvr6p5f9+rBAMZ5GLTEMYVwhBg==
-X-Received: by 2002:a17:906:1e89:: with SMTP id e9mr27040006ejj.56.1565516791454;
-        Sun, 11 Aug 2019 02:46:31 -0700 (PDT)
-Received: from eldamar (80-218-24-251.dclient.hispeed.ch. [80.218.24.251])
-        by smtp.gmail.com with ESMTPSA id f21sm23144299edj.36.2019.08.11.02.46.30
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 11 Aug 2019 02:46:31 -0700 (PDT)
-Date:   Sun, 11 Aug 2019 11:46:30 +0200
-From:   Salvatore Bonaccorso <carnil@debian.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>, x86@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Matthew Garrett <mjg59@google.com>
-Subject: Re: [Linux 5.2.x]
- /sys/kernel/debug/tracing/events/power/cpu_idle/id: BUG: kernel NULL pointer
- dereference, address: 0000000000000000
-Message-ID: <20190811094630.GA18925@eldamar.local>
-References: <4b54ff1e-f18b-3c58-7caa-945a0775c24c@molgen.mpg.de>
- <alpine.DEB.2.21.1908101910280.7324@nanos.tec.linutronix.de>
- <01c7bc6b-dc6d-5eca-401a-8869e02f7c2a@molgen.mpg.de>
- <e18e2a11-ea96-a612-48cd-877fa307115f@molgen.mpg.de>
- <alpine.DEB.2.21.1908110822110.7324@nanos.tec.linutronix.de>
+        Sun, 11 Aug 2019 05:56:05 -0400
+Received: from mail-eopbgr140057.outbound.protection.outlook.com ([40.107.14.57]:50760
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725900AbfHKJ4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 05:56:05 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NQtZkbdYptQtCagSdMzg5d3sbrKrdL6yvWVN6o1yFDftUUpOIASdRWBqNisVpL6KSPhjBojvbvGtEZcTqZWlUi2/yVTrTvaPJuovXkhx+Eyq+hmG81zTFN5rxlFre7nrgdoRSNCjQVr5XtevdphIPtaI+OscB181YFT9PjThGmmSLVhXzwqWvyW2pK+MLamH0BQQMQKZNIe2FGV3+bKQRDY9pLZEXhtkNtP35jLXzDH509NvEDLv8SJO7rq2coN5rnKLXDav32KIbuBb8Sd6F5FvVFgq1JsuSw9QuPbNgljn1pc1JmRSjXpMlQ8J1PXfRkV+mX1GSSTZ6/7MOOBqqA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LJtzcYhH8Dei1lvX5Lut2M+WOEfZoTyMfeC5WS3b/og=;
+ b=EDtNbfuKl4qdHOdDg5Zhgujc3AZ0u31pXf9CUeHptsJrb9abZAmfHe6sMLcAiCcjqRguTPQUnAkP7dGlQO6zXS2Icx616nyBcEX9aEpFNVpkb93hvKs4mlTpXNWaYkjOVueqayYioG1kcMQQBAtHVEOuKFRZlZG37d5cU9KGg/eYDvKFEIpOKhyZXV9zf08BjAB+eBZlpCTwXsvqFEhBcQS4z7DeG5KaGgQNI05slgQE35DRf367738YFVkTwSBJz2GGOR1l1Y5KDGE+jS89JtLmPT7byNATA3Pb5sIt29Jk087OGuMTg47P2O0ax0MjvEme09RThjxC1z6Ss614BQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LJtzcYhH8Dei1lvX5Lut2M+WOEfZoTyMfeC5WS3b/og=;
+ b=Irf3nmJbp1R2uoOy+bKZC6gszk5O7YkJ8c5NFfYcA3K9n9GU8cqbAIunYGyULnuEa25vKiK4rR34HhA9wEI3ZFBYXHAimCn6Dr7oc92jQofiJMzsHNgSHA1xQ8rnUIUIcAyTU3QpM2JimwR5mHD6VWKMu2tfdanDpeTx25ZIK7c=
+Received: from AM4PR05MB3137.eurprd05.prod.outlook.com (10.171.188.155) by
+ AM4PR05MB3458.eurprd05.prod.outlook.com (10.170.125.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.14; Sun, 11 Aug 2019 09:55:58 +0000
+Received: from AM4PR05MB3137.eurprd05.prod.outlook.com
+ ([fe80::a1bc:70:4ca9:49f6]) by AM4PR05MB3137.eurprd05.prod.outlook.com
+ ([fe80::a1bc:70:4ca9:49f6%7]) with mapi id 15.20.2157.022; Sun, 11 Aug 2019
+ 09:55:58 +0000
+From:   Leon Romanovsky <leonro@mellanox.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+CC:     "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Boris Pismenny <borisp@mellanox.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Igor Russkikh <igor.russkikh@aquantia.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "oss-drivers@netronome.com" <oss-drivers@netronome.com>
+Subject: Re: [PATCH 11/11] treewide: remove dummy Makefiles for single targets
+Thread-Topic: [PATCH 11/11] treewide: remove dummy Makefiles for single
+ targets
+Thread-Index: AQHVT5QeRE/eBhrx90G8ydJdkg0FfKb1tsaA
+Date:   Sun, 11 Aug 2019 09:55:58 +0000
+Message-ID: <20190811095555.GF28049@mtr-leonro.mtl.com>
+References: <20190810155307.29322-1-yamada.masahiro@socionext.com>
+ <20190810155307.29322-12-yamada.masahiro@socionext.com>
+In-Reply-To: <20190810155307.29322-12-yamada.masahiro@socionext.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR2PR09CA0020.eurprd09.prod.outlook.com
+ (2603:10a6:101:16::32) To AM4PR05MB3137.eurprd05.prod.outlook.com
+ (2603:10a6:205:8::27)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonro@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.47.165.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5a6960f3-1c5c-406b-f5ef-08d71e421c0e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM4PR05MB3458;
+x-ms-traffictypediagnostic: AM4PR05MB3458:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM4PR05MB3458C667CF8B910D35D17B15B0D00@AM4PR05MB3458.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 0126A32F74
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(376002)(366004)(396003)(136003)(346002)(199004)(189003)(6246003)(4326008)(8676002)(11346002)(6486002)(478600001)(446003)(81156014)(81166006)(229853002)(5660300002)(66066001)(316002)(8936002)(4744005)(14454004)(2906002)(54906003)(486006)(6436002)(1076003)(66446008)(64756008)(66556008)(66476007)(66946007)(476003)(3846002)(6506007)(386003)(7416002)(52116002)(9686003)(6512007)(6116002)(102836004)(6916009)(25786009)(86362001)(186003)(53936002)(99286004)(71190400001)(71200400001)(305945005)(76176011)(33656002)(7736002)(26005)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR05MB3458;H:AM4PR05MB3137.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: C1hooVLEz9S7qgTUPP8Zlpw5FQtCLRbfPMo7YyXFLvvb9F073Xk/btf9azTdxldc8ZlWSJ2SUjuLi5/cnHManxEwIdITcihL6aove01RaWwQvatTerBqbYQ9Hk+QmuWHsLw0XBnsTxmdl9WQQZDwx7hBUbCkKfUZsaOR9e6U5ITrBqxsgzBXEzksUxER1HbFjQsrHLbgknODGGJ8kApjvFtT4J6sjT0aivxkmqj2kYbXKxZgmRGgncne3Ubb2XOu2jasWESfT8NkaHhj0sb130Ylcfz62iVUoCNdeFV8oUwv+qK8Z9WtoPB6s2Uvclyv/zgHEhaCbnBIFrToCIL2a+NGbHWQSjbcEZpFv5s8MRvmxV6PP2pntXa3z834xZizLkBZ0i8cgLbeqTrxjbVQ6a1/Iqji4xIJWljsKbFIPlk=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D00E1D38B2CAF44D82BE59CBB71B2DAA@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <alpine.DEB.2.21.1908110822110.7324@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a6960f3-1c5c-406b-f5ef-08d71e421c0e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Aug 2019 09:55:58.6030
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yes2R86qFUOXZKiZF1gnTM+fy5wNPsgym0WfQhcCmZeOuLNs2hUD2a4zvtZuE4yDFj8D2rpmIs9GKaNm+uhlew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR05MB3458
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi,
+On Sun, Aug 11, 2019 at 12:53:07AM +0900, Masahiro Yamada wrote:
+> Now that the single target build descends into sub-directories
+> in the same ways as the normal build, these dummy Makefiles
+> are not needed any more.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
 
-On Sun, Aug 11, 2019 at 08:22:35AM +0200, Thomas Gleixner wrote:
-> On Sat, 10 Aug 2019, Paul Menzel wrote:
-> 
-> Cc+ Steven
-> 
-> > [+ INTEL IDLE DRIVER]
-> > 
-> > Dear Linux folks,
-> > 
-> > 
-> > On 10.08.19 20:28, Paul Menzel wrote:
-> > 
-> > > On 10.08.19 19:31, Thomas Gleixner wrote:
-> > > 
-> > > > On Sat, 10 Aug 2019, Paul Menzel wrote:
-> > > > > 
-> > > > > I have no idea, who to report this to, so I please refer me to the
-> > > > > correct
-> > > > > list.
-> > > > 
-> > > > I have no idea yet either :)
-> > > > 
-> > > > > With Linux 5.2.7 from Debian Sid/unstable and PowerTOP 2.10, executing
-> > > > > 
-> > > > >      sudo powertop --auto-tune
-> > > > > 
-> > > > > causes a NULL pointer dereference, and the graphical session crashes due
-> > > > > to an
-> > > > > effect on the i915 driver. It worked in the past with the 4.19 series
-> > > > > from
-> > > > > Debian.
-> > > > > 
-> > > > > Here is the trace, and please find all Linux kernel logs attached.
-> > > > > 
-> > > > > > [ 2027.170589] BUG: kernel NULL pointer dereference, address:
-> > > > > > 0000000000000000
-> > > > > > [ 2027.170600] #PF: supervisor instruction fetch in kernel mode
-> > > > > > [ 2027.170604] #PF: error_code(0x0010) - not-present page
-> > > > > > [ 2027.170609] PGD 0 P4D 0 [ 2027.170619] Oops: 0010 [#1] SMP PTI
-> > > > ...
-> > > > > > [ 2027.170730]  do_dentry_open+0x13a/0x370
-> > > > 
-> > > > If you have compiled with debug info, please decode the line:
-> > > > 
-> > > >    linux/scripts/faddr2line vmlinux do_dentry_open+0x13a/0x370
-> > > > 
-> > > > That gives us the fops pointer which is NULL.
-> > > 
-> > > Hah, luckily it’s reproducible.
-> > > 
-> > > ```
-> > > $ scripts/faddr2line /usr/lib/debug/boot/vmlinux-5.2.0-2-amd64
-> > > do_dentry_open+0x13a/0x370
-> > > do_dentry_open+0x13a/0x370:
-> > > do_dentry_open at fs/open.c:799
-> > > ```
-> > > 
-> > > > > > [ 2027.170745]  path_openat+0x2c6/0x1480
-> > > > > > [ 2027.170757]  ? terminate_walk+0xe6/0x100
-> > > > > > [ 2027.170767]  ? path_lookupat.isra.48+0xa3/0x220
-> > > > > > [ 2027.170779]  ? reuse_swap_page+0x105/0x320
-> > > > > > [ 2027.170791]  do_filp_open+0x93/0x100
-> > > > > > [ 2027.170804]  ? __check_object_size+0x15d/0x189
-> > > > > > [ 2027.170816]  do_sys_open+0x184/0x220
-> > > > > > [ 2027.170828]  do_syscall_64+0x53/0x130
-> > > > > > [ 2027.170837]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > > > 
-> > > > That's an open crashing. We just don't know which file. Is the machine
-> > > > completely hosed after that or is it just the graphics stuff dying?
-> > > 
-> > > No, the graphical login manager showed up, and I could log back in, and
-> > > continue using hte machine.
-> > > 
-> > > > If it's not completely dead then instead of running it from your graphical
-> > > > desktop you could switch to a VGA terminal Alt+Ctrl+F1 (or whatever
-> > > > function key your distro maps to) after boot and run powertop with strace
-> > > > from there:
-> > > > 
-> > > >    strace -f -o xxx.log powertop
-> > > > 
-> > > > With a bit of luck xxx.log should contain the information about the file
-> > > > it
-> > > > tries to open.
-> > > 
-> > > ```
-> > > 2157  access("/sys/class/drm/card0/power/rc6_residency_ms", R_OK) = 0
-> > > 2157  openat(AT_FDCWD, "/sys/kernel/debug/tracing/events/power/cpu_idle/id",
-> > > O_RDONLY) = ?
-> > > 2157  +++ killed by SIGKILL +++
-> > > ```
-> > > 
-> > > > Alternatively if you have a serial console you can enable the
-> > > > sys_enter_open* tracepoints:
-> > > > 
-> > > > # echo 1 >/sys/kernel/debug/tracing/events/syscalls/sys_enter_open
-> > > > # echo 1 >/sys/kernel/debug/tracing/events/syscalls/sys_enter_openat
-> > > > 
-> > > > Either add 'ftrace_dump_on_oops' to the kernel command line or enable it
-> > > > from the shell:
-> > > > 
-> > > > # echo 1 > /proc/sys/kernel/ftrace_dump_on_oops
-> > > > 
-> > > > Then run powertop. After the crash it will take some time to spill out the
-> > > > trace buffer over serial, but it will pinpoint the offending file.
-> > > 
-> > > I do not have serial console on this device.
-> > 
-> > For the record. It is also reproducible with Linux 5.2.6, and trying to print
-> > the file contents with cat already fails.
-> > 
-> > ```
-> > $ sudo ls -l /sys/kernel/debug/tracing/events/power/cpu_idle/id
-> > -r--r--r-- 1 root root 0 Aug 10 23:05
-> > /sys/kernel/debug/tracing/events/power/cpu_idle/id
-> > $ sudo cat /sys/kernel/debug/tracing/events/power/cpu_idle/id
-> > Killed
-> > ```
+It is hard to test/review/ack on this patch without seeing previous
+patches, especially patch #10 where you changed logic of single targets.
 
-This seems to be related to https://bugs.debian.org/934304 (in
-particular https://bugs.debian.org/934304#29). The mentioned patch
-features/all/lockdown/0031-tracefs-Restrict-tracefs-when-the-kernel-is-locked-d.patch
-is a backport of https://patchwork.kernel.org/patch/11069661/ with
-only change that it is converted back to the non-LSM lockdown API.
-
-Regards,
-Salvatore
+Thanks
