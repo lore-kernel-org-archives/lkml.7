@@ -2,69 +2,112 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97710C0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 20:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8603FC433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 20:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 623CF2085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 20:20:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565554819;
-	bh=i4w8B+cpVPXThlxBvwy4MnGi42Qt5vWodoM8k3EI0oc=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=uIrCQpSMkrQKUxrREfGpdz5Wod7nLrldykWzXvOJHngiKCdXrhWaxfUlPtTZy8IPM
-	 +Gc1efd6yHNuGe+Mi78QDyD64WorI8RVEZqFTEAwg5ZeXqKBCgPeFYeR+gXNi5Oyyd
-	 LxAioe2AVGoeBqDQqQ7tHH6cSccBEt/PkpkWmtBo=
+	by mail.kernel.org (Postfix) with ESMTP id 551662085B
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 20:22:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FmE07a+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfHKUUS (ORCPT
+        id S1726519AbfHKUWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 16:20:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbfHKUUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 16:20:17 -0400
-Subject: Re: [GIT PULL] dax fixes v5.3-rc4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565554813;
-        bh=i4w8B+cpVPXThlxBvwy4MnGi42Qt5vWodoM8k3EI0oc=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=prCFR2BhegsueU5De1GSXYh3GJ3xKxMD9aceQyN2kMhmCSJYAV8UMigzQq5GccTXY
-         fS6JzB3mnDutkrtArtYRQgdvhVefGnKulp+ZkEWDcF4/sXU+l/CqIkaY+GbiTT1yZi
-         Zr/HRfxtkgxAYeF3lmT0z4bVbu1NvfWrtsx8IR8Q=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAPcyv4iaYiXbv2sf-Znn5dYphLKEi77NjafkEzXA2kAEMqyR0w@mail.gmail.com>
-References: <CAPcyv4iaYiXbv2sf-Znn5dYphLKEi77NjafkEzXA2kAEMqyR0w@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAPcyv4iaYiXbv2sf-Znn5dYphLKEi77NjafkEzXA2kAEMqyR0w@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
- tags/dax-fixes-5.3-rc4
-X-PR-Tracked-Commit-Id: 06282373ff57a2b82621be4f84f981e1b0a4eb28
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b6c0649caf351d39e1dfb5698d7b3bb7536850b1
-Message-Id: <156555480716.24420.8804304827340944517.pr-tracker-bot@kernel.org>
-Date:   Sun, 11 Aug 2019 20:20:07 +0000
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Sun, 11 Aug 2019 16:22:51 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44546 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726011AbfHKUWv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 16:22:51 -0400
+Received: by mail-ot1-f68.google.com with SMTP id b7so101673770otl.11;
+        Sun, 11 Aug 2019 13:22:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LhCZsWxZ9N0cFWIcf2zFmzJDaTFv5khYxxXFoiFHFWc=;
+        b=FmE07a+nY1HAiO1rZnpjtzbLGzfO6KldQ2bZDNtWHZSNJRnyWc2I/38EyigtGOYOw0
+         IPbM6A5H333mRQrrA+lr4GYpR31LAKYRzEwuTOTqu52E+cDVQQp2rwhoc75LG/zje7bS
+         2Fc/0PZa4y7COtYss1r79TGXFY7meEJuIPuaZZ3Kkrj23//Bqbi/VF2ia4XO2fqXmXC/
+         VeblU1cEJY6iMkIQ+3YpiMCIxqr0XDX4VLlO8U7qaRGoTFruw3JQIt5/cQdPlvxNV6P7
+         EE18/3a/p79DDBPHNbqzTci3O+XlfBZFJ4u/ZeP0epTf7sf2DFO1dwGeKsE+EDVRqL5H
+         Rc1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LhCZsWxZ9N0cFWIcf2zFmzJDaTFv5khYxxXFoiFHFWc=;
+        b=gBVqSvRZLhPCwtkN2ndmpRTCnuGTrR6SuzReLVMvuYTv4BugfguVdalyPdS7fqVGLj
+         1SqQPG/cZ4EeCPjtTVCGVPl6QJGBMjnzUXZt8Y6ZT4ZBd5r7for620ENHvkuThtOOc6N
+         cSEaEMLHABIDM6Zv/XxUpDvVkpVGwaGpNsOfWnhCu3V/HD/46k9Kf8ETLdL9rtB7wV96
+         NRksn1q6PbXEeSpRGC16rkIafbU9zLxOHvP1X4U3tg0tSe0BCr7QuUN1lauFa6OSnqeF
+         hsWEG+972meWyfCvY7kUUMvTK96YhW1HjpemlVpTYbbyQqtN1tS5IZtjazelRmXocP3W
+         LHIg==
+X-Gm-Message-State: APjAAAWbWXNkXZRVgUIP5BQJ1+45LsXIygFsukcap2s2D1Cegt1EUhLn
+        /KmDmhbaQ+oM+n4HHqUXx0rf6Zv4qIt2c+hrsgRiOg==
+X-Google-Smtp-Source: APXvYqzN0e1ldEXQab16Pz+xVPTk//ZiZ63CKAj2OIYrK3ALilgswuz+hP1rq+AcMw7tJZFuiH5gXBCnPHjj9ZSrmtw=
+X-Received: by 2002:a02:6d24:: with SMTP id m36mr34626709jac.87.1565554970465;
+ Sun, 11 Aug 2019 13:22:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <1565554067-4994-1-git-send-email-wenwen@cs.uga.edu>
+In-Reply-To: <1565554067-4994-1-git-send-email-wenwen@cs.uga.edu>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Sun, 11 Aug 2019 13:22:39 -0700
+Message-ID: <CAKgT0Ue_cSVDd6Tf9ji5zUCNEseAAzUtDG3BS6TEhR8Xh83xQQ@mail.gmail.com>
+Subject: Re: [PATCH] net: ixgbe: fix memory leaks
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "moderated list:INTEL ETHERNET DRIVERS" 
+        <intel-wired-lan@lists.osuosl.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Amritha Nambiar <amritha.nambiar@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 11 Aug 2019 12:01:02 -0700:
+On Sun, Aug 11, 2019 at 1:08 PM Wenwen Wang <wenwen@cs.uga.edu> wrote:
+>
+> In ixgbe_configure_clsu32(), 'jump', 'input', and 'mask' are allocated
+> through kzalloc() respectively in a for loop body. Then,
+> ixgbe_clsu32_build_input() is invoked to build the input. If this process
+> fails, next iteration of the for loop will be executed. However, the
+> allocated 'jump', 'input', and 'mask' are not deallocated on this execution
+> path, leading to memory leaks.
+>
+> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+> ---
+>  drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+> index cbaf712..6b7ea87 100644
+> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+> @@ -9490,6 +9490,10 @@ static int ixgbe_configure_clsu32(struct ixgbe_adapter *adapter,
+>                                 jump->mat = nexthdr[i].jump;
+>                                 adapter->jump_tables[link_uhtid] = jump;
+>                                 break;
+> +                       } else {
+> +                               kfree(mask);
+> +                               kfree(input);
+> +                               kfree(jump);
+>                         }
+>                 }
+>                 return 0;
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm tags/dax-fixes-5.3-rc4
+So I think this fix is still missing a good chunk of the exception
+handling it should have. Specifically we will end up failing and then
+trying to allocate for the next rule. It seems like we should probably
+stop trying to program rules and unwind the work we have already done.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b6c0649caf351d39e1dfb5698d7b3bb7536850b1
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Also it would probably make sense to return an error if we are unable
+to program one of the rules into the hardware. Otherwise things will
+fail and the user will never know why.
