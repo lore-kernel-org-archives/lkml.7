@@ -2,146 +2,161 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5375BC0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 07:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CA0C0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 07:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 296C92173C
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 07:04:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565507041;
-	bh=jWMpenqWIxBR2gTyohlRI7kZJbZCU4SFLASh3LRKW2g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LZg7X3G/nvkq2+QsWx1Lg5vSeBdZtTSJ/Qw+uPQmDjz/irqWDJHIgxoDcxo92dQhP
-	 Im/eyNaUWUXvkODR025158pn/W5GrYNfkKyfJ0JxIsAFf1Vx6S0W8DsU/cleWwSZzX
-	 BO5JQCEup+Q4wX4gQzcjx7OVdk5PHBDQM+tkgYh0=
+	by mail.kernel.org (Postfix) with ESMTP id 7FFBA216F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 07:19:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbfHKHEA (ORCPT
+        id S1726164AbfHKHTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 03:04:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42604 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725813AbfHKHD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 03:03:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F6B52085B;
-        Sun, 11 Aug 2019 07:03:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565507038;
-        bh=jWMpenqWIxBR2gTyohlRI7kZJbZCU4SFLASh3LRKW2g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U6UKvdfOuYH1cx0uYTMIjlXc8f7wfD/ydISlh4LZK1neoCXseF7iZZ68TegLBhVEE
-         z0Rb9VkmEZ2pr5QFPy2VPH7QlIGzKuBgvxmQTIXF24gqQqszsFCK7oWFsXYqpXj9R0
-         /+/RvYlCiQ5xXSP8TNieVuvKFrxQiohrXcOFdzGM=
-Date:   Sun, 11 Aug 2019 09:03:50 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Robert Jarzmik <robert.jarzmik@free.fr>
-Cc:     dan.j.williams@intel.com, vkoul@kernel.org,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/6] dma: pxa_dma: no need to check return value of
- debugfs_create functions
-Message-ID: <20190811070350.GA28202@kroah.com>
-References: <20190612122557.24158-1-gregkh@linuxfoundation.org>
- <20190612122557.24158-4-gregkh@linuxfoundation.org>
- <87tvaorfc1.fsf@belgarion.home>
+        Sun, 11 Aug 2019 03:19:12 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58550 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfHKHTM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 03:19:12 -0400
+Received: from p200300ddd71876477e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7647:7e7a:91ff:fec9:8e25])
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hwi89-0005ku-3g; Sun, 11 Aug 2019 09:19:05 +0200
+Date:   Sun, 11 Aug 2019 09:18:59 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Megha Dey <megha.dey@intel.com>
+cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, marc.zyngier@arm.com,
+        ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
+        megha.dey@linux.intel.com
+Subject: Re: [RFC V1 RESEND 5/6] PCI/MSI: Free MSI-X resources by group
+In-Reply-To: <1565118597.2401.116.camel@intel.com>
+Message-ID: <alpine.DEB.2.21.1908110912470.7324@nanos.tec.linutronix.de>
+References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>  <1561162778-12669-6-git-send-email-megha.dey@linux.intel.com>  <alpine.DEB.2.21.1906291002190.1802@nanos.tec.linutronix.de> <1565118597.2401.116.camel@intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87tvaorfc1.fsf@belgarion.home>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: multipart/mixed; boundary="8323329-2125260003-1565507945=:7324"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 10, 2019 at 09:27:26PM +0200, Robert Jarzmik wrote:
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-2125260003-1565507945=:7324
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+
+On Tue, 6 Aug 2019, Megha Dey wrote:
+
+> On Sat, 2019-06-29 at 10:08 +0200, Thomas Gleixner wrote:
+> > Megha,
+> > 
+> > On Fri, 21 Jun 2019, Megha Dey wrote:
+> > > 
+> > > +static int free_msi_irqs_grp(struct pci_dev *dev, int group_id)
+> > > +{
+> > > 
+> > > +
+> > > +	for_each_pci_msi_entry(entry, dev) {
+> > > +		if (entry->group_id == group_id && entry->irq)
+> > > +			for (i = 0; i < entry->nvec_used; i++)
+> > > +				BUG_ON(irq_has_action(entry->irq +
+> > > i));
+> > BUG_ON is wrong here. This can and must be handled gracefully.
+> > 
 > 
-> Hi Greg,
+> Hmm, I reused this code from the 'free_msi_irqs' function. I am not
+> sure why it is wrong to use BUG_ON here but ok to use it there, please
+> let me know.
+
+We are not adding BUG_ON() anymore except for situations where there is
+absolutely no way out. Just because there is still older code having
+BUG_ON() does not make it any better. Copying it surely is no
+justification.
+
+If there is really no way out, then you need to explain it.
+ 
+> > > +static void pci_msix_shutdown_grp(struct pci_dev *dev, int
+> > > group_id)
+> > > +{
+> > > +	struct msi_desc *entry;
+> > > +	int grp_present = 0;
+> > > +
+> > > +	if (pci_dev_is_disconnected(dev)) {
+> > > +		dev->msix_enabled = 0;
+> > Huch? What's that? I can't figure out why this is needed and of
+> > course it
+> > completely lacks a comment explaining this. 
+> > 
 > 
-> > When calling debugfs functions, there is no need to ever check the
-> > return value.  The function can work or not, but the code logic should
-> > never do something different based on this.
-> >
-> > Also, because there is no need to save the file dentry, remove the
-> > variable that was saving it as it was never even being used once set.
-> >
-> > Cc: Daniel Mack <daniel@zonque.org>
-> > Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
-> > Cc: Robert Jarzmik <robert.jarzmik@free.fr>
-> > Cc: Vinod Koul <vkoul@kernel.org>
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: dmaengine@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > ---
-> >  drivers/dma/pxa_dma.c | 56 +++++++++----------------------------------
-> >  1 file changed, 11 insertions(+), 45 deletions(-)
-> >
-> > diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
-> > index b429642f3e7a..0f698f49ee26 100644
-> > --- a/drivers/dma/pxa_dma.c
-> > +++ b/drivers/dma/pxa_dma.c
-> > @@ -132,7 +132,6 @@ struct pxad_device {
-> >  	spinlock_t			phy_lock;	/* Phy association */
-> >  #ifdef CONFIG_DEBUG_FS
-> >  	struct dentry			*dbgfs_root;
-> > -	struct dentry			*dbgfs_state;
-> >  	struct dentry			**dbgfs_chan;
-> >  #endif
-> >  };
-> > @@ -326,31 +325,18 @@ static struct dentry *pxad_dbg_alloc_chan(struct pxad_device *pdev,
-> >  					     int ch, struct dentry *chandir)
-> >  {
-> >  	char chan_name[11];
-> > -	struct dentry *chan, *chan_state = NULL, *chan_descr = NULL;
-> > -	struct dentry *chan_reqs = NULL;
-> > +	struct dentry *chan;
-> >  	void *dt;
-> >  
-> >  	scnprintf(chan_name, sizeof(chan_name), "%d", ch);
-> >  	chan = debugfs_create_dir(chan_name, chandir);
-> >  	dt = (void *)&pdev->phys[ch];
-> >  
-> > -	if (chan)
-> > -		chan_state = debugfs_create_file("state", 0400, chan, dt,
-> > -						 &chan_state_fops);
-> > -	if (chan_state)
-> > -		chan_descr = debugfs_create_file("descriptors", 0400, chan, dt,
-> > -						 &descriptors_fops);
-> > -	if (chan_descr)
-> > -		chan_reqs = debugfs_create_file("requesters", 0400, chan, dt,
-> > -						&requester_chan_fops);
-> > -	if (!chan_reqs)
-> > -		goto err_state;
-> > +	debugfs_create_file("state", 0400, chan, dt, &chan_state_fops);
-> > +	debugfs_create_file("descriptors", 0400, chan, dt, &descriptors_fops);
-> > +	debugfs_create_file("requesters", 0400, chan, dt, &requester_chan_fops);
+> Again, I have reused this code from the pci_msix_shutdown() function.
+> So for the group case, this is not required?
+
+Copy and paste is not an argument, really. Can this happen here? If so,
+then please add a comment.
+
+> > > 
+> > > +		return;
+> > > +	}
+> > > +
+> > > +	/* Return the device with MSI-X masked as initial states
+> > > */
+> > > +	for_each_pci_msi_entry(entry, dev) {
+> > > +		if (entry->group_id == group_id) {
+> > > +			/* Keep cached states to be restored */
+> > > +			__pci_msix_desc_mask_irq(entry, 1);
+> > > +			grp_present = 1;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	if (!grp_present) {
+> > > +		pci_err(dev, "Group to be disabled not
+> > > present\n");
+> > > +		return;
+> > So you print an error and silently return
+> > 
 > 
-> This is not strictly equivalent.
-> Imagine that the debugfs_create_dir() fails and returns NULL :
+> This is a void function, hence no error value can be returned. What do
+> you think is the right thing to do if someone wants to delete a group
+> which is not present?
 
-How can that happen?
+Well, you made it a void function. 
+ 
+> > > 
+> > > +	}
+> > > +}
+> > > +
+> > > +int pci_disable_msix_grp(struct pci_dev *dev, int group_id)
+> > > +{
+> > > +	int num_vecs;
+> > > +
+> > > +	if (!pci_msi_enable || !dev)
+> > > +		return -EINVAL;
+> > > +
+> > > +	pci_msix_shutdown_grp(dev, group_id);
+> > > +	num_vecs = free_msi_irqs_grp(dev, group_id);
+> > just to call in another function which has to do the same group_id
+> > lookup
+> > muck again.
+> 
+> Even with the new proposal, we are to have 2 sets of functions: one to
+> delete all the msic_desc entries associated with the device, and the
+> other to delete those only belonging a 'user specified' group. So we do
+> need to pass a group_id to these functions right? Yes, internally the
+> deletion would be straightforward with the new approach.
 
->  - in the former case, neither "state", "descriptors" nor "requesters" would be
->    created
->  - in the new code, "state", "descriptors" nor "requesters" will be created in
->    the debugfs root directory
+That does not matter. If pci_msix_shutdown_grp() does not find a group, why
+proceeding instead of having a proper error return and telling the caller?
 
-I agree, but debugfs_create_dir() does not return a NULL on an error
-since many kernel releases.  Neither can debugfs_create_file() so really
-this test is not working at all as-is :)
+Thanks,
 
-thanks,
-
-greg k-h
+	tglx
+--8323329-2125260003-1565507945=:7324--
