@@ -2,155 +2,150 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E30BC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 16:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C369AC41514
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 16:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67B6320880
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 16:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9516E216F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 16:08:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NVnQZNVU";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hjMIY34S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfHKQH6 (ORCPT
+        id S1726556AbfHKQIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 12:07:58 -0400
-Received: from bmailout1.hostsharing.net ([83.223.95.100]:34617 "EHLO
-        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfHKQH6 (ORCPT
+        Sun, 11 Aug 2019 12:08:39 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:34134 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfHKQIj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 12:07:58 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 7D1E330000CC0;
-        Sun, 11 Aug 2019 18:07:55 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 56D1C22B01A; Sun, 11 Aug 2019 18:07:55 +0200 (CEST)
-Date:   Sun, 11 Aug 2019 18:07:55 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] PCI: pciehp: Add pciehp_set_indicators() to jointly
- set LED indicators
-Message-ID: <20190811160755.w2jpcqt2powdcz7q@wunner.de>
-References: <20190811132945.12426-1-efremov@linux.com>
- <20190811132945.12426-2-efremov@linux.com>
+        Sun, 11 Aug 2019 12:08:39 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1EA9E60709; Sun, 11 Aug 2019 16:08:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565539718;
+        bh=q2Eye4K2ziKCFlT1foS+S6HSiy4LOooGYEQTduuBmiw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NVnQZNVUOiK3K7aKCxetRqBpEoBkNBU05iW86thPa5J/aTc8I2/mi88U78JdckLbV
+         9EiUZ2juRkXB4OJMjH2Di2MajNay0ZFOUQ2qJOA3j05+Lo3cmdVvptj1iE1cbHsnLu
+         3Oxn2V4CFyAhZ4D8kt0SuP+FnKMRIaPc49YBLTkk=
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1C0D36053B;
+        Sun, 11 Aug 2019 16:08:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565539717;
+        bh=q2Eye4K2ziKCFlT1foS+S6HSiy4LOooGYEQTduuBmiw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hjMIY34Sv2YtANfBFfitDJXajAadIYCdQPemtCzJ9iq2adSonaPKN2fsL7dH+tIcc
+         9lYwvg7BEHZkh2nAAIDeB3081lx0jOOeYgTT3M0K7Nkeb+1LNi4flA4d/yMWXYYPjK
+         YhN/5/MnQwuWKPsyiOZCC7HkOZw7OnkEvV5HNjgA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1C0D36053B
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
+Received: by mail-ed1-f47.google.com with SMTP id m44so8038470edd.9;
+        Sun, 11 Aug 2019 09:08:36 -0700 (PDT)
+X-Gm-Message-State: APjAAAWjgAcZLXkEMxNjvoGvu/SmkZXegUcmsK5OgjlOPG8tt0nkxoHr
+        WGWju9EHhIUylbxVuHYOghBW8ilJA+Df78RHrrQ=
+X-Google-Smtp-Source: APXvYqyFFJCaGAq46SyTCzjuDhcbBv3wmxf8bN+ADhcvIt95E7RRnkwHNH6sBTe8oSgzL5kbHeNmbVUaK3aBr0qGTKk=
+X-Received: by 2002:a17:906:2544:: with SMTP id j4mr27620572ejb.221.1565539715693;
+ Sun, 11 Aug 2019 09:08:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190811132945.12426-2-efremov@linux.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
+ <20190612071554.13573-5-vivek.gautam@codeaurora.org> <20190805222627.GA2634@builder>
+In-Reply-To: <20190805222627.GA2634@builder>
+From:   Vivek Gautam <vivek.gautam@codeaurora.org>
+Date:   Sun, 11 Aug 2019 21:38:24 +0530
+X-Gmail-Original-Message-ID: <CAFp+6iHGrXAJ2Y1ewxaePGYEcbnprjScUnGyR61qvOv03HVZhQ@mail.gmail.com>
+Message-ID: <CAFp+6iHGrXAJ2Y1ewxaePGYEcbnprjScUnGyR61qvOv03HVZhQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] arm64: dts/sdm845: Enable FW implemented safe
+ sequence handler on MTP
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "robh+dt" <robh+dt@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 04:29:42PM +0300, Denis Efremov wrote:
-> This commit adds pciehp_set_indicators() to set power and attention
+On Tue, Aug 6, 2019 at 3:56 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Wed 12 Jun 00:15 PDT 2019, Vivek Gautam wrote:
+>
+> > Indicate on MTP SDM845 that firmware implements handler to
+> > TLB invalidate erratum SCM call where SAFE sequence is toggled
+> > to achieve optimum performance on real-time clients, such as
+> > display and camera.
+> >
+> > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > index 78ec373a2b18..6a73d9744a71 100644
+> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > @@ -2368,6 +2368,7 @@
+> >                       compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
+> >                       reg = <0 0x15000000 0 0x80000>;
+> >                       #iommu-cells = <2>;
+> > +                     qcom,smmu-500-fw-impl-safe-errata;
+>
+> Looked back at this series and started to wonder if there there is a
+> case where this should not be set? I mean we're after all adding this to
+> the top 845 dtsi...
 
-Nit:  "This commit ..." is superfluous, just say "Add ...".
+My bad.
+This is not valid in case of cheza. Cheza firmware doesn't implement
+the safe errata handling hook.
+On cheza we just have the liberty of accessing the secure registers
+through scm calls - this is what
+we were doing in earlier patch series handling this errata.
+So, a property like this should go to mtp board's dts file.
 
+Thanks
 
-> indicators with a single register write. enum pciehp_indicator
-> introduced to switch between the indicators statuses. Attention
-> indicator statuses are explicitly set with values in the enum to
-> transparently comply with pciehp_set_attention_status() from
-> pciehp_hpc.c and set_attention_status() from pciehp_core.c
+Vivek
 
-Please document the motivation of the change (the "why").
-
-One motivation might be to avoid waiting twice for Command Complete.
-
-Another motivation might be to change both LEDs at the same time
-in a glitch-free manner, thereby achieving a smoother user experience.
-
-
-> --- a/drivers/pci/hotplug/pciehp.h
-> +++ b/drivers/pci/hotplug/pciehp.h
-> +enum pciehp_indicator {
-> +	// Explicit values to match set_attention_status interface
-
-Kernel coding style is typically /* */, not //.
-
-
-> +	ATTN_NONE = -1,
-> +	ATTN_OFF = 0,
-> +	ATTN_ON = 1,
-> +	ATTN_BLINK = 2,
-> +	PWR_NONE,
-> +	PWR_OFF,
-> +	PWR_ON,
-> +	PWR_BLINK
-> +};
-
-I'd suggest using the same values that are written to the register, i.e.:
-
-enum pciehp_indicator {
-	ATTN_NONE  = -1,
-	ATTN_ON    =  1,
-	ATTN_BLINK =  2,
-	ATTN_OFF   =  3,
-	PWR_NONE   = -1,
-	PWR_ON     =  1,
-	PWR_BLINK  =  2,
-	PWR_OFF    =  3,
-};
-
-Then you can just shift the values to the proper offset and don't need
-a translation between enum pciehp_indicator and register value.
-
-
-> +void pciehp_set_indicators(struct controller *ctrl,
-> +			   enum pciehp_indicator pwr,
-> +			   enum pciehp_indicator attn)
-> +{
-> +	u16 cmd = 0;
-> +	bool pwr_none = (pwr == PWR_NONE);
-> +	bool attn_none = (attn == ATTN_NONE);
-> +	bool pwr_led = PWR_LED(ctrl);
-> +	bool attn_led = ATTN_LED(ctrl);
-> +
-> +	if ((!pwr_led && !attn_led) || (pwr_none && attn_none) ||
-> +	    (!attn_led && pwr_none) || (!pwr_led && attn_none))
-> +		return;
-
-I'd suggest the following simpler construct:
-
-	if (!PWR_LED(ctrl)  || pwr  == PWR_NONE) &&
-	    !ATTN_LED(ctrl) || attn == ATTN_NONE))
-		return;
+>
+> How about making it the default in the driver and opt out of the errata
+> once there is a need?
+>
+> Regards,
+> Bjorn
+>
+> >                       #global-interrupts = <1>;
+> >                       interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
+> >                                    <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
+> > --
+> > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> > of Code Aurora Forum, hosted by The Linux Foundation
+> >
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
 
 
-> +	switch (pwr) {
-> +	case PWR_OFF:
-> +		cmd = PCI_EXP_SLTCTL_PWR_IND_OFF;
-> +		break;
-> +	case PWR_ON:
-> +		cmd = PCI_EXP_SLTCTL_PWR_IND_ON;
-> +		break;
-> +	case PWR_BLINK:
-> +		cmd = PCI_EXP_SLTCTL_PWR_IND_BLINK;
-> +		break;
-> +	default:
-> +		break;
-> +	}
 
-If you follow my suggestion above to use the register value for "pwr",
-then you can just fold all three cases into one, i.e.
-
-	case PWR_ON:
-	case PWR_BLINK:
-	case PWR_OFF:
-		cmd = pwr << 8;
-		mask |= PCI_EXP_SLTCTL_PIC;
-		break;
-
-Feel free to add a PCI_EXP_SLTCTL_PWR_IND_OFFSET macro for the offset 8.
-Add a "u16 mask = 0" to the top of the function and pass "mask" to
-pcie_write_cmd_nowait().
-
-Thanks,
-
-Lukas
+--
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
