@@ -2,165 +2,73 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E078C0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 686EEC433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 033FE208C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:00:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565514034;
-	bh=iyH/cUx17oamFY6wZF/MwlfV/Qh3cGvuxjYSc3KZ8IE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=hP/wc8VjMOZKoHn+oY7LGbjV/efMRQX0MbdTp3A0hw936HVe5bDtcbz8/zA0C3aLJ
-	 z/tFzGqCU+k/qtYT0i7jHiTZZdATHofZo/NzXgHD/XYtSSerqdMyxWDfBAJ/7aRX4x
-	 FrrRy6c+bxQSLalUHpNHOa1QvRE55u9hGxv+Tl68=
+	by mail.kernel.org (Postfix) with ESMTP id 3F470208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:05:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbfHKJAd (ORCPT
+        id S1726231AbfHKJFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 05:00:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53168 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725855AbfHKJAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 05:00:32 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A57FF208C2;
-        Sun, 11 Aug 2019 09:00:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565514031;
-        bh=iyH/cUx17oamFY6wZF/MwlfV/Qh3cGvuxjYSc3KZ8IE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MxOcaQRnaUV/7d90hW7VdqU6wkBO3KJDp6xgyKhZYNF/A6BQXo7IiVWCD8ZxtkwXn
-         Kqtq61VrW6ktEOwmBga8gmVCmlciPL6A/gevwPM2tOwkmDmClanracIOfNmd2O8Wob
-         hmoR78czcSiECmdqDBl2EXy9Lg8bT48M2XouhctE=
-Date:   Sun, 11 Aug 2019 10:00:22 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Healy <cphealy@gmail.com>,
-        Vladimir Barinov <vladimir.barinov@cogentembedded.com>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Subject: Re: [PATCH] iio: hi8435: Drop hi8435_remove()
-Message-ID: <20190811100022.4fe91756@archlinux>
-In-Reply-To: <20190811054545.6922-1-andrew.smirnov@gmail.com>
-References: <20190811054545.6922-1-andrew.smirnov@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 11 Aug 2019 05:05:17 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38924 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbfHKJFQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 05:05:16 -0400
+Received: by mail-pg1-f195.google.com with SMTP id u17so48012076pgi.6;
+        Sun, 11 Aug 2019 02:05:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=IcaO688fqJ9Hhcivif+YH1kMxvlYAd9l9NqrayDjxq0=;
+        b=OWkY+cvsQHo6nG/1/wUs0s/HCs2ucdS4RkIyDu1RUYKmhqJImTogg521JDtDceLcSK
+         efEg40j+wjaEpAO8/cf2+HD0biWxbw+me4W1zGScnxjkz32JtQLFnbwh0SONfdIh8k8o
+         +XlvwAmivn9m/H9JZ04QixDJicFSosF38JqfmS3+U/GEHWvKTBkL+kV+MNMojfuh40W/
+         5GpDtZemDaI8NowsGz0wuc5F2ZnXrkIT1bmv3Zd71V+Q4/UGqdzBenUtugvDWJEV/z3d
+         9KVX1I+85xmH2KevQh3baEAHJRWPx3OLFf5LGpW3yi0zw5Si1hHI4Ayl56QZR+ehV3sq
+         kZvw==
+X-Gm-Message-State: APjAAAWeUpHn5oY4P67LhHXpn2OtamrnJUf3+4UjpKY/Qod1cFiTf/r6
+        UibbAdnyqFFb4Uaxh234fEs=
+X-Google-Smtp-Source: APXvYqx2blkLw/V4FEJpl8ZqPLTs9eoghw79426vNrE77wukLP1oTnruHW4TTYpJjIaWDZC5dITeDA==
+X-Received: by 2002:a62:e801:: with SMTP id c1mr30719946pfi.41.1565514315923;
+        Sun, 11 Aug 2019 02:05:15 -0700 (PDT)
+Received: from archbox.localdomain ([203.88.145.156])
+        by smtp.gmail.com with ESMTPSA id q63sm134447761pfb.81.2019.08.11.02.05.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 11 Aug 2019 02:05:15 -0700 (PDT)
+From:   Bhushan Shah <bshah@kde.org>
+To:     Icenowy Zheng <icenowy@aosc.io>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Bhushan Shah <bshah@kde.org>
+Subject: [PATCH 0/2] Enable the I2C nodes for Allwinner H6 CPU
+Date:   Sun, 11 Aug 2019 14:35:01 +0530
+Message-Id: <20190811090503.32396-1-bshah@kde.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 10 Aug 2019 22:45:45 -0700
-Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+This patch series adds device-tree nodes for i2c nodes in the H6 dtsi,
+and enables it for the Pine H64.
 
-> Convert the remainder of hi8435_probe() to use devres and get rid of
-> hi8435_remove().
-> 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-iio@vger.kernel.org
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Chris Healy <cphealy@gmail.com>
-+CC as before.
+Bhushan Shah (2):
+  arm64: allwinner: h6: add I2C nodes
+  arm64: allwinner: h6: enable i2c0 in PineH64
 
-I've tweaked things a little bit (see below)
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  4 ++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 54 +++++++++++++++++++
+ 2 files changed, 58 insertions(+)
 
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
-
-Still time for others to comment btw!
-
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/adc/hi8435.c | 30 +++++++++++++-----------------
->  1 file changed, 13 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/hi8435.c b/drivers/iio/adc/hi8435.c
-> index c15f0e154e4d..fe1341383d30 100644
-> --- a/drivers/iio/adc/hi8435.c
-> +++ b/drivers/iio/adc/hi8435.c
-> @@ -456,6 +456,11 @@ static irqreturn_t hi8435_trigger_handler(int irq, void *private)
->  	return IRQ_HANDLED;
->  }
->  
-> +static void hi8435_triggered_event_cleanup(void *data)
-> +{
-> +	iio_triggered_event_cleanup(data);
-> +}
-
-Hmm. I wonder if we should do a full devm_iio_triggered_event_setup()
-but given we have very few callers that can be a job for another day.
-
-> +
->  static int hi8435_probe(struct spi_device *spi)
->  {
->  	struct iio_dev *idev;
-> @@ -513,26 +518,18 @@ static int hi8435_probe(struct spi_device *spi)
->  	if (ret)
->  		return ret;
->  
-> -	ret = iio_device_register(idev);
-> +	ret = devm_add_action_or_reset(&spi->dev,
-> +				       hi8435_triggered_event_cleanup,
-> +				       idev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = devm_iio_device_register(&spi->dev, idev);
->  	if (ret < 0) {
->  		dev_err(&spi->dev, "unable to register device\n");
-> -		goto unregister_triggered_event;
-> +		return ret;
-
-We could tidy up a little more and do
-	if (ret)
-		dev_err...
-
-	return ret;
-
-Or, given all the likely paths in iio_device_register() have 
-error prints anyway, can just do
-	return devm_iio_device_register();
-
-I'll change it to this last one whilst applying.
-
->  	}
->  
-> -	return 0;
-> -
-> -unregister_triggered_event:
-> -	iio_triggered_event_cleanup(idev);
-> -	return ret;
-> -}
-> -
-> -static int hi8435_remove(struct spi_device *spi)
-> -{
-> -	struct iio_dev *idev = spi_get_drvdata(spi);
-> -
-> -	iio_device_unregister(idev);
-> -	iio_triggered_event_cleanup(idev);
-> -
->  	return 0;
->  }
->  
-> @@ -554,7 +551,6 @@ static struct spi_driver hi8435_driver = {
->  		.of_match_table	= of_match_ptr(hi8435_dt_ids),
->  	},
->  	.probe		= hi8435_probe,
-> -	.remove		= hi8435_remove,
->  	.id_table	= hi8435_id,
->  };
->  module_spi_driver(hi8435_driver);
+-- 
+2.17.1
 
