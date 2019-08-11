@@ -2,91 +2,107 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD30C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1126DC433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B647217D4
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA338216F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:10:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbfHKJFZ (ORCPT
+        id S1726466AbfHKJKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 05:05:25 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38888 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbfHKJFX (ORCPT
+        Sun, 11 Aug 2019 05:10:23 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:18611 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725826AbfHKJKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 05:05:23 -0400
-Received: by mail-pg1-f196.google.com with SMTP id z14so10783708pga.5;
-        Sun, 11 Aug 2019 02:05:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=DfWUrSqQwgPvfj5wOOKm7TdPELNExyWS4lWHPaxFdi0=;
-        b=g4q31ygIcXH5lZpT9nbUDAitkSqORG0X+XUotkTRBUBNWoOHcv+SOlynEYB5Bn3LhT
-         cam0DGHmkiVbmEnMiUMeSn6VwJwswjFdSWj+wt9q/SeWF7Ol/nfYNnLAa1i9xOz8WEkb
-         gVrm1vhA9RvWqJT6sHQl0G7DXKnq3m/cGEoft6WIasrxEjxJ1hPyO737DnxC8DAMfSxk
-         SSPWtHKWe0SoR1cDg18Oq016quUJqYx/ch2ROP7a98qzFsS9ABa14zdWHmGkjtBofjDh
-         3h2Kj6XCgrjKZrBNKSg8/TJmkToI5mILxgwdMUyn8g34VTj4ZCkpABEIuXUsapjhhsBG
-         w/sA==
-X-Gm-Message-State: APjAAAUhREbGzjndghOSIYKCAJ7qpCHuaxAv3VvmGGXl1+66fhxcxTJv
-        PsWe6lbohfy6sL20nBkO8mo=
-X-Google-Smtp-Source: APXvYqySWWqv4fBguoluEQVEtCnzmJWQIrOn4zc+LscMyjnZJH79c32tcsOXqXbfufs9etIHIFwKbA==
-X-Received: by 2002:aa7:85d6:: with SMTP id z22mr4472397pfn.262.1565514322676;
-        Sun, 11 Aug 2019 02:05:22 -0700 (PDT)
-Received: from archbox.localdomain ([203.88.145.156])
-        by smtp.gmail.com with ESMTPSA id f27sm87287978pgm.60.2019.08.11.02.05.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 11 Aug 2019 02:05:22 -0700 (PDT)
-From:   Bhushan Shah <bshah@kde.org>
-To:     Icenowy Zheng <icenowy@aosc.io>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Sun, 11 Aug 2019 05:10:23 -0400
+X-UUID: 05ffea0b1da64af4b9ab527241d52319-20190811
+X-UUID: 05ffea0b1da64af4b9ab527241d52319-20190811
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 313713411; Sun, 11 Aug 2019 17:10:12 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N2.mediatek.inc
+ (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sun, 11 Aug
+ 2019 17:10:06 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
+ MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1395.4 via Frontend Transport; Sun, 11 Aug 2019 17:10:04 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Bhushan Shah <bshah@kde.org>
-Subject: [PATCH 2/2] arm64: allwinner: h6: enable i2c0 in PineH64
-Date:   Sun, 11 Aug 2019 14:35:03 +0530
-Message-Id: <20190811090503.32396-3-bshah@kde.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190811090503.32396-1-bshah@kde.org>
-References: <20190811090503.32396-1-bshah@kde.org>
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Jitao Shi <jitao.shi@mediatek.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <ck.hu@mediatek.com>, <stonea168@163.com>
+Subject: [PATCH v4 0/4] Add drivers for auo,kd101n80-45na and boe,tv101wum-nl6 panels
+Date:   Sun, 11 Aug 2019 17:09:57 +0800
+Message-ID: <20190811091001.49555-1-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-TM-SNTS-SMTP: 13D0A12DC02939C6C15BF9FF5D1853EE5ED675A5B964FD3864D887C10CD6F7A02000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i2c0 bus is exposed by PI-2 BUS in the PineH64, model B.
+Changes since v3:
+ - remove check enable_gpio.
+ - fine tune the auo,kd101n80-45na panel's power on timing.
 
-Signed-off-by: Bhushan Shah <bshah@kde.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Changes since v2:
+ - correct the panel size
+ - remove blank line in Kconfig
+ - move auo,kd101n80-45na panel driver in this series.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index 684d1daa3081..a184361bc10d 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -160,6 +160,14 @@
- 	vcc-pg-supply = <&reg_aldo1>;
- };
- 
-+&i2c0 {
-+	status = "okay";
-+};
-+
-+&i2c0_pins {
-+	bias-pull-up;
-+};
-+
- &r_i2c {
- 	status = "okay";
- 
+Changes since v1:
+
+ - update typo nl6 -> n16.
+ - update new panel config and makefile are added in alphabetically order.
+ - add the panel mode and panel info in driver data.
+ - merge auo,kd101n80-45a and boe,tv101wum-nl6 in one driver
+
+Jitao Shi (4):
+  dt-bindings: display: panel: Add BOE tv101wum-n16 panel bindings
+  drm/panel: support for BOE tv101wum-nl6 wuxga dsi video mode panel
+  dt-bindings: display: panel: add auo kd101n80-45na panel bindings
+  drm/panel: support for auo,kd101n80-45na wuxga dsi video mode panel
+
+ .../display/panel/auo,kd101n80-45na.txt       |  34 +
+ .../display/panel/boe,tv101wum-nl6.txt        |  34 +
+ drivers/gpu/drm/panel/Kconfig                 |   9 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    | 761 ++++++++++++++++++
+ 5 files changed, 839 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/auo,kd101n80-45na.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
+ create mode 100644 drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
+
 -- 
-2.17.1
+2.21.0
 
