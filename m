@@ -2,85 +2,139 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0691C0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 21:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A98C0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 21:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94565205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 21:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6083208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 21:14:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fG0PSTui"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbfHKVLZ (ORCPT
+        id S1726488AbfHKVOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 17:11:25 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:47258 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfHKVLZ (ORCPT
+        Sun, 11 Aug 2019 17:14:34 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55763 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfHKVOe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 17:11:25 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id CB5CF2002B;
-        Sun, 11 Aug 2019 23:11:19 +0200 (CEST)
-Date:   Sun, 11 Aug 2019 23:11:18 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>, stonea168@163.com,
-        dri-devel@lists.freedesktop.org,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        cawa.cheng@mediatek.com,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Thierry Reding <treding@nvidia.com>,
-        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        linux-arm-kernel@lists.infradead.org,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Sean Paul <seanpaul@chromium.org>
-Subject: Re: [PATCH v4 0/4] Add drivers for auo, kd101n80-45na and boe,
- tv101wum-nl6 panels
-Message-ID: <20190811211118.GA23636@ravnborg.org>
-References: <20190811091001.49555-1-jitao.shi@mediatek.com>
+        Sun, 11 Aug 2019 17:14:34 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f72so10396828wmf.5;
+        Sun, 11 Aug 2019 14:14:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PszWHvsLW/V6ZIB/afDy1WXCmSMBx8K80OqoFKRpWh8=;
+        b=fG0PSTuiukHcjUI+CKoLX7LrppjKawyg62flNpJVoVJ2lP7lZog5dTPwS5OPLR1MVR
+         3FT/iTW7ksED0tg9OZQOM2mpg7vGPo3/qP+uLF9XVIuPwokNkX0MvbHgDOz98rUnIWE8
+         LpJSSfaxStjdJitospeus04UjuJFKB8yO9OtPc4oLPLhb7T7WTuzQLHyiMATekCdiscL
+         T+sURDuZAlMXOj7aHLeYQB1ZFUBsFClhxb6lrDpJf+7hl6LITkpN1otjp5NErC9kpaqP
+         asTQAxmlwm/HYJMQaaDFCbN8nZayFZtPUMBEjh2Qh+j/3kWglrmD6qB410Fzrkoo6RFk
+         gGtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PszWHvsLW/V6ZIB/afDy1WXCmSMBx8K80OqoFKRpWh8=;
+        b=K4aM5mYb/9YtSvDC3JeZOsrWIOY3vUAVwPPXqcg1Ypf7vUaX7U94w/uume7gT+sRaF
+         EXPAQCEJxTfvzmKq8vusP/tffUcdOwQ1CnLR1YmzdC0jfQudgXs4YNDn0AfRiGzbOEc3
+         wuGx/r13ViWc7BoMjcng3sZNjOx7riq9p/dPp/Bs5R/sfGiqGcj3nmyn+gdCZRPcQ2Vv
+         2JRQQEDmkODlN6/1h8q8SOLCtW4Sr2U9n6vo6rvlDZqyTLM3cIYLqDSM2ReuIM1NhHEI
+         Z5c5oJpd7k6GmwvrSwkQyz204UBj+CtxfWPlAutzqA2UCDqiJ2XN80dtfrSUn/SKiYT2
+         sCTw==
+X-Gm-Message-State: APjAAAW7ldMANCFVt4kW8aVxBFfM+9ioNtJVJ9O2NZfdWq8dl5RpTb2m
+        14WOLSzeL9yvNC8YOe5TN7JK28fxbwbv8g==
+X-Google-Smtp-Source: APXvYqzH7S9vOiayMX06yEUTN1laxhsJ3ePYWknAWl8ojDlgYEwAhy1f7wQcZAvlXBJybcSJoh9W9Q==
+X-Received: by 2002:a1c:a6c8:: with SMTP id p191mr23065963wme.99.1565558071411;
+        Sun, 11 Aug 2019 14:14:31 -0700 (PDT)
+Received: from ?IPv6:2a01:e0a:1f1:d0f0::4e2b:d7ca? ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id c15sm46855416wrb.80.2019.08.11.14.14.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 11 Aug 2019 14:14:30 -0700 (PDT)
+Subject: Re: [PATCH v5 00/18] add thermal driver for h6
+To:     Yangtao Li <tiny.windzz@gmail.com>, rui.zhang@intel.com,
+        edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        nicolas.ferre@microchip.com
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190810052829.6032-1-tiny.windzz@gmail.com>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Message-ID: <f479c162-4eac-f320-3583-b9ddbef79b1a@gmail.com>
+Date:   Sun, 11 Aug 2019 23:14:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190811091001.49555-1-jitao.shi@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=pdzb0zgU1xEUnBsD4PIA:9 a=CjuIK1q_8ugA:10
+In-Reply-To: <20190810052829.6032-1-tiny.windzz@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jitao.
+Hi Yangtao,
 
->  .../display/panel/auo,kd101n80-45na.txt       |  34 +
->  .../display/panel/boe,tv101wum-nl6.txt        |  34 +
+On 10/08/2019 07:28, Yangtao Li wrote:
+> This patchset add support for A64, H3, H5, H6 and R40 thermal sensor.
 
-panel bindings are in the process of being migrated to the new
-meta-schema format.
-Therefore new bindings should preferably also follow the new format.
+Could you add the device-tree configuration in the same series?
+This will allow user to test it.
 
-Can you please look into this.
-In upstream and drm-misc-next there is already some examples.
+Thanks,
+Clément
 
-Note: It is not a hard rule that new bindings shall be in
-the new meta-schema format (.yaml extension), but as this is
-best practice now it is preferred.
-Same goes for display bindings btw.
-
-	Sam
+> 
+> Thx to Icenowy and Vasily.
+> 
+> BTY, do a cleanup in thermal makfile.
+> 
+> Icenowy Zheng (3):
+>    thermal: sun8i: allow to use custom temperature calculation function
+>    thermal: sun8i: add support for Allwinner H5 thermal sensor
+>    thermal: sun8i: add support for Allwinner R40 thermal sensor
+> 
+> Vasily Khoruzhick (1):
+>    thermal: sun8i: add thermal driver for A64
+> 
+> Yangtao Li (14):
+>    thermal: sun8i: add thermal driver for h6
+>    dt-bindings: thermal: add binding document for h6 thermal controller
+>    thermal: fix indentation in makefile
+>    thermal: sun8i: get ths sensor number from device compatible
+>    thermal: sun8i: rework for sun8i_ths_get_temp()
+>    thermal: sun8i: get ths init func from device compatible
+>    thermal: sun8i: rework for ths irq handler func
+>    thermal: sun8i: support mod clocks
+>    thermal: sun8i: rework for ths calibrate func
+>    dt-bindings: thermal: add binding document for h3 thermal controller
+>    thermal: sun8i: add thermal driver for h3
+>    dt-bindings: thermal: add binding document for a64 thermal controller
+>    dt-bindings: thermal: add binding document for h5 thermal controller
+>    dt-bindings: thermal: add binding document for r40 thermal controller
+> 
+>   .../bindings/thermal/sun8i-thermal.yaml       | 157 +++++
+>   MAINTAINERS                                   |   7 +
+>   drivers/thermal/Kconfig                       |  14 +
+>   drivers/thermal/Makefile                      |   9 +-
+>   drivers/thermal/sun8i_thermal.c               | 596 ++++++++++++++++++
+>   5 files changed, 779 insertions(+), 4 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+>   create mode 100644 drivers/thermal/sun8i_thermal.c
+> ---
+> v5:
+> -add more support
+> -some trival fix
+> ---
+> 2.17.1
+> 
+> 
