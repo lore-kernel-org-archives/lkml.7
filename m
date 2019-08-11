@@ -2,91 +2,102 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C827C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 03:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C2CC433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 03:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE254208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 03:22:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Yzr0rdSC"
+	by mail.kernel.org (Postfix) with ESMTP id 94C5A208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 03:25:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbfHKDWp (ORCPT
+        id S1726509AbfHKDZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 23:22:45 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:50556 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbfHKDWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 23:22:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=cI5p1XQLyIExMHElEEu9ho2V0ZrEcMfH/r5aBwEaBW0=; b=Yzr0rdSC7WwCIyIDdxVQKifrhr
-        +0fqD6dxkh5xNxHyEfNgmrdpsq3nyHuz9YN702twIiDZMfz0A66jnS9DGnUVAB/g6+7BXRt3qdACO
-        /ZrvpD3d/BdKElQ9dHneeszuonhkwqbZXYfKUwyOO5CQvZKrL3b+Mr7CyNfy4rioZVWc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hweRH-0002Bu-UH; Sun, 11 Aug 2019 05:22:35 +0200
-Date:   Sun, 11 Aug 2019 05:22:35 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Ioana Ciornei <ioana.ciornei@nxp.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>
-Subject: Re: [PATCH] dpaa2-ethsw: move the DPAA2 Ethernet Switch driver out
- of staging
-Message-ID: <20190811032235.GK30120@lunn.ch>
-References: <1565366213-20063-1-git-send-email-ioana.ciornei@nxp.com>
- <20190809190459.GW27917@lunn.ch>
- <VI1PR0402MB2800FF2E5C4DE24B25E7D843E0D10@VI1PR0402MB2800.eurprd04.prod.outlook.com>
+        Sat, 10 Aug 2019 23:25:29 -0400
+Received: from mail.rationali.st ([13.54.121.199]:44530 "EHLO
+        mail.rationali.st" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfHKDZ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 23:25:29 -0400
+Received: from ppp167-208-210.static.internode.on.net ([59.167.208.210] helo=t460s.rationali.st)
+        by mail.rationali.st with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <acooks@rationali.st>)
+        id 1hwdyJ-0000m7-9g; Sun, 11 Aug 2019 02:53:10 +0000
+Reply-To: acooks@rationali.st
+Subject: Re: [PATCH v5 0/3] Enable ACPI-defined peripherals on i2c-piix4 SMBus
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Jean Delvare <jdelvare@suse.de>,
+        Linux I2C <linux-i2c@vger.kernel.org>
+Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, platypus-sw@opengear.com,
+        "Tobin C . Harding" <me@tobin.cc>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Will Wagner <willw@carallon.com>
+References: <20190802145109.38dd4045@endymion>
+ <b013c33b-da11-ce5e-08d4-0b24a8575109@metux.net>
+From:   Andrew Cooks <acooks@rationali.st>
+Message-ID: <db725a3b-7b6e-ac79-ef1c-e601ff45c0f2@rationali.st>
+Date:   Sun, 11 Aug 2019 12:52:37 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VI1PR0402MB2800FF2E5C4DE24B25E7D843E0D10@VI1PR0402MB2800.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <b013c33b-da11-ce5e-08d4-0b24a8575109@metux.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ioana
+Hi Enrico
 
->  >> +	struct ethsw_port_priv *port_priv = netdev_priv(netdev);
->  >> +	struct ethsw_core *ethsw = port_priv->ethsw_data;
->  >> +	int i, err;
->  >> +
->  >> +	for (i = 0; i < ethsw->sw_attr.num_ifs; i++)
->  >> +		if (ethsw->ports[i]->bridge_dev &&
->  >> +		    (ethsw->ports[i]->bridge_dev != upper_dev)) {
->  >> +			netdev_err(netdev,
->  >> +				   "Another switch port is connected to %s\n",
->  >> +				   ethsw->ports[i]->bridge_dev->name);
->  >> +			return -EINVAL;
->  >> +		}
->  >
->  > Am i reading this correct? You only support a single bridge?  The
->  > error message is not very informative. Also, i think you should be
->  > returning EOPNOTSUPP, indicating the offload is not possible. Linux
->  > will then do it in software. If it could actually receive/transmit the
->  > frames....
->  >
-> 
-> Yes, we only support a single bridge.
+On 8/8/19 7:17 PM, Enrico Weigelt, metux IT consult wrote:
+> On 02.08.19 14:51, Jean Delvare wrote:
+>
+> Hi,
+>
+>> These patches fix a couple of issues with the i2c-piix4 driver on
+>> AMD Family 16h Model 30h SoCs and add ACPI-based enumeration to the
+>> i2c-piix4 driver.
+> Can you tell a little bit more about what devices are behind the smbus ?
+> I recall the G-412 SoCs (such as on apu2+ boards) have an Hudson inside
+> and fall into this category. (I'll have to check when back in office),
+> so (as the apu2 platform driver maintainer) I'm very interested in this.
+My initial work is based on a board that is similar to the APU2, but has additional peripherals connected to the smbus, including a NCT7491 thermal monitor/fan controller and PCA6524 GPIO controller. These are simply peripherals on a board variant, not 'platform' devices, so I didn't want to follow the platform driver approach that the APU2 GPIO driver uses.
+>
+> Does the probing need some special BIOS support (or do the necessary
+> table entries already come from aegesa) ?
 
-That is a pretty severe restriction for a device of this class. Some
-of the very simple switches DSA support have a similar restriction,
-but in general, most do support multiple bridges.
+SMBus (and I2C) peripherals can generally not be enumerated without some firmware support. It is possible to probe for specific devices on the bus (eg sensors-detect) but in general it is not feasible to let every supported device driver probe the bus for its device. ACPI and Devicetree provides the kernel with metadata for the device: type, address, calibrated set points for temperature, etc.
 
-Are there any plans to fix this?
+Since the peripherals are not standard platform devices, they are not described by the ACPI tables provided by Coreboot or AMD, but it's not too difficult to create supplementary device description tables (ACPI) for non-standard devices. These can be added to coreboot, supplied to qemu as additional firmware files (see -acpitable arg), or built into the kernel (see https://www.kernel.org/doc/Documentation/acpi/ssdt-overlays.txt)
 
-Thanks
-	Andrew
+ACPI may be an ugly abomination, but it's what we're stuck with on x86 and it can only improve when more people get their hands on it.
+
+>
+> I have to admit, I'm still confused by the AMD documentation - haven't
+> found a clear documentation on what peripherals exactly are in the
+> G-412 SoC, just puzzled together that the FCH seems to be an Hudson,
+> probably v2. There also seems to be some relation between smbus and
+> gpio, but the gpio's are directly memory-mapped - no idea whether they
+> just share the same base address register or the gpios are really behind
+> smbus and some hw logic directy maps them into mmio space ...
+> Do you happen to have some more information on that ?
+You might find it helpful to look at the coreboot source for the APU2 (src/mainboard/pcengines/apu2/gpio_ftns.h)
+>
+> By the way: I'm considering collecting some hw documentation in the
+> kernel tree (maybe Documentation/hardware/...) - do you folks think
+> that's a good idea ?
+
+Would it be awesome if specs were available for every device supported by the kernel? Absolutely, what a dream! Perhaps a separate repo, like the linux-firmware repo, would be better for binary objects that don't change. Unfortunately, copyright makes this hard. NDAs make this hard. Hardware companies just don't seem to work like that.
+
+>
+> --mtx
+
+Regards,
+ 
+
+Andrew
