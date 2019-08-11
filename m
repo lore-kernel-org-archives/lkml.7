@@ -2,70 +2,73 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C56C0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 20:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31761C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 20:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59181208C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 20:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D870F208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 20:32:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ViO0P++5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oXSmSfYF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbfHKUb5 (ORCPT
+        id S1726565AbfHKUb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 16:31:57 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39943 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbfHKUb5 (ORCPT
+        Sun, 11 Aug 2019 16:31:59 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34892 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfHKUb5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 11 Aug 2019 16:31:57 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v19so10022050wmj.5;
-        Sun, 11 Aug 2019 13:31:55 -0700 (PDT)
+Received: by mail-wm1-f68.google.com with SMTP id l2so10035934wmg.0;
+        Sun, 11 Aug 2019 13:31:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6dOMEfOb1vmuX/6l/d3avTdPuEJdGUDFzKuzVhzSSwQ=;
-        b=ViO0P++5hjh8dnkGtGqlG3J38bvwKJgVHbgG4HRRD2mqb03ZqtIsupG7JVG3AKdKB0
-         uqGJD4EGCMwBtCQrCz1lSw+9mIzXjIFFAtpyPdk7iNhMdR/VwtC9xUtJsUUy2f3FBgPv
-         A1Gm1HqtMZXGWX5sNowc4ICheOxtNKIFMtDXdjjMQE9FZZQR3RdJP+YmxvWQ6aM9c3Hw
-         jX/cHA8SsoIUr+VbSOvCHCC9k8NNCdja6r+g/j1s0V7v8viQGEoIhN7KTGXsS/2hvmxb
-         YjZoSKkOmUYPmuXl2TK8e+ip7A73zeMJeLL+ezFto+Zo3LRt1aKadA9TNSxk8LYVKTyS
-         QJkQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=VmJANs6ADrzmj7CF2pwPHk66RmEAqBp61/Sj+xq22Nc=;
+        b=oXSmSfYFRVvVK9HlfrUEv/VpPMEzztyoEuPkETohNSxYvim/+DIFnl4roDjE4M+Q7C
+         pM1GWR5ea4sg3sA5Urj8lLcwC/4wrt9HGUM9wu3ukdZrg9PM/T2AnU7PeL2jS+Yd9qmk
+         C+I46kDxvxT9ZLL7aAmVXOUxzzrWfhBZImGF3EwNOobu0O1H+SkMec/i35IXDeDsNDap
+         Pvh6xpJS596vjLoSVUpaX8uv7FraOaV6E6zziqDrvOP5vAmWV85V9RYikAjAxVHp+S1J
+         a5APp4StEx+4Z8QwY83WduuxACFSqRMP/SDgLT7V8erZRCQRQMBIWiYZQY6s/OeT/YyG
+         FfCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6dOMEfOb1vmuX/6l/d3avTdPuEJdGUDFzKuzVhzSSwQ=;
-        b=dt5G27TK0RG0XZrIyAGSSMF6wJSFPFWBSRA+l3VUGSIOr+1JHM2xtsX3tPBCvp84WG
-         kjCni64YNrePiYPRxwU221CEfakE7pTk6fGd/ReQtLZYk6Tnq1k/XqkphrVC6rGXNEeQ
-         ijdqv+sEY9nTH4i5IEAVJnXzEcxnjZXxf1JlQjI/GA/3gXDpdlNIQ06LksvK2S1vt26W
-         qU/L7WXOmkSi+6IC7llMP8yakTPwEzBC70ZlURmXNwwoVXXWUuaI5044qz/H8XbQMRkw
-         yyBLsJSanqlfYQb3IXkdgPUS6YTTzgXd6Qs6Cgs2ktNKaGsYpbiFCOA5LviK4kJJeeCL
-         G/8w==
-X-Gm-Message-State: APjAAAWPpR8821Q1Df7Oji7Bq/eTORRDYVBftow144BuDGgVlnFYfCoe
-        ojFYVKt3jHZhONh3DoF40K8=
-X-Google-Smtp-Source: APXvYqzEN7q5gvE9iuIA2xRk3W11noAPkkHt45AjTzx1U+c5eNJWmzVS+/Yb/w+zT/xNpTBDnGtYmA==
-X-Received: by 2002:a7b:cd06:: with SMTP id f6mr9391045wmj.66.1565555514739;
-        Sun, 11 Aug 2019 13:31:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=VmJANs6ADrzmj7CF2pwPHk66RmEAqBp61/Sj+xq22Nc=;
+        b=X03zpLDML+xaU104dVhqkCZjUIfMgQ50TrSEbTBe3WW4C9zyVLDWg3wWsFapCwR9Xz
+         hFL76ihXOwlqmJbbOmb2u05iaRyUovOwJhtmMzO3rY05x6hplesmBLdEEvwWaMdVlchf
+         0yPrRDzn0vVanEgrT2Bqcj7q87Irxmns3mRrsvrCWmwvLDWfQb2Uv+rPgjyvnX5/zy3v
+         /Yc2dyBrg+YB1lwcFfBfJzKcANtVG0ymtiy6KDR+TZ5586cZHnD8+o2CwAZ61Xe6u4RU
+         fqUbbg6elR2Wz2KjA3cOnJmo4W2SFyQBOnxh03rHRcw2Q7U3gayTUZ9A7RtWnMRFpKn+
+         iIrA==
+X-Gm-Message-State: APjAAAV47SKPIX7Hmy2yUBLa83feErIBGS7AhOUpBjagcPP4UowHagtK
+        FyjBEqHrUfEhJImOCpcbqFs=
+X-Google-Smtp-Source: APXvYqz5EW5ZeCJAojOp6CW/ocpmh260LXSUmp5dYTFVkvKIjvNHd65nG3jLSSoKZIhate3Y+4Eksg==
+X-Received: by 2002:a1c:9a95:: with SMTP id c143mr10613581wme.2.1565555515436;
+        Sun, 11 Aug 2019 13:31:55 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
         by smtp.gmail.com with ESMTPSA id a8sm11063269wma.31.2019.08.11.13.31.54
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 11 Aug 2019 13:31:54 -0700 (PDT)
+        Sun, 11 Aug 2019 13:31:55 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>,
         Rob Herring <robh+dt@kernel.org>
 Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v5 0/3] Allwinner H6 SPDIF support
-Date:   Sun, 11 Aug 2019 22:31:41 +0200
-Message-Id: <20190811203144.5999-1-peron.clem@gmail.com>
+Subject: [PATCH v5 1/3] arm64: dts: allwinner: Add SPDIF node for Allwinner H6
+Date:   Sun, 11 Aug 2019 22:31:42 +0200
+Message-Id: <20190811203144.5999-2-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190811203144.5999-1-peron.clem@gmail.com>
+References: <20190811203144.5999-1-peron.clem@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -74,45 +77,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwinner H6 SoC has a SPDIF controller called One Wire Audio (OWA) which
-is different from the previous H3 generation and not compatible.
+The Allwinner H6 has a SPDIF controller called OWA (One Wire Audio).
 
-Difference are an increase of fifo sizes, some memory mapping are different
-and there is now the possibility to output the master clock on a pin.
+Only one pinmuxing is available so set it as default.
 
-Actually all these features are unused and only a bit for flushing the TX
-fifo is required.
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 38 ++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-Changes since v4:
- - rename audio card name to sun50i-h6-spdif
- - drop patches already merged
-
-Changes since v3:
- - rename reg_fctl_ftx to val_fctl_ftx
- - rebase this series on sound-next
- - fix dt-bindings due to change in sound-next
- - change node name sound_spdif to sound-spdif
-
-Changes since v2:
- - Split quirks and H6 support patch
- - Add specific section for quirks comment
-
-Changes since v1:
- - Remove H3 compatible
- - Add TX fifo bit flush quirks
- - Add H6 bindings in SPDIF driver
-
-
-Clément Péron (3):
-  arm64: dts: allwinner: Add SPDIF node for Allwinner H6
-  arm64: dts: allwinner: h6: Enable SPDIF for Beelink GS1
-  arm64: defconfig: Enable Sun4i SPDIF module
-
- .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 ++
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 38 +++++++++++++++++++
- arch/arm64/configs/defconfig                  |  1 +
- 3 files changed, 43 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 7628a7c83096..677eb374678d 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -83,6 +83,24 @@
+ 		method = "smc";
+ 	};
+ 
++	sound-spdif {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "sun50i-h6-spdif";
++
++		simple-audio-card,cpu {
++			sound-dai = <&spdif>;
++		};
++
++		simple-audio-card,codec {
++			sound-dai = <&spdif_out>;
++		};
++	};
++
++	spdif_out: spdif-out {
++		#sound-dai-cells = <0>;
++		compatible = "linux,spdif-dit";
++	};
++
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupts = <GIC_PPI 13
+@@ -282,6 +300,11 @@
+ 				bias-pull-up;
+ 			};
+ 
++			spdif_tx_pin: spdif-tx-pin {
++				pins = "PH7";
++				function = "spdif";
++			};
++
+ 			uart0_ph_pins: uart0-ph-pins {
+ 				pins = "PH0", "PH1";
+ 				function = "uart0";
+@@ -411,6 +434,21 @@
+ 			};
+ 		};
+ 
++		spdif: spdif@5093000 {
++			#sound-dai-cells = <0>;
++			compatible = "allwinner,sun50i-h6-spdif";
++			reg = <0x05093000 0x400>;
++			interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_SPDIF>, <&ccu CLK_SPDIF>;
++			clock-names = "apb", "spdif";
++			resets = <&ccu RST_BUS_SPDIF>;
++			dmas = <&dma 2>;
++			dma-names = "tx";
++			pinctrl-names = "default";
++			pinctrl-0 = <&spdif_tx_pin>;
++			status = "disabled";
++		};
++
+ 		usb2otg: usb@5100000 {
+ 			compatible = "allwinner,sun50i-h6-musb",
+ 				     "allwinner,sun8i-a33-musb";
 -- 
 2.20.1
 
