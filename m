@@ -2,60 +2,61 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F4FC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 18:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E096C0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 18:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF8C22085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 18:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36C5A2085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 18:49:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpTg4xV3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="plMzkZ2Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbfHKStp (ORCPT
+        id S1726497AbfHKSt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 14:49:45 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39998 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfHKStp (ORCPT
+        Sun, 11 Aug 2019 14:49:56 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42198 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726011AbfHKSt4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 14:49:45 -0400
-Received: by mail-lj1-f196.google.com with SMTP id e27so1303926ljb.7
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 11:49:44 -0700 (PDT)
+        Sun, 11 Aug 2019 14:49:56 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 15so4676338ljr.9
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 11:49:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IEYY3BqnM8b1RPxwyAoBl6+XjM31KhEUVwkBh71t+1U=;
-        b=MpTg4xV3+ndLHG9PcSw3xMceaVbWrdjGv7sAyWBSVbuyIRB0tP/4hgtlmT3nTndWbe
-         AOUhJdAGB0ATrTCHPDTltE22gLp6Zze8N7S8uUilSoVd+B4DHZa7HKDace1l0NimCGvA
-         dxGkP3+KSf+qBUeoGxNZMh7f0ysnU8LXXuG+vTL3nPkfgeULyC4l+0uhflbGbuS+kiHA
-         tOL006qzU1IzX1Ive1yFz4ej+mF+R677Na+vidCZIjispQHm+fjZm6O6c9tifTTkuQCA
-         zjxtQNJOrDiDoKHi94OdXm3pbq6dJyksHj1F/2aQ+aq6Jm1Kv/nxx/+0iWsQM5lhnLoJ
-         AE/g==
+        bh=aAzxUIh+F3vyPVqhjFc/DJxcezBxry9v7OnC5t1hVac=;
+        b=plMzkZ2QMZblSXmGPP4mHFOaGUWc5TWrDtPJ1limo7EGe6D/+1jgDfPpiVEBQ+744F
+         7hSqoU+53D03QTvqToghkFYT2ewGvVxFNpVkmnjcMP49UrhEkR8nn062JYJnF89hWlll
+         xAdNyM//p+WX6Uu/OIxi2wJcQO/T9QDgdvmEFsmZyOBFpdXPQm4uBECnVYXi0XLkxMrI
+         2TibcHrL+PNc0kMV0S4+IZOwBMJQcB0i9zrHkWQh81oeM06X/jJZGryAltsQplnG5jJ4
+         KGGQExadxrZ2WywvA/999Fm6i+mntOmaRKHIN3aJQgZgMvW54Te4uA2xPoCLqPM3iSYj
+         7BgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IEYY3BqnM8b1RPxwyAoBl6+XjM31KhEUVwkBh71t+1U=;
-        b=eySqYgbI6qkVFEEZZBTiFLtQJh7h6oRQh/cCxoHzdR61B1s/Y+wLdqcPbP3TE289TC
-         KpeBB7drCbO9ILnv+/MZlEWBlUTC6w5exeZw/okoHuaanqyiMpg5pPjAw/tsvpbGbYGs
-         8siiFlVpWsOvxTUB91lWYU0nNYQOofWTyON6nihcFrwudpi7NMYwsQfUwa4d4isAsvDa
-         rUD0by/YFzfXgkM88lxRnGyR/b+NgdXxGWRAj4M/ezDCYfzMZ0xcMoPd7Jyv7Mz/5efl
-         eE+iS3stU5VOKRN/0XKdn9tKMrHaBf7AQ6qmrgZ/KxE090hWb8/Uu5lUEU57Qma1rQer
-         Ulpg==
-X-Gm-Message-State: APjAAAVjeuiNteyoa9STgMGmTvFxCq273ERAj4AgEIxjQDpopBndwF3I
-        NIEpNwGNSkhkJdS4RoMaufU=
-X-Google-Smtp-Source: APXvYqw9IbeDzTFhPyIE6AdAYeziEw5Z/MJR9YKmCBkYpubNnWTlD0CXGda7DUdRhtclLnG09guITg==
-X-Received: by 2002:a2e:2c09:: with SMTP id s9mr83390ljs.222.1565549383345;
-        Sun, 11 Aug 2019 11:49:43 -0700 (PDT)
+        bh=aAzxUIh+F3vyPVqhjFc/DJxcezBxry9v7OnC5t1hVac=;
+        b=Km9KmwywRwyp2uOs+kFEDO8Ca2YU9yFYJS3x6wrDrzt0TdHTK1WmeGhukG2qyMswht
+         e+94339Zvl7cfE5OyS0r+wwtLtI6cnTBpNpIESmoTZtFYrw+ApRQ72m8PxSa0jtlO64S
+         g5gZGNxfAvHiBDSSFJKKL9RBtF5+DxybPFvMbr8G8J93d3vWqsYSYFohCC3FbicNp0yl
+         8969cTYlAACAA2iI8MEyhQY6X9/5oNq1yq1i5E8FYpEpAspZ2O684fsFylVmEzlaRx4p
+         QdSUMBvBFI7urEuJIpKTYmkT0jSVAZKdUNXuBPraF2QPnIqvnB/MDmaNnpUU77fKenTY
+         KU+w==
+X-Gm-Message-State: APjAAAV8tmmX5wKe3xVPZn7isDzHD7BEp8XmphurVeyZFla7Wv9TL+ON
+        XGmz2PQoEzmqfoKzLow5E90=
+X-Google-Smtp-Source: APXvYqzlHdUeOxCOYse1sYa4OgV1J54zLR1O70z+HRG7YbfybQsA5rc9GlxXOKglSbJ70CaduAeTcQ==
+X-Received: by 2002:a2e:8986:: with SMTP id c6mr8823621lji.59.1565549394387;
+        Sun, 11 Aug 2019 11:49:54 -0700 (PDT)
 Received: from localhost.localdomain (h-158-174-186-115.NA.cust.bahnhof.se. [158.174.186.115])
-        by smtp.gmail.com with ESMTPSA id r21sm5250117lfi.32.2019.08.11.11.49.41
+        by smtp.gmail.com with ESMTPSA id r21sm5250117lfi.32.2019.08.11.11.49.53
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 11 Aug 2019 11:49:42 -0700 (PDT)
+        Sun, 11 Aug 2019 11:49:53 -0700 (PDT)
 From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
 To:     rikard.falkeborn@gmail.com
 Cc:     akpm@linux-foundation.org, joe@perches.com,
@@ -63,13 +64,19 @@ Cc:     akpm@linux-foundation.org, joe@perches.com,
         yamada.masahiro@socionext.com,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Kees Cook <keescook@chromium.org>, x86@kernel.org
-Subject: [PATCH v3 0/3] Add compile time sanity check of GENMASK inputs
-Date:   Sun, 11 Aug 2019 20:49:35 +0200
-Message-Id: <20190811184938.1796-1-rikard.falkeborn@gmail.com>
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Jordan Borgner <mail@jordan-borgner.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>
+Subject: [PATCH v3 1/3] x86/boot: Use common BUILD_BUG_ON
+Date:   Sun, 11 Aug 2019 20:49:36 +0200
+Message-Id: <20190811184938.1796-2-rikard.falkeborn@gmail.com>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190801230358.4193-1-rikard.falkeborn@gmail.com>
+In-Reply-To: <20190811184938.1796-1-rikard.falkeborn@gmail.com>
 References: <20190801230358.4193-1-rikard.falkeborn@gmail.com>
+ <20190811184938.1796-1-rikard.falkeborn@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,69 +84,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Defining BUILD_BUG_ON causes redefinition warnings when adding includes
+of include/linux/build_bug.h in files unrelated to x86/boot.
+For example, adding an include of build_bug.h to include/linux/bits.h
+shows the following warnings:
 
-A new attempt to try to add build time validity checks of GENMASK (and
-GENMASK_ULL) inputs. There main differences from v2:
+  CC      arch/x86/boot/cpucheck.o
+  In file included from ./include/linux/bits.h:22,
+                   from ./arch/x86/include/asm/msr-index.h:5,
+                   from arch/x86/boot/cpucheck.c:28:
+  ./include/linux/build_bug.h:49: warning: "BUILD_BUG_ON" redefined
+     49 | #define BUILD_BUG_ON(condition) \
+        |
+  In file included from arch/x86/boot/cpucheck.c:22:
+  arch/x86/boot/boot.h:31: note: this is the location of the previous definition
+     31 | #define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)]))
+        |
 
-Remove a define of BUILD_BUG_ON in x86/boot to avoid a compiler warning
-about redefining BUILD_BUG_ON. Instead, use the common one from
-include/.
+The macro was added to boot.h in commit 62bd0337d0c4 ("Top header file
+for new x86 setup code"). At that time, BUILD_BUG_ON was defined in
+kernel.h. Presumably BUILD_BUG_ON was redefined to avoid pulling in
+kernel.h. Since then, BUILD_BUG_ON and similar macros have been split to
+a separate header file.
 
-Drop patch 2 in v2 where GENMASK arguments where made more verbose.
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+---
+ arch/x86/boot/boot.h | 2 --
+ arch/x86/boot/main.c | 1 +
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-Add a cast in the BUILD_BUG_ON_ZERO macro change the type to int to
-avoid the somewhat clumpsy casts of BUILD_BUG_ON_ZERO. The second patch
-in this series adds such a cast to BUILD_BUG_ON_ZERO, which makes it
-possible to avoid casts when using BUILD_BUG_ON_ZERO in patch 3.
-
-I have checked all users of BUILD_BUG_ON_ZERO and I did not find a case
-where adding a cast to int would affect existing users but I'd feel much
-more comfortable if someone else double (or tripple) checked (there are
-~80 instances plus ~10 copies in tools). Perhaps I should have CC:d
-maintainers of files using BUILD_BUG_ON_ZERO?
-
-Finally, use __builtin_constant_p instead of __is_constexpr. This avoids
-pulling in kernel.h in bits.h.
-
-Joe Perches sent a patch series to fix existing misuses, currently there
-are five such misuses (which patches pending) left in Linus tree and two
-(with patches pending) in linux-next. Those patches should fix all
-"simple" misuses of GENMASK (cases where the arguments are numerical
-constants). Pushing v2 to linux-next also revealed an arm-specific
-misuse where GENMASK was used in another macro (and also broke the
-arm-builds). There is a patch to fix that by Nathan Chancellor (not in
-linux-next yet). Those patches should be merged before the last patch of
-this series to avoid breaking builds.
-
-Changelog
-Since v2
-  - Use __builtin_constant_p instead of __is_constexpr to avoid pulling
-    in kernel.h (that include was missing in v2, so the header was no
-    longer builable standalone
-  - add cast to BUILD_BUG_ON_ZERO to make the type int
-  - Remove unnecessary casts due to the above
-  - Drop patch that renamed macro arguments
-
-Since v1
-  - Add comment about why inputs are not checked when used in asm file
-  - Use UL(0) instead of 0
-  - Extract mask creation in a separate macro to improve readability
-  - Use high and low instead of h and l (part of this was extracted to a
-    separate patch)
-  - Updated commit message
-
-Rikard Falkeborn (3):
-  x86/boot: Use common BUILD_BUG_ON
-  linux/build_bug.h: Change type to int
-  linux/bits.h: Add compile time sanity check of GENMASK inputs
-
- arch/x86/boot/boot.h      |  2 --
- arch/x86/boot/main.c      |  1 +
- include/linux/bits.h      | 21 +++++++++++++++++++--
- include/linux/build_bug.h |  4 ++--
- 4 files changed, 22 insertions(+), 6 deletions(-)
-
+diff --git a/arch/x86/boot/boot.h b/arch/x86/boot/boot.h
+index 19eca14b49a0..ca866f1cca2e 100644
+--- a/arch/x86/boot/boot.h
++++ b/arch/x86/boot/boot.h
+@@ -28,8 +28,6 @@
+ #include "cpuflags.h"
+ 
+ /* Useful macros */
+-#define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)]))
+-
+ #define ARRAY_SIZE(x) (sizeof(x) / sizeof(*(x)))
+ 
+ extern struct setup_header hdr;
+diff --git a/arch/x86/boot/main.c b/arch/x86/boot/main.c
+index 996df3d586f0..c5e55d2c55d0 100644
+--- a/arch/x86/boot/main.c
++++ b/arch/x86/boot/main.c
+@@ -13,6 +13,7 @@
+ 
+ #include "boot.h"
+ #include "string.h"
++#include <linux/build_bug.h>
+ 
+ struct boot_params boot_params __attribute__((aligned(16)));
+ 
 -- 
 2.22.0
 
