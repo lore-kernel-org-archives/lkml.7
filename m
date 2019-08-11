@@ -2,99 +2,104 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2942DC0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 16:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE09AC0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 17:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D58FD2087B
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 16:58:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=yehs2007@zoho.com header.b="dY5bJLMw"
+	by mail.kernel.org (Postfix) with ESMTP id B0BB12147A
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 17:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726137AbfHKQ6I (ORCPT
+        id S1726200AbfHKRXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 12:58:08 -0400
-Received: from sender4-pp-o95.zoho.com ([136.143.188.95]:25517 "EHLO
-        sender4-pp-o95.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfHKQ6I (ORCPT
+        Sun, 11 Aug 2019 13:23:42 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:43813 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfHKRXl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 12:58:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1565539978; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=k6oBNE9NWzTI+nYMITWgTOBj46cwZ0VzrYK6y7rPlKx0TLECCqui+KbkELfTPzfd+2axLJ1EI/R/RnIEN+BEgvgTUY6K6Dc4Vlfyoyi0ZlsTAXzSsRTEnqJMGofj+J0nrEYk/Br52yXOqQ9VJWbapuFuQWDZlLEFfxru9MmfSxg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1565539978; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To:ARC-Authentication-Results; 
-        bh=1aDYVhR5ua7R6QtqqYBIeriKVtf05O2LG5PFry5xJvo=; 
-        b=IUT6eQ65lLKAP1tUpWXclKQM8OnRdjqL6AtGupA4BZcoZdT4/JZkZBkGDS7KASnr4fWTSsmrsgpCyJMP2mTKV+/R5qZfqSomn94dypA8TowoxZfaYQPrEMwaaoQOR34lZBlq9k86orcdJue9zw+nN4IgppY7mG211cvlgVjnbIE=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=yehs2007@zoho.com;
-        dmarc=pass header.from=<yehs2007@zoho.com> header.from=<yehs2007@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
-  b=alkQzwM8edBCu3qQZh1bHv4vZmFN9MkF2/YKq95OMrmmcSawkJdnaDw/Rlv0k8ZtlADdrdQ7JcpY
-    3xrRsZ7lg/g1DepNHfZdL8GhScSGvATFnt506pRpqc9rdmk5dQ+U  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1565539978;
-        s=zm2019; d=zoho.com; i=yehs2007@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        l=1001; bh=1aDYVhR5ua7R6QtqqYBIeriKVtf05O2LG5PFry5xJvo=;
-        b=dY5bJLMwuEbg/pqA9SR9XF3DaFzkEc5HJq7nofCTPfZsKzVtkF40ydtk+TwhpFgJ
-        tvux+W5IaUAn56WNIOK4fk0ZSPBMYlAixP3fga0eP7jKtB38FyPw9MzBtTI/m4mlc6r
-        fODh70X1GvtAPheOnPCoGRfyRH33G18NAZpcKplU=
-Received: from YEHS1XR3054QMS.lenovo.com (114.245.9.228 [114.245.9.228]) by mx.zohomail.com
-        with SMTPS id 156553997678386.42888057393054; Sun, 11 Aug 2019 09:12:56 -0700 (PDT)
-From:   Huaisheng Ye <yehs2007@zoho.com>
-To:     mpatocka@redhat.com, snitzer@redhat.com, agk@redhat.com
-Cc:     prarit@redhat.com, tyu1@lenovo.com, dm-devel@redhat.com,
-        linux-kernel@vger.kernel.org, Huaisheng Ye <yehs1@lenovo.com>
-Subject: dm writecache: add unlikely for getting two block with same LBA
-Date:   Mon, 12 Aug 2019 00:12:33 +0800
-Message-Id: <20190811161233.7616-2-yehs2007@zoho.com>
-X-Mailer: git-send-email 2.17.0.windows.1
-In-Reply-To: <20190811161233.7616-1-yehs2007@zoho.com>
-References: <20190811161233.7616-1-yehs2007@zoho.com>
-X-ZohoMailClient: External
+        Sun, 11 Aug 2019 13:23:41 -0400
+Received: by mail-yw1-f66.google.com with SMTP id n205so37953992ywb.10;
+        Sun, 11 Aug 2019 10:23:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tn6nhjNQ7pdIDBNVvjNcCirLgHTb4d9vEhC1PgN0dmg=;
+        b=Q4HxoqNQmDtNQG+lssU+Y9bv60ghSM7/KASV/auxtsiUOQQACxYd0jfDCBz1zp1otq
+         ijytVPKRnPklz5rW4gVMY3aeiiDfQtjji8tD7gM8kG1/icmXA97OgLeWQEkihf/qYdb7
+         y8eCe0uVu7iPZoScrjjaeCLbdJ9/PqfQ3yN9nhRkkBR4r4YG6G75iVo9i7sb+rhOtbkV
+         jNPhiGyvuk3SfW5cxySYn1787idvlqrp8xL4aJC1RpX+jSkw2kq+7c1oRqhJzpIDBvft
+         y4VhHrNUuMWjyOr9WzAI/FFZUCj77gB/gKx7q41QAC9RLA3+rU6Nyd0Wgeugvnxadrzp
+         I2kQ==
+X-Gm-Message-State: APjAAAV1XJkdQbB6Qsqe6DdRGW8G2GGM51q57+ql/hMISnY7pF4T3eKi
+        viwTBo/I2r/KwEWWLw+pPP5Z+usWh4w=
+X-Google-Smtp-Source: APXvYqyQ0YGPfGErlB97Ql1pCAIUrzC/nGiwLC0F+lrA2nquYsm718zy1jqHZRJ/vG2HIjgexdP3cQ==
+X-Received: by 2002:a81:50c:: with SMTP id 12mr22280201ywf.380.1565544220073;
+        Sun, 11 Aug 2019 10:23:40 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id l4sm1027236ywd.0.2019.08.11.10.23.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 11 Aug 2019 10:23:39 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        xen-devel@lists.xenproject.org (moderated list:XEN BLOCK SUBSYSTEM),
+        linux-block@vger.kernel.org (open list:BLOCK LAYER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] xen/blkback: fix memory leaks
+Date:   Sun, 11 Aug 2019 12:23:22 -0500
+Message-Id: <1565544202-3927-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huaisheng Ye <yehs1@lenovo.com>
+In read_per_ring_refs(), after 'req' and related memory regions are
+allocated, xen_blkif_map() is invoked to map the shared frame, irq, and
+etc. However, if this mapping process fails, no cleanup is performed,
+leading to memory leaks. To fix this issue, invoke the cleanup before
+returning the error.
 
-In function writecache_writeback, entries g and f has same original
-sector only happens at entry f has been committed, but entry g has
-NOT yet.
-
-The probability of this happening is very low in the following
- 256 blocks at most of entry e, so add unlikely for the result.
-
-Signed-off-by: Huaisheng Ye <yehs1@lenovo.com>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 ---
- drivers/md/dm-writecache.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/block/xen-blkback/xenbus.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/dm-writecache.c b/drivers/md/dm-writecache.c
-index 5c7009d..3643084 100644
---- a/drivers/md/dm-writecache.c
-+++ b/drivers/md/dm-writecache.c
-@@ -1628,8 +1628,8 @@ static void writecache_writeback(struct work_struct *work)
- 			if (unlikely(!next_node))
- 				break;
- 			g = container_of(next_node, struct wc_entry, rb_node);
--			if (read_original_sector(wc, g) ==
--			    read_original_sector(wc, f)) {
-+			if (unlikely(read_original_sector(wc, g) ==
-+			    read_original_sector(wc, f))) {
- 				f = g;
- 				continue;
- 			}
+diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
+index 3ac6a5d..b90dbcd 100644
+--- a/drivers/block/xen-blkback/xenbus.c
++++ b/drivers/block/xen-blkback/xenbus.c
+@@ -965,6 +965,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
+ 		}
+ 	}
+ 
++	err = -ENOMEM;
+ 	for (i = 0; i < nr_grefs * XEN_BLKIF_REQS_PER_PAGE; i++) {
+ 		req = kzalloc(sizeof(*req), GFP_KERNEL);
+ 		if (!req)
+@@ -987,7 +988,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
+ 	err = xen_blkif_map(ring, ring_ref, nr_grefs, evtchn);
+ 	if (err) {
+ 		xenbus_dev_fatal(dev, err, "mapping ring-ref port %u", evtchn);
+-		return err;
++		goto fail;
+ 	}
+ 
+ 	return 0;
+@@ -1007,8 +1008,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
+ 		}
+ 		kfree(req);
+ 	}
+-	return -ENOMEM;
+-
++	return err;
+ }
+ 
+ static int connect_ring(struct backend_info *be)
 -- 
-1.8.3.1
-
+2.7.4
 
