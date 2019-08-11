@@ -2,67 +2,160 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6314DC0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 17:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA60C0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 17:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B78A2087B
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 17:50:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565545809;
-	bh=Rs+Ze9RGfHCINzSg9y8mBa3QLzUFZPvCtOCIK5Q5RiY=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Iazu/vceqNAZIXc1bQoLW4q3BTH2SXN51uAsmEKf27HwN6qNoMOVplZ6C0l/s9XKD
-	 Lm7crXjAl0PsAEMHUliTc7UvMMao8xWEVmbE0OF5EnQG2wfG9WlX3SxIdU4KBp1vTU
-	 CnfN3DTNqCuX07/5xSH+NbYB6yR7vRTqqAS90070=
+	by mail.kernel.org (Postfix) with ESMTP id 608E32085B
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 17:52:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VMfbVcIx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbfHKRuI (ORCPT
+        id S1726510AbfHKRwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 13:50:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60400 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbfHKRuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 13:50:08 -0400
-Subject: Re: [GIT PULL] NTB bug fixes for v5.3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565545807;
-        bh=Rs+Ze9RGfHCINzSg9y8mBa3QLzUFZPvCtOCIK5Q5RiY=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=aVpcW7ddTGiHViJ2a+h9bfjg5lJkBbsLRDnwp/1ZbAS+Jh2diABCff9uCzPUUg7rW
-         bDCVIKscj5WMuVJmEGAhs0BJAKP55CIPjqJur9s+5SDTWNlDCgFGMo+NiF+2mfFDnN
-         9U/bnZ/46+Fl5TxiSblWEdSHlz7n8xtee3cTk/k8=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190811141703.GA12153@graymalkin>
-References: <20190811141703.GA12153@graymalkin>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190811141703.GA12153@graymalkin>
-X-PR-Tracked-Remote: git://github.com/jonmason/ntb tags/ntb-5.3-bugfixes
-X-PR-Tracked-Commit-Id: 49da065f7b1f27be625de65d6d55bdd22ac6b5c2
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f6192cb7429211bfaac1178c35607b0c989900b8
-Message-Id: <156554580721.21169.6349916023834124246.pr-tracker-bot@kernel.org>
-Date:   Sun, 11 Aug 2019 17:50:07 +0000
-To:     Jon Mason <jdmason@kudzu.us>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-ntb@googlegroups.com
+        Sun, 11 Aug 2019 13:52:33 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35622 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfHKRwc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 13:52:32 -0400
+Received: by mail-lj1-f193.google.com with SMTP id l14so6444471lje.2;
+        Sun, 11 Aug 2019 10:52:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rIU90j9rmc0loKWn/Zvdc4rY0H97o0GEeKBESXJwW0A=;
+        b=VMfbVcIxRwIj74Ya3SeIBTYo+Q3lx7+9VjhmEhhYZlu4988dm4YbJmz++gucXsDGBB
+         nRD073sJKCh8P95/CCmX/chQxVKVIfRlErURNt3qv5u1OI3MQmEqqx7ut24BOB4xTEFi
+         VqbKzvtH8LF1sNKMqvWCfiQFe51v14/8XKFSi9t0aYG8k6VntcJf+c+yx+E5RdzNmUQy
+         MiK4nI8QpD43MIrbcilgqt3oH4QFehZi0dn4oAY8011Ls703PmYSm9g2FJCP68Q+ccTq
+         svrQrRWp0j0Yp+hUM2cbQkORp+MU2hV0ciOOmf1owjLD8AKnc+ub6WAITcBtoJuvcDuq
+         xEjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rIU90j9rmc0loKWn/Zvdc4rY0H97o0GEeKBESXJwW0A=;
+        b=eOAB0Urb/hs+e9L36UujyxySy7Kiz67XEQnLmlYeWmqg0WmCjCmDkDgnQWO1TzCvBx
+         Md78/WEp16XERIECp9ekBVEogp4cIWQE7wJKtezUW3Piu4Dn9BFF1YW+wNGDOlI14+LQ
+         XISxPNIVobGGqlZ2GKK6qiUyft4SWMHxFWXhB6ktk6kv2BhX1yiP4+W/dluJzKIBi/5n
+         nZKCTocbkJCVn32SzW+gFQfjLQKLOJkAZfAOlGbjfGfcFGMIHwnuXPMe4bhMOP7+mZb5
+         Ijx2FjOvlSijOdoGAedV6eXqIiQk6oo49YV3YTeWh2YayEWnbW9FrT0VUhKzygqLSmAZ
+         kcXA==
+X-Gm-Message-State: APjAAAVjwBb6tO1h1ZgAorc9aWfOZqlcDuikswEu1f6yMvdtAqf44F2A
+        Q/9n7PjmVCxZbtrKditFMFFv4J94
+X-Google-Smtp-Source: APXvYqwZ9Ji04vtk6kNzV+t0QZO7OK2X65TeYFt1oxK8FP21Bf2xuGQRdgvYT7bIR3lDyeFMnGFD1A==
+X-Received: by 2002:a2e:b0c6:: with SMTP id g6mr6084135ljl.60.1565545949227;
+        Sun, 11 Aug 2019 10:52:29 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.34.218])
+        by smtp.googlemail.com with ESMTPSA id r68sm18553765lff.52.2019.08.11.10.52.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 11 Aug 2019 10:52:28 -0700 (PDT)
+Subject: Re: [PATCH v8 15/21] soc/tegra: pmc: Allow to support more tegras
+ wake
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-16-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <53634c8e-1295-86eb-60c2-27da26d05400@gmail.com>
+Date:   Sun, 11 Aug 2019 20:52:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <1565308020-31952-16-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 11 Aug 2019 10:17:03 -0400:
+09.08.2019 2:46, Sowjanya Komatineni пишет:
+> This patch allows to create separate irq_set_wake and irq_set_type
+> implementations for different tegra designs PMC that has different
+> wake models which require difference wake registers and different
+> programming sequence.
+> 
+> AOWAKE model support is available for Tegra186 and Tegra194 only
+> and it resides within PMC and supports tiered wake architecture.
+> 
+> Tegra210 and prior tegra designs uses PMC directly to receive wake
+> events and coordinate the wake sequence.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/soc/tegra/pmc.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index 9f9c1c677cf4..91c84d0e66ae 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -226,6 +226,8 @@ struct tegra_pmc_soc {
+>  	void (*setup_irq_polarity)(struct tegra_pmc *pmc,
+>  				   struct device_node *np,
+>  				   bool invert);
+> +	int (*irq_set_wake)(struct irq_data *data, unsigned int on);
+> +	int (*irq_set_type)(struct irq_data *data, unsigned int type);
+>  
+>  	const char * const *reset_sources;
+>  	unsigned int num_reset_sources;
+> @@ -1920,7 +1922,7 @@ static const struct irq_domain_ops tegra_pmc_irq_domain_ops = {
+>  	.alloc = tegra_pmc_irq_alloc,
+>  };
+>  
+> -static int tegra_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+> +static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+>  {
+>  	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+>  	unsigned int offset, bit;
+> @@ -1952,7 +1954,7 @@ static int tegra_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+>  	return 0;
+>  }
+>  
+> -static int tegra_pmc_irq_set_type(struct irq_data *data, unsigned int type)
+> +static int tegra186_pmc_irq_set_type(struct irq_data *data, unsigned int type)
+>  {
+>  	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+>  	u32 value;
+> @@ -2006,8 +2008,8 @@ static int tegra_pmc_irq_init(struct tegra_pmc *pmc)
+>  	pmc->irq.irq_unmask = irq_chip_unmask_parent;
+>  	pmc->irq.irq_eoi = irq_chip_eoi_parent;
+>  	pmc->irq.irq_set_affinity = irq_chip_set_affinity_parent;
+> -	pmc->irq.irq_set_type = tegra_pmc_irq_set_type;
+> -	pmc->irq.irq_set_wake = tegra_pmc_irq_set_wake;
+> +	pmc->irq.irq_set_type = pmc->soc->irq_set_type;
+> +	pmc->irq.irq_set_wake = pmc->soc->irq_set_wake;
+>  
+>  	pmc->domain = irq_domain_add_hierarchy(parent, 0, 96, pmc->dev->of_node,
+>  					       &tegra_pmc_irq_domain_ops, pmc);
+> @@ -2680,6 +2682,8 @@ static const struct tegra_pmc_soc tegra186_pmc_soc = {
+>  	.regs = &tegra186_pmc_regs,
+>  	.init = NULL,
+>  	.setup_irq_polarity = tegra186_pmc_setup_irq_polarity,
+> +	.irq_set_wake = tegra186_pmc_irq_set_wake,
+> +	.irq_set_type = tegra186_pmc_irq_set_type,
+>  	.reset_sources = tegra186_reset_sources,
+>  	.num_reset_sources = ARRAY_SIZE(tegra186_reset_sources),
+>  	.reset_levels = tegra186_reset_levels,
+> 
 
-> git://github.com/jonmason/ntb tags/ntb-5.3-bugfixes
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f6192cb7429211bfaac1178c35607b0c989900b8
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
