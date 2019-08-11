@@ -2,77 +2,92 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F77C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 01:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C515C32756
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 01:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5615320880
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 01:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72058208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 01:22:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AaoGjcrC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbfHKBDO (ORCPT
+        id S1726472AbfHKBWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 21:03:14 -0400
-Received: from smtprelay0132.hostedemail.com ([216.40.44.132]:44163 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726292AbfHKBDO (ORCPT
+        Sat, 10 Aug 2019 21:22:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49272 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfHKBW3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 21:03:14 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 5F5DA1822563C;
-        Sun, 11 Aug 2019 01:03:12 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: town85_38e2295c5af30
-X-Filterd-Recvd-Size: 2035
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf17.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 11 Aug 2019 01:03:10 +0000 (UTC)
-Message-ID: <67dd4fe22f197700a7bc3b663a63383ce51346df.camel@perches.com>
-Subject: Re: [PATCH] dpaa2-ethsw: move the DPAA2 Ethernet Switch driver out
- of staging
-From:   Joe Perches <joe@perches.com>
-To:     Ioana Ciornei <ioana.ciornei@nxp.com>, Andrew Lunn <andrew@lunn.ch>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>
-Date:   Sat, 10 Aug 2019 18:03:09 -0700
-In-Reply-To: <VI1PR0402MB2800FF2E5C4DE24B25E7D843E0D10@VI1PR0402MB2800.eurprd04.prod.outlook.com>
-References: <1565366213-20063-1-git-send-email-ioana.ciornei@nxp.com>
-         <20190809190459.GW27917@lunn.ch>
-         <VI1PR0402MB2800FF2E5C4DE24B25E7D843E0D10@VI1PR0402MB2800.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Sat, 10 Aug 2019 21:22:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=x9UEbmW8LJ0lIKjMLHktJ3/c30NE8tEZXrlgaJFgkVE=; b=AaoGjcrC0WoqO1MfO2CSTnPGI
+        xpj5lAq2Y9Wl0X5d3XzIXj3RgldrNnIh4XMTJiD/QAm3PVyJZ54O6o7Atg95xOKR/0I0M6yHNVKDm
+        QPphw1ZfIX/DEd0Wua3oKgObE8pkvmnCc4JzacvdJH31NfDgA8slYqhUV+VBVweS4WwG2olbBZg/y
+        oSgCW4Zwm5pWwrkAqnxUJ6OzyeHs1Es78Bofj4n8UOQYPGyA44gskjjjq7g5TspMpIVABjMg3gcDI
+        1f1enarGTp5f/nRmn8ovSkuYCzxjfQYN360kMEJ0FEJtgsk96eqIti+H2WX1IIFfVEyZO0nGsqGaf
+        PJz9fm00g==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hwcYv-0004on-1g; Sun, 11 Aug 2019 01:22:21 +0000
+Date:   Sat, 10 Aug 2019 18:22:20 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Julia Cartwright <julia@ni.com>, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Joel Becker <jlbec@evilplan.org>
+Subject: Re: [patch V2 0/7] fs: Substitute bit-spinlocks for PREEMPT_RT and
+ debugging
+Message-ID: <20190811012220.GB7491@bombadil.infradead.org>
+References: <20190801010126.245731659@linutronix.de>
+ <20190802075612.GA20962@infradead.org>
+ <alpine.DEB.2.21.1908021107090.2285@nanos.tec.linutronix.de>
+ <20190806061119.GA17492@infradead.org>
+ <alpine.DEB.2.21.1908080858460.2882@nanos.tec.linutronix.de>
+ <20190808072807.GA25259@infradead.org>
+ <alpine.DEB.2.21.1908080953170.2882@nanos.tec.linutronix.de>
+ <20190810081834.GB30426@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190810081834.GB30426@infradead.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-08-10 at 21:45 +0000, Ioana Ciornei wrote:
-> On 8/9/19 10:05 PM, Andrew Lunn wrote:
-[]
->  >> +static int
->  >> +ethsw_get_link_ksettings(struct net_device *netdev,
->  >> +			 struct ethtool_link_ksettings *link_ksettings)
->  >> +{
->  >> +	struct ethsw_port_priv *port_priv = netdev_priv(netdev);
->  >> +	struct dpsw_link_state state = {0};
->  >> +	int err = 0;
->  >> +
->  >> +	err = dpsw_if_get_link_state(port_priv->ethsw_data->mc_io, 0,
->  >> +				     port_priv->ethsw_data->dpsw_handle,
->  >> +				     port_priv->idx,
->  >> +				     &state);
->  >> +	if (err) {
->  >> +		netdev_err(netdev, "ERROR %d getting link state", err);
+On Sat, Aug 10, 2019 at 01:18:34AM -0700, Christoph Hellwig wrote:
+> On Thu, Aug 08, 2019 at 09:54:03AM +0200, Thomas Gleixner wrote:
+> > > I know.  But the problem here is that normally PG_locked is used together 
+> > > with wait_on_page_bit_*, but this one instances uses the bit spinlock
+> > > helpers.  This is the equivalent of calling spin_lock on a struct mutex
+> > > rather than having a mutex_lock_spin helper for this case.
+> > 
+> > Yes, I know :(
+> 
+> But this means we should exclude slub from the bit_spin_lock removal.
+> It really should use it's own version of it anyhow insted of pretending
+> that the page lock is a bit spinlock.
 
-trivia:  Do please add terminating '\n's to all the formats.
-
+But PG_locked isn't used as a mutex _when the page is allocated by slab_.
+Yes, every other user uses PG_locked as a mutex, but I don't see why that
+should constrain slub's usage of PG_locked.
 
