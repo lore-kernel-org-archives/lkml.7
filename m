@@ -2,128 +2,167 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E45ACC32751
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 02:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29999C32751
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 02:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADFED208C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 02:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9EE820880
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 02:27:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pQjStUAk"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="s7M110bx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbfHKCIR (ORCPT
+        id S1726515AbfHKC1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 22:08:17 -0400
-Received: from mail-ed1-f47.google.com ([209.85.208.47]:35738 "EHLO
-        mail-ed1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbfHKCIQ (ORCPT
+        Sat, 10 Aug 2019 22:27:02 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43156 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726457AbfHKC1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 22:08:16 -0400
-Received: by mail-ed1-f47.google.com with SMTP id w20so100118748edd.2;
-        Sat, 10 Aug 2019 19:08:15 -0700 (PDT)
+        Sat, 10 Aug 2019 22:27:02 -0400
+Received: by mail-pf1-f196.google.com with SMTP id v12so244883pfn.10
+        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 19:27:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to;
-        bh=RP1LWzRuajmzKFCHqaSzfx+dlpKjssOccTd/Pg6x94Y=;
-        b=pQjStUAk0dXclB0KaZ5iJOIZg/GStMfNwGg/nnbV0Wr22jGRxiYitMBnCG7pRajOli
-         cSV1alOcJZo+PSeV/5gjPa2B6ILKlykPwk71yLM1Hm05nY01A1jfJkJTemW3dGZvQPcm
-         ofwqKDap4EFyrqQ+DjUhVgWHqULDNNct3W+gRL57gWIBTPZkiPOT/im8t6viMOfFEamr
-         ZBUgisBezf7qM7U4KS9r20g0qn9kmCHZ7t0/FBps2W2r8Vs/fW0TDcLCTkzqQ+FMWf6d
-         jgbLGRZtDQKpV8jAyLbVstsG9HASAgVnMsVPpF/QUllbQaIKOxuvPQ7ZwJ8hIGd6jye4
-         hfig==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sSdzyR3+jYPF/gjOoTrNU8w81mqUq5doextlSL/xXQ4=;
+        b=s7M110bxdXziQG6liQpM/xp6bqiW8h9v45zpZw5HEmfR/k1v4bsiREzdcS2T5WUeXb
+         aeEnhuMIBpEMM+8nw0JIVpnmZFeBmyB70tIguxc4Va4t55IhIm+MLdiCHwXkm1nfmrZ1
+         bhTA+8SSS4ODDqq8aSie+HE+jp17gN5F96iAk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to;
-        bh=RP1LWzRuajmzKFCHqaSzfx+dlpKjssOccTd/Pg6x94Y=;
-        b=tI/5zxMTfN2op9xKywLmVfaTjUovPnZCcAz9i4HhpuM2dunhGOOrDwB/PC48tXMHtX
-         asAZCt102Ki4KiHyPad9ZEAH3xNviFdTfcLYJBN/XTnTHDtUeBubZgz2G144qnxLOTV/
-         YVInI4s3Sy7GDxRFOIDbyS6wX1ieDUz+xMGjyUYPsmPeb7Srx42LHnEQ2gMtTUWdVIE6
-         jN9x0uPEw34gbZWsjzjQgmFQT4u3XtOi+qYs9+dfVxS+5a3dbNcpssr/kk5MeLcv104T
-         0f3rvJjXDd4hNjpdx/cq4FsmycR7km/3f7xxbEO6fkL3eXh8SctImUxXfW3Vxx7EkVS1
-         sc2g==
-X-Gm-Message-State: APjAAAWG7gU8Se6MswIbubUceCGqP6+LlolgXBnsgFflYY3/7s9AtK9V
-        b07YU8+yttv7mkYmiq8pZwKSjNSiatbOqgrcadar/kflFeo=
-X-Google-Smtp-Source: APXvYqxexoPqWF5fiyg/W6Z7Mdxv3GsVnhy2+mXXdUwsH61CiLb2bcrPo/hfsa7DE1sdN3yYs5VC0l6oFTW5CFOqewQ=
-X-Received: by 2002:a50:de08:: with SMTP id z8mr9025845edk.121.1565489294608;
- Sat, 10 Aug 2019 19:08:14 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sSdzyR3+jYPF/gjOoTrNU8w81mqUq5doextlSL/xXQ4=;
+        b=A/wS95aaxCYi0x2gVwPC5myJM6Ff6GSiTOkIATIeCF4ymi+wMmRNbntefKkLyCAxpg
+         MUS/z2crEE7xHCSDNVEYlAbCa67CN6nnF660TbCO02njBQWKVMf9IEwmFEXvp9RCLYwj
+         1YCYbK/QMP55hPjUjxYAjoFVs16B6Rd9V96ZKWNuIfdZ+BuEO9xTic3iFz1IZ47nYSND
+         Ye6HW+YL0ngTIShIj0dvzySaDswU0lGmIO4wBSTmEXm0ftCPH8ozmPLWk39K3mgz6zOf
+         3OjqUtCwtM7MzkXMwJeSlH7k/tzrkmj4PE5PqhmcLklJDD3SMeX9+FTG/FO/Fhrm6S/b
+         7fKg==
+X-Gm-Message-State: APjAAAVXUR6vzWowTcOK9tFYn/6aSmAuNiZvoHEXCNiLzwPekPiF8ShT
+        4iL6YDnTJHlJajQO0lS2F3xvkJgoObE=
+X-Google-Smtp-Source: APXvYqzC/mcnzr4WKGyOHvssnZpmX5fEBua0B7RkotLurKRAGOH8XY5yucbXkdQbIh/f2j9+JC/mrw==
+X-Received: by 2002:a17:90a:ae12:: with SMTP id t18mr17482911pjq.32.1565490421214;
+        Sat, 10 Aug 2019 19:27:01 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id o32sm9183003pje.9.2019.08.10.19.26.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 10 Aug 2019 19:27:00 -0700 (PDT)
+Date:   Sat, 10 Aug 2019 22:26:58 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, Rao Shoaib <rao.shoaib@oracle.com>,
+        max.byungchul.park@gmail.com, byungchul.park@lge.com,
+        kernel-team@android.com, kernel-team@lge.com,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC v1 1/2] rcu/tree: Add basic support for kfree_rcu
+ batching
+Message-ID: <20190811022658.GA177703@google.com>
+References: <20190806212041.118146-1-joel@joelfernandes.org>
+ <20190806235631.GU28441@linux.ibm.com>
+ <20190807094504.GB169551@google.com>
+ <20190807175215.GE28441@linux.ibm.com>
+ <20190810024232.GA183658@google.com>
+ <20190810033814.GP28441@linux.ibm.com>
+ <20190810042037.GA175783@google.com>
+ <20190810182446.GT28441@linux.ibm.com>
 MIME-Version: 1.0
-Received: by 2002:a17:906:2001:0:0:0:0 with HTTP; Sat, 10 Aug 2019 19:08:13
- -0700 (PDT)
-In-Reply-To: <CABVa4NgWMkJuyB1P5fwQEYHwqBRiySE+fGQpMKt8zbp+xJ8+rw@mail.gmail.com>
-References: <CABVa4NgWMkJuyB1P5fwQEYHwqBRiySE+fGQpMKt8zbp+xJ8+rw@mail.gmail.com>
-From:   James Nylen <jnylen@gmail.com>
-Date:   Sun, 11 Aug 2019 02:08:13 +0000
-Message-ID: <CABVa4NhutjvHPbyaxNeVpJjf-RMJdwEX-Yjk4bkqLC1DN3oXPA@mail.gmail.com>
-Subject: [PATCH] `iwlist scan` fails with many networks available
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: multipart/mixed; boundary="0000000000004e2b98058fcde157"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190810182446.GT28441@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000004e2b98058fcde157
-Content-Type: text/plain; charset="UTF-8"
+On Sat, Aug 10, 2019 at 11:24:46AM -0700, Paul E. McKenney wrote:
+> On Sat, Aug 10, 2019 at 12:20:37AM -0400, Joel Fernandes wrote:
+> > On Fri, Aug 09, 2019 at 08:38:14PM -0700, Paul E. McKenney wrote:
+> > > On Fri, Aug 09, 2019 at 10:42:32PM -0400, Joel Fernandes wrote:
+> > > > On Wed, Aug 07, 2019 at 10:52:15AM -0700, Paul E. McKenney wrote:
+> > > > [snip] 
+> > > > > > > > @@ -3459,6 +3645,8 @@ void __init rcu_init(void)
+> > > > > > > >  {
+> > > > > > > >  	int cpu;
+> > > > > > > >  
+> > > > > > > > +	kfree_rcu_batch_init();
+> > > > > > > 
+> > > > > > > What happens if someone does a kfree_rcu() before this point?  It looks
+> > > > > > > like it should work, but have you tested it?
+> > > > > > > 
+> > > > > > > >  	rcu_early_boot_tests();
+> > > > > > > 
+> > > > > > > For example, by testing it in rcu_early_boot_tests() and moving the
+> > > > > > > call to kfree_rcu_batch_init() here.
+> > > > > > 
+> > > > > > I have not tried to do the kfree_rcu() this early. I will try it out.
+> > > > > 
+> > > > > Yeah, well, call_rcu() this early came as a surprise to me back in the
+> > > > > day, so...  ;-)
+> > > > 
+> > > > I actually did get surprised as well!
+> > > > 
+> > > > It appears the timers are not fully initialized so the really early
+> > > > kfree_rcu() call from rcu_init() does cause a splat about an initialized
+> > > > timer spinlock (even though future kfree_rcu()s and the system are working
+> > > > fine all the way into the torture tests).
+> > > > 
+> > > > I think to resolve this, we can just not do batching until early_initcall,
+> > > > during which I have an initialization function which switches batching on.
+> > > > >From that point it is safe.
+> > > 
+> > > Just go ahead and batch, but don't bother with the timer until
+> > > after single-threaded boot is done.  For example, you could check
+> > > rcu_scheduler_active similar to how sync_rcu_exp_select_cpus() does.
+> > > (See kernel/rcu/tree_exp.h.)
+> > 
+> > Cool, that works nicely and I tested it. Actually I made it such that we
+> > don't need to batch even, before the scheduler is up. I don't see any benefit
+> > of that unless we can see a kfree_rcu() flood happening that early at boot
+> > which seems highly doubtful as a real world case.
+> 
+> The benefit is removing the kfree_rcu() special cases from the innards
+> of RCU, for example, in rcu_do_batch().  Another benefit is removing the
+> current restriction on the position of the rcu_head structure within the
+> enclosing data structure.
+> 
+> So it would be good to avoid the current kfree_rcu() special casing within
+> RCU itself.
+> 
+> Or are you using some trick that avoids both the batching and the current
+> kfree_rcu() special casing?
 
-In 5.x it's still possible for `ieee80211_scan_results` (`iwlist
-scan`) to fail when too many wireless networks are available.  This
-code path is used by `wicd`.
+Oh. I see what you mean. Would it be Ok with you to have that be a follow up
+patch?  I am not getting rid (yet) of the special casing in rcu_do_batch in
+this patch, but can do that in another patch.
 
-Previously: https://lkml.org/lkml/2017/4/2/192
+For now I am just doing something like the following in kfree_call_rcu(). I
+was almost about to hit send on the v1 and I have been testing this a lot so
+I'll post it anyway; and we can discuss more about this point on that.
 
-I've been applying this updated patch to my own kernels since 2017 with
-no issues.  I am sure it is not the ideal way to solve this problem, but
-I'm making my fix available in case it helps others.
++void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
++{
++       unsigned long flags;
++       struct kfree_rcu_cpu *krcp;
++       bool monitor_todo;
++
++       /* kfree_call_rcu() batching requires timers to be up. If the scheduler
++        * is not yet up, just skip batching and do non-batched kfree_call_rcu().
++        */
++       if (rcu_scheduler_active != RCU_SCHEDULER_RUNNING)
++               return kfree_call_rcu_nobatch(head, func);
++
 
-Please advise on next steps or if this is a dead end.
+thanks,
 
---0000000000004e2b98058fcde157
-Content-Type: text/plain; charset="US-ASCII"; name="wireless-scan-less-e2big.diff"
-Content-Disposition: attachment; filename="wireless-scan-less-e2big.diff"
-Content-Transfer-Encoding: base64
-X-Attachment-Id: file0
+ - Joel
 
-Y29tbWl0IDhlODBkY2IwZGY3MWFjOGY1ZDM2NDBiY2RiMWJiYTljNzY5M2Q2M2EKQXV0aG9yOiBK
-YW1lcyBOeWxlbiA8am55bGVuQGdtYWlsLmNvbT4KRGF0ZTogICBXZWQgQXByIDI2IDE0OjM4OjU4
-IDIwMTcgKzAyMDAKCiAgICBIYWNrOiBNYWtlIGBpZWVlODAyMTFfc2Nhbl9yZXN1bHRzYCAoYGl3
-bGlzdCBzY2FuYCkgcmV0dXJuIGxlc3MgRTJCSUcKICAgIAogICAgU2VlOiBodHRwczovL2xrbWwu
-b3JnL2xrbWwvMjAxNy80LzIvMTkyCiAgICAKICAgIChhbmQgYnJhbmNoIGBqY24vaGFjay93aXJl
-bGVzcy1zY2FuLW5vLWUyYmlnYCkKICAgIAogICAgVGhpcyBzaG91bGQgcmVhbGx5IGJlIGRvbmUg
-d2l0aCBhIGJpZ2dlciBsaW1pdCBpbnNpZGUgdGhlIGBpd2xpc3RgIGNvZGUKICAgIGluc3RlYWQs
-IGlmIHBvc3NpYmxlIChvciBldmVuIGJldHRlcjogbW9kaWZ5IGB3aWNkYCB0byB1c2UgYGl3IHNj
-YW5gCiAgICBpbnN0ZWFkKS4KCmRpZmYgLS1naXQgYS9uZXQvd2lyZWxlc3Mvc2Nhbi5jIGIvbmV0
-L3dpcmVsZXNzL3NjYW4uYwppbmRleCAyMWJlNTZiMzEyOGUuLjA4ZmE5Y2I2OGY1OSAxMDA2NDQK
-LS0tIGEvbmV0L3dpcmVsZXNzL3NjYW4uYworKysgYi9uZXQvd2lyZWxlc3Mvc2Nhbi5jCkBAIC0x
-Njk5LDYgKzE2OTksNyBAQCBzdGF0aWMgaW50IGllZWU4MDIxMV9zY2FuX3Jlc3VsdHMoc3RydWN0
-IGNmZzgwMjExX3JlZ2lzdGVyZWRfZGV2aWNlICpyZGV2LAogCQkJCSAgc3RydWN0IGl3X3JlcXVl
-c3RfaW5mbyAqaW5mbywKIAkJCQkgIGNoYXIgKmJ1Ziwgc2l6ZV90IGxlbikKIHsKKwljaGFyICpt
-YXliZV9jdXJyZW50X2V2OwogCWNoYXIgKmN1cnJlbnRfZXYgPSBidWY7CiAJY2hhciAqZW5kX2J1
-ZiA9IGJ1ZiArIGxlbjsKIAlzdHJ1Y3QgY2ZnODAyMTFfaW50ZXJuYWxfYnNzICpic3M7CkBAIC0x
-NzA5LDE0ICsxNzEwLDI5IEBAIHN0YXRpYyBpbnQgaWVlZTgwMjExX3NjYW5fcmVzdWx0cyhzdHJ1
-Y3QgY2ZnODAyMTFfcmVnaXN0ZXJlZF9kZXZpY2UgKnJkZXYsCiAKIAlsaXN0X2Zvcl9lYWNoX2Vu
-dHJ5KGJzcywgJnJkZXYtPmJzc19saXN0LCBsaXN0KSB7CiAJCWlmIChidWYgKyBsZW4gLSBjdXJy
-ZW50X2V2IDw9IElXX0VWX0FERFJfTEVOKSB7Ci0JCQllcnIgPSAtRTJCSUc7CisJCQkvLyBCdWZm
-ZXIgdG9vIHNtYWxsIHRvIGhvbGQgYW5vdGhlciBCU1MuICBPbmx5IHJlcG9ydAorCQkJLy8gYW4g
-ZXJyb3IgaWYgd2UgaGF2ZSBub3QgeWV0IHJlYWNoZWQgdGhlIG1heGltdW0KKwkJCS8vIGJ1ZmZl
-ciBzaXplIHRoYXQgYGl3bGlzdGAgY2FuIGhhbmRsZS4KKwkJCWlmIChsZW4gPCAweEZGRkYpIHsK
-KwkJCQllcnIgPSAtRTJCSUc7CisJCQl9CiAJCQlicmVhazsKIAkJfQotCQljdXJyZW50X2V2ID0g
-aWVlZTgwMjExX2JzcygmcmRldi0+d2lwaHksIGluZm8sIGJzcywKLQkJCQkJICAgY3VycmVudF9l
-diwgZW5kX2J1Zik7Ci0JCWlmIChJU19FUlIoY3VycmVudF9ldikpIHsKLQkJCWVyciA9IFBUUl9F
-UlIoY3VycmVudF9ldik7CisJCW1heWJlX2N1cnJlbnRfZXYgPSBpZWVlODAyMTFfYnNzKCZyZGV2
-LT53aXBoeSwgaW5mbywgYnNzLAorCQkJCQkgICAgICAgICBjdXJyZW50X2V2LCBlbmRfYnVmKTsK
-KwkJaWYgKElTX0VSUihtYXliZV9jdXJyZW50X2V2KSkgeworCQkJZXJyID0gUFRSX0VSUihtYXli
-ZV9jdXJyZW50X2V2KTsKKwkJCWlmIChlcnIgPT0gLUUyQklHKSB7CisJCQkJLy8gTGFzdCBCU1Mg
-ZmFpbGVkIHRvIGNvcHkgaW50byBidWZmZXIuICBBcworCQkJCS8vIGFib3ZlLCBvbmx5IHJlcG9y
-dCBhbiBlcnJvciBpZiBgaXdsaXN0YCB3aWxsCisJCQkJLy8gcmV0cnkgYWdhaW4gd2l0aCBhIGxh
-cmdlciBidWZmZXIuCisJCQkJaWYgKGxlbiA+PSAweEZGRkYpIHsKKwkJCQkJZXJyID0gMDsKKwkJ
-CQl9CisJCQl9CiAJCQlicmVhazsKKwkJfSBlbHNlIHsKKwkJCWN1cnJlbnRfZXYgPSBtYXliZV9j
-dXJyZW50X2V2OwogCQl9CiAJfQogCXNwaW5fdW5sb2NrX2JoKCZyZGV2LT5ic3NfbG9jayk7Cg==
---0000000000004e2b98058fcde157--
