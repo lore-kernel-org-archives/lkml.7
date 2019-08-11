@@ -2,104 +2,129 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B16C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C693C0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E06E2085B
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 642592085B
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:48:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k62jIKVL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfHKIoY (ORCPT
+        id S1726179AbfHKIsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 04:44:24 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35774 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfHKIoY (ORCPT
+        Sun, 11 Aug 2019 04:48:23 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43541 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfHKIsW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 04:44:24 -0400
-Received: by mail-qk1-f196.google.com with SMTP id r21so74957911qke.2
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 01:44:23 -0700 (PDT)
+        Sun, 11 Aug 2019 04:48:22 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h15so2094912ljg.10;
+        Sun, 11 Aug 2019 01:48:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pXHasjFTPMOY9kq0PL7JOaC1aEi+PxAZiTuH1S1KxPY=;
+        b=k62jIKVLNEu0Be0N/7l+wYBc7wVgvBzJUQXjpCeyJS3gbRqwdPYFBfHiK2zFRkxPO/
+         OUsBzs1m/cwMfxr7+qlEX9MAa/8hNqiRwT/RaoxM7BDP93INRIHdW7ScRFJVXn93Zkg0
+         D0joxhEV1nxkjYMotGQQW029J/hWfjQHoi2WPedN6XNWb1VHf+J1bEOLMEctkUerrI0d
+         YvgQ/iazH+JjR4zwMrCP4RAVsA/XwZirTW2p2YnUH1y4Qkj78o/whSTzW5sVSlxtIOTk
+         iPCaGFB1tf70KItAywSwXxscFYdixzF9Xl7grRT/iJVPb2V7u4P8TIz1fyoYDgr9QFvW
+         /vLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hcr1GZOkXo/SpBuFQN2sn5O4znC3vPI6qwtk9Hnv4bM=;
-        b=g2bGvZkA0JSKqZNhxcNaZrlUsq6SjfZrwahmt16MFJ86y9RwK4shxK+muKdvBImABD
-         2vgQskyEUJ98R+AiLdts57h0mXyLvtQRrQBREdl3odX2ju6xsDQT1mFEm70hQ17zAisc
-         H4TS6PnKMPFsnUu2c6izwaDNs/1aCbephdkdbNjhj9qjonGntG7fsD7+jKELo0WlNmE3
-         E8l0K9BwdeeJFgDDz0Fcyrr6lUPQ88ekd6DeuORYAHS0mOPSiGq6U2ymlgt74mNyaa93
-         8VCrUKbCQ51+ehjP5QKmYnICS7/+Sco7wkKhwSQLQbn4zTP+vBOjJ75QPHpOF71/olma
-         8zKA==
-X-Gm-Message-State: APjAAAXuIbx3NUC+H13C2XrM7CVgny0TYwlXbuUgq2NFe7LPyWHSzqpQ
-        29iDh4U2CefW1KQPsKW6utXwZg==
-X-Google-Smtp-Source: APXvYqwtJ8qJQX9u6p3npJxqnjO9//GeJFQdkKZGJ1PnQ4tx5aYXx+lvnUCwpoSIPVkCh1o6EEBaKw==
-X-Received: by 2002:a37:b303:: with SMTP id c3mr25443520qkf.253.1565513063479;
-        Sun, 11 Aug 2019 01:44:23 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id 23sm42858742qkk.121.2019.08.11.01.44.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 11 Aug 2019 01:44:22 -0700 (PDT)
-Date:   Sun, 11 Aug 2019 04:44:17 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Ram Pai <linuxram@us.ibm.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-devel@lists.ozlabs.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alexey Kardashevskiy <aik@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
-Message-ID: <20190811044256-mutt-send-email-mst@kernel.org>
-References: <87zhrj8kcp.fsf@morokweng.localdomain>
- <20190810143038-mutt-send-email-mst@kernel.org>
- <20190810220702.GA5964@ram.ibm.com>
- <20190811055607.GA12488@lst.de>
- <20190811064621.GB5964@ram.ibm.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pXHasjFTPMOY9kq0PL7JOaC1aEi+PxAZiTuH1S1KxPY=;
+        b=fvC/y5bJWGTSd8j+kChL/sV39oAXhQiU2ENLuX9v2ph9eYAaDl1B7dqgjyIm3lYy7U
+         Z6qxbKtbinrRokqcFF8TGBUKpVNAOTZddc1zYtZkPYw5gbC4BbbAgtkme+xxmvdtvvg7
+         MHpZvRrxVGuARK1FxvQGOruO8gs4YuF7RweyYGuGcCYLjqGCq4delbOVMNJS3KH+pc4T
+         tezuEG5BqhtIB4SPz4Bc/20URDIiXmkQvDKvQRdheBI26K62XyQGM4KsMt44uAAOho0Q
+         tDTJT6WQ+7gKkGNfz23DRt+iGtQnGXWPZFu6jWLiQ17v68o9SwlXe4vckYIj5DSdlMrV
+         JHrw==
+X-Gm-Message-State: APjAAAXW5BFVUoAvgMuhWAYl2Ic5sWZFdonfrjw+jFoVSs8DnLFwQkBy
+        1dZ4k1qQ8B03rO35suDZyC5ile8x
+X-Google-Smtp-Source: APXvYqwnlKb4Nta1kIvQyP6WUPknA1M8NdVMu8eeJdxxX6zeqV5kJDCOIXhMt+XQpSwveJeh6SKI8A==
+X-Received: by 2002:a2e:968f:: with SMTP id q15mr16037437lji.30.1565513300534;
+        Sun, 11 Aug 2019 01:48:20 -0700 (PDT)
+Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
+        by smtp.gmail.com with ESMTPSA id l22sm20242598ljc.4.2019.08.11.01.48.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 11 Aug 2019 01:48:19 -0700 (PDT)
+From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Tony Lindgren <tony@atomide.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Subject: [PATCH for v5.3] ARM: OMAP1: ams-delta-fiq: Fix missing irq_ack
+Date:   Sun, 11 Aug 2019 10:48:02 +0200
+Message-Id: <20190811084802.630-1-jmkrzyszt@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190811064621.GB5964@ram.ibm.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 10, 2019 at 11:46:21PM -0700, Ram Pai wrote:
-> On Sun, Aug 11, 2019 at 07:56:07AM +0200, Christoph Hellwig wrote:
-> > sev_active() is gone now in linux-next, at least as a global API.
-> > 
-> > And once again this is entirely going in the wrong direction.  The only
-> > way using the DMA API is going to work at all is if the device is ready
-> > for it.  So we need a flag on the virtio device, exposed by the
-> > hypervisor (or hardware for hw virtio devices) that says:  hey, I'm real,
-> > don't take a shortcut.
-> > 
-> > And that means on power and s390 qemu will always have to set thos if
-> > you want to be ready for the ultravisor and co games.  It's not like we
-> > haven't been through this a few times before, have we?
-> 
-> 
-> We have been through this so many times, but I dont think, we ever
-> understood each other.   I have a fundamental question, the answer to
-> which was never clear. Here it is...
-> 
-> If the hypervisor (hardware for hw virtio devices) does not mandate a
-> DMA API, why is it illegal for the driver to request, special handling
-> of its i/o buffers? Why are we associating this special handling to
-> always mean, some DMA address translation? Can't there be 
-> any other kind of special handling needs, that has nothing to do with
-> DMA address translation?
+Non-serio path of Amstrad Delta FIQ deferred handler depended on
+irq_ack() method provided by OMAP GPIO driver.  That method has been
+removed by commit 693de831c6e5 ("gpio: omap: remove irq_ack method").
+Remove useless code from the deferred handler and reimplement the
+missing operation inside the base FIQ handler.
 
-I think the answer to that is, extend the DMA API to cover that special
-need then. And that's exactly what dma_addr_is_phys_addr is trying to
-do.
+Should another dependency - irq_unmask() - be ever removed from the OMAP
+GPIO driver, WARN once if missing.
 
-> 
-> -- 
-> Ram Pai
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+---
+ arch/arm/mach-omap1/ams-delta-fiq-handler.S | 3 ++-
+ arch/arm/mach-omap1/ams-delta-fiq.c         | 4 +---
+ 2 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/mach-omap1/ams-delta-fiq-handler.S b/arch/arm/mach-omap1/ams-delta-fiq-handler.S
+index 81159af44862..14a6c3eb3298 100644
+--- a/arch/arm/mach-omap1/ams-delta-fiq-handler.S
++++ b/arch/arm/mach-omap1/ams-delta-fiq-handler.S
+@@ -126,6 +126,8 @@ restart:
+ 	orr r11, r11, r13			@ mask all requested interrupts
+ 	str r11, [r12, #OMAP1510_GPIO_INT_MASK]
+ 
++	str r13, [r12, #OMAP1510_GPIO_INT_STATUS] @ ack all requested interrupts
++
+ 	ands r10, r13, #KEYBRD_CLK_MASK		@ extract keyboard status - set?
+ 	beq hksw				@ no - try next source
+ 
+@@ -133,7 +135,6 @@ restart:
+ 	@@@@@@@@@@@@@@@@@@@@@@
+ 	@ Keyboard clock FIQ mode interrupt handler
+ 	@ r10 now contains KEYBRD_CLK_MASK, use it
+-	str r10, [r12, #OMAP1510_GPIO_INT_STATUS]	@ ack the interrupt
+ 	bic r11, r11, r10				@ unmask it
+ 	str r11, [r12, #OMAP1510_GPIO_INT_MASK]
+ 
+diff --git a/arch/arm/mach-omap1/ams-delta-fiq.c b/arch/arm/mach-omap1/ams-delta-fiq.c
+index 43899fa56674..0254eb9cf8c6 100644
+--- a/arch/arm/mach-omap1/ams-delta-fiq.c
++++ b/arch/arm/mach-omap1/ams-delta-fiq.c
+@@ -70,9 +70,7 @@ static irqreturn_t deferred_fiq(int irq, void *dev_id)
+ 			 * interrupts default to since commit 80ac93c27441
+ 			 * requires interrupt already acked and unmasked.
+ 			 */
+-			if (irq_chip->irq_ack)
+-				irq_chip->irq_ack(d);
+-			if (irq_chip->irq_unmask)
++			if (!WARN_ON_ONCE(!irq_chip->irq_unmask))
+ 				irq_chip->irq_unmask(d);
+ 		}
+ 		for (; irq_counter[gpio] < fiq_count; irq_counter[gpio]++)
+-- 
+2.21.0
+
