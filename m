@@ -2,139 +2,116 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36125C32756
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 19:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B8DC0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 19:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11F652173C
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 19:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BAEA208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 19:01:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NKH6a5rK"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="0oOGBZDH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbfHKTAX (ORCPT
+        id S1726466AbfHKTBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 15:00:23 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45518 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfHKTAX (ORCPT
+        Sun, 11 Aug 2019 15:01:14 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42624 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfHKTBO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 15:00:23 -0400
-Received: by mail-pl1-f193.google.com with SMTP id y8so4924602plr.12
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 12:00:23 -0700 (PDT)
+        Sun, 11 Aug 2019 15:01:14 -0400
+Received: by mail-ot1-f66.google.com with SMTP id j7so6778661ota.9
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 12:01:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=g4HRffWR5sTfOdPb8n2H2gBlNEK3O7QkgVCtkSjBUGc=;
-        b=NKH6a5rKubvrnRjIiAagMdwN7DNFvpDIxEUxLYf+kcaaRrXUD4LXVeEaPzEwnv51Qn
-         7QZtgmEqhK5E4pjO/rrk1i6VlM2ljoxMczTY2s0GmrCxGCEIRTRvwfm2eZyvt5gl2ail
-         i4BetvPir8rZaPCg6FdYaMlO7QhhsOWiFl05YooTM8FK+qi+aGZytl2RfGMDZccqWYcH
-         c7A1ri271xLpFxZkPBYu7DbHUIaK8beRCewn28rCUTsX9GjAB64fyF3nlcG1issWWlne
-         M1MeftR3HX7ZBV69FKtlbTP5HTcIxgTIQFwFvS9sWY9tl+c2q40uABiEoYtg7El1O0aC
-         FcCA==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=8CYB75tEXZ2XGjArz0sIzOXQhMzMA9ETRG0W57479F8=;
+        b=0oOGBZDHawnT6tmmA7FIAOOT8r1zBTfrvPcrZf5O/ihWNLAllN93OL9uP95I9VkQmM
+         nP5hxw8LFtTmglndTHiTXYpR3W3jYv56Gl6E0js3c83nUptmb2OdO+3Bbco9QmsAeD4h
+         KtlxjbFd8VhocheXPss1Yt538XYGlGyAwtHOP/ZaPWOM9gYX6RFWSaOTsqn9J5nPUmkU
+         wnEidQKmM5iGTz8daURN3XxmKJbFD+gnM+K7NWcXx8pqMwwFQCFiLShU/t77cu3YPfU0
+         UWdGRsUmyGm7l18Ex8CDjsMpYcqYlpvoHLgcu2u/xEmQPdbCFGq8G+wpm+0yLFxUPya+
+         kcNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=g4HRffWR5sTfOdPb8n2H2gBlNEK3O7QkgVCtkSjBUGc=;
-        b=rUkVqpOC0+YjBG3d6+oOVOG+KaitivYRcAxzBj/zNEF8GCpMxm+cUbjF3+q4TIOo60
-         Gb6q86Sa2vO7CiI1ugzxO4K3GIy84fJZcITwPYEKH/Q8L5HHRtC+jex8Dq9cJQlRueud
-         mncJIgdcP6ovqz1klhxYeAoP+mPVtOdf3GM9xXDKQBEM3Z7N4NglQu0aurY74okSmuo0
-         WyoKs2pwLd5Kgf0LBscG3lThBanS9XZGvIQZJwb8PJsE5T5jNtKKagEkrcXioD/ou3dC
-         oACk8BXip7zCAbnJY2lOrKTPyWyFqZYCYRWqTb+zvDXavs5Zw96vksj+3PB1MQGG/3gl
-         rQ1A==
-X-Gm-Message-State: APjAAAXf+qXCLfleQGm5Cs9mmQJ+0QsyLbjBsj4cu0HoqOm9uV0FCrDx
-        EQBSYOjOcQ7sobadAm5+zJoquw==
-X-Google-Smtp-Source: APXvYqzc4Bn9ATOCQYg7LsJf9jLHX1jrV/wEcEKA0Dzyd51K6OZ8vz1CVcwhFwEFMJTVX7DrRrXbdA==
-X-Received: by 2002:a17:902:e4:: with SMTP id a91mr29498761pla.150.1565550022586;
-        Sun, 11 Aug 2019 12:00:22 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 5sm41932620pgh.93.2019.08.11.12.00.21
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 11 Aug 2019 12:00:21 -0700 (PDT)
-Date:   Sun, 11 Aug 2019 12:01:59 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        robh+dt <robh+dt@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v3 4/4] arm64: dts/sdm845: Enable FW implemented safe
- sequence handler on MTP
-Message-ID: <20190811190159.GQ26807@tuxbook-pro>
-References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
- <20190612071554.13573-5-vivek.gautam@codeaurora.org>
- <20190805222627.GA2634@builder>
- <CAFp+6iHGrXAJ2Y1ewxaePGYEcbnprjScUnGyR61qvOv03HVZhQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=8CYB75tEXZ2XGjArz0sIzOXQhMzMA9ETRG0W57479F8=;
+        b=S7YTK7qLKMjzrQe/jvEJB8V6i5+N+l4rEuvGtt1DSRe9wMCgtzdBxFV/be3bJshVCQ
+         3jQYfZJBOshqviBVC6+mUWAlPKUIRUXC4+JR1KhVjh9f0C+9FfbAp0ZaOVNGbS0XFURR
+         52Na1O+e2ffCLd8lE1TBbEXFFRUFlX5kYPfYlmnW2P6Ke4cW4RxDxZhFcyLxQUWrpztG
+         k/nh6Y3t0FDe+W4OMC/g5qR00HwlsTc8iVEDgQwzNF5ChxOGccaSvLv+tL8dWvldwkri
+         D3tX99K2HiYYilPQn65+ZhmHQkOk2YmGgCYXBAH6NgUJQNfRdTya1tmsR3xyv5vmx18C
+         /NEw==
+X-Gm-Message-State: APjAAAVKXtk5DFubJh8c4M/ko9LNiJx7fUYJq78sxEasjMG2q4GXutM+
+        35N3wa1pbyDpuNVeiBkM4+aUVJw2lb1TvZ4ZtW3WP8iz4pA=
+X-Google-Smtp-Source: APXvYqxCBXehuIHD7MVGr3oQ6+9vulwhlOrxF2TSbUxwyaVksmmBcJbvCHzRAExD9UI669rmu+iqnsMwb1EjIkGlO98=
+X-Received: by 2002:a9d:5f13:: with SMTP id f19mr19214592oti.207.1565550073180;
+ Sun, 11 Aug 2019 12:01:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFp+6iHGrXAJ2Y1ewxaePGYEcbnprjScUnGyR61qvOv03HVZhQ@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sun, 11 Aug 2019 12:01:02 -0700
+Message-ID: <CAPcyv4iaYiXbv2sf-Znn5dYphLKEi77NjafkEzXA2kAEMqyR0w@mail.gmail.com>
+Subject: [GIT PULL] dax fixes v5.3-rc4
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 11 Aug 09:08 PDT 2019, Vivek Gautam wrote:
+Hi Linus, please pull from:
 
-> On Tue, Aug 6, 2019 at 3:56 AM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> >
-> > On Wed 12 Jun 00:15 PDT 2019, Vivek Gautam wrote:
-> >
-> > > Indicate on MTP SDM845 that firmware implements handler to
-> > > TLB invalidate erratum SCM call where SAFE sequence is toggled
-> > > to achieve optimum performance on real-time clients, such as
-> > > display and camera.
-> > >
-> > > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> > > ---
-> > >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > index 78ec373a2b18..6a73d9744a71 100644
-> > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > @@ -2368,6 +2368,7 @@
-> > >                       compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
-> > >                       reg = <0 0x15000000 0 0x80000>;
-> > >                       #iommu-cells = <2>;
-> > > +                     qcom,smmu-500-fw-impl-safe-errata;
-> >
-> > Looked back at this series and started to wonder if there there is a
-> > case where this should not be set? I mean we're after all adding this to
-> > the top 845 dtsi...
-> 
-> My bad.
-> This is not valid in case of cheza. Cheza firmware doesn't implement
-> the safe errata handling hook.
-> On cheza we just have the liberty of accessing the secure registers
-> through scm calls - this is what
-> we were doing in earlier patch series handling this errata.
-> So, a property like this should go to mtp board's dts file.
-> 
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/dax-fixes-5.3-rc4
 
-It would have been nice if the common case was just selected by default,
-but afaict no safe workaround is needed on Cheza? You mention here that
-it should (could?) use the scm write based approach instead, would an
-introduction of that come with another flag?
+...a filesystem-dax and device-dax fix for v5.3. The filesystem-dax
+fix is tagged for stable as the implementation has been mistakenly
+throwing away all cow pages on any truncate or hole punch operation as
+part of the solution to coordinate device-dma vs truncate to dax
+pages. The device-dax change fixes up a regression this cycle from the
+introduction of a common 'internal per-cpu-ref' implementation.
 
+The filesystem-dax fix has appeared in -next. The device-dax has not,
+but it has been exposed on a kbuild-robot visible branch for the past
+few days, and passes the nvdimm unit tests.
 
-PS. In it's current form it's correct that this should be moved to the
-device dts files - all but one of them...
+---
 
-Regards,
-Bjorn
+The following changes since commit e21a712a9685488f5ce80495b37b9fdbe96c230d:
+
+  Linux 5.3-rc3 (2019-08-04 18:40:12 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/dax-fixes-5.3-rc4
+
+for you to fetch changes up to 06282373ff57a2b82621be4f84f981e1b0a4eb28:
+
+  mm/memremap: Fix reuse of pgmap instances with internal references
+(2019-08-09 14:16:15 -0700)
+
+----------------------------------------------------------------
+dax fixes v5.3-rc4
+
+- Fix dax_layout_busy_page() to not discard private cow pages of fs/dax
+  private mappings.
+
+- Update the memremap_pages core to properly cleanup on behalf of
+  internal reference-count users like device-dax.
+
+----------------------------------------------------------------
+Dan Williams (1):
+      mm/memremap: Fix reuse of pgmap instances with internal references
+
+Vivek Goyal (1):
+      dax: dax_layout_busy_page() should not unmap cow pages
+
+ fs/dax.c      | 2 +-
+ mm/memremap.c | 6 ++++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
