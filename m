@@ -2,36 +2,37 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1126DC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B04C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA338216F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B37D216F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 09:10:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbfHKJKX (ORCPT
+        id S1726506AbfHKJK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 05:10:23 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:18611 "EHLO
+        Sun, 11 Aug 2019 05:10:27 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:27195 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725826AbfHKJKX (ORCPT
+        with ESMTP id S1726029AbfHKJKY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 05:10:23 -0400
-X-UUID: 05ffea0b1da64af4b9ab527241d52319-20190811
-X-UUID: 05ffea0b1da64af4b9ab527241d52319-20190811
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        Sun, 11 Aug 2019 05:10:24 -0400
+X-UUID: 90dce940dfb747b5be4c843419677861-20190811
+X-UUID: 90dce940dfb747b5be4c843419677861-20190811
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <jitao.shi@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 313713411; Sun, 11 Aug 2019 17:10:12 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N2.mediatek.inc
- (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sun, 11 Aug
- 2019 17:10:06 +0800
+        with ESMTP id 1951926286; Sun, 11 Aug 2019 17:10:18 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sun, 11 Aug
+ 2019 17:10:12 +0800
 Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
  MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Sun, 11 Aug 2019 17:10:04 +0800
+ 15.0.1395.4 via Frontend Transport; Sun, 11 Aug 2019 17:10:11 +0800
 From:   Jitao Shi <jitao.shi@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -57,52 +58,171 @@ CC:     Jitao Shi <jitao.shi@mediatek.com>,
         <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
         <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
         <ck.hu@mediatek.com>, <stonea168@163.com>
-Subject: [PATCH v4 0/4] Add drivers for auo,kd101n80-45na and boe,tv101wum-nl6 panels
-Date:   Sun, 11 Aug 2019 17:09:57 +0800
-Message-ID: <20190811091001.49555-1-jitao.shi@mediatek.com>
+Subject: [PATCH wn 4/4] drm/panel: support for auo,kd101n80-45na wuxga dsi video mode panel
+Date:   Sun, 11 Aug 2019 17:10:01 +0800
+Message-ID: <20190811091001.49555-5-jitao.shi@mediatek.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190811091001.49555-1-jitao.shi@mediatek.com>
+References: <20190811091001.49555-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-TM-SNTS-SMTP: 13D0A12DC02939C6C15BF9FF5D1853EE5ED675A5B964FD3864D887C10CD6F7A02000:8
+X-TM-SNTS-SMTP: 1A1FAEEAFFF9DF397BC74083D4176CD7946D3DFCEFE4E482C633B39BACB90FAA2000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes since v3:
- - remove check enable_gpio.
- - fine tune the auo,kd101n80-45na panel's power on timing.
+Auo,kd101n80-45na's connector is same as boe,tv101wum-nl6.
+The most codes can be reuse.
+So auo,kd101n80-45na and boe,tv101wum-nl6 use one driver file.
+Add the different parts in driver data.
 
-Changes since v2:
- - correct the panel size
- - remove blank line in Kconfig
- - move auo,kd101n80-45na panel driver in this series.
+Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+---
+ drivers/gpu/drm/panel/Kconfig                 |  6 +-
+ .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    | 76 ++++++++++++++++---
+ 2 files changed, 67 insertions(+), 15 deletions(-)
 
-Changes since v1:
-
- - update typo nl6 -> n16.
- - update new panel config and makefile are added in alphabetically order.
- - add the panel mode and panel info in driver data.
- - merge auo,kd101n80-45a and boe,tv101wum-nl6 in one driver
-
-Jitao Shi (4):
-  dt-bindings: display: panel: Add BOE tv101wum-n16 panel bindings
-  drm/panel: support for BOE tv101wum-nl6 wuxga dsi video mode panel
-  dt-bindings: display: panel: add auo kd101n80-45na panel bindings
-  drm/panel: support for auo,kd101n80-45na wuxga dsi video mode panel
-
- .../display/panel/auo,kd101n80-45na.txt       |  34 +
- .../display/panel/boe,tv101wum-nl6.txt        |  34 +
- drivers/gpu/drm/panel/Kconfig                 |   9 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    | 761 ++++++++++++++++++
- 5 files changed, 839 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/auo,kd101n80-45na.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
- create mode 100644 drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-
+diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+index afcadb3585fb..0e887c978796 100644
+--- a/drivers/gpu/drm/panel/Kconfig
++++ b/drivers/gpu/drm/panel/Kconfig
+@@ -19,13 +19,13 @@ config DRM_PANEL_ARM_VERSATILE
+ 	  in the Versatile family syscon registers.
+ 
+ config DRM_PANEL_BOE_TV101WUM_NL6
+-	tristate "BOE TV101WUM 1200x1920 panel"
++	tristate "BOE TV101WUM and AUO KD101N80 45NA 1200x1920 panel"
+ 	depends on OF
+ 	depends on DRM_MIPI_DSI
+ 	depends on BACKLIGHT_CLASS_DEVICE
+ 	help
+-	  Say Y here if you want to support for BOE TV101WUM WUXGA PANEL
+-	  DSI Video Mode panel
++	  Say Y here if you want to support for BOE TV101WUM and AUO KD101N80
++	  45NA WUXGA PANEL DSI Video Mode panel
+ 
+ config DRM_PANEL_LVDS
+ 	tristate "Generic LVDS panel driver"
+diff --git a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
+index c0e27f0b2713..aef4f8034c5b 100644
+--- a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
++++ b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
+@@ -35,6 +35,7 @@ struct panel_desc {
+ 	enum mipi_dsi_pixel_format format;
+ 	const struct panel_init_cmd *init_cmds;
+ 	unsigned int lanes;
++	bool discharge_on_disable;
+ };
+ 
+ struct boe_panel {
+@@ -372,6 +373,15 @@ static const struct panel_init_cmd boe_init_cmd[] = {
+ 	{},
+ };
+ 
++static const struct panel_init_cmd auo_init_cmd[] = {
++	_INIT_DELAY_CMD(24),
++	_INIT_DCS_CMD(0x11),
++	_INIT_DELAY_CMD(120),
++	_INIT_DCS_CMD(0x29),
++	_INIT_DELAY_CMD(120),
++	{},
++};
++
+ static inline struct boe_panel *to_boe_panel(struct drm_panel *panel)
+ {
+ 	return container_of(panel, struct boe_panel, base);
+@@ -449,20 +459,30 @@ static int boe_panel_unprepare(struct drm_panel *panel)
+ 	if (!boe->prepared)
+ 		return 0;
+ 
+-	ret = boe_panel_off(boe);
+-	if (ret < 0) {
+-		dev_err(panel->dev, "failed to set panel off: %d\n", ret);
+-		return ret;
++	if (boe->desc->discharge_on_disable) {
++		msleep(150);
++		regulator_disable(boe->avee);
++		regulator_disable(boe->avdd);
++		usleep_range(5000, 7000);
++		gpiod_set_value(boe->enable_gpio, 0);
++		usleep_range(5000, 7000);
++		regulator_disable(boe->pp1800);
++	} else {
++		ret = boe_panel_off(boe);
++		if (ret < 0) {
++			dev_err(panel->dev, "failed to set panel off: %d\n",
++				ret);
++			return ret;
++		}
++		msleep(150);
++		gpiod_set_value(boe->enable_gpio, 0);
++		usleep_range(500, 1000);
++		regulator_disable(boe->avee);
++		regulator_disable(boe->avdd);
++		usleep_range(5000, 7000);
++		regulator_disable(boe->pp1800);
+ 	}
+ 
+-	msleep(150);
+-	gpiod_set_value(boe->enable_gpio, 0);
+-	usleep_range(500, 1000);
+-	regulator_disable(boe->avee);
+-	regulator_disable(boe->avdd);
+-	usleep_range(5000, 7000);
+-	regulator_disable(boe->pp1800);
+-
+ 	boe->prepared = false;
+ 
+ 	return 0;
+@@ -564,6 +584,35 @@ static const struct panel_desc boe_tv101wum_nl6_desc = {
+ 	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
+ 		      MIPI_DSI_MODE_LPM,
+ 	.init_cmds = boe_init_cmd,
++	.discharge_on_disable = false,
++};
++
++static const struct drm_display_mode auo_default_mode = {
++	.clock = 157000,
++	.hdisplay = 1200,
++	.hsync_start = 1200 + 80,
++	.hsync_end = 1200 + 80 + 24,
++	.htotal = 1200 + 80 + 24 + 36,
++	.vdisplay = 1920,
++	.vsync_start = 1920 + 16,
++	.vsync_end = 1920 + 16 + 4,
++	.vtotal = 1920 + 16 + 4 + 16,
++	.vrefresh = 60,
++};
++
++static const struct panel_desc auo_kd101n80_45na_desc = {
++	.modes = &auo_default_mode,
++	.bpc = 8,
++	.size = {
++		.width_mm = 135,
++		.height_mm = 216,
++	},
++	.lanes = 4,
++	.format = MIPI_DSI_FMT_RGB888,
++	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
++		      MIPI_DSI_MODE_LPM,
++	.init_cmds = auo_init_cmd,
++	.discharge_on_disable = true,
+ };
+ 
+ static int boe_panel_get_modes(struct drm_panel *panel)
+@@ -689,6 +738,9 @@ static const struct of_device_id boe_of_match[] = {
+ 	{ .compatible = "boe,tv101wum-nl6",
+ 	  .data = &boe_tv101wum_nl6_desc
+ 	},
++	{ .compatible = "auo,kd101n80-45na",
++	  .data = &auo_kd101n80_45na_desc
++	},
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, boe_of_match);
 -- 
 2.21.0
 
