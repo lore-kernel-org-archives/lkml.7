@@ -2,127 +2,106 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B59FC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 15:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA91CC0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 15:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06F042084C
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 15:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 998CE20880
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 15:26:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfHKPKy (ORCPT
+        id S1726505AbfHKPZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 11:10:54 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33365 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfHKPKx (ORCPT
+        Sun, 11 Aug 2019 11:25:59 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33334 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726014AbfHKPZ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 11:10:53 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n9so102614582wru.0;
-        Sun, 11 Aug 2019 08:10:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZvL0w/RrWzCXmEqGtiPSbyCPgpLUV0eBfGdylB2j+qE=;
-        b=CLzcbNGvwl9aPNKORIzGoCSyJPRTTIBLGJs8OAJKGg2pCfzOKAn7KKXwrMa3jdJuln
-         pNe+nYY+fREDZEVjonjvbC5OkQ8uJYiPn9yw3ucd8agyuPL7I6FlvL/yduM4Z3J0qw5d
-         po/wAIZk0WFNVNWshwuVreIuCFZPvU17rhWl8cLJ7pboEez1qxRCLZ+aGdR75N31/38K
-         RYXhhKoOruptS34HOrlB8qpeuKL0cBoaJq+Uift5dSll3nMsrDMQIoh464juyaP3GWGi
-         4X/Uni57EilSwZzsXTrh7GvjEwYaEp4CJ+5rz+7+RqHVVZgqlmYD77US7FvBknNEAIv4
-         WgsA==
-X-Gm-Message-State: APjAAAU0yWTDoc2AcxvV0lMEKeG8yS0PYXpCy46epvMv8MGzrtiwXzzY
-        2sQWCW4BxT74nphpwVmGR6U=
-X-Google-Smtp-Source: APXvYqyC1XseTJUsID4U0s2kw/P6UJNA5sVYJ6WdgeL+XNrPosY9yRULJaidsX4driYK6FPd5RYWNw==
-X-Received: by 2002:adf:90d0:: with SMTP id i74mr22816979wri.218.1565536251573;
-        Sun, 11 Aug 2019 08:10:51 -0700 (PDT)
-Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id y16sm227049408wrg.85.2019.08.11.08.10.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 11 Aug 2019 08:10:51 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Denis Efremov <efremov@linux.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 7/7] vfio_pci: Use PCI_STD_NUM_BARS in loops instead of PCI_STD_RESOURCE_END
-Date:   Sun, 11 Aug 2019 18:08:04 +0300
-Message-Id: <20190811150802.2418-8-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190811150802.2418-1-efremov@linux.com>
-References: <20190811150802.2418-1-efremov@linux.com>
+        Sun, 11 Aug 2019 11:25:59 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hwpjJ-0000rz-8w; Sun, 11 Aug 2019 16:25:57 +0100
+Received: from ben by deadeye with local (Exim 4.92)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hwpjJ-0006mY-1m; Sun, 11 Aug 2019 16:25:57 +0100
+Message-ID: <078beee0929d7632913611a0ba3cd000b1e27474.camel@decadent.org.uk>
+Subject: Re: [PATCH 3.16 000/157] 3.16.72-rc1 review
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        Denis Kirjanov <kda@linux-powerpc.org>
+Date:   Sun, 11 Aug 2019 16:25:52 +0100
+In-Reply-To: <06733f55-19b7-6192-736c-fa1014f120ea@roeck-us.net>
+References: <lsq.1565469607.188083258@decadent.org.uk>
+         <06733f55-19b7-6192-736c-fa1014f120ea@roeck-us.net>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-hgH8ajv8mnTRUcpAfvv/"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch refactors the loop condition scheme from
-'i <= PCI_STD_RESOURCE_END' to 'i < PCI_STD_NUM_BARS'.
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- drivers/vfio/pci/vfio_pci.c         | 4 ++--
- drivers/vfio/pci/vfio_pci_config.c  | 2 +-
- drivers/vfio/pci/vfio_pci_private.h | 4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+--=-hgH8ajv8mnTRUcpAfvv/
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 703948c9fbe1..13f5430e3f3c 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -115,7 +115,7 @@ static void vfio_pci_probe_mmaps(struct vfio_pci_device *vdev)
- 
- 	INIT_LIST_HEAD(&vdev->dummy_resources_list);
- 
--	for (bar = PCI_STD_RESOURCES; bar <= PCI_STD_RESOURCE_END; bar++) {
-+	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
- 		res = vdev->pdev->resource + bar;
- 
- 		if (!IS_ENABLED(CONFIG_VFIO_PCI_MMAP))
-@@ -399,7 +399,7 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
- 
- 	vfio_config_free(vdev);
- 
--	for (bar = PCI_STD_RESOURCES; bar <= PCI_STD_RESOURCE_END; bar++) {
-+	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
- 		if (!vdev->barmap[bar])
- 			continue;
- 		pci_iounmap(pdev, vdev->barmap[bar]);
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index f0891bd8444c..6035a2961160 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -455,7 +455,7 @@ static void vfio_bar_fixup(struct vfio_pci_device *vdev)
- 
- 	bar = (__le32 *)&vdev->vconfig[PCI_BASE_ADDRESS_0];
- 
--	for (i = PCI_STD_RESOURCES; i <= PCI_STD_RESOURCE_END; i++, bar++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++, bar++) {
- 		if (!pci_resource_start(pdev, i)) {
- 			*bar = 0; /* Unmapped by host = unimplemented to user */
- 			continue;
-diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
-index ee6ee91718a4..8a2c7607d513 100644
---- a/drivers/vfio/pci/vfio_pci_private.h
-+++ b/drivers/vfio/pci/vfio_pci_private.h
-@@ -86,8 +86,8 @@ struct vfio_pci_reflck {
- 
- struct vfio_pci_device {
- 	struct pci_dev		*pdev;
--	void __iomem		*barmap[PCI_STD_RESOURCE_END + 1];
--	bool			bar_mmap_supported[PCI_STD_RESOURCE_END + 1];
-+	void __iomem		*barmap[PCI_STD_NUM_BARS];
-+	bool			bar_mmap_supported[PCI_STD_NUM_BARS];
- 	u8			*pci_config_map;
- 	u8			*vconfig;
- 	struct perm_bits	*msi_perm;
--- 
-2.21.0
+On Sun, 2019-08-11 at 07:05 -0700, Guenter Roeck wrote:
+> On 8/10/19 1:40 PM, Ben Hutchings wrote:
+> > This is the start of the stable review cycle for the 3.16.72 release.
+> > There are 157 patches in this series, which will be posted as responses
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >=20
+> > Responses should be made by Tue Aug 13 12:00:00 UTC 2019.
+> > Anything received after that time might be too late.
+> >=20
+>=20
+> Build results:
+> 	total: 136 pass: 136 fail: 0
+> Qemu test results:
+> 	total: 229 pass: 229 fail: 0
 
+Thanks for testing,
+
+Ben.
+
+--=20
+Ben Hutchings
+Time is nature's way of making sure that
+everything doesn't happen at once.
+
+
+
+--=-hgH8ajv8mnTRUcpAfvv/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl1QM4AACgkQ57/I7JWG
+EQn0HQ//Yat8+tNFQMWS/0qNS7jleupMxcIeJVgSB2JHMjNwQdGP7+63ocLRMNzk
+YtdV3fRw2oXioS6ZXKr0xrymllCqUq2+vfodpkq/VkoFctdobTRS1I2gUJflv7Dm
+rCKuq3lT6HUauBMfk4VXne6a6NGxELpYXhzTGzuiBgoBHTrBvmMpZKgL4nC4YwPw
+I2xEp7txYgUx6E3w42opaxSZT5kcCc0OOhZK3n+6EC2BwWGKnQzs9Wk06mCim3sj
+29w5o7O4cjkL90OOCygP7SYEAk9WgL7+i2GzM/8mi77kSlZGv+wKDc+m16E99o26
+Mw55xH8C0m19uKV1nbsG8vhZQBbKvwRd/RWdgHmcO86BYekVRWut/3PBNEOfFrm1
+B67S8y+1QqJXEN/r+wIMmC+VdD3/Nx6hipXkRGTzm58YbngYI8X7q0hJh3/FW3/C
+QUVIJ5WNIT4VRZfL6jus6b/DoiXnP/j241hahbddfRwR9ta2aMX7tEfHBv8JcAWl
+iaLNLv3RHXkM101bPkV6ZUxBq4b0HN7APlhvqW7y/e1kWN8X046DYzxWs29Z1yZx
+6NO/yXVC0IxL7z/S0MhOjQQs4CPbyS40eNWmUSoX+/tmQ2XAth3TXvYbnK96NRr3
+kHZYRTzqzuahYUF+syir2d6eIOCN8pX6qKFRaOAXSRd9qqdSq+4=
+=1bQW
+-----END PGP SIGNATURE-----
+
+--=-hgH8ajv8mnTRUcpAfvv/--
