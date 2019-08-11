@@ -2,103 +2,181 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D45A0C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 14:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D3AC433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 14:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 798BC2085B
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 14:17:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kudzu-us.20150623.gappssmtp.com header.i=@kudzu-us.20150623.gappssmtp.com header.b="CTDI2f9n"
+	by mail.kernel.org (Postfix) with ESMTP id 1A371208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 14:18:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565533115;
+	bh=dpWvePEcOU2yMdIm5cjfyrjyEtE2hQK9N6jf7+LUvtE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=tiF99BYBOtTa1VpFXLmAUk26ppuJW8WqZJX16Mefwrs6QBct2gSJmXI5Un2q04cZM
+	 VmJseyTxiaVN2/A+MktZBvFZPQgLB8QLK8STowTOrR7qETEzlMEnNoMT7YmZvaDvMK
+	 eeLt1LGLrIjteRMgT6bikdztpGREE/5wxfAF8G2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbfHKORJ (ORCPT
+        id S1726528AbfHKOSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 10:17:09 -0400
-Received: from mail-yb1-f179.google.com ([209.85.219.179]:39615 "EHLO
-        mail-yb1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbfHKORJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 10:17:09 -0400
-Received: by mail-yb1-f179.google.com with SMTP id s142so8036339ybc.6
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 07:17:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=1k10DVZX38KqG7NN+n2wPTA9UK8NfscpxQDUmI83NeE=;
-        b=CTDI2f9nfiEREhjRyqr16/Wu2BsL8YzNd4VagGVOSl/B5YDxTgQQwOMQrHIfXbI1aC
-         bU+ex0Qt6s19RDFxRkvd3jnxZXezvIJnlCkbrLAfs0771eX+aOiO+VM6SvupxtUrrok6
-         cwcjvg2olRbuuf2kxl24x5d76bEJk+0zihyEsPkROa6YLdN08WepvGyXkrc4pwrCKsPz
-         viFjyN1Mcdb5bJcI9vYrG85O9ddA9vytStRifndDrw0+uv3V89FSZRbUwGfvfcBLvwSZ
-         1vBV2/ufvHw956SOQde8iTMGqfdqGbeosRXodWYiRmiVaEtbTziKoG6DDNLIQjHOUJ0p
-         p9kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=1k10DVZX38KqG7NN+n2wPTA9UK8NfscpxQDUmI83NeE=;
-        b=SlV43Ov23wwRn/+ZHrGffLULkoFi7CUR2QjZlsDfkMYZyFlu5bwzYuCAlwlm5h8CT5
-         9IeCTE9y2uetdVmDc7xm/VtFpXd04tjR49Ievsnr37rvdxQ26h31WMV6ileeNd2I9PVL
-         HxXeLb776r7Mq4qeoZIsY2aFLReBYD2xi8U+hpS7GrGW2PGZTrLS97BQPWYKKXkxWaPM
-         +s9+js5wLQq6JNqgKRkp1t/+94KcUksPv4DR394m/OoY+Bn/4IqdP+IzLUz0kg0LIjRO
-         uWBpodRyl9NQvnUMkD0v3SDAEK+y1+v4TQW3FgYIjGnhACKZGZEstRopA+9Kp/jEtV/M
-         QJeQ==
-X-Gm-Message-State: APjAAAXZAxu7x8Mk+mh3VpcSZ0vSNIn3pGzKn6j1CpoIzvCIozgNUGHN
-        Sbd8krOllgB8b/JO62WqrVvgZA==
-X-Google-Smtp-Source: APXvYqzTe63h2ZGbEdSFO7kx+kUNMCQJw33B0alWQfVL5Rp0etQWvZiBS06QAEvaOpGoJkoVyqHvGQ==
-X-Received: by 2002:a05:6902:52e:: with SMTP id y14mr12008418ybs.272.1565533028035;
-        Sun, 11 Aug 2019 07:17:08 -0700 (PDT)
-Received: from graymalkin (76-230-155-4.lightspeed.rlghnc.sbcglobal.net. [76.230.155.4])
-        by smtp.gmail.com with ESMTPSA id q132sm23579060ywb.26.2019.08.11.07.17.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 11 Aug 2019 07:17:07 -0700 (PDT)
-From:   Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jdm@graymalkin>
-Received: by graymalkin (sSMTP sendmail emulation); Sun, 11 Aug 2019 10:17:03 -0400
-Date:   Sun, 11 Aug 2019 10:17:03 -0400
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com
-Subject: [GIT PULL] NTB bug fixes for v5.3
-Message-ID: <20190811141703.GA12153@graymalkin>
+        Sun, 11 Aug 2019 10:18:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726014AbfHKOSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 10:18:33 -0400
+Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86D912085B;
+        Sun, 11 Aug 2019 14:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565533112;
+        bh=dpWvePEcOU2yMdIm5cjfyrjyEtE2hQK9N6jf7+LUvtE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=10m6bKOxBnTwvkOMv662Fjk1mttsyMA2XH1FDzmEbxR2Q0wN8a/atKLyYtm6d11eR
+         fCxLjb1lLhZp+dgHN8g1MMa91aG836iXIq9zjBHRjBooxYr60q7PBv74ABmmchCWwK
+         xMl0dZZjwwQm+SNrCJywWMQPcVA+7iPdg/8rg1JI=
+Received: by wens.tw (Postfix, from userid 1000)
+        id CFA225FCC3; Sun, 11 Aug 2019 22:18:28 +0800 (CST)
+From:   Chen-Yu Tsai <wens@kernel.org>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Chen-Yu Tsai <wens@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net v3] net: dsa: Check existence of .port_mdb_add callback before calling it
+Date:   Sun, 11 Aug 2019 22:18:25 +0800
+Message-Id: <20190811141825.11566-1-wens@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
-Here is a trivial NTB bug fix for v5.3.  Please consider pulling it.
+From: Chen-Yu Tsai <wens@csie.org>
 
-Thanks,
-Jon
+The dsa framework has optional .port_mdb_{prepare,add,del} callback fields
+for drivers to handle multicast database entries. When adding an entry, the
+framework goes through a prepare phase, then a commit phase. Drivers not
+providing these callbacks should be detected in the prepare phase.
 
+DSA core may still bypass the bridge layer and call the dsa_port_mdb_add
+function directly with no prepare phase or no switchdev trans object,
+and the framework ends up calling an undefined .port_mdb_add callback.
+This results in a NULL pointer dereference, as shown in the log below.
 
+The other functions seem to be properly guarded. Do the same for
+.port_mdb_add in dsa_switch_mdb_add_bitmap() as well.
 
-The following changes since commit e21a712a9685488f5ce80495b37b9fdbe96c230d:
+    8<--- cut here ---
+    Unable to handle kernel NULL pointer dereference at virtual address 00000000
+    pgd = (ptrval)
+    [00000000] *pgd=00000000
+    Internal error: Oops: 80000005 [#1] SMP ARM
+    Modules linked in: rtl8xxxu rtl8192cu rtl_usb rtl8192c_common rtlwifi mac80211 cfg80211
+    CPU: 1 PID: 134 Comm: kworker/1:2 Not tainted 5.3.0-rc1-00247-gd3519030752a #1
+    Hardware name: Allwinner sun7i (A20) Family
+    Workqueue: events switchdev_deferred_process_work
+    PC is at 0x0
+    LR is at dsa_switch_event+0x570/0x620
+    pc : [<00000000>]    lr : [<c08533ec>]    psr: 80070013
+    sp : ee871db8  ip : 00000000  fp : ee98d0a4
+    r10: 0000000c  r9 : 00000008  r8 : ee89f710
+    r7 : ee98d040  r6 : ee98d088  r5 : c0f04c48  r4 : ee98d04c
+    r3 : 00000000  r2 : ee89f710  r1 : 00000008  r0 : ee98d040
+    Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+    Control: 10c5387d  Table: 6deb406a  DAC: 00000051
+    Process kworker/1:2 (pid: 134, stack limit = 0x(ptrval))
+    Stack: (0xee871db8 to 0xee872000)
+    1da0:                                                       ee871e14 103ace2d
+    1dc0: 00000000 ffffffff 00000000 ee871e14 00000005 00000000 c08524a0 00000000
+    1de0: ffffe000 c014bdfc c0f04c48 ee871e98 c0f04c48 ee9e5000 c0851120 c014bef0
+    1e00: 00000000 b643aea2 ee9b4068 c08509a8 ee2bf940 ee89f710 ee871ecb 00000000
+    1e20: 00000008 103ace2d 00000000 c087e248 ee29c868 103ace2d 00000001 ffffffff
+    1e40: 00000000 ee871e98 00000006 00000000 c0fb2a50 c087e2d0 ffffffff c08523c4
+    1e60: ffffffff c014bdfc 00000006 c0fad2d0 ee871e98 ee89f710 00000000 c014c500
+    1e80: 00000000 ee89f3c0 c0f04c48 00000000 ee9e5000 c087dfb4 ee9e5000 00000000
+    1ea0: ee89f710 ee871ecb 00000001 103ace2d 00000000 c0f04c48 00000000 c087e0a8
+    1ec0: 00000000 efd9a3e0 0089f3c0 103ace2d ee89f700 ee89f710 ee9e5000 00000122
+    1ee0: 00000100 c087e130 ee89f700 c0fad2c8 c1003ef0 c087de4c 2e928000 c0fad2ec
+    1f00: c0fad2ec ee839580 ef7a62c0 ef7a9400 00000000 c087def8 c0fad2ec c01447dc
+    1f20: ef315640 ef7a62c0 00000008 ee839580 ee839594 ef7a62c0 00000008 c0f03d00
+    1f40: ef7a62d8 ef7a62c0 ffffe000 c0145b84 ffffe000 c0fb2420 c0bfaa8c 00000000
+    1f60: ffffe000 ee84b600 ee84b5c0 00000000 ee870000 ee839580 c0145b40 ef0e5ea4
+    1f80: ee84b61c c014a6f8 00000001 ee84b5c0 c014a5b0 00000000 00000000 00000000
+    1fa0: 00000000 00000000 00000000 c01010e8 00000000 00000000 00000000 00000000
+    1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+    1fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
+    [<c08533ec>] (dsa_switch_event) from [<c014bdfc>] (notifier_call_chain+0x48/0x84)
+    [<c014bdfc>] (notifier_call_chain) from [<c014bef0>] (raw_notifier_call_chain+0x18/0x20)
+    [<c014bef0>] (raw_notifier_call_chain) from [<c08509a8>] (dsa_port_mdb_add+0x48/0x74)
+    [<c08509a8>] (dsa_port_mdb_add) from [<c087e248>] (__switchdev_handle_port_obj_add+0x54/0xd4)
+    [<c087e248>] (__switchdev_handle_port_obj_add) from [<c087e2d0>] (switchdev_handle_port_obj_add+0x8/0x14)
+    [<c087e2d0>] (switchdev_handle_port_obj_add) from [<c08523c4>] (dsa_slave_switchdev_blocking_event+0x94/0xa4)
+    [<c08523c4>] (dsa_slave_switchdev_blocking_event) from [<c014bdfc>] (notifier_call_chain+0x48/0x84)
+    [<c014bdfc>] (notifier_call_chain) from [<c014c500>] (blocking_notifier_call_chain+0x50/0x68)
+    [<c014c500>] (blocking_notifier_call_chain) from [<c087dfb4>] (switchdev_port_obj_notify+0x44/0xa8)
+    [<c087dfb4>] (switchdev_port_obj_notify) from [<c087e0a8>] (switchdev_port_obj_add_now+0x90/0x104)
+    [<c087e0a8>] (switchdev_port_obj_add_now) from [<c087e130>] (switchdev_port_obj_add_deferred+0x14/0x5c)
+    [<c087e130>] (switchdev_port_obj_add_deferred) from [<c087de4c>] (switchdev_deferred_process+0x64/0x104)
+    [<c087de4c>] (switchdev_deferred_process) from [<c087def8>] (switchdev_deferred_process_work+0xc/0x14)
+    [<c087def8>] (switchdev_deferred_process_work) from [<c01447dc>] (process_one_work+0x218/0x50c)
+    [<c01447dc>] (process_one_work) from [<c0145b84>] (worker_thread+0x44/0x5bc)
+    [<c0145b84>] (worker_thread) from [<c014a6f8>] (kthread+0x148/0x150)
+    [<c014a6f8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+    Exception stack(0xee871fb0 to 0xee871ff8)
+    1fa0:                                     00000000 00000000 00000000 00000000
+    1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+    1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+    Code: bad PC value
+    ---[ end trace 1292c61abd17b130 ]---
 
-  Linux 5.3-rc3 (2019-08-04 18:40:12 -0700)
+    [<c08533ec>] (dsa_switch_event) from [<c014bdfc>] (notifier_call_chain+0x48/0x84)
+    corresponds to
 
-are available in the Git repository at:
+	$ arm-linux-gnueabihf-addr2line -C -i -e vmlinux c08533ec
 
-  git://github.com/jonmason/ntb tags/ntb-5.3-bugfixes
+	linux/net/dsa/switch.c:156
+	linux/net/dsa/switch.c:178
+	linux/net/dsa/switch.c:328
 
-for you to fetch changes up to 49da065f7b1f27be625de65d6d55bdd22ac6b5c2:
+Fixes: e6db98db8a95 ("net: dsa: add switch mdb bitmap functions")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+Changes since v2:
 
-  NTB/msi: remove incorrect MODULE defines (2019-08-05 15:42:27 -0400)
+  - Moved the check back to dsa_switch_mdb_add_bitmap, but don't change
+    the function return type this time
+  - Rewrote the commit log
 
-----------------------------------------------------------------
-Bug fix for NTB MSI kernel compile warning
+Changes since v1:
 
-----------------------------------------------------------------
-Logan Gunthorpe (1):
-      NTB/msi: remove incorrect MODULE defines
+  - Moved the check to the beginning of dsa_switch_mdb_add()
 
- drivers/ntb/msi.c | 5 -----
- 1 file changed, 5 deletions(-)
+---
+ net/dsa/switch.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/net/dsa/switch.c b/net/dsa/switch.c
+index 4ec5b7f85d51..09d9286b27cc 100644
+--- a/net/dsa/switch.c
++++ b/net/dsa/switch.c
+@@ -153,6 +153,9 @@ static void dsa_switch_mdb_add_bitmap(struct dsa_switch *ds,
+ {
+ 	int port;
+ 
++	if (!ds->ops->port_mdb_add)
++		return;
++
+ 	for_each_set_bit(port, bitmap, ds->num_ports)
+ 		ds->ops->port_mdb_add(ds, port, mdb);
+ }
+-- 
+2.20.1
+
