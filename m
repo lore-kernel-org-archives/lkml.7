@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8855C32756
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0AAC0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A6202085B
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E36C4217D4
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:06:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UMEvzoLE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ax6p9oKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfHKIF5 (ORCPT
+        id S1726605AbfHKIGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 04:05:57 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33332 "EHLO
+        Sun, 11 Aug 2019 04:06:01 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33586 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbfHKIFz (ORCPT
+        with ESMTP id S1726566AbfHKIF6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 04:05:55 -0400
+        Sun, 11 Aug 2019 04:05:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=dftcSzfDdyc02vTQypmmr4nqPV2SE1bB1GMbvWD2Jek=; b=UMEvzoLEwpMDTenvIB+0BTS26+
-        KD8/KOYJDOvaupvERmLkq2+cOudPdXx/9YAoxoLHBIhbWE6ItR8RS/0q2pcFARGnStycuXfOJSELl
-        L98cN/SUFZ/K1WBVF4aO8stRWvkRk/IP8d51FdkPvK7ZqKMWjCX/iU7n4w78ZUKQTKnGDENcpiQbL
-        /hBoz5+7c3ZWPb2Avw9aNlL9bAkJ2ZEHRQ7/cZ4AqSjaLwefBbjEoCu93NOsgtOECpicixiH3M3eS
-        vciuwhd+C2zn6tR2Fkb9RXE3YmkWCxeZuh1VGjS9wgNNuD08nkWVa1+3Wy2sU5Px8aHs3e6W6zj7J
-        R+uzwONg==;
+        bh=aUU+hlkhrpiLGkqb9yLX5LvOZKeD+UrNctlDkcRT8c0=; b=Ax6p9oKF7TWgXYyF2WtzSWjagk
+        BNniHtPluUBTFd5mJ4BNzxO+5vwnyPP+WI4FttbLmW95pNEwCTg9EEg4TxYK/KQN/+SW9a7GWZdNo
+        mi6f6w23oeCxIkPeacRf+yLhLZaeSzP9myORxWiiyuLCoQAf5yVL8xQooQRb9nlhBcaOnDnPrjHCa
+        kApazYa2o6vGOugcHVss6tyBINKprccgFsl3UnouAW7RRuyvy1YWboeKHZWWl5DrrTtm1fMx7kzna
+        sYOJ6cTc19mjBErMnjoZ8B/LFS5VxAbkBEm3fO8V9dhRNhnLtBS5c2C7dFe2rF1UMEO/1/iJkAxex
+        t+4T26aQ==;
 Received: from [2001:4bb8:180:1ec3:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hwir3-0001um-Fz; Sun, 11 Aug 2019 08:05:30 +0000
+        id 1hwirJ-00021E-C9; Sun, 11 Aug 2019 08:05:46 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Maxime Chevallier <maxime.chevallier@bootlin.com>
@@ -59,9 +59,9 @@ Cc:     Gavin Li <git@thegavinli.com>,
         linux-usb@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/6] usb: don't create dma pools for HCDs with a localmem_pool
-Date:   Sun, 11 Aug 2019 10:05:15 +0200
-Message-Id: <20190811080520.21712-2-hch@lst.de>
+Subject: [PATCH 6/6] driver core: initialize a default DMA mask for platform device
+Date:   Sun, 11 Aug 2019 10:05:20 +0200
+Message-Id: <20190811080520.21712-7-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190811080520.21712-1-hch@lst.de>
 References: <20190811080520.21712-1-hch@lst.de>
@@ -73,32 +73,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the HCD provides a localmem pool we will never use the DMA pools, so
-don't create them.
+We still treat devices without a DMA mask as defaulting to 32-bits for
+both mask, but a few releases ago we've started warning about such
+cases, as they require special cases to work around this sloppyness.
+Add a dma_mask field to struct platform_object so that we can initialize
+the dma_mask pointer in struct device and initialize both masks to
+32-bits by default.  Architectures can still override this in
+arch_setup_pdev_archdata if needed.
 
-Fixes: b0310c2f09bb ("USB: use genalloc for USB HCs with local memory")
+Note that the code looks a little odd with the various conditionals
+because we have to support platform_device structures that are
+statically allocated.
+
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/usb/core/buffer.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/base/platform.c         | 15 +++++++++++++--
+ include/linux/platform_device.h |  1 +
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/core/buffer.c b/drivers/usb/core/buffer.c
-index 1359b78a624e..1a5b3dcae930 100644
---- a/drivers/usb/core/buffer.c
-+++ b/drivers/usb/core/buffer.c
-@@ -66,9 +66,9 @@ int hcd_buffer_create(struct usb_hcd *hcd)
- 	char		name[16];
- 	int		i, size;
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index ec974ba9c0c4..b216fcb0a8af 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -264,6 +264,17 @@ struct platform_object {
+ 	char name[];
+ };
  
--	if (!IS_ENABLED(CONFIG_HAS_DMA) ||
--	    (!is_device_dma_capable(hcd->self.sysdev) &&
--	     !hcd->localmem_pool))
-+	if (hcd->localmem_pool ||
-+	    !IS_ENABLED(CONFIG_HAS_DMA) ||
-+	    !is_device_dma_capable(hcd->self.sysdev))
- 		return 0;
++static void setup_pdev_archdata(struct platform_device *pdev)
++{
++	if (!pdev->dev.coherent_dma_mask)
++		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
++	if (!pdev->dma_mask)
++		pdev->dma_mask = DMA_BIT_MASK(32);
++	if (!pdev->dev.dma_mask)
++		pdev->dev.dma_mask = &pdev->dma_mask;
++	arch_setup_pdev_archdata(pdev);
++};
++
+ /**
+  * platform_device_put - destroy a platform device
+  * @pdev: platform device to free
+@@ -310,7 +321,7 @@ struct platform_device *platform_device_alloc(const char *name, int id)
+ 		pa->pdev.id = id;
+ 		device_initialize(&pa->pdev.dev);
+ 		pa->pdev.dev.release = platform_device_release;
+-		arch_setup_pdev_archdata(&pa->pdev);
++		setup_pdev_archdata(&pa->pdev);
+ 	}
  
- 	for (i = 0; i < HCD_BUFFER_POOLS; i++) {
+ 	return pa ? &pa->pdev : NULL;
+@@ -512,7 +523,7 @@ EXPORT_SYMBOL_GPL(platform_device_del);
+ int platform_device_register(struct platform_device *pdev)
+ {
+ 	device_initialize(&pdev->dev);
+-	arch_setup_pdev_archdata(pdev);
++	setup_pdev_archdata(pdev);
+ 	return platform_device_add(pdev);
+ }
+ EXPORT_SYMBOL_GPL(platform_device_register);
+diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+index 9bc36b589827..a2abde2aef25 100644
+--- a/include/linux/platform_device.h
++++ b/include/linux/platform_device.h
+@@ -24,6 +24,7 @@ struct platform_device {
+ 	int		id;
+ 	bool		id_auto;
+ 	struct device	dev;
++	u64		dma_mask;
+ 	u32		num_resources;
+ 	struct resource	*resource;
+ 
 -- 
 2.20.1
 
