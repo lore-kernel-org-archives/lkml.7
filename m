@@ -6,114 +6,99 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3170AC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 06:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77776C0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 06:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 012D1208C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 06:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46F3E208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 06:51:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726075AbfHKGqf (ORCPT
+        id S1726214AbfHKGvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 02:46:35 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32656 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725776AbfHKGqf (ORCPT
+        Sun, 11 Aug 2019 02:51:16 -0400
+Received: from esgaroth.petrovitsch.at ([78.47.184.11]:5710 "EHLO
+        esgaroth.tuxoid.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfHKGvP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 02:46:35 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7B6gpT3006684
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 02:46:34 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uabhtbb10-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 02:46:33 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
-        Sun, 11 Aug 2019 07:46:32 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 11 Aug 2019 07:46:28 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7B6kRjD40894894
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 11 Aug 2019 06:46:27 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 06C9742045;
-        Sun, 11 Aug 2019 06:46:27 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 141EE42042;
-        Sun, 11 Aug 2019 06:46:24 +0000 (GMT)
-Received: from ram.ibm.com (unknown [9.85.191.17])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sun, 11 Aug 2019 06:46:23 +0000 (GMT)
-Date:   Sat, 10 Aug 2019 23:46:21 -0700
-From:   Ram Pai <linuxram@us.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-devel@lists.ozlabs.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alexey Kardashevskiy <aik@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Reply-To: Ram Pai <linuxram@us.ibm.com>
-References: <87zhrj8kcp.fsf@morokweng.localdomain>
- <20190810143038-mutt-send-email-mst@kernel.org>
- <20190810220702.GA5964@ram.ibm.com>
- <20190811055607.GA12488@lst.de>
+        Sun, 11 Aug 2019 02:51:15 -0400
+Received: from thorin.petrovitsch.priv.at (80-110-97-231.cgn.dynamic.surfer.at [80.110.97.231])
+        (authenticated bits=0)
+        by esgaroth.tuxoid.at (8.15.2/8.15.2) with ESMTPSA id x7B6oTFa029135
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=NO);
+        Sun, 11 Aug 2019 08:50:30 +0200
+Subject: Re: [PATCH] Makefile: Convert -Wimplicit-fallthrough=3 to just
+ -Wimplicit-fallthrough for clang
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Joe Perches <joe@perches.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+References: <c0005a09c89c20093ac699c97e7420331ec46b01.camel@perches.com>
+ <9c7a79b4d21aea52464d00c8fa4e4b92638560b6.camel@perches.com>
+ <CAHk-=wiL7jqYNfYrNikgBw3byY+Zn37-8D8yR=WUu0x=_2BpZA@mail.gmail.com>
+ <6a5f470c1375289908c37632572c4aa60d6486fa.camel@perches.com>
+ <20190811020442.GA22736@archlinux-threadripper>
+ <871efd6113ee2f6491410409511b871b7637f9e3.camel@perches.com>
+ <20190811031715.GA22334@archlinux-threadripper>
+From:   Bernd Petrovitsch <bernd@petrovitsch.priv.at>
+Message-ID: <514fb156-7d81-a812-510a-7f252c27e79e@petrovitsch.priv.at>
+Date:   Sun, 11 Aug 2019 08:50:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190811055607.GA12488@lst.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19081106-0020-0000-0000-0000035E6383
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19081106-0021-0000-0000-000021B36F43
-Message-Id: <20190811064621.GB5964@ram.ibm.com>
-Subject: RE: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-11_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=575 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908110076
+In-Reply-To: <20190811031715.GA22334@archlinux-threadripper>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-DCC-EATSERVER-Metrics: esgaroth.tuxoid.at 1166; Body=6 Fuz1=6 Fuz2=6
+X-Virus-Scanned: clamav-milter 0.97 at esgaroth.tuxoid.at
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 07:56:07AM +0200, Christoph Hellwig wrote:
-> sev_active() is gone now in linux-next, at least as a global API.
+On 11/08/2019 05:17, Nathan Chancellor wrote:
+> On Sat, Aug 10, 2019 at 08:06:05PM -0700, Joe Perches wrote:
+>> On Sat, 2019-08-10 at 19:04 -0700, Nathan Chancellor wrote:
+>>> On a tangential note, how are you planning on doing the fallthrough
+>>> comment to attribute conversion? The reason I ask is clang does not
+>>> support the comment annotations, meaning that when Nathan Huckleberry's
+>>> patch is applied to clang (which has been accepted [1]), we are going
+>>> to get slammed by the warnings. I just ran an x86 defconfig build at
+>>> 296d05cb0d3c with his patch applied and I see 27673 instances of this
+>>> warning... (mostly coming from some header files so nothing crazy but it
+>>> will be super noisy).
+>>>
+>>> If you have something to share like a script or patch, I'd be happy to
+>>> test it locally.
+>>>
+>>> [1]: https://reviews.llvm.org/D64838
+>>
+>> Something like this patch:
+>>
+>> https://lore.kernel.org/patchwork/patch/1108577/
+>>
+>> Maybe use:
+>>
+>> #define fallthrough [[fallthrough]]
+>>
+>> if the compiler supports that notation
+>>
 > 
-> And once again this is entirely going in the wrong direction.  The only
-> way using the DMA API is going to work at all is if the device is ready
-> for it.  So we need a flag on the virtio device, exposed by the
-> hypervisor (or hardware for hw virtio devices) that says:  hey, I'm real,
-> don't take a shortcut.
-> 
-> And that means on power and s390 qemu will always have to set thos if
-> you want to be ready for the ultravisor and co games.  It's not like we
-> haven't been through this a few times before, have we?
+> That patch as it stands will work with D64838, as it is adding support
+> for the GNU fallthrough attribute.
+>
+> However, I assume that all of the /* fall through */ comments will need
+> to be converted to the attribute macro, was that going to be done with
+> Coccinelle or something else?
 
+clang has not problem with the comment - it's just a comment;-)
 
-We have been through this so many times, but I dont think, we ever
-understood each other.   I have a fundamental question, the answer to
-which was never clear. Here it is...
+The #define above works BTW.
 
-If the hypervisor (hardware for hw virtio devices) does not mandate a
-DMA API, why is it illegal for the driver to request, special handling
-of its i/o buffers? Why are we associating this special handling to
-always mean, some DMA address translation? Can't there be 
-any other kind of special handling needs, that has nothing to do with
-DMA address translation?
-
-
+MfG,
+	Bernd
 -- 
-Ram Pai
-
+Bernd Petrovitsch                  Email : bernd@petrovitsch.priv.at
+                     LUGA : http://www.luga.at
