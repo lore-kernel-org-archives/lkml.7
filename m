@@ -2,293 +2,146 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3813FC0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 19:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC251C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 19:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03AB02085B
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 19:43:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="IgyVz+Gq"
+	by mail.kernel.org (Postfix) with ESMTP id 8A1E32085B
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 19:45:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfHKTnw (ORCPT
+        id S1726463AbfHKTpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 15:43:52 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40632 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfHKTnv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 15:43:51 -0400
-Received: by mail-lj1-f194.google.com with SMTP id e27so1365291ljb.7
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 12:43:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2JM7oqrhQCTVMvk3eVplIHNbjHRhWyn3FtkoaPBDQIA=;
-        b=IgyVz+Gq75priv9lK3TzHFpAv3V2oXw8fKQJjqjm4A6m6e1qS+tK/DusATZpvDdLG/
-         XQ+nPOAEJcnAhCtuVzlWJq6OYpwk12TSknR11FbXkGDy9kQD9cTU+FSM8ixXiAuQxkMG
-         VOxY1bpJvnpNqogOZS2h7XcPJ76W8hkeWvuIo8VfX2sOOQvBw2AJRhL2dZy1Rx9vyrQS
-         d4vtKFziknmn5FqWlMLEnWccsLaFXYWhxWXWcUDI2LUCn4NNSNB2VtwLEU2KkL5cZEYS
-         eyWJjo9jEB3VjzpLdzZcUpzGgZN8+OdP9bAtUQC92UtbIAo9QzVtSe9JlE2otvD2XdRf
-         p5gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2JM7oqrhQCTVMvk3eVplIHNbjHRhWyn3FtkoaPBDQIA=;
-        b=UD1kDzZvHXs69I0y55uiyRjZ64Esn4x+zhYTHsvdsc7qVxAP0mUL1PGLZ6UWflix3A
-         XjmTCVCT0RqcvcFhhz2FXPfnMJp7mXs42aldof/8mtqSjHROf5cDVpyUH57hYph3b+xX
-         PIHk1N3gVbJxQqeWI5XYtTuOWvkchvOGg6KSWfv/O7UONoJ4jBIUBohHP/MnAhkaY9XL
-         FDEMGeR0otvhJC84UcNabITTrjufAjORGGVbuMqN1FEMH5t0WAHRmgBBNB0PR8lRGqeV
-         mvUD18DQlvsPs344UyZQfl5d1iAPSsNzUoSmmRUpi9vUvjwHOBoC18H0VqDp1YyfpgmN
-         nmIw==
-X-Gm-Message-State: APjAAAV3HshdJ9cmeu+Y167jp+LmxNXnZnsySXfPXVkH2Vm5tz1wpzTl
-        4Len4rP5396GdU6DwGTN5XaqhA==
-X-Google-Smtp-Source: APXvYqxvXaRtaeT96Y+guDysDnh4OydQ/TMiHiAjsrut7gx2Sz+63XT/Ir68bX6E3XCSVLdfotk6jA==
-X-Received: by 2002:a2e:9048:: with SMTP id n8mr17085129ljg.37.1565552628036;
-        Sun, 11 Aug 2019 12:43:48 -0700 (PDT)
-Received: from [192.168.0.36] (2-111-91-225-cable.dk.customer.tdc.net. [2.111.91.225])
-        by smtp.googlemail.com with ESMTPSA id f1sm20432278ljk.86.2019.08.11.12.43.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 11 Aug 2019 12:43:47 -0700 (PDT)
-Subject: Re: [PATCH 1/2] lightnvm: introduce pr_fmt for the prefix nvm
-To:     Minwoo Im <minwoo.im.dev@gmail.com>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Klaus Birkelund <klaus@birkelund.eu>,
-        =?UTF-8?Q?Javier_Gonz=c3=a1lez?= <javier@javigon.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-References: <20190727182626.27991-1-minwoo.im.dev@gmail.com>
- <20190727182626.27991-2-minwoo.im.dev@gmail.com>
-From:   =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>
-Message-ID: <712c30cc-4b23-087c-39fa-b919ed0529da@lightnvm.io>
-Date:   Sun, 11 Aug 2019 21:43:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <20190727182626.27991-2-minwoo.im.dev@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+        Sun, 11 Aug 2019 15:45:22 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:48396 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726014AbfHKTpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 15:45:22 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E6C6520010F;
+        Sun, 11 Aug 2019 21:45:19 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CFE9C20003D;
+        Sun, 11 Aug 2019 21:45:19 +0200 (CEST)
+Received: from fsr-ub1864-103.ea.freescale.net (fsr-ub1864-103.ea.freescale.net [10.171.82.17])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 72AE520600;
+        Sun, 11 Aug 2019 21:45:19 +0200 (CEST)
+From:   Daniel Baluta <daniel.baluta@nxp.com>
+To:     nicoleotsuka@gmail.com, broonie@kernel.org
+Cc:     festevam@gmail.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        Viorel Suman <viorel.suman@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH] ASoC: fsl_sai: Handle slave mode per TX/RX direction
+Date:   Sun, 11 Aug 2019 22:45:17 +0300
+Message-Id: <20190811194517.19314-1-daniel.baluta@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/27/19 8:26 PM, Minwoo Im wrote:
-> all the pr_() family can have this prefix by pr_fmt.
-> 
-> Changes to V2:
->    - Fix typo in title (s/previx/prefix)
-> 
-> Changes to V1:
->    - Squashed multiple lines to make it short (Chaitanya)
-> 
-> Cc: Matias Bjørling <mb@lightnvm.io>
-> Cc: Javier González <javier@javigon.com>
-> Cc: Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-> Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
-> Reviewed-by: Javier González <javier@javigon.com>
-> ---
->   drivers/lightnvm/core.c | 48 ++++++++++++++++++++---------------------
->   1 file changed, 24 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/lightnvm/core.c b/drivers/lightnvm/core.c
-> index a600934fdd9c..4c7b48f72e80 100644
-> --- a/drivers/lightnvm/core.c
-> +++ b/drivers/lightnvm/core.c
-> @@ -4,6 +4,7 @@
->    * Initial release: Matias Bjorling <m@bjorling.me>
->    */
->   
-> +#define pr_fmt(fmt) "nvm: " fmt
->   #include <linux/list.h>
->   #include <linux/types.h>
->   #include <linux/sem.h>
-> @@ -74,7 +75,7 @@ static int nvm_reserve_luns(struct nvm_dev *dev, int lun_begin, int lun_end)
->   
->   	for (i = lun_begin; i <= lun_end; i++) {
->   		if (test_and_set_bit(i, dev->lun_map)) {
-> -			pr_err("nvm: lun %d already allocated\n", i);
-> +			pr_err("lun %d already allocated\n", i);
->   			goto err;
->   		}
->   	}
-> @@ -264,7 +265,7 @@ static int nvm_config_check_luns(struct nvm_geo *geo, int lun_begin,
->   				 int lun_end)
->   {
->   	if (lun_begin > lun_end || lun_end >= geo->all_luns) {
-> -		pr_err("nvm: lun out of bound (%u:%u > %u)\n",
-> +		pr_err("lun out of bound (%u:%u > %u)\n",
->   			lun_begin, lun_end, geo->all_luns - 1);
->   		return -EINVAL;
->   	}
-> @@ -297,7 +298,7 @@ static int __nvm_config_extended(struct nvm_dev *dev,
->   	if (e->op == 0xFFFF) {
->   		e->op = NVM_TARGET_DEFAULT_OP;
->   	} else if (e->op < NVM_TARGET_MIN_OP || e->op > NVM_TARGET_MAX_OP) {
-> -		pr_err("nvm: invalid over provisioning value\n");
-> +		pr_err("invalid over provisioning value\n");
->   		return -EINVAL;
->   	}
->   
-> @@ -334,23 +335,23 @@ static int nvm_create_tgt(struct nvm_dev *dev, struct nvm_ioctl_create *create)
->   		e = create->conf.e;
->   		break;
->   	default:
-> -		pr_err("nvm: config type not valid\n");
-> +		pr_err("config type not valid\n");
->   		return -EINVAL;
->   	}
->   
->   	tt = nvm_find_target_type(create->tgttype);
->   	if (!tt) {
-> -		pr_err("nvm: target type %s not found\n", create->tgttype);
-> +		pr_err("target type %s not found\n", create->tgttype);
->   		return -EINVAL;
->   	}
->   
->   	if ((tt->flags & NVM_TGT_F_HOST_L2P) != (dev->geo.dom & NVM_RSP_L2P)) {
-> -		pr_err("nvm: device is incompatible with target L2P type.\n");
-> +		pr_err("device is incompatible with target L2P type.\n");
->   		return -EINVAL;
->   	}
->   
->   	if (nvm_target_exists(create->tgtname)) {
-> -		pr_err("nvm: target name already exists (%s)\n",
-> +		pr_err("target name already exists (%s)\n",
->   							create->tgtname);
->   		return -EINVAL;
->   	}
-> @@ -367,7 +368,7 @@ static int nvm_create_tgt(struct nvm_dev *dev, struct nvm_ioctl_create *create)
->   
->   	tgt_dev = nvm_create_tgt_dev(dev, e.lun_begin, e.lun_end, e.op);
->   	if (!tgt_dev) {
-> -		pr_err("nvm: could not create target device\n");
-> +		pr_err("could not create target device\n");
->   		ret = -ENOMEM;
->   		goto err_t;
->   	}
-> @@ -686,7 +687,7 @@ static int nvm_set_rqd_ppalist(struct nvm_tgt_dev *tgt_dev, struct nvm_rq *rqd,
->   	rqd->nr_ppas = nr_ppas;
->   	rqd->ppa_list = nvm_dev_dma_alloc(dev, GFP_KERNEL, &rqd->dma_ppa_list);
->   	if (!rqd->ppa_list) {
-> -		pr_err("nvm: failed to allocate dma memory\n");
-> +		pr_err("failed to allocate dma memory\n");
->   		return -ENOMEM;
->   	}
->   
-> @@ -1048,7 +1049,7 @@ int nvm_set_chunk_meta(struct nvm_tgt_dev *tgt_dev, struct ppa_addr *ppas,
->   		return 0;
->   
->   	if (nr_ppas > NVM_MAX_VLBA) {
-> -		pr_err("nvm: unable to update all blocks atomically\n");
-> +		pr_err("unable to update all blocks atomically\n");
->   		return -EINVAL;
->   	}
->   
-> @@ -1111,27 +1112,26 @@ static int nvm_init(struct nvm_dev *dev)
->   	int ret = -EINVAL;
->   
->   	if (dev->ops->identity(dev)) {
-> -		pr_err("nvm: device could not be identified\n");
-> +		pr_err("device could not be identified\n");
->   		goto err;
->   	}
->   
-> -	pr_debug("nvm: ver:%u.%u nvm_vendor:%x\n",
-> -				geo->major_ver_id, geo->minor_ver_id,
-> -				geo->vmnt);
-> +	pr_debug("ver:%u.%u nvm_vendor:%x\n", geo->major_ver_id,
-> +			geo->minor_ver_id, geo->vmnt);
->   
->   	ret = nvm_core_init(dev);
->   	if (ret) {
-> -		pr_err("nvm: could not initialize core structures.\n");
-> +		pr_err("could not initialize core structures.\n");
->   		goto err;
->   	}
->   
-> -	pr_info("nvm: registered %s [%u/%u/%u/%u/%u]\n",
-> +	pr_info("registered %s [%u/%u/%u/%u/%u]\n",
->   			dev->name, dev->geo.ws_min, dev->geo.ws_opt,
->   			dev->geo.num_chk, dev->geo.all_luns,
->   			dev->geo.num_ch);
->   	return 0;
->   err:
-> -	pr_err("nvm: failed to initialize nvm\n");
-> +	pr_err("failed to initialize nvm\n");
->   	return ret;
->   }
->   
-> @@ -1169,7 +1169,7 @@ int nvm_register(struct nvm_dev *dev)
->   	dev->dma_pool = dev->ops->create_dma_pool(dev, "ppalist",
->   						  exp_pool_size);
->   	if (!dev->dma_pool) {
-> -		pr_err("nvm: could not create dma pool\n");
-> +		pr_err("could not create dma pool\n");
->   		kref_put(&dev->ref, nvm_free);
->   		return -ENOMEM;
->   	}
-> @@ -1214,7 +1214,7 @@ static int __nvm_configure_create(struct nvm_ioctl_create *create)
->   	up_write(&nvm_lock);
->   
->   	if (!dev) {
-> -		pr_err("nvm: device not found\n");
-> +		pr_err("device not found\n");
->   		return -EINVAL;
->   	}
->   
-> @@ -1288,7 +1288,7 @@ static long nvm_ioctl_get_devices(struct file *file, void __user *arg)
->   		i++;
->   
->   		if (i > 31) {
-> -			pr_err("nvm: max 31 devices can be reported.\n");
-> +			pr_err("max 31 devices can be reported.\n");
->   			break;
->   		}
->   	}
-> @@ -1315,7 +1315,7 @@ static long nvm_ioctl_dev_create(struct file *file, void __user *arg)
->   
->   	if (create.conf.type == NVM_CONFIG_TYPE_EXTENDED &&
->   	    create.conf.e.rsv != 0) {
-> -		pr_err("nvm: reserved config field in use\n");
-> +		pr_err("reserved config field in use\n");
->   		return -EINVAL;
->   	}
->   
-> @@ -1331,7 +1331,7 @@ static long nvm_ioctl_dev_create(struct file *file, void __user *arg)
->   			flags &= ~NVM_TARGET_FACTORY;
->   
->   		if (flags) {
-> -			pr_err("nvm: flag not supported\n");
-> +			pr_err("flag not supported\n");
->   			return -EINVAL;
->   		}
->   	}
-> @@ -1349,7 +1349,7 @@ static long nvm_ioctl_dev_remove(struct file *file, void __user *arg)
->   	remove.tgtname[DISK_NAME_LEN - 1] = '\0';
->   
->   	if (remove.flags != 0) {
-> -		pr_err("nvm: no flags supported\n");
-> +		pr_err("no flags supported\n");
->   		return -EINVAL;
->   	}
->   
-> @@ -1365,7 +1365,7 @@ static long nvm_ioctl_dev_init(struct file *file, void __user *arg)
->   		return -EFAULT;
->   
->   	if (init.flags != 0) {
-> -		pr_err("nvm: no flags supported\n");
-> +		pr_err("no flags supported\n");
->   		return -EINVAL;
->   	}
->   
-> 
+From: Viorel Suman <viorel.suman@nxp.com>
 
-Thanks Minwoo. Applied.
+The SAI interface can be a clock supplier or consumer
+as a function of stream direction. e.g SAI can be master
+for Tx and slave for Rx.
+
+Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+---
+ sound/soc/fsl/fsl_sai.c | 18 +++++++++---------
+ sound/soc/fsl/fsl_sai.h |  2 +-
+ 2 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+index 4a346fcb5630..69cf3678c859 100644
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -273,18 +273,18 @@ static int fsl_sai_set_dai_fmt_tr(struct snd_soc_dai *cpu_dai,
+ 	case SND_SOC_DAIFMT_CBS_CFS:
+ 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
+ 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
+-		sai->is_slave_mode = false;
++		sai->is_slave_mode[tx] = false;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBM_CFM:
+-		sai->is_slave_mode = true;
++		sai->is_slave_mode[tx] = true;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBS_CFM:
+ 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
+-		sai->is_slave_mode = false;
++		sai->is_slave_mode[tx] = false;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBM_CFS:
+ 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
+-		sai->is_slave_mode = true;
++		sai->is_slave_mode[tx] = true;
+ 		break;
+ 	default:
+ 		return -EINVAL;
+@@ -326,7 +326,7 @@ static int fsl_sai_set_bclk(struct snd_soc_dai *dai, bool tx, u32 freq)
+ 	int ret = 0;
+ 
+ 	/* Don't apply to slave mode */
+-	if (sai->is_slave_mode)
++	if (sai->is_slave_mode[tx])
+ 		return 0;
+ 
+ 	for (id = 0; id < FSL_SAI_MCLK_MAX; id++) {
+@@ -422,7 +422,7 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
+ 	if (sai->slot_width)
+ 		slot_width = sai->slot_width;
+ 
+-	if (!sai->is_slave_mode) {
++	if (!sai->is_slave_mode[tx]) {
+ 		ret = fsl_sai_set_bclk(cpu_dai, tx,
+ 				slots * slot_width * params_rate(params));
+ 		if (ret)
+@@ -458,7 +458,7 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
+ 	 * error.
+ 	 */
+ 
+-	if (!sai->is_slave_mode) {
++	if (!sai->is_slave_mode[tx]) {
+ 		if (!sai->synchronous[TX] && sai->synchronous[RX] && !tx) {
+ 			regmap_update_bits(sai->regmap, FSL_SAI_TCR4(ofs),
+ 				FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK,
+@@ -497,7 +497,7 @@ static int fsl_sai_hw_free(struct snd_pcm_substream *substream,
+ 	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
+ 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+ 
+-	if (!sai->is_slave_mode &&
++	if (!sai->is_slave_mode[tx] &&
+ 			sai->mclk_streams & BIT(substream->stream)) {
+ 		clk_disable_unprepare(sai->mclk_clk[sai->mclk_id[tx]]);
+ 		sai->mclk_streams &= ~BIT(substream->stream);
+@@ -581,7 +581,7 @@ static int fsl_sai_trigger(struct snd_pcm_substream *substream, int cmd,
+ 			 * This is a hardware bug, and will be fix in the
+ 			 * next sai version.
+ 			 */
+-			if (!sai->is_slave_mode) {
++			if (!sai->is_slave_mode[tx]) {
+ 				/* Software Reset for both Tx and Rx */
+ 				regmap_write(sai->regmap, FSL_SAI_TCSR(ofs),
+ 					     FSL_SAI_CSR_SR);
+diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
+index b89b0ca26053..c2c43a7d9ba1 100644
+--- a/sound/soc/fsl/fsl_sai.h
++++ b/sound/soc/fsl/fsl_sai.h
+@@ -167,7 +167,7 @@ struct fsl_sai {
+ 	struct clk *bus_clk;
+ 	struct clk *mclk_clk[FSL_SAI_MCLK_MAX];
+ 
+-	bool is_slave_mode;
++	bool is_slave_mode[2];
+ 	bool is_lsb_first;
+ 	bool is_dsp_mode;
+ 	bool synchronous[2];
+-- 
+2.17.1
+
