@@ -6,57 +6,57 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1A0C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 01:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B1DC433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 01:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9476F208C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 01:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E41208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 01:35:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="qNSbQf4q"
+	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="AXhhUFeo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfHKBcl (ORCPT
+        id S1726492AbfHKBfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 21:32:41 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40596 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbfHKBcl (ORCPT
+        Sat, 10 Aug 2019 21:35:12 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36628 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725863AbfHKBfM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 21:32:41 -0400
-Received: by mail-pl1-f194.google.com with SMTP id a93so46441946pla.7
-        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 18:32:40 -0700 (PDT)
+        Sat, 10 Aug 2019 21:35:12 -0400
+Received: by mail-pg1-f193.google.com with SMTP id l21so47729067pgm.3
+        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 18:35:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fossix-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:in-reply-to:references:date:message-id
          :mime-version;
-        bh=xDbdhPQ3QT7gF9yHOSPbJa8hYNyqWu2iQmr6Xb0YzUA=;
-        b=qNSbQf4q28lHSOKSvi+eAA78dUYvFPX9rJCfEplQ4Z2aSSFGg3Nb9Rk1hLvpFiapB9
-         LVTHjAPonjlFWPuwTolGzJhJLsNPucQEZ0LUNoDJaqec8qPKBwLZRu7Fj44fc4cFjOom
-         IU6mWfxAX7aox+P7Qqm5RnLv70xxgPrVuF7QzL52X01r8h5M2EbF4DK7V45kjINdHSqf
-         gZNx5aQ5bXmq8HjLY42FAYFG6DJ6OQYJbq1qmsnpykIj1MW71cj+iCMMBls8ww212b48
-         A1Lgil3AiZK36Mo37rOAxeBn5bvfiE3kTN25iG560apIB/9rI8rNPMtzVy0LASeJQtjW
-         kULA==
+        bh=Zw+nh8qCKQOD3K2GFW9bgpIFhSU9vSD+z99NnnwXM2c=;
+        b=AXhhUFeoBKKdT9LsBrc2PAhjlbi66oD6k7OARW/cod+XbPKUbLhJWk1yy6JGRz4xUP
+         x2H4e7331p+kJl0SVIcrzZSO1AfMmOte1PoYKDuWy1amc+HoFuQck8bflfZx2w0ODNs+
+         ri4t//L0Keq5NT5hHM+Tgz4gEAcEn9ql6eaYoKF8HepGxWjANmlw5JKddNdfvtjyi3wu
+         w7nR3+4uoFGBzjBsMoEHyEMMQH42pt/I4zX+649Knjg+Bl/exC8h2hewQnHaTGXh4pkL
+         6UwLPZYdYoRNbvNjvzBDNSelAqF4gOL2AhvqN7fMj82ba/iPE6b5GSelJ4NVkbzbu4Qc
+         aY8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
          :message-id:mime-version;
-        bh=xDbdhPQ3QT7gF9yHOSPbJa8hYNyqWu2iQmr6Xb0YzUA=;
-        b=BB/NwGh5fgazOumND76M3WQjtPz7Ind/97ldKsaXBrhD4GRV/7SXbGz/WuFxBpPwo5
-         6saOtzvMbuiaK2bNBVG4rdvaj7PSadXCyr+Q8Hm8KikWnsb/itT7ffkkJYuHiNRK4qmj
-         V+mFgvqFPdZLm9QJdo9LdjNmCzpyp9/rbZnlcS2L01BAgZIjZQr+l/bQN7aUoT4brfi0
-         oh7dXtjguxOqwkqsP1Jigz0LtXLs7zFeO4c9yymfSreF52En/wvcQEXe7WWgxONZyDZA
-         EAlFZztRtBfeTIA3pJeTrYIwp/Ab03RQHVoARA88ceY9ScUE/zY8YlTWktdhDAGpUXpo
-         dJsA==
-X-Gm-Message-State: APjAAAXOFL5GSTEplcb+QM7V4DrulUcgoj+ukyI5oAWIc7umUbL7uDY5
-        yjPGgwNsHj1Tsnuu8u9LA37A2Q==
-X-Google-Smtp-Source: APXvYqzaQlGlI3jqb5AY7EeLc6Mh9LKfAj2eQ8o/ZNlKoLUwacolB1HYd1iDASAP51gabqn4/ndXEw==
-X-Received: by 2002:a17:902:9346:: with SMTP id g6mr26575152plp.61.1565487160141;
-        Sat, 10 Aug 2019 18:32:40 -0700 (PDT)
+        bh=Zw+nh8qCKQOD3K2GFW9bgpIFhSU9vSD+z99NnnwXM2c=;
+        b=AdsWFPtdxIWqkIr++qY+rrCHVJgAZ/gPe1QnU0xyPTVQ3e6GAphVILe5kB/CUVHgib
+         9tasHC/rPgBr/uDL7n6pzcLKxYtpF8FJtDUtvEnQwCRJeVZGcV20VDlfGhAcEqGttkIs
+         WRtCdB0AVRvpTGcStenogu8UteGrliMJGG2RKegBPIcFzEtc3N2eHeCNY52gyhuVpe6I
+         E647bnLcwFEwXJr8lKm3cVqCLZbhfmqjcOtIPf32lGYfdZye5m44jehUg/Bx3kHY0CJt
+         O6vqioRAdu4FBjZ8Y5Exw60jYhMHKb5B1osGO6oTPrY/32tsEks+0EoVvxPCTrOUTHjW
+         Pxpw==
+X-Gm-Message-State: APjAAAUJj38rZDcqXD/2OBrC7HqYh0LC6TeMe95KY4KwwaFjC1PBmmxO
+        Tc/TKcdv/kVLuq8D3uMkyCacPw==
+X-Google-Smtp-Source: APXvYqydaLReTPGJtMm22+pRsfy2OronyOq4BntAxsQzFMMtz7OvGX0hZQWSl1UjwwA74cJeApqAqQ==
+X-Received: by 2002:a17:90a:8c18:: with SMTP id a24mr16554646pjo.111.1565487311837;
+        Sat, 10 Aug 2019 18:35:11 -0700 (PDT)
 Received: from localhost ([183.82.18.139])
-        by smtp.gmail.com with ESMTPSA id v27sm146159299pgn.76.2019.08.10.18.32.38
+        by smtp.gmail.com with ESMTPSA id 21sm8443524pjh.25.2019.08.10.18.35.10
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 10 Aug 2019 18:32:39 -0700 (PDT)
+        Sat, 10 Aug 2019 18:35:11 -0700 (PDT)
 From:   Santosh Sivaraj <santosh@fossix.org>
-To:     Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>,
+To:     Michael Ellerman <mpe@ellerman.id.au>,
         linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         Linux Kernel <linux-kernel@vger.kernel.org>
 Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
@@ -64,14 +64,13 @@ Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         Reza Arbab <arbab@linux.ibm.com>,
         Balbir Singh <bsingharora@gmail.com>,
         Chandan Rajendra <chandan@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
         Nicholas Piggin <npiggin@gmail.com>,
         christophe leroy <christophe.leroy@c-s.fr>
-Subject: Re: [PATCH v8 3/7] powerpc/mce: Fix MCE handling for huge pages
-In-Reply-To: <9b3e144e-8f12-de24-ff6a-ea599dc6e021@linux.vnet.ibm.com>
-References: <20190807145700.25599-1-santosh@fossix.org> <20190807145700.25599-4-santosh@fossix.org> <9b3e144e-8f12-de24-ff6a-ea599dc6e021@linux.vnet.ibm.com>
-Date:   Sun, 11 Aug 2019 07:02:36 +0530
-Message-ID: <87pnlc8p1n.fsf@santosiv.in.ibm.com>
+Subject: Re: [PATCH v8 7/7] powerpc: add machine check safe copy_to_user
+In-Reply-To: <87lfw1s6u0.fsf@concordia.ellerman.id.au>
+References: <20190807145700.25599-1-santosh@fossix.org> <20190807145700.25599-8-santosh@fossix.org> <87lfw1s6u0.fsf@concordia.ellerman.id.au>
+Date:   Sun, 11 Aug 2019 07:05:09 +0530
+Message-ID: <87mugg8oxe.fsf@santosiv.in.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,109 +78,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com> writes:
+Michael Ellerman <mpe@ellerman.id.au> writes:
 
-> On 8/7/19 8:26 PM, Santosh Sivaraj wrote:
->> From: Balbir Singh <bsingharora@gmail.com>
->> 
->> The current code would fail on huge pages addresses, since the shift would
->> be incorrect. Use the correct page shift value returned by
->> __find_linux_pte() to get the correct physical address. The code is more
->> generic and can handle both regular and compound pages.
->> 
->> Fixes: ba41e1e1ccb9 ("powerpc/mce: Hookup derror (load/store) UE errors")
->> Signed-off-by: Balbir Singh <bsingharora@gmail.com>
->> [arbab@linux.ibm.com: Fixup pseries_do_memory_failure()]
->> Signed-off-by: Reza Arbab <arbab@linux.ibm.com>
->> Co-developed-by: Santosh Sivaraj <santosh@fossix.org>
+> Santosh Sivaraj <santosh@fossix.org> writes:
+>> Use  memcpy_mcsafe() implementation to define copy_to_user_mcsafe()
+>>
 >> Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
 >> ---
->>  arch/powerpc/include/asm/mce.h       |  2 +-
->>  arch/powerpc/kernel/mce_power.c      | 50 ++++++++++++++--------------
->>  arch/powerpc/platforms/pseries/ras.c |  9 ++---
->>  3 files changed, 29 insertions(+), 32 deletions(-)
->> 
->> diff --git a/arch/powerpc/include/asm/mce.h b/arch/powerpc/include/asm/mce.h
->> index a4c6a74ad2fb..f3a6036b6bc0 100644
->> --- a/arch/powerpc/include/asm/mce.h
->> +++ b/arch/powerpc/include/asm/mce.h
->> @@ -209,7 +209,7 @@ extern void release_mce_event(void);
->>  extern void machine_check_queue_event(void);
->>  extern void machine_check_print_event_info(struct machine_check_event *evt,
->>  					   bool user_mode, bool in_guest);
->> -unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr);
->> +unsigned long addr_to_phys(struct pt_regs *regs, unsigned long addr);
->>  #ifdef CONFIG_PPC_BOOK3S_64
->>  void flush_and_reload_slb(void);
->>  #endif /* CONFIG_PPC_BOOK3S_64 */
->> diff --git a/arch/powerpc/kernel/mce_power.c b/arch/powerpc/kernel/mce_power.c
->> index a814d2dfb5b0..bed38a8e2e50 100644
->> --- a/arch/powerpc/kernel/mce_power.c
->> +++ b/arch/powerpc/kernel/mce_power.c
->> @@ -20,13 +20,14 @@
->>  #include <asm/exception-64s.h>
->>  
->>  /*
->> - * Convert an address related to an mm to a PFN. NOTE: we are in real
->> - * mode, we could potentially race with page table updates.
->> + * Convert an address related to an mm to a physical address.
->> + * NOTE: we are in real mode, we could potentially race with page table updates.
->>   */
->> -unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr)
->> +unsigned long addr_to_phys(struct pt_regs *regs, unsigned long addr)
->>  {
->> -	pte_t *ptep;
->> -	unsigned long flags;
->> +	pte_t *ptep, pte;
->> +	unsigned int shift;
->> +	unsigned long flags, phys_addr;
->>  	struct mm_struct *mm;
->>  
->>  	if (user_mode(regs))
->> @@ -35,14 +36,21 @@ unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr)
->>  		mm = &init_mm;
->>  
->>  	local_irq_save(flags);
->> -	if (mm == current->mm)
->> -		ptep = find_current_mm_pte(mm->pgd, addr, NULL, NULL);
->> -	else
->> -		ptep = find_init_mm_pte(addr, NULL);
->> +	ptep = __find_linux_pte(mm->pgd, addr, NULL, &shift);
->>  	local_irq_restore(flags);
->> +
->>  	if (!ptep || pte_special(*ptep))
->>  		return ULONG_MAX;
->> -	return pte_pfn(*ptep);
->> +
->> +	pte = *ptep;
->> +	if (shift > PAGE_SHIFT) {
->> +		unsigned long rpnmask = (1ul << shift) - PAGE_SIZE;
->> +
->> +		pte = __pte(pte_val(pte) | (addr & rpnmask));
->> +	}
->> +	phys_addr = pte_pfn(pte) << PAGE_SHIFT;
->> +
->> +	return phys_addr;
+>>  arch/powerpc/Kconfig               |  1 +
+>>  arch/powerpc/include/asm/uaccess.h | 14 ++++++++++++++
+>>  2 files changed, 15 insertions(+)
+>>
+>> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+>> index 77f6ebf97113..4316e36095a2 100644
+>> --- a/arch/powerpc/Kconfig
+>> +++ b/arch/powerpc/Kconfig
+>> @@ -137,6 +137,7 @@ config PPC
+>>  	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !RELOCATABLE && !HIBERNATION)
+>>  	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
+>>  	select ARCH_HAS_UACCESS_FLUSHCACHE	if PPC64
+>> +	select ARCH_HAS_UACCESS_MCSAFE		if PPC64
+>>  	select ARCH_HAS_UBSAN_SANITIZE_ALL
+>>  	select ARCH_HAVE_NMI_SAFE_CMPXCHG
+>>  	select ARCH_KEEP_MEMBLOCK
+>> diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
+>> index 8b03eb44e876..15002b51ff18 100644
+>> --- a/arch/powerpc/include/asm/uaccess.h
+>> +++ b/arch/powerpc/include/asm/uaccess.h
+>> @@ -387,6 +387,20 @@ static inline unsigned long raw_copy_to_user(void __user *to,
+>>  	return ret;
 >>  }
 >>  
->>  /* flush SLBs and reload */
->> @@ -354,18 +362,16 @@ static int mce_find_instr_ea_and_pfn(struct pt_regs *regs, uint64_t *addr,
+>> +static __always_inline unsigned long __must_check
+>> +copy_to_user_mcsafe(void __user *to, const void *from, unsigned long n)
+>> +{
+>> +	if (likely(check_copy_size(from, n, true))) {
+>> +		if (access_ok(to, n)) {
+>> +			allow_write_to_user(to, n);
+>> +			n = memcpy_mcsafe((void *)to, from, n);
+>> +			prevent_write_to_user(to, n);
+>> +		}
+>> +	}
+>> +
+>> +	return n;
+>> +}
 >
-> Now that we have addr_to_phys() can we change this function name as well
-> to mce_find_instr_ea_and_phys() ?
+> This looks OK to me.
+>
+> It would be nice though if copy_to_user_mcsafe() followed the pattern of
+> the other copy_to_user() etc. routines where the arch code is only
+> responsible for the actual arch details, and all the checks are done in
+> the generic code. That would be a good cleanup to do after this has gone
+> in, as the 2nd implementation of the API.
 
-Makes sense, will avoid confusions.
+Sure, will do that.
 
 >
-> Tested-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
->
-> This should go to stable tree. Can you move this patch to 2nd position ?
+> cheers
 
-Thanks for testing. Sure. Will reorder and mark stable as well.
-
-Thanks,
-Santosh
->
-> Thanks,
-> -Mahesh.
->
