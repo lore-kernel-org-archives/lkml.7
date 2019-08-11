@@ -2,156 +2,120 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB1BC0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E52A5C0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 853082173C
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:03:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565510606;
-	bh=mdfX89J7i+I020yze43/ImZLz3U+e+1AfvwU979Ejv4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=x2NyKbDuEA02r66iE1kHfQXquljxG0DZ6nqhYIVXVAqR0WOc7tTRfvtxBE1XVVh2O
-	 k54kT77A0vFuG9HucxAKMGNriGC7Mpl0gl3otyGZCTlWqyBSgjvFsoWgKCDwzUdqRY
-	 P2s/cIDXppbhkK1w74eLWj56SFMSbFAXW2VbQbUs=
+	by mail.kernel.org (Postfix) with ESMTP id B9CFC2085B
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:05:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gIc0HPMb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbfHKIDX (ORCPT
+        id S1726476AbfHKIFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 04:03:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbfHKIDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 04:03:22 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2F5C2085B;
-        Sun, 11 Aug 2019 08:03:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565510601;
-        bh=mdfX89J7i+I020yze43/ImZLz3U+e+1AfvwU979Ejv4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=O+G9jL5g/jV9cBbfxjaGSjkdAfE03ZkSqCWbrXwscD9uIX++wtts46w6Wr435CwXw
-         3VUT199SP6WFjzLkqojQHNi2i3kw6ah5DS8TDxF9dZH1isw3tml8Dwxw9eoD5oaWQv
-         GRYhKtJYlhTiOHJFbmYUYBM9H3/dqyoVbb/hKkoc=
-Date:   Sun, 11 Aug 2019 09:03:15 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        freeman.liu@unisoc.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: adc: sc27xx: Change to polling mode to read data
-Message-ID: <20190811090251.5fbd7d75@archlinux>
-In-Reply-To: <CAMz4kuK4GFfOi3vGvFOLdRfmqrwVLDs5CN+Xp_it3jG4=iKi=w@mail.gmail.com>
-References: <1870ea18729f93fb36694affaf7e9443733dd988.1564035575.git.baolin.wang@linaro.org>
-        <20190727182709.037fc595@archlinux>
-        <CAMz4kuLLSYw0JRLRVN-JegxZcK1bdv4K2m4mVu7oep6xfb+xxg@mail.gmail.com>
-        <20190805145037.0a03f21e@archlinux>
-        <CAMz4kuK4GFfOi3vGvFOLdRfmqrwVLDs5CN+Xp_it3jG4=iKi=w@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 11 Aug 2019 04:05:55 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33282 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfHKIFy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 04:05:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=5H4DKSyLtnJ8RX8GrhMYzxFLFlnlKxpwlI+kM8oQhzA=; b=gIc0HPMb2kkD9y746pngg/tZIN
+        BBONBD5zHBfeFgLgtqVgkSReL2hz0BiQ8tWxlcZBGdXTJzS4Ath+2GX6SY8kDOgn0wGDxJbRWR6Ym
+        /kGAt2D4y49bBi/D+c8YLGeSgiKu65k8qY+B3QSANY1FckAeC9Cxp6H6mKqnPTwSRCSdBfyPNe+Py
+        jkvjkjUHLKDmgOogJ8JSIT5mTrSbJWKkEAwbjNO7fZuw2itIciNFU03pBKETjnELhrnm+Eo2l4+0L
+        C2x20Pytwg6b/m1KFfyevb6gdPJ44xpY5hWZTqAQWyT8c+YytwOVfVY7bLH8Iq+nqurohNbdxi0Mq
+        envVcypQ==;
+Received: from [2001:4bb8:180:1ec3:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hwirC-0001w6-G8; Sun, 11 Aug 2019 08:05:39 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc:     Gavin Li <git@thegavinli.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Geoff Levand <geoff@infradead.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Olav Kongas <ok@artecdesign.ee>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Bin Liu <b-liu@ti.com>, linux-arm-kernel@lists.infradead.org,
+        linux-usb@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 4/6] usb/max3421: remove the dummy {un,}map_urb_for_dma methods
+Date:   Sun, 11 Aug 2019 10:05:18 +0200
+Message-Id: <20190811080520.21712-5-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190811080520.21712-1-hch@lst.de>
+References: <20190811080520.21712-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 6 Aug 2019 15:39:45 +0800
-Baolin Wang <baolin.wang@linaro.org> wrote:
+Now that we have an explicit HCD_DMA flag, there is not need to override
+these methods.
 
-> Hi Jonathan,
-> 
-> On Mon, 5 Aug 2019 at 21:50, Jonathan Cameron <jic23@kernel.org> wrote:
-> >
-> > On Mon, 29 Jul 2019 10:19:48 +0800
-> > Baolin Wang <baolin.wang@linaro.org> wrote:
-> >  
-> > > Hi Jonathan,
-> > >
-> > > On Sun, 28 Jul 2019 at 01:27, Jonathan Cameron <jic23@kernel.org> wrote:  
-> > > >
-> > > > On Thu, 25 Jul 2019 14:33:50 +0800
-> > > > Baolin Wang <baolin.wang@linaro.org> wrote:
-> > > >  
-> > > > > From: Freeman Liu <freeman.liu@unisoc.com>
-> > > > >
-> > > > > On Spreadtrum platform, the headphone will read one ADC channel multiple
-> > > > > times to identify the headphone type, and the headphone identification is
-> > > > > sensitive of the ADC reading time. And we found it will take longer time
-> > > > > to reading ADC data by using interrupt mode comparing with the polling
-> > > > > mode, thus we should change to polling mode to improve the efficiency
-> > > > > of reading data, which can identify the headphone type successfully.
-> > > > >
-> > > > > Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
-> > > > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>  
-> > > >
-> > > > Hi,
-> > > >
-> > > > My concerns with this sort of approach is that we may be sacrificing power
-> > > > efficiency for some usecases to support one demanding one.
-> > > >
-> > > > The maximum sleep time is 1 second (I think) which is probably too long
-> > > > to poll a register for in general.  
-> > >
-> > > 1 second is the timeout time, that means something wrong when reading
-> > > the data taking 1 second, and we will poll the register status every
-> > > 500 us.
-> > > From the testing, polling mode takes less time than interrupt mode
-> > > when reading ADC data multiple times, so polling mode did not
-> > > sacrifice power
-> > > efficiency.  
-> >
-> > Hmm.  I'll go with a probably on that, depends on interrupt response
-> > latency etc so isn't entirely obvious.  Faster response doesn't necessarily
-> > mean lower power.
-> >  
-> > >  
-> > > > Is there some way we can bound that time and perhaps switch between
-> > > > interrupt and polling modes depending on how long we expect to wait?  
-> > >
-> > > I do not think the interrupt mode is needed any more, since the ADC
-> > > reading is so fast enough usually. Thanks.  
-> > The reason for interrupts in such devices is usually precisely the opposite.
-> >
-> > You do it because things are slow enough that you can go to sleep
-> > for a long time before the interrupt occurs.
-> >
-> > So question becomes whether there are circumstances in which we are
-> > running with long timescales and would benefit from using interrupts.  
-> 
-> From our testing, the ADC version time is usually about 100us, it will
-> be faster to get data if we poll every 50us in this case. But if we
-> change to use interrupt mode, it will take millisecond level time to
-> get data. That will cause problems for those time sensitive scenarios,
-> like headphone detection, that's the main reason we can not use
-> interrupt mode.
-> 
-> For those non-time-sensitive scenarios, yes, I agree with you, the
-> interrupt mode will get a better power efficiency. But ADC driver can
-> not know what scenarios asked by consumers, so changing to polling
-> mode seems the easiest way to solve the problem, and we've applied
-> this patch in our downstream kernel for a while, we did not see any
-> other problem.
-> 
-> Thanks for your comments.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/usb/host/max3421-hcd.c | 17 -----------------
+ 1 file changed, 17 deletions(-)
 
-OK. It's not ideal but sometimes such is life ;)
-
-So last question - fix or not?  If a fix, can I have a fixes tag
-please.
-
-Thanks,
-
-Jonathan
-
-> 
+diff --git a/drivers/usb/host/max3421-hcd.c b/drivers/usb/host/max3421-hcd.c
+index afa321ab55fc..8819f502b6a6 100644
+--- a/drivers/usb/host/max3421-hcd.c
++++ b/drivers/usb/host/max3421-hcd.c
+@@ -1800,21 +1800,6 @@ max3421_bus_resume(struct usb_hcd *hcd)
+ 	return -1;
+ }
+ 
+-/*
+- * The SPI driver already takes care of DMA-mapping/unmapping, so no
+- * reason to do it twice.
+- */
+-static int
+-max3421_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb, gfp_t mem_flags)
+-{
+-	return 0;
+-}
+-
+-static void
+-max3421_unmap_urb_for_dma(struct usb_hcd *hcd, struct urb *urb)
+-{
+-}
+-
+ static const struct hc_driver max3421_hcd_desc = {
+ 	.description =		"max3421",
+ 	.product_desc =		DRIVER_DESC,
+@@ -1826,8 +1811,6 @@ static const struct hc_driver max3421_hcd_desc = {
+ 	.get_frame_number =	max3421_get_frame_number,
+ 	.urb_enqueue =		max3421_urb_enqueue,
+ 	.urb_dequeue =		max3421_urb_dequeue,
+-	.map_urb_for_dma =	max3421_map_urb_for_dma,
+-	.unmap_urb_for_dma =	max3421_unmap_urb_for_dma,
+ 	.endpoint_disable =	max3421_endpoint_disable,
+ 	.hub_status_data =	max3421_hub_status_data,
+ 	.hub_control =		max3421_hub_control,
+-- 
+2.20.1
 
