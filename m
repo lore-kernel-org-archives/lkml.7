@@ -2,167 +2,166 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29999C32751
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 02:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D068C32751
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 02:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9EE820880
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 02:27:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="s7M110bx"
+	by mail.kernel.org (Postfix) with ESMTP id 15D1420880
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 02:30:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbfHKC1C (ORCPT
+        id S1726530AbfHKCaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 22:27:02 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43156 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726457AbfHKC1C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 22:27:02 -0400
-Received: by mail-pf1-f196.google.com with SMTP id v12so244883pfn.10
-        for <linux-kernel@vger.kernel.org>; Sat, 10 Aug 2019 19:27:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sSdzyR3+jYPF/gjOoTrNU8w81mqUq5doextlSL/xXQ4=;
-        b=s7M110bxdXziQG6liQpM/xp6bqiW8h9v45zpZw5HEmfR/k1v4bsiREzdcS2T5WUeXb
-         aeEnhuMIBpEMM+8nw0JIVpnmZFeBmyB70tIguxc4Va4t55IhIm+MLdiCHwXkm1nfmrZ1
-         bhTA+8SSS4ODDqq8aSie+HE+jp17gN5F96iAk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sSdzyR3+jYPF/gjOoTrNU8w81mqUq5doextlSL/xXQ4=;
-        b=A/wS95aaxCYi0x2gVwPC5myJM6Ff6GSiTOkIATIeCF4ymi+wMmRNbntefKkLyCAxpg
-         MUS/z2crEE7xHCSDNVEYlAbCa67CN6nnF660TbCO02njBQWKVMf9IEwmFEXvp9RCLYwj
-         1YCYbK/QMP55hPjUjxYAjoFVs16B6Rd9V96ZKWNuIfdZ+BuEO9xTic3iFz1IZ47nYSND
-         Ye6HW+YL0ngTIShIj0dvzySaDswU0lGmIO4wBSTmEXm0ftCPH8ozmPLWk39K3mgz6zOf
-         3OjqUtCwtM7MzkXMwJeSlH7k/tzrkmj4PE5PqhmcLklJDD3SMeX9+FTG/FO/Fhrm6S/b
-         7fKg==
-X-Gm-Message-State: APjAAAVXUR6vzWowTcOK9tFYn/6aSmAuNiZvoHEXCNiLzwPekPiF8ShT
-        4iL6YDnTJHlJajQO0lS2F3xvkJgoObE=
-X-Google-Smtp-Source: APXvYqzC/mcnzr4WKGyOHvssnZpmX5fEBua0B7RkotLurKRAGOH8XY5yucbXkdQbIh/f2j9+JC/mrw==
-X-Received: by 2002:a17:90a:ae12:: with SMTP id t18mr17482911pjq.32.1565490421214;
-        Sat, 10 Aug 2019 19:27:01 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id o32sm9183003pje.9.2019.08.10.19.26.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 10 Aug 2019 19:27:00 -0700 (PDT)
-Date:   Sat, 10 Aug 2019 22:26:58 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, Rao Shoaib <rao.shoaib@oracle.com>,
-        max.byungchul.park@gmail.com, byungchul.park@lge.com,
-        kernel-team@android.com, kernel-team@lge.com,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC v1 1/2] rcu/tree: Add basic support for kfree_rcu
- batching
-Message-ID: <20190811022658.GA177703@google.com>
-References: <20190806212041.118146-1-joel@joelfernandes.org>
- <20190806235631.GU28441@linux.ibm.com>
- <20190807094504.GB169551@google.com>
- <20190807175215.GE28441@linux.ibm.com>
- <20190810024232.GA183658@google.com>
- <20190810033814.GP28441@linux.ibm.com>
- <20190810042037.GA175783@google.com>
- <20190810182446.GT28441@linux.ibm.com>
+        Sat, 10 Aug 2019 22:30:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34834 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726292AbfHKCaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 10 Aug 2019 22:30:17 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8EFBF3DE0F;
+        Sun, 11 Aug 2019 02:30:16 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-12-36.pek2.redhat.com [10.72.12.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B5326100195F;
+        Sun, 11 Aug 2019 02:30:00 +0000 (UTC)
+Subject: Re: crash: `kmem -s` reported "kmem: dma-kmalloc-512: slab:
+ ffffe192c0001000 invalid freepointer: e5ffef4e9a040b7e" on a dumped vmcore
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Dave Young <dyoung@redhat.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dave Anderson <anderson@redhat.com>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "vgoyal@redhat.com" <vgoyal@redhat.com>,
+        "bhe@redhat.com" <bhe@redhat.com>,
+        "ebiederm@xmission.com" <ebiederm@xmission.com>
+References: <e640b50a-a962-8e56-33a2-2ba2eb76e813@redhat.com>
+ <20190802010538.GA2202@dhcp-128-65.nay.redhat.com>
+ <5d91e856-01de-bc80-e4bc-497d57652072@amd.com>
+From:   lijiang <lijiang@redhat.com>
+Message-ID: <2d3c7ab8-0b83-4ef5-bb89-0c7c476265b3@redhat.com>
+Date:   Sun, 11 Aug 2019 10:29:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190810182446.GT28441@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5d91e856-01de-bc80-e4bc-497d57652072@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Sun, 11 Aug 2019 02:30:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 10, 2019 at 11:24:46AM -0700, Paul E. McKenney wrote:
-> On Sat, Aug 10, 2019 at 12:20:37AM -0400, Joel Fernandes wrote:
-> > On Fri, Aug 09, 2019 at 08:38:14PM -0700, Paul E. McKenney wrote:
-> > > On Fri, Aug 09, 2019 at 10:42:32PM -0400, Joel Fernandes wrote:
-> > > > On Wed, Aug 07, 2019 at 10:52:15AM -0700, Paul E. McKenney wrote:
-> > > > [snip] 
-> > > > > > > > @@ -3459,6 +3645,8 @@ void __init rcu_init(void)
-> > > > > > > >  {
-> > > > > > > >  	int cpu;
-> > > > > > > >  
-> > > > > > > > +	kfree_rcu_batch_init();
-> > > > > > > 
-> > > > > > > What happens if someone does a kfree_rcu() before this point?  It looks
-> > > > > > > like it should work, but have you tested it?
-> > > > > > > 
-> > > > > > > >  	rcu_early_boot_tests();
-> > > > > > > 
-> > > > > > > For example, by testing it in rcu_early_boot_tests() and moving the
-> > > > > > > call to kfree_rcu_batch_init() here.
-> > > > > > 
-> > > > > > I have not tried to do the kfree_rcu() this early. I will try it out.
-> > > > > 
-> > > > > Yeah, well, call_rcu() this early came as a surprise to me back in the
-> > > > > day, so...  ;-)
-> > > > 
-> > > > I actually did get surprised as well!
-> > > > 
-> > > > It appears the timers are not fully initialized so the really early
-> > > > kfree_rcu() call from rcu_init() does cause a splat about an initialized
-> > > > timer spinlock (even though future kfree_rcu()s and the system are working
-> > > > fine all the way into the torture tests).
-> > > > 
-> > > > I think to resolve this, we can just not do batching until early_initcall,
-> > > > during which I have an initialization function which switches batching on.
-> > > > >From that point it is safe.
-> > > 
-> > > Just go ahead and batch, but don't bother with the timer until
-> > > after single-threaded boot is done.  For example, you could check
-> > > rcu_scheduler_active similar to how sync_rcu_exp_select_cpus() does.
-> > > (See kernel/rcu/tree_exp.h.)
-> > 
-> > Cool, that works nicely and I tested it. Actually I made it such that we
-> > don't need to batch even, before the scheduler is up. I don't see any benefit
-> > of that unless we can see a kfree_rcu() flood happening that early at boot
-> > which seems highly doubtful as a real world case.
+在 2019年08月09日 06:37, Lendacky, Thomas 写道:
+> On 8/1/19 8:05 PM, Dave Young wrote:
+>> Add kexec cc list.
+>> On 08/01/19 at 11:02pm, lijiang wrote:
+>>> Hi, Tom
+>>>
+>>> Recently, i ran into a problem about SME and used crash tool to check the vmcore as follow:
+>>>
+>>> crash> kmem -s | grep -i invalid
+>>> kmem: dma-kmalloc-512: slab: ffffe192c0001000 invalid freepointer: e5ffef4e9a040b7e
+>>> kmem: dma-kmalloc-512: slab: ffffe192c0001000 invalid freepointer: e5ffef4e9a040b7e
+>>>
+>>> And the crash tool reported the above error, probably, the main reason is that kernel does not
+>>> correctly handle the first 640k region when SME is enabled.
+>>>
+>>> When SME is enabled, the kernel and initramfs images are loaded into the decrypted memory, and
+>>> the backup area(first 640k) is also mapped as decrypted, but the first 640k data is copied to
+>>> the backup area in purgatory(). Please refer to this file: arch/x86/purgatory/purgatory.c
+>>> ......
+>>> static int copy_backup_region(void)
+>>> {
+>>>          if (purgatory_backup_dest) {
+>>>                  memcpy((void *)purgatory_backup_dest,
+>>>                         (void *)purgatory_backup_src, purgatory_backup_sz);
+>>>          }
+>>>          return 0;
+>>> }
+>>> ......
+>>>
+>>> arch/x86/kernel/machine_kexec_64.c
+>>> ......
+>>> machine_kexec_prepare()->
+>>> arch_update_purgatory()->
+>>> .....
+>>>
+>>> Actually, the firs 640k area is encrypted in the first kernel when SME is enabled, here kernel
+>>> copies the first 640k data to the backup area in purgatory(), because the backup area is mapped
+>>> as decrypted, this copying operation makes that the first 640k data is decrypted(decoded) and
+>>> saved to the backup area, but probably kernel can not aware of SME in purgatory(), which causes
+>>> kernel mistakenly read out the first 640k.
+>>>
+>>> In addition, i hacked kernel code as follow:
+>>>
+>>> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+>>> index 7bcc92add72c..a51631d36a7a 100644
+>>> --- a/fs/proc/vmcore.c
+>>> +++ b/fs/proc/vmcore.c
+>>> @@ -377,6 +378,16 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
+>>>                                              m->offset + m->size - *fpos,
+>>>                                              buflen);
+>>>                          start = m->paddr + *fpos - m->offset;
+>>> +                       if (m->paddr == 0x73f60000) {//the backup area's start address:0x73f60000
+>>> +                               tmp = read_from_oldmem(buffer, tsz, &start,
+>>> +                                               userbuf, false);
+>>> +                       } else
+>>>                                  tmp = read_from_oldmem(buffer, tsz, &start,
+>>>                                                 userbuf, mem_encrypt_active());
+>>>                          if (tmp < 0)
+>>>
+>>> Here, i used the crash tool to check the vmcore, i can see that the backup area is decrypted,
+>>> except for the dma-kmalloc-512. So i suspect that kernel did not correctly read out the first
+>>> 640k data to backup area. Do you happen to know how to deal with the first 640k area in purgatory()
+>>> when SME is enabled? Any idea?
 > 
-> The benefit is removing the kfree_rcu() special cases from the innards
-> of RCU, for example, in rcu_do_batch().  Another benefit is removing the
-> current restriction on the position of the rcu_head structure within the
-> enclosing data structure.
+> I'm not all that familiar with kexec and purgatory, etc., but I think
+> that you want to setup the page table that is active when purgatory runs
+> so that the src and dest both have the SME encryption mask set in their
+> respective page table entries. This way, when the copy is performed,
+> everything is copied correctly. 
+
+Exactly. That's just what i was thinking.
+
+> Remember, encrypted data from one page
+> cannot be directly copied as unencrypted data and decrypted properly in
+> the new location (e.g. a page of zeroes encrypted at one address will not
+> appear the same as a page of zeroes encrypted at a different address).
+
+Yes, that's right. Thank you, Tom.
+
+I'm considering how to solve it, and i guess that probably it needs to properly deal with
+this problem in purgatory().
+
+Thanks.
+Lianbo
+
 > 
-> So it would be good to avoid the current kfree_rcu() special casing within
-> RCU itself.
+> Thanks,
+> Tom
 > 
-> Or are you using some trick that avoids both the batching and the current
-> kfree_rcu() special casing?
-
-Oh. I see what you mean. Would it be Ok with you to have that be a follow up
-patch?  I am not getting rid (yet) of the special casing in rcu_do_batch in
-this patch, but can do that in another patch.
-
-For now I am just doing something like the following in kfree_call_rcu(). I
-was almost about to hit send on the v1 and I have been testing this a lot so
-I'll post it anyway; and we can discuss more about this point on that.
-
-+void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-+{
-+       unsigned long flags;
-+       struct kfree_rcu_cpu *krcp;
-+       bool monitor_todo;
-+
-+       /* kfree_call_rcu() batching requires timers to be up. If the scheduler
-+        * is not yet up, just skip batching and do non-batched kfree_call_rcu().
-+        */
-+       if (rcu_scheduler_active != RCU_SCHEDULER_RUNNING)
-+               return kfree_call_rcu_nobatch(head, func);
-+
-
-thanks,
-
- - Joel
-
+>>>
+>>> BTW: I' curious the reason why the address of dma-kmalloc-512k always falls into the first 640k
+>>> region, and i did not see the same issue on another machine.
+>>>
+>>> Machine:
+>>> Serial Number 	diesel-sys9079-0001
+>>> Model           AMD Diesel (A0C)
+>>> CPU             AMD EPYC 7601 32-Core Processor
+>>>
+>>>
+>>> Background:
+>>> On x86_64, the first 640k region is special because of some historical reasons. And kdump kernel will
+>>> reuse the first 640k region, so kernel will back up(copy) the first 640k region to a backup area in
+>>> purgatory(), in order not to rewrite the old region(640k) in kdump kernel, which makes sure that kdump
+>>> can read out the old memory from vmcore.
+>>>
+>>>
+>>> Thanks.
+>>> Lianbo
