@@ -2,178 +2,176 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988EEC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 18:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E37C0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 18:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE252173C
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 18:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06E3C2147A
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 18:27:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HcjfI+Xm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfHKS0j (ORCPT
+        id S1726477AbfHKS15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 14:26:39 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36135 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfHKS0j (ORCPT
+        Sun, 11 Aug 2019 14:27:57 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:32987 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfHKS15 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 14:26:39 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r7so48621554pfl.3;
-        Sun, 11 Aug 2019 11:26:39 -0700 (PDT)
+        Sun, 11 Aug 2019 14:27:57 -0400
+Received: by mail-qt1-f196.google.com with SMTP id v38so8399968qtb.0;
+        Sun, 11 Aug 2019 11:27:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=0SFlFa5AgAY1Vcpe3Q2xK8MoGHp7PJyv7YgLvyrtfZg=;
+        b=HcjfI+XmaM4lhtBDN41C3ynWBYjj2V6X43kuht7ovZOBZ2W2YltOH+ilYgyV/QDuk/
+         aU03KZiHz1NnjyMQAoCVvHDODYcWAwO6lpgmlp+v58KHabaepwuc+Xw/QPiwf2JuY4+I
+         w6dlRRjs+poKiqQ7eXbMkRSi4g8wrZZa2Ci6JSChsDRgOePNsqYP1o6KtV8axQQXtG9p
+         kbJcpRLG1O8fDe0yeUAraiZP+FT72j9Hc/PUCGfuymPnc5suT5wGMNKsmwcJNhxL0Z7I
+         mt8qlzYKKfTgDy+JGiIRbx2vSnvzGfFZqaDYoF/Got928UDEGj7Y72LNtFwJU93dM4Lq
+         nQAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
          :content-transfer-encoding;
-        bh=RvBS7LnbEXRKBr+Vk2OxA3lSCuWdQHXP5Oy5elpb9AU=;
-        b=lkmqFNrpGYqJoGAUzPYlURHNmhONCjOcA3zxL1y+ZJh4aLLst6aoB1GR7oqTEpX/sx
-         dMJtqmsNTvy8TXsLRcUKB05cw8uD94B917Py9i9tXJohvgz/YgHDduBdk+gS+6qnKRjc
-         b1v4xg+UAwa2HmGpvhSyxoRzaXbz7feF/ulaGP7MTgyZzy2OmqROrsavJ5CeuluXfL6T
-         F+vYFz9J8vpUpxR14kIPesRrPjzjKYwmx727JTr3sHed9LjML+1sgEC+VlrMf1+/ke1J
-         X/wARI3QJPd+tE7Y0TRTt1OQV0LDhQ+1YRBgeOvl933JIYmO7ADYh8wsyihYTuOoB0pY
-         Nn+g==
-X-Gm-Message-State: APjAAAVGr1ojjiuLTcpzhKu2zYMwVeIP5NinJd0dD8lKAc4H7MVtdyuu
-        OEBkPg1VBeergbZDx2rvqpUnmQsrYKw=
-X-Google-Smtp-Source: APXvYqzCX24eHkmxeM6dWX3x43XOL79S+1CVVkfVooXjwTZKpysXWMkGY3TB3bvT3jj9naxjtyfeYg==
-X-Received: by 2002:a65:6096:: with SMTP id t22mr26462796pgu.204.1565547998514;
-        Sun, 11 Aug 2019 11:26:38 -0700 (PDT)
-Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.gmail.com with ESMTPSA id o130sm168437424pfg.171.2019.08.11.11.26.33
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sun, 11 Aug 2019 11:26:37 -0700 (PDT)
-Subject: Re: [PATCH 1/4] PCI: pciehp: Add pciehp_set_indicators() to jointly
- set LED indicators
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        bh=0SFlFa5AgAY1Vcpe3Q2xK8MoGHp7PJyv7YgLvyrtfZg=;
+        b=CGsSlXLlY3giz6Alpey1XczX7QhqHk1vFxJCtKOKu20rtUxByYwlYiF+8C9BJXT1jw
+         puH5oWTM46kjSFeJS4ZC0NX2xA8nuR5EGU3w7X47wqEpGDbE2KNgv0CQZrOJZI3Ci7EF
+         X8T67+aSnXWdFwY7gSeJlNyFGleoJ4Wy80rQpCN0p+3+Y8w7QsyiENAatWNLr/qgWq5k
+         wV+dL4P0jG/L+U2BLBZZpSqv/C7hmxondz6wTh2uHIB8U2melzSBTOLKwfqI3ZJ8DEkC
+         nr8GRiZ0X/F6H2txeU2k1CPDAjDxNg+9Ghy5yD6kpgZdDSCtmWwU3UmALczIFWDbmKf0
+         MvhQ==
+X-Gm-Message-State: APjAAAVMyU9anhUIm26OsQfjddfeF0WC056LnCYOdf83iyLRaJAk+kGA
+        2RmrMeQE78XjeiFF+ykia08=
+X-Google-Smtp-Source: APXvYqwDiOzmzEcm0cXXFDpX+BJ7kBgoK0vc93nZzHjhjO/fG6pGYcOJd/8O1bCkSMi6D9DA4XijxA==
+X-Received: by 2002:a05:6214:1e5:: with SMTP id c5mr16839252qvu.18.1565548076120;
+        Sun, 11 Aug 2019 11:27:56 -0700 (PDT)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id 18sm47619309qkh.77.2019.08.11.11.27.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 11 Aug 2019 11:27:55 -0700 (PDT)
+Date:   Sun, 11 Aug 2019 14:27:54 -0400
+Message-ID: <20190811142754.GB25788@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Chen-Yu Tsai <wens@kernel.org>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20190811132945.12426-1-efremov@linux.com>
- <20190811132945.12426-2-efremov@linux.com>
- <20190811160755.w2jpcqt2powdcz7q@wunner.de>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <81c06549-6076-b230-9c6b-64b07a2bb509@linux.com>
-Date:   Sun, 11 Aug 2019 21:26:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Subject: Re: [PATCH net v3] net: dsa: Check existence of .port_mdb_add
+ callback before calling it
+In-Reply-To: <20190811141825.11566-1-wens@kernel.org>
+References: <20190811141825.11566-1-wens@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190811160755.w2jpcqt2powdcz7q@wunner.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you for the review, I will send v2.
+Hi Chen-Yu,
 
-On 11.08.2019 19:07, Lukas Wunner wrote:
-> On Sun, Aug 11, 2019 at 04:29:42PM +0300, Denis Efremov wrote:
->> This commit adds pciehp_set_indicators() to set power and attention
+On Sun, 11 Aug 2019 22:18:25 +0800, Chen-Yu Tsai <wens@kernel.org> wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
 > 
-> Nit:  "This commit ..." is superfluous, just say "Add ...".
+> The dsa framework has optional .port_mdb_{prepare,add,del} callback fields
+> for drivers to handle multicast database entries. When adding an entry, the
+> framework goes through a prepare phase, then a commit phase. Drivers not
+> providing these callbacks should be detected in the prepare phase.
 > 
+> DSA core may still bypass the bridge layer and call the dsa_port_mdb_add
+> function directly with no prepare phase or no switchdev trans object,
+> and the framework ends up calling an undefined .port_mdb_add callback.
+> This results in a NULL pointer dereference, as shown in the log below.
 > 
->> indicators with a single register write. enum pciehp_indicator
->> introduced to switch between the indicators statuses. Attention
->> indicator statuses are explicitly set with values in the enum to
->> transparently comply with pciehp_set_attention_status() from
->> pciehp_hpc.c and set_attention_status() from pciehp_core.c
+> The other functions seem to be properly guarded. Do the same for
+> .port_mdb_add in dsa_switch_mdb_add_bitmap() as well.
 > 
-> Please document the motivation of the change (the "why").
+>     8<--- cut here ---
+>     Unable to handle kernel NULL pointer dereference at virtual address 00000000
+>     pgd = (ptrval)
+>     [00000000] *pgd=00000000
+>     Internal error: Oops: 80000005 [#1] SMP ARM
+>     Modules linked in: rtl8xxxu rtl8192cu rtl_usb rtl8192c_common rtlwifi mac80211 cfg80211
+>     CPU: 1 PID: 134 Comm: kworker/1:2 Not tainted 5.3.0-rc1-00247-gd3519030752a #1
+>     Hardware name: Allwinner sun7i (A20) Family
+>     Workqueue: events switchdev_deferred_process_work
+>     PC is at 0x0
+>     LR is at dsa_switch_event+0x570/0x620
+>     pc : [<00000000>]    lr : [<c08533ec>]    psr: 80070013
+>     sp : ee871db8  ip : 00000000  fp : ee98d0a4
+>     r10: 0000000c  r9 : 00000008  r8 : ee89f710
+>     r7 : ee98d040  r6 : ee98d088  r5 : c0f04c48  r4 : ee98d04c
+>     r3 : 00000000  r2 : ee89f710  r1 : 00000008  r0 : ee98d040
+>     Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+>     Control: 10c5387d  Table: 6deb406a  DAC: 00000051
+>     Process kworker/1:2 (pid: 134, stack limit = 0x(ptrval))
+>     Stack: (0xee871db8 to 0xee872000)
+>     1da0:                                                       ee871e14 103ace2d
+>     1dc0: 00000000 ffffffff 00000000 ee871e14 00000005 00000000 c08524a0 00000000
+>     1de0: ffffe000 c014bdfc c0f04c48 ee871e98 c0f04c48 ee9e5000 c0851120 c014bef0
+>     1e00: 00000000 b643aea2 ee9b4068 c08509a8 ee2bf940 ee89f710 ee871ecb 00000000
+>     1e20: 00000008 103ace2d 00000000 c087e248 ee29c868 103ace2d 00000001 ffffffff
+>     1e40: 00000000 ee871e98 00000006 00000000 c0fb2a50 c087e2d0 ffffffff c08523c4
+>     1e60: ffffffff c014bdfc 00000006 c0fad2d0 ee871e98 ee89f710 00000000 c014c500
+>     1e80: 00000000 ee89f3c0 c0f04c48 00000000 ee9e5000 c087dfb4 ee9e5000 00000000
+>     1ea0: ee89f710 ee871ecb 00000001 103ace2d 00000000 c0f04c48 00000000 c087e0a8
+>     1ec0: 00000000 efd9a3e0 0089f3c0 103ace2d ee89f700 ee89f710 ee9e5000 00000122
+>     1ee0: 00000100 c087e130 ee89f700 c0fad2c8 c1003ef0 c087de4c 2e928000 c0fad2ec
+>     1f00: c0fad2ec ee839580 ef7a62c0 ef7a9400 00000000 c087def8 c0fad2ec c01447dc
+>     1f20: ef315640 ef7a62c0 00000008 ee839580 ee839594 ef7a62c0 00000008 c0f03d00
+>     1f40: ef7a62d8 ef7a62c0 ffffe000 c0145b84 ffffe000 c0fb2420 c0bfaa8c 00000000
+>     1f60: ffffe000 ee84b600 ee84b5c0 00000000 ee870000 ee839580 c0145b40 ef0e5ea4
+>     1f80: ee84b61c c014a6f8 00000001 ee84b5c0 c014a5b0 00000000 00000000 00000000
+>     1fa0: 00000000 00000000 00000000 c01010e8 00000000 00000000 00000000 00000000
+>     1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+>     1fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
+>     [<c08533ec>] (dsa_switch_event) from [<c014bdfc>] (notifier_call_chain+0x48/0x84)
+>     [<c014bdfc>] (notifier_call_chain) from [<c014bef0>] (raw_notifier_call_chain+0x18/0x20)
+>     [<c014bef0>] (raw_notifier_call_chain) from [<c08509a8>] (dsa_port_mdb_add+0x48/0x74)
+>     [<c08509a8>] (dsa_port_mdb_add) from [<c087e248>] (__switchdev_handle_port_obj_add+0x54/0xd4)
+>     [<c087e248>] (__switchdev_handle_port_obj_add) from [<c087e2d0>] (switchdev_handle_port_obj_add+0x8/0x14)
+>     [<c087e2d0>] (switchdev_handle_port_obj_add) from [<c08523c4>] (dsa_slave_switchdev_blocking_event+0x94/0xa4)
+>     [<c08523c4>] (dsa_slave_switchdev_blocking_event) from [<c014bdfc>] (notifier_call_chain+0x48/0x84)
+>     [<c014bdfc>] (notifier_call_chain) from [<c014c500>] (blocking_notifier_call_chain+0x50/0x68)
+>     [<c014c500>] (blocking_notifier_call_chain) from [<c087dfb4>] (switchdev_port_obj_notify+0x44/0xa8)
+>     [<c087dfb4>] (switchdev_port_obj_notify) from [<c087e0a8>] (switchdev_port_obj_add_now+0x90/0x104)
+>     [<c087e0a8>] (switchdev_port_obj_add_now) from [<c087e130>] (switchdev_port_obj_add_deferred+0x14/0x5c)
+>     [<c087e130>] (switchdev_port_obj_add_deferred) from [<c087de4c>] (switchdev_deferred_process+0x64/0x104)
+>     [<c087de4c>] (switchdev_deferred_process) from [<c087def8>] (switchdev_deferred_process_work+0xc/0x14)
+>     [<c087def8>] (switchdev_deferred_process_work) from [<c01447dc>] (process_one_work+0x218/0x50c)
+>     [<c01447dc>] (process_one_work) from [<c0145b84>] (worker_thread+0x44/0x5bc)
+>     [<c0145b84>] (worker_thread) from [<c014a6f8>] (kthread+0x148/0x150)
+>     [<c014a6f8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+>     Exception stack(0xee871fb0 to 0xee871ff8)
+>     1fa0:                                     00000000 00000000 00000000 00000000
+>     1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+>     1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+>     Code: bad PC value
+>     ---[ end trace 1292c61abd17b130 ]---
 > 
-> One motivation might be to avoid waiting twice for Command Complete.
+>     [<c08533ec>] (dsa_switch_event) from [<c014bdfc>] (notifier_call_chain+0x48/0x84)
+>     corresponds to
 > 
-> Another motivation might be to change both LEDs at the same time
-> in a glitch-free manner, thereby achieving a smoother user experience.
+> 	$ arm-linux-gnueabihf-addr2line -C -i -e vmlinux c08533ec
 > 
+> 	linux/net/dsa/switch.c:156
+> 	linux/net/dsa/switch.c:178
+> 	linux/net/dsa/switch.c:328
 > 
->> --- a/drivers/pci/hotplug/pciehp.h
->> +++ b/drivers/pci/hotplug/pciehp.h
->> +enum pciehp_indicator {
->> +	// Explicit values to match set_attention_status interface
-> 
-> Kernel coding style is typically /* */, not //.
-> 
-> 
->> +	ATTN_NONE = -1,
->> +	ATTN_OFF = 0,
->> +	ATTN_ON = 1,
->> +	ATTN_BLINK = 2,
->> +	PWR_NONE,
->> +	PWR_OFF,
->> +	PWR_ON,
->> +	PWR_BLINK
->> +};
-> 
-> I'd suggest using the same values that are written to the register, i.e.:
-> 
-> enum pciehp_indicator {
-> 	ATTN_NONE  = -1,
-> 	ATTN_ON    =  1,
-> 	ATTN_BLINK =  2,
-> 	ATTN_OFF   =  3,
-> 	PWR_NONE   = -1,
-> 	PWR_ON     =  1,
-> 	PWR_BLINK  =  2,
-> 	PWR_OFF    =  3,
-> };
-> 
-> Then you can just shift the values to the proper offset and don't need
-> a translation between enum pciehp_indicator and register value.
-> 
-> 
->> +void pciehp_set_indicators(struct controller *ctrl,
->> +			   enum pciehp_indicator pwr,
->> +			   enum pciehp_indicator attn)
->> +{
->> +	u16 cmd = 0;
->> +	bool pwr_none = (pwr == PWR_NONE);
->> +	bool attn_none = (attn == ATTN_NONE);
->> +	bool pwr_led = PWR_LED(ctrl);
->> +	bool attn_led = ATTN_LED(ctrl);
->> +
->> +	if ((!pwr_led && !attn_led) || (pwr_none && attn_none) ||
->> +	    (!attn_led && pwr_none) || (!pwr_led && attn_none))
->> +		return;
-> 
-> I'd suggest the following simpler construct:
-> 
-> 	if (!PWR_LED(ctrl)  || pwr  == PWR_NONE) &&
-> 	    !ATTN_LED(ctrl) || attn == ATTN_NONE))
-> 		return;
-> 
-> 
->> +	switch (pwr) {
->> +	case PWR_OFF:
->> +		cmd = PCI_EXP_SLTCTL_PWR_IND_OFF;
->> +		break;
->> +	case PWR_ON:
->> +		cmd = PCI_EXP_SLTCTL_PWR_IND_ON;
->> +		break;
->> +	case PWR_BLINK:
->> +		cmd = PCI_EXP_SLTCTL_PWR_IND_BLINK;
->> +		break;
->> +	default:
->> +		break;
->> +	}
-> 
-> If you follow my suggestion above to use the register value for "pwr",
-> then you can just fold all three cases into one, i.e.
-> 
-> 	case PWR_ON:
-> 	case PWR_BLINK:
-> 	case PWR_OFF:
-> 		cmd = pwr << 8;
-> 		mask |= PCI_EXP_SLTCTL_PIC;
-> 		break;
-> 
-> Feel free to add a PCI_EXP_SLTCTL_PWR_IND_OFFSET macro for the offset 8.
-> Add a "u16 mask = 0" to the top of the function and pass "mask" to
-> pcie_write_cmd_nowait().
-> 
-> Thanks,
-> 
-> Lukas
-> 
+> Fixes: e6db98db8a95 ("net: dsa: add switch mdb bitmap functions")
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+
+Thanks for your patience,
+
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
