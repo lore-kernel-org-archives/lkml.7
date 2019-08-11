@@ -2,106 +2,121 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA91CC0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 15:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6EAC0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 15:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 998CE20880
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 15:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71FB820880
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 15:33:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RuuhpUV6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfHKPZ7 (ORCPT
+        id S1726502AbfHKPda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 11:25:59 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33334 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726014AbfHKPZ7 (ORCPT
+        Sun, 11 Aug 2019 11:33:30 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33901 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726424AbfHKPda (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 11:25:59 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hwpjJ-0000rz-8w; Sun, 11 Aug 2019 16:25:57 +0100
-Received: from ben by deadeye with local (Exim 4.92)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hwpjJ-0006mY-1m; Sun, 11 Aug 2019 16:25:57 +0100
-Message-ID: <078beee0929d7632913611a0ba3cd000b1e27474.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 000/157] 3.16.72-rc1 review
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        Denis Kirjanov <kda@linux-powerpc.org>
-Date:   Sun, 11 Aug 2019 16:25:52 +0100
-In-Reply-To: <06733f55-19b7-6192-736c-fa1014f120ea@roeck-us.net>
-References: <lsq.1565469607.188083258@decadent.org.uk>
-         <06733f55-19b7-6192-736c-fa1014f120ea@roeck-us.net>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-hgH8ajv8mnTRUcpAfvv/"
-User-Agent: Evolution 3.30.5-1.1 
+        Sun, 11 Aug 2019 11:33:30 -0400
+Received: by mail-ed1-f68.google.com with SMTP id s49so66688224edb.1;
+        Sun, 11 Aug 2019 08:33:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LfMEDWO38iSQdUunD3Hlo38F1+ICCQ2/45EAVCriAGU=;
+        b=RuuhpUV689wLH1DbjcLv4FhAUABCkgt82R1kvweXIITporFlF1QKQPG7lAG+W1AaCy
+         sKZoPqipL5rdQNoz++R8piru/ObupX5XI3F2Up/PoXeUPI2H65vb7Wl6QHFT62rv5XrR
+         7zxELGop2IU1DulIwAOA0ggsZ3cd20qUpH4laFbz9bJn7ZvrNQJSycCereePjVdu3/Mk
+         qQSjKmPKaslGJW5oa1DnPEQ5udoBr8NMaWkccNOp1ZyKEm4DViHQuBfrv4Nu+BB2WMlP
+         f7qpHePH1TfDluHZj3bh0NHpwqgjvdIcNSNU6R9f+t7qhJ1jUd4PnzzGyfd7OYsTU7bR
+         n9bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LfMEDWO38iSQdUunD3Hlo38F1+ICCQ2/45EAVCriAGU=;
+        b=bkK9Isv09xy7CdejWYQhXBfdHgGylbtNvOK5gHwy0jsrtZZON7jL262UGMDTZWW85a
+         54q1Zwfov84yJ2+DBdhID2ZEdkLK2Bz7oHnHZIAxQz7ASLvkdL1eV9m/sm39wgR/ZSwK
+         xjVWjQykNYofAeMrneZ3vrTZA9PTYS5uqYT7+Lc0EmzcCIiZwxsMhe8lcGRkpBuVYovW
+         RfY/JL+jU8/vSLGRbseIcSMg0gSz3MLqwRTohpJV/DAdE0Hnay2snjpsmYOLRNYsudfS
+         WFKJKW+4U/0tagPfp94hMmneELVk7oWonGXQWy25HeVUedNnOitPjVcJo7yKdAW016nA
+         5LVg==
+X-Gm-Message-State: APjAAAW/doPUFkcybi1KA0dVUgpj3xuYwxiT1+Z8HCjN/QK/BORJJATm
+        AsH+eNRUg8akL2xtnnfsWeg=
+X-Google-Smtp-Source: APXvYqyfFv9/ip91xdh1XW8s+k1djdxmFVOY71xWnEgjW3JNlPgvdFxUn2BiYRCXMVowcqsNE/G51w==
+X-Received: by 2002:a05:6402:397:: with SMTP id o23mr32658840edv.68.1565537608022;
+        Sun, 11 Aug 2019 08:33:28 -0700 (PDT)
+Received: from eldamar (80-218-24-251.dclient.hispeed.ch. [80.218.24.251])
+        by smtp.gmail.com with ESMTPSA id c1sm102702edn.62.2019.08.11.08.33.27
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 11 Aug 2019 08:33:27 -0700 (PDT)
+Date:   Sun, 11 Aug 2019 17:33:26 +0200
+From:   Salvatore Bonaccorso <carnil@debian.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Matthew Garrett <mjg59@google.com>
+Subject: Re: [Linux 5.2.x]
+ /sys/kernel/debug/tracing/events/power/cpu_idle/id: BUG: kernel NULL pointer
+ dereference, address: 0000000000000000
+Message-ID: <20190811153326.GA8036@eldamar.local>
+References: <4b54ff1e-f18b-3c58-7caa-945a0775c24c@molgen.mpg.de>
+ <alpine.DEB.2.21.1908101910280.7324@nanos.tec.linutronix.de>
+ <01c7bc6b-dc6d-5eca-401a-8869e02f7c2a@molgen.mpg.de>
+ <e18e2a11-ea96-a612-48cd-877fa307115f@molgen.mpg.de>
+ <alpine.DEB.2.21.1908110822110.7324@nanos.tec.linutronix.de>
+ <20190811094630.GA18925@eldamar.local>
+ <alpine.DEB.2.21.1908111456430.7324@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1908111456430.7324@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Thomas,
 
---=-hgH8ajv8mnTRUcpAfvv/
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Sun, Aug 11, 2019 at 02:58:15PM +0200, Thomas Gleixner wrote:
+> Salvatore,
+> 
+> On Sun, 11 Aug 2019, Salvatore Bonaccorso wrote:
+> > On Sun, Aug 11, 2019 at 08:22:35AM +0200, Thomas Gleixner wrote:
+> > > On Sat, 10 Aug 2019, Paul Menzel wrote:
+> > > > For the record. It is also reproducible with Linux 5.2.6, and trying to print
+> > > > the file contents with cat already fails.
+> > > > 
+> > > > ```
+> > > > $ sudo ls -l /sys/kernel/debug/tracing/events/power/cpu_idle/id
+> > > > -r--r--r-- 1 root root 0 Aug 10 23:05
+> > > > /sys/kernel/debug/tracing/events/power/cpu_idle/id
+> > > > $ sudo cat /sys/kernel/debug/tracing/events/power/cpu_idle/id
+> > > > Killed
+> > > > ```
+> > 
+> > This seems to be related to https://bugs.debian.org/934304 (in
+> > particular https://bugs.debian.org/934304#29). The mentioned patch
+> > features/all/lockdown/0031-tracefs-Restrict-tracefs-when-the-kernel-is-locked-d.patch
+> > is a backport of https://patchwork.kernel.org/patch/11069661/ with
+> > only change that it is converted back to the non-LSM lockdown API.
+> 
+> So that's a debian kernel specific issue?
 
-On Sun, 2019-08-11 at 07:05 -0700, Guenter Roeck wrote:
-> On 8/10/19 1:40 PM, Ben Hutchings wrote:
-> > This is the start of the stable review cycle for the 3.16.72 release.
-> > There are 157 patches in this series, which will be posted as responses
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >=20
-> > Responses should be made by Tue Aug 13 12:00:00 UTC 2019.
-> > Anything received after that time might be too late.
-> >=20
->=20
-> Build results:
-> 	total: 136 pass: 136 fail: 0
-> Qemu test results:
-> 	total: 229 pass: 229 fail: 0
+"yes". A kernel build without the above patch does not exhibit the
+issue. So the issue is specific to that lockdown patch ("tracefs:
+Restrict tracefs when the kernel is locked down").
 
-Thanks for testing,
+Steven and Matthew are both CC'ed.
 
-Ben.
-
---=20
-Ben Hutchings
-Time is nature's way of making sure that
-everything doesn't happen at once.
-
-
-
---=-hgH8ajv8mnTRUcpAfvv/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl1QM4AACgkQ57/I7JWG
-EQn0HQ//Yat8+tNFQMWS/0qNS7jleupMxcIeJVgSB2JHMjNwQdGP7+63ocLRMNzk
-YtdV3fRw2oXioS6ZXKr0xrymllCqUq2+vfodpkq/VkoFctdobTRS1I2gUJflv7Dm
-rCKuq3lT6HUauBMfk4VXne6a6NGxELpYXhzTGzuiBgoBHTrBvmMpZKgL4nC4YwPw
-I2xEp7txYgUx6E3w42opaxSZT5kcCc0OOhZK3n+6EC2BwWGKnQzs9Wk06mCim3sj
-29w5o7O4cjkL90OOCygP7SYEAk9WgL7+i2GzM/8mi77kSlZGv+wKDc+m16E99o26
-Mw55xH8C0m19uKV1nbsG8vhZQBbKvwRd/RWdgHmcO86BYekVRWut/3PBNEOfFrm1
-B67S8y+1QqJXEN/r+wIMmC+VdD3/Nx6hipXkRGTzm58YbngYI8X7q0hJh3/FW3/C
-QUVIJ5WNIT4VRZfL6jus6b/DoiXnP/j241hahbddfRwR9ta2aMX7tEfHBv8JcAWl
-iaLNLv3RHXkM101bPkV6ZUxBq4b0HN7APlhvqW7y/e1kWN8X046DYzxWs29Z1yZx
-6NO/yXVC0IxL7z/S0MhOjQQs4CPbyS40eNWmUSoX+/tmQ2XAth3TXvYbnK96NRr3
-kHZYRTzqzuahYUF+syir2d6eIOCN8pX6qKFRaOAXSRd9qqdSq+4=
-=1bQW
------END PGP SIGNATURE-----
-
---=-hgH8ajv8mnTRUcpAfvv/--
+Regards,
+Salvatore
