@@ -2,97 +2,178 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C883AC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 18:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 988EEC433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 18:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2484208C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 18:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE252173C
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 18:26:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfHKSLW (ORCPT
+        id S1726267AbfHKS0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 14:11:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55430 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725847AbfHKSLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 14:11:22 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0BEA97FD45;
-        Sun, 11 Aug 2019 18:11:22 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6DF0B7C777;
-        Sun, 11 Aug 2019 18:11:17 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id x7BIBHNa014830;
-        Sun, 11 Aug 2019 14:11:17 -0400
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id x7BIBGRG014826;
-        Sun, 11 Aug 2019 14:11:16 -0400
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Sun, 11 Aug 2019 14:11:16 -0400 (EDT)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     Huaisheng Ye <yehs2007@zoho.com>
-cc:     snitzer@redhat.com, agk@redhat.com, prarit@redhat.com,
-        tyu1@lenovo.com, dm-devel@redhat.com, linux-kernel@vger.kernel.org,
-        Huaisheng Ye <yehs1@lenovo.com>
-Subject: Re: dm writecache: add unlikely for getting two block with same
- LBA
-In-Reply-To: <20190811161233.7616-2-yehs2007@zoho.com>
-Message-ID: <alpine.LRH.2.02.1908111410590.13454@file01.intranet.prod.int.rdu2.redhat.com>
-References: <20190811161233.7616-1-yehs2007@zoho.com> <20190811161233.7616-2-yehs2007@zoho.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        Sun, 11 Aug 2019 14:26:39 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36135 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfHKS0j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 14:26:39 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r7so48621554pfl.3;
+        Sun, 11 Aug 2019 11:26:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RvBS7LnbEXRKBr+Vk2OxA3lSCuWdQHXP5Oy5elpb9AU=;
+        b=lkmqFNrpGYqJoGAUzPYlURHNmhONCjOcA3zxL1y+ZJh4aLLst6aoB1GR7oqTEpX/sx
+         dMJtqmsNTvy8TXsLRcUKB05cw8uD94B917Py9i9tXJohvgz/YgHDduBdk+gS+6qnKRjc
+         b1v4xg+UAwa2HmGpvhSyxoRzaXbz7feF/ulaGP7MTgyZzy2OmqROrsavJ5CeuluXfL6T
+         F+vYFz9J8vpUpxR14kIPesRrPjzjKYwmx727JTr3sHed9LjML+1sgEC+VlrMf1+/ke1J
+         X/wARI3QJPd+tE7Y0TRTt1OQV0LDhQ+1YRBgeOvl933JIYmO7ADYh8wsyihYTuOoB0pY
+         Nn+g==
+X-Gm-Message-State: APjAAAVGr1ojjiuLTcpzhKu2zYMwVeIP5NinJd0dD8lKAc4H7MVtdyuu
+        OEBkPg1VBeergbZDx2rvqpUnmQsrYKw=
+X-Google-Smtp-Source: APXvYqzCX24eHkmxeM6dWX3x43XOL79S+1CVVkfVooXjwTZKpysXWMkGY3TB3bvT3jj9naxjtyfeYg==
+X-Received: by 2002:a65:6096:: with SMTP id t22mr26462796pgu.204.1565547998514;
+        Sun, 11 Aug 2019 11:26:38 -0700 (PDT)
+Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.gmail.com with ESMTPSA id o130sm168437424pfg.171.2019.08.11.11.26.33
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Sun, 11 Aug 2019 11:26:37 -0700 (PDT)
+Subject: Re: [PATCH 1/4] PCI: pciehp: Add pciehp_set_indicators() to jointly
+ set LED indicators
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190811132945.12426-1-efremov@linux.com>
+ <20190811132945.12426-2-efremov@linux.com>
+ <20190811160755.w2jpcqt2powdcz7q@wunner.de>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <81c06549-6076-b230-9c6b-64b07a2bb509@linux.com>
+Date:   Sun, 11 Aug 2019 21:26:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Sun, 11 Aug 2019 18:11:22 +0000 (UTC)
+In-Reply-To: <20190811160755.w2jpcqt2powdcz7q@wunner.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Thank you for the review, I will send v2.
 
-
-On Mon, 12 Aug 2019, Huaisheng Ye wrote:
-
-> From: Huaisheng Ye <yehs1@lenovo.com>
+On 11.08.2019 19:07, Lukas Wunner wrote:
+> On Sun, Aug 11, 2019 at 04:29:42PM +0300, Denis Efremov wrote:
+>> This commit adds pciehp_set_indicators() to set power and attention
 > 
-> In function writecache_writeback, entries g and f has same original
-> sector only happens at entry f has been committed, but entry g has
-> NOT yet.
+> Nit:  "This commit ..." is superfluous, just say "Add ...".
 > 
-> The probability of this happening is very low in the following
->  256 blocks at most of entry e, so add unlikely for the result.
 > 
-> Signed-off-by: Huaisheng Ye <yehs1@lenovo.com>
-
-Acked-by: Mikulas Patocka <mpatocka@redhat.com>
-
-> ---
->  drivers/md/dm-writecache.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>> indicators with a single register write. enum pciehp_indicator
+>> introduced to switch between the indicators statuses. Attention
+>> indicator statuses are explicitly set with values in the enum to
+>> transparently comply with pciehp_set_attention_status() from
+>> pciehp_hpc.c and set_attention_status() from pciehp_core.c
 > 
-> diff --git a/drivers/md/dm-writecache.c b/drivers/md/dm-writecache.c
-> index 5c7009d..3643084 100644
-> --- a/drivers/md/dm-writecache.c
-> +++ b/drivers/md/dm-writecache.c
-> @@ -1628,8 +1628,8 @@ static void writecache_writeback(struct work_struct *work)
->  			if (unlikely(!next_node))
->  				break;
->  			g = container_of(next_node, struct wc_entry, rb_node);
-> -			if (read_original_sector(wc, g) ==
-> -			    read_original_sector(wc, f)) {
-> +			if (unlikely(read_original_sector(wc, g) ==
-> +			    read_original_sector(wc, f))) {
->  				f = g;
->  				continue;
->  			}
-> -- 
-> 1.8.3.1
+> Please document the motivation of the change (the "why").
 > 
+> One motivation might be to avoid waiting twice for Command Complete.
+> 
+> Another motivation might be to change both LEDs at the same time
+> in a glitch-free manner, thereby achieving a smoother user experience.
+> 
+> 
+>> --- a/drivers/pci/hotplug/pciehp.h
+>> +++ b/drivers/pci/hotplug/pciehp.h
+>> +enum pciehp_indicator {
+>> +	// Explicit values to match set_attention_status interface
+> 
+> Kernel coding style is typically /* */, not //.
+> 
+> 
+>> +	ATTN_NONE = -1,
+>> +	ATTN_OFF = 0,
+>> +	ATTN_ON = 1,
+>> +	ATTN_BLINK = 2,
+>> +	PWR_NONE,
+>> +	PWR_OFF,
+>> +	PWR_ON,
+>> +	PWR_BLINK
+>> +};
+> 
+> I'd suggest using the same values that are written to the register, i.e.:
+> 
+> enum pciehp_indicator {
+> 	ATTN_NONE  = -1,
+> 	ATTN_ON    =  1,
+> 	ATTN_BLINK =  2,
+> 	ATTN_OFF   =  3,
+> 	PWR_NONE   = -1,
+> 	PWR_ON     =  1,
+> 	PWR_BLINK  =  2,
+> 	PWR_OFF    =  3,
+> };
+> 
+> Then you can just shift the values to the proper offset and don't need
+> a translation between enum pciehp_indicator and register value.
+> 
+> 
+>> +void pciehp_set_indicators(struct controller *ctrl,
+>> +			   enum pciehp_indicator pwr,
+>> +			   enum pciehp_indicator attn)
+>> +{
+>> +	u16 cmd = 0;
+>> +	bool pwr_none = (pwr == PWR_NONE);
+>> +	bool attn_none = (attn == ATTN_NONE);
+>> +	bool pwr_led = PWR_LED(ctrl);
+>> +	bool attn_led = ATTN_LED(ctrl);
+>> +
+>> +	if ((!pwr_led && !attn_led) || (pwr_none && attn_none) ||
+>> +	    (!attn_led && pwr_none) || (!pwr_led && attn_none))
+>> +		return;
+> 
+> I'd suggest the following simpler construct:
+> 
+> 	if (!PWR_LED(ctrl)  || pwr  == PWR_NONE) &&
+> 	    !ATTN_LED(ctrl) || attn == ATTN_NONE))
+> 		return;
+> 
+> 
+>> +	switch (pwr) {
+>> +	case PWR_OFF:
+>> +		cmd = PCI_EXP_SLTCTL_PWR_IND_OFF;
+>> +		break;
+>> +	case PWR_ON:
+>> +		cmd = PCI_EXP_SLTCTL_PWR_IND_ON;
+>> +		break;
+>> +	case PWR_BLINK:
+>> +		cmd = PCI_EXP_SLTCTL_PWR_IND_BLINK;
+>> +		break;
+>> +	default:
+>> +		break;
+>> +	}
+> 
+> If you follow my suggestion above to use the register value for "pwr",
+> then you can just fold all three cases into one, i.e.
+> 
+> 	case PWR_ON:
+> 	case PWR_BLINK:
+> 	case PWR_OFF:
+> 		cmd = pwr << 8;
+> 		mask |= PCI_EXP_SLTCTL_PIC;
+> 		break;
+> 
+> Feel free to add a PCI_EXP_SLTCTL_PWR_IND_OFFSET macro for the offset 8.
+> Add a "u16 mask = 0" to the top of the function and pass "mask" to
+> pcie_write_cmd_nowait().
+> 
+> Thanks,
+> 
+> Lukas
 > 
