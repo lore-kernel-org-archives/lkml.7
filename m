@@ -2,87 +2,148 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E701C0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BE8C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D78EC216F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CB36216F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:43:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565513011;
+	bh=Uz7UmkDTB6qXO93AGoCGWU8AydoXx37sRXoooqBiQa0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=0EHq7TAug7TI6WWXrn9fR6+ErwfG0n5uCuILkidsyvbIELVC0lq7rCb0cBYu0z5JH
+	 Wfj3iKc0O+tynHfPaY8AqO58zTSZjt+9WdcDmIseGQT7Y3WxcOwUkv11k74FxrPSzs
+	 mKVpGssOzeLsL4WTCOnWBeWj1N9oMUfsXWP7RM+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbfHKImr (ORCPT
+        id S1726453AbfHKIn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 04:42:47 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44435 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbfHKImr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 04:42:47 -0400
-Received: by mail-qt1-f195.google.com with SMTP id 44so68957758qtg.11
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 01:42:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OwTyRG3c0uWeDZrJY6ZpPNgUs/dENdNyzYLQJF235ng=;
-        b=D/zrSdi96VOcyqWD2WscCTxTBz0aEu/Nzvlt3G6e4aw1CrcBV647apLOKvB8v+F8fE
-         HROBF2wImCx0D/ULRtSKAk3I+w5qKrNl9BIDs5TdDjb5+JSdTTpZ0ZSaMw14u8hzCjY7
-         GKWNvK+9nmltfQhAr4f0c12Ek1r5O7cRdwAhtRqukDF7u2NDvlYckFiI6sxehhQoymNa
-         PlYL2Jg7FIWMEPUv0Pwxn79OZOGT0k0nYGQJVeOK8COmVTnAoC5AcNs9EMl3dxXZU6H5
-         6G0sJuPHbJoDp6J5Hq8wmDz7heYrsKxYEL8K7TeV4i3FFBo4SkbbuK4C7HQjyKN1O9vP
-         WPNg==
-X-Gm-Message-State: APjAAAUQc5uB1qwt0O9HQYbcfkHATrLSqxKvkvUt2FbyXqB5XDtnjAeE
-        6j9m5uTp6yYVOKGaYuULWBvGIw==
-X-Google-Smtp-Source: APXvYqzuHJ2U68lDoEL7EBgwf3NbWFXfC318bVrfWPFs3lvkcljrjOCTNgmV+LGovkQ0nKOOObqhmg==
-X-Received: by 2002:a0c:ae6d:: with SMTP id z42mr25654119qvc.8.1565512966475;
-        Sun, 11 Aug 2019 01:42:46 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id m5sm42472030qkb.117.2019.08.11.01.42.41
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 11 Aug 2019 01:42:45 -0700 (PDT)
-Date:   Sun, 11 Aug 2019 04:42:38 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-devel@lists.ozlabs.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alexey Kardashevskiy <aik@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
-Message-ID: <20190811041636-mutt-send-email-mst@kernel.org>
-References: <87zhrj8kcp.fsf@morokweng.localdomain>
- <20190810143038-mutt-send-email-mst@kernel.org>
- <20190810220702.GA5964@ram.ibm.com>
- <20190811055607.GA12488@lst.de>
+        Sun, 11 Aug 2019 04:43:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725826AbfHKIn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 04:43:29 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B3302085B;
+        Sun, 11 Aug 2019 08:43:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565513008;
+        bh=Uz7UmkDTB6qXO93AGoCGWU8AydoXx37sRXoooqBiQa0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=oeJ2in80mLxzLAcvOQcFuEU5/iKREKQza9/XYf9WyptF/ARMYv4sB7xnNfPgdcGOh
+         Ah3QhwohPYQZ62kEGE8dbPAu/lxRP2zArFolU5EPpyyx8I5uMcmcdvkXb8oX0d86ot
+         fCRd9Yyvn5MwRoP5sIq01bIflWU0H4E3LtlAQhjg=
+Date:   Sun, 11 Aug 2019 09:43:22 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rodrigo <rodrigorsdc@gmail.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: Re: [PATCH] staging: iio: accel: adis16240: Improve readability on
+ write_raw function
+Message-ID: <20190811094322.063ad682@archlinux>
+In-Reply-To: <20190810150058.3509-1-rodrigorsdc@gmail.com>
+References: <20190810150058.3509-1-rodrigorsdc@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190811055607.GA12488@lst.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 07:56:07AM +0200, Christoph Hellwig wrote:
-> And once again this is entirely going in the wrong direction.  The only
-> way using the DMA API is going to work at all is if the device is ready
-> for it.
+On Sat, 10 Aug 2019 12:00:58 -0300
+Rodrigo <rodrigorsdc@gmail.com> wrote:
 
-So the point made is that if DMA addresses are also physical addresses
-(not necessarily the same physical addresses that driver supplied), then
-DMA API actually works even though device itself uses CPU page tables.
+> From: Rodrigo Carvalho <rodrigorsdc@gmail.com>
+>=20
+> Improve readability by using GENMASK macro, changing switch statement
+> by if statement and removing unnecessary local variables.
+
+=46rom your description it sounds like multiple changes in one patch.
+Always preferable to have one type of change in a patch and more
+small patches.
+
+Based on comments below, I would leave the switch statement alone,
+but put in your GENMASK change as that one is good and gets
+rid of the odd local variable 'bits' as well :)
+
+Thanks,
+
+Jonathan
 
 
-To put it in other terms: it would be possible to make all or part of
-memory unenecrypted and then have virtio access all of it.  SEV guests
-at the moment make a decision to instead use a bounce buffer, forcing an
-extra copy but gaining security.
+>=20
+> Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>
+> ---
+>  drivers/staging/iio/accel/adis16240.c | 16 +++++++---------
+>  1 file changed, 7 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/drivers/staging/iio/accel/adis16240.c b/drivers/staging/iio/=
+accel/adis16240.c
+> index 62f4b3b1b457..68f165501389 100644
+> --- a/drivers/staging/iio/accel/adis16240.c
+> +++ b/drivers/staging/iio/accel/adis16240.c
+> @@ -309,17 +309,15 @@ static int adis16240_write_raw(struct iio_dev *indi=
+o_dev,
+>  			       long mask)
+>  {
+>  	struct adis *st =3D iio_priv(indio_dev);
+> -	int bits =3D 10;
+> -	s16 val16;
+> +	int m;
+>  	u8 addr;
+> =20
+> -	switch (mask) {
+> -	case IIO_CHAN_INFO_CALIBBIAS:
+> -		val16 =3D val & ((1 << bits) - 1);
+> -		addr =3D adis16240_addresses[chan->scan_index][0];
+> -		return adis_write_reg_16(st, addr, val16);
+> -	}
+> -	return -EINVAL;
+> +	if (mask !=3D IIO_CHAN_INFO_CALIBBIAS)
+> +		return -EINVAL;
 
--- 
-MST
+Hmm. We generally encourage the use of switch statements in these
+cases because they reduce churn as new features are added.
+
+In this particular case, we don't have any control of sampling frequency
+in the driver, but the hardware appears to support it (table 23 on the
+datasheet).
+
+
+> +
+> +	m =3D GENMASK(9, 0);
+> +	addr =3D adis16240_addresses[chan->scan_index][0];
+> +	return adis_write_reg_16(st, addr, val & m);
+Why the local variable m?  Can we not just do
+
+	return adis_write_reg_16(st, addr, val & GENMASK(9, 0));
+
+If anything I think that is a little more readable than your
+version.  There is a reasonable argument for just having
+addr inline as well.=20
+
+	return adis_write_reg_16(st,
+			         adis16240_addresses[chan->scan_index][0],
+				 val & GENMASK(9, 0));
+
+However, given I'm suggesting you leave it as a switch statement, it
+will be too long with addr inline.
+
+>  }
+> =20
+>  static const struct iio_chan_spec adis16240_channels[] =3D {
+
