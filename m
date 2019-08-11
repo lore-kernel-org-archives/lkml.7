@@ -2,170 +2,293 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B132C41514
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 19:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3813FC0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 19:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1DB2147A
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 19:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03AB02085B
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 19:43:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="IgyVz+Gq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbfHKT2h (ORCPT
+        id S1726267AbfHKTnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 15:28:37 -0400
-Received: from enpas.org ([46.38.239.100]:53814 "EHLO mail.enpas.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbfHKT2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 15:28:37 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        by mail.enpas.org (Postfix) with ESMTPSA id C5516100171;
-        Sun, 11 Aug 2019 19:28:33 +0000 (UTC)
-Subject: Re: [PATCH v4] ata/pata_buddha: Probe via modalias instead of
- initcall
-To:     b.zolnierkie@samsung.com, axboe@kernel.dk
-Cc:     linux-ide@vger.kernel.org, linux-m68k@vger.kernel.org,
-        linux-kernel@vger.kernel.org, glaubitz@physik.fu-berlin.de,
-        schmitzmic@gmail.com, geert@linux-m68k.org
-References: <20190811153643.12029-1-max@enpas.org>
-From:   Max Staudt <max@enpas.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=max@enpas.org; prefer-encrypt=mutual; keydata=
- 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
- urZIw0nz8zec+73Bv/qF4GHHftLYfA==
-Message-ID: <d9fa8aca-62a4-5d4a-b63f-bdd628e6b304@enpas.org>
-Date:   Sun, 11 Aug 2019 21:28:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 11 Aug 2019 15:43:52 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40632 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfHKTnv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 15:43:51 -0400
+Received: by mail-lj1-f194.google.com with SMTP id e27so1365291ljb.7
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 12:43:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2JM7oqrhQCTVMvk3eVplIHNbjHRhWyn3FtkoaPBDQIA=;
+        b=IgyVz+Gq75priv9lK3TzHFpAv3V2oXw8fKQJjqjm4A6m6e1qS+tK/DusATZpvDdLG/
+         XQ+nPOAEJcnAhCtuVzlWJq6OYpwk12TSknR11FbXkGDy9kQD9cTU+FSM8ixXiAuQxkMG
+         VOxY1bpJvnpNqogOZS2h7XcPJ76W8hkeWvuIo8VfX2sOOQvBw2AJRhL2dZy1Rx9vyrQS
+         d4vtKFziknmn5FqWlMLEnWccsLaFXYWhxWXWcUDI2LUCn4NNSNB2VtwLEU2KkL5cZEYS
+         eyWJjo9jEB3VjzpLdzZcUpzGgZN8+OdP9bAtUQC92UtbIAo9QzVtSe9JlE2otvD2XdRf
+         p5gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2JM7oqrhQCTVMvk3eVplIHNbjHRhWyn3FtkoaPBDQIA=;
+        b=UD1kDzZvHXs69I0y55uiyRjZ64Esn4x+zhYTHsvdsc7qVxAP0mUL1PGLZ6UWflix3A
+         XjmTCVCT0RqcvcFhhz2FXPfnMJp7mXs42aldof/8mtqSjHROf5cDVpyUH57hYph3b+xX
+         PIHk1N3gVbJxQqeWI5XYtTuOWvkchvOGg6KSWfv/O7UONoJ4jBIUBohHP/MnAhkaY9XL
+         FDEMGeR0otvhJC84UcNabITTrjufAjORGGVbuMqN1FEMH5t0WAHRmgBBNB0PR8lRGqeV
+         mvUD18DQlvsPs344UyZQfl5d1iAPSsNzUoSmmRUpi9vUvjwHOBoC18H0VqDp1YyfpgmN
+         nmIw==
+X-Gm-Message-State: APjAAAV3HshdJ9cmeu+Y167jp+LmxNXnZnsySXfPXVkH2Vm5tz1wpzTl
+        4Len4rP5396GdU6DwGTN5XaqhA==
+X-Google-Smtp-Source: APXvYqxvXaRtaeT96Y+guDysDnh4OydQ/TMiHiAjsrut7gx2Sz+63XT/Ir68bX6E3XCSVLdfotk6jA==
+X-Received: by 2002:a2e:9048:: with SMTP id n8mr17085129ljg.37.1565552628036;
+        Sun, 11 Aug 2019 12:43:48 -0700 (PDT)
+Received: from [192.168.0.36] (2-111-91-225-cable.dk.customer.tdc.net. [2.111.91.225])
+        by smtp.googlemail.com with ESMTPSA id f1sm20432278ljk.86.2019.08.11.12.43.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 11 Aug 2019 12:43:47 -0700 (PDT)
+Subject: Re: [PATCH 1/2] lightnvm: introduce pr_fmt for the prefix nvm
+To:     Minwoo Im <minwoo.im.dev@gmail.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Klaus Birkelund <klaus@birkelund.eu>,
+        =?UTF-8?Q?Javier_Gonz=c3=a1lez?= <javier@javigon.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+References: <20190727182626.27991-1-minwoo.im.dev@gmail.com>
+ <20190727182626.27991-2-minwoo.im.dev@gmail.com>
+From:   =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>
+Message-ID: <712c30cc-4b23-087c-39fa-b919ed0529da@lightnvm.io>
+Date:   Sun, 11 Aug 2019 21:43:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <20190811153643.12029-1-max@enpas.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190727182626.27991-2-minwoo.im.dev@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replying to my own patch with two more questions:
+On 7/27/19 8:26 PM, Minwoo Im wrote:
+> all the pr_() family can have this prefix by pr_fmt.
+> 
+> Changes to V2:
+>    - Fix typo in title (s/previx/prefix)
+> 
+> Changes to V1:
+>    - Squashed multiple lines to make it short (Chaitanya)
+> 
+> Cc: Matias Bjørling <mb@lightnvm.io>
+> Cc: Javier González <javier@javigon.com>
+> Cc: Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+> Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
+> Reviewed-by: Javier González <javier@javigon.com>
+> ---
+>   drivers/lightnvm/core.c | 48 ++++++++++++++++++++---------------------
+>   1 file changed, 24 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/lightnvm/core.c b/drivers/lightnvm/core.c
+> index a600934fdd9c..4c7b48f72e80 100644
+> --- a/drivers/lightnvm/core.c
+> +++ b/drivers/lightnvm/core.c
+> @@ -4,6 +4,7 @@
+>    * Initial release: Matias Bjorling <m@bjorling.me>
+>    */
+>   
+> +#define pr_fmt(fmt) "nvm: " fmt
+>   #include <linux/list.h>
+>   #include <linux/types.h>
+>   #include <linux/sem.h>
+> @@ -74,7 +75,7 @@ static int nvm_reserve_luns(struct nvm_dev *dev, int lun_begin, int lun_end)
+>   
+>   	for (i = lun_begin; i <= lun_end; i++) {
+>   		if (test_and_set_bit(i, dev->lun_map)) {
+> -			pr_err("nvm: lun %d already allocated\n", i);
+> +			pr_err("lun %d already allocated\n", i);
+>   			goto err;
+>   		}
+>   	}
+> @@ -264,7 +265,7 @@ static int nvm_config_check_luns(struct nvm_geo *geo, int lun_begin,
+>   				 int lun_end)
+>   {
+>   	if (lun_begin > lun_end || lun_end >= geo->all_luns) {
+> -		pr_err("nvm: lun out of bound (%u:%u > %u)\n",
+> +		pr_err("lun out of bound (%u:%u > %u)\n",
+>   			lun_begin, lun_end, geo->all_luns - 1);
+>   		return -EINVAL;
+>   	}
+> @@ -297,7 +298,7 @@ static int __nvm_config_extended(struct nvm_dev *dev,
+>   	if (e->op == 0xFFFF) {
+>   		e->op = NVM_TARGET_DEFAULT_OP;
+>   	} else if (e->op < NVM_TARGET_MIN_OP || e->op > NVM_TARGET_MAX_OP) {
+> -		pr_err("nvm: invalid over provisioning value\n");
+> +		pr_err("invalid over provisioning value\n");
+>   		return -EINVAL;
+>   	}
+>   
+> @@ -334,23 +335,23 @@ static int nvm_create_tgt(struct nvm_dev *dev, struct nvm_ioctl_create *create)
+>   		e = create->conf.e;
+>   		break;
+>   	default:
+> -		pr_err("nvm: config type not valid\n");
+> +		pr_err("config type not valid\n");
+>   		return -EINVAL;
+>   	}
+>   
+>   	tt = nvm_find_target_type(create->tgttype);
+>   	if (!tt) {
+> -		pr_err("nvm: target type %s not found\n", create->tgttype);
+> +		pr_err("target type %s not found\n", create->tgttype);
+>   		return -EINVAL;
+>   	}
+>   
+>   	if ((tt->flags & NVM_TGT_F_HOST_L2P) != (dev->geo.dom & NVM_RSP_L2P)) {
+> -		pr_err("nvm: device is incompatible with target L2P type.\n");
+> +		pr_err("device is incompatible with target L2P type.\n");
+>   		return -EINVAL;
+>   	}
+>   
+>   	if (nvm_target_exists(create->tgtname)) {
+> -		pr_err("nvm: target name already exists (%s)\n",
+> +		pr_err("target name already exists (%s)\n",
+>   							create->tgtname);
+>   		return -EINVAL;
+>   	}
+> @@ -367,7 +368,7 @@ static int nvm_create_tgt(struct nvm_dev *dev, struct nvm_ioctl_create *create)
+>   
+>   	tgt_dev = nvm_create_tgt_dev(dev, e.lun_begin, e.lun_end, e.op);
+>   	if (!tgt_dev) {
+> -		pr_err("nvm: could not create target device\n");
+> +		pr_err("could not create target device\n");
+>   		ret = -ENOMEM;
+>   		goto err_t;
+>   	}
+> @@ -686,7 +687,7 @@ static int nvm_set_rqd_ppalist(struct nvm_tgt_dev *tgt_dev, struct nvm_rq *rqd,
+>   	rqd->nr_ppas = nr_ppas;
+>   	rqd->ppa_list = nvm_dev_dma_alloc(dev, GFP_KERNEL, &rqd->dma_ppa_list);
+>   	if (!rqd->ppa_list) {
+> -		pr_err("nvm: failed to allocate dma memory\n");
+> +		pr_err("failed to allocate dma memory\n");
+>   		return -ENOMEM;
+>   	}
+>   
+> @@ -1048,7 +1049,7 @@ int nvm_set_chunk_meta(struct nvm_tgt_dev *tgt_dev, struct ppa_addr *ppas,
+>   		return 0;
+>   
+>   	if (nr_ppas > NVM_MAX_VLBA) {
+> -		pr_err("nvm: unable to update all blocks atomically\n");
+> +		pr_err("unable to update all blocks atomically\n");
+>   		return -EINVAL;
+>   	}
+>   
+> @@ -1111,27 +1112,26 @@ static int nvm_init(struct nvm_dev *dev)
+>   	int ret = -EINVAL;
+>   
+>   	if (dev->ops->identity(dev)) {
+> -		pr_err("nvm: device could not be identified\n");
+> +		pr_err("device could not be identified\n");
+>   		goto err;
+>   	}
+>   
+> -	pr_debug("nvm: ver:%u.%u nvm_vendor:%x\n",
+> -				geo->major_ver_id, geo->minor_ver_id,
+> -				geo->vmnt);
+> +	pr_debug("ver:%u.%u nvm_vendor:%x\n", geo->major_ver_id,
+> +			geo->minor_ver_id, geo->vmnt);
+>   
+>   	ret = nvm_core_init(dev);
+>   	if (ret) {
+> -		pr_err("nvm: could not initialize core structures.\n");
+> +		pr_err("could not initialize core structures.\n");
+>   		goto err;
+>   	}
+>   
+> -	pr_info("nvm: registered %s [%u/%u/%u/%u/%u]\n",
+> +	pr_info("registered %s [%u/%u/%u/%u/%u]\n",
+>   			dev->name, dev->geo.ws_min, dev->geo.ws_opt,
+>   			dev->geo.num_chk, dev->geo.all_luns,
+>   			dev->geo.num_ch);
+>   	return 0;
+>   err:
+> -	pr_err("nvm: failed to initialize nvm\n");
+> +	pr_err("failed to initialize nvm\n");
+>   	return ret;
+>   }
+>   
+> @@ -1169,7 +1169,7 @@ int nvm_register(struct nvm_dev *dev)
+>   	dev->dma_pool = dev->ops->create_dma_pool(dev, "ppalist",
+>   						  exp_pool_size);
+>   	if (!dev->dma_pool) {
+> -		pr_err("nvm: could not create dma pool\n");
+> +		pr_err("could not create dma pool\n");
+>   		kref_put(&dev->ref, nvm_free);
+>   		return -ENOMEM;
+>   	}
+> @@ -1214,7 +1214,7 @@ static int __nvm_configure_create(struct nvm_ioctl_create *create)
+>   	up_write(&nvm_lock);
+>   
+>   	if (!dev) {
+> -		pr_err("nvm: device not found\n");
+> +		pr_err("device not found\n");
+>   		return -EINVAL;
+>   	}
+>   
+> @@ -1288,7 +1288,7 @@ static long nvm_ioctl_get_devices(struct file *file, void __user *arg)
+>   		i++;
+>   
+>   		if (i > 31) {
+> -			pr_err("nvm: max 31 devices can be reported.\n");
+> +			pr_err("max 31 devices can be reported.\n");
+>   			break;
+>   		}
+>   	}
+> @@ -1315,7 +1315,7 @@ static long nvm_ioctl_dev_create(struct file *file, void __user *arg)
+>   
+>   	if (create.conf.type == NVM_CONFIG_TYPE_EXTENDED &&
+>   	    create.conf.e.rsv != 0) {
+> -		pr_err("nvm: reserved config field in use\n");
+> +		pr_err("reserved config field in use\n");
+>   		return -EINVAL;
+>   	}
+>   
+> @@ -1331,7 +1331,7 @@ static long nvm_ioctl_dev_create(struct file *file, void __user *arg)
+>   			flags &= ~NVM_TARGET_FACTORY;
+>   
+>   		if (flags) {
+> -			pr_err("nvm: flag not supported\n");
+> +			pr_err("flag not supported\n");
+>   			return -EINVAL;
+>   		}
+>   	}
+> @@ -1349,7 +1349,7 @@ static long nvm_ioctl_dev_remove(struct file *file, void __user *arg)
+>   	remove.tgtname[DISK_NAME_LEN - 1] = '\0';
+>   
+>   	if (remove.flags != 0) {
+> -		pr_err("nvm: no flags supported\n");
+> +		pr_err("no flags supported\n");
+>   		return -EINVAL;
+>   	}
+>   
+> @@ -1365,7 +1365,7 @@ static long nvm_ioctl_dev_init(struct file *file, void __user *arg)
+>   		return -EFAULT;
+>   
+>   	if (init.flags != 0) {
+> -		pr_err("nvm: no flags supported\n");
+> +		pr_err("no flags supported\n");
+>   		return -EINVAL;
+>   	}
+>   
+> 
 
-
-On 08/11/2019 05:36 PM, Max Staudt wrote:
-> -		/* allocate host */
-> -		host = ata_host_alloc(&z->dev, nr_ports);
-
-Actually, this is an issue even the existing pata_buddha has: ata_host_alloc() will dev_set_drvdata(dev, host) which is fine on Buddha and Catweasel, but conflicts with zorro8390's own dev_set_drvdata() on an X-Surf board. Thus, if both pata_buddha and zorro8390 are active, only one can be unloaded. The original ide/buddha driver does not have this problem as far as I can see.
-
-This should be resolved once we get around to MFD support, as Geert suggested.
-
-Shall we leave this as-is, as it's not really a change from the status quo in pata_buddha?
-
-
-> +static int __init pata_buddha_late_init(void)
-> +{
-> +        struct zorro_dev *z = NULL;
-> +
-> +	pr_info("pata_buddha: Scanning for stand-alone IDE controllers...\n");
-> +	zorro_register_driver(&pata_buddha_driver);
-> +
-> +	pr_info("pata_buddha: Scanning for X-Surf boards...\n");
-> +        while ((z = zorro_find_device(ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, z))) {
-> +		static struct zorro_device_id xsurf_ent =
-> +			{ ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, BOARD_XSURF};
-> +
-> +		pata_buddha_probe(z, &xsurf_ent);
-> +        }
-> +
-> +        return 0;
-> +}
-
-This is suboptimal, as we don't release memory in case pata_buddha_probe() fails. Any suggestions?
-
-
-> +static void __exit pata_buddha_exit(void)
-> +{
-> +	struct zorro_dev *z = NULL;
-> +
-> +	pr_info("pata_buddha: Releasing X-Surf boards...\n");
-> +        while ((z = zorro_find_device(ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, z))) {
-> +		struct ata_host *host = dev_get_drvdata(&z->dev);
-> +
-> +		if (host)
-> +			ata_host_detach(host);
-> +        }
-
-I guess that here we also need to manually release the resources we allocated with devm_* above. Any ideas?
-
-
-Thanks
-
-Max
+Thanks Minwoo. Applied.
