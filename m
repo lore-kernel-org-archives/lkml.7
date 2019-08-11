@@ -2,94 +2,137 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9E4C0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 11:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E93FC433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 11:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF451208C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 11:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 010CE2085B
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 11:33:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="bYyr51s8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfHKLJe (ORCPT
+        id S1726453AbfHKLdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 07:09:34 -0400
-Received: from mail.bugwerft.de ([46.23.86.59]:58526 "EHLO mail.bugwerft.de"
+        Sun, 11 Aug 2019 07:33:08 -0400
+Received: from mout.gmx.net ([212.227.15.18]:53855 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbfHKLJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 07:09:34 -0400
-X-Greylist: delayed 433 seconds by postgrey-1.27 at vger.kernel.org; Sun, 11 Aug 2019 07:09:33 EDT
-Received: from localhost.localdomain (p57BC9E04.dip0.t-ipconnect.de [87.188.158.4])
-        by mail.bugwerft.de (Postfix) with ESMTPSA id 3D0F429A1F4;
-        Sun, 11 Aug 2019 10:58:23 +0000 (UTC)
-From:   Daniel Mack <daniel@zonque.org>
-To:     gregkh@linuxfoundation.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Mack <daniel@zonque.org>
-Subject: [PATCH] uio: uio_pdrv_genirq: Make UIO name controllable via DT node property
-Date:   Sun, 11 Aug 2019 13:02:13 +0200
-Message-Id: <20190811110213.5537-1-daniel@zonque.org>
-X-Mailer: git-send-email 2.21.0
+        id S1725990AbfHKLdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 07:33:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1565523160;
+        bh=5XNLSGLV/n8XATlDhvdkuJ0c9QjsZbpQ2b3uSxwJK6w=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=bYyr51s8eLybvh94uOtY1iy/RL+qrsRvhIqX/y4gU5zcOm4PQzksqf+zXKoslev7D
+         NP2u7cSloBXdFHSIX9LUiA3dVht1iTP26Jl9Oz+nmPJLrGqz5FoJT34A0i9VyyLL0D
+         oaUFb5e12LIj1zFqZYpF2oPRAO7y25HgbbTQcur0=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx001
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 0MQ2Wx-1i0Kr52FzX-005KXD; Sun, 11
+ Aug 2019 13:32:40 +0200
+Date:   Sun, 11 Aug 2019 13:32:25 +0200
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        linux-doc@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Documentation/networking/af_xdp: Inhibit reference to
+ struct socket
+Message-ID: <20190811113225.GD1966@latitude>
+References: <20190810121738.19587-1-j.neuschaefer@gmx.net>
+ <20190810085821.11cee8b0@lwn.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3Pql8miugIZX0722"
+Content-Disposition: inline
+In-Reply-To: <20190810085821.11cee8b0@lwn.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:WSlMOTVkTIxgNdANUM34B9Gmw91nDYkQ4iCc+WK1bcjyk8C1UVC
+ xd4RXLqrHapjXCexH+vQ3NdTtgk03TD0vuPZ+zgdyQKcB/OBs1TdT7T6e7GZs9RfH1BUjvU
+ 5eUraiD5cWDMFKmPen2rgxYhu409cLv5Vh/xJr3Nbhx36lwNMVCPzEGVKzIdS2mOH4PxxOH
+ Gu1usr2e7Hg9gQhtvvCpA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:y64qkCK5mCY=:Ul8qM4rYjC/JIKtPh+C2QA
+ O+NQ+dtV+T+uJHv+18CPWbiFdp5IvIJrqq6fEsC1/9rvOfRkPVTHlNy5+3hImBlfdj3tGASW8
+ E9f8vcOr5XSqUf3uTwU993wHkK4hXX0yErTG18Yj3n1nc0h2vu6LBc6HGsDJm2YSl0XVm4sAs
+ 6022eCI1cgEW9RH0v8t8CJkezSvr3GV0EgRTflBEFIVVmz9q1Y2ljSVGSeSCREXHJvemB2L3j
+ ReTM+XO0LLZlM9vMVscZ63Rt+1uZYDVMqDyLYN9AXRa7uE+QdHpYlFGIVNMCABXUpoBCWiD1X
+ GlFyqAr/1yOyfgDz/zbjAi0Y4wGO+J35M+dlDxt6kIPCMS/f8LyXpnRqu4Z1eKzOn6zw1fB9O
+ /Psvu4iRxvr+HQ2n5EPbIj+ktG+It6+9O8vzdzj9d27Jhysy9ot3SNbZta0NiGbjsEHOodVqX
+ Bq1BwSnK2sTgMTCAt/y/MvY0nDSyMQ3dOUwEYEWJk7y5/aTqD4R75QOrLQS0e5qlJmnwoMwRj
+ +XRSU4ox8FyZMcL1f/3D1BFYNXr0BvlTHQgAwyxTS8UOIxnXVwoNVpzPmJ2npZGgbvzyPLNXw
+ OwgK/F/13q9H1YKBzLUyK/4EUBB1Wybb44Eig2bK1XrEjXLWhdlsCCUoFvJjKonC6wQwRLPwx
+ y8hGLVxZo7Po/KmLfrxNsSkZplVMK/5JcFP2KmHpTZ3Kt+89ZuE9XVJz9Gchtyova5jYMcOgv
+ haCI5Qlc1+sTkqG81+pRSVtEt+LAG7j7SibahVhB+65QPdlIK87drPSmLJP6OFt0vZdJLqxBx
+ sA1ozCd/ZGyIGGqHbyr8DrnjYVto5IIvltYEc7qMWNq7PD0xJvb4Kakd4i6Wfjjb9TRtvm6eV
+ M03K7GPVhbmJFKL/DCQBRwaa7GU8Yc7eWBjeHe4svs3uJuM83FjEt5m7fHQAzwe2DL3TJNPHn
+ n2vmD9BQgK45Z+2xVAU0mqlUmOaMBnQptu8bolR3EoqhyirC2Uo6P3DN58Vsz94zUGZyFsASX
+ Bd/pRcUuJ8aWBDk5lQAfr46cLuIHrhEZDeSH/NOFy1UbJ7wZYB/1mE5UkA/OeDGPOchJaqxhR
+ bTnOf675spHdrb7v6xdI7a6hpcU4oQ0mwv9aynbWG54b6EJT02E7gkc4Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When probed via DT, the uio_pdrv_genirq driver currently uses the name
-of the node and exposes that as name of the UIO device to userspace.
 
-This doesn't work for systems where multiple nodes with the same name
-(but different unit addresses) are present, or for systems where the
-node names are auto-generated by a third-party tool.
+--3Pql8miugIZX0722
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This patch adds the possibility to read the UIO name from the optional
-"linux,uio-name" property.
+On Sat, Aug 10, 2019 at 08:58:21AM -0600, Jonathan Corbet wrote:
+> On Sat, 10 Aug 2019 14:17:37 +0200
+> Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
+>=20
+> > With the recent change to auto-detect function names, Sphinx parses
+> > socket() as a reference to the in-kernel definition of socket. It then
+> > decides that struct socket is a good match, which was obviously not
+> > intended in this case, because the text speaks about the syscall with
+> > the same name.
+> >=20
+> > Prevent socket() from being misinterpreted by wrapping it in ``inline
+> > literal`` quotes.
+> >=20
+> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+>=20
+> Thanks for looking at that.  The better fix, though, would be to add
+> socket() to the Skipfuncs array in Documentation/sphinx/automarkup.py.
+> Then it will do the right thing everywhere without the need to add markup
+> to the RST files.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- drivers/uio/uio_pdrv_genirq.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+Alright, I'll do that for v2.
 
-diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
-index 6c759934bff3..24d60eb1bda5 100644
---- a/drivers/uio/uio_pdrv_genirq.c
-+++ b/drivers/uio/uio_pdrv_genirq.c
-@@ -105,12 +105,15 @@ static int uio_pdrv_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
- static int uio_pdrv_genirq_probe(struct platform_device *pdev)
- {
- 	struct uio_info *uioinfo = dev_get_platdata(&pdev->dev);
-+	struct device_node *node = pdev->dev.of_node;
- 	struct uio_pdrv_genirq_platdata *priv;
- 	struct uio_mem *uiomem;
- 	int ret = -EINVAL;
- 	int i;
- 
--	if (pdev->dev.of_node) {
-+	if (node) {
-+		const char *name;
-+
- 		/* alloc uioinfo for one device */
- 		uioinfo = devm_kzalloc(&pdev->dev, sizeof(*uioinfo),
- 				       GFP_KERNEL);
-@@ -118,8 +121,13 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
- 			dev_err(&pdev->dev, "unable to kmalloc\n");
- 			return -ENOMEM;
- 		}
--		uioinfo->name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%pOFn",
--					       pdev->dev.of_node);
-+
-+		if (!of_property_read_string(node, "linux,uio-name", &name))
-+			uioinfo->name = devm_kstrdup(&pdev->dev, name, GFP_KERNEL);
-+		else
-+			uioinfo->name = devm_kasprintf(&pdev->dev, GFP_KERNEL,
-+						       "%pOFn", node);
-+
- 		uioinfo->version = "devicetree";
- 		/* Multiple IRQs are not supported */
- 	}
--- 
-2.21.0
 
+Thanks,
+Jonathan Neusch=C3=A4fer
+
+--3Pql8miugIZX0722
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl1P/IAACgkQCDBEmo7z
+X9sBYw//WDx7jJODlKacEnlPkuHTxAkanqNDkGnT1Ghh6pIMjM4kqaZSusMiTy77
+BCcw1O+iDfYLGZgBVuEeOZzaQtmKPGiaYvaOCGlEse5I/FR51qxXJmH6joU7ernN
+SktIdNBlV7GnisrZHoXvxVeBmnCtLUDX0mIdqstioLlkGNnu1zEduNhM+p/KkBzj
+iSxlNeQ/NEETCj2e4UHpLpYynix8j17T7X7uG/uO4b8gzoMBRe1bSOfKp45+AOoN
+0LwjbcS3rnsFqaYiP/7dJ8LaQUYCSWfUd4+f7yKgrvzA2cH3ObjYbDd8XeKHRm/R
+Gndzkxqm3SzxaUfAo8xYBqzD9tl/lfVVDYz0LUl1S+zMWAVK9v6rLXvdX7Ab7YRX
+dY3gRKCPYvL0jzyrLFHOZTBIlHqSHV9X/kECgVCS2ahOMIDx3ll8scb/Pw2XkM06
+bKQ/M/4SEaW4kxbhIj3H8y3lzngY46I5kFW/R64vhiH5KITQvqNd31V5ZUNzkdAT
+2+pQP1tBasxhur956ITqgW74t3KhwnqSTv8c7VS+VtmJQrB2QvXzaWT9RrodcrTo
+Tm5mWmfVBy8d0xfUu6RFNZN7SuQ2aUwb5WxDmzvNrB7FGD3vFpd42SJN2ub3qSDZ
+OeHDnYBFmcvbsYAi7JUi+Wg7yZzZoCeKsbKdgQdyxQG2UHYFpyg=
+=rjZu
+-----END PGP SIGNATURE-----
+
+--3Pql8miugIZX0722--
