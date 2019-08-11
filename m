@@ -2,126 +2,179 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E70C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 06:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4489C0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 06:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC6AE2173C
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 06:17:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Vs7oS3CC"
+	by mail.kernel.org (Postfix) with ESMTP id 774EF217D4
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 06:22:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726070AbfHKGRR (ORCPT
+        id S1726214AbfHKGW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 02:17:17 -0400
-Received: from mail-eopbgr80051.outbound.protection.outlook.com ([40.107.8.51]:42211
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725810AbfHKGRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 02:17:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q6QRf7pP+/fngsCExkhYyxF585mWIefWK2umtgDBbklIVtQ0Fzc8tQSbiYwv8Ga33kAgtewfGYVn3WcOAPF7cDXhfWJV0nMpzmHUPXulU8+UdxZMJBM3QmMZ/xpb+mKKGhRKITrCcd/cCMio+G5inFYOJ9As+6NA1W9rjQOO9x2xk1T2uxHbcwu4hFFuXG+KTg8PkTL362s4m1e9vwqsoR1Py4zpWThFU0+a0uvvUTgC1RFvsHNL0LxzF1sAhUCKwynmUr3O+9C2SZSF7XCKcL54pJH3mMlqY9n0bRB8rb+CGCJ8fb63BjBohtGwbakCaEfXYq5uViXnGIqxB0HxKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6DUhTzwJf8Io2rLCQO+HDLF1OyB00srAAcm976Gfw74=;
- b=Zw9h3A0y7czGsPws3MMQpUY9Hj4yX8DV0jrdHEbBV3/SdvtHIEH8bCUP/yYDm4zDQzKhMS4dcj/Scl1QRcjDroGeqDk0+IK05Jo6+2ZOp61r37TucwaUlkaqX9xgZi7Ak559NChKe3W0LJmDOgL8v/Tu69TKYL+h/ia4rCn50Lltbiz2lHHdfi2AMO/DjxZ1Dd80DishM+CPoSZZQh6gNm+CLtz5C7QWxkq6kqvJRZ1btLzu5JqA8cONvSjThqeTpEZf+zFIzjM/7TiaqUc7KXPVog7M1mBlyWMatnENRa3gzSvM7D/T7nDoELLrzJ/+x746Fml8EGkMhFWpmSk7Uw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6DUhTzwJf8Io2rLCQO+HDLF1OyB00srAAcm976Gfw74=;
- b=Vs7oS3CCegA3N4uRJyyZnOPlhJ60iuqgXmwc/3ZkP4KIu0RnXur+pgtWcf9JVfNrSMPR0nJYUXDkyMoVnMaf/6VKkN6IYyrkC3HCvQ/bTgw2D8HrMj76dncL42RUUIBnEpOm9s+40xDsb9uBGw6n4/JO7V7ZY0apFbnptWeUpQY=
-Received: from AM4PR05MB3137.eurprd05.prod.outlook.com (10.171.188.155) by
- AM4PR05MB3236.eurprd05.prod.outlook.com (10.171.186.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.18; Sun, 11 Aug 2019 06:17:12 +0000
-Received: from AM4PR05MB3137.eurprd05.prod.outlook.com
- ([fe80::a1bc:70:4ca9:49f6]) by AM4PR05MB3137.eurprd05.prod.outlook.com
- ([fe80::a1bc:70:4ca9:49f6%7]) with mapi id 15.20.2157.022; Sun, 11 Aug 2019
- 06:17:12 +0000
-From:   Leon Romanovsky <leonro@mellanox.com>
-To:     Pavel Machek <pavel@denx.de>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Edward Srouji <edwards@mellanox.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: Re: [PATCH 4.19 36/45] net/mlx5: Fix modify_cq_in alignment
-Thread-Topic: [PATCH 4.19 36/45] net/mlx5: Fix modify_cq_in alignment
-Thread-Index: AQHVThzUf1ywxcty9kmSJ0G2vhImXab0QHqAgAE8HQA=
-Date:   Sun, 11 Aug 2019 06:17:12 +0000
-Message-ID: <20190811061710.GE28049@mtr-leonro.mtl.com>
-References: <20190808190453.827571908@linuxfoundation.org>
- <20190808190455.839364156@linuxfoundation.org> <20190810112544.GA6147@amd>
-In-Reply-To: <20190810112544.GA6147@amd>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR0P264CA0096.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:18::36) To AM4PR05MB3137.eurprd05.prod.outlook.com
- (2603:10a6:205:8::27)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonro@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.47.165.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 334253fa-eea7-45a8-973a-08d71e238c4c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM4PR05MB3236;
-x-ms-traffictypediagnostic: AM4PR05MB3236:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM4PR05MB323609AF0F4DE52313FB106FB0D00@AM4PR05MB3236.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 0126A32F74
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(136003)(39850400004)(396003)(366004)(199004)(189003)(66446008)(64756008)(6512007)(5660300002)(446003)(66556008)(8936002)(4744005)(186003)(66946007)(9686003)(476003)(11346002)(71190400001)(71200400001)(1076003)(6506007)(52116002)(386003)(6116002)(486006)(3846002)(26005)(2906002)(102836004)(14454004)(86362001)(66476007)(76176011)(256004)(8676002)(6916009)(4326008)(229853002)(478600001)(6436002)(6486002)(33656002)(81156014)(81166006)(99286004)(305945005)(7736002)(53936002)(25786009)(66066001)(107886003)(316002)(54906003)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR05MB3236;H:AM4PR05MB3137.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 7Mrg7ZDDblwu8Rcc4uVEkI7QRxPQlJYAIhFdR5dd3M9x4KbFc//5nnx1xwYaXDD7ua3Ctx5TXAP4lrHyNJhcHMG8CGx6Q9aO+55aaP2ELT00eq6evVAx6YwRP+WJXlwShNoZ95hk7MWmzMsdqLk1tF4iPqQR4iohbUieTFMtFiusnjWvWIw1JusMhtv++tBpd4WCoTXsM2CUyLdoKsyzvvwJ9SPbkro0YMvSdrqCXuVKL6ni5jO1RN17D/DppTxSS56jTAZnCy3K26iHlYO1m1rnrQRHvupcmlHIETEf2GrsKYA1U9aRrDL3ZQqqcixTm74BwaEomdYCIj6t7/PwBaUNJ0Ww70zDGOsFuBTIUe3bDKVpcCMJ4MTqRjw2xhdSu0Ft8hU+5mUYNjlhJ5Vo8CIXw+nO8iRNBKvnntPv0RM=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <931E8E9B11E9404E823EFD591D40EEA2@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Sun, 11 Aug 2019 02:22:56 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58537 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfHKGW4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 02:22:56 -0400
+Received: from p200300ddd71876477e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7647:7e7a:91ff:fec9:8e25])
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hwhFa-00054Y-1X; Sun, 11 Aug 2019 08:22:42 +0200
+Date:   Sun, 11 Aug 2019 08:22:35 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [Linux 5.2.x] /sys/kernel/debug/tracing/events/power/cpu_idle/id:
+ BUG: kernel NULL pointer dereference, address: 0000000000000000
+In-Reply-To: <e18e2a11-ea96-a612-48cd-877fa307115f@molgen.mpg.de>
+Message-ID: <alpine.DEB.2.21.1908110822110.7324@nanos.tec.linutronix.de>
+References: <4b54ff1e-f18b-3c58-7caa-945a0775c24c@molgen.mpg.de> <alpine.DEB.2.21.1908101910280.7324@nanos.tec.linutronix.de> <01c7bc6b-dc6d-5eca-401a-8869e02f7c2a@molgen.mpg.de> <e18e2a11-ea96-a612-48cd-877fa307115f@molgen.mpg.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 334253fa-eea7-45a8-973a-08d71e238c4c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Aug 2019 06:17:12.4981
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lf9cYTrUovgnsiQ1wcCLL3zqU75rHdpuVe/BPBeMZfr+v9jJWI634XSr5CDBZM2K7RIi8FUHiH3ETiW+1di94Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR05MB3236
+Content-Type: multipart/mixed; boundary="8323329-1450168681-1565504562=:7324"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 10, 2019 at 01:25:45PM +0200, Pavel Machek wrote:
-> Hi!
->
-> > From: Edward Srouji <edwards@mellanox.com>
-> >
-> > [ Upstream commit 7a32f2962c56d9d8a836b4469855caeee8766bd4 ]
-> >
-> > Fix modify_cq_in alignment to match the device specification.
-> > After this fix the 'cq_umem_valid' field will be in the right
-> > offset.
->
-> Is it neccessary for v4.19 stable? The cq_umem_valid field is not
-> there, and it is not needed by subsequent patch.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-The change is in hardware specification file which we prefer to keep
-right and upto date for our partners who use stable@ trees.
+--8323329-1450168681-1565504562=:7324
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-Necessary - no
-Beneficial and useful - yes
+On Sat, 10 Aug 2019, Paul Menzel wrote:
 
-Thanks
+Cc+ Steven
+
+> [+ INTEL IDLE DRIVER]
+> 
+> Dear Linux folks,
+> 
+> 
+> On 10.08.19 20:28, Paul Menzel wrote:
+> 
+> > On 10.08.19 19:31, Thomas Gleixner wrote:
+> > 
+> > > On Sat, 10 Aug 2019, Paul Menzel wrote:
+> > > > 
+> > > > I have no idea, who to report this to, so I please refer me to the
+> > > > correct
+> > > > list.
+> > > 
+> > > I have no idea yet either :)
+> > > 
+> > > > With Linux 5.2.7 from Debian Sid/unstable and PowerTOP 2.10, executing
+> > > > 
+> > > >      sudo powertop --auto-tune
+> > > > 
+> > > > causes a NULL pointer dereference, and the graphical session crashes due
+> > > > to an
+> > > > effect on the i915 driver. It worked in the past with the 4.19 series
+> > > > from
+> > > > Debian.
+> > > > 
+> > > > Here is the trace, and please find all Linux kernel logs attached.
+> > > > 
+> > > > > [ 2027.170589] BUG: kernel NULL pointer dereference, address:
+> > > > > 0000000000000000
+> > > > > [ 2027.170600] #PF: supervisor instruction fetch in kernel mode
+> > > > > [ 2027.170604] #PF: error_code(0x0010) - not-present page
+> > > > > [ 2027.170609] PGD 0 P4D 0 [ 2027.170619] Oops: 0010 [#1] SMP PTI
+> > > ...
+> > > > > [ 2027.170730]  do_dentry_open+0x13a/0x370
+> > > 
+> > > If you have compiled with debug info, please decode the line:
+> > > 
+> > >    linux/scripts/faddr2line vmlinux do_dentry_open+0x13a/0x370
+> > > 
+> > > That gives us the fops pointer which is NULL.
+> > 
+> > Hah, luckily it’s reproducible.
+> > 
+> > ```
+> > $ scripts/faddr2line /usr/lib/debug/boot/vmlinux-5.2.0-2-amd64
+> > do_dentry_open+0x13a/0x370
+> > do_dentry_open+0x13a/0x370:
+> > do_dentry_open at fs/open.c:799
+> > ```
+> > 
+> > > > > [ 2027.170745]  path_openat+0x2c6/0x1480
+> > > > > [ 2027.170757]  ? terminate_walk+0xe6/0x100
+> > > > > [ 2027.170767]  ? path_lookupat.isra.48+0xa3/0x220
+> > > > > [ 2027.170779]  ? reuse_swap_page+0x105/0x320
+> > > > > [ 2027.170791]  do_filp_open+0x93/0x100
+> > > > > [ 2027.170804]  ? __check_object_size+0x15d/0x189
+> > > > > [ 2027.170816]  do_sys_open+0x184/0x220
+> > > > > [ 2027.170828]  do_syscall_64+0x53/0x130
+> > > > > [ 2027.170837]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > > 
+> > > That's an open crashing. We just don't know which file. Is the machine
+> > > completely hosed after that or is it just the graphics stuff dying?
+> > 
+> > No, the graphical login manager showed up, and I could log back in, and
+> > continue using hte machine.
+> > 
+> > > If it's not completely dead then instead of running it from your graphical
+> > > desktop you could switch to a VGA terminal Alt+Ctrl+F1 (or whatever
+> > > function key your distro maps to) after boot and run powertop with strace
+> > > from there:
+> > > 
+> > >    strace -f -o xxx.log powertop
+> > > 
+> > > With a bit of luck xxx.log should contain the information about the file
+> > > it
+> > > tries to open.
+> > 
+> > ```
+> > 2157  access("/sys/class/drm/card0/power/rc6_residency_ms", R_OK) = 0
+> > 2157  openat(AT_FDCWD, "/sys/kernel/debug/tracing/events/power/cpu_idle/id",
+> > O_RDONLY) = ?
+> > 2157  +++ killed by SIGKILL +++
+> > ```
+> > 
+> > > Alternatively if you have a serial console you can enable the
+> > > sys_enter_open* tracepoints:
+> > > 
+> > > # echo 1 >/sys/kernel/debug/tracing/events/syscalls/sys_enter_open
+> > > # echo 1 >/sys/kernel/debug/tracing/events/syscalls/sys_enter_openat
+> > > 
+> > > Either add 'ftrace_dump_on_oops' to the kernel command line or enable it
+> > > from the shell:
+> > > 
+> > > # echo 1 > /proc/sys/kernel/ftrace_dump_on_oops
+> > > 
+> > > Then run powertop. After the crash it will take some time to spill out the
+> > > trace buffer over serial, but it will pinpoint the offending file.
+> > 
+> > I do not have serial console on this device.
+> 
+> For the record. It is also reproducible with Linux 5.2.6, and trying to print
+> the file contents with cat already fails.
+> 
+> ```
+> $ sudo ls -l /sys/kernel/debug/tracing/events/power/cpu_idle/id
+> -r--r--r-- 1 root root 0 Aug 10 23:05
+> /sys/kernel/debug/tracing/events/power/cpu_idle/id
+> $ sudo cat /sys/kernel/debug/tracing/events/power/cpu_idle/id
+> Killed
+> ```
+> 
+> 
+> Kind regards,
+> 
+> Paul
+> 
+--8323329-1450168681-1565504562=:7324--
