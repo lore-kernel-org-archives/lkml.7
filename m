@@ -2,81 +2,114 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F3EC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 03:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DB1C32751
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 03:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74DA7208C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 03:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7211208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 03:10:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbfHKDGL (ORCPT
+        id S1726484AbfHKDK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 10 Aug 2019 23:06:11 -0400
-Received: from smtprelay0042.hostedemail.com ([216.40.44.42]:50325 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726383AbfHKDGL (ORCPT
+        Sat, 10 Aug 2019 23:10:26 -0400
+Received: from mail.rationali.st ([13.54.121.199]:44512 "EHLO
+        mail.rationali.st" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfHKDKZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 10 Aug 2019 23:06:11 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 9561C181D3419;
-        Sun, 11 Aug 2019 03:06:09 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: stem44_6fd7008362b22
-X-Filterd-Recvd-Size: 2154
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 11 Aug 2019 03:06:08 +0000 (UTC)
-Message-ID: <871efd6113ee2f6491410409511b871b7637f9e3.camel@perches.com>
-Subject: Re: [PATCH] Makefile: Convert -Wimplicit-fallthrough=3 to just
- -Wimplicit-fallthrough for clang
-From:   Joe Perches <joe@perches.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Date:   Sat, 10 Aug 2019 20:06:05 -0700
-In-Reply-To: <20190811020442.GA22736@archlinux-threadripper>
-References: <c0005a09c89c20093ac699c97e7420331ec46b01.camel@perches.com>
-         <9c7a79b4d21aea52464d00c8fa4e4b92638560b6.camel@perches.com>
-         <CAHk-=wiL7jqYNfYrNikgBw3byY+Zn37-8D8yR=WUu0x=_2BpZA@mail.gmail.com>
-         <6a5f470c1375289908c37632572c4aa60d6486fa.camel@perches.com>
-         <20190811020442.GA22736@archlinux-threadripper>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Sat, 10 Aug 2019 23:10:25 -0400
+X-Greylist: delayed 1014 seconds by postgrey-1.27 at vger.kernel.org; Sat, 10 Aug 2019 23:10:23 EDT
+Received: from ppp167-208-210.static.internode.on.net ([59.167.208.210] helo=t460s.rationali.st)
+        by mail.rationali.st with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <acooks@rationali.st>)
+        id 1hweF7-0000pI-Fk; Sun, 11 Aug 2019 03:10:07 +0000
+Reply-To: acooks@rationali.st
+Subject: Re: [PATCH v5 0/3] Enable ACPI-defined peripherals on i2c-piix4 SMBus
+To:     Jean Delvare <jdelvare@suse.de>,
+        "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Linux I2C <linux-i2c@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, platypus-sw@opengear.com,
+        "Tobin C . Harding" <me@tobin.cc>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Will Wagner <willw@carallon.com>
+References: <20190802145109.38dd4045@endymion>
+ <b013c33b-da11-ce5e-08d4-0b24a8575109@metux.net>
+ <20190809103340.2ef24523@endymion>
+From:   Andrew Cooks <acooks@rationali.st>
+Message-ID: <87e83cd9-e9a9-ee58-9ea3-7549ae3b0838@rationali.st>
+Date:   Sun, 11 Aug 2019 13:09:59 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190809103340.2ef24523@endymion>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-08-10 at 19:04 -0700, Nathan Chancellor wrote:
-> On a tangential note, how are you planning on doing the fallthrough
-> comment to attribute conversion? The reason I ask is clang does not
-> support the comment annotations, meaning that when Nathan Huckleberry's
-> patch is applied to clang (which has been accepted [1]), we are going
-> to get slammed by the warnings. I just ran an x86 defconfig build at
-> 296d05cb0d3c with his patch applied and I see 27673 instances of this
-> warning... (mostly coming from some header files so nothing crazy but it
-> will be super noisy).
-> 
-> If you have something to share like a script or patch, I'd be happy to
-> test it locally.
-> 
-> [1]: https://reviews.llvm.org/D64838
 
-Something like this patch:
+On 8/9/19 6:33 PM, Jean Delvare wrote:
+> Hi Enrico,
+>
+> On Thu, 8 Aug 2019 11:17:53 +0200, Enrico Weigelt, metux IT consult wrote:
+>> On 02.08.19 14:51, Jean Delvare wrote:
+>>> These patches fix a couple of issues with the i2c-piix4 driver on
+>>> AMD Family 16h Model 30h SoCs and add ACPI-based enumeration to the
+>>> i2c-piix4 driver.  
+>> Can you tell a little bit more about what devices are behind the smbus ?
+>> I recall the G-412 SoCs (such as on apu2+ boards) have an Hudson inside
+>> and fall into this category. (I'll have to check when back in office),
+>> so (as the apu2 platform driver maintainer) I'm very interested in this.
+> Unfortunately not. I only picked up from where Andrew Cooks left, due
+> to me being way too slow to review his patches. I did not want his work
+> to be lost. I was able to test the first 2 patches which fix bugs, but
+> not the 3rd one which deals with ACPI devices. There does not seem to
+> be any such device on the 2 test machines I have remotely access to.
 
-https://lore.kernel.org/patchwork/patch/1108577/
+Thanks for taking a look at these patches and thanks for your many years of support and maintenance.
 
-Maybe use:
+The patches I submitted were developed for an commercial product, but I am not with the company anymore and do not have access to the hardware. This is the device: https://opengear.com/products/om2200-operations-manager/
 
-#define fallthrough [[fallthrough]]
+The specific peripheral that required ACPI support is the NCT7491, and a driver is available at https://github.com/opengear/nct7491-driver
 
-if the compiler supports that notation
+>> Does the probing need some special BIOS support (or do the necessary
+>> table entries already come from aegesa) ?
+> I assume that ACPI devices are declared in one of the ACPI tables, so
+> it comes from the "BIOS", yes, whatever form it takes these days.
+Yes, though unfortunately I didn't get a chance to submit this to the coreboot project and no longer have access to the source.
+>
+>> I have to admit, I'm still confused by the AMD documentation - haven't
+>> found a clear documentation on what peripherals exactly are in the
+>> G-412 SoC, just puzzled together that the FCH seems to be an Hudson,
+>> probably v2. There also seems to be some relation between smbus and
+>> gpio, but the gpio's are directly memory-mapped - no idea whether they
+>> just share the same base address register or the gpios are really behind
+>> smbus and some hw logic directy maps them into mmio space ...
+>> Do you happen to have some more information on that ?
+> I remember noticing long ago that SMBus ports were using GPIO pins, so
+> these pins could be used for SMBus or for any other purpose. I could
+> not find any way to figure out from the registers if a given pin pair
+> was used for SMBus or not, which is pretty bad because it means we are
+> blindly instantiating ALL possible SMBus ports even if some of the pins
+> are used for a completely different purpose. It was over 1 year ago
+> though, so I don't remember the details, and my findings then may not
+> apply to the most recent hardware.
+>
+>> By the way: I'm considering collecting some hw documentation in the
+>> kernel tree (maybe Documentation/hardware/...) - do you folks think
+>> that's a good idea ?
+> No. Only documentation specifically related to the Linux kernel should
+> live in the kernel tree. OS-neutral documentation must go somewhere
+> else.
+>
+Thanks,
+
+Andrew
 
