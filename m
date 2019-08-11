@@ -7,54 +7,49 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 737DEC0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87441C41514
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49CF62173C
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C8F2217F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565511858;
-	bh=HUqE2jicU2f5TLW18jlaxJAUP1YeHMHB74GR0cNbTIE=;
+	s=default; t=1565512370;
+	bh=bhEWn2cJHLvZ3bN1Q/kwRHMbOyW232kkKU7xamqw9CA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=h9ZkddxXS7iIpq9zhT+ZDnDgWXPHSrp7eqhGGC5j7wNWta1a4eNiaxuBu9T5cWqwv
-	 tPvZi422CBzh3XJT08EqfEArh8p+1s8QkAkAqXML42x7wWejGfx05j3v83FpBW0SXU
-	 HmvlXxwQ6nU7pLUdxMZGU9YMzWZ+cKU1t2afcmeI=
+	b=vUR5l+rlIWMbbY3d7yzBeihmO9c7ZHJ1ob3ecFXq+OqRundj1T2hP4XxiuEjOpvqP
+	 4piAbBoab6zvB1IVd4y+403RttGycBQGEKQOURbZkQKzyutyzZlFSgoqNF7pZetiz8
+	 VoMreypF2uhKsmwHqMVOKt5cGv2B+94jvt0koejQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfHKIYR (ORCPT
+        id S1726214AbfHKIct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 04:24:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41298 "EHLO mail.kernel.org"
+        Sun, 11 Aug 2019 04:32:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbfHKIYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 04:24:17 -0400
+        id S1725810AbfHKIct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 04:32:49 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9D35216F4;
-        Sun, 11 Aug 2019 08:24:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82C442173C;
+        Sun, 11 Aug 2019 08:32:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565511856;
-        bh=HUqE2jicU2f5TLW18jlaxJAUP1YeHMHB74GR0cNbTIE=;
+        s=default; t=1565512368;
+        bh=bhEWn2cJHLvZ3bN1Q/kwRHMbOyW232kkKU7xamqw9CA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lOe1e06owzyl2ouywaeLtHmVL0DrwjKmJmiHl/a9N4X8pk5zfn5ax64yBBW4LHCBm
-         PXsa12XH5VCfNNDkflAge2itnDiU+2s6bNAa/6Ef01akTp98v0YzZOSP3bmHttbzVl
-         5WMqKtRaD2x1Rwhl+L6c3W2TRXV5JW1Fwrn83Wdg=
-Date:   Sun, 11 Aug 2019 09:24:11 +0100
+        b=M6Ad9+pXvoEJLz8d6sIdT99WBgmz/Z/ZxtDhyPrsfLehfIVrz4bJgZsJQikPbwws5
+         h/sDCSyaXka6Qs18ah7QB4mJ0X8YqurPvr0sCrpQ5srjOgwbVOKqfE1Hkx5vBvmvPM
+         aVLZSYtUvPG6dpTS3p0195hyQROZlVbl5IDLwxzg=
+Date:   Sun, 11 Aug 2019 09:32:43 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Stefan Agner <stefan@agner.ch>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: max9611: Fix temperature reading in probe
-Message-ID: <20190811092411.4474796c@archlinux>
-In-Reply-To: <20190806073114.4mujzdvbrgxivizs@uno.localdomain>
-References: <20190805155515.22621-1-jacopo+renesas@jmondi.org>
-        <20190805181244.663585ac@archlinux>
-        <20190806073114.4mujzdvbrgxivizs@uno.localdomain>
+To:     Himanshu Jha <himanshujha199640@gmail.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        dpfrey@gmail.com, mike.looijmans@topic.nl
+Subject: Re: [PATCH] iio: chemical: bme680: Fix pressure and humidity ABI
+ mismatch
+Message-ID: <20190811093243.6e08a12d@archlinux>
+In-Reply-To: <20190808154350.9693-1-himanshujha199640@gmail.com>
+References: <20190808154350.9693-1-himanshujha199640@gmail.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -64,72 +59,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 6 Aug 2019 09:31:14 +0200
-Jacopo Mondi <jacopo@jmondi.org> wrote:
+On Thu,  8 Aug 2019 21:13:50 +0530
+Himanshu Jha <himanshujha199640@gmail.com> wrote:
 
-> Hi Jonathan,
+> Standard ABI for reporting pressure is kilopascal and for
+> relative humidity it is millipercent.
 > 
-> On Mon, Aug 05, 2019 at 06:12:44PM +0100, Jonathan Cameron wrote:
-> > On Mon,  5 Aug 2019 17:55:15 +0200
-> > Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> >  
-> > > The max9611 driver reads the die temperature at probe time to validate
-> > > the communication channel. Use the actual read value to perform the test
-> > > instead of the read function return value, which was mistakenly used so
-> > > far.
-> > >
-> > > The temperature reading test was only successful because the 0 return
-> > > value is in the range of supported temperatures.
-> > >
-> > > Fixes: 69780a3bbc0b ("iio: adc: Add Maxim max9611 ADC driver")
-> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>  
-> >
-> > Applied to the fixes-togreg branch of iio.git and marked for
-> > stable.  That'll be a bit fiddly given other changes around this
-> > so we may need to do backports.
-> >  
+> What:           /sys/bus/iio/devices/iio:deviceX/in_pressureY_input
+> What:           /sys/bus/iio/devices/iio:deviceX/in_pressure_input
+> KernelVersion:  3.8
+> Contact:        linux-iio@vger.kernel.org
+> Description:
+>                 Scaled pressure measurement from channel Y, in kilopascal.
 > 
-> Indeed, I should have mentioned this patch depends on Joe's
-> ae8cc91a7d85 ("iio: adc: max9611: Fix misuse of GENMASK macro")
-> which is now in linux-next, otherwise it might atually trigger errors
-> due to the wrong mask value.
+> What:           /sys/bus/iio/devices/iio:deviceX/in_humidityrelative_input
+> KernelVersion:  3.14
+> Contact:        linux-iio@vger.kernel.org
+> Description:
+>                 Scaled humidity measurement in milli percent.
 > 
-> I wonder if there's a way to keep track of these dependencies for the
-> sake of backporting, or it's an operation that has to be carried out
-> manually...
-A note in the commit message is normally enough as all the stable
-maintainers check that first.  In this particular case both patches
-are marked for stable so will get picked up automatically in the right
-order (hopefully!).
+> Currently pressure is reported in hectopascal(hPa) and relative humidity
+> in percent. Hence fix this ABI mismatch conforming to the standard ABI.
+> 
+> Fixes: 1b3bd8592780 ("iio: chemical: Add support for Bosch BME680 sensor")
+> Signed-off-by: Himanshu Jha <himanshujha199640@gmail.com>
+
+Hopefully any users will cope with their scripts getting broken
+by this.
+
+I'm going to let this one sit for a little longer to give others time
+to take a look.
+
+Give me a poke if it looks like I've lost it down the back of the sofa
+in a week or two.
 
 Thanks,
 
 Jonathan
 
+
+> ---
 > 
-> Thanks
->    j
+> While cleaning this mess I wonder about the gas channel and there
+> exists no `in_resistance_input` in standard ABI :-(
 > 
-> >  
-> > > ---
-> > >  drivers/iio/adc/max9611.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
-> > > index 917223d5ff5b..e9f6b1da1b94 100644
-> > > --- a/drivers/iio/adc/max9611.c
-> > > +++ b/drivers/iio/adc/max9611.c
-> > > @@ -480,7 +480,7 @@ static int max9611_init(struct max9611_dev *max9611)
-> > >  	if (ret)
-> > >  		return ret;
-> > >
-> > > -	regval = ret & MAX9611_TEMP_MASK;
-> > > +	regval &= MAX9611_TEMP_MASK;
-> > >
-> > >  	if ((regval > MAX9611_TEMP_MAX_POS &&
-> > >  	     regval < MAX9611_TEMP_MIN_NEG) ||
-> > > --
-> > > 2.22.0
-> > >  
-> >  
+> We only have:
+> 
+> What:           /sys/bus/iio/devices/iio:deviceX/in_resistance_raw
+> What:           /sys/bus/iio/devices/iio:deviceX/in_resistanceX_raw
+> What:           /sys/bus/iio/devices/iio:deviceX/out_resistance_raw
+> What:           /sys/bus/iio/devices/iio:deviceX/out_resistanceX_raw
+> KernelVersion:  4.3
+> Contact:        linux-iio@vger.kernel.org
+> Description:
+>                 Raw (unscaled no offset etc.) resistance reading that can be processed
+>                 into an ohm value.
+> 
+> The sensor outputs processed value which is reported as is.
+> 
+> So, does it need a new ABI ?
+
+New documentation as the ABI is clearly already there.   Good for completeness
+but that description for _raw makes it obvious what the units will be etc so
+hopefully we don't have any disagreement between drivers.
+
+
+> 
+>  drivers/iio/chemical/bme680_core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/chemical/bme680_core.c b/drivers/iio/chemical/bme680_core.c
+> index ccde4c65ff93..28cc96d1e3c8 100644
+> --- a/drivers/iio/chemical/bme680_core.c
+> +++ b/drivers/iio/chemical/bme680_core.c
+> @@ -670,7 +670,7 @@ static int bme680_read_press(struct bme680_data *data,
+>  	}
+>  
+>  	*val = bme680_compensate_press(data, adc_press);
+> -	*val2 = 100;
+> +	*val2 = 1000;
+>  	return IIO_VAL_FRACTIONAL;
+>  }
+>  
+> @@ -704,7 +704,7 @@ static int bme680_read_humid(struct bme680_data *data,
+>  	comp_humidity = bme680_compensate_humid(data, adc_humidity);
+>  
+>  	*val = comp_humidity;
+> -	*val2 = 1000;
+> +	*val2 = 1000000;
+>  	return IIO_VAL_FRACTIONAL;
+>  }
+>  
 
