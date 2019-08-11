@@ -2,116 +2,141 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 822B7C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 21:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B14AEC0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 21:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5649C2084D
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 21:27:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sqBxk/kZ"
+	by mail.kernel.org (Postfix) with ESMTP id 865E420844
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 21:32:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfHKV1P (ORCPT
+        id S1726496AbfHKVcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 17:27:15 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:48631 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726011AbfHKV1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 17:27:15 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Sun, 11 Aug 2019 17:32:21 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:37802 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726011AbfHKVcV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 17:32:21 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 466Brc3ctcz9sML;
-        Mon, 12 Aug 2019 07:27:12 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565558832;
-        bh=lemg1XZKoY/pD1ybQMwC+6Du3MCkFzha4FmfuaD/GUg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sqBxk/kZNe2wpuIoLf3MW/bewetlG4FJlGudpYYvjnftLt2Bp0iYHwoZil4N5VP2z
-         4LnyAp8oLHh3MxnW0BmpPNiLhXnTKIexqw1l1pZI5rgGLPsgG/D6hN0q5ljXY18DQ5
-         cI7JRXRcTAu+T/3xZDPiFD17iz8A3zLWbL7/kSzuTv5g7zzlsVrFaRIPWQWaYBIIEZ
-         q2VJgeF6pWtv9JrICw1Njf7JKtcM3c9l37p3h3UiduNypikFD6H1/3yxeCLLHYAHiF
-         TjVyuNpfQNtvkCmvquvWg5/fSRKPbSFfY9oXfmBUuQ1nSgYGROWUfyH68SPfYbgRPN
-         EFafp5E2ap1mw==
-Date:   Mon, 12 Aug 2019 07:26:59 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Add SPDX kernel tree to linux-next
-Message-ID: <20190812072659.606b2107@canb.auug.org.au>
-In-Reply-To: <20190810115533.GA6302@kroah.com>
-References: <20190810115533.GA6302@kroah.com>
+        by asavdk4.altibox.net (Postfix) with ESMTPS id AB9CF803E5;
+        Sun, 11 Aug 2019 23:32:16 +0200 (CEST)
+Date:   Sun, 11 Aug 2019 23:32:15 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Sean Paul <sean@poorly.run>
+Subject: Best practice for embedded code samles? [Was: drm/drv: Use // for
+ comments in example code]
+Message-ID: <20190811213215.GA26468@ravnborg.org>
+References: <20190808163629.14280-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/joDWPergj0mqSvlW2B4zo=E";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190808163629.14280-1-j.neuschaefer@gmx.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=8nJEP1OIZ-IA:10 a=VVlED5B4AAAA:8
+        a=e5mUnYsNAAAA:8 a=hR6eB8P5VIS1gKZY23kA:9 a=wPNLvfGTeEIA:10
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/joDWPergj0mqSvlW2B4zo=E
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Aug 08, 2019 at 06:36:28PM +0200, Jonathan Neuschäfer wrote:
+> This improves Sphinx output in two ways:
+> 
+> - It avoids an unmatched single-quote ('), about which Sphinx complained:
+> 
+>   /.../Documentation/gpu/drm-internals.rst:298:
+>     WARNING: Could not lex literal_block as "c". Highlighting skipped.
+> 
+>   An alternative approach would be to replace "can't" with a word that
+>   doesn't have a single-quote.
+> 
+> - It lets Sphinx format the comments in italics and grey, making the
+>   code slightly easier to read.
+> 
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 
-Hi Greg,
+The result looks much better now - thanks.
 
-On Sat, 10 Aug 2019 13:55:33 +0200 Greg KH <gregkh@linuxfoundation.org> wro=
-te:
->=20
-> I realized that I've been sending patches to Linus from my "SPDX" kernel
-> tree for a few releases now, and it's not included in linux-next, which
-> is not good.
->=20
-> So, could you please add the kernel tree / branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/spdx.git spdx-linus
->=20
-> to linux-next?
+I wonder if there is a better way to embed a code sample
+than reverting to // style comments.
 
-Added from today.  One question: is this meant to be a -next tree or a
--fixes tree?
+As the kernel do not like // comments we should try to avoid them in
+examples.
 
-Thanks for adding your subsystem tree as a participant of linux-next.  As
-you may know, this is not a judgement of your code.  The purpose of
-linux-next is for integration testing and to lower the impact of
-conflicts between subsystems in the next merge window.=20
+Mauro/Jon?
 
-You will need to ensure that the patches/commits in your tree/series have
-been:
-     * submitted under GPL v2 (or later) and include the Contributor's
-        Signed-off-by,
-     * posted to the relevant mailing list,
-     * reviewed by you (or another maintainer of your subsystem tree),
-     * successfully unit tested, and=20
-     * destined for the current or next Linux merge window.
+	Sam
 
-Basically, this should be just what you would send to Linus (or ask him
-to fetch).  It is allowed to be rebased if you deem it necessary.
-
---=20
-Cheers,
-Stephen Rothwell=20
-sfr@canb.auug.org.au
-
---Sig_/joDWPergj0mqSvlW2B4zo=E
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1QiCMACgkQAVBC80lX
-0Gwlzgf7BHK49PKtF9cbwzB+OTFwcYVI5QBhlxcgG7jPdrI+YRBJXPnszm6VcdwA
-TZ3qgjkJl8SDAy88LsefAtMqRgZi52rIiJ6SB9YXfPlPzu/3tre47Umb+zLfTCoj
-+HMN6zHnKskaPB0jxyEv3Lm/m8CWT4pzdXlQnWMrguvp+6PVbczZMsvJqMg9WEWr
-X8a8df9QIlhDPIHOFgJ7BiNSMT1/L3/uN2Wu2szqMLix5PoRoAI+OSA8mBRcWWUI
-RPE9fa8SGwloMIoU8CsRFAmy9DAT+F+wArb11iyjyfuPavqhglGJywPzCQS4O5/1
-v+PjPeos8+qfC6AxI23IjvFJtBxEaw==
-=7LyJ
------END PGP SIGNATURE-----
-
---Sig_/joDWPergj0mqSvlW2B4zo=E--
+> ---
+>  drivers/gpu/drm/drm_drv.c | 14 ++++++--------
+>  1 file changed, 6 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
+> index 9d00947ca447..769feefeeeef 100644
+> --- a/drivers/gpu/drm/drm_drv.c
+> +++ b/drivers/gpu/drm/drm_drv.c
+> @@ -328,11 +328,9 @@ void drm_minor_release(struct drm_minor *minor)
+>   *		struct drm_device *drm;
+>   *		int ret;
+>   *
+> - *		[
+> - *		  devm_kzalloc() can't be used here because the drm_device
+> - *		  lifetime can exceed the device lifetime if driver unbind
+> - *		  happens when userspace still has open file descriptors.
+> - *		]
+> + *		// devm_kzalloc() can't be used here because the drm_device '
+> + *		// lifetime can exceed the device lifetime if driver unbind
+> + *		// happens when userspace still has open file descriptors.
+>   *		priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+>   *		if (!priv)
+>   *			return -ENOMEM;
+> @@ -355,7 +353,7 @@ void drm_minor_release(struct drm_minor *minor)
+>   *		if (IS_ERR(priv->pclk))
+>   *			return PTR_ERR(priv->pclk);
+>   *
+> - *		[ Further setup, display pipeline etc ]
+> + *		// Further setup, display pipeline etc
+>   *
+>   *		platform_set_drvdata(pdev, drm);
+>   *
+> @@ -370,7 +368,7 @@ void drm_minor_release(struct drm_minor *minor)
+>   *		return 0;
+>   *	}
+>   *
+> - *	[ This function is called before the devm_ resources are released ]
+> + *	// This function is called before the devm_ resources are released
+>   *	static int driver_remove(struct platform_device *pdev)
+>   *	{
+>   *		struct drm_device *drm = platform_get_drvdata(pdev);
+> @@ -381,7 +379,7 @@ void drm_minor_release(struct drm_minor *minor)
+>   *		return 0;
+>   *	}
+>   *
+> - *	[ This function is called on kernel restart and shutdown ]
+> + *	// This function is called on kernel restart and shutdown
+>   *	static void driver_shutdown(struct platform_device *pdev)
+>   *	{
+>   *		drm_atomic_helper_shutdown(platform_get_drvdata(pdev));
+> --
+> 2.20.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
