@@ -5,70 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9D1C0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 18:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EDAC0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 18:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5942D2085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 18:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B686208C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 18:52:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lvUog1CY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ew3YcMsf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfHKSuN (ORCPT
+        id S1726457AbfHKSwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 14:50:13 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39274 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbfHKSuM (ORCPT
+        Sun, 11 Aug 2019 14:52:35 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37915 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726011AbfHKSwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 14:50:12 -0400
-Received: by mail-lf1-f66.google.com with SMTP id x3so19084975lfn.6
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 11:50:10 -0700 (PDT)
+        Sun, 11 Aug 2019 14:52:35 -0400
+Received: by mail-ed1-f66.google.com with SMTP id r12so67015688edo.5;
+        Sun, 11 Aug 2019 11:52:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=huKzeJveUl46Z4R0QkbeDkdnGlxIMnjDuQYSIj+D3TA=;
-        b=lvUog1CYF7fqUUlClqszooVVVxPZzUAhtcD1J9MCq04cpH3yJSqmNdgb2vl393BJcs
-         Jarw5/+oi8BegE+cjFyg+gndI4iZvJDn/P+tS8DC+3jXjNkZPB6aB0AhCsLmza/ouJdU
-         xXWmZrvgV1tCVyB1Lrl8uNK0SGWOpKgLhzW0OJkcEa/SgNqqQRvhQMgDsuYeuK3zD1eF
-         sU6UukH84VaHWTy4GMQqYps5NTWAqfErZsJ3n3S2xy1s9nAGJhJtRqBGMlZqIazTm7WQ
-         jsP5gCs13zmxglQMrEeo32cfm+6cDuIA3ubwlVwOf+cNNjPP+yh5U2ktvp87zERHzDlA
-         cl2Q==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KYK7YTFui77HICQxsg8JHaSNjp6UjHG92th/aL1dPFo=;
+        b=Ew3YcMsfAhzbTARoe38VKNNfgl9MbbX1naHpAK8cVSms97PmH7VeyUYUg566PaoG1c
+         GkEyXuX/khNpsO4f9H09tktQE1D4FazupzNSyC5+4Ifh+uQIhqtNKnWmQ9EacbLZRPYJ
+         qoOm0yPED2VK1gZXN80A7aLm1KK6Ao4B3HULdal0loBxjRYAKVGxlNt8FvdFJeMG9KxP
+         7C7FA4gYnpIwpzDEPQUGu4eh5m3NOxUu3Eq1KN6uqcbBSDwff2/LO00YsKs4nZCLZunp
+         z4UJYxtnbkWGH6mxOTTjvsIjacFWHkOMMGGn7vNqu4zIDbjCPZp0lWKP1ScDA6N2gGyG
+         Ddag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=huKzeJveUl46Z4R0QkbeDkdnGlxIMnjDuQYSIj+D3TA=;
-        b=kqYWgL44R7tDxNy9u1CWmEYThPZ5XRD47J7X69UWpprs0+uJwNvT3bMqiTlcXI/LCI
-         BuugH/ti/Dxa9T0bZ72WkcE5Bv2s1AWr1c9xGMlD0BrZpI9y++3hMOxelH0a0ZJiYQ7/
-         o9VT+bBQq5YsnlDtypzS0yai3qz1tr+GW2QnQPEekceaQNEvsTiFP4xbZmVlZW4ir9TF
-         BL92eRseIi3va58ND9NCVwBPD2qmMsxvvjHo+5JtbgThXpNy+h4h1XM0RSqi4BdmKpTW
-         pWEzy62QkC5Rqwc1YiR17BoqCsfSGNkqo7c/Jal4urNppK1+wtAO0oToXbZhwT5WKzKv
-         COtw==
-X-Gm-Message-State: APjAAAX8OJtGtl25vGwHjQqxV0kGCyFKvgackNLwUjNaxLuKf+/y0zqq
-        90FPyJ9s7cl/ACALEZj7kCAWAcF7u0E=
-X-Google-Smtp-Source: APXvYqwkYy3RWYS3j92u4EDKhjLwq7QBSdVBxqiCcayqsX1944SPhtZfzm+hnbbQJevsYcJ7qPk6lQ==
-X-Received: by 2002:a19:674d:: with SMTP id e13mr13737512lfj.176.1565549409458;
-        Sun, 11 Aug 2019 11:50:09 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-186-115.NA.cust.bahnhof.se. [158.174.186.115])
-        by smtp.gmail.com with ESMTPSA id r21sm5250117lfi.32.2019.08.11.11.50.08
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KYK7YTFui77HICQxsg8JHaSNjp6UjHG92th/aL1dPFo=;
+        b=DPgl4bhSubguIArDak5KdNY1u7AweDwrTtCPKEP10hnkExXLqZOHOTU6UInbMadb1L
+         fa4hgMsJ4DGV97ZO+iUxTmpZ2v64Q558tCu/sNJ4C3F7Wp9nAIvdBtYGCOo3EIjmEwQJ
+         Y73jLutHbA0laSxaRL9a8HmytlDd2ylzxs7nckHWWyBqNDworEORkLXpA9/gTvwXOl+l
+         7mIYdhnAbltVT/mNxBrmYiw1lDJeyoWNnCqzUlZuW/cudd0tWGIFCSoAQBGnVXijYXVX
+         jeBgHf5fdg+bOa8HSP0toE7XQb9hF7Hhx59vIoGp205hOO7J6JK7zQzQDgiPEF0eOrYI
+         5J3w==
+X-Gm-Message-State: APjAAAVzz3oXws3J2px2cRluL+n5TcfQRkk12r9rj+u/jlUEc9nFLDQs
+        QCr44NLv135AX+7Mybmtc0Ad0OMvn5ywvg==
+X-Google-Smtp-Source: APXvYqwO2XdD8acBLt7QbE/p8x+/yikd0pZnx3MXByXW62i5O0edVdsiVnlpGIu6mP59CkFfbvajJg==
+X-Received: by 2002:a50:a485:: with SMTP id w5mr33287954edb.277.1565549552566;
+        Sun, 11 Aug 2019 11:52:32 -0700 (PDT)
+Received: from localhost.localdomain ([188.187.105.131])
+        by smtp.gmail.com with ESMTPSA id u8sm22968136edo.78.2019.08.11.11.52.30
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 11 Aug 2019 11:50:08 -0700 (PDT)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-To:     rikard.falkeborn@gmail.com
-Cc:     akpm@linux-foundation.org, joe@perches.com,
-        johannes@sipsolutions.net, linux-kernel@vger.kernel.org,
-        yamada.masahiro@socionext.com
-Subject: [PATCH v3 3/3] linux/bits.h: Add compile time sanity check of GENMASK inputs
-Date:   Sun, 11 Aug 2019 20:49:38 +0200
-Message-Id: <20190811184938.1796-4-rikard.falkeborn@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190811184938.1796-1-rikard.falkeborn@gmail.com>
-References: <20190801230358.4193-1-rikard.falkeborn@gmail.com>
- <20190811184938.1796-1-rikard.falkeborn@gmail.com>
+        Sun, 11 Aug 2019 11:52:31 -0700 (PDT)
+From:   ivan.lazeev@gmail.com
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vanya Lazeev <ivan.lazeev@gmail.com>
+Subject: [PATCH v2] Fix fTPM on AMD Zen+ CPUs
+Date:   Sun, 11 Aug 2019 21:52:18 +0300
+Message-Id: <20190811185218.16893-1-ivan.lazeev@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,94 +75,280 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GENMASK() and GENMASK_ULL() are supposed to be called with the high bit
-as the first argument and the low bit as the second argument. Mixing
-them will return a mask with zero bits set.
+From: Vanya Lazeev <ivan.lazeev@gmail.com>
 
-Recent commits show getting this wrong is not uncommon, see e.g.
-commit aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and
-commit 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK
-macro").
+The patch is an attempt to make fTPM on AMD Zen CPUs work.
+Bug link: https://bugzilla.kernel.org/show_bug.cgi?id=195657
 
-To prevent such mistakes from appearing again, add compile time sanity
-checking to the arguments of GENMASK() and GENMASK_ULL(). If both
-arguments are known at compile time, and the low bit is higher than the
-high bit, break the build to detect the mistake immediately.
+The problem seems to be that tpm_crb driver doesn't expect tpm command
+and response memory regions to belong to different ACPI resources.
 
-Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be
-used instead of BUILD_BUG_ON().
+Tested on Asrock ITX motherboard with Ryzen 2600X CPU.
+However, I don't have any other hardware to test the changes on and no
+expertise to be sure that other TPMs won't break as a result.
+Hopefully, the patch will be useful.
 
-__builtin_constant_p does not evaluate is argument, it only checks if it
-is a constant or not at compile time, and __builtin_choose_expr does not
-evaluate the expression that is not chosen. Therefore, GENMASK(x++, 0)
-does only evaluate x++ once.
+Changes from v1:
+- use list_for_each_safe
 
-Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
-available in assembly") made the macros in linux/bits.h available in
-assembly. Since BUILD_BUG_OR_ZERO() is not asm compatible, disable the
-checks if the file is included in an asm file.
-
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Signed-off-by: Vanya Lazeev <ivan.lazeev@gmail.com>
 ---
-Changes in v3:
-  - Changed back to shorter macro argument names
-  - Remove casts and use 0 instead of UL(0) in GENMASK_INPUT_CHECK(),
-    since all results in GENMASK_INPUT_CHECK() are now ints. Update
-    commit message to reflect that.
+ drivers/char/tpm/tpm_crb.c | 146 ++++++++++++++++++++++++++++---------
+ 1 file changed, 110 insertions(+), 36 deletions(-)
 
-Changes in v2:
-  - Add comment about why inputs are not checked when used in asm file
-  - Use UL(0) instead of 0
-  - Extract mask creation in a separate macro to improve readability
-  - Use high and low instead of h and l (part of this was extracted to a
-    separate patch)
-  - Updated commit message
-
-Joe Perches sent a series to fix the existing misuses of GENMASK() that
-needs to be merged before this to avoid build failures. Currently, 5 of
-the patches are not in Linus tree, and 2 are not in linux-next. There is
-also a patch pending by Nathan Chancellor that also needs to be merged
-before this patch is merged to avoid build failures.
-
- include/linux/bits.h | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/bits.h b/include/linux/bits.h
-index 669d69441a62..4ba0fb609239 100644
---- a/include/linux/bits.h
-+++ b/include/linux/bits.h
-@@ -18,12 +18,29 @@
-  * position @h. For example
-  * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-  */
--#define GENMASK(h, l) \
-+#ifndef __ASSEMBLY__
-+#include <linux/build_bug.h>
-+#define GENMASK_INPUT_CHECK(h, l) \
-+	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
-+		__builtin_constant_p((l) > (h)), (l) > (h), 0)))
-+#else
-+/*
-+ * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
-+ * disable the input check if that is the case.
-+ */
-+#define GENMASK_INPUT_CHECK(h, l) 0
-+#endif
+diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
+index e59f1f91d..b0e797464 100644
+--- a/drivers/char/tpm/tpm_crb.c
++++ b/drivers/char/tpm/tpm_crb.c
+@@ -91,7 +91,6 @@ enum crb_status {
+ struct crb_priv {
+ 	u32 sm;
+ 	const char *hid;
+-	void __iomem *iobase;
+ 	struct crb_regs_head __iomem *regs_h;
+ 	struct crb_regs_tail __iomem *regs_t;
+ 	u8 __iomem *cmd;
+@@ -108,6 +107,13 @@ struct tpm2_crb_smc {
+ 	u32 smc_func_id;
+ };
+ 
++struct crb_resource {
++	struct resource io_res;
++	void __iomem *iobase;
 +
-+#define __GENMASK(h, l) \
- 	(((~UL(0)) - (UL(1) << (l)) + 1) & \
- 	 (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
-+#define GENMASK(h, l) \
-+	(GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
++	struct list_head link;
++};
++
+ static bool crb_wait_for_reg_32(u32 __iomem *reg, u32 mask, u32 value,
+ 				unsigned long timeout)
+ {
+@@ -432,23 +438,69 @@ static const struct tpm_class_ops tpm_crb = {
+ 	.req_complete_val = CRB_DRV_STS_COMPLETE,
+ };
  
--#define GENMASK_ULL(h, l) \
-+#define __GENMASK_ULL(h, l) \
- 	(((~ULL(0)) - (ULL(1) << (l)) + 1) & \
- 	 (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
-+#define GENMASK_ULL(h, l) \
-+	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
++static void crb_free_resource_list(struct list_head *resources)
++{
++	struct list_head *position, *tmp;
++
++	list_for_each_safe(position, tmp, resources)
++		kfree(list_entry(position, struct crb_resource, link));
++}
++
++/**
++ * Checks if resource @io_res contains range with the specified @start and @size
++ * completely or, when @strict is false, at least it's beginning.
++ * Non-strict match is needed to work around broken BIOSes that return
++ * inconsistent values from ACPI regions vs registers.
++ */
++static inline bool crb_resource_contains(const struct resource *io_res,
++					 u64 start, u32 size, bool strict)
++{
++	return start >= io_res->start &&
++		(start + size - 1 <= io_res->end ||
++		 (!strict && start <= io_res->end));
++}
++
++static struct crb_resource *crb_containing_resource(
++		const struct list_head *resources,
++		u64 start, u32 size, bool strict)
++{
++	struct list_head *pos;
++
++	list_for_each(pos, resources) {
++		struct crb_resource *cres;
++
++		cres = list_entry(pos, struct crb_resource, link);
++		if (crb_resource_contains(&cres->io_res, start, size, strict))
++			return cres;
++	}
++
++	return NULL;
++}
++
+ static int crb_check_resource(struct acpi_resource *ares, void *data)
+ {
+-	struct resource *io_res = data;
++	struct list_head *list = data;
++	struct crb_resource *cres;
+ 	struct resource_win win;
+ 	struct resource *res = &(win.res);
  
- #endif	/* __LINUX_BITS_H */
+ 	if (acpi_dev_resource_memory(ares, res) ||
+ 	    acpi_dev_resource_address_space(ares, &win)) {
+-		*io_res = *res;
+-		io_res->name = NULL;
++		cres = kzalloc(sizeof(*cres), GFP_KERNEL);
++		if (!cres)
++			return -ENOMEM;
++
++		cres->io_res = *res;
++		cres->io_res.name = NULL;
++
++		list_add_tail(&cres->link, list);
+ 	}
+ 
+ 	return 1;
+ }
+ 
+-static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
+-				 struct resource *io_res, u64 start, u32 size)
++static void __iomem *crb_map_res(struct device *dev, struct crb_resource *cres,
++				 u64 start, u32 size)
+ {
+ 	struct resource new_res = {
+ 		.start	= start,
+@@ -460,10 +512,16 @@ static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
+ 	if (start != new_res.start)
+ 		return (void __iomem *) ERR_PTR(-EINVAL);
+ 
+-	if (!resource_contains(io_res, &new_res))
++	if (!cres)
+ 		return devm_ioremap_resource(dev, &new_res);
+ 
+-	return priv->iobase + (new_res.start - io_res->start);
++	if (!cres->iobase) {
++		cres->iobase = devm_ioremap_resource(dev, &cres->io_res);
++		if (IS_ERR(cres->iobase))
++			return cres->iobase;
++	}
++
++	return cres->iobase + (new_res.start - cres->io_res.start);
+ }
+ 
+ /*
+@@ -490,9 +548,9 @@ static u64 crb_fixup_cmd_size(struct device *dev, struct resource *io_res,
+ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 		      struct acpi_table_tpm2 *buf)
+ {
+-	struct list_head resources;
+-	struct resource io_res;
++	struct list_head acpi_resources, crb_resources;
+ 	struct device *dev = &device->dev;
++	struct crb_resource *cres;
+ 	u32 pa_high, pa_low;
+ 	u64 cmd_pa;
+ 	u32 cmd_size;
+@@ -501,21 +559,30 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 	u32 rsp_size;
+ 	int ret;
+ 
+-	INIT_LIST_HEAD(&resources);
+-	ret = acpi_dev_get_resources(device, &resources, crb_check_resource,
+-				     &io_res);
++	INIT_LIST_HEAD(&acpi_resources);
++	INIT_LIST_HEAD(&crb_resources);
++	ret = acpi_dev_get_resources(device, &acpi_resources,
++				     crb_check_resource, &crb_resources);
+ 	if (ret < 0)
+-		return ret;
+-	acpi_dev_free_resource_list(&resources);
++		goto out_free_crb_resources;
++
++	acpi_dev_free_resource_list(&acpi_resources);
+ 
+-	if (resource_type(&io_res) != IORESOURCE_MEM) {
++	if (list_empty(&crb_resources)) {
+ 		dev_err(dev, FW_BUG "TPM2 ACPI table does not define a memory resource\n");
+-		return -EINVAL;
++		ret = -EINVAL;
++		goto out_free_crb_resources;
+ 	}
+ 
+-	priv->iobase = devm_ioremap_resource(dev, &io_res);
+-	if (IS_ERR(priv->iobase))
+-		return PTR_ERR(priv->iobase);
++	cres = crb_containing_resource(&crb_resources, buf->control_address,
++				       sizeof(struct crb_regs_tail), true);
++
++	priv->regs_t = crb_map_res(dev, cres, buf->control_address,
++				   sizeof(struct crb_regs_tail));
++	if (IS_ERR(priv->regs_t)) {
++		ret = PTR_ERR(priv->regs_t);
++		goto out_free_crb_resources;
++	}
+ 
+ 	/* The ACPI IO region starts at the head area and continues to include
+ 	 * the control area, as one nice sane region except for some older
+@@ -523,23 +590,17 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 	 */
+ 	if ((priv->sm == ACPI_TPM2_COMMAND_BUFFER) ||
+ 	    (priv->sm == ACPI_TPM2_MEMORY_MAPPED)) {
+-		if (buf->control_address == io_res.start +
++		if (cres &&
++		    buf->control_address == cres->io_res.start +
+ 		    sizeof(*priv->regs_h))
+-			priv->regs_h = priv->iobase;
++			priv->regs_h = cres->iobase;
+ 		else
+ 			dev_warn(dev, FW_BUG "Bad ACPI memory layout");
+ 	}
+ 
+ 	ret = __crb_request_locality(dev, priv, 0);
+ 	if (ret)
+-		return ret;
+-
+-	priv->regs_t = crb_map_res(dev, priv, &io_res, buf->control_address,
+-				   sizeof(struct crb_regs_tail));
+-	if (IS_ERR(priv->regs_t)) {
+-		ret = PTR_ERR(priv->regs_t);
+-		goto out_relinquish_locality;
+-	}
++		goto out_free_crb_resources;
+ 
+ 	/*
+ 	 * PTT HW bug w/a: wake up the device to access
+@@ -552,13 +613,17 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 	pa_high = ioread32(&priv->regs_t->ctrl_cmd_pa_high);
+ 	pa_low  = ioread32(&priv->regs_t->ctrl_cmd_pa_low);
+ 	cmd_pa = ((u64)pa_high << 32) | pa_low;
+-	cmd_size = crb_fixup_cmd_size(dev, &io_res, cmd_pa,
+-				      ioread32(&priv->regs_t->ctrl_cmd_size));
++	cmd_size = ioread32(&priv->regs_t->ctrl_cmd_size);
++
++	cres = crb_containing_resource(&crb_resources, cmd_pa, cmd_size, false);
++	if (cres)
++		cmd_size = crb_fixup_cmd_size(dev, &cres->io_res,
++					      cmd_pa, cmd_size);
+ 
+ 	dev_dbg(dev, "cmd_hi = %X cmd_low = %X cmd_size %X\n",
+ 		pa_high, pa_low, cmd_size);
+ 
+-	priv->cmd = crb_map_res(dev, priv, &io_res, cmd_pa, cmd_size);
++	priv->cmd = crb_map_res(dev, cres, cmd_pa, cmd_size);
+ 	if (IS_ERR(priv->cmd)) {
+ 		ret = PTR_ERR(priv->cmd);
+ 		goto out;
+@@ -566,11 +631,16 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 
+ 	memcpy_fromio(&__rsp_pa, &priv->regs_t->ctrl_rsp_pa, 8);
+ 	rsp_pa = le64_to_cpu(__rsp_pa);
+-	rsp_size = crb_fixup_cmd_size(dev, &io_res, rsp_pa,
+-				      ioread32(&priv->regs_t->ctrl_rsp_size));
++	rsp_size = ioread32(&priv->regs_t->ctrl_rsp_size);
++
++	cres = crb_containing_resource(&crb_resources, rsp_pa,
++				       rsp_size, false);
++	if (cres)
++		rsp_size = crb_fixup_cmd_size(dev, &cres->io_res,
++					      rsp_pa, rsp_size);
+ 
+ 	if (cmd_pa != rsp_pa) {
+-		priv->rsp = crb_map_res(dev, priv, &io_res, rsp_pa, rsp_size);
++		priv->rsp = crb_map_res(dev, cres, rsp_pa, rsp_size);
+ 		ret = PTR_ERR_OR_ZERO(priv->rsp);
+ 		goto out;
+ 	}
+@@ -596,6 +666,10 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 
+ 	__crb_relinquish_locality(dev, priv, 0);
+ 
++out_free_crb_resources:
++
++	crb_free_resource_list(&crb_resources);
++
+ 	return ret;
+ }
+ 
 -- 
-2.22.0
+2.20.1
 
