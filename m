@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F35C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7ECC433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A041E217F5
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 486972173C
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:06:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wd/MLYXc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rx2STIca"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbfHKIF7 (ORCPT
+        id S1726648AbfHKIGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 04:05:59 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33470 "EHLO
+        Sun, 11 Aug 2019 04:06:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33330 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbfHKIF5 (ORCPT
+        with ESMTP id S1726488AbfHKIFz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 04:05:57 -0400
+        Sun, 11 Aug 2019 04:05:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=3t34NdMYaxK3b7q79OweXtc3LDVxX2AkiLPLkSCTGmc=; b=Wd/MLYXcWw0RcxlthtcL1M20zy
-        3bKATolABUJyp/PAgkQ4isIzv+9iROyEB1CcZ4Ml1Wi3ZnAy4EOi3+/rg1Xny12A0iq9qRSOMEqZa
-        Nbk/hVRbubwVuY2/kv++6zEIq1+31DKl3O+lUg8hlojvJVESHBqyreHowXtg8HUx/MxToZvM3TyIi
-        /mGely6wTaaqz/q+rfs1GIvjoeWuxn/W3PSj/6hwcgD19UG1ZFWNPDAo2LSio+dvq8ZhXo2EgfB6v
-        gm+4ZM2IgnbwIXhK3NKrv9vstUDV5KKfTSSSxGKaLE5dTMpuLRcbZLstlxanB4X3rU4Ie6P0oSDV1
-        xs8Di//Q==;
+        bh=/qPzNIpevvN/qwi+1IcOX2emVd7L7tcHzjYkoXjMmbs=; b=rx2STIcad83YqjkOlc8pS3EKFK
+        tm5EQbOmD/zVesaB2Yrka4WpJlP1wkoqY2lwbZhzszanIlrNAV4QTyV8TCOF9F3eI3zuLrIJd1Zkz
+        /6Qz6H0Uu+YmAp0zzbW9uv0aN73hwVJ4eagsQzRMNy+wzoMs2+vf0kHt/V80B+ZW/AG3/htUUV1KM
+        3LsUroqS4mhIvTAjCxTfIBA/5IwbT+2Jq4jOGvfRcgkAsYpujmAHbQNcQxfqKUure4D6FDtoCq9+k
+        thu7CtXONgfv8pgEAme12GQ8RHhMiE8QEIZeEdrfspL7BjvQUUI7VGUabnM6ngSB7IYK8iw/PwVYb
+        0AgEyMFg==;
 Received: from [2001:4bb8:180:1ec3:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hwir6-0001ut-IN; Sun, 11 Aug 2019 08:05:33 +0000
+        id 1hwirF-0001yq-Iw; Sun, 11 Aug 2019 08:05:42 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Maxime Chevallier <maxime.chevallier@bootlin.com>
@@ -59,9 +59,9 @@ Cc:     Gavin Li <git@thegavinli.com>,
         linux-usb@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/6] usb: add a hcd_uses_dma helper
-Date:   Sun, 11 Aug 2019 10:05:16 +0200
-Message-Id: <20190811080520.21712-3-hch@lst.de>
+Subject: [PATCH 5/6] dma-mapping: remove is_device_dma_capable
+Date:   Sun, 11 Aug 2019 10:05:19 +0200
+Message-Id: <20190811080520.21712-6-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190811080520.21712-1-hch@lst.de>
 References: <20190811080520.21712-1-hch@lst.de>
@@ -73,119 +73,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The USB buffer allocation code is the only place in the usb core (and in
-fact the whole kernel) that uses is_device_dma_capable, while the URB
-mapping code uses the uses_dma flag in struct usb_bus.  Switch the buffer
-allocation to use the uses_dma flag used by the rest of the USB code,
-and create a helper in hcd.h that checks this flag as well as the
-CONFIG_HAS_DMA to simplify the caller a bit.
+No users left.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/usb/core/buffer.c | 10 +++-------
- drivers/usb/core/hcd.c    |  4 ++--
- drivers/usb/dwc2/hcd.c    |  2 +-
- include/linux/usb.h       |  2 +-
- include/linux/usb/hcd.h   |  3 +++
- 5 files changed, 10 insertions(+), 11 deletions(-)
+ include/linux/dma-mapping.h | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/usb/core/buffer.c b/drivers/usb/core/buffer.c
-index 1a5b3dcae930..6cf22c27f2d2 100644
---- a/drivers/usb/core/buffer.c
-+++ b/drivers/usb/core/buffer.c
-@@ -66,9 +66,7 @@ int hcd_buffer_create(struct usb_hcd *hcd)
- 	char		name[16];
- 	int		i, size;
- 
--	if (hcd->localmem_pool ||
--	    !IS_ENABLED(CONFIG_HAS_DMA) ||
--	    !is_device_dma_capable(hcd->self.sysdev))
-+	if (hcd->localmem_pool || !hcd_uses_dma(hcd))
- 		return 0;
- 
- 	for (i = 0; i < HCD_BUFFER_POOLS; i++) {
-@@ -129,8 +127,7 @@ void *hcd_buffer_alloc(
- 		return gen_pool_dma_alloc(hcd->localmem_pool, size, dma);
- 
- 	/* some USB hosts just use PIO */
--	if (!IS_ENABLED(CONFIG_HAS_DMA) ||
--	    !is_device_dma_capable(bus->sysdev)) {
-+	if (!hcd_uses_dma(hcd)) {
- 		*dma = ~(dma_addr_t) 0;
- 		return kmalloc(size, mem_flags);
- 	}
-@@ -160,8 +157,7 @@ void hcd_buffer_free(
- 		return;
- 	}
- 
--	if (!IS_ENABLED(CONFIG_HAS_DMA) ||
--	    !is_device_dma_capable(bus->sysdev)) {
-+	if (!hcd_uses_dma(hcd)) {
- 		kfree(addr);
- 		return;
- 	}
-diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-index 2ccbc2f83570..8592c0344fe8 100644
---- a/drivers/usb/core/hcd.c
-+++ b/drivers/usb/core/hcd.c
-@@ -1412,7 +1412,7 @@ int usb_hcd_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
- 	if (usb_endpoint_xfer_control(&urb->ep->desc)) {
- 		if (hcd->self.uses_pio_for_control)
- 			return ret;
--		if (IS_ENABLED(CONFIG_HAS_DMA) && hcd->self.uses_dma) {
-+		if (hcd_uses_dma(hcd)) {
- 			if (is_vmalloc_addr(urb->setup_packet)) {
- 				WARN_ONCE(1, "setup packet is not dma capable\n");
- 				return -EAGAIN;
-@@ -1446,7 +1446,7 @@ int usb_hcd_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
- 	dir = usb_urb_dir_in(urb) ? DMA_FROM_DEVICE : DMA_TO_DEVICE;
- 	if (urb->transfer_buffer_length != 0
- 	    && !(urb->transfer_flags & URB_NO_TRANSFER_DMA_MAP)) {
--		if (IS_ENABLED(CONFIG_HAS_DMA) && hcd->self.uses_dma) {
-+		if (hcd_uses_dma(hcd)) {
- 			if (urb->num_sgs) {
- 				int n;
- 
-diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
-index ee144ff8af5b..111787a137ee 100644
---- a/drivers/usb/dwc2/hcd.c
-+++ b/drivers/usb/dwc2/hcd.c
-@@ -4608,7 +4608,7 @@ static int _dwc2_hcd_urb_enqueue(struct usb_hcd *hcd, struct urb *urb,
- 
- 	buf = urb->transfer_buffer;
- 
--	if (hcd->self.uses_dma) {
-+	if (hcd_uses_dma(hcd)) {
- 		if (!buf && (urb->transfer_dma & 3)) {
- 			dev_err(hsotg->dev,
- 				"%s: unaligned transfer with no transfer_buffer",
-diff --git a/include/linux/usb.h b/include/linux/usb.h
-index 83d35d993e8c..e87826e23d59 100644
---- a/include/linux/usb.h
-+++ b/include/linux/usb.h
-@@ -1457,7 +1457,7 @@ typedef void (*usb_complete_t)(struct urb *);
-  * field rather than determining a dma address themselves.
-  *
-  * Note that transfer_buffer must still be set if the controller
-- * does not support DMA (as indicated by bus.uses_dma) and when talking
-+ * does not support DMA (as indicated by hcd_uses_dma()) and when talking
-  * to root hub. If you have to trasfer between highmem zone and the device
-  * on such controller, create a bounce buffer or bail out with an error.
-  * If transfer_buffer cannot be set (is in highmem) and the controller is DMA
-diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
-index bab27ccc8ff5..a20e7815d814 100644
---- a/include/linux/usb/hcd.h
-+++ b/include/linux/usb/hcd.h
-@@ -422,6 +422,9 @@ static inline bool hcd_periodic_completion_in_progress(struct usb_hcd *hcd,
- 	return hcd->high_prio_bh.completing_ep == ep;
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index f7d1eea32c78..14702e2d6fa8 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -149,11 +149,6 @@ static inline int valid_dma_direction(int dma_direction)
+ 		(dma_direction == DMA_FROM_DEVICE));
  }
  
-+#define hcd_uses_dma(hcd) \
-+	(IS_ENABLED(CONFIG_HAS_DMA) && (hcd)->self.uses_dma)
-+
- extern int usb_hcd_link_urb_to_ep(struct usb_hcd *hcd, struct urb *urb);
- extern int usb_hcd_check_unlink_urb(struct usb_hcd *hcd, struct urb *urb,
- 		int status);
+-static inline int is_device_dma_capable(struct device *dev)
+-{
+-	return dev->dma_mask != NULL && *dev->dma_mask != DMA_MASK_NONE;
+-}
+-
+ #ifdef CONFIG_DMA_DECLARE_COHERENT
+ /*
+  * These three functions are only for dma allocator.
 -- 
 2.20.1
 
