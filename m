@@ -2,119 +2,155 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88178C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 15:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E30BC433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 16:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DAC62085B
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 15:44:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="o+O/hv48"
+	by mail.kernel.org (Postfix) with ESMTP id 67B6320880
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 16:08:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfHKPoC (ORCPT
+        id S1726510AbfHKQH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 11:44:02 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36918 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfHKPoB (ORCPT
+        Sun, 11 Aug 2019 12:07:58 -0400
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:34617 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfHKQH6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 11:44:01 -0400
-Received: by mail-ot1-f68.google.com with SMTP id f17so15185008otq.4;
-        Sun, 11 Aug 2019 08:44:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RgzDUY8iEdtjWOC/UcjlQu0YWYk/dEALxCJaSLPEEOM=;
-        b=o+O/hv48sg3cHwHlW8B8v0viNUMFEX8D2CGWAPNzX9pjzuu/6K7dFO7SSRtt2y1bhV
-         7jKQAk4MWx9nG/yoH+SE4caHw/uu9/DzLJy6fjcx0ZiKYbC7E8bWqkIeJPYHSsW5MvOK
-         H298XXnhhFWqJ7Ywh1i6i7IaPm9io3SWKnbkSZUCJJiqcjHs9Iwn9wDdqsSnnR5u18Us
-         yPwcZGmvwNxzPEDgvOKruL+EDjUeODouMUmA1RobQOVJwCfPqIvEr75T3kD7DKSAth42
-         15cgsvRSL3VL1Y4NJI/ChaSumrxgEUXqmeRtgj1yrY4E4Ogo3XWGopCuM3sC623wBrEx
-         xGjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RgzDUY8iEdtjWOC/UcjlQu0YWYk/dEALxCJaSLPEEOM=;
-        b=JOVYdsw7FVYaZpEMp5ldSWLRnmxAAXKAV48AF0by/RpYBpWt3hNlCAPlGZ0RzBJnEc
-         yT0UrFzQV7TCiT44PyQYjOU44LXUTho/r05IVkXyJcjrSFj5MjWfwtvrihPNRdLTOsVD
-         rFumdqFScDGgJBgvKcK4lFN4Wp0cjxFPSgh0fSbbOG5OCncwK0EH/oAYg1izYvO+8iip
-         ZppkOcKmzizWB0CKtk8+8T7BULfwRxXVV4oxdZ0RDrDhlkMb043mPSr1oCECGLAlJPiX
-         iwU0ed8D+2P+/trBJcbBIYdgqvdunlcOp0WDzwL0bWVLNp3nMq9X1sIsRBDNzdfxGuyo
-         nfWQ==
-X-Gm-Message-State: APjAAAXk6gazu/BsZoAeCuGlxPc1mjGU+BWnRid6nDV6SsqIn5u2qs32
-        1W3VrlWFDt3ThMdtGOQVUQ97H7OIH8+Yo/hkX8hl/DVo
-X-Google-Smtp-Source: APXvYqxWNrdwhdZjUN0E+QG+e/rP9vdmU9vDHg66HyoGvwKrC0kqPidAohwxJoPiEC9Es5jTZv3FayaUbUh8NtS3QYo=
-X-Received: by 2002:a05:6830:1e5a:: with SMTP id e26mr11850575otj.96.1565538240642;
- Sun, 11 Aug 2019 08:44:00 -0700 (PDT)
+        Sun, 11 Aug 2019 12:07:58 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 7D1E330000CC0;
+        Sun, 11 Aug 2019 18:07:55 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 56D1C22B01A; Sun, 11 Aug 2019 18:07:55 +0200 (CEST)
+Date:   Sun, 11 Aug 2019 18:07:55 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] PCI: pciehp: Add pciehp_set_indicators() to jointly
+ set LED indicators
+Message-ID: <20190811160755.w2jpcqt2powdcz7q@wunner.de>
+References: <20190811132945.12426-1-efremov@linux.com>
+ <20190811132945.12426-2-efremov@linux.com>
 MIME-Version: 1.0
-References: <20190806130506.8753-1-glaroque@baylibre.com> <20190806130506.8753-3-glaroque@baylibre.com>
-In-Reply-To: <20190806130506.8753-3-glaroque@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sun, 11 Aug 2019 17:43:49 +0200
-Message-ID: <CAFBinCAMjtWTAvVEhMxDx1NPvCp9dU8HewxBxxp1TAtr3ZbKtw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] thermal: amlogic: Add thermal driver to support
- G12 SoCs
-To:     Guillaume La Roque <glaroque@baylibre.com>
-Cc:     daniel.lezcano@linaro.org, khilman@baylibre.com,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190811132945.12426-2-efremov@linux.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guillaume,
+On Sun, Aug 11, 2019 at 04:29:42PM +0300, Denis Efremov wrote:
+> This commit adds pciehp_set_indicators() to set power and attention
 
-[...]
-> +struct amlogic_thermal {
-> +       struct platform_device *pdev;
-> +       const struct amlogic_thermal_data *data;
-> +       struct regmap *regmap;
-> +       struct regmap *sec_ao_map;
-> +       struct clk *clk;
-> +       struct thermal_zone_device *tzd;
-> +       u32 trim_info;
-> +       void __iomem *base;
-nit-pick: this is only used in _probe() so you could make it a local
-variable there
-
-[...]
-> +static const struct of_device_id of_amlogic_thermal_match[] = {
-> +       {
-> +               .compatible = "amlogic,g12-ddr-thermal",
-> +               .data = &amlogic_thermal_g12_ddr_param,
-> +       },
-> +       {
-> +               .compatible = "amlogic,g12-cpu-thermal",
-> +               .data = &amlogic_thermal_g12_cpu_param,
-> +       },
-I assume you are using "g12" to indicate that it's valid for both,
-G12A and G12B?
-meson-g12-common.dtsi currently does not use any other "amlogic,g12-*"
-compatible string (there are some meson-axg-*, meson-gx-* and
-meson-g12a-* ones, but no g12-*)
-I would like to hear Kevin's and Neil's opinion on this one whether we
-should introduce that "amlogic,g12-*" prefix or stick to
-"amlogic,g12a-*"
-
-[...]
-> +       ret = amlogic_thermal_enable(pdata);
-> +       if (ret)
-> +               clk_disable_unprepare(pdata->clk);
-amlogic_thermal_enable only returns an error-code if clk_prepare_enable() fails
-in that case the clock is neither prepared nor enabled so we must not
-call clk_disable_unprepare
-
-apart from that it looks good to me (as someone who doesn't know the
-thermal framework)
+Nit:  "This commit ..." is superfluous, just say "Add ...".
 
 
-Martin
+> indicators with a single register write. enum pciehp_indicator
+> introduced to switch between the indicators statuses. Attention
+> indicator statuses are explicitly set with values in the enum to
+> transparently comply with pciehp_set_attention_status() from
+> pciehp_hpc.c and set_attention_status() from pciehp_core.c
+
+Please document the motivation of the change (the "why").
+
+One motivation might be to avoid waiting twice for Command Complete.
+
+Another motivation might be to change both LEDs at the same time
+in a glitch-free manner, thereby achieving a smoother user experience.
+
+
+> --- a/drivers/pci/hotplug/pciehp.h
+> +++ b/drivers/pci/hotplug/pciehp.h
+> +enum pciehp_indicator {
+> +	// Explicit values to match set_attention_status interface
+
+Kernel coding style is typically /* */, not //.
+
+
+> +	ATTN_NONE = -1,
+> +	ATTN_OFF = 0,
+> +	ATTN_ON = 1,
+> +	ATTN_BLINK = 2,
+> +	PWR_NONE,
+> +	PWR_OFF,
+> +	PWR_ON,
+> +	PWR_BLINK
+> +};
+
+I'd suggest using the same values that are written to the register, i.e.:
+
+enum pciehp_indicator {
+	ATTN_NONE  = -1,
+	ATTN_ON    =  1,
+	ATTN_BLINK =  2,
+	ATTN_OFF   =  3,
+	PWR_NONE   = -1,
+	PWR_ON     =  1,
+	PWR_BLINK  =  2,
+	PWR_OFF    =  3,
+};
+
+Then you can just shift the values to the proper offset and don't need
+a translation between enum pciehp_indicator and register value.
+
+
+> +void pciehp_set_indicators(struct controller *ctrl,
+> +			   enum pciehp_indicator pwr,
+> +			   enum pciehp_indicator attn)
+> +{
+> +	u16 cmd = 0;
+> +	bool pwr_none = (pwr == PWR_NONE);
+> +	bool attn_none = (attn == ATTN_NONE);
+> +	bool pwr_led = PWR_LED(ctrl);
+> +	bool attn_led = ATTN_LED(ctrl);
+> +
+> +	if ((!pwr_led && !attn_led) || (pwr_none && attn_none) ||
+> +	    (!attn_led && pwr_none) || (!pwr_led && attn_none))
+> +		return;
+
+I'd suggest the following simpler construct:
+
+	if (!PWR_LED(ctrl)  || pwr  == PWR_NONE) &&
+	    !ATTN_LED(ctrl) || attn == ATTN_NONE))
+		return;
+
+
+> +	switch (pwr) {
+> +	case PWR_OFF:
+> +		cmd = PCI_EXP_SLTCTL_PWR_IND_OFF;
+> +		break;
+> +	case PWR_ON:
+> +		cmd = PCI_EXP_SLTCTL_PWR_IND_ON;
+> +		break;
+> +	case PWR_BLINK:
+> +		cmd = PCI_EXP_SLTCTL_PWR_IND_BLINK;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+
+If you follow my suggestion above to use the register value for "pwr",
+then you can just fold all three cases into one, i.e.
+
+	case PWR_ON:
+	case PWR_BLINK:
+	case PWR_OFF:
+		cmd = pwr << 8;
+		mask |= PCI_EXP_SLTCTL_PIC;
+		break;
+
+Feel free to add a PCI_EXP_SLTCTL_PWR_IND_OFFSET macro for the offset 8.
+Add a "u16 mask = 0" to the top of the function and pass "mask" to
+pcie_write_cmd_nowait().
+
+Thanks,
+
+Lukas
