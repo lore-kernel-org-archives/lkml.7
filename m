@@ -2,98 +2,163 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A3CFC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 13:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23100C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 13:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B762084D
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 13:47:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="p2tu4E4X"
+	by mail.kernel.org (Postfix) with ESMTP id EC178216F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 13:57:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565531841;
+	bh=EKhbEXkuN2ZDGDQDDOeHR5yEUXMTrmt9kFJSq7Yr/c4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=p5lX7ZrofUCBwT48D6VJd82IoOUFxTgmRmUr26egvHmVDEjy8bqriSCuq7k169CLR
+	 tLE7MctO6eyltZnjayddxNXMypP3aueMjzgaqv3ZCIH6Na4DkuYokjv7Iul4zWte3c
+	 P5hpOvFa/VX36baFwDpaCSaY/ikp9OW2EbRlThyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfHKNrV (ORCPT
+        id S1726476AbfHKN5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 09:47:21 -0400
-Received: from mail-pg1-f170.google.com ([209.85.215.170]:34019 "EHLO
-        mail-pg1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfHKNrV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 09:47:21 -0400
-Received: by mail-pg1-f170.google.com with SMTP id n9so41965234pgc.1
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 06:47:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eKL1dA155QCu6WYrg0VrgaVF1x3BPFSyhRdmz8vLW5g=;
-        b=p2tu4E4X7s81MRwfV968FP5zSv+IZkMFZa/KVtay3OLVJ1mqT6IMqCCZhnuIGTAoMQ
-         UnqjNXTSubbJTUxUoz6J68iuBG4+dhtyAj6PcBhjcx1PH9NtPkm1abxJQ73avVAZeOJ1
-         VXYoyC8CG0Qy6FJz2J9CYFtoTNELIQ+qMlwf52gZ/EhTr9l6jOaXVKYjdaMyK9nTdvxk
-         P6IeLoTamnbJ/xJwB8kCgFXjLoiahqQReE4Rdt76EUt2H2ffVHkrMH6Z+FKXtovHKfuq
-         xjdtEqmhiTQWFBo81uR3XjPAs03z4vTUtSrDvXFxqW5Q1BhQUq3I/BevvE7sDTnI3rgZ
-         hbHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eKL1dA155QCu6WYrg0VrgaVF1x3BPFSyhRdmz8vLW5g=;
-        b=Ne0rXdISEEvXIHQMMYFEO2gPfYbwANM+zt2aSFmTFAcmXCt8LCuNIQwMeuZx+aAYMM
-         mluPAGFoOdE31bGqPt1N4hGWvR9HnEu1WC4TedO8lyKiALYnNcUVxDk0J4jYlLQ3/m1y
-         oqzT3IB173jvi8wEt3s7UA5567Kf7CBU9LtYeqGDnkRVKTlV4PViNH08NfKbPaeJZsHc
-         lH5SAtQyRabkjMOebNdhPO4iYq+MzAzrOKA8RF8DxMunfka1wjIHvgmbyxMP8cs30Ne6
-         +Xue87a/FCbT9zlPhOB/XqMN6k6DL/ahJpDWG8fSjZ8ejk0PG0PynvaCEgfxAprImI3k
-         qVMA==
-X-Gm-Message-State: APjAAAX2TXgeRH7AqoQUiWqyPSzKd/3A5TdsLbpHwzZZh86OLRUDujWq
-        2GIH4AeuyeGXke7fBnr17f30BA==
-X-Google-Smtp-Source: APXvYqxIGqIKdUE8+57ofBw5l8grr/0GPy0neLSmHefZqohaJwNu6RjqIkrC6ao1tj7ncQD1Z2+KNg==
-X-Received: by 2002:a17:90a:94c3:: with SMTP id j3mr1151182pjw.10.1565531240464;
-        Sun, 11 Aug 2019 06:47:20 -0700 (PDT)
-Received: from [192.168.1.188] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id 131sm33085239pge.37.2019.08.11.06.47.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 11 Aug 2019 06:47:19 -0700 (PDT)
-Subject: Re: [PATCHv2 0/4] blk_execute_rq{_nowait} cleanup part1
-To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     hch@lst.de, linux-block@vger.kernel.org
-References: <20190809105433.8946-1-marcos.souza.org@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <55246cff-6d32-e7d5-bee0-9940bc59250a@kernel.dk>
-Date:   Sun, 11 Aug 2019 07:47:17 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 11 Aug 2019 09:57:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45254 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726164AbfHKN5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 09:57:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10733216F4;
+        Sun, 11 Aug 2019 13:57:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565531838;
+        bh=EKhbEXkuN2ZDGDQDDOeHR5yEUXMTrmt9kFJSq7Yr/c4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=dEUo6gFgpCW5qwrNSy2i1ariezzngOi0dDqvHVhIVtJrCVwJxq/CIBGmjtJcHp2Xx
+         5yrCFXFR+82q+CEoh5qkOguBCGR6f9gw4bM9Ztgl3+ns31ULYsv0W6UmFqS32TcQhA
+         3x08Ig6vyu3TQvysg6OTIULIrt61XP90fxTD41YM=
+Date:   Sun, 11 Aug 2019 15:57:16 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.4.189
+Message-ID: <20190811135716.GA23065@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20190809105433.8946-1-marcos.souza.org@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/9/19 3:54 AM, Marcos Paulo de Souza wrote:
-> After checking the request_queue argument of funtion blk_execute_rq_nowait, I
-> now added three more patches, one to remove the same argument from
-> blk_execute_rq and other two to change the at_head argument from
-> blk_exeute_rq_{nowait} from int to bool.
-> 
-> Original patch can be checked here[1].
-> 
-> After this patch gets merged, my plan is to analyse the usage the gendisk
-> argument, is being set as NULL but the majority of callers.
-> 
-> [1]: https://lkml.org/lkml/2019/8/6/31
+I'm announcing the release of the 4.4.189 kernel.
 
-Don't ever send something out that hasn't even been compiled. I already
-detest doing kernel-wide cleanup changes like this, but when I do, I
-need absolute confidence in it actually being tested. The fact that it
-hasn't even been compiled is a big black mark on the submitter.
+All users of the 4.4 kernel series must upgrade.
 
--- 
-Jens Axboe
+The updated 4.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.4.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+
+thanks,
+
+greg k-h
+
+------------
+
+ Documentation/kernel-parameters.txt             |    7 -
+ Makefile                                        |    2 
+ arch/arm64/include/asm/cpufeature.h             |    7 -
+ arch/arm64/kernel/cpufeature.c                  |   14 ++-
+ arch/x86/entry/calling.h                        |   19 ++++
+ arch/x86/entry/entry_64.S                       |   25 ++++-
+ arch/x86/include/asm/cpufeatures.h              |   10 +-
+ arch/x86/kernel/cpu/bugs.c                      |  105 +++++++++++++++++++++---
+ arch/x86/kernel/cpu/common.c                    |   42 ++++++---
+ block/blk-core.c                                |    1 
+ drivers/atm/iphase.c                            |    8 +
+ drivers/hid/hid-ids.h                           |    1 
+ drivers/hid/usbhid/hid-quirks.c                 |    1 
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c |    2 
+ drivers/net/ethernet/mellanox/mlx5/core/main.c  |    2 
+ drivers/net/ppp/pppoe.c                         |    3 
+ drivers/net/ppp/pppox.c                         |   13 ++
+ drivers/net/ppp/pptp.c                          |    3 
+ drivers/spi/spi-bcm2835.c                       |    3 
+ fs/compat_ioctl.c                               |    3 
+ include/linux/if_pppox.h                        |    3 
+ include/net/tcp.h                               |   17 +++
+ net/bridge/br_vlan.c                            |    5 +
+ net/core/dev.c                                  |    2 
+ net/ipv4/tcp_output.c                           |   11 ++
+ net/l2tp/l2tp_ppp.c                             |    3 
+ net/netfilter/nfnetlink_acct.c                  |    2 
+ net/sched/sch_codel.c                           |    3 
+ net/tipc/netlink_compat.c                       |   11 +-
+ 29 files changed, 271 insertions(+), 57 deletions(-)
+
+Arnd Bergmann (1):
+      compat_ioctl: pppoe: fix PPPOEIOCSFWD handling
+
+Ben Hutchings (1):
+      x86: cpufeatures: Sort feature word 7
+
+Eric Dumazet (1):
+      tcp: be more careful in tcp_fragment()
+
+Greg Kroah-Hartman (1):
+      Linux 4.4.189
+
+Gustavo A. R. Silva (1):
+      atm: iphase: Fix Spectre v1 vulnerability
+
+Jia-Ju Bai (1):
+      net: sched: Fix a possible null-pointer dereference in dequeue_func()
+
+Jiri Pirko (1):
+      net: fix ifindex collision during namespace removal
+
+Josh Poimboeuf (3):
+      x86/speculation: Prepare entry code for Spectre v1 swapgs mitigations
+      x86/speculation: Enable Spectre v1 swapgs mitigations
+      x86/entry/64: Use JMP instead of JMPQ
+
+Lukas Wunner (1):
+      spi: bcm2835: Fix 3-wire mode if DMA is enabled
+
+Mark Zhang (1):
+      net/mlx5: Use reversed order when unregister devices
+
+Nikolay Aleksandrov (1):
+      net: bridge: delete local fdb on device init failure
+
+Phil Turnbull (1):
+      netfilter: nfnetlink_acct: validate NFACCT_QUOTA parameter
+
+Sebastian Parschauer (1):
+      HID: Add quirk for HP X1200 PIXART OEM mouse
+
+Sudarsana Reddy Kalluru (1):
+      bnx2x: Disable multi-cos feature.
+
+Taras Kondratiuk (1):
+      tipc: compat: allow tipc commands without arguments
+
+Thomas Gleixner (1):
+      x86/speculation/swapgs: Exclude ATOMs from speculation through SWAPGS
+
+Wanpeng Li (1):
+      x86/entry/64: Fix context tracking state warning when load_gs_index fails
+
+Will Deacon (2):
+      arm64: cpufeature: Fix CTR_EL0 field definitions
+      arm64: cpufeature: Fix feature comparison for CTR_EL0.{CWG,ERG}
+
+xiao jin (1):
+      block: blk_init_allocated_queue() set q->fq as NULL in the fail case
 
