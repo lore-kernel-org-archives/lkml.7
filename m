@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CCAC0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 20:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7302C0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 20:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 113612147A
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 20:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 747B32173C
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 20:32:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KHe21AKd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ly+71Zaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbfHKUcB (ORCPT
+        id S1726609AbfHKUcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 16:32:01 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38924 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbfHKUb7 (ORCPT
+        Sun, 11 Aug 2019 16:32:09 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39074 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbfHKUb6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 16:31:59 -0400
-Received: by mail-wm1-f65.google.com with SMTP id u25so10009336wmc.4;
-        Sun, 11 Aug 2019 13:31:58 -0700 (PDT)
+        Sun, 11 Aug 2019 16:31:58 -0400
+Received: by mail-wr1-f67.google.com with SMTP id t16so12773557wra.6;
+        Sun, 11 Aug 2019 13:31:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cqEyWiFMPAZ1NvJfJjLqIDmYUzdmfNk5EDDyLjyH02E=;
-        b=KHe21AKdQYzpf8mH5+VzMOd91TmxEZmAxwbxGDwKukO7Ann4MMaqndFz4uoH4rYSfZ
-         QfoZF7odDseQ1LhaqKu7s07hG0k4HNpeDzgm6JqXrpLrBH4T4epkF7+AFlTfw+GiwXOl
-         p+Uwm+XQE35n2BXrPCso+gsVp73LeexHhywIn7W48BnYP2Mf7W7mej4aLODyrtmIH4/8
-         eCKrtO3wRkG+xhYamCGgP0KjVNQwNNUoCwaCQrYUmN3ob60NVlprGXB1LtukWjByXIdu
-         7qXsg2r3Z+ppyy/xoU4Y4TkTnEX9qqI2sTMd4JIl66zMDHgtlyimdKezOO/hY/XnRmvY
-         i4dA==
+        bh=OlAy4iNnvpXUfWGzbLAVAxpfZU/8XBVjL/0mbqQ077c=;
+        b=ly+71Zaz/X9NyRaWrirRlpyMXzsGMNtcBIlaS9oIk8T1YKCC7/Tj4Vxo5nLS01EAbI
+         30RLA6qzAZBLap2dED1SGNozXwZB0Pi7ELLnUdI5XLMGT11HRajfX+JJJm/ThUzrjB0Z
+         h45iX8Go0ht636Kdz7pdzBLLmlBszFWSTwNc3vNvH5jFI4BA6vA8Rg0eWitkSOvysns6
+         Tx4d1PgloYMj1ibLpY9n25gLp4VbUQj6RlqeQebIISg0ByU3jYymz+YPcHhkCbm75nR7
+         21411fOa1cFTr6VQfX6FvQVEqHrypgXYU+P0k8D1bsuTmQqsmwZhEo6HqaoTLFiakUJI
+         KYRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cqEyWiFMPAZ1NvJfJjLqIDmYUzdmfNk5EDDyLjyH02E=;
-        b=MtXlZrjcKpUYImMufLU6CgJdwJSNawCZPI9871UYpuA66B2zljyHABJKGmYXlKtWDD
-         u0rzdUqxRjndZ+iyMcJtINQ0ypkCZCKpHS3XyM/TbuTjJe3YXG80TwoXw2pv04pnHVde
-         Qmecnuj9DLBcZvd1ND/+kS/zo/TUtisB2BTev8NOhrb3I3NFU9iWKp1Y+zr6j31BPwvm
-         wTDS9dwWZ6BjdByQO5D5bSqme5vpCDImA5g+aYrX1rRZi6YQPlI1elpVg0WnObjvKWc9
-         CIVzI3FceEUYJLiAbBR2+zD++m/YAOSm9uTB704evtbWM9KEkgW0gtO//AtYH2TY5s/M
-         RU9A==
-X-Gm-Message-State: APjAAAUdc9cxfJLfV9GKUAVF4puUqBo+v20WauBWrz3wGEy1XwLSsbtA
-        1usG7uAZRG4gJcJp45vczm0=
-X-Google-Smtp-Source: APXvYqxQ0D6hBVy7gRNf9suLk16jU3u90wVI74bZGyD7Iq0fC5+3xfhAkOnad4WI0haC0pJ4awz0kQ==
-X-Received: by 2002:a05:600c:231a:: with SMTP id 26mr10158445wmo.136.1565555517369;
-        Sun, 11 Aug 2019 13:31:57 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id a8sm11063269wma.31.2019.08.11.13.31.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        bh=OlAy4iNnvpXUfWGzbLAVAxpfZU/8XBVjL/0mbqQ077c=;
+        b=st2S7iEV9ZSwYzQIym9ngXD0G1hgYFzbjvYLZEEFZr0I2ZQfSV/b7U9ItFBx5Q88Nv
+         h/Pv2AFhnF9esoDv6X0hD1+Phkcc9xp+SNA9JOtZ6YrdLGqwg5EUm+L1989pgbzAVItX
+         0t3U6+fXKpJbb63xiQkY5TRzjlDn2JI/2ZpWHZnhQJ+aKw/wqiLC1mafmUbdNMrPqJBB
+         3NzziHemzJIhSd/Yq+RWnaxROVGsraDU+Br0F/BImuE/O/oMwOtCWYhGKCqzFLy0kWIY
+         W6Q+4oTQuIH02f79UO6hLHTjfX5At/vJdQWhBKTHsemtdPfBDNgHahbKLGTmQNzwLXD9
+         WZ8A==
+X-Gm-Message-State: APjAAAU3F9/knnjvCzZhlNHs4agiitD9bwZ6ceMAkw+j1TtujiC8jHAB
+        t/knLqhnOF8+EWoc27bZejo=
+X-Google-Smtp-Source: APXvYqyujAHdwhl3y5Jb21DrU1zw3uVqtrkNnTjI4QUdlilQy7BcEMoR2pY5eXQt6p5wlKH2pHoGQw==
+X-Received: by 2002:adf:cd11:: with SMTP id w17mr9316867wrm.297.1565555516367;
         Sun, 11 Aug 2019 13:31:56 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id a8sm11063269wma.31.2019.08.11.13.31.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 11 Aug 2019 13:31:55 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>,
         Rob Herring <robh+dt@kernel.org>
 Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v5 3/3] arm64: defconfig: Enable Sun4i SPDIF module
-Date:   Sun, 11 Aug 2019 22:31:44 +0200
-Message-Id: <20190811203144.5999-4-peron.clem@gmail.com>
+Subject: [PATCH v5 2/3] arm64: dts: allwinner: h6: Enable SPDIF for Beelink GS1
+Date:   Sun, 11 Aug 2019 22:31:43 +0200
+Message-Id: <20190811203144.5999-3-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190811203144.5999-1-peron.clem@gmail.com>
 References: <20190811203144.5999-1-peron.clem@gmail.com>
@@ -77,27 +77,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwinner A64 and H6 use the Sun4i SPDIF driver.
-
-Enable this to allow a proper support.
+Beelink GS1 board has a SPDIF out connector, so enable it in
+the device-tree.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 0e58ef02880c..b0638849c14c 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -558,6 +558,7 @@ CONFIG_SND_SOC_ROCKCHIP_RT5645=m
- CONFIG_SND_SOC_RK3399_GRU_SOUND=m
- CONFIG_SND_SOC_SAMSUNG=y
- CONFIG_SND_SOC_RCAR=m
-+CONFIG_SND_SUN4I_SPDIF=m
- CONFIG_SND_SOC_AK4613=m
- CONFIG_SND_SOC_ES7134=m
- CONFIG_SND_SOC_ES7241=m
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+index 0dc33c90dd60..76a95ad33dc5 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+@@ -243,6 +243,10 @@
+ 	vcc-pm-supply = <&reg_aldo1>;
+ };
+ 
++&spdif {
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_ph_pins>;
 -- 
 2.20.1
 
