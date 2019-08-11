@@ -2,135 +2,108 @@ Return-Path: <SRS0=XJun=WH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE34C0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF963C0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 073C2208C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97EFA216F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 11 Aug 2019 08:23:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kc3X0PTL"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RYEuc9J/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfHKINP (ORCPT
+        id S1726476AbfHKIXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 04:13:15 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42670 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfHKIND (ORCPT
+        Sun, 11 Aug 2019 04:23:09 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43628 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfHKIXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 04:13:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=wlIHq+QByXfQFn2NhPBNjI0aq3Vrr70dQs8BcS07ZzU=; b=kc3X0PTLwMO5fuhqlS6Qovruk8
-        pDoyHkdZ+189ETCogs3IobPSptChmx20eLInajEaYa9SOM7Pu0nJdngc2DDaOBv0RtJyetKzZeBTk
-        5u+SvBBaD19zrH72HD/iouIYz6pEmZoqRW1d+CernqP+Rvl1BCHCHKpAZmq41FiyvqG10jXSsjizQ
-        lmAoD+M/3j/w6cUPONNpkZHits/zCfz91+B8ELezWMJqODmz+6Z867v/DGRNrXyNRy/ej2Qsv26ox
-        MWJjal2GweQyLKvR3qdqWJm3DyKrLYCm/mXgb6XBkhRBKIc4VWBdo/FVTXaUYpePhl2cr5Nf9YJMS
-        4VOyPYIg==;
-Received: from [2001:4bb8:180:1ec3:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hwiyK-0005Dt-VH; Sun, 11 Aug 2019 08:13:01 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Bharata B Rao <bharata@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
-Subject: [PATCH 4/5] memremap: don't use a separate devm action for devmap_managed_enable_get
-Date:   Sun, 11 Aug 2019 10:12:46 +0200
-Message-Id: <20190811081247.22111-5-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190811081247.22111-1-hch@lst.de>
-References: <20190811081247.22111-1-hch@lst.de>
+        Sun, 11 Aug 2019 04:23:09 -0400
+Received: by mail-pf1-f194.google.com with SMTP id v12so463954pfn.10
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 01:23:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Wo4/uRiHIALFdqkgpwktSoLWl4QtwkIFB23okqQapww=;
+        b=RYEuc9J/vOST/W8tZzIQFZNhcC0yZxjak4y3HFNOKsVzosFaj1j7+3cCSOlDO6aLob
+         zYwcRhY0EbmDXngqblcVApgs6Ies9CuaXAimU1RXSz+M1rMSmXKtL7bnCwF2cOQ3Cod5
+         eTnRFr5flDU+XlSS2jM7wFNzqOBCNMIH8WXHE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Wo4/uRiHIALFdqkgpwktSoLWl4QtwkIFB23okqQapww=;
+        b=RfN+YxT4q0a4EMKBE+IabWfzrQq+mrKgeW5lQSLLQBTxeBDnHoCL9ch58t01VpwCyp
+         Z2QELx6yF7uWLwLPuaWHIWn6wy3z0aKHGnzRE2D7CcxwJug7qoYRkUbAvkhLpRjUjaiW
+         Mu5fubJEp4hf7RNoJuu5jNaa/on1W1E2e1DFsn1oTpBzIM/tcv8GlCAQUGrkldjeUbmn
+         xztvL0dWkw0PyYTp/yJ9DmFSb3nGLeaXwqAFZprQJ3FHFj2718nz1ZijBpncojVduVRn
+         9H4Pu9/iNbXCDirOTTL0kPSgmu1viGa1q34XVpy+27BU88Md5enOP8X7s7B9Mjrsdpu5
+         hthQ==
+X-Gm-Message-State: APjAAAXMTAcq1rH82PDQgCA7v2RoZwG9njbIacyQfXMbcftVRCmYF1DU
+        bRLmXtryyqMplQc1Jm2iXgtZDg==
+X-Google-Smtp-Source: APXvYqymMdyFVk+KzTCVYi2Yr41UUABkv/0v1F5H5bRd/n3h6adkpBkfYEJXBbx789agxpQrjrHTlQ==
+X-Received: by 2002:a17:90a:8a15:: with SMTP id w21mr18096468pjn.134.1565511788520;
+        Sun, 11 Aug 2019 01:23:08 -0700 (PDT)
+Received: from ikjn-glaptop.roam.corp.google.com (36-224-206-174.dynamic-ip.hinet.net. [36.224.206.174])
+        by smtp.gmail.com with ESMTPSA id d14sm122742498pfo.154.2019.08.11.01.23.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 11 Aug 2019 01:23:08 -0700 (PDT)
+From:   Ikjoon Jang <ikjn@chromium.org>
+To:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ikjoon Jang <ikjn@chromium.org>
+Subject: [PATCH] xhci: fix memleak on setup address fails.
+Date:   Sun, 11 Aug 2019 16:22:59 +0800
+Message-Id: <20190811082259.48176-1-ikjn@chromium.org>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just clean up for early failures and then piggy back on
-devm_memremap_pages_release.  This helps with a pending not device
-managed version of devm_memremap_pages.
+Xhci re-enables a slot on transaction error in set_address using
+xhci_disable_slot() + xhci_alloc_dev().
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+But in this case, xhci_alloc_dev() creates debugfs entries upon an
+existing device without cleaning up old entries, thus memory leaks.
+
+So this patch simply moves calling xhci_debugfs_free_dev() from
+xhci_free_dev() to xhci_disable_slot().
+
+Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
 ---
- mm/memremap.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/usb/host/xhci.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/mm/memremap.c b/mm/memremap.c
-index 600a14cbe663..09a087ca30ff 100644
---- a/mm/memremap.c
-+++ b/mm/memremap.c
-@@ -21,13 +21,13 @@ DEFINE_STATIC_KEY_FALSE(devmap_managed_key);
- EXPORT_SYMBOL(devmap_managed_key);
- static atomic_t devmap_managed_enable;
- 
--static void devmap_managed_enable_put(void *data)
-+static void devmap_managed_enable_put(void)
- {
- 	if (atomic_dec_and_test(&devmap_managed_enable))
- 		static_branch_disable(&devmap_managed_key);
- }
- 
--static int devmap_managed_enable_get(struct device *dev, struct dev_pagemap *pgmap)
-+static int devmap_managed_enable_get(struct dev_pagemap *pgmap)
- {
- 	if (!pgmap->ops || !pgmap->ops->page_free) {
- 		WARN(1, "Missing page_free method\n");
-@@ -36,13 +36,16 @@ static int devmap_managed_enable_get(struct device *dev, struct dev_pagemap *pgm
- 
- 	if (atomic_inc_return(&devmap_managed_enable) == 1)
- 		static_branch_enable(&devmap_managed_key);
--	return devm_add_action_or_reset(dev, devmap_managed_enable_put, NULL);
-+	return 0;
- }
- #else
--static int devmap_managed_enable_get(struct device *dev, struct dev_pagemap *pgmap)
-+static int devmap_managed_enable_get(struct dev_pagemap *pgmap)
- {
- 	return -EINVAL;
- }
-+static void devmap_managed_enable_put(void)
-+{
-+}
- #endif /* CONFIG_DEV_PAGEMAP_OPS */
- 
- static void pgmap_array_delete(struct resource *res)
-@@ -123,6 +126,7 @@ static void devm_memremap_pages_release(void *data)
- 	untrack_pfn(NULL, PHYS_PFN(res->start), resource_size(res));
- 	pgmap_array_delete(res);
- 	WARN_ONCE(pgmap->altmap.alloc, "failed to free all reserved pages\n");
-+	devmap_managed_enable_put();
- }
- 
- static void dev_pagemap_percpu_release(struct percpu_ref *ref)
-@@ -212,7 +216,7 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 03d1e552769b..c24c5bf9ef9c 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -3814,7 +3814,6 @@ static void xhci_free_dev(struct usb_hcd *hcd, struct usb_device *udev)
+ 		virt_dev->eps[i].ep_state &= ~EP_STOP_CMD_PENDING;
+ 		del_timer_sync(&virt_dev->eps[i].stop_cmd_timer);
  	}
+-	xhci_debugfs_remove_slot(xhci, udev->slot_id);
+ 	virt_dev->udev = NULL;
+ 	ret = xhci_disable_slot(xhci, udev->slot_id);
+ 	if (ret)
+@@ -3832,6 +3831,8 @@ int xhci_disable_slot(struct xhci_hcd *xhci, u32 slot_id)
+ 	if (!command)
+ 		return -ENOMEM;
  
- 	if (need_devmap_managed) {
--		error = devmap_managed_enable_get(dev, pgmap);
-+		error = devmap_managed_enable_get(pgmap);
- 		if (error)
- 			return ERR_PTR(error);
- 	}
-@@ -321,6 +325,7 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
-  err_array:
- 	dev_pagemap_kill(pgmap);
- 	dev_pagemap_cleanup(pgmap);
-+	devmap_managed_enable_put();
- 	return ERR_PTR(error);
- }
- EXPORT_SYMBOL_GPL(devm_memremap_pages);
++	xhci_debugfs_remove_slot(xhci, slot_id);
++
+ 	spin_lock_irqsave(&xhci->lock, flags);
+ 	/* Don't disable the slot if the host controller is dead. */
+ 	state = readl(&xhci->op_regs->status);
 -- 
-2.20.1
+2.23.0.rc1.153.gdeed80330f-goog
 
