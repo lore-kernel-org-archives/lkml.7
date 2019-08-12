@@ -2,274 +2,139 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78CFC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3D9C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8047520679
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E94B20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:03:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=devtank-co-uk.20150623.gappssmtp.com header.i=@devtank-co-uk.20150623.gappssmtp.com header.b="wAwgpYB8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbfHLVDA (ORCPT
+        id S1727391AbfHLVDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 17:03:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40518 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbfHLVDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 17:03:00 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8B4323081CFE;
-        Mon, 12 Aug 2019 21:02:59 +0000 (UTC)
-Received: from dcbz.redhat.com (ovpn-116-30.ams2.redhat.com [10.36.116.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6B9FD60C44;
-        Mon, 12 Aug 2019 21:02:51 +0000 (UTC)
-Date:   Mon, 12 Aug 2019 23:02:41 +0200
-From:   Adrian Reber <areber@redhat.com>
-To:     Andrei Vagin <avagin@gmail.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelianov <xemul@virtuozzo.com>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v6 1/2] fork: extend clone3() to support setting a PID
-Message-ID: <20190812210241.GA23563@dcbz.redhat.com>
-References: <20190812200939.23784-1-areber@redhat.com>
- <CANaxB-z+DktJ2Kaqdpyp60oPwAtiKyctnoJA2gFZ2r=044DfjQ@mail.gmail.com>
+        Mon, 12 Aug 2019 17:03:36 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51953 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727072AbfHLVDg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 17:03:36 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 207so857621wma.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 14:03:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=devtank-co-uk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-transfer-encoding:content-language;
+        bh=GpW5qLhZyrECHDegQNaRLHT0CfKc1qacLHW2hCzZ6z0=;
+        b=wAwgpYB8w4BwSUbHdghD8ZImzZ2FTixXUOwdkOyc5UkRbhHwFXv5wOp0aRuAsm8HQL
+         Jqgu6hb/QdI3DbANUVBCxoJpxDnBtCfiknDeKjSUPYV+V015LZy+VbM5sRBMVX9FP7L1
+         T5pYGDHZ3BJPEKDxIJWr9ixFAx/E7AsZMHIA/8a1PmLw2MFL+g88EALquzE/RdbHlvKh
+         AaEAkZ1Fnk3Llh3AWa2BXAFfGxcGXB+k56JKIteyztsehnO+BBqBCFXzX1+O+vWyrq8v
+         vQIFVtbqB2msnSz/DlSZWCbmYojaUogg1VS4xZNeeX2vJMxQ633XZIx681ncsw+q7VNi
+         wfng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=GpW5qLhZyrECHDegQNaRLHT0CfKc1qacLHW2hCzZ6z0=;
+        b=lyY15UxfUeVbBSWpvWegzN28gCvdFjp95p99ar4A/5vAgIdNoem86Dyz6ePlkySZ7q
+         pDzubWlO7uyuMD7RWX6YdPyFIFePktRFIimlwXuq3A7hkfOJwOe+NemSm1f1pPEOTUdu
+         eAc84bmmc/tzIonXrGb2xhLiZS9JgtL7Htm//YIgUe3qBrPs14MMHcCBj6xryKs+3Q6W
+         3Ckx5owChHxZPOa8r7zb5v1jjT0cpKjKQ7a9fXwRrQX/zNxBpA1kmWzt5UxFWEXApBV8
+         gf5L+09eKFA24feaiFZ6ks1HSOd3j5kgc+5yBKJfGubHqWXK6XQSRosevML5WXEI+d0g
+         t6TQ==
+X-Gm-Message-State: APjAAAVmCjv9LU0dbKT1LusyRH2bgU+Xj3JvEt0VGba/J5mfJldURjnV
+        d7wUXDluPro+83Gpge0kwh+FInbqAo4=
+X-Google-Smtp-Source: APXvYqyHfviym5EAsN4aOLK9l3Gc+8Rugp5zzQU53Zta2+hZ75MbKJHpSQrkpexpDGZde6NNTsSSzA==
+X-Received: by 2002:a7b:c310:: with SMTP id k16mr961676wmj.133.1565643813877;
+        Mon, 12 Aug 2019 14:03:33 -0700 (PDT)
+Received: from [192.168.222.141] (82-71-5-123.dsl.in-addr.zen.co.uk. [82.71.5.123])
+        by smtp.gmail.com with ESMTPSA id h97sm32667090wrh.74.2019.08.12.14.03.32
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 12 Aug 2019 14:03:33 -0700 (PDT)
+Subject: Re: [PATCH] Add optional chip erase functionality to AT25 EEPROM
+ driver.
+To:     David Laight <David.Laight@ACULAB.COM>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190809125358.24440-1-joe.burmeister@devtank.co.uk>
+ <9f1c7d45020d482390737be22c885a9b@AcuMS.aculab.com>
+From:   Joe Burmeister <joe.burmeister@devtank.co.uk>
+Message-ID: <dd5f6b9f-13bd-8127-71a8-40e7a7017d25@devtank.co.uk>
+Date:   Mon, 12 Aug 2019 22:03:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANaxB-z+DktJ2Kaqdpyp60oPwAtiKyctnoJA2gFZ2r=044DfjQ@mail.gmail.com>
-X-Operating-System: Linux (5.1.19-300.fc30.x86_64)
-X-Load-Average: 1.23 1.20 1.45
-X-Unexpected: The Spanish Inquisition
-X-GnuPG-Key: gpg --recv-keys D3C4906A
-Organization: Red Hat
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 12 Aug 2019 21:02:59 +0000 (UTC)
+In-Reply-To: <9f1c7d45020d482390737be22c885a9b@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 01:43:53PM -0700, Andrei Vagin wrote:
-> On Mon, Aug 12, 2019 at 1:10 PM Adrian Reber <areber@redhat.com> wrote:
-> >
-> > The main motivation to add set_tid to clone3() is CRIU.
-> >
-> > To restore a process with the same PID/TID CRIU currently uses
-> > /proc/sys/kernel/ns_last_pid. It writes the desired (PID - 1) to
-> > ns_last_pid and then (quickly) does a clone(). This works most of the
-> > time, but it is racy. It is also slow as it requires multiple syscalls.
-> >
-> > Extending clone3() to support set_tid makes it possible restore a
-> > process using CRIU without accessing /proc/sys/kernel/ns_last_pid and
-> > race free (as long as the desired PID/TID is available).
-> >
-> > This clone3() extension places the same restrictions (CAP_SYS_ADMIN)
-> > on clone3() with set_tid as they are currently in place for ns_last_pid.
-> >
-> > Signed-off-by: Adrian Reber <areber@redhat.com>
-> > ---
-> > v2:
-> >  - Removed (size < sizeof(struct clone_args)) as discussed with
-> >    Christian and Dmitry
-> >  - Added comment to ((set_tid != 1) && idr_get_cursor() <= 1) (Oleg)
-> >  - Use idr_alloc() instead of idr_alloc_cyclic() (Oleg)
-> >
-> > v3:
-> >  - Return EEXIST if PID is already in use (Christian)
-> >  - Drop CLONE_SET_TID (Christian and Oleg)
-> >  - Use idr_is_empty() instead of idr_get_cursor() (Oleg)
-> >  - Handle different `struct clone_args` sizes (Dmitry)
-> >
-> > v4:
-> >  - Rework struct size check with defines (Christian)
-> >  - Reduce number of set_tid checks (Oleg)
-> >  - Less parentheses and more robust code (Oleg)
-> >  - Do ns_capable() on correct user_ns (Oleg, Christian)
-> >
-> > v5:
-> >  - make set_tid checks earlier in alloc_pid() (Christian)
-> >  - remove unnecessary comment and struct size check (Christian)
-> >
-> > v6:
-> >  - remove CLONE_SET_TID from description (Christian)
-> >  - add clone3() tests for different clone_args sizes (Christian)
-> >  - move more set_tid checks to alloc_pid() (Oleg)
-> >  - make all set_tid checks lockless (Oleg)
-> > ---
-> >  include/linux/pid.h        |  2 +-
-> >  include/linux/sched/task.h |  1 +
-> >  include/uapi/linux/sched.h |  1 +
-> >  kernel/fork.c              | 14 ++++++++++++--
-> >  kernel/pid.c               | 37 ++++++++++++++++++++++++++++++-------
-> >  5 files changed, 45 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/include/linux/pid.h b/include/linux/pid.h
-> > index 2a83e434db9d..052000db0ced 100644
-> > --- a/include/linux/pid.h
-> > +++ b/include/linux/pid.h
-> > @@ -116,7 +116,7 @@ extern struct pid *find_vpid(int nr);
-> >  extern struct pid *find_get_pid(int nr);
-> >  extern struct pid *find_ge_pid(int nr, struct pid_namespace *);
-> >
-> > -extern struct pid *alloc_pid(struct pid_namespace *ns);
-> > +extern struct pid *alloc_pid(struct pid_namespace *ns, pid_t set_tid);
-> >  extern void free_pid(struct pid *pid);
-> >  extern void disable_pid_allocation(struct pid_namespace *ns);
-> >
-> > diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-> > index 0497091e40c1..4f2a80564332 100644
-> > --- a/include/linux/sched/task.h
-> > +++ b/include/linux/sched/task.h
-> > @@ -26,6 +26,7 @@ struct kernel_clone_args {
-> >         unsigned long stack;
-> >         unsigned long stack_size;
-> >         unsigned long tls;
-> > +       pid_t set_tid;
-> >  };
-> >
-> >  /*
-> > diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
-> > index b3105ac1381a..e1ce103a2c47 100644
-> > --- a/include/uapi/linux/sched.h
-> > +++ b/include/uapi/linux/sched.h
-> > @@ -45,6 +45,7 @@ struct clone_args {
-> >         __aligned_u64 stack;
-> >         __aligned_u64 stack_size;
-> >         __aligned_u64 tls;
-> > +       __aligned_u64 set_tid;
-> >  };
-> >
-> >  /*
-> > diff --git a/kernel/fork.c b/kernel/fork.c
-> > index 2852d0e76ea3..8317d408a8d6 100644
-> > --- a/kernel/fork.c
-> > +++ b/kernel/fork.c
-> > @@ -117,6 +117,11 @@
-> >   */
-> >  #define MAX_THREADS FUTEX_TID_MASK
-> >
-> > +/*
-> > + * For different sizes of struct clone_args
-> > + */
-> > +#define CLONE3_ARGS_SIZE_V0 64
-> > +
-> >  /*
-> >   * Protected counters by write_lock_irq(&tasklist_lock)
-> >   */
-> > @@ -2031,7 +2036,7 @@ static __latent_entropy struct task_struct *copy_process(
-> >         stackleak_task_init(p);
-> >
-> >         if (pid != &init_struct_pid) {
-> > -               pid = alloc_pid(p->nsproxy->pid_ns_for_children);
-> > +               pid = alloc_pid(p->nsproxy->pid_ns_for_children, args->set_tid);
-> >                 if (IS_ERR(pid)) {
-> >                         retval = PTR_ERR(pid);
-> >                         goto bad_fork_cleanup_thread;
-> > @@ -2535,9 +2540,13 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
-> >         if (unlikely(size > PAGE_SIZE))
-> >                 return -E2BIG;
-> >
-> > -       if (unlikely(size < sizeof(struct clone_args)))
-> > +       if (unlikely(size < CLONE3_ARGS_SIZE_V0))
-> >                 return -EINVAL;
-> >
-> > +       if (size < sizeof(struct clone_args))
-> > +               memset((void *)&args + size, 0,
-> > +                               sizeof(struct clone_args) - size);
-> > +
-> >         if (unlikely(!access_ok(uargs, size)))
-> >                 return -EFAULT;
-> >
-> > @@ -2571,6 +2580,7 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
-> >                 .stack          = args.stack,
-> >                 .stack_size     = args.stack_size,
-> >                 .tls            = args.tls,
-> > +               .set_tid        = args.set_tid,
-> >         };
-> >
-> >         return 0;
-> > diff --git a/kernel/pid.c b/kernel/pid.c
-> > index 0a9f2e437217..5cdab73b9094 100644
-> > --- a/kernel/pid.c
-> > +++ b/kernel/pid.c
-> > @@ -157,7 +157,7 @@ void free_pid(struct pid *pid)
-> >         call_rcu(&pid->rcu, delayed_put_pid);
-> >  }
-> >
-> > -struct pid *alloc_pid(struct pid_namespace *ns)
-> > +struct pid *alloc_pid(struct pid_namespace *ns, int set_tid)
-> >  {
-> >         struct pid *pid;
-> >         enum pid_type type;
-> > @@ -166,6 +166,16 @@ struct pid *alloc_pid(struct pid_namespace *ns)
-> >         struct upid *upid;
-> >         int retval = -ENOMEM;
-> >
-> > +       if (set_tid) {
-> > +               if (set_tid < 0 || set_tid >= pid_max)
-> > +                       return ERR_PTR(-EINVAL);
-> > +               /* Also fail if a PID != 1 is requested and no PID 1 exists */
-> > +               if (set_tid != 1 && !ns->child_reaper)
-> > +                       return ERR_PTR(-EINVAL);
-> 
-> What will happen if I will create a new pid namespace
-> (unsahre(CLONE_NEWPID)) and then call clone3 with tid which isn't
-> equal to 1?
-> 
-> Will I get the init process with the 5 pid?...
+On 12/08/2019 16:51, David Laight wrote:
+> From: Joe Burmeister
+>> Sent: 09 August 2019 13:54
+>>
+>> Many, though not all, AT25s have an instruction for chip erase.
+>> If there is one in the datasheet, it can be added to device tree.
+>> Erase can then be done in userspace via the sysfs API with a new
+>> "erase" device attribute. This matches the eeprom_93xx46 driver's
+>> "erase".
+> Is it actually worth doing though?
+>
+> I'm guessing that device erase can easily take over a minute.
 
-No, you will get -EINVAL. In the selftest exactly this is tested. A PID
-1 is still required even with this patch.
 
-> > +               if (!ns_capable(ns->user_ns, CAP_SYS_ADMIN))
-> > +                       return ERR_PTR(-EPERM);
-> > +       }
-> > +
-> >         pid = kmem_cache_alloc(ns->pid_cachep, GFP_KERNEL);
-> >         if (!pid)
-> >                 return ERR_PTR(retval);
-> > @@ -186,12 +196,25 @@ struct pid *alloc_pid(struct pid_namespace *ns)
-> >                 if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
-> >                         pid_min = RESERVED_PIDS;
-> >
-> > -               /*
-> > -                * Store a null pointer so find_pid_ns does not find
-> > -                * a partially initialized PID (see below).
-> > -                */
-> > -               nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
-> > -                                     pid_max, GFP_ATOMIC);
-> > +               if (set_tid) {
-> > +                       nr = idr_alloc(&tmp->idr, NULL, set_tid,
-> > +                                       set_tid + 1, GFP_ATOMIC);
-> > +                       /*
-> > +                        * If ENOSPC is returned it means that the PID is
-> > +                        * alreay in use. Return EEXIST in that case.
-> > +                        */
-> > +                       if (nr == -ENOSPC)
-> > +                               nr = -EEXIST;
-> > +                       /* Only use set_tid for one PID namespace. */
-> > +                       set_tid = 0;
-> > +               } else {
-> > +                       /*
-> > +                        * Store a null pointer so find_pid_ns does not find
-> > +                        * a partially initialized PID (see below).
-> > +                        */
-> > +                       nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
-> > +                                             pid_max, GFP_ATOMIC);
-> > +               }
-> >                 spin_unlock_irq(&pidmap_lock);
-> >                 idr_preload_end();
-> >
-> > --
-> > 2.21.0
-> >
+That must depend on the AT25. The one we're using (AT25F512A), as it's 
+setup, it's fast enough. The datasheet states "The CHIP ERASE cycle time 
+typically is 2 seconds.". I've not timed it's because as I said, seamed 
+fast enough.
+
+
+If you can't erase it, then it's basically write once, or you expose it 
+with spi_dev to Flashrom to erase it.
+
+
+> When I looked at 'device erase' on an EEPROM it took just as long
+> as erasing the sectors one at a time - but without the warm cosy
+> feeling that progress was being made.
+
+
+I didn't look at sector erase as I'm only interested in erasing it all 
+and there was a command for it. I figured if someone wanted sector by 
+sector they would implement it.
+
+
+
+> Not only that you can't really interrupt the erase, so either
+> the application has to sleep uninterruptibly for the duration
+> or you have to have some kind of 'device busy' response while
+> it is done asynchronously.
+
+
+That's true, but as I said, it's fast enough it's not an issue for us.
+
+> 	David
+>
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+
+Regards,
+
+Joe
+
