@@ -2,241 +2,139 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A04EBC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E5DC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C61E2070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5664208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:27:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565623656;
+	bh=vbVr9jjl22J0zb0ffZlickEWyD1dg9kUn83VsAuo2gc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w9oo5ZYKT5pWNBAgSTksEIiGu4IvYmuJ7iBmVlg9E4JDxoft9A4lGnQzCcikg30Vy
+	 XocPd+m2LRL6siT7bC40vTpdTi4qsQB0v56KZSiCGuKrtY0uHBAVxI/yxG+N/tmV9H
+	 aR37/ZuG2jWbcIXHQZZ1qo1D3vS14FRAc8s0z6tY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbfHLP0z convert rfc822-to-8bit (ORCPT
+        id S1727938AbfHLP1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 11:26:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47658 "EHLO mx1.redhat.com"
+        Mon, 12 Aug 2019 11:27:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727360AbfHLP0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 11:26:55 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727103AbfHLP1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 11:27:35 -0400
+Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9EA7E3023081;
-        Mon, 12 Aug 2019 15:26:54 +0000 (UTC)
-Received: from [10.18.17.163] (dhcp-17-163.bos.redhat.com [10.18.17.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C17E9646B0;
-        Mon, 12 Aug 2019 15:26:39 +0000 (UTC)
-Subject: Re: [QEMU Patch 2/2] virtio-balloon: support for handling page
- reporting
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
-        john.starks@microsoft.com, Dave Hansen <dave.hansen@intel.com>,
-        Michal Hocko <mhocko@suse.com>, cohuck@redhat.com
-References: <20190812131235.27244-1-nitesh@redhat.com>
- <20190812131357.27312-1-nitesh@redhat.com>
- <20190812131357.27312-2-nitesh@redhat.com>
- <CAKgT0Uc8kGwX8VwU2b51qVuh2z5eZQ6XhSnYMryTVa_pKHCvew@mail.gmail.com>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <101649ae-58d4-76ee-91f3-42ac1c145c46@redhat.com>
-Date:   Mon, 12 Aug 2019 11:26:38 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 7261B2070C;
+        Mon, 12 Aug 2019 15:27:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565623655;
+        bh=vbVr9jjl22J0zb0ffZlickEWyD1dg9kUn83VsAuo2gc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pV7VfsZmTSwqdx7hJ19BAsFa2hxZSxzosbwfvKgUv/wMxXD6fuH8M5J9Pqve32BHM
+         LGi33XJvc9mlNIxCCG7JnfYNDqfXjO0tCKMWDhPFbuQ3/kuQHKbGdxCNTOyTWARIyc
+         iGsnxyY//nXtgglWqzmEM9Z93K1D54pAY09YstTk=
+Date:   Mon, 12 Aug 2019 17:27:25 +0200
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Hui Song <hui.song_1@nxp.com>
+Cc:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v1 2/3] arm64: dts: fix gpio node
+Message-ID: <20190812152723.GK27041@X250>
+References: <20190808101628.36782-1-hui.song_1@nxp.com>
+ <20190808101628.36782-2-hui.song_1@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0Uc8kGwX8VwU2b51qVuh2z5eZQ6XhSnYMryTVa_pKHCvew@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 12 Aug 2019 15:26:54 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808101628.36782-2-hui.song_1@nxp.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 08, 2019 at 06:16:27PM +0800, Hui Song wrote:
+> From: Song Hui <hui.song_1@nxp.com>
+> 
+> Update the nodes to include little-endian
+> property to be consistent with the hardware
+> and add ls1088a gpio specify compatible.
+> 
+> Signed-off-by: Song Hui <hui.song_1@nxp.com>
 
-On 8/12/19 11:18 AM, Alexander Duyck wrote:
-> On Mon, Aug 12, 2019 at 6:14 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
->> Page reporting is a feature which enables the virtual machine to report
->> chunk of free pages to the hypervisor.
->> This patch enables QEMU to process these reports from the VM and discard the
->> unused memory range.
->>
->> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
->> ---
->>  hw/virtio/virtio-balloon.c         | 41 ++++++++++++++++++++++++++++++
->>  include/hw/virtio/virtio-balloon.h |  2 +-
->>  2 files changed, 42 insertions(+), 1 deletion(-)
->>
->> diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
->> index 25de154307..1132e47ee0 100644
->> --- a/hw/virtio/virtio-balloon.c
->> +++ b/hw/virtio/virtio-balloon.c
->> @@ -320,6 +320,39 @@ static void balloon_stats_set_poll_interval(Object *obj, Visitor *v,
->>      balloon_stats_change_timer(s, 0);
->>  }
->>
->> +static void virtio_balloon_handle_reporting(VirtIODevice *vdev, VirtQueue *vq)
->> +{
->> +    VirtQueueElement *elem;
->> +
->> +    while ((elem = virtqueue_pop(vq, sizeof(VirtQueueElement)))) {
->> +        unsigned int i;
->> +
->> +        for (i = 0; i < elem->in_num; i++) {
->> +            void *gaddr = elem->in_sg[i].iov_base;
->> +            size_t size = elem->in_sg[i].iov_len;
->> +            ram_addr_t ram_offset;
->> +            size_t rb_page_size;
->> +           RAMBlock *rb;
->> +
->> +            if (qemu_balloon_is_inhibited())
->> +                continue;
->> +
->> +            rb = qemu_ram_block_from_host(gaddr, false, &ram_offset);
->> +            rb_page_size = qemu_ram_pagesize(rb);
->> +
->> +            /* For now we will simply ignore unaligned memory regions */
->> +            if ((ram_offset | size) & (rb_page_size - 1))
->> +                continue;
->> +
->> +            ram_block_discard_range(rb, ram_offset, size);
->> +        }
->> +
->> +        virtqueue_push(vq, elem, 0);
->> +        virtio_notify(vdev, vq);
->> +        g_free(elem);
->> +    }
->> +}
->> +
-> No offense, but I am a bit annoyed.
+The prefix should be more specific, like 'arm64: dts: ls1088a: ...'
 
-None taken at all.
+Shawn
 
->  If you are going to copy my code
-> you should at least keep up with the fixes.
-
-
-Yeah I did refer to your code and just because the quality of your code is
-better than what I posted earlier and there is quite a lot for me to learn from it.
-
-
-> stuff to handle the poison value. If you are going to just duplicate
-> my setup you might as well have just pulled the QEMU patches from the
-> last submission I did. Then this would have at least has the fix for
-> the page poisoning.
->
-
-The only reason I didn't include the poison change as I still need to understand
-them.
-I have this mentioned in my cover-email.
-
-
->  Also it wouldn't hurt to mention that you are
-> basing it off of the patch set I submitted since it hasn't been
-> accepted yet.
-
-
-My bad!! This I will surely do from next time.
-
->
->>  static void virtio_balloon_handle_output(VirtIODevice *vdev, VirtQueue *vq)
->>  {
->>      VirtIOBalloon *s = VIRTIO_BALLOON(vdev);
->> @@ -792,6 +825,12 @@ static void virtio_balloon_device_realize(DeviceState *dev, Error **errp)
->>      s->dvq = virtio_add_queue(vdev, 128, virtio_balloon_handle_output);
->>      s->svq = virtio_add_queue(vdev, 128, virtio_balloon_receive_stats);
->>
->> +    if (virtio_has_feature(s->host_features,
->> +                           VIRTIO_BALLOON_F_REPORTING)) {
->> +        s->reporting_vq = virtio_add_queue(vdev, 16,
->> +                                          virtio_balloon_handle_reporting);
->> +    }
->> +
->>      if (virtio_has_feature(s->host_features,
->>                             VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
->>          s->free_page_vq = virtio_add_queue(vdev, VIRTQUEUE_MAX_SIZE,
->> @@ -912,6 +951,8 @@ static Property virtio_balloon_properties[] = {
->>       * is disabled, resulting in QEMU 3.1 migration incompatibility.  This
->>       * property retains this quirk for QEMU 4.1 machine types.
->>       */
->> +    DEFINE_PROP_BIT("free-page-reporting", VirtIOBalloon, host_features,
->> +                    VIRTIO_BALLOON_F_REPORTING, true),
->>      DEFINE_PROP_BOOL("qemu-4-0-config-size", VirtIOBalloon,
->>                       qemu_4_0_config_size, false),
->>      DEFINE_PROP_LINK("iothread", VirtIOBalloon, iothread, TYPE_IOTHREAD,
->> diff --git a/include/hw/virtio/virtio-balloon.h b/include/hw/virtio/virtio-balloon.h
->> index d1c968d237..15a05e6435 100644
->> --- a/include/hw/virtio/virtio-balloon.h
->> +++ b/include/hw/virtio/virtio-balloon.h
->> @@ -42,7 +42,7 @@ enum virtio_balloon_free_page_report_status {
->>
->>  typedef struct VirtIOBalloon {
->>      VirtIODevice parent_obj;
->> -    VirtQueue *ivq, *dvq, *svq, *free_page_vq;
->> +    VirtQueue *ivq, *dvq, *svq, *free_page_vq, *reporting_vq;
->>      uint32_t free_page_report_status;
->>      uint32_t num_pages;
->>      uint32_t actual;
->> --
->> 2.21.0
->> q
--- 
-Thanks
-Nitesh
-
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> index 20f5ebd..d58d203 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> @@ -269,43 +269,47 @@
+>  		};
+>  
+>  		gpio0: gpio@2300000 {
+> -			compatible = "fsl,qoriq-gpio";
+> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+>  			reg = <0x0 0x2300000 0x0 0x10000>;
+>  			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
+>  			gpio-controller;
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> +			little-endian;
+>  		};
+>  
+>  		gpio1: gpio@2310000 {
+> -			compatible = "fsl,qoriq-gpio";
+> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+>  			reg = <0x0 0x2310000 0x0 0x10000>;
+>  			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
+>  			gpio-controller;
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> +			little-endian;
+>  		};
+>  
+>  		gpio2: gpio@2320000 {
+> -			compatible = "fsl,qoriq-gpio";
+> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+>  			reg = <0x0 0x2320000 0x0 0x10000>;
+>  			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
+>  			gpio-controller;
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> +			little-endian;
+>  		};
+>  
+>  		gpio3: gpio@2330000 {
+> -			compatible = "fsl,qoriq-gpio";
+> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+>  			reg = <0x0 0x2330000 0x0 0x10000>;
+>  			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
+>  			gpio-controller;
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> +			little-endian;
+>  		};
+>  
+>  		ifc: ifc@2240000 {
+> -- 
+> 2.9.5
+> 
