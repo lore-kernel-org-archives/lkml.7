@@ -2,121 +2,215 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1959C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 599B3C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90E892087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:12:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="E4CmTLZg"
+	by mail.kernel.org (Postfix) with ESMTP id 27FDC2087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:15:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfHLGMm (ORCPT
+        id S1726948AbfHLGP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 02:12:42 -0400
-Received: from ozlabs.org ([203.11.71.1]:35127 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725822AbfHLGMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 02:12:41 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 466QVs64CLz9sN1;
-        Mon, 12 Aug 2019 16:12:37 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565590358;
-        bh=pOEPhG+/RGwGtNl2Qa47jqW4DKafXj0rUWcYO1vB2Xo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=E4CmTLZgQcV6f0nEZHp7rJhVr44nrj8SAe9rzWKCQTYl1WB8O3lv3ju1vmuznk3QJ
-         lI/bstRXjSmrgZ/scNjDzaEnKsOA7RirGu4cWjPW6cPkUv3uyjUDhKROXU6Tmz4n58
-         UF7sweFyTMsds2Dx+sRQ6tnnIBX++E2gHWVmR8GZAhmvSyOgdLckrDSihXYU5ThGXx
-         4f7JgzWabMOk3/9Qs2I5tS/42vhx1r/HZ25hb1llLNpznSbMwMJMkw1IkOBcgNRQ88
-         7RRsKdhWvttZ5u4baLnmhlU1fHEHb3Pszp8VAzVWD7Fe9EOi5TpAP7ac8VzPdSw3fx
-         ZYSgNEtiHiHhQ==
-Date:   Mon, 12 Aug 2019 16:12:36 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: linux-next: build failure after merge of the rcu tree
-Message-ID: <20190812161236.21defb17@canb.auug.org.au>
+        Mon, 12 Aug 2019 02:15:27 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:47551 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfHLGP0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 02:15:26 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hx3c2-0003qC-1Z; Mon, 12 Aug 2019 08:15:22 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hx3c0-0001Kz-CD; Mon, 12 Aug 2019 08:15:20 +0200
+Date:   Mon, 12 Aug 2019 08:15:20 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Malaterre <malat@debian.org>,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH 4/7] pwm: jz4740: Improve algorithm of clock calculation
+Message-ID: <20190812061520.lwzk3us4ginwwxov@pengutronix.de>
+References: <20190809123031.24219-1-paul@crapouillou.net>
+ <20190809123031.24219-5-paul@crapouillou.net>
+ <20190809170551.u4ybilf5ay2rsvnn@pengutronix.de>
+ <1565370885.2091.2@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_//CSq7Gt6RsUb+TNh9NYHfeD";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1565370885.2091.2@crapouillou.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_//CSq7Gt6RsUb+TNh9NYHfeD
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello Paul,
 
-Hi all,
+On Fri, Aug 09, 2019 at 07:14:45PM +0200, Paul Cercueil wrote:
+> Le ven. 9 août 2019 à 19:05, Uwe =?iso-8859-1?q?Kleine-K=F6nig?=
+> <u.kleine-koenig@pengutronix.de> a écrit :
+> > On Fri, Aug 09, 2019 at 02:30:28PM +0200, Paul Cercueil wrote:
+> > >  The previous algorithm hardcoded details about how the TCU clocks
+> > > work.
+> > >  The new algorithm will use clk_round_rate to find the perfect clock
+> > > rate
+> > >  for the PWM channel.
+> > > 
+> > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> > >  Tested-by: Mathieu Malaterre <malat@debian.org>
+> > >  Tested-by: Artur Rojek <contact@artur-rojek.eu>
+> > >  ---
+> > >   drivers/pwm/pwm-jz4740.c | 60
+> > > +++++++++++++++++++++++++++++-----------
+> > >   1 file changed, 44 insertions(+), 16 deletions(-)
+> > > 
+> > >  diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+> > >  index 6ec8794d3b99..f20dc2e19240 100644
+> > >  --- a/drivers/pwm/pwm-jz4740.c
+> > >  +++ b/drivers/pwm/pwm-jz4740.c
+> > >  @@ -110,24 +110,56 @@ static int jz4740_pwm_apply(struct pwm_chip
+> > > *chip, struct pwm_device *pwm,
+> > >   	struct jz4740_pwm_chip *jz4740 = to_jz4740(pwm->chip);
+> > >   	struct clk *clk = pwm_get_chip_data(pwm),
+> > >   		   *parent_clk = clk_get_parent(clk);
+> > >  -	unsigned long rate, period, duty;
+> > >  +	unsigned long rate, parent_rate, period, duty;
+> > >   	unsigned long long tmp;
+> > >  -	unsigned int prescaler = 0;
+> > >  +	int ret;
+> > > 
+> > >  -	rate = clk_get_rate(parent_clk);
+> > >  -	tmp = (unsigned long long)rate * state->period;
+> > >  -	do_div(tmp, 1000000000);
+> > >  -	period = tmp;
+> > >  +	parent_rate = clk_get_rate(parent_clk);
+> > >  +
+> > >  +	jz4740_pwm_disable(chip, pwm);
+> > > 
+> > >  -	while (period > 0xffff && prescaler < 6) {
+> > >  -		period >>= 2;
+> > >  -		rate >>= 2;
+> > >  -		++prescaler;
+> > >  +	/* Reset the clock to the maximum rate, and we'll reduce it if needed */
+> > >  +	ret = clk_set_max_rate(clk, parent_rate);
+> > 
+> > What is the purpose of this call? IIUC this limits the allowed range of
+> > rates for clk. I assume the idea is to prevent other consumers to change
+> > the rate in a way that makes it unsuitable for this pwm. But this only
+> > makes sense if you had a notifier for clk changes, doesn't it? I'm
+> > confused.
+> 
+> Nothing like that. The second call to clk_set_max_rate() might have set
+> a maximum clock rate that's lower than the parent's rate, and we want to
+> undo that.
 
-After merging the rcu tree, today's linux-next build (x86_64 allmodconfig)
-failed like this:
+I still don't get the purpose of this call. Why do you limit the clock
+rate at all?
 
-arch/x86/xen/smp_pv.c: In function 'xen_pv_play_dead':
-arch/x86/xen/smp_pv.c:439:2: error: implicit declaration of function 'tick_=
-nohz_idle_stop_tick_protected'; did you mean 'tick_nohz_idle_stop_tick'? [-=
-Werror=3Dimplicit-function-declaration]
-  tick_nohz_idle_stop_tick_protected();
-  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  tick_nohz_idle_stop_tick
+> > I think this doesn't match the commit log, you didn't even introduced a
+> > call to clk_round_rate().
+> 
+> Right, I'll edit the commit message.
+> 
+> 
+> > >  +	if (ret) {
+> > >  +		dev_err(chip->dev, "Unable to set max rate: %d\n", ret);
+> > >  +		return ret;
+> > >   	}
+> > > 
+> > >  -	if (prescaler == 6)
+> > >  -		return -EINVAL;
+> > >  +	ret = clk_set_rate(clk, parent_rate);
+> > >  +	if (ret) {
+> > >  +		dev_err(chip->dev, "Unable to reset to parent rate (%lu Hz)",
+> > >  +			parent_rate);
+> > >  +		return ret;
+> > >  +	}
+> > >  +
+> > >  +	/*
+> > >  +	 * Limit the clock to a maximum rate that still gives us a period value
+> > >  +	 * which fits in 16 bits.
+> > >  +	 */
+> > >  +	tmp = 0xffffull * NSEC_PER_SEC;
+> > >  +	do_div(tmp, state->period);
+> > > 
+> > >  +	ret = clk_set_max_rate(clk, tmp);
+> > 
+> > And now you change the maximal rate again?
+> 
+> Basically, we start from the maximum clock rate we can get for that PWM
+> - which is the rate of the parent clk - and from that compute the maximum
+> clock rate that we can support that still gives us < 16-bits hardware
+> values for the period and duty.
+> 
+> We then pass that computed maximum clock rate to clk_set_max_rate(), which
+> may or may not update the current PWM clock's rate to match the new limits.
+> Finally we read back the PWM clock's rate and compute the period and duty
+> from that.
 
-Caused by commit
+If you change the clk rate, is this externally visible on the PWM
+output? Does this affect other PWM instances?
 
-  a96f9dca9820 ("idle: Prevent late-arriving interrupts from disrupting off=
-line")
+> > >  +	if (ret) {
+> > >  +		dev_err(chip->dev, "Unable to set max rate: %d\n", ret);
+> > >  +		return ret;
+> > >  +	}
+> > >  +
+> > >  +	/*
+> > >  +	 * Read back the clock rate, as it may have been modified by
+> > >  +	 * clk_set_max_rate()
+> > >  +	 */
+> > >  +	rate = clk_get_rate(clk);
+> > >  +
+> > >  +	if (rate != parent_rate)
+> > >  +		dev_dbg(chip->dev, "PWM clock updated to %lu Hz\n", rate);
+> > >  +
+> > >  +	/* Calculate period value */
+> > >  +	tmp = (unsigned long long)rate * state->period;
+> > >  +	do_div(tmp, NSEC_PER_SEC);
+> > >  +	period = (unsigned long)tmp;
+> > >  +
+> > >  +	/* Calculate duty value */
+> > >   	tmp = (unsigned long long)period * state->duty_cycle;
+> > >   	do_div(tmp, state->period);
+> > >   	duty = period - tmp;
+> > >  @@ -135,14 +167,10 @@ static int jz4740_pwm_apply(struct pwm_chip
+> > > *chip, struct pwm_device *pwm,
+> > >   	if (duty >= period)
+> > >   		duty = period - 1;
+> > > 
+> > >  -	jz4740_pwm_disable(chip, pwm);
+> > >  -
+> > >   	/* Set abrupt shutdown */
+> > >   	regmap_update_bits(jz4740->map, TCU_REG_TCSRc(pwm->hwpwm),
+> > >   			   TCU_TCSR_PWM_SD, TCU_TCSR_PWM_SD);
+> > > 
+> > >  -	clk_set_rate(clk, rate);
+> > >  -
+> > 
+> > It's not obvious to me why removing these two lines belong in the
+> > current patch.
+> 
+> They're not removed, they're both moved up in the function.
 
-Also:
+OK, will look closer in the next iteration.
 
-In file included from <command-line>:
-include/linux/rcu_segcblist.h:69:2: error: unknown type name 'atomic_long_t'
-  atomic_long_t len;
-  ^~~~~~~~~~~~~
-include/linux/rcu_segcblist.h:74:2: error: unknown type name 'u8'
-  u8 enabled;
-  ^~
-include/linux/rcu_segcblist.h:75:2: error: unknown type name 'u8'
-  u8 offloaded;
-  ^~
+Best regards
+Uwe
 
-Caused by commits:
-
-  e084617762b7 ("rcu/nocb: Use separate flag to indicate disabled ->cblist")
-  5e114ba3d7a5 ("rcu/nocb: Use separate flag to indicate offloaded ->cblist=
-")
-  9f3ca0945104 ("rcu/nocb: Atomic ->len field in rcu_segcblist structure")
-
-We prefer our include files to be standalone now if at all possible.
-
-I have used the rcu tree from next-20190809 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_//CSq7Gt6RsUb+TNh9NYHfeD
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1RA1QACgkQAVBC80lX
-0Gy+ywf/RLWpPZS6gUI31MOJ8x+REwGZSn76bsaJd8z4d0htogdXtDsUQdL/FJWS
-5S5zI5V7XoUqYuXqmco6/59mcLYIS0JWtxfpaVSKEQTblXHgP59sbzSKIxlfIekF
-tE3W6I6lUbziRIYWggYA8EnnwB6T7oqPvhjghJyyuCwPixoBTb7JoqE5y0zr7KgZ
-PwSXnV5h7YFoh8DN/lpJx/suWIhiGwkR0IL2neHSBxK3tikcoiMmdzzqTD3ao6Y4
-NWtU20y8KPz0Bhl9Riudbwz/bc5SE9fxjvvvzR0WQU5VDgO1tXHIqdgYAw2yLEx0
-0zNi82acCXhpwzNEc+Q1B+upn1y3NA==
-=jpAy
------END PGP SIGNATURE-----
-
---Sig_//CSq7Gt6RsUb+TNh9NYHfeD--
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
