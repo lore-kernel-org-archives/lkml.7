@@ -2,293 +2,126 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B48C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713CEC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 006802085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47516214C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:27:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="FsFt9ayz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LO5JKiJd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbfHLL1M (ORCPT
+        id S1728357AbfHLL1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 07:27:12 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:56300 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728310AbfHLL1K (ORCPT
+        Mon, 12 Aug 2019 07:27:42 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40641 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728179AbfHLL1l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 07:27:10 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7CBQsKG009671;
-        Mon, 12 Aug 2019 13:26:55 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=17uDe87c50tKQgdxVxYmeWeDXo+AdHkkYcqYlgcRwu4=;
- b=FsFt9ayzo3JkxHFJSm3tB5JaGRu7O0AgxIfU5qQSboiDeJbbO08brT0ODsWno1xM/g1a
- 0Y3XfPt0eskh5wiid0B9sRjSnZXunwry/K0F+614ComfdcYSlV5/Sqb6jukEev7w+Hhx
- cpxP5kMMXvebYISnFSOEtcLQn8vsA5f11Mn7DTJ5ZuSRZmqbhJFlyhwFC2pEyOshyCpM
- RhOFclGAgH0sw9EmMt3b3hpd96zrTJC7s3BJKauUg/pPV7x+DV+UraPigy1kfu4pMoVl
- f4GRA6UvFOpC2KvftfFa67APKvYzxh/YeAJsyXDmhNYVmBMJwh+6l0nauxH83EAkU93i UA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2u9mtktbfq-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 12 Aug 2019 13:26:55 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9C77E3A;
-        Mon, 12 Aug 2019 11:26:54 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 64A242F56E6;
-        Mon, 12 Aug 2019 13:26:54 +0200 (CEST)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 12 Aug
- 2019 13:26:54 +0200
-Received: from localhost (10.201.23.19) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 12 Aug 2019 13:26:53
- +0200
-From:   Hugues Fruchet <hugues.fruchet@st.com>
-To:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-CC:     <linux-media@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Yannick Fertre <yannick.fertre@st.com>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        "Hugues Fruchet" <hugues.fruchet@st.com>,
-        Mickael GUENE <mickael.guene@st.com>
-Subject: [PATCH v5 1/3] media: stm32-dcmi: improve sensor subdev naming
-Date:   Mon, 12 Aug 2019 13:26:44 +0200
-Message-ID: <1565609206-27101-2-git-send-email-hugues.fruchet@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1565609206-27101-1-git-send-email-hugues.fruchet@st.com>
-References: <1565609206-27101-1-git-send-email-hugues.fruchet@st.com>
+        Mon, 12 Aug 2019 07:27:41 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v19so11433551wmj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 04:27:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=onzhCYAhu69mMnXiA3vphG6i/bzFEmmStwTFQWrMk/M=;
+        b=LO5JKiJdEnUY8rCcJ2Dk0Cx7bVBWYoQfej9KzgsHgDhAkyu5Y53OGvPMUIyUokibZk
+         Zq3jSti6K5bU1CJ1cDsfIvltT3cpISE22lYn65JOgKwL0eAC4njzGhFQOH0fs648Ld1p
+         qR8D+vvuePJgI5XIy2e6QmnkXtoZxFh1k1FIf3QoOj5cPvSzuFIraDR9m/Ej91wJ9lHG
+         MzA0WxkE8gJ7UbJ970D1xLiwDnkOp5LkugO3JNEFjh8jNRwZeWjGmQwOpSRQ1GJwXJxh
+         xkJIHvQ7nBoS5vusCij3D0275J2K8rV9GTxNsY8GZDHgGh68O6JeV3dAqlT+aK6w4z9s
+         4xhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=onzhCYAhu69mMnXiA3vphG6i/bzFEmmStwTFQWrMk/M=;
+        b=iXfISPTFknQgZ2A5K15+czJMIHC/eA1zm3lrvZFB2rp+91wQRFJQATR4xH0D6h2CmJ
+         ub+dyrZmfEAStZrg3pWnvcETkCpgQNdRGW8/AcqMMBBynzs6EvoQ9LE3fCkp+3IELCsD
+         SzbyudNhfxNZpNBezcWlRoAF4rvrRiW/bSgKs/UKf9cAS2gHf32fm4PfgnA88UYRdXzi
+         039wh5kh7L/WFaJiClC39t0PmxAm3dNbzvcOEaRSdUV/ZBRINVPu1TSsdAR3J5EZOnIU
+         9iJ+Yc3+4aXPg9hHImruu9ByoymR29ssSHzLU3s+pNt8oUcIvmmNHQEQZBl4X/pw9BRC
+         r5sg==
+X-Gm-Message-State: APjAAAXC4RAC2fS3kCkxiK/lX97r/QlHJVxrSEEmjEpRvbhB97Irq+tP
+        k+TTFcZQdJtajtK4baQVgsFFLw==
+X-Google-Smtp-Source: APXvYqxmaNB4W7rQ1NBaIa13dmH8j4PeVi2WkfZMssZuVRKBziRrA/ksz+FwV16y1femTzoXzfSu1Q==
+X-Received: by 2002:a05:600c:54c:: with SMTP id k12mr8590960wmc.117.1565609260064;
+        Mon, 12 Aug 2019 04:27:40 -0700 (PDT)
+Received: from dell ([2.27.35.255])
+        by smtp.gmail.com with ESMTPSA id e11sm13412913wrc.4.2019.08.12.04.27.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 12 Aug 2019 04:27:39 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 12:27:31 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     Kate Stewart <kstewart@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-kernel@vger.kernel.org,
+        Richard Fontana <rfontana@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-rtc@vger.kernel.org, Allison Randal <allison@lohutok.net>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        Sean Wang <sean.wang@mediatek.com>,
+        "Tianping . Fang" <tianping.fang@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: Re: [PATCH v3 06/10] mfd: mt6323: some improvements of
+ mt6397-core
+Message-ID: <20190812112731.GS26727@dell>
+References: <20190729174154.4335-1-frank-w@public-files.de>
+ <20190729174154.4335-7-frank-w@public-files.de>
+ <20190812102209.GI26727@dell>
+ <trinity-0fa641df-f7bb-4627-a9ab-aac3cabc90ba-1565609115974@3c-app-gmx-bs80>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.19]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-12_05:,,
- signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <trinity-0fa641df-f7bb-4627-a9ab-aac3cabc90ba-1565609115974@3c-app-gmx-bs80>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename "subdev" entity struct field to "source"
-to prepare for several subdev support.
-Move asd field on top of entity struct.
+On Mon, 12 Aug 2019, Frank Wunderlich wrote:
 
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
----
- drivers/media/platform/stm32/stm32-dcmi.c | 46 +++++++++++++++----------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
+> > Gesendet: Montag, 12. August 2019 um 12:22 Uhr
+> > Von: "Lee Jones" <lee.jones@linaro.org>
+> 
+> > > - * Copyright (c) 2014 MediaTek Inc.
+> > > + * Copyright (c) 2014-2018 MediaTek Inc.
+> >
+> > This is out of date.  Please update it.
+> 
+> maybe i should drop change of this line completely (else it needs to be adjusted every year)
 
-diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
-index b9dad0a..b462f71 100644
---- a/drivers/media/platform/stm32/stm32-dcmi.c
-+++ b/drivers/media/platform/stm32/stm32-dcmi.c
-@@ -100,10 +100,10 @@ enum state {
- #define OVERRUN_ERROR_THRESHOLD	3
- 
- struct dcmi_graph_entity {
--	struct device_node *node;
--
- 	struct v4l2_async_subdev asd;
--	struct v4l2_subdev *subdev;
-+
-+	struct device_node *remote_node;
-+	struct v4l2_subdev *source;
- };
- 
- struct dcmi_format {
-@@ -595,7 +595,7 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	}
- 
- 	/* Enable stream on the sub device */
--	ret = v4l2_subdev_call(dcmi->entity.subdev, video, s_stream, 1);
-+	ret = v4l2_subdev_call(dcmi->entity.source, video, s_stream, 1);
- 	if (ret && ret != -ENOIOCTLCMD) {
- 		dev_err(dcmi->dev, "%s: Failed to start streaming, subdev streamon error",
- 			__func__);
-@@ -685,7 +685,7 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	return 0;
- 
- err_subdev_streamoff:
--	v4l2_subdev_call(dcmi->entity.subdev, video, s_stream, 0);
-+	v4l2_subdev_call(dcmi->entity.source, video, s_stream, 0);
- 
- err_pm_put:
- 	pm_runtime_put(dcmi->dev);
-@@ -713,7 +713,7 @@ static void dcmi_stop_streaming(struct vb2_queue *vq)
- 	int ret;
- 
- 	/* Disable stream on the sub device */
--	ret = v4l2_subdev_call(dcmi->entity.subdev, video, s_stream, 0);
-+	ret = v4l2_subdev_call(dcmi->entity.source, video, s_stream, 0);
- 	if (ret && ret != -ENOIOCTLCMD)
- 		dev_err(dcmi->dev, "%s: Failed to stop streaming, subdev streamoff error (%d)\n",
- 			__func__, ret);
-@@ -857,7 +857,7 @@ static int dcmi_try_fmt(struct stm32_dcmi *dcmi, struct v4l2_format *f,
- 	}
- 
- 	v4l2_fill_mbus_format(&format.format, pix, sd_fmt->mbus_code);
--	ret = v4l2_subdev_call(dcmi->entity.subdev, pad, set_fmt,
-+	ret = v4l2_subdev_call(dcmi->entity.source, pad, set_fmt,
- 			       &pad_cfg, &format);
- 	if (ret < 0)
- 		return ret;
-@@ -934,7 +934,7 @@ static int dcmi_set_fmt(struct stm32_dcmi *dcmi, struct v4l2_format *f)
- 	mf->width = sd_framesize.width;
- 	mf->height = sd_framesize.height;
- 
--	ret = v4l2_subdev_call(dcmi->entity.subdev, pad,
-+	ret = v4l2_subdev_call(dcmi->entity.source, pad,
- 			       set_fmt, NULL, &format);
- 	if (ret < 0)
- 		return ret;
-@@ -991,7 +991,7 @@ static int dcmi_get_sensor_format(struct stm32_dcmi *dcmi,
- 	};
- 	int ret;
- 
--	ret = v4l2_subdev_call(dcmi->entity.subdev, pad, get_fmt, NULL, &fmt);
-+	ret = v4l2_subdev_call(dcmi->entity.source, pad, get_fmt, NULL, &fmt);
- 	if (ret)
- 		return ret;
- 
-@@ -1020,7 +1020,7 @@ static int dcmi_set_sensor_format(struct stm32_dcmi *dcmi,
- 	}
- 
- 	v4l2_fill_mbus_format(&format.format, pix, sd_fmt->mbus_code);
--	ret = v4l2_subdev_call(dcmi->entity.subdev, pad, set_fmt,
-+	ret = v4l2_subdev_call(dcmi->entity.source, pad, set_fmt,
- 			       &pad_cfg, &format);
- 	if (ret < 0)
- 		return ret;
-@@ -1043,7 +1043,7 @@ static int dcmi_get_sensor_bounds(struct stm32_dcmi *dcmi,
- 	/*
- 	 * Get sensor bounds first
- 	 */
--	ret = v4l2_subdev_call(dcmi->entity.subdev, pad, get_selection,
-+	ret = v4l2_subdev_call(dcmi->entity.source, pad, get_selection,
- 			       NULL, &bounds);
- 	if (!ret)
- 		*r = bounds.r;
-@@ -1224,7 +1224,7 @@ static int dcmi_enum_framesizes(struct file *file, void *fh,
- 
- 	fse.code = sd_fmt->mbus_code;
- 
--	ret = v4l2_subdev_call(dcmi->entity.subdev, pad, enum_frame_size,
-+	ret = v4l2_subdev_call(dcmi->entity.source, pad, enum_frame_size,
- 			       NULL, &fse);
- 	if (ret)
- 		return ret;
-@@ -1241,7 +1241,7 @@ static int dcmi_g_parm(struct file *file, void *priv,
- {
- 	struct stm32_dcmi *dcmi = video_drvdata(file);
- 
--	return v4l2_g_parm_cap(video_devdata(file), dcmi->entity.subdev, p);
-+	return v4l2_g_parm_cap(video_devdata(file), dcmi->entity.source, p);
- }
- 
- static int dcmi_s_parm(struct file *file, void *priv,
-@@ -1249,7 +1249,7 @@ static int dcmi_s_parm(struct file *file, void *priv,
- {
- 	struct stm32_dcmi *dcmi = video_drvdata(file);
- 
--	return v4l2_s_parm_cap(video_devdata(file), dcmi->entity.subdev, p);
-+	return v4l2_s_parm_cap(video_devdata(file), dcmi->entity.source, p);
- }
- 
- static int dcmi_enum_frameintervals(struct file *file, void *fh,
-@@ -1271,7 +1271,7 @@ static int dcmi_enum_frameintervals(struct file *file, void *fh,
- 
- 	fie.code = sd_fmt->mbus_code;
- 
--	ret = v4l2_subdev_call(dcmi->entity.subdev, pad,
-+	ret = v4l2_subdev_call(dcmi->entity.source, pad,
- 			       enum_frame_interval, NULL, &fie);
- 	if (ret)
- 		return ret;
-@@ -1291,7 +1291,7 @@ MODULE_DEVICE_TABLE(of, stm32_dcmi_of_match);
- static int dcmi_open(struct file *file)
- {
- 	struct stm32_dcmi *dcmi = video_drvdata(file);
--	struct v4l2_subdev *sd = dcmi->entity.subdev;
-+	struct v4l2_subdev *sd = dcmi->entity.source;
- 	int ret;
- 
- 	if (mutex_lock_interruptible(&dcmi->lock))
-@@ -1322,7 +1322,7 @@ static int dcmi_open(struct file *file)
- static int dcmi_release(struct file *file)
- {
- 	struct stm32_dcmi *dcmi = video_drvdata(file);
--	struct v4l2_subdev *sd = dcmi->entity.subdev;
-+	struct v4l2_subdev *sd = dcmi->entity.source;
- 	bool fh_singular;
- 	int ret;
- 
-@@ -1433,7 +1433,7 @@ static int dcmi_formats_init(struct stm32_dcmi *dcmi)
- {
- 	const struct dcmi_format *sd_fmts[ARRAY_SIZE(dcmi_formats)];
- 	unsigned int num_fmts = 0, i, j;
--	struct v4l2_subdev *subdev = dcmi->entity.subdev;
-+	struct v4l2_subdev *subdev = dcmi->entity.source;
- 	struct v4l2_subdev_mbus_code_enum mbus_code = {
- 		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
- 	};
-@@ -1479,7 +1479,7 @@ static int dcmi_formats_init(struct stm32_dcmi *dcmi)
- static int dcmi_framesizes_init(struct stm32_dcmi *dcmi)
- {
- 	unsigned int num_fsize = 0;
--	struct v4l2_subdev *subdev = dcmi->entity.subdev;
-+	struct v4l2_subdev *subdev = dcmi->entity.source;
- 	struct v4l2_subdev_frame_size_enum fse = {
- 		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
- 		.code = dcmi->sd_format->mbus_code,
-@@ -1526,7 +1526,7 @@ static int dcmi_graph_notify_complete(struct v4l2_async_notifier *notifier)
- 	struct stm32_dcmi *dcmi = notifier_to_dcmi(notifier);
- 	int ret;
- 
--	dcmi->vdev->ctrl_handler = dcmi->entity.subdev->ctrl_handler;
-+	dcmi->vdev->ctrl_handler = dcmi->entity.source->ctrl_handler;
- 	ret = dcmi_formats_init(dcmi);
- 	if (ret) {
- 		dev_err(dcmi->dev, "No supported mediabus format found\n");
-@@ -1582,7 +1582,7 @@ static int dcmi_graph_notify_bound(struct v4l2_async_notifier *notifier,
- 
- 	dev_dbg(dcmi->dev, "Subdev %s bound\n", subdev->name);
- 
--	dcmi->entity.subdev = subdev;
-+	dcmi->entity.source = subdev;
- 
- 	return 0;
- }
-@@ -1608,7 +1608,7 @@ static int dcmi_graph_parse(struct stm32_dcmi *dcmi, struct device_node *node)
- 		return -EINVAL;
- 
- 	/* Remote node to connect */
--	dcmi->entity.node = remote;
-+	dcmi->entity.remote_node = remote;
- 	dcmi->entity.asd.match_type = V4L2_ASYNC_MATCH_FWNODE;
- 	dcmi->entity.asd.match.fwnode = of_fwnode_handle(remote);
- 	return 0;
-@@ -1631,7 +1631,7 @@ static int dcmi_graph_init(struct stm32_dcmi *dcmi)
- 					     &dcmi->entity.asd);
- 	if (ret) {
- 		dev_err(dcmi->dev, "Failed to add subdev notifier\n");
--		of_node_put(dcmi->entity.node);
-+		of_node_put(dcmi->entity.remote_node);
- 		return ret;
- 	}
- 
+It only needs changing when the Copyright is changed.
+
+If you want to update it to 2014-2019, that's fine.
+
+Or leaving it untouched, is also fine.
+
 -- 
-2.7.4
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
