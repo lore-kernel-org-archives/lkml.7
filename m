@@ -6,81 +6,84 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF76BC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 321C4C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8303F2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02E87206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565637076;
-	bh=zGXxYRVN5FWM3TPyMY1MjGb5RqFeMmER7+0sGSVq3TQ=;
+	s=default; t=1565637102;
+	bh=E/Wq7i7xnIxt1gJKCZ82QanfLVuebUWCuy1K24B+FMo=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=I4Dr5sDv2yetiFr2BT2BuEjtbiZC340F1YrorC5igkY9mw+xpVGXrsZhV77qkQ9qy
-	 AC+PxWrkM9owBrDlcUgUoIeKM9ecrIZhod59GAkyT8Z+nvZBEjDrs6zG9Tmnihsdqw
-	 5+GApaffcjZNpvdDIa6c1IzjsNV/mpTp0zmsoO08=
+	b=FRA2lLWL8PZaPIpiCwpsL3agS0HOVGFZHIUW6B09BsFU+y3FmzgJqOAfcIF6Viko1
+	 QTfC84dW6pEVRSzYkBmEORZVoODO6TeCWkjY6RiBgpikM/JKZo/0sMryjhv1KAnb02
+	 T4UkoBEfODPp0W3A96AuuLjn+jkQ1P/1C3NdH4Ks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfHLTLP (ORCPT
+        id S1726823AbfHLTLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 15:11:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46494 "EHLO mail.kernel.org"
+        Mon, 12 Aug 2019 15:11:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726200AbfHLTLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 15:11:15 -0400
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        id S1726200AbfHLTLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 15:11:40 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 272392075B;
-        Mon, 12 Aug 2019 19:11:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEFE4208C2;
+        Mon, 12 Aug 2019 19:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565637074;
-        bh=zGXxYRVN5FWM3TPyMY1MjGb5RqFeMmER7+0sGSVq3TQ=;
+        s=default; t=1565637099;
+        bh=E/Wq7i7xnIxt1gJKCZ82QanfLVuebUWCuy1K24B+FMo=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bVvmCjxI+kPRG+nJNG4XkRKgxw3Tm4bRcUjOq2ildmS1J/5hfn/ngXlYQvqmCA5VO
-         ftcD6Ez9A2x1hDGlfIwOKR7NScXJU1VmmojMEo32y7dszjMlrd7OiuUwAR3T4RVQCF
-         JCEhrBCiHDtlJbdBgfbjP8owpJ79pzvpZTcSHDY8=
-Received: by mail-qt1-f182.google.com with SMTP id e8so3435128qtp.7;
-        Mon, 12 Aug 2019 12:11:14 -0700 (PDT)
-X-Gm-Message-State: APjAAAXgipOGHYBhCKevQ454Eo7KloUEpXTnSCZz2pz2euBXr3ckEHyL
-        xNwkJXZI+ZiD5AGT1GGISKMBO5tdOzhojF0JUA==
-X-Google-Smtp-Source: APXvYqy53vey6GYtzUmgKLgpgbiBPv+fXnb+bYVHJBev6DG0D+8uR8ZPe/236TEwvcCDWern5cLCJluC0mBiGyCQMWU=
-X-Received: by 2002:ac8:7593:: with SMTP id s19mr23691492qtq.136.1565637073361;
- Mon, 12 Aug 2019 12:11:13 -0700 (PDT)
+        b=treak2G8MrbmObg8FSSFRSwB7hajX9l7l97PeEBgEdM/rpYdzbDA/0/OLeqsgg2qU
+         KKeMhhzubR55UZHsQlN1wJmK2EcT4cTbc3Qci1JDGQox8SEM4HqQml5jf7ih485rmi
+         GzvXzfi6cTXv86Tepm51ut18EIkOqAVRXDCcMW38=
+Received: by mail-qt1-f175.google.com with SMTP id t12so15364533qtp.9;
+        Mon, 12 Aug 2019 12:11:39 -0700 (PDT)
+X-Gm-Message-State: APjAAAXdUDovj7ilgCQ9dcZSIkrDGBd0SD/sNJQkXdVMEagFS0Xj2QR7
+        1UJmzthhgDgwDGVM4wdDcTs+2uqNyeM/XtjEyA==
+X-Google-Smtp-Source: APXvYqwy7GVmLeGMFfbnCU9KfMy2d+Cst1XuCcbjR1Nxmy2vbL1Eh3xsRpA80dmnLum7eCTeYkaqBTIWT6xIjJgsq9c=
+X-Received: by 2002:ad4:4301:: with SMTP id c1mr10974792qvs.138.1565637099006;
+ Mon, 12 Aug 2019 12:11:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190811230015.28349-1-justin.swartz@risingedge.co.za>
-In-Reply-To: <20190811230015.28349-1-justin.swartz@risingedge.co.za>
+References: <20190812025242.15570-1-wangzqbj@inspur.com>
+In-Reply-To: <20190812025242.15570-1-wangzqbj@inspur.com>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 12 Aug 2019 13:11:01 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKpNgVcM-Ou7BKWv0qxvkJx3=NuSHRTHonQ-XSz-NXb1w@mail.gmail.com>
-Message-ID: <CAL_JsqKpNgVcM-Ou7BKWv0qxvkJx3=NuSHRTHonQ-XSz-NXb1w@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: add device tree for Mecer Xtreme Mini S6
-To:     Justin Swartz <justin.swartz@risingedge.co.za>
+Date:   Mon, 12 Aug 2019 13:11:27 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ1742r8vkwMjzem5FYEis21kVJKamrBt-TgDpMHHFsPw@mail.gmail.com>
+Message-ID: <CAL_JsqJ1742r8vkwMjzem5FYEis21kVJKamrBt-TgDpMHHFsPw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: Add ipsps1 as a trivial device
+To:     John Wang <wangzqbj@inspur.com>
 Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Jiri Kosina <trivial@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Patrick Venture <venture@google.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jeremy Gebben <jgebben@sweptlaser.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Milton Miller <miltonm@us.ibm.com>,
+        Lei YU <mine260309@gmail.com>, duanzhijia01@inspur.com,
+        Joel Stanley <joel@jms.id.au>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 5:01 PM Justin Swartz
-<justin.swartz@risingedge.co.za> wrote:
+On Sun, Aug 11, 2019 at 8:52 PM John Wang <wangzqbj@inspur.com> wrote:
 >
-> The Mecer Xtreme Mini S6 features a Rockchip RK3229 SoC,
-> 1GB DDR3 RAM, 8GB eMMC, MicroSD port, 10/100Mbps Ethernet,
-> Realtek 8723BS WLAN module, 2 x USB 2.0 ports, HDMI output,
-> and S/PDIF output.
+> The ipsps1 is an Inspur Power System power supply unit
 >
-> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+> Signed-off-by: John Wang <wangzqbj@inspur.com>
 > ---
->  .../devicetree/bindings/arm/rockchip.yaml          |   5 +
->  .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
->  arch/arm/boot/dts/Makefile                         |   1 +
->  arch/arm/boot/dts/rk3229-xms6.dts                  | 283 +++++++++++++++++++++
->  4 files changed, 291 insertions(+)
->  create mode 100644 arch/arm/boot/dts/rk3229-xms6.dts
+> v3:
+>     - Fix adding entry to the inappropriate line
+> v2:
+>     - No changes.
+> ---
+>  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
