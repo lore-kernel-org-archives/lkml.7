@@ -2,85 +2,87 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F7BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FEFC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B20CC20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDCFD20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:07:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565644053;
+	bh=8eWu0FeEigtryjeLkybywbMKb9yID/F2+1F7HYeW6MM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1h0t3Vif7lZ6FLlXBbj5cqCamB2HIKhauMidStJLjzUHsUcftR5sgaD7918BVbhGX
+	 xtRaug1++JbrsTD6HDeGuQ4x8XYeXpHEJlSbQkEGtrnO27WwPH6iluTPaaY2nlAGji
+	 E62GOtR7743rwBeSDMiZA02IDnJMcLcBARcppPzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbfHLVHA (ORCPT
+        id S1727275AbfHLVHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 17:07:00 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38744 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbfHLVHA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 17:07:00 -0400
-Received: by mail-wm1-f66.google.com with SMTP id m125so844456wmm.3;
-        Mon, 12 Aug 2019 14:06:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qWOFH+vnQ/d55qFCAGVCq+EnpKRZ2n+KSZvDsQ6ulNI=;
-        b=FIGNzvn5pMOFb/ZhIonIJ50VtezyxDgcWTRYehOfbeKYUPxQDhbs+0hCyixcoDVOBJ
-         5Qz4ZQ5t/8nPfP7eyfeXzs/DpV0rA98IONqKnYAVh2YaOg0aNtFoA9iN4SPDoKLU0xSh
-         cxKDTwNdP7NXa5nJcL0jLtzNXJP5KVndy6Y8k8SB+47h85zXpESwManC4CSAi0vLKKBH
-         m2ZkOTv5c4c/kzywS4oVQ3hg80sHCtwcHVMbwoYEKJpLT07iPgd77/ZGj4pbqhX3Gzop
-         gxeRf0sWVukmjnFyVzsUCNtuvLPWksP7cB5miInTq6yv9GjzlEgaQjt1HsClWNkWh114
-         twfg==
-X-Gm-Message-State: APjAAAUMDXvITrdZqQC6ZpaE3SfIhU6h88GP4ZYQETSrBxNTX/Tgw09i
-        buwDFvmsdqa6ZK601QBWCQ+B8Qyib10=
-X-Google-Smtp-Source: APXvYqyTfyfmXcBwUnQMX1BXqa6qMWfoGfpurBy5nZQqS3EqusXypmdFF0r/5bJNxz/6uyXyzPWj1A==
-X-Received: by 2002:a1c:ed06:: with SMTP id l6mr1035718wmh.128.1565644018345;
-        Mon, 12 Aug 2019 14:06:58 -0700 (PDT)
-Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.gmail.com with ESMTPSA id j9sm3380620wrx.66.2019.08.12.14.06.57
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 14:06:57 -0700 (PDT)
-Subject: Re: [PATCH 2/7] s390/pci: Replace PCI_BAR_COUNT with PCI_STD_NUM_BARS
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190811150802.2418-1-efremov@linux.com>
- <20190811150802.2418-3-efremov@linux.com> <20190812200201.GC11785@google.com>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <a23079db-e130-e3b5-deee-ff7c06d9191e@linux.com>
-Date:   Tue, 13 Aug 2019 00:06:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190812200201.GC11785@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Mon, 12 Aug 2019 17:07:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726663AbfHLVHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 17:07:32 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75159206C2;
+        Mon, 12 Aug 2019 21:07:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565644051;
+        bh=8eWu0FeEigtryjeLkybywbMKb9yID/F2+1F7HYeW6MM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=KSc2f7WJ+aVJbY03uw3UilWLAtizXPAUmMYG3sHCkIFvvCmev13bVOmzlC7c9DVvu
+         TeJWhQV7OhPUJ2Tp8JQEIgR7dRP5f1Cy44CsuUM+mAdfmg1cwNi5yByYYrqsdtng6l
+         6qQ6wmggXbxoq8GT9R4qXV42gFqJDwD+b6ejhFnw=
+Date:   Mon, 12 Aug 2019 14:07:30 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>
+Subject: Re: [PATCH v3 0/3] mm: kmemleak: Use a memory pool for kmemleak
+ object allocations
+Message-Id: <20190812140730.71dd7f35d568b4d8530f8908@linux-foundation.org>
+In-Reply-To: <20190812160642.52134-1-catalin.marinas@arm.com>
+References: <20190812160642.52134-1-catalin.marinas@arm.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Mon, 12 Aug 2019 17:06:39 +0100 Catalin Marinas <catalin.marinas@arm.com> wrote:
 
+> Following the discussions on v2 of this patch(set) [1], this series
+> takes slightly different approach:
 > 
-> There's a loop just below here that should be rewritten in the typical
-> style:
+> - it implements its own simple memory pool that does not rely on the
+>   slab allocator
 > 
->         i = PCI_IOV_RESOURCES;
->         for (; i < PCI_SRIOV_NUM_BARS + PCI_IOV_RESOURCES; i++) {
->                 len = pci_resource_len(pdev, i);
+> - drops the early log buffer logic entirely since it can now allocate
+>   metadata from the memory pool directly before kmemleak is fully
+>   initialised
 > 
-> Again, not strictly related to this patch, but probably trivial enough
-> to do in the same patch.
+> - CONFIG_DEBUG_KMEMLEAK_EARLY_LOG_SIZE option is renamed to
+>   CONFIG_DEBUG_KMEMLEAK_MEM_POOL_SIZE
 > 
+> - moves the kmemleak_init() call earlier (mm_init())
+> 
+> - to avoid a separate memory pool for struct scan_area, it makes the
+>   tool robust when such allocations fail as scan areas are rather an
+>   optimisation
+> 
+> [1] http://lkml.kernel.org/r/20190727132334.9184-1-catalin.marinas@arm.com
 
-I think it's already fixed in a separate patch https://lkml.org/lkml/2019/8/6/694
-Thanks for the review, I will send v2.
+Using the term "memory pool" is a little unfortunate, but better than
+using "mempool"!
 
-Denis
+The changelog doesn't answer the very first question: why not use
+mempools.  Please send along a paragraph which explains this decision.
