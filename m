@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68373C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E63A7C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DEC8208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABD3C208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:05:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mYkFnIPS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rrv303O4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfHLPFM (ORCPT
+        id S1727764AbfHLPFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 11:05:12 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53959 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbfHLPFK (ORCPT
+        Mon, 12 Aug 2019 11:05:16 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35286 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727602AbfHLPFP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 11:05:10 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 10so12497396wmp.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 08:05:09 -0700 (PDT)
+        Mon, 12 Aug 2019 11:05:15 -0400
+Received: by mail-wm1-f67.google.com with SMTP id l2so12089889wmg.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 08:05:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=8IMb6ucekZITMI3FMSd2vkVdCA6v6V+Ngebbp2VClKs=;
-        b=mYkFnIPSEzOo3ELoos1JOjri2NaV+zXYbxrik8fkPrh+5rloTjwd/yVKYHjAa7pFLF
-         wtktJZhupsHyFx3pDUdgJCjAwh2p9I6TMvQmya7vx9BrBdhGHagICquUhelfs60FQXNJ
-         +Fmf80svglaVSoptoJFHOK/7/HQGbm06ig+PZL/IFbZPRMFZltu0iM3nG0FwkPInS1nf
-         RE99EoSBVWs7/RDHUkK1hWxt0vUYdqsDFp6z6dSvIQwN8mU17cOI/uZOun2czuL3zl4P
-         ijme2BGrI/TokPeVKfSslXWXAq1EO1A8iUqHlYQ4tfJsEhaWvECPEXrChIQq8+v16LoF
-         zNAg==
+        bh=+lKE3M766VSXcFdd93gVKyp3DvIcJdKpewtir+tTjtY=;
+        b=Rrv303O43OyEKz36qcqnSKBIfjcfCb4HWfW9FX3qbTTUFSZeHD+ZEYxD7FWdJO01zz
+         FKjj+3TTv8OMK34lkqrRP70oXLRXYegXR2wmS6GFWKdXJ8RhFF8xNpEgrd4ArJ66lAne
+         Df3gipPgc8ZqMSg/hfMqlZSVy8Wpp4lrs6k8RECYjSvtmMAG9aEa1YWTgSp2LpukgMfd
+         cvJLKlHTQgz3yMgZ6dZzdEekD+kYNDOxIWQMzkldeg4Hl4VZ3VvzTgRjlERwT3IoTcTS
+         rLpOef9qj2iPFTtYP0zWJTxAkjxl50ehZ2ynJBH1NUnA5OrFcZRQqohI+FRQWsf50tP0
+         1LWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=8IMb6ucekZITMI3FMSd2vkVdCA6v6V+Ngebbp2VClKs=;
-        b=IAiVgA9JyE++nyNxaYX9XRENq8A46KKC3BRxLwgA1dve2SOogBd2g4QBr0FEjAhPWu
-         KAd9wt5AfvgfzhT+AEKLk4FVd54rEdKEK+tgEZXvW4z7Wg2zgVnD4m5lDcPU4FonXWW4
-         hg8FBaRWbH2+1wmh7CTWPA6eLBoJKHkIXAXQfVEznf5ICpaF2aH0B/SZkz5760kjGNnP
-         EgFKyqAKSIeAbERun+zxj+/miHL503Hp2cGJDud66HdbBzEBv3abu+4vRreQMvzIrHCA
-         cHwZCXPZuvkzN4cz+FTlohJxrAkkjeAU2rWzQ02bejnL0X88FfmiGxEu/oNUFGaOLYY8
-         Jyyw==
-X-Gm-Message-State: APjAAAWixGHmmQtC/VXbs1UHgMD3yQgS23pYzWf8Hokc33Usn4Mj4G3l
-        24EzI+Vo5pYBx9rLArIhOvVtwg==
-X-Google-Smtp-Source: APXvYqxP6NEQtwOppdOu3AyNA04uPlbn1EdFq9PlZqMlsslGdmQq9f0Afadj82zlntGTlJRLgljamw==
-X-Received: by 2002:a1c:a008:: with SMTP id j8mr2838023wme.57.1565622308510;
-        Mon, 12 Aug 2019 08:05:08 -0700 (PDT)
+        bh=+lKE3M766VSXcFdd93gVKyp3DvIcJdKpewtir+tTjtY=;
+        b=etB/pedEB8hIF0vItCq5facz5yQF37+wTxNFxPBTDG6CAup6rXp9/QaIQDORvY+ub1
+         /QE20yrBSIaTQoTNNoKnXcd4M34FULIItqswiJQWXmRRtpm3/4yzSFMV/JouKbOlpcLQ
+         2eq4fYjfxNLvSAkqjNlwvxDJdJ7BW7eYPI6XdiYgl8lFFEy89P+kWg/Jy45FqS0tatfM
+         0/TpbUc/5pKSEqVEx6NhVoSd2Y1QuepqiRGr+HDjoZVyTWawEJFNJkx/ukNHu7zht5x3
+         fMeYv1TiHN0IcCyMOfILiT0Zy0xGlOt8vKG0Ddzj7OHELnF2hbNMPhYTiT8bBkJjA30v
+         /4nw==
+X-Gm-Message-State: APjAAAWfdy1eAk2yRRikozNk1bb6b62cUsGsghnStN53bK7oQSWOi9Bt
+        z0bmON3mpbH9c4ZsGZCzIEZa5A==
+X-Google-Smtp-Source: APXvYqzcfsQYwW8Tw9+tg9Rj9NNGvQbwgKwQN797396Gxxe9KHJsy6RUFJgGTaEQx6oGR08Ep5OU6g==
+X-Received: by 2002:a1c:f618:: with SMTP id w24mr22373421wmc.112.1565622312740;
+        Mon, 12 Aug 2019 08:05:12 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:587:a407:da00:1c0e:f938:89a1:8e17])
-        by smtp.gmail.com with ESMTPSA id h97sm31027269wrh.74.2019.08.12.08.05.06
+        by smtp.gmail.com with ESMTPSA id h97sm31027269wrh.74.2019.08.12.08.05.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 08:05:07 -0700 (PDT)
+        Mon, 12 Aug 2019 08:05:12 -0700 (PDT)
 From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -62,10 +62,11 @@ Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
         Mario Limonciello <mario.limonciello@dell.com>,
         Narendra K <Narendra.K@dell.com>,
-        Xiaofei Tan <tanxiaofei@huawei.com>
-Subject: [PATCH 1/5] efi: x86: move efi_is_table_address() into arch/x86
-Date:   Mon, 12 Aug 2019 18:04:48 +0300
-Message-Id: <20190812150452.27983-2-ard.biesheuvel@linaro.org>
+        Xiaofei Tan <tanxiaofei@huawei.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org
+Subject: [PATCH 3/5] efi: ia64: move SAL systab handling out of generic EFI code
+Date:   Mon, 12 Aug 2019 18:04:50 +0300
+Message-Id: <20190812150452.27983-4-ard.biesheuvel@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190812150452.27983-1-ard.biesheuvel@linaro.org>
 References: <20190812150452.27983-1-ard.biesheuvel@linaro.org>
@@ -74,178 +75,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function efi_is_table_address() and the associated array of table
-pointers is specific to x86. Since we will be adding some more x86
-specific tables, let's move this code out of the generic code first.
+The SAL systab is an Itanium specific EFI configuration table, so
+move its handling into arch/ia64 where it belongs.
 
+Cc; Tony Luck <tony.luck@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: linux-ia64@vger.kernel.org
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 ---
- arch/x86/include/asm/efi.h  |  5 +++++
- arch/x86/mm/ioremap.c       |  1 +
- arch/x86/platform/efi/efi.c | 33 +++++++++++++++++++++++++++++++++
- drivers/firmware/efi/efi.c  | 33 ---------------------------------
- include/linux/efi.h         |  7 -------
- 5 files changed, 39 insertions(+), 40 deletions(-)
+ arch/ia64/include/asm/sal.h       | 1 +
+ arch/ia64/include/asm/sn/sn_sal.h | 2 +-
+ arch/ia64/kernel/efi.c            | 3 +++
+ arch/ia64/kernel/setup.c          | 2 +-
+ arch/x86/platform/efi/efi.c       | 1 -
+ drivers/firmware/efi/efi.c        | 2 --
+ include/linux/efi.h               | 1 -
+ 7 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-index 606a4b6a9812..43a82e59c59d 100644
---- a/arch/x86/include/asm/efi.h
-+++ b/arch/x86/include/asm/efi.h
-@@ -242,6 +242,7 @@ static inline bool efi_is_64bit(void)
- 		__efi_early()->runtime_services), __VA_ARGS__)
+diff --git a/arch/ia64/include/asm/sal.h b/arch/ia64/include/asm/sal.h
+index 588f33156da6..08f5b6aaed73 100644
+--- a/arch/ia64/include/asm/sal.h
++++ b/arch/ia64/include/asm/sal.h
+@@ -43,6 +43,7 @@
+ #include <asm/pal.h>
+ #include <asm/fpu.h>
  
- extern bool efi_reboot_required(void);
-+extern bool efi_is_table_address(unsigned long phys_addr);
++extern unsigned long sal_systab_phys;
+ extern spinlock_t sal_lock;
  
- #else
- static inline void parse_efi_setup(u64 phys_addr, u32 data_len) {}
-@@ -249,6 +250,10 @@ static inline bool efi_reboot_required(void)
+ /* SAL spec _requires_ eight args for each call. */
+diff --git a/arch/ia64/include/asm/sn/sn_sal.h b/arch/ia64/include/asm/sn/sn_sal.h
+index 1f5ff470a5a1..5142c444652d 100644
+--- a/arch/ia64/include/asm/sn/sn_sal.h
++++ b/arch/ia64/include/asm/sn/sn_sal.h
+@@ -167,7 +167,7 @@
+ static inline u32
+ sn_sal_rev(void)
  {
- 	return false;
+-	struct ia64_sal_systab *systab = __va(efi.sal_systab);
++	struct ia64_sal_systab *systab = __va(sal_systab_phys);
+ 
+ 	return (u32)(systab->sal_b_rev_major << 8 | systab->sal_b_rev_minor);
  }
-+static inline  bool efi_is_table_address(unsigned long phys_addr)
-+{
-+	return false;
-+}
- #endif /* CONFIG_EFI */
+diff --git a/arch/ia64/kernel/efi.c b/arch/ia64/kernel/efi.c
+index 3795d18276c4..0a34dcc435c6 100644
+--- a/arch/ia64/kernel/efi.c
++++ b/arch/ia64/kernel/efi.c
+@@ -47,8 +47,11 @@
  
- #endif /* _ASM_X86_EFI_H */
-diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-index 63e99f15d7cf..a39dcdb5ae34 100644
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -19,6 +19,7 @@
+ static __initdata unsigned long palo_phys;
  
- #include <asm/set_memory.h>
- #include <asm/e820/api.h>
-+#include <asm/efi.h>
- #include <asm/fixmap.h>
- #include <asm/pgtable.h>
- #include <asm/tlbflush.h>
++unsigned long sal_systab_phys = EFI_INVALID_TABLE_ADDR;
++
+ static __initdata efi_config_table_type_t arch_tables[] = {
+ 	{PROCESSOR_ABSTRACTION_LAYER_OVERWRITE_GUID, "PALO", &palo_phys},
++	{SAL_SYSTEM_TABLE_GUID, "SALsystab", &sal_systab_phys},
+ 	{NULL_GUID, NULL, 0},
+ };
+ 
+diff --git a/arch/ia64/kernel/setup.c b/arch/ia64/kernel/setup.c
+index c9cfa760cd57..0e1b4eb149b4 100644
+--- a/arch/ia64/kernel/setup.c
++++ b/arch/ia64/kernel/setup.c
+@@ -572,7 +572,7 @@ setup_arch (char **cmdline_p)
+ 	find_memory();
+ 
+ 	/* process SAL system table: */
+-	ia64_sal_init(__va(efi.sal_systab));
++	ia64_sal_init(__va(sal_systab_phys));
+ 
+ #ifdef CONFIG_ITANIUM
+ 	ia64_patch_rse((u64) __start___rse_patchlist, (u64) __end___rse_patchlist);
 diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index a7189a3b4d70..8d9be97a5607 100644
+index 9866a3584765..6697c109c449 100644
 --- a/arch/x86/platform/efi/efi.c
 +++ b/arch/x86/platform/efi/efi.c
-@@ -64,6 +64,25 @@ static efi_config_table_type_t arch_tables[] __initdata = {
- 	{NULL_GUID, NULL, NULL},
- };
- 
-+static const unsigned long * const efi_tables[] = {
-+	&efi.mps,
-+	&efi.acpi,
-+	&efi.acpi20,
-+	&efi.smbios,
-+	&efi.smbios3,
-+	&efi.sal_systab,
-+	&efi.boot_info,
-+	&efi.hcdp,
-+	&efi.uga,
-+	&efi.uv_systab,
-+	&efi.fw_vendor,
-+	&efi.runtime,
-+	&efi.config_table,
-+	&efi.esrt,
-+	&efi.properties_table,
-+	&efi.mem_attr_table,
-+};
-+
- u64 efi_setup;		/* efi setup_data physical address */
- 
- static int add_efi_memmap __initdata;
-@@ -1049,3 +1068,17 @@ static int __init arch_parse_efi_cmdline(char *str)
- 	return 0;
- }
- early_param("efi", arch_parse_efi_cmdline);
-+
-+bool efi_is_table_address(unsigned long phys_addr)
-+{
-+	unsigned int i;
-+
-+	if (phys_addr == EFI_INVALID_TABLE_ADDR)
-+		return false;
-+
-+	for (i = 0; i < ARRAY_SIZE(efi_tables); i++)
-+		if (*(efi_tables[i]) == phys_addr)
-+			return true;
-+
-+	return false;
-+}
+@@ -70,7 +70,6 @@ static const unsigned long * const efi_tables[] = {
+ 	&efi.acpi20,
+ 	&efi.smbios,
+ 	&efi.smbios3,
+-	&efi.sal_systab,
+ 	&efi.boot_info,
+ 	&efi.hcdp,
+ 	&efi.uga,
 diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index ad3b1f4866b3..cbdbdbc8f9eb 100644
+index 4dfd873373bd..801925c5bcfb 100644
 --- a/drivers/firmware/efi/efi.c
 +++ b/drivers/firmware/efi/efi.c
-@@ -57,25 +57,6 @@ struct efi __read_mostly efi = {
- };
- EXPORT_SYMBOL(efi);
- 
--static unsigned long *efi_tables[] = {
--	&efi.mps,
--	&efi.acpi,
--	&efi.acpi20,
--	&efi.smbios,
--	&efi.smbios3,
--	&efi.sal_systab,
--	&efi.boot_info,
--	&efi.hcdp,
--	&efi.uga,
--	&efi.uv_systab,
--	&efi.fw_vendor,
--	&efi.runtime,
--	&efi.config_table,
--	&efi.esrt,
--	&efi.properties_table,
--	&efi.mem_attr_table,
--};
--
- struct mm_struct efi_mm = {
- 	.mm_rb			= RB_ROOT,
- 	.mm_users		= ATOMIC_INIT(2),
-@@ -964,20 +945,6 @@ int efi_status_to_err(efi_status_t status)
- 	return err;
- }
- 
--bool efi_is_table_address(unsigned long phys_addr)
--{
--	unsigned int i;
--
--	if (phys_addr == EFI_INVALID_TABLE_ADDR)
--		return false;
--
--	for (i = 0; i < ARRAY_SIZE(efi_tables); i++)
--		if (*(efi_tables[i]) == phys_addr)
--			return true;
--
--	return false;
--}
--
- static DEFINE_SPINLOCK(efi_mem_reserve_persistent_lock);
- static struct linux_efi_memreserve *efi_memreserve_root __ro_after_init;
- 
+@@ -39,7 +39,6 @@ struct efi __read_mostly efi = {
+ 	.acpi20			= EFI_INVALID_TABLE_ADDR,
+ 	.smbios			= EFI_INVALID_TABLE_ADDR,
+ 	.smbios3		= EFI_INVALID_TABLE_ADDR,
+-	.sal_systab		= EFI_INVALID_TABLE_ADDR,
+ 	.boot_info		= EFI_INVALID_TABLE_ADDR,
+ 	.hcdp			= EFI_INVALID_TABLE_ADDR,
+ 	.uga			= EFI_INVALID_TABLE_ADDR,
+@@ -456,7 +455,6 @@ static __initdata efi_config_table_type_t common_tables[] = {
+ 	{ACPI_TABLE_GUID, "ACPI", &efi.acpi},
+ 	{HCDP_TABLE_GUID, "HCDP", &efi.hcdp},
+ 	{MPS_TABLE_GUID, "MPS", &efi.mps},
+-	{SAL_SYSTEM_TABLE_GUID, "SALsystab", &efi.sal_systab},
+ 	{SMBIOS_TABLE_GUID, "SMBIOS", &efi.smbios},
+ 	{SMBIOS3_TABLE_GUID, "SMBIOS 3.0", &efi.smbios3},
+ 	{UGA_IO_PROTOCOL_GUID, "UGA", &efi.uga},
 diff --git a/include/linux/efi.h b/include/linux/efi.h
-index f87fabea4a85..60a6242765d8 100644
+index 171bb1005a10..f88318b85fb0 100644
 --- a/include/linux/efi.h
 +++ b/include/linux/efi.h
-@@ -1211,8 +1211,6 @@ static inline bool efi_enabled(int feature)
- 	return test_bit(feature, &efi.flags) != 0;
- }
- extern void efi_reboot(enum reboot_mode reboot_mode, const char *__unused);
--
--extern bool efi_is_table_address(unsigned long phys_addr);
- #else
- static inline bool efi_enabled(int feature)
- {
-@@ -1226,11 +1224,6 @@ efi_capsule_pending(int *reset_type)
- {
- 	return false;
- }
--
--static inline bool efi_is_table_address(unsigned long phys_addr)
--{
--	return false;
--}
- #endif
- 
- extern int efi_status_to_err(efi_status_t status);
+@@ -984,7 +984,6 @@ extern struct efi {
+ 	unsigned long acpi20;		/* ACPI table  (ACPI 2.0) */
+ 	unsigned long smbios;		/* SMBIOS table (32 bit entry point) */
+ 	unsigned long smbios3;		/* SMBIOS table (64 bit entry point) */
+-	unsigned long sal_systab;	/* SAL system table */
+ 	unsigned long boot_info;	/* boot info table */
+ 	unsigned long hcdp;		/* HCDP table */
+ 	unsigned long uga;		/* UGA table */
 -- 
 2.17.1
 
