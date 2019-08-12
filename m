@@ -2,144 +2,152 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA92C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 02:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89993C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 02:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5289205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 02:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58E51208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 02:21:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QNcfiPHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfHLCHH (ORCPT
+        id S1726594AbfHLCVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 22:07:07 -0400
-Received: from mail-ot1-f69.google.com ([209.85.210.69]:34756 "EHLO
-        mail-ot1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbfHLCHH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 22:07:07 -0400
-Received: by mail-ot1-f69.google.com with SMTP id a26so7856622otl.1
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 19:07:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=pA4ajK2mL+OR2q0DCzQWIvgz3qE+KSagbdoGlUva7a4=;
-        b=ZEX3Pf0/au/KrJr8dzSMQ/y/YLlxLVSlohmjBzbwF/ZaI059KAZTMUDuPp3VYZYOq0
-         2VzEv+aZpZzg7+c4LULRdioVvMSu4EsGdlwAs8oC2XdfMm38w1OnfWK2jez3pbsziOJf
-         aBsC0C3cSBHbVBQ0JCgRqlK0674gE0rjQFvtaueCoPGjxXiK51XNxvlwN5x62M9hFucf
-         R0v4s2bRrtDPSvWZk+QSpHcp0dXtyfFdlX00hsf8ennW3adQa2ArVvt8sYoW4AXZdS1Q
-         tnLV5D4uDappalfbPtFSp9ucsxNO2jJjrbxcoqIfaAFGMN6RDZxZdPX4rlVBJL37/lTa
-         n8zw==
-X-Gm-Message-State: APjAAAW/pRjuNopL6UZZ6K8c4WIzF8R5UeDDecJTfYkGS4ga5ioxEXLu
-        PH+IBkl0KeiMn1b/DDwaDDV7X4z5+gdvMh76pT7wP0oqehTV
-X-Google-Smtp-Source: APXvYqx1J6ZW+jxF/lQ3V1d2KJ2ik/J0TW7ZaJ61DK+gwmOM93ZnyWMxf+0k89SajqAmZLaFwW0gFQ58e5AGgbREvxXb7QiplNpo
+        Sun, 11 Aug 2019 22:21:12 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:44233 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726200AbfHLCVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 22:21:12 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 466KMm0Lmdz9sP7;
+        Mon, 12 Aug 2019 12:21:07 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565576468;
+        bh=HdId0j789qpKf14+gTDT90r9ZUNm34/y6nkMbLvLDic=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QNcfiPHDLgsuXv+vEoXbiT9BcqJPx0xzdL248GxHRlEaqR9/vubWhsPz53ZiPMGPK
+         drh+igYPYu3T9f8k+QrpFpR7pRsShaUswdgWnrG4mStQcs2VbaN8m5lexnnHJcXeTL
+         iIHcP8fKXLVAR0DA1NKZ8ocoYi6/FhPdLPSe37n7s1jgxieZtdQ0GMrp4Qy5l2qD0O
+         ydw6iZ6agY00yUzEe8XURUa0Tk/uLvDEG1+PwmywdVAmZ5JP1/FAfD0lVVEkpYtq3P
+         m/STZymVWv/eOdjazpPma0pgcm1zGVw1dAnku+GO3JH1ez2EU5vHx7xKTR/h0ei2jl
+         irCsFTqHEOMBA==
+Date:   Mon, 12 Aug 2019 12:21:06 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Huy Nguyen <huyn@mellanox.com>,
+        Vlad Buslov <vladbu@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: linux-next: manual merge of the net-next tree with the net tree
+Message-ID: <20190812122106.628debfd@canb.auug.org.au>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:e317:: with SMTP id u23mr20541853ioc.38.1565575626132;
- Sun, 11 Aug 2019 19:07:06 -0700 (PDT)
-Date:   Sun, 11 Aug 2019 19:07:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001097b6058fe1fb22@google.com>
-Subject: BUG: Dentry still in use [unmount of nfsd nfsd]
-From:   syzbot <syzbot+2c95195d5d433f6ed6cb@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; boundary="Sig_/wKh8sn3YkOTaPQ=4/ySqEeQ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+--Sig_/wKh8sn3YkOTaPQ=4/ySqEeQ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-syzbot found the following crash on:
+Hi all,
 
-HEAD commit:    f4eb1423 Merge branch 'for-linus' of git://git.kernel.org/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11ab1c74600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a4c9e9f08e9e8960
-dashboard link: https://syzkaller.appspot.com/bug?extid=2c95195d5d433f6ed6cb
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Today's linux-next merge of the net-next tree got a conflict in:
 
-Unfortunately, I don't have any reproducer for this crash yet.
+  drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+2c95195d5d433f6ed6cb@syzkaller.appspotmail.com
+between commit:
 
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa0af7a86d4
-R13: 00000000004c018f R14: 00000000004d2228 R15: 0000000000000004
-BUG: Dentry 00000000117d3c54{i=0,n=clients}  still in use (1) [unmount of  
-nfsd nfsd]
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 18817 at fs/dcache.c:1595 umount_check  
-fs/dcache.c:1595 [inline]
-WARNING: CPU: 1 PID: 18817 at fs/dcache.c:1595 umount_check.cold+0xf5/0x116  
-fs/dcache.c:1576
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 18817 Comm: syz-executor.3 Not tainted 5.3.0-rc3+ #100
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2dc/0x755 kernel/panic.c:219
-  __warn.cold+0x20/0x4c kernel/panic.c:576
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-RIP: 0010:umount_check fs/dcache.c:1595 [inline]
-RIP: 0010:umount_check.cold+0xf5/0x116 fs/dcache.c:1576
-Code: 00 00 45 89 e8 4c 89 e1 53 4d 8b 0f 4c 89 f2 4c 89 e6 48 c7 c7 80 97  
-96 87 e8 61 a6 9f ff 48 c7 c7 00 98 96 87 e8 55 a6 9f ff <0f> 0b 58 e9 b1  
-15 ff ff e8 24 1f f0 ff e9 1d ff ff ff 45 31 f6 e9
-RSP: 0018:ffff888060187b88 EFLAGS: 00010282
-RAX: 0000000000000024 RBX: ffff8880624f8bb8 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815c3ba6 RDI: ffffed100c030f63
-RBP: ffff888060187bb8 R08: 0000000000000024 R09: fffffbfff11b42c5
-R10: fffffbfff11b42c4 R11: ffffffff88da1623 R12: ffff88803f50fa20
-R13: 0000000000000001 R14: 0000000000000000 R15: ffffffff88f75220
-  d_walk+0x283/0x950 fs/dcache.c:1305
-  do_one_tree+0x28/0x40 fs/dcache.c:1602
-  shrink_dcache_for_umount+0x72/0x170 fs/dcache.c:1618
-  generic_shutdown_super+0x6d/0x370 fs/super.c:443
-  kill_anon_super+0x3e/0x60 fs/super.c:1102
-  kill_litter_super+0x50/0x60 fs/super.c:1111
-  nfsd_umount+0x3f/0x90 fs/nfsd/nfsctl.c:1416
-  deactivate_locked_super+0x95/0x100 fs/super.c:331
-  vfs_get_super+0x210/0x270 fs/super.c:1185
-  nfsd_fs_get_tree+0x7a/0x90 fs/nfsd/nfsctl.c:1390
-  vfs_get_tree+0x8e/0x390 fs/super.c:1413
-  vfs_fsconfig_locked+0x236/0x3d0 fs/fsopen.c:232
-  __do_sys_fsconfig fs/fsopen.c:445 [inline]
-  __se_sys_fsconfig fs/fsopen.c:314 [inline]
-  __x64_sys_fsconfig+0x8e0/0xa40 fs/fsopen.c:314
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459829
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fa0af7a7c78 EFLAGS: 00000246 ORIG_RAX: 00000000000001af
-RAX: ffffffffffffffda RBX: 00007fa0af7a7c90 RCX: 0000000000459829
-RDX: 0000000000000000 RSI: 0000000000000006 RDI: 0000000000000003
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa0af7a86d4
-R13: 00000000004c018f R14: 00000000004d2228 R15: 0000000000000004
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+  93b3586e070b ("net/mlx5: Support inner header match criteria for non deca=
+p flow action")
 
+from the net tree and commit:
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+  226f2ca3075a ("net/mlx5e: Change flow flags type to unsigned long")
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+from the net-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+index deeb65da99f3,5be3da621499..000000000000
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+@@@ -1839,18 -2057,15 +2061,20 @@@ static int parse_cls_flower(struct mlx5
+  	struct mlx5_core_dev *dev =3D priv->mdev;
+  	struct mlx5_eswitch *esw =3D dev->priv.eswitch;
+  	struct mlx5e_rep_priv *rpriv =3D priv->ppriv;
+ -	u8 match_level, tunnel_match_level =3D MLX5_MATCH_NONE;
+  	struct mlx5_eswitch_rep *rep;
++ 	bool is_eswitch_flow;
+  	int err;
+ =20
+ -	err =3D __parse_cls_flower(priv, spec, f, filter_dev, &match_level, &tun=
+nel_match_level);
+ +	inner_match_level =3D MLX5_MATCH_NONE;
+ +	outer_match_level =3D MLX5_MATCH_NONE;
+ +
+ +	err =3D __parse_cls_flower(priv, spec, f, filter_dev, &inner_match_level,
+ +				 &outer_match_level);
+ +	non_tunnel_match_level =3D (inner_match_level =3D=3D MLX5_MATCH_NONE) ?
+ +				 outer_match_level : inner_match_level;
+ =20
+- 	if (!err && (flow->flags & MLX5E_TC_FLOW_ESWITCH)) {
++ 	is_eswitch_flow =3D mlx5e_is_eswitch_flow(flow);
++ 	if (!err && is_eswitch_flow) {
+  		rep =3D rpriv->rep;
+  		if (rep->vport !=3D MLX5_VPORT_UPLINK &&
+  		    (esw->offloads.inline_mode !=3D MLX5_INLINE_MODE_NONE &&
+@@@ -1864,11 -2079,11 +2088,11 @@@
+  		}
+  	}
+ =20
+- 	if (flow->flags & MLX5E_TC_FLOW_ESWITCH) {
++ 	if (is_eswitch_flow) {
+ -		flow->esw_attr->match_level =3D match_level;
+ -		flow->esw_attr->tunnel_match_level =3D tunnel_match_level;
+ +		flow->esw_attr->inner_match_level =3D inner_match_level;
+ +		flow->esw_attr->outer_match_level =3D outer_match_level;
+  	} else {
+ -		flow->nic_attr->match_level =3D match_level;
+ +		flow->nic_attr->match_level =3D non_tunnel_match_level;
+  	}
+ =20
+  	return err;
+
+--Sig_/wKh8sn3YkOTaPQ=4/ySqEeQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1QzRIACgkQAVBC80lX
+0Gy70wgAmOYZD+4qminOIVh1+j+LLcV84fr9pUaDAjSYS11cjsKZN0bsPzI7fX1l
+KLqpS/z1gK4NhWCrECrNj1UviuC5dktksvxv9YKuhy2vJhLqpcWmiNeI6u5+ACx+
+vtz4A2nBPNYvEXkuRl4JwJz6vvN23XDh+siBqcsVuyQ4lGdouFnc2CjmKNaKb9tn
+NcSdA6ar3Czbf+ZeSz04j5P2IsjlEnteVuPVWuDRQhH6BEEBk4BBFUxee+iLkqRX
+TgsYyICMnHnbtV2PYgHD213JjoP0AcNko+6fx8gaaom1SBQOuprppyZGLx+RaZS2
+YLpc8ie93AqMR9HGH+E7izxdgTra3Q==
+=7dPM
+-----END PGP SIGNATURE-----
+
+--Sig_/wKh8sn3YkOTaPQ=4/ySqEeQ--
