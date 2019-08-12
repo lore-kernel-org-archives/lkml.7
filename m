@@ -2,123 +2,198 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4393C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBA0C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AAC2217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:39:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565653197;
-	bh=g1oGI/RT7q+tWZ2BW7Bj/hckAKrhiNedFdjBEplqisA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sI7IKtJyEvwfrWkPw+I05T1R+NWcE+qVdWXv8I9UoHKpEGAl41m71VNc6vE3EXYR1
-	 aYqm/0gqI22zmL08UA63MVdmTsk6q5e3fmNt/jszU0EsReJXOglxCJjtyjfOJe2Qcx
-	 7//mdI2M9gfJieRiOb6E/ON4+Sy5ml7b9Yclb4yM=
+	by mail.kernel.org (Postfix) with ESMTP id 8133920679
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:40:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Az/KAHeX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfHLXj4 (ORCPT
+        id S1726824AbfHLXk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 19:39:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37646 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726453AbfHLXj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 19:39:56 -0400
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A609620820;
-        Mon, 12 Aug 2019 23:39:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565653194;
-        bh=g1oGI/RT7q+tWZ2BW7Bj/hckAKrhiNedFdjBEplqisA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jWZvvpDMOZIOxvbu8qTb1T1bHujYnWZxRtUuMOJ88SX+lJ+yl2x4LvXD0CCOJJ6Cm
-         JFSXqg4V1bgoVpqM1qTM0Cink5TzT0+WVXAmtWmZOT/edkdNbwOUcUPQ1ZyccQyVpE
-         16E1cGwOeMwhIPkcvVNS6MJSmzEdlPhJANNdq2Ak=
-Received: by mail-qk1-f169.google.com with SMTP id u190so14687778qkh.5;
-        Mon, 12 Aug 2019 16:39:54 -0700 (PDT)
-X-Gm-Message-State: APjAAAU0JIN/FhOIDrEyUDfEWt24dL5xBMz3HrBIE45i16OsUxPAVDEb
-        27Ii/PZYLj34Wh1BiU+jq+RRsUQzz4sOjvVLng==
-X-Google-Smtp-Source: APXvYqx7EbPjgLHVpq/dM8qT7Al9/ZfUvTi6FAz8DRCcUvaxEZ+RFwA37wmOT/6EmvBt557f0GUFFOvVpEKHIXy2qu8=
-X-Received: by 2002:a37:d8f:: with SMTP id 137mr24941301qkn.254.1565653193835;
- Mon, 12 Aug 2019 16:39:53 -0700 (PDT)
+        Mon, 12 Aug 2019 19:40:57 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34305 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbfHLXk5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 19:40:57 -0400
+Received: by mail-ot1-f67.google.com with SMTP id n5so165771312otk.1;
+        Mon, 12 Aug 2019 16:40:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pPEYAuAye+0GqC7OnP9046qaqHZYqZpPqW1iRwks6UA=;
+        b=Az/KAHeXWMTK6hZoEHd2o4MQYecAB/NgvnMRDnUZzVhXDkbMTvsthJSrrVcLyIVGuQ
+         LVzU0ExEzwQNwWcILcnqpux7LRq7Pd1qSkB6eC+g6fwszr9wFB4ErXIhaGXDPYoCO0rv
+         pMTcAXFbhCOg1XGFgjerQ+dc+mqA0hzjGc7BXUkfO6eMyx/1piKi9i9vK/U/kw6GE4gD
+         773IvbSspzM4MSxA3WRpuHbv+AfIXIq4oeBOCH7MdYMlswP0aaiDugAkwcyxCvWhnBRv
+         n0HaEonKGwLDsQznMyf3w0/GPE5m7PEZs6cCaPGYJy8lmgi5gsjsZxHu8AgF0+1x6gfL
+         fVNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pPEYAuAye+0GqC7OnP9046qaqHZYqZpPqW1iRwks6UA=;
+        b=EzxdQT+CmPrQk3ASznEEDJ8x+DFR7I9tRFv3Ty+R3wzwIbpUZSjXtrsbB5PlN9rpAN
+         6mCmw0CODWoMIqci/nbLSeEZtluZs2WTdg2mQ4vqC9iIfWd//HVl1UOG/vRpL0SlwRJP
+         2Gn27FoKHISD5yvQCNIXQ4dwqsKExZfsJ9c7iZUYs0bqJggQ9z9a5natFYtKsDoyYzr9
+         7dnjNym8Dh6D1I0aC53M/G4ELmNLSZtg8MAQ9cOq+s6IdaIPJZkpSwtbwmzKo1UKLTbI
+         OSGeSxQWUILAzYHoWLR7r7TmtO0q+7qUPxLf9bMy6bSNQ/hFALnCPblPGFSsMviqfRcR
+         +GwQ==
+X-Gm-Message-State: APjAAAVYVEA2WqvQtRgwZZDXRpwdVnWHvv+0f+hsS/vtUlvW1Li/FxUc
+        70I0kVwhvz1RiAIXuihgUepBl+qq9Q9moeWUA0k=
+X-Google-Smtp-Source: APXvYqwdCwEVUV+9iATbwHthiTuqT8FRW51Zis4SYydD2va0Jx7WyHS0BxXBm3kCBot3qcQDULuG0pks3KT0NGUUszE=
+X-Received: by 2002:a6b:fd13:: with SMTP id c19mr12236684ioi.168.1565653256193;
+ Mon, 12 Aug 2019 16:40:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190607154410.10633-1-paul@crapouillou.net> <20190607154410.10633-2-paul@crapouillou.net>
- <20190709020425.GA7984@bogus> <20190808082829.i6enaout5ozvdnwj@pengutronix.de>
-In-Reply-To: <20190808082829.i6enaout5ozvdnwj@pengutronix.de>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 12 Aug 2019 17:39:42 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJv8kv_xXwoOUa-avTZhq0NkkDHCUmA5HbQFydWKu=n-g@mail.gmail.com>
-Message-ID: <CAL_JsqJv8kv_xXwoOUa-avTZhq0NkkDHCUmA5HbQFydWKu=n-g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] dt-bindings: Remove unused compatible strings
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190810052829.6032-1-tiny.windzz@gmail.com> <20190810052829.6032-3-tiny.windzz@gmail.com>
+ <20190812085604.ozhl35wwm3ehlvqn@flea>
+In-Reply-To: <20190812085604.ozhl35wwm3ehlvqn@flea>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Tue, 13 Aug 2019 07:40:44 +0800
+Message-ID: <CAEExFWswLiFknVpBEKF9c5yoFvvA4np-ivWYkQLcteYoM8qjfg@mail.gmail.com>
+Subject: Re: [PATCH v5 02/18] dt-bindings: thermal: add binding document for
+ h6 thermal controller
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan.Cameron@huawei.com,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 8, 2019 at 2:28 AM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
+On Mon, Aug 12, 2019 at 4:56 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> On Mon, Jul 08, 2019 at 08:04:25PM -0600, Rob Herring wrote:
-> > On Fri, Jun 07, 2019 at 05:44:05PM +0200, Paul Cercueil wrote:
-> > > Right now none of the Ingenic-based boards probe this driver from
-> > > devicetree. This driver defined three compatible strings for the exac=
-t
-> > > same behaviour. Before these strings are used, we can remove two of
-> > > them.
-> > >
-> > > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > > ---
-> > >
-> > > Notes:
-> > >     v2: Rebase on v5.2-rc3
-> > >
-> > >  Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt | 5 +--=
---
-> > >  1 file changed, 1 insertion(+), 4 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm=
-.txt b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> > > index 7d9d3f90641b..493bec80d59b 100644
-> > > --- a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> > > +++ b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> > > @@ -2,10 +2,7 @@ Ingenic JZ47xx PWM Controller
-> > >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
-> > >
-> > >  Required properties:
-> > > -- compatible: One of:
-> > > -  * "ingenic,jz4740-pwm"
-> > > -  * "ingenic,jz4770-pwm"
-> > > -  * "ingenic,jz4780-pwm"
-> > > +- compatible: Should be "ingenic,jz4740-pwm"
+> On Sat, Aug 10, 2019 at 05:28:13AM +0000, Yangtao Li wrote:
+> > This patch adds binding document for allwinner h6 thermal controller.
 > >
-> > Are you sure all 3 chips are exactly the same features and bugs?
+> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > ---
+> >  .../bindings/thermal/sun8i-thermal.yaml       | 79 +++++++++++++++++++
+> >  1 file changed, 79 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
 > >
-> > The correct thing to do here generally is the 4770 and 4780 would also
-> > have ingenic,jz4740-pwm as a fallback compatible. Then the driver can
-> > match on that until you find some difference and can use the more
-> > specific compatible.
+> > diff --git a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+> > new file mode 100644
+> > index 000000000000..e0973199ba3c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
 >
-> Note that Thierry already applied this patch before your concern reached
-> the mailing list. Is this bad enough to revert
-> 925488e8df4f396ad96ff008a84f5b14d8b73347?
+> We've used so far for the schemas the first compatible to introduce
+> that controller as the filename, we should be consistent here. In that
+> case that would be allwinner,sun8i-a23-ths.yaml
+>
+> > @@ -0,0 +1,79 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/thermal/sun8i-thermal.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - Yangtao Li <tiny.windzz@gmail.com>
+> > +
+> > +description: |-
+> > +  This describes the device tree binding for the Allwinner thermal
+> > +  controller which measures the on-SoC temperatures.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - allwinner,sun50i-h6-ths
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  resets:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  clock-names:
+> > +    const: bus
+> > +
+> > +  "#thermal-sensor-cells":
+> > +    const: 1
+> > +
+> > +  nvmem-cells:
+>
+> You need a maxItems here too
+>
+> > +    description: ths calibrate data
+>
+> What about something like this:
+>
+> Calibration data for the thermal sensor
+>
+> > +
+> > +  nvmem-cell-names:
+> > +    const: calib
+>
+> I'm not sure we need a abbreviation here, calibration would be more
+> explicit
+>
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - reset
+> > +  - clocks
+> > +  - clock-names
+> > +  - interrupts
+> > +  - "#thermal-sensor-cells"
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    ths: ths@5070400 {
+> > +        compatible = "allwinner,sun50i-h6-ths";
+> > +        reg = <0x05070400 0x100>;
+> > +        clocks = <&ccu CLK_BUS_THS>;
+> > +        clock-names = "bus";
+> > +        resets = <&ccu RST_BUS_THS>;
+> > +        interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+>
+> Those examples won't compile.
 
-It won't be my problem when you find and need to handle any of the
-differences in the driver.
+Emmm, I have some questions about this.
+I added this information and it can be compiled.
 
-Rob
+Yours,
+Yangtao
+
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
