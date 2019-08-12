@@ -2,150 +2,213 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04482C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6049C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C160220684
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:42:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Y6+sszg8"
+	by mail.kernel.org (Postfix) with ESMTP id 8640F20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:43:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfHLSmV (ORCPT
+        id S1726807AbfHLSnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 14:42:21 -0400
-Received: from mail-eopbgr800120.outbound.protection.outlook.com ([40.107.80.120]:40800
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726090AbfHLSmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 14:42:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KwUWtl/jY+jx8KH5HFjXb4v8kszhtGfnLLa+Td53HFPGwpmzgof6u+JyY0O44mqeSDpNxlHkSHGWgQwGyRyPczJTbXj5kg3dMI36UuYr2TdqS7dWnHxf6jv9IxGI9pmqoVajV20TFx6V0vFS2p9A61li4BamLDt598RCLhD95kcjQhpRSmtR/PJCXRFqdfIWZ0UMYDOd/0GFohf+ZCHqPjh5ddI4N3ABtgNRWvOdRP58iuKP29tH/9CnPu+PiwIdztCbRAo0ph84h40h/YpQ3MUK7i1VFK7nhYhoN2NC++6G0GYWrOZqUj1uPZ/8XC8zFAosmuoKce9+UhI1HNeEdg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cjH38107+ukbM+m4bfRUwdnJgoOpsmCjMKQw6qinwJM=;
- b=EhfnwoVGmafPeNSgSX0CjveetgIuPcyytfSetQxPOoZqkQY6LI93tW5hsf4k1W97xr177YP1yM6ERbqzepiieomtmpht66UpwOjGikNjMKIlodtze6qrYrBi5KB9q8tfSL3pturXeKF7FdtBRwI2gPeK/yHnV5P+ILlM9DlUmueqOXBjvC+i6dZlJG9PdCuc+gsKqVwdH06d8Q7LAnFCcCnb6GLUb/SQMvwOphBTfvV/ydtRsdQeDwD0k/67IHbIjNNEAl/1UQTNkUjokbI9Dt/Qh4PLGDvegxnXjlLpU75Y3upytj0FoCo0VnxJZl3t6G/w3TeWBfSzb4l6XUZb8w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cjH38107+ukbM+m4bfRUwdnJgoOpsmCjMKQw6qinwJM=;
- b=Y6+sszg80TLKy+vzxkOxC1aExlQOmyDIGXctUbqYtNAL2I6UQ+M4qlH0S4ShkNyWtY6LNueK+69cpaqx92cLW2UariIBobuO+2pgrOnEplzTNd4j3QA0rvUszbGj7cRf2xZKjDfXHVg7rA4r9BBfS+OGoimgor/jwFZ7/NQKcFI=
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
- DM5PR21MB0764.namprd21.prod.outlook.com (10.173.172.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id
- 15.20.2178.6; Mon, 12 Aug 2019 18:41:38 +0000
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::9558:216:27ca:5dfd]) by DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::9558:216:27ca:5dfd%2]) with mapi id 15.20.2157.011; Mon, 12 Aug 2019
- 18:41:38 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "ashal@kernel.org" <ashal@kernel.org>
-CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: RE: [PATCH 2/2] clocksource/Hyper-V:  Add Hyper-V specific sched
- clock function
-Thread-Topic: [PATCH 2/2] clocksource/Hyper-V:  Add Hyper-V specific sched
- clock function
-Thread-Index: AQHVReKqPvPCosA5s02OPHGb8bfYZKb37vnQ
-Date:   Mon, 12 Aug 2019 18:41:38 +0000
-Message-ID: <DM5PR21MB01371937B0E72671C4B7C990D7D30@DM5PR21MB0137.namprd21.prod.outlook.com>
-References: <20190729075243.22745-1-Tianyu.Lan@microsoft.com>
- <20190729075243.22745-3-Tianyu.Lan@microsoft.com>
-In-Reply-To: <20190729075243.22745-3-Tianyu.Lan@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-12T18:41:36.6177014Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5c6862ef-aced-4cd7-9a8f-9ce8de1d440f;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e26f9ef9-302e-4cca-5fc0-08d71f54b5e3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600158)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM5PR21MB0764;
-x-ms-traffictypediagnostic: DM5PR21MB0764:|DM5PR21MB0764:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR21MB0764E38AEF2127C1889F4638D7D30@DM5PR21MB0764.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 012792EC17
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(396003)(39860400002)(376002)(346002)(136003)(199004)(189003)(6506007)(256004)(71190400001)(8676002)(2501003)(71200400001)(9686003)(7696005)(74316002)(81166006)(86362001)(7736002)(33656002)(6246003)(6436002)(110136005)(26005)(8936002)(53936002)(55016002)(8990500004)(305945005)(99286004)(186003)(3846002)(76176011)(4326008)(10090500001)(54906003)(4744005)(229853002)(81156014)(6116002)(7416002)(5660300002)(102836004)(2201001)(2906002)(446003)(10290500003)(22452003)(316002)(25786009)(478600001)(476003)(66946007)(64756008)(486006)(1511001)(66556008)(11346002)(66446008)(76116006)(66066001)(52536014)(66476007)(14454004)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0764;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: q1jqyBBHagg1W206lzd2qBBSzkbP9NFwlxJ6mePFvmqxf/FwZeuXL3Qv9GR6DzF7JLRcgmn5blxcRc718ejBHkI/ejaXnVw+aD2DN4uI6XFs/EzBgGADK9502G88zhPAuN9/27ZSOK73NkxIAuRXbQ/IflGBwXmeHfWd1WJA4c18+FJCLzP+1w/j5q+pj2SWWaHca+w5AgwDbFCDFX3YgwVHB4BMS3Wx9GEoJ8FtiE0Roky2NhOxGXo4MGPfbgkg9Mm4Q8Z6xi+alQfP9jbeJSMYoExjE2O6OtWCzM0khpw/FyZhTlRsDhlYB6b4fTnB26w7pm8bCK25w4s+Fy5d9m5yJDTYXj95a6ZSi8CT3oUAIlJUFBNG1fQUyTjwIvch9dgZbFHlLHhK76ne+JBXmkTaaQGISPrG6k5RqzYdXbM=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 12 Aug 2019 14:43:08 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54224 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbfHLSnI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 14:43:08 -0400
+Received: from mail-wm1-f72.google.com ([209.85.128.72])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <andrea.righi@canonical.com>)
+        id 1hxFHd-0002W0-8q
+        for linux-kernel@vger.kernel.org; Mon, 12 Aug 2019 18:43:05 +0000
+Received: by mail-wm1-f72.google.com with SMTP id r9so151269wme.8
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 11:43:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=zOSc9bmVuG5obO3oziTzKmJN7+pvSQBbPqrqY+V06TY=;
+        b=AG00wf73f7w/p7Iyd6X5XHgAj2xss0Dn0VVBSn2itkiiZ7v2Dfr4BA0/Uevtb9y5BH
+         VdMcl2ws4fQhHb2LW16fzus0I9vUpAz34mPzpg9yGnsMkqLtqaIPVVaZDyhLaizMo+Cc
+         rDLFZGtuXbiJ0ArYmwNOdUjCyOVpq/9425xrD2QMEpjKetHSIoWQHKFk0ImOdOA7numU
+         ZwMsLAsKsp73dNFLMhwK/BIh3cj8CAzD6TCcCuS+8tdCQgDloZavP0XZrIyOIyoBJC/7
+         +ukmEi9I92Z8BQjnT9ZHJoH4pY0u+rB3ztVCa67f6los9rrJOdaykmPHzA+gzFUQxkep
+         UpLw==
+X-Gm-Message-State: APjAAAVhxFS81KIp4g8zK3jzOR94b+oWX6NPZuXnr+S8Vtx4v2oIFqXG
+        BQgO6fP0rtQcb0T9NX+YDGKW4bLFGtgfTfQJh1AZSPe8SdAhLTxuLVFinJpyP6bKAgV3+AOPHli
+        OwEQey6qErZHPS4eA0E+al0Onz0neUWhhzetmwcex9A==
+X-Received: by 2002:a05:600c:21ca:: with SMTP id x10mr724456wmj.112.1565635384883;
+        Mon, 12 Aug 2019 11:43:04 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwUy+BZVTbWFU/tgHThf47/KnVxiM5rhVfDdJ9a4Eq8ftNgf57M/gzIJZV/Fo5M63ZGq0rzRQ==
+X-Received: by 2002:a05:600c:21ca:: with SMTP id x10mr724435wmj.112.1565635384567;
+        Mon, 12 Aug 2019 11:43:04 -0700 (PDT)
+Received: from localhost ([95.238.207.169])
+        by smtp.gmail.com with ESMTPSA id l3sm26644952wrb.41.2019.08.12.11.43.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Aug 2019 11:43:04 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 20:43:02 +0200
+From:   Andrea Righi <andrea.righi@canonical.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] kprobes: fix potential deadlock in kprobe_optimizer()
+Message-ID: <20190812184302.GA7010@xps-13>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e26f9ef9-302e-4cca-5fc0-08d71f54b5e3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 18:41:38.3516
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Gyr2CDaMiveqLbpXXrVrpgpgMhG1RpQ06UmPP7fUB9hkioIVNlXEVViJz6OKvkBrxQ2My9gcSFrvgm3RhAZ0mzvrFMlIs0ReYWl/sWksqk0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0764
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>  Sent: Monday, July 29, 2019 12=
-:53 AM
->=20
-> Hyper-V guests use the default native_sched_clock() in pv_ops.time.sched_=
-clock
-> on x86.  But native_sched_clock() directly uses the raw TSC value, which
-> can be discontinuous in a Hyper-V VM. Add the generic hv_setup_sched_cloc=
-k()
-> to set the sched clock function appropriately. On x86, this sets pv_ops.t=
-ime.
-> sched_clock to read the Hyper-V reference TSC value that is scaled and ad=
-justed
-> to be continuous.
->=20
-> Also move the Hyper-V reference TSC initialization much earlier in the bo=
-ot
-> process so no discontinuity is observed when pv_ops.time.sched_clock
-> calculates its offset.
->=20
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
->  arch/x86/hyperv/hv_init.c          |  2 --
->  arch/x86/kernel/cpu/mshyperv.c     |  8 ++++++++
->  drivers/clocksource/hyperv_timer.c | 22 ++++++++++++----------
->  include/asm-generic/mshyperv.h     |  1 +
->  4 files changed, 21 insertions(+), 12 deletions(-)
->=20
+lockdep reports the following:
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+ WARNING: possible circular locking dependency detected
+
+ kworker/1:1/48 is trying to acquire lock:
+ 000000008d7a62b2 (text_mutex){+.+.}, at: kprobe_optimizer+0x163/0x290
+
+ but task is already holding lock:
+ 00000000850b5e2d (module_mutex){+.+.}, at: kprobe_optimizer+0x31/0x290
+
+ which lock already depends on the new lock.
+
+ the existing dependency chain (in reverse order) is:
+
+ -> #1 (module_mutex){+.+.}:
+        __mutex_lock+0xac/0x9f0
+        mutex_lock_nested+0x1b/0x20
+        set_all_modules_text_rw+0x22/0x90
+        ftrace_arch_code_modify_prepare+0x1c/0x20
+        ftrace_run_update_code+0xe/0x30
+        ftrace_startup_enable+0x2e/0x50
+        ftrace_startup+0xa7/0x100
+        register_ftrace_function+0x27/0x70
+        arm_kprobe+0xb3/0x130
+        enable_kprobe+0x83/0xa0
+        enable_trace_kprobe.part.0+0x2e/0x80
+        kprobe_register+0x6f/0xc0
+        perf_trace_event_init+0x16b/0x270
+        perf_kprobe_init+0xa7/0xe0
+        perf_kprobe_event_init+0x3e/0x70
+        perf_try_init_event+0x4a/0x140
+        perf_event_alloc+0x93a/0xde0
+        __do_sys_perf_event_open+0x19f/0xf30
+        __x64_sys_perf_event_open+0x20/0x30
+        do_syscall_64+0x65/0x1d0
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+ -> #0 (text_mutex){+.+.}:
+        __lock_acquire+0xfcb/0x1b60
+        lock_acquire+0xca/0x1d0
+        __mutex_lock+0xac/0x9f0
+        mutex_lock_nested+0x1b/0x20
+        kprobe_optimizer+0x163/0x290
+        process_one_work+0x22b/0x560
+        worker_thread+0x50/0x3c0
+        kthread+0x112/0x150
+        ret_from_fork+0x3a/0x50
+
+ other info that might help us debug this:
+
+  Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock(module_mutex);
+                                lock(text_mutex);
+                                lock(module_mutex);
+   lock(text_mutex);
+
+  *** DEADLOCK ***
+
+As a reproducer I've been using bcc's funccount.py
+(https://github.com/iovisor/bcc/blob/master/tools/funccount.py),
+for example:
+
+ # ./funccount.py '*interrupt*'
+
+That immediately triggers the lockdep splat.
+
+Fix by acquiring text_mutex before module_mutex in kprobe_optimizer().
+
+Fixes: d5b844a2cf50 ("ftrace/x86: Remove possible deadlock between register_kprobe() and ftrace_run_update_code()")
+Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+---
+ kernel/kprobes.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 9873fc627d61..d9770a5393c8 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -470,6 +470,7 @@ static DECLARE_DELAYED_WORK(optimizing_work, kprobe_optimizer);
+  */
+ static void do_optimize_kprobes(void)
+ {
++	lockdep_assert_held(&text_mutex);
+ 	/*
+ 	 * The optimization/unoptimization refers online_cpus via
+ 	 * stop_machine() and cpu-hotplug modifies online_cpus.
+@@ -487,9 +488,7 @@ static void do_optimize_kprobes(void)
+ 	    list_empty(&optimizing_list))
+ 		return;
+ 
+-	mutex_lock(&text_mutex);
+ 	arch_optimize_kprobes(&optimizing_list);
+-	mutex_unlock(&text_mutex);
+ }
+ 
+ /*
+@@ -500,6 +499,7 @@ static void do_unoptimize_kprobes(void)
+ {
+ 	struct optimized_kprobe *op, *tmp;
+ 
++	lockdep_assert_held(&text_mutex);
+ 	/* See comment in do_optimize_kprobes() */
+ 	lockdep_assert_cpus_held();
+ 
+@@ -507,7 +507,6 @@ static void do_unoptimize_kprobes(void)
+ 	if (list_empty(&unoptimizing_list))
+ 		return;
+ 
+-	mutex_lock(&text_mutex);
+ 	arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
+ 	/* Loop free_list for disarming */
+ 	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
+@@ -524,7 +523,6 @@ static void do_unoptimize_kprobes(void)
+ 		} else
+ 			list_del_init(&op->list);
+ 	}
+-	mutex_unlock(&text_mutex);
+ }
+ 
+ /* Reclaim all kprobes on the free_list */
+@@ -556,6 +554,7 @@ static void kprobe_optimizer(struct work_struct *work)
+ {
+ 	mutex_lock(&kprobe_mutex);
+ 	cpus_read_lock();
++	mutex_lock(&text_mutex);
+ 	/* Lock modules while optimizing kprobes */
+ 	mutex_lock(&module_mutex);
+ 
+@@ -583,6 +582,7 @@ static void kprobe_optimizer(struct work_struct *work)
+ 	do_free_cleaned_kprobes();
+ 
+ 	mutex_unlock(&module_mutex);
++	mutex_unlock(&text_mutex);
+ 	cpus_read_unlock();
+ 	mutex_unlock(&kprobe_mutex);
+ 
+-- 
+2.20.1
+
