@@ -2,109 +2,202 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB326C41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5B2C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8F82085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:34:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565645689;
-	bh=S4cnd35CkG0wBAzyUMh2O31IjCJTpSxUWG+UBGSodlY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WtMAmSRe50EDu1YXGGJlgW82gEgOhN+j/w/mEP/hGr0hessMQ1JZqlhNcVrpjMm5d
-	 tmwljzMX8k8zHQRAbN3sjaGgejpqi5iPI2brAWm/OXRUHhetEQEBBpykC5gIG1S4l2
-	 8OnU+lGHRAo2o/W7mrjgquDod1hypZt/dEeU39Pw=
+	by mail.kernel.org (Postfix) with ESMTP id 062C120820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:34:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dy9mnJaF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfHLVes (ORCPT
+        id S1727695AbfHLVew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 17:34:48 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41018 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbfHLVer (ORCPT
+        Mon, 12 Aug 2019 17:34:52 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38244 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727037AbfHLVer (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 12 Aug 2019 17:34:47 -0400
-Received: by mail-ot1-f65.google.com with SMTP id o101so11723010ota.8;
-        Mon, 12 Aug 2019 14:34:46 -0700 (PDT)
+Received: by mail-pf1-f194.google.com with SMTP id o70so5013230pfg.5;
+        Mon, 12 Aug 2019 14:34:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=R9EIePxtKgh7rutMNGBvqWvR/nyIQIv1yBQVlI6lc80=;
+        b=dy9mnJaFkP+ijv6fm4aMpVYmf05Qj6Vs0VjEph0VKV7IuBmwWf3JNcUEKYrcgPvtZ2
+         +O0sDUBSCGDoEPl2TFbA+9ZRbTI0QWwQyizHzSvOXJ6lipdnjZFLHOksMTwCN6g75SGp
+         ju1H7V6QSP9fqqr4pvgkuuFHHidi8DKHip7Kq6U+C0Nk2xZv80yCGWvqzqtn+YnVQa+Q
+         1Ju8lfS/lMR4lLtm0mPJBrBf0HABmS9us58iDR2UzMIGC6YPSIWfIB6oIM4ine4gn6WI
+         eWwDc9e/7U9FwFmZjaTPrKEEP8+t2msqNfIgPpzWc9bgl8HgU1BZeNCdKo15O4blyGUm
+         WJ/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jZTSZJjRei2HkvD9YfG1B9/O0uyYnQM5GtMkOOuKYJE=;
-        b=bQ1CgLNoOLaieTjRRaUndcFop4DrBa3U+zwMj+GICSMI64uYIppihqinSmCGWcUNAm
-         iauRisVdBne/VpkoixcQ2fVzZu8+Pa3ta2Cx9zSKCzl4t3XeQ7wFsS6G/H9Pc68C4TuQ
-         gKPfAZQUpuPvekLo6l4vudnjzKhsUwsCu9RlHTxedMfRjX72+jnrHfJAmCdtoccmHrEi
-         PpATJAA5MSS8fjnwvpM0U0zUFlzAvOgh5KQ/r/tx4ac324+ZYA2yfyhvC5aCGrYBj+UI
-         W9pmfqscP0xZztd3FkYcmIM/DR+bfw2EUZaJdNmeOn3D6cLF52slywOXpDjKSwr9dpGw
-         PMog==
-X-Gm-Message-State: APjAAAWfZXCXJzFcubpFyarHm9tValrDSrPnCicXHPqDp84I1HkQ60FN
-        0+7toRUZGWSgH877tikbG5dyfl6q865IvNMtHnw=
-X-Google-Smtp-Source: APXvYqzt40UUbia0mqNs3QKrFhMjfhsG2yXjJOoVC88IG8RVQJZB7huJTl0fjcO+PdhTNJJOT5G6LKh/jvuyBUTfhg0=
-X-Received: by 2002:a05:6830:154:: with SMTP id j20mr14892283otp.266.1565645686269;
- Mon, 12 Aug 2019 14:34:46 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=R9EIePxtKgh7rutMNGBvqWvR/nyIQIv1yBQVlI6lc80=;
+        b=GU85UqA1wpXVmhOAhpjjKMXirLaqY0vO9aT37DPQDEFlU8qHtOH/WX1G5N92qmUOGI
+         MaW0XHlFHnxMEEc/Ouc/BKHePu4IKXMMElWKP/uE5pxwBFgNc1eOcxY57URpQCUZX+70
+         29Bfi7tQNVbnyFgGFe6iy0prcc3SrpYQmeDQQVsiKAafHbeOskfXOilQfMOGufaTVDJm
+         mmnZXRp/Sxe8qW4z7yYYTlp53wSNDhvDwGHr9ZjyLYPZTnNB/fQZqltZwGDt3mTF0P56
+         J2X2SPryCnF4OeAL4GgURM++77nmW0A/rrt7/ARlJtVIgQISXMiJptEiQGSJHTxRawcN
+         RPAQ==
+X-Gm-Message-State: APjAAAURlKxAHwgpZuyC5blnB7VCPn4m+JFrhPe37+YpkKpASdmCQody
+        8IIKQcHoeu0mcBAO3bN7JDc=
+X-Google-Smtp-Source: APXvYqzy3mZr9YsJMHQoof47HpG4IsPKYIO2wLwt5c331rIo788wvZ1T9TIh3B5oDKso+UoRscraVg==
+X-Received: by 2002:a62:fb18:: with SMTP id x24mr36656678pfm.231.1565645686838;
+        Mon, 12 Aug 2019 14:34:46 -0700 (PDT)
+Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
+        by smtp.gmail.com with ESMTPSA id e13sm130218480pff.45.2019.08.12.14.34.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 12 Aug 2019 14:34:46 -0700 (PDT)
+Subject: [PATCH v5 QEMU 3/3] virtio-balloon: Provide a interface for unused
+ page reporting
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     nitesh@redhat.com, kvm@vger.kernel.org, mst@redhat.com,
+        david@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, virtio-dev@lists.oasis-open.org
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
+        konrad.wilk@oracle.com, willy@infradead.org,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com, mhocko@kernel.org,
+        alexander.h.duyck@linux.intel.com, osalvador@suse.de
+Date:   Mon, 12 Aug 2019 14:34:45 -0700
+Message-ID: <20190812213445.22552.15744.stgit@localhost.localdomain>
+In-Reply-To: <20190812213158.22097.30576.stgit@localhost.localdomain>
+References: <20190812213158.22097.30576.stgit@localhost.localdomain>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-References: <20190812123847.50802-1-mika.westerberg@linux.intel.com> <20190812123847.50802-9-mika.westerberg@linux.intel.com>
-In-Reply-To: <20190812123847.50802-9-mika.westerberg@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 12 Aug 2019 23:34:35 +0200
-Message-ID: <CAJZ5v0haDniwqEwG1suE80sk4bAwpwCQweVMGZoeNB7h04gFOQ@mail.gmail.com>
-Subject: Re: [PATCH v2 8/8] ACPI / property: Add two new Thunderbolt property
- GUIDs to the list
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Raanan Avargil <raanan.avargil@intel.com>,
-        David Laight <David.Laight@aculab.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 2:39 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> Ice Lake Thunderbolt controller includes two new device property
-> compatible properties that we need to be able to extract in the driver
-> so add them to the growing array of GUIDs.
->
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Add support for what I am referring to as "unused page reporting".
+Basically the idea is to function very similar to how the balloon works
+in that we basically end up madvising the page as not being used. However
+we don't really need to bother with any deflate type logic since the page
+will be faulted back into the guest when it is read or written to.
 
-> ---
->  drivers/acpi/property.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> index ea3d700da3ca..e095334eaec9 100644
-> --- a/drivers/acpi/property.c
-> +++ b/drivers/acpi/property.c
-> @@ -39,6 +39,12 @@ static const guid_t prp_guids[] = {
->         /* External facing port GUID: efcc06cc-73ac-4bc3-bff0-76143807c389 */
->         GUID_INIT(0xefcc06cc, 0x73ac, 0x4bc3,
->                   0xbf, 0xf0, 0x76, 0x14, 0x38, 0x07, 0xc3, 0x89),
-> +       /* Thunderbolt GUID for IMR_VALID: c44d002f-69f9-4e7d-a904-a7baabdf43f7 */
-> +       GUID_INIT(0xc44d002f, 0x69f9, 0x4e7d,
-> +                 0xa9, 0x04, 0xa7, 0xba, 0xab, 0xdf, 0x43, 0xf7),
-> +       /* Thunderbolt GUID for WAKE_SUPPORTED: 6c501103-c189-4296-ba72-9bf5a26ebe5d */
-> +       GUID_INIT(0x6c501103, 0xc189, 0x4296,
-> +                 0xba, 0x72, 0x9b, 0xf5, 0xa2, 0x6e, 0xbe, 0x5d),
->  };
->
->  /* ACPI _DSD data subnodes GUID: dbb8e3e6-5886-4ba6-8795-1319f52a966b */
-> --
-> 2.20.1
->
+This is meant to be a simplification of the existing balloon interface
+to use for providing hints to what memory needs to be freed. I am assuming
+this is safe to do as the deflate logic does not actually appear to do very
+much other than tracking what subpages have been released and which ones
+haven't.
+
+Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+---
+ hw/virtio/virtio-balloon.c         |   46 ++++++++++++++++++++++++++++++++++--
+ include/hw/virtio/virtio-balloon.h |    2 +-
+ 2 files changed, 45 insertions(+), 3 deletions(-)
+
+diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
+index 003b3ebcfdfb..7a30df63bc77 100644
+--- a/hw/virtio/virtio-balloon.c
++++ b/hw/virtio/virtio-balloon.c
+@@ -320,6 +320,40 @@ static void balloon_stats_set_poll_interval(Object *obj, Visitor *v,
+     balloon_stats_change_timer(s, 0);
+ }
+ 
++static void virtio_balloon_handle_report(VirtIODevice *vdev, VirtQueue *vq)
++{
++    VirtIOBalloon *dev = VIRTIO_BALLOON(vdev);
++    VirtQueueElement *elem;
++
++    while ((elem = virtqueue_pop(vq, sizeof(VirtQueueElement)))) {
++    	unsigned int i;
++
++        for (i = 0; i < elem->in_num; i++) {
++            void *addr = elem->in_sg[i].iov_base;
++            size_t size = elem->in_sg[i].iov_len;
++            ram_addr_t ram_offset;
++            size_t rb_page_size;
++            RAMBlock *rb;
++
++            if (qemu_balloon_is_inhibited() || dev->poison_val)
++                continue;
++
++            rb = qemu_ram_block_from_host(addr, false, &ram_offset);
++            rb_page_size = qemu_ram_pagesize(rb);
++
++            /* For now we will simply ignore unaligned memory regions */
++            if ((ram_offset | size) & (rb_page_size - 1))
++                continue;
++
++            ram_block_discard_range(rb, ram_offset, size);
++        }
++
++        virtqueue_push(vq, elem, 0);
++        virtio_notify(vdev, vq);
++        g_free(elem);
++    }
++}
++
+ static void virtio_balloon_handle_output(VirtIODevice *vdev, VirtQueue *vq)
+ {
+     VirtIOBalloon *s = VIRTIO_BALLOON(vdev);
+@@ -627,7 +661,8 @@ static size_t virtio_balloon_config_size(VirtIOBalloon *s)
+         return sizeof(struct virtio_balloon_config);
+     }
+     if (virtio_has_feature(features, VIRTIO_BALLOON_F_PAGE_POISON) ||
+-        virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
++        virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT) ||
++        virtio_has_feature(features, VIRTIO_BALLOON_F_REPORTING)) {
+         return sizeof(struct virtio_balloon_config);
+     }
+     return offsetof(struct virtio_balloon_config, free_page_report_cmd_id);
+@@ -715,7 +750,8 @@ static uint64_t virtio_balloon_get_features(VirtIODevice *vdev, uint64_t f,
+     VirtIOBalloon *dev = VIRTIO_BALLOON(vdev);
+     f |= dev->host_features;
+     virtio_add_feature(&f, VIRTIO_BALLOON_F_STATS_VQ);
+-    if (virtio_has_feature(f, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
++    if (virtio_has_feature(f, VIRTIO_BALLOON_F_FREE_PAGE_HINT) ||
++        virtio_has_feature(f, VIRTIO_BALLOON_F_REPORTING)) {
+         virtio_add_feature(&f, VIRTIO_BALLOON_F_PAGE_POISON);
+     }
+ 
+@@ -805,6 +841,10 @@ static void virtio_balloon_device_realize(DeviceState *dev, Error **errp)
+     s->dvq = virtio_add_queue(vdev, 128, virtio_balloon_handle_output);
+     s->svq = virtio_add_queue(vdev, 128, virtio_balloon_receive_stats);
+ 
++    if (virtio_has_feature(s->host_features, VIRTIO_BALLOON_F_REPORTING)) {
++        s->rvq = virtio_add_queue(vdev, 32, virtio_balloon_handle_report);
++    }
++
+     if (virtio_has_feature(s->host_features,
+                            VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
+         s->free_page_vq = virtio_add_queue(vdev, VIRTQUEUE_MAX_SIZE,
+@@ -931,6 +971,8 @@ static Property virtio_balloon_properties[] = {
+      */
+     DEFINE_PROP_BOOL("qemu-4-0-config-size", VirtIOBalloon,
+                      qemu_4_0_config_size, false),
++    DEFINE_PROP_BIT("unused-page-reporting", VirtIOBalloon, host_features,
++                    VIRTIO_BALLOON_F_REPORTING, true),
+     DEFINE_PROP_LINK("iothread", VirtIOBalloon, iothread, TYPE_IOTHREAD,
+                      IOThread *),
+     DEFINE_PROP_END_OF_LIST(),
+diff --git a/include/hw/virtio/virtio-balloon.h b/include/hw/virtio/virtio-balloon.h
+index 7fe78e5c14d7..db5bf7127112 100644
+--- a/include/hw/virtio/virtio-balloon.h
++++ b/include/hw/virtio/virtio-balloon.h
+@@ -42,7 +42,7 @@ enum virtio_balloon_free_page_report_status {
+ 
+ typedef struct VirtIOBalloon {
+     VirtIODevice parent_obj;
+-    VirtQueue *ivq, *dvq, *svq, *free_page_vq;
++    VirtQueue *ivq, *dvq, *svq, *free_page_vq, *rvq;
+     uint32_t free_page_report_status;
+     uint32_t num_pages;
+     uint32_t actual;
+
