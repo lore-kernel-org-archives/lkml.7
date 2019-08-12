@@ -2,168 +2,171 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FFEC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E804C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5672A208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 483A42085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:42:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbfHLKmc (ORCPT
+        id S1728028AbfHLKmg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:42:32 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:52640 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727678AbfHLKmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:42:31 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5DD18646940A019F322D;
-        Mon, 12 Aug 2019 18:42:30 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Mon, 12 Aug 2019
- 18:42:22 +0800
-Subject: Re: [PATCH] iommu/arm-smmu-v3: add nr_ats_masters to avoid
- unnecessary operations
-To:     Zhen Lei <thunder.leizhen@huawei.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Will Deacon" <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        <jean-philippe@linaro.org>
-References: <20190801122040.26024-1-thunder.leizhen@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <b5866f7a-013a-5900-6fce-268052f2ba0a@huawei.com>
-Date:   Mon, 12 Aug 2019 11:42:17 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Mon, 12 Aug 2019 06:42:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39666 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727678AbfHLKmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 06:42:35 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 38FE1C05E740;
+        Mon, 12 Aug 2019 10:42:35 +0000 (UTC)
+Received: from krava (unknown [10.43.17.33])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 8EF727CD84;
+        Mon, 12 Aug 2019 10:42:33 +0000 (UTC)
+Date:   Mon, 12 Aug 2019 12:42:32 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Mukesh Ojha <mojha@codeaurora.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Raghavendra Rao Ananta <rananta@codeaurora.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: Re: [PATCH V5 1/1] perf: event preserve and create across cpu hotplug
+Message-ID: <20190812104232.GA17441@krava>
+References: <1564685213-8180-1-git-send-email-mojha@codeaurora.org>
+ <1564685213-8180-2-git-send-email-mojha@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20190801122040.26024-1-thunder.leizhen@huawei.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1564685213-8180-2-git-send-email-mojha@codeaurora.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 12 Aug 2019 10:42:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/08/2019 13:20, Zhen Lei wrote:
-> When (smmu_domain->smmu->features & ARM_SMMU_FEAT_ATS) is true, even if a
-> smmu domain does not contain any ats master, the operations of
-> arm_smmu_atc_inv_to_cmd() and lock protection in arm_smmu_atc_inv_domain()
-> are always executed. This will impact performance, especially in
-> multi-core and stress scenarios. For my FIO test scenario, about 8%
-> performance reduced.
->
-> In fact, we can use a atomic member to record how many ats masters the
-> smmu contains. And check that without traverse the list and check all
-> masters one by one in the lock protection.
->
-
-Hi Will, Robin, Jean-Philippe,
-
-Can you kindly check this issue? We have seen a signifigant performance 
-regression here.
-
-Thanks!
-
-> Fixes: 9ce27afc0830 ("iommu/arm-smmu-v3: Add support for PCI ATS")
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+On Fri, Aug 02, 2019 at 12:16:53AM +0530, Mukesh Ojha wrote:
+> Perf framework doesn't allow preserving CPU events across
+> CPU hotplugs. The events are scheduled out as and when the
+> CPU walks offline. Moreover, the framework also doesn't
+> allow the clients to create events on an offline CPU. As
+> a result, the clients have to keep on monitoring the CPU
+> state until it comes back online.
+> 
+> Therefore, introducing the perf framework to support creation
+> and preserving of (CPU) events for offline CPUs. Through
+> this, the CPU's online state would be transparent to the
+> client and it not have to worry about monitoring the CPU's
+> state. Success would be returned to the client even while
+> creating the event on an offline CPU. If during the lifetime
+> of the event the CPU walks offline, the event would be
+> preserved and would continue to count as soon as (and if) the
+> CPU comes back online.
+> 
+> Co-authored-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
+> Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Alexei Starovoitov <ast@kernel.org>
 > ---
->  drivers/iommu/arm-smmu-v3.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index a9a9fabd396804a..1b370d9aca95f94 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -631,6 +631,7 @@ struct arm_smmu_domain {
->
->  	struct io_pgtable_ops		*pgtbl_ops;
->  	bool				non_strict;
-> +	atomic_t			nr_ats_masters;
+> Change in V5:
+> =============
+> - Rebased it.
+
+note that we might need to change how we store cpu topology,
+now that it can change during the sampling.. like below it's
+the comparison of header data with and without cpu 1
+
+I think some of the report code checks on topology or caches
+and it might get confused
+
+perhaps we could watch cpu topology in record and update the
+data as we see it changing.. future TODO list ;-)
+
+perf stat is probably fine
+
+jirka
 
 
-It's not ideal to keep a separate count of ats masters...hmmm
-
->
->  	enum arm_smmu_domain_stage	stage;
->  	union {
-> @@ -1531,7 +1532,7 @@ static int arm_smmu_atc_inv_domain(struct arm_smmu_domain *smmu_domain,
->  	struct arm_smmu_cmdq_ent cmd;
->  	struct arm_smmu_master *master;
->
-> -	if (!(smmu_domain->smmu->features & ARM_SMMU_FEAT_ATS))
-> +	if (!atomic_read(&smmu_domain->nr_ats_masters))
->  		return 0;
-
-The rest of the code is here:
-
-	arm_smmu_atc_inv_to_cmd(ssid, iova, size, &cmd);
-
-	spin_lock_irqsave(&smmu_domain->devices_lock, flags);
-	list_for_each_entry(master, &smmu_domain->devices, domain_head)
-		ret |= arm_smmu_atc_inv_master(master, &cmd);
-	spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
-
-	return ret ? -ETIMEDOUT : 0;
-}
-
-Not directly related to leizhen's issue: Could RCU protection be used 
-for this list iteration? I can't imagine that the devices list changes 
-often. And also we already protect the cmdq in arm_smmu_atc_inv_master().
-
->
->  	arm_smmu_atc_inv_to_cmd(ssid, iova, size, &cmd);
-> @@ -1869,6 +1870,7 @@ static int arm_smmu_enable_ats(struct arm_smmu_master *master)
->  	size_t stu;
->  	struct pci_dev *pdev;
->  	struct arm_smmu_device *smmu = master->smmu;
-> +	struct arm_smmu_domain *smmu_domain = master->domain;
->  	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(master->dev);
->
->  	if (!(smmu->features & ARM_SMMU_FEAT_ATS) || !dev_is_pci(master->dev) ||
-> @@ -1887,12 +1889,15 @@ static int arm_smmu_enable_ats(struct arm_smmu_master *master)
->  		return ret;
->
->  	master->ats_enabled = true;
-> +	atomic_inc(&smmu_domain->nr_ats_masters);
-> +
->  	return 0;
->  }
->
->  static void arm_smmu_disable_ats(struct arm_smmu_master *master)
->  {
->  	struct arm_smmu_cmdq_ent cmd;
-> +	struct arm_smmu_domain *smmu_domain = master->domain;
->
->  	if (!master->ats_enabled || !dev_is_pci(master->dev))
->  		return;
-> @@ -1901,6 +1906,7 @@ static void arm_smmu_disable_ats(struct arm_smmu_master *master)
->  	arm_smmu_atc_inv_master(master, &cmd);
->  	pci_disable_ats(to_pci_dev(master->dev));
->  	master->ats_enabled = false;
-> +	atomic_dec(&smmu_domain->nr_ats_masters);
->  }
->
->  static void arm_smmu_detach_dev(struct arm_smmu_master *master)
-> @@ -1915,10 +1921,10 @@ static void arm_smmu_detach_dev(struct arm_smmu_master *master)
->  	list_del(&master->domain_head);
->  	spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
->
-> -	master->domain = NULL;
->  	arm_smmu_install_ste_for_dev(master);
->
->  	arm_smmu_disable_ats(master);
-> +	master->domain = NULL;
->  }
->
->  static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
->
-
-
+---
+-# nrcpus online : 39
++# nrcpus online : 40
+ # nrcpus avail : 40
+ # cpudesc : Intel(R) Xeon(R) Silver 4114 CPU @ 2.20GHz
+ # cpuid : GenuineIntel,6,85,4
+...
+ # sibling sockets : 0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38
+-# sibling sockets : 3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39
++# sibling sockets : 1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39
+ # sibling dies    : 0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38
+-# sibling dies    : 3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39
++# sibling dies    : 1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39
+ # sibling threads : 0,20
++# sibling threads : 1,21
+ # sibling threads : 2,22
+ # sibling threads : 3,23
+ # sibling threads : 4,24
+@@ -38,9 +39,8 @@
+ # sibling threads : 17,37
+ # sibling threads : 18,38
+ # sibling threads : 19,39
+-# sibling threads : 21
+ # CPU 0: Core ID 0, Die ID 0, Socket ID 0
+-# CPU 1: Core ID -1, Die ID -1, Socket ID -1
++# CPU 1: Core ID 0, Die ID 0, Socket ID 1
+ # CPU 2: Core ID 4, Die ID 0, Socket ID 0
+ # CPU 3: Core ID 4, Die ID 0, Socket ID 1
+ # CPU 4: Core ID 1, Die ID 0, Socket ID 0
+@@ -79,14 +79,16 @@
+ # CPU 37: Core ID 9, Die ID 0, Socket ID 1
+ # CPU 38: Core ID 10, Die ID 0, Socket ID 0
+ # CPU 39: Core ID 10, Die ID 0, Socket ID 1
+-# node0 meminfo  : total = 47391616 kB, free = 46536844 kB
++# node0 meminfo  : total = 47391616 kB, free = 46548348 kB
+ # node0 cpu list : 0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38
+-# node1 meminfo  : total = 49539612 kB, free = 48908820 kB
+-# node1 cpu list : 3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39
++# node1 meminfo  : total = 49539612 kB, free = 48897176 kB
++# node1 cpu list : 1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39
+ # pmu mappings: intel_pt = 8, uncore_cha_1 = 25, uncore_irp_3 = 49, software = 1, uncore_imc_5 = 18, uncore_m3upi_0 = 21, uncore_iio_free_running_5 = 45, uncore_irp_1 = 47, uncore_m2m_1 = 12, uncore_imc_3 = 16, uncore_cha_8 = 32, uncore_iio_free_running_3 = 43, uncore_imc_1 = 14, uncore_upi_1 = 20, power = 10, uncore_cha_6 = 30, uncore_iio_free_running_1 = 41, uncore_iio_4 = 38, uprobe = 7, cpu = 4, uncore_cha_4 = 28, uncore_iio_2 = 36, cstate_core = 53, breakpoint = 5, uncore_cha_2 = 26, uncore_irp_4 = 50, uncore_m3upi_1 = 22, uncore_iio_0 = 34, tracepoint = 2, uncore_cha_0 = 24, uncore_irp_2 = 48, cstate_pkg = 54, uncore_imc_4 = 17, uncore_cha_9 = 33, uncore_iio_free_running_4 = 44, uncore_ubox = 23, uncore_irp_0 = 46, uncore_m2m_0 = 11, uncore_imc_2 = 15, kprobe = 6, uncore_cha_7 = 31, uncore_iio_free_running_2 = 42, uncore_iio_5 = 39, uncore_imc_0 = 13, uncore_upi_0 = 19, uncore_cha_5 = 29, uncore_iio_free_running_0 = 40, uncore_pcu = 52, msr = 9, uncore_iio_3 = 37, uncore_cha_3
+  = 27, uncore_irp_5 = 51, uncore_iio_1 = 35
+ # CPU cache info:
+ #  L1 Data                 32K [0,20]
+ #  L1 Instruction          32K [0,20]
++#  L1 Data                 32K [1,21]
++#  L1 Instruction          32K [1,21]
+ #  L1 Data                 32K [2,22]
+ #  L1 Instruction          32K [2,22]
+ #  L1 Data                 32K [3,23]
+@@ -123,9 +125,8 @@
+ #  L1 Instruction          32K [18,38]
+ #  L1 Data                 32K [19,39]
+ #  L1 Instruction          32K [19,39]
+-#  L1 Data                 32K [21]
+-#  L1 Instruction          32K [21]
+ #  L2 Unified            1024K [0,20]
++#  L2 Unified            1024K [1,21]
+ #  L2 Unified            1024K [2,22]
+ #  L2 Unified            1024K [3,23]
+ #  L2 Unified            1024K [4,24]
+@@ -144,12 +145,11 @@
+ #  L2 Unified            1024K [17,37]
+ #  L2 Unified            1024K [18,38]
+ #  L2 Unified            1024K [19,39]
+-#  L2 Unified            1024K [21]
+ #  L3 Unified           14080K [0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38]
+-#  L3 Unified           14080K [3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39]
+...
