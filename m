@@ -2,76 +2,270 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F82C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3163C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79BFA208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD53220679
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:06:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="zelB1XPT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbfHLPGC (ORCPT
+        id S1728132AbfHLPGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 11:06:02 -0400
-Received: from mail-ot1-f71.google.com ([209.85.210.71]:50949 "EHLO
-        mail-ot1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727081AbfHLPGC (ORCPT
+        Mon, 12 Aug 2019 11:06:36 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40907 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727040AbfHLPGf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 11:06:02 -0400
-Received: by mail-ot1-f71.google.com with SMTP id t26so550235otp.17
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 08:06:01 -0700 (PDT)
+        Mon, 12 Aug 2019 11:06:35 -0400
+Received: by mail-lf1-f65.google.com with SMTP id b17so74456567lff.7
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 08:06:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Js+VA7F9tvJG5+BevlMW9BFXe0iGndk5HT03D5ecuXA=;
+        b=zelB1XPT4ic3ClpjtoMKpqoAdRcpSTyK1zTD+k6Ol67rjX9SMkk/V6j4Gafr7QmrtG
+         U9jr8xZ4MyCaZfSDvesSE4btKzIJSmGTZrFAQ93iiHvDiIn/q0Aa3cHShKPB02iU78Px
+         ldhR7emuMQzsbLN/Gre6kuQU8HRJDQhxF8MzSFxJA/V67xB8gAKEgcv78ac/+ZIiqL3x
+         QHBBQ1wy8GvLCp6/bjRdBClu7YN2r2ElQb/XjNDVzBklc/HR2bbyK419gui3+zkLCg5y
+         8Pt1A9SfABaW/ZzOaAk95SjrKZKWsNTbRvhH3CZb5Gd+DtGVd5ZjZet0E7fw/nKlE9lO
+         jf4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=UdT6wUZ/D8ky7HtPCj9VpMdye4p6v52eVLFOfN7WQts=;
-        b=D56T+3AeXqkoOHhdj6xNG5dzJQAqhpDocWgt4pJCcbt/cdYiYQulPsEH80I2ppRO8z
-         hodmAdylf0Isosz/DW9VUJStiNJvAdheFEzdSp/46B8rq/9ayixcwpIZWOrPJEmqxcB1
-         di7/cSYpWfI7C8KLgEy9Roo+QdzxQS2VamRapDJiCWCOFp1wAKe95LY0EBPJvfHGjDV9
-         9cPi+4FltQs6jf7g/eZ4j/nlIUG6iNl74JQDr9a6fjkCl0+h/kUIUWCi13yj7H/tnfhj
-         x372Duh0weltdGC3RrVaNh21tnPYm+t7YLVpnE7vEQ5WkiGRd7jQF/nzFuO3K/wTCfAr
-         MJ6Q==
-X-Gm-Message-State: APjAAAXviYsAuukJ128vIUFmJoasnJUUNIdLs3JDOhqdwDF/lJqmCbEL
-        yC4LY4y22akDTNwuzRk2L8EK+nBFUApd2WHi5rTBChJXMoL4
-X-Google-Smtp-Source: APXvYqwxLBlryY9AUKUQMeg0vCZyhR/BAXzcWCPEWAR/D5r2dVoCbvnxs4b2xafrrXxYy2E7KpBMgX++6+Ns9fTe7IJHLPoTqUBj
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Js+VA7F9tvJG5+BevlMW9BFXe0iGndk5HT03D5ecuXA=;
+        b=RSUr25WFhPLfQIQKSGevl2KR0ZVyj5x027X2GySTGzpMN8tUyoNdklkUhjE4uL9VxK
+         tYzt5eIOqlyO70QEQ/LXQ8OyKXFoozCHDOiDc5Hxy9FvIOl7Da9hdUIst7I90lFWtgQc
+         u6FsZJ7brP0hTqFQ5QejZFzXEtGd+/wCzpAb2IXjbc8q19ZJQxza6r36ZXO0RYzICXOs
+         Utt2M381PtzxMl2RpTwi2ezxBdzbUWfUKx9bD1tjtqrGckOC2BCshAQyamzclNwBKwwN
+         jxkeU9R72DUsM5UdUHBTzX5bNogrFBTEXf/3OH6P4Fr5V53TvQGZ1/6VTm5lVAV37bpa
+         B2og==
+X-Gm-Message-State: APjAAAXA46cXuoxRFSzhCWgFbuNTj35FGS3eas2w42irYJDLWbs4sgPG
+        BauP+Kk/MiDF4dPNzIEEQvQ5UsL7FNItcNjo0Oh9
+X-Google-Smtp-Source: APXvYqw8wiIUmNCJfabwfJYW5JsUtTuihAsGpOSEYQcYjdD8elsuK+NKNesqdZ2r/V1C+2u2RvR27W8EZqU9nvh1KNo=
+X-Received: by 2002:a19:c511:: with SMTP id w17mr9150075lfe.31.1565622392374;
+ Mon, 12 Aug 2019 08:06:32 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:bcc7:: with SMTP id m190mr24368313iof.107.1565622361221;
- Mon, 12 Aug 2019 08:06:01 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 08:06:01 -0700
-In-Reply-To: <20190812144720.1980-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b1729e058fecdcee@google.com>
-Subject: Re: general protection fault in __pm_runtime_resume
-From:   syzbot <syzbot+3cbe5cd105d2ad56a1df@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, hdanton@sina.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        oneukum@suse.com, stern@rowland.harvard.edu,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190809181401.7086-1-acgoide@tycho.nsa.gov>
+In-Reply-To: <20190809181401.7086-1-acgoide@tycho.nsa.gov>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 12 Aug 2019 11:06:21 -0400
+Message-ID: <CAHC9VhTXjvUHQsZT9Fd6m=yzdBTDAzf1SpfMxQ_qwjy6zbJZLg@mail.gmail.com>
+Subject: Re: [PATCH v2] fanotify, inotify, dnotify, security: add security
+ hook for fs notifications
+To:     Aaron Goidel <acgoide@tycho.nsa.gov>,
+        Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, dhowells@redhat.com, jack@suse.cz,
+        amir73il@gmail.com, James Morris <jmorris@namei.org>,
+        linux-kernel@vger.kernel.org,
+        Casey Schaufler <casey@schaufler-ca.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Aug 9, 2019 at 2:14 PM Aaron Goidel <acgoide@tycho.nsa.gov> wrote:
+> As of now, setting watches on filesystem objects has, at most, applied a
+> check for read access to the inode, and in the case of fanotify, requires
+> CAP_SYS_ADMIN. No specific security hook or permission check has been
+> provided to control the setting of watches. Using any of inotify, dnotify,
+> or fanotify, it is possible to observe, not only write-like operations, but
+> even read access to a file. Modeling the watch as being merely a read from
+> the file is insufficient for the needs of SELinux. This is due to the fact
+> that read access should not necessarily imply access to information about
+> when another process reads from a file. Furthermore, fanotify watches grant
+> more power to an application in the form of permission events. While
+> notification events are solely, unidirectional (i.e. they only pass
+> information to the receiving application), permission events are blocking.
+> Permission events make a request to the receiving application which will
+> then reply with a decision as to whether or not that action may be
+> completed. This causes the issue of the watching application having the
+> ability to exercise control over the triggering process. Without drawing a
+> distinction within the permission check, the ability to read would imply
+> the greater ability to control an application. Additionally, mount and
+> superblock watches apply to all files within the same mount or superblock.
+> Read access to one file should not necessarily imply the ability to watch
+> all files accessed within a given mount or superblock.
+>
+> In order to solve these issues, a new LSM hook is implemented and has been
+> placed within the system calls for marking filesystem objects with inotify,
+> fanotify, and dnotify watches. These calls to the hook are placed at the
+> point at which the target path has been resolved and are provided with the
+> path struct, the mask of requested notification events, and the type of
+> object on which the mark is being set (inode, superblock, or mount). The
+> mask and obj_type have already been translated into common FS_* values
+> shared by the entirety of the fs notification infrastructure. The path
+> struct is passed rather than just the inode so that the mount is available,
+> particularly for mount watches. This also allows for use of the hook by
+> pathname-based security modules. However, since the hook is intended for
+> use even by inode based security modules, it is not placed under the
+> CONFIG_SECURITY_PATH conditional. Otherwise, the inode-based security
+> modules would need to enable all of the path hooks, even though they do not
+> use any of them.
+>
+> This only provides a hook at the point of setting a watch, and presumes
+> that permission to set a particular watch implies the ability to receive
+> all notification about that object which match the mask. This is all that
+> is required for SELinux. If other security modules require additional hooks
+> or infrastructure to control delivery of notification, these can be added
+> by them. It does not make sense for us to propose hooks for which we have
+> no implementation. The understanding that all notifications received by the
+> requesting application are all strictly of a type for which the application
+> has been granted permission shows that this implementation is sufficient in
+> its coverage.
+>
+> Security modules wishing to provide complete control over fanotify must
+> also implement a security_file_open hook that validates that the access
+> requested by the watching application is authorized. Fanotify has the issue
+> that it returns a file descriptor with the file mode specified during
+> fanotify_init() to the watching process on event. This is already covered
+> by the LSM security_file_open hook if the security module implements
+> checking of the requested file mode there. Otherwise, a watching process
+> can obtain escalated access to a file for which it has not been authorized.
+>
+> The selinux_path_notify hook implementation works by adding five new file
+> permissions: watch, watch_mount, watch_sb, watch_reads, and watch_with_perm
+> (descriptions about which will follow), and one new filesystem permission:
+> watch (which is applied to superblock checks). The hook then decides which
+> subset of these permissions must be held by the requesting application
+> based on the contents of the provided mask and the obj_type. The
+> selinux_file_open hook already checks the requested file mode and therefore
+> ensures that a watching process cannot escalate its access through
+> fanotify.
+>
+> The watch, watch_mount, and watch_sb permissions are the baseline
+> permissions for setting a watch on an object and each are a requirement for
+> any watch to be set on a file, mount, or superblock respectively. It should
+> be noted that having either of the other two permissions (watch_reads and
+> watch_with_perm) does not imply the watch, watch_mount, or watch_sb
+> permission. Superblock watches further require the filesystem watch
+> permission to the superblock. As there is no labeled object in view for
+> mounts, there is no specific check for mount watches beyond watch_mount to
+> the inode. Such a check could be added in the future, if a suitable labeled
+> object existed representing the mount.
+>
+> The watch_reads permission is required to receive notifications from
+> read-exclusive events on filesystem objects. These events include accessing
+> a file for the purpose of reading and closing a file which has been opened
+> read-only. This distinction has been drawn in order to provide a direct
+> indication in the policy for this otherwise not obvious capability. Read
+> access to a file should not necessarily imply the ability to observe read
+> events on a file.
+>
+> Finally, watch_with_perm only applies to fanotify masks since it is the
+> only way to set a mask which allows for the blocking, permission event.
+> This permission is needed for any watch which is of this type. Though
+> fanotify requires CAP_SYS_ADMIN, this is insufficient as it gives implicit
+> trust to root, which we do not do, and does not support least privilege.
+>
+> Signed-off-by: Aaron Goidel <acgoide@tycho.nsa.gov>
+> Acked-by: Casey Schaufler <casey@schaufler-ca.com>
+> ---
+> v2:
+>   - move initialization of obj_type up to remove duplicate work
+>   - convert inotify and fanotify flags to common FS_* flags
+>  fs/notify/dnotify/dnotify.c         | 15 +++++++--
+>  fs/notify/fanotify/fanotify_user.c  | 19 ++++++++++--
+>  fs/notify/inotify/inotify_user.c    | 14 +++++++--
+>  include/linux/lsm_hooks.h           |  9 +++++-
+>  include/linux/security.h            | 10 ++++--
+>  security/security.c                 |  6 ++++
+>  security/selinux/hooks.c            | 47 +++++++++++++++++++++++++++++
+>  security/selinux/include/classmap.h |  5 +--
+>  8 files changed, 113 insertions(+), 12 deletions(-)
 
-syzbot has tested the proposed patch and the reproducer did not trigger  
-crash:
+...
 
-Reported-and-tested-by:  
-syzbot+3cbe5cd105d2ad56a1df@syzkaller.appspotmail.com
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index f77b314d0575..a47376d1c924 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -3261,6 +3263,50 @@ static int selinux_inode_removexattr(struct dentry *dentry, const char *name)
+>         return -EACCES;
+>  }
+>
+> +static int selinux_path_notify(const struct path *path, u64 mask,
+> +                                               unsigned int obj_type)
+> +{
+> +       int ret;
+> +       u32 perm;
+> +
+> +       struct common_audit_data ad;
+> +
+> +       ad.type = LSM_AUDIT_DATA_PATH;
+> +       ad.u.path = *path;
+> +
+> +       /*
+> +        * Set permission needed based on the type of mark being set.
+> +        * Performs an additional check for sb watches.
+> +        */
+> +       switch (obj_type) {
+> +       case FSNOTIFY_OBJ_TYPE_VFSMOUNT:
+> +               perm = FILE__WATCH_MOUNT;
+> +               break;
+> +       case FSNOTIFY_OBJ_TYPE_SB:
+> +               perm = FILE__WATCH_SB;
+> +               ret = superblock_has_perm(current_cred(), path->dentry->d_sb,
+> +                                               FILESYSTEM__WATCH, &ad);
+> +               if (ret)
+> +                       return ret;
+> +               break;
+> +       case FSNOTIFY_OBJ_TYPE_INODE:
+> +               perm = FILE__WATCH;
+> +               break;
+> +       default:
+> +               return -EINVAL;
+> +       }
 
-Tested on:
+Sigh.
 
-commit:         7f7867ff usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git
-kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=177252d2600000
+Remember when I said "Don't respin the patch just for this, but if you
+have to do it for some other reason please fix the C++ style
+comments."?  In this particular case it is a small thing, but a
+failure to incorporate all the feedback is one of the things that
+really annoys me (mostly because it makes me worry about other things
+that may have been missed).  It isn't as bad as submitting code which
+doesn't compile, but it's a close second.
 
-Note: testing is done by a robot and is best-effort only.
+At this point I'm going to ask you to respin the patch to get rid of
+those C++ style comments.  I'm also going to get a bit more nitpicky
+about those comments too (more comments below).
+
+> +       // check if the mask is requesting ability to set a blocking watch
+> +       if (mask & (ALL_FSNOTIFY_PERM_EVENTS))
+> +               perm |= FILE__WATCH_WITH_PERM; // if so, check that permission
+
+What is the point of that trailing comment "if so, check that
+permission"?  Given the code, and the comment two lines above this
+seems obvious, does it not?  If you want to keep it, that's fine with
+me, but let's combine the two comments so they read a bit better, for
+example:
+
+  /* blocking watches require the file:watch_with_perm permission */
+  if (...)
+    perm |= FILE__WATCH_WITH_PERM;
+
+> +       // is the mask asking to watch file reads?
+> +       if (mask & (FS_ACCESS | FS_ACCESS_PERM | FS_CLOSE_NOWRITE))
+> +               perm |= FILE__WATCH_READS; // check that permission as well
+
+Here the "check that permission as well" adds no additional useful
+information, it's just noise in the code, drop it from the patch.
+
+I am a believer in the old advice that good comments explain *why* the
+code is doing something, where bad comments explain *what* the code is
+doing.  I would kindly ask that you keep that in mind when submitting
+future SELinux patches.
+
+-- 
+paul moore
+www.paul-moore.com
