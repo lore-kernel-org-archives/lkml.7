@@ -2,225 +2,110 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA3DC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8256C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41CED21744
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7764821855
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:28:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nlnLwPlc"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="hj/Fuo5y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728537AbfHLM14 (ORCPT
+        id S1728574AbfHLM2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 08:27:56 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38752 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728366AbfHLM1y (ORCPT
+        Mon, 12 Aug 2019 08:28:16 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:39260 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728242AbfHLM2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 08:27:54 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z14so12168225pga.5
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 05:27:53 -0700 (PDT)
+        Mon, 12 Aug 2019 08:28:16 -0400
+Received: by mail-qk1-f196.google.com with SMTP id 125so3702921qkl.6
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 05:28:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qNFs7sbNtnm8TIR9j2SolRZsryLdQU4+rlFLvcu2GAY=;
-        b=nlnLwPlc2Zb8CsIdl6INGn8eBPFSxyF17s+Sf1rqTKglwFRZrLMfiQV+xyyBxVUBC9
-         UAmf7xXV2H7JgrQUX0dz9g4S3PMsB8eWNsVjyvvCob5wi6CVt3Z1bBkxe4M7Qm8WAwxa
-         SC7Ib6OxUR0MGV4O9/rhdEl3+G1Hzvaocnm+CsoWG9PsAGWZxb3mGT5fUA0jbq2w5PON
-         TCXPxB4T2ubMCk0Wnk1dRV/ote2+0flvtsPjbq7WJV5bn5P3g6z5WOBuTO7Gy3xZeoDL
-         g1+vvuxgUNlgal86GTym0cLlGBw/7sKhMwfOYqsi3c0qV/I7aCXUMOWs+0LvQbw8sCJs
-         7/Cg==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=F3NVoBe9n1v2ZfRa55FdnUViyntY9dM8fBRiLu0L+fw=;
+        b=hj/Fuo5ytWHe0SJ+13jcDdQMsbU/i1ZIACgIViMzJiw64MJCvg0Xb2wHJG7iO+F4CY
+         aU/8Q4e5EoRTDQDpyyngxGAd8VRdCivVvM9K4kJH8VkohD0SyifJp3mGzN0GcVbvBsA6
+         4Y51i7Ejn6Y8PGCOwhEemjauQp1RbvuAk+XvQ3vNiR6Z8yE71AQmuSIriJA5+G1/cPmw
+         b9Fve7MbxQYSmPLxPc8WFWQFK9ggMft0bP6KTFKqQIAdoHpT+phxWGWiOfnw0VACG5Ib
+         rBDe3YqIH8M46+Mj9gTd05nIVBhQ30Y1/5SkXNdMnFNsQXrdNcqB8yDxa3rqTHlr6dLq
+         iK8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qNFs7sbNtnm8TIR9j2SolRZsryLdQU4+rlFLvcu2GAY=;
-        b=SS4Ox8Bs4a3DpvbRcCwnaDSehyLYhmxcOzctTGshXw263YW7li7E7Jd9hakLHVOibQ
-         B2cv84IcGOQTVTXMEcmz4CDhGzmcvqD4mPVBcNIMq2EzautRMQ/Mrylbc/CYSfPLdF+y
-         x7RjHn+jAZxrKxQLuoI7zWS02BrVhdLGdWK0Lv18fpkEYp8xFDR/fWUSXmglfNjIGrg2
-         1UhQJ+C8t/mOKM1atzy7D3Q9Rz1NyWoroiQ4JbcpCFcfGsuB4v5K2ejSDeEV+lCTzbMD
-         bndBz05qXzXXtFU4vodocZUlxhGJ6C2JWI+sSQkOcPRJn/VYoXt9Sp2/Zkl3lIO1CXyu
-         du2w==
-X-Gm-Message-State: APjAAAUiUokh+0MHUXMdaVaF3Ju4S977T+Lr/ePP9IvCh9KXX8sB0Ee7
-        pr+rgz0XZ+m3Gm34zXuLtIHf9rd/fr2vaHpUwu1WFA==
-X-Google-Smtp-Source: APXvYqyUWw6ptj1JwOUyxZKIhMwemF63PdlLuXg00TaGkm4edY3MfHSL7YLxkWY8F2GXMbKhMOUowT3r2FYahvnBcng=
-X-Received: by 2002:a17:90a:c20f:: with SMTP id e15mr16883275pjt.123.1565612872743;
- Mon, 12 Aug 2019 05:27:52 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=F3NVoBe9n1v2ZfRa55FdnUViyntY9dM8fBRiLu0L+fw=;
+        b=d+m2C8Xs+hyH9uPl3OIPC5xVGNkYc/Aa7PbqgHzonFvGI3o1r5XcmZ/eIoezk7svyI
+         OLYWAFXAO4uew3FPQ9l0NlaxKH1DTZZC2srMUKP2fBFxzUcNnodSxVpZvCIMZ2y/+02Z
+         wu/3E6CdiodoW6AAQAsE80cW+otCZ2JwcWJqN2zSJwVcGO67iublzoZptQm4iSY2PjSe
+         TKy2TZaZT5cqH2eu8fL+Omqq0yNq+IKHifYZId/NYEhElXJobbmZah8HIJVpbKfLWV6B
+         f8+X6y+VG8Q8343Yk2NbGzzUGJgQIUeQZ/CkoFe/jE3RRJHgMPfwvvAdpLYKJmZIW3xH
+         Z5dg==
+X-Gm-Message-State: APjAAAXF5xwKQUz8qtCOR2lS73gU2sf4eO3jUhCCgKyqyCOVqA62T9j5
+        m8X3xNko419bSgsEZTmCJY94Gw==
+X-Google-Smtp-Source: APXvYqwODBrrpXeLg1uZt60+w4xuw/RA5y0XlK9HIDJS76yjPxmVou6ZmWwl4OVp2Tm+2EwyPKY3dw==
+X-Received: by 2002:a05:620a:12d2:: with SMTP id e18mr29712440qkl.176.1565612895187;
+        Mon, 12 Aug 2019 05:28:15 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id z2sm9588656qtq.7.2019.08.12.05.28.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 12 Aug 2019 05:28:14 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hx9Qs-00079D-9F; Mon, 12 Aug 2019 09:28:14 -0300
+Date:   Mon, 12 Aug 2019 09:28:14 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     ira.weiny@intel.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 15/19] mm/gup: Introduce vaddr_pin_pages()
+Message-ID: <20190812122814.GC24457@ziepe.ca>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-16-ira.weiny@intel.com>
 MIME-Version: 1.0
-References: <000000000000487b44058fea845c@google.com>
-In-Reply-To: <000000000000487b44058fea845c@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 12 Aug 2019 14:27:41 +0200
-Message-ID: <CAAeHK+wELVfuQPJaOeG7KggR2BDTOuzCYLC+dzqbhrRRPNf9cA@mail.gmail.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in usbnet_generic_cdc_bind
-To:     syzbot <syzbot+45a53506b65321c1fe91@syzkaller.appspotmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Oliver Neukum <oliver@neukum.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Alan Stern <stern@rowland.harvard.edu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809225833.6657-16-ira.weiny@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 2:18 PM syzbot
-<syzbot+45a53506b65321c1fe91@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1390791c600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
-> dashboard link: https://syzkaller.appspot.com/bug?extid=45a53506b65321c1fe91
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12c78cd2600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1395b40e600000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+45a53506b65321c1fe91@syzkaller.appspotmail.com
->
-> usb 1-1: config 1 interface 0 altsetting 0 has 0 endpoint descriptors,
-> different from the interface descriptor's value: 18
-> usb 1-1: New USB device found, idVendor=0525, idProduct=a4a1, bcdDevice=
-> 0.40
-> usb 1-1: New USB device strings: Mfr=6, Product=0, SerialNumber=0
-> ==================================================================
-> BUG: KASAN: slab-out-of-bounds in memcmp+0xa6/0xb0 lib/string.c:904
-> Read of size 1 at addr ffff8881d4262f3b by task kworker/1:2/83
->
-> CPU: 1 PID: 83 Comm: kworker/1:2 Not tainted 5.3.0-rc2+ #25
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   print_address_description+0x6a/0x32c mm/kasan/report.c:351
->   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
->   kasan_report+0xe/0x12 mm/kasan/common.c:612
->   memcmp+0xa6/0xb0 lib/string.c:904
->   memcmp include/linux/string.h:400 [inline]
->   usbnet_generic_cdc_bind+0x71b/0x17c0 drivers/net/usb/cdc_ether.c:225
->   usbnet_ether_cdc_bind drivers/net/usb/cdc_ether.c:322 [inline]
->   usbnet_cdc_bind+0x20/0x1a0 drivers/net/usb/cdc_ether.c:430
->   usbnet_probe+0xb43/0x23d0 drivers/net/usb/usbnet.c:1722
->   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
->   really_probe+0x281/0x650 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:882
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2114
->   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x281/0x650 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:882
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2114
->   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
->   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> Allocated by task 83:
->   save_stack+0x1b/0x80 mm/kasan/common.c:69
->   set_track mm/kasan/common.c:77 [inline]
->   __kasan_kmalloc mm/kasan/common.c:487 [inline]
->   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
->   kmalloc include/linux/slab.h:557 [inline]
->   usb_get_configuration+0x30c/0x3070 drivers/usb/core/config.c:857
->   usb_enumerate_device drivers/usb/core/hub.c:2369 [inline]
->   usb_new_device+0xd3/0x160 drivers/usb/core/hub.c:2505
->   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> Freed by task 269:
->   save_stack+0x1b/0x80 mm/kasan/common.c:69
->   set_track mm/kasan/common.c:77 [inline]
->   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
->   slab_free_hook mm/slub.c:1423 [inline]
->   slab_free_freelist_hook mm/slub.c:1470 [inline]
->   slab_free mm/slub.c:3012 [inline]
->   kfree+0xe4/0x2f0 mm/slub.c:3953
->   kobject_uevent_env+0x294/0x1160 lib/kobject_uevent.c:624
->   kobject_synth_uevent+0x70a/0x81e lib/kobject_uevent.c:208
->   uevent_store+0x20/0x50 drivers/base/core.c:1244
->   dev_attr_store+0x50/0x80 drivers/base/core.c:947
->   sysfs_kf_write+0x110/0x160 fs/sysfs/file.c:138
->   kernfs_fop_write+0x2b0/0x470 fs/kernfs/file.c:315
->   __vfs_write+0x76/0x100 fs/read_write.c:494
->   vfs_write+0x262/0x5c0 fs/read_write.c:558
->   ksys_write+0x127/0x250 fs/read_write.c:611
->   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
->
-> The buggy address belongs to the object at ffff8881d4262f00
->   which belongs to the cache kmalloc-64 of size 64
-> The buggy address is located 59 bytes inside of
->   64-byte region [ffff8881d4262f00, ffff8881d4262f40)
-> The buggy address belongs to the page:
-> page:ffffea0007509880 refcount:1 mapcount:0 mapping:ffff8881da003180
-> index:0x0
-> flags: 0x200000000000200(slab)
-> raw: 0200000000000200 ffffea00074d1f00 0000001800000018 ffff8881da003180
-> raw: 0000000000000000 00000000802a002a 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->   ffff8881d4262e00: fb fb fb fb fc fc fc fc 00 00 00 00 00 00 fc fc
->   ffff8881d4262e80: fc fc fc fc fb fb fb fb fb fb fb fb fc fc fc fc
-> > ffff8881d4262f00: 00 00 00 00 00 00 00 03 fc fc fc fc fb fb fb fb
->                                          ^
->   ffff8881d4262f80: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
->   ffff8881d4263000: fb fb fb fb fb fb fb fb fb fb fc fc fc fc fb fb
-> ==================================================================
+On Fri, Aug 09, 2019 at 03:58:29PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> The addition of FOLL_LONGTERM has taken on additional meaning for CMA
+> pages.
+> 
+> In addition subsystems such as RDMA require new information to be passed
+> to the GUP interface to track file owning information.  As such a simple
+> FOLL_LONGTERM flag is no longer sufficient for these users to pin pages.
+> 
+> Introduce a new GUP like call which takes the newly introduced vaddr_pin
+> information.  Failure to pass the vaddr_pin object back to a vaddr_put*
+> call will result in a failure if pins were created on files during the
+> pin operation.
 
-This one is funny, we do sizeof(struct usb_cdc_mdlm_desc *) instead of
-sizeof(struct usb_cdc_mdlm_desc) and the same for
-usb_cdc_mdlm_detail_desc in cdc_parse_cdc_header().
+Is this a 'vaddr' in the traditional sense, ie does it work with
+something returned by valloc?
 
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000487b44058fea845c%40google.com.
+Maybe another name would be better?
+
+I also wish GUP like functions took in a 'void __user *' instead of
+the unsigned long to make this clear :\
+
+Jason
