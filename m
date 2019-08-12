@@ -2,52 +2,71 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F286EC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5451C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D035120663
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B035920679
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:41:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="FUfvxf0D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbfHLMjV (ORCPT
+        id S1726597AbfHLMlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 08:39:21 -0400
-Received: from mga14.intel.com ([192.55.52.115]:31861 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726502AbfHLMiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 08:38:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 05:38:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,377,1559545200"; 
-   d="scan'208";a="175871409"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga008.fm.intel.com with ESMTP; 12 Aug 2019 05:38:48 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 046FAF9; Mon, 12 Aug 2019 15:38:47 +0300 (EEST)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Mario.Limonciello@dell.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Raanan Avargil <raanan.avargil@intel.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH v2 0/8] thunderbolt: Intel Ice Lake support
-Date:   Mon, 12 Aug 2019 15:38:39 +0300
-Message-Id: <20190812123847.50802-1-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 12 Aug 2019 08:41:47 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42717 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbfHLMlq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 08:41:46 -0400
+Received: by mail-wr1-f65.google.com with SMTP id b16so7717937wrq.9
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 05:41:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mrwfrIKrYFfamy4c5vzLtem+Xc73qRM6JZjJ2gik+Hc=;
+        b=FUfvxf0DHtH9KpoJ0X9Ra32kGPWTpFo5rxU1zDYUZD9XzGJiNdMGbwGnUToDx9Bdp7
+         LInJGSUSq46S655AB9fh12XDYUsPYcwH5EeRxx84QFfk8JE8KCiJVSireHFlgHai5ohA
+         b3q/pqDVxyiQMOaoOXagXwqP/bMC1/CZ+CT3IxAVl/ZURzmgNwnRVeV/SqtnjzQRrx7Y
+         Ih+b1xt/VvJWvjqrTfi9RzqT7vFsIWvMCT5xDjbkv4/DuH6+5J3kKqpsciKIVWg/OQS4
+         WuxdKXninizlSxRRgzpzKBFLtvVNhfM50UfLmo6if0sjZW7vgKBNG7jOjXXzDBP1em3m
+         kwxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mrwfrIKrYFfamy4c5vzLtem+Xc73qRM6JZjJ2gik+Hc=;
+        b=eyD+VCH3TctgTFgwQlcAh68Zx/SBETggqTEncSB5ixkq66pQFcNNwXaMRrS4CWTWzt
+         NE4qEDe5Jy87/PPlhrV0zaytMIWZEMAuCAUlgITizp7t0RwOlRgmxRfjYWfeVVOFzPCy
+         Txi7ISoLpOg3aLzb18A8YgwiCCf5+aEUFrW8dUtQ63gnEOF3WmG333UPWyZAkO21M1Fp
+         A5ltI9OraG6/9YC6evuWXi+A9SnFOxcsTl1ZRU5Pzl61VjW1wkQKSDkeEAG16I5+8Xo8
+         g6GqjMoozltDWHpOYFLHIvV39iIVXZV1nZnlHV570yFl/oD3L6rEbgPwiSvK+zoCY1kl
+         bZzg==
+X-Gm-Message-State: APjAAAVvqchGXbMCYhK/+GC4iDPYusNUGuE0SS+/uXQtm3AjGadwO9fJ
+        9RN92YrVLQ2QxoOzLdwD7kiX2g==
+X-Google-Smtp-Source: APXvYqxvdiimPN6REXGqxrbIhOO5sIqtbXFrvpnzU/YAZRZkclAjxlZDYw6lM2NKBwaTeayPp6AhNA==
+X-Received: by 2002:a5d:4448:: with SMTP id x8mr11720190wrr.119.1565613704212;
+        Mon, 12 Aug 2019 05:41:44 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id p13sm37961458wrw.90.2019.08.12.05.41.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 05:41:43 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] tools: iio: add .gitignore
+Date:   Mon, 12 Aug 2019 14:41:41 +0200
+Message-Id: <20190812124141.9108-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,75 +74,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This is second version of the patch series adding support for the Intel Ice
-Lake integrated Thunderbolt controller. The biggest difference from the
-previous discrete controllers is that the Ice Lake Thunderbolt controller
-is now integrated as part of the SoC. The firmware messages pretty much
-follow Titan Ridge but there are some differences as well (such as the new
-RTD3 veto notification). Also Ice Lake does not implement security levels
-so DMA protection is handled by IOMMU.
+The generated files must not be tracked by git. Add a local .gitignore.
 
-The previous version of the series can be found here:
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ tools/iio/.gitignore | 4 ++++
+ 1 file changed, 4 insertions(+)
+ create mode 100644 tools/iio/.gitignore
 
-  https://lwn.net/Articles/793066/
-
-Changes from the previous version:
-
-  * Check !x86_apple_machine for Titan Ridge also.
-
-  * Drop ioread32() when updating prod/cons because hardware ignores writes
-    to the read-only parts of the register this allows us to save one read.
-
-  * Remove Light Ridge specific handling in eeprom.c as it is not necessary
-    after patch 4/8.
-
-  * Moved RTD3 veto handling into separate functions to avoid code
-    duplication.
-
-  * Reworked struct nhi_ops so that it provides hooks such as
-    runtime_suspend and so on. The NHI implementation then can use those
-    hooks to implement whatever additional logic is needed. This should
-    allow us to move those bits into a separate files in future if needed.
-
-    I also looked whether we could replace
-    quirk_apple_poweroff_thunderbolt() using struct nhi_ops as well but it
-    turns out to be unsuitable. The reason is that the ACPI magic sequence
-    needs to be done after PCI core has moved the device into D3. The NHI
-    driver does not have easy means to do so.
-
-  * Clarified comment in icl_nhi_suspend()
-
-  * Added clarification comment to icl_nhi_force_power()
-
-  * Use "Thunderbolt" instead of "TBT" in new GUID entries
-
-  * Added reviewed tag from Yehezkel
-
-Mika Westerberg (8):
-  thunderbolt: Correct path indices for PCIe tunnel
-  thunderbolt: Move NVM upgrade support flag to struct icm
-  thunderbolt: Use 32-bit writes when writing ring producer/consumer
-  thunderbolt: Do not fail adding switch if some port is not implemented
-  thunderbolt: Hide switch attributes that are not set
-  thunderbolt: Expose active parts of NVM even if upgrade is not supported
-  thunderbolt: Add support for Intel Ice Lake
-  ACPI / property: Add two new Thunderbolt property GUIDs to the list
-
- drivers/acpi/property.c        |   6 +
- drivers/thunderbolt/ctl.c      |  23 ++-
- drivers/thunderbolt/eeprom.c   |   4 -
- drivers/thunderbolt/icm.c      | 176 ++++++++++++++++--
- drivers/thunderbolt/nhi.c      | 326 +++++++++++++++++++++++++++++++--
- drivers/thunderbolt/nhi.h      |   2 +
- drivers/thunderbolt/nhi_regs.h |  25 +++
- drivers/thunderbolt/switch.c   |  52 ++++--
- drivers/thunderbolt/tb_msgs.h  |  16 +-
- drivers/thunderbolt/tunnel.c   |   4 +-
- include/linux/thunderbolt.h    |   2 +
- 11 files changed, 584 insertions(+), 52 deletions(-)
-
+diff --git a/tools/iio/.gitignore b/tools/iio/.gitignore
+new file mode 100644
+index 000000000000..3758202618bd
+--- /dev/null
++++ b/tools/iio/.gitignore
+@@ -0,0 +1,4 @@
++iio_event_monitor
++iio_generic_buffer
++lsiio
++include/
 -- 
-2.20.1
+2.21.0
 
