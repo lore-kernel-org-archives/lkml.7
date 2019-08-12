@@ -2,98 +2,103 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA11C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CC3C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65E982070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FB77206C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:46:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hYNXPKmH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gb3s9Sv3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbfHLVpL (ORCPT
+        id S1726879AbfHLVqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 17:45:11 -0400
-Received: from ozlabs.org ([203.11.71.1]:32927 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726200AbfHLVpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 17:45:11 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 466qBq6fRYz9sN1;
-        Tue, 13 Aug 2019 07:45:07 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565646308;
-        bh=rEe7J5LXPR3Bzx5yRrLWfT587t2d294CWMNiWIGXH0A=;
-        h=Date:From:To:Cc:Subject:From;
-        b=hYNXPKmHoA0dVaa5a2zcggsRlPooNpWuVEK5vTCJccMnl1wu2K04T2/zUfT+tqVkd
-         0YiY2IKacOyIKUGuW1l8+laWF7SD0LTw+WGF5LnbXPD7GMymcRHVOvT2x8a9jH9Fhk
-         clqCWUXVm6HtOVfLryD4mEo5va8Fwm9z0F4H7fjmmQGlncHUqLnCMlqcmw3HES1tdB
-         IIwjdbPV0NJyfAQ0XKLIaIwqYvlM0Kg+Bs1+U/HzeXH6oIQMBbJL8fPcGL83pxfY8D
-         Lx0k66Uo8lJUBCMN+6QK+5F2hV7eYt1ZUYClyJzZ7asCCdJ5UVcELF88A1w55C8eBt
-         aSu23QxK0rNcw==
-Date:   Tue, 13 Aug 2019 07:45:06 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Subject: linux-next: Fixes tag needs some work in the xfs tree
-Message-ID: <20190813074506.3e2ee2c8@canb.auug.org.au>
+        Mon, 12 Aug 2019 17:46:44 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37982 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfHLVqo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 17:46:44 -0400
+Received: by mail-ot1-f68.google.com with SMTP id r20so14930486ota.5;
+        Mon, 12 Aug 2019 14:46:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nkr+gIxBqJFzbWoJfHgW3m7rzqgw9KiVs/6RGjZDRIE=;
+        b=gb3s9Sv3HPzBuaC3EiLO0FNuc/94OYMO3ZLktnyjaS+lDLsYD/udOgs1bduzDvAQIp
+         wKA/z462vLytjz4AxyK4uufltfvTRd67Up6etwBvtOpZx6iX6Ev0eznFpRXZkUO3VRZ0
+         9aYqTU6+3Dy7SPqRIwbhzzGnxsMCbFcKFjSF2SiaVjWM8Qt4ZT3gpCj9d9HAeWGTY6jQ
+         9hyjTDQE6EStrFkTq/p0Uhqxa5vyLNHoCPaOqykjKt7dAEy3ueXRONeg+TkgVT9dZUWX
+         CFwX9wT3ycD/ni656k2S6FCk/ZecJ0/Qov43udnJ2dmslJokvq7fnfEjbM8Z2DoTvQBH
+         1dNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nkr+gIxBqJFzbWoJfHgW3m7rzqgw9KiVs/6RGjZDRIE=;
+        b=KXem9y0r5Ijr9CpewkBnm6TBEz5eJqM0nflZ1yQaT9TWK5V3H9e5zuEZu2/DsWmow2
+         qSWAuTeL5UfnuenLBZNny1uh8GUxvuIrSlgBhhkiUeBLfo0BuIOdLshrHo613y/HJmhW
+         giO0TdqKKA8fq041r32BqT6shtC9tKLXDnuOxcru9H39eQRINInxHyN57pchdp+xmUoR
+         NMuzw0syf0ElQa1ADmo/B/nZF44/l6qRVo971x58yszlcssM4svcwBcI2VB9pEE6RFV4
+         vOgb96DZiuw7V2Tfk3bOrY820wXOsHP7jkEiXYfAqueNUtsXzr9+2BXykihfSygZhtz8
+         eICQ==
+X-Gm-Message-State: APjAAAUSKwrXdut20kWi8hwBdcr+M2WNzVlcBhi1c6jYXXTSP04czPhI
+        TN3qs8QwoZQ+L2FC2Cc9CVfvBdKjH+pKvD6GTB1cqw==
+X-Google-Smtp-Source: APXvYqwAyNV0aoo1JgRTizUlMZhcmLZp+ePIOOGhBR9XXQDREIsPzaMnEKBBtRT9HS5LeBuYLTV5wdHKDqyUhCqP3iI=
+X-Received: by 2002:a02:a1c7:: with SMTP id o7mr40873256jah.26.1565646402920;
+ Mon, 12 Aug 2019 14:46:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/qZu7HnNcDMRIIYz=EyaSqZg";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20190802120217.GA8712@toshiba> <A83A0A38-8AC8-4662-BBC1-3B48B707E97B@holtmann.org>
+In-Reply-To: <A83A0A38-8AC8-4662-BBC1-3B48B707E97B@holtmann.org>
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Date:   Mon, 12 Aug 2019 14:46:32 -0700
+Message-ID: <CAKdAkRQP8DBbpdfA6yFZK6THw5eVUbdr+QnVQMkm-mLyEp5brg@mail.gmail.com>
+Subject: Re: [PATCH v2] Bluetooth: btusb: Fix suspend issue for Realtek devices
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Alex Lu <alex_lu@realsil.com.cn>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Max Chou <max.chou@realtek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qZu7HnNcDMRIIYz=EyaSqZg
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Aug 12, 2019 at 9:36 AM Marcel Holtmann <marcel@holtmann.org> wrote=
+:
+>
+> Hi Alex,
+>
+> > From the perspective of controller, global suspend means there is no
+> > SET_FEATURE (DEVICE_REMOTE_WAKEUP) and controller would drop the
+> > firmware. It would consume less power. So we should not send this kind
+> > of SET_FEATURE when host goes to suspend state.
+> > Otherwise, when making device enter selective suspend, host should send
+> > SET_FEATURE to make sure the firmware remains.
+> >
+> > Signed-off-by: Alex Lu <alex_lu@realsil.com.cn>
+> > ---
+> > drivers/bluetooth/btusb.c | 34 ++++++++++++++++++++++++++++++----
+> > 1 file changed, 30 insertions(+), 4 deletions(-)
+>
+> this one doesn=E2=80=99t apply cleanly to bluetooth-next. Can you please =
+send a version that does.
 
-Hi all,
+Is this a chip issue or system issue? I.e. if in some system BT
+controller is wired so that it loses power over system suspend, this
+is quite different form chip itself losing firmware in certain
+situations, and this smells like a system issue and thus needs to be
+addressed on system level.
 
-In commit
-
-  294fc7a4c8ec ("fs: xfs: xfs_log: Don't use KM_MAYFAIL at xfs_log_reserve(=
-).")
-
-Fixes tag
-
-  Fixes: eb01c9cd87 ("[XFS] Remove the xlog_ticket allocator")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    This can be fixed for the future by setting core.abbrev to 12 (or
-    more) or (for git v2.11 or later) just making sure it is not set
-    (or set to "auto").
+Thanks.
 
 --=20
-Cheers,
-Stephen Rothwell
-
---Sig_/qZu7HnNcDMRIIYz=EyaSqZg
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1R3eIACgkQAVBC80lX
-0GyQdggAiIZNkT1bXZlEiouHqcI/6K+Q5IiKQfem6//MqILuFjBaM62fwggQEtJ8
-fblLTbCyJUYMO1TBrSir0FDBUU5Gs+xGpMS+Xt+wnCZzBBru80135pr+gIL/izxt
-CtYYFR0fdUeG4soHg7gb0ZBSaYoSuMP12CD0IQjsQwQDaYL5aoWsFBBk1btUo89y
-aUuWAFyIWiYOdUow9vZ8jVrtW+K4YDE2ejP2QkGyE//nxES00E08AScWtWIgFwCA
-ZMWXRdgw9bd87XklAGOfyas86xVgVG6MJVrYiAdub+Xr0CJA7jUh8/vMH8TEWgrL
-xPmns2M3UtU5y4FeH14QOYVjNEs1cg==
-=VlG8
------END PGP SIGNATURE-----
-
---Sig_/qZu7HnNcDMRIIYz=EyaSqZg--
+Dmitry
