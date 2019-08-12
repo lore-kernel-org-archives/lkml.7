@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A99B6C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63349C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71BA2208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32097208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:10:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bOm1smK3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m3tzM5Rj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbfHLUKj (ORCPT
+        id S1727958AbfHLUKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 16:10:39 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43230 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727685AbfHLUJ1 (ORCPT
+        Mon, 12 Aug 2019 16:10:45 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36001 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727163AbfHLUJX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 16:09:27 -0400
-Received: by mail-pg1-f195.google.com with SMTP id r26so14085447pgl.10;
-        Mon, 12 Aug 2019 13:09:26 -0700 (PDT)
+        Mon, 12 Aug 2019 16:09:23 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l21so50030450pgm.3;
+        Mon, 12 Aug 2019 13:09:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=s01id/bOKqHbSZOwJqDeTGRrZOkCw7N0lkNR7ywaBCU=;
-        b=bOm1smK3FIK/qm4nWXJQ3M+ZQ99uM0jxgqV7Q2SaY2u+bSx4syNKCD4U2Sdqy+60Je
-         Uf16hlgCEouo117pVAp9X0Nm6ch9AEhIQzp+7+wtrKZ4wCcyNBBH5MhiHDkjZJ0czzgl
-         kPRwVKAQrQmvvdlU7mpbA2WxNrWa+AUoWOwP7oFPvhclWkqBnd1nHnClzb6mwneOr6Se
-         klg3yfVEFHbIZQKEsf0sum28+PBBfttsunme1LlOLTcAsnoYBPeKhwQ9RYuaMk70vyxv
-         BttDGCROP1bTllyYwtaMNeRBAbmKxSsakIDPkzDJ3ldui/BPzdFytOiytUA9acuXC8b1
-         crXg==
+        bh=v5LhoIh9pEXsuxuOal6SQWOEU6dIDuk09/Lr+q8se7U=;
+        b=m3tzM5Rjigj1YHXtE5lXE4sKYSMSgS8iLNxSaKt7AGhxG0BxGDK9ZOSakPs7RxdgMO
+         2VH4MAV64sIbrqBsqspOusRH6kVALTy75Yo2u1xDsLjCvxKdYJCLKZFCeZOjFOvGwkwJ
+         aUyuf7uJqp20+fNgsUNWg4IZYKbdh+8Y5fxBhnb4natmsQhYmAe+APl3sGE19HXNzbmy
+         nXLICEQ8th490qXxDShMh4F4XAEfhTXnLe34ehmO91GvN8vHFCnN9RvEuq1P6lEecPQH
+         7gTDYkgjXErCBYkF9W3Bas26Zp2qK7jJ0xLUnabG54+wufiWMTykWnGsT1AYrzCRHUPE
+         aUWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=s01id/bOKqHbSZOwJqDeTGRrZOkCw7N0lkNR7ywaBCU=;
-        b=a8tjBH1HvBeIWFbb3VY3lVGZUe5AZrcHesMbACtruVPnMMVcqJyhyRktRgmEeJuMGg
-         veSLJKxD/dVZWZI7jG5jPpkfzZDQE7E2unbSFYbNlRROtVYGaJRkRl3G1qgME/QywTUu
-         UUtzCvfhJVmLCRLtHHGIrZ0UMHuWmIAcg+MwMl3OLcZ98rwHv86Ov/t5IwFm9PBu0R0T
-         mXsdFtAvmlE04TOmOazuxuBLLHyosLsyQQYfUTFFrYJLzD+THTb7BNLrrsyS3InZTTBk
-         75f/sehhoAxh8Vt+8pVcDFffLlsL9RexIY6fIZ01FlejFtwnnZhbTeyZYBl64FyxcoJ1
-         XRBg==
-X-Gm-Message-State: APjAAAWzBKE1/Eyi7tjj4V0iR0aR2gwPzttrmEdzspakvFnnBHdPeixj
-        jUf8fh6eIDLwIJAJ5oxvlBacoUFB
-X-Google-Smtp-Source: APXvYqwnOkLd8FQChENX81H6oxLjr0wNdj8grTifdhEXAM7laAo9vmVoeIvqe8bTpgjNhZO8F/MZfQ==
-X-Received: by 2002:a62:640c:: with SMTP id y12mr36702608pfb.166.1565640566249;
-        Mon, 12 Aug 2019 13:09:26 -0700 (PDT)
+        bh=v5LhoIh9pEXsuxuOal6SQWOEU6dIDuk09/Lr+q8se7U=;
+        b=rKQM76pvNtEw6Ux+hAXzLi350m5zxsQcwuix2AgeotMYIiwUlxK80ylQ79GBX0ox/n
+         D5xBD9O2ReZJxjl8AUNAGn1vBJO6AubKVIYCP3kLFb6EQ6BeUu+tCn4XXLg3zI/DAqUy
+         PDbt2DWCuq3qqpRV8rpPOP+U0Ko1Jc9IdYFFXRTet3HuhGQZx0rr2XgQy43zrgFwv7vg
+         RCujOUxC0qLfd59NAKah4J2pJfMy1UY+FHpTHhPqkKoFN9U2lCKqONw6mHg311eQGZuH
+         UpeXE3TVwpNquYcFbXLBWhj7XhU6bRJzBIkHKMVRAmSVg7LbzwHnuO79cGzlsf6GBsYp
+         hvlg==
+X-Gm-Message-State: APjAAAV8IACRtJ4VpyWVPIuplguZIMXsaF/81/576iLpRxFniMPQ2+6x
+        MMYz/LykqXwUeSxxD8GYfaENNc3M
+X-Google-Smtp-Source: APXvYqxiNEuuYTdNk/z8R1E7J8+LLjiEFuarmkwBZF4IeYgn7FceZwWLd3s8ejncGYTYmTQmohIUDw==
+X-Received: by 2002:a62:1c93:: with SMTP id c141mr38374483pfc.9.1565640562519;
+        Mon, 12 Aug 2019 13:09:22 -0700 (PDT)
 Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id n26sm110286451pfa.83.2019.08.12.13.09.25
+        by smtp.gmail.com with ESMTPSA id n26sm110286451pfa.83.2019.08.12.13.09.21
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 13:09:25 -0700 (PDT)
+        Mon, 12 Aug 2019 13:09:21 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-watchdog@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Healy <cphealy@gmail.com>,
         Guenter Roeck <linux@roeck-us.net>,
+        Chris Healy <cphealy@gmail.com>,
         Rick Ramstetter <rick@anteaterllc.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 06/22] watchdog: ziirave_wdt: Simplify ziirave_firm_write_pkt()
-Date:   Mon, 12 Aug 2019 13:08:50 -0700
-Message-Id: <20190812200906.31344-7-andrew.smirnov@gmail.com>
+Subject: [PATCH v2 03/22] watchdog: ziirave_wdt: Be more verbose during firmware update
+Date:   Mon, 12 Aug 2019 13:08:47 -0700
+Message-Id: <20190812200906.31344-4-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190812200906.31344-1-andrew.smirnov@gmail.com>
 References: <20190812200906.31344-1-andrew.smirnov@gmail.com>
@@ -77,196 +77,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There no reason why ziirave_firm_write_pkt() has to take firmware
-data via 'struct ihex_binrec' and it can just take address, data pointer
-and data length as individual arguments. Make this change to allow us
-to drastically simplify handling page crossing case by removing all of
-the extra code required to split 'struct ihex_binrec' into two.
+Add more error logging to ziirave_firm_upload() for diagnostics.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 Cc: Chris Healy <cphealy@gmail.com>
 Cc: Guenter Roeck <linux@roeck-us.net>
 Cc: Rick Ramstetter <rick@anteaterllc.com>
 Cc: linux-watchdog@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/watchdog/ziirave_wdt.c | 116 +++++++++++++--------------------
- 1 file changed, 44 insertions(+), 72 deletions(-)
+ drivers/watchdog/ziirave_wdt.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/watchdog/ziirave_wdt.c b/drivers/watchdog/ziirave_wdt.c
-index 75c066602c00..b2d5ff0c22fe 100644
+index 8c71341a9c1c..b3e255b40209 100644
 --- a/drivers/watchdog/ziirave_wdt.c
 +++ b/drivers/watchdog/ziirave_wdt.c
-@@ -51,6 +51,7 @@ static char *ziirave_reasons[] = {"power cycle", "hw watchdog", NULL, NULL,
- #define ZIIRAVE_FIRM_PKT_DATA_SIZE	16
- #define ZIIRAVE_FIRM_FLASH_MEMORY_START	0x1600
- #define ZIIRAVE_FIRM_FLASH_MEMORY_END	0x2bbf
-+#define ZIIRAVE_FIRM_PAGE_SIZE		128
- 
- /* Received and ready for next Download packet. */
- #define ZIIRAVE_FIRM_DOWNLOAD_ACK	1
-@@ -244,27 +245,26 @@ static int ziirave_firm_write_byte(struct watchdog_device *wdd, u8 command,
-  *     Data0 .. Data15: Array of 16 bytes of data.
-  *     Checksum: Checksum byte to verify data integrity.
-  */
--static int ziirave_firm_write_pkt(struct watchdog_device *wdd,
--				  const struct ihex_binrec *rec)
-+static int __ziirave_firm_write_pkt(struct watchdog_device *wdd,
-+				    u32 addr, const u8 *data, u8 len)
- {
-+	const u16 addr16 = (u16)addr / 2;
- 	struct i2c_client *client = to_i2c_client(wdd->parent);
- 	u8 i, checksum = 0, packet[ZIIRAVE_FIRM_PKT_TOTAL_SIZE];
- 	int ret;
--	u16 addr;
- 
- 	memset(packet, 0, ARRAY_SIZE(packet));
- 
- 	/* Packet length */
--	packet[0] = (u8)be16_to_cpu(rec->len);
-+	packet[0] = len;
- 	/* Packet address */
--	addr = (be32_to_cpu(rec->addr) & 0xffff) >> 1;
--	packet[1] = addr & 0xff;
--	packet[2] = (addr & 0xff00) >> 8;
-+	packet[1] = addr16 & 0xff;
-+	packet[2] = (addr16 & 0xff00) >> 8;
- 
- 	/* Packet data */
--	if (be16_to_cpu(rec->len) > ZIIRAVE_FIRM_PKT_DATA_SIZE)
-+	if (len > ZIIRAVE_FIRM_PKT_DATA_SIZE)
- 		return -EMSGSIZE;
--	memcpy(packet + 3, rec->data, be16_to_cpu(rec->len));
-+	memcpy(packet + 3, data, len);
- 
- 	/* Packet checksum */
- 	for (i = 0; i < ZIIRAVE_FIRM_PKT_TOTAL_SIZE - 1; i++)
-@@ -276,11 +276,35 @@ static int ziirave_firm_write_pkt(struct watchdog_device *wdd,
- 	if (ret)
- 		dev_err(&client->dev,
- 		      "Failed to write firmware packet at address 0x%04x: %d\n",
--		      addr, ret);
-+		      addr16, ret);
- 
- 	return ret;
- }
- 
-+static int ziirave_firm_write_pkt(struct watchdog_device *wdd,
-+				  u32 addr, const u8 *data, u8 len)
-+{
-+	const u8 max_write_len = ZIIRAVE_FIRM_PAGE_SIZE -
-+		(addr - ALIGN_DOWN(addr, ZIIRAVE_FIRM_PAGE_SIZE));
-+	int ret;
-+
-+	if (len > max_write_len) {
-+		/*
-+		 * If data crossed page boundary we need to split this
-+		 * write in two
-+		 */
-+		ret = __ziirave_firm_write_pkt(wdd, addr, data, max_write_len);
-+		if (ret)
-+			return ret;
-+
-+		addr += max_write_len;
-+		data += max_write_len;
-+		len  -= max_write_len;
-+	}
-+
-+	return __ziirave_firm_write_pkt(wdd, addr, data, len);
-+}
-+
- static int ziirave_firm_verify(struct watchdog_device *wdd,
- 			       const struct firmware *fw)
- {
-@@ -333,9 +357,8 @@ static int ziirave_firm_upload(struct watchdog_device *wdd,
- 			       const struct firmware *fw)
- {
- 	struct i2c_client *client = to_i2c_client(wdd->parent);
--	int ret, words_till_page_break;
- 	const struct ihex_binrec *rec;
--	struct ihex_binrec *rec_new;
-+	int ret;
+@@ -335,14 +335,18 @@ static int ziirave_firm_upload(struct watchdog_device *wdd,
  
  	ret = ziirave_firm_write_byte(wdd, ZIIRAVE_CMD_JUMP_TO_BOOTLOADER, 1,
  				      false);
-@@ -366,68 +389,17 @@ static int ziirave_firm_upload(struct watchdog_device *wdd,
- 			return -EMSGSIZE;
- 		}
- 
--		/* Calculate words till page break */
--		words_till_page_break = (64 - ((be32_to_cpu(rec->addr) >> 1) &
--					 0x3f));
--		if ((be16_to_cpu(rec->len) >> 1) > words_till_page_break) {
--			/*
--			 * Data in passes page boundary, so we need to split in
--			 * two blocks of data. Create a packet with the first
--			 * block of data.
--			 */
--			rec_new = kzalloc(sizeof(struct ihex_binrec) +
--					  (words_till_page_break << 1),
--					  GFP_KERNEL);
--			if (!rec_new)
--				return -ENOMEM;
--
--			rec_new->len = cpu_to_be16(words_till_page_break << 1);
--			rec_new->addr = rec->addr;
--			memcpy(rec_new->data, rec->data,
--			       be16_to_cpu(rec_new->len));
--
--			ret = ziirave_firm_write_pkt(wdd, rec_new);
--			kfree(rec_new);
--			if (ret)
--				return ret;
--
--			/* Create a packet with the second block of data */
--			rec_new = kzalloc(sizeof(struct ihex_binrec) +
--					  be16_to_cpu(rec->len) -
--					  (words_till_page_break << 1),
--					  GFP_KERNEL);
--			if (!rec_new)
--				return -ENOMEM;
--
--			/* Remaining bytes */
--			rec_new->len = rec->len -
--				       cpu_to_be16(words_till_page_break << 1);
--
--			rec_new->addr = cpu_to_be32(be32_to_cpu(rec->addr) +
--					(words_till_page_break << 1));
--
--			memcpy(rec_new->data,
--			       rec->data + (words_till_page_break << 1),
--			       be16_to_cpu(rec_new->len));
--
--			ret = ziirave_firm_write_pkt(wdd, rec_new);
--			kfree(rec_new);
--			if (ret)
--				return ret;
--		} else {
--			ret = ziirave_firm_write_pkt(wdd, rec);
--			if (ret)
--				return ret;
--		}
-+		ret = ziirave_firm_write_pkt(wdd, be32_to_cpu(rec->addr),
-+					     rec->data, be16_to_cpu(rec->len));
-+		if (ret)
-+			return ret;
- 	}
- 
--	/* For end of download, the length field will be set to 0 */
--	rec_new = kzalloc(sizeof(struct ihex_binrec) + 1, GFP_KERNEL);
--	if (!rec_new)
--		return -ENOMEM;
--
--	ret = ziirave_firm_write_pkt(wdd, rec_new);
--	kfree(rec_new);
-+	/*
-+	 * Finish firmware download process by sending a zero length
-+	 * payload
-+	 */
-+	ret = ziirave_firm_write_pkt(wdd, 0, NULL, 0);
- 	if (ret) {
- 		dev_err(&client->dev, "Failed to send EMPTY packet: %d\n", ret);
+-	if (ret)
++	if (ret) {
++		dev_err(&client->dev, "Failed to jump to bootloader\n");
  		return ret;
++	}
+ 
+ 	msleep(500);
+ 
+ 	ret = ziirave_firm_write_byte(wdd, ZIIRAVE_CMD_DOWNLOAD_START, 1, true);
+-	if (ret)
++	if (ret) {
++		dev_err(&client->dev, "Failed to start download\n");
+ 		return ret;
++	}
+ 
+ 	msleep(500);
+ 
+@@ -438,14 +442,20 @@ static int ziirave_firm_upload(struct watchdog_device *wdd,
+ 
+ 	/* End download operation */
+ 	ret = ziirave_firm_write_byte(wdd, ZIIRAVE_CMD_DOWNLOAD_END, 1, false);
+-	if (ret)
++	if (ret) {
++		dev_err(&client->dev,
++			"Failed to end firmware download: %d\n", ret);
+ 		return ret;
++	}
+ 
+ 	/* Reset the processor */
+ 	ret = ziirave_firm_write_byte(wdd, ZIIRAVE_CMD_RESET_PROCESSOR, 1,
+ 				      false);
+-	if (ret)
++	if (ret) {
++		dev_err(&client->dev,
++			"Failed to reset the watchdog: %d\n", ret);
+ 		return ret;
++	}
+ 
+ 	msleep(500);
+ 
 -- 
 2.21.0
 
