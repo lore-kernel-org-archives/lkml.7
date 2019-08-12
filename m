@@ -2,99 +2,102 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128CAC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7607DC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE00320673
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C8F206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:52:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bluespec-com.20150623.gappssmtp.com header.i=@bluespec-com.20150623.gappssmtp.com header.b="jltM4Ar/"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="Go1xYdCn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfHLTtJ (ORCPT
+        id S1727065AbfHLTwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 15:49:09 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:36979 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726812AbfHLTtJ (ORCPT
+        Mon, 12 Aug 2019 15:52:13 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:32772 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726940AbfHLTwM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 15:49:09 -0400
-Received: by mail-qt1-f193.google.com with SMTP id y26so104103424qto.4
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 12:49:08 -0700 (PDT)
+        Mon, 12 Aug 2019 15:52:12 -0400
+Received: by mail-qt1-f194.google.com with SMTP id v38so11701697qtb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 12:52:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bluespec-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UV8CKdboAmk/VxMPvqRcAfLPhy32LDZ4SxfI8+jq9eA=;
-        b=jltM4Ar/lpuGu7lyFR8pJwgeA74SyhzojO+40mYneDCJsl94QUPrx70p61RHEz6xmu
-         vxkRFSG8yB7Urm7pDINv5eITQYdhi20v2JKnVgLly8r+4TngIEXqgfyJWjjSMtT9mBQt
-         gUCHl9Xmv24ePdraDYLmy1ht3MgFF7ACGEWY0cz6IJuxACbJ6YYWtRlW1EWgEI7xjhTQ
-         YdjyYRXfgrXbypaFlvxwk/W2pesE3Uc5mymbJ0gXtvHWJZwSGwFXuIwJa6uYu+k9fRYM
-         4wacfQuGkmQNOA5D6T6KTCi+hPh1pS6fcmEI0l8+cpFJNfBoCux0WwPHe0DCajgkek9P
-         Zrag==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=kEkVLWwqovwyFjtoRAd3ZuRhWq4pA+S9mUWyYQC3ODQ=;
+        b=Go1xYdCnowLCjBoQHanBZc7stvpdCA4G/sIQJnrvYOMObBB2RF6oSbhmlUQOeUImJi
+         FjU3UE6ZPgHFVoFvHQajdt5DYsYDsfr3MtE4zVRqViB/uQewO2eXWYVzND9A6/k4syDI
+         KiQJ6kbVnAeos66Zydq4l49v2EO55bXWiaIY8YW1yEmsocbSrMGpDqu+fWwU8vgoLsAL
+         BjBZUWdKUw5Ietmf5bF6Q/S0JeYR6CXwsVmVc2s/Qsj4Yz5gyHXdmhwnwpT0kgnEBwjL
+         P516qLnaRnN3sZ9sXUHu8h9MiftUXkp2Ylvq4VMfyG9py3890rhln94s9T5uukkQHTwY
+         uSiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UV8CKdboAmk/VxMPvqRcAfLPhy32LDZ4SxfI8+jq9eA=;
-        b=fNE43CCqJO3kJtAdyslyFUV+6gTnORtLWYanx++VgsuC4pqgYK1rHzDXE28PWxodKc
-         R6SYkDWnyOt2l6nFmsCefr/1O9dRcoN+GSHe8IGWglh56ihe5meQl+l7U/cHzkOOsBMx
-         CpAYaS5cGMkZa8X92GUuUMAB4MRQo7jlTIlSZ0q4b50B+13GRRJBuUuKq18diGcDYnbG
-         Hsxb/IebLpBdE76OsSORP8bjIh94zxCgxU9ogq52nPg9QzmBdBejt287pr089W5e3pzk
-         aiepEKo3BMWiuW0RhP/XAF/w0OhDZaGBlUo1rn7ggR6HtrENPqEMBLAcJaItp/AnazUS
-         dRKA==
-X-Gm-Message-State: APjAAAUgmPhym7pJj57mWNswfORbq+QRlHmmQwtApMSF2+f/ogRQGI3d
-        /vXWx1p+5xn1MUMPABNzwW6A
-X-Google-Smtp-Source: APXvYqwt1wY0kFXUf2SJJ0SNo1VLt4PBkuZhW7TlkhaF569W0Da1qsUMXXhslmo12N/U1uTW9SVUGg==
-X-Received: by 2002:ac8:30f3:: with SMTP id w48mr29811591qta.216.1565639348315;
-        Mon, 12 Aug 2019 12:49:08 -0700 (PDT)
-Received: from [10.7.11.6] ([194.59.251.156])
-        by smtp.gmail.com with ESMTPSA id k21sm7850588qki.50.2019.08.12.12.49.06
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 12:49:07 -0700 (PDT)
-Subject: Re: [PATCH] riscv: kbuild: drop CONFIG_RISCV_ISA_C
-To:     Christoph Hellwig <hch@infradead.org>,
-        Charles Papon <charles.papon.90@gmail.com>
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-References: <alpine.DEB.2.21.9999.1908061929230.19468@viisi.sifive.com>
- <CAEUhbmVTM2OUnX-gnBZw5oqU+1MwdYkErrOnA3NGJKh5gxULng@mail.gmail.com>
- <CAMabmMJ3beMcs38Boe11qcsQvqY+9u=2OqA0vCSKdL=n-cK9GQ@mail.gmail.com>
- <20190812150348.GH26897@infradead.org>
-From:   Darius Rad <darius@bluespec.com>
-Message-ID: <5a931461-c6a8-6d2d-4f73-103a10b26f0e@bluespec.com>
-Date:   Mon, 12 Aug 2019 15:49:06 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=kEkVLWwqovwyFjtoRAd3ZuRhWq4pA+S9mUWyYQC3ODQ=;
+        b=hU41BvkKk7IkhX7GvSjJLzSfIhux+vfEML+Re8cWCxr1tHaecFJVzaNOLRgUNkqAHp
+         ggsuHR7hDlw5LFIXj6SB+m5xq5xDqOG5LJ0ihNPpigLit75njlISXqy2XcvrCy/F3xl8
+         hE2sGgTB7xjBuBiZz/aZHb4oIKq93EZOy+lFSbYuvHY7fT0eZyBl4kBhxtE+EKTKgkM6
+         tZTSmyPdpdMgK+16eJgMitlFhpyz8ET5HjAo/Jc0Xlap8yMiMqU15tZksVMRAdzCohER
+         kMdTVtoPgmU4BasprI/JwkqeGV4vH0DMuPrY6Gt6n5jvgsG5FuiVKaOuDyR7hrWB05H5
+         beog==
+X-Gm-Message-State: APjAAAXNBuB4q9K9TGiBP7jffCKmgpT2+d4+MR8qnhBg8h+TF+63WF9x
+        PeSp5GvZX1psIhYlm0UgzSiKZg==
+X-Google-Smtp-Source: APXvYqy2g/f0DiyWHWOpG/JWWUORJpCznhP/S1XW87hCBQrOyaFf5OKJtY8YQ6WH8wMHkAb2ye+Nzw==
+X-Received: by 2002:ac8:376c:: with SMTP id p41mr11767771qtb.306.1565639531882;
+        Mon, 12 Aug 2019 12:52:11 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id g24sm3920710qtc.38.2019.08.12.12.52.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 12:52:11 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 12:52:02 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH v4 7/9] mfd: ioc3: Add driver for SGI IOC3 chip
+Message-ID: <20190812125202.46608b74@cakuba.netronome.com>
+In-Reply-To: <20190811093212.88635fb1a6c796a073ec71ff@suse.de>
+References: <20190809103235.16338-1-tbogendoerfer@suse.de>
+        <20190809103235.16338-8-tbogendoerfer@suse.de>
+        <20190809142222.4558691e@cakuba.netronome.com>
+        <20190811093212.88635fb1a6c796a073ec71ff@suse.de>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-In-Reply-To: <20190812150348.GH26897@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/12/19 11:03 AM, Christoph Hellwig wrote:
-> On Thu, Aug 08, 2019 at 02:18:53PM +0200, Charles Papon wrote:
->> Please do not drop it.
->>
->> Compressed instruction extension has some specific overhead in small
->> RISC-V FPGA softcore, especialy in the ones which can't implement the
->> register file read in a asynchronous manner because of the FPGA
->> technology.
->> What are reasons to enforce RVC ?
+On Sun, 11 Aug 2019 09:32:12 +0200, Thomas Bogendoerfer wrote:
+> > Also please don't use stdint types in the kernel, please try checkpatch
+> > to catch coding style issues.  
 > 
-> Because it it the unix platform baseline as stated in the patch.
-> 
+> my patch already reduces them and checkpatch only warns about usage of printk
+> for the network part. Changing that to dev_warn/dev_err in the mfd patch didn't
+> seem the right thing to do. As I'm splitting the conversion patch into a few
+> steps I could also replace the printks.
 
-The same argument could be made for an FPU or MMU, yet there are options 
-to disable those.
+Thanks for looking into it. I was referring to the use of uint32_t
+instead of u32. Perhaps checkpatch has to be motivated with the --strict
+option to point those out?
