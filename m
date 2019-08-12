@@ -2,82 +2,91 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFCAC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FCDC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE4520842
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C76E20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:06:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565615198;
+	bh=ZecCZ9w26px/XMlWrTJMf7OeSyYvghgJ40bY+3qMuvI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vuKe/28uEutwBr02qREfT8jmW9qKUqzkrZFPbDtSk0iIVEAg/MYUYjKzh+y6t783K
+	 Ar1/7HRY7erUdAT36h++YW3n73bzO3Afhp+J/c+ijyqiovhVme2nyokWCvoCxdluyl
+	 xMQDrRLGLlngCla89IRreOe+jqa3AWjB5EaqNcSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728784AbfHLNGN (ORCPT
+        id S1728804AbfHLNGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 09:06:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:50008 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726458AbfHLNGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 09:06:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DC3415AB;
-        Mon, 12 Aug 2019 06:06:12 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 206B23F706;
-        Mon, 12 Aug 2019 06:06:10 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 14:06:07 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        "jackm@mellanox.com" <jackm@mellanox.com>
-Subject: Re: [PATCH v2] PCI: hv: Fix panic by calling hv_pci_remove_slots()
- earlier
-Message-ID: <20190812130607.GD20861@e121166-lin.cambridge.arm.com>
-References: <PU1P153MB01693F32F6BB02F9655CC84EBFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <20190806201611.GT151852@google.com>
- <PU1P153MB0169F9EDD707FFE1517F8D56BFD50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        Mon, 12 Aug 2019 09:06:37 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33996 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726458AbfHLNGg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 09:06:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZecCZ9w26px/XMlWrTJMf7OeSyYvghgJ40bY+3qMuvI=; b=GkYpSmwqLQmQTHK914OmSd2gE
+        t1dc/UDVwd7rNV7p/1kK2XwVdYqXxWrv0H+jUk9eEnGob6G6Cvxv6PEDOna1/nkt51QGLC8gkk/W+
+        UL+yKV9I66y2FD/VkCNeEy1j+valLdmOe5uBZse632FmHdVALMALluqo8rMHkK0HQFt/Q=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1hxA1y-0001Kd-I9; Mon, 12 Aug 2019 13:06:34 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 7F57B2740CB7; Mon, 12 Aug 2019 14:06:33 +0100 (BST)
+Date:   Mon, 12 Aug 2019 14:06:33 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     soc@kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH 07/16] spi: remove w90x900 driver
+Message-ID: <20190812130633.GK4592@sirena.co.uk>
+References: <20190809202749.742267-1-arnd@arndb.de>
+ <20190809202749.742267-8-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mGCtrYeZ202LI9ZG"
 Content-Disposition: inline
-In-Reply-To: <PU1P153MB0169F9EDD707FFE1517F8D56BFD50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190809202749.742267-8-arnd@arndb.de>
+X-Cookie: Decaffeinated coffee?  Just Say No.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 08:41:17PM +0000, Dexuan Cui wrote:
-> > From: linux-hyperv-owner@vger.kernel.org
-> > <linux-hyperv-owner@vger.kernel.org> On Behalf Of Bjorn Helgaas
-> > Sent: Tuesday, August 6, 2019 1:16 PM
-> > To: Dexuan Cui <decui@microsoft.com>
-> > 
-> > Thanks for updating this.  But you didn't update the subject line,
-> > which is really still a little too low-level.  Maybe Lorenzo will fix
-> > this.  Something like this, maybe?
-> > 
-> >   PCI: hv: Avoid use of hv_pci_dev->pci_slot after freeing it
-> 
-> This is better. Thanks!
-> 
-> I hope Lorenzo can help to fix this so I could avoid a v3. :-)
 
-You should have fixed it yourself, this time I will.
+--mGCtrYeZ202LI9ZG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks,
-Lorenzo
+On Fri, Aug 09, 2019 at 10:27:35PM +0200, Arnd Bergmann wrote:
+> The ARM w90x900 platform is getting removed, so this driver is obsolete.
+
+This doesn't apply against current code, please check and resend.
+
+--mGCtrYeZ202LI9ZG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1RZFgACgkQJNaLcl1U
+h9D4tAf/QZWqB5njZanGjNO1DH1B3pBBDjVRROlyO3EsnnnH8Ro3vruDK+rX3324
+mED3dhurDA9V7j5OywgEyaGE+m0bnVetxR68wsL2HhWXTn762ynlNE9k1ROsRoBt
+DtXvD/O1OW2dv/HsPDPiYleYzTqHKQGgZJMeUp7trmb3s01SuEUE0wGQz29E7rXX
+qnPTcynGKbZgJM2ZZJ14m9F0GlFxGuEl6FtbDEDrr2stX7cHoqXqcTBqwu74h7aJ
+66vQlVC0RC+0Ek7UOVzU64n9mk5JTEdljY8Gh8I9pg0+Ulk9aUiTRUBLa+Pb3cIg
+f+ezLxFbvwpFEob20b6fY8N9bnxgYA==
+=yMIY
+-----END PGP SIGNATURE-----
+
+--mGCtrYeZ202LI9ZG--
