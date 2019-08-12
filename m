@@ -2,347 +2,244 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E21C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91352C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BD4120820
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:59:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="obSlPtmA"
+	by mail.kernel.org (Postfix) with ESMTP id 628A720820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:59:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbfHLK7j (ORCPT
+        id S1728162AbfHLK7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:59:39 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40012 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727995AbfHLK7i (ORCPT
+        Mon, 12 Aug 2019 06:59:52 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57637 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727847AbfHLK7v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:59:38 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v19so11359974wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 03:59:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=L3QDldUNKawRROwPoifWuojCk4A/opVfl24XOrd2D7A=;
-        b=obSlPtmAMxsNOfVblv1rcLth1tU1YkoOq/0WsTxm0q0uFxpqHtR77NtUQ+rl03ecjl
-         WkoobEX1p04hFOFoObYL3iULEGiERZ6FlpX5EujGVaDmLku+GdXft+03MhQgxDVgrr14
-         sCL/ithC+ZDs+9yBSpOSxCUlc/2Pn2ewjwy4ZPyjZ0wthxAZ8ico9frp/ttcYKD6VyId
-         iKx3kyMmKVGEJDBtt1GU9ByQdWMJXoQhvRZiRTwklE+jNOb+4mZl42tPsQTP+hdmHnnD
-         0NMd0XuWjT+YitJyNjUdq+o3a5ihmsG5e3VfFBSYDn4QlbTghhFoD4eEMF1Y+HRl16cl
-         GGUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=L3QDldUNKawRROwPoifWuojCk4A/opVfl24XOrd2D7A=;
-        b=aGndh20k3UNLtVdbfJi0Curs0z7kdC+VzRNeEt04ECXTJZTwjp8B4bi6hTOQEMA6UY
-         YOGJq3c+zyfvUlc3400xh/agaB5kNcreneaxommjV1M++hJk9OooFwUP9ZXVncHzTMvJ
-         DUxrDMhOjYa3V5/Wr85qya2gzRCJlD8uFoS7LkkZjNpFEsE6SZTHDKiwZP+vQ7y93Zz7
-         VZFupS26VFA4Anli2krwRFP47ZaMm94cFPGs16gRmn7fwRXpGtNcm6hsJoQoOT9ZNMQJ
-         4kxhWgM5Psk70vYTnvjtkhvuNccBEK/PyVjGWW3pHsOtyE6vxSYUki0gsTzo5PUM9v4i
-         9ttA==
-X-Gm-Message-State: APjAAAU1zO0VHm+BkbGzqt0zOozc8n9wWM0YXWvJkM9YbEM94+V/VubW
-        S95UNlkaHMhR154O3oxf/17a/g==
-X-Google-Smtp-Source: APXvYqywqTqWPVgMZmVrzbCZt88p0+kSGz4htkEKRS3xHptkYpO7UA20whgKvePyENz44HvhOZ+enQ==
-X-Received: by 2002:a1c:20c8:: with SMTP id g191mr26698891wmg.55.1565607575988;
-        Mon, 12 Aug 2019 03:59:35 -0700 (PDT)
-Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id g26sm1600973wmh.32.2019.08.12.03.59.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 03:59:35 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 11:59:33 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
-Subject: Re: [PATCH v4 06/10] mfd: Add support for the MediaTek MT6358 PMIC
-Message-ID: <20190812105933.GO26727@dell>
-References: <1564982518-32163-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1564982518-32163-7-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Mon, 12 Aug 2019 06:59:51 -0400
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1hx83G-0002ep-9N; Mon, 12 Aug 2019 12:59:46 +0200
+Received: from [IPv6:2001:67c:670:202:595f:209f:a34b:fbc1] (unknown [IPv6:2001:67c:670:202:595f:209f:a34b:fbc1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
+         client-signature RSA-PSS (4096 bits))
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id E95E0443293;
+        Mon, 12 Aug 2019 10:59:43 +0000 (UTC)
+Subject: Re: [PATCH 0/5] can: xilinx_can: Bug fixes
+To:     Michal Simek <michal.simek@xilinx.com>,
+        Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>,
+        wg@grandegger.com, davem@davemloft.net
+Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1565594914-18999-1-git-send-email-appana.durga.rao@xilinx.com>
+ <7ecaa7df-3202-21d8-de93-5f6af3582964@pengutronix.de>
+ <5571da8a-de1f-f420-f6b7-81c6d8932430@pengutronix.de>
+ <f0e3360d-7c9a-a455-f63c-7fb584dfad2f@xilinx.com>
+ <cb8f91b5-174f-79e5-d476-b01da2f3a65c@pengutronix.de>
+ <c09ae89a-509d-55e7-a2d6-44ca2543f333@xilinx.com>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <6b36bbcb-06e3-63aa-8861-c07c8840e25e@pengutronix.de>
+Date:   Mon, 12 Aug 2019 12:59:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1564982518-32163-7-git-send-email-hsin-hsiung.wang@mediatek.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <c09ae89a-509d-55e7-a2d6-44ca2543f333@xilinx.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="pr6zYuzLM3uquhunjE5VAIbSZefbqogin"
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 05 Aug 2019, Hsin-Hsiung Wang wrote:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--pr6zYuzLM3uquhunjE5VAIbSZefbqogin
+Content-Type: multipart/mixed; boundary="lBGMvgV8d0x7gFgAeoPJZgjTJbeYeKb4o";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Michal Simek <michal.simek@xilinx.com>,
+ Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>,
+ wg@grandegger.com, davem@davemloft.net
+Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Message-ID: <6b36bbcb-06e3-63aa-8861-c07c8840e25e@pengutronix.de>
+Subject: Re: [PATCH 0/5] can: xilinx_can: Bug fixes
+References: <1565594914-18999-1-git-send-email-appana.durga.rao@xilinx.com>
+ <7ecaa7df-3202-21d8-de93-5f6af3582964@pengutronix.de>
+ <5571da8a-de1f-f420-f6b7-81c6d8932430@pengutronix.de>
+ <f0e3360d-7c9a-a455-f63c-7fb584dfad2f@xilinx.com>
+ <cb8f91b5-174f-79e5-d476-b01da2f3a65c@pengutronix.de>
+ <c09ae89a-509d-55e7-a2d6-44ca2543f333@xilinx.com>
+In-Reply-To: <c09ae89a-509d-55e7-a2d6-44ca2543f333@xilinx.com>
 
-> This adds support for the MediaTek MT6358 PMIC. This is a
-> multifunction device with the following sub modules:
-> 
-> - Regulator
-> - RTC
-> - Codec
-> - Interrupt
-> 
-> It is interfaced to the host controller using SPI interface
-> by a proprietary hardware called PMIC wrapper or pwrap.
-> MT6358 MFD is a child device of the pwrap.
-> 
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->  drivers/mfd/Makefile                 |   3 +-
->  drivers/mfd/mt6358-irq.c             | 229 ++++++++++++++++++++++++++++
->  drivers/mfd/mt6397-core.c            |  52 ++++++-
->  include/linux/mfd/mt6358/core.h      | 158 ++++++++++++++++++++
->  include/linux/mfd/mt6358/registers.h | 282 +++++++++++++++++++++++++++++++++++
->  include/linux/mfd/mt6397/core.h      |   3 +
->  6 files changed, 725 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/mfd/mt6358-irq.c
->  create mode 100644 include/linux/mfd/mt6358/core.h
->  create mode 100644 include/linux/mfd/mt6358/registers.h
-> 
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 9a96325..36d088b 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -241,7 +241,8 @@ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
-> -mt6397-objs	:= mt6397-core.o mt6397-irq.o
-> +
-> +mt6397-objs			:= mt6397-core.o mt6397-irq.o mt6358-irq.o
->  obj-$(CONFIG_MFD_MT6397)	+= mt6397.o
->  
->  obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
-> diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
-> new file mode 100644
-> index 0000000..2f55079
-> --- /dev/null
-> +++ b/drivers/mfd/mt6358-irq.c
-> @@ -0,0 +1,229 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (c) 2019 MediaTek Inc.
-> +
-> +#include <linux/interrupt.h>
-> +#include <linux/mfd/mt6358/core.h>
-> +#include <linux/mfd/mt6358/registers.h>
-> +#include <linux/mfd/mt6397/core.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
+--lBGMvgV8d0x7gFgAeoPJZgjTJbeYeKb4o
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
 
-[...]
+On 8/12/19 12:57 PM, Michal Simek wrote:
+> On 12. 08. 19 12:47, Marc Kleine-Budde wrote:
+>> On 8/12/19 12:18 PM, Michal Simek wrote:
+>>> On 12. 08. 19 11:10, Marc Kleine-Budde wrote:
+>>>> On 8/12/19 11:05 AM, Marc Kleine-Budde wrote:
+>>>>> On 8/12/19 9:28 AM, Appana Durga Kedareswara rao wrote:
+>>>>>> This patch series fixes below issues
+>>>>>> --> Bugs in the driver w.r.to CANFD 2.0 IP support
+>>>>>> --> Defer the probe if clock is not found
+>>>>>>
+>>>>>> Appana Durga Kedareswara rao (3):
+>>>>>>   can: xilinx_can: Fix FSR register handling in the rx path
+>>>>>>   can: xilinx_can: Fix the data updation logic for CANFD FD frames=
 
-> +static void pmic_irq_sync_unlock(struct irq_data *data)
-> +{
-> +	unsigned int i, top_gp, en_reg, int_regs, shift;
-> +	struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> +	struct pmic_irq_data *irqd = chip->irq_data;
-> +
-> +	for (i = 0; i < irqd->num_pmic_irqs; i++) {
-> +		if (irqd->enable_hwirq[i] == irqd->cache_hwirq[i])
-> +			continue;
-> +
-> +		top_gp = 0;
-> +		while ((top_gp + 1) < ARRAY_SIZE(mt6358_ints) &&
-> +		       i >= mt6358_ints[top_gp + 1].hwirq_base)
-> +			top_gp++;
+>>>>>>   can: xilinx_can: Fix FSR register FL and RI mask values for canf=
+d 2.0
+>>>>>>
+>>>>>> Srinivas Neeli (1):
+>>>>>>   can: xilinx_can: Fix the data phase btr1 calculation
+>>>>>>
+>>>>>> Venkatesh Yadav Abbarapu (1):
+>>>>>>   can: xilinx_can: defer the probe if clock is not found
+>>>>>
+>>>>> Please add your S-o-b to patches 4+5.
+>>>>>
+>>>>> As these all are bugfixes please add a reference to the commit it f=
+ixes:
+>>>>>
+>>>>>     Fixes: commitish ("description")
+>>>>
+>>>> Add this to your ~/.gitconfig:
+>>>>
+>>>> [alias]
+>>>>         lfixes =3D log --pretty=3Dfixes
+>>>> [pretty]
+>>>>         fixes =3D Fixes: %h (\"%s\")
+>>>
+>>> This is understandable and I have this in my .gitconfig for quite a l=
+ong
+>>> time. And this is just log
+>>>
+>>>> and then use $(git lfixes $commitish).
+>>>
+>>> But what do you mean by this? Are you able to add this to commit mess=
+age
+>>> just with sha1?
+>>
+>> First identify the commit that this patch fixes then go to the command=
 
-A comment here would make this easier to follow.
+>> line and enter
+>>
+>>     git lfixes $committish
+>>
+>> and git will print out the line that you can copy directly to the comm=
+it
+>> message.
+>=20
+> ok. I thought you have any nice way to directly add it to commit messag=
+e
+> without c&p.
 
-> +		if (top_gp >= ARRAY_SIZE(mt6358_ints)) {
-> +			mutex_unlock(&chip->irqlock);
-> +			dev_err(chip->dev,
-> +				"Failed to get top_group: %d\n", top_gp);
-> +			return;
-> +		}
-> +
-> +		int_regs = (i - mt6358_ints[top_gp].hwirq_base) /
-> +			    MT6358_REG_WIDTH;
-> +		en_reg = mt6358_ints[top_gp].en_reg +
-> +			mt6358_ints[top_gp].en_reg_shift * int_regs;
-> +		shift = (i - mt6358_ints[top_gp].hwirq_base) % MT6358_REG_WIDTH;
-> +		regmap_update_bits(chip->regmap, en_reg, BIT(shift),
-> +				   irqd->enable_hwirq[i] << shift);
-> +		irqd->cache_hwirq[i] = irqd->enable_hwirq[i];
-> +	}
-> +	mutex_unlock(&chip->irqlock);
-> +}
+You can insert the output from a console command in vim by adding a "!"
+in front of it in the command mode.
 
-[...]
+Marc
 
-> +int mt6358_irq_init(struct mt6397_chip *chip)
-> +{
-> +	int i, j, ret;
-> +	struct pmic_irq_data *irqd;
-> +
-> +	irqd = devm_kzalloc(chip->dev, sizeof(struct pmic_irq_data *),
-> +			    GFP_KERNEL);
-> +	if (!irqd)
-> +		return -ENOMEM;
-> +
-> +	chip->irq_data = irqd;
-> +
-> +	mutex_init(&chip->irqlock);
-> +	irqd->top_int_status_reg = MT6358_TOP_INT_STATUS0;
-> +	irqd->num_pmic_irqs = MT6358_IRQ_NR;
-> +	irqd->num_top = ARRAY_SIZE(mt6358_ints);
-> +
-> +	irqd->enable_hwirq = devm_kcalloc(chip->dev,
-> +					  irqd->num_pmic_irqs,
-> +					  sizeof(bool),
-> +					  GFP_KERNEL);
-> +	if (!irqd->enable_hwirq)
-> +		return -ENOMEM;
-> +
-> +	irqd->cache_hwirq = devm_kcalloc(chip->dev,
-> +					 irqd->num_pmic_irqs,
-> +					 sizeof(bool),
-> +					 GFP_KERNEL);
-> +	if (!irqd->cache_hwirq)
-> +		return -ENOMEM;
-> +
-> +	/* Disable all interrupt for initializing */
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
-s/interrupt/interrupts/
 
-> +	for (i = 0; i < irqd->num_top; i++) {
-> +		for (j = 0; j < mt6358_ints[i].num_int_regs; j++)
-> +			regmap_write(chip->regmap,
-> +				     mt6358_ints[i].en_reg +
-> +				     mt6358_ints[i].en_reg_shift * j, 0);
-> +	}
-> +
-> +	chip->irq_domain = irq_domain_add_linear(chip->dev->of_node,
-> +						 irqd->num_pmic_irqs,
-> +						 &mt6358_irq_domain_ops, chip);
-> +	if (!chip->irq_domain) {
-> +		dev_err(chip->dev, "could not create irq domain\n");
+--lBGMvgV8d0x7gFgAeoPJZgjTJbeYeKb4o--
 
-s/irq/IRQ/
+--pr6zYuzLM3uquhunjE5VAIbSZefbqogin
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = devm_request_threaded_irq(chip->dev, chip->irq, NULL,
-> +					mt6358_irq_handler, IRQF_ONESHOT,
-> +					mt6358_irq_chip.name, chip);
-> +	if (ret) {
-> +		dev_err(chip->dev, "failed to register irq=%d; err: %d\n",
-> +			chip->irq, ret);
-> +		return ret;
-> +	}
-> +
-> +	enable_irq_wake(chip->irq);
-> +	return ret;
-> +}
+-----BEGIN PGP SIGNATURE-----
 
-[...]
+iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl1RRpwACgkQWsYho5Hk
+nSDGHQgAn+qDhdt0QiMSBuNdZcK7VDUyMm4lDhKxIeInxDKdPFMijY0La7P/V8va
+BxT5X7xZjiwhlYDxdPboseCRoCPPLMZptfTBjRkqLZNHb/aSWVpWXUZY1x36bLOP
+IImdUZGxjtiLHgi26oAOtBR9A7jtv1mJ57lOg+O5nezMXvLYy2niAU29pHAsPc+E
+r2p6tTMoQCvnLv5M8I0npPt2vTjkGlY8NKcQU+oc/ZUBkr5Z4QKKwhObbVIqPy5M
+/VApX02s4Wg1ml9BAiGqDXmnpKuvuLL4VCzKrPKFXYA5h13YlwIq/cjROKKbsLSj
+l1OnnUFnV7Hto1WROwes1VcM2tUm6Q==
+=RfB4
+-----END PGP SIGNATURE-----
 
->  static const struct chip_data mt6397_core = {
->  	.cid_addr = MT6397_CID,
->  	.cid_shift = 0,
-> @@ -135,7 +172,11 @@ static int mt6397_probe(struct platform_device *pdev)
->  	if (pmic->irq <= 0)
->  		return pmic->irq;
->  
-> -	ret = mt6397_irq_init(pmic);
-> +	if (pmic->chip_id == MT6358_CHIP_ID)
-> +		ret = mt6358_irq_init(pmic);
-> +	else
-> +		ret = mt6397_irq_init(pmic);
-> +
-
-You may with so to check for both and error out on an unsupported chip
-ID.
-
->  	if (ret)
->  		return ret;
->  
-> @@ -146,6 +187,12 @@ static int mt6397_probe(struct platform_device *pdev)
->  					   0, pmic->irq_domain);
->  		break;
->  
-> +	case MT6358_CHIP_ID:
-> +		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6358_devs,
-
-Not -1.  Please use the defines.
-
-> +					   ARRAY_SIZE(mt6358_devs), NULL,
-> +					   0, pmic->irq_domain);
-> +		break;
-> +
->  	case MT6391_CHIP_ID:
->  	case MT6397_CHIP_ID:
->  		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6397_devs,
-> @@ -171,6 +218,9 @@ static const struct of_device_id mt6397_of_match[] = {
->  		.compatible = "mediatek,mt6323",
->  		.data = &mt6323_core,
->  	}, {
-> +		.compatible = "mediatek,mt6358",
-> +		.data = &mt6358_core,
-> +	}, {
->  		.compatible = "mediatek,mt6397",
->  		.data = &mt6397_core,
->  	}, {
-> diff --git a/include/linux/mfd/mt6358/core.h b/include/linux/mfd/mt6358/core.h
-> new file mode 100644
-> index 0000000..05108617
-> --- /dev/null
-> +++ b/include/linux/mfd/mt6358/core.h
-> @@ -0,0 +1,158 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-> + */
-> +
-> +#ifndef __MFD_MT6358_CORE_H__
-> +#define __MFD_MT6358_CORE_H__
-> +
-> +#define MT6358_REG_WIDTH 16
-
-[...]
-
-> +#define MT6358_TOP_GEN(sp)	\
-> +{	\
-> +	.hwirq_base = MT6358_IRQ_##sp##_BASE,	\
-> +	.num_int_regs =	\
-> +		((MT6358_IRQ_##sp##_BITS - 1) / MT6358_REG_WIDTH) + 1,	\
-> +	.num_int_bits = MT6358_IRQ_##sp##_BITS, \
-> +	.en_reg = MT6358_##sp##_TOP_INT_CON0,		\
-> +	.en_reg_shift = 0x6,	\
-> +	.sta_reg = MT6358_##sp##_TOP_INT_STATUS0,		\
-> +	.sta_reg_shift = 0x2,	\
-> +	.top_offset = MT6358_##sp##_TOP,	\
-> +}
-
-Please tab out the '\'s.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--pr6zYuzLM3uquhunjE5VAIbSZefbqogin--
