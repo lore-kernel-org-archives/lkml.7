@@ -2,91 +2,167 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C88AAC32753
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD984C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 937AA208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EC062085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:06:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mQwxLC2H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUtQ31Fu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbfHLKGN (ORCPT
+        id S1727737AbfHLKGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:06:13 -0400
-Received: from ozlabs.org ([203.11.71.1]:57991 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727409AbfHLKGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:06:12 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 466WhK6QxWz9sN1;
-        Mon, 12 Aug 2019 20:06:09 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565604370;
-        bh=iqB1LVYeaEpnmcXmOoPdhBF8HxreRVomAaxJjtwya2E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mQwxLC2HNy7DVGPJkkE/aOR73lZKPaOSCqqoERPfR42rl+P9XQcbouR2puhm1Fqey
-         sW3vGdRuOvcOf0nqFH0NvSLvVDG8g+2vjrclHGwmsOogqRSSyxALjBqJBOTIoCKy6P
-         2+nswUn3rpjGU6o+nXTbiXorDcPTy4yAxXZUGyxVnsWXCvY/FuV7Yhq+LTnbyTNFIw
-         Wk56BA+uquL+8v9i8FjY5mt9J9VWsAELGeiSBo0j98ubRb0enrI6/ummMRI4M8WN+w
-         siizPG6tqj30bw1pAu6u+q48ZIeP0GDXdos8q517z4q0yXJy6989xGqCUbvRh5LBL3
-         5KZC66ef1pZSA==
-Date:   Mon, 12 Aug 2019 20:06:07 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dma: ti: unexport filter functions
-Message-ID: <20190812200607.6ac1ab09@canb.auug.org.au>
-In-Reply-To: <20190812093623.992757-1-arnd@arndb.de>
-References: <20190812093623.992757-1-arnd@arndb.de>
+        Mon, 12 Aug 2019 06:06:55 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38998 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727409AbfHLKGz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 06:06:55 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r21so150764996otq.6;
+        Mon, 12 Aug 2019 03:06:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8nCPUFYSV3W2ZY/9ifJedm0QroBzrSP7heeMdjE0RYc=;
+        b=dUtQ31FuyY2lGlBy1y1AG4y7lkQyg7ft8JrEFprD4sPlp5AZvxcNbEfmxXBu/cQcnV
+         o/6S5ToiBsnRk2m7c2rYVo3Mx6LO20q4qXxSfMzmV36xwyLtb92p3crtdbN9w2rkfL43
+         ZSA1yR8NMWYNtBgKPex3VwSOWkuP9emYKXHLQ5P6tscw80wVV7D/fdjwmtMIhq1WqP9H
+         k3unDUqZENUGiurOH/iaTHrpZUh6nB4JHIR2W3Qxwmlp1bbIWJtszfXtedEo5R08z9th
+         EkaJ90LYXfqoRBSy2w0Po2NRFfNk9a+zezHKL1kKRwJX6R2jelWe/NuQi2qz2wIl+xU/
+         vNZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8nCPUFYSV3W2ZY/9ifJedm0QroBzrSP7heeMdjE0RYc=;
+        b=GI7aLP7S2mGV2YUdnxP0xgYnaQkDzfD1tC9PY8VfhkzzMYQq9Jbxbdhk9TgpujjLoZ
+         DFPe2xwXaNW2WFmOR+L67Kz5rd89hYVgef7HTTjHVwekhs6Oa4qKqaDlgb8r+BHxWgyM
+         zXBjhI/vcKbnbfJiUfNhOVV6WMpG2uQUlyzqqErWss+V3os8voTR5VUAWOaatXrWgkpp
+         yBFD895VbJIrwFAu+rytskENIv/iHo148h9UUGGig8aMCiRbPuo4a4I4OB2rrbLo8QEn
+         ESGD6ENJM6cvD2UoPLOCQy+LPz4IcVP8xZ2rLoJ0WRDI5zwrUvAwvqCcIK6osy7KorxR
+         +AnQ==
+X-Gm-Message-State: APjAAAVEUCKUzTxcUfLyC5G4vhca8ALH1oYr1nhRA6iNhwoleGj5D4pS
+        6q/Wq0w6ZXpNYgCXu69n21tu32HhQ7BiQN6czxY=
+X-Google-Smtp-Source: APXvYqxvqfA09aURLU8YM9tv/GT/gYr0AjzO6i/r2Gsv8wwZfS5HHnycPV8077bbQrYrQDoZ28O0i43Zg3+AJ/6SAy4=
+X-Received: by 2002:a5e:d817:: with SMTP id l23mr33366249iok.282.1565604413971;
+ Mon, 12 Aug 2019 03:06:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/0CO=r8YnSAbj=0kxeaVWCKS";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20190812094242.44735-1-marc@koderer.com>
+In-Reply-To: <20190812094242.44735-1-marc@koderer.com>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Mon, 12 Aug 2019 12:09:52 +0200
+Message-ID: <CAOi1vP_SDOKzh+oyhv8gKVZwdWNY8NpTZ+oM+xSn+k1KCnu_sg@mail.gmail.com>
+Subject: Re: [PATCH] net/ceph replace ceph_kvmalloc with kvmalloc
+To:     Marc Koderer <marc@koderer.com>
+Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/0CO=r8YnSAbj=0kxeaVWCKS
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Arnd,
-
-Just a nit.
-
-On Mon, 12 Aug 2019 11:36:03 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
+On Mon, Aug 12, 2019 at 11:42 AM Marc Koderer <marc@koderer.com> wrote:
 >
-> The two filter functions are now marked stable, but still exported,
-                                          ^^^^^^
-static ...
+> There is nearly no difference between both implemenations.
+> ceph_kvmalloc existed before kvmalloc which makes me think it's
+> a leftover.
+>
+> Signed-off-by: Marc Koderer <marc@koderer.com>
+> ---
+>  net/ceph/buffer.c      |  3 +--
+>  net/ceph/ceph_common.c | 11 -----------
+>  net/ceph/crypto.c      |  2 +-
+>  net/ceph/messenger.c   |  2 +-
+>  4 files changed, 3 insertions(+), 15 deletions(-)
+>
+> diff --git a/net/ceph/buffer.c b/net/ceph/buffer.c
+> index 5622763ad402..6ca273d2246a 100644
+> --- a/net/ceph/buffer.c
+> +++ b/net/ceph/buffer.c
+> @@ -7,7 +7,6 @@
+>
+>  #include <linux/ceph/buffer.h>
+>  #include <linux/ceph/decode.h>
+> -#include <linux/ceph/libceph.h> /* for ceph_kvmalloc */
+>
+>  struct ceph_buffer *ceph_buffer_new(size_t len, gfp_t gfp)
+>  {
+> @@ -17,7 +16,7 @@ struct ceph_buffer *ceph_buffer_new(size_t len, gfp_t gfp)
+>         if (!b)
+>                 return NULL;
+>
+> -       b->vec.iov_base = ceph_kvmalloc(len, gfp);
+> +       b->vec.iov_base = kvmalloc(len, gfp);
+>         if (!b->vec.iov_base) {
+>                 kfree(b);
+>                 return NULL;
+> diff --git a/net/ceph/ceph_common.c b/net/ceph/ceph_common.c
+> index 4eeea4d5c3ef..6c1769a815af 100644
+> --- a/net/ceph/ceph_common.c
+> +++ b/net/ceph/ceph_common.c
+> @@ -185,17 +185,6 @@ int ceph_compare_options(struct ceph_options *new_opt,
+>  }
+>  EXPORT_SYMBOL(ceph_compare_options);
+>
+> -void *ceph_kvmalloc(size_t size, gfp_t flags)
+> -{
+> -       if (size <= (PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER)) {
+> -               void *ptr = kmalloc(size, flags | __GFP_NOWARN);
+> -               if (ptr)
+> -                       return ptr;
+> -       }
+> -
+> -       return __vmalloc(size, flags, PAGE_KERNEL);
+> -}
+> -
+>
+>  static int parse_fsid(const char *str, struct ceph_fsid *fsid)
+>  {
+> diff --git a/net/ceph/crypto.c b/net/ceph/crypto.c
+> index 5d6724cee38f..a9deead1e4ff 100644
+> --- a/net/ceph/crypto.c
+> +++ b/net/ceph/crypto.c
+> @@ -144,7 +144,7 @@ void ceph_crypto_key_destroy(struct ceph_crypto_key *key)
+>  static const u8 *aes_iv = (u8 *)CEPH_AES_IV;
+>
+>  /*
+> - * Should be used for buffers allocated with ceph_kvmalloc().
+> + * Should be used for buffers allocated with kvmalloc().
+>   * Currently these are encrypt out-buffer (ceph_buffer) and decrypt
+>   * in-buffer (msg front).
+>   *
+> diff --git a/net/ceph/messenger.c b/net/ceph/messenger.c
+> index 962f521c863e..f1f2fcc6f780 100644
+> --- a/net/ceph/messenger.c
+> +++ b/net/ceph/messenger.c
+> @@ -3334,7 +3334,7 @@ struct ceph_msg *ceph_msg_new2(int type, int front_len, int max_data_items,
+>
+>         /* front */
+>         if (front_len) {
+> -               m->front.iov_base = ceph_kvmalloc(front_len, flags);
+> +               m->front.iov_base = kvmalloc(front_len, flags);
+>                 if (m->front.iov_base == NULL) {
+>                         dout("ceph_msg_new can't allocate %d bytes\n",
+>                              front_len);
 
---=20
-Cheers,
-Stephen Rothwell
+Hi Marc,
 
---Sig_/0CO=r8YnSAbj=0kxeaVWCKS
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+I'm working on a patch for https://tracker.ceph.com/issues/40481 which
+changes ceph_kvmalloc() to properly deal with non-GFP_KERNEL contexts.
+We can't switch to kvmalloc() because it doesn't actually fall back to
+vmalloc() for GFP_NOFS or GFP_NOIO.
 
------BEGIN PGP SIGNATURE-----
+Thanks,
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1ROg8ACgkQAVBC80lX
-0Gz1xwf9GGNXlG54PTj7UkR/zWsjuxUMRGFmp0x/w490cWeQK+q1uyRqR9/etbqm
-/yjR8pq/AzUAW3pxQWimCOZzZhbSEVy2cDr5uJEM/DYinYoU4aK63i8YPP4ZCcvM
-lVwIdgqfL+01TpT7QEV0io5NWvGUVTgNb58Mprb3f7CyE7Idp6N1K7Ib2k29GIkw
-PvsxGCGEkY0XSjEKU1jfapRf6cbck4U9icWtAinJUjR3n7mi2YCk7MWe3XHnFkcj
-rpR6EeF+HKJAQ0rO87clq0ICB+1y5+QFSPiyRMeIKN6T6Izy+3d4fh/lOmu53sVb
-TImghilme58cxoToyDEvVugFktiUyA==
-=KUm0
------END PGP SIGNATURE-----
-
---Sig_/0CO=r8YnSAbj=0kxeaVWCKS--
+                Ilya
