@@ -2,138 +2,79 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA09CC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A142C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA3E2206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FB3220663
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:06:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbfHLSF4 (ORCPT
+        id S1726756AbfHLSGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 14:05:56 -0400
-Received: from mga01.intel.com ([192.55.52.88]:56621 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbfHLSF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 14:05:56 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 11:05:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,378,1559545200"; 
-   d="scan'208";a="177558391"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga007.fm.intel.com with ESMTP; 12 Aug 2019 11:05:51 -0700
-Date:   Mon, 12 Aug 2019 11:05:51 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 07/19] fs/xfs: Teach xfs to use new
- dax_layout_busy_page()
-Message-ID: <20190812180551.GC19746@iweiny-DESK2.sc.intel.com>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
- <20190809225833.6657-8-ira.weiny@intel.com>
- <20190809233037.GB7777@dread.disaster.area>
+        Mon, 12 Aug 2019 14:06:04 -0400
+Received: from mail-ot1-f72.google.com ([209.85.210.72]:50709 "EHLO
+        mail-ot1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbfHLSGB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 14:06:01 -0400
+Received: by mail-ot1-f72.google.com with SMTP id t26so1560446otp.17
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 11:06:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=iH/156rgMT4fJuQS0nAy3Ez5veVeDUxUwLRyEyTI9H8=;
+        b=cIXFGHIOTGdeqr0AftnyZacp2qIjsJDns49npJN6QPNeZxBbFfAdWqDJgpwmJ1vphO
+         aBO0xVdnkuxkxnOB8Ml9q99jFSymHwVZwbWL9lCTqXZ5dkKmF/oxnaVWUPdUMTi8MC0x
+         UGp8WTNRoOmUX1ejHELhm5sIvKZcoRPU3uzT7Ji0bMRF1RRZCqTzrlkVID5QI/tDQ/QJ
+         niLAN5/yWwdBDqsbzxLIlOzcE94n5jIqu63TzRP7kbMKkk4LmfZ7uOsw2Plek4sKTCzT
+         QTT7C94ZzYuo0NODaJE9MCdAopZP/sLy8T117Kpd+WcZIDXHZ0Ic64yBlpPfz9e5Nir6
+         V6ug==
+X-Gm-Message-State: APjAAAU6JHZTW/moSMtgglmmXDq0gkezIGu+DONfJcHw7EaK+NJKHTcd
+        i59tJAAp4RbEu1gGMoWASj+9FQ+rcCmsJwmCMJ9W75onFR6C
+X-Google-Smtp-Source: APXvYqwuMjKnkHlImBDK/Uqqq5JTnDh9EQ7P5bcsypbrgVf6mLj8vhU+JGvuhxpJikQONeVKnmVPfbXgiZemqDb4ZclS/LuIRawB
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190809233037.GB7777@dread.disaster.area>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+X-Received: by 2002:a5d:860e:: with SMTP id f14mr25026723iol.242.1565633161044;
+ Mon, 12 Aug 2019 11:06:01 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 11:06:01 -0700
+In-Reply-To: <0000000000007593f4058fea60d8@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000069a89f058fef604a@google.com>
+Subject: Re: KASAN: use-after-free Read in rxrpc_queue_local
+From:   syzbot <syzbot+78e71c5bab4f76a6a719@syzkaller.appspotmail.com>
+To:     arvid.brodin@alten.se, davem@davemloft.net, dhowells@redhat.com,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 10, 2019 at 09:30:37AM +1000, Dave Chinner wrote:
-> On Fri, Aug 09, 2019 at 03:58:21PM -0700, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > dax_layout_busy_page() can now operate on a sub-range of the
-> > address_space provided.
-> > 
-> > Have xfs specify the sub range to dax_layout_busy_page()
-> 
-> Hmmm. I've got patches that change all these XFS interfaces to
-> support range locks. I'm not sure the way the ranges are passed here
-> is the best way to do it, and I suspect they aren't correct in some
-> cases, either....
-> 
-> > diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> > index ff3c1fae5357..f0de5486f6c1 100644
-> > --- a/fs/xfs/xfs_iops.c
-> > +++ b/fs/xfs/xfs_iops.c
-> > @@ -1042,10 +1042,16 @@ xfs_vn_setattr(
-> >  		xfs_ilock(ip, XFS_MMAPLOCK_EXCL);
-> >  		iolock = XFS_IOLOCK_EXCL | XFS_MMAPLOCK_EXCL;
-> >  
-> > -		error = xfs_break_layouts(inode, &iolock, BREAK_UNMAP);
-> > -		if (error) {
-> > -			xfs_iunlock(ip, XFS_MMAPLOCK_EXCL);
-> > -			return error;
-> > +		if (iattr->ia_size < inode->i_size) {
-> > +			loff_t                  off = iattr->ia_size;
-> > +			loff_t                  len = inode->i_size - iattr->ia_size;
-> > +
-> > +			error = xfs_break_layouts(inode, &iolock, off, len,
-> > +						  BREAK_UNMAP);
-> > +			if (error) {
-> > +				xfs_iunlock(ip, XFS_MMAPLOCK_EXCL);
-> > +				return error;
-> > +			}
-> 
-> This isn't right - truncate up still needs to break the layout on
-> the last filesystem block of the file,
+syzbot has bisected this bug to:
 
-I'm not following this?  From a user perspective they can't have done anything
-with the data beyond the EOF.  So isn't it safe to allow EOF to grow without
-changing the layout of that last block?
+commit b9a1e627405d68d475a3c1f35e685ccfb5bbe668
+Author: Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Thu Jul 4 00:21:13 2019 +0000
 
-> and truncate down needs to
-> extend to "maximum file offset" because we remove all extents beyond
-> EOF on a truncate down.
+     hsr: implement dellink to clean up resources
 
-Ok, I was trying to allow a user to extend the file without conflicts if they
-were to have a pin on the 'beginning' of the original file.  This sounds like
-you are saying that a layout lease must be dropped to do that?  In some ways I
-think I understand what you are driving at and I think I see how I may have
-been playing "fast and loose" with the strictness of the layout lease.  But
-from a user perspective if there is a part of the file which "does not exist"
-(beyond EOF) does it matter that the layout there may change?
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10b4ebce600000
+start commit:   125b7e09 net: tc35815: Explicitly check NET_IP_ALIGN is no..
+git tree:       net
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=12b4ebce600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14b4ebce600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a4c9e9f08e9e8960
+dashboard link: https://syzkaller.appspot.com/bug?extid=78e71c5bab4f76a6a719
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=165ec172600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=119d4eba600000
 
-> 
-> i.e. when we use preallocation, the extent map extends beyond EOF,
-> and layout leases need to be able to extend beyond the current EOF
-> to allow the lease owner to do extending writes, extending truncate,
-> preallocation beyond EOF, etc safely without having to get a new
-> lease to cover the new region in the extended file...
+Reported-by: syzbot+78e71c5bab4f76a6a719@syzkaller.appspotmail.com
+Fixes: b9a1e627405d ("hsr: implement dellink to clean up resources")
 
-I'm not following this.  What determines when preallocation is done?
-
-Forgive my ignorance on file systems but how can we have a layout for every
-file which is "maximum file offset" for every file even if a file is only 1
-page long?
-
-Thanks,
-Ira
-
-> 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
