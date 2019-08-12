@@ -2,225 +2,150 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F93C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B529C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 607922173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 451D92173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:24:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="Y05H30m1"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="QuyZlcZP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbfHLLYg (ORCPT
+        id S1728421AbfHLLYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 07:24:36 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:37060 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728348AbfHLLYe (ORCPT
+        Mon, 12 Aug 2019 07:24:40 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:53917 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728348AbfHLLYh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 07:24:34 -0400
-Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7CBNNZi007542;
-        Mon, 12 Aug 2019 07:24:27 -0400
-Received: from nam03-dm3-obe.outbound.protection.outlook.com (mail-dm3nam03lp2050.outbound.protection.outlook.com [104.47.41.50])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2u9qpawfjx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 12 Aug 2019 07:24:27 -0400
+        Mon, 12 Aug 2019 07:24:37 -0400
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="Tudor.Ambarus@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: FZoMxtYWkbyIXj1XJisPPUlokjCFK/vMgJS6Mm7LWzrG2d6YN/a9TQYQWmST06Rxjnxw8xvwn5
+ Ujyi+nSxa6Fgaxx46jaJA5YH0t3uBL8i5iCFoTOvTOnxfXqiaw28lnh5GFXxSz0eeeFMTd+ZZK
+ ZqUSwkDjlCHzwWRGOmH6aF6ePieJmd16a3UaCTwhw4nolYSZx7wAL+SCimRFna0LfPVv6hG5r+
+ q1htUb8cWECRS01i7wa8HvDBLPnRiQaLNG5HWPhoVlo1mVPPkOANwrYmI5gCwsHX+9pMZnVZ39
+ Kq8=
+X-IronPort-AV: E=Sophos;i="5.64,377,1559545200"; 
+   d="scan'208";a="43968405"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Aug 2019 04:24:36 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 12 Aug 2019 04:24:26 -0700
+Received: from NAM03-BY2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 12 Aug 2019 04:24:27 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n0gqjgCXgsjMeDge46QayS57JK1KtSqbk7dIKu3dgHObdI6wC410Xocpu0nMEmbadXUHkBI1vzEVCIysqbFVVnyUgTI/itzx9kHPoUbSzsaiRG8m6VPnLQUw9rmm6vZ3+4UDMoXywzY4wx9QidsiY7ELRewqNcZSpI6z3ZUBX56tRH8mKtPQRiIFvAVd/2oQrsUQOt/Hj62yqcShZ46tTVV/IKYgCdhLAeieimhXm/nhhN+lYLMj1TADW99urAceVOEu+WfcF0rrkQdEXyMI9VPrf5R3VawaB5Kg60HlKEY32uc9pLDjiyWDRf8GhN3srdCe7X3UyKJMZbgNEt5HyA==
+ b=X+DXWkJZEOLtpQ2jI+jVRZeQq/eUd5e/e0bBcReD6vYpHHFZzfUe56Wf/RkPSShIHfP2XzmIqUxYStJmsGJOtW7P4MAr5QKljw2MR4FbrfBgRqK1hsQ+UzonkVwObF7n4nlO0K3AncZgJd0LhW7UJZ4k38e4HVgi7z35LQbX+NOQGrL2AOQUIdD8c+uFFYUXX7okfl+ItwENfh7NnJgPj2QAy/VTCyRrJWUj29PpSyUEnQdM7G0m4JUm4Debd67aaKoU8nn7Yr6UkUEFjKZpKwV+oNskQTpdIWE7oMs6CwndQZ8q7Z9VxWxFIPtSRkpReWRxwUe3kKukmE74GhCH8Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xpxz53QW0BqFdEDmfraPY70UZ81PF8uuq174FIgxsIk=;
- b=IvBN44XrN85oQJIPt7dTR1BB0KgGoLX5bsmL0PwZylB5l6oymVPrZldLtlPo6R1KPfmBAIzscQf+4hxOSc7ZYHj7JJ3AQro8hSPI9bssnNHJckAfU2T1NizNU8fUGOPq6hcHqB9trgPHh5eVjUZAmH71o4Cx30YkycS5JTLKolPf3qJNRwHcbZQKKfl7qjiHJP1RCX+d+el7eAwihvkcbNA8KowNYARckei6A+uFrI0KSb2XVTOED3zwuntYDa8BI0+RDynJzRTyaZwq5Am2Sg/0jxUxQqn1Bz5IASDIdTWQGoIZF7GwyhxhH2wRoPtYnaF063BZlPEzZY/k78ATjQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
+ bh=DFNPkCNcvIVyLXaDum920V2U9zMnSLTS1Idjwm6g1pI=;
+ b=jvlSIFYpshl7Lt6SLdxcyCWMUbpKptVvp78lXleItwCGZAGyeKGbrF0rIPzanx6dpTPmAM+C1SQicTG7SczGeeIsFXv7YjJMMruSC3yYsj8PB2IBiNCIU1KkG4Hvc8fuubiZaS1Wb5mz98R+DrM0kgUdGe0LNDfGp0/avp4PfcroRCgUZwH2XvW1h1qvTux5UtQh+CQN9rhpuQx7KdNcdmmncu914tSBcv2o2e7yRMVz7TQrBIn7UgG5y/3vMVxYjP/n8bJwBdaD2Z6Ak6XdJp1NSTtAFLV+gNB+oIh5ghegOxnR5FsT4yrPmOROZfnSZ/NSi1pW9hYS+yxvkshEIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xpxz53QW0BqFdEDmfraPY70UZ81PF8uuq174FIgxsIk=;
- b=Y05H30m1PK/45PiNlN+/95ZaBiWGThVsJPwz9D7NJWZ6/D5JzJEn4Q5QVJDorB6eQpCFK4Bzo/oUBqN77EQt8bhPm4KAcvk6YmoyeZe8ZpJXZv3ZGwu06BdL4O0Zll2Csk+gTVWsIn+jRcfGaYXlvHBidJpLMmQX3iP4IojbMn0=
-Received: from BY5PR03CA0018.namprd03.prod.outlook.com (2603:10b6:a03:1e0::28)
- by BN8PR03MB4689.namprd03.prod.outlook.com (2603:10b6:408:68::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.18; Mon, 12 Aug
- 2019 11:24:26 +0000
-Received: from BL2NAM02FT011.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::201) by BY5PR03CA0018.outlook.office365.com
- (2603:10b6:a03:1e0::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2157.16 via Frontend
- Transport; Mon, 12 Aug 2019 11:24:25 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- BL2NAM02FT011.mail.protection.outlook.com (10.152.77.5) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2157.15
- via Frontend Transport; Mon, 12 Aug 2019 11:24:25 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x7CBOP7f004274
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Mon, 12 Aug 2019 04:24:25 -0700
-Received: from saturn.ad.analog.com (10.48.65.113) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Mon, 12 Aug 2019 07:24:24 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <davem@davemloft.net>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <f.fainelli@gmail.com>,
-        <hkallweit1@gmail.com>, <andrew@lunn.ch>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v4 14/14] dt-bindings: net: add bindings for ADIN PHY driver
-Date:   Mon, 12 Aug 2019 14:23:50 +0300
-Message-ID: <20190812112350.15242-15-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190812112350.15242-1-alexandru.ardelean@analog.com>
-References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
+ bh=DFNPkCNcvIVyLXaDum920V2U9zMnSLTS1Idjwm6g1pI=;
+ b=QuyZlcZPPpLi9QeVOK8lp5yRwD5QFrNy7Go7jk7TemB+aZJlMDANLHpEJX1R3b6rgmdOaol35caQaUsNXzoPUAKC1ZDCIMWBj8c/QHHz7wOqvphET/UOE/W+T1wnUJsFUlO3RgrgEg5/jh1rg4oJLdKzZNTFhBC+0lxdkhxFvSw=
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
+ MN2PR11MB4062.namprd11.prod.outlook.com (20.179.149.216) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.20; Mon, 12 Aug 2019 11:24:26 +0000
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::70c3:e929:4da2:60a5]) by MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::70c3:e929:4da2:60a5%7]) with mapi id 15.20.2157.022; Mon, 12 Aug 2019
+ 11:24:26 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <vigneshr@ti.com>, <marek.vasut@gmail.com>
+CC:     <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
+        <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <boris.brezillon@collabora.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <Nicolas.Ferre@microchip.com>
+Subject: Re: [PATCH 1/5] mtd: spi-nor: fix description for int
+ (*flash_is_locked)()
+Thread-Topic: [PATCH 1/5] mtd: spi-nor: fix description for int
+ (*flash_is_locked)()
+Thread-Index: AQHVPHxaKG+eJEFhOUur/Urn3TTMiqbsJe6AgAth+IA=
+Date:   Mon, 12 Aug 2019 11:24:26 +0000
+Message-ID: <2ac48ee5-f918-2313-c30c-8d1e2d3008b5@microchip.com>
+References: <20190717084745.19322-1-tudor.ambarus@microchip.com>
+ <20190717084745.19322-2-tudor.ambarus@microchip.com>
+ <a4f14ae4-e42c-73f5-2121-5e506dd868cf@ti.com>
+In-Reply-To: <a4f14ae4-e42c-73f5-2121-5e506dd868cf@ti.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR07CA0189.eurprd07.prod.outlook.com
+ (2603:10a6:802:3f::13) To MN2PR11MB4448.namprd11.prod.outlook.com
+ (2603:10b6:208:193::29)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 968ff21a-5c00-43bd-9328-08d71f17a211
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MN2PR11MB4062;
+x-ms-traffictypediagnostic: MN2PR11MB4062:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB406201C97BF7A56BEB41CEEFF0D30@MN2PR11MB4062.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:352;
+x-forefront-prvs: 012792EC17
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(39860400002)(376002)(136003)(366004)(199004)(189003)(26005)(316002)(66946007)(6306002)(6512007)(64756008)(66556008)(66476007)(66446008)(14454004)(110136005)(3846002)(99286004)(8936002)(966005)(6486002)(6436002)(36756003)(5660300002)(305945005)(54906003)(81166006)(6116002)(81156014)(4744005)(7736002)(8676002)(66066001)(4326008)(31686004)(25786009)(2906002)(107886003)(6246003)(229853002)(478600001)(53936002)(53546011)(76176011)(386003)(476003)(2616005)(2501003)(52116002)(186003)(71200400001)(71190400001)(102836004)(86362001)(14444005)(256004)(486006)(446003)(11346002)(6506007)(31696002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4062;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: kEAsSN5UxtKWVqEPMhkEmUF2VGmm4y2pRx0d1mXE6pM5KSBf0OOxr6CHKKRn8lz8E4zorNsfGT9UW7UY4omUzTAXUBbLmc3DjJPI4iXwGXLVyR3IAnY3qUp1iwX+D3GjN8TiqQTASstJ/ReI0iCyvInQInk5QrkqV/oMdRExh5O4aCAxgcNx1Yi1NFlJDZEJnIH6ByyMyf5Jwfiy6wWNvtYMVgVEKfUhlFkv9VF676sU6IUSGlEw7bFn2/1dXtEpHnXAx0P0WL7BfK1IL7Ew7J9q86Im92G2MjH9+AM62LjPMi9AbkkPCwZJEsTWjHXk7gFChgqeHkn7cEznP/DzQvIN+wSv/rH4SJ1RgjLBFt4S9I00LCpgl+imRh2dnm4FXtdPOdv+vJ2Dt7FTNRf0Ho7Qc1/jq/HfyKMOutrpYXs=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <70FB3AC78402B24182E5E8F90A4C3A9A@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(39860400002)(136003)(346002)(396003)(2980300002)(199004)(189003)(8676002)(106002)(26005)(966005)(70206006)(70586007)(50226002)(48376002)(50466002)(110136005)(4326008)(54906003)(7696005)(76176011)(51416003)(478600001)(8936002)(53376002)(316002)(107886003)(6306002)(86362001)(7636002)(426003)(47776003)(2201001)(1076003)(36756003)(2616005)(126002)(44832011)(6666004)(2870700001)(186003)(356004)(246002)(2906002)(486006)(476003)(5660300002)(305945005)(14444005)(11346002)(446003)(336012);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR03MB4689;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7e4617ee-c332-46e9-34f7-08d71f17a1c6
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BN8PR03MB4689;
-X-MS-TrafficTypeDiagnostic: BN8PR03MB4689:
-X-MS-Exchange-PUrlCount: 3
-X-Microsoft-Antispam-PRVS: <BN8PR03MB46897B7E7D4F36423B49526CF9D30@BN8PR03MB4689.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-Forefront-PRVS: 012792EC17
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: rA5sNg7vaOMfWHvH8hoQbDe+rkoC9Qd96obAvxGs8pNU7j5/DDrI3ryM0jrcl53tV+abGt8mKefFzjCvn5rs+ZanYsceCAmo90ZZMKO+eH3sL609AQhO8qBfgvESBdu7qw5suxPH0h/srnNviaTvllVehJa1J3AHChz+02oKbgNFIwBy/FsYD4b8dRHTchfm6I638hdvboLJ5WaPKQQPHbIoTECt50WF7O/QIfGcndQ/8vvZy29ZfXC7btDK8D1mTqbZf+0YA9K4b5nNCKeoEdcDV33FXqx1DOeoyB5ZJ5qP44pVumvMbengxhX4Zng47urZAhptJ4Svgsh5yRvmdII6j1EZq9zvhu2WnGhA2Om5dKbzy/Sn+oRV0FeIuugfY2MXP/oFJcQhYM4W0QB2a6trO+c1nF4qE6AL9HqqAf0=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2019 11:24:25.4003
+X-MS-Exchange-CrossTenant-Network-Message-Id: 968ff21a-5c00-43bd-9328-08d71f17a211
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 11:24:26.2862
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e4617ee-c332-46e9-34f7-08d71f17a1c6
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR03MB4689
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-12_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908120128
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HBSqVv0KauPw33NqU/UWup1qtL9b4nbPWC/TpuYMHVtAGqsc/mnug/qf90V13fCLmFiYIKzSH+VDpvrnH3gWwaRV5Nf71dBdN2NWBuYP7oI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4062
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change adds bindings for the Analog Devices ADIN PHY driver, detailing
-all the properties implemented by the driver.
-
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- .../devicetree/bindings/net/adi,adin.yaml     | 73 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 74 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/adi,adin.yaml
-
-diff --git a/Documentation/devicetree/bindings/net/adi,adin.yaml b/Documentation/devicetree/bindings/net/adi,adin.yaml
-new file mode 100644
-index 000000000000..69375cb28e92
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/adi,adin.yaml
-@@ -0,0 +1,73 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/adi,adin.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices ADIN1200/ADIN1300 PHY
-+
-+maintainers:
-+  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-+
-+description: |
-+  Bindings for Analog Devices Industrial Ethernet PHYs
-+
-+allOf:
-+  - $ref: ethernet-phy.yaml#
-+
-+properties:
-+  adi,rx-internal-delay-ps:
-+    description: |
-+      RGMII RX Clock Delay used only when PHY operates in RGMII mode with
-+      internal delay (phy-mode is 'rgmii-id' or 'rgmii-rxid') in pico-seconds.
-+    enum: [ 1600, 1800, 2000, 2200, 2400 ]
-+    default: 2000
-+
-+  adi,tx-internal-delay-ps:
-+    description: |
-+      RGMII TX Clock Delay used only when PHY operates in RGMII mode with
-+      internal delay (phy-mode is 'rgmii-id' or 'rgmii-txid') in pico-seconds.
-+    enum: [ 1600, 1800, 2000, 2200, 2400 ]
-+    default: 2000
-+
-+  adi,fifo-depth-bits:
-+    description: |
-+      When operating in RMII mode, this option configures the FIFO depth.
-+    enum: [ 4, 8, 12, 16, 20, 24 ]
-+    default: 8
-+
-+  adi,disable-energy-detect:
-+    description: |
-+      Disables Energy Detect Powerdown Mode (default disabled, i.e energy detect
-+      is enabled if this property is unspecified)
-+    type: boolean
-+
-+examples:
-+  - |
-+    ethernet {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        phy-mode = "rgmii-id";
-+
-+        ethernet-phy@0 {
-+            reg = <0>;
-+
-+            adi,rx-internal-delay-ps = <1800>;
-+            adi,tx-internal-delay-ps = <2200>;
-+        };
-+    };
-+  - |
-+    ethernet {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        phy-mode = "rmii";
-+
-+        ethernet-phy@1 {
-+            reg = <1>;
-+
-+            adi,fifo-depth-bits = <16>;
-+            adi,disable-energy-detect;
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e8aa8a667864..fd9ab61c2670 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -944,6 +944,7 @@ L:	netdev@vger.kernel.org
- W:	http://ez.analog.com/community/linux-device-drivers
- S:	Supported
- F:	drivers/net/phy/adin.c
-+F:	Documentation/devicetree/bindings/net/adi,adin.yaml
- 
- ANALOG DEVICES INC ADIS DRIVER LIBRARY
- M:	Alexandru Ardelean <alexandru.ardelean@analog.com>
--- 
-2.20.1
-
+DQoNCk9uIDA4LzA1LzIwMTkgMDg6MzQgQU0sIFZpZ25lc2ggUmFnaGF2ZW5kcmEgd3JvdGU6DQo+
+IEV4dGVybmFsIEUtTWFpbA0KPiANCj4gDQo+IA0KPiBPbiAxNy8wNy8xOSAyOjE4IFBNLCBUdWRv
+ci5BbWJhcnVzQG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+PiBGcm9tOiBUdWRvciBBbWJhcnVzIDx0
+dWRvci5hbWJhcnVzQG1pY3JvY2hpcC5jb20+DQo+Pg0KPj4gVGhlIGRlc2NyaXB0aW9uIHdhcyBp
+bnRlcmxlYXZlZC4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBUdWRvciBBbWJhcnVzIDx0dWRvci5h
+bWJhcnVzQG1pY3JvY2hpcC5jb20+DQo+IA0KPiBSZXZpZXdlZC1ieTogVmlnbmVzaCBSYWdoYXZl
+bmRyYSA8dmlnbmVzaHJAdGkuY29tPg0KPiANCg0KQXBwbGllZCB0byBodHRwczovL2dpdC5rZXJu
+ZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9tdGQvbGludXguZ2l0LA0Kc3BpLW5vci9u
+ZXh0IGJyYW5jaC4NCg0KVGhhbmtzLA0KdGENCg==
