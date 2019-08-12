@@ -2,119 +2,182 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D095CC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD18C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1B3720842
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:06:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Pm/i5Awv"
+	by mail.kernel.org (Postfix) with ESMTP id 971E52067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:07:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfHLSGU (ORCPT
+        id S1726838AbfHLSHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 14:06:20 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45968 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfHLSGS (ORCPT
+        Mon, 12 Aug 2019 14:07:05 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35952 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726185AbfHLSHF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 14:06:18 -0400
-Received: by mail-pg1-f194.google.com with SMTP id o13so49865290pgp.12
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 11:06:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rkibUktkvDgvPaKzYudHbYv+zssBd9BVnmORpFK5sIM=;
-        b=Pm/i5Awv+1wuEbKCQ7G++ON3VKecwo9wUwhdvsO4/YJuS0PP46xEGXgjDrgypxhqB1
-         EZV4gC90lHCBFaUda5gn9lCqVYK6cLjjx5kHklAdvsV2533UxL6qZ5kKKQzdvSVhs8Yt
-         0baWDmWgyor6cBKVrjFhiZkMlh5ninhAuqSQ8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rkibUktkvDgvPaKzYudHbYv+zssBd9BVnmORpFK5sIM=;
-        b=nBbdx50kVmrmKMPlL0AbD2F+rMV4KddpMlwC204JafADo6eB9xDKiuyt+Lj1XcMPGC
-         sBeuoDSpTsU/l9jOmPjWWpc9mTLbVHiVfuQJoSPdraObHbai3w8bAOaF8yoDC3B6o+fq
-         XiBqfSxvfQBeljWtTp0wf0hWTmlRWzZfINFtEukU4S8EzOUsiMBM23+bDPdEJcS20pkf
-         C6pl/UbRlsFz960/vnpoCKfcNK2L0XWohh3OJXNXEIA/yk4sV/TIO9gAUd1qopRuJpUR
-         6/4+wzzoRJMLT/x6I8hzWCgRiM9geS7/W4+X3GPkTGs2Bymc18FVlbByt6yeojPCrVAF
-         G8YA==
-X-Gm-Message-State: APjAAAUw2C3SPk8FMD+7DywTDflxvIizq1p2NVjYPEbxckcWHQAIHowg
-        FZiG5uq+4dvdfcpHsOiXWzJjgZckl1Q=
-X-Google-Smtp-Source: APXvYqwQNDswXhVN3SaWKfAiYZ9PFI71KTrt+N0THLB/Nq1EPI+5R3W5gBzqamh9PGPVG4SeUiySkA==
-X-Received: by 2002:aa7:8218:: with SMTP id k24mr35369354pfi.221.1565631483928;
-        Mon, 12 Aug 2019 10:38:03 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u3sm153514pjn.5.2019.08.12.10.38.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 10:38:03 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 10:38:02 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Paul Chaignon <paul.chaignon@gmail.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] seccomp: allow BPF_MOD ALU instructions
-Message-ID: <201908121035.06695C79F@keescook>
-References: <20190809182621.GA4074@Nover>
- <CAO5pjwSe+U70tSPjKOgFsqqF=gCKXPDREzYF81NCZ03kGAyWww@mail.gmail.com>
+        Mon, 12 Aug 2019 14:07:05 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7CI3Laq068929;
+        Mon, 12 Aug 2019 14:06:52 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ubcqvruqc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 12 Aug 2019 14:06:51 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7CI3Y8d070436;
+        Mon, 12 Aug 2019 14:06:50 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ubcqvruna-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 12 Aug 2019 14:06:49 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7CI18q1032240;
+        Mon, 12 Aug 2019 18:06:46 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma02wdc.us.ibm.com with ESMTP id 2u9nj620nw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 12 Aug 2019 18:06:46 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7CI6kis13828738
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 12 Aug 2019 18:06:46 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 11115B2068;
+        Mon, 12 Aug 2019 18:06:46 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D7182B205F;
+        Mon, 12 Aug 2019 18:06:45 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 12 Aug 2019 18:06:45 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id BDB9716C19DD; Mon, 12 Aug 2019 11:06:49 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 11:06:49 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Akira Yokosawa <akiyks@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Lustig <dlustig@nvidia.com>
+Subject: Re: [PATCH RFC memory-model 27/31] tools/memory-model: Add data-race
+ capabilities to judgelitmus.sh
+Message-ID: <20190812180649.GM28441@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190801222026.GA11315@linux.ibm.com>
+ <20190801222056.12144-27-paulmck@linux.ibm.com>
+ <beb07965-eb83-9cd1-2b49-cfc24928dce5@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAO5pjwSe+U70tSPjKOgFsqqF=gCKXPDREzYF81NCZ03kGAyWww@mail.gmail.com>
+In-Reply-To: <beb07965-eb83-9cd1-2b49-cfc24928dce5@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-12_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908120194
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 10:58:33AM +0200, Paul Chaignon wrote:
-> On Fri, Aug 9, 2019 at 8:26 PM Paul Chaignon <paul.chaignon@orange.com> wrote:
-> >
-> > We need BPF_MOD to match system calls against whitelists encoded as 32-bit
-> > bit arrays.  The selection of the syscall's bit in the appropriate bit
-> > array requires a modulo operation such that X = 1 << nr % 32.
+On Mon, Aug 12, 2019 at 11:32:35PM +0900, Akira Yokosawa wrote:
+> Hi Paul,
+> (CC: using Andrea's gmail address, adding Daniel)
+
+Good point, I did forget to update at my end.  Fixed, thank you!
+
+> Sorry for slow response, but please find inline comments below.
 > 
-> Of course, X = 1 << nr & 0x1F, and we can do without BPF_MOD in our case.
-> I'll put that on a lack of sleep...
-
-No worries! Changing the dialect of seccomp BPF isn't something I'd like
-to do without really good reason since it creates a split in the filter
-correctness from userspace (i.e. a filter using BPF_MOD on an older
-kernel will fail). So there would need to be a distinct flag set
-somewhere, etc. So, if you do end up discovering later you really want
-BPF_MOD, we can figure that out, but for now if you can get by with "&",
-that would be best. :)
-
-Thanks!
-
--Kees
-
+> On Thu, 1 Aug 2019 15:20:52 -0700, Paul E. McKenney wrote:
+> > This commit adds functionality to judgelitmus.sh to allow it to handle
+> > both the "DATARACE" markers in the "Result:" comments in litmus tests
+> > and the "Flag data-race" markers in LKMM output.  For C-language tests,
+> > if either marker is present, the other must also be as well, at least for
+> > litmus tests having a "Result:" comment.  If the LKMM output indicates
+> > a data race, then failures of the Always/Sometimes/Never portion of the
+> > "Result:" prediction are forgiven.
 > 
-> >
-> > Signed-off-by: Paul Chaignon <paul.chaignon@orange.com>
+> I'd like to see the reason _why_ they can be forgiven. Also, updating
+> the header comment of judgelitimus.sh to mention these expansions would
+> be of much help.
+> 
+> My guess is any data-race would moot the Always/Sometimes/Never
+> prediction.
+
+Exactly.  And good point, I will update the commit log to make this
+explicit.
+
+> This reminds me that update of LKMM documentation regarding plain
+> accesses (data races) is yet to come.
+
+Yes, this one is still on the to-do list.  Timely reminder, though!  ;-)
+
+							Thanx, Paul
+
+>         Thanks, Akira
+> 
+> > 
+> > Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 > > ---
-> >  kernel/seccomp.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> > index 811b4a86cdf6..87de6532ff6d 100644
-> > --- a/kernel/seccomp.c
-> > +++ b/kernel/seccomp.c
-> > @@ -205,6 +205,8 @@ static int seccomp_check_filter(struct sock_filter *filter, unsigned int flen)
-> >                 case BPF_ALU | BPF_MUL | BPF_X:
-> >                 case BPF_ALU | BPF_DIV | BPF_K:
-> >                 case BPF_ALU | BPF_DIV | BPF_X:
-> > +               case BPF_ALU | BPF_MOD | BPF_K:
-> > +               case BPF_ALU | BPF_MOD | BPF_X:
-> >                 case BPF_ALU | BPF_AND | BPF_K:
-> >                 case BPF_ALU | BPF_AND | BPF_X:
-> >                 case BPF_ALU | BPF_OR | BPF_K:
-> > --
-> > 2.17.1
-
--- 
-Kees Cook
+> >  tools/memory-model/scripts/judgelitmus.sh | 20 +++++++++++++++++++-
+> >  1 file changed, 19 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/memory-model/scripts/judgelitmus.sh b/tools/memory-model/scripts/judgelitmus.sh
+> > index ca9a19829d79..eaa2cc7d3b36 100755
+> > --- a/tools/memory-model/scripts/judgelitmus.sh
+> > +++ b/tools/memory-model/scripts/judgelitmus.sh
+> > @@ -47,9 +47,27 @@ else
+> >  	echo ' --- ' error: \"$LKMM_DESTDIR/$litmusout is not a readable file
+> >  	exit 255
+> >  fi
+> > +if grep -q '^Flag data-race$' "$LKMM_DESTDIR/$litmusout"
+> > +then
+> > +	datarace_modeled=1
+> > +fi
+> >  if grep -q '^ \* Result: ' $litmus
+> >  then
+> >  	outcome=`grep -m 1 '^ \* Result: ' $litmus | awk '{ print $3 }'`
+> > +	if grep -m1 '^ \* Result: .* DATARACE' $litmus
+> > +	then
+> > +		datarace_predicted=1
+> > +	fi
+> > +	if test -n "$datarace_predicted" -a -z "$datarace_modeled" -a -z "$LKMM_HW_MAP_FILE"
+> > +	then
+> > +		echo '!!! Predicted data race not modeled' $litmus
+> > +		exit 252
+> > +	elif test -z "$datarace_predicted" -a -n "$datarace_modeled"
+> > +	then
+> > +		# Note that hardware models currently don't model data races
+> > +		echo '!!! Unexpected data race modeled' $litmus
+> > +		exit 253
+> > +	fi
+> >  elif test -n "$LKMM_HW_MAP_FILE" && grep -q '^Observation' $LKMM_DESTDIR/$lkmmout > /dev/null 2>&1
+> >  then
+> >  	outcome=`grep -m 1 '^Observation ' $LKMM_DESTDIR/$lkmmout | awk '{ print $3 }'`
+> > @@ -114,7 +132,7 @@ elif grep '^Observation' $LKMM_DESTDIR/$litmusout | grep -q $outcome || test "$o
+> >  then
+> >  	ret=0
+> >  else
+> > -	if test -n "$LKMM_HW_MAP_FILE" -a "$outcome" = Sometimes
+> > +	if test \( -n "$LKMM_HW_MAP_FILE" -a "$outcome" = Sometimes \) -o -n "$datarace_modeled"
+> >  	then
+> >  		flag="--- Forgiven"
+> >  		ret=0
+> > 
+> 
