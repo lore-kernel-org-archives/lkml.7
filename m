@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AC4C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7990AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9766D20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A2720663
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:39:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfHLMi4 (ORCPT
+        id S1728494AbfHLMi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 08:38:56 -0400
-Received: from mga14.intel.com ([192.55.52.115]:31861 "EHLO mga14.intel.com"
+        Mon, 12 Aug 2019 08:38:59 -0400
+Received: from mga09.intel.com ([134.134.136.24]:54173 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726557AbfHLMiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 08:38:54 -0400
+        id S1726797AbfHLMi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 08:38:56 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 05:38:52 -0700
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 05:38:56 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,377,1559545200"; 
-   d="scan'208";a="200110901"
+   d="scan'208";a="375218552"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 12 Aug 2019 05:38:48 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 12 Aug 2019 05:38:52 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 255052DD; Mon, 12 Aug 2019 15:38:48 +0300 (EEST)
+        id 4984A38E; Mon, 12 Aug 2019 15:38:48 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Andreas Noever <andreas.noever@gmail.com>,
@@ -44,9 +44,9 @@ Cc:     Andreas Noever <andreas.noever@gmail.com>,
         David Laight <David.Laight@ACULAB.COM>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-acpi@vger.kernel.org
-Subject: [PATCH v2 2/8] thunderbolt: Move NVM upgrade support flag to struct icm
-Date:   Mon, 12 Aug 2019 15:38:41 +0300
-Message-Id: <20190812123847.50802-3-mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 5/8] thunderbolt: Hide switch attributes that are not set
+Date:   Mon, 12 Aug 2019 15:38:44 +0300
+Message-Id: <20190812123847.50802-6-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190812123847.50802-1-mika.westerberg@linux.intel.com>
 References: <20190812123847.50802-1-mika.westerberg@linux.intel.com>
@@ -57,79 +57,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is depends on the controller and on the platform/CPU we are
-running. Move it to struct icm so we can set it per controller.
+Thunderbolt host routers may not always contain DROM that includes
+device identification information. This is mostly needed for Ice Lake
+systems but some Falcon Ridge controllers on PCs also do not have DROM.
+
+In that case hide the identification attributes.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Yehezkel Bernat <YehezkelShB@gmail.com>
 ---
- drivers/thunderbolt/icm.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/thunderbolt/switch.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/thunderbolt/icm.c b/drivers/thunderbolt/icm.c
-index fbdcef56a676..e9835ab35465 100644
---- a/drivers/thunderbolt/icm.c
-+++ b/drivers/thunderbolt/icm.c
-@@ -55,6 +55,7 @@
-  * @safe_mode: ICM is in safe mode
-  * @max_boot_acl: Maximum number of preboot ACL entries (%0 if not supported)
-  * @rpm: Does the controller support runtime PM (RTD3)
-+ * @can_upgrade_nvm: Can the NVM firmware be upgrade on this controller
-  * @is_supported: Checks if we can support ICM on this controller
-  * @cio_reset: Trigger CIO reset
-  * @get_mode: Read and return the ICM firmware mode (optional)
-@@ -74,6 +75,7 @@ struct icm {
- 	int vnd_cap;
- 	bool safe_mode;
- 	bool rpm;
-+	bool can_upgrade_nvm;
- 	bool (*is_supported)(struct tb *tb);
- 	int (*cio_reset)(struct tb *tb);
- 	int (*get_mode)(struct tb *tb);
-@@ -1913,12 +1915,7 @@ static int icm_start(struct tb *tb)
- 	if (IS_ERR(tb->root_switch))
- 		return PTR_ERR(tb->root_switch);
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index 64f845fe4690..bd3eaaf34ea1 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -1337,7 +1337,19 @@ static umode_t switch_attr_is_visible(struct kobject *kobj,
+ 	struct device *dev = container_of(kobj, struct device, kobj);
+ 	struct tb_switch *sw = tb_to_switch(dev);
  
--	/*
--	 * NVM upgrade has not been tested on Apple systems and they
--	 * don't provide images publicly either. To be on the safe side
--	 * prevent root switch NVM upgrade on Macs for now.
--	 */
--	tb->root_switch->no_nvm_upgrade = x86_apple_machine;
-+	tb->root_switch->no_nvm_upgrade = !icm->can_upgrade_nvm;
- 	tb->root_switch->rpm = icm->rpm;
- 
- 	ret = tb_switch_add(tb->root_switch);
-@@ -2021,6 +2018,7 @@ struct tb *icm_probe(struct tb_nhi *nhi)
- 	switch (nhi->pdev->device) {
- 	case PCI_DEVICE_ID_INTEL_FALCON_RIDGE_2C_NHI:
- 	case PCI_DEVICE_ID_INTEL_FALCON_RIDGE_4C_NHI:
-+		icm->can_upgrade_nvm = true;
- 		icm->is_supported = icm_fr_is_supported;
- 		icm->get_route = icm_fr_get_route;
- 		icm->save_devices = icm_fr_save_devices;
-@@ -2038,6 +2036,13 @@ struct tb *icm_probe(struct tb_nhi *nhi)
- 	case PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_4C_NHI:
- 	case PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_2C_NHI:
- 		icm->max_boot_acl = ICM_AR_PREBOOT_ACL_ENTRIES;
-+		/*
-+		 * NVM upgrade has not been tested on Apple systems and
-+		 * they don't provide images publicly either. To be on
-+		 * the safe side prevent root switch NVM upgrade on Macs
-+		 * for now.
-+		 */
-+		icm->can_upgrade_nvm = !x86_apple_machine;
- 		icm->is_supported = icm_ar_is_supported;
- 		icm->cio_reset = icm_ar_cio_reset;
- 		icm->get_mode = icm_ar_get_mode;
-@@ -2054,6 +2059,7 @@ struct tb *icm_probe(struct tb_nhi *nhi)
- 	case PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_NHI:
- 	case PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_NHI:
- 		icm->max_boot_acl = ICM_AR_PREBOOT_ACL_ENTRIES;
-+		icm->can_upgrade_nvm = !x86_apple_machine;
- 		icm->is_supported = icm_ar_is_supported;
- 		icm->cio_reset = icm_tr_cio_reset;
- 		icm->get_mode = icm_ar_get_mode;
+-	if (attr == &dev_attr_key.attr) {
++	if (attr == &dev_attr_device.attr) {
++		if (!sw->device)
++			return 0;
++	} else if (attr == &dev_attr_device_name.attr) {
++		if (!sw->device_name)
++			return 0;
++	} else if (attr == &dev_attr_vendor.attr)  {
++		if (!sw->vendor)
++			return 0;
++	} else if (attr == &dev_attr_vendor_name.attr)  {
++		if (!sw->vendor_name)
++			return 0;
++	} else if (attr == &dev_attr_key.attr) {
+ 		if (tb_route(sw) &&
+ 		    sw->tb->security_level == TB_SECURITY_SECURE &&
+ 		    sw->security_level == TB_SECURITY_SECURE)
 -- 
 2.20.1
 
