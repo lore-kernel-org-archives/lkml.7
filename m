@@ -2,100 +2,144 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E61CC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFCCC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74B0A20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84727206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:56:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CpEkLX+H"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="aT1+Cp+K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfHLRzo (ORCPT
+        id S1726690AbfHLR4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 13:55:44 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40612 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfHLRzn (ORCPT
+        Mon, 12 Aug 2019 13:56:17 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33334 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbfHLR4R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 13:55:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=A5xx+suP+i+wlxI3r0bZSwnQIwSxHDhSzDl/aVQqy44=; b=CpEkLX+HQLoCnKFPMleBcK4Xn
-        mKlxeuVobdx5mF93JGhdufQwe0ywW5R1UusFok0w7dl5HYo1L/cJTtUn4YJOv6otPtNKfHoYA8ZEX
-        JgsCd3Dxb2/wjkhI7M8k4+OD2O+Z0NdVgAS/pPUqHtPLcsE525zZIYd9evXf7tZGSL3jlQC1f19Qj
-        26PeCW5S5Lo0FSCBAcWW0VctU4NPXPIg10lpE58scG80bmsk8FUnjBEoJZHG6OhidYhtvvcX1U+1a
-        xmqES2hTCBjiokk8omo7hEaBoMvubeW+zV+HFbr5T1/aCpZFbRMRlfyfAuwYBXxwrCQ9CkTtorvm0
-        AZZo0oyPw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hxEXl-000108-99; Mon, 12 Aug 2019 17:55:41 +0000
-Date:   Mon, 12 Aug 2019 10:55:41 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Troy Benjegerdes <troy.benjegerdes@sifive.com>
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Anup Patel <anup.patel@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org,
-        Allison Randal <allison@lohutok.net>,
-        ron minnich <rminnich@gmail.com>
-Subject: Re: [PATCH] RISC-V: Issue a local tlb flush if possible.
-Message-ID: <20190812175541.GA23733@infradead.org>
-References: <20190810014309.20838-1-atish.patra@wdc.com>
- <118B0DE7-EDCC-4947-88E5-7FF133A757D8@sifive.com>
+        Mon, 12 Aug 2019 13:56:17 -0400
+Received: by mail-qt1-f196.google.com with SMTP id v38so11317459qtb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 10:56:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YeHGfRcz7/xDdQu045YPZqSeRdWuIL5U3pex4BeV6Co=;
+        b=aT1+Cp+KGWQyozFDowVXklkNZVi/kM9KamsNgl23DUo+IJyNPad8EzXuoAG7s3f5bf
+         bOSW7DhNODTjMskeg1DRPDb4g7NB2wX2AWkHQuyR0cct0HrdnZzak9aU8g7CHTL0qHoO
+         IKZcX3vXDSq/u24mEPYpzVVHpbOB2TSRpMchVGlB+vxEwN6TXEtwOQ8uYyw5P8+cz9Hd
+         j1BzALymBU6a7rw2q7wWcxOSnVbjWppZ0IMW4+9rMtyvhB+q0F08Mu3PWUPEGDQxvNfD
+         RqDlAaDfsxyO370w/XugHLZnyfoDs8iN8igYYDuAHaeRZtKy3Zg+yOMKiyalzWN131uL
+         Eqkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YeHGfRcz7/xDdQu045YPZqSeRdWuIL5U3pex4BeV6Co=;
+        b=Cf3gLK7y1JG0Kxt3HKy/O67rXdKbQR3l3rQOe7ROCoYJHDVGC5S+vIVyKRX8TaNaVL
+         OU6iNB+WlQh/luGokEUqJFxZATyPNes49ALHEtdqlDmrXVNEoZnHMsOKS0M7T1LF280/
+         kqbF5ZJxIBNf0WLc+QXAZzyZUZrlaL597sAx7S3RIwDuhwScQ3y9wafnMo+yLZh/9HnP
+         WmbJ1C0544zcRjgy7Qmi7iGJJf/k8RnzTFtzonthmz9TaJ3Fk3WCxybxrzNvUWYH57O1
+         Xgt7dHUoQRzaT4SLBv3DDyYG4cQao+zmF4BuuiuUZCJsTTryTZX1QnvHg4UR20eg6LfA
+         X8AQ==
+X-Gm-Message-State: APjAAAUkAL0URj/tghSXLRw/QrzlzRr6A98+t3kIJQVeNazwLg5q/zJL
+        fch80LVwsMEFWxKUVtJVj/e1/w==
+X-Google-Smtp-Source: APXvYqx5MBD9MG64lV9iZUYWN/EeNo5U4lzvE+q4eQc5jVQAxZ4QmzhDKvfOk+m1tNY0/uiYKcLUcw==
+X-Received: by 2002:ac8:43c4:: with SMTP id w4mr15414493qtn.238.1565632576300;
+        Mon, 12 Aug 2019 10:56:16 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id r15sm5883158qtp.94.2019.08.12.10.56.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 12 Aug 2019 10:56:15 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hxEYJ-0004LN-Ev; Mon, 12 Aug 2019 14:56:15 -0300
+Date:   Mon, 12 Aug 2019 14:56:15 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 16/19] RDMA/uverbs: Add back pointer to system
+ file object
+Message-ID: <20190812175615.GI24457@ziepe.ca>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-17-ira.weiny@intel.com>
+ <20190812130039.GD24457@ziepe.ca>
+ <20190812172826.GA19746@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <118B0DE7-EDCC-4947-88E5-7FF133A757D8@sifive.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190812172826.GA19746@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 10:36:25AM -0500, Troy Benjegerdes wrote:
-> Is there anything other than convention and current usage that prevents
-> the kernel from natively handling TLB flushes without ever making the SBI
-> call?
+On Mon, Aug 12, 2019 at 10:28:27AM -0700, Ira Weiny wrote:
+> On Mon, Aug 12, 2019 at 10:00:40AM -0300, Jason Gunthorpe wrote:
+> > On Fri, Aug 09, 2019 at 03:58:30PM -0700, ira.weiny@intel.com wrote:
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > In order for MRs to be tracked against the open verbs context the ufile
+> > > needs to have a pointer to hand to the GUP code.
+> > > 
+> > > No references need to be taken as this should be valid for the lifetime
+> > > of the context.
+> > > 
+> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > >  drivers/infiniband/core/uverbs.h      | 1 +
+> > >  drivers/infiniband/core/uverbs_main.c | 1 +
+> > >  2 files changed, 2 insertions(+)
+> > > 
+> > > diff --git a/drivers/infiniband/core/uverbs.h b/drivers/infiniband/core/uverbs.h
+> > > index 1e5aeb39f774..e802ba8c67d6 100644
+> > > +++ b/drivers/infiniband/core/uverbs.h
+> > > @@ -163,6 +163,7 @@ struct ib_uverbs_file {
+> > >  	struct page *disassociate_page;
+> > >  
+> > >  	struct xarray		idr;
+> > > +	struct file             *sys_file; /* backpointer to system file object */
+> > >  };
+> > 
+> > The 'struct file' has a lifetime strictly shorter than the
+> > ib_uverbs_file, which is kref'd on its own lifetime. Having a back
+> > pointer like this is confouding as it will be invalid for some of the
+> > lifetime of the struct.
+> 
+> Ah...  ok.  I really thought it was the other way around.
+> 
+> __fput() should not call ib_uverbs_close() until the last reference on struct
+> file is released...  What holds references to struct ib_uverbs_file past that?
 
-Yes and no.
+Child fds hold onto the internal ib_uverbs_file until they are closed
 
-In all existing RISC-V implementation remote TLB flushes are simply
-implementing using IPIs.  So you could trivially implement remote TLB
-flush using IPIs, and in fact Gary Guo posted a series to do that a
-while ago.
+> Perhaps I need to add this (untested)?
+> 
+> diff --git a/drivers/infiniband/core/uverbs_main.c
+> b/drivers/infiniband/core/uverbs_main.c
+> index f628f9e4c09f..654e774d9cf2 100644
+> +++ b/drivers/infiniband/core/uverbs_main.c
+> @@ -1125,6 +1125,8 @@ static int ib_uverbs_close(struct inode *inode, struct file *filp)
+>         list_del_init(&file->list);
+>         mutex_unlock(&file->device->lists_mutex);
+>  
+> +       file->sys_file = NULL;
 
-But: the RISC privileged spec requires that IPIs are only issued from
-M-mode and only delivered to M-mode.  So what would be a trivial MMIO
-write plus interupt to wakeup the remote hart actually turns into
-a dance requiring multiple context switches between privile levels,
-and without additional optimizations that will be even slower than the
-current SBI based implementation.
+Now this has unlocked updates to that data.. you'd need some lock and
+get not zero pattern
 
-I've started a prototype implementation and spec edits to relax this
-and allow direct IPIs from S-mode to S-mode, which will speed up IPIs
-by about an order of magnitude, and I hope this will be how future
-RISC-V implementations work.
-
-> Someone is eventually going to want to run the linux kernel in machine mode,
-> likely for performance and/or security reasons, and this will require flushing TLBs
-> natively anyway.
-
-The nommu ports run in M-mode.  But running a MMU-enabled port in M-mode
-is rather painful if not impossible (trust me, I've tried) due to how
-the privileged spec says that M-mode generally runs without address
-translation.  There is a workaround using the MPRV bit in mstatus, but
-even that just uses the address translation for loads and stores, and
-not for the program text.
+Jason
