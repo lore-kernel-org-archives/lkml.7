@@ -2,172 +2,1113 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46240C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA46C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 173B020684
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:08:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="XuHwYpVy"
+	by mail.kernel.org (Postfix) with ESMTP id 039BD21743
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:10:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565615400;
+	bh=bLyxf6vr2VvpjopXvABxvYwkd269Hm5WAndOmkeMYoA=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=zwynhlQg19d2sTbmXSXHURQzOyOcjjxK0MQc0/QIluuAYaY8iUHFEqSZSwdVEs1Vt
+	 MqJCnTabxwbApxQscA9eJ5wIWgi3pq2D8AvxfxXhheu9xSbkNXF1ObSgwTmGaCjoPR
+	 /PpxnxHzkLS3IiPWwtNKhYG/tC6nd8HrV7izqku0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbfHLNIM (ORCPT
+        id S1728750AbfHLNJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 09:08:12 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34678 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfHLNIL (ORCPT
+        Mon, 12 Aug 2019 09:09:58 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39678 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726458AbfHLNJ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 09:08:11 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n9so43236420pgc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 06:08:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0+d7JiE4ALvh+vozWgQX9WRuAWwlUlbg0HRlo3FMVKM=;
-        b=XuHwYpVy4YKDtkBncgZgarepVoaPreVCKt5pefACP+j1hsGxvnUD3UAc7zX6MEHqRz
-         sSvzKE9SEErpR8GuW7cCSDvttY5W8YiCTLbu+Io2+tbPcN87ElV3LqukcHrdDGUv9vtT
-         DCaNaiazekE/y9Ng3AM/qvYGjeWum23ndyYDg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0+d7JiE4ALvh+vozWgQX9WRuAWwlUlbg0HRlo3FMVKM=;
-        b=njz9Fv3R4DADVzhk0J8bRNYnFMblrG4v/Zdk686vfWUu32FYNi2qNFtjI2OiBwX9ig
-         hO94DIzn1Fh549ylOWh0Zvmevdk1T0yynUMP76/W0MVoYacDMDb+6AdolhWY6wbKaihE
-         bAdcl7HrqcuGMYv1acRHG7Ad8QTA2lWKCQqa7YXgU4eLivxUVKEJfHv1PlRIMqJqawyZ
-         n+jqLTmSF8irLmYfiaEVJXMqs1EnknWYVZScEPKDHzQsqTDNVGwSbipH9lrWTSwLuInn
-         6a+/nKNPHjG/fowpYCa7xhf1Dn14YtwjHspz0XH4dmtET4MfkpXUTC6luni8NIhT4oTZ
-         Y3XQ==
-X-Gm-Message-State: APjAAAVdcyJlR26a4oRoqfpuDwTHBjQl4QjIOE+iFMURv+OIV4QToWPX
-        izYHML5u+KWHo/8ANzesfdgV7Q==
-X-Google-Smtp-Source: APXvYqwzwSNMzkoGkoKrM7gC6Kss7FrU3+9YPzxEYeGpsPCnpjpC2W6CZwZrbnKkmicR5H8Ki5UIqA==
-X-Received: by 2002:a17:90a:a896:: with SMTP id h22mr1309321pjq.1.1565615291134;
-        Mon, 12 Aug 2019 06:08:11 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id v14sm113161991pfm.164.2019.08.12.06.08.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 06:08:10 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 09:08:09 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Byungchul Park <byungchul.park@lge.com>
-Cc:     linux-kernel@vger.kernel.org, Rao Shoaib <rao.shoaib@oracle.com>,
-        max.byungchul.park@gmail.com, kernel-team@android.com,
-        kernel-team@lge.com, Andrew Morton <akpm@linux-foundation.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2 1/2] rcu/tree: Add basic support for kfree_rcu batching
-Message-ID: <20190812130809.GB27552@google.com>
-References: <20190811024957.233650-1-joel@joelfernandes.org>
- <20190812102917.GA10624@X58A-UD3R>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812102917.GA10624@X58A-UD3R>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 12 Aug 2019 09:09:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=dxu9r0G5i7EzhN699/4vsFzfPrF4l6K6ZeZPUnqQSWs=; b=c4r+LG3htq8a
+        Viab2Cmfz5v+eYRibuwC+TuQaUOvP1hGQapFgr/wZ8T8zWcbSrbgBpo83SgRZf1Vd0NKLE1ZO6x0y
+        K10JgX+VqACGiExh24FJky4DTxnXehSxMG0Up2XU9D4iwLKy1GMi/MPg6zoxZRcDDdsFie/Z5aK/1
+        KAIBs=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1hxA5A-0001MK-D4; Mon, 12 Aug 2019 13:09:52 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id C601D2740CB7; Mon, 12 Aug 2019 14:09:51 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        soc@kernel.org
+Subject: Applied "ASoC: remove w90x900/nuc900 platform drivers" to the asoc tree
+In-Reply-To: <20190809202749.742267-9-arnd@arndb.de>
+X-Patchwork-Hint: ignore
+Message-Id: <20190812130951.C601D2740CB7@ypsilon.sirena.org.uk>
+Date:   Mon, 12 Aug 2019 14:09:51 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 07:29:17PM +0900, Byungchul Park wrote:
-[snip]
-> > diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
-> > index 8e727f57d814..383f2481750f 100644
-> > --- a/include/linux/rcutiny.h
-> > +++ b/include/linux/rcutiny.h
-> > @@ -39,6 +39,11 @@ static inline void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-> >  	call_rcu(head, func);
-> >  }
-> >  
-> > +static inline void kfree_call_rcu_nobatch(struct rcu_head *head, rcu_callback_t func)
-> > +{
-> > +	call_rcu(head, func);
-> > +}
-> > +
-> >  void rcu_qs(void);
-> >  
-> >  static inline void rcu_softirq_qs(void)
-> > diff --git a/include/linux/rcutree.h b/include/linux/rcutree.h
-> > index 735601ac27d3..7e38b39ec634 100644
-> > --- a/include/linux/rcutree.h
-> > +++ b/include/linux/rcutree.h
-> > @@ -34,6 +34,7 @@ static inline void rcu_virt_note_context_switch(int cpu)
-> >  
-> >  void synchronize_rcu_expedited(void);
-> >  void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func);
-> > +void kfree_call_rcu_nobatch(struct rcu_head *head, rcu_callback_t func);
-> >  
-> >  void rcu_barrier(void);
-> >  bool rcu_eqs_special_set(int cpu);
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index a14e5fbbea46..102a5f606d78 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -2593,17 +2593,204 @@ void call_rcu(struct rcu_head *head, rcu_callback_t func)
-> >  }
-> >  EXPORT_SYMBOL_GPL(call_rcu);
-> >  
-> > +
-> > +/* Maximum number of jiffies to wait before draining a batch. */
-> > +#define KFREE_DRAIN_JIFFIES (HZ / 50)
-> 
-> JFYI, I also can see oom with a larger value of this. I hope this magic
-> value works well for all kind of systems.
+The patch
 
-It seems to work well in my testing. I am glad you could not perceive OOMs at
-this value, either.
+   ASoC: remove w90x900/nuc900 platform drivers
 
-> > - * Queue an RCU callback for lazy invocation after a grace period.
-> > - * This will likely be later named something like "call_rcu_lazy()",
-> > - * but this change will require some way of tagging the lazy RCU
-> > - * callbacks in the list of pending callbacks. Until then, this
-> > - * function may only be called from __kfree_rcu().
-> > + * Maximum number of kfree(s) to batch, if this limit is hit then the batch of
-> > + * kfree(s) is queued for freeing after a grace period, right away.
-> >   */
-> > -void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-> > +struct kfree_rcu_cpu {
-> > +	/* The rcu_work node for queuing work with queue_rcu_work(). The work
-> > +	 * is done after a grace period.
-> > +	 */
-> > +	struct rcu_work rcu_work;
-> > +
-> > +	/* The list of objects being queued in a batch but are not yet
-> > +	 * scheduled to be freed.
-> > +	 */
-> > +	struct rcu_head *head;
-> > +
-> > +	/* The list of objects that have now left ->head and are queued for
-> > +	 * freeing after a grace period.
-> > +	 */
-> > +	struct rcu_head *head_free;
-> > +
-> > +	/* Protect concurrent access to this structure. */
-> > +	spinlock_t lock;
-> > +
-> > +	/* The delayed work that flushes ->head to ->head_free incase ->head
-> > +	 * did not reach a length of KFREE_MAX_BATCH within KFREE_DRAIN_JIFFIES.
-> > +	 * In case flushing cannot be done if RCU is busy, then ->head just
-> > +	 * continues to grow beyond KFREE_MAX_BATCH and we retry flushing later.
-> 
-> Minor one. We don't use KFREE_MAX_BATCH anymore.
+has been applied to the asoc tree at
 
-Sorry for leaving these KFREE_MAX_BATCH comments stale, I cleaned up many of
-them already but some where still left behind. I will fix these in the v3.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
-thanks for review!
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
- - Joel
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-[snip]
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 8b209cdb696f49f7f5d6c1922bed435e54631ddd Mon Sep 17 00:00:00 2001
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Fri, 9 Aug 2019 22:27:36 +0200
+Subject: [PATCH] ASoC: remove w90x900/nuc900 platform drivers
+
+The ARM w90x900 platform is getting removed, so this driver is obsolete.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/20190809202749.742267-9-arnd@arndb.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/Kconfig               |   1 -
+ sound/soc/Makefile              |   1 -
+ sound/soc/nuc900/Kconfig        |  29 ---
+ sound/soc/nuc900/Makefile       |  12 -
+ sound/soc/nuc900/nuc900-ac97.c  | 391 --------------------------------
+ sound/soc/nuc900/nuc900-audio.c |  73 ------
+ sound/soc/nuc900/nuc900-audio.h | 108 ---------
+ sound/soc/nuc900/nuc900-pcm.c   | 321 --------------------------
+ 8 files changed, 936 deletions(-)
+ delete mode 100644 sound/soc/nuc900/Kconfig
+ delete mode 100644 sound/soc/nuc900/Makefile
+ delete mode 100644 sound/soc/nuc900/nuc900-ac97.c
+ delete mode 100644 sound/soc/nuc900/nuc900-audio.c
+ delete mode 100644 sound/soc/nuc900/nuc900-audio.h
+ delete mode 100644 sound/soc/nuc900/nuc900-pcm.c
+
+diff --git a/sound/soc/Kconfig b/sound/soc/Kconfig
+index dc86e4073001..bdc305cece6e 100644
+--- a/sound/soc/Kconfig
++++ b/sound/soc/Kconfig
+@@ -51,7 +51,6 @@ source "sound/soc/dwc/Kconfig"
+ source "sound/soc/fsl/Kconfig"
+ source "sound/soc/hisilicon/Kconfig"
+ source "sound/soc/jz4740/Kconfig"
+-source "sound/soc/nuc900/Kconfig"
+ source "sound/soc/kirkwood/Kconfig"
+ source "sound/soc/img/Kconfig"
+ source "sound/soc/intel/Kconfig"
+diff --git a/sound/soc/Makefile b/sound/soc/Makefile
+index 250a0dea9294..861a21b79484 100644
+--- a/sound/soc/Makefile
++++ b/sound/soc/Makefile
+@@ -39,7 +39,6 @@ obj-$(CONFIG_SND_SOC)	+= intel/
+ obj-$(CONFIG_SND_SOC)	+= mediatek/
+ obj-$(CONFIG_SND_SOC)	+= meson/
+ obj-$(CONFIG_SND_SOC)	+= mxs/
+-obj-$(CONFIG_SND_SOC)	+= nuc900/
+ obj-$(CONFIG_SND_SOC)	+= kirkwood/
+ obj-$(CONFIG_SND_SOC)	+= pxa/
+ obj-$(CONFIG_SND_SOC)	+= qcom/
+diff --git a/sound/soc/nuc900/Kconfig b/sound/soc/nuc900/Kconfig
+deleted file mode 100644
+index e1b22fbcb159..000000000000
+--- a/sound/soc/nuc900/Kconfig
++++ /dev/null
+@@ -1,29 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-only
+-##
+-## NUC900 series AC97 API
+-##
+-config SND_SOC_NUC900
+-	tristate "SoC Audio for NUC900 series"
+-	depends on ARCH_W90X900
+-	select SND_SOC_NUC900_AC97
+-	help
+-	  This option enables support for AC97 mode on the NUC900 SoC.
+-
+-config SND_SOC_NUC900_AC97
+-	tristate
+-	select AC97_BUS
+-	select SND_AC97_CODEC
+-	select SND_SOC_AC97_BUS
+-
+-
+-##
+-## Boards
+-##
+-config SND_SOC_NUC900EVB
+-	tristate "NUC900 AC97 support for demo board"
+-	depends on SND_SOC_NUC900
+-	select SND_SOC_NUC900_AC97
+-	select SND_SOC_AC97_CODEC
+-	help
+-	  Select this option to enable audio (AC97) on the
+-	  NUC900 demoboard.
+diff --git a/sound/soc/nuc900/Makefile b/sound/soc/nuc900/Makefile
+deleted file mode 100644
+index c7ba2b9549d2..000000000000
+--- a/sound/soc/nuc900/Makefile
++++ /dev/null
+@@ -1,12 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-# NUC900 series audio
+-snd-soc-nuc900-pcm-objs := nuc900-pcm.o
+-snd-soc-nuc900-ac97-objs := nuc900-ac97.o
+-
+-obj-$(CONFIG_SND_SOC_NUC900) += snd-soc-nuc900-pcm.o
+-obj-$(CONFIG_SND_SOC_NUC900_AC97) += snd-soc-nuc900-ac97.o
+-
+-# Boards
+-snd-soc-nuc900-audio-objs := nuc900-audio.o
+-
+-obj-$(CONFIG_SND_SOC_NUC900EVB) += snd-soc-nuc900-audio.o
+diff --git a/sound/soc/nuc900/nuc900-ac97.c b/sound/soc/nuc900/nuc900-ac97.c
+deleted file mode 100644
+index 5f2e5c069377..000000000000
+--- a/sound/soc/nuc900/nuc900-ac97.c
++++ /dev/null
+@@ -1,391 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * Copyright (c) 2009-2010 Nuvoton technology corporation.
+- *
+- * Wan ZongShun <mcuos.com@gmail.com>
+- */
+-
+-#include <linux/init.h>
+-#include <linux/module.h>
+-#include <linux/slab.h>
+-#include <linux/device.h>
+-#include <linux/delay.h>
+-#include <linux/mutex.h>
+-#include <linux/suspend.h>
+-#include <sound/core.h>
+-#include <sound/pcm.h>
+-#include <sound/initval.h>
+-#include <sound/soc.h>
+-#include <linux/clk.h>
+-
+-#include <mach/mfp.h>
+-
+-#include "nuc900-audio.h"
+-
+-static DEFINE_MUTEX(ac97_mutex);
+-struct nuc900_audio *nuc900_ac97_data;
+-EXPORT_SYMBOL_GPL(nuc900_ac97_data);
+-
+-static int nuc900_checkready(void)
+-{
+-	struct nuc900_audio *nuc900_audio = nuc900_ac97_data;
+-
+-	if (!(AUDIO_READ(nuc900_audio->mmio + ACTL_ACIS0) & CODEC_READY))
+-		return -EPERM;
+-
+-	return 0;
+-}
+-
+-/* AC97 controller reads codec register */
+-static unsigned short nuc900_ac97_read(struct snd_ac97 *ac97,
+-					unsigned short reg)
+-{
+-	struct nuc900_audio *nuc900_audio = nuc900_ac97_data;
+-	unsigned long timeout = 0x10000, val;
+-
+-	mutex_lock(&ac97_mutex);
+-
+-	val = nuc900_checkready();
+-	if (val) {
+-		dev_err(nuc900_audio->dev, "AC97 codec is not ready\n");
+-		goto out;
+-	}
+-
+-	/* set the R_WB bit and write register index */
+-	AUDIO_WRITE(nuc900_audio->mmio + ACTL_ACOS1, R_WB | reg);
+-
+-	/* set the valid frame bit and valid slots */
+-	val = AUDIO_READ(nuc900_audio->mmio + ACTL_ACOS0);
+-	val |= (VALID_FRAME | SLOT1_VALID);
+-	AUDIO_WRITE(nuc900_audio->mmio + ACTL_ACOS0, val);
+-
+-	udelay(100);
+-
+-	/* polling the AC_R_FINISH */
+-	while (!(AUDIO_READ(nuc900_audio->mmio + ACTL_ACCON) & AC_R_FINISH)
+-								&& --timeout)
+-		mdelay(1);
+-
+-	if (!timeout) {
+-		dev_err(nuc900_audio->dev, "AC97 read register time out !\n");
+-		val = -EPERM;
+-		goto out;
+-	}
+-
+-	val = AUDIO_READ(nuc900_audio->mmio + ACTL_ACOS0) ;
+-	val &= ~SLOT1_VALID;
+-	AUDIO_WRITE(nuc900_audio->mmio + ACTL_ACOS0, val);
+-
+-	if (AUDIO_READ(nuc900_audio->mmio + ACTL_ACIS1) >> 2 != reg) {
+-		dev_err(nuc900_audio->dev,
+-				"R_INDEX of REG_ACTL_ACIS1 not match!\n");
+-	}
+-
+-	udelay(100);
+-	val = (AUDIO_READ(nuc900_audio->mmio + ACTL_ACIS2) & 0xFFFF);
+-
+-out:
+-	mutex_unlock(&ac97_mutex);
+-	return val;
+-}
+-
+-/* AC97 controller writes to codec register */
+-static void nuc900_ac97_write(struct snd_ac97 *ac97, unsigned short reg,
+-				unsigned short val)
+-{
+-	struct nuc900_audio *nuc900_audio = nuc900_ac97_data;
+-	unsigned long tmp, timeout = 0x10000;
+-
+-	mutex_lock(&ac97_mutex);
+-
+-	tmp = nuc900_checkready();
+-	if (tmp)
+-		dev_err(nuc900_audio->dev, "AC97 codec is not ready\n");
+-
+-	/* clear the R_WB bit and write register index */
+-	AUDIO_WRITE(nuc900_audio->mmio + ACTL_ACOS1, reg);
+-
+-	/* write register value */
+-	AUDIO_WRITE(nuc900_audio->mmio + ACTL_ACOS2, val);
+-
+-	/* set the valid frame bit and valid slots */
+-	tmp = AUDIO_READ(nuc900_audio->mmio + ACTL_ACOS0);
+-	tmp |= SLOT1_VALID | SLOT2_VALID | VALID_FRAME;
+-	AUDIO_WRITE(nuc900_audio->mmio + ACTL_ACOS0, tmp);
+-
+-	udelay(100);
+-
+-	/* polling the AC_W_FINISH */
+-	while ((AUDIO_READ(nuc900_audio->mmio + ACTL_ACCON) & AC_W_FINISH)
+-								&& --timeout)
+-		mdelay(1);
+-
+-	if (!timeout)
+-		dev_err(nuc900_audio->dev, "AC97 write register time out !\n");
+-
+-	tmp = AUDIO_READ(nuc900_audio->mmio + ACTL_ACOS0);
+-	tmp &= ~(SLOT1_VALID | SLOT2_VALID);
+-	AUDIO_WRITE(nuc900_audio->mmio + ACTL_ACOS0, tmp);
+-
+-	mutex_unlock(&ac97_mutex);
+-
+-}
+-
+-static void nuc900_ac97_warm_reset(struct snd_ac97 *ac97)
+-{
+-	struct nuc900_audio *nuc900_audio = nuc900_ac97_data;
+-	unsigned long val;
+-
+-	mutex_lock(&ac97_mutex);
+-
+-	/* warm reset AC 97 */
+-	val = AUDIO_READ(nuc900_audio->mmio + ACTL_ACCON);
+-	val |= AC_W_RES;
+-	AUDIO_WRITE(nuc900_audio->mmio + ACTL_ACCON, val);
+-
+-	udelay(100);
+-
+-	val = nuc900_checkready();
+-	if (val)
+-		dev_err(nuc900_audio->dev, "AC97 codec is not ready\n");
+-
+-	mutex_unlock(&ac97_mutex);
+-}
+-
+-static void nuc900_ac97_cold_reset(struct snd_ac97 *ac97)
+-{
+-	struct nuc900_audio *nuc900_audio = nuc900_ac97_data;
+-	unsigned long val;
+-
+-	mutex_lock(&ac97_mutex);
+-
+-	/* reset Audio Controller */
+-	val = AUDIO_READ(nuc900_audio->mmio + ACTL_RESET);
+-	val |= ACTL_RESET_BIT;
+-	AUDIO_WRITE(nuc900_audio->mmio + ACTL_RESET, val);
+-
+-	val = AUDIO_READ(nuc900_audio->mmio + ACTL_RESET);
+-	val &= (~ACTL_RESET_BIT);
+-	AUDIO_WRITE(nuc900_audio->mmio + ACTL_RESET, val);
+-
+-	/* reset AC-link interface */
+-
+-	val = AUDIO_READ(nuc900_audio->mmio + ACTL_RESET);
+-	val |= AC_RESET;
+-	AUDIO_WRITE(nuc900_audio->mmio + ACTL_RESET, val);
+-
+-	val = AUDIO_READ(nuc900_audio->mmio + ACTL_RESET);
+-	val &= ~AC_RESET;
+-	AUDIO_WRITE(nuc900_audio->mmio + ACTL_RESET, val);
+-
+-	/* cold reset AC 97 */
+-	val = AUDIO_READ(nuc900_audio->mmio + ACTL_ACCON);
+-	val |= AC_C_RES;
+-	AUDIO_WRITE(nuc900_audio->mmio + ACTL_ACCON, val);
+-
+-	val = AUDIO_READ(nuc900_audio->mmio + ACTL_ACCON);
+-	val &= (~AC_C_RES);
+-	AUDIO_WRITE(nuc900_audio->mmio + ACTL_ACCON, val);
+-
+-	udelay(100);
+-
+-	mutex_unlock(&ac97_mutex);
+-
+-}
+-
+-/* AC97 controller operations */
+-static struct snd_ac97_bus_ops nuc900_ac97_ops = {
+-	.read		= nuc900_ac97_read,
+-	.write		= nuc900_ac97_write,
+-	.reset		= nuc900_ac97_cold_reset,
+-	.warm_reset	= nuc900_ac97_warm_reset,
+-};
+-
+-static int nuc900_ac97_trigger(struct snd_pcm_substream *substream,
+-				int cmd, struct snd_soc_dai *dai)
+-{
+-	struct nuc900_audio *nuc900_audio = nuc900_ac97_data;
+-	int ret;
+-	unsigned long val, tmp;
+-
+-	ret = 0;
+-
+-	switch (cmd) {
+-	case SNDRV_PCM_TRIGGER_START:
+-	case SNDRV_PCM_TRIGGER_RESUME:
+-		val = AUDIO_READ(nuc900_audio->mmio + ACTL_RESET);
+-		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+-			tmp = AUDIO_READ(nuc900_audio->mmio + ACTL_ACOS0);
+-			tmp |= (SLOT3_VALID | SLOT4_VALID | VALID_FRAME);
+-			AUDIO_WRITE(nuc900_audio->mmio + ACTL_ACOS0, tmp);
+-
+-			tmp = AUDIO_READ(nuc900_audio->mmio + ACTL_PSR);
+-			tmp |= (P_DMA_END_IRQ | P_DMA_MIDDLE_IRQ);
+-			AUDIO_WRITE(nuc900_audio->mmio + ACTL_PSR, tmp);
+-			val |= AC_PLAY;
+-		} else {
+-			tmp = AUDIO_READ(nuc900_audio->mmio + ACTL_RSR);
+-			tmp |= (R_DMA_END_IRQ | R_DMA_MIDDLE_IRQ);
+-
+-			AUDIO_WRITE(nuc900_audio->mmio + ACTL_RSR, tmp);
+-			val |= AC_RECORD;
+-		}
+-
+-		AUDIO_WRITE(nuc900_audio->mmio + ACTL_RESET, val);
+-
+-		break;
+-	case SNDRV_PCM_TRIGGER_STOP:
+-	case SNDRV_PCM_TRIGGER_SUSPEND:
+-		val = AUDIO_READ(nuc900_audio->mmio + ACTL_RESET);
+-		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+-			tmp = AUDIO_READ(nuc900_audio->mmio + ACTL_ACOS0);
+-			tmp &= ~(SLOT3_VALID | SLOT4_VALID);
+-			AUDIO_WRITE(nuc900_audio->mmio + ACTL_ACOS0, tmp);
+-
+-			AUDIO_WRITE(nuc900_audio->mmio + ACTL_PSR, RESET_PRSR);
+-			val &= ~AC_PLAY;
+-		} else {
+-			AUDIO_WRITE(nuc900_audio->mmio + ACTL_RSR, RESET_PRSR);
+-			val &= ~AC_RECORD;
+-		}
+-
+-		AUDIO_WRITE(nuc900_audio->mmio + ACTL_RESET, val);
+-
+-		break;
+-	default:
+-		ret = -EINVAL;
+-	}
+-
+-	return ret;
+-}
+-
+-static int nuc900_ac97_probe(struct snd_soc_dai *dai)
+-{
+-	struct nuc900_audio *nuc900_audio = nuc900_ac97_data;
+-	unsigned long val;
+-
+-	mutex_lock(&ac97_mutex);
+-
+-	/* enable unit clock */
+-	clk_enable(nuc900_audio->clk);
+-
+-	/* enable audio controller and AC-link interface */
+-	val = AUDIO_READ(nuc900_audio->mmio + ACTL_CON);
+-	val |= (IIS_AC_PIN_SEL | ACLINK_EN);
+-	AUDIO_WRITE(nuc900_audio->mmio + ACTL_CON, val);
+-
+-	mutex_unlock(&ac97_mutex);
+-
+-	return 0;
+-}
+-
+-static int nuc900_ac97_remove(struct snd_soc_dai *dai)
+-{
+-	struct nuc900_audio *nuc900_audio = nuc900_ac97_data;
+-
+-	clk_disable(nuc900_audio->clk);
+-	return 0;
+-}
+-
+-static const struct snd_soc_dai_ops nuc900_ac97_dai_ops = {
+-	.trigger	= nuc900_ac97_trigger,
+-};
+-
+-static struct snd_soc_dai_driver nuc900_ac97_dai = {
+-	.probe			= nuc900_ac97_probe,
+-	.remove			= nuc900_ac97_remove,
+-	.bus_control		= true,
+-	.playback = {
+-		.rates		= SNDRV_PCM_RATE_8000_48000,
+-		.formats	= SNDRV_PCM_FMTBIT_S16_LE,
+-		.channels_min	= 1,
+-		.channels_max	= 2,
+-	},
+-	.capture = {
+-		.rates		= SNDRV_PCM_RATE_8000_48000,
+-		.formats	= SNDRV_PCM_FMTBIT_S16_LE,
+-		.channels_min	= 1,
+-		.channels_max	= 2,
+-	},
+-	.ops = &nuc900_ac97_dai_ops,
+-};
+-
+-static const struct snd_soc_component_driver nuc900_ac97_component = {
+-	.name		= "nuc900-ac97",
+-};
+-
+-static int nuc900_ac97_drvprobe(struct platform_device *pdev)
+-{
+-	struct nuc900_audio *nuc900_audio;
+-	int ret;
+-
+-	if (nuc900_ac97_data)
+-		return -EBUSY;
+-
+-	nuc900_audio = devm_kzalloc(&pdev->dev, sizeof(struct nuc900_audio),
+-				    GFP_KERNEL);
+-	if (!nuc900_audio)
+-		return -ENOMEM;
+-
+-	spin_lock_init(&nuc900_audio->lock);
+-
+-	nuc900_audio->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	nuc900_audio->mmio = devm_ioremap_resource(&pdev->dev,
+-						   nuc900_audio->res);
+-	if (IS_ERR(nuc900_audio->mmio))
+-		return PTR_ERR(nuc900_audio->mmio);
+-
+-	nuc900_audio->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(nuc900_audio->clk)) {
+-		ret = PTR_ERR(nuc900_audio->clk);
+-		goto out;
+-	}
+-
+-	ret = platform_get_irq(pdev, 0);
+-	if (ret < 0)
+-		goto out;
+-	nuc900_audio->irq_num = ret;
+-
+-	nuc900_ac97_data = nuc900_audio;
+-
+-	ret = snd_soc_set_ac97_ops(&nuc900_ac97_ops);
+-	if (ret)
+-		goto out;
+-
+-	ret = devm_snd_soc_register_component(&pdev->dev, &nuc900_ac97_component,
+-					 &nuc900_ac97_dai, 1);
+-	if (ret)
+-		goto out;
+-
+-	/* enbale ac97 multifunction pin */
+-	mfp_set_groupg(nuc900_audio->dev, NULL);
+-
+-	return 0;
+-
+-out:
+-	snd_soc_set_ac97_ops(NULL);
+-	return ret;
+-}
+-
+-static int nuc900_ac97_drvremove(struct platform_device *pdev)
+-{
+-	nuc900_ac97_data = NULL;
+-	snd_soc_set_ac97_ops(NULL);
+-
+-	return 0;
+-}
+-
+-static struct platform_driver nuc900_ac97_driver = {
+-	.driver	= {
+-		.name	= "nuc900-ac97",
+-	},
+-	.probe		= nuc900_ac97_drvprobe,
+-	.remove		= nuc900_ac97_drvremove,
+-};
+-
+-module_platform_driver(nuc900_ac97_driver);
+-
+-MODULE_AUTHOR("Wan ZongShun <mcuos.com@gmail.com>");
+-MODULE_DESCRIPTION("NUC900 AC97 SoC driver!");
+-MODULE_LICENSE("GPL");
+-MODULE_ALIAS("platform:nuc900-ac97");
+diff --git a/sound/soc/nuc900/nuc900-audio.c b/sound/soc/nuc900/nuc900-audio.c
+deleted file mode 100644
+index 19146690d514..000000000000
+--- a/sound/soc/nuc900/nuc900-audio.c
++++ /dev/null
+@@ -1,73 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * Copyright (c) 2010 Nuvoton technology corporation.
+- *
+- * Wan ZongShun <mcuos.com@gmail.com>
+- */
+-
+-#include <linux/module.h>
+-#include <linux/moduleparam.h>
+-#include <linux/timer.h>
+-#include <linux/interrupt.h>
+-#include <linux/platform_device.h>
+-
+-#include <sound/core.h>
+-#include <sound/pcm.h>
+-#include <sound/soc.h>
+-
+-#include "nuc900-audio.h"
+-
+-SND_SOC_DAILINK_DEFS(ac97,
+-	DAILINK_COMP_ARRAY(COMP_CPU("nuc900-ac97")),
+-	DAILINK_COMP_ARRAY(COMP_CODEC("ac97-codec", "ac97-hifi")),
+-	DAILINK_COMP_ARRAY(COMP_PLATFORM("nuc900-pcm-audio")));
+-
+-static struct snd_soc_dai_link nuc900evb_ac97_dai = {
+-	.name		= "AC97",
+-	.stream_name	= "AC97 HiFi",
+-	SND_SOC_DAILINK_REG(ac97),
+-};
+-
+-static struct snd_soc_card nuc900evb_audio_machine = {
+-	.name		= "NUC900EVB_AC97",
+-	.owner		= THIS_MODULE,
+-	.dai_link	= &nuc900evb_ac97_dai,
+-	.num_links	= 1,
+-};
+-
+-static struct platform_device *nuc900evb_asoc_dev;
+-
+-static int __init nuc900evb_audio_init(void)
+-{
+-	int ret;
+-
+-	ret = -ENOMEM;
+-	nuc900evb_asoc_dev = platform_device_alloc("soc-audio", -1);
+-	if (!nuc900evb_asoc_dev)
+-		goto out;
+-
+-	/* nuc900 board audio device */
+-	platform_set_drvdata(nuc900evb_asoc_dev, &nuc900evb_audio_machine);
+-
+-	ret = platform_device_add(nuc900evb_asoc_dev);
+-
+-	if (ret) {
+-		platform_device_put(nuc900evb_asoc_dev);
+-		nuc900evb_asoc_dev = NULL;
+-	}
+-
+-out:
+-	return ret;
+-}
+-
+-static void __exit nuc900evb_audio_exit(void)
+-{
+-	platform_device_unregister(nuc900evb_asoc_dev);
+-}
+-
+-module_init(nuc900evb_audio_init);
+-module_exit(nuc900evb_audio_exit);
+-
+-MODULE_LICENSE("GPL");
+-MODULE_DESCRIPTION("NUC900 Series ASoC audio support");
+-MODULE_AUTHOR("Wan ZongShun");
+diff --git a/sound/soc/nuc900/nuc900-audio.h b/sound/soc/nuc900/nuc900-audio.h
+deleted file mode 100644
+index 90ffa7bbce01..000000000000
+--- a/sound/soc/nuc900/nuc900-audio.h
++++ /dev/null
+@@ -1,108 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright (c) 2010 Nuvoton technology corporation.
+- *
+- * Wan ZongShun <mcuos.com@gmail.com>
+- */
+-
+-#ifndef _NUC900_AUDIO_H
+-#define _NUC900_AUDIO_H
+-
+-#include <linux/io.h>
+-
+-/* Audio Control Registers */
+-#define ACTL_CON		0x00
+-#define ACTL_RESET		0x04
+-#define ACTL_RDSTB		0x08
+-#define ACTL_RDST_LENGTH	0x0C
+-#define ACTL_RDSTC		0x10
+-#define ACTL_RSR		0x14
+-#define ACTL_PDSTB		0x18
+-#define ACTL_PDST_LENGTH	0x1C
+-#define ACTL_PDSTC		0x20
+-#define ACTL_PSR		0x24
+-#define ACTL_IISCON		0x28
+-#define ACTL_ACCON		0x2C
+-#define ACTL_ACOS0		0x30
+-#define ACTL_ACOS1		0x34
+-#define ACTL_ACOS2		0x38
+-#define ACTL_ACIS0		0x3C
+-#define ACTL_ACIS1		0x40
+-#define ACTL_ACIS2		0x44
+-#define ACTL_COUNTER		0x48
+-
+-/* bit definition of REG_ACTL_CON register */
+-#define R_DMA_IRQ		0x1000
+-#define T_DMA_IRQ		0x0800
+-#define IIS_AC_PIN_SEL		0x0100
+-#define FIFO_TH			0x0080
+-#define ADC_EN			0x0010
+-#define M80_EN			0x0008
+-#define ACLINK_EN		0x0004
+-#define IIS_EN			0x0002
+-
+-/* bit definition of REG_ACTL_RESET register */
+-#define W5691_PLAY		0x20000
+-#define ACTL_RESET_BIT		0x10000
+-#define RECORD_RIGHT_CHNNEL	0x08000
+-#define RECORD_LEFT_CHNNEL	0x04000
+-#define PLAY_RIGHT_CHNNEL	0x02000
+-#define PLAY_LEFT_CHNNEL	0x01000
+-#define DAC_PLAY		0x00800
+-#define ADC_RECORD		0x00400
+-#define M80_PLAY		0x00200
+-#define AC_RECORD		0x00100
+-#define AC_PLAY			0x00080
+-#define IIS_RECORD		0x00040
+-#define IIS_PLAY		0x00020
+-#define DAC_RESET		0x00010
+-#define ADC_RESET		0x00008
+-#define M80_RESET		0x00004
+-#define AC_RESET		0x00002
+-#define IIS_RESET		0x00001
+-
+-/* bit definition of REG_ACTL_ACCON register */
+-#define AC_BCLK_PU_EN		0x20
+-#define AC_R_FINISH		0x10
+-#define AC_W_FINISH		0x08
+-#define AC_W_RES		0x04
+-#define AC_C_RES		0x02
+-
+-/* bit definition of ACTL_RSR register */
+-#define R_FIFO_EMPTY		0x04
+-#define R_DMA_END_IRQ		0x02
+-#define R_DMA_MIDDLE_IRQ	0x01
+-
+-/* bit definition of ACTL_PSR register */
+-#define P_FIFO_EMPTY		0x04
+-#define P_DMA_END_IRQ		0x02
+-#define P_DMA_MIDDLE_IRQ	0x01
+-
+-/* bit definition of ACTL_ACOS0 register */
+-#define SLOT1_VALID		0x01
+-#define SLOT2_VALID		0x02
+-#define SLOT3_VALID		0x04
+-#define SLOT4_VALID		0x08
+-#define VALID_FRAME		0x10
+-
+-/* bit definition of ACTL_ACOS1 register */
+-#define R_WB			0x80
+-
+-#define CODEC_READY		0x10
+-#define RESET_PRSR		0x00
+-#define AUDIO_WRITE(addr, val)	__raw_writel(val, addr)
+-#define AUDIO_READ(addr)	__raw_readl(addr)
+-
+-struct nuc900_audio {
+-	void __iomem *mmio;
+-	spinlock_t lock;
+-	unsigned long irq_num;
+-	struct resource *res;
+-	struct clk *clk;
+-	struct device *dev;
+-
+-};
+-
+-extern struct nuc900_audio *nuc900_ac97_data;
+-
+-#endif /*end _NUC900_AUDIO_H */
+diff --git a/sound/soc/nuc900/nuc900-pcm.c b/sound/soc/nuc900/nuc900-pcm.c
+deleted file mode 100644
+index 4442a26e9502..000000000000
+--- a/sound/soc/nuc900/nuc900-pcm.c
++++ /dev/null
+@@ -1,321 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * Copyright (c) 2010 Nuvoton technology corporation.
+- *
+- * Wan ZongShun <mcuos.com@gmail.com>
+- */
+-
+-#include <linux/module.h>
+-#include <linux/init.h>
+-#include <linux/io.h>
+-#include <linux/platform_device.h>
+-#include <linux/slab.h>
+-#include <linux/dma-mapping.h>
+-
+-#include <sound/core.h>
+-#include <sound/pcm.h>
+-#include <sound/pcm_params.h>
+-#include <sound/soc.h>
+-
+-#include <mach/hardware.h>
+-
+-#include "nuc900-audio.h"
+-
+-static const struct snd_pcm_hardware nuc900_pcm_hardware = {
+-	.info			= SNDRV_PCM_INFO_INTERLEAVED |
+-					SNDRV_PCM_INFO_BLOCK_TRANSFER |
+-					SNDRV_PCM_INFO_MMAP |
+-					SNDRV_PCM_INFO_MMAP_VALID |
+-					SNDRV_PCM_INFO_PAUSE |
+-					SNDRV_PCM_INFO_RESUME,
+-	.buffer_bytes_max	= 4*1024,
+-	.period_bytes_min	= 1*1024,
+-	.period_bytes_max	= 4*1024,
+-	.periods_min		= 1,
+-	.periods_max		= 1024,
+-};
+-
+-static int nuc900_dma_hw_params(struct snd_pcm_substream *substream,
+-	struct snd_pcm_hw_params *params)
+-{
+-	return snd_pcm_lib_malloc_pages(substream, params_buffer_bytes(params));
+-}
+-
+-static void nuc900_update_dma_register(struct snd_pcm_substream *substream)
+-{
+-	struct snd_pcm_runtime *runtime = substream->runtime;
+-	struct nuc900_audio *nuc900_audio = runtime->private_data;
+-	void __iomem *mmio_addr, *mmio_len;
+-
+-	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+-		mmio_addr = nuc900_audio->mmio + ACTL_PDSTB;
+-		mmio_len = nuc900_audio->mmio + ACTL_PDST_LENGTH;
+-	} else {
+-		mmio_addr = nuc900_audio->mmio + ACTL_RDSTB;
+-		mmio_len = nuc900_audio->mmio + ACTL_RDST_LENGTH;
+-	}
+-
+-	AUDIO_WRITE(mmio_addr, runtime->dma_addr);
+-	AUDIO_WRITE(mmio_len, runtime->dma_bytes);
+-}
+-
+-static void nuc900_dma_start(struct snd_pcm_substream *substream)
+-{
+-	struct snd_pcm_runtime *runtime = substream->runtime;
+-	struct nuc900_audio *nuc900_audio = runtime->private_data;
+-	unsigned long val;
+-
+-	val = AUDIO_READ(nuc900_audio->mmio + ACTL_CON);
+-	val |= (T_DMA_IRQ | R_DMA_IRQ);
+-	AUDIO_WRITE(nuc900_audio->mmio + ACTL_CON, val);
+-}
+-
+-static void nuc900_dma_stop(struct snd_pcm_substream *substream)
+-{
+-	struct snd_pcm_runtime *runtime = substream->runtime;
+-	struct nuc900_audio *nuc900_audio = runtime->private_data;
+-	unsigned long val;
+-
+-	val = AUDIO_READ(nuc900_audio->mmio + ACTL_CON);
+-	val &= ~(T_DMA_IRQ | R_DMA_IRQ);
+-	AUDIO_WRITE(nuc900_audio->mmio + ACTL_CON, val);
+-}
+-
+-static irqreturn_t nuc900_dma_interrupt(int irq, void *dev_id)
+-{
+-	struct snd_pcm_substream *substream = dev_id;
+-	struct nuc900_audio *nuc900_audio = substream->runtime->private_data;
+-	unsigned long val;
+-
+-	spin_lock(&nuc900_audio->lock);
+-
+-	val = AUDIO_READ(nuc900_audio->mmio + ACTL_CON);
+-
+-	if (val & R_DMA_IRQ) {
+-		AUDIO_WRITE(nuc900_audio->mmio + ACTL_CON, val | R_DMA_IRQ);
+-
+-		val = AUDIO_READ(nuc900_audio->mmio + ACTL_RSR);
+-
+-		if (val & R_DMA_MIDDLE_IRQ) {
+-			val |= R_DMA_MIDDLE_IRQ;
+-			AUDIO_WRITE(nuc900_audio->mmio + ACTL_RSR, val);
+-		}
+-
+-		if (val & R_DMA_END_IRQ) {
+-			val |= R_DMA_END_IRQ;
+-			AUDIO_WRITE(nuc900_audio->mmio + ACTL_RSR, val);
+-		}
+-	} else if (val & T_DMA_IRQ) {
+-		AUDIO_WRITE(nuc900_audio->mmio + ACTL_CON, val | T_DMA_IRQ);
+-
+-		val = AUDIO_READ(nuc900_audio->mmio + ACTL_PSR);
+-
+-		if (val & P_DMA_MIDDLE_IRQ) {
+-			val |= P_DMA_MIDDLE_IRQ;
+-			AUDIO_WRITE(nuc900_audio->mmio + ACTL_PSR, val);
+-		}
+-
+-		if (val & P_DMA_END_IRQ) {
+-			val |= P_DMA_END_IRQ;
+-			AUDIO_WRITE(nuc900_audio->mmio + ACTL_PSR, val);
+-		}
+-	} else {
+-		dev_err(nuc900_audio->dev, "Wrong DMA interrupt status!\n");
+-		spin_unlock(&nuc900_audio->lock);
+-		return IRQ_HANDLED;
+-	}
+-
+-	spin_unlock(&nuc900_audio->lock);
+-
+-	snd_pcm_period_elapsed(substream);
+-
+-	return IRQ_HANDLED;
+-}
+-
+-static int nuc900_dma_hw_free(struct snd_pcm_substream *substream)
+-{
+-	snd_pcm_lib_free_pages(substream);
+-	return 0;
+-}
+-
+-static int nuc900_dma_prepare(struct snd_pcm_substream *substream)
+-{
+-	struct snd_pcm_runtime *runtime = substream->runtime;
+-	struct nuc900_audio *nuc900_audio = runtime->private_data;
+-	unsigned long flags, val;
+-	int ret = 0;
+-
+-	spin_lock_irqsave(&nuc900_audio->lock, flags);
+-
+-	nuc900_update_dma_register(substream);
+-
+-	val = AUDIO_READ(nuc900_audio->mmio + ACTL_RESET);
+-
+-	switch (runtime->channels) {
+-	case 1:
+-		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+-			val &= ~(PLAY_LEFT_CHNNEL | PLAY_RIGHT_CHNNEL);
+-			val |= PLAY_RIGHT_CHNNEL;
+-		} else {
+-			val &= ~(RECORD_LEFT_CHNNEL | RECORD_RIGHT_CHNNEL);
+-			val |= RECORD_RIGHT_CHNNEL;
+-		}
+-		AUDIO_WRITE(nuc900_audio->mmio + ACTL_RESET, val);
+-		break;
+-	case 2:
+-		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+-			val |= (PLAY_LEFT_CHNNEL | PLAY_RIGHT_CHNNEL);
+-		else
+-			val |= (RECORD_LEFT_CHNNEL | RECORD_RIGHT_CHNNEL);
+-		AUDIO_WRITE(nuc900_audio->mmio + ACTL_RESET, val);
+-		break;
+-	default:
+-		ret = -EINVAL;
+-	}
+-	spin_unlock_irqrestore(&nuc900_audio->lock, flags);
+-	return ret;
+-}
+-
+-static int nuc900_dma_trigger(struct snd_pcm_substream *substream, int cmd)
+-{
+-	int ret = 0;
+-
+-	switch (cmd) {
+-	case SNDRV_PCM_TRIGGER_START:
+-	case SNDRV_PCM_TRIGGER_RESUME:
+-		nuc900_dma_start(substream);
+-		break;
+-
+-	case SNDRV_PCM_TRIGGER_STOP:
+-	case SNDRV_PCM_TRIGGER_SUSPEND:
+-		nuc900_dma_stop(substream);
+-		break;
+-
+-	default:
+-		ret = -EINVAL;
+-		break;
+-	}
+-
+-	return ret;
+-}
+-
+-static int nuc900_dma_getposition(struct snd_pcm_substream *substream,
+-					dma_addr_t *src, dma_addr_t *dst)
+-{
+-	struct snd_pcm_runtime *runtime = substream->runtime;
+-	struct nuc900_audio *nuc900_audio = runtime->private_data;
+-
+-	if (src != NULL)
+-		*src = AUDIO_READ(nuc900_audio->mmio + ACTL_PDSTC);
+-
+-	if (dst != NULL)
+-		*dst = AUDIO_READ(nuc900_audio->mmio + ACTL_RDSTC);
+-
+-	return 0;
+-}
+-
+-static snd_pcm_uframes_t nuc900_dma_pointer(struct snd_pcm_substream *substream)
+-{
+-	struct snd_pcm_runtime *runtime = substream->runtime;
+-	dma_addr_t src, dst;
+-	unsigned long res;
+-
+-	nuc900_dma_getposition(substream, &src, &dst);
+-
+-	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE)
+-		res = dst - runtime->dma_addr;
+-	else
+-		res = src - runtime->dma_addr;
+-
+-	return bytes_to_frames(substream->runtime, res);
+-}
+-
+-static int nuc900_dma_open(struct snd_pcm_substream *substream)
+-{
+-	struct snd_pcm_runtime *runtime = substream->runtime;
+-	struct nuc900_audio *nuc900_audio;
+-
+-	snd_soc_set_runtime_hwparams(substream, &nuc900_pcm_hardware);
+-
+-	nuc900_audio = nuc900_ac97_data;
+-
+-	if (request_irq(nuc900_audio->irq_num, nuc900_dma_interrupt,
+-			0, "nuc900-dma", substream))
+-		return -EBUSY;
+-
+-	runtime->private_data = nuc900_audio;
+-
+-	return 0;
+-}
+-
+-static int nuc900_dma_close(struct snd_pcm_substream *substream)
+-{
+-	struct snd_pcm_runtime *runtime = substream->runtime;
+-	struct nuc900_audio *nuc900_audio = runtime->private_data;
+-
+-	free_irq(nuc900_audio->irq_num, substream);
+-
+-	return 0;
+-}
+-
+-static int nuc900_dma_mmap(struct snd_pcm_substream *substream,
+-	struct vm_area_struct *vma)
+-{
+-	struct snd_pcm_runtime *runtime = substream->runtime;
+-
+-	return dma_mmap_wc(substream->pcm->card->dev, vma, runtime->dma_area,
+-			   runtime->dma_addr, runtime->dma_bytes);
+-}
+-
+-static const struct snd_pcm_ops nuc900_dma_ops = {
+-	.open		= nuc900_dma_open,
+-	.close		= nuc900_dma_close,
+-	.ioctl		= snd_pcm_lib_ioctl,
+-	.hw_params	= nuc900_dma_hw_params,
+-	.hw_free	= nuc900_dma_hw_free,
+-	.prepare	= nuc900_dma_prepare,
+-	.trigger	= nuc900_dma_trigger,
+-	.pointer	= nuc900_dma_pointer,
+-	.mmap		= nuc900_dma_mmap,
+-};
+-
+-static int nuc900_dma_new(struct snd_soc_pcm_runtime *rtd)
+-{
+-	struct snd_card *card = rtd->card->snd_card;
+-	struct snd_pcm *pcm = rtd->pcm;
+-	int ret;
+-
+-	ret = dma_coerce_mask_and_coherent(card->dev, DMA_BIT_MASK(32));
+-	if (ret)
+-		return ret;
+-
+-	snd_pcm_lib_preallocate_pages_for_all(pcm, SNDRV_DMA_TYPE_DEV,
+-		card->dev, 4 * 1024, (4 * 1024) - 1);
+-
+-	return 0;
+-}
+-
+-static const struct snd_soc_component_driver nuc900_soc_component = {
+-	.ops		= &nuc900_dma_ops,
+-	.pcm_new	= nuc900_dma_new,
+-};
+-
+-static int nuc900_soc_platform_probe(struct platform_device *pdev)
+-{
+-	return devm_snd_soc_register_component(&pdev->dev, &nuc900_soc_component,
+-					       NULL, 0);
+-}
+-
+-static struct platform_driver nuc900_pcm_driver = {
+-	.driver = {
+-			.name = "nuc900-pcm-audio",
+-	},
+-
+-	.probe = nuc900_soc_platform_probe,
+-};
+-
+-module_platform_driver(nuc900_pcm_driver);
+-
+-MODULE_AUTHOR("Wan ZongShun, <mcuos.com@gmail.com>");
+-MODULE_DESCRIPTION("nuc900 Audio DMA module");
+-MODULE_LICENSE("GPL");
+-- 
+2.20.1
+
