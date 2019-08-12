@@ -2,60 +2,77 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D1BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 04:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFF6C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 04:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 198712085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 04:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A83E2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 04:42:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfHLEkl (ORCPT
+        id S1726761AbfHLEmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 00:40:41 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:38760 "EHLO
+        Mon, 12 Aug 2019 00:42:17 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:38784 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfHLEkl (ORCPT
+        with ESMTP id S1725838AbfHLEmQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 00:40:41 -0400
+        Mon, 12 Aug 2019 00:42:16 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id A3BE1145F4F52;
-        Sun, 11 Aug 2019 21:40:40 -0700 (PDT)
-Date:   Sun, 11 Aug 2019 21:40:40 -0700 (PDT)
-Message-Id: <20190811.214040.1362923590670743834.davem@davemloft.net>
-To:     chris.packham@alliedtelesis.co.nz
-Cc:     jon.maloy@ericsson.com, ying.xue@windriver.com,
-        netdev@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] tipc: initialise addr_trail_end when setting node
- addresses
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id EE650145F4F5D;
+        Sun, 11 Aug 2019 21:42:15 -0700 (PDT)
+Date:   Sun, 11 Aug 2019 21:42:15 -0700 (PDT)
+Message-Id: <20190811.214215.1211940529349794121.davem@davemloft.net>
+To:     natechancellor@gmail.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] net: tc35815: Explicitly check NET_IP_ALIGN is not
+ zero in tc35815_rx
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190811201825.13876-1-chris.packham@alliedtelesis.co.nz>
-References: <20190811201825.13876-1-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20190812031345.41157-1-natechancellor@gmail.com>
+References: <20190812031345.41157-1-natechancellor@gmail.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 11 Aug 2019 21:40:40 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 11 Aug 2019 21:42:16 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Date: Mon, 12 Aug 2019 08:18:25 +1200
+From: Nathan Chancellor <natechancellor@gmail.com>
+Date: Sun, 11 Aug 2019 20:13:45 -0700
 
-> We set the field 'addr_trial_end' to 'jiffies', instead of the current
-> value 0, at the moment the node address is initialized. This guarantees
-> we don't inadvertently enter an address trial period when the node
-> address is explicitly set by the user.
+> clang warns:
 > 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> Acked-by: Jon Maloy <jon.maloy@ericsson.com>
+> drivers/net/ethernet/toshiba/tc35815.c:1507:30: warning: use of logical
+> '&&' with constant operand [-Wconstant-logical-operand]
+>                         if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
+>                                                   ^  ~~~~~~~~~~~~
+> drivers/net/ethernet/toshiba/tc35815.c:1507:30: note: use '&' for a
+> bitwise operation
+>                         if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
+>                                                   ^~
+>                                                   &
+> drivers/net/ethernet/toshiba/tc35815.c:1507:30: note: remove constant to
+> silence this warning
+>                         if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN)
+>                                                  ~^~~~~~~~~~~~~~~
+> 1 warning generated.
+> 
+> Explicitly check that NET_IP_ALIGN is not zero, which matches how this
+> is checked in other parts of the tree. Because NET_IP_ALIGN is a build
+> time constant, this check will be constant folded away during
+> optimization.
+> 
+> Fixes: 82a9928db560 ("tc35815: Enable StripCRC feature")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/608
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Applied.
+Applied but I think clang is being rediculous.
