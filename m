@@ -2,107 +2,110 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31565C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CB4C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFBD32085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:24:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565598257;
-	bh=zNzis2zQXdyIq2cAeR2BUedzH+EroG2164G+U884KuI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xpqGU6PXt1hyx4QMshF8HChMm40qjfUB0SsRC6OIkks5WU/Rma+21bWw8MK2lHyyj
-	 air3joewb98zCLrwbWMkdksW0t015Y8SKh4nonw8qkkjbP8/ON3cOExM9jRYicRgEu
-	 Rts/32GMTDddx3XdAIAnAgWtPgC6Psp7Eorbe9YU=
+	by mail.kernel.org (Postfix) with ESMTP id 0F6572085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:24:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfHLIYP (ORCPT
+        id S1727111AbfHLIYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 04:24:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45330 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726834AbfHLIYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 04:24:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1D034AE04;
-        Mon, 12 Aug 2019 08:24:14 +0000 (UTC)
-Date:   Mon, 12 Aug 2019 10:24:11 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     ndrw <ndrw.xf@redhazel.co.uk>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Artem S. Tashkinov" <aros@gmx.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Subject: Re: Let's talk about the elephant in the room - the Linux kernel's
- inability to gracefully handle low memory pressure
-Message-ID: <20190812082411.GB5117@dhcp22.suse.cz>
-References: <20190808114826.GC18351@dhcp22.suse.cz>
- <806F5696-A8D6-481D-A82F-49DEC1F2B035@redhazel.co.uk>
- <20190808163228.GE18351@dhcp22.suse.cz>
- <5FBB0A26-0CFE-4B88-A4F2-6A42E3377EDB@redhazel.co.uk>
- <20190808185925.GH18351@dhcp22.suse.cz>
- <08e5d007-a41a-e322-5631-b89978b9cc20@redhazel.co.uk>
- <20190809085748.GN18351@dhcp22.suse.cz>
- <cdb392ee-e192-c136-41cb-48d9e4e4bf47@redhazel.co.uk>
- <20190809105016.GP18351@dhcp22.suse.cz>
- <33407eca-3c05-5900-0353-761db62feeea@redhazel.co.uk>
+        Mon, 12 Aug 2019 04:24:19 -0400
+Received: from mga12.intel.com ([192.55.52.136]:26525 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726834AbfHLIYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 04:24:16 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 01:24:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,376,1559545200"; 
+   d="scan'208";a="193908061"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
+  by fmsmga001.fm.intel.com with ESMTP; 12 Aug 2019 01:24:14 -0700
+Subject: Re: [PATCH] mmc: sdhci-cadence: use struct_size() helper
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190808165301.GA30877@embeddedor>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <994dec08-a6fb-56b1-c931-9a034e9a5f8d@intel.com>
+Date:   Mon, 12 Aug 2019 11:23:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <33407eca-3c05-5900-0353-761db62feeea@redhazel.co.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190808165301.GA30877@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 10-08-19 13:34:06, ndrw wrote:
-> On 09/08/2019 11:50, Michal Hocko wrote:
-> > We try to protect low amount of cache. Have a look at get_scan_count
-> > function. But the exact amount of the cache to be protected is really
-> > hard to know wihtout a crystal ball or understanding of the workload.
-> > The kernel doesn't have neither of the two.
+On 8/08/19 7:53 PM, Gustavo A. R. Silva wrote:
+> One of the more common cases of allocation size calculations is finding
+> the size of a structure that has a zero-sized array at the end, along
+> with memory for some number of elements for that array. For example:
 > 
-> Thank you. I'm familiarizing myself with the code. Is there anyone I could
-> discuss some details with? I don't want to create too much noise here.
-
-linux-mm mailing list sounds like a good fit.
-
-> For example, are file pages created by mmaping files and are anon page
-> exclusively allocated on heap (RW data)? If so, where do "streaming IO"
-> pages belong to?
-
-Page cache will be generated by both buffered IO (read/write) and file
-mmaps. Anonymous memory by MAP_PRIVATE of file backed or MAP_ANON.
-Streaming IO is generally referred to by an single data pass IO that
-is not reused later (e.g. a backup).
-
-> > We have been thinking about this problem for a long time and couldn't
-> > come up with anything much better than we have now. PSI is the most recent
-> > improvement in that area. If you have better ideas then patches are
-> > always welcome.
+> struct sdhci_cdns_priv {
+> 	...
+>         struct sdhci_cdns_phy_param phy_params[0];
+> };
 > 
-> In general, I found there are very few user accessible knobs for adjusting
-> caching, especially in the pre-OOM phase. On the other hand, swapping, dirty
-> page caching, have many options or can even be disabled completely.
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes.
 > 
-> For example, I would like to try disabling/limiting eviction of some/all
-> file pages (for example exec pages) akin to disabling swapping, but there is
-> no such mechanism. Yes, there would likely be problems with large RO mmapped
-> files that would need to be addressed, but in many applications users would
-> be interested in having such options.
+> So, replace the following form:
 > 
-> Adjusting how aggressive/conservative the system should be with the OOM
-> killer also falls into this category.
+> sizeof(*priv) + sizeof(priv->phy_params[0]) * nr_phy_params
+> 
+> with:
+> 
+> struct_size(priv, phy_params, nr_phy_params)
+> 
+> Also, notice that, in this case, variable priv_size is not necessary,
+> hence it is removed.
+> 
+> This code was detected with the help of Coccinelle.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-What would that mean and how it would be configured?
--- 
-Michal Hocko
-SUSE Labs
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
+> ---
+>  drivers/mmc/host/sdhci-cadence.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
+> index 163d1cf4367e..1768a13f89be 100644
+> --- a/drivers/mmc/host/sdhci-cadence.c
+> +++ b/drivers/mmc/host/sdhci-cadence.c
+> @@ -337,7 +337,6 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
+>  	struct sdhci_pltfm_host *pltfm_host;
+>  	struct sdhci_cdns_priv *priv;
+>  	struct clk *clk;
+> -	size_t priv_size;
+>  	unsigned int nr_phy_params;
+>  	int ret;
+>  	struct device *dev = &pdev->dev;
+> @@ -351,8 +350,8 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
+>  		return ret;
+>  
+>  	nr_phy_params = sdhci_cdns_phy_param_count(dev->of_node);
+> -	priv_size = sizeof(*priv) + sizeof(priv->phy_params[0]) * nr_phy_params;
+> -	host = sdhci_pltfm_init(pdev, &sdhci_cdns_pltfm_data, priv_size);
+> +	host = sdhci_pltfm_init(pdev, &sdhci_cdns_pltfm_data,
+> +				struct_size(priv, phy_params, nr_phy_params));
+>  	if (IS_ERR(host)) {
+>  		ret = PTR_ERR(host);
+>  		goto disable_clk;
+> 
+
