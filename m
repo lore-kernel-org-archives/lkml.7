@@ -2,114 +2,121 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8B3C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1959C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E52412087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E892087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:12:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="E4CmTLZg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfHLGJ0 (ORCPT
+        id S1726936AbfHLGMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 02:09:26 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55979 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbfHLGJ0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 02:09:26 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hx3WD-0003Fq-Nx; Mon, 12 Aug 2019 08:09:21 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hx3WD-00015j-2b; Mon, 12 Aug 2019 08:09:21 +0200
-Date:   Mon, 12 Aug 2019 08:09:21 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/7] pwm: jz4740: Drop dependency on MACH_INGENIC
-Message-ID: <20190812060921.7iz4cmwp5awtqhwz@pengutronix.de>
-References: <20190809123031.24219-1-paul@crapouillou.net>
- <20190809123031.24219-4-paul@crapouillou.net>
- <20190809164143.2p573g7wlx43hero@pengutronix.de>
- <1565386860.2091.5@crapouillou.net>
+        Mon, 12 Aug 2019 02:12:42 -0400
+Received: from ozlabs.org ([203.11.71.1]:35127 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725822AbfHLGMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 02:12:41 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 466QVs64CLz9sN1;
+        Mon, 12 Aug 2019 16:12:37 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565590358;
+        bh=pOEPhG+/RGwGtNl2Qa47jqW4DKafXj0rUWcYO1vB2Xo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=E4CmTLZgQcV6f0nEZHp7rJhVr44nrj8SAe9rzWKCQTYl1WB8O3lv3ju1vmuznk3QJ
+         lI/bstRXjSmrgZ/scNjDzaEnKsOA7RirGu4cWjPW6cPkUv3uyjUDhKROXU6Tmz4n58
+         UF7sweFyTMsds2Dx+sRQ6tnnIBX++E2gHWVmR8GZAhmvSyOgdLckrDSihXYU5ThGXx
+         4f7JgzWabMOk3/9Qs2I5tS/42vhx1r/HZ25hb1llLNpznSbMwMJMkw1IkOBcgNRQ88
+         7RRsKdhWvttZ5u4baLnmhlU1fHEHb3Pszp8VAzVWD7Fe9EOi5TpAP7ac8VzPdSw3fx
+         ZYSgNEtiHiHhQ==
+Date:   Mon, 12 Aug 2019 16:12:36 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: linux-next: build failure after merge of the rcu tree
+Message-ID: <20190812161236.21defb17@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1565386860.2091.5@crapouillou.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; boundary="Sig_//CSq7Gt6RsUb+TNh9NYHfeD";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 11:40:59PM +0200, Paul Cercueil wrote:
-> 
-> 
-> Le ven. 9 août 2019 à 18:41, Uwe =?iso-8859-1?q?Kleine-K=F6nig?=
-> <u.kleine-koenig@pengutronix.de> a écrit :
-> > On Fri, Aug 09, 2019 at 02:30:27PM +0200, Paul Cercueil wrote:
-> > >  Depending on MACH_INGENIC prevent us from creating a generic kernel
-> > > that
-> > >  works on more than one MIPS board. Instead, we just depend on MIPS
-> > > being
-> > >  set.
-> > > 
-> > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > >  ---
-> > >   drivers/pwm/Kconfig | 2 +-
-> > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > >  diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> > >  index d2557c6fcf65..82a75e0b72e5 100644
-> > >  --- a/drivers/pwm/Kconfig
-> > >  +++ b/drivers/pwm/Kconfig
-> > >  @@ -224,7 +224,7 @@ config PWM_IMX_TPM
-> > > 
-> > >   config PWM_JZ4740
-> > >   	tristate "Ingenic JZ47xx PWM support"
-> > >  -	depends on MACH_INGENIC
-> > >  +	depends on MIPS
-> > 
-> > If this isn't actually useful on MIPS without MACH_INGENIC this is
-> > better expressed using:
-> > 
-> > 	depends on MIPS
-> > 	depends on MACH_INGENIC || COMPILE_TEST
-> > 
-> > This way some configuring a mips kernel without INGENIC isn't bothered
-> > by this question.
-> 
-> As said in the commit message, it is useful on MIPS without MACH_INGENIC,
-> if you want to create a generic kernel that works on more than one MIPS
-> board.
+--Sig_//CSq7Gt6RsUb+TNh9NYHfeD
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Ah, mips is different than arm here. If you configure a generic kernel
-that supports arm/imx and some others the Kconfig settings for imx are still
-available. Would it make more sense to do:
+Hi all,
 
-	depends on MACH_INGENIC || MIPS_GENERIC || COMPILE_TEST
+After merging the rcu tree, today's linux-next build (x86_64 allmodconfig)
+failed like this:
 
-then? Or switch mips to the (IMHO) more intuitive approach that is taken
-by arm, too? (i.e. ensure that MACH_INGENIC is =y for both a generic
-kernel that supports this machine type among others and a tailored
-kernel that only supports Ingenic.)
+arch/x86/xen/smp_pv.c: In function 'xen_pv_play_dead':
+arch/x86/xen/smp_pv.c:439:2: error: implicit declaration of function 'tick_=
+nohz_idle_stop_tick_protected'; did you mean 'tick_nohz_idle_stop_tick'? [-=
+Werror=3Dimplicit-function-declaration]
+  tick_nohz_idle_stop_tick_protected();
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  tick_nohz_idle_stop_tick
 
-Best regards
-Uwe
+Caused by commit
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+  a96f9dca9820 ("idle: Prevent late-arriving interrupts from disrupting off=
+line")
+
+Also:
+
+In file included from <command-line>:
+include/linux/rcu_segcblist.h:69:2: error: unknown type name 'atomic_long_t'
+  atomic_long_t len;
+  ^~~~~~~~~~~~~
+include/linux/rcu_segcblist.h:74:2: error: unknown type name 'u8'
+  u8 enabled;
+  ^~
+include/linux/rcu_segcblist.h:75:2: error: unknown type name 'u8'
+  u8 offloaded;
+  ^~
+
+Caused by commits:
+
+  e084617762b7 ("rcu/nocb: Use separate flag to indicate disabled ->cblist")
+  5e114ba3d7a5 ("rcu/nocb: Use separate flag to indicate offloaded ->cblist=
+")
+  9f3ca0945104 ("rcu/nocb: Atomic ->len field in rcu_segcblist structure")
+
+We prefer our include files to be standalone now if at all possible.
+
+I have used the rcu tree from next-20190809 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_//CSq7Gt6RsUb+TNh9NYHfeD
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1RA1QACgkQAVBC80lX
+0Gy+ywf/RLWpPZS6gUI31MOJ8x+REwGZSn76bsaJd8z4d0htogdXtDsUQdL/FJWS
+5S5zI5V7XoUqYuXqmco6/59mcLYIS0JWtxfpaVSKEQTblXHgP59sbzSKIxlfIekF
+tE3W6I6lUbziRIYWggYA8EnnwB6T7oqPvhjghJyyuCwPixoBTb7JoqE5y0zr7KgZ
+PwSXnV5h7YFoh8DN/lpJx/suWIhiGwkR0IL2neHSBxK3tikcoiMmdzzqTD3ao6Y4
+NWtU20y8KPz0Bhl9Riudbwz/bc5SE9fxjvvvzR0WQU5VDgO1tXHIqdgYAw2yLEx0
+0zNi82acCXhpwzNEc+Q1B+upn1y3NA==
+=jpAy
+-----END PGP SIGNATURE-----
+
+--Sig_//CSq7Gt6RsUb+TNh9NYHfeD--
