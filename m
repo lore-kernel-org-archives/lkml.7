@@ -2,76 +2,62 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B61BC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B68C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40EB220820
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C51E620684
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:57:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfHLU4H (ORCPT
+        id S1727029AbfHLU5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 16:56:07 -0400
-Received: from ms.lwn.net ([45.79.88.28]:36972 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbfHLU4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 16:56:06 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 19C7B2D8;
-        Mon, 12 Aug 2019 20:56:06 +0000 (UTC)
-Date:   Mon, 12 Aug 2019 14:56:05 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
-Cc:     linux-doc@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] Documentation: sphinx: Add missing comma to list
- of strings
-Message-ID: <20190812145605.04ff5e01@lwn.net>
-In-Reply-To: <20190812160708.32172-1-j.neuschaefer@gmx.net>
-References: <20190812160708.32172-1-j.neuschaefer@gmx.net>
-Organization: LWN.net
+        Mon, 12 Aug 2019 16:57:39 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:55087 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfHLU5j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 16:57:39 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id DEDD120007;
+        Mon, 12 Aug 2019 20:57:36 +0000 (UTC)
+Date:   Mon, 12 Aug 2019 22:57:36 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     soc@kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH 14/16] rtc: remove w90x900/nuc900 driver
+Message-ID: <20190812205736.GT3600@piout.net>
+References: <20190809202749.742267-1-arnd@arndb.de>
+ <20190809202749.742267-15-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809202749.742267-15-arnd@arndb.de>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 12 Aug 2019 18:07:04 +0200
-Jonathan Neuschäfer <j.neuschaefer@gmx.net> wrote:
-
-> In Python, like in C, when a comma is omitted in a list of strings, the
-> two strings around the missing comma are concatenated.
+On 09/08/2019 22:27:42+0200, Arnd Bergmann wrote:
+> The ARM w90x900 platform is getting removed, so this driver is obsolete.
 > 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
+>  drivers/rtc/Kconfig      |   7 -
+>  drivers/rtc/Makefile     |   1 -
+>  drivers/rtc/rtc-nuc900.c | 271 ---------------------------------------
+>  3 files changed, 279 deletions(-)
+>  delete mode 100644 drivers/rtc/rtc-nuc900.c
 > 
-> v2:
-> - new patch
-> ---
->  Documentation/sphinx/automarkup.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/sphinx/automarkup.py b/Documentation/sphinx/automarkup.py
-> index 77e89c1956d7..a8798369e8f7 100644
-> --- a/Documentation/sphinx/automarkup.py
-> +++ b/Documentation/sphinx/automarkup.py
-> @@ -25,7 +25,7 @@ RE_function = re.compile(r'([\w_][\w\d_]+\(\))')
->  # to the creation of incorrect and confusing cross references.  So
->  # just don't even try with these names.
->  #
-> -Skipfuncs = [ 'open', 'close', 'read', 'write', 'fcntl', 'mmap'
-> +Skipfuncs = [ 'open', 'close', 'read', 'write', 'fcntl', 'mmap',
->                'select', 'poll', 'fork', 'execve', 'clone', 'ioctl']
+Applied, thanks.
 
-Hmm...that's a wee bit embarrassing.  Applied (and the socket() patch
-too), thanks.
-
-jon
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
