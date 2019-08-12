@@ -2,120 +2,109 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE46BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F755C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9283F20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DD0520679
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:19:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMOs+pdP"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="h84BwQy1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727482AbfHLOTq (ORCPT
+        id S1727833AbfHLOT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 10:19:46 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45327 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727206AbfHLOTq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 10:19:46 -0400
-Received: by mail-ed1-f66.google.com with SMTP id x19so97907678eda.12
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 07:19:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iivSnktAPjnlSD94HraPJYOzwcYbsXnIpC6UfUdyt1w=;
-        b=fMOs+pdPUCunxL+VlNcjw0inCDUYczP4DNptKnjmA+iIs5iSqH+wFAb8OrnnzW+/WA
-         dKDu7dbSukUIPfTFBWJhE/zpPpNi4d/npgGREOyPQobiFFC3IkgFfnIRh5pau+IDtYkB
-         zIo9yf9VPrennmv7Um0d2pvSe/Fi9IFiNOn55hi69JQbNsX/Ye5yN7O5CHomfR/atg0U
-         jRyjuKUVRfUTjYa79LmeQYD6FjnhXfPmX2Xcpxlgw3b0e21TR6gNCSzw/QzpZLPqoOwE
-         b5LuCj6lzisfF7UXyeh8hseX96dcFgAWM/BpeA6nnDEk63beE/fsFT0cKPfX2iq/FsyX
-         CGUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iivSnktAPjnlSD94HraPJYOzwcYbsXnIpC6UfUdyt1w=;
-        b=WOmKFHVxhPWIWDL0ZjGRGW1ct/TpAsYJYbwrhGLanrtloKGF1w0AHcrWr/61apbk3x
-         rLs2V0bClhaElsKWIrSrCiua3Ppbt8WXvyLBc/iNTaYR1TczaxKJgYAO8s755QJc87V1
-         mLl32Jpyr330z+bb1kk1vAVA7oZKWsNpZUXhSLZDqah2g1RV8lYgVpt8gk3mYpPkzFuG
-         pCHbVFpPjQswxM6/PsDw9g+cZyGFU6SBF2dcT2lNmvenDP2bX4r4tEAxYDW2h72nOCKf
-         l1oWSWA2lcGd0xN/2b0nljVTDMXamuIrSxU2916h0FlX3tidfTx9fEtpQVid99kx32hr
-         RDtg==
-X-Gm-Message-State: APjAAAXk/iiPzlGwwhXVYkAVtaUHfz7hYcQOe6l5rNNuXmF0HCvZYmad
-        bBVzbITRU4YIirvKYu9fDBk13n+yCLusmZo1V4otlQ==
-X-Google-Smtp-Source: APXvYqwQwtRUxyYdAzg6UYSw5I32xydKcD2cfRkVoq9f+wPzG7Wf/Glg+QM3pFBDeHQfTN47bFsy95PkFkLII4ZwZEs=
-X-Received: by 2002:a50:b66f:: with SMTP id c44mr36867903ede.171.1565619584492;
- Mon, 12 Aug 2019 07:19:44 -0700 (PDT)
+        Mon, 12 Aug 2019 10:19:58 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:53488 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727206AbfHLOT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 10:19:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=v50gXxy0UcfFeBrMZIy3FtqZqPifqcZZR2bgm2dAuIo=; b=h84BwQy1LrMNOO8yJaW9C+VNJq
+        KW/ljM91Z/GUyUKeTsx34crAiF9KEsrEPyaKJle9NHlpZm1iDOJsHP5P/dWNLrJ3n0eMfUUK2x6qN
+        vMSILa+zvZAHUw3WsbeBLofilTAVSkd+XdemD5bcSXhd0/MpBPwZmzH0a9G7dCub3Vd4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hxBAw-0000mk-AP; Mon, 12 Aug 2019 16:19:54 +0200
+Date:   Mon, 12 Aug 2019 16:19:54 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com,
+        hkallweit1@gmail.com
+Subject: Re: [PATCH v4 10/14] net: phy: adin: implement PHY subsystem
+ software reset
+Message-ID: <20190812141954.GP14290@lunn.ch>
+References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
+ <20190812112350.15242-11-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-References: <20190809030352.8387-1-hslester96@gmail.com> <20190809151114.GD3963@sirena.co.uk>
- <CANhBUQ09+q9_=7nMs63w4KRLGOhW1=z-AnuwOzAnUrWRY6uC6A@mail.gmail.com>
- <20190812110719.GE4592@sirena.co.uk> <CANhBUQ2XWAJBgfzbiiffaJ60wnoP__kDPHOF4d+Z_1b1HzSpPQ@mail.gmail.com>
-In-Reply-To: <CANhBUQ2XWAJBgfzbiiffaJ60wnoP__kDPHOF4d+Z_1b1HzSpPQ@mail.gmail.com>
-From:   Chuhong Yuan <hslester96@gmail.com>
-Date:   Mon, 12 Aug 2019 22:19:33 +0800
-Message-ID: <CANhBUQ1QZUU9Fv+usQhUvs4ehy-OTTf2UWRKb333Bsfga=422Q@mail.gmail.com>
-Subject: Re: [PATCH] regulator: core: Add devres versions of regulator_enable/disable
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812112350.15242-11-alexandru.ardelean@analog.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 8:51 PM Chuhong Yuan <hslester96@gmail.com> wrote:
->
-> On Mon, Aug 12, 2019 at 7:07 PM Mark Brown <broonie@kernel.org> wrote:
-> >
-> > On Sat, Aug 10, 2019 at 09:44:45AM +0800, Chuhong Yuan wrote:
-> > > On Fri, Aug 9, 2019 at 11:11 PM Mark Brown <broonie@kernel.org> wrote:
-> >
-> > > > I'm not super keen on managed versions of these functions since they're
-> > > > very likely to cause reference counting issues between the probe/remove
-> > > > path and the suspend/resume path which aren't obvious from the code, I'm
-> > > > especially worried about double frees on release.
-> >
-> > > I find that 29 of 31 cases I found call regulator_disable() only when encounter
-> > > probe failure or in .remove.
-> > > So I think the devm versions of regulator_enable/disable() will not cause big
-> > > problems.
-> >
-> > There's way more drivers using regulators than that...
-> >
->
-> I wrote a new coccinelle script to detect all regulator_disable() in .remove,
-> 101 drivers are found in total.
-> Within them, 25 drivers cannot benefit from devres version of regulator_enable()
-> since they have additional non-devm operations after
-> regulator_disable() in .remove.
+> +static int adin_reset(struct phy_device *phydev)
+> +{
+> +	/* If there is a reset GPIO just exit */
+> +	if (!IS_ERR_OR_NULL(phydev->mdio.reset_gpio))
+> +		return 0;
 
-I find 6 of 25 can benefit from devm_regulator_enable().
-They are included in my previously found 147 cases so I incorrectly skipped them
-while checking.
-Therefore, there are 82 cases that can benefit from devm_regulator_enable() and
-66 of them(80.5%) only call regulator_disable() when fail in probe or
-in .remove.
+I'm not so happy with this.
 
-> Within the left 76 cases, 60 drivers (79%) only use
-> regulator_disable() when encounter
-> probe failure or in .remove.
-> The left 16 cases mostly use regulator_disable() in _suspend().
-> Furthermore, 3 cases of 76 are found to forget to disable regulator
-> when fail in probe.
-> So I think a devres version of regulator_enable/disable() has more
-> benefits than potential
-> risk.
->
-> > > I even found a driver to forget to disable regulator when encounter
-> > > probe failure,
-> > > which is drivers/iio/adc/ti-adc128s052.c.
-> > > And a devm version of regulator_enable() can prevent such mistakes.
-> >
-> > Yes, it's useful for that.
+First off, there are two possible GPIO configurations. The GPIO can be
+applied to all PHYs on the MDIO bus. That GPIO is used when the bus is
+probed. There can also be a per PHY GPIO, which is what you are
+looking at here.
+
+The idea of putting the GPIO handling in the core is that PHYs don't
+need to worry about it. How much of a difference does it make if the
+PHY is both reset via GPIO and then again in software? How slow is the
+software reset? Maybe just unconditionally do the reset, if it is not
+too slow.
+
+> +
+> +	/* Reset PHY core regs & subsystem regs */
+> +	return adin_subsytem_soft_reset(phydev);
+> +}
+> +
+> +static int adin_probe(struct phy_device *phydev)
+> +{
+> +	return adin_reset(phydev);
+> +}
+
+Why did you decide to do this as part of probe, and not use the
+.soft_reset member of phy_driver?
+
+> +
+>  static struct phy_driver adin_driver[] = {
+>  	{
+>  		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
+>  		.name		= "ADIN1200",
+>  		.config_init	= adin_config_init,
+> +		.probe		= adin_probe,
+>  		.config_aneg	= adin_config_aneg,
+>  		.read_status	= adin_read_status,
+>  		.ack_interrupt	= adin_phy_ack_intr,
+> @@ -461,6 +503,7 @@ static struct phy_driver adin_driver[] = {
+>  		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1300),
+>  		.name		= "ADIN1300",
+>  		.config_init	= adin_config_init,
+> +		.probe		= adin_probe,
+>  		.config_aneg	= adin_config_aneg,
+>  		.read_status	= adin_read_status,
+>  		.ack_interrupt	= adin_phy_ack_intr,
+
+Thanks
+	Andrew
