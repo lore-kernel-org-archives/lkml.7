@@ -2,176 +2,95 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D27C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 559D8C32750
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3389321721
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28482216F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:33:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uw8AWp11"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="TSTYHZac"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbfHLMc0 (ORCPT
+        id S1728549AbfHLMdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 08:32:26 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43902 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726557AbfHLMcZ (ORCPT
+        Mon, 12 Aug 2019 08:33:00 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36160 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726424AbfHLMc7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 08:32:25 -0400
-Received: by mail-pf1-f193.google.com with SMTP id v12so1832862pfn.10
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 05:32:25 -0700 (PDT)
+        Mon, 12 Aug 2019 08:32:59 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r3so10669652wrt.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 05:32:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gvTdbRjaEW3UrnRu3vY1zSLb0Sex69k/AMIh01pDgys=;
-        b=uw8AWp11fDPrgvIdRenk9JPjafF1eJeFY12qfIl+CtHpJ82MZ2HLpodOljXylrrDNu
-         /n6wOTwBagb7qTyIaxC/iM+sKncsvCNw7wy0M0ZPTBOWOMHbfb+XqKiEuV08io0zo2gR
-         0a52DtahhLcE5LgLGY4WVg7u2snezlzhEBcisCLraYXYWd8mGHVbrsTJCjkXil44/rRo
-         kaoo0qOrjUT/d9wjWd07rZ48cEQhosVqWrhBxiYjq82jEDUpqRjQSRMH6vPdSv0T7lhZ
-         gO2oWjwn6c+fWn+UqOqIJ6JK5/NCV7OlsPyW9fUkND/JHMr0NKLAKmu+eJxWODZ9OI0G
-         acWw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Nr8iX58l/pylFA11X0pfxij8SKgcdcbQ3mPsulHOLOw=;
+        b=TSTYHZacvPBZRPOGOkxNmW9UwYDLYQIJpf0XtATvpOeYqCrXMPefQnRcRIJ7HPJlnb
+         /3QsD43K5VNs4j/tgWMwF+admBA2wrJDJ5g4yQGP8nPI+uuDVxOiyuhxlW+nqh1XX4UL
+         r9iQUW1yvHwoDz09Auy0e3mOyybZGpRccN7ORw1Ivw4LxzHWpBbHjkQYhL1b4Slsz1ZA
+         by3d9kx+/1h602zfcj61H8MqdxJP6HF4QiJEfVdn0MgsH95jUI856gTFHUNiYC0Ykbof
+         eFzmWVaoqdEVqaLTaQneOFEH1xhsZNY35BDL9N5aC1m4Wz/PcdYC2+mU0RCrs0556DHQ
+         NhMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gvTdbRjaEW3UrnRu3vY1zSLb0Sex69k/AMIh01pDgys=;
-        b=AxQInUg2lANPyVpNomgjKiYJB7gEy7JnECG0FlliDa/AY2YAsGeJfnkjzGZkfEvAKS
-         bl8iKUlhc+CYPM7gdn6SpXw867smgtsuEnBVn7qp3VBDhJwe2Rc8DJouRsEG2iVdYg4o
-         dk8aPDPW//voHtt3K1sB6TF/TKZmCjh4lygY7Zt3r5+mwpXearE91h5tx+x0RVkcy2BW
-         qHrHbwUJKHZhRUVudVxJvGt4X3m9vVZcBWe/hik/VALyyzZ7eOALj/Zl/wY7gWrgecaG
-         GDp2USUJDSo0t5P77g7ZI6QtifEbuMV0FBSqEQV5xZVcHBXj/fv9fsaTzZfeftnIGRPt
-         5Ftg==
-X-Gm-Message-State: APjAAAXPgFQoKGLaUdP/qKew6SXXxZUaTwpjKhcFgT4wgWt3dvbuQ/yM
-        UF7R9R5HBZJYwl1uS9jdtjabrcPPOj+cJv1ZXXm8oQ==
-X-Google-Smtp-Source: APXvYqyab+2lpXjAFZAlZOQ6Ym9sgCUA1ZBAJn1epTN9hBZr2MJlnQKUOo1XV4OpsiQGhRubcEjFsqeqRK66sKPZVZs=
-X-Received: by 2002:a65:4b8b:: with SMTP id t11mr29838015pgq.130.1565613144555;
- Mon, 12 Aug 2019 05:32:24 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Nr8iX58l/pylFA11X0pfxij8SKgcdcbQ3mPsulHOLOw=;
+        b=NRGABPAVPMtcoCo3HqBSlZopN+9DhyxEZ3xnNEgrX59XKRhJS5rLvjjZO1BCHdVdwz
+         JvA91vBjxuMFyeOT9FQSAu63aNHJ5sHQWeBLIvBjxTLDmos4nyChOQes4MXlIqeEVLVb
+         jlTpw/5KcXqKBtlXDa9svu4U5SlFfWI3oMh2Nshz8uAA/2LHZp63+aYpJ7u4VudZM55t
+         MfOm3gboFkqGLFkcWaVGIDxVBZvkZpuiX6EjXC2IDErxJTDPtpf4G1iqzmDGYZ147FTo
+         n2m5O2Etr6enI2HSqJ8osuexVlgKH7WW/OTG7ZuzVThWRsfqZG6VIT4LsieslwswNyzK
+         04Bg==
+X-Gm-Message-State: APjAAAWxawF2z8rcuMaNbXmOkF21j7AyYlPSoCZk13mR4lfGluByguhT
+        aCcCFrU86+g5W/2HYdeasc21OQ==
+X-Google-Smtp-Source: APXvYqx9Q+ux5GFsRAjfYY9EDz5s7kgz3ZmgnTcN7772qjvFYGrIolvNNUxhgaoQ+kq04Vg7URWh2g==
+X-Received: by 2002:adf:c613:: with SMTP id n19mr40465331wrg.109.1565613177657;
+        Mon, 12 Aug 2019 05:32:57 -0700 (PDT)
+Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id z6sm15886432wre.76.2019.08.12.05.32.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 05:32:57 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] clk: meson: axg-audio: add reset support
+Date:   Mon, 12 Aug 2019 14:32:51 +0200
+Message-Id: <20190812123253.4734-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <0000000000003acc06058e6d6b70@google.com> <000000000000e80c0e058e7a5a31@google.com>
-In-Reply-To: <000000000000e80c0e058e7a5a31@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 12 Aug 2019 14:32:13 +0200
-Message-ID: <CAAeHK+wnqRzpUDfspoXPVw76bAbrZ49JiwkeTj-g3U9zqLjZRg@mail.gmail.com>
-Subject: Re: general protection fault in __pm_runtime_resume
-To:     syzbot <syzbot+3cbe5cd105d2ad56a1df@syzkaller.appspotmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        len.brown@intel.com, LKML <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        pavel@ucw.cz, rjw@rjwysocki.net,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hillf Danton <hdanton@sina.com>
-Content-Type: multipart/mixed; boundary="00000000000056dee3058feab79d"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---00000000000056dee3058feab79d
-Content-Type: text/plain; charset="UTF-8"
+This patchset adds support for the reset provided in the register space
+of the g12a audio clock controller
 
-On Thu, Jul 25, 2019 at 7:04 AM syzbot
-<syzbot+3cbe5cd105d2ad56a1df@syzkaller.appspotmail.com> wrote:
->
-> syzbot has found a reproducer for the following crash on:
->
-> HEAD commit:    6a3599ce usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=108edb68600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3cbe5cd105d2ad56a1df
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13f0b4c8600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=172d8758600000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+3cbe5cd105d2ad56a1df@syzkaller.appspotmail.com
->
-> kasan: CONFIG_KASAN_INLINE enabled
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] SMP KASAN
-> CPU: 0 PID: 1740 Comm: syz-executor618 Not tainted 5.2.0-rc6+ #15
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> RIP: 0010:__pm_runtime_resume+0x49/0x180 drivers/base/power/runtime.c:1069
-> Code: ed 74 d5 fe 45 85 ed 0f 85 9a 00 00 00 e8 6f 73 d5 fe 48 8d bd c1 02
-> 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48
-> 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 fe 00 00 00
-> RSP: 0018:ffff8881cf5878e0 EFLAGS: 00010202
-> RAX: dffffc0000000000 RBX: 0000000000000020 RCX: ffffffff82676833
-> RDX: 000000021d463be5 RSI: ffffffff82676841 RDI: 00000010ea31df2b
-> RBP: 00000010ea31dc6a R08: ffff8881d1b7e000 R09: fffffbfff0e84c25
-> R10: ffff8881cf587940 R11: ffffffff87426127 R12: 0000000000000004
-> R13: 0000000000000000 R14: ffff8881cfd7a500 R15: ffffffff897f9040
-> FS:  0000555555808880(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000000000043f760 CR3: 00000001d0f29000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->   pm_runtime_get_sync include/linux/pm_runtime.h:226 [inline]
->   usb_autopm_get_interface+0x1b/0x50 drivers/usb/core/driver.c:1707
->   usbhid_power+0x7c/0xe0 drivers/hid/usbhid/hid-core.c:1234
->   hid_hw_power include/linux/hid.h:1038 [inline]
->   hidraw_open+0x20d/0x740 drivers/hid/hidraw.c:282
->   chrdev_open+0x219/0x5c0 fs/char_dev.c:413
->   do_dentry_open+0x497/0x1040 fs/open.c:778
->   do_last fs/namei.c:3416 [inline]
->   path_openat+0x1430/0x3ff0 fs/namei.c:3533
->   do_filp_open+0x1a1/0x280 fs/namei.c:3563
->   do_sys_open+0x3c0/0x580 fs/open.c:1070
->   do_syscall_64+0xb7/0x560 arch/x86/entry/common.c:301
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x401ad0
-> Code: 01 f0 ff ff 0f 83 c0 0b 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f
-> 44 00 00 83 3d fd 5b 2d 00 00 75 14 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff
-> ff 0f 83 94 0b 00 00 c3 48 83 ec 08 e8 fa 00 00 00
-> RSP: 002b:00007ffed8d15738 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000401ad0
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007ffed8d15740
-> RBP: 6666666666666667 R08: 000000000000000f R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402af0
-> R13: 0000000000402b80 R14: 0000000000000000 R15: 0000000000000000
-> Modules linked in:
-> ---[ end trace 60987a9feed42828 ]---
-> RIP: 0010:__pm_runtime_resume+0x49/0x180 drivers/base/power/runtime.c:1069
-> Code: ed 74 d5 fe 45 85 ed 0f 85 9a 00 00 00 e8 6f 73 d5 fe 48 8d bd c1 02
-> 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48
-> 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 fe 00 00 00
-> RSP: 0018:ffff8881cf5878e0 EFLAGS: 00010202
-> RAX: dffffc0000000000 RBX: 0000000000000020 RCX: ffffffff82676833
-> RDX: 000000021d463be5 RSI: ffffffff82676841 RDI: 00000010ea31df2b
-> RBP: 00000010ea31dc6a R08: ffff8881d1b7e000 R09: fffffbfff0e84c25
-> R10: ffff8881cf587940 R11: ffffffff87426127 R12: 0000000000000004
-> R13: 0000000000000000 R14: ffff8881cfd7a500 R15: ffffffff897f9040
-> FS:  0000555555808880(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000000000043f760 CR3: 00000001d0f29000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->
+Changes since v1 [0]:
+* Fix typo reported by Stephen
 
-Let's try Hillf's patch here as well:
+[0]: https://lkml.kernel.org/r/20190703122614.3579-1-jbrunet@baylibre.com
 
-#syz test: https://github.com/google/kasan.git 6a3599ce
+Jerome Brunet (2):
+  dt-bindings: clock: meson: add resets to the audio clock controller
+  clk: meson: axg-audio: add g12a reset support
 
---00000000000056dee3058feab79d
-Content-Type: application/x-patch; name="hid-core.patch"
-Content-Disposition: attachment; filename="hid-core.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_jz8dm6mt0>
-X-Attachment-Id: f_jz8dm6mt0
+ .../bindings/clock/amlogic,axg-audio-clkc.txt |   1 +
+ drivers/clk/meson/axg-audio.c                 | 107 +++++++++++++++++-
+ drivers/clk/meson/axg-audio.h                 |   1 +
+ .../reset/amlogic,meson-g12a-audio-reset.h    |  38 +++++++
+ 4 files changed, 145 insertions(+), 2 deletions(-)
+ create mode 100644 include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
 
-LS0tIGEvZHJpdmVycy9oaWQvdXNiaGlkL2hpZC1jb3JlLmMKKysrIGIvZHJpdmVycy9oaWQvdXNi
-aGlkL2hpZC1jb3JlLmMKQEAgLTE0MTAsNiArMTQxMCw3IEBAIHN0YXRpYyB2b2lkIHVzYmhpZF9k
-aXNjb25uZWN0KHN0cnVjdCB1c2IKIAlzcGluX2xvY2tfaXJxKCZ1c2JoaWQtPmxvY2spOwkvKiBT
-eW5jIHdpdGggZXJyb3IgYW5kIGxlZCBoYW5kbGVycyAqLwogCXNldF9iaXQoSElEX0RJU0NPTk5F
-Q1RFRCwgJnVzYmhpZC0+aW9mbCk7CiAJc3Bpbl91bmxvY2tfaXJxKCZ1c2JoaWQtPmxvY2spOwor
-CWhpZF9od19zdG9wKGhpZCk7CiAJaGlkX2Rlc3Ryb3lfZGV2aWNlKGhpZCk7CiAJa2ZyZWUodXNi
-aGlkKTsKIH0K
---00000000000056dee3058feab79d--
+-- 
+2.21.0
+
