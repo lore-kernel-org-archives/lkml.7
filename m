@@ -2,117 +2,90 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8D5C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F770C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF6B206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:16:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u4QlkRbM"
+	by mail.kernel.org (Postfix) with ESMTP id 603AA206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:17:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbfHLIQp (ORCPT
+        id S1727151AbfHLIRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 04:16:45 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43741 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbfHLIQp (ORCPT
+        Mon, 12 Aug 2019 04:17:35 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:60661 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726996AbfHLIRf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 04:16:45 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p13so29186494wru.10
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 01:16:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=MJHxBxh/Q5vo+W76uNGRUJUeN3hwDfWxfMg6P/gBOg0=;
-        b=u4QlkRbMDiHfGrjdu436aHZusopdsD94AaT6zXTM3eaZ4y6BosUM0tlaA56X51nN9c
-         umI3PH27REA1YdEm/bDm3OE2UI9MGULdMLuGUTvnDBKUBlM+u5BgwEJXKd1SByIuWkrY
-         2kv99VeKU+V5QXG9oieP77x7yQgoExIDYXx4vPH8vlEru6HzZ6/p32cpzzObsHy5W3az
-         O2VbXSjzdwyFpNJYin4w9mGvGx4NIQqGMocgiLaaq7HHG8qkJjXvIxiD9mAgo53+VJlh
-         LCcGJbAa2s5qZg9/JZfFsSRo/t/+spxSIJYxDJW7Gfq3OorZb4uOTIjODwyWsHDkDNXd
-         LmBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=MJHxBxh/Q5vo+W76uNGRUJUeN3hwDfWxfMg6P/gBOg0=;
-        b=awed+V8WMtHXIcPhn0aJ2UdkORwoEEpdOxCg+MgGVzyCqOCBkGsNRAEvFF9Fwr/T3g
-         n9AVC9s8txNTas8u9NcXfjnqN4vY2L7NF6j1crIQP5HdpP5EXRS/zX8O8EHdX2JkGCKV
-         k2aXHSmTaW7uMhWdOOzaapVR1ceav4n7uukCuNAbBsqSUa7PAesrR78PdPrx5Hs0UdlP
-         cOXF8+ZipcTK9F3NGMFUMvwNFKuzqBLPiUZtGsOfl5x+eB7m+PCnv5OsWKCbvbT90FyT
-         I5OWCugeS5HZkN7ppSTiMKmwWTG5SpAdqTpecEBbYyJ1wL+qLg4686IJcKNIwgBBdHTR
-         Aj3Q==
-X-Gm-Message-State: APjAAAXsOFz+W+/Hpk1NOofSarE0/mNsc36zZHCihIgI9VsTHKsWHFky
-        6lURt3y2+h1MTBEeeZ6A7BIlnw==
-X-Google-Smtp-Source: APXvYqyD6fPKryZQTpN9zsdwGV7yS5BKNQZ8tOEeMIPGi0uW8Qmgi+HgiANiv0VmQSgyzgbueGKdzg==
-X-Received: by 2002:adf:ec0d:: with SMTP id x13mr40515082wrn.240.1565597802765;
-        Mon, 12 Aug 2019 01:16:42 -0700 (PDT)
-Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id g15sm16420028wrp.29.2019.08.12.01.16.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 01:16:42 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 09:16:40 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sebastian Reichel <sre@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, od@zcrc.me,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: Re: [PATCH 10/11] mfd: Drop obsolete JZ4740 driver
-Message-ID: <20190812081640.GA26727@dell>
-References: <20190725220215.460-1-paul@crapouillou.net>
- <20190725220215.460-11-paul@crapouillou.net>
+        Mon, 12 Aug 2019 04:17:35 -0400
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id DCC74100002;
+        Mon, 12 Aug 2019 08:17:31 +0000 (UTC)
+Date:   Mon, 12 Aug 2019 10:17:31 +0200
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     Igor Russkikh <Igor.Russkikh@aquantia.com>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "sd@queasysnail.net" <sd@queasysnail.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
+        "camelia.groza@nxp.com" <camelia.groza@nxp.com>,
+        Simon Edelhaus <Simon.Edelhaus@aquantia.com>,
+        Pavel Belous <Pavel.Belous@aquantia.com>
+Subject: Re: [PATCH net-next v2 2/9] net: macsec: move some definitions in a
+ dedicated header
+Message-ID: <20190812081731.GE3698@kwain>
+References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
+ <20190808140600.21477-3-antoine.tenart@bootlin.com>
+ <9f65de8e-bf62-f9b0-5aba-69c0f92df1ca@aquantia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190725220215.460-11-paul@crapouillou.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <9f65de8e-bf62-f9b0-5aba-69c0f92df1ca@aquantia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jul 2019, Paul Cercueil wrote:
+Hi Igor,
 
-> It has been replaced with the ingenic-iio driver for the ADC.
+On Sat, Aug 10, 2019 at 12:19:36PM +0000, Igor Russkikh wrote:
+> > +/**
+> > + * struct macsec_tx_sa - transmit secure association
+> > + * @active:
+> > + * @next_pn: packet number to use for the next packet
+> > + * @lock: protects next_pn manipulations
+> > + * @key: key structure
+> > + * @stats: per-SA stats
+> > + */
+> > +struct macsec_tx_sa {
+> > +	struct macsec_key key;
+> > +	spinlock_t lock;
+> > +	u32 next_pn;
+> > +	refcount_t refcnt;
+> > +	bool active;
+> > +	bool offloaded;
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Tested-by: Artur Rojek <contact@artur-rojek.eu>
-> ---
->  drivers/mfd/Kconfig      |   9 --
->  drivers/mfd/Makefile     |   1 -
->  drivers/mfd/jz4740-adc.c | 324 ---------------------------------------
->  3 files changed, 334 deletions(-)
->  delete mode 100644 drivers/mfd/jz4740-adc.c
+> I don't see this `offloaded` field being used anywhere. Is this needed?
 
-Applied, thanks.
+You're right it's not and was only used in previous versions of this
+patchset. I'll remove it.
+
+Thanks for spotting this!
+Antoine
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Antoine T�nart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
