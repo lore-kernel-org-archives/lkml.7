@@ -2,234 +2,180 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22862C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DE5C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC432085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:43:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CqfskxwI"
+	by mail.kernel.org (Postfix) with ESMTP id 465662085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:43:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbfHLKnX (ORCPT
+        id S1728057AbfHLKnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:43:23 -0400
-Received: from mout.gmx.net ([212.227.17.22]:47963 "EHLO mout.gmx.net"
+        Mon, 12 Aug 2019 06:43:39 -0400
+Received: from enpas.org ([46.38.239.100]:54418 "EHLO mail.enpas.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727795AbfHLKnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:43:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1565606589;
-        bh=wp3YFiI3potydFc2/yf2oqLRxfV7Zlo9+YnNBxFcidY=;
-        h=X-UI-Sender-Class:From:To:Subject:Date;
-        b=CqfskxwIwwrL2tZI6Q82uyp/rKaBWgO5cLPnqI6JKzYQvXbaZDedKnEUM1W7i1ueS
-         pMeItaRURYXg/WnE2tfvzvILTKGVt5tyNYHL8UmR4A935HRmPIFaeSHxm60A0cskP4
-         CRR6Gj3ACHxZrgN/eTLyVDPSBWLcJAptrh3uX6VA=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [217.61.152.193] ([217.61.152.193]) by web-mail.gmx.net
- (3c-app-gmx-bs80.server.lan [172.19.170.228]) (via HTTP); Mon, 12 Aug 2019
- 12:43:09 +0200
+        id S1727795AbfHLKni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 06:43:38 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        by mail.enpas.org (Postfix) with ESMTPSA id 35841FFE76;
+        Mon, 12 Aug 2019 10:43:35 +0000 (UTC)
+Subject: Re: [PATCH] i2c/busses: Add i2c-icy for I2C on m68k/Amiga
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux I2C <linux-i2c@vger.kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Linux/m68k <linux-m68k@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+References: <20190811043253.24938-1-max@enpas.org>
+ <CAMuHMdVJJxjH-gPraW==smrkOOMcGYPKB8BPzrYPU4bstASX3A@mail.gmail.com>
+From:   Max Staudt <max@enpas.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=max@enpas.org; prefer-encrypt=mutual; keydata=
+ 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
+ urZIw0nz8zec+73Bv/qF4GHHftLYfA==
+Message-ID: <fe5cf25f-1804-dc45-7010-01e602b3f3e5@enpas.org>
+Date:   Mon, 12 Aug 2019 12:43:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Message-ID: <trinity-99bcd71d-8f78-4bbe-a439-f6a915040b0a-1565606589515@3c-app-gmx-bs80>
-From:   "Frank Wunderlich" <frank-w@public-files.de>
-To:     "Andrew Lunn" <andrew@lunn.ch>,
-        "Vivien Didelot" <vivien.didelot@gmail.com>,
-        "Florian Fainelli" <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [BUG] access to null-pointer in dsa_switch_event when bridge set up
-Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 12 Aug 2019 12:43:09 +0200
-Importance: normal
-Sensitivity: Normal
-X-Priority: 3
-X-Provags-ID: V03:K1:XZaEfDZ0Ncu+3+6X6bUwMHapo0wNaUT8Qi3PhKcK1Mig1tjZh9ahK7cgpMS5V4HSXEoa5
- bGGChxuDlrel/7NC/F+8gKXgOqg0FqKuJ5wkcmYWeoYeAKNfJz55B+gmVh3hzR40dw4YlCytQ3Sk
- /qIAiOL/rxO9v9Mzr2JDTkF+olqHHAhd8uPqPhQmQ+1tq4r3Jin6kKS93aOgVQYrIphx0It18914
- or9fikXSpnTAnG5e4o+2HGH+j8IayUfjZqbYiWPJx7L/CJaadc9M12wAXrJ9b6B9LDjMLpHFR4Qh
- mk=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:n7Oi+tCz/8k=:xAYheaxeiAPMGelHJN5t9O
- kkVB250qoZ6j0o0ks1/l3bDNiB+soHuqoYwoHE8EV860nBu7xj+rxHIJCYOvq6JU0/eees5Wx
- 7pgGQAU5EwJ29JKU+1IyRjZnx1H50NzK0O/WAbY/I+Y6GRCUGo5SIUvMoZvi0Ls5eJXMDsRgO
- Iw78XtohKI4HqKuP+ByVXdVwWpkgiYc54S8YtDzYMs62YdP+GUbsUfUNtKGhnRdlarryrLBCu
- xpv6n9tg22yfDsnrvOcGrPZUUYo3Z/Gmfpb8ExMY9UhAo/7JUxoEiGWjSnyHCkHnaEWZ/0rTT
- O6EGOqrol0l9jmAwv53m3nYgmemTe4AHaNrBeH11uec2T6XY0sB0HSGX5lpfK6R8qsj2fhGf4
- QtPNeucgw9KctcrKCIxUYpLlwkBFM7Wg40g4NXpWF1xhYBBcag5MSe6hEwi/yZvOFduplCpzg
- nxApEe8vnb8aM13zlJlp82EaNriffvfOOAu+WA64ZOOanHlDmsrzvvEChobo98jjDKHiSRR53
- YYmiHkyMX4sNeXHShXJtP5d8cWqbm1RyOr3DOXIVHhTstKhWEpBrq22ut0MCwnyNghOoDOW9A
- +2AFN/FTV+AeDK7Sn2nL6riH7isU9ISjVLRkql4o7mmN3UOZavi4syBtfGUf1PKmBVB3KSCPn
- onp8h1mj/XTZ/3sGV5WYTNJl7eVe0L2XOlhGK+TDQ5WK3RA==
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAMuHMdVJJxjH-gPraW==smrkOOMcGYPKB8BPzrYPU4bstASX3A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Geert,
 
-i've noticed a bug when using bridge on dsa-ports. Tested on Bpi-r2, Crash=
- happens on 5.3-rc1 and rc4, 5.2-rc7 (last version pre 5.3 i have found on=
- my tftp) is not affected.
+Thanks for your feedback!
+Replies below.
 
-root@bpi-r2:~# brctl addbr br0
-root@bpi-r2:~# ip addr add 192.168.0.11/24 dev br0
-root@bpi-r2:~# brctl addif br0 lan0
-[   47.731914] br0: port 1(lan0) entered blocking state
-[   47.736898] br0: port 1(lan0) entered disabled state
-[   47.742586] device lan0 entered promiscuous mode
-root@bpi-r2:~# ip link set br0 up
-[  114.675568] br0: port 1(lan0) entered blocking state
-[  114.680612] br0: port 1(lan0) entered forwarding state
-[  114.686643] IPv6: ADDRCONF(NETDEV_CHANGE): br0: link becomes ready
-root@bpi-r2:~# [  114.718094] 8<--- cut here ---
-[  114.721167] Unable to handle kernel NULL pointer dereference at virtual=
- address 00000000
-[  114.729344] pgd =3D 661519c9
-[  114.732055] [00000000] *pgd=3D00000000
-[  114.735642] Internal error: Oops: 80000005 [#1] SMP ARM
-[  114.740865] Modules linked in:
-[  114.743925] CPU: 1 PID: 156 Comm: kworker/1:2 Not tainted 5.3.0-rc4-bpi=
--r2 #307
-[  114.751231] Hardware name: Mediatek Cortex-A7 (Device Tree)
-[  114.756816] Workqueue: events switchdev_deferred_process_work
-[  114.762564] PC is at 0x0
-[  114.765100] LR is at dsa_switch_event+0x640/0x6e8
-[  114.769801] pc : [<00000000>]    lr : [<c09f2f00>]    psr: 20070013
-[  114.776064] sp : e71edcc8  ip : 00000000  fp : e71edd0c
-[  114.781285] r10: e71ede73  r9 : ea1b7088  r8 : e6932dd0
-[  114.786506] r7 : ea1b7040  r6 : 00000006  r5 : c1104c48  r4 : ea1b704c
-[  114.793030] r3 : 00000000  r2 : e6932dd0  r1 : 00000006  r0 : ea1b7040
-[  114.799560] Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segmen=
-t none
-[  114.806698] Control: 10c5387d  Table: a778006a  DAC: 00000051
-[  114.812447] Process kworker/1:2 (pid: 156, stack limit =3D 0xb5a13451)
-[  114.818801] Stack: (0xe71edcc8 to 0xe71ee000)
-[  114.823162] dcc0:                   c086981c c11a5c20 00000001 600c0113=
- 00000000 1021bd52
-[  114.831347] dce0: e71edd08 ffffffff 00000000 e71edd54 00000005 00000000=
- c09f1dd0 00000000
-[  114.839531] dd00: e71edd34 e71edd10 c014d4f8 c09f28cc c1104c48 c1104c48=
- 00000000 e71fd800
-[  114.847715] dd20: c09f0740 c09f1dd0 e71edd4c e71edd38 c014d658 c014d4ac=
- 00000000 c017a738
-[  114.855900] dd40: e71edd7c e71edd50 c09efe1c c014d63c e71eddac e6932dd0=
- e71ede73 00000000
-[  114.864084] dd60: 00000006 1021bd52 00000000 e71ede38 e71edd8c e71edd80=
- c09f1e2c c09efdd0
-[  114.872268] dd80: e71eddc4 e71edd90 c0b47cc4 c09f1ddc b43f0a89 1021bd52=
- 00000000 ffffffff
-[  114.880452] dda0: 00000000 e71ede38 00000006 00000000 00000000 00000000=
- e71eddd4 e71eddc8
-[  114.888637] ddc0: c0b47d5c c0b47c6c e71edde4 e71eddd8 c09f1c58 c0b47d50=
- e71ede0c e71edde8
-[  114.896821] dde0: c014d4f8 c09f1c14 00000006 c11bc820 e71ede38 e71fd800=
- e6932dd0 00000000
-[  114.905006] de00: e71ede34 e71ede10 c014dd70 c014d4ac 00000000 e71ede20=
- c016a99c c1104c48
-[  114.913190] de20: 1021bd52 00000000 e71ede64 e71ede38 c0b479ec c014dd28=
- e71fd800 00000000
-[  114.921374] de40: e6932dd0 e71ede73 00000001 1021bd52 c1104c48 e71ede73=
- e71ede9c e71ede68
-[  114.929559] de60: c0b47af4 c0b479a4 00000000 c0b65d88 0014d4f8 1021bd52=
- e6932dc0 e6932dd0
-[  114.937743] de80: e71fd800 00000100 00000000 c11c50f0 e71edebc e71edea0=
- c0b47b8c c0b47a5c
-[  114.945927] dea0: e6932dc0 c11bc818 c12332ac 00000100 e71edee4 e71edec0=
- c0b477e0 c0b47b74
-[  114.954112] dec0: 010000ff c0898820 c11bc83c e909f380 ead8f100 ead92200=
- e71edef4 e71edee8
-[  114.962296] dee0: c0b47890 c0b47768 e71edf34 e71edef8 c0144dac c0b47880=
- e90b12c0 ffffe000
-[  114.970480] df00: e71edf1c e71edf10 c0146f48 e909f380 ead8f100 e909f394=
- ead8f118 ffffe000
-[  114.978665] df20: 00000008 c1103d00 e71edf74 e71edf38 c0145b8c c0144c0c=
- ffffe000 c0e58270
-[  114.986850] df40: c11c4939 ead8f100 c014b4f4 e910bf40 e910bf00 00000000=
- e71ec000 e909f380
-[  114.995036] df60: c0145b30 ea13fe74 e71edfac e71edf78 c014ba18 c0145b3c=
- e910bf5c e910bf5c
-[  115.003219] df80: e71edfac e910bf00 c014b8b0 00000000 00000000 00000000=
- 00000000 00000000
-[  115.011404] dfa0: 00000000 e71edfb0 c01010e8 c014b8bc 00000000 00000000=
- 00000000 00000000
-[  115.019587] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000=
- 00000000 00000000
-[  115.027770] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000=
- 00000000 00000000
-[  115.035948] Backtrace:
-[  115.038406] [<c09f28c0>] (dsa_switch_event) from [<c014d4f8>] (notifier=
-_call_chain+0x58/0x94)
-[  115.046940]  r10:00000000 r9:c09f1dd0 r8:00000000 r7:00000005 r6:e71edd=
-54 r5:00000000
-[  115.054771]  r4:ffffffff
-[  115.057308] [<c014d4a0>] (notifier_call_chain) from [<c014d658>] (raw_n=
-otifier_call_chain+0x28/0x30)
-[  115.066447]  r9:c09f1dd0 r8:c09f0740 r7:e71fd800 r6:00000000 r5:c1104c4=
-8 r4:c1104c48
-[  115.074197] [<c014d630>] (raw_notifier_call_chain) from [<c09efe1c>] (d=
-sa_port_mdb_add+0x58/0x84)
-[  115.083078] [<c09efdc4>] (dsa_port_mdb_add) from [<c09f1e2c>] (dsa_slav=
-e_port_obj_add+0x5c/0x78)
-[  115.091866]  r4:e71ede38
-[  115.094403] [<c09f1dd0>] (dsa_slave_port_obj_add) from [<c0b47cc4>] (__=
-switchdev_handle_port_obj_add+0x64/0xe4)
-[  115.104499] [<c0b47c60>] (__switchdev_handle_port_obj_add) from [<c0b47=
-d5c>] (switchdev_handle_port_obj_add+0x18/0x24)
-[  115.115201]  r10:00000000 r9:00000000 r8:00000000 r7:00000006 r6:e71ede=
-38 r5:00000000
-[  115.123032]  r4:ffffffff
-[  115.125570] [<c0b47d44>] (switchdev_handle_port_obj_add) from [<c09f1c5=
-8>] (dsa_slave_switchdev_blocking_event+0x50/0xb0)
-[  115.136535] [<c09f1c08>] (dsa_slave_switchdev_blocking_event) from [<c0=
-14d4f8>] (notifier_call_chain+0x58/0x94)
-[  115.146632] [<c014d4a0>] (notifier_call_chain) from [<c014dd70>] (block=
-ing_notifier_call_chain+0x54/0x6c)
-[  115.156206]  r9:00000000 r8:e6932dd0 r7:e71fd800 r6:e71ede38 r5:c11bc82=
-0 r4:00000006
-[  115.163956] [<c014dd1c>] (blocking_notifier_call_chain) from [<c0b479ec=
->] (switchdev_port_obj_notify+0x54/0xb8)
-[  115.174049]  r6:00000000 r5:1021bd52 r4:c1104c48
-[  115.178670] [<c0b47998>] (switchdev_port_obj_notify) from [<c0b47af4>] =
-(switchdev_port_obj_add_now+0xa4/0x118)
-[  115.188675]  r5:e71ede73 r4:c1104c48
-[  115.192254] [<c0b47a50>] (switchdev_port_obj_add_now) from [<c0b47b8c>]=
- (switchdev_port_obj_add_deferred+0x24/0x70)
-[  115.202698]  r9:c11c50f0 r8:00000000 r7:00000100 r6:e71fd800 r5:e6932dd=
-0 r4:e6932dc0
-[  115.210450] [<c0b47b68>] (switchdev_port_obj_add_deferred) from [<c0b47=
-7e0>] (switchdev_deferred_process+0x84/0x118)
-[  115.220978]  r7:00000100 r6:c12332ac r5:c11bc818 r4:e6932dc0
-[  115.226643] [<c0b4775c>] (switchdev_deferred_process) from [<c0b47890>]=
- (switchdev_deferred_process_work+0x1c/0x24)
-[  115.237085]  r7:ead92200 r6:ead8f100 r5:e909f380 r4:c11bc83c
-[  115.242751] [<c0b47874>] (switchdev_deferred_process_work) from [<c0144=
-dac>] (process_one_work+0x1ac/0x4bc)
-[  115.252499] [<c0144c00>] (process_one_work) from [<c0145b8c>] (worker_t=
-hread+0x5c/0x580)
-[  115.260597]  r10:c1103d00 r9:00000008 r8:ffffe000 r7:ead8f118 r6:e909f3=
-94 r5:ead8f100
-[  115.268427]  r4:e909f380
-[  115.270965] [<c0145b30>] (worker_thread) from [<c014ba18>] (kthread+0x1=
-68/0x170)
-[  115.278368]  r10:ea13fe74 r9:c0145b30 r8:e909f380 r7:e71ec000 r6:000000=
-00 r5:e910bf00
-[  115.286199]  r4:e910bf40
-[  115.288737] [<c014b8b0>] (kthread) from [<c01010e8>] (ret_from_fork+0x1=
-4/0x2c)
-[  115.295961] Exception stack(0xe71edfb0 to 0xe71edff8)
-[  115.301014] dfa0:                                     00000000 00000000=
- 00000000 00000000
-[  115.309197] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000=
- 00000000 00000000
-[  115.317379] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[  115.323997]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:000000=
-00 r5:c014b8b0
-[  115.331827]  r4:e910bf00
-[  115.334363] Code: bad PC value
-[  115.337583] ---[ end trace 3bdbb989816b27f4 ]---
+On 08/12/2019 11:37 AM, Geert Uytterhoeven wrote:
+> What about the RTC? The schematics show both a ds1620 and pcf8583.
 
-regards Frank
+Oh no! I missed those in the original project, in my mind it didn't have any extra hardware at all.
 
+I only own the new board with the LTC2990, and I'm pretty sure there are more of these in circulation than the original board. So if it's okay, I'll skip the DS1620 and PCF8583.
+
+
+>> +static void icy_pcf_setbyte(void *data, int ctl, int val)
+> 
+> icy_pcf_setpcf(), to match the callback name?
+
+Fair. I kept the name when I cloned i2c-elektor.c.
+
+
+> zorro_request_device()?
+> Ah, there's no devm_*() variant yet. OK.
+
+Also, I only wanted to reserve the first 4 bytes. Thinking about it now, it makes more sense to reserve the whole AutoConfig'd space, as I don't know whether the bus GAL maps the PCF8584 across the whole 64k repeatedly.
+
+
+>> +       /*
+>> +        * The 2019 a1k.org PCBs have an LTC2990 at 0x4c, so start
+>> +        * it automatically once ltc2990 is modprobed.
+>> +        *
+>> +        * in0 is the voltage of the internal 5V power supply.
+>> +        * temp1 is the temperature inside the chip.
+>> +        *
+>> +        * Configuration 0x18 enables all sensors on this PCB:
+>> +        *  # modprobe i2c-dev
+>> +        *  # i2cset 0 0x4c 1 0x18
+> 
+> What's the reason for the i2cset command?
+
+It sets the sensor modes in the LTC2990 and enables the three sensors listed below. I should have clarified this.
+
+I tried to integrate this in the driver, but ltc2990 only allows reading this configuration out of a device tree. Is there a good way to fake a DT entry in the init function?
+
+
+> 
+>> +        *  # modprobe ltc2990
+>> +        * in1 will be the voltage of the 5V rail, divided by 2.
+>> +        * in2 will be the voltage of the 12V rail, divided by 4.
+>> +        * temp3 will be measured using a PCB loop next the chip.
+>> +        */
+>> +       i2c->client_ltc2990 = i2c_new_probed_device(&i2c->adapter,
+>> +                                                   &icy_ltc2990_info,
+>> +                                                   icy_ltc2990_addresses,
+>> +                                                   NULL);
+>> +
+>> +       return 0;
+>> +}
+
+
+Thanks for your feedback,
+Max
