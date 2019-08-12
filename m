@@ -2,181 +2,106 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C222C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BDFC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7554C216F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E7A20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:15:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JR4azrcf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbfHLKMl (ORCPT
+        id S1727684AbfHLKPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:12:41 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35576 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727703AbfHLKMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:12:37 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2AF2EF66CD59304F08B0;
-        Mon, 12 Aug 2019 18:12:35 +0800 (CST)
-Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.202.226.45) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 12 Aug 2019 18:12:26 +0800
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     <linux-acpi@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <lenb@kernel.org>, <james.morse@arm.com>, <tony.luck@intel.com>,
-        <bp@alien8.de>, <baicar@os.amperecomputing.com>
-CC:     <linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
-        <tanxiaofei@huawei.com>, Shiju Jose <shiju.jose@huawei.com>
-Subject: [PATCH RFC 4/4] ACPI: APEI: Add log_arm_hw_error to the new notification method
-Date:   Mon, 12 Aug 2019 11:11:49 +0100
-Message-ID: <20190812101149.26036-5-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.19.2.windows.1
-In-Reply-To: <20190812101149.26036-1-shiju.jose@huawei.com>
-References: <Shiju Jose>
- <20190812101149.26036-1-shiju.jose@huawei.com>
+        Mon, 12 Aug 2019 06:15:09 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39435 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727518AbfHLKPI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 06:15:08 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t16so13942520wra.6
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 03:15:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=MIUyKFqvrV6Iriy5J++Bt5lmEJciQ4Nm0oLpNRJua4s=;
+        b=JR4azrcfAINC79q/jxAC5q7wpl2GKtG+oqSduyMfzGNi7MCwG1x0vzQwWE5XWnUsqn
+         4rvq0ZyF2vO73A1od36hoy/HlgAwsQvByuaSCf7qgoFk0pOoRmactaeJq+N5rrNr4nL0
+         sMHmT+JJqQs1y47xUz0okyakzzuIzsZIQGoTNgr4MGMcXjg3SNLTpn0uQpJpePxfemI4
+         eB9TFJRJdK0BAqRd3cOv4t3yykDlaiC8dePribs8TWaAdBtswdtwqoRGP8NGraDpCip6
+         8mqPQZISI27VYMKq3Sw4FiBoVw8kpXQ/RGpijePMRLwvuqDyia8ETir7eum49Jot7nAU
+         gSnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=MIUyKFqvrV6Iriy5J++Bt5lmEJciQ4Nm0oLpNRJua4s=;
+        b=nb4Eo3bNOhVMNZbSSAJrpNMKB4+mHwrGnqRQyA+gZtP0b/qurPeSvX5zIhzrysnvo0
+         tFOnwkMtAhfV8R/P2MerufNVHCYQoB5h7TL0IEIo8HiGq92nF5IUyurNTzh0YY2eO9Lg
+         W/TBABANqcel/Lj5T9hGFISsu5cgXd4AOHg2DR6cezCXRhS5i8Oqm6GfgDsLyxs0upar
+         VJICFV9YgkpBSpacaIsfKNqtNv12AsxQMbF9V0wFQCucA0Y/V3UJFoojKjTIyF/QCnUv
+         tfXb6F1yiSAD+1+jzP2mHMoLaj2pHtL4489loujEFaJPrz4ZGlNQzNoSS3Y5MzF8LVKd
+         fkHQ==
+X-Gm-Message-State: APjAAAXjNhyD6Nglaq0pawEvQ0Dcp8YC1Rwzp4X/5AtcfT0TzM/NEn8/
+        d6b8+kbbDZsvlPSgVdW4w2JD3g==
+X-Google-Smtp-Source: APXvYqz48A5YFBe5piSydrG0TZ+rpOGZ4/18TlUR5pdHjlvP/9aDOmhZiCfxMVH17iE2WGkbx8bxMw==
+X-Received: by 2002:adf:f042:: with SMTP id t2mr39835533wro.139.1565604906881;
+        Mon, 12 Aug 2019 03:15:06 -0700 (PDT)
+Received: from dell ([2.27.35.255])
+        by smtp.gmail.com with ESMTPSA id d17sm14629320wrm.52.2019.08.12.03.15.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 12 Aug 2019 03:15:06 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 11:15:04 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH 3/3] dt-bindings: aspeed: Remove mention of deprecated
+ compatibles
+Message-ID: <20190812101504.GF26727@dell>
+References: <20190724081313.12934-1-andrew@aj.id.au>
+ <20190724081313.12934-4-andrew@aj.id.au>
+ <CACRpkdZCJWeZO6CFvkq4uhnX+o_q_AfkDZ=a2kmUgbS3JtDqfA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.202.226.45]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdZCJWeZO6CFvkq4uhnX+o_q_AfkDZ=a2kmUgbS3JtDqfA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds log_arm_hw_error to the new error notification
-method.
+On Mon, 05 Aug 2019, Linus Walleij wrote:
 
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- drivers/acpi/apei/ghes.c | 47 ++++++++++++++++++++++-------------------------
- drivers/ras/ras.c        |  5 ++++-
- include/linux/ras.h      |  7 +++++--
- 3 files changed, 31 insertions(+), 28 deletions(-)
+> On Wed, Jul 24, 2019 at 10:13 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+> 
+> > Guide readers away from using the aspeed,g[45].* compatible patterns.
+> >
+> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> 
+> Patch applied to the pinctrl tree.
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index ffc309c..013fea0 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -574,34 +574,27 @@ static void ghes_do_proc(struct ghes *ghes,
- 		if (gdata->validation_bits & CPER_SEC_VALID_FRU_TEXT)
- 			fru_text = gdata->fru_text;
- 
--		if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
--			struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
--
--			log_arm_hw_error(err);
--		} else {
--			rcu_read_lock();
--			list_for_each_entry_rcu(err_notify,
--						&ghes_error_notify_list, list) {
--				if (guid_equal(&err_notify->sec_type,
--					       sec_type)) {
--					/* The notification is called in the
--					 * interrupt context, thus the handler
--					 * functions should be take care of it.
--					 */
--					err_notify->handle(gdata, sev,
--							   err_notify->data);
--					is_notify = 1;
--				}
-+		rcu_read_lock();
-+		list_for_each_entry_rcu(err_notify, &ghes_error_notify_list,
-+					list) {
-+			if (guid_equal(&err_notify->sec_type, sec_type)) {
-+				/* The notification is called in the
-+				 * interrupt context, thus the handler
-+				 * functions should be take care of it.
-+				 */
-+				err_notify->handle(gdata, sev,
-+						   err_notify->data);
-+				is_notify = 1;
- 			}
--			rcu_read_unlock();
-+		}
-+		rcu_read_unlock();
- 
--			if (!is_notify) {
--				void *err = acpi_hest_get_payload(gdata);
-+		if (!is_notify) {
-+			void *err = acpi_hest_get_payload(gdata);
- 
--				log_non_standard_event(sec_type, fru_id,
--						       fru_text, sec_sev, err,
--						       gdata->error_data_length);
--			}
-+			log_non_standard_event(sec_type, fru_id,
-+					       fru_text, sec_sev, err,
-+					       gdata->error_data_length);
- 		}
- 	}
- }
-@@ -1198,6 +1191,10 @@ struct ghes_err_handler_tab {
- 		.sec_type = CPER_SEC_PCIE,
- 		.handle = ghes_handle_aer,
- 	},
-+	{
-+		.sec_type = CPER_SEC_PROC_ARM,
-+		.handle = log_arm_hw_error,
-+	},
- 	{ /* sentinel */ }
- };
- 
-diff --git a/drivers/ras/ras.c b/drivers/ras/ras.c
-index 95540ea..7ec3eeb 100644
---- a/drivers/ras/ras.c
-+++ b/drivers/ras/ras.c
-@@ -21,8 +21,11 @@ void log_non_standard_event(const guid_t *sec_type, const guid_t *fru_id,
- 	trace_non_standard_event(sec_type, fru_id, fru_text, sev, err, len);
- }
- 
--void log_arm_hw_error(struct cper_sec_proc_arm *err)
-+void log_arm_hw_error(struct acpi_hest_generic_data *gdata,
-+		      int sev, void *data)
- {
-+	struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
-+
- 	trace_arm_event(err);
- }
- 
-diff --git a/include/linux/ras.h b/include/linux/ras.h
-index 7c3debb..05b662d 100644
---- a/include/linux/ras.h
-+++ b/include/linux/ras.h
-@@ -5,6 +5,7 @@
- #include <asm/errno.h>
- #include <linux/uuid.h>
- #include <linux/cper.h>
-+#include <acpi/ghes.h>
- 
- #ifdef CONFIG_DEBUG_FS
- int ras_userspace_consumers(void);
-@@ -29,7 +30,8 @@ static inline void __init cec_init(void)	{ }
- void log_non_standard_event(const guid_t *sec_type,
- 			    const guid_t *fru_id, const char *fru_text,
- 			    const u8 sev, const u8 *err, const u32 len);
--void log_arm_hw_error(struct cper_sec_proc_arm *err);
-+void log_arm_hw_error(struct acpi_hest_generic_data *gdata,
-+		      int sev, void *data);
- #else
- static inline void
- log_non_standard_event(const guid_t *sec_type,
-@@ -37,7 +39,8 @@ void log_non_standard_event(const guid_t *sec_type,
- 		       const u8 sev, const u8 *err, const u32 len)
- { return; }
- static inline void
--log_arm_hw_error(struct cper_sec_proc_arm *err) { return; }
-+log_arm_hw_error(struct acpi_hest_generic_data *gdata,
-+		 int sev, void *data) { return; }
- #endif
- 
- #endif /* __RAS_H__ */
+With my Ack?
+
 -- 
-1.9.1
-
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
