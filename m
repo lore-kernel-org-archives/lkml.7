@@ -2,593 +2,172 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB0EC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 02:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73679C41514
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 02:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B09352064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 02:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39BE82075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 02:37:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HqKR6v7r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbfHLC0I convert rfc822-to-8bit (ORCPT
+        id S1726556AbfHLCh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 22:26:08 -0400
-Received: from gli-ex.genesyslogic.com.tw ([60.251.58.171]:3851 "EHLO
-        gli-ex.genesyslogic.com.tw" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726236AbfHLC0I (ORCPT
+        Sun, 11 Aug 2019 22:37:57 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44544 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbfHLCh5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 22:26:08 -0400
-Received: from [172.17.104.60] (172.17.104.60) by
- Gli-CASHT02.genesyslogic.com.tw (172.17.50.60) with Microsoft SMTP Server
- (TLS) id 14.2.347.0; Mon, 12 Aug 2019 10:25:40 +0800
-Subject: Re: [PATCH v2 2/2] mmc: sdhci: sdhci-pci-core: Add Genesis Logic
- GL975x support
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        "Michael K. Johnson" <johnsonm@danlj.org>, <ulf.hansson@linaro.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-References: <20190726020754.GA12078@people.danlj.org>
- <62a756ff-6432-fd43-5e90-038eb28045cd@intel.com>
-From:   Ben Chuang <ben.chuang@genesyslogic.com.tw>
-Message-ID: <92ee89f9-82cc-0493-5daf-bb28187ea810@genesyslogic.com.tw>
-Date:   Mon, 12 Aug 2019 10:25:39 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 11 Aug 2019 22:37:57 -0400
+Received: by mail-ot1-f65.google.com with SMTP id b7so103499874otl.11
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 19:37:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vVPUyU0J20dZaP14ZLtarTnmhaUFJnFvaSIBf/iSdHg=;
+        b=HqKR6v7rUVKSqH/801mtUb1b78SxT444rRCVYLlXNrRvp07ibQehYufIH7zwzwDso/
+         IS581UNC9Z8ELxE5VeWHqzl8I0+7/AQXjYXv8hZ5jV2ZTVsYRXf20Gb0EYxfA8/z28sr
+         MRqdBnWVDqq/ZnLG/D42iTpl6ZxPuVa3lXzrwNHq9DwTray9m9bCOh2gpZ+EmIDRQE3X
+         POb1arab6XlIRV+ysy2faIH4gXg345Z0QVuhpy+zodgkrp1iLRmWiEXFWjK5cfPbIixu
+         g8XwfRwS0rwmmuWSs5qBONARdmSm+i2T/G17QvWwhQ6D0z1fPGRlBZJ5mIPEQzYiiosh
+         Qc2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vVPUyU0J20dZaP14ZLtarTnmhaUFJnFvaSIBf/iSdHg=;
+        b=d8WFrTLLfww2z9HOWcqZFK6Hr9h/0IRuXn91d0jPW8Aogo0u08UAioZBb9TGveUUjy
+         K7+ogBjFZb3oc3Gta2BIhBtVhHgqSj3IKmKjRULRSgM8ZmDpQg3JEYvBP8xifD8FOlQ6
+         GtGXGHNSWz4z4iua343SZDRKVaHqlic+2vtjWfKNvii9Gy4UsRpW9ZwUvv6YIHOPaAhE
+         MBAb4t/AidQMPpM5Q1OwEOW620nmUrlursKfyo/lByRsI+CmmB/DkIChrY9Hkd4x+CBB
+         LrMz+2LeUgefS1uGAEJCRQTC0eiMq7WfzdeNThN08uFs6kaTjweR+krtbfYc1iXWQW4Q
+         dPlg==
+X-Gm-Message-State: APjAAAXu0rF+C/lKKw+VWjqNmtaHjvYRDZ0hSGsv0PF6dCUZjKSjV+Q6
+        1BBEAeyfLEu0PgFDh0X+r6PisGcU3TPJDEg95TmXjw==
+X-Google-Smtp-Source: APXvYqy4/uubGIOKb1mot88/KCwAhXdUYNlH4ftJciezuK0kUKzJ1Q2YpBEmCO17/xgWuQUtu7VXOSNPqtPZCFhbso4=
+X-Received: by 2002:a9d:590d:: with SMTP id t13mr18027546oth.281.1565577475725;
+ Sun, 11 Aug 2019 19:37:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <62a756ff-6432-fd43-5e90-038eb28045cd@intel.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
-X-Originating-IP: [172.17.104.60]
+References: <1870ea18729f93fb36694affaf7e9443733dd988.1564035575.git.baolin.wang@linaro.org>
+ <20190727182709.037fc595@archlinux> <CAMz4kuLLSYw0JRLRVN-JegxZcK1bdv4K2m4mVu7oep6xfb+xxg@mail.gmail.com>
+ <20190805145037.0a03f21e@archlinux> <CAMz4kuK4GFfOi3vGvFOLdRfmqrwVLDs5CN+Xp_it3jG4=iKi=w@mail.gmail.com>
+ <20190811090251.5fbd7d75@archlinux>
+In-Reply-To: <20190811090251.5fbd7d75@archlinux>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Mon, 12 Aug 2019 10:37:44 +0800
+Message-ID: <CAMz4ku+ansL1RJScmJRsvKR-dJVLNjAZqgTFqRSEJWQSYUy_Sg@mail.gmail.com>
+Subject: Re: [PATCH] iio: adc: sc27xx: Change to polling mode to read data
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        freeman.liu@unisoc.com,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/19 8:25 PM, Adrian Hunter wrote:
-> On 26/07/19 5:07 AM, Michael K. Johnson wrote:
->> Add support for the GL9750 and GL9755 chipsets.
->>
->> Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
->> Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
->> Signed-off-by: Michael K Johnson <johnsonm@danlj.org>
->>
->> diff --git a/drivers/mmc/host/sdhci-gli.h b/drivers/mmc/host/sdhci-gli.h
-> I suggest creating sdhci-pci-gli.c and putting definitions there.  Have a
-> look at sdhci-pci-arasan.c, sdhci-pci-dwc-mshc.c or sdhci-pci-o2micro.c
-
-Hi, Adrian,
-
-Thanks for the review.
-
-I will break the patch apart as you suggested and create sdhci-pci-gli.c.
-
-Then move vendor specific changes to sdhci-pci-gli.c.
-
->> new file mode 100644
->> index 000000000000..0acd35b6d3e2
->> --- /dev/null
->> +++ b/drivers/mmc/host/sdhci-gli.h
->> @@ -0,0 +1,27 @@
->> +/* SPDX-License-Identifier: GPL-2.0+ */
->> +#ifndef __SDHCI_GLI_H
->> +#define __SDHCI_GLI_H
->> +
->> +/* the define PCI_VENDOR_ID_GLI may put in kernel/include/linux/pci_ids.h */
->> +#ifndef PCI_VENDOR_ID_GLI
->> +#define PCI_VENDOR_ID_GLI           0x17a0
->> +#endif
-> If it is in include/linux/pci_ids.h then this code should be removed
+On Sun, 11 Aug 2019 at 16:03, Jonathan Cameron <jic23@kernel.org> wrote:
 >
->> +
->> +/*  Genesys Logic extra registers */
->> +#define SDHCI_GLI_9750_WT         0x800
->> +#define SDHCI_GLI_9750_DRIVING    0x860
->> +#define SDHCI_GLI_9750_PLL        0x864
->> +#define SDHCI_GLI_9750_SW_CTRL    0x874
->> +#define SDHCI_GLI_9750_MISC       0x878
->> +
->> +#define SDHCI_GLI_9750_TUNING_CONTROL               0x540
->> +#define SDHCI_GLI_9750_TUNING_PARAMETERS    0x544
->> +
->> +#define GLI_9755_DRIVER_VER      "Genesys Logic (GL9755 v0.9.0-y190703)"
->> +#define GLI_9750_DRIVER_VER      "Genesys Logic (GL9750 v0.9.0-y190703)"
->> +
->> +#define GLI_MAX_TUNING_LOOP 40
->> +
->> +void gli_set_9750(struct sdhci_host *host);
->> +
->> +#endif /* __SDHCI_GLI_H */
->> diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
->> index 4154ee11b47d..b5c28df39de1 100644
->> --- a/drivers/mmc/host/sdhci-pci-core.c
->> +++ b/drivers/mmc/host/sdhci-pci-core.c
->> @@ -35,6 +35,7 @@
->>
->>   #include "sdhci.h"
->>   #include "sdhci-pci.h"
->> +#include "sdhci-gli.h"
->>
->>   static void sdhci_pci_hw_reset(struct sdhci_host *host);
->>
->> @@ -1453,6 +1454,223 @@ static const struct sdhci_pci_fixes sdhci_rtsx = {
->>      .probe_slot     = rtsx_probe_slot,
->>   };
->>
->> +/* Genesys Logic chipset */
->> +static int gli_probe_slot_gl9755(struct sdhci_pci_slot *slot)
->> +{
->> +    struct sdhci_host *host = slot->host;
->> +
->> +    slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
->> +    dev_info(&slot->chip->pdev->dev, "%s\n", GLI_9755_DRIVER_VER);
->> +    sdhci_enable_v4_mode(host);
->> +
->> +    return 0;
->> +}
->> +
->> +static void gli_set_9750_rx_inv(struct sdhci_host *host, bool b)
->> +{
->> +    u32 wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
->> +    u32 misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
->> +
->> +    if ((wt_value & 0x1) == 0) {
->> +            wt_value |= 0x1;
->> +            sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
->> +    }
->> +
->> +    misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
->> +    if (b) {
->> +            misc_value |= 0x8;
->> +            sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
->> +    } else {
->> +            misc_value &= ~0x8;
->> +            sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
->> +    }
->> +
->> +    wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
->> +    wt_value &= ~0x1;
->> +    sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
->> +}
->> +
->> +static int __sdhci_execute_tuning_9750(struct sdhci_host *host, u32 opcode)
->> +{
->> +    int i;
->> +    int rx_inv = 0;
->> +
->> +    for (rx_inv = 0; rx_inv < 2; rx_inv++) {
->> +            if (rx_inv & 0x1)
->> +                    gli_set_9750_rx_inv(host, true);
->> +            else
->> +                    gli_set_9750_rx_inv(host, false);
->> +
->> +            sdhci_start_tuning(host);
->> +
->> +            for (i = 0; i < GLI_MAX_TUNING_LOOP; i++) {
->> +                    u16 ctrl;
->> +
->> +                    sdhci_send_tuning(host, opcode);
->> +
->> +                    if (!host->tuning_done) {
->> +                            if (rx_inv == 1) {
->> +                                    pr_info("%s: Tuning timeout, falling back to fixed sampling clock\n",
->> +                                            mmc_hostname(host->mmc));
->> +                                    sdhci_abort_tuning(host, opcode);
->> +                                    return -ETIMEDOUT;
->> +                            }
->> +                            pr_info("%s: Tuning timeout, try next tuning\n",
->> +                                    mmc_hostname(host->mmc));
->> +                            sdhci_abort_tuning(host, opcode);
->> +                            break;
->> +                    }
->> +
->> +                    ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
->> +                    if (!(ctrl & SDHCI_CTRL_EXEC_TUNING)) {
->> +                            if (ctrl & SDHCI_CTRL_TUNED_CLK) {
->> +                                    pr_info("%s: Tuning successful\n",
->> +                                            mmc_hostname(host->mmc));
->> +                                    return 0; /* Success! */
->> +                            }
->> +                            break;
->> +                    }
->> +            }
->> +    }
->> +
->> +    pr_info("%s: Tuning failed, falling back to fixed sampling clock\n",
->> +            mmc_hostname(host->mmc));
->> +    sdhci_reset_tuning(host);
->> +    return -EAGAIN;
->> +}
->> +
->> +static int gl9750_execute_tuning(struct mmc_host *mmc, u32 opcode)
->> +{
->> +    struct sdhci_host *host = mmc_priv(mmc);
->> +    int err = 0;
->> +    unsigned int tuning_count = 0;
->> +    bool hs400_tuning;
->> +
->> +    hs400_tuning = host->flags & SDHCI_HS400_TUNING;
->> +
->> +    if (host->tuning_mode == SDHCI_TUNING_MODE_1)
->> +            tuning_count = host->tuning_count;
->> +
->> +    /*
->> +     * The Host Controller needs tuning in case of SDR104 and DDR50
->> +     * mode, and for SDR50 mode when Use Tuning for SDR50 is set in
->> +     * the Capabilities register.
->> +     * If the Host Controller supports the HS200 mode then the
->> +     * tuning function has to be executed.
->> +     */
->> +    switch (host->timing) {
->> +    /* HS400 tuning is done in HS200 mode */
->> +    case MMC_TIMING_MMC_HS400:
->> +            err = -EINVAL;
->> +            goto out;
->> +
->> +    case MMC_TIMING_MMC_HS200:
->> +            /*
->> +             * Periodic re-tuning for HS400 is not expected to be needed, so
->> +             * disable it here.
->> +             */
->> +            if (hs400_tuning)
->> +                    tuning_count = 0;
->> +            break;
->> +
->> +    case MMC_TIMING_UHS_SDR104:
->> +    case MMC_TIMING_UHS_DDR50:
->> +            break;
->> +
->> +    case MMC_TIMING_UHS_SDR50:
->> +            if (host->flags & SDHCI_SDR50_NEEDS_TUNING)
->> +                    break;
->> +            /* FALLTHROUGH */
->> +
->> +    default:
->> +            goto out;
->> +    }
->> +
->> +    if (host->ops->platform_execute_tuning) {
->> +            err = host->ops->platform_execute_tuning(host, opcode);
->> +            goto out;
->> +    }
->> +
->> +    host->mmc->retune_period = tuning_count;
->> +
->> +    if (host->tuning_delay < 0)
->> +            host->tuning_delay = opcode == MMC_SEND_TUNING_BLOCK;
->> +
->> +    gli_set_9750(host);
->> +    host->tuning_err = __sdhci_execute_tuning_9750(host, opcode);
->> +
->> +    sdhci_end_tuning(host);
->> +out:
->> +    host->flags &= ~SDHCI_HS400_TUNING;
->> +
->> +    return err;
->> +}
->> +
->> +static int gli_probe_slot_gl9750(struct sdhci_pci_slot *slot)
->> +{
->> +    struct sdhci_host *host = slot->host;
->> +    struct mmc_host_ops *ops = &host->mmc_host_ops;
->> +
->> +    u32 gli_wt = sdhci_readl(host, SDHCI_GLI_9750_WT);
->> +
->> +    dev_info(&slot->chip->pdev->dev, "%s\n", GLI_9750_DRIVER_VER);
->> +    slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
->> +
->> +    if ((gli_wt & 0x1) == 0) {
->> +            gli_wt |= 0x1;
->> +            sdhci_writel(host, gli_wt, SDHCI_GLI_9750_WT);
->> +    }
->> +
->> +    gli_wt = sdhci_readl(host, SDHCI_GLI_9750_WT);
->> +    gli_wt &= ~0x1;
->> +    sdhci_writel(host, gli_wt, SDHCI_GLI_9750_WT);
->> +
->> +    sdhci_enable_v4_mode(host);
->> +
->> +    ops->execute_tuning = gl9750_execute_tuning;
->> +
->> +    return 0;
->> +}
->> +
->> +static void sdhci_gli_voltage_switch(struct sdhci_host *host)
->> +{
->> +    usleep_range(5000, 5500);
->> +}
->> +
->> +static const struct sdhci_ops sdhci_gl9755_ops = {
->> +    .set_clock                      = sdhci_set_clock,
->> +    .enable_dma                     = sdhci_pci_enable_dma,
->> +    .set_bus_width                  = sdhci_set_bus_width,
->> +    .reset                          = sdhci_reset,
->> +    .set_uhs_signaling              = sdhci_set_uhs_signaling,
->> +    .hw_reset                       = sdhci_pci_hw_reset,
->> +    .voltage_switch                 = sdhci_gli_voltage_switch,
->> +};
->> +
->> +static const struct sdhci_pci_fixes sdhci_gl9755 = {
->> +    .quirks         = SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC,
->> +    .quirks2        = SDHCI_QUIRK2_BROKEN_DDR50,
->> +    .probe_slot     = gli_probe_slot_gl9755,
->> +    .ops            = &sdhci_gl9755_ops,
->> +};
->> +
->> +static const struct sdhci_ops sdhci_gl9750_ops = {
->> +    .set_clock                      = sdhci_set_clock,
->> +    .enable_dma                     = sdhci_pci_enable_dma,
->> +    .set_bus_width                  = sdhci_set_bus_width,
->> +    .reset                          = sdhci_reset,
->> +    .set_uhs_signaling              = sdhci_set_uhs_signaling,
->> +    .hw_reset                       = sdhci_pci_hw_reset,
->> +    .voltage_switch                 = sdhci_gli_voltage_switch,
->> +};
->> +
->> +static const struct sdhci_pci_fixes sdhci_gl9750 = {
->> +    .quirks         = SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC,
->> +    .quirks2        = SDHCI_QUIRK2_BROKEN_DDR50,
->> +    .probe_slot     = gli_probe_slot_gl9750,
->> +    .ops            = &sdhci_gl9750_ops,
->> +};
->> +
->>   /*AMD chipset generation*/
->>   enum amd_chipset_gen {
->>      AMD_CHIPSET_BEFORE_ML,
->> @@ -1682,6 +1900,8 @@ static const struct pci_device_id pci_ids[] = {
->>      SDHCI_PCI_DEVICE(O2, SEABIRD1, o2),
->>      SDHCI_PCI_DEVICE(ARASAN, PHY_EMMC, arasan),
->>      SDHCI_PCI_DEVICE(SYNOPSYS, DWC_MSHC, snps),
->> +    SDHCI_PCI_DEVICE(GLI, 9755, gl9755),
->> +    SDHCI_PCI_DEVICE(GLI, 9750, gl9750),
->>      SDHCI_PCI_DEVICE_CLASS(AMD, SYSTEM_SDHCI, PCI_CLASS_MASK, amd),
->>      /* Generic SD host controller */
->>      {PCI_DEVICE_CLASS(SYSTEM_SDHCI, PCI_CLASS_MASK)},
->> diff --git a/drivers/mmc/host/sdhci-pci.h b/drivers/mmc/host/sdhci-pci.h
->> index e5dc6e44c7a4..78e6b631e252 100644
->> --- a/drivers/mmc/host/sdhci-pci.h
->> +++ b/drivers/mmc/host/sdhci-pci.h
->> @@ -65,6 +65,9 @@
->>
->>   #define PCI_DEVICE_ID_SYNOPSYS_DWC_MSHC 0xc202
->>
->> +#define PCI_DEVICE_ID_GLI_9755              0x9755
->> +#define PCI_DEVICE_ID_GLI_9750              0x9750
->> +
->>   /*
->>    * PCI device class and mask
->>    */
->> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->> index 14957578bf2e..1ccf1b692d04 100644
->> --- a/drivers/mmc/host/sdhci.c
->> +++ b/drivers/mmc/host/sdhci.c
->> @@ -25,6 +25,8 @@
->>
->>   #include <linux/leds.h>
->>
->> +#include <linux/pci.h>
->> +
->>   #include <linux/mmc/mmc.h>
->>   #include <linux/mmc/host.h>
->>   #include <linux/mmc/card.h>
->> @@ -32,6 +34,8 @@
->>   #include <linux/mmc/slot-gpio.h>
->>
->>   #include "sdhci.h"
->> +#include "sdhci-pci.h"
->> +#include "sdhci-gli.h"
-> Vendor specific changes do not belong in sdhci.c
+> On Tue, 6 Aug 2019 15:39:45 +0800
+> Baolin Wang <baolin.wang@linaro.org> wrote:
 >
->>
->>   #define DRIVER_NAME "sdhci"
->>
->> @@ -50,6 +54,8 @@ static void sdhci_finish_data(struct sdhci_host *);
->>
->>   static void sdhci_enable_preset_value(struct sdhci_host *host, bool enable);
->>
->> +static bool gli_is_9750(struct sdhci_host *);
->> +
->>   void sdhci_dumpregs(struct sdhci_host *host)
->>   {
->>      SDHCI_DUMP("============ SDHCI REGISTER DUMP ===========\n");
->> @@ -328,6 +334,8 @@ static void sdhci_init(struct sdhci_host *host, int soft)
->>
->>      host->cqe_on = false;
->>
->> +    gli_set_9750(host);
-> Maybe look at using the sdhci_ops ->reset() callback.
+> > Hi Jonathan,
+> >
+> > On Mon, 5 Aug 2019 at 21:50, Jonathan Cameron <jic23@kernel.org> wrote:
+> > >
+> > > On Mon, 29 Jul 2019 10:19:48 +0800
+> > > Baolin Wang <baolin.wang@linaro.org> wrote:
+> > >
+> > > > Hi Jonathan,
+> > > >
+> > > > On Sun, 28 Jul 2019 at 01:27, Jonathan Cameron <jic23@kernel.org> wrote:
+> > > > >
+> > > > > On Thu, 25 Jul 2019 14:33:50 +0800
+> > > > > Baolin Wang <baolin.wang@linaro.org> wrote:
+> > > > >
+> > > > > > From: Freeman Liu <freeman.liu@unisoc.com>
+> > > > > >
+> > > > > > On Spreadtrum platform, the headphone will read one ADC channel multiple
+> > > > > > times to identify the headphone type, and the headphone identification is
+> > > > > > sensitive of the ADC reading time. And we found it will take longer time
+> > > > > > to reading ADC data by using interrupt mode comparing with the polling
+> > > > > > mode, thus we should change to polling mode to improve the efficiency
+> > > > > > of reading data, which can identify the headphone type successfully.
+> > > > > >
+> > > > > > Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
+> > > > > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > > > >
+> > > > > Hi,
+> > > > >
+> > > > > My concerns with this sort of approach is that we may be sacrificing power
+> > > > > efficiency for some usecases to support one demanding one.
+> > > > >
+> > > > > The maximum sleep time is 1 second (I think) which is probably too long
+> > > > > to poll a register for in general.
+> > > >
+> > > > 1 second is the timeout time, that means something wrong when reading
+> > > > the data taking 1 second, and we will poll the register status every
+> > > > 500 us.
+> > > > From the testing, polling mode takes less time than interrupt mode
+> > > > when reading ADC data multiple times, so polling mode did not
+> > > > sacrifice power
+> > > > efficiency.
+> > >
+> > > Hmm.  I'll go with a probably on that, depends on interrupt response
+> > > latency etc so isn't entirely obvious.  Faster response doesn't necessarily
+> > > mean lower power.
+> > >
+> > > >
+> > > > > Is there some way we can bound that time and perhaps switch between
+> > > > > interrupt and polling modes depending on how long we expect to wait?
+> > > >
+> > > > I do not think the interrupt mode is needed any more, since the ADC
+> > > > reading is so fast enough usually. Thanks.
+> > > The reason for interrupts in such devices is usually precisely the opposite.
+> > >
+> > > You do it because things are slow enough that you can go to sleep
+> > > for a long time before the interrupt occurs.
+> > >
+> > > So question becomes whether there are circumstances in which we are
+> > > running with long timescales and would benefit from using interrupts.
+> >
+> > From our testing, the ADC version time is usually about 100us, it will
+> > be faster to get data if we poll every 50us in this case. But if we
+> > change to use interrupt mode, it will take millisecond level time to
+> > get data. That will cause problems for those time sensitive scenarios,
+> > like headphone detection, that's the main reason we can not use
+> > interrupt mode.
+> >
+> > For those non-time-sensitive scenarios, yes, I agree with you, the
+> > interrupt mode will get a better power efficiency. But ADC driver can
+> > not know what scenarios asked by consumers, so changing to polling
+> > mode seems the easiest way to solve the problem, and we've applied
+> > this patch in our downstream kernel for a while, we did not see any
+> > other problem.
+> >
+> > Thanks for your comments.
 >
->> +
->>      if (soft) {
->>              /* force clock reconfiguration */
->>              host->clock = 0;
->> @@ -2326,7 +2334,7 @@ void sdhci_reset_tuning(struct sdhci_host *host)
->>   }
->>   EXPORT_SYMBOL_GPL(sdhci_reset_tuning);
->>
->> -static void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode)
->> +void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode)
->>   {
->>      sdhci_reset_tuning(host);
->>
->> @@ -2337,6 +2345,7 @@ static void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode)
->>
->>      mmc_abort_tuning(host->mmc, opcode);
->>   }
->> +EXPORT_SYMBOL_GPL(sdhci_abort_tuning);
-> If you need to export sdhci_abort_tuning, then please make it a separate patch.
->
->>
->>   /*
->>    * We use sdhci_send_tuning() because mmc_send_tuning() is not a good fit. SDHCI
->> @@ -2493,9 +2502,7 @@ int sdhci_execute_tuning(struct mmc_host *mmc, u32 opcode)
->>              host->tuning_delay = opcode == MMC_SEND_TUNING_BLOCK;
->>
->>      sdhci_start_tuning(host);
->> -
->>      host->tuning_err = __sdhci_execute_tuning(host, opcode);
->> -
->>      sdhci_end_tuning(host);
->>   out:
->>      host->flags &= ~SDHCI_HS400_TUNING;
->> @@ -4090,6 +4097,12 @@ int sdhci_setup_host(struct sdhci_host *host)
->>       * value.
->>       */
->>      max_current_caps = sdhci_readl(host, SDHCI_MAX_CURRENT);
->> +
->> +    if (gli_is_9750(host)) {
->> +            if (!(max_current_caps & 0xff))
->> +                    max_current_caps |= 0xc8;
->> +    }
-> Vendor specific changes do not belong in sdhci.c
->
-> Look at using sdhci I/O accessors (refer CONFIG_MMC_SDHCI_IO_ACCESSORS)
-> instead
->
->> +
->>      if (!max_current_caps && !IS_ERR(mmc->supply.vmmc)) {
->>              int curr = regulator_get_current_limit(mmc->supply.vmmc);
->>              if (curr > 0) {
->> @@ -4269,6 +4282,106 @@ void sdhci_cleanup_host(struct sdhci_host *host)
->>   }
->>   EXPORT_SYMBOL_GPL(sdhci_cleanup_host);
->>
->> +// for Genesys Logic
->> +void gli_set_9750(struct sdhci_host *host)
->> +{
->> +    u32 wt_value = 0;
->> +    u32 driving_value = 0;
->> +    u32 pll_value = 0;
->> +    u32 sw_ctrl_value = 0;
->> +    u32 misc_value = 0;
->> +    u32 parameter_value = 0;
->> +    u32 control_value = 0;
->> +
->> +    u16 ctrl2 = 0;
->> +
->> +    if (!gli_is_9750(host))
->> +            return;
->> +
->> +    wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
->> +    if ((wt_value & 0x1) == 0) {
->> +            wt_value |= 0x1;
->> +            sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
->> +    }
->> +
->> +    driving_value = sdhci_readl(host, SDHCI_GLI_9750_DRIVING);
->> +    pll_value = sdhci_readl(host, SDHCI_GLI_9750_PLL);
->> +    sw_ctrl_value = sdhci_readl(host, SDHCI_GLI_9750_SW_CTRL);
->> +    misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
->> +    parameter_value = sdhci_readl(host, SDHCI_GLI_9750_TUNING_PARAMETERS);
->> +    control_value = sdhci_readl(host, SDHCI_GLI_9750_TUNING_CONTROL);
->> +
->> +    driving_value &= ~(0x0C000FFF);
->> +    driving_value |= 0x0C000FFF;
->> +    sdhci_writel(host, driving_value, SDHCI_GLI_9750_DRIVING);
->> +
->> +    sw_ctrl_value |= 0xc0;
->> +    sdhci_writel(host, sw_ctrl_value, SDHCI_GLI_9750_SW_CTRL);
->> +
->> +    // reset the tuning flow after reinit and before starting tuning
->> +    pll_value |= 0x800000; // bit23-1
->> +    pll_value &= ~(0x00700000); // bit22:20-0
->> +
->> +    misc_value &= ~(0x8); // bit3-0
->> +    misc_value &= ~(0x4); // bit2-0
->> +
->> +    misc_value &= ~(0x70); // bit6:4-0
->> +    misc_value |= 0x50; // bit6:4-5
->> +
->> +    parameter_value &= ~(0x7); // bit2:0-0
->> +    parameter_value |= 0x1; // bit2:0-1
->> +
->> +    control_value &= ~(0x190000); // bit20:19-0, bit16-0
->> +    control_value |=   0x110000; // bit20:19-b10, bit16-1
->> +
->> +    sdhci_writel(host, pll_value, SDHCI_GLI_9750_PLL);
->> +    sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
->> +
->> +    // disable tuned clk
->> +    ctrl2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
->> +    ctrl2 &= ~SDHCI_CTRL_TUNED_CLK;
->> +    sdhci_writew(host, ctrl2, SDHCI_HOST_CONTROL2);
->> +
->> +    // 540 enable tuning parameters control
->> +    control_value |= 0x10;
->> +    sdhci_writel(host, control_value, SDHCI_GLI_9750_TUNING_CONTROL);
->> +
->> +    // write 544 tuning parameters
->> +    sdhci_writel(host, parameter_value, SDHCI_GLI_9750_TUNING_PARAMETERS);
->> +
->> +    // 540 disable tuning parameters control
->> +    control_value &= ~0x10;
->> +    sdhci_writel(host, control_value, SDHCI_GLI_9750_TUNING_CONTROL);
->> +
->> +    // clear tuned clk
->> +    ctrl2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
->> +    ctrl2 &= ~SDHCI_CTRL_TUNED_CLK;
->> +    sdhci_writew(host, ctrl2, SDHCI_HOST_CONTROL2);
->> +
->> +    udelay(1);
->> +    wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
->> +    wt_value &= ~0x1;
->> +    sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
->> +}
->> +EXPORT_SYMBOL_GPL(gli_set_9750);
->> +
->> +bool gli_is_9750(struct sdhci_host *host)
->> +{
->> +    struct sdhci_pci_slot *slot = sdhci_priv(host);
->> +    struct sdhci_pci_chip *chip;
->> +    struct pci_dev *pdev;
->> +
->> +    chip = slot->chip;
->> +    pdev = chip->pdev;
->> +
->> +    if (pdev->vendor == PCI_VENDOR_ID_GLI &&
->> +        pdev->device == PCI_DEVICE_ID_GLI_9750) {
->> +            return true;
->> +    }
->> +
->> +    return false;
->> +}
->> +
-> Vendor specific changes do not belong in sdhci.c
->
->>   int __sdhci_add_host(struct sdhci_host *host)
->>   {
->>      unsigned int flags = WQ_UNBOUND | WQ_MEM_RECLAIM | WQ_HIGHPRI;
->> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
->> index 72601a4d2e95..437bab3af195 100644
->> --- a/drivers/mmc/host/sdhci.h
->> +++ b/drivers/mmc/host/sdhci.h
->> @@ -797,5 +797,6 @@ void sdhci_start_tuning(struct sdhci_host *host);
->>   void sdhci_end_tuning(struct sdhci_host *host);
->>   void sdhci_reset_tuning(struct sdhci_host *host);
->>   void sdhci_send_tuning(struct sdhci_host *host, u32 opcode);
->> +void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode);
->>
->>   #endif /* __SDHCI_HW_H */
->> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
->> index 70e86148cb1e..e668da5c8df5 100644
->> --- a/include/linux/pci_ids.h
->> +++ b/include/linux/pci_ids.h
->> @@ -2403,6 +2403,7 @@
->>   #define PCI_DEVICE_ID_RDC_R6061            0x6061
->>   #define PCI_DEVICE_ID_RDC_D1010            0x1010
->>
->> +#define PCI_VENDOR_ID_GLI           0x17a0
-> Better as a separate patch.
-I will create a pci_ids.h patch for GLI's pci vendor id.
->>   #define PCI_VENDOR_ID_LENOVO               0x17aa
->>
->>   #define PCI_VENDOR_ID_QCOM         0x17cb
->>
-________________________________
+> OK. It's not ideal but sometimes such is life ;)
 
-Genesys Logic Email Confidentiality Notice:
-This mail and any attachments may contain information that is confidential, proprietary, privileged or otherwise protected by law. The mail is intended solely for the named addressee (or a person responsible for delivering it to the addressee). If you are not the intended recipient of this mail, you are not authorized to read, print, copy or disseminate this mail.
+Thanks for your understanding :)
 
-If you have received this email in error, please notify us immediately by reply email and immediately delete this message and any attachments from your system. Please be noted that any unauthorized use, dissemination, distribution or copying of this email is strictly prohibited.
-________________________________
+>
+> So last question - fix or not?  If a fix, can I have a fixes tag
+> please.
+
+This is a bigger patch, I am afraid it can not be merged into stable
+kernel, and original code can work at most scenarios. So I think no
+need add stable tag for this patch. Thanks.
+
+-- 
+Baolin Wang
+Best Regards
