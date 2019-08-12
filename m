@@ -2,96 +2,93 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B79C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE8EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D747B20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5092720679
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:21:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="aVtZY53y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfHLOUJ (ORCPT
+        id S1726961AbfHLOVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 10:20:09 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:46886 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727206AbfHLOUI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 10:20:08 -0400
-Received: (qmail 2923 invoked by uid 2102); 12 Aug 2019 10:20:07 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 12 Aug 2019 10:20:07 -0400
-Date:   Mon, 12 Aug 2019 10:20:07 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Felipe Balbi <felipe.balbi@linux.intel.com>
-cc:     Pawel Laszczak <pawell@cadence.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "rogerq@ti.com" <rogerq@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jbergsagel@ti.com" <jbergsagel@ti.com>,
-        "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>,
-        Suresh Punnoose <sureshp@cadence.com>,
-        "peter.chen@nxp.com" <peter.chen@nxp.com>,
-        Jayshri Dajiram Pawar <jpawar@cadence.com>,
-        Rahul Kumar <kurahul@cadence.com>
-Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-In-Reply-To: <877e7iu0xw.fsf@gmail.com>
-Message-ID: <Pine.LNX.4.44L0.1908121018430.1659-100000@iolanthe.rowland.org>
+        Mon, 12 Aug 2019 10:21:13 -0400
+Received: from mout.gmx.net ([212.227.15.15]:58913 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726354AbfHLOVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 10:21:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1565619665;
+        bh=zUhEadOAUQhcWm7AGcip/egPCwT9J+4/k4dDXd7AnpI=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=aVtZY53yHXM6A/aYymGfzmI5MAaya69O9DZsW9mkloKh34+ayHdHeuEafJ9IxlgW/
+         t+K0V8OJZlTgfI4TVsR6hfrRXWFCDNUqQF2chbQxMCrPipuACz3vd3KQqcCiVFfNEj
+         aoVX8QsYUbLbWu044DWZft0BlM4iqFIX29eqqakg=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [217.61.152.193] ([217.61.152.193]) by web-mail.gmx.net
+ (3c-app-gmx-bs80.server.lan [172.19.170.228]) (via HTTP); Mon, 12 Aug 2019
+ 16:21:05 +0200
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Message-ID: <trinity-b3a8466a-f95c-4f43-88b0-6f66c5850fee-1565619665734@3c-app-gmx-bs80>
+From:   "Frank Wunderlich" <frank-w@public-files.de>
+To:     "Andrew Lunn" <andrew@lunn.ch>
+Cc:     "Vivien Didelot" <vivien.didelot@gmail.com>,
+        "Florian Fainelli" <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Aw: Re: [BUG] access to null-pointer in dsa_switch_event when
+ bridge set up
+Content-Type: text/plain; charset=UTF-8
+Date:   Mon, 12 Aug 2019 16:21:05 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <20190812134243.GK14290@lunn.ch>
+References: <trinity-99bcd71d-8f78-4bbe-a439-f6a915040b0a-1565606589515@3c-app-gmx-bs80>
+ <20190812134243.GK14290@lunn.ch>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:5qDa2BE/sSzjmKbbE1/R41wXv0iMXfdGeKoYVdxoO2G8CtortXU6rgZmOu2HfJnIapbLD
+ yHWBngVLeo63yS9nkk5W/c0hbJVdAfdjFlXPXMEJSFGRv3l74tqZDdLpRziGX/n76IejZ2MOaqeS
+ TCrnMOOq6B09lXPp79HPfQ7CfVSXqShK4GZZg+tK5Bv98AnFV7OCBOg9AZeSzUw9Xbod+SS27ZfC
+ o5Fd3azB2ltmzNLWDJyzHCb/wchJe6HlU0OEfoiEVnT/uy2BYmmi3TLpGUQ4DAGJWzMbucBKqJt6
+ yw=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+dQG7yZZiFI=:yL7wtFUMDsAMaCujFfkZg5
+ CWwV4LZnhVkBCvrsquaHA5icHbTH/fc1zHi3BaIo+NxWlh81HU9nWmmyXP9ZvLp9QdEt8EU6T
+ MJA93f3/PhepC+5W8jDhwJ5ft0trwDxlfUeSUaNta+YFDF7tKvfucdawzpfej4bxtZyxuD5co
+ BsJhcXiUGnHCtALhVJoiPWuWmWNIW39fF7Vj14bNklwhq4S54BwVj08MqesxECOgDaqgDCsp1
+ oezp4sRlEnsMpL1FwbEaaEif05Pj6wWbrziP7LEaQ14TANWkNi93tMgFxe3Cvz7kOt1p2mtS5
+ 6ykuVItgsqP+GpCE9+KQlBBROQ5JQt3MkXBi6zijvWdv2fhTLCNGPRCmfSGlomkKkhuYvzEzD
+ KnejvYJtgtNjv8K86Xye2P5OBuueKslx8Ga/PvIPr1wnFuhrM/zacyRCtg4f0iU63MG8cwAom
+ A4784N7vOLNI4BQS/5xmmF+1jrGSpqZD2GSRoGF8n6FQaTM6KQ/8/Jsv+eeWyIxNRl7QwDbcR
+ cwzs+RSoWXT+oZ9C2xSEJe5euq1KvVGPFvwei3KTLiMagUra1luMY6JxRNva3uirXNMff8nxs
+ ZHoo+2aKcsg1fnpXu3tKBKAscAQ72HfTu4j1afwyT0uv5FWPJhGss1yQ2HkUzj19d9NM8h0BL
+ 2l+2/gSPwT09fjKzjJERom+MYShpRKe/Ye5TXvCrbred8eA==
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 12 Aug 2019, Felipe Balbi wrote:
+Hi Andrew,
 
-> I don't understand the intricacies of the coherent API to judge if it's
-> a bug in the API itself. In any case, here's where the splat comes from:
-> 
-> void dma_free_attrs(struct device *dev, size_t size, void *cpu_addr,
-> 		dma_addr_t dma_handle, unsigned long attrs)
-> {
-> 	const struct dma_map_ops *ops = get_dma_ops(dev);
-> 
-> 	if (dma_release_from_dev_coherent(dev, get_order(size), cpu_addr))
-> 		return;
-> 	/*
-> 	 * On non-coherent platforms which implement DMA-coherent buffers via
-> 	 * non-cacheable remaps, ops->free() may call vunmap(). Thus getting
-> 	 * this far in IRQ context is a) at risk of a BUG_ON() or trying to
-> 	 * sleep on some machines, and b) an indication that the driver is
-> 	 * probably misusing the coherent API anyway.
-> 	 */
-> 	WARN_ON(irqs_disabled());
-> 
-> 	if (!cpu_addr)
-> 		return;
-> 
-> 	debug_dma_free_coherent(dev, size, cpu_addr, dma_handle);
-> 	if (dma_is_direct(ops))
-> 		dma_direct_free(dev, size, cpu_addr, dma_handle, attrs);
-> 	else if (ops->free)
-> 		ops->free(dev, size, cpu_addr, dma_handle, attrs);
-> }
-> EXPORT_SYMBOL(dma_free_attrs);
-> 
-> maybe you're gonna have to fire up a workqueue to free this memory for
-> you :-(
-> 
-> Unless someone else has better ideas. Alan, Greg, any ideas?
+[1] seems to fix it, thank you
 
-I don't understand it very well myself, but there have been posts by 
-some of the DMA maintainers on this topic.  Maybe you can try asking 
-them.
+regards Frank
 
-Alan Stern
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git/commit/?=
+id=3D58799865be84e2a895dab72de0e1b996ed943f22
+
+> Gesendet: Montag, 12. August 2019 um 15:42 Uhr
+> Von: "Andrew Lunn" <andrew@lunn.ch>
+> Hi Frank
+>
+> A patch was merged last night with a fix for dsa_port_mdb_add. The
+> call stack looks the same. So i think this is fixed.
+>
+>      Andrew
 
