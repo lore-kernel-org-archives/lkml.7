@@ -2,166 +2,166 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9959DC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 437C6C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672272067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 147CE2070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:24:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LnitzvMr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfHLSVH (ORCPT
+        id S1726631AbfHLSYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 14:21:07 -0400
-Received: from mail-ot1-f69.google.com ([209.85.210.69]:39370 "EHLO
-        mail-ot1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfHLSVH (ORCPT
+        Mon, 12 Aug 2019 14:24:41 -0400
+Received: from mail-qt1-f202.google.com ([209.85.160.202]:54332 "EHLO
+        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726488AbfHLSYk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 14:21:07 -0400
-Received: by mail-ot1-f69.google.com with SMTP id v49so86052717otb.6
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 11:21:06 -0700 (PDT)
+        Mon, 12 Aug 2019 14:24:40 -0400
+Received: by mail-qt1-f202.google.com with SMTP id t5so97354717qtd.21
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 11:24:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=9mTljNvnyVjruVsrPNgUh53D69b4G0uh+rf/XKR7JZU=;
+        b=LnitzvMrBNB6LXONfL+PvwD9Ikk/vWzKySiopcnIrxQgVqiY5+jLuNhJ9ZjzPBotY0
+         Y0ntD2wGlkRwN/WqMUqePvF0CIftp/LQyZGsiE/rMamSPolRPy/gI1hWyTFrYjj8Az0S
+         iO+WLGSlSP4wDNeKPbhpSACldOlKIN0vm2AbpOTth5lwOi+wd5FtPBH+6DMV4BF7XZ5u
+         DCsO7wsqQZmhB7r+8C/SPCwSznOeI9ADcdzFPsEOZDZ9rWtgCf15F0uO/DhlcKvYD1vS
+         ikhy6UaROEOWv19ZHJDw8MIz7i0jbDy1yYL+vXOT6UpBhCm16LBtfsDmmxW8jdqFq7iG
+         CYUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=sT2xLk+0Un+bRMWjiKMtddMew8Oxq3tg/Abd8beDHHI=;
-        b=M42dXUfk1nTqigOBs8058MtbnXUFrD7rRkzxdz6Aw+8JED8rsTIi2hFCpdTfid8mub
-         6kvtjvg3cOa1lNrwQLcwatyPcK7O1Ie0puqL998MIQIrd1XjGkpsKokjK1uJsqKhiNw0
-         0s/85c/gyhlP7HsR7Vqvk7ukOXF6AdMBY33RWt6e/ZzdTMvL17TN1QaGBRjtYibcWuS3
-         Kvtbx75X2jjJ0/E/QUfzUHiE4SJTcnXcuanqzBicSWoAje3Quif/kAykaJo4xUXtbO0M
-         KrMn/hY6z8Vb4lCuf8dNsWbyR7ThPXIdVgc+G95MFDpdSmV8HLnWDI/ENUT3r/oycITV
-         UhiA==
-X-Gm-Message-State: APjAAAWKGBLTsur9uvqOzcAxDNnF1b1OHUv/FgaynJpTSJjYVC8E4N1O
-        ttiVCFf7F16xqKj/8dsfjp547zLZYSwjLIfcaiV3cZEGkKD7
-X-Google-Smtp-Source: APXvYqw8ggwmlHFXB0d4+J8cXKtIDVQgnB5+93oBKsifZkuJ5qdqbT9lNG1WDXaurKPN8qM9p4KdTzmJVnQkzjQEDa4WmpynDhc/
-MIME-Version: 1.0
-X-Received: by 2002:a5e:9701:: with SMTP id w1mr36295739ioj.294.1565634065769;
- Mon, 12 Aug 2019 11:21:05 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 11:21:05 -0700
-In-Reply-To: <0000000000007a3d3b058fea6016@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000056b055058fef9679@google.com>
-Subject: Re: KMSAN: uninit-value in gtco_probe
-From:   syzbot <syzbot+bb54195a43a54b1e5e5e@syzkaller.appspotmail.com>
-To:     dmitry.torokhov@gmail.com, glider@google.com,
-        granthernandez@google.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=9mTljNvnyVjruVsrPNgUh53D69b4G0uh+rf/XKR7JZU=;
+        b=lC9RlhtoTEcwf7S0tDD1igwOSdPt8sloWi0XFG9MbL19txBnMUHUPQ8aoL5CrbXTKd
+         jcy/Jp92r3qRpcYOFjRJ1mxSzQQ8bYpLHssKNRCgMbOqYcaC+86xoegelvEtLEZD4uuO
+         66zKxkPQnGCo/V1AYkHWWYnTQpnv7BG3n9iFGj5geSAuk5y0hPRQcprevUTwfe160Osa
+         030S0vidb6bz40ysKrmKgV7SnuZWuv2q3FXTofOR27sqsyoJes+1zTx24H1x+2E1ADsj
+         idK54fxmL2GYdOGslk40/HjavtVFu9kU0jJUM+v2rWOR5egAzYd9wSwnAmafPbeCZ4ap
+         Ml2g==
+X-Gm-Message-State: APjAAAX68JM9sPo15tXTxe2hf572+Nj5ThN2OuW9cbiarFIjqeUoOeSX
+        yhkWhe9KMKfV3hdFh6A6ZP1arckIT1l/HO8b3cLqrQ==
+X-Google-Smtp-Source: APXvYqyX/pgx0ykzeqZ6WcltGi5sso4Ln3mqeyyrGVZaHJD02/SPkwtsL4N8Ya+oDgvaUGfqUr1kIJOvfUwiqmtqKuHktw==
+X-Received: by 2002:a37:4a88:: with SMTP id x130mr13395431qka.501.1565634278957;
+ Mon, 12 Aug 2019 11:24:38 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 11:24:03 -0700
+Message-Id: <20190812182421.141150-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+Subject: [PATCH v12 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+## TL;DR
 
-HEAD commit:    61ccdad1 Revert "drm/bochs: Use shadow buffer for bochs fr..
-git tree:       kmsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=106e8536600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=27abc558ecb16a3b
-dashboard link: https://syzkaller.appspot.com/bug?extid=bb54195a43a54b1e5e5e
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1766194a600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13d5879a600000
+This revision removes dependence on kunit_stream in favor of
+kunit_assert, as suggested by Stephen Boyd. kunit_assert provides a more
+structured interface for constructing messages and allows most required
+data to be stored on the stack for most expectations until it is
+determined that a failure message must be produced.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+bb54195a43a54b1e5e5e@syzkaller.appspotmail.com
+As a part of introducing kunit_assert, expectations (KUNIT_EXPECT_*) and
+assertions (KUNIT_ASSERT_*) have been substantially refactored.
+Nevertheless, behavior should be the same.
 
-usb 1-1: config 0 has no interface number 0
-usb 1-1: New USB device found, idVendor=078c, idProduct=1002,  
-bcdDevice=e6.47
-usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 1-1: config 0 descriptor??
-gtco 1-1:0.219: Collection level already at zero
-==================================================================
-BUG: KMSAN: uninit-value in parse_hid_report_descriptor  
-drivers/input/tablet/gtco.c:297 [inline]
-BUG: KMSAN: uninit-value in gtco_probe+0x18c7/0x3520  
-drivers/input/tablet/gtco.c:938
-CPU: 1 PID: 621 Comm: kworker/1:1 Not tainted 5.3.0-rc3+ #17
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x162/0x2d0 mm/kmsan/kmsan_report.c:109
-  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:294
-  parse_hid_report_descriptor drivers/input/tablet/gtco.c:297 [inline]
-  gtco_probe+0x18c7/0x3520 drivers/input/tablet/gtco.c:938
-  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
-  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:882
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2114
-  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
-  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
-  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
-  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:882
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2114
-  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
-  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
-  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
-  kthread+0x4b5/0x4f0 kernel/kthread.c:256
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+As this revision, adds a new patch, it, [PATCH v12 04/18], needs to be
+reviewed. All other patches have appropriate reviews and acks.
 
-Uninit was stored to memory at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:187 [inline]
-  kmsan_internal_chain_origin+0xcc/0x150 mm/kmsan/kmsan.c:345
-  __msan_chain_origin+0x6b/0xe0 mm/kmsan/kmsan_instr.c:190
-  parse_hid_report_descriptor drivers/input/tablet/gtco.c:298 [inline]
-  gtco_probe+0x1a7c/0x3520 drivers/input/tablet/gtco.c:938
-  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
-  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:882
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2114
-  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
-  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
-  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
-  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:882
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2114
-  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
-  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
-  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
-  kthread+0x4b5/0x4f0 kernel/kthread.c:256
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+I also rebased the patchset on v5.3-rc3.
 
-Local variable description: ----globalval.i@gtco_probe
-Variable was created at:
-  parse_hid_report_descriptor drivers/input/tablet/gtco.c:221 [inline]
-  gtco_probe+0xcd6/0x3520 drivers/input/tablet/gtco.c:938
-  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
-==================================================================
+## Background
+
+This patch set proposes KUnit, a lightweight unit testing and mocking
+framework for the Linux kernel.
+
+Unlike Autotest and kselftest, KUnit is a true unit testing framework;
+it does not require installing the kernel on a test machine or in a VM
+(however, KUnit still allows you to run tests on test machines or in VMs
+if you want[1]) and does not require tests to be written in userspace
+running on a host kernel. Additionally, KUnit is fast: From invocation
+to completion KUnit can run several dozen tests in about a second.
+Currently, the entire KUnit test suite for KUnit runs in under a second
+from the initial invocation (build time excluded).
+
+KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+Googletest/Googlemock for C++. KUnit provides facilities for defining
+unit test cases, grouping related test cases into test suites, providing
+common infrastructure for running tests, mocking, spying, and much more.
+
+### What's so special about unit testing?
+
+A unit test is supposed to test a single unit of code in isolation,
+hence the name. There should be no dependencies outside the control of
+the test; this means no external dependencies, which makes tests orders
+of magnitudes faster. Likewise, since there are no external dependencies,
+there are no hoops to jump through to run the tests. Additionally, this
+makes unit tests deterministic: a failing unit test always indicates a
+problem. Finally, because unit tests necessarily have finer granularity,
+they are able to test all code paths easily solving the classic problem
+of difficulty in exercising error handling code.
+
+### Is KUnit trying to replace other testing frameworks for the kernel?
+
+No. Most existing tests for the Linux kernel are end-to-end tests, which
+have their place. A well tested system has lots of unit tests, a
+reasonable number of integration tests, and some end-to-end tests. KUnit
+is just trying to address the unit test space which is currently not
+being addressed.
+
+### More information on KUnit
+
+There is a bunch of documentation near the end of this patch set that
+describes how to use KUnit and best practices for writing unit tests.
+For convenience I am hosting the compiled docs here[2].
+
+Additionally for convenience, I have applied these patches to a
+branch[3]. The repo may be cloned with:
+git clone https://kunit.googlesource.com/linux
+This patchset is on the kunit/rfc/v5.3/v12 branch.
+
+## Changes Since Last Version
+
+- Dropped patch "[PATCH v11 04/18] kunit: test: add kunit_stream a
+  std::stream like logger" and replaced it with "[PATCH v12 04/18]
+  kunit: test: add assertion printing library", which provides a totally
+  new mechanism for constructing expectation/assertion failure messages.
+- Substantially refactored expectations and assertions definitions in
+  [PATCH 05/18] and [PATCH 11/18] respectively.
+- Rebased patchset on v5.3-rc3.
+- Fixed a minor documentation bug.
+
+[1] https://google.github.io/kunit-docs/third_party/kernel/docs/usage.html#kunit-on-non-uml-architectures
+[2] https://google.github.io/kunit-docs/third_party/kernel/docs/
+[3] https://kunit.googlesource.com/linux/+/kunit/rfc/v5.3/v12
+
+-- 
+2.23.0.rc1.153.gdeed80330f-goog
 
