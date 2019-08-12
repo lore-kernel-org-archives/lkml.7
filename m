@@ -2,112 +2,137 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC19AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 01:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 796C5C41514
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 01:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F78120874
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 01:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B7E72084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 01:40:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SZiO6DEO"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bZxJx1x+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfHLBho (ORCPT
+        id S1726807AbfHLBky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 21:37:44 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:32899 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfHLBhn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 21:37:43 -0400
-Received: by mail-vs1-f68.google.com with SMTP id i7so2534210vsp.0
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 18:37:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2LvnTipJZhZIUoRbWH0WQTQrByqAr4V2iqODb0EELto=;
-        b=SZiO6DEOIuyIhDHVG+GnlEin+uNFqKBQipgtk36IXhXF1wSZzH4nnCKhrLWOSlpIRO
-         q5pzayzwz5vRvu90mtASG4006WIp47vBQvOex/05Py76sArBAEfJbX+E9g/k7pEJttu7
-         NbNu3WpFyjx9+q3+IUMCoU/wL+Qjl4VAcRsj9TSpD1+lghCVx+59zJkpF6mSMskDjRk9
-         XOgSue0Fh84YKh7QuLx46d+rHY+y7byVzs5sdi6/Lg5yYhoPRX9p6r2rokgieZslHFvY
-         57vbYtPb7tkEuXOS9YcJbostJENVMDO2mt/cBcJuiUuVDanqsAFr8mQ2C4kY2A0NE21x
-         6/Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2LvnTipJZhZIUoRbWH0WQTQrByqAr4V2iqODb0EELto=;
-        b=Gnfrvojf09FPbNGjF9DdNPggBIXlqTdA155ee34Ocxyv9M7zHnw3DlOPHWhkOK/ZHF
-         9xJubkU6TaiTmvNtqPO9F/z/4RAJ6Pe2gEmp/+fwgvWGgjtkl/aIRmNhcFMA5yvKAIdE
-         xxGk7vhmTEwAghh2uYCSlkgcfa2qGROWohQRLQil54o4zkZ6wEb6n3mA853knRelzpCp
-         KBnY2Kt1ys8jPurMtNSsyNUiMNfIZCoxbmwK3gwKcWaoO1JYgXSTHM1H/AEDE47F++8X
-         E2z4U3ATS+FkCqu2Q8V9QeM/KEPZUNDgrWeG/8Z/Dn9RLigAyeB25o/HDbmFX3m0SoNT
-         ciUw==
-X-Gm-Message-State: APjAAAUe2Uzi9Z/rXlFLPtgKiIL0U/I1BKfEjEUPI3ATtkccmEAPihtm
-        2JxqGmjKkKo8YuF2bC/2kttmNTE40A1NJ4XofokULg==
-X-Google-Smtp-Source: APXvYqyXrQBmouu5GDDT5m91pjiFtd39uZBKfcErjB7T8vaeySN7FBJrwBC4os/PtCmiK1g2TAsdryg5ahnIiPnj/is=
-X-Received: by 2002:a67:3251:: with SMTP id y78mr11021809vsy.39.1565573862229;
- Sun, 11 Aug 2019 18:37:42 -0700 (PDT)
+        Sun, 11 Aug 2019 21:40:54 -0400
+Received: from ozlabs.org ([203.11.71.1]:51147 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbfHLBky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 21:40:54 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 466JTG5rsxz9sP7;
+        Mon, 12 Aug 2019 11:40:50 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565574052;
+        bh=EevmDzavchTrzirQeVBqWWlarYRf4O1/6PgoQ3YXLJI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=bZxJx1x+W8Ve74HK9shaqfHm4BD8N5C3n9MCBpztql0azxOLLPJgie6Z6pm2ElxSG
+         Vnb9ndcl7mT9P1pgpc6d72vdehuyUmk94+FTwwfrqQkUCl+MHUVaWgIvNl6GI73uFp
+         vHsO3I3v1il+cgJ+av5HfFQBhLftgEYMuL7LdxusEGfopoRDjrIz4fproOJexY6vFi
+         8nQ/JSDRCiDrwjNb76HO3kSqOA16ucW43Bh3HWURbTSFI+Y6OBG6n2JxS2cAiQ7i80
+         l+rAM16qkCFHJ6te83SMTRxShj0fkZnpoEP1TB7D0kEymjEQ0VS5OunD3ByKHOx6Eq
+         wRbI5EvdA+RvA==
+Date:   Mon, 12 Aug 2019 11:40:50 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Paul Burton <paul.burton@mips.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: linux-next: manual merge of the jc_docs tree with the mips tree
+Message-ID: <20190812114050.0c94ad6e@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190811184613.20463-1-urezki@gmail.com> <20190811184613.20463-2-urezki@gmail.com>
-In-Reply-To: <20190811184613.20463-2-urezki@gmail.com>
-From:   Michel Lespinasse <walken@google.com>
-Date:   Sun, 11 Aug 2019 18:37:30 -0700
-Message-ID: <CANN689GT3CorHHegQBFR8tiVPqv5XAb2oYLCEbjB=tBhkO2PCw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] augmented rbtree: use max3() in the *_compute_max() function
-To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Roman Gushchin <guro@fb.com>, Hillf Danton <hdanton@sina.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/y1V_0SkurqAx66nxcd=h5mg";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 11:46 AM Uladzislau Rezki (Sony)
-<urezki@gmail.com> wrote:
->
-> Recently there was introduced RB_DECLARE_CALLBACKS_MAX template.
-> One of the callback, to be more specific *_compute_max(), calculates
-> a maximum scalar value of node against its left/right sub-tree.
->
-> To simplify the code and improve readability we can switch and
-> make use of max3() macro that makes the code more transparent.
->
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+--Sig_/y1V_0SkurqAx66nxcd=h5mg
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks. The change is correct but I think I prefer it the "before"
-version. My reasons are:
+Hi all,
 
-- I don't have a strong style preference either way - it's the same
-amount of code either way, admittedly more modular in your proposal,
-but also with more indirection (compute_max refers to get_max and
-max3). The indirection doesn't hinder readability but IMO it makes it
-harder to be confident that the compiler will generate quality code,
-compared to the "before" approach which just lays down all the pieces
-in a linear way.
+Today's linux-next merge of the jc_docs tree got a conflict in:
 
-- A quick check shows that the proposed change generates larger code
-for mm/interval_tree.o:
-   2757       0       0    2757     ac5 mm/interval_tree.o
-   2533       0       0    2533     9e5 mm/interval_tree.o.orig
-  This does not happen for every RB_DECLARE_CALLBACKS_MAX use,
-lib/interval_tree.o in particular seems to be fine. But it does go
-towards my gut feeling that the change trusts the compiler/optimizer
-more than I want to.
+  Documentation/mips/index.rst
 
-- Slight loss of generality. The "before" code only assumes that the
-RBAUGMENTED field can be compared using "<" ; the "after" code also
-assumes that the minimum value is 0. While this covers the current
-uses, I would prefer not to have that limitation.
+between commit:
+
+  97689a1a3fda ("doc: Add doc for the Ingenic TCU hardware")
+
+from the mips tree and commit:
+
+  80b1505893b6 ("docs: mips: add to the documentation body as ReST")
+
+from the jc_docs tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Documentation/mips/index.rst
+index 321b4794f3b8,fd9023c8a89f..000000000000
+--- a/Documentation/mips/index.rst
++++ b/Documentation/mips/index.rst
+@@@ -1,11 -1,17 +1,19 @@@
+  .. SPDX-License-Identifier: GPL-2.0
+ =20
+ -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+ -MIPS architecture
+ -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+ +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+ +MIPS-specific Documentation
+ +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+ =20
+  .. toctree::
+-    :maxdepth: 1
++    :maxdepth: 2
+ +   :numbered:
+ =20
++    au1xxx_ide
+ +   ingenic-tcu
++=20
++ .. only::  subproject and html
++=20
++    Indices
++    =3D=3D=3D=3D=3D=3D=3D
++=20
++    * :ref:`genindex`
+
+--Sig_/y1V_0SkurqAx66nxcd=h5mg
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1Qw6IACgkQAVBC80lX
+0Gx5jwgAi46GBYf0Z1/MlTfftNHnG0/XPH/v4Vpn/lfdPMD9fNo0Bu80IPCtjiTQ
+laNFJ40gclPFcXCG0LMUBGGUS75d16zl2zsvXGudb1NcxCVD8Jd57f6wxI3aRakY
+McxiAH0hALdKuMA+yZ8fg12hpr++WErlMicUcONGZtioZslWk3benDpgHdPKzzl4
+KJ1tTRB2+skN2UTWgCJZltnsFL1TaHJXQFDlMOYVijbn+gvdLswD3aA9gypMhLGy
+VH/R2LEC0P3iyRn42dr+2fuSra2xO+PgQ03VcmyVYezr12JvXKX4j5szvyBKeqZE
+7qllctkkViH7pjQEVmqbmlcFwQ30SA==
+=f4xG
+-----END PGP SIGNATURE-----
+
+--Sig_/y1V_0SkurqAx66nxcd=h5mg--
