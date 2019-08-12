@@ -2,130 +2,90 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 060F6C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CA6C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE1F52085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:55:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f3a+MCly"
+	by mail.kernel.org (Postfix) with ESMTP id 10D102085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:56:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbfHLJzG (ORCPT
+        id S1727637AbfHLJ4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 05:55:06 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36272 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727140AbfHLJzF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 05:55:05 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g67so11203227wme.1;
-        Mon, 12 Aug 2019 02:55:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mQO/VOKFZftOK8QHN4NGuCN85/5BGprWbgm1EqjUZRk=;
-        b=f3a+MClydnhfTcdBwTNQsqn6kbXHVsIhjsN5qRYW8QT/b34I8g0tBhs4xg7iZiQYmV
-         /ds/dQG0Zj8/LzKHOMB2oNPLsbnUW4OcpDpRufXgbX7ZE8Q7iZDLPEfNbg0CxDB/TWhf
-         IJNyPYCU8BQEi/SsiBrFdM2p7KQt+Qbcb30MS/NSHEO5kW0Ige5o5LMzv0vwFSPrvnM+
-         KpFEoWGWXbDvknQM6trCaPMqES24WmDEzjIHgOwkSLULGIIoDKjJMYvw+a1cEi7oOyuz
-         yeEs82+F7dOtfM4Dg8/vgqkANUWYXbMVolpmd5Oc1YCMZdK+FAwDM0YBaZZGKPu5w050
-         A6nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mQO/VOKFZftOK8QHN4NGuCN85/5BGprWbgm1EqjUZRk=;
-        b=JnUSnq1G+xBsBouFD/kjNoM8ep1pUPTl4jtfItCYM8osJVt//JOL3mjnZFyEUtgitX
-         NjS/2cuq8WgaJwQM8Qg0Rl9l0vjGOQ9pxUdCZx2HjpWyYxDFBrxc+Xu7IO+2/IHojKaK
-         e+Al1rhRckRw+5nSbN+e7DPeIOtUh0yWEYJFA2MD93UZiWPW1e3RVVcFarcCjE9dw94E
-         mhMY2irSr6WDZZGfEi3FgdUPiAn3Ar1ZPI8khKYctknz3mhGJnO07NG7AfnF4HJAHyuw
-         vdUfbA0hQ+4YBadwvWVxEqF50ARD5AzxvmkUeqRlTxMwORPI9XkdCLTMJwfH3kPSqRLO
-         E/Hw==
-X-Gm-Message-State: APjAAAUHMc6KtZfd4soorYP5qoa4IRjCYOFjt0vV7+qFtYjj/CIag3WZ
-        S5XmIj9twty7Jks1lwJ3o8s=
-X-Google-Smtp-Source: APXvYqy+V17kwdKJdpqcY5NM6SKLstrsWvCPqEdTInpG5cnwKl78q58ZT/S2d6tCDCF6MSLio96JEA==
-X-Received: by 2002:a05:600c:2192:: with SMTP id e18mr8525190wme.83.1565603702323;
-        Mon, 12 Aug 2019 02:55:02 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id f23sm7593250wmj.37.2019.08.12.02.55.01
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 02:55:01 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 11:55:00 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v8 10/21] clk: tegra: clk-super: Add restore-context
- support
-Message-ID: <20190812095500.GI8903@ulmo>
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-11-git-send-email-skomatineni@nvidia.com>
+        Mon, 12 Aug 2019 05:56:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:47226 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727324AbfHLJ4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 05:56:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E56A715A2;
+        Mon, 12 Aug 2019 02:56:15 -0700 (PDT)
+Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5AA6A3F718;
+        Mon, 12 Aug 2019 02:56:14 -0700 (PDT)
+Subject: Re: [tip:sched/core] sched/fair: Use rq_lock/unlock in
+ online_fair_sched_group
+To:     Phil Auld <pauld@redhat.com>
+Cc:     vincent.guittot@linaro.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, tglx@linutronix.de, mingo@kernel.org,
+        linux-tip-commits@vger.kernel.org
+References: <20190801133749.11033-1-pauld@redhat.com>
+ <tip-6b8fd01b21f5f2701b407a7118f236ba4c41226d@git.kernel.org>
+ <dfc8f652-ca98-e30a-546f-e6a2df36e33a@arm.com>
+ <20190809172837.GB18727@pauld.bos.csb>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <d711ee53-48ca-47f5-df23-0593cc0f3347@arm.com>
+Date:   Mon, 12 Aug 2019 11:56:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hABqaeELJqnDDeDE"
-Content-Disposition: inline
-In-Reply-To: <1565308020-31952-11-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190809172837.GB18727@pauld.bos.csb>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 8/9/19 7:28 PM, Phil Auld wrote:
+> On Fri, Aug 09, 2019 at 06:21:22PM +0200 Dietmar Eggemann wrote:
+>> On 8/8/19 1:01 PM, tip-bot for Phil Auld wrote:
 
---hABqaeELJqnDDeDE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[...]
 
-On Thu, Aug 08, 2019 at 04:46:49PM -0700, Sowjanya Komatineni wrote:
-> This patch implements restore_context for clk_super_mux and clk_super.
->=20
-> During system supend, core power goes off the and context of Tegra
-> CAR registers is lost.
->=20
-> So on system resume, context of super clock registers are restored
-> to have them in same state as before suspend.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-super.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+>> Shouldn't this be:
+>>
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index d9407517dae9..1054d2cf6aaa 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -10288,11 +10288,11 @@ void online_fair_sched_group(struct task_group
+>> *tg)
+>>         for_each_possible_cpu(i) {
+>>                 rq = cpu_rq(i);
+>>                 se = tg->se[i];
+>> -               rq_lock(rq, &rf);
+>> +               rq_lock_irq(rq, &rf);
+>>                 update_rq_clock(rq);
+>>                 attach_entity_cfs_rq(se);
+>>                 sync_throttle(tg, i);
+>> -               rq_unlock(rq, &rf);
+>> +               rq_unlock_irq(rq, &rf);
+>>         }
+>>  }
+>>
+>> Currently, you should get a 'inconsistent lock state' warning with
+>> CONFIG_PROVE_LOCKING.
+> 
+> Yes, indeed. Sorry about that. Maybe it can be fixed in tip before 
+> it gets any farther?  Or do we need a new patch?
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+I think Peter is on holiday so maybe you can send a new patch and ask
+Ingo or Thomas to replace your original patch on tip sched/core?
 
---hABqaeELJqnDDeDE
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1RN3QACgkQ3SOs138+
-s6FHwRAAnYt3bQr8qabJpmuLiAWddIRGpf0XzLDW6DnRqSmhENAKH09BCH1IJ8bO
-RNFI+6CZYoGt38zjU54qQxf2BGFSW1q/63T/+CU318zZ1oUws+0iWQrFPKHIxnS7
-Rae4YsOE1UqTucB/uwniVcDVTGTcMmDKx9lA+WgMTcNyRcMFYuKhPjV0BL34Kq+5
-2JA7MaqNqrBKSwVqOlN2kAjqa5NOUq57c8MbQ6/blbGQsdgnDrWt9TDR4s3cifCc
-tu9HdlV5921/RAP42V2+oCnHnYMNvGAre7Z3ES5GZ0z5DdW48koDA99XexftElaT
-+KCuXTdOUrv8Y5x6PQ5MwCxnXqqayjz+4c3v8ahygNBV8K159Kkokt2c8NR6Igbt
-Mz403frb3Hp3qstDs6HfvYCsuNFmTmB+/Lhp8xciVyEiuv26CPNXg+OL7rRfJtc2
-hQy6RcFw4D8uYRcOS7rkH5m2rot8R59tK+2QqSEIgMlYbNtDuciS/5r83/ro7516
-tTMbjYdQWRlrFELVTzmjIQtE2i5PJ4uq8VJsbXOGlx0ESmQIwNcxdwe2nBH6vrSY
-7kFuBQvOBTMv7bUvHY4/M+yhZLHOIC77Z/vYPh58Yl8JwxFTu1RNT7esQUcMyJfD
-i1u4z1VztUimQjiojE4eGV8tkO6K6f38N0lz1R8T/MyOOOf67TE=
-=5pWj
------END PGP SIGNATURE-----
-
---hABqaeELJqnDDeDE--
