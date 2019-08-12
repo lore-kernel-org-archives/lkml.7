@@ -2,109 +2,96 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F755C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B79C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD0520679
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:19:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="h84BwQy1"
+	by mail.kernel.org (Postfix) with ESMTP id D747B20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:20:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbfHLOT6 (ORCPT
+        id S1727899AbfHLOUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 10:19:58 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:53488 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727206AbfHLOT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 10:19:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=v50gXxy0UcfFeBrMZIy3FtqZqPifqcZZR2bgm2dAuIo=; b=h84BwQy1LrMNOO8yJaW9C+VNJq
-        KW/ljM91Z/GUyUKeTsx34crAiF9KEsrEPyaKJle9NHlpZm1iDOJsHP5P/dWNLrJ3n0eMfUUK2x6qN
-        vMSILa+zvZAHUw3WsbeBLofilTAVSkd+XdemD5bcSXhd0/MpBPwZmzH0a9G7dCub3Vd4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hxBAw-0000mk-AP; Mon, 12 Aug 2019 16:19:54 +0200
-Date:   Mon, 12 Aug 2019 16:19:54 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com,
-        hkallweit1@gmail.com
-Subject: Re: [PATCH v4 10/14] net: phy: adin: implement PHY subsystem
- software reset
-Message-ID: <20190812141954.GP14290@lunn.ch>
-References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
- <20190812112350.15242-11-alexandru.ardelean@analog.com>
+        Mon, 12 Aug 2019 10:20:09 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:46886 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727206AbfHLOUI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 10:20:08 -0400
+Received: (qmail 2923 invoked by uid 2102); 12 Aug 2019 10:20:07 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 12 Aug 2019 10:20:07 -0400
+Date:   Mon, 12 Aug 2019 10:20:07 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Felipe Balbi <felipe.balbi@linux.intel.com>
+cc:     Pawel Laszczak <pawell@cadence.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "rogerq@ti.com" <rogerq@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jbergsagel@ti.com" <jbergsagel@ti.com>,
+        "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>,
+        Suresh Punnoose <sureshp@cadence.com>,
+        "peter.chen@nxp.com" <peter.chen@nxp.com>,
+        Jayshri Dajiram Pawar <jpawar@cadence.com>,
+        Rahul Kumar <kurahul@cadence.com>
+Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
+In-Reply-To: <877e7iu0xw.fsf@gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1908121018430.1659-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812112350.15242-11-alexandru.ardelean@analog.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +static int adin_reset(struct phy_device *phydev)
-> +{
-> +	/* If there is a reset GPIO just exit */
-> +	if (!IS_ERR_OR_NULL(phydev->mdio.reset_gpio))
-> +		return 0;
+On Mon, 12 Aug 2019, Felipe Balbi wrote:
 
-I'm not so happy with this.
+> I don't understand the intricacies of the coherent API to judge if it's
+> a bug in the API itself. In any case, here's where the splat comes from:
+> 
+> void dma_free_attrs(struct device *dev, size_t size, void *cpu_addr,
+> 		dma_addr_t dma_handle, unsigned long attrs)
+> {
+> 	const struct dma_map_ops *ops = get_dma_ops(dev);
+> 
+> 	if (dma_release_from_dev_coherent(dev, get_order(size), cpu_addr))
+> 		return;
+> 	/*
+> 	 * On non-coherent platforms which implement DMA-coherent buffers via
+> 	 * non-cacheable remaps, ops->free() may call vunmap(). Thus getting
+> 	 * this far in IRQ context is a) at risk of a BUG_ON() or trying to
+> 	 * sleep on some machines, and b) an indication that the driver is
+> 	 * probably misusing the coherent API anyway.
+> 	 */
+> 	WARN_ON(irqs_disabled());
+> 
+> 	if (!cpu_addr)
+> 		return;
+> 
+> 	debug_dma_free_coherent(dev, size, cpu_addr, dma_handle);
+> 	if (dma_is_direct(ops))
+> 		dma_direct_free(dev, size, cpu_addr, dma_handle, attrs);
+> 	else if (ops->free)
+> 		ops->free(dev, size, cpu_addr, dma_handle, attrs);
+> }
+> EXPORT_SYMBOL(dma_free_attrs);
+> 
+> maybe you're gonna have to fire up a workqueue to free this memory for
+> you :-(
+> 
+> Unless someone else has better ideas. Alan, Greg, any ideas?
 
-First off, there are two possible GPIO configurations. The GPIO can be
-applied to all PHYs on the MDIO bus. That GPIO is used when the bus is
-probed. There can also be a per PHY GPIO, which is what you are
-looking at here.
+I don't understand it very well myself, but there have been posts by 
+some of the DMA maintainers on this topic.  Maybe you can try asking 
+them.
 
-The idea of putting the GPIO handling in the core is that PHYs don't
-need to worry about it. How much of a difference does it make if the
-PHY is both reset via GPIO and then again in software? How slow is the
-software reset? Maybe just unconditionally do the reset, if it is not
-too slow.
+Alan Stern
 
-> +
-> +	/* Reset PHY core regs & subsystem regs */
-> +	return adin_subsytem_soft_reset(phydev);
-> +}
-> +
-> +static int adin_probe(struct phy_device *phydev)
-> +{
-> +	return adin_reset(phydev);
-> +}
-
-Why did you decide to do this as part of probe, and not use the
-.soft_reset member of phy_driver?
-
-> +
->  static struct phy_driver adin_driver[] = {
->  	{
->  		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
->  		.name		= "ADIN1200",
->  		.config_init	= adin_config_init,
-> +		.probe		= adin_probe,
->  		.config_aneg	= adin_config_aneg,
->  		.read_status	= adin_read_status,
->  		.ack_interrupt	= adin_phy_ack_intr,
-> @@ -461,6 +503,7 @@ static struct phy_driver adin_driver[] = {
->  		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1300),
->  		.name		= "ADIN1300",
->  		.config_init	= adin_config_init,
-> +		.probe		= adin_probe,
->  		.config_aneg	= adin_config_aneg,
->  		.read_status	= adin_read_status,
->  		.ack_interrupt	= adin_phy_ack_intr,
-
-Thanks
-	Andrew
