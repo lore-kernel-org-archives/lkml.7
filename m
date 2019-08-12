@@ -2,181 +2,65 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BCBC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0830FC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2262067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF5652067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:00:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfHLV66 (ORCPT
+        id S1727201AbfHLWAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 17:58:58 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40287 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfHLV66 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 17:58:58 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hxIL8-0004s7-An; Mon, 12 Aug 2019 23:58:54 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hxIL7-0007mA-VV; Mon, 12 Aug 2019 23:58:53 +0200
-Date:   Mon, 12 Aug 2019 23:58:53 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/7] pwm: jz4740: Make PWM start with the active part
-Message-ID: <20190812215853.hbhihhtvdziarj3y@pengutronix.de>
-References: <20190809123031.24219-1-paul@crapouillou.net>
- <20190809123031.24219-7-paul@crapouillou.net>
- <20190809171058.gothydohec6qx7hu@pengutronix.de>
- <1565372004.2091.3@crapouillou.net>
- <20190812055515.ne7o4ujchfeubjid@pengutronix.de>
- <1565643001.2007.2@crapouillou.net>
+        Mon, 12 Aug 2019 18:00:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40926 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726527AbfHLWAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 18:00:18 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DE9C730FB8FC;
+        Mon, 12 Aug 2019 22:00:17 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5B4826A225;
+        Mon, 12 Aug 2019 22:00:16 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <7e84e076-7096-028f-b49d-29160aea0831@I-love.SAKURA.ne.jp>
+References: <7e84e076-7096-028f-b49d-29160aea0831@I-love.SAKURA.ne.jp> <00000000000021eea2058feaaf82@google.com>
+To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc:     dhowells@redhat.com,
+        syzbot <syzbot+cda1ac91660a61b51495@syzkaller.appspotmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, linux-afs@lists.infradead.org
+Subject: Re: WARNING in aa_sock_msg_perm
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1565643001.2007.2@crapouillou.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <18090.1565647215.1@warthog.procyon.org.uk>
+Date:   Mon, 12 Aug 2019 23:00:15 +0100
+Message-ID: <18091.1565647215@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 12 Aug 2019 22:00:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 10:50:01PM +0200, Paul Cercueil wrote:
+Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp> wrote:
+
+> This is not AppArmor's bug. LSM modules expect that "struct socket" is not
+> NULL.  For some reason, peer->local->socket became NULL. Thus, suspecting
+> rxrpc's bug.
 > 
-> 
-> Le lun. 12 août 2019 à 7:55, Uwe =?iso-8859-1?q?Kleine-K=F6nig?=
-> <u.kleine-koenig@pengutronix.de> a écrit :
-> > On Fri, Aug 09, 2019 at 07:33:24PM +0200, Paul Cercueil wrote:
-> > > 
-> > > 
-> > >  Le ven. 9 août 2019 à 19:10, Uwe =?iso-8859-1?q?Kleine-K=F6nig?=
-> > >  <u.kleine-koenig@pengutronix.de> a écrit :
-> > >  > On Fri, Aug 09, 2019 at 02:30:30PM +0200, Paul Cercueil wrote:
-> > >  > >  The PWM will always start with the inactive part. To counter
-> > > that,
-> > >  > >  when PWM is enabled we switch the configured polarity, and use
-> > >  > >  'period - duty + 1' as the real duty.
-> > >  >
-> > >  > Where does the + 1 come from? This looks wrong. (So if duty=0 is
-> > >  > requested you use duty = period + 1?)
-> > > 
-> > >  You'd never request duty == 0, would you?
-> > > 
-> > >  Your duty must always be in the inclusive range [1, period]
-> > >  (hardware values, not ns). A duty of 0 is a hardware fault
-> > >  (on the jz4740 it is).
-> > 
-> > From the PWM framework's POV duty cycle = 0 is perfectly valid. Similar
-> > to duty == period. Not supporting dutz cycle 0 is another limitation of
-> > your PWM that should be documented.
-> > 
-> > For actual use cases of duty cycle = 0 see drivers/hwmon/pwm-fan.c or
-> > drivers/leds/leds-pwm.c.
-> 
-> Perfectly valid for the PWM framework, maybe; but what is the expected
-> output then? A constant inactive state?
+> >  rxrpc_send_keepalive+0x1ff/0x940 net/rxrpc/output.c:656
 
-Yes, a constant inactive state is expected. This is consistent and in a
-similar way when using duty == period an constant active output is
-expected.
+I agree.  There's a further refcounting bug in the local object handling, but
+it's proving annoyingly difficult to reliably reproduce.
 
-> Then I guess I can just disable the PWM output in the driver when
-> configured with duty == 0.
-
-Some time ago I argued with Thierry that we could drop the concept of
-enabled/disabled for a PWM because a disabled PWM is supposed to behave
-identically to duty=0. This is however only nearly true because with
-duty=0 the time the PWM is inactive still is a multiple of the period.
-
-I tend to agree that disabling the PWM when duty=0 is requested is
-better than to fail the request (or configure for duty=1 $whateverunit).
-I'm looking forward to what Thierry's opinion is here.
-
-> > >  If you request duty == 1 (the minimum), then the new duty is equal
-> > >  to (period - 1 + 1) == period, which is the maximum of your range.
-> > > 
-> > >  If you request duty == period (the maximum), then the new duty
-> > >  calculated is equal to (period - period + 1) == 1, which is the
-> > >  minimum of your range.
-
-Note that the wrong border (because duty=0 is impossible for your
-hardware) shifts the whole space. The right inverse of duty = period - 1
-is duty = 1, isn't it?
-
-> > > > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > > > >  ---
-> > > > >   drivers/pwm/pwm-jz4740.c | 22 +++++++++++++---------
-> > > > >   1 file changed, 13 insertions(+), 9 deletions(-)
-> > > > >
-> > > > >  diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
-> > > > >  index 85e2110aae4f..8df898429d47 100644
-> > > > >  --- a/drivers/pwm/pwm-jz4740.c
-> > > > >  +++ b/drivers/pwm/pwm-jz4740.c
-> > > > >  @@ -121,6 +121,7 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> > > > >   		   *parent_clk = clk_get_parent(clk);
-> > > > >   	unsigned long rate, parent_rate, period, duty;
-> > > > >   	unsigned long long tmp;
-> > > > >  +	bool polarity_inversed;
-> > > > >   	int ret;
-> > > > >
-> > > > >   	parent_rate = clk_get_rate(parent_clk);
-> > > > >  @@ -183,24 +184,27 @@ static int jz4740_pwm_apply(struct pwm_chip
-> > > > > *chip, struct pwm_device *pwm,
-> > > > >   	/* Reset counter to 0 */
-> > > > >   	regmap_write(jz4740->map, TCU_REG_TCNTc(pwm->hwpwm), 0);
-> > > > >
-> > > > >  -	/* Set duty */
-> > > > >  -	regmap_write(jz4740->map, TCU_REG_TDHRc(pwm->hwpwm), duty);
-> > > > >  -
-> > > > >   	/* Set period */
-> > > > >   	regmap_write(jz4740->map, TCU_REG_TDFRc(pwm->hwpwm), period);
-> > > > >
-> > > > >  +	/*
-> > > > >  +	 * The PWM will always start with the inactive part. To counter that,
-> > > > >  +	 * when PWM is enabled we switch the configured polarity, and use
-> > > > >  +	 * 'period - duty + 1' as the real duty.
-> > > > >  +	 */
-> > > > >  +
-> > > > >  +	/* Set duty */
-> > > > >  +	regmap_write(jz4740->map, TCU_REG_TDHRc(pwm->hwpwm), period - duty + 1);
-> > > > >  +
-> > > >
-> > > > Before you set duty first, then period, now you do it the other way
-> > > > round. Is there a good reason?
-> > > 
-> > >  To move it below the comment that explains why we use 'period - duty + 1'.
-> > > 
-> > >  We modify that line anyway, so it's not like it makes the patch much more
-> > >  verbose.
-> > 
-> > It doesn't make it more verbose, but that's not the background of my
-> > question. For most(?) PWM implementation the order of hardware accesses
-> > matters and introducing such a difference as an unneeded side effect
-> > isn't optimal.
-> 
-> There's no side effect. The PWM is disabled when reconfigured.
-
-Then please mention it in the commit log.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+David
