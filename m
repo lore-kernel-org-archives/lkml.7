@@ -7,116 +7,72 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F157BC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4441AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C325021744
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 241D921744
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbfHLMYz (ORCPT
+        id S1728799AbfHLMZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 08:24:55 -0400
-Received: from mxwww.masterlogin.de ([95.129.51.220]:59246 "EHLO
-        mxwww.masterlogin.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728510AbfHLMYK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 08:24:10 -0400
-Received: from mxout2.routing.net (unknown [192.168.10.82])
-        by new.mxwww.masterlogin.de (Postfix) with ESMTPS id 7729A96D5E;
-        Mon, 12 Aug 2019 12:15:30 +0000 (UTC)
-Received: from mxbox2.masterlogin.de (unknown [192.168.10.253])
-        by mxout2.routing.net (Postfix) with ESMTP id C7876647BC;
-        Mon, 12 Aug 2019 12:15:30 +0000 (UTC)
-Received: from localhost.localdomain (fttx-pool-217.61.152.193.bambit.de [217.61.152.193])
-        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 7BDD1100D0A;
-        Mon, 12 Aug 2019 14:15:29 +0200 (CEST)
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Allison Randal <allison@lohutok.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Tianping . Fang" <tianping.fang@mediatek.com>
-Cc:     Josef Friedl <josef.friedl@speed.at>,
-        Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH v5 02/10] dt-bindings: add missing mt6397 rtc
-Date:   Mon, 12 Aug 2019 14:15:03 +0200
-Message-Id: <20190812121511.4169-3-frank-w@public-files.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190812121511.4169-1-frank-w@public-files.de>
-References: <20190812121511.4169-1-frank-w@public-files.de>
+        Mon, 12 Aug 2019 08:25:13 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4660 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728464AbfHLMZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 08:25:12 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3FD46459B3490B51E00F;
+        Mon, 12 Aug 2019 20:25:10 +0800 (CST)
+Received: from RH5885H-V3.huawei.com (10.90.53.225) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 12 Aug 2019 20:25:03 +0800
+From:   Sun Ke <sunke32@huawei.com>
+To:     <sunke32@huawei.com>, <josef@toxicpanda.com>, <axboe@kernel.dk>,
+        <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] nbd: add a missed nbd_config_put() in nbd_xmit_timeout()
+Date:   Mon, 12 Aug 2019 20:31:26 +0800
+Message-ID: <1565613086-13776-1-git-send-email-sunke32@huawei.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Friedl <josef.friedl@speed.at>
+When try to get the lock failed, before return, execute the
+nbd_config_put() to decrease the nbd->config_refs.
 
-add missing devicetree-binding document for mt6397 rtc
-in later patch driver is extended with mt6323 chip
+If the nbd->config_refs is added but not decreased. Then will not
+execute nbd_clear_sock() in nbd_config_put(). bd->task_setup will
+not be cleared away. Finally, print"Device being setup by another
+task" in nbd_add_sock() and nbd device can not be reused.
 
-Suggested-By: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Josef Friedl <josef.friedl@speed.at>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Fixes: 8f3ea35929a0 ("nbd: handle unexpected replies better")
+Signed-off-by: Sun Ke <sunke32@huawei.com>
 ---
-changes since v4: use relative path
-changes since v3: moved SOB
-changes since v2: splitted rtc-mt6397.txt from first patch
----
- .../devicetree/bindings/rtc/rtc-mt6397.txt    | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+ drivers/block/nbd.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
-new file mode 100644
-index 000000000000..4d2d8317e16b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
-@@ -0,0 +1,29 @@
-+Device-Tree bindings for MediaTek PMIC based RTC
-+
-+MediaTek PMIC based RTC is an independent function of MediaTek PMIC that works
-+as a type of multi-function device (MFD). The RTC can be configured and set up
-+with PMIC wrapper bus which is a common resource shared with the other
-+functions found on the same PMIC.
-+
-+For MediaTek PMIC MFD bindings, see:
-+../../bindings/mfd/mt6397.txt
-+
-+For MediaTek PMIC wrapper bus bindings, see:
-+../../bindings/soc/mediatek/pwrap.txt
-+
-+Required properties:
-+- compatible: Should be one of follows
-+       "mediatek,mt6323-rtc": for MT6323 PMIC
-+       "mediatek,mt6397-rtc": for MT6397 PMIC
-+
-+Example:
-+
-+       pmic {
-+               compatible = "mediatek,mt6323";
-+
-+               ...
-+
-+               rtc {
-+                       compatible = "mediatek,mt6323-rtc";
-+               };
-+       };
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index e21d2de..a69a90a 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -357,8 +357,10 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
+ 	}
+ 	config = nbd->config;
+ 
+-	if (!mutex_trylock(&cmd->lock))
++	if (!mutex_trylock(&cmd->lock)) {
++		nbd_config_put(nbd);
+ 		return BLK_EH_RESET_TIMER;
++	}
+ 
+ 	if (config->num_connections > 1) {
+ 		dev_err_ratelimited(nbd_to_dev(nbd),
 -- 
-2.17.1
+2.7.4
 
