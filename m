@@ -2,127 +2,147 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F47C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0D6C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFCA820663
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 851FD206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:00:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="Fnd3Ga+e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XB3wyrg/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbfHLR65 (ORCPT
+        id S1726634AbfHLSAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 13:58:57 -0400
-Received: from mail-eopbgr770114.outbound.protection.outlook.com ([40.107.77.114]:9445
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726581AbfHLR64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 13:58:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YcqTettayRHOXkpm9OY+HZad4uXIkB6QL5iAM5P6Cc3GlsEG1ILgzn9I7r1diY6i/MmRQnv5kKpSiB7hAb/8h2SsGRYasqcYUu4I9FXjEZwaNU6QPXS8utPbCIRYpgBQ69AkbJq2xlMW+xXS6slYnw4VW8hxn1v/JCNrU9eTBwbC1VnPjF4pHP6nAlNDLnzbKI4AgiBUyMHRLFt4cZSL/+PentXwb/ONtgksTfUgge52XJrK6LheJuQCfPMzhMw0d0EO7GbvoY9mZpkSn8vPtRBbqeaPDl6vMy1NX0yiEkoM6XU7bMUhzu+AQ3Dbyq1nUYjQHNWDTWzCI0BYPf++pA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rQ+zOhPWxWr/+OnIyGt25IXGG4WaR85Z0Ex+CLlDKFY=;
- b=UkKWw09JWzWtRrvpZF0HwIYegnampOzYSSavq6D7ZAmsjdb7e0pjvPaFC2Fwo75iHP7vEQQIVc1c89lqlZ7Ppoe1LjDn5TE1qj4iSkvPyD5pWDFAFTeh5MaV59jVbjPntVqYA1fF9GKjL7UOmO6oeyR5PgKxm9DTQcYqey8ecSdyQwTG7DiJde0wrQZaZwdjPhNFAJUkD1ImVoAB1KWerW7mT9aIOyx4MglV0K9AFHbFZUO5rD9IPesr52kVFv3DHxKhO9DRgglUPXnUVJ1W/KaYVjoGfI/NVR8YzbsBDx1bO3D+Z192Df7UITLyo52ktRNzJwE31HneZF1FljwscQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
- dkim=pass header.d=mips.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rQ+zOhPWxWr/+OnIyGt25IXGG4WaR85Z0Ex+CLlDKFY=;
- b=Fnd3Ga+ejMERnKCCkeknqL44i2VkNa2TEhZm5ro7siBgU3I90f+J+G3pMNZU6tA03MIyjel4rAMmf0I4UAGsTRnrz0T0aM3n8fxou8BpRDJzf9KkZcxDymj7KF2J+ha5NSUZBIQiT3oMB3rMmFty7aVUTdlKaPMG98Jk0q6kaHs=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1104.namprd22.prod.outlook.com (10.174.169.154) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.18; Mon, 12 Aug 2019 17:58:47 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f566:bf1f:dcd:862c]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f566:bf1f:dcd:862c%10]) with mapi id 15.20.2157.022; Mon, 12 Aug 2019
- 17:58:47 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>,
-        Vladimir Serbinenko <phcoder@gmail.com>,
-        Jussi Kivilinna <jussi.kivilinna@iki.fi>
-Subject: Re: [PATCH 3/5] lib/mpi: Fix for building for MIPS32 with Clang
-Thread-Topic: [PATCH 3/5] lib/mpi: Fix for building for MIPS32 with Clang
-Thread-Index: AQHVUTeWNolbWFJ6CkGezm0cPp8EqQ==
-Date:   Mon, 12 Aug 2019 17:58:47 +0000
-Message-ID: <20190812175846.ozvhx5a2sturrclt@pburton-laptop>
-References: <20190812033120.43013-1-natechancellor@gmail.com>
- <20190812033120.43013-4-natechancellor@gmail.com>
- <20190812052355.GA47342@archlinux-threadripper>
-In-Reply-To: <20190812052355.GA47342@archlinux-threadripper>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR03CA0008.namprd03.prod.outlook.com
- (2603:10b6:a02:a8::21) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d66e9ba3-1cdc-4aba-1ce1-08d71f4eb953
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1104;
-x-ms-traffictypediagnostic: MWHPR2201MB1104:
-x-microsoft-antispam-prvs: <MWHPR2201MB1104BA7E25CC230D7145B3C8C1D30@MWHPR2201MB1104.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 012792EC17
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(376002)(136003)(346002)(366004)(39840400004)(396003)(189003)(199004)(9686003)(7736002)(14454004)(478600001)(6512007)(54906003)(53936002)(305945005)(58126008)(316002)(33716001)(64756008)(1411001)(66476007)(66556008)(6246003)(2906002)(66946007)(4326008)(3846002)(71200400001)(66446008)(71190400001)(4744005)(6116002)(76176011)(1076003)(25786009)(52116002)(6436002)(6486002)(6506007)(386003)(446003)(42882007)(11346002)(476003)(8936002)(26005)(5660300002)(486006)(81156014)(44832011)(229853002)(6916009)(8676002)(102836004)(66066001)(81166006)(186003)(99286004)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1104;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: MJO84WnTJbYt8+QiUBpNwQYgfQgXmUHnRZT7Ev7KqcYYmCfinbhQEX3qmNZNlDiTgl/TiP4nzl/VnH7bCy+HjtVR/kaXHiq38v89qo6qSlchSTSka4U5ZJ0tWCDBJu7oexMl/nJ0cqu3VPTDcBlIpgLeE+ikYFizm7KbNcpWtFZtWttDecZVKAuIe+qm1O63WKmqafBLHduIBI3Zbl4oJxlf4RF0nKoDAFkZbNUGUMcQZzYaIJjTOYsJQu1QWblhnipXJDP7SWFjCg4J6x/EGgkFTAmS0ngAQ0vYpZYFxl+Pwhzg/VpV17YqXnXtm9QxlEG9mF3/PaqAd9lFlgn94gzO0x6G7vy5ieVhKe0vkF7y/5hKMB48PJqvM3dYCN9pjQ3Oo9R0/IAyOsHB+cxbeYv5l2CayrVlmrYof6jxRGk=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <590DCDA92AE15C48BF35F3D7D623F45F@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 12 Aug 2019 14:00:09 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37795 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbfHLSAJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 14:00:09 -0400
+Received: by mail-ot1-f65.google.com with SMTP id f17so26800511otq.4;
+        Mon, 12 Aug 2019 11:00:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fGpuQrmzy1FwsMj9TWHIASi6W9ylGMJSZYJThCVeJRs=;
+        b=XB3wyrg/V5N1EHWm7v0n8Sh0CJ8wyH2LjlBLunj2JehIwNDmpUeAWK15ucBjUGy8Km
+         sR7ut9SSNvpGY/zJ734FVCR5WgLMbSOh34j+z7kwkWShV2+IMofxiJlFDGMGjsF7L0cf
+         eK15o16mTTFxFRp1T5uRrsW2o/1FcSfMWFz+FFo0WvPMB1GzjEf58j9xoMzqwmTr/EwC
+         W/GnmI6HLiJWSq7+qdc7pZMdiNC9yQcsuQLt/UG9Y9H8dR9Fk97XawSQmndTAEMSAvNc
+         CWyqL1ORXQxQusypiF4jmj9pMS2xxmLheMOpKULEVq9YrinTI0nz6gJPdaBBv91VkKHM
+         YvzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fGpuQrmzy1FwsMj9TWHIASi6W9ylGMJSZYJThCVeJRs=;
+        b=cSdbmiOaIqe+84PgvtJsyDl3LGzfiVUDVIUdezVw3jWULkdrdEnOtWgeA2Whd9/w7x
+         fbaxOIF0k8qSQai7ebjl9gG99iPbNF8cDuGSTvObQh4BYaR1ibKao62UFfJY0RCkflFQ
+         P4Y482YKP9rCKlUBLFUMjRAOzuFomRK9be76Ga1RfRVViZ/f0GQJDPMkQQCmA4/KFQjB
+         3sYj+wvIfKSXAcpbddnV2VwqP3sUJ+LQ46XmrNNwMYyiWQ1bDoVm8BrZhGO8NWBEoW+b
+         U0WAdFjlyNx9Au5ZtQYdUNugC636uGaOL6DEjHHjIRz66JujiJ9q8Q7QFCbI4Ijrnf9l
+         3+MA==
+X-Gm-Message-State: APjAAAU2a+inJ+7p/tuA9aRuqxcysnHm2sEScXdteCsk3CdgzMl7dDLg
+        pSaBCpBkcdrmuMTnMpsN0xpxXh00bCkJrhXhrMw=
+X-Google-Smtp-Source: APXvYqyssTKPXbJDSlF9l6L93EOn6Pvx11xwGZ+Lev+PZBmup9Uh5e7i7z/YF0ouyQXSq4LZoqtJDNNWy5G99o/EwUw=
+X-Received: by 2002:a5e:8a48:: with SMTP id o8mr26890028iom.287.1565632808028;
+ Mon, 12 Aug 2019 11:00:08 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d66e9ba3-1cdc-4aba-1ce1-08d71f4eb953
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 17:58:47.7024
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gtqlD9l3m7/KvqhvJcxvJMhvE0am6qMwLcVaz0yV8tb0CR/g/rvaNYS7BUMhoKQQZnpi1MweG1Y0kqtABJHAwQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1104
+References: <20190717152458.22337-1-andrew.smirnov@gmail.com>
+ <20190717152458.22337-5-andrew.smirnov@gmail.com> <VI1PR0402MB34854421031A02B1AE3F953098C70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR0402MB34854421031A02B1AE3F953098C70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Mon, 12 Aug 2019 10:59:56 -0700
+Message-ID: <CAHQ1cqEhS+rSW7avtP5Yt5o+6AH2wPzXCxpqKW9J7U6k7FMOBA@mail.gmail.com>
+Subject: Re: [PATCH v6 04/14] crypto: caam - request JR IRQ as the last step
+To:     Horia Geanta <horia.geanta@nxp.com>
+Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Chris Spencer <christopher.spencer@sea.co.uk>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nathan,
+On Tue, Jul 23, 2019 at 9:02 AM Horia Geanta <horia.geanta@nxp.com> wrote:
+>
+> On 7/17/2019 6:25 PM, Andrey Smirnov wrote:
+> > In order to avoid any risk of JR IRQ request being handled while some
+> > of the resources used for that are not yet allocated move the code
+> > requesting said IRQ to the endo of caam_jr_init(). No functional
+>                              ^ typo
+> > change intended.
+> >
+> What qualifies as a "functional change"?
+> I've seen this comment in several commits.
+>
 
-On Sun, Aug 11, 2019 at 10:23:55PM -0700, Nathan Chancellor wrote:
->  I noticed you didn't pick up this patch with the other ones you
->  applied. I just wanted to make sure it wasn't because it was sent to
->  the wrong person. This set of files doesn't appear to have an owner in
->  MAINTAINERS, I guess based on git history either Andrew or Hubert (on
->  CC) pick up patches for this set of files? If I need to, I can resend
->  it to the proper people.
+My intent was to mark refactoring only changes as such. Probably not
+appropriate for this commit. Will drop in v7.
 
-The 3 arch/mips patches were trivial for me to apply because I'm very
-familiar with the code & know they should go via the MIPS tree.
+> >       error = caam_reset_hw_jr(dev);
+> >       if (error)
+> > -             goto out_kill_deq;
+> > +             return error;
+> >
+> >       error = -ENOMEM;
+> >       jrp->inpring = dmam_alloc_coherent(dev, sizeof(*jrp->inpring) *
+> >                                          JOBR_DEPTH, &inpbusaddr,
+> >                                          GFP_KERNEL);
+> >       if (!jrp->inpring)
+> > -             goto out_kill_deq;
+> > +             return -ENOMEM;
+> Above there's "error = -ENOMEM;", so why not "return err;" here and
+> in all the other cases below?
+>
 
-I'm far less familiar with lib/mpi & needed to look up maintainers,
-which is why I didn't apply them in the few minutes I had spare.
+I was going to remove that "error = -ENOMEM;", but forgot. Will do in v7.
+
+> >
+> >       jrp->outring = dmam_alloc_coherent(dev, sizeof(*jrp->outring) *
+> >                                          JOBR_DEPTH, &outbusaddr,
+> >                                          GFP_KERNEL);
+> >       if (!jrp->outring)
+> > -             goto out_kill_deq;
+> > +             return -ENOMEM;
+> >
+> >       jrp->entinfo = devm_kcalloc(dev, JOBR_DEPTH, sizeof(*jrp->entinfo),
+> >                                   GFP_KERNEL);
+> >       if (!jrp->entinfo)
+> > -             goto out_kill_deq;
+> > +             return -ENOMEM;
+> >
+> >       for (i = 0; i < JOBR_DEPTH; i++)
+> >               jrp->entinfo[i].desc_addr_dma = !0;
+> > @@ -483,10 +472,19 @@ static int caam_jr_init(struct device *dev)
+> >                     (JOBR_INTC_COUNT_THLD << JRCFG_ICDCT_SHIFT) |
+> >                     (JOBR_INTC_TIME_THLD << JRCFG_ICTT_SHIFT));
+> >
+> > +     tasklet_init(&jrp->irqtask, caam_jr_dequeue, (unsigned long)dev);
+> > +
+> > +     /* Connect job ring interrupt handler. */
+> > +     error = devm_request_irq(dev, jrp->irq, caam_jr_interrupt, IRQF_SHARED,
+> > +                              dev_name(dev), dev);
+> > +     if (error) {
+> > +             dev_err(dev, "can't connect JobR %d interrupt (%d)\n",
+> > +                     jrp->ridx, jrp->irq);
+> > +             tasklet_kill(&jrp->irqtask);
+> > +             return error;
+> "return error;" should be moved out the if block.
+>
+
+Sure, will do in v7.
 
 Thanks,
-    Paul
+Andrey Smirnov
