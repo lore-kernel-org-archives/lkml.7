@@ -2,108 +2,150 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E909C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04482C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E491820684
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C160220684
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:42:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ThLZwOpG"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Y6+sszg8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfHLSkZ (ORCPT
+        id S1726735AbfHLSmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 14:40:25 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46042 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfHLSkZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 14:40:25 -0400
-Received: by mail-pf1-f196.google.com with SMTP id w26so4852763pfq.12
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 11:40:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=wEHsTJtJkpVrJagTBHsYEXur21Gl4Q7vvn3wXU2PQh8=;
-        b=ThLZwOpG0O4bmdtkt2UnZX/MXyG86/QHR9MlVnhByElkQHIwAd35+0RY5UWMGcyGQJ
-         aw2P+B1KVo9TB47jb+KJMBw6U9RyBKalERMGDjB4SKkxxvBvVhkj7CjoGCa+YXm7fugs
-         SxiBsKNdbARGIsliHlsgE5zWCmN+3F56+Bbmt175GGBLHkC4PZkNF8Np6EVmCy160V8J
-         Yo3CiJXb0BB2VjnZGePMZqmHiXKOsKVDfPRpdGv67j9IfVIlXRQlq3aQEvz8TMe5GdR0
-         oICoptny0sOMxX9IEBC3jkYvbLo6o7H1EJZre5N5CJU50TD4JLi9+QgN3bD6om4D/6Wk
-         fI9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wEHsTJtJkpVrJagTBHsYEXur21Gl4Q7vvn3wXU2PQh8=;
-        b=a+Tl4oe0UY/hLQ7piNCOMI/b62+/6TWpcIH4QaUl3cE+g2QD06iP9FpJZJnYyE1lTC
-         JvbJTF2IGMbbRGFfwVMEXp4nQsYAEMMc8jlpnc9bo7kY7xfghFoHYN8vTfKXuJmGaj0o
-         jlNqIruKYzKl17F4aGsJHZyri+DLZPWZPIt5pHWnxNWrxbhYYWQXw9KXsepBP3arElSe
-         3pzlUQX88FqWadzFWq4UYINhC7ryBxe5SlsGe3w/o4pYVvo0mz9woUjjWH4P40eB+hAI
-         R52cf7mc5JV75l8/gKTgmtr7FOZDwMIasc27Up+wwRRefD1cYGe1bllbUpxNjcP0eLoY
-         gbjg==
-X-Gm-Message-State: APjAAAV+zmJORMveQiPIiZrvbT7PS1sygFMXop8bpao7+AB0QN9FVfSY
-        aM8mBiI2FxJSrxDiI+3s1EFy/mXV
-X-Google-Smtp-Source: APXvYqzkj5Qqa/vMdOxNgH0OewOSW8q2/FvbkwDsQw7xZNeVclwwuFxbcce6jZOfFLMr8kMYmAHljQ==
-X-Received: by 2002:a17:90a:3465:: with SMTP id o92mr641173pjb.20.1565635224168;
-        Mon, 12 Aug 2019 11:40:24 -0700 (PDT)
-Received: from localhost.localdomain ([203.109.114.129])
-        by smtp.gmail.com with ESMTPSA id d3sm301403pjz.31.2019.08.12.11.40.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 12 Aug 2019 11:40:23 -0700 (PDT)
-From:   Raag Jadav <raagjadav@gmail.com>
-To:     linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Raag Jadav <raagjadav@gmail.com>
-Subject: [PATCH] regulator: act8945a-regulator: fix ldo register addresses in set_mode hook
-Date:   Tue, 13 Aug 2019 00:09:54 +0530
-Message-Id: <1565635194-5816-1-git-send-email-raagjadav@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 12 Aug 2019 14:42:21 -0400
+Received: from mail-eopbgr800120.outbound.protection.outlook.com ([40.107.80.120]:40800
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726090AbfHLSmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 14:42:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KwUWtl/jY+jx8KH5HFjXb4v8kszhtGfnLLa+Td53HFPGwpmzgof6u+JyY0O44mqeSDpNxlHkSHGWgQwGyRyPczJTbXj5kg3dMI36UuYr2TdqS7dWnHxf6jv9IxGI9pmqoVajV20TFx6V0vFS2p9A61li4BamLDt598RCLhD95kcjQhpRSmtR/PJCXRFqdfIWZ0UMYDOd/0GFohf+ZCHqPjh5ddI4N3ABtgNRWvOdRP58iuKP29tH/9CnPu+PiwIdztCbRAo0ph84h40h/YpQ3MUK7i1VFK7nhYhoN2NC++6G0GYWrOZqUj1uPZ/8XC8zFAosmuoKce9+UhI1HNeEdg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cjH38107+ukbM+m4bfRUwdnJgoOpsmCjMKQw6qinwJM=;
+ b=EhfnwoVGmafPeNSgSX0CjveetgIuPcyytfSetQxPOoZqkQY6LI93tW5hsf4k1W97xr177YP1yM6ERbqzepiieomtmpht66UpwOjGikNjMKIlodtze6qrYrBi5KB9q8tfSL3pturXeKF7FdtBRwI2gPeK/yHnV5P+ILlM9DlUmueqOXBjvC+i6dZlJG9PdCuc+gsKqVwdH06d8Q7LAnFCcCnb6GLUb/SQMvwOphBTfvV/ydtRsdQeDwD0k/67IHbIjNNEAl/1UQTNkUjokbI9Dt/Qh4PLGDvegxnXjlLpU75Y3upytj0FoCo0VnxJZl3t6G/w3TeWBfSzb4l6XUZb8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cjH38107+ukbM+m4bfRUwdnJgoOpsmCjMKQw6qinwJM=;
+ b=Y6+sszg80TLKy+vzxkOxC1aExlQOmyDIGXctUbqYtNAL2I6UQ+M4qlH0S4ShkNyWtY6LNueK+69cpaqx92cLW2UariIBobuO+2pgrOnEplzTNd4j3QA0rvUszbGj7cRf2xZKjDfXHVg7rA4r9BBfS+OGoimgor/jwFZ7/NQKcFI=
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
+ DM5PR21MB0764.namprd21.prod.outlook.com (10.173.172.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id
+ 15.20.2178.6; Mon, 12 Aug 2019 18:41:38 +0000
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::9558:216:27ca:5dfd]) by DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::9558:216:27ca:5dfd%2]) with mapi id 15.20.2157.011; Mon, 12 Aug 2019
+ 18:41:38 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "ashal@kernel.org" <ashal@kernel.org>
+CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: RE: [PATCH 2/2] clocksource/Hyper-V:  Add Hyper-V specific sched
+ clock function
+Thread-Topic: [PATCH 2/2] clocksource/Hyper-V:  Add Hyper-V specific sched
+ clock function
+Thread-Index: AQHVReKqPvPCosA5s02OPHGb8bfYZKb37vnQ
+Date:   Mon, 12 Aug 2019 18:41:38 +0000
+Message-ID: <DM5PR21MB01371937B0E72671C4B7C990D7D30@DM5PR21MB0137.namprd21.prod.outlook.com>
+References: <20190729075243.22745-1-Tianyu.Lan@microsoft.com>
+ <20190729075243.22745-3-Tianyu.Lan@microsoft.com>
+In-Reply-To: <20190729075243.22745-3-Tianyu.Lan@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-12T18:41:36.6177014Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5c6862ef-aced-4cd7-9a8f-9ce8de1d440f;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e26f9ef9-302e-4cca-5fc0-08d71f54b5e3
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600158)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM5PR21MB0764;
+x-ms-traffictypediagnostic: DM5PR21MB0764:|DM5PR21MB0764:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR21MB0764E38AEF2127C1889F4638D7D30@DM5PR21MB0764.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-forefront-prvs: 012792EC17
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(396003)(39860400002)(376002)(346002)(136003)(199004)(189003)(6506007)(256004)(71190400001)(8676002)(2501003)(71200400001)(9686003)(7696005)(74316002)(81166006)(86362001)(7736002)(33656002)(6246003)(6436002)(110136005)(26005)(8936002)(53936002)(55016002)(8990500004)(305945005)(99286004)(186003)(3846002)(76176011)(4326008)(10090500001)(54906003)(4744005)(229853002)(81156014)(6116002)(7416002)(5660300002)(102836004)(2201001)(2906002)(446003)(10290500003)(22452003)(316002)(25786009)(478600001)(476003)(66946007)(64756008)(486006)(1511001)(66556008)(11346002)(66446008)(76116006)(66066001)(52536014)(66476007)(14454004)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0764;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: q1jqyBBHagg1W206lzd2qBBSzkbP9NFwlxJ6mePFvmqxf/FwZeuXL3Qv9GR6DzF7JLRcgmn5blxcRc718ejBHkI/ejaXnVw+aD2DN4uI6XFs/EzBgGADK9502G88zhPAuN9/27ZSOK73NkxIAuRXbQ/IflGBwXmeHfWd1WJA4c18+FJCLzP+1w/j5q+pj2SWWaHca+w5AgwDbFCDFX3YgwVHB4BMS3Wx9GEoJ8FtiE0Roky2NhOxGXo4MGPfbgkg9Mm4Q8Z6xi+alQfP9jbeJSMYoExjE2O6OtWCzM0khpw/FyZhTlRsDhlYB6b4fTnB26w7pm8bCK25w4s+Fy5d9m5yJDTYXj95a6ZSi8CT3oUAIlJUFBNG1fQUyTjwIvch9dgZbFHlLHhK76ne+JBXmkTaaQGISPrG6k5RqzYdXbM=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e26f9ef9-302e-4cca-5fc0-08d71f54b5e3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 18:41:38.3516
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Gyr2CDaMiveqLbpXXrVrpgpgMhG1RpQ06UmPP7fUB9hkioIVNlXEVViJz6OKvkBrxQ2My9gcSFrvgm3RhAZ0mzvrFMlIs0ReYWl/sWksqk0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0764
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to ACT8945A datasheet[1], operating modes for ldos are
-controlled by BIT(5) of their respective _CTRL registers.
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>  Sent: Monday, July 29, 2019 12=
+:53 AM
+>=20
+> Hyper-V guests use the default native_sched_clock() in pv_ops.time.sched_=
+clock
+> on x86.  But native_sched_clock() directly uses the raw TSC value, which
+> can be discontinuous in a Hyper-V VM. Add the generic hv_setup_sched_cloc=
+k()
+> to set the sched clock function appropriately. On x86, this sets pv_ops.t=
+ime.
+> sched_clock to read the Hyper-V reference TSC value that is scaled and ad=
+justed
+> to be continuous.
+>=20
+> Also move the Hyper-V reference TSC initialization much earlier in the bo=
+ot
+> process so no discontinuity is observed when pv_ops.time.sched_clock
+> calculates its offset.
+>=20
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> ---
+>  arch/x86/hyperv/hv_init.c          |  2 --
+>  arch/x86/kernel/cpu/mshyperv.c     |  8 ++++++++
+>  drivers/clocksource/hyperv_timer.c | 22 ++++++++++++----------
+>  include/asm-generic/mshyperv.h     |  1 +
+>  4 files changed, 21 insertions(+), 12 deletions(-)
+>=20
 
-[1] https://active-semi.com/wp-content/uploads/ACT8945A_Datasheet.pdf
-
-Fixes: 7482d6ecc68e ("regulator: act8945a-regulator: Implement PM functionalities")
-Signed-off-by: Raag Jadav <raagjadav@gmail.com>
----
- drivers/regulator/act8945a-regulator.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/regulator/act8945a-regulator.c b/drivers/regulator/act8945a-regulator.c
-index 5842849..d2f804d 100644
---- a/drivers/regulator/act8945a-regulator.c
-+++ b/drivers/regulator/act8945a-regulator.c
-@@ -169,16 +169,16 @@ static int act8945a_set_mode(struct regulator_dev *rdev, unsigned int mode)
- 		reg = ACT8945A_DCDC3_CTRL;
- 		break;
- 	case ACT8945A_ID_LDO1:
--		reg = ACT8945A_LDO1_SUS;
-+		reg = ACT8945A_LDO1_CTRL;
- 		break;
- 	case ACT8945A_ID_LDO2:
--		reg = ACT8945A_LDO2_SUS;
-+		reg = ACT8945A_LDO2_CTRL;
- 		break;
- 	case ACT8945A_ID_LDO3:
--		reg = ACT8945A_LDO3_SUS;
-+		reg = ACT8945A_LDO3_CTRL;
- 		break;
- 	case ACT8945A_ID_LDO4:
--		reg = ACT8945A_LDO4_SUS;
-+		reg = ACT8945A_LDO4_CTRL;
- 		break;
- 	default:
- 		return -EINVAL;
--- 
-2.7.4
-
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
