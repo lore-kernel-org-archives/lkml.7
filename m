@@ -2,90 +2,90 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B0DC41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72B6C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33432206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B18D206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:34:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Ns5tnFaX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="z7aM5UTw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfHLUdI (ORCPT
+        id S1726648AbfHLUeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 16:33:08 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36440 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbfHLUdH (ORCPT
+        Mon, 12 Aug 2019 16:34:00 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:59830 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfHLUeA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 16:33:07 -0400
-Received: by mail-pg1-f195.google.com with SMTP id l21so50057719pgm.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 13:33:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=opuTeOP019YiHjS7zgVGx1N/ZtI2m573pQ8Fm6DPedA=;
-        b=Ns5tnFaXWDviA+GNTixFkO7AFl1W+l/Ald/kQO5BWa44a6ukvr1eWIfWjaWVDYUYDj
-         hiAQT2HpufQzPthDGeB765CF3V6cCc9ECB9Nb9FumVOdvKyCv603isBx/5MPS6iHlrNj
-         YgxsfNStteKFyfoyRgVQ7FztMMbz+A+7H9xCy4FP4N6hIP3FexB/hSxdWfnYZ5e8qxoO
-         n8ijIrIRl4bVRGBQMRhePCuyMmbw7FhP1X3hyIp9VFPC+iRXtGEIKjnn3rnFwdAycubP
-         1wpdkQhN3+kVMZT8ywoPlKyHLiAEMXVoKcD7/Lr1NHmQ8oLt8qXpYTHauzLeviIHKc2M
-         tWfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=opuTeOP019YiHjS7zgVGx1N/ZtI2m573pQ8Fm6DPedA=;
-        b=ojsyqzKzlAHRzJ6uIBrtzUBvoymi/pFYYpLMlfkNIz2u961Ce4Ve5L/d3u45NvoXe4
-         ZbxCfvOX3gBVgEmfTGwcmwItUaPCA8YVTg7jnzerv4K1hp+HqLtXtGm+UXKWsg8sR5jb
-         hxje6e+4766VoFSQpT0gZ5+0L3sdqao2sy8M88H2qj/V/sb1U+8jlUk12gWU29/DCTRN
-         en4MxAI48rQdDIFQO3DktX4wjToTz6gPaj43x4m0Y3tANKNa08+ne5pSTgiyjkRMsBdZ
-         VThqRj9onyYvVvMI8U9Uar6YgYj/bpo0FoRNtHbyoHR5NjjhUVYjzulUm/5iQqFUe+8u
-         joWg==
-X-Gm-Message-State: APjAAAXvhad9Ljo24LBQ2HbgZhOgsBOKlCazaLHSA5+mWp8GvDwtLklX
-        lMUGhdqeGGF1k/vinLjbsAIzqw==
-X-Google-Smtp-Source: APXvYqzLso2VXLAcxk2gXZWzzA185FIPfyG4h7hY0rd/zhvtbW+18JphumXy+BZjj65b5PHnBueorA==
-X-Received: by 2002:a17:90a:d793:: with SMTP id z19mr1014808pju.36.1565641986978;
-        Mon, 12 Aug 2019 13:33:06 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:f08])
-        by smtp.gmail.com with ESMTPSA id b6sm93774090pgq.26.2019.08.12.13.33.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 13:33:06 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 16:33:04 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, matthew.wilcox@oracle.com,
-        kirill.shutemov@linux.intel.com, kernel-team@fb.com,
-        william.kucharski@oracle.com, akpm@linux-foundation.org,
-        hdanton@sina.com
-Subject: Re: [PATCH v10 2/7] filemap: check compound_head(page)->mapping in
- pagecache_get_page()
-Message-ID: <20190812203304.GA15498@cmpxchg.org>
-References: <20190801184244.3169074-1-songliubraving@fb.com>
- <20190801184244.3169074-3-songliubraving@fb.com>
+        Mon, 12 Aug 2019 16:34:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=GBM94Q/OTQSku+z+3GFrDGRbKILOPX2GboQOlG2X8Rw=; b=z7aM5UTw64BJPzgzRRuNu84mRi
+        Z6JR8tJZzwLY9ubRiQ8yZAaoEkLo29CPPNjrBttuzYvcmJhNeBc919RK7wl2pTYQcURgw3OEAaz0k
+        pPCa0J2exqf5RdUOarENp/peLbLv4nHKSSE755yQtYOzBouIz3ooR+hSxELGRti80Xa3E3P35Zv4/
+        B56UMmyYqadUtWL9YNb4Z7rrMoo9a0z7Z3j+EyeiLjlEmZ4rUf2P3r5dL1XQKv1Iu2qiiVJVJCcjP
+        h6gzBw3hOi6S4fmtCkyVC2CiNHyK1xepomHZO89Ogi8peyVxcA9f7WfHBUSOeP4+L/lrRtJTeKyMp
+        nuubTBaw==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hxH0v-0004g4-ME; Mon, 12 Aug 2019 20:33:57 +0000
+Subject: Re: Build regressions/improvements in v5.3-rc4
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-kernel@vger.kernel.org
+References: <20190812102049.27836-1-geert@linux-m68k.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a74dd048-8501-a973-5b03-eefbc83d7f79@infradead.org>
+Date:   Mon, 12 Aug 2019 13:33:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801184244.3169074-3-songliubraving@fb.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190812102049.27836-1-geert@linux-m68k.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 11:42:39AM -0700, Song Liu wrote:
-> Similar to previous patch, pagecache_get_page() avoids race condition
-> with truncate by checking page->mapping == mapping. This does not work
-> for compound pages. This patch let it check compound_head(page)->mapping
-> instead.
+On 8/12/19 3:20 AM, Geert Uytterhoeven wrote:
+> Below is the list of build error/warning regressions/improvements in
+> v5.3-rc4[1] compared to v5.2[2].
 > 
-> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-> Signed-off-by: Song Liu <songliubraving@fb.com>
+> Summarized:
+>   - build errors: +5/-1
+>   - build warnings: +137/-136
+> 
+> JFYI, when comparing v5.3-rc4[1] to v5.3-rc3[3], the summaries are:
+>   - build errors: +0/-4
+>   - build warnings: +105/-69
+> 
+> Happy fixing! ;-)
+> 
+> Thanks to the linux-next team for providing the build service.
+> 
+> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/d45331b00ddb179e291766617259261c112db872/ (all 242 configs)
+> [2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/0ecfebd2b52404ae0c54a878c872bb93363ada36/ (all 242 configs)
+> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/e21a712a9685488f5ce80495b37b9fdbe96c230d/ (all 242 configs)
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+
+> *** WARNINGS ***
+> 
+> 137 warning regressions:
+
+>   + warning: unmet direct dependencies detected for MTD_COMPLEX_MAPPINGS:  => N/A
+
+It would be Really Good if there was some automated way to know which
+of the 242 configs this is from (instead of you having to grep and reply to
+email or someone/me having to download up to 242 log files).
+
+-- 
+~Randy
