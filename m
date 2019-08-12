@@ -2,117 +2,90 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 248C2C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 00:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF635C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 00:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7BA920820
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 00:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A62DA20874
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 00:42:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="V+g+WALm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IKqPzlkB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfHLAWE (ORCPT
+        id S1726752AbfHLAji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 20:22:04 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.212]:14681 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726275AbfHLAWE (ORCPT
+        Sun, 11 Aug 2019 20:39:38 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:43524 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfHLAjh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 20:22:04 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 5B4FA400CC660
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 19:22:02 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id wy65hViRd90onwy65hKnjp; Sun, 11 Aug 2019 19:22:02 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rOOPxfsGYN4ADAoetTEhwGr2GPC2m5yYCGICAwSLA1A=; b=V+g+WALm4X/kwH+wvXaJ6qDBvd
-        waEP+UkdGFUylUdlIgI4Nevdkq6rFad044GJxvbyq1DCf2nLjQcTTnBONgh8Q7RNWPJJl1wcngKQ6
-        tvWThJyI6b52FptrqWKwwudEfSMuwE5etxuDMPs6dLhsqCNrSzUjAZnuwgzxf1XavDACYLcnN+8eX
-        P7p5q+x9/rMd/I9EfZYazn2SocvkmRIr2S1T6o6Oy/C3KqmN5ayXseInCj90f3yPE9aBwV9R3sNo/
-        TX+Th24EIsrPyuCUgC0BJAWNlHdNIYzUKq5rDhjO2w7USIw6vW9xrt3zzsArkl5Rg5gJDw3aG/n4V
-        Q1Shd5sA==;
-Received: from [187.192.11.120] (port=52044 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hwy64-002b9l-LT; Sun, 11 Aug 2019 19:22:00 -0500
-Date:   Sun, 11 Aug 2019 19:22:00 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Li Yang <leoyang.li@nxp.com>, Zhang Wei <zw@zh-kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] dmaengine: fsldma: Mark expected switch fall-through
-Message-ID: <20190812002159.GA26899@embeddedor>
+        Sun, 11 Aug 2019 20:39:37 -0400
+Received: by mail-ua1-f65.google.com with SMTP id o2so39694913uae.10
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 17:39:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6K0DvhL9RJkMUKWGy9bBRNsMSDRRIMczdHWxj2ZlOLY=;
+        b=IKqPzlkBpTxY+A47jneyPgFuefY8XtvBtZMXnqH7VkTU2q0nJcG3iIRUuKxPVzsVSJ
+         qaquyNCY/6XJ7D82HonO4EBmwolNEFZ0EKXfqOGLmnfrGtGIpfHMNqIlMKefsCRAFSqZ
+         JoExbp3p4N4WfyaHmR6RVo8ExwftKr4w/E5HNtfOeBbT3xa+aoWI8ruwrdtCuWimPd7I
+         V3y+2iKeKtWpb4vFKx67OmWGvsA4thlgxbOSxsJnlK/b/PEdRHBI7Ylo+rUgOPHJMOjh
+         BmhzmtoZeu51qfUhDBUGVzA8g+COBbey3b1/Z7KDSww6AYJInUYcnDhyf5zz4TAnOhqH
+         Un5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6K0DvhL9RJkMUKWGy9bBRNsMSDRRIMczdHWxj2ZlOLY=;
+        b=HtBCKmbjdLWNkW2jLt8Osea39p+fu4nUe481PY3jBByms6SB5G4jMgoe8eyOBt9EHB
+         M8oE0HPgieCy2QPZLZZD5BMW333UG6JVD9VJ3zWNplTwEq0VEeuCo05Syu/EMsI/sO6T
+         8yK8SbvbfY8npIq3tkUTlTyKTnuRLtqxj9yAIcUwxtRTn8Thnb1IVOo2ykQRCZJPqi3b
+         uCqAiUK6+KX2hcm5yGCL/e4gdyyJ2XKqkowW0suVfepAfEt3FeacO1HZRKIfV/15AFu3
+         dE1K2IsVJ8eq2J1dWE85xbQiUqXWOtFQ9AEklIWvB9hbvHYwjXElVsOM7T75yTZX/qdI
+         K43Q==
+X-Gm-Message-State: APjAAAW2FoTMWNegay2LctcNGBFQ6buGUTldqFAsiT372QzZbgEBH0Ss
+        Gf204vCYr0IXZo/s+uApPrepviKLWacUOa3cwVQEsg==
+X-Google-Smtp-Source: APXvYqxvKmRyM1n6aAxPB7BHyG0ztTWG0OjK+dcEQcs9gVLd7ek1DWS6G6ppS8xScBCLvhhXvUQFgbNQHh9Vv1eg9D0=
+X-Received: by 2002:ab0:7618:: with SMTP id o24mr18290583uap.39.1565570376227;
+ Sun, 11 Aug 2019 17:39:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hwy64-002b9l-LT
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:52044
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 14
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20190811184613.20463-1-urezki@gmail.com> <20190811184613.20463-3-urezki@gmail.com>
+In-Reply-To: <20190811184613.20463-3-urezki@gmail.com>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Sun, 11 Aug 2019 17:39:23 -0700
+Message-ID: <CANN689Hh-Pr-3r9HD7w=FcNGfj_E7-9HVsHu3J9gZts_DYug8A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mm/vmalloc: use generated callback to populate subtree_max_size
+To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Roman Gushchin <guro@fb.com>, Hillf Danton <hdanton@sina.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through.
+On Sun, Aug 11, 2019 at 11:46 AM Uladzislau Rezki (Sony)
+<urezki@gmail.com> wrote:
+> RB_DECLARE_CALLBACKS_MAX defines its own callback to update the
+> augmented subtree information after a node is modified. It makes
+> sense to use it instead of our own propagate implementation.
+>
+> Apart of that, in case of using generated callback we can eliminate
+> compute_subtree_max_size() function and get rid of duplication.
+>
+> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 
-Fix the following warning (Building: powerpc-ppa8548_defconfig powerpc):
+Reviewed-by: Michel Lespinasse <walken@google.com>
 
-drivers/dma/fsldma.c: In function ‘fsl_dma_chan_probe’:
-drivers/dma/fsldma.c:1165:26: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   chan->toggle_ext_pause = fsl_chan_toggle_ext_pause;
-   ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/dma/fsldma.c:1166:2: note: here
-  case FSL_DMA_IP_83XX:
-  ^~~~
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/dma/fsldma.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
-index 23e0a356f167..ad72b3f42ffa 100644
---- a/drivers/dma/fsldma.c
-+++ b/drivers/dma/fsldma.c
-@@ -1163,6 +1163,7 @@ static int fsl_dma_chan_probe(struct fsldma_device *fdev,
- 	switch (chan->feature & FSL_DMA_IP_MASK) {
- 	case FSL_DMA_IP_85XX:
- 		chan->toggle_ext_pause = fsl_chan_toggle_ext_pause;
-+		/* Fall through */
- 	case FSL_DMA_IP_83XX:
- 		chan->toggle_ext_start = fsl_chan_toggle_ext_start;
- 		chan->set_src_loop_size = fsl_chan_set_src_loop_size;
--- 
-2.22.0
-
+Love it. Thanks a lot for the cleanup!
