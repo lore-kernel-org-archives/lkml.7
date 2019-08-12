@@ -2,131 +2,78 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37828C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7772FC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1183C20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42DB620842
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:50:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565603433;
+	bh=sbiaL+DHZtRdI6YR754ZOXvnLLEjOSonGtEULxBahw8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q5CR2e904YauMz5k/8WahVJ4Kn3ClzI7ZV4B9NnalpFrIFebQsNwjLo0PPP4pw3HL
+	 tfqix4XK8jpaNQnHxNOhdXrmVuGTyLjPRi8lmK3mbUgEiPsXcU80m1keAuUg3+/nCq
+	 /8xeS3jOo729oLJpq8Ui3Sn/B7F6r8mKWTIvVvAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727602AbfHLJtR (ORCPT
+        id S1727640AbfHLJuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 05:49:17 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35857 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727425AbfHLJtP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 05:49:15 -0400
-Received: by mail-qk1-f194.google.com with SMTP id d23so1650983qko.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 02:49:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=TeG3wutKuFLwVY8GXTa6M+xMk4IsoY0IuBgfuWlKI8w=;
-        b=LVPv9z9Q2ZpjlDK8fPKYwW5SDrlBje/i2RQeJFhad8GW/uZ+Yh2LLyk+w1pEhzlKri
-         jzx6cS8ykAeZyd2sw+1qmJVd31THImM8y7c3iSDEV/klVB6kjNwKg2lo202Nj2ZZ1Ytb
-         ed1MVgCLA//a9mcGuyJVpMagTgK5AIboZxxa0j+oqav+xwB5rlDYp9POk44BD0vOXGFw
-         Gq2bhBNzSMgqx/+S2WolOZFt2rhjOlwAugbfmOie++hAjNQFxifj+ETlz0oI4DuMYwt2
-         Ke9DLUsTfDv+LIVAH2yUwSkD53jF9Av0oaUIoAwPKiNCslLZYBCmweRz1YvBbU2bRumr
-         Cuiw==
-X-Gm-Message-State: APjAAAUjyda1tGzfyMMsM+4oEWQzs5yJQXZ8QgnX8xShDl1Xzx3lgySA
-        dpnT1lsYGmUW40UftD/aXkNXjDv8+6ri7wxw
-X-Google-Smtp-Source: APXvYqxP0GkCXonLtypbly8kLbgJ4TN28n5gWEUnHayGxRExqWLocZL6kaOvmE9QUvNpukx30J3PxA==
-X-Received: by 2002:a37:79c7:: with SMTP id u190mr3917170qkc.26.1565603354162;
-        Mon, 12 Aug 2019 02:49:14 -0700 (PDT)
-Received: from redhat.com ([147.234.38.29])
-        by smtp.gmail.com with ESMTPSA id m27sm52517604qtu.31.2019.08.12.02.49.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 02:49:13 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 05:49:08 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, jgg@ziepe.ca
-Subject: Re: [PATCH V5 0/9] Fixes for vhost metadata acceleration
-Message-ID: <20190812054429-mutt-send-email-mst@kernel.org>
-References: <20190809054851.20118-1-jasowang@redhat.com>
- <20190810134948-mutt-send-email-mst@kernel.org>
- <360a3b91-1ac5-84c0-d34b-a4243fa748c4@redhat.com>
+        Mon, 12 Aug 2019 05:50:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46000 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727471AbfHLJub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 05:50:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9F9FEAECA;
+        Mon, 12 Aug 2019 09:50:30 +0000 (UTC)
+Date:   Mon, 12 Aug 2019 11:50:29 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     =?iso-8859-1?Q?J=F6rg_R=F6del?= <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        "x86@kernel.org" <x86@kernel.org>, kexec@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Donald Buczek <buczek@molgen.mpg.de>
+Subject: Re: Crash kernel with 256 MB reserved memory runs into OOM condition
+Message-ID: <20190812095029.GE5117@dhcp22.suse.cz>
+References: <d65e4a42-1962-78c6-1b5a-65cb70529d62@molgen.mpg.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <360a3b91-1ac5-84c0-d34b-a4243fa748c4@redhat.com>
+In-Reply-To: <d65e4a42-1962-78c6-1b5a-65cb70529d62@molgen.mpg.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 10:44:51AM +0800, Jason Wang wrote:
-> 
-> On 2019/8/11 上午1:52, Michael S. Tsirkin wrote:
-> > On Fri, Aug 09, 2019 at 01:48:42AM -0400, Jason Wang wrote:
-> > > Hi all:
-> > > 
-> > > This series try to fix several issues introduced by meta data
-> > > accelreation series. Please review.
-> > > 
-> > > Changes from V4:
-> > > - switch to use spinlock synchronize MMU notifier with accessors
-> > > 
-> > > Changes from V3:
-> > > - remove the unnecessary patch
-> > > 
-> > > Changes from V2:
-> > > - use seqlck helper to synchronize MMU notifier with vhost worker
-> > > 
-> > > Changes from V1:
-> > > - try not use RCU to syncrhonize MMU notifier with vhost worker
-> > > - set dirty pages after no readers
-> > > - return -EAGAIN only when we find the range is overlapped with
-> > >    metadata
-> > > 
-> > > Jason Wang (9):
-> > >    vhost: don't set uaddr for invalid address
-> > >    vhost: validate MMU notifier registration
-> > >    vhost: fix vhost map leak
-> > >    vhost: reset invalidate_count in vhost_set_vring_num_addr()
-> > >    vhost: mark dirty pages during map uninit
-> > >    vhost: don't do synchronize_rcu() in vhost_uninit_vq_maps()
-> > >    vhost: do not use RCU to synchronize MMU notifier with worker
-> > >    vhost: correctly set dirty pages in MMU notifiers callback
-> > >    vhost: do not return -EAGAIN for non blocking invalidation too early
-> > > 
-> > >   drivers/vhost/vhost.c | 202 +++++++++++++++++++++++++-----------------
-> > >   drivers/vhost/vhost.h |   6 +-
-> > >   2 files changed, 122 insertions(+), 86 deletions(-)
-> > This generally looks more solid.
-> > 
-> > But this amounts to a significant overhaul of the code.
-> > 
-> > At this point how about we revert 7f466032dc9e5a61217f22ea34b2df932786bbfc
-> > for this release, and then re-apply a corrected version
-> > for the next one?
+On Mon 12-08-19 11:42:33, Paul Menzel wrote:
+> Dear Linux folks,
 > 
 > 
-> If possible, consider we've actually disabled the feature. How about just
-> queued those patches for next release?
+> On a Dell PowerEdge R7425 with two AMD EPYC 7601 (total 128 threads) and
+> 1 TB RAM, the crash kernel with 256 MB of space reserved crashes.
 > 
-> Thanks
+> Please find the messages of the normal and the crash kernel attached.
 
-Sorry if I was unclear. My idea is that
-1. I revert the disabled code
-2. You send a patch readding it with all the fixes squashed
-3. Maybe optimizations on top right away?
-4. We queue *that* for next and see what happens.
+You will need more memory to reserve for the crash kernel because ...
 
-And the advantage over the patchy approach is that the current patches
-are hard to review. E.g.  it's not reasonable to ask RCU guys to review
-the whole of vhost for RCU usage but it's much more reasonable to ask
-about a specific patch.
+> [    4.548703] Node 0 DMA free:484kB min:4kB low:4kB high:4kB active_anon:0kB inactive_anon:0kB active_file:0kB inactive_file:0kB unevictable:0kB writepending:0kB present:568kB managed:484kB mlocked:0kB kernel_stack:0kB pagetables:0kB bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:0kB
+> [    4.573612] lowmem_reserve[]: 0 125 125 125
+> [    4.577799] Node 0 DMA32 free:1404kB min:1428kB low:1784kB high:2140kB active_anon:0kB inactive_anon:0kB active_file:0kB inactive_file:0kB unevictable:15720kB writepending:0kB present:261560kB managed:133752kB mlocked:0kB kernel_stack:2496kB pagetables:0kB bounce:0kB free_pcp:212kB local_pcp:212kB free_cma:0kB
 
+... the memory is really depleted and nothing to be reclaimed (no anon.
+file pages) Look how tht free memory is below min watermark (node zone DMA has
+lowmem protection for GFP_KERNEL allocation).
 
+[...]
+> [    4.923156] Out of memory and no killable processes...
+
+and there is no task existing to be killed so we go and panic.
 -- 
-MST
+Michal Hocko
+SUSE Labs
