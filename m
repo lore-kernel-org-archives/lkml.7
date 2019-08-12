@@ -2,190 +2,110 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DA3C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AF9C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F19EE20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:36:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L+vcXW+K"
+	by mail.kernel.org (Postfix) with ESMTP id BD6E220820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:36:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbfHLTgM (ORCPT
+        id S1727120AbfHLTgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 15:36:12 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35503 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfHLTgI (ORCPT
+        Mon, 12 Aug 2019 15:36:19 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60158 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727068AbfHLTgP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 15:36:08 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k2so19761991wrq.2;
-        Mon, 12 Aug 2019 12:36:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=k2Q5Zs7N8/j45SfwYDhEjobCOU8g/47tJEkHFeIxHdQ=;
-        b=L+vcXW+KZ8BQTvrEhjNTM9/4fNSXashX2Z9MybFGgXHOgLaxQrwJaCZIw8tyuMHQbW
-         oAI5ft/lKpjXyHMpeFPuVksxq3JQfhfXjNYkF1lbSDiy+gb8Xem7Hlz7OW9uBiMyLGU5
-         t0/hPwXrEiZMfO0L7cw9BacR+cu+KpzHaOYoAVQMWS3pqGBFdgcoGoMiQifCB3Is8CxJ
-         qJewGM+821XESthu8Qp2EFHTARjMpbjmSuagNrZ0if4y05JOIGEBF5ZDh4AKxS8OZty1
-         s/ctoFI0rUGmTXxdr1EvvpwLj9Pa8F/3mtWmnEcHi/vOVca9MCmVJPRpUPNx74ElYrJq
-         oVwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=k2Q5Zs7N8/j45SfwYDhEjobCOU8g/47tJEkHFeIxHdQ=;
-        b=Of8ciqMrej3C44n72Ki/BZ8ZumtHk+Nnr4lFa5tf8lokdT+j72v4WVMbV/cY/MEqCd
-         46ciy1ucTx/8CWQQM6DBeFTn5xzYk9ilhXBS06PvNFtTG5Xr+dVexfjYImHm1aHepXdI
-         kt6OlZDptricKN9TNpeBBtLREMbbkZgSubG79mGbnqeBvd/7YrtXFG8DLrN4H3gu0nB4
-         heLj5I89kQvzqjGtBa73C2nGSj1FbRWvytsmJSir4gD9zFyKe+iiDUXSmuaBnK4Gbf3m
-         XH8MFG0LHEfzc5LqRZ0VkpQYvilRKDPlcLBV69JfKdzKk37VITbbtm9r4GW+1oWS4x3R
-         Ym9g==
-X-Gm-Message-State: APjAAAXdYqYTbpQSltPPUoifGRUqYUcexcW/aW6os+Ul/a8sVT8hmxkm
-        GR9qkw6H6IPW/Mj14luLdSk=
-X-Google-Smtp-Source: APXvYqzswoVYVjt/R00117iT42wlOz4HmNFFf19yfz3oM8qk/uVTrP34TUwKNyiEzRSwhGx5aTwW8g==
-X-Received: by 2002:adf:fe08:: with SMTP id n8mr40819056wrr.60.1565638566277;
-        Mon, 12 Aug 2019 12:36:06 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id l3sm26874346wrb.41.2019.08.12.12.36.04
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 12:36:05 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     linux-mips@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH v2] lib/mpi: Eliminate unused umul_ppmm definitions for MIPS
-Date:   Mon, 12 Aug 2019 12:32:57 -0700
-Message-Id: <20190812193256.55103-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.23.0.rc2
+        Mon, 12 Aug 2019 15:36:15 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 5232528A113
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 08/11] media: hantro: Move copy_metadata() before doing a decode operation
+Date:   Mon, 12 Aug 2019 16:35:19 -0300
+Message-Id: <20190812193522.10911-9-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190812193522.10911-1-ezequiel@collabora.com>
+References: <20190812193522.10911-1-ezequiel@collabora.com>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang errors out when building this macro:
+From: Boris Brezillon <boris.brezillon@collabora.com>
 
-lib/mpi/generic_mpih-mul1.c:37:24: error: invalid use of a cast in a
-inline asm context requiring an l-value: remove the cast or build with
--fheinous-gnu-extensions
-                umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
-                ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-lib/mpi/longlong.h:652:20: note: expanded from macro 'umul_ppmm'
-        : "=l" ((USItype)(w0)), \
-                ~~~~~~~~~~^~~
-lib/mpi/generic_mpih-mul1.c:37:3: error: invalid output constraint '=h'
-in asm
-                umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
-                ^
-lib/mpi/longlong.h:653:7: note: expanded from macro 'umul_ppmm'
-             "=h" ((USItype)(w1)) \
-             ^
-2 errors generated.
+Some decoders use intra slice/frame references. The capture buffer
+pointed by these references might be new and thus have invalid
+timestamp which prevents the decoder logic from retrieving the
+vb2_buffer object based on the output buf timestamp.
+Copy all metadata (including the timestamp) before starting the decode
+operation.
 
-The C version that is used for GCC 4.4 and up works well with clang;
-however, it is not currently being used because Clang masks itself
-as GCC 4.2.1 for compatibility reasons. As Nick points out, we require
-GCC 4.6 and newer in the kernel so we can eliminate all of the
-versioning checks and just use the C version of umul_ppmm for all
-supported compilers.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/605
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Suggested-by: Jonas Karlman <jonas@kwiboo.se>
+Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
+Changes in v5:
+* None.
+Changes in v4:
+* None.
+---
+ drivers/staging/media/hantro/hantro_drv.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-This supersedes the following two patches:
-
-https://lore.kernel.org/lkml/20190812033120.43013-4-natechancellor@gmail.com/
-
-https://lore.kernel.org/lkml/20190812033120.43013-5-natechancellor@gmail.com/
-
-I labelled this as a v2 so those don't get applied.
-
- lib/mpi/longlong.h | 36 +-----------------------------------
- 1 file changed, 1 insertion(+), 35 deletions(-)
-
-diff --git a/lib/mpi/longlong.h b/lib/mpi/longlong.h
-index 3bb6260d8f42..2dceaca27489 100644
---- a/lib/mpi/longlong.h
-+++ b/lib/mpi/longlong.h
-@@ -639,30 +639,12 @@ do { \
- 	**************  MIPS  *****************
- 	***************************************/
- #if defined(__mips__) && W_TYPE_SIZE == 32
--#if (__GNUC__ >= 5) || (__GNUC__ >= 4 && __GNUC_MINOR__ >= 4)
- #define umul_ppmm(w1, w0, u, v)			\
- do {						\
- 	UDItype __ll = (UDItype)(u) * (v);	\
- 	w1 = __ll >> 32;			\
- 	w0 = __ll;				\
- } while (0)
--#elif __GNUC__ > 2 || __GNUC_MINOR__ >= 7
--#define umul_ppmm(w1, w0, u, v) \
--	__asm__ ("multu %2,%3" \
--	: "=l" ((USItype)(w0)), \
--	     "=h" ((USItype)(w1)) \
--	: "d" ((USItype)(u)), \
--	     "d" ((USItype)(v)))
--#else
--#define umul_ppmm(w1, w0, u, v) \
--	__asm__ ("multu %2,%3\n" \
--	   "mflo %0\n" \
--	   "mfhi %1" \
--	: "=d" ((USItype)(w0)), \
--	     "=d" ((USItype)(w1)) \
--	: "d" ((USItype)(u)), \
--	     "d" ((USItype)(v)))
--#endif
- #define UMUL_TIME 10
- #define UDIV_TIME 100
- #endif /* __mips__ */
-@@ -687,7 +669,7 @@ do {									\
- 		 : "d" ((UDItype)(u)),					\
- 		   "d" ((UDItype)(v)));					\
- } while (0)
--#elif (__GNUC__ >= 5) || (__GNUC__ >= 4 && __GNUC_MINOR__ >= 4)
-+#else
- #define umul_ppmm(w1, w0, u, v) \
- do {									\
- 	typedef unsigned int __ll_UTItype __attribute__((mode(TI)));	\
-@@ -695,22 +677,6 @@ do {									\
- 	w1 = __ll >> 64;						\
- 	w0 = __ll;							\
- } while (0)
--#elif __GNUC__ > 2 || __GNUC_MINOR__ >= 7
--#define umul_ppmm(w1, w0, u, v) \
--	__asm__ ("dmultu %2,%3" \
--	: "=l" ((UDItype)(w0)), \
--	     "=h" ((UDItype)(w1)) \
--	: "d" ((UDItype)(u)), \
--	     "d" ((UDItype)(v)))
--#else
--#define umul_ppmm(w1, w0, u, v) \
--	__asm__ ("dmultu %2,%3\n" \
--	   "mflo %0\n" \
--	   "mfhi %1" \
--	: "=d" ((UDItype)(w0)), \
--	     "=d" ((UDItype)(w1)) \
--	: "d" ((UDItype)(u)), \
--	     "d" ((UDItype)(v)))
- #endif
- #define UMUL_TIME 20
- #define UDIV_TIME 140
+diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+index 4af6ee80229e..6e2351e46750 100644
+--- a/drivers/staging/media/hantro/hantro_drv.c
++++ b/drivers/staging/media/hantro/hantro_drv.c
+@@ -111,8 +111,6 @@ static void hantro_job_finish(struct hantro_dev *vpu,
+ 	src->sequence = ctx->sequence_out++;
+ 	dst->sequence = ctx->sequence_cap++;
+ 
+-	v4l2_m2m_buf_copy_metadata(src, dst, true);
+-
+ 	ret = ctx->buf_finish(ctx, &dst->vb2_buf, bytesused);
+ 	if (ret)
+ 		result = VB2_BUF_STATE_ERROR;
+@@ -178,8 +176,12 @@ void hantro_finish_run(struct hantro_ctx *ctx)
+ static void device_run(void *priv)
+ {
+ 	struct hantro_ctx *ctx = priv;
++	struct vb2_v4l2_buffer *src, *dst;
+ 	int ret;
+ 
++	src = hantro_get_src_buf(ctx);
++	dst = hantro_get_dst_buf(ctx);
++
+ 	ret = clk_bulk_enable(ctx->dev->variant->num_clocks, ctx->dev->clocks);
+ 	if (ret)
+ 		goto err_cancel_job;
+@@ -187,6 +189,8 @@ static void device_run(void *priv)
+ 	if (ret < 0)
+ 		goto err_cancel_job;
+ 
++	v4l2_m2m_buf_copy_metadata(src, dst, true);
++
+ 	ctx->codec_ops->run(ctx);
+ 	return;
+ 
 -- 
-2.23.0.rc2
+2.22.0
 
