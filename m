@@ -2,120 +2,113 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E83C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 01:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3E8C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 01:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FB5B206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 01:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F41E32147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 01:30:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="n0LhE3Hd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfHLBT7 (ORCPT
+        id S1726768AbfHLBal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 21:19:59 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50472 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726692AbfHLBT6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 21:19:58 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7C1Gk55042787
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 21:19:57 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uatghnqxa-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 21:19:57 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Mon, 12 Aug 2019 02:19:55 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 12 Aug 2019 02:19:52 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7C1JpxE48234554
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 12 Aug 2019 01:19:51 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1B93D4203F;
-        Mon, 12 Aug 2019 01:19:51 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BF80F42045;
-        Mon, 12 Aug 2019 01:19:50 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 12 Aug 2019 01:19:50 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        Sun, 11 Aug 2019 21:30:41 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:60529 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbfHLBal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 21:30:41 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id A7973A021B;
-        Mon, 12 Aug 2019 11:19:49 +1000 (AEST)
-Subject: Re: [PATCH 1/2] powerpc: Allow flush_icache_range to work across
- ranges >4GB
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     stable@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Mon, 12 Aug 2019 11:19:49 +1000
-In-Reply-To: <a9bcc457-9f9b-7010-6796-fb263135f8bc@c-s.fr>
-References: <20190809004548.22445-1-alastair@au1.ibm.com>
-         <a9bcc457-9f9b-7010-6796-fb263135f8bc@c-s.fr>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 466JFT1j9Mz9sP7;
+        Mon, 12 Aug 2019 11:30:37 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565573438;
+        bh=ycnuaxxCviDjlprrcU6bj2KTDUtMKAFm4aMQpCZeFKc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=n0LhE3HdHO9KD6Ba7lOWaMe0hWIqzzi8cNhFNVw4m6+yo1TevrC7+qVhX4M7+imYy
+         UaNWXNPdFyhrLmhfiDxeLEKbiwA8bL8VyhCL1yAed+KCGAOAkb6ibCVqo5vD/+dzWV
+         TWD0tujyQA/SNI1+nfV6WYgOAcxMOynNxbZk5d3KALPNHR0cNTfppVrqQ6BVJseOf+
+         wE3M12lAvoY5PvK6i6qxXFTfkNICG2zudyuPBHiLVBpBWwWYNj9iZlOkploPpFP0kK
+         vGCDpDRSzNgKist/qVi3x2ahJuCU9GMP6154HTbCcm5xxgITqEupZ1lPWUERoqE+Ku
+         KSgYZPcs4TyVw==
+Date:   Mon, 12 Aug 2019 11:30:36 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     john.hubbard@gmail.com
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        Joe Perches <joe@perches.com>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <ofir.drang@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 1/1] checkpatch: revert broken NOTIFIER_HEAD check
+Message-ID: <20190812113036.7a5dd650@canb.auug.org.au>
+In-Reply-To: <20190811225443.31161-2-jhubbard@nvidia.com>
+References: <20190811225443.31161-1-jhubbard@nvidia.com>
+        <20190811225443.31161-2-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19081201-0028-0000-0000-0000038E9C09
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19081201-0029-0000-0000-00002450A655
-Message-Id: <72a3fca157a508a9f1bc6ea20801b9227d788f1d.camel@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-11_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=918 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908120012
+Content-Type: multipart/signed; boundary="Sig_/WuFc+e.ptM4HNUcVgI3bsBc";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-09 at 10:59 +0200, Christophe Leroy wrote:
-> 
-> Le 09/08/2019 à 02:45, Alastair D'Silva a écrit :
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > When calling flush_icache_range with a size >4GB, we were masking
-> > off the upper 32 bits, so we would incorrectly flush a range
-> > smaller
-> > than intended.
-> > 
-> > This patch replaces the 32 bit shifts with 64 bit ones, so that
-> > the full size is accounted for.
-> > 
-> > Heads-up for backporters: the old version of flush_dcache_range is
-> > subject to a similar bug (this has since been replaced with a C
-> > implementation).
-> 
-> Can you submit a patch to stable, explaining this ?
-> 
+--Sig_/WuFc+e.ptM4HNUcVgI3bsBc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This patch was sent to stable too - or did you mean send another patch
-for the stable asm version of flush_dcache_range?
+Hi John,
 
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+On Sun, 11 Aug 2019 15:54:43 -0700 john.hubbard@gmail.com wrote:
+>
+> From: John Hubbard <jhubbard@nvidia.com>
+>=20
+> commit 1a47005dd5aa ("checkpatch: add *_NOTIFIER_HEAD as var
+> definition") causes the following warning when run on some
+> patches:
+>=20
+> Unescaped left brace in regex is passed through in regex;
+> marked by < --HERE in m/(?:
+> ...
+>    [238 lines of appalling perl output, mercifully not included]
+> ...
+> )/ at ./scripts/checkpatch.pl line 3889.
+>=20
+> This is broken, so revert it until a better solution is found.
+>=20
+> Fixes: 1a47005dd5aa ("checkpatch: add *_NOTIFIER_HEAD as var
+> definition")
 
+Thanks for the report.
+
+I have removed that patch from linux-next today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/WuFc+e.ptM4HNUcVgI3bsBc
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1QwTwACgkQAVBC80lX
+0Gzc/QgApOFkdaFpPZwPnhNs2noiONSVhCVI7cv+EqtUSnTr2FiuYJXNi5QKZ4fI
+ggllREfOxuA9Aew2lcFPS4LALiiJLhwWdblhwfROKUBixQtr3JdS9+qBP4cP0Evk
+LdKQVY7xo+Ib+R8/ylw0L97PWvIZEhgWngKdtooZYS5m0sN5C0XgvNXHIg0YK6yH
+4s4Hgsu+uO1w/tNVFKUxpWiQuHuqDoVTxpIS/y1XghrvSk7szk93ohIC0xYZslc6
+jW7bFjCMQI78UcfUcOg/9r8mSfXsDttTnCrxx0nyn1XQg+R/si8JEcYuwkkiCymb
+ZkKAhXodanmRJuuKIeOTTEzuRct3Mw==
+=7B0q
+-----END PGP SIGNATURE-----
+
+--Sig_/WuFc+e.ptM4HNUcVgI3bsBc--
