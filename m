@@ -2,254 +2,369 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB3AC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C2AC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA2F72085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25A302085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:05:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dCzkjnfs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbfHLKCf (ORCPT
+        id S1727582AbfHLKFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:02:35 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:35571 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727447AbfHLKCf (ORCPT
+        Mon, 12 Aug 2019 06:05:50 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:53996 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727409AbfHLKFu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:02:35 -0400
-X-Originating-IP: 86.250.200.211
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 0A47560008;
-        Mon, 12 Aug 2019 10:02:31 +0000 (UTC)
-Date:   Mon, 12 Aug 2019 12:02:31 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Code Kipper <codekipper@gmail.com>,
-        Christopher Obbard <chris@64studio.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "Andrea Venturi (pers)" <be17068@iperbole.bo.it>
-Subject: Re: [linux-sunxi] Re: [PATCH v4 6/9] ASoC: sun4i-i2s: Add multi-lane
- functionality
-Message-ID: <20190812100231.wlxitekfojr4jaki@flea>
-References: <20190603174735.21002-1-codekipper@gmail.com>
- <2092329.vleAuWJ0xl@jernej-laptop>
- <20190731122953.2u3iabd6gkn7jv7k@flea>
- <1589203.0AjJVEASy3@jernej-laptop>
- <CAGb2v66D4-QvWYPXE=rf6Zv93X1LjnxUgpk+5wdAL_b7MM3vaA@mail.gmail.com>
+        Mon, 12 Aug 2019 06:05:50 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7CA5inM117333;
+        Mon, 12 Aug 2019 05:05:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565604344;
+        bh=2squYM050JBpZFBL7wu2/TiVqNRBbePM/Vxhi0sruKY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=dCzkjnfsNb9WFqvjmKkh7Bm+8Q+/VSmHnRbPAN1JBtSh40qAG+6SzhxhxR0axNVBC
+         v3o02LJLeFYW7JlepFQ8KRvyimrCHNHLGXf1kj95amfCuCyy0x3ipAozM2pzzakk/S
+         mGeNKJOzfLotwzvV1EaqUlHE6vyr3ACW/ibFU/F0=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7CA5i66122540
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 12 Aug 2019 05:05:44 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 12
+ Aug 2019 05:05:43 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 12 Aug 2019 05:05:43 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7CA5e8I029957;
+        Mon, 12 Aug 2019 05:05:41 -0500
+Subject: Re: [PATCH v10 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
+To:     Pawel Laszczak <pawell@cadence.com>,
+        "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jbergsagel@ti.com" <jbergsagel@ti.com>,
+        "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>,
+        Suresh Punnoose <sureshp@cadence.com>,
+        Jayshri Dajiram Pawar <jpawar@cadence.com>,
+        Rahul Kumar <kurahul@cadence.com>,
+        Anil Joy Varughese <aniljoy@cadence.com>,
+        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>
+References: <1563733939-21214-1-git-send-email-pawell@cadence.com>
+ <1563733939-21214-6-git-send-email-pawell@cadence.com>
+ <88742d5b-ee10-cf4e-6724-58e7bdd19cb9@ti.com>
+ <BYAPR07MB47090BCA728600F0C2F4E129DDD00@BYAPR07MB4709.namprd07.prod.outlook.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <c5c52dae-21c8-340a-cbca-5f269dabb890@ti.com>
+Date:   Mon, 12 Aug 2019 13:05:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4tzqsccmfdz6gxrw"
-Content-Disposition: inline
-In-Reply-To: <CAGb2v66D4-QvWYPXE=rf6Zv93X1LjnxUgpk+5wdAL_b7MM3vaA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <BYAPR07MB47090BCA728600F0C2F4E129DDD00@BYAPR07MB4709.namprd07.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---4tzqsccmfdz6gxrw
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 06, 2019 at 02:22:13PM +0800, Chen-Yu Tsai wrote:
-> On Thu, Aug 1, 2019 at 1:32 PM Jernej =C5=A0krabec <jernej.skrabec@gmail.=
-com> wrote:
-> >
-> > Dne sreda, 31. julij 2019 ob 14:29:53 CEST je Maxime Ripard napisal(a):
-> > > On Tue, Jul 30, 2019 at 07:57:10PM +0200, Jernej =C5=A0krabec wrote:
-> > > > Dne torek, 04. junij 2019 ob 11:38:44 CEST je Code Kipper napisal(a=
-):
-> > > > > On Tue, 4 Jun 2019 at 11:02, Christopher Obbard <chris@64studio.c=
-om>
-> > wrote:
-> > > > > > On Tue, 4 Jun 2019 at 09:43, Code Kipper <codekipper@gmail.com>=
- wrote:
-> > > > > > > On Tue, 4 Jun 2019 at 09:58, Maxime Ripard
-> > > > > > > <maxime.ripard@bootlin.com>
-> > > >
-> > > > wrote:
-> > > > > > > > On Mon, Jun 03, 2019 at 07:47:32PM +0200, codekipper@gmail.=
-com
-> > wrote:
-> > > > > > > > > From: Marcus Cooper <codekipper@gmail.com>
-> > > > > > > > >
-> > > > > > > > > The i2s block supports multi-lane i2s output however this
-> > > > > > > > > functionality
-> > > > > > > > > is only possible in earlier SoCs where the pins are expos=
-ed and
-> > > > > > > > > for
-> > > > > > > > > the i2s block used for HDMI audio on the later SoCs.
-> > > > > > > > >
-> > > > > > > > > To enable this functionality, an optional property has be=
-en
-> > > > > > > > > added to
-> > > > > > > > > the bindings.
-> > > > > > > > >
-> > > > > > > > > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> > > > > > > >
-> > > > > > > > I'd like to have Mark's input on this, but I'm really worri=
-ed
-> > > > > > > > about
-> > > > > > > > the interaction with the proper TDM support.
-> > > > > > > >
-> > > > > > > > Our fundamental issue is that the controller can have up to=
- 8
-> > > > > > > > channels, but either on 4 lines (instead of 1), or 8 channe=
-ls on 1
-> > > > > > > > (like proper TDM) (or any combination between the two, but =
-that
-> > > > > > > > should
-> > > > > > > > be pretty rare).
-> > > > > > >
-> > > > > > > I understand...maybe the TDM needs to be extended to support =
-this to
-> > > > > > > consider channel mapping and multiple transfer lines. I was t=
-hinking
-> > > > > > > about the later when someone was requesting support on IIRC a=
- while
-> > > > > > > ago, I thought masking might of been a solution. These can wa=
-it as
-> > > > > > > the
-> > > > > > > only consumer at the moment is LibreELEC and we can patch it =
-there.
-> > > > > >
-> > > > > > Hi Marcus,
-> > > > > >
-> > > > > > FWIW, the TI McASP driver has support for TDM & (i think?) mult=
-iple
-> > > > > > transfer lines which are called serializers.
-> > > > > > Maybe this can help with inspiration?
-> > > > > > see
-> > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.=
-git/tre
-> > > > > > e/s
-> > > > > > ound/soc/ti/davinci-mcasp.c sample DTS:
-> > > > > >
-> > > > > > &mcasp0 {
-> > > > > >
-> > > > > >     #sound-dai-cells =3D <0>;
-> > > > > >     status =3D "okay";
-> > > > > >     pinctrl-names =3D "default";
-> > > > > >     pinctrl-0 =3D <&mcasp0_pins>;
-> > > > > >
-> > > > > >     op-mode =3D <0>;
-> > > > > >     tdm-slots =3D <8>;
-> > > > > >     serial-dir =3D <
-> > > > > >
-> > > > > >         2 0 1 0
-> > > > > >         0 0 0 0
-> > > > > >         0 0 0 0
-> > > > > >         0 0 0 0
-> > > > > >     >
-> > > > > >     >;
-> > > > > >
-> > > > > >     tx-num-evt =3D <1>;
-> > > > > >     rx-num-evt =3D <1>;
-> > > > > >
-> > > > > > };
-> > > > > >
-> > > > > > Cheers!
-> > > > >
-> > > > > Thanks, this looks good.
-> > > >
-> > > > I would really like to see this issue resolved, because HDMI audio =
-support
-> > > > in mainline Linux for those SoCs is long overdue.
-> > > >
-> > > > However, there is a possibility to still add HDMI audio suport (ste=
-reo
-> > > > only) even if this issue is not completely solved. If we agree that
-> > > > configuration of channels would be solved with additional property =
-as
-> > > > Christopher suggested, support for >2 channels can be left for a la=
-ter
-> > > > time when support for that property would be implemented. Currently,
-> > > > stereo HDMI audio support can be added with a few patches.
-> > > >
-> > > > I think all I2S cores are really the same, no matter if internally
-> > > > connected to HDMI controller or routed to pins, so it would make se=
-nse to
-> > > > use same compatible for all of them. It's just that those I2S cores=
- which
-> > > > are routed to pins can use only one lane and >2 channels can be use=
-d only
-> > > > in TDM mode of operation, if I understand this correctly.
-> > > >
-> > > > New property would have to be optional, so it's omission would resu=
-lt in
-> > > > same channel configuration as it is already present, to preserve
-> > > > compatibility with old device trees. And this mode is already suffi=
-cient
-> > > > for stereo HDMI audio support.
-> > >
-> > > Yeah, it looks like a good plan.
-> > >
-> > > > Side note: HDMI audio with current sun4i-i2s driver has a delay (ab=
-out a
-> > > > second), supposedly because DW HDMI controller automatically genera=
-tes CTS
-> > > > value based on I2S clock (auto CTS value generation is enabled per
-> > > > DesignWare recomendation for DW HDMI I2S interface).
-> > >
-> > > Is that a constant delay during the audio playback, or only at startu=
-p?
-> >
-> > I think it's just at startup, e.g. if you're watching movie, audio is i=
-n sync,
-> > it's just that first second or so is silent.
-> >
-> > >
-> > > > I2S driver from BSP Linux solves that by having I2S clock output
-> > > > enabled all the time. Should this be flagged with some additional
-> > > > property in DT?
-> > >
-> > > I'd say that if the codec has that requirement, then it should be
-> > > between the codec and the DAI, the DT doesn't really have anything to
-> > > do with this.
-> >
-> > Ok, but how to communicate that fact to I2S driver then? BSP driver sol=
-ves
-> > that by using different compatible, but as I said before, I2S cores are=
- not
-> > really different, so this seems wrong.
->
-> Maybe we could make the DW-HDMI I2S driver require the I2S clock be on all
-> the time? You wouldn't need any changes to the DT.
+On 11/08/2019 14:59, Pawel Laszczak wrote:
+> Hi,
+> 
+>>
+>> On 21/07/2019 21:32, Pawel Laszczak wrote:
+>>> This patch introduce new Cadence USBSS DRD driver to Linux kernel.
+>>>
+>>> The Cadence USBSS DRD Controller is a highly configurable IP Core which
+>>> can be instantiated as Dual-Role Device (DRD), Peripheral Only and
+>>> Host Only (XHCI)configurations.
+>>>
+>>> The current driver has been validated with FPGA platform. We have
+>>> support for PCIe bus, which is used on FPGA prototyping.
+>>>
+>>> The host side of USBSS-DRD controller is compliant with XHCI
+>>> specification, so it works with standard XHCI Linux driver.
+>>>
+>>> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+>>> ---
+>>>  drivers/usb/Kconfig                |    2 +
+>>>  drivers/usb/Makefile               |    2 +
+>>>  drivers/usb/cdns3/Kconfig          |   46 +
+>>>  drivers/usb/cdns3/Makefile         |   17 +
+>>>  drivers/usb/cdns3/cdns3-pci-wrap.c |  203 +++
+>>>  drivers/usb/cdns3/core.c           |  554 +++++++
+>>>  drivers/usb/cdns3/core.h           |  109 ++
+>>>  drivers/usb/cdns3/debug.h          |  171 ++
+>>>  drivers/usb/cdns3/debugfs.c        |   87 ++
+>>>  drivers/usb/cdns3/drd.c            |  390 +++++
+>>>  drivers/usb/cdns3/drd.h            |  166 ++
+>>>  drivers/usb/cdns3/ep0.c            |  914 +++++++++++
+>>>  drivers/usb/cdns3/gadget-export.h  |   28 +
+>>>  drivers/usb/cdns3/gadget.c         | 2338 ++++++++++++++++++++++++++++
+>>>  drivers/usb/cdns3/gadget.h         | 1321 ++++++++++++++++
+>>>  drivers/usb/cdns3/host-export.h    |   28 +
+>>>  drivers/usb/cdns3/host.c           |   71 +
+>>>  drivers/usb/cdns3/trace.c          |   11 +
+>>>  drivers/usb/cdns3/trace.h          |  493 ++++++
+>>>  19 files changed, 6951 insertions(+)
+>>>  create mode 100644 drivers/usb/cdns3/Kconfig
+>>>  create mode 100644 drivers/usb/cdns3/Makefile
+>>>  create mode 100644 drivers/usb/cdns3/cdns3-pci-wrap.c
+>>>  create mode 100644 drivers/usb/cdns3/core.c
+>>>  create mode 100644 drivers/usb/cdns3/core.h
+>>>  create mode 100644 drivers/usb/cdns3/debug.h
+>>>  create mode 100644 drivers/usb/cdns3/debugfs.c
+>>>  create mode 100644 drivers/usb/cdns3/drd.c
+>>>  create mode 100644 drivers/usb/cdns3/drd.h
+>>>  create mode 100644 drivers/usb/cdns3/ep0.c
+>>>  create mode 100644 drivers/usb/cdns3/gadget-export.h
+>>>  create mode 100644 drivers/usb/cdns3/gadget.c
+>>>  create mode 100644 drivers/usb/cdns3/gadget.h
+>>>  create mode 100644 drivers/usb/cdns3/host-export.h
+>>>  create mode 100644 drivers/usb/cdns3/host.c
+>>>  create mode 100644 drivers/usb/cdns3/trace.c
+>>>  create mode 100644 drivers/usb/cdns3/trace.h
+>>>
 
-That's an option, but I'd really like to avoid it if possible.
+<snip>
 
-I guess we could also just add a delay in the powerup path in the HDMI
-case? Would it work?
+>>
+>>> diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
+>>> new file mode 100644
+>>> index 000000000000..291f08be56fe
+>>> --- /dev/null
+>>> +++ b/drivers/usb/cdns3/gadget.c
+>>> @@ -0,0 +1,2338 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +/*
+>>> + * Cadence USBSS DRD Driver - gadget side.
+>>> + *
+>>> + * Copyright (C) 2018-2019 Cadence Design Systems.
+>>> + * Copyright (C) 2017-2018 NXP
+>>> + *
+>>> + * Authors: Pawel Jez <pjez@cadence.com>,
+>>> + *          Pawel Laszczak <pawell@cadence.com>
+>>> + *          Peter Chen <peter.chen@nxp.com>
+>>> + */
+>>> +
+>>
+>> <snip>
+>>
+>>> +/**
+>>> + * cdns3_device_irq_handler- interrupt handler for device part of controller
+>>> + *
+>>> + * @irq: irq number for cdns3 core device
+>>> + * @data: structure of cdns3
+>>> + *
+>>> + * Returns IRQ_HANDLED or IRQ_NONE
+>>> + */
+>>> +static irqreturn_t cdns3_device_irq_handler(int irq, void *data)
+>>> +{
+>>> +	struct cdns3_device *priv_dev;
+>>> +	struct cdns3 *cdns = data;
+>>> +	irqreturn_t ret = IRQ_NONE;
+>>> +	unsigned long flags;
+>>> +	u32 reg;
+>>> +
+>>> +	priv_dev = cdns->gadget_dev;
+>>> +	spin_lock_irqsave(&priv_dev->lock, flags);
+>>> +
+>>> +	/* check USB device interrupt */
+>>> +	reg = readl(&priv_dev->regs->usb_ists);
+>>> +
+>>> +	if (reg) {
+>>> +		writel(reg, &priv_dev->regs->usb_ists);
+>>
+>> Do we need to mask device interrupts till thread handler has done processing
+>> current set of events?
+> 
+> Yes, we need do this to avoid raising the next the same interrupts. 
+> If we return back from hard irq handler without clearing reported interrupts,
+> then system report them again. The solution for this is to use IRQF_ONESHOT
+> flag during registering interrupt, but I can't use this flag 
+> because I have shared interrupt line with other component. 
+> 
+> In this version these (usb_ists) interrupts are handled in hard irq, but in next version
+> will be moved to thread handler. 
+> 
+>>> +		cdns3_check_usb_interrupt_proceed(priv_dev, reg);
+>>> +		ret = IRQ_HANDLED;
+>>> +	}
+>>> +
+>>> +	/* check endpoint interrupt */
+>>> +	reg = readl(&priv_dev->regs->ep_ists);
+>>> +
+>>> +	if (reg) {
+>>> +		priv_dev->shadow_ep_en |= reg;
+>>> +		reg = ~reg & readl(&priv_dev->regs->ep_ien);
+>>> +		/* mask deferred interrupt. */
+>>> +		writel(reg, &priv_dev->regs->ep_ien);
+>>> +		ret = IRQ_WAKE_THREAD;
+>>> +	}
+>>> +
+>>> +	spin_unlock_irqrestore(&priv_dev->lock, flags);
+>>> +	return ret;
+>>> +}
+>>> +
+>>
+>> <snip>
+>>
+>>> +
+>>> +static int cdns3_gadget_start(struct cdns3 *cdns)
+>>> +{
+>>> +	struct cdns3_device *priv_dev;
+>>> +	u32 max_speed;
+>>> +	int ret;
+>>> +
+>>> +	priv_dev = kzalloc(sizeof(*priv_dev), GFP_KERNEL);
+>>> +	if (!priv_dev)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	cdns->gadget_dev = priv_dev;
+>>> +	priv_dev->sysdev = cdns->dev;
+>>> +	priv_dev->dev = cdns->dev;
+>>> +	priv_dev->regs = cdns->dev_regs;
+>>> +
+>>> +	device_property_read_u16(priv_dev->dev, "cdns,on-chip-buff-size",
+>>> +				 &priv_dev->onchip_buffers);
+>>> +
+>>> +	if (priv_dev->onchip_buffers <=  0) {
+>>> +		u32 reg = readl(&priv_dev->regs->usb_cap2);
+>>> +
+>>> +		priv_dev->onchip_buffers = USB_CAP2_ACTUAL_MEM_SIZE(reg);
+>>> +	}
+>>> +
+>>> +	if (!priv_dev->onchip_buffers)
+>>> +		priv_dev->onchip_buffers = 256;
+>>> +
+>>> +	max_speed = usb_get_maximum_speed(cdns->dev);
+>>> +
+>>> +	/* Check the maximum_speed parameter */
+>>> +	switch (max_speed) {
+>>> +	case USB_SPEED_FULL:
+>>
+>> In this case we need to limit controller max speed to full-speed as system
+>> integrator would expect that. e.g. in DT node, maximum-speed = "full-speed";
+>>
+>> I suppose we need to set the force Full-speed bit here?
+>>
+>>> +	case USB_SPEED_HIGH:
+>>
+>> Here we need to restrict device controller max-speed to high-speed.
+>>
+> 
+> Why system integrator would limit the speed of controller? 
 
-maxime
+To save cost? For many use cases, high-speed is more then sufficient.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> For debugging purpose it's  ok, but in production system it's better 
+> to use higher speed.
+> Do we relay need such functionality ?
 
---4tzqsccmfdz6gxrw
-Content-Type: application/pgp-signature; name="signature.asc"
+Mostly for testing purpose. I can just change the DT node's speed property
+to the lower speed to limit the controller to that speed.
 
------BEGIN PGP SIGNATURE-----
+If we can achieve that with a few lines of code, why not support it?
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVE5NwAKCRDj7w1vZxhR
-xaLkAP9Dau8CFZaqjfYlG8eEMwwmDGnmJ3Qb+OfrtRI9IxfL8AEA9pf3QqqQHWty
-49bPYoHYZSaMSKd3MPMDdPL5aONO1Q8=
-=l/Kl
------END PGP SIGNATURE-----
+> 
+>>> +	case USB_SPEED_SUPER:
+>>> +		break;
+>>> +	default:
+>>> +		dev_err(cdns->dev, "invalid maximum_speed parameter %d\n",
+>>> +			max_speed);
+>>> +		/* fall through */
+>>> +	case USB_SPEED_UNKNOWN:
+>>> +		/* default to superspeed */
+>>> +		max_speed = USB_SPEED_SUPER;
+>>> +		break;
+>>> +	}
+>>> +
+>>> +	/* fill gadget fields */
+>>> +	priv_dev->gadget.max_speed = max_speed;
+>>> +	priv_dev->gadget.speed = USB_SPEED_UNKNOWN;
+>>> +	priv_dev->gadget.ops = &cdns3_gadget_ops;
+>>> +	priv_dev->gadget.name = "usb-ss-gadget";
+>>> +	priv_dev->gadget.sg_supported = 1;
+>>> +
+>>> +	spin_lock_init(&priv_dev->lock);
+>>> +	INIT_WORK(&priv_dev->pending_status_wq,
+>>> +		  cdns3_pending_setup_status_handler);
+>>> +
+>>> +	/* initialize endpoint container */
+>>> +	INIT_LIST_HEAD(&priv_dev->gadget.ep_list);
+>>> +	INIT_LIST_HEAD(&priv_dev->aligned_buf_list);
+>>> +
+>>> +	ret = cdns3_init_eps(priv_dev);
+>>> +	if (ret) {
+>>> +		dev_err(priv_dev->dev, "Failed to create endpoints\n");
+>>> +		goto err1;
+>>> +	}
+>>> +
+>>> +	/* allocate memory for setup packet buffer */
+>>> +	priv_dev->setup_buf = dma_alloc_coherent(priv_dev->sysdev, 8,
+>>> +						 &priv_dev->setup_dma, GFP_DMA);
+>>> +	if (!priv_dev->setup_buf) {
+>>> +		ret = -ENOMEM;
+>>> +		goto err2;
+>>> +	}
+>>> +
+>>> +	priv_dev->dev_ver = readl(&priv_dev->regs->usb_cap6);
+>>> +
+>>> +	dev_dbg(priv_dev->dev, "Device Controller version: %08x\n",
+>>> +		readl(&priv_dev->regs->usb_cap6));
+>>> +	dev_dbg(priv_dev->dev, "USB Capabilities:: %08x\n",
+>>> +		readl(&priv_dev->regs->usb_cap1));
+>>> +	dev_dbg(priv_dev->dev, "On-Chip memory cnfiguration: %08x\n",
+>>> +		readl(&priv_dev->regs->usb_cap2));
+>>> +
+>>> +	priv_dev->dev_ver = GET_DEV_BASE_VERSION(priv_dev->dev_ver);
+>>> +
+>>> +	priv_dev->zlp_buf = kzalloc(CDNS3_EP_ZLP_BUF_SIZE, GFP_KERNEL);
+>>> +	if (!priv_dev->zlp_buf) {
+>>> +		ret = -ENOMEM;
+>>> +		goto err3;
+>>> +	}
+>>> +
+>>> +	/* add USB gadget device */
+>>> +	ret = usb_add_gadget_udc(priv_dev->dev, &priv_dev->gadget);
+>>> +	if (ret < 0) {
+>>> +		dev_err(priv_dev->dev,
+>>> +			"Failed to register USB device controller\n");
+>>> +		goto err4;
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +err4:
+>>> +	kfree(priv_dev->zlp_buf);
+>>> +err3:
+>>> +	dma_free_coherent(priv_dev->sysdev, 8, priv_dev->setup_buf,
+>>> +			  priv_dev->setup_dma);
+>>> +err2:
+>>> +	cdns3_free_all_eps(priv_dev);
+>>> +err1:
+>>> +	cdns->gadget_dev = NULL;
+>>> +	return ret;
+>>> +}
+>>> +
+>>
 
---4tzqsccmfdz6gxrw--
+cheers,
+-roger
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
