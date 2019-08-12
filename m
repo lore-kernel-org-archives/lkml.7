@@ -2,151 +2,135 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4769C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 04:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6CAC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 04:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E69620880
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 04:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F9572085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 04:48:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="nLca5kN2"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mAOmiz5d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfHLEr2 (ORCPT
+        id S1726867AbfHLEsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 00:47:28 -0400
-Received: from mail-eopbgr810104.outbound.protection.outlook.com ([40.107.81.104]:55664
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725648AbfHLEr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 00:47:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HrrTlkE7rTj3zYnkjq75e3YpckSA1AhZ/ds3qFOvwf2Jw3jtsq3eRru7+rv0b4nTLe/CsaKKl2f05PQEaMyQosYnX2dhdcnmpMxAc6uKPGpifE1z/bbsUGgBSR95Z0oog1s7lRwyOO9XtQxLZn7xcDt4syfPk9isYxhMT87WKGNG+Dtc09eFN7ZC5smv74PY1HQGCd91Dt4ewQAg57HuZ91lL6k7s1po4nwCfABQwXVkf5DxKL1gvDm+mmCJau6Q2Ho7rI8sCLbFRzpiYuotNgRcSJGeSKeipAalsyVOguXA3ysjXUybg4b1e8E9uTvpYLA7dquvrvvlI46viqXOdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d2tPNjdEncHAYwHdvixqOdjOvU5ihiHWJvn2SpzvDzE=;
- b=ZWdR5x2/ZQRXQm5aMjeh50v11W+bldMXw76TM2zC59308I4Jy8UgjpaoAk5ytXySf+LnAxgccl5OaH7plTOsXpk91CNgUamaGb0pB+yNUIO+Sq4Ni1/dsgZvHNuC+JivUVn9LFrQnXowLkSONmSTt5XoApHPWtMAiMscu0zEE3l9L57/SkBduviLKhDL+nT5/yc3S10U1fZo+A1nQjHjR4dCUFgtV79ec7AQRtQ55+O467S9yfYeus7/5xKFiEb/XwesY4R+MBz8ZhMpfsGc8pnFZB4XvFFSgBVAfbt2Uao/3I8ap03Q4ONfNpPapheJFUFr1yFDIYpCMDtl/WDmXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
- dkim=pass header.d=mips.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d2tPNjdEncHAYwHdvixqOdjOvU5ihiHWJvn2SpzvDzE=;
- b=nLca5kN2NCwH5LbuNLr6Czet4mPn5jbcmt2wgVszgaThU3G7sL4t+zoVE46pFEqGnegxEciw3e+MlGMs/Fl8JJrOxsynVJF+1zucn/OKeD/nvBSax8y/N0zw3rLXziKALifc+l/iplQhydWNyo1soniGedF4fNNor0zyQVoBcxc=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1469.namprd22.prod.outlook.com (10.174.170.142) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.22; Mon, 12 Aug 2019 04:47:24 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f566:bf1f:dcd:862c]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f566:bf1f:dcd:862c%10]) with mapi id 15.20.2157.022; Mon, 12 Aug 2019
- 04:47:24 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <pburton@wavecomp.com>,
-        James Hogan <jhogan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH 5/5] MIPS: tlbex: Explicitly cast _PAGE_NO_EXEC to a
- boolean
-Thread-Topic: [PATCH 5/5] MIPS: tlbex: Explicitly cast _PAGE_NO_EXEC to a
- boolean
-Thread-Index: AQHVUMkILvVfiv8aFEiOoDD3+vloLA==
-Date:   Mon, 12 Aug 2019 04:47:24 +0000
-Message-ID: <MWHPR2201MB1277133CC3B57F621F359C42C1D30@MWHPR2201MB1277.namprd22.prod.outlook.com>
-References: <20190812033120.43013-6-natechancellor@gmail.com>
-In-Reply-To: <20190812033120.43013-6-natechancellor@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR06CA0003.namprd06.prod.outlook.com
- (2603:10b6:a03:d4::16) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2601:646:8a00:9810:9d6:9cca:ff8c:efe0]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0cc0387d-80c0-410f-20d4-08d71ee02b3a
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR2201MB1469;
-x-ms-traffictypediagnostic: MWHPR2201MB1469:
-x-ms-exchange-purlcount: 2
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR2201MB14691DE2D27F520CA1D11C06C1D30@MWHPR2201MB1469.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 012792EC17
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(346002)(366004)(39830400003)(396003)(189003)(199004)(6306002)(81156014)(81166006)(8676002)(14454004)(9686003)(99286004)(446003)(7736002)(11346002)(42882007)(486006)(966005)(2906002)(476003)(25786009)(478600001)(8936002)(54906003)(229853002)(55016002)(6916009)(6436002)(1411001)(102836004)(52116002)(316002)(76176011)(71190400001)(71200400001)(66946007)(7696005)(64756008)(66556008)(66446008)(386003)(6506007)(186003)(66476007)(74316002)(256004)(14444005)(6246003)(46003)(33656002)(5660300002)(52536014)(44832011)(6116002)(4326008)(305945005)(53936002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1469;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rGjKCaWyb+XE8EnP03e6E6ZYq1IpdEQuBuScYz74iU0RVM63bMMiBV7zLRyad/X338GSWnO5eiBQOFjtsznAmzcFADJbU+sCymIeEB5GGpiieNf+AJiZuNrPWfuP6f3Z+4wdJjoUrLuo5H/eRlb43k+bGaIVrEJCp8zO30jUgDk7Xeoudr9A7nz6OAjImiWKwTrupy2fm+kx7QiwZLe3RVs8kuDLF28eVOZG6PRMtkdGFLHCHVzOJZvu/T8j4vAUT3B4QyFcmZF3bX9bNfti8cBsnVEbC9e+n723hqX3qVBLxfJcu/IbxWtgvwjy7vNU6OGut43JEBngifLfWTOJzmTQDO40AKwCzd+jmT2N0S2DlVj9H0yM8iPNnF9rt8jOobTVkpiN4/3gEmMSA/WsKbK3KttHAAAQk17r/uS+f5c=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 12 Aug 2019 00:48:17 -0400
+Received: from ozlabs.org ([203.11.71.1]:48991 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725822AbfHLEsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 00:48:17 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 466NdV0vqVz9s7T;
+        Mon, 12 Aug 2019 14:48:14 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565585294;
+        bh=HSOlcymwrlIqoGwbQQiD+KG+WFcvDmC2mHXslXoPuGw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mAOmiz5dz5xANXUb/OfMOwau2aSHrqdKb1R20PmaZPqk7xS648phZSn2mu5cYb8Id
+         ZwPsOfBc60wuPZ6aVv0MQ2QaWumxvjmvRJ5fJyvAIjM0dVnzOliq/VyqG4Yo9cz4/T
+         KyU9d9n6X4BtOVOZquedTBlBSalpOnXoBPYRazIsoOoH6Q7juKYQiIGB13/ESmJrwi
+         3+ZVunR24E+I6kCrFSVZcksn0RK5KTueIRfxiqWMkebcPgqCeP/rI5hceMGwTIqb+v
+         VlraehMVsBpvZUsvCfca2676mOhRMXhGA9xvS97+9+xlPuzcldL9J7+TuV+euGHxZD
+         EOyh/+NAzhl+g==
+Date:   Mon, 12 Aug 2019 14:48:13 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     James Morris <jmorris@namei.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: linux-next: manual merge of the security tree with Linus' tree
+Message-ID: <20190812144813.761d9f34@canb.auug.org.au>
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0cc0387d-80c0-410f-20d4-08d71ee02b3a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 04:47:24.4651
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LASis2d6pZ8iQYJQmDmQ2G2tR6Flt/niO5CnB5Oz4codh/I0TnLU2vwAvQBQwfm3Q4MMk3zrfaw/aYf2fBv6Cw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1469
+Content-Type: multipart/signed; boundary="Sig_/./9uIixY.vMTpZAEqlsm+Eh";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+--Sig_/./9uIixY.vMTpZAEqlsm+Eh
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Nathan Chancellor wrote:
-> clang warns:
->=20
-> arch/mips/mm/tlbex.c:634:19: error: use of logical '&&' with constant
-> operand [-Werror,-Wconstant-logical-operand]
->         if (cpu_has_rixi && _PAGE_NO_EXEC) {
->                          ^  ~~~~~~~~~~~~~
-> arch/mips/mm/tlbex.c:634:19: note: use '&' for a bitwise operation
->         if (cpu_has_rixi && _PAGE_NO_EXEC) {
->                          ^~
->                          &
-> arch/mips/mm/tlbex.c:634:19: note: remove constant to silence this
-> warning
->         if (cpu_has_rixi && _PAGE_NO_EXEC) {
->                         ~^~~~~~~~~~~~~~~~
-> 1 error generated.
->=20
-> Explicitly cast this value to a boolean so that clang understands we
-> intend for this to be a non-zero value.
->=20
-> Fixes: 00bf1c691d08 ("MIPS: tlbex: Avoid placing software PTE bits in Ent=
-ry* PFN fields")
+Hi all,
 
-Applied to mips-next.
+Today's linux-next merge of the security tree got a conflict in:
 
-> commit c59ae0a10551
-> https://git.kernel.org/mips/c/c59ae0a10551
->=20
-> Fixes: 00bf1c691d08 ("MIPS: tlbex: Avoid placing software PTE bits in Ent=
-ry* PFN fields")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/609
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> Signed-off-by: Paul Burton <paul.burton@mips.com>
+  kernel/trace/trace_kprobe.c
 
-Thanks,
-    Paul
+between commit:
 
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paul.burton@mips.com to report it. ]
+  715fa2fd4c6c ("tracing/kprobe: Check registered state using kprobe")
+
+from Linus' tree and commit:
+
+  e87402c063fd ("lockdown: Lock down tracing and perf kprobes when in confi=
+dentiality mode")
+
+from the security tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc kernel/trace/trace_kprobe.c
+index 9d483ad9bb6c,fcb28b0702b2..000000000000
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@@ -11,9 -11,8 +11,10 @@@
+  #include <linux/uaccess.h>
+  #include <linux/rculist.h>
+  #include <linux/error-injection.h>
++ #include <linux/security.h>
+ =20
+ +#include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+ +
+  #include "trace_dynevent.h"
+  #include "trace_kprobe_selftest.h"
+  #include "trace_probe.h"
+@@@ -389,7 -416,11 +390,11 @@@ static int __register_trace_kprobe(stru
+  {
+  	int i, ret;
+ =20
++ 	ret =3D security_locked_down(LOCKDOWN_KPROBES);
++ 	if (ret)
++ 		return ret;
++=20
+ -	if (trace_probe_is_registered(&tk->tp))
+ +	if (trace_kprobe_is_registered(tk))
+  		return -EINVAL;
+ =20
+  	if (within_notrace_func(tk)) {
+
+--Sig_/./9uIixY.vMTpZAEqlsm+Eh
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1Q740ACgkQAVBC80lX
+0GyHBwf/V9GLIaMp9lh4GnJhB3r0HGoERANx8/VjZIaQxdDVnim1Ii+ay65pU5FT
+5U3MoWH95hHmQecBZKmOTpQ+mKXVfIv/8sM7LlO9ly+QaSthjHgzv9dacEQNHXsE
+YuzBnUCSBv2i/p+ES7XWM3BuZVK1IBbu6JgLnut6OdNUQWOLSweXwN0ysf9c39cz
+vxNQVsWEgziTgXIenFv4TTz0VNszoKcpjxZCiHVv9sIKauGlvFRC92+74axnrfxW
+HYS4jBshT2AzTBgk7AJ7486BndD0Jbiu23KNTsahhD+V8+zlHnUtnhKrm8iFhFjZ
+5uQtbgi7JfcfIR92UWMasGF+Lps8vQ==
+=a9uj
+-----END PGP SIGNATURE-----
+
+--Sig_/./9uIixY.vMTpZAEqlsm+Eh--
