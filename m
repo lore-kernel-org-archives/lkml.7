@@ -2,83 +2,475 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFD8C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B121C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB162054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:46:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565649996;
-	bh=hLHV9fVasK4l+S4cL82UdIjZ+ye00hR11YOmWfhylXo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c22Movv7O6/3N4jgdI40b/9hdVwGF3kpdGH4l/WYPN2aNompdJG80mPhPKWerH3RJ
-	 OMuZ/auT0AJOiZl3pXuHtHSBJhFHQaNJCcbkXe2vbOOtDFTD0jycT/YnGNXRr+LQaS
-	 qwd/mLfbvTKfvvTteBbjzM/wq260FGPVBZY7QkzI=
+	by mail.kernel.org (Postfix) with ESMTP id D4A3120665
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:49:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CCh5Q4PA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbfHLWqf (ORCPT
+        id S1727111AbfHLWtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 18:46:35 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37184 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbfHLWqe (ORCPT
+        Mon, 12 Aug 2019 18:49:31 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33122 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726568AbfHLWtb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 18:46:34 -0400
-Received: by mail-ot1-f65.google.com with SMTP id f17so29896720otq.4;
-        Mon, 12 Aug 2019 15:46:34 -0700 (PDT)
+        Mon, 12 Aug 2019 18:49:31 -0400
+Received: by mail-pl1-f196.google.com with SMTP id c14so48346647plo.0;
+        Mon, 12 Aug 2019 15:49:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xU+/Sl6Leeeh21cBv1Xx2kaEUhC7IwLWQcmuWzbub+A=;
+        b=CCh5Q4PAbgeUWcXDZu7VkvHSTw6G4bzT3PfaRjtxtIigFvi4E76A7EoRBvHQirPtWN
+         i/HWSKNdwDWHDJAu5d2c+bbY/iqypN+a0KUoi6PLwDIbpEwR9BO488TKhj3WwjpWzvmQ
+         CwzkKP06SQAa9G0w+XQbn5iVT9Ofddt5YPtpxzZI7oWXEg7AFgpxHbZkP7SZaVKCUo3U
+         AczPgW9f5bgnR0mXveT6/o73EJC8ntX4940yh0iLseRgoxQpDgkxTQDaFhl/y9RvniBf
+         I6dIZGH6PxLvCAgzrjrjqkFpbAxpvZTdvA3D6VPN0At4qQWlnBtSGjQdUG5sEAu3zAL8
+         6Q0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KS0Ggk8/WnDOHf4y0WafUwtXAfrRj3bnVPQpHZODwE4=;
-        b=QHoSayy4NpFioKOE8MZpp4eC2XYT0sDp52QUEDqsXkgBmQI8IGKxGRmJcTMxIrPg40
-         tTQne/6wy033BsKgNqU6nQELNsl8wmmlc58EmOi2TpdiSu6HQOQylPR6MO7WceBIfJvB
-         EwMS93uxLJgwbwpE0NvOT3F9jbsvrCrAd0y+zdIEYaFd2GtUnckyu18vuOM5bNPo2vZV
-         LOsMqp3rHKXiUMaX5zTKnfHbACrSIfMVIW/EqozIYw1fNfjVpWohf5Gu+CNaSt39R/VG
-         TfTzRSYUTSUm0mfj+12y1B1isvkfiPUbpTEcUCkZhtRJWrfugTqs2UpgvRyvWRndkwTq
-         Rarg==
-X-Gm-Message-State: APjAAAVp0K8nHtdaNetJ82CeWm6/Ytd9GcJe35dPWjaYZjJUR6VMztzO
-        F8hWhnPS7Z1CT4NJDw3MtA==
-X-Google-Smtp-Source: APXvYqw0DHsEGO4r5uXAMeKV/9aPKTqdrrYppFG758qnraHchXhK+sOX7jXcXCutn/8jBoF6ZW+NBg==
-X-Received: by 2002:a6b:6012:: with SMTP id r18mr37836641iog.241.1565649993800;
-        Mon, 12 Aug 2019 15:46:33 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id f1sm11650956ioh.73.2019.08.12.15.46.32
+        bh=xU+/Sl6Leeeh21cBv1Xx2kaEUhC7IwLWQcmuWzbub+A=;
+        b=f37Q2FqFCXfWj8eLbN7pxwi0H3FQB2KEvTeyKkjAbzhpwaoEwJdaUJ19G77F94wRqA
+         q/KvdxzKFAwbb89kMl1HX0kIZHjhnruu1bWm/0OlInDr/vvj0aHx4Faujk57IUyKse65
+         1bwWT8jzZFQZnhwuibIpZ21vaV04QFtQSCF2RkZiWoOHDhqMISokiLGFGJLwj7JM9YAn
+         rThubNX4ufMh7XWy+Hvw0ETtn/bq/lx1n0O4o0jZ50sFREceSILTlM3OY0FdncT/MNae
+         cDcZWFUG/8dmuLZ3OpovtQ8V69Q6z7fak4VBFZ+l6bWuvrgvoLinUCt7kijpo9dlHeYt
+         cwnA==
+X-Gm-Message-State: APjAAAViRfhrrtzkvwFDR8pc1LW8Aq5+72TbqHlHzGEbcSpz4e0f+aza
+        vKiDx6DPMUDxzn7MDa9WtsU=
+X-Google-Smtp-Source: APXvYqy5WvcvBfR4jR650H28WpvCCuJf01sNTKnB3a9p/lSIiXlsBnrr1nyPdKsYXoLvObY39B7z6A==
+X-Received: by 2002:a17:902:2ea2:: with SMTP id r31mr35341718plb.200.1565650169914;
+        Mon, 12 Aug 2019 15:49:29 -0700 (PDT)
+Received: from ArchLinux ([103.231.90.174])
+        by smtp.gmail.com with ESMTPSA id 23sm111034708pfn.176.2019.08.12.15.49.25
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 15:46:33 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 16:46:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Alexandre Mergnat <amergnat@baylibre.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, jic23@kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        baylibre-upstreaming@groups.io, dmitry.torokhov@gmail.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        Alexandre Mergnat <amergnat@baylibre.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: Add pixart vendor
-Message-ID: <20190812224632.GA12010@bogus>
-References: <20190713080455.17513-1-amergnat@baylibre.com>
- <20190713080455.17513-2-amergnat@baylibre.com>
+        Mon, 12 Aug 2019 15:49:28 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 04:19:18 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Junio C Hamano <gitster@pobox.com>
+Cc:     git@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>,
+        git-packagers@googlegroups.com
+Subject: Re: [ANNOUNCE] Git v2.22.1
+Message-ID: <20190812224918.GA24008@ArchLinux>
+References: <xmqqh86m9npi.fsf@gitster-ct.c.googlers.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
 Content-Disposition: inline
-In-Reply-To: <20190713080455.17513-2-amergnat@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <xmqqh86m9npi.fsf@gitster-ct.c.googlers.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 13 Jul 2019 10:04:53 +0200, Alexandre Mergnat wrote:
-> PixArt Imaging Inc. is expertized in CMOS image sensors (CIS),
-> capacitive touch controllers and related imaging application development.
-> 
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+--tThc/1wpZn/ma/RB
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+
+Thanks, a bunch Junio :)
+
+On 12:40 Mon 12 Aug 2019, Junio C Hamano wrote:
+>A maintenance release Git v2.22.1 is now available at the usual
+>places.  This backports many of the fixes that appeared already
+>on the 'master' front in preparation for the upcoming v2.23 release
+>of Git.
+>
+>The tarballs are found at:
+>
+>    https://www.kernel.org/pub/software/scm/git/
+>
+>The following public repositories all have a copy of the 'v2.22.1'
+>tag and the 'maint' branch that the tag points at:
+>
+>  url =3D https://kernel.googlesource.com/pub/scm/git/git
+>  url =3D git://repo.or.cz/alt-git.git
+>  url =3D https://github.com/gitster/git
+>
+>----------------------------------------------------------------
+>
+>Git 2.22.1 Release Notes
+>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>Fixes since v2.22
+>-----------------
+>
+> * A relative pathname given to "git init --template=3D<path> <repo>"
+>   ought to be relative to the directory "git init" gets invoked in,
+>   but it instead was made relative to the repository, which has been
+>   corrected.
+>
+> * "git worktree add" used to fail when another worktree connected to
+>   the same repository was corrupt, which has been corrected.
+>
+> * The ownership rule for the file descriptor to fast-import remote
+>   backend was mixed up, leading to unrelated file descriptor getting
+>   closed, which has been fixed.
+>
+> * "git update-server-info" used to leave stale packfiles in its
+>   output, which has been corrected.
+>
+> * The server side support for "git fetch" used to show incorrect
+>   value for the HEAD symbolic ref when the namespace feature is in
+>   use, which has been corrected.
+>
+> * "git am -i --resolved" segfaulted after trying to see a commit as
+>   if it were a tree, which has been corrected.
+>
+> * "git bundle verify" needs to see if prerequisite objects exist in
+>   the receiving repository, but the command did not check if we are
+>   in a repository upfront, which has been corrected.
+>
+> * "git merge --squash" is designed to update the working tree and the
+>   index without creating the commit, and this cannot be countermanded
+>   by adding the "--commit" option; the command now refuses to work
+>   when both options are given.
+>
+> * The data collected by fsmonitor was not properly written back to
+>   the on-disk index file, breaking t7519 tests occasionally, which
+>   has been corrected.
+>
+> * Update to Unicode 12.1 width table.
+>
+> * The command line to invoke a "git cat-file" command from inside
+>   "git p4" was not properly quoted to protect a caret and running a
+>   broken command on Windows, which has been corrected.
+>
+> * "git request-pull" learned to warn when the ref we ask them to pull
+>   from in the local repository and in the published repository are
+>   different.
+>
+> * When creating a partial clone, the object filtering criteria is
+>   recorded for the origin of the clone, but this incorrectly used a
+>   hardcoded name "origin" to name that remote; it has been corrected
+>   to honor the "--origin <name>" option.
+>
+> * "git fetch" into a lazy clone forgot to fetch base objects that are
+>   necessary to complete delta in a thin packfile, which has been
+>   corrected.
+>
+> * The filter_data used in the list-objects-filter (which manages a
+>   lazily sparse clone repository) did not use the dynamic array API
+>   correctly---'nr' is supposed to point at one past the last element
+>   of the array in use.  This has been corrected.
+>
+> * The description about slashes in gitignore patterns (used to
+>   indicate things like "anchored to this level only" and "only
+>   matches directories") has been revamped.
+>
+> * The URL decoding code has been updated to avoid going past the end
+>   of the string while parsing %-<hex>-<hex> sequence.
+>
+> * The list of for-each like macros used by clang-format has been
+>   updated.
+>
+> * "git push --atomic" that goes over the transport-helper (namely,
+>   the smart http transport) failed to prevent refs to be pushed when
+>   it can locally tell that one of the ref update will fail without
+>   having to consult the other end, which has been corrected.
+>
+> * "git clean" silently skipped a path when it cannot lstat() it; now
+>   it gives a warning.
+>
+> * A codepath that reads from GPG for signed object verification read
+>   past the end of allocated buffer, which has been fixed.
+>
+> * "git rm" to resolve a conflicted path leaked an internal message
+>   "needs merge" before actually removing the path, which was
+>   confusing.  This has been corrected.
+>
+> * The "git clone" documentation refers to command line options in its
+>   description in the short form; they have been replaced with long
+>   forms to make them more recognisable.
+>
+> * The configuration variable rebase.rescheduleFailedExec should be
+>   effective only while running an interactive rebase and should not
+>   affect anything when running a non-interactive one, which was not
+>   the case.  This has been corrected.
+>
+> * "git submodule foreach" did not protect command line options passed
+>   to the command to be run in each submodule correctly, when the
+>   "--recursive" option was in use.
+>
+> * Use "Erase in Line" CSI sequence that is already used in the editor
+>   support to clear cruft in the progress output.
+>
+> * The codepath to compute delta islands used to spew progress output
+>   without giving the callers any way to squelch it, which has been
+>   fixed.
+>
+> * The code to parse scaled numbers out of configuration files has
+>   been made more robust and also easier to follow.
+>
+> * An incorrect list of options was cached after command line
+>   completion failed (e.g. trying to complete a command that requires
+>   a repository outside one), which has been corrected.
+>
+> * "git rebase --abort" used to leave refs/rewritten/ when concluding
+>   "git rebase -r", which has been corrected.
+>
+> * "git stash show 23" used to work, but no more after getting
+>   rewritten in C; this regression has been corrected.
+>
+> * "git interpret-trailers" always treated '#' as the comment
+>   character, regardless of core.commentChar setting, which has been
+>   corrected.
+>
+> * Code clean-up to avoid signed integer overlaps during binary search.
+>
+> * "git checkout -p" needs to selectively apply a patch in reverse,
+>   which did not work well.
+>
+> * The commit-graph file is now part of the "files that the runtime
+>   may keep open file descriptors on, all of which would need to be
+>   closed when done with the object store", and the file descriptor to
+>   an existing commit-graph file now is closed before "gc" finalizes a
+>   new instance to replace it.
+>
+> * Code restructuring during 2.20 period broke fetching tags via
+>   "import" based transports.
+>
+> * We have been trying out a few language features outside c89; the
+>   coding guidelines document did not talk about them and instead had
+>   a blanket ban against them.
+>
+> * The internal diff machinery can be made to read out of bounds while
+>   looking for --funcion-context line in a corner case, which has been
+>   corrected.
+>
+>Also contains various documentation updates, code clean-ups and minor fixu=
+ps.
+>
+>----------------------------------------------------------------
+>
+>Changes since v2.22.0 are as follows:
+>
+>Beat Bolli (1):
+>      unicode: update the width tables to Unicode 12.1
+>
+>Carlo Marcelo Arenas Bel=C3=B3n (5):
+>      fsmonitor: avoid signed integer overflow / infinite loop
+>      wrapper: avoid undefined behaviour in macOS
+>      xdiff: drop system includes in xutils.c
+>      xdiff: remove duplicate headers from xhistogram.c
+>      xdiff: remove duplicate headers from xpatience.c
+>
+>Chris Mayo (1):
+>      send-email: update documentation of required Perl modules
+>
+>Denton Liu (2):
+>      config/alias.txt: change " and ' to `
+>      config/alias.txt: document alias accepting non-command first word
+>
+>Derrick Stolee (15):
+>      commit-graph: fix the_repository reference
+>      sha1-file: split OBJECT_INFO_FOR_PREFETCH
+>      commit-graph: return with errors during write
+>      commit-graph: collapse parameters into flags
+>      commit-graph: remove Future Work section
+>      commit-graph: create write_commit_graph_context
+>      commit-graph: extract fill_oids_from_packs()
+>      commit-graph: extract fill_oids_from_commit_hex()
+>      commit-graph: extract fill_oids_from_all_packs()
+>      commit-graph: extract count_distinct_commits()
+>      commit-graph: extract copy_oids_to_commits()
+>      commit-graph: extract write_commit_graph_file()
+>      commit-graph: use raw_object_store when closing
+>      packfile: close commit-graph in close_all_packs
+>      packfile: rename close_all_packs to close_object_store
+>
+>Doug Ilijev (1):
+>      README: fix rendering of text in angle brackets
+>
+>Dr. Adam Nielsen (1):
+>      gitignore.txt: make slash-rules more readable
+>
+>Emily Shaffer (3):
+>      grep: fail if call could output and name is null
+>      doc: hint about GIT_DEBUGGER in CodingGuidelines
+>      transport-helper: enforce atomic in push_refs_with_push
+>
+>Eric Wong (1):
+>      server-info: do not list unlinked packs
+>
+>Felipe Contreras (5):
+>      t5801 (remote-helpers): cleanup refspec stuff
+>      t5801 (remote-helpers): add test to fetch tags
+>      fetch: trivial cleanup
+>      fetch: make the code more understandable
+>      fetch: fix regression with transport helpers
+>
+>Jakub Wilk (1):
+>      doc: don't use git.kernel.org as example gitweb URL
+>
+>Jeff King (10):
+>      upload-pack: strip namespace from symref data
+>      am: simplify prompt response handling
+>      am: read interactive input from stdin
+>      am: drop tty requirement for --interactive
+>      am: fix --interactive HEAD tree resolution
+>      interpret-trailers: load default config
+>      verify-tag: drop signal.h include
+>      wt-status.h: drop stdio.h include
+>      delta-islands: respect progress flag
+>      xdiff: clamp function context indices in post-image
+>
+>Johannes Schindelin (14):
+>      bisect--helper: verify HEAD could be parsed before continuing
+>      fill_stat_cache_info(): prepare for an fsmonitor fix
+>      mark_fsmonitor_valid(): mark the index as changed if needed
+>      bundle verify: error out if called without an object database
+>      poll (mingw): allow compiling with GCC 8 and DEVELOPER=3D1
+>      kwset: allow building with GCC 8
+>      winansi: simplify loading the GetCurrentConsoleFontEx() function
+>      config: avoid calling `labs()` on too-large data type
+>      t3404: fix a typo
+>      t0001: fix on case-insensitive filesystems
+>      rebase --am: ignore rebase.rescheduleFailedExec
+>      diff: munmap() file contents before running external diff
+>      mingw: support spawning programs containing spaces in their names
+>      clean: show an error message when the path is too long
+>
+>Jonathan Tan (5):
+>      t5616: refactor packfile replacement
+>      index-pack: prefetch missing REF_DELTA bases
+>      t5616: use correct flag to check object is missing
+>      t5616: cover case of client having delta base
+>      t5551: test usage of chunked encoding explicitly
+>
+>Josh Steadmon (1):
+>      trace2: correct trace2 field name documentation
+>
+>Junio C Hamano (6):
+>      transport-helper: avoid var decl in for () loop control
+>      rm: resolving by removal is not a warning-worthy event
+>      CodingGuidelines: spell out post-C89 rules
+>      Flush fixes up to the third batch post 2.22.0
+>      Merge fixes made on the 'master' front
+>      Git 2.22.1
+>
+>Martin =C3=85gren (1):
+>      RelNotes/2.21.1: typofix
+>
+>Matthew DeVore (3):
+>      list-objects-filter: correct usage of ALLOC_GROW
+>      url: do not read past end of buffer
+>      url: do not allow %00 to represent NUL in URLs
+>
+>Miguel Ojeda (1):
+>      clang-format: use git grep to generate the ForEachMacros list
+>
+>Mike Hommey (2):
+>      dup() the input fd for fast-import used for remote helpers
+>      Use xmmap_gently instead of xmmap in use_pack
+>
+>Mike Mueller (1):
+>      p4 unshelve: fix "Not a valid object name HEAD0" on Windows
+>
+>Morian Sonnet (1):
+>      submodule foreach: fix recursion of options
+>
+>Nguy=E1=BB=85n Th=C3=A1i Ng=E1=BB=8Dc Duy (3):
+>      init: make --template path relative to $CWD
+>      worktree add: be tolerant of corrupt worktrees
+>      completion: do not cache if --git-completion-helper fails
+>
+>Paolo Bonzini (2):
+>      request-pull: quote regex metacharacters in local ref
+>      request-pull: warn if the remote object is not the same as the local=
+ one
+>
+>Philip Oakley (2):
+>      doc branch: provide examples for listing remote tracking branches
+>      .mailmap: update email address of Philip Oakley
+>
+>Phillip Wood (5):
+>      rebase: fix a memory leak
+>      rebase: warn if state directory cannot be removed
+>      sequencer: return errors from sequencer_remove_state()
+>      rebase --abort/--quit: cleanup refs/rewritten
+>      add -p: fix checkout -p with pathological context
+>
+>Quentin Nerden (2):
+>      docs: git-clone: refer to long form of options
+>      docs: git-clone: list short form of options first
+>
+>Ren=C3=A9 Scharfe (6):
+>      cleanup: fix possible overflow errors in binary search, part 2
+>      coccinelle: use COPY_ARRAY for copying arrays
+>      use COPY_ARRAY for copying arrays
+>      config: use unsigned_mult_overflows to check for overflows
+>      config: don't multiply in parse_unit_factor()
+>      config: simplify parsing of unit factors
+>
+>Robert Morgan (1):
+>      gpg(docs): use correct --verify syntax
+>
+>SZEDER G=C3=A1bor (11):
+>      t3404: modernize here doc style
+>      t3404: make the 'rebase.missingCommitsCheck=3Dignore' test more focu=
+sed
+>      pager: add a helper function to clear the last line in the terminal
+>      t5551: use 'test_i18ngrep' to check translated output
+>      rebase: fix garbled progress display with '-x'
+>      progress: use term_clear_line()
+>      Document that 'git -C ""' works and doesn't change directory
+>      ci: don't update Homebrew
+>      ci: disable Homebrew's auto cleanup
+>      ci/lib.sh: update a comment about installed P4 and Git-LFS versions
+>      Documentation/git-fsck.txt: include fsck.* config variables
+>
+>Simon Williams (1):
+>      git-p4: allow unshelving of branched files
+>
+>Steven Roberts (1):
+>      gpg-interface: do not scan past the end of buffer
+>
+>Thomas Gummerer (1):
+>      stash: fix show referencing stash index
+>
+>Varun Naik (1):
+>      read-cache.c: do not die if mmap fails
+>
+>Vishal Verma (1):
+>      merge: refuse --commit with --squash
+>
+>Xin Li (1):
+>      clone: respect user supplied origin name when setting up partial clo=
+ne
+>
+>=C3=86var Arnfj=C3=B6r=C3=B0 Bjarmason (1):
+>      hash-object doc: stop mentioning git-cvsimport
+>
+
+--tThc/1wpZn/ma/RB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl1R7OoACgkQsjqdtxFL
+KRUjaQf9FzktNwRACAaz1XUgCk3anBRY+tA4JQGVPBfJGvhF5uudxdflGVlQm89A
+r8uTT2zhLOySPVIPYbTb15z1dni5OSwNOspdL0f8F41IQ1Mxgxpix8GXJSSog1Dw
+BrYlWEQ6wt/fLkVtrZKmCcfZqCR0TJ3Aw/5Fj8IRoffyAZCnS/gPmryqI4Jx1IMo
+/NjWIXMMmPX8fx4RfQepmrr/glcqEljy9bBKgrDp3pSXRjUZVAJRmLyrH1Ta109I
+LbTFsalZcSD+T1Y+1YYYFeV1WBTwH+XAKfEKSpZbIYZLImOwotr5g88irwJaWT/e
+SYSDbcSZYsIcGyCUWuumE4hSUcmp/A==
+=qu6B
+-----END PGP SIGNATURE-----
+
+--tThc/1wpZn/ma/RB--
