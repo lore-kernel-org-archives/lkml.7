@@ -2,114 +2,93 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EE8C32753
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA14C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1C9A206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A16320684
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:55:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbfHLNzV (ORCPT
+        id S1728178AbfHLNzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 09:55:21 -0400
-Received: from mga18.intel.com ([134.134.136.126]:45219 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727103AbfHLNzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 09:55:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 06:55:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,377,1559545200"; 
-   d="scan'208";a="187434113"
-Received: from rbhardw1-mobl.gar.corp.intel.com (HELO [10.252.80.195]) ([10.252.80.195])
-  by orsmga002.jf.intel.com with ESMTP; 12 Aug 2019 06:55:17 -0700
-Subject: Re: [PATCH v3 0/8] PM / ACPI: sleep: Additional changes related to
- suspend-to-idle
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-References: <5997740.FPbUVk04hV@kreacher>
-From:   "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
-Message-ID: <a5548466-2e8e-84d0-357d-e2ca0c72097c@linux.intel.com>
-Date:   Mon, 12 Aug 2019 19:25:16 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 12 Aug 2019 09:55:24 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:47529 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727103AbfHLNzX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 09:55:23 -0400
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id AD3FC240003;
+        Mon, 12 Aug 2019 13:55:19 +0000 (UTC)
+Date:   Mon, 12 Aug 2019 15:55:19 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        paul.kocialkowski@bootlin.com, wens@csie.org, mchehab@kernel.org,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/7] media: cedrus: Improvements/cleanup
+Message-ID: <20190812135519.ysmqytkhtln7sknc@flea>
+References: <20190530211516.1891-1-jernej.skrabec@siol.net>
+ <274221f1-b2d2-83aa-d84b-e1c572a1b832@xs4all.nl>
 MIME-Version: 1.0
-In-Reply-To: <5997740.FPbUVk04hV@kreacher>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5ghcmst6jaoa4kn7"
+Content-Disposition: inline
+In-Reply-To: <274221f1-b2d2-83aa-d84b-e1c572a1b832@xs4all.nl>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael
 
-On 02-Aug-19 4:03 PM, Rafael J. Wysocki wrote:
-> Hi All,
+--5ghcmst6jaoa4kn7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi!
+
+On Mon, Aug 12, 2019 at 02:12:21PM +0200, Hans Verkuil wrote:
+> On 5/30/19 11:15 PM, Jernej Skrabec wrote:
+> > Here is first batch of random Cedrus improvements/cleanups. Only patch 2
+> > has a change which raises a question about H264 controls.
+> >
+> > Changes were tested on H3 SoC using modified ffmpeg and Kodi.
+> >
+> > Please take a look.
 >
->>> On top of the "Simplify the suspend-to-idle control flow" patch series
->>> posted previously:
->>>
->>> https://lore.kernel.org/lkml/71085220.z6FKkvYQPX@kreacher/
->>>
->>> sanitize the suspend-to-idle flow even further.
->>>
->>> First off, decouple EC wakeup from the LPS0 _DSM processing (patch 1).
->>>
->>> Next, reorder the code to invoke LPS0 _DSM Functions 5 and 6 in the
->>> specification-compliant order with respect to suspending and resuming
->>> devices (patch 2).
->>>
->>> Finally, rearrange lps0_device_attach() (patch 3) and add a command line
->>> switch to prevent the LPS0 _DSM from being used.
->> The v2 is because I found a (minor) bug in patch 1, decided to use a module
->> parameter instead of a kernel command line option in patch 4.  Also, there
->> are 4 new patches:
->>
->> Patch 5: Switch the EC over to polling during "noirq" suspend and back
->> during "noirq" resume.
->>
->> Patch 6: Eliminate acpi_sleep_no_ec_events().
->>
->> Patch 7: Consolidate some EC code depending on PM_SLEEP.
->>
->> Patch 8: Add EC GPE dispatching debug message.
-> The v3 is just a rearranged v2 so as to move the post sensitive patch (previous patch 2)
-> to the end of the series.   [After applying the full series the code is the same as before.]
+> This has been sitting in patchwork for quite some time. I've updated the
+> status of the various patches and most needed extra work.
 >
-> For easier testing, the series (along with some previous patches depended on by it)
-> is available in the pm-s2idle-testing branch of the linux-pm.git tree at kernel.org:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=pm-s2idle-testing
->
-> Please refer to the changelogs for details.
+> It seems that patches 4/7 and 5/7 are OK. Maxime, can you please confirm
+> that these two are still valid? They apply cleanly on the latest master
+> at least, but since they are a bit old I prefer to have confirmation that
+> it's OK to merge them.
 
+Yes, you can definitely merge those.
 
-I have tested both pm-s2idle-testing and pm-s2idle-rework branches 
-including recently introduced commit "PM: suspend: Fix 
-platform_suspend_prepare_noirq()".
+Maxime
 
-Works fine for me on Ice Lake platform.
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-  Acked-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+--5ghcmst6jaoa4kn7
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Tested-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVFvxwAKCRDj7w1vZxhR
+xaNLAPsEGPiyqOdRajYEA4cGxVY18jjPs7B80tUGLwn7y/lX7QEA1hoN114NPrjR
+odSkIRw1Cs9MkNQXMbozY4cjiWx8ZAs=
+=JSLg
+-----END PGP SIGNATURE-----
 
-> Thanks,
-> Rafael
->
->
->
+--5ghcmst6jaoa4kn7--
