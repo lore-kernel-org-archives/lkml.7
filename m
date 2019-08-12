@@ -2,110 +2,126 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78581C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E42CC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B92720679
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 329602075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:28:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q9YeUqrO"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="k1vjYN/u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfHLQ22 (ORCPT
+        id S1726987AbfHLQ2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 12:28:28 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42939 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbfHLQ21 (ORCPT
+        Mon, 12 Aug 2019 12:28:37 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:41740 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbfHLQ2g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 12:28:27 -0400
-Received: by mail-pf1-f195.google.com with SMTP id i30so1227435pfk.9
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 09:28:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nqNpCGFtDsa8a+HaBObToOYnGgLCkK9gOXb9jSunYpg=;
-        b=q9YeUqrOotnWphtWt+AmZhvUnYaPCLv3zf1CBf8qMjF4Lv+N1SlxcpneZ0RIDVmKx6
-         PEnkTk/klNoYA9mDPfS1ByJfxSqRYhoqgiKYO+g2npyQLOG5Qu+wZdc0UZqCNGTVj6Wl
-         yU8u4eqsgHXW5p3oDfzLjG2GK6p5qQBuoGkoO9mLVZFafWtSQt7TZy907yptEz88jId2
-         sNtQsXtA2kmDSUVFsniFeFTjWLU5ozKhQsrHSVVPnI2O/1vT2frMSBLVsPWgj6Grgo5A
-         dhUT541BM69IcvHQhcMqysd8tszX9+Cp6fSRHF9JnCnz5kf0KvGCK6wgfbGF/pPR2y98
-         InOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nqNpCGFtDsa8a+HaBObToOYnGgLCkK9gOXb9jSunYpg=;
-        b=DNNGPfcZ+YlsN26oB/mBx0bvFdPaAtldH0AiqHdke1WwyzyiaDCQ4DVV2a9WlOdYyI
-         d4e485BFSyuXo68cT+vYhbTmrO0zz9Tnv5H0hSHUa8LNnyAiK6bHG5yNbtcslJYdDHRy
-         ysVgqqv6Dj2szyN7JPGwvZaccpkTQSnInZunpT7y+kyUQkComP7hjlOvw5FdMw8V5Uca
-         bPESvxpMLAfok+8FrFq0vrzMH/MB/SaElqy52tRu2zZVrHx9qxcQQtj5jb/HFkRAt/oR
-         0JnvlJE1oL3CFJxPaokeSYA2aj23t5gcU8O5SjmpJyAHRTDH3h+/vd1wWP6C0Epc8+2P
-         H5+g==
-X-Gm-Message-State: APjAAAWX4ZWbKGu4eDsT09IQWbSZdaowsDlqY6YoG4us9/stNoB5c+17
-        hpGN7lH0xY6fl/pzmpWR/FmY0z8mmXwcmJBMIRbG0A==
-X-Google-Smtp-Source: APXvYqybiim5GktIVsZhGSf2Jvn0qjk2FW1kum2frzZ3BACvfGCTgX1Xu8z+cPROUCSeIpYWIdG1CQVhIXzzXj+xryA=
-X-Received: by 2002:a63:f94c:: with SMTP id q12mr30500912pgk.10.1565627306188;
- Mon, 12 Aug 2019 09:28:26 -0700 (PDT)
+        Mon, 12 Aug 2019 12:28:36 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7CGSSO6082982;
+        Mon, 12 Aug 2019 11:28:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565627308;
+        bh=IsKWgqgOglbaA6eYIe/r12Zf5tXCWsmgx1YMeflw7pY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=k1vjYN/uiF81v43522pzxwnJM4QIt1smtzfCqAKw3TsOp5y3pigH2fwmguZGIpBV0
+         f4F4jQPxhApuQ/gfhORnEtUSVrccfREOb7LHI4URSZ7wcH7fgQyDF5rULGOY5kJqf4
+         OMgA6bShR1TPvJNx2CNByzAdBdw6d0sdEM4e2DY4=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7CGSSbf067422
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 12 Aug 2019 11:28:28 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 12
+ Aug 2019 11:28:27 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 12 Aug 2019 11:28:27 -0500
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7CGSRX0093082;
+        Mon, 12 Aug 2019 11:28:27 -0500
+Subject: Re: [PATCH] rpmsg: virtio_rpmsg_bus: replace "%p" with "%pK"
+To:     "Andrew F. Davis" <afd@ti.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     <linux-remoteproc@vger.kernel.org>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20181024011909.21674-1-s-anna@ti.com>
+ <1cc3d697-6fde-901b-2e35-2e2b53b44425@ti.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <2ef5e274-df09-c3a0-41ed-a945d1902eaf@ti.com>
+Date:   Mon, 12 Aug 2019 11:28:27 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <c0005a09c89c20093ac699c97e7420331ec46b01.camel@perches.com>
- <9c7a79b4d21aea52464d00c8fa4e4b92638560b6.camel@perches.com>
- <CAHk-=wiL7jqYNfYrNikgBw3byY+Zn37-8D8yR=WUu0x=_2BpZA@mail.gmail.com>
- <6a5f470c1375289908c37632572c4aa60d6486fa.camel@perches.com>
- <20190811020442.GA22736@archlinux-threadripper> <871efd6113ee2f6491410409511b871b7637f9e3.camel@perches.com>
-In-Reply-To: <871efd6113ee2f6491410409511b871b7637f9e3.camel@perches.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 12 Aug 2019 09:28:15 -0700
-Message-ID: <CAKwvOdmAj34xDcMUn7Fu_aXdtD-7xHjHuU20qY=rFcr_Kz7gpg@mail.gmail.com>
-Subject: Re: [PATCH] Makefile: Convert -Wimplicit-fallthrough=3 to just
- -Wimplicit-fallthrough for clang
-To:     Joe Perches <joe@perches.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1cc3d697-6fde-901b-2e35-2e2b53b44425@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 10, 2019 at 8:06 PM Joe Perches <joe@perches.com> wrote:
->
-> On Sat, 2019-08-10 at 19:04 -0700, Nathan Chancellor wrote:
-> > On a tangential note, how are you planning on doing the fallthrough
-> > comment to attribute conversion? The reason I ask is clang does not
-> > support the comment annotations, meaning that when Nathan Huckleberry's
-> > patch is applied to clang (which has been accepted [1]), we are going
-> > to get slammed by the warnings. I just ran an x86 defconfig build at
-> > 296d05cb0d3c with his patch applied and I see 27673 instances of this
-> > warning... (mostly coming from some header files so nothing crazy but it
-> > will be super noisy).
-> >
-> > If you have something to share like a script or patch, I'd be happy to
-> > test it locally.
-> >
-> > [1]: https://reviews.llvm.org/D64838
->
-> Something like this patch:
->
-> https://lore.kernel.org/patchwork/patch/1108577/
->
-> Maybe use:
->
-> #define fallthrough [[fallthrough]]
+On 8/12/19 10:47 AM, Andrew F. Davis wrote:
+> On 10/23/18 9:19 PM, Suman Anna wrote:
+>> The virtio_rpmsg_bus driver uses the "%p" format-specifier for
+>> printing the vring buffer address. This prints only a hashed
+>> pointer even for previliged users. Use "%pK" instead so that
+>> the address can be printed during debug using kptr_restrict
+>> sysctl.
+>>
+> 
+> 
+> s/previliged/privileged
 
-Isn't [[fallthrough]] the C++ style attribute?  **eek** Seems to be a
-waste for Clang to implement __attribute__((fallthrough)) just as we
-switch the kernel to not use it.  Also, I'd recommend making the
-preprocessor define all caps to help folks recognize it's a
-preprocessor define.
--- 
-Thanks,
-~Nick Desaulniers
+Bjorn,
+Can you fix this up when applying.
+
+> 
+> You describe what the code does, but not why you need this. %pK is used
+> for only about 1% of pointer printing, why do you want to leak this
+> address to userspace at all?
+
+Andrew,
+Default behavior of %pK is same as %p, but it does allow you to control
+the print. The reason is clearly mentioned in the last sentence in the
+patch description.
+
+regards
+Suman
+
+> 
+> Andrew
+> 
+> 
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> ---
+>>  drivers/rpmsg/virtio_rpmsg_bus.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
+>> index f29dee731026..1345f373a1a0 100644
+>> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
+>> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+>> @@ -950,7 +950,7 @@ static int rpmsg_probe(struct virtio_device *vdev)
+>>  		goto vqs_del;
+>>  	}
+>>  
+>> -	dev_dbg(&vdev->dev, "buffers: va %p, dma %pad\n",
+>> +	dev_dbg(&vdev->dev, "buffers: va %pK, dma %pad\n",
+>>  		bufs_va, &vrp->bufs_dma);
+>>  
+>>  	/* half of the buffers is dedicated for RX */
+>>
+
