@@ -2,230 +2,92 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B95C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B535C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6DAD206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45714206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:31:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="AjY+bT2p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbfHLHa0 (ORCPT
+        id S1726998AbfHLHbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 03:30:26 -0400
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:54498 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726759AbfHLHa0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 03:30:26 -0400
-Received: from ramsan ([84.194.98.4])
-        by baptiste.telenet-ops.be with bizsmtp
-        id o7WN2000105gfCL017WN0K; Mon, 12 Aug 2019 09:30:22 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hx4mb-0007Nm-VU; Mon, 12 Aug 2019 09:30:21 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hx4mb-0004yw-Sd; Mon, 12 Aug 2019 09:30:21 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     linux-m68k@lists.linux-m68k.org
-Cc:     kbuild test robot <lkp@intel.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] m68k: atari: Rename shifter to shifter_st to avoid conflict
-Date:   Mon, 12 Aug 2019 09:30:20 +0200
-Message-Id: <20190812073020.19109-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 12 Aug 2019 03:31:39 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:36434 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726495AbfHLHbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 03:31:38 -0400
+Received: from zn.tnic (p200300EC2F062700705A3C93C863E474.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:2700:705a:3c93:c863:e474])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 946DA1EC074B;
+        Mon, 12 Aug 2019 09:31:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565595097;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=HIcq0KY0GaLpoIyyj2S96sngcdEQFgKkq4QBqsm3C6Y=;
+        b=AjY+bT2plZ/db4kUCxJOU2w4SzOFhhcVe2D7jcPtKobGvsA6fmc30OW5KpyA8N1Nj4xNtQ
+        Uo0bbyakhNb2EIt04wUfeIvKJLrF1rMvD1LQvjQZZ+1cDAuqDtG1ViWIQQ2820gEYhCof2
+        t3J2hcehvs5RGEfpXXNpSlNKPRngogs=
+Date:   Mon, 12 Aug 2019 09:32:22 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 02/24] EDAC, ghes: Fix grain calculation
+Message-ID: <20190812073221.GA23772@zn.tnic>
+References: <20190624150758.6695-1-rrichter@marvell.com>
+ <20190624150758.6695-3-rrichter@marvell.com>
+ <20190809131559.GF2152@zn.tnic>
+ <20190812064147.5czmkj7e6hxgvje3@rric.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190812064147.5czmkj7e6hxgvje3@rric.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When test-compiling the BCM2835 pin control driver on m68k:
+On Mon, Aug 12, 2019 at 06:42:00AM +0000, Robert Richter wrote:
+> I have seen you had actively promoted this style guideline, I even was
+> not aware of it, thanks for the pointer.
 
-    In file included from arch/m68k/include/asm/io_mm.h:32:0,
-                     from arch/m68k/include/asm/io.h:8,
-                     from include/linux/io.h:13,
-                     from include/linux/irq.h:20,
-                     from include/linux/gpio/driver.h:7,
-                     from drivers/pinctrl/bcm/pinctrl-bcm2835.c:17:
-    drivers/pinctrl/bcm/pinctrl-bcm2835.c: In function 'bcm2711_pull_config_set':
-    arch/m68k/include/asm/atarihw.h:190:22: error: expected identifier or '(' before 'volatile'
-     # define shifter ((*(volatile struct SHIFTER *)SHF_BAS))
+It is about time we started writing proper commit messages. How long are
+we trying, 20 years...?
 
-"shifter" is a too generic name for a global definition.
+> With the grain_bits calculation the mask is rounded up to the next
+> power of 2 value.
 
-As the corresponding definition for Atari TT is already called
-"shifter_tt", fix this by renaming the definition for Atari ST to
-"shifter_st".
+mask	  = 0xffffffffff00ff00
+~mask	  = 0x0000000000ff00ff
+~mask + 1 = 0x0000000000ff0100
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Suggested-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
-To be queued in the m68k tree for v5.4.
+Your "trick" of adding a 1 to get to the most significant bit simply
+doesn't work here. Thus:
 
- arch/m68k/atari/config.c        |  6 ++---
- arch/m68k/include/asm/atarihw.h |  4 ++--
- drivers/video/fbdev/atafb.c     | 42 ++++++++++++++++-----------------
- 3 files changed, 26 insertions(+), 26 deletions(-)
+"I guess we can leave it like that for now until some "inventive"
+firmware actually does it."
 
-diff --git a/arch/m68k/atari/config.c b/arch/m68k/atari/config.c
-index 902255e7b5b2ad56..73bf5ea9ee1bf1cf 100644
---- a/arch/m68k/atari/config.c
-+++ b/arch/m68k/atari/config.c
-@@ -246,9 +246,9 @@ void __init config_atari(void)
- 	} else if (hwreg_present(tt_palette)) {
- 		ATARIHW_SET(TT_SHIFTER);
- 		pr_cont(" TT_SHIFTER");
--	} else if (hwreg_present(&shifter.bas_hi)) {
--		if (hwreg_present(&shifter.bas_lo) &&
--		    (shifter.bas_lo = 0x0aau, shifter.bas_lo == 0x0aau)) {
-+	} else if (hwreg_present(&shifter_st.bas_hi)) {
-+		if (hwreg_present(&shifter_st.bas_lo) &&
-+		    (shifter_st.bas_lo = 0x0aau, shifter_st.bas_lo == 0x0aau)) {
- 			ATARIHW_SET(EXTD_SHIFTER);
- 			pr_cont(" EXTD_SHIFTER");
- 		} else {
-diff --git a/arch/m68k/include/asm/atarihw.h b/arch/m68k/include/asm/atarihw.h
-index 533008262b691ad9..13828dcc45ff79ac 100644
---- a/arch/m68k/include/asm/atarihw.h
-+++ b/arch/m68k/include/asm/atarihw.h
-@@ -170,7 +170,7 @@ static inline void dma_cache_maintenance( unsigned long paddr,
- #define TT_HIGH 6
- 
- #define SHF_BAS (0xffff8200)
--struct SHIFTER
-+struct SHIFTER_ST
-  {
- 	u_char pad1;
- 	u_char bas_hi;
-@@ -187,7 +187,7 @@ struct SHIFTER
- 	u_char pad7;
- 	u_char bas_lo;
-  };
--# define shifter ((*(volatile struct SHIFTER *)SHF_BAS))
-+# define shifter_st ((*(volatile struct SHIFTER_ST *)SHF_BAS))
- 
- #define SHF_FBAS (0xffff820e)
- struct SHIFTER_F030
-diff --git a/drivers/video/fbdev/atafb.c b/drivers/video/fbdev/atafb.c
-index fc9dfb0a95afc03e..51f5d1c56fd9c675 100644
---- a/drivers/video/fbdev/atafb.c
-+++ b/drivers/video/fbdev/atafb.c
-@@ -763,17 +763,17 @@ static void tt_get_par(struct atafb_par *par)
- {
- 	unsigned long addr;
- 	par->hw.tt.mode = shifter_tt.tt_shiftmode;
--	par->hw.tt.sync = shifter.syncmode;
--	addr = ((shifter.bas_hi & 0xff) << 16) |
--	       ((shifter.bas_md & 0xff) << 8)  |
--	       ((shifter.bas_lo & 0xff));
-+	par->hw.tt.sync = shifter_st.syncmode;
-+	addr = ((shifter_st.bas_hi & 0xff) << 16) |
-+	       ((shifter_st.bas_md & 0xff) << 8)  |
-+	       ((shifter_st.bas_lo & 0xff));
- 	par->screen_base = atari_stram_to_virt(addr);
- }
- 
- static void tt_set_par(struct atafb_par *par)
- {
- 	shifter_tt.tt_shiftmode = par->hw.tt.mode;
--	shifter.syncmode = par->hw.tt.sync;
-+	shifter_st.syncmode = par->hw.tt.sync;
- 	/* only set screen_base if really necessary */
- 	if (current_par.screen_base != par->screen_base)
- 		fbhw->set_screen_base(par->screen_base);
-@@ -1543,7 +1543,7 @@ static void falcon_get_par(struct atafb_par *par)
- 	hw->f_shift = videl.f_shift;
- 	hw->vid_control = videl.control;
- 	hw->vid_mode = videl.mode;
--	hw->sync = shifter.syncmode & 0x1;
-+	hw->sync = shifter_st.syncmode & 0x1;
- 	hw->xoffset = videl.xoffset & 0xf;
- 	hw->hht = videl.hht;
- 	hw->hbb = videl.hbb;
-@@ -1558,9 +1558,9 @@ static void falcon_get_par(struct atafb_par *par)
- 	hw->vde = videl.vde;
- 	hw->vss = videl.vss;
- 
--	addr = (shifter.bas_hi & 0xff) << 16 |
--	       (shifter.bas_md & 0xff) << 8  |
--	       (shifter.bas_lo & 0xff);
-+	addr = (shifter_st.bas_hi & 0xff) << 16 |
-+	       (shifter_st.bas_md & 0xff) << 8  |
-+	       (shifter_st.bas_lo & 0xff);
- 	par->screen_base = atari_stram_to_virt(addr);
- 
- 	/* derived parameters */
-@@ -1605,7 +1605,7 @@ static irqreturn_t falcon_vbl_switcher(int irq, void *dummy)
- 			/* Turn off external clocks. Read sets all output bits to 1. */
- 			*(volatile unsigned short *)0xffff9202;
- 		}
--		shifter.syncmode = hw->sync;
-+		shifter_st.syncmode = hw->sync;
- 
- 		videl.hht = hw->hht;
- 		videl.hbb = hw->hbb;
-@@ -1952,18 +1952,18 @@ static void stste_get_par(struct atafb_par *par)
- {
- 	unsigned long addr;
- 	par->hw.st.mode = shifter_tt.st_shiftmode;
--	par->hw.st.sync = shifter.syncmode;
--	addr = ((shifter.bas_hi & 0xff) << 16) |
--	       ((shifter.bas_md & 0xff) << 8);
-+	par->hw.st.sync = shifter_st.syncmode;
-+	addr = ((shifter_st.bas_hi & 0xff) << 16) |
-+	       ((shifter_st.bas_md & 0xff) << 8);
- 	if (ATARIHW_PRESENT(EXTD_SHIFTER))
--		addr |= (shifter.bas_lo & 0xff);
-+		addr |= (shifter_st.bas_lo & 0xff);
- 	par->screen_base = atari_stram_to_virt(addr);
- }
- 
- static void stste_set_par(struct atafb_par *par)
- {
- 	shifter_tt.st_shiftmode = par->hw.st.mode;
--	shifter.syncmode = par->hw.st.sync;
-+	shifter_st.syncmode = par->hw.st.sync;
- 	/* only set screen_base if really necessary */
- 	if (current_par.screen_base != par->screen_base)
- 		fbhw->set_screen_base(par->screen_base);
-@@ -2018,10 +2018,10 @@ static void stste_set_screen_base(void *s_base)
- 	unsigned long addr;
- 	addr = atari_stram_to_phys(s_base);
- 	/* Setup Screen Memory */
--	shifter.bas_hi = (unsigned char)((addr & 0xff0000) >> 16);
--	shifter.bas_md = (unsigned char)((addr & 0x00ff00) >> 8);
-+	shifter_st.bas_hi = (unsigned char)((addr & 0xff0000) >> 16);
-+	shifter_st.bas_md = (unsigned char)((addr & 0x00ff00) >> 8);
- 	if (ATARIHW_PRESENT(EXTD_SHIFTER))
--		shifter.bas_lo = (unsigned char)(addr & 0x0000ff);
-+		shifter_st.bas_lo = (unsigned char)(addr & 0x0000ff);
- }
- 
- #endif /* ATAFB_STE */
-@@ -2265,9 +2265,9 @@ static void set_screen_base(void *s_base)
- 
- 	addr = atari_stram_to_phys(s_base);
- 	/* Setup Screen Memory */
--	shifter.bas_hi = (unsigned char)((addr & 0xff0000) >> 16);
--	shifter.bas_md = (unsigned char)((addr & 0x00ff00) >> 8);
--	shifter.bas_lo = (unsigned char)(addr & 0x0000ff);
-+	shifter_st.bas_hi = (unsigned char)((addr & 0xff0000) >> 16);
-+	shifter_st.bas_md = (unsigned char)((addr & 0x00ff00) >> 8);
-+	shifter_st.bas_lo = (unsigned char)(addr & 0x0000ff);
- }
- 
- static int pan_display(struct fb_var_screeninfo *var, struct fb_info *info)
+> The reason this is here is because this check will be moved to
+> edac_raw_mc_handle_error() to unify edac_mc and ghes code (see patch
+> #4).
+
+Ok.
+
+Thx.
+
 -- 
-2.17.1
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
