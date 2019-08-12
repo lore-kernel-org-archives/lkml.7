@@ -2,87 +2,138 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A79C2C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB277C32750
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EFE3206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E22220651
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:28:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9wMnkLe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbfHLNZn (ORCPT
+        id S1728865AbfHLN2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 09:25:43 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:40790 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728552AbfHLNZn (ORCPT
+        Mon, 12 Aug 2019 09:28:09 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41560 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfHLN2J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 09:25:43 -0400
-Received: from [167.98.27.226] (helo=xylophone)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1hxAKR-00033l-Iv; Mon, 12 Aug 2019 14:25:39 +0100
-Message-ID: <53df9d81bfb4ee7ec64fabf1089f91d80dceb491.camel@codethink.co.uk>
-Subject: Re: [Y2038] [PATCH 04/20] mount: Add mount warning for impending
- timestamp expiry
-From:   Ben Hutchings <ben.hutchings@codethink.co.uk>
-To:     Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 12 Aug 2019 14:25:38 +0100
-In-Reply-To: <CABeXuvruROn7j1DiCDbP6MLBt9SB4Pp3HoKqcQbUNPDJgGWLgw@mail.gmail.com>
-References: <20190730014924.2193-1-deepa.kernel@gmail.com>
-         <20190730014924.2193-5-deepa.kernel@gmail.com>
-         <c508fe0116b77ff0496ebb17a69f756c47be62b7.camel@codethink.co.uk>
-         <CABeXuvruROn7j1DiCDbP6MLBt9SB4Pp3HoKqcQbUNPDJgGWLgw@mail.gmail.com>
-Organization: Codethink Ltd.
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Mon, 12 Aug 2019 09:28:09 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 196so2527599pfz.8;
+        Mon, 12 Aug 2019 06:28:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dInIMy+S8GZhLa1bLLBVLdCdAhs9RNizZZYijhr+GRA=;
+        b=C9wMnkLeMSuBKlE6YwI8xKAQmyaPpoK/Jcvs3F8L+QhsHKfUNGw9Iropg5Zltpy72S
+         y2uEJtNgj5H3JlGfrbD4JtexgAI+kvxR+v0yR8BIV0uj0KgwNmCgMCe0Qz19Y3FfUZ7G
+         J4+qnAyoWzjzNW5OcioBCIQQyn7dBO+fuXw/kW9Z+FW5jq3wqOL4kTx1FiM9FEt8WW4h
+         GwSogQcAHUKFSYCotUxsgEzww7pX6K2pohGQ5rYMIlsy5rxCuvOeAE32M9wVQLZPqYcx
+         KCr4nYu1d1k2kMVMkPXfVJ6ehOb4oywNG1Z1ZVzvxi/WxmvBTOXxWEcxUE40ZPGIWHhR
+         gfcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dInIMy+S8GZhLa1bLLBVLdCdAhs9RNizZZYijhr+GRA=;
+        b=oKLOEyRd1iF+PvGm27n3mqFXabZdqdMmTQ9+fiB8befXGBec/vnagKPJJ+FEh2UN/M
+         9mgCpRI5DIX8PFrwvT9PbyJC85VfRUaW1cVMs+TsYNw+EVDl1mm2XPkCYwgnpVTv1dQC
+         XGFVRYQW7yhJtKF5DrTszma3LT8NrVjwHnPCjXiGfhMJJT0dzlwBXdGV6yCcme76A8OS
+         9mGVkwzpegEl2AVoFy7GYpu7DdVtXeegUfzU+fu5ICRyYOxuulNj8+aK/Y+0Jz/MEJ0e
+         aee5yMkE9SVIflvxs5oT8+9jTNMtvc7VVajNfSnjPEyti98DtGwZUGVEPHdndwaXOafw
+         hm1g==
+X-Gm-Message-State: APjAAAU4OYU/V/XUPw4gBdMd0MOLCgs6GgkEAXRXQ/f1DP5cfB5PyvxL
+        sPLR4USEr5Ewr2Z1R6DlCoixmalW
+X-Google-Smtp-Source: APXvYqwiLiMUMbHYUN2Yl0rZPsaMKuD0yT0eQaPd33ELXbr8lQ4kRo93KDnNsNltKKsVNkhKRKPR/Q==
+X-Received: by 2002:a63:29c4:: with SMTP id p187mr30803952pgp.330.1565616488103;
+        Mon, 12 Aug 2019 06:28:08 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e2sm2643783pff.49.2019.08.12.06.28.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 12 Aug 2019 06:28:06 -0700 (PDT)
+Subject: Re: [PATCH] watchdog: imx2_wdt: fix min() calculation in
+ imx2_wdt_set_timeout
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc:     Georg Hofmann <georg@hofmannsweb.com>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20190812131356.23039-1-linux@rasmusvillemoes.dk>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <77faf1bd-14cc-831f-e65e-4f2aa74e1843@roeck-us.net>
+Date:   Mon, 12 Aug 2019 06:28:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190812131356.23039-1-linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-08-10 at 13:44 -0700, Deepa Dinamani wrote:
-> On Mon, Aug 5, 2019 at 7:14 AM Ben Hutchings
-> <ben.hutchings@codethink.co.uk> wrote:
-> > On Mon, 2019-07-29 at 18:49 -0700, Deepa Dinamani wrote:
-> > > The warning reuses the uptime max of 30 years used by the
-> > > setitimeofday().
-> > > 
-> > > Note that the warning is only added for new filesystem mounts
-> > > through the mount syscall. Automounts do not have the same warning.
-> > [...]
-> > 
-> > Another thing - perhaps this warning should be suppressed for read-only
-> > mounts?
+On 8/12/19 6:13 AM, Rasmus Villemoes wrote:
+> Converting from ms to s requires dividing by 1000, not multiplying. So
+> this is currently taking the smaller of new_timeout and 1.28e8,
+> i.e. effectively new_timeout.
 > 
-> Many filesystems support read only mounts only. We do fill in right
-> granularities and limits for these filesystems as well. In keeping
-> with the trend, I have added the warning accordingly. I don't think I
-> have a preference either way. But, not warning for the red only mounts
-> adds another if case. If you have a strong preference, I could add it
-> in.
+> The driver knows what it set max_hw_heartbeat_ms to, so use that
+> value instead of doing a division at run-time.
+> 
+> FWIW, this can easily be tested by booting into a busybox shell and
+> doing "watchdog -t 5 -T 130 /dev/watchdog" - without this patch, the
+> watchdog fires after 130&127 == 2 seconds.
+> 
+> Fixes: b07e228eee69 "watchdog: imx2_wdt: Fix set_timeout for big timeout values"
+> Cc: stable@vger.kernel.org # 5.2 plus anything the above got backported to
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-It seems to me that the warning is needed if there is a possibility of
-data loss (incorrect timestamps, potentially leading to incorrect
-decisions about which files are newer).  This can happen only when a
-filesystem is mounted read-write, or when a filesystem image is
-created.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-I think that warning for read-only mounts would be an annoyance to
-users retrieving files from old filesystems.
+> ---
+> This should really be handled in the watchdog core for any driver that
+> reports max_hw_heartbeat_ms.
+> 
+Good point. I'll see if I can write a patch.
 
-Ben.
+Guenter
 
--- 
-Ben Hutchings, Software Developer                         Codethink Ltd
-https://www.codethink.co.uk/                 Dale House, 35 Dale Street
-                                     Manchester, M1 2HF, United Kingdom
+> The same pattern appears in aspeed_wdt.c. I don't have the hardware, but
+> s#wdd->max_hw_heartbeat_ms * 1000#WDT_MAX_TIMEOUT_MS/1000U# should fix that one.
+> 
+> 
+>   drivers/watchdog/imx2_wdt.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
+> index 32af3974e6bb..8d019a961ccc 100644
+> --- a/drivers/watchdog/imx2_wdt.c
+> +++ b/drivers/watchdog/imx2_wdt.c
+> @@ -55,7 +55,7 @@
+>   
+>   #define IMX2_WDT_WMCR		0x08		/* Misc Register */
+>   
+> -#define IMX2_WDT_MAX_TIME	128
+> +#define IMX2_WDT_MAX_TIME	128U
+>   #define IMX2_WDT_DEFAULT_TIME	60		/* in seconds */
+>   
+>   #define WDOG_SEC_TO_COUNT(s)	((s * 2 - 1) << 8)
+> @@ -180,7 +180,7 @@ static int imx2_wdt_set_timeout(struct watchdog_device *wdog,
+>   {
+>   	unsigned int actual;
+>   
+> -	actual = min(new_timeout, wdog->max_hw_heartbeat_ms * 1000);
+> +	actual = min(new_timeout, IMX2_WDT_MAX_TIME);
+>   	__imx2_wdt_set_timeout(wdog, actual);
+>   	wdog->timeout = new_timeout;
+>   	return 0;
+> 
 
