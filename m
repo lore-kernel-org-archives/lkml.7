@@ -2,150 +2,102 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA2AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3864BC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4492067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08F6320684
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:42:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vB8BBLTc"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Xe1HCglz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfHLUli (ORCPT
+        id S1726747AbfHLUmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 16:41:38 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43159 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbfHLUli (ORCPT
+        Mon, 12 Aug 2019 16:42:08 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43901 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfHLUmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 16:41:38 -0400
-Received: by mail-pg1-f196.google.com with SMTP id r26so14122629pgl.10
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 13:41:37 -0700 (PDT)
+        Mon, 12 Aug 2019 16:42:08 -0400
+Received: by mail-pl1-f195.google.com with SMTP id 4so41327317pld.10
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 13:42:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MJnh/DbbwUp2ykhuWtKroei6fTXCscBWC620YMU78kw=;
-        b=vB8BBLTcHyR/6MmManbwUwxuFJIulQIi8ssstEWavyxVjDjZTqCdDV4k+GvQznx2Gu
-         BYrmoSxq/p6EpObadBuog/qnQED0Er2g3FPY/R5mmU2+6prANR/EPeaPhjZJhguiIiRP
-         laVlnix+3k3ldsZoV0C1xagsklVYtYidBM9aE1xGrFVcLjBbwRpW6HahGY9+Avp/kWLm
-         T5NAN/tqvOLG0auDu2paiIhDdkHD9xVBreQFe50Qz3Fk4VEdJTBMNP4enXfrvN3t06qW
-         EUgtNhbhUYFQV5XLv75AMMsdUTUbhRhJq5GaejhlsHjGOrbIRPayAm9bBTghIOMPNAZO
-         gGvA==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HB3fJfLK4PnVLPAunkiBcGzstN0wP/veN+x35xEeTW4=;
+        b=Xe1HCglzqQ/jt0qNR/aglTK1b4gWyuldTqcJGOCn2p8MviY8GjAePqFA8W6qXYNWwh
+         2cixQe7Xk+CMRlinmlShEIITwIG+/yKYjpZ4tXo+xdxjqX6r2AXuhjY1AXgfF/+pPLpt
+         3H4FA7FbPHHMEjZxSLeUZCOeIzQH+QoS9hGTM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MJnh/DbbwUp2ykhuWtKroei6fTXCscBWC620YMU78kw=;
-        b=oLTNwAwAQnPuaB2n/baGacDE6srBJsgh9lIhDIBgha0+678z3mNQYnvGekadnXp91W
-         8jK6LU5CFwzG+PjuoR8QkRnOL0e8fGPwF8qjb975i1IewPnw6ESQpXZ0gj3mn3KK21PC
-         WZB70ux7pI2RAQ/V72F8ekUG6R2eebncKSwwl7q31TuztdZrnYi8XDqqBsBOxHTReGgX
-         X3vAAZnDF2RT+6BQEjjZWVrgJRon+5yCryzz4OHasNBcwvRaTPE9NIADZhd/rwVTm4tj
-         jXCwuZpTrsdkjx1mdiqB9gm9JvT1/JHWAx5vQmKBC6kkKMQ3G5kz6QD7lvVyKvwB6fEB
-         dphQ==
-X-Gm-Message-State: APjAAAWct3m28BtOzBAoEOOBUt8Sv7Wc6duup8B/rANaajAfPgeeO/pg
-        X2tJfl7IenuRMpf1j0pjAStLzglrPAw+DXNKmLjVZQ==
-X-Google-Smtp-Source: APXvYqzmkY3rA1NydAKLLowsftOVMQA6KoE5ccWG/aJPzsMG71zwm21zQ2Wdnhb2Togz1F6UwE1Me36C6jQdnlOZ3bs=
-X-Received: by 2002:a63:b919:: with SMTP id z25mr31379684pge.201.1565642496668;
- Mon, 12 Aug 2019 13:41:36 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HB3fJfLK4PnVLPAunkiBcGzstN0wP/veN+x35xEeTW4=;
+        b=Wb1QSfsl2NobrGbOGEIM4/vQo4c+PaJrNXQMZWZ+nbiyU9BMHuX+45SbO0abB7xvL/
+         sBnyRBVDyS6L70/TFamVCIypscaThVp9/rmTLJgzMFjzPfQxMVFU7NJmccVDXXU9UtTl
+         WetC2HO+BNeFG1HCPYf2OSYBb/BPxSw5BfRMUZArDAQ3R1gO39gJ0DqCfY7gpw8AHh+Q
+         gX2N9MZLy7HNkmJDg3iAwu7bB7U9PczOqv5bEuOU8F1/Cs7Ywqk0pyGQpIlzzXa/7iRm
+         EKEdvSCXL8exG0PXTGD7J8771OSXLfUjjqugMEfR36Slufm9TED2aaMMsOmSuLI3F+tZ
+         A/Gw==
+X-Gm-Message-State: APjAAAUF/4vdA6bx9POmgRLtPBYKYmodCKmwZkcSxcYuyZ1z3Y2Zj4rg
+        KZURgHcL3oZa69aXvM6GOZetEw==
+X-Google-Smtp-Source: APXvYqzPYpjVmv8OPuJ7/zhwmE1fv9Mj7f2m91Oz+OJyXmJx2LhgvftlfMirHjQRBKJSR4vGQbrjbw==
+X-Received: by 2002:a17:902:1004:: with SMTP id b4mr23932384pla.340.1565642527441;
+        Mon, 12 Aug 2019 13:42:07 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id a4sm2991210pfi.55.2019.08.12.13.42.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 13:42:06 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 16:42:05 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 2/3] doc: Update documentation about
+ list_for_each_entry_rcu (v1)
+Message-ID: <20190812204205.GA48751@google.com>
+References: <20190811221111.99401-1-joel@joelfernandes.org>
+ <20190811221111.99401-2-joel@joelfernandes.org>
+ <20190812202241.GP28441@linux.ibm.com>
 MIME-Version: 1.0
-References: <20190716175021.9CA412173C@mail.kernel.org> <20190719000834.GA3228@google.com>
- <20190722200347.261D3218C9@mail.kernel.org> <CAFd5g45hdCxEavSxirr0un_uLzo5Z-J4gHRA06qjzcQrTzmjVg@mail.gmail.com>
- <20190722235411.06C1320840@mail.kernel.org> <20190724073125.xyzfywctrcvg6fmh@pathway.suse.cz>
- <CAFd5g47v3Mr4GEGOjqyYy9Jwwm+ow7ypbu9j88rxEN06QCzdxQ@mail.gmail.com>
- <20190726083148.d4gf57w2nt5k7t6n@pathway.suse.cz> <CAFd5g46iAhDZ5C_chi7oYLVOkwcoj6+0nw+kPWuXhqWwWKd9jA@mail.gmail.com>
- <CAFd5g473iFfvBnJs2pcwuJYgY+DpgD6RLzyDFL1otUuScgKUag@mail.gmail.com>
- <20190801211447.6D3D7206A2@mail.kernel.org> <CAFd5g47tk8x5iet=xfPVO6MphD3SsLtYQLrCi5O2h0bvdXwHtA@mail.gmail.com>
-In-Reply-To: <CAFd5g47tk8x5iet=xfPVO6MphD3SsLtYQLrCi5O2h0bvdXwHtA@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 12 Aug 2019 13:41:24 -0700
-Message-ID: <CAFd5g44bovSiiqGCip1Q4zBOUauXMcryxnPs8miOa0-QrPW61Q@mail.gmail.com>
-Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like logger
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Petr Mladek <pmladek@suse.com>, Jeff Dike <jdike@addtoit.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@google.com>,
-        David Rientjes <rientjes@google.com>,
-        kunit-dev@googlegroups.com,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
-        wfg@linux.intel.com, Greg KH <gregkh@linuxfoundation.org>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Richard Weinberger <richard@nod.at>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Timothy Bird <Tim.Bird@sony.com>,
-        John Ogness <john.ogness@linutronix.de>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812202241.GP28441@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 2:43 PM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> On Thu, Aug 1, 2019 at 2:14 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> >
-> > Quoting Brendan Higgins (2019-08-01 11:59:57)
-> > > On Thu, Aug 1, 2019 at 11:55 AM Brendan Higgins
-> > > <brendanhiggins@google.com> wrote:
-> > > >
-> > > > On Fri, Jul 26, 2019 at 1:31 AM Petr Mladek <pmladek@suse.com> wrote:
-> > > >
-> > > > > To be honest I do not fully understand KUnit design. I am not
-> > > > > completely sure how the tested code is isolated from the running
-> > > > > system. Namely, I do not know if the tested code shares
-> > > > > the same locks with the system running the test.
-> > > >
-> > > > No worries, I don't expect printk to be the hang up in those cases. It
-> > > > sounds like KUnit has a long way to evolve before printk is going to
-> > > > be a limitation.
-> > >
-> > > So Stephen, what do you think?
-> > >
-> > > Do you want me to go forward with the new kunit_assert API wrapping
-> > > the string_stream as I have it now? Would you prefer to punt this to a
-> > > later patch? Or would you prefer something else?
-> > >
-> >
-> > I like the struct based approach. If anything, it can be adjusted to
-> > make the code throw some records into a spinlock later on and delay the
-> > formatting of the assertion if need be.
->
-> That's a fair point.
->
-> > Can you resend with that
-> > approach? I don't think I'll have any more comments after that.
+On Mon, Aug 12, 2019 at 01:22:41PM -0700, Paul E. McKenney wrote:
+> On Sun, Aug 11, 2019 at 06:11:10PM -0400, Joel Fernandes (Google) wrote:
+> > This patch updates the documentation with information about
+> > usage of lockdep with list_for_each_entry_rcu().
+> > 
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> 
+> Thank you!!!
+> 
+> I queued this for v5.5 with the following wordsmithing.  Please check
+> to make sure that I didn't mess anything up.
 
-I sent a new revision, v12, that incorporates the kunit_assert stuff.
+Yes, this looks great to me. thanks!
 
-Let me know what you think!
+Also, I will send out the other drivers/core patch of this series in a bit
+with Steve's suggestion.
+
+ - Joel
+
+[snip]
