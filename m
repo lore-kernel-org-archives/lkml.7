@@ -2,201 +2,182 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A643AC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7D4C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D7C92063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E01142054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:56:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MURQZflg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kj+TnowR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfHLXyh (ORCPT
+        id S1727071AbfHLX4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 19:54:37 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46892 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbfHLXyh (ORCPT
+        Mon, 12 Aug 2019 19:56:43 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42095 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbfHLX4n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 19:54:37 -0400
-Received: by mail-ot1-f67.google.com with SMTP id z17so47325350otk.13;
-        Mon, 12 Aug 2019 16:54:36 -0700 (PDT)
+        Mon, 12 Aug 2019 19:56:43 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t132so50272193pgb.9
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 16:56:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=w2kdR+7b7KvFC+HWFUinAh+s80F0DWNtdCahrnarn44=;
-        b=MURQZflgt53gZwpL/adUQPWglHlq+Vte6KXRI0z/ItnHLIbuIWVx+AHjTIX3e2/2XJ
-         AgQauFkwH8PiW27qaftBzb8SjEZ22PQqEWa+nCPvevt0Be+071pvDuvfrffhPLtBRpdA
-         LBIdY9YYHhtIhRwH3KeCIhyxenjmm3/uupxNakiv2kKJarsmfSyGbsbA9DFnwaS0ukVe
-         W1bFdGY9LnSQmBVakQlpzuluvXvyRyG+GjF+BMnQ3AsRKnDVSirB6IyXN29SEnjYM10Q
-         Kg+r75M1tzmCtWw+PxSZkLBjos7xfe2rDFrJIyNyazO4H6GArHp+JAU+pZqjWawZp4oF
-         m2ug==
+        bh=gYpSAuCXXKxryh8QTeN+G2zHTLzdvz4q0W6bw5kxZF4=;
+        b=kj+TnowRhwNBHJOh8ghz79tlvll8x/4UGw5bdSUzfSM675Bmppn0T+5pwwMqUi1Pj8
+         SkfxC53wkTjuPEqLDzqpMT8o02usB1hT7ISXFNR37RoScwW9mBXE4G6OWWcEhGxQ4RjE
+         ZULQCeKPfhmyKaUvhvxsP1ztH072L3pIFOOb1mQPoepGl9JYtada5S4xJGf8kTW6G2ed
+         agtpkDcP4Se/8cfElAOE/jMH6pWLmTG0sCRAYFHxhMUFNN99If6/5pZXWUcydlo5gP79
+         cH+LRfP7b/BQG+d1ym6KyAQRfa3JaLfiK6f13kXjD96rm3bbdFV/J9GFHUpWjzV//M/H
+         yS1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=w2kdR+7b7KvFC+HWFUinAh+s80F0DWNtdCahrnarn44=;
-        b=V9s9vJUc2ceaccAPpSEc85odBC0MXUNSVC7Y4m6nL8EsmlzVI69PnHsPK1oawq8Dcy
-         tadoWeuWmIjF4Id7G8mKWnQTk0E131wfZ0sytTC8YZZPfbM240OReedPywq/8+ruEM+L
-         nS8GjYFjrJ8kA3qt4q+SYey8TMBQ+lOwIuvPI4RqiH98t8LviB/JYqxQ6T9OR2/+xnem
-         LktKRuwXUKpYRiaGiNYnH86+TkMc7zj+HFD/28YfROYZB4CSP9Xhl5z5+b3xbIfQnmUz
-         o6ur5QC3VTQZ4Xc0k28QjI2orut7QjAtsMGPZyn3MgWqiUf04rC13P0LqSwybm8VVY0Y
-         j9kg==
-X-Gm-Message-State: APjAAAUlFqjsrnlMsd8bS5hT+xo5eUXNU26lIUY+V8SNHLO3icvuggbN
-        Ic8cC6txMZu5vadJs3QZf649/DDN1uFhdrzni7w=
-X-Google-Smtp-Source: APXvYqz72zUtIykO8D1IdH6U+dE5fed0U7T2C3hqJGnZx13Lu2B8gFOyDxVqs3R/+r4Eq6F8rMwsnza3cbCy+u/sHjs=
-X-Received: by 2002:a05:6830:1f0b:: with SMTP id u11mr23846230otg.263.1565654075918;
- Mon, 12 Aug 2019 16:54:35 -0700 (PDT)
+        bh=gYpSAuCXXKxryh8QTeN+G2zHTLzdvz4q0W6bw5kxZF4=;
+        b=dK0Haq4aJrqt35QljYyHITVSAziI0LHNOpNk9wQbrlrK8XPrfzU8IJI+2k64meeEy3
+         U7cRTPvhyI2sIyfslLEbiNDvhmTNFPq6vpwQ+A0CWd/kG6DD94RtpjkyujoU94HshjEd
+         UDvWJ0c1wNJyXt/q9iKn0lUXIhCgKJuMETmzNgr9iVUNs3VKGaSQNi0LxSYPEXvkaWlH
+         V1ChDyjKl20JqnWH2QktGIGW3pB9RV41NXqN4K1gSFRtoEt1d41NaHnCgoYC+rO9POoS
+         h45K3BkE+t5qvlkJAG6wgUNZxUfRYqiptO1sA4SHIeZhfksCphyszj7VpsQuF8GC7Mhp
+         cDOQ==
+X-Gm-Message-State: APjAAAWJ9Exh9k58u+xn2whOT4XdYwsqE/WiHxIfnHcfqdEV38wCsh/C
+        rOPOpPhhff6YENK6fpsrra77VY8j58pgkoDazY3NSg==
+X-Google-Smtp-Source: APXvYqw7Md+FhMdhe7gt7ZbaYFjad4Qutk9q143YLYnyDZF1R0tUF3skBOerqPAJS3PaDxgm1xGa9mrupUlIDIlaGXw=
+X-Received: by 2002:a63:b919:: with SMTP id z25mr31882885pge.201.1565654201390;
+ Mon, 12 Aug 2019 16:56:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190810052829.6032-1-tiny.windzz@gmail.com> <20190810052829.6032-9-tiny.windzz@gmail.com>
- <CA+E=qVfp-rProxOwX__J6jM-pZ9g_SmeuOCOgvC_5DJVQw4OGw@mail.gmail.com> <CAEExFWubLqtPZ=ZKJTCb6x2-PeYebXb3sr-t-XvtrLJTRiUU1A@mail.gmail.com>
-In-Reply-To: <CAEExFWubLqtPZ=ZKJTCb6x2-PeYebXb3sr-t-XvtrLJTRiUU1A@mail.gmail.com>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Mon, 12 Aug 2019 16:54:15 -0700
-Message-ID: <CA+E=qVf9V9iTvCfXXyjqKeviCJOvYpKUO8qw6cQsKqoaRmdKYQ@mail.gmail.com>
-Subject: Re: [PATCH v5 08/18] thermal: sun8i: support mod clocks
-To:     Frank Lee <tiny.windzz@gmail.com>
-Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan.Cameron@huawei.com,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
+References: <20190812182421.141150-1-brendanhiggins@google.com>
+ <20190812182421.141150-5-brendanhiggins@google.com> <20190812234644.E054D20679@mail.kernel.org>
+In-Reply-To: <20190812234644.E054D20679@mail.kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 12 Aug 2019 16:56:29 -0700
+Message-ID: <CAFd5g44huOiR9B0H1C2TtiPy63BDuwi_Qpb_exF3zmT3ttV8eg@mail.gmail.com>
+Subject: Re: [PATCH v12 04/18] kunit: test: add assertion printing library
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 4:46 PM Frank Lee <tiny.windzz@gmail.com> wrote:
+On Mon, Aug 12, 2019 at 4:46 PM Stephen Boyd <sboyd@kernel.org> wrote:
 >
-> HI Vasily,
+> Quoting Brendan Higgins (2019-08-12 11:24:07)
+> > Add `struct kunit_assert` and friends which provide a structured way to
+> > capture data from an expectation or an assertion (introduced later in
+> > the series) so that it may be printed out in the event of a failure.
+> >
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > ---
 >
-> On Sat, Aug 10, 2019 at 2:17 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
-> >
-> > On Fri, Aug 9, 2019 at 10:31 PM Yangtao Li <tiny.windzz@gmail.com> wrote:
-> > >
-> > > H3 has extra clock, so introduce something in ths_thermal_chip/ths_device
-> > > and adds the process of the clock.
-> > >
-> > > This is pre-work for supprt it.
-> > >
-> > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > > ---
-> > >  drivers/thermal/sun8i_thermal.c | 17 ++++++++++++++++-
-> > >  1 file changed, 16 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-> > > index b934bc81eba7..6f4294c2aba7 100644
-> > > --- a/drivers/thermal/sun8i_thermal.c
-> > > +++ b/drivers/thermal/sun8i_thermal.c
-> > > @@ -54,6 +54,7 @@ struct tsensor {
-> > >  };
-> > >
-> > >  struct ths_thermal_chip {
-> > > +       bool            has_mod_clk;
-> > >         int             sensor_num;
-> > >         int             offset;
-> > >         int             scale;
-> > > @@ -69,6 +70,7 @@ struct ths_device {
-> > >         struct regmap                           *regmap;
-> > >         struct reset_control                    *reset;
-> > >         struct clk                              *bus_clk;
-> > > +       struct clk                              *mod_clk;
-> > >         struct tsensor                          sensor[MAX_SENSOR_NUM];
-> > >  };
-> > >
-> > > @@ -274,6 +276,12 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
-> > >         if (IS_ERR(tmdev->bus_clk))
-> > >                 return PTR_ERR(tmdev->bus_clk);
-> > >
-> > > +       if (tmdev->chip->has_mod_clk) {
-> > > +               tmdev->mod_clk = devm_clk_get(&pdev->dev, "mod");
-> > > +               if (IS_ERR(tmdev->mod_clk))
-> > > +                       return PTR_ERR(tmdev->mod_clk);
-> > > +       }
-> > > +
-> > >         ret = reset_control_deassert(tmdev->reset);
-> > >         if (ret)
-> > >                 return ret;
-> > > @@ -282,12 +290,18 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
-> > >         if (ret)
-> > >                 goto assert_reset;
-> > >
-> > > -       ret = sun50i_ths_calibrate(tmdev);
-> > > +       ret = clk_prepare_enable(tmdev->mod_clk);
-> >
-> > You have to set rate of modclk before enabling it since you can't rely
-> > on whatever bootloader left for you.
-> >
-> > Also I found that parameters you're using for PC_TEMP_PERIOD, ACQ0 and
-> > ACQ1 are too aggressive and may result in high interrupt rate to the
-> > point when it may stall RCU. I changed driver a bit to use params from
-> > Philipp Rossak's work (modclk set to 4MHz, PC_TEMP_PERIOD is 7, ACQ0
-> > is 255, ACQ1 is 63) and it fixed RCU stalls for me, see [1] for
-> > details.
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 >
-> Why is the RCU stall happening, is it caused by a deadlock?
-> Can you provide log information and your configuration?
-> I am a bit curious.
+> Just some minor nits below
+>
+> > diff --git a/include/kunit/assert.h b/include/kunit/assert.h
+> > new file mode 100644
+> > index 0000000000000..55f1b88b0cb4d
+> > --- /dev/null
+> > +++ b/include/kunit/assert.h
+> > @@ -0,0 +1,183 @@
+> [...]
+> > +                           struct string_stream *stream);
+> > +
+> > +struct kunit_fail_assert {
+> > +       struct kunit_assert assert;
+> > +};
+> > +
+> > +void kunit_fail_assert_format(const struct kunit_assert *assert,
+> > +                             struct string_stream *stream);
+> > +
+> > +#define KUNIT_INIT_FAIL_ASSERT_STRUCT(test, type) {                           \
+> > +               .assert = KUNIT_INIT_ASSERT_STRUCT(test,                       \
+> > +                                                  type,                       \
+> > +                                                  kunit_fail_assert_format)   \
+>
+> This one got indented one too many times?
 
-It's not deadlock, I believe it just can't handle that many interrupts
-when running at lowest CPU frequency. Even with Philipp's settings
-there's ~20 interrupts a second from ths. I don't remember how many
-interrupts were there with your settings.
+Not unless I have been using the wrong formatting for multiline
+macros. You can see this commit applied here:
+https://kunit.googlesource.com/linux/+/870964da2990920030990dd1ffb647ef408e52df/include/kunit/assert.h#59
 
-Unfortunately there's nothing interesting in backtraces, I'm using
-Pine64-LTS board.
+I have test, type, and kunit_fail_assert_format all column aligned (it
+just doesn't render nicely in the patch format).
 
-> Thx,
-> Yangtao
+> > +}
+> > +
+> > +struct kunit_unary_assert {
+> > +       struct kunit_assert assert;
+> > +       const char *condition;
+> > +       bool expected_true;
+> > +};
+> > +
+> > +void kunit_unary_assert_format(const struct kunit_assert *assert,
+> > +                              struct string_stream *stream);
+> > +
+> [...]
+> > +#define KUNIT_INIT_BINARY_STR_ASSERT_STRUCT(test,                             \
+> > +                                           type,                              \
+> > +                                           op_str,                            \
+> > +                                           left_str,                          \
+> > +                                           left_val,                          \
+> > +                                           right_str,                         \
+> > +                                           right_val) {                       \
+> > +       .assert = KUNIT_INIT_ASSERT_STRUCT(test,                               \
+> > +                                          type,                               \
+> > +                                          kunit_binary_str_assert_format),    \
+> > +       .operation = op_str,                                                   \
+> > +       .left_text = left_str,                                                 \
+> > +       .left_value = left_val,                                                \
+> > +       .right_text = right_str,                                               \
+> > +       .right_value = right_val                                               \
+> > +}
 >
-> >
-> > [1] https://github.com/anarsoul/linux-2.6/commit/46b8bb0fe2ccd1cd88fa9181a2ecbf79e8d513b2
-> >
-> >
-> > >         if (ret)
-> > >                 goto bus_disable;
-> > >
-> > > +       ret = sun50i_ths_calibrate(tmdev);
-> > > +       if (ret)
-> > > +               goto mod_disable;
-> > > +
-> > >         return 0;
-> > >
-> > > +mod_disable:
-> > > +       clk_disable_unprepare(tmdev->mod_clk);
-> > >  bus_disable:
-> > >         clk_disable_unprepare(tmdev->bus_clk);
-> > >  assert_reset:
-> > > @@ -395,6 +409,7 @@ static int sun8i_ths_remove(struct platform_device *pdev)
-> > >  {
-> > >         struct ths_device *tmdev = platform_get_drvdata(pdev);
-> > >
-> > > +       clk_disable_unprepare(tmdev->mod_clk);
-> > >         clk_disable_unprepare(tmdev->bus_clk);
-> > >         reset_control_assert(tmdev->reset);
-> > >
-> > > --
-> > > 2.17.1
-> > >
-> > >
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> It would be nice to have kernel doc on these macros so we know how to
+> use them.
+
+Sounds good. Will fix.
