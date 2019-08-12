@@ -2,126 +2,106 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713CEC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0330C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47516214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF3792085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:28:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LO5JKiJd"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IHRRCekE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbfHLL1m (ORCPT
+        id S1728270AbfHLL2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 07:27:42 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40641 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728179AbfHLL1l (ORCPT
+        Mon, 12 Aug 2019 07:28:37 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:18368 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728002AbfHLL2h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 07:27:41 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v19so11433551wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 04:27:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=onzhCYAhu69mMnXiA3vphG6i/bzFEmmStwTFQWrMk/M=;
-        b=LO5JKiJdEnUY8rCcJ2Dk0Cx7bVBWYoQfej9KzgsHgDhAkyu5Y53OGvPMUIyUokibZk
-         Zq3jSti6K5bU1CJ1cDsfIvltT3cpISE22lYn65JOgKwL0eAC4njzGhFQOH0fs648Ld1p
-         qR8D+vvuePJgI5XIy2e6QmnkXtoZxFh1k1FIf3QoOj5cPvSzuFIraDR9m/Ej91wJ9lHG
-         MzA0WxkE8gJ7UbJ970D1xLiwDnkOp5LkugO3JNEFjh8jNRwZeWjGmQwOpSRQ1GJwXJxh
-         xkJIHvQ7nBoS5vusCij3D0275J2K8rV9GTxNsY8GZDHgGh68O6JeV3dAqlT+aK6w4z9s
-         4xhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=onzhCYAhu69mMnXiA3vphG6i/bzFEmmStwTFQWrMk/M=;
-        b=iXfISPTFknQgZ2A5K15+czJMIHC/eA1zm3lrvZFB2rp+91wQRFJQATR4xH0D6h2CmJ
-         ub+dyrZmfEAStZrg3pWnvcETkCpgQNdRGW8/AcqMMBBynzs6EvoQ9LE3fCkp+3IELCsD
-         SzbyudNhfxNZpNBezcWlRoAF4rvrRiW/bSgKs/UKf9cAS2gHf32fm4PfgnA88UYRdXzi
-         039wh5kh7L/WFaJiClC39t0PmxAm3dNbzvcOEaRSdUV/ZBRINVPu1TSsdAR3J5EZOnIU
-         9iJ+Yc3+4aXPg9hHImruu9ByoymR29ssSHzLU3s+pNt8oUcIvmmNHQEQZBl4X/pw9BRC
-         r5sg==
-X-Gm-Message-State: APjAAAXC4RAC2fS3kCkxiK/lX97r/QlHJVxrSEEmjEpRvbhB97Irq+tP
-        k+TTFcZQdJtajtK4baQVgsFFLw==
-X-Google-Smtp-Source: APXvYqxmaNB4W7rQ1NBaIa13dmH8j4PeVi2WkfZMssZuVRKBziRrA/ksz+FwV16y1femTzoXzfSu1Q==
-X-Received: by 2002:a05:600c:54c:: with SMTP id k12mr8590960wmc.117.1565609260064;
-        Mon, 12 Aug 2019 04:27:40 -0700 (PDT)
-Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id e11sm13412913wrc.4.2019.08.12.04.27.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 04:27:39 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 12:27:31 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     Kate Stewart <kstewart@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org,
-        Richard Fontana <rfontana@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-rtc@vger.kernel.org, Allison Randal <allison@lohutok.net>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
-        Sean Wang <sean.wang@mediatek.com>,
-        "Tianping . Fang" <tianping.fang@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: Re: [PATCH v3 06/10] mfd: mt6323: some improvements of
- mt6397-core
-Message-ID: <20190812112731.GS26727@dell>
-References: <20190729174154.4335-1-frank-w@public-files.de>
- <20190729174154.4335-7-frank-w@public-files.de>
- <20190812102209.GI26727@dell>
- <trinity-0fa641df-f7bb-4627-a9ab-aac3cabc90ba-1565609115974@3c-app-gmx-bs80>
+        Mon, 12 Aug 2019 07:28:37 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d514d6f0000>; Mon, 12 Aug 2019 04:28:47 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 12 Aug 2019 04:28:36 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 12 Aug 2019 04:28:36 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 12 Aug
+ 2019 11:28:36 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 12 Aug 2019 11:28:36 +0000
+Received: from kyarlagadda-linux.nvidia.com (Not Verified[10.19.64.169]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d514d610000>; Mon, 12 Aug 2019 04:28:36 -0700
+From:   Krishna Yarlagadda <kyarlagadda@nvidia.com>
+To:     <gregkh@linuxfoundation.org>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <ldewangan@nvidia.com>, <jslaby@suse.com>
+CC:     <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Krishna Yarlagadda <kyarlagadda@nvidia.com>
+Subject: [PATCH 00/14] serial: tegra: Tegra186 support and fixes
+Date:   Mon, 12 Aug 2019 16:58:09 +0530
+Message-ID: <1565609303-27000-1-git-send-email-kyarlagadda@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <trinity-0fa641df-f7bb-4627-a9ab-aac3cabc90ba-1565609115974@3c-app-gmx-bs80>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565609327; bh=IeA7TVzSY/j/yQ40dk+G66W/AzCRieQzDfzgCyYzZDQ=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=IHRRCekEJxQVEHEPjVwHWrMYSE2xITl1tZJ+fVOcsBXDaMq9ir5j7CBYN9mClJODW
+         fgCxOPgjLhyuIVZB895aXlibIggpvR6kYCg19gfKA3XUaxs6HiAgwoGpTAM1GH4vVC
+         Mz+4TGI8SfptcwqLvV1Gc5t1npuOADlk4eqfo63vTY0F6a3xVM4Zxhdj5EgYTKIGlO
+         +UqfCTKaNwqLxory4XZaR46jDp50fSrMrKuB+dvh3T3E5AgdVpN8bAiOADiDvMxEUU
+         afbeI5ClCp7Rtj9klAwn4qeV6rRr+itQunwTaKdxfvw2IH2kbQPJw1aUQS5FVTG1bN
+         KTgYE2kXQq8kA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 12 Aug 2019, Frank Wunderlich wrote:
+Series of patches adding enhancements to exising UART driver and adding
+support for new chip Tegra186 and Tegra194.
 
-> > Gesendet: Montag, 12. August 2019 um 12:22 Uhr
-> > Von: "Lee Jones" <lee.jones@linaro.org>
-> 
-> > > - * Copyright (c) 2014 MediaTek Inc.
-> > > + * Copyright (c) 2014-2018 MediaTek Inc.
-> >
-> > This is out of date.  Please update it.
-> 
-> maybe i should drop change of this line completely (else it needs to be adjusted every year)
+Tegra186 uses GPCDMA for dma transfers which is still not available in
+mainstream. However, it can work in PIO/FIFO mode and support added for it.
+Also Tegra186 has a hardware issue where it does not meet tolernace +/-4% and
+to work around it, device tree entries provided to adjust baud rate for a
+particular range.
 
-It only needs changing when the Copyright is changed.
+Ahung Cheng (2):
+  serial: tegra: avoid reg access when clk disabled
+  serial: tegra: protect IER against LCR.DLAB
 
-If you want to update it to 2014-2019, that's fine.
+Andreas Abel (1):
+  serial: tegra: add internal loopback functionality
 
-Or leaving it untouched, is also fine.
+Krishna Yarlagadda (7):
+  serial: tegra: report error to upper tty layer
+  serial: tegra: add compatible for new chips
+  serial: tegra: check for FIFO mode enabled status
+  serial: tegra: DT for Adjusted baud rates
+  serial: tegra: add support to adjust baud rate
+  serial: tegra: report clk rate errors
+  serial: tegra: Add PIO mode support
+
+Shardar Shariff Md (4):
+  serial: tegra: add support to ignore read
+  serial: tegra: flush the RX fifo on frame error
+  serial: tegra: set maximum num of uart ports to 8
+  serial: tegra: add support to use 8 bytes trigger
+
+ .../bindings/serial/nvidia,tegra20-hsuart.txt      |  35 +-
+ drivers/tty/serial/serial-tegra.c                  | 405 ++++++++++++++++++---
+ 2 files changed, 385 insertions(+), 55 deletions(-)
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
+
