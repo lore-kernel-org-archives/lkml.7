@@ -2,136 +2,127 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51195C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC201C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2764720684
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:03:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="PwGI0wkw"
+	by mail.kernel.org (Postfix) with ESMTP id 88C8A20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbfHLNDP (ORCPT
+        id S1728840AbfHLNDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 09:03:15 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35778 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728812AbfHLNDN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 09:03:13 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n4so7718245pgv.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 06:03:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9PGFo0IOTBF0bIx7y/QxiVY31P4bvTcKQoBfJqZTG+w=;
-        b=PwGI0wkwa6ZBvzJS2WowZtgp5DVi7QPH+BrB9p0HCfQcxpdzKqQgPTHdIAl3D1o9Ui
-         UwguTSYRYWuAd3qrqhfjY+51MrRtaJizalVxHqxwXrlJqDBvavY40TWKCBgS4IeFRTPK
-         AfF57tOE8WhINap7lLBY+lYVRyduY9cx0H4rc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9PGFo0IOTBF0bIx7y/QxiVY31P4bvTcKQoBfJqZTG+w=;
-        b=oDPMXxtJEUfJ7QiHitqODkluEYThzZHYNhlqFrCF9kmy3fwBqL1lw/TgZIDsNWQNSs
-         Ngnork39lMUP30QjYjy92ug4XOT/Ai3+ge4BwgBezMYn5WcT5h97eIttbyTWAaFPs1Jr
-         cjBXyqNMh/wYUsz4EN/KLdZRrzEDUDK+xvnkDEpcub7bxeVd+Hg02BDTN3ywpKaF2mGg
-         5rKxbz3IuZG3MVGE/D1nnm/lnXpLPc4FYwEXKoTF8tKLbBQqAovQjsq5WE1+cpl+gfHE
-         3eQEECOqqs3qXM6C7kNovw8BMyfpPSD6Q7ANeIWZfiB8qtoMb2e5JTnAqCtnlyuxFXWn
-         QuFA==
-X-Gm-Message-State: APjAAAUv0saEW2grwqMcpqc0++sUqLanP/rT0R8DAxxYqv8xsrtOmlwD
-        FosqmXmL1OfbMPIyHQ3qmhZZ4A==
-X-Google-Smtp-Source: APXvYqyz6EmE0iTkl3gZlNovk6A/dv0bMJdkggbBqQc3eqErF9H/OyeJ1CsBomxTPL6iok8vEgG0pQ==
-X-Received: by 2002:a17:90a:ec07:: with SMTP id l7mr18571059pjy.39.1565614992605;
-        Mon, 12 Aug 2019 06:03:12 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id o3sm25222103pje.1.2019.08.12.06.03.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 06:03:11 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 09:03:10 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH 3/3] driver/core: Fix build error when SRCU and lockdep
- disabled
-Message-ID: <20190812130310.GA27552@google.com>
-References: <20190811221111.99401-1-joel@joelfernandes.org>
- <20190811221111.99401-3-joel@joelfernandes.org>
- <20190812050256.GC5834@kroah.com>
+        Mon, 12 Aug 2019 09:03:20 -0400
+Received: from ozlabs.org ([203.11.71.1]:56767 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728826AbfHLNDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 09:03:19 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 466bcj1tK1z9sN6;
+        Mon, 12 Aug 2019 23:03:17 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Anshuman Khandual <anshuman.linux@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Ryan Grimm <grimm@linux.vnet.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: Re: [PATCH v3 11/16] powerpc/pseries/svm: Export guest SVM status to user space via sysfs
+In-Reply-To: <20190806052237.12525-12-bauerman@linux.ibm.com>
+References: <20190806052237.12525-1-bauerman@linux.ibm.com> <20190806052237.12525-12-bauerman@linux.ibm.com>
+Date:   Mon, 12 Aug 2019 23:03:16 +1000
+Message-ID: <8736i6sfhn.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812050256.GC5834@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 07:02:56AM +0200, Greg Kroah-Hartman wrote:
-> On Sun, Aug 11, 2019 at 06:11:11PM -0400, Joel Fernandes (Google) wrote:
-> > Properly check if lockdep lock checking is disabled at config time. If
-> > so, then lock_is_held() is undefined so don't do any checking.
-> > 
-> > This fix is similar to the pattern used in srcu_read_lock_held().
-> > 
-> > Link: https://lore.kernel.org/lkml/201908080026.WSAFx14k%25lkp@intel.com/
-> > Fixes: c9e4d3a2fee8 ("acpi: Use built-in RCU list checking for acpi_ioremaps list")
-> 
-> What tree is this commit in?
-> 
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > ---
-> > This patch is based on the -rcu dev branch.
-> 
-> Ah...
-> 
-> >  drivers/base/core.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > index 32cf83d1c744..fe25cf690562 100644
-> > --- a/drivers/base/core.c
-> > +++ b/drivers/base/core.c
-> > @@ -99,7 +99,11 @@ void device_links_read_unlock(int not_used)
-> >  
-> >  int device_links_read_lock_held(void)
-> >  {
-> > -	return lock_is_held(&device_links_lock);
-> > +#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> > +	return lock_is_held(&(device_links_lock.dep_map));
-> > +#else
-> > +	return 1;
-> > +#endif
-> 
-> return 1?  So the lock is always held?
+Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
+> From: Ryan Grimm <grimm@linux.vnet.ibm.com>
+>
+> User space might want to know it's running in a secure VM.  It can't do
+> a mfmsr because mfmsr is a privileged instruction.
+>
+> The solution here is to create a cpu attribute:
+>
+> /sys/devices/system/cpu/svm
+>
+> which will read 0 or 1 based on the S bit of the guest's CPU 0.
 
-This is just the pattern of an assert that is disabled, so that
-false-positives don't happen if lockdep is disabled.
+Why CPU 0?
 
-So say someone writes a statement like:
-WARN_ON_ONCE(!device_links_read_lock_held());
+If we have different CPUs running with different MSR_S then something
+has gone badly wrong, no?
 
-Since lockdep is disabled, we cannot check whether lock is held or not. Yet,
-we don't want false positives by reporting that the lock is not held. In this
-case, it is better to report that the lock is held to suppress
-false-positives.  srcu_read_lock_held() also follows the same pattern.
+So can't we just read the MSR on whatever CPU the sysfs code happens to
+run on.
 
-thanks,
+cheers
 
- - Joel
-
+> diff --git a/arch/powerpc/kernel/sysfs.c b/arch/powerpc/kernel/sysfs.c
+> index e2147d7c9e72..f7100ab77d29 100644
+> --- a/arch/powerpc/kernel/sysfs.c
+> +++ b/arch/powerpc/kernel/sysfs.c
+> @@ -19,6 +19,7 @@
+>  #include <asm/smp.h>
+>  #include <asm/pmc.h>
+>  #include <asm/firmware.h>
+> +#include <asm/svm.h>
+>  
+>  #include "cacheinfo.h"
+>  #include "setup.h"
+> @@ -715,6 +716,32 @@ static struct device_attribute pa6t_attrs[] = {
+>  #endif /* HAS_PPC_PMC_PA6T */
+>  #endif /* HAS_PPC_PMC_CLASSIC */
+>  
+> +#ifdef CONFIG_PPC_SVM
+> +static void get_svm(void *val)
+> +{
+> +	u32 *value = val;
+> +
+> +	*value = is_secure_guest();
+> +}
+> +
+> +static ssize_t show_svm(struct device *dev, struct device_attribute *attr, char *buf)
+> +{
+> +	u32 val;
+> +	smp_call_function_single(0, get_svm, &val, 1);
+> +	return sprintf(buf, "%u\n", val);
+> +}
+> +static DEVICE_ATTR(svm, 0444, show_svm, NULL);
+> +
+> +static void create_svm_file(void)
+> +{
+> +	device_create_file(cpu_subsys.dev_root, &dev_attr_svm);
+> +}
+> +#else
+> +static void create_svm_file(void)
+> +{
+> +}
+> +#endif /* CONFIG_PPC_SVM */
+> +
+>  static int register_cpu_online(unsigned int cpu)
+>  {
+>  	struct cpu *c = &per_cpu(cpu_devices, cpu);
+> @@ -1058,6 +1085,8 @@ static int __init topology_init(void)
+>  	sysfs_create_dscr_default();
+>  #endif /* CONFIG_PPC64 */
+>  
+> +	create_svm_file();
+> +
+>  	return 0;
+>  }
+>  subsys_initcall(topology_init);
