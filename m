@@ -2,153 +2,192 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDDEC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACDBC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41F39208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:34:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lVImMMz2"
+	by mail.kernel.org (Postfix) with ESMTP id 581D220842
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:34:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbfHLKeP (ORCPT
+        id S1727951AbfHLKep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:34:15 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43792 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727199AbfHLKeO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:34:14 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p13so29523315wru.10;
-        Mon, 12 Aug 2019 03:34:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dtSTTUUBqdhvdDXLf5hsOIn63I5eQ1MYrFt/Dlyzq7c=;
-        b=lVImMMz2WSbCGkQ78isy9YytFeejo4tBiKbmYGYa1Dg+7NeKJUQkvI0v9RlzObW26N
-         TeHQC+sTskIWViBkdRT/sBofC2pkPxiZvV+rxeFihw4Xt/WhkfvG2Einp+iWgNMmEpW8
-         uqSe5NEJtQ1V8yf8jdPVgJRKzfv/jU9xO8l7Ris74Vittim5wCd3qL+c1jhg4W72x/LA
-         h8tv7VjCHZsZl5h95SVVBtdZ4Ibats461YNXWenyj8Oo3dXPrGCNdFIbupUwIR80HuCo
-         BOcxBVUPso/dmiYuJKzklwN72bHGrIwo4l+R2mEnDjAVSQqCdHNqfamL8WIsXkfCcs4X
-         2gFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dtSTTUUBqdhvdDXLf5hsOIn63I5eQ1MYrFt/Dlyzq7c=;
-        b=uZmYS+3blvNXAZVXfLMgac1EvnIBdMSYodZY7uRQLeRwDk9Eh4G0FFtz/jZ3rlTrNx
-         rTDMs6ZomNHeigx+UTs2+rLF0v7ky+iVimrNjc7ZfeXqUFCht1NwhJ8xkiVfV52Xb8wi
-         it8ZTQTXgOjy4K/MbXWza1G0ZOw9PPuf8c2EUHe+7c8wHJWj5VwCCqph+q6cCbYkkz/k
-         FjWBXjAAKywbbl7hTHK9wENXyTM8ed3yfP7cJBOXq6LSF2I4VL2itXfLL/rmD8YMwq1X
-         A/Fxff3d58j3yUYlsjEt1JLbCVSrQ371K0rOGDJ0v0K/EHy8RXK1LSMcTlbRMGh+nVHL
-         +Zkw==
-X-Gm-Message-State: APjAAAWVwTNpEvnkXFb4wv5bGr4tuwmwi4VFD3Om83h2KMW5UlxupVKS
-        6NbKBPvY4bf4e/Is/2oWpQo=
-X-Google-Smtp-Source: APXvYqxDE7RJ2i6s8am7/VWRRZXy1R+AOldVj3UiB2rbBd+7FM7mAM0+8hLQWuYHVbKSkxcjIp5e4A==
-X-Received: by 2002:adf:f3c1:: with SMTP id g1mr40412123wrp.203.1565606052462;
-        Mon, 12 Aug 2019 03:34:12 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id i5sm7610442wrn.48.2019.08.12.03.34.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 03:34:11 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 12:34:10 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, digetx@gmail.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V15 00/13] PCI: tegra: Add Tegra194 PCIe support
-Message-ID: <20190812103410.GO8903@ulmo>
-References: <20190809044609.20401-1-vidyas@nvidia.com>
- <20190812102519.GN8903@ulmo>
- <aa666d78-43b3-dbea-dac6-386deaca3e12@nvidia.com>
+        Mon, 12 Aug 2019 06:34:45 -0400
+Received: from mga03.intel.com ([134.134.136.65]:28382 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727199AbfHLKeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 06:34:44 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 03:34:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,377,1559545200"; 
+   d="asc'?scan'208";a="170000591"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by orsmga008.jf.intel.com with ESMTP; 12 Aug 2019 03:34:39 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Pawel Laszczak <pawell@cadence.com>,
+        "devicetree\@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>
+Cc:     "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "hdegoede\@redhat.com" <hdegoede@redhat.com>,
+        "heikki.krogerus\@linux.intel.com" <heikki.krogerus@linux.intel.com>,
+        "robh+dt\@kernel.org" <robh+dt@kernel.org>,
+        "rogerq\@ti.com" <rogerq@ti.com>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jbergsagel\@ti.com" <jbergsagel@ti.com>,
+        "nsekhar\@ti.com" <nsekhar@ti.com>, "nm\@ti.com" <nm@ti.com>,
+        Suresh Punnoose <sureshp@cadence.com>,
+        "peter.chen\@nxp.com" <peter.chen@nxp.com>,
+        Jayshri Dajiram Pawar <jpawar@cadence.com>,
+        Rahul Kumar <kurahul@cadence.com>
+Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
+In-Reply-To: <BYAPR07MB470931F8C699784CC88E21CBDDD30@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1562324238-16655-1-git-send-email-pawell@cadence.com> <1562324238-16655-6-git-send-email-pawell@cadence.com> <877e8tm25r.fsf@linux.intel.com> <BYAPR07MB4709152CB29B6B027ABEB688DDCF0@BYAPR07MB4709.namprd07.prod.outlook.com> <8736idnu0q.fsf@gmail.com> <BYAPR07MB4709B0A4FADFB76183D651DCDDD10@BYAPR07MB4709.namprd07.prod.outlook.com> <87k1bjvtvi.fsf@gmail.com> <BYAPR07MB470926DA6241B54FC5AF3C2ADDD30@BYAPR07MB4709.namprd07.prod.outlook.com> <87imr2u77c.fsf@gmail.com> <BYAPR07MB4709C07ED94C952886858F14DDD30@BYAPR07MB4709.namprd07.prod.outlook.com> <87d0hau37p.fsf@gmail.com> <BYAPR07MB470931F8C699784CC88E21CBDDD30@BYAPR07MB4709.namprd07.prod.outlook.com>
+Date:   Mon, 12 Aug 2019 13:34:35 +0300
+Message-ID: <877e7iu0xw.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mvuFargmsA+C2jC8"
-Content-Disposition: inline
-In-Reply-To: <aa666d78-43b3-dbea-dac6-386deaca3e12@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---mvuFargmsA+C2jC8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--=-=-=
+Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 12, 2019 at 03:59:39PM +0530, Vidya Sagar wrote:
-> On 8/12/2019 3:55 PM, Thierry Reding wrote:
-> > On Fri, Aug 09, 2019 at 10:15:56AM +0530, Vidya Sagar wrote:
-> > > Tegra194 has six PCIe controllers based on Synopsys DesignWare core.
-> > > There are two Universal PHY (UPHY) blocks with each supporting 12(HSI=
-O:
-> > > Hisg Speed IO) and 8(NVHS: NVIDIA High Speed) lanes respectively.
-> > > Controllers:0~4 use UPHY lanes from HSIO brick whereas Controller:5 u=
-ses
-> > > UPHY lanes from NVHS brick. Lane mapping in HSIO UPHY brick to each P=
-CIe
-> > > controller (0~4) is controlled in XBAR module by BPMP-FW. Since PCIe
-> > > core has PIPE interface, a glue module called PIPE-to-UPHY (P2U) is u=
-sed
-> > > to connect each UPHY lane (applicable to both HSIO and NVHS UPHY bric=
-ks)
-> > > to PCIe controller
-> > > This patch series
-> > > - Adds support for P2U PHY driver
-> > > - Adds support for PCIe host controller
-> > > - Adds device tree nodes each PCIe controllers
-> > > - Enables nodes applicable to p2972-0000 platform
-> > > - Adds helper APIs in Designware core driver to get capability regs o=
-ffset
-> > > - Adds defines for new feature registers of PCIe spec revision 4
-> > > - Makes changes in DesignWare core driver to get Tegra194 PCIe working
-> > >=20
-> > > Testing done on P2972-0000 platform
-> > > - Able to get PCIe link up with on-board Marvel eSATA controller
-> > > - Able to get PCIe link up with NVMe cards connected to M.2 Key-M slot
-> > > - Able to do data transfers with both SATA drives and NVMe cards
-> > > - Able to perform suspend-resume sequence
-> >=20
-> > Do you happen to have a patch for P2972-0000 PCI support? I don't see it
-> > in this series.
-> It is already merged.
-> V10 link @ http://patchwork.ozlabs.org/patch/1114445/
 
-D'oh! Indeed.
+Hi,
 
-Thierry
+Pawel Laszczak <pawell@cadence.com> writes:
+>>>>Yet another thread? Can't you just run this right before giving back the
+>>>>USB request? So, don't do it from IRQ handler, but from giveback path?
+>>>
+>>> Do you mean in:
+>>> 	if (request->complete) {
+>>> 		spin_unlock(&priv_dev->lock);
+>>> 		if (priv_dev->run_garbage_collector) {
+>>> 			....
+>>> 		}
+>>> 		usb_gadget_giveback_request(&priv_ep->endpoint,
+>>> 					    request);
+>>> 		spin_lock(&priv_dev->lock);
+>>> 	}
+>>> ??
+>>
+>>right, you can do it right before giving back the request. Or right
+>>after.
+>>
+>>> I ask because this is finally also called from IRQ handler:
+>>>
+>>> cdns3_device_thread_irq_handler
+>>>     -> cdns3_check_ep_interrupt_proceed
+>>>         -> cdns3_transfer_completed
+>>>             -> cdns3_gadget_giveback
+>>>                 -> usb_gadget_giveback_request
+>>
+>>Did you notice that it doesn't reenable interrupts, though?
+>
+> I noticed that there is a lack of reenabling interrupts :)
+>
+> The problem is that If I have disabled interrupt the kernel complains
+> for using dma_free_coherent function in such place.=20
+>
+> Here you have a fragment of complaints:=20
+> [ 7420.502863] WARNING: CPU: 0 PID: 10260 at kernel/dma/mapping.c:281 dma=
+_free_attrs+0xa0/0xd0
+> [ 7420.502866] Modules linked in: usb_f_mass_storage cdns3(OE) cdns3_pci_=
+wrap(OE) libcomposite
+> 		...
+> [ 7420.502965]  cdns3_gadget_giveback+0x159/0x2a0 [cdns3]
+> [ 7420.502975]  cdns3_transfer_completed+0xc5/0x3c0 [cdns3]
+> [ 7420.502986]  cdns3_device_thread_irq_handler+0x1b1/0xab0 [cdns3]
+> [ 7420.502991]  ? __schedule+0x333/0x7e0
+> [ 7420.503001]  irq_thread_fn+0x26/0x60
+> [ 7420.503006]  ? irq_thread+0xa8/0x1b0
+> [ 7420.503011]  irq_thread+0x10e/0x1b0
+> [ 7420.503015]  ? irq_forced_thread_fn+0x80/0x80
+> [ 7420.503021]  ? wake_threads_waitq+0x30/0x30
+> [ 7420.503029]  kthread+0x12c/0x150
+> [ 7420.503034]  ? irq_thread_check_affinity+0xe0/0xe0
+> [ 7420.503038]  ? kthread_park+0x90/0x90
+> [ 7420.503045]  ret_from_fork+0x3a/0x50
+> [ 7420.503061] irq event stamp: 2962
+> [ 7420.503065] hardirqs last  enabled at (2961): [<ffffffffb252672c>] _ra=
+w_spin_unlock_irq+0x2c/0x40
+> [ 7420.503070] hardirqs last disabled at (2962): [<ffffffffb25268f5>] _ra=
+w_spin_lock_irqsave+0x25/0x60
+> [ 7420.503074] softirqs last  enabled at (2918): [<ffffffffb2800340>] __d=
+o_softirq+0x340/0x451
+> [ 7420.503079] softirqs last disabled at (2657): [<ffffffffb1aa02b6>] irq=
+_exit+0xc6/0xd0
+> [ 7420.503082] ---[ end trace d02652af11011c3b ]---
+>
+> Maybe it's a bug in implementation of this function.  I allocate memory w=
+ith flag GFP_ATOMIC with=20
+> disabled interrupt, but I can't free such memory.=20
 
---mvuFargmsA+C2jC8
+I don't understand the intricacies of the coherent API to judge if it's
+a bug in the API itself. In any case, here's where the splat comes from:
+
+void dma_free_attrs(struct device *dev, size_t size, void *cpu_addr,
+		dma_addr_t dma_handle, unsigned long attrs)
+{
+	const struct dma_map_ops *ops =3D get_dma_ops(dev);
+
+	if (dma_release_from_dev_coherent(dev, get_order(size), cpu_addr))
+		return;
+	/*
+	 * On non-coherent platforms which implement DMA-coherent buffers via
+	 * non-cacheable remaps, ops->free() may call vunmap(). Thus getting
+	 * this far in IRQ context is a) at risk of a BUG_ON() or trying to
+	 * sleep on some machines, and b) an indication that the driver is
+	 * probably misusing the coherent API anyway.
+	 */
+	WARN_ON(irqs_disabled());
+
+	if (!cpu_addr)
+		return;
+
+	debug_dma_free_coherent(dev, size, cpu_addr, dma_handle);
+	if (dma_is_direct(ops))
+		dma_direct_free(dev, size, cpu_addr, dma_handle, attrs);
+	else if (ops->free)
+		ops->free(dev, size, cpu_addr, dma_handle, attrs);
+}
+EXPORT_SYMBOL(dma_free_attrs);
+
+maybe you're gonna have to fire up a workqueue to free this memory for
+you :-(
+
+Unless someone else has better ideas. Alan, Greg, any ideas?
+
+=2D-=20
+balbi
+
+--=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1RQKIACgkQ3SOs138+
-s6GLXg/8DOJVJ0fFXPAXXeHi86AGgUkBYnQUYPlOJXETCmROhZoJ5epgGbfRhQX9
-QjEAXF7CNF6/FlU/0myVBYhGu+y2W5SkY+4dhOn1LLhTOS66MxNzuEvt7jMC7X6P
-n8aOuS1nWlIjrTFRHRzwEQqLRIhhoInAo0Vyj+eOTUs3fk8eqDQ3pRLKx9BIJEwc
-nhtoo5Dc15R7fHvBvwkP1349UHm6eodDr2Wo3tSa4IHj4QVpaaYhWpvujT7MvISU
-dBznNBWqoLq7QAi3LFM/Wc0jgKZGriDnxQ2wKNbedDwmvF+FJsiBGlu+++Xg+enp
-g/KKv9ZLMAWO0U8RD+j64NL6/325aBbaGZ+L1CFEscZPFuk7ivMspDAsMAjTqYOK
-6X3QBqyHRUnHIHxKtYvnsI5U6e0y8lnjQCdnL6tNsq7qLdtHvC9o1xcMUeS/KOeM
-TEPTztARXSzibsU5ebgDNX0Q/ioonwY5484gRPfNAmyOb+Vk0i8iCcZXlC6PpeZ5
-GkF3LH8XAKBJ5QEoexe+o5qvZemQubl+hwrWViq1ySA8+3nHV0gEhkjt8dChfh/f
-6NA0RMm3PyUtINdLP7kGOuZEc4ScNqszbsngqZuE/IgPj/2M5cWSzxnnad0OXG7R
-0TnzLQG2M3PRP4bmxEb5jzTk+apORKyFOw6PKg+VkKACFN6P0F8=
-=ZcJU
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl1RQLsACgkQzL64meEa
+mQaIQRAA0TD8TKQptnOmAGv1zIYC6xgBgnsm0x2vGb6xL4PRP2OCZ5rtKxQ68m4V
+yp7zk5HSsVupbVXXvnlrwW1kkYSeSGy6Eu4R13SndS1AzDhoT4GXVQp4p4lnC/qP
+C7tHOOEFBAcN6/R5xmdfztd7OnNzvLVSyHQDjPTV/ZrhO5WA/7PiISDbrIJwko63
+ew2eR97yc6ieP0AntOPEePHqp07h2PkOSDBECZd3k4HqI2HhZI/yRK2x02dzYLTd
+UeKfQePHjlfyhoptUrsumaombaIvOi4OzaW+e/XXitZAzcQhlbjiKtBy8HzSiF0U
+4Y1ElXeeP1HqQBmWvOetFSgKLNjR5TAlRrWOp/x6XS8IUM/jyJHKIYqMWShjGbPZ
+/V2JvOhJH8z7/Gnldx47LC4qyHQaNFhtZ8DTvGTLyYiC4aJp1geNvOsn7h4hmUNp
+Un5t5ytPUuNrWITTN4V6w1S8eQem1GN947GTJmWDICYrlKWuBwAIfM7GrVgV0omp
+4YGouah8LD8o+h2IVHqAlRui/uNQMxk0h+MHHkxo8JbrFJfOdR2JBKUT36Npv4ut
+3KaCHAVG/LHY5+2LbqlbLZiH9gUjntSs0efbDDePT4OudMFqz3HX95MHAcNq1JgP
+s4NR1rdSKILE+EYOk9XT6ch5jNKqq9ylfwCuRhJtIShcyBGEHF0=
+=xDrg
 -----END PGP SIGNATURE-----
-
---mvuFargmsA+C2jC8--
+--=-=-=--
