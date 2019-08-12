@@ -2,118 +2,113 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2398AC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC4BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E760720842
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D41D20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:30:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FHAqDme4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ClsxrPQn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbfHLK3t (ORCPT
+        id S1727862AbfHLKaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:29:49 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:14353 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727564AbfHLK3t (ORCPT
+        Mon, 12 Aug 2019 06:30:13 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33251 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727564AbfHLKaN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:29:49 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d513f9e0000>; Mon, 12 Aug 2019 03:29:50 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 12 Aug 2019 03:29:48 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 12 Aug 2019 03:29:48 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 12 Aug
- 2019 10:29:47 +0000
-Received: from [10.24.47.35] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 12 Aug
- 2019 10:29:41 +0000
-Subject: Re: [PATCH V15 00/13] PCI: tegra: Add Tegra194 PCIe support
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
-        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190809044609.20401-1-vidyas@nvidia.com>
- <20190812102519.GN8903@ulmo>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <aa666d78-43b3-dbea-dac6-386deaca3e12@nvidia.com>
-Date:   Mon, 12 Aug 2019 15:59:39 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 12 Aug 2019 06:30:13 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n9so104213984wru.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 03:30:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=/xJkw3HJipqZsGqksy3Y3Kh8Zd6FZDx8Lzcx83UAp1E=;
+        b=ClsxrPQnDz+StEaMCZFcJZvBHropFOtgMNmG2NxTqoUDwh6xgtGinyNwjek/gGcDsb
+         QP1OJM6Xd1F2+jtVWeFLi1FSsRcufM8taxrEwcf0QUaqX+LUqCR3UVrdQTaqW2LpQ1y3
+         dsDIJaW+Js6+nyJmMmkLZcAHA2Op1QVU1Zz2KJtwS5ol4eh1LyS+b6Wmj6TYA8FAvXWD
+         8cfVzTGdcHIaSf4XbL3iIGj9rO5BeaiZuA8wzFzzEJc68yQgXpSSXAN0sTUNkAeyBUoj
+         Q+kMB94rY4bxav5iCDcv+Z52AxWXy7i9GHlFR5KcPojz5YMEn3iZ+w/apQKAo6E42J5I
+         Ux1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=/xJkw3HJipqZsGqksy3Y3Kh8Zd6FZDx8Lzcx83UAp1E=;
+        b=tQwB/vGbejfApzvmnX5RiTCbReq809EoDqfHsxvhB5y87QmUIMAglQ4loyvypg7W5l
+         lit/kdZgHkEBUbpCqrnke98c/cxq9SC8Quyg8HzxvhZmMqpy2kU2x/eUueOHeGk8QTvb
+         lDGOGPmojn6MWnBZuj2FxQS6GwQJOIFRyJ6v46g1BABtnvy+kobZuLRV8XInsNGD2sub
+         RnU6kB47qKCRU27bxzRcoShxjENJxRq9nObySMD4rT5yp+9hiWypgo+HwjBt1OmFIMVx
+         s9D9AOzxjhOa59iaIkXM3ga752+sKD5C6rvrGURhF7JckaZ6dsAPLxA989ZiWmnfSJYH
+         XA9A==
+X-Gm-Message-State: APjAAAU0YI2YrN6lGXvSEHsh+yv+cxD0Tc7jENsWgsvLLjzPBKRW8Aw6
+        63UBJhvEsF46ytk2pc3Ltp4CSA==
+X-Google-Smtp-Source: APXvYqysIRjAaDtd2ibOzQb9fjpi50O1qhEVT0kIXTChSIdIo1wq0xFRIV2BJs//0/kavloNGsljaA==
+X-Received: by 2002:adf:ef07:: with SMTP id e7mr21348509wro.242.1565605811394;
+        Mon, 12 Aug 2019 03:30:11 -0700 (PDT)
+Received: from dell ([2.27.35.255])
+        by smtp.gmail.com with ESMTPSA id n8sm90185885wro.89.2019.08.12.03.30.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 12 Aug 2019 03:30:10 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 11:30:09 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] mfd: db8500-prcmu: Mark expected switch fall-throughs
+Message-ID: <20190812103009.GL26727@dell>
+References: <20190728235614.GA23618@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20190812102519.GN8903@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565605790; bh=1tG5zYeqXj8gIs6w5lyT32kz+7+NUeIz90VCrmxkBbc=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=FHAqDme4CmBe+T+ICvgSDgfiTDrKnpaWceizTG4rWtUZc3n8VecOch5oN0Grc4LwZ
-         53haw51XUeac/Y+r2Mq4SW5WHXTFDonCEWVJ3QpiWzjIvPGvz5gorgr/nqQwiWF6E0
-         51MvK0t+bRdcIKQaZiB78sxIRC2DoTq+no9hoZqEMnfTQWCNltW0s45UwDYX1BD3M9
-         ddQDztvPDkm39p/8WMZD+H0V+aPPU5645XM+DPb/Um33WDhWZpgU18ElSiEESHZcBe
-         MNaZtOjnvQU2IzzBuD+hkJE2TYUgScp5lErVEEoivDQUNbfRweiJOkhT8BQwGsfdx4
-         PoivvVBnBXP2Q==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190728235614.GA23618@embeddedor>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/12/2019 3:55 PM, Thierry Reding wrote:
-> On Fri, Aug 09, 2019 at 10:15:56AM +0530, Vidya Sagar wrote:
->> Tegra194 has six PCIe controllers based on Synopsys DesignWare core.
->> There are two Universal PHY (UPHY) blocks with each supporting 12(HSIO:
->> Hisg Speed IO) and 8(NVHS: NVIDIA High Speed) lanes respectively.
->> Controllers:0~4 use UPHY lanes from HSIO brick whereas Controller:5 uses
->> UPHY lanes from NVHS brick. Lane mapping in HSIO UPHY brick to each PCIe
->> controller (0~4) is controlled in XBAR module by BPMP-FW. Since PCIe
->> core has PIPE interface, a glue module called PIPE-to-UPHY (P2U) is used
->> to connect each UPHY lane (applicable to both HSIO and NVHS UPHY bricks)
->> to PCIe controller
->> This patch series
->> - Adds support for P2U PHY driver
->> - Adds support for PCIe host controller
->> - Adds device tree nodes each PCIe controllers
->> - Enables nodes applicable to p2972-0000 platform
->> - Adds helper APIs in Designware core driver to get capability regs offset
->> - Adds defines for new feature registers of PCIe spec revision 4
->> - Makes changes in DesignWare core driver to get Tegra194 PCIe working
->>
->> Testing done on P2972-0000 platform
->> - Able to get PCIe link up with on-board Marvel eSATA controller
->> - Able to get PCIe link up with NVMe cards connected to M.2 Key-M slot
->> - Able to do data transfers with both SATA drives and NVMe cards
->> - Able to perform suspend-resume sequence
-> 
-> Do you happen to have a patch for P2972-0000 PCI support? I don't see it
-> in this series.
-It is already merged.
-V10 link @ http://patchwork.ozlabs.org/patch/1114445/
+On Sun, 28 Jul 2019, Gustavo A. R. Silva wrote:
 
-- Vidya Sagar
+> Mark switch cases where we are expecting to fall through.
 > 
-> Thierry
+> This patch fixes the following warnings:
 > 
+> drivers/mfd/db8500-prcmu.c: In function 'dsiclk_rate':
+> drivers/mfd/db8500-prcmu.c:1592:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    div *= 2;
+>    ~~~~^~~~
+> drivers/mfd/db8500-prcmu.c:1593:2: note: here
+>   case PRCM_DSI_PLLOUT_SEL_PHI_2:
+>   ^~~~
+> drivers/mfd/db8500-prcmu.c:1594:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    div *= 2;
+>    ~~~~^~~~
+> drivers/mfd/db8500-prcmu.c:1595:2: note: here
+>   case PRCM_DSI_PLLOUT_SEL_PHI:
+>   ^~~~
+> 
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/mfd/db8500-prcmu.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
+Applied, thanks.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
