@@ -2,183 +2,154 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7CAC32753
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B4CC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E541C216F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0409A206A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:01:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ar7EqkwR"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="T5n47MKc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbfHLKBe (ORCPT
+        id S1727666AbfHLKBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 12 Aug 2019 06:01:37 -0400
+Received: from mout.web.de ([212.227.15.3]:40477 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727466AbfHLKBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 12 Aug 2019 06:01:34 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35660 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727423AbfHLKBd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:01:33 -0400
-Received: by mail-wm1-f66.google.com with SMTP id l2so11222505wmg.0;
-        Mon, 12 Aug 2019 03:01:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lWrWlWYj8cvJ3r/FmTFT+tjcuUTnaXDsUrXZMHuksYo=;
-        b=ar7EqkwRDl4xpHq7AvfU+gQfmaCoAx0Y5xv4UIH3A22fsLoa1bYP0OmScYRKH7+sm7
-         cdyo2gCE+RqLB4wPd4ZmdFEnrHNyi3oMc07+lRaOYIcG7SZ2H0NAW+98RQuHLW/Y6qab
-         577eq+Ax3qjdC06Yapg/VO4CQgJopb94nnJ6aDssiGX1GJKvrxdXinB25/bc7erswV0y
-         A9GZ5L02/zoR2WgNtvroCGwisa5J14PcsEajq8BH1g/MttOaw2vZheArGNnvPHmgCCe1
-         FEdFjG7+h6oMs79m/flFofwXY3u6zHPrJIwo+KNyQ+F9At/C0yyA4hv+rZpdT59aTqkg
-         PbBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lWrWlWYj8cvJ3r/FmTFT+tjcuUTnaXDsUrXZMHuksYo=;
-        b=XZHO4aElWcg0GG4OPN5rXJ9FNtlOSJLUQZ+WzMMh+U7x+EKASHN1eRKhFgNIZr1EGF
-         e1Lok/jhuKbtMvJpcoBis0fJbvaZg83q3UdzU6T6XefJBKuMY9GMmO5eRohb9HsI/QZS
-         WBWuILAtNA7zNf6NUGGyYTvYTfvhg5BSnRHZUGJzlFOXfygbuJwOlboSpupNQrmYPo/S
-         +RCyWK3xs/NLBYdefDoZN3+ulMDUqIJcx6KEO0AAbB2wMIrTVCjvYXNUrbQesm3FjMkM
-         NT8FZzDxtd/ByQ3scQh4KxPQiqtkjoODIe7xR49dG/GZBVGg+kvHwfH9Px+biOWYfuve
-         W0ww==
-X-Gm-Message-State: APjAAAXLBoz3zKi7Xt1fce3yGqvlzkueEFeW3cOvi4OVHqIdPpQYP24V
-        KgWErTdZKjVbQI9arNUKqkY=
-X-Google-Smtp-Source: APXvYqxDtGEc4QyyHF/B4+oUczVRvnYQ6PMqgZN8YjrpYNhCxVjC+msiBt4HMMk+Kaaf+7tJZEYpJQ==
-X-Received: by 2002:a1c:f20f:: with SMTP id s15mr25880744wmc.33.1565604089682;
-        Mon, 12 Aug 2019 03:01:29 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id u5sm8764194wmc.17.2019.08.12.03.01.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 03:01:28 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 12:01:27 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v8 11/21] clk: tegra: clk-dfll: Add suspend and resume
- support
-Message-ID: <20190812100127.GJ8903@ulmo>
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-12-git-send-email-skomatineni@nvidia.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1565604060;
+        bh=cIbV8TNZ6P1Oot98inSuptsBLdkK9s4ARR+DiDfLzpQ=;
+        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
+        b=T5n47MKcmeq89PMqZ1noAOLndZTyEhCWlxz+0oJRsK4SDAq998e5jF/AVhQAPe5l5
+         b/5Jl8gtiSIhJz0OIyZr1/gm9wormy9b1+LkmzbRVwJcHFAlsT4TaIKa4YPylzA9j8
+         3P0h0ZiSBQACu/6rdgl3m+ac1M/cB1tNQNOipExo=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.165.124]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MXBh7-1hklJp1XjJ-00WCb8; Mon, 12
+ Aug 2019 12:01:00 +0200
+To:     Alexander Popov <alex.popov@linux.com>,
+        Jann Horn <jannh@google.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        kernel-janitors@vger.kernel.org, cocci@systeme.lip6.fr
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        kernel-hardening@lists.openwall.com,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Denis Efremov <efremov@linux.com>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Jens Axboe <axboe@kernel.dk>, Jiri Kosina <jikos@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Nicolas Palix <nicolas.palix@imag.fr>
+References: <3ee24295-6d63-6da9-774f-f1a599418685@linux.com>
+Subject: Re: floppy: fix usercopy direction
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <e514a05f-6e9f-1d62-9b38-163e13578bff@web.de>
+Date:   Mon, 12 Aug 2019 12:00:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="72k7VsmfIboquFwl"
-Content-Disposition: inline
-In-Reply-To: <1565308020-31952-12-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <3ee24295-6d63-6da9-774f-f1a599418685@linux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Lq+S+0zUpkv9IKiOBh3L967rFcylnMgd7xdu1zCinFBfeZODjJm
+ 4NCn3xwdhtvkPmBbetWnwUSK+7Z3qGtDz8uzgTvBXrWshMJRJ68JJuwzn8y8qZ1bRFt/lHA
+ cK2zo6skIS4QAMDvHEa+NY45ePPvkz+kn+tNNBAdafp4MwSPdKzfB7u3ynVauhFp0p1345G
+ /7IS0cfK93Uj3EntCMH2w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gbMIUPXj9qA=:bvqc9ICAFUMD2Vu28lkK0H
+ 3qiZrzd2NpQleJ16WGBSlnPe0haEa+PAPWvM7DxVLefN1f95omJtZ+tuygh+tmJcr9gdnXTmq
+ F5tjDOHYkhCg962Dc/8iOrwvfAkKmR3m+LXnjA82fEcqUFHHH8GRVq0b0Xxd/5VS+XjISYWaL
+ HjupPST4dcFxUGVw0WRwEbVHlRKrVm703lAQrryCNwkgXGbb9iyWH94V6TKs9PpfRHkeixmNl
+ ZH2shgphJJRxethZpOFVHycBZ+U0v2ENVzT08iJATuyofSdRnZ4F1X14V65Rs0hrFqnj9T7ez
+ B2EvfDdeEPi9AaqCczjeoBxxPbDUGqF7yQQAkg3Ch3CPlHtc3txh2SwGc5KH1eHFqKXgGDIbo
+ qtOLdOHpJchY/gqei5fv9BIU9HvOvoeEm7YX/EPLQrOa4tlwE1fZiFQyo7lmMhbZ8bxhlIxy2
+ EbzJH7//X8tioPbgErUDFpd7Dq0kmXVaEwNBujNFiVjBdDuijnaMCqCDPCjfXqSiAsj/jbTTV
+ YbOWiJ7NLmPmx2eomdPBWN7FX6vdD7hB4T1toSAoFYdvAZ2T7vtqn9IF6iB/or2YA1x0OZXxc
+ 0JxUa5eFBloHm9yFNIMp814en+NCIkqpOAzfFbc69X436pZfraK8v9wIPxa7uuMxD2oyHnjUK
+ pEPD9sBu9U/WUR1ccnA87tLxgbHwTjXOL26Vd9qSMBjQDDvaLlqiHUEDv+g/271sPtDbafjU/
+ 2fMCqwwwTCK0SluevjvIsvN5b0mQrjG4lSbmGHy+WJubkgrZ84zv2594eQLN/tM+26spqxdq3
+ WERKDLVBLOc8DZKsZkL6Jzk/mJ5DVIhcaxU+H6i0RWgIQAJ2LdEcqD/2Ft7ua/DMq1qVL4qV4
+ SKvOWc1C3oUrrOsFnjoZe45qfuX8OiW2ZI+j3qzpB32GMGcy55/zQP83+A/U2okFYqgUwbJ9X
+ p3qL1ZdDN9L6cb1QxX4SoSq7HJsDDO3m5rz57PrYsvtk+vNDC4aBaNo7kvV5BYNeTjDBDphwt
+ 6KeAwpNx5+ECkC1pt9OC+f9TbVG+wt8j+4cO5xzkA9JuRzIDDNq7QSfCbrsmmEdSxLVVuRn3E
+ LPLAl/qUAQUVYpcbU6gzrfmMAtCrfgChCe2MDbpZ85UGYZzehkcg4t83U2hkiWhtoZFMz/fMj
+ sBqmE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> =E2=80=A6, I see `exists` allows to drop `<+ +>`, right?
 
---72k7VsmfIboquFwl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I would interpret the combination of such SmPL specifications in a differe=
+nt way.
 
-On Thu, Aug 08, 2019 at 04:46:50PM -0700, Sowjanya Komatineni wrote:
-> This patch implements DFLL suspend and resume operation.
->=20
-> During system suspend entry, CPU clock will switch CPU to safe
-> clock source of PLLP and disables DFLL clock output.
->=20
-> DFLL driver suspend confirms DFLL disable state and errors out on
-> being active.
->=20
-> DFLL is re-initialized during the DFLL driver resume as it goes
-> through complete reset during suspend entry.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-dfll.c               | 56 ++++++++++++++++++++++++=
-++++++
->  drivers/clk/tegra/clk-dfll.h               |  2 ++
->  drivers/clk/tegra/clk-tegra124-dfll-fcpu.c |  1 +
->  3 files changed, 59 insertions(+)
->=20
-> diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
-> index f8688c2ddf1a..eb298a5d7be9 100644
-> --- a/drivers/clk/tegra/clk-dfll.c
-> +++ b/drivers/clk/tegra/clk-dfll.c
-> @@ -1487,6 +1487,7 @@ static int dfll_init(struct tegra_dfll *td)
->  	td->last_unrounded_rate =3D 0;
-> =20
->  	pm_runtime_enable(td->dev);
-> +	pm_runtime_irq_safe(td->dev);
->  	pm_runtime_get_sync(td->dev);
-> =20
->  	dfll_set_mode(td, DFLL_DISABLED);
-> @@ -1513,6 +1514,61 @@ static int dfll_init(struct tegra_dfll *td)
->  	return ret;
->  }
-> =20
-> +/**
-> + * tegra_dfll_suspend - check DFLL is disabled
-> + * @dev: DFLL device *
-> + *
-> + * DFLL clock should be disabled by the CPUFreq driver. So, make
-> + * sure it is disabled and disable all clocks needed by the DFLL.
-> + */
-> +int tegra_dfll_suspend(struct device *dev)
-> +{
-> +	struct tegra_dfll *td =3D dev_get_drvdata(dev);
-> +
-> +	if (dfll_is_running(td)) {
-> +		dev_err(td->dev, "dfll is enabled while shouldn't be\n");
 
-Minor nit: "DFLL" in the error message, just like you have in the
-kerneldoc comment above. Perhaps also make the error message a little
-more specific. "while shouldn't be" makes the user guess what that
-means. Perhaps better to say something like:
+> It turned out that sparse already can find these bugs.
 
-	"DFLL still enabled while suspending\n"
+This is generally nice, isn't it?
 
-or perhaps even add a hint as to what could be the culprit:
 
-	"DFLL still enabled while suspending, possibly a cpufreq driverbug\n"
+> Is this rule useful anyway?
 
-The latter is somewhat long and the former is enough because the
-kerneldoc comment already explains that cpufreq might be the reason for
-this.
+I hope so.
 
-With a more specific error message, this is:
+Can scripts for the semantic patch language help any more?
 
-Acked-by: Thierry Reding <treding@nvidia.com>
 
---72k7VsmfIboquFwl
-Content-Type: application/pgp-signature; name="signature.asc"
+> If so, I can prepare a patch.
 
------BEGIN PGP SIGNATURE-----
+Would you like to take corresponding adjustments into account?
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1ROPcACgkQ3SOs138+
-s6GNTQ//VCpA84fs+aIIyDiD3wn1shO+OCh67D3tZ+8ScJa6j54SmHrCHGGWY3GP
-9JVQr5VFX4tMxrslidnMe6laHcoM5JU+vPSovEq5dTqjZe2HTmjsMswUBABd/Jrg
-fid7ioVcpPfdbbO2qNMS42Q698Kx0IFAv1t4NmhmCDDaE6NerYN8eJ94KYrFx7TI
-p4mvNUV3WcR9aGEOLwVyAcUatmR5EReyZJJ8nSNdPxfdzrLHUUtI9oIP9q8ADgpl
-djfabIZYjrDWaNIx6X/HLQU+3zf3C/SvDMsDJd8/oOa1WkOXKy7Wsbgt6PWZpm8q
-DbMkl8e57/v5fEfaERkqq+U9C0GFdZfpriI7qofQvbi80rkVrDq8UKEAQa/KkfeN
-8wiHr9XVeIwddApapx1YilBL1gAAphRdD7NOzvxeO4KMKCzbuQ7upYReNtBEaMVA
-EwhjYNEVWuEMwg3S5ssxpjqyWMT11WUDIxmX3WqPswNzN1K/dNCrDzKye1IVIET/
-s66UjxKscWJVnsmQWUVE4LKw3S6Tct4BOR+Us7XDJd9f417iSCTTC8lsEoz2PCIv
-tWNEWekILl5Pg/yT5SXy6z8+0g0fsD9R3Pxe56vf9dnGiG9kGx0wmP02FENpKUs2
-T+fSap9ZYLgjVvT2L3WDyQZWbVDl8X31T5nCquBVXKYSWOQqwrM=
-=U0sL
------END PGP SIGNATURE-----
-
---72k7VsmfIboquFwl--
+Regards,
+Markus
