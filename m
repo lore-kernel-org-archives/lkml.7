@@ -2,139 +2,112 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED4FC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25264C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 466F5206C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB121206C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:48:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbfHLVsn (ORCPT
+        id S1727501AbfHLVs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 17:48:43 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35999 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfHLVsn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 17:48:43 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hxIBD-0003q7-Ti; Mon, 12 Aug 2019 23:48:39 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hxIBC-0007XI-6y; Mon, 12 Aug 2019 23:48:38 +0200
-Date:   Mon, 12 Aug 2019 23:48:38 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: Re: [PATCH 4/7] pwm: jz4740: Improve algorithm of clock calculation
-Message-ID: <20190812214838.e5hyhnlcyykjfvsb@pengutronix.de>
-References: <20190809123031.24219-1-paul@crapouillou.net>
- <20190809123031.24219-5-paul@crapouillou.net>
- <20190809170551.u4ybilf5ay2rsvnn@pengutronix.de>
- <1565370885.2091.2@crapouillou.net>
- <20190812061520.lwzk3us4ginwwxov@pengutronix.de>
- <1565642590.2007.1@crapouillou.net>
+        Mon, 12 Aug 2019 17:48:57 -0400
+Received: from mga03.intel.com ([134.134.136.65]:15780 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726530AbfHLVs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 17:48:56 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 14:48:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,379,1559545200"; 
+   d="scan'208";a="375391550"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga005.fm.intel.com with ESMTP; 12 Aug 2019 14:48:55 -0700
+Date:   Mon, 12 Aug 2019 14:48:55 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 15/19] mm/gup: Introduce vaddr_pin_pages()
+Message-ID: <20190812214854.GF20634@iweiny-DESK2.sc.intel.com>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-16-ira.weiny@intel.com>
+ <20190812122814.GC24457@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1565642590.2007.1@crapouillou.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190812122814.GC24457@ziepe.ca>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Paul,
-
-On Mon, Aug 12, 2019 at 10:43:10PM +0200, Paul Cercueil wrote:
-> Le lun. 12 août 2019 à 8:15, Uwe =?iso-8859-1?q?Kleine-K=F6nig?=
-> <u.kleine-koenig@pengutronix.de> a écrit :
-> > On Fri, Aug 09, 2019 at 07:14:45PM +0200, Paul Cercueil wrote:
-> > >  Le ven. 9 août 2019 à 19:05, Uwe =?iso-8859-1?q?Kleine-K=F6nig?=
-> > >  <u.kleine-koenig@pengutronix.de> a écrit :
-> > >  > On Fri, Aug 09, 2019 at 02:30:28PM +0200, Paul Cercueil wrote:
-> > >  > > [...]
-> > >  > >  +	/* Reset the clock to the maximum rate, and we'll reduce it if needed */
-> > >  > >  +	ret = clk_set_max_rate(clk, parent_rate);
-> > >  >
-> > >  > What is the purpose of this call? IIUC this limits the allowed range of
-> > >  > rates for clk. I assume the idea is to prevent other consumers to change
-> > >  > the rate in a way that makes it unsuitable for this pwm. But this only
-> > >  > makes sense if you had a notifier for clk changes, doesn't it? I'm
-> > >  > confused.
-> > > 
-> > >  Nothing like that. The second call to clk_set_max_rate() might have set
-> > >  a maximum clock rate that's lower than the parent's rate, and we want to
-> > >  undo that.
+On Mon, Aug 12, 2019 at 09:28:14AM -0300, Jason Gunthorpe wrote:
+> On Fri, Aug 09, 2019 at 03:58:29PM -0700, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
 > > 
-> > I still don't get the purpose of this call. Why do you limit the clock
-> > rate at all?
-> 
-> As it says below, we "limit the clock to a maximum rate that still gives
-> us a period value which fits in 16 bits". So that the computed hardware
-> values won't overflow.
-
-But why not just using clk_set_rate? You want to have the clock running
-at a certain rate, not any rate below that certain rate, don't you?
- 
-> E.g. if at a rate of 12 MHz your computed hardware value for the period
-> is 0xf000, then at a rate of 24 MHz it won't fit in 16 bits. So the clock
-> rate must be reduced to the highest possible that will still give you a
-> < 16-bit value.
-> 
-> We always want the highest possible clock rate that works, for the sake of
-> precision.
-
-This is dubious; but ok to keep the driver simple. (Consider a PWM that
-can run at i MHz for i in [1, .. 30]. If a period of 120 ns and a duty
-cycle of 40 ns is requested you can get an exact match with 25 MHz, but
-not with 30 MHz.)
-
-> > >  Basically, we start from the maximum clock rate we can get for that PWM
-> > >  - which is the rate of the parent clk - and from that compute the maximum
-> > >  clock rate that we can support that still gives us < 16-bits hardware
-> > >  values for the period and duty.
-> > > 
-> > >  We then pass that computed maximum clock rate to clk_set_max_rate(), which
-> > >  may or may not update the current PWM clock's rate to match the new limits.
-> > >  Finally we read back the PWM clock's rate and compute the period and duty
-> > >  from that.
+> > The addition of FOLL_LONGTERM has taken on additional meaning for CMA
+> > pages.
 > > 
-> > If you change the clk rate, is this externally visible on the PWM
-> > output? Does this affect other PWM instances?
+> > In addition subsystems such as RDMA require new information to be passed
+> > to the GUP interface to track file owning information.  As such a simple
+> > FOLL_LONGTERM flag is no longer sufficient for these users to pin pages.
+> > 
+> > Introduce a new GUP like call which takes the newly introduced vaddr_pin
+> > information.  Failure to pass the vaddr_pin object back to a vaddr_put*
+> > call will result in a failure if pins were created on files during the
+> > pin operation.
 > 
-> The clock rate doesn't change the PWM output because the hardware values for
-> the period and duty are adapted accordingly to reflect the change.
+> Is this a 'vaddr' in the traditional sense, ie does it work with
+> something returned by valloc?
 
-It doesn't change it in the end. But in the (short) time frame between
-the call to change the clock and the update of the PWM registers there
-is a glitch, right?
+...or malloc in user space, yes.  I think the idea is that it is a user virtual
+address.
 
-You didn't answer to the question about other PWM instances. Does that
-mean others are not affected?
+> 
+> Maybe another name would be better?
 
-Best regards
-Uwe
+Maybe, the name I had was way worse...  So I'm not even going to admit to it...
 
-PS: It would be great if you could fix your mailer to not damage the
-quoted mail. Also it doesn't seem to understand how my name is encoded
-in the From line. I fixed up the quotes in my reply.
+;-)
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+So I'm open to suggestions.  Jan gave me this one, so I figured it was safer to
+suggest it...
+
+:-D
+
+> 
+> I also wish GUP like functions took in a 'void __user *' instead of
+> the unsigned long to make this clear :\
+
+Not a bad idea.  But I only see a couple of call sites who actually use a 'void
+__user *' to pass into GUP...  :-/
+
+For RDMA the address is _never_ a 'void __user *' AFAICS.
+
+For the new API, it may be tractable to force users to cast to 'void __user *'
+but it is not going to provide any type safety.
+
+But it is easy to change in this series.
+
+What do others think?
+
+Ira
+
+> 
+> Jason
+> 
