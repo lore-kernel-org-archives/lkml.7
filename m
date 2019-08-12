@@ -2,205 +2,98 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AE6C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2031C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C088208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C14682085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:39:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zJ2S5Kf3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbfHLKjV (ORCPT
+        id S1728041AbfHLKjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:39:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:47986 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727323AbfHLKjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:39:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0EAD1715;
-        Mon, 12 Aug 2019 03:39:19 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 250763F706;
-        Mon, 12 Aug 2019 03:39:18 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-Subject: Re: [PATCH 9/9] arm64: Retrieve stolen time as paravirtualized guest
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Marc Zyngier <maz@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu
-References: <20190802145017.42543-1-steven.price@arm.com>
- <20190802145017.42543-10-steven.price@arm.com>
- <5d763c8e-9c06-c448-2644-25bfa0e57e8c@huawei.com>
-Message-ID: <07075994-3a32-8f20-23d8-1759ec2874e3@arm.com>
-Date:   Mon, 12 Aug 2019 11:39:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 12 Aug 2019 06:39:36 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35045 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727795AbfHLKjg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 06:39:36 -0400
+Received: by mail-wm1-f67.google.com with SMTP id l2so11320512wmg.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 03:39:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=MoT41+8OBiG5AIS32B1GbYNGjZ0zGQf3yjOjNkvAl3w=;
+        b=zJ2S5Kf3w1FcFPelYkhvCORLN+zhfHCjFVxYX/pJUoUgBttJ+Ltp91Qo/Myb29W7+0
+         BT4dNqpfBa2GMtxrqp6X1KpgMqr0z/r1W68XlRpxtCHEZA6Vw6XKhMfThLc88OeiuwQC
+         O+DNfN0f23PvnZdBns2cquJa2LKegJgvigS7YJJf8at/Okwj9TG+GYImG3fzUD54wHB4
+         jcPDCJXkzU/ZPxeNT8x+xON67m+c9gr6X5TEplMaJjvWoEBVTNR16ZDhRGMudmjTGXqf
+         pDSOEJi7CDwPCj4m3093m/3u3iXqBjUZ0Z65QR5LM4PJrVSKv19mLu1AzUCRXbDsJ2A/
+         PTFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=MoT41+8OBiG5AIS32B1GbYNGjZ0zGQf3yjOjNkvAl3w=;
+        b=Pig8fsK8hf9INhj39E7HEUviP0/CmVaHIigVAJ4x4gogfzifNgi0cmvQRghh//IHdq
+         Ih3tJWNSmFt4MDdjn873JLm3xG/cDGtWEzcSwD0zNKfi1wlWPhwo8+xDyQnReoUYMjS3
+         o1317et/u7DLwloZzLT3uG4RZeNkUfifqz8TdaQCarH03bz7Wg1WG5MZT7Y0GLUP5KUS
+         hHhBa8nh0W/ojfgb5Lpnqh4HvDxGCCcFc9EMB+rGL2TKsA9v0BhUvpfdpYHZxuqRDdxh
+         ihOu/DxvrGzTUMR+Yrl1Dw9LZ+DEU4dxwGPQJMJndlCgVK3T/DHmCT0vaiWkhBGfVam2
+         sD7g==
+X-Gm-Message-State: APjAAAXDZ08IGTiWizl2UdNxAly/mdaqgOF/bgE0TZj4v5HpHocX2ucS
+        MQsJ05TnxO7l9fCuxhOOBMXIXfKbAsE=
+X-Google-Smtp-Source: APXvYqx6gLOcb8+8c8NPQ25MpEKF5l7SJvWJ0ZAVhYpzW0O0BzOf3cmdjAVNPOp+sxVnpmCkiRPArw==
+X-Received: by 2002:a05:600c:145:: with SMTP id w5mr2485651wmm.75.1565606374600;
+        Mon, 12 Aug 2019 03:39:34 -0700 (PDT)
+Received: from dell ([2.27.35.255])
+        by smtp.gmail.com with ESMTPSA id z8sm6099540wmi.7.2019.08.12.03.39.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 12 Aug 2019 03:39:34 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 11:39:32 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patches@opensource.cirrus.com
+Subject: Re: [PATCH 1/2] mfd: madera: Update DT binding document to support
+ clock supplies
+Message-ID: <20190812103932.GN26727@dell>
+References: <20190806151321.31137-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-In-Reply-To: <5d763c8e-9c06-c448-2644-25bfa0e57e8c@huawei.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190806151321.31137-1-ckeepax@opensource.cirrus.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/08/2019 14:51, Zenghui Yu wrote:
-[...]
-> Hi Steven,
+On Tue, 06 Aug 2019, Charles Keepax wrote:
+
+> Add the 3 input clock sources for the chip into the device tree binding
+> document.
 > 
-> Since userspace is not involved yet (right?), no one will create the
-> PV_TIME device for guest (and no one will specify the IPA of the shared
-> stolen time region), and I guess we will get a "not supported" error
-> here.
-> 
-> So what should we do if we want to test this series now?  Any userspace
-> tools?  If no, do you have any plans for userspace developing? ;-)
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/madera.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-At the moment I have the following patch to kvmtool which creates the
-PV_TIME device - this isn't in a state to go upstream, and Marc has
-asked that I rework the memory allocation, so this will need to change.
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-It's a little ugly as it simply reserves the first page of RAM to use
-for the PV time structures.
-
-----8<----
-diff --git a/Makefile b/Makefile
-index 3862112..a79956b 100644
---- a/Makefile
-+++ b/Makefile
-@@ -158,7 +158,7 @@ endif
- # ARM
- OBJS_ARM_COMMON		:= arm/fdt.o arm/gic.o arm/gicv2m.o arm/ioport.o \
- 			   arm/kvm.o arm/kvm-cpu.o arm/pci.o arm/timer.o \
--			   arm/pmu.o
-+			   arm/pmu.o arm/pvtime.o
- HDRS_ARM_COMMON		:= arm/include
- ifeq ($(ARCH), arm)
- 	DEFINES		+= -DCONFIG_ARM
-diff --git a/arm/fdt.c b/arm/fdt.c
-index c80e6da..19eccbc 100644
---- a/arm/fdt.c
-+++ b/arm/fdt.c
-@@ -119,6 +119,7 @@ static int setup_fdt(struct kvm *kvm)
- 
- 	/* Create new tree without a reserve map */
- 	_FDT(fdt_create(fdt, FDT_MAX_SIZE));
-+	_FDT(fdt_add_reservemap_entry(fdt, kvm->arch.memory_guest_start, 4096));
- 	_FDT(fdt_finish_reservemap(fdt));
- 
- 	/* Header */
-diff --git a/arm/kvm.c b/arm/kvm.c
-index 1f85fc6..8bbfef1 100644
---- a/arm/kvm.c
-+++ b/arm/kvm.c
-@@ -11,6 +11,8 @@
- #include <linux/kvm.h>
- #include <linux/sizes.h>
- 
-+int pvtime_create(struct kvm *kvm);
-+
- struct kvm_ext kvm_req_ext[] = {
- 	{ DEFINE_KVM_EXT(KVM_CAP_IRQCHIP) },
- 	{ DEFINE_KVM_EXT(KVM_CAP_ONE_REG) },
-@@ -86,6 +88,10 @@ void kvm__arch_init(struct kvm *kvm, const char *hugetlbfs_path, u64 ram_size)
- 	/* Create the virtual GIC. */
- 	if (gic__create(kvm, kvm->cfg.arch.irqchip))
- 		die("Failed to create virtual GIC");
-+
-+	/* Setup PV time */
-+	if (pvtime_create(kvm))
-+		die("Failed to initialise PV time");
- }
- 
- #define FDT_ALIGN	SZ_2M
-diff --git a/arm/pvtime.c b/arm/pvtime.c
-new file mode 100644
-index 0000000..abcaab3
---- /dev/null
-+++ b/arm/pvtime.c
-@@ -0,0 +1,77 @@
-+#include "kvm/kvm.h"
-+
-+#define KVM_DEV_TYPE_ARM_PV_TIME (KVM_DEV_TYPE_ARM_VGIC_ITS+2)
-+
-+/* Device Control API: PV_TIME */
-+#define KVM_DEV_ARM_PV_TIME_PADDR	0
-+#define KVM_DEV_ARM_PV_TIME_FREQUENCY	3
-+
-+#define KVM_DEV_ARM_PV_TIME_ST		0
-+#define KVM_DEV_ARM_PV_TIME_LPT		1
-+
-+static int pvtime_fd;
-+
-+int pvtime_create(struct kvm *kvm);
-+
-+int pvtime_create(struct kvm *kvm)
-+{
-+	int err;
-+	u64 lpt_paddr = 0x10000000;
-+	u64 st_paddr = lpt_paddr + 4096;
-+	u32 frequency = 100 * 1000 * 1000;
-+
-+	printf("lpt_paddr=%llx\n", lpt_paddr);
-+
-+	struct kvm_create_device pvtime_device = {
-+		.type = KVM_DEV_TYPE_ARM_PV_TIME,
-+		.flags = 0,
-+	};
-+
-+	err = ioctl(kvm->vm_fd, KVM_CREATE_DEVICE, &pvtime_device);
-+	if (err) {
-+		printf("Failed to create PV device\n");
-+		return 0;
-+	}
-+
-+	pvtime_fd = pvtime_device.fd;
-+
-+	struct kvm_device_attr lpt_base = {
-+		.group = KVM_DEV_ARM_PV_TIME_PADDR,
-+		.attr = KVM_DEV_ARM_PV_TIME_LPT,
-+		.addr = (u64)(unsigned long)&lpt_paddr
-+	};
-+	struct kvm_device_attr st_base = {
-+		.group = KVM_DEV_ARM_PV_TIME_PADDR,
-+		.attr = KVM_DEV_ARM_PV_TIME_ST,
-+		.addr = (u64)(unsigned long)&st_paddr
-+	};
-+
-+	struct kvm_device_attr lpt_freq = {
-+		.group = KVM_DEV_ARM_PV_TIME_FREQUENCY,
-+		.attr = KVM_DEV_ARM_PV_TIME_LPT,
-+		.addr = (u64)(unsigned long)&frequency
-+	};
-+
-+	err = ioctl(pvtime_fd, KVM_SET_DEVICE_ATTR, &lpt_base);
-+	if (err) {
-+		perror("ioctl lpt_base failed");
-+		printf("Ignoring LPT...\n");
-+	}
-+	err = ioctl(pvtime_fd, KVM_SET_DEVICE_ATTR, &st_base);
-+	if (err) {
-+		perror("ioctl st_base failed");
-+		goto out_err;
-+	}
-+	err = ioctl(pvtime_fd, KVM_SET_DEVICE_ATTR, &lpt_freq);
-+	if (err) {
-+		perror("ioctl lpt_freq failed");
-+		printf("Ignoring LPT...\n");
-+	}
-+
-+	printf("PV time setup\n");
-+
-+	return 0;
-+out_err:
-+	close(pvtime_fd);
-+	return err;
-+}
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
