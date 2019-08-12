@@ -2,88 +2,75 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3226C32750
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4598C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9EBD20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B27B020665
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:06:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfHLQEw (ORCPT
+        id S1726663AbfHLQGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 12:04:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35491 "EHLO mx1.redhat.com"
+        Mon, 12 Aug 2019 12:06:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:52290 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbfHLQEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 12:04:51 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6A03B30EA18E;
-        Mon, 12 Aug 2019 16:04:51 +0000 (UTC)
-Received: from plouf.redhat.com (ovpn-117-165.ams2.redhat.com [10.36.117.165])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 920421001958;
-        Mon, 12 Aug 2019 16:04:47 +0000 (UTC)
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-To:     David Barksdale <dbarksdale@uplogix.com>,
-        Jiri Kosina <jikos@kernel.org>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH] HID: cp2112: prevent sleeping function called from invalid context
-Date:   Mon, 12 Aug 2019 18:04:44 +0200
-Message-Id: <20190812160444.10402-1-benjamin.tissoires@redhat.com>
+        id S1725923AbfHLQGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 12:06:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED1F515A2;
+        Mon, 12 Aug 2019 09:06:46 -0700 (PDT)
+Received: from arrakis.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DDF7B3F718;
+        Mon, 12 Aug 2019 09:06:45 -0700 (PDT)
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>
+Subject: [PATCH v3 0/3] mm: kmemleak: Use a memory pool for kmemleak object allocations
+Date:   Mon, 12 Aug 2019 17:06:39 +0100
+Message-Id: <20190812160642.52134-1-catalin.marinas@arm.com>
+X-Mailer: git-send-email 2.23.0.rc0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 12 Aug 2019 16:04:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When calling request_threaded_irq() with a CP2112, the function
-cp2112_gpio_irq_startup() is called in a IRQ context.
+Following the discussions on v2 of this patch(set) [1], this series
+takes slightly different approach:
 
-Therefore we can not sleep, and we can not call
-cp2112_gpio_direction_input() there.
+- it implements its own simple memory pool that does not rely on the
+  slab allocator
 
-Move the call to cp2112_gpio_direction_input() earlier to have a working
-driver.
+- drops the early log buffer logic entirely since it can now allocate
+  metadata from the memory pool directly before kmemleak is fully
+  initialised
 
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
----
- drivers/hid/hid-cp2112.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+- CONFIG_DEBUG_KMEMLEAK_EARLY_LOG_SIZE option is renamed to
+  CONFIG_DEBUG_KMEMLEAK_MEM_POOL_SIZE
 
-diff --git a/drivers/hid/hid-cp2112.c b/drivers/hid/hid-cp2112.c
-index 2310c96ccf4a..db1b55df0d13 100644
---- a/drivers/hid/hid-cp2112.c
-+++ b/drivers/hid/hid-cp2112.c
-@@ -1153,8 +1153,6 @@ static unsigned int cp2112_gpio_irq_startup(struct irq_data *d)
- 
- 	INIT_DELAYED_WORK(&dev->gpio_poll_worker, cp2112_gpio_poll_callback);
- 
--	cp2112_gpio_direction_input(gc, d->hwirq);
--
- 	if (!dev->gpio_poll) {
- 		dev->gpio_poll = true;
- 		schedule_delayed_work(&dev->gpio_poll_worker, 0);
-@@ -1204,6 +1202,12 @@ static int __maybe_unused cp2112_allocate_irq(struct cp2112_device *dev,
- 		return PTR_ERR(dev->desc[pin]);
- 	}
- 
-+	ret = cp2112_gpio_direction_input(&dev->gc, pin);
-+	if (ret < 0) {
-+		dev_err(dev->gc.parent, "Failed to set GPIO to input dir\n");
-+		goto err_desc;
-+	}
-+
- 	ret = gpiochip_lock_as_irq(&dev->gc, pin);
- 	if (ret) {
- 		dev_err(dev->gc.parent, "Failed to lock GPIO as interrupt\n");
--- 
-2.19.2
+- moves the kmemleak_init() call earlier (mm_init())
+
+- to avoid a separate memory pool for struct scan_area, it makes the
+  tool robust when such allocations fail as scan areas are rather an
+  optimisation
+
+[1] http://lkml.kernel.org/r/20190727132334.9184-1-catalin.marinas@arm.com
+
+Catalin Marinas (3):
+  mm: kmemleak: Make the tool tolerant to struct scan_area allocation
+    failures
+  mm: kmemleak: Simple memory allocation pool for kmemleak objects
+  mm: kmemleak: Use the memory pool for early allocations
+
+ init/main.c       |   2 +-
+ lib/Kconfig.debug |  11 +-
+ mm/kmemleak.c     | 325 ++++++++++++----------------------------------
+ 3 files changed, 91 insertions(+), 247 deletions(-)
 
