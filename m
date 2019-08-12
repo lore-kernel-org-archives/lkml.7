@@ -2,247 +2,186 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B8FC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877C1C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3505720842
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F68C20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:14:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="gP8UUQfH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbfHLNNU (ORCPT
+        id S1728921AbfHLNN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 09:13:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39050 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728864AbfHLNNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 09:13:17 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 64F01309C387;
-        Mon, 12 Aug 2019 13:13:16 +0000 (UTC)
-Received: from virtlab605.virt.lab.eng.bos.redhat.com (virtlab605.virt.lab.eng.bos.redhat.com [10.19.152.201])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F84B5D6A0;
-        Mon, 12 Aug 2019 13:13:14 +0000 (UTC)
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
-        pbonzini@redhat.com, lcapitulino@redhat.com, pagupta@redhat.com,
-        wei.w.wang@intel.com, yang.zhang.wz@gmail.com, riel@surriel.com,
-        david@redhat.com, mst@redhat.com, dodgen@google.com,
-        konrad.wilk@oracle.com, dhildenb@redhat.com, aarcange@redhat.com,
-        alexander.duyck@gmail.com, john.starks@microsoft.com,
-        dave.hansen@intel.com, mhocko@suse.com, cohuck@redhat.com
-Subject: [RFC][Patch v12 2/2] virtio-balloon: interface to support free page reporting
-Date:   Mon, 12 Aug 2019 09:12:35 -0400
-Message-Id: <20190812131235.27244-3-nitesh@redhat.com>
-In-Reply-To: <20190812131235.27244-1-nitesh@redhat.com>
-References: <20190812131235.27244-1-nitesh@redhat.com>
+        Mon, 12 Aug 2019 09:13:59 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40899 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727309AbfHLNN7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 09:13:59 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w10so49467864pgj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 06:13:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GZ0kjDqlsBXm1onlGJXcmPjGBoo61xvrnT83Ha327/w=;
+        b=gP8UUQfHWVK6PCcZuCtgUQGLNb1xfd6VKrNkvy4mRHgk9halkk9WtevTsy8CrmrGJc
+         8f/OSls2fO+e27Z+BFeMu4ZQ3qWb/YelAQDZM5eq+e3yOvW53/QDwykv+eangS1d98mk
+         ZVssmiHwfBbBDFsY+PTe1XEIpIW7JcLyTa4Ow=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GZ0kjDqlsBXm1onlGJXcmPjGBoo61xvrnT83Ha327/w=;
+        b=UmcOZzwg0pLHLGA6Iz+4Y+ErsG+ohjBT67iiq+AysItCF3cluSILcOAM9XVvc9AlLF
+         h5Wv2/1M3L2bj11UJeK+usVAJQPMKBO2uVHVx6HpUMwEgM0E2yEO1/uji1xGojlvqWt0
+         /gy3SEbqx9QuPb7Bq+vlb1AsKGAzuZ8tkhRXW3G2gAHUZB5m6aCwxq5quJRnGTOh4cFN
+         NjcRwoToybKX+H3KiL0vj/kAvD+LN5dabuVTFf+l4XStJ9jMJLiRuWQ0QHF6wC8m4Am8
+         J8GPLMVCkzFg9n0k9JHzOTV8wuYvdwW6oty2iAY8sONlqZd2glp5qAojOlo6u3dAV+IX
+         u9ig==
+X-Gm-Message-State: APjAAAXbpPhpASF4P0YzKtRDI76vztv9ftBYDjGWDsCXJ/XmWPdEh8ZT
+        P+B8ZEFOKXv1rRSSuhK3bu6X7Q==
+X-Google-Smtp-Source: APXvYqy6+6QzzZdWXIKiyMIq2T9hBQPZZNCte/r5azHG+eDPKEg76LyIZYFYP+2vYNMdHuJERhvlAQ==
+X-Received: by 2002:a17:90a:9dca:: with SMTP id x10mr23688041pjv.100.1565615638117;
+        Mon, 12 Aug 2019 06:13:58 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id u16sm14628129pjb.2.2019.08.12.06.13.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 06:13:57 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 09:13:56 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, Rao Shoaib <rao.shoaib@oracle.com>,
+        max.byungchul.park@gmail.com, byungchul.park@lge.com,
+        kernel-team@android.com, kernel-team@lge.com,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC v1 1/2] rcu/tree: Add basic support for kfree_rcu
+ batching
+Message-ID: <20190812131356.GD27552@google.com>
+References: <20190806212041.118146-1-joel@joelfernandes.org>
+ <20190806235631.GU28441@linux.ibm.com>
+ <20190807094504.GB169551@google.com>
+ <20190807175215.GE28441@linux.ibm.com>
+ <20190810024232.GA183658@google.com>
+ <20190810033814.GP28441@linux.ibm.com>
+ <20190810042037.GA175783@google.com>
+ <20190810182446.GT28441@linux.ibm.com>
+ <20190811022658.GA177703@google.com>
+ <20190811233504.GA28441@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 12 Aug 2019 13:13:16 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190811233504.GA28441@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enables the kernel to negotiate VIRTIO_BALLOON_F_REPORTING feature with
-the host. If it is available and page_reporting_flag is set to true,
-page_reporting is enabled and its callback is configured along with
-the max_pages count which indicates the maximum number of pages that
-can be isolated and reported at a time. Currently, only free pages of
-order >= (MAX_ORDER - 2) are reported. To prevent any false OOM
-max_pages count is set to 16.
+On Sun, Aug 11, 2019 at 04:35:04PM -0700, Paul E. McKenney wrote:
+> On Sat, Aug 10, 2019 at 10:26:58PM -0400, Joel Fernandes wrote:
+> > On Sat, Aug 10, 2019 at 11:24:46AM -0700, Paul E. McKenney wrote:
+> > > On Sat, Aug 10, 2019 at 12:20:37AM -0400, Joel Fernandes wrote:
+> > > > On Fri, Aug 09, 2019 at 08:38:14PM -0700, Paul E. McKenney wrote:
+> > > > > On Fri, Aug 09, 2019 at 10:42:32PM -0400, Joel Fernandes wrote:
+> > > > > > On Wed, Aug 07, 2019 at 10:52:15AM -0700, Paul E. McKenney wrote:
+> > > > > > [snip] 
+> > > > > > > > > > @@ -3459,6 +3645,8 @@ void __init rcu_init(void)
+> > > > > > > > > >  {
+> > > > > > > > > >  	int cpu;
+> > > > > > > > > >  
+> > > > > > > > > > +	kfree_rcu_batch_init();
+> > > > > > > > > 
+> > > > > > > > > What happens if someone does a kfree_rcu() before this point?  It looks
+> > > > > > > > > like it should work, but have you tested it?
+> > > > > > > > > 
+> > > > > > > > > >  	rcu_early_boot_tests();
+> > > > > > > > > 
+> > > > > > > > > For example, by testing it in rcu_early_boot_tests() and moving the
+> > > > > > > > > call to kfree_rcu_batch_init() here.
+> > > > > > > > 
+> > > > > > > > I have not tried to do the kfree_rcu() this early. I will try it out.
+> > > > > > > 
+> > > > > > > Yeah, well, call_rcu() this early came as a surprise to me back in the
+> > > > > > > day, so...  ;-)
+> > > > > > 
+> > > > > > I actually did get surprised as well!
+> > > > > > 
+> > > > > > It appears the timers are not fully initialized so the really early
+> > > > > > kfree_rcu() call from rcu_init() does cause a splat about an initialized
+> > > > > > timer spinlock (even though future kfree_rcu()s and the system are working
+> > > > > > fine all the way into the torture tests).
+> > > > > > 
+> > > > > > I think to resolve this, we can just not do batching until early_initcall,
+> > > > > > during which I have an initialization function which switches batching on.
+> > > > > > >From that point it is safe.
+> > > > > 
+> > > > > Just go ahead and batch, but don't bother with the timer until
+> > > > > after single-threaded boot is done.  For example, you could check
+> > > > > rcu_scheduler_active similar to how sync_rcu_exp_select_cpus() does.
+> > > > > (See kernel/rcu/tree_exp.h.)
+> > > > 
+> > > > Cool, that works nicely and I tested it. Actually I made it such that we
+> > > > don't need to batch even, before the scheduler is up. I don't see any benefit
+> > > > of that unless we can see a kfree_rcu() flood happening that early at boot
+> > > > which seems highly doubtful as a real world case.
+> > > 
+> > > The benefit is removing the kfree_rcu() special cases from the innards
+> > > of RCU, for example, in rcu_do_batch().  Another benefit is removing the
+> > > current restriction on the position of the rcu_head structure within the
+> > > enclosing data structure.
+> > > 
+> > > So it would be good to avoid the current kfree_rcu() special casing within
+> > > RCU itself.
+> > > 
+> > > Or are you using some trick that avoids both the batching and the current
+> > > kfree_rcu() special casing?
+> > 
+> > Oh. I see what you mean. Would it be Ok with you to have that be a follow up
+> > patch?  I am not getting rid (yet) of the special casing in rcu_do_batch in
+> > this patch, but can do that in another patch.
+> 
+> I am OK having that in another patch, and I will be looking over yours
+> and Byungchul's two patches tomorrow.  If they look OK, I will queue them.
 
-By default page_reporting feature is enabled and gets loaded as soon
-as the virtio-balloon driver is loaded. However, it could be disabled
-by writing the page_reporting_flag which is a virtio-balloon parameter.
+Ok, some of the code comments are stale as Byungchul pointed, allow me to fix
+them and then you can look at v3 directly, to save you the time.
 
-Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
----
- drivers/virtio/Kconfig              |  1 +
- drivers/virtio/virtio_balloon.c     | 64 ++++++++++++++++++++++++++++-
- include/uapi/linux/virtio_balloon.h |  1 +
- 3 files changed, 65 insertions(+), 1 deletion(-)
+> However, I won't send them upstream without a follow-on patch that gets
+> rid of the kfree_rcu() special casing within rcu_do_batch() and perhaps
+> elsewhere.  This follow-on patch would of course also need to change rcuperf
+> appropriately.
 
-diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-index 078615cf2afc..4b2dd8259ff5 100644
---- a/drivers/virtio/Kconfig
-+++ b/drivers/virtio/Kconfig
-@@ -58,6 +58,7 @@ config VIRTIO_BALLOON
- 	tristate "Virtio balloon driver"
- 	depends on VIRTIO
- 	select MEMORY_BALLOON
-+	select PAGE_REPORTING
- 	---help---
- 	 This driver supports increasing and decreasing the amount
- 	 of memory within a KVM guest.
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index 226fbb995fb0..defec00d4ee2 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -19,6 +19,7 @@
- #include <linux/mount.h>
- #include <linux/magic.h>
- #include <linux/pseudo_fs.h>
-+#include <linux/page_reporting.h>
- 
- /*
-  * Balloon device works in 4K page units.  So each page is pointed to by
-@@ -46,6 +47,7 @@ enum virtio_balloon_vq {
- 	VIRTIO_BALLOON_VQ_DEFLATE,
- 	VIRTIO_BALLOON_VQ_STATS,
- 	VIRTIO_BALLOON_VQ_FREE_PAGE,
-+	VIRTIO_BALLOON_VQ_REPORTING,
- 	VIRTIO_BALLOON_VQ_MAX
- };
- 
-@@ -55,7 +57,8 @@ enum virtio_balloon_config_read {
- 
- struct virtio_balloon {
- 	struct virtio_device *vdev;
--	struct virtqueue *inflate_vq, *deflate_vq, *stats_vq, *free_page_vq;
-+	struct virtqueue *inflate_vq, *deflate_vq, *stats_vq, *free_page_vq,
-+			 *reporting_vq;
- 
- 	/* Balloon's own wq for cpu-intensive work items */
- 	struct workqueue_struct *balloon_wq;
-@@ -113,6 +116,9 @@ struct virtio_balloon {
- 
- 	/* To register a shrinker to shrink memory upon memory pressure */
- 	struct shrinker shrinker;
-+
-+	/* To configure page reporting to report isolated pages */
-+	struct page_reporting_config page_reporting_conf;
- };
- 
- static struct virtio_device_id id_table[] = {
-@@ -120,6 +126,10 @@ static struct virtio_device_id id_table[] = {
- 	{ 0 },
- };
- 
-+bool page_reporting_flag = true;
-+module_param(page_reporting_flag, bool, 0644);
-+MODULE_PARM_DESC(page_reporting_flag, "Enable page reporting");
-+
- static u32 page_to_balloon_pfn(struct page *page)
- {
- 	unsigned long pfn = page_to_pfn(page);
-@@ -152,6 +162,44 @@ static void tell_host(struct virtio_balloon *vb, struct virtqueue *vq)
- 
- }
- 
-+void virtballoon_report_pages(struct page_reporting_config *page_reporting_conf,
-+			      unsigned int num_pages)
-+{
-+	struct virtio_balloon *vb = container_of(page_reporting_conf,
-+						 struct virtio_balloon,
-+						 page_reporting_conf);
-+	struct virtqueue *vq = vb->reporting_vq;
-+	int err, unused;
-+
-+	/* We should always be able to add these buffers to an empty queue. */
-+	err = virtqueue_add_inbuf(vq, page_reporting_conf->sg, num_pages, vb,
-+				  GFP_NOWAIT);
-+	/* We should not report if the guest is low on memory */
-+	if (unlikely(err))
-+		return;
-+	virtqueue_kick(vq);
-+
-+	/* When host has read buffer, this completes via balloon_ack */
-+	wait_event(vb->acked, virtqueue_get_buf(vq, &unused));
-+}
-+
-+static void virtballoon_page_reporting_setup(struct virtio_balloon *vb)
-+{
-+	struct device *dev = &vb->vdev->dev;
-+	int err;
-+
-+	vb->page_reporting_conf.report = virtballoon_report_pages;
-+	vb->page_reporting_conf.max_pages = PAGE_REPORTING_MAX_PAGES;
-+	err = page_reporting_enable(&vb->page_reporting_conf);
-+	if (err < 0) {
-+		dev_err(dev, "Failed to enable reporting, err = %d\n", err);
-+		page_reporting_flag = false;
-+		vb->page_reporting_conf.report = NULL;
-+		vb->page_reporting_conf.max_pages = 0;
-+		return;
-+	}
-+}
-+
- static void set_page_pfns(struct virtio_balloon *vb,
- 			  __virtio32 pfns[], struct page *page)
- {
-@@ -476,6 +524,7 @@ static int init_vqs(struct virtio_balloon *vb)
- 	names[VIRTIO_BALLOON_VQ_DEFLATE] = "deflate";
- 	names[VIRTIO_BALLOON_VQ_STATS] = NULL;
- 	names[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
-+	names[VIRTIO_BALLOON_VQ_REPORTING] = NULL;
- 
- 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
- 		names[VIRTIO_BALLOON_VQ_STATS] = "stats";
-@@ -487,11 +536,18 @@ static int init_vqs(struct virtio_balloon *vb)
- 		callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
- 	}
- 
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING)) {
-+		names[VIRTIO_BALLOON_VQ_REPORTING] = "reporting_vq";
-+		callbacks[VIRTIO_BALLOON_VQ_REPORTING] = balloon_ack;
-+	}
- 	err = vb->vdev->config->find_vqs(vb->vdev, VIRTIO_BALLOON_VQ_MAX,
- 					 vqs, callbacks, names, NULL, NULL);
- 	if (err)
- 		return err;
- 
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING))
-+		vb->reporting_vq = vqs[VIRTIO_BALLOON_VQ_REPORTING];
-+
- 	vb->inflate_vq = vqs[VIRTIO_BALLOON_VQ_INFLATE];
- 	vb->deflate_vq = vqs[VIRTIO_BALLOON_VQ_DEFLATE];
- 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
-@@ -924,6 +980,9 @@ static int virtballoon_probe(struct virtio_device *vdev)
- 		if (err)
- 			goto out_del_balloon_wq;
- 	}
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING) &&
-+	    page_reporting_flag)
-+		virtballoon_page_reporting_setup(vb);
- 	virtio_device_ready(vdev);
- 
- 	if (towards_target(vb))
-@@ -971,6 +1030,8 @@ static void virtballoon_remove(struct virtio_device *vdev)
- 		destroy_workqueue(vb->balloon_wq);
- 	}
- 
-+	if (page_reporting_flag)
-+		page_reporting_disable(&vb->page_reporting_conf);
- 	remove_common(vb);
- #ifdef CONFIG_BALLOON_COMPACTION
- 	if (vb->vb_dev_info.inode)
-@@ -1027,6 +1088,7 @@ static unsigned int features[] = {
- 	VIRTIO_BALLOON_F_DEFLATE_ON_OOM,
- 	VIRTIO_BALLOON_F_FREE_PAGE_HINT,
- 	VIRTIO_BALLOON_F_PAGE_POISON,
-+	VIRTIO_BALLOON_F_REPORTING,
- };
- 
- static struct virtio_driver virtio_balloon_driver = {
-diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/virtio_balloon.h
-index a1966cd7b677..19974392d324 100644
---- a/include/uapi/linux/virtio_balloon.h
-+++ b/include/uapi/linux/virtio_balloon.h
-@@ -36,6 +36,7 @@
- #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
- #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages */
- #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisoning */
-+#define VIRTIO_BALLOON_F_REPORTING	5 /* Page reporting virtqueue */
- 
- /* Size of a PFN in the balloon interface. */
- #define VIRTIO_BALLOON_PFN_SHIFT 12
--- 
-2.21.0
+Sounds good.
+
+> > For now I am just doing something like the following in kfree_call_rcu(). I
+> > was almost about to hit send on the v1 and I have been testing this a lot so
+> > I'll post it anyway; and we can discuss more about this point on that.
+> > 
+> > +void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+> > +{
+> > +       unsigned long flags;
+> > +       struct kfree_rcu_cpu *krcp;
+> > +       bool monitor_todo;
+> > +
+> > +       /* kfree_call_rcu() batching requires timers to be up. If the scheduler
+> > +        * is not yet up, just skip batching and do non-batched kfree_call_rcu().
+> > +        */
+> > +       if (rcu_scheduler_active != RCU_SCHEDULER_RUNNING)
+> > +               return kfree_call_rcu_nobatch(head, func);
+> > +
+> 
+> As a stopgap until the follow-on patch, this looks fine.
+
+Cool, thanks!
+
+- Joel
 
