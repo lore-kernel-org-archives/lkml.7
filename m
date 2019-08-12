@@ -2,171 +2,144 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4A4C32750
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 500A5C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7140E20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A35520684
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:03:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="l3asKrud";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nlmdTbTv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q9RDmDO2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbfHLTDQ (ORCPT
+        id S1726841AbfHLTDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 15:03:16 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:56200 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbfHLTDP (ORCPT
+        Mon, 12 Aug 2019 15:03:51 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:51268 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbfHLTDv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 15:03:15 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id CDD146050D; Mon, 12 Aug 2019 19:03:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565636594;
-        bh=+MD5LElchqMbgLC+3+P9vMAxbocPXBlWdeP3RWd6oDk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=l3asKrudoUAE7CgF87q2VGkOkp4swtEZhNPb+uskZNC2m8+HvtjsIJni+IGkUJNLI
-         V5tIjeQZegsYj1k0i6cnArr7Wa9nam2m9l+VVnk8dIvzuNBUoYF06hzooz1c9Z5JIj
-         ttLqRPrl9VyCeBLf2RunXtqMdhk29MR+m9Yc+Mjk=
-Received: from isaacm-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: isaacm@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 740ED6050D;
-        Mon, 12 Aug 2019 19:03:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565636593;
-        bh=+MD5LElchqMbgLC+3+P9vMAxbocPXBlWdeP3RWd6oDk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=nlmdTbTvm32M7IXOQXJw6f7XJyYZXQETneNM0FW5ObkoIM+j+m8FlGrtWXDJj+0Xf
-         +wc1WsVcko+Bar7TibcAMab3/EpgSkldzfbi+hdKrACo/EgwnMAQzYoYKnJ0j8hnPu
-         QGOfORFJQXHhb/t7H6KvvVCjJqksG6JMcct8+T3M=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 740ED6050D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=isaacm@codeaurora.org
-From:   "Isaac J. Manjarres" <isaacm@codeaurora.org>
-To:     hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com
-Cc:     "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        pratikp@codeaurora.org, lmark@codeaurora.org,
-        stable@vger.kernel.org
-Subject: [PATCH] dma-mapping: Use unsigned types for size checks
-Date:   Mon, 12 Aug 2019 12:03:02 -0700
-Message-Id: <1565636582-9802-1-git-send-email-isaacm@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Mon, 12 Aug 2019 15:03:51 -0400
+Received: by mail-pl1-f201.google.com with SMTP id p9so2641905pls.18
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 12:03:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=mVRG9jasrEKg9xmOyrLCCjteMMsk/r5mx76vPr6ubzk=;
+        b=q9RDmDO2fkCI9Qt4DsOTQzVOLjfIiL+630cF1AohLv94Zttj87byDozSTNIzJdDFxS
+         65LIrJBSWoWIPgg8HLw/Ibe+hpcR8l860eYDAMrCTN2mb4YifgWxGfgc/kIDQv3PjPOz
+         1U1OI8q9EVNzl8XvJQmH4CaIptQ7UoukxN2XN+Q+KCZjNfIQ9ARbxFyTmRsVbN4FwiYu
+         voOTvcr1jxQtiSrDxs8xdjQpdwIUxlAMT223sLKDhHO0pgWClDkk4F5cymxcnYlxVGr0
+         0DQFGhVkujomhJzVwjuMSmGKkJnfhefJkUR2W2ih5Ct9N7PXTcL+3/i4ELl5X3y1Mekm
+         hJjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=mVRG9jasrEKg9xmOyrLCCjteMMsk/r5mx76vPr6ubzk=;
+        b=K/iy8QuzmZJ2uSICFy1Hd9A3xhZbvxfFr3goCvZGCRHuT6KirEo/TSrMjqozEKErJ6
+         SWhCE2wFOd06RALd08YC/HNbu2WP43vS86v0/1J2LoKkYHSFxKtbQhTzbYRWTE1weylD
+         EtjoYS/R5u53jMjde/ndVvOSfb+5bl8pzApY9oDZV3eeP2bSSUrpoTBL08WLDJhrjOOZ
+         5lXORgqLljirjLBlbSWlkdbbcinxrK+xzUJSOI/VE+KM1ReRa5Fd8/XZ0dcM8GdiEJGm
+         rz3Et9aju/PBQsKOo4iI1Yk+qOSOr8Z9c5OUbVtcmjzRc3Xa/wWgmCgsRgs3nNFHrag/
+         Jkgw==
+X-Gm-Message-State: APjAAAUWsjRPBZvssqKqJh5HZDacQnXeciKIFzqH9Mt0KlimTNXug/7V
+        Ao75lpj7FgxrjHuVqxTE3rVoIq7iYw==
+X-Google-Smtp-Source: APXvYqz+0C+mFFgI8Q0CX89fBw1s6PY8DPzBB4RvD1+6OQmtwxJjFOgwhNgfAUl1lKyUt/SLCVegv6dY++0=
+X-Received: by 2002:a63:89c2:: with SMTP id v185mr31231727pgd.241.1565636630566;
+ Mon, 12 Aug 2019 12:03:50 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 12:03:20 -0700
+Message-Id: <20190812190320.209988-1-yabinc@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+Subject: [PATCH v2] coresight: tmc-etr: Fix perf_data check.
+From:   Yabin Cui <yabinc@google.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Yabin Cui <yabinc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both the size parameter in the dma_alloc_from_[dev/global]_coherent()
-functions and the size field in the dma_coherent_mem structure
-are represented by a signed quantity, which makes it so that any
-comparisons between these two quantities is a signed comparison.
+When tracing etm data of multiple threads on multiple cpus through
+perf interface, each cpu has a unique etr_perf_buffer while sharing
+the same etr device. There is no guarantee that the last cpu starts
+etm tracing also stops last. This makes perf_data check fail.
 
-When a reserved memory region is larger than or equal to 2GB in
-size, this will cause the most significant bit to be set to 1,
-thus, treating the size as a negative number in signed
-comparisons.
+Fix it by checking etr_buf instead of etr_perf_buffer.
 
-This can result in allocation failures when an amount of
-memory that is strictly less than 2 GB is requested from
-this region. The allocation fails because the signed comparison
-to prevent from allocating more memory than what is in the
-region in __dma_alloc_from_coherent() evaluates to true since
-the size of the region is treated as a negative number, but the
-size of the request is treated as a positive number.
-
-Thus, change the type of the size parameter in the allocation
-functions to an unsigned type, and change the type of the
-size field in the dma_coherent_mem structure to an unsigned type
-as well, as it does not make sense for sizes to be represented
-by signed quantities.
-
-Fixes: ee7e5516be4f ("generic: per-device coherent dma allocator")
-Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
-Cc: stable@vger.kernel.org
+Fixes: 3147da92a8a8 ("coresight: tmc-etr: Allocate and free ETR memory buffers for CPU-wide scenarios")
+Signed-off-by: Yabin Cui <yabinc@google.com>
 ---
- include/linux/dma-mapping.h | 6 +++---
- kernel/dma/coherent.c       | 8 ++++----
- 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index f7d1eea..06d446d 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -159,14 +159,14 @@ static inline int is_device_dma_capable(struct device *dev)
-  * These three functions are only for dma allocator.
-  * Don't use them in device drivers.
+v1 -> v2: rename perf_data to perf_buf. Add fixes tag.
+
+---
+ drivers/hwtracing/coresight/coresight-tmc-etr.c | 6 +++---
+ drivers/hwtracing/coresight/coresight-tmc.h     | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index 17006705287a..90d1548ad268 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -1484,7 +1484,7 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+ 		goto out;
+ 	}
+ 
+-	if (WARN_ON(drvdata->perf_data != etr_perf)) {
++	if (WARN_ON(drvdata->perf_buf != etr_buf)) {
+ 		lost = true;
+ 		spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 		goto out;
+@@ -1497,7 +1497,7 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+ 
+ 	CS_LOCK(drvdata->base);
+ 	/* Reset perf specific data */
+-	drvdata->perf_data = NULL;
++	drvdata->perf_buf = NULL;
+ 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 
+ 	size = etr_buf->len;
+@@ -1556,7 +1556,7 @@ static int tmc_enable_etr_sink_perf(struct coresight_device *csdev, void *data)
+ 	}
+ 
+ 	etr_perf->head = PERF_IDX2OFF(handle->head, etr_perf);
+-	drvdata->perf_data = etr_perf;
++	drvdata->perf_buf = etr_perf->etr_buf;
+ 
+ 	/*
+ 	 * No HW configuration is needed if the sink is already in
+diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
+index 1ed50411cc3c..f9a0c95e9ba2 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc.h
++++ b/drivers/hwtracing/coresight/coresight-tmc.h
+@@ -178,8 +178,8 @@ struct etr_buf {
+  *		device configuration register (DEVID)
+  * @idr:	Holds etr_bufs allocated for this ETR.
+  * @idr_mutex:	Access serialisation for idr.
+- * @perf_data:	PERF buffer for ETR.
+- * @sysfs_data:	SYSFS buffer for ETR.
++ * @sysfs_buf:	SYSFS buffer for ETR.
++ * @perf_buf:	PERF buffer for ETR.
   */
--int dma_alloc_from_dev_coherent(struct device *dev, ssize_t size,
-+int dma_alloc_from_dev_coherent(struct device *dev, size_t size,
- 				       dma_addr_t *dma_handle, void **ret);
- int dma_release_from_dev_coherent(struct device *dev, int order, void *vaddr);
+ struct tmc_drvdata {
+ 	void __iomem		*base;
+@@ -202,7 +202,7 @@ struct tmc_drvdata {
+ 	struct idr		idr;
+ 	struct mutex		idr_mutex;
+ 	struct etr_buf		*sysfs_buf;
+-	void			*perf_data;
++	struct etr_buf		*perf_buf;
+ };
  
- int dma_mmap_from_dev_coherent(struct device *dev, struct vm_area_struct *vma,
- 			    void *cpu_addr, size_t size, int *ret);
- 
--void *dma_alloc_from_global_coherent(ssize_t size, dma_addr_t *dma_handle);
-+void *dma_alloc_from_global_coherent(size_t size, dma_addr_t *dma_handle);
- int dma_release_from_global_coherent(int order, void *vaddr);
- int dma_mmap_from_global_coherent(struct vm_area_struct *vma, void *cpu_addr,
- 				  size_t size, int *ret);
-@@ -176,7 +176,7 @@ int dma_mmap_from_global_coherent(struct vm_area_struct *vma, void *cpu_addr,
- #define dma_release_from_dev_coherent(dev, order, vaddr) (0)
- #define dma_mmap_from_dev_coherent(dev, vma, vaddr, order, ret) (0)
- 
--static inline void *dma_alloc_from_global_coherent(ssize_t size,
-+static inline void *dma_alloc_from_global_coherent(size_t size,
- 						   dma_addr_t *dma_handle)
- {
- 	return NULL;
-diff --git a/kernel/dma/coherent.c b/kernel/dma/coherent.c
-index 29fd659..c671d5c 100644
---- a/kernel/dma/coherent.c
-+++ b/kernel/dma/coherent.c
-@@ -13,7 +13,7 @@ struct dma_coherent_mem {
- 	void		*virt_base;
- 	dma_addr_t	device_base;
- 	unsigned long	pfn_base;
--	int		size;
-+	unsigned long	size;
- 	unsigned long	*bitmap;
- 	spinlock_t	spinlock;
- 	bool		use_dev_dma_pfn_offset;
-@@ -136,7 +136,7 @@ void dma_release_declared_memory(struct device *dev)
- EXPORT_SYMBOL(dma_release_declared_memory);
- 
- static void *__dma_alloc_from_coherent(struct dma_coherent_mem *mem,
--		ssize_t size, dma_addr_t *dma_handle)
-+		size_t size, dma_addr_t *dma_handle)
- {
- 	int order = get_order(size);
- 	unsigned long flags;
-@@ -179,7 +179,7 @@ static void *__dma_alloc_from_coherent(struct dma_coherent_mem *mem,
-  * Returns 0 if dma_alloc_coherent should continue with allocating from
-  * generic memory areas, or !0 if dma_alloc_coherent should return @ret.
-  */
--int dma_alloc_from_dev_coherent(struct device *dev, ssize_t size,
-+int dma_alloc_from_dev_coherent(struct device *dev, size_t size,
- 		dma_addr_t *dma_handle, void **ret)
- {
- 	struct dma_coherent_mem *mem = dev_get_coherent_memory(dev);
-@@ -191,7 +191,7 @@ int dma_alloc_from_dev_coherent(struct device *dev, ssize_t size,
- 	return 1;
- }
- 
--void *dma_alloc_from_global_coherent(ssize_t size, dma_addr_t *dma_handle)
-+void *dma_alloc_from_global_coherent(size_t size, dma_addr_t *dma_handle)
- {
- 	if (!dma_coherent_default_memory)
- 		return NULL;
+ struct etr_buf_operations {
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.23.0.rc1.153.gdeed80330f-goog
 
