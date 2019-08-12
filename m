@@ -2,96 +2,117 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71169C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA04C32756
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48D55208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070542085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:36:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfHLGgO (ORCPT
+        id S1726989AbfHLGgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 02:36:14 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:44199 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbfHLGgO (ORCPT
+        Mon, 12 Aug 2019 02:36:22 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46944 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbfHLGgV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 02:36:14 -0400
-Received: by mail-yw1-f68.google.com with SMTP id l79so38333803ywe.11;
-        Sun, 11 Aug 2019 23:36:13 -0700 (PDT)
+        Mon, 12 Aug 2019 02:36:21 -0400
+Received: by mail-lj1-f195.google.com with SMTP id h13so1815835ljc.13;
+        Sun, 11 Aug 2019 23:36:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kslLH4Uqs+rGxpqwQFf+1cq9Y1E7WzeuukGAnIal7z0=;
-        b=dS+6OhJRFhKArjmG/gu/Muevn9h8UX4xXBB0Ss1a5zALcuRaqZP/oLvFm8Xp+fndEZ
-         5lRdq/qtJuwoqnRT0haMpmFp3GN8uK9Lgyy2ivKx7yAFWOAKlFV5Gn/eqbJ4ZqFRg7MR
-         plQXDT/zpVBPq8+XqVMEFPybfjU3nsD+ZdWYTi85X+IsyWbx4LdcXTUwYcpNl9XUDTl1
-         blX5/gK9ijV7SP5ZQ+P7LRwEtVE/PE7XO8scKhdjx/gtNKIrU46m82pGuTVEOwN45zKg
-         efA0qIflZ9ZVN2rPA2NWmoZjADvrAvWuPpwGxmJ5rwRDh4QfC46Mem8uuH6w6GJ7BGY4
-         aypg==
-X-Gm-Message-State: APjAAAVDObY/tCQAcNWp2+1FhcQRCar2MLcpJI5My51MAgrC1bsEMEBg
-        +AC2/zsIjcKaSalZxF1yxAXaHD3Lyvg=
-X-Google-Smtp-Source: APXvYqyEH4UpzW429OeouTIxC9M996cLjK/PStI+h3bBVuoPhPsqS7myPAFcrl1ssuzlf5lq+bMdTg==
-X-Received: by 2002:a0d:c945:: with SMTP id l66mr2618710ywd.291.1565591773268;
-        Sun, 11 Aug 2019 23:36:13 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id q132sm24029658ywb.26.2019.08.11.23.36.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 11 Aug 2019 23:36:12 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Tariq Toukan <tariqt@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev@vger.kernel.org (open list:MELLANOX ETHERNET DRIVER (mlx4_en)),
-        linux-rdma@vger.kernel.org (open list:MELLANOX MLX4 core VPI driver),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] net/mlx4_en: fix a memory leak bug
-Date:   Mon, 12 Aug 2019 01:36:05 -0500
-Message-Id: <1565591765-6461-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=/vpEUEVLjdkCAlhcb55giL/kGOPY848dG61+iEK0NcA=;
+        b=XLXSXK0eiWbPF91T+8JDR58rVmLlb8u0BgOX5DPFiAtsWkGBqBBmz0l8PeZwmEoBeD
+         5ZbtGFHbgI+o+dCiTo4xazI6NQm/H6/6nZd31LMshSrIr1g09NbRomTwwCdaChDO1mi5
+         joz8djPaWrX/UYz+uZ2DB3U2iuVCJ60iMZh6Ot1J50DCe+jFqZ1uyR7/tTkDnQSLnksD
+         kEfn+1EcKEIbZwsXDcHlMQvNUDoGS/urLURXEkO3AQqKtFyJhHbOM4MEdxvM+ekEkRSF
+         Xu8BvZJNA0S2AoHxPcgS5da1pScgJBRsFCfZs54OKyJBQMbjoKg/9yRIYr/9w+DfXVN0
+         NJaA==
+X-Gm-Message-State: APjAAAUkK+jBZCL5P1UvvUCY0m9Z2FcliyB9pG0vnPf0F0/Xxl9xgvDQ
+        j+IVQ6JZkMxg4MZ208sGgIQ=
+X-Google-Smtp-Source: APXvYqz7QZCYabUZI+UmwtalsRYtNXtt4fpUnUVFgWSM/ShRImkuc7OeZsTD25D/fcpxoVq69pHj0Q==
+X-Received: by 2002:a2e:7c14:: with SMTP id x20mr4166039ljc.36.1565591779144;
+        Sun, 11 Aug 2019 23:36:19 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id b2sm1741182lje.98.2019.08.11.23.36.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 11 Aug 2019 23:36:18 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 09:36:11 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "yuehaibing@huawei.com" <yuehaibing@huawei.com>
+Subject: [PATCH] rtc: bd70528: fix driver dependencies
+Message-ID: <84462e01e43d39024948a3bdd24087ff87dc2255.1565591387.git.matti.vaittinen@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In mlx4_en_config_rss_steer(), 'rss_map->indir_qp' is allocated through
-kzalloc(). After that, mlx4_qp_alloc() is invoked to configure RSS
-indirection. However, if mlx4_qp_alloc() fails, the allocated
-'rss_map->indir_qp' is not deallocated, leading to a memory leak bug.
+With CONFIG_BD70528_WATCHDOG=m, a built-in rtc driver cannot call
+into the low-level functions that are part of the watchdog module:
 
-To fix the above issue, add the 'mlx4_err' label to free
-'rss_map->indir_qp'.
+drivers/rtc/rtc-bd70528.o: In function `bd70528_set_time':
+rtc-bd70528.c:(.text+0x22c): undefined reference to `bd70528_wdt_lock'
+rtc-bd70528.c:(.text+0x2a8): undefined reference to `bd70528_wdt_unlock'
+drivers/rtc/rtc-bd70528.o: In function `bd70528_set_rtc_based_timers':
+rtc-bd70528.c:(.text+0x50c): undefined reference to `bd70528_wdt_set'
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Add a Kconfig dependency which forces RTC to be a module if watchdog is a
+module. If watchdog is not compiled at all the stub functions for watchdog
+control are used. compiling the RTC without watchdog is fine.
+
+Fixes: 32a4a4ebf768 ("rtc: bd70528: Initial support for ROHM bd70528 RTC")
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
- drivers/net/ethernet/mellanox/mlx4/en_rx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ Issue was found by kbuildbot from linux-next. Issue was addressed by
+ Arnd and Randy - but those solutions disallowed compiling the RTC
+ without watchdog. This patch is a result of discussion with Arnd and it
+ was created on top of Linus' tree (tag v5.3-rc4).
+ drivers/rtc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/en_rx.c b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-index 6c01314..9476dbd 100644
---- a/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-@@ -1187,7 +1187,7 @@ int mlx4_en_config_rss_steer(struct mlx4_en_priv *priv)
- 	err = mlx4_qp_alloc(mdev->dev, priv->base_qpn, rss_map->indir_qp);
- 	if (err) {
- 		en_err(priv, "Failed to allocate RSS indirection QP\n");
--		goto rss_err;
-+		goto mlx4_err;
- 	}
- 
- 	rss_map->indir_qp->event = mlx4_en_sqp_event;
-@@ -1241,6 +1241,7 @@ int mlx4_en_config_rss_steer(struct mlx4_en_priv *priv)
- 		       MLX4_QP_STATE_RST, NULL, 0, 0, rss_map->indir_qp);
- 	mlx4_qp_remove(mdev->dev, rss_map->indir_qp);
- 	mlx4_qp_free(mdev->dev, rss_map->indir_qp);
-+mlx4_err:
- 	kfree(rss_map->indir_qp);
- 	rss_map->indir_qp = NULL;
- rss_err:
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index e72f65b61176..add43c337489 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -500,6 +500,7 @@ config RTC_DRV_M41T80_WDT
+ 	  watchdog timer in the ST M41T60 and M41T80 RTC chips series.
+ config RTC_DRV_BD70528
+ 	tristate "ROHM BD70528 PMIC RTC"
++	depends on MFD_ROHM_BD70528 && (BD70528_WATCHDOG || !BD70528_WATCHDOG)
+ 	help
+ 	  If you say Y here you will get support for the RTC
+ 	  on ROHM BD70528 Power Management IC.
 -- 
-2.7.4
+2.17.2
 
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
