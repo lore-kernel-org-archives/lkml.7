@@ -2,166 +2,144 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD5CC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C81EBC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2697020665
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99EC020665
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:29:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565652577;
+	bh=cer7IE2RRNr2t1gNqlu4qGmm3HJXNOA7allDIe3zKOY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sJlhDGiOrBy5Y9psF9/gJr8kNemduPxMFabZtxrrx83sBUpbmHXEwA0F2K2thny+O
+	 zvvSHkF/vSZCTs/XwNkhSCoLUYNcpt0/s1xqTRkdUfxohJQfPGjVcDiKqJ5f0Qu5IL
+	 a5/f1rxJPt/fex83Osxb1Xy9SkhZ1pWAJFjIQ6TU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbfHLXX6 (ORCPT
+        id S1726659AbfHLX3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 19:23:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36448 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726144AbfHLXX5 (ORCPT
+        Mon, 12 Aug 2019 19:29:36 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43119 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfHLX3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 19:23:57 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7CNLsl6087075;
-        Mon, 12 Aug 2019 19:23:15 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ubh68s0aj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 12 Aug 2019 19:23:15 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7CNMrfI089904;
-        Mon, 12 Aug 2019 19:23:14 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ubh68s09u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 12 Aug 2019 19:23:14 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7CNKZf6031273;
-        Mon, 12 Aug 2019 23:23:13 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma04wdc.us.ibm.com with ESMTP id 2u9nj6a6hc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 12 Aug 2019 23:23:13 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7CNNCsK48431482
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 12 Aug 2019 23:23:12 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 89582B2066;
-        Mon, 12 Aug 2019 23:23:12 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6A263B2064;
-        Mon, 12 Aug 2019 23:23:12 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 12 Aug 2019 23:23:12 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id A127D16C0783; Mon, 12 Aug 2019 16:23:16 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 16:23:16 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
-Subject: Re: [PATCH RFC tip/core/rcu 14/14] rcu/nohz: Make multi_cpu_stop()
- enable tick on all online CPUs
-Message-ID: <20190812232316.GT28441@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190802151435.GA1081@linux.ibm.com>
- <20190802151501.13069-14-paulmck@linux.ibm.com>
- <20190812210232.GA3648@lenoir>
+        Mon, 12 Aug 2019 19:29:36 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e12so21328095otp.10;
+        Mon, 12 Aug 2019 16:29:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4yxOmFc8mjrzQ7FT1CRXemmXNTDbbde5+76CCWY9y9w=;
+        b=aG7cwCOJUCfJBYEJb0q6C4GrFHXDKQpt/0p04oyzQ9CzeCKToFiE8dWRjU9nG10qLk
+         IhbMQCKAL3Sqszp/2MyJWFtMnI4iam07l2ynLlnaeOw0+1I2xcO2QNzoomZ+E5abcMjU
+         1OnJ18bCJ9ZZvHQXIvk1UMkaMy72uzhx7oiUe6VoiMQznWMjX2tsd/WiV7VG0eGU99M6
+         3mvaFjYQwKU8N4C5hEgCO6PFMDCyLoP0ua2Sq9xmIasXnl0ZfKrMVzN8MQ+3voogLrym
+         qkeaWej0cvDH169dT0/66xKnd3be8LAuM0qWBefL4cZZsRkbnNVnlLnT44kfh/Ku+ZDH
+         lXnw==
+X-Gm-Message-State: APjAAAU1/Q69rBWUMFjyVjE00DgnXiK74qyEoBO4aZuOPi6vuxX6cugl
+        ssUUJtXf7zZqZLwWb7sN5g==
+X-Google-Smtp-Source: APXvYqwMVgFEMJqzgRQCjE77n0TRXXJZ+evINUqzU+d3BirD/mE1ZLx1bMt8mhMDISlggMrsS6Hamw==
+X-Received: by 2002:a6b:7619:: with SMTP id g25mr631364iom.92.1565652575408;
+        Mon, 12 Aug 2019 16:29:35 -0700 (PDT)
+Received: from localhost ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id j25sm151097051ioj.67.2019.08.12.16.29.34
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 16:29:34 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 17:29:34 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Wen He <wen.he_1@nxp.com>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com
+Subject: Re: [v2 1/4] dt-bindings: display: Add DT bindings for LS1028A
+ HDP-TX PHY.
+Message-ID: <20190812232934.GA1219@bogus>
+References: <20190719100942.12016-1-wen.he_1@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190812210232.GA3648@lenoir>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-12_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=779 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908120229
+In-Reply-To: <20190719100942.12016-1-wen.he_1@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 11:02:33PM +0200, Frederic Weisbecker wrote:
-> On Fri, Aug 02, 2019 at 08:15:01AM -0700, Paul E. McKenney wrote:
-> > The multi_cpu_stop() function relies on the scheduler to gain control from
-> > whatever is running on the various online CPUs, including any nohz_full
-> > CPUs running long loops in kernel-mode code.  Lack of the scheduler-clock
-> > interrupt on such CPUs can delay multi_cpu_stop() for several minutes
-> > and can also result in RCU CPU stall warnings.  This commit therefore
-> > causes multi_cpu_stop() to enable the scheduler-clock interrupt on all
-> > online CPUs.
-> > 
-> > Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-> > ---
-> >  kernel/stop_machine.c | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
-> > index b4f83f7bdf86..a2659f61ed92 100644
-> > --- a/kernel/stop_machine.c
-> > +++ b/kernel/stop_machine.c
-> > @@ -20,6 +20,7 @@
-> >  #include <linux/smpboot.h>
-> >  #include <linux/atomic.h>
-> >  #include <linux/nmi.h>
-> > +#include <linux/tick.h>
-> >  #include <linux/sched/wake_q.h>
-> >  
-> >  /*
-> > @@ -187,15 +188,19 @@ static int multi_cpu_stop(void *data)
-> >  {
-> >  	struct multi_stop_data *msdata = data;
-> >  	enum multi_stop_state curstate = MULTI_STOP_NONE;
-> > -	int cpu = smp_processor_id(), err = 0;
-> > +	int cpu, err = 0;
-> >  	const struct cpumask *cpumask;
-> >  	unsigned long flags;
-> >  	bool is_active;
-> >  
-> > +	for_each_online_cpu(cpu)
-> > +		tick_nohz_dep_set_cpu(cpu, TICK_DEP_MASK_RCU);
+On Fri, Jul 19, 2019 at 06:09:39PM +0800, Wen He wrote:
+> Add DT bindings documentmation for the HDP-TX PHY controller. The describes
+> which could be found on NXP Layerscape ls1028a platform.
+
+Not required, but please consider converting to DT schema (YAML) format.
+
 > 
-> Looks like it's not the right fix but, should you ever need to set an
-> all-CPUs (system wide) tick dependency in the future, you can use tick_set_dep().
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
+> ---
+> change in v2:
+>         - correction the node name.
+> 
+>  .../devicetree/bindings/display/fsl,hdp.txt   | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/fsl,hdp.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/fsl,hdp.txt b/Documentation/devicetree/bindings/display/fsl,hdp.txt
+> new file mode 100644
+> index 000000000000..53ca08337587
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/fsl,hdp.txt
+> @@ -0,0 +1,56 @@
+> +NXP Layerscpae ls1028a HDP-TX PHY Controller
 
-Indeed, I have dropped this patch, but I now do something similar in
-RCU's CPU-hotplug notifiers.  Which does have an effect, especially on
-the system that isn't subject to the insane-latency cpu_relax().
+typo
 
-Plus I am having to put a similar workaround into RCU's quiescent-state
-forcing logic.
+> +============================================
+> +
+> +The following bindings describe the Cadence HDP TX PHY on ls1028a that
+> +offer multi-protocol support of standars such as eDP and Displayport,
 
-But how should this really be done?
+s/offer/offers/
 
-Isn't there some sort of monitoring of nohz_full CPUs for accounting
-purposes?  If so, would it make sense for this monitoring to check for
-long-duration kernel execution and enable the tick in this case?  The
-RCU dyntick machinery can be used to remotely detect the long-duration
-kernel execution using something like the following:
+and another typo.
 
-	int nohz_in_kernel_snap = rcu_dynticks_snap_cpu(cpu);
+> +supports for 25-600MHz pixel clock and up to 4k2k at 60MHz resolution.
+> +The HDP transmitter is a Cadence HDP TX controller IP with a companion
+> +PHY IP.
+> +
+> +Required properties:
+> +  - compatible:   Should be "fsl,ls1028a-dp" for ls1028a.
+> +  - reg:          Physical base address and size of the block of registers used
+> +  by the processor.
 
-	...
+The example shows 2 regions, what are they?
 
-	if (rcu_dynticks_in_eqs_cpu(cpu, nohz_in_kernel_snap)
-		nohz_in_kernel_snap = rcu_dynticks_snap_cpu(cpu);
-	else
-		/* Turn on the tick! */
+> +  - interrupts:   HDP hotplug in/out detect interrupt number
+> +  - clocks:       A list of phandle + clock-specifier pairs, one for each entry
+> +  in 'clock-names'
+> +  - clock-names:  A list of clock names. It should contain:
+> +      - "clk_ipg": inter-Integrated circuit clock
+> +      - "clk_core": for the Main Display TX controller clock
+> +      - "clk_pxl": for the pixel clock feeding the output PLL of the processor
+> +      - "clk_pxl_mux": for the high PerfPLL bypass clock
+> +      - "clk_pxl_link": for the link rate pixel clock
+> +      - "clk_apb": for the APB interface clock
+> +      - "clk_vif": for the Video pixel clock
 
-I would supply rcu_dynticks_snap_cpu() and rcu_dynticks_in_eqs_cpu(),
-which would be simple wrappers around RCU's private rcu_dynticks_snap()
-and rcu_dynticks_in_eqs() functions.
+'clk_' is redundant.
 
-Would this make sense as a general solution, or am I missing a corner
-case or three?
+> +
+> +Required sub-nodes:
+> +  - port: The HDP connection to an encoder output port. The connection
+> +    is modelled using the OF graph bindings specified in
+> +    Documentation/devicetree/bindings/graph.txt
 
-							Thanx, Paul
+I'm still confused as to what this block does? The 'encoder output' is 
+DisplayPort? If this is just a phy, then use the phy binding.
+
+Normally, a DisplayPort encoder/bridge OF graph output would be 
+connected to a DP connector node or a panel.
+
+Rob
