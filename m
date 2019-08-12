@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C03C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0F8C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4378D20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6696F20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfHLJjo (ORCPT
+        id S1727587AbfHLJj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 05:39:44 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:57624 "EHLO inva021.nxp.com"
+        Mon, 12 Aug 2019 05:39:58 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:57580 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727484AbfHLJjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 05:39:37 -0400
+        id S1727404AbfHLJjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 05:39:35 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 992A62002FB;
-        Mon, 12 Aug 2019 11:39:35 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DB69F20031B;
+        Mon, 12 Aug 2019 11:39:33 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8CF8F200112;
-        Mon, 12 Aug 2019 11:39:35 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CA67E2002F1;
+        Mon, 12 Aug 2019 11:39:33 +0200 (CEST)
 Received: from fsr-ub1464-137.ea.freescale.net (fsr-ub1464-137.ea.freescale.net [10.171.82.114])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 42EE8205ED;
-        Mon, 12 Aug 2019 11:39:35 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 91DDD205ED;
+        Mon, 12 Aug 2019 11:39:33 +0200 (CEST)
 From:   Ioana Ciornei <ioana.ciornei@nxp.com>
 To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
 Cc:     andrew@lunn.ch, ruxandra.radulescu@nxp.com,
         Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: [PATCH 08/10] staging: fsl-dpaa2/ethsw: reword error message
-Date:   Mon, 12 Aug 2019 12:39:16 +0300
-Message-Id: <1565602758-14434-9-git-send-email-ioana.ciornei@nxp.com>
+Subject: [PATCH 03/10] staging: fsl-dpaa2/ethsw: add line terminator to all formats
+Date:   Mon, 12 Aug 2019 12:39:11 +0300
+Message-Id: <1565602758-14434-4-git-send-email-ioana.ciornei@nxp.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1565602758-14434-1-git-send-email-ioana.ciornei@nxp.com>
 References: <1565602758-14434-1-git-send-email-ioana.ciornei@nxp.com>
@@ -45,28 +45,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the current state, the dpaa2-ethsw driver supports only one bridge
-per DPSW object. Reword the error message so that this information is
-much more clear.
+Add the '\n' line terminator to the string formats missing it.
 
 Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 ---
- drivers/staging/fsl-dpaa2/ethsw/ethsw.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c |  2 +-
+ drivers/staging/fsl-dpaa2/ethsw/ethsw.c         | 10 +++++-----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c
+index 926a0c053e18..95e9f1096999 100644
+--- a/drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c
++++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c
+@@ -65,7 +65,7 @@ static void ethsw_get_drvinfo(struct net_device *netdev,
+ 				     port_priv->idx,
+ 				     &state);
+ 	if (err) {
+-		netdev_err(netdev, "ERROR %d getting link state", err);
++		netdev_err(netdev, "ERROR %d getting link state\n", err);
+ 		goto out;
+ 	}
+ 
 diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-index b69b2b7be972..28da109aef5e 100644
+index 302842c3bdfe..9ade73928e60 100644
 --- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
 +++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-@@ -1119,8 +1119,7 @@ static int port_bridge_join(struct net_device *netdev,
- 		if (ethsw->ports[i]->bridge_dev &&
- 		    (ethsw->ports[i]->bridge_dev != upper_dev)) {
- 			netdev_err(netdev,
--				   "Another switch port is connected to %s\n",
--				   ethsw->ports[i]->bridge_dev->name);
-+				   "Only one bridge supported per DPSW object!\n");
- 			return -EINVAL;
- 		}
+@@ -722,12 +722,12 @@ static irqreturn_t ethsw_irq0_handler_thread(int irq_num, void *arg)
+ 	err = dpsw_get_irq_status(ethsw->mc_io, 0, ethsw->dpsw_handle,
+ 				  DPSW_IRQ_INDEX_IF, &status);
+ 	if (err) {
+-		dev_err(dev, "Can't get irq status (err %d)", err);
++		dev_err(dev, "Can't get irq status (err %d)\n", err);
+ 
+ 		err = dpsw_clear_irq_status(ethsw->mc_io, 0, ethsw->dpsw_handle,
+ 					    DPSW_IRQ_INDEX_IF, 0xFFFFFFFF);
+ 		if (err)
+-			dev_err(dev, "Can't clear irq status (err %d)", err);
++			dev_err(dev, "Can't clear irq status (err %d)\n", err);
+ 		goto out;
+ 	}
+ 
+@@ -772,21 +772,21 @@ static int ethsw_setup_irqs(struct fsl_mc_device *sw_dev)
+ 					IRQF_NO_SUSPEND | IRQF_ONESHOT,
+ 					dev_name(dev), dev);
+ 	if (err) {
+-		dev_err(dev, "devm_request_threaded_irq(): %d", err);
++		dev_err(dev, "devm_request_threaded_irq(): %d\n", err);
+ 		goto free_irq;
+ 	}
+ 
+ 	err = dpsw_set_irq_mask(ethsw->mc_io, 0, ethsw->dpsw_handle,
+ 				DPSW_IRQ_INDEX_IF, mask);
+ 	if (err) {
+-		dev_err(dev, "dpsw_set_irq_mask(): %d", err);
++		dev_err(dev, "dpsw_set_irq_mask(): %d\n", err);
+ 		goto free_devm_irq;
+ 	}
+ 
+ 	err = dpsw_set_irq_enable(ethsw->mc_io, 0, ethsw->dpsw_handle,
+ 				  DPSW_IRQ_INDEX_IF, 1);
+ 	if (err) {
+-		dev_err(dev, "dpsw_set_irq_enable(): %d", err);
++		dev_err(dev, "dpsw_set_irq_enable(): %d\n", err);
+ 		goto free_devm_irq;
+ 	}
  
 -- 
 1.9.1
