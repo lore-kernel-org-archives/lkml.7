@@ -2,115 +2,115 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B649BC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1ED9C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83888214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:42:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="1yNlF2YC"
+	by mail.kernel.org (Postfix) with ESMTP id AEAFB217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:42:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727675AbfHLNmu (ORCPT
+        id S1728223AbfHLNmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 09:42:50 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:53338 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbfHLNmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 09:42:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=wP9/YhXhhTrXAtgu2t1aKCPym9xbq8KIIf/zHdGPK5E=; b=1yNlF2YCqlhKPeveeY1yI71Tch
-        HTJJszODy46EedfOZi1YHn89fckPZlgYMhtvY2Ya8oc9y28t6iNFo0SnWDYNymnsARTOS+SttbGYz
-        5LLEd/NeVNiAdOs9doTVP3ylkLU/H0SBZXmi4b0X1bB8m8IOxrmFkRkGzWui3DiHwmM4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hxAax-0000QJ-MX; Mon, 12 Aug 2019 15:42:43 +0200
-Date:   Mon, 12 Aug 2019 15:42:43 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [BUG] access to null-pointer in dsa_switch_event when bridge set
- up
-Message-ID: <20190812134243.GK14290@lunn.ch>
-References: <trinity-99bcd71d-8f78-4bbe-a439-f6a915040b0a-1565606589515@3c-app-gmx-bs80>
+        Mon, 12 Aug 2019 09:42:55 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57354 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfHLNmx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 09:42:53 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 4686C28B0CA
+Message-ID: <9374a16516e61978d58bff4d8721bff2f511c5c9.camel@collabora.com>
+Subject: Re: [PATCH 4/7] media: cedrus: Remove dst_bufs from context
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        paul.kocialkowski@bootlin.com, maxime.ripard@bootlin.com
+Cc:     wens@csie.org, mchehab@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Mon, 12 Aug 2019 10:42:44 -0300
+In-Reply-To: <20190530211516.1891-5-jernej.skrabec@siol.net>
+References: <20190530211516.1891-1-jernej.skrabec@siol.net>
+         <20190530211516.1891-5-jernej.skrabec@siol.net>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <trinity-99bcd71d-8f78-4bbe-a439-f6a915040b0a-1565606589515@3c-app-gmx-bs80>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Mon, Aug 12, 2019 at 12:43:09PM +0200, Frank Wunderlich wrote:
-> Hi,
+On Thu, 2019-05-30 at 23:15 +0200, Jernej Skrabec wrote:
+> This array is just duplicated capture buffer queue. Remove it and adjust
+> code to look into capture buffer queue instead.
 > 
-> i've noticed a bug when using bridge on dsa-ports. Tested on Bpi-r2, Crash happens on 5.3-rc1 and rc4, 5.2-rc7 (last version pre 5.3 i have found on my tftp) is not affected.
-
-Hi Frank
-
-A patch was merged last night with a fix for dsa_port_mdb_add. The
-call stack looks the same. So i think this is fixed.
-
-     Andrew
-
- 
-> [  115.038406] [<c09f28c0>] (dsa_switch_event) from [<c014d4f8>] (notifier_call_chain+0x58/0x94)
-> [  115.046940]  r10:00000000 r9:c09f1dd0 r8:00000000 r7:00000005 r6:e71edd54 r5:00000000
-> [  115.054771]  r4:ffffffff
-> [  115.057308] [<c014d4a0>] (notifier_call_chain) from [<c014d658>] (raw_notifier_call_chain+0x28/0x30)
-> [  115.066447]  r9:c09f1dd0 r8:c09f0740 r7:e71fd800 r6:00000000 r5:c1104c48 r4:c1104c48
-> [  115.074197] [<c014d630>] (raw_notifier_call_chain) from [<c09efe1c>] (dsa_port_mdb_add+0x58/0x84)
-> [  115.083078] [<c09efdc4>] (dsa_port_mdb_add) from [<c09f1e2c>] (dsa_slave_port_obj_add+0x5c/0x78)
-> [  115.091866]  r4:e71ede38
-> [  115.094403] [<c09f1dd0>] (dsa_slave_port_obj_add) from [<c0b47cc4>] (__switchdev_handle_port_obj_add+0x64/0xe4)
-> [  115.104499] [<c0b47c60>] (__switchdev_handle_port_obj_add) from [<c0b47d5c>] (switchdev_handle_port_obj_add+0x18/0x24)
-> [  115.115201]  r10:00000000 r9:00000000 r8:00000000 r7:00000006 r6:e71ede38 r5:00000000
-> [  115.123032]  r4:ffffffff
-> [  115.125570] [<c0b47d44>] (switchdev_handle_port_obj_add) from [<c09f1c58>] (dsa_slave_switchdev_blocking_event+0x50/0xb0)
-> [  115.136535] [<c09f1c08>] (dsa_slave_switchdev_blocking_event) from [<c014d4f8>] (notifier_call_chain+0x58/0x94)
-> [  115.146632] [<c014d4a0>] (notifier_call_chain) from [<c014dd70>] (blocking_notifier_call_chain+0x54/0x6c)
-> [  115.156206]  r9:00000000 r8:e6932dd0 r7:e71fd800 r6:e71ede38 r5:c11bc820 r4:00000006
-> [  115.163956] [<c014dd1c>] (blocking_notifier_call_chain) from [<c0b479ec>] (switchdev_port_obj_notify+0x54/0xb8)
-> [  115.174049]  r6:00000000 r5:1021bd52 r4:c1104c48
-> [  115.178670] [<c0b47998>] (switchdev_port_obj_notify) from [<c0b47af4>] (switchdev_port_obj_add_now+0xa4/0x118)
-> [  115.188675]  r5:e71ede73 r4:c1104c48
-> [  115.192254] [<c0b47a50>] (switchdev_port_obj_add_now) from [<c0b47b8c>] (switchdev_port_obj_add_deferred+0x24/0x70)
-> [  115.202698]  r9:c11c50f0 r8:00000000 r7:00000100 r6:e71fd800 r5:e6932dd0 r4:e6932dc0
-> [  115.210450] [<c0b47b68>] (switchdev_port_obj_add_deferred) from [<c0b477e0>] (switchdev_deferred_process+0x84/0x118)
-> [  115.220978]  r7:00000100 r6:c12332ac r5:c11bc818 r4:e6932dc0
-> [  115.226643] [<c0b4775c>] (switchdev_deferred_process) from [<c0b47890>] (switchdev_deferred_process_work+0x1c/0x24)
-> [  115.237085]  r7:ead92200 r6:ead8f100 r5:e909f380 r4:c11bc83c
-> [  115.242751] [<c0b47874>] (switchdev_deferred_process_work) from [<c0144dac>] (process_one_work+0x1ac/0x4bc)
-> [  115.252499] [<c0144c00>] (process_one_work) from [<c0145b8c>] (worker_thread+0x5c/0x580)
-> [  115.260597]  r10:c1103d00 r9:00000008 r8:ffffe000 r7:ead8f118 r6:e909f394 r5:ead8f100
-> [  115.268427]  r4:e909f380
-> [  115.270965] [<c0145b30>] (worker_thread) from [<c014ba18>] (kthread+0x168/0x170)
-> [  115.278368]  r10:ea13fe74 r9:c0145b30 r8:e909f380 r7:e71ec000 r6:00000000 r5:e910bf00
-> [  115.286199]  r4:e910bf40
-> [  115.288737] [<c014b8b0>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
-> [  115.295961] Exception stack(0xe71edfb0 to 0xe71edff8)
-> [  115.301014] dfa0:                                     00000000 00000000 00000000 00000000
-> [  115.309197] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [  115.317379] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> [  115.323997]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:00000000 r5:c014b8b0
-> [  115.331827]  r4:e910bf00
-> [  115.334363] Code: bad PC value
-> [  115.337583] ---[ end trace 3bdbb989816b27f4 ]---
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  drivers/staging/media/sunxi/cedrus/cedrus.h   |  4 +---
+>  .../staging/media/sunxi/cedrus/cedrus_h264.c  |  4 ++--
+>  .../staging/media/sunxi/cedrus/cedrus_video.c | 22 -------------------
+>  3 files changed, 3 insertions(+), 27 deletions(-)
 > 
-> regards Frank
-> 
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> index 3f476d0fd981..d8e6777e5e27 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> @@ -100,8 +100,6 @@ struct cedrus_ctx {
+>  	struct v4l2_ctrl_handler	hdl;
+>  	struct v4l2_ctrl		**ctrls;
+>  
+> -	struct vb2_buffer		*dst_bufs[VIDEO_MAX_FRAME];
+> -
+>  	union {
+>  		struct {
+>  			void		*mv_col_buf;
+> @@ -187,7 +185,7 @@ static inline dma_addr_t cedrus_dst_buf_addr(struct cedrus_ctx *ctx,
+>  	if (index < 0)
+>  		return 0;
+>  
+> -	buf = ctx->dst_bufs[index];
+> +	buf = ctx->fh.m2m_ctx->cap_q_ctx.q.bufs[index];
+
+I think you can use v4l2_m2m_get_dst_vq() to access the queue,
+and vb2_get_buffer() to access buffers in a vb2 queue.
+
+>  	return buf ? cedrus_buf_addr(buf, &ctx->dst_fmt, plane) : 0;
+>  }
+>  
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> index d0ee3f90ff46..b2290f98d81a 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> @@ -119,7 +119,7 @@ static void cedrus_write_frame_list(struct cedrus_ctx *ctx,
+>  		if (buf_idx < 0)
+>  			continue;
+>  
+> -		cedrus_buf = vb2_to_cedrus_buffer(ctx->dst_bufs[buf_idx]);
+> +		cedrus_buf = vb2_to_cedrus_buffer(cap_q->bufs[buf_idx]);
+
+Ditto about vb2_get_buffer.
+
+>  		position = cedrus_buf->codec.h264.position;
+>  		used_dpbs |= BIT(position);
+>  
+> @@ -194,7 +194,7 @@ static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
+>  		if (buf_idx < 0)
+>  			continue;
+>  
+> -		ref_buf = to_vb2_v4l2_buffer(ctx->dst_bufs[buf_idx]);
+> +		ref_buf = to_vb2_v4l2_buffer(cap_q->bufs[buf_idx]);
+
+Ditto about vb2_get_buffer.
+
+With those changes:
+
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+
+Thanks,
+Ezequiel
+
