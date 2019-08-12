@@ -2,167 +2,95 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7949C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D56C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8147220820
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7539720820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:37:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iDOVokDe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfHLFgu (ORCPT
+        id S1726934AbfHLFhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 01:36:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45502 "EHLO mx1.redhat.com"
+        Mon, 12 Aug 2019 01:37:33 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43193 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725822AbfHLFgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 01:36:49 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725822AbfHLFhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 01:37:32 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 001608E582;
-        Mon, 12 Aug 2019 05:36:48 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E43886092D;
-        Mon, 12 Aug 2019 05:36:48 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id CD3732551B;
-        Mon, 12 Aug 2019 05:36:48 +0000 (UTC)
-Date:   Mon, 12 Aug 2019 01:36:48 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     amit@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
-        virtualization@lists.linux-foundation.org, jasowang@redhat.com,
-        linux-kernel@vger.kernel.org, xiaohli@redhat.com
-Message-ID: <361928616.7829318.1565588208467.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190810141019-mutt-send-email-mst@kernel.org>
-References: <20190809064847.28918-1-pagupta@redhat.com> <20190809064847.28918-2-pagupta@redhat.com> <20190810141019-mutt-send-email-mst@kernel.org>
-Subject: Re: [PATCH v3 1/2] virtio_console: free unused buffers with port
- delete
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 466PkL2HbHz9sML;
+        Mon, 12 Aug 2019 15:37:30 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565588250;
+        bh=56nDGULStuFYy08/Qv3AeFa1sDuUWtlfW/0UiSMMy8o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iDOVokDeNo0AH4e9iH8xqe/pW7fMaLnvrqZUzP7Z/hKIAwBDDejVez5iZhGwdQpxC
+         PBJ0jwbtmmWUckrToyCNrmMLN8f/7/7OY+co6d+Ytjb2WFZBbKg3UVJel+izPE7Spm
+         VtpkEHFrlilCP/ZvH2WnRS7Ivtg3D+cXJQfzrTogYNSnOGM0YKOI2eB2CRjBFD8+DD
+         GuydUwiXyxLh8rPzvXCNLICwSuQ2J4KqHTxgiIaK2NqzyhAVDJvkuwHFQ7fuHS3o4W
+         c+GEbib0cpiPBPoqyr+T3yPpz3AusclfgDJoKLXKFl6KR2b6WrKQIhl27utWqu/Sjy
+         deOkAjjd1mzQA==
+Date:   Mon, 12 Aug 2019 15:37:29 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Add SPDX kernel tree to linux-next
+Message-ID: <20190812153729.104d4451@canb.auug.org.au>
+In-Reply-To: <20190812045731.GA5834@kroah.com>
+References: <20190810115533.GA6302@kroah.com>
+        <20190812072659.606b2107@canb.auug.org.au>
+        <20190812045731.GA5834@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.116.104, 10.4.195.23]
-Thread-Topic: virtio_console: free unused buffers with port delete
-Thread-Index: xwxGlAEv6xkpmfow2TwRUq1nvFYnwA==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 12 Aug 2019 05:36:49 +0000 (UTC)
+Content-Type: multipart/signed; boundary="Sig_/ommFjSvsNb6tQoHDzqUgSg4";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/ommFjSvsNb6tQoHDzqUgSg4
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> On Fri, Aug 09, 2019 at 12:18:46PM +0530, Pankaj Gupta wrote:
-> > The commit a7a69ec0d8e4 ("virtio_console: free buffers after reset")
-> > deferred detaching of unused buffer to virtio device unplug time.
-> > This causes unplug/replug of single port in virtio device with an
-> > error "Error allocating inbufs\n". As we don't free the unused buffers
-> > attached with the port. Re-plug the same port tries to allocate new
-> > buffers in virtqueue and results in this error if queue is full.
-> 
-> So why not reuse the buffers that are already there in this case?
-> Seems quite possible.
+Hi Greg,
 
-I took this approach because reusing the buffers will involve tweaking
-the existing core functionality like managing the the virt queue indexes.
-Compared to that deleting the buffers while hot-unplugging port is simple
-and was working fine before. It seems logically correct as well.   
+On Mon, 12 Aug 2019 06:57:31 +0200 Greg KH <gregkh@linuxfoundation.org> wro=
+te:
+>
+> On Mon, Aug 12, 2019 at 07:26:59AM +1000, Stephen Rothwell wrote:
+> > Added from today.  One question: is this meant to be a -next tree or a
+> > -fixes tree? =20
+>=20
+> A "-fixes" tree, it should be sent to Linus for the latest release.
 
-I agree we need a spec change for this.
+OK, I will move it up among the other -fixes trees from tomorrow.
 
-> 
-> > This patch removes the unused buffers in vq's when we unplug the port.
-> > This is the best we can do as we cannot call device_reset because virtio
-> > device is still active.
-> > 
-> > Reported-by: Xiaohui Li <xiaohli@redhat.com>
-> > Fixes: a7a69ec0d8e4 ("virtio_console: free buffers after reset")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> 
-> This is really a revert of a7a69ec0d8e4, just tagged confusingly.
-> 
-> And the original is also supposed to be a bugfix.
-> So how will the original bug be fixed?
+--=20
+Cheers,
+Stephen Rothwell
 
-Yes, Even I was confused while adding this tag.
-I will remove remove 'fixes' tag completely for this patch?
-because its a revert to original behavior which also is a bugfix.
+--Sig_/ommFjSvsNb6tQoHDzqUgSg4
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-> 
-> "this is the best we can do" is rarely the case.
-> 
-> I am not necessarily against the revert. But if we go that way then what
-> we need to do is specify the behaviour in the spec, since strict spec
-> compliance is exactly what the original patch was addressing.
+-----BEGIN PGP SIGNATURE-----
 
-Agree.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1Q+xkACgkQAVBC80lX
+0Gyxtwf+OAsBnc6Y5oR6vFj8oy18hPes+Qg5erpdRM1Ww4hqrX+EOU9A1srq+pvf
+67RtvfON6lZ1HydJcAvsItZtEb9IchuUw3Lykz6wiG5AAASglHMzIsYVuITpxSDs
+SPVWG7GZnNly8BwzomB4nW1Yvb3KSZWI3VCTGJ9LX/JkdIGLj1iddfEekyxxXz8M
+1dytbdoknz//gXvjPbr9dI/4lM5Jr8p1ttnqeOOmpDIQOn5c+S+erA0XHPV3/P8M
+Ej7EmAP57tlEoG9l+XZD/PA78W3Cp3LYBMFPt/dH1ljYmIA72zG9Z/XH9ndNxl3c
++3BUZE8Ofix7FZo+EMXvUYzrNPM+cw==
+=fh3x
+-----END PGP SIGNATURE-----
 
-> 
-> In particular, we'd document that console has a special property that
-> when port is detached virtqueue is considered stopped, device must not
-> use any buffers, and it is legal to take buffers out of the device.
-
-Yes. This documents the exact scenario. Thanks.
-You want me to send a patch for the spec change?
-
-Best regards,
-Pankaj
- 
-> 
-> 
-> 
-> > ---
-> >  drivers/char/virtio_console.c | 14 +++++++++++---
-> >  1 file changed, 11 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
-> > index 7270e7b69262..e8be82f1bae9 100644
-> > --- a/drivers/char/virtio_console.c
-> > +++ b/drivers/char/virtio_console.c
-> > @@ -1494,15 +1494,25 @@ static void remove_port(struct kref *kref)
-> >          kfree(port);
-> >  }
-> >  
-> > +static void remove_unused_bufs(struct virtqueue *vq)
-> > +{
-> > +        struct port_buffer *buf;
-> > +
-> > +        while ((buf = virtqueue_detach_unused_buf(vq)))
-> > +                free_buf(buf, true);
-> > +}
-> > +
-> >  static void remove_port_data(struct port *port)
-> >  {
-> >          spin_lock_irq(&port->inbuf_lock);
-> >          /* Remove unused data this port might have received. */
-> >          discard_port_data(port);
-> > +        remove_unused_bufs(port->in_vq);
-> >          spin_unlock_irq(&port->inbuf_lock);
-> >  
-> >          spin_lock_irq(&port->outvq_lock);
-> >          reclaim_consumed_buffers(port);
-> > +        remove_unused_bufs(port->out_vq);
-> >          spin_unlock_irq(&port->outvq_lock);
-> >  }
-> >  
-> > @@ -1938,11 +1948,9 @@ static void remove_vqs(struct ports_device *portdev)
-> >          struct virtqueue *vq;
-> >  
-> >          virtio_device_for_each_vq(portdev->vdev, vq) {
-> > -                struct port_buffer *buf;
-> >  
-> >                  flush_bufs(vq, true);
-> > -                while ((buf = virtqueue_detach_unused_buf(vq)))
-> > -                        free_buf(buf, true);
-> > +                remove_unused_bufs(vq);
-> >          }
-> >          portdev->vdev->config->del_vqs(portdev->vdev);
-> >          kfree(portdev->in_vqs);
-> > --
-> > 2.21.0
-> 
+--Sig_/ommFjSvsNb6tQoHDzqUgSg4--
