@@ -2,138 +2,111 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A42C7C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FCBC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 799EE20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:36:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LpKMdEDM"
+	by mail.kernel.org (Postfix) with ESMTP id 8D57720679
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfHLQgM (ORCPT
+        id S1726898AbfHLQhI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 12:36:12 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59644 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbfHLQgM (ORCPT
+        Mon, 12 Aug 2019 12:37:08 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:46080 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbfHLQhI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 12:36:12 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7CGa5w7038570;
-        Mon, 12 Aug 2019 11:36:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1565627765;
-        bh=T2phpgm+NARzJAyCB2+UTr9p6Cxo5E7SZBGs4Cpo3zo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=LpKMdEDMQhXB4jMb2oafcKkPFCB8q7ubinXIphDr0YOVHeNKsWh7ytwbeM5Pt5iAW
-         NIUORjWZKvwnyPovIlEnqLTh6zJacNOGBStB6M0y7/7peLmIwqUzxTVQIxCkUdFUgY
-         fR8O6VolvFyHcjTGLVuov7p0VMn196fLsLTp+zOs=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7CGa5xS076195
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 12 Aug 2019 11:36:05 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 12
- Aug 2019 11:36:04 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 12 Aug 2019 11:36:04 -0500
-Received: from [10.250.88.190] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7CGa4Fa112134;
-        Mon, 12 Aug 2019 11:36:04 -0500
-Subject: Re: [PATCH] rpmsg: virtio_rpmsg_bus: replace "%p" with "%pK"
-To:     Suman Anna <s-anna@ti.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     <linux-remoteproc@vger.kernel.org>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20181024011909.21674-1-s-anna@ti.com>
- <1cc3d697-6fde-901b-2e35-2e2b53b44425@ti.com>
- <2ef5e274-df09-c3a0-41ed-a945d1902eaf@ti.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <92dc4403-8782-8dbf-b912-cc832ac748a7@ti.com>
-Date:   Mon, 12 Aug 2019 12:36:04 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <2ef5e274-df09-c3a0-41ed-a945d1902eaf@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 12 Aug 2019 12:37:08 -0400
+Received: from marcel-macbook.fritz.box (p4FEFC580.dip0.t-ipconnect.de [79.239.197.128])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 2B53BCECF3;
+        Mon, 12 Aug 2019 18:45:48 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] Bluetooth: btqca: release_firmware after
+ qca_inject_cmd_complete_event
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20190806095629.88769-1-tientzu@chromium.org>
+Date:   Mon, 12 Aug 2019 18:37:06 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>, johan@kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bgodavar@codeaurora.org, hemantg@codeaurora.org,
+        rjliao@codeaurora.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <5AFCA924-5A3E-471D-83A8-5C59B7AD8049@holtmann.org>
+References: <20190806095629.88769-1-tientzu@chromium.org>
+To:     Claire Chang <tientzu@chromium.org>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/12/19 12:28 PM, Suman Anna wrote:
-> On 8/12/19 10:47 AM, Andrew F. Davis wrote:
->> On 10/23/18 9:19 PM, Suman Anna wrote:
->>> The virtio_rpmsg_bus driver uses the "%p" format-specifier for
->>> printing the vring buffer address. This prints only a hashed
->>> pointer even for previliged users. Use "%pK" instead so that
->>> the address can be printed during debug using kptr_restrict
->>> sysctl.
->>>
->>
->>
->> s/previliged/privileged
-> 
-> Bjorn,
-> Can you fix this up when applying.
-> 
->>
->> You describe what the code does, but not why you need this. %pK is used
->> for only about 1% of pointer printing, why do you want to leak this
->> address to userspace at all?
-> 
-> Andrew,
-> Default behavior of %pK is same as %p, but it does allow you to control
-> the print. The reason is clearly mentioned in the last sentence in the
-> patch description.
-> 
+Hi Claire,
 
-
-Let me rephrase then, why would you ever set 'kptr_restrict' to anything
-other than 0, or why do you want to be able to leak this address to
-userspace at all? If the answer is just because you can, then all 12,000
-instances of %p in kernel could be converted for the same reason.
-
-Andrew
-
-
-> regards
-> Suman
+> commit 32646db8cc28 ("Bluetooth: btqca: inject command complete event
+> during fw download") added qca_inject_cmd_complete_event() for certain
+> qualcomm chips. However, qca_download_firmware() will return without
+> calling release_firmware() in this case.
 > 
->>
->> Andrew
->>
->>
->>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>> ---
->>>  drivers/rpmsg/virtio_rpmsg_bus.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
->>> index f29dee731026..1345f373a1a0 100644
->>> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
->>> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
->>> @@ -950,7 +950,7 @@ static int rpmsg_probe(struct virtio_device *vdev)
->>>  		goto vqs_del;
->>>  	}
->>>  
->>> -	dev_dbg(&vdev->dev, "buffers: va %p, dma %pad\n",
->>> +	dev_dbg(&vdev->dev, "buffers: va %pK, dma %pad\n",
->>>  		bufs_va, &vrp->bufs_dma);
->>>  
->>>  	/* half of the buffers is dedicated for RX */
->>>
+> This leads to a memory leak like the following found by kmemleak:
 > 
+> unreferenced object 0xfffffff3868a5880 (size 128):
+>  comm "kworker/u17:5", pid 347, jiffies 4294676481 (age 312.157s)
+>  hex dump (first 32 bytes):
+>    ac fd 00 00 00 00 00 00 00 d0 7e 17 80 ff ff ff  ..........~.....
+>    00 00 00 00 00 00 00 00 00 59 8a 86 f3 ff ff ff  .........Y......
+>  backtrace:
+>    [<00000000978ce31d>] kmem_cache_alloc_trace+0x194/0x298
+>    [<000000006ea0398c>] _request_firmware+0x74/0x4e4
+>    [<000000004da31ca0>] request_firmware+0x44/0x64
+>    [<0000000094572996>] qca_download_firmware+0x74/0x6e4 [btqca]
+>    [<00000000b24d615a>] qca_uart_setup+0xc0/0x2b0 [btqca]
+>    [<00000000364a6d5a>] qca_setup+0x204/0x570 [hci_uart]
+>    [<000000006be1a544>] hci_uart_setup+0xa8/0x148 [hci_uart]
+>    [<00000000d64c0f4f>] hci_dev_do_open+0x144/0x530 [bluetooth]
+>    [<00000000f69f5110>] hci_power_on+0x84/0x288 [bluetooth]
+>    [<00000000d4151583>] process_one_work+0x210/0x420
+>    [<000000003cf3dcfb>] worker_thread+0x2c4/0x3e4
+>    [<000000007ccaf055>] kthread+0x124/0x134
+>    [<00000000bef1f723>] ret_from_fork+0x10/0x18
+>    [<00000000c36ee3dd>] 0xffffffffffffffff
+> unreferenced object 0xfffffff37b16de00 (size 128):
+>  comm "kworker/u17:5", pid 347, jiffies 4294676873 (age 311.766s)
+>  hex dump (first 32 bytes):
+>    da 07 00 00 00 00 00 00 00 50 ff 0b 80 ff ff ff  .........P......
+>    00 00 00 00 00 00 00 00 00 dd 16 7b f3 ff ff ff  ...........{....
+>  backtrace:
+>    [<00000000978ce31d>] kmem_cache_alloc_trace+0x194/0x298
+>    [<000000006ea0398c>] _request_firmware+0x74/0x4e4
+>    [<000000004da31ca0>] request_firmware+0x44/0x64
+>    [<0000000094572996>] qca_download_firmware+0x74/0x6e4 [btqca]
+>    [<000000000cde20a9>] qca_uart_setup+0x144/0x2b0 [btqca]
+>    [<00000000364a6d5a>] qca_setup+0x204/0x570 [hci_uart]
+>    [<000000006be1a544>] hci_uart_setup+0xa8/0x148 [hci_uart]
+>    [<00000000d64c0f4f>] hci_dev_do_open+0x144/0x530 [bluetooth]
+>    [<00000000f69f5110>] hci_power_on+0x84/0x288 [bluetooth]
+>    [<00000000d4151583>] process_one_work+0x210/0x420
+>    [<000000003cf3dcfb>] worker_thread+0x2c4/0x3e4
+>    [<000000007ccaf055>] kthread+0x124/0x134
+>    [<00000000bef1f723>] ret_from_fork+0x10/0x18
+>    [<00000000c36ee3dd>] 0xffffffffffffffff
+> 
+> Make sure release_firmware() is called aftre
+> qca_inject_cmd_complete_event() to avoid the memory leak.
+> 
+> Fixes: 32646db8cc28 ("Bluetooth: btqca: inject command complete event during fw download")
+> Signed-off-by: Claire Chang <tientzu@chromium.org>
+> ---
+> drivers/bluetooth/btqca.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+
+patch has been applied to bluetooth-stable tree.
+
+Regards
+
+Marcel
+
