@@ -2,202 +2,94 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5B2C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F0AC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 062C120820
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:34:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dy9mnJaF"
+	by mail.kernel.org (Postfix) with ESMTP id 3E44B2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:37:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565645855;
+	bh=07tJJiA2VR08JnF9uwMOoDCaKsZwYqGb2v9SvApZzMc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Z0efvBOEP3ky+k4TWVh9qqyldAszsmHZpApgVqAzKH6yji8p50cqOt9HdOKqMtw9s
+	 gfpaubtLwQGucSvpTvxXAILhBxDp2bLqRwEF3SFyIZE82C5dznSffZvVVOHfdjHkEP
+	 qziDrALiUrdOHvVwPw/SVCRVbZn3SyGwAGJiyOuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbfHLVew (ORCPT
+        id S1726681AbfHLVhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 17:34:52 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38244 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727037AbfHLVer (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 17:34:47 -0400
-Received: by mail-pf1-f194.google.com with SMTP id o70so5013230pfg.5;
-        Mon, 12 Aug 2019 14:34:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=R9EIePxtKgh7rutMNGBvqWvR/nyIQIv1yBQVlI6lc80=;
-        b=dy9mnJaFkP+ijv6fm4aMpVYmf05Qj6Vs0VjEph0VKV7IuBmwWf3JNcUEKYrcgPvtZ2
-         +O0sDUBSCGDoEPl2TFbA+9ZRbTI0QWwQyizHzSvOXJ6lipdnjZFLHOksMTwCN6g75SGp
-         ju1H7V6QSP9fqqr4pvgkuuFHHidi8DKHip7Kq6U+C0Nk2xZv80yCGWvqzqtn+YnVQa+Q
-         1Ju8lfS/lMR4lLtm0mPJBrBf0HABmS9us58iDR2UzMIGC6YPSIWfIB6oIM4ine4gn6WI
-         eWwDc9e/7U9FwFmZjaTPrKEEP8+t2msqNfIgPpzWc9bgl8HgU1BZeNCdKo15O4blyGUm
-         WJ/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=R9EIePxtKgh7rutMNGBvqWvR/nyIQIv1yBQVlI6lc80=;
-        b=GU85UqA1wpXVmhOAhpjjKMXirLaqY0vO9aT37DPQDEFlU8qHtOH/WX1G5N92qmUOGI
-         MaW0XHlFHnxMEEc/Ouc/BKHePu4IKXMMElWKP/uE5pxwBFgNc1eOcxY57URpQCUZX+70
-         29Bfi7tQNVbnyFgGFe6iy0prcc3SrpYQmeDQQVsiKAafHbeOskfXOilQfMOGufaTVDJm
-         mmnZXRp/Sxe8qW4z7yYYTlp53wSNDhvDwGHr9ZjyLYPZTnNB/fQZqltZwGDt3mTF0P56
-         J2X2SPryCnF4OeAL4GgURM++77nmW0A/rrt7/ARlJtVIgQISXMiJptEiQGSJHTxRawcN
-         RPAQ==
-X-Gm-Message-State: APjAAAURlKxAHwgpZuyC5blnB7VCPn4m+JFrhPe37+YpkKpASdmCQody
-        8IIKQcHoeu0mcBAO3bN7JDc=
-X-Google-Smtp-Source: APXvYqzy3mZr9YsJMHQoof47HpG4IsPKYIO2wLwt5c331rIo788wvZ1T9TIh3B5oDKso+UoRscraVg==
-X-Received: by 2002:a62:fb18:: with SMTP id x24mr36656678pfm.231.1565645686838;
-        Mon, 12 Aug 2019 14:34:46 -0700 (PDT)
-Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
-        by smtp.gmail.com with ESMTPSA id e13sm130218480pff.45.2019.08.12.14.34.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 14:34:46 -0700 (PDT)
-Subject: [PATCH v5 QEMU 3/3] virtio-balloon: Provide a interface for unused
- page reporting
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     nitesh@redhat.com, kvm@vger.kernel.org, mst@redhat.com,
-        david@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, virtio-dev@lists.oasis-open.org
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, willy@infradead.org,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com, mhocko@kernel.org,
-        alexander.h.duyck@linux.intel.com, osalvador@suse.de
-Date:   Mon, 12 Aug 2019 14:34:45 -0700
-Message-ID: <20190812213445.22552.15744.stgit@localhost.localdomain>
-In-Reply-To: <20190812213158.22097.30576.stgit@localhost.localdomain>
-References: <20190812213158.22097.30576.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+        Mon, 12 Aug 2019 17:37:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726488AbfHLVhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 17:37:33 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25FB2206C1;
+        Mon, 12 Aug 2019 21:37:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565645852;
+        bh=07tJJiA2VR08JnF9uwMOoDCaKsZwYqGb2v9SvApZzMc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=xHPKjAQr8eR3Ys5t2F8n8lhJx/sQg6Qgi3Km8sf0/tf137IyaQhuxWflV6htZbHui
+         kpSIg+UULX+BoKkMpAo+Sx8XyPE8Jl/KJ3HJq7Aevp+VoNDiBBFPV+L4dhqxK59Toh
+         kUg/XzZ9wWOiMo6oYMgEAxSGz3yUuPiS3S+nDnYg=
+Date:   Mon, 12 Aug 2019 14:37:31 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Michal Hocko <mhocko@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+        Mike Kravetz <mike.kravetz@oracle.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, ltp@lists.linux.it,
+        Li Wang <liwang@redhat.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Cyril Hrubis <chrubis@suse.cz>, xishi.qiuxishi@alibaba-inc.com
+Subject: Re: [PATCH] hugetlbfs: fix hugetlb page migration/fault race
+ causing SIGBUS
+Message-Id: <20190812143731.3f46b952e53ff3434e04bcf9@linux-foundation.org>
+In-Reply-To: <20190812153326.GB17747@sasha-vm>
+References: <20190808074736.GJ11812@dhcp22.suse.cz>
+        <416ee59e-9ae8-f72d-1b26-4d3d31501330@oracle.com>
+        <20190808185313.GG18351@dhcp22.suse.cz>
+        <20190808163928.118f8da4f4289f7c51b8ffd4@linux-foundation.org>
+        <20190809064633.GK18351@dhcp22.suse.cz>
+        <20190809151718.d285cd1f6d0f1cf02cb93dc8@linux-foundation.org>
+        <20190811234614.GZ17747@sasha-vm>
+        <20190812084524.GC5117@dhcp22.suse.cz>
+        <39b59001-55c1-a98b-75df-3a5dcec74504@suse.cz>
+        <20190812132226.GI5117@dhcp22.suse.cz>
+        <20190812153326.GB17747@sasha-vm>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+On Mon, 12 Aug 2019 11:33:26 -0400 Sasha Levin <sashal@kernel.org> wrote:
 
-Add support for what I am referring to as "unused page reporting".
-Basically the idea is to function very similar to how the balloon works
-in that we basically end up madvising the page as not being used. However
-we don't really need to bother with any deflate type logic since the page
-will be faulted back into the guest when it is read or written to.
+> >I thought that absence of the Cc is the indication :P. Anyway, I really
+> >do not understand why should we bother, really. I have tried to explain
+> >that stable maintainers should follow Cc: stable because we bother to
+> >consider that part and we are quite good at not forgetting (Thanks
+> >Andrew for persistence). Sasha has told me that MM will be blacklisted
+> >from automagic selection procedure.
+> 
+> I'll add mm/ to the ignore list for AUTOSEL patches.
 
-This is meant to be a simplification of the existing balloon interface
-to use for providing hints to what memory needs to be freed. I am assuming
-this is safe to do as the deflate logic does not actually appear to do very
-much other than tracking what subpages have been released and which ones
-haven't.
+Thanks, I'm OK with that.  I'll undo Fixes-no-stable.
 
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- hw/virtio/virtio-balloon.c         |   46 ++++++++++++++++++++++++++++++++++--
- include/hw/virtio/virtio-balloon.h |    2 +-
- 2 files changed, 45 insertions(+), 3 deletions(-)
+Although I'd prefer that "akpm" was ignored, rather than "./mm/". 
+Plenty of "mm" patches don't touch mm/, such as drivers/base/memory.c,
+include/linux/blah, fs/, etc.  And I am diligent about considering
+-stable for all the other code I look after.
 
-diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
-index 003b3ebcfdfb..7a30df63bc77 100644
---- a/hw/virtio/virtio-balloon.c
-+++ b/hw/virtio/virtio-balloon.c
-@@ -320,6 +320,40 @@ static void balloon_stats_set_poll_interval(Object *obj, Visitor *v,
-     balloon_stats_change_timer(s, 0);
- }
- 
-+static void virtio_balloon_handle_report(VirtIODevice *vdev, VirtQueue *vq)
-+{
-+    VirtIOBalloon *dev = VIRTIO_BALLOON(vdev);
-+    VirtQueueElement *elem;
-+
-+    while ((elem = virtqueue_pop(vq, sizeof(VirtQueueElement)))) {
-+    	unsigned int i;
-+
-+        for (i = 0; i < elem->in_num; i++) {
-+            void *addr = elem->in_sg[i].iov_base;
-+            size_t size = elem->in_sg[i].iov_len;
-+            ram_addr_t ram_offset;
-+            size_t rb_page_size;
-+            RAMBlock *rb;
-+
-+            if (qemu_balloon_is_inhibited() || dev->poison_val)
-+                continue;
-+
-+            rb = qemu_ram_block_from_host(addr, false, &ram_offset);
-+            rb_page_size = qemu_ram_pagesize(rb);
-+
-+            /* For now we will simply ignore unaligned memory regions */
-+            if ((ram_offset | size) & (rb_page_size - 1))
-+                continue;
-+
-+            ram_block_discard_range(rb, ram_offset, size);
-+        }
-+
-+        virtqueue_push(vq, elem, 0);
-+        virtio_notify(vdev, vq);
-+        g_free(elem);
-+    }
-+}
-+
- static void virtio_balloon_handle_output(VirtIODevice *vdev, VirtQueue *vq)
- {
-     VirtIOBalloon *s = VIRTIO_BALLOON(vdev);
-@@ -627,7 +661,8 @@ static size_t virtio_balloon_config_size(VirtIOBalloon *s)
-         return sizeof(struct virtio_balloon_config);
-     }
-     if (virtio_has_feature(features, VIRTIO_BALLOON_F_PAGE_POISON) ||
--        virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
-+        virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT) ||
-+        virtio_has_feature(features, VIRTIO_BALLOON_F_REPORTING)) {
-         return sizeof(struct virtio_balloon_config);
-     }
-     return offsetof(struct virtio_balloon_config, free_page_report_cmd_id);
-@@ -715,7 +750,8 @@ static uint64_t virtio_balloon_get_features(VirtIODevice *vdev, uint64_t f,
-     VirtIOBalloon *dev = VIRTIO_BALLOON(vdev);
-     f |= dev->host_features;
-     virtio_add_feature(&f, VIRTIO_BALLOON_F_STATS_VQ);
--    if (virtio_has_feature(f, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
-+    if (virtio_has_feature(f, VIRTIO_BALLOON_F_FREE_PAGE_HINT) ||
-+        virtio_has_feature(f, VIRTIO_BALLOON_F_REPORTING)) {
-         virtio_add_feature(&f, VIRTIO_BALLOON_F_PAGE_POISON);
-     }
- 
-@@ -805,6 +841,10 @@ static void virtio_balloon_device_realize(DeviceState *dev, Error **errp)
-     s->dvq = virtio_add_queue(vdev, 128, virtio_balloon_handle_output);
-     s->svq = virtio_add_queue(vdev, 128, virtio_balloon_receive_stats);
- 
-+    if (virtio_has_feature(s->host_features, VIRTIO_BALLOON_F_REPORTING)) {
-+        s->rvq = virtio_add_queue(vdev, 32, virtio_balloon_handle_report);
-+    }
-+
-     if (virtio_has_feature(s->host_features,
-                            VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
-         s->free_page_vq = virtio_add_queue(vdev, VIRTQUEUE_MAX_SIZE,
-@@ -931,6 +971,8 @@ static Property virtio_balloon_properties[] = {
-      */
-     DEFINE_PROP_BOOL("qemu-4-0-config-size", VirtIOBalloon,
-                      qemu_4_0_config_size, false),
-+    DEFINE_PROP_BIT("unused-page-reporting", VirtIOBalloon, host_features,
-+                    VIRTIO_BALLOON_F_REPORTING, true),
-     DEFINE_PROP_LINK("iothread", VirtIOBalloon, iothread, TYPE_IOTHREAD,
-                      IOThread *),
-     DEFINE_PROP_END_OF_LIST(),
-diff --git a/include/hw/virtio/virtio-balloon.h b/include/hw/virtio/virtio-balloon.h
-index 7fe78e5c14d7..db5bf7127112 100644
---- a/include/hw/virtio/virtio-balloon.h
-+++ b/include/hw/virtio/virtio-balloon.h
-@@ -42,7 +42,7 @@ enum virtio_balloon_free_page_report_status {
- 
- typedef struct VirtIOBalloon {
-     VirtIODevice parent_obj;
--    VirtQueue *ivq, *dvq, *svq, *free_page_vq;
-+    VirtQueue *ivq, *dvq, *svq, *free_page_vq, *rvq;
-     uint32_t free_page_report_status;
-     uint32_t num_pages;
-     uint32_t actual;
+This doesn't mean that I'm correct all the time, by any means - I'd
+like to hear about patches which autosel thinks should be backported
+but which don't include the c:stable tag.
 
