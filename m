@@ -2,114 +2,87 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7F6C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D13E0C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D839206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:14:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uy79aJTk"
+	by mail.kernel.org (Postfix) with ESMTP id AF8D1208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:15:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfHLIOx (ORCPT
+        id S1727150AbfHLIPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 04:14:53 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33505 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727077AbfHLIOw (ORCPT
+        Mon, 12 Aug 2019 04:15:07 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:38985 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727077AbfHLIPH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 04:14:52 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n9so103882000wru.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 01:14:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=qEF5FXIF7WGBf6aJazFjpcACOgco/DNFUKkyRA8p7dM=;
-        b=Uy79aJTkTjamb+Vu1pzYBjsU9r5Qzghk+FQaDMW1XYZ3n6lIdPX7k1To3q3htFHTR6
-         4sB5/KqTjpydFvhjfW0DdzS/uwZPMr88jd/uf4G9NpkHCRATL4WxpUxX79t7z+mAdeFA
-         W5wB66YET1eytyP9Xn0qJrN3s9SALUhdQuYm62giJKC2LYgCoaDYPdRrCi3VRPeiWudh
-         oqv1mnnGFlrUpBj5n0uSjZkdN+6DzpRVirXbzwqra50yrl4nzbQIreDNP/kh3zQ6BLFU
-         OlD16xo5CnIiIoJaGv8ASnJ9wQFBcwIGX3ZWX9kV92Rxs1Pc2XcUf8E4YA/VjkLhI5WL
-         rbzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=qEF5FXIF7WGBf6aJazFjpcACOgco/DNFUKkyRA8p7dM=;
-        b=DgWSx+fkxmVE3Gl1BvMMfPhBuieHJKtEkF506zuqNdtcrnaag/z5jcNsO4w7uahSK+
-         3qc+sBFZJk2uXc4PPWflLWbGO6fHYQ2eyoe2f6qZzuTErX4vVrLAFeK2bxN2RdNoRdMy
-         5qGUp2uBVDul2M47XPjSJUjDBlOAmOjh8Ggn6l0JRfVROKtg7UjETLnR8z4fL6vDLtSw
-         1Uu3XRWYoKJRE7tGVUVcEmCIg8N6HZLJ+i+OGW3qeWwsWSRyDzD0O7G4DrAl3TzyIn1e
-         818CNU6UfAAXNtTUq/sGvkSsO515y8d5ipF6r7vAXIfOAdDuxW0g26yue7L7gv47JDNA
-         MHKA==
-X-Gm-Message-State: APjAAAWLYoWIcKBIi7JDWSWq3ZMMbhAdiD0nVzwCbo6LHEsZRiMtWRum
-        HMUi0Fk+r0i47qfktrVafbuZgP6f6x4=
-X-Google-Smtp-Source: APXvYqwPJFnjS2XTDyp7EXOHWGcmXMZXQjXOwzyeo8HVPNvbhSJk2Dflgi3oKdZg/bNBPvjtmcGX0Q==
-X-Received: by 2002:a5d:4e82:: with SMTP id e2mr34014823wru.149.1565597690638;
-        Mon, 12 Aug 2019 01:14:50 -0700 (PDT)
-Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id r4sm69876247wrq.82.2019.08.12.01.14.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 01:14:49 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 09:14:48 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] mfd: omap-usb-host: Mark expected switch fall-throughs
-Message-ID: <20190812081448.GJ4594@dell>
-References: <20190728235858.GA23755@embeddedor>
+        Mon, 12 Aug 2019 04:15:07 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 740C8C0010;
+        Mon, 12 Aug 2019 08:15:02 +0000 (UTC)
+Date:   Mon, 12 Aug 2019 10:15:01 +0200
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>, davem@davemloft.net,
+        sd@queasysnail.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas.petazzoni@bootlin.com, alexandre.belloni@bootlin.com,
+        allan.nielsen@microchip.com, camelia.groza@nxp.com,
+        Simon.Edelhaus@aquantia.com
+Subject: Re: [PATCH net-next v2 6/9] net: macsec: hardware offloading
+ infrastructure
+Message-ID: <20190812081501.GD3698@kwain>
+References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
+ <20190808140600.21477-7-antoine.tenart@bootlin.com>
+ <20190810163423.GA30120@lunn.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190728235858.GA23755@embeddedor>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190810163423.GA30120@lunn.ch>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 28 Jul 2019, Gustavo A. R. Silva wrote:
+Hi Andrew,
 
-> Mark switch cases where we are expecting to fall through.
+On Sat, Aug 10, 2019 at 06:34:23PM +0200, Andrew Lunn wrote:
+> On Thu, Aug 08, 2019 at 04:05:57PM +0200, Antoine Tenart wrote:
+> > This patch introduces the MACsec hardware offloading infrastructure.
+> > 
+> > The main idea here is to re-use the logic and data structures of the
+> > software MACsec implementation. This allows not to duplicate definitions
+> > and structure storing the same kind of information. It also allows to
+> > use a unified genlink interface for both MACsec implementations (so that
+> > the same userspace tool, `ip macsec`, is used with the same arguments).
+> > The MACsec offloading support cannot be disabled if an interface
+> > supports it at the moment.
+> > 
+> > The MACsec configuration is passed to device drivers supporting it
+> > through macsec_hw_offload() which is called from the MACsec genl
+> > helpers. This function calls the macsec ops of PHY and Ethernet
+> > drivers in two steps
 > 
-> This patch fixes the following warnings:
-> 
-> drivers/mfd/omap-usb-host.c: In function 'usbhs_runtime_resume':
-> drivers/mfd/omap-usb-host.c:303:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     if (!IS_ERR(omap->hsic480m_clk[i])) {
->        ^
-> drivers/mfd/omap-usb-host.c:313:3: note: here
->    case OMAP_EHCI_PORT_MODE_TLL:
->    ^~~~
-> drivers/mfd/omap-usb-host.c: In function 'usbhs_runtime_suspend':
-> drivers/mfd/omap-usb-host.c:345:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     if (!IS_ERR(omap->hsic480m_clk[i]))
->        ^
-> drivers/mfd/omap-usb-host.c:349:3: note: here
->    case OMAP_EHCI_PORT_MODE_TLL:
->    ^~~~
-> 
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/mfd/omap-usb-host.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> It is great that you are thinking how a MAC driver would make use of
+> this. But on the flip side, we don't usual add an API unless there is
+> a user. And as far as i see, you only add a PHY level implementation,
+> not a MAC level.
 
-Applied, thanks.
+That's right, and the only modification here is a simple patch adding
+the MACsec ops within struct net_device. I can remove it as we do not
+have providers as of now and it can be added easily later on.
+
+Thanks,
+Antoine
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Antoine T�nart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
