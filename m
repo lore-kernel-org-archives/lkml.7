@@ -2,96 +2,98 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6C7C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40037C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1D2420820
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E686217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:12:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfHLKMQ (ORCPT
+        id S1727838AbfHLKMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:12:16 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:56136 "EHLO inva020.nxp.com"
+        Mon, 12 Aug 2019 06:12:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:47492 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727605AbfHLKMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:12:15 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9C3D01A02B0;
-        Mon, 12 Aug 2019 12:12:12 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 89F3A1A02E3;
-        Mon, 12 Aug 2019 12:12:07 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0E0DE402D2;
-        Mon, 12 Aug 2019 18:12:00 +0800 (SGT)
-From:   Wen He <wen.he_1@nxp.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     leoyang.li@nxp.com, liviu.dudau@arm.com, Wen He <wen.he_1@nxp.com>
-Subject: [v1 3/3] arm64: dts: ls1028a: Add properties node for Display output pixel clock
-Date:   Mon, 12 Aug 2019 18:02:24 +0800
-Message-Id: <20190812100224.34502-1-wen.he_1@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1727605AbfHLKMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 06:12:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8812015A2;
+        Mon, 12 Aug 2019 03:12:18 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 19F893F706;
+        Mon, 12 Aug 2019 03:12:15 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 11:12:13 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>, kishon@ti.com
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
+        mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org,
+        pombredanne@nexb.com, shawn.lin@rock-chips.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCHv3 1/2] PCI: layerscape: Add the bar_fixed_64bit property
+ in EP driver.
+Message-ID: <20190812101213.GB20861@e121166-lin.cambridge.arm.com>
+References: <20190628013826.4705-1-xiaowei.bao@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628013826.4705-1-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LS1028A has a clock domain PXLCLK0 used for the Display output
-interface in the display core, independent of the system bus frequency,
-for flexible clock design. This display core has its own pixel clock.
+First off:
 
-This patch enable the pixel clock provider on the LS1028A.
+Trim the CC list, you CC'ed maintainers (and mailing lists) for no
+reasons whatsover.
 
-Signed-off-by: Wen He <wen.he_1@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+Then, read this:
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 2d31e1c09e74..0c54ba3214af 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -70,11 +70,18 @@
- 		clock-output-names = "sysclk";
- 	};
- 
--	dpclk: clock-dp {
-+	osc_27m: clock-osc-27m {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <27000000>;
--		clock-output-names= "dpclk";
-+		clock-output-names = "phy_27m";
-+	};
-+
-+	dpclk: clock-controller@f1f0000 {
-+		compatible = "fsl,ls1028a-plldig";
-+		reg = <0x0 0xf1f0000 0x0 0xffff>;
-+		#clock-cells = <1>;
-+		clocks = <&osc_27m>;
- 	};
- 
- 	aclk: clock-axi {
-@@ -557,7 +564,7 @@
- 		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
- 			     <0 223 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-names = "DE", "SE";
--		clocks = <&dpclk>, <&aclk>, <&aclk>, <&pclk>;
-+		clocks = <&dpclk 0>, <&aclk>, <&aclk>, <&pclk>;
- 		clock-names = "pxlclk", "mclk", "aclk", "pclk";
- 		arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
- 		arm,malidp-arqos-value = <0xd000d000>;
--- 
-2.17.1
+https://lore.kernel.org/linux-pci/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com/
 
+and make your patches compliant please.
+
+On Fri, Jun 28, 2019 at 09:38:25AM +0800, Xiaowei Bao wrote:
+> The PCIe controller of layerscape just have 4 BARs, BAR0 and BAR1
+> is 32bit, BAR3 and BAR4 is 64bit, this is determined by hardware,
+> so set the bar_fixed_64bit with 0x14.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> ---
+> v2:
+>  - Replace value 0x14 with a macro.
+> v3:
+>  - No change.
+> 
+>  drivers/pci/controller/dwc/pci-layerscape-ep.c |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> index be61d96..227c33b 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> @@ -44,6 +44,7 @@ static int ls_pcie_establish_link(struct dw_pcie *pci)
+>  	.linkup_notifier = false,
+>  	.msi_capable = true,
+>  	.msix_capable = false,
+> +	.bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+
+I would appreciate Kishon's ACK on this.
+
+Lorenzo
+
+>  };
+>  
+>  static const struct pci_epc_features*
+> -- 
+> 1.7.1
+> 
