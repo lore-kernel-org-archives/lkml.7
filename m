@@ -2,156 +2,152 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67865C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CAFC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43307206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48CCB206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:27:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bbz8xNwS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbfHLUXk (ORCPT
+        id S1727526AbfHLU1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 16:23:40 -0400
-Received: from mga06.intel.com ([134.134.136.31]:40802 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726925AbfHLUXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 16:23:39 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 13:23:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,378,1559545200"; 
-   d="scan'208";a="351319677"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 12 Aug 2019 13:23:38 -0700
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id D522B580372;
-        Mon, 12 Aug 2019 13:23:38 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v5 1/7] PCI/ATS: Fix pci_prg_resp_pasid_required()
- dependency issues
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <0d7e0e0d079c438897f4da8cdca4b55994b1233b.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190812200418.GJ11785@google.com>
-From:   sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <09a2faf0-a26f-6374-130a-3b33b1b712d5@linux.intel.com>
-Date:   Mon, 12 Aug 2019 13:20:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 12 Aug 2019 16:27:12 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45419 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726925AbfHLU1L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 16:27:11 -0400
+Received: by mail-qk1-f196.google.com with SMTP id m2so4146949qki.12
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 13:27:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9zeU09HvL8h4sQQ/WE4AQZf/AMEHoTVJyw4VstGuzg0=;
+        b=bbz8xNwSmE0ajseU9lAnpKEuAIcEunhMu4RccUlNeUCFdhCL9MFdQ/KaQFJ/9JP+Ef
+         K49I5xb4koGhAod6mCKlHr4At6WEmrK1SZkSzJQndo85oyyDkBr0+KtAQUBR8HJYpcST
+         JTv5eI4q8DNxOZTus2sj4XKqXAsRKagTdM0I/HcLNGRzaMeoB/1C0qpNwsbtqyAfSuvD
+         mI0ln3TjFFG9sR8nn3/x673FV5RdNdFhGXDS82l4+eIBeECJtK50cqMmHAOIDOwlHzTQ
+         FScL9xCuWs4QJHn+R3El0eqm2cejEYwIL5fwxXdZ00zCmJlIevsbFysi6MOFL965x6wd
+         POQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9zeU09HvL8h4sQQ/WE4AQZf/AMEHoTVJyw4VstGuzg0=;
+        b=I7J3xJemrtrKSat+3XV6KOv9fr87YzV+ii8hx7SYwlGwLFJpb5d9A5kUvEKyyhwf0m
+         EeND1ZtRvkGEC34hOnuzKZbXyz5MUJ3Lnu2I5KPMwBpcJJq4NfSZ3cSOn8hFrb3hPNie
+         Ho/NpttAI5rMJtX7lO/GCIJjT4HcKHvuFIv2yAHu+/MMx0/mJI54e9jxq4U404HNsjwY
+         mObsJ0B0oHTdIHwHsZvrXEQAlp31qfi68JNKskTitNnzx9U8j4rWLUgG6/9VUzHeamOf
+         hC7ArDK9JPgsMy+XIUPTYBXIy/xulter99aq6tGkTd4Vyd7EFjpWR5B80zA6QHmRHTOq
+         vC5Q==
+X-Gm-Message-State: APjAAAVSV6uDrmqyjR+RlH2S0Lr52mafy6srjL9God4WN854QIY9+Mio
+        qY4FdhSUOdWLjw1R98tgJtQ=
+X-Google-Smtp-Source: APXvYqxtGY6lLemTlys1bRmIOk/IUxz9wbXRq/fv3QDB1ZrLtFk/1sLAFxqz6JTiOmiRoJgeGESzeQ==
+X-Received: by 2002:a37:d245:: with SMTP id f66mr30971706qkj.59.1565641630935;
+        Mon, 12 Aug 2019 13:27:10 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (187-26-98-68.3g.claro.net.br. [187.26.98.68])
+        by smtp.gmail.com with ESMTPSA id t5sm2359942qkt.93.2019.08.12.13.27.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 13:27:10 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 70EC640340; Mon, 12 Aug 2019 17:27:06 -0300 (-03)
+Date:   Mon, 12 Aug 2019 17:27:06 -0300
+To:     Igor Lubashev <ilubashe@akamai.com>
+Cc:     linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        James Morris <jmorris@namei.org>
+Subject: Re: [PATCH v3 4/4] perf: Use CAP_SYS_ADMIN instead of euid==0 with
+ ftrace
+Message-ID: <20190812202706.GH9280@kernel.org>
+References: <cover.1565188228.git.ilubashe@akamai.com>
+ <bd8763b72ed4d58d0b42d44fbc7eb474d32e53a3.1565188228.git.ilubashe@akamai.com>
+ <20190812202251.GG9280@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190812200418.GJ11785@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812202251.GG9280@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Mon, Aug 12, 2019 at 05:22:51PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Wed, Aug 07, 2019 at 10:44:17AM -0400, Igor Lubashev escreveu:
+> > Kernel requires CAP_SYS_ADMIN instead of euid==0 to mount debugfs for ftrace.
+> > Make perf do the same.
+> > 
+> > Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
+> > ---
+> >  tools/perf/builtin-ftrace.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> > index ae1466aa3b26..d09eac8a6d57 100644
+> > --- a/tools/perf/builtin-ftrace.c
+> > +++ b/tools/perf/builtin-ftrace.c
+> > @@ -13,6 +13,7 @@
+> >  #include <signal.h>
+> >  #include <fcntl.h>
+> >  #include <poll.h>
+> > +#include <linux/capability.h>
+> >  
+> >  #include "debug.h"
+> >  #include <subcmd/parse-options.h>
+> > @@ -21,6 +22,7 @@
+> >  #include "target.h"
+> >  #include "cpumap.h"
+> >  #include "thread_map.h"
+> > +#include "util/cap.h"
+> >  #include "util/config.h"
+> >  
+> >  
+> > @@ -281,7 +283,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+> >  		.events = POLLIN,
+> >  	};
+> >  
+> > -	if (geteuid() != 0) {
+> > +	if (!perf_cap__capable(CAP_SYS_ADMIN)) {
+> >  		pr_err("ftrace only works for root!\n");
+> 
+> I guess we should update the error message too? 
+> 
 
-On 8/12/19 1:04 PM, Bjorn Helgaas wrote:
-> On Thu, Aug 01, 2019 at 05:05:58PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>
->> Since pci_prg_resp_pasid_required() function has dependency on both
->> PASID and PRI, define it only if both CONFIG_PCI_PRI and
->> CONFIG_PCI_PASID config options are enabled.
-> I don't really like this.  It makes the #ifdefs more complicated and I
-> don't think it really buys us anything.  Will anything break if we
-> just drop this patch?
-Yes, this function uses "pri_lock" mutex which is only defined if 
-CONFIG_PCI_PRI is enabled. So not protecting this function within 
-CONFIG_PCI_PRI will lead to compilation issues.
->
->> Fixes: e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required()
->> interface.")
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> ---
->>   drivers/pci/ats.c       | 10 ++++++----
->>   include/linux/pci-ats.h | 12 +++++++++---
->>   2 files changed, 15 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
->> index e18499243f84..cdd936d10f68 100644
->> --- a/drivers/pci/ats.c
->> +++ b/drivers/pci/ats.c
->> @@ -395,6 +395,8 @@ int pci_pasid_features(struct pci_dev *pdev)
->>   }
->>   EXPORT_SYMBOL_GPL(pci_pasid_features);
->>   
->> +#ifdef CONFIG_PCI_PRI
->> +
->>   /**
->>    * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
->>    *				 status.
->> @@ -402,10 +404,8 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
->>    *
->>    * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
->>    *
->> - * Even though the PRG response PASID status is read from PRI Status
->> - * Register, since this API will mainly be used by PASID users, this
->> - * function is defined within #ifdef CONFIG_PCI_PASID instead of
->> - * CONFIG_PCI_PRI.
->> + * Since this API has dependency on both PRI and PASID, protect it
->> + * with both CONFIG_PCI_PRI and CONFIG_PCI_PASID.
->>    */
->>   int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->>   {
->> @@ -425,6 +425,8 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->>   }
->>   EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
->>   
->> +#endif
->> +
->>   #define PASID_NUMBER_SHIFT	8
->>   #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
->>   /**
->> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
->> index 1ebb88e7c184..1a0bdaee2f32 100644
->> --- a/include/linux/pci-ats.h
->> +++ b/include/linux/pci-ats.h
->> @@ -40,7 +40,6 @@ void pci_disable_pasid(struct pci_dev *pdev);
->>   void pci_restore_pasid_state(struct pci_dev *pdev);
->>   int pci_pasid_features(struct pci_dev *pdev);
->>   int pci_max_pasids(struct pci_dev *pdev);
->> -int pci_prg_resp_pasid_required(struct pci_dev *pdev);
->>   
->>   #else  /* CONFIG_PCI_PASID */
->>   
->> @@ -67,11 +66,18 @@ static inline int pci_max_pasids(struct pci_dev *pdev)
->>   	return -EINVAL;
->>   }
->>   
->> +#endif /* CONFIG_PCI_PASID */
->> +
->> +#if defined(CONFIG_PCI_PRI) && defined(CONFIG_PCI_PASID)
->> +
->> +int pci_prg_resp_pasid_required(struct pci_dev *pdev);
->> +
->> +#else /* CONFIG_PCI_PASID && CONFIG_PCI_PRI */
->> +
->>   static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->>   {
->>   	return 0;
->>   }
->> -#endif /* CONFIG_PCI_PASID */
->> -
->> +#endif
->>   
->>   #endif /* LINUX_PCI_ATS_H*/
->> -- 
->> 2.21.0
->>
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+I.e. I applied this as a follow up patch:
 
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index 01a5bb58eb04..ba8b65c2f9dc 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -284,7 +284,12 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+ 	};
+ 
+ 	if (!perf_cap__capable(CAP_SYS_ADMIN)) {
+-		pr_err("ftrace only works for root!\n");
++		pr_err("ftrace only works for %s!\n",
++#ifdef HAVE_LIBCAP_SUPPORT
++		"users with the SYS_ADMIN capability"
++#else
++		"root"
++#endif
+ 		return -1;
+ 	}
+ 
