@@ -2,192 +2,151 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B8EC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3F3C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD9992070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 805562070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:36:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="O/4sboGa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dc0IemBH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbfHLXfJ (ORCPT
+        id S1726797AbfHLXgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 19:35:09 -0400
-Received: from ozlabs.org ([203.11.71.1]:60145 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbfHLXfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 19:35:09 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 466sdh5qp0z9sDQ;
-        Tue, 13 Aug 2019 09:35:04 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565652905;
-        bh=w5C3ZkmHOk9kOs+eEwrKFMW1sTL4vPGtQoSZ5biw8Rw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=O/4sboGaG/zaWVdLtazhMeVWzXSwmJjuKu/AkXfzjZBM5W6IsQSjVIyvqA7JVlyRE
-         1l61BNQIbgqPiYRItSeGA42WzAb68yU4fJE84I7jPfJPEVtPQkgbzP2PggFQNF40a8
-         AvXLc/HkUH8DkjFnT+wfBWsBe/dJBTOuV1Dsq179OPq3ifjzBau6XVdj8R3tZbYY/+
-         Kuh9q/42vS+Tp+BdKhkRO8FfV/RN4nAm9e9hpV3jonXhge8tJZpA7B98HdDCn+0Wjm
-         8RZGId4/5GNbqPsoFv7hYWPBCYv/cgAZm2jU2xJ+CHuUf0RybHGfXr6VdtkafAlObN
-         vSWszLXAyj36A==
-Date:   Tue, 13 Aug 2019 09:34:47 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul@pwsan.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Atish Patra <atish.patra@wdc.com>
-Subject: linux-next: manual merge of the risc-v tree with the arm64 tree
-Message-ID: <20190813093447.747a5853@canb.auug.org.au>
+        Mon, 12 Aug 2019 19:36:13 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42580 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfHLXgN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 19:36:13 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j7so20884911ota.9;
+        Mon, 12 Aug 2019 16:36:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=mdMrX21nqMnvIo0oSW5nynBC7o2j74UpdSvh/i3TCuw=;
+        b=Dc0IemBH6ncFvomx4DuvnPw47t9stKmlDKr174FZc3Govzrg+3isbhY8bAEhZMFZSM
+         EJwTO7PC5sc2aIM1Edj9q+rHGs1QDBbUtcvHaM5FlZvnj1nrnNKtRP4+BH4KkI5svDM/
+         rG7q1A8/+GSQ0XYBE/zavAFd8ivbsG4uDI9t0Gk/S2IeAqJlyU+8XncCly65BRRzeQk/
+         4cZl5vn0GX5UTK2mhGgURbWmw+tzQYKBDIFjN72ckCJRJ80gV6g+TWhJKQPmy0vWR0OQ
+         Phq4uZ0RKXJT1T76zva460FaPlcXKtsampSsiCafYOeeFLds+tWobvtYROdKcENNUd/o
+         C07g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=mdMrX21nqMnvIo0oSW5nynBC7o2j74UpdSvh/i3TCuw=;
+        b=QiYNd+vgOQoKzRnoeUjCF1GsMgovqPKZaZiUJ8ZH9hsBIf6CbX9YU/QlM6YTx7PUEw
+         JLmBDtVZH/+YDaGXXC4g2yD0W9TNGC1TgNGt4wZTai3io05xnnYwwGTvGIDlGtMaKba1
+         WRDbSj+gRUVgAWlFldxrFxc1FsikWe8xqZPCkMXoro56cAmV35qjr33zH+Pqcn7uPgAU
+         3ThsqF4zkSr/oC7nYvUNxAhFmQkYyCj9e4qTtwqWH0CfIaYc58iLoM+irn15QcVwSsIm
+         js32dY2OHdAA4mg+Tygv49+1b+Xe5by8S3lWusl1rCOBBiU0yBsY7pndA9eg2MBh92e8
+         M4cQ==
+X-Gm-Message-State: APjAAAXAxz93t8ohf59nVQDFth5LqL9eO8oUwLExsY2dto7oT2/eJTra
+        RjZmNuGGJDafIxk2pXlVZHLVOyvHsPfOywuUDm0=
+X-Google-Smtp-Source: APXvYqwzQ8RzLpMPAB55e3s5PL0qjJ7LLgXXH8BJGqGYod4lRp0CQ5+iGkhGj8srHUw4054ayr+0QdORe2rXP1OVJtA=
+X-Received: by 2002:a5d:9047:: with SMTP id v7mr26934439ioq.18.1565652972130;
+ Mon, 12 Aug 2019 16:36:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/qDRPE4LeVl/DGF9Q.z8Vj7u";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20190810052829.6032-1-tiny.windzz@gmail.com> <f479c162-4eac-f320-3583-b9ddbef79b1a@gmail.com>
+In-Reply-To: <f479c162-4eac-f320-3583-b9ddbef79b1a@gmail.com>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Tue, 13 Aug 2019 07:36:00 +0800
+Message-ID: <CAEExFWu+CNqjDF218kaVu2xHq1yYL8XgxrM1o=S9axNNebb8XA@mail.gmail.com>
+Subject: Re: [PATCH v5 00/18] add thermal driver for h6
+To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan.Cameron@huawei.com,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qDRPE4LeVl/DGF9Q.z8Vj7u
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Aug 12, 2019 at 5:14 AM Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.c=
+om> wrote:
+>
+> Hi Yangtao,
+>
+> On 10/08/2019 07:28, Yangtao Li wrote:
+> > This patchset add support for A64, H3, H5, H6 and R40 thermal sensor.
+>
+> Could you add the device-tree configuration in the same series?
+> This will allow user to test it.
 
-Hi all,
+Ok, it will be added later.
 
-Today's linux-next merge of the risc-v tree got a conflict in:
+Yangtao
 
-  arch/arm64/kernel/topology.c
-
-between commit:
-
-  98dc19902a0b ("arm64: topology: Use PPTT to determine if PE is a thread")
-
-from the arm64 tree and commit:
-
-  60c1b220d8bc ("cpu-topology: Move cpu topology code to common code.")
-
-from the risc-v tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/arm64/kernel/topology.c
-index 6106c49f84bc,6b95c91e7d67..000000000000
---- a/arch/arm64/kernel/topology.c
-+++ b/arch/arm64/kernel/topology.c
-@@@ -296,72 -59,21 +59,32 @@@ topology_populated
-  	update_siblings_masks(cpuid);
-  }
- =20
-- static void clear_cpu_topology(int cpu)
-- {
-- 	struct cpu_topology *cpu_topo =3D &cpu_topology[cpu];
--=20
-- 	cpumask_clear(&cpu_topo->llc_sibling);
-- 	cpumask_set_cpu(cpu, &cpu_topo->llc_sibling);
--=20
-- 	cpumask_clear(&cpu_topo->core_sibling);
-- 	cpumask_set_cpu(cpu, &cpu_topo->core_sibling);
-- 	cpumask_clear(&cpu_topo->thread_sibling);
-- 	cpumask_set_cpu(cpu, &cpu_topo->thread_sibling);
-- }
--=20
-- static void __init reset_cpu_topology(void)
-- {
-- 	unsigned int cpu;
--=20
-- 	for_each_possible_cpu(cpu) {
-- 		struct cpu_topology *cpu_topo =3D &cpu_topology[cpu];
--=20
-- 		cpu_topo->thread_id =3D -1;
-- 		cpu_topo->core_id =3D 0;
-- 		cpu_topo->package_id =3D -1;
-- 		cpu_topo->llc_id =3D -1;
--=20
-- 		clear_cpu_topology(cpu);
-- 	}
-- }
--=20
-- void remove_cpu_topology(unsigned int cpu)
-- {
-- 	int sibling;
--=20
-- 	for_each_cpu(sibling, topology_core_cpumask(cpu))
-- 		cpumask_clear_cpu(cpu, topology_core_cpumask(sibling));
-- 	for_each_cpu(sibling, topology_sibling_cpumask(cpu))
-- 		cpumask_clear_cpu(cpu, topology_sibling_cpumask(sibling));
-- 	for_each_cpu(sibling, topology_llc_cpumask(cpu))
-- 		cpumask_clear_cpu(cpu, topology_llc_cpumask(sibling));
--=20
-- 	clear_cpu_topology(cpu);
-- }
--=20
-  #ifdef CONFIG_ACPI
- +static bool __init acpi_cpu_is_threaded(int cpu)
- +{
- +	int is_threaded =3D acpi_pptt_cpu_is_thread(cpu);
- +
- +	/*
- +	 * if the PPTT doesn't have thread information, assume a homogeneous
- +	 * machine and return the current CPU's thread state.
- +	 */
- +	if (is_threaded < 0)
- +		is_threaded =3D read_cpuid_mpidr() & MPIDR_MT_BITMASK;
- +
- +	return !!is_threaded;
- +}
- +
-  /*
-   * Propagate the topology information of the processor_topology_node tree=
- to the
-   * cpu_topology array.
-   */
-- static int __init parse_acpi_topology(void)
-+ int __init parse_acpi_topology(void)
-  {
- -	bool is_threaded;
-  	int cpu, topology_id;
- =20
-+ 	if (acpi_disabled)
-+ 		return 0;
-+=20
- -	is_threaded =3D read_cpuid_mpidr() & MPIDR_MT_BITMASK;
- -
-  	for_each_possible_cpu(cpu) {
-  		int i, cache_id;
- =20
-
---Sig_/qDRPE4LeVl/DGF9Q.z8Vj7u
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1R95cACgkQAVBC80lX
-0GzjrQf+Irkjq9nucIWfVaZI7zqV1yRRrOVf+EPUDEP7w1ON2v1s5fBJF22WQDXi
-PBRJQe1dIBh3OC2CC1AcrhXe98Lg1j91QNnhkouWGrUMIAxytKsgX32ad/B9JeBj
-ASrwHu17vzj8FtBDQ3kqxeUMzUBQAg68nwJKLD54eJBtCJ7gBUZeO/2QC2NOEegD
-NivI0haXBY8GxJZSjNr95ubSC5KtEIdvdxbkM54QebgSfvJg/5yAXqti8D96DnD4
-SD3a5ZnrYnNLeG1eLn+dTk8d32M1+ERtYcP8ov4AqgPXOtvdxnKVWNM9QrfBsAct
-ddU3gR5gtD+azJmXxfkp3gU6KobSqA==
-=VK8O
------END PGP SIGNATURE-----
-
---Sig_/qDRPE4LeVl/DGF9Q.z8Vj7u--
+>
+> Thanks,
+> Cl=C3=A9ment
+>
+> >
+> > Thx to Icenowy and Vasily.
+> >
+> > BTY, do a cleanup in thermal makfile.
+> >
+> > Icenowy Zheng (3):
+> >    thermal: sun8i: allow to use custom temperature calculation function
+> >    thermal: sun8i: add support for Allwinner H5 thermal sensor
+> >    thermal: sun8i: add support for Allwinner R40 thermal sensor
+> >
+> > Vasily Khoruzhick (1):
+> >    thermal: sun8i: add thermal driver for A64
+> >
+> > Yangtao Li (14):
+> >    thermal: sun8i: add thermal driver for h6
+> >    dt-bindings: thermal: add binding document for h6 thermal controller
+> >    thermal: fix indentation in makefile
+> >    thermal: sun8i: get ths sensor number from device compatible
+> >    thermal: sun8i: rework for sun8i_ths_get_temp()
+> >    thermal: sun8i: get ths init func from device compatible
+> >    thermal: sun8i: rework for ths irq handler func
+> >    thermal: sun8i: support mod clocks
+> >    thermal: sun8i: rework for ths calibrate func
+> >    dt-bindings: thermal: add binding document for h3 thermal controller
+> >    thermal: sun8i: add thermal driver for h3
+> >    dt-bindings: thermal: add binding document for a64 thermal controlle=
+r
+> >    dt-bindings: thermal: add binding document for h5 thermal controller
+> >    dt-bindings: thermal: add binding document for r40 thermal controlle=
+r
+> >
+> >   .../bindings/thermal/sun8i-thermal.yaml       | 157 +++++
+> >   MAINTAINERS                                   |   7 +
+> >   drivers/thermal/Kconfig                       |  14 +
+> >   drivers/thermal/Makefile                      |   9 +-
+> >   drivers/thermal/sun8i_thermal.c               | 596 +++++++++++++++++=
++
+> >   5 files changed, 779 insertions(+), 4 deletions(-)
+> >   create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-th=
+ermal.yaml
+> >   create mode 100644 drivers/thermal/sun8i_thermal.c
+> > ---
+> > v5:
+> > -add more support
+> > -some trival fix
+> > ---
+> > 2.17.1
+> >
+> >
