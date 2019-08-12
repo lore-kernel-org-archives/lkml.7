@@ -2,401 +2,285 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CFDC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7D1C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 114182085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6DBD2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:53:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tIyEA2mQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uNj2PzOW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbfHLJxo (ORCPT
+        id S1727690AbfHLJxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 05:53:44 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40308 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727425AbfHLJxn (ORCPT
+        Mon, 12 Aug 2019 05:53:50 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37004 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727425AbfHLJxu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 05:53:43 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r1so4913137wrl.7
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 02:53:41 -0700 (PDT)
+        Mon, 12 Aug 2019 05:53:50 -0400
+Received: by mail-wm1-f65.google.com with SMTP id z23so11198106wmf.2;
+        Mon, 12 Aug 2019 02:53:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=QVjgkFb/UoYL4lyfH0oonDO4eNphs4OMqX0F+thZKmE=;
-        b=tIyEA2mQLaQZemhwReFsYvFsT/0407PHswf9itCl7deO1g5hSbadDH9yDn04LRHAMJ
-         Fg+XVU6/+QihIZPdPx+fsgA7lQwKRn2XrPFgdB3ZUxnURXqYsL9gu/vEmgUETixjkJ4x
-         JdVzwv0HV8Sij6CKmvJ0w+mRGr7ai5FCzgiVAWAcW0sxUFiHVF5r611WiwBnlFAuLjEB
-         SN4emEBGkSe0tLA0H+lfHLRpkmeZ0xQXL48jJ7UeYKpNkJq05lvZf7ts/WJwSeVNlIbU
-         iQU+7wxnoTGLeBoD8pHHm541b35PEZRSxymPJL6Jht5yn4ONKq+ZbsabVpS/pLi9JRh8
-         b+Wg==
+         :content-disposition:in-reply-to:user-agent;
+        bh=G2spvlN9eUViINwSX8FLxMr7evAtvkAGUBzR5szrA6Y=;
+        b=uNj2PzOWlYlm63XokrWRMDpTE+Vuqj1ANchbpecQS0QcxzFrm5pQbh2FZhKpyxjJJO
+         69MGdgUe4m020JK6zmZd9cYpjxOcnwArSNqsGTe/4QF8/ULz/K4t8tzdojHSLloVB8pR
+         D7tF6VkN9VUzEnHGDEW7lIe6Pek1g1JbEU2dzxohIUlyg0wYXBXnIOyMwNjIlby4n3El
+         hxVFwY04AX2YIVv7F8ksqr2cOYse067RYHQYt5yKpt45a3cfkrPjr7Al8LkKoA47sVRK
+         JGdzl9sW5rkb/EmUhs/VcGxZXO8Mp0wbGuHyHqneOZrEltcRwfBzzfB/u/bYeAyl+WRS
+         Flzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=QVjgkFb/UoYL4lyfH0oonDO4eNphs4OMqX0F+thZKmE=;
-        b=OvmlLKyOoxqKyR4qFb6//O1jHZqPcbBY1rVgIH8JaM60rQz5kbiVmaIoor8W1akw7b
-         NKbGek4bxxiE9TWXMSe5kg2ANP9OTK682TVSGMaMrLokMNvhmUtVdfwoHGuYwB2i5+l+
-         N7YXu8cYfWovugE2BFVfER/kfMWxPmz0PRN4W02+Bp+XzE2tKyYcrLwP+/otvuT8sZrC
-         P5eaHklHtYOA90HHyX7g3xCL+9rzFIv8EYMQA/yGL6d3LaYuRm/GFretFMOZQpP7LeXt
-         Sq27UqNgpO+VegydQxDMvqQO0pGvhX3Qk9tSrK7FBYVeJcC+xI5asW1TfPxNJEwK/FvX
-         T77A==
-X-Gm-Message-State: APjAAAXq/Bz7vsZkt3OfGvste6mOZwUDFP8i4vjwZFzy5uObX2f2pfTm
-        UTtjYroE62/J+croNm8JQ5g6fgKyQew=
-X-Google-Smtp-Source: APXvYqyrplOccsSerZZAdy6HPvacPhcgCNgPW7L0cDDP5mI83ySYjHA72OOjFWw/MmJjvElYTQRfBg==
-X-Received: by 2002:adf:e2cb:: with SMTP id d11mr33697229wrj.66.1565603620373;
-        Mon, 12 Aug 2019 02:53:40 -0700 (PDT)
-Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id e11sm13017480wrc.4.2019.08.12.02.53.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 02:53:39 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 10:53:38 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] mfd: Add support for Merrifield Basin Cove PMIC
-Message-ID: <20190812095338.GD26727@dell>
-References: <20190801190335.37726-1-andriy.shevchenko@linux.intel.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=G2spvlN9eUViINwSX8FLxMr7evAtvkAGUBzR5szrA6Y=;
+        b=qi68GWwx3WI9yDirlBqPqd4VlebAlOMZ8lBJWeca6LeqP5QqcfAvTtp55t1/wassuK
+         TNPv7+N0MvS4JdBYXHmnt5i9Yvy+uxaEEtsb3ug7JTHQHKcVAQi6XFF8gD8BhPWPNcxt
+         oPPPZQUEL8YF2Re8Lh8sAwNx3REZi1xlbqVs6osinQhckbbHT+NB2pbtB14QahNW4jfg
+         JVL3hRFDYNhGlz4AWlnUG4qcm4bZ1tIixVwtE+/1UuFi+wrJHrU6ZadBZ113OOJ4PEoS
+         760wBd5heehO6m9Pp4oJGhvxrz3Mk4rs4NCrtuSc3mLUz2WxfpjuytMkEtdtJOYVLkn5
+         9MVw==
+X-Gm-Message-State: APjAAAWi7KQWNzyVloDcFt2cF93hvRdqifRkJsoMdq4KszYkNjP5XgtV
+        w3Pmd0eq6/SoKW/sRdCFsJ8=
+X-Google-Smtp-Source: APXvYqwbMybiTxjGXH5d4FP5EAydJFALYbdnI5jzXf1AhozoLGqlFSqtheu0qHGyI2NDVuElLZ6OuQ==
+X-Received: by 2002:a1c:7516:: with SMTP id o22mr27231371wmc.19.1565603625897;
+        Mon, 12 Aug 2019 02:53:45 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id o6sm230670853wra.27.2019.08.12.02.53.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 02:53:44 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 11:53:43 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
+        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
+        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        sboyd@kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
+        talho@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v8 09/21] clk: tegra: clk-super: Fix to enable PLLP
+ branches to CPU
+Message-ID: <20190812095343.GH8903@ulmo>
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-10-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2oox5VnwalALFvA7"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190801190335.37726-1-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1565308020-31952-10-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 01 Aug 2019, Andy Shevchenko wrote:
 
-> Add an MFD driver for Intel Merrifield Basin Cove PMIC.
-> 
-> Firmware on the platforms which are using Basin Cove PMIC is "smarter"
-> than on the rest supported by vanilla kernel. It handles first level
-> of interrupt itself, while others do it on OS level.
-> 
-> The driver is done in the same way as the rest of Intel PMIC MFD drivers
-> in the kernel to support the initial design. The design allows to use
-> one driver among few PMICs without knowing implementation details of
-> the each hardware version or generation.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+--2oox5VnwalALFvA7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Aug 08, 2019 at 04:46:48PM -0700, Sowjanya Komatineni wrote:
+> This patch has a fix to enable PLLP branches to CPU before changing
+> the CPU cluster clock source to PLLP for Gen5 Super clock and
+> disables PLLP branches to CPU when not in use.
+>=20
+> During system suspend entry and exit, CPU source will be switched
+> to PLLP and this needs PLLP branches to be enabled to CPU prior to
+> the switch.
+>=20
+> On system resume, warmboot code enables PLLP branches to CPU and
+> powers up the CPU with PLLP clock source.
+>=20
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
-> v4: elaborate in the commit message the design choice
->  drivers/mfd/Kconfig                      |  11 ++
->  drivers/mfd/Makefile                     |   1 +
->  drivers/mfd/intel_soc_pmic_mrfld.c       | 157 +++++++++++++++++++++++
->  include/linux/mfd/intel_soc_pmic_mrfld.h |  81 ++++++++++++
->  4 files changed, 250 insertions(+)
->  create mode 100644 drivers/mfd/intel_soc_pmic_mrfld.c
->  create mode 100644 include/linux/mfd/intel_soc_pmic_mrfld.h
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index f129f9678940..adf178ad5e7b 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -597,6 +597,17 @@ config INTEL_SOC_PMIC_CHTDC_TI
->  	  Select this option for supporting Dollar Cove (TI version) PMIC
->  	  device that is found on some Intel Cherry Trail systems.
->  
-> +config INTEL_SOC_PMIC_MRFLD
-> +	tristate "Support for Intel Merrifield Basin Cove PMIC"
-> +	depends on GPIOLIB
-> +	depends on ACPI
-> +	depends on INTEL_SCU_IPC
-> +	select MFD_CORE
-> +	select REGMAP_IRQ
-> +	help
-> +	  Select this option for supporting Basin Cove PMIC device
-> +	  that is found on Intel Merrifield systems.
+>  drivers/clk/tegra/clk-super.c            | 14 ++++++++++++++
+>  drivers/clk/tegra/clk-tegra-super-gen4.c |  7 ++++++-
+>  drivers/clk/tegra/clk.c                  | 14 ++++++++++++++
+>  drivers/clk/tegra/clk.h                  |  5 +++++
+>  4 files changed, 39 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/clk/tegra/clk-super.c b/drivers/clk/tegra/clk-super.c
+> index 39ef31b46df5..e2a1e95a8db7 100644
+> --- a/drivers/clk/tegra/clk-super.c
+> +++ b/drivers/clk/tegra/clk-super.c
+> @@ -28,6 +28,9 @@
+>  #define super_state_to_src_shift(m, s) ((m->width * s))
+>  #define super_state_to_src_mask(m) (((1 << m->width) - 1))
+> =20
+> +#define CCLK_SRC_PLLP_OUT0 4
+> +#define CCLK_SRC_PLLP_OUT4 5
 > +
->  config MFD_INTEL_LPSS
->  	tristate
->  	select COMMON_CLK
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index f026ada68f6a..637ecf6b12de 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -241,6 +241,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
-> +obj-$(CONFIG_INTEL_SOC_PMIC_MRFLD)	+= intel_soc_pmic_mrfld.o
->  obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
->  
->  obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
-> diff --git a/drivers/mfd/intel_soc_pmic_mrfld.c b/drivers/mfd/intel_soc_pmic_mrfld.c
-> new file mode 100644
-> index 000000000000..26a1551c5faf
-> --- /dev/null
-> +++ b/drivers/mfd/intel_soc_pmic_mrfld.c
-> @@ -0,0 +1,157 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device access for Basin Cove PMIC
-> + *
-> + * Copyright (c) 2019, Intel Corporation.
-> + * Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> + */
+>  static u8 clk_super_get_parent(struct clk_hw *hw)
+>  {
+>  	struct tegra_clk_super_mux *mux =3D to_clk_super_mux(hw);
+> @@ -97,12 +100,23 @@ static int clk_super_set_parent(struct clk_hw *hw, u=
+8 index)
+>  		if (index =3D=3D mux->div2_index)
+>  			index =3D mux->pllx_index;
+>  	}
 > +
-> +#include <linux/acpi.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/intel_soc_pmic.h>
-> +#include <linux/mfd/intel_soc_pmic_mrfld.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
+> +	/* enable PLLP branches to CPU before selecting PLLP source */
+> +	if ((mux->flags & TEGRA210_CPU_CLK) &&
+> +	    (index =3D=3D CCLK_SRC_PLLP_OUT0 || index =3D=3D CCLK_SRC_PLLP_OUT4=
+))
+> +		tegra_clk_set_pllp_out_cpu(true);
 > +
-> +#include <asm/intel_scu_ipc.h>
+>  	val &=3D ~((super_state_to_src_mask(mux)) << shift);
+>  	val |=3D (index & (super_state_to_src_mask(mux))) << shift;
+> =20
+>  	writel_relaxed(val, mux->reg);
+>  	udelay(2);
+> =20
+> +	/* disable PLLP branches to CPU if not used */
+> +	if ((mux->flags & TEGRA210_CPU_CLK) &&
+> +	    index !=3D CCLK_SRC_PLLP_OUT0 && index !=3D CCLK_SRC_PLLP_OUT4)
+> +		tegra_clk_set_pllp_out_cpu(false);
 > +
-> +/*
-> + * Level 2 IRQs
-> + *
-> + * Firmware on the systems with Basin Cove PMIC services Level 1 IRQs
-> + * without an assistance. Thus, each of the Level 1 IRQ is represented
-> + * as a separate RTE in IOAPIC.
-> + */
-> +static struct resource irq_level2_resources[] = {
-> +	DEFINE_RES_IRQ(0), /* power button */
-> +	DEFINE_RES_IRQ(0), /* TMU */
-> +	DEFINE_RES_IRQ(0), /* thermal */
-> +	DEFINE_RES_IRQ(0), /* BCU */
-> +	DEFINE_RES_IRQ(0), /* ADC */
-> +	DEFINE_RES_IRQ(0), /* charger */
-> +	DEFINE_RES_IRQ(0), /* GPIO */
-> +};
-> +
-> +static const struct mfd_cell bcove_dev[] = {
-> +	{
-> +		.name = "mrfld_bcove_pwrbtn",
-> +		.num_resources = 1,
-> +		.resources = &irq_level2_resources[0],
-> +	}, {
-> +		.name = "mrfld_bcove_tmu",
-> +		.num_resources = 1,
-> +		.resources = &irq_level2_resources[1],
-> +	}, {
-> +		.name = "mrfld_bcove_thermal",
-> +		.num_resources = 1,
-> +		.resources = &irq_level2_resources[2],
-> +	}, {
-> +		.name = "mrfld_bcove_bcu",
-> +		.num_resources = 1,
-> +		.resources = &irq_level2_resources[3],
-> +	}, {
-> +		.name = "mrfld_bcove_adc",
-> +		.num_resources = 1,
-> +		.resources = &irq_level2_resources[4],
-> +	}, {
-> +		.name = "mrfld_bcove_charger",
-> +		.num_resources = 1,
-> +		.resources = &irq_level2_resources[5],
-> +	}, {
-> +		.name = "mrfld_bcove_pwrsrc",
-> +		.num_resources = 1,
-> +		.resources = &irq_level2_resources[5],
-> +	}, {
-> +		.name = "mrfld_bcove_gpio",
-> +		.num_resources = 1,
-> +		.resources = &irq_level2_resources[6],
-> +	},
-> +	{	.name = "mrfld_bcove_region", },
-> +};
-> +
-> +static int bcove_ipc_byte_reg_read(void *context, unsigned int reg,
-> +				    unsigned int *val)
+>  out:
+>  	if (mux->lock)
+>  		spin_unlock_irqrestore(mux->lock, flags);
+> diff --git a/drivers/clk/tegra/clk-tegra-super-gen4.c b/drivers/clk/tegra=
+/clk-tegra-super-gen4.c
+> index cdfe7c9697e1..98538f79b0c4 100644
+> --- a/drivers/clk/tegra/clk-tegra-super-gen4.c
+> +++ b/drivers/clk/tegra/clk-tegra-super-gen4.c
+> @@ -180,7 +180,7 @@ static void __init tegra_super_clk_init(void __iomem =
+*clk_base,
+>  					gen_info->num_cclk_g_parents,
+>  					CLK_SET_RATE_PARENT,
+>  					clk_base + CCLKG_BURST_POLICY,
+> -					0, 4, 8, 0, NULL);
+> +					TEGRA210_CPU_CLK, 4, 8, 0, NULL);
+>  		} else {
+>  			clk =3D tegra_clk_register_super_mux("cclk_g",
+>  					gen_info->cclk_g_parents,
+> @@ -196,6 +196,11 @@ static void __init tegra_super_clk_init(void __iomem=
+ *clk_base,
+>  	dt_clk =3D tegra_lookup_dt_id(tegra_clk_cclk_lp, tegra_clks);
+>  	if (dt_clk) {
+>  		if (gen_info->gen =3D=3D gen5) {
+> +		/*
+> +		 * TEGRA210_CPU_CLK flag is not needed for cclk_lp as cluster
+> +		 * switching is not currently supported on Tegra210 and also
+> +		 * cpu_lp is not used.
+> +		 */
+
+Indentation looks odd here. If you want to comment the whole block, put
+the comment above the "if (...) {". If you want to comment the contents
+of the block, indent one level further so it aligns with the "clk =3D ..."
+below.
+
+Otherwise looks good, so with the indentation fixed:
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+>  			clk =3D tegra_clk_register_super_mux("cclk_lp",
+>  					gen_info->cclk_lp_parents,
+>  					gen_info->num_cclk_lp_parents,
+> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
+> index 573e3c967ae1..eb08047fd02f 100644
+> --- a/drivers/clk/tegra/clk.c
+> +++ b/drivers/clk/tegra/clk.c
+> @@ -23,6 +23,7 @@
+>  #define CLK_OUT_ENB_W			0x364
+>  #define CLK_OUT_ENB_X			0x280
+>  #define CLK_OUT_ENB_Y			0x298
+> +#define CLK_ENB_PLLP_OUT_CPU		BIT(31)
+>  #define CLK_OUT_ENB_SET_L		0x320
+>  #define CLK_OUT_ENB_CLR_L		0x324
+>  #define CLK_OUT_ENB_SET_H		0x328
+> @@ -199,6 +200,19 @@ const struct tegra_clk_periph_regs *get_reg_bank(int=
+ clkid)
+>  	}
+>  }
+> =20
+> +void tegra_clk_set_pllp_out_cpu(bool enable)
 > +{
-> +	u8 ipc_out;
-> +	int ret;
+> +	u32 val;
 > +
-> +	ret = intel_scu_ipc_ioread8(reg, &ipc_out);
-> +	if (ret)
-> +		return ret;
+> +	val =3D readl_relaxed(clk_base + CLK_OUT_ENB_Y);
+> +	if (enable)
+> +		val |=3D CLK_ENB_PLLP_OUT_CPU;
+> +	else
+> +		val &=3D ~CLK_ENB_PLLP_OUT_CPU;
 > +
-> +	*val = ipc_out;
-> +	return 0;
+> +	writel_relaxed(val, clk_base + CLK_OUT_ENB_Y);
 > +}
 > +
-> +static int bcove_ipc_byte_reg_write(void *context, unsigned int reg,
-> +				     unsigned int val)
-> +{
-> +	u8 ipc_in = val;
-> +	int ret;
-> +
-> +	ret = intel_scu_ipc_iowrite8(reg, ipc_in);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
+>  struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int ban=
+ks)
+>  {
+>  	clk_base =3D regs;
+> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+> index 8a9af45b6084..560e2bcb3d7d 100644
+> --- a/drivers/clk/tegra/clk.h
+> +++ b/drivers/clk/tegra/clk.h
+> @@ -677,6 +677,9 @@ struct clk *tegra_clk_register_periph_data(void __iom=
+em *clk_base,
+>   * Flags:
+>   * TEGRA_DIVIDER_2 - LP cluster has additional divider. This flag indica=
+tes
+>   *     that this is LP cluster clock.
+> + * TEGRA210_CPU_CLK - This flag is used to identify CPU cluster for gen5
+> + * super mux parent using PLLP branches. To use PLLP branches to CPU, ne=
+ed
+> + * to configure additional bit PLLP_OUT_CPU in the clock registers.
+>   */
+>  struct tegra_clk_super_mux {
+>  	struct clk_hw	hw;
+> @@ -693,6 +696,7 @@ struct tegra_clk_super_mux {
+>  #define to_clk_super_mux(_hw) container_of(_hw, struct tegra_clk_super_m=
+ux, hw)
+> =20
+>  #define TEGRA_DIVIDER_2 BIT(0)
+> +#define TEGRA210_CPU_CLK BIT(1)
+> =20
+>  extern const struct clk_ops tegra_clk_super_ops;
+>  struct clk *tegra_clk_register_super_mux(const char *name,
+> @@ -838,6 +842,7 @@ int tegra_pll_p_div_to_hw(struct tegra_clk_pll *pll, =
+u8 p_div);
+>  int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
+>  		 u8 frac_width, u8 flags);
+>  void tegra_clk_osc_resume(void __iomem *clk_base);
+> +void tegra_clk_set_pllp_out_cpu(bool enable);
+> =20
+> =20
+>  /* Combined read fence with delay */
+> --=20
+> 2.7.4
+>=20
 
-Is intel_scu_ipc_iowrite8() going to be used with Regmap again?  If
-so, it's probably best to have these as part of the API.  Probably
-supplied as an inline function.
+--2oox5VnwalALFvA7
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +static const struct regmap_config bcove_regmap_config = {
-> +	.reg_bits = 16,
-> +	.val_bits = 8,
-> +	.max_register = 0xff,
-> +	.reg_write = bcove_ipc_byte_reg_write,
-> +	.reg_read = bcove_ipc_byte_reg_read,
-> +};
-> +
-> +static int bcove_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct intel_soc_pmic *pmic;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	pmic = devm_kzalloc(dev, sizeof(*pmic), GFP_KERNEL);
-> +	if (!pmic)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, pmic);
-> +	pmic->dev = &pdev->dev;
-> +
-> +	pmic->regmap = devm_regmap_init(dev, NULL, pmic, &bcove_regmap_config);
-> +	if (IS_ERR(pmic->regmap))
-> +		return PTR_ERR(pmic->regmap);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(irq_level2_resources); i++) {
-> +		ret = platform_get_irq(pdev, i);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		irq_level2_resources[i].start = ret;
-> +		irq_level2_resources[i].end = ret;
-> +	}
+-----BEGIN PGP SIGNATURE-----
 
-I still get the same feeling that this is a waste of a driver!
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1RNycACgkQ3SOs138+
+s6FWNhAAlaShT2GFtVBnhhFJ445GVNOhlfEDJqg1Z1G4FVSwFxbtkRYmVuAa+KSq
+YgcgH99epOInSsouaVVlwF3uBpAaZVXn1tX3LSzqvbvgDWq4H/EnWOk8jRwKL4Tv
+a0CLk8G7kfgwHy83vBuZu2XcBqp8tmWjFLs6Z2g3hohxnwGkmcc1503vqP/Iv/cm
+M1Xh+nIcilyWJZh+HSKJXi6gmsciVh1ebEItgZjVzDq74AIVs8WQIsN5evcRPrYH
+sF3t8n+vEThtO4yv0nrBwOeXDW7+DoLHbNNttnb++5DoJ8YPFamEOhPXULomtH+5
+W0WYACbVmq+r/vSGq0/CvdsUOuXfUtcIFRcSKflomIi9sIE62Zxcgx2Mu5DFwF3J
+mKVetDtHpqnWn8HP/cwAd/pUI8OBiUczzdneJtYY+Kl9HYZ+QRhvR69C1QXt00JS
+hx41ObgsLn66B2pmKcOzCs8IlPfzPnjzNpsiRloHv2b82be/VHB3CR+H1LUkv2BY
+nQmdXPUOLaFeHUMUgXus4i8XoHOWsxnIAQdgW5Q44BQesc0eOZKGl9aRbO9g+8Wi
+xNTHsaXoSDCGsEqEGC4suyUqz1CI9OrGbRcJRSr72zdSO0krgOV4Gy8lgvHhIDjw
+03rH1AMxPh3jCXhHiN9SFNSPPDhbguHoEz+5sDezI0s52deFTGY=
+=ARG9
+-----END PGP SIGNATURE-----
 
-ACPI hackery, if you will. :(
-
-It's just a shame that I can't think of a better way to do it.
-
-> +	return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
-> +				    bcove_dev, ARRAY_SIZE(bcove_dev),
-> +				    NULL, 0, NULL);
-> +}
-> +
-> +static const struct acpi_device_id bcove_acpi_ids[] = {
-> +	{ "INTC100E" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(acpi, bcove_acpi_ids);
-> +
-> +static struct platform_driver bcove_driver = {
-> +	.driver = {
-> +		.name = "intel_soc_pmic_mrfld",
-> +		.acpi_match_table = bcove_acpi_ids,
-> +	},
-> +	.probe = bcove_probe,
-> +};
-> +module_platform_driver(bcove_driver);
-> +
-> +MODULE_DESCRIPTION("IPC driver for Intel SoC Basin Cove PMIC");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/mfd/intel_soc_pmic_mrfld.h b/include/linux/mfd/intel_soc_pmic_mrfld.h
-> new file mode 100644
-> index 000000000000..4daecd682275
-> --- /dev/null
-> +++ b/include/linux/mfd/intel_soc_pmic_mrfld.h
-> @@ -0,0 +1,81 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Header file for Intel Merrifield Basin Cove PMIC
-> + *
-> + * Copyright (C) 2019 Intel Corporation. All rights reserved.
-> + */
-> +
-> +#ifndef __INTEL_SOC_PMIC_MRFLD_H__
-> +#define __INTEL_SOC_PMIC_MRFLD_H__
-> +
-> +#include <linux/bits.h>
-> +
-> +#define BCOVE_ID		0x00
-> +
-> +#define BCOVE_ID_MINREV0	GENMASK(2, 0)
-> +#define BCOVE_ID_MAJREV0	GENMASK(5, 3)
-> +#define BCOVE_ID_VENDID0	GENMASK(7, 6)
-> +
-> +#define BCOVE_MINOR(x)		(unsigned int)(((x) & BCOVE_ID_MINREV0) >> 0)
-> +#define BCOVE_MAJOR(x)		(unsigned int)(((x) & BCOVE_ID_MAJREV0) >> 3)
-> +#define BCOVE_VENDOR(x)		(unsigned int)(((x) & BCOVE_ID_VENDID0) >> 6)
-> +
-> +#define BCOVE_IRQLVL1		0x01
-> +
-> +#define BCOVE_PBIRQ		0x02
-> +#define BCOVE_TMUIRQ		0x03
-> +#define BCOVE_THRMIRQ		0x04
-> +#define BCOVE_BCUIRQ		0x05
-> +#define BCOVE_ADCIRQ		0x06
-> +#define BCOVE_CHGRIRQ0		0x07
-> +#define BCOVE_CHGRIRQ1		0x08
-> +#define BCOVE_GPIOIRQ		0x09
-> +#define BCOVE_CRITIRQ		0x0B
-> +
-> +#define BCOVE_MIRQLVL1		0x0C
-> +
-> +#define BCOVE_MPBIRQ		0x0D
-> +#define BCOVE_MTMUIRQ		0x0E
-> +#define BCOVE_MTHRMIRQ		0x0F
-> +#define BCOVE_MBCUIRQ		0x10
-> +#define BCOVE_MADCIRQ		0x11
-> +#define BCOVE_MCHGRIRQ0		0x12
-> +#define BCOVE_MCHGRIRQ1		0x13
-> +#define BCOVE_MGPIOIRQ		0x14
-> +#define BCOVE_MCRITIRQ		0x16
-> +
-> +#define BCOVE_SCHGRIRQ0		0x4E
-> +#define BCOVE_SCHGRIRQ1		0x4F
-> +
-> +/* Level 1 IRQs */
-> +#define BCOVE_LVL1_PWRBTN	BIT(0)	/* power button */
-> +#define BCOVE_LVL1_TMU		BIT(1)	/* time management unit */
-> +#define BCOVE_LVL1_THRM		BIT(2)	/* thermal */
-> +#define BCOVE_LVL1_BCU		BIT(3)	/* burst control unit */
-> +#define BCOVE_LVL1_ADC		BIT(4)	/* ADC */
-> +#define BCOVE_LVL1_CHGR		BIT(5)	/* charger */
-> +#define BCOVE_LVL1_GPIO		BIT(6)	/* GPIO */
-> +#define BCOVE_LVL1_CRIT		BIT(7)	/* critical event */
-> +
-> +/* Level 2 IRQs: power button */
-> +#define BCOVE_PBIRQ_PBTN	BIT(0)
-> +#define BCOVE_PBIRQ_UBTN	BIT(1)
-> +
-> +/* Level 2 IRQs: ADC */
-> +#define BCOVE_ADCIRQ_BATTEMP	BIT(2)
-> +#define BCOVE_ADCIRQ_SYSTEMP	BIT(3)
-> +#define BCOVE_ADCIRQ_BATTID	BIT(4)
-> +#define BCOVE_ADCIRQ_VIBATT	BIT(5)
-> +#define BCOVE_ADCIRQ_CCTICK	BIT(7)
-> +
-> +/* Level 2 IRQs: charger */
-> +#define BCOVE_CHGRIRQ_BAT0ALRT	BIT(4)
-> +#define BCOVE_CHGRIRQ_BAT1ALRT	BIT(5)
-> +#define BCOVE_CHGRIRQ_BATCRIT	BIT(6)
-> +
-> +#define BCOVE_CHGRIRQ_VBUSDET	BIT(0)
-> +#define BCOVE_CHGRIRQ_DCDET	BIT(1)
-> +#define BCOVE_CHGRIRQ_BATTDET	BIT(2)
-> +#define BCOVE_CHGRIRQ_USBIDDET	BIT(3)
-> +
-> +#endif	/* __INTEL_SOC_PMIC_MRFLD_H__ */
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--2oox5VnwalALFvA7--
