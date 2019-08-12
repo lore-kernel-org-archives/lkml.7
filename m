@@ -2,75 +2,119 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA41BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 01:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 456C8C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 01:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAB0E2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 01:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 162A62084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 01:51:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J3n5ZKeo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfHLBt5 (ORCPT
+        id S1726819AbfHLBu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 21:49:57 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4656 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726200AbfHLBt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 21:49:57 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 60388B41B8A7E0293E9B;
-        Mon, 12 Aug 2019 09:49:52 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 12 Aug
- 2019 09:49:48 +0800
-Subject: Re: [PATCH] mailmap: add entry for Jaegeuk Kim
-To:     Jonathan Corbet <corbet@lwn.net>, Chao Yu <chao@kernel.org>
-CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jaegeuk@kernel.org>
-References: <20190802012135.31419-1-yuchao0@huawei.com>
- <20190802072626.405246e3@lwn.net>
- <fe9cd2bc-76ed-5371-e0c3-b538e7a805e7@kernel.org>
- <fd14e8d4-7468-ed3a-a679-6167eac72626@kernel.org>
- <20190809102816.52b3b310@lwn.net>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <be87504b-d0e2-3219-82da-568bf9b02cc3@huawei.com>
-Date:   Mon, 12 Aug 2019 09:49:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 11 Aug 2019 21:50:57 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43921 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfHLBu4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 21:50:56 -0400
+Received: by mail-pf1-f196.google.com with SMTP id v12so1141998pfn.10;
+        Sun, 11 Aug 2019 18:50:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pfaVFzFF0GvUkP+csExf9mRMYKLakGIqocXWtOijWcs=;
+        b=J3n5ZKeoQQ0bmNJgluv6gAytDIfBo9heugCs0XBMhVCrev0LMMnqqYvHMPS/Cr0eBt
+         gctxUlCPGnoXwjK2CwzgVvi28Wb22MRLlEhA2lKWros6W4HEdEFgJOn/NBCaUfYs2Th8
+         uPiE4ZxUz27VerKWtltJreVV1o5cNvwgiQmm2L4fmmkncjkGTaspegF0sY5rCwFaz1Bj
+         NmwHks4rnhNi7uAo/lBpxeuM3ZbiuZQc8DkW7I1xNK4QRa1pZCMUjYzqmjrptEEwb9Fi
+         DfhQnMHmRrF6nz3dpmgznKvjSD+eNOrb0yEq+WeDxCYjBjqUNCYLFdD0M1uwwALX4eRZ
+         OSMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pfaVFzFF0GvUkP+csExf9mRMYKLakGIqocXWtOijWcs=;
+        b=MXJwOuOHmKADAU2vW5Wl+ibhpMmFzsIFmV9dQVSznTMaeSqywa251ZKEmB8DChqAtv
+         MBzHJRjZnFMSWb7mnvbWw+FG+sZT9r0bYfuHgEGOU67iL6pb2NFfbim3jIpRNUJRU7oJ
+         HVxkxX/bX76r9mLlPlr10ooXMhXfs+yO7rsW0+3b2n3nSp9G/SH6jJLN2EI5sGp1tqZW
+         r7b6v5anIqIp5IvaEleQDqTaLAgV9BBHinmn8eEbIaG1pNpi/PVc1fFQwQ/Sq7iR2Ap7
+         4t4VUEvFH1/VSdF1D05tc8ALRAYZs8iHRCc/C1TUAigSFtO22OaTVKYnGauINordz8o+
+         rjOw==
+X-Gm-Message-State: APjAAAV5MRK7ASlQc6cFhAXEcnQ9SbO9LMetLVT5YBzO5i6NHDs4S/da
+        RinunS/jdu+RtHY9PI2hhDHGPMXA
+X-Google-Smtp-Source: APXvYqwiGohojGGhDnygsE9A4cyzbEHPkz9fH4ggMXoJfzmaJzcdAgT3McHJiakV36cLDMyvSwP/zg==
+X-Received: by 2002:a65:44cc:: with SMTP id g12mr27761338pgs.409.1565574656022;
+        Sun, 11 Aug 2019 18:50:56 -0700 (PDT)
+Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id j20sm100062363pfr.113.2019.08.11.18.50.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 11 Aug 2019 18:50:55 -0700 (PDT)
+From:   john.hubbard@gmail.com
+X-Google-Original-From: jhubbard@nvidia.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [RFC PATCH 0/2] mm/gup: introduce vaddr_pin_pages_remote(), FOLL_PIN
+Date:   Sun, 11 Aug 2019 18:50:42 -0700
+Message-Id: <20190812015044.26176-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <20190809102816.52b3b310@lwn.net>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/10 0:28, Jonathan Corbet wrote:
-> On Thu, 8 Aug 2019 22:37:41 +0800
-> Chao Yu <chao@kernel.org> wrote:
-> 
->>> IMO, when we use git-blame to find out who is response for specified code, w/o
->>> mailmap we may just found old obsolete email address in the related commit; even
->>> we can search full name for his/her new email address, how can we make sure they
->>> are the same person... so anyway, it can help to find last valid/canonical email
->>> address of someone.  
->>
->> Any thoughts?
-> 
-> I'm not fully convinced that we want to maintain a database of every
-> developer's email history.  But I did merge this patch a few days ago.
+From: John Hubbard <jhubbard@nvidia.com>
 
-Thanks for the merging anyway. :)
+Hi,
 
-> 
-> Thanks,
-> 
-> jon
-> .
-> 
+Dave Chinner's head didn't seem to explode...much, when he saw Ira's
+series, so I optimistically started taking it from there...this builds on
+top of Ira's patchset that he just sent out:
+
+  "[RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002   ;-)" [1]
+
+...which in turn is based on the latest -mmotm.
+
+If Ira's series and this one are both acceptable, then
+
+    a) I'll rework the 41-patch "put_user_pages(): miscellaneous call
+       sites" series, and
+
+    b) note that this will take rather longer and will be quite a bit more
+       intrusive for each call site (but it's worth it), due to the
+       need to plumb the owning struct file* all the way down to the gup()
+       call. whew.
+
+[1] https://lore.kernel.org/r/20190809225833.6657-1-ira.weiny@intel.com
+
+[2] https://lore.kernel.org/r/20190807013340.9706-1-jhubbard@nvidia.com
+
+John Hubbard (2):
+  mm/gup: introduce FOLL_PIN flag for get_user_pages()
+  mm/gup: introduce vaddr_pin_pages_remote()
+
+ drivers/infiniband/core/umem_odp.c | 15 ++++----
+ include/linux/mm.h                 |  8 +++++
+ mm/gup.c                           | 55 +++++++++++++++++++++++++++++-
+ 3 files changed, 71 insertions(+), 7 deletions(-)
+
+-- 
+2.22.0
+
