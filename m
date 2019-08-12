@@ -2,169 +2,144 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2207C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 278BBC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5C742075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9A332085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:52:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="kMR1F6bg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GOYts8y6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfHLVvp (ORCPT
+        id S1727828AbfHLVwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 17:51:45 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:34722 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727696AbfHLVvj (ORCPT
+        Mon, 12 Aug 2019 17:52:06 -0400
+Received: from mail-qk1-f202.google.com ([209.85.222.202]:39431 "EHLO
+        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727811AbfHLVwF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 17:51:39 -0400
-Received: by mail-qt1-f193.google.com with SMTP id q4so7265637qtp.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 14:51:38 -0700 (PDT)
+        Mon, 12 Aug 2019 17:52:05 -0400
+Received: by mail-qk1-f202.google.com with SMTP id x1so94451773qkn.6
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 14:52:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:mime-version
-         :content-transfer-encoding;
-        bh=iILK3toCoRAShc6Bh7nRP60zRRz+Erv6WfY1v74geMg=;
-        b=kMR1F6bg3fRTthKLTTPpF3GEFocmjz/QZyvklyt5eQUdKPsv18uVBoop04qVRE7FiK
-         0miUL7e+xwxrsPpWrj0wTIYqgpoyd8+icRTiqVbQqyJ4+EqfH45gS7e4IiiAVud/sSGf
-         srFVMNt8tDfIsCaCISevJeAceHKqE0rjnQRckcu+UshdOQ4SmjPVSd2KqmFVmddLBpnB
-         lo6+Pv+Ua2yVqBTRI5RJ+DPaez5lNyxSibpwCi8W1RForYBGPlguzUCeZe+EVMlXLD0S
-         MdTgZ8snDgnn5ChRCNLrIoXBMv0Kr1ApzZ+k+32q2Jvt6V0bdYJsBHVntYWIxv6ZHCCL
-         1JAA==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=4H9PWcGFWTnQRRpR6qzftNQ0lP7jmcpJc1z5bvKXC0c=;
+        b=GOYts8y62z5hDG5UBvKTyRA53eo64IPfTWzoj20oJPWRcHrTKxwsvLxh3a4n5gbZEv
+         PEmhfuyQJErUyzHsQgmc+BxiQ+0zaHqdQPYkHNoGmXn1M/p3nNSyCS4YS+QnjsSu15e/
+         4p9ECmVJbtW52/m719Gd9XDThtFlJaVi8EAw8eYS5rrF7pNdIpC8S3YQAtKU4R/HoM1y
+         BQi3xcPQqrL81dRaMBvh/8Aty6jeE0XDlyzQopxkixPirRMhNQ2BW7dcG4t34N56iTRJ
+         t5GaJvbA2lpJTkd80ffPOg6j49O1q9MIvTWyeV3HEdK0REH1ZKW2JM3VYuddT4rKkiLa
+         91eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:mime-version
-         :content-transfer-encoding;
-        bh=iILK3toCoRAShc6Bh7nRP60zRRz+Erv6WfY1v74geMg=;
-        b=lTzni75QMG2Q5U+x4G4En9/0ilBQcTBaGzUdFmzAb3mUlo2uOk5bKyl0OMWfGmq/Gg
-         ZijXWzxexHQ+pzsteNIk/f0OqzdfTN4nQFsjaJJxXH9uTnMsPjDB2FLOIeJGUgAeSEvl
-         ghVi1ai9Ln9i4B459nFVOkoNBQTpxUShErDV7cQhNlkIN4jT13oTVK6sDMhXb+NArHfC
-         cnWKoWbB7mediJ73lPKygoq6Ap4DgVZsVK3F+E4Ee+ldaxubGzdHeFJW8KTBp/+vQPde
-         QowFrVF0DjprjEzJx3XcH0I87skKghtokdLdySKGSkaY1nvjhmTZi3r/T/3XKHR4TX6L
-         zarA==
-X-Gm-Message-State: APjAAAVlSqxj23DmXr4LeC2E+zGC7hgKkqOah7oBwxI8nbg8NuQuzGfh
-        NrMY9wlsE5LVnrV7H2a3QjZ2Mns+eE4=
-X-Google-Smtp-Source: APXvYqy9+Fo1lRLai0S6Yj3orolpYdBovfmsN5AqRWMe8YHwjKGfGG76bynQnDMr+WRbjdaWesGAYQ==
-X-Received: by 2002:ac8:4602:: with SMTP id p2mr7291668qtn.291.1565646697784;
-        Mon, 12 Aug 2019 14:51:37 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id q42sm10781021qtc.52.2019.08.12.14.51.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 14:51:37 -0700 (PDT)
-Message-ID: <1565646695.8572.6.camel@lca.pw>
-Subject: "arm64/for-next/core" causes boot panic
-From:   Qian Cai <cai@lca.pw>
-To:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Mon, 12 Aug 2019 17:51:35 -0400
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=4H9PWcGFWTnQRRpR6qzftNQ0lP7jmcpJc1z5bvKXC0c=;
+        b=Gt2tb52HX8QJDrOUgBvXsIAc8taX6VcaIoRptD0IwD7SDl4VT0CxxGxLwC7ntMIbJ9
+         g6UVg/+7XMGniA8k15LXozxPm9HpWSRGNAEVb4AhJdFykUn0roa9B17YAeSQMOAKM1s6
+         HOWi2v+mQG3swVQbrc6XvVUIGJ6cjHnxGe2WHTjnfpgx85plHlVT2NuYVPfi2CPTmZy5
+         fpCto84KCDZ7VSPMPLHW/rkjAzfENJeHO7rcAUjIVrORsdvYL7ngn7fiW7gC3fe6fxzd
+         B34AQA85VtUtUTZFCN2yyMq6x6XiaguKUDrgL8cMIqsv/nRHVQaNX++apvLdEoSvbrXb
+         DNSA==
+X-Gm-Message-State: APjAAAXTlJfTl8JO/d93FaH8WDoF98/Rj7CsRwvXNf47hhsVmTA9BVFs
+        A8UccrCugPnOZDf0TZ/bKJoRFgEwl37cYItfyXw=
+X-Google-Smtp-Source: APXvYqwes1gV2IDw+8Qi/1BZf+2RvRVqWZMirG+2WSzT6D2Sl6v9dobOMCg6A6UD4p/INQTsMrciAWtKuTDBsrcdsyU=
+X-Received: by 2002:ac8:45d2:: with SMTP id e18mr6288417qto.241.1565646724122;
+ Mon, 12 Aug 2019 14:52:04 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 14:50:40 -0700
+In-Reply-To: <20190812215052.71840-1-ndesaulniers@google.com>
+Message-Id: <20190812215052.71840-7-ndesaulniers@google.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190812215052.71840-1-ndesaulniers@google.com>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+Subject: [PATCH 07/16] arm: prefer __section from compiler_attributes.h
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     akpm@linux-foundation.org
+Cc:     sedat.dilek@gmail.com, jpoimboe@redhat.com, yhs@fb.com,
+        miguel.ojeda.sandonis@gmail.com,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Booting today's linux-next on an arm64 server triggers a panic with
-CONFIG_KASAN_SW_TAGS=y pointing to this line,
+Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+ arch/arm/include/asm/cache.h     | 2 +-
+ arch/arm/include/asm/mach/arch.h | 4 ++--
+ arch/arm/include/asm/setup.h     | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-kfree()->virt_to_head_page()->compound_head()
+diff --git a/arch/arm/include/asm/cache.h b/arch/arm/include/asm/cache.h
+index 1d65ed3a2755..cc06079600e0 100644
+--- a/arch/arm/include/asm/cache.h
++++ b/arch/arm/include/asm/cache.h
+@@ -24,6 +24,6 @@
+ #define ARCH_SLAB_MINALIGN 8
+ #endif
+ 
+-#define __read_mostly __attribute__((__section__(".data..read_mostly")))
++#define __read_mostly __section(.data..read_mostly)
+ 
+ #endif
+diff --git a/arch/arm/include/asm/mach/arch.h b/arch/arm/include/asm/mach/arch.h
+index e7df5a822cab..2986f6b4862d 100644
+--- a/arch/arm/include/asm/mach/arch.h
++++ b/arch/arm/include/asm/mach/arch.h
+@@ -81,7 +81,7 @@ extern const struct machine_desc __arch_info_begin[], __arch_info_end[];
+ #define MACHINE_START(_type,_name)			\
+ static const struct machine_desc __mach_desc_##_type	\
+  __used							\
+- __attribute__((__section__(".arch.info.init"))) = {	\
++ __section(.arch.info.init) = {	\
+ 	.nr		= MACH_TYPE_##_type,		\
+ 	.name		= _name,
+ 
+@@ -91,7 +91,7 @@ static const struct machine_desc __mach_desc_##_type	\
+ #define DT_MACHINE_START(_name, _namestr)		\
+ static const struct machine_desc __mach_desc_##_name	\
+  __used							\
+- __attribute__((__section__(".arch.info.init"))) = {	\
++ __section(.arch.info.init) = {	\
+ 	.nr		= ~0,				\
+ 	.name		= _namestr,
+ 
+diff --git a/arch/arm/include/asm/setup.h b/arch/arm/include/asm/setup.h
+index 67d20712cb48..00190f1f0574 100644
+--- a/arch/arm/include/asm/setup.h
++++ b/arch/arm/include/asm/setup.h
+@@ -14,7 +14,7 @@
+ #include <uapi/asm/setup.h>
+ 
+ 
+-#define __tag __used __attribute__((__section__(".taglist.init")))
++#define __tag __used __section(.taglist.init)
+ #define __tagtable(tag, fn) \
+ static const struct tagtable __tagtable_##fn __tag = { tag, fn }
+ 
+-- 
+2.23.0.rc1.153.gdeed80330f-goog
 
-unsigned long head = READ_ONCE(page->compound_head);
-
-The bisect so far indicates one of those could be bad,
-
-9c1cac424c93 arm64: mm: Really fix sparse warning in untagged_addr()
-d2c68de192cf docs: arm64: Add layout and 52-bit info to memory document
-2c624fe68715 arm64: mm: Remove vabits_user
-b6d00d47e81a arm64: mm: Introduce 52-bit Kernel VAs
-ce3aaed87344 arm64: mm: Modify calculation of VMEMMAP_SIZE
-c8b6d2ccf9b1 arm64: mm: Separate out vmemmap
-c812026c54cf arm64: mm: Logic to make offset_ttbr1 conditional
-5383cc6efed1 arm64: mm: Introduce vabits_actual
-90ec95cda91a arm64: mm: Introduce VA_BITS_MIN
-99426e5e8c9f arm64: dump: De-constify VA_START and KASAN_SHADOW_START
-6bd1d0be0e97 arm64: kasan: Switch to using KASAN_SHADOW_OFFSET
-14c127c957c1 arm64: mm: Flip kernel VA space
-08f103b9a950 arm64/ptrace: Fix typoes in sve_set() comment
-2951d5efaf8b arm64: mm: print hexadecimal EC value in mem_abort_decode()
-b99286b088ea arm64/prefetch: fix a -Wtype-limits warning
-71c67a31f09f init/Kconfig: Fix infinite Kconfig recursion on PPC
-42d038c4fb00 arm64: Add support for function error injection
-45880f7b7b19 error-injection: Consolidate override function definition
-9ce1263033cd selftests, arm64: add a selftest for passing tagged pointers to
-kernel
-63f0c6037965 arm64: Introduce prctl() options to control the tagged user
-addresses ABI
-2b835e24b5c6 arm64: untag user pointers in access_ok and __uaccess_mask_ptr
-5cf896fb6be3 arm64: Add support for relocating the kernel with RELR relocations
-66cbdf5d0c96 arm64: Move TIF_* documentation to individual definitions
-13776f9d40a0 arm64: mm: free the initrd reserved memblock in a aligned manner
-22ec71615d82 arm64: io: Relax implicit barriers in default I/O accessors
-2f8f180b3cee arm64: Remove unused cpucap_multi_entry_cap_cpu_enable()
-73961dc1182e arm64: sysreg: Remove unused and rotting SCTLR_ELx field
-definitions
-332e5281a4e8 arm64: esr: Add ESR exception class encoding for trapped ERET
-b3e089cd446b arm64: Replace strncmp with str_has_prefix
-3e77eeb7a27f ACPI/IORT: Rename arm_smmu_v3_set_proximity() 'node' local variable
-b717480f5415 arm64: remove unneeded uapi/asm/stat.h
-c19d050f8088 arm64/kexec: Use consistent convention of initializing
-'kxec_buf.mem' with KEXEC_BUF_MEM_UNKNOWN
-b907b80d7ae7 arm64: remove pointless __KERNEL__ guards
-c87857945b0e arm64: Remove unused assembly macro
-
-
-[    0.000000][    T0] Unable to handle kernel paging request at virtual address
-0030ffe001e01588
-[    0.000000][    T0] Mem abort info:
-[    0.000000][    T0]   ESR = 0x96000004
-[    0.000000][    T0]   EC = 0x25: DABT (current EL), IL = 32 bits
-[    0.000000][    T0]   SET = 0, FnV = 0
-[    0.000000][    T0]   EA = 0, S1PTW = 0
-[    0.000000][    T0] Data abort info:
-[    0.000000][    T0]   ISV = 0, ISS = 0x00000004
-[    0.000000][    T0]   CM = 0, WnR = 0
-[    0.000000][    T0] [0030ffe001e01588] address between user and kernel
-address ranges
-[    0.000000][    T0] Internal error: Oops: 96000004 [#1] SMP
-[    0.000000][    T0] Modules linked in:
-[    0.000000][    T0] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-rc4-next-
-20190812+ #1
-[    0.000000][    T0] pstate: 40000089 (nZcv daIf -PAN -UAO)
-[    0.000000][    T0] pc : kfree+0x160/0xc98
-[    0.000000][    T0] lr : kfree+0x154/0xc98
-[    0.000000][    T0] sp : ffff900012e07cc0
-[    0.000000][    T0] x29: ffff900012e07d50 x28: 0000000000000100 
-[    0.000000][    T0] x27: 8cff000800563c88 x26: 3dff000800566220 
-[    0.000000][    T0] x25: 7bff0008005c0800 x24: c3ff00080056a580 
-[    0.000000][    T0] x23: 33ff000800563500 x22: 8cff000800563c80 
-[    0.000000][    T0] x21: ffff9000109b57a4 x20: 33ff000800563500 
-[    0.000000][    T0] x19: ffffffdfffc00000 x18: 0000000000000040 
-[    0.000000][    T0] x17: 0000000000400000 x16: ffff900010c00000 
-[    0.000000][    T0] x15: 0000000000000000 x14: ffff90001121a590 
-[    0.000000][    T0] x13: ffff90001013c6fc x12: ffff900010141c78 
-[    0.000000][    T0] x11: 0000000000000001 x10: ffff8fff8fc00000 
-[    0.000000][    T0] x9 : 0001000080000000 x8 : 0030ffe001e01580 
-[    0.000000][    T0] x7 : ffffffffffffffff x6 : 33ff000800563520 
-[    0.000000][    T0] x5 : 0000000000000000 x4 : 0000000000000000 
-[    0.000000][    T0] x3 : 0000000000000100 x2 : ffff900012e324f8 
-[    0.000000][    T0] x1 : 33ff000800563500 x0 : c40000088056a580 
-[    0.000000][    T0] Call trace:
-[    0.000000][    T0]  kfree+0x160/0xc98
-[    0.000000][    T0]  free_cpumask_var+0xc/0x14
-[    0.000000][    T0]  apply_wqattrs_prepare+0x2e4/0x3b0
-[    0.000000][    T0]  apply_workqueue_attrs_locked+0x7c/0xdc
-[    0.000000][    T0]  alloc_workqueue+0x340/0x69c
-[    0.000000][    T0]  workqueue_init_early+0x4b4/0x654
-[    0.000000][    T0]  start_kernel+0x210/0x558
-[    0.000000][    T0] Code: 97f323d3 d34afc08 927abd08 8b080268 (f9400509) 
-[    0.000000][    T0] ---[ end trace 8710f821a534a562 ]---
-[    0.000000][    T0] Kernel panic - not syncing: Fatal exception
-[    0.000000][    T0] ---[ end Kernel panic - not syncing: Fatal exception ]---
