@@ -2,126 +2,107 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A424AC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4617CC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 608DB2070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:57:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aWW5sFms"
+	by mail.kernel.org (Postfix) with ESMTP id 1DBB62070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:59:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbfHLF5i (ORCPT
+        id S1726957AbfHLF73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 01:57:38 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:57066 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbfHLF5i (ORCPT
+        Mon, 12 Aug 2019 01:59:29 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:45055 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbfHLF72 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 01:57:38 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7C5vIR4061742;
-        Mon, 12 Aug 2019 00:57:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1565589438;
-        bh=d/2eujAuWcFMzItdKiZz1Co+QI1jNG7Mcvw6s/uq0OE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=aWW5sFmsib5UYxgILEXnXw+NZAMQwMz0uPV7NaumisPe9UoIh+rdngL/9a29c0sT4
-         sTHG54yZhPi0b+Bgb2N95dodWtp54E5cClAQkI/hehzDqaYl5tBHNCf7L9fEUkikFY
-         WqpCHXJV88nTU61dWCA3w05/m62gjyjEweMDBJAU=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7C5vI9Q080164
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 12 Aug 2019 00:57:18 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 12
- Aug 2019 00:56:05 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 12 Aug 2019 00:56:05 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7C5u3mB022015;
-        Mon, 12 Aug 2019 00:56:03 -0500
-Subject: Re: [PATCH for-5.3] drm/omap: ensure we have a valid dma_mask
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Christoph Hellwig <hch@lst.de>
-CC:     <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>
-References: <20190808101042.18809-1-hch@lst.de>
- <7fff8fd3-16ae-1f42-fcd6-9aa360fe36b5@ti.com> <20190809080750.GA21874@lst.de>
- <c219e7e6-0f66-d6fd-e0cf-59c803386825@ti.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <b5961703-6e6f-5183-206b-d792017beb96@ti.com>
-Date:   Mon, 12 Aug 2019 08:56:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <c219e7e6-0f66-d6fd-e0cf-59c803386825@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 12 Aug 2019 01:59:28 -0400
+Received: by mail-yb1-f195.google.com with SMTP id y21so1760951ybi.11;
+        Sun, 11 Aug 2019 22:59:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=N6oSMRPpHGkQ7E+kK6e4vXB5ZZOBX+MrIVovGvsXigg=;
+        b=IzzNYvEb8kl4xf3lmvM5GQCAsQXvIFOWUmV/0R/Ox4sOR6YrMw7ZChyK9K4/WDfXEB
+         YUAG1nsD+HGryy3UHFh5aq7/fNcgtUw3aMKMA9MiTW4+R8mvCipMSB7K9M3Va5cBjaYe
+         Ls51oAq+5HwH/FlkqgqA+ZsEW7n0U6M0ZJrd3cHFYY3XMTb0d6u9l8/l5zL+0Ms+XFQ/
+         IYf5xEQ8+GHUFgwMGldjNgaOd4dAJ/MPK2SviD/xHMlqiBhwA+Ree4tBIYlwaMz8F3gA
+         d+OEGX1x6xwqvqRhG3dftyei/pKopqLgKPzv2cFB9eO9wwXw/5EoeYeE1SGcnpCxxsjl
+         oYyg==
+X-Gm-Message-State: APjAAAUlr1dhzUGanSgqmoLib8PRiqqs4tbfA8mqskWnxUz55yTbyH8Z
+        GuXiZZQCPCOveHOFk/ekx9U=
+X-Google-Smtp-Source: APXvYqyH7bGaVBWLSU8sEzfL/N45LAWNBbDKUHxF98WHxf0lYev6I/BUIG/ZR/mT8bKm9nE2BGn1Zw==
+X-Received: by 2002:a25:d794:: with SMTP id o142mr9107179ybg.384.1565589567579;
+        Sun, 11 Aug 2019 22:59:27 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id e12sm24721471ywe.85.2019.08.11.22.59.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 11 Aug 2019 22:59:26 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        intel-wired-lan@lists.osuosl.org (moderated list:INTEL ETHERNET DRIVERS),
+        netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] e1000: fix memory leaks
+Date:   Mon, 12 Aug 2019 00:59:21 -0500
+Message-Id: <1565589561-5910-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In e1000_set_ringparam(), 'tx_old' and 'rx_old' are not deallocated if
+e1000_up() fails, leading to memory leaks. Refactor the code to fix this
+issue.
 
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ drivers/net/ethernet/intel/e1000/e1000_ethtool.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-On 09/08/2019 13.00, Tomi Valkeinen wrote:
-> Here's my version.
-> 
-> From c258309e36fc86076db155aead03a3900b96c3d4 Mon Sep 17 00:00:00 2001
-> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Date: Fri, 9 Aug 2019 09:54:49 +0300
-> Subject: [PATCH] drm/omap: ensure we have a valid dma_mask
-> 
-> The omapdrm driver uses dma_set_coherent_mask(), but that's not enough
-> anymore when LPAE is enabled.
-> 
-> From Christoph Hellwig <hch@lst.de>:
-> 
-> The traditional arm DMA code ignores, but the generic dma-direct/swiotlb
-> has stricter checks and thus fails mappings without a DMA mask.  As we
-> use swiotlb for arm with LPAE now, omapdrm needs to catch up and
-> actually set a DMA mask.
-> 
-> Change the dma_set_coherent_mask() call to
-> dma_coerce_mask_and_coherent() so that the dev->dma_mask is also set.
+diff --git a/drivers/net/ethernet/intel/e1000/e1000_ethtool.c b/drivers/net/ethernet/intel/e1000/e1000_ethtool.c
+index a410085..2e07ffa 100644
+--- a/drivers/net/ethernet/intel/e1000/e1000_ethtool.c
++++ b/drivers/net/ethernet/intel/e1000/e1000_ethtool.c
+@@ -607,6 +607,7 @@ static int e1000_set_ringparam(struct net_device *netdev,
+ 	for (i = 0; i < adapter->num_rx_queues; i++)
+ 		rxdr[i].count = rxdr->count;
+ 
++	err = 0;
+ 	if (netif_running(adapter->netdev)) {
+ 		/* Try to get new resources before deleting old */
+ 		err = e1000_setup_all_rx_resources(adapter);
+@@ -627,14 +628,13 @@ static int e1000_set_ringparam(struct net_device *netdev,
+ 		adapter->rx_ring = rxdr;
+ 		adapter->tx_ring = txdr;
+ 		err = e1000_up(adapter);
+-		if (err)
+-			goto err_setup;
+ 	}
+ 	kfree(tx_old);
+ 	kfree(rx_old);
+ 
+ 	clear_bit(__E1000_RESETTING, &adapter->flags);
+-	return 0;
++	return err;
++
+ err_setup_tx:
+ 	e1000_free_all_rx_resources(adapter);
+ err_setup_rx:
+@@ -646,7 +646,6 @@ static int e1000_set_ringparam(struct net_device *netdev,
+ err_alloc_tx:
+ 	if (netif_running(adapter->netdev))
+ 		e1000_up(adapter);
+-err_setup:
+ 	clear_bit(__E1000_RESETTING, &adapter->flags);
+ 	return err;
+ }
+-- 
+2.7.4
 
-Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-
-> Fixes: ad3c7b18c5b3 ("arm: use swiotlb for bounce buffering on LPAE configs")
-> Reported-by: "H. Nikolaus Schaller" <hns@goldelico.com>
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> 
-> diff --git a/drivers/gpu/drm/omapdrm/omap_drv.c b/drivers/gpu/drm/omapdrm/omap_drv.c
-> index 288c59dae56a..1bad0a2cc5c6 100644
-> --- a/drivers/gpu/drm/omapdrm/omap_drv.c
-> +++ b/drivers/gpu/drm/omapdrm/omap_drv.c
-> @@ -669,7 +669,7 @@ static int pdev_probe(struct platform_device *pdev)
->  	if (omapdss_is_initialized() == false)
->  		return -EPROBE_DEFER;
->  
-> -	ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
-> +	ret = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
->  	if (ret) {
->  		dev_err(&pdev->dev, "Failed to set the DMA mask\n");
->  		return ret;
-> 
-> 
-> 
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
