@@ -2,120 +2,106 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A33A8C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E477C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3CE20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BD0420684
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:56:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="2MsEqrq6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GvH5lrvI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfHLUyq (ORCPT
+        id S1727021AbfHLU4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 16:54:46 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41183 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbfHLUyq (ORCPT
+        Mon, 12 Aug 2019 16:56:09 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33830 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726757AbfHLU4H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 16:54:46 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 196so3135366pfz.8
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 13:54:45 -0700 (PDT)
+        Mon, 12 Aug 2019 16:56:07 -0400
+Received: by mail-ot1-f68.google.com with SMTP id n5so164330710otk.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 13:56:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=G96ttrylkozavtp+GkCFPZaZpJ1CXYrccgmyLzpILSM=;
-        b=2MsEqrq6jeAHonuDnFidSEMvA40eV2EV9rHP09a8PVmfQV2q1l2rUXiOBofFeJytCi
-         yI+eiJfH2QzC7hIdvHRPsVJrkoZa71GBYet+8I26skuXpSKSI6mp1hI99ctHa29GprZ2
-         D/4QHSTBBh999SSdtRaZg4Rga9dfc1HV1AYHPPnxvfQKvLeYaRfUTi4mGfAxKSdbp0xQ
-         xRoZd/5mUSybTsWNHCDHg3TkIxncgGBdxcipbrzEf7yrtBKbhoA2r8VNePoJpE/r4e0E
-         Y6Id0y55Va4n6Rzm1NfozTcxT848JRvEm9+JoESTp70CMatneEjveslZJC4XPk6RIZqy
-         O17Q==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yEhYtlqx3isPppAlKvPH5QInxYeigAvCLguvPFMHc8U=;
+        b=GvH5lrvIAAKcYun7yRC8SDdua3RI8viU0eBaf+6otOFBpCpzupg3pkPDPUEy/1xrXQ
+         OPqAc6S9iobVBwK5a/Afj+iPegbRa257wSViB6S2zob3GV+yqTaTUsRudTC6kOE/dP2d
+         rUAqbFjYxnpJHQ+HL/c//eTP1JQ8jj/+sZ8dLP1nGltc0R54UGZNetLNCQFvNYGvAgf6
+         QHdoH35fdNjFsTRPNUBHzAz5Wni8BNL0469msCrLu5GMx2oACcBLf2uNZwV/rlxujwWL
+         rQcOOp1gZC/2dYVqK2HspIzHHbarzQf1+k1VcCnoWLDbNO7Im/4ofxUWqlENdr6CIVpU
+         CXXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=G96ttrylkozavtp+GkCFPZaZpJ1CXYrccgmyLzpILSM=;
-        b=RVQzhN3PZkOB/m3GGO2KPvojmYrqlqLQ81Cb3h1cia8ylR7nKn4RK3f/ssHGe8OtB1
-         7Fxk68uIV0AU5nIX+AT4n5QkBTX0Z1ySvyTszUs5hDZen1cBMK8UVjBpQhbB9L52w5vb
-         MEh85e9yDR5tPg44kSrXUlSILuaIs1SYvXKObZHV8HKCAuHwz/LwGnW9jtGUSTE919qQ
-         oox2NsHvIqe5J92qOhZM7ukg2BK7hhguB2a9aspv5UGodKh05K+ljQEgSK6XWt4Kgi2R
-         J0Z/xqeY2x2utdEmLRVWaWE7b5TjJC7L2x/8y7b0L0p8BmrcMZei17LrIBcXgzTvmLD0
-         ijow==
-X-Gm-Message-State: APjAAAUx//2M5YA5Aa+9umO4HmZDjDspeNhAG5Kv2YEtfT6zO1DVASCF
-        QCbWMmL08UQUIToaZaxL/gownQ==
-X-Google-Smtp-Source: APXvYqzbET0UNtAEOW/tFOjsj6Fj901cwmJjrYlflO9pmbo1TxhTMwyLzIaz0Ye07PH9P2f/B/glkw==
-X-Received: by 2002:a62:f245:: with SMTP id y5mr3845900pfl.156.1565643285235;
-        Mon, 12 Aug 2019 13:54:45 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:14bb:580e:e4d6:b3a8])
-        by smtp.gmail.com with ESMTPSA id cx22sm405480pjb.25.2019.08.12.13.54.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 13:54:44 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] arm64: g12a: add support for DVFS
-In-Reply-To: <7hk1bn43fq.fsf@baylibre.com>
-References: <20190729132622.7566-1-narmstrong@baylibre.com> <7hwofrh1md.fsf@baylibre.com> <7hk1bn43fq.fsf@baylibre.com>
-Date:   Mon, 12 Aug 2019 13:54:43 -0700
-Message-ID: <7hpnla14vg.fsf@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yEhYtlqx3isPppAlKvPH5QInxYeigAvCLguvPFMHc8U=;
+        b=B4As0mJdZeZi2uk+nj/lVRwd0AyzXOSdXjKg/k7lEa/if50YdTKDOj2+UtYSxzsN0p
+         Y8ZHq39g+jUKHOsfeAoGoGAxx8bTVjgSmsw7nZRQ1hpyXUDEE3GMvZbluzap0v9Ehi97
+         xiCNAZkfqehmm9kDND+EQBTrtGFw+NoP1y5V73KgnJG5c8N7eHjift0ClbMN+O87I14p
+         ZN1Y5WM6rOS6NQLQKdnjnyUHceq+JaRIbdGfnUwbOMQBBa/DDzhG53sPRIloLfYj1FA7
+         jOZCcVWvZBIA53LKO0jTODS9MYze558MW4fkOaIsQN8p8JWY0/I1/AhJa1ipBLHXQoGF
+         9cyA==
+X-Gm-Message-State: APjAAAUx6xx6Qjz1WlZm1TDdfDLWnsn+Er2hGXlYOhVMkcpxbHpguTs9
+        ACqYhzYr5crsGIF5b7FEetFl3D4cKy6sKXH8CgEkuw==
+X-Google-Smtp-Source: APXvYqxwVUDUJKPykTlJoJIAe7teD9eBcVqKjT6eveMf2e+O5c92wWdS07aWZ62aimqSth0qIbY0i9WcKyYJFxWO15s=
+X-Received: by 2002:a02:cb51:: with SMTP id k17mr4219145jap.4.1565643366183;
+ Mon, 12 Aug 2019 13:56:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190808005255.106299-1-egranata@chromium.org> <20190810081540.GA30426@infradead.org>
+In-Reply-To: <20190810081540.GA30426@infradead.org>
+From:   Enrico Granata <egranata@google.com>
+Date:   Mon, 12 Aug 2019 13:55:55 -0700
+Message-ID: <CAPR809tiAhWqrNz0E5KrFtn-QrMTKv7vQtYq=_mrOH0VWfi0Eg@mail.gmail.com>
+Subject: Re: [PATCH] vhost: do not reference a file that does not exist
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Enrico Granata <egranata@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        mst@redhat.com, jasowang@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        trivial@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kevin Hilman <khilman@baylibre.com> writes:
+Fair enough, yeah.
 
-> Kevin Hilman <khilman@baylibre.com> writes:
->
->> Neil Armstrong <narmstrong@baylibre.com> writes:
->>
->>> The G12A & G12B SoCs has kernel controllable CPU clocks and PWMs for
->>> voltage regulators.
->>>
->>> This patchsets moves the meson-g12a.dtsi to meson-g12-common.dtsi to simplify
->>> handling the G12A & G12B differences in the meson-g12a.dtsi & meson-g12b.dtsi
->>> files, like the OPPs and CPU nodes.
->>>
->>> Then G12A & G12B OPP tables are added, followed by the CPU voltages regulators
->>> in each boards DT.
->>>
->>> It was voluntary chosen to enabled DVFS (CPU regulator and CPU clocks) only
->>> in boards, to make sure only tested boards has DVFS enabled.
->>>
->>> This patchset :
->>> - moves the G12A DT to a common g12a-common dtsi
->>> - adds the G12A and G12B OPPs
->>> - enables DVFS on all supported boards
->>>
->>> Dependencies:
->>> - None
->>
->> Not quite.  The last patch to enable DVFS on odroid-n2 has a build-time
->> dependency on the clock series that adds the CPUB clock.
->>
->> I'll apply the rest of the series to v5.4/dt64 until there's a stable
->> clock tag I can use for the clocks.
->
-> In order to test this, I noticed another dependency needed for the PWM
-> regulators to work:
->
->    https://lore.kernel.org/linux-amlogic/20190729125838.6498-1-narmstrong@baylibre.com/
->
-> With that and the clock deps, it's working well on my odroid-n2.
->
-> Tested-by: Kevin Hilman <khilman@baylibre.com>
+I think what I found confusing was that the file had a precise
+(directly actionable in a file browser, if you will) path. If it was
+just listed as a filename, or a project name, it might have been more
+obvious that one shouldn't expect to find it within the kernel tree
+and just go look it up in your favorite search engine.
 
-After merging Jerome's tag for clk DT, I've queued this for v5.4,
+The right incantation to get your hands on that file is a web search,
+not a local file navigation, and to my perception a full and seemingly
+valid path pointed in the direction of doing the wrong thing.
+
+It's not a huge deal, obviously, and it may be that I was the only one
+confused by that. If so, feel free to disregard the patch.
 
 Thanks,
+- Enrico
 
-Kevin
+Thanks,
+- Enrico
+
+
+On Sat, Aug 10, 2019 at 1:15 AM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Wed, Aug 07, 2019 at 05:52:55PM -0700, egranata@chromium.org wrote:
+> > From: Enrico Granata <egranata@google.com>
+> >
+> > lguest was removed from the mainline kernel in late 2017.
+> >
+> > Signed-off-by: Enrico Granata <egranata@google.com>
+>
+> But this particular file even has an override in the script looking
+> for dead references, which together with the content of the overal
+> contents makes me thing the dangling reference is somewhat intentional.
