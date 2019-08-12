@@ -2,175 +2,133 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28717C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD29C32756
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F41202070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD8D0206C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:56:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="YVkwg8NI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfHLI4M (ORCPT
+        id S1727278AbfHLI4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 04:56:12 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:40435 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbfHLI4M (ORCPT
+        Mon, 12 Aug 2019 04:56:25 -0400
+Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:54120 "EHLO
+        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbfHLI4Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 04:56:12 -0400
-X-Originating-IP: 86.250.200.211
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id E3E8460006;
-        Mon, 12 Aug 2019 08:56:04 +0000 (UTC)
-Date:   Mon, 12 Aug 2019 10:56:04 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, wens@csie.org, mchehab+samsung@kernel.org,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 02/18] dt-bindings: thermal: add binding document for
- h6 thermal controller
-Message-ID: <20190812085604.ozhl35wwm3ehlvqn@flea>
-References: <20190810052829.6032-1-tiny.windzz@gmail.com>
- <20190810052829.6032-3-tiny.windzz@gmail.com>
+        Mon, 12 Aug 2019 04:56:25 -0400
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Mon, 12 Aug 2019 04:56:24 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1565600184;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=9ddt8p1x9c7vbOfw0mclslg4q+Z34NYzRueRbs1+UkU=;
+  b=YVkwg8NI9+t+ReHutfbmazeG181+gj/lsAwsSEzC5bIejq93nrYeCNiP
+   14sySFdkxsPWNsUlK5M7SYz58IVtnxbjlXb83WmFxXEIu12RaqAXuIh8P
+   LC6y2kEYaxlqRcf+6bb6kYZvdDy3m1Hm2N94dqOmHndxTHLoG+AO20E8S
+   8=;
+Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
+  receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa4.hc3370-68.iphmx.com: domain of
+  roger.pau@citrix.com designates 162.221.158.21 as permitted
+  sender) identity=mailfrom; client-ip=162.221.158.21;
+  receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83 ~all"
+Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: 2kSHKHm5HwQ9K+9+aCk8H5O3gYMiB2IUfZLmVfHUKEptE9LIH9+OD6maCgO3ZiIGmrovCFmIK5
+ PPeWKiBOqhF0O/FrUB6VJ0+d8fp+b2oLRON5ZckGESvAhEYkr9vuBubfJWJkF87dciK4evAC+x
+ HJPSsQxzctuHbmqJt2P99g3jzEhL0WiVbvl0+lITjxXj/DG5Bwn5DWFT09XV29Bzjpsy9EwPpn
+ ME/Yn4nYCbmyAeRNxKHa6rDy3eSVyYgc/276W+IMiylV9BKrrc0qF7K3N5d44K8TW+aoF9BhZ1
+ C4I=
+X-SBRS: 2.7
+X-MesageID: 4341947
+X-Ironport-Server: esa4.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.64,376,1559534400"; 
+   d="scan'208";a="4341947"
+Date:   Mon, 12 Aug 2019 10:49:11 +0200
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+CC:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "moderated list:XEN BLOCK SUBSYSTEM" <xen-devel@lists.xenproject.org>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] xen/blkback: fix memory leaks
+Message-ID: <20190812084911.25vfz6zu5omgtqqe@Air-de-Roger>
+References: <1565544202-3927-1-git-send-email-wenwen@cs.uga.edu>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4zhzclyt6oncb76d"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
-In-Reply-To: <20190810052829.6032-3-tiny.windzz@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1565544202-3927-1-git-send-email-wenwen@cs.uga.edu>
 User-Agent: NeoMutt/20180716
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Aug 11, 2019 at 12:23:22PM -0500, Wenwen Wang wrote:
+> In read_per_ring_refs(), after 'req' and related memory regions are
+> allocated, xen_blkif_map() is invoked to map the shared frame, irq, and
+> etc. However, if this mapping process fails, no cleanup is performed,
+> leading to memory leaks. To fix this issue, invoke the cleanup before
+> returning the error.
+> 
+> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 
---4zhzclyt6oncb76d
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks!
 
-On Sat, Aug 10, 2019 at 05:28:13AM +0000, Yangtao Li wrote:
-> This patch adds binding document for allwinner h6 thermal controller.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 > ---
->  .../bindings/thermal/sun8i-thermal.yaml       | 79 +++++++++++++++++++
->  1 file changed, 79 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
->
-> diff --git a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-> new file mode 100644
-> index 000000000000..e0973199ba3c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+>  drivers/block/xen-blkback/xenbus.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
+> index 3ac6a5d..b90dbcd 100644
+> --- a/drivers/block/xen-blkback/xenbus.c
+> +++ b/drivers/block/xen-blkback/xenbus.c
+> @@ -965,6 +965,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
+>  		}
+>  	}
+>  
+> +	err = -ENOMEM;
+>  	for (i = 0; i < nr_grefs * XEN_BLKIF_REQS_PER_PAGE; i++) {
+>  		req = kzalloc(sizeof(*req), GFP_KERNEL);
+>  		if (!req)
+> @@ -987,7 +988,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
+>  	err = xen_blkif_map(ring, ring_ref, nr_grefs, evtchn);
 
-We've used so far for the schemas the first compatible to introduce
-that controller as the filename, we should be consistent here. In that
-case that would be allwinner,sun8i-a23-ths.yaml
+You could also move the xen_blkif_map cal before the allocation loop,
+since there's nothing in xen_blkif_map that uses the memory allocated
+AFAICT, but I'm fine either way.
 
-> @@ -0,0 +1,79 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/thermal/sun8i-thermal.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Yangtao Li <tiny.windzz@gmail.com>
-> +
-> +description: |-
-> +  This describes the device tree binding for the Allwinner thermal
-> +  controller which measures the on-SoC temperatures.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - allwinner,sun50i-h6-ths
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: bus
-> +
-> +  "#thermal-sensor-cells":
-> +    const: 1
-> +
-> +  nvmem-cells:
+Acked-by: Roger Pau Monné <roger.pau@citrix.com>
 
-You need a maxItems here too
-
-> +    description: ths calibrate data
-
-What about something like this:
-
-Calibration data for the thermal sensor
-
-> +
-> +  nvmem-cell-names:
-> +    const: calib
-
-I'm not sure we need a abbreviation here, calibration would be more
-explicit
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reset
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +  - "#thermal-sensor-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    ths: ths@5070400 {
-> +        compatible = "allwinner,sun50i-h6-ths";
-> +        reg = <0x05070400 0x100>;
-> +        clocks = <&ccu CLK_BUS_THS>;
-> +        clock-names = "bus";
-> +        resets = <&ccu RST_BUS_THS>;
-> +        interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-
-Those examples won't compile.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---4zhzclyt6oncb76d
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVEppAAKCRDj7w1vZxhR
-xbePAQD4oGzekU98J4bCgNXtImN3X9EeDQ3DpYjvOJSUQtIlZgEAnRIw2ceIxFC7
-AomJrBOwFCYE3Ly30TnJfIXLEPZvYAU=
-=Si6e
------END PGP SIGNATURE-----
-
---4zhzclyt6oncb76d--
+Roger.
