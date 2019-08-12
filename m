@@ -2,121 +2,77 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DD3C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F0EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 895642070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:53:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gL1S3cqa"
+	by mail.kernel.org (Postfix) with ESMTP id 244C82070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:54:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbfHLIxh (ORCPT
+        id S1727225AbfHLIyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 04:53:37 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46733 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbfHLIxh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 04:53:37 -0400
-Received: by mail-wr1-f68.google.com with SMTP id z1so103858602wru.13;
-        Mon, 12 Aug 2019 01:53:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=seSi3n95uUD8W4p/6j5kcYSqF/k8upBA9PgsWMWJ7bo=;
-        b=gL1S3cqaH2kcFGJ+D0mmDlLbZNLWmyvKbnXOS3cN+w2qXfmjF6ORunVFU3P5LrNb4v
-         2fG8te6m8bi+vV6geLz39oHTVCPBZNrtBu6kQHNo9wVxIHuLfcRiSQVjbM5Ukyk4cTTl
-         RG6IJtRV79vTLhpLqOLTf6hkPxW52XEBx8UAYsF5HW9CNh2YlIusPHzj/PK5mQDnPoL1
-         92pQgCtFLsWx29TEhrMOI31ucZ21t1AhMzZpSDk9/vBdot2fzFHDur6+vOLzfu9jfiMs
-         42ZUHIs0EjQu3InmSY0/l8XH35Q2XuNCmvMjBGtNnlUwQuNuqjcZsM9/SPRLaNyDUNQ0
-         zYNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=seSi3n95uUD8W4p/6j5kcYSqF/k8upBA9PgsWMWJ7bo=;
-        b=B9UmRfsXX7jGpEb5guAXQZVyLl6bF5UIQ+lrfnl9ZlAKUdCsPaOlR/w5ypmWubdwXN
-         DfBim6JofAayAJdLJNURawmjAsrh5Sb2lGT6kpit8fDBhZ8Lf9odEGv9dbhrE9iA20X2
-         8SAGu4ug9HdJDnU+0CZiKdCawrn20dqDOFFgv2rHzCsM8Ift8913HJiDDMsDc4lkQUv5
-         Wnuk5tWcRfrv9wTDvzDyLxzW/52FHBvVVNJ5/MO09GBz/BC+OMpY/m2+GT+xYzfp6Uqr
-         81a5TKVUlcxL4kb5UhbFzxpsmQPaEkyZ8HqGOeT/qJ/ScSYWH3SJnPwn+DX7ProPymrF
-         oYbw==
-X-Gm-Message-State: APjAAAUy7Q39ixxyfs7bI/geuGuOsO887oO6Jy13NKvMf0i5WO5NNO2C
-        WdGkdsNgkQF2RhVs/+pWqxccytQJ
-X-Google-Smtp-Source: APXvYqwdVmUaxgGtGQM8j0YJJLJuWAoTqInIoMHALirw91ZoA/TbTRW80piD15HwmOFiqFp8ZbLhig==
-X-Received: by 2002:a05:6000:14b:: with SMTP id r11mr39722594wrx.196.1565600015270;
-        Mon, 12 Aug 2019 01:53:35 -0700 (PDT)
-Received: from ?IPv6:2a00:23c4:1c64:3600:ef32:9810:b6a2:ebe? ([2a00:23c4:1c64:3600:ef32:9810:b6a2:ebe])
-        by smtp.googlemail.com with ESMTPSA id o9sm1305900wrj.17.2019.08.12.01.53.34
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 01:53:34 -0700 (PDT)
-Subject: Re: [PATCH] media: docs-rst: Clarify duration of LP-11 mode
-To:     Steve Longerbeam <slongerbeam@gmail.com>,
-        linux-media@vger.kernel.org
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190811173621.20454-1-slongerbeam@gmail.com>
-From:   Ian Arkver <ian.arkver.dev@gmail.com>
-Message-ID: <3f31cde6-8faf-f9a0-626e-dc995260a640@gmail.com>
-Date:   Mon, 12 Aug 2019 09:53:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190811173621.20454-1-slongerbeam@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
+        Mon, 12 Aug 2019 04:54:25 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:58700 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726495AbfHLIyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 04:54:24 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C60F12002FB;
+        Mon, 12 Aug 2019 10:54:20 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1EE902002DF;
+        Mon, 12 Aug 2019 10:54:16 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0D067402D2;
+        Mon, 12 Aug 2019 16:54:09 +0800 (SGT)
+From:   Anson.Huang@nxp.com
+To:     wim@linux-watchdog.org, linux@roeck-us.net, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] watchdog: imx_sc: Remove unnecessary error log
+Date:   Mon, 12 Aug 2019 16:44:34 +0800
+Message-Id: <20190812084434.13316-1-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+From: Anson Huang <Anson.Huang@nxp.com>
 
-On 11/08/2019 18:36, Steve Longerbeam wrote:
-> Add a sentence that makes it more clear when the CSI-2 transmitter
-> must, if possible, exit LP-11 mode. That is, maintain LP-11 mode
-> until stream on, at which point the transmitter activates the clock
-> lane and transition to HS mode.
-> 
-> Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-> ---
->   Documentation/media/kapi/csi2.rst | 10 +++++++---
->   1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/media/kapi/csi2.rst b/Documentation/media/kapi/csi2.rst
-> index a7e75e2eba85..6cd1d4b0df17 100644
-> --- a/Documentation/media/kapi/csi2.rst
-> +++ b/Documentation/media/kapi/csi2.rst
-> @@ -49,9 +49,13 @@ where
->   
->   The transmitter drivers must, if possible, configure the CSI-2
->   transmitter to *LP-11 mode* whenever the transmitter is powered on but
-> -not active. Some transmitters do this automatically but some have to
-> -be explicitly programmed to do so, and some are unable to do so
-> -altogether due to hardware constraints.
-> +not active, and maintain *LP-11 mode* until stream on. Only until
+An error message is already displayed by watchdog_register_device()
+when failed, so no need to have error log again for failure of
+calling devm_watchdog_register_device().
 
-s/until/at/ perhaps?
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/watchdog/imx_sc_wdt.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Regards,
-Ian
-> +stream on should the transmitter activate the clock on the clock lane
-> +and transition to *HS mode*.
-> +
-> +Some transmitters do this automatically but some have to be explicitly
-> +programmed to do so, and some are unable to do so altogether due to
-> +hardware constraints.
->   
->   Stopping the transmitter
->   ^^^^^^^^^^^^^^^^^^^^^^^^
-> 
+diff --git a/drivers/watchdog/imx_sc_wdt.c b/drivers/watchdog/imx_sc_wdt.c
+index 78eaaf7..9260475 100644
+--- a/drivers/watchdog/imx_sc_wdt.c
++++ b/drivers/watchdog/imx_sc_wdt.c
+@@ -175,11 +175,8 @@ static int imx_sc_wdt_probe(struct platform_device *pdev)
+ 	watchdog_stop_on_unregister(wdog);
+ 
+ 	ret = devm_watchdog_register_device(dev, wdog);
+- 
+- 	if (ret) {
+- 		dev_err(dev, "Failed to register watchdog device\n");
++	if (ret)
+  		return ret;
+- 	}
+  
+ 	ret = imx_scu_irq_group_enable(SC_IRQ_GROUP_WDOG,
+ 				       SC_IRQ_WDOG,
+-- 
+2.7.4
+
