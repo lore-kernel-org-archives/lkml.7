@@ -2,121 +2,201 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D700C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A643AC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3CDB2063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D7C92063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:54:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MURQZflg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfHLXxm (ORCPT
+        id S1727068AbfHLXyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 19:53:42 -0400
-Received: from mga05.intel.com ([192.55.52.43]:48957 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726453AbfHLXxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 19:53:42 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 16:53:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,379,1559545200"; 
-   d="scan'208";a="181018165"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga006.jf.intel.com with ESMTP; 12 Aug 2019 16:53:41 -0700
-Date:   Mon, 12 Aug 2019 16:53:41 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, mst@redhat.com, rkrcmar@redhat.com,
-        jmattson@google.com
-Subject: Re: [PATCH v6 4/8] KVM: VMX: Pass through CET related MSRs to Guest
-Message-ID: <20190812235341.GG4996@linux.intel.com>
-References: <20190725031246.8296-1-weijiang.yang@intel.com>
- <20190725031246.8296-5-weijiang.yang@intel.com>
+        Mon, 12 Aug 2019 19:54:37 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46892 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726578AbfHLXyh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 19:54:37 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z17so47325350otk.13;
+        Mon, 12 Aug 2019 16:54:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w2kdR+7b7KvFC+HWFUinAh+s80F0DWNtdCahrnarn44=;
+        b=MURQZflgt53gZwpL/adUQPWglHlq+Vte6KXRI0z/ItnHLIbuIWVx+AHjTIX3e2/2XJ
+         AgQauFkwH8PiW27qaftBzb8SjEZ22PQqEWa+nCPvevt0Be+071pvDuvfrffhPLtBRpdA
+         LBIdY9YYHhtIhRwH3KeCIhyxenjmm3/uupxNakiv2kKJarsmfSyGbsbA9DFnwaS0ukVe
+         W1bFdGY9LnSQmBVakQlpzuluvXvyRyG+GjF+BMnQ3AsRKnDVSirB6IyXN29SEnjYM10Q
+         Kg+r75M1tzmCtWw+PxSZkLBjos7xfe2rDFrJIyNyazO4H6GArHp+JAU+pZqjWawZp4oF
+         m2ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w2kdR+7b7KvFC+HWFUinAh+s80F0DWNtdCahrnarn44=;
+        b=V9s9vJUc2ceaccAPpSEc85odBC0MXUNSVC7Y4m6nL8EsmlzVI69PnHsPK1oawq8Dcy
+         tadoWeuWmIjF4Id7G8mKWnQTk0E131wfZ0sytTC8YZZPfbM240OReedPywq/8+ruEM+L
+         nS8GjYFjrJ8kA3qt4q+SYey8TMBQ+lOwIuvPI4RqiH98t8LviB/JYqxQ6T9OR2/+xnem
+         LktKRuwXUKpYRiaGiNYnH86+TkMc7zj+HFD/28YfROYZB4CSP9Xhl5z5+b3xbIfQnmUz
+         o6ur5QC3VTQZ4Xc0k28QjI2orut7QjAtsMGPZyn3MgWqiUf04rC13P0LqSwybm8VVY0Y
+         j9kg==
+X-Gm-Message-State: APjAAAUlFqjsrnlMsd8bS5hT+xo5eUXNU26lIUY+V8SNHLO3icvuggbN
+        Ic8cC6txMZu5vadJs3QZf649/DDN1uFhdrzni7w=
+X-Google-Smtp-Source: APXvYqz72zUtIykO8D1IdH6U+dE5fed0U7T2C3hqJGnZx13Lu2B8gFOyDxVqs3R/+r4Eq6F8rMwsnza3cbCy+u/sHjs=
+X-Received: by 2002:a05:6830:1f0b:: with SMTP id u11mr23846230otg.263.1565654075918;
+ Mon, 12 Aug 2019 16:54:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725031246.8296-5-weijiang.yang@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190810052829.6032-1-tiny.windzz@gmail.com> <20190810052829.6032-9-tiny.windzz@gmail.com>
+ <CA+E=qVfp-rProxOwX__J6jM-pZ9g_SmeuOCOgvC_5DJVQw4OGw@mail.gmail.com> <CAEExFWubLqtPZ=ZKJTCb6x2-PeYebXb3sr-t-XvtrLJTRiUU1A@mail.gmail.com>
+In-Reply-To: <CAEExFWubLqtPZ=ZKJTCb6x2-PeYebXb3sr-t-XvtrLJTRiUU1A@mail.gmail.com>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Mon, 12 Aug 2019 16:54:15 -0700
+Message-ID: <CA+E=qVf9V9iTvCfXXyjqKeviCJOvYpKUO8qw6cQsKqoaRmdKYQ@mail.gmail.com>
+Subject: Re: [PATCH v5 08/18] thermal: sun8i: support mod clocks
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan.Cameron@huawei.com,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 11:12:42AM +0800, Yang Weijiang wrote:
-> CET MSRs pass through Guest directly to enhance performance.
-> CET runtime control settings are stored in MSR_IA32_{U,S}_CET,
-> Shadow Stack Pointer(SSP) are stored in MSR_IA32_PL{0,1,2,3}_SSP,
-> SSP table base address is stored in MSR_IA32_INT_SSP_TAB,
-> these MSRs are defined in kernel and re-used here.
-> 
-> MSR_IA32_U_CET and MSR_IA32_PL3_SSP are used for user mode protection,
-> the contents could differ from process to process, therefore,
-> kernel needs to save/restore them during context switch, it makes
-> sense to pass through them so that the guest kernel can
-> use xsaves/xrstors to operate them efficiently. Other MSRs are used
-> for non-user mode protection. See CET spec for detailed info.
-> 
-> The difference between CET VMCS state fields and xsave components is that,
-> the former used for CET state storage during VMEnter/VMExit,
-> whereas the latter used for state retention between Guest task/process
-> switch.
-> 
-> Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> ---
->  arch/x86/kvm/vmx/vmx.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index ce1d6fe21780..ce5d1e45b7a5 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -6952,6 +6952,7 @@ static void update_intel_pt_cfg(struct kvm_vcpu *vcpu)
->  static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
->  {
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> +	unsigned long *msr_bitmap;
->  
->  	if (cpu_has_secondary_exec_ctrls()) {
->  		vmx_compute_secondary_exec_control(vmx);
-> @@ -6973,6 +6974,19 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
->  	if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
->  			guest_cpuid_has(vcpu, X86_FEATURE_INTEL_PT))
->  		update_intel_pt_cfg(vcpu);
-> +
-> +	msr_bitmap = vmx->vmcs01.msr_bitmap;
-> +
-> +	if (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-> +	    guest_cpuid_has(vcpu, X86_FEATURE_IBT)) {
+On Mon, Aug 12, 2019 at 4:46 PM Frank Lee <tiny.windzz@gmail.com> wrote:
+>
+> HI Vasily,
+>
+> On Sat, Aug 10, 2019 at 2:17 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+> >
+> > On Fri, Aug 9, 2019 at 10:31 PM Yangtao Li <tiny.windzz@gmail.com> wrote:
+> > >
+> > > H3 has extra clock, so introduce something in ths_thermal_chip/ths_device
+> > > and adds the process of the clock.
+> > >
+> > > This is pre-work for supprt it.
+> > >
+> > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > > ---
+> > >  drivers/thermal/sun8i_thermal.c | 17 ++++++++++++++++-
+> > >  1 file changed, 16 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+> > > index b934bc81eba7..6f4294c2aba7 100644
+> > > --- a/drivers/thermal/sun8i_thermal.c
+> > > +++ b/drivers/thermal/sun8i_thermal.c
+> > > @@ -54,6 +54,7 @@ struct tsensor {
+> > >  };
+> > >
+> > >  struct ths_thermal_chip {
+> > > +       bool            has_mod_clk;
+> > >         int             sensor_num;
+> > >         int             offset;
+> > >         int             scale;
+> > > @@ -69,6 +70,7 @@ struct ths_device {
+> > >         struct regmap                           *regmap;
+> > >         struct reset_control                    *reset;
+> > >         struct clk                              *bus_clk;
+> > > +       struct clk                              *mod_clk;
+> > >         struct tsensor                          sensor[MAX_SENSOR_NUM];
+> > >  };
+> > >
+> > > @@ -274,6 +276,12 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
+> > >         if (IS_ERR(tmdev->bus_clk))
+> > >                 return PTR_ERR(tmdev->bus_clk);
+> > >
+> > > +       if (tmdev->chip->has_mod_clk) {
+> > > +               tmdev->mod_clk = devm_clk_get(&pdev->dev, "mod");
+> > > +               if (IS_ERR(tmdev->mod_clk))
+> > > +                       return PTR_ERR(tmdev->mod_clk);
+> > > +       }
+> > > +
+> > >         ret = reset_control_deassert(tmdev->reset);
+> > >         if (ret)
+> > >                 return ret;
+> > > @@ -282,12 +290,18 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
+> > >         if (ret)
+> > >                 goto assert_reset;
+> > >
+> > > -       ret = sun50i_ths_calibrate(tmdev);
+> > > +       ret = clk_prepare_enable(tmdev->mod_clk);
+> >
+> > You have to set rate of modclk before enabling it since you can't rely
+> > on whatever bootloader left for you.
+> >
+> > Also I found that parameters you're using for PC_TEMP_PERIOD, ACQ0 and
+> > ACQ1 are too aggressive and may result in high interrupt rate to the
+> > point when it may stall RCU. I changed driver a bit to use params from
+> > Philipp Rossak's work (modclk set to 4MHz, PC_TEMP_PERIOD is 7, ACQ0
+> > is 255, ACQ1 is 63) and it fixed RCU stalls for me, see [1] for
+> > details.
+>
+> Why is the RCU stall happening, is it caused by a deadlock?
+> Can you provide log information and your configuration?
+> I am a bit curious.
 
-These should be exposed to the guest if and only if they're supported in
-the host and guest, i.e. kvm_supported_xss() needs to be checked.  And,
-again assuming USER and KERNEL can be virtualized independently, the logic
-needs to account for exposting USER but KERNEL and vice versa.
+It's not deadlock, I believe it just can't handle that many interrupts
+when running at lowest CPU frequency. Even with Philipp's settings
+there's ~20 interrupts a second from ths. I don't remember how many
+interrupts were there with your settings.
 
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_U_CET, MSR_TYPE_RW);
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_S_CET, MSR_TYPE_RW);
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_INT_SSP_TAB, MSR_TYPE_RW);
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL0_SSP, MSR_TYPE_RW);
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL1_SSP, MSR_TYPE_RW);
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL2_SSP, MSR_TYPE_RW);
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL3_SSP, MSR_TYPE_RW);
+Unfortunately there's nothing interesting in backtraces, I'm using
+Pine64-LTS board.
 
-The SSP MSRs should only be passed through if the guest has SHSTK, e.g.
-KVM should intercept RDMSR and WRMSR to inject #GP in those cases.
-
-> +	}
->  }
->  
->  static void vmx_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
-> -- 
-> 2.17.2
-> 
+> Thx,
+> Yangtao
+>
+> >
+> > [1] https://github.com/anarsoul/linux-2.6/commit/46b8bb0fe2ccd1cd88fa9181a2ecbf79e8d513b2
+> >
+> >
+> > >         if (ret)
+> > >                 goto bus_disable;
+> > >
+> > > +       ret = sun50i_ths_calibrate(tmdev);
+> > > +       if (ret)
+> > > +               goto mod_disable;
+> > > +
+> > >         return 0;
+> > >
+> > > +mod_disable:
+> > > +       clk_disable_unprepare(tmdev->mod_clk);
+> > >  bus_disable:
+> > >         clk_disable_unprepare(tmdev->bus_clk);
+> > >  assert_reset:
+> > > @@ -395,6 +409,7 @@ static int sun8i_ths_remove(struct platform_device *pdev)
+> > >  {
+> > >         struct ths_device *tmdev = platform_get_drvdata(pdev);
+> > >
+> > > +       clk_disable_unprepare(tmdev->mod_clk);
+> > >         clk_disable_unprepare(tmdev->bus_clk);
+> > >         reset_control_assert(tmdev->reset);
+> > >
+> > > --
+> > > 2.17.1
+> > >
+> > >
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
