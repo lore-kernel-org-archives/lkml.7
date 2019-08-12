@@ -2,130 +2,98 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB4EC32757
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724B3C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A7DE208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 456E9214C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:22:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kMZeJErZ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="f4g55UqE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbfHLJVi (ORCPT
+        id S1727446AbfHLJWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 05:21:38 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38122 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727023AbfHLJVh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 05:21:37 -0400
-Received: by mail-wm1-f68.google.com with SMTP id m125so7053241wmm.3;
-        Mon, 12 Aug 2019 02:21:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BLDuAK08TKNLQJlZE4xf8scGpyyBOHsDCwJyjOgqjDg=;
-        b=kMZeJErZHjqdJUQN7g33dNHR1nwoiXVLmJqq01F4jhQBFYBx3125ontVaFbi6cuvTK
-         Ka6KmMxHTQ1oUxOEkUJAKx64OAagdEs65w1+8fupQX4wQ+TkHA+HA8Vz06GD9OfoVLoj
-         fFENiXdoXHLJ8/8hEqKl3gWckK/Ev+ys7buLOQ17WfmgbdHnBXJei9IboIoYKngFngFT
-         U2YSmAztCEzhz+QEVdOUvtiiRYBSAbZeW2ZzLLZaU/ugtHWp5a6RhFRoo5MxDsr8+YBW
-         S9obvYqSIMo7XgwkRP55kyMEW61I744YgRpOIm4ENPJ1aDkr7HRiOVjlhDQybFLWhw+X
-         XPfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BLDuAK08TKNLQJlZE4xf8scGpyyBOHsDCwJyjOgqjDg=;
-        b=Uy7T7nE5SO8DfNCHYi4svSdJYQV2VOwvjqFTePHEQdGc7IrdPmHRxPDcFloP7XGeB2
-         srS499YNMtWx1puCfAsXgQ+YPp6FbzTGy5WzLuazKCOvNn9efFlI4IIf+wVSq3dARSuK
-         q2M72IEFRTnwaCFUMQWtcuirVhOcfAh9Y/z4Q4GuWI22d0K7E72+ph58/OlpPc3zr1Ty
-         Grw/5/HlQneT3N0NZpYs1rPzbBgT7NpwGMwmV/j/+qa7/ebn0Cw1yu89AX84+aa+y2Sh
-         wew2Dwz7DrMsf1fiZohvFSRyRqMQDeLVxs0e2C+bt9n5uRyL6ZFtT5t5/riyBdPOkN2G
-         ES8g==
-X-Gm-Message-State: APjAAAXlq74+q9E3y7WDQ+CHlkBZkgVYjqBn3lvaXCqWClykRb1miPWP
-        ryeOmHuQolZ9ybf0K5z4qSQ=
-X-Google-Smtp-Source: APXvYqzkq/Kh/UDHkyDzpKpx3Xqc2ssuOI6RBB8doiDSlOyLTd0Ni+3KC1NGxxpPsyBZkUTThBxNrw==
-X-Received: by 2002:a7b:c453:: with SMTP id l19mr25845318wmi.106.1565601695283;
-        Mon, 12 Aug 2019 02:21:35 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id x20sm231084483wrg.10.2019.08.12.02.21.33
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 02:21:34 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 11:21:33 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v8 03/21] clk: tegra: divider: Save and restore divider
- rate
-Message-ID: <20190812092133.GE8903@ulmo>
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-4-git-send-email-skomatineni@nvidia.com>
+        Mon, 12 Aug 2019 05:22:04 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:48579 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727023AbfHLJWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 05:22:04 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 466VjP4FBJz9sN1;
+        Mon, 12 Aug 2019 19:22:01 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565601721;
+        bh=Ts0BS2lBSwZD9i7w2vfUNt/uLevPqGYZiTJy11OCM8Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=f4g55UqEoW8DKaZ58XlQAJMv7FNQhR238Ww/42Jej3QMJQ2AfqeDjfjWEtokCamIr
+         jyfZVVw2XNO0k9JKt4AOLlePbFRvKH/Jy9vO9s5kQTSJpYZ2ARetXIGogM98TVeXlE
+         q4LkUnDnUjOz2iBM8dWT0HhA/4nY0hMooWCnXCBals9p5s1m+LXvXqAggVWNmgNjQv
+         Ix848O6njUDUOZ5bOlCPlh3mtcg5djozcih/TDc51MIhTbA68E1P10PWN9QnSPalWI
+         iAo/toEFEpftD/bW7N5X8Gc1oE+uuAvCulid3cq4xxDppQV9vnp7doBDm6fJZkBpc0
+         BsnlQx2rJkOTg==
+Date:   Mon, 12 Aug 2019 19:21:47 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the slave-dma tree
+Message-ID: <20190812192147.5dd41ab7@canb.auug.org.au>
+In-Reply-To: <CAK8P3a0eOyD2iTFeLC1J95WMAwyzBJJ0S5nOb+Z_y9nUy=8=qg@mail.gmail.com>
+References: <20190812171411.31ec6ae3@canb.auug.org.au>
+        <CAK8P3a0eOyD2iTFeLC1J95WMAwyzBJJ0S5nOb+Z_y9nUy=8=qg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xJK8B5Wah2CMJs8h"
-Content-Disposition: inline
-In-Reply-To: <1565308020-31952-4-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: multipart/signed; boundary="Sig_/2ntkKCQ=Lv/uHWV.m3yc27U";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---xJK8B5Wah2CMJs8h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--Sig_/2ntkKCQ=Lv/uHWV.m3yc27U
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 08, 2019 at 04:46:42PM -0700, Sowjanya Komatineni wrote:
-> This patch implements context restore for clock divider.
->=20
-> During system suspend, core power goes off and looses the settings
-> of the Tegra CAR controller registers.
->=20
-> So on resume, clock dividers are restored back for normal operation.
->=20
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-divider.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+Hi Arnd,
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+On Mon, 12 Aug 2019 11:14:08 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> The warning is valid, I will send a fix.
 
---xJK8B5Wah2CMJs8h
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks.
+
+> I have never seen this message though, I guess the build system just intr=
+oduced
+> a check for this? I don't see where this would come from in next-20190809
+> (only checking with grep, not actually trying to build right now).
+
+Yeah, we had a version of this a week or so ago and it has come back
+today (I haven't done today's release yet).
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/2ntkKCQ=Lv/uHWV.m3yc27U
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1RL50ACgkQ3SOs138+
-s6GciRAAu7ihjAvzjleKr5l/wYMUx50GqCmlDbJPPj3jcAiRgKqgWMrvVdOgdbZp
-QdV017XzIRxpMkj8v62RKCOm/PlnAbbZ+a7RGu0qvGpMK5a4RnfrYHvyK+e+DaN4
-YSOYsPYSviDEb8kGhWGe5m6cVDaR8b6EZFhqMfNi3eFXp15+c1JZylmbHRlL0cU3
-EGlVEXewNcAseec8V4d8EXNEi2DZOKfq4l1hKiTr1HfHqw3RwJeXMF0mbv5DLKey
-H0LYXW+dDWn4SLGLOl4KxXh6TUi7pqhkT7Iu9Q8DSVa+LyuYS2wOcHewvDmnD6gD
-ELNQ1trgtsbz6SPpVNXVbvXDuYkI+Uzxla2Cs6I7zS2xK4tbQFUeHtSKrBc8cfK9
-UP3BQmVfpVR9OQmHUL+GrEiGB05CaYtIoZLOpFvv31XYjYaCy+MtvjnM0HjZGj+K
-sZIQ0hSIDGcWDlg+2K7PU3wL7PXOA4C95cVjPjqghkEhnoBP8jZ6qYSHCoZ+UKEC
-PhaQue7ePjTN3iSgqp0CGzUDN3+JRxS4MsYVbudTiwxAd+LYD0830r9IwDH2kIPE
-o4uWmo67u4pqaoMu3MP4Ll9hJiXur61rLMQXt6MQacvD3eG/bG6W5hP5l00bPEgA
-K8TMgeZWF8HtT2QNf7fyJKCzLIC6vV3/w6jtc0VP6EWvDYg3aDU=
-=9Mj2
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1RL6sACgkQAVBC80lX
+0GzU5ggAiWC5r5/x0iURbEy6t17fpXwyQ/WYtWPEDodz6X9XlXdEf+DegSXS3zKI
+gVpTfq0i4rUmZS4CQ98PcGPgz5eKG2KEtI+oty6yZjXb3ePL5Dtmzx16/76SkW1X
+JH37O2s9nWAKshQRMaTMHcTh70hZE+tD38uhL55Yt1QxZeanD65pmfL4c0YpGr1I
+ROPhf3sO5MqOe3KzKO3g8s9Dyf/y5PxGkbWzuiH+VdrWg/IBU82pv3nn0s88r2U/
+Wveq7M4CbSuaw8MCd3KAOD55ak5E/ldjrJVvfOtKlVhlpue4+b2qkCMYQX+9rCnJ
+F/6a44PPxJtUFb/Jps0prGzyWpS49w==
+=Jn29
 -----END PGP SIGNATURE-----
 
---xJK8B5Wah2CMJs8h--
+--Sig_/2ntkKCQ=Lv/uHWV.m3yc27U--
