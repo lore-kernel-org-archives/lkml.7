@@ -2,81 +2,214 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C5AC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 725FEC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E62D12087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 415862087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:36:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfHLIf7 (ORCPT
+        id S1727254AbfHLIgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 04:35:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53310 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727222AbfHLIf6 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 04:35:58 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 98A792A41;
-        Mon, 12 Aug 2019 08:35:58 +0000 (UTC)
-Received: from krava (unknown [10.43.17.33])
-        by smtp.corp.redhat.com (Postfix) with SMTP id AE9571D1;
-        Mon, 12 Aug 2019 08:35:56 +0000 (UTC)
-Date:   Mon, 12 Aug 2019 10:35:55 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v3] perf diff: Report noisy for cycles diff
-Message-ID: <20190812083555.GC11752@krava>
-References: <20190809233029.12265-1-yao.jin@linux.intel.com>
+        Mon, 12 Aug 2019 04:36:06 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:39531 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727222AbfHLIgF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 04:36:05 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hx5o6-0001lO-8V; Mon, 12 Aug 2019 10:35:58 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hx5o4-0005vW-EO; Mon, 12 Aug 2019 10:35:56 +0200
+Date:   Mon, 12 Aug 2019 10:35:56 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
+Subject: Re: [PATCH 2/2] pwm: sprd: Add Spreadtrum PWM support
+Message-ID: <20190812083556.dvprpwv6mjy3cjae@pengutronix.de>
+References: <6a38a3655bc8100764d85cb04dea5c2546a311e1.1565168564.git.baolin.wang@linaro.org>
+ <40127356a1acd1f2ff1be1d8a120b305a4e17af4.1565168564.git.baolin.wang@linaro.org>
+ <20190809091013.vguj4wty7qiab64t@pengutronix.de>
+ <CAMz4kuLQsrBWjta1s=ZRPgxUd0_+_f-GbJV138tccuMLg2XCLA@mail.gmail.com>
+ <20190809144124.3as3rtctlywxkudr@pengutronix.de>
+ <CAMz4ku+o6dCyxhR3-5yM+zr2nBpTQG5A8Pbnxpo7yRciwPbv3Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190809233029.12265-1-yao.jin@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 12 Aug 2019 08:35:58 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMz4ku+o6dCyxhR3-5yM+zr2nBpTQG5A8Pbnxpo7yRciwPbv3Q@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 10, 2019 at 07:30:29AM +0800, Jin Yao wrote:
+Hello Baolin,
 
-SNIP
+On Mon, Aug 12, 2019 at 03:29:07PM +0800, Baolin Wang wrote:
+> Hi Uwe,
+> 
+> On Fri, 9 Aug 2019 at 22:41, Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Fri, Aug 09, 2019 at 06:06:21PM +0800, Baolin Wang wrote:
+> > > On Fri, 9 Aug 2019 at 17:10, Uwe Kleine-König
+> > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > On Thu, Aug 08, 2019 at 04:59:39PM +0800, Baolin Wang wrote:
+> > > > > +static void sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> > > > > +                            struct pwm_state *state)
+> > > > > +{
+> > > > > +     struct sprd_pwm_chip *spc =
+> > > > > +             container_of(chip, struct sprd_pwm_chip, chip);
+> > > > > +     struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
+> > > > > +     u32 enabled, duty, prescale;
+> > > > > +     u64 tmp;
+> > > > > +     int ret;
+> > > > > +
+> > > > > +     ret = clk_bulk_prepare_enable(SPRD_PWM_NUM_CLKS, chn->clks);
+> > > > > +     if (ret) {
+> > > > > +             dev_err(spc->dev, "failed to enable pwm%u clocks\n",
+> > > > > +                     pwm->hwpwm);
+> > > > > +             return;
+> > > > > +     }
+> > > > > +
+> > > > > +     chn->clk_enabled = true;
+> > > > > +
+> > > > > +     duty = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_DUTY) & SPRD_PWM_REG_MSK;
+> > > > > +     prescale = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE) & SPRD_PWM_REG_MSK;
+> > > > > +     enabled = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_ENABLE) & SPRD_PWM_ENABLE_BIT;
+> > > > > +
+> > > > > +     /*
+> > > > > +      * According to the datasheet, the period_ns and duty_ns calculation
+> > > > > +      * formula should be:
+> > > > > +      * period_ns = 10^9 * (prescale + 1) * mod / clk_rate
+> > > > > +      * duty_ns = 10^9 * (prescale + 1) * duty / clk_rate
+> > > > > +      */
+> > > > > +     tmp = (prescale + 1) * 1000000000ULL * SPRD_PWM_MOD_MAX;
+> > > > > +     state->period = div64_u64(tmp, chn->clk_rate);
+> > > >
+> > > > This is not idempotent. If you apply the configuration that is returned
+> > > > here this shouldn't result in a reconfiguration.
+> > >
+> > > Since we may configure the  PWM in bootloader, so in kernel part we
+> > > should get current PWM state to avoid reconfiguration if state
+> > > configuration are same.
+> >
+> > This is also important as some consumers might do something like:
+> >
+> >         state = pwm_get_state(mypwm)
+> >         if (something):
+> >                 state->duty = 0
+> >         else:
+> >                 state->duty = state->period / 2
+> >         pwm_set_state(mypwm, state)
+> >
+> > and then period shouldn't get smaller in each step.
+> > (This won't happen as of now because the PWM framework caches the last
+> > state that was set and returns this for pwm_get_state. Still getting
+> > this right would be good.)
+> 
+> I understood your concern, but the period can be configured in
+> bootloader, we have no software things to save the accurate period.
 
-> +		if (vals[i] != 0)
-> +			return 0;
-> +	return 1;
-> +}
-> +
-> +static int print_cycles_spark(char *bf, int size, unsigned long *svals, u64 n)
-> +{
-> +	int len = n, printed;
-> +
-> +	if (len <= 1)
-> +		return 0;
-> +
-> +	if (len > NUM_SPARKS)
-> +		len = NUM_SPARKS;
-> +	if (all_zero(svals, len))
-> +		return 0;
-> +
-> +	printed = print_spark(bf, size, svals, len);
-> +	printed += scnprintf(bf + printed, size - printed, " ");
-> +
-> +	if (n > NUM_SPARKS)
-> +		printed += scnprintf(bf + printed, size - printed, "..");
+I don't understand what you're saying here. The bootloader configuring
+the hardware is a usual use-case. That's why we have the .get_state
+callback in the first place.
 
-will this '..' ever be printed? I can't see that even if I enlarge
-the column width..
+> Moreover I think I can change to use DIV_ROUND_CLOSET_ULL to keep the
+> accuracy.
 
-jirka
+DIV_ROUND_CLOSEST_ULL still doesn't match what the apply callback uses.
+With the lack of an official statement from the maintainer I'd prefer
+.apply to round down and implement .get_state such that
+
+	pwm_apply(pwm, pwm_get_state(pwm))
+
+is a no-op.
+ 
+> > > > > +
+> > > > > +                     dev_err(spc->dev, "failed to get channel clocks\n");
+> > > > > +                     return ret;
+> > > > > +             }
+> > > > > +
+> > > > > +             clk_pwm = chn->clks[1].clk;
+> > > >
+> > > > This 1 looks suspicious. Are you using all clocks provided in the dtb at
+> > > > all? You're not using i in the loop at all, this doesn't look right.
+> > >
+> > > Like I said above, each channel has 2 clocks: enable clock and pwm
+> > > clock, the 2nd clock of each channel's bulk clocks is the pwm clock,
+> > > which is used to set the source clock. I know this's not easy to read,
+> > > so do you have any good suggestion?
+> >
+> > Not sure this is easily possible to rework to make this clearer.
+> >
+> > Do these clks have different uses? e.g. one to enable register access
+> > and the other to enable the pwm output? If so just using
+> 
+> Yes.
+
+So assuming one of the clocks is for operation of the output and the
+other for accessing the registers, the latter can be disabled at the end
+of each callback?
+
+> > devm_clk_bulk_get isn't the right thing because you should be able know
+> > if clks[0] or clks[1] is the one you need to enable the output (or
+> > register access).
+> 
+> We've fixed the clock order in bulk clocks by the array
+> 'sprd_pwm_clks', maybe I should define one readable macro instead of
+> magic number.
+
+ack.
+
+> > > > > +             if (!clk_set_parent(clk_pwm, clk_parent))
+> > > > > +                     chn->clk_rate = clk_get_rate(clk_pwm);
+> > > > > +             else
+> > > > > +                     chn->clk_rate = SPRD_PWM_DEFAULT_CLK;
+> > > >
+> > > > I don't know all the clock framework details, but I think there are
+> > > > better ways to ensure that a given clock is used as parent for another
+> > > > given clock. Please read the chapter about "Assigned clock parents and
+> > > > rates" in the clock bindings and check if this could be used for the
+> > > > purpose here and so simplify the driver.
+> > >
+> > > Actually there are many other drivers set the parent clock like this,
+> > > and we want a default clock if failed to set the parent clock.
+> >
+> > These might be older than the clk framework capabilities, or the
+> > reviewers didn't pay attention to this detail; both shouldn't be a
+> > reason to not make it better here.
+> 
+> The clock framework supplies 'assigned-clocks' and
+> 'assigned-clock-parents' properties to set parent, but for our case we
+> still want to set a default clock rate if failed to set parent when
+> met some abnormal things.
+
+Without understanding the complete problem I'd say this is out of the
+area the driver should care about.
+ 
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
