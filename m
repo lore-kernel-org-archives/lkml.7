@@ -2,130 +2,186 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC46AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABA1C32750
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC5652067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:29:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="OMiVvuQ6"
+	by mail.kernel.org (Postfix) with ESMTP id 7E3DC2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:30:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727204AbfHLR3w (ORCPT
+        id S1727072AbfHLRa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 13:29:52 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50501 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfHLR3w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 13:29:52 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v15so313374wml.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 10:29:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ByFUgdhbenoqEac047fOWBGeHpky4WQIPNsQ5F/8hHw=;
-        b=OMiVvuQ6ojoYr2YaifiVWycNEMTTYrBGavkydOe6vRXCe5m9lxrGeQZD/i2qxrv3S6
-         +dxN1eFQvkk00T5cXg2ceO/GOTDj+MNPm959qjfJFzbl4DrPw6VLexlrq9ZhmPKLSf79
-         YyXON1FHSIP9zt2EHjOA+Ii8cCDWH1NA25tDA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ByFUgdhbenoqEac047fOWBGeHpky4WQIPNsQ5F/8hHw=;
-        b=JzcfCDUiHq64huXVmNHOhBX2MieaTVfoVzRhbblAvHusJQ6Y3L+dYQbz5pGYiok9G4
-         T8A6aKATHpi90raAhbc/tNRUHzpQypRH14WIygn1/71qigEX2LM0KM5dlgTXVcRQybpy
-         rMDRxoYyqE3K2nM1zPJzxLd5UIfdjeN99LViTdMS+oVDbkWP9dD5jpoaJkL3oK9YEn2P
-         p7FWfQXkO64638XJ1E5qRjdyIf5QgrWzjcydAESfE6wQMxjezm/UiKEdD+yYnBzFKgpl
-         P3IS3RGJXBvok8kzB27VuV64aENS6fU2+ufUmrUt5gKE2MbekGj8K/jhIKLIzqSqbS/9
-         K3Cg==
-X-Gm-Message-State: APjAAAXCCoRN6hnJNtVN0PLL8q9LxKayzvr33gBM+ocubSNsjD3LyidZ
-        yMWVy/p90ov5JPni1VgFogp5og==
-X-Google-Smtp-Source: APXvYqwffxgDJUFgKjRnlRgtgc57iuw+e8GldResFtDU49A9XNzUc1EaUB1YKilvT4b09fNs8Ut0Fw==
-X-Received: by 2002:a05:600c:24a:: with SMTP id 10mr422398wmj.7.1565630990279;
-        Mon, 12 Aug 2019 10:29:50 -0700 (PDT)
-Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id t14sm12277331wrv.12.2019.08.12.10.29.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 10:29:49 -0700 (PDT)
-Subject: Re: [PATCH v1 2/2] i2c: iproc: Add full name of devicetree node to
- adapter name
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lori Hikichi <lori.hikichi@broadcom.com>
-References: <1565235473-28461-1-git-send-email-rayagonda.kokatanur@broadcom.com>
- <1565235473-28461-3-git-send-email-rayagonda.kokatanur@broadcom.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <76f6d006-a0af-85ba-f893-f60e60bfc20d@broadcom.com>
-Date:   Mon, 12 Aug 2019 10:29:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 12 Aug 2019 13:30:57 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:37724 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725843AbfHLRa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 13:30:57 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hxE9l-0002sX-OJ; Mon, 12 Aug 2019 11:30:55 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hxE9j-0002PI-2E; Mon, 12 Aug 2019 11:30:51 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Date:   Mon, 12 Aug 2019 11:30:38 -0600
+Message-Id: <20190812173048.9186-5-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190812173048.9186-1-logang@deltatee.com>
+References: <20190812173048.9186-1-logang@deltatee.com>
 MIME-Version: 1.0
-In-Reply-To: <1565235473-28461-3-git-send-email-rayagonda.kokatanur@broadcom.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org, bhelgaas@google.com, hch@lst.de, jgg@mellanox.com, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, dan.j.williams@intel.com, epilmore@gigaio.com, sbates@raithlin.com, logang@deltatee.com, Christian.Koenig@amd.com, christian.koenig@amd.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v3 04/14] PCI/P2PDMA: Factor out __upstream_bridge_distance()
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is a prep patch to create a second level helper. There are no
+functional changes.
 
+The root complex whitelist code will be moved into this function in a
+subsequent patch.
 
-On 8/7/19 8:37 PM, Rayagonda Kokatanur wrote:
-> From: Lori Hikichi <lori.hikichi@broadcom.com>
-> 
-> Add the full name of the devicetree node to the adapter name.
-> Without this change, all adapters have the same name making it difficult
-> to distinguish between multiple instances.
-> The most obvious way to see this is to use the utility i2c_detect.
-> e.g. "i2c-detect -l"
-> 
-> Before
-> i2c-1 i2c Broadcom iProc I2C adapter I2C adapter
-> i2c-0 i2c Broadcom iProc I2C adapter I2C adapter
-> 
-> After
-> i2c-1 i2c Broadcom iProc (i2c@e0000) I2C adapter
-> i2c-0 i2c Broadcom iProc (i2c@b0000) I2C adapter
-> 
-> Now it is easy to figure out which adapter maps to a which DT node.
-> 
-> Signed-off-by: Lori Hikichi <lori.hikichi@broadcom.com>
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> ---
->   drivers/i2c/busses/i2c-bcm-iproc.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
-> index 19ef2b0..183b220 100644
-> --- a/drivers/i2c/busses/i2c-bcm-iproc.c
-> +++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-> @@ -922,7 +922,9 @@ static int bcm_iproc_i2c_probe(struct platform_device *pdev)
->   
->   	adap = &iproc_i2c->adapter;
->   	i2c_set_adapdata(adap, iproc_i2c);
-> -	strlcpy(adap->name, "Broadcom iProc I2C adapter", sizeof(adap->name));
-> +	snprintf(adap->name, sizeof(adap->name),
-> +		"Broadcom iProc (%s)",
-> +		of_node_full_name(iproc_i2c->device->of_node));
->   	adap->algo = &bcm_iproc_algo;
->   	adap->quirks = &bcm_iproc_i2c_quirks;
->   	adap->dev.parent = &pdev->dev;
-> 
+Link: https://lore.kernel.org/r/20190730163545.4915-5-logang@deltatee.com
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+---
+ drivers/pci/p2pdma.c | 88 ++++++++++++++++++++++++--------------------
+ 1 file changed, 48 insertions(+), 40 deletions(-)
 
-Looks good, thanks!
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index 8f0688201aec..600ba6a7aa11 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -296,47 +296,8 @@ static bool root_complex_whitelist(struct pci_dev *dev)
+ 	return false;
+ }
+ 
+-/*
+- * Find the distance through the nearest common upstream bridge between
+- * two PCI devices.
+- *
+- * If the two devices are the same device then 0 will be returned.
+- *
+- * If there are two virtual functions of the same device behind the same
+- * bridge port then 2 will be returned (one step down to the PCIe switch,
+- * then one step back to the same device).
+- *
+- * In the case where two devices are connected to the same PCIe switch, the
+- * value 4 will be returned. This corresponds to the following PCI tree:
+- *
+- *     -+  Root Port
+- *      \+ Switch Upstream Port
+- *       +-+ Switch Downstream Port
+- *       + \- Device A
+- *       \-+ Switch Downstream Port
+- *         \- Device B
+- *
+- * The distance is 4 because we traverse from Device A through the downstream
+- * port of the switch, to the common upstream port, back up to the second
+- * downstream port and then to Device B.
+- *
+- * Any two devices that cannot communicate using p2pdma will return
+- * PCI_P2PDMA_MAP_NOT_SUPPORTED.
+- *
+- * Any two devices that have a data path that goes through the host bridge
+- * will consult a whitelist. If the host bridges are on the whitelist,
+- * this function will return PCI_P2PDMA_MAP_THRU_HOST_BRIDGE.
+- *
+- * If either bridge is not on the whitelist this function returns
+- * PCI_P2PDMA_MAP_NOT_SUPPORTED.
+- *
+- * If a bridge which has any ACS redirection bits set is in the path,
+- * acs_redirects will be set to true. In this case, a list of all infringing
+- * bridge addresses will be populated in acs_list (assuming it's non-null)
+- * for printk purposes.
+- */
+ static enum pci_p2pdma_map_type
+-upstream_bridge_distance(struct pci_dev *provider, struct pci_dev *client,
++__upstream_bridge_distance(struct pci_dev *provider, struct pci_dev *client,
+ 		int *dist, bool *acs_redirects, struct seq_buf *acs_list)
+ {
+ 	struct pci_dev *a = provider, *b = client, *bb;
+@@ -416,6 +377,53 @@ upstream_bridge_distance(struct pci_dev *provider, struct pci_dev *client,
+ 	return PCI_P2PDMA_MAP_BUS_ADDR;
+ }
+ 
++/*
++ * Find the distance through the nearest common upstream bridge between
++ * two PCI devices.
++ *
++ * If the two devices are the same device then 0 will be returned.
++ *
++ * If there are two virtual functions of the same device behind the same
++ * bridge port then 2 will be returned (one step down to the PCIe switch,
++ * then one step back to the same device).
++ *
++ * In the case where two devices are connected to the same PCIe switch, the
++ * value 4 will be returned. This corresponds to the following PCI tree:
++ *
++ *     -+  Root Port
++ *      \+ Switch Upstream Port
++ *       +-+ Switch Downstream Port
++ *       + \- Device A
++ *       \-+ Switch Downstream Port
++ *         \- Device B
++ *
++ * The distance is 4 because we traverse from Device A through the downstream
++ * port of the switch, to the common upstream port, back up to the second
++ * downstream port and then to Device B.
++ *
++ * Any two devices that cannot communicate using p2pdma will return
++ * PCI_P2PDMA_MAP_NOT_SUPPORTED.
++ *
++ * Any two devices that have a data path that goes through the host bridge
++ * will consult a whitelist. If the host bridges are on the whitelist,
++ * this function will return PCI_P2PDMA_MAP_THRU_HOST_BRIDGE.
++ *
++ * If either bridge is not on the whitelist this function returns
++ * PCI_P2PDMA_MAP_NOT_SUPPORTED.
++ *
++ * If a bridge which has any ACS redirection bits set is in the path,
++ * acs_redirects will be set to true. In this case, a list of all infringing
++ * bridge addresses will be populated in acs_list (assuming it's non-null)
++ * for printk purposes.
++ */
++static enum pci_p2pdma_map_type
++upstream_bridge_distance(struct pci_dev *provider, struct pci_dev *client,
++		int *dist, bool *acs_redirects, struct seq_buf *acs_list)
++{
++	return __upstream_bridge_distance(provider, client, dist,
++					  acs_redirects, acs_list);
++}
++
+ static enum pci_p2pdma_map_type
+ upstream_bridge_distance_warn(struct pci_dev *provider, struct pci_dev *client,
+ 			      int *dist)
+-- 
+2.20.1
 
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
