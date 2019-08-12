@@ -2,73 +2,69 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B48B0C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD0EC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64CC82070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C152067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:31:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o2QA/lHt"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="mTXf7n2L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfHLT1w (ORCPT
+        id S1726877AbfHLTbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 15:27:52 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34737 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726681AbfHLT1v (ORCPT
+        Mon, 12 Aug 2019 15:31:48 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43379 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726681AbfHLTbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 15:27:51 -0400
-Received: by mail-ot1-f67.google.com with SMTP id n5so163333113otk.1;
-        Mon, 12 Aug 2019 12:27:51 -0700 (PDT)
+        Mon, 12 Aug 2019 15:31:47 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e12so19015967otp.10;
+        Mon, 12 Aug 2019 12:31:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ILsSYtoFc2CKUlsvQby1NfpnXmUVs1DoYSPvAsEfls8=;
-        b=o2QA/lHtWsZXoUWoPCY1fi2EbjP3gU2sfs7+RY7eESxVYX8lLeUmip9oXzJ7XGDJIR
-         MR0abaxb3jMRolf3wgB78dNbWcvM0hnBgRq22Ta8W21hxFjeSgc6TpXFToll2I/kqPvd
-         jghGveeNTsg30U1mIIgM4bo23kl3dE/Z1hrXuQRC3MPbjgCPIVe6hSCaLTXOfCmLJeWl
-         PojFObeFGcz37hrOMnRu1e2xlwmCyyeuUJ2kaiLIxIPNuqhfrsdaJ5jcvogDB0GMOqwn
-         sZC4TbnU8vDoEqfmxaFXkPrji8il2qEl0gGVkzlGC1uNCptGdCT9wegAPhltsU1T4ycC
-         nToA==
+        bh=r2rO/WLuk4jqhjOyvblSLWfVGDCVFevnenUKc3T2vXE=;
+        b=mTXf7n2L/tWj2GeXTRaqOKVq3tmQ6jcRutXb0WOYoYol7v5Ctz5NPeNpUoaVd2hqbs
+         oP4O46zAaQYhq6ZJN6xaVycFmxC0Jnwynysm/+DtOPtQwrKWLAfYlgejb98NvLDfcIbL
+         OWnIRPq+ZOngD8zCvkRGVcWoT+VD7VKgKiTKa/L0u1t6HdnF3UGz3tCUjUONzNmGpsC9
+         6QxhaMGdca19AfLglykP5gfweF4Fvs/aLGCu08nxPFU9bXoXwjpiyhI7vGrHLTq4Xrc3
+         DHvVeh5IuWl+ZzL/0d5yEjKJ+do5EPgnU0mHYmXrM6RhWCkNF974u9OGl8SKXt9Yid2M
+         bZtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ILsSYtoFc2CKUlsvQby1NfpnXmUVs1DoYSPvAsEfls8=;
-        b=ZCHiW31uACdNKcpr92+17y556Yxj+1iIQtTByh5vKpHAH+IHd8IzMq5gCBoBE02DWg
-         g75W3YDfj/1VjmX3nuxs1asJZ8MyzWuzSOi7TGksrxVqP1OZl6J24mQeTPs+nZcmGXjP
-         +MAfG08rVHNmDxBgjVU3sDOcvW6lvq1nqmKkrVvKqoG2b7SpN6EDXBa8YmZQKCV2jNGv
-         qqXgvcmyclw/SaLH4RF5Vgy1bev/AlR5y6U30mReGmwHJ2uZ3SDwqGhO67VmQmVPH3Li
-         5xGqYLZmBcwpR0N+xwn95wKf5+h0LFlpENpb9qQBjQIKr8tt4Pzbwq/KdWxX0ZH2CuyC
-         9r7A==
-X-Gm-Message-State: APjAAAXFvZyvCGP9E6rR+8oSdh4MmBT55PFLavRiHOcrGauah82H/zrL
-        ErXBVQ129brykx45CaYSLofDRia3/DoygztUid4=
-X-Google-Smtp-Source: APXvYqyFv5k85LuUb92ftiZ5NcKrsW1BBLp8/X85YaDKrUsvOGGM29LDofD561J6Qe5XmNJQ26XFzrsVX+X/wKpwUOc=
-X-Received: by 2002:a6b:4107:: with SMTP id n7mr11786212ioa.12.1565638070771;
- Mon, 12 Aug 2019 12:27:50 -0700 (PDT)
+        bh=r2rO/WLuk4jqhjOyvblSLWfVGDCVFevnenUKc3T2vXE=;
+        b=oMxjfB9YDM03v9BsBXCAGQODVNv9TIbU+h3CXBTw7PxIVa1UofXBLBWmKf6nPWdVPT
+         6vGU4F9i2Bb5CQ8OnTeGsnP4rZ+rv6vBgo03r5Z0xkXpMWo6qRDjIBbTAAZdziXogQZV
+         njcFccFwmXjH2rDNZZRww61M+V9h+ldcAVie69ds+To2TUi/eRtVqu2mWK7UIxqelDEf
+         KsdfccqOrJllcmvHmPwvryA8TgcH38nCoLMgdFtO71dEsTVbCj4h14W71jKy1BHDd8Mx
+         5AQThlniGxnswOD0j+pnNZMTYzGdhPjMIVixzO/ZyUxBvskLB6+lCh0CR4uYglH3Qksq
+         Tqfg==
+X-Gm-Message-State: APjAAAW51jIjq00UK/WNbSPImsUj/zNvLc8hnDouVX0SY9o6/b/StmHR
+        F0C+a/yuno8DthCTHPy34BVtwVEJm0OBp36KzgI=
+X-Google-Smtp-Source: APXvYqyNn0/qfDF9fazKFcP1RqRIS7NkpYdZ41O1fLhn9LJCvmdHKKWpJQkr0PSt/J3+1pT90Q8ZxbzSsa2/mRaQjSg=
+X-Received: by 2002:a6b:fd19:: with SMTP id c25mr23437832ioi.267.1565638306900;
+ Mon, 12 Aug 2019 12:31:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190717152458.22337-1-andrew.smirnov@gmail.com>
- <20190717152458.22337-13-andrew.smirnov@gmail.com> <VI1PR0402MB348580480F5EAF5F539B585A98DA0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR0402MB348580480F5EAF5F539B585A98DA0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Mon, 12 Aug 2019 12:27:38 -0700
-Message-ID: <CAHQ1cqEiCkXP+-w9WUc33oW6vDhHza2Jq_kQsXjKZ+__T5g77g@mail.gmail.com>
-Subject: Re: [PATCH v6 12/14] crypto: caam - force DMA address to 32-bit on
- 64-bit i.MX SoCs
-To:     Horia Geanta <horia.geanta@nxp.com>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Chris Spencer <christopher.spencer@sea.co.uk>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
+References: <20190808202415.25166-1-stephend@silicom-usa.com>
+ <20190810074317.GA18582@infradead.org> <abfa4b20-2916-d89a-f4d3-b27fca5906b2@silicom-usa.com>
+ <CAPcyv4g+PdbisZd8=FpB5QiR_FCA2OQ9EqEF9yMAN=XWTYXY1Q@mail.gmail.com>
+ <051cb164-19d5-9241-2941-0d866e565339@silicom-usa.com> <20190812180613.GA18377@infradead.org>
+In-Reply-To: <20190812180613.GA18377@infradead.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 12 Aug 2019 12:31:35 -0700
+Message-ID: <CAA9_cme3saBAJEyob3B1tX=t8keTodWJZMUd1j_v7vPMRU+aXA@mail.gmail.com>
+Subject: Re: [PATCH] ata: ahci: Lookup PCS register offset based on PCI device ID
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Stephen Douthit <stephend@silicom-usa.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,65 +72,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 1:23 AM Horia Geanta <horia.geanta@nxp.com> wrote:
+On Mon, Aug 12, 2019 at 11:08 AM Christoph Hellwig <hch@infradead.org> wrote:
 >
-> On 7/17/2019 6:25 PM, Andrey Smirnov wrote:
-> > i.MX8 SoC still use 32-bit addresses in its CAAM implmentation, so
-> i.MX8 SoC or i.MX8 mScale?
-> Looking at the documentation, some i.MX8 parts (for e.g. QM and QXP)
-> allow for 36-bit addresses.
+> On Mon, Aug 12, 2019 at 05:49:29PM +0000, Stephen Douthit wrote:
+> > Does anyone know the background of the original PCS workaround?
 >
-
-mScale. Will update the message.
-
-> > change all of the code to be able to handle that.
-> >
-> Shouldn't this case (32-bit CAAM and CONFIG_ARCH_DMA_ADDR_T_64BIT=y) work
-> for any ARMv8 SoC, i.e. how is this i.MX-specific?
+> Based on a few git-blame iterations on history.git the original PCS
+> handling (just when initializing) goes back to this BK commit:
 >
-
-It's a generic change.
-
-> > @@ -603,11 +603,13 @@ static int caam_probe(struct platform_device *pdev)
-> >               ret = init_clocks(dev, ctrlpriv, imx_soc_match->data);
-> >               if (ret)
-> >                       return ret;
-> > +
-> > +             caam_ptr_sz = sizeof(u32);
-> > +     } else {
-> > +             caam_ptr_sz = sizeof(dma_addr_t);
-> caam_ptr_sz should be deduced by reading MCFGR[PS] bit, i.e. decoupled
-> from dma_addr_t.
+> --
+> From c0835b838e76c9500facad05dc305170a1a577a8 Mon Sep 17 00:00:00 2001
+> From: Jeff Garzik <jgarzik@pobox.com>
+> Date: Thu, 14 Oct 2004 16:11:44 -0400
+> Subject: [libata ahci] fix several bugs
 >
+> * PCI IDs from test version didn't make it into mainline... doh
+> * do all command setup in ->qc_prep
+> * phy_reset routine that does signature check
+> * check SATA phy for errors
+> * reset hardware from scratch, in case card BIOS didn't run
 
-MCFGR[PS] is not mentioned in i.MX8MQ SRM and MCFG_PS in CTPR_MS is
-documented as set to "0" (seems to match in real HW as well). Doesn't
-seem like a workable solution for i.MX8MQ. Is there something I am
-missing?
+Ok, that at least matches the expectation that platform firmware
+initially enables the ports. However, it still leaves open the
+question of whether the PCS bits were actually not configured, or
+whether just the controller reset was needed. Certainly there is no
+reason to touch that configuration register after every controller
+reset (via the HOST_CTL mmio register)
 
-> There is another configuration that should be considered
-> (even though highly unlikely):
-> caam_ptr_sz=1  - > 32-bit addresses for CAAM
-> CONFIG_ARCH_DMA_ADDR_T_64BIT=n - 32-bit dma_addr_t
-> so the logic has to be carefully evaluated.
->
+It seems platforms / controllers that fail to run the option-rom
+should be quirked by device-id, but the PCS register twiddling be
+removed for everyone else. "Card BIOS" to me implies devices with an
+Option-ROM BAR which I don't think modern devices have, so that might
+be a simple way to try to phase out this quirk going forward without
+regressing working setups that might be relying on this.
 
-I don't understand what you mean here. 32-bit CAAM + 32-bit dma_addr_t
-should already be the case for i.MX6, etc. how is what you describe
-different?
-
-> > @@ -191,7 +191,8 @@ static inline u64 caam_dma64_to_cpu(u64 value)
-> >
-> >  static inline u64 cpu_to_caam_dma(u64 value)
-> >  {
-> > -     if (IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT))
-> > +     if (IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT) &&
-> > +         !caam_imx)
-> Related to my previous comment (i.MX-specific vs. SoC-generic),
-> this should probably change to smth. like: caam_ptr_sz == sizeof(u64)
->
-
-Makes sense, will do here and in other places.
-
-Thanks,
-Andrey Smirnov
+Then again the driver is already depending on the number of enabled
+ports to be reliable before PCS is written, and the current driver
+does not attempt to enable ports that were not enabled previously.
+That tells me that if the PCS quirk ever mattered it would have
+already regressed when the driver switched from blindly writing 0xf to
+only setting the bits that were already set in ->port_map.
