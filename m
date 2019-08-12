@@ -2,168 +2,140 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CA5C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E1FC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 300C42070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEBD72070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:59:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfHLI5o convert rfc822-to-8bit (ORCPT
+        id S1727265AbfHLI7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 04:57:44 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56574 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727167AbfHLI5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 04:57:43 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9EE8799132131362ED60;
-        Mon, 12 Aug 2019 16:57:33 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Mon, 12 Aug 2019
- 16:57:30 +0800
-Date:   Mon, 12 Aug 2019 09:57:17 +0100
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Rodrigo Ribeiro <rodrigorsdc@gmail.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-iio@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <kernel-usp@googlegroups.com>
-Subject: Re: [PATCH] staging: iio: accel: adis16240: Improve readability on
- write_raw function
-Message-ID: <20190812095717.00002918@huawei.com>
-In-Reply-To: <CAOeBkLqGe-5LwBq1yrX_F8kNn2UK-7+7H+AOZPAqKS5OKHuYkA@mail.gmail.com>
-References: <20190810150058.3509-1-rodrigorsdc@gmail.com>
-        <20190811094322.063ad682@archlinux>
-        <CAOeBkLqGe-5LwBq1yrX_F8kNn2UK-7+7H+AOZPAqKS5OKHuYkA@mail.gmail.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 12 Aug 2019 04:59:11 -0400
+Received: from mga12.intel.com ([192.55.52.136]:29065 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727154AbfHLI7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 04:59:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 01:59:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,376,1559545200"; 
+   d="scan'208";a="193913406"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
+  by fmsmga001.fm.intel.com with ESMTP; 12 Aug 2019 01:59:07 -0700
+Subject: Re: [RFC PATCH 0/7] Add MMC packed function
+To:     Baolin Wang <baolin.wang@linaro.org>, Jens Axboe <axboe@kernel.dk>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Chunyan Zhang <zhang.lyra@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org
+References: <cover.1563782844.git.baolin.wang@linaro.org>
+ <CAMz4ku+NjcqLY0tWRxrBCRUnkpyWih42LYieKaf0FO6WsqO2vA@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <8abff7d6-0a3e-efe7-e8ec-9309fada9121@intel.com>
+Date:   Mon, 12 Aug 2019 11:58:00 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+In-Reply-To: <CAMz4ku+NjcqLY0tWRxrBCRUnkpyWih42LYieKaf0FO6WsqO2vA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 11 Aug 2019 13:47:04 -0300
-Rodrigo Ribeiro <rodrigorsdc@gmail.com> wrote:
-
-> Em dom, 11 de ago de 2019 às 05:43, Jonathan Cameron
-> <jic23@kernel.org> escreveu:
-> >
-> > On Sat, 10 Aug 2019 12:00:58 -0300
-> > Rodrigo <rodrigorsdc@gmail.com> wrote:
-> >  
-> > > From: Rodrigo Carvalho <rodrigorsdc@gmail.com>
-> > >
-> > > Improve readability by using GENMASK macro, changing switch statement
-> > > by if statement and removing unnecessary local variables.  
-> >  
+On 12/08/19 8:20 AM, Baolin Wang wrote:
+> Hi,
 > 
-> Hi Jonathan. Thanks for reviewing!
+> On Mon, 22 Jul 2019 at 21:10, Baolin Wang <baolin.wang@linaro.org> wrote:
+>>
+>> Hi All,
+>>
+>> Now some SD/MMC controllers can support packed command or packed request,
+>> that means it can package multiple requests to host controller to be handled
+>> at one time, which can improve the I/O performence. Thus this patchset is
+>> used to add the MMC packed function to support packed request or packed
+>> command.
+>>
+>> In this patch set, I implemented the SD host ADMA3 transfer mode to support
+>> packed request. The ADMA3 transfer mode can process a multi-block data transfer
+>> by using a pair of command descriptor and ADMA2 descriptor. In future we can
+>> easily expand the MMC packed function to support packed command.
+>>
+>> Below are some comparison data between packed request and non-packed request
+>> with fio tool. The fio command I used is like below with changing the
+>> '--rw' parameter and enabling the direct IO flag to measure the actual hardware
+>> transfer speed.
+>>
+>> ./fio --filename=/dev/mmcblk0p30 --direct=1 --iodepth=20 --rw=read --bs=4K --size=512M --group_reporting --numjobs=20 --name=test_read
+>>
+>> My eMMC card working at HS400 Enhanced strobe mode:
+>> [    2.229856] mmc0: new HS400 Enhanced strobe MMC card at address 0001
+>> [    2.237566] mmcblk0: mmc0:0001 HBG4a2 29.1 GiB
+>> [    2.242621] mmcblk0boot0: mmc0:0001 HBG4a2 partition 1 4.00 MiB
+>> [    2.249110] mmcblk0boot1: mmc0:0001 HBG4a2 partition 2 4.00 MiB
+>> [    2.255307] mmcblk0rpmb: mmc0:0001 HBG4a2 partition 3 4.00 MiB, chardev (248:0)
+>>
+>> 1. Non-packed request
+>> I tested 3 times for each case and output a average speed.
+>>
+>> 1) Sequential read:
+>> Speed: 28.9MiB/s, 26.4MiB/s, 30.9MiB/s
+>> Average speed: 28.7MiB/s
+
+This seems surprising low for a HS400ES card.  Do you know why that is?
+
+>>
+>> 2) Random read:
+>> Speed: 18.2MiB/s, 8.9MiB/s, 15.8MiB/s
+>> Average speed: 14.3MiB/s
+>>
+>> 3) Sequential write:
+>> Speed: 21.1MiB/s, 27.9MiB/s, 25MiB/s
+>> Average speed: 24.7MiB/s
+>>
+>> 4) Random write:
+>> Speed: 21.5MiB/s, 18.1MiB/s, 18.1MiB/s
+>> Average speed: 19.2MiB/s
+>>
+>> 2. Packed request
+>> In packed request mode, I set the host controller can package maximum 10
+>> requests at one time (Actually I can increase the package number), and I
+>> enabled read/write packed request mode. Also I tested 3 times for each
+>> case and output a average speed.
+>>
+>> 1) Sequential read:
+>> Speed: 165MiB/s, 167MiB/s, 164MiB/s
+>> Average speed: 165.3MiB/s
+>>
+>> 2) Random read:
+>> Speed: 147MiB/s, 141MiB/s, 144MiB/s
+>> Average speed: 144MiB/s
+>>
+>> 3) Sequential write:
+>> Speed: 87.8MiB/s, 89.1MiB/s, 90.0MiB/s
+>> Average speed: 89MiB/s
+>>
+>> 4) Random write:
+>> Speed: 90.9MiB/s, 89.8MiB/s, 90.4MiB/s
+>> Average speed: 90.4MiB/s
+>>
+>> Form above data, we can see the packed request can improve the performance greatly.
+>> Any comments are welcome. Thanks a lot.
 > 
-> > From your description it sounds like multiple changes in one patch.
-> > Always preferable to have one type of change in a patch and more
-> > small patches.
-> >
-> > Based on comments below, I would leave the switch statement alone,
-> > but put in your GENMASK change as that one is good and gets
-> > rid of the odd local variable 'bits' as well :)
-> >
-> > Thanks,
-> >
-> > Jonathan
-> >
-> >  
-> > >
-> > > Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>
-> > > ---
-> > >  drivers/staging/iio/accel/adis16240.c | 16 +++++++---------
-> > >  1 file changed, 7 insertions(+), 9 deletions(-)
-> > >
-> > > diff --git a/drivers/staging/iio/accel/adis16240.c b/drivers/staging/iio/accel/adis16240.c
-> > > index 62f4b3b1b457..68f165501389 100644
-> > > --- a/drivers/staging/iio/accel/adis16240.c
-> > > +++ b/drivers/staging/iio/accel/adis16240.c
-> > > @@ -309,17 +309,15 @@ static int adis16240_write_raw(struct iio_dev *indio_dev,
-> > >                              long mask)
-> > >  {
-> > >       struct adis *st = iio_priv(indio_dev);
-> > > -     int bits = 10;
-> > > -     s16 val16;
-> > > +     int m;
-> > >       u8 addr;
-> > >
-> > > -     switch (mask) {
-> > > -     case IIO_CHAN_INFO_CALIBBIAS:
-> > > -             val16 = val & ((1 << bits) - 1);
-> > > -             addr = adis16240_addresses[chan->scan_index][0];
-> > > -             return adis_write_reg_16(st, addr, val16);
-> > > -     }
-> > > -     return -EINVAL;
-> > > +     if (mask != IIO_CHAN_INFO_CALIBBIAS)
-> > > +             return -EINVAL;  
-> >
-> > Hmm. We generally encourage the use of switch statements in these
-> > cases because they reduce churn as new features are added.
-> >
-> > In this particular case, we don't have any control of sampling frequency
-> > in the driver, but the hardware appears to support it (table 23 on the
-> > datasheet).  
-> 
-> On drivers of same kind out of staging (adis16209 and adis16201), sampling
-> frequency writing are not implemented, even though datasheets suggest a register
-> writing for this. I can try to implement if it is a good one.
+> Any comments for this patch set? Thanks.
 
-I would be a bit nervous about doing so if you don't have
-hardware, and we can't find anyone who is setup to test the device.
-
-Obviously if you can get it tested one way or the other, it would be good
-to add support.
-
-
-Thanks,
-
-J
-
-> 
-> > > +
-> > > +     m = GENMASK(9, 0);
-> > > +     addr = adis16240_addresses[chan->scan_index][0];
-> > > +     return adis_write_reg_16(st, addr, val & m);  
-> > Why the local variable m?  Can we not just do
-> >
-> >         return adis_write_reg_16(st, addr, val & GENMASK(9, 0));
-> >
-> > If anything I think that is a little more readable than your
-> > version.  There is a reasonable argument for just having
-> > addr inline as well.
-> >
-> >         return adis_write_reg_16(st,
-> >                                  adis16240_addresses[chan->scan_index][0],
-> >                                  val & GENMASK(9, 0));
-> >
-> > However, given I'm suggesting you leave it as a switch statement, it
-> > will be too long with addr inline.
-> >  
-> > >  }
-> > >
-> > >  static const struct iio_chan_spec adis16240_channels[] = {  
-> >  
-> 
-> Regards,
-> Rodrigo
-
-
+Did you consider adapting the CQE interface?
