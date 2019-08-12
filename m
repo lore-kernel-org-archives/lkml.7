@@ -2,240 +2,117 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D585EC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B55C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABA6D20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C9D20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:04:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZbQ2S5yw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfHLMBg (ORCPT
+        id S1728155AbfHLMEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 08:01:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:49134 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726483AbfHLMBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 08:01:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9BA9915AB;
-        Mon, 12 Aug 2019 05:01:34 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 450AC3F706;
-        Mon, 12 Aug 2019 05:01:33 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 13:01:26 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Ganapatrao Kulkarni <gkulkarni@marvell.com>
-Cc:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        "gklkml16@gmail.com" <gklkml16@gmail.com>
-Subject: Re: [PATCH v3 2/2] drivers/perf: Add CCPI2 PMU support in ThunderX2
- UNCORE driver.
-Message-ID: <20190812120125.GA50712@lakrids.cambridge.arm.com>
-References: <1563873380-2003-1-git-send-email-gkulkarni@marvell.com>
- <1563873380-2003-3-git-send-email-gkulkarni@marvell.com>
+        Mon, 12 Aug 2019 08:04:10 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44259 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726987AbfHLMEJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 08:04:09 -0400
+Received: by mail-pl1-f194.google.com with SMTP id t14so47762892plr.11
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 05:04:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FIFevxOQtejENIKXPw7Is4Q/QJpdaof9XvfR5if/hlM=;
+        b=ZbQ2S5ywhnWZ9VGkBs5RSNIxxulgtRILYMiJXBeaSZSdFMfiq2nW9MFU0nAfRgYk3l
+         x4UwOBmE/VoMnZr+z4Rwj1uIbLi+Akbcv/GnJdOoxvofvG8oWIJq2pOzfHViIP7txhud
+         6oKvWyqoeT6u+Ig3IXYnAG0zER9ge5R96HRrswYJyltCh8VWPCdGNvFtcYmoNfj7p3/G
+         Sot3TFKWLL1lbbjCvojO1527uzVTbRQjhtaH4JGlU8/BSMVQAaPzlNmdawHBerPgczyF
+         si5qYNwMRgWdbME3mEtR4EEkXbbMGGhEBLY7FLP/PU8C432j2ykiB6LkIZgeC3aooQG+
+         XFeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FIFevxOQtejENIKXPw7Is4Q/QJpdaof9XvfR5if/hlM=;
+        b=FSiWaxXnTuyPCJMZNK/DYMuZLucYK+EH7ORBPPsD+gZe/rY8xqYC4prLnz/XSAuZ5F
+         inmYGF9nnz2+JcP/aKZoSb5LWs6omLGrU2lot4gLBDIVwh8I/poZYpktqmb0nbQrcvzN
+         u4LUA108LjPEsG5PqrOUYbKx5gFOb8QkbkXWzF5ByEk1Uq6wUdvB0Qz8hn0mqLo7Kjge
+         FuAuSWmZTPE2Ki1HBlxp5gshCVGQCPR/HoH/WDmx5Od9Bsvz3IRZcYQZb2plQe5zGcig
+         7vh9jUQrrItgbH8EGgtufju4iJ/hpYPVOUpynOX212sxYttaF+VduXMASu8PkFNKGOXn
+         bxsQ==
+X-Gm-Message-State: APjAAAXXW+ZCHAQQNxK4j0Us5Fv9kS3Ke3cGD3xl2gvHmlKjlqt88O98
+        kKIS4DibzRpDJumQfTvxT918SMQb0RUb9mpjtVQW9A==
+X-Google-Smtp-Source: APXvYqwbQ5EK3raAtGV2QgalD22x83zsfNv7FwCakquHaWGun3+qLY7nAY6Govoxf/EQzc3zZik3ZAzgehe7BEW0Pfw=
+X-Received: by 2002:a17:902:8649:: with SMTP id y9mr5338163plt.252.1565611448967;
+ Mon, 12 Aug 2019 05:04:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1563873380-2003-3-git-send-email-gkulkarni@marvell.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+References: <0000000000007e2e84058fb46c49@google.com> <Pine.LNX.4.44L0.1908091646230.1630-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1908091646230.1630-100000@iolanthe.rowland.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 12 Aug 2019 14:03:57 +0200
+Message-ID: <CAAeHK+ztV==ojaqueEzM4O5Bq_qdxVKhg8stvgT-VdMEs8GBtw@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in usb_kill_urb
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     syzbot <syzbot+22ae4e3b9fcc8a5c153a@syzkaller.appspotmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 09:16:28AM +0000, Ganapatrao Kulkarni wrote:
-> CCPI2 is a low-latency high-bandwidth serial interface for connecting
-> ThunderX2 processors. This patch adds support to capture CCPI2 perf events.
+On Fri, Aug 9, 2019 at 10:52 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Fri, 9 Aug 2019, syzbot wrote:
+>
+> > Hello,
+> >
+> > syzbot has tested the proposed patch and the reproducer did not trigger
+> > crash:
+> >
+> > Reported-and-tested-by:
+> > syzbot+22ae4e3b9fcc8a5c153a@syzkaller.appspotmail.com
+> >
+> > Tested on:
+> >
+> > commit:         e96407b4 usb-fuzzer: main usb gadget fuzzer driver
+> > git tree:       https://github.com/google/kasan.git
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > patch:          https://syzkaller.appspot.com/x/patch.diff?x=173f2d2c600000
+> >
+> > Note: testing is done by a robot and is best-effort only.
+>
+> This shows that this bug is a duplicate of extid=30cf45ebfe0b0c4847a1.
 
-It would be worth pointing out in the commit message how the CCPI2
-counters differ from the others. I realise you have that in the body of
-patch 1, but it's critical information when reviewing this patch...
+Let's mark it as one:
 
-> 
-> Signed-off-by: Ganapatrao Kulkarni <gkulkarni@marvell.com>
-> ---
->  drivers/perf/thunderx2_pmu.c | 248 ++++++++++++++++++++++++++++++-----
->  1 file changed, 214 insertions(+), 34 deletions(-)
-> 
-> diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
-> index 43d76c85da56..a4e1273eafa3 100644
-> --- a/drivers/perf/thunderx2_pmu.c
-> +++ b/drivers/perf/thunderx2_pmu.c
-> @@ -17,22 +17,31 @@
->   */
->  
->  #define TX2_PMU_MAX_COUNTERS		4
+#syz dup: KASAN: use-after-free Read in ld_usb_release
 
-Shouldn't this be 8 now?
+I'll also mark all bugs that involve ldusb as duplicates, as they all
+likely are.
 
-[...]
-
->  /*
-> - * pmu on each socket has 2 uncore devices(dmc and l3c),
-> - * each device has 4 counters.
-> + * pmu on each socket has 3 uncore devices(dmc, l3ci and ccpi2),
-> + * dmc and l3c has 4 counters and ccpi2 8.
->   */
-
-How about:
-
-/*
- * Each socket has 3 uncore device associated with a PMU. The DMC and
- * L3C have 4 32-bit counters, and the CCPI2 has 8 64-bit counters.
- */
-
->  struct tx2_uncore_pmu {
->  	struct hlist_node hpnode;
-> @@ -69,12 +86,14 @@ struct tx2_uncore_pmu {
->  	int node;
->  	int cpu;
->  	u32 max_counters;
-> +	u32 counters_mask;
->  	u32 prorate_factor;
->  	u32 max_events;
-> +	u32 events_mask;
->  	u64 hrtimer_interval;
->  	void __iomem *base;
->  	DECLARE_BITMAP(active_counters, TX2_PMU_MAX_COUNTERS);
-
-This bitmap isn't big enough for the 4 new counters.
-
-> -	struct perf_event *events[TX2_PMU_MAX_COUNTERS];
-> +	struct perf_event **events;
-
-As above, can't we bump TX2_PMU_MAX_COUNTERS to 8 rather than making
-this a dynamic allocation?
-
-[...]
-
->  static inline u32 reg_readl(unsigned long addr)
->  {
->  	return readl((void __iomem *)addr);
->  }
->  
-> +static inline u32 reg_readq(unsigned long addr)
-> +{
-> +	return readq((void __iomem *)addr);
-> +}
-
-Presumably reg_readq() should return a u64.
-
-[...]
-
-> +static void uncore_start_event_ccpi2(struct perf_event *event, int flags)
-> +{
-> +	u32 emask;
-> +	struct hw_perf_event *hwc = &event->hw;
-> +	struct tx2_uncore_pmu *tx2_pmu;
-> +
-> +	tx2_pmu = pmu_to_tx2_pmu(event->pmu);
-> +	emask = tx2_pmu->events_mask;
-> +
-> +	/* Bit [09:00] to set event id, set level and type to 1 */
-> +	reg_writel((3 << 10) |
-
-Do you mean that bits [11:10] are level and type?
-
-What exactly are 'level' and 'type'?
-
-Can we give those bits mnemonics?
-
-> +			GET_EVENTID(event, emask), hwc->config_base);
-> +	/* reset[4], enable[0] and start[1] counters */
-
-Rather than using magic numbers everywhere, please give these mnemonics,
-e.g.
-
-#define CCPI2_PERF_CTL_ENABLE	BIT(0)
-#define CCPI2_PERF_CTL_START	BIT(1)
-#define CCPI2_PERF_CTL_RESET	BIT(4)
-
-> +	reg_writel(0x13, hwc->event_base + CCPI2_PERF_CTL);
-
-... and then you can OR them in here:
-
-	ctl = CCPI2_PERF_CTL_ENABLE |
-	      CCPI2_PERF_CTL_START |
-	      CCPI2_PERF_CTL_RESET;
-	reg_writel(ctl, hwc->event_base + CCPI2_PERF_CTL);
-
-[...]
-
-> @@ -456,8 +603,9 @@ static void tx2_uncore_event_start(struct perf_event *event, int flags)
->  	tx2_pmu->start_event(event, flags);
->  	perf_event_update_userpage(event);
->  
-> -	/* Start timer for first event */
-> -	if (bitmap_weight(tx2_pmu->active_counters,
-> +	/* Start timer for first non ccpi2 event */
-> +	if (tx2_pmu->type != PMU_TYPE_CCPI2 &&
-> +			bitmap_weight(tx2_pmu->active_counters,
->  				tx2_pmu->max_counters) == 1) {
->  		hrtimer_start(&tx2_pmu->hrtimer,
->  			ns_to_ktime(tx2_pmu->hrtimer_interval),
-
-This would be easier to read as two statements:
-
-	/* No hrtimer needed with 64-bit counters */
-	if (tx2_pmu->type == PMU_TYPE_CCPI2)
-		return;
-	
-	/* Start timer for first event */
-	if (bitmap_weight(tx2_pmu->active_counters,
-	    tx2_pmu->max_counters) != 1) {
-	    	...
-	}
-
-> @@ -495,7 +643,8 @@ static int tx2_uncore_event_add(struct perf_event *event, int flags)
->  	if (hwc->idx < 0)
->  		return -EAGAIN;
->  
-> -	tx2_pmu->events[hwc->idx] = event;
-> +	if (tx2_pmu->events)
-> +		tx2_pmu->events[hwc->idx] = event;
-
-So this is NULL for CCPI2?
-
-I guess we don't strictly need the if we don't have a hrtimer to update
-event counts, but this makes the code more complicated than it needs to
-be.
-
-[...]
-
-> @@ -580,8 +732,12 @@ static int tx2_uncore_pmu_add_dev(struct tx2_uncore_pmu *tx2_pmu)
->  			cpu_online_mask);
->  
->  	tx2_pmu->cpu = cpu;
-> -	hrtimer_init(&tx2_pmu->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-> -	tx2_pmu->hrtimer.function = tx2_hrtimer_callback;
-> +	/* CCPI2 counters are 64 bit counters, no overflow  */
-> +	if (tx2_pmu->type != PMU_TYPE_CCPI2) {
-> +		hrtimer_init(&tx2_pmu->hrtimer,
-> +				CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-> +		tx2_pmu->hrtimer.function = tx2_hrtimer_callback;
-> +	}
-
-Hmmm... this means that tx2_pmu->hrtimer.function is NULL for the CCPI2
-PMU. I think it would be best to check that when (re)programming the
-counters rather than the PMU type. For example, in
-tx2_uncore_event_start() we could have:
-
-	if (!tx2_pmu->hrtimer.function)
-		return;
-	if (bitmap_weight(tx2_pmu->active_counters,
-	    tx2_pmu->max_counters) != 1) {
-	    	...
-	}
-
-Thanks,
-Mark.
+> This fact is also visible in the console logs; both have lines saying
+> something like:
+>
+> [  549.416341][   T22] sysfs: cannot create duplicate filename '/class/usbmisc/ldusb0'
+>
+> and
+>
+> [  549.958755][   T22] ldusb 1-1:0.28: Not able to get a minor for this device.
+>
+> preceding the invalid access.
+>
+> Alan Stern
+>
