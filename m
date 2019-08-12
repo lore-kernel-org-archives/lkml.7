@@ -2,225 +2,132 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96850C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1D4C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6782020684
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 366AF20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:03:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=SILICOMLTD.onmicrosoft.com header.i=@SILICOMLTD.onmicrosoft.com header.b="Zpnnnq2D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbfHLNDD (ORCPT
+        id S1728811AbfHLNDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 09:03:03 -0400
-Received: from mail-ot1-f70.google.com ([209.85.210.70]:52396 "EHLO
-        mail-ot1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbfHLNDC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 09:03:02 -0400
-Received: by mail-ot1-f70.google.com with SMTP id 88so5158568otc.19
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 06:03:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=uYo9/fGrSCot63aysBamrSaY5jIS7smNmzV10wWZ5dU=;
-        b=GyI6Dgqkprybonsvfc5KwJRdMVw9k9cH6A7T6oCq6x132zA066YRqqkcgOi8PIqynF
-         SkucBKg2MkEX4hI9IH6tKAK+AYF9iNzGBud5Kmzad2XyJ7GP0cYIHq/QsHkQHbvxbWB+
-         3Q20uWvNYYNpP9vfwNxiwI99etpMoBE5me9fx4VDw4obLT41vMTIFxtkSSSoSFcmujdC
-         /XGHmqvtm44snzKDQrDyJ8BKtLalmyFJOShsba4wBUKApwvBm0nTHudoBbNgVisKgST+
-         uUZLVb1oSPMUVDM1ubsqYhqPq7VVM18HLsN74qsKhV6rotJNbk4GTfvjhIx0MapTMmHM
-         71yA==
-X-Gm-Message-State: APjAAAVh/r4OcCcWKa0o0F2HAqQqSur5uC9aYl4qUoLWj0EihOL9Vfgq
-        N97lc1p6E11zsV6MrLoS9H+aySU76rHFmBUDNwMUJvAE6mMY
-X-Google-Smtp-Source: APXvYqzBgCE6f3Cz8BrLX/WTcXEojXsHDIJVWGSC0+gbUFcJ9i1kEKBToNZ6wfQDThwen0+fk2wCw+oreRc64JwYYQy6kFPlES+O
+        Mon, 12 Aug 2019 09:03:12 -0400
+Received: from mail-eopbgr80123.outbound.protection.outlook.com ([40.107.8.123]:43102
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728651AbfHLNDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 09:03:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cbNT4sFaRa/PW5hhjIttqOMkTB+9XWglhpPFNDUUmeQoxwyhvqqP0yyDFcuZ1N+YCj63j+yvJKZ1XOy/onZY/bEj7jg/ixAm8TKAU37CoxEMRJu9n1K521gquBZR5GBFh8w6c+Hh0Q1/FxWh6Ve6f4GmE+24V90rnOTveaUa8p20WXrdGlrtbZqWEtPipD6VCNqimOZhtX724eiv9g8gynGI/tac3QNyeNJFOg4VenRVRwmZwFaeU2cWg8AtZ3Um4Yfw1B5PIKZw7RSN/u2HV7HyK83386bPKiHQypzKtYq8NCexzHAJfNieI9Ue+vc073/KkCHsK8QHlt0DbtvwyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3SbfqvsTQbd6Jhu7v73AipmIyY5AbVnTT0hW5s7R1C8=;
+ b=RcAkUg20hDUccWL6nz86SzjEOu1NiXu4O+0XRE4uMsxz/ycYYQtg8F3aCttozjTCXoyxfdetF45XOBo7QHoVCzBeH0mFwNCGLkT0TZtgFOfbpALaZz8WIL1zZMLqA21BLGgrRZiQxNhSl1bwoFHMqYF6Dg6dZLbP0Rv28i/4ER7b8KppHzyBGZRbsXFJF3Z2nst5fgGty8S0rjO3aVOuMOEwFzT9Mpj+LzEqKYXNhrTXDzuggiMOy7MLBQmNU7sj9zxu+L09S2aqE/adFa5miTkUMJlrnO/SJk+YBB/5wnM7DIpgHa+5aR8xU74j9i2Zvc4DJq11uOzrUyhU0cqdmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silicom-usa.com; dmarc=pass action=none
+ header.from=silicom-usa.com; dkim=pass header.d=silicom-usa.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=SILICOMLTD.onmicrosoft.com; s=selector2-SILICOMLTD-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3SbfqvsTQbd6Jhu7v73AipmIyY5AbVnTT0hW5s7R1C8=;
+ b=Zpnnnq2DJn/AkxLNFDRRWwWKFoNOO7wF6lmEug43WWnwfSrMHCoschu2lsHWcY5f+w49hCXFNNEdMlLFGt+Yfp3hoeFIaRRtxKRqwDQQhtyOYR2IOJlhjWBWwwKFZSZfmBomNU/+H+ahLhr7wrqbxVGJf12OCIXBS2sGhJqHH+w=
+Received: from VI1PR0402MB2717.eurprd04.prod.outlook.com (10.175.22.139) by
+ VI1PR0402MB2797.eurprd04.prod.outlook.com (10.172.255.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.20; Mon, 12 Aug 2019 13:02:28 +0000
+Received: from VI1PR0402MB2717.eurprd04.prod.outlook.com
+ ([fe80::eca9:e1f:eca7:8439]) by VI1PR0402MB2717.eurprd04.prod.outlook.com
+ ([fe80::eca9:e1f:eca7:8439%9]) with mapi id 15.20.2157.022; Mon, 12 Aug 2019
+ 13:02:28 +0000
+From:   Stephen Douthit <stephend@silicom-usa.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     Jens Axboe <axboe@kernel.dk>,
+        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH] ata: ahci: Lookup PCS register offset based on PCI device
+ ID
+Thread-Topic: [PATCH] ata: ahci: Lookup PCS register offset based on PCI
+ device ID
+Thread-Index: AQHVTidIVfq9W1HbR0i2bNtry39Joab0Aj2AgAN9ywA=
+Date:   Mon, 12 Aug 2019 13:02:27 +0000
+Message-ID: <abfa4b20-2916-d89a-f4d3-b27fca5906b2@silicom-usa.com>
+References: <20190808202415.25166-1-stephend@silicom-usa.com>
+ <20190810074317.GA18582@infradead.org>
+In-Reply-To: <20190810074317.GA18582@infradead.org>
+Reply-To: Stephen Douthit <stephend@silicom-usa.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BN6PR1701CA0009.namprd17.prod.outlook.com
+ (2603:10b6:405:15::19) To VI1PR0402MB2717.eurprd04.prod.outlook.com
+ (2603:10a6:800:b4::11)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=stephend@silicom-usa.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [96.82.2.57]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6844c787-0299-41d4-cd7c-08d71f2553d2
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0402MB2797;
+x-ms-traffictypediagnostic: VI1PR0402MB2797:
+x-microsoft-antispam-prvs: <VI1PR0402MB2797201806751C0F673104F294D30@VI1PR0402MB2797.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 012792EC17
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(396003)(366004)(346002)(39850400004)(189003)(199004)(3846002)(14454004)(53936002)(6116002)(64756008)(86362001)(76176011)(6486002)(31696002)(53546011)(66446008)(66556008)(26005)(2906002)(386003)(6506007)(66476007)(186003)(66946007)(3450700001)(25786009)(4326008)(102836004)(31686004)(6246003)(478600001)(66066001)(6916009)(229853002)(5660300002)(8676002)(486006)(99286004)(71200400001)(71190400001)(43066004)(81166006)(36756003)(81156014)(256004)(8936002)(305945005)(316002)(52116002)(6436002)(6512007)(446003)(11346002)(7736002)(54906003)(476003)(2616005);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0402MB2797;H:VI1PR0402MB2717.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: silicom-usa.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Eat08B1Zy41Wvy5I6vJdvoAiK7G56DcoXn3wQzlsm1txFkFMevsk6lpwXscqAGo+2YATlNtEs9YJ8LU+oELLalUyvCBH4Hq3uFG5Z9nDa/zcYVGjRhmzKPyBczR5AzYvWm+wVafajN1/SehVkkxHZq0P1bIPRaq5dbDJdOSfKoquSCK7z0t806Nz/zAn4MyOW02ZBnboPfVr8jeSsjnp17b0HSVQgcGUgFxom5OqUkiHXFWHTy/maz6wH7dGdDOdPZLDV/4T78JewkxS/GtrnTivdewVxCd42oxr70uh6svj2g3VXRTlAawGW1m3urFLxV8Zl2f0HmIM6YOGrdW0MuZfK774pbzE6Oj/S6NepJDbMgsGD5KhOb/VqC/2KYH5RqwYhxoEPyXwreqoSuEmQrQxR80muiOYThr9NC0dpbQ=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6B99C8D56EB6684D8FE2860F550E47DF@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a6b:6b02:: with SMTP id g2mr21734309ioc.13.1565614981352;
- Mon, 12 Aug 2019 06:03:01 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 06:03:01 -0700
-In-Reply-To: <CAAeHK+z-uCr-bWu9uVDynU2S=wCrtxRbuA-Cut=h5zYuYcS-Cw@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d195cc058feb2498@google.com>
-Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb
-From:   syzbot <syzbot+a7a6b9c609b9457c62c6@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, hdanton@sina.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        oneukum@suse.com, stern@rowland.harvard.edu,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: silicom-usa.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6844c787-0299-41d4-cd7c-08d71f2553d2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 13:02:27.9338
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c9e326d8-ce47-4930-8612-cc99d3c87ad1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0P66+KkogscynsoR+VjLv/OP6hYPlAo1l7XrO8kiSwYJUV+yraubi6q+k5eHsk+zyOf3R+9KRFBReb259Qc9q1AF45sh16400nbAht4ZmG4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2797
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot has tested the proposed patch but the reproducer still triggered  
-crash:
-KASAN: invalid-free in hcd_buffer_free
-
-usb 5-1: USB disconnect, device number 2
-==================================================================
-BUG: KASAN: double-free or invalid-free in hcd_buffer_free+0x199/0x260  
-drivers/usb/core/buffer.c:165
-
-CPU: 0 PID: 1745 Comm: kworker/0:2 Not tainted 5.3.0-rc2+ #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x6a/0x32c mm/kasan/report.c:351
-  kasan_report_invalid_free+0x61/0xa0 mm/kasan/report.c:444
-  __kasan_slab_free+0x162/0x180 mm/kasan/common.c:428
-  slab_free_hook mm/slub.c:1423 [inline]
-  slab_free_freelist_hook mm/slub.c:1470 [inline]
-  slab_free mm/slub.c:3012 [inline]
-  kfree+0xe4/0x2f0 mm/slub.c:3953
-  hcd_buffer_free+0x199/0x260 drivers/usb/core/buffer.c:165
-  usb_free_coherent+0x67/0x80 drivers/usb/core/usb.c:932
-  hid_free_buffers.isra.0+0x94/0x290 drivers/hid/usbhid/hid-core.c:964
-  usbhid_stop+0x308/0x450 drivers/hid/usbhid/hid-core.c:1224
-  logi_dj_remove+0x107/0x210 drivers/hid/hid-logitech-dj.c:1797
-  hid_device_remove+0xed/0x240 drivers/hid/hid-core.c:2242
-  __device_release_driver drivers/base/dd.c:1118 [inline]
-  device_release_driver_internal+0x206/0x4c0 drivers/base/dd.c:1151
-  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
-  device_del+0x420/0xb10 drivers/base/core.c:2288
-  hid_remove_device drivers/hid/hid-core.c:2413 [inline]
-  hid_destroy_device+0xe1/0x150 drivers/hid/hid-core.c:2432
-  usbhid_disconnect+0xad/0xd0 drivers/hid/usbhid/hid-core.c:1414
-  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
-  __device_release_driver drivers/base/dd.c:1120 [inline]
-  device_release_driver_internal+0x404/0x4c0 drivers/base/dd.c:1151
-  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
-  device_del+0x420/0xb10 drivers/base/core.c:2288
-  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
-  usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
-  hub_port_connect drivers/usb/core/hub.c:4949 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Allocated by task 1745:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:487 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
-  kmalloc include/linux/slab.h:557 [inline]
-  hcd_buffer_alloc+0x1ca/0x290 drivers/usb/core/buffer.c:135
-  usb_alloc_coherent+0x5d/0x80 drivers/usb/core/usb.c:910
-  hid_alloc_buffers drivers/hid/usbhid/hid-core.c:846 [inline]
-  usbhid_start+0x60b/0x22f0 drivers/hid/usbhid/hid-core.c:1075
-  hid_hw_start+0x5d/0x130 drivers/hid/hid-core.c:1976
-  logi_dj_probe+0x808/0xcd7 drivers/hid/hid-logitech-dj.c:1703
-  hid_device_probe+0x2be/0x3f0 drivers/hid/hid-core.c:2209
-  really_probe+0x281/0x650 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:882
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2114
-  hid_add_device+0x33c/0x990 drivers/hid/hid-core.c:2365
-  usbhid_probe+0xa81/0xfa0 drivers/hid/usbhid/hid-core.c:1386
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x650 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:882
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2114
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x650 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:882
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2114
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 1745:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
-  slab_free_hook mm/slub.c:1423 [inline]
-  slab_free_freelist_hook mm/slub.c:1470 [inline]
-  slab_free mm/slub.c:3012 [inline]
-  kfree+0xe4/0x2f0 mm/slub.c:3953
-  hcd_buffer_free+0x199/0x260 drivers/usb/core/buffer.c:165
-  usb_free_coherent+0x67/0x80 drivers/usb/core/usb.c:932
-  hid_free_buffers.isra.0+0x94/0x290 drivers/hid/usbhid/hid-core.c:964
-  usbhid_stop+0x308/0x450 drivers/hid/usbhid/hid-core.c:1224
-  usbhid_disconnect+0xa5/0xd0 drivers/hid/usbhid/hid-core.c:1413
-  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
-  __device_release_driver drivers/base/dd.c:1120 [inline]
-  device_release_driver_internal+0x404/0x4c0 drivers/base/dd.c:1151
-  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
-  device_del+0x420/0xb10 drivers/base/core.c:2288
-  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
-  usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
-  hub_port_connect drivers/usb/core/hub.c:4949 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff8881d5875500
-  which belongs to the cache kmalloc-4k of size 4096
-The buggy address is located 0 bytes inside of
-  4096-byte region [ffff8881d5875500, ffff8881d5876500)
-The buggy address belongs to the page:
-page:ffffea0007561c00 refcount:1 mapcount:0 mapping:ffff8881da00c280  
-index:0x0 compound_mapcount: 0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da00c280
-raw: 0000000000000000 0000000000070007 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881d5875400: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff8881d5875480: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff8881d5875500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                    ^
-  ffff8881d5875580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881d5875600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
-Tested on:
-
-commit:         7f7867ff usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=13833b9a600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=167d2a0e600000
-
+T24gOC8xMC8xOSAzOjQzIEFNLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90ZToNCj4gT24gVGh1LCBB
+dWcgMDgsIDIwMTkgYXQgMDg6MjQ6MzFQTSArMDAwMCwgU3RlcGhlbiBEb3V0aGl0IHdyb3RlOg0K
+Pj4gSW50ZWwgbW92ZWQgdGhlIFBDUyByZWdpc3RlciBmcm9tIDB4OTIgdG8gMHg5NCBvbiBEZW52
+ZXJ0b24gZm9yIHNvbWUNCj4+IHJlYXNvbiwgc28gbm93IHdlIGdldCB0byBjaGVjayB0aGUgZGV2
+aWNlIElEIGJlZm9yZSBwb2tpbmcgaXQgb24gcmVzZXQuDQo+IA0KPiBBbmQgbm93IHlvdSBqdXN0
+IG1hdGNoIG9uIHRoZSBuZXcgSURzLCB3aGljaCBtZWFucyB3ZSdsbCBwZXJwZXR1YWxseQ0KPiBj
+YXRjaCB1cCBvbiBhbnkgbmV3IGRldmljZS4gIERhbiwgY2FuIHlvdSByZWFjaCBvdXQgaW5zaWRl
+IEludGVsIHRvDQo+IGZpZ3VyZSBvdXQgaWYgdGhlcmUgaXMgYSB3YXkgdG8gZmluZCBvdXQgdGhl
+IFBDUyByZWdpc3RlciBsb2NhdGlvbg0KPiB3aXRob3V0IHRoZSBQQ0kgSUQgY2hlY2s/DQo+IA0K
+PiANCj4+ICAgc3RhdGljIGludCBhaGNpX3BjaV9yZXNldF9jb250cm9sbGVyKHN0cnVjdCBhdGFf
+aG9zdCAqaG9zdCkNCj4+ICAgew0KPj4gICAJc3RydWN0IHBjaV9kZXYgKnBkZXYgPSB0b19wY2lf
+ZGV2KGhvc3QtPmRldik7DQo+PiBAQCAtNjM0LDEzICs2NjksMTQgQEAgc3RhdGljIGludCBhaGNp
+X3BjaV9yZXNldF9jb250cm9sbGVyKHN0cnVjdCBhdGFfaG9zdCAqaG9zdCkNCj4+ICAgDQo+PiAg
+IAlpZiAocGRldi0+dmVuZG9yID09IFBDSV9WRU5ET1JfSURfSU5URUwpIHsNCj4+ICAgCQlzdHJ1
+Y3QgYWhjaV9ob3N0X3ByaXYgKmhwcml2ID0gaG9zdC0+cHJpdmF0ZV9kYXRhOw0KPj4gKwkJaW50
+IHBjcyA9IGFoY2lfcGNzX29mZnNldChob3N0KTsNCj4+ICAgCQl1MTYgdG1wMTY7DQo+PiAgIA0K
+Pj4gICAJCS8qIGNvbmZpZ3VyZSBQQ1MgKi8NCj4+IC0JCXBjaV9yZWFkX2NvbmZpZ193b3JkKHBk
+ZXYsIDB4OTIsICZ0bXAxNik7DQo+PiArCQlwY2lfcmVhZF9jb25maWdfd29yZChwZGV2LCBwY3Ms
+ICZ0bXAxNik7DQo+PiAgIAkJaWYgKCh0bXAxNiAmIGhwcml2LT5wb3J0X21hcCkgIT0gaHByaXYt
+PnBvcnRfbWFwKSB7DQo+PiAtCQkJdG1wMTYgfD0gaHByaXYtPnBvcnRfbWFwOw0KPj4gLQkJCXBj
+aV93cml0ZV9jb25maWdfd29yZChwZGV2LCAweDkyLCB0bXAxNik7DQo+PiArCQkJdG1wMTYgfD0g
+aHByaXYtPnBvcnRfbWFwICYgMHhmZjsNCj4+ICsJCQlwY2lfd3JpdGVfY29uZmlnX3dvcmQocGRl
+diwgcGNzLCB0bXAxNik7DQo+PiAgIAkJfQ0KPj4gICAJfQ0KPiANCj4gQW5kIFN0ZXBoZW4sIHdo
+aWxlIHlvdSBhcmUgYXQgaXQsIGNhbiB5b3Ugc3BsaXQgdGhpcyBJbnRlbC1zcGVjaWZpYw0KPiBx
+dWlyayBpbnRvIGEgc2VwYXJhdGUgaGVscGVyPw0KDQpJIGNhbiBkbyB0aGF0LiAgSSdsbCB3YWl0
+IHVudGlsIHdlIGhlYXIgYmFjayBmcm9tIERhbiBpZiB0aGVyZSdzIGENCmJldHRlciBzY2hlbWUg
+dGhhbiBhIGRldmljZSBJRCBsb29rdXAuDQo=
