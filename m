@@ -2,270 +2,209 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3163C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7D3C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD53220679
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E76BC20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:07:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="zelB1XPT"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="mUXTUC7C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbfHLPGg (ORCPT
+        id S1727677AbfHLPHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 11:06:36 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40907 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbfHLPGf (ORCPT
+        Mon, 12 Aug 2019 11:07:30 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36780 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726954AbfHLPH3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 11:06:35 -0400
-Received: by mail-lf1-f65.google.com with SMTP id b17so74456567lff.7
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 08:06:33 -0700 (PDT)
+        Mon, 12 Aug 2019 11:07:29 -0400
+Received: by mail-pf1-f195.google.com with SMTP id r7so49832563pfl.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 08:07:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Js+VA7F9tvJG5+BevlMW9BFXe0iGndk5HT03D5ecuXA=;
-        b=zelB1XPT4ic3ClpjtoMKpqoAdRcpSTyK1zTD+k6Ol67rjX9SMkk/V6j4Gafr7QmrtG
-         U9jr8xZ4MyCaZfSDvesSE4btKzIJSmGTZrFAQ93iiHvDiIn/q0Aa3cHShKPB02iU78Px
-         ldhR7emuMQzsbLN/Gre6kuQU8HRJDQhxF8MzSFxJA/V67xB8gAKEgcv78ac/+ZIiqL3x
-         QHBBQ1wy8GvLCp6/bjRdBClu7YN2r2ElQb/XjNDVzBklc/HR2bbyK419gui3+zkLCg5y
-         8Pt1A9SfABaW/ZzOaAk95SjrKZKWsNTbRvhH3CZb5Gd+DtGVd5ZjZet0E7fw/nKlE9lO
-         jf4g==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FfJCpjysQVbS87yDleV9efBJ62H70bVd8lRpyhmGjiA=;
+        b=mUXTUC7CkMBCbbdOgWd22eOoshLbMwoFMoQp4tY2RQgykV8jAxvOkDHlG90thkP0F2
+         Lh63qquLYhRU43BqWJtg/mZWx0933vd1hoWixjmZyv2RbLGrHQEVr8QnOKuVcgstRLl4
+         pDP3R2EByEFiYfXTDQbBG4sgYerLUH7/EGHZmqzhi7ifawDhF6MugPaY4v3BAV8v6mLy
+         q9EY11iwePPr9MJFAOcEaxFqa7ZHV0oTl0wezEUIm2mYoGkFyY5uwAKHO8vOWACR3bFT
+         FDbDRUay8rQkx/TrMOUuFwLrxIRD3bU+qVN+BmxcFqIdvXDNCPI1Dz2NoLfStDc+ULVA
+         FzXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Js+VA7F9tvJG5+BevlMW9BFXe0iGndk5HT03D5ecuXA=;
-        b=RSUr25WFhPLfQIQKSGevl2KR0ZVyj5x027X2GySTGzpMN8tUyoNdklkUhjE4uL9VxK
-         tYzt5eIOqlyO70QEQ/LXQ8OyKXFoozCHDOiDc5Hxy9FvIOl7Da9hdUIst7I90lFWtgQc
-         u6FsZJ7brP0hTqFQ5QejZFzXEtGd+/wCzpAb2IXjbc8q19ZJQxza6r36ZXO0RYzICXOs
-         Utt2M381PtzxMl2RpTwi2ezxBdzbUWfUKx9bD1tjtqrGckOC2BCshAQyamzclNwBKwwN
-         jxkeU9R72DUsM5UdUHBTzX5bNogrFBTEXf/3OH6P4Fr5V53TvQGZ1/6VTm5lVAV37bpa
-         B2og==
-X-Gm-Message-State: APjAAAXA46cXuoxRFSzhCWgFbuNTj35FGS3eas2w42irYJDLWbs4sgPG
-        BauP+Kk/MiDF4dPNzIEEQvQ5UsL7FNItcNjo0Oh9
-X-Google-Smtp-Source: APXvYqw8wiIUmNCJfabwfJYW5JsUtTuihAsGpOSEYQcYjdD8elsuK+NKNesqdZ2r/V1C+2u2RvR27W8EZqU9nvh1KNo=
-X-Received: by 2002:a19:c511:: with SMTP id w17mr9150075lfe.31.1565622392374;
- Mon, 12 Aug 2019 08:06:32 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FfJCpjysQVbS87yDleV9efBJ62H70bVd8lRpyhmGjiA=;
+        b=QV2eG7ZVLYSR6BWb3dcgz9+OchBsvGqAlxmDqS5eKbaw4iRJTgd+wbM/q+2/ZMzjYS
+         NnurCTocrY+vYZegyFxpZJdksCJtJ0c+rZ+e/fvx9bju0SPjJc3b4QRCxGyNbtofkt+P
+         o6kY9g99K22wmBcoXorE55UMUvxQTbzFg3ci7TKNQQCp+n+mvuldXEm2cpwGBAG6+DzR
+         qA5DfeUSCD8ZBeJQPkqg+D0741o8ubb6B53/aaAATafdmfeP3jcHJElVIxSac7YtRhYt
+         2NiF/E0R0yUzqxV4h8YlMm3c1fspImP+uE1wObr6SnQgLvHwLGUarfuSeTS7kJR7abBO
+         KQJg==
+X-Gm-Message-State: APjAAAVwz4RRexqGhxe9h8OegwOYK+2ts+IqaAkxJ8mC1DHyg5Kpj/cL
+        5ZbxP/0aVAHUmpjIC2/CZ93xAg==
+X-Google-Smtp-Source: APXvYqyFnO5i7orfiNCFIgJ8d4gkhfqZkqY3IMYxdxP0CAlBa1w7YwP0CoonnHUoO6Y/TBeiqGg9EA==
+X-Received: by 2002:a63:c64b:: with SMTP id x11mr30441310pgg.319.1565622448538;
+        Mon, 12 Aug 2019 08:07:28 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::5810])
+        by smtp.gmail.com with ESMTPSA id e6sm6079914pfl.37.2019.08.12.08.07.27
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 08:07:27 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 11:07:25 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Miguel de Dios <migueldedios@google.com>,
+        Wei Wang <wvw@google.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [RFC PATCH] mm: drop mark_page_access from the unmap path
+Message-ID: <20190812150725.GA3684@cmpxchg.org>
+References: <20190730121110.GA184615@google.com>
+ <20190730123237.GR9330@dhcp22.suse.cz>
+ <20190730123935.GB184615@google.com>
+ <20190730125751.GS9330@dhcp22.suse.cz>
+ <20190731054447.GB155569@google.com>
+ <20190731072101.GX9330@dhcp22.suse.cz>
+ <20190806105509.GA94582@google.com>
+ <20190809124305.GQ18351@dhcp22.suse.cz>
+ <20190809183424.GA22347@cmpxchg.org>
+ <20190812080947.GA5117@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20190809181401.7086-1-acgoide@tycho.nsa.gov>
-In-Reply-To: <20190809181401.7086-1-acgoide@tycho.nsa.gov>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 12 Aug 2019 11:06:21 -0400
-Message-ID: <CAHC9VhTXjvUHQsZT9Fd6m=yzdBTDAzf1SpfMxQ_qwjy6zbJZLg@mail.gmail.com>
-Subject: Re: [PATCH v2] fanotify, inotify, dnotify, security: add security
- hook for fs notifications
-To:     Aaron Goidel <acgoide@tycho.nsa.gov>,
-        Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, dhowells@redhat.com, jack@suse.cz,
-        amir73il@gmail.com, James Morris <jmorris@namei.org>,
-        linux-kernel@vger.kernel.org,
-        Casey Schaufler <casey@schaufler-ca.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812080947.GA5117@dhcp22.suse.cz>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 2:14 PM Aaron Goidel <acgoide@tycho.nsa.gov> wrote:
-> As of now, setting watches on filesystem objects has, at most, applied a
-> check for read access to the inode, and in the case of fanotify, requires
-> CAP_SYS_ADMIN. No specific security hook or permission check has been
-> provided to control the setting of watches. Using any of inotify, dnotify,
-> or fanotify, it is possible to observe, not only write-like operations, but
-> even read access to a file. Modeling the watch as being merely a read from
-> the file is insufficient for the needs of SELinux. This is due to the fact
-> that read access should not necessarily imply access to information about
-> when another process reads from a file. Furthermore, fanotify watches grant
-> more power to an application in the form of permission events. While
-> notification events are solely, unidirectional (i.e. they only pass
-> information to the receiving application), permission events are blocking.
-> Permission events make a request to the receiving application which will
-> then reply with a decision as to whether or not that action may be
-> completed. This causes the issue of the watching application having the
-> ability to exercise control over the triggering process. Without drawing a
-> distinction within the permission check, the ability to read would imply
-> the greater ability to control an application. Additionally, mount and
-> superblock watches apply to all files within the same mount or superblock.
-> Read access to one file should not necessarily imply the ability to watch
-> all files accessed within a given mount or superblock.
->
-> In order to solve these issues, a new LSM hook is implemented and has been
-> placed within the system calls for marking filesystem objects with inotify,
-> fanotify, and dnotify watches. These calls to the hook are placed at the
-> point at which the target path has been resolved and are provided with the
-> path struct, the mask of requested notification events, and the type of
-> object on which the mark is being set (inode, superblock, or mount). The
-> mask and obj_type have already been translated into common FS_* values
-> shared by the entirety of the fs notification infrastructure. The path
-> struct is passed rather than just the inode so that the mount is available,
-> particularly for mount watches. This also allows for use of the hook by
-> pathname-based security modules. However, since the hook is intended for
-> use even by inode based security modules, it is not placed under the
-> CONFIG_SECURITY_PATH conditional. Otherwise, the inode-based security
-> modules would need to enable all of the path hooks, even though they do not
-> use any of them.
->
-> This only provides a hook at the point of setting a watch, and presumes
-> that permission to set a particular watch implies the ability to receive
-> all notification about that object which match the mask. This is all that
-> is required for SELinux. If other security modules require additional hooks
-> or infrastructure to control delivery of notification, these can be added
-> by them. It does not make sense for us to propose hooks for which we have
-> no implementation. The understanding that all notifications received by the
-> requesting application are all strictly of a type for which the application
-> has been granted permission shows that this implementation is sufficient in
-> its coverage.
->
-> Security modules wishing to provide complete control over fanotify must
-> also implement a security_file_open hook that validates that the access
-> requested by the watching application is authorized. Fanotify has the issue
-> that it returns a file descriptor with the file mode specified during
-> fanotify_init() to the watching process on event. This is already covered
-> by the LSM security_file_open hook if the security module implements
-> checking of the requested file mode there. Otherwise, a watching process
-> can obtain escalated access to a file for which it has not been authorized.
->
-> The selinux_path_notify hook implementation works by adding five new file
-> permissions: watch, watch_mount, watch_sb, watch_reads, and watch_with_perm
-> (descriptions about which will follow), and one new filesystem permission:
-> watch (which is applied to superblock checks). The hook then decides which
-> subset of these permissions must be held by the requesting application
-> based on the contents of the provided mask and the obj_type. The
-> selinux_file_open hook already checks the requested file mode and therefore
-> ensures that a watching process cannot escalate its access through
-> fanotify.
->
-> The watch, watch_mount, and watch_sb permissions are the baseline
-> permissions for setting a watch on an object and each are a requirement for
-> any watch to be set on a file, mount, or superblock respectively. It should
-> be noted that having either of the other two permissions (watch_reads and
-> watch_with_perm) does not imply the watch, watch_mount, or watch_sb
-> permission. Superblock watches further require the filesystem watch
-> permission to the superblock. As there is no labeled object in view for
-> mounts, there is no specific check for mount watches beyond watch_mount to
-> the inode. Such a check could be added in the future, if a suitable labeled
-> object existed representing the mount.
->
-> The watch_reads permission is required to receive notifications from
-> read-exclusive events on filesystem objects. These events include accessing
-> a file for the purpose of reading and closing a file which has been opened
-> read-only. This distinction has been drawn in order to provide a direct
-> indication in the policy for this otherwise not obvious capability. Read
-> access to a file should not necessarily imply the ability to observe read
-> events on a file.
->
-> Finally, watch_with_perm only applies to fanotify masks since it is the
-> only way to set a mask which allows for the blocking, permission event.
-> This permission is needed for any watch which is of this type. Though
-> fanotify requires CAP_SYS_ADMIN, this is insufficient as it gives implicit
-> trust to root, which we do not do, and does not support least privilege.
->
-> Signed-off-by: Aaron Goidel <acgoide@tycho.nsa.gov>
-> Acked-by: Casey Schaufler <casey@schaufler-ca.com>
-> ---
-> v2:
->   - move initialization of obj_type up to remove duplicate work
->   - convert inotify and fanotify flags to common FS_* flags
->  fs/notify/dnotify/dnotify.c         | 15 +++++++--
->  fs/notify/fanotify/fanotify_user.c  | 19 ++++++++++--
->  fs/notify/inotify/inotify_user.c    | 14 +++++++--
->  include/linux/lsm_hooks.h           |  9 +++++-
->  include/linux/security.h            | 10 ++++--
->  security/security.c                 |  6 ++++
->  security/selinux/hooks.c            | 47 +++++++++++++++++++++++++++++
->  security/selinux/include/classmap.h |  5 +--
->  8 files changed, 113 insertions(+), 12 deletions(-)
+On Mon, Aug 12, 2019 at 10:09:47AM +0200, Michal Hocko wrote:
+> On Fri 09-08-19 14:34:24, Johannes Weiner wrote:
+> > On Fri, Aug 09, 2019 at 02:43:24PM +0200, Michal Hocko wrote:
+> > > On Tue 06-08-19 19:55:09, Minchan Kim wrote:
+> > > > On Wed, Jul 31, 2019 at 09:21:01AM +0200, Michal Hocko wrote:
+> > > > > On Wed 31-07-19 14:44:47, Minchan Kim wrote:
+> > > [...]
+> > > > > > As Nick mentioned in the description, without mark_page_accessed in
+> > > > > > zapping part, repeated mmap + touch + munmap never acticated the page
+> > > > > > while several read(2) calls easily promote it.
+> > > > > 
+> > > > > And is this really a problem? If we refault the same page then the
+> > > > > refaults detection should catch it no? In other words is the above still
+> > > > > a problem these days?
+> > > > 
+> > > > I admit we have been not fair for them because read(2) syscall pages are
+> > > > easily promoted regardless of zap timing unlike mmap-based pages.
+> > > > 
+> > > > However, if we remove the mark_page_accessed in the zap_pte_range, it
+> > > > would make them more unfair in that read(2)-accessed pages are easily
+> > > > promoted while mmap-based page should go through refault to be promoted.
+> > > 
+> > > I have really hard time to follow why an unmap special handling is
+> > > making the overall state more reasonable.
+> > > 
+> > > Anyway, let me throw the patch for further discussion. Nick, Mel,
+> > > Johannes what do you think?
+> > > 
+> > > From 3821c2e66347a2141358cabdc6224d9990276fec Mon Sep 17 00:00:00 2001
+> > > From: Michal Hocko <mhocko@suse.com>
+> > > Date: Fri, 9 Aug 2019 14:29:59 +0200
+> > > Subject: [PATCH] mm: drop mark_page_access from the unmap path
+> > > 
+> > > Minchan has noticed that mark_page_access can take quite some time
+> > > during unmap:
+> > > : I had a time to benchmark it via adding some trace_printk hooks between
+> > > : pte_offset_map_lock and pte_unmap_unlock in zap_pte_range. The testing
+> > > : device is 2018 premium mobile device.
+> > > :
+> > > : I can get 2ms delay rather easily to release 2M(ie, 512 pages) when the
+> > > : task runs on little core even though it doesn't have any IPI and LRU
+> > > : lock contention. It's already too heavy.
+> > > :
+> > > : If I remove activate_page, 35-40% overhead of zap_pte_range is gone
+> > > : so most of overhead(about 0.7ms) comes from activate_page via
+> > > : mark_page_accessed. Thus, if there are LRU contention, that 0.7ms could
+> > > : accumulate up to several ms.
+> > > 
+> > > bf3f3bc5e734 ("mm: don't mark_page_accessed in fault path") has replaced
+> > > SetPageReferenced by mark_page_accessed arguing that the former is not
+> > > sufficient when mark_page_accessed is removed from the fault path
+> > > because it doesn't promote page to the active list. It is true that a
+> > > page that is mapped by a single process might not get promoted even when
+> > > referenced if the reclaim checks it after the unmap but does that matter
+> > > that much? Can we cosider the page hot if there are no other
+> > > users? Moreover we do have workingset detection in place since then and
+> > > so a next refault would activate the page if it was really hot one.
+> > 
+> > I do think the pages can be very hot. Think of short-lived executables
+> > and their libraries. Like shell commands. When they run a few times or
+> > periodically, they should be promoted to the active list and not have
+> > to compete with streaming IO on the inactive list - the PG_referenced
+> > doesn't really help them there, see page_check_references().
+> 
+> Yeah, I am aware of that. We do rely on more processes to map the page
+> which I've tried to explain in the changelog.
+> 
+> Btw. can we promote PageReferenced pages with zero mapcount? I am
+> throwing that more as an idea because I haven't really thought that
+> through yet.
 
-...
+That flag implements a second-chance policy, see this commit:
 
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index f77b314d0575..a47376d1c924 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -3261,6 +3263,50 @@ static int selinux_inode_removexattr(struct dentry *dentry, const char *name)
->         return -EACCES;
->  }
->
-> +static int selinux_path_notify(const struct path *path, u64 mask,
-> +                                               unsigned int obj_type)
-> +{
-> +       int ret;
-> +       u32 perm;
-> +
-> +       struct common_audit_data ad;
-> +
-> +       ad.type = LSM_AUDIT_DATA_PATH;
-> +       ad.u.path = *path;
-> +
-> +       /*
-> +        * Set permission needed based on the type of mark being set.
-> +        * Performs an additional check for sb watches.
-> +        */
-> +       switch (obj_type) {
-> +       case FSNOTIFY_OBJ_TYPE_VFSMOUNT:
-> +               perm = FILE__WATCH_MOUNT;
-> +               break;
-> +       case FSNOTIFY_OBJ_TYPE_SB:
-> +               perm = FILE__WATCH_SB;
-> +               ret = superblock_has_perm(current_cred(), path->dentry->d_sb,
-> +                                               FILESYSTEM__WATCH, &ad);
-> +               if (ret)
-> +                       return ret;
-> +               break;
-> +       case FSNOTIFY_OBJ_TYPE_INODE:
-> +               perm = FILE__WATCH;
-> +               break;
-> +       default:
-> +               return -EINVAL;
-> +       }
+commit 645747462435d84c6c6a64269ed49cc3015f753d
+Author: Johannes Weiner <hannes@cmpxchg.org>
+Date:   Fri Mar 5 13:42:22 2010 -0800
 
-Sigh.
+    vmscan: detect mapped file pages used only once
 
-Remember when I said "Don't respin the patch just for this, but if you
-have to do it for some other reason please fix the C++ style
-comments."?  In this particular case it is a small thing, but a
-failure to incorporate all the feedback is one of the things that
-really annoys me (mostly because it makes me worry about other things
-that may have been missed).  It isn't as bad as submitting code which
-doesn't compile, but it's a close second.
+We had an application that would checksum large files using mmapped IO
+to avoid double buffering. The VM used to activate mapped cache
+directly, and it trashed the actual workingset.
 
-At this point I'm going to ask you to respin the patch to get rid of
-those C++ style comments.  I'm also going to get a bit more nitpicky
-about those comments too (more comments below).
+In response I added support for use-once mapped pages using this flag.
+SetPageReferenced signals the VM that we're not sure about the page
+yet and give it another round trip on the LRU.
 
-> +       // check if the mask is requesting ability to set a blocking watch
-> +       if (mask & (ALL_FSNOTIFY_PERM_EVENTS))
-> +               perm |= FILE__WATCH_WITH_PERM; // if so, check that permission
+If you activate on this flag, it would restore the initial problem of
+use-once pages trashing the workingset.
 
-What is the point of that trailing comment "if so, check that
-permission"?  Given the code, and the comment two lines above this
-seems obvious, does it not?  If you want to keep it, that's fine with
-me, but let's combine the two comments so they read a bit better, for
-example:
+> > Maybe the refaults will be fine - but latency expectations around
+> > mapped page cache certainly are a lot higher than unmapped cache.
+> >
+> > So I'm a bit reluctant about this patch. If Minchan can be happy with
+> > the lock batching, I'd prefer that.
+> 
+> Yes, it seems that the regular lock drop&relock helps in Minchan's case
+> but this is a kind of change that might have other subtle side effects.
+> E.g. will-it-scale has noticed a regression [1], likely because the
+> critical section is shorter and the overal throughput of the operation
+> decreases. Now, the w-i-s is an artificial benchmark so I wouldn't lose
+> much sleep over it normally but we have already seen real regressions
+> when the locking pattern has changed in the past so I would by a bit
+> cautious.
 
-  /* blocking watches require the file:watch_with_perm permission */
-  if (...)
-    perm |= FILE__WATCH_WITH_PERM;
+I'm much more concerned about fundamentally changing the aging policy
+of mapped page cache then about the lock breaking scheme. With locking
+we worry about CPU effects; with aging we worry about additional IO.
 
-> +       // is the mask asking to watch file reads?
-> +       if (mask & (FS_ACCESS | FS_ACCESS_PERM | FS_CLOSE_NOWRITE))
-> +               perm |= FILE__WATCH_READS; // check that permission as well
+> As I've said, this RFC is mostly to open a discussion. I would really
+> like to weigh the overhead of mark_page_accessed and potential scenario
+> when refaults would be visible in practice. I can imagine that a short
+> lived statically linked applications have higher chance of being the
+> only user unlike libraries which are often being mapped via several
+> ptes. But the main problem to evaluate this is that there are many other
+> external factors to trigger the worst case.
 
-Here the "check that permission as well" adds no additional useful
-information, it's just noise in the code, drop it from the patch.
-
-I am a believer in the old advice that good comments explain *why* the
-code is doing something, where bad comments explain *what* the code is
-doing.  I would kindly ask that you keep that in mind when submitting
-future SELinux patches.
-
--- 
-paul moore
-www.paul-moore.com
+We can discuss the pros and cons, but ultimately we simply need to
+test it against real workloads to see if changing the promotion rules
+regresses the amount of paging we do in practice.
