@@ -2,181 +2,139 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32831C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 892E5C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E78A820842
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D26D20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:25:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pdwnw6J6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OCwdg+fJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbfHLKYz (ORCPT
+        id S1727916AbfHLKZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:24:55 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50631 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727762AbfHLKYz (ORCPT
+        Mon, 12 Aug 2019 06:25:25 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46819 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727703AbfHLKZZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:24:55 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v15so11645308wml.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 03:24:53 -0700 (PDT)
+        Mon, 12 Aug 2019 06:25:25 -0400
+Received: by mail-wr1-f66.google.com with SMTP id z1so104086669wru.13;
+        Mon, 12 Aug 2019 03:25:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=s4c+tCeURwefVMli54iWLwLzBmEiKHEDXmTByXMYRso=;
-        b=Pdwnw6J67H7oh9kG9MSsgYoXkdh501ITQ+vyaKqx8I5koutjUs8WxYTHY5P0rqX6Kq
-         FaJXpKcfefMm4VvtL/T6xaZGzTTQbUvKGJjM3I/VFvcQ0DCQNwC3aIyfjU8ZQE8aV7g7
-         9g3kQVmNLS6toK1woedUfVsC4xMma3jCX71ZaUNgjQXgWMjSKTalINYNo0lIBdu0I+hJ
-         17w3MPAddEkIGRcFIe2LvCBFqSgsJmdDHFVMgeMzpZduUCHCqzSgED1SJRfCyUPNakpL
-         9xeXwF0IS9HV4qQurL3bnDZLlZ71Z80zwSqsUy4bpkmEiqz8FUjO1UEe+jypGDtzO1uA
-         w5kw==
+         :content-disposition:in-reply-to:user-agent;
+        bh=PIAupDPuXjY8vH3r8F2CpCcWnZ4atzq5h0b+kQLhH+s=;
+        b=OCwdg+fJef/L9XVuxGY6Alc24Gm4QyZwIk/wWZcJYtfVz0llGuYy8hWIL6dE+CA3Dw
+         foGBga0+uFwLxB9DqB/HFPOP0dD/j5Re/mq7r0FkzKjWRgMOBaatS6DAYsW64Q0IoCgT
+         v3frKbqCMimQUei0PcaZs3yRncEgP3eVPiVmT2TwOXUAMZDNRzujsM57IKh+zZ1A5DAI
+         kOrbhdFdgonKD+eFZttxFiDHiUk2waWwVBdVjv0BsA0OHm9PhEsvKBor4AACD2p938D9
+         rKHREm9//MXZEIgDLZ3TArowHQJ0UaDHyG7/ITkQrpNG3ELS+qdc27o00i8tiI5jd3ZL
+         ZbTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=s4c+tCeURwefVMli54iWLwLzBmEiKHEDXmTByXMYRso=;
-        b=r8NZqHXe6ocGryN9e90u2N13oVBvzv1PfM2hU2V3fWAlaAg4fSCbg19wMgfbGqS4qw
-         1liIzUH4d4IyECUoMlp4Cjd1z8R9r1m0cVeYQlvoFZDfGzCi2+bL2PyOd6uWhFdAGlWy
-         q4DQfJ2b3n1o6chWpaz9pn6Eh7+VkLaIRLEp0jtFdPVTZfKg7jhnhZX/hI9PON47E95A
-         106C8JTNFT2OZ2527oI8He2FnISuelGXMgyhNONHFlHL/hM8/J+92N0GI+Ge449qlvM0
-         eQKnTnt+hjl1VaByYajhg2XH23NWeQ5kxKt20P142OeIzPd5YLeLyY+EKdOqimmoBjJ1
-         oFaA==
-X-Gm-Message-State: APjAAAXXpDvIiRE/4wclTYn7PKkqQ2onzpVsMQWsTBA0Fm08PkruIbJF
-        /aR3SqZfsb90LGkpSZ5CIZHVTw==
-X-Google-Smtp-Source: APXvYqyxkApIE8+Qfsn+A8tYWpIpvwdj9Lwb/49n7m31aXieEdChiennESHmI1ox7hWldcSQUf7guw==
-X-Received: by 2002:a1c:7e85:: with SMTP id z127mr27612402wmc.95.1565605493088;
-        Mon, 12 Aug 2019 03:24:53 -0700 (PDT)
-Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id l14sm10411976wrn.42.2019.08.12.03.24.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 03:24:52 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 11:24:50 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, arnd@arndb.de
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v2 1/3] arm64: imx8mq: add imx8mq iomux-gpr field defines
-Message-ID: <20190812102450.GK26727@dell>
-References: <cover.1565367567.git.agx@sigxcpu.org>
- <e0562d8bb4098dc4cdb4023b41fb75b312be22a5.1565367567.git.agx@sigxcpu.org>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PIAupDPuXjY8vH3r8F2CpCcWnZ4atzq5h0b+kQLhH+s=;
+        b=EVZF18kU9L9nvCTMdSqvX2BGdT4TIHNWIIdR4D50n9QaSuLDt1z6BNOiLgl57OFWmJ
+         FdeMoGiETctJwqasy+ceHYAuRCjrNChINbx8MXMnIrUGevTNsT4xCiE17NCYhyn8yMeO
+         7QcW633fbSk/FROLnRsYNXJYe3Iz/LMQDMKDpLkM1pdBZvwo1sKq6XwgpURcKpP+0DDM
+         mLxCP0vMAaCmx+BkkkyOa8JnHvjor0BX1C06RbPsn7zm6scRezBELJEk76Sy2FQVFDMo
+         TyHKfGQ4b6A0e6FRUztc+hqoghRkJr79mhhVD9L6d9KJRYlOcqCOnAMzbDP9Y34a/Re3
+         tAgg==
+X-Gm-Message-State: APjAAAUEGDb/qkT8P6uLmBDDjUOb2r60SMWhbypTDTd8YHQ+D089TTqL
+        2QdoJnz/bSeq9dm4yWiH0Rk=
+X-Google-Smtp-Source: APXvYqzOg/oqt5FDmrHHGm4UwI9Lwb2F5Q0/VdEDMZCcUfcUWnykIVeThG56IyoyM5PHpJ5vVFM8hA==
+X-Received: by 2002:adf:a2cd:: with SMTP id t13mr20581202wra.251.1565605522275;
+        Mon, 12 Aug 2019 03:25:22 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id a84sm16437631wmf.29.2019.08.12.03.25.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 03:25:20 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 12:25:19 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V15 00/13] PCI: tegra: Add Tegra194 PCIe support
+Message-ID: <20190812102519.GN8903@ulmo>
+References: <20190809044609.20401-1-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="e8/wErwm0bqugfcz"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e0562d8bb4098dc4cdb4023b41fb75b312be22a5.1565367567.git.agx@sigxcpu.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190809044609.20401-1-vidyas@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 09 Aug 2019, Guido Günther wrote:
 
-> This adds all the gpr registers and the define needed for selecting
-> the input source in the imx-nwl drm bridge.
-> 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> ---
->  include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h | 62 ++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h
+--e8/wErwm0bqugfcz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I would like Arnd to look at this please.
+On Fri, Aug 09, 2019 at 10:15:56AM +0530, Vidya Sagar wrote:
+> Tegra194 has six PCIe controllers based on Synopsys DesignWare core.
+> There are two Universal PHY (UPHY) blocks with each supporting 12(HSIO:
+> Hisg Speed IO) and 8(NVHS: NVIDIA High Speed) lanes respectively.
+> Controllers:0~4 use UPHY lanes from HSIO brick whereas Controller:5 uses
+> UPHY lanes from NVHS brick. Lane mapping in HSIO UPHY brick to each PCIe
+> controller (0~4) is controlled in XBAR module by BPMP-FW. Since PCIe
+> core has PIPE interface, a glue module called PIPE-to-UPHY (P2U) is used
+> to connect each UPHY lane (applicable to both HSIO and NVHS UPHY bricks)
+> to PCIe controller
+> This patch series
+> - Adds support for P2U PHY driver
+> - Adds support for PCIe host controller
+> - Adds device tree nodes each PCIe controllers
+> - Enables nodes applicable to p2972-0000 platform
+> - Adds helper APIs in Designware core driver to get capability regs offset
+> - Adds defines for new feature registers of PCIe spec revision 4
+> - Makes changes in DesignWare core driver to get Tegra194 PCIe working
+>=20
+> Testing done on P2972-0000 platform
+> - Able to get PCIe link up with on-board Marvel eSATA controller
+> - Able to get PCIe link up with NVMe cards connected to M.2 Key-M slot
+> - Able to do data transfers with both SATA drives and NVMe cards
+> - Able to perform suspend-resume sequence
 
-> diff --git a/include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h b/include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h
-> new file mode 100644
-> index 000000000000..62e85ffacfad
-> --- /dev/null
-> +++ b/include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h
-> @@ -0,0 +1,62 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2017 NXP
-> + *               2019 Purism SPC
-> + */
-> +
-> +#ifndef __LINUX_IMX8MQ_IOMUXC_GPR_H
-> +#define __LINUX_IMX8MQ_IOMUXC_GPR_H
-> +
-> +#define IOMUXC_GPR0	0x00
-> +#define IOMUXC_GPR1	0x04
-> +#define IOMUXC_GPR2	0x08
-> +#define IOMUXC_GPR3	0x0c
-> +#define IOMUXC_GPR4	0x10
-> +#define IOMUXC_GPR5	0x14
-> +#define IOMUXC_GPR6	0x18
-> +#define IOMUXC_GPR7	0x1c
-> +#define IOMUXC_GPR8	0x20
-> +#define IOMUXC_GPR9	0x24
-> +#define IOMUXC_GPR10	0x28
-> +#define IOMUXC_GPR11	0x2c
-> +#define IOMUXC_GPR12	0x30
-> +#define IOMUXC_GPR13	0x34
-> +#define IOMUXC_GPR14	0x38
-> +#define IOMUXC_GPR15	0x3c
-> +#define IOMUXC_GPR16	0x40
-> +#define IOMUXC_GPR17	0x44
-> +#define IOMUXC_GPR18	0x48
-> +#define IOMUXC_GPR19	0x4c
-> +#define IOMUXC_GPR20	0x50
-> +#define IOMUXC_GPR21	0x54
-> +#define IOMUXC_GPR22	0x58
-> +#define IOMUXC_GPR23	0x5c
-> +#define IOMUXC_GPR24	0x60
-> +#define IOMUXC_GPR25	0x64
-> +#define IOMUXC_GPR26	0x68
-> +#define IOMUXC_GPR27	0x6c
-> +#define IOMUXC_GPR28	0x70
-> +#define IOMUXC_GPR29	0x74
-> +#define IOMUXC_GPR30	0x78
-> +#define IOMUXC_GPR31	0x7c
-> +#define IOMUXC_GPR32	0x80
-> +#define IOMUXC_GPR33	0x84
-> +#define IOMUXC_GPR34	0x88
-> +#define IOMUXC_GPR35	0x8c
-> +#define IOMUXC_GPR36	0x90
-> +#define IOMUXC_GPR37	0x94
-> +#define IOMUXC_GPR38	0x98
-> +#define IOMUXC_GPR39	0x9c
-> +#define IOMUXC_GPR40	0xa0
-> +#define IOMUXC_GPR41	0xa4
-> +#define IOMUXC_GPR42	0xa8
-> +#define IOMUXC_GPR43	0xac
-> +#define IOMUXC_GPR44	0xb0
-> +#define IOMUXC_GPR45	0xb4
-> +#define IOMUXC_GPR46	0xb8
-> +#define IOMUXC_GPR47	0xbc
-> +
-> +/* i.MX8Mq iomux gpr register field defines */
-> +#define IMX8MQ_GPR13_MIPI_MUX_SEL		BIT(2)
-> +
-> +#endif /* __LINUX_IMX8MQ_IOMUXC_GPR_H */
+Do you happen to have a patch for P2972-0000 PCI support? I don't see it
+in this series.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thierry
+
+--e8/wErwm0bqugfcz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1RPo8ACgkQ3SOs138+
+s6H7Pg//dh1al8/AaKqfOXUV7vJCuuAAP7eFAzEZssLuFIavDHghC4X+d5w0OsdZ
+eOnaJyrojkIFvpialETEQ3G+MLw2HyFoBt+f1G827JsyxMvVe+LDkGa2skg79F1y
+wa3gCp2zTkMM1mzS7cfm4wxGSdN1nUuuu63kMvBHpBOALTYnWeGv6hov5/rO+Yqg
+B9Wjbwu2rzNjNKirRW98/nUL5A9Ilxd4rVBu7o7JLz0VSoCdZ/5+DpursUTzZZz/
+9EbUFzy7pngftxrHxOL4DabxegjdehBj5JKQ7vR1ORmSo/9iukVrXh8dptqayijU
+8KUUWoYpnXmCCjBIAoc7mBwrwGfqZm9hF9rGedCILnpWxlVLgrXCxClsvBUn84TL
+db/VKF34Qo20wUfEPwUl0k5QjFwUc369XjfBEhBibkIXQb8+/4pA0EvolU7kedv7
+VrcLkUkEEPgGpTieaEKN11N3gARx8sEDde0muyKMG/bnRQmnvbq65nT0iiNI+lbj
+anvrkE3goyCno6raR0u7JLiWxCOgLVXA94aY+95h+16XpG6+jSQzgJfYWV0Xhi2L
+yPAuIH5zKzz2uzzbyqa4eF39lW0P4oBxghVt8jEvUfuqzcTXnR4VenQaciTjUb2A
+4S5Rtd/jNgp48OFTOpJTxcSPIBRZLzPKZnGGRhFGrpWZWUGikmY=
+=BYfL
+-----END PGP SIGNATURE-----
+
+--e8/wErwm0bqugfcz--
