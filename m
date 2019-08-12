@@ -2,184 +2,86 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B7BC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E35C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36A120679
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D12D521721
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:24:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CFmKhYzb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfHLQXi (ORCPT
+        id S1726808AbfHLQYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 12:23:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36340 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbfHLQXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 12:23:37 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C0FF7C04510D;
-        Mon, 12 Aug 2019 16:23:36 +0000 (UTC)
-Received: from plouf.redhat.com (ovpn-117-165.ams2.redhat.com [10.36.117.165])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6C94784F4;
-        Mon, 12 Aug 2019 16:23:35 +0000 (UTC)
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-To:     Matthias Fend <Matthias.Fend@wolfvision.net>,
-        Jiri Kosina <jikos@kernel.org>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH 2/2] HID: multitouch: add support for the Smart Tech panel
-Date:   Mon, 12 Aug 2019 18:23:26 +0200
-Message-Id: <20190812162326.14253-3-benjamin.tissoires@redhat.com>
-In-Reply-To: <20190812162326.14253-1-benjamin.tissoires@redhat.com>
-References: <20190812162326.14253-1-benjamin.tissoires@redhat.com>
+        Mon, 12 Aug 2019 12:24:45 -0400
+Received: from mail-ot1-f54.google.com ([209.85.210.54]:45208 "EHLO
+        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbfHLQYp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 12:24:45 -0400
+Received: by mail-ot1-f54.google.com with SMTP id m24so8011829otp.12
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 09:24:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EX5SqmQimFHHDLW4N4+79Vwj96/2MHoKe+E0fsyJiX4=;
+        b=CFmKhYzbI6hIG26EYtPFKdHkeYvVR2LPoEEm1pWnytsnlQjp8uMPlRXJMT4XFPG7Nv
+         rgb5569VHjTgVD1Fw2h6+J4/BQgIJJ4Y7y5gNs0SBffw7jpP8QVBO4M/HIbQjpAaa+rb
+         oeRnCHlfwZ0DeWobS/2ZmZR0i6iz7uX31WObeAY4TSlcqlDDnOPLMsGDlAAxSd9VdIK6
+         mFP6LdlZaGVqB0J1BDRvCpZRlaQbzkDD5nWY3rBN+kBy3eWG6JvzxH2370ZZk4mRkTwa
+         bFw004BCG9Ozzkcbd3Kdl3I+0dHSs/liYIYyDatgTOqrNIsd/cRof1FjCqwLGnq2ePe9
+         kTyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EX5SqmQimFHHDLW4N4+79Vwj96/2MHoKe+E0fsyJiX4=;
+        b=uh43oRZbu0MYvxm2NMqo2X4xIcJ1YqkblZrmjs+llUhUcWbPgd4Hh9thvhbOm9JoNx
+         K0LB7kYdOOH7OYHjgqqsIvygTxd0M8oxqW/dY7YolcqdDY0HaqtAU5naKSXypsWa756W
+         gFbw0x7yCnQT6QIQZcaDoAnQsh9ajEmaVebyoXEs8pH2bPHV8uPwJ5kpFA3o3oo35JYh
+         dDHv5HYo7XLnWyGQqLGY30xeZvlo0Gph55onZZi7gpDeBHVPsu++VrN4LNI/9ECzE2/7
+         KhIrLwS2vNgB+TKyOxx6hdct2lRgE/rGNVAnpgkkXMWq7NcmljvJRaFkuzcsovqdDK/k
+         0G/Q==
+X-Gm-Message-State: APjAAAWeTjtSIG/31xRy8MxzriFji5k8Mi4l2nXBBf6y0RHJEH/ndANj
+        pT02neJkd34tPYdBKyJtkIU/ZkbWswmHG/mjElcL+A==
+X-Google-Smtp-Source: APXvYqxmA37cnUt7FIlqtFhijw1GGQINjQ3ttgIzYfaSdF7wC+dpqlZzx5JzYkaAhf5q5G+YBVHWpBw7Op+QeBoNKA4=
+X-Received: by 2002:a02:ba91:: with SMTP id g17mr12832603jao.11.1565627084182;
+ Mon, 12 Aug 2019 09:24:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Mon, 12 Aug 2019 16:23:36 +0000 (UTC)
+References: <4b54ff1e-f18b-3c58-7caa-945a0775c24c@molgen.mpg.de>
+ <alpine.DEB.2.21.1908101910280.7324@nanos.tec.linutronix.de>
+ <01c7bc6b-dc6d-5eca-401a-8869e02f7c2a@molgen.mpg.de> <e18e2a11-ea96-a612-48cd-877fa307115f@molgen.mpg.de>
+ <alpine.DEB.2.21.1908110822110.7324@nanos.tec.linutronix.de>
+ <20190811094630.GA18925@eldamar.local> <alpine.DEB.2.21.1908111456430.7324@nanos.tec.linutronix.de>
+ <20190811153326.GA8036@eldamar.local> <20190812112853.53ecc122@gandalf.local.home>
+In-Reply-To: <20190812112853.53ecc122@gandalf.local.home>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Mon, 12 Aug 2019 09:24:30 -0700
+Message-ID: <CACdnJusGKAx-APuDi2+hqSSVXeeH5hBq4Chi-rPirDos4MvhgQ@mail.gmail.com>
+Subject: Re: [Linux 5.2.x] /sys/kernel/debug/tracing/events/power/cpu_idle/id:
+ BUG: kernel NULL pointer dereference, address: 0000000000000000
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Salvatore Bonaccorso <carnil@debian.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This panel is not very friendly to us:
-it exposes multiple multitouch collections, some of them being of
-logical application stylus.
+On Mon, Aug 12, 2019 at 8:29 AM Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Usually, a device has only one report per application, and that is
-what I assumed in commit 8dfe14b3b47f ("HID: multitouch: ditch mt_report_id")
+> From what I understand, Matthew's "lockdown" work is to prevent the
+> system from doing anything to see what is happening in the kernel. This
+> includes tracefs. This looks like it is working as designed.
 
-To avoid breaking all working device, add a new class and a new quirk
-for that situation.
-
-Reported-and-tested-by: Matthias Fend <Matthias.Fend@wolfvision.net>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
----
- drivers/hid/hid-multitouch.c | 34 ++++++++++++++++++++++++++++------
- 1 file changed, 28 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index 0d190d93ca7c..3cfeb1629f79 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -68,6 +68,7 @@ MODULE_LICENSE("GPL");
- #define MT_QUIRK_STICKY_FINGERS		BIT(16)
- #define MT_QUIRK_ASUS_CUSTOM_UP		BIT(17)
- #define MT_QUIRK_WIN8_PTP_BUTTONS	BIT(18)
-+#define MT_QUIRK_SEPARATE_APP_REPORT	BIT(19)
- 
- #define MT_INPUTMODE_TOUCHSCREEN	0x02
- #define MT_INPUTMODE_TOUCHPAD		0x03
-@@ -103,6 +104,7 @@ struct mt_usages {
- struct mt_application {
- 	struct list_head list;
- 	unsigned int application;
-+	unsigned int report_id;
- 	struct list_head mt_usages;	/* mt usages list */
- 
- 	__s32 quirks;
-@@ -203,6 +205,7 @@ static void mt_post_parse(struct mt_device *td, struct mt_application *app);
- #define MT_CLS_VTL				0x0110
- #define MT_CLS_GOOGLE				0x0111
- #define MT_CLS_RAZER_BLADE_STEALTH		0x0112
-+#define MT_CLS_SMART_TECH			0x0113
- 
- #define MT_DEFAULT_MAXCONTACT	10
- #define MT_MAX_MAXCONTACT	250
-@@ -354,6 +357,12 @@ static const struct mt_class mt_classes[] = {
- 			MT_QUIRK_CONTACT_CNT_ACCURATE |
- 			MT_QUIRK_WIN8_PTP_BUTTONS,
- 	},
-+	{ .name = MT_CLS_SMART_TECH,
-+		.quirks = MT_QUIRK_ALWAYS_VALID |
-+			MT_QUIRK_IGNORE_DUPLICATES |
-+			MT_QUIRK_CONTACT_CNT_ACCURATE |
-+			MT_QUIRK_SEPARATE_APP_REPORT,
-+	},
- 	{ }
- };
- 
-@@ -510,8 +519,9 @@ static struct mt_usages *mt_allocate_usage(struct hid_device *hdev,
- }
- 
- static struct mt_application *mt_allocate_application(struct mt_device *td,
--						      unsigned int application)
-+						      struct hid_report *report)
- {
-+	unsigned int application = report->application;
- 	struct mt_application *mt_application;
- 
- 	mt_application = devm_kzalloc(&td->hdev->dev, sizeof(*mt_application),
-@@ -536,6 +546,7 @@ static struct mt_application *mt_allocate_application(struct mt_device *td,
- 	mt_application->scantime = DEFAULT_ZERO;
- 	mt_application->raw_cc = DEFAULT_ZERO;
- 	mt_application->quirks = td->mtclass.quirks;
-+	mt_application->report_id = report->id;
- 
- 	list_add_tail(&mt_application->list, &td->applications);
- 
-@@ -543,19 +554,23 @@ static struct mt_application *mt_allocate_application(struct mt_device *td,
- }
- 
- static struct mt_application *mt_find_application(struct mt_device *td,
--						  unsigned int application)
-+						  struct hid_report *report)
- {
-+	unsigned int application = report->application;
- 	struct mt_application *tmp, *mt_application = NULL;
- 
- 	list_for_each_entry(tmp, &td->applications, list) {
- 		if (application == tmp->application) {
--			mt_application = tmp;
--			break;
-+			if (!(td->mtclass.quirks & MT_QUIRK_SEPARATE_APP_REPORT) ||
-+			    tmp->report_id == report->id) {
-+				mt_application = tmp;
-+				break;
-+			}
- 		}
- 	}
- 
- 	if (!mt_application)
--		mt_application = mt_allocate_application(td, application);
-+		mt_application = mt_allocate_application(td, report);
- 
- 	return mt_application;
- }
-@@ -572,7 +587,7 @@ static struct mt_report_data *mt_allocate_report_data(struct mt_device *td,
- 		return NULL;
- 
- 	rdata->report = report;
--	rdata->application = mt_find_application(td, report->application);
-+	rdata->application = mt_find_application(td, report);
- 
- 	if (!rdata->application) {
- 		devm_kfree(&td->hdev->dev, rdata);
-@@ -1562,6 +1577,9 @@ static int mt_input_configured(struct hid_device *hdev, struct hid_input *hi)
- 	case HID_VD_ASUS_CUSTOM_MEDIA_KEYS:
- 		suffix = "Custom Media Keys";
- 		break;
-+	case HID_DG_PEN:
-+		suffix = "Stylus";
-+		break;
- 	default:
- 		suffix = "UNKNOWN";
- 		break;
-@@ -2023,6 +2041,10 @@ static const struct hid_device_id mt_devices[] = {
- 		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
- 			USB_VENDOR_ID_SYNAPTICS, 0x8323) },
- 
-+	/* Smart Tech panels */
-+	{ .driver_data = MT_CLS_SMART_TECH,
-+		MT_USB_DEVICE(0x0b8c, 0x0092)},
-+
- 	/* Stantum panels */
- 	{ .driver_data = MT_CLS_CONFIDENCE,
- 		MT_USB_DEVICE(USB_VENDOR_ID_STANTUM_STM,
--- 
-2.19.2
-
+Oopsing the kernel isn't working as designed. Ben has a patch to fix this.
