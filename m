@@ -2,103 +2,84 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A5AC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FC2C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9DAF206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:21:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="MPY+5qIx"
+	by mail.kernel.org (Postfix) with ESMTP id E3788208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:23:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728136AbfHLLVn (ORCPT
+        id S1728178AbfHLLXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 07:21:43 -0400
-Received: from smtp121.iad3b.emailsrvr.com ([146.20.161.121]:55410 "EHLO
-        smtp121.iad3b.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728063AbfHLLVn (ORCPT
+        Mon, 12 Aug 2019 07:23:30 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:41419 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728063AbfHLLXa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 07:21:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1565608532;
-        bh=9x1cUfvsbcEgha7aQEB/fsAOqNVDRg4jX3S5Aq1JnlM=;
-        h=From:To:Subject:Date:From;
-        b=MPY+5qIxeWtB1AUiHhqiIg3YKJOkgBPozzz0gTtblWwpT/ZtRLIyrMLuJGcAWaD33
-         +2jSzeoCASSZSqRNDFIZyycDXW6WnjylIgQw8W+aRTKMe/aDFMkzaMBhUVG0ZwUmPJ
-         5ievljPv9nFGMG/n9BqnX/Pp7GtUtIZAtVOsOtw4=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp16.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 3A861C00BC;
-        Mon, 12 Aug 2019 07:15:31 -0400 (EDT)
-X-Sender-Id: abbotti@mev.co.uk
-Received: from ian-deb.inside.mev.co.uk (remote.quintadena.com [81.133.34.160])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-GCM-SHA256)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Mon, 12 Aug 2019 07:15:32 -0400
-From:   Ian Abbott <abbotti@mev.co.uk>
-To:     devel@driverdev.osuosl.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        linux-kernel@vger.kernel.org, David Binderman <dcb314@hotmail.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] staging: comedi: dt3000: Fix signed integer overflow 'divider * base'
-Date:   Mon, 12 Aug 2019 12:15:17 +0100
-Message-Id: <20190812111517.26803-1-abbotti@mev.co.uk>
-X-Mailer: git-send-email 2.20.1
+        Mon, 12 Aug 2019 07:23:30 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 75E3C20008;
+        Mon, 12 Aug 2019 11:23:28 +0000 (UTC)
+Date:   Mon, 12 Aug 2019 13:23:28 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v6 0/2] Allwinner H6 SPDIF support
+Message-ID: <20190812112328.o6xznp2mvnuchswe@flea>
+References: <20190812105115.26676-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jy2mseu76lv4s422"
+Content-Disposition: inline
+In-Reply-To: <20190812105115.26676-1-peron.clem@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In `dt3k_ns_to_timer()` the following lines near the end of the function
-result in a signed integer overflow:
 
-	prescale = 15;
-	base = timer_base * (1 << prescale);
-	divider = 65535;
-	*nanosec = divider * base;
+--jy2mseu76lv4s422
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-(`divider`, `base` and `prescale` are type `int`, `timer_base` and
-`*nanosec` are type `unsigned int`.  The value of `timer_base` will be
-either 50 or 100.)
+On Mon, Aug 12, 2019 at 12:51:13PM +0200, Cl=E9ment P=E9ron wrote:
+> Allwinner H6 SoC has a SPDIF controller called One Wire Audio (OWA) which
+> is different from the previous H3 generation and not compatible.
+>
+> Difference are an increase of fifo sizes, some memory mapping are differe=
+nt
+> and there is now the possibility to output the master clock on a pin.
+>
+> Actually all these features are unused and only a bit for flushing the TX
+> fifo is required.
 
-The main reason for the overflow is that the calculation for `base` is
-completely wrong.  It should be:
+Applied both, thanks
 
-	base = timer_base * (prescale + 1);
+Maxime
 
-which matches an earlier instance of this calculation in the same
-function.
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Reported-by: David Binderman <dcb314@hotmail.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
----
-N.B. Greg: The original report suggested an actual build error, so
-may be prudent to queue this on your 'staging-linus' queue.
+--jy2mseu76lv4s422
+Content-Type: application/pgp-signature; name="signature.asc"
 
- drivers/staging/comedi/drivers/dt3000.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/drivers/staging/comedi/drivers/dt3000.c b/drivers/staging/comedi/drivers/dt3000.c
-index 2edf3ee91300..4ad176fc14ad 100644
---- a/drivers/staging/comedi/drivers/dt3000.c
-+++ b/drivers/staging/comedi/drivers/dt3000.c
-@@ -368,7 +368,7 @@ static int dt3k_ns_to_timer(unsigned int timer_base, unsigned int *nanosec,
- 	}
- 
- 	prescale = 15;
--	base = timer_base * (1 << prescale);
-+	base = timer_base * (prescale + 1);
- 	divider = 65535;
- 	*nanosec = divider * base;
- 	return (prescale << 16) | (divider);
--- 
-2.20.1
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVFMLwAKCRDj7w1vZxhR
+xcPRAP0ebGBO67tqWojTHkbb+BtT7hi+/h6+hwFFzFt8mCG2RQD9GxoAuuARoreO
+CEPXNNW5FHOEKlw26Jh57e6Xkr2X1A8=
+=n+Qt
+-----END PGP SIGNATURE-----
 
+--jy2mseu76lv4s422--
