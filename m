@@ -2,93 +2,136 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA97BC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F9D2C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFEF720842
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EF19208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:08:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbfHLLHi (ORCPT
+        id S1728201AbfHLLIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 07:07:38 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45225 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728108AbfHLLHh (ORCPT
+        Mon, 12 Aug 2019 07:08:19 -0400
+Received: from anchovy1.45ru.net.au ([203.30.46.145]:55274 "EHLO
+        anchovy1.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728086AbfHLLIT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 07:07:37 -0400
-Received: by mail-ot1-f66.google.com with SMTP id m24so4207608otp.12;
-        Mon, 12 Aug 2019 04:07:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qHM6FDOhsRzjTSd8loKknXcNLEK6jv1Ba3F/sVhpvak=;
-        b=V8zbj8r1zNgjNGOFYxEC34ZR4s8pmp4gtsacmjQXVxiXHqJBBN3ExpdMrrAIMpE+Au
-         FRbss/YYVh4PcvCGxDTpt3EH8vblP9z2yXtcZVrPytb8poTZhysh53sozNxZ27/HQsd+
-         7EuM5JxFeDF0tSqMJF121lGLfCZCbUTez/GMS+BK2jIvvIlb8ADVgLsR99pCByLuMIlg
-         coni3sp3jUKISnFxYWly8LBFR7pQfNr3wHhfybF/8iQus1YiWOlUL5SB7MmNVJ8VLnIn
-         BFLjlhRTH/WOJN8Jc+vUKK0r5SdNd5mKG+MyWRnATHljN/sgL6pnTE/V3I4tqT42MlLB
-         JGww==
-X-Gm-Message-State: APjAAAWZEk8+k2lTwjzXYwQwD1usKg2of9aAHUjahZfV6YYJFOZBrdqE
-        8XRyHadBfIIabQmruPHw9Ag7SFN2sV2XMdlh1k1Fy9d7
-X-Google-Smtp-Source: APXvYqzmaEY+qGiEtJ5HvmGixD/Xz77NLpsNYxYeCejZoLaZ6fsmS4oeCoZJrN9r13ht5HpGdDdIy0RLNV0Px8B6FBY=
-X-Received: by 2002:a05:6830:210f:: with SMTP id i15mr29933428otc.250.1565608056546;
- Mon, 12 Aug 2019 04:07:36 -0700 (PDT)
+        Mon, 12 Aug 2019 07:08:19 -0400
+Received: (qmail 26595 invoked by uid 5089); 12 Aug 2019 11:08:16 -0000
+Received: by simscan 1.2.0 ppid: 26512, pid: 26513, t: 0.0680s
+         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
+Received: from unknown (HELO ?10.1.1.129?) (preid@electromag.com.au@118.209.160.98)
+  by anchovy1.45ru.net.au with ESMTPA; 12 Aug 2019 11:08:15 -0000
+Subject: Re: iio: Is storing output values to non volatile registers something
+ we should do automatically or leave to userspace action. [was Re: [PATCH]
+ iio: potentiometer: max5432: update the non-volatile position]
+To:     Martin Kaiser <martin@kaiser.cx>,
+        Jonathan Cameron <jic23@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190809160617.21035-1-martin@kaiser.cx>
+ <20190811101137.5bd495e9@archlinux>
+ <20190812103751.gumfzgazlytq5zqm@viti.kaiser.cx>
+From:   Phil Reid <preid@electromag.com.au>
+Message-ID: <42d99cc8-e59b-6c0b-d1e3-5690b8d1fe53@electromag.com.au>
+Date:   Mon, 12 Aug 2019 19:08:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190811043253.24938-1-max@enpas.org> <CAMuHMdVJJxjH-gPraW==smrkOOMcGYPKB8BPzrYPU4bstASX3A@mail.gmail.com>
- <fe5cf25f-1804-dc45-7010-01e602b3f3e5@enpas.org>
-In-Reply-To: <fe5cf25f-1804-dc45-7010-01e602b3f3e5@enpas.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 12 Aug 2019 13:07:25 +0200
-Message-ID: <CAMuHMdUum4Dubx8EOsSakaNfLp4-Yyzsutfkvb_+i5mqtOtkKw@mail.gmail.com>
-Subject: Re: [PATCH] i2c/busses: Add i2c-icy for I2C on m68k/Amiga
-To:     Max Staudt <max@enpas.org>
-Cc:     Linux I2C <linux-i2c@vger.kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190812103751.gumfzgazlytq5zqm@viti.kaiser.cx>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Max,
+G'day Martin / Jonathan,
 
-On Mon, Aug 12, 2019 at 12:43 PM Max Staudt <max@enpas.org> wrote:
-> On 08/12/2019 11:37 AM, Geert Uytterhoeven wrote:
-> >> +       /*
-> >> +        * The 2019 a1k.org PCBs have an LTC2990 at 0x4c, so start
-> >> +        * it automatically once ltc2990 is modprobed.
-> >> +        *
-> >> +        * in0 is the voltage of the internal 5V power supply.
-> >> +        * temp1 is the temperature inside the chip.
-> >> +        *
-> >> +        * Configuration 0x18 enables all sensors on this PCB:
-> >> +        *  # modprobe i2c-dev
-> >> +        *  # i2cset 0 0x4c 1 0x18
-> >
-> > What's the reason for the i2cset command?
->
-> It sets the sensor modes in the LTC2990 and enables the three sensors listed below. I should have clarified this.
->
-> I tried to integrate this in the driver, but ltc2990 only allows reading this configuration out of a device tree. Is there a good way to fake a DT entry in the init function?
+On 12/08/2019 18:37, Martin Kaiser wrote:
+> Hi Jonathan,
+> 
+> Thus wrote Jonathan Cameron (jic23@kernel.org):
+> 
+>> The patch is fine, but I'm wondering about whether we need some element
+>> of policy control on this restore to current value.
+> 
+>> A few things to take into account.
+> 
+>> * Some devices don't have a non volatile store.  So userspace will be
+>>    responsible for doing the restore on reboot.
+>> * This may be one of several related devices, and it may make no sense
+>>    to restore this one if the others aren't going to be in the same
+>>    state as before the reboot.
+>> * Some devices only have non volatile registers for this sort of value
+>>    (or save to non volatile on removal of power). Hence any policy to
+>>    not store the value can't apply to this class of device.
+> 
+> I see your point. You'd like a consistent bahaviour across all
+> potentiometer drivers. Or at least a way for user space to figure out
+> whether a chip uses non-volatile storage or not.
+> This property doesn't quite fit into the channel info that are defined
+> in the arrays in drivers/iio/industrialio-core.c. Is there any other way
+> to set such a property?
+> 
+>> My initial thought is that these probably don't matter that much and
+>> we should apply this, but I would like to seek input from others!
+> 
+>> I thought there were some other drivers doing similar store to no
+>> volatile but I can't find one.
+> 
+> drivers/iio/potentiometer/max5481.c and max5487.c do something similar.
+> 
+> They use a command to transfer the setting from volatile to non-volatile
+> register in the spi remove function. I guess that the intention is to
+> save the current setting when the system is rebooted. However, my
+> understanding is that the remove function is called only when a module
+> is unloaded or when user space does explicitly unbind the device from
+> the bus via sysfs. That's why I tried using the shutdown function
+> instead.
+> 
+> Still, this approach has some disadvantages. For many systems, there's a
+> soft reboot (shutdown -r) where the driver's shutdown function is called
+> and a "hard reboot" where the power from the CPU and the potentiometer
+> chip is removed and reapplied. In this case, the current value would not
+> be transfered to the non-volatile register.
+> 
+> At least for the max5432 family, there's no way to read the current
+> setting. The only option for user space to have a well-defined setting
+> is to set the wiper position explicitly at startup.
+> 
+> I guess the only sensible way to use a non-volatile register would be a
+> write operation where user space gets a response about successful
+> completion.
+> 
+> We could have two channels to write to the volatile or to non-volatile
+> register. Or we stick to one channel and update both volatile and
+> non-volatile registers when user space changes the value. This assumes
+> that the setting does not change frequently, which is prabably not true
+> for all applications...
+> 
+> Whatever we come up with, we should at least make the max* chips behave
+> the same way.
+> 
+The AD5272/AD5274 Digital Rheostat has a 50-times limit for programming the NV register.
+So you want to be real sure that you want to set it.
 
-You can add platform_data support to the ltc2990 driver, and pass it
-through i2c_board_info.platform_data.
+I'd rather my system default to a known "safe" value for next boot than
+set to whatever the last write was. So some kind of policy on setting this would
+be nice. I personally think it's something that userspace should initiate via an explicit
+command.
 
-Gr{oetje,eeting}s,
+Writing the NV for the AD5272 is something I planned to add at some stage.
+But so far the default factory values have worked ok.
+It'd be nice for cross device consistency for any interface for this.
 
-                        Geert
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards
+Phil Reid
