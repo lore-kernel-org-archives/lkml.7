@@ -2,141 +2,98 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84324C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B808BC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C84120663
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7203420663
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:42:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZRo1bNo+"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AejkOoxo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfHLTmP (ORCPT
+        id S1727072AbfHLTme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 15:42:15 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41803 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfHLTmP (ORCPT
+        Mon, 12 Aug 2019 15:42:34 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:8775 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfHLTmd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 15:42:15 -0400
-Received: by mail-lj1-f194.google.com with SMTP id d24so99365612ljg.8
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 12:42:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i9ag70mY/H+XzREddXT8m/GXsHt6XXH2r3/lGBLxgjQ=;
-        b=ZRo1bNo+Aw7DiqwxJFn3dOhsQ/fbVTXH8r5yWiltl7XdssZ/k7B0Yz7F5FHLa/WdkS
-         MeT+k+iNxhKOWiIKH9o5/D2tDHeeWPmSNDPkw5skE0iSvjSCpsUqe9K1out3ZZied9kc
-         gNrTfUjruX87SkWqrLtPjiNb/QoE16r3csI4KMZERkYHTzqUJ7RydCIZBq09Qd2WRwqb
-         gTagedY8bdHU7LMOADp8JxIY+PGeA1Qu6Pyh0hjfZcmbgeOzgu5bqQL2ddXmPBQYhXV0
-         KuXQQmq/eYfGsLYe0vO7pvr0hYBW5f9fQI0FE/TzXU5vJmNZpIEeypVaGuZQOiY54giO
-         7Xrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i9ag70mY/H+XzREddXT8m/GXsHt6XXH2r3/lGBLxgjQ=;
-        b=dZcImyTHkcz5hzt+HMQAHBPkHt8d28CCQiTiqi08g5euuakSAxZvvZ1uj6VCEFLmys
-         dhhahoVxUeftJd+L0MBxwDfMEtMtYG/Q0s/Krmc4LRCZnInoTcq9h8VwdEUTPzxgXZ1x
-         7E7DStWTOV6fuN/9RtIqCvzPUUcjsu1AagTZ9x+Hcu2QIAraFEYrX9C8ZwUWr9Y6DaVB
-         3IJjKYpnlvjp8xfq9bLlDCYs2wWOVu/a5rApG01TBJtEHHgkDT40yzigfy0xv160mJe1
-         vcDyIct4Ex6fqFepRQdHRuupdQuJc42UB3VnlcAWVmTnAKXaNkzll44tws0nBehpINkV
-         npKA==
-X-Gm-Message-State: APjAAAUQDFuq9EIEhF2M17j72lhLbc/yzfNNGgEIHA2rHSOvCwMij0JF
-        sGBWNeAI8u3Jl2AuNoQrXO4GTModEVkSZAmiKME=
-X-Google-Smtp-Source: APXvYqwompkoD8EmgNEGCtq1PSOzsE9DbFEgjmLe9WsZMZf/8p/TnQjxnGKvuCVakhW7AbgT0g6kxogCgzWpuQO2qiU=
-X-Received: by 2002:a2e:8059:: with SMTP id p25mr7751366ljg.120.1565638933507;
- Mon, 12 Aug 2019 12:42:13 -0700 (PDT)
+        Mon, 12 Aug 2019 15:42:33 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d51c1340002>; Mon, 12 Aug 2019 12:42:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 12 Aug 2019 12:42:33 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 12 Aug 2019 12:42:33 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 12 Aug
+ 2019 19:42:30 +0000
+Subject: Re: [PATCH] nouveau/hmm: map pages after migration
+To:     Christoph Hellwig <hch@lst.de>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <nouveau@lists.freedesktop.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+References: <20190807150214.3629-1-rcampbell@nvidia.com>
+ <20190808070701.GC29382@lst.de>
+ <0b96a8d8-86b5-3ce0-db95-669963c1f8a7@nvidia.com>
+ <20190810111308.GB26349@lst.de>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <1a84e6b6-31e6-6955-509f-9883f4a7a322@nvidia.com>
+Date:   Mon, 12 Aug 2019 12:42:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <CAM_iQpXvuYKn94WjJ9nSjzhk8DzYAvDmdgxsi6cc9CdBfkdTnw@mail.gmail.com>
- <20180223121456.GZ25201@hirez.programming.kicks-ass.net> <20180226203937.GA21543@tassilo.jf.intel.com>
- <CAKA=qzYOU-VtEC5p6djRNmVS0xGe=jpTd3ZgUr++1G3Jj1=PTg@mail.gmail.com>
- <alpine.DEB.2.21.1908121933310.7324@nanos.tec.linutronix.de>
- <CAKA=qzY=F-wj8YXhb-B7RahNceeab0rSA=06qBc8+7V-SyY-+Q@mail.gmail.com> <alpine.DEB.2.21.1908122133310.7324@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1908122133310.7324@nanos.tec.linutronix.de>
-From:   Josh Hunt <joshhunt00@gmail.com>
-Date:   Mon, 12 Aug 2019 12:42:02 -0700
-Message-ID: <CAKA=qzYTax6ECQBChUrNWMRp5iY9F2SezMY2Ma_zmWxiDgjOSA@mail.gmail.com>
-Subject: Re: Long standing kernel warning: perfevents: irq loop stuck!
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "Liang, Kan" <kan.liang@intel.com>, jolsa@redhat.com,
-        bigeasy@linutronix.de, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190810111308.GB26349@lst.de>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565638964; bh=OU8IJv/lYjVdyGsKoyblYg4ib4y7MVh+DIjHamncxq8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=AejkOoxomaGMhLpZ3pIIkspkKl7sO550hrdwKO5/NA8faapWC8ktyg1xgZmGlUyIT
+         E8+aD/Eyq4DXtfObw2wb1IDfF5rGaB9SY6L/edDp+qrtiD/VZn2zqviiDYtoL2w5RT
+         G2oreIveRctBxGW5KoLgroNOd1BXtk46jBCX4G5NkjDRbfvrDjsc6GOcIcGt2oLG0z
+         UngAn/Ys1zlFjY6Xwh+/SSpg1UNR5ybYE1cK2qp/6NKJvinEEPJHRCwvguTZlofaqS
+         Pfo7VmGAYM9odOp4MO2GNNvVxTKI+kTKn1BcDsQmcysGiShtWpFpnDFVSIWPomC38i
+         YRYBbJfX49njg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 12:34 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Mon, 12 Aug 2019, Josh Hunt wrote:
-> > On Mon, Aug 12, 2019 at 10:55 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > >
-> > > On Mon, 12 Aug 2019, Josh Hunt wrote:
-> > > > Was there any progress made on debugging this issue? We are still
-> > > > seeing it on 4.19.44:
-> > >
-> > > I haven't seen anyone looking at this.
-> > >
-> > > Can you please try the patch Ingo posted:
-> > >
-> > >   https://lore.kernel.org/lkml/20150501070226.GB18957@gmail.com/
-> > >
-> > > and if it fixes the issue decrease the value from 128 to the point where it
-> > > comes back, i.e. 128 -> 64 -> 32 ...
-> > >
-> > > Thanks,
-> > >
-> > >         tglx
-> >
-> > I just checked the machines where this problem occurs and they're both
-> > Nehalem boxes. I think Ingo's patch would only help Haswell machines.
-> > Please let me know if I misread the patch or if what I'm seeing is a
-> > different issue than the one Cong originally reported.
->
-> Find the NHM hack below.
->
-> Thanks,
->
->         tglx
->
-> 8<----------------
->
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 648260b5f367..93c1a4f0e73e 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -3572,6 +3572,11 @@ static u64 bdw_limit_period(struct perf_event *event, u64 left)
->         return left;
->  }
->
-> +static u64 nhm_limit_period(struct perf_event *event, u64 left)
-> +{
-> +       return max(left, 128ULL);
-> +}
-> +
->  PMU_FORMAT_ATTR(event, "config:0-7"    );
->  PMU_FORMAT_ATTR(umask, "config:8-15"   );
->  PMU_FORMAT_ATTR(edge,  "config:18"     );
-> @@ -4606,6 +4611,7 @@ __init int intel_pmu_init(void)
->                 x86_pmu.pebs_constraints = intel_nehalem_pebs_event_constraints;
->                 x86_pmu.enable_all = intel_pmu_nhm_enable_all;
->                 x86_pmu.extra_regs = intel_nehalem_extra_regs;
-> +               x86_pmu.limit_period = nhm_limit_period;
->
->                 mem_attr = nhm_mem_events_attrs;
->
-Thanks Thomas. Will try this and let you know.
 
--- 
-Josh
+On 8/10/19 4:13 AM, Christoph Hellwig wrote:
+> On something vaguely related to this patch:
+> 
+> You use the NVIF_VMM_PFNMAP_V0_V* defines from nvif/if000c.h, which are
+> a little odd as we only ever set these bits, but they also don't seem
+> to appear to be in values that are directly fed to the hardware.
+> 
+> On the other hand mmu/vmm.h defines a set of NVIF_VMM_PFNMAP_V0_*
+
+Yes, I see NVKM_VMM_PFN_*
+
+> constants with similar names and identical values, and those are used
+> in mmu/vmmgp100.c and what appears to finally do the low-level dma
+> mapping and talking to the hardware.  Are these two sets of constants
+> supposed to be the same?  Are the actual hardware values or just a
+> driver internal interface?
+
+It looks a bit odd to me too.
+I don't really know the structure/history of nouveau.
+Perhaps Ben Skeggs can shed more light on your question.
