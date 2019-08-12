@@ -2,136 +2,115 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F9D2C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA833C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF19208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 761DC20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:10:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565608216;
+	bh=tS6IR6P1x92K78yk6lWGvErb+OAt9xyhyDY3++Qc7xo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qlP5HPAM3kr0bhcKnScQfWc34caUI7nSsOQey7CFSMg8p9oe7htU260lChzU8a598
+	 Sa8dtSnFWsLyeaDH4MwRXPKPk7RxPEreeIldnYCmrMC6Uvcl6OK6aZRpUF98j68zrd
+	 DAyDxwNK/3bh44aHoGWahU/vSZU4XKFNd6S95rTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbfHLLIT (ORCPT
+        id S1728090AbfHLLKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 07:08:19 -0400
-Received: from anchovy1.45ru.net.au ([203.30.46.145]:55274 "EHLO
-        anchovy1.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728086AbfHLLIT (ORCPT
+        Mon, 12 Aug 2019 07:10:15 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35984 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727235AbfHLLKO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 07:08:19 -0400
-Received: (qmail 26595 invoked by uid 5089); 12 Aug 2019 11:08:16 -0000
-Received: by simscan 1.2.0 ppid: 26512, pid: 26513, t: 0.0680s
-         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
-Received: from unknown (HELO ?10.1.1.129?) (preid@electromag.com.au@118.209.160.98)
-  by anchovy1.45ru.net.au with ESMTPA; 12 Aug 2019 11:08:15 -0000
-Subject: Re: iio: Is storing output values to non volatile registers something
- we should do automatically or leave to userspace action. [was Re: [PATCH]
- iio: potentiometer: max5432: update the non-volatile position]
-To:     Martin Kaiser <martin@kaiser.cx>,
-        Jonathan Cameron <jic23@kernel.org>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190809160617.21035-1-martin@kaiser.cx>
- <20190811101137.5bd495e9@archlinux>
- <20190812103751.gumfzgazlytq5zqm@viti.kaiser.cx>
-From:   Phil Reid <preid@electromag.com.au>
-Message-ID: <42d99cc8-e59b-6c0b-d1e3-5690b8d1fe53@electromag.com.au>
-Date:   Mon, 12 Aug 2019 19:08:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 12 Aug 2019 07:10:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=vED+9cQ0sertdJ1ms2MKGbJLYJH7mjscNUgYcRMgoP8=; b=nBG/fX81cclUONp6sUQcuMu7E
+        JluFxxkl0XrObYtk/lHbAKQ1I4vVR2I/xm3HeDy6A2oL/efLgCopfTe4tA7twrHPvqdWF/x+ACcYq
+        sbKy/2Kpke0l+H62/MuFWww6VzAPB3gLYUJjeASrhWnLN+4BE4mzRJW16Qk/5FwcaFGs8=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1hx8DM-000134-51; Mon, 12 Aug 2019 11:10:12 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 94A3527430B7; Mon, 12 Aug 2019 12:10:11 +0100 (BST)
+Date:   Mon, 12 Aug 2019 12:10:11 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Raag Jadav <raagjadav@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH 1/2] regulator: act8865: operating mode and suspend state
+ support
+Message-ID: <20190812111011.GF4592@sirena.co.uk>
+References: <1565423335-3213-1-git-send-email-raagjadav@gmail.com>
+ <1565423335-3213-2-git-send-email-raagjadav@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190812103751.gumfzgazlytq5zqm@viti.kaiser.cx>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="QXO0/MSS4VvK6f+D"
+Content-Disposition: inline
+In-Reply-To: <1565423335-3213-2-git-send-email-raagjadav@gmail.com>
+X-Cookie: Decaffeinated coffee?  Just Say No.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-G'day Martin / Jonathan,
 
-On 12/08/2019 18:37, Martin Kaiser wrote:
-> Hi Jonathan,
-> 
-> Thus wrote Jonathan Cameron (jic23@kernel.org):
-> 
->> The patch is fine, but I'm wondering about whether we need some element
->> of policy control on this restore to current value.
-> 
->> A few things to take into account.
-> 
->> * Some devices don't have a non volatile store.  So userspace will be
->>    responsible for doing the restore on reboot.
->> * This may be one of several related devices, and it may make no sense
->>    to restore this one if the others aren't going to be in the same
->>    state as before the reboot.
->> * Some devices only have non volatile registers for this sort of value
->>    (or save to non volatile on removal of power). Hence any policy to
->>    not store the value can't apply to this class of device.
-> 
-> I see your point. You'd like a consistent bahaviour across all
-> potentiometer drivers. Or at least a way for user space to figure out
-> whether a chip uses non-volatile storage or not.
-> This property doesn't quite fit into the channel info that are defined
-> in the arrays in drivers/iio/industrialio-core.c. Is there any other way
-> to set such a property?
-> 
->> My initial thought is that these probably don't matter that much and
->> we should apply this, but I would like to seek input from others!
-> 
->> I thought there were some other drivers doing similar store to no
->> volatile but I can't find one.
-> 
-> drivers/iio/potentiometer/max5481.c and max5487.c do something similar.
-> 
-> They use a command to transfer the setting from volatile to non-volatile
-> register in the spi remove function. I guess that the intention is to
-> save the current setting when the system is rebooted. However, my
-> understanding is that the remove function is called only when a module
-> is unloaded or when user space does explicitly unbind the device from
-> the bus via sysfs. That's why I tried using the shutdown function
-> instead.
-> 
-> Still, this approach has some disadvantages. For many systems, there's a
-> soft reboot (shutdown -r) where the driver's shutdown function is called
-> and a "hard reboot" where the power from the CPU and the potentiometer
-> chip is removed and reapplied. In this case, the current value would not
-> be transfered to the non-volatile register.
-> 
-> At least for the max5432 family, there's no way to read the current
-> setting. The only option for user space to have a well-defined setting
-> is to set the wiper position explicitly at startup.
-> 
-> I guess the only sensible way to use a non-volatile register would be a
-> write operation where user space gets a response about successful
-> completion.
-> 
-> We could have two channels to write to the volatile or to non-volatile
-> register. Or we stick to one channel and update both volatile and
-> non-volatile registers when user space changes the value. This assumes
-> that the setting does not change frequently, which is prabably not true
-> for all applications...
-> 
-> Whatever we come up with, we should at least make the max* chips behave
-> the same way.
-> 
-The AD5272/AD5274 Digital Rheostat has a 50-times limit for programming the NV register.
-So you want to be real sure that you want to set it.
+--QXO0/MSS4VvK6f+D
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'd rather my system default to a known "safe" value for next boot than
-set to whatever the last write was. So some kind of policy on setting this would
-be nice. I personally think it's something that userspace should initiate via an explicit
-command.
+On Sat, Aug 10, 2019 at 01:18:54PM +0530, Raag Jadav wrote:
 
-Writing the NV for the AD5272 is something I planned to add at some stage.
-But so far the default factory values have worked ok.
-It'd be nice for cross device consistency for any interface for this.
+> +static int act8865_set_mode(struct regulator_dev *rdev, unsigned int mode)
+> +{
+> +	struct act8865 *act8865 = rdev_get_drvdata(rdev);
+> +	struct regmap *regmap = rdev->regmap;
+> +	int id = rdev_get_id(rdev);
+> +	int reg, ret, val = 0;
 
+This function doesn't check if the mode is _FIXED - if it is then I'd
+expect to get an error when trying to set the mode (I'm assuming that
+means fixed in hardware).
 
--- 
-Regards
-Phil Reid
+> +static unsigned int act8865_get_mode(struct regulator_dev *rdev)
+> +{
+> +	struct act8865 *act8865 = rdev_get_drvdata(rdev);
+> +	int id = rdev_get_id(rdev);
+> +
+> +	if (id < ACT8865_ID_DCDC1 || id >= ACT8865_ID_MAX)
+> +		return -EINVAL;
+> +
+> +	return act8865->op_mode[id];
+> +}
+
+This should be reading the value back from the hardware.
+
+--QXO0/MSS4VvK6f+D
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1RSRIACgkQJNaLcl1U
+h9BhNQf7B2/bNkk+XZ0e/tSVOzn00nt73fznt5qCrh7/yAtFkVxdf6LjfSE1npvK
+SueIulSiA0j0bCBr//JcD19lDdGzdrCH3+bc6vRFfFSOo5tJfqsm/gCYJg8k86uS
+1uT4fRIJfp0dVtG0CADCY1mxAY3bltg8TRHKudtQHv9bV5Wm0iV7oQrcSrttowCk
+HgsoWDMg6VHDp+kxoPt1GzP7vlIB85KOGpjq7wY0/LCPih+/rwbmvTC36KXtrD9o
+3bm949Pf2aw/x1EQ8ImqVBpJmtq8gWTjhjMe7VWwhu5LuLu2UD22HvkkcA9pp7tB
+LEr7wsIbp2dzxwUgLWZZgVDRzNRDyg==
+=N1iA
+-----END PGP SIGNATURE-----
+
+--QXO0/MSS4VvK6f+D--
