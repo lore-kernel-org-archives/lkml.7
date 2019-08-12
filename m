@@ -2,303 +2,169 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA15C32750
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BABBAC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86A20206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86BA8206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:12:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W2RB/Vxj"
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="EBV0Uff0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfHLVMU (ORCPT
+        id S1727188AbfHLVM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 17:12:20 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41377 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfHLVMT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 17:12:19 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 196so3157539pfz.8
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 14:12:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0DB9UTHIFldIFFOJr6TZo6jvfDPuMazUP8xd6Lz++AE=;
-        b=W2RB/VxjLUJmLwI3i7t/ylV0SqzQU3whRIxHEZY174I3x1TcL09PB9YtE6qqnhZflm
-         z3pCM04RE/MNye/FBbIDAB5xKcR9oafYqbRUwtvJ5DVwgm/qIOTG9moOVgz6nn305Uw8
-         y1rvZ7JLdIi5MCunZk5glzIxTMD7YjkiHCRrw06dV0ogIAKmkhVB4UbxqOb6EpZcQ1wi
-         wGQ82PLZxVN67F+ZL0Hb2WaV4YVS+zJxn6QuG86e5pJerUGaNMa0aoBwlfpRj2SW3tA6
-         95vJ3jyazBSzNbXYNRXUgmvtsvUzxz00iARrCQNdCkbULVj/yDPEmaeZdLcJ+wx2hxdN
-         Re2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0DB9UTHIFldIFFOJr6TZo6jvfDPuMazUP8xd6Lz++AE=;
-        b=FGtI+oENa30Np06sy13OgwzI0v8v3UZEfkZmBJeG0M7JfHPi3Zzy4+QciZ/Ed0R92l
-         9O3VSkT6jgl+7tNe9Sxw+B7+DyOs0mIHYZkYE3hc7J73WVo217qEEPWk4PzkAWBAtVZZ
-         QbF612E9hNOvzYe1aV3+5jOuoW/Ek8S81UpH2ZVuQKiRlMoXroAj99JvNjrtiW8WJs2P
-         dsbP9Gk/VB6YDUMbr/bBs7K95FwLIhdjIq+M/NUYMZIxdxb9U6ldv84A3aTVv1NYh7ru
-         jyY5CafVfaD7z4t2a2wro53X69GnnqZ7wdSTmgQ+5X4iDuywwpSWJhMDhjVF7wdD4705
-         B6lg==
-X-Gm-Message-State: APjAAAVwCVDZnl7ngTd6GoIZicFWPIuEJIOCBfSSqUrrnrxuBN5gk/pi
-        Sx1H/QqoP+qy0k9ToB+Jop14tA==
-X-Google-Smtp-Source: APXvYqzaUYIImDWpVIC87+7U7jJ4yfPe7QcYdqiyIGP30vU+nD4zCAI11/ydfpsmLO3b3Hmyvs7bhw==
-X-Received: by 2002:a17:90a:a404:: with SMTP id y4mr1080068pjp.69.1565644337662;
-        Mon, 12 Aug 2019 14:12:17 -0700 (PDT)
-Received: from google.com ([2620:15c:2cb:1:e90c:8e54:c2b4:29e7])
-        by smtp.gmail.com with ESMTPSA id x67sm111873022pfb.21.2019.08.12.14.12.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 14:12:16 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 14:12:11 -0700
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Petr Mladek <pmladek@suse.com>, Jeff Dike <jdike@addtoit.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@google.com>,
-        David Rientjes <rientjes@google.com>,
-        kunit-dev@googlegroups.com,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        shuah <shuah@kernel.org>, wfg@linux.intel.com,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Richard Weinberger <richard@nod.at>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Timothy Bird <Tim.Bird@sony.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream
- like logger
-Message-ID: <20190812211211.GA197038@google.com>
-References: <CAFd5g46a7C1+R6ZcE_SkqaYqgrH5Rx3M=X7orFyaMgFLDbeYYA@mail.gmail.com>
- <20190719000834.GA3228@google.com>
- <20190722200347.261D3218C9@mail.kernel.org>
- <CAFd5g45hdCxEavSxirr0un_uLzo5Z-J4gHRA06qjzcQrTzmjVg@mail.gmail.com>
- <20190722235411.06C1320840@mail.kernel.org>
- <20190724073125.xyzfywctrcvg6fmh@pathway.suse.cz>
- <CAFd5g47v3Mr4GEGOjqyYy9Jwwm+ow7ypbu9j88rxEN06QCzdxQ@mail.gmail.com>
- <20190726083148.d4gf57w2nt5k7t6n@pathway.suse.cz>
- <CAFd5g46iAhDZ5C_chi7oYLVOkwcoj6+0nw+kPWuXhqWwWKd9jA@mail.gmail.com>
- <871ry4yq3y.fsf@linutronix.de>
+        Mon, 12 Aug 2019 17:12:56 -0400
+Received: from first.geanix.com ([116.203.34.67]:58112 "EHLO first.geanix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726718AbfHLVM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 17:12:56 -0400
+Received: from zen.localdomain (unknown [85.184.140.241])
+        by first.geanix.com (Postfix) with ESMTPSA id 40E2DB79;
+        Mon, 12 Aug 2019 21:11:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
+        t=1565644311; bh=mgXsLQ8BeIBpyO91ZbJaEtRAx90yntfQUVQkhgQhhxo=;
+        h=From:To:Cc:Subject:Date;
+        b=EBV0Uff0M4pRmeJ4eKJ6QyEwW6ULI3N600WPpcPRXRezqO9T2wMQX8Lt+JKDJsJ8v
+         PEva6rUpHURQAAAEGcgyZTDARFFlCOThnBNaVG0i/GfN86pvo/eeiJEYwaFak3fH/C
+         bV1qhgbxZdhQE6ahGb90C2XGOn7/dk+Skf6/TEIVv/GZm2C87YTaIE6ekvFPEMvt+k
+         5jVNrUFVpf0r5aH5EPqAh/wbOvteFAw/9stTy3OX+FAvMCN722lFJzBLFtQLBO1iBZ
+         JnWYXYM1XrP9b5AyaEXT/HCuwBhWSwkHlpDomqjXGCDy6aD2cUoWW2CmQlTfqvhPj4
+         nepLYu4u3M4sw==
+From:   =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>,
+        =?UTF-8?q?Sean=20Nyekj=C3=A6r?= <sean@geanix.com>,
+        Esben Haabendal <esben@geanix.com>
+Subject: [PATCHv4] tty: n_gsm: add ioctl to map serial device to mux'ed tty
+Date:   Mon, 12 Aug 2019 23:12:43 +0200
+Message-Id: <20190812211243.98686-1-martin@geanix.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <871ry4yq3y.fsf@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 09:37:53AM +0200, John Ogness wrote:
-> On 2019-08-01, Brendan Higgins <brendanhiggins@google.com> wrote:
-> > On Fri, Jul 26, 2019 at 1:31 AM Petr Mladek <pmladek@suse.com> wrote:
-> >> On Thu 2019-07-25 13:21:12, Brendan Higgins wrote:
-> >>> On Wed, Jul 24, 2019 at 12:31 AM Petr Mladek <pmladek@suse.com> wrote:
-> >>>> On Mon 2019-07-22 16:54:10, Stephen Boyd wrote:
-> >>>>> Quoting Brendan Higgins (2019-07-22 15:30:49)
-> >>>>>> On Mon, Jul 22, 2019 at 1:03 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> >>>>>>> What's the calling context of the assertions and expectations? I
-> >>>>>>> still don't like the fact that string stream needs to allocate
-> >>>>>>> buffers and throw them into a list somewhere because the calling
-> >>>>>>> context matters there.
-> >>>>>>
-> >>>>>> The calling context is the same as before, which is anywhere.
-> >>>>>
-> >>>>> Ok. That's concerning then.
-> >>>>>
-> >>>>>>> I'd prefer we just wrote directly to the console/log via printk
-> >>>>>>> instead. That way things are simple because we use the existing
-> >>>>>>> buffering path of printk, but maybe there's some benefit to the
-> >>>>>>> string stream that I don't see? Right now it looks like it
-> >>>>>>> builds a string and then dumps it to printk so I'm sort of lost
-> >>>>>>> what the benefit is over just writing directly with printk.
-> >>>>>>
-> >>>>>> It's just buffering it so the whole string gets printed
-> >>>>>> uninterrupted.  If we were to print out piecemeal to printk,
-> >>>>>> couldn't we have another call to printk come in causing it to
-> >>>>>> garble the KUnit message we are in the middle of printing?
-> >>>>>
-> >>>>> Yes, printing piecemeal by calling printk many times could lead to
-> >>>>> interleaving of messages if something else comes in such as an
-> >>>>> interrupt printing something. Printk has some support to hold
-> >>>>> "records" but I'm not sure how that would work here because
-> >>>>> KERN_CONT talks about only being used early on in boot code. I
-> >>>>> haven't looked at printk in detail though so maybe I'm all wrong
-> >>>>> and KERN_CONT just works?
-> >>>>
-> >>>> KERN_CONT does not guarantee that the message will get printed
-> >>>> together. The pieces get interleaved with messages printed in
-> >>>> parallel.
-> >>>>
-> >>>> Note that KERN_CONT was originally really meant to be used only
-> >>>> during boot. It was later used more widely and ended in the best
-> >>>> effort category.
-> >>>>
-> >>>> There were several attempts to make it more reliable. But it was
-> >>>> always either too complicated or error prone or both.
-> >>>>
-> >>>> You need to use your own buffering if you rely want perfect output.
-> >>>> The question is if it is really worth the complexity. Also note
-> >>>> that any buffering reduces the chance that the messages will reach
-> >>>> the console.
-> >>>
-> >>> Seems like that settles it then. Thanks!
-> >>>
-> >>>> BTW: There is a work in progress on a lockless printk ring buffer.
-> >>>> It will make printk() more secure regarding deadlocks. But it might
-> >>>> make transparent handling of continuous lines even more tricky.
-> >>>>
-> >>>> I guess that local buffering, before calling printk(), will be
-> >>>> even more important then. Well, it might really force us to create
-> >>>> an API for it.
-> >>>
-> >>> Cool! Can you CC me on that discussion?
-> >>
-> >> Adding John Oggness into CC.
-> >>
-> >> John, please CC Brendan Higgins on the patchsets eventually switching
-> >> printk() into the lockless buffer. The test framework is going to
-> >> do its own buffering to keep the related messages together.
-> >>
-> >> The lockless ringbuffer might make handling of related (partial)
-> >> lines worse or better. It might justify KUnit's extra buffering
-> >> or it might allow to get rid of it.
-> >
-> > Thanks for CC'ing me on the printk ringbuffer thread. It looks like it
-> > actually probably won't affect my needs for KUnit logging. The biggest
-> > reason I need some sort of buffering system is to be able to compose
-> > messages piece meal into a single message that will be printed out to
-> > the user as a single message with no messages from other printk
-> > callers printed out in the middle of mine.
-> 
-> printk has this same requirement for its CONT messages. You can read
-> about how I propose to implement that here[0], using a separate prb
-> ringbuffer for buffered storage until all the pieces are available.
-> 
-> It is not my goal that multiple subsystems start making use of the prb
-> ringbuffer. However, its features can be attractive if you don't want to
-> worry about multiple writers/readers or context (including NMI). Before
+Guessing the first tty for a gsm0710 multiplexed serial device is not
+currently possible, which makes it racy to use with multiple modems.
 
-That sounds like it might be useful down the road, but not to replace
-the string_stream.
+Add a way to map the physical serial tty to its related mux devices
+using an ioctl.
 
-> writing "yet another ringbuffer" [1] it might be worth the effort to at
-> least see if one of the existing implementations can work (or be
-> extended to work) for you.
+Signed-off-by: Martin Hundebøll <martin@geanix.com>
+---
 
-In regards to the conversation here about string_stream/kunit_stream, I
-think Petr already answered that question. As I said previously:
-> [I]t appears that to get the
-> semantics that I need, I would have to put my entire message in a
-> single data block and would consequently need to know the size of my
-> message a priori, which is problematic. Consequently, it seems as
-> though I will probably need to compose my entire message using my own
-> buffering system.
+Changes since v3:
+ * use __u32 instead of uint32_t
 
-I could potentially use my own set of prbs for that buffering; however,
-I think this use case is probably closer to seq_buf than your prb.
-Really, I just want some kind of string builder, not a message queue.
+Changes since v2:
+ * rename IOCTL from GSMIOC_GETBASE to GSMIOC_GETFIRST
+ * return first usable line instead of private control line
+ * return uint32_t instead of int
 
-The place where I think your prb is relevant here is once I have
-composed the message and I just want to print it, having a way to print
-it without worrying about context is nice, but I think that is a
-separate discussion from the main topic here which was just figuring out
-the right way to compose that message in the first place.
+Changes since v1:
+ * use put_user() instead of copy_to_user()
+ * add missing opening quote
 
-Cheers
+ Documentation/driver-api/serial/n_gsm.rst | 11 +++++++++--
+ drivers/tty/n_gsm.c                       |  4 ++++
+ include/uapi/linux/gsmmux.h               |  2 ++
+ 3 files changed, 15 insertions(+), 2 deletions(-)
 
-> John Ogness
-> 
-> [0] https://lkml.kernel.org/r/87imt2bl0k.fsf@linutronix.de
-> [1] https://lwn.net/Articles/789603/
-> 
-> > The prb does look interesting; however, it appears that to get the
-> > semantics that I need, I would have to put my entire message in a
-> > single data block and would consequently need to know the size of my
-> > message a priori, which is problematic. Consequently, it seems as
-> > though I will probably need to compose my entire message using my own
-> > buffering system.
-> >
-> >>>> Note that stroring the messages into the printk log is basically
-> >>>> safe in any context. It uses temporary per-CPU buffers for
-> >>>> recursive messages and in NMI. The only problem is panic() when
-> >>>> some CPU gets stuck with the lock taken. This will get solved by
-> >>>> the lockless ringbuffer. Also the temporary buffers will not be
-> >>>> necessary any longer.
-> >>>
-> >>> Sure, I think Stephen's concern is all the supporting code that is
-> >>> involved. Not printk specifically. It just means a lot more of KUnit
-> >>> has to be IRQ safe.
-> >>
-> >> I see.
-> >>
-> >> BTW: I wonder if KUnit could reuse the existing seq_buf
-> >> implementation for buffering messages.
-> >>
-> >> I am sorry if it has already been proposed and rejected for some
-> >> reason. I might have missed it. Feel free to just point me to
-> >> same older mail.
-> >
-> > Yeah, we discussed it briefly here:
-> >
-> > https://lkml.org/lkml/2019/5/17/497
-> >
-> > Looks like I forgot to include my reasoning in the commit text, sorry
-> > about that.
-> >
-> >>>> Much bigger problems are with consoles. There are many of them. It
-> >>>> means a lot of code and more locks involved, including scheduler
-> >>>> locks. Note that console lock is a semaphore.
-> >>>
-> >>> That shouldn't affect us though, right? As long as we continue to
-> >>> use the printk interface?
-> >>
-> >> I guess that it should not affect KUnit.
-> >>
-> >> The only problem might be if the testing framework calls printk()
-> >> inside scheduler or console code. And only when the tested code
-> >> uses the same locks that will be used by the called printk().
-> >
-> > Yeah, well printk will not be our only problem in those instances.
-> >
-> >> To be honest I do not fully understand KUnit design. I am not
-> >> completely sure how the tested code is isolated from the running
-> >> system. Namely, I do not know if the tested code shares
-> >> the same locks with the system running the test.
-> >
-> > No worries, I don't expect printk to be the hang up in those cases. It
-> > sounds like KUnit has a long way to evolve before printk is going to
-> > be a limitation.
-> >
-> > Thanks!
+diff --git a/Documentation/driver-api/serial/n_gsm.rst b/Documentation/driver-api/serial/n_gsm.rst
+index 0ba731ab00b2..286e7ff4d2d9 100644
+--- a/Documentation/driver-api/serial/n_gsm.rst
++++ b/Documentation/driver-api/serial/n_gsm.rst
+@@ -18,10 +18,13 @@ How to use it
+ 2. switch the serial line to using the n_gsm line discipline by using
+    TIOCSETD ioctl,
+ 3. configure the mux using GSMIOC_GETCONF / GSMIOC_SETCONF ioctl,
++4. obtain base gsmtty number for the used serial port,
+ 
+ Major parts of the initialization program :
+ (a good starting point is util-linux-ng/sys-utils/ldattach.c)::
+ 
++  #include <stdio.h>
++  #include <stdint.h>
+   #include <linux/gsmmux.h>
+   #include <linux/tty.h>
+   #define DEFAULT_SPEED	B115200
+@@ -30,6 +33,7 @@ Major parts of the initialization program :
+ 	int ldisc = N_GSM0710;
+ 	struct gsm_config c;
+ 	struct termios configuration;
++	uint32_t first;
+ 
+ 	/* open the serial port connected to the modem */
+ 	fd = open(SERIAL_PORT, O_RDWR | O_NOCTTY | O_NDELAY);
+@@ -58,19 +62,22 @@ Major parts of the initialization program :
+ 	c.mtu = 127;
+ 	/* set the new configuration */
+ 	ioctl(fd, GSMIOC_SETCONF, &c);
++	/* get first gsmtty device node */
++	ioctl(fd, GSMIOC_GETFIRST, &first);
++	printf("first muxed line: /dev/gsmtty%i\n", first);
+ 
+ 	/* and wait for ever to keep the line discipline enabled */
+ 	daemon(0,0);
+ 	pause();
+ 
+-4. use these devices as plain serial ports.
++5. use these devices as plain serial ports.
+ 
+    for example, it's possible:
+ 
+    - and to use gnokii to send / receive SMS on ttygsm1
+    - to use ppp to establish a datalink on ttygsm2
+ 
+-5. first close all virtual ports before closing the physical port.
++6. first close all virtual ports before closing the physical port.
+ 
+    Note that after closing the physical port the modem is still in multiplexing
+    mode. This may prevent a successful re-opening of the port later. To avoid
+diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+index a60be591f1fc..d30525946892 100644
+--- a/drivers/tty/n_gsm.c
++++ b/drivers/tty/n_gsm.c
+@@ -2613,6 +2613,7 @@ static int gsmld_ioctl(struct tty_struct *tty, struct file *file,
+ {
+ 	struct gsm_config c;
+ 	struct gsm_mux *gsm = tty->disc_data;
++	unsigned int base;
+ 
+ 	switch (cmd) {
+ 	case GSMIOC_GETCONF:
+@@ -2624,6 +2625,9 @@ static int gsmld_ioctl(struct tty_struct *tty, struct file *file,
+ 		if (copy_from_user(&c, (void *)arg, sizeof(c)))
+ 			return -EFAULT;
+ 		return gsm_config(gsm, &c);
++	case GSMIOC_GETFIRST:
++		base = mux_num_to_base(gsm);
++		return put_user(base + 1, (__u32 __user *)arg);
+ 	default:
+ 		return n_tty_ioctl_helper(tty, file, cmd, arg);
+ 	}
+diff --git a/include/uapi/linux/gsmmux.h b/include/uapi/linux/gsmmux.h
+index 101d3c469acb..cb8693b39cb7 100644
+--- a/include/uapi/linux/gsmmux.h
++++ b/include/uapi/linux/gsmmux.h
+@@ -37,5 +37,7 @@ struct gsm_netconfig {
+ #define GSMIOC_ENABLE_NET      _IOW('G', 2, struct gsm_netconfig)
+ #define GSMIOC_DISABLE_NET     _IO('G', 3)
+ 
++/* get the base tty number for a configured gsmmux tty */
++#define GSMIOC_GETFIRST		_IOR('G', 4, __u32)
+ 
+ #endif
+-- 
+2.22.0
+
