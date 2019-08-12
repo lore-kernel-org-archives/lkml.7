@@ -2,222 +2,123 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E35DC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7B7C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1258C20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B09AF20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:10:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fDdqVHCR"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OFqI8123"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727704AbfHLKIu (ORCPT
+        id S1727720AbfHLKKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:08:50 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36715 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727605AbfHLKIt (ORCPT
+        Mon, 12 Aug 2019 06:10:04 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:48496 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727323AbfHLKKE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:08:49 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r3so10308566wrt.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 03:08:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=iSUWZthkT5NzdIgl34+cYotng+ccjbgaBsS9HBt2QpI=;
-        b=fDdqVHCRpjoHrQfUYYjb7rs/gyyidY3ytmy/UeoeKwQJgSBSpkd6BIOeUlatWuDg6c
-         Vq6aor2/IeaEEbMUdepTGe+20qI+GJBleu7gnh1fTEy0AtD22SaAt92/ljzmWtmBsD2h
-         J3MnfLJns9LGkZ22sSsN4sAGKQ7/ouMNxpU1Je/9KmVrTNcZCg7ueUrKhDzCekaHkgS7
-         a8r12ZS/0pRSGJL2RGV5tnrHH8IDbxRizpZK+cPLYVmLuZuWfJtiv9t6z08drKV3g2wA
-         GXQoNIfqsrvNEBJkoZh66iknbQh8ZpOYe+OtI21kj9Mfme5CnyyFRVCdC/0FnZscc6ka
-         2yFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=iSUWZthkT5NzdIgl34+cYotng+ccjbgaBsS9HBt2QpI=;
-        b=X00aEvv546M4hpi78lecp4pJc3pPQDxFGRKwqv000QSiQte6+iMSKMS5TIIhn2G2Ur
-         yzFsn+YRIhKG7vkipmHFo5XDbU2DTNKoSpBLaGZh/tDOpFulwzXhUp85LsoGawgt8hD1
-         +OJ3QntoSRVvcMSvnj4W1lSDeoqbXWD07H/KTIflp24h+esLaxD2Z2cFPP5+yRo9dkd7
-         4rRnjMx2F2TRZEzDxIzZEtGyVgEvn4F0oI2m6xAKBoKfo69xz1zhF9U1/7R/KsJMHi/5
-         A+N+QIvvQKCPbb7j/fHXlxHjTRoc+gKNNVA6yAvzGk1J1XQoblQ0OKoo5hmbYp6JnFcL
-         3oJQ==
-X-Gm-Message-State: APjAAAUW49F3dFh2Ki/O9JgPvktG6u84wyU/aS0m7nagxh/wsWB2O5J8
-        W1TtgDZOiZ5Js1gLiBE6e4DwM7v3DDA=
-X-Google-Smtp-Source: APXvYqxXdcW7172rHwWqsloeJ92Ae2s3Za7LKpR+s//Kn+kNFnC//fGd81qnjDWE0u84R3aq4MlUUw==
-X-Received: by 2002:adf:c803:: with SMTP id d3mr41322658wrh.130.1565604526947;
-        Mon, 12 Aug 2019 03:08:46 -0700 (PDT)
-Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id 4sm620554wmd.26.2019.08.12.03.08.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 03:08:46 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 11:08:44 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Lukasz Majewski <lukma@denx.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] mfd: mc13xxx: Add mc34708 adc support
-Message-ID: <20190812100844.GE26727@dell>
-References: <20190717222602.2912-1-lukma@denx.de>
- <20190717222602.2912-2-lukma@denx.de>
- <20190725123641.GJ23883@dell>
- <20190725182020.3948c8d9@jawa>
+        Mon, 12 Aug 2019 06:10:04 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7CA9rhU091302;
+        Mon, 12 Aug 2019 05:09:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565604593;
+        bh=UZRnkM5LvmQhJ973nCFgnIBPPkZUhy0vG2BKjcSREDU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=OFqI8123VtOzyplXQHgfAaDINyZGQx4DKU5ymPOs5iKWU9CWweRQ3lx4iK/hJFvmj
+         2lImSblZMp3Bs2oJbi2NRTR6RNNW8wko8EQ6l3cWCbZl9/4YBhusR3Xe60liZ4KCzU
+         APpkW/AEHGXGSNqLl0kAjLQQhc4bAtrF1FlMjco4=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7CA9rBb127011
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 12 Aug 2019 05:09:53 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 12
+ Aug 2019 05:09:52 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 12 Aug 2019 05:09:52 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7CA9pfA058659;
+        Mon, 12 Aug 2019 05:09:51 -0500
+Subject: Re: [PATCH] dma: ti: unexport filter functions
+To:     Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vkoul@kernel.org>
+CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190812093623.992757-1-arnd@arndb.de>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <650d280a-a13e-ffa3-9c55-d235ed6c0b16@ti.com>
+Date:   Mon, 12 Aug 2019 13:10:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20190812093623.992757-1-arnd@arndb.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190725182020.3948c8d9@jawa>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jul 2019, Lukasz Majewski wrote:
-> > On Thu, 18 Jul 2019, Lukasz Majewski wrote:
-> > 
-> > > From: Sascha Hauer <s.hauer@pengutronix.de>
-> > > 
-> > > The mc34708 has an improved adc. The older variants will always
-> > > convert a fixed order of channels. The mc34708 can do up to eight
-> > > conversions in arbitrary channel order. Currently this extended
-> > > feature is not supported. We only support touchscreen conversions
-> > > now, which will be sampled in a data format compatible to the older
-> > > chips in order to keep the API between the mfd and the touchscreen
-> > > driver.
-> > > 
-> > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> > > 
-> > > ---
-> > > Changes for v4:
-> > > - None
-> > > 
-> > > Changes for v3:
-> > > - None
-> > > 
-> > > Changes for v2:
-> > > - Change the return code patch when the mc13xxx ADC is performing
-> > > conversion
-> > > - Introduce new include/linux/mfd/mc34708.h header file for mc34708
-> > > specific defines
-> > > 
-> > > Changes from the original patches:
-> > > - ADC conversion functions prototypes added to fix build error
-> > > - Adjustments to make checkpatch clean (-ENOSYS, line over 80 char)
-> > > 
-> > > This patch applies on top of v5.2 - SHA1:
-> > > 0ecfebd2b52404ae0c54a878c872bb93363ada36 ---
-> > >  drivers/mfd/mc13xxx-core.c  | 102
-> > > +++++++++++++++++++++++++++++++++++++++++++-
-> > > drivers/mfd/mc13xxx.h       |   3 ++ include/linux/mfd/mc34708.h |
-> > > 37 ++++++++++++++++ 3 files changed, 141 insertions(+), 1
-> > > deletion(-) create mode 100644 include/linux/mfd/mc34708.h
-> > > 
-> > > diff --git a/drivers/mfd/mc13xxx-core.c b/drivers/mfd/mc13xxx-core.c
-> > > index 1abe7432aad8..01473d6fda21 100644
-> > > --- a/drivers/mfd/mc13xxx-core.c
-> > > +++ b/drivers/mfd/mc13xxx-core.c
-> > > @@ -12,6 +12,7 @@
-> > >  #include <linux/of_device.h>
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/mfd/core.h>
-> > > +#include <linux/mfd/mc34708.h>
-> > >  
-> > >  #include "mc13xxx.h"
-> > >  
-> > > @@ -45,6 +46,8 @@
-> > >  
-> > >  #define MC13XXX_ADC2		45
-> > >  
-> > > +#define MC13XXX_ADC_WORKING		(1 << 0)  
-> > 
-> > BIT(0) ?
+
+
+On 12/08/2019 12.36, Arnd Bergmann wrote:
+> The two filter functions are now marked stable, but still exported,
+> which triggers a coming build-time check:
 > 
-> The same convention - i.e. (1 << 0) is used in the rest of the file.
-
-Very well, but please consider converting it subsequently.
-
-> > >  void mc13xxx_lock(struct mc13xxx *mc13xxx)
-> > >  {
-> > >  	if (!mutex_trylock(&mc13xxx->lock)) {
-> > > @@ -198,22 +201,30 @@ static void mc34708_print_revision(struct
-> > > mc13xxx *mc13xxx, u32 revision) maskval(revision,
-> > > MC34708_REVISION_FAB)); }
-> > >  
-> > > +static int mc13xxx_adc_conversion(struct mc13xxx *, unsigned int,
-> > > +				  unsigned int, u8, bool, unsigned
-> > > int *); +static int mc34708_adc_conversion(struct mc13xxx *,
-> > > unsigned int,
-> > > +				  unsigned int, u8, bool, unsigned
-> > > int *); +
-> > >  /* These are only exported for mc13xxx-i2c and mc13xxx-spi */
-> > >  struct mc13xxx_variant mc13xxx_variant_mc13783 = {
-> > >  	.name = "mc13783",
-> > >  	.print_revision = mc13xxx_print_revision,
-> > > +	.adc_do_conversion = mc13xxx_adc_conversion,
-> > >  };
-> > >  EXPORT_SYMBOL_GPL(mc13xxx_variant_mc13783);  
-> > 
-> > I'd prefer to keep the call-back functions as close to zero as
-> > possible.
+> WARNING: "omap_dma_filter_fn" [vmlinux] is a static EXPORT_SYMBOL_GPL
+> WARNING: "edma_filter_fn" [vmlinux] is a static EXPORT_SYMBOL
 > 
-> If I may ask - what is wrong with having per device callback(s) ?
-
-Call-backs are ugly and hard to read/debug.
-
-If they can be avoided, they should be, IMHO>
-
-> > It would be better to turn mc13xxx_adc_conversion() in to the catch
-> > function
+> Remove the unneeded exports as well, as originally intended.
 > 
-> Could you share any example? 
+> Fixes: 9c71b9eb3cb2 ("dmaengine: omap-dma: make omap_dma_filter_fn private")
+> Fixes: d2bfe7b5d182 ("dmaengine: edma: make edma_filter_fn private")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Just put the code doing the conversion into mc13xxx_adc_conversion()
-and remove the call-back.
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-> > choose an execution route based on some platform matching.
-> > 
+> ---
+>  drivers/dma/ti/edma.c     | 1 -
+>  drivers/dma/ti/omap-dma.c | 1 -
+>  2 files changed, 2 deletions(-)
 > 
-> Could you help me with giving a hint of how shall I do the "platform
-> matching" in this particular driver ? 
-
-We normally match on some platform ID, rather than passing around
-pointers to structures containing pointers to device specific
-functions.
-
-> The mc13xxx driver seems rather complex with SPI and I2C support and in
-> which the subdevices are added (e.g. rtc, adc, etc).
-
-Not sure I follow your point?
-
-> This particular patch just follows current driver design and fixes its
-> usability for mc13708 drvice.
-
-Right, but it is the current driver design that I'm trying to change.
-
-> > If you could do the same for print_revision too, that would be even
-> > better.
+> diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+> index f2549ee3fb49..ea028388451a 100644
+> --- a/drivers/dma/ti/edma.c
+> +++ b/drivers/dma/ti/edma.c
+> @@ -2540,7 +2540,6 @@ static bool edma_filter_fn(struct dma_chan *chan, void *param)
+>  	}
+>  	return match;
+>  }
+> -EXPORT_SYMBOL(edma_filter_fn);
+>  
+>  static int edma_init(void)
+>  {
+> diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+> index 49da402a1927..98b39bcb7b37 100644
+> --- a/drivers/dma/ti/omap-dma.c
+> +++ b/drivers/dma/ti/omap-dma.c
+> @@ -1652,7 +1652,6 @@ static bool omap_dma_filter_fn(struct dma_chan *chan, void *param)
+>  	}
+>  	return false;
+>  }
+> -EXPORT_SYMBOL_GPL(omap_dma_filter_fn);
+>  
+>  static int omap_dma_init(void)
+>  {
 > 
-> I would prefer to fix the driver (for mc13708) without the need to
-> change the working code.
 
-Okay, but no additional call-backs please.
+- Péter
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
