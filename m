@@ -2,91 +2,128 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FCDC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FD3C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C76E20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:06:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565615198;
-	bh=ZecCZ9w26px/XMlWrTJMf7OeSyYvghgJ40bY+3qMuvI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vuKe/28uEutwBr02qREfT8jmW9qKUqzkrZFPbDtSk0iIVEAg/MYUYjKzh+y6t783K
-	 Ar1/7HRY7erUdAT36h++YW3n73bzO3Afhp+J/c+ijyqiovhVme2nyokWCvoCxdluyl
-	 xMQDrRLGLlngCla89IRreOe+jqa3AWjB5EaqNcSM=
+	by mail.kernel.org (Postfix) with ESMTP id BD34820684
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:07:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbfHLNGh (ORCPT
+        id S1728819AbfHLNHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 09:06:37 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33996 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726458AbfHLNGg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 09:06:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZecCZ9w26px/XMlWrTJMf7OeSyYvghgJ40bY+3qMuvI=; b=GkYpSmwqLQmQTHK914OmSd2gE
-        t1dc/UDVwd7rNV7p/1kK2XwVdYqXxWrv0H+jUk9eEnGob6G6Cvxv6PEDOna1/nkt51QGLC8gkk/W+
-        UL+yKV9I66y2FD/VkCNeEy1j+valLdmOe5uBZse632FmHdVALMALluqo8rMHkK0HQFt/Q=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1hxA1y-0001Kd-I9; Mon, 12 Aug 2019 13:06:34 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 7F57B2740CB7; Mon, 12 Aug 2019 14:06:33 +0100 (BST)
-Date:   Mon, 12 Aug 2019 14:06:33 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     soc@kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH 07/16] spi: remove w90x900 driver
-Message-ID: <20190812130633.GK4592@sirena.co.uk>
-References: <20190809202749.742267-1-arnd@arndb.de>
- <20190809202749.742267-8-arnd@arndb.de>
+        Mon, 12 Aug 2019 09:07:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60570 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726822AbfHLNHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 09:07:03 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DDE87300895B;
+        Mon, 12 Aug 2019 13:07:02 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 048676FDA5;
+        Mon, 12 Aug 2019 13:07:00 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon, 12 Aug 2019 15:07:02 +0200 (CEST)
+Date:   Mon, 12 Aug 2019 15:06:59 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <matthew.wilcox@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Kernel Team <Kernel-team@fb.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        "srikar@linux.vnet.ibm.com" <srikar@linux.vnet.ibm.com>
+Subject: Re: [PATCH v12 5/6] khugepaged: enable collapse pmd for pte-mapped
+ THP
+Message-ID: <20190812130659.GA31560@redhat.com>
+References: <20190807233729.3899352-1-songliubraving@fb.com>
+ <20190807233729.3899352-6-songliubraving@fb.com>
+ <20190808163303.GB7934@redhat.com>
+ <770B3C29-CE8F-4228-8992-3C6E2B5487B6@fb.com>
+ <20190809152404.GA21489@redhat.com>
+ <3B09235E-5CF7-4982-B8E6-114C52196BE5@fb.com>
+ <4D8B8397-5107-456B-91FC-4911F255AE11@fb.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mGCtrYeZ202LI9ZG"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190809202749.742267-8-arnd@arndb.de>
-X-Cookie: Decaffeinated coffee?  Just Say No.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <4D8B8397-5107-456B-91FC-4911F255AE11@fb.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 12 Aug 2019 13:07:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 08/09, Song Liu wrote:
+>
+> +void collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr)
+> +{
+> +	unsigned long haddr = addr & HPAGE_PMD_MASK;
+> +	struct vm_area_struct *vma = find_vma(mm, haddr);
+> +	struct page *hpage = NULL;
+> +	pmd_t *pmd, _pmd;
+> +	spinlock_t *ptl;
+> +	int count = 0;
+> +	int i;
+> +
+> +	if (!vma || !vma->vm_file ||
+> +	    vma->vm_start > haddr || vma->vm_end < haddr + HPAGE_PMD_SIZE)
+> +		return;
+> +
+> +	/*
+> +	 * This vm_flags may not have VM_HUGEPAGE if the page was not
+> +	 * collapsed by this mm. But we can still collapse if the page is
+> +	 * the valid THP. Add extra VM_HUGEPAGE so hugepage_vma_check()
+> +	 * will not fail the vma for missing VM_HUGEPAGE
+> +	 */
+> +	if (!hugepage_vma_check(vma, vma->vm_flags | VM_HUGEPAGE))
+> +		return;
+> +
+> +	pmd = mm_find_pmd(mm, haddr);
+> +	if (!pmd)
+> +		return;
+> +
+> +	/* step 1: check all mapped PTEs are to the right huge page */
+> +	for (i = 0, addr = haddr; i < HPAGE_PMD_NR; i++, addr += PAGE_SIZE) {
+> +		pte_t *pte = pte_offset_map(pmd, addr);
+> +		struct page *page;
+> +
+> +		if (pte_none(*pte) || !pte_present(*pte))
+> +			continue;
 
---mGCtrYeZ202LI9ZG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+		if (!pte_present(*pte))
+			return;
 
-On Fri, Aug 09, 2019 at 10:27:35PM +0200, Arnd Bergmann wrote:
-> The ARM w90x900 platform is getting removed, so this driver is obsolete.
+you can't simply flush pmd if this page is swapped out.
 
-This doesn't apply against current code, please check and resend.
+> +
+> +		page = vm_normal_page(vma, addr, *pte);
+> +
+> +		if (!page || !PageCompound(page))
+> +			return;
+> +
+> +		if (!hpage) {
+> +			hpage = compound_head(page);
+> +			/*
+> +			 * The mapping of the THP should not change.
+> +			 *
+> +			 * Note that uprobe may change the page table,
 
---mGCtrYeZ202LI9ZG
-Content-Type: application/pgp-signature; name="signature.asc"
+Not only uprobe can cow the page. Debugger can do. Or mmap(PROT_WRITE, MAP_PRIVATE).
 
------BEGIN PGP SIGNATURE-----
+uprobe() is "special" because it a) it works with a foreign mm and b)
+it can't stop the process which uses this mm. Otherwise it could simply
+update the page returned by get_user_pages_remote(FOLL_FORCE), just we
+would need to add FOLL_WRITE and if we do this we do not even need SPLIT,
+that is why, say, __access_remote_vm() works without SPLIT.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1RZFgACgkQJNaLcl1U
-h9D4tAf/QZWqB5njZanGjNO1DH1B3pBBDjVRROlyO3EsnnnH8Ro3vruDK+rX3324
-mED3dhurDA9V7j5OywgEyaGE+m0bnVetxR68wsL2HhWXTn762ynlNE9k1ROsRoBt
-DtXvD/O1OW2dv/HsPDPiYleYzTqHKQGgZJMeUp7trmb3s01SuEUE0wGQz29E7rXX
-qnPTcynGKbZgJM2ZZJ14m9F0GlFxGuEl6FtbDEDrr2stX7cHoqXqcTBqwu74h7aJ
-66vQlVC0RC+0Ek7UOVzU64n9mk5JTEdljY8Gh8I9pg0+Ulk9aUiTRUBLa+Pb3cIg
-f+ezLxFbvwpFEob20b6fY8N9bnxgYA==
-=yMIY
------END PGP SIGNATURE-----
+Oleg.
 
---mGCtrYeZ202LI9ZG--
