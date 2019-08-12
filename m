@@ -2,161 +2,107 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 785F3C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 02:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DBEC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 02:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD8620651
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 02:42:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGYrhLjU"
+	by mail.kernel.org (Postfix) with ESMTP id 9983820651
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 02:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfHLCmL (ORCPT
+        id S1726682AbfHLCo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 22:42:11 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38849 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfHLCmK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 22:42:10 -0400
-Received: by mail-wr1-f65.google.com with SMTP id g17so103257517wrr.5;
-        Sun, 11 Aug 2019 19:42:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yf3qi63BI9X/BYxP9kfuXNqP3LoeT8xFrAy0fp782mo=;
-        b=dGYrhLjUkDj2WJPilmQW4xy3C/uREHCHQArXSMNPDpqIEW9bXvBveorN4AIx/dBEBe
-         0IkYNrxa9lAnkMJQXZ8wtfmbkrk+mazm1sj+6pmuwC6RtgaCLHWHvMBXtwwj5i4Bwr6z
-         XSdF0bZl23ZHz02JGh+C6o0Ogd7SV07ZxeFGWc5pLmEIv37r71wPOVREl39RsxL4WeQi
-         LjrWDs8vWNaphnVGSXNBpuEOY3FEWcLexSOZjN3/XqToEJ4aIAhvO6DSvpf3equX5y+N
-         A9BH5e2HrddMzVAAQqxQG5cw91i83TPYgUZrvmZWjx2Kl+fMd8XA4R1I8w25DqBfrbRi
-         yLKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yf3qi63BI9X/BYxP9kfuXNqP3LoeT8xFrAy0fp782mo=;
-        b=IX4ZrdCDZhYWmqZRr1riXnqtoJBxizo4pPHiF4E3NuQuayqtRZPtYtZVNAPaILr1CV
-         SOKQi8Tc6BXITOYVG+TKeubTClqg0gItL/SfTr2EfmhObPGh55uKa8n7bam3kEcX8ivx
-         wD0YqUhQ9sVvY4/RA+pDliRgEMLG2Ik6Yt0bffTMlknLREXd4tkqhuCDh6HisVll98Rs
-         GS5nH4XnuUeU0VDkGGb0d3gBKIjYnG4qmIoFOkY6sj+uHXIDvL2/SZagEwZMNEJxVvAy
-         b3NY3qglgrWPT1KChq8dKSrZkUNZgPUt89cOOuNXLFFAFfo0Fu6D7mfHIm7/Kq0BMYuC
-         gDCQ==
-X-Gm-Message-State: APjAAAU8e6Y+k+cIxQVGRT0mZ4Ypbexn1fyEyd7xptMMwnqflEs1c720
-        7paxix5gYRX0S5QVLkrxrMc=
-X-Google-Smtp-Source: APXvYqznAqEJ+GJ49TKqcvfBU6PxEdk43wnddnbNxpFj/DrvwKZy6Mob6j4soONcsG3hwYBtyUIFZg==
-X-Received: by 2002:adf:dbcc:: with SMTP id e12mr28643909wrj.205.1565577728170;
-        Sun, 11 Aug 2019 19:42:08 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id a26sm16705786wmg.45.2019.08.11.19.42.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 11 Aug 2019 19:42:07 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] powerpc: Avoid clang warnings around setjmp and longjmp
-Date:   Sun, 11 Aug 2019 19:32:15 -0700
-Message-Id: <20190812023214.107817-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.23.0.rc2
+        Sun, 11 Aug 2019 22:44:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54702 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726011AbfHLCo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 22:44:57 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DBAC63090FCF;
+        Mon, 12 Aug 2019 02:44:56 +0000 (UTC)
+Received: from [10.72.12.78] (ovpn-12-78.pek2.redhat.com [10.72.12.78])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0273610016E8;
+        Mon, 12 Aug 2019 02:44:51 +0000 (UTC)
+Subject: Re: [PATCH V5 0/9] Fixes for vhost metadata acceleration
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, jgg@ziepe.ca
+References: <20190809054851.20118-1-jasowang@redhat.com>
+ <20190810134948-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <360a3b91-1ac5-84c0-d34b-a4243fa748c4@redhat.com>
+Date:   Mon, 12 Aug 2019 10:44:51 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
+In-Reply-To: <20190810134948-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 12 Aug 2019 02:44:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit aea447141c7e ("powerpc: Disable -Wbuiltin-requires-header when
-setjmp is used") disabled -Wbuiltin-requires-header because of a warning
-about the setjmp and longjmp declarations.
 
-r367387 in clang added another diagnostic around this, complaining that
-there is no jmp_buf declaration.
+On 2019/8/11 上午1:52, Michael S. Tsirkin wrote:
+> On Fri, Aug 09, 2019 at 01:48:42AM -0400, Jason Wang wrote:
+>> Hi all:
+>>
+>> This series try to fix several issues introduced by meta data
+>> accelreation series. Please review.
+>>
+>> Changes from V4:
+>> - switch to use spinlock synchronize MMU notifier with accessors
+>>
+>> Changes from V3:
+>> - remove the unnecessary patch
+>>
+>> Changes from V2:
+>> - use seqlck helper to synchronize MMU notifier with vhost worker
+>>
+>> Changes from V1:
+>> - try not use RCU to syncrhonize MMU notifier with vhost worker
+>> - set dirty pages after no readers
+>> - return -EAGAIN only when we find the range is overlapped with
+>>    metadata
+>>
+>> Jason Wang (9):
+>>    vhost: don't set uaddr for invalid address
+>>    vhost: validate MMU notifier registration
+>>    vhost: fix vhost map leak
+>>    vhost: reset invalidate_count in vhost_set_vring_num_addr()
+>>    vhost: mark dirty pages during map uninit
+>>    vhost: don't do synchronize_rcu() in vhost_uninit_vq_maps()
+>>    vhost: do not use RCU to synchronize MMU notifier with worker
+>>    vhost: correctly set dirty pages in MMU notifiers callback
+>>    vhost: do not return -EAGAIN for non blocking invalidation too early
+>>
+>>   drivers/vhost/vhost.c | 202 +++++++++++++++++++++++++-----------------
+>>   drivers/vhost/vhost.h |   6 +-
+>>   2 files changed, 122 insertions(+), 86 deletions(-)
+> This generally looks more solid.
+>
+> But this amounts to a significant overhaul of the code.
+>
+> At this point how about we revert 7f466032dc9e5a61217f22ea34b2df932786bbfc
+> for this release, and then re-apply a corrected version
+> for the next one?
 
-In file included from ../arch/powerpc/xmon/xmon.c:47:
-../arch/powerpc/include/asm/setjmp.h:10:13: error: declaration of
-built-in function 'setjmp' requires the declaration of the 'jmp_buf'
-type, commonly provided in the header <setjmp.h>.
-[-Werror,-Wincomplete-setjmp-declaration]
-extern long setjmp(long *);
-            ^
-../arch/powerpc/include/asm/setjmp.h:11:13: error: declaration of
-built-in function 'longjmp' requires the declaration of the 'jmp_buf'
-type, commonly provided in the header <setjmp.h>.
-[-Werror,-Wincomplete-setjmp-declaration]
-extern void longjmp(long *, long);
-            ^
-2 errors generated.
 
-Take the same approach as the above commit by disabling the warning for
-the same reason, we provide our own longjmp/setjmp function.
+If possible, consider we've actually disabled the feature. How about 
+just queued those patches for next release?
 
-Cc: stable@vger.kernel.org # 4.19+
-Link: https://github.com/ClangBuiltLinux/linux/issues/625
-Link: https://github.com/llvm/llvm-project/commit/3be25e79477db2d31ac46493d97eca8c20592b07
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
+Thanks
 
-It may be worth using -fno-builtin-setjmp and -fno-builtin-longjmp
-instead as it makes it clear to clang that we are not using the builtin
-longjmp and setjmp functions, which I think is why these warnings are
-appearing (at least according to the commit that introduced this waring).
 
-Sample patch:
-https://github.com/ClangBuiltLinux/linux/issues/625#issuecomment-519251372
-
-However, this is the most conservative approach, as I have already had
-someone notice this error when building LLVM with PGO on tip of tree
-LLVM.
-
- arch/powerpc/kernel/Makefile | 5 +++--
- arch/powerpc/xmon/Makefile   | 5 +++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-index ea0c69236789..44e340ed4722 100644
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -5,8 +5,9 @@
- 
- CFLAGS_ptrace.o		+= -DUTS_MACHINE='"$(UTS_MACHINE)"'
- 
--# Disable clang warning for using setjmp without setjmp.h header
--CFLAGS_crash.o		+= $(call cc-disable-warning, builtin-requires-header)
-+# Avoid clang warnings about longjmp and setjmp built-ins (inclusion of setjmp.h and declaration of jmp_buf type)
-+CFLAGS_crash.o		+= $(call cc-disable-warning, builtin-requires-header) \
-+			   $(call cc-disable-warning, incomplete-setjmp-declaration)
- 
- ifdef CONFIG_PPC64
- CFLAGS_prom_init.o	+= $(NO_MINIMAL_TOC)
-diff --git a/arch/powerpc/xmon/Makefile b/arch/powerpc/xmon/Makefile
-index f142570ad860..53f341391210 100644
---- a/arch/powerpc/xmon/Makefile
-+++ b/arch/powerpc/xmon/Makefile
-@@ -1,8 +1,9 @@
- # SPDX-License-Identifier: GPL-2.0
- # Makefile for xmon
- 
--# Disable clang warning for using setjmp without setjmp.h header
--subdir-ccflags-y := $(call cc-disable-warning, builtin-requires-header)
-+# Avoid clang warnings about longjmp and setjmp built-ins (inclusion of setjmp.h and declaration of jmp_buf type)
-+subdir-ccflags-y := $(call cc-disable-warning, builtin-requires-header) \
-+		    $(call cc-disable-warning, incomplete-setjmp-declaration)
- 
- GCOV_PROFILE := n
- KCOV_INSTRUMENT := n
--- 
-2.23.0.rc2
-
+>
+>> -- 
+>> 2.18.1
