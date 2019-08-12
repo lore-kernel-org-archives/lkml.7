@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1862EC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3111C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF6FE2087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AE67206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:24:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cHadjI9z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x/4t2gzj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfHLHYi (ORCPT
+        id S1727007AbfHLHYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 03:24:38 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37215 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbfHLHYh (ORCPT
+        Mon, 12 Aug 2019 03:24:47 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33308 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726869AbfHLHYp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 03:24:37 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z23so10833522wmf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 00:24:34 -0700 (PDT)
+        Mon, 12 Aug 2019 03:24:45 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n9so103769837wru.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 00:24:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=/EQ4at7WuhC2wsgDOCnM8fQPkTZ0WBVqkzyUHM074KY=;
-        b=cHadjI9zYq9B7QDJFUqRjtNhwHVM7kGTATasOgCd5vgV8XXWRHzC/OeCEnqPlgvMam
-         Lp1/DmnrmZ54mI+HFQlU/vJ2R1utPJ82ZMev7iorrk9IAMEBq7gVunGCD/6YR4CVSBzp
-         HAabL7OFYT6qrCvfbazFbIjT0Up3D59nBmrhqxZNcdu69AhkOmNd/MChnWUNpSjdyhCX
-         xdXjR4AA+9yDPHFusoTpiOOhZUAGELmie4DjUG1opjf1I0A5QlQpospoqmAmdg9AuYu2
-         B6SuV0q/S92leIOq1a0DSdi+BTnfvrb79FH34CVKMDXdyLEC2K1iIqYrrf/sUI71o5X+
-         ct7Q==
+        bh=9zWlaqRYNg33Ujw6gX84xxtRqD+/AO06V5Zy/fEvl2U=;
+        b=x/4t2gzjTBnjUKUihtJFhrnYyaeNJGOSsaCCnEJdkw16AtqdhNMcUQbgHNnPirVZfc
+         /bDy4r0bBjppKrKKngyxFcGQchOmESlbOw6I20b+tgkfFDFks7tDpzXcpBdqH2nsL0b6
+         CPg5Uij6VpJ+lomzltFYGgWnBkj1C+rIWSXZ9w1/AmlZHqayTloiFAdlMHNR67o34sST
+         puhpgbRfD6IiFlOKjK7euWKQVCX7oAszdB949r9CaHqaIiAqQTjsSTHo8A7hylteEZ6k
+         GPT9tbs4q5DhVezyaQzAwrsSKTOhEGy9VJ4k+H6EFiAFdYDv2WWwn3SsIw/iDJiyVY0x
+         y/yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=/EQ4at7WuhC2wsgDOCnM8fQPkTZ0WBVqkzyUHM074KY=;
-        b=IuYRrhwznDbyyhsvN4BEXkEqbXz2i5Do7yBCSAtwGQyx1OkoUj1piL4L5q3Zs3jRmx
-         V9CsMURIX3mVfmXlD0XjM2uT5eIGrRXsqGNPwMdy2zWpxmiGkuuvdL0pHp2S3zlO6t7Z
-         L3eJVgvViY0qnrqVEmTD7xtJwy8hq2xtlXCNK3J6q4S3rshlUIZJ7dncUVlL/IYrIVJe
-         HC+UlMBRjYt2m0YdJjurQ1M1lcl+XSgFBe8qfHK7HBEy5Tfy39IyGlgpojZO1eulHjes
-         GL20KFFRcU5cKZ3I+PdHZBpGJJBsdnRH1XqWmJQr2JQI180TQJOeypSbWw6xZzxkDvfj
-         4xqw==
-X-Gm-Message-State: APjAAAUrhU4ZSJtGZe/1KgZ9i6uRI/gBwqXpx2c1U7s2llH0Titu5NEL
-        m7RvXSXVTaJHChAeXCTca0I27w==
-X-Google-Smtp-Source: APXvYqz/0fItZ/jY3YSS40ttMi01zPdUVkC5lPKFpM+w2DRebnu3CDXWrCtrSkdWEa+5wFiLK0Qu9A==
-X-Received: by 2002:a1c:a1c1:: with SMTP id k184mr26714773wme.81.1565594674247;
-        Mon, 12 Aug 2019 00:24:34 -0700 (PDT)
+        bh=9zWlaqRYNg33Ujw6gX84xxtRqD+/AO06V5Zy/fEvl2U=;
+        b=smxO9zhU8WFNC8Gp/+ein+QwPVh5RxXiG6sBItWfobxiBBH28orez+9FA0C7epdlm+
+         LpF+BFIY+DrtcjmtRwdiIvBfpMgitlf8LKJQXcgtoyLwUqJCTkFWUgwBIA6rJfOoO9Vo
+         7Xv8cuK0DNAny4EM9vLQFDFC26+x+p39F3cGuThJaceoXi57IClgIrtpMg24A70E56Ij
+         pUud6kUH6f5U8hkcRW5ht5CtIiHD0jart7V221nmt6ji8LuyHvt5jJvEzkqgi8GA/MPN
+         eLNW2vUlgtF0wkyc6uaO/BnMCntDdq/9fqCeM0MWlBg/O1AYcGiJ8Vz4/K8RQVofRUiW
+         nFpg==
+X-Gm-Message-State: APjAAAXWbac5V2xq9edJaVWGw9vfVSvIEok9vlLwD905bf10tFmejqCm
+        HwH525TlgtV2o/1eXeFNYM7D6g==
+X-Google-Smtp-Source: APXvYqx2c35NApNszr2AuXiAK8tFn5aJcPO/gWfDYaXXjxlyJIeTtYNK4gOiVYOQ0gGav8S4WfVatw==
+X-Received: by 2002:adf:90d0:: with SMTP id i74mr26035572wri.218.1565594683417;
+        Mon, 12 Aug 2019 00:24:43 -0700 (PDT)
 Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id f17sm18044659wmf.27.2019.08.12.00.24.33
+        by smtp.gmail.com with ESMTPSA id 39sm11769739wrc.45.2019.08.12.00.24.42
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 00:24:33 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 08:24:31 +0100
+        Mon, 12 Aug 2019 00:24:42 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 08:24:40 +0100
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
@@ -80,17 +80,21 @@ Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Collabora kernel ML <kernel@collabora.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Gwendal Grignou <gwendal@chromium.org>
-Subject: Re: [PATCH v5 01/11] mfd / platform: cros_ec: Handle chained ECs as
- platform devices
-Message-ID: <20190812072431.GE4594@dell>
+Subject: Re: [PATCH v5 02/11] mfd / platform: cros_ec: Move cros-ec core
+ driver out from MFD
+Message-ID: <20190812072440.GF4594@dell>
 References: <20190722133257.9336-1-enric.balletbo@collabora.com>
- <20190722133257.9336-2-enric.balletbo@collabora.com>
+ <20190722133257.9336-3-enric.balletbo@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190722133257.9336-2-enric.balletbo@collabora.com>
+In-Reply-To: <20190722133257.9336-3-enric.balletbo@collabora.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -99,84 +103,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon, 22 Jul 2019, Enric Balletbo i Serra wrote:
 
-> An MFD is a device that contains several sub-devices (cells). For instance,
-> the ChromeOS EC fits in this description as usually contains a charger and
-> can have other devices with different functions like a Real-Time Clock,
-> an Audio codec, a Real-Time Clock, ...
-> 
-> If you look at the driver, though, we're doing something odd. We have
-> two MFD cros-ec drivers where one of them (cros-ec-core) instantiates
-> another MFD driver as sub-driver (cros-ec-dev), and the latest
-> instantiates the different sub-devices (Real-Time Clock, Audio codec,
-> etc).
-> 
->                   MFD
-> ------------------------------------------
->    cros-ec-core
->        |___ mfd-cellA (cros-ec-dev)
->        |       |__ mfd-cell0
->        |       |__ mfd-cell1
->        |       |__ ...
->        |
->        |___ mfd-cellB (cros-ec-dev)
->                |__ mfd-cell0
->                |__ mfd-cell1
->                |__ ...
-> 
-> The problem that was trying to solve is to describe some kind of topology for
-> the case where we have an EC (cros-ec) chained with another EC
-> (cros-pd). Apart from that this extends the bounds of what MFD was
-> designed to do we might be interested on have other kinds of topology that
-> can't be implemented in that way.
-> 
-> Let's prepare the code to move the cros-ec-core part from MFD to
-> platform/chrome as this is clearly a platform specific thing non-related
-> to a MFD device.
-> 
->   platform/chrome  |         MFD
-> ------------------------------------------
->                    |
->    cros-ec ________|___ cros-ec-dev
->                    |       |__ mfd-cell0
->                    |       |__ mfd-cell1
->                    |       |__ ...
->                    |
->    cros-pd ________|___ cros-ec-dev
->                    |        |__ mfd-cell0
->                    |        |__ mfd-cell1
->                    |        |__ ...
+> Now, the ChromeOS EC core driver has nothing related to an MFD device, so
+> move that driver from the MFD subsystem to the platform/chrome subsystem.
 > 
 > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Acked-by: Thierry Reding <thierry.reding@gmail.com>
+> Acked-by: Mark Brown <broonie@kernel.org>
+> Acked-by: Wolfram Sang <wsa@the-dreams.de>
+> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 > Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
 > Tested-by: Gwendal Grignou <gwendal@chromium.org>
 > ---
 > 
-> Changes in v5:
-> - Rebased on top of 5.3-rc1
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
 > 
-> Changes in v4:
-> - Rebase again on top of for-mfd-next to avoid conflicts.
-> 
-> Changes in v3:
-> - Collect more acks an tested-by
-> 
-> Changes in v2:
-> - Collect acks received.
-> - Remove '[PATCH 07/10] mfd: cros_ec: Update with SPDX Licence identifier
->   and fix description' to avoid conflicts with some tree-wide patches
->   that actually updates the Licence identifier.
-> - Add '[PATCH 10/10] arm/arm64: defconfig: Update configs to use the new
->   CROS_EC options' to update the defconfigs after change some config
->   symbols.
-> 
->  drivers/mfd/cros_ec.c                   | 61 +++++++++++++------------
->  drivers/platform/chrome/cros_ec_i2c.c   |  8 ++++
->  drivers/platform/chrome/cros_ec_lpc.c   |  3 +-
->  drivers/platform/chrome/cros_ec_rpmsg.c |  2 +
->  drivers/platform/chrome/cros_ec_spi.c   |  8 ++++
->  include/linux/mfd/cros_ec.h             | 18 ++++++++
->  6 files changed, 69 insertions(+), 31 deletions(-)
+>  drivers/extcon/Kconfig                     |  2 +-
+>  drivers/hid/Kconfig                        |  2 +-
+>  drivers/i2c/busses/Kconfig                 |  2 +-
+>  drivers/iio/common/cros_ec_sensors/Kconfig |  2 +-
+>  drivers/input/keyboard/Kconfig             |  2 +-
+>  drivers/media/platform/Kconfig             |  3 +--
+>  drivers/mfd/Kconfig                        | 15 ++-------------
+>  drivers/mfd/Makefile                       |  2 --
+>  drivers/platform/chrome/Kconfig            | 21 +++++++++++++++++----
+>  drivers/platform/chrome/Makefile           |  1 +
+>  drivers/{mfd => platform/chrome}/cros_ec.c |  0
+>  drivers/power/supply/Kconfig               |  2 +-
+>  drivers/pwm/Kconfig                        |  2 +-
+>  drivers/rtc/Kconfig                        |  2 +-
+>  sound/soc/codecs/Kconfig                   |  4 ++--
+>  sound/soc/qcom/Kconfig                     |  2 +-
+>  16 files changed, 32 insertions(+), 32 deletions(-)
+>  rename drivers/{mfd => platform/chrome}/cros_ec.c (100%)
 
 For my own reference:
   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
