@@ -2,144 +2,217 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 500A5C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CD3C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A35520684
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:03:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q9RDmDO2"
+	by mail.kernel.org (Postfix) with ESMTP id 1D26A2070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:07:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565636857;
+	bh=FcFeaQDXYSIJuf9XH3+tvFUIqjy5UNjSL13NncdI4lw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=N+sj7OxL4ziSjPjqrEPbUZb99D7sCwoClNxC97744w3BU/nebk7NOvACDGDQj3hAd
+	 fcq4b3jgcZdlUheeJ/E1WmA9B8aTbu7qCK38FHf020TSJICP1KnkItIGLTKbSsibFZ
+	 u08ROkWteU9UmQv9fSExUeiLw0tZNVw5dktDTsIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbfHLTDv (ORCPT
+        id S1726707AbfHLTHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 15:03:51 -0400
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:51268 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfHLTDv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 15:03:51 -0400
-Received: by mail-pl1-f201.google.com with SMTP id p9so2641905pls.18
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 12:03:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=mVRG9jasrEKg9xmOyrLCCjteMMsk/r5mx76vPr6ubzk=;
-        b=q9RDmDO2fkCI9Qt4DsOTQzVOLjfIiL+630cF1AohLv94Zttj87byDozSTNIzJdDFxS
-         65LIrJBSWoWIPgg8HLw/Ibe+hpcR8l860eYDAMrCTN2mb4YifgWxGfgc/kIDQv3PjPOz
-         1U1OI8q9EVNzl8XvJQmH4CaIptQ7UoukxN2XN+Q+KCZjNfIQ9ARbxFyTmRsVbN4FwiYu
-         voOTvcr1jxQtiSrDxs8xdjQpdwIUxlAMT223sLKDhHO0pgWClDkk4F5cymxcnYlxVGr0
-         0DQFGhVkujomhJzVwjuMSmGKkJnfhefJkUR2W2ih5Ct9N7PXTcL+3/i4ELl5X3y1Mekm
-         hJjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=mVRG9jasrEKg9xmOyrLCCjteMMsk/r5mx76vPr6ubzk=;
-        b=K/iy8QuzmZJ2uSICFy1Hd9A3xhZbvxfFr3goCvZGCRHuT6KirEo/TSrMjqozEKErJ6
-         SWhCE2wFOd06RALd08YC/HNbu2WP43vS86v0/1J2LoKkYHSFxKtbQhTzbYRWTE1weylD
-         EtjoYS/R5u53jMjde/ndVvOSfb+5bl8pzApY9oDZV3eeP2bSSUrpoTBL08WLDJhrjOOZ
-         5lXORgqLljirjLBlbSWlkdbbcinxrK+xzUJSOI/VE+KM1ReRa5Fd8/XZ0dcM8GdiEJGm
-         rz3Et9aju/PBQsKOo4iI1Yk+qOSOr8Z9c5OUbVtcmjzRc3Xa/wWgmCgsRgs3nNFHrag/
-         Jkgw==
-X-Gm-Message-State: APjAAAUWsjRPBZvssqKqJh5HZDacQnXeciKIFzqH9Mt0KlimTNXug/7V
-        Ao75lpj7FgxrjHuVqxTE3rVoIq7iYw==
-X-Google-Smtp-Source: APXvYqz+0C+mFFgI8Q0CX89fBw1s6PY8DPzBB4RvD1+6OQmtwxJjFOgwhNgfAUl1lKyUt/SLCVegv6dY++0=
-X-Received: by 2002:a63:89c2:: with SMTP id v185mr31231727pgd.241.1565636630566;
- Mon, 12 Aug 2019 12:03:50 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 12:03:20 -0700
-Message-Id: <20190812190320.209988-1-yabinc@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
-Subject: [PATCH v2] coresight: tmc-etr: Fix perf_data check.
-From:   Yabin Cui <yabinc@google.com>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Yabin Cui <yabinc@google.com>
+        Mon, 12 Aug 2019 15:07:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726424AbfHLTHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 15:07:35 -0400
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAB1C20842;
+        Mon, 12 Aug 2019 19:07:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565636854;
+        bh=FcFeaQDXYSIJuf9XH3+tvFUIqjy5UNjSL13NncdI4lw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qtg+nC2RZBlfIwv+HDTtkwAXEQ9hANBf8IDXAU+gEteVYnjzSBm2oYmoYCahq9N+5
+         ua8Ae4B4QzeOgCeqp98o6yreb/razFufSBpe2pnd+JIGfMMlZKtm0M3gxjl9Zy8cSN
+         ocZnFAd9UcZZ/p6/YbSdoXaDqxDtoFzQyQEsOxlc=
+Received: by mail-qt1-f171.google.com with SMTP id b11so4158172qtp.10;
+        Mon, 12 Aug 2019 12:07:34 -0700 (PDT)
+X-Gm-Message-State: APjAAAVR/NwXWToimLphQOfs15PvVQ/b4RKoBxdeiDDA5MQaNDiMR+kd
+        9E00TeoUoRCP+Q9A0LX2N0nsOZxjQeC2STjBdA==
+X-Google-Smtp-Source: APXvYqxk/joWgBLYIYok1T9+jsQdNHJop0U8NuSELICDjk3xl7SPL7nbv63ymnQdTJGha5x0HyH+ihoMLBAs53zaNlM=
+X-Received: by 2002:ac8:368a:: with SMTP id a10mr31241634qtc.143.1565636853900;
+ Mon, 12 Aug 2019 12:07:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190812090341.27183-1-mircea.caprioru@analog.com> <20190812090341.27183-4-mircea.caprioru@analog.com>
+In-Reply-To: <20190812090341.27183-4-mircea.caprioru@analog.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 12 Aug 2019 13:07:22 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLTVEMfxuCx3ueuT2uoLbxNiMUOGJzNUerJrQz95sHb=A@mail.gmail.com>
+Message-ID: <CAL_JsqLTVEMfxuCx3ueuT2uoLbxNiMUOGJzNUerJrQz95sHb=A@mail.gmail.com>
+Subject: Re: [PATCH 4/4] dt-bindings: iio: adc: ad7192: Add binding
+ documentation for AD7192
+To:     Mircea Caprioru <mircea.caprioru@analog.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When tracing etm data of multiple threads on multiple cpus through
-perf interface, each cpu has a unique etr_perf_buffer while sharing
-the same etr device. There is no guarantee that the last cpu starts
-etm tracing also stops last. This makes perf_data check fail.
+On Mon, Aug 12, 2019 at 3:03 AM Mircea Caprioru
+<mircea.caprioru@analog.com> wrote:
+>
+> This patch add device tree binding documentation for AD7192 adc in YAML
+> format.
+>
+> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+> ---
+>  .../bindings/iio/adc/adi,ad7192.yaml          | 123 ++++++++++++++++++
+>  1 file changed, 123 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7192.=
+yaml
+>
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml b/=
+Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+> new file mode 100644
+> index 000000000000..a56ee391f6a8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+> @@ -0,0 +1,123 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 Analog Devices Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad7192.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD7192 ADC device driver
+> +
+> +maintainers:
+> +  - Michael Hennerich <michael.hennerich@analog.com>
+> +
+> +description: |
+> +  Bindings for the Analog Devices AD7192 ADC device. Datasheet can be
+> +  found here:
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/AD=
+7192.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad7190
+> +      - adi,ad7192
+> +      - adi,ad7193
+> +      - adi,ad7195
+> +
+> +  reg:
+> +    description: SPI chip select number for the device
 
-Fix it by checking etr_buf instead of etr_perf_buffer.
+Don't need a description as this is a standard property and there's
+only 1 entry.
 
-Fixes: 3147da92a8a8 ("coresight: tmc-etr: Allocate and free ETR memory buffers for CPU-wide scenarios")
-Signed-off-by: Yabin Cui <yabinc@google.com>
----
+> +    maxItems: 1
+> +
+> +  spi-cpol: true
+> +
+> +  spi-cpha: true
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: phandle to the master clock (mclk)
+> +
+> +  clock-names:
+> +    items:
+> +      - const: mclk
+> +
+> +  interrupts:
+> +    description: IRQ line for the ADC
 
-v1 -> v2: rename perf_data to perf_buf. Add fixes tag.
+Same here.
 
----
- drivers/hwtracing/coresight/coresight-tmc-etr.c | 6 +++---
- drivers/hwtracing/coresight/coresight-tmc.h     | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+> +    maxItems: 1
+> +
+> +  dvdd-supply:
+> +    description: DVdd voltage supply
+> +    items:
+> +      - const: dvdd
+> +
+> +  avdd-supply:
+> +    description: AVdd voltage supply
+> +    items:
+> +      - const: avdd
+> +
+> +  adi,rejection-60-Hz-enable:
+> +    description: |
+> +      This bit enables a notch at 60 Hz when the first notch of the sinc
+> +      filter is at 50 Hz. When REJ60 is set, a filter notch is placed at
+> +      60 Hz when the sinc filter first notch is at 50 Hz. This allows
+> +      simultaneous 50 Hz/ 60 Hz rejection.
+> +    type: boolean
+> +
+> +  adi,refin2-pins-enable:
+> +    description: |
+> +      External reference applied between the P1/REFIN2(+) and P0/REFIN2(=
+=E2=88=92) pins.
+> +    type: boolean
+> +
+> +  adi,buffer-enable:
+> +    description: |
+> +      Enables the buffer on the analog inputs. If cleared, the analog in=
+puts
+> +      are unbuffered, lowering the power consumption of the device. If t=
+his
+> +      bit is set, the analog inputs are buffered, allowing the user to p=
+lace
+> +      source impedances on the front end without contributing gain error=
+s to
+> +      the system.
+> +    type: boolean
+> +
+> +  adi,burnout-currents-enable:
+> +    description: |
+> +      When this bit is set to 1, the 500 nA current sources in the signa=
+l
+> +      path are enabled. When BURN =3D 0, the burnout currents are disabl=
+ed.
+> +      The burnout currents can be enabled only when the buffer is active
+> +      and when chop is disabled.
+> +    type: boolean
+> +
+> +  bipolar:
+> +    description: see Documentation/devicetree/bindings/iio/adc/adc.txt
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +  - dvdd-supply
+> +  - avdd-supply
+> +  - spi-cpol
+> +  - spi-cpha
+> +
+> +examples:
+> +  - |
+> +    spi0 {
+> +      ad7192@0 {
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-index 17006705287a..90d1548ad268 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-@@ -1484,7 +1484,7 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
- 		goto out;
- 	}
- 
--	if (WARN_ON(drvdata->perf_data != etr_perf)) {
-+	if (WARN_ON(drvdata->perf_buf != etr_buf)) {
- 		lost = true;
- 		spin_unlock_irqrestore(&drvdata->spinlock, flags);
- 		goto out;
-@@ -1497,7 +1497,7 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
- 
- 	CS_LOCK(drvdata->base);
- 	/* Reset perf specific data */
--	drvdata->perf_data = NULL;
-+	drvdata->perf_buf = NULL;
- 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
- 
- 	size = etr_buf->len;
-@@ -1556,7 +1556,7 @@ static int tmc_enable_etr_sink_perf(struct coresight_device *csdev, void *data)
- 	}
- 
- 	etr_perf->head = PERF_IDX2OFF(handle->head, etr_perf);
--	drvdata->perf_data = etr_perf;
-+	drvdata->perf_buf = etr_perf->etr_buf;
- 
- 	/*
- 	 * No HW configuration is needed if the sink is already in
-diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
-index 1ed50411cc3c..f9a0c95e9ba2 100644
---- a/drivers/hwtracing/coresight/coresight-tmc.h
-+++ b/drivers/hwtracing/coresight/coresight-tmc.h
-@@ -178,8 +178,8 @@ struct etr_buf {
-  *		device configuration register (DEVID)
-  * @idr:	Holds etr_bufs allocated for this ETR.
-  * @idr_mutex:	Access serialisation for idr.
-- * @perf_data:	PERF buffer for ETR.
-- * @sysfs_data:	SYSFS buffer for ETR.
-+ * @sysfs_buf:	SYSFS buffer for ETR.
-+ * @perf_buf:	PERF buffer for ETR.
-  */
- struct tmc_drvdata {
- 	void __iomem		*base;
-@@ -202,7 +202,7 @@ struct tmc_drvdata {
- 	struct idr		idr;
- 	struct mutex		idr_mutex;
- 	struct etr_buf		*sysfs_buf;
--	void			*perf_data;
-+	struct etr_buf		*perf_buf;
- };
- 
- struct etr_buf_operations {
--- 
-2.23.0.rc1.153.gdeed80330f-goog
+adc@0
 
+With those fixes,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
