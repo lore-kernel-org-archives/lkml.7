@@ -2,98 +2,106 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2031C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACE7C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C14682085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:39:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zJ2S5Kf3"
+	by mail.kernel.org (Postfix) with ESMTP id 148DF2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:42:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbfHLKjg (ORCPT
+        id S1727926AbfHLKmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:39:36 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35045 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727795AbfHLKjg (ORCPT
+        Mon, 12 Aug 2019 06:42:09 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40835 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727678AbfHLKmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:39:36 -0400
-Received: by mail-wm1-f67.google.com with SMTP id l2so11320512wmg.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 03:39:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=MoT41+8OBiG5AIS32B1GbYNGjZ0zGQf3yjOjNkvAl3w=;
-        b=zJ2S5Kf3w1FcFPelYkhvCORLN+zhfHCjFVxYX/pJUoUgBttJ+Ltp91Qo/Myb29W7+0
-         BT4dNqpfBa2GMtxrqp6X1KpgMqr0z/r1W68XlRpxtCHEZA6Vw6XKhMfThLc88OeiuwQC
-         O+DNfN0f23PvnZdBns2cquJa2LKegJgvigS7YJJf8at/Okwj9TG+GYImG3fzUD54wHB4
-         jcPDCJXkzU/ZPxeNT8x+xON67m+c9gr6X5TEplMaJjvWoEBVTNR16ZDhRGMudmjTGXqf
-         pDSOEJi7CDwPCj4m3093m/3u3iXqBjUZ0Z65QR5LM4PJrVSKv19mLu1AzUCRXbDsJ2A/
-         PTFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=MoT41+8OBiG5AIS32B1GbYNGjZ0zGQf3yjOjNkvAl3w=;
-        b=Pig8fsK8hf9INhj39E7HEUviP0/CmVaHIigVAJ4x4gogfzifNgi0cmvQRghh//IHdq
-         Ih3tJWNSmFt4MDdjn873JLm3xG/cDGtWEzcSwD0zNKfi1wlWPhwo8+xDyQnReoUYMjS3
-         o1317et/u7DLwloZzLT3uG4RZeNkUfifqz8TdaQCarH03bz7Wg1WG5MZT7Y0GLUP5KUS
-         hHhBa8nh0W/ojfgb5Lpnqh4HvDxGCCcFc9EMB+rGL2TKsA9v0BhUvpfdpYHZxuqRDdxh
-         ihOu/DxvrGzTUMR+Yrl1Dw9LZ+DEU4dxwGPQJMJndlCgVK3T/DHmCT0vaiWkhBGfVam2
-         sD7g==
-X-Gm-Message-State: APjAAAXDZ08IGTiWizl2UdNxAly/mdaqgOF/bgE0TZj4v5HpHocX2ucS
-        MQsJ05TnxO7l9fCuxhOOBMXIXfKbAsE=
-X-Google-Smtp-Source: APXvYqx6gLOcb8+8c8NPQ25MpEKF5l7SJvWJ0ZAVhYpzW0O0BzOf3cmdjAVNPOp+sxVnpmCkiRPArw==
-X-Received: by 2002:a05:600c:145:: with SMTP id w5mr2485651wmm.75.1565606374600;
-        Mon, 12 Aug 2019 03:39:34 -0700 (PDT)
-Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id z8sm6099540wmi.7.2019.08.12.03.39.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 03:39:34 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 11:39:32 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patches@opensource.cirrus.com
-Subject: Re: [PATCH 1/2] mfd: madera: Update DT binding document to support
- clock supplies
-Message-ID: <20190812103932.GN26727@dell>
-References: <20190806151321.31137-1-ckeepax@opensource.cirrus.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190806151321.31137-1-ckeepax@opensource.cirrus.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 12 Aug 2019 06:42:08 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1hx7m5-0000ZP-60; Mon, 12 Aug 2019 12:42:01 +0200
+Message-ID: <1565606519.5017.5.camel@pengutronix.de>
+Subject: Re: [PATCH v4 00/11] media: hantro: Add support for H264 decoding
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
+Date:   Mon, 12 Aug 2019 12:41:59 +0200
+In-Reply-To: <20190808103432.12062-1-ezequiel@collabora.com>
+References: <20190808103432.12062-1-ezequiel@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 06 Aug 2019, Charles Keepax wrote:
+Hi Ezequiel,
 
-> Add the 3 input clock sources for the chip into the device tree binding
-> document.
+On Thu, 2019-08-08 at 07:34 -0300, Ezequiel Garcia wrote:
+> This series is consolidating the two recent H264 series submitted
+> by Boris [1] [2]. Given some patches from [2]  have been merged (namely,
+> helpers for the Hantro driver), the series contains the remanining
+> bits required to support H264 on Hantro G1 VPU.
 > 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
->  Documentation/devicetree/bindings/mfd/madera.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> * Patch 1 adds support for the sort_r() variant and has
+>   been posted separately by Rasmus. It would be good to merge this patch
+>   via the media tree, ideally as soon as possible, to avoid the
+>   synchronisation burden that might appear if we decide to delay it.
+> 
+> * Patch 2 to 4 extends the H264 uAPI, introducing frame-based vs slice-based
+>   decoding granularity, and also support for different NALU start codes.
+>   Currently, Annex B and no start codes are the supported options.
+> 
+>   With the introduction of the start code control, the H264 parsed
+>   slices pixel format should be renamed, dropping the _RAW suffix,
+>   which is now meaningless.
+> 
+> * Patch 5 removes the P0/B0/B1 ref lists from the decode_params control.
+>   These lists are no longer needed since we build them on the
+>   kernel side based on the DPB.
+> 
+> * Patch 6 and 7 exposes the proper decoding mode and start code
+>   on the cedrus driver. The driver functionality is not changed,
+>   and only the Cedrus support is now being properly exposed to
+>   userspace.
+> 
+> * Patch 8 is needed to properly propagate the OUTPUT buffer timestamp to
+>   the CAPTURE buffer one, which is required for intra-frame references.
+> 
+> * Patches 9 to 11 adds H264 support for Hantro G1 and then enable
+>   H264 decoding on RK3288.
+> 
+> This series has been tested using MPV/Ffmpeg, on Rockchip RK3288
+> for Hantro and Allwinner H3 boards for Cedrus.
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+on i.MX8MQ EVK using [1], so I effectively patches 1-5 and 8-10, with
+your FFmpeg modifications [2].
+
+[1] git://git.pengutronix.de/git/pza/linux.git hantro/imx8m-wip
+[2] https://gitlab.collabora.com/ezequiel/ffmpeg stateless-mpeg2-vp8-
+h264-v4
+
+regards
+Philipp
