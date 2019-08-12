@@ -2,190 +2,288 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54655C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D70C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B108214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BBDF214C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:12:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbfHLKM1 (ORCPT
+        id S1727899AbfHLKMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:12:27 -0400
-Received: from lgeamrelo13.lge.com ([156.147.23.53]:45414 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727843AbfHLKM0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:12:26 -0400
-Received: from unknown (HELO lgeamrelo04.lge.com) (156.147.1.127)
-        by 156.147.23.53 with ESMTP; 12 Aug 2019 19:12:22 +0900
-X-Original-SENDERIP: 156.147.1.127
-X-Original-MAILFROM: byungchul.park@lge.com
-Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
-        by 156.147.1.127 with ESMTP; 12 Aug 2019 19:12:22 +0900
-X-Original-SENDERIP: 10.177.222.33
-X-Original-MAILFROM: byungchul.park@lge.com
-Date:   Mon, 12 Aug 2019 19:10:52 +0900
-From:   Byungchul Park <byungchul.park@lge.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Byungchul Park <max.byungchul.park@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rao Shoaib <rao.shoaib@oracle.com>, kernel-team@android.com,
-        kernel-team <kernel-team@lge.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC v1 1/2] rcu/tree: Add basic support for kfree_rcu
- batching
-Message-ID: <20190812101052.GA10478@X58A-UD3R>
-References: <20190806235631.GU28441@linux.ibm.com>
- <20190807094504.GB169551@google.com>
- <20190807175215.GE28441@linux.ibm.com>
- <20190808095232.GA30401@X58A-UD3R>
- <20190808125607.GB261256@google.com>
- <CANrsvRPU_u6oKpjZ1368Evto+1hGboNYeOuMdbdzaOfXhSO=5g@mail.gmail.com>
- <20190808180916.GP28441@linux.ibm.com>
- <20190811083626.GA9486@X58A-UD3R>
- <20190811084950.GB9486@X58A-UD3R>
- <20190811234939.GC28441@linux.ibm.com>
+        Mon, 12 Aug 2019 06:12:33 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35322 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727862AbfHLKMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 06:12:32 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0B55C43626E257FE43CD;
+        Mon, 12 Aug 2019 18:12:25 +0800 (CST)
+Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.202.226.45) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 12 Aug 2019 18:12:15 +0800
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     <linux-acpi@vger.kernel.org>, <linux-edac@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <lenb@kernel.org>, <james.morse@arm.com>, <tony.luck@intel.com>,
+        <bp@alien8.de>, <baicar@os.amperecomputing.com>
+CC:     <linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
+        <tanxiaofei@huawei.com>, Shiju Jose <shiju.jose@huawei.com>
+Subject: [PATCH RFC 1/4] ACPI: APEI: Add support to notify the vendor specific HW errors
+Date:   Mon, 12 Aug 2019 11:11:46 +0100
+Message-ID: <20190812101149.26036-2-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.19.2.windows.1
+In-Reply-To: <20190812101149.26036-1-shiju.jose@huawei.com>
+References: <Shiju Jose>
+ <20190812101149.26036-1-shiju.jose@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190811234939.GC28441@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.202.226.45]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 04:49:39PM -0700, Paul E. McKenney wrote:
-> Maybe.  Note well that I said "potential issue".  When I checked a few
-> years ago, none of the uses of rcu_barrier() cared about kfree_rcu().
-> They cared instead about call_rcu() callbacks that accessed code or data
-> that was going to disappear soon, for example, due to module unload or
-> filesystem unmount.
-> 
-> So it -might- be that rcu_barrier() can stay as it is, but with changes
-> as needed to documentation.
-> 
-> It also -might- be, maybe now or maybe some time in the future, that
-> there will need to be a kfree_rcu_barrier() or some such.  But if so,
-> let's not create it until it is needed.  For one thing, it is reasonably
-> likely that something other than a kfree_rcu_barrier() would really
-> be what was needed.  After all, the main point would be to make sure
-> that the old memory really was freed before allocating new memory.
+Presently the vendor specific HW errors, in the non-standard format,
+are not reported to the vendor drivers for the recovery.
 
-Now I fully understand what you meant thanks to you. Thank you for
-explaining it in detail.
+This patch adds support to notify the vendor specific HW errors to the
+registered kernel drivers.
 
-> But if the system had ample memory, why wait?  In that case you don't
-> really need to wait for all the old memory to be freed, but rather for
-> sufficient memory to be available for allocation.
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+---
+ drivers/acpi/apei/ghes.c | 118 +++++++++++++++++++++++++++++++++++++++++++++--
+ include/acpi/ghes.h      |  47 +++++++++++++++++++
+ 2 files changed, 160 insertions(+), 5 deletions(-)
 
-Agree. Totally make sense.
+diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+index a66e00f..374d197 100644
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -477,6 +477,77 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
+ #endif
+ }
+ 
++struct ghes_error_notify {
++	struct list_head list;
++	struct rcu_head	rcu_head;
++	guid_t sec_type; /* guid of the error record */
++	error_handle handle; /* error handler function */
++	void *data; /* handler driver's private data if any */
++};
++
++/* List to store the registered error handling functions */
++static DEFINE_MUTEX(ghes_error_notify_mutex);
++static LIST_HEAD(ghes_error_notify_list);
++static refcount_t ghes_ref_count;
++
++/**
++ * ghes_error_notify_register - register an error handling function
++ * for the hw errors.
++ * @sec_type: sec_type of the corresponding CPER to be notified.
++ * @handle: pointer to the error handling function.
++ * @data: handler driver's private data.
++ *
++ * return 0 : SUCCESS, non-zero : FAIL
++ */
++int ghes_error_notify_register(guid_t sec_type, error_handle handle, void *data)
++{
++	struct ghes_error_notify *err_notify;
++
++	mutex_lock(&ghes_error_notify_mutex);
++	err_notify = kzalloc(sizeof(*err_notify), GFP_KERNEL);
++	if (!err_notify)
++		return -ENOMEM;
++
++	err_notify->handle = handle;
++	guid_copy(&err_notify->sec_type, &sec_type);
++	err_notify->data = data;
++	list_add_rcu(&err_notify->list, &ghes_error_notify_list);
++	mutex_unlock(&ghes_error_notify_mutex);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(ghes_error_notify_register);
++
++/**
++ * ghes_error_notify_unregister - unregister an error handling function.
++ * @sec_type: sec_type of the corresponding CPER.
++ * @handle: pointer to the error handling function.
++ *
++ * return none.
++ */
++void ghes_error_notify_unregister(guid_t sec_type, error_handle handle)
++{
++	struct ghes_error_notify *err_notify;
++	bool found = 0;
++
++	mutex_lock(&ghes_error_notify_mutex);
++	rcu_read_lock();
++	list_for_each_entry_rcu(err_notify, &ghes_error_notify_list, list) {
++		if (guid_equal(&err_notify->sec_type, &sec_type) &&
++		    err_notify->handle == handle) {
++			list_del_rcu(&err_notify->list);
++			found = 1;
++			break;
++		}
++	}
++	rcu_read_unlock();
++	synchronize_rcu();
++	mutex_unlock(&ghes_error_notify_mutex);
++	if (found)
++		kfree(err_notify);
++}
++EXPORT_SYMBOL_GPL(ghes_error_notify_unregister);
++
+ static void ghes_do_proc(struct ghes *ghes,
+ 			 const struct acpi_hest_generic_status *estatus)
+ {
+@@ -485,6 +556,8 @@ static void ghes_do_proc(struct ghes *ghes,
+ 	guid_t *sec_type;
+ 	guid_t *fru_id = &NULL_UUID_LE;
+ 	char *fru_text = "";
++	bool is_notify = 0;
++	struct ghes_error_notify *err_notify;
+ 
+ 	sev = ghes_severity(estatus->error_severity);
+ 	apei_estatus_for_each_section(estatus, gdata) {
+@@ -512,11 +585,29 @@ static void ghes_do_proc(struct ghes *ghes,
+ 
+ 			log_arm_hw_error(err);
+ 		} else {
+-			void *err = acpi_hest_get_payload(gdata);
+-
+-			log_non_standard_event(sec_type, fru_id, fru_text,
+-					       sec_sev, err,
+-					       gdata->error_data_length);
++			rcu_read_lock();
++			list_for_each_entry_rcu(err_notify,
++						&ghes_error_notify_list, list) {
++				if (guid_equal(&err_notify->sec_type,
++					       sec_type)) {
++					/* The notification is called in the
++					 * interrupt context, thus the handler
++					 * functions should be take care of it.
++					 */
++					err_notify->handle(gdata, sev,
++							   err_notify->data);
++					is_notify = 1;
++				}
++			}
++			rcu_read_unlock();
++
++			if (!is_notify) {
++				void *err = acpi_hest_get_payload(gdata);
++
++				log_non_standard_event(sec_type, fru_id,
++						       fru_text, sec_sev, err,
++						       gdata->error_data_length);
++			}
+ 		}
+ 	}
+ }
+@@ -1217,6 +1308,11 @@ static int ghes_probe(struct platform_device *ghes_dev)
+ 
+ 	ghes_edac_register(ghes, &ghes_dev->dev);
+ 
++	if (!refcount_read(&ghes_ref_count))
++		refcount_set(&ghes_ref_count, 1);
++	else
++		refcount_inc(&ghes_ref_count);
++
+ 	/* Handle any pending errors right away */
+ 	spin_lock_irqsave(&ghes_notify_lock_irq, flags);
+ 	ghes_proc(ghes);
+@@ -1237,6 +1333,7 @@ static int ghes_remove(struct platform_device *ghes_dev)
+ 	int rc;
+ 	struct ghes *ghes;
+ 	struct acpi_hest_generic *generic;
++	struct ghes_error_notify *err_notify, *tmp;
+ 
+ 	ghes = platform_get_drvdata(ghes_dev);
+ 	generic = ghes->generic;
+@@ -1279,6 +1376,17 @@ static int ghes_remove(struct platform_device *ghes_dev)
+ 
+ 	ghes_fini(ghes);
+ 
++	if (refcount_dec_and_test(&ghes_ref_count) &&
++	    !list_empty(&ghes_error_notify_list)) {
++		mutex_lock(&ghes_error_notify_mutex);
++		list_for_each_entry_safe(err_notify, tmp,
++					 &ghes_error_notify_list, list) {
++			list_del_rcu(&err_notify->list);
++			kfree_rcu(err_notify, rcu_head);
++		}
++		mutex_unlock(&ghes_error_notify_mutex);
++	}
++
+ 	ghes_edac_unregister(ghes);
+ 
+ 	kfree(ghes);
+diff --git a/include/acpi/ghes.h b/include/acpi/ghes.h
+index e3f1cdd..d480537 100644
+--- a/include/acpi/ghes.h
++++ b/include/acpi/ghes.h
+@@ -50,6 +50,53 @@ enum {
+ 	GHES_SEV_PANIC = 0x3,
+ };
+ 
++/**
++ * error_handle - error handling function for the hw errors.
++ * This handle function is called in the interrupt context.
++ * @gdata: acpi_hest_generic_data.
++ * @sev: error severity of the entire error event defined in the
++ * ACPI spec table generic error status block.
++ * @data: handler driver's private data.
++ *
++ * return : none.
++ */
++typedef void (*error_handle)(struct acpi_hest_generic_data *gdata, int sev,
++			     void *data);
++
++#ifdef CONFIG_ACPI_APEI_GHES
++/**
++ * ghes_error_notify_register - register an error handling function
++ * for the hw errors.
++ * @sec_type: sec_type of the corresponding CPER to be notified.
++ * @handle: pointer to the error handling function.
++ * @data: handler driver's private data.
++ *
++ * return : 0 - SUCCESS, non-zero - FAIL.
++ */
++int ghes_error_notify_register(guid_t sec_type, error_handle handle,
++			       void *data);
++
++/**
++ * ghes_error_notify_unregister - unregister an error handling function
++ * for the hw errors.
++ * @sec_type: sec_type of the corresponding CPER.
++ * @handle: pointer to the error handling function.
++ *
++ * return none.
++ */
++void ghes_error_notify_unregister(guid_t sec_type, error_handle handle);
++
++#else
++int ghes_error_notify_register(guid_t sec_type, error_handle handle, void *data)
++{
++	return -ENODEV;
++}
++
++void ghes_error_notify_unregister(guid_t sec_type, error_handle handle)
++{
++}
++#endif
++
+ int ghes_estatus_pool_init(int num_ghes);
+ 
+ /* From drivers/edac/ghes_edac.c */
+-- 
+1.9.1
 
-Thanks,
-Byungchul
 
-> 
-> 							Thanx, Paul
-> 
-> > Thanks,
-> > Byungchul
-> > 
-> > > But now that we can see letting the list just grow works well, we don't
-> > > have to consider this one at the moment. Let's consider this method
-> > > again once we face the problem in the future by any chance.
-> > > 
-> > > > We should therefore just let the second list grow.  If experience shows
-> > > > a need for callbacks to be sent up more quickly, it should be possible
-> > > > to provide an additional list, so that two lists on a given CPU can both
-> > > > be waiting for a grace period at the same time.
-> > > 
-> > > Or the third and fourth list might be needed in some system. But let's
-> > > talk about it later too.
-> > > 
-> > > > > > I also agree. But this _FORCE thing will still not solve the issue Paul is
-> > > > > > raising which is doing this loop possibly in irq disabled / hardirq context.
-> > > > > 
-> > > > > I added more explanation above. What I suggested is a way to avoid not
-> > > > > only heavy
-> > > > > work within the irq-disabled region of a single kfree_rcu() but also
-> > > > > too many requests
-> > > > > to be queued into ->head.
-> > > > 
-> > > > But let's start simple, please!
-> > > 
-> > > Yes. The simpler, the better.
-> > > 
-> > > > > > We can't even cond_resched() here. In fact since _FORCE is larger, it will be
-> > > > > > even worse. Consider a real-time system with a lot of memory, in this case
-> > > > > > letting ->head grow large is Ok, but looping for long time in IRQ disabled
-> > > > > > would not be Ok.
-> > > > > 
-> > > > > Please check the explanation above.
-> > > > > 
-> > > > > > But I could make it something like:
-> > > > > > 1. Letting ->head grow if ->head_free busy
-> > > > > > 2. If head_free is busy, then just queue/requeue the monitor to try again.
-> > > > > 
-> > > > > This is exactly what Paul said. The problem with this is ->head can grow too
-> > > > > much. That's why I suggested the above one.
-> > > > 
-> > > > It can grow quite large, but how do you know that limiting its size will
-> > > > really help?  Sure, you have limited the size, but does that really do
-> > > 
-> > > To decide the size, we might have to refer to how much pressure on
-> > > memory and RCU there are at that moment and adjust it on runtime.
-> > > 
-> > > > anything for the larger problem of extreme kfree_rcu() rates on the one
-> > > > hand and a desire for more efficient handling of kfree_rcu() on the other?
-> > > 
-> > > Assuming current RCU logic handles extremly high rate well which is
-> > > anyway true, my answer is *yes*, because batching anyway has pros and
-> > > cons. One of major cons is there must be inevitable kfree_rcu() requests
-> > > that not even request to RCU. By allowing only the size of batching, the
-> > > situation can be mitigated.
-> > > 
-> > > I just answered to you. But again, let's talk about it later once we
-> > > face the problem as you said.
-> > > 
-> > > Thanks,
-> > > Byungchul
-> > > 
-> > > > 							Thanx, Paul
-> > > > 
-> > > > > > This would even improve performance, but will still risk going out of memory.
-> > > > > >
-> > > > > > Thoughts?
-> > > > > >
-> > > > > > thanks,
-> > > > > >
-> > > > > >  - Joel
-> > > > > >
-> > > > > > >
-> > > > > > > This way, we can avoid both:
-> > > > > > >
-> > > > > > > 1. too many requests being queued and
-> > > > > > > 2. __call_rcu() bunch of requests within a single kfree_rcu().
-> > > > > > >
-> > > > > > > Thanks,
-> > > > > > > Byungchul
-> > > > > > >
-> > > > > > > >
-> > > > > > > > But please feel free to come up with a better solution!
-> > > > > > > >
-> > > > > > > > [ . . . ]
-> > > > > 
-> > > > > 
-> > > > > 
-> > > > > -- 
-> > > > > Thanks,
-> > > > > Byungchul
-> > > > > 
