@@ -2,151 +2,122 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B81CC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B35D6C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58BDA20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F76C20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:32:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GhyXBLc6";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dipzXRcN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbfHLObk (ORCPT
+        id S1727251AbfHLOcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 10:31:40 -0400
-Received: from mga17.intel.com ([192.55.52.151]:15933 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbfHLObj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 10:31:39 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 07:31:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,377,1559545200"; 
-   d="scan'208";a="259812957"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 12 Aug 2019 07:31:34 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 882B42DD; Mon, 12 Aug 2019 17:31:33 +0300 (EEST)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] PCI: pciehp: Do not disable interrupt twice on suspend
-Date:   Mon, 12 Aug 2019 17:31:32 +0300
-Message-Id: <20190812143133.75319-1-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 12 Aug 2019 10:32:16 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43282 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbfHLOcQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 10:32:16 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 2B3EA61230; Mon, 12 Aug 2019 14:32:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565620335;
+        bh=w8crrLL9haXBTnSHYdfkFARCnHukR+gTIrEu5wquuGI=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=GhyXBLc6suy/Bz/jL9AvI/qRrs0Y9DpmC/nzQ3ZZZTpC2Gkmf5apwM8yZgqWoO7Qo
+         ZkPK7OK3Ds9wZmJ2wzUzV7HYJWrFjmETmozIa0kBwN0RiqsY0j/wbZVVGJy4vW3yaY
+         EgojsDtcfV8tI5os4hM3do19A79vqBCF5TX5QWgU=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B046360EA5;
+        Mon, 12 Aug 2019 14:32:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565620333;
+        bh=w8crrLL9haXBTnSHYdfkFARCnHukR+gTIrEu5wquuGI=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=dipzXRcNxl5qADpUHOKhs9uV/1gy1uS40sOp5tXz1l5qYYOFBj0KDj1/hDpqEDD0M
+         bktOchuFqm009dWS8jgoi0DtrbkKZ5POI3LHP7vi5QkA0hWHysAoh4WWlSI3uO56aq
+         EMwAArS48E4AqRNq3BvAo1jV7tJWFLPag4Aw9280=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B046360EA5
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Jes Sorensen <jes.sorensen@gmail.com>
+Cc:     Chris Chiu <chiu@endlessm.com>, davem@davemloft.net,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com,
+        Daniel Drake <drake@endlessm.com>
+Subject: Re: [RFC PATCH v7] rtl8xxxu: Improve TX performance of RTL8723BU on rtl8xxxu driver
+References: <20190805131452.13257-1-chiu@endlessm.com>
+        <d0047834-957d-0cf3-5792-31faa5315ad1@gmail.com>
+Date:   Mon, 12 Aug 2019 17:32:08 +0300
+In-Reply-To: <d0047834-957d-0cf3-5792-31faa5315ad1@gmail.com> (Jes Sorensen's
+        message of "Mon, 12 Aug 2019 09:38:51 -0400")
+Message-ID: <87wofibgk7.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We try to keep PCIe hotplug ports runtime suspended when entering system
-suspend. Due to the fact that the PCIe portdrv sets NEVER_SKIP driver PM
-flag the PM core always calls system suspend/resume hooks even if the
-device is left runtime suspended. Since PCIe hotplug driver re-uses the
-same function for both it ends up disabling hotplug interrupt twice and
-the second time following is printed:
+Jes Sorensen <jes.sorensen@gmail.com> writes:
 
-  pciehp 0000:03:01.0:pcie204: pcie_do_write_cmd: no response from device
+> On 8/5/19 9:14 AM, Chris Chiu wrote:
+>> We have 3 laptops which connect the wifi by the same RTL8723BU.
+>> The PCI VID/PID of the wifi chip is 10EC:B720 which is supported.
+>> They have the same problem with the in-kernel rtl8xxxu driver, the
+>> iperf (as a client to an ethernet-connected server) gets ~1Mbps.
+>> Nevertheless, the signal strength is reported as around -40dBm,
+>> which is quite good. From the wireshark capture, the tx rate for each
+>> data and qos data packet is only 1Mbps. Compare to the Realtek driver
+>> at https://github.com/lwfinger/rtl8723bu, the same iperf test gets
+>> ~12Mbps or better. The signal strength is reported similarly around
+>> -40dBm. That's why we want to improve.
+>> 
+>> After reading the source code of the rtl8xxxu driver and Realtek's, the
+>> major difference is that Realtek's driver has a watchdog which will keep
+>> monitoring the signal quality and updating the rate mask just like the
+>> rtl8xxxu_gen2_update_rate_mask() does if signal quality changes.
+>> And this kind of watchdog also exists in rtlwifi driver of some specific
+>> chips, ex rtl8192ee, rtl8188ee, rtl8723ae, rtl8821ae...etc. They have
+>> the same member function named dm_watchdog and will invoke the
+>> corresponding dm_refresh_rate_adaptive_mask to adjust the tx rate
+>> mask.
+>> 
+>> With this commit, the tx rate of each data and qos data packet will
+>> be 39Mbps (MCS4) with the 0xF00000 as the tx rate mask. The 20th bit
+>> to 23th bit means MCS4 to MCS7. It means that the firmware still picks
+>> the lowest rate from the rate mask and explains why the tx rate of
+>> data and qos data is always lowest 1Mbps because the default rate mask
+>> passed is always 0xFFFFFFF ranges from the basic CCK rate, OFDM rate,
+>> and MCS rate. However, with Realtek's driver, the tx rate observed from
+>> wireshark under the same condition is almost 65Mbps or 72Mbps, which
+>> indicating that rtl8xxxu could still be further improved.
+>> 
+>> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+>> Reviewed-by: Daniel Drake <drake@endlessm.com>
+>> ---
+>
+> Looks good to me! Nice work! I am actually very curious if this will
+> improve performance 8192eu as well.
+>
+> Ideally I'd like to figure out how to make host controlled rates work,
+> but in all my experiments with that, I never really got it to work well.
+>
+> Signed-off-by: Jes Sorensen <Jes.Sorensen@gmail.com>
 
-Prevent this from happening by checking whether the device is already
-runtime suspended when system suspend hook is called.
+This is marked as RFC so I'm not sure what's the plan. Should I apply
+this?
 
-Fixes: 9c62f0bfb832 ("PCI: pciehp: Implement runtime PM callbacks")
-Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-Changes from previous version:
-
-  * Move .resume inside CONFIG_PM_SLEEP
-  * Added tags from Kai-Heng and Rafael
-
- drivers/pci/hotplug/pciehp_core.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
-index 6ad0d86762cb..e9f82afa3773 100644
---- a/drivers/pci/hotplug/pciehp_core.c
-+++ b/drivers/pci/hotplug/pciehp_core.c
-@@ -248,7 +248,7 @@ static bool pme_is_native(struct pcie_device *dev)
- 	return pcie_ports_native || host->native_pme;
- }
- 
--static int pciehp_suspend(struct pcie_device *dev)
-+static void pciehp_disable_interrupt(struct pcie_device *dev)
- {
- 	/*
- 	 * Disable hotplug interrupt so that it does not trigger
-@@ -256,7 +256,19 @@ static int pciehp_suspend(struct pcie_device *dev)
- 	 */
- 	if (pme_is_native(dev))
- 		pcie_disable_interrupt(get_service_data(dev));
-+}
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int pciehp_suspend(struct pcie_device *dev)
-+{
-+	/*
-+	 * If the port is already runtime suspended we can keep it that
-+	 * way.
-+	 */
-+	if (dev_pm_smart_suspend_and_suspended(&dev->port->dev))
-+		return 0;
-+
-+	pciehp_disable_interrupt(dev);
- 	return 0;
- }
- 
-@@ -274,6 +286,7 @@ static int pciehp_resume_noirq(struct pcie_device *dev)
- 
- 	return 0;
- }
-+#endif
- 
- static int pciehp_resume(struct pcie_device *dev)
- {
-@@ -287,6 +300,12 @@ static int pciehp_resume(struct pcie_device *dev)
- 	return 0;
- }
- 
-+static int pciehp_runtime_suspend(struct pcie_device *dev)
-+{
-+	pciehp_disable_interrupt(dev);
-+	return 0;
-+}
-+
- static int pciehp_runtime_resume(struct pcie_device *dev)
- {
- 	struct controller *ctrl = get_service_data(dev);
-@@ -313,10 +332,12 @@ static struct pcie_port_service_driver hpdriver_portdrv = {
- 	.remove		= pciehp_remove,
- 
- #ifdef	CONFIG_PM
-+#ifdef	CONFIG_PM_SLEEP
- 	.suspend	= pciehp_suspend,
- 	.resume_noirq	= pciehp_resume_noirq,
- 	.resume		= pciehp_resume,
--	.runtime_suspend = pciehp_suspend,
-+#endif
-+	.runtime_suspend = pciehp_runtime_suspend,
- 	.runtime_resume	= pciehp_runtime_resume,
- #endif	/* PM */
- };
 -- 
-2.20.1
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
