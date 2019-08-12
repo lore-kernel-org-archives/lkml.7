@@ -2,155 +2,166 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9558C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD5CC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB6BF20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2697020665
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:23:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfHLXXb (ORCPT
+        id S1726692AbfHLXX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 19:23:31 -0400
-Received: from smtprelay0114.hostedemail.com ([216.40.44.114]:53551 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726144AbfHLXXb (ORCPT
+        Mon, 12 Aug 2019 19:23:58 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36448 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726144AbfHLXX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 19:23:31 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id C1578182CED2A;
-        Mon, 12 Aug 2019 23:23:29 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: leaf22_1e480bf41a219
-X-Filterd-Recvd-Size: 5199
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 12 Aug 2019 23:23:27 +0000 (UTC)
-Message-ID: <058c848ef329fa68ef40ca58fa6bbd65b97de0e1.camel@perches.com>
-Subject: Re: [PATCH v2] kbuild: Change fallthrough comments to attributes
-From:   Joe Perches <joe@perches.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Nathan Huckleberry <nhuck@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Date:   Mon, 12 Aug 2019 16:23:26 -0700
-In-Reply-To: <CAKwvOdnpXqoQDmHVRCh0qX=Yh-8UpEWJ0C3S=syn1KN8rB3OGQ@mail.gmail.com>
-References: <20190812214711.83710-1-nhuck@google.com>
-         <20190812221416.139678-1-nhuck@google.com>
-         <814c1b19141022946d3e0f7e24d69658d7a512e4.camel@perches.com>
-         <CAKwvOdnpXqoQDmHVRCh0qX=Yh-8UpEWJ0C3S=syn1KN8rB3OGQ@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Mon, 12 Aug 2019 19:23:57 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7CNLsl6087075;
+        Mon, 12 Aug 2019 19:23:15 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ubh68s0aj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 12 Aug 2019 19:23:15 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7CNMrfI089904;
+        Mon, 12 Aug 2019 19:23:14 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ubh68s09u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 12 Aug 2019 19:23:14 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7CNKZf6031273;
+        Mon, 12 Aug 2019 23:23:13 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma04wdc.us.ibm.com with ESMTP id 2u9nj6a6hc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 12 Aug 2019 23:23:13 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7CNNCsK48431482
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 12 Aug 2019 23:23:12 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 89582B2066;
+        Mon, 12 Aug 2019 23:23:12 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6A263B2064;
+        Mon, 12 Aug 2019 23:23:12 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 12 Aug 2019 23:23:12 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id A127D16C0783; Mon, 12 Aug 2019 16:23:16 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 16:23:16 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
+Subject: Re: [PATCH RFC tip/core/rcu 14/14] rcu/nohz: Make multi_cpu_stop()
+ enable tick on all online CPUs
+Message-ID: <20190812232316.GT28441@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190802151435.GA1081@linux.ibm.com>
+ <20190802151501.13069-14-paulmck@linux.ibm.com>
+ <20190812210232.GA3648@lenoir>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812210232.GA3648@lenoir>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-12_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=779 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908120229
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-08-12 at 16:11 -0700, Nick Desaulniers wrote:
-> On Mon, Aug 12, 2019 at 3:40 PM Joe Perches <joe@perches.com> wrote:
-> > On Mon, 2019-08-12 at 15:14 -0700, Nathan Huckleberry wrote:
-> > > Clang does not support the use of comments to label
-> > > intentional fallthrough. This patch replaces some uses
-> > > of comments to attributesto cut down a significant number
-> > > of warnings on clang (from ~50000 to ~200). Only comments
-> > > in commonly used header files have been replaced.
-> > > 
-> > > Since there is still quite a bit of noise, this
-> > > patch moves -Wimplicit-fallthrough to
-> > > Makefile.extrawarn if you are compiling with
-> > > clang.
+On Mon, Aug 12, 2019 at 11:02:33PM +0200, Frederic Weisbecker wrote:
+> On Fri, Aug 02, 2019 at 08:15:01AM -0700, Paul E. McKenney wrote:
+> > The multi_cpu_stop() function relies on the scheduler to gain control from
+> > whatever is running on the various online CPUs, including any nohz_full
+> > CPUs running long loops in kernel-mode code.  Lack of the scheduler-clock
+> > interrupt on such CPUs can delay multi_cpu_stop() for several minutes
+> > and can also result in RCU CPU stall warnings.  This commit therefore
+> > causes multi_cpu_stop() to enable the scheduler-clock interrupt on all
+> > online CPUs.
 > > 
-> > Unmodified clang does not emit this warning without a patch.
+> > Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+> > ---
+> >  kernel/stop_machine.c | 9 ++++++++-
+> >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
+> > index b4f83f7bdf86..a2659f61ed92 100644
+> > --- a/kernel/stop_machine.c
+> > +++ b/kernel/stop_machine.c
+> > @@ -20,6 +20,7 @@
+> >  #include <linux/smpboot.h>
+> >  #include <linux/atomic.h>
+> >  #include <linux/nmi.h>
+> > +#include <linux/tick.h>
+> >  #include <linux/sched/wake_q.h>
+> >  
+> >  /*
+> > @@ -187,15 +188,19 @@ static int multi_cpu_stop(void *data)
+> >  {
+> >  	struct multi_stop_data *msdata = data;
+> >  	enum multi_stop_state curstate = MULTI_STOP_NONE;
+> > -	int cpu = smp_processor_id(), err = 0;
+> > +	int cpu, err = 0;
+> >  	const struct cpumask *cpumask;
+> >  	unsigned long flags;
+> >  	bool is_active;
+> >  
+> > +	for_each_online_cpu(cpu)
+> > +		tick_nohz_dep_set_cpu(cpu, TICK_DEP_MASK_RCU);
 > 
-> Correct, Nathan is currently implementing support for attribute
-> fallthrough in Clang in:
-> https://reviews.llvm.org/D64838
-> 
-> I asked him in person to evaluate how many warnings we'd see in an
-> arm64 defconfig with his patch applied.  There were on the order of
-> 50k warnings, mostly from these headers.  I asked him to send these
-> patches, then land support in the compiler, that way should our CI
-> catch fire overnight, we can carry out of tree fixes until they land.
-> With the changes here to Makefile.extrawarn, we should not need to
-> carry any out of tree patches.
-> 
-> > > diff --git a/Makefile b/Makefile
-> > []
-> > > @@ -846,7 +846,11 @@ NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
-> > >  KBUILD_CFLAGS += -Wdeclaration-after-statement
-> > > 
-> > >  # Warn about unmarked fall-throughs in switch statement.
-> > > +# If the compiler is clang, this warning is only enabled if W=1 in
-> > > +# Makefile.extrawarn
-> > > +ifndef CONFIG_CC_IS_CLANG
-> > >  KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
-> > > +endif
-> > 
-> > It'd be better to remove CONFIG_CC_IS_CLANG everywhere
-> > eventually as it adds complexity and makes .config files
-> > not portable to multiple systems.
-> > 
-> > > diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
-> > []
-> > > @@ -253,4 +253,8 @@
-> > >   */
-> > >  #define __weak                          __attribute__((__weak__))
-> > > 
-> > > +#if __has_attribute(fallthrough)
-> > > +#define __fallthrough                   __attribute__((fallthrough))
-> > 
-> > This should be __attribute__((__fallthrough__))
-> 
-> Agreed.  I think the GCC documentation on attributes had a point about
-> why the __ prefix/suffix was important, which is why we went with that
-> in Miguel's original patchset.
-> 
-> > And there is still no agreement about whether this should
-> > be #define fallthrough or #define __fallthrough
-> > 
-> > https://lore.kernel.org/patchwork/patch/1108577/
-> > 
-> > > diff --git a/include/linux/jhash.h b/include/linux/jhash.h
-> > []
-> > > @@ -86,19 +86,43 @@ static inline u32 jhash(const void *key, u32 length, u32 initval)
-> > []
-> > > +     case 12:
-> > > +             c += (u32)k[11]<<24;
-> > > +             __fallthrough;
-> > 
-> > You might consider trying out the scripted conversion tool
-> > attached to this email:
-> > 
-> > https://lore.kernel.org/lkml/61ddbb86d5e68a15e24ccb06d9b399bbf5ce2da7.camel@perches.com/
-> 
-> I guess the thing I'm curious about is why /* fall through */ is being
-> used vs __attribute__((__fallthrough__))?  Surely there's some
-> discussion someone can point me to?
+> Looks like it's not the right fix but, should you ever need to set an
+> all-CPUs (system wide) tick dependency in the future, you can use tick_set_dep().
 
-AFAIK:
+Indeed, I have dropped this patch, but I now do something similar in
+RCU's CPU-hotplug notifiers.  Which does have an effect, especially on
+the system that isn't subject to the insane-latency cpu_relax().
 
-It's historic.
+Plus I am having to put a similar workaround into RCU's quiescent-state
+forcing logic.
 
-https://lkml.org/lkml/2019/8/4/83
+But how should this really be done?
 
-coverity and lint do not support __attribute__((__fallthrough__))
-but do support /* fallthrough */ comments in their analysis output.
+Isn't there some sort of monitoring of nohz_full CPUs for accounting
+purposes?  If so, would it make sense for this monitoring to check for
+long-duration kernel execution and enable the tick in this case?  The
+RCU dyntick machinery can be used to remotely detect the long-duration
+kernel execution using something like the following:
 
-I prefer converting all the comments to a macro / pseudo keyword.
+	int nohz_in_kernel_snap = rcu_dynticks_snap_cpu(cpu);
 
-The cvt_style.pl script does a reasonable job of conversion.
+	...
 
+	if (rcu_dynticks_in_eqs_cpu(cpu, nohz_in_kernel_snap)
+		nohz_in_kernel_snap = rcu_dynticks_snap_cpu(cpu);
+	else
+		/* Turn on the tick! */
 
+I would supply rcu_dynticks_snap_cpu() and rcu_dynticks_in_eqs_cpu(),
+which would be simple wrappers around RCU's private rcu_dynticks_snap()
+and rcu_dynticks_in_eqs() functions.
 
+Would this make sense as a general solution, or am I missing a corner
+case or three?
+
+							Thanx, Paul
