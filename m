@@ -2,88 +2,97 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 321C4C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB57C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02E87206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:11:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565637102;
-	bh=E/Wq7i7xnIxt1gJKCZ82QanfLVuebUWCuy1K24B+FMo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FRA2lLWL8PZaPIpiCwpsL3agS0HOVGFZHIUW6B09BsFU+y3FmzgJqOAfcIF6Viko1
-	 QTfC84dW6pEVRSzYkBmEORZVoODO6TeCWkjY6RiBgpikM/JKZo/0sMryjhv1KAnb02
-	 T4UkoBEfODPp0W3A96AuuLjn+jkQ1P/1C3NdH4Ks=
+	by mail.kernel.org (Postfix) with ESMTP id C476D2070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:11:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfHLTLk (ORCPT
+        id S1726882AbfHLTLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 15:11:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47230 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726200AbfHLTLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 15:11:40 -0400
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEFE4208C2;
-        Mon, 12 Aug 2019 19:11:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565637099;
-        bh=E/Wq7i7xnIxt1gJKCZ82QanfLVuebUWCuy1K24B+FMo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=treak2G8MrbmObg8FSSFRSwB7hajX9l7l97PeEBgEdM/rpYdzbDA/0/OLeqsgg2qU
-         KKeMhhzubR55UZHsQlN1wJmK2EcT4cTbc3Qci1JDGQox8SEM4HqQml5jf7ih485rmi
-         GzvXzfi6cTXv86Tepm51ut18EIkOqAVRXDCcMW38=
-Received: by mail-qt1-f175.google.com with SMTP id t12so15364533qtp.9;
-        Mon, 12 Aug 2019 12:11:39 -0700 (PDT)
-X-Gm-Message-State: APjAAAXdUDovj7ilgCQ9dcZSIkrDGBd0SD/sNJQkXdVMEagFS0Xj2QR7
-        1UJmzthhgDgwDGVM4wdDcTs+2uqNyeM/XtjEyA==
-X-Google-Smtp-Source: APXvYqwy7GVmLeGMFfbnCU9KfMy2d+Cst1XuCcbjR1Nxmy2vbL1Eh3xsRpA80dmnLum7eCTeYkaqBTIWT6xIjJgsq9c=
-X-Received: by 2002:ad4:4301:: with SMTP id c1mr10974792qvs.138.1565637099006;
- Mon, 12 Aug 2019 12:11:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190812025242.15570-1-wangzqbj@inspur.com>
-In-Reply-To: <20190812025242.15570-1-wangzqbj@inspur.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 12 Aug 2019 13:11:27 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ1742r8vkwMjzem5FYEis21kVJKamrBt-TgDpMHHFsPw@mail.gmail.com>
-Message-ID: <CAL_JsqJ1742r8vkwMjzem5FYEis21kVJKamrBt-TgDpMHHFsPw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: Add ipsps1 as a trivial device
-To:     John Wang <wangzqbj@inspur.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Jiri Kosina <trivial@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Patrick Venture <venture@google.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jeremy Gebben <jgebben@sweptlaser.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Milton Miller <miltonm@us.ibm.com>,
-        Lei YU <mine260309@gmail.com>, duanzhijia01@inspur.com,
-        Joel Stanley <joel@jms.id.au>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 12 Aug 2019 15:11:52 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:41221 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfHLTLw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 15:11:52 -0400
+Received: by mail-yb1-f195.google.com with SMTP id n7so4236975ybd.8;
+        Mon, 12 Aug 2019 12:11:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=oWFM6rsWwr2/8NmCYG8dA8Afg3RG0C8rbixsAOZiZhE=;
+        b=VJb9ZR4CPV3So7W3wv26gLPoXvFhcBA/IEF/Ju1HN+bXVruAmKoGhIJ5rnzbWMgSZE
+         fALw598tdsp4F0NtyJVp8dtpSp8I8scOpmp1Y5IcxtMUAnAjjjTWbnnnonVCYlKk78Wm
+         4MSlYWx/dLGGlHeMGyRlM0EzStng3K0oFpNlmJRD3neToHHd4Qz4Q7xJ47iE2QNO/Tkk
+         nAAeMdTbi5R8NnvqlqGsQBHcCYLo/HMYcSM3kvz79Q35QLBFQtXu/fjtLcpeNm0DR1ng
+         0jgLlsdTPjGDIV/zQ0iCQqNhnLw1C1fqokk+inKWZq4HHbQBOVz3fPMar/1r3BCYHaAa
+         vPJg==
+X-Gm-Message-State: APjAAAUzNKrVKPQMMhgtHfFQJdpuLrThZxx2yduU6+EOcygxEuYj9nWb
+        wE0DHQPGDlbSCVvyp/HEiL4=
+X-Google-Smtp-Source: APXvYqyEJYx2b36OinXqAO2z76u3/xvYcHi3C4xSFH4ddR32DXQs6x+YIR2GBrmU4FmV71KsqNvSbw==
+X-Received: by 2002:a25:57d5:: with SMTP id l204mr24262546ybb.508.1565637111019;
+        Mon, 12 Aug 2019 12:11:51 -0700 (PDT)
+Received: from BlueSky.guest.pso.uga.edu (75-131-184-98.static.gwnt.ga.charter.com. [75.131.184.98])
+        by smtp.gmail.com with ESMTPSA id x15sm2001013ywj.63.2019.08.12.12.11.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 12 Aug 2019 12:11:50 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Tariq Toukan <tariqt@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev@vger.kernel.org (open list:MELLANOX ETHERNET DRIVER (mlx4_en)),
+        linux-rdma@vger.kernel.org (open list:MELLANOX MLX4 core VPI driver),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] net/mlx4_en: fix a memory leak bug
+Date:   Mon, 12 Aug 2019 14:11:35 -0500
+Message-Id: <1565637095-7972-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 8:52 PM John Wang <wangzqbj@inspur.com> wrote:
->
-> The ipsps1 is an Inspur Power System power supply unit
->
-> Signed-off-by: John Wang <wangzqbj@inspur.com>
-> ---
-> v3:
->     - Fix adding entry to the inappropriate line
-> v2:
->     - No changes.
-> ---
->  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+In mlx4_en_config_rss_steer(), 'rss_map->indir_qp' is allocated through
+kzalloc(). After that, mlx4_qp_alloc() is invoked to configure RSS
+indirection. However, if mlx4_qp_alloc() fails, the allocated
+'rss_map->indir_qp' is not deallocated, leading to a memory leak bug.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+To fix the above issue, add the 'qp_alloc_err' label to free
+'rss_map->indir_qp'.
+
+Fixes: 4931c6ef04b4 ("net/mlx4_en: Optimized single ring steering")
+
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ drivers/net/ethernet/mellanox/mlx4/en_rx.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx4/en_rx.c b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
+index 6c01314..db3552f 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/en_rx.c
++++ b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
+@@ -1187,7 +1187,7 @@ int mlx4_en_config_rss_steer(struct mlx4_en_priv *priv)
+ 	err = mlx4_qp_alloc(mdev->dev, priv->base_qpn, rss_map->indir_qp);
+ 	if (err) {
+ 		en_err(priv, "Failed to allocate RSS indirection QP\n");
+-		goto rss_err;
++		goto qp_alloc_err;
+ 	}
+ 
+ 	rss_map->indir_qp->event = mlx4_en_sqp_event;
+@@ -1241,6 +1241,7 @@ int mlx4_en_config_rss_steer(struct mlx4_en_priv *priv)
+ 		       MLX4_QP_STATE_RST, NULL, 0, 0, rss_map->indir_qp);
+ 	mlx4_qp_remove(mdev->dev, rss_map->indir_qp);
+ 	mlx4_qp_free(mdev->dev, rss_map->indir_qp);
++qp_alloc_err:
+ 	kfree(rss_map->indir_qp);
+ 	rss_map->indir_qp = NULL;
+ rss_err:
+-- 
+2.7.4
+
