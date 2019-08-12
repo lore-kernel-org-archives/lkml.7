@@ -2,206 +2,90 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E8EC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A13C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0DE82067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 097422184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:29:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="SwUBhl3E"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="cWbc/657"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfHLWZp (ORCPT
+        id S1727025AbfHLW3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 18:25:45 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:41212 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbfHLWZp (ORCPT
+        Mon, 12 Aug 2019 18:29:18 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:11644 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726453AbfHLW3S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 18:25:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1565648742; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fpvDPZt0n0JQQ2tsQ3wI+WD036Lk0j72y5P1ujGlN9w=;
-        b=SwUBhl3E5SStXfHzOGTIsHJnklbSw/wakKSDm4rX7pNOn2NE9XHaLmizr1nm//qRnZCiNo
-        PswTatfwpvXO5zgJoR4Ypd1XzG97jok8edh3xDk6nR9O2aBbQeK8CRXTF3Dk7VrmW/++lS
-        MV9eYOuVoE9dslfCLDMJlWZrBdiolQE=
-Date:   Tue, 13 Aug 2019 00:25:35 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 4/7] pwm: jz4740: Improve algorithm of clock calculation
-To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Message-Id: <1565648735.2007.4@crapouillou.net>
-In-Reply-To: <20190812214838.e5hyhnlcyykjfvsb@pengutronix.de>
-References: <20190809123031.24219-1-paul@crapouillou.net>
-        <20190809123031.24219-5-paul@crapouillou.net>
-        <20190809170551.u4ybilf5ay2rsvnn@pengutronix.de>
-        <1565370885.2091.2@crapouillou.net>
-        <20190812061520.lwzk3us4ginwwxov@pengutronix.de>
-        <1565642590.2007.1@crapouillou.net>
-        <20190812214838.e5hyhnlcyykjfvsb@pengutronix.de>
+        Mon, 12 Aug 2019 18:29:18 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x7CMTHZr029599
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 15:29:17 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=qiofHP19MlmvHdnj3l6VS7qqrTUvd1N7ucXGb2hoq9Y=;
+ b=cWbc/657cZcEAPWc56tMtbVX3CK9tBi+AGft2GYziIy8AZ1v/UMfBB+t9JX5quMd5O9s
+ d5HrnmFO1XrJ7ILnOYgFPikSOL9cEBAnaoQPzl0qWHVhWOA1h7yIOjrfLup1VgnWji4e
+ xiGax47wfqKNW4h6WslxAFzcyDDj1Ng2pCk= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 2ubbe5hkaw-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 15:29:17 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 12 Aug 2019 15:29:15 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id 182E9163FCBF4; Mon, 12 Aug 2019 15:29:14 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>
+CC:     Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
+        Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH 0/2] flush percpu vmstats
+Date:   Mon, 12 Aug 2019 15:29:09 -0700
+Message-ID: <20190812222911.2364802-1-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-12_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=554 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908120219
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Re-send my message in plain text, as it was bounced by the
-lists - sorry about that]
+While working on v2 of the slabs vmstats flushing patch, I've realized
+the the problem is much more generic and affects all vmstats, not only
+slabs. So the patch has been converted to set of 2.
 
+v2:
+  1) added patch 1, patch 2 rebased on top
+  2) s/for_each_cpu()/for_each_online_cpu() (by Andrew Morton)
 
-Le lun. 12 ao=FBt 2019 =E0 23:48, Uwe =3D?iso-8859-1?q?Kleine-K=3DF6nig?=3D=
-=20
-<u.kleine-koenig@pengutronix.de> a =E9crit :
-> Hello Paul,
->=20
-> On Mon, Aug 12, 2019 at 10:43:10PM +0200, Paul Cercueil wrote:
->>  Le lun. 12 ao=FBt 2019 =E0 8:15, Uwe =3D?iso-8859-1?q?Kleine-K=3DF6nig?=
-=3D
->>  <u.kleine-koenig@pengutronix.de> a =E9crit :
->>  > On Fri, Aug 09, 2019 at 07:14:45PM +0200, Paul Cercueil wrote:
->>  > >  Le ven. 9 ao=FBt 2019 =E0 19:05, Uwe=20
->> =3D?iso-8859-1?q?Kleine-K=3DF6nig?=3D
->>  > >  <u.kleine-koenig@pengutronix.de> a =E9crit :
->>  > >  > On Fri, Aug 09, 2019 at 02:30:28PM +0200, Paul Cercueil=20
->> wrote:
->>  > >  > > [...]
->>  > >  > >  +	/* Reset the clock to the maximum rate, and we'll=20
->> reduce it if needed */
->>  > >  > >  +	ret =3D clk_set_max_rate(clk, parent_rate);
->>  > >  >
->>  > >  > What is the purpose of this call? IIUC this limits the=20
->> allowed range of
->>  > >  > rates for clk. I assume the idea is to prevent other=20
->> consumers to change
->>  > >  > the rate in a way that makes it unsuitable for this pwm. But=20
->> this only
->>  > >  > makes sense if you had a notifier for clk changes, doesn't=20
->> it? I'm
->>  > >  > confused.
->>  > >
->>  > >  Nothing like that. The second call to clk_set_max_rate() might=20
->> have set
->>  > >  a maximum clock rate that's lower than the parent's rate, and=20
->> we want to
->>  > >  undo that.
->>  >
->>  > I still don't get the purpose of this call. Why do you limit the=20
->> clock
->>  > rate at all?
->>=20
->>  As it says below, we "limit the clock to a maximum rate that still=20
->> gives
->>  us a period value which fits in 16 bits". So that the computed=20
->> hardware
->>  values won't overflow.
->=20
-> But why not just using clk_set_rate? You want to have the clock=20
-> running
-> at a certain rate, not any rate below that certain rate, don't you?
+Roman Gushchin (2):
+  mm: memcontrol: flush percpu vmstats before releasing memcg
+  mm: memcontrol: flush percpu slab vmstats on kmem offlining
 
-I'll let yourself answer yourself:
-https://patchwork.ozlabs.org/patch/1018969/
+ mm/memcontrol.c | 59 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-It's enough to run it below a certain rate, yes. The actual rate doesn't
-actually matter that much.
-
-
->=20
->>  E.g. if at a rate of 12 MHz your computed hardware value for the=20
->> period
->>  is 0xf000, then at a rate of 24 MHz it won't fit in 16 bits. So the=20
->> clock
->>  rate must be reduced to the highest possible that will still give=20
->> you a
->>  < 16-bit value.
->>=20
->>  We always want the highest possible clock rate that works, for the=20
->> sake of
->>  precision.
->=20
-> This is dubious; but ok to keep the driver simple. (Consider a PWM=20
-> that
-> can run at i MHz for i in [1, .. 30]. If a period of 120 ns and a duty
-> cycle of 40 ns is requested you can get an exact match with 25 MHz,=20
-> but
-> not with 30 MHz.)
-
-The clock rate is actually (parent_rate >> (2 * x) )
-for x =3D 0, 1, 2, ...
-
-So if your parent_rate is 30 MHz the next valid one is 7.5 MHz, and the
-next one is 1.875 MHz. It'd be very unlikely that you get a better=20
-match at a
-lower clock.
-
-
->>  > >  Basically, we start from the maximum clock rate we can get for=20
->> that PWM
->>  > >  - which is the rate of the parent clk - and from that compute=20
->> the maximum
->>  > >  clock rate that we can support that still gives us < 16-bits=20
->> hardware
->>  > >  values for the period and duty.
->>  > >
->>  > >  We then pass that computed maximum clock rate to=20
->> clk_set_max_rate(), which
->>  > >  may or may not update the current PWM clock's rate to match=20
->> the new limits.
->>  > >  Finally we read back the PWM clock's rate and compute the=20
->> period and duty
->>  > >  from that.
->>  >
->>  > If you change the clk rate, is this externally visible on the PWM
->>  > output? Does this affect other PWM instances?
->>=20
->>  The clock rate doesn't change the PWM output because the hardware=20
->> values for
->>  the period and duty are adapted accordingly to reflect the change.
->=20
-> It doesn't change it in the end. But in the (short) time frame between
-> the call to change the clock and the update of the PWM registers there
-> is a glitch, right?
-
-The PWM is disabled, so the line is in inactive state, and will be in=20
-that state
-until the PWM is enabled again. No glitch to fear.
-
-
-> You didn't answer to the question about other PWM instances. Does that
-> mean others are not affected?
-
-Sorry. Yes, they are not affected - all PWM channels are independent.
-
-
-> Best regards
-> Uwe
->=20
-> PS: It would be great if you could fix your mailer to not damage the
-> quoted mail. Also it doesn't seem to understand how my name is encoded
-> in the From line. I fixed up the quotes in my reply.
-
-I guess I'll submit a bug report to Geary then.
-
-
->=20
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=F6nig       =20
->     |
-> Industrial Linux Solutions                 |=20
-> http://www.pengutronix.de/  |
-
-=
+-- 
+2.21.0
 
