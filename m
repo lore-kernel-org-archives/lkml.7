@@ -2,253 +2,110 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE8EC32750
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 179B3C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACBA0206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:28:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cAJ5h1wF"
+	by mail.kernel.org (Postfix) with ESMTP id D77BD206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:29:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbfHLU2X (ORCPT
+        id S1727590AbfHLU3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 16:28:23 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34580 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbfHLU2X (ORCPT
+        Mon, 12 Aug 2019 16:29:36 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61448 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726907AbfHLU3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 16:28:23 -0400
-Received: by mail-wm1-f67.google.com with SMTP id e8so754008wme.1;
-        Mon, 12 Aug 2019 13:28:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=s0wCDx5y8pM7KtoQUqmdqY2XvkbJAZAW+gebmmrvDIE=;
-        b=cAJ5h1wFXUpT9r4lSaCUp9GTsqU+jUD3IEO0JrHTfziR7f2FmF76dZgvpsPXeTNtiS
-         aEw7fp/lS611qPmwa4pE3qnF68BhjavZ9OtDH2o3OEx+4b4Lu5VhO6TRiGzubbIEl1C1
-         nRrL01e0gFLK5pH4CdxqERkorGogwxbZW3xleDzMAGKjLNtATZD5b0UqGLWTbQVroURy
-         q1CcREkVPnVLyJiko/JK15+d3E8Un5YVy1B2WiWJgIiqD9YxQF14FKgpdQYqGeeuI44v
-         jmhbsFoKLJZJLegN8p4KyBr3lmk8BcraA8yNOGqccz1qXF9kCet/txd2iIQ5/citHZhH
-         n/IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=s0wCDx5y8pM7KtoQUqmdqY2XvkbJAZAW+gebmmrvDIE=;
-        b=Jv9UgHkesFLLtLdTy2nfC1kpnqwafITbMO/TvqVV4EKuQZIVJVQwVT7eJHLM9muIt9
-         mc0uzE87ZjssMqssW5f0y8/+w23da3bo3MadaXCleLRkAqFproyk/dD6JybdN2s0yfNm
-         7kIH6MKjNlvO4eNZRt33ubD929mTl7IzIZ3ixeeYtUEnmKIXdUS1WrD/edr3njEkLvW6
-         t/pgYbty8F5lWWjfXrASZ1+Q/WMAwqePW6ecAZaV9dAnHIQFd5e83d91y+lMDh1GRlr3
-         QI/X7XyxNd0sQU7qUAUbJgYIps5hT5hfIqCCtnF64872dj6PGIRyPnc977TP3L5SOluv
-         bNiA==
-X-Gm-Message-State: APjAAAVh1SSJOkgRvGt6eyrMAqPTk+7UFHI7Zo2fQGqbr5tN4n3pnQHe
-        ANAiuVtnnB1Ksheq2nIls6vOpT79
-X-Google-Smtp-Source: APXvYqxeFokrusVryrWCYSrwCp/0pKQAr6rCeL88qBCrWqVRBNU52Y1mu2t0P6NIjfR8780orli+0Q==
-X-Received: by 2002:a1c:f509:: with SMTP id t9mr1021363wmh.114.1565641698530;
-        Mon, 12 Aug 2019 13:28:18 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.218])
-        by smtp.googlemail.com with ESMTPSA id u186sm1061474wmu.26.2019.08.12.13.28.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 13:28:17 -0700 (PDT)
-Subject: Re: [PATCH v8 14/21] clk: tegra210: Add suspend and resume support
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com,
-        pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-15-git-send-email-skomatineni@nvidia.com>
- <a21b7464-62c3-8461-04c2-a0e863bdde85@gmail.com>
- <7d101ec9-c559-8b40-1764-6bf67a9c7a7a@nvidia.com>
- <aa823801-00c7-df88-0f63-45338bffa854@gmail.com>
- <cbe94f84-a17b-7e1a-811d-89db571784e1@nvidia.com>
- <4397de5d-772d-2b04-5f87-b2988f6c96c8@gmail.com>
- <805a825e-f19d-d056-83eb-8ed1cb1c089c@nvidia.com>
- <ca90bd2b-8088-8b46-2816-95e58a4811b8@gmail.com>
- <931b027d-fdf3-220b-167a-4177fa917781@nvidia.com>
- <1779e92b-fa4d-68ab-9218-51970eee1ec5@gmail.com>
- <cd685e84-c0de-6142-597e-f7c77604350e@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <232688c1-d47b-771d-a768-07e722488fa8@gmail.com>
-Date:   Mon, 12 Aug 2019 23:28:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 12 Aug 2019 16:29:36 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7CKLwFx099237
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 16:29:34 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ubcqvwju6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 16:29:34 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
+        Mon, 12 Aug 2019 21:29:32 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 12 Aug 2019 21:29:27 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7CKTQn254526030
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 12 Aug 2019 20:29:26 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F1065A404D;
+        Mon, 12 Aug 2019 20:29:25 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1C6E1A4055;
+        Mon, 12 Aug 2019 20:29:23 +0000 (GMT)
+Received: from ram.ibm.com (unknown [9.85.191.17])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 12 Aug 2019 20:29:22 +0000 (GMT)
+Date:   Mon, 12 Aug 2019 13:29:20 -0700
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        linuxppc-devel@lists.ozlabs.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Alexey Kardashevskiy <aik@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Reply-To: Ram Pai <linuxram@us.ibm.com>
+References: <87zhrj8kcp.fsf@morokweng.localdomain>
+ <20190810143038-mutt-send-email-mst@kernel.org>
+ <20190810220702.GA5964@ram.ibm.com>
+ <20190811055607.GA12488@lst.de>
+ <20190811064621.GB5964@ram.ibm.com>
+ <20190812121324.GA9405@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <cd685e84-c0de-6142-597e-f7c77604350e@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812121324.GA9405@lst.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19081220-0008-0000-0000-000003084E4A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19081220-0009-0000-0000-00004A265E9B
+Message-Id: <20190812202920.GC5964@ram.ibm.com>
+Subject: RE: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-12_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=710 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908120202
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-12.08.2019 22:03, Sowjanya Komatineni пишет:
+On Mon, Aug 12, 2019 at 02:13:24PM +0200, Christoph Hellwig wrote:
+> On Sat, Aug 10, 2019 at 11:46:21PM -0700, Ram Pai wrote:
+> > If the hypervisor (hardware for hw virtio devices) does not mandate a
+> > DMA API, why is it illegal for the driver to request, special handling
+> > of its i/o buffers? Why are we associating this special handling to
+> > always mean, some DMA address translation? Can't there be 
+> > any other kind of special handling needs, that has nothing to do with
+> > DMA address translation?
 > 
-> On 8/12/19 11:19 AM, Dmitry Osipenko wrote:
->> 12.08.2019 20:28, Sowjanya Komatineni пишет:
->>> On 8/12/19 9:25 AM, Dmitry Osipenko wrote:
->>>> 11.08.2019 22:15, Sowjanya Komatineni пишет:
->>>>> On 8/11/19 10:39 AM, Dmitry Osipenko wrote:
->>>>>> 09.08.2019 21:40, Sowjanya Komatineni пишет:
->>>>>>> On 8/9/19 11:18 AM, Dmitry Osipenko wrote:
->>>>>>>> 09.08.2019 19:19, Sowjanya Komatineni пишет:
->>>>>>>>> On 8/9/19 6:56 AM, Dmitry Osipenko wrote:
->>>>>>>>>> 09.08.2019 2:46, Sowjanya Komatineni пишет:
->>>>>>>>>>> This patch adds support for clk: tegra210: suspend-resume.
->>>>>>>>>>>
->>>>>>>>>>> All the CAR controller settings are lost on suspend when core
->>>>>>>>>>> power goes off.
->>>>>>>>>>>
->>>>>>>>>>> This patch has implementation for saving and restoring all PLLs
->>>>>>>>>>> and clocks context during system suspend and resume to have the
->>>>>>>>>>> clocks back to same state for normal operation.
->>>>>>>>>>>
->>>>>>>>>>> Clock driver suspend and resume are registered as syscore_ops as clocks
->>>>>>>>>>> restore need to happen before the other drivers resume to have all their
->>>>>>>>>>> clocks back to the same state as before suspend.
->>>>>>>>>>>
->>>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>>>>> ---
->>>>>>>>>>>      drivers/clk/tegra/clk-tegra210.c | 103 +++++++++++++++++++++++++++++++++++++--
->>>>>>>>>>>      drivers/clk/tegra/clk.c          |  64 ++++++++++++++++++++++++
->>>>>>>>>>>      drivers/clk/tegra/clk.h          |   3 ++
->>>>>>>>>>>      3 files changed, 166 insertions(+), 4 deletions(-)
->>>>>>>>>>>
->>>>>>>>>>> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
->>>>>>>>>>> index 998bf60b219a..8dd6f4f4debb 100644
->>>>>>>>>>> --- a/drivers/clk/tegra/clk-tegra210.c
->>>>>>>>>>> +++ b/drivers/clk/tegra/clk-tegra210.c
->>>>>>>>>>> @@ -9,13 +9,13 @@
->>>>>>>>>>>      #include <linux/clkdev.h>
->>>>>>>>>>>      #include <linux/of.h>
->>>>>>>>>>>      #include <linux/of_address.h>
->>>>>>>>>>> +#include <linux/syscore_ops.h>
->>>>>>>>>>>      #include <linux/delay.h>
->>>>>>>>>>>      #include <linux/export.h>
->>>>>>>>>>>      #include <linux/mutex.h>
->>>>>>>>>>>      #include <linux/clk/tegra.h>
->>>>>>>>>>>      #include <dt-bindings/clock/tegra210-car.h>
->>>>>>>>>>>      #include <dt-bindings/reset/tegra210-car.h>
->>>>>>>>>>> -#include <linux/iopoll.h>
->>>>>>>>>>>      #include <linux/sizes.h>
->>>>>>>>>>>      #include <soc/tegra/pmc.h>
->>>>>>>>>>>      @@ -220,11 +220,15 @@
->>>>>>>>>>>      #define CLK_M_DIVISOR_SHIFT 2
->>>>>>>>>>>      #define CLK_M_DIVISOR_MASK 0x3
->>>>>>>>>>>      +#define CLK_MASK_ARM    0x44
->>>>>>>>>>> +#define MISC_CLK_ENB    0x48
->>>>>>>>>>> +
->>>>>>>>>>>      #define RST_DFLL_DVCO 0x2f4
->>>>>>>>>>>      #define DVFS_DFLL_RESET_SHIFT 0
->>>>>>>>>>>        #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
->>>>>>>>>>>      #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
->>>>>>>>>>> +#define CPU_SOFTRST_CTRL 0x380
->>>>>>>>>>>        #define LVL2_CLK_GATE_OVRA 0xf8
->>>>>>>>>>>      #define LVL2_CLK_GATE_OVRC 0x3a0
->>>>>>>>>>> @@ -2825,6 +2829,7 @@ static int tegra210_enable_pllu(void)
->>>>>>>>>>>          struct tegra_clk_pll_freq_table *fentry;
->>>>>>>>>>>          struct tegra_clk_pll pllu;
->>>>>>>>>>>          u32 reg;
->>>>>>>>>>> +    int ret;
->>>>>>>>>>>            for (fentry = pll_u_freq_table; fentry->input_rate; fentry++) {
->>>>>>>>>>>              if (fentry->input_rate == pll_ref_freq)
->>>>>>>>>>> @@ -2853,9 +2858,14 @@ static int tegra210_enable_pllu(void)
->>>>>>>>>>>          reg |= PLL_ENABLE;
->>>>>>>>>>>          writel(reg, clk_base + PLLU_BASE);
->>>>>>>>>>>      -    readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
->>>>>>>>>>> -                      reg & PLL_BASE_LOCK, 2, 1000);
->>>>>>>>>>> -    if (!(reg & PLL_BASE_LOCK)) {
->>>>>>>>>>> +    /*
->>>>>>>>>>> +     * During clocks resume, same PLLU init and enable sequence get
->>>>>>>>>>> +     * executed. So, readx_poll_timeout_atomic can't be used here as it
->>>>>>>>>>> +     * uses ktime_get() and timekeeping resume doesn't happen by that
->>>>>>>>>>> +     * time. So, using tegra210_wait_for_mask for PLL LOCK.
->>>>>>>>>>> +     */
->>>>>>>>>>> +    ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
->>>>>>>>>>> +    if (ret) {
->>>>>>>>>>>              pr_err("Timed out waiting for PLL_U to lock\n");
->>>>>>>>>>>              return -ETIMEDOUT;
->>>>>>>>>>>          }
->>>>>>>>>>> @@ -3288,6 +3298,84 @@ static void tegra210_disable_cpu_clock(u32 cpu)
->>>>>>>>>>>      }
->>>>>>>>>>>        #ifdef CONFIG_PM_SLEEP
->>>>>>>>>>> +/*
->>>>>>>>>>> + * This array lists mask values for each peripheral clk bank
->>>>>>>>>>> + * to mask out reserved bits during the clocks state restore
->>>>>>>>>>> + * on SC7 resume to prevent accidental writes to these reserved
->>>>>>>>>>> + * bits.
->>>>>>>>>>> + */
->>>>>>>>>>> +static u32 periph_clk_rsvd_mask[TEGRA210_CAR_BANK_COUNT] = {
->>>>>>>>>> Should be more natural to have a "valid_mask" instead of "rsvd_mask".
->>>>>>>>>>
->>>>>>>>>> What's actually wrong with touching of the reserved bits? They must be NO-OP.. or the
->>>>>>>>>> reserved bits are actually some kind of "secret" bits? If those bits have some
->>>>>>>>>> use-case
->>>>>>>>>> outside of Silicon HW (like FPGA simulation), then this doesn't matter for upstream
->>>>>>>>>> and you
->>>>>>>>>> have to keep the workaround locally in the downstream kernel or whatever.
->>>>>>>>> Will rename as valid_mask.
->>>>>>>>>
->>>>>>>>> some bits in these registers are undefined and is not good to write to these bits as
->>>>>>>>> they
->>>>>>>>> can cause pslverr.
->>>>>>>> Okay, it should be explained in the comment.
->>>>>>>>
->>>>>>>> Is it possible to disable trapping of changing the undefined bits?
->>>>>>> No its internal to design
->>>>>> Okay.
->>>>>>
->>>>>> Also, what about to move the valid_mask into struct tegra_clk_periph_regs?
->>>>> No, we cannot move to tegra_clk_periph_regs as its in tegra/clk.c and is common for all
->>>>> tegra.
->>>>>
->>>>> Reserved bits are different on tegra chips so should come from Tegra chip specific clock
->>>>> driver like
->>>>>
->>>>> clk-tegra210 for Tegra210.
->>>> Could you please check whether the reserved bits are RAZ (read as zero)?
->>>>
->>>> [snip]
->>> yes all reserved bits of clk_enb register is 0. This should not be set to 1.
->>>
->>> As I will be changing to variable name to valid_mask instead of reserved mask, will also
->>> change values to valid mask so it can be used directly to write to clk_enb for enabling all
->>> peripherals clks.
->>>
->> It looks to me that the tegra_clk_periph_force_on() could be made local to the
->> clk-tegra210.c and then the raw clk_enb values could be written directly instead of having
->> the clk_enb[] array, probably that will be a bit cleaner
-> 
-> All CLK_OUT_ENB* registers are already defined in clk driver and also periph_regs includes
-> all of these to use.
-> 
-> To write value to enable all clocks directly without array, it need total 7 individual
-> register writes for Tegra210. Also when suspend/resume is implemented for other prior
-> tegras, they need to do same in tegra clock driver.
-> 
-> Reason I had this in clock driver is, this can be used by all tegra clock drivers and just
-> can pass valid clocks values.
-> 
-> But doing individual register write with direct hard code values in corresponding tegra
-> clock driver is preferred still, will update so in next revision and will move all the
-> CLK_OUT_ENB* register defines to tegra/clk.h
-> 
-> Currently RST_DEVICES & CLK_OUT_ENB are all in tegra/clk.c
+> I don't think it is illegal per se.  It is however completely broken
+> if we do that decision on a system weide scale rather than properly
+> requesting it through a per-device flag in the normal virtio framework.
 
-Yes, it should be a bit more clear to share these defines. Also, please define the "valid"
-bitmasks with something like TEGRA210_DEVICES_MASK_L.
+if the decision has to be system-wide; for reasons known locally only to the
+kernel/driver, something that is independent of any device-flag,
+what would be the mechanism?
+
+RP
+
