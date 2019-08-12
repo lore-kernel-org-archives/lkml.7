@@ -2,170 +2,139 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B237C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B48B0C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFFC2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64CC82070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:27:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="jzC2l9r8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o2QA/lHt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfHLTXU (ORCPT
+        id S1726819AbfHLT1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 15:23:20 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37326 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbfHLTXT (ORCPT
+        Mon, 12 Aug 2019 15:27:52 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34737 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726681AbfHLT1v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 15:23:19 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d1so17161665pgp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 12:23:19 -0700 (PDT)
+        Mon, 12 Aug 2019 15:27:51 -0400
+Received: by mail-ot1-f67.google.com with SMTP id n5so163333113otk.1;
+        Mon, 12 Aug 2019 12:27:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WbZ4Sjz/PnOqkj9Tyb0eRWLHmMcoPs5r9WlmOIHpeSo=;
-        b=jzC2l9r88UaY1IukY7wBl28NxdfPM525Oizdju82oqnG+UjMFtJsmQ4V8Uvx/6+Orm
-         fWS1GQxRoaEB2jq5CsZnnU1wxLSuBymvRWSQYQv2k4Fc04be15Oia6PI0grZJI7R2lxH
-         IIEMek1SCHJoUx7vl2b0ZqSLUs8sascLRu9JdKIBwCJMo6nAISs6UQ+jEeXfnyNHERRv
-         auaqhuzsjPAV71Ee7a+PteY3nAiiXs0DyQhgGfGNjObh9DdA0bOLONSDN10g6v6ng50c
-         nzWmlZ4d3goJTdGLPL9hG2fwhhVHCKPrGDEk5V0RvMSdUKKA+J9+ZRo4KaIWYRmCYX2/
-         vyyQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ILsSYtoFc2CKUlsvQby1NfpnXmUVs1DoYSPvAsEfls8=;
+        b=o2QA/lHtWsZXoUWoPCY1fi2EbjP3gU2sfs7+RY7eESxVYX8lLeUmip9oXzJ7XGDJIR
+         MR0abaxb3jMRolf3wgB78dNbWcvM0hnBgRq22Ta8W21hxFjeSgc6TpXFToll2I/kqPvd
+         jghGveeNTsg30U1mIIgM4bo23kl3dE/Z1hrXuQRC3MPbjgCPIVe6hSCaLTXOfCmLJeWl
+         PojFObeFGcz37hrOMnRu1e2xlwmCyyeuUJ2kaiLIxIPNuqhfrsdaJ5jcvogDB0GMOqwn
+         sZC4TbnU8vDoEqfmxaFXkPrji8il2qEl0gGVkzlGC1uNCptGdCT9wegAPhltsU1T4ycC
+         nToA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WbZ4Sjz/PnOqkj9Tyb0eRWLHmMcoPs5r9WlmOIHpeSo=;
-        b=MW024eGS1ABWVBa2VN1SXyiTPwC9rNTR/zND6d9rz+Z0bbIEvK2bmVhtf856gyOK3C
-         tWhGST9987wDv//jMdQsvNo5G2OkqDLllKl70gE+C7zvmmzIq4h65XPSj3LGNQgBzxXB
-         /Okmf5FheQ2sDUljiRUkbfmALuZajHP0rPOTyU33o2TJg5pFD7g+KG6onrh1+0gGcLDb
-         TrqHt6jQyJPgkLYlQMocojAQ+j3u0DEmw6M05Q07ke4X3Zi1jq0l0hnHfEsU4NOszU0P
-         T25RPlrpP9COgGFM/ssWBOcZCNouy4e4YJIXNGSz5RiIgYQ38VjgOdZIphdRVjcmymQG
-         wXIg==
-X-Gm-Message-State: APjAAAVCw9KIKa/AXbUOWnTj5EZ4B/aL6fHFMUSZr2MMRkJeZ4mlTVGE
-        Q82UBZdKm5o4wwTt8lnwOoLI7g==
-X-Google-Smtp-Source: APXvYqw1S8904a2xrHCvhOv0CHIN7t7zCW5x0903Sd3n3zquB/ZaHzb6mZNsVhdWI0VY78GJibDFVA==
-X-Received: by 2002:a65:5188:: with SMTP id h8mr31346069pgq.294.1565637798475;
-        Mon, 12 Aug 2019 12:23:18 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::5810])
-        by smtp.gmail.com with ESMTPSA id v8sm340554pjb.6.2019.08.12.12.23.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 12:23:17 -0700 (PDT)
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH] mm: vmscan: do not share cgroup iteration between reclaimers
-Date:   Mon, 12 Aug 2019 15:23:16 -0400
-Message-Id: <20190812192316.13615-1-hannes@cmpxchg.org>
-X-Mailer: git-send-email 2.22.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ILsSYtoFc2CKUlsvQby1NfpnXmUVs1DoYSPvAsEfls8=;
+        b=ZCHiW31uACdNKcpr92+17y556Yxj+1iIQtTByh5vKpHAH+IHd8IzMq5gCBoBE02DWg
+         g75W3YDfj/1VjmX3nuxs1asJZ8MyzWuzSOi7TGksrxVqP1OZl6J24mQeTPs+nZcmGXjP
+         +MAfG08rVHNmDxBgjVU3sDOcvW6lvq1nqmKkrVvKqoG2b7SpN6EDXBa8YmZQKCV2jNGv
+         qqXgvcmyclw/SaLH4RF5Vgy1bev/AlR5y6U30mReGmwHJ2uZ3SDwqGhO67VmQmVPH3Li
+         5xGqYLZmBcwpR0N+xwn95wKf5+h0LFlpENpb9qQBjQIKr8tt4Pzbwq/KdWxX0ZH2CuyC
+         9r7A==
+X-Gm-Message-State: APjAAAXFvZyvCGP9E6rR+8oSdh4MmBT55PFLavRiHOcrGauah82H/zrL
+        ErXBVQ129brykx45CaYSLofDRia3/DoygztUid4=
+X-Google-Smtp-Source: APXvYqyFv5k85LuUb92ftiZ5NcKrsW1BBLp8/X85YaDKrUsvOGGM29LDofD561J6Qe5XmNJQ26XFzrsVX+X/wKpwUOc=
+X-Received: by 2002:a6b:4107:: with SMTP id n7mr11786212ioa.12.1565638070771;
+ Mon, 12 Aug 2019 12:27:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190717152458.22337-1-andrew.smirnov@gmail.com>
+ <20190717152458.22337-13-andrew.smirnov@gmail.com> <VI1PR0402MB348580480F5EAF5F539B585A98DA0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR0402MB348580480F5EAF5F539B585A98DA0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Mon, 12 Aug 2019 12:27:38 -0700
+Message-ID: <CAHQ1cqEiCkXP+-w9WUc33oW6vDhHza2Jq_kQsXjKZ+__T5g77g@mail.gmail.com>
+Subject: Re: [PATCH v6 12/14] crypto: caam - force DMA address to 32-bit on
+ 64-bit i.MX SoCs
+To:     Horia Geanta <horia.geanta@nxp.com>
+Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Chris Spencer <christopher.spencer@sea.co.uk>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of our services observed a high rate of cgroup OOM kills in the
-presence of large amounts of clean cache. Debugging showed that the
-culprit is the shared cgroup iteration in page reclaim.
+On Mon, Aug 5, 2019 at 1:23 AM Horia Geanta <horia.geanta@nxp.com> wrote:
+>
+> On 7/17/2019 6:25 PM, Andrey Smirnov wrote:
+> > i.MX8 SoC still use 32-bit addresses in its CAAM implmentation, so
+> i.MX8 SoC or i.MX8 mScale?
+> Looking at the documentation, some i.MX8 parts (for e.g. QM and QXP)
+> allow for 36-bit addresses.
+>
 
-Under high allocation concurrency, multiple threads enter reclaim at
-the same time. Fearing overreclaim when we first switched from the
-single global LRU to cgrouped LRU lists, we introduced a shared
-iteration state for reclaim invocations - whether 1 or 20 reclaimers
-are active concurrently, we only walk the cgroup tree once: the 1st
-reclaimer reclaims the first cgroup, the second the second one etc.
-With more reclaimers than cgroups, we start another walk from the top.
+mScale. Will update the message.
 
-This sounded reasonable at the time, but the problem is that reclaim
-concurrency doesn't scale with allocation concurrency. As reclaim
-concurrency increases, the amount of memory individual reclaimers get
-to scan gets smaller and smaller. Individual reclaimers may only see
-one cgroup per cycle, and that may not have much reclaimable
-memory. We see individual reclaimers declare OOM when there is plenty
-of reclaimable memory available in cgroups they didn't visit.
+> > change all of the code to be able to handle that.
+> >
+> Shouldn't this case (32-bit CAAM and CONFIG_ARCH_DMA_ADDR_T_64BIT=y) work
+> for any ARMv8 SoC, i.e. how is this i.MX-specific?
+>
 
-This patch does away with the shared iterator, and every reclaimer is
-allowed to scan the full cgroup tree and see all of reclaimable
-memory, just like it would on a non-cgrouped system. This way, when
-OOM is declared, we know that the reclaimer actually had a chance.
+It's a generic change.
 
-To still maintain fairness in reclaim pressure, disallow cgroup
-reclaim from bailing out of the tree walk early. Kswapd and regular
-direct reclaim already don't bail, so it's not clear why limit reclaim
-would have to, especially since it only walks subtrees to begin with.
+> > @@ -603,11 +603,13 @@ static int caam_probe(struct platform_device *pdev)
+> >               ret = init_clocks(dev, ctrlpriv, imx_soc_match->data);
+> >               if (ret)
+> >                       return ret;
+> > +
+> > +             caam_ptr_sz = sizeof(u32);
+> > +     } else {
+> > +             caam_ptr_sz = sizeof(dma_addr_t);
+> caam_ptr_sz should be deduced by reading MCFGR[PS] bit, i.e. decoupled
+> from dma_addr_t.
+>
 
-This change completely eliminates the OOM kills on our service, while
-showing no signs of overreclaim - no increased scan rates, %sys time,
-or abrupt free memory spikes. I tested across 100 machines that have
-64G of RAM and host about 300 cgroups each.
+MCFGR[PS] is not mentioned in i.MX8MQ SRM and MCFG_PS in CTPR_MS is
+documented as set to "0" (seems to match in real HW as well). Doesn't
+seem like a workable solution for i.MX8MQ. Is there something I am
+missing?
 
-[ It's possible overreclaim never was a *practical* issue to begin
-  with - it was simply a concern we had on the mailing lists at the
-  time, with no real data to back it up. But we have also added more
-  bail-out conditions deeper inside reclaim (e.g. the proportional
-  exit in shrink_node_memcg) since. Regardless, now we have data that
-  suggests full walks are more reliable and scale just fine. ]
+> There is another configuration that should be considered
+> (even though highly unlikely):
+> caam_ptr_sz=1  - > 32-bit addresses for CAAM
+> CONFIG_ARCH_DMA_ADDR_T_64BIT=n - 32-bit dma_addr_t
+> so the logic has to be carefully evaluated.
+>
 
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- mm/vmscan.c | 22 ++--------------------
- 1 file changed, 2 insertions(+), 20 deletions(-)
+I don't understand what you mean here. 32-bit CAAM + 32-bit dma_addr_t
+should already be the case for i.MX6, etc. how is what you describe
+different?
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index dbdc46a84f63..b2f10fa49c88 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2667,10 +2667,6 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
- 
- 	do {
- 		struct mem_cgroup *root = sc->target_mem_cgroup;
--		struct mem_cgroup_reclaim_cookie reclaim = {
--			.pgdat = pgdat,
--			.priority = sc->priority,
--		};
- 		unsigned long node_lru_pages = 0;
- 		struct mem_cgroup *memcg;
- 
-@@ -2679,7 +2675,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
- 		nr_reclaimed = sc->nr_reclaimed;
- 		nr_scanned = sc->nr_scanned;
- 
--		memcg = mem_cgroup_iter(root, NULL, &reclaim);
-+		memcg = mem_cgroup_iter(root, NULL, NULL);
- 		do {
- 			unsigned long lru_pages;
- 			unsigned long reclaimed;
-@@ -2724,21 +2720,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
- 				   sc->nr_scanned - scanned,
- 				   sc->nr_reclaimed - reclaimed);
- 
--			/*
--			 * Kswapd have to scan all memory cgroups to fulfill
--			 * the overall scan target for the node.
--			 *
--			 * Limit reclaim, on the other hand, only cares about
--			 * nr_to_reclaim pages to be reclaimed and it will
--			 * retry with decreasing priority if one round over the
--			 * whole hierarchy is not sufficient.
--			 */
--			if (!current_is_kswapd() &&
--					sc->nr_reclaimed >= sc->nr_to_reclaim) {
--				mem_cgroup_iter_break(root, memcg);
--				break;
--			}
--		} while ((memcg = mem_cgroup_iter(root, memcg, &reclaim)));
-+		} while ((memcg = mem_cgroup_iter(root, memcg, NULL)));
- 
- 		if (reclaim_state) {
- 			sc->nr_reclaimed += reclaim_state->reclaimed_slab;
--- 
-2.22.0
+> > @@ -191,7 +191,8 @@ static inline u64 caam_dma64_to_cpu(u64 value)
+> >
+> >  static inline u64 cpu_to_caam_dma(u64 value)
+> >  {
+> > -     if (IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT))
+> > +     if (IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT) &&
+> > +         !caam_imx)
+> Related to my previous comment (i.MX-specific vs. SoC-generic),
+> this should probably change to smth. like: caam_ptr_sz == sizeof(u64)
+>
 
+Makes sense, will do here and in other places.
+
+Thanks,
+Andrey Smirnov
