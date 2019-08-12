@@ -2,161 +2,347 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3361FC32750
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E21C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA2BB20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BD4120820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:59:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="ZCgbyyBV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="obSlPtmA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbfHLK72 (ORCPT
+        id S1728150AbfHLK7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:59:28 -0400
-Received: from mail-eopbgr130132.outbound.protection.outlook.com ([40.107.13.132]:7345
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727691AbfHLK71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:59:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IuTRhGf2ZJxliLUZFjlAITmJeiC8xWuAniqk2rkCC5rGOFw+doSYGpF4fyq24LAZLJ5NyWn2N+wATieIjHg199Rc7WeVUEtjacHB6kXgmRFTKkMBmUqERH9NfkMETLOze2hwqmi6LnNeI7Gc+JGN4k0rqCQXHiL4ntQtdMQfWCEmtyoWOATJ2gvKn0bcAb6uYz6CAFnOYPBZeSHdAcmBQIpXzLDNbUE2kSIMSamCGaVEBNpKnGNUZ9kRlW0gkQTaT1cGThhl61rRfOMsNQDh9s5n1LAyaviqjcKa2O+1vLUqStkUbZupMjqFoQkNOpQeHeK+OPPF+B0nRKiYJ1vTPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+2xhQobUc2rRhp5kmDObpJuKamNn87J+odFug7SIfaE=;
- b=UhkMShVKhwV/C90g9i6mtTwsawHnS1jn4YmZy7Ax9r8O3AfTj8K+NE04l4obsyLsn5Sq68UwXCr6VNVGf4XxTZL8ABg+BckG7+4bB9h4131gLO7cfOJnk6BS8mo4pahSGNmp1gBVsVf3bc0qg0oZu9pQ0lhRGezGaqCoVesYSCza4mUvJPFQerxt7lFWOhrlOnl5Q4Mp5/YQJmn7/2k4Mhwjyt2bTphhqr98/c16tFNND4dohQYWj61+dqMGT8KLOPmnViWvipPB0Na+AjFZqQ7l73B3zO4uxJPGO7xa839R7z/VXsw0BzKqmgkU7Bsbvy/Lpo4kR2GoKIUMyrAjYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+2xhQobUc2rRhp5kmDObpJuKamNn87J+odFug7SIfaE=;
- b=ZCgbyyBVYEBIh/2VqqYRxcxOcHWWdVqcRoj5RXr3vJxMbdEnuHk5SuZ08zOPA2jraGrjVLflEZz1bfSpNNxsNC/ZfimDTQWTUe+GNjEviIr+7J2sMwapB32iqPrbBO0q/eM1cwNVmB9UdcnnV/kW9lVtGNZLSqkhk4uQkoahsUk=
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com (52.134.17.157) by
- VI1PR0502MB3983.eurprd05.prod.outlook.com (52.134.18.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.18; Mon, 12 Aug 2019 10:59:20 +0000
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::8405:5b51:b25d:39a2]) by VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::8405:5b51:b25d:39a2%6]) with mapi id 15.20.2157.022; Mon, 12 Aug 2019
- 10:59:20 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     "stefan@agner.ch" <stefan@agner.ch>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>
-Subject: Re: [PATCH v3 05/21] ARM: dts: add recovery for I2C for iMX7
-Thread-Topic: [PATCH v3 05/21] ARM: dts: add recovery for I2C for iMX7
-Thread-Index: AQHVTPnHBymxxsKMCkWQ+k28WDfDKab3QxYAgAAc8YA=
-Date:   Mon, 12 Aug 2019 10:59:19 +0000
-Message-ID: <bfbf1b9c233da9362cdca5e000bc1dc7b92f08a2.camel@toradex.com>
-References: <20190807082556.5013-1-philippe.schenker@toradex.com>
-         <20190807082556.5013-6-philippe.schenker@toradex.com>
-         <cd0da6ed-6b59-be60-34b2-74eb603aa10d@ysoft.com>
-In-Reply-To: <cd0da6ed-6b59-be60-34b2-74eb603aa10d@ysoft.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=philippe.schenker@toradex.com; 
-x-originating-ip: [46.140.72.82]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4db9d560-d881-4019-2115-08d71f14209e
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0502MB3983;
-x-ms-traffictypediagnostic: VI1PR0502MB3983:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0502MB3983B3F86E99DC5CE13FCA9AF4D30@VI1PR0502MB3983.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 012792EC17
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39840400004)(376002)(346002)(366004)(136003)(199004)(189003)(91956017)(71200400001)(71190400001)(2906002)(76116006)(66946007)(66476007)(478600001)(256004)(66556008)(7416002)(118296001)(6116002)(3846002)(14454004)(81156014)(81166006)(8676002)(8936002)(4326008)(36756003)(14444005)(229853002)(305945005)(6506007)(26005)(66066001)(76176011)(25786009)(110136005)(316002)(54906003)(99286004)(102836004)(44832011)(6486002)(64756008)(6436002)(66446008)(5660300002)(53936002)(6512007)(7736002)(2501003)(6246003)(476003)(2201001)(186003)(86362001)(486006)(11346002)(2616005)(446003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB3983;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 8aA0Px4zMVCNgVsDA16OepDfhfkkAiX4pfFqIinuMQAqdl1BSrs63gYvssvu1h+GXSk1sJbpvmE+MS0glRNj5qtEQbFXumPaDrlkp9/ms9SKZhzGbeOv/8An7QNFlxQQZqC9uEk32Z/RNRO3UTrv5AXOT9+zY/IHeFdOCZqpUL96VzsvSCpBKdq3F4BK0ELq4cpfMKXBqNP9b509aJ0mBswitAZBK9slPbNQVeuL9WG0JmgL0zD6xVgKDTuxSDqvxLojRMfSqNAJhjjLME+sV6Q+m7SnVuxTg3RKyjQWN7tCcGGhyZ3QOmNPFSssChlIW4SwHcWl5owduJ3mqDSr7iLfluqTL/VOBH1mCZSPyebS0Q4E8D8kEzoL2O0cO4J47/mC6vHg72pyDYV1dHalrvB3LhpBLRWCZh7h/C5nG1w=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <15A196EE244FFF46BAD0486B46FCD407@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 12 Aug 2019 06:59:39 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40012 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727995AbfHLK7i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 06:59:38 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v19so11359974wmj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 03:59:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=L3QDldUNKawRROwPoifWuojCk4A/opVfl24XOrd2D7A=;
+        b=obSlPtmAMxsNOfVblv1rcLth1tU1YkoOq/0WsTxm0q0uFxpqHtR77NtUQ+rl03ecjl
+         WkoobEX1p04hFOFoObYL3iULEGiERZ6FlpX5EujGVaDmLku+GdXft+03MhQgxDVgrr14
+         sCL/ithC+ZDs+9yBSpOSxCUlc/2Pn2ewjwy4ZPyjZ0wthxAZ8ico9frp/ttcYKD6VyId
+         iKx3kyMmKVGEJDBtt1GU9ByQdWMJXoQhvRZiRTwklE+jNOb+4mZl42tPsQTP+hdmHnnD
+         0NMd0XuWjT+YitJyNjUdq+o3a5ihmsG5e3VfFBSYDn4QlbTghhFoD4eEMF1Y+HRl16cl
+         GGUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=L3QDldUNKawRROwPoifWuojCk4A/opVfl24XOrd2D7A=;
+        b=aGndh20k3UNLtVdbfJi0Curs0z7kdC+VzRNeEt04ECXTJZTwjp8B4bi6hTOQEMA6UY
+         YOGJq3c+zyfvUlc3400xh/agaB5kNcreneaxommjV1M++hJk9OooFwUP9ZXVncHzTMvJ
+         DUxrDMhOjYa3V5/Wr85qya2gzRCJlD8uFoS7LkkZjNpFEsE6SZTHDKiwZP+vQ7y93Zz7
+         VZFupS26VFA4Anli2krwRFP47ZaMm94cFPGs16gRmn7fwRXpGtNcm6hsJoQoOT9ZNMQJ
+         4kxhWgM5Psk70vYTnvjtkhvuNccBEK/PyVjGWW3pHsOtyE6vxSYUki0gsTzo5PUM9v4i
+         9ttA==
+X-Gm-Message-State: APjAAAU1zO0VHm+BkbGzqt0zOozc8n9wWM0YXWvJkM9YbEM94+V/VubW
+        S95UNlkaHMhR154O3oxf/17a/g==
+X-Google-Smtp-Source: APXvYqywqTqWPVgMZmVrzbCZt88p0+kSGz4htkEKRS3xHptkYpO7UA20whgKvePyENz44HvhOZ+enQ==
+X-Received: by 2002:a1c:20c8:: with SMTP id g191mr26698891wmg.55.1565607575988;
+        Mon, 12 Aug 2019 03:59:35 -0700 (PDT)
+Received: from dell ([2.27.35.255])
+        by smtp.gmail.com with ESMTPSA id g26sm1600973wmh.32.2019.08.12.03.59.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 12 Aug 2019 03:59:35 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 11:59:33 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
+Subject: Re: [PATCH v4 06/10] mfd: Add support for the MediaTek MT6358 PMIC
+Message-ID: <20190812105933.GO26727@dell>
+References: <1564982518-32163-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1564982518-32163-7-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4db9d560-d881-4019-2115-08d71f14209e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 10:59:19.9887
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6PytLYfrS6/TvQ1BLxzWtL5LyablOpB28h9BnxWzkx7IkqjuG8T1moK8eVw9ThFVY72f0a1gCvjgLW7h+sZqKTM53dQkfJQmU7YAZNSPNY8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3983
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1564982518-32163-7-git-send-email-hsin-hsiung.wang@mediatek.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA4LTEyIGF0IDExOjE1ICswMjAwLCBNaWNoYWwgVm9rw6HEjSB3cm90ZToN
-Cj4gT24gMDcuIDA4LiAxOSAxMDoyNiwgUGhpbGlwcGUgU2NoZW5rZXIgd3JvdGU6DQo+ID4gRnJv
-bTogT2xla3NhbmRyIFN1dm9yb3YgPG9sZWtzYW5kci5zdXZvcm92QHRvcmFkZXguY29tPg0KPiA+
-IA0KPiA+IC0gYWRkIHJlY292ZXJ5IG1vZGUgZm9yIGFwcGxpY2FibGUgaTJjIGJ1c2VzIGZvcg0K
-PiA+ICAgIENvbGlicmkgaU1YNyBtb2R1bGUuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogT2xl
-a3NhbmRyIFN1dm9yb3YgPG9sZWtzYW5kci5zdXZvcm92QHRvcmFkZXguY29tPg0KPiA+IFNpZ25l
-ZC1vZmYtYnk6IFBoaWxpcHBlIFNjaGVua2VyIDxwaGlsaXBwZS5zY2hlbmtlckB0b3JhZGV4LmNv
-bT4NCj4gPiAtLS0NCj4gSGkgUGhpbGlwcGUsDQo+IA0KPiBzaW5jZSB5b3UgYXJlIGdvaW5nIHRv
-IHNlbmQgdjQgYW55d2F5IEkgc3VnZ2VzdCB5b3UgdXBkYXRlIHRoZSBzdWJqZWN0DQo+IHRvIGJl
-IGNvbnNpc3RlbnQgYWNyb3NzIGFsbCB0aGUgcGF0Y2hlcy4NCj4gDQo+IAkiQVJNOiBkdHM6IGlt
-eDctY29saWJyaTogYWRkIHJlY292ZXJ5IGZvciBJMkMgZm9yIGlNWDciDQo+IA0KPiBmaXRzIGJl
-dHRlciBJIHRoaW5rLg0KPiANCj4gVGhhbmsgeW91LA0KPiBNaWNoYWwNCg0KT2theSwgd2lsbCBk
-byB0aGF0IGZvciB2NC4gSSdsbCBnbyBvdmVyIGFsbCBtZXNzYWdlcyB0aGVuIGFnYWluIGFuZCBz
-ZWUNCnRoYXQgaXQgaXMgY29uc2lzdGVudC4NCg0KUGhpbGlwcGUNCj4gDQo+ID4gQ2hhbmdlcyBp
-biB2MzogTm9uZQ0KPiA+IENoYW5nZXMgaW4gdjI6IE5vbmUNCj4gPiANCj4gPiAgIGFyY2gvYXJt
-L2Jvb3QvZHRzL2lteDctY29saWJyaS5kdHNpIHwgMjUgKysrKysrKysrKysrKysrKysrKysrKyst
-LQ0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDIzIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
-DQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJyaS5k
-dHNpDQo+ID4gYi9hcmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmkuZHRzaQ0KPiA+IGluZGV4
-IGE4ZDk5MmYzZTg5Ny4uMjQ4MDYyM2M5MmZmIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL2lteDctY29saWJyaS5kdHNpDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14
-Ny1jb2xpYnJpLmR0c2kNCj4gPiBAQCAtMTQwLDggKzE0MCwxMiBAQA0KPiA+ICAgDQo+ID4gICAm
-aTJjMSB7DQo+ID4gICAJY2xvY2stZnJlcXVlbmN5ID0gPDEwMDAwMD47DQo+ID4gLQlwaW5jdHJs
-LW5hbWVzID0gImRlZmF1bHQiOw0KPiA+ICsJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IiwgImdw
-aW8iOw0KPiA+ICAgCXBpbmN0cmwtMCA9IDwmcGluY3RybF9pMmMxICZwaW5jdHJsX2kyYzFfaW50
-PjsNCj4gPiArCXBpbmN0cmwtMSA9IDwmcGluY3RybF9pMmMxX3JlY292ZXJ5ICZwaW5jdHJsX2ky
-YzFfaW50PjsNCj4gPiArCXNjbC1ncGlvcyA9IDwmZ3BpbzEgNCBHUElPX0FDVElWRV9ISUdIPjsN
-Cj4gPiArCXNkYS1ncGlvcyA9IDwmZ3BpbzEgNSBHUElPX0FDVElWRV9ISUdIPjsNCj4gPiArDQo+
-ID4gICAJc3RhdHVzID0gIm9rYXkiOw0KPiA+ICAgDQo+ID4gICAJY29kZWM6IHNndGw1MDAwQGEg
-ew0KPiA+IEBAIC0yNDIsOCArMjQ2LDExIEBADQo+ID4gICANCj4gPiAgICZpMmM0IHsNCj4gPiAg
-IAljbG9jay1mcmVxdWVuY3kgPSA8MTAwMDAwPjsNCj4gPiAtCXBpbmN0cmwtbmFtZXMgPSAiZGVm
-YXVsdCI7DQo+ID4gKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiLCAiZ3BpbyI7DQo+ID4gICAJ
-cGluY3RybC0wID0gPCZwaW5jdHJsX2kyYzQ+Ow0KPiA+ICsJcGluY3RybC0xID0gPCZwaW5jdHJs
-X2kyYzRfcmVjb3Zlcnk+Ow0KPiA+ICsJc2NsLWdwaW9zID0gPCZncGlvNyA4IEdQSU9fQUNUSVZF
-X0hJR0g+Ow0KPiA+ICsJc2RhLWdwaW9zID0gPCZncGlvNyA5IEdQSU9fQUNUSVZFX0hJR0g+Ow0K
-PiA+ICAgfTsNCj4gPiAgIA0KPiA+ICAgJmxjZGlmIHsNCj4gPiBAQCAtNTQwLDYgKzU0NywxMyBA
-QA0KPiA+ICAgCQk+Ow0KPiA+ICAgCX07DQo+ID4gICANCj4gPiArCXBpbmN0cmxfaTJjNF9yZWNv
-dmVyeTogaTJjNC1yZWNvdmVyeWdycCB7DQo+ID4gKwkJZnNsLHBpbnMgPSA8DQo+ID4gKwkJCU1Y
-N0RfUEFEX0VORVQxX1JHTUlJX1REMl9fR1BJTzdfSU84CTB4NDAwMDAwN2YNCj4gPiArCQkJTVg3
-RF9QQURfRU5FVDFfUkdNSUlfVEQzX19HUElPN19JTzkJMHg0MDAwMDA3Zg0KPiA+ICsJCT47DQo+
-ID4gKwl9Ow0KPiA+ICsNCj4gPiAgIAlwaW5jdHJsX2xjZGlmX2RhdDogbGNkaWYtZGF0LWdycCB7
-DQo+ID4gICAJCWZzbCxwaW5zID0gPA0KPiA+ICAgCQkJTVg3RF9QQURfTENEX0RBVEEwMF9fTENE
-X0RBVEEwCQkweDc5DQo+ID4gQEAgLTc0MCw2ICs3NTQsMTMgQEANCj4gPiAgIAkJPjsNCj4gPiAg
-IAl9Ow0KPiA+ICAgDQo+ID4gKwlwaW5jdHJsX2kyYzFfcmVjb3Zlcnk6IGkyYzEtcmVjb3Zlcnln
-cnAgew0KPiA+ICsJCWZzbCxwaW5zID0gPA0KPiA+ICsJCQlNWDdEX1BBRF9MUFNSX0dQSU8xX0lP
-MDRfX0dQSU8xX0lPNAkweDQwMDAwMDdmDQo+ID4gKwkJCU1YN0RfUEFEX0xQU1JfR1BJTzFfSU8w
-NV9fR1BJTzFfSU81CTB4NDAwMDAwN2YNCj4gPiArCQk+Ow0KPiA+ICsJfTsNCj4gPiArDQo+ID4g
-ICAJcGluY3RybF9jZF91c2RoYzE6IHVzZGhjMS1jZC1ncnAgew0KPiA+ICAgCQlmc2wscGlucyA9
-IDwNCj4gPiAgIAkJCU1YN0RfUEFEX0xQU1JfR1BJTzFfSU8wMF9fR1BJTzFfSU8wCTB4NTkgLyog
-Q0QNCj4gPiAqLw0KPiA+IA0K
+On Mon, 05 Aug 2019, Hsin-Hsiung Wang wrote:
+
+> This adds support for the MediaTek MT6358 PMIC. This is a
+> multifunction device with the following sub modules:
+> 
+> - Regulator
+> - RTC
+> - Codec
+> - Interrupt
+> 
+> It is interfaced to the host controller using SPI interface
+> by a proprietary hardware called PMIC wrapper or pwrap.
+> MT6358 MFD is a child device of the pwrap.
+> 
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  drivers/mfd/Makefile                 |   3 +-
+>  drivers/mfd/mt6358-irq.c             | 229 ++++++++++++++++++++++++++++
+>  drivers/mfd/mt6397-core.c            |  52 ++++++-
+>  include/linux/mfd/mt6358/core.h      | 158 ++++++++++++++++++++
+>  include/linux/mfd/mt6358/registers.h | 282 +++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/mt6397/core.h      |   3 +
+>  6 files changed, 725 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/mfd/mt6358-irq.c
+>  create mode 100644 include/linux/mfd/mt6358/core.h
+>  create mode 100644 include/linux/mfd/mt6358/registers.h
+> 
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 9a96325..36d088b 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -241,7 +241,8 @@ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
+> -mt6397-objs	:= mt6397-core.o mt6397-irq.o
+> +
+> +mt6397-objs			:= mt6397-core.o mt6397-irq.o mt6358-irq.o
+>  obj-$(CONFIG_MFD_MT6397)	+= mt6397.o
+>  
+>  obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
+> diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
+> new file mode 100644
+> index 0000000..2f55079
+> --- /dev/null
+> +++ b/drivers/mfd/mt6358-irq.c
+> @@ -0,0 +1,229 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (c) 2019 MediaTek Inc.
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/mfd/mt6358/core.h>
+> +#include <linux/mfd/mt6358/registers.h>
+> +#include <linux/mfd/mt6397/core.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+
+[...]
+
+> +static void pmic_irq_sync_unlock(struct irq_data *data)
+> +{
+> +	unsigned int i, top_gp, en_reg, int_regs, shift;
+> +	struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
+> +	struct pmic_irq_data *irqd = chip->irq_data;
+> +
+> +	for (i = 0; i < irqd->num_pmic_irqs; i++) {
+> +		if (irqd->enable_hwirq[i] == irqd->cache_hwirq[i])
+> +			continue;
+> +
+> +		top_gp = 0;
+> +		while ((top_gp + 1) < ARRAY_SIZE(mt6358_ints) &&
+> +		       i >= mt6358_ints[top_gp + 1].hwirq_base)
+> +			top_gp++;
+
+A comment here would make this easier to follow.
+
+> +		if (top_gp >= ARRAY_SIZE(mt6358_ints)) {
+> +			mutex_unlock(&chip->irqlock);
+> +			dev_err(chip->dev,
+> +				"Failed to get top_group: %d\n", top_gp);
+> +			return;
+> +		}
+> +
+> +		int_regs = (i - mt6358_ints[top_gp].hwirq_base) /
+> +			    MT6358_REG_WIDTH;
+> +		en_reg = mt6358_ints[top_gp].en_reg +
+> +			mt6358_ints[top_gp].en_reg_shift * int_regs;
+> +		shift = (i - mt6358_ints[top_gp].hwirq_base) % MT6358_REG_WIDTH;
+> +		regmap_update_bits(chip->regmap, en_reg, BIT(shift),
+> +				   irqd->enable_hwirq[i] << shift);
+> +		irqd->cache_hwirq[i] = irqd->enable_hwirq[i];
+> +	}
+> +	mutex_unlock(&chip->irqlock);
+> +}
+
+[...]
+
+> +int mt6358_irq_init(struct mt6397_chip *chip)
+> +{
+> +	int i, j, ret;
+> +	struct pmic_irq_data *irqd;
+> +
+> +	irqd = devm_kzalloc(chip->dev, sizeof(struct pmic_irq_data *),
+> +			    GFP_KERNEL);
+> +	if (!irqd)
+> +		return -ENOMEM;
+> +
+> +	chip->irq_data = irqd;
+> +
+> +	mutex_init(&chip->irqlock);
+> +	irqd->top_int_status_reg = MT6358_TOP_INT_STATUS0;
+> +	irqd->num_pmic_irqs = MT6358_IRQ_NR;
+> +	irqd->num_top = ARRAY_SIZE(mt6358_ints);
+> +
+> +	irqd->enable_hwirq = devm_kcalloc(chip->dev,
+> +					  irqd->num_pmic_irqs,
+> +					  sizeof(bool),
+> +					  GFP_KERNEL);
+> +	if (!irqd->enable_hwirq)
+> +		return -ENOMEM;
+> +
+> +	irqd->cache_hwirq = devm_kcalloc(chip->dev,
+> +					 irqd->num_pmic_irqs,
+> +					 sizeof(bool),
+> +					 GFP_KERNEL);
+> +	if (!irqd->cache_hwirq)
+> +		return -ENOMEM;
+> +
+> +	/* Disable all interrupt for initializing */
+
+s/interrupt/interrupts/
+
+> +	for (i = 0; i < irqd->num_top; i++) {
+> +		for (j = 0; j < mt6358_ints[i].num_int_regs; j++)
+> +			regmap_write(chip->regmap,
+> +				     mt6358_ints[i].en_reg +
+> +				     mt6358_ints[i].en_reg_shift * j, 0);
+> +	}
+> +
+> +	chip->irq_domain = irq_domain_add_linear(chip->dev->of_node,
+> +						 irqd->num_pmic_irqs,
+> +						 &mt6358_irq_domain_ops, chip);
+> +	if (!chip->irq_domain) {
+> +		dev_err(chip->dev, "could not create irq domain\n");
+
+s/irq/IRQ/
+
+> +		return -ENODEV;
+> +	}
+> +
+> +	ret = devm_request_threaded_irq(chip->dev, chip->irq, NULL,
+> +					mt6358_irq_handler, IRQF_ONESHOT,
+> +					mt6358_irq_chip.name, chip);
+> +	if (ret) {
+> +		dev_err(chip->dev, "failed to register irq=%d; err: %d\n",
+> +			chip->irq, ret);
+> +		return ret;
+> +	}
+> +
+> +	enable_irq_wake(chip->irq);
+> +	return ret;
+> +}
+
+[...]
+
+>  static const struct chip_data mt6397_core = {
+>  	.cid_addr = MT6397_CID,
+>  	.cid_shift = 0,
+> @@ -135,7 +172,11 @@ static int mt6397_probe(struct platform_device *pdev)
+>  	if (pmic->irq <= 0)
+>  		return pmic->irq;
+>  
+> -	ret = mt6397_irq_init(pmic);
+> +	if (pmic->chip_id == MT6358_CHIP_ID)
+> +		ret = mt6358_irq_init(pmic);
+> +	else
+> +		ret = mt6397_irq_init(pmic);
+> +
+
+You may with so to check for both and error out on an unsupported chip
+ID.
+
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -146,6 +187,12 @@ static int mt6397_probe(struct platform_device *pdev)
+>  					   0, pmic->irq_domain);
+>  		break;
+>  
+> +	case MT6358_CHIP_ID:
+> +		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6358_devs,
+
+Not -1.  Please use the defines.
+
+> +					   ARRAY_SIZE(mt6358_devs), NULL,
+> +					   0, pmic->irq_domain);
+> +		break;
+> +
+>  	case MT6391_CHIP_ID:
+>  	case MT6397_CHIP_ID:
+>  		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6397_devs,
+> @@ -171,6 +218,9 @@ static const struct of_device_id mt6397_of_match[] = {
+>  		.compatible = "mediatek,mt6323",
+>  		.data = &mt6323_core,
+>  	}, {
+> +		.compatible = "mediatek,mt6358",
+> +		.data = &mt6358_core,
+> +	}, {
+>  		.compatible = "mediatek,mt6397",
+>  		.data = &mt6397_core,
+>  	}, {
+> diff --git a/include/linux/mfd/mt6358/core.h b/include/linux/mfd/mt6358/core.h
+> new file mode 100644
+> index 0000000..05108617
+> --- /dev/null
+> +++ b/include/linux/mfd/mt6358/core.h
+> @@ -0,0 +1,158 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + */
+> +
+> +#ifndef __MFD_MT6358_CORE_H__
+> +#define __MFD_MT6358_CORE_H__
+> +
+> +#define MT6358_REG_WIDTH 16
+
+[...]
+
+> +#define MT6358_TOP_GEN(sp)	\
+> +{	\
+> +	.hwirq_base = MT6358_IRQ_##sp##_BASE,	\
+> +	.num_int_regs =	\
+> +		((MT6358_IRQ_##sp##_BITS - 1) / MT6358_REG_WIDTH) + 1,	\
+> +	.num_int_bits = MT6358_IRQ_##sp##_BITS, \
+> +	.en_reg = MT6358_##sp##_TOP_INT_CON0,		\
+> +	.en_reg_shift = 0x6,	\
+> +	.sta_reg = MT6358_##sp##_TOP_INT_STATUS0,		\
+> +	.sta_reg_shift = 0x2,	\
+> +	.top_offset = MT6358_##sp##_TOP,	\
+> +}
+
+Please tab out the '\'s.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
