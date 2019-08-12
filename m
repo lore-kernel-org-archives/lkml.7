@@ -2,110 +2,88 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5EEC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 639C3C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3734520820
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:55:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ueE8QJvJ"
+	by mail.kernel.org (Postfix) with ESMTP id 409CD20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727037AbfHLHzV (ORCPT
+        id S1727013AbfHLIDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 03:55:21 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57967 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726528AbfHLHzV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 03:55:21 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7C7pJws019345;
-        Mon, 12 Aug 2019 09:55:06 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=K4f2t1Y5I/EziBGPEJ+ljv/yOyY+PHAdMeuhhuVCD0A=;
- b=ueE8QJvJ5XEt07B7hhwIm9PHXk8vr9MMQx57+IV19RtrYnKCgN2NH2NndaUKX9AhuEXf
- kdpIHS1q2gg7KQFcH5AlSnETBmFxMtNRZ1hYT6DBMPYQjsFLt5SHmtVW740XB8rlNuyi
- V1gsoTXk6RY+epahTtKdy3KZ09zx71p4tzYmpaWG7N5m1EK5lH2nKpWvKK1cbx7/Rjoo
- QCm1wsT5q+wFGgpmWpEuYAlbijeqf0s/xGFcBtsotZw4++HsQiPZ5A6xLXWfuj/ameX3
- ceADR+LDgFwhHiJOBFYkr5FX8e8lUdTAYBch3xSIo7VYGs6E3TyAL80orPKf4BMnmF0W lQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2u9kpuhmue-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 12 Aug 2019 09:55:05 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1D80031;
-        Mon, 12 Aug 2019 07:55:05 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E99412C1097;
-        Mon, 12 Aug 2019 09:55:04 +0200 (CEST)
-Received: from SFHDAG5NODE1.st.com (10.75.127.13) by SFHDAG6NODE3.st.com
- (10.75.127.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 12 Aug
- 2019 09:55:04 +0200
-Received: from SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6]) by
- SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6%20]) with mapi id
- 15.00.1473.003; Mon, 12 Aug 2019 09:55:04 +0200
-From:   Hugues FRUCHET <hugues.fruchet@st.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-CC:     Alexandre TORGUE <alexandre.torgue@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Mickael GUENE <mickael.guene@st.com>
-Subject: Re: [PATCH v4 1/3] media: stm32-dcmi: improve sensor subdev naming
-Thread-Topic: [PATCH v4 1/3] media: stm32-dcmi: improve sensor subdev naming
-Thread-Index: AQHVTsvbNiH8ciXV5ESmNTxaXVzk1ab3B2CA
-Date:   Mon, 12 Aug 2019 07:55:04 +0000
-Message-ID: <0deb258d-bb11-15ee-0beb-8355cfd3782b@st.com>
-References: <1564577783-18627-1-git-send-email-hugues.fruchet@st.com>
- <1564577783-18627-2-git-send-email-hugues.fruchet@st.com>
- <20190809160121.GA6194@paasikivi.fi.intel.com>
-In-Reply-To: <20190809160121.GA6194@paasikivi.fi.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Mon, 12 Aug 2019 04:03:20 -0400
+Received: from mga14.intel.com ([192.55.52.115]:13190 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726834AbfHLIDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 04:03:19 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 01:03:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,376,1559545200"; 
+   d="scan'208";a="180776919"
+Received: from unknown (HELO [10.239.196.241]) ([10.239.196.241])
+  by orsmga006.jf.intel.com with ESMTP; 12 Aug 2019 01:03:16 -0700
+Subject: Re: [PATCH] acpi/hmat: ACPI_HMAT_MEMORY_PD_VALID is deprecated in
+ ACPI-6.3
+To:     Daniel Black <daniel@linux.ibm.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190806042440.16445-1-daniel@linux.ibm.com>
+From:   Tao Xu <tao3.xu@intel.com>
+Message-ID: <67031b1d-5785-330d-ddd8-b862799e6f18@intel.com>
+Date:   Mon, 12 Aug 2019 16:03:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.51]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C5F0FC3B1E518747BF9EB47BB034675C@st.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-12_04:,,
- signatures=0
+In-Reply-To: <20190806042440.16445-1-daniel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgU2FrYXJpLA0KDQpTb3JyeSBmb3IgaW5jb252ZW5pZW5jZSwgSSB3aWxsIHB1c2ggYSBWNSB3
-aXRoIHRoYXQgZml4ZWQuDQoNCk1heSBJIHB1dCB5b3VyICJBY2tlZC1ieSIgYWxzbyBvbiB0aGUg
-MiBvdGhlciBjb21taXRzID8gT3IganVzdCB0aGlzIG9uZSA/DQoNCk9uIDgvOS8xOSA2OjAxIFBN
-LCBTYWthcmkgQWlsdXMgd3JvdGU6DQo+IEhpIEh1Z3VlcywNCj4gDQo+IFRoYW5rcyBmb3IgdGVo
-IHVwZGF0ZS4NCj4gDQo+IE9uIFdlZCwgSnVsIDMxLCAyMDE5IGF0IDAyOjU2OjIxUE0gKzAyMDAs
-IEh1Z3VlcyBGcnVjaGV0IHdyb3RlOg0KPj4gUmVuYW1lICJzdWJkZXYiIGVudGl0eSBzdHJ1Y3Qg
-ZmllbGQgdG8gInNvdXJjZSINCj4+IHRvIHByZXBhcmUgZm9yIHNldmVyYWwgc3ViZGV2IHN1cHBv
-cnQuDQo+PiBNb3ZlIGFzZCBmaWVsZCBvbiB0b3Agb2YgZW50aXR5IHN0cnVjdC4NCj4+DQo+PiBT
-aWduZWQtb2ZmLWJ5OiBIdWd1ZXMgRnJ1Y2hldCA8aHVndWVzLmZydWNoZXRAc3QuY29tPg0KPj4g
-Q2hhbmdlLUlkOiBJMTU0NWExYTI5YTgwNjFlZTY3Y2M2ZTRiNzk5ZTlhNjkwNzE5MTFlNw0KPiAN
-Cj4gTm8gQ2hhbmdlLUlkIHRhZ3MgaW4gdGhlIGtlcm5lbCwgcGxlYXNlLiBDaGVjayB0aGUgb3Ro
-ZXIgdHdvIGFzIHdlbGwuDQo+IA0KPiBXaXRoIHRoYXQgZml4ZWQsDQo+IA0KPiBBY2tlZC1ieTog
-U2FrYXJpIEFpbHVzIDxzYWthcmkuYWlsdXNAbGludXguaW50ZWwuY29tPg0KPiANCg0KQmVzdCBy
-ZWdhcmRzLA0KSHVndWVzLg==
+On 8/6/2019 12:24 PM, Daniel Black wrote:
+> ACPI-6.3 corresponds to when hmat revision was bumped from
+> 1 to 2. In this version ACPI_HMAT_MEMORY_PD_VALID was
+> deprecated and made reserved.
+> 
+> As such in revision 2+ we shouldn't be testing this flag.
+> 
+> This is as per ACPI-6.3, 5.2.27.3, Table 5-145
+> "Memory Proximity Domain Attributes Structure"
+> for Flags.
+
+Looks good to me.
+
+Reviewed-by: Tao Xu <tao3.xu@intel.com>
+> 
+> Signed-off-by: Daniel Black <daniel@linux.ibm.com>
+> ---
+>   drivers/acpi/hmat/hmat.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
+> index 96b7d39a97c6..e938e34673d9 100644
+> --- a/drivers/acpi/hmat/hmat.c
+> +++ b/drivers/acpi/hmat/hmat.c
+> @@ -382,7 +382,7 @@ static int __init hmat_parse_proximity_domain(union acpi_subtable_headers *heade
+>   		pr_info("HMAT: Memory Flags:%04x Processor Domain:%d Memory Domain:%d\n",
+>   			p->flags, p->processor_PD, p->memory_PD);
+>   
+> -	if (p->flags & ACPI_HMAT_MEMORY_PD_VALID) {
+> +	if (p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) {
+>   		target = find_mem_target(p->memory_PD);
+>   		if (!target) {
+>   			pr_debug("HMAT: Memory Domain missing from SRAT\n");
+> 
+
