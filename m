@@ -4,103 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BB3C41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBEFC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A32CF20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494D020820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbfHLKMF (ORCPT
+        id S1727787AbfHLKMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 12 Aug 2019 06:12:08 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:55986 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727734AbfHLKMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 12 Aug 2019 06:12:05 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:54055 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727323AbfHLKMF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:12:05 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MS1G7-1hqoYI2gv5-00TT5D; Mon, 12 Aug 2019 12:11:57 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] dma: ti: unexport filter functions
-Date:   Mon, 12 Aug 2019 12:11:43 +0200
-Message-Id: <20190812101155.997721-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:uBwRpCRy5yDjgNG/dokHF0MoW+SifCtPmbgwLmiKHzF83+qi8QO
- qxYJmM5hbw49pgx1evLZVOr/zFMJGJgToPOFyn1kY32HM6my5VhoN1YcSEqzg6DAbpSBLak
- PQR4jVF/b0P/Z1HxcC0Ck07SKFQ6LLEni1yH14x4t2+2w+R9OvNfNhhgBaAPtu5uCmQdN/R
- 5qqBhSxlExLjZg56HD3PA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zSDZ4EY2AbM=:hvDql46WjA+Aeh43ObcA68
- Ns4FfUQl7+VYKlgQC9V/hLAe9sl4DvP/c6054B0+8mO34E0KS+EUYLNtU+KTIr2dHg3fZIbGT
- /Z2JxAuzhQuk9Anl5ZdA7T8K6Qh3zH0ivxjSwMxJCK2PBbwEa2xFGc4WH2HVQ4BnvGXItdWAO
- mWP4VCghZohBMYE7mZItkSlG6gSx9+ApsRztI4lB8hQ+acNOonlED18GaduoItR9ue91z3mFl
- ck2tyNvTSaAS14M0vUj6ZZ7v6virZgv6QVxvw84Y1bSqiUv4Pi/3wL9bS1UA8xhU0DkHfKwTJ
- VtYZqz1X5jyyVm1XgyZuryaf3hUm+IIDOsThxgRvHTw8amWagZ/RqPKR5qgJQx0al+upGVmRl
- 7XIj9ySiLNIJ4yNB3//AOl0GOhf9ck+61BqTO77M5PAQqQhCpSg0isLs385IuQlodIAp/IZ5I
- iC2o0Y546I0ALmY2QoRgetCpWsySjIybf+e/+E94njyLrMn5xieGXRvyfC2qQ72rqCcSOVBeX
- iHj0EyqOcUv+K+x5RZCAY8xeq5cbsB/ryHlo4HOIn1i4cHOBphWsaP0uZ0hrVj6MuzBqNSsIk
- rWj09+de6iw8Z5jT5PLfw4Un74tgOXv4KXWrCP/Dl6dDEuN+j6L1BeNfFmMvKvdbnRrcVeQFM
- PYPhFiG0s5iBdmAc42QMk/Ot0nHkDmjtk25aiH7oHI2/9Kqhxrc3q4lB0LaHAxaNdqMvnRmxq
- iAfciNmaslYBCvGgiDqHeH+RwNLDVemYEDpUbg==
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 931BD1A02B0;
+        Mon, 12 Aug 2019 12:12:04 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7F5F21A011B;
+        Mon, 12 Aug 2019 12:11:59 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id F18CF402F0;
+        Mon, 12 Aug 2019 18:11:52 +0800 (SGT)
+From:   Wen He <wen.he_1@nxp.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     leoyang.li@nxp.com, liviu.dudau@arm.com, Wen He <wen.he_1@nxp.com>
+Subject: [v1 2/3] dt/bindings: clk: Add DT bindings for LS1028A Display output interface
+Date:   Mon, 12 Aug 2019 18:02:16 +0800
+Message-Id: <20190812100216.34459-1-wen.he_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The two filter functions are now marked static, but still exported,
-which triggers a coming build-time check:
+Add DT bindings documentmation for the Clock of the LS1028A Display
+output interface.
 
-WARNING: "omap_dma_filter_fn" [vmlinux] is a static EXPORT_SYMBOL_GPL
-WARNING: "edma_filter_fn" [vmlinux] is a static EXPORT_SYMBOL
-
-Remove the unneeded exports as well, as originally intended.
-
-Fixes: 9c71b9eb3cb2 ("dmaengine: omap-dma: make omap_dma_filter_fn private")
-Fixes: d2bfe7b5d182 ("dmaengine: edma: make edma_filter_fn private")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Wen He <wen.he_1@nxp.com>
 ---
-v2: fix typo in changelog
----
- drivers/dma/ti/edma.c     | 1 -
- drivers/dma/ti/omap-dma.c | 1 -
- 2 files changed, 2 deletions(-)
+ .../devicetree/bindings/clock/fsl,plldig.txt  | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/fsl,plldig.txt
 
-diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-index f2549ee3fb49..ea028388451a 100644
---- a/drivers/dma/ti/edma.c
-+++ b/drivers/dma/ti/edma.c
-@@ -2540,7 +2540,6 @@ static bool edma_filter_fn(struct dma_chan *chan, void *param)
- 	}
- 	return match;
- }
--EXPORT_SYMBOL(edma_filter_fn);
- 
- static int edma_init(void)
- {
-diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index 49da402a1927..98b39bcb7b37 100644
---- a/drivers/dma/ti/omap-dma.c
-+++ b/drivers/dma/ti/omap-dma.c
-@@ -1652,7 +1652,6 @@ static bool omap_dma_filter_fn(struct dma_chan *chan, void *param)
- 	}
- 	return false;
- }
--EXPORT_SYMBOL_GPL(omap_dma_filter_fn);
- 
- static int omap_dma_init(void)
- {
+diff --git a/Documentation/devicetree/bindings/clock/fsl,plldig.txt b/Documentation/devicetree/bindings/clock/fsl,plldig.txt
+new file mode 100644
+index 000000000000..29c5a6117809
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/fsl,plldig.txt
+@@ -0,0 +1,26 @@
++NXP QorIQ Layerscape LS1028A Display output interface Clock
++===========================================================
++
++Required properties:
++    - compatible: shall contain "fsl,ls1028a-plldig"
++    - reg: Physical base address and size of the block registers
++    - #clock-cells: shall contain 1.
++    - clocks: a phandle + clock-specifier pairs, here should be
++    specify the reference clock of the system
++
++
++Example:
++
++/ {
++        ...
++
++        dpclk: clock-controller@f1f0000 {
++                compatible = "fsl,ls1028a-plldig";
++                reg = <0x0 0xf1f0000 0x0 0xffff>;
++                #clock-cells = <1>;
++                clocks = <&osc_27m>;
++        };
++
++        ...
++};
++
 -- 
-2.20.0
+2.17.1
 
