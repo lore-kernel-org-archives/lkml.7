@@ -7,70 +7,70 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F0CC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A845C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B54412085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF5AD2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:48:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="byHzQiAd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EJdNXt9f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfHLHsB (ORCPT
+        id S1727229AbfHLHsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 03:48:01 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33165 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727212AbfHLHsB (ORCPT
+        Mon, 12 Aug 2019 03:48:09 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55885 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbfHLHsI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 03:48:01 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p77so10276045wme.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 00:47:59 -0700 (PDT)
+        Mon, 12 Aug 2019 03:48:08 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f72so11208748wmf.5
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 00:48:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=E1i1E8TWvO1VSrOqM8vbWck6cQCOPIB0uEJKJYjbhrY=;
-        b=byHzQiAdskyAz1hTiWRZbB545tZhX2+uf857cBNYla9a+9uXIde1M030thzJc2/S63
-         lOxYfiwskh0rHwbsjflBJCY0laTKpWieT1G8vawhHeudg86YSQmWfRMRvi4gR/uBiPe/
-         e6jXP0o55bzizb6R1ew5WfEWmVIr06yVovy+VM9OKmoY7tRvMFnShPgU0W171X6FuEVq
-         rcxU6qtm7Ybk4eC6Wu6Vf1I9Ir+7mPgMQmhKQDOnFVQohZRm8bHTHjmrJR4pyR2EtU7M
-         oi/R88jD7do6wKlE1Zhe/X2inHxk3m9WyqYZT9iwhZnlOYy0I60T8h22OxIJT0LrseOa
-         o9YA==
+        bh=oJisgWnDEB7FRQeVeun93jQaR5ES1KStdB1vVlMSndA=;
+        b=EJdNXt9fogeecU1R4hnXUKwFMJyvnzUbRbu/ZBtaKLYANBuo3ev/dL5cXIwiHMeWiC
+         7f7TupDpedezy29E+TolN5ydvQtlCW5MMqAou+wZ3X8IBvxMxu4jiGFWQzs5osgo5U1z
+         6ywt22fqQidjCbuxP2IMDljpuioTTAt+MpIw6wPocxW5lxZpJtE8JJcvu+UXW7UJyHdn
+         4tHNEX2d3I5nNKZXS2C9hnlNwuUQLPFfqsnCrNauoLJrTEQxKqMCmmVK8Yk1mwbZyP0W
+         EhpQBBZs2clCyA2FpH4as0BA6lbPYBhaoF1HjTBgA1RNlmP6SSgMvNsVaRacdr53heS9
+         CpzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=E1i1E8TWvO1VSrOqM8vbWck6cQCOPIB0uEJKJYjbhrY=;
-        b=kNcntcQXgbHYxvIVSiwVwJgTwc6RpEGRqeOLydUtqgp/EIm7ovHawllO0cdWJPCK0k
-         YxNmjPcmVhBIUPkaru9L+FyF/RySpHsqqnl5KI0EdqU+uZo4/ohz1h/GaFrbXBUlSBG0
-         YzvC2QXymXDA740UKbNhVCsFb2xVMu7sPinEd1G/LZSTp97qtf7BeZi15C/vA2oTPRex
-         C2L0uIWNTES8ohrU7qrcZgnn2+GCl6kw1fLh3/xjSfCe5w5EhCILxvw5mPE9WsQ0eI7f
-         I0v45K2nTEGHmLv9zuq0/PYrWjstZ5pW6USnHV+qmlWpS0F7rtuJaT7/p7nIn5dBlrFD
-         s3ZQ==
-X-Gm-Message-State: APjAAAVjpIpwrUGgUR2W1EUm7zrh30bQUorl3n6726uPKp/LcNngoRPw
-        iVSENPUBdrz56Xkl6gRskQDvDw==
-X-Google-Smtp-Source: APXvYqx3fMfzlURgW+h/0aIr27PGHhyA9XZzTN6TwwQgDOI4uHFCeuPBiBvvUBoR/Szm+OFB1/8zfw==
-X-Received: by 2002:a7b:c0d0:: with SMTP id s16mr12265125wmh.65.1565596078875;
-        Mon, 12 Aug 2019 00:47:58 -0700 (PDT)
+        bh=oJisgWnDEB7FRQeVeun93jQaR5ES1KStdB1vVlMSndA=;
+        b=Ec4WDHRJylQK91pBGuHLkkjMemughwfMyv74DB5ShgJdmBw6vS8lNqNmbVOcxncoV9
+         ImNjXnKS98Vh3P3agZlQsti96rTOD/qOuxgCp7lPawqtazJri05J5WnzW1Sx74GECw8j
+         pojYChIk0SnH6ocuQibCaq5Go8BN+C7ASqKMnCV3t44CXNNc101pB1DxCQN3wHHVqpWE
+         dwToXIwU4dP1ZRGyXpYN1CnYJP+amEO9pi9iQPo89sa5FS5pSbYv8G3LwJ/X4HOFJYEB
+         hrZ3X1txZhpoJKmmzmPOIofs3AdmgzHMWR9Q8ZFdJkE172HC+epcMMznWb7F6BUB8HyR
+         1qtA==
+X-Gm-Message-State: APjAAAWQZ/yjPvbVog7h+boxDyWbktivDYzCXV5ydkx38AJG1J+Kv51p
+        RdI3TKmJoHq5ZWylZ5ckmVZjrGPaeFs=
+X-Google-Smtp-Source: APXvYqx6JauNMG4v0kuXBMom1u4m8KtPH1IXdtoZ5aztjWC97jrkBOomdNBRiM7+05XnoJjo2oXoUA==
+X-Received: by 2002:a05:600c:245:: with SMTP id 5mr25053945wmj.36.1565596086391;
+        Mon, 12 Aug 2019 00:48:06 -0700 (PDT)
 Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id x6sm19128678wmf.6.2019.08.12.00.47.58
+        by smtp.gmail.com with ESMTPSA id e13sm9330882wmh.44.2019.08.12.00.48.05
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 00:47:58 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 08:47:57 +0100
+        Mon, 12 Aug 2019 00:48:05 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 08:48:04 +0100
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
 Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/14] mfd: max8997: convert to i2c_new_dummy_device
-Message-ID: <20190812074757.GC4594@dell>
+Subject: Re: [PATCH 12/14] mfd: max8998: convert to i2c_new_dummy_device
+Message-ID: <20190812074804.GD4594@dell>
 References: <20190722172623.4166-1-wsa+renesas@sang-engineering.com>
- <20190722172623.4166-12-wsa+renesas@sang-engineering.com>
+ <20190722172623.4166-13-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190722172623.4166-12-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20190722172623.4166-13-wsa+renesas@sang-engineering.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -87,8 +87,8 @@ On Mon, 22 Jul 2019, Wolfram Sang wrote:
 > 
 > Generated with coccinelle. Build tested by me and buildbot. Not tested on HW.
 > 
->  drivers/mfd/max8997.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
+>  drivers/mfd/max8998.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
 Applied, thanks.
 
