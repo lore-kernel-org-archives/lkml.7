@@ -2,120 +2,177 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 410B9C32750
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F8EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F42D214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C94E20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:23:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VbvHp5gq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AjCxPLPC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbfHLKWl (ORCPT
+        id S1727979AbfHLKXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:22:41 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53744 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727679AbfHLKWk (ORCPT
+        Mon, 12 Aug 2019 06:23:04 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42750 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727679AbfHLKXE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:22:40 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 10so11639554wmp.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 03:22:38 -0700 (PDT)
+        Mon, 12 Aug 2019 06:23:04 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b16so7370293wrq.9;
+        Mon, 12 Aug 2019 03:23:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=5m2IUZRROGymOefDRF7neqY5caAFmV8hI7w+ygmONvA=;
-        b=VbvHp5gq3ZfIv129Gw/NtZ87lFa2bGMn4EuR83iecdeL2Csep9DpwQiL7+zz5JqjFK
-         X8bIxV0RuZYkwYNxNlQfaKfvyhdfMRe+fsByZ+5/9Q4URPmHiuFfC+v/g4Na72n/MRMw
-         r5gWKC5znHtVRRq1Mdy7xb3V/NfaocaWCQA7G19e1ZfLLTVKay0EAG6Eyp0ykdSV+4+H
-         m8IfxciiLoaWNeDAQlVb35jDEAHgnVhlwiGdrJnKqaWswW3Ci+r549m18+lM5cv/jCuF
-         1hFxRPVjIE+R+CsJoPvG28LQ6WUzne3g9QFS7qHahxLXO0k9kPM/IiwVA3zxzlc5GxvS
-         W5ig==
+         :content-disposition:in-reply-to:user-agent;
+        bh=MTiHtsvt5NhSEME25nXCrgva1MRgamkEFmaJPkZIx4w=;
+        b=AjCxPLPCs5zOInkjESEXueg3dRHlkj8W/McUs0U+BiyZAAx3fiOpO9n7YUlq2uSzbL
+         PDxlVAbxxKpuwXFHPWbT40/Wc07o90dvUFYO80VwftE8WJt8wZWrIN40BII0iXOCnKbf
+         slnbwe8jSQt3acptM9RdKLs+g+9oG2aBRyE+1Pd1c31vH8rXAFDs43+cybT/ayVay+97
+         08apvAHi52MImdRLZlosiTvpat+YkfT74LsMmhHLVciaj+ow7AL6VoRxbdBez7fn7Yoc
+         vl+oZJEN9rUY7DYOYuiij1AC00ipPTh4iZjBpN/h4wQKY0otnT54HY/rcm0PzJqAi71d
+         Szww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=5m2IUZRROGymOefDRF7neqY5caAFmV8hI7w+ygmONvA=;
-        b=TPmTs5FwLnmMXsS3JwktJ2kZHXLpGse7qgXAHlLxAnovzK//The9bsX4PrjInTl3Kb
-         KVypH6G1v3ePw4ft5lPOa15ZUD6CtZX4EuNXlv+7Rk9cJ1LpjDyoM74mgvLuBQWYLV8m
-         G7Nuu7v5Pj5dw8MaOE2dBxil+DYp6b1HWpOPe9Ps1uNFd4cWHcAsyNCkKsSaXsAJK+FV
-         TaiZOSLiiT65c4qeAhFFoOEF9q5MmgpHUYWsd7gK3nanRYo5MONAxREDyMbLGtCUUYpC
-         zDuDErD1jDFfLeyatb9+iNT9pmCipvSsEUIhVaN+zdlAxAObAmhSHnHl1u9wr682DcLN
-         vOAQ==
-X-Gm-Message-State: APjAAAUWXJkXknsUePJiJwkqxz7vR7kvwAOEh9b0t7+ZWt5M+yWkViQD
-        dmNHwizBUtRYKjbSBH3FjU1ycQ==
-X-Google-Smtp-Source: APXvYqybIDxE+3tj5T831ZEq1FImfdGr3gRRq6UGg2lHX1HJoq0eScbIUxcvMhMextMyi7Sx8dZgKQ==
-X-Received: by 2002:a1c:6a0b:: with SMTP id f11mr19124477wmc.87.1565605358267;
-        Mon, 12 Aug 2019 03:22:38 -0700 (PDT)
-Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id g26sm1478821wmh.32.2019.08.12.03.22.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 03:22:37 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 11:22:35 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Allison Randal <allison@lohutok.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Tianping . Fang" <tianping.fang@mediatek.com>,
-        Josef Friedl <josef.friedl@speed.at>
-Subject: Re: [PATCH v3 07/10] mfd: mt6323: add mt6323 rtc+pwrc
-Message-ID: <20190812102235.GJ26727@dell>
-References: <20190729174154.4335-1-frank-w@public-files.de>
- <20190729174154.4335-8-frank-w@public-files.de>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MTiHtsvt5NhSEME25nXCrgva1MRgamkEFmaJPkZIx4w=;
+        b=qL9G6FZd5gjFEm7d9itmIDVh3bzWsGPX1k4Ydrzph6zSNnKMjHXi6bR38fA1TDb6Ee
+         yZoe6/VS1Qm9HnjiMcUH0yBRhxoHIHiRp9l+wUm1UcrYTzD3Nydn6oYBEuVmzh0svz0+
+         34vvX4wVoYNzqd60p5xRVrNV7a4xjVGwiBA8J7xZQH37y4n9UbrwH9f0iSLdp9PNobzP
+         tExAP5fke0jBqlT0AYGOOsEUgcM30idFWJjuV+gk0wzk2y8Yb5xJEawYmUL3EeAEVQOK
+         MwEYrdx4Cy+02hjomBdXnwoAgNG46Ze+QRECmFnFl7tMjYKPAr2sf/WLa2mCwWksNj5Y
+         yFxw==
+X-Gm-Message-State: APjAAAVoz5DSvy/0Plyk03YdjVQC6Td2rj8mwimHoUXb2nT9vvTOhMtC
+        YYQiafX3WJqFhXb6+3mQEGI=
+X-Google-Smtp-Source: APXvYqw8ewrkG14Pe2lRIqxXus+F0QYZWt3csjZLIT7tSFq3ITwXIBiyhaMB3csWtIQ680aBgkgtJg==
+X-Received: by 2002:a5d:634c:: with SMTP id b12mr18996501wrw.127.1565605382076;
+        Mon, 12 Aug 2019 03:23:02 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id l3sm24553705wrb.41.2019.08.12.03.23.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 03:23:00 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 12:23:00 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V15 12/13] phy: tegra: Add PCIe PIPE2UPHY support
+Message-ID: <20190812102300.GM8903@ulmo>
+References: <20190809044609.20401-1-vidyas@nvidia.com>
+ <20190809044609.20401-13-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="GeONROBiaq1zPAtT"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190729174154.4335-8-frank-w@public-files.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190809044609.20401-13-vidyas@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jul 2019, Frank Wunderlich wrote:
 
-> From: Josef Friedl <josef.friedl@speed.at>
-> 
-> add entry for rtc and power-controller to mt6323
-> 
-> changes since v2: only splitting, second part of v2 part 4
-> 
-> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+--GeONROBiaq1zPAtT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Aug 09, 2019 at 10:16:08AM +0530, Vidya Sagar wrote:
+> Synopsys DesignWare core based PCIe controllers in Tegra 194 SoC interface
+> with Universal PHY (UPHY) module through a PIPE2UPHY (P2U) module.
+> For each PCIe lane of a controller, there is a P2U unit instantiated at
+> hardware level. This driver provides support for the programming required
+> for each P2U that is going to be used for a PCIe controller.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  drivers/mfd/mt6397-core.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
+> V15:
+> * None
+>=20
+> V14:
+> * None
+>=20
+> V13:
+> * None
+>=20
+> V12:
+> * None
+>=20
+> V11:
+> * Replaced PTR_ERR_OR_ZERO() with PTR_ERR() as the check for zero is alre=
+ady
+>   present in the code.
+>=20
+> V10:
+> * Used _relaxed() versions of readl() & writel()
+>=20
+> V9:
+> * Made it dependent on ARCH_TEGRA_194_SOC directly instead of ARCH_TEGRA
+>=20
+> V8:
+> * Changed P2U driver file name from pcie-p2u-tegra194.c to phy-tegra194-p=
+2u.c
+>=20
+> V7:
+> * None
+>=20
+> V6:
+> * Addressed review comments from Thierry
+>=20
+> V5:
+> * None
+>=20
+> V4:
+> * Rebased on top of linux-next top of the tree
+>=20
+> V3:
+> * Replaced spaces with tabs in Kconfig file
+> * Sorted header file inclusion alphabetically
+>=20
+> V2:
+> * Added COMPILE_TEST in Kconfig
+> * Removed empty phy_ops implementations
+> * Modified code according to DT documentation file modifications
+>=20
+>  drivers/phy/tegra/Kconfig            |   7 ++
+>  drivers/phy/tegra/Makefile           |   1 +
+>  drivers/phy/tegra/phy-tegra194-p2u.c | 120 +++++++++++++++++++++++++++
+>  3 files changed, 128 insertions(+)
+>  create mode 100644 drivers/phy/tegra/phy-tegra194-p2u.c
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Thierry Reding <treding@nvidia.com>
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--GeONROBiaq1zPAtT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1RPgMACgkQ3SOs138+
+s6G6QRAApZ8Wo+dLU8yIc2xUpt31Zb4Mt89cHlgrBXMadX3WQGRdKFxNtS63hucq
+6bj/FGGojkXhuiFBY4vaRnhhWFEeUi8khH+gCiKHEq4f8ENNpPRF3nC11/ISDQlt
+rYB0lB0edwd7ZVso8KVs8LAXPO/qg3hF2UsriGDYyHIzhgNrpAqGtue+RbgfoXic
+uzcPDzhaXgcSls0JkMrQrqdb3I7dH/VrPXs4Y9FdbnHb4OaaSpDRiyR1M0e+j5Rs
+uBA3+qz84CGVEzUCmLakD52NbtEW1SJj2x3LfKe2LzjlR03p8p8q0+L7UbCP3OdM
+SNOB+VD+FCCQ2uH0aJMn1U4t/pAp16NuDSWlJxXXx8Pn/auq1nyYgluYyyArWNJO
+K1Y93Tr3DmEwzv67v8nXQqP7nyFj/Rn0XapYHt9JmjpBsFuZC9vh9lJ+m0lplJir
+LYFt0sZYyP/aYr6EmNwPE4fOsgW9++yXP68WqaS7YmL+Mr7Xek+ojJqi6t65J6K+
+QxIczmLN+hnkAr8RDjO1f5fClz2pIJRCt//HVwk2nMAr6aiSf4oKg0dAoxOW1q04
+7d5Mfcivnqus2gm2w2g4qtnUH1hQ4zxUjDMbaNsYJTxtjwnUS01lA8M2F1eJpqJX
+yTihfhNjw1i2pqoK4FD694YSFT3e/4toB0LG86K4ej9qfFcHcqI=
+=HGLV
+-----END PGP SIGNATURE-----
+
+--GeONROBiaq1zPAtT--
