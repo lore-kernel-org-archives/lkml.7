@@ -2,168 +2,146 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2297C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0707C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D87C206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:53:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linbit-com.20150623.gappssmtp.com header.i=@linbit-com.20150623.gappssmtp.com header.b="cQbuABGz"
+	by mail.kernel.org (Postfix) with ESMTP id BC38E206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:56:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbfHLLw7 (ORCPT
+        id S1728283AbfHLL4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 07:52:59 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40957 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728229AbfHLLw7 (ORCPT
+        Mon, 12 Aug 2019 07:56:54 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56360 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728063AbfHLL4y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 07:52:59 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v19so11496593wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 04:52:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linbit-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=JQc8MsYNi4B/FOCBvJsS2RlJj0CEn21Q6IfYpjwCByI=;
-        b=cQbuABGzre6z66mKEgHBD96wCUZXMJC4mpPHT0efXWmmjm9LFEbu8bCipYfzUQi0SI
-         ZSRWEHmHyx2h+IXRZuJ9vBM/yt9QBDMhgL00fYPO11GrJ7Xkufs/GaVL/Vkykqz2PBQv
-         0AXOp7Q0qbjD8nar9v7vS0Pc1OGwrS8JPsOb6O0ETj086uVIJ2vn6abQBmF8MTdaud4G
-         bQ8kGU1+/VI25AXVwFAe2LUenrmbU9/6iYJRKU0ExsG298YaWKU5k91+lDv3RlRSiFgl
-         l2qvee23tylBqhyv+VRsN3TU7GXwy4G8M0+a+X6nfbvXUKW2WLwPqkNHg96FNjdtOjQ8
-         UTNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=JQc8MsYNi4B/FOCBvJsS2RlJj0CEn21Q6IfYpjwCByI=;
-        b=KlwAOwplvzWydgfEfcMSnG2tPcCGXDBtQayDkFnqT3k3aRvqpataVKxrH+1oJNBPNe
-         eCZXCAQdUDtdgDAbMaZNj2691bB342VVp4cFS9Ine87e/roWxCQeAVeDrWcSx6X/Qm7/
-         QN6I8ijnvWXxwUkOeJI1e7OxYVtPkhw2TaoL2wPip6F0iN0ERll6GuRbG0pFnKx0L6L0
-         7nIHB/X+36UjyBcfHVBJ6AH7hZuu5iolVKFCEtylLMbtRU8kFou1T0pNbwOzp4YTN5OU
-         CvZJQSnunMAOnc0j7NjAugcdk/Tg9/+3+szAECYi8H9wim9tkBkiWDF231sTgxM5pwhV
-         wsOA==
-X-Gm-Message-State: APjAAAXLttvrX4JdA1Yek9c7AlYYaxfthkfCS7HsaSARgx6MYmhrJfuP
-        xSb2zc9R2nKCux/YYjsAVzo3ng==
-X-Google-Smtp-Source: APXvYqwWWWi+XtR+N8wWk9JxW+7GVf46hQYfqdReJTujMWv4l41Mno0JVhc/WRt2g3J2tVVJ/i9WYA==
-X-Received: by 2002:a7b:c04f:: with SMTP id u15mr27138326wmc.106.1565610776729;
-        Mon, 12 Aug 2019 04:52:56 -0700 (PDT)
-Received: from fat-tyre.localnet ([2001:858:107:1:7139:36a7:c14f:e911])
-        by smtp.gmail.com with ESMTPSA id f17sm8185963wmj.27.2019.08.12.04.52.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Aug 2019 04:52:55 -0700 (PDT)
-From:   Philipp Reisner <philipp.reisner@linbit.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     David Laight <David.Laight@aculab.com>,
-        'Christoph =?ISO-8859-1?Q?B=F6hmwalder=27?= 
-        <christoph.boehmwalder@linbit.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>
-Subject: Re: [PATCH] drbd: do not ignore signals in threads
-Date:   Mon, 12 Aug 2019 13:52:52 +0200
-Message-ID: <1761552.9xIroHqhk7@fat-tyre>
-In-Reply-To: <6f8c0d1e51c242a288fbf9b32240e4c1@AcuMS.aculab.com>
-References: <20190729083248.30362-1-christoph.boehmwalder@linbit.com> <ad16d006-4382-3f77-8968-6f840e58b8df@linbit.com> <6f8c0d1e51c242a288fbf9b32240e4c1@AcuMS.aculab.com>
+        Mon, 12 Aug 2019 07:56:54 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 5DB3628AC52
+Message-ID: <95b8f8f8d5d4f6394cfd5858a29d507b7e77be2f.camel@collabora.com>
+Subject: Re: [PATCH v4 04/11] media: uapi: h264: Add the concept of start
+ code
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
+Date:   Mon, 12 Aug 2019 08:56:32 -0300
+In-Reply-To: <a729d241-6550-c23a-4f75-f106ab1c7ff9@xs4all.nl>
+References: <20190808103432.12062-1-ezequiel@collabora.com>
+         <20190808103432.12062-5-ezequiel@collabora.com>
+         <a729d241-6550-c23a-4f75-f106ab1c7ff9@xs4all.nl>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
+On Mon, 2019-08-12 at 12:11 +0200, Hans Verkuil wrote:
+> On 8/8/19 12:34 PM, Ezequiel Garcia wrote:
+> > Stateless decoders have different expectations about the
+> > start code that is prepended on H264 slices. Add a
+> > menu control to express the supported start code types
+> > (including no start code).
+> > 
+> > Drivers are allowed to support only one start code type,
+> > but they can support both too.
+> > 
+> > Note that this is independent of the H264 decoding mode,
+> > which specifies the granularity of the decoding operations.
+> > Either in frame-based or slice-based mode, this new control
+> > will allow to define the start code expected on H264 slices.
+> > 
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> > Changes in v4:
+> > * New patch.
+> > ---
+> >  .../media/uapi/v4l/ext-ctrls-codec.rst        | 31 +++++++++++++++++++
+> >  drivers/media/v4l2-core/v4l2-ctrls.c          |  9 ++++++
+> >  include/media/h264-ctrls.h                    |  6 ++++
+> >  3 files changed, 46 insertions(+)
+> > 
+> > diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+> > index ea0455957149..94fd3a9b8b9e 100644
+> > --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+> > +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+> > @@ -2062,6 +2062,37 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+> >          The OUTPUT buffer should contain all slices needed to decode the
+> >          frame/field.
+> >  
+> > +``V4L2_CID_MPEG_VIDEO_H264_STARTCODE (enum)``
+> > +    Specifies the H264 slice start code expected for each slice.
+> > +    This control shall e used to complement V4L2_PIX_FMT_H264_SLICE
+> 
+> e -> be
+> 
+> > +    pixel format. Drivers may expose a single or multiple
+> > +    start codes, depending on what they can support.
+> > +
+> > +    .. note::
+> > +
+> > +       This menu control is not yet part of the public kernel API and
+> > +       it is expected to change.
+> > +
+> > +.. c:type:: v4l2_mpeg_video_h264_startcode
+> > +
+> > +.. cssclass:: longtable
+> > +
+> > +.. flat-table::
+> > +    :header-rows:  0
+> > +    :stub-columns: 0
+> > +    :widths:       1 1 2
+> > +
+> > +    * - ``V4L2_MPEG_VIDEO_H264_NO_STARTCODE``
+> > +      - 0
+> > +      - Selecting this value specifies that H264 slices are passed
+> > +        to the driver without any start code.
+> > +        Bla.
+> 
+> Bla?
+> 
 
-Please have a look.
+Well, despite how many times I reviewed this doc, it seems
+this slipped through :-(
 
-With fee109901f392 Eric W. Biederman changed drbd to use send_sig()=20
-instead of force_sig(). That was part of a series that did this change
-in multiple call sites tree wide. Which, by accident broke drbd, since=20
-the signals are _not_ allowed by default. That got released with v5.2.
+> > +    * - ``V4L2_MPEG_VIDEO_H264_ANNEX_B_STARTCODE``
+> > +      - 1
+> > +      - Selecting this value specifies that H264 slices are expected
+> > +        to be prefixed by Annex B start codes. According to :ref:`h264`
+> > +        valid start codes can be 3-bytes 0x000001, or 4-bytes 0x00000001.
+> > +
+> 
+> I had the impression that it is more common to require startcodes. If that's
+> indeed the case, shouldn't this have value 0 instead of 1?
+> 1?
+> 
 
-On July 29 Christoph 	B=F6hmwalder sent a patch that adds two=20
-allow_signal()s to fix drbd.
+I'm not sure this is indeed the case.
 
-Then David Laight points out that he has code that can not deal
-with the send_sig() instead of force_sig() because allowed signals
-can be sent from user-space as well.
-I assume that David is referring to out of tree code, so I fear it
-is up to him to fix that to work with upstream, or initiate a=20
-revert of Eric's change.
+For instance, VA-API accelerators work on H264 slices that are not
+prepended by the NALU start code.
 
-Jens, please consider sending Christoph's path to Linus for merge in=20
-this cycle, or let us know how you think we should proceed.
+I'm fine flipping the values, but at this point, with only cedrus and hantro,
+there's doesn't seem to be a "natural" choice.
 
-best regards,
- Phil
-
-Am Montag, 5. August 2019, 11:41:06 CEST schrieb David Laight:
-> From: Christoph B=F6hmwalder
->=20
-> > Sent: 05 August 2019 10:33
-> >=20
-> > On 29.07.19 10:50, David Laight wrote:
-> >=20
-> > > Doesn't unmasking the signals and using send_sig() instead  of
-> > > force_sig()
-> > > have the (probably unwanted) side effect of allowing userspace to send
-> > > the signal?
-> >=20
-> >=20
-> > I have ran some tests, and it does look like it is now possible to send
-> > signals to the DRBD kthread from userspace. However, ...
-> >=20
-> >=20
-> > > I've certainly got some driver code that uses force_sig() on a kthread
-> > > that it doesn't (ever) want userspace to signal.
-> >=20
-> >=20
-> > ... we don't feel that it is absolutely necessary for userspace to be
-> > unable to send a signal to our kthreads. This is because the DRBD thread
-> > independently checks its own state, and (for example) only exits as a
-> > result of a signal if its thread state was already "EXITING" to begin
-> > with.
->=20
->=20
-> In must 'clear' the signal - otherwise it won't block again.
->=20
-> I've also got this horrid code fragment:
->=20
->     init_waitqueue_entry(&w, current);
->=20
->     /* Tell scheduler we are going to sleep... */
->     if (signal_pending(current) && !interruptible)
->         /* We don't want waking immediately (again) */
->         sleep_state =3D TASK_UNINTERRUPTIBLE;
->     else
->         sleep_state =3D TASK_INTERRUPTIBLE;
->     set_current_state(sleep_state);
->=20
->     /* Connect to condition variable ... */
->     add_wait_queue(cvp, &w);
->     mutex_unlock(mtxp); /* Release mutex */
->=20
-> where we want to sleep TASK_UNINTERRUPTIBLE but that f*cks up the 'load
-> average',
- so sleep TASK_INTERRUPTIBLE unless there is a signal pending
-> that we want to ignore.
->=20
-> 	David
->=20
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1
-> 1PT, UK
- Registration No: 1397386 (Wales)
-
-
-=2D-=20
-LINBIT | Keeping The Digital World Running
-
-DRBD=AE and LINBIT=AE are registered trademarks of LINBIT, Austria.
-
-
+Thanks,
+Ezequiel
 
