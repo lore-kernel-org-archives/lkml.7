@@ -2,102 +2,146 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7607DC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D281CC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49C8F206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3C520673
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:52:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="Go1xYdCn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wOXQsMpK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfHLTwN (ORCPT
+        id S1727102AbfHLTwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 15:52:13 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:32772 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbfHLTwM (ORCPT
+        Mon, 12 Aug 2019 15:52:25 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38717 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726679AbfHLTwZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 15:52:12 -0400
-Received: by mail-qt1-f194.google.com with SMTP id v38so11701697qtb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 12:52:12 -0700 (PDT)
+        Mon, 12 Aug 2019 15:52:25 -0400
+Received: by mail-ot1-f65.google.com with SMTP id r20so13708784ota.5
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 12:52:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=kEkVLWwqovwyFjtoRAd3ZuRhWq4pA+S9mUWyYQC3ODQ=;
-        b=Go1xYdCnowLCjBoQHanBZc7stvpdCA4G/sIQJnrvYOMObBB2RF6oSbhmlUQOeUImJi
-         FjU3UE6ZPgHFVoFvHQajdt5DYsYDsfr3MtE4zVRqViB/uQewO2eXWYVzND9A6/k4syDI
-         KiQJ6kbVnAeos66Zydq4l49v2EO55bXWiaIY8YW1yEmsocbSrMGpDqu+fWwU8vgoLsAL
-         BjBZUWdKUw5Ietmf5bF6Q/S0JeYR6CXwsVmVc2s/Qsj4Yz5gyHXdmhwnwpT0kgnEBwjL
-         P516qLnaRnN3sZ9sXUHu8h9MiftUXkp2Ylvq4VMfyG9py3890rhln94s9T5uukkQHTwY
-         uSiA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xdTaSZFMc5c0WlaR2P3h3aNLmfWS7MtBN6nvtQBsHM0=;
+        b=wOXQsMpKls2n2TWvbygbodoRbilCT7zxfywZx8W9fg1DsdaPvB+TWjAJKecI0MwLma
+         HPkyKCzyphSBstyhyr2OoGDSiqolOIW4UYiEmDOYnlvbZs/T+IHfNmqjCEm0mUnV0zDN
+         K66Rav+9mPw4nRCZh8YzfrZzyTewjwRc/YQatITPJNKwAlkwb2IbNsGNKetKp9nyyQ6L
+         bu8DgM2Uccyr/Y0L/CuazZBwuIWOvb8pp/lrMVDZgK1+WuKSciTIRyvm4uO67nE5iCVA
+         YYUjAE1TiFd1125P2QenAH5Wti81+Pj5qr9pBmKXoSiE6s0tWuBYW1+jD2R8nYKNvHzg
+         rjOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=kEkVLWwqovwyFjtoRAd3ZuRhWq4pA+S9mUWyYQC3ODQ=;
-        b=hU41BvkKk7IkhX7GvSjJLzSfIhux+vfEML+Re8cWCxr1tHaecFJVzaNOLRgUNkqAHp
-         ggsuHR7hDlw5LFIXj6SB+m5xq5xDqOG5LJ0ihNPpigLit75njlISXqy2XcvrCy/F3xl8
-         hE2sGgTB7xjBuBiZz/aZHb4oIKq93EZOy+lFSbYuvHY7fT0eZyBl4kBhxtE+EKTKgkM6
-         tZTSmyPdpdMgK+16eJgMitlFhpyz8ET5HjAo/Jc0Xlap8yMiMqU15tZksVMRAdzCohER
-         kMdTVtoPgmU4BasprI/JwkqeGV4vH0DMuPrY6Gt6n5jvgsG5FuiVKaOuDyR7hrWB05H5
-         beog==
-X-Gm-Message-State: APjAAAXNBuB4q9K9TGiBP7jffCKmgpT2+d4+MR8qnhBg8h+TF+63WF9x
-        PeSp5GvZX1psIhYlm0UgzSiKZg==
-X-Google-Smtp-Source: APXvYqy2g/f0DiyWHWOpG/JWWUORJpCznhP/S1XW87hCBQrOyaFf5OKJtY8YQ6WH8wMHkAb2ye+Nzw==
-X-Received: by 2002:ac8:376c:: with SMTP id p41mr11767771qtb.306.1565639531882;
-        Mon, 12 Aug 2019 12:52:11 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id g24sm3920710qtc.38.2019.08.12.12.52.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 12:52:11 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 12:52:02 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v4 7/9] mfd: ioc3: Add driver for SGI IOC3 chip
-Message-ID: <20190812125202.46608b74@cakuba.netronome.com>
-In-Reply-To: <20190811093212.88635fb1a6c796a073ec71ff@suse.de>
-References: <20190809103235.16338-1-tbogendoerfer@suse.de>
-        <20190809103235.16338-8-tbogendoerfer@suse.de>
-        <20190809142222.4558691e@cakuba.netronome.com>
-        <20190811093212.88635fb1a6c796a073ec71ff@suse.de>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xdTaSZFMc5c0WlaR2P3h3aNLmfWS7MtBN6nvtQBsHM0=;
+        b=geZUVx4LFGvdh7B9xBTO6K96aggQVG2sEM3dLjvA4tnphMOnUhNLBwPn4muu5tcUGI
+         xcrocP/EHw7oRzDfJ/Ac2gmO0Gx7pgT8v19A3QKw60zcGyYezbZoJ36Iz4NqEQLVsAHQ
+         RBX024p96qz39sDj+t3iFf0KC1LF/4RhCVYMqcS7vucexD/nr4jyJb8PT1aBF8y9Mkye
+         /+30d3roNngJ/7w7I3LXmvsQ/5nNBktpbmQE2qS8bXRO/pADjdlUcgu2ulULy/LZvb8I
+         SNQhn8kSQYDGF4GkkBYlaGUAe718vygM4iUHA5EYB7hx8HSBDw3+4L68i80q1NE5ff2y
+         qLig==
+X-Gm-Message-State: APjAAAX1Dp+NbX5mIZO2xziOrO+XfUoDXtFlrzlbyKZMSgezPC4wGnCr
+        wKMuB059NOyrv3C5mZWhmrrOX19jBEtfCvN5q9Jd4w==
+X-Google-Smtp-Source: APXvYqzinv8BUq2fw3XQtW9LprZZERQgtghAKjpvgwtfCTXV7yJ0blJuAWMqywLxj6o39rgOmGzFbULPKs7Hcam4rvM=
+X-Received: by 2002:a02:8663:: with SMTP id e90mr40014405jai.98.1565639543943;
+ Mon, 12 Aug 2019 12:52:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190805233738.136357-1-yabinc@google.com>
+In-Reply-To: <20190805233738.136357-1-yabinc@google.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Mon, 12 Aug 2019 13:52:12 -0600
+Message-ID: <CANLsYkzdu9CBYhDmMwOC5azmQgyqcjCU-CM9R8JfnaF_KbQomg@mail.gmail.com>
+Subject: Re: [PATCH] coresight: tmc-etr: Fix updating buffer in not-snapshot mode.
+To:     Yabin Cui <yabinc@google.com>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 11 Aug 2019 09:32:12 +0200, Thomas Bogendoerfer wrote:
-> > Also please don't use stdint types in the kernel, please try checkpatch
-> > to catch coding style issues.  
-> 
-> my patch already reduces them and checkpatch only warns about usage of printk
-> for the network part. Changing that to dev_warn/dev_err in the mfd patch didn't
-> seem the right thing to do. As I'm splitting the conversion patch into a few
-> steps I could also replace the printks.
+Good day Yabin,
 
-Thanks for looking into it. I was referring to the use of uint32_t
-instead of u32. Perhaps checkpatch has to be motivated with the --strict
-option to point those out?
+With this patch you are addressing a long time itch I had - please read on.
+
+On Mon, 5 Aug 2019 at 17:37, Yabin Cui <yabinc@google.com> wrote:
+>
+> TMC etr always copies all available data to perf aux buffer, which
+> may exceed the available space in perf aux buffer. It isn't suitable
+> for not-snapshot mode, because:
+> 1) It may overwrite previously written data.
+> 2) It may make the perf_event_mmap_page->aux_head report having more
+> or less data than the reality.
+>
+> Signed-off-by: Yabin Cui <yabinc@google.com>
+> ---
+>  drivers/hwtracing/coresight/coresight-tmc-etr.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> index 17006705287a..697e68d492af 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> @@ -1410,9 +1410,10 @@ static void tmc_free_etr_buffer(void *config)
+>   * tmc_etr_sync_perf_buffer: Copy the actual trace data from the hardware
+>   * buffer to the perf ring buffer.
+>   */
+> -static void tmc_etr_sync_perf_buffer(struct etr_perf_buffer *etr_perf)
+> +static void tmc_etr_sync_perf_buffer(struct etr_perf_buffer *etr_perf,
+> +                                    unsigned long to_copy)
+>  {
+> -       long bytes, to_copy;
+> +       long bytes;
+>         long pg_idx, pg_offset, src_offset;
+>         unsigned long head = etr_perf->head;
+>         char **dst_pages, *src_buf;
+> @@ -1423,7 +1424,6 @@ static void tmc_etr_sync_perf_buffer(struct etr_perf_buffer *etr_perf)
+>         pg_offset = head & (PAGE_SIZE - 1);
+>         dst_pages = (char **)etr_perf->pages;
+>         src_offset = etr_buf->offset;
+> -       to_copy = etr_buf->len;
+>
+>         while (to_copy > 0) {
+>                 /*
+> @@ -1501,7 +1501,11 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+>         spin_unlock_irqrestore(&drvdata->spinlock, flags);
+>
+>         size = etr_buf->len;
+> -       tmc_etr_sync_perf_buffer(etr_perf);
+> +       if (!etr_perf->snapshot && size > handle->size) {
+> +               size = handle->size;
+> +               lost = true;
+> +       }
+
+Perfect - this is in line with what is done for ETB and ETF.
+
+> +       tmc_etr_sync_perf_buffer(etr_perf, size);
+
+Here tmc_etr_sync_perf_buffer() will copy data to the perf ring buffer
+starting at @etr_perf->offset for @size, clipping the _end_ of the
+trace data accumulated in the trace buffer.  This is contrary to what
+is done for ETB and ETF where the equivalent of @etr_perf->offset is
+moved forward (clipping the _beginning_ of the trace data) in order to
+keep as much of the end as possible.
+
+I would rather enact the same heuristic here.
+
+Thanks,
+Mathieu
+
+>
+>         /*
+>          * In snapshot mode we simply increment the head by the number of byte
+> --
+> 2.22.0.770.g0f2c4a37fd-goog
+>
