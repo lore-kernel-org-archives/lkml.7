@@ -2,107 +2,75 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B69EC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1187DC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4223121855
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:30:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565613045;
-	bh=Ijmr7L4rj9fAdpDTeN+I568sFcwLmUT8CgsOo/en4AA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Uq+FIYn5XaibkcqMfamEU3YziR+s2TdWfazwxR0fa00Qv44qNVn9Du7HHaZVznDQd
-	 6+T8XnAcJL1F0ZWMLtyL6Ix91FKNYB/tXQmWOoEzgqIztypbBa1k6wEJTdqxTxvC6z
-	 S/gyhfc0PHJF7zGnjaG3SMj1iW1WkEYM0dRAWpmg=
+	by mail.kernel.org (Postfix) with ESMTP id DFF6721744
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:31:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728732AbfHLMao (ORCPT
+        id S1728740AbfHLMbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 08:30:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33360 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728449AbfHLMao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 08:30:44 -0400
-Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E61D021744;
-        Mon, 12 Aug 2019 12:30:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565613043;
-        bh=Ijmr7L4rj9fAdpDTeN+I568sFcwLmUT8CgsOo/en4AA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=S4GKmEuU3TYlyUYRKAnckZZb1Qg5JvWhhhH8O5Io14pQ48FHhe12HFwxtUuZ3BNdu
-         ez6RpxAdFpRTHYvheWx7FPUhY1lC76AZL6SSJARrmIXW+34fMtPid+LMjcRkNZd4Bh
-         HF/vN8apPq1sJgZbMgDe36lbuDhZq6p/TcEpc8EI=
-Date:   Mon, 12 Aug 2019 14:30:28 +0200
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson.Huang@nxp.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        andrew.smirnov@gmail.com, manivannan.sadhasivam@linaro.org,
-        j.neuschaefer@gmx.net, u.kleine-koenig@pengutronix.de,
-        leoyang.li@nxp.com, aisheng.dong@nxp.com, l.stach@pengutronix.de,
-        vabhav.sharma@nxp.com, bhaskar.upadhaya@nxp.com, ping.bai@nxp.com,
-        pramod.kumar_1@nxp.com, leonard.crestez@nxp.com,
-        daniel.baluta@nxp.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V4 4/4] dt-bindings: arm: imx: Add the soc binding for
- i.MX8MQ
-Message-ID: <20190812123026.GA27041@X250>
-References: <20190619022145.42398-1-Anson.Huang@nxp.com>
- <20190619022145.42398-4-Anson.Huang@nxp.com>
+        Mon, 12 Aug 2019 08:31:01 -0400
+Received: from mail-ot1-f72.google.com ([209.85.210.72]:35155 "EHLO
+        mail-ot1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728449AbfHLMbB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 08:31:01 -0400
+Received: by mail-ot1-f72.google.com with SMTP id d14so44381625otf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 05:31:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=uTu/C5kEoXRr3czNQDVPHfrZDcI2hFsg6TBFRhIIG1U=;
+        b=A/Ta3qcSC34TCqV2fjAhctMPMDK4KsmyaDVz2QpYvyYnRtwkSHa66rtHIecA9dlQRG
+         oyuB0+898CsnjCvw1cRDC1eUVN9Ux9IjuNQefM3iwX9FZnx1k24Epf6Oc/tpo4wsxriU
+         lQtw+zUabpcVtkC9phPAiX6cKGwvw4T3l+vpKTJLZFnbfeN/V3R7rIM0N3qwDI68UsF7
+         BA2mq8W5ZtFNLNSYOg2Lb9wtgNZIsHvwP/yeWnwYyw5/6ZN8SAcCcFR3bjNYQ/hFhugw
+         lmZKB0JDbJMtdVHqskR9tss5bUt9qDOT+3WfjK2fKjP4ete8imDJzY735gla6MJw/cV7
+         xRsw==
+X-Gm-Message-State: APjAAAXWjqDcM3cSFay5K3MC96w61lwmFN5GZotajpNz1hqyOeoM7kMq
+        pwAveRZv8VB2Ol0thZGov+7ql+B0QpEOasyhQqHilS81zdSi
+X-Google-Smtp-Source: APXvYqw/6HtWEBrsF6QXzaiwhcykXVdkAZLMzV8QABcMryQlBavKHtHvOvwHYYvMX1cWcDA4JpW0SWpCnxo7meykgzHSvTS2TVUx
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619022145.42398-4-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Received: by 2002:a5e:d507:: with SMTP id e7mr21142454iom.284.1565613060687;
+ Mon, 12 Aug 2019 05:31:00 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 05:31:00 -0700
+In-Reply-To: <CAAeHK+wh=oQo4rorPuKR6dKGbwx4pNL8Of8mDUqbpV-G0kt6_w@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000569062058feab2e2@google.com>
+Subject: Re: possible deadlock in usb_deregister_dev
+From:   syzbot <syzbot+a64a382964bf6c71a9c0@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        oneukum@suse.de, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 10:21:45AM +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> This patch adds the soc & board binding for i.MX8MQ.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> No changes.
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> index b35abb1..f944df8 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -183,6 +183,12 @@ properties:
->                - fsl,imx8mn-ddr4-evk            # i.MX8MN DDR4 EVK Board
->            - const: fsl,imx8mn
->  
-> +      - description: i.MX8MQ based Boards
-> +        items:
-> +          - enum:
-> +              - fsl,imx8mq-evk            # i.MX8MQ EVK Board
-> +          - const: fsl,imx8mq
-> +
+Hello,
 
-We already have this with e126417ff1b1 (dt-bindings: arm: fsl: Add the
-imx8mq boards).
+syzbot has tested the proposed patch and the reproducer did not trigger  
+crash:
 
-Shawn
+Reported-and-tested-by:  
+syzbot+a64a382964bf6c71a9c0@syzkaller.appspotmail.com
 
->        - description: i.MX8QXP based Boards
->          items:
->            - enum:
-> -- 
-> 2.7.4
-> 
+Tested on:
+
+commit:         e96407b4 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=16a8a38c600000
+
+Note: testing is done by a robot and is best-effort only.
