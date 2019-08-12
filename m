@@ -2,175 +2,384 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEB2C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6E6C32756
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F6BA2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 892A72070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:10:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="moxPWwI3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfHLHDm (ORCPT
+        id S1726689AbfHLHKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 03:03:42 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37440 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbfHLHDm (ORCPT
+        Mon, 12 Aug 2019 03:10:08 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40920 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbfHLHKI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 03:03:42 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z23so10786829wmf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 00:03:40 -0700 (PDT)
+        Mon, 12 Aug 2019 03:10:08 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c34so15333165otb.7
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 00:10:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BbBNOuxm0GlTjEqeeVl/lvmyNQSZaDpFdxwK3irfmzQ=;
+        b=moxPWwI3A6jUYH/PrBqOntD8Bmxn0e3Oco4tFsc55qjv0AyFAJ1tfeufPN0H+uSZPT
+         LzYEpdamSmI78Cqkt7kyEOCyfL44ErmNiKNOQNlv0Vf1mn+0r7qhqVXihHLX10GUUrHQ
+         EMPtN72DHOch7S96g6Nzhc9hIF4kq6jTamShYSkue+Ux4tibjL6++UiLbr6QIKJ16jL/
+         x3MaLml/q9A+hT/IgzZa13xAcTnV5Jf4/W2PPwMifIk9d/DL6G9UPM0xGQHR/qEX6hHI
+         Ix40CYpnGfzVygBd7Gmy8mfbcMz8B8PIVQmG47NMZe8iZY2AzaOzwJkY2MEOfqsmZM6L
+         jAog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=y1+mXhJUTJgr8gTIPY1u76OpE07CstUIWpVpL4Le1Yo=;
-        b=NMdElydd7+7AI99qFFpAF0VqH6rAIONU9OJGbykzAn4lEblUrGn6MVnk60/s2PKd25
-         kw7Stparf8eTOB/oNWDwHKudzgT8b7I+/PjB5FcI2ZlPGjd4TciXuENRT0UszwCMhtjy
-         gxKLTybMSVmO1KrOZjHMc+3yJmt3Dbj0qZOMdG70mDl8JmOCnZxS473Uj4Yts0xQRkk2
-         jvElfdGRkcA0vcSgTCLYJdYyBaVZNR/ajE4zwbKhBiAKqv/h/K8+owfcLKFEa5oi6lWj
-         7Xv5rNSEGcY6BFxSUMibivkN0CTDucQeatZ8h9c1O3pCDh6uMvdU8Pacdb2lEipYg/TI
-         7IMw==
-X-Gm-Message-State: APjAAAWhg3SKsQwEhipwCpczKFABj4GscrUisAIIVNCnlhWGyqjiM8MN
-        NifNDeXCE71odyaa2tfkhYc=
-X-Google-Smtp-Source: APXvYqwn4WtwSOl/st4NkiKcRqyNv7HjLcws2bNazhvYZnZd7KNPlLtPiBtzO9zg+gW0XaAwGFgYTA==
-X-Received: by 2002:a1c:27c1:: with SMTP id n184mr17429735wmn.61.1565593419385;
-        Mon, 12 Aug 2019 00:03:39 -0700 (PDT)
-Received: from [192.168.1.12] (adsl-dyn53.78-98-69.t-com.sk. [78.98.69.53])
-        by smtp.gmail.com with ESMTPSA id r15sm110401477wrj.68.2019.08.12.00.03.37
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 00:03:38 -0700 (PDT)
-Subject: Re: [PATCH] x86/apic: Handle missing global clockevent gracefully
-To:     Daniel Drake <drake@endlessm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Endless Linux Upstreaming Team <linux@endlessm.com>
-References: <CAD8Lp448i7jOk9C5NJtC2wHMaGuRLD4pxVqK17YqRCuMVXhsOA@mail.gmail.com>
- <CAERHkruxfBc8DqNUr=fbYuQWrXrHC7cK6HnVR3xp0iLA9QtxiQ@mail.gmail.com>
- <alpine.DEB.2.21.1908010931550.1788@nanos.tec.linutronix.de>
- <CAERHkrtaVAQHDU1cj2_GLL59LPjp7E=3X0Zna0spfFB=Ve5__w@mail.gmail.com>
- <alpine.DEB.2.21.1908011011250.1788@nanos.tec.linutronix.de>
- <81666b28-d029-56c3-8978-90abc219d1b7@linux.intel.com>
- <alpine.DEB.2.21.1908011054210.1965@nanos.tec.linutronix.de>
- <3d14b0cc-3cca-1874-3521-4ee2ec52141d@amd.com>
- <alpine.DEB.2.21.1908082235590.2882@nanos.tec.linutronix.de>
- <5bf28ba4-b7c1-51de-88ae-feebae2a28db@amd.com>
- <alpine.DEB.2.21.1908082306220.2882@nanos.tec.linutronix.de>
- <75e59ac6-5165-bd0a-aec9-be16d662ece9@amd.com>
- <alpine.DEB.2.21.1908091443030.21433@nanos.tec.linutronix.de>
- <CAD8Lp46FgT6yoW9a4Yt8t=bVWzZbYHjw-Dqdk6Pvd2xzxfGHLQ@mail.gmail.com>
-From:   Jiri Slaby <jslaby@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <3ca04aaf-c67a-d449-dac9-0fe5bc431009@suse.cz>
-Date:   Mon, 12 Aug 2019 09:03:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BbBNOuxm0GlTjEqeeVl/lvmyNQSZaDpFdxwK3irfmzQ=;
+        b=jcx2KoQ6Ty6wWXokMPVLOW3E4+izhggmgVBgOscjKSdeYR64RISDRLNDDAF1hSI0mJ
+         xJZke1w/1SIAXbmMoZygQ7Vl62EO4J5uS0SqIFEPUy6YPUVArE6GbS5K4jZyib7NWz8a
+         La7OSFcfDK/4+WdWPchIm8zjU44rorLvtBzmieKIPTO67/HN2fWWHYFtqPtzhDgutP/x
+         ENdCeTAGxMM/nORShqecjpF1EVI1NysjFEw/FB+bes4IsRv5VN+JAOcBQqvjaFB1S/vj
+         dJsa58NdZhrmQvxJsSwnDaUEr6lqP5YKRT+2PbKKmJB6WuCm0pyl6XPj8H/8AK6r2yyB
+         M2cA==
+X-Gm-Message-State: APjAAAW9SZUjGnwraNQsGHJZ+IdYe10m8ncIjyLdta3xV3UKb2qIOL0p
+        zr3SAwZjiIyXKQZbiLiEVR1MWEmwUYb9pAAtlBAXhw==
+X-Google-Smtp-Source: APXvYqxDY92kWbEMPW6FL/c2DrwPTOfjP15cg1Ew1dErImjaHvI3+i6H0erQDf8168aYZkY+ePW+vOgODEbBTb2pizI=
+X-Received: by 2002:a05:6830:1291:: with SMTP id z17mr29428568otp.194.1565593806632;
+ Mon, 12 Aug 2019 00:10:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAD8Lp46FgT6yoW9a4Yt8t=bVWzZbYHjw-Dqdk6Pvd2xzxfGHLQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190809144043.476786-1-arnd@arndb.de> <20190809144043.476786-6-arnd@arndb.de>
+In-Reply-To: <20190809144043.476786-6-arnd@arndb.de>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 12 Aug 2019 09:09:55 +0200
+Message-ID: <CAMpxmJVwsUHmr-89iR8gQG=WN2-z6JxbP1Pxbbcb1DR+zE=98g@mail.gmail.com>
+Subject: Re: [PATCH v2 05/13] gpio: lpc32xx: allow building on non-lpc32xx targets
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     soc@kernel.org, Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12. 08. 19, 8:16, Daniel Drake wrote:
-> On Fri, Aug 9, 2019 at 8:54 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->> Some newer machines do not advertise legacy timers. The kernel can handle
->> that situation if the TSC and the CPU frequency are enumerated by CPUID or
->> MSRs and the CPU supports TSC deadline timer. If the CPU does not support
->> TSC deadline timer the local APIC timer frequency has to be known as well.
->>
->> Some Ryzens machines do not advertize legacy timers, but there is no
->> reliable way to determine the bus frequency which feeds the local APIC
->> timer when the machine allows overclocking of that frequency.
->>
->> As there is no legacy timer the local APIC timer calibration crashes due to
->> a NULL pointer dereference when accessing the not installed global clock
->> event device.
->>
->> Switch the calibration loop to a non interrupt based one, which polls
->> either TSC (frequency known) or jiffies. The latter requires a global
->> clockevent. As the machines which do not have a global clockevent installed
->> have a known TSC frequency this is a non issue. For older machines where
->> TSC frequency is not known, there is no known case where the legacy timers
->> do not exist as that would have been reported long ago.
-> 
-> This solves the problem I described in the thread:
->     setup_boot_APIC_clock() NULL dereference during early boot on
-> reduced hardware platforms
+pt., 9 sie 2019 o 16:43 Arnd Bergmann <arnd@arndb.de> napisa=C5=82(a):
+>
+> The driver uses hardwire MMIO addresses instead of the data
+> that is passed in device tree. Change it over to only
+> hardcode the register offset values and allow compile-testing.
+>
+> Acked-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
+> Tested-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  arch/arm/configs/lpc32xx_defconfig |   1 +
+>  drivers/gpio/Kconfig               |   7 ++
+>  drivers/gpio/Makefile              |   2 +-
+>  drivers/gpio/gpio-lpc32xx.c        | 118 +++++++++++++++++------------
+>  4 files changed, 77 insertions(+), 51 deletions(-)
+>
+> diff --git a/arch/arm/configs/lpc32xx_defconfig b/arch/arm/configs/lpc32x=
+x_defconfig
+> index 0cdc6c7974b3..3772d5a8975a 100644
+> --- a/arch/arm/configs/lpc32xx_defconfig
+> +++ b/arch/arm/configs/lpc32xx_defconfig
+> @@ -93,6 +93,7 @@ CONFIG_SERIAL_HS_LPC32XX_CONSOLE=3Dy
+>  # CONFIG_HW_RANDOM is not set
+>  CONFIG_I2C_CHARDEV=3Dy
+>  CONFIG_I2C_PNX=3Dy
+> +CONFIG_GPIO_LPC32XX=3Dy
+>  CONFIG_SPI=3Dy
+>  CONFIG_SPI_PL022=3Dy
+>  CONFIG_GPIO_SYSFS=3Dy
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index bb13c266c329..8b40a578963c 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -311,6 +311,13 @@ config GPIO_LPC18XX
+>           Select this option to enable GPIO driver for
+>           NXP LPC18XX/43XX devices.
+>
+> +config GPIO_LPC32XX
+> +       tristate "NXP LPC32XX GPIO support"
+> +       depends on OF_GPIO && (ARCH_LPC32XX || COMPILE_TEST)
+> +       help
+> +         Select this option to enable GPIO driver for
+> +         NXP LPC32XX devices.
+> +
+>  config GPIO_LYNXPOINT
+>         tristate "Intel Lynxpoint GPIO support"
+>         depends on ACPI && X86
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index a4e91175c708..87d659ae95eb 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -74,7 +74,7 @@ obj-$(CONFIG_GPIO_LP3943)             +=3D gpio-lp3943.=
+o
+>  obj-$(CONFIG_GPIO_LP873X)              +=3D gpio-lp873x.o
+>  obj-$(CONFIG_GPIO_LP87565)             +=3D gpio-lp87565.o
+>  obj-$(CONFIG_GPIO_LPC18XX)             +=3D gpio-lpc18xx.o
+> -obj-$(CONFIG_ARCH_LPC32XX)             +=3D gpio-lpc32xx.o
+> +obj-$(CONFIG_GPIO_LPC32XX)             +=3D gpio-lpc32xx.o
+>  obj-$(CONFIG_GPIO_LYNXPOINT)           +=3D gpio-lynxpoint.o
+>  obj-$(CONFIG_GPIO_MADERA)              +=3D gpio-madera.o
+>  obj-$(CONFIG_GPIO_MAX3191X)            +=3D gpio-max3191x.o
+> diff --git a/drivers/gpio/gpio-lpc32xx.c b/drivers/gpio/gpio-lpc32xx.c
+> index 24885b3db3d5..4e626c4235c2 100644
+> --- a/drivers/gpio/gpio-lpc32xx.c
+> +++ b/drivers/gpio/gpio-lpc32xx.c
+> @@ -16,36 +16,33 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/module.h>
+>
+> -#include <mach/hardware.h>
+> -#include <mach/platform.h>
+> -
+> -#define LPC32XX_GPIO_P3_INP_STATE              _GPREG(0x000)
+> -#define LPC32XX_GPIO_P3_OUTP_SET               _GPREG(0x004)
+> -#define LPC32XX_GPIO_P3_OUTP_CLR               _GPREG(0x008)
+> -#define LPC32XX_GPIO_P3_OUTP_STATE             _GPREG(0x00C)
+> -#define LPC32XX_GPIO_P2_DIR_SET                        _GPREG(0x010)
+> -#define LPC32XX_GPIO_P2_DIR_CLR                        _GPREG(0x014)
+> -#define LPC32XX_GPIO_P2_DIR_STATE              _GPREG(0x018)
+> -#define LPC32XX_GPIO_P2_INP_STATE              _GPREG(0x01C)
+> -#define LPC32XX_GPIO_P2_OUTP_SET               _GPREG(0x020)
+> -#define LPC32XX_GPIO_P2_OUTP_CLR               _GPREG(0x024)
+> -#define LPC32XX_GPIO_P2_MUX_SET                        _GPREG(0x028)
+> -#define LPC32XX_GPIO_P2_MUX_CLR                        _GPREG(0x02C)
+> -#define LPC32XX_GPIO_P2_MUX_STATE              _GPREG(0x030)
+> -#define LPC32XX_GPIO_P0_INP_STATE              _GPREG(0x040)
+> -#define LPC32XX_GPIO_P0_OUTP_SET               _GPREG(0x044)
+> -#define LPC32XX_GPIO_P0_OUTP_CLR               _GPREG(0x048)
+> -#define LPC32XX_GPIO_P0_OUTP_STATE             _GPREG(0x04C)
+> -#define LPC32XX_GPIO_P0_DIR_SET                        _GPREG(0x050)
+> -#define LPC32XX_GPIO_P0_DIR_CLR                        _GPREG(0x054)
+> -#define LPC32XX_GPIO_P0_DIR_STATE              _GPREG(0x058)
+> -#define LPC32XX_GPIO_P1_INP_STATE              _GPREG(0x060)
+> -#define LPC32XX_GPIO_P1_OUTP_SET               _GPREG(0x064)
+> -#define LPC32XX_GPIO_P1_OUTP_CLR               _GPREG(0x068)
+> -#define LPC32XX_GPIO_P1_OUTP_STATE             _GPREG(0x06C)
+> -#define LPC32XX_GPIO_P1_DIR_SET                        _GPREG(0x070)
+> -#define LPC32XX_GPIO_P1_DIR_CLR                        _GPREG(0x074)
+> -#define LPC32XX_GPIO_P1_DIR_STATE              _GPREG(0x078)
+> +#define LPC32XX_GPIO_P3_INP_STATE              (0x000)
+> +#define LPC32XX_GPIO_P3_OUTP_SET               (0x004)
+> +#define LPC32XX_GPIO_P3_OUTP_CLR               (0x008)
+> +#define LPC32XX_GPIO_P3_OUTP_STATE             (0x00C)
+> +#define LPC32XX_GPIO_P2_DIR_SET                        (0x010)
+> +#define LPC32XX_GPIO_P2_DIR_CLR                        (0x014)
+> +#define LPC32XX_GPIO_P2_DIR_STATE              (0x018)
+> +#define LPC32XX_GPIO_P2_INP_STATE              (0x01C)
+> +#define LPC32XX_GPIO_P2_OUTP_SET               (0x020)
+> +#define LPC32XX_GPIO_P2_OUTP_CLR               (0x024)
+> +#define LPC32XX_GPIO_P2_MUX_SET                        (0x028)
+> +#define LPC32XX_GPIO_P2_MUX_CLR                        (0x02C)
+> +#define LPC32XX_GPIO_P2_MUX_STATE              (0x030)
+> +#define LPC32XX_GPIO_P0_INP_STATE              (0x040)
+> +#define LPC32XX_GPIO_P0_OUTP_SET               (0x044)
+> +#define LPC32XX_GPIO_P0_OUTP_CLR               (0x048)
+> +#define LPC32XX_GPIO_P0_OUTP_STATE             (0x04C)
+> +#define LPC32XX_GPIO_P0_DIR_SET                        (0x050)
+> +#define LPC32XX_GPIO_P0_DIR_CLR                        (0x054)
+> +#define LPC32XX_GPIO_P0_DIR_STATE              (0x058)
+> +#define LPC32XX_GPIO_P1_INP_STATE              (0x060)
+> +#define LPC32XX_GPIO_P1_OUTP_SET               (0x064)
+> +#define LPC32XX_GPIO_P1_OUTP_CLR               (0x068)
+> +#define LPC32XX_GPIO_P1_OUTP_STATE             (0x06C)
+> +#define LPC32XX_GPIO_P1_DIR_SET                        (0x070)
+> +#define LPC32XX_GPIO_P1_DIR_CLR                        (0x074)
+> +#define LPC32XX_GPIO_P1_DIR_STATE              (0x078)
+>
+>  #define GPIO012_PIN_TO_BIT(x)                  (1 << (x))
+>  #define GPIO3_PIN_TO_BIT(x)                    (1 << ((x) + 25))
+> @@ -72,12 +69,12 @@
+>  #define LPC32XX_GPO_P3_GRP     (LPC32XX_GPI_P3_GRP + LPC32XX_GPI_P3_MAX)
+>
+>  struct gpio_regs {
+> -       void __iomem *inp_state;
+> -       void __iomem *outp_state;
+> -       void __iomem *outp_set;
+> -       void __iomem *outp_clr;
+> -       void __iomem *dir_set;
+> -       void __iomem *dir_clr;
+> +       unsigned long inp_state;
+> +       unsigned long outp_state;
+> +       unsigned long outp_set;
+> +       unsigned long outp_clr;
+> +       unsigned long dir_set;
+> +       unsigned long dir_clr;
+>  };
+>
+>  /*
+> @@ -165,16 +162,27 @@ static struct gpio_regs gpio_grp_regs_p3 =3D {
+>  struct lpc32xx_gpio_chip {
+>         struct gpio_chip        chip;
+>         struct gpio_regs        *gpio_grp;
+> +       void __iomem            *reg_base;
+>  };
+>
+> +static inline u32 gpreg_read(struct lpc32xx_gpio_chip *group, unsigned l=
+ong offset)
+> +{
+> +       return __raw_readl(group->reg_base + offset);
+> +}
+> +
+> +static inline void gpreg_write(struct lpc32xx_gpio_chip *group, u32 val,=
+ unsigned long offset)
+> +{
+> +       __raw_writel(val, group->reg_base + offset);
+> +}
+> +
+>  static void __set_gpio_dir_p012(struct lpc32xx_gpio_chip *group,
+>         unsigned pin, int input)
+>  {
+>         if (input)
+> -               __raw_writel(GPIO012_PIN_TO_BIT(pin),
+> +               gpreg_write(group, GPIO012_PIN_TO_BIT(pin),
+>                         group->gpio_grp->dir_clr);
+>         else
+> -               __raw_writel(GPIO012_PIN_TO_BIT(pin),
+> +               gpreg_write(group, GPIO012_PIN_TO_BIT(pin),
+>                         group->gpio_grp->dir_set);
+>  }
+>
+> @@ -184,19 +192,19 @@ static void __set_gpio_dir_p3(struct lpc32xx_gpio_c=
+hip *group,
+>         u32 u =3D GPIO3_PIN_TO_BIT(pin);
+>
+>         if (input)
+> -               __raw_writel(u, group->gpio_grp->dir_clr);
+> +               gpreg_write(group, u, group->gpio_grp->dir_clr);
+>         else
+> -               __raw_writel(u, group->gpio_grp->dir_set);
+> +               gpreg_write(group, u, group->gpio_grp->dir_set);
+>  }
+>
+>  static void __set_gpio_level_p012(struct lpc32xx_gpio_chip *group,
+>         unsigned pin, int high)
+>  {
+>         if (high)
+> -               __raw_writel(GPIO012_PIN_TO_BIT(pin),
+> +               gpreg_write(group, GPIO012_PIN_TO_BIT(pin),
+>                         group->gpio_grp->outp_set);
+>         else
+> -               __raw_writel(GPIO012_PIN_TO_BIT(pin),
+> +               gpreg_write(group, GPIO012_PIN_TO_BIT(pin),
+>                         group->gpio_grp->outp_clr);
+>  }
+>
+> @@ -206,31 +214,31 @@ static void __set_gpio_level_p3(struct lpc32xx_gpio=
+_chip *group,
+>         u32 u =3D GPIO3_PIN_TO_BIT(pin);
+>
+>         if (high)
+> -               __raw_writel(u, group->gpio_grp->outp_set);
+> +               gpreg_write(group, u, group->gpio_grp->outp_set);
+>         else
+> -               __raw_writel(u, group->gpio_grp->outp_clr);
+> +               gpreg_write(group, u, group->gpio_grp->outp_clr);
+>  }
+>
+>  static void __set_gpo_level_p3(struct lpc32xx_gpio_chip *group,
+>         unsigned pin, int high)
+>  {
+>         if (high)
+> -               __raw_writel(GPO3_PIN_TO_BIT(pin), group->gpio_grp->outp_=
+set);
+> +               gpreg_write(group, GPO3_PIN_TO_BIT(pin), group->gpio_grp-=
+>outp_set);
+>         else
+> -               __raw_writel(GPO3_PIN_TO_BIT(pin), group->gpio_grp->outp_=
+clr);
+> +               gpreg_write(group, GPO3_PIN_TO_BIT(pin), group->gpio_grp-=
+>outp_clr);
+>  }
+>
+>  static int __get_gpio_state_p012(struct lpc32xx_gpio_chip *group,
+>         unsigned pin)
+>  {
+> -       return GPIO012_PIN_IN_SEL(__raw_readl(group->gpio_grp->inp_state)=
+,
+> +       return GPIO012_PIN_IN_SEL(gpreg_read(group, group->gpio_grp->inp_=
+state),
+>                 pin);
+>  }
+>
+>  static int __get_gpio_state_p3(struct lpc32xx_gpio_chip *group,
+>         unsigned pin)
+>  {
+> -       int state =3D __raw_readl(group->gpio_grp->inp_state);
+> +       int state =3D gpreg_read(group, group->gpio_grp->inp_state);
+>
+>         /*
+>          * P3 GPIO pin input mapping is not contiguous, GPIOP3-0..4 is ma=
+pped
+> @@ -242,13 +250,13 @@ static int __get_gpio_state_p3(struct lpc32xx_gpio_=
+chip *group,
+>  static int __get_gpi_state_p3(struct lpc32xx_gpio_chip *group,
+>         unsigned pin)
+>  {
+> -       return GPI3_PIN_IN_SEL(__raw_readl(group->gpio_grp->inp_state), p=
+in);
+> +       return GPI3_PIN_IN_SEL(gpreg_read(group, group->gpio_grp->inp_sta=
+te), pin);
+>  }
+>
+>  static int __get_gpo_state_p3(struct lpc32xx_gpio_chip *group,
+>         unsigned pin)
+>  {
+> -       return GPO3_PIN_IN_SEL(__raw_readl(group->gpio_grp->outp_state), =
+pin);
+> +       return GPO3_PIN_IN_SEL(gpreg_read(group, group->gpio_grp->outp_st=
+ate), pin);
+>  }
+>
+>  /*
+> @@ -497,12 +505,18 @@ static int lpc32xx_of_xlate(struct gpio_chip *gc,
+>  static int lpc32xx_gpio_probe(struct platform_device *pdev)
+>  {
+>         int i;
+> +       void __iomem *reg_base;
+> +
+> +       reg_base =3D devm_platform_ioremap_resource(pdev, 0);
+> +       if (IS_ERR(reg_base))
+> +               return PTR_ERR(reg_base);
+>
+>         for (i =3D 0; i < ARRAY_SIZE(lpc32xx_gpiochip); i++) {
+>                 if (pdev->dev.of_node) {
+>                         lpc32xx_gpiochip[i].chip.of_xlate =3D lpc32xx_of_=
+xlate;
+>                         lpc32xx_gpiochip[i].chip.of_gpio_n_cells =3D 3;
+>                         lpc32xx_gpiochip[i].chip.of_node =3D pdev->dev.of=
+_node;
+> +                       lpc32xx_gpiochip[i].reg_base =3D reg_base;
+>                 }
+>                 devm_gpiochip_add_data(&pdev->dev, &lpc32xx_gpiochip[i].c=
+hip,
+>                                   &lpc32xx_gpiochip[i]);
+> @@ -527,3 +541,7 @@ static struct platform_driver lpc32xx_gpio_driver =3D=
+ {
+>  };
+>
+>  module_platform_driver(lpc32xx_gpio_driver);
+> +
+> +MODULE_AUTHOR("Kevin Wells <kevin.wells@nxp.com>");
+> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("GPIO driver for LPC32xx SoC");
+> --
+> 2.20.0
+>
 
-So it does for the openSUSE user:
-http://bugzilla.opensuse.org/show_bug.cgi?id=1142926#c12
+Applied, thanks!
 
-=========
-After installing that build of the kernel from your OBS home project,
-that did
-more than just fix the issue with the APIC timer screwing up. I now have
-all 4
-cores/8 threads available.
-
-I do see some errors from the ACPI layer that do indicate that there are
-some
-areas of the BIOS from HP that are buggy, but at this time, the machine
-seems
-to be working without issue.
-=========
-
-dmesg here:
-http://bugzilla.opensuse.org/attachment.cgi?id=813577
-
-thanks,
--- 
-js
-suse labs
+Bart
