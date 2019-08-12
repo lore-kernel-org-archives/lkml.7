@@ -2,192 +2,446 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACDBC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D2EC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 581D220842
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB3B20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:35:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbfHLKep (ORCPT
+        id S1727960AbfHLKf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:34:45 -0400
-Received: from mga03.intel.com ([134.134.136.65]:28382 "EHLO mga03.intel.com"
+        Mon, 12 Aug 2019 06:35:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47782 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727199AbfHLKeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:34:44 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 03:34:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,377,1559545200"; 
-   d="asc'?scan'208";a="170000591"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga008.jf.intel.com with ESMTP; 12 Aug 2019 03:34:39 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Pawel Laszczak <pawell@cadence.com>,
-        "devicetree\@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>
-Cc:     "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "hdegoede\@redhat.com" <hdegoede@redhat.com>,
-        "heikki.krogerus\@linux.intel.com" <heikki.krogerus@linux.intel.com>,
-        "robh+dt\@kernel.org" <robh+dt@kernel.org>,
-        "rogerq\@ti.com" <rogerq@ti.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jbergsagel\@ti.com" <jbergsagel@ti.com>,
-        "nsekhar\@ti.com" <nsekhar@ti.com>, "nm\@ti.com" <nm@ti.com>,
-        Suresh Punnoose <sureshp@cadence.com>,
-        "peter.chen\@nxp.com" <peter.chen@nxp.com>,
-        Jayshri Dajiram Pawar <jpawar@cadence.com>,
-        Rahul Kumar <kurahul@cadence.com>
-Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-In-Reply-To: <BYAPR07MB470931F8C699784CC88E21CBDDD30@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1562324238-16655-1-git-send-email-pawell@cadence.com> <1562324238-16655-6-git-send-email-pawell@cadence.com> <877e8tm25r.fsf@linux.intel.com> <BYAPR07MB4709152CB29B6B027ABEB688DDCF0@BYAPR07MB4709.namprd07.prod.outlook.com> <8736idnu0q.fsf@gmail.com> <BYAPR07MB4709B0A4FADFB76183D651DCDDD10@BYAPR07MB4709.namprd07.prod.outlook.com> <87k1bjvtvi.fsf@gmail.com> <BYAPR07MB470926DA6241B54FC5AF3C2ADDD30@BYAPR07MB4709.namprd07.prod.outlook.com> <87imr2u77c.fsf@gmail.com> <BYAPR07MB4709C07ED94C952886858F14DDD30@BYAPR07MB4709.namprd07.prod.outlook.com> <87d0hau37p.fsf@gmail.com> <BYAPR07MB470931F8C699784CC88E21CBDDD30@BYAPR07MB4709.namprd07.prod.outlook.com>
-Date:   Mon, 12 Aug 2019 13:34:35 +0300
-Message-ID: <877e7iu0xw.fsf@gmail.com>
+        id S1727323AbfHLKf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 06:35:27 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id ECEA168829;
+        Mon, 12 Aug 2019 10:35:26 +0000 (UTC)
+Received: from gondolin (dhcp-192-181.str.redhat.com [10.33.192.181])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6DD5C19C4F;
+        Mon, 12 Aug 2019 10:35:19 +0000 (UTC)
+Date:   Mon, 12 Aug 2019 12:35:17 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, mjrosato@linux.ibm.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+Subject: Re: [PATCH v5 6/7] s390: vfio-ap: add logging to vfio_ap driver
+Message-ID: <20190812123517.059046b6.cohuck@redhat.com>
+In-Reply-To: <1564612877-7598-7-git-send-email-akrowiak@linux.ibm.com>
+References: <1564612877-7598-1-git-send-email-akrowiak@linux.ibm.com>
+        <1564612877-7598-7-git-send-email-akrowiak@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 12 Aug 2019 10:35:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Wed, 31 Jul 2019 18:41:16 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
+> Added two DBF log files for logging events and errors; one for the vfio_ap
+> driver, and one for each matrix mediated device.
 
-Hi,
+While the s390dbf is useful (especially for accessing the information
+in dumps), trace points are a more standard interface. Have you
+evaluated that as well? (We probably should add something to the
+vfio/mdev code as well; tracing there is a good complement to tracing
+in vendor drivers.)
 
-Pawel Laszczak <pawell@cadence.com> writes:
->>>>Yet another thread? Can't you just run this right before giving back the
->>>>USB request? So, don't do it from IRQ handler, but from giveback path?
->>>
->>> Do you mean in:
->>> 	if (request->complete) {
->>> 		spin_unlock(&priv_dev->lock);
->>> 		if (priv_dev->run_garbage_collector) {
->>> 			....
->>> 		}
->>> 		usb_gadget_giveback_request(&priv_ep->endpoint,
->>> 					    request);
->>> 		spin_lock(&priv_dev->lock);
->>> 	}
->>> ??
->>
->>right, you can do it right before giving back the request. Or right
->>after.
->>
->>> I ask because this is finally also called from IRQ handler:
->>>
->>> cdns3_device_thread_irq_handler
->>>     -> cdns3_check_ep_interrupt_proceed
->>>         -> cdns3_transfer_completed
->>>             -> cdns3_gadget_giveback
->>>                 -> usb_gadget_giveback_request
->>
->>Did you notice that it doesn't reenable interrupts, though?
->
-> I noticed that there is a lack of reenabling interrupts :)
->
-> The problem is that If I have disabled interrupt the kernel complains
-> for using dma_free_coherent function in such place.=20
->
-> Here you have a fragment of complaints:=20
-> [ 7420.502863] WARNING: CPU: 0 PID: 10260 at kernel/dma/mapping.c:281 dma=
-_free_attrs+0xa0/0xd0
-> [ 7420.502866] Modules linked in: usb_f_mass_storage cdns3(OE) cdns3_pci_=
-wrap(OE) libcomposite
-> 		...
-> [ 7420.502965]  cdns3_gadget_giveback+0x159/0x2a0 [cdns3]
-> [ 7420.502975]  cdns3_transfer_completed+0xc5/0x3c0 [cdns3]
-> [ 7420.502986]  cdns3_device_thread_irq_handler+0x1b1/0xab0 [cdns3]
-> [ 7420.502991]  ? __schedule+0x333/0x7e0
-> [ 7420.503001]  irq_thread_fn+0x26/0x60
-> [ 7420.503006]  ? irq_thread+0xa8/0x1b0
-> [ 7420.503011]  irq_thread+0x10e/0x1b0
-> [ 7420.503015]  ? irq_forced_thread_fn+0x80/0x80
-> [ 7420.503021]  ? wake_threads_waitq+0x30/0x30
-> [ 7420.503029]  kthread+0x12c/0x150
-> [ 7420.503034]  ? irq_thread_check_affinity+0xe0/0xe0
-> [ 7420.503038]  ? kthread_park+0x90/0x90
-> [ 7420.503045]  ret_from_fork+0x3a/0x50
-> [ 7420.503061] irq event stamp: 2962
-> [ 7420.503065] hardirqs last  enabled at (2961): [<ffffffffb252672c>] _ra=
-w_spin_unlock_irq+0x2c/0x40
-> [ 7420.503070] hardirqs last disabled at (2962): [<ffffffffb25268f5>] _ra=
-w_spin_lock_irqsave+0x25/0x60
-> [ 7420.503074] softirqs last  enabled at (2918): [<ffffffffb2800340>] __d=
-o_softirq+0x340/0x451
-> [ 7420.503079] softirqs last disabled at (2657): [<ffffffffb1aa02b6>] irq=
-_exit+0xc6/0xd0
-> [ 7420.503082] ---[ end trace d02652af11011c3b ]---
->
-> Maybe it's a bug in implementation of this function.  I allocate memory w=
-ith flag GFP_ATOMIC with=20
-> disabled interrupt, but I can't free such memory.=20
+Also, isn't this independent of the rest of the series?
 
-I don't understand the intricacies of the coherent API to judge if it's
-a bug in the API itself. In any case, here's where the splat comes from:
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>  drivers/s390/crypto/vfio_ap_drv.c     |  34 +++++++
+>  drivers/s390/crypto/vfio_ap_ops.c     | 187 ++++++++++++++++++++++++++++++----
+>  drivers/s390/crypto/vfio_ap_private.h |  20 ++++
+>  3 files changed, 223 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+> index d8da520ae1fa..04a77246c22a 100644
+> --- a/drivers/s390/crypto/vfio_ap_drv.c
+> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+> @@ -22,6 +22,10 @@ MODULE_AUTHOR("IBM Corporation");
+>  MODULE_DESCRIPTION("VFIO AP device driver, Copyright IBM Corp. 2018");
+>  MODULE_LICENSE("GPL v2");
+>  
+> +uint dbglvl = 3;
+> +module_param(dbglvl, uint, 0444);
+> +MODULE_PARM_DESC(dbglvl, "VFIO_AP driver debug level.");
 
-void dma_free_attrs(struct device *dev, size_t size, void *cpu_addr,
-		dma_addr_t dma_handle, unsigned long attrs)
-{
-	const struct dma_map_ops *ops =3D get_dma_ops(dev);
+More the default debug level, isn't it? (IIRC, you can change the level
+of the s390dbfs dynamically.)
 
-	if (dma_release_from_dev_coherent(dev, get_order(size), cpu_addr))
-		return;
-	/*
-	 * On non-coherent platforms which implement DMA-coherent buffers via
-	 * non-cacheable remaps, ops->free() may call vunmap(). Thus getting
-	 * this far in IRQ context is a) at risk of a BUG_ON() or trying to
-	 * sleep on some machines, and b) an indication that the driver is
-	 * probably misusing the coherent API anyway.
-	 */
-	WARN_ON(irqs_disabled());
+> +
+>  static struct ap_driver vfio_ap_drv;
+>  
+>  struct ap_matrix_dev *matrix_dev;
+> @@ -158,6 +162,21 @@ static void vfio_ap_matrix_dev_destroy(void)
+>  	root_device_unregister(root_device);
+>  }
+>  
+> +static void vfio_ap_log_queues_in_use(struct ap_matrix_mdev *matrix_mdev,
+> +				  unsigned long *apm, unsigned long *aqm)
+> +{
+> +	unsigned long apid, apqi;
+> +
+> +	for_each_set_bit_inv(apid, apm, AP_DEVICES) {
+> +		for_each_set_bit_inv(apqi, aqm, AP_DOMAINS) {
+> +			VFIO_AP_DBF(matrix_dev, DBF_ERR,
+> +				    "queue %02lx.%04lx in use by mdev %s\n",
+> +				    apid, apqi,
+> +				    dev_name(mdev_dev(matrix_mdev->mdev)));
 
-	if (!cpu_addr)
-		return;
+I remember some issues wrt %s in s390dbfs (lifetime); will this dbf
+potentially outlive the mdev? Or is the string copied? (Or has s390dbf
+been changed to avoid that trap? If so, please disregard my comments.)
 
-	debug_dma_free_coherent(dev, size, cpu_addr, dma_handle);
-	if (dma_is_direct(ops))
-		dma_direct_free(dev, size, cpu_addr, dma_handle, attrs);
-	else if (ops->free)
-		ops->free(dev, size, cpu_addr, dma_handle, attrs);
-}
-EXPORT_SYMBOL(dma_free_attrs);
+> +		}
+> +	}
+> +}
+> +
+>  static bool vfio_ap_resource_in_use(unsigned long *apm, unsigned long *aqm)
+>  {
+>  	bool in_use = false;
+> @@ -179,6 +198,8 @@ static bool vfio_ap_resource_in_use(unsigned long *apm, unsigned long *aqm)
+>  			continue;
+>  
+>  		in_use = true;
+> +		vfio_ap_log_queues_in_use(matrix_mdev, apm_intrsctn,
+> +					  aqm_intrsctn);
+>  	}
+>  
+>  	mutex_unlock(&matrix_dev->lock);
+> @@ -186,6 +207,16 @@ static bool vfio_ap_resource_in_use(unsigned long *apm, unsigned long *aqm)
+>  	return in_use;
+>  }
+>  
+> +static int __init vfio_ap_debug_init(void)
+> +{
+> +	matrix_dev->dbf = debug_register(VFIO_AP_DRV_NAME, 1, 1,
+> +					 DBF_SPRINTF_MAX_ARGS * sizeof(long));
 
-maybe you're gonna have to fire up a workqueue to free this memory for
-you :-(
+It seems that debug_register() can possibly fail? (Unlikely, but we
+should check.)
 
-Unless someone else has better ideas. Alan, Greg, any ideas?
+> +	debug_register_view(matrix_dev->dbf, &debug_sprintf_view);
+> +	debug_set_level(matrix_dev->dbf, dbglvl);
+> +
+> +	return 0;
+> +}
+> +
+>  static int __init vfio_ap_init(void)
+>  {
+>  	int ret;
+> @@ -219,6 +250,8 @@ static int __init vfio_ap_init(void)
+>  		return ret;
+>  	}
+>  
+> +	vfio_ap_debug_init();
+> +
+>  	return 0;
+>  }
+>  
+> @@ -227,6 +260,7 @@ static void __exit vfio_ap_exit(void)
+>  	vfio_ap_mdev_unregister();
+>  	ap_driver_unregister(&vfio_ap_drv);
+>  	vfio_ap_matrix_dev_destroy();
+> +	debug_unregister(matrix_dev->dbf);
+>  }
+>  
+>  module_init(vfio_ap_init);
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index 0e748819abb6..1aa18eba43d0 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -167,17 +167,23 @@ static struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
+>  		case AP_RESPONSE_INVALID_ADDRESS:
+>  		default:
+>  			/* All cases in default means AP not operational */
+> -			WARN_ONCE(1, "%s: ap_aqic status %d\n", __func__,
+> -				  status.response_code);
+>  			goto end_free;
+>  		}
+>  	} while (retries--);
+>  
+> -	WARN_ONCE(1, "%s: ap_aqic status %d\n", __func__,
+> -		  status.response_code);
+>  end_free:
+>  	vfio_ap_free_aqic_resources(q);
+>  	q->matrix_mdev = NULL;
+> +	if (status.response_code) {
 
-=2D-=20
-balbi
+If I read the code correctly, we consider AP_RESPONSE_OTHERWISE_CHANGED
+a success as well, don't we? (Not sure what that means, though.)
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+> +		VFIO_AP_MDEV_DBF(q->matrix_mdev, DBF_WARN,
+> +			 "IRQ disable failed for queue %02x.%04x: status response code=%u\n",
+> +			 AP_QID_CARD(q->apqn), AP_QID_QUEUE(q->apqn),
+> +			 status.response_code);
+> +	} else {
+> +		VFIO_AP_MDEV_DBF(q->matrix_mdev, DBF_INFO,
+> +				 "IRQ disabled for queue %02x.%04x\n",
+> +				 AP_QID_CARD(q->apqn), AP_QID_QUEUE(q->apqn));
+> +	}
+>  	return status;
+>  }
+>  
 
------BEGIN PGP SIGNATURE-----
+(...)
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl1RQLsACgkQzL64meEa
-mQaIQRAA0TD8TKQptnOmAGv1zIYC6xgBgnsm0x2vGb6xL4PRP2OCZ5rtKxQ68m4V
-yp7zk5HSsVupbVXXvnlrwW1kkYSeSGy6Eu4R13SndS1AzDhoT4GXVQp4p4lnC/qP
-C7tHOOEFBAcN6/R5xmdfztd7OnNzvLVSyHQDjPTV/ZrhO5WA/7PiISDbrIJwko63
-ew2eR97yc6ieP0AntOPEePHqp07h2PkOSDBECZd3k4HqI2HhZI/yRK2x02dzYLTd
-UeKfQePHjlfyhoptUrsumaombaIvOi4OzaW+e/XXitZAzcQhlbjiKtBy8HzSiF0U
-4Y1ElXeeP1HqQBmWvOetFSgKLNjR5TAlRrWOp/x6XS8IUM/jyJHKIYqMWShjGbPZ
-/V2JvOhJH8z7/Gnldx47LC4qyHQaNFhtZ8DTvGTLyYiC4aJp1geNvOsn7h4hmUNp
-Un5t5ytPUuNrWITTN4V6w1S8eQem1GN947GTJmWDICYrlKWuBwAIfM7GrVgV0omp
-4YGouah8LD8o+h2IVHqAlRui/uNQMxk0h+MHHkxo8JbrFJfOdR2JBKUT36Npv4ut
-3KaCHAVG/LHY5+2LbqlbLZiH9gUjntSs0efbDDePT4OudMFqz3HX95MHAcNq1JgP
-s4NR1rdSKILE+EYOk9XT6ch5jNKqq9ylfwCuRhJtIShcyBGEHF0=
-=xDrg
------END PGP SIGNATURE-----
---=-=-=--
+> @@ -321,8 +340,29 @@ static void vfio_ap_matrix_init(struct ap_config_info *info,
+>  	matrix->adm_max = info->apxa ? info->Nd : 15;
+>  }
+>  
+> +static int vfio_ap_mdev_debug_init(struct ap_matrix_mdev *matrix_mdev)
+> +{
+> +	int ret;
+> +
+> +	matrix_mdev->dbf = debug_register(dev_name(mdev_dev(matrix_mdev->mdev)),
+> +					  1, 1,
+> +					  DBF_SPRINTF_MAX_ARGS * sizeof(long));
+> +
+> +	if (!matrix_mdev->dbf)
+> +		return -ENOMEM;
+
+Ok, here we do check for the result of debug_register().
+
+> +
+> +	ret = debug_register_view(matrix_mdev->dbf, &debug_sprintf_view);
+> +	if (ret)
+> +		return ret;
+
+Don't we need to clean up ->dbf in the failure case?
+
+Also, we probably need to check this as well for the other dbf.
+
+> +
+> +	debug_set_level(matrix_mdev->dbf, dbglvl);
+> +
+> +	return 0;
+> +}
+> +
+>  static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
+>  {
+> +	int ret;
+>  	struct ap_matrix_mdev *matrix_mdev;
+>  
+>  	if ((atomic_dec_if_positive(&matrix_dev->available_instances) < 0))
+> @@ -335,6 +375,13 @@ static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
+>  	}
+>  
+>  	matrix_mdev->mdev = mdev;
+> +
+> +	ret = vfio_ap_mdev_debug_init(matrix_mdev);
+> +	if (ret) {
+> +		kfree(matrix_mdev);
+> +		return ret;
+
+You also should bump available_instances again in the failure case.
+
+> +	}
+> +
+>  	vfio_ap_matrix_init(&matrix_dev->info, &matrix_mdev->matrix);
+>  	mdev_set_drvdata(mdev, matrix_mdev);
+>  	matrix_mdev->pqap_hook.hook = handle_pqap;
+> @@ -350,14 +397,19 @@ static int vfio_ap_mdev_remove(struct mdev_device *mdev)
+>  {
+>  	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>  
+> -	if (matrix_mdev->kvm)
+> +	if (matrix_mdev->kvm) {
+> +		VFIO_AP_MDEV_DBF(matrix_mdev, DBF_ERR,
+> +				 "remove rejected, mdev in use by %s",
+> +				 matrix_mdev->kvm->debugfs_dentry->d_iname);
+
+Can this be a problem when the kvm goes away (and the d_iname is gone)?
+
+Regardless of s390dbf implementation details, is d_iname even valid in
+all cases (no debugfs)?
+
+>  		return -EBUSY;
+> +	}
+>  
+>  	mutex_lock(&matrix_dev->lock);
+>  	vfio_ap_mdev_reset_queues(mdev);
+>  	list_del(&matrix_mdev->node);
+>  	mutex_unlock(&matrix_dev->lock);
+>  
+> +	debug_unregister(matrix_mdev->dbf);
+>  	kfree(matrix_mdev);
+>  	mdev_set_drvdata(mdev, NULL);
+>  	atomic_inc(&matrix_dev->available_instances);
+> @@ -406,6 +458,22 @@ static struct attribute_group *vfio_ap_mdev_type_groups[] = {
+>  	NULL,
+>  };
+>  
+> +static void vfio_ap_mdev_log_sharing_error(struct ap_matrix_mdev *logdev,
+> +					   const char *assigned_to,
+> +					   unsigned long *apm,
+> +					   unsigned long *aqm)
+> +{
+> +	unsigned long apid, apqi;
+> +
+> +	for_each_set_bit_inv(apid, apm, AP_DEVICES) {
+> +		for_each_set_bit_inv(apqi, aqm, AP_DOMAINS) {
+> +			VFIO_AP_MDEV_DBF(logdev, DBF_ERR,
+> +					 "queue %02lx.%04lx already assigned to %s\n",
+
+I'm also not 100% sure about string lifetimes here.
+
+> +					 apid, apqi, assigned_to);
+> +		}
+> +	}
+> +}
+> +
+>  /**
+>   * vfio_ap_mdev_verify_no_sharing
+>   *
+> @@ -448,22 +516,39 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev,
+>  		if (!bitmap_and(aqm, mdev_aqm, lstdev->matrix.aqm, AP_DOMAINS))
+>  			continue;
+>  
+> +		vfio_ap_mdev_log_sharing_error(matrix_mdev,
+> +					       dev_name(mdev_dev(lstdev->mdev)),
+> +					       apm, aqm);
+> +
+>  		return -EADDRINUSE;
+>  	}
+>  
+>  	return 0;
+>  }
+>  
+> -static int vfio_ap_mdev_validate_masks(struct ap_matrix_mdev *matrix_mdev,
+> +static int vfio_ap_mdev_validate_masks(struct ap_matrix_mdev *logdev,
+>  				       unsigned long *apm, unsigned long *aqm)
+>  {
+> -	int ret;
+> +	int ret = 0;
+> +	unsigned long apid, apqi;
+> +
+> +	for_each_set_bit_inv(apid, apm, AP_DEVICES) {
+> +		for_each_set_bit_inv(apqi, aqm, AP_DEVICES) {
+> +			if (!ap_owned_by_def_drv(apid, apqi))
+> +				continue;
+> +
+> +			VFIO_AP_MDEV_DBF(logdev, DBF_ERR,
+> +					 "queue %02lx.%04lx owned by zcrypt\n",
+
+s/zcrypt/default driver/ ?
+
+> +					 apid, apqi);
+> +
+> +			ret = -EADDRNOTAVAIL;
+> +		}
+> +	}
+>  
+> -	ret = ap_apqn_in_matrix_owned_by_def_drv(apm, aqm);
+>  	if (ret)
+> -		return (ret == 1) ? -EADDRNOTAVAIL : ret;
+> +		return ret;
+>  
+> -	return vfio_ap_mdev_verify_no_sharing(matrix_mdev, apm, aqm);
+> +	return vfio_ap_mdev_verify_no_sharing(logdev, apm, aqm);
+>  }
+>  
+>  static void vfio_ap_mdev_update_crycb(struct ap_matrix_mdev *matrix_mdev)
+
+(...)
+
+> @@ -1013,9 +1132,10 @@ static void vfio_ap_mdev_wait_for_qempty(ap_qid_t qid)
+>  			msleep(20);
+>  			break;
+>  		default:
+> -			pr_warn("%s: tapq response %02x waiting for queue %04x.%02x empty\n",
+> -				__func__, status.response_code,
+> -				AP_QID_CARD(qid), AP_QID_QUEUE(qid));
+> +			WARN_ONCE(1,
+> +				  "%s: tapq response %02x waiting for queue %04x.%02x empty\n",
+> +				  __func__, status.response_code,
+> +				  AP_QID_CARD(qid), AP_QID_QUEUE(qid));
+
+Why this change?
+
+>  			return;
+>  		}
+>  	} while (--retry);
+
+(...)
+
+> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+> index 5cc3c2ebf151..f717e43e10cf 100644
+> --- a/drivers/s390/crypto/vfio_ap_private.h
+> +++ b/drivers/s390/crypto/vfio_ap_private.h
+> @@ -24,6 +24,21 @@
+>  #define VFIO_AP_MODULE_NAME "vfio_ap"
+>  #define VFIO_AP_DRV_NAME "vfio_ap"
+>  
+> +#define DBF_ERR		3	/* error conditions   */
+> +#define DBF_WARN	4	/* warning conditions */
+> +#define DBF_INFO	5	/* informational      */
+> +#define DBF_DEBUG	6	/* for debugging only */
+
+Can you reuse the LOGLEVEL_* constants instead of rolling your own?
+
+> +
+> +#define DBF_SPRINTF_MAX_ARGS 5
+> +
+> +#define VFIO_AP_DBF(d_matrix_dev, ...) \
+> +	debug_sprintf_event(d_matrix_dev->dbf, ##__VA_ARGS__)
+> +
+> +#define VFIO_AP_MDEV_DBF(d_matrix_mdev, ...) \
+> +	debug_sprintf_event(d_matrix_mdev->dbf, ##__VA_ARGS__)
+> +
+> +extern uint dbglvl;
+> +
+>  /**
+>   * ap_matrix_dev - the AP matrix device structure
+>   * @device:	generic device structure associated with the AP matrix device
+> @@ -43,6 +58,7 @@ struct ap_matrix_dev {
+>  	struct list_head mdev_list;
+>  	struct mutex lock;
+>  	struct ap_driver  *vfio_ap_drv;
+> +	debug_info_t *dbf;
+>  };
+>  
+>  extern struct ap_matrix_dev *matrix_dev;
+> @@ -77,6 +93,9 @@ struct ap_matrix {
+>   * @group_notifier: notifier block used for specifying callback function for
+>   *		    handling the VFIO_GROUP_NOTIFY_SET_KVM event
+>   * @kvm:	the struct holding guest's state
+> + * @pqap_hook:	handler for PQAP instruction
+> + * @mdev:	the matrix mediated device
+
+Should updating the description for these two go into a trivial
+separate patch?
+
+> + * @dbf:	the debug info log
+>   */
+>  struct ap_matrix_mdev {
+>  	struct list_head node;
+> @@ -86,6 +105,7 @@ struct ap_matrix_mdev {
+>  	struct kvm *kvm;
+>  	struct kvm_s390_module_hook pqap_hook;
+>  	struct mdev_device *mdev;
+> +	debug_info_t *dbf;
+>  };
+>  
+>  extern int vfio_ap_mdev_register(void);
+
