@@ -2,33 +2,34 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7318C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF848C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8682087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9923C2087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:29:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="LjKOG3ZI"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="cL267T86"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbfHLH3A (ORCPT
+        id S1727066AbfHLH3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 03:29:00 -0400
-Received: from mail-eopbgr800072.outbound.protection.outlook.com ([40.107.80.72]:50070
+        Mon, 12 Aug 2019 03:29:06 -0400
+Received: from mail-eopbgr800049.outbound.protection.outlook.com ([40.107.80.49]:16208
         "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726963AbfHLH3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 03:29:00 -0400
+        id S1726963AbfHLH3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 03:29:05 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UQWY9u8JZMtaxFB5QSjUH0I3eMml0zFFlyGVZcxfFd5Wix/EGRaIF/3JCviB5t6jc31udzhSDB8jwk0KOdCYrzAS0QjvRd63NqPgMGXReFvV1tTtWUdAMI0DVRe75FiWgxpmRufLEtoh5Lgteyqa2scZBM+pcLHsGAp14SdlulqOyWo/gK5JBnroiajl3kFGa0bxr5hjfd9sbVE4AXtu1HnrwjgkRHdMp39KN7RqDZ2QD6uSe2GxDPUaT/g2OLzltmOxe1ioHw0L99AOUgdBrp/R9u14P4zXkJfeL+TyTgW47SafdPiYk308xUHOZY+pTv7VVXiJCSRiVP+Iu52BiQ==
+ b=ZKgGb6amhUCMBJCDbuoR363apBBPzT6HKsu+ORqeNralAdRQqvSiyiPoy6wbw1aZTNpEyzoKvOsdPAZ/FpyUuTCHnrxacqsCd2MCCE3Rd73G489dK4IvYd2ixAd/hTNF+8ksfKZVZ6lBPPdSt/R5OAbZW7hK1hox5splyGYvQwDSQLNZsX9rpCP/dpFQfrOcKpfI7dQeU8tdOIhZuk/GfrjWC4jia+lEtQBE1mN+kiMlDresU0a/mAGXRzmLrYVKGkIlujaTN4AOQrlvesHYkSqTfMg+Sf9fEIZoiNUpG7HUQyktKs4PCckfIMv3NKBZnXBBlQYWlhmF5a+GFCi4RQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nVUzGQQkg4Rgq8QH1gJQTAFS5Ha7zRG7XkVh6mE1zjM=;
- b=TLjxiSKjBHbjz1FcWYLNAqm8wPhTIOUWtcjFxanPnmhtcS7d4QQ0fkAjts+PP31Ij3T08GLClWERDrWzN+G8uGeRgEvV12n3Xl0bc4+0o3UbyV7a5G2xvwyaMTGg2Dbqwlv6HRlFMiLqasJQXIx2jVhKeMh6/Smz0hp5LH+A+tUokxqAVCbYqMzhEDL9zh9H5cr0MDztfOaDI6Ok3eJXSXJFZc3YJUsUs4K1DR9l7d2aPO+AShJy6eBqYMcyJQF8e4P5tLAs3PMU+VXISPBlEYO1wj742E93fNxRQ97JaxTP9u1ewEzq7Jyf3/n9kWej+l0Nxsa3nsQLmTqjKKLHOA==
+ bh=cSMmvAeIgCvSvsajDhb72aGebUIKVXn6o/W6hDVlOJ0=;
+ b=XfKgfhSqjDMyUaSfD/bxE0p6JHYVPLCGL6xL/qbcAq2vnHjmHMX9JSBnFa4OI9BtJYoac1JUcQtzBYO7M8yhjy1LfKz0oCyFyC1tVAhokrRHMMO+DsKoAxqGYyS8D8WaFJ5W4p5wiucSpRPBm8CBUNLo4oJ2nC3908sZLbfvW1fyVzpaHmKD9rET9lrR/zN8SB9o00/mWOfb2KPqqYw5J0mkBw9eFy7mHE7gfRSC0eUfFXJa0Tz5KRwHdwj6nQu/9NFEaw9UG9gHaMoTXLZElrqIuScfDC6deAhJ0DkB+QNnc7BVkrXliB26Z4ojyHD+2Jaz4faNrfTfcwGOA8uXyw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -36,18 +37,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nVUzGQQkg4Rgq8QH1gJQTAFS5Ha7zRG7XkVh6mE1zjM=;
- b=LjKOG3ZItawwkUlPpBgHd2WLTFGM4JBLpJJq6N2seZ9k9oHRi14leVBEiVhCXiSbfCoAwDhvBlnVzr7s/e7NPDgaYZI80H2bQGIBqj5UNjWvmVSFZqYxOdlmxlxxmh3fx3B5yQcFXoKpr3IRQPkjDfXXqyme+r315hjO/eCvP4A=
-Received: from MWHPR0201CA0008.namprd02.prod.outlook.com
- (2603:10b6:301:74::21) by SN1PR02MB3807.namprd02.prod.outlook.com
- (2603:10b6:802:31::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.21; Mon, 12 Aug
- 2019 07:28:51 +0000
-Received: from SN1NAM02FT041.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::201) by MWHPR0201CA0008.outlook.office365.com
- (2603:10b6:301:74::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2157.16 via Frontend
- Transport; Mon, 12 Aug 2019 07:28:50 +0000
+ bh=cSMmvAeIgCvSvsajDhb72aGebUIKVXn6o/W6hDVlOJ0=;
+ b=cL267T861NiikgjfOWVnZ0ND8+lkRkKkx7mxbFtaCxXVLK5DYLcTgOP7WBdyd82+e40himvoAwNipze1ntAtqNulV8NTgzJJXsQBKcA8Bh/bLlXxgY0gxbXUzLoizkQXtMi5Qg6gvNog8a/p0aR4uSgnRKSLpu/6ZByQtj1ISGc=
+Received: from BN6PR02CA0036.namprd02.prod.outlook.com (2603:10b6:404:5f::22)
+ by SN6PR02MB4832.namprd02.prod.outlook.com (2603:10b6:805:98::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.18; Mon, 12 Aug
+ 2019 07:29:01 +0000
+Received: from SN1NAM02FT036.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::203) by BN6PR02CA0036.outlook.office365.com
+ (2603:10b6:404:5f::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.16 via Frontend
+ Transport; Mon, 12 Aug 2019 07:29:00 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
@@ -56,83 +57,147 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT041.mail.protection.outlook.com (10.152.72.217) with Microsoft SMTP
+ SN1NAM02FT036.mail.protection.outlook.com (10.152.72.149) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2157.15
- via Frontend Transport; Mon, 12 Aug 2019 07:28:50 +0000
+ via Frontend Transport; Mon, 12 Aug 2019 07:29:00 +0000
 Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
         (envelope-from <appana.durga.rao@xilinx.com>)
-        id 1hx4l7-0001gU-TP; Mon, 12 Aug 2019 00:28:49 -0700
+        id 1hx4lI-0001gb-3I; Mon, 12 Aug 2019 00:29:00 -0700
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <appana.durga.rao@xilinx.com>)
-        id 1hx4l2-0000dz-Q3; Mon, 12 Aug 2019 00:28:44 -0700
+        id 1hx4lD-0000eU-08; Mon, 12 Aug 2019 00:28:55 -0700
 Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x7C7SeIj019445;
-        Mon, 12 Aug 2019 00:28:40 -0700
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x7C7SmfD021535;
+        Mon, 12 Aug 2019 00:28:49 -0700
 Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <appana.durga.rao@xilinx.com>)
-        id 1hx4ky-0000d9-2W; Mon, 12 Aug 2019 00:28:40 -0700
+        id 1hx4l6-0000d9-E0; Mon, 12 Aug 2019 00:28:48 -0700
 From:   Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
 To:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
         michal.simek@xilinx.com
 Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-Subject: [PATCH 0/5] can: xilinx_can: Bug fixes
-Date:   Mon, 12 Aug 2019 12:58:29 +0530
-Message-Id: <1565594914-18999-1-git-send-email-appana.durga.rao@xilinx.com>
+Subject: [PATCH 3/5] can: xilinx_can: Fix the data updation logic for CANFD FD frames
+Date:   Mon, 12 Aug 2019 12:58:32 +0530
+Message-Id: <1565594914-18999-4-git-send-email-appana.durga.rao@xilinx.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1565594914-18999-1-git-send-email-appana.durga.rao@xilinx.com>
+References: <1565594914-18999-1-git-send-email-appana.durga.rao@xilinx.com>
 X-RCIS-Action: ALLOW
 X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(136003)(346002)(2980300002)(199004)(189003)(63266004)(36386004)(50466002)(36756003)(8676002)(336012)(50226002)(107886003)(47776003)(2906002)(4326008)(9786002)(8936002)(5660300002)(476003)(81166006)(70206006)(2616005)(486006)(70586007)(16586007)(81156014)(4744005)(126002)(106002)(316002)(26005)(305945005)(51416003)(7696005)(6636002)(48376002)(426003)(478600001)(6666004)(186003)(356004);DIR:OUT;SFP:1101;SCL:1;SRVR:SN1PR02MB3807;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(39860400002)(396003)(2980300002)(199004)(189003)(356004)(6666004)(81166006)(8676002)(81156014)(6636002)(36386004)(478600001)(4326008)(316002)(16586007)(63266004)(47776003)(48376002)(36756003)(305945005)(106002)(50466002)(107886003)(50226002)(5660300002)(26005)(8936002)(486006)(70586007)(336012)(2906002)(11346002)(186003)(2616005)(476003)(70206006)(446003)(426003)(126002)(51416003)(7696005)(76176011)(9786002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4832;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e2ee0ce5-8149-40b2-0793-08d71ef6b8b7
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:SN1PR02MB3807;
-X-MS-TrafficTypeDiagnostic: SN1PR02MB3807:
-X-Microsoft-Antispam-PRVS: <SN1PR02MB3807A3A45658B7A819204788DCD30@SN1PR02MB3807.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 9d1b9bf3-c843-4e90-0943-08d71ef6bec8
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(4709080)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:SN6PR02MB4832;
+X-MS-TrafficTypeDiagnostic: SN6PR02MB4832:
+X-Microsoft-Antispam-PRVS: <SN6PR02MB4832DA188349BB6CA02F668FDCD30@SN6PR02MB4832.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Oob-TLC-OOBClassifiers: OLM:366;
 X-Forefront-PRVS: 012792EC17
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: LsEsAEDMzTiJm0rN+iUrxpRxRF0xFkRUgVgd4I65xBY1EnSM3xsFfN48vBgXQb5d6J8mgx+UFH9Hfro2vGT2u5Rg2BEnWPHdMYTEa4aBVzmPqBiGKU8FRsDgAkBeYrVmZHE5jOwp7u/8e4sDJCI0lSbTNk+5Iuv2dWr4pwwm9yiOi+PeYTS4o4esIYEazuLgadJliGSjYR84qaJu6HZ50Y84G1RVeHzB+VU5UZQNiRuaxpwThRIYu+GEBJCM/7CsD24H7NUa1/aEdlB4c/gzMB737CPVxRvZLUqYTUeYz7h0U8pw15Dyu3DgxFRqi2XhItcsc4H1zVEFA49zqLouq51zhuuxJCEZETNcFwXOAckUULFChoZYKPO6mspFlJ7+ygitkJ3VMiCK1HmryvUSRNTdjQo00hjgFLE5nTRu7eI=
+X-Microsoft-Antispam-Message-Info: ZQjE22ZkLQxq3quEUFQ+oBBy0aXnKwMidLDz2MGV1Fxa/Xz5rZTg2z4Lo0ueKVYPDbLMSwRuh9Sdrj8u/9W/0kXVacx2U7eR/bIsm7unj+z1ptO4q4xkzPysYAy6sz3BC8ecUs5tj7xkMlm2zm+ij/SiUyh5kOX78r0v/00FwJ62rAe7UKonXV91sqOyv4SCvR4H8vcnA6Tzpvzkr8UH2OV5dSGdJuo7FKci/Pv2tn24JqVpH+EUpw8wLhMFtJHNEIJUlhtDmr7ee0YZPITkyWFEzghnJLXR656iDgxa/uq5mQXSB49nlgK9+CQIj+PfiSVgVDwWitD9P7QBCOBABB1mjIJ1TvI51bke/NB4FYknnjFNGeNMURrmibarallQkpI1hrtskP2hFMgW3M7BUCuGexwFrEMEntH0BtUrbWI=
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2019 07:28:50.2772
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2019 07:29:00.4510
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e2ee0ce5-8149-40b2-0793-08d71ef6b8b7
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d1b9bf3-c843-4e90-0943-08d71ef6bec8
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR02MB3807
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4832
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series fixes below issues
---> Bugs in the driver w.r.to CANFD 2.0 IP support
---> Defer the probe if clock is not found
+commit c223da689324 ("can: xilinx_can: Add support for CANFD FD frames")
+is writing data to a wrong offset for FD frames.
 
-Appana Durga Kedareswara rao (3):
-  can: xilinx_can: Fix FSR register handling in the rx path
-  can: xilinx_can: Fix the data updation logic for CANFD FD frames
-  can: xilinx_can: Fix FSR register FL and RI mask values for canfd 2.0
+This patch fixes this issue.
 
-Srinivas Neeli (1):
-  can: xilinx_can: Fix the data phase btr1 calculation
+Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Reviewed-by: Shubhrajyoti Datta <Shubhrajyoti.datta@xilinx.com>
+Signed-off-by: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
+ drivers/net/can/xilinx_can.c | 29 ++++++++---------------------
+ 1 file changed, 8 insertions(+), 21 deletions(-)
 
-Venkatesh Yadav Abbarapu (1):
-  can: xilinx_can: defer the probe if clock is not found
-
- drivers/net/can/xilinx_can.c | 162 +++++++++++++++++++------------------------
- 1 file changed, 72 insertions(+), 90 deletions(-)
-
+diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c
+index 2d3399e..c9b951b 100644
+--- a/drivers/net/can/xilinx_can.c
++++ b/drivers/net/can/xilinx_can.c
+@@ -66,8 +66,7 @@ enum xcan_reg {
+ #define XCAN_FRAME_DLC_OFFSET(frame_base)	((frame_base) + 0x04)
+ #define XCAN_FRAME_DW1_OFFSET(frame_base)	((frame_base) + 0x08)
+ #define XCAN_FRAME_DW2_OFFSET(frame_base)	((frame_base) + 0x0C)
+-#define XCANFD_FRAME_DW_OFFSET(frame_base, n)	(((frame_base) + 0x08) + \
+-						 ((n) * XCAN_CANFD_FRAME_SIZE))
++#define XCANFD_FRAME_DW_OFFSET(frame_base)	((frame_base) + 0x08)
+ 
+ #define XCAN_CANFD_FRAME_SIZE		0x48
+ #define XCAN_TXMSG_FRAME_OFFSET(n)	(XCAN_TXMSG_BASE_OFFSET + \
+@@ -600,7 +599,7 @@ static void xcan_write_frame(struct xcan_priv *priv, struct sk_buff *skb,
+ 	if (priv->devtype.cantype == XAXI_CANFD ||
+ 	    priv->devtype.cantype == XAXI_CANFD_2_0) {
+ 		for (i = 0; i < cf->len; i += 4) {
+-			ramoff = XCANFD_FRAME_DW_OFFSET(frame_offset, dwindex) +
++			ramoff = XCANFD_FRAME_DW_OFFSET(frame_offset) +
+ 					(dwindex * XCANFD_DW_BYTES);
+ 			priv->write_reg(priv, ramoff,
+ 					be32_to_cpup((__be32 *)(cf->data + i)));
+@@ -816,10 +815,8 @@ static int xcanfd_rx(struct net_device *ndev, int frame_base)
+ 	struct net_device_stats *stats = &ndev->stats;
+ 	struct canfd_frame *cf;
+ 	struct sk_buff *skb;
+-	u32 id_xcan, dlc, data[2] = {0, 0}, dwindex = 0, i, fsr, readindex;
++	u32 id_xcan, dlc, data[2] = {0, 0}, dwindex = 0, i, dw_offset;
+ 
+-	fsr = priv->read_reg(priv, XCAN_FSR_OFFSET);
+-	readindex = fsr & XCAN_FSR_RI_MASK;
+ 	id_xcan = priv->read_reg(priv, XCAN_FRAME_ID_OFFSET(frame_base));
+ 	dlc = priv->read_reg(priv, XCAN_FRAME_DLC_OFFSET(frame_base));
+ 	if (dlc & XCAN_DLCR_EDL_MASK)
+@@ -863,26 +860,16 @@ static int xcanfd_rx(struct net_device *ndev, int frame_base)
+ 	/* Check the frame received is FD or not*/
+ 	if (dlc & XCAN_DLCR_EDL_MASK) {
+ 		for (i = 0; i < cf->len; i += 4) {
+-			if (priv->devtype.flags & XCAN_FLAG_CANFD_2)
+-				data[0] = priv->read_reg(priv,
+-					(XCAN_RXMSG_2_FRAME_OFFSET(readindex) +
+-					(dwindex * XCANFD_DW_BYTES)));
+-			else
+-				data[0] = priv->read_reg(priv,
+-					(XCAN_RXMSG_FRAME_OFFSET(readindex) +
+-					(dwindex * XCANFD_DW_BYTES)));
++			dw_offset = XCANFD_FRAME_DW_OFFSET(frame_base) +
++					(dwindex * XCANFD_DW_BYTES);
++			data[0] = priv->read_reg(priv, dw_offset);
+ 			*(__be32 *)(cf->data + i) = cpu_to_be32(data[0]);
+ 			dwindex++;
+ 		}
+ 	} else {
+ 		for (i = 0; i < cf->len; i += 4) {
+-			if (priv->devtype.flags & XCAN_FLAG_CANFD_2)
+-				data[0] = priv->read_reg(priv,
+-					XCAN_RXMSG_2_FRAME_OFFSET(readindex) +
+-								  i);
+-			else
+-				data[0] = priv->read_reg(priv,
+-					XCAN_RXMSG_FRAME_OFFSET(readindex) + i);
++			dw_offset = XCANFD_FRAME_DW_OFFSET(frame_base);
++			data[0] = priv->read_reg(priv, dw_offset + i);
+ 			*(__be32 *)(cf->data + i) = cpu_to_be32(data[0]);
+ 		}
+ 	}
 -- 
 2.7.4
 
