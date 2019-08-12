@@ -2,117 +2,250 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD51C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A2CC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 013112085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:41:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="tXM4FaMZ"
+	by mail.kernel.org (Postfix) with ESMTP id 2479D2087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:45:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfHLFl1 (ORCPT
+        id S1726900AbfHLFpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 01:41:27 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:14787 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725852AbfHLFl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 01:41:27 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 466Ppn2qyjzB09bJ;
-        Mon, 12 Aug 2019 07:41:21 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=tXM4FaMZ; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id AL-sfYbjepFg; Mon, 12 Aug 2019 07:41:21 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 466Ppn1fyPzB09bG;
-        Mon, 12 Aug 2019 07:41:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1565588481; bh=aSvscXTe0OBobtl058VSABuVDDxAT9o0ET91HCafAZA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=tXM4FaMZLqgfa4UR8st58PV1szduvw8v5jkRKMjbScOYDFsi4YNXO0oKicwpOmSqz
-         W0zVjFAoBzwPimyH5wKH18OkZFcMly4tE5ma3IQW9gs5GoppZEaa7lmdtJyrnu5vgi
-         oAav5yZjevb1WD9dxYLY9XsxX/Y1sHQhaAawM2+s=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 249CB8B791;
-        Mon, 12 Aug 2019 07:41:26 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id isJuowyE8M47; Mon, 12 Aug 2019 07:41:26 +0200 (CEST)
-Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EA6148B752;
-        Mon, 12 Aug 2019 07:41:25 +0200 (CEST)
-Subject: Re: [PATCH 1/2] powerpc: Allow flush_icache_range to work across
- ranges >4GB
-To:     Alastair D'Silva <alastair@au1.ibm.com>
-Cc:     stable@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190809004548.22445-1-alastair@au1.ibm.com>
- <a9bcc457-9f9b-7010-6796-fb263135f8bc@c-s.fr>
- <72a3fca157a508a9f1bc6ea20801b9227d788f1d.camel@au1.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <d481e068-5688-d507-b78c-c927ce7a70d3@c-s.fr>
-Date:   Mon, 12 Aug 2019 07:41:25 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 12 Aug 2019 01:45:01 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33516 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725852AbfHLFpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 01:45:01 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8ED0FBDC1E026B7FB095;
+        Mon, 12 Aug 2019 13:44:58 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Mon, 12 Aug 2019
+ 13:44:54 +0800
+Subject: Re: [PATCH 2/2] vfio_pci: make use of update_irq_devid and optimize
+ irq ops
+To:     Ben Luo <luoben@linux.alibaba.com>, <tglx@linutronix.de>,
+        <alex.williamson@redhat.com>, <linux-kernel@vger.kernel.org>
+CC:     <tao.ma@linux.alibaba.com>, <gerry@linux.alibaba.com>
+References: <cover.1565263723.git.luoben@linux.alibaba.com>
+ <461a0d843c8ac4c31de61d08f4940884742f77b5.1565263723.git.luoben@linux.alibaba.com>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <6b11b0fa-06a9-fd92-084c-faaca116dc74@huawei.com>
+Date:   Mon, 12 Aug 2019 13:44:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-In-Reply-To: <72a3fca157a508a9f1bc6ea20801b9227d788f1d.camel@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <461a0d843c8ac4c31de61d08f4940884742f77b5.1565263723.git.luoben@linux.alibaba.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 12/08/2019 à 03:19, Alastair D'Silva a écrit :
-> On Fri, 2019-08-09 at 10:59 +0200, Christophe Leroy wrote:
->>
->> Le 09/08/2019 à 02:45, Alastair D'Silva a écrit :
->>> From: Alastair D'Silva <alastair@d-silva.org>
->>>
->>> When calling flush_icache_range with a size >4GB, we were masking
->>> off the upper 32 bits, so we would incorrectly flush a range
->>> smaller
->>> than intended.
->>>
->>> This patch replaces the 32 bit shifts with 64 bit ones, so that
->>> the full size is accounted for.
->>>
->>> Heads-up for backporters: the old version of flush_dcache_range is
->>> subject to a similar bug (this has since been replaced with a C
->>> implementation).
->>
->> Can you submit a patch to stable, explaining this ?
->>
+On 2019/8/8 20:07, Ben Luo wrote:
+> When userspace (e.g. qemu) triggers a switch between KVM
+> irqfd and userspace eventfd, only dev_id of irq action
+> (i.e. the "trigger" in this patch's context) will be
+> changed, but a free-then-request-irq action is taken in
+> current code. And, irq affinity setting in VM will also
+> trigger a free-then-request-irq action, which actully
+> changes nothing, but only fires a producer re-registration
+> to update irte in case that posted-interrupt is in use.
 > 
-> This patch was sent to stable too - or did you mean send another patch
-> for the stable asm version of flush_dcache_range?
+> This patch makes use of update_irq_devid() and optimize
+> both cases above, which reduces the risk of losing interrupt
+> and also cuts some overhead.
+> 
+> Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
+> Reviewed-by: Liu Jiang <gerry@linux.alibaba.com>
+> ---
+>  drivers/vfio/pci/vfio_pci_intrs.c | 100 +++++++++++++++++++++++---------------
+>  1 file changed, 62 insertions(+), 38 deletions(-)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vfio_pci_intrs.c
+> index 3fa3f72..1323dc8 100644
+> --- a/drivers/vfio/pci/vfio_pci_intrs.c
+> +++ b/drivers/vfio/pci/vfio_pci_intrs.c
+> @@ -285,69 +285,93 @@ static int vfio_msi_set_vector_signal(struct vfio_pci_device *vdev,
+>  				      int vector, int fd, bool msix)
+>  {
+>  	struct pci_dev *pdev = vdev->pdev;
+> -	struct eventfd_ctx *trigger;
+> +	struct eventfd_ctx *trigger = NULL;
+
+struct eventfd_ctx *trigger = NULL;
+struct pci_dev *pdev = vdev->pdev;
+
+to maintain reverse christmas tree?
+
+>  	int irq, ret;
+>  
+>  	if (vector < 0 || vector >= vdev->num_ctx)
+>  		return -EINVAL;
+>  
+> +	if (fd >= 0) {
+> +		trigger = eventfd_ctx_fdget(fd);
+> +		if (IS_ERR(trigger))
+> +			return PTR_ERR(trigger);
+
+It seems vdev->ctx[vector].trigger is freed even if  fd < 0 before
+this patch. If it return here, vdev->ctx[vector].trigger is not free?
+
+> +	}
+> +
+>  	irq = pci_irq_vector(pdev, vector);
+>  
+>  	if (vdev->ctx[vector].trigger) {
+> -		free_irq(irq, vdev->ctx[vector].trigger);
+> -		irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
+> -		kfree(vdev->ctx[vector].name);
+> -		eventfd_ctx_put(vdev->ctx[vector].trigger);
+> -		vdev->ctx[vector].trigger = NULL;
+> +		if (vdev->ctx[vector].trigger != trigger) {
+> +			if (trigger) {
+> +				ret = update_irq_devid(irq,
+> +						vdev->ctx[vector].trigger, trigger);
+> +				if (unlikely(ret)) {
+> +					dev_info(&pdev->dev,
+> +							"update_irq_devid %d (token %p) fails: %d\n",
+> +							irq, vdev->ctx[vector].trigger, ret);
+> +					eventfd_ctx_put(trigger);
+> +					return ret;
+> +				}
+> +				irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
+> +				eventfd_ctx_put(vdev->ctx[vector].trigger);
+> +				vdev->ctx[vector].producer.token = trigger;
+> +				vdev->ctx[vector].trigger = trigger;
+> +			} else {
+> +				free_irq(irq, vdev->ctx[vector].trigger);
+> +				irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
+> +				kfree(vdev->ctx[vector].name);
+> +				eventfd_ctx_put(vdev->ctx[vector].trigger);
+> +				vdev->ctx[vector].trigger = NULL;
+> +			}
+> +		} else
+> +			irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
+>  	}
+
+Maybe adjust it a litte to reduce indent and to improve readability?
+
+	if (vdev->ctx[vector].trigger && vdev->ctx[vector].trigger == trigger) {
+		irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
+	} else if (vdev->ctx[vector].trigger && !trigger) {
+		free_irq(irq, vdev->ctx[vector].trigger);
+		irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
+		kfree(vdev->ctx[vector].name);
+		eventfd_ctx_put(vdev->ctx[vector].trigger);
+		vdev->ctx[vector].trigger = NULL;
+	} else if (vdev->ctx[vector].trigger) {
+		ret = update_irq_devid(irq, vdev->ctx[vector].trigger, trigger);
+		if (unlikely(ret)) {
+			dev_info(&pdev->dev,
+				 "update_irq_devid %d (token %p) fails: %d\n",
+				 irq, vdev->ctx[vector].trigger, ret);
+				 eventfd_ctx_put(trigger);
+				 return ret;
+		}
+		irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
+		eventfd_ctx_put(vdev->ctx[vector].trigger);
+		vdev->ctx[vector].producer.token = trigger;
+		vdev->ctx[vector].trigger = trigger;
+	}
+
+
+>  
+>  	if (fd < 0)
+>  		return 0;
+>  
+> -	vdev->ctx[vector].name = kasprintf(GFP_KERNEL, "vfio-msi%s[%d](%s)",
+> -					   msix ? "x" : "", vector,
+> -					   pci_name(pdev));
+> -	if (!vdev->ctx[vector].name)
+> -		return -ENOMEM;
+> +	if (vdev->ctx[vector].trigger == NULL) {
+
+It may be common to use the below check to do NULL checking:
+If (!vdev->ctx[vector].trigger)
+
+
+> +		vdev->ctx[vector].name = kasprintf(GFP_KERNEL, "vfio-msi%s[%d](%s)",
+> +						   msix ? "x" : "", vector,
+> +						   pci_name(pdev));
+> +		if (!vdev->ctx[vector].name) {
+> +			eventfd_ctx_put(trigger);
+> +			return -ENOMEM;
+> +		}
+>  
+> -	trigger = eventfd_ctx_fdget(fd);
+> -	if (IS_ERR(trigger)) {
+> -		kfree(vdev->ctx[vector].name);
+> -		return PTR_ERR(trigger);
+> -	}
+> +		/*
+> +		 * The MSIx vector table resides in device memory which may be cleared
+> +		 * via backdoor resets. We don't allow direct access to the vector
+> +		 * table so even if a userspace driver attempts to save/restore around
+> +		 * such a reset it would be unsuccessful. To avoid this, restore the
+> +		 * cached value of the message prior to enabling.
+> +		 */
+> +		if (msix) {
+> +			struct msi_msg msg;
+>  
+> -	/*
+> -	 * The MSIx vector table resides in device memory which may be cleared
+> -	 * via backdoor resets. We don't allow direct access to the vector
+> -	 * table so even if a userspace driver attempts to save/restore around
+> -	 * such a reset it would be unsuccessful. To avoid this, restore the
+> -	 * cached value of the message prior to enabling.
+> -	 */
+> -	if (msix) {
+> -		struct msi_msg msg;
+> +			get_cached_msi_msg(irq, &msg);
+> +			pci_write_msi_msg(irq, &msg);
+> +		}
+>  
+> -		get_cached_msi_msg(irq, &msg);
+> -		pci_write_msi_msg(irq, &msg);
+> -	}
+> +		ret = request_irq(irq, vfio_msihandler, 0,
+> +				  vdev->ctx[vector].name, trigger);
+> +		if (ret) {
+> +			kfree(vdev->ctx[vector].name);
+> +			eventfd_ctx_put(trigger);
+> +			return ret;
+> +		}
+>  
+> -	ret = request_irq(irq, vfio_msihandler, 0,
+> -			  vdev->ctx[vector].name, trigger);
+> -	if (ret) {
+> -		kfree(vdev->ctx[vector].name);
+> -		eventfd_ctx_put(trigger);
+> -		return ret;
+> +		vdev->ctx[vector].producer.token = trigger;
+> +		vdev->ctx[vector].producer.irq = irq;
+> +		vdev->ctx[vector].trigger = trigger;
+>  	}
+>  
+> -	vdev->ctx[vector].producer.token = trigger;
+> -	vdev->ctx[vector].producer.irq = irq;
+> +	/* always update irte for posted mode */
+>  	ret = irq_bypass_register_producer(&vdev->ctx[vector].producer);
+>  	if (unlikely(ret))
+>  		dev_info(&pdev->dev,
+>  		"irq bypass producer (token %p) registration fails: %d\n",
+>  		vdev->ctx[vector].producer.token, ret);
+>  
+> -	vdev->ctx[vector].trigger = trigger;
+> -
+>  	return 0;
+>  }
+>  
 > 
 
-Yes I meant a patch for your 'heads-up', in extenso a patch for fixing 
-flush_dcache_range().
-
-And for this patch, you put stable is copy of the mail, but for it to be 
-taken into account it needs to also explicitely include a Cc: 
-stable@vger.kernel.org in the commit message. I guess Michael will add 
-it for this time.
-
-Christophe
