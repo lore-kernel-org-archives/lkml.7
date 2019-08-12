@@ -2,95 +2,144 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D56C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0C8C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7539720820
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8263D20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:37:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iDOVokDe"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="X5Zrx/RX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbfHLFhd (ORCPT
+        id S1726953AbfHLFhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 01:37:33 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43193 "EHLO ozlabs.org"
+        Mon, 12 Aug 2019 01:37:54 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:60335 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725822AbfHLFhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 01:37:32 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 466PkL2HbHz9sML;
-        Mon, 12 Aug 2019 15:37:30 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565588250;
-        bh=56nDGULStuFYy08/Qv3AeFa1sDuUWtlfW/0UiSMMy8o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iDOVokDeNo0AH4e9iH8xqe/pW7fMaLnvrqZUzP7Z/hKIAwBDDejVez5iZhGwdQpxC
-         PBJ0jwbtmmWUckrToyCNrmMLN8f/7/7OY+co6d+Ytjb2WFZBbKg3UVJel+izPE7Spm
-         VtpkEHFrlilCP/ZvH2WnRS7Ivtg3D+cXJQfzrTogYNSnOGM0YKOI2eB2CRjBFD8+DD
-         GuydUwiXyxLh8rPzvXCNLICwSuQ2J4KqHTxgiIaK2NqzyhAVDJvkuwHFQ7fuHS3o4W
-         c+GEbib0cpiPBPoqyr+T3yPpz3AusclfgDJoKLXKFl6KR2b6WrKQIhl27utWqu/Sjy
-         deOkAjjd1mzQA==
-Date:   Mon, 12 Aug 2019 15:37:29 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Add SPDX kernel tree to linux-next
-Message-ID: <20190812153729.104d4451@canb.auug.org.au>
-In-Reply-To: <20190812045731.GA5834@kroah.com>
-References: <20190810115533.GA6302@kroah.com>
-        <20190812072659.606b2107@canb.auug.org.au>
-        <20190812045731.GA5834@kroah.com>
+        id S1725822AbfHLFhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 01:37:54 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 466Pkg1rcXzB09b6;
+        Mon, 12 Aug 2019 07:37:47 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=X5Zrx/RX; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 0YC7Mo5kUr_h; Mon, 12 Aug 2019 07:37:47 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 466Pkg0mpxzB09Zx;
+        Mon, 12 Aug 2019 07:37:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1565588267; bh=zPe15F+ILVBJRhKhdywc5kLzTzCdvp6RH6BIPfn1N74=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=X5Zrx/RXi/1fNWx7+BFLq+zHp0ZniXnyyKmusuRcixROTUiRtVKRXeQcHhDNfq+/4
+         bCMf8RFOzID7B/1Yqi4RvcZA8hHE8XeWjQSFDQcf4ko/Ki+7VZ00UhQFQaOmGSnXYU
+         VtY3DFWXwGAK4sGuHiUhrPrHkObcNCV4vN7jQ2cY=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 032B38B791;
+        Mon, 12 Aug 2019 07:37:52 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 3WTBnr-EQg93; Mon, 12 Aug 2019 07:37:51 +0200 (CEST)
+Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CCB228B752;
+        Mon, 12 Aug 2019 07:37:51 +0200 (CEST)
+Subject: Re: [PATCH] powerpc: Avoid clang warnings around setjmp and longjmp
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Cc:     clang-built-linux@googlegroups.com, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20190812023214.107817-1-natechancellor@gmail.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <5da5478f-9320-43bd-0f5e-430db2ee9195@c-s.fr>
+Date:   Mon, 12 Aug 2019 07:37:51 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ommFjSvsNb6tQoHDzqUgSg4";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20190812023214.107817-1-natechancellor@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ommFjSvsNb6tQoHDzqUgSg4
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Greg,
 
-On Mon, 12 Aug 2019 06:57:31 +0200 Greg KH <gregkh@linuxfoundation.org> wro=
-te:
->
-> On Mon, Aug 12, 2019 at 07:26:59AM +1000, Stephen Rothwell wrote:
-> > Added from today.  One question: is this meant to be a -next tree or a
-> > -fixes tree? =20
->=20
-> A "-fixes" tree, it should be sent to Linus for the latest release.
+Le 12/08/2019 à 04:32, Nathan Chancellor a écrit :
+> Commit aea447141c7e ("powerpc: Disable -Wbuiltin-requires-header when
+> setjmp is used") disabled -Wbuiltin-requires-header because of a warning
+> about the setjmp and longjmp declarations.
+> 
+> r367387 in clang added another diagnostic around this, complaining that
+> there is no jmp_buf declaration.
+> 
+[...]
 
-OK, I will move it up among the other -fixes trees from tomorrow.
+> 
+> Cc: stable@vger.kernel.org # 4.19+
+> Link: https://github.com/ClangBuiltLinux/linux/issues/625
+> Link: https://github.com/llvm/llvm-project/commit/3be25e79477db2d31ac46493d97eca8c20592b07
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+> 
+[...]
 
---=20
-Cheers,
-Stephen Rothwell
+> 
+>   arch/powerpc/kernel/Makefile | 5 +++--
+>   arch/powerpc/xmon/Makefile   | 5 +++--
 
---Sig_/ommFjSvsNb6tQoHDzqUgSg4
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+What about scripts/recordmcount.c and scripts/sortextable.c which 
+contains calls to setjmp() and longjmp() ?
 
------BEGIN PGP SIGNATURE-----
+And arch/um/ ?
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1Q+xkACgkQAVBC80lX
-0Gyxtwf+OAsBnc6Y5oR6vFj8oy18hPes+Qg5erpdRM1Ww4hqrX+EOU9A1srq+pvf
-67RtvfON6lZ1HydJcAvsItZtEb9IchuUw3Lykz6wiG5AAASglHMzIsYVuITpxSDs
-SPVWG7GZnNly8BwzomB4nW1Yvb3KSZWI3VCTGJ9LX/JkdIGLj1iddfEekyxxXz8M
-1dytbdoknz//gXvjPbr9dI/4lM5Jr8p1ttnqeOOmpDIQOn5c+S+erA0XHPV3/P8M
-Ej7EmAP57tlEoG9l+XZD/PA78W3Cp3LYBMFPt/dH1ljYmIA72zG9Z/XH9ndNxl3c
-+3BUZE8Ofix7FZo+EMXvUYzrNPM+cw==
-=fh3x
------END PGP SIGNATURE-----
+Christophe
 
---Sig_/ommFjSvsNb6tQoHDzqUgSg4--
+>   2 files changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+> index ea0c69236789..44e340ed4722 100644
+> --- a/arch/powerpc/kernel/Makefile
+> +++ b/arch/powerpc/kernel/Makefile
+> @@ -5,8 +5,9 @@
+>   
+>   CFLAGS_ptrace.o		+= -DUTS_MACHINE='"$(UTS_MACHINE)"'
+>   
+> -# Disable clang warning for using setjmp without setjmp.h header
+> -CFLAGS_crash.o		+= $(call cc-disable-warning, builtin-requires-header)
+> +# Avoid clang warnings about longjmp and setjmp built-ins (inclusion of setjmp.h and declaration of jmp_buf type)
+> +CFLAGS_crash.o		+= $(call cc-disable-warning, builtin-requires-header) \
+> +			   $(call cc-disable-warning, incomplete-setjmp-declaration)
+>   
+>   ifdef CONFIG_PPC64
+>   CFLAGS_prom_init.o	+= $(NO_MINIMAL_TOC)
+> diff --git a/arch/powerpc/xmon/Makefile b/arch/powerpc/xmon/Makefile
+> index f142570ad860..53f341391210 100644
+> --- a/arch/powerpc/xmon/Makefile
+> +++ b/arch/powerpc/xmon/Makefile
+> @@ -1,8 +1,9 @@
+>   # SPDX-License-Identifier: GPL-2.0
+>   # Makefile for xmon
+>   
+> -# Disable clang warning for using setjmp without setjmp.h header
+> -subdir-ccflags-y := $(call cc-disable-warning, builtin-requires-header)
+> +# Avoid clang warnings about longjmp and setjmp built-ins (inclusion of setjmp.h and declaration of jmp_buf type)
+> +subdir-ccflags-y := $(call cc-disable-warning, builtin-requires-header) \
+> +		    $(call cc-disable-warning, incomplete-setjmp-declaration)
+>   
+>   GCOV_PROFILE := n
+>   KCOV_INSTRUMENT := n
+> 
