@@ -2,129 +2,120 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53674C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE46BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2490120679
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565619571;
-	bh=/CzpgItuJ/zcOwp1y38I4Sy2xSjjpNvMuoMEDpCuOaI=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=eBdZo9LRwvPgpyJacblfX/X7yi/K7Fd+UCcGvQP9IaHRwZdeUJlitny9+M53JiZUe
-	 9VasBIXa09PHCxwfli9uL5CWpp/pMlL5GxrXN293cwGPzFW1p7ap0ZiPbxkXiTHgVK
-	 ia2Ls5E67WGpQQId6v1NnTNEcIYclFmWMR3HYxmA=
+	by mail.kernel.org (Postfix) with ESMTP id 9283F20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:19:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMOs+pdP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfHLOTa (ORCPT
+        id S1727482AbfHLOTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 10:19:30 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35385 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbfHLOT3 (ORCPT
+        Mon, 12 Aug 2019 10:19:46 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45327 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727206AbfHLOTq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 10:19:29 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g17so8382260otl.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 07:19:29 -0700 (PDT)
+        Mon, 12 Aug 2019 10:19:46 -0400
+Received: by mail-ed1-f66.google.com with SMTP id x19so97907678eda.12
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 07:19:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IYKcaAxSUXSLWlSHYCezPjjjdoMELWaMbCrjl2NmRfY=;
-        b=Pt7fCr91W6DvDkWtDDrseUuFrBpRTivsHBGGm945oUNY3jvMDupYAaBs/A6/imyoNX
-         VHp5rbs2Q+y01R+frFrsKy7svjhhQSU3cUwrpBwMowOVoDjtS4wqSYSqxzLmnaXX1fyA
-         1+H2C/x3LF5CFPjjEOefGHy/H+loF1NQJS28Y=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iivSnktAPjnlSD94HraPJYOzwcYbsXnIpC6UfUdyt1w=;
+        b=fMOs+pdPUCunxL+VlNcjw0inCDUYczP4DNptKnjmA+iIs5iSqH+wFAb8OrnnzW+/WA
+         dKDu7dbSukUIPfTFBWJhE/zpPpNi4d/npgGREOyPQobiFFC3IkgFfnIRh5pau+IDtYkB
+         zIo9yf9VPrennmv7Um0d2pvSe/Fi9IFiNOn55hi69JQbNsX/Ye5yN7O5CHomfR/atg0U
+         jRyjuKUVRfUTjYa79LmeQYD6FjnhXfPmX2Xcpxlgw3b0e21TR6gNCSzw/QzpZLPqoOwE
+         b5LuCj6lzisfF7UXyeh8hseX96dcFgAWM/BpeA6nnDEk63beE/fsFT0cKPfX2iq/FsyX
+         CGUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IYKcaAxSUXSLWlSHYCezPjjjdoMELWaMbCrjl2NmRfY=;
-        b=R6t+KC7EsmYB9LrWqpEieXcAzyj9y1zTNiiipKrCtrieoM4lLU3L+ojedFbR3AFqbK
-         eucW98IO5S4NOobP0WCBnCycqTWG4LcSDoXEFwwuKoIZnQQFCOjj1LBoec1X9tzaNGxW
-         WUcJC5xkY6EK2qo0pjpxmz8/8GGUyeZyiUbGLlmQ9eaL1CAWfB5wZVGITzSzTv+hQmS3
-         uxdZKCyLAXaiMPwc7rh5CbS2o836F1vNzuKllExh8ioC5Hy/Rr/KfrdCmdYGZgoTLgCK
-         q+CSsZbZA1zZ/SchTWf7+jJIZHV5YbrtW80amsSM0Q5kNbcSxK6Wfj4ANvSTUezp37uU
-         Btpw==
-X-Gm-Message-State: APjAAAU3vkuk8bxTF0F/Xq/iD/8g3LG35qzjOHcTQbfADckj0IsZpBHU
-        /2+ArjcycdL3825FAhrK6IgtKA==
-X-Google-Smtp-Source: APXvYqwRoQCDCl9xIntsgU9V7rgFqpBRfFWdjGKdxXbtNChGf1uUzb4+He0XY+3ELPWgT+eGxZmReg==
-X-Received: by 2002:a5d:93cd:: with SMTP id j13mr14863113ioo.39.1565619568913;
-        Mon, 12 Aug 2019 07:19:28 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id w5sm20166879iom.33.2019.08.12.07.19.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 07:19:28 -0700 (PDT)
-Subject: Re: [PATCH 1/3] media: vimc: move private defines to a common header
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        helen.koike@collabora.com,
-        =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
-Cc:     mchehab@kernel.org, hverkuil@xs4all.nl,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-References: <cover.1565386363.git.skhan@linuxfoundation.org>
- <142cc5a6a10f75ed97de8b2d9b1e73b034a88b2f.1565386363.git.skhan@linuxfoundation.org>
- <20190810141432.GA30451@pendragon.ideasonboard.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <ab0b316c-8b6d-0faf-b046-97c8065b8afd@linuxfoundation.org>
-Date:   Mon, 12 Aug 2019 08:19:27 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iivSnktAPjnlSD94HraPJYOzwcYbsXnIpC6UfUdyt1w=;
+        b=WOmKFHVxhPWIWDL0ZjGRGW1ct/TpAsYJYbwrhGLanrtloKGF1w0AHcrWr/61apbk3x
+         rLs2V0bClhaElsKWIrSrCiua3Ppbt8WXvyLBc/iNTaYR1TczaxKJgYAO8s755QJc87V1
+         mLl32Jpyr330z+bb1kk1vAVA7oZKWsNpZUXhSLZDqah2g1RV8lYgVpt8gk3mYpPkzFuG
+         pCHbVFpPjQswxM6/PsDw9g+cZyGFU6SBF2dcT2lNmvenDP2bX4r4tEAxYDW2h72nOCKf
+         l1oWSWA2lcGd0xN/2b0nljVTDMXamuIrSxU2916h0FlX3tidfTx9fEtpQVid99kx32hr
+         RDtg==
+X-Gm-Message-State: APjAAAXk/iiPzlGwwhXVYkAVtaUHfz7hYcQOe6l5rNNuXmF0HCvZYmad
+        bBVzbITRU4YIirvKYu9fDBk13n+yCLusmZo1V4otlQ==
+X-Google-Smtp-Source: APXvYqwQwtRUxyYdAzg6UYSw5I32xydKcD2cfRkVoq9f+wPzG7Wf/Glg+QM3pFBDeHQfTN47bFsy95PkFkLII4ZwZEs=
+X-Received: by 2002:a50:b66f:: with SMTP id c44mr36867903ede.171.1565619584492;
+ Mon, 12 Aug 2019 07:19:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190810141432.GA30451@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190809030352.8387-1-hslester96@gmail.com> <20190809151114.GD3963@sirena.co.uk>
+ <CANhBUQ09+q9_=7nMs63w4KRLGOhW1=z-AnuwOzAnUrWRY6uC6A@mail.gmail.com>
+ <20190812110719.GE4592@sirena.co.uk> <CANhBUQ2XWAJBgfzbiiffaJ60wnoP__kDPHOF4d+Z_1b1HzSpPQ@mail.gmail.com>
+In-Reply-To: <CANhBUQ2XWAJBgfzbiiffaJ60wnoP__kDPHOF4d+Z_1b1HzSpPQ@mail.gmail.com>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Mon, 12 Aug 2019 22:19:33 +0800
+Message-ID: <CANhBUQ1QZUU9Fv+usQhUvs4ehy-OTTf2UWRKb333Bsfga=422Q@mail.gmail.com>
+Subject: Re: [PATCH] regulator: core: Add devres versions of regulator_enable/disable
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+On Mon, Aug 12, 2019 at 8:51 PM Chuhong Yuan <hslester96@gmail.com> wrote:
+>
+> On Mon, Aug 12, 2019 at 7:07 PM Mark Brown <broonie@kernel.org> wrote:
+> >
+> > On Sat, Aug 10, 2019 at 09:44:45AM +0800, Chuhong Yuan wrote:
+> > > On Fri, Aug 9, 2019 at 11:11 PM Mark Brown <broonie@kernel.org> wrote:
+> >
+> > > > I'm not super keen on managed versions of these functions since they're
+> > > > very likely to cause reference counting issues between the probe/remove
+> > > > path and the suspend/resume path which aren't obvious from the code, I'm
+> > > > especially worried about double frees on release.
+> >
+> > > I find that 29 of 31 cases I found call regulator_disable() only when encounter
+> > > probe failure or in .remove.
+> > > So I think the devm versions of regulator_enable/disable() will not cause big
+> > > problems.
+> >
+> > There's way more drivers using regulators than that...
+> >
+>
+> I wrote a new coccinelle script to detect all regulator_disable() in .remove,
+> 101 drivers are found in total.
+> Within them, 25 drivers cannot benefit from devres version of regulator_enable()
+> since they have additional non-devm operations after
+> regulator_disable() in .remove.
 
-On 8/10/19 8:14 AM, Laurent Pinchart wrote:
-> Hi Shuah,
-> 
-> Thank you for the patch.
-> 
-> On Fri, Aug 09, 2019 at 03:45:41PM -0600, Shuah Khan wrote:
->> In preparation for collapsing the component driver structure into
->> a monolith, move private device structure defines to a new common
->> header file.
-> 
-> Apart from the vimc_device structure, this doesn't seem to be needed.
-> I'd rather keep each structure private to the .c file that handles it,
-> and only share vimc_device globally.
-> 
+I find 6 of 25 can benefit from devm_regulator_enable().
+They are included in my previously found 147 cases so I incorrectly skipped them
+while checking.
+Therefore, there are 82 cases that can benefit from devm_regulator_enable() and
+66 of them(80.5%) only call regulator_disable() when fail in probe or
+in .remove.
 
-Right. I initially thought that I needed these global. Once I completed
-the patches without needing these as global, I overlooked updating the
-patches.
-
-I will take care of that. Any thoughts on vimc.h vs. adding vimc_device
-struct to existing vimc-common.h
-
-As I explained to Helen in response to her comment about:
-
-"My thinking is that vimc-common.h is common for all the subdevs and
-putting vimc-core defines and structures it shares it with the subdev
-files can be in a separate file.
-
-It is more of design choice to keep structures and defined organized.
-Originally I was thinking all the subdev device structires need to be
-global, and my patch set I sent out as such doesn't need that. I just
-overlooked that when I sent the patches out.
-
-This reduces the number of things that need to be common, I don't really
-have any strong reasons for either choice of adding common defines to
-vimc-common.h vs vimc.h - maybe with a slight tilt towards vimc.h"
-
-Thanks all for a quick review and testing. I will work on v2 with your
-comments. I want to make sure topology either looks the same as what
-is in media master. I think it is, but I want to double check.
-
-thanks,
--- Shuah
+> Within the left 76 cases, 60 drivers (79%) only use
+> regulator_disable() when encounter
+> probe failure or in .remove.
+> The left 16 cases mostly use regulator_disable() in _suspend().
+> Furthermore, 3 cases of 76 are found to forget to disable regulator
+> when fail in probe.
+> So I think a devres version of regulator_enable/disable() has more
+> benefits than potential
+> risk.
+>
+> > > I even found a driver to forget to disable regulator when encounter
+> > > probe failure,
+> > > which is drivers/iio/adc/ti-adc128s052.c.
+> > > And a devm version of regulator_enable() can prevent such mistakes.
+> >
+> > Yes, it's useful for that.
