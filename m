@@ -2,362 +2,111 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B641C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CAEC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B256620679
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:50:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R/zhnL0M"
+	by mail.kernel.org (Postfix) with ESMTP id 57C592075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:50:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565653836;
+	bh=+Nz+NtCbaaqfrcm+wym7Q36wwuWOyQMe7nw20hWUlv4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YHWCF1DrnB7phtqWLyTuR+t/fA7d6NdmQIQUsrzyIIhsTf8BGMEESHoZ2h0PuLnGw
+	 ndOemmgpL4vzOFhGl9SMSQU/mrLdIYSHD5+G0OuHYFNNRh2pzJFbqhFP79WwGi/I+m
+	 ugM35vIyuSXMGbGIqvY3mtQ1lrQ/sg40/j646Tks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfHLXuH (ORCPT
+        id S1726987AbfHLXuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 19:50:07 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43227 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbfHLXuH (ORCPT
+        Mon, 12 Aug 2019 19:50:35 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45814 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbfHLXuf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 19:50:07 -0400
-Received: by mail-pl1-f194.google.com with SMTP id 4so41492467pld.10
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 16:50:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XOzXkxuzDaSaCrNnzQfIfBKq5vFfoJ+Ut/PxPNA6VMg=;
-        b=R/zhnL0M6dBOq/DnCdstND60EDNy5mjSDrbwBKVQ31apNFU5aKroWFSwYDhbzpmV/Y
-         5ARtumowsAOU9rYkaWwJU86HX8FKGJSpkmb8TWJBV1M8CUKfHm58VlG6GVl5D7P9c/Ud
-         xn5gC5ziAPDM8gGWU3jz4iz3pNNP8zUJq72thMy+oHaAu7jtGAE6Yo38bCQrBspPq1XG
-         gVw/uRMAfrFgteDX+oP/1DxSaD9RcUQBLd9GkE8viyulqpnXheWLi12YhuJ6xbp6EBu6
-         pGJH49PyDKakALsJhE5mPaDARfpsDLUUL3zpQwvHS7dy4p+05C3GlM3tVPRn3Wa38H8v
-         HB7g==
+        Mon, 12 Aug 2019 19:50:35 -0400
+Received: by mail-ot1-f65.google.com with SMTP id m24so12762253otp.12;
+        Mon, 12 Aug 2019 16:50:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XOzXkxuzDaSaCrNnzQfIfBKq5vFfoJ+Ut/PxPNA6VMg=;
-        b=SXUB+Pqbg5HAUlug2/TZ+FspfKSzXPm1qYfpZuwROKpyyA/oKAJWSqYcGo2WBcufh/
-         f4yM1NNkJt+NI3lwqHcnCAYWeAt3MTMvtafs1D29btHME9bQkEq062ymEVYlo9GAax03
-         +pxKe/aXkbyDlXfk0M6pAd10dS8xmt8mAj2VsIUkcdno7/2O2/KjRKHf6HP+gILJIpSp
-         VuJczoEvK5Ov2QgddsZrNZfP6+ESRbW8U3tyQc+34OOhFJwZacOHqtqhIMhvle7SW4hZ
-         2cpVMNVtXGrjMvi8y86L05kyZoVh2ZjHdTdkwDjf4wXe8US+3F/iNa4yp9CLmSPdqb2U
-         jQjg==
-X-Gm-Message-State: APjAAAWEOtXMVKD7pc/Kce37qOfG+1Y3dXcpbeBcD+IXhU3vrigavgg3
-        vdeb4+siGyfFfiRZk1pF7Mw80NGzUdY6X3spRv7Zyw==
-X-Google-Smtp-Source: APXvYqw8RH3QhZtn2zg+6ZSIQWki2YySMWpBZmVUAcb1flnX/HZvuciK4QnB9UWPboFzgI3QSk1xSjwO9cijLE8dUk8=
-X-Received: by 2002:a17:902:a9c3:: with SMTP id b3mr4162381plr.179.1565653806199;
- Mon, 12 Aug 2019 16:50:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wu+Yll/a4SFv+CqAeDhttcKl/XjxKpsIr9S2nfoZc4M=;
+        b=lHB30SRIzvFYGAsID4zuLtSUGM2t2/5xKA4ljm7KsygAkJmnE10YQ55Mh3YQfgXxK5
+         Nc+MO2e5QglZXqC1TsajZoZlVCkh2B6yF/8Zn/7YNmGPBAV/ci9vVC/Wd7tSmF6UqfAb
+         3Eb3Tv/ug88K5u1X+wfIfOtIMm80/sVonzb1eRnvTmeMaSFJ6vgiBh6S8q/kTFaBMc2X
+         ur89c7MT78FJyDyyWPIo3qVgKTrSWjYkBn7Kw6uklPEpFhmvfn5mG7LXDSv9KKD3WchM
+         /+52RLuvJ/G0AX9hWNbGGlV/5hprQUJnHvgdYieYi4HP230klo5xBD1JKJ9JofXZdB0L
+         DX7g==
+X-Gm-Message-State: APjAAAXtExRToNvnVD+MlgECm2g31MjiZTAN4AMZMDfKKAgJPwnCOIVu
+        4rTj9CbjBb1CCCLDb412SA==
+X-Google-Smtp-Source: APXvYqx5Pv9z7njFaTAOthJEXcWpHg1NmhbYE+TwIbn7UqsGcIDNzFfJG9k3aLDX0IZoXAaHdvDBEg==
+X-Received: by 2002:a6b:6f06:: with SMTP id k6mr13023011ioc.232.1565653834113;
+        Mon, 12 Aug 2019 16:50:34 -0700 (PDT)
+Received: from localhost ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id t133sm153140480iof.21.2019.08.12.16.50.33
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 16:50:33 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 17:50:32 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Evgeny Kolesnikov <evgenyz@gmail.com>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/5] power: reset: Add UART-based MCU poweroff DT bindings
+Message-ID: <20190812235032.GA8575@bogus>
+References: <cover.1563822216.git.evgenyz@gmail.com>
+ <cda16032dc5679a557230cbdb63702b105782b3b.1563822216.git.evgenyz@gmail.com>
 MIME-Version: 1.0
-References: <20190801231046.105022-1-nhuck@google.com>
-In-Reply-To: <20190801231046.105022-1-nhuck@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 12 Aug 2019 16:49:54 -0700
-Message-ID: <CAKwvOdncQM4i=Xm=fP2teY0qsKfUnL2Tgts-0GjZGH4nVx_JaQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] ARM: UNWINDER_FRAME_POINTER implementation for Clang
-To:     Nathan Huckleberry <nhuck@google.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Tri Vo <trong@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cda16032dc5679a557230cbdb63702b105782b3b.1563822216.git.evgenyz@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 4:10 PM 'Nathan Huckleberry' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
->
-> The stackframe setup when compiled with clang is different.
-> Since the stack unwinder expects the gcc stackframe setup it
-> fails to print backtraces. This patch adds support for the
-> clang stackframe setup.
->
-> Cc: clang-built-linux@googlegroups.com
-> Suggested-by: Tri Vo <trong@google.com>
-> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-
-Thanks for the patch! This is something definitely useful to have
-implemented with Clang.  Some initial thoughts below:
-
+On Mon, Jul 22, 2019 at 09:53:01PM +0200, Evgeny Kolesnikov wrote:
+> This adds device tree bindings of the poweroff driver
+> for power managing micro controller units that are connected
+> to a board via the UART interface.
+> 
+> Signed-off-by: Evgeny Kolesnikov <evgenyz@gmail.com>
 > ---
->  arch/arm/Kconfig.debug   |   4 +-
->  arch/arm/Makefile        |   2 +-
->  arch/arm/lib/backtrace.S | 134 ++++++++++++++++++++++++++++++++++++---
->  3 files changed, 128 insertions(+), 12 deletions(-)
->
-> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-> index 85710e078afb..92fca7463e21 100644
-> --- a/arch/arm/Kconfig.debug
-> +++ b/arch/arm/Kconfig.debug
-> @@ -56,7 +56,7 @@ choice
->
->  config UNWINDER_FRAME_POINTER
->         bool "Frame pointer unwinder"
-> -       depends on !THUMB2_KERNEL && !CC_IS_CLANG
-> +       depends on !THUMB2_KERNEL
->         select ARCH_WANT_FRAME_POINTERS
->         select FRAME_POINTER
->         help
-> @@ -1872,7 +1872,7 @@ config DEBUG_UNCOMPRESS
->           When this option is set, the selected DEBUG_LL output method
->           will be re-used for normal decompressor output on multiplatform
->           kernels.
-> -
+>  .../bindings/power/reset/uart-poweroff.txt    | 38 +++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/reset/uart-poweroff.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/reset/uart-poweroff.txt b/Documentation/devicetree/bindings/power/reset/uart-poweroff.txt
+> new file mode 100644
+> index 000000000000..86d036271b51
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/reset/uart-poweroff.txt
+> @@ -0,0 +1,38 @@
+> +* UART-based PM MCU power off driver
 > +
->
->  config UNCOMPRESS_INCLUDE
->         string
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index c3624ca6c0bc..a593d9c4e18a 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -36,7 +36,7 @@ KBUILD_CFLAGS += $(call cc-option,-mno-unaligned-access)
->  endif
->
->  ifeq ($(CONFIG_FRAME_POINTER),y)
-> -KBUILD_CFLAGS  +=-fno-omit-frame-pointer -mapcs -mno-sched-prolog
-> +KBUILD_CFLAGS  +=-fno-omit-frame-pointer $(call cc-option,-mapcs,) $(call cc-option,-mno-sched-prolog,)
->  endif
->
->  ifeq ($(CONFIG_CPU_BIG_ENDIAN),y)
-> diff --git a/arch/arm/lib/backtrace.S b/arch/arm/lib/backtrace.S
-> index 1d5210eb4776..fd64eec9f6ae 100644
-> --- a/arch/arm/lib/backtrace.S
-> +++ b/arch/arm/lib/backtrace.S
-> @@ -14,10 +14,7 @@
->  @ fp is 0 or stack frame
->
->  #define frame  r4
-> -#define sv_fp  r5
-> -#define sv_pc  r6
+> +Some devices have a microcontroller controlling the main power
+> +supply. This microcontroller is connected to UART of the SoC.
+> +Sending a sequence of characters tells the MCU to turn
+> +the power off.
 
-It looks like sv_fp and sv_pc have the same values for both GCC and
-Clang, maybe they don't need to be moved here?
+IMO, you should have a node representing the specific microcontroller. 
+Generic binding attempts like this generally don't work well because you 
+need a never ending addition of properties to deal with h/w (and f/w in 
+this case) differences. The properties you already have are evidence of 
+this.
 
->  #define mask   r7
-> -#define offset r8
+Now, if you want a common driver, then that is a separate issue. You can 
+have multiple, specific bindings map to a common driver (or not, it's up 
+to the OS).
 
-So GCC has an offset while Clang has sv_lr.
-
->
->  ENTRY(c_backtrace)
->
-> @@ -25,7 +22,8 @@ ENTRY(c_backtrace)
->                 ret     lr
->  ENDPROC(c_backtrace)
->  #else
-> -               stmfd   sp!, {r4 - r8, lr}      @ Save an extra register so we have a location...
-> +               stmfd   sp!, {r4 - r8, fp, lr}  @ Save an extra register
-
-Not having a preprocessor guard here makes it seem like GCC will
-always have to move the additional register, even if it's not using
-it?
-
-> +                                               @ so we have a location..
->                 movs    frame, r0               @ if frame pointer is zero
->                 beq     no_frame                @ we have no stack frames
->
-> @@ -35,11 +33,119 @@ ENDPROC(c_backtrace)
->   THUMB(                orreq   mask, #0x03             )
->                 movne   mask, #0                @ mask for 32-bit
->
-> -1:             stmfd   sp!, {pc}               @ calculate offset of PC stored
-> -               ldr     r0, [sp], #4            @ by stmfd for this CPU
-> -               adr     r1, 1b
-> -               sub     offset, r0, r1
->
-> +#if defined(CONFIG_CC_IS_CLANG)
-
-#ifdef CONFIG_CC_IS_CLANG
-
-I'd only use `#if defined(foo)` if there were 2 or more things I
-needed to check: `#if defined(foo) || defined(bar)`.
-
-> +/*
-> + * Clang does not store pc or sp in function prologues
-> + *             so we don't know exactly where the function
-> + *             starts.
-> + * We can treat the current frame's lr as the saved pc and the
-> + *             preceding frame's lr as the lr, but we can't
-> + *             trace the most recent call.
-> + * Inserting a false stack frame allows us to reference the
-> + *             function called last in the stacktrace.
-> + * If the call instruction was a bl we can look at the callers
-> + *             branch instruction to calculate the saved pc.
-> + * We can recover the pc in most cases, but in cases such as
-> + *             calling function pointers we cannot. In this
-> + *             case, default to using the lr. This will be
-> + *             some address in the function, but will not
-> + *             be the function start.
-> + * Unfortunately due to the stack frame layout we can't dump
-> + *              r0 - r3, but these are less frequently saved.
-> + *
-> + * Stack frame layout:
-> + *             <larger addresses>
-> + *             saved lr
-> + *    frame => saved fp
-> + *             optionally saved caller registers (r4 - r10)
-> + *             optionally saved arguments (r0 - r3)
-> + *             <top of stack frame>
-> + *             <smaller addressses>
-
-s/addressses/addresses/
-
-> + *
-> + * Functions start with the following code sequence:
-> + * corrected pc =>  stmfd sp!, {..., fp, lr}
-> + *                 add fp, sp, #x
-> + *                 stmfd sp!, {r0 - r3} (optional)
-> + */
-> +#define sv_fp  r5
-> +#define sv_pc  r6
-> +#define sv_lr   r8
-> +               add     frame, sp, #20          @ switch to false frame
-> +for_each_frame:        tst     frame, mask             @ Check for address exceptions
-> +               bne     no_frame
-> +
-> +1001:          ldr     sv_pc, [frame, #4]      @ get saved 'pc'
-> +1002:          ldr     sv_fp, [frame, #0]      @ get saved fp
-
-These two sections seem to differ between GCC and Clang only for the
-offsets. Could these be made into preprocessor defines and more code
-shared?
-
-> +
-> +               teq     sv_fp, #0               @ make sure next frame exists
-> +               beq     no_frame
-> +
-> +1003:          ldr     sv_lr, [sv_fp, #4]      @ get saved lr from next frame
-> +
-> +               //try to find function start
-
-Use either /* c89 comments */ or @arm assembler comments.
-
-> +               ldr     r0, [sv_lr, #-4]        @ get call instruction
-> +               ldr     r3, .Ldsi+8
-> +               and     r2, r3, r0              @ is this a bl call
-> +               teq     r2, r3
-> +               bne     finished_setup          @ give up if it's not
-> +               and     r0, #0xffffff           @ get call offset 24-bit int
-> +               lsl     r0, r0, #8              @ sign extend offset
-> +               asr     r0, r0, #8
-> +               ldr     sv_pc, [sv_fp, #4]      @ get lr address
-> +               add     sv_pc, sv_pc, #-4       @ get call instruction address
-> +               add     sv_pc, sv_pc, #8        @ take care of prefetch
-> +               add     sv_pc, sv_pc, r0, lsl #2 @ find function start
-> +               b       finished_setup
-
-Do we need an explicit branch to this label? Wouldn't we just fall
-through to it?j
-
-> +
-> +finished_setup:
-> +
-> +               bic     sv_pc, sv_pc, mask      @ mask PC/LR for the mode
-> +
-> +1004:          mov     r0, sv_pc
-> +
-> +               mov     r1, sv_lr
-> +               mov     r2, frame
-> +               bic     r1, r1, mask            @ mask PC/LR for the mode
-> +               bl      dump_backtrace_entry
-> +
-> +1005:          ldr     r1, [sv_pc, #0]         @ if stmfd sp!, {..., fp, lr}
-> +               ldr     r3, .Ldsi               @ instruction exists,
-> +               teq     r3, r1, lsr #11
-> +               ldr     r0, [frame]             @ locals are stored in
-> +                                               @ the preceding frame
-> +               subeq   r0, r0, #4
-> +               bleq    dump_backtrace_stm      @ dump saved registers
-> +
-> +               teq     sv_fp, #0               @ zero saved fp means
-> +               beq     no_frame                @ no further frames
-> +
-> +               cmp     sv_fp, frame            @ next frame must be
-> +               mov     frame, sv_fp            @ above the current frame
-> +               bhi     for_each_frame
-> +
-> +1006:          adr     r0, .Lbad
-> +               mov     r1, frame
-> +               bl      printk
-> +no_frame:      ldmfd   sp!, {r4 - r8, fp, pc}
-> +ENDPROC(c_backtrace)
-> +               .pushsection __ex_table,"a"
-> +               .align  3
-> +               .long   1001b, 1006b
-> +               .long   1002b, 1006b
-> +               .long   1003b, 1006b
-> +               .long   1004b, 1006b
-> +               .popsection
-> +
-> +.Lbad:         .asciz  "Backtrace aborted due to bad frame pointer <%p>\n"
-> +               .align
-
-Probably don't need to duplicate the above (up to ENDPROC), but the
-below hunk looks compiler specific.
-
-> +.Ldsi:         .word   0xe92d4800 >> 11        @ stmfd sp!, {... fp, lr}
-> +               .word   0xe92d0000 >> 11        @ stmfd sp!, {}
-> +               .word   0x0b000000              @ bl if these bits are set
-> +
-> +ENDPROC(c_backtrace)
-
-Duplicate ENDPROC?
-
-> +
-> +#else
->  /*
->   * Stack frame layout:
->   *             optionally saved caller registers (r4 - r10)
-> @@ -55,6 +161,15 @@ ENDPROC(c_backtrace)
->   *                  stmfd sp!, {r0 - r3} (optional)
->   * corrected pc =>  stmfd sp!, {..., fp, ip, lr, pc}
->   */
-> +#define sv_fp  r5
-> +#define sv_pc  r6
-> +#define offset r8
-> +
-> +1:             stmfd   sp!, {pc}               @ calculate offset of PC stored
-> +               ldr     r0, [sp], #4            @ by stmfd for this CPU
-> +               adr     r1, 1b
-> +               sub     offset, r0, r1
-> +
->  for_each_frame:        tst     frame, mask             @ Check for address exceptions
->                 bne     no_frame
->
-> @@ -98,7 +213,7 @@ for_each_frame:      tst     frame, mask             @ Check for address exceptions
->  1006:          adr     r0, .Lbad
->                 mov     r1, frame
->                 bl      printk
-> -no_frame:      ldmfd   sp!, {r4 - r8, pc}
-> +no_frame:      ldmfd   sp!, {r4 - r8, fp, pc}
-
-More work for GCC...
-
->  ENDPROC(c_backtrace)
->
->                 .pushsection __ex_table,"a"
-> @@ -115,3 +230,4 @@ ENDPROC(c_backtrace)
->                 .word   0xe92d0000 >> 11        @ stmfd sp!, {}
->
->  #endif
-> +#endif
-
-It would be nice to put comments on the end of these #endif's what
-condition they're terminating:
-
-#endif /* CONFIG_CC_IS_CLANG
-#endif /* !defined(CONFIG_FRAME_POINTER) || !defined(CONFIG_PRINTK) */
-Maybe also the #else's above.
-
-Will send more thoughts tomorrow/throughout the week.
--- 
-Thanks,
-~Nick Desaulniers
+Rob
