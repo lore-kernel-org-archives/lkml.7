@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3111C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19804C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE67206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE32E208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:24:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x/4t2gzj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PykGLLrM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfHLHYr (ORCPT
+        id S1727021AbfHLHY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 03:24:47 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33308 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbfHLHYp (ORCPT
+        Mon, 12 Aug 2019 03:24:58 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34486 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726869AbfHLHY6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 03:24:45 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n9so103769837wru.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 00:24:44 -0700 (PDT)
+        Mon, 12 Aug 2019 03:24:58 -0400
+Received: by mail-wr1-f68.google.com with SMTP id 31so103695243wrm.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 00:24:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=9zWlaqRYNg33Ujw6gX84xxtRqD+/AO06V5Zy/fEvl2U=;
-        b=x/4t2gzjTBnjUKUihtJFhrnYyaeNJGOSsaCCnEJdkw16AtqdhNMcUQbgHNnPirVZfc
-         /bDy4r0bBjppKrKKngyxFcGQchOmESlbOw6I20b+tgkfFDFks7tDpzXcpBdqH2nsL0b6
-         CPg5Uij6VpJ+lomzltFYGgWnBkj1C+rIWSXZ9w1/AmlZHqayTloiFAdlMHNR67o34sST
-         puhpgbRfD6IiFlOKjK7euWKQVCX7oAszdB949r9CaHqaIiAqQTjsSTHo8A7hylteEZ6k
-         GPT9tbs4q5DhVezyaQzAwrsSKTOhEGy9VJ4k+H6EFiAFdYDv2WWwn3SsIw/iDJiyVY0x
-         y/yw==
+        bh=EzL5oPwPWP+i1Dl8GnEH4sLFKHKvgm53zQpW/LeZKN8=;
+        b=PykGLLrMqapgzqImD33lH3WqU8EsjsQyR62y8ey8BqQqsULXtn31CMZxb2FxKrZHJg
+         dcHyPbcCZzYG3x9gfly97a73ggE4cg6kNztifzFGzxqUkUfS38N8vZk5/CwYHFJsDv+C
+         U82Ncu/sqmGlIOwqTibxSmtR1idwD2AsKAbtsmq493DMw1hNQ/htWBvWQXsnY4bNfjMt
+         JBfsedyfZHr5mH9rwmdyKZtG3vQvxF1XqN1ciey/VvSjhlZhOwxl+jjql/Yiaf/7n4mg
+         fFhw4TotMfpvFmERsO0coxyjzCLPZVQFwGSSDlsK+q5u400mvGfVqu2qXT0WqOCntvEz
+         Iswg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=9zWlaqRYNg33Ujw6gX84xxtRqD+/AO06V5Zy/fEvl2U=;
-        b=smxO9zhU8WFNC8Gp/+ein+QwPVh5RxXiG6sBItWfobxiBBH28orez+9FA0C7epdlm+
-         LpF+BFIY+DrtcjmtRwdiIvBfpMgitlf8LKJQXcgtoyLwUqJCTkFWUgwBIA6rJfOoO9Vo
-         7Xv8cuK0DNAny4EM9vLQFDFC26+x+p39F3cGuThJaceoXi57IClgIrtpMg24A70E56Ij
-         pUud6kUH6f5U8hkcRW5ht5CtIiHD0jart7V221nmt6ji8LuyHvt5jJvEzkqgi8GA/MPN
-         eLNW2vUlgtF0wkyc6uaO/BnMCntDdq/9fqCeM0MWlBg/O1AYcGiJ8Vz4/K8RQVofRUiW
-         nFpg==
-X-Gm-Message-State: APjAAAXWbac5V2xq9edJaVWGw9vfVSvIEok9vlLwD905bf10tFmejqCm
-        HwH525TlgtV2o/1eXeFNYM7D6g==
-X-Google-Smtp-Source: APXvYqx2c35NApNszr2AuXiAK8tFn5aJcPO/gWfDYaXXjxlyJIeTtYNK4gOiVYOQ0gGav8S4WfVatw==
-X-Received: by 2002:adf:90d0:: with SMTP id i74mr26035572wri.218.1565594683417;
-        Mon, 12 Aug 2019 00:24:43 -0700 (PDT)
+        bh=EzL5oPwPWP+i1Dl8GnEH4sLFKHKvgm53zQpW/LeZKN8=;
+        b=Gn6KL/6fTVBH+VWN7OAcB7rk3qxtWz71ZgUXOgbrcR6SJs+1BhKEok1yQIyNb7hpNR
+         A1seB1Fcz1+nHfsrhEMFwO3DVlhZXxCzrW4aa7huolxdj9W/TKdXpvQtff9SIapl+X4T
+         N7OBJ6Zrepd5y902wFi/N+INZejcfQH+ngt+aeQ05gqM+eBJdQXlICWzWQIDs8dYzC4Z
+         F8dJYPTrgZZFVo9f/R9cGzGmCW3jFt2WONKMyRDgT4m+eHi6p/TaV3yOvfNBhye2mRhq
+         /1K5KXbHXx7m4z/nzCcAM2ghdDASuCssDPuOtb3xzgG7fXv0mRyMVxHQleNZjBwQWBVW
+         PsnQ==
+X-Gm-Message-State: APjAAAUmumAF5MQxIWN8CIIKhPrt0cUdUQbAoeSDXaticfynJ1NC/J3C
+        0L5LWqLK/i4+hinIBTHSD8taKg==
+X-Google-Smtp-Source: APXvYqxWIEwdrZb54vApYuurr77b3Tu0nBVwUKEN5UJvyW1EJjpr4te7ZaJg0SUfDKIlNxnGcWFnTg==
+X-Received: by 2002:adf:e8c3:: with SMTP id k3mr28304515wrn.8.1565594696080;
+        Mon, 12 Aug 2019 00:24:56 -0700 (PDT)
 Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id 39sm11769739wrc.45.2019.08.12.00.24.42
+        by smtp.gmail.com with ESMTPSA id l3sm23743226wrb.41.2019.08.12.00.24.55
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 00:24:42 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 08:24:40 +0100
+        Mon, 12 Aug 2019 00:24:55 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 08:24:53 +0100
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
@@ -80,21 +80,17 @@ Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Collabora kernel ML <kernel@collabora.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Gwendal Grignou <gwendal@chromium.org>
-Subject: Re: [PATCH v5 02/11] mfd / platform: cros_ec: Move cros-ec core
- driver out from MFD
-Message-ID: <20190812072440.GF4594@dell>
+Subject: Re: [PATCH v5 03/11] mfd / platform: cros_ec: Miscellaneous
+ character device to talk with the EC
+Message-ID: <20190812072453.GG4594@dell>
 References: <20190722133257.9336-1-enric.balletbo@collabora.com>
- <20190722133257.9336-3-enric.balletbo@collabora.com>
+ <20190722133257.9336-4-enric.balletbo@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190722133257.9336-3-enric.balletbo@collabora.com>
+In-Reply-To: <20190722133257.9336-4-enric.balletbo@collabora.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -103,48 +99,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon, 22 Jul 2019, Enric Balletbo i Serra wrote:
 
-> Now, the ChromeOS EC core driver has nothing related to an MFD device, so
-> move that driver from the MFD subsystem to the platform/chrome subsystem.
+> That's a driver to talk with the ChromeOS Embedded Controller via a
+> miscellaneous character device, it creates an entry in /dev for every
+> instance and implements basic file operations for communicating with the
+> Embedded Controller with an userspace application. The API is moved to
+> the uapi folder, which is supposed to contain the user space API of the
+> kernel.
+> 
+> Note that this will replace current character device interface
+> implemented in the cros-ec-dev driver in the MFD subsystem. The idea is
+> to move all the functionality that extends the bounds of what MFD was
+> designed to platform/chrome subsystem.
 > 
 > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Thierry Reding <thierry.reding@gmail.com>
-> Acked-by: Mark Brown <broonie@kernel.org>
-> Acked-by: Wolfram Sang <wsa@the-dreams.de>
-> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 > Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
 > Tested-by: Gwendal Grignou <gwendal@chromium.org>
 > ---
 > 
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
+> Changes in v5:
+> - Prefix the versions strings with CROS_EC_DEV_VERSION (Gwendal)
 > 
->  drivers/extcon/Kconfig                     |  2 +-
->  drivers/hid/Kconfig                        |  2 +-
->  drivers/i2c/busses/Kconfig                 |  2 +-
->  drivers/iio/common/cros_ec_sensors/Kconfig |  2 +-
->  drivers/input/keyboard/Kconfig             |  2 +-
->  drivers/media/platform/Kconfig             |  3 +--
->  drivers/mfd/Kconfig                        | 15 ++-------------
->  drivers/mfd/Makefile                       |  2 --
->  drivers/platform/chrome/Kconfig            | 21 +++++++++++++++++----
->  drivers/platform/chrome/Makefile           |  1 +
->  drivers/{mfd => platform/chrome}/cros_ec.c |  0
->  drivers/power/supply/Kconfig               |  2 +-
->  drivers/pwm/Kconfig                        |  2 +-
->  drivers/rtc/Kconfig                        |  2 +-
->  sound/soc/codecs/Kconfig                   |  4 ++--
->  sound/soc/qcom/Kconfig                     |  2 +-
->  16 files changed, 32 insertions(+), 32 deletions(-)
->  rename drivers/{mfd => platform/chrome}/cros_ec.c (100%)
+> Changes in v4: None
+> Changes in v3:
+> - Fix 'linux/mfd/cros_ec.h' is not exported (reported by lkp)
+> 
+> Changes in v2:
+> - Remove the list, and the lock, as are not needed (Greg Kroah-Hartman)
+> - Remove dev_info in probe, anyway we will see the chardev or not if the
+>   probe fails (Greg Kroah-Hartman)
+> 
+>  drivers/mfd/cros_ec_dev.c                     |   4 +-
+>  drivers/platform/chrome/Kconfig               |  11 +
+>  drivers/platform/chrome/Makefile              |   1 +
+>  drivers/platform/chrome/cros_ec_chardev.c     | 252 ++++++++++++++++++
+>  .../uapi/linux/cros_ec_chardev.h              |   9 +-
+>  5 files changed, 271 insertions(+), 6 deletions(-)
+>  create mode 100644 drivers/platform/chrome/cros_ec_chardev.c
+>  rename drivers/mfd/cros_ec_dev.h => include/uapi/linux/cros_ec_chardev.h (80%)
 
 For my own reference:
   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
