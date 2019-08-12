@@ -2,153 +2,94 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B17F3C32756
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CA4C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 862882087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:47:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I1sE1d7E"
+	by mail.kernel.org (Postfix) with ESMTP id BFD3B20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:49:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfHLJri (ORCPT
+        id S1727530AbfHLJtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 05:47:38 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53480 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727323AbfHLJri (ORCPT
+        Mon, 12 Aug 2019 05:49:13 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43212 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727425AbfHLJtN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 05:47:38 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 10so11544383wmp.3;
-        Mon, 12 Aug 2019 02:47:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=P3Tt0hVFMeQO9WKnMLt0unZfnULQUSGm6Y8+KX1wABY=;
-        b=I1sE1d7EaGl/q7KxoFPph8dUQJL5MYq+TkA/7MKHlrpe5pTnqrRQ1Qyq/dyi6nqToG
-         6MDKfag1hIXu0R51glp/qPsKBJEqSfBlsp6qYqASxY8rNzk/+ZdFKEF6fIzXTW6yGAqz
-         RTmBMzpNT6SCMpxR5GEcTJA2At8Mw+mrnZGrrJYlNEplTz060HdwlOyc7CizuAOH0y+p
-         ucsMdOD2Vb0EwMMKYfYaILJqutj7CNfWqG0z7MYxQG93MwGH500Phhh+qr7wsUPRekMC
-         wmdZY8gOb8UWP0A6/r90TYJvbiVT2V2e8UXX4xG3lwyaFw1MfmPXG/RxzT1oO5AZRrdt
-         XDjA==
+        Mon, 12 Aug 2019 05:49:13 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m2so12168491qkd.10;
+        Mon, 12 Aug 2019 02:49:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=P3Tt0hVFMeQO9WKnMLt0unZfnULQUSGm6Y8+KX1wABY=;
-        b=EDXm55vQ8+SkobmTfqinOzoLVfBl32dhX5/uMLOHTNkuD/LZRaGUYrBo8nUN8ynf6D
-         hWqUiXuDHFKd88IczPNABYa3MCYX+QxEKMvWF9bU9mrQovF/HgYHSSHZ8j0u5yp5AN88
-         0DuHdjKHHAEnsUvsoFcwJQawwJU16uh+bCnGuGBgGe7QVZFEFU9DUfpdXAAknlhSFup9
-         6D12bxEa2gch9gA1q3//oCyNKNU9Om1gRrfcULGMVB1DSmGoRO/FCl8429xgg1EI0G9P
-         V/JhrEIcyEsmVvozpnXvZ6HiK6St68LazfCrpn0Au2xTOYnKvfXvB/0pYmz6XYZ3qROg
-         XnTQ==
-X-Gm-Message-State: APjAAAWSmFtZrYAp5S8jQMIYkH76aU1DNn1RuGFmWOzlMntLoH+6FOY/
-        alC5JL05TNGB6R9npRnpJY+VtNw3
-X-Google-Smtp-Source: APXvYqx6wQo6Pmfnamku65GgkuW6kOZqIbz2Qumz2X/qbaAzrxHyWQQ1tTSaVAp8yp6St60D20w5+w==
-X-Received: by 2002:a7b:c758:: with SMTP id w24mr2100045wmk.143.1565603255334;
-        Mon, 12 Aug 2019 02:47:35 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id u186sm24647842wmu.26.2019.08.12.02.47.33
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 02:47:33 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 11:47:32 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v8 07/21] clk: Add API to get index of the clock parent
-Message-ID: <20190812094732.GF8903@ulmo>
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-8-git-send-email-skomatineni@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xAybZyOMngteP+D+qSW1GDTJYmxvpwNRj3u8iw1H9iI=;
+        b=rN1aR9JKoiGfcWFGMSnj10dIV201pjpEywckSPKdInPsX53LHC6KaIU/eK+mfRCQBQ
+         jwWi+Q45cwpsV/FHlvG6UTNg6YNKEMBJloJCha2VyarfGHz3SFdTMjmEak7iJHJ5TXen
+         8nCMFW9ULj2Bvr7F+lDlG/y3LAubOdLwLyPlSN+1qce+kHIbjGCZXc6rKQtrHTlxWLDz
+         D3hZj7fSZl8gl5tW/rGitv1km54YWf39dPwV/fThQaNLPmLJpOfn5kFrm6Ck82bsDdBj
+         cHeBlB55AWuuZXildfVNzEI9ZFw/IQ/7vPd1Ua4FA6DUzknddz5wwqKSiIeWbJLD+9Fq
+         qCfA==
+X-Gm-Message-State: APjAAAUEnGpXQmHghU84qVzuFNvjkSKi0Fq+4fBNScOPfqjFEyib7E01
+        CuwZZ9Dyrb02GijKa9kAYzhpiXqhRRPp4MgO5EY=
+X-Google-Smtp-Source: APXvYqxWhPrGiOhkXhbkKSICcchKatCxf1zXyWL2+I28AuQWo2+ZrVMsn4RzrL5HBF9AufYw6bbRI4V/aUKfXIn8ATk=
+X-Received: by 2002:a37:5f45:: with SMTP id t66mr29267714qkb.286.1565603352161;
+ Mon, 12 Aug 2019 02:49:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="0hHDr/TIsw4o3iPK"
-Content-Disposition: inline
-In-Reply-To: <1565308020-31952-8-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190810010758.16407-1-alistair.francis@wdc.com>
+In-Reply-To: <20190810010758.16407-1-alistair.francis@wdc.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 12 Aug 2019 11:48:55 +0200
+Message-ID: <CAK8P3a2wYMsBRm1X-TFo1d7-B7Xug9gwqF77HitoE7wmOqD7rw@mail.gmail.com>
+Subject: Re: [PATCH] syscalls: Update the syscall #defines to match uapi
+To:     Alistair Francis <alistair.francis@wdc.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Alistair Francis <alistair23@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Aug 10, 2019 at 3:11 AM Alistair Francis
+<alistair.francis@wdc.com> wrote:
+>
+> Update the #defines around sys_fstat64() and sys_fstatat64() to match
+> the #defines around the __NR3264_fstatat and __NR3264_fstat definitions
+> in include/uapi/asm-generic/unistd.h. This avoids compiler failures if
+> one is defined.
 
---0hHDr/TIsw4o3iPK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+What is the compiler failure you get?
 
-On Thu, Aug 08, 2019 at 04:46:46PM -0700, Sowjanya Komatineni wrote:
-> This patch adds an API clk_hw_get_parent_index to get index of the
-> clock parent to use during the clock restore operations on system
-> resume.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
 > ---
->  drivers/clk/clk.c            | 17 +++++++++++++++++
->  include/linux/clk-provider.h |  1 +
->  2 files changed, 18 insertions(+)
->=20
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index c0990703ce54..f26252e48f73 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -1643,6 +1643,23 @@ static int clk_fetch_parent_index(struct clk_core =
-*core,
->  	return i;
->  }
-> =20
-> +/**
-> + * clk_hw_get_parent_index - return the index of parent clock
-> + * @hw: clk_hw associated with the clk being consumed
-> + * @parent_hw: clk_hw associated with the parent of clk
-> + *
-> + * Fetches and returns the index of parent clock.
-> + * if hw or parent_hw is NULL, returns -EINVAL.
+>  include/linux/syscalls.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+> index 2bcef4c70183..e4bf5e480d60 100644
+> --- a/include/linux/syscalls.h
+> +++ b/include/linux/syscalls.h
+> @@ -512,7 +512,7 @@ asmlinkage long sys_readlinkat(int dfd, const char __user *path, char __user *bu
+>  asmlinkage long sys_newfstatat(int dfd, const char __user *filename,
+>                                struct stat __user *statbuf, int flag);
+>  asmlinkage long sys_newfstat(unsigned int fd, struct stat __user *statbuf);
+> -#if defined(__ARCH_WANT_STAT64) || defined(__ARCH_WANT_COMPAT_STAT64)
+> +#if defined(__ARCH_WANT_NEW_STAT) || defined(__ARCH_WANT_STAT64)
+>  asmlinkage long sys_fstat64(unsigned long fd, struct stat64 __user *statbuf);
+>  asmlinkage long sys_fstatat64(int dfd, const char __user *filename,
+>                                struct stat64 __user *statbuf, int flag);
 
-"If" because it's at the beginning of a sentence. You may also want to
-turn this into a "Return:" section as described in:
+I think this is wrong: when __ARCH_WANT_NEW_STAT is set, we are
+on a 64-bit architecture and only want the sys_newfstat{,at} system
+calls, not sys_fstat{,at}64 that gets used on 32-bit machines.
 
-	Documentation/doc-guide/kernel-doc.rst
+The #if check in the syscalls.h file also matches the definition of
+the function.
 
-That said, other functions in this file don't use that construct either,
-so I suppose this is fine as-is, for consistency.
-
-So with the capitalization of "If" fixed, this is:
-
-Reviewed-by: Thierry Reding <treding@nvidia.com>
-
---0hHDr/TIsw4o3iPK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1RNbIACgkQ3SOs138+
-s6FV1A//VN8FoQqHYUZDRFeTFLp0ScDoXoSuHZPsgTeHnWdfLuI6hjX0BwnBpuou
-xp0VC0KcQdVBw0mL+B/0aKRlYcTsXGB0Pk0qi786ZQ5HicqrF7ixVfWNns9TIbAC
-WQbjyPR0SoG0kBTfIXn36aSRfJh9ulnaPQjJ/SpoaT+pAsc4IUjCaGFVw+Eu2LNX
-Av3p5BKIcCIynHfmMFNgM4wh44PInWZ7KHqW8yVNk+yJV41rSYqzV0TO2ANg/a6b
-LaWziwn3XN+aPyuo5dB++g8xIATX2dQSfG6uYjZC4HDt08f3pCBkSEAfyup2xEIF
-epEcFzFYBuSqyrMZ587honAJ0a5AqzFDSGCxxZw2qd1MSiW5EaIIdQE1PEiY2zeC
-ldZGCn0iMPizacDQqkRrd96KwDsZ1s8oTGHyNya7z+6PHLRF36nb4EEg0OF1AJ95
-aj9EI5IfJlfKSN1RSuR1K7DaZzIunI9Ji7Ip3WlkNc4LIBL9duQ0WQ0D6ttFLpZ4
-cTcrkgo/uJ2DOaK84DCEt9w21jIkOoiSFstUKBCC/0+IPURVcHC+ByhHOJbjJMge
-oYq5uhB2pVscLpnzfjjy5XLBuVjYiapsuWy74tUm1YAyyRvJSLr9+6McvwLjQAHk
-hpiiENkRMsXAPGywAKTdlrIUK5JYRyXTR7rVHW2xI5M47aMJOdo=
-=fkP5
------END PGP SIGNATURE-----
-
---0hHDr/TIsw4o3iPK--
+       Arnd
