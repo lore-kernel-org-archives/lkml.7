@@ -2,130 +2,154 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A04C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5BEC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 671B520820
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37DB220820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:41:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="dxEq5xKY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZbnR6SgF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfHLTlF (ORCPT
+        id S1727057AbfHLTle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 15:41:05 -0400
-Received: from mail-eopbgr70082.outbound.protection.outlook.com ([40.107.7.82]:51911
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726973AbfHLTlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 15:41:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D+xZsCUucq3VGeOZ2dVg4eyVN7+ZvxJ1OnCfXVXAlSATVPHqj3t3EqDJZQK2v+kzvglndKd/qzFG0TLUgjyojduLRo5IUwBDMS25WpPb5jD9v3WWLPHxYmYwEV0KgzZTZ5gtlzVqP2RBi6De4NKMRda8ZF88ZPSOZ+fXWdVZzIBcJB+QOv34ALvOtOKUVFPy8NlqikSKz4JLknYtJkJ64o9J6hsQjWLocKmjWBCjYeGFyRkCcRGdaadyZiEUdcaOoqZej8V76RBUQpKgBiypNRwFQTF5h7G8KpHWVmA14KEhcve5uPfGDBaptdHUv1Fned5lOlD1DDpgOnV2hR034Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hg2DmKUxfug3yUUwflDCB3ejSA4zSZtbC43QPCWR9j0=;
- b=fk/GpU3EUv+Vw5eJmMApnxTMfdE+iDpzJP3hMtTjWRLKb/h8v5x43T3Pb8G9HcYBwSm4sQLxY5bXg7LJbRP2u43T1JFuuKutS4OIWqa2f0urnBpHBJS6GJE7w59qKZN9MUWkkCygZBqKSjXSGy4cmDLsEdpjxpcH435qLLcq8M98G1dELkzutUn05zSCuTWYgCL/PRp/MSlG9xDGISklJU0v2lGLX6L6PZOkuNhWqhGf0w32KIuc0108pUuRrerLiiKNVd2JrpV36eKviiAzQqcLPcZ5Idn/cFrlKjxA4D+n07vNlIvrkUzTUT98a2APuhwRoO7Y10vWjqpvOlilwg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hg2DmKUxfug3yUUwflDCB3ejSA4zSZtbC43QPCWR9j0=;
- b=dxEq5xKYVgsCnd2NWWqojjIYleGrS6p1s19kdehml1JPa6qzsRjG722SXdYIngbcghdd0QL75U++NiSgsgyKA5cuRmqN2CcRnc8sLk9L1Gj5mFoWkgoT32bK/hEWKaHdmwyPsXxDRicsICRpE9KGT7z+QzvtLTjGhlWLzX/VcZQ=
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.235.152) by
- VE1PR04MB6509.eurprd04.prod.outlook.com (20.179.233.159) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.23; Mon, 12 Aug 2019 19:40:58 +0000
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::3d61:6e52:a83c:7c59]) by VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::3d61:6e52:a83c:7c59%6]) with mapi id 15.20.2136.018; Mon, 12 Aug 2019
- 19:40:58 +0000
-From:   Leo Li <leoyang.li@nxp.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Zhang Wei <zw@zh-kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] dmaengine: fsldma: Mark expected switch fall-through
-Thread-Topic: [PATCH] dmaengine: fsldma: Mark expected switch fall-through
-Thread-Index: AQHVUKP5RUYlyDnoZkqg5dHV6OqYpqb36lNA
-Date:   Mon, 12 Aug 2019 19:40:58 +0000
-Message-ID: <VE1PR04MB6687030F764BAAB24FDE80378FD30@VE1PR04MB6687.eurprd04.prod.outlook.com>
-References: <20190812002159.GA26899@embeddedor>
-In-Reply-To: <20190812002159.GA26899@embeddedor>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leoyang.li@nxp.com; 
-x-originating-ip: [64.157.242.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1163b1d1-ffc2-4ea3-40fb-08d71f5d0001
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6509;
-x-ms-traffictypediagnostic: VE1PR04MB6509:
-x-microsoft-antispam-prvs: <VE1PR04MB6509329803F117F61B9F85D18FD30@VE1PR04MB6509.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:843;
-x-forefront-prvs: 012792EC17
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(39860400002)(346002)(396003)(13464003)(189003)(199004)(486006)(14454004)(476003)(53546011)(7736002)(26005)(8936002)(71190400001)(186003)(11346002)(81156014)(6506007)(305945005)(8676002)(81166006)(102836004)(71200400001)(446003)(14444005)(256004)(66066001)(6116002)(3846002)(99286004)(33656002)(478600001)(5660300002)(2906002)(55016002)(52536014)(316002)(6436002)(9686003)(66946007)(76176011)(25786009)(66556008)(66476007)(229853002)(66446008)(64756008)(6246003)(7696005)(53936002)(4326008)(110136005)(54906003)(86362001)(76116006)(74316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6509;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 6/S78OHNcDcTbPW9gsiqQr8ozDoAMd3zikyIwZMBlQQpooo5VS2C4UNME+LIPOg3qTurfBIUOWlJaik1ZRjfUM/xv4bSZ4AH72U35swzmJegLIBXMf6vUUEdFwWWACljGAcNP/Jh2GQEcwkiXg460GzaO/w7namNnrmtPgmu31QM81iVBS3EORf3Zz78dPYDbym21poqaEYKHi2MYnooV9qPDnU78X3tS6yjOgUer6hr1TDmNvA5LWVI3cOsN0WplcrBIWEPtEZhzbA3cPO2aUm125BqvFmdAI/m381u1Ed6vP7oQg4lzu+oXi0TZysH9WmPdKkgWVBGgtFvce8yjo2SVlNoc7mRt399srgUodLs1XxskHJvqsJs90tt5clNxM+H/YEHrwnzp2VUSm+3UVIwSLyvIbxhbRORnxPH30c=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 12 Aug 2019 15:41:34 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44718 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfHLTld (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 15:41:33 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c81so1200700pfc.11
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 12:41:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=a9ULtG2G11QpFccQoEesKvps5pyWLLNLNLE39lbGndA=;
+        b=ZbnR6SgFlx796r//7kvxc5LQhRkwJA83fYojeTlfr+jgGd+dgheLeaMkKiMmcegB9j
+         ppfJsVarjskbv1HLKHIBVSGfRTd9Z5CVxK1+XMSQI094Pb6gUTU0Jl6Wy5mKpb8wARwU
+         zBfLTuxvAO/Q0eAzoDyrCA3uGXQdimeik/SNjZIVgYaAmbPHmNa04iKCPfdRX5vM/b+s
+         Gvq4By3VGPpaF661sNOI/yBPyy7XU1AifrVy+C9Pu/scfPBGmDuyY5+o65mHz5Npjh8p
+         Vto9wikHnFRWw3fSevtHBTqqjLHmhoKuA/ywdDalaskAb5nxYYEo9ok0KDKQZ9R+7p9C
+         aq8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=a9ULtG2G11QpFccQoEesKvps5pyWLLNLNLE39lbGndA=;
+        b=hnjaZg79mWc6FMiP/5MbE35ptPyDmWgXCdkJGEeHfW0G5YIZ6xp6zaAxCCK5fXp8cS
+         5VA7v9ApusXiuf6Pd3xx7SdwXX6XSxuj8gHUUUyrCXoEusRUXhU1yJE4LkjWqhfcCfOM
+         rvYhMNvTn3VO19Zpi9FAhbsYd9E80TgqtWFnHSRj3u/o0eSa2Xzq+WKlzfg1Z4A0tK5S
+         iXkr9Aj1AupFrsVk/IGiRf4kSRzrrbKZ/RlJMouV7cJGZV1Jnv3O+J06ySrkmI5Z0Jt2
+         OzHHtig/rCDLG77VBdRleIpXD+MaTOA3+cdLTB2jW1SLGCm7Lb/NtUo7x0VolFBG7djb
+         4fDw==
+X-Gm-Message-State: APjAAAWjj74EYdYEd4zCq1ESxPZYrIk7vl1O7KhltWNBJpKzu2ZsfP1W
+        tdYnkMQCQCcQIvsYZHZp6ocScofYGcMyKqJEDojKgQ==
+X-Google-Smtp-Source: APXvYqzSSNS4svybYmOUiWvGdPmN4hWWl8HBvs6GBy/wM7mIEWEyUBHJeJdTx/DfJn50CXv4B5Z5qJnPJgNBJCv4QqQ=
+X-Received: by 2002:a63:60a:: with SMTP id 10mr31136337pgg.381.1565638892699;
+ Mon, 12 Aug 2019 12:41:32 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1163b1d1-ffc2-4ea3-40fb-08d71f5d0001
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 19:40:58.7347
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: leoyang.li@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6509
+References: <CAKwvOdmNdvgv=+P1CU36fG+trETojmPEXSMmAmX2TY0e67X-Wg@mail.gmail.com>
+ <7c4db60a2b1976a92b5c824c7d24c4c77aa57278.camel@perches.com>
+ <CAKwvOd=n_8i6+9K=g2OK2mAqubBZZHhmJrDM0=FtT_m0e0D5sQ@mail.gmail.com>
+ <4580cd399d23bbdd9b7cf28a1ffaa7bc1daef6a6.camel@perches.com>
+ <CAKwvOd=293uFBT1hLrC-vE9ekd2YOaTiiXj1HVeGfTjAk1rGvg@mail.gmail.com> <225af64a285ed0760a893e2dae45f1054e2cf82f.camel@perches.com>
+In-Reply-To: <225af64a285ed0760a893e2dae45f1054e2cf82f.camel@perches.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 12 Aug 2019 12:41:21 -0700
+Message-ID: <CAKwvOdk1USOoRK0u0STmB2+gyTCxB_X-ZMW1OGV0xcf4O7n1aQ@mail.gmail.com>
+Subject: Re: checkpatch.pl should suggest __section
+To:     Joe Perches <joe@perches.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR3VzdGF2byBBLiBSLiBT
-aWx2YSA8Z3VzdGF2b0BlbWJlZGRlZG9yLmNvbT4NCj4gU2VudDogU3VuZGF5LCBBdWd1c3QgMTEs
-IDIwMTkgNzoyMiBQTQ0KPiBUbzogTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBaaGFuZyBX
-ZWkgPHp3QHpoLWtlcm5lbC5vcmc+OyBWaW5vZA0KPiBLb3VsIDx2a291bEBrZXJuZWwub3JnPjsg
-RGFuIFdpbGxpYW1zIDxkYW4uai53aWxsaWFtc0BpbnRlbC5jb20+DQo+IENjOiBsaW51eHBwYy1k
-ZXZAbGlzdHMub3psYWJzLm9yZzsgZG1hZW5naW5lQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+
-IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IEd1c3Rhdm8gQS4gUi4gU2lsdmEgPGd1c3Rhdm9AZW1i
-ZWRkZWRvci5jb20+DQo+IFN1YmplY3Q6IFtQQVRDSF0gZG1hZW5naW5lOiBmc2xkbWE6IE1hcmsg
-ZXhwZWN0ZWQgc3dpdGNoIGZhbGwtdGhyb3VnaA0KPiANCj4gTWFyayBzd2l0Y2ggY2FzZXMgd2hl
-cmUgd2UgYXJlIGV4cGVjdGluZyB0byBmYWxsIHRocm91Z2guDQo+IA0KPiBGaXggdGhlIGZvbGxv
-d2luZyB3YXJuaW5nIChCdWlsZGluZzogcG93ZXJwYy1wcGE4NTQ4X2RlZmNvbmZpZyBwb3dlcnBj
-KToNCj4gDQo+IGRyaXZlcnMvZG1hL2ZzbGRtYS5jOiBJbiBmdW5jdGlvbiDigJhmc2xfZG1hX2No
-YW5fcHJvYmXigJk6DQo+IGRyaXZlcnMvZG1hL2ZzbGRtYS5jOjExNjU6MjY6IHdhcm5pbmc6IHRo
-aXMgc3RhdGVtZW50IG1heSBmYWxsIHRocm91Z2ggWy0NCj4gV2ltcGxpY2l0LWZhbGx0aHJvdWdo
-PV0NCj4gICAgY2hhbi0+dG9nZ2xlX2V4dF9wYXVzZSA9IGZzbF9jaGFuX3RvZ2dsZV9leHRfcGF1
-c2U7DQo+ICAgIH5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+Xn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
-fn5+DQo+IGRyaXZlcnMvZG1hL2ZzbGRtYS5jOjExNjY6Mjogbm90ZTogaGVyZQ0KPiAgIGNhc2Ug
-RlNMX0RNQV9JUF84M1hYOg0KPiAgIF5+fn4NCj4gDQo+IFJlcG9ydGVkLWJ5OiBrYnVpbGQgdGVz
-dCByb2JvdCA8bGtwQGludGVsLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogR3VzdGF2byBBLiBSLiBT
-aWx2YSA8Z3VzdGF2b0BlbWJlZGRlZG9yLmNvbT4NCg0KQWNrZWQtYnk6IExpIFlhbmcgPGxlb3lh
-bmcubGlAbnhwLmNvbT4NCg0KPiAtLS0NCj4gIGRyaXZlcnMvZG1hL2ZzbGRtYS5jIHwgMSArDQo+
-ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL2RtYS9mc2xkbWEuYyBiL2RyaXZlcnMvZG1hL2ZzbGRtYS5jIGluZGV4DQo+IDIzZTBhMzU2
-ZjE2Ny4uYWQ3MmIzZjQyZmZhIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2RtYS9mc2xkbWEuYw0K
-PiArKysgYi9kcml2ZXJzL2RtYS9mc2xkbWEuYw0KPiBAQCAtMTE2Myw2ICsxMTYzLDcgQEAgc3Rh
-dGljIGludCBmc2xfZG1hX2NoYW5fcHJvYmUoc3RydWN0DQo+IGZzbGRtYV9kZXZpY2UgKmZkZXYs
-DQo+ICAJc3dpdGNoIChjaGFuLT5mZWF0dXJlICYgRlNMX0RNQV9JUF9NQVNLKSB7DQo+ICAJY2Fz
-ZSBGU0xfRE1BX0lQXzg1WFg6DQo+ICAJCWNoYW4tPnRvZ2dsZV9leHRfcGF1c2UgPSBmc2xfY2hh
-bl90b2dnbGVfZXh0X3BhdXNlOw0KPiArCQkvKiBGYWxsIHRocm91Z2ggKi8NCj4gIAljYXNlIEZT
-TF9ETUFfSVBfODNYWDoNCj4gIAkJY2hhbi0+dG9nZ2xlX2V4dF9zdGFydCA9IGZzbF9jaGFuX3Rv
-Z2dsZV9leHRfc3RhcnQ7DQo+ICAJCWNoYW4tPnNldF9zcmNfbG9vcF9zaXplID0gZnNsX2NoYW5f
-c2V0X3NyY19sb29wX3NpemU7DQo+IC0tDQo+IDIuMjIuMA0KDQo=
+On Mon, Aug 12, 2019 at 11:27 AM Joe Perches <joe@perches.com> wrote:
+>
+> On Mon, 2019-08-12 at 11:20 -0700, Nick Desaulniers wrote:
+> > On Fri, Aug 9, 2019 at 4:17 PM Joe Perches <joe@perches.com> wrote:
+> > > On Fri, 2019-08-09 at 16:04 -0700, Nick Desaulniers wrote:
+> > > > > how about:
+> > > > > ---
+> > > > >  scripts/checkpatch.pl | 9 +++++++++
+> > > > >  1 file changed, 9 insertions(+)
+> > > > >
+> > > > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > > > > index 1cdacb4fd207..8e6693ca772c 100755
+> > > > > --- a/scripts/checkpatch.pl
+> > > > > +++ b/scripts/checkpatch.pl
+> > > > > @@ -5901,6 +5901,15 @@ sub process {
+> > > > >                              "__aligned(size) is preferred over _=
+_attribute__((aligned(size)))\n" . $herecurr);
+> > > > >                 }
+> > > > >
+> > > > > +# Check for __attribute__ section, prefer __section (without quo=
+tes)
+> > > > > +               if ($realfile !~ m@\binclude/uapi/@ &&
+> > > > > +                   $line =3D~ /\b__attribute__\s*\(\s*\(.*_*sect=
+ion_*\s*\(\s*("[^"]*")/) {
+> > > > > +                       my $old =3D substr($rawline, $-[1], $+[1]=
+ - $-[1]);
+> > > > > +                       my $new =3D substr($old, 1, -1);
+> > > > > +                       WARN("PREFER_SECTION",
+> > > > > +                            "__section($new) is preferred over _=
+_attribute__((section($old)))\n" . $herecurr);
+> > > > > +               }
+> > > > > +
+> > > >
+> > > > I can't read Perl, but this looks pretty good.
+> > > > Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+> > >
+> > > I'll add a Suggested-by: for you.
+> > >
+> > > But a Tested-by would be more valuable than an Acked-by if you
+> > > don't actually know how it works.
+> >
+> > $ git am joes.patch
+> > $ echo "int foo __attribute__((section(.hello)));" >> arch/x86/boot/a20=
+.c
+>
+> Does this compile?
+>
+> checkpatch is not a compiler.
+>
+> I think you need
+>
+> __attribute__((section(".hello")))
+
+PEBKAC
+=E2=9E=9C  kernel-all git:(section_escaping) =E2=9C=97 ./scripts/checkpatch=
+.pl
+0001-x86-boot-hello.patch
+WARNING: __section(.hello) is preferred over __attribute__((section(".hello=
+")))
+#20: FILE: arch/x86/boot/a20.c:164:
++int foo __attribute__((section(".hello")));
+
+total: 0 errors, 1 warnings, 4 lines checked
+
+NOTE: For some of the reported defects, checkpatch may be able to
+      mechanically convert to the typical style using --fix or --fix-inplac=
+e.
+
+0001-x86-boot-hello.patch has style problems, please review.
+
+NOTE: If any of the errors are false positives, please report
+      them to the maintainer, see CHECKPATCH in MAINTAINERS.
+
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+--=20
+Thanks,
+~Nick Desaulniers
