@@ -2,126 +2,91 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C225C32750
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C88AAC32753
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEBF22085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 937AA208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:06:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mQwxLC2H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbfHLKGJ (ORCPT
+        id S1727701AbfHLKGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:06:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:47322 "EHLO foss.arm.com"
+        Mon, 12 Aug 2019 06:06:13 -0400
+Received: from ozlabs.org ([203.11.71.1]:57991 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727409AbfHLKGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:06:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 13F0115A2;
-        Mon, 12 Aug 2019 03:06:08 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98CE53F718;
-        Mon, 12 Aug 2019 03:06:05 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 11:06:00 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
-        arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
-        mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org,
-        pombredanne@nexb.com, shawn.lin@rock-chips.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCHv3 2/2] PCI: layerscape: Add CONFIG_PCI_LAYERSCAPE_EP to
- build EP/RC separately
-Message-ID: <20190812100600.GA20861@e121166-lin.cambridge.arm.com>
-References: <20190628013826.4705-1-xiaowei.bao@nxp.com>
- <20190628013826.4705-2-xiaowei.bao@nxp.com>
+        id S1727409AbfHLKGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 06:06:12 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 466WhK6QxWz9sN1;
+        Mon, 12 Aug 2019 20:06:09 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565604370;
+        bh=iqB1LVYeaEpnmcXmOoPdhBF8HxreRVomAaxJjtwya2E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=mQwxLC2HNy7DVGPJkkE/aOR73lZKPaOSCqqoERPfR42rl+P9XQcbouR2puhm1Fqey
+         sW3vGdRuOvcOf0nqFH0NvSLvVDG8g+2vjrclHGwmsOogqRSSyxALjBqJBOTIoCKy6P
+         2+nswUn3rpjGU6o+nXTbiXorDcPTy4yAxXZUGyxVnsWXCvY/FuV7Yhq+LTnbyTNFIw
+         Wk56BA+uquL+8v9i8FjY5mt9J9VWsAELGeiSBo0j98ubRb0enrI6/ummMRI4M8WN+w
+         siizPG6tqj30bw1pAu6u+q48ZIeP0GDXdos8q517z4q0yXJy6989xGqCUbvRh5LBL3
+         5KZC66ef1pZSA==
+Date:   Mon, 12 Aug 2019 20:06:07 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dma: ti: unexport filter functions
+Message-ID: <20190812200607.6ac1ab09@canb.auug.org.au>
+In-Reply-To: <20190812093623.992757-1-arnd@arndb.de>
+References: <20190812093623.992757-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628013826.4705-2-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_/0CO=r8YnSAbj=0kxeaVWCKS";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 09:38:26AM +0800, Xiaowei Bao wrote:
-> Add CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
-> v2:
->  - No change.
-> v3:
->  - modify the commit message.
-> 
->  drivers/pci/controller/dwc/Kconfig  |   20 ++++++++++++++++++--
->  drivers/pci/controller/dwc/Makefile |    3 ++-
->  2 files changed, 20 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index a6ce1ee..a41ccf5 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -131,13 +131,29 @@ config PCI_KEYSTONE_EP
->  	  DesignWare core functions to implement the driver.
->  
->  config PCI_LAYERSCAPE
-> -	bool "Freescale Layerscape PCIe controller"
-> +	bool "Freescale Layerscape PCIe controller - Host mode"
->  	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
->  	depends on PCI_MSI_IRQ_DOMAIN
->  	select MFD_SYSCON
->  	select PCIE_DW_HOST
->  	help
-> -	  Say Y here if you want PCIe controller support on Layerscape SoCs.
-> +	  Say Y here if you want to enable PCIe controller support on Layerscape
-> +	  SoCs to work in Host mode.
-> +	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
+--Sig_/0CO=r8YnSAbj=0kxeaVWCKS
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-What's "The RCW" ? This entry should explain why a kernel configuration
-should enable it.
+Hi Arnd,
 
-Lorenzo
+Just a nit.
 
-> +	  determines which PCIe controller works in EP mode and which PCIe
-> +	  controller works in RC mode.
-> +
-> +config PCI_LAYERSCAPE_EP
-> +	bool "Freescale Layerscape PCIe controller - Endpoint mode"
-> +	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
-> +	depends on PCI_ENDPOINT
-> +	select PCIE_DW_EP
-> +	help
-> +	  Say Y here if you want to enable PCIe controller support on Layerscape
-> +	  SoCs to work in Endpoint mode.
-> +	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
-> +	  determines which PCIe controller works in EP mode and which PCIe
-> +	  controller works in RC mode.
->  
->  config PCI_HISI
->  	depends on OF && (ARM64 || COMPILE_TEST)
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> index b085dfd..824fde7 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -8,7 +8,8 @@ obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
->  obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
->  obj-$(CONFIG_PCIE_SPEAR13XX) += pcie-spear13xx.o
->  obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone.o
-> -obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o pci-layerscape-ep.o
-> +obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
-> +obj-$(CONFIG_PCI_LAYERSCAPE_EP) += pci-layerscape-ep.o
->  obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
->  obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
->  obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
-> -- 
-> 1.7.1
-> 
+On Mon, 12 Aug 2019 11:36:03 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> The two filter functions are now marked stable, but still exported,
+                                          ^^^^^^
+static ...
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/0CO=r8YnSAbj=0kxeaVWCKS
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1ROg8ACgkQAVBC80lX
+0Gz1xwf9GGNXlG54PTj7UkR/zWsjuxUMRGFmp0x/w490cWeQK+q1uyRqR9/etbqm
+/yjR8pq/AzUAW3pxQWimCOZzZhbSEVy2cDr5uJEM/DYinYoU4aK63i8YPP4ZCcvM
+lVwIdgqfL+01TpT7QEV0io5NWvGUVTgNb58Mprb3f7CyE7Idp6N1K7Ib2k29GIkw
+PvsxGCGEkY0XSjEKU1jfapRf6cbck4U9icWtAinJUjR3n7mi2YCk7MWe3XHnFkcj
+rpR6EeF+HKJAQ0rO87clq0ICB+1y5+QFSPiyRMeIKN6T6Izy+3d4fh/lOmu53sVb
+TImghilme58cxoToyDEvVugFktiUyA==
+=KUm0
+-----END PGP SIGNATURE-----
+
+--Sig_/0CO=r8YnSAbj=0kxeaVWCKS--
