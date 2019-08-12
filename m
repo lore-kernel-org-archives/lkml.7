@@ -2,232 +2,110 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5BFC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C119DC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03BD2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 939E020679
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:39:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="SM/72PML"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfHLPil (ORCPT
+        id S1726729AbfHLPi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 11:38:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:52044 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726185AbfHLPik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 11:38:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C1CB15A2;
-        Mon, 12 Aug 2019 08:38:39 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB2143F718;
-        Mon, 12 Aug 2019 08:38:37 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 16:38:33 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     "sashal@kernel.org" <sashal@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Message-ID: <20190812153833.GA30794@e121166-lin.cambridge.arm.com>
-References: <1565135484-31351-1-git-send-email-haiyangz@microsoft.com>
+        Mon, 12 Aug 2019 11:38:59 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43116 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbfHLPi7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 11:38:59 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e12so16113936otp.10
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 08:38:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=digitalocean.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zyjyZ9IF9yKP9YmOo1rW3lIJcoNsTg3G/mxjlSrkZUo=;
+        b=SM/72PMLIelCgb3lWyhM30lVs68LiFi8DHWN+LknWn/Quh++yBKmoxum74Yfqt4CXT
+         o9UnOy3vy4mgfQGk1vtF13V30voHjEZ6x0TR2/iDvIqffznKarydUaZcQrxzHrjM4gqP
+         u78rLuBlzrnVFuoSQjrPdOQuOuvgBcWAdiZzo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zyjyZ9IF9yKP9YmOo1rW3lIJcoNsTg3G/mxjlSrkZUo=;
+        b=bxCLfJt4RkMQzcYjcOXyApqHVyTJqGW5qKN+YNA3MChVDCs+RGjn8sP0hHJaLAutf7
+         57VvwiBJc3kH0G4zHSZj1hp6GX8OIJTPnkA7hHUZs9nZaqZzOBRiG7chM16cm61pUYAs
+         pGwTfWg7ouRr0J3L65KNC+weR+7R1dYsHYWs8fvz+RAQZxLXI4CFzCrWDnSy2cg/bo03
+         4QxnnBqnkOOt9hDBoA8bk6FdJHNlo0l3Wuh12PcMptN5PCkcVEOZLwGJ3RJkUjotckwY
+         7XW60SlePOnDWHaxpw2vtaiw4gNRNWM+9Qrlimvc2IWJ5puS+0yvC4bLfV98lj/um2ct
+         ukOA==
+X-Gm-Message-State: APjAAAUcXXbrCCk7daVsNht8qyaoZUJYvzTQI20zCbxAxp2xeALL3rT5
+        mSKqKv3f9s8uvZbd+gNdTzQx+SpC5ig3a9oaN05Atw==
+X-Google-Smtp-Source: APXvYqwfyn2DmWsZj2bhXfvA9i4/XqS8i/McjJrxQuPNIVYFjFINgDT10ZJoH33WOPTfzc89HlMzh99B6HddHW0ucJY=
+X-Received: by 2002:a05:6830:1249:: with SMTP id s9mr31776344otp.33.1565624337837;
+ Mon, 12 Aug 2019 08:38:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1565135484-31351-1-git-send-email-haiyangz@microsoft.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
+ <20190802153715.GA18075@sinkpad> <f4778816-69e5-146c-2a30-ec42e7f1677f@linux.intel.com>
+ <20190806032418.GA54717@aaronlu> <e1c4a7ed-822e-93cb-ff1d-6a0842db115f@linux.intel.com>
+ <20190806171241.GQ2349@hirez.programming.kicks-ass.net> <21933a50-f796-3d28-664c-030cb7c98431@linux.intel.com>
+ <20190808064731.GA5121@aaronlu> <70d1ff90-9be9-7b05-f1ff-e751f266183b@linux.intel.com>
+ <b7a83fcb-5c34-9794-5688-55c52697fd84@linux.intel.com> <20190810141556.GA73644@aaronlu>
+In-Reply-To: <20190810141556.GA73644@aaronlu>
+From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Date:   Mon, 12 Aug 2019 11:38:44 -0400
+Message-ID: <CANaguZDEq4=5Q9pnFyWx0-Gfkoq-WxUXBYgiG6WKLTO5njAHUA@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+To:     Aaron Lu <aaron.lu@linux.alibaba.com>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 11:52:11PM +0000, Haiyang Zhang wrote:
-> Currently in Azure cloud, for passthrough devices including GPU, the
-> host sets the device instance ID's bytes 8 - 15 to a value derived from
-> the host HWID, which is the same on all devices in a VM. So, the device
-> instance ID's bytes 8 and 9 provided by the host are no longer unique.
-> 
-> This can cause device passthrough to VMs to fail because the bytes 8 and
-> 9 is used as PCI domain number. So, as recommended by Azure host team,
-> we now use the bytes 4 and 5 which usually contain unique numbers as PCI
-> domain. The chance of collision is greatly reduced. In the rare cases of
-> collision, we will detect and find another number that is not in use.
+> I have two other small changes that I think are worth sending out.
+>
+> The first simplify logic in pick_task() and the 2nd avoid task pick all
+> over again when max is preempted. I also refined the previous hack patch to
+> make schedule always happen only for root cfs rq. Please see below for
+> details, thanks.
+>
+I see a potential issue here. With the simplification in pick_task,
+you might introduce a livelock where the match logic spins for ever.
+But you avoid that with the patch 2, by removing the loop if a pick
+preempts max. The potential problem is that, you miss a case where
+the newly picked task might have a match in the sibling on which max
+was selected before. By selecting idle, you ignore the potential match.
+As of now, the potential match check does not really work because,
+sched_core_find will always return the same task and we do not check
+the whole core_tree for a next match. This is in my TODO list to have
+sched_core_find to return the best next match, if match was preempted.
+But its a bit complex and needs more thought.
 
-This is not clear at all. Why "finding another number" is fine with
-this patch while it is not with current kernel code ? Also does this
-have backward compatibility issues ?
-
-I do not understand if a collision is a problem or not from the
-log above.
-
-> Thanks to Michael Kelley <mikelley@microsoft.com> for proposing this idea.
-
-Add it as Suggested-by: tag.
+Third patch looks good to me.
 
 Thanks,
-Lorenzo
-
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> Acked-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 92 +++++++++++++++++++++++++++++++------
->  1 file changed, 79 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 40b6254..4f3d97e 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -2510,6 +2510,48 @@ static void put_hvpcibus(struct hv_pcibus_device *hbus)
->  		complete(&hbus->remove_event);
->  }
->  
-> +#define HVPCI_DOM_MAP_SIZE (64 * 1024)
-> +static DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
-> +
-> +/*
-> + * PCI domain number 0 is used by emulated devices on Gen1 VMs, so define 0
-> + * as invalid for passthrough PCI devices of this driver.
-> + */
-> +#define HVPCI_DOM_INVALID 0
-> +
-> +/**
-> + * hv_get_dom_num() - Get a valid PCI domain number
-> + * Check if the PCI domain number is in use, and return another number if
-> + * it is in use.
-> + *
-> + * @dom: Requested domain number
-> + *
-> + * return: domain number on success, HVPCI_DOM_INVALID on failure
-> + */
-> +static u16 hv_get_dom_num(u16 dom)
-> +{
-> +	unsigned int i;
-> +
-> +	if (test_and_set_bit(dom, hvpci_dom_map) == 0)
-> +		return dom;
-> +
-> +	for_each_clear_bit(i, hvpci_dom_map, HVPCI_DOM_MAP_SIZE) {
-> +		if (test_and_set_bit(i, hvpci_dom_map) == 0)
-> +			return i;
-> +	}
-> +
-> +	return HVPCI_DOM_INVALID;
-> +}
-> +
-> +/**
-> + * hv_put_dom_num() - Mark the PCI domain number as free
-> + * @dom: Domain number to be freed
-> + */
-> +static void hv_put_dom_num(u16 dom)
-> +{
-> +	clear_bit(dom, hvpci_dom_map);
-> +}
-> +
->  /**
->   * hv_pci_probe() - New VMBus channel probe, for a root PCI bus
->   * @hdev:	VMBus's tracking struct for this root PCI bus
-> @@ -2521,6 +2563,7 @@ static int hv_pci_probe(struct hv_device *hdev,
->  			const struct hv_vmbus_device_id *dev_id)
->  {
->  	struct hv_pcibus_device *hbus;
-> +	u16 dom_req, dom;
->  	int ret;
->  
->  	/*
-> @@ -2535,19 +2578,34 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	hbus->state = hv_pcibus_init;
->  
->  	/*
-> -	 * The PCI bus "domain" is what is called "segment" in ACPI and
-> -	 * other specs.  Pull it from the instance ID, to get something
-> -	 * unique.  Bytes 8 and 9 are what is used in Windows guests, so
-> -	 * do the same thing for consistency.  Note that, since this code
-> -	 * only runs in a Hyper-V VM, Hyper-V can (and does) guarantee
-> -	 * that (1) the only domain in use for something that looks like
-> -	 * a physical PCI bus (which is actually emulated by the
-> -	 * hypervisor) is domain 0 and (2) there will be no overlap
-> -	 * between domains derived from these instance IDs in the same
-> -	 * VM.
-> +	 * The PCI bus "domain" is what is called "segment" in ACPI and other
-> +	 * specs. Pull it from the instance ID, to get something usually
-> +	 * unique. In rare cases of collision, we will find out another number
-> +	 * not in use.
-> +	 *
-> +	 * Note that, since this code only runs in a Hyper-V VM, Hyper-V
-> +	 * together with this guest driver can guarantee that (1) The only
-> +	 * domain used by Gen1 VMs for something that looks like a physical
-> +	 * PCI bus (which is actually emulated by the hypervisor) is domain 0.
-> +	 * (2) There will be no overlap between domains (after fixing possible
-> +	 * collisions) in the same VM.
->  	 */
-> -	hbus->sysdata.domain = hdev->dev_instance.b[9] |
-> -			       hdev->dev_instance.b[8] << 8;
-> +	dom_req = hdev->dev_instance.b[5] << 8 | hdev->dev_instance.b[4];
-> +	dom = hv_get_dom_num(dom_req);
-> +
-> +	if (dom == HVPCI_DOM_INVALID) {
-> +		dev_err(&hdev->device,
-> +			"Unable to use dom# 0x%hx or other numbers", dom_req);
-> +		ret = -EINVAL;
-> +		goto free_bus;
-> +	}
-> +
-> +	if (dom != dom_req)
-> +		dev_info(&hdev->device,
-> +			 "PCI dom# 0x%hx has collision, using 0x%hx",
-> +			 dom_req, dom);
-> +
-> +	hbus->sysdata.domain = dom;
->  
->  	hbus->hdev = hdev;
->  	refcount_set(&hbus->remove_lock, 1);
-> @@ -2562,7 +2620,7 @@ static int hv_pci_probe(struct hv_device *hdev,
->  					   hbus->sysdata.domain);
->  	if (!hbus->wq) {
->  		ret = -ENOMEM;
-> -		goto free_bus;
-> +		goto free_dom;
->  	}
->  
->  	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
-> @@ -2639,6 +2697,8 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	vmbus_close(hdev->channel);
->  destroy_wq:
->  	destroy_workqueue(hbus->wq);
-> +free_dom:
-> +	hv_put_dom_num(hbus->sysdata.domain);
->  free_bus:
->  	free_page((unsigned long)hbus);
->  	return ret;
-> @@ -2720,6 +2780,9 @@ static int hv_pci_remove(struct hv_device *hdev)
->  	put_hvpcibus(hbus);
->  	wait_for_completion(&hbus->remove_event);
->  	destroy_workqueue(hbus->wq);
-> +
-> +	hv_put_dom_num(hbus->sysdata.domain);
-> +
->  	free_page((unsigned long)hbus);
->  	return 0;
->  }
-> @@ -2747,6 +2810,9 @@ static void __exit exit_hv_pci_drv(void)
->  
->  static int __init init_hv_pci_drv(void)
->  {
-> +	/* Set the invalid domain number's bit, so it will not be used */
-> +	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
-> +
->  	return vmbus_driver_register(&hv_pci_drv);
->  }
->  
-> -- 
-> 1.8.3.1
-> 
+Vineeth
