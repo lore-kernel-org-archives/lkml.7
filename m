@@ -2,501 +2,290 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0DBC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1316BC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2C5120842
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E842087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:45:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="jsb6LUJY"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="F0QhhuwK";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="MGuxSvwV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfHLJpM (ORCPT
+        id S1727785AbfHLJpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 05:45:12 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:50944 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727570AbfHLJo1 (ORCPT
+        Mon, 12 Aug 2019 05:45:21 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:51062 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727570AbfHLJpT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 05:44:27 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        Mon, 12 Aug 2019 05:45:19 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost1.synopsys.com [10.12.135.161])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 63F11C2178;
-        Mon, 12 Aug 2019 09:44:24 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id CDE17C2143;
+        Mon, 12 Aug 2019 09:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1565603066; bh=1LoyqSTnLghI7ZIO6XywvNo83CHecLW+F76Y4rY9cuI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=jsb6LUJYNTHm6jQeC9uIXazyDEIXC1Cklq7xYQxK81b1YZgs16Kv6ZdzAo47iWAij
-         uC4NIU5sHZsEvKmzdmUNt47nRip/OJlBa/wvAFxoJh+P7/kpmpAW8ZLDdLcbSFZyYp
-         52Rldev0l4xyeLMG3qVmsX5e941x7Xdcrd1KVDD3L9cQvZSSm1A8snwtLqvrG0OogZ
-         HD0axVd92Dsr3VM7QaDzW8IYVlSU6vntH1O1CEO934J8uSaVjzo3mlKzfjISYDTkYQ
-         W8S4DS6Sq4/FlHCPA1oZvyonuwrIRYjNpBPC71nL8o8k2WtDr4ZX2eHRdRreDTn8vr
-         hUBzTecNwpO3w==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 04640A0065;
-        Mon, 12 Aug 2019 09:44:23 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
+        t=1565603119; bh=5M20aLwwE0S58trhDLEhLTGPI5PpcsoKXDaUPfUNc8Y=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=F0QhhuwKywf5xY2E6b/jhnTjnxU6AEk9hLnoFJa9TVe0zZUkv3wVAuJTrw9ZgANOI
+         wMsxMZM+3Vl4xvpmLcdK82bpzIOiQtvgA1nBiSTzf+Nkd3cNw2fm7avbk4jn2eTaSp
+         +BFuDYwtywMS/omQPOwNgFnmyv90XUGLLBFqCdGKPKzJESmjx7NxBn9s0vbFVLz017
+         xPczYinO5oC39n7QOV9Ng7urDxVEc/LBqWhQolv6gMUUfZy5Iimexlf/KekBPYMSpU
+         Sf07BfxlGkc5HUgnWhLg7jHoQ8ucbjW4EvQgoQ4VAFWpmS84DbapZyW7mDvyXQfX32
+         N/DMfdyrXj4vQ==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 72888A008B;
+        Mon, 12 Aug 2019 09:45:17 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ us01wehtc1.internal.synopsys.com (10.12.239.231) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 12 Aug 2019 02:45:16 -0700
+Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 12 Aug 2019 02:45:16 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gsU0sjbS9/8ydqKsapPrU9gMzr+lI8RfH1RQcYKkWaVRDbrHznYTyQL8nuk5ZXWLM/O3nZ4FjT6VSNRYf4uM6yKRkw3XyOOfVhk2M3VFx99viF/3rrGBQWmw6U0/nXdtd5BNkvUJu465RUk/Qt6A1ReVq6MRgbqEnyqKkfHsxhZD+LG/w+QBJgeLOjdvmQX/eOlRQm57gCQml3gc5bPZluXVIARgA2b1BVOKJZa8SJTqEZYGUqMN3JZTEOJWAfTvvMHmI97aGJsh4c/LmjAGZtHNNc2rqyj216DMGASZa2Rl4g5fczA6/5Hvsv6CJJhWzdtIfsATHxRUuv9cA2Txgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5M20aLwwE0S58trhDLEhLTGPI5PpcsoKXDaUPfUNc8Y=;
+ b=DZD2izbT72/fCZfRcIPJWlhVZmsxDiAAmfN1MSBM+0bhpu9sU7Dbv9FGnuiNEXhCIO2/LCCBvb9h+2/23OoDwgyO+QE0WYcYhH1D9qrc9Tu275RKSWuGv3vnhDEWSXgRB68ZgyOEKL6+BaH+LK/GIgT9JcFyWCP7mpH8idYg+6c0dRSF6+rEQwgocz/Xb2TcMtzK0fYlPNmyp3YUetE0c8DYtGVR3KmP8//QKMdszzGlGymTbq2kuIbDQoK519oJ+SL035NdxzpWfYKCoIMRHA5aaPE3xkeBrDPI4+pJKaac7LVuAkHPbb0CfmDlNRnGPMidgvKIKXZuiQyUgGgGZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5M20aLwwE0S58trhDLEhLTGPI5PpcsoKXDaUPfUNc8Y=;
+ b=MGuxSvwVmjFyA/m/K9dPx/aQZ14tRiFi5LlwEuJ5HhuLhhNB9dGXMz17vooo4rCrH7VxvL9wE1dxJ9HszZ75QzExtd0pW3ssbtRh8x2hvR1BLtwrl0w1fa+5KTCWWRdBgchH2hedT5X9lsxIq1SIsQEbbnteKQV3IiplIHJrpag=
+Received: from MN2PR12MB3710.namprd12.prod.outlook.com (10.255.236.23) by
+ MN2PR12MB2941.namprd12.prod.outlook.com (20.179.80.76) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.16; Mon, 12 Aug 2019 09:45:15 +0000
+Received: from MN2PR12MB3710.namprd12.prod.outlook.com
+ ([fe80::f50c:562b:fdc0:c2dd]) by MN2PR12MB3710.namprd12.prod.outlook.com
+ ([fe80::f50c:562b:fdc0:c2dd%3]) with mapi id 15.20.2157.022; Mon, 12 Aug 2019
+ 09:45:15 +0000
+From:   Luis de Oliveira <Luis.Oliveira@synopsys.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>
+CC:     Luis Oliveira <Luis.Oliveira@synopsys.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 04/12] net: stmmac: Add Split Header support and enable it in XGMAC cores
-Date:   Mon, 12 Aug 2019 11:44:03 +0200
-Message-Id: <6279e35421e17256ac023227ec8cd5c8498d34d0.1565602974.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1565602974.git.joabreu@synopsys.com>
-References: <cover.1565602974.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1565602974.git.joabreu@synopsys.com>
-References: <cover.1565602974.git.joabreu@synopsys.com>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Rob Herring <robh@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Kishon Vijay Abraham I" <kishon@ti.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        "Linux Media Mailing List" <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: RE: [v4 2/6] media: platform: dwc: Add MIPI CSI-2 controller driver
+Thread-Topic: [v4 2/6] media: platform: dwc: Add MIPI CSI-2 controller driver
+Thread-Index: AQHVIIralF2QFkL0vUS66ixvvrgUPKbzNy0AgAGBY4CAAueZkA==
+Date:   Mon, 12 Aug 2019 09:45:15 +0000
+Message-ID: <MN2PR12MB3710E54A1E4BA4FD3AD77B87CBD30@MN2PR12MB3710.namprd12.prod.outlook.com>
+References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
+ <1560280855-18085-3-git-send-email-luis.oliveira@synopsys.com>
+ <20190809141000.GB864@valkosipuli.retiisi.org.uk>
+ <CAHp75VeutP=W43GHtY+FKvVGjBnQrF+nKbdaq_QXy8ZCoS=k1g@mail.gmail.com>
+In-Reply-To: <CAHp75VeutP=W43GHtY+FKvVGjBnQrF+nKbdaq_QXy8ZCoS=k1g@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=lolivei@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fcc866d3-569f-413f-bcb9-08d71f09c73e
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR12MB2941;
+x-ms-traffictypediagnostic: MN2PR12MB2941:|MN2PR12MB2941:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR12MB29412CF3B77D0D33DE062E56CBD30@MN2PR12MB2941.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1122;
+x-forefront-prvs: 012792EC17
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(136003)(366004)(396003)(39850400004)(199004)(189003)(7736002)(186003)(305945005)(229853002)(26005)(25786009)(3846002)(5660300002)(6116002)(74316002)(71190400001)(107886003)(66066001)(6246003)(71200400001)(99286004)(52536014)(316002)(8676002)(9686003)(7416002)(7696005)(76176011)(54906003)(2906002)(81156014)(110136005)(53936002)(81166006)(478600001)(102836004)(55016002)(8936002)(86362001)(53546011)(6506007)(6436002)(14454004)(486006)(446003)(11346002)(66446008)(476003)(76116006)(64756008)(66556008)(66476007)(4326008)(66946007)(14444005)(33656002)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR12MB2941;H:MN2PR12MB3710.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: lgMxGqFpC3jvf78AyF94Z0zkEqqGy/FIZihqzuujAztM4CyuqNoIaZKG1BuoaWe/dJLGcyii/jbPF0wNTUJHKWV85iP0DOLpATeWEvbuA0bPgiko+9QAJIQAkJBGIYl2OjcdZnBbeu2OF4FepFFGQrn2tm3D1QRiu0u4PM+PoRsPtDo/RyN2IuxdKTT+sT15STDPhR+HszmCP1mz9ba/SdHcSbRF6Y2d8azhT2URaS1MKPi+pnGJC2PQlR5f5y1C6BHzYDkxbX+D0WKu7WY7hyPtZ3AZmSGLk34C76BMGNb8va2O73hr9aDDk2QW3fwXB7Y9jGvs0X0bjSM6re8uuCc3XMJeyylY7fhcpfnBZufASMX9pHcUEH5l3m2r9LE1t5RQDgkcFOT+S+a8hbPvmTgBM6Az5OEd0M+3QYKjzis=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: fcc866d3-569f-413f-bcb9-08d71f09c73e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 09:45:15.2149
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: muaALApS8mDAoX8wqrTmhU2VrY01R7UAsAsnnDG9Nith+xZmte2jjSxnv6Q8foO/uPzEmAZXFrsI93vez1LLJQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB2941
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the support for Split Header feature in the RX path and enable it in
-XGMAC cores.
-
-With Split Header disabled 'perf stat -d' gives:
-86870.624945 task-clock (msec)      #    0.429 CPUs utilized
-     1073352 context-switches       #    0.012 M/sec
-           1 cpu-migrations         #    0.000 K/sec
-         213 page-faults            #    0.002 K/sec
-327113872376 cycles                 #    3.766 GHz (62.53%)
- 56618161216 instructions           #    0.17  insn per cycle (75.06%)
- 10742205071 branches               #  123.658 M/sec (75.36%)
-   584309242 branch-misses          #    5.44% of all branches (75.19%)
- 17594787965 L1-dcache-loads        #  202.540 M/sec (74.88%)
-  4003773131 L1-dcache-load-misses  #   22.76% of all L1-dcache hits (74.89%)
-  1313301468 LLC-loads              #   15.118 M/sec (49.75%)
-   355906510 LLC-load-misses        #   27.10% of all LL-cache hits (49.92%)
-
-With Split Header enabled 'perf stat -d' gives:
-49324.456539 task-clock (msec)     #    0.245 CPUs utilized
-     2542387 context-switches      #    0.052 M/sec
-           1 cpu-migrations        #    0.000 K/sec
-         213 page-faults           #    0.004 K/sec
-177092791469 cycles                #    3.590 GHz (62.30%)
- 68555756017 instructions          #    0.39  insn per cycle (75.16%)
- 12697019382 branches              #  257.418 M/sec (74.81%)
-   442081897 branch-misses         #    3.48% of all branches (74.79%)
- 20337958358 L1-dcache-loads       #  412.330 M/sec (75.46%)
-  3820210140 L1-dcache-load-misses #   18.78% of all L1-dcache hits (75.35%)
-  1257719198 LLC-loads             #   25.499 M/sec (49.73%)
-   685543923 LLC-load-misses       #   54.51% of all LL-cache hits (49.86%)
-
-Changes from v1:
-	- Add performance info (David)
-	- Add misssing dma_sync_single_for_device()
-
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/stmicro/stmmac/common.h       |  1 +
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |  6 ++
- .../net/ethernet/stmicro/stmmac/dwxgmac2_descs.c   | 18 ++++-
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c | 18 +++++
- drivers/net/ethernet/stmicro/stmmac/hwif.h         |  9 +++
- drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  3 +
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 76 +++++++++++++++++++++-
- 7 files changed, 129 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index e1e6f67041ec..527f961579f4 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -356,6 +356,7 @@ struct dma_features {
- 	unsigned int addr64;
- 	unsigned int rssen;
- 	unsigned int vlhash;
-+	unsigned int sphen;
- };
- 
- /* GMAC TX FIFO is 8K, Rx FIFO is 16K */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-index 429c94e40c73..995d533b9316 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-@@ -32,6 +32,9 @@
- #define XGMAC_CONFIG_ARPEN		BIT(31)
- #define XGMAC_CONFIG_GPSL		GENMASK(29, 16)
- #define XGMAC_CONFIG_GPSL_SHIFT		16
-+#define XGMAC_CONFIG_HDSMS		GENMASK(14, 12)
-+#define XGMAC_CONFIG_HDSMS_SHIFT	12
-+#define XGMAC_CONFIG_HDSMS_256		(0x2 << XGMAC_CONFIG_HDSMS_SHIFT)
- #define XGMAC_CONFIG_S2KP		BIT(11)
- #define XGMAC_CONFIG_LM			BIT(10)
- #define XGMAC_CONFIG_IPC		BIT(9)
-@@ -101,6 +104,7 @@
- #define XGMAC_HW_FEATURE1		0x00000120
- #define XGMAC_HWFEAT_RSSEN		BIT(20)
- #define XGMAC_HWFEAT_TSOEN		BIT(18)
-+#define XGMAC_HWFEAT_SPHEN		BIT(17)
- #define XGMAC_HWFEAT_ADDR64		GENMASK(15, 14)
- #define XGMAC_HWFEAT_TXFIFOSIZE		GENMASK(10, 6)
- #define XGMAC_HWFEAT_RXFIFOSIZE		GENMASK(4, 0)
-@@ -258,6 +262,7 @@
- #define XGMAC_TCEIE			BIT(0)
- #define XGMAC_DMA_ECC_INT_STATUS	0x0000306c
- #define XGMAC_DMA_CH_CONTROL(x)		(0x00003100 + (0x80 * (x)))
-+#define XGMAC_SPH			BIT(24)
- #define XGMAC_PBLx8			BIT(16)
- #define XGMAC_DMA_CH_TX_CONTROL(x)	(0x00003104 + (0x80 * (x)))
- #define XGMAC_TxPBL			GENMASK(21, 16)
-@@ -318,6 +323,7 @@
- #define XGMAC_TDES3_CIC_SHIFT		16
- #define XGMAC_TDES3_TPL			GENMASK(17, 0)
- #define XGMAC_TDES3_FL			GENMASK(14, 0)
-+#define XGMAC_RDES2_HL			GENMASK(9, 0)
- #define XGMAC_RDES3_OWN			BIT(31)
- #define XGMAC_RDES3_CTXT		BIT(30)
- #define XGMAC_RDES3_IOC			BIT(30)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-index 717b50d4aa93..6d79d6fac049 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-@@ -29,6 +29,8 @@ static int dwxgmac2_get_rx_status(void *data, struct stmmac_extra_stats *x,
- 
- 	if (unlikely(rdes3 & XGMAC_RDES3_OWN))
- 		return dma_own;
-+	if (unlikely(rdes3 & XGMAC_RDES3_CTXT))
-+		return discard_frame;
- 	if (likely(!(rdes3 & XGMAC_RDES3_LD)))
- 		return rx_not_ls;
- 	if (unlikely((rdes3 & XGMAC_RDES3_ES) && (rdes3 & XGMAC_RDES3_LD)))
-@@ -54,7 +56,7 @@ static void dwxgmac2_set_tx_owner(struct dma_desc *p)
- 
- static void dwxgmac2_set_rx_owner(struct dma_desc *p, int disable_rx_ic)
- {
--	p->des3 = cpu_to_le32(XGMAC_RDES3_OWN);
-+	p->des3 |= cpu_to_le32(XGMAC_RDES3_OWN);
- 
- 	if (!disable_rx_ic)
- 		p->des3 |= cpu_to_le32(XGMAC_RDES3_IOC);
-@@ -285,6 +287,18 @@ static int dwxgmac2_get_rx_hash(struct dma_desc *p, u32 *hash,
- 	return -EINVAL;
- }
- 
-+static int dwxgmac2_get_rx_header_len(struct dma_desc *p, unsigned int *len)
-+{
-+	*len = le32_to_cpu(p->des2) & XGMAC_RDES2_HL;
-+	return 0;
-+}
-+
-+static void dwxgmac2_set_sec_addr(struct dma_desc *p, dma_addr_t addr)
-+{
-+	p->des2 = cpu_to_le32(lower_32_bits(addr));
-+	p->des3 = cpu_to_le32(upper_32_bits(addr));
-+}
-+
- const struct stmmac_desc_ops dwxgmac210_desc_ops = {
- 	.tx_status = dwxgmac2_get_tx_status,
- 	.rx_status = dwxgmac2_get_rx_status,
-@@ -309,4 +323,6 @@ const struct stmmac_desc_ops dwxgmac210_desc_ops = {
- 	.set_addr = dwxgmac2_set_addr,
- 	.clear = dwxgmac2_clear,
- 	.get_rx_hash = dwxgmac2_get_rx_hash,
-+	.get_rx_header_len = dwxgmac2_get_rx_header_len,
-+	.set_sec_addr = dwxgmac2_set_sec_addr,
- };
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-index 18cbf4ab4ad2..0f3de4895cf7 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-@@ -366,6 +366,7 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
- 	hw_cap = readl(ioaddr + XGMAC_HW_FEATURE1);
- 	dma_cap->rssen = (hw_cap & XGMAC_HWFEAT_RSSEN) >> 20;
- 	dma_cap->tsoen = (hw_cap & XGMAC_HWFEAT_TSOEN) >> 18;
-+	dma_cap->sphen = (hw_cap & XGMAC_HWFEAT_SPHEN) >> 17;
- 
- 	dma_cap->addr64 = (hw_cap & XGMAC_HWFEAT_ADDR64) >> 14;
- 	switch (dma_cap->addr64) {
-@@ -472,6 +473,22 @@ static void dwxgmac2_set_bfsize(void __iomem *ioaddr, int bfsize, u32 chan)
- 	writel(value, ioaddr + XGMAC_DMA_CH_RX_CONTROL(chan));
- }
- 
-+static void dwxgmac2_enable_sph(void __iomem *ioaddr, bool en, u32 chan)
-+{
-+	u32 value = readl(ioaddr + XGMAC_RX_CONFIG);
-+
-+	value &= ~XGMAC_CONFIG_HDSMS;
-+	value |= XGMAC_CONFIG_HDSMS_256; /* Segment max 256 bytes */
-+	writel(value, ioaddr + XGMAC_RX_CONFIG);
-+
-+	value = readl(ioaddr + XGMAC_DMA_CH_CONTROL(chan));
-+	if (en)
-+		value |= XGMAC_SPH;
-+	else
-+		value &= ~XGMAC_SPH;
-+	writel(value, ioaddr + XGMAC_DMA_CH_CONTROL(chan));
-+}
-+
- const struct stmmac_dma_ops dwxgmac210_dma_ops = {
- 	.reset = dwxgmac2_dma_reset,
- 	.init = dwxgmac2_dma_init,
-@@ -498,4 +515,5 @@ const struct stmmac_dma_ops dwxgmac210_dma_ops = {
- 	.enable_tso = dwxgmac2_enable_tso,
- 	.qmode = dwxgmac2_qmode,
- 	.set_bfsize = dwxgmac2_set_bfsize,
-+	.enable_sph = dwxgmac2_enable_sph,
- };
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index 7e1523c6f456..ed9fda50ee22 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -89,6 +89,8 @@ struct stmmac_desc_ops {
- 	/* RSS */
- 	int (*get_rx_hash)(struct dma_desc *p, u32 *hash,
- 			   enum pkt_hash_types *type);
-+	int (*get_rx_header_len)(struct dma_desc *p, unsigned int *len);
-+	void (*set_sec_addr)(struct dma_desc *p, dma_addr_t addr);
- };
- 
- #define stmmac_init_rx_desc(__priv, __args...) \
-@@ -141,6 +143,10 @@ struct stmmac_desc_ops {
- 	stmmac_do_void_callback(__priv, desc, clear, __args)
- #define stmmac_get_rx_hash(__priv, __args...) \
- 	stmmac_do_callback(__priv, desc, get_rx_hash, __args)
-+#define stmmac_get_rx_header_len(__priv, __args...) \
-+	stmmac_do_callback(__priv, desc, get_rx_header_len, __args)
-+#define stmmac_set_desc_sec_addr(__priv, __args...) \
-+	stmmac_do_void_callback(__priv, desc, set_sec_addr, __args)
- 
- struct stmmac_dma_cfg;
- struct dma_features;
-@@ -191,6 +197,7 @@ struct stmmac_dma_ops {
- 	void (*enable_tso)(void __iomem *ioaddr, bool en, u32 chan);
- 	void (*qmode)(void __iomem *ioaddr, u32 channel, u8 qmode);
- 	void (*set_bfsize)(void __iomem *ioaddr, int bfsize, u32 chan);
-+	void (*enable_sph)(void __iomem *ioaddr, bool en, u32 chan);
- };
- 
- #define stmmac_reset(__priv, __args...) \
-@@ -247,6 +254,8 @@ struct stmmac_dma_ops {
- 	stmmac_do_void_callback(__priv, dma, qmode, __args)
- #define stmmac_set_dma_bfsize(__priv, __args...) \
- 	stmmac_do_void_callback(__priv, dma, set_bfsize, __args)
-+#define stmmac_enable_sph(__priv, __args...) \
-+	stmmac_do_void_callback(__priv, dma, enable_sph, __args)
- 
- struct mac_device_info;
- struct net_device;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-index 56158e1448ac..4597811fd325 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-@@ -58,7 +58,9 @@ struct stmmac_tx_queue {
- 
- struct stmmac_rx_buffer {
- 	struct page *page;
-+	struct page *sec_page;
- 	dma_addr_t addr;
-+	dma_addr_t sec_addr;
- };
- 
- struct stmmac_rx_queue {
-@@ -136,6 +138,7 @@ struct stmmac_priv {
- 	int hwts_tx_en;
- 	bool tx_path_in_lpi_mode;
- 	bool tso;
-+	int sph;
- 
- 	unsigned int dma_buf_sz;
- 	unsigned int rx_copybreak;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index a093eb4ec275..556c75803f70 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -1201,6 +1201,17 @@ static int stmmac_init_rx_buffers(struct stmmac_priv *priv, struct dma_desc *p,
- 	if (!buf->page)
- 		return -ENOMEM;
- 
-+	if (priv->sph) {
-+		buf->sec_page = page_pool_dev_alloc_pages(rx_q->page_pool);
-+		if (!buf->sec_page)
-+			return -ENOMEM;
-+
-+		buf->sec_addr = page_pool_get_dma_addr(buf->sec_page);
-+		stmmac_set_desc_sec_addr(priv, p, buf->sec_addr);
-+	} else {
-+		buf->sec_page = NULL;
-+	}
-+
- 	buf->addr = page_pool_get_dma_addr(buf->page);
- 	stmmac_set_desc_addr(priv, p, buf->addr);
- 	if (priv->dma_buf_sz == BUF_SIZE_16KiB)
-@@ -1223,6 +1234,10 @@ static void stmmac_free_rx_buffer(struct stmmac_priv *priv, u32 queue, int i)
- 	if (buf->page)
- 		page_pool_put_page(rx_q->page_pool, buf->page, false);
- 	buf->page = NULL;
-+
-+	if (buf->sec_page)
-+		page_pool_put_page(rx_q->page_pool, buf->sec_page, false);
-+	buf->sec_page = NULL;
- }
- 
- /**
-@@ -2596,6 +2611,12 @@ static int stmmac_hw_setup(struct net_device *dev, bool init_ptp)
- 			stmmac_enable_tso(priv, priv->ioaddr, 1, chan);
- 	}
- 
-+	/* Enable Split Header */
-+	if (priv->sph && priv->hw->rx_csum) {
-+		for (chan = 0; chan < rx_cnt; chan++)
-+			stmmac_enable_sph(priv, priv->ioaddr, 1, chan);
-+	}
-+
- 	/* Start the ball rolling... */
- 	stmmac_start_all_dma(priv);
- 
-@@ -3315,6 +3336,17 @@ static inline void stmmac_rx_refill(struct stmmac_priv *priv, u32 queue)
- 				break;
- 		}
- 
-+		if (priv->sph && !buf->sec_page) {
-+			buf->sec_page = page_pool_dev_alloc_pages(rx_q->page_pool);
-+			if (!buf->sec_page)
-+				break;
-+
-+			buf->sec_addr = page_pool_get_dma_addr(buf->sec_page);
-+
-+			dma_sync_single_for_device(priv->device, buf->sec_addr,
-+						   len, DMA_FROM_DEVICE);
-+		}
-+
- 		buf->addr = page_pool_get_dma_addr(buf->page);
- 
- 		/* Sync whole allocation to device. This will invalidate old
-@@ -3324,6 +3356,7 @@ static inline void stmmac_rx_refill(struct stmmac_priv *priv, u32 queue)
- 					   DMA_FROM_DEVICE);
- 
- 		stmmac_set_desc_addr(priv, p, buf->addr);
-+		stmmac_set_desc_sec_addr(priv, p, buf->sec_addr);
- 		stmmac_refill_desc3(priv, rx_q, p);
- 
- 		rx_q->rx_count_frames++;
-@@ -3370,10 +3403,11 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- 		stmmac_display_ring(priv, rx_head, DMA_RX_SIZE, true);
- 	}
- 	while (count < limit) {
-+		unsigned int hlen = 0, prev_len = 0;
- 		enum pkt_hash_types hash_type;
- 		struct stmmac_rx_buffer *buf;
--		unsigned int prev_len = 0;
- 		struct dma_desc *np, *p;
-+		unsigned int sec_len;
- 		int entry;
- 		u32 hash;
- 
-@@ -3389,6 +3423,8 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- 		}
- 
- read_again:
-+		sec_len = 0;
-+
- 		if (count >= limit)
- 			break;
- 
-@@ -3418,6 +3454,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- 			np = rx_q->dma_rx + next_entry;
- 
- 		prefetch(np);
-+		prefetch(page_address(buf->page));
- 
- 		if (priv->extend_desc)
- 			stmmac_rx_extended_status(priv, &priv->dev->stats,
-@@ -3458,6 +3495,17 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- 		}
- 
- 		if (!skb) {
-+			int ret = stmmac_get_rx_header_len(priv, p, &hlen);
-+
-+			if (priv->sph && !ret && (hlen > 0)) {
-+				sec_len = len;
-+				if (!(status & rx_not_ls))
-+					sec_len = sec_len - hlen;
-+				len = hlen;
-+
-+				prefetch(page_address(buf->sec_page));
-+			}
-+
- 			skb = netdev_alloc_skb_ip_align(priv->dev, len);
- 			if (!skb) {
- 				priv->dev->stats.rx_dropped++;
-@@ -3490,6 +3538,20 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- 			buf->page = NULL;
- 		}
- 
-+		if (sec_len > 0) {
-+			dma_sync_single_for_cpu(priv->device, buf->sec_addr,
-+						sec_len, DMA_FROM_DEVICE);
-+			skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags,
-+					buf->sec_page, 0, sec_len,
-+					priv->dma_buf_sz);
-+
-+			len += sec_len;
-+
-+			/* Data payload appended into SKB */
-+			page_pool_release_page(rx_q->page_pool, buf->sec_page);
-+			buf->sec_page = NULL;
-+		}
-+
- 		if (likely(status & rx_not_ls))
- 			goto read_again;
- 
-@@ -3664,6 +3726,8 @@ static int stmmac_set_features(struct net_device *netdev,
- 			       netdev_features_t features)
- {
- 	struct stmmac_priv *priv = netdev_priv(netdev);
-+	bool sph_en;
-+	u32 chan;
- 
- 	/* Keep the COE Type in case of csum is supporting */
- 	if (features & NETIF_F_RXCSUM)
-@@ -3675,6 +3739,10 @@ static int stmmac_set_features(struct net_device *netdev,
- 	 */
- 	stmmac_rx_ipc(priv, priv->hw);
- 
-+	sph_en = (priv->hw->rx_csum > 0) && priv->sph;
-+	for (chan = 0; chan < priv->plat->rx_queues_to_use; chan++)
-+		stmmac_enable_sph(priv, priv->ioaddr, sph_en, chan);
-+
- 	return 0;
- }
- 
-@@ -4367,6 +4435,12 @@ int stmmac_dvr_probe(struct device *device,
- 		dev_info(priv->device, "TSO feature enabled\n");
- 	}
- 
-+	if (priv->dma_cap.sphen) {
-+		ndev->hw_features |= NETIF_F_GRO;
-+		priv->sph = true;
-+		dev_info(priv->device, "SPH feature enabled\n");
-+	}
-+
- 	if (priv->dma_cap.addr64) {
- 		ret = dma_set_mask_and_coherent(device,
- 				DMA_BIT_MASK(priv->dma_cap.addr64));
--- 
-2.7.4
-
+SGkgU2FrYXJpLCBBbmR5LA0KDQpGcm9tOiBBbmR5IFNoZXZjaGVua28gPGFuZHkuc2hldmNoZW5r
+b0BnbWFpbC5jb20+DQpEYXRlOiBTYXQsIEF1ZyAxMCwgMjAxOSBhdCAxNDowOToyMQ0KDQo+IE9u
+IEZyaSwgQXVnIDksIDIwMTkgYXQgNTozOCBQTSBTYWthcmkgQWlsdXMgPHNha2FyaS5haWx1c0Bp
+a2kuZmk+IHdyb3RlOg0KPiA+IE9uIFR1ZSwgSnVuIDExLCAyMDE5IGF0IDA5OjIwOjUxUE0gKzAy
+MDAsIEx1aXMgT2xpdmVpcmEgd3JvdGU6DQo+ID4gPiBBZGQgdGhlIFN5bm9wc3lzIE1JUEkgQ1NJ
+LTIgY29udHJvbGxlciBkcml2ZXIuIFRoaXMNCj4gPiA+IGNvbnRyb2xsZXIgZHJpdmVyIGlzIGRp
+dmlkZWQgaW4gcGxhdGZvcm0gZnVuY3Rpb25zIGFuZCBjb3JlIGZ1bmN0aW9ucy4NCj4gPiA+IFRo
+aXMgd2F5IGl0IHNlcnZlcyBhcyBwbGF0Zm9ybSBmb3IgZnV0dXJlIERlc2lnbldhcmUgZHJpdmVy
+cy4NCj4gDQo+ID4gPiArY29uc3Qgc3RydWN0IG1pcGlfZHQgY3NpX2R0W10gPSB7DQo+ID4NCj4g
+PiBNYWtlIHRoaXMgc3RhdGljIG9yIHVzZSBhIGNvbW1vbiBwcmVmaXggdGhhdCBzb21laG93IHJl
+c2VtYmxlcyB0aGUgbmFtZQ0KPiA+IG5hbWUgb2YgdGhlIGRyaXZlci4NCg0KSSB3aWxsIGRvIGl0
+Lg0KDQo+ID4NCj4gPiA+ICsgICAgIHsNCj4gPiA+ICsgICAgICAgICAgICAgLmhleCA9IENTSV8y
+X1lVVjQyMF84LA0KPiA+ID4gKyAgICAgICAgICAgICAubmFtZSA9ICJZVVY0MjBfOGJpdHMiLA0K
+PiA+ID4gKyAgICAgfSwgew0KPiA+ID4gKyAgICAgICAgICAgICAuaGV4ID0gQ1NJXzJfWVVWNDIw
+XzEwLA0KPiA+ID4gKyAgICAgICAgICAgICAubmFtZSA9ICJZVVY0MjBfMTBiaXRzIiwNCj4gPiA+
+ICsgICAgIH0sIHsNCj4gPiA+ICsgICAgICAgICAgICAgLmhleCA9IENTSV8yX1lVVjQyMF84X0xF
+RywNCj4gPiA+ICsgICAgICAgICAgICAgLm5hbWUgPSAiWVVWNDIwXzhiaXRzX0xFR0FDWSIsDQo+
+ID4gPiArICAgICB9LCB7DQo+ID4gPiArICAgICAgICAgICAgIC5oZXggPSBDU0lfMl9ZVVY0MjBf
+OF9TSElGVCwNCj4gPiA+ICsgICAgICAgICAgICAgLm5hbWUgPSAiWVVWNDIwXzhiaXRzX1NISUZU
+IiwNCj4gPiA+ICsgICAgIH0sIHsNCj4gPiA+ICsgICAgICAgICAgICAgLmhleCA9IENTSV8yX1lV
+VjQyMF8xMF9TSElGVCwNCj4gPiA+ICsgICAgICAgICAgICAgLm5hbWUgPSAiWVVWNDIwXzEwYml0
+c19TSElGVCIsDQo+ID4gPiArICAgICB9LCB7DQo+ID4gPiArICAgICAgICAgICAgIC5oZXggPSBD
+U0lfMl9ZVVY0MjJfOCwNCj4gPiA+ICsgICAgICAgICAgICAgLm5hbWUgPSAiWVVWNDQyXzhiaXRz
+IiwNCj4gPiA+ICsgICAgIH0sIHsNCj4gPiA+ICsgICAgICAgICAgICAgLmhleCA9IENTSV8yX1lV
+VjQyMl8xMCwNCj4gPiA+ICsgICAgICAgICAgICAgLm5hbWUgPSAiWVVWNDQyXzEwYml0cyIsDQo+
+ID4gPiArICAgICB9LCB7DQo+ID4gPiArICAgICAgICAgICAgIC5oZXggPSBDU0lfMl9SR0I0NDQs
+DQo+ID4gPiArICAgICAgICAgICAgIC5uYW1lID0gIlJHQjQ0NCIsDQo+ID4gPiArICAgICB9LCB7
+DQo+ID4gPiArICAgICAgICAgICAgIC5oZXggPSBDU0lfMl9SR0I1NTUsDQo+ID4gPiArICAgICAg
+ICAgICAgIC5uYW1lID0gIlJHQjU1NSIsDQo+ID4gPiArICAgICB9LCB7DQo+ID4gPiArICAgICAg
+ICAgICAgIC5oZXggPSBDU0lfMl9SR0I1NjUsDQo+ID4gPiArICAgICAgICAgICAgIC5uYW1lID0g
+IlJHQjU2NSIsDQo+ID4gPiArICAgICB9LCB7DQo+ID4gPiArICAgICAgICAgICAgIC5oZXggPSBD
+U0lfMl9SR0I2NjYsDQo+ID4gPiArICAgICAgICAgICAgIC5uYW1lID0gIlJHQjY2NiIsDQo+ID4g
+PiArICAgICB9LCB7DQo+ID4gPiArICAgICAgICAgICAgIC5oZXggPSBDU0lfMl9SR0I4ODgsDQo+
+ID4gPiArICAgICAgICAgICAgIC5uYW1lID0gIlJHQjg4OCIsDQo+ID4gPiArICAgICB9LCB7DQo+
+ID4gPiArICAgICAgICAgICAgIC5oZXggPSBDU0lfMl9SQVc2LA0KPiA+ID4gKyAgICAgICAgICAg
+ICAubmFtZSA9ICJSQVc2IiwNCj4gPiA+ICsgICAgIH0sIHsNCj4gPiA+ICsgICAgICAgICAgICAg
+LmhleCA9IENTSV8yX1JBVzcsDQo+ID4gPiArICAgICAgICAgICAgIC5uYW1lID0gIlJBVzciLA0K
+PiA+ID4gKyAgICAgfSwgew0KPiA+ID4gKyAgICAgICAgICAgICAuaGV4ID0gQ1NJXzJfUkFXOCwN
+Cj4gPiA+ICsgICAgICAgICAgICAgLm5hbWUgPSAiUkFXOCIsDQo+ID4gPiArICAgICB9LCB7DQo+
+ID4gPiArICAgICAgICAgICAgIC5oZXggPSBDU0lfMl9SQVcxMCwNCj4gPiA+ICsgICAgICAgICAg
+ICAgLm5hbWUgPSAiUkFXMTAiLA0KPiA+ID4gKyAgICAgfSwgew0KPiA+ID4gKyAgICAgICAgICAg
+ICAuaGV4ID0gQ1NJXzJfUkFXMTIsDQo+ID4gPiArICAgICAgICAgICAgIC5uYW1lID0gIlJBVzEy
+IiwNCj4gPiA+ICsgICAgIH0sIHsNCj4gPiA+ICsgICAgICAgICAgICAgLmhleCA9IENTSV8yX1JB
+VzE0LA0KPiA+ID4gKyAgICAgICAgICAgICAubmFtZSA9ICJSQVcxNCIsDQo+ID4gPiArICAgICB9
+LCB7DQo+ID4gPiArICAgICAgICAgICAgIC5oZXggPSBDU0lfMl9SQVcxNiwNCj4gPiA+ICsgICAg
+ICAgICAgICAgLm5hbWUgPSAiUkFXMTYiLA0KPiA+ID4gKyAgICAgfSwNCj4gPiA+ICt9Ow0KPiAN
+Cj4gT25lIG1heSB1dGlsaXplIF9fc3RyaW5naWZ5KCkgbWFjcm8gYW5kIGRvIHNvbWVsaWtlDQo+
+IA0KPiAjZGVmaW5lIENTSV9GTVRfREVTQyhmbXQpIFwNCj4gIHsgLmhleCA9IENTSV8yXyMjZm10
+LCAubmFtZSA9IF9fc3RyaW5naWZ5KGZtdCksIH0NCj4gDQo+IEFuZCBkbw0KPiANCj4gIENTSV9G
+TVRfREVTQyhSQVcxNiksDQo+IA0KPiBldGMuDQo+IA0KDQpHcmVhdCwgdGhhbmtzISANCg0KPiA+
+ID4gKyAgICAgICAgICAgICByZXR1cm4gY2ZnID8gdjRsMl9zdWJkZXZfZ2V0X3RyeV9mb3JtYXQo
+JmRldi0+c2QsDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBjZmcsDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAwKSA6IE5VTEw7DQo+IA0KPiBUaGlzIGluZGVudGF0aW9u
+IGxvb2tzIHVnbHkuDQo+IEkgd291bGQgcmF0aGVyIHB1dCB0aGlzIG9uIG9uZSBsaW5lLg0KPiAN
+Cj4gPiA+ICsgICAgIGRldl9kYmcoZGV2LT5kZXYsDQo+ID4gPiArICAgICAgICAgICAgICIlcyBn
+b3QgdjRsMl9tYnVzX3BpeGVsY29kZS4gMHgleFxuIiwgX19mdW5jX18sDQo+ID4gPiArICAgICAg
+ICAgICAgIGRldi0+Zm9ybWF0LmNvZGUpOw0KPiA+ID4gKyAgICAgZGV2X2RiZyhkZXYtPmRldiwN
+Cj4gPiA+ICsgICAgICAgICAgICAgIiVzIGdvdCB3aWR0aC4gMHgleFxuIiwgX19mdW5jX18sDQo+
+ID4gPiArICAgICAgICAgICAgIGRldi0+Zm9ybWF0LndpZHRoKTsNCj4gPiA+ICsgICAgIGRldl9k
+YmcoZGV2LT5kZXYsDQo+ID4gPiArICAgICAgICAgICAgICIlcyBnb3QgaGVpZ2h0LiAweCV4XG4i
+LCBfX2Z1bmNfXywNCj4gPiA+ICsgICAgICAgICAgICAgZGV2LT5mb3JtYXQuaGVpZ2h0KTsNCj4g
+DQo+IF9fZnVuY19fIGlzIHVzdWFsbHkgcmVkdW5kYW50IChpZiBEeW5hbWljIERlYnVnIGluIHVz
+ZSBpdCBjYW4gYmUNCj4gc3dpdGNoZWQgYXQgcnVuLXRpbWUpLg0KPiANCg0KVGhhdCdzIHRydWUs
+IEkgZG9uJ3QgbmVlZCBpdC4NCg0KPiA+IEknZCBqdXN0IG9taXQgdGhlc2UgZGVidWcgcHJpbnRz
+IGluIGEgZHJpdmVyLiBCdXQgYWRkaW5nIHRoZW0gdG8gdGhlDQo+ID4gZnJhbWV3b3JrIG1pZ2h0
+IG1ha2Ugc2Vuc2UuIFdlIGRvbid0IGhhdmUgYSBsb3Qgb2YgZGVidWcgcHJpbnRzIGRlYWxpbmcN
+Cj4gPiB3aXRoIHVzZXIgcGFyYW1ldGVycyBpbiB0aGVyZS4gT1RPSCB0aGUgY29tbW9uIHRlc3Qg
+cHJvZ3JhbXMgbGFyZ2VseSBkbyB0aGUNCj4gPiBzYW1lIGFscmVhZHkuDQo+IA0KPiBJIHdvdWxk
+IHJhdGhlciBzZWUgdHJhY2Vwb2ludHMgaW5zdGVhZCBvZiBkZWJ1ZyBwcmludHMgaWYgd2UgYXJl
+DQo+IHRhbGtpbmcgYWJvdXQgZ2VuZXJpYyBzb2x1dGlvbiBmb3IgZW50aXJlIGZyYW1ld29yay4N
+Cj4gDQoNCkkgd2lsbCBjaGVjayB0aGF0Lg0KDQo+ID4NCj4gPiA+ICsgICAgIHJldHVybiAmZGV2
+LT5mb3JtYXQ7DQo+ID4gPiArfQ0KPiANCj4gPiA+ICsgICAgIHN0cnVjdCBtaXBpX2ZtdCAqZGV2
+X2ZtdDsNCj4gDQo+IFRoaXMgaXMgc2ltcGxlIGJhZCBuYW1lLiBXZSBoYXZlIGRldl9mbXQoKSBt
+YWNyby4gSSB3b3VsZCByYXRoZXIgYXZvaWQNCj4gcG90ZW50aWFsIGNvbGxpc2lvbnMuDQoNClRy
+dWUsIEkgd2lsbCBjaGFuZ2UgdGhlIG5hbWUuDQoNCj4gDQo+ID4gPiArICAgICBzdHJ1Y3QgdjRs
+Ml9tYnVzX2ZyYW1lZm10ICptZjsNCj4gPiA+ICsNCj4gPiA+ICsgICAgIG1mID0gZHdfbWlwaV9j
+c2lfZ2V0X2Zvcm1hdChkZXYsIGNmZywgZm10LT53aGljaCk7DQo+ID4gPiArICAgICBpZiAoIW1m
+KQ0KPiA+ID4gKyAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gDQo+IENhbid0IHlvdSBy
+YXRoZXIgcmV0dXJuIGFuIGVycm9yIHBvaW50ZXIgaW4gdGhpcyBhbmQgc2ltaWxhciBjYXNlcz8N
+Cj4gDQoNClllcywgb2ZjLg0KDQo+ID4gPiArICAgICBkZXZfdmRiZyhkZXYtPmRldiwgIiVzOiBv
+bj0lZFxuIiwgX19mdW5jX18sIG9uKTsNCj4gDQo+IFRoaXMgaXMgbm9pc2UuIElmIHlvdSB3b3Vs
+ZCBsaWtlIHRvIGRlYnVnIEZ1bmN0aW9uIFRyYWNlciBpcyBhIGdvb2Qgc3RhcnQuDQo+IA0KDQpP
+ay4NCg0KPiA+ID4gKyAgICAgb2ZfaWQgPSBvZl9tYXRjaF9ub2RlKGR3X21pcGlfY3NpX29mX21h
+dGNoLCBkZXYtPm9mX25vZGUpOw0KPiA+ID4gKyAgICAgaWYgKCFvZl9pZCkNCj4gPiA+ICsgICAg
+ICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+IA0KPiBJcyBpdCBwb3NzaWJsZSB0byBoYXZlIHRo
+aXMgYXNzZXJ0ZWQ/DQo+IA0KDQpJIHdpbGwgcmVtb3ZlIGl0Lg0KIA0KPiA+ID4gKyAgICAgcmVz
+ID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsNCj4gDQo+
+ID4gPiArICAgICBpZiAoIXJlcykNCj4gPiA+ICsgICAgICAgICAgICAgcmV0dXJuIC1FTlhJTzsN
+Cj4gDQo+IFJlZHVuZGFudC4gQmVsb3cgZG9lcyB0aGUgY2hlY2sgZm9yIHlvdS4NCj4gDQoNClll
+cCwgdGhhbmtzLg0KDQo+ID4gPiArDQo+ID4gPiArICAgICBjc2ktPmJhc2VfYWRkcmVzcyA9IGRl
+dm1faW9yZW1hcF9yZXNvdXJjZShkZXYsIHJlcyk7DQo+ID4gPiArICAgICBpZiAoSVNfRVJSKGNz
+aS0+YmFzZV9hZGRyZXNzKSkgew0KPiANCj4gPiA+ICsgICAgICAgICAgICAgZGV2X2VycihkZXYs
+ICJCYXNlIGFkZHJlc3Mgbm90IHNldC5cbiIpOw0KPiANCj4gUmVkdW5kYW50LiBBYm92ZSBkb2Vz
+IHByaW50IGFuIGVycm9yIG1lc3NhZ2UgZm9yIHlvdS4NCj4gDQoNCk9rLg0KDQo+ID4gPiArICAg
+ICAgICAgICAgIHJldHVybiBQVFJfRVJSKGNzaS0+YmFzZV9hZGRyZXNzKTsNCj4gPiA+ICsgICAg
+IH0NCj4gDQo+IE1vcmVvdmVyLCB1c2UgZGV2bV9wbGF0Zm9ybV9pb3JlbWFwX3Jlc291cmNlKCkg
+aW5zdGVhZCBvZiBib3RoLg0KPiANCg0KTmljZSwgdGhhbmtzLg0KDQo+ID4gPiArICAgICBjc2kt
+PmN0cmxfaXJxX251bWJlciA9IHBsYXRmb3JtX2dldF9pcnEocGRldiwgMCk7DQo+ID4gPiArICAg
+ICBpZiAoY3NpLT5jdHJsX2lycV9udW1iZXIgPCAwKSB7DQo+IA0KPiA+ID4gKyAgICAgICAgICAg
+ICBkZXZfZXJyKGRldiwgImlycSBudW1iZXIgJWQgbm90IHNldC5cbiIsIGNzaS0+Y3RybF9pcnFf
+bnVtYmVyKTsNCj4gDQo+IFJlZHVuZGFudCBzaW5jZSB0aGlzIGN5Y2xlICh2NS40KS4NCj4gDQoN
+Ck9rLA0KDQo+ID4gPiArICAgICAgICAgICAgIHJldCA9IGNzaS0+Y3RybF9pcnFfbnVtYmVyOw0K
+PiANCj4gQmV0dGVyIHRvIGRvIHRoZSBvcHBvc2l0ZQ0KPiANCj4gcmV0ID0gcGxhdGZvcm1fZ2V0
+X2lycSgpOw0KPiBpZiAocmV0KQ0KPiAgZ290byBlbmQ7DQo+IC4uLiA9IHJldDsNCj4gDQo+ID4g
+PiArICAgICAgICAgICAgIGdvdG8gZW5kOw0KPiA+ID4gKyAgICAgfQ0KPiANCj4gPiA+ICsgICAg
+IHJldCA9IGRldm1fcmVxdWVzdF9pcnEoZGV2LCBjc2ktPmN0cmxfaXJxX251bWJlciwNCj4gPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgZHdfbWlwaV9jc2lfaXJxMSwgSVJRRl9TSEFS
+RUQsDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRldl9uYW1lKGRldiksIGNz
+aSk7DQo+ID4gPiArICAgICBpZiAocmV0KSB7DQo+ID4gPiArICAgICAgICAgICAgIGRldl9lcnIo
+ZGV2LCAiaXJxIGNzaSAlcyBmYWlsZWRcbiIsIG9mX2lkLT5uYW1lKTsNCj4gPiA+ICsNCj4gPiA+
+ICsgICAgICAgICAgICAgZ290byBlbmQ7DQo+ID4gPiArICAgICB9DQo+IA0KPiBkZXZtXyppcnEo
+KSBtaWdodCBiZSBhIGJhZCBpZGVhLiBJcyBpdCByYWNlIGZyZWUgaW4geW91ciBkcml2ZXI/DQo+
+IA0KDQpJIG5ldmVyIHRob3VnaHQgYWJvdXQgaXQgbGlrZSB0aGF0LiBTaG91bGQgSSB1c2UgcmVx
+dWVzdF9pcnEgYW5kIA0KZnJlZV9pcnE/IA0KDQo+ID4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBv
+Zl9kZXZpY2VfaWQgZHdfbWlwaV9jc2lfb2ZfbWF0Y2hbXSA9IHsNCj4gPiA+ICsgICAgIHsgLmNv
+bXBhdGlibGUgPSAic25wcyxkdy1jc2kiIH0sDQo+IA0KPiA+ID4gKyAgICAge30sDQo+IA0KPiBC
+ZXR0ZXIgd2l0aG91dCBjb21tYS4gVGVybWluYXRvciBtYXkgdGVybWluYXRlIGV2ZW4gYXQgY29t
+cGlsZSB0aW1lLg0KPiANCg0KT2suDQo+ID4gPiArfTsNCj4gDQo+ID4gPiArc3RhdGljIHNzaXpl
+X3QgY29yZV92ZXJzaW9uX3Nob3coc3RydWN0IGRldmljZSAqZGV2LA0KPiA+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkZXZpY2VfYXR0cmlidXRlICphdHRyLA0KPiA+
+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNoYXIgKmJ1ZikNCj4gPiA+ICt7DQo+
+ID4gPiArICAgICBzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2ID0gdG9fcGxhdGZvcm1fZGV2
+aWNlKGRldik7DQo+ID4gPiArICAgICBzdHJ1Y3QgdjRsMl9zdWJkZXYgKnNkID0gcGxhdGZvcm1f
+Z2V0X2RydmRhdGEocGRldik7DQo+ID4gPiArICAgICBzdHJ1Y3QgZHdfY3NpICpjc2lfZGV2ID0g
+c2RfdG9fbWlwaV9jc2lfZGV2KHNkKTsNCj4gDQo+ID4gPiArDQo+ID4gPiArICAgICBjaGFyIGJ1
+ZmZlclsxMF07DQo+ID4gPiArDQo+ID4gPiArICAgICBzbnByaW50ZihidWZmZXIsIDEwLCAidi4l
+ZC4lZCpcbiIsIGNzaV9kZXYtPmh3X3ZlcnNpb25fbWFqb3IsDQo+ID4gPiArICAgICAgICAgICAg
+ICBjc2lfZGV2LT5od192ZXJzaW9uX21pbm9yKTsNCj4gPiA+ICsNCj4gPiA+ICsgICAgIHJldHVy
+biBzdHJsY3B5KGJ1ZiwgYnVmZmVyLCBQQUdFX1NJWkUpOw0KPiANCj4gT2gsIGNhbid0IHlvdSBz
+aW1wbGUgd2l0aG91dCBhbnkgdGVtcHJvcmFyeSB1c2VsZXNzIGJ1ZmZlcnM/DQo+ICBzcHJpbnRm
+KGJ1ZiwgLi4uKT8NCj4gKFllcywgbm90ZSBfYWJzZW5jZV8gb2YgKm4qIHRoZXJlKQ0KDQpZb3Ug
+YXJlIHJpZ2h0Lg0KPiANCj4gPiA+ICt9DQo+IA0KPiA+ID4gK3N0YXRpYyBzc2l6ZV90IG5fbGFu
+ZXNfc3RvcmUoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlX2F0dHJpYnV0ZSAqYXR0
+ciwNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IGNoYXIgKmJ1Ziwgc2l6
+ZV90IGNvdW50KQ0KPiA+ID4gK3sNCj4gPiA+ICsgICAgIGludCByZXQ7DQo+ID4gPiArICAgICB1
+bnNpZ25lZCBsb25nIGxhbmVzOw0KPiANCj4gPiA+ICsNCj4gDQo+IE1vcmUgYmxhbmsgbGluZXMh
+IFdlIG5lZWQgdGhlbSENCj4gDQoNCk9rLg0KDQo+ID4gPiArICAgICBzdHJ1Y3QgcGxhdGZvcm1f
+ZGV2aWNlICpwZGV2ID0gdG9fcGxhdGZvcm1fZGV2aWNlKGRldik7DQo+ID4gPiArICAgICBzdHJ1
+Y3QgdjRsMl9zdWJkZXYgKnNkID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7DQo+ID4gPiAr
+ICAgICBzdHJ1Y3QgZHdfY3NpICpjc2lfZGV2ID0gc2RfdG9fbWlwaV9jc2lfZGV2KHNkKTsNCj4g
+PiA+ICsNCj4gPiA+ICsgICAgIHJldCA9IGtzdHJ0b3VsKGJ1ZiwgMTAsICZsYW5lcyk7DQo+ID4g
+PiArICAgICBpZiAocmV0IDwgMCkNCj4gPiA+ICsgICAgICAgICAgICAgcmV0dXJuIHJldDsNCj4g
+DQo+IENhbiBpdCByZXR1cm4gcG9zaXRpdmUgbnVtYmVyPw0KPiANCj4gPiA+ICsgICAgIGRldl9p
+bmZvKGRldiwgIkxhbmVzICVsdVxuIiwgbGFuZXMpOw0KPiANCj4gTm9pc2UuDQo+IFRoZSB1c2Vy
+IGdldHMgaXQsIHdoeSB0byBzcGFtIGtlcm5lbCBsb2c/Pz8NCj4gDQpPay4NCg0KPiA+ID4gKyAg
+ICAgY3NpX2Rldi0+aHcubnVtX2xhbmVzID0gbGFuZXM7DQo+ID4gPiArDQo+ID4gPiArICAgICBy
+ZXR1cm4gY291bnQ7DQo+ID4gPiArfQ0KPiANCj4gSSB0b2xkIG9uY2UsIGNhbiByZXBlYXQgYWdh
+aW4uIFN5bm9wc3lzIHBlcmhhcHMgbmVlZHMgYmV0dGVyIHJldmlld3MNCj4gaW5zaWRlIGNvbXBh
+bnkuIEVhY2ggdGltZSBJIHNlZSB0aGUgY29kZSwgaXQgcmVwZWF0cyBzYW1lIG1pc3Rha2VzDQo+
+IG92ZXIgYW5kIG92ZXIuIEhhdmUgeW91LCBndXlzLCBkbyBzb21ldGhpbmcgYWJvdXQgaXQ/DQoN
+CldlIGFyZSB3b3JraW5nIG9uIGl0LiBJdCB3aWxsIGdldCBiZXR0ZXIsIHNvcnJ5Lg0KPiANCj4g
+LS0gDQo+IFdpdGggQmVzdCBSZWdhcmRzLA0KPiBBbmR5IFNoZXZjaGVua28NCg0KVGhhbmtzLA0K
+THVpcw0K
