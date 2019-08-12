@@ -2,198 +2,76 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5905BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F82C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC7A208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:05:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uUtpswhj"
+	by mail.kernel.org (Postfix) with ESMTP id 79BFA208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:06:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbfHLPFP (ORCPT
+        id S1728092AbfHLPGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 11:05:15 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52269 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727146AbfHLPFM (ORCPT
+        Mon, 12 Aug 2019 11:06:02 -0400
+Received: from mail-ot1-f71.google.com ([209.85.210.71]:50949 "EHLO
+        mail-ot1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727081AbfHLPGC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 11:05:12 -0400
-Received: by mail-wm1-f67.google.com with SMTP id s3so12503722wms.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 08:05:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Z3sLGJ9Y6NSuUVoK4Ad/f3JwEEVat2vLXpskef4Wjpw=;
-        b=uUtpswhjcXonrclDX2pzC/OLlMB8CR4jdNsbVCyyJfbFyBbMWg+0Aew0YrDSAbgynn
-         UBHZ5qxiR/FLZ0Ct92Vg9vySGyIMlp0Yt/g4bYii5IWID7ZLPf+RyFBRXZAedOHhY3f1
-         x8kbYQmk9C1++IuCm9gK2XiUkD/aqYVIN9apkB5giAeUyZKNaA/0ZJXRkq79Y5kkKhE4
-         1SGL8XBz3c2V4QL0D7Qs4FM7A3jQbeESD3X1qiLoi9x1D7WoWNGemRbTg5N+WEtmjXeP
-         zpXj0JUd+0iUU29AgEne7VQpoPzhKcNXb81u+/xT9VS4QG/w5s0GItw7dh6fJS+Hrplh
-         PIyQ==
+        Mon, 12 Aug 2019 11:06:02 -0400
+Received: by mail-ot1-f71.google.com with SMTP id t26so550235otp.17
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 08:06:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Z3sLGJ9Y6NSuUVoK4Ad/f3JwEEVat2vLXpskef4Wjpw=;
-        b=pKH9ltWlhDQBxpeIeftIlSmGTIGs7v12UAFPqUkW/sy25oW6PcstYGGaWhy+F4HF41
-         0T7OIYQyODZiRqx2h9qA/jkDTGa2YbiwioyEKmcJ8+uF3k5NPRRcX2WSVFOFRFLcjp7b
-         z42FRmXlyD3qO9lE2aImSEcz7M3AI+fWOGHSfEdZbTsh/NmTufjl997PcnxpFZHz06eV
-         /EsLKMW/hJXUD37rx90IOTGs6Nd9k7uh6TZLkvaslfBTK4y9FoNx5N2fQo/zgc+6rsKx
-         Me9bHnXGHzYQKSG9U3qh4IWfXcndjpmvTeO4/fiQxsEHpZZVgq8BC/IMRUsX+S0ouS42
-         Ru1A==
-X-Gm-Message-State: APjAAAXe9YxU3aYb21xYRCBcjp22+8ZDcyCbskGSkVxHSyq3aUI9vaNd
-        k8psHrqvLKBLcbxCnKOmLMoLKQ==
-X-Google-Smtp-Source: APXvYqwjMTQwZ5HfDfZM+Cgs8md0RkIXE6Dfx5lrM/wyv+HTDldo8cpMPCTwuzIY2DevaLtmSA4WEw==
-X-Received: by 2002:a1c:4c06:: with SMTP id z6mr3789211wmf.47.1565622310553;
-        Mon, 12 Aug 2019 08:05:10 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:587:a407:da00:1c0e:f938:89a1:8e17])
-        by smtp.gmail.com with ESMTPSA id h97sm31027269wrh.74.2019.08.12.08.05.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 08:05:09 -0700 (PDT)
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Narendra K <Narendra.K@dell.com>,
-        Xiaofei Tan <tanxiaofei@huawei.com>
-Subject: [PATCH 2/5] efi/x86: move UV_SYSTAB handling into arch/x86
-Date:   Mon, 12 Aug 2019 18:04:49 +0300
-Message-Id: <20190812150452.27983-3-ard.biesheuvel@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190812150452.27983-1-ard.biesheuvel@linaro.org>
-References: <20190812150452.27983-1-ard.biesheuvel@linaro.org>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=UdT6wUZ/D8ky7HtPCj9VpMdye4p6v52eVLFOfN7WQts=;
+        b=D56T+3AeXqkoOHhdj6xNG5dzJQAqhpDocWgt4pJCcbt/cdYiYQulPsEH80I2ppRO8z
+         hodmAdylf0Isosz/DW9VUJStiNJvAdheFEzdSp/46B8rq/9ayixcwpIZWOrPJEmqxcB1
+         di7/cSYpWfI7C8KLgEy9Roo+QdzxQS2VamRapDJiCWCOFp1wAKe95LY0EBPJvfHGjDV9
+         9cPi+4FltQs6jf7g/eZ4j/nlIUG6iNl74JQDr9a6fjkCl0+h/kUIUWCi13yj7H/tnfhj
+         x372Duh0weltdGC3RrVaNh21tnPYm+t7YLVpnE7vEQ5WkiGRd7jQF/nzFuO3K/wTCfAr
+         MJ6Q==
+X-Gm-Message-State: APjAAAXviYsAuukJ128vIUFmJoasnJUUNIdLs3JDOhqdwDF/lJqmCbEL
+        yC4LY4y22akDTNwuzRk2L8EK+nBFUApd2WHi5rTBChJXMoL4
+X-Google-Smtp-Source: APXvYqwxLBlryY9AUKUQMeg0vCZyhR/BAXzcWCPEWAR/D5r2dVoCbvnxs4b2xafrrXxYy2E7KpBMgX++6+Ns9fTe7IJHLPoTqUBj
+MIME-Version: 1.0
+X-Received: by 2002:a6b:bcc7:: with SMTP id m190mr24368313iof.107.1565622361221;
+ Mon, 12 Aug 2019 08:06:01 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 08:06:01 -0700
+In-Reply-To: <20190812144720.1980-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b1729e058fecdcee@google.com>
+Subject: Re: general protection fault in __pm_runtime_resume
+From:   syzbot <syzbot+3cbe5cd105d2ad56a1df@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, hdanton@sina.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        oneukum@suse.com, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SGI UV UEFI machines are tightly coupled to the x86 architecture
-so there is no need to keep any awareness of its existence in the
-generic EFI layer, especially since we already have the infrastructure
-to handle arch-specific configuration tables, and were even already
-using it to some extent.
+Hello,
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
----
- arch/x86/include/asm/uv/uv.h   |  4 +++-
- arch/x86/platform/efi/efi.c    |  6 ++++--
- arch/x86/platform/uv/bios_uv.c | 10 ++++++----
- drivers/firmware/efi/efi.c     |  1 -
- include/linux/efi.h            |  1 -
- 5 files changed, 13 insertions(+), 9 deletions(-)
+syzbot has tested the proposed patch and the reproducer did not trigger  
+crash:
 
-diff --git a/arch/x86/include/asm/uv/uv.h b/arch/x86/include/asm/uv/uv.h
-index e60c45fd3679..6bc6d89d8e2a 100644
---- a/arch/x86/include/asm/uv/uv.h
-+++ b/arch/x86/include/asm/uv/uv.h
-@@ -12,10 +12,12 @@ struct mm_struct;
- #ifdef CONFIG_X86_UV
- #include <linux/efi.h>
- 
-+extern unsigned long uv_systab_phys;
-+
- extern enum uv_system_type get_uv_system_type(void);
- static inline bool is_early_uv_system(void)
- {
--	return !((efi.uv_systab == EFI_INVALID_TABLE_ADDR) || !efi.uv_systab);
-+	return uv_systab_phys && uv_systab_phys != EFI_INVALID_TABLE_ADDR;
- }
- extern int is_uv_system(void);
- extern int is_uv_hubless(void);
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index 8d9be97a5607..9866a3584765 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -59,7 +59,7 @@ static efi_system_table_t efi_systab __initdata;
- 
- static efi_config_table_type_t arch_tables[] __initdata = {
- #ifdef CONFIG_X86_UV
--	{UV_SYSTEM_TABLE_GUID, "UVsystab", &efi.uv_systab},
-+	{UV_SYSTEM_TABLE_GUID, "UVsystab", &uv_systab_phys},
- #endif
- 	{NULL_GUID, NULL, NULL},
- };
-@@ -74,7 +74,9 @@ static const unsigned long * const efi_tables[] = {
- 	&efi.boot_info,
- 	&efi.hcdp,
- 	&efi.uga,
--	&efi.uv_systab,
-+#ifdef CONFIG_X86_UV
-+	&uv_systab_phys,
-+#endif
- 	&efi.fw_vendor,
- 	&efi.runtime,
- 	&efi.config_table,
-diff --git a/arch/x86/platform/uv/bios_uv.c b/arch/x86/platform/uv/bios_uv.c
-index 7c69652ffeea..c2ee31953372 100644
---- a/arch/x86/platform/uv/bios_uv.c
-+++ b/arch/x86/platform/uv/bios_uv.c
-@@ -14,6 +14,8 @@
- #include <asm/uv/bios.h>
- #include <asm/uv/uv_hub.h>
- 
-+unsigned long uv_systab_phys __ro_after_init = EFI_INVALID_TABLE_ADDR;
-+
- struct uv_systab *uv_systab;
- 
- static s64 __uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3,
-@@ -185,13 +187,13 @@ EXPORT_SYMBOL_GPL(uv_bios_set_legacy_vga_target);
- void uv_bios_init(void)
- {
- 	uv_systab = NULL;
--	if ((efi.uv_systab == EFI_INVALID_TABLE_ADDR) ||
--	    !efi.uv_systab || efi_runtime_disabled()) {
-+	if ((uv_systab_phys == EFI_INVALID_TABLE_ADDR) ||
-+	    !uv_systab_phys || efi_runtime_disabled()) {
- 		pr_crit("UV: UVsystab: missing\n");
- 		return;
- 	}
- 
--	uv_systab = ioremap(efi.uv_systab, sizeof(struct uv_systab));
-+	uv_systab = ioremap(uv_systab_phys, sizeof(struct uv_systab));
- 	if (!uv_systab || strncmp(uv_systab->signature, UV_SYSTAB_SIG, 4)) {
- 		pr_err("UV: UVsystab: bad signature!\n");
- 		iounmap(uv_systab);
-@@ -203,7 +205,7 @@ void uv_bios_init(void)
- 		int size = uv_systab->size;
- 
- 		iounmap(uv_systab);
--		uv_systab = ioremap(efi.uv_systab, size);
-+		uv_systab = ioremap(uv_systab_phys, size);
- 		if (!uv_systab) {
- 			pr_err("UV: UVsystab: ioremap(%d) failed!\n", size);
- 			return;
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index cbdbdbc8f9eb..4dfd873373bd 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -43,7 +43,6 @@ struct efi __read_mostly efi = {
- 	.boot_info		= EFI_INVALID_TABLE_ADDR,
- 	.hcdp			= EFI_INVALID_TABLE_ADDR,
- 	.uga			= EFI_INVALID_TABLE_ADDR,
--	.uv_systab		= EFI_INVALID_TABLE_ADDR,
- 	.fw_vendor		= EFI_INVALID_TABLE_ADDR,
- 	.runtime		= EFI_INVALID_TABLE_ADDR,
- 	.config_table		= EFI_INVALID_TABLE_ADDR,
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 60a6242765d8..171bb1005a10 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -988,7 +988,6 @@ extern struct efi {
- 	unsigned long boot_info;	/* boot info table */
- 	unsigned long hcdp;		/* HCDP table */
- 	unsigned long uga;		/* UGA table */
--	unsigned long uv_systab;	/* UV system table */
- 	unsigned long fw_vendor;	/* fw_vendor */
- 	unsigned long runtime;		/* runtime table */
- 	unsigned long config_table;	/* config tables */
--- 
-2.17.1
+Reported-and-tested-by:  
+syzbot+3cbe5cd105d2ad56a1df@syzkaller.appspotmail.com
 
+Tested on:
+
+commit:         7f7867ff usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=177252d2600000
+
+Note: testing is done by a robot and is best-effort only.
