@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 588A1C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6767C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24E122085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 931B02085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:55:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AmB2oLLk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iP0z8EV+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfHLGzl (ORCPT
+        id S1726997AbfHLGzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 02:55:41 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40728 "EHLO
+        Mon, 12 Aug 2019 02:55:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40712 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726974AbfHLGzj (ORCPT
+        with ESMTP id S1725819AbfHLGzd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 02:55:39 -0400
+        Mon, 12 Aug 2019 02:55:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=JIXHQp9s2CVKIRUydQ4Mw0MR2l1VaY1/v2KS1Lf2mlI=; b=AmB2oLLkWobqAZTUGGzUVYYcsW
-        AyKI21+qdSeWWM6l/MjdX574V7uUIZCnoTByOZ00FtFd/hBPT+c6YoGs/8U9JClmhDluYoMwYRDwX
-        kfDQfbufZ7msUl5mNu1xJk1VBbqWKHL2FoQI0WO2R/YgByxXIFODsZX5b15SnCmdPqOiVSZP/nMZZ
-        Fd/iFub55uJZecnjyyG9KLsBUUgCzKKZrHMVK2qzW051bXB+7Q9egGvFy9wT9eqc0x9zZ5LM6iFw0
-        bcxuLGomxWkFu69/gdj9EqP0PC0BBB75w2jZUqXzMREpEBXtQZ+JKpEeIO91CCzuJRN5HlHUiWK00
-        UQH6UetA==;
+        bh=b/1SYLwCRu5ERaaMVaIVgm/WJjkkAxvP0cPxYMfvmxg=; b=iP0z8EV+pbbylTdR8wLneXOgP2
+        kKToqwGy3QXjsfIkrX8OVuuOg4ufM97VYsJW0Hb/C/SoVlfAVB4BotohvpeUPkh0rUs+TZJvOa8QU
+        zt84qTKrogtTUMxDnwGI3iOs4EU1jk5Xk/AFpVI0Y+YCp4uIh0Q7QYeLnxbgKtQ+3/hj/1JsQEzAT
+        OH76bleQgiQbNN53z12DVsDzlW2L9wENKjeqLx/vur9wHwt4TMu6+a85NrNPvzCJT80MwGl2pDQWH
+        1l9sp2nVJm08NnarW4s3TTgEwnZphWr42lm2QjiF/n09ReyrOFq7HLSrggr8V9ZQYmTcKA9CrezEa
+        fBshxHOg==;
 Received: from [2001:4bb8:180:1ec3:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hx4F0-0000G5-8k; Mon, 12 Aug 2019 06:55:38 +0000
+        id 1hx4Eu-0000FE-TO; Mon, 12 Aug 2019 06:55:33 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>
 Cc:     linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] kernel: only define task_struct_whitelist conditionally
-Date:   Mon, 12 Aug 2019 08:55:24 +0200
-Message-Id: <20190812065524.19959-5-hch@lst.de>
+Subject: [PATCH 2/4] ia64: annotate switch fallthroughs in ia64_handle_unaligned
+Date:   Mon, 12 Aug 2019 08:55:22 +0200
+Message-Id: <20190812065524.19959-3-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190812065524.19959-1-hch@lst.de>
 References: <20190812065524.19959-1-hch@lst.de>
@@ -55,34 +55,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_ARCH_TASK_STRUCT_ALLOCATOR is set task_struct_whitelist is
-never called, and thus generates a compiler warning.
+Replace the "no break" comments with something that the compiler
+recognizes.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- kernel/fork.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/ia64/kernel/unaligned.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 2852d0e76ea3..f79e3da0caaf 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -768,6 +768,7 @@ static void set_max_threads(unsigned int max_threads_suggested)
- int arch_task_struct_size __read_mostly;
- #endif
- 
-+#ifndef CONFIG_ARCH_TASK_STRUCT_ALLOCATOR
- static void task_struct_whitelist(unsigned long *offset, unsigned long *size)
- {
- 	/* Fetch thread_struct whitelist for the architecture. */
-@@ -782,6 +783,7 @@ static void task_struct_whitelist(unsigned long *offset, unsigned long *size)
- 	else
- 		*offset += offsetof(struct task_struct, thread);
- }
-+#endif /* CONFIG_ARCH_TASK_STRUCT_ALLOCATOR */
- 
- void __init fork_init(void)
- {
+diff --git a/arch/ia64/kernel/unaligned.c b/arch/ia64/kernel/unaligned.c
+index eb7d5df59fa3..2d4e65ba5c3e 100644
+--- a/arch/ia64/kernel/unaligned.c
++++ b/arch/ia64/kernel/unaligned.c
+@@ -1431,7 +1431,7 @@ ia64_handle_unaligned (unsigned long ifa, struct pt_regs *regs)
+ 		if (u.insn.x)
+ 			/* oops, really a semaphore op (cmpxchg, etc) */
+ 			goto failure;
+-		/* no break */
++		/*FALLTHRU*/
+ 	      case LDS_IMM_OP:
+ 	      case LDSA_IMM_OP:
+ 	      case LDFS_OP:
+@@ -1459,7 +1459,7 @@ ia64_handle_unaligned (unsigned long ifa, struct pt_regs *regs)
+ 		if (u.insn.x)
+ 			/* oops, really a semaphore op (cmpxchg, etc) */
+ 			goto failure;
+-		/* no break */
++		/*FALLTHRU*/
+ 	      case LD_IMM_OP:
+ 	      case LDA_IMM_OP:
+ 	      case LDBIAS_IMM_OP:
+@@ -1475,7 +1475,7 @@ ia64_handle_unaligned (unsigned long ifa, struct pt_regs *regs)
+ 		if (u.insn.x)
+ 			/* oops, really a semaphore op (cmpxchg, etc) */
+ 			goto failure;
+-		/* no break */
++		/*FALLTHRU*/
+ 	      case ST_IMM_OP:
+ 	      case STREL_IMM_OP:
+ 		ret = emulate_store_int(ifa, u.insn, regs);
 -- 
 2.20.1
 
