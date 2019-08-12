@@ -4,82 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 173F2C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E58FC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E03C420684
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AEB920684
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565636286;
-	bh=/KjUbN4S4cg6Wx088EupOk/aYRMhP1qDGEYMVvueRVE=;
+	s=default; t=1565636318;
+	bh=R7sUkUsIyBVyM0xgwC6ssrjHDpSaec6rd52f5BsBnQI=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YW4tW8SUsKMZ9700MfQ2TVIEOEUdHNKk4oSlqslyLi31IStjFrAb/h5sBs1eVgBjj
-	 4+w+pMI07zyEziQikPoUMOh+CtKNKT51Ij5/wbJ7oVgUDH+5qZQe9Fl7Ohj354rtYl
-	 ApmjrYU3hQvbQu6OezafTWkby9201ZuMixzoP/Js=
+	b=c0BxnMI1K4ywB/dzgCJ9/n71INPLrCya49lnm0ZsFsS4on3YOhwy+NPHMRCMkkl4k
+	 ZrXvZDRvmeJHE7/GkjyO7Noguv0vRdOICiUiL6J+0fDUE6Bd6uBAo230Yewp2+ZiPh
+	 boJsIQ3yBCIsd9mEaZ5KDpO9W7Ca975fozw5g2Kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfHLS6E (ORCPT
+        id S1726759AbfHLS6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 14:58:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44314 "EHLO mail.kernel.org"
+        Mon, 12 Aug 2019 14:58:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbfHLS6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 14:58:02 -0400
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        id S1726090AbfHLS6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 14:58:36 -0400
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E41220684;
-        Mon, 12 Aug 2019 18:58:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 306C22075B;
+        Mon, 12 Aug 2019 18:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565636282;
-        bh=/KjUbN4S4cg6Wx088EupOk/aYRMhP1qDGEYMVvueRVE=;
+        s=default; t=1565636315;
+        bh=R7sUkUsIyBVyM0xgwC6ssrjHDpSaec6rd52f5BsBnQI=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=D9qYsj5LWfjHJ6CObn5s8xYmjgy/0hM3xZQLPkyi+bEQMpTUOB11WHBj+7uTsOGWK
-         +XFIipl/LQjiE/0WJwZ09DwMmBmLh1K8rBHS8DYmzSFSKtJggAcXh6Du24YE6yfpba
-         yQm9lmLzh1eWiOh1Gx4T+IxnWgs47wpfsdd1TAkk=
-Received: by mail-qt1-f171.google.com with SMTP id z4so103982861qtc.3;
-        Mon, 12 Aug 2019 11:58:02 -0700 (PDT)
-X-Gm-Message-State: APjAAAVvqbDA338+3yAayRqWgjznNJTimrXWZrslDnQFjwURyqWg++Uv
-        iNn4gcXm/q9ts9N2uIiGWVYoYgMKdF4bIkKFzw==
-X-Google-Smtp-Source: APXvYqyRqIRy/JRTGiKAgusS3nr3ls85FyjwyvVTVo4EiRNmt609rPVypfT2vXE1taQf0kjr/XZde/uV4mb154zysxo=
-X-Received: by 2002:aed:24f4:: with SMTP id u49mr3150956qtc.110.1565636281433;
- Mon, 12 Aug 2019 11:58:01 -0700 (PDT)
+        b=Q/p1uiloLNDD1JaGaTSp7kW8zk6vGVCwMeJHmjWRFZ8xwSTKj2dI3Ll9JxRE/wjhA
+         0vRCmaNuDX7okExuF58HoslSn7oeke6LU1HaWU5rDPsFMYcd3uQH/hUXkooSdx8cB1
+         vpIN7FKvtlyV9vVkX4BVNAmJyb9jELe++tKI/mho=
+Received: by mail-qt1-f181.google.com with SMTP id d17so24954019qtj.8;
+        Mon, 12 Aug 2019 11:58:35 -0700 (PDT)
+X-Gm-Message-State: APjAAAVGHbemEwBJFHf1Jtvv+l8cvSLR9PHLg2SzzEcbJ7TcphuXfu2g
+        +6DzzxYwecPD5PzEFYtLJmnhSlki1jOQNc15Tg==
+X-Google-Smtp-Source: APXvYqzFjlTyS2m8jvSL/rEOx3inN5YXegwV3lD2MVMO9vmnvZIOtTu5uyTMAAy7H8+QyiC/chnN1YS23chwygY3KUU=
+X-Received: by 2002:ac8:44c4:: with SMTP id b4mr19765999qto.224.1565636314436;
+ Mon, 12 Aug 2019 11:58:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190809093158.7969-1-lkundrak@v3.sk> <20190809093158.7969-2-lkundrak@v3.sk>
-In-Reply-To: <20190809093158.7969-2-lkundrak@v3.sk>
+References: <20190809112853.15846-1-stefan-gabriel.mirea@nxp.com> <20190809112853.15846-2-stefan-gabriel.mirea@nxp.com>
+In-Reply-To: <20190809112853.15846-2-stefan-gabriel.mirea@nxp.com>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 12 Aug 2019 12:57:48 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLyQjRNONDQT=RM0kYzztd4PdsSZssjiVfd8WUwCjFUVA@mail.gmail.com>
-Message-ID: <CAL_JsqLyQjRNONDQT=RM0kYzztd4PdsSZssjiVfd8WUwCjFUVA@mail.gmail.com>
-Subject: Re: [PATCH 01/19] dt-bindings: arm: cpu: Add Marvell MMP3 SMP enable method
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Olof Johansson <olof@lixom.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+Date:   Mon, 12 Aug 2019 12:58:22 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJkTzcUnDCoWH9DP9LpwpdBh3wWHzPVfg=ieTTZet92pw@mail.gmail.com>
+Message-ID: <CAL_JsqJkTzcUnDCoWH9DP9LpwpdBh3wWHzPVfg=ieTTZet92pw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: arm: fsl: Add the S32V234-EVB board
+To:     Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+Cc:     "corbet@lwn.net" <corbet@lwn.net>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "jslaby@suse.com" <jslaby@suse.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>
+        Eddy Petrisor <eddy.petrisor@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 3:32 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
+On Fri, Aug 9, 2019 at 5:29 AM Stefan-gabriel Mirea
+<stefan-gabriel.mirea@nxp.com> wrote:
 >
-> Add the enable method for the second PJ4B core of the Marvell MMP3 SoC.
+> From: Eddy Petri=C8=99or <eddy.petrisor@nxp.com>
 >
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Add entry for the NXP S32V234 Customer Evaluation Board to the board/SoC
+> bindings.
+>
+> Signed-off-by: Eddy Petri=C8=99or <eddy.petrisor@nxp.com>
+> Signed-off-by: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
 > ---
->  Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
