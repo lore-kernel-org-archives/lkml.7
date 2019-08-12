@@ -2,63 +2,63 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D595C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD18AC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3137520665
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE1D20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:15:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SF7YYcit"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lr/cfQpI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbfHLPLd (ORCPT
+        id S1727286AbfHLPP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 11:11:33 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36251 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727159AbfHLPLd (ORCPT
+        Mon, 12 Aug 2019 11:15:27 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36027 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727037AbfHLPP1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 11:11:33 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g67so12109591wme.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 08:11:32 -0700 (PDT)
+        Mon, 12 Aug 2019 11:15:27 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r3so11157386wrt.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 08:15:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=GUVrtoEfscx3IZ80Na3X/rWaOd9dRKNDQf1aNP1gKJQ=;
-        b=SF7YYcitpnmLEfAIg1jOi9hmKo1i+Rcoivb2acbFvzJTcAy0/wOVgXhFfL/86Xv3Sx
-         dC+O3vUZWV4HQcQKJEV8MAtHUgBFzbWrDZv2UXKJTpgvytBorP3RknUn6lZsPEozuxBP
-         F3D72dCDxFyNY4KUClx+epNbiA4zhlB1+88AU39AEP7kRZc0KdP+bEFWPPAYe46iiWx6
-         U+4S1sir5JuK91IbOrf2IoIRcfBuFdJrx6uLRoWwQWlxZ78ecsCRBXv+gwX/Cz+6kzR+
-         xMza4uhVz+49uL8JYrZ9KKPp9w5Ty8IeyU7v+KTRjDUxmiKxRWfhwdpeq0662ruHnQQL
-         ABhQ==
+        bh=kxqbuY4B1dItH0K76N5jkNqR9OjL/xCxchMz+Ee+8mE=;
+        b=lr/cfQpIZIaBSo6b9Q3zxeOVa2+U0uJcOFT+1l6c30ZI2NbC+DOeDIoBUtdF0VF0ov
+         iwtSxkFt8UCR7dfeUmqY7rXB+7He3ZhOOiiMgmL9FmhQZgX9io9AucbNrI9nJyrQPpiQ
+         E09PfHLDjAQW2IEh/0AroZo9xVRg/aeq/biCAQVAdq5XJb+nsYnv99EIGDBAAuOFFspl
+         SvwOCXElndrpLEvzqNZeT1j0BHnGnbf85ioODXWRgasd1a/qtdcwvPJPWxwnBX0nqdQV
+         SOBGjVPPASSZhDPvsfTKmRg64PHj8QlxLf59HMArxIzwN0KgPsk+8C2CZB54WJ5SHGl+
+         0P7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=GUVrtoEfscx3IZ80Na3X/rWaOd9dRKNDQf1aNP1gKJQ=;
-        b=ccTGXYcmCY7FAJk7X3i5i3O7Xb9jqtGoU7Sfm0YW9dATEq/ZnSXZWSaAwg7+K1rptH
-         a3GM6wZVPMDVyttn5fifUEKlJ2bzAGCTGflLX2RfLCxjjbO2FIwHp6s+WEDEzo3tbPI8
-         5Wi8fAT/6z4v2Xh9qR0+N/0h4wxkoKrdel+WVFnI7BX1rpfZlLBtY/B0d1/W/Qa/phFN
-         weHkR0cb8GJtn9sGCdGmopD9ROpdJi5d55kDdFc5AvCr2xlnniJdHNJR5PpxtiADAkX2
-         GSWICdOaZ6sFg7asJh+poZvL7S4U0GSjob1O2RBmP8Dx9soAjW2t74khm8B9yz9QOLum
-         ZJTQ==
-X-Gm-Message-State: APjAAAVILAOoKfDSnUWCtgDCJPxrXM/P08TyKkxYul0roAvjT4Ku5WFJ
-        tit2ERmmYCnmyRS7jgo/PHl6Cw==
-X-Google-Smtp-Source: APXvYqzzq2N35RxoX6M2lYFHPFEysjYpmtcFojnVg276i12s+isDXsA6w+Dfor/LAfFbQnLudsik5w==
-X-Received: by 2002:a1c:1b97:: with SMTP id b145mr26940656wmb.158.1565622691528;
-        Mon, 12 Aug 2019 08:11:31 -0700 (PDT)
+        bh=kxqbuY4B1dItH0K76N5jkNqR9OjL/xCxchMz+Ee+8mE=;
+        b=TAo78b+9jAERa4VHLbYxzn7AmQJ1ZzTr2Aks+Uql2U8O1dFpwuQwpzKWAbscMd+nhj
+         41HpRHJDbolgco3tCmI3/wyeXK+pdlwFCN+d4pYF2L3s/tC6j/2vfz+lmTlNQGy0qGM+
+         VQaTS+IlvdX9jki2vF+FwP8x8Q4tGif9nTJpVR+R8q9vFnNw9/nhkZiOq4RqA17FmM46
+         cG8gYJjLMLiSd7qAs+5vmAOnbUmh9DCtxzLY8gGR0NVYQgeLpTjoa9/oAUe3rD6sw4Lh
+         h2K+lfViHPA9hxCYMluFNT2gYAnTVUm46xdAfYqqLHqf7JwZCErbhj1h6jZAIDAbElSS
+         tycQ==
+X-Gm-Message-State: APjAAAWOWTFashKxxbEBxVm9qSzim7xfPAuhj2K60EDYNXFa9Ts/7Zxq
+        yI11cLyk1aQpuhNK3ESA/kflkQ==
+X-Google-Smtp-Source: APXvYqyuePFlhOmpa07Fm6SyAPeyyhzMKjfeXv4MqLRtO62+RwuhXTyFoBewlD8zEFNaSN29kSEuGg==
+X-Received: by 2002:adf:f008:: with SMTP id j8mr26439756wro.129.1565622925048;
+        Mon, 12 Aug 2019 08:15:25 -0700 (PDT)
 Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id k1sm12674396wru.49.2019.08.12.08.11.30
+        by smtp.gmail.com with ESMTPSA id f134sm30682221wmg.20.2019.08.12.08.15.23
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 08:11:30 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 16:11:29 +0100
+        Mon, 12 Aug 2019 08:15:24 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 16:15:22 +0100
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Frank Wunderlich <frank-w@public-files.de>
 Cc:     Alessandro Zummo <a.zummo@towertech.it>,
@@ -82,16 +82,15 @@ Cc:     Alessandro Zummo <a.zummo@towertech.it>,
         Thomas Gleixner <tglx@linutronix.de>,
         "Tianping . Fang" <tianping.fang@mediatek.com>,
         Josef Friedl <josef.friedl@speed.at>
-Subject: Re: [PATCH v5 03/10] rtc: mt6397: move some common definitions into
- rtc.h
-Message-ID: <20190812151128.GV26727@dell>
+Subject: Re: [PATCH v5 01/10] dt-bindings: add powercontroller
+Message-ID: <20190812151522.GW26727@dell>
 References: <20190812121511.4169-1-frank-w@public-files.de>
- <20190812121511.4169-4-frank-w@public-files.de>
+ <20190812121511.4169-2-frank-w@public-files.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190812121511.4169-4-frank-w@public-files.de>
+In-Reply-To: <20190812121511.4169-2-frank-w@public-files.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -102,24 +101,54 @@ On Mon, 12 Aug 2019, Frank Wunderlich wrote:
 
 > From: Josef Friedl <josef.friedl@speed.at>
 > 
-> move code to separate header-file to reuse definitions later
-> in poweroff-driver (drivers/power/reset/mt6323-poweroff.c)
+> add mt6323-rtc and mt6323-pwrc to mt6397 mfd DT bindings
+> an example is shown in mt6323-poweroff.txt
 > 
 > Suggested-by: Frank Wunderlich <frank-w@public-files.de>
 > Signed-off-by: Josef Friedl <josef.friedl@speed.at>
 > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 > ---
-> changes since v4: none
+> changes since v4: use relative path
 > changes since v3: none
-> changes since v2: add missing commit-message
+> changes since v2: separated rtc-mt6397.txt to part 2
 > ---
->  drivers/rtc/rtc-mt6397.c       | 55 +-------------------------
->  include/linux/mfd/mt6397/rtc.h | 71 ++++++++++++++++++++++++++++++++++
+>  .../devicetree/bindings/mfd/mt6397.txt        | 20 +++++++++++++------
+>  .../bindings/power/reset/mt6323-poweroff.txt  | 20 +++++++++++++++++++
+>  2 files changed, 34 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
+> index 0ebd08af777d..063f5fe1cace 100644
+> --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
+> +++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
+> @@ -8,11 +8,12 @@ MT6397/MT6323 is a multifunction device with the following sub modules:
+>  - Clock
+>  - LED
+>  - Keys
+> +- Power controller
+>  
+>  It is interfaced to host controller using SPI interface by a proprietary hardware
+>  called PMIC wrapper or pwrap. MT6397/MT6323 MFD is a child device of pwrap.
+>  See the following for pwarp node definitions:
+> -Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+> +../../bindings/soc/mediatek/pwrap.txt
+>  
+>  This document describes the binding for MFD device and its sub module.
+>  
+> @@ -22,14 +23,16 @@ compatible: "mediatek,mt6397" or "mediatek,mt6323"
+>  Optional subnodes:
+>  
+>  - rtc
+> -	Required properties:
+> +	Required properties: Should be one of follows
+> +		- compatible: "mediatek,mt6323-rtc"
+>  		- compatible: "mediatek,mt6397-rtc"
+> +	For details, see ../../bindings/rtc/rtc-mt6397.txt
 
-include/linux/rtc/mt6397.h?
-
->  2 files changed, 72 insertions(+), 54 deletions(-)
->  create mode 100644 include/linux/mfd/mt6397/rtc.h
+Apologies for the ambiguity.  I don't think you need to go all the way
+back to 'bindings'.  Just one step back will do fine.  ../rtc/* will be
+fine here.
 
 -- 
 Lee Jones [李琼斯]
