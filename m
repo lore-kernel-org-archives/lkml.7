@@ -2,132 +2,136 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1D4C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51195C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 366AF20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2764720684
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:03:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=SILICOMLTD.onmicrosoft.com header.i=@SILICOMLTD.onmicrosoft.com header.b="Zpnnnq2D"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="PwGI0wkw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbfHLNDM (ORCPT
+        id S1728828AbfHLNDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 09:03:12 -0400
-Received: from mail-eopbgr80123.outbound.protection.outlook.com ([40.107.8.123]:43102
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728651AbfHLNDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 09:03:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cbNT4sFaRa/PW5hhjIttqOMkTB+9XWglhpPFNDUUmeQoxwyhvqqP0yyDFcuZ1N+YCj63j+yvJKZ1XOy/onZY/bEj7jg/ixAm8TKAU37CoxEMRJu9n1K521gquBZR5GBFh8w6c+Hh0Q1/FxWh6Ve6f4GmE+24V90rnOTveaUa8p20WXrdGlrtbZqWEtPipD6VCNqimOZhtX724eiv9g8gynGI/tac3QNyeNJFOg4VenRVRwmZwFaeU2cWg8AtZ3Um4Yfw1B5PIKZw7RSN/u2HV7HyK83386bPKiHQypzKtYq8NCexzHAJfNieI9Ue+vc073/KkCHsK8QHlt0DbtvwyQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3SbfqvsTQbd6Jhu7v73AipmIyY5AbVnTT0hW5s7R1C8=;
- b=RcAkUg20hDUccWL6nz86SzjEOu1NiXu4O+0XRE4uMsxz/ycYYQtg8F3aCttozjTCXoyxfdetF45XOBo7QHoVCzBeH0mFwNCGLkT0TZtgFOfbpALaZz8WIL1zZMLqA21BLGgrRZiQxNhSl1bwoFHMqYF6Dg6dZLbP0Rv28i/4ER7b8KppHzyBGZRbsXFJF3Z2nst5fgGty8S0rjO3aVOuMOEwFzT9Mpj+LzEqKYXNhrTXDzuggiMOy7MLBQmNU7sj9zxu+L09S2aqE/adFa5miTkUMJlrnO/SJk+YBB/5wnM7DIpgHa+5aR8xU74j9i2Zvc4DJq11uOzrUyhU0cqdmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silicom-usa.com; dmarc=pass action=none
- header.from=silicom-usa.com; dkim=pass header.d=silicom-usa.com; arc=none
+        Mon, 12 Aug 2019 09:03:15 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35778 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728812AbfHLNDN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 09:03:13 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n4so7718245pgv.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 06:03:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=SILICOMLTD.onmicrosoft.com; s=selector2-SILICOMLTD-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3SbfqvsTQbd6Jhu7v73AipmIyY5AbVnTT0hW5s7R1C8=;
- b=Zpnnnq2DJn/AkxLNFDRRWwWKFoNOO7wF6lmEug43WWnwfSrMHCoschu2lsHWcY5f+w49hCXFNNEdMlLFGt+Yfp3hoeFIaRRtxKRqwDQQhtyOYR2IOJlhjWBWwwKFZSZfmBomNU/+H+ahLhr7wrqbxVGJf12OCIXBS2sGhJqHH+w=
-Received: from VI1PR0402MB2717.eurprd04.prod.outlook.com (10.175.22.139) by
- VI1PR0402MB2797.eurprd04.prod.outlook.com (10.172.255.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.20; Mon, 12 Aug 2019 13:02:28 +0000
-Received: from VI1PR0402MB2717.eurprd04.prod.outlook.com
- ([fe80::eca9:e1f:eca7:8439]) by VI1PR0402MB2717.eurprd04.prod.outlook.com
- ([fe80::eca9:e1f:eca7:8439%9]) with mapi id 15.20.2157.022; Mon, 12 Aug 2019
- 13:02:28 +0000
-From:   Stephen Douthit <stephend@silicom-usa.com>
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     Jens Axboe <axboe@kernel.dk>,
-        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH] ata: ahci: Lookup PCS register offset based on PCI device
- ID
-Thread-Topic: [PATCH] ata: ahci: Lookup PCS register offset based on PCI
- device ID
-Thread-Index: AQHVTidIVfq9W1HbR0i2bNtry39Joab0Aj2AgAN9ywA=
-Date:   Mon, 12 Aug 2019 13:02:27 +0000
-Message-ID: <abfa4b20-2916-d89a-f4d3-b27fca5906b2@silicom-usa.com>
-References: <20190808202415.25166-1-stephend@silicom-usa.com>
- <20190810074317.GA18582@infradead.org>
-In-Reply-To: <20190810074317.GA18582@infradead.org>
-Reply-To: Stephen Douthit <stephend@silicom-usa.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BN6PR1701CA0009.namprd17.prod.outlook.com
- (2603:10b6:405:15::19) To VI1PR0402MB2717.eurprd04.prod.outlook.com
- (2603:10a6:800:b4::11)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=stephend@silicom-usa.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [96.82.2.57]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6844c787-0299-41d4-cd7c-08d71f2553d2
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0402MB2797;
-x-ms-traffictypediagnostic: VI1PR0402MB2797:
-x-microsoft-antispam-prvs: <VI1PR0402MB2797201806751C0F673104F294D30@VI1PR0402MB2797.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 012792EC17
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(396003)(366004)(346002)(39850400004)(189003)(199004)(3846002)(14454004)(53936002)(6116002)(64756008)(86362001)(76176011)(6486002)(31696002)(53546011)(66446008)(66556008)(26005)(2906002)(386003)(6506007)(66476007)(186003)(66946007)(3450700001)(25786009)(4326008)(102836004)(31686004)(6246003)(478600001)(66066001)(6916009)(229853002)(5660300002)(8676002)(486006)(99286004)(71200400001)(71190400001)(43066004)(81166006)(36756003)(81156014)(256004)(8936002)(305945005)(316002)(52116002)(6436002)(6512007)(446003)(11346002)(7736002)(54906003)(476003)(2616005);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0402MB2797;H:VI1PR0402MB2717.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: silicom-usa.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Eat08B1Zy41Wvy5I6vJdvoAiK7G56DcoXn3wQzlsm1txFkFMevsk6lpwXscqAGo+2YATlNtEs9YJ8LU+oELLalUyvCBH4Hq3uFG5Z9nDa/zcYVGjRhmzKPyBczR5AzYvWm+wVafajN1/SehVkkxHZq0P1bIPRaq5dbDJdOSfKoquSCK7z0t806Nz/zAn4MyOW02ZBnboPfVr8jeSsjnp17b0HSVQgcGUgFxom5OqUkiHXFWHTy/maz6wH7dGdDOdPZLDV/4T78JewkxS/GtrnTivdewVxCd42oxr70uh6svj2g3VXRTlAawGW1m3urFLxV8Zl2f0HmIM6YOGrdW0MuZfK774pbzE6Oj/S6NepJDbMgsGD5KhOb/VqC/2KYH5RqwYhxoEPyXwreqoSuEmQrQxR80muiOYThr9NC0dpbQ=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6B99C8D56EB6684D8FE2860F550E47DF@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9PGFo0IOTBF0bIx7y/QxiVY31P4bvTcKQoBfJqZTG+w=;
+        b=PwGI0wkwa6ZBvzJS2WowZtgp5DVi7QPH+BrB9p0HCfQcxpdzKqQgPTHdIAl3D1o9Ui
+         UwguTSYRYWuAd3qrqhfjY+51MrRtaJizalVxHqxwXrlJqDBvavY40TWKCBgS4IeFRTPK
+         AfF57tOE8WhINap7lLBY+lYVRyduY9cx0H4rc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9PGFo0IOTBF0bIx7y/QxiVY31P4bvTcKQoBfJqZTG+w=;
+        b=oDPMXxtJEUfJ7QiHitqODkluEYThzZHYNhlqFrCF9kmy3fwBqL1lw/TgZIDsNWQNSs
+         Ngnork39lMUP30QjYjy92ug4XOT/Ai3+ge4BwgBezMYn5WcT5h97eIttbyTWAaFPs1Jr
+         cjBXyqNMh/wYUsz4EN/KLdZRrzEDUDK+xvnkDEpcub7bxeVd+Hg02BDTN3ywpKaF2mGg
+         5rKxbz3IuZG3MVGE/D1nnm/lnXpLPc4FYwEXKoTF8tKLbBQqAovQjsq5WE1+cpl+gfHE
+         3eQEECOqqs3qXM6C7kNovw8BMyfpPSD6Q7ANeIWZfiB8qtoMb2e5JTnAqCtnlyuxFXWn
+         QuFA==
+X-Gm-Message-State: APjAAAUv0saEW2grwqMcpqc0++sUqLanP/rT0R8DAxxYqv8xsrtOmlwD
+        FosqmXmL1OfbMPIyHQ3qmhZZ4A==
+X-Google-Smtp-Source: APXvYqyz6EmE0iTkl3gZlNovk6A/dv0bMJdkggbBqQc3eqErF9H/OyeJ1CsBomxTPL6iok8vEgG0pQ==
+X-Received: by 2002:a17:90a:ec07:: with SMTP id l7mr18571059pjy.39.1565614992605;
+        Mon, 12 Aug 2019 06:03:12 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id o3sm25222103pje.1.2019.08.12.06.03.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 06:03:11 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 09:03:10 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 3/3] driver/core: Fix build error when SRCU and lockdep
+ disabled
+Message-ID: <20190812130310.GA27552@google.com>
+References: <20190811221111.99401-1-joel@joelfernandes.org>
+ <20190811221111.99401-3-joel@joelfernandes.org>
+ <20190812050256.GC5834@kroah.com>
 MIME-Version: 1.0
-X-OriginatorOrg: silicom-usa.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6844c787-0299-41d4-cd7c-08d71f2553d2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 13:02:27.9338
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c9e326d8-ce47-4930-8612-cc99d3c87ad1
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0P66+KkogscynsoR+VjLv/OP6hYPlAo1l7XrO8kiSwYJUV+yraubi6q+k5eHsk+zyOf3R+9KRFBReb259Qc9q1AF45sh16400nbAht4ZmG4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2797
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812050256.GC5834@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gOC8xMC8xOSAzOjQzIEFNLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90ZToNCj4gT24gVGh1LCBB
-dWcgMDgsIDIwMTkgYXQgMDg6MjQ6MzFQTSArMDAwMCwgU3RlcGhlbiBEb3V0aGl0IHdyb3RlOg0K
-Pj4gSW50ZWwgbW92ZWQgdGhlIFBDUyByZWdpc3RlciBmcm9tIDB4OTIgdG8gMHg5NCBvbiBEZW52
-ZXJ0b24gZm9yIHNvbWUNCj4+IHJlYXNvbiwgc28gbm93IHdlIGdldCB0byBjaGVjayB0aGUgZGV2
-aWNlIElEIGJlZm9yZSBwb2tpbmcgaXQgb24gcmVzZXQuDQo+IA0KPiBBbmQgbm93IHlvdSBqdXN0
-IG1hdGNoIG9uIHRoZSBuZXcgSURzLCB3aGljaCBtZWFucyB3ZSdsbCBwZXJwZXR1YWxseQ0KPiBj
-YXRjaCB1cCBvbiBhbnkgbmV3IGRldmljZS4gIERhbiwgY2FuIHlvdSByZWFjaCBvdXQgaW5zaWRl
-IEludGVsIHRvDQo+IGZpZ3VyZSBvdXQgaWYgdGhlcmUgaXMgYSB3YXkgdG8gZmluZCBvdXQgdGhl
-IFBDUyByZWdpc3RlciBsb2NhdGlvbg0KPiB3aXRob3V0IHRoZSBQQ0kgSUQgY2hlY2s/DQo+IA0K
-PiANCj4+ICAgc3RhdGljIGludCBhaGNpX3BjaV9yZXNldF9jb250cm9sbGVyKHN0cnVjdCBhdGFf
-aG9zdCAqaG9zdCkNCj4+ICAgew0KPj4gICAJc3RydWN0IHBjaV9kZXYgKnBkZXYgPSB0b19wY2lf
-ZGV2KGhvc3QtPmRldik7DQo+PiBAQCAtNjM0LDEzICs2NjksMTQgQEAgc3RhdGljIGludCBhaGNp
-X3BjaV9yZXNldF9jb250cm9sbGVyKHN0cnVjdCBhdGFfaG9zdCAqaG9zdCkNCj4+ICAgDQo+PiAg
-IAlpZiAocGRldi0+dmVuZG9yID09IFBDSV9WRU5ET1JfSURfSU5URUwpIHsNCj4+ICAgCQlzdHJ1
-Y3QgYWhjaV9ob3N0X3ByaXYgKmhwcml2ID0gaG9zdC0+cHJpdmF0ZV9kYXRhOw0KPj4gKwkJaW50
-IHBjcyA9IGFoY2lfcGNzX29mZnNldChob3N0KTsNCj4+ICAgCQl1MTYgdG1wMTY7DQo+PiAgIA0K
-Pj4gICAJCS8qIGNvbmZpZ3VyZSBQQ1MgKi8NCj4+IC0JCXBjaV9yZWFkX2NvbmZpZ193b3JkKHBk
-ZXYsIDB4OTIsICZ0bXAxNik7DQo+PiArCQlwY2lfcmVhZF9jb25maWdfd29yZChwZGV2LCBwY3Ms
-ICZ0bXAxNik7DQo+PiAgIAkJaWYgKCh0bXAxNiAmIGhwcml2LT5wb3J0X21hcCkgIT0gaHByaXYt
-PnBvcnRfbWFwKSB7DQo+PiAtCQkJdG1wMTYgfD0gaHByaXYtPnBvcnRfbWFwOw0KPj4gLQkJCXBj
-aV93cml0ZV9jb25maWdfd29yZChwZGV2LCAweDkyLCB0bXAxNik7DQo+PiArCQkJdG1wMTYgfD0g
-aHByaXYtPnBvcnRfbWFwICYgMHhmZjsNCj4+ICsJCQlwY2lfd3JpdGVfY29uZmlnX3dvcmQocGRl
-diwgcGNzLCB0bXAxNik7DQo+PiAgIAkJfQ0KPj4gICAJfQ0KPiANCj4gQW5kIFN0ZXBoZW4sIHdo
-aWxlIHlvdSBhcmUgYXQgaXQsIGNhbiB5b3Ugc3BsaXQgdGhpcyBJbnRlbC1zcGVjaWZpYw0KPiBx
-dWlyayBpbnRvIGEgc2VwYXJhdGUgaGVscGVyPw0KDQpJIGNhbiBkbyB0aGF0LiAgSSdsbCB3YWl0
-IHVudGlsIHdlIGhlYXIgYmFjayBmcm9tIERhbiBpZiB0aGVyZSdzIGENCmJldHRlciBzY2hlbWUg
-dGhhbiBhIGRldmljZSBJRCBsb29rdXAuDQo=
+On Mon, Aug 12, 2019 at 07:02:56AM +0200, Greg Kroah-Hartman wrote:
+> On Sun, Aug 11, 2019 at 06:11:11PM -0400, Joel Fernandes (Google) wrote:
+> > Properly check if lockdep lock checking is disabled at config time. If
+> > so, then lock_is_held() is undefined so don't do any checking.
+> > 
+> > This fix is similar to the pattern used in srcu_read_lock_held().
+> > 
+> > Link: https://lore.kernel.org/lkml/201908080026.WSAFx14k%25lkp@intel.com/
+> > Fixes: c9e4d3a2fee8 ("acpi: Use built-in RCU list checking for acpi_ioremaps list")
+> 
+> What tree is this commit in?
+> 
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > ---
+> > This patch is based on the -rcu dev branch.
+> 
+> Ah...
+> 
+> >  drivers/base/core.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > index 32cf83d1c744..fe25cf690562 100644
+> > --- a/drivers/base/core.c
+> > +++ b/drivers/base/core.c
+> > @@ -99,7 +99,11 @@ void device_links_read_unlock(int not_used)
+> >  
+> >  int device_links_read_lock_held(void)
+> >  {
+> > -	return lock_is_held(&device_links_lock);
+> > +#ifdef CONFIG_DEBUG_LOCK_ALLOC
+> > +	return lock_is_held(&(device_links_lock.dep_map));
+> > +#else
+> > +	return 1;
+> > +#endif
+> 
+> return 1?  So the lock is always held?
+
+This is just the pattern of an assert that is disabled, so that
+false-positives don't happen if lockdep is disabled.
+
+So say someone writes a statement like:
+WARN_ON_ONCE(!device_links_read_lock_held());
+
+Since lockdep is disabled, we cannot check whether lock is held or not. Yet,
+we don't want false positives by reporting that the lock is not held. In this
+case, it is better to report that the lock is held to suppress
+false-positives.  srcu_read_lock_held() also follows the same pattern.
+
+thanks,
+
+ - Joel
+
