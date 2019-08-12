@@ -2,127 +2,118 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35149C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31475C32750
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 065B720679
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03E8C214C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:00:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ox3zecLL"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="LV/5e5bv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbfHLM7z (ORCPT
+        id S1728777AbfHLNAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 08:59:55 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44458 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbfHLM7z (ORCPT
+        Mon, 12 Aug 2019 09:00:42 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43498 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728738AbfHLNAl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 08:59:55 -0400
-Received: by mail-lj1-f193.google.com with SMTP id e24so1504856ljg.11
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 05:59:54 -0700 (PDT)
+        Mon, 12 Aug 2019 09:00:41 -0400
+Received: by mail-qt1-f195.google.com with SMTP id b11so2856120qtp.10
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 06:00:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F2Nq/zcAHmKnyWJZUFugKDFlDxB+1xeCPHyjsiZ4S/U=;
-        b=Ox3zecLLBuTUitWMEKguTdU+91neVQRMhUjF6XXwufTANvpF5wwbvg6lM78G+Xci5J
-         G1tchLUxkpKCj/Y26M92mAcJRJSu9KaiN6smELAF0Q2nUpe6XEUap8WZ//TMKWUR5DwT
-         +cw4rg1DGLeah4TpC2+nEkyq+6Lc9hakaFV2uI45V9ZqAUP4v+f2lR7ah2r6nDBtXpUQ
-         xfIOmb52HehnFaFM9Gs84NzOw3jrumOVjQfcQqZEbDFNgjifAG20QNgIOeP5JcEblyYv
-         tPkUqHQ9MhstecI/OjGLmqhkAPbiLgfcSui740aqrmvu8m5+P1FZf4GVGKLUQUzJyIVM
-         w5cw==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=v27wNdJ2y4fYwnlNFEt6zNAiJxMsGAli8ivaPg3wc1M=;
+        b=LV/5e5bv9v8c9I7DK/4tP8vVkAv6ndU5JI38qUo1+2B1jfGlrpI06NbB/wUkGmGyeD
+         KY3vx+BUEfWjNcT2jjwpyELSCXp7i7rhZc2KX9VIhPMNn4kdIu0t67lAdfyU9nekK3/L
+         3MP+wXH4WlzFyTZrxx9Nd58XuCITcoHJXYChWbVPAs14UWUvJfZCxKp6aHXHdcIEep4x
+         r+prD4FcMDTQq1FtSuu4IHqp4tIQ7RstC8NDn1Eia7VGs9b5kzm5e4WhAMu4VOynEmb3
+         TrkDaFXVCw6fu3HohAu2/SmzPW7CoZVyBc26hhltk64h6IL73zahCzWzhawOMhGp4fqS
+         1wtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F2Nq/zcAHmKnyWJZUFugKDFlDxB+1xeCPHyjsiZ4S/U=;
-        b=lyIb1ddV2tJYsR+Q+RQZb8W9+FwgyCmUKvFY5fyl75/FV7x9PFdx9kqhM6hnnIQptt
-         gp5F3IzSV1HIIb+2AIInssAGuEu48e0ZdwMXkDlS0RsNXEWE2WOXoI++7Zy1buwid0fg
-         a1ewgrOqWhTSgptfugzDWu+ydMXb8Xv0DMNxCQOmhzpjrtvxQzgyJFIpdFnlBORxjKuh
-         PNg+eGjSyHUH+4XR5eHr2k3rbS2r1tfIloJo+LG6YNUie1jGbwcRef2e2JdPUmkaBmpw
-         Rxqnt2+o7VsQ1W8qPNdNemb+7U5znqxhJxoVDUXx0/lfRnQ6F7vniS+brEyFuDZc93/t
-         /n0g==
-X-Gm-Message-State: APjAAAVRLhJF+g/bywcG0cy2aLJGn7TI+L2uo7lyGGP7+k7k2VK+NQ4m
-        B0vNpnz80gwdUrpDVjiGo0oBPE1Hqqc3WMBRbf4=
-X-Google-Smtp-Source: APXvYqxwe25Z+YQzEjGWC7ePKovdbzR8uhCgFxhBz9fGHIchB8hh/uLGhqKsLm+UkHO3cKBtu/UqoezbFItlEudWmEk=
-X-Received: by 2002:a2e:9b83:: with SMTP id z3mr18122610lji.84.1565614793893;
- Mon, 12 Aug 2019 05:59:53 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=v27wNdJ2y4fYwnlNFEt6zNAiJxMsGAli8ivaPg3wc1M=;
+        b=RLoPJOe4N1zQwHd88MiUDafxn8JFf8o6efRAILHTy/g4AzwKi3oD1RZg/axb3HDqOd
+         GXtnbXz4sUiqU3n7ou2QjWkJjddtLjiqrNJlaiZ0zlfrhe183hkFI6QUsbNSVmWFyFj5
+         PuDBEXDw2xlsmxJdhG2fvHuQO8bl/hK2Jfn3KQ2sdDvuM4QCKabWHfrypW+1pqeLI35/
+         uQY1KYj3F56NPdImT6wueQNeCb+yA3/0G8XIjAMyKfp4CPZnh4uVMZHwpFgPdwiePSfL
+         yS3WHEmx/9V29NAA6ze1wIQ5Y27qOtFTCCccb2huYyP/zRcJj95ah9a6qJcnOTglUY1C
+         6yYw==
+X-Gm-Message-State: APjAAAXihEZgV2Q6uIURlxKnPEL5pslqny30+a6FK5i00X8aFq99H87O
+        EYyik7/h0xPj6GFBQr9Y9SQf3g==
+X-Google-Smtp-Source: APXvYqyQID2HK/cSNFy0j5AldC0D5f58clAE4+2HeEw+kkaB2zL8GXSnMyU9v7OrdqZd4L0OHplsYg==
+X-Received: by 2002:ac8:6c48:: with SMTP id z8mr18986870qtu.58.1565614840799;
+        Mon, 12 Aug 2019 06:00:40 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id m27sm52693265qtu.31.2019.08.12.06.00.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 12 Aug 2019 06:00:40 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hx9wG-0007QV-0U; Mon, 12 Aug 2019 10:00:40 -0300
+Date:   Mon, 12 Aug 2019 10:00:40 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     ira.weiny@intel.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 16/19] RDMA/uverbs: Add back pointer to system
+ file object
+Message-ID: <20190812130039.GD24457@ziepe.ca>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-17-ira.weiny@intel.com>
 MIME-Version: 1.0
-References: <CAD8Lp448i7jOk9C5NJtC2wHMaGuRLD4pxVqK17YqRCuMVXhsOA@mail.gmail.com>
- <CAERHkruxfBc8DqNUr=fbYuQWrXrHC7cK6HnVR3xp0iLA9QtxiQ@mail.gmail.com>
- <alpine.DEB.2.21.1908010931550.1788@nanos.tec.linutronix.de>
- <CAERHkrtaVAQHDU1cj2_GLL59LPjp7E=3X0Zna0spfFB=Ve5__w@mail.gmail.com>
- <alpine.DEB.2.21.1908011011250.1788@nanos.tec.linutronix.de>
- <81666b28-d029-56c3-8978-90abc219d1b7@linux.intel.com> <alpine.DEB.2.21.1908011054210.1965@nanos.tec.linutronix.de>
- <3d14b0cc-3cca-1874-3521-4ee2ec52141d@amd.com> <alpine.DEB.2.21.1908082235590.2882@nanos.tec.linutronix.de>
- <5bf28ba4-b7c1-51de-88ae-feebae2a28db@amd.com> <alpine.DEB.2.21.1908082306220.2882@nanos.tec.linutronix.de>
- <75e59ac6-5165-bd0a-aec9-be16d662ece9@amd.com> <alpine.DEB.2.21.1908091443030.21433@nanos.tec.linutronix.de>
- <1803ad97-74f4-28c6-58c8-c52b3d1e5b1f@linux.intel.com> <alpine.DEB.2.21.1908121423040.7324@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1908121423040.7324@nanos.tec.linutronix.de>
-From:   Aubrey Li <aubrey.intel@gmail.com>
-Date:   Mon, 12 Aug 2019 20:59:42 +0800
-Message-ID: <CAERHkrttXdZhZHZs+JasZU6a2kEb1vc6KB25+LbpQycenJZpOg@mail.gmail.com>
-Subject: Re: [PATCH] x86/apic: Handle missing global clockevent gracefully
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Daniel Drake <drake@endlessm.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Endless Linux Upstreaming Team <linux@endlessm.com>,
-        Jiri Slaby <jslaby@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809225833.6657-17-ira.weiny@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 8:25 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Mon, 12 Aug 2019, Li, Aubrey wrote:
-> > On 2019/8/9 20:54, Thomas Gleixner wrote:
-> > > +   local_irq_disable();
-> > >     /*
-> > >      * Setup the APIC counter to maximum. There is no way the lapic
-> > >      * can underflow in the 100ms detection time frame
-> > >      */
-> > >     __setup_APIC_LVTT(0xffffffff, 0, 0);
-> > >
-> > > -   /* Let the interrupts run */
-> > > -   local_irq_enable();
-> > > +   /*
-> > > +    * Methods to terminate the calibration loop:
-> > > +    *  1) Global clockevent if available (jiffies)
-> > > +    *  2) TSC if available and frequency is known
-> > > +    */
-> > > +   jif_start = READ_ONCE(jiffies);
-> > > +
-> > > +   if (tsc_khz) {
-> > > +           tsc_start = rdtsc();
-> > > +           tsc_perj = div_u64((u64)tsc_khz * 1000, HZ);
-> > > +   }
-> > > +
-> > > +   while (lapic_cal_loops <= LAPIC_CAL_LOOPS) {
-> >
-> > Is this loop still meaningful, can we just invoke the handler twice
-> > before and after the tick?
->
-> And that solves what?
->
+On Fri, Aug 09, 2019 at 03:58:30PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> In order for MRs to be tracked against the open verbs context the ufile
+> needs to have a pointer to hand to the GUP code.
+> 
+> No references need to be taken as this should be valid for the lifetime
+> of the context.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+>  drivers/infiniband/core/uverbs.h      | 1 +
+>  drivers/infiniband/core/uverbs_main.c | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/drivers/infiniband/core/uverbs.h b/drivers/infiniband/core/uverbs.h
+> index 1e5aeb39f774..e802ba8c67d6 100644
+> +++ b/drivers/infiniband/core/uverbs.h
+> @@ -163,6 +163,7 @@ struct ib_uverbs_file {
+>  	struct page *disassociate_page;
+>  
+>  	struct xarray		idr;
+> +	struct file             *sys_file; /* backpointer to system file object */
+>  };
 
-I meant, can we do this one time?
-- lapic_cal_t1 = read APIC counter
-- /* Wait for a tick to elapse */
-- lapic_cal_t2 = read APIC counter
+The 'struct file' has a lifetime strictly shorter than the
+ib_uverbs_file, which is kref'd on its own lifetime. Having a back
+pointer like this is confouding as it will be invalid for some of the
+lifetime of the struct.
 
-I'm not clear why we still need this loop, to use the
-existing lapic_cal_handler()?
-
-Thanks,
--Aubrey
+Jason
