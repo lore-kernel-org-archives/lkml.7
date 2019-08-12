@@ -2,87 +2,117 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D13E0C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8D5C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF8D1208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF6B206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:16:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u4QlkRbM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbfHLIPH (ORCPT
+        id S1727100AbfHLIQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 04:15:07 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:38985 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727077AbfHLIPH (ORCPT
+        Mon, 12 Aug 2019 04:16:45 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43741 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbfHLIQp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 04:15:07 -0400
-X-Originating-IP: 86.250.200.211
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 740C8C0010;
-        Mon, 12 Aug 2019 08:15:02 +0000 (UTC)
-Date:   Mon, 12 Aug 2019 10:15:01 +0200
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>, davem@davemloft.net,
-        sd@queasysnail.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, alexandre.belloni@bootlin.com,
-        allan.nielsen@microchip.com, camelia.groza@nxp.com,
-        Simon.Edelhaus@aquantia.com
-Subject: Re: [PATCH net-next v2 6/9] net: macsec: hardware offloading
- infrastructure
-Message-ID: <20190812081501.GD3698@kwain>
-References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
- <20190808140600.21477-7-antoine.tenart@bootlin.com>
- <20190810163423.GA30120@lunn.ch>
+        Mon, 12 Aug 2019 04:16:45 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p13so29186494wru.10
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 01:16:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=MJHxBxh/Q5vo+W76uNGRUJUeN3hwDfWxfMg6P/gBOg0=;
+        b=u4QlkRbMDiHfGrjdu436aHZusopdsD94AaT6zXTM3eaZ4y6BosUM0tlaA56X51nN9c
+         umI3PH27REA1YdEm/bDm3OE2UI9MGULdMLuGUTvnDBKUBlM+u5BgwEJXKd1SByIuWkrY
+         2kv99VeKU+V5QXG9oieP77x7yQgoExIDYXx4vPH8vlEru6HzZ6/p32cpzzObsHy5W3az
+         O2VbXSjzdwyFpNJYin4w9mGvGx4NIQqGMocgiLaaq7HHG8qkJjXvIxiD9mAgo53+VJlh
+         LCcGJbAa2s5qZg9/JZfFsSRo/t/+spxSIJYxDJW7Gfq3OorZb4uOTIjODwyWsHDkDNXd
+         LmBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=MJHxBxh/Q5vo+W76uNGRUJUeN3hwDfWxfMg6P/gBOg0=;
+        b=awed+V8WMtHXIcPhn0aJ2UdkORwoEEpdOxCg+MgGVzyCqOCBkGsNRAEvFF9Fwr/T3g
+         n9AVC9s8txNTas8u9NcXfjnqN4vY2L7NF6j1crIQP5HdpP5EXRS/zX8O8EHdX2JkGCKV
+         k2aXHSmTaW7uMhWdOOzaapVR1ceav4n7uukCuNAbBsqSUa7PAesrR78PdPrx5Hs0UdlP
+         cOXF8+ZipcTK9F3NGMFUMvwNFKuzqBLPiUZtGsOfl5x+eB7m+PCnv5OsWKCbvbT90FyT
+         I5OWCugeS5HZkN7ppSTiMKmwWTG5SpAdqTpecEBbYyJ1wL+qLg4686IJcKNIwgBBdHTR
+         Aj3Q==
+X-Gm-Message-State: APjAAAXsOFz+W+/Hpk1NOofSarE0/mNsc36zZHCihIgI9VsTHKsWHFky
+        6lURt3y2+h1MTBEeeZ6A7BIlnw==
+X-Google-Smtp-Source: APXvYqyD6fPKryZQTpN9zsdwGV7yS5BKNQZ8tOEeMIPGi0uW8Qmgi+HgiANiv0VmQSgyzgbueGKdzg==
+X-Received: by 2002:adf:ec0d:: with SMTP id x13mr40515082wrn.240.1565597802765;
+        Mon, 12 Aug 2019 01:16:42 -0700 (PDT)
+Received: from dell ([2.27.35.255])
+        by smtp.gmail.com with ESMTPSA id g15sm16420028wrp.29.2019.08.12.01.16.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 12 Aug 2019 01:16:42 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 09:16:40 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sebastian Reichel <sre@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, od@zcrc.me,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH 10/11] mfd: Drop obsolete JZ4740 driver
+Message-ID: <20190812081640.GA26727@dell>
+References: <20190725220215.460-1-paul@crapouillou.net>
+ <20190725220215.460-11-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190810163423.GA30120@lunn.ch>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190725220215.460-11-paul@crapouillou.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On Thu, 25 Jul 2019, Paul Cercueil wrote:
 
-On Sat, Aug 10, 2019 at 06:34:23PM +0200, Andrew Lunn wrote:
-> On Thu, Aug 08, 2019 at 04:05:57PM +0200, Antoine Tenart wrote:
-> > This patch introduces the MACsec hardware offloading infrastructure.
-> > 
-> > The main idea here is to re-use the logic and data structures of the
-> > software MACsec implementation. This allows not to duplicate definitions
-> > and structure storing the same kind of information. It also allows to
-> > use a unified genlink interface for both MACsec implementations (so that
-> > the same userspace tool, `ip macsec`, is used with the same arguments).
-> > The MACsec offloading support cannot be disabled if an interface
-> > supports it at the moment.
-> > 
-> > The MACsec configuration is passed to device drivers supporting it
-> > through macsec_hw_offload() which is called from the MACsec genl
-> > helpers. This function calls the macsec ops of PHY and Ethernet
-> > drivers in two steps
+> It has been replaced with the ingenic-iio driver for the ADC.
 > 
-> It is great that you are thinking how a MAC driver would make use of
-> this. But on the flip side, we don't usual add an API unless there is
-> a user. And as far as i see, you only add a PHY level implementation,
-> not a MAC level.
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Tested-by: Artur Rojek <contact@artur-rojek.eu>
+> ---
+>  drivers/mfd/Kconfig      |   9 --
+>  drivers/mfd/Makefile     |   1 -
+>  drivers/mfd/jz4740-adc.c | 324 ---------------------------------------
+>  3 files changed, 334 deletions(-)
+>  delete mode 100644 drivers/mfd/jz4740-adc.c
 
-That's right, and the only modification here is a simple patch adding
-the MACsec ops within struct net_device. I can remove it as we do not
-have providers as of now and it can be added easily later on.
-
-Thanks,
-Antoine
+Applied, thanks.
 
 -- 
-Antoine T�nart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
