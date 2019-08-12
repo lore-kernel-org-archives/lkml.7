@@ -2,134 +2,112 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 533A8C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 395ECC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C92D206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F41DF2070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:31:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="erYZ3Yjo"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="e3gKu9VE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbfHLU3z (ORCPT
+        id S1726500AbfHLUbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 16:29:55 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46939 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbfHLU3y (ORCPT
+        Mon, 12 Aug 2019 16:31:24 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37446 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfHLUbY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 16:29:54 -0400
-Received: by mail-qt1-f195.google.com with SMTP id j15so10612990qtl.13
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 13:29:54 -0700 (PDT)
+        Mon, 12 Aug 2019 16:31:24 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 129so3362072pfa.4
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 13:31:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=okQCanS41NVfsqts5AJnKPYxoZvv6fudHvTlcVUrGb4=;
-        b=erYZ3YjobyGfzlBoxLc42M3F2RosVw0ZLJ8jT8ORF/CXfU5fuK1ic4KNz8H7G/MZUc
-         TpEJqrKmiQoupS4h55fSjKWdfsZ9GTdfueOQ6dPAacplMEouOBo48ORxGA+y88n4dI+l
-         +DKmoViQB7lujSgP6zatSKVxGCwL0NPYKdfjB8zbLU38V2osbC9TScaVwcg8aaJgnU2D
-         sCA1ifDiEstx71dcNXDT1gs6OgwSb0meF4fm9mv+AZU01XfZa5C9RphIIX4Mhn6T5/38
-         AntxHq5JjZ2R2qldCfQuE81uFpKfxjAxLR9OzS8LBgPKduNdddLZ6gtKMhPoVxaEJoBV
-         0OWw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=8/dzomfKZtMmJBCxwZthQlRqMx3W9Dc6DXlVE3ZOJ98=;
+        b=e3gKu9VE3T9jzG9hciNyK0x0OK+iti0j4JSgrsCMf1iFhV3LZxpdlCtga8J82aXRgG
+         hvN47PEvUiGgWu8qPwec45iUvVohkyDRCeOKQlZ+j0QJq/llZ/iSO1yjlkjP79wjNqaL
+         I3jwvEphQJvT2hCtGhPMo2S5MpDyy2RagsceziAKt0EGRJzgKrMjZMFuCqNpvLJKNERU
+         zJZm+6b3YPKnWbjB8eeLgrmCjBBAmY8F7G+ANNwgl+Jig575o5Yf1c8mXiN0JDVe9ZfR
+         gAs9EZkIsp0Hg29EhVVzpqIp6kVkuDF3AhjBo9I70LREOI6yLLo/3UyHrLwdQWj8zo0c
+         yD2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=okQCanS41NVfsqts5AJnKPYxoZvv6fudHvTlcVUrGb4=;
-        b=It/o8uhAYcV3vH3srCpelZWPcWxuR/zfmEY2vYOcPnQtam3korOe5ThgG7ew3uZx6T
-         y4gYZsZbDJoQ1qf/hmqEr0Y6ylqu6zzBUlozzAIkhD+DtvdbeXSrzjTL+QruWYiC/XZ9
-         8OEi3cBhEDP/YQwn1voFUwean+WD/lJFWlilZs4zi/wl2ZU30wgdA9jCZ/5hB+HkofzP
-         hrOI4jcIBzUNggRtvMvzJRBn+F6OZtShPO3RpAhy7Bf+MQJ2qKB/y+Tj0e2VYYHTcrPp
-         dOHG4WNtPlOTpcHbTBVhFSlxxNFVoRCMbObg8RKfGItCSfO9b3LR7anPvRZIiC5FXugv
-         HALQ==
-X-Gm-Message-State: APjAAAVherCG6bXTGp8Rdw1E4OG3LJ5A5GJmuMfeP6QQ61RXmS/IaTOU
-        EQTJfjcCTzUjwgMOaeHzkww=
-X-Google-Smtp-Source: APXvYqwTpsVawcNiJenRqIgzSQZqFPPVYNx449w5EoHaVgkXcuz2UimxK1d9twMADDsK95KCb7HLpQ==
-X-Received: by 2002:ac8:6112:: with SMTP id a18mr9255751qtm.272.1565641793538;
-        Mon, 12 Aug 2019 13:29:53 -0700 (PDT)
-Received: from quaco.ghostprotocols.net (187-26-98-68.3g.claro.net.br. [187.26.98.68])
-        by smtp.gmail.com with ESMTPSA id f20sm1343362qtf.68.2019.08.12.13.29.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 13:29:50 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6AA6940340; Mon, 12 Aug 2019 17:29:47 -0300 (-03)
-Date:   Mon, 12 Aug 2019 17:29:47 -0300
-To:     Igor Lubashev <ilubashe@akamai.com>
-Cc:     linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        James Morris <jmorris@namei.org>
-Subject: Re: [PATCH v3 4/4] perf: Use CAP_SYS_ADMIN instead of euid==0 with
- ftrace
-Message-ID: <20190812202947.GI9280@kernel.org>
-References: <cover.1565188228.git.ilubashe@akamai.com>
- <bd8763b72ed4d58d0b42d44fbc7eb474d32e53a3.1565188228.git.ilubashe@akamai.com>
- <20190812202251.GG9280@kernel.org>
- <20190812202706.GH9280@kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=8/dzomfKZtMmJBCxwZthQlRqMx3W9Dc6DXlVE3ZOJ98=;
+        b=LAYFklbeEQ34W1cgE5qzMBM8xxTFRa9QKACbnz4Xja8hgYPSGq+/V+E8pSGuzeNDTm
+         ASNWLCJDJXk7WIJauuuQgITzl2pJ3ABGEQK7kJnLQbmriGLf2vN+fjgbaTmLRukUARrB
+         rjkIIjfGgdZahrrZdaZqFhw2cRnsAb+Ie7F8xsyk/6x+2hbNzRikMfM4xk0hFEJV2Dtp
+         WWz5u/cNu8lph1TUfx5towTBlrgxwS+hNNHEQ5R4o5cCxhCmEAaZOoY8bQ4nj+apSynt
+         SBSl1JcYJN5EVglP1ZgJNIXaWQQXMnkKfaI3j0xMpcng+Z/iIvhuu6Wgh5WhCzjNwd/q
+         ImRA==
+X-Gm-Message-State: APjAAAWvovAzet+4SmvxgP08KIfjipbiXc4TSRrBZGkIQ18ggnkXWcbh
+        /lz815zCrs1zU1R3PwLAbo8Kbg==
+X-Google-Smtp-Source: APXvYqzRVx7zE/aBCc9H6C7hScAoLaJmDfXikuBGTg+k7m7mx2eKPJSF/Mmu1eyHEj3FG+3hh9tBqA==
+X-Received: by 2002:a65:4b8b:: with SMTP id t11mr31505067pgq.130.1565641883048;
+        Mon, 12 Aug 2019 13:31:23 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:14bb:580e:e4d6:b3a8])
+        by smtp.gmail.com with ESMTPSA id h195sm5229140pfe.20.2019.08.12.13.31.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 12 Aug 2019 13:31:22 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Christian Hewitt <christianshewitt@gmail.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2] arm64: dts: meson-g12b-khadas-vim3: add initial device-tree
+In-Reply-To: <20190812074857.8133-1-narmstrong@baylibre.com>
+References: <20190812074857.8133-1-narmstrong@baylibre.com>
+Date:   Mon, 12 Aug 2019 13:31:21 -0700
+Message-ID: <7hzhke15ye.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812202706.GH9280@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Aug 12, 2019 at 05:27:06PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Aug 12, 2019 at 05:22:51PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Wed, Aug 07, 2019 at 10:44:17AM -0400, Igor Lubashev escreveu:
-> > > @@ -281,7 +283,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
-> > >  		.events = POLLIN,
-> > >  	};
-> > >  
-> > > -	if (geteuid() != 0) {
-> > > +	if (!perf_cap__capable(CAP_SYS_ADMIN)) {
-> > >  		pr_err("ftrace only works for root!\n");
-> > 
-> > I guess we should update the error message too? 
-> > 
-> 
-> I.e. I applied this as a follow up patch:
-> 
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index 01a5bb58eb04..ba8b65c2f9dc 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -284,7 +284,12 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
->  	};
->  
->  	if (!perf_cap__capable(CAP_SYS_ADMIN)) {
-> -		pr_err("ftrace only works for root!\n");
-> +		pr_err("ftrace only works for %s!\n",
-> +#ifdef HAVE_LIBCAP_SUPPORT
-> +		"users with the SYS_ADMIN capability"
-> +#else
-> +		"root"
-> +#endif
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-                );
+> From: Christian Hewitt <christianshewitt@gmail.com>
+>
+> The Khadas VIM3 uses the Amlogic S922X or A311S SoC, both based on the
+> Amlogic G12B SoC family, on a board with the same form factor as the
+> VIM/VIM2 models. It ships in two variants; basic and
+> pro which differ in RAM and eMMC size:
+>
+> - 2GB (basic) or 4GB (pro) LPDDR4 RAM
+> - 16GB (basic) or 32GB (pro) eMMC 5.1 storage
+> - 16MB SPI flash
+> - 10/100/1000 Base-T Ethernet
+> - AP6398S Wireless (802.11 a/b/g/n/ac, BT5.0)
+> - HDMI 2.1 video
+> - 1x USB 2.0 + 1x USB 3.0 ports
+> - 1x USB-C (power) with USB 2.0 OTG
+> - 3x LED's (1x red, 1x blue, 1x white)
+> - 3x buttons (power, function, reset)
+> - IR receiver
+> - M2 socket with PCIe, USB, ADC & I2C
+> - 40pin GPIO Header
+> - 1x micro SD card slot
+>
+> A common meson-g12b-khadas-vim3.dtsi is added to support both S922X and
+> A311D SoCs supported by two variants of the board.
+>
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-:-)
- 
->  		return -1;
->  	}
->  
+This still has a build-time dependency on the CPUB clock patch.
 
-I've pushed the whole set to my tmp.perf/cap branch, please chec
+Looks like Jerome has sent a PR w/tag today that includes that, so I'll
+merge that tag and then queue this patch.
 
-- Arnaldo
+Thanks,
+
+Kevin
