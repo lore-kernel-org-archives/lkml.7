@@ -2,106 +2,95 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2ABFC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3218BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C93492085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:26:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="MGnSkv10"
+	by mail.kernel.org (Postfix) with ESMTP id EE7AF214C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:26:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565609210;
+	bh=WMX5WzUBHC7wrBcFibKuCXcsI0mYQCxfu+77DTSZQHU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OKZdUbrs9KUP7OJbcBanNEKTjfIw3FCfNTQcSz5JdfdMOgAof9FnqEsWCAxZbZnU6
+	 JTWYg5R+qmEskHIwpWrnkgPsLcAkZQMU++HsExrh6O1EnOB0yo+A3Bo6+h0KwnSHmS
+	 ohAWrE6IF5+nMKBzJfZpsCVJuTlDDOEBTDfVwmlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbfHLL0W (ORCPT
+        id S1728300AbfHLL0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 07:26:22 -0400
-Received: from mout.gmx.net ([212.227.15.19]:49285 "EHLO mout.gmx.net"
+        Mon, 12 Aug 2019 07:26:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728085AbfHLL0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 07:26:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1565609116;
-        bh=v7b7BvrXciV3NBubwOpaemt2kAsPrl1BPe/Nz2NswBU=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=MGnSkv10s6bJr+2LYe0Vg+T5aQQgWun0XdWZhVJjH0OTeFdRRlBmS6Ih2lFLvyv5L
-         vWF5UvQnSdqCZULmjwQ9RVEYSZYOAIXomyeYoAZIvUPv/MqCc2QtBZUOL0fxHIZnVy
-         VqBXryDgJhswl2xOlxSt0waDs6QiYE7+ZufmluR4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [217.61.152.193] ([217.61.152.193]) by web-mail.gmx.net
- (3c-app-gmx-bs80.server.lan [172.19.170.228]) (via HTTP); Mon, 12 Aug 2019
- 13:25:16 +0200
+        id S1727691AbfHLL0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 07:26:48 -0400
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E86E208C2;
+        Mon, 12 Aug 2019 11:26:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565609207;
+        bh=WMX5WzUBHC7wrBcFibKuCXcsI0mYQCxfu+77DTSZQHU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jmrlemJOZkcq7TFqEpSIyvlO5ThYDd7E/0FPazJ/0SSO95N8OALMPNG+Dv9Lzu77H
+         oD53cj2dOs4yc31OKOaVSUa6DJLcG0nIUJ+RixdUj91vIqWuImq8HAjj7rlCdG7QIC
+         04knvFtiuXW9NftL4mCeQcu9dp9bNGim2mOXEHbk=
+Date:   Mon, 12 Aug 2019 13:26:45 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH] arm64: dts: allwinner: Enable DDC regulator for Beelink
+ GS1
+Message-ID: <20190812112645.avyyf5iexxatgrwe@flea>
+References: <20190812102355.22586-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-Message-ID: <trinity-0fa641df-f7bb-4627-a9ab-aac3cabc90ba-1565609115974@3c-app-gmx-bs80>
-From:   "Frank Wunderlich" <frank-w@public-files.de>
-To:     "Lee Jones" <lee.jones@linaro.org>
-Cc:     "Kate Stewart" <kstewart@linuxfoundation.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org,
-        "Richard Fontana" <rfontana@redhat.com>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
-        linux-rtc@vger.kernel.org, "Allison Randal" <allison@lohutok.net>,
-        "Nicolas Ferre" <nicolas.ferre@microchip.com>,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
-        "Sean Wang" <sean.wang@mediatek.com>,
-        "Tianping . Fang" <tianping.fang@mediatek.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Eddie Huang" <eddie.huang@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "Alessandro Zummo" <a.zummo@towertech.it>,
-        "Josef Friedl" <josef.friedl@speed.at>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Sebastian Reichel" <sre@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Aw: Re: [PATCH v3 06/10] mfd: mt6323: some improvements of
- mt6397-core
-Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 12 Aug 2019 13:25:16 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <20190812102209.GI26727@dell>
-References: <20190729174154.4335-1-frank-w@public-files.de>
- <20190729174154.4335-7-frank-w@public-files.de>
- <20190812102209.GI26727@dell>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:+H+zrFxbX3u65Kz8Q14UR+W2QL6KWeuqbqDXcd/mwlEXxknDmP8VniBO4dlsPO8lvzAXn
- 3Y5NyGNEFcxG/hiDEMdhlb6mGUuC2oM0phOjueOu2MDtHhyNSzKa7zzri7AaOrLyXgls+u8sTwPQ
- oAV/CbSBYlmUVInmmRiS2kzjJFgTPVlFkzP+Rwz8lHdNBK149VceMK36vw/RyB+IoFv+U8FKiztO
- yMwrHuIbMWrhlGq1Uj1J+0nxuOtWnyd5GyKRFUYsqojA8ecuYK6tOXNnVm1cb1FrnaNST1QYDBxU
- Mg=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8Yj7l7CH0Mw=:gZd+QnMoJMQ46IbcpRg+69
- uYQ9PWSHzCb4jiQPAL0RN4XqGKUkZP7au9BlZu0WeAXvh2moFGkS+Qh6H/UHvlfwoK/zckQts
- cSjLWlFMupqJc7aAKUQfYQeemHELWiYqn7OHSi3fCzZ5BWFF4A3nQ4g4yoiqnt0pEuncDClxD
- qyoAVq9ArjxiVhYQYJA+PBrs7RziX5GkbBGDbwU5A9oGzVXvGiaDnBv6dUZOnhrW42dabqHS0
- lXU6xDXmrEAtePWxyeJZ40FbZOUl2nBhcn0Ctq5enGlq6vSuThfpLhU/cMvkVj9nHxdUkAeqy
- ASvjyoO1IKTe/Leg8l0X6YSD2sTyzyv7YXtP0U0sEOo1WUBWGayxs4gAzARxamymbaBjlhfx/
- OUyC1XD9pmsdx+kOvL61uobd2H29U8aF9pvGk1JBGdzDPzbNvzGqg7Oc1VOkBk9gGzSzeaCdw
- EWqUYj0GKkc5wRo4mB/yfqKK3ymFbRVrkA8YxocvAnR/cXIcxS+jvKmY2YyDG6p2BMGEPvXKZ
- 7xzezeddUuOzzBfMo3wupso6yj2SDGjeO5OPEwTvJNjgdfUr8uCyYRFquSH5DsOvA7C4xYYjT
- gN3DvuN67PPM5sP0cvLOSC6YEijq4vcf44N36E+tBQs7z/K5g6lA0LQzCD7+B4ZjLv1wdYjDw
- 06kiD9astcDCR5QcII++ExU97eegbwccVgVGX0HqIddrKtQ==
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="myuur5a3gwhb4nbt"
+Content-Disposition: inline
+In-Reply-To: <20190812102355.22586-1-peron.clem@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Gesendet: Montag, 12. August 2019 um 12:22 Uhr
-> Von: "Lee Jones" <lee.jones@linaro.org>
 
-> > - * Copyright (c) 2014 MediaTek Inc.
-> > + * Copyright (c) 2014-2018 MediaTek Inc.
+--myuur5a3gwhb4nbt
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Aug 12, 2019 at 12:23:55PM +0200, Cl=E9ment P=E9ron wrote:
+> Beelink GS1 has a DDC I2C bus voltage shifter. This is actually missing
+> and video is limited to 1024x768 due to missing EDID information.
 >
-> This is out of date.  Please update it.
+> Add the DDC regulator in the device-tree.
+>
+> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
 
-maybe i should drop change of this line completely (else it needs to be ad=
-justed every year)
+Applied, thanks
+Maxime
 
-regards Frank
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--myuur5a3gwhb4nbt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVFM9AAKCRDj7w1vZxhR
+xXlfAQCzGoHNMF6inUbK/DxstBsOVMBjL9GAKYk4ftUwdU7LDQEAq6yMKoeAHhfX
+FQiNLVXWJr+pVOrIPUOnWyLlp/Ocrgk=
+=XUMj
+-----END PGP SIGNATURE-----
+
+--myuur5a3gwhb4nbt--
