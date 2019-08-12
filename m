@@ -2,147 +2,194 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B3CC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A41C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F65720679
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66B7A20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:39:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfHLQhP (ORCPT
+        id S1726753AbfHLQjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 12:37:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38378 "EHLO mx1.redhat.com"
+        Mon, 12 Aug 2019 12:39:23 -0400
+Received: from mga17.intel.com ([192.55.52.151]:26926 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbfHLQhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 12:37:14 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1D6763D956;
-        Mon, 12 Aug 2019 16:37:14 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
-        by smtp.corp.redhat.com (Postfix) with SMTP id EB56F5C1B5;
-        Mon, 12 Aug 2019 16:37:11 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 12 Aug 2019 18:37:13 +0200 (CEST)
-Date:   Mon, 12 Aug 2019 18:37:10 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Adrian Reber <areber@redhat.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelianov <xemul@virtuozzo.com>,
-        Jann Horn <jannh@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v5 1/2] fork: extend clone3() to support CLONE_SET_TID
-Message-ID: <20190812163710.GC31560@redhat.com>
-References: <20190811203327.5385-1-areber@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190811203327.5385-1-areber@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 12 Aug 2019 16:37:14 +0000 (UTC)
+        id S1725887AbfHLQjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 12:39:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 09:39:22 -0700
+X-IronPort-AV: E=Sophos;i="5.64,378,1559545200"; 
+   d="scan'208";a="187487906"
+Received: from spandruv-mobl.amr.corp.intel.com ([10.252.205.216])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 09:39:21 -0700
+Message-ID: <ac27f3df68610dbc56d82dd3536c81064cf1e023.camel@linux.intel.com>
+Subject: Re: [PATCH 1/2] HID: do not call hid_set_drvdata(hdev, NULL) in
+ drivers
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Bruno =?ISO-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Ping Cheng <pinglinux@gmail.com>,
+        Jason Gerecke <jason.gerecke@wacom.com>,
+        Jiri Kosina <jikos@kernel.org>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 12 Aug 2019 09:39:17 -0700
+In-Reply-To: <20190812162740.15898-2-benjamin.tissoires@redhat.com>
+References: <20190812162740.15898-1-benjamin.tissoires@redhat.com>
+         <20190812162740.15898-2-benjamin.tissoires@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-1.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/11, Adrian Reber wrote:
->
->  include/linux/pid.h        |  2 +-
->  include/linux/sched/task.h |  1 +
->  include/uapi/linux/sched.h |  1 +
->  kernel/fork.c              | 22 ++++++++++++++++++++--
->  kernel/pid.c               | 36 +++++++++++++++++++++++++++++-------
->  5 files changed, 52 insertions(+), 10 deletions(-)
+On Mon, 2019-08-12 at 18:27 +0200, Benjamin Tissoires wrote:
+> This is a common pattern in the HID drivers to reset the drvdata.
+> Some
+> do it properly, some do it only in case of failure.
+> 
+> But, this is actually already handled by driver core, so there is no
+> need
+> to do it manually.
+> 
+> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+for hid-sensor-hub.c
+ Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-Looks good to me...
-
-A couple of nits below, but I won't insist, feel free to ignore.
-
-> +/*
-> + * Different sizes of struct clone_args
-> + */
-> +#define CLONE3_ARGS_SIZE_V0 64
-
-I don't really understand why do we want the "size < CLONE3_ARGS_SIZE_V0"
-check in copy_clone_args_from_user(), but I won't argue.
-
-> +/* V1 includes set_tid */
-> +#define CLONE3_ARGS_SIZE_V1 72
-
-unused?
-
-> @@ -2031,7 +2038,13 @@ static __latent_entropy struct task_struct *copy_process(
->  	stackleak_task_init(p);
+> ---
+>  drivers/hid/hid-cougar.c       | 6 ++----
+>  drivers/hid/hid-gfrm.c         | 7 -------
+>  drivers/hid/hid-lenovo.c       | 2 --
+>  drivers/hid/hid-picolcd_core.c | 7 +------
+>  drivers/hid/hid-sensor-hub.c   | 1 -
+>  5 files changed, 3 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/hid/hid-cougar.c b/drivers/hid/hid-cougar.c
+> index e0bb7b34f3a4..4ff3bc1d25e2 100644
+> --- a/drivers/hid/hid-cougar.c
+> +++ b/drivers/hid/hid-cougar.c
+> @@ -207,7 +207,7 @@ static int cougar_probe(struct hid_device *hdev,
+>  	error = hid_parse(hdev);
+>  	if (error) {
+>  		hid_err(hdev, "parse failed\n");
+> -		goto fail;
+> +		return error;
+>  	}
 >  
->  	if (pid != &init_struct_pid) {
-> -		pid = alloc_pid(p->nsproxy->pid_ns_for_children);
-> +		if (args->set_tid && !ns_capable(
-> +				p->nsproxy->pid_ns_for_children->user_ns,
-> +				CAP_SYS_ADMIN)) {
-> +			retval = -EPERM;
-> +			goto bad_fork_cleanup_thread;
-> +		}
-> +		pid = alloc_pid(p->nsproxy->pid_ns_for_children, args->set_tid);
-
-copy_process() is already huge and complex, why not move this check into
-alloc_pid() ? Again, note that is accepts the same ->pid_ns_for_children.
-
-> @@ -166,6 +166,9 @@ struct pid *alloc_pid(struct pid_namespace *ns)
->  	struct upid *upid;
->  	int retval = -ENOMEM;
+>  	if (hdev->collection->usage == COUGAR_VENDOR_USAGE) {
+> @@ -219,7 +219,7 @@ static int cougar_probe(struct hid_device *hdev,
+>  	error = hid_hw_start(hdev, connect_mask);
+>  	if (error) {
+>  		hid_err(hdev, "hw start failed\n");
+> -		goto fail;
+> +		return error;
+>  	}
 >  
-> +	if (set_tid < 0 || set_tid >= pid_max)
-> +		return ERR_PTR(-EINVAL);
-> +
->  	pid = kmem_cache_alloc(ns->pid_cachep, GFP_KERNEL);
->  	if (!pid)
->  		return ERR_PTR(retval);
-> @@ -186,12 +189,31 @@ struct pid *alloc_pid(struct pid_namespace *ns)
->  		if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
->  			pid_min = RESERVED_PIDS;
+>  	error = cougar_bind_shared_data(hdev, cougar);
+> @@ -249,8 +249,6 @@ static int cougar_probe(struct hid_device *hdev,
 >  
-> -		/*
-> -		 * Store a null pointer so find_pid_ns does not find
-> -		 * a partially initialized PID (see below).
-> -		 */
-> -		nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
-> -				      pid_max, GFP_ATOMIC);
-> +		if (set_tid) {
-> +			/*
-> +			 * Also fail if a PID != 1 is requested
-> +			 * and no PID 1 exists.
-> +			 */
-> +			nr = -EINVAL;
-> +			if (set_tid == 1 || !idr_is_empty(&tmp->idr))
-
-On the second thought, I think we should check ns->child_reaper != NULL
-rather than !idr_is_empty(), this looks more robust and clean.
-
-And this way alloc_pid() can do everything lockless at the start,
-
-	if (set_tid) {
-		if (set_tid < 0 || set_tid >= pid_max)
-			return ERR_PTR(-EINVAL);
-		if (set_tid != 1 && !ns->child_reaper)
-			return ERR_PTR(-EINVAL);
-		if (!ns_capable(ns->user_ns, CAP_SYS_ADMIN))
-			return ERR_PTR(-EPERM);
-	}
-
-
-and just for record... this is off-topic and I need to recheck, but
-today "ns->pid_allocated = 0" in free_pid() doesn't look right to me...
-This logic predates unshare(CLONE_PIDNS).
-
-Oleg.
+>  fail_stop_and_cleanup:
+>  	hid_hw_stop(hdev);
+> -fail:
+> -	hid_set_drvdata(hdev, NULL);
+>  	return error;
+>  }
+>  
+> diff --git a/drivers/hid/hid-gfrm.c b/drivers/hid/hid-gfrm.c
+> index 86c317320bf2..699186ff2349 100644
+> --- a/drivers/hid/hid-gfrm.c
+> +++ b/drivers/hid/hid-gfrm.c
+> @@ -123,12 +123,6 @@ static int gfrm_probe(struct hid_device *hdev,
+> const struct hid_device_id *id)
+>  	return ret;
+>  }
+>  
+> -static void gfrm_remove(struct hid_device *hdev)
+> -{
+> -	hid_hw_stop(hdev);
+> -	hid_set_drvdata(hdev, NULL);
+> -}
+> -
+>  static const struct hid_device_id gfrm_devices[] = {
+>  	{ HID_BLUETOOTH_DEVICE(0x58, 0x2000),
+>  		.driver_data = GFRM100 },
+> @@ -142,7 +136,6 @@ static struct hid_driver gfrm_driver = {
+>  	.name = "gfrm",
+>  	.id_table = gfrm_devices,
+>  	.probe = gfrm_probe,
+> -	.remove = gfrm_remove,
+>  	.input_mapping = gfrm_input_mapping,
+>  	.raw_event = gfrm_raw_event,
+>  	.input_configured = gfrm_input_configured,
+> diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
+> index 364bc7f11d9d..96fa2a2c2cd3 100644
+> --- a/drivers/hid/hid-lenovo.c
+> +++ b/drivers/hid/hid-lenovo.c
+> @@ -866,8 +866,6 @@ static void lenovo_remove_tpkbd(struct hid_device
+> *hdev)
+>  
+>  	led_classdev_unregister(&data_pointer->led_micmute);
+>  	led_classdev_unregister(&data_pointer->led_mute);
+> -
+> -	hid_set_drvdata(hdev, NULL);
+>  }
+>  
+>  static void lenovo_remove_cptkbd(struct hid_device *hdev)
+> diff --git a/drivers/hid/hid-picolcd_core.c b/drivers/hid/hid-
+> picolcd_core.c
+> index 5f7a39a5d4af..1b5c63241af0 100644
+> --- a/drivers/hid/hid-picolcd_core.c
+> +++ b/drivers/hid/hid-picolcd_core.c
+> @@ -534,8 +534,7 @@ static int picolcd_probe(struct hid_device *hdev,
+>  	data = kzalloc(sizeof(struct picolcd_data), GFP_KERNEL);
+>  	if (data == NULL) {
+>  		hid_err(hdev, "can't allocate space for Minibox PicoLCD
+> device data\n");
+> -		error = -ENOMEM;
+> -		goto err_no_cleanup;
+> +		return -ENOMEM;
+>  	}
+>  
+>  	spin_lock_init(&data->lock);
+> @@ -597,9 +596,6 @@ static int picolcd_probe(struct hid_device *hdev,
+>  	hid_hw_stop(hdev);
+>  err_cleanup_data:
+>  	kfree(data);
+> -err_no_cleanup:
+> -	hid_set_drvdata(hdev, NULL);
+> -
+>  	return error;
+>  }
+>  
+> @@ -635,7 +631,6 @@ static void picolcd_remove(struct hid_device
+> *hdev)
+>  	picolcd_exit_cir(data);
+>  	picolcd_exit_keys(data);
+>  
+> -	hid_set_drvdata(hdev, NULL);
+>  	mutex_destroy(&data->mutex);
+>  	/* Finally, clean up the picolcd data itself */
+>  	kfree(data);
+> diff --git a/drivers/hid/hid-sensor-hub.c b/drivers/hid/hid-sensor-
+> hub.c
+> index be92a6f79687..94c7398b5c27 100644
+> --- a/drivers/hid/hid-sensor-hub.c
+> +++ b/drivers/hid/hid-sensor-hub.c
+> @@ -742,7 +742,6 @@ static void sensor_hub_remove(struct hid_device
+> *hdev)
+>  	}
+>  	spin_unlock_irqrestore(&data->lock, flags);
+>  	mfd_remove_devices(&hdev->dev);
+> -	hid_set_drvdata(hdev, NULL);
+>  	mutex_destroy(&data->mutex);
+>  }
+>  
 
