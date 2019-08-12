@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB62C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 03:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A862C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 03:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B880E2087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 03:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1434D2184E
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 03:08:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfHLDH5 (ORCPT
+        id S1726928AbfHLDIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 23:07:57 -0400
+        Sun, 11 Aug 2019 23:08:21 -0400
 Received: from mga17.intel.com ([192.55.52.151]:12631 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726011AbfHLDHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 23:07:52 -0400
+        id S1726758AbfHLDH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 23:07:56 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Aug 2019 20:07:52 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Aug 2019 20:07:56 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,375,1559545200"; 
-   d="scan'208";a="199987471"
+   d="scan'208";a="199987489"
 Received: from hao-dev.bj.intel.com ([10.238.157.65])
-  by fmsmga004.fm.intel.com with ESMTP; 11 Aug 2019 20:07:49 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 11 Aug 2019 20:07:54 -0700
 From:   Wu Hao <hao.wu@intel.com>
 To:     gregkh@linuxfoundation.org, mdf@kernel.org,
         linux-fpga@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
         linux-doc@vger.kernel.org, atull@kernel.org,
-        Wu Hao <hao.wu@intel.com>
-Subject: [PATCH v5 3/9] fpga: dfl: afu: convert platform_driver to use dev_groups
-Date:   Mon, 12 Aug 2019 10:49:58 +0800
-Message-Id: <1565578204-13969-4-git-send-email-hao.wu@intel.com>
+        Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>
+Subject: [PATCH v5 5/9] fpga: dfl: afu: expose __afu_port_enable/disable function.
+Date:   Mon, 12 Aug 2019 10:50:00 +0800
+Message-Id: <1565578204-13969-6-git-send-email-hao.wu@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1565578204-13969-1-git-send-email-hao.wu@intel.com>
 References: <1565578204-13969-1-git-send-email-hao.wu@intel.com>
@@ -45,139 +45,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch takes advantage of driver core which helps to create
-and remove sysfs attribute files, so there is no need to register
-sysfs entries manually in dfl-afu platform river code.
+As these two functions are used by other private features within the
+same driver module but different driver files. e.g. in error reporting
+private feature, it requires to clear errors when port is in reset.
 
+Signed-off-by: Xu Yilun <yilun.xu@intel.com>
 Signed-off-by: Wu Hao <hao.wu@intel.com>
+Acked-by: Moritz Fischer <mdf@kernel.org>
+Acked-by: Alan Tull <atull@kernel.org>
+Signed-off-by: Moritz Fischer <mdf@kernel.org>
 ---
- drivers/fpga/dfl-afu-main.c | 69 +++++++++++++++++++++++----------------------
- 1 file changed, 36 insertions(+), 33 deletions(-)
+v2: rebased
+v5: add afu prefix to __port_enable/disable function to keep
+    alignment with other func exposed across different afu files.
+---
+ drivers/fpga/dfl-afu-main.c | 26 +++++++++++++++-----------
+ drivers/fpga/dfl-afu.h      |  4 ++++
+ 2 files changed, 19 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-index e50c45e..e955149 100644
+index f0b45f2..449185c 100644
 --- a/drivers/fpga/dfl-afu-main.c
 +++ b/drivers/fpga/dfl-afu-main.c
-@@ -282,24 +282,17 @@ static int port_get_id(struct platform_device *pdev)
- 	&dev_attr_power_state.attr,
- 	NULL,
- };
--ATTRIBUTE_GROUPS(port_hdr);
-+
-+static const struct attribute_group port_hdr_group = {
-+	.attrs = port_hdr_attrs,
-+};
+@@ -22,14 +22,17 @@
+ #include "dfl-afu.h"
  
- static int port_hdr_init(struct platform_device *pdev,
- 			 struct dfl_feature *feature)
+ /**
+- * port_enable - enable a port
++ * __afu_port_enable - enable a port by clear reset
+  * @pdev: port platform device.
+  *
+  * Enable Port by clear the port soft reset bit, which is set by default.
+  * The AFU is unable to respond to any MMIO access while in reset.
+- * port_enable function should only be used after port_disable function.
++ * __afu_port_enable function should only be used after __afu_port_disable
++ * function.
++ *
++ * The caller needs to hold lock for protection.
+  */
+-static void port_enable(struct platform_device *pdev)
++void __afu_port_enable(struct platform_device *pdev)
  {
--	dev_dbg(&pdev->dev, "PORT HDR Init.\n");
--
- 	port_reset(pdev);
+ 	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
+ 	void __iomem *base;
+@@ -52,13 +55,14 @@ static void port_enable(struct platform_device *pdev)
+ #define RST_POLL_TIMEOUT 1000 /* us */
  
--	return device_add_groups(&pdev->dev, port_hdr_groups);
--}
--
--static void port_hdr_uinit(struct platform_device *pdev,
--			   struct dfl_feature *feature)
--{
--	dev_dbg(&pdev->dev, "PORT HDR UInit.\n");
--
--	device_remove_groups(&pdev->dev, port_hdr_groups);
-+	return 0;
- }
- 
- static long
-@@ -330,7 +323,6 @@ static void port_hdr_uinit(struct platform_device *pdev,
- 
- static const struct dfl_feature_ops port_hdr_ops = {
- 	.init = port_hdr_init,
--	.uinit = port_hdr_uinit,
- 	.ioctl = port_hdr_ioctl,
- };
- 
-@@ -361,32 +353,37 @@ static void port_hdr_uinit(struct platform_device *pdev,
- 	&dev_attr_afu_id.attr,
- 	NULL
- };
--ATTRIBUTE_GROUPS(port_afu);
- 
--static int port_afu_init(struct platform_device *pdev,
--			 struct dfl_feature *feature)
-+static umode_t port_afu_attrs_visible(struct kobject *kobj,
-+				      struct attribute *attr, int n)
+ /**
+- * port_disable - disable a port
++ * __afu_port_disable - disable a port by hold reset
+  * @pdev: port platform device.
+  *
+- * Disable Port by setting the port soft reset bit, it puts the port into
+- * reset.
++ * Disable Port by setting the port soft reset bit, it puts the port into reset.
++ *
++ * The caller needs to hold lock for protection.
+  */
+-static int port_disable(struct platform_device *pdev)
++int __afu_port_disable(struct platform_device *pdev)
  {
--	struct resource *res = &pdev->resource[feature->resource_index];
--	int ret;
--
--	dev_dbg(&pdev->dev, "PORT AFU Init.\n");
-+	struct device *dev = kobj_to_dev(kobj);
- 
--	ret = afu_mmio_region_add(dev_get_platdata(&pdev->dev),
--				  DFL_PORT_REGION_INDEX_AFU, resource_size(res),
--				  res->start, DFL_PORT_REGION_READ |
--				  DFL_PORT_REGION_WRITE | DFL_PORT_REGION_MMAP);
--	if (ret)
--		return ret;
-+	/*
-+	 * sysfs entries are visible only if related private feature is
-+	 * enumerated.
-+	 */
-+	if (!dfl_get_feature_by_id(dev, PORT_FEATURE_ID_AFU))
-+		return 0;
- 
--	return device_add_groups(&pdev->dev, port_afu_groups);
-+	return attr->mode;
- }
- 
--static void port_afu_uinit(struct platform_device *pdev,
--			   struct dfl_feature *feature)
-+static const struct attribute_group port_afu_group = {
-+	.attrs      = port_afu_attrs,
-+	.is_visible = port_afu_attrs_visible,
-+};
-+
-+static int port_afu_init(struct platform_device *pdev,
-+			 struct dfl_feature *feature)
+ 	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
+ 	void __iomem *base;
+@@ -104,9 +108,9 @@ static int __port_reset(struct platform_device *pdev)
  {
--	dev_dbg(&pdev->dev, "PORT AFU UInit.\n");
-+	struct resource *res = &pdev->resource[feature->resource_index];
+ 	int ret;
  
--	device_remove_groups(&pdev->dev, port_afu_groups);
-+	return afu_mmio_region_add(dev_get_platdata(&pdev->dev),
-+				   DFL_PORT_REGION_INDEX_AFU,
-+				   resource_size(res), res->start,
-+				   DFL_PORT_REGION_MMAP | DFL_PORT_REGION_READ |
-+				   DFL_PORT_REGION_WRITE);
+-	ret = port_disable(pdev);
++	ret = __afu_port_disable(pdev);
+ 	if (!ret)
+-		port_enable(pdev);
++		__afu_port_enable(pdev);
+ 
+ 	return ret;
  }
+@@ -799,9 +803,9 @@ static int port_enable_set(struct platform_device *pdev, bool enable)
  
- static const struct dfl_feature_id port_afu_id_table[] = {
-@@ -396,7 +393,6 @@ static void port_afu_uinit(struct platform_device *pdev,
+ 	mutex_lock(&pdata->lock);
+ 	if (enable)
+-		port_enable(pdev);
++		__afu_port_enable(pdev);
+ 	else
+-		ret = port_disable(pdev);
++		ret = __afu_port_disable(pdev);
+ 	mutex_unlock(&pdata->lock);
  
- static const struct dfl_feature_ops port_afu_ops = {
- 	.init = port_afu_init,
--	.uinit = port_afu_uinit,
+ 	return ret;
+diff --git a/drivers/fpga/dfl-afu.h b/drivers/fpga/dfl-afu.h
+index 0c7630a..83683f2 100644
+--- a/drivers/fpga/dfl-afu.h
++++ b/drivers/fpga/dfl-afu.h
+@@ -79,6 +79,10 @@ struct dfl_afu {
+ 	struct dfl_feature_platform_data *pdata;
  };
  
- static struct dfl_feature_driver port_feature_drvs[] = {
-@@ -748,9 +744,16 @@ static int afu_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct attribute_group *afu_dev_groups[] = {
-+	&port_hdr_group,
-+	&port_afu_group,
-+	NULL
-+};
++/* hold pdata->lock when call __afu_port_enable/disable */
++void __afu_port_enable(struct platform_device *pdev);
++int __afu_port_disable(struct platform_device *pdev);
 +
- static struct platform_driver afu_driver = {
- 	.driver	= {
--		.name    = DFL_FPGA_FEATURE_DEV_PORT,
-+		.name	    = DFL_FPGA_FEATURE_DEV_PORT,
-+		.dev_groups = afu_dev_groups,
- 	},
- 	.probe   = afu_probe,
- 	.remove  = afu_remove,
+ void afu_mmio_region_init(struct dfl_feature_platform_data *pdata);
+ int afu_mmio_region_add(struct dfl_feature_platform_data *pdata,
+ 			u32 region_index, u64 region_size, u64 phys, u32 flags);
 -- 
 1.8.3.1
 
