@@ -2,230 +2,175 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F26C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEB2C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06FF42085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:02:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vlQDNy5Y"
+	by mail.kernel.org (Postfix) with ESMTP id 5F6BA2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:03:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbfHLHCq (ORCPT
+        id S1726831AbfHLHDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 03:02:46 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44830 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbfHLHCq (ORCPT
+        Mon, 12 Aug 2019 03:03:42 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37440 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725923AbfHLHDm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 03:02:46 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i18so49013510pgl.11
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 00:02:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EOl0XeLgAx0b65C6nSeSC9yGXCtzgtHSTtqGfuyIaA0=;
-        b=vlQDNy5YJO6Rv2CTz4D+sFjXSVfdMSWzoGHyWrsVpDZq7JqD0mPF8/aws7RJXMFDqf
-         6juF0WggXHGf25n28qssGrf1563DftaotS7eWUkqtIlIsjjkCug9pxhVm16NNtdJBK2l
-         l5LIBGhsttPzj+EKXjcBjyY793e64nIv5iAKXKhXBy3BdxPIys2fff+ahuqNOYnPzSdO
-         BuLYSLioVYPRnVR3mgesz3wn2Sjs8Vg+hNAxHnCqcgP+aAFnWtOfFjVk/Xfu7Ae408Sy
-         YIVmRdP36FMhVzUTFEpRfpokYAKjW1tprGctep1TYZJ8oZPrR8IGHGBwUqKSL5USjYmd
-         34pg==
+        Mon, 12 Aug 2019 03:03:42 -0400
+Received: by mail-wm1-f67.google.com with SMTP id z23so10786829wmf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 00:03:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EOl0XeLgAx0b65C6nSeSC9yGXCtzgtHSTtqGfuyIaA0=;
-        b=FXyMEN2gyW+ZXUvMKLrIuanyAOgfXNGmJ+rD1fPwV8IF63+WRCLygqonqU1Xxmma0y
-         B5ElfkjJdmGs1reDuO7BKoVxWNtTYjbpOGijLqDHxnP8t7sguDH8yHV75nwKHaU0gQtb
-         my9lw44UIQgBNRFwKSAku2OqbJ8jSmlyz1azuXa0cJb3eJePC1jAAShZH80VK3NBtDqh
-         AbtFiAJitRZjcaYvpzrApvWo0bWI+i4jY1fDjjUbuU00IXqcnoV8VsmeSkY9Alp1qp17
-         FHVH1UhurXsWi54aZeLwN8pYRtZDljQX2s3HFIo79JbHKrl/OxY9g0eHb8WX5TEXuf8e
-         sxCA==
-X-Gm-Message-State: APjAAAXQmKlhr4M6NZ1vgvV/iXnO2G0vBR+EQ5KwYqRw7ZDrijtq+3Ii
-        HV5LK1ngKX9LJtzvpiznt5Oj7A==
-X-Google-Smtp-Source: APXvYqxAh3VkSFRalpNOfNOGfoKAYQbeiPPX2JQLAcPa5A4DmJPshw2KGdvQ+9cPGwzU07VXbkSYGA==
-X-Received: by 2002:a63:f07:: with SMTP id e7mr30222661pgl.238.1565593365394;
-        Mon, 12 Aug 2019 00:02:45 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li456-16.members.linode.com. [50.116.10.16])
-        by smtp.gmail.com with ESMTPSA id k5sm6182091pgo.45.2019.08.12.00.02.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 00:02:44 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 15:02:36 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        David Miller <davem@davemloft.net>,
-        Milian Wolff <milian.wolff@kdab.com>,
-        Donald Yandt <donald.yandt@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Wei Li <liwei391@huawei.com>, Mark Drayton <mbd@fb.com>,
-        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v4 1/2] perf machine: Support arch's specific kernel
- start address
-Message-ID: <20190812070236.GA8062@leoy-ThinkPad-X240s>
-References: <20190810072135.27072-1-leo.yan@linaro.org>
- <20190810072135.27072-2-leo.yan@linaro.org>
- <c1818f6f-37df-6971-fddc-6663e5b6ff95@intel.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=y1+mXhJUTJgr8gTIPY1u76OpE07CstUIWpVpL4Le1Yo=;
+        b=NMdElydd7+7AI99qFFpAF0VqH6rAIONU9OJGbykzAn4lEblUrGn6MVnk60/s2PKd25
+         kw7Stparf8eTOB/oNWDwHKudzgT8b7I+/PjB5FcI2ZlPGjd4TciXuENRT0UszwCMhtjy
+         gxKLTybMSVmO1KrOZjHMc+3yJmt3Dbj0qZOMdG70mDl8JmOCnZxS473Uj4Yts0xQRkk2
+         jvElfdGRkcA0vcSgTCLYJdYyBaVZNR/ajE4zwbKhBiAKqv/h/K8+owfcLKFEa5oi6lWj
+         7Xv5rNSEGcY6BFxSUMibivkN0CTDucQeatZ8h9c1O3pCDh6uMvdU8Pacdb2lEipYg/TI
+         7IMw==
+X-Gm-Message-State: APjAAAWhg3SKsQwEhipwCpczKFABj4GscrUisAIIVNCnlhWGyqjiM8MN
+        NifNDeXCE71odyaa2tfkhYc=
+X-Google-Smtp-Source: APXvYqwn4WtwSOl/st4NkiKcRqyNv7HjLcws2bNazhvYZnZd7KNPlLtPiBtzO9zg+gW0XaAwGFgYTA==
+X-Received: by 2002:a1c:27c1:: with SMTP id n184mr17429735wmn.61.1565593419385;
+        Mon, 12 Aug 2019 00:03:39 -0700 (PDT)
+Received: from [192.168.1.12] (adsl-dyn53.78-98-69.t-com.sk. [78.98.69.53])
+        by smtp.gmail.com with ESMTPSA id r15sm110401477wrj.68.2019.08.12.00.03.37
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 12 Aug 2019 00:03:38 -0700 (PDT)
+Subject: Re: [PATCH] x86/apic: Handle missing global clockevent gracefully
+To:     Daniel Drake <drake@endlessm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Endless Linux Upstreaming Team <linux@endlessm.com>
+References: <CAD8Lp448i7jOk9C5NJtC2wHMaGuRLD4pxVqK17YqRCuMVXhsOA@mail.gmail.com>
+ <CAERHkruxfBc8DqNUr=fbYuQWrXrHC7cK6HnVR3xp0iLA9QtxiQ@mail.gmail.com>
+ <alpine.DEB.2.21.1908010931550.1788@nanos.tec.linutronix.de>
+ <CAERHkrtaVAQHDU1cj2_GLL59LPjp7E=3X0Zna0spfFB=Ve5__w@mail.gmail.com>
+ <alpine.DEB.2.21.1908011011250.1788@nanos.tec.linutronix.de>
+ <81666b28-d029-56c3-8978-90abc219d1b7@linux.intel.com>
+ <alpine.DEB.2.21.1908011054210.1965@nanos.tec.linutronix.de>
+ <3d14b0cc-3cca-1874-3521-4ee2ec52141d@amd.com>
+ <alpine.DEB.2.21.1908082235590.2882@nanos.tec.linutronix.de>
+ <5bf28ba4-b7c1-51de-88ae-feebae2a28db@amd.com>
+ <alpine.DEB.2.21.1908082306220.2882@nanos.tec.linutronix.de>
+ <75e59ac6-5165-bd0a-aec9-be16d662ece9@amd.com>
+ <alpine.DEB.2.21.1908091443030.21433@nanos.tec.linutronix.de>
+ <CAD8Lp46FgT6yoW9a4Yt8t=bVWzZbYHjw-Dqdk6Pvd2xzxfGHLQ@mail.gmail.com>
+From:   Jiri Slaby <jslaby@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <3ca04aaf-c67a-d449-dac9-0fe5bc431009@suse.cz>
+Date:   Mon, 12 Aug 2019 09:03:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c1818f6f-37df-6971-fddc-6663e5b6ff95@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAD8Lp46FgT6yoW9a4Yt8t=bVWzZbYHjw-Dqdk6Pvd2xzxfGHLQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 09:37:33AM +0300, Adrian Hunter wrote:
-> On 10/08/19 10:21 AM, Leo Yan wrote:
-> > machine__get_kernel_start() gives out the kernel start address; some
-> > architectures need to tweak the start address so that can reflect the
-> > kernel start address correctly.  This is not only for x86_64 arch, but
-> > it is also required by other architectures, e.g. arm/arm64 needs to
-> > tweak the kernel start address so can include the kernel memory regions
-> > which are used before the '_stext' symbol.
-> > 
-> > This patch refactors machine__get_kernel_start() by adding a weak
-> > arch__fix_kernel_text_start(), any architecture can implement it to
-> > tweak its specific start address; this also allows the arch specific
-> > code to be placed into 'arch' folder.
-> > 
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > ---
-> >  tools/perf/arch/x86/util/machine.c | 10 ++++++++++
-> >  tools/perf/util/machine.c          | 13 +++++++------
-> >  tools/perf/util/machine.h          |  2 ++
-> >  3 files changed, 19 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/tools/perf/arch/x86/util/machine.c b/tools/perf/arch/x86/util/machine.c
-> > index 1e9ec783b9a1..9f012131534a 100644
-> > --- a/tools/perf/arch/x86/util/machine.c
-> > +++ b/tools/perf/arch/x86/util/machine.c
-> > @@ -101,4 +101,14 @@ int machine__create_extra_kernel_maps(struct machine *machine,
-> >  	return ret;
-> >  }
-> >  
-> > +void arch__fix_kernel_text_start(u64 *start)
-> > +{
-> > +	/*
-> > +	 * On x86_64, PTI entry trampolines are less than the
-> > +	 * start of kernel text, but still above 2^63. So leave
-> > +	 * kernel_start = 1ULL << 63 for x86_64.
-> > +	 */
-> > +	*start = 1ULL << 63;
-> > +}
+On 12. 08. 19, 8:16, Daniel Drake wrote:
+> On Fri, Aug 9, 2019 at 8:54 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> Some newer machines do not advertise legacy timers. The kernel can handle
+>> that situation if the TSC and the CPU frequency are enumerated by CPUID or
+>> MSRs and the CPU supports TSC deadline timer. If the CPU does not support
+>> TSC deadline timer the local APIC timer frequency has to be known as well.
+>>
+>> Some Ryzens machines do not advertize legacy timers, but there is no
+>> reliable way to determine the bus frequency which feeds the local APIC
+>> timer when the machine allows overclocking of that frequency.
+>>
+>> As there is no legacy timer the local APIC timer calibration crashes due to
+>> a NULL pointer dereference when accessing the not installed global clock
+>> event device.
+>>
+>> Switch the calibration loop to a non interrupt based one, which polls
+>> either TSC (frequency known) or jiffies. The latter requires a global
+>> clockevent. As the machines which do not have a global clockevent installed
+>> have a known TSC frequency this is a non issue. For older machines where
+>> TSC frequency is not known, there is no known case where the legacy timers
+>> do not exist as that would have been reported long ago.
 > 
-> That is needed for reporting x86 data on any arch i.e. it is not specific to
-> the compile-time architecture, it is specific to the perf.data file
-> architecture, which is what machine__is() compares. So, this looks wrong.
+> This solves the problem I described in the thread:
+>     setup_boot_APIC_clock() NULL dereference during early boot on
+> reduced hardware platforms
 
-Thanks for reviewing, Adrian.
+So it does for the openSUSE user:
+http://bugzilla.opensuse.org/show_bug.cgi?id=1142926#c12
 
-If so, I think we should extend the function machine__get_kernel_start()
-as below; for building successfully, will always define the macro
-ARM_PRE_START_SIZE in Makefile.config.
+=========
+After installing that build of the kernel from your OBS home project,
+that did
+more than just fix the issue with the APIC timer screwing up. I now have
+all 4
+cores/8 threads available.
 
-@Arnaldo, @Adrian, Please let me know if this works for you?
+I do see some errors from the ACPI layer that do indicate that there are
+some
+areas of the BIOS from HP that are buggy, but at this time, the machine
+seems
+to be working without issue.
+=========
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index f6ee7fbad3e4..30a0ff627263 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2687,13 +2687,26 @@ int machine__get_kernel_start(struct machine *machine)
-        machine->kernel_start = 1ULL << 63;
-        if (map) {
-                err = map__load(map);
-+               if (err)
-+                       return err;
-+
-                /*
-                 * On x86_64, PTI entry trampolines are less than the
-                 * start of kernel text, but still above 2^63. So leave
-                 * kernel_start = 1ULL << 63 for x86_64.
-                 */
--               if (!err && !machine__is(machine, "x86_64"))
-+               if (!machine__is(machine, "x86_64"))
-                        machine->kernel_start = map->start;
-+
-+               /*
-+                * On arm/arm64, some memory regions are prior to '_stext'
-+                * symbol; to reflect the complete kernel address space,
-+                * compensate these pre-defined regions for kernel start
-+                * address.
-+                */
-+               if (machine__is(machine, "arm64") ||
-+                   machine__is(machine, "arm"))
-+                       machine->kernel_start -= ARM_PRE_START_SIZE;
-        }
-        return err;
- }
+dmesg here:
+http://bugzilla.opensuse.org/attachment.cgi?id=813577
 
-Thanks,
-Leo Yan
-
-> > +
-> >  #endif
-> > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> > index f6ee7fbad3e4..603518835692 100644
-> > --- a/tools/perf/util/machine.c
-> > +++ b/tools/perf/util/machine.c
-> > @@ -2671,6 +2671,10 @@ int machine__nr_cpus_avail(struct machine *machine)
-> >  	return machine ? perf_env__nr_cpus_avail(machine->env) : 0;
-> >  }
-> >  
-> > +void __weak arch__fix_kernel_text_start(u64 *start __maybe_unused)
-> > +{
-> > +}
-> > +
-> >  int machine__get_kernel_start(struct machine *machine)
-> >  {
-> >  	struct map *map = machine__kernel_map(machine);
-> > @@ -2687,14 +2691,11 @@ int machine__get_kernel_start(struct machine *machine)
-> >  	machine->kernel_start = 1ULL << 63;
-> >  	if (map) {
-> >  		err = map__load(map);
-> > -		/*
-> > -		 * On x86_64, PTI entry trampolines are less than the
-> > -		 * start of kernel text, but still above 2^63. So leave
-> > -		 * kernel_start = 1ULL << 63 for x86_64.
-> > -		 */
-> > -		if (!err && !machine__is(machine, "x86_64"))
-> > +		if (!err)
-> >  			machine->kernel_start = map->start;
-> >  	}
-> > +
-> > +	arch__fix_kernel_text_start(&machine->kernel_start);
-> >  	return err;
-> >  }
-> >  
-> > diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-> > index ef803f08ae12..9cb459f4bfbc 100644
-> > --- a/tools/perf/util/machine.h
-> > +++ b/tools/perf/util/machine.h
-> > @@ -278,6 +278,8 @@ void machine__get_kallsyms_filename(struct machine *machine, char *buf,
-> >  int machine__create_extra_kernel_maps(struct machine *machine,
-> >  				      struct dso *kernel);
-> >  
-> > +void arch__fix_kernel_text_start(u64 *start);
-> > +
-> >  /* Kernel-space maps for symbols that are outside the main kernel map and module maps */
-> >  struct extra_kernel_map {
-> >  	u64 start;
-> > 
-> 
+thanks,
+-- 
+js
+suse labs
