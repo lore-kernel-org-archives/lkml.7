@@ -2,54 +2,234 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10800C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2226C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D45D620665
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA5C120665
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:42:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HutFIDTY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfHLWly convert rfc822-to-8bit (ORCPT
+        id S1727211AbfHLWmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 18:41:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46916 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726568AbfHLWly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 18:41:54 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 53A603003761;
-        Mon, 12 Aug 2019 22:41:54 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 171541001B20;
-        Mon, 12 Aug 2019 22:41:52 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <000000000000492086058fad2979@google.com>
-References: <000000000000492086058fad2979@google.com>
-To:     syzbot <syzbot+193e29e9387ea5837f1d@syzkaller.appspotmail.com>
-Cc:     dhowells@redhat.com, davem@davemloft.net,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: BUG: corrupted list in rxrpc_local_processor
+        Mon, 12 Aug 2019 18:42:55 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37344 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726993AbfHLWmz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 18:42:55 -0400
+Received: by mail-ed1-f66.google.com with SMTP id f22so2417798edt.4;
+        Mon, 12 Aug 2019 15:42:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QUBJRxxlBoKDOtPGvaYl0LzRCrQs93fgZbNJb9pzsVM=;
+        b=HutFIDTYL6kWqcxuk2ZOU+gDDGZ7sptzDfhcTBXelsnOypyUhBliP1BKGfVK7K/eXX
+         u7gD3mE7UrrKY7GXmP3Prr8gL2QbxVVfTn3BCFRHqVwcrMk6icYvKuK6APeWtNBAEzR+
+         UlkVljHdlauattZbAVzeKEUrxcxN9QcqLTcxBDukDv6wivnIF8kzo+zNkxm/zfcqI0ww
+         ocsROxYgoun1TnHNxNeC7BkLBFQCE12jt7i3SchntHdfDUDRcxj0KA0P1nSiDyd6vVEb
+         hqkry+jMlDulUzlMkdKCseTmoWHKWzFvyMCLTp0BCGOR/5tPkeGsuZfcLWewMJhdjCuB
+         D35g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QUBJRxxlBoKDOtPGvaYl0LzRCrQs93fgZbNJb9pzsVM=;
+        b=UAaM+tDZQDvtyoBnbHIN42z3Ok7kx4iPlmDoHMyZyJk2ZXJXxjfXY5eNkWQCANFoCl
+         e0QiSbA1nhATdV0WDiiBWWdnIoYv8wQDleOFt1iuNAiNRmuyXWoaNSqg6jRipi5WZbZ9
+         PNQa1n+t8PLABEu+ufIDpAUVjc1pNbT+2xmWJOtvrKR6hWj0TsFLIP2Ey1XDQ3GPXsE6
+         JVOKbUQm9BHGARigN5FnpNUBc6X1CSTuIUCaqsvVCCwkAmUxfO/LunloRF4+7RB5DcrS
+         2vh5w/J/JRmiWCDOe9uvls8kQhsFRnUkWSiSHINFf24YSafDZpWWg4uQApicmPoS/JEr
+         +2Jw==
+X-Gm-Message-State: APjAAAVWzUVonBgHdSvDCXrPjQbf1gNtszaNfcsVsElr5AaiV81LhupX
+        WesGEwpo2tzHofoBSh7oXCMscYhTtKoH+g==
+X-Google-Smtp-Source: APXvYqyiLsbdP8VKcYz03FlnTneDzOyiHyRZD/jSMbxNrgMsudDeBN5ao3nvCdNwNsL7PQl5cblO0Q==
+X-Received: by 2002:a05:6402:1244:: with SMTP id l4mr115209edw.117.1565649773120;
+        Mon, 12 Aug 2019 15:42:53 -0700 (PDT)
+Received: from tazik.netherland ([188.187.106.181])
+        by smtp.gmail.com with ESMTPSA id z9sm3202067edd.18.2019.08.12.15.42.52
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 15:42:53 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 01:42:42 +0300
+From:   Vanya Lazeev <ivan.lazeev@gmail.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] Fix fTPM on AMD Zen+ CPUs
+Message-ID: <20190812224242.GA3865@tazik.netherland>
+References: <20190811185218.16893-1-ivan.lazeev@gmail.com>
+ <20190812131003.GF24457@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5013.1565649712.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Mon, 12 Aug 2019 23:41:52 +0100
-Message-ID: <5014.1565649712@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 12 Aug 2019 22:41:54 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812131003.GF24457@ziepe.ca>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git 03a62469fffcbd535d85e42ef25ba098262e9d72
+On Mon, Aug 12, 2019 at 10:10:03AM -0300, Jason Gunthorpe wrote:
+> On Sun, Aug 11, 2019 at 09:52:18PM +0300, ivan.lazeev@gmail.com wrote:
+> > From: Vanya Lazeev <ivan.lazeev@gmail.com>
+> > 
+> > The patch is an attempt to make fTPM on AMD Zen CPUs work.
+> > Bug link: https://bugzilla.kernel.org/show_bug.cgi?id=195657
+> > 
+> > The problem seems to be that tpm_crb driver doesn't expect tpm command
+> > and response memory regions to belong to different ACPI resources.
+> > 
+> > Tested on Asrock ITX motherboard with Ryzen 2600X CPU.
+> > However, I don't have any other hardware to test the changes on and no
+> > expertise to be sure that other TPMs won't break as a result.
+> > Hopefully, the patch will be useful.
+> > 
+> > Changes from v1:
+> > - use list_for_each_safe
+> > 
+> > Signed-off-by: Vanya Lazeev <ivan.lazeev@gmail.com>
+> >  drivers/char/tpm/tpm_crb.c | 146 ++++++++++++++++++++++++++++---------
+> >  1 file changed, 110 insertions(+), 36 deletions(-)
+> > 
+> > diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
+> > index e59f1f91d..b0e797464 100644
+> > +++ b/drivers/char/tpm/tpm_crb.c
+> > @@ -91,7 +91,6 @@ enum crb_status {
+> >  struct crb_priv {
+> >  	u32 sm;
+> >  	const char *hid;
+> > -	void __iomem *iobase;
+> >  	struct crb_regs_head __iomem *regs_h;
+> >  	struct crb_regs_tail __iomem *regs_t;
+> >  	u8 __iomem *cmd;
+> > @@ -108,6 +107,13 @@ struct tpm2_crb_smc {
+> >  	u32 smc_func_id;
+> >  };
+> >  
+> > +struct crb_resource {
+> > +	struct resource io_res;
+> > +	void __iomem *iobase;
+> > +
+> > +	struct list_head link;
+> > +};
+> > +
+> >  static bool crb_wait_for_reg_32(u32 __iomem *reg, u32 mask, u32 value,
+> >  				unsigned long timeout)
+> >  {
+> > @@ -432,23 +438,69 @@ static const struct tpm_class_ops tpm_crb = {
+> >  	.req_complete_val = CRB_DRV_STS_COMPLETE,
+> >  };
+> >  
+> > +static void crb_free_resource_list(struct list_head *resources)
+> > +{
+> > +	struct list_head *position, *tmp;
+> > +
+> > +	list_for_each_safe(position, tmp, resources)
+> > +		kfree(list_entry(position, struct crb_resource, link));
+> > +}
+> > +
+> > +/**
+> > + * Checks if resource @io_res contains range with the specified @start and @size
+> > + * completely or, when @strict is false, at least it's beginning.
+> > + * Non-strict match is needed to work around broken BIOSes that return
+> > + * inconsistent values from ACPI regions vs registers.
+> > + */
+> > +static inline bool crb_resource_contains(const struct resource *io_res,
+> > +					 u64 start, u32 size, bool strict)
+> > +{
+> > +	return start >= io_res->start &&
+> > +		(start + size - 1 <= io_res->end ||
+> > +		 (!strict && start <= io_res->end));
+> > +}
+> > +
+> > +static struct crb_resource *crb_containing_resource(
+> > +		const struct list_head *resources,
+> > +		u64 start, u32 size, bool strict)
+> > +{
+> > +	struct list_head *pos;
+> > +
+> > +	list_for_each(pos, resources) {
+> > +		struct crb_resource *cres;
+> > +
+> > +		cres = list_entry(pos, struct crb_resource, link);
+> > +		if (crb_resource_contains(&cres->io_res, start, size, strict))
+> > +			return cres;
+> > +	}
+> > +
+> > +	return NULL;
+> > +}
+> 
+> This flow seems very strange, why isn't this part of crb_map_res?
+> 
+
+fTPM on Zen+ not only needs multiple mappings, it can also return
+inconsistent with ACPI values for range sizes (as for me and
+mikajhe from the bug thread), so results of crb_containing_resource 
+are also used to fix the inconsistencies with crb_fixup_cmd_size.
+
+> >  static int crb_check_resource(struct acpi_resource *ares, void *data)
+> >  {
+> > -	struct resource *io_res = data;
+> > +	struct list_head *list = data;
+> > +	struct crb_resource *cres;
+> >  	struct resource_win win;
+> >  	struct resource *res = &(win.res);
+> >  
+> >  	if (acpi_dev_resource_memory(ares, res) ||
+> >  	    acpi_dev_resource_address_space(ares, &win)) {
+> > -		*io_res = *res;
+> > -		io_res->name = NULL;
+> > +		cres = kzalloc(sizeof(*cres), GFP_KERNEL);
+> > +		if (!cres)
+> > +			return -ENOMEM;
+> > +
+> > +		cres->io_res = *res;
+> > +		cres->io_res.name = NULL;
+> > +
+> > +		list_add_tail(&cres->link, list);
+> 
+> And why is this allocating memory inside the acpi table walker? It
+> seems to me like the memory should be allocated once the mapping is
+> made.
+> 
+
+Yes, this looks bad. Letting the walker build the list and then using
+it is, probably, a better idea.
+
+> Maybe all the mappings should be created from the ACPI ranges right
+> away?
+> 
+
+I don't know if it's a good idea to just map them all instead of doing 
+so only for relevant ones. Maybe it is safe, here I need an advice
+from a more knowledgeable person.
+
+> > @@ -460,10 +512,16 @@ static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
+> >  	if (start != new_res.start)
+> >  		return (void __iomem *) ERR_PTR(-EINVAL);
+> >  
+> > -	if (!resource_contains(io_res, &new_res))
+> > +	if (!cres)
+> >  		return devm_ioremap_resource(dev, &new_res);
+> >  
+> > -	return priv->iobase + (new_res.start - io_res->start);
+> > +	if (!cres->iobase) {
+> > +		cres->iobase = devm_ioremap_resource(dev, &cres->io_res);
+> > +		if (IS_ERR(cres->iobase))
+> > +			return cres->iobase;
+> > +	}
+> 
+> It sounds likethe real bug is that the crb_map_res only considers a
+> single active mapping, while these AMD chips need more than one?
+> 
+
+Yes, this seems to be the issue.
