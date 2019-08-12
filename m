@@ -2,97 +2,111 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F5AC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 03:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3DCC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 03:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9488F20818
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 03:04:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tiYPxybz"
+	by mail.kernel.org (Postfix) with ESMTP id 854082173C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 03:07:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfHLDEw (ORCPT
+        id S1726601AbfHLDHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 23:04:52 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43249 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726011AbfHLDEw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 23:04:52 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h15so3317852ljg.10;
-        Sun, 11 Aug 2019 20:04:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BQiSQRNit1pwC9yi8sjcdyIjfy8y+tALvc4Wl2a4X6M=;
-        b=tiYPxybzu8GIIn46WEKhu7lCRB7l7N8izZUpw/Oxeiz5uQNLSVcbaVw7m1AeyPuw3o
-         btjJJSdY98vX9SO5ctbb2Tbb4Cp43k7kLTcRnwPeLb5Bm9+1AafnoAt6IwA+4RMN7L0/
-         nu2OSPU7f6uwGlLA8kiGAQD3KbyyfSM7n++j7oxIX4YTmwIAp3DJghzarT4P9Ouej+9r
-         Z6SmkmFr+XnUqyNFAmOrywSGttG5KRHwrmG45+YOp77gXXJsvK+NNXIOobiB7eIEgyZg
-         Sfg3g1aYT+wxonfySvVKIqvHtCrIYvSp4O59tcCssnLDc9i5NbJn2lXaUia6lkqVA1Fu
-         HlKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BQiSQRNit1pwC9yi8sjcdyIjfy8y+tALvc4Wl2a4X6M=;
-        b=sQCfN9DUYPQLfhWTp3UkDsFL85RMu72Jki7Ghlm3MgPPNkIzCJWdd1zJePbiBGMS5O
-         7s0hpfgenD14NzYgBzLdVQFbB33ThHfxNDVIiSrsJA/UPUVUq2Qsu+YokRjqgTAVGCHy
-         9gvu+7PWbV6QfgbrDlJoTMonhXgJAC1wmEaNcKJlbVF0a/YkzgFr26IsGARirirLclTx
-         vdvn0M/r7wwofzwojMV84b9R3l1Z/H8PSbDeE5Rq3LEwIlT+fc5FTOgjdaxE6KtC8yyG
-         kbXlqLGVAc09sZyOv/6PyXBBTsm/FE4ys3NhayWZDMP+kxOvv9cE9WK8o4uypvdXoVz5
-         zOmw==
-X-Gm-Message-State: APjAAAXywBCbnrKT4ZGuzuJUnU8w3occ6qpWe0JABOqBtyd9uGUvduZM
-        MRfWxdn6VeITIoj/J5PAWJ9rqjIUEv6zoYFKtfVZ7S2YZgs=
-X-Google-Smtp-Source: APXvYqwc7JFeUTTkcSgKoeMJk5mKKbkw15fD85WlI/E++FNuUlFcT6t1H0ldF4qX9i8orVfgq+R+dxg16H4WVhR5N2c=
-X-Received: by 2002:a2e:480a:: with SMTP id v10mr17026609lja.94.1565579090393;
- Sun, 11 Aug 2019 20:04:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190810010758.16407-1-alistair.francis@wdc.com> <CALCETrVArr5TTbXayDZ9rz90iGoytGW2bnV5_ZOunhOsPR1u4g@mail.gmail.com>
-In-Reply-To: <CALCETrVArr5TTbXayDZ9rz90iGoytGW2bnV5_ZOunhOsPR1u4g@mail.gmail.com>
-From:   Alistair Francis <alistair23@gmail.com>
-Date:   Sun, 11 Aug 2019 20:04:22 -0700
-Message-ID: <CAKmqyKN58BfEr2R+W=08r795zRKAT1nK_G2v6U2kQSANr+90Vg@mail.gmail.com>
-Subject: Re: [PATCH] syscalls: Update the syscall #defines to match uapi
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Alistair Francis <alistair.francis@wdc.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Deepa Dinamani <deepa.kernel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 11 Aug 2019 23:07:47 -0400
+Received: from mga17.intel.com ([192.55.52.151]:12631 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726011AbfHLDHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 23:07:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Aug 2019 20:07:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,375,1559545200"; 
+   d="scan'208";a="199987451"
+Received: from hao-dev.bj.intel.com ([10.238.157.65])
+  by fmsmga004.fm.intel.com with ESMTP; 11 Aug 2019 20:07:44 -0700
+From:   Wu Hao <hao.wu@intel.com>
+To:     gregkh@linuxfoundation.org, mdf@kernel.org,
+        linux-fpga@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-doc@vger.kernel.org, atull@kernel.org,
+        Wu Hao <hao.wu@intel.com>
+Subject: [PATCH v5 0/9] FPGA DFL updates
+Date:   Mon, 12 Aug 2019 10:49:55 +0800
+Message-Id: <1565578204-13969-1-git-send-email-hao.wu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 5:00 PM Andy Lutomirski <luto@kernel.org> wrote:
->
-> On Fri, Aug 9, 2019 at 6:11 PM Alistair Francis
-> <alistair.francis@wdc.com> wrote:
-> >
-> > Update the #defines around sys_fstat64() and sys_fstatat64() to match
-> > the #defines around the __NR3264_fstatat and __NR3264_fstat definitions
-> > in include/uapi/asm-generic/unistd.h. This avoids compiler failures if
-> > one is defined.
->
-> What do you mean by "if one is defined"?
+Hi Greg,
 
-Yeah, I guess that isn't clear. What I mean is that if
-__ARCH_WANT_NEW_STAT is defined but __ARCH_WANT_STAT64 isn't currently
-it will fail to build.
+This is v5 patchset which adds more features to FPGA DFL. Marjor changes
+against v4 are sysfs related code rework to address comments on v4.
 
->
-> The patch seems like it's probably okay, but I can't understand the changelog.
+Please help to take a look. Thanks!
 
-I can send a v2 with an updated commit message.
+Main changes from v4:
+  - convert code to use dev_groups for sysfs entries (#2, #3, #4, #6, #8).
+  - clean up for empty init function after remove sysfs add/remove (#1).
+  - introduce is_visible for sysfs groups (#3, #4, #6, #8).
+  - remove revision sysfs entries (#4, #6, #8).
+  - improve naming on shared functions (#5).
+  - reorganize sysfs entries for port and fme error reporting (#6, #8).
 
-Alistair
+Main changes from v3:
+  - drop avx512 partail reconfiguration patch for now.
+  - split dfl_fpga_cdev_config_port to 2 functions *_release/assign_port
+    (#1).
+  - split __dfl_fpga_cdev_config_port_vf into 2 functions with locking
+    added (#2).
+  - improve description in sysfs doc to avoid misunderstanding (#3).
+  - switch to boolean in sysfs entry store function (#3).
+  - remove dev_dbg in init/uinit callback function (#7, #9, #11).
+  - remove uinit callback which does does nothing (#8, #9)
 
->
-> --Andy
+Main changes from v2:
+  - update kernel version/date in sysfs doc (patch #4, #5, #8, #10, #11).
+  - add back Documentation patch (patch #12).
+
+Main changes from v1:
+  - remove DRV/MODULE_VERSION modifications. (patch #1, #3, #4, #6)
+  - remove argsz from new ioctls. (patch #2)
+  - replace sysfs_create/remove_* with device_add/remove_* for sysfs entries.
+    (patch #5, #8, #11)
+
+Wu Hao (9):
+  fpga: dfl: make init callback optional
+  fpga: dfl: fme: convert platform_driver to use dev_groups
+  fpga: dfl: afu: convert platform_driver to use dev_groups
+  fpga: dfl: afu: add userclock sysfs interfaces.
+  fpga: dfl: afu: expose __afu_port_enable/disable function.
+  fpga: dfl: afu: add error reporting support.
+  fpga: dfl: afu: add STP (SignalTap) support
+  fpga: dfl: fme: add global error reporting support
+  Documentation: fpga: dfl: add descriptions for virtualization and new
+    interfaces.
+
+ Documentation/ABI/testing/sysfs-platform-dfl-fme  |  62 ++++
+ Documentation/ABI/testing/sysfs-platform-dfl-port |  53 ++++
+ Documentation/fpga/dfl.rst                        | 105 +++++++
+ drivers/fpga/Makefile                             |   3 +-
+ drivers/fpga/dfl-afu-error.c                      | 230 ++++++++++++++
+ drivers/fpga/dfl-afu-main.c                       | 230 +++++++++++---
+ drivers/fpga/dfl-afu.h                            |   9 +
+ drivers/fpga/dfl-fme-error.c                      | 359 ++++++++++++++++++++++
+ drivers/fpga/dfl-fme-main.c                       |  42 +--
+ drivers/fpga/dfl-fme.h                            |   3 +
+ drivers/fpga/dfl.c                                |  10 +-
+ drivers/fpga/dfl.h                                |   9 +
+ 12 files changed, 1041 insertions(+), 74 deletions(-)
+ create mode 100644 drivers/fpga/dfl-afu-error.c
+ create mode 100644 drivers/fpga/dfl-fme-error.c
+
+-- 
+1.8.3.1
+
