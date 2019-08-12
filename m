@@ -2,131 +2,253 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2643C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9FEC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A253720665
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:27:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565620055;
-	bh=CeDbMIv7fnNuo3ESRXtbf9fp7MZ+ChvMZ4DP83hBzpQ=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=bDGH4axtOxi5yDgQvTxQwh44YhYCGNb/oLBfg4isvOe4YA0xOcmdWc4ix+CFJzA2t
-	 VlygoKr4lfx2hOIZ2lQtXD2vsDsAYaikHDOdkjFKGzzYOot4GVr3MheR7ZevT2XPzu
-	 5ln23qqFDYsHgfCVwUJTcdG0FL8vAHUcvD9KRzAE=
+	by mail.kernel.org (Postfix) with ESMTP id E78BD20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:27:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yw+0SxQn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727659AbfHLO1e (ORCPT
+        id S1727838AbfHLO16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 10:27:34 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36756 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbfHLO1e (ORCPT
+        Mon, 12 Aug 2019 10:27:58 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39955 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbfHLO15 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 10:27:34 -0400
-Received: by mail-ot1-f68.google.com with SMTP id k18so27299172otr.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 07:27:33 -0700 (PDT)
+        Mon, 12 Aug 2019 10:27:57 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w10so49574953pgj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 07:27:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iB0JWM7h1gxHw3EITq7Z+ghm7p6Q9nTkPir7Y/G4NH8=;
-        b=TZc9ggBowRmmtGuC8ttoadFm5vz2RNC35ZL0jQEW8J4nIC/wah+7aT1ZVTL8JXEnt9
-         Pfu07LhqpOmZZ46/ccWdmiRlXjW42Izow1P9kDlGqDd7Hd2czIF2QlOF2N28AcnYdtkX
-         JDn/O9InIP/aYT4ciYOi5C+4hFHdJM1sgwXJs=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ey5t6Z7+NFJy49eO7tTR7Aiye6/bMn8cHyeq52BlSSc=;
+        b=Yw+0SxQno/EStVztJgzclFL24slqtlNeGgggZrxqYnwJuIcXwWUZ097tFpDzznEdtD
+         sxI+1zP2MtVNXNRa9aERisjZjjovMIkNBIF3tShcDx8N3IHlYfzaVazudG5oMynTIql2
+         L0Sd3EMmsbqAwXpyP9wyqEqtKcpnajBw8nF2NVrpvhoM5AwUbx0ytzval/TxbUlUghqi
+         adFyZKD7BVMXb+5+U5xpGxfLg32RvFh9SRPELB6tOBxcclUiq2k0Nkihc/MWQJGYeBC2
+         SwIpddxqMvWQI976EFFWBMnp1WTpxEjUQvMXTdnuMsvdGUtevCBOHsnN6kI5J2sbL2BH
+         +6eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iB0JWM7h1gxHw3EITq7Z+ghm7p6Q9nTkPir7Y/G4NH8=;
-        b=sWiaSge2J1mhRKXgz+5B7yqK4NQXhxb1o2NK0l/i+Dgw2oLjmmrvbacEliUvuqRcJQ
-         Q9ZK/XqaVsUp3rqM+oQveSrrKMM0piWoBsS+A+BCf8Z8uOTy15f/a8OKrmvYVA+y/34C
-         hkI5IfwIRWeIFfmYil0u5xdwJjnxlM/lZK1/BNeMTLQ8NZoqOIE6W6+x7StfoyL7ZqZ0
-         bL9qaWq6YVB8FJkTmvkrbJQVZ4pmPh6bjogH56eJ7mYmL8rQUkolMthyEMjjTsnPsOKs
-         J58DfApZYIXQ757sZCfwOOaoAf/V5SsOSlj0c/rLIAU1WPb/+4JFiYIrA0mvfzO1jtNg
-         5w6g==
-X-Gm-Message-State: APjAAAU4LpLTaNZTC9pLNq2hg1EnNNw+nZqBcHT3gbMtB9x1GbtaJWzn
-        gRuydI0HgrWtf0RKjquP7qLIGQ==
-X-Google-Smtp-Source: APXvYqxKpM3w/vMiS/JBa38QJi5ADvN199ViP/KkzVP1/OxWlB0VBqt0i1aaSCaBQG+ri38z3vnHQA==
-X-Received: by 2002:a6b:730f:: with SMTP id e15mr33995089ioh.74.1565620053420;
-        Mon, 12 Aug 2019 07:27:33 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id d6sm20462220iod.17.2019.08.12.07.27.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 07:27:32 -0700 (PDT)
-Subject: Re: [PATCH 1/3] media: vimc: move private defines to a common header
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     helen.koike@collabora.com,
-        =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        mchehab@kernel.org, hverkuil@xs4all.nl,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        "skh >> Shuah Khan" <skhan@linuxfoundation.org>
-References: <cover.1565386363.git.skhan@linuxfoundation.org>
- <142cc5a6a10f75ed97de8b2d9b1e73b034a88b2f.1565386363.git.skhan@linuxfoundation.org>
- <20190810141432.GA30451@pendragon.ideasonboard.com>
- <ab0b316c-8b6d-0faf-b046-97c8065b8afd@linuxfoundation.org>
- <20190812142447.GF5006@pendragon.ideasonboard.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <8e5206fe-240e-e5d3-c675-255aa0df7d57@linuxfoundation.org>
-Date:   Mon, 12 Aug 2019 08:27:32 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ey5t6Z7+NFJy49eO7tTR7Aiye6/bMn8cHyeq52BlSSc=;
+        b=kfS65TD00g/g2DdK0HXRjBGukGVRFncNyIaG8kQENPKXRrXZkOpTsn2T/oboVBt6Mo
+         0mfQ1sUN/RsKwhai/3DnUAyhMvQXboe7tnkMksT+FvOJYyEC9/Optq6bgfrkItrGA8bs
+         nlMOMKHFw4inwkZBu5z8YkhJX6MvostkKhyMg+hDj/K1tz42cZ/zcT5OQgNAeiVYfjfG
+         0278rHWzZxC/aD1cH0ADy3DbOJLdpIkSrZMDl9e6oKqe+G5a+uwxy37qTVGqPvCzL8ej
+         oN2YHVxBnsojpDwn2m5Jcg4I/kuMGDPVQr/0JzDn6h1bPsdWGFNZmNCd+1HRkrTcCARi
+         BL9Q==
+X-Gm-Message-State: APjAAAVH4FxpLao4i5igCHk4UQuXVXuINMbADdP+NVeVgApj+HVEibXh
+        FBfXikxkjuIVjzrj7tTVBwKcIgHzLqr9X2nDWTCdcQ==
+X-Google-Smtp-Source: APXvYqxLcE1zsWsJPDnJEQe/jyc643JTMt6PtTFANULGnHA4bGrUmYbS7DJFrP+O/VYPI8hIzOetLJt2+6vBvqG/jT0=
+X-Received: by 2002:aa7:9e9a:: with SMTP id p26mr36630927pfq.25.1565620076692;
+ Mon, 12 Aug 2019 07:27:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190812142447.GF5006@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAAeHK+x2n11zWO7yC1zWz45d_2qJTFW=ODZ-1bxSGpn5BuVuGA@mail.gmail.com>
+ <000000000000563ccb058fec51a5@google.com>
+In-Reply-To: <000000000000563ccb058fec51a5@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 12 Aug 2019 16:27:45 +0200
+Message-ID: <CAAeHK+xW2QLj3g1PkxXfqSUoDPeSc9YWLKfPrJ9CiSnDpSdcLg@mail.gmail.com>
+Subject: Re: Re: KASAN: use-after-free Read in __pm_runtime_resume
+To:     syzbot <syzbot+b156665cf4d1b5e00c76@syzkaller.appspotmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hillf Danton <hdanton@sina.com>, len.brown@intel.com,
+        LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>, rjw@rjwysocki.net,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/12/19 8:24 AM, Laurent Pinchart wrote:
-> Hi Shua,
-> 
-> On Mon, Aug 12, 2019 at 08:19:27AM -0600, Shuah Khan wrote:
->> On 8/10/19 8:14 AM, Laurent Pinchart wrote:
->>> On Fri, Aug 09, 2019 at 03:45:41PM -0600, Shuah Khan wrote:
->>>> In preparation for collapsing the component driver structure into
->>>> a monolith, move private device structure defines to a new common
->>>> header file.
->>>
->>> Apart from the vimc_device structure, this doesn't seem to be needed.
->>> I'd rather keep each structure private to the .c file that handles it,
->>> and only share vimc_device globally.
->>
->> Right. I initially thought that I needed these global. Once I completed
->> the patches without needing these as global, I overlooked updating the
->> patches.
->>
->> I will take care of that. Any thoughts on vimc.h vs. adding vimc_device
->> struct to existing vimc-common.h
->>
->> As I explained to Helen in response to her comment about:
->>
->> "My thinking is that vimc-common.h is common for all the subdevs and
->> putting vimc-core defines and structures it shares it with the subdev
->> files can be in a separate file.
->>
->> It is more of design choice to keep structures and defined organized.
->> Originally I was thinking all the subdev device structires need to be
->> global, and my patch set I sent out as such doesn't need that. I just
->> overlooked that when I sent the patches out.
->>
->> This reduces the number of things that need to be common, I don't really
->> have any strong reasons for either choice of adding common defines to
->> vimc-common.h vs vimc.h - maybe with a slight tilt towards vimc.h"
-> 
-> The vimc_device structure fits nicely in vimc-common.h in my opinion, as
-> it's used by every component. I don't care much either way.
-> 
+On Mon, Aug 12, 2019 at 4:27 PM syzbot
+<syzbot+b156665cf4d1b5e00c76@syzkaller.appspotmail.com> wrote:
+>
+> > On Sat, Aug 3, 2019 at 11:12 AM Hillf Danton <hdanton@sina.com> wrote:
+>
+>
+> >> On Fri, 02 Aug 2019 05:58:05 -0700
+> >> > Hello,
+> >> >
+> >> > syzbot found the following crash on:
+> >> >
+> >> > HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
+> >> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> >> > console output:
+> >> https://syzkaller.appspot.com/x/log.txt?x=146071b4600000
+> >> > kernel config:
+> >> https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
+> >> > dashboard link:
+> >> https://syzkaller.appspot.com/bug?extid=b156665cf4d1b5e00c76
+> >> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >> >
+> >> > Unfortunately, I don't have any reproducer for this crash yet.
+> >> >
+> >> > IMPORTANT: if you fix the bug, please add the following tag to the
+> >> commit:
+> >> > Reported-by: syzbot+b156665cf4d1b5e00c76@syzkaller.appspotmail.com
+> >> >
+> >> > ==================================================================
+> >> > BUG: KASAN: use-after-free in __pm_runtime_resume+0x162/0x180
+> >> > drivers/base/power/runtime.c:1069
+> >> > Read of size 1 at addr ffff8881c775b671 by task syz-executor.4/5918
+> >> >
+> >> > CPU: 1 PID: 5918 Comm: syz-executor.4 Not tainted 5.3.0-rc2+ #24
+> >> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> >> > Google 01/01/2011
+> >> > Call Trace:
+> >> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >> >   dump_stack+0xca/0x13e lib/dump_stack.c:113
+> >> >   print_address_description+0x6a/0x32c mm/kasan/report.c:351
+> >> >   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
+> >> >   kasan_report+0xe/0x12 mm/kasan/common.c:612
+> >> >   __pm_runtime_resume+0x162/0x180 drivers/base/power/runtime.c:1069
+> >> >   pm_runtime_get_sync include/linux/pm_runtime.h:226 [inline]
+> >> >   usb_autopm_get_interface+0x1b/0x50 drivers/usb/core/driver.c:1707
+> >> >   usbhid_power+0x7c/0xe0 drivers/hid/usbhid/hid-core.c:1234
+> >> >   hid_hw_power include/linux/hid.h:1038 [inline]
+> >> >   hidraw_open+0x20d/0x740 drivers/hid/hidraw.c:282
+> >> >   chrdev_open+0x219/0x5c0 fs/char_dev.c:414
+> >> >   do_dentry_open+0x494/0x1120 fs/open.c:797
+> >> >   do_last fs/namei.c:3416 [inline]
+> >> >   path_openat+0x1430/0x3f50 fs/namei.c:3533
+> >> >   do_filp_open+0x1a1/0x280 fs/namei.c:3563
+> >> >   do_sys_open+0x3c0/0x580 fs/open.c:1089
+> >> >   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+> >> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >> > RIP: 0033:0x413711
+> >> > Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 19 00 00
+> >> c3 48
+> >> > 83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f 05 <48> 8b 3c 24
+> >> 48
+> >> > 89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d 01
+> >> > RSP: 002b:00007fa3309ef7a0 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
+> >> > RAX: ffffffffffffffda RBX: 6666666666666667 RCX: 0000000000413711
+> >> > RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007fa3309ef850
+> >> > RBP: 000000000075bf20 R08: 000000000000000f R09: 0000000000000000
+> >> > R10: ffffffffffffffff R11: 0000000000000293 R12: 00007fa3309f06d4
+> >> > R13: 00000000004c8c02 R14: 00000000004dfa80 R15: 00000000ffffffff
+> >> >
+> >> > Allocated by task 103:
+> >> >   save_stack+0x1b/0x80 mm/kasan/common.c:69
+> >> >   set_track mm/kasan/common.c:77 [inline]
+> >> >   __kasan_kmalloc mm/kasan/common.c:487 [inline]
+> >> >   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
+> >> >   kmalloc include/linux/slab.h:552 [inline]
+> >> >   kzalloc include/linux/slab.h:748 [inline]
+> >> >   usb_set_configuration+0x2c4/0x1670 drivers/usb/core/message.c:1846
+> >> >   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+> >> >   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+> >> >   really_probe+0x281/0x650 drivers/base/dd.c:548
+> >> >   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+> >> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+> >> >   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+> >> >   __device_attach+0x217/0x360 drivers/base/dd.c:882
+> >> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> >> >   device_add+0xae6/0x16f0 drivers/base/core.c:2114
+> >> >   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+> >> >   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+> >> >   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+> >> >   port_event drivers/usb/core/hub.c:5359 [inline]
+> >> >   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+> >> >   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+> >> >   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+> >> >   kthread+0x318/0x420 kernel/kthread.c:255
+> >> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> >> >
+> >> > Freed by task 103:
+> >> >   save_stack+0x1b/0x80 mm/kasan/common.c:69
+> >> >   set_track mm/kasan/common.c:77 [inline]
+> >> >   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
+> >> >   slab_free_hook mm/slub.c:1423 [inline]
+> >> >   slab_free_freelist_hook mm/slub.c:1470 [inline]
+> >> >   slab_free mm/slub.c:3012 [inline]
+> >> >   kfree+0xe4/0x2f0 mm/slub.c:3953
+> >> >   device_release+0x71/0x200 drivers/base/core.c:1064
+> >> >   kobject_cleanup lib/kobject.c:693 [inline]
+> >> >   kobject_release lib/kobject.c:722 [inline]
+> >> >   kref_put include/linux/kref.h:65 [inline]
+> >> >   kobject_put+0x171/0x280 lib/kobject.c:739
+> >> >   put_device+0x1b/0x30 drivers/base/core.c:2213
+> >> >   usb_disable_device+0x2ce/0x690 drivers/usb/core/message.c:1244
+> >> >   usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
+> >> >   hub_port_connect drivers/usb/core/hub.c:4949 [inline]
+> >> >   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+> >> >   port_event drivers/usb/core/hub.c:5359 [inline]
+> >> >   hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
+> >> >   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+> >> >   process_scheduled_works kernel/workqueue.c:2331 [inline]
+> >> >   worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+> >> >   kthread+0x318/0x420 kernel/kthread.c:255
+> >> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> >> >
+> >> > The buggy address belongs to the object at ffff8881c775b300
+> >> >   which belongs to the cache kmalloc-2k of size 2048
+> >> > The buggy address is located 881 bytes inside of
+> >> >   2048-byte region [ffff8881c775b300, ffff8881c775bb00)
+> >> > The buggy address belongs to the page:
+> >> > page:ffffea00071dd600 refcount:1 mapcount:0 mapping:ffff8881da00c000
+> >> > index:0x0 compound_mapcount: 0
+> >> > flags: 0x200000000010200(slab|head)
+> >> > raw: 0200000000010200 ffffea0007541a00 0000000300000003
+> >> ffff8881da00c000
+> >> > raw: 0000000000000000 00000000000f000f 00000001ffffffff
+> >> 0000000000000000
+> >> > page dumped because: kasan: bad access detected
+> >> >
+> >> > Memory state around the buggy address:
+> >> >   ffff8881c775b500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >> >   ffff8881c775b580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >> > > ffff8881c775b600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >> >                                                               ^
+> >> >   ffff8881c775b680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >> >   ffff8881c775b700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >> > ==================================================================
+>
+> >> --- a/drivers/hid/usbhid/hid-core.c
+> >> +++ b/drivers/hid/usbhid/hid-core.c
+> >> @@ -1410,6 +1410,7 @@ static void usbhid_disconnect(struct usb
+> >>          spin_lock_irq(&usbhid->lock);   /* Sync with error and led
+> >> handlers */
+> >>          set_bit(HID_DISCONNECTED, &usbhid->iofl);
+> >>          spin_unlock_irq(&usbhid->lock);
+> >> +       hid_hw_stop(hid);
+> >>          hid_destroy_device(hid);
+> >>          kfree(usbhid);
+> >>   }
+> >> --
+>
+>
+> > Hi Hillf,
+>
+> > Looks like your patch fixes the issue (one of the issues at least), as
+> > tested on this report:
+>
+> > https://syzkaller.appspot.com/bug?extid=3cbe5cd105d2ad56a1df
+>
+> > I'm duping this bug to that one:
+>
+> > #syz dup: KASAN: use-after-free Read in __pm_runtime_resume
+>
+> Can't dup bug to itself.
 
-Sounds good to me.
+Wrong name.
 
-thanks,
--- Shuah
+#syz dup: general protection fault in __pm_runtime_resume
+
+>
+>
+> > Could you submit your patch?
+>
+> > Thanks!
