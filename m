@@ -2,96 +2,82 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F169AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABEBC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5DF32085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB5B42085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbfHLKpc (ORCPT
+        id S1728012AbfHLKrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:45:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:48106 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727691AbfHLKpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:45:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BA0715AB;
-        Mon, 12 Aug 2019 03:45:31 -0700 (PDT)
-Received: from dawn-kernel.cambridge.arm.com (unknown [10.1.197.116])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 677F73F706;
-        Mon, 12 Aug 2019 03:45:30 -0700 (PDT)
-Subject: Re: [PATCH] coresight: tmc-etr: Fix perf_data check.
-To:     yabinc@google.com, mathieu.poirier@linaro.org,
-        alexander.shishkin@linux.intel.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190809202330.51183-1-yabinc@google.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <8b154f20-60d9-74a4-8e5d-65ad612dc387@arm.com>
-Date:   Mon, 12 Aug 2019 11:45:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 12 Aug 2019 06:47:08 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:56865 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727691AbfHLKrI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 06:47:08 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hx7qw-0001B8-KY; Mon, 12 Aug 2019 12:47:02 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hx7qu-0001m9-Up; Mon, 12 Aug 2019 12:47:00 +0200
+Date:   Mon, 12 Aug 2019 12:47:00 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
+        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        kernel@pengutronix.de, Frank Rowand <frowand.list@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
+Message-ID: <20190812104700.vzpdxx3yddthiif5@pengutronix.de>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net>
+ <173825848.1FZsmuHfpq@jernej-laptop>
+ <20190729185108.tpilwoooxvi2z72e@pengutronix.de>
+ <2452836.v7ux4bnEjb@jernej-laptop>
+ <20190730080900.hhxrqun7vk4nsj2h@pengutronix.de>
+ <20190730170601.a7ei43wku6jsjanu@flea>
+ <20190731065230.mqbtn5sfoxrkevw5@pengutronix.de>
+ <20190812095648.wuefcr2mep3dpkth@flea>
 MIME-Version: 1.0
-In-Reply-To: <20190809202330.51183-1-yabinc@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190812095648.wuefcr2mep3dpkth@flea>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Maxime,
 
+the idea of my mail was to summarize quickly the discussion for the dt
+people to give their judgement to stop us circling in a discussion about
+the always same points.
 
-On 09/08/2019 21:23, Yabin Cui wrote:
-> When tracing etm data of multiple threads on multiple cpus through
-> perf interface, each cpu has a unique etr_perf_buffer while sharing
-> the same etr device. There is no guarantee that the last cpu starts
-> etm tracing also stops last. This makes perf_data check fail.
-> 
-> Fix it by checking etr_buf instead of etr_perf_buffer.
+I suggest we stop the discussion here now and wait for a reply from them
+instead.
 
-Please could you add a Fixes tag for this:
+Best regards
+Uwe
 
-Fixes: 3147da92a8a81fc3 ("coresight: tmc-etr: Allocate and free ETR memory 
-buffers for CPU-wide scenarios")
-
-as the problem was introduced as a side effect of the above patch ?
-
-> 
-> Signed-off-by: Yabin Cui <yabinc@google.com>
-> ---
->   drivers/hwtracing/coresight/coresight-tmc-etr.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> index 17006705287a..f466f05afe08 100644
-> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> @@ -1484,7 +1484,7 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
->   		goto out;
->   	}
->   
-> -	if (WARN_ON(drvdata->perf_data != etr_perf)) {
-> +	if (WARN_ON(drvdata->perf_data != etr_buf)) {
->   		lost = true;
->   		spin_unlock_irqrestore(&drvdata->spinlock, flags);
->   		goto out;
-> @@ -1556,7 +1556,7 @@ static int tmc_enable_etr_sink_perf(struct coresight_device *csdev, void *data)
->   	}
->   
->   	etr_perf->head = PERF_IDX2OFF(handle->head, etr_perf);
-> -	drvdata->perf_data = etr_perf;
-> +	drvdata->perf_data = etr_perf->etr_buf;
-
-minor nit: Now that we are storing the etr_buf instead of the etr_perf_buf in
-perf_data, we could make the "perf_data" => "perf_buf" inline with the
-sysfs_buf.
-
-Either ways:
-
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
