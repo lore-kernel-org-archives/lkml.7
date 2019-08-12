@@ -2,110 +2,110 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DC9C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C02C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44E25208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:07:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565597279;
-	bh=rfwD66AedIpA/3YE2dWFn8YCpnEehefOryrXd0y6bio=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XvKAm1Wr1sSrdrjbZP3izCE/imuO6PVx6UBCP4dtWvSNWK8XWNzC2fjntVzH3xvYq
-	 25yygxEyOMdCbOlmKYLtCxxj7d/qYx4m7gfG4/GkqREQUdwnrsSdGICHTG3Wmtu0rQ
-	 AceDTkkLCEpZb5QwQo79DpVb5HUOkqwsshPTsxZA=
+	by mail.kernel.org (Postfix) with ESMTP id 0E817206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:09:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbfHLIH6 (ORCPT
+        id S1727042AbfHLIJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 04:07:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726405AbfHLIH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 04:07:57 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62E70206C2;
-        Mon, 12 Aug 2019 08:07:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565597276;
-        bh=rfwD66AedIpA/3YE2dWFn8YCpnEehefOryrXd0y6bio=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TH581SWmFX5Vu6WBmaibZ4b8HqpSesdZ9B8gRjIiM+ftqFvUWyIG4J9oD/o8xDBaZ
-         4EOPkWYiJUWIBlolpVAenfFXazLeuyXQ4Owqj3+RBAyWEqHZvQyniCnt3m88lmuzbd
-         tnmIHtFxQyKlmk+kt7gW0A7xtcnNrGAQZcF73pBo=
-Date:   Mon, 12 Aug 2019 10:07:54 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v5 0/6] Support for Allwinner V3/S3L and Sochip S3
-Message-ID: <20190812080754.n7dgogopm3ytd6h5@flea>
-References: <20190728031227.49140-1-icenowy@aosc.io>
+        Mon, 12 Aug 2019 04:09:50 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4232 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726528AbfHLIJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 04:09:50 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7551D3381FFC3A810CA8;
+        Mon, 12 Aug 2019 16:09:21 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Mon, 12 Aug 2019
+ 16:09:14 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <marcel@holtmann.org>, <johan.hedberg@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-bluetooth@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] Bluetooth: hci_bcm: Fix -Wunused-const-variable warnings
+Date:   Mon, 12 Aug 2019 14:22:11 +0800
+Message-ID: <20190812062211.69984-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="he4xln2tfu7hadbz"
-Content-Disposition: inline
-In-Reply-To: <20190728031227.49140-1-icenowy@aosc.io>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+If CONFIG_ACPI is not set, gcc warn this:
 
---he4xln2tfu7hadbz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+drivers/bluetooth/hci_bcm.c:831:39: warning:
+ acpi_bcm_int_last_gpios defined but not used [-Wunused-const-variable=]
+drivers/bluetooth/hci_bcm.c:838:39: warning:
+ acpi_bcm_int_first_gpios defined but not used [-Wunused-const-variable=]
 
-On Sun, Jul 28, 2019 at 11:12:21AM +0800, Icenowy Zheng wrote:
-> This patchset tries to add support for Allwinner V3/S3L and Sochip S3.
->
-> Allwinner V3/V3s/S3L and Sochip S3 share the same die, but with
-> different package. V3 is BGA w/o co-packaged DDR, V3s is QFP w/ DDR2,
-> S3L is BGA w/ DDR2 and S3 is BGA w/ DDR3. (S3 and S3L is compatible
-> for pinout, but because of different DDR, DDR voltage is different
-> between the two variants). Because of the pin count of V3s is
-> restricted due to the package, some pins are not bound on V3s, but
-> they're bound on V3/S3/S3L.
->
-> Currently the kernel is only prepared for the features available on V3s.
-> This patchset adds the features missing on V3s for using them on
-> V3/S3/S3L, and add bindings for V3/S3/S3L. It also adds a S3 SoM by
-> Sipeed, called Lichee Zero Plus.
->
-> Icenowy Zheng (6):
->   pinctrl: sunxi: v3s: introduce support for V3
->   clk: sunxi-ng: v3s: add missing clock slices for MMC2 module clocks
->   clk: sunxi-ng: v3s: add Allwinner V3 support
->   ARM: sunxi: dts: s3/s3l/v3: add DTSI files for S3/S3L/V3 SoCs
->   dt-bindings: arm: sunxi: add binding for Lichee Zero Plus core board
->   ARM: dts: sun8i: s3: add devicetree for Lichee zero plus w/ S3
+move them to #ifdef CONFIG_ACPI block.
 
-Applied the patches 2 to 6, thanks!
-Maxime
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/bluetooth/hci_bcm.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
+index ae2624f..4d9de20 100644
+--- a/drivers/bluetooth/hci_bcm.c
++++ b/drivers/bluetooth/hci_bcm.c
+@@ -824,6 +824,21 @@ static int bcm_resume(struct device *dev)
+ }
+ #endif
+ 
++/* Some firmware reports an IRQ which does not work (wrong pin in fw table?) */
++static const struct dmi_system_id bcm_broken_irq_dmi_table[] = {
++	{
++		.ident = "Meegopad T08",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_BOARD_VENDOR,
++					"To be filled by OEM."),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "T3 MRD"),
++			DMI_EXACT_MATCH(DMI_BOARD_VERSION, "V1.1"),
++		},
++	},
++	{ }
++};
++
++#ifdef CONFIG_ACPI
+ static const struct acpi_gpio_params first_gpio = { 0, 0, false };
+ static const struct acpi_gpio_params second_gpio = { 1, 0, false };
+ static const struct acpi_gpio_params third_gpio = { 2, 0, false };
+@@ -842,21 +857,6 @@ static const struct acpi_gpio_mapping acpi_bcm_int_first_gpios[] = {
+ 	{ },
+ };
+ 
+-/* Some firmware reports an IRQ which does not work (wrong pin in fw table?) */
+-static const struct dmi_system_id bcm_broken_irq_dmi_table[] = {
+-	{
+-		.ident = "Meegopad T08",
+-		.matches = {
+-			DMI_EXACT_MATCH(DMI_BOARD_VENDOR,
+-					"To be filled by OEM."),
+-			DMI_EXACT_MATCH(DMI_BOARD_NAME, "T3 MRD"),
+-			DMI_EXACT_MATCH(DMI_BOARD_VERSION, "V1.1"),
+-		},
+-	},
+-	{ }
+-};
+-
+-#ifdef CONFIG_ACPI
+ static int bcm_resource(struct acpi_resource *ares, void *data)
+ {
+ 	struct bcm_device *dev = data;
+-- 
+2.7.4
 
---he4xln2tfu7hadbz
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVEeWgAKCRDj7w1vZxhR
-xc1HAQC4pz8qSqTprqKaHx4vMzq28Cpy8SSZNQyYzojW9ba9VQEAuyb7C8zQZ1Qn
-xIEmEbly3ZpRq6N6RP/EFwfX+rg2HgM=
-=3RxS
------END PGP SIGNATURE-----
-
---he4xln2tfu7hadbz--
