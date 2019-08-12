@@ -2,214 +2,285 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3BEC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC6FC32753
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5BF820684
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09F6C20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:03:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NxV+xcfA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfHLTCa (ORCPT
+        id S1726810AbfHLTDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 15:02:30 -0400
-Received: from mga18.intel.com ([134.134.136.126]:63529 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbfHLTC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 15:02:29 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 12:01:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,378,1559545200"; 
-   d="scan'208";a="194025844"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Aug 2019 12:01:58 -0700
-Date:   Mon, 12 Aug 2019 12:01:58 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Michal Hocko <mhocko@suse.com>,
-        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 11/19] mm/gup: Pass follow_page_context further
- down the call stack
-Message-ID: <20190812190158.GA20634@iweiny-DESK2.sc.intel.com>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
- <20190809225833.6657-12-ira.weiny@intel.com>
- <57000521-cc09-9c33-9fa4-1fae5a3972c2@nvidia.com>
+        Mon, 12 Aug 2019 15:03:10 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:11972 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726424AbfHLTDJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 15:03:09 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d51b7ee0002>; Mon, 12 Aug 2019 12:03:10 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 12 Aug 2019 12:03:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 12 Aug 2019 12:03:08 -0700
+Received: from [10.110.103.110] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 12 Aug
+ 2019 19:03:07 +0000
+Subject: Re: [PATCH v8 14/21] clk: tegra210: Add suspend and resume support
+To:     Dmitry Osipenko <digetx@gmail.com>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
+        <stefan@agner.ch>, <mark.rutland@arm.com>,
+        <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-15-git-send-email-skomatineni@nvidia.com>
+ <a21b7464-62c3-8461-04c2-a0e863bdde85@gmail.com>
+ <7d101ec9-c559-8b40-1764-6bf67a9c7a7a@nvidia.com>
+ <aa823801-00c7-df88-0f63-45338bffa854@gmail.com>
+ <cbe94f84-a17b-7e1a-811d-89db571784e1@nvidia.com>
+ <4397de5d-772d-2b04-5f87-b2988f6c96c8@gmail.com>
+ <805a825e-f19d-d056-83eb-8ed1cb1c089c@nvidia.com>
+ <ca90bd2b-8088-8b46-2816-95e58a4811b8@gmail.com>
+ <931b027d-fdf3-220b-167a-4177fa917781@nvidia.com>
+ <1779e92b-fa4d-68ab-9218-51970eee1ec5@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <cd685e84-c0de-6142-597e-f7c77604350e@nvidia.com>
+Date:   Mon, 12 Aug 2019 12:03:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <57000521-cc09-9c33-9fa4-1fae5a3972c2@nvidia.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <1779e92b-fa4d-68ab-9218-51970eee1ec5@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565636590; bh=7XlWEYCiGiAR4X4VAwgcIi0qXW4BB3NV1aG2k3zMqes=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=NxV+xcfAb0rEOnzACQQ/RLDqDAgQauE7TyHNclfrK4gFhLu+EX+/x5FimxUdQt9F8
+         icqjwtFqD6xSTIsETBRORTRxunLv5s+FDQ7qdBBdDlxUeEX5OuJ4K61ImoqI44QJ+e
+         Wzo/IHoabk3torINxKEu7Vp/caNsJTpXzZqpJ/NbwflMel/IHoW9RY7gsGzXq0hjeC
+         MyqAJpvAVrXGlnAXMdgcLLkHa59EEbqInvOxHX9KrpWI4QR4aKrjzxt7Srhpfz4I3/
+         hxbmO69uSA9IY2z2KXi7NKOKEtffXh1nL6xS4FoVyUxJYBg5mDhAB2TZT2GfaGHhoh
+         OHiwDRnJ8hzgA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 05:18:31PM -0700, John Hubbard wrote:
-> On 8/9/19 3:58 PM, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > In preparation for passing more information (vaddr_pin) into
-> > follow_page_pte(), follow_devmap_pud(), and follow_devmap_pmd().
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-[snip]
+On 8/12/19 11:19 AM, Dmitry Osipenko wrote:
+> 12.08.2019 20:28, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 8/12/19 9:25 AM, Dmitry Osipenko wrote:
+>>> 11.08.2019 22:15, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> On 8/11/19 10:39 AM, Dmitry Osipenko wrote:
+>>>>> 09.08.2019 21:40, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>> On 8/9/19 11:18 AM, Dmitry Osipenko wrote:
+>>>>>>> 09.08.2019 19:19, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
+=82:
+>>>>>>>> On 8/9/19 6:56 AM, Dmitry Osipenko wrote:
+>>>>>>>>> 09.08.2019 2:46, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
+=82:
+>>>>>>>>>> This patch adds support for clk: tegra210: suspend-resume.
+>>>>>>>>>>
+>>>>>>>>>> All the CAR controller settings are lost on suspend when core
+>>>>>>>>>> power goes off.
+>>>>>>>>>>
+>>>>>>>>>> This patch has implementation for saving and restoring all PLLs
+>>>>>>>>>> and clocks context during system suspend and resume to have the
+>>>>>>>>>> clocks back to same state for normal operation.
+>>>>>>>>>>
+>>>>>>>>>> Clock driver suspend and resume are registered as syscore_ops as=
+ clocks
+>>>>>>>>>> restore need to happen before the other drivers resume to have a=
+ll their
+>>>>>>>>>> clocks back to the same state as before suspend.
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>>>>> ---
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 drivers/clk/tegra/clk-tegra210.c | 103 +++++=
+++++++++++++++++++++++++++++++++--
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 drivers/clk/tegra/clk.c=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 64 ++++++++++++++++++++++++
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 drivers/clk/tegra/clk.h=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 ++
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 3 files changed, 166 insertions(+), 4 deleti=
+ons(-)
+>>>>>>>>>>
+>>>>>>>>>> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegr=
+a/clk-tegra210.c
+>>>>>>>>>> index 998bf60b219a..8dd6f4f4debb 100644
+>>>>>>>>>> --- a/drivers/clk/tegra/clk-tegra210.c
+>>>>>>>>>> +++ b/drivers/clk/tegra/clk-tegra210.c
+>>>>>>>>>> @@ -9,13 +9,13 @@
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 #include <linux/clkdev.h>
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 #include <linux/of.h>
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 #include <linux/of_address.h>
+>>>>>>>>>> +#include <linux/syscore_ops.h>
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 #include <linux/delay.h>
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 #include <linux/export.h>
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 #include <linux/mutex.h>
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 #include <linux/clk/tegra.h>
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 #include <dt-bindings/clock/tegra210-car.h>
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 #include <dt-bindings/reset/tegra210-car.h>
+>>>>>>>>>> -#include <linux/iopoll.h>
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 #include <linux/sizes.h>
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 #include <soc/tegra/pmc.h>
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 @@ -220,11 +220,15 @@
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 #define CLK_M_DIVISOR_SHIFT 2
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 #define CLK_M_DIVISOR_MASK 0x3
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 +#define CLK_MASK_ARM=C2=A0=C2=A0=C2=A0 0x44
+>>>>>>>>>> +#define MISC_CLK_ENB=C2=A0=C2=A0=C2=A0 0x48
+>>>>>>>>>> +
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 #define RST_DFLL_DVCO 0x2f4
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 #define DVFS_DFLL_RESET_SHIFT 0
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 =C2=A0 #define CLK_RST_CONTROLLER_RST_DEV_Y_=
+SET 0x2a8
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2=
+ac
+>>>>>>>>>> +#define CPU_SOFTRST_CTRL 0x380
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 =C2=A0 #define LVL2_CLK_GATE_OVRA 0xf8
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 #define LVL2_CLK_GATE_OVRC 0x3a0
+>>>>>>>>>> @@ -2825,6 +2829,7 @@ static int tegra210_enable_pllu(void)
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_clk_pll=
+_freq_table *fentry;
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_clk_pll=
+ pllu;
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 reg;
+>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 int ret;
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (fentry =
+=3D pll_u_freq_table; fentry->input_rate; fentry++) {
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 if (fentry->input_rate =3D=3D pll_ref_freq)
+>>>>>>>>>> @@ -2853,9 +2858,14 @@ static int tegra210_enable_pllu(void)
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg |=3D PLL_ENABLE;
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel(reg, clk_base=
+ + PLLU_BASE);
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 -=C2=A0=C2=A0=C2=A0 readl_relaxed_poll_timeo=
+ut_atomic(clk_base + PLLU_BASE, reg,
+>>>>>>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg & PLL_B=
+ASE_LOCK, 2, 1000);
+>>>>>>>>>> -=C2=A0=C2=A0=C2=A0 if (!(reg & PLL_BASE_LOCK)) {
+>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 /*
+>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * During clocks resume, same PLLU init=
+ and enable sequence get
+>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * executed. So, readx_poll_timeout_ato=
+mic can't be used here as it
+>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * uses ktime_get() and timekeeping res=
+ume doesn't happen by that
+>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * time. So, using tegra210_wait_for_ma=
+sk for PLL LOCK.
+>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
+>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 ret =3D tegra210_wait_for_mask(&pllu, PLLU_B=
+ASE, PLL_BASE_LOCK);
+>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (ret) {
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 pr_err("Timed out waiting for PLL_U to lock\n");
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 return -ETIMEDOUT;
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>>>>> @@ -3288,6 +3298,84 @@ static void tegra210_disable_cpu_clock(u3=
+2 cpu)
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 }
+>>>>>>>>>>  =C2=A0=C2=A0=C2=A0 =C2=A0 #ifdef CONFIG_PM_SLEEP
+>>>>>>>>>> +/*
+>>>>>>>>>> + * This array lists mask values for each peripheral clk bank
+>>>>>>>>>> + * to mask out reserved bits during the clocks state restore
+>>>>>>>>>> + * on SC7 resume to prevent accidental writes to these reserved
+>>>>>>>>>> + * bits.
+>>>>>>>>>> + */
+>>>>>>>>>> +static u32 periph_clk_rsvd_mask[TEGRA210_CAR_BANK_COUNT] =3D {
+>>>>>>>>> Should be more natural to have a "valid_mask" instead of "rsvd_ma=
+sk".
+>>>>>>>>>
+>>>>>>>>> What's actually wrong with touching of the reserved bits? They mu=
+st be NO-OP.. or the
+>>>>>>>>> reserved bits are actually some kind of "secret" bits? If those b=
+its have some use-case
+>>>>>>>>> outside of Silicon HW (like FPGA simulation), then this doesn't m=
+atter for upstream
+>>>>>>>>> and you
+>>>>>>>>> have to keep the workaround locally in the downstream kernel or w=
+hatever.
+>>>>>>>> Will rename as valid_mask.
+>>>>>>>>
+>>>>>>>> some bits in these registers are undefined and is not good to writ=
+e to these bits as
+>>>>>>>> they
+>>>>>>>> can cause pslverr.
+>>>>>>> Okay, it should be explained in the comment.
+>>>>>>>
+>>>>>>> Is it possible to disable trapping of changing the undefined bits?
+>>>>>> No its internal to design
+>>>>> Okay.
+>>>>>
+>>>>> Also, what about to move the valid_mask into struct tegra_clk_periph_=
+regs?
+>>>> No, we cannot move to tegra_clk_periph_regs as its in tegra/clk.c and =
+is common for all
+>>>> tegra.
+>>>>
+>>>> Reserved bits are different on tegra chips so should come from Tegra c=
+hip specific clock
+>>>> driver like
+>>>>
+>>>> clk-tegra210 for Tegra210.
+>>> Could you please check whether the reserved bits are RAZ (read as zero)=
+?
+>>>
+>>> [snip]
+>> yes all reserved bits of clk_enb register is 0. This should not be set t=
+o 1.
+>>
+>> As I will be changing to variable name to valid_mask instead of reserved=
+ mask, will also
+>> change values to valid mask so it can be used directly to write to clk_e=
+nb for enabling all
+>> peripherals clks.
+>>
+> It looks to me that the tegra_clk_periph_force_on() could be made local t=
+o the
+> clk-tegra210.c and then the raw clk_enb values could be written directly =
+instead of having
+> the clk_enb[] array, probably that will be a bit cleaner
 
-> > @@ -786,7 +782,8 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
-> >  static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
-> >  		unsigned long start, unsigned long nr_pages,
-> >  		unsigned int gup_flags, struct page **pages,
-> > -		struct vm_area_struct **vmas, int *nonblocking)
-> > +		struct vm_area_struct **vmas, int *nonblocking,
-> > +		struct vaddr_pin *vaddr_pin)
-> 
-> I didn't expect to see more vaddr_pin arg passing, based on the commit
-> description. Did you want this as part of patch 9 or 10 instead? If not,
-> then let's mention it in the commit description.
+All CLK_OUT_ENB* registers are already defined in clk driver and also=20
+periph_regs includes all of these to use.
 
-Yea that does seem out of place now that I look at it.  I'll add to the commit
-message because this is really getting vaddr_pin into the context _and_ passing
-it down the stack.  With all the rebasing I may have squashed something I did
-not mean to.  But I think this patch is ok because it is not to complicated to
-see what is going on.
+To write value to enable all clocks directly without array, it need=20
+total 7 individual register writes for Tegra210. Also when=20
+suspend/resume is implemented for other prior tegras, they need to do=20
+same in tegra clock driver.
 
-Thanks,
-Ira
+Reason I had this in clock driver is, this can be used by all tegra=20
+clock drivers and just can pass valid clocks values.
 
-> 
-> >  {
-> >  	long ret = 0, i = 0;
-> >  	struct vm_area_struct *vma = NULL;
-> > @@ -797,6 +794,8 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
-> >  
-> >  	VM_BUG_ON(!!pages != !!(gup_flags & FOLL_GET));
-> >  
-> > +	ctx.vaddr_pin = vaddr_pin;
-> > +
-> >  	/*
-> >  	 * If FOLL_FORCE is set then do not force a full fault as the hinting
-> >  	 * fault information is unrelated to the reference behaviour of a task
-> > @@ -1025,7 +1024,7 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
-> >  	lock_dropped = false;
-> >  	for (;;) {
-> >  		ret = __get_user_pages(tsk, mm, start, nr_pages, flags, pages,
-> > -				       vmas, locked);
-> > +				       vmas, locked, vaddr_pin);
-> >  		if (!locked)
-> >  			/* VM_FAULT_RETRY couldn't trigger, bypass */
-> >  			return ret;
-> > @@ -1068,7 +1067,7 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
-> >  		lock_dropped = true;
-> >  		down_read(&mm->mmap_sem);
-> >  		ret = __get_user_pages(tsk, mm, start, 1, flags | FOLL_TRIED,
-> > -				       pages, NULL, NULL);
-> > +				       pages, NULL, NULL, vaddr_pin);
-> >  		if (ret != 1) {
-> >  			BUG_ON(ret > 1);
-> >  			if (!pages_done)
-> > @@ -1226,7 +1225,7 @@ long populate_vma_page_range(struct vm_area_struct *vma,
-> >  	 * not result in a stack expansion that recurses back here.
-> >  	 */
-> >  	return __get_user_pages(current, mm, start, nr_pages, gup_flags,
-> > -				NULL, NULL, nonblocking);
-> > +				NULL, NULL, nonblocking, NULL);
-> >  }
-> >  
-> >  /*
-> > @@ -1311,7 +1310,7 @@ struct page *get_dump_page(unsigned long addr)
-> >  
-> >  	if (__get_user_pages(current, current->mm, addr, 1,
-> >  			     FOLL_FORCE | FOLL_DUMP | FOLL_GET, &page, &vma,
-> > -			     NULL) < 1)
-> > +			     NULL, NULL) < 1)
-> >  		return NULL;
-> >  	flush_cache_page(vma, addr, page_to_pfn(page));
-> >  	return page;
-> > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> > index bc1a07a55be1..7e09f2f17ed8 100644
-> > --- a/mm/huge_memory.c
-> > +++ b/mm/huge_memory.c
-> > @@ -916,8 +916,9 @@ static void touch_pmd(struct vm_area_struct *vma, unsigned long addr,
-> >  }
-> >  
-> >  struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
-> > -		pmd_t *pmd, int flags, struct dev_pagemap **pgmap)
-> > +		pmd_t *pmd, int flags, struct follow_page_context *ctx)
-> >  {
-> > +	struct dev_pagemap **pgmap = &ctx->pgmap;
-> >  	unsigned long pfn = pmd_pfn(*pmd);
-> >  	struct mm_struct *mm = vma->vm_mm;
-> >  	struct page *page;
-> > @@ -1068,8 +1069,9 @@ static void touch_pud(struct vm_area_struct *vma, unsigned long addr,
-> >  }
-> >  
-> >  struct page *follow_devmap_pud(struct vm_area_struct *vma, unsigned long addr,
-> > -		pud_t *pud, int flags, struct dev_pagemap **pgmap)
-> > +		pud_t *pud, int flags, struct follow_page_context *ctx)
-> >  {
-> > +	struct dev_pagemap **pgmap = &ctx->pgmap;
-> >  	unsigned long pfn = pud_pfn(*pud);
-> >  	struct mm_struct *mm = vma->vm_mm;
-> >  	struct page *page;
-> > diff --git a/mm/internal.h b/mm/internal.h
-> > index 0d5f720c75ab..46ada5279856 100644
-> > --- a/mm/internal.h
-> > +++ b/mm/internal.h
-> > @@ -12,6 +12,34 @@
-> >  #include <linux/pagemap.h>
-> >  #include <linux/tracepoint-defs.h>
-> >  
-> > +struct follow_page_context {
-> > +	struct dev_pagemap *pgmap;
-> > +	unsigned int page_mask;
-> > +	struct vaddr_pin *vaddr_pin;
-> > +};
-> > +
-> > +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> > +struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
-> > +		pmd_t *pmd, int flags, struct follow_page_context *ctx);
-> > +struct page *follow_devmap_pud(struct vm_area_struct *vma, unsigned long addr,
-> > +		pud_t *pud, int flags, struct follow_page_context *ctx);
-> > +#else
-> > +static inline struct page *follow_devmap_pmd(struct vm_area_struct *vma,
-> > +	unsigned long addr, pmd_t *pmd, int flags,
-> > +	struct follow_page_context *ctx)
-> > +{
-> > +	return NULL;
-> > +}
-> > +
-> > +static inline struct page *follow_devmap_pud(struct vm_area_struct *vma,
-> > +	unsigned long addr, pud_t *pud, int flags,
-> > +	struct follow_page_context *ctx)
-> > +{
-> > +	return NULL;
-> > +}
-> > +#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
-> > +
-> > +
-> >  /*
-> >   * The set of flags that only affect watermark checking and reclaim
-> >   * behaviour. This is used by the MM to obey the caller constraints
-> > 
-> 
-> 
-> 
-> 
-> thanks,
-> -- 
-> John Hubbard
-> NVIDIA
+But doing individual register write with direct hard code values in=20
+corresponding tegra clock driver is preferred still, will update so in=20
+next revision and will move all the CLK_OUT_ENB* register defines to=20
+tegra/clk.h
+
+Currently RST_DEVICES & CLK_OUT_ENB are all in tegra/clk.c
+
+> .
