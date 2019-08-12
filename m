@@ -2,75 +2,60 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AED9C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8E3C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2292B20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:12:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565647935;
-	bh=dl+Tz0F8DICZ/Q3wJoeTdAyMirqmNwcwyPQV9GAFnro=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AdF1enE8kKIpYnDkK/3MEH1tjgFaaAFkCOSlJvfLsSKqZKBp65qguxLkWbRb/WfiK
-	 ivKLx6tv/47Q0ADqIViUjlY2Q8BA8M7T654lJ3atmQQiRgotklUgL34XPI17UDnRV0
-	 VEhkyyS1XBnZqZQmG3jNAKVUNns7yyEZl1hPJIzA=
+	by mail.kernel.org (Postfix) with ESMTP id D5C342070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:13:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfHLWMO (ORCPT
+        id S1726754AbfHLWNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 18:12:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726659AbfHLWMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 18:12:13 -0400
-Received: from localhost (c-73-15-1-175.hsd1.ca.comcast.net [73.15.1.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F54D2070C;
-        Mon, 12 Aug 2019 22:12:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565647932;
-        bh=dl+Tz0F8DICZ/Q3wJoeTdAyMirqmNwcwyPQV9GAFnro=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dyJMogyknyoe08H7Bmrmj4OuP47idleVZ9nmsE44pjssUABl7AANDVOe+mvolvwa3
-         alHvFV/ehAkU8nh0mPOCUa4xm5CzoLSi6xY5nHx7Fo6J+Rf/4vZuzXfBgZ6WLMOIt7
-         GPy5w0hxvYNJtKUTpcTpDZi5ziEiMQMo4TVcm1J8=
-Date:   Mon, 12 Aug 2019 17:12:12 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] PCI: pciehp: Replace
- pciehp_green_led_{on,off,blink}()
-Message-ID: <20190812221212.GF7302@google.com>
-References: <20190811195944.23765-1-efremov@linux.com>
- <20190811195944.23765-5-efremov@linux.com>
- <20190812200330.GH11785@google.com>
- <b948bc25-e643-a43c-de70-136a041f13b1@linux.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b948bc25-e643-a43c-de70-136a041f13b1@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 12 Aug 2019 18:13:49 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:52246 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbfHLWNt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 18:13:49 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D331A1264D004;
+        Mon, 12 Aug 2019 15:13:47 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 15:13:44 -0700 (PDT)
+Message-Id: <20190812.151344.808737276838117231.davem@davemloft.net>
+To:     ndesaulniers@google.com
+Cc:     akpm@linux-foundation.org, sedat.dilek@gmail.com,
+        jpoimboe@redhat.com, yhs@fb.com, miguel.ojeda.sandonis@gmail.com,
+        clang-built-linux@googlegroups.com, ast@kernel.org,
+        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
+        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 09/16] sparc: prefer __section from
+ compiler_attributes.h
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190812215052.71840-9-ndesaulniers@google.com>
+References: <20190812215052.71840-1-ndesaulniers@google.com>
+        <20190812215052.71840-9-ndesaulniers@google.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 12 Aug 2019 15:13:48 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 12:14:08AM +0300, Denis Efremov wrote:
-> > You must have a reason, but why didn't you completely remove
-> > pciehp_green_led_on(), etc, and change the callers to use
-> > pciehp_set_indicators() instead?
-> 
-> Well, I don't have the exact reason here. I thought that it would be nice to preserve
-> an existing interface and to hide some implementation details (e.g., status of the
-> second indicator). I could completely remove pciehp_green_led_{on,off,blink}() and
-> pciehp_set_attention_status() in v3 if you prefer.
+From: Nick Desaulniers <ndesaulniers@google.com>
+Date: Mon, 12 Aug 2019 14:50:42 -0700
 
-I might be missing something, but I do think I would prefer to
-completely remove pciehp_green_led_{on,off,blink}() and
-pciehp_set_attention_status().  Then we'd have exactly one interface
-to change indicator state.
+> Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+
+Acked-by: David S. Miller <davem@davemloft.net>
