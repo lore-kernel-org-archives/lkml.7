@@ -2,154 +2,93 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AADB0C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0312C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C67208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C20A92070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:03:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbfHLJBc convert rfc822-to-8bit (ORCPT
+        id S1727243AbfHLJDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 05:01:32 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:43958 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727170AbfHLJBc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 05:01:32 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-167-o1ho9AClPlujEPqzHyiv3g-1; Mon, 12 Aug 2019 10:01:29 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon,
- 12 Aug 2019 10:01:28 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 12 Aug 2019 10:01:28 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Mika Westerberg' <mika.westerberg@linux.intel.com>
-CC:     'Yehezkel Bernat' <yehezkelshb@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        "Anthony Wong" <anthony.wong@canonical.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Subject: RE: [PATCH 3/8] thunderbolt: Use 32-bit writes when writing ring
- producer/consumer
-Thread-Topic: [PATCH 3/8] thunderbolt: Use 32-bit writes when writing ring
- producer/consumer
-Thread-Index: AQHVMyIznn3HI+p3CEuvWWeqi0Ulhqa8L0swgDPP6oCAABFywP//9NeAgAAR0ICAARElgIAGSXbA
-Date:   Mon, 12 Aug 2019 09:01:28 +0000
-Message-ID: <60b8b8d8ff14405bb86b9bd30addb94f@AcuMS.aculab.com>
-References: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
- <20190705095800.43534-4-mika.westerberg@linux.intel.com>
- <CA+CmpXtMBEtyh77fcrhX2BU8esiit56CWfZmey6LYEHZVUxf8A@mail.gmail.com>
- <0f3a47d8133945b181d623ea6e0d53f2@AcuMS.aculab.com>
- <20190807161359.GT2716@lahna.fi.intel.com>
- <79616dd147864771b0b74901e77f2607@AcuMS.aculab.com>
- <20190807163629.GV2716@lahna.fi.intel.com>
- <91a579eb2f614739a9a1177bdde5513e@AcuMS.aculab.com>
- <20190808095751.GA2716@lahna.fi.intel.com>
-In-Reply-To: <20190808095751.GA2716@lahna.fi.intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-X-MC-Unique: o1ho9AClPlujEPqzHyiv3g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Mon, 12 Aug 2019 05:03:18 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:59638 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727152AbfHLJDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 05:03:18 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C72F71A00A2;
+        Mon, 12 Aug 2019 11:03:15 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 801301A022F;
+        Mon, 12 Aug 2019 11:03:07 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 34174402D2;
+        Mon, 12 Aug 2019 17:02:57 +0800 (SGT)
+From:   Anson.Huang@nxp.com
+To:     wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux@armlinux.org.uk,
+        otavio@ossystems.com.br, leonard.crestez@nxp.com,
+        u.kleine-koenig@pengutronix.de, schnitzeltony@gmail.com,
+        jan.tuerk@emtrion.com, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 1/4] dt-bindings: watchdog: Add i.MX7ULP bindings
+Date:   Mon, 12 Aug 2019 16:53:18 +0800
+Message-Id: <20190812085321.13823-1-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: 'Mika Westerberg'
-> Sent: 08 August 2019 10:58
-> On Wed, Aug 07, 2019 at 04:41:30PM +0000, David Laight wrote:
-> > From: 'Mika Westerberg' [mailto:mika.westerberg@linux.intel.com]
-> > > Sent: 07 August 2019 17:36
-> > >
-> > > On Wed, Aug 07, 2019 at 04:22:26PM +0000, David Laight wrote:
-> > > > From: Mika Westerberg
-> > > > > Sent: 07 August 2019 17:14
-> > > > > To: David Laight
-> > > > >
-> > > > > On Fri, Jul 05, 2019 at 04:04:19PM +0000, David Laight wrote:
-> > > > > > > Really a matter of taste, but maybe you want to consider having a single
-> > > > > > > function, with a 3rd parameter, bool is_tx.
-> > > > > > > The calls here will be unified to:
-> > > > > > >         ring_iowrite(ring, ring->head, ring->is_tx);
-> > > > > > > (No condition is needed here).
-> > > > > > >
-> > > > > > > The implementation uses the new parameter to decide which part of the register
-> > > > > > > to mask, reducing the code duplication (in my eyes):
-> > > > > > >
-> > > > > > >         val = ioread32(ring_desc_base(ring) + 8);
-> > > > > > >         if (is_tx) {
-> > > > > > >                 val &= 0x0000ffff;
-> > > > > > >                 val |= value << 16;
-> > > > > > >         } else {
-> > > > > > >                 val &= 0xffff0000;
-> > > > > > >                 val |= value;
-> > > > > > >         }
-> > > > > > >         iowrite32(val, ring_desc_base(ring) + 8);
-> > > > > > >
-> > > > > > > I'm not sure if it improves the readability or makes it worse. Your call.
-> > > > > >
-> > > > > > Gah, that is all horrid beyond belief.
-> > > > > > If a 32bit write is valid then the hardware must not be updating
-> > > > > > the other 16 bits.
-> > > > > > In which case the driver knows what they should be.
-> > > > > > So it can do a single 32bit write of the required value.
-> > > > >
-> > > > > I'm not entirely sure I understand what you say above. Can you shed some
-> > > > > light on this by a concrete example how it should look like? :-)
-> > > >
-> > > > The driver must know both the tx and rx ring values, so:
-> > > > 	iowrite32(tx_val << 16 | rx_val, ring_desc_base(ring) + 8);
-> > > >
-> > >
-> > > I see. However, prod or cons side gets updated by the hardware as it
-> > > processes buffers and other side is only updated by the driver. I'm not
-> > > sure the above works here.
-> >
-> > If the hardware updates the other half of the 32bit word it doesn't ever work.
-> >
-> > In that case you must do 16bit writes.
-> > If the hardware is ignoring the byte-enables it is broken and unusable.
-> 
-> It is quite usable as I'm running this code on real hardware ;-) but
-> 32-bit access is needed.
-> 
-> The low or high 16-bits are read-only depending on the ring (Tx or Rx)
-> and updated by the hardware. It ignores writes to that part so we could
-> do this for Tx ring:
-> 
-> 	iowrite32(prod << 16, ring_desc_base(ring) + 8);
-> 
-> and this for Rx ring:
-> 
-> 	iowrite32(cons, ring_desc_base(ring) + 8);
-> 
-> Do you see any issues with this?
+From: Anson Huang <Anson.Huang@nxp.com>
 
-No, just comment that the hardware ignores the write to the other bytes.
+Add the watchdog bindings for Freescale i.MX7ULP.
 
-You probably want separate functions - to remove the mispredicted branch.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+No changes.
+---
+ .../bindings/watchdog/fsl-imx7ulp-wdt.txt          | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
 
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
+new file mode 100644
+index 0000000..d83fc5c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
+@@ -0,0 +1,22 @@
++* Freescale i.MX7ULP Watchdog Timer (WDT) Controller
++
++Required properties:
++- compatible : Should be "fsl,imx7ulp-wdt"
++- reg : Should contain WDT registers location and length
++- interrupts : Should contain WDT interrupt
++- clocks: Should contain a phandle pointing to the gated peripheral clock.
++
++Optional properties:
++- timeout-sec : Contains the watchdog timeout in seconds
++
++Examples:
++
++wdog1: wdog@403d0000 {
++	compatible = "fsl,imx7ulp-wdt";
++	reg = <0x403d0000 0x10000>;
++	interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
++	assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
++	assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
++	timeout-sec = <40>;
++};
+-- 
+2.7.4
 
