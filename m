@@ -2,127 +2,126 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B291C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D92F8C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC7072070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:49:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="UV4VNRqK"
+	by mail.kernel.org (Postfix) with ESMTP id A8392206C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:49:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565646577;
+	bh=tPhdeZe5ewdqRrqCzCaBpaqNTarmgp/h7jAzDYbNNvg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=njPIyYn1rz6xlDpYY+BI5GGtsxa+Hw/2n6bf9yUX1o2tsBl37EICQJtQ9RII7zgGH
+	 bCHbOcTvkpHBDabl2vQf8i+hIYRzcnApqSfFZ2LN4e8lh7kn3Ja8HOrHG5t91tX4gg
+	 sCfk2zBgu6FmrfQYOLyJ6V54N0mT3y/alHyMMr9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbfHLVt3 (ORCPT
+        id S1727606AbfHLVtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 17:49:29 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35846 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727534AbfHLVt2 (ORCPT
+        Mon, 12 Aug 2019 17:49:36 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40739 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbfHLVtg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 17:49:28 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l21so50142618pgm.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 14:49:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+VX5r5f5cF5tCseJubpffqLGoYoFIqCd8nAOS2Bnab0=;
-        b=UV4VNRqK2V8oXdZjI846lm0TvkYgelhm3Z/ShKpmDvnsa4yJznguBzAfmFOXQ52rno
-         4wOBsmQBdzQlqfQHDVU0OmgLqZ/+pv6lyhNVJOnmpeHAHfv+uq8u4oGh0dGkOioLchI8
-         RArBmprnuppbf9ZOANtkSWuTHWE1xQnkXrGo4=
+        Mon, 12 Aug 2019 17:49:36 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c34so24775132otb.7;
+        Mon, 12 Aug 2019 14:49:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+VX5r5f5cF5tCseJubpffqLGoYoFIqCd8nAOS2Bnab0=;
-        b=UVWKp+GcxZi03ndAMCIyJMyVm25Kbe1zFiyg5k0VHAPchYqpU9lZhTj8UQdAAyG4k/
-         Q4+k5nCepGe/hkmNcDi7TsJ5ogz1FC3Bce0a+XrNnROsfFokX71H21BaF5s4CxVtZBTO
-         f6ODASuSK2b9R6KaNwVhqiEU7ukqFXRURyeXxnTdbXWDN9c+RIOIjCJ/iDbxJKLXJw9E
-         4TGljwQSWvtlvUCc5RX/lON+Z9s0P5hXxVaWsaeJFb80aw3cOVZzx2rXtT5YLPpYuW4L
-         QAeEM7/lVjqyaCQQj0y4QROW/yJqQA4917E+bMWYsfo++97x/YLy7A9AVa6HfGMvg55P
-         rYAg==
-X-Gm-Message-State: APjAAAVZqhSCHWEhix3oxpd7IHp97nk3Gm/djWrlvhlMH8qpz1tjuAUu
-        D+Nv1zxN0p3tG5WFxYxAr11uTRV+7ls=
-X-Google-Smtp-Source: APXvYqwpk5HoZYOES56dT5Hrqd5iS4AYSjw/VkhuQw+LHdOhVcm8tSvP24x6GNfHSM8kduo/3ggB+w==
-X-Received: by 2002:a62:e910:: with SMTP id j16mr38564939pfh.123.1565646567232;
-        Mon, 12 Aug 2019 14:49:27 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id c5sm5434978pfo.175.2019.08.12.14.49.25
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bId57j+xCMgHmNke4H/rs1zm5GrySxRkVxKOzngNvUM=;
+        b=gCBHpJHRlmd6lNJwpANJIKoeYFzIE9DYzReik3UDmdd2ovdHaDNVTyBEP4Wgk0vKhz
+         F4KS8OnBD+1+lsEa1rnt6i5/trEU6lzUmrTffNzrm+ePDhoHHjbjomNA1OSRb9yF5x/U
+         rHe9gNwAcUTHOXk/awqmceph7/Xky6H7533BDbg8pBbJi4S5d09T5aQgjvVBcmc6TfGg
+         t6YP9ayaAZQxZJOCPwK23zduQKH3d/JeUE5x9WHxwl8gDuvnTd0CMvZYVWV4GB4gM5db
+         jAklDAbSNKFZeP3xoz0+GuMo5GXQroQHC0N6L8bLUz94O+dBH26ZNBFBU5WuyG+Y7cZa
+         dOlQ==
+X-Gm-Message-State: APjAAAVTUPNyEdXOkd0crbDrGStIJlGgS1iahexNlejVKIWvrYLc0U+f
+        X7ReGaHfPFz1GktV5Q89Gg==
+X-Google-Smtp-Source: APXvYqydXCuTRQqJ+qulK7XUYr9oCHuac1Wfp89EYjWA89p2UUzerGucxvamiLfRUxWnafYzdRe2lA==
+X-Received: by 2002:a6b:fd10:: with SMTP id c16mr34339686ioi.217.1565646575229;
+        Mon, 12 Aug 2019 14:49:35 -0700 (PDT)
+Received: from localhost ([74.118.88.158])
+        by smtp.gmail.com with ESMTPSA id r5sm86648270iom.42.2019.08.12.14.49.34
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 14:49:26 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        kernel-team@android.com, kbuild test robot <lkp@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH v2] driver/core: Fix build error when SRCU and lockdep disabled
-Date:   Mon, 12 Aug 2019 17:49:17 -0400
-Message-Id: <20190812214918.101756-1-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+        Mon, 12 Aug 2019 14:49:34 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 15:49:33 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        Sascha Hauer <kernel@pengutronix.de>,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        ck.hu@mediatek.com, stonea168@163.com
+Subject: Re: [PATCH v5 1/4] dt-bindings: display: mediatek: update dpi
+  supported chips
+Message-ID: <20190812214933.GA5954@bogus>
+References: <20190807060257.57007-1-jitao.shi@mediatek.com>
+ <20190807060257.57007-2-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807060257.57007-2-jitao.shi@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check if lockdep lock checking is disabled. If so, then do not define
-device_links_read_lock_held(). It is used only from places where lockdep
-checking is enabled.
+On Wed, Aug 07, 2019 at 02:02:54PM +0800, Jitao Shi wrote:
+> Add decriptions about supported chips, including MT2701 & MT8173 &
+> mt8183
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  .../bindings/display/mediatek/mediatek,dpi.txt        | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> index b6a7e7397b8b..cd6a1469c8b7 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> @@ -7,6 +7,7 @@ output bus.
+>  
+>  Required properties:
+>  - compatible: "mediatek,<chip>-dpi"
+> +  the supported chips are mt2701 , mt8173 and mt8183.
+>  - reg: Physical base address and length of the controller's registers
+>  - interrupts: The interrupt signal from the function block.
+>  - clocks: device clocks
+> @@ -16,6 +17,11 @@ Required properties:
+>    Documentation/devicetree/bindings/graph.txt. This port should be connected
+>    to the input port of an attached HDMI or LVDS encoder chip.
+>  
+> +Optional properties:
+> +- dpi_pin_mode_swap: Swap the pin mode between dpi mode and gpio mode.
+> +- pinctrl-names: Contain "gpiomode" and "dpimode".
+> +- dpi_dual_edge: Control the RGB 24bit data on 12 pins or 24 pins.
 
-Also fix a bug where I was not checking dep_map. Previously, I did not
-test !SRCU configs so this got missed. Now it is sorted.
+Nothing about this in the commit msg...
 
-Link: https://lore.kernel.org/lkml/201908080026.WSAFx14k%25lkp@intel.com/
-Fixes: c9e4d3a2fee8 ("acpi: Use built-in RCU list checking for acpi_ioremaps list")
- (Based on RCU's dev branch)
+The dpi* properties need vendor prefixes and use '-' rather than '_'.
 
-Cc: kernel-team@android.com
-Cc: kbuild test robot <lkp@intel.com>,
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-Cc: Josh Triplett <josh@joshtriplett.org>,
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>,
-Cc: linux-doc@vger.kernel.org,
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>,
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-Cc: rcu@vger.kernel.org,
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- drivers/base/core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 32cf83d1c744..c22271577c84 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -97,10 +97,12 @@ void device_links_read_unlock(int not_used)
- 	up_read(&device_links_lock);
- }
- 
-+#ifdef CONFIG_DEBUG_LOCK_ALLOC
- int device_links_read_lock_held(void)
- {
--	return lock_is_held(&device_links_lock);
-+	return lock_is_held(&(device_links_lock.dep_map));
- }
-+#endif
- #endif /* !CONFIG_SRCU */
- 
- /**
--- 
-2.23.0.rc1.153.gdeed80330f-goog
-
+Rob
