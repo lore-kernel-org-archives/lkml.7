@@ -3,185 +3,183 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01400C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A502C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD53C2087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7614208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbfHLJSE (ORCPT
+        id S1727342AbfHLJSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 05:18:04 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46771 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbfHLJSE (ORCPT
+        Mon, 12 Aug 2019 05:18:50 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:44837 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727154AbfHLJSu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 05:18:04 -0400
-Received: by mail-ed1-f65.google.com with SMTP id z51so15635111edz.13;
-        Mon, 12 Aug 2019 02:18:02 -0700 (PDT)
+        Mon, 12 Aug 2019 05:18:50 -0400
+Received: by mail-qt1-f196.google.com with SMTP id 44so71053186qtg.11
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 02:18:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qYfm+HhxiVLxwMRZpF6kOW9iq3of0f5g9KF9ckov0fc=;
-        b=cVXExtymyEjoZpWX0ovDJLW5SCLo+b+U7P4pTosqUARvfjcwtFd3VsaOuw5CLJ4gYx
-         Ui6SInKS2BXsZLMOEhVMlTfUu34DkUMkvCgK5qd6aDXZ8NSBNPREMqeCBoIENIwVMh1t
-         jUUNMkjG+tEDPc/Tu8ir/VJB6VDNs10YW8NjOul8oArMoZ3OoD+TM4x0EFJVrL2jsbrr
-         sTOwwhRhNnYUTksL86wxQMr43wwGe2Cl2vbL8Kq9WBjT/+Mxb/vg6mqlytoPEmaJ3oUf
-         6B2vwzlnmFTig8HHyk5Fpb9g4KPo1RY3o5lFK+3cv8QdUBTWuDkrO7MzKpM+n2gA9mis
-         M3/A==
-X-Gm-Message-State: APjAAAWUieWSFTXtE7P8qr+MxzM59a7r0J010MLNxZ/FnG7ykvRtT1oc
-        yUJOauTqbe4k/hhuQwIgOm0jyhNf59E=
-X-Google-Smtp-Source: APXvYqzK3Gd7c+stmPBEDXck6lIvUr4izmcWUK1wvlhoe6Bx1vfTv9cxeWM97fymb54Y17+cYoQQSA==
-X-Received: by 2002:a50:8b64:: with SMTP id l91mr15854796edl.258.1565601481313;
-        Mon, 12 Aug 2019 02:18:01 -0700 (PDT)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com. [209.85.221.45])
-        by smtp.gmail.com with ESMTPSA id l26sm438803ejg.70.2019.08.12.02.18.00
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 02:18:01 -0700 (PDT)
-Received: by mail-wr1-f45.google.com with SMTP id p17so103906122wrf.11;
-        Mon, 12 Aug 2019 02:18:00 -0700 (PDT)
-X-Received: by 2002:adf:dbce:: with SMTP id e14mr30773546wrj.9.1565601480549;
- Mon, 12 Aug 2019 02:18:00 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eQ6iC6FPotbDLw/yqSrmxneRMN32NSA1RVINhFfjlLs=;
+        b=m4rAfSqawLwrTOH2PRhvlnWaHBdcRcEmd4LsTTKPrq0O/1SHJa6j2BmY7FBHhOBqb2
+         ameabMrG5YCUpylJpu85gnqUNa+x89gUPOs+tnkKiTOaj91h9iD6fWFVEDsLjV4G50Lc
+         Ih7U6DXQ5dK5nuuanO43MNFwOwRng2wibGUnVbMogUuoHv3hj0u+y5LSbxHu+eZ1KnRf
+         BMF1kkO9Sht7sd/uUjtMt5a7V+xH6h2oaUhAohbcWLSxJw+RtlWsi/BqeCFPbpgX9zHE
+         ctzSvZkHx7njR7e73Z3bND6A7vcDeosOTu7KWxxpop+Gai2p0TSupj2x5SAOrJnlR6ZD
+         eJMQ==
+X-Gm-Message-State: APjAAAV8aF4lnV+aH/I8rcpz5MplX6HGTsNfRsEOJG8yLJ42brqAA6iz
+        Tz/H0p17sTjD0Qm8HdWfsNRorA==
+X-Google-Smtp-Source: APXvYqzgOdql+JK/PJhPFMelOxcGaMkTyi0NmRPnztTdE++1Jkqyr19sSEGOPDgOeu1nQnMgqKnsSQ==
+X-Received: by 2002:a0c:b036:: with SMTP id k51mr30009599qvc.103.1565601528843;
+        Mon, 12 Aug 2019 02:18:48 -0700 (PDT)
+Received: from redhat.com ([147.234.38.29])
+        by smtp.gmail.com with ESMTPSA id h26sm60625829qta.58.2019.08.12.02.18.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 02:18:47 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 05:18:41 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Pankaj Gupta <pagupta@redhat.com>
+Cc:     amit@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
+        virtualization@lists.linux-foundation.org, jasowang@redhat.com,
+        linux-kernel@vger.kernel.org, xiaohli@redhat.com
+Subject: Re: [PATCH v3 1/2] virtio_console: free unused buffers with port
+ delete
+Message-ID: <20190812051642-mutt-send-email-mst@kernel.org>
+References: <20190809064847.28918-1-pagupta@redhat.com>
+ <20190809064847.28918-2-pagupta@redhat.com>
+ <20190810141019-mutt-send-email-mst@kernel.org>
+ <361928616.7829318.1565588208467.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
-References: <20190806155744.10263-1-megous@megous.com> <20190806155744.10263-2-megous@megous.com>
-In-Reply-To: <20190806155744.10263-2-megous@megous.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 12 Aug 2019 17:17:48 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66+L6_QrL-05fLHQxqavBAmP-pEFp9RWT5XeTQ2rpGa3w@mail.gmail.com>
-Message-ID: <CAGb2v66+L6_QrL-05fLHQxqavBAmP-pEFp9RWT5XeTQ2rpGa3w@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v8 1/4] arm64: dts: allwinner: orange-pi-3:
- Enable ethernet
-To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>
-Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <361928616.7829318.1565588208467.JavaMail.zimbra@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 11:57 PM <megous@megous.com> wrote:
->
-> From: Ondrej Jirman <megous@megous.com>
->
-> Orange Pi 3 has two regulators that power the Realtek RTL8211E. According
-> to the phy datasheet, both regulators need to be enabled at the same time,
-> but we can only specify a single phy-supply in the DT.
->
-> This can be achieved by making one regulator depedning on the other via
-> vin-supply. While it's not a technically correct description of the
-> hardware, it achieves the purpose.
->
-> All values of RX/TX delay were tested exhaustively and a middle one of the
-> working values was chosen.
->
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
->  1 file changed, 44 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> index 17d496990108..2c6807b74ff6 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> @@ -15,6 +15,7 @@
->
->         aliases {
->                 serial0 = &uart0;
-> +               ethernet0 = &emac;
->         };
->
->         chosen {
-> @@ -44,6 +45,27 @@
->                 regulator-max-microvolt = <5000000>;
->                 regulator-always-on;
->         };
-> +
-> +       /*
-> +        * The board uses 2.5V RGMII signalling. Power sequence to enable
-> +        * the phy is to enable GMAC-2V5 and GMAC-3V (aldo2) power rails
-> +        * at the same time and to wait 100ms.
-> +        */
-> +       reg_gmac_2v5: gmac-2v5 {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "gmac-2v5";
-> +               regulator-min-microvolt = <2500000>;
-> +               regulator-max-microvolt = <2500000>;
-> +               startup-delay-us = <100000>;
-> +               enable-active-high;
-> +               gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
-> +
-> +               /* The real parent of gmac-2v5 is reg_vcc5v, but we need to
-> +                * enable two regulators to power the phy. This is one way
-> +                * to achieve that.
-> +                */
-> +               vin-supply = <&reg_aldo2>; /* GMAC-3V */
-> +       };
+On Mon, Aug 12, 2019 at 01:36:48AM -0400, Pankaj Gupta wrote:
+> 
+> > 
+> > On Fri, Aug 09, 2019 at 12:18:46PM +0530, Pankaj Gupta wrote:
+> > > The commit a7a69ec0d8e4 ("virtio_console: free buffers after reset")
+> > > deferred detaching of unused buffer to virtio device unplug time.
+> > > This causes unplug/replug of single port in virtio device with an
+> > > error "Error allocating inbufs\n". As we don't free the unused buffers
+> > > attached with the port. Re-plug the same port tries to allocate new
+> > > buffers in virtqueue and results in this error if queue is full.
+> > 
+> > So why not reuse the buffers that are already there in this case?
+> > Seems quite possible.
+> 
+> I took this approach because reusing the buffers will involve tweaking
+> the existing core functionality like managing the the virt queue indexes.
 
-The RTL8211E datasheet I have says:
+I don't see why frankly, if you keep a list of outstanding
+buffers on plug you can assume they have been added.
 
-    2.5V (or 1.8/1.5V) RGMII power should be risen simultaneously or slightly
-    earlier than 3.3V power. Rising 2.5V (or 1.8/1.5V) power later than 3.3V
-    power may lead to errors.
+> Compared to that deleting the buffers while hot-unplugging port is simple
+> and was working fine before. It seems logically correct as well.   
+> 
+> I agree we need a spec change for this.
+> 
+> > 
+> > > This patch removes the unused buffers in vq's when we unplug the port.
+> > > This is the best we can do as we cannot call device_reset because virtio
+> > > device is still active.
+> > > 
+> > > Reported-by: Xiaohui Li <xiaohli@redhat.com>
+> > > Fixes: a7a69ec0d8e4 ("virtio_console: free buffers after reset")
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> > 
+> > This is really a revert of a7a69ec0d8e4, just tagged confusingly.
+> > 
+> > And the original is also supposed to be a bugfix.
+> > So how will the original bug be fixed?
+> 
+> Yes, Even I was confused while adding this tag.
+> I will remove remove 'fixes' tag completely for this patch?
+> because its a revert to original behavior which also is a bugfix.
+> 
+> > 
+> > "this is the best we can do" is rarely the case.
+> > 
+> > I am not necessarily against the revert. But if we go that way then what
+> > we need to do is specify the behaviour in the spec, since strict spec
+> > compliance is exactly what the original patch was addressing.
+> 
+> Agree.
+> 
+> > 
+> > In particular, we'd document that console has a special property that
+> > when port is detached virtqueue is considered stopped, device must not
+> > use any buffers, and it is legal to take buffers out of the device.
+> 
+> Yes. This documents the exact scenario. Thanks.
+> You want me to send a patch for the spec change?
+> 
+> Best regards,
+> Pankaj
 
-Since you can't reverse the parent relationship in your patch, maybe it's
-time to add a phy-io-supply property?
+Go ahead.
 
-It also says the rise time for 3.3V must be between 1ms and 100ms. However
-the PMIC doesn't support voltage ramp control for the LDOs, nor does it list
-the ramp rate.
-
-ChenYu
-
->  };
->
->  &cpu0 {
-> @@ -58,6 +80,28 @@
->         status = "okay";
->  };
->
-> +&emac {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&ext_rgmii_pins>;
-> +       phy-mode = "rgmii";
-> +       phy-handle = <&ext_rgmii_phy>;
-> +       phy-supply = <&reg_gmac_2v5>;
-> +       allwinner,rx-delay-ps = <1500>;
-> +       allwinner,tx-delay-ps = <700>;
-> +       status = "okay";
-> +};
-> +
-> +&mdio {
-> +       ext_rgmii_phy: ethernet-phy@1 {
-> +               compatible = "ethernet-phy-ieee802.3-c22";
-> +               reg = <1>;
-> +
-> +               reset-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* PD14 */
-> +               reset-assert-us = <15000>;
-> +               reset-deassert-us = <40000>;
-> +       };
-> +};
-> +
->  &mmc0 {
->         vmmc-supply = <&reg_cldo1>;
->         cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
-> --
-> 2.22.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20190806155744.10263-2-megous%40megous.com.
+> > 
+> > 
+> > 
+> > > ---
+> > >  drivers/char/virtio_console.c | 14 +++++++++++---
+> > >  1 file changed, 11 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
+> > > index 7270e7b69262..e8be82f1bae9 100644
+> > > --- a/drivers/char/virtio_console.c
+> > > +++ b/drivers/char/virtio_console.c
+> > > @@ -1494,15 +1494,25 @@ static void remove_port(struct kref *kref)
+> > >          kfree(port);
+> > >  }
+> > >  
+> > > +static void remove_unused_bufs(struct virtqueue *vq)
+> > > +{
+> > > +        struct port_buffer *buf;
+> > > +
+> > > +        while ((buf = virtqueue_detach_unused_buf(vq)))
+> > > +                free_buf(buf, true);
+> > > +}
+> > > +
+> > >  static void remove_port_data(struct port *port)
+> > >  {
+> > >          spin_lock_irq(&port->inbuf_lock);
+> > >          /* Remove unused data this port might have received. */
+> > >          discard_port_data(port);
+> > > +        remove_unused_bufs(port->in_vq);
+> > >          spin_unlock_irq(&port->inbuf_lock);
+> > >  
+> > >          spin_lock_irq(&port->outvq_lock);
+> > >          reclaim_consumed_buffers(port);
+> > > +        remove_unused_bufs(port->out_vq);
+> > >          spin_unlock_irq(&port->outvq_lock);
+> > >  }
+> > >  
+> > > @@ -1938,11 +1948,9 @@ static void remove_vqs(struct ports_device *portdev)
+> > >          struct virtqueue *vq;
+> > >  
+> > >          virtio_device_for_each_vq(portdev->vdev, vq) {
+> > > -                struct port_buffer *buf;
+> > >  
+> > >                  flush_bufs(vq, true);
+> > > -                while ((buf = virtqueue_detach_unused_buf(vq)))
+> > > -                        free_buf(buf, true);
+> > > +                remove_unused_bufs(vq);
+> > >          }
+> > >          portdev->vdev->config->del_vqs(portdev->vdev);
+> > >          kfree(portdev->in_vqs);
+> > > --
+> > > 2.21.0
+> > 
