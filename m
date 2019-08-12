@@ -2,194 +2,148 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A41C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0EEC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66B7A20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5079020679
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:39:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PpzWiwYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbfHLQjX (ORCPT
+        id S1726901AbfHLQjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 12:39:23 -0400
-Received: from mga17.intel.com ([192.55.52.151]:26926 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbfHLQjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 12:39:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 09:39:22 -0700
-X-IronPort-AV: E=Sophos;i="5.64,378,1559545200"; 
-   d="scan'208";a="187487906"
-Received: from spandruv-mobl.amr.corp.intel.com ([10.252.205.216])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 09:39:21 -0700
-Message-ID: <ac27f3df68610dbc56d82dd3536c81064cf1e023.camel@linux.intel.com>
-Subject: Re: [PATCH 1/2] HID: do not call hid_set_drvdata(hdev, NULL) in
- drivers
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Bruno =?ISO-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Ping Cheng <pinglinux@gmail.com>,
-        Jason Gerecke <jason.gerecke@wacom.com>,
-        Jiri Kosina <jikos@kernel.org>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 12 Aug 2019 09:39:17 -0700
-In-Reply-To: <20190812162740.15898-2-benjamin.tissoires@redhat.com>
-References: <20190812162740.15898-1-benjamin.tissoires@redhat.com>
-         <20190812162740.15898-2-benjamin.tissoires@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-1.fc28) 
-Mime-Version: 1.0
+        Mon, 12 Aug 2019 12:39:35 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:59902 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbfHLQje (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 12:39:34 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7CGdSTf039298;
+        Mon, 12 Aug 2019 11:39:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565627968;
+        bh=md23hPTLe4IPvI8vg4S3vMldyp9598RszV7otPnzrZs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=PpzWiwYY+VyKSb9Mw62MGjQE/ijWqwxSpROIsNucd4bNrj8stlEeOcJYZSMxW6tGr
+         SVRSCTTVoGjk7hG6NDU5UHrTgfIyJGdrz7KmezWkUwx8LxIDRGmqFL6V0PqpxE8kYT
+         oPQJ4Owxz/UsmfTfAhooMptKdIblr+JAQgn2wdyM=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7CGdSJc080163
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 12 Aug 2019 11:39:28 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 12
+ Aug 2019 11:39:27 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 12 Aug 2019 11:39:28 -0500
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7CGdRfi108093;
+        Mon, 12 Aug 2019 11:39:27 -0500
+Subject: Re: [PATCH] rpmsg: virtio_rpmsg_bus: replace "%p" with "%pK"
+To:     "Andrew F. Davis" <afd@ti.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     <linux-remoteproc@vger.kernel.org>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20181024011909.21674-1-s-anna@ti.com>
+ <1cc3d697-6fde-901b-2e35-2e2b53b44425@ti.com>
+ <2ef5e274-df09-c3a0-41ed-a945d1902eaf@ti.com>
+ <92dc4403-8782-8dbf-b912-cc832ac748a7@ti.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <ea1efb4e-43be-4efc-10f8-9d182313bf12@ti.com>
+Date:   Mon, 12 Aug 2019 11:39:27 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <92dc4403-8782-8dbf-b912-cc832ac748a7@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-08-12 at 18:27 +0200, Benjamin Tissoires wrote:
-> This is a common pattern in the HID drivers to reset the drvdata.
-> Some
-> do it properly, some do it only in case of failure.
+On 8/12/19 11:36 AM, Andrew F. Davis wrote:
+> On 8/12/19 12:28 PM, Suman Anna wrote:
+>> On 8/12/19 10:47 AM, Andrew F. Davis wrote:
+>>> On 10/23/18 9:19 PM, Suman Anna wrote:
+>>>> The virtio_rpmsg_bus driver uses the "%p" format-specifier for
+>>>> printing the vring buffer address. This prints only a hashed
+>>>> pointer even for previliged users. Use "%pK" instead so that
+>>>> the address can be printed during debug using kptr_restrict
+>>>> sysctl.
+>>>>
+>>>
+>>>
+>>> s/previliged/privileged
+>>
+>> Bjorn,
+>> Can you fix this up when applying.
+>>
+>>>
+>>> You describe what the code does, but not why you need this. %pK is used
+>>> for only about 1% of pointer printing, why do you want to leak this
+>>> address to userspace at all?
+>>
+>> Andrew,
+>> Default behavior of %pK is same as %p, but it does allow you to control
+>> the print. The reason is clearly mentioned in the last sentence in the
+>> patch description.
+>>
 > 
-> But, this is actually already handled by driver core, so there is no
-> need
-> to do it manually.
 > 
-> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-for hid-sensor-hub.c
- Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Let me rephrase then, why would you ever set 'kptr_restrict' to anything
+> other than 0, or why do you want to be able to leak this address to
+> userspace at all? If the answer is just because you can, then all 12,000
+> instances of %p in kernel could be converted for the same reason.
 
-> ---
->  drivers/hid/hid-cougar.c       | 6 ++----
->  drivers/hid/hid-gfrm.c         | 7 -------
->  drivers/hid/hid-lenovo.c       | 2 --
->  drivers/hid/hid-picolcd_core.c | 7 +------
->  drivers/hid/hid-sensor-hub.c   | 1 -
->  5 files changed, 3 insertions(+), 20 deletions(-)
+It is a dev_dbg statement, so it is already under dynamic debug control.
+We would only ever use it during debug.
+
+regards
+Suman
+
 > 
-> diff --git a/drivers/hid/hid-cougar.c b/drivers/hid/hid-cougar.c
-> index e0bb7b34f3a4..4ff3bc1d25e2 100644
-> --- a/drivers/hid/hid-cougar.c
-> +++ b/drivers/hid/hid-cougar.c
-> @@ -207,7 +207,7 @@ static int cougar_probe(struct hid_device *hdev,
->  	error = hid_parse(hdev);
->  	if (error) {
->  		hid_err(hdev, "parse failed\n");
-> -		goto fail;
-> +		return error;
->  	}
->  
->  	if (hdev->collection->usage == COUGAR_VENDOR_USAGE) {
-> @@ -219,7 +219,7 @@ static int cougar_probe(struct hid_device *hdev,
->  	error = hid_hw_start(hdev, connect_mask);
->  	if (error) {
->  		hid_err(hdev, "hw start failed\n");
-> -		goto fail;
-> +		return error;
->  	}
->  
->  	error = cougar_bind_shared_data(hdev, cougar);
-> @@ -249,8 +249,6 @@ static int cougar_probe(struct hid_device *hdev,
->  
->  fail_stop_and_cleanup:
->  	hid_hw_stop(hdev);
-> -fail:
-> -	hid_set_drvdata(hdev, NULL);
->  	return error;
->  }
->  
-> diff --git a/drivers/hid/hid-gfrm.c b/drivers/hid/hid-gfrm.c
-> index 86c317320bf2..699186ff2349 100644
-> --- a/drivers/hid/hid-gfrm.c
-> +++ b/drivers/hid/hid-gfrm.c
-> @@ -123,12 +123,6 @@ static int gfrm_probe(struct hid_device *hdev,
-> const struct hid_device_id *id)
->  	return ret;
->  }
->  
-> -static void gfrm_remove(struct hid_device *hdev)
-> -{
-> -	hid_hw_stop(hdev);
-> -	hid_set_drvdata(hdev, NULL);
-> -}
-> -
->  static const struct hid_device_id gfrm_devices[] = {
->  	{ HID_BLUETOOTH_DEVICE(0x58, 0x2000),
->  		.driver_data = GFRM100 },
-> @@ -142,7 +136,6 @@ static struct hid_driver gfrm_driver = {
->  	.name = "gfrm",
->  	.id_table = gfrm_devices,
->  	.probe = gfrm_probe,
-> -	.remove = gfrm_remove,
->  	.input_mapping = gfrm_input_mapping,
->  	.raw_event = gfrm_raw_event,
->  	.input_configured = gfrm_input_configured,
-> diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
-> index 364bc7f11d9d..96fa2a2c2cd3 100644
-> --- a/drivers/hid/hid-lenovo.c
-> +++ b/drivers/hid/hid-lenovo.c
-> @@ -866,8 +866,6 @@ static void lenovo_remove_tpkbd(struct hid_device
-> *hdev)
->  
->  	led_classdev_unregister(&data_pointer->led_micmute);
->  	led_classdev_unregister(&data_pointer->led_mute);
-> -
-> -	hid_set_drvdata(hdev, NULL);
->  }
->  
->  static void lenovo_remove_cptkbd(struct hid_device *hdev)
-> diff --git a/drivers/hid/hid-picolcd_core.c b/drivers/hid/hid-
-> picolcd_core.c
-> index 5f7a39a5d4af..1b5c63241af0 100644
-> --- a/drivers/hid/hid-picolcd_core.c
-> +++ b/drivers/hid/hid-picolcd_core.c
-> @@ -534,8 +534,7 @@ static int picolcd_probe(struct hid_device *hdev,
->  	data = kzalloc(sizeof(struct picolcd_data), GFP_KERNEL);
->  	if (data == NULL) {
->  		hid_err(hdev, "can't allocate space for Minibox PicoLCD
-> device data\n");
-> -		error = -ENOMEM;
-> -		goto err_no_cleanup;
-> +		return -ENOMEM;
->  	}
->  
->  	spin_lock_init(&data->lock);
-> @@ -597,9 +596,6 @@ static int picolcd_probe(struct hid_device *hdev,
->  	hid_hw_stop(hdev);
->  err_cleanup_data:
->  	kfree(data);
-> -err_no_cleanup:
-> -	hid_set_drvdata(hdev, NULL);
-> -
->  	return error;
->  }
->  
-> @@ -635,7 +631,6 @@ static void picolcd_remove(struct hid_device
-> *hdev)
->  	picolcd_exit_cir(data);
->  	picolcd_exit_keys(data);
->  
-> -	hid_set_drvdata(hdev, NULL);
->  	mutex_destroy(&data->mutex);
->  	/* Finally, clean up the picolcd data itself */
->  	kfree(data);
-> diff --git a/drivers/hid/hid-sensor-hub.c b/drivers/hid/hid-sensor-
-> hub.c
-> index be92a6f79687..94c7398b5c27 100644
-> --- a/drivers/hid/hid-sensor-hub.c
-> +++ b/drivers/hid/hid-sensor-hub.c
-> @@ -742,7 +742,6 @@ static void sensor_hub_remove(struct hid_device
-> *hdev)
->  	}
->  	spin_unlock_irqrestore(&data->lock, flags);
->  	mfd_remove_devices(&hdev->dev);
-> -	hid_set_drvdata(hdev, NULL);
->  	mutex_destroy(&data->mutex);
->  }
->  
+> Andrew
+> 
+> 
+>> regards
+>> Suman
+>>
+>>>
+>>> Andrew
+>>>
+>>>
+>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>> ---
+>>>>  drivers/rpmsg/virtio_rpmsg_bus.c | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
+>>>> index f29dee731026..1345f373a1a0 100644
+>>>> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
+>>>> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+>>>> @@ -950,7 +950,7 @@ static int rpmsg_probe(struct virtio_device *vdev)
+>>>>  		goto vqs_del;
+>>>>  	}
+>>>>  
+>>>> -	dev_dbg(&vdev->dev, "buffers: va %p, dma %pad\n",
+>>>> +	dev_dbg(&vdev->dev, "buffers: va %pK, dma %pad\n",
+>>>>  		bufs_va, &vrp->bufs_dma);
+>>>>  
+>>>>  	/* half of the buffers is dedicated for RX */
+>>>>
+>>
 
