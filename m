@@ -2,125 +2,120 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD84CC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 00:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E83C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 01:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E2FE20651
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 00:51:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="OQek2Bg6";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="l4EgbgtF"
+	by mail.kernel.org (Postfix) with ESMTP id 1FB5B206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 01:20:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfHLAv4 (ORCPT
+        id S1726771AbfHLBT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 20:51:56 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:58985 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726144AbfHLAv4 (ORCPT
+        Sun, 11 Aug 2019 21:19:59 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50472 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726692AbfHLBT6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 20:51:56 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id A1B5321E;
-        Sun, 11 Aug 2019 20:51:54 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Sun, 11 Aug 2019 20:51:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=/vRZS0DH6BibYTI+jPSXeATx8DCWgvz
-        KB2bf68zgCYQ=; b=OQek2Bg6nPx+MsQpoORrSMQGYewK50sRAfUejX06ZLWlOBG
-        gn7XgbylvKurPPS5ys0R5IVfpXhTFMDXdWyX0mKClfr7T75O5bD3f7IJCU8Gh1s9
-        YLSS1rsgbUsk6QfhyFv/srD+1BbDXgAD/89Y6r5vMCbhP9aHbxgE3KuY82EDN/lr
-        ZvhX5WsHp78jWXRxsr1DhvuTJ+Kwk7Fe9op7n1PpfNiGdGVukF2WR1N6g33Be3Vc
-        bM/HCQrRjmhxp7v/owwpJezKnNwEDyY3ZcYKrLEIXy9CSCRiHnaPJmHKzW+D760P
-        DtNmt1qWG4i9DP9UQQSYbunB5/D26fewO9BxAow==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=/vRZS0
-        DH6BibYTI+jPSXeATx8DCWgvzKB2bf68zgCYQ=; b=l4EgbgtFwY2Rpc1UyNz2W+
-        SVRmVfLyLc4sGVwItuaAv9LJ/jyolnlF5S9783mgLebzuLBhoA29b1mfBtjfXlts
-        nt6Qa/vDIhZUFwfSEXXitbVgP54MPr45swxOvFlpy1+X3/48Sn0flYvsdCrocClv
-        MS3KOs2ZS3tyoY8zAwtSmlqSnwXglqStBVKdLy+19+/SJEqTHkK1H2fie7Hp1zmr
-        s/KUU61alWy7z+Exs29OZunIrAoHKqq2YxK/idCRFkgRJ9dDk7/GeUA6L/jk0Y2V
-        rtlWVclnKR7Ik144F39sFM0Y3e3Uk4/gh97MJmSnTUM/2RfPfMPFeW61hPmPH+9A
-        ==
-X-ME-Sender: <xms:KbhQXUG9-62aDcJWln-0fRcKkW7dmXKPACWIugq9hkhX3w-TU-muhQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddruddvfedggeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuffhomh
-    grihhnpehgihhthhhusgdrtghomhenucfrrghrrghmpehmrghilhhfrhhomheprghnughr
-    vgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:KbhQXU9W_omMMMEsdmyjaJCTtlhrXfmQ3KUB8ekL7_ANC9twYQ9hXA>
-    <xmx:KbhQXby0EuRf6TnVmdBphx1eiSVUUC8rYJuvXidsen8cy4t_cOTOeg>
-    <xmx:KbhQXQOaNCOxABK2Jby3AbZlBGd4snluNAwo42JMlCx9npfu7ftg5g>
-    <xmx:KrhQXTalqmfKIW_ZqyRhUrTSCKbpaRqhFzQ2d9LCJDTIvYS19-x12w>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 0A5CCE00A2; Sun, 11 Aug 2019 20:51:52 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-809-g8e5c451-fmstable-20190809v1
-Mime-Version: 1.0
-Message-Id: <e5aa4940-41d8-4c35-9783-09548e406885@www.fastmail.com>
-In-Reply-To: <CACRpkdbDgOQXfxgM4dEyzBRhtske3=V+858B7J8jGExnJE5fJQ@mail.gmail.com>
-References: <20190807003037.48457-1-natechancellor@gmail.com>
- <CACRpkdbDgOQXfxgM4dEyzBRhtske3=V+858B7J8jGExnJE5fJQ@mail.gmail.com>
-Date:   Mon, 12 Aug 2019 10:21:55 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Linus Walleij" <linus.walleij@linaro.org>,
-        "Nathan Chancellor" <natechancellor@gmail.com>
-Cc:     "Joel Stanley" <joel@jms.id.au>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        "OpenBMC Maillist" <openbmc@lists.ozlabs.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: =?UTF-8?Q?Re:_[PATCH]_pinctrl:_aspeed:_g6:_Remove_const_specifier_from_a?=
- =?UTF-8?Q?speed=5Fg6=5Fsig=5Fexpr=5Fset's_ctx_parameter?=
-Content-Type: text/plain
+        Sun, 11 Aug 2019 21:19:58 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7C1Gk55042787
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 21:19:57 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uatghnqxa-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 21:19:57 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Mon, 12 Aug 2019 02:19:55 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 12 Aug 2019 02:19:52 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7C1JpxE48234554
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 12 Aug 2019 01:19:51 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1B93D4203F;
+        Mon, 12 Aug 2019 01:19:51 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BF80F42045;
+        Mon, 12 Aug 2019 01:19:50 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 12 Aug 2019 01:19:50 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id A7973A021B;
+        Mon, 12 Aug 2019 11:19:49 +1000 (AEST)
+Subject: Re: [PATCH 1/2] powerpc: Allow flush_icache_range to work across
+ ranges >4GB
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     stable@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Mon, 12 Aug 2019 11:19:49 +1000
+In-Reply-To: <a9bcc457-9f9b-7010-6796-fb263135f8bc@c-s.fr>
+References: <20190809004548.22445-1-alastair@au1.ibm.com>
+         <a9bcc457-9f9b-7010-6796-fb263135f8bc@c-s.fr>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19081201-0028-0000-0000-0000038E9C09
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19081201-0029-0000-0000-00002450A655
+Message-Id: <72a3fca157a508a9f1bc6ea20801b9227d788f1d.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-11_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=918 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908120012
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Sat, 10 Aug 2019, at 17:43, Linus Walleij wrote:
-> On Wed, Aug 7, 2019 at 2:32 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
+On Fri, 2019-08-09 at 10:59 +0200, Christophe Leroy wrote:
 > 
-> > clang errors:
-> >
-> > drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c:2325:9: error: incompatible
-> > pointer types initializing 'int (*)(struct aspeed_pinmux_data *, const
-> > struct aspeed_sig_expr *, bool)' with an expression of type 'int (const
-> > struct aspeed_pinmux_data *, const struct aspeed_sig_expr *, bool)'
-> > [-Werror,-Wincompatible-pointer-types]
-> >         .set = aspeed_g6_sig_expr_set,
-> >                ^~~~~~~~~~~~~~~~~~~~~~
-> > 1 error generated.
-> >
-> > Commit 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps")
-> > changed the set function pointer declaration and the g6 one wasn't
-> > updated (I assume because it wasn't merged yet).
-> >
-> > Fixes: 2eda1cdec49f ("pinctrl: aspeed: Add AST2600 pinmux support")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/632
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> Le 09/08/2019 à 02:45, Alastair D'Silva a écrit :
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> > 
+> > When calling flush_icache_range with a size >4GB, we were masking
+> > off the upper 32 bits, so we would incorrectly flush a range
+> > smaller
+> > than intended.
+> > 
+> > This patch replaces the 32 bit shifts with 64 bit ones, so that
+> > the full size is accounted for.
+> > 
+> > Heads-up for backporters: the old version of flush_dcache_range is
+> > subject to a similar bug (this has since been replaced with a C
+> > implementation).
 > 
-> Patch applied with Andrew's ACK.
+> Can you submit a patch to stable, explaining this ?
+> 
 
-FYI this fixes pinctrl/for-next which is likely where Nathan ran into the issue,
-however to fix pinctrl/devel we'll need a back-merge of pinctrl/fixes, or to
-apply 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps") to
-pinctrl/devel also.
+This patch was sent to stable too - or did you mean send another patch
+for the stable asm version of flush_dcache_range?
 
-Fixing that bug was unfortunate timing wrt the 2600 driver.
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
 
-Andrew
