@@ -2,87 +2,148 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E6DC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBF5C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE872070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:10:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565647833;
-	bh=SPZRl5pSVopkTs0dY+BYgF4YdIC5weWXIEKe9ul/RDw=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=MEwKBDfuSXyJp4NQKoh0d2lnS4kVFwdeQtibTOsqXEA8NGtOFdBRSt0CvNQ83t4Cp
-	 hI3W8f4Lv6bxPday+Ki2ibIb2XMvw7UZF0/TkjJf4UqULpcV68auqqSXNq8V6JYpq6
-	 qGj1IPfCLWwbCLQs5WYapcV9NuBjsLN3pdKHwU2w=
+	by mail.kernel.org (Postfix) with ESMTP id C83582070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:12:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iChCTuWc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbfHLWKc (ORCPT
+        id S1726640AbfHLWL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 18:10:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49114 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726185AbfHLWKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 18:10:32 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99B31206C2;
-        Mon, 12 Aug 2019 22:10:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565647830;
-        bh=SPZRl5pSVopkTs0dY+BYgF4YdIC5weWXIEKe9ul/RDw=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=V3lZzoj5A/ZUJ82O/D6JOwCAESMHhjfhFsM/G+WlAQFOJn0eCYLeKxiUav3yhAWrc
-         3bLOfvUeJqm5cu0JRjxhkYqU/qNE2mLaefdclg0BgxHvmqSh/kXGRMQIhxkerIgm9f
-         dbMpOgSRN5v/bzLnxQ4pQx6d7nMjpT4h51jSvW3c=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190812182421.141150-3-brendanhiggins@google.com>
-References: <20190812182421.141150-1-brendanhiggins@google.com> <20190812182421.141150-3-brendanhiggins@google.com>
-Subject: Re: [PATCH v12 02/18] kunit: test: add test resource management API
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
-        tytso@mit.edu, yamada.masahiro@socionext.com
-User-Agent: alot/0.8.1
-Date:   Mon, 12 Aug 2019 15:10:29 -0700
-Message-Id: <20190812221030.99B31206C2@mail.kernel.org>
+        Mon, 12 Aug 2019 18:11:59 -0400
+Received: from mail-qt1-f201.google.com ([209.85.160.201]:45225 "EHLO
+        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfHLWL7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 18:11:59 -0400
+Received: by mail-qt1-f201.google.com with SMTP id l9so97731820qtu.12
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 15:11:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Jw1cj/+ww6TfMtRSJmzTU59qtmGQEsSIwrvBNo/N7vI=;
+        b=iChCTuWckrWOil+NdSVQAXCes8B5y+65GYvCV0IakAqJktJmI/dqtiIt7UiI2ePUeJ
+         uX7GWHA/fOMjJ9EroA9KTPBKBpIqHm34x/LpQfBTFSUtiQHqfLalCNCotPDpR94Y0nJo
+         o1mh/M3dFf1EC0+hT6IcWPTi5U/HnvRqWstHp4Dmzei8hxvRLLPLpeIzU5wadrIp7tI3
+         wUjQgUPE5yzFkpb0NUVdDmaB5oOs/vdE3L1ZCWhniXfrVEiu4W+xhpdxOHBazvyNtiDy
+         LnocJc9ECkP4GZmBtQ+yX8mBiYSTItXKBf9JTH/hOBQ3k7Jz7er1kzgVuECju5/jFzLc
+         RVBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Jw1cj/+ww6TfMtRSJmzTU59qtmGQEsSIwrvBNo/N7vI=;
+        b=WasKcxVR3liBEGivndwJ5Oaz73hJIDxlUeV3p23+UwKK6v9hVy/UkX/3rKjZts0/Z8
+         v97mfs2NN3yo3MloGOosGxCI533lGoS6RuSqKXRa77ST3pONd9oD7EwewMFCUs1m2IeR
+         75T3XjSsP3U/gkvi7TfkvF2+ybmrXOFxpNJJwXIgzs97bWXSEsi/BVV7/+Q7nIlZ7PXJ
+         ywhIpihaGYHP85jkuMC6ne4DVsHx5i07duW3qFb52w1ALnDSE/WXO22o67S25AK6oM5v
+         A2oIXBiCQSpev9j2eiTWHAZ865/ciXYgPSs6F9RFQeVpJmrz7/5Fi2LdhL46GdRLKh90
+         JPnw==
+X-Gm-Message-State: APjAAAWf3qAGBgZb8uKS49+xvzfTpLg3qo4rEedIOpAvEUfyVG2ja1oA
+        e7Rw8qq0Ul+iTnPwK0ubtlEAFCeR+w==
+X-Google-Smtp-Source: APXvYqwy1+a3pvBSx5ME8Bu1yYQnHk1MVG9t0R+bkukKv0wVXu23I1/UVkAiABDKs9aR157Lqsy4jBTtGqk=
+X-Received: by 2002:ae9:e007:: with SMTP id m7mr2877964qkk.87.1565647918275;
+ Mon, 12 Aug 2019 15:11:58 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 15:11:54 -0700
+Message-Id: <20190812221154.46875-1-yabinc@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+Subject: [PATCH v2] coresight: tmc-etr: Fix updating buffer in not-snapshot mode.
+From:   Yabin Cui <yabinc@google.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Yabin Cui <yabinc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brendan Higgins (2019-08-12 11:24:05)
-> Create a common API for test managed resources like memory and test
-> objects. A lot of times a test will want to set up infrastructure to be
-> used in test cases; this could be anything from just wanting to allocate
-> some memory to setting up a driver stack; this defines facilities for
-> creating "test resources" which are managed by the test infrastructure
-> and are automatically cleaned up at the conclusion of the test.
->=20
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
+TMC etr always copies all available data to perf aux buffer, which
+may exceed the available space in perf aux buffer. It isn't suitable
+for not-snapshot mode, because:
+1) It may overwrite previously written data.
+2) It may make the perf_event_mmap_page->aux_head report having more
+or less data than the reality.
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+So change to only copy the latest data fitting the available space in
+perf aux buffer.
+
+Signed-off-by: Yabin Cui <yabinc@google.com>
+---
+
+v1 -> v2: copy the latest data instead of the earliest data.
+
+---
+ .../hwtracing/coresight/coresight-tmc-etr.c    | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index 17006705287a..676dcb4cf0e2 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -1410,9 +1410,10 @@ static void tmc_free_etr_buffer(void *config)
+  * tmc_etr_sync_perf_buffer: Copy the actual trace data from the hardware
+  * buffer to the perf ring buffer.
+  */
+-static void tmc_etr_sync_perf_buffer(struct etr_perf_buffer *etr_perf)
++static void tmc_etr_sync_perf_buffer(struct etr_perf_buffer *etr_perf,
++				     unsigned long to_copy)
+ {
+-	long bytes, to_copy;
++	long bytes;
+ 	long pg_idx, pg_offset, src_offset;
+ 	unsigned long head = etr_perf->head;
+ 	char **dst_pages, *src_buf;
+@@ -1422,8 +1423,7 @@ static void tmc_etr_sync_perf_buffer(struct etr_perf_buffer *etr_perf)
+ 	pg_idx = head >> PAGE_SHIFT;
+ 	pg_offset = head & (PAGE_SIZE - 1);
+ 	dst_pages = (char **)etr_perf->pages;
+-	src_offset = etr_buf->offset;
+-	to_copy = etr_buf->len;
++	src_offset = etr_buf->offset + etr_buf->len - to_copy;
+ 
+ 	while (to_copy > 0) {
+ 		/*
+@@ -1434,6 +1434,8 @@ static void tmc_etr_sync_perf_buffer(struct etr_perf_buffer *etr_perf)
+ 		 *  3) what is available in the destination page.
+ 		 * in one iteration.
+ 		 */
++		if (src_offset >= etr_buf->size)
++			src_offset -= etr_buf->size;
+ 		bytes = tmc_etr_buf_get_data(etr_buf, src_offset, to_copy,
+ 					     &src_buf);
+ 		if (WARN_ON_ONCE(bytes <= 0))
+@@ -1454,8 +1456,6 @@ static void tmc_etr_sync_perf_buffer(struct etr_perf_buffer *etr_perf)
+ 
+ 		/* Move source pointers */
+ 		src_offset += bytes;
+-		if (src_offset >= etr_buf->size)
+-			src_offset -= etr_buf->size;
+ 	}
+ }
+ 
+@@ -1501,7 +1501,11 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+ 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 
+ 	size = etr_buf->len;
+-	tmc_etr_sync_perf_buffer(etr_perf);
++	if (!etr_perf->snapshot && size > handle->size) {
++		size = handle->size;
++		lost = true;
++	}
++	tmc_etr_sync_perf_buffer(etr_perf, size);
+ 
+ 	/*
+ 	 * In snapshot mode we simply increment the head by the number of byte
+-- 
+2.23.0.rc1.153.gdeed80330f-goog
 
