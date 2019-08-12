@@ -7,72 +7,73 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D51C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0061AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97974208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6DE62085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:47:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SdCHx2C+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wWuMidiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfHLHrM (ORCPT
+        id S1727146AbfHLHrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 03:47:12 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34298 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727109AbfHLHrM (ORCPT
+        Mon, 12 Aug 2019 03:47:23 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37163 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727109AbfHLHrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 03:47:12 -0400
-Received: by mail-wr1-f68.google.com with SMTP id 31so103743411wrm.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 00:47:10 -0700 (PDT)
+        Mon, 12 Aug 2019 03:47:22 -0400
+Received: by mail-wm1-f65.google.com with SMTP id z23so10883735wmf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 00:47:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=dd4nFK3Yasv23+PU/7sIWKW7tGXmGUSqsPun5TNRCtA=;
-        b=SdCHx2C+pEDytZ1qdooynzwh/T51cGNO3ky/zsAwJLoj+wJhSm3rpWXCnRkDElus72
-         N59FxRwjKVmfSqanlMp+PDvD6BVevCzTcHP0yEh0rh232/hUXRuuZ0jYYGDFln+HvCnU
-         SNzJdOQz8enkWPoKwwXXpthKUOrU77Hn0jYjkWgQKD2I+2Wd6oW6Hwnbtukgws6SbPq9
-         Z0iG6BdSFj3ha0fJAy6DZfaeOSIsDYfNNVwXzzplEICC9yMIQVnygSZRqdb+9VpxqVGo
-         9LYMBqF084pjkPrlaM/2PSv7yGuLy2gcWaBcEdUhkWfA+DedYBzzMB1gW99ZoWfXeVoQ
-         35rw==
+        bh=aPJyuhmK2M+KC6mnAARKtr39I2//Chy5Fd8BV6X7TQ0=;
+        b=wWuMidiSyxxp89AVvVLBSgf5QaqTr4R+d+NeZRQ131gQPs0l46nHdRS2gnXD60VtJI
+         uHJHMXHINPxsC0Zq6z4+joiCtgtRMUEFpgubKz4mWSbtuUbeT8Um7yqBb0pWzkP9tsgu
+         E0z0N+u4PRGYEjFPrdFlThtw6Enp9iuTYiha4hQTZtjPr/7Vr+8DKsvbEQB+qFn3tz9X
+         lTK8w0jztXsjmYw7V0239Cegup0SOL7rVbsN/sLQj2lTZWh3tP/wJprdP2VDMTDuqEJj
+         9rqf5uj4DaXZId5t8LQTOiM3haYn5b2EXHz5p1aOsoV572cOysCCbbDbuE+9HlJ++mKp
+         I0Fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=dd4nFK3Yasv23+PU/7sIWKW7tGXmGUSqsPun5TNRCtA=;
-        b=VovbfDy39bATLa6XyFyAdboVaFKaY8yNdE7MPrGjCalnW+qzl9i6hDrXC4yIODcCQp
-         eQmBWgJwK132JKUyPytCHniLO7lagg/96NNGwY1pi3fP1Q6B4nrryFX0mCv85isr2ITo
-         pEkLV6xHkrmERu7rqeo1EZm3EdfgQjAn0gxUJJ1fx6R2aud+1qOQADdC2A4MRLeJXIc1
-         skTTOynh75NKV6DbeQNm+AifNRKeo6inv8aLCljgzh8jnvHCpEjhQOCdRtEKtSDT2mB2
-         lKD8VkDZRpNS+OC3N8sh+L7Hiu6lOOAOgIziZBK2FWMeFkJ78pphMMBMm2/t5gzmfMjc
-         Qavw==
-X-Gm-Message-State: APjAAAXEWZqrYwJymK7b++KMPFJm+IGGwlHPx1U7Kusp++BgL1/hdeuA
-        5F7De8PU0TkZY7XqJqDWHz+N5w==
-X-Google-Smtp-Source: APXvYqy8RgVPs2t5iiIzN0JNIMR+Fhmp592y0kdooAnhBgBnKD4Szo7TlxQlSrIpnDaKJzWlaHFWNA==
-X-Received: by 2002:adf:f30e:: with SMTP id i14mr7791628wro.288.1565596029972;
-        Mon, 12 Aug 2019 00:47:09 -0700 (PDT)
+        bh=aPJyuhmK2M+KC6mnAARKtr39I2//Chy5Fd8BV6X7TQ0=;
+        b=rlXn346HCAL2yqS4UsPpEdCebkC87nUTIRTONpcRGwOyDeV/CcqavkvmNT5zckBTt/
+         dMWTZK1ymRfGzKm7zTNf1unfk36USMg6jqmfKTLyK2OxrzugjTUD47K9hq36ZZQk7/mA
+         MalqoUR6C8pjDKV/Fri7Bzgbb5Pd0SLyl/J7VZYKMW/t9Zgi8THdpwLrx1zDvbuHINCS
+         zwsQpyvOM0d0ABIGixVs3RO3Ks+7bm0a3rCI1S7J7QQP6jxHmKUuWyRX92SUv68rhajB
+         xZxXcn8cTVqtdjQzkAIK7ib1tLCk/oHZEzb4P9Q5TiVuPaN7AWlksoNgRZ+iRfZr6I0P
+         g1HQ==
+X-Gm-Message-State: APjAAAXWY0/BsiQcqhUhBgEmedF/2yULHEGJl8qb5pg4XVn9vMKgvKlB
+        qx1+bfI5ESJV6xuhABLaAO6JTw==
+X-Google-Smtp-Source: APXvYqwDy88mekwhAswG43mfQirOZeC4mQUuqD9A3hFYkiGJfdoRgGFQms7qSxd30pj55V3Zoa2CaQ==
+X-Received: by 2002:a1c:acc8:: with SMTP id v191mr26802733wme.177.1565596040719;
+        Mon, 12 Aug 2019 00:47:20 -0700 (PDT)
 Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id o9sm9016887wrm.88.2019.08.12.00.47.09
+        by smtp.gmail.com with ESMTPSA id 74sm4405124wma.15.2019.08.12.00.47.20
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 00:47:09 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 08:47:08 +0100
+        Mon, 12 Aug 2019 00:47:20 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 08:47:18 +0100
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org,
-        Support Opensource <support.opensource@diasemi.com>,
+Cc:     linux-i2c@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/14] mfd: da9150-core: convert to i2c_new_dummy_device
-Message-ID: <20190812074708.GW4594@dell>
+Subject: Re: [PATCH 06/14] mfd: max14577: convert to i2c_new_dummy_device
+Message-ID: <20190812074718.GX4594@dell>
 References: <20190722172623.4166-1-wsa+renesas@sang-engineering.com>
- <20190722172623.4166-6-wsa+renesas@sang-engineering.com>
+ <20190722172623.4166-7-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190722172623.4166-6-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20190722172623.4166-7-wsa+renesas@sang-engineering.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -89,7 +90,7 @@ On Mon, 22 Jul 2019, Wolfram Sang wrote:
 > 
 > Generated with coccinelle. Build tested by me and buildbot. Not tested on HW.
 > 
->  drivers/mfd/da9150-core.c | 6 +++---
+>  drivers/mfd/max14577.c | 6 +++---
 >  1 file changed, 3 insertions(+), 3 deletions(-)
 
 Applied, thanks.
