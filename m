@@ -2,98 +2,246 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B95C2C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6227BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89CEE208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:46:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WWCwWP0g"
+	by mail.kernel.org (Postfix) with ESMTP id 31D882087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:46:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfHLHqt (ORCPT
+        id S1727049AbfHLHqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 03:46:49 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37099 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbfHLHqt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 03:46:49 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z23so10882468wmf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 00:46:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=lrPgrszRi4y8yAbGcnuUhC0Hrlx2Ru6O0e/W/S4/MlY=;
-        b=WWCwWP0grDhwslIWs2KnZ305qgob3XPk9M3sgO2mmvsSMESNX50WyFFIdfCAavlUMH
-         QUXwu5xTll63Dhi5gzDBOqnz2fKZ09uhbBM7PsFpyJJv4udGfsPDLiAi6kFA9etRHhU2
-         oYFJXthPuh/7zEEai/vSsN/irH81rGOPt3VYhJO9hXUYvXcp2Wp/EIHL1O+59l6QCn3T
-         WhCj40TFuobw00GGjhf6KEfuSneGeGlnP0txRQmSCTssXJgruxNcZXFbfM5P2lGJIXRV
-         wI81cpRxIVSOFODIOKxzA1QgzrRkCD8vayvaHQ8v49PdIfHzBfaKAGRNACqneqeAzMfp
-         DenA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=lrPgrszRi4y8yAbGcnuUhC0Hrlx2Ru6O0e/W/S4/MlY=;
-        b=V1HPevLXEcpqJHNF+4Zzx3CGqxm81Gvt4Hj2m9eeZsziSTcXrD41N+ydQZowxdF8Q0
-         F+p2yMOLsJjPmWdtu9c+lZRRDldqgDj+vKVToAP9LCwFbJavlWwNIUdrlsFJHDAwI3vL
-         BO59ELJ30T8lWK4zz5gV7FhhxtkPpza7pvbx7O4nzk+ucuzko0Dw/nwQryPyQtLgbuYA
-         /2qpz/xeoMJJx4ANojKDaISrcdIcjlwojhcyWA3cRqWd1VmP6VUVwpAuZ0CItKx67Hmu
-         uozmunyZamte+LRknJ742es9FqX4N5RmUSI3Ufiz4R7iuJqqOAKKXNI4oI9T9R/lJrop
-         /o0g==
-X-Gm-Message-State: APjAAAWLDRDchJB/M/fnmUQbp+SZECHXOiAkOut9MVrXT3+TJUzhknmB
-        0wiXfm63WCL1soWqaiQpkt0O6B80e5E=
-X-Google-Smtp-Source: APXvYqxiQGXbmZVhHNJQeBSroRneZRbmavKdwsrCkohTxJN0/4x1INuaopF398ew3A/xpu/Mmh8IkQ==
-X-Received: by 2002:a1c:9c8a:: with SMTP id f132mr26130638wme.29.1565596007143;
-        Mon, 12 Aug 2019 00:46:47 -0700 (PDT)
-Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id f17sm18136349wmf.27.2019.08.12.00.46.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 00:46:46 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 08:46:45 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/14] mfd: 88pm860x-core: convert to i2c_new_dummy_device
-Message-ID: <20190812074645.GT4594@dell>
-References: <20190722172623.4166-1-wsa+renesas@sang-engineering.com>
- <20190722172623.4166-3-wsa+renesas@sang-engineering.com>
+        Mon, 12 Aug 2019 03:46:54 -0400
+Received: from mga04.intel.com ([192.55.52.120]:49821 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726694AbfHLHqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 03:46:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 00:46:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,376,1559545200"; 
+   d="scan'208";a="183488324"
+Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
+  by FMSMGA003.fm.intel.com with ESMTP; 12 Aug 2019 00:46:51 -0700
+Subject: Re: [PATCH] x86/apic: Handle missing global clockevent gracefully
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc:     Daniel Drake <drake@endlessm.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Endless Linux Upstreaming Team <linux@endlessm.com>,
+        Jiri Slaby <jslaby@suse.cz>
+References: <CAD8Lp448i7jOk9C5NJtC2wHMaGuRLD4pxVqK17YqRCuMVXhsOA@mail.gmail.com>
+ <CAERHkruxfBc8DqNUr=fbYuQWrXrHC7cK6HnVR3xp0iLA9QtxiQ@mail.gmail.com>
+ <alpine.DEB.2.21.1908010931550.1788@nanos.tec.linutronix.de>
+ <CAERHkrtaVAQHDU1cj2_GLL59LPjp7E=3X0Zna0spfFB=Ve5__w@mail.gmail.com>
+ <alpine.DEB.2.21.1908011011250.1788@nanos.tec.linutronix.de>
+ <81666b28-d029-56c3-8978-90abc219d1b7@linux.intel.com>
+ <alpine.DEB.2.21.1908011054210.1965@nanos.tec.linutronix.de>
+ <3d14b0cc-3cca-1874-3521-4ee2ec52141d@amd.com>
+ <alpine.DEB.2.21.1908082235590.2882@nanos.tec.linutronix.de>
+ <5bf28ba4-b7c1-51de-88ae-feebae2a28db@amd.com>
+ <alpine.DEB.2.21.1908082306220.2882@nanos.tec.linutronix.de>
+ <75e59ac6-5165-bd0a-aec9-be16d662ece9@amd.com>
+ <alpine.DEB.2.21.1908091443030.21433@nanos.tec.linutronix.de>
+From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
+Message-ID: <1803ad97-74f4-28c6-58c8-c52b3d1e5b1f@linux.intel.com>
+Date:   Mon, 12 Aug 2019 15:46:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.1.1
 MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.21.1908091443030.21433@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190722172623.4166-3-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jul 2019, Wolfram Sang wrote:
-
-> Move from i2c_new_dummy() to i2c_new_dummy_device(), so we now get an
-> ERRPTR which we use in error handling.
+On 2019/8/9 20:54, Thomas Gleixner wrote:
+> Some newer machines do not advertise legacy timers. The kernel can handle
+> that situation if the TSC and the CPU frequency are enumerated by CPUID or
+> MSRs and the CPU supports TSC deadline timer. If the CPU does not support
+> TSC deadline timer the local APIC timer frequency has to be known as well.
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Some Ryzens machines do not advertize legacy timers, but there is no
+> reliable way to determine the bus frequency which feeds the local APIC
+> timer when the machine allows overclocking of that frequency.
+
+Are these platforms are all ACPI HW-reduced platform?
+
+> 
+> As there is no legacy timer the local APIC timer calibration crashes due to
+> a NULL pointer dereference when accessing the not installed global clock
+> event device.
+> 
+> Switch the calibration loop to a non interrupt based one, which polls
+> either TSC (frequency known) or jiffies. The latter requires a global
+> clockevent. As the machines which do not have a global clockevent installed
+> have a known TSC frequency this is a non issue. For older machines where
+> TSC frequency is not known, there is no known case where the legacy timers
+> do not exist as that would have been reported long ago.
+> 
+> Reported-by: Daniel Drake <drake@endlessm.com>
+> Reported-by: Jiri Slaby <jslaby@suse.cz>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 > ---
 > 
-> Generated with coccinelle. Build tested by me and buildbot. Not tested on HW.
+> Note: Only lightly tested, but of course not on an affected machine.
 > 
->  drivers/mfd/88pm860x-core.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>       If that works reliably, then this needs some exhaustive testing
+>       on a wide range of systems so we can risk backports to stable
+>       kernels.
+> 
+> ---
+>  arch/x86/kernel/apic/apic.c |   70 +++++++++++++++++++++++++++++++++-----------
+>  include/linux/acpi_pmtmr.h  |   10 ++++++
+>  2 files changed, 64 insertions(+), 16 deletions(-)
+> 
+> --- a/arch/x86/kernel/apic/apic.c
+> +++ b/arch/x86/kernel/apic/apic.c
+> @@ -851,7 +851,8 @@ bool __init apic_needs_pit(void)
+>  static int __init calibrate_APIC_clock(void)
+>  {
+>  	struct clock_event_device *levt = this_cpu_ptr(&lapic_events);
+> -	void (*real_handler)(struct clock_event_device *dev);
+> +	u64 tsc_perj = 0, tsc_start = 0;
+> +	unsigned long jif_start;
+>  	unsigned long deltaj;
+>  	long delta, deltatsc;
+>  	int pm_referenced = 0;
+> @@ -878,29 +879,65 @@ static int __init calibrate_APIC_clock(v
+>  	apic_printk(APIC_VERBOSE, "Using local APIC timer interrupts.\n"
+>  		    "calibrating APIC timer ...\n");
+>  
+> -	local_irq_disable();
+> -
+> -	/* Replace the global interrupt handler */
+> -	real_handler = global_clock_event->event_handler;
+> -	global_clock_event->event_handler = lapic_cal_handler;
+> +	/*
+> +	 * There are platforms w/o global clockevent devices. Instead of
+> +	 * making the calibration conditional on that, use a polling based
+> +	 * approach everywhere.
+> +	 */
+>  
+> +	local_irq_disable();
+>  	/*
+>  	 * Setup the APIC counter to maximum. There is no way the lapic
+>  	 * can underflow in the 100ms detection time frame
+>  	 */
+>  	__setup_APIC_LVTT(0xffffffff, 0, 0);
+>  
+> -	/* Let the interrupts run */
+> -	local_irq_enable();
+> +	/*
+> +	 * Methods to terminate the calibration loop:
+> +	 *  1) Global clockevent if available (jiffies)
+> +	 *  2) TSC if available and frequency is known
+> +	 */
+> +	jif_start = READ_ONCE(jiffies);
+> +
+> +	if (tsc_khz) {
+> +		tsc_start = rdtsc();
+> +		tsc_perj = div_u64((u64)tsc_khz * 1000, HZ);
+> +	}
+> +
+> +	while (lapic_cal_loops <= LAPIC_CAL_LOOPS) {
 
-Applied, thanks.
+Is this loop still meaningful, can we just invoke the handler twice
+before and after the tick?
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks,
+-Aubrey
+
+> +		/*
+> +		 * Enable interrupts so the tick can fire, if a global
+> +		 * clockevent device is available
+> +		 */
+> +		local_irq_enable();
+>  
+> -	while (lapic_cal_loops <= LAPIC_CAL_LOOPS)
+> -		cpu_relax();
+> +		/* Wait for a tick to elapse */
+> +		while (1) {
+> +			if (tsc_khz) {
+> +				u64 tsc_now = rdtsc();
+> +				if ((tsc_now - tsc_start) >= tsc_perj) {
+> +					tsc_start += tsc_perj;
+> +					break;
+> +				}
+> +			} else {
+> +				unsigned long jif_now = READ_ONCE(jiffies);
+> +
+> +				if (time_after(jif_now, jif_start)) {
+> +					jif_start = jif_now;
+> +					break;
+> +				}
+> +			}
+> +			cpu_relax();
+> +		}
+> +
+> +		/* Invoke the calibration routine */
+> +		local_irq_disable();
+> +		lapic_cal_handler(NULL);
+> +		local_irq_enable();
+> +	}
+>  
+>  	local_irq_disable();
+>  
+> -	/* Restore the real event handler */
+> -	global_clock_event->event_handler = real_handler;
+> -
+>  	/* Build delta t1-t2 as apic timer counts down */
+>  	delta = lapic_cal_t1 - lapic_cal_t2;
+>  	apic_printk(APIC_VERBOSE, "... lapic delta = %ld\n", delta);
+> @@ -943,10 +980,11 @@ static int __init calibrate_APIC_clock(v
+>  	levt->features &= ~CLOCK_EVT_FEAT_DUMMY;
+>  
+>  	/*
+> -	 * PM timer calibration failed or not turned on
+> -	 * so lets try APIC timer based calibration
+> +	 * PM timer calibration failed or not turned on so lets try APIC
+> +	 * timer based calibration, if a global clockevent device is
+> +	 * available.
+>  	 */
+> -	if (!pm_referenced) {
+> +	if (!pm_referenced && global_clock_event) {
+>  		apic_printk(APIC_VERBOSE, "... verify APIC timer\n");
+>  
+>  		/*
+> --- a/include/linux/acpi_pmtmr.h
+> +++ b/include/linux/acpi_pmtmr.h
+> @@ -18,6 +18,11 @@
+>  extern u32 acpi_pm_read_verified(void);
+>  extern u32 pmtmr_ioport;
+>  
+> +static inline bool acpi_pm_timer_available(void)
+> +{
+> +	return pmtmr_ioport != 0;
+> +}
+> +
+>  static inline u32 acpi_pm_read_early(void)
+>  {
+>  	if (!pmtmr_ioport)
+> @@ -28,6 +33,11 @@ static inline u32 acpi_pm_read_early(voi
+>  
+>  #else
+>  
+> +static inline bool acpi_pm_timer_available(void)
+> +{
+> +	return false;
+> +}
+> +
+>  static inline u32 acpi_pm_read_early(void)
+>  {
+>  	return 0;
+> 
+
