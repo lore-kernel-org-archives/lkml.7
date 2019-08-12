@@ -2,93 +2,307 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20775C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB0AC32756
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00084208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7D8320842
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:45:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="gWG4SDn1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727729AbfHLJpE (ORCPT
+        id S1727757AbfHLJpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 05:45:04 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:51325 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727430AbfHLJpC (ORCPT
+        Mon, 12 Aug 2019 05:45:09 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:50932 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727567AbfHLJo1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 05:45:02 -0400
-X-Originating-IP: 91.118.195.70
-Received: from jirafa.cyrius.com (91-118-195-70.static.upcbusiness.at [91.118.195.70])
-        (Authenticated sender: tbm@cyrius.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id DA1BF40003;
-        Mon, 12 Aug 2019 09:44:56 +0000 (UTC)
-Received: by jirafa.cyrius.com (Postfix, from userid 1000)
-        id 58518A887E; Mon, 12 Aug 2019 11:44:56 +0200 (CEST)
-Date:   Mon, 12 Aug 2019 11:44:56 +0200
-From:   Martin Michlmayr <tbm@cyrius.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, soc@kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org,
-        Peter Teichmann <lists@peter-teichmann.de>
-Subject: Re: [PATCH 1/7] [RFC] ARM: remove Intel iop33x and iop13xx support
-Message-ID: <20190812094456.GI10598@jirafa.cyrius.com>
-References: <20190809162956.488941-1-arnd@arndb.de>
- <20190809163334.489360-1-arnd@arndb.de>
- <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 12 Aug 2019 05:44:27 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 552C0C2173;
+        Mon, 12 Aug 2019 09:44:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1565603066; bh=ow6p6jwrXh56WCp0knNr8AIf4GNn22Dq9KX2g2HFolw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=gWG4SDn1qEUSS6quM64GC+LjR14ENkEuWVXcweUXg0BvPjtHZDF61z0Sl338kztOD
+         tGwotsTlNW9XGOrtdrcdskNjSEXzMUGJE3BBGn1klA/zN+EJTzNC69ZSR/cFtE7v0c
+         KV3qVkwJs21SdMosFNvY3QAzQ6NSbO+expVSGCjxnjLKeBuJXh+qkloASp3/aTAC9p
+         G7QJqK/ofCef07nyIpyNBU287oiREW/zoJnRXCQMN2xs2OILPNVWyYoGS54SdTjHM0
+         vvT1vBNWDQl8/gBwVQjNq+IwciKASzrykGLqXChNRejSWqBjtQ5UA06aorNoxYdyJR
+         JKxkc9vdyPVAA==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id E8314A005F;
+        Mon, 12 Aug 2019 09:44:22 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2 02/12] net: stmmac: Prepare to add Split Header support
+Date:   Mon, 12 Aug 2019 11:44:01 +0200
+Message-Id: <342007d6ac2b44db03d113e7e8bf0310caa77ea0.1565602974.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1565602974.git.joabreu@synopsys.com>
+References: <cover.1565602974.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1565602974.git.joabreu@synopsys.com>
+References: <cover.1565602974.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Dan Williams <dan.j.williams@intel.com> [2019-08-09 11:34]:
-> > Earlier versions of OpenWRT and Debian both had support for iop32x
-> > but not the others, and they both dropped iop32x as well in their 2015
-> > releases.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> > I'm just guessing that iop32x is still needed, and the other two are
-> > not. If anyone disagrees with that assessment, let me know so we
-> > can come up with an alternative approach.
-> 
-> I'm not sure who would scream if iop32x support went away as well, but
-> I have not followed this space in years hence copying Martin.
+In order to add Split Header support, stmmac_rx() needs to take into
+account that packet may be split accross multiple descriptors.
 
-I believe iop13xx were mostly Intel dev boards.  I'm not aware of any
-major devices based on iop33x.
+Refactor the logic of this function in order to support this scenario.
 
-As Arnd points out, Debian used to have support for various iop32x
-devices.  While Debian hasn't supported iop32x in a number of years,
-these devices are still usable and in use (RMK being a prime example).
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
-So I think it's safe to drop iop33x/iop13xx while retaining support
-for iop32x.
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h      |   6 +
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 149 +++++++++++++---------
+ 2 files changed, 95 insertions(+), 60 deletions(-)
 
-As I was looking at my email archives, I saw an email from Peter
-Teichmann who was working on an iop33x based platform (around 2009) so
-I've copied him as well.
-
-> In any event:
-> 
-> Acked-by: Dan Williams <dan.j.williams@intel.com>
-
-Acked-by: Martin Michlmayr <tbm@cyrius.com>
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+index 80276587048a..56158e1448ac 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+@@ -74,6 +74,12 @@ struct stmmac_rx_queue {
+ 	u32 rx_zeroc_thresh;
+ 	dma_addr_t dma_rx_phy;
+ 	u32 rx_tail_addr;
++	unsigned int state_saved;
++	struct {
++		struct sk_buff *skb;
++		unsigned int len;
++		unsigned int error;
++	} state;
+ };
+ 
+ struct stmmac_channel {
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index b2e5f4ecd551..a093eb4ec275 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3353,9 +3353,10 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ {
+ 	struct stmmac_rx_queue *rx_q = &priv->rx_queue[queue];
+ 	struct stmmac_channel *ch = &priv->channel[queue];
++	unsigned int count = 0, error = 0, len = 0;
++	int status = 0, coe = priv->hw->rx_csum;
+ 	unsigned int next_entry = rx_q->cur_rx;
+-	int coe = priv->hw->rx_csum;
+-	unsigned int count = 0;
++	struct sk_buff *skb = NULL;
+ 
+ 	if (netif_msg_rx_status(priv)) {
+ 		void *rx_head;
+@@ -3369,9 +3370,27 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 		stmmac_display_ring(priv, rx_head, DMA_RX_SIZE, true);
+ 	}
+ 	while (count < limit) {
++		enum pkt_hash_types hash_type;
+ 		struct stmmac_rx_buffer *buf;
++		unsigned int prev_len = 0;
+ 		struct dma_desc *np, *p;
+-		int entry, status;
++		int entry;
++		u32 hash;
++
++		if (!count && rx_q->state_saved) {
++			skb = rx_q->state.skb;
++			error = rx_q->state.error;
++			len = rx_q->state.len;
++		} else {
++			rx_q->state_saved = false;
++			skb = NULL;
++			error = 0;
++			len = 0;
++		}
++
++read_again:
++		if (count >= limit)
++			break;
+ 
+ 		entry = next_entry;
+ 		buf = &rx_q->buf_pool[entry];
+@@ -3407,28 +3426,24 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 			page_pool_recycle_direct(rx_q->page_pool, buf->page);
+ 			priv->dev->stats.rx_errors++;
+ 			buf->page = NULL;
++			error = 1;
++		}
++
++		if (unlikely(error & (status & rx_not_ls)))
++			goto read_again;
++		if (unlikely(error)) {
++			if (skb)
++				dev_kfree_skb(skb);
++			continue;
++		}
++
++		/* Buffer is good. Go on. */
++
++		if (likely(status & rx_not_ls)) {
++			len += priv->dma_buf_sz;
+ 		} else {
+-			enum pkt_hash_types hash_type;
+-			struct sk_buff *skb;
+-			unsigned int des;
+-			int frame_len;
+-			u32 hash;
+-
+-			stmmac_get_desc_addr(priv, p, &des);
+-			frame_len = stmmac_get_rx_frame_len(priv, p, coe);
+-
+-			/*  If frame length is greater than skb buffer size
+-			 *  (preallocated during init) then the packet is
+-			 *  ignored
+-			 */
+-			if (frame_len > priv->dma_buf_sz) {
+-				if (net_ratelimit())
+-					netdev_err(priv->dev,
+-						   "len %d larger than size (%d)\n",
+-						   frame_len, priv->dma_buf_sz);
+-				priv->dev->stats.rx_length_errors++;
+-				continue;
+-			}
++			prev_len = len;
++			len = stmmac_get_rx_frame_len(priv, p, coe);
+ 
+ 			/* ACS is set; GMAC core strips PAD/FCS for IEEE 802.3
+ 			 * Type frames (LLC/LLC-SNAP)
+@@ -3439,57 +3454,71 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 			 */
+ 			if (unlikely(priv->synopsys_id >= DWMAC_CORE_4_00) ||
+ 			    unlikely(status != llc_snap))
+-				frame_len -= ETH_FCS_LEN;
+-
+-			if (netif_msg_rx_status(priv)) {
+-				netdev_dbg(priv->dev, "\tdesc: %p [entry %d] buff=0x%x\n",
+-					   p, entry, des);
+-				netdev_dbg(priv->dev, "frame size %d, COE: %d\n",
+-					   frame_len, status);
+-			}
++				len -= ETH_FCS_LEN;
++		}
+ 
+-			skb = netdev_alloc_skb_ip_align(priv->dev, frame_len);
+-			if (unlikely(!skb)) {
++		if (!skb) {
++			skb = netdev_alloc_skb_ip_align(priv->dev, len);
++			if (!skb) {
+ 				priv->dev->stats.rx_dropped++;
+ 				continue;
+ 			}
+ 
+-			dma_sync_single_for_cpu(priv->device, buf->addr,
+-						frame_len, DMA_FROM_DEVICE);
++			dma_sync_single_for_cpu(priv->device, buf->addr, len,
++						DMA_FROM_DEVICE);
+ 			skb_copy_to_linear_data(skb, page_address(buf->page),
+-						frame_len);
+-			skb_put(skb, frame_len);
++						len);
++			skb_put(skb, len);
+ 
+-			if (netif_msg_pktdata(priv)) {
+-				netdev_dbg(priv->dev, "frame received (%dbytes)",
+-					   frame_len);
+-				print_pkt(skb->data, frame_len);
+-			}
++			/* Data payload copied into SKB, page ready for recycle */
++			page_pool_recycle_direct(rx_q->page_pool, buf->page);
++			buf->page = NULL;
++		} else {
++			unsigned int buf_len = len - prev_len;
+ 
+-			stmmac_get_rx_hwtstamp(priv, p, np, skb);
++			if (likely(status & rx_not_ls))
++				buf_len = priv->dma_buf_sz;
+ 
+-			stmmac_rx_vlan(priv->dev, skb);
++			dma_sync_single_for_cpu(priv->device, buf->addr,
++						buf_len, DMA_FROM_DEVICE);
++			skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags,
++					buf->page, 0, buf_len,
++					priv->dma_buf_sz);
+ 
+-			skb->protocol = eth_type_trans(skb, priv->dev);
++			/* Data payload appended into SKB */
++			page_pool_release_page(rx_q->page_pool, buf->page);
++			buf->page = NULL;
++		}
+ 
+-			if (unlikely(!coe))
+-				skb_checksum_none_assert(skb);
+-			else
+-				skb->ip_summed = CHECKSUM_UNNECESSARY;
++		if (likely(status & rx_not_ls))
++			goto read_again;
+ 
+-			if (!stmmac_get_rx_hash(priv, p, &hash, &hash_type))
+-				skb_set_hash(skb, hash, hash_type);
++		/* Got entire packet into SKB. Finish it. */
+ 
+-			skb_record_rx_queue(skb, queue);
+-			napi_gro_receive(&ch->rx_napi, skb);
++		stmmac_get_rx_hwtstamp(priv, p, np, skb);
++		stmmac_rx_vlan(priv->dev, skb);
++		skb->protocol = eth_type_trans(skb, priv->dev);
+ 
+-			/* Data payload copied into SKB, page ready for recycle */
+-			page_pool_recycle_direct(rx_q->page_pool, buf->page);
+-			buf->page = NULL;
++		if (unlikely(!coe))
++			skb_checksum_none_assert(skb);
++		else
++			skb->ip_summed = CHECKSUM_UNNECESSARY;
+ 
+-			priv->dev->stats.rx_packets++;
+-			priv->dev->stats.rx_bytes += frame_len;
+-		}
++		if (!stmmac_get_rx_hash(priv, p, &hash, &hash_type))
++			skb_set_hash(skb, hash, hash_type);
++
++		skb_record_rx_queue(skb, queue);
++		napi_gro_receive(&ch->rx_napi, skb);
++
++		priv->dev->stats.rx_packets++;
++		priv->dev->stats.rx_bytes += len;
++	}
++
++	if (status & rx_not_ls) {
++		rx_q->state_saved = true;
++		rx_q->state.skb = skb;
++		rx_q->state.error = error;
++		rx_q->state.len = len;
+ 	}
+ 
+ 	stmmac_rx_refill(priv, queue);
 -- 
-Martin Michlmayr
-https://www.cyrius.com/
+2.7.4
+
