@@ -2,142 +2,85 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63349C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F455C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32097208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:10:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m3tzM5Rj"
+	by mail.kernel.org (Postfix) with ESMTP id 0190020673
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:11:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbfHLUKp (ORCPT
+        id S1727656AbfHLULg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 16:10:45 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36001 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727163AbfHLUJX (ORCPT
+        Mon, 12 Aug 2019 16:11:36 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60662 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727163AbfHLULf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 16:09:23 -0400
-Received: by mail-pg1-f194.google.com with SMTP id l21so50030450pgm.3;
-        Mon, 12 Aug 2019 13:09:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=v5LhoIh9pEXsuxuOal6SQWOEU6dIDuk09/Lr+q8se7U=;
-        b=m3tzM5Rjigj1YHXtE5lXE4sKYSMSgS8iLNxSaKt7AGhxG0BxGDK9ZOSakPs7RxdgMO
-         2VH4MAV64sIbrqBsqspOusRH6kVALTy75Yo2u1xDsLjCvxKdYJCLKZFCeZOjFOvGwkwJ
-         aUyuf7uJqp20+fNgsUNWg4IZYKbdh+8Y5fxBhnb4natmsQhYmAe+APl3sGE19HXNzbmy
-         nXLICEQ8th490qXxDShMh4F4XAEfhTXnLe34ehmO91GvN8vHFCnN9RvEuq1P6lEecPQH
-         7gTDYkgjXErCBYkF9W3Bas26Zp2qK7jJ0xLUnabG54+wufiWMTykWnGsT1AYrzCRHUPE
-         aUWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=v5LhoIh9pEXsuxuOal6SQWOEU6dIDuk09/Lr+q8se7U=;
-        b=rKQM76pvNtEw6Ux+hAXzLi350m5zxsQcwuix2AgeotMYIiwUlxK80ylQ79GBX0ox/n
-         D5xBD9O2ReZJxjl8AUNAGn1vBJO6AubKVIYCP3kLFb6EQ6BeUu+tCn4XXLg3zI/DAqUy
-         PDbt2DWCuq3qqpRV8rpPOP+U0Ko1Jc9IdYFFXRTet3HuhGQZx0rr2XgQy43zrgFwv7vg
-         RCujOUxC0qLfd59NAKah4J2pJfMy1UY+FHpTHhPqkKoFN9U2lCKqONw6mHg311eQGZuH
-         UpeXE3TVwpNquYcFbXLBWhj7XhU6bRJzBIkHKMVRAmSVg7LbzwHnuO79cGzlsf6GBsYp
-         hvlg==
-X-Gm-Message-State: APjAAAV8IACRtJ4VpyWVPIuplguZIMXsaF/81/576iLpRxFniMPQ2+6x
-        MMYz/LykqXwUeSxxD8GYfaENNc3M
-X-Google-Smtp-Source: APXvYqxiNEuuYTdNk/z8R1E7J8+LLjiEFuarmkwBZF4IeYgn7FceZwWLd3s8ejncGYTYmTQmohIUDw==
-X-Received: by 2002:a62:1c93:: with SMTP id c141mr38374483pfc.9.1565640562519;
-        Mon, 12 Aug 2019 13:09:22 -0700 (PDT)
-Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id n26sm110286451pfa.83.2019.08.12.13.09.21
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 13:09:21 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-watchdog@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Chris Healy <cphealy@gmail.com>,
-        Rick Ramstetter <rick@anteaterllc.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 03/22] watchdog: ziirave_wdt: Be more verbose during firmware update
-Date:   Mon, 12 Aug 2019 13:08:47 -0700
-Message-Id: <20190812200906.31344-4-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190812200906.31344-1-andrew.smirnov@gmail.com>
-References: <20190812200906.31344-1-andrew.smirnov@gmail.com>
+        Mon, 12 Aug 2019 16:11:35 -0400
+Received: from p200300ddd71876867e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7686:7e7a:91ff:fec9:8e25])
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hxGf2-0005KS-ES; Mon, 12 Aug 2019 22:11:20 +0200
+Date:   Mon, 12 Aug 2019 22:11:14 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     Denis Efremov <efremov@linux.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        kvm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        netdev@vger.kernel.org, x86@kernel.org, linux-s390@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/7] Add definition for the number of standard PCI BARs
+In-Reply-To: <20190812200134.GB11785@google.com>
+Message-ID: <alpine.DEB.2.21.1908122210300.7324@nanos.tec.linutronix.de>
+References: <20190811150802.2418-1-efremov@linux.com> <20190812200134.GB11785@google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add more error logging to ziirave_firm_upload() for diagnostics.
+On Mon, 12 Aug 2019, Bjorn Helgaas wrote:
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Rick Ramstetter <rick@anteaterllc.com>
-Cc: linux-watchdog@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/watchdog/ziirave_wdt.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+> On Sun, Aug 11, 2019 at 06:07:55PM +0300, Denis Efremov wrote:
+> > Code that iterates over all standard PCI BARs typically uses
+> > PCI_STD_RESOURCE_END, but this is error-prone because it requires
+> > "i <= PCI_STD_RESOURCE_END" rather than something like
+> > "i < PCI_STD_NUM_BARS". We could add such a definition and use it the same
+> > way PCI_SRIOV_NUM_BARS is used. There is already the definition
+> > PCI_BAR_COUNT for s390 only. Thus, this patchset introduces it globally.
+> > 
+> > The patch is splitted into 7 parts for different drivers/subsystems for
+> > easy readability.
+> 
+> This looks good.  I can take all these together, since they all depend
+> on the first patch.  I have a few comments on the individual patches.
+> 
+> > Denis Efremov (7):
+> >   PCI: Add define for the number of standard PCI BARs
+> >   s390/pci: Replace PCI_BAR_COUNT with PCI_STD_NUM_BARS
+> >   x86/PCI: Use PCI_STD_NUM_BARS in loops instead of PCI_STD_RESOURCE_END
 
-diff --git a/drivers/watchdog/ziirave_wdt.c b/drivers/watchdog/ziirave_wdt.c
-index 8c71341a9c1c..b3e255b40209 100644
---- a/drivers/watchdog/ziirave_wdt.c
-+++ b/drivers/watchdog/ziirave_wdt.c
-@@ -335,14 +335,18 @@ static int ziirave_firm_upload(struct watchdog_device *wdd,
- 
- 	ret = ziirave_firm_write_byte(wdd, ZIIRAVE_CMD_JUMP_TO_BOOTLOADER, 1,
- 				      false);
--	if (ret)
-+	if (ret) {
-+		dev_err(&client->dev, "Failed to jump to bootloader\n");
- 		return ret;
-+	}
- 
- 	msleep(500);
- 
- 	ret = ziirave_firm_write_byte(wdd, ZIIRAVE_CMD_DOWNLOAD_START, 1, true);
--	if (ret)
-+	if (ret) {
-+		dev_err(&client->dev, "Failed to start download\n");
- 		return ret;
-+	}
- 
- 	msleep(500);
- 
-@@ -438,14 +442,20 @@ static int ziirave_firm_upload(struct watchdog_device *wdd,
- 
- 	/* End download operation */
- 	ret = ziirave_firm_write_byte(wdd, ZIIRAVE_CMD_DOWNLOAD_END, 1, false);
--	if (ret)
-+	if (ret) {
-+		dev_err(&client->dev,
-+			"Failed to end firmware download: %d\n", ret);
- 		return ret;
-+	}
- 
- 	/* Reset the processor */
- 	ret = ziirave_firm_write_byte(wdd, ZIIRAVE_CMD_RESET_PROCESSOR, 1,
- 				      false);
--	if (ret)
-+	if (ret) {
-+		dev_err(&client->dev,
-+			"Failed to reset the watchdog: %d\n", ret);
- 		return ret;
-+	}
- 
- 	msleep(500);
- 
--- 
-2.21.0
+Fine with me for the x86 part. That's your turf anyway :)
 
+Thanks,
+
+	tglx
