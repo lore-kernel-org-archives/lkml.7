@@ -3,84 +3,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE32AC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 04:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE10C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 04:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 804DC20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 04:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 582CF20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 04:32:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbfHLE3a (ORCPT
+        id S1726718AbfHLEcs convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 00:29:30 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:38566 "EHLO
+        Mon, 12 Aug 2019 00:32:48 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:38660 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbfHLE3a (ORCPT
+        with ESMTP id S1725808AbfHLEcr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 00:29:30 -0400
+        Mon, 12 Aug 2019 00:32:47 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7F9FC145487CD;
-        Sun, 11 Aug 2019 21:29:29 -0700 (PDT)
-Date:   Sun, 11 Aug 2019 21:29:28 -0700 (PDT)
-Message-Id: <20190811.212928.1681769879219779999.davem@davemloft.net>
-To:     dhowells@redhat.com
-Cc:     netdev@vger.kernel.org, jaltman@auristor.com,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] rxrpc: Fix local refcounting
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 25C7B145BAEA4;
+        Sun, 11 Aug 2019 21:32:47 -0700 (PDT)
+Date:   Sun, 11 Aug 2019 21:32:46 -0700 (PDT)
+Message-Id: <20190811.213246.151393820300894015.davem@davemloft.net>
+To:     j.neuschaefer@gmx.net
+Cc:     netdev@vger.kernel.org, gregkh@linuxfoundation.org,
+        alexios.zavras@intel.com, tglx@linutronix.de, allison@lohutok.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: nps_enet: Fix function names in doc comments
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <156538726702.16201.13552536596121161945.stgit@warthog.procyon.org.uk>
-References: <156538726702.16201.13552536596121161945.stgit@warthog.procyon.org.uk>
+In-Reply-To: <20190810111159.3389-1-j.neuschaefer@gmx.net>
+References: <20190810111159.3389-1-j.neuschaefer@gmx.net>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 11 Aug 2019 21:29:29 -0700 (PDT)
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 11 Aug 2019 21:32:47 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
-Date: Fri, 09 Aug 2019 22:47:47 +0100
+From: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+Date: Sat, 10 Aug 2019 13:11:56 +0200
 
-> Fix rxrpc_unuse_local() to handle a NULL local pointer as it can be called
-> on an unbound socket on which rx->local is not yet set.
+> Adjust the function names in two doc comments to match the corresponding
+> functions.
 > 
-> The following reproduced (includes omitted):
-> 
-> 	int main(void)
-> 	{
-> 		socket(AF_RXRPC, SOCK_DGRAM, AF_INET);
-> 		return 0;
-> 	}
-> 
-> causes the following oops to occur:
-> 
-> 	BUG: kernel NULL pointer dereference, address: 0000000000000010
-> 	...
-> 	RIP: 0010:rxrpc_unuse_local+0x8/0x1b
-> 	...
-> 	Call Trace:
-> 	 rxrpc_release+0x2b5/0x338
-> 	 __sock_release+0x37/0xa1
-> 	 sock_close+0x14/0x17
-> 	 __fput+0x115/0x1e9
-> 	 task_work_run+0x72/0x98
-> 	 do_exit+0x51b/0xa7a
-> 	 ? __context_tracking_exit+0x4e/0x10e
-> 	 do_group_exit+0xab/0xab
-> 	 __x64_sys_exit_group+0x14/0x17
-> 	 do_syscall_64+0x89/0x1d4
-> 	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> Reported-by: syzbot+20dee719a2e090427b5f@syzkaller.appspotmail.com
-> Fixes: 730c5fd42c1e ("rxrpc: Fix local endpoint refcounting")
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Jeffrey Altman <jaltman@auristor.com>
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 
 Applied.
