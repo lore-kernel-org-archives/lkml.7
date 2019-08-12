@@ -2,98 +2,75 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40037C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41163C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E686217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 200B82173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:12:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfHLKMT (ORCPT
+        id S1727867AbfHLKM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:12:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:47492 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727605AbfHLKMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:12:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8812015A2;
-        Mon, 12 Aug 2019 03:12:18 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 19F893F706;
-        Mon, 12 Aug 2019 03:12:15 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 11:12:13 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>, kishon@ti.com
-Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
-        mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org,
-        pombredanne@nexb.com, shawn.lin@rock-chips.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCHv3 1/2] PCI: layerscape: Add the bar_fixed_64bit property
- in EP driver.
-Message-ID: <20190812101213.GB20861@e121166-lin.cambridge.arm.com>
-References: <20190628013826.4705-1-xiaowei.bao@nxp.com>
+        Mon, 12 Aug 2019 06:12:26 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35112 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727605AbfHLKMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 06:12:25 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id ED999F36D83503C6D975;
+        Mon, 12 Aug 2019 18:12:19 +0800 (CST)
+Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.202.226.45) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 12 Aug 2019 18:12:11 +0800
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     <linux-acpi@vger.kernel.org>, <linux-edac@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <lenb@kernel.org>, <james.morse@arm.com>, <tony.luck@intel.com>,
+        <bp@alien8.de>, <baicar@os.amperecomputing.com>
+CC:     <linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
+        <tanxiaofei@huawei.com>, Shiju Jose <shiju.jose@huawei.com>
+Subject: [PATCH RFC 0/4] ACPI: APEI: Add support to notify the vendor specific HW errors
+Date:   Mon, 12 Aug 2019 11:11:45 +0100
+Message-ID: <20190812101149.26036-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.19.2.windows.1
+In-Reply-To: <Shiju Jose>
+References: <Shiju Jose>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628013826.4705-1-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.202.226.45]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First off:
+Presently kernel does not support reporting the vendor specific HW errors,
+in the non-standard format, to the vendor drivers for the recovery.
 
-Trim the CC list, you CC'ed maintainers (and mailing lists) for no
-reasons whatsover.
+This patch set add this support and also move the existing handler
+functions for the standard errors to the new callback method.
+Also the CCIX RAS patches could be move to the proposed callback method.
+https://www.spinics.net/lists/linux-edac/msg10508.html
+https://patchwork.kernel.org/patch/10979491/
 
-Then, read this:
+Shiju Jose (4):
+  ACPI: APEI: Add support to notify the vendor specific HW errors
+  ACPI: APEI: Add ghes_handle_memory_failure to the new notification
+    method
+  ACPI: APEI: Add ghes_handle_aer to the new notification method
+  ACPI: APEI: Add log_arm_hw_error to the new notification method
 
-https://lore.kernel.org/linux-pci/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com/
+ drivers/acpi/apei/ghes.c | 170 +++++++++++++++++++++++++++++++++++++++++------
+ drivers/ras/ras.c        |   5 +-
+ include/acpi/ghes.h      |  47 +++++++++++++
+ include/linux/ras.h      |   7 +-
+ 4 files changed, 205 insertions(+), 24 deletions(-)
 
-and make your patches compliant please.
+-- 
+1.9.1
 
-On Fri, Jun 28, 2019 at 09:38:25AM +0800, Xiaowei Bao wrote:
-> The PCIe controller of layerscape just have 4 BARs, BAR0 and BAR1
-> is 32bit, BAR3 and BAR4 is 64bit, this is determined by hardware,
-> so set the bar_fixed_64bit with 0x14.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
-> v2:
->  - Replace value 0x14 with a macro.
-> v3:
->  - No change.
-> 
->  drivers/pci/controller/dwc/pci-layerscape-ep.c |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> index be61d96..227c33b 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> @@ -44,6 +44,7 @@ static int ls_pcie_establish_link(struct dw_pcie *pci)
->  	.linkup_notifier = false,
->  	.msi_capable = true,
->  	.msix_capable = false,
-> +	.bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
 
-I would appreciate Kishon's ACK on this.
-
-Lorenzo
-
->  };
->  
->  static const struct pci_epc_features*
-> -- 
-> 1.7.1
-> 
