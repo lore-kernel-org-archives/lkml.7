@@ -2,112 +2,119 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B49C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344B6C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5235B2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:08:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iytsO+zL"
+	by mail.kernel.org (Postfix) with ESMTP id 101D12067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 18:08:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbfHLSIJ (ORCPT
+        id S1726776AbfHLSIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 14:08:09 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43775 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfHLSII (ORCPT
+        Mon, 12 Aug 2019 14:08:14 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:48853 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbfHLSIN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 14:08:08 -0400
-Received: by mail-pf1-f195.google.com with SMTP id v12so2291886pfn.10
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 11:08:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=AxMvcKPPSOt5h9tOESk6eM74C3v+cXx0BCMEFfeO5Dg=;
-        b=iytsO+zLrR4089ozDzpPc3tz1mmM3j8pqgVIx733CHvK6m0+n7kP80jjwnb85tAH9/
-         U1EbkVLTKURLnNI5KM09vWZjzObFj4srl8HjIIH9vkodhrdRjRRRbj9AXla1YegIc13q
-         dTH3dOLK3AklNGYSY25a02nAlqq4YmGfncrtA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AxMvcKPPSOt5h9tOESk6eM74C3v+cXx0BCMEFfeO5Dg=;
-        b=rn/IgtejAOyWNtiKZKq5p/VsL8WGknOA+tgdpod5sJZQl1yt3DGcU3OLd8/hjwDZWH
-         auvbmMaZ2jPmAE0d1AESe0duKEmnRSClglvxPS4I5DdDY199pKwRKWQv4UQVI1JFHO6F
-         0e5Bx3N1b0o2zkITTrr9V/gsSCLz+2lqAoYSwXI/y6PQXynw+ejebEK0ZJpFwYGCsqhp
-         By3G07fqAFOX5d2U90yrrfom15UDSYxf+G/pvK/6rZ5B3XZMrX358QYpOZS8Niy32AbN
-         UB5Dnufc7z6/xlxqps4ePEkebFlH0gjugFzrjy+3yLtLE8cr+OIS7O8wZXBNH2TIsRX/
-         od9g==
-X-Gm-Message-State: APjAAAWhY8DrmaWFj4X0RiAff6s2EGKlzPKO1pU0GZuzpJGeolmTPjjP
-        AdDZkE7gBBAowqXobsbGIYpHyQ==
-X-Google-Smtp-Source: APXvYqx7GB2qYifIkhLgbQzOkQXXpweNH/WY6CfmXeWoasPo9MTc+Yfo4Ft8gq7lm/41t9o2VRLAtw==
-X-Received: by 2002:a17:90a:c403:: with SMTP id i3mr494779pjt.110.1565633288008;
-        Mon, 12 Aug 2019 11:08:08 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o128sm114355469pfb.42.2019.08.12.11.08.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 11:08:07 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 11:08:06 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>
-Subject: Re: [PATCH 4/6] lib/refcount: Move bulk of REFCOUNT_FULL
- implementation into header
-Message-ID: <201908121107.C3262BBB5@keescook>
-References: <20190802101000.12958-1-will@kernel.org>
- <20190802101000.12958-5-will@kernel.org>
- <20190802185222.GD2349@hirez.programming.kicks-ass.net>
- <201908021915.95BD6B26FC@keescook>
- <20190809160428.smumdvimrtn7rv6u@willie-the-truck>
+        Mon, 12 Aug 2019 14:08:13 -0400
+Received: from [167.98.27.226] (helo=xylophone)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1hxELt-0001w2-Ar; Mon, 12 Aug 2019 18:43:25 +0100
+Message-ID: <7edb5c85c29a46cf5edb6fe5033b07884fd068ae.camel@codethink.co.uk>
+Subject: Re: [Y2038] [PATCH 04/20] mount: Add mount warning for impending
+ timestamp expiry
+From:   Ben Hutchings <ben.hutchings@codethink.co.uk>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>
+Date:   Mon, 12 Aug 2019 18:43:24 +0100
+In-Reply-To: <CABeXuvoa4VUQp3QxsEfq6PBKNv4Q2icp++5_EP=1e_72KLk_9w@mail.gmail.com>
+References: <20190730014924.2193-1-deepa.kernel@gmail.com>
+         <20190730014924.2193-5-deepa.kernel@gmail.com>
+         <c508fe0116b77ff0496ebb17a69f756c47be62b7.camel@codethink.co.uk>
+         <CABeXuvruROn7j1DiCDbP6MLBt9SB4Pp3HoKqcQbUNPDJgGWLgw@mail.gmail.com>
+         <53df9d81bfb4ee7ec64fabf1089f91d80dceb491.camel@codethink.co.uk>
+         <CAK8P3a0CADLUeXvsBHNAC8ekLoo0o0uYz2arBqZ=1N+Xp8HNvA@mail.gmail.com>
+         <CABeXuvpAPp98G2gCczB3n=izv4aM7vacdbPONiELrw-1ZOrd=g@mail.gmail.com>
+         <CABeXuvoa4VUQp3QxsEfq6PBKNv4Q2icp++5_EP=1e_72KLk_9w@mail.gmail.com>
+Organization: Codethink Ltd.
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190809160428.smumdvimrtn7rv6u@willie-the-truck>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 05:04:28PM +0100, Will Deacon wrote:
-> On Fri, Aug 02, 2019 at 07:23:07PM -0700, Kees Cook wrote:
-> > On Fri, Aug 02, 2019 at 08:52:22PM +0200, Peter Zijlstra wrote:
-> > > On Fri, Aug 02, 2019 at 11:09:58AM +0100, Will Deacon wrote:
-> > > > In an effort to improve performance of the REFCOUNT_FULL implementation,
-> > > > move the bulk of its functions into linux/refcount.h. This allows them
-> > > > to be inlined in the same way as if they had been provided via
-> > > > CONFIG_ARCH_HAS_REFCOUNT.
+On Mon, 2019-08-12 at 09:15 -0700, Deepa Dinamani wrote:
+> On Mon, Aug 12, 2019 at 9:09 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+> > On Mon, Aug 12, 2019 at 7:11 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > On Mon, Aug 12, 2019 at 3:25 PM Ben Hutchings
+> > > <ben.hutchings@codethink.co.uk> wrote:
+> > > > On Sat, 2019-08-10 at 13:44 -0700, Deepa Dinamani wrote:
+> > > > > On Mon, Aug 5, 2019 at 7:14 AM Ben Hutchings
+> > > > > <ben.hutchings@codethink.co.uk> wrote:
+> > > > > > On Mon, 2019-07-29 at 18:49 -0700, Deepa Dinamani wrote:
+> > > > > > > The warning reuses the uptime max of 30 years used by the
+> > > > > > > setitimeofday().
+> > > > > > > 
+> > > > > > > Note that the warning is only added for new filesystem mounts
+> > > > > > > through the mount syscall. Automounts do not have the same warning.
+> > > > > > [...]
+> > > > > > 
+> > > > > > Another thing - perhaps this warning should be suppressed for read-only
+> > > > > > mounts?
+> > > > > 
+> > > > > Many filesystems support read only mounts only. We do fill in right
+> > > > > granularities and limits for these filesystems as well. In keeping
+> > > > > with the trend, I have added the warning accordingly. I don't think I
+> > > > > have a preference either way. But, not warning for the red only mounts
+> > > > > adds another if case. If you have a strong preference, I could add it
+> > > > > in.
+> > > > 
+> > > > It seems to me that the warning is needed if there is a possibility of
+> > > > data loss (incorrect timestamps, potentially leading to incorrect
+> > > > decisions about which files are newer).  This can happen only when a
+> > > > filesystem is mounted read-write, or when a filesystem image is
+> > > > created.
+> > > > 
+> > > > I think that warning for read-only mounts would be an annoyance to
+> > > > users retrieving files from old filesystems.
 > > > 
-> > > Hehe, they started out this way, then Linus said to stuff them in a C
-> > > file :-)
+> > > I agree, the warning is not helpful for read-only mounts. An earlier
+> > > plan was to completely disallow writable mounts that might risk an
+> > > overflow (in some configurations at least). The warning replaces that
+> > > now, and I think it should also just warn for the cases that would
+> > > otherwise have been dangerous.
 > > 
-> > I asked this at the time and didn't quite get a straight answer; Linus's
-> > request was private:
+> > Ok, I will make the change to exclude new read only mounts. I will use
+> > __mnt_is_readonly() so that it also exculdes filesystems that are
+> > readonly also.
+> > The diff looks like below:
 > > 
-> > https://lore.kernel.org/lkml/20170213180020.GK6500@twins.programming.kicks-ass.net/
+> > -       if (!error && sb->s_time_max &&
+> > +       if (!error && !__mnt_is_readonly(mnt) &&
+> >             (ktime_get_real_seconds() + TIME_UPTIME_SEC_MAX > sb->s_time_max)) {
 > > 
-> > It seemed sensible to me (then and now) to have them be inline if there
-> > were so many performance concerns about it, etc. Was it just the image
-> > size bloat due to the WARNs? So... since we're back to this topic. Why
-> > should they not be inline?
+> > Note that we can get rid of checking for non zero sb->s_time_max now.
 > 
-> I mean, I can always just move this into an arm64-specific implementation
-> if I have to, but it seems a shame given that it's completely generic and
-> seems to perform just as well as the x86-specific implementation on my
-> laptop.
+> One more thing, we will probably have to add a second warning for when
+> the filesystem is re-mounted rw after the initial readonly mount.
 
-Yeah, I prefer this being generic too. I continue to think the race
-isn't meaningful compared to the benefit of gaining a reliable and cheap
-"inc from zero" check.
+Indeed, there would need to be a check for remount-read-write.  I
+didn't check whether remount uses this same code path.
+
+Ben.
 
 -- 
-Kees Cook
+Ben Hutchings, Software Developer                         Codethink Ltd
+https://www.codethink.co.uk/                 Dale House, 35 Dale Street
+                                     Manchester, M1 2HF, United Kingdom
+
