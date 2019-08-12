@@ -2,263 +2,118 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 271B3C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB08C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E15F1208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B2C420820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:20:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbfHLKTn (ORCPT
+        id S1727901AbfHLKUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:19:43 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:57255 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727409AbfHLKTn (ORCPT
+        Mon, 12 Aug 2019 06:20:07 -0400
+Received: from mail-ot1-f72.google.com ([209.85.210.72]:50658 "EHLO
+        mail-ot1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727323AbfHLKUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:19:43 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id x7QOhPs4Rur8Tx7QRhhsK9; Mon, 12 Aug 2019 12:19:40 +0200
-Subject: Re: [PATCH v4 03/11] media: uapi: h264: Add the concept of decoding
- mode
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
-References: <20190808103432.12062-1-ezequiel@collabora.com>
- <20190808103432.12062-4-ezequiel@collabora.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <e8895d5f-af65-5ee8-665b-b9d4abd681bc@xs4all.nl>
-Date:   Mon, 12 Aug 2019 12:19:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 12 Aug 2019 06:20:07 -0400
+Received: by mail-ot1-f72.google.com with SMTP id a21so83540001otk.17
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 03:20:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=F+sCkwDa9f+RxfruDpYk266w8j1SjIK4Xb0PYHWArdY=;
+        b=SWLTcGVuC0QeZXCq3zH2mh7x9S05DOiq4CDf5CBf2H1iexzqHlx8ytMtuknJyEO2V2
+         Fw9lBpG/OkaMGypXjZJbPc9yM6HzMSMsyiEu7defKiG0COnZWHMDI1tRuopqmCtOKMWV
+         7ccYfPX8VHvAU61BfAui8NpbLISoaa+ZLjTJjtkWr3Hgdgo2WFumQHtrUXPH+2EFQHj7
+         UT5wKC5PtiZZ9cLVcCLnsV+mww+YUMFhChnXP/aPHdLx4+fviziqN493qCAqTeaBGtVB
+         IyS0XDX68utHqeSc3KR6YhPYxruclIKKoCXyjFm+2o9tP0id4b7CGcutX8y1NCzMeymV
+         mk3A==
+X-Gm-Message-State: APjAAAXRkZHecwk4aIYh+OxM9XKAIQYi2ZMVnw/sjsEub09hyFN0h30y
+        OlL1F6xHBx/qAig4ZfnOl+2zj9ebpFCYvIOg7547ddO5n/0J
+X-Google-Smtp-Source: APXvYqylZCr71afqbkmSSEoG0bXp+Wqna6q1KYeqMuVdotyvmT64jqS7CvFtW+Sb2KKJRXvbqprM29x92pCgtQB9t92MfbiYnkEv
 MIME-Version: 1.0
-In-Reply-To: <20190808103432.12062-4-ezequiel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfJmAHzbMgg/7+RLqkI3O+xpYZSwzmsq8ZwkX+JeU+AMFaD4MsGY5tuB9Ku+bH4yJItNwyfjuIvgP6j08XEhzt1YAr6FjamU6D53IgfjdxksHM4Q6oYnc
- 3zemor8qhAUaPCrG69dXKBpeHz9UWqIiE6JRziRK0kTiXDhczLs8+Pq4znwaKQDJsx0zDbUcNqlWIWJC//SCRLlWG18PwNr2UncX9zRflbOQtotWOaDjD4iY
- JdosNhOxy+jEoylptWwSnJosThT35Msn0xQ3EnH+48jk+nMQTJFdezWkzaRcflZgmRgt85ZwD+arbAhqUYT9o0SyrvxCGs/7S4XDOJXgDUhezxy0spt7M6mB
- /HWfUdIJJzrAPsiYRyJAApJXDkqGMoAp3IQnwEPAG+tpbdlrldkwhQmZTqmJoDsG1siD0HLbKlXx8QIE52GPbQzad9kLxyiJqyS8KVfd3e7bwi/lWXj9+spZ
- Uw+hWmsJLaqMv22kp9rSxWXyTDZbBNfIkzAvF03hqfR3iH6+S56tlm8TRclR7I5LyhOHhd4A3HKKvQwAoPIt1qAszJohEsVaH4U6fauGIeKmwnckO9r/pPJE
- tZa2ddhUa7Vjin4Ypmj2s7Tx7TS6yA7BD73pMkHlT9+GSuxqo4JjQ9VbKaKrrWwmwoE=
+X-Received: by 2002:a5d:8f8a:: with SMTP id l10mr8658161iol.306.1565605206234;
+ Mon, 12 Aug 2019 03:20:06 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 03:20:06 -0700
+In-Reply-To: <000000000000492086058fad2979@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002d1bcc058fe8deb8@google.com>
+Subject: Re: BUG: corrupted list in rxrpc_local_processor
+From:   syzbot <syzbot+193e29e9387ea5837f1d@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dhowells@redhat.com,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/8/19 12:34 PM, Ezequiel Garcia wrote:
-> From: Boris Brezillon <boris.brezillon@collabora.com>
-> 
-> Some stateless decoders don't support per-slice decoding granularity
-> (or at least not in a way that would make them efficient or easy to use).
-> 
-> Expose a menu to control the supported decoding modes. Drivers are
-> allowed to support only one decoding but they can support both too.
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> ---
-> Changes in v4:
-> * Typos/rewording fixes
-> 
-> Changes in v3:
-> * s/per-{slice,frame} decoding/{slice,frame}-based decoding/
-> * Add Paul's R-b
-> 
-> Changes in v2:
-> * Allow decoding multiple slices in per-slice decoding mode
-> * Minor doc improvement/fixes
-> ---
->  .../media/uapi/v4l/ext-ctrls-codec.rst        | 43 ++++++++++++++++++-
->  drivers/media/v4l2-core/v4l2-ctrls.c          |  9 ++++
->  include/media/h264-ctrls.h                    | 11 +++++
->  3 files changed, 62 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> index c5f39dd50043..ea0455957149 100644
-> --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> @@ -1747,6 +1747,11 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
->      * - __u32
->        - ``size``
->        -
-> +    * - __u32
-> +      - ``start_byte_offset``
-> +      - Where the slice payload starts in the output buffer. Useful when the
-> +        OUTPUT buffer contains more than one slice (some codecs need to know
-> +        where each slice starts in this buffer).
->      * - __u32
->        - ``header_bit_size``
->        -
-> @@ -1930,7 +1935,10 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
->        -
->      * - __u16
->        - ``num_slices``
-> -      - Number of slices needed to decode the current frame
-> +      - Number of slices needed to decode the current frame/field. When
-> +        operating in slice-based decoding mode (see
-> +        :c:type:`v4l2_mpeg_video_h264_decoding_mode`), this field
-> +        should always be set to one.
->      * - __u16
->        - ``nal_ref_idc``
->        - NAL reference ID value coming from the NAL Unit header
-> @@ -2021,6 +2029,39 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
->        - 0x00000004
->        - The DPB entry is a long term reference frame
->  
-> +``V4L2_CID_MPEG_VIDEO_H264_DECODING_MODE (enum)``
-> +    Specifies the decoding mode to use. Currently exposes slice-based and
-> +    frame-based decoding but new modes might be added later on.
-> +    Drivers may expose a single or multiple decoding modes,
-> +    depending on what they can support.
+syzbot has found a reproducer for the following crash on:
 
-This should mention that this is valid for V4L2_PIX_FMT_H264_SLICE pixelformat
-only. And it is a required control (i.e. it must always be present for that
-pixelformat). Ditto for the start code control.
+HEAD commit:    125b7e09 net: tc35815: Explicitly check NET_IP_ALIGN is no..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=16fb7bc2600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a4c9e9f08e9e8960
+dashboard link: https://syzkaller.appspot.com/bug?extid=193e29e9387ea5837f1d
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=159d4eba600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16ba194a600000
 
-Also, the V4L2_PIX_FMT_H264_SLICE should refer to this control and the start
-code control as well since these controls effectively are modifiers for the
-pixelformat.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+193e29e9387ea5837f1d@syzkaller.appspotmail.com
 
-Regards,
+IPv6: ADDRCONF(NETDEV_CHANGE): hsr_slave_1: link becomes ready
+list_del corruption. prev->next should be ffff8880996e84e0, but was  
+ffff8880996e8960
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:51!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.3.0-rc3+ #159
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: krxrpcd rxrpc_local_processor
+RIP: 0010:__list_del_entry_valid.cold+0xf/0x4f lib/list_debug.c:51
+Code: e8 e9 03 1e fe 0f 0b 48 89 f1 48 c7 c7 80 25 c6 87 4c 89 e6 e8 d5 03  
+1e fe 0f 0b 4c 89 f6 48 c7 c7 20 27 c6 87 e8 c4 03 1e fe <0f> 0b 4c 89 ea  
+4c 89 f6 48 c7 c7 60 26 c6 87 e8 b0 03 1e fe 0f 0b
+RSP: 0018:ffff8880a9917cc0 EFLAGS: 00010286
+RAX: 0000000000000054 RBX: ffff8880996e84f8 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815c3b96 RDI: ffffed1015322f8a
+RBP: ffff8880a9917cd8 R08: 0000000000000054 R09: ffffed1015d260d1
+R10: ffffed1015d260d0 R11: ffff8880ae930687 R12: ffff88808f998638
+R13: ffff88808f998638 R14: ffff8880996e84e0 R15: ffff8880aa0a8500
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f2648a08db8 CR3: 00000000981a9000 CR4: 00000000001406e0
+Call Trace:
+  __list_del_entry include/linux/list.h:131 [inline]
+  list_del_init include/linux/list.h:190 [inline]
+  rxrpc_local_destroyer net/rxrpc/local_object.c:429 [inline]
+  rxrpc_local_processor+0x251/0x830 net/rxrpc/local_object.c:465
+  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace 4d70382ddfcfe2b8 ]---
+RIP: 0010:__list_del_entry_valid.cold+0xf/0x4f lib/list_debug.c:51
+Code: e8 e9 03 1e fe 0f 0b 48 89 f1 48 c7 c7 80 25 c6 87 4c 89 e6 e8 d5 03  
+1e fe 0f 0b 4c 89 f6 48 c7 c7 20 27 c6 87 e8 c4 03 1e fe <0f> 0b 4c 89 ea  
+4c 89 f6 48 c7 c7 60 26 c6 87 e8 b0 03 1e fe 0f 0b
+RSP: 0018:ffff8880a9917cc0 EFLAGS: 00010286
+RAX: 0000000000000054 RBX: ffff8880996e84f8 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815c3b96 RDI: ffffed1015322f8a
+RBP: ffff8880a9917cd8 R08: 0000000000000054 R09: ffffed1015d260d1
+R10: ffffed1015d260d0 R11: ffff8880ae930687 R12: ffff88808f998638
+R13: ffff88808f998638 R14: ffff8880996e84e0 R15: ffff8880aa0a8500
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f2648a08db8 CR3: 00000000981a9000 CR4: 00000000001406e0
 
-	Hans
-
-> +
-> +    .. note::
-> +
-> +       This menu control is not yet part of the public kernel API and
-> +       it is expected to change.
-> +
-> +.. c:type:: v4l2_mpeg_video_h264_decoding_mode
-> +
-> +.. cssclass:: longtable
-> +
-> +.. flat-table::
-> +    :header-rows:  0
-> +    :stub-columns: 0
-> +    :widths:       1 1 2
-> +
-> +    * - ``V4L2_MPEG_VIDEO_H264_SLICE_BASED_DECODING``
-> +      - 0
-> +      - The decoding is done at the slice granularity.
-> +        v4l2_ctrl_h264_decode_params->num_slices should be set to 1.
-> +        The OUTPUT buffer must contain a single slice.
-> +    * - ``V4L2_MPEG_VIDEO_H264_FRAME_BASED_DECODING``
-> +      - 1
-> +      - The decoding is done at the frame granularity.
-> +        v4l2_ctrl_h264_decode_params->num_slices should be set to the number of
-> +        slices forming a frame.
-
-Actually, I wonder if there shouldn't be a third option: FIELD_BASED_DECODING
-to indicate that the hardware expects the slices of a single field in a buffer
-instead of both fields.
-
-Or just stick to FRAME_BASED_DECODING for now but explicitly mention that
-in the case of interlaced decoding both fields must be present in the buffer.
-
-A FIELD_BASED_DECODING option can always be added later if necessary.
-
-> +        The OUTPUT buffer should contain all slices needed to decode the
-> +        frame/field.
-> +
->  .. _v4l2-mpeg-mpeg2:
->  
->  ``V4L2_CID_MPEG_VIDEO_MPEG2_SLICE_PARAMS (struct)``
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> index cd1ae016706f..c3194299bfac 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -402,6 +402,11 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
->  		"Explicit",
->  		NULL,
->  	};
-> +	static const char * const h264_decoding_mode[] = {
-> +		"Slice-Based",
-> +		"Frame-Based",
-> +		NULL,
-> +	};
->  	static const char * const mpeg_mpeg2_level[] = {
->  		"Low",
->  		"Main",
-> @@ -633,6 +638,8 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
->  		return h264_fp_arrangement_type;
->  	case V4L2_CID_MPEG_VIDEO_H264_FMO_MAP_TYPE:
->  		return h264_fmo_map_type;
-> +	case V4L2_CID_MPEG_VIDEO_H264_DECODING_MODE:
-> +		return h264_decoding_mode;
->  	case V4L2_CID_MPEG_VIDEO_MPEG2_LEVEL:
->  		return mpeg_mpeg2_level;
->  	case V4L2_CID_MPEG_VIDEO_MPEG2_PROFILE:
-> @@ -852,6 +859,7 @@ const char *v4l2_ctrl_get_name(u32 id)
->  	case V4L2_CID_MPEG_VIDEO_H264_SCALING_MATRIX:		return "H264 Scaling Matrix";
->  	case V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS:		return "H264 Slice Parameters";
->  	case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:		return "H264 Decode Parameters";
-> +	case V4L2_CID_MPEG_VIDEO_H264_DECODING_MODE:		return "H264 Decoding Mode";
->  	case V4L2_CID_MPEG_VIDEO_MPEG2_LEVEL:			return "MPEG2 Level";
->  	case V4L2_CID_MPEG_VIDEO_MPEG2_PROFILE:			return "MPEG2 Profile";
->  	case V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP:		return "MPEG4 I-Frame QP Value";
-> @@ -1220,6 +1228,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
->  	case V4L2_CID_MPEG_VIDEO_H264_VUI_SAR_IDC:
->  	case V4L2_CID_MPEG_VIDEO_H264_SEI_FP_ARRANGEMENT_TYPE:
->  	case V4L2_CID_MPEG_VIDEO_H264_FMO_MAP_TYPE:
-> +	case V4L2_CID_MPEG_VIDEO_H264_DECODING_MODE:
->  	case V4L2_CID_MPEG_VIDEO_MPEG2_LEVEL:
->  	case V4L2_CID_MPEG_VIDEO_MPEG2_PROFILE:
->  	case V4L2_CID_MPEG_VIDEO_MPEG4_LEVEL:
-> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-> index 6160a69c0143..e6c510877f67 100644
-> --- a/include/media/h264-ctrls.h
-> +++ b/include/media/h264-ctrls.h
-> @@ -26,6 +26,7 @@
->  #define V4L2_CID_MPEG_VIDEO_H264_SCALING_MATRIX	(V4L2_CID_MPEG_BASE+1002)
->  #define V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS	(V4L2_CID_MPEG_BASE+1003)
->  #define V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS	(V4L2_CID_MPEG_BASE+1004)
-> +#define V4L2_CID_MPEG_VIDEO_H264_DECODING_MODE	(V4L2_CID_MPEG_BASE+1005)
->  
->  /* enum v4l2_ctrl_type type values */
->  #define V4L2_CTRL_TYPE_H264_SPS			0x0110
-> @@ -33,6 +34,12 @@
->  #define V4L2_CTRL_TYPE_H264_SCALING_MATRIX	0x0112
->  #define V4L2_CTRL_TYPE_H264_SLICE_PARAMS	0x0113
->  #define V4L2_CTRL_TYPE_H264_DECODE_PARAMS	0x0114
-> +#define V4L2_CTRL_TYPE_H264_DECODING_MODE	0x0115
-> +
-> +enum v4l2_mpeg_video_h264_decoding_mode {
-> +	V4L2_MPEG_VIDEO_H264_SLICE_BASED_DECODING,
-> +	V4L2_MPEG_VIDEO_H264_FRAME_BASED_DECODING,
-> +};
->  
->  #define V4L2_H264_SPS_CONSTRAINT_SET0_FLAG			0x01
->  #define V4L2_H264_SPS_CONSTRAINT_SET1_FLAG			0x02
-> @@ -125,6 +132,10 @@ struct v4l2_h264_pred_weight_table {
->  struct v4l2_ctrl_h264_slice_params {
->  	/* Size in bytes, including header */
->  	__u32 size;
-> +
-> +	/* Offset in bytes to the start of slice in the OUTPUT buffer. */
-> +	__u32 start_byte_offset;
-> +
->  	/* Offset in bits to slice_data() from the beginning of this slice. */
->  	__u32 header_bit_size;
->  
-> 
-
-Regards,
-
-	Hans
