@@ -2,133 +2,151 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 985E5C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCB9C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D84320644
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:16:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="RR7TtUdP"
+	by mail.kernel.org (Postfix) with ESMTP id EB79920644
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:18:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfHLRQw (ORCPT
+        id S1727083AbfHLRSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 13:16:52 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43100 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbfHLRQw (ORCPT
+        Mon, 12 Aug 2019 13:18:50 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45667 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbfHLRSt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 13:16:52 -0400
-Received: by mail-qk1-f196.google.com with SMTP id m2so13227855qkd.10;
-        Mon, 12 Aug 2019 10:16:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BtBXM090wQ33aSD3OfaN8dNIs/4MWHf6KDcAkchuLpQ=;
-        b=RR7TtUdP82ci6fgUyyFPtz5v03ncaUV+qUbf9QTbsSN48mhud6FQMJIWcnmdGgx3/v
-         kA+oZAE70C3ETI1ZxHHg6MUIiJeF8a/f09srgpsLn/sYpWM2iY71ZdaVa2XK5kuO670q
-         p3VW/ObwgBXNqNkSGuppsgKJimQJvTWk6X4HGQGSALkV3Rh+Q38/lB9K1PtuuG9FiJ87
-         hPoJR+hWaga1WJeKluEZwHQmP0CRJMbd5W/JlPmoMhruDlyZZBbEgDUT9AhCvIxfpzXe
-         GGiEvoyW8XMDSbzwbvlzgDJDfrsXd9tJVi1jYoilIw5EFnHSvZViqPBPqIralIv2fRHX
-         6TWA==
+        Mon, 12 Aug 2019 13:18:49 -0400
+Received: by mail-wr1-f66.google.com with SMTP id q12so14990416wrj.12
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 10:18:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BtBXM090wQ33aSD3OfaN8dNIs/4MWHf6KDcAkchuLpQ=;
-        b=TlU2dnkkkD8SZ10YMSoTtgD+rJ99y22xz8e/znNcxLVfWhxIPrm/W2o1kjpFriB2T8
-         yxOFlD3VjTXLBxGKduIcEAQY+N6MmH/TYpoA5LNZ1lHQdCHdD7KoPzn5SEfyWTg5o2vJ
-         RJIRA/NQND75cSyLOGPZUTHrDlL7g0Y/PlsdXZTcdNnMA9hHTSQ+1JAz5R/8NC0hJmP1
-         fQMNK9tfpLKSNiHOMji6f6TbcrFYaNuJPu7yX41QfbaHMQgDMNrX13UgaD1dUgZiImu1
-         flE0NLzRAw+RmE4vtQAiHeefBQUrCTh6X7qeJ+jOj3WKIzlQn8MProOXrdAndDRG7qQ2
-         AGqw==
-X-Gm-Message-State: APjAAAX5Gpy5Lo4yTSHAgOoc6zftwfQZ4UA9dStLSQySSUa00u/V79fg
-        lEBit4ZfUt0P3dABs366TRdi8S9w5XzMX7khUkE=
-X-Google-Smtp-Source: APXvYqyLHmujuBanHsJfl5xNeVIrqPmRXrXe6Gt6bY0l1E1v1ndOo/T1IuOolwjZjXVUcDrOQJ2UWWeX2ocPzTjbE9Y=
-X-Received: by 2002:a37:7144:: with SMTP id m65mr24542013qkc.149.1565630211206;
- Mon, 12 Aug 2019 10:16:51 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pBmApiQS/+gQxohoTnkThlw2oRZGT6Jx6zrcPnHDklQ=;
+        b=uI289dW/RX4ZrB2VLK7KfjPprvgcH5OZ/eTb+c0PYlerhqDcE08CdhMqX60VHgqbzp
+         XMK0pvMQyacwKl58oOC1o04j2wk1I9VC+Mht5bOvidBJmpFveH2vf6PuBDssGwRlLyCc
+         cP1dMqL/GnlAZcQliv0PXcUXN/x1avJfvv6cZbuYyz+DmJttzn+xXj3HzsBtsVe5uP8Z
+         jRbJKnCfjhZMtDgnJmRa8vgqAT8GmjxAQGp70kPq+qDns6SYpHnll/HAtFFZ5j3nu1es
+         lGYuWgCYJrEB2jvuSF5x5HlavC7gnV6ldogXJYoyGDwKVUlJJ1BY6M531tKRf8x2l64b
+         yhyA==
+X-Gm-Message-State: APjAAAU61nV0moHStxr6yY7SlKPZ9LECXEyQGy2SU5BrLOaIGWCXaCF0
+        +Bil1/iQFXHTOJ3WFhiUcPy/4A==
+X-Google-Smtp-Source: APXvYqzwJk21tvZbLfhDZjYO1RRyP+UbRZ7w5iO/fbLosDG72tal138bwmCjorD9+/+wHLlasZTdSA==
+X-Received: by 2002:adf:e452:: with SMTP id t18mr5297027wrm.0.1565630327577;
+        Mon, 12 Aug 2019 10:18:47 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id i93sm11419929wri.57.2019.08.12.10.18.46
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 12 Aug 2019 10:18:46 -0700 (PDT)
+Subject: Re: [PATCH] extcon-intel-cht-wc: Don't reset USB data connection at
+ probe
+To:     Yauhen Kharuzhy <jekhor@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20190808220129.2737-1-jekhor@gmail.com>
+ <fbe20a5f-0f64-cadf-2c1e-88a468d54a07@redhat.com>
+ <20190809151116.GD30248@jeknote.loshitsa1.net>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <492098ce-ec4c-a860-4625-27c410d7deb3@redhat.com>
+Date:   Mon, 12 Aug 2019 19:18:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1560928518-243100-1-git-send-email-jiping.ma2@windriver.com> <1560928518-243100-2-git-send-email-jiping.ma2@windriver.com>
-In-Reply-To: <1560928518-243100-2-git-send-email-jiping.ma2@windriver.com>
-From:   Tony Luck <tony.luck@intel.com>
-Date:   Mon, 12 Aug 2019 10:16:40 -0700
-Message-ID: <CA+8MBbKegE2Z3YqB+a4XFEwN=C23YG3c9ju3su-WS5pt1HPCwA@mail.gmail.com>
-Subject: Re: [PATCH] EDAC, ie31200: Add Intel Corporation 3rd Gen Core processor
-To:     Jiping Ma <jiping.ma2@windriver.com>
-Cc:     Jason Baron <jbaron@akamai.com>,
-        Linux Edac Mailing List <linux-edac@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190809151116.GD30248@jeknote.loshitsa1.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 12:34 AM Jiping Ma <jiping.ma2@windriver.com> wrote:
+Hi,
 
-Oops. Boris pointed out to me that this has been left hanging. Sorry
-for the delay.
+On 09-08-19 17:11, Yauhen Kharuzhy wrote:
+> On Fri, Aug 09, 2019 at 01:06:01PM +0200, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 8/9/19 12:01 AM, Yauhen Kharuzhy wrote:
+>>> Intel Cherry Trail Whiskey Cove extcon driver connect USB data lines to
+>>> PMIC at driver probing for further charger detection. This causes reset of
+>>> USB data sessions and removing all devices from bus. If system was
+>>> booted from Live CD or USB dongle, this makes system unusable.
+>>>
+>>> Check if USB ID pin is floating and re-route data lines in this case
+>>> only, don't touch otherwise.
+>>>
+>>> Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
+>>> ---
+>>>    drivers/extcon/extcon-intel-cht-wc.c | 16 ++++++++++++++--
+>>>    1 file changed, 14 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/extcon/extcon-intel-cht-wc.c b/drivers/extcon/extcon-intel-cht-wc.c
+>>> index 9d32150e68db..3ae573e93e6e 100644
+>>> --- a/drivers/extcon/extcon-intel-cht-wc.c
+>>> +++ b/drivers/extcon/extcon-intel-cht-wc.c
+>>> @@ -338,6 +338,7 @@ static int cht_wc_extcon_probe(struct platform_device *pdev)
+>>>    	struct intel_soc_pmic *pmic = dev_get_drvdata(pdev->dev.parent);
+>>>    	struct cht_wc_extcon_data *ext;
+>>>    	unsigned long mask = ~(CHT_WC_PWRSRC_VBUS | CHT_WC_PWRSRC_USBID_MASK);
+>>> +	int pwrsrc_sts, id;
+>>>    	int irq, ret;
+>>>    	irq = platform_get_irq(pdev, 0);
+>>> @@ -387,8 +388,19 @@ static int cht_wc_extcon_probe(struct platform_device *pdev)
+>>>    		goto disable_sw_control;
+>>>    	}
+>>> -	/* Route D+ and D- to PMIC for initial charger detection */
+>>> -	cht_wc_extcon_set_phymux(ext, MUX_SEL_PMIC);
+>>> +	ret = regmap_read(ext->regmap, CHT_WC_PWRSRC_STS, &pwrsrc_sts);
+>>> +	if (ret) {
+>>> +		dev_err(ext->dev, "Error reading pwrsrc status: %d\n", ret);
+>>> +		goto disable_sw_control;
+>>> +	}
+>>> +
+>>> +	id = cht_wc_extcon_get_id(ext, pwrsrc_sts);
+>>> +
+>>> +	/* If no USB host or device connected, route D+ and D- to PMIC for
+>>> +	 * initial charger detection
+>>> +	 */
+>>> +	if (id == INTEL_USB_ID_FLOAT)
+>>> +		cht_wc_extcon_set_phymux(ext, MUX_SEL_PMIC);
+>>
+>> The check here should be != INTEL_USB_ID_GND, when we are connected as
+>> device we are charging from the host we are connected to and the port
+>> we are connected to may be a CDP (charging downstream port) instead of
+>> a SDP (standard downstream port) allowing us to charge at 1.5A instead
+>> of 0.5A, also != INTEL_USB_ID_GND matches the condition used in
+>> cht_wc_extcon_pwrsrc_event to determine if we should continue with
+>> charger detection there.
+> 
+> Actually it should be checked as ((id != INTEL_USB_ID_GND) && (id !=
+> INTEL_USB_RID_A)), to not interrupt connection if ACA used and our host
+> is OTG A device (for example, if LiveCD boots from USB flash inserted
+> into an ACA USB hub).
 
-> 3rd Gen Core seems to work just like Skylake.
+Right, except that cht_wc_extcon_get_id never returns INTEL_USB_RID_A,
+so checking for that would be superfluous and also would be inconsistent
+with what cht_wc_extcon_pwrsrc_event is doing, so for now please just test
+for != INTEL_USB_ID_GND, if cht_wc_extcon_get_id ever starts supporting
+RID_A then we should fix both cht_wc_extcon_pwrsrc_event and you new check
+at that time.
 
-Maybe "just like all the other Xeon-E3 processors?
+Hmm, I now see that cht_wc_extcon_get_id currently only reports one of:
+INTEL_USB_ID_GND or INTEL_USB_ID_FLOAT so == INTEL_USB_ID_FLOAT is
+equivalent to != INTEL_USB_ID_GND still please check for 1= INTEL_USB_ID_GND
+as that is what cht_wc_extcon_pwrsrc_event is doing.
 
-"3rd Gen Core" seems to be Ivybridge generation (based on the PCI
-device ID below).
-I.e. "Xeon E3-12xx V2". Is that correct?
+>> Like your other patch I will try to give this one a  test-run tomorrow.
 
-I don't have a way to test that, so I'd like some more details on the
-testing that
-you have done.  Specifically has this driver been run on a system and correctly
-reported at least one error?
+I've given this patch a test-run today and I can confirm that BC1.2 charger
+detection still works fine on my device using this driver.
 
-> Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
-> ---
->  drivers/edac/ie31200_edac.c | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
-> index aac9b9b..1445336 100644
-> --- a/drivers/edac/ie31200_edac.c
-> +++ b/drivers/edac/ie31200_edac.c
-> @@ -19,6 +19,7 @@
->   * 0c08: Xeon E3-1200 v3 Processor DRAM Controller
->   * 1918: Xeon E3-1200 v5 Skylake Host Bridge/DRAM Registers
->   * 5918: Xeon E3-1200 Xeon E3-1200 v6/7th Gen Core Processor Host Bridge/DRAM Registers
-> + * 0154: 3rd Gen Core processor DRAM Controller
+Regards,
 
-I think this line should be added chronologically by age of processor
-(i.e. at the start
-of the list)
-
->   *
->   * Based on Intel specification:
->   * http://www.intel.com/content/dam/www/public/us/en/documents/datasheets/xeon-e3-1200v3-vol-2-datasheet.pdf
-> @@ -59,6 +60,7 @@
->  #define PCI_DEVICE_ID_INTEL_IE31200_HB_7 0x0c08
->  #define PCI_DEVICE_ID_INTEL_IE31200_HB_8 0x1918
->  #define PCI_DEVICE_ID_INTEL_IE31200_HB_9 0x5918
-> +#define PCI_DEVICE_ID_INTEL_IE31200_HB_10 0x0154
->
->  #define IE31200_DIMMS                  4
->  #define IE31200_RANKS                  8
-> @@ -569,6 +571,9 @@ static void ie31200_remove_one(struct pci_dev *pdev)
->                 PCI_VEND_DEV(INTEL, IE31200_HB_9), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
->                 IE31200},
->         {
-> +               PCI_VEND_DEV(INTEL, IE31200_HB_10), PCI_ANY_ID, PCI_ANY_ID, 0, 0
-> +               , IE31200},
-> +       {
->                 0,
->         }            /* 0 terminated list. */
->  };
-> --
-> 1.9.1
->
+Hans
