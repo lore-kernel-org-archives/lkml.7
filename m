@@ -2,125 +2,168 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25763C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2297C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF14F20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D87C206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:53:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nz/9gOYB"
+	dkim=pass (2048-bit key) header.d=linbit-com.20150623.gappssmtp.com header.i=@linbit-com.20150623.gappssmtp.com header.b="cQbuABGz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbfHLLvy (ORCPT
+        id S1728311AbfHLLw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 07:51:54 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52857 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728231AbfHLLvx (ORCPT
+        Mon, 12 Aug 2019 07:52:59 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40957 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728229AbfHLLw7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 07:51:53 -0400
-Received: by mail-wm1-f66.google.com with SMTP id s3so11887974wms.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 04:51:51 -0700 (PDT)
+        Mon, 12 Aug 2019 07:52:59 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v19so11496593wmj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 04:52:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=RBO3DRjOTnD2wLqgKm2sOWPkxUiw82Gd++GtZ0/46Pk=;
-        b=nz/9gOYBm5f41AVteysD7l24n/Fd0CiOd3001w0L8BtaHes0R2oAL3pINo1E67hDqy
-         LYLZYDx2CxxVwMBSRwITxQ7LBANizanIV8XLQDJPMvsJ77m9tES+HS7jSPuaZNNf5zLH
-         nJNC3fbaSgk6TIwPbEkvXAR9YMr4uaJGNyujl8nkgLPC2ajuplKaJMLBVMygaRw4mctr
-         v9K4EXL7KXzp3RsqZvOuNFZZIBgL3EH8ok18K9QCfbZD0XeauBkGNU8sGb/rdBD+mhii
-         VoucQhke9qSJVeBDCh/U7CT6nQl1GGi3bHOV9kBWWjJvjTkOKetcXv8rzrMZAI1jwibq
-         JScg==
+        d=linbit-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=JQc8MsYNi4B/FOCBvJsS2RlJj0CEn21Q6IfYpjwCByI=;
+        b=cQbuABGzre6z66mKEgHBD96wCUZXMJC4mpPHT0efXWmmjm9LFEbu8bCipYfzUQi0SI
+         ZSRWEHmHyx2h+IXRZuJ9vBM/yt9QBDMhgL00fYPO11GrJ7Xkufs/GaVL/Vkykqz2PBQv
+         0AXOp7Q0qbjD8nar9v7vS0Pc1OGwrS8JPsOb6O0ETj086uVIJ2vn6abQBmF8MTdaud4G
+         bQ8kGU1+/VI25AXVwFAe2LUenrmbU9/6iYJRKU0ExsG298YaWKU5k91+lDv3RlRSiFgl
+         l2qvee23tylBqhyv+VRsN3TU7GXwy4G8M0+a+X6nfbvXUKW2WLwPqkNHg96FNjdtOjQ8
+         UTNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=RBO3DRjOTnD2wLqgKm2sOWPkxUiw82Gd++GtZ0/46Pk=;
-        b=V9CRDhH9SJD1Uxx0HUILkTSQjNn6iNE7ua5CrA9chagJokObVT8CviAGqvKjqw622T
-         1NvMlOM5FNBwjtSWxgRTXAxxqUtZeqEk7PYEoGGA1qsQlSJXZmZq7cssKxiTyok+HYyC
-         kkDeFin1MF2sq2PNHL9N5FN85+xSabXggqd1TjjFtm+ky575lMeI34331bHAnzac5MlQ
-         LKs3i0+4oEaS0GAPdu2t4z2dvoCGTOgLJhcmcy5ODQkw7bHD9kGVb5EeLFkcZhhS+yAj
-         vP0UrZMl154yZ+oLDjeGg9d9ksUTYTvlrx6WyXi6jnfrcq3FSx5/5Mbtgv0Z89mEhA6q
-         jOAg==
-X-Gm-Message-State: APjAAAWI/3gQRQI0vVASPZPtuXqvES5qSJL1qKC1z5XXpJHPBVk3RYqM
-        M7Ey5g2eObP2ADX8ibqeSKxt5Q==
-X-Google-Smtp-Source: APXvYqwV9aoRqyXcZZQN5vuglpU7Un+RzXUmxodwxoqrNtY4ZzQnftXwr2r3/ozL4duHxbq6J6RM+w==
-X-Received: by 2002:a1c:a985:: with SMTP id s127mr26790055wme.163.1565610711038;
-        Mon, 12 Aug 2019 04:51:51 -0700 (PDT)
-Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id s64sm22246982wmf.16.2019.08.12.04.51.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 04:51:50 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 12:51:48 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Allison Randal <allison@lohutok.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Tianping . Fang" <tianping.fang@mediatek.com>,
-        Josef Friedl <josef.friedl@speed.at>
-Subject: Re: Re: Re: [PATCH v3 01/10] dt-bindings: add powercontroller
-Message-ID: <20190812115148.GT26727@dell>
-References: <20190729174154.4335-1-frank-w@public-files.de>
- <20190729174154.4335-2-frank-w@public-files.de>
- <20190812102035.GH26727@dell>
- <trinity-a6c06411-16d3-40ab-a4fb-3494131c8ed6-1565608221532@3c-app-gmx-bs80>
- <20190812112507.GR26727@dell>
- <trinity-738d59ed-ecac-4025-a729-0888eaea1f95-1565609875829@3c-app-gmx-bs80>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JQc8MsYNi4B/FOCBvJsS2RlJj0CEn21Q6IfYpjwCByI=;
+        b=KlwAOwplvzWydgfEfcMSnG2tPcCGXDBtQayDkFnqT3k3aRvqpataVKxrH+1oJNBPNe
+         eCZXCAQdUDtdgDAbMaZNj2691bB342VVp4cFS9Ine87e/roWxCQeAVeDrWcSx6X/Qm7/
+         QN6I8ijnvWXxwUkOeJI1e7OxYVtPkhw2TaoL2wPip6F0iN0ERll6GuRbG0pFnKx0L6L0
+         7nIHB/X+36UjyBcfHVBJ6AH7hZuu5iolVKFCEtylLMbtRU8kFou1T0pNbwOzp4YTN5OU
+         CvZJQSnunMAOnc0j7NjAugcdk/Tg9/+3+szAECYi8H9wim9tkBkiWDF231sTgxM5pwhV
+         wsOA==
+X-Gm-Message-State: APjAAAXLttvrX4JdA1Yek9c7AlYYaxfthkfCS7HsaSARgx6MYmhrJfuP
+        xSb2zc9R2nKCux/YYjsAVzo3ng==
+X-Google-Smtp-Source: APXvYqwWWWi+XtR+N8wWk9JxW+7GVf46hQYfqdReJTujMWv4l41Mno0JVhc/WRt2g3J2tVVJ/i9WYA==
+X-Received: by 2002:a7b:c04f:: with SMTP id u15mr27138326wmc.106.1565610776729;
+        Mon, 12 Aug 2019 04:52:56 -0700 (PDT)
+Received: from fat-tyre.localnet ([2001:858:107:1:7139:36a7:c14f:e911])
+        by smtp.gmail.com with ESMTPSA id f17sm8185963wmj.27.2019.08.12.04.52.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Aug 2019 04:52:55 -0700 (PDT)
+From:   Philipp Reisner <philipp.reisner@linbit.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     David Laight <David.Laight@aculab.com>,
+        'Christoph =?ISO-8859-1?Q?B=F6hmwalder=27?= 
+        <christoph.boehmwalder@linbit.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>
+Subject: Re: [PATCH] drbd: do not ignore signals in threads
+Date:   Mon, 12 Aug 2019 13:52:52 +0200
+Message-ID: <1761552.9xIroHqhk7@fat-tyre>
+In-Reply-To: <6f8c0d1e51c242a288fbf9b32240e4c1@AcuMS.aculab.com>
+References: <20190729083248.30362-1-christoph.boehmwalder@linbit.com> <ad16d006-4382-3f77-8968-6f840e58b8df@linbit.com> <6f8c0d1e51c242a288fbf9b32240e4c1@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <trinity-738d59ed-ecac-4025-a729-0888eaea1f95-1565609875829@3c-app-gmx-bs80>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 12 Aug 2019, Frank Wunderlich wrote:
+Hi Jens,
 
-> > Gesendet: Montag, 12. August 2019 um 13:25 Uhr
-> > Von: "Lee Jones" <lee.jones@linaro.org>
-> > It was an example (hence the "E.g.").
-> >
-> > You will need to adapt it depending on where the file ends up.
-> 
-> i saw the e.g., but i wanted to know relative to which directory ;) your example mentions that it should contain the dt-bindings-folder and i think it should be relative to current file...
-> 
-> have applied your suggestions to my tree
-> 
-> https://github.com/frank-w/BPI-R2-4.14/commits/5.3-poweroff
-> 
-> please take a short look if i don't miss anything
+Please have a look.
 
-Just resubmit them.  Doing off-list reviews is a slippery slope.
+With fee109901f392 Eric W. Biederman changed drbd to use send_sig()=20
+instead of force_sig(). That was part of a series that did this change
+in multiple call sites tree wide. Which, by accident broke drbd, since=20
+the signals are _not_ allowed by default. That got released with v5.2.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+On July 29 Christoph 	B=F6hmwalder sent a patch that adds two=20
+allow_signal()s to fix drbd.
+
+Then David Laight points out that he has code that can not deal
+with the send_sig() instead of force_sig() because allowed signals
+can be sent from user-space as well.
+I assume that David is referring to out of tree code, so I fear it
+is up to him to fix that to work with upstream, or initiate a=20
+revert of Eric's change.
+
+Jens, please consider sending Christoph's path to Linus for merge in=20
+this cycle, or let us know how you think we should proceed.
+
+best regards,
+ Phil
+
+Am Montag, 5. August 2019, 11:41:06 CEST schrieb David Laight:
+> From: Christoph B=F6hmwalder
+>=20
+> > Sent: 05 August 2019 10:33
+> >=20
+> > On 29.07.19 10:50, David Laight wrote:
+> >=20
+> > > Doesn't unmasking the signals and using send_sig() instead  of
+> > > force_sig()
+> > > have the (probably unwanted) side effect of allowing userspace to send
+> > > the signal?
+> >=20
+> >=20
+> > I have ran some tests, and it does look like it is now possible to send
+> > signals to the DRBD kthread from userspace. However, ...
+> >=20
+> >=20
+> > > I've certainly got some driver code that uses force_sig() on a kthread
+> > > that it doesn't (ever) want userspace to signal.
+> >=20
+> >=20
+> > ... we don't feel that it is absolutely necessary for userspace to be
+> > unable to send a signal to our kthreads. This is because the DRBD thread
+> > independently checks its own state, and (for example) only exits as a
+> > result of a signal if its thread state was already "EXITING" to begin
+> > with.
+>=20
+>=20
+> In must 'clear' the signal - otherwise it won't block again.
+>=20
+> I've also got this horrid code fragment:
+>=20
+>     init_waitqueue_entry(&w, current);
+>=20
+>     /* Tell scheduler we are going to sleep... */
+>     if (signal_pending(current) && !interruptible)
+>         /* We don't want waking immediately (again) */
+>         sleep_state =3D TASK_UNINTERRUPTIBLE;
+>     else
+>         sleep_state =3D TASK_INTERRUPTIBLE;
+>     set_current_state(sleep_state);
+>=20
+>     /* Connect to condition variable ... */
+>     add_wait_queue(cvp, &w);
+>     mutex_unlock(mtxp); /* Release mutex */
+>=20
+> where we want to sleep TASK_UNINTERRUPTIBLE but that f*cks up the 'load
+> average',
+ so sleep TASK_INTERRUPTIBLE unless there is a signal pending
+> that we want to ignore.
+>=20
+> 	David
+>=20
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1
+> 1PT, UK
+ Registration No: 1397386 (Wales)
+
+
+=2D-=20
+LINBIT | Keeping The Digital World Running
+
+DRBD=AE and LINBIT=AE are registered trademarks of LINBIT, Austria.
+
+
+
