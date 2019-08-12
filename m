@@ -2,195 +2,368 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4E1C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 298BEC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96529206C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D912120578
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:06:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RV02ssHx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfHLXEw (ORCPT
+        id S1726668AbfHLXGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 19:04:52 -0400
-Received: from mga12.intel.com ([192.55.52.136]:60121 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726316AbfHLXEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 19:04:52 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 16:04:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,379,1559545200"; 
-   d="scan'208";a="376109369"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga006.fm.intel.com with ESMTP; 12 Aug 2019 16:04:50 -0700
-Date:   Mon, 12 Aug 2019 16:04:50 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, mst@redhat.com, rkrcmar@redhat.com,
-        jmattson@google.com
-Subject: Re: [PATCH v6 7/8] KVM: x86: Load Guest fpu state when accessing
- MSRs managed by XSAVES
-Message-ID: <20190812230450.GD4996@linux.intel.com>
-References: <20190725031246.8296-1-weijiang.yang@intel.com>
- <20190725031246.8296-8-weijiang.yang@intel.com>
- <20190812230203.GC4996@linux.intel.com>
+        Mon, 12 Aug 2019 19:06:32 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41224 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbfHLXGc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 19:06:32 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 196so3289545pfz.8
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 16:06:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=De9jcsYouvXHLh29bhHmb3kbddcyyiH/H6Cd5fLJLXA=;
+        b=RV02ssHxjFrVVEupasCBV/t3807qEtv7FnIlZqUgUyOfO/9nwFM4mHRIhmByK+HbvU
+         QvFUeCZF/PA0ZEx8HUQpYievndAv0tJk9n86shTgvHg6esAJTNY3T+WkhZ3DFTTwpJj0
+         PUBCCnay7zNjKrIpgHccEN1YlUhrIZ5RhJGq2NmLlI5g6/0uQbQ2fefizb23xyI7ALek
+         bbMKGwJelXNTrNnVh/0HVoLgJXWxwUoZUWRUDUj6rRG+5/oP1JbuvAOb8m3EWyiZm8+c
+         YZWKT5boCQAWy7jgWM1Oce62ET6srHIz0NTkLvyJ4b37TesY7g/m7t/i1xR26tSc72wl
+         oa/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=De9jcsYouvXHLh29bhHmb3kbddcyyiH/H6Cd5fLJLXA=;
+        b=nbpRoGddUUY9LHvAzJhk9b5JN6HOakgtcDPNKrTdPsxeMT3ilOLdfE/kDuUBiKzthJ
+         VfYQwlsLohGBkVgJF4CLptI+cHNBDwESY7fhbCsZsjbxtkKNp5AaY5/t0rXBDIR85spI
+         XCKd4Vd/kR8LnuoleHbq6fMJKgmQBP07AM5s+PgLHcXrjIviJAhr0+KPp77ceXVQ5az0
+         CfLAy6HdR7kB0adJHcLnsqjUecSORbxa0/UprNV4CmSLP9o+Y+2dL/jHltZc3eia3r9H
+         NeXnuEEd+hrJ1UPYz2rQcsXrJoygnqGEynD0xEanqRVCp6hjuSdtkmMqTbGmNCqjyYyw
+         epaw==
+X-Gm-Message-State: APjAAAVeHCv39KbkFrklUC4D66wY81K4XbUZ4APXFZxiQBFVbNi97cw4
+        gS99DWbEqLy/SWp7LH0dZlK3qcH4YcLO3wBzrdWggA==
+X-Google-Smtp-Source: APXvYqwlmeoYcYvuUCn9jbvYIMAPyh+ExMj7OhAC+KEvOBFLUwHY7v5/Fo2cCr8O4vspv2fnrL4/77m3DLxTX4q1slM=
+X-Received: by 2002:aa7:8085:: with SMTP id v5mr20736102pff.165.1565651191125;
+ Mon, 12 Aug 2019 16:06:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812230203.GC4996@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190812214711.83710-1-nhuck@google.com>
+In-Reply-To: <20190812214711.83710-1-nhuck@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 12 Aug 2019 16:06:20 -0700
+Message-ID: <CAKwvOdnruuSr01efU9W7vdHy5nngYj5WOWGaCRf7ucX=6WRNKA@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Change fallthrough comments to attributes
+To:     Nathan Huckleberry <nhuck@google.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 04:02:03PM -0700, Sean Christopherson wrote:
-> On Thu, Jul 25, 2019 at 11:12:45AM +0800, Yang Weijiang wrote:
-> > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> > 
-> > A handful of CET MSRs are not context switched through "traditional"
-> > methods, e.g. VMCS or manual switching, but rather are passed through
-> > to the guest and are saved and restored by XSAVES/XRSTORS, i.e. the
-> > guest's FPU state.
-> > 
-> > Load the guest's FPU state if userspace is accessing MSRs whose values
-> > are managed by XSAVES so that the MSR helper, e.g. vmx_{get,set}_msr(),
-> > can simply do {RD,WR}MSR to access the guest's value.
-> > 
-> > Note that guest_cpuid_has() is not queried as host userspace is allowed
-> > to access MSRs that have not been exposed to the guest, e.g. it might do
-> > KVM_SET_MSRS prior to KVM_SET_CPUID2.
-> > 
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Co-developed-by: Yang Weijiang <weijiang.yang@intel.com>
-> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> > ---
-> >  arch/x86/kvm/x86.c | 29 ++++++++++++++++++++++++++++-
-> >  1 file changed, 28 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index fafd81d2c9ea..c657e6a56527 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -102,6 +102,8 @@ static void enter_smm(struct kvm_vcpu *vcpu);
-> >  static void __kvm_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags);
-> >  static void store_regs(struct kvm_vcpu *vcpu);
-> >  static int sync_regs(struct kvm_vcpu *vcpu);
-> > +static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu);
-> > +static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu);
-> >  
-> >  struct kvm_x86_ops *kvm_x86_ops __read_mostly;
-> >  EXPORT_SYMBOL_GPL(kvm_x86_ops);
-> > @@ -2959,6 +2961,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
-> >  }
-> >  EXPORT_SYMBOL_GPL(kvm_get_msr_common);
-> >  
-> > +static bool is_xsaves_msr(u32 index)
-> > +{
-> > +	return index == MSR_IA32_U_CET ||
-> > +	       (index >= MSR_IA32_PL0_SSP && index <= MSR_IA32_PL3_SSP);
-> > +}
-> > +
-> >  /*
-> >   * Read or write a bunch of msrs. All parameters are kernel addresses.
-> >   *
-> > @@ -2969,11 +2977,30 @@ static int __msr_io(struct kvm_vcpu *vcpu, struct kvm_msrs *msrs,
-> >  		    int (*do_msr)(struct kvm_vcpu *vcpu,
-> >  				  unsigned index, u64 *data))
-> >  {
-> > +	bool fpu_loaded = false;
-> >  	int i;
-> > +	u64 cet_bits = XFEATURE_MASK_CET_USER | XFEATURE_MASK_CET_KERNEL;
-> 
-> Dunno if the compiler will actually generate different code, but this can be a
-> const.
-> 
-> > +	u64 host_xss = 0;
-> > +
-> > +	for (i = 0; i < msrs->nmsrs; ++i) {
-> > +		if (!fpu_loaded && is_xsaves_msr(entries[i].index)) {
-> > +			if (!kvm_x86_ops->xsaves_supported() ||
-> > +			    !kvm_x86_ops->supported_xss())
-> 
-> The "!kvm_x86_ops->supported_xss()" is redundant with the host_xss check
-> below.
-> 
-> > +				continue;
-> 
-> Hmm, vmx_set_msr() should be checking host_xss, arguably we should call
-> do_msr() and let it handle the bad MSR access.  I don't have a strong
-> opinion either way, practically speaking the end result will be the same.
-> 
-> If we do want to handle a misbehaving userspace here, this should be
-> 'break' instead of 'continue'.
-> 
-> > +
-> > +			host_xss = kvm_x86_ops->supported_xss();
-> >  
-> > -	for (i = 0; i < msrs->nmsrs; ++i)
-> > +			if ((host_xss & cet_bits) != cet_bits)
-> 
-> I'm pretty sure this should check for either CET bit being set, not both,
-> e.g. I assume it's possible to enable and expose XFEATURE_MASK_CET_USER
-> but not XFEATURE_MASK_CET_KERNEL.
-> 
-> So something like
-> 
-> 	const u64 cet_bits = XFEATURE_MASK_CET_USER | XFEATURE_MASK_CET_KERNEL;
-> 	const bool cet_supported = kvm_x86_ops->xsaves_supported() &&
-> 				   (kvm_x86_ops->supported_xss() & cet_bits);
+On Mon, Aug 12, 2019 at 2:48 PM 'Nathan Huckleberry' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+>
+> Clang does not support the use of comments to label
+> intentional fallthrough. This patch replaces some uses
+> of comments to attributesto cut down a significant number
+> of warnings on clang (from ~50000 to ~200). Only comments
+> in commonly used header files have been replaced.
+>
+> Since there is still quite a bit of noise, this
+> patch moves -Wimplicit-fallthrough to
+> Makefile.extrawarn if you are compiling with
+> clang.
+>
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+> ---
+>  Makefile                   |  4 +++
+>  include/linux/jhash.h      | 60 ++++++++++++++++++++++++++++----------
+>  include/linux/mm.h         |  9 ++++--
+>  include/linux/signal.h     | 14 +++++----
+>  include/linux/skbuff.h     | 12 ++++----
+>  lib/zstd/bitstream.h       | 10 +++----
+>  scripts/Makefile.extrawarn |  3 ++
+>  7 files changed, 77 insertions(+), 35 deletions(-)
+>
+> diff --git a/Makefile b/Makefile
+> index c391fbb07195..875930c19619 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -847,7 +847,11 @@ NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
+>  KBUILD_CFLAGS += -Wdeclaration-after-statement
+>
+>  # Warn about unmarked fall-throughs in switch statement.
+> +# If the compiler is clang, this warning is only enabled if W=1 in
+> +# Makefile.extrawarn
+> +ifndef CONFIG_CC_IS_CLANG
+>  KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
 
-Oh, and this should use kvm_supported_xss(), which masks ->supported_xss()
-with KVM_SUPPORTED_XSS .
+This should go in the block higher up (see line 739) that already
+exists for CONFIG_CC_IS_CLANG.
 
-> 
-> 	for (i = 0; i < msrs->nmsrs; ++i) {
-> 		if (!fpu_loaded && cet_supported &&
-> 		    is_xsaves_msr(entries[i].index)) {
-> 			kvm_load_guest_fpu(vcpu);
-> 			fpu_loaded = true;
-> 		}
-> 		if (do_msr(vcpu, entries[i].index, &entries[i].data))
-> 			break;	
-> 	}
-> 
-> or
-> 
-> 	const u64 cet_bits = XFEATURE_MASK_CET_USER | XFEATURE_MASK_CET_KERNEL;
-> 
-> 	for (i = 0; i < msrs->nmsrs; ++i) {
-> 		if (!fpu_loaded && is_xsaves_msr(entries[i].index)) {
-> 			if (!kvm_x86_ops->supported_xss() ||
-> 			    !(kvm_x86_ops->supported_xss() & cet_bits))
-> 				break;
-> 			kvm_load_guest_fpu(vcpu);
-> 			fpu_loaded = true;
-> 		}
-> 		if (do_msr(vcpu, entries[i].index, &entries[i].data))
-> 			break;	
-> 	}
-> 
-> 
-> > +				continue;
-> > +
-> > +			kvm_load_guest_fpu(vcpu);
-> > +			fpu_loaded = true;
-> > +		}
-> >  		if (do_msr(vcpu, entries[i].index, &entries[i].data))
-> >  			break;
-> > +	}
-> > +	if (fpu_loaded)
-> > +		kvm_put_guest_fpu(vcpu);
-> >  
-> >  	return i;
-> >  }
-> > -- 
-> > 2.17.2
-> > 
+> +endif
+>
+>  # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
+>  KBUILD_CFLAGS += -Wvla
+> diff --git a/include/linux/jhash.h b/include/linux/jhash.h
+> index ba2f6a9776b6..6cb2381501d1 100644
+> --- a/include/linux/jhash.h
+> +++ b/include/linux/jhash.h
+
+Probably should split this patch into:
+1. Makefile and scripts/Makefile.extrawarn hunks
+2. hunks for each other file that can be applied individually (as
+makes sense for the maintainers' trees).
+
+> @@ -86,19 +86,43 @@ static inline u32 jhash(const void *key, u32 length, u32 initval)
+>         }
+>         /* Last block: affect all 32 bits of (c) */
+>         switch (length) {
+> -       case 12: c += (u32)k[11]<<24;   /* fall through */
+> -       case 11: c += (u32)k[10]<<16;   /* fall through */
+> -       case 10: c += (u32)k[9]<<8;     /* fall through */
+> -       case 9:  c += k[8];             /* fall through */
+> -       case 8:  b += (u32)k[7]<<24;    /* fall through */
+> -       case 7:  b += (u32)k[6]<<16;    /* fall through */
+> -       case 6:  b += (u32)k[5]<<8;     /* fall through */
+> -       case 5:  b += k[4];             /* fall through */
+> -       case 4:  a += (u32)k[3]<<24;    /* fall through */
+> -       case 3:  a += (u32)k[2]<<16;    /* fall through */
+> -       case 2:  a += (u32)k[1]<<8;     /* fall through */
+> -       case 1:  a += k[0];
+> +       case 12:
+> +               c += (u32)k[11]<<24;
+> +               __attribute__((fallthrough));
+> +       case 11:
+> +               c += (u32)k[10]<<16;
+> +               __attribute__((fallthrough));
+> +       case 10:
+> +               c += (u32)k[9]<<8;
+> +               __attribute__((fallthrough));
+> +       case 9:
+> +               c += k[8];
+> +               __attribute__((fallthrough));
+> +       case 8:
+> +               b += (u32)k[7]<<24;
+> +               __attribute__((fallthrough));
+> +       case 7:
+> +               b += (u32)k[6]<<16;
+> +               __attribute__((fallthrough));
+> +       case 6:
+> +               b += (u32)k[5]<<8;
+> +               __attribute__((fallthrough));
+> +       case 5:
+> +               b += k[4];
+> +               __attribute__((fallthrough));
+> +       case 4:
+> +               a += (u32)k[3]<<24;
+> +               __attribute__((fallthrough));
+> +       case 3:
+> +               a += (u32)k[2]<<16;
+> +               __attribute__((fallthrough));
+> +       case 2:
+> +               a += (u32)k[1]<<8;
+> +               __attribute__((fallthrough));
+> +       case 1:
+> +               a += k[0];
+>                  __jhash_final(a, b, c);
+> +               break;
+>         case 0: /* Nothing left to add */
+>                 break;
+>         }
+> @@ -132,10 +156,16 @@ static inline u32 jhash2(const u32 *k, u32 length, u32 initval)
+>
+>         /* Handle the last 3 u32's */
+>         switch (length) {
+> -       case 3: c += k[2];      /* fall through */
+> -       case 2: b += k[1];      /* fall through */
+> -       case 1: a += k[0];
+> +       case 3:
+> +               c += k[2];
+> +               __attribute__((fallthrough));
+> +       case 2:
+> +               b += k[1];
+> +               __attribute__((fallthrough));
+> +       case 1:
+> +               a += k[0];
+>                 __jhash_final(a, b, c);
+> +               break;
+>         case 0: /* Nothing left to add */
+>                 break;
+>         }
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 0334ca97c584..52d99f263ca3 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -158,11 +158,14 @@ static inline void __mm_zero_struct_page(struct page *page)
+>
+>         switch (sizeof(struct page)) {
+>         case 80:
+> -               _pp[9] = 0;     /* fallthrough */
+> +               _pp[9] = 0;
+> +               __attribute__((fallthrough));
+>         case 72:
+> -               _pp[8] = 0;     /* fallthrough */
+> +               _pp[8] = 0;
+> +               __attribute__((fallthrough));
+>         case 64:
+> -               _pp[7] = 0;     /* fallthrough */
+> +               _pp[7] = 0;
+> +               __attribute__((fallthrough));
+>         case 56:
+>                 _pp[6] = 0;
+>                 _pp[5] = 0;
+> diff --git a/include/linux/signal.h b/include/linux/signal.h
+> index b5d99482d3fe..4fb0a0041a37 100644
+> --- a/include/linux/signal.h
+> +++ b/include/linux/signal.h
+> @@ -129,11 +129,11 @@ static inline void name(sigset_t *r, const sigset_t *a, const sigset_t *b) \
+>                 b3 = b->sig[3]; b2 = b->sig[2];                         \
+>                 r->sig[3] = op(a3, b3);                                 \
+>                 r->sig[2] = op(a2, b2);                                 \
+> -               /* fall through */                                      \
+> +               __attribute__((fallthrough));                           \
+>         case 2:                                                         \
+>                 a1 = a->sig[1]; b1 = b->sig[1];                         \
+>                 r->sig[1] = op(a1, b1);                                 \
+> -               /* fall through */                                      \
+> +               __attribute__((fallthrough));                           \
+>         case 1:                                                         \
+>                 a0 = a->sig[0]; b0 = b->sig[0];                         \
+>                 r->sig[0] = op(a0, b0);                                 \
+> @@ -163,9 +163,9 @@ static inline void name(sigset_t *set)                                      \
+>         switch (_NSIG_WORDS) {                                          \
+>         case 4: set->sig[3] = op(set->sig[3]);                          \
+>                 set->sig[2] = op(set->sig[2]);                          \
+> -               /* fall through */                                      \
+> +               __attribute__((fallthrough));                           \
+>         case 2: set->sig[1] = op(set->sig[1]);                          \
+> -               /* fall through */                                      \
+> +               __attribute__((fallthrough));                           \
+>         case 1: set->sig[0] = op(set->sig[0]);                          \
+>                     break;                                              \
+>         default:                                                        \
+> @@ -186,7 +186,7 @@ static inline void sigemptyset(sigset_t *set)
+>                 memset(set, 0, sizeof(sigset_t));
+>                 break;
+>         case 2: set->sig[1] = 0;
+> -               /* fall through */
+> +               __attribute__((fallthrough));
+>         case 1: set->sig[0] = 0;
+>                 break;
+>         }
+> @@ -199,7 +199,7 @@ static inline void sigfillset(sigset_t *set)
+>                 memset(set, -1, sizeof(sigset_t));
+>                 break;
+>         case 2: set->sig[1] = -1;
+> -               /* fall through */
+> +               __attribute__((fallthrough));
+>         case 1: set->sig[0] = -1;
+>                 break;
+>         }
+> @@ -230,6 +230,7 @@ static inline void siginitset(sigset_t *set, unsigned long mask)
+>                 memset(&set->sig[1], 0, sizeof(long)*(_NSIG_WORDS-1));
+>                 break;
+>         case 2: set->sig[1] = 0;
+> +               __attribute__((fallthrough));
+>         case 1: ;
+>         }
+>  }
+> @@ -242,6 +243,7 @@ static inline void siginitsetinv(sigset_t *set, unsigned long mask)
+>                 memset(&set->sig[1], -1, sizeof(long)*(_NSIG_WORDS-1));
+>                 break;
+>         case 2: set->sig[1] = -1;
+> +               __attribute__((fallthrough));
+>         case 1: ;
+>         }
+>  }
+> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+> index d8af86d995d6..4a1df6714dfe 100644
+> --- a/include/linux/skbuff.h
+> +++ b/include/linux/skbuff.h
+> @@ -3639,19 +3639,19 @@ static inline bool __skb_metadata_differs(const struct sk_buff *skb_a,
+>  #define __it(x, op) (x -= sizeof(u##op))
+>  #define __it_diff(a, b, op) (*(u##op *)__it(a, op)) ^ (*(u##op *)__it(b, op))
+>         case 32: diffs |= __it_diff(a, b, 64);
+> -                /* fall through */
+> +               __attribute__((fallthrough));
+>         case 24: diffs |= __it_diff(a, b, 64);
+> -                /* fall through */
+> +               __attribute__((fallthrough));
+>         case 16: diffs |= __it_diff(a, b, 64);
+> -                /* fall through */
+> +               __attribute__((fallthrough));
+>         case  8: diffs |= __it_diff(a, b, 64);
+>                 break;
+>         case 28: diffs |= __it_diff(a, b, 64);
+> -                /* fall through */
+> +               __attribute__((fallthrough));
+>         case 20: diffs |= __it_diff(a, b, 64);
+> -                /* fall through */
+> +               __attribute__((fallthrough));
+>         case 12: diffs |= __it_diff(a, b, 64);
+> -                /* fall through */
+> +               __attribute__((fallthrough));
+>         case  4: diffs |= __it_diff(a, b, 32);
+>                 break;
+>         }
+> diff --git a/lib/zstd/bitstream.h b/lib/zstd/bitstream.h
+> index 3a49784d5c61..cc311bae44da 100644
+> --- a/lib/zstd/bitstream.h
+> +++ b/lib/zstd/bitstream.h
+> @@ -259,15 +259,15 @@ ZSTD_STATIC size_t BIT_initDStream(BIT_DStream_t *bitD, const void *srcBuffer, s
+>                 bitD->bitContainer = *(const BYTE *)(bitD->start);
+>                 switch (srcSize) {
+>                 case 7: bitD->bitContainer += (size_t)(((const BYTE *)(srcBuffer))[6]) << (sizeof(bitD->bitContainer) * 8 - 16);
+> -                       /* fall through */
+> +                       __attribute__((fallthrough));
+>                 case 6: bitD->bitContainer += (size_t)(((const BYTE *)(srcBuffer))[5]) << (sizeof(bitD->bitContainer) * 8 - 24);
+> -                       /* fall through */
+> +                       __attribute__((fallthrough));
+>                 case 5: bitD->bitContainer += (size_t)(((const BYTE *)(srcBuffer))[4]) << (sizeof(bitD->bitContainer) * 8 - 32);
+> -                       /* fall through */
+> +                       __attribute__((fallthrough));
+>                 case 4: bitD->bitContainer += (size_t)(((const BYTE *)(srcBuffer))[3]) << 24;
+> -                       /* fall through */
+> +                       __attribute__((fallthrough));
+>                 case 3: bitD->bitContainer += (size_t)(((const BYTE *)(srcBuffer))[2]) << 16;
+> -                       /* fall through */
+> +                       __attribute__((fallthrough));
+>                 case 2: bitD->bitContainer += (size_t)(((const BYTE *)(srcBuffer))[1]) << 8;
+>                 default:;
+>                 }
+> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+> index a74ce2e3c33e..e12359d69bb7 100644
+> --- a/scripts/Makefile.extrawarn
+> +++ b/scripts/Makefile.extrawarn
+> @@ -30,6 +30,9 @@ warning-1 += $(call cc-option, -Wunused-but-set-variable)
+>  warning-1 += $(call cc-option, -Wunused-const-variable)
+>  warning-1 += $(call cc-option, -Wpacked-not-aligned)
+>  warning-1 += $(call cc-option, -Wstringop-truncation)
+> +ifdef CONFIG_CC_IS_CLANG
+> +KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
+
+copy+pasta? Should this be:
+warning-1 += ...
+
+further, there's a block at the end of this file already for
+CONFIG_CC_IS_CLANG that this should go in.  Unlike the rest of the
+items there, you SHOULD keep the call to cc-option since older
+versions of Clang won't support the warning.
+
+Thanks for the patch!
+-- 
+Thanks,
+~Nick Desaulniers
