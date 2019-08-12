@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD978C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E80EC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83B62216F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30C4A20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565615411;
-	bh=NJC7RxVutOjJ6ZDzweButGU0v8irF9j+XpVMBhdyERI=;
+	s=default; t=1565615414;
+	bh=+07g6QngHMC6BcxWNDgBKx8ofuIuWy1mnIjM8mXWee4=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=hH+4irY0N2obzjLirkywFL5mxDsIVu1d/X8W+Ben+sYdyDGIEo4FfziW1jeZiwnr3
-	 doYUKNgiIyGGxxBDCt8TNY0JEZIXDOsseHlOEXnQwvY+0kQTuhHJfgR/Y+S0QYDTQn
-	 Phf85LoSdAla+QRuwYgzSELkLTkiBe+q1q7H5FZo=
+	b=Fvg8ZP7N3F4Jh5FfIAkwxGlbJ/8xdYI1VuBj6ZHJPrmIHI0fF+wfZSNXYBF496v/I
+	 ZDkzhdLeA1YBr0IUDafT3zyc5KugeURX1oxIWmzDAL5sQJBhU55NYWSUuCnJxXk77E
+	 CAq4bq1xJ9C4NyW7Q0KHQYsS1hAH1FNEOiR1yEdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728838AbfHLNKK (ORCPT
+        id S1728859AbfHLNKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 09:10:10 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40362 "EHLO
+        Mon, 12 Aug 2019 09:10:12 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40398 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726895AbfHLNKJ (ORCPT
+        with ESMTP id S1728822AbfHLNKJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 12 Aug 2019 09:10:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,28 +34,29 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=ZyTCBEw26HPO4hNsabNswLIYhe65sPxbGwi2SQZZZ1k=; b=aiVfOKiNbIvj
-        /89trdewnMeO27dxlxDipw6Ex9acfpSGEi/y/nNnhK09Kbx8EaZ1n9QQZOT+H5XwbJfcVcmlb6UP0
-        Cm+rDd7ibx881kw0wDaNSnb8Iq3Ce+8Wsx+5W+3zyP6iIrnUWL6NPkw3f25AMGjEcZhKzqhIb1/vS
-        CtLuE=;
+        List-Archive; bh=726K291caKRqeiB2KOs9bhqJM6YwCvuRpeAmBC8Mkio=; b=ktfWXSNR+l0P
+        q5iJ5adjeOtLSykywMzb8U5/PwlMfF0qOvFzNeM4ApqXoF6j29TXCCdueFh6t6JBOQVmfX9mHexQr
+        5zknyGi1AFf5SNP8+DxpGCR60/MDOGHEh9hFw80PZZbGO8ssAsyByjklT8qv6tw8qnmX0p46Pj2Dn
+        7AXV8=;
 Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1hxA5B-0001Mk-Se; Mon, 12 Aug 2019 13:09:53 +0000
+        id 1hxA5B-0001Mg-HX; Mon, 12 Aug 2019 13:09:53 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 4D0E92740CED; Mon, 12 Aug 2019 14:09:53 +0100 (BST)
+        id E77BF2740CBD; Mon, 12 Aug 2019 14:09:52 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        Hulk Robot <hulkci@huawei.com>, kstewart@linuxfoundation.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, perex@perex.cz, tiwai@suse.com
-Subject: Applied "ASoC: max98926: remove two unused variables" to the asoc tree
-In-Reply-To: <20190808143215.65904-1-yuehaibing@huawei.com>
+Cc:     allison@lohutok.net, alsa-devel@alsa-project.org,
+        broonie@kernel.org, gregkh@linuxfoundation.org,
+        Hulk Robot <hulkci@huawei.com>, lgirdwood@gmail.com,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        perex@perex.cz, tiwai@suse.com
+Subject: Applied "ASoC: max9850: remove unused variable 'max9850_reg'" to the asoc tree
+In-Reply-To: <20190808143507.66788-1-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190812130953.4D0E92740CED@ypsilon.sirena.org.uk>
-Date:   Mon, 12 Aug 2019 14:09:53 +0100 (BST)
+Message-Id: <20190812130952.E77BF2740CBD@ypsilon.sirena.org.uk>
+Date:   Mon, 12 Aug 2019 14:09:52 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -63,7 +64,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: max98926: remove two unused variables
+   ASoC: max9850: remove unused variable 'max9850_reg'
 
 has been applied to the asoc tree at
 
@@ -88,46 +89,49 @@ to this mail.
 Thanks,
 Mark
 
-From dbf0649f4340c8bb7d36b8d6255dba03ed6981e7 Mon Sep 17 00:00:00 2001
+From c86102a333f77dcd0f7ef20ba836c6f13f1a077a Mon Sep 17 00:00:00 2001
 From: YueHaibing <yuehaibing@huawei.com>
-Date: Thu, 8 Aug 2019 22:32:15 +0800
-Subject: [PATCH] ASoC: max98926: remove two unused variables
+Date: Thu, 8 Aug 2019 22:35:07 +0800
+Subject: [PATCH] ASoC: max9850: remove unused variable 'max9850_reg'
 
-sound/soc/codecs/max98926.c:28:26: warning:
- max98926_dai_txt defined but not used [-Wunused-const-variable=]
-sound/soc/codecs/max98926.c:23:27: warning:
- max98926_boost_current_txt defined but not used [-Wunused-const-variable=]
+sound/soc/codecs/max9850.c:31:33: warning:
+ max9850_reg defined but not used [-Wunused-const-variable=]
 
-They are never used, so can be removd.
+It is not used since commit 068416620c0d ("ASoC:
+max9850: Convert to direct regmap API usage")
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190808143215.65904-1-yuehaibing@huawei.com
+Link: https://lore.kernel.org/r/20190808143507.66788-1-yuehaibing@huawei.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/max98926.c | 9 ---------
- 1 file changed, 9 deletions(-)
+ sound/soc/codecs/max9850.c | 13 -------------
+ 1 file changed, 13 deletions(-)
 
-diff --git a/sound/soc/codecs/max98926.c b/sound/soc/codecs/max98926.c
-index 818c0301fb29..c4dfa8ab1d49 100644
---- a/sound/soc/codecs/max98926.c
-+++ b/sound/soc/codecs/max98926.c
-@@ -20,15 +20,6 @@ static const char * const max98926_boost_voltage_txt[] = {
- 	"6.5V", "6.5V", "6.5V", "6.5V", "6.5V", "6.5V", "6.5V", "6.5V"
+diff --git a/sound/soc/codecs/max9850.c b/sound/soc/codecs/max9850.c
+index f50ee8f5fe93..6f43748f9239 100644
+--- a/sound/soc/codecs/max9850.c
++++ b/sound/soc/codecs/max9850.c
+@@ -27,19 +27,6 @@ struct max9850_priv {
+ 	unsigned int sysclk;
  };
  
--static const char * const max98926_boost_current_txt[] = {
--	"0.6", "0.8", "1.0", "1.2", "1.4", "1.6", "1.8", "2.0",
--	"2.2", "2.4", "2.6", "2.8", "3.2", "3.6", "4.0", "4.4"
+-/* max9850 register cache */
+-static const struct reg_default max9850_reg[] = {
+-	{  2, 0x0c },
+-	{  3, 0x00 },
+-	{  4, 0x00 },
+-	{  5, 0x00 },
+-	{  6, 0x00 },
+-	{  7, 0x00 },
+-	{  8, 0x00 },
+-	{  9, 0x00 },
+-	{ 10, 0x00 },
 -};
 -
--static const char *const max98926_dai_txt[] = {
--	"Left", "Right", "LeftRight", "LeftRightDiv2",
--};
--
- static const char *const max98926_pdm_ch_text[] = {
- 	"Current", "Voltage",
- };
+ /* these registers are not used at the moment but provided for the sake of
+  * completeness */
+ static bool max9850_volatile_register(struct device *dev, unsigned int reg)
 -- 
 2.20.1
 
