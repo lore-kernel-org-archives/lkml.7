@@ -2,160 +2,121 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3313C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA86AC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECDF20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F9120651
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:07:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="tMcBup0L";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="tucfsSI5"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZSHKMJha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbfHLMGZ (ORCPT
+        id S1728399AbfHLMHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 08:06:25 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:57298 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728356AbfHLMGY (ORCPT
+        Mon, 12 Aug 2019 08:07:32 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42397 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726987AbfHLMHc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 08:06:24 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x7CC0dW0000630;
-        Mon, 12 Aug 2019 05:06:14 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=g8UGPPQL+Z7HQib+zGHctZgqYyhbQkfxiIsZz5kk00k=;
- b=tMcBup0LoE5pBKBDTKRnAXspeLng8mBT2JBxXbr863YTeeVfiS5/gP4eORrl+DpcWGkn
- oGXbaszHoR9el1zq7N4pFl1C5xLfYspUuD3Zfr3Iwq75+r28Ldf4oyVpXNoX2b7SiXE7
- 6h1ZaLWOUvzUzIZ9KYy8L5cM5ZPyHV6Z9X+q3KCDDYCU5tWHoR4WlQZCst9+/jVDEOME
- JGOzXjoDc/M/LMNg3DaUqRL7RzDcf/gD/IjOiHuQPT/pN1AroWOVTDhaFtlimONBfy+D
- cXhRf8vzb0zXGGG53M4r27OnyGbntK0FekhcIsVTTCi8+Mc+1nmZsl/TD1u714a0/jur ew== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2u9u9qe8ht-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 12 Aug 2019 05:06:14 -0700
-Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 12 Aug
- 2019 05:05:27 -0700
-Received: from NAM01-BN3-obe.outbound.protection.outlook.com (104.47.33.54) by
- SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Mon, 12 Aug 2019 05:05:27 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TnRWpxCuQnxAa1TAQEL6RtPqc3Iyl8JaSEtoHJGfxD6Sbu8LQdPnhOEFzZ8wfNsRHpLjwUN4Kgi595lcWXvqYy8rtueE1mOO0FmIwaFAyvmGjppa0uirtLaVya+yuub1cISQpIzLHKgHhgIN2FeKKozychKjisvzrSK03zKBTZqy6/uQlDRIXFXxJruGutlTaPsUdmPRPEvLWMa+aK2jwCxwoJX7hvFSYovbjNP3vAKXyk7zNMH/fwfFJhoLNBMYAoAIL5+11qRRbi6OrYv7lZ8F2MgbVnUfxh1ta9H2vqMozKNZeZgUvdYYkvhARstTB0z7N8Am2HsLKeibZibwDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g8UGPPQL+Z7HQib+zGHctZgqYyhbQkfxiIsZz5kk00k=;
- b=W7tzod/wDMHvMsCO7ktahabFMHJsPZq7+djrdrb5S92O7zgVZckTmV+FLIgDMAmnwzHmxreB+mN7+vI896ERshTCQaR2MxJV6QINBlhgWdYXi/NR1Dxy4vhr4hYDOiXhPpSE5wjOXXGSkHf7VvnPS7kc0zT2eQAnCm6qeb8F6KVvZKxQm1KTw9XGOucLuRMd6/VWUZqOGMgeXXMAkTST4qHRzO7X/qEugNtAGDRGPpfy27jFEui4rd9g+qsHkVYFAV66LYQLJPI0G7u9UwnqFVbSKh9GvRfNA5LnCR3dGFzbOrDF8b9OTECDwIVJae59pnpuLKlQyHoQ3QCCjwy2lA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
+        Mon, 12 Aug 2019 08:07:32 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b16so7627497wrq.9
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 05:07:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g8UGPPQL+Z7HQib+zGHctZgqYyhbQkfxiIsZz5kk00k=;
- b=tucfsSI5tVARqlaKfxal6o/Ot38O83bwg36ZLWPZYDe/zN2LFmgSovS4Sj8a6ixnKyE8iSzr9AYY6Zuy71X87r2k65kzcQIfcnwjxbtIyxMpLKl0eWW89VYIwLq4URsZxUL+HhPCcJl86Y8IjSLXp15ylIO6jNwunoiM6/Je9dM=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
- MN2PR18MB2480.namprd18.prod.outlook.com (20.179.82.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.23; Mon, 12 Aug 2019 12:05:25 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::1b3:8b34:63fe:aad2]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::1b3:8b34:63fe:aad2%6]) with mapi id 15.20.2157.022; Mon, 12 Aug 2019
- 12:05:25 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 02/24] EDAC, ghes: Fix grain calculation
-Thread-Topic: [PATCH v2 02/24] EDAC, ghes: Fix grain calculation
-Thread-Index: AQHVUQY528Xmn3pGVkWm7FH417vWZw==
-Date:   Mon, 12 Aug 2019 12:05:25 +0000
-Message-ID: <20190812120517.2kktugib244ujgvb@rric.localdomain>
-References: <20190624150758.6695-1-rrichter@marvell.com>
- <20190624150758.6695-3-rrichter@marvell.com> <20190809131559.GF2152@zn.tnic>
- <20190812064147.5czmkj7e6hxgvje3@rric.localdomain>
- <20190812073221.GA23772@zn.tnic>
-In-Reply-To: <20190812073221.GA23772@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0701CA0067.eurprd07.prod.outlook.com
- (2603:10a6:3:64::11) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:16c::25)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 90a105f3-fa89-42fe-f3e9-08d71f1d5bb2
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2480;
-x-ms-traffictypediagnostic: MN2PR18MB2480:
-x-microsoft-antispam-prvs: <MN2PR18MB24800B203BDCB9DFAC82F244D9D30@MN2PR18MB2480.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 012792EC17
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(396003)(39850400004)(366004)(346002)(189003)(199004)(9686003)(6486002)(76176011)(66946007)(66476007)(25786009)(229853002)(6436002)(5660300002)(2906002)(6512007)(316002)(66556008)(6916009)(86362001)(64756008)(66446008)(6246003)(54906003)(52116002)(4326008)(53936002)(81166006)(11346002)(305945005)(6506007)(186003)(81156014)(8676002)(446003)(71200400001)(1076003)(102836004)(14454004)(476003)(26005)(7736002)(486006)(53546011)(386003)(8936002)(4744005)(71190400001)(3846002)(6116002)(99286004)(478600001)(256004)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2480;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: aXrEFN+eA9o0P74qkqOx8qjz/GGkhSt0ghtJkePQW9UuiLOCYZ8hRoKW6llMwuouKd/N9XlwrMnvQS1o9OJWNDmmFnd76N+/AC3/xIF4GEkBLUH/QNcM4ayPz4GLwRRfMUlWz5orogS2OndrTTer0sk0EBbu+7e2qky3atWm8sXIr2yHumIyRlqv1FS0zRurVnVec11b9ZqiTOLN3DXohFo+7mG7/9f0XxHzv4gTfk49EhjWsYuRye5RAcaJIamy2VSmfruyZ3GnE+pq1iL4XUUVH04rp2J3/EFxXdKM1y/jFhmOhYLcl1xQPSmON5/5tPpStlBji7ZAppLtnbunPq5bmZUEIGbx8L64EBnT/Cj3U2DbWeYIBq9qdK/lxhg0E2pOPKnXat9aI3DGfxsMfP7zHd4TNb+LR/DiaYOXz9Q=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E74C6359FF15E942AA05DEB9CD815928@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PMduQLcYqJa9E1xoRdmMO8whZQuhJA1DUXAc3zPrO3g=;
+        b=ZSHKMJha6yfzKyUtd06NcDFZ3gN6HThtYSZHVhI1dWDon6ToPzcz/3Own8XjxQ6mgY
+         cNZxnu/TVZ+61qFCnUFdEJLOgky25gQCDhsH/+hNfvo1/tuwRFVAYIZ0rlF6tlIm0KyF
+         iUCMnmfJERpt/DBw38nE6bUD0UhHm32KkD+TwpX8kS784VDRNuZ4zM0XGH1+eHhHNIGF
+         rfG1P9vlqoj1SknmEStYhp/BpCNJvZPevmhinSS3o/GeDoPPCkItQDqi5o7p0o/Z19H4
+         V/l1fiLnkQUc1tJTXSRA6hZMqewIKizbra1XnWkTwB1TSx5TgqY0slk6QhUZjZoyT3JS
+         G5FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PMduQLcYqJa9E1xoRdmMO8whZQuhJA1DUXAc3zPrO3g=;
+        b=cY1BkikArC17L+ilPJfXyOSOjvzTNQgnUOZAXsq9FleDFN/xO51cIOHufZrxL7r0jV
+         Pf1BFl3qLEKbCIQ1yPay2KzQijxS+vd9sH1HDYjfaCJ36Z/4KX9I0fnMXR14ZBqZAl9i
+         PMvOMP4ILFLjVcwl34vElzN+dAnPJrkVSNczptwfm4jSZlTp5so0GBC+4C+TjHaqQ3mq
+         YIe9LLhGVvf0QI/8HrRWmUDiK0PiKR2ANDJL1mpRLkCH0SpItZU+ctphTDyhyoWo7ha9
+         Gaguwn0eApLN+7vghLH9fIMyT8Z0gPoB9oHim/xa7lpK5mdd7nmmGSJgzNsu2WsrFc3i
+         OEJw==
+X-Gm-Message-State: APjAAAVik3IhjArCsApqcwyVWtRRgB0vFc3dnJZHUm1FIRTbq/YtNLmC
+        IRAyyWbEj7FL6+fdfLhpOPf/Eg==
+X-Google-Smtp-Source: APXvYqwBXFdcnSm3N9WSnk3H4/5r6eeqaMC73NAcum/+jEQe399Q3DLr4ex5iwjbxozzlPA6mgZt0w==
+X-Received: by 2002:adf:e887:: with SMTP id d7mr24777870wrm.282.1565611649905;
+        Mon, 12 Aug 2019 05:07:29 -0700 (PDT)
+Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id j9sm1883415wrx.66.2019.08.12.05.07.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 05:07:29 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH v2 0/8] drm/bridge: dw-hdmi: improve i2s support
+Date:   Mon, 12 Aug 2019 14:07:18 +0200
+Message-Id: <20190812120726.1528-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90a105f3-fa89-42fe-f3e9-08d71f1d5bb2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 12:05:25.0680
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NGu76aKDuK41VVsj2F5hu60dyeRP3EaTI35KHqgSsKMcYBdgp+6dfI094MXW2X57pQ5+9nsxZm3SQHCaNRQMRw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2480
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:5.22.84,1.0.8
- definitions=2019-08-12_05:2019-08-09,2019-08-12 signatures=0
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.08.19 09:32:22, Borislav Petkov wrote:
-> On Mon, Aug 12, 2019 at 06:42:00AM +0000, Robert Richter wrote:
+The purpose of this patchset is to improve the support of the i2s
+interface of the synopsys hdmi controller.
 
-> > With the grain_bits calculation the mask is rounded up to the next
-> > power of 2 value.
->=20
-> mask	  =3D 0xffffffffff00ff00
+Once applied, the interface should support all the usual i2s bus formats,
+8 channels playback and properly setup the channel number and allocation
+in the infoframes.
 
-grain =3D ~mask + 1
+Also, the dw-hdmi i2s interface will now provide the eld to the generic
+hdmi-codec so it can expose the related controls to user space.
 
-> ~mask	  =3D 0x0000000000ff00ff
-> ~mask + 1 =3D 0x0000000000ff0100
+This work was inspired by Jonas Karlman's work, available here [0].
 
-grain_bits =3D fls_long(e->grain - 1);
-grain_bits =3D 24
+This was tested the Amlogic meson-g12a-sei510 platform.
+For this specific platform, which uses codec2codec links, there is a
+runtime dependency for patch 8 on this ASoC series [1].
 
-grain =3D 1 << grain_bits
-grain =3D 0x1000000
+Changes since v1 [2]:
+ * Fix copy size in .get_eld()
 
-So for masks in the range from 0xffffffffff000000 to
-0xffffffffff7fffff we have grain_bits set to 24, which corresponds to
-a grain of 0x1000000. Looks good to me.
+[0]: https://github.com/Kwiboo/linux-rockchip/commits/rockchip-5.2-for-libreelec-v5.2.3
+[1]: https://lkml.kernel.org/r/20190725165949.29699-1-jbrunet@baylibre.com
+[2]: https://lkml.kernel.org/r/20190805134102.24173-1-jbrunet@baylibre.com
 
->=20
-> Your "trick" of adding a 1 to get to the most significant bit simply
-> doesn't work here. Thus:
->=20
-> "I guess we can leave it like that for now until some "inventive"
-> firmware actually does it."
+Jerome Brunet (8):
+  drm/bridge: dw-hdmi-i2s: support more i2s format
+  drm/bridge: dw-hdmi: move audio channel setup out of ahb
+  drm/bridge: dw-hdmi: set channel count in the infoframes
+  drm/bridge: dw-hdmi-i2s: enable lpcm multi channels
+  drm/bridge: dw-hdmi-i2s: set the channel allocation
+  drm/bridge: dw-hdmi-i2s: reset audio fifo before applying new params
+  drm/bridge: dw-hdmi-i2s: enable only the required i2s lanes
+  drm/bridge: dw-hdmi-i2s: add .get_eld support
 
-Fine to me.
+ .../drm/bridge/synopsys/dw-hdmi-ahb-audio.c   | 20 ++-----
+ .../gpu/drm/bridge/synopsys/dw-hdmi-audio.h   |  1 +
+ .../drm/bridge/synopsys/dw-hdmi-i2s-audio.c   | 60 +++++++++++++++++--
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c     | 37 ++++++++++++
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.h     | 13 +++-
+ include/drm/bridge/dw_hdmi.h                  |  2 +
+ 6 files changed, 108 insertions(+), 25 deletions(-)
 
--Robert
+-- 
+2.21.0
+
