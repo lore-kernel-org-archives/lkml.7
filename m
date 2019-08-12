@@ -2,121 +2,136 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C425FC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB83C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9666C208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:28:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="g1CNGvFz"
+	by mail.kernel.org (Postfix) with ESMTP id E1207208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:29:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbfHLL26 (ORCPT
+        id S1728516AbfHLL3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 07:28:58 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:18419 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727936AbfHLL24 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 07:28:56 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d514d820001>; Mon, 12 Aug 2019 04:29:06 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 12 Aug 2019 04:28:55 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 12 Aug 2019 04:28:55 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 12 Aug
- 2019 11:28:55 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 12 Aug 2019 11:28:55 +0000
-Received: from kyarlagadda-linux.nvidia.com (Not Verified[10.19.64.169]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d514d730001>; Mon, 12 Aug 2019 04:28:54 -0700
-From:   Krishna Yarlagadda <kyarlagadda@nvidia.com>
-To:     <gregkh@linuxfoundation.org>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <ldewangan@nvidia.com>, <jslaby@suse.com>
-CC:     <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Shardar Shariff Md <smohammed@nvidia.com>,
-        Krishna Yarlagadda <kyarlagadda@nvidia.com>
-Subject: [PATCH 05/14] serial: tegra: flush the RX fifo on frame error
-Date:   Mon, 12 Aug 2019 16:58:14 +0530
-Message-ID: <1565609303-27000-6-git-send-email-kyarlagadda@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1565609303-27000-1-git-send-email-kyarlagadda@nvidia.com>
-References: <1565609303-27000-1-git-send-email-kyarlagadda@nvidia.com>
-X-NVConfidentiality: public
+        Mon, 12 Aug 2019 07:29:02 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54464 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728473AbfHLL27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 07:28:59 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 988ECB04B9D23C81953D;
+        Mon, 12 Aug 2019 19:28:56 +0800 (CST)
+Received: from [127.0.0.1] (10.57.101.250) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 12 Aug 2019
+ 19:28:47 +0800
+To:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>, <linus.walleij@linaro.org>
+CC:     Linuxarm <linuxarm@huawei.com>, <xuwei5@hisilicon.com>,
+        "Shameerali Kolothum Thodi" <shameerali.kolothum.thodi@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        "Salil Mehta" <salil.mehta@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>, <jinying@hisilicon.com>,
+        Zhangyi ac <zhangyi.ac@huawei.com>,
+        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
+        Tangkunshan <tangkunshan@huawei.com>,
+        huangdaode <huangdaode@hisilicon.com>
+From:   Wei Xu <xuwei5@hisilicon.com>
+Subject: [PATCH] gpio: pl061: Fix the issue failed to register the ACPI
+ interruption
+Message-ID: <5D514D6F.4090904@hisilicon.com>
+Date:   Mon, 12 Aug 2019 19:28:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.2.0
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565609346; bh=nCCKGiv628BbZmkkEihGSfqyEdAMaQQZVH2IpiR4RW8=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=g1CNGvFzz0+Ne84kxC1sq4a8FVG5Q5msyTbcdeBR05j4FQxlssNV+vF4j8lsS5kLB
-         TJlLxpg4KyRUyAxLOQCphdhCg1P9LdnaXNFOdPPWODIxFQK2uIusuiTzE8saA5WIYK
-         8kvZnGOa0jDfjS63KWHHMT6QKSm19+jeZDFmfFXoTSudZdYKUIyxSY/6KD9K5JYQw+
-         5FgF+bzO3RAy3yUNcH5wPkFg6iQ++1fjLXW6Aji9ITUGya44G8b4RI6FKaZ2RskKOO
-         JnvIZmLjuF7yOIluH3iOgEf6qaOp498PsouUy68D1gM1yIQB6mFSvRE9jXwrwNP/qM
-         wxG9atHJH3gRA==
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.101.250]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shardar Shariff Md <smohammed@nvidia.com>
+Invoke acpi_gpiochip_request_interrupts after the acpi data has been
+attached to the pl061 acpi node to register interruption.
 
-FIFO reset/flush code implemented now does not follow programming
-guidelines. RTS line has to be turned off while flushing fifos to
-avoid new transfers. Also check LSR bits UART_LSR_TEMT and UART_LSR_DR
-to confirm fifos are flushed.
+Otherwise it will be failed to register interruption for the ACPI case.
+Because in the gpiochip_add_data_with_key, acpi_gpiochip_add is invoked
+after gpiochip_add_irqchip but at that time the acpi data has not been
+attached yet.
 
-Signed-off-by: Shardar Shariff Md <smohammed@nvidia.com>
-Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+Tested with below steps on QEMU v4.1.0-rc3 and Linux kernel v5.3-rc4,
+and found pl061 interruption is missed in the /proc/interrupts:
+1.
+qemu-system-aarch64 \
+-machine virt,gic-version=3 -cpu cortex-a57 \
+-m 1G,maxmem=4G,slots=4 \
+-kernel Image -initrd rootfs.cpio.gz \
+-net none -nographic  \
+-bios QEMU_EFI.fd  \
+-append "console=ttyAMA0 acpi=force earlycon=pl011,0x9000000"
+
+2. cat /proc/interrupts in the guest console:
+estuary:/$ cat /proc/interrupts
+CPU0
+2:       3228     GICv3  27 Level     arch_timer
+4:         15     GICv3  33 Level     uart-pl011
+42:          0     GICv3  23 Level     arm-pmu
+IPI0:         0       Rescheduling interrupts
+IPI1:         0       Function call interrupts
+IPI2:         0       CPU stop interrupts
+IPI3:         0       CPU stop (for crash dump) interrupts
+IPI4:         0       Timer broadcast interrupts
+IPI5:         0       IRQ work interrupts
+IPI6:         0       CPU wake-up interrupts
+Err:          0
+
+Fixes: 04ce935c6b2a ("gpio: pl061: Pass irqchip when adding gpiochip")
+Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
 ---
- drivers/tty/serial/serial-tegra.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+  drivers/gpio/gpio-pl061.c | 7 +++++++
+  1 file changed, 7 insertions(+)
 
-diff --git a/drivers/tty/serial/serial-tegra.c b/drivers/tty/serial/serial-tegra.c
-index ae7225c..f6a3f4e 100644
---- a/drivers/tty/serial/serial-tegra.c
-+++ b/drivers/tty/serial/serial-tegra.c
-@@ -266,6 +266,10 @@ static void tegra_uart_wait_sym_time(struct tegra_uart_port *tup,
- static void tegra_uart_fifo_reset(struct tegra_uart_port *tup, u8 fcr_bits)
- {
- 	unsigned long fcr = tup->fcr_shadow;
-+	unsigned int lsr, tmout = 10000;
+diff --git a/drivers/gpio/gpio-pl061.c b/drivers/gpio/gpio-pl061.c
+index 722ce5c..e1a434e 100644
+--- a/drivers/gpio/gpio-pl061.c
++++ b/drivers/gpio/gpio-pl061.c
+@@ -8,6 +8,7 @@
+   *
+   * Data sheet: ARM DDI 0190B, September 2000
+   */
++#include <linux/acpi.h>
+  #include <linux/spinlock.h>
+  #include <linux/errno.h>
+  #include <linux/init.h>
+@@ -24,6 +25,9 @@
+  #include <linux/pinctrl/consumer.h>
+  #include <linux/pm.h>
+
++#include "gpiolib.h"
++#include "gpiolib-acpi.h"
 +
-+	if (tup->rts_active)
-+		set_rts(tup, false);
- 
- 	if (tup->cdata->allow_txfifo_reset_fifo_mode) {
- 		fcr |= fcr_bits & (UART_FCR_CLEAR_RCVR | UART_FCR_CLEAR_XMIT);
-@@ -289,6 +293,17 @@ static void tegra_uart_fifo_reset(struct tegra_uart_port *tup, u8 fcr_bits)
- 	 * to propagate, otherwise data could be lost.
- 	 */
- 	tegra_uart_wait_cycle_time(tup, 32);
+  #define GPIODIR 0x400
+  #define GPIOIS  0x404
+  #define GPIOIBE 0x408
+@@ -345,6 +349,9 @@ static int pl061_probe(struct amba_device *adev, 
+const struct amba_id *id)
+      if (ret)
+          return ret;
+
++    if (has_acpi_companion(dev))
++        acpi_gpiochip_request_interrupts(&pl061->gc);
 +
-+	do {
-+		lsr = tegra_uart_read(tup, UART_LSR);
-+		if (lsr | UART_LSR_TEMT)
-+			if (!(lsr & UART_LSR_DR))
-+				break;
-+		udelay(1);
-+	} while (--tmout);
-+
-+	if (tup->rts_active)
-+		set_rts(tup, true);
- }
- 
- static int tegra_set_baudrate(struct tegra_uart_port *tup, unsigned int baud)
+      amba_set_drvdata(adev, pl061);
+      dev_info(dev, "PL061 GPIO chip registered\n");
+
 -- 
-2.7.4
+2.8.1
+
+
+.
 
