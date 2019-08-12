@@ -2,134 +2,188 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4309EC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54020C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D6BA2070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:00:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="clZMOrgp"
+	by mail.kernel.org (Postfix) with ESMTP id 2CE16206C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:02:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbfHLXAr (ORCPT
+        id S1726712AbfHLXCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 19:00:47 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45938 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbfHLXAq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 19:00:46 -0400
-Received: by mail-pg1-f193.google.com with SMTP id o13so50205108pgp.12
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 16:00:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2ksXWqG62EfbmUuHI0nKd4a7rlKac00A3mrtP5kn5Ls=;
-        b=clZMOrgpPeiUsSiOQGc7xPtSCJ1+tYlCEalNf0FrCYLJfEA+0uy4k2IMsGT3jc2cFu
-         QPuYWIpFCQhxAals/OKuaPNf8mppQVTkf6D4zIbGyKu4gOrWVhA2o9ZKUIPwXfJVrcoG
-         avMIYarRQn3GMlD+OUwXFSElhTGkglyd3QZD1GJQSaZP8jC6QiZ2xLFtEuUdnjR3mnni
-         sRQtw5csmi7PfDU+Ql+QaQ1NKyhCIKJ3a40cFUmsKMpgHBOzlU8Y+4Tu8Q9zJCvCmZsb
-         tOC9AwuoxVLSsc9XXteA5o+ppMTBTFjDr7sDywYo3lo2UATZPZ7kYu0zrGDtAc9pwsi5
-         IbpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2ksXWqG62EfbmUuHI0nKd4a7rlKac00A3mrtP5kn5Ls=;
-        b=n/ZrtasiwlkIIfpphd1kmISanj+U22JcsjTcPkZliQX6749vM16o4kBT9HA5kDhAVe
-         ibAkzWiNUBn1Pr1tMYbkRazEXcKserdUQT6QWvHq/+wtcJ5JdBnW5q2/0wngqaYdREK7
-         7qBecTHYFk2I6gnJ3B+uASayBMZuFu3c0EiModWO1LVDYMC7wimlxNflvqKRkn+LIdgG
-         ztglazvz0COwSr0SButxt2l8aBqcT1hxnJXsw2XGeazsABgUL2ArjJx0yTH25zbGW1t7
-         whW/8RThiMlpOzr0jtkC8P+qBEkmDEx7K8QWTrZwT35a1fhSb9lT4jD1W5kk70m4d+hj
-         hwiQ==
-X-Gm-Message-State: APjAAAX6jzR8hoK4UWgsm+QIjF7E0iy454tv/5NGjo3ORk7mEy+tY6Ql
-        XGeSEgEYI/UIvlWiXIKrEta2zg==
-X-Google-Smtp-Source: APXvYqyb883Z7rrcgcBtXgV+QnSSy8ZT99o+mRBxe/N1CFP0iCEGlwsPbuGd5lBVkMaokl9X9DPeAA==
-X-Received: by 2002:a62:6083:: with SMTP id u125mr37305269pfb.208.1565650845803;
-        Mon, 12 Aug 2019 16:00:45 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:f08])
-        by smtp.gmail.com with ESMTPSA id z13sm110232784pfa.94.2019.08.12.16.00.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 16:00:45 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 19:00:43 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>
-Subject: Re: [PATCH] mm: vmscan: do not share cgroup iteration between
- reclaimers
-Message-ID: <20190812230043.GA18948@cmpxchg.org>
-References: <20190812192316.13615-1-hannes@cmpxchg.org>
- <20190812210723.GA9423@tower.dhcp.thefacebook.com>
+        Mon, 12 Aug 2019 19:02:05 -0400
+Received: from mga03.intel.com ([134.134.136.65]:21131 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726296AbfHLXCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 19:02:04 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 16:02:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,379,1559545200"; 
+   d="scan'208";a="204889364"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga002.fm.intel.com with ESMTP; 12 Aug 2019 16:02:03 -0700
+Date:   Mon, 12 Aug 2019 16:02:03 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, mst@redhat.com, rkrcmar@redhat.com,
+        jmattson@google.com
+Subject: Re: [PATCH v6 7/8] KVM: x86: Load Guest fpu state when accessing
+ MSRs managed by XSAVES
+Message-ID: <20190812230203.GC4996@linux.intel.com>
+References: <20190725031246.8296-1-weijiang.yang@intel.com>
+ <20190725031246.8296-8-weijiang.yang@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190812210723.GA9423@tower.dhcp.thefacebook.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190725031246.8296-8-weijiang.yang@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 09:07:27PM +0000, Roman Gushchin wrote:
-> On Mon, Aug 12, 2019 at 03:23:16PM -0400, Johannes Weiner wrote:
-> > @@ -2679,7 +2675,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
-> >  		nr_reclaimed = sc->nr_reclaimed;
-> >  		nr_scanned = sc->nr_scanned;
-> >  
-> > -		memcg = mem_cgroup_iter(root, NULL, &reclaim);
-> > +		memcg = mem_cgroup_iter(root, NULL, NULL);
+On Thu, Jul 25, 2019 at 11:12:45AM +0800, Yang Weijiang wrote:
+> From: Sean Christopherson <sean.j.christopherson@intel.com>
 > 
-> I wonder if we can remove the shared memcg tree walking at all? It seems that
-> the only use case left is the soft limit, and the same logic can be applied
-> to it. The we potentially can remove a lot of code in mem_cgroup_iter().
-> Just an idea...
-
-It's so tempting! But soft limit reclaim starts at priority 0 right
-out of the gate, so overreclaim is an actual concern there. We could
-try to rework it, but it'll be hard to avoid regressions given how
-awkward the semantics and behavior around the soft limit already are.
-
-> >  		do {
-> >  			unsigned long lru_pages;
-> >  			unsigned long reclaimed;
-> > @@ -2724,21 +2720,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
-> >  				   sc->nr_scanned - scanned,
-> >  				   sc->nr_reclaimed - reclaimed);
-> >  
-> > -			/*
-> > -			 * Kswapd have to scan all memory cgroups to fulfill
-> > -			 * the overall scan target for the node.
-> > -			 *
-> > -			 * Limit reclaim, on the other hand, only cares about
-> > -			 * nr_to_reclaim pages to be reclaimed and it will
-> > -			 * retry with decreasing priority if one round over the
-> > -			 * whole hierarchy is not sufficient.
-> > -			 */
-> > -			if (!current_is_kswapd() &&
-> > -					sc->nr_reclaimed >= sc->nr_to_reclaim) {
-> > -				mem_cgroup_iter_break(root, memcg);
-> > -				break;
-> > -			}
-> > -		} while ((memcg = mem_cgroup_iter(root, memcg, &reclaim)));
-> > +		} while ((memcg = mem_cgroup_iter(root, memcg, NULL)));
-> >  
-> >  		if (reclaim_state) {
-> >  			sc->nr_reclaimed += reclaim_state->reclaimed_slab;
-> > -- 
-> > 2.22.0
-> >
+> A handful of CET MSRs are not context switched through "traditional"
+> methods, e.g. VMCS or manual switching, but rather are passed through
+> to the guest and are saved and restored by XSAVES/XRSTORS, i.e. the
+> guest's FPU state.
 > 
-> Otherwise looks good to me!
+> Load the guest's FPU state if userspace is accessing MSRs whose values
+> are managed by XSAVES so that the MSR helper, e.g. vmx_{get,set}_msr(),
+> can simply do {RD,WR}MSR to access the guest's value.
 > 
-> Reviewed-by: Roman Gushchin <guro@fb.com>
+> Note that guest_cpuid_has() is not queried as host userspace is allowed
+> to access MSRs that have not been exposed to the guest, e.g. it might do
+> KVM_SET_MSRS prior to KVM_SET_CPUID2.
+> 
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Co-developed-by: Yang Weijiang <weijiang.yang@intel.com>
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> ---
+>  arch/x86/kvm/x86.c | 29 ++++++++++++++++++++++++++++-
+>  1 file changed, 28 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index fafd81d2c9ea..c657e6a56527 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -102,6 +102,8 @@ static void enter_smm(struct kvm_vcpu *vcpu);
+>  static void __kvm_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags);
+>  static void store_regs(struct kvm_vcpu *vcpu);
+>  static int sync_regs(struct kvm_vcpu *vcpu);
+> +static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu);
+> +static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu);
+>  
+>  struct kvm_x86_ops *kvm_x86_ops __read_mostly;
+>  EXPORT_SYMBOL_GPL(kvm_x86_ops);
+> @@ -2959,6 +2961,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_get_msr_common);
+>  
+> +static bool is_xsaves_msr(u32 index)
+> +{
+> +	return index == MSR_IA32_U_CET ||
+> +	       (index >= MSR_IA32_PL0_SSP && index <= MSR_IA32_PL3_SSP);
+> +}
+> +
+>  /*
+>   * Read or write a bunch of msrs. All parameters are kernel addresses.
+>   *
+> @@ -2969,11 +2977,30 @@ static int __msr_io(struct kvm_vcpu *vcpu, struct kvm_msrs *msrs,
+>  		    int (*do_msr)(struct kvm_vcpu *vcpu,
+>  				  unsigned index, u64 *data))
+>  {
+> +	bool fpu_loaded = false;
+>  	int i;
+> +	u64 cet_bits = XFEATURE_MASK_CET_USER | XFEATURE_MASK_CET_KERNEL;
 
-Thanks!
+Dunno if the compiler will actually generate different code, but this can be a
+const.
+
+> +	u64 host_xss = 0;
+> +
+> +	for (i = 0; i < msrs->nmsrs; ++i) {
+> +		if (!fpu_loaded && is_xsaves_msr(entries[i].index)) {
+> +			if (!kvm_x86_ops->xsaves_supported() ||
+> +			    !kvm_x86_ops->supported_xss())
+
+The "!kvm_x86_ops->supported_xss()" is redundant with the host_xss check
+below.
+
+> +				continue;
+
+Hmm, vmx_set_msr() should be checking host_xss, arguably we should call
+do_msr() and let it handle the bad MSR access.  I don't have a strong
+opinion either way, practically speaking the end result will be the same.
+
+If we do want to handle a misbehaving userspace here, this should be
+'break' instead of 'continue'.
+
+> +
+> +			host_xss = kvm_x86_ops->supported_xss();
+>  
+> -	for (i = 0; i < msrs->nmsrs; ++i)
+> +			if ((host_xss & cet_bits) != cet_bits)
+
+I'm pretty sure this should check for either CET bit being set, not both,
+e.g. I assume it's possible to enable and expose XFEATURE_MASK_CET_USER
+but not XFEATURE_MASK_CET_KERNEL.
+
+So something like
+
+	const u64 cet_bits = XFEATURE_MASK_CET_USER | XFEATURE_MASK_CET_KERNEL;
+	const bool cet_supported = kvm_x86_ops->xsaves_supported() &&
+				   (kvm_x86_ops->supported_xss() & cet_bits);
+
+	for (i = 0; i < msrs->nmsrs; ++i) {
+		if (!fpu_loaded && cet_supported &&
+		    is_xsaves_msr(entries[i].index)) {
+			kvm_load_guest_fpu(vcpu);
+			fpu_loaded = true;
+		}
+		if (do_msr(vcpu, entries[i].index, &entries[i].data))
+			break;	
+	}
+
+or
+
+	const u64 cet_bits = XFEATURE_MASK_CET_USER | XFEATURE_MASK_CET_KERNEL;
+
+	for (i = 0; i < msrs->nmsrs; ++i) {
+		if (!fpu_loaded && is_xsaves_msr(entries[i].index)) {
+			if (!kvm_x86_ops->supported_xss() ||
+			    !(kvm_x86_ops->supported_xss() & cet_bits))
+				break;
+			kvm_load_guest_fpu(vcpu);
+			fpu_loaded = true;
+		}
+		if (do_msr(vcpu, entries[i].index, &entries[i].data))
+			break;	
+	}
+
+
+> +				continue;
+> +
+> +			kvm_load_guest_fpu(vcpu);
+> +			fpu_loaded = true;
+> +		}
+>  		if (do_msr(vcpu, entries[i].index, &entries[i].data))
+>  			break;
+> +	}
+> +	if (fpu_loaded)
+> +		kvm_put_guest_fpu(vcpu);
+>  
+>  	return i;
+>  }
+> -- 
+> 2.17.2
+> 
