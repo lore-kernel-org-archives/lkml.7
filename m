@@ -2,189 +2,110 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C998AC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 752B0C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7839D20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:06:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="IaBMqPtz"
+	by mail.kernel.org (Postfix) with ESMTP id 4915820842
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:07:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565608043;
+	bh=DXHfdczzz0Ngw+McQkfe+Do33h0S24f/hNtYp5Nr2Ho=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fUrzLUHQIilrU9NwejBrrRm+HvKd6USESTz/gRTiDhsykBkckOMnJHl+fz5S2eNMd
+	 SlVDxOganqfFVugAcWyWuX6BrG0AGX/rWUPZ88UD+Lp7k/q5DmwbnZCFt2hjsgirau
+	 qSk1RlUlHxPJ9mLjLyTmxZM73wH1Y21zngIPv1A8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbfHLLF6 (ORCPT
+        id S1728182AbfHLLHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 07:05:58 -0400
-Received: from mail-eopbgr820053.outbound.protection.outlook.com ([40.107.82.53]:31073
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727980AbfHLLF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 07:05:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C9I1JVB3IxqEueiu3W1zXK1XjOESmskvxxcQFkNmhsHzc4RYW7YTLTNKDPcW74n6SIF+xH9uBJ1cm6PCqhijFA39O8HY6iSVmJnxVRGaEqtSs1lyWgxUzPXZDwGnnKDlWzOULriLa6kub0YIfJvP10blziUXIiTFOyQmRviRPNcHnN2p23g+ptQyyB+QpkddKScUVNrWHA785VlHigHRToaoEkBpGlIUcx/CZLAEYDRAFPNWA8ciQ+EeXP0j+Mco7qy7ZjwFfQTnBRywZNx62yaL9AsonWiSceLZ7OHBG/cQdGJZ/9I6909+CZZdawIV2A4qSn/DJny/6TWbV250ZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w0yC7c27b03C8UOQUep5urDnwYrr1WM479GAlFkcZf4=;
- b=acvBeimMvLvRoC559x0170s9bxrQToWS0cNb93D0qCQNgvpjjmsuWtAfbbVBKe7f7+4Qu969d9F5ajJowsJJasZidvNXK/PCOvmJg+JLZmDyUbCY/TOF7PuGeMV8gf4U6AftAoaseyBjtRDGc5IWQ3DP3yU1o8Xm5SYkaSjEdlVUGMBIYlVrIlu7zs3lpFqwRQa/0oKb7/y7EbXdW36CncD2jmsje9bDRyzkfDNF2dBdZmkD2GMAur+0Ea/rTRBfxxWcEPLJ0bCb0YjtF2mCvw+oO2WycHQOhuSRIAkxqHpTqDqctE+yfxKcPuEKOmiKUJMFWJ3nroiay+MDkc95ow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.100) smtp.rcpttodomain=pengutronix.de smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w0yC7c27b03C8UOQUep5urDnwYrr1WM479GAlFkcZf4=;
- b=IaBMqPtz7mUfQtHzTbM6RucIfOg7vW1YV04pZ4INvhtZ/Zo+S3w5S0uTezimPjH49KoDItjRPNdyFExj0MG7riCdnljpWu35l6ToWYBnTmOqN/bJaTrKDh+n8H8oeTJiI63OVgPGdaRxXkajAtBw0Lw9P8hrERwlJof8B4jVokg=
-Received: from BN6PR02CA0099.namprd02.prod.outlook.com (2603:10b6:405:60::40)
- by BL0PR02MB3795.namprd02.prod.outlook.com (2603:10b6:207:3e::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.18; Mon, 12 Aug
- 2019 11:05:54 +0000
-Received: from BL2NAM02FT062.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::200) by BN6PR02CA0099.outlook.office365.com
- (2603:10b6:405:60::40) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.15 via Frontend
- Transport; Mon, 12 Aug 2019 11:05:54 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.100)
- smtp.mailfrom=xilinx.com; pengutronix.de; dkim=none (message not signed)
- header.d=none;pengutronix.de; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
-Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
- BL2NAM02FT062.mail.protection.outlook.com (10.152.77.57) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2157.15
- via Frontend Transport; Mon, 12 Aug 2019 11:05:54 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66]:40585 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1hx89B-0008Dg-Uq; Mon, 12 Aug 2019 04:05:53 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1hx896-0007np-Pg; Mon, 12 Aug 2019 04:05:48 -0700
-Received: from xsj-pvapsmtp01 (xsj-pvapsmtp01.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x7CB5fqU020034;
-        Mon, 12 Aug 2019 04:05:42 -0700
-Received: from [172.30.17.116]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1hx88z-0007mq-IP; Mon, 12 Aug 2019 04:05:41 -0700
-Subject: Re: [PATCH 0/5] can: xilinx_can: Bug fixes
-To:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>,
-        wg@grandegger.com, davem@davemloft.net
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1565594914-18999-1-git-send-email-appana.durga.rao@xilinx.com>
- <7ecaa7df-3202-21d8-de93-5f6af3582964@pengutronix.de>
- <5571da8a-de1f-f420-f6b7-81c6d8932430@pengutronix.de>
- <f0e3360d-7c9a-a455-f63c-7fb584dfad2f@xilinx.com>
- <cb8f91b5-174f-79e5-d476-b01da2f3a65c@pengutronix.de>
- <c09ae89a-509d-55e7-a2d6-44ca2543f333@xilinx.com>
- <6b36bbcb-06e3-63aa-8861-c07c8840e25e@pengutronix.de>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <d8e17519-9cc4-cdf8-2acc-215592782625@xilinx.com>
-Date:   Mon, 12 Aug 2019 13:05:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 12 Aug 2019 07:07:22 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59360 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728054AbfHLLHV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 07:07:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=DXHfdczzz0Ngw+McQkfe+Do33h0S24f/hNtYp5Nr2Ho=; b=Nv/NKn/6zoFeAuQr5jGDYm312
+        L3o64lDHq5rXTY9MV7JA5VtpYsL8fr05Wfrn9h7MmUF6suls3UKo6FDBD8e+1PQjx+2gel/b08krO
+        kh1l8qJWFLludx1SAcIG5KPn7JBt0amMVaydDs8uAcJZrT5/KvkWN2i3XOxdi39eSg0Dw=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1hx8Aa-000123-8B; Mon, 12 Aug 2019 11:07:20 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 594B927430B7; Mon, 12 Aug 2019 12:07:19 +0100 (BST)
+Date:   Mon, 12 Aug 2019 12:07:19 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] regulator: core: Add devres versions of
+ regulator_enable/disable
+Message-ID: <20190812110719.GE4592@sirena.co.uk>
+References: <20190809030352.8387-1-hslester96@gmail.com>
+ <20190809151114.GD3963@sirena.co.uk>
+ <CANhBUQ09+q9_=7nMs63w4KRLGOhW1=z-AnuwOzAnUrWRY6uC6A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <6b36bbcb-06e3-63aa-8861-c07c8840e25e@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(136003)(376002)(2980300002)(199004)(189003)(26005)(76176011)(2486003)(23676004)(230700001)(65806001)(336012)(426003)(53546011)(6246003)(446003)(11346002)(2616005)(476003)(126002)(486006)(36386004)(44832011)(50466002)(36756003)(47776003)(65956001)(229853002)(81166006)(8676002)(81156014)(52146003)(356004)(478600001)(4326008)(31696002)(63266004)(316002)(5660300002)(58126008)(2906002)(31686004)(64126003)(65826007)(305945005)(8936002)(9786002)(186003)(106002)(70206006)(110136005)(70586007)(5001870100001);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR02MB3795;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:xapps1.xilinx.com,unknown-60-100.xilinx.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 25f147a3-3701-4bee-5f9d-08d71f150ba9
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BL0PR02MB3795;
-X-MS-TrafficTypeDiagnostic: BL0PR02MB3795:
-X-Microsoft-Antispam-PRVS: <BL0PR02MB37958907277BFC58CDC2A8E2C6D30@BL0PR02MB3795.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
-X-Forefront-PRVS: 012792EC17
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: 6Oku2ovMeXoQRS3BnaQ7PjYzFH8h/SaF3+3Ac/2BwCC+KE70LJTe2dWgs58DyZa/DXGV3B7btuWrOVoxtzQF4od/mwxie4zOlV7Tm6ush1rE0B3Xpy/s30otNkld/QsuV0LshwlqVajuRCnrEpDzTi+tfksb5ay1Rogi2kJhQUkyHvlDOVkacJNM/AE+ZzTouDyP1VDPUk/pdXSVyhgL1Z6HVAvn9htSC5woMW9xcseef2D3TCmqI930YcoEE1Wk8VN2ZSvVKAroQB9ZoZPmomC99nRLyojFtIwPgR7rlDxmwhNMm9FPe1d5cpdmkZ+VRWcvf0bTJD9hdMrY8B91s3VqVVIoJ8MGHhnE4OVPse2f0t07COjr7sOW5E3cEiMCVFsb+gGP3/zBQ72QpBjz1ch0/LlWiXzNJ9vvi+CnpbE=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2019 11:05:54.4856
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 25f147a3-3701-4bee-5f9d-08d71f150ba9
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB3795
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sfyO1m2EN8ZOtJL6"
+Content-Disposition: inline
+In-Reply-To: <CANhBUQ09+q9_=7nMs63w4KRLGOhW1=z-AnuwOzAnUrWRY6uC6A@mail.gmail.com>
+X-Cookie: Decaffeinated coffee?  Just Say No.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12. 08. 19 12:59, Marc Kleine-Budde wrote:
-> On 8/12/19 12:57 PM, Michal Simek wrote:
->> On 12. 08. 19 12:47, Marc Kleine-Budde wrote:
->>> On 8/12/19 12:18 PM, Michal Simek wrote:
->>>> On 12. 08. 19 11:10, Marc Kleine-Budde wrote:
->>>>> On 8/12/19 11:05 AM, Marc Kleine-Budde wrote:
->>>>>> On 8/12/19 9:28 AM, Appana Durga Kedareswara rao wrote:
->>>>>>> This patch series fixes below issues
->>>>>>> --> Bugs in the driver w.r.to CANFD 2.0 IP support
->>>>>>> --> Defer the probe if clock is not found
->>>>>>>
->>>>>>> Appana Durga Kedareswara rao (3):
->>>>>>>   can: xilinx_can: Fix FSR register handling in the rx path
->>>>>>>   can: xilinx_can: Fix the data updation logic for CANFD FD frames
->>>>>>>   can: xilinx_can: Fix FSR register FL and RI mask values for canfd 2.0
->>>>>>>
->>>>>>> Srinivas Neeli (1):
->>>>>>>   can: xilinx_can: Fix the data phase btr1 calculation
->>>>>>>
->>>>>>> Venkatesh Yadav Abbarapu (1):
->>>>>>>   can: xilinx_can: defer the probe if clock is not found
->>>>>>
->>>>>> Please add your S-o-b to patches 4+5.
->>>>>>
->>>>>> As these all are bugfixes please add a reference to the commit it fixes:
->>>>>>
->>>>>>     Fixes: commitish ("description")
->>>>>
->>>>> Add this to your ~/.gitconfig:
->>>>>
->>>>> [alias]
->>>>>         lfixes = log --pretty=fixes
->>>>> [pretty]
->>>>>         fixes = Fixes: %h (\"%s\")
->>>>
->>>> This is understandable and I have this in my .gitconfig for quite a long
->>>> time. And this is just log
->>>>
->>>>> and then use $(git lfixes $commitish).
->>>>
->>>> But what do you mean by this? Are you able to add this to commit message
->>>> just with sha1?
->>>
->>> First identify the commit that this patch fixes then go to the command
->>> line and enter
->>>
->>>     git lfixes $committish
->>>
->>> and git will print out the line that you can copy directly to the commit
->>> message.
->>
->> ok. I thought you have any nice way to directly add it to commit message
->> without c&p.
-> 
-> You can insert the output from a console command in vim by adding a "!"
-> in front of it in the command mode.
 
-ok.
-M
+--sfyO1m2EN8ZOtJL6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Sat, Aug 10, 2019 at 09:44:45AM +0800, Chuhong Yuan wrote:
+> On Fri, Aug 9, 2019 at 11:11 PM Mark Brown <broonie@kernel.org> wrote:
 
+> > I'm not super keen on managed versions of these functions since they're
+> > very likely to cause reference counting issues between the probe/remove
+> > path and the suspend/resume path which aren't obvious from the code, I'm
+> > especially worried about double frees on release.
+
+> I find that 29 of 31 cases I found call regulator_disable() only when encounter
+> probe failure or in .remove.
+> So I think the devm versions of regulator_enable/disable() will not cause big
+> problems.
+
+There's way more drivers using regulators than that...
+
+> I even found a driver to forget to disable regulator when encounter
+> probe failure,
+> which is drivers/iio/adc/ti-adc128s052.c.
+> And a devm version of regulator_enable() can prevent such mistakes.
+
+Yes, it's useful for that.
+
+--sfyO1m2EN8ZOtJL6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1RSGYACgkQJNaLcl1U
+h9BI5Qf+MjbM11UyOu1uRb8i9kBtXAhB3Nf++MDh5wUhKYEmZa3Jd9HPcfiSl1BI
+bG2CUtD8eHAktpenvf2YudwZ18GYuTA09RaauWbEu07aB3uUAzRykh9Af6yPj8wH
+tt3tn97PeEaYb5DaiJYQtbMyUALv2k0cWxrnXWIJvG9tClfuy4VWTKeEOfw0t09N
+pzsFWUE980VeemegI4ceyMYVQ7/aUxmsdvSFnQF0v5+qzeMH0Io1M9IU2YBUhvqz
+WuCdRXW81YoO+rhwbBguczlriy6cCN27ilwM+tpX9eilBYdhfFkUHIjptjYW1P01
+Jh1z5hndyvZrMvpMpM8iJam8nXgBEQ==
+=SvNi
+-----END PGP SIGNATURE-----
+
+--sfyO1m2EN8ZOtJL6--
