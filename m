@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E80EC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50519C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30C4A20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22A11208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565615414;
-	bh=+07g6QngHMC6BcxWNDgBKx8ofuIuWy1mnIjM8mXWee4=;
+	s=default; t=1565615419;
+	bh=ol7ncmy9e4hmMXc2jePY8wguNh6XQcQOwoiiOnTk8sg=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Fvg8ZP7N3F4Jh5FfIAkwxGlbJ/8xdYI1VuBj6ZHJPrmIHI0fF+wfZSNXYBF496v/I
-	 ZDkzhdLeA1YBr0IUDafT3zyc5KugeURX1oxIWmzDAL5sQJBhU55NYWSUuCnJxXk77E
-	 CAq4bq1xJ9C4NyW7Q0KHQYsS1hAH1FNEOiR1yEdA=
+	b=zCSl8YHG6h6BofQyMhfkvp/RSAAQnlVzcN1qIp1P5YN7PUEBbMDZuXrH2Y+miOmHt
+	 XGRs7LNKQW4zxpevj/xxecs46w5F/jdwU3BBji6MOmZL8CjG9wlsT+kvHXNJYEItDV
+	 rNYcASMdThtcTNnTs6m6KSXFY9RkIE6Jd8Q4RCcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728859AbfHLNKM (ORCPT
+        id S1728881AbfHLNKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 09:10:12 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40398 "EHLO
+        Mon, 12 Aug 2019 09:10:17 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40394 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728822AbfHLNKJ (ORCPT
+        with ESMTP id S1728820AbfHLNKJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 12 Aug 2019 09:10:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,29 +34,27 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=726K291caKRqeiB2KOs9bhqJM6YwCvuRpeAmBC8Mkio=; b=ktfWXSNR+l0P
-        q5iJ5adjeOtLSykywMzb8U5/PwlMfF0qOvFzNeM4ApqXoF6j29TXCCdueFh6t6JBOQVmfX9mHexQr
-        5zknyGi1AFf5SNP8+DxpGCR60/MDOGHEh9hFw80PZZbGO8ssAsyByjklT8qv6tw8qnmX0p46Pj2Dn
-        7AXV8=;
+        List-Archive; bh=gd9DyYbnFyPsG5Oa/SoWq+i9aBWOzldgmInHOmAKHtg=; b=b2SxXVLmnNQv
+        eud1RiJ9tB7mHyjx/QJQGVUsF6U7TDFo1DmvcEz1R999e2pzQYoJkb/ORu9hSFbxMcPKR/8taE5Io
+        V6gMqBUD/IRZK6g/8avKMEKU1WwPBQmOAilp2FkKQFk6TQmrYRkfDskrVPLzib7iEPDXVI0UkZkMi
+        Y4F88=;
 Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1hxA5B-0001Mg-HX; Mon, 12 Aug 2019 13:09:53 +0000
+        id 1hxA5M-0001PY-QV; Mon, 12 Aug 2019 13:10:04 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id E77BF2740CBD; Mon, 12 Aug 2019 14:09:52 +0100 (BST)
+        id 02C3B2740CB7; Mon, 12 Aug 2019 14:10:03 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     allison@lohutok.net, alsa-devel@alsa-project.org,
-        broonie@kernel.org, gregkh@linuxfoundation.org,
-        Hulk Robot <hulkci@huawei.com>, lgirdwood@gmail.com,
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     broonie@kernel.org, gregkh@linuxfoundation.org,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        perex@perex.cz, tiwai@suse.com
-Subject: Applied "ASoC: max9850: remove unused variable 'max9850_reg'" to the asoc tree
-In-Reply-To: <20190808143507.66788-1-yuehaibing@huawei.com>
+        rafael@kernel.org
+Subject: Applied "regmap-irq: Correct error paths in regmap_irq_thread for pm_runtime" to the regmap tree
+In-Reply-To: <20190812092409.21593-1-ckeepax@opensource.cirrus.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190812130952.E77BF2740CBD@ypsilon.sirena.org.uk>
-Date:   Mon, 12 Aug 2019 14:09:52 +0100 (BST)
+Message-Id: <20190812131004.02C3B2740CB7@ypsilon.sirena.org.uk>
+Date:   Mon, 12 Aug 2019 14:10:03 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,11 +62,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: max9850: remove unused variable 'max9850_reg'
+   regmap-irq: Correct error paths in regmap_irq_thread for pm_runtime
 
-has been applied to the asoc tree at
+has been applied to the regmap tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -89,49 +87,65 @@ to this mail.
 Thanks,
 Mark
 
-From c86102a333f77dcd0f7ef20ba836c6f13f1a077a Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Thu, 8 Aug 2019 22:35:07 +0800
-Subject: [PATCH] ASoC: max9850: remove unused variable 'max9850_reg'
+From fba5b1e9ab527bd46bc529370d52a7b2b552dce1 Mon Sep 17 00:00:00 2001
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Date: Mon, 12 Aug 2019 10:24:09 +0100
+Subject: [PATCH] regmap-irq: Correct error paths in regmap_irq_thread for
+ pm_runtime
 
-sound/soc/codecs/max9850.c:31:33: warning:
- max9850_reg defined but not used [-Wunused-const-variable=]
+Some error paths in regmap_irq_thread put the pm_runtime others do not,
+there is no reason to leave the pm_runtime enabled in some cases so
+update those paths to also put the pm_runtime.
 
-It is not used since commit 068416620c0d ("ASoC:
-max9850: Convert to direct regmap API usage")
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190808143507.66788-1-yuehaibing@huawei.com
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20190812092409.21593-1-ckeepax@opensource.cirrus.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/max9850.c | 13 -------------
- 1 file changed, 13 deletions(-)
+ drivers/base/regmap/regmap-irq.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/sound/soc/codecs/max9850.c b/sound/soc/codecs/max9850.c
-index f50ee8f5fe93..6f43748f9239 100644
---- a/sound/soc/codecs/max9850.c
-+++ b/sound/soc/codecs/max9850.c
-@@ -27,19 +27,6 @@ struct max9850_priv {
- 	unsigned int sysclk;
- };
+diff --git a/drivers/base/regmap/regmap-irq.c b/drivers/base/regmap/regmap-irq.c
+index c9dc70ceca5f..3d64c9331a82 100644
+--- a/drivers/base/regmap/regmap-irq.c
++++ b/drivers/base/regmap/regmap-irq.c
+@@ -370,7 +370,6 @@ static irqreturn_t regmap_irq_thread(int irq, void *d)
+ 		if (ret < 0) {
+ 			dev_err(map->dev, "IRQ thread failed to resume: %d\n",
+ 				ret);
+-			pm_runtime_put(map->dev);
+ 			goto exit;
+ 		}
+ 	}
+@@ -425,8 +424,6 @@ static irqreturn_t regmap_irq_thread(int irq, void *d)
+ 					dev_err(map->dev,
+ 						"Failed to read IRQ status %d\n",
+ 						ret);
+-					if (chip->runtime_pm)
+-						pm_runtime_put(map->dev);
+ 					goto exit;
+ 				}
+ 			}
+@@ -478,8 +475,6 @@ static irqreturn_t regmap_irq_thread(int irq, void *d)
+ 				dev_err(map->dev,
+ 					"Failed to read IRQ status: %d\n",
+ 					ret);
+-				if (chip->runtime_pm)
+-					pm_runtime_put(map->dev);
+ 				goto exit;
+ 			}
+ 		}
+@@ -513,10 +508,10 @@ static irqreturn_t regmap_irq_thread(int irq, void *d)
+ 		}
+ 	}
  
--/* max9850 register cache */
--static const struct reg_default max9850_reg[] = {
--	{  2, 0x0c },
--	{  3, 0x00 },
--	{  4, 0x00 },
--	{  5, 0x00 },
--	{  6, 0x00 },
--	{  7, 0x00 },
--	{  8, 0x00 },
--	{  9, 0x00 },
--	{ 10, 0x00 },
--};
--
- /* these registers are not used at the moment but provided for the sake of
-  * completeness */
- static bool max9850_volatile_register(struct device *dev, unsigned int reg)
++exit:
+ 	if (chip->runtime_pm)
+ 		pm_runtime_put(map->dev);
+ 
+-exit:
+ 	if (chip->handle_post_irq)
+ 		chip->handle_post_irq(chip->irq_drv_data);
+ 
 -- 
 2.20.1
 
