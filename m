@@ -2,117 +2,199 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C46C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C15C9C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A5220842
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8749420663
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:38:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T5u3brS8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfHLTgc (ORCPT
+        id S1726956AbfHLTiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 15:36:32 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60198 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727128AbfHLTga (ORCPT
+        Mon, 12 Aug 2019 15:38:01 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:32826 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfHLTiB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 15:36:30 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 8A2A12854FE
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
-        Hertz Wong <hertz.wong@rock-chips.com>
-Subject: [PATCH v5 11/11] media: hantro: Enable H264 decoding on rk3288
-Date:   Mon, 12 Aug 2019 16:35:22 -0300
-Message-Id: <20190812193522.10911-12-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190812193522.10911-1-ezequiel@collabora.com>
-References: <20190812193522.10911-1-ezequiel@collabora.com>
+        Mon, 12 Aug 2019 15:38:01 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n190so9187214pgn.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 12:38:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WR1xNMurBLLA6YfMYoKDYGfmPGWBmM4BYdMt2Nd0Jy4=;
+        b=T5u3brS8PDizcepwvlE+y29UANfuDWnRqgZwWb1XLHJPSfsHuW8VepYHOnbgyqnwcX
+         KxNd/FS7ZwS6bQn+N3FMgL1SdrqGgVAOTQ8a6SgK6j0KW25NRiGbua+tqvdOXavCRaxy
+         ysQ4nF+nqUkAz7bKPwK5civoSaMqRom5soxPONTpJzza+DKERaNMJy8fDBjQsIoywRvz
+         ccjSmoFKVV2nqU44IQReP/kA8F4QYiDvVj1c7zw6PgtMWcre+leLK58uoKN7Ukxm5WD6
+         zXKsgqkfs4P4077QRTA9AlTMNPVlpwJPL4p/4tYUiJ5UBLGw0jzTE4U1oAqTxXG+wTHq
+         rx/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WR1xNMurBLLA6YfMYoKDYGfmPGWBmM4BYdMt2Nd0Jy4=;
+        b=AWRwrIKZANXaCsFCwEh7hBSJ9H95QRFSgNBk7SvHMQNCMLlFetf8YuE8ITiIw/WR20
+         9LQoEQegMnfduyWCrBWwNtJ+Bbi/PptCUme47eT2EzCRmnYEEddkb9jOHgQnSXr37Nfy
+         uRMIP2b56NXpbPJnHNouw0taDzhY9kqekokxzw0ut8U6ZjvOtpewQpNR31ldWxXJO1+S
+         i4wK+nuIBA5qyZZnrw/ALPd+H27WWNXnMinhK4j5B5yJXgz2FtM++jrSaDO+oZagWcwd
+         Jb7ejXGi3pFcbfkIjBSy+VuGyu65Pu1IhbN8gsXDqj0QDpd4UnQgYCk3VWpQJrpR0pzK
+         EYzQ==
+X-Gm-Message-State: APjAAAVq7XqGHw5cwV4ao+3aEnBde2hbd8WckChyfJqUKf9Y4UfXa0FD
+        JKKpxtVUF8vt8F2al1BbYEf0TDwFajFbT22mextOlw==
+X-Google-Smtp-Source: APXvYqymx0WwYkoqYrEt9Rm0iUVkV7VpPVoYSGOIzq24JC7wLNajuws27Vy+jaADp5jIo8WQBMm41EoWnfnf2OJgMj0=
+X-Received: by 2002:aa7:8085:: with SMTP id v5mr19988296pff.165.1565638679763;
+ Mon, 12 Aug 2019 12:37:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190812193256.55103-1-natechancellor@gmail.com>
+In-Reply-To: <20190812193256.55103-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 12 Aug 2019 12:37:48 -0700
+Message-ID: <CAKwvOdkScTZpiCnb_HBcnMLssBZ-WT7g+ir5R+uMWWZE_QA2Vw@mail.gmail.com>
+Subject: Re: [PATCH v2] lib/mpi: Eliminate unused umul_ppmm definitions for MIPS
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-mips@vger.kernel.org,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hertz Wong <hertz.wong@rock-chips.com>
+On Mon, Aug 12, 2019 at 12:36 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang errors out when building this macro:
+>
+> lib/mpi/generic_mpih-mul1.c:37:24: error: invalid use of a cast in a
+> inline asm context requiring an l-value: remove the cast or build with
+> -fheinous-gnu-extensions
+>                 umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
+>                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> lib/mpi/longlong.h:652:20: note: expanded from macro 'umul_ppmm'
+>         : "=l" ((USItype)(w0)), \
+>                 ~~~~~~~~~~^~~
+> lib/mpi/generic_mpih-mul1.c:37:3: error: invalid output constraint '=h'
+> in asm
+>                 umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
+>                 ^
+> lib/mpi/longlong.h:653:7: note: expanded from macro 'umul_ppmm'
+>              "=h" ((USItype)(w1)) \
+>              ^
+> 2 errors generated.
+>
+> The C version that is used for GCC 4.4 and up works well with clang;
+> however, it is not currently being used because Clang masks itself
+> as GCC 4.2.1 for compatibility reasons. As Nick points out, we require
+> GCC 4.6 and newer in the kernel so we can eliminate all of the
+> versioning checks and just use the C version of umul_ppmm for all
+> supported compilers.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/605
+> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Now that the generic bits have been added, we can activate H264 decoding
-on rk3288.
+LGTM thanks Nathan.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Signed-off-by: Hertz Wong <hertz.wong@rock-chips.com>
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
----
-Changes in v5:
-* None.
-Changes in v4:
-* None.
----
- drivers/staging/media/hantro/rk3288_vpu_hw.c | 21 +++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+> ---
+>
+> This supersedes the following two patches:
+>
+> https://lore.kernel.org/lkml/20190812033120.43013-4-natechancellor@gmail.com/
+>
+> https://lore.kernel.org/lkml/20190812033120.43013-5-natechancellor@gmail.com/
+>
+> I labelled this as a v2 so those don't get applied.
+>
+>  lib/mpi/longlong.h | 36 +-----------------------------------
+>  1 file changed, 1 insertion(+), 35 deletions(-)
+>
+> diff --git a/lib/mpi/longlong.h b/lib/mpi/longlong.h
+> index 3bb6260d8f42..2dceaca27489 100644
+> --- a/lib/mpi/longlong.h
+> +++ b/lib/mpi/longlong.h
+> @@ -639,30 +639,12 @@ do { \
+>         **************  MIPS  *****************
+>         ***************************************/
+>  #if defined(__mips__) && W_TYPE_SIZE == 32
+> -#if (__GNUC__ >= 5) || (__GNUC__ >= 4 && __GNUC_MINOR__ >= 4)
+>  #define umul_ppmm(w1, w0, u, v)                        \
+>  do {                                           \
+>         UDItype __ll = (UDItype)(u) * (v);      \
+>         w1 = __ll >> 32;                        \
+>         w0 = __ll;                              \
+>  } while (0)
+> -#elif __GNUC__ > 2 || __GNUC_MINOR__ >= 7
+> -#define umul_ppmm(w1, w0, u, v) \
+> -       __asm__ ("multu %2,%3" \
+> -       : "=l" ((USItype)(w0)), \
+> -            "=h" ((USItype)(w1)) \
+> -       : "d" ((USItype)(u)), \
+> -            "d" ((USItype)(v)))
+> -#else
+> -#define umul_ppmm(w1, w0, u, v) \
+> -       __asm__ ("multu %2,%3\n" \
+> -          "mflo %0\n" \
+> -          "mfhi %1" \
+> -       : "=d" ((USItype)(w0)), \
+> -            "=d" ((USItype)(w1)) \
+> -       : "d" ((USItype)(u)), \
+> -            "d" ((USItype)(v)))
+> -#endif
+>  #define UMUL_TIME 10
+>  #define UDIV_TIME 100
+>  #endif /* __mips__ */
+> @@ -687,7 +669,7 @@ do {                                                                        \
+>                  : "d" ((UDItype)(u)),                                  \
+>                    "d" ((UDItype)(v)));                                 \
+>  } while (0)
+> -#elif (__GNUC__ >= 5) || (__GNUC__ >= 4 && __GNUC_MINOR__ >= 4)
+> +#else
+>  #define umul_ppmm(w1, w0, u, v) \
+>  do {                                                                   \
+>         typedef unsigned int __ll_UTItype __attribute__((mode(TI)));    \
+> @@ -695,22 +677,6 @@ do {                                                                       \
+>         w1 = __ll >> 64;                                                \
+>         w0 = __ll;                                                      \
+>  } while (0)
+> -#elif __GNUC__ > 2 || __GNUC_MINOR__ >= 7
+> -#define umul_ppmm(w1, w0, u, v) \
+> -       __asm__ ("dmultu %2,%3" \
+> -       : "=l" ((UDItype)(w0)), \
+> -            "=h" ((UDItype)(w1)) \
+> -       : "d" ((UDItype)(u)), \
+> -            "d" ((UDItype)(v)))
+> -#else
+> -#define umul_ppmm(w1, w0, u, v) \
+> -       __asm__ ("dmultu %2,%3\n" \
+> -          "mflo %0\n" \
+> -          "mfhi %1" \
+> -       : "=d" ((UDItype)(w0)), \
+> -            "=d" ((UDItype)(w1)) \
+> -       : "d" ((UDItype)(u)), \
+> -            "d" ((UDItype)(v)))
+>  #endif
+>  #define UMUL_TIME 20
+>  #define UDIV_TIME 140
+> --
+> 2.23.0.rc2
+>
 
-diff --git a/drivers/staging/media/hantro/rk3288_vpu_hw.c b/drivers/staging/media/hantro/rk3288_vpu_hw.c
-index f1b573a006ae..6bfcc47d1e58 100644
---- a/drivers/staging/media/hantro/rk3288_vpu_hw.c
-+++ b/drivers/staging/media/hantro/rk3288_vpu_hw.c
-@@ -61,6 +61,19 @@ static const struct hantro_fmt rk3288_vpu_dec_fmts[] = {
- 		.fourcc = V4L2_PIX_FMT_NV12,
- 		.codec_mode = HANTRO_MODE_NONE,
- 	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_H264_SLICE,
-+		.codec_mode = HANTRO_MODE_H264_DEC,
-+		.max_depth = 2,
-+		.frmsize = {
-+			.min_width = 48,
-+			.max_width = 3840,
-+			.step_width = H264_MB_DIM,
-+			.min_height = 48,
-+			.max_height = 2160,
-+			.step_height = H264_MB_DIM,
-+		},
-+	},
- 	{
- 		.fourcc = V4L2_PIX_FMT_MPEG2_SLICE,
- 		.codec_mode = HANTRO_MODE_MPEG2_DEC,
-@@ -162,6 +175,12 @@ static const struct hantro_codec_ops rk3288_vpu_codec_ops[] = {
- 		.init = hantro_jpeg_enc_init,
- 		.exit = hantro_jpeg_enc_exit,
- 	},
-+	[HANTRO_MODE_H264_DEC] = {
-+		.run = hantro_g1_h264_dec_run,
-+		.reset = rk3288_vpu_dec_reset,
-+		.init = hantro_h264_dec_init,
-+		.exit = hantro_h264_dec_exit,
-+	},
- 	[HANTRO_MODE_MPEG2_DEC] = {
- 		.run = hantro_g1_mpeg2_dec_run,
- 		.reset = rk3288_vpu_dec_reset,
-@@ -197,7 +216,7 @@ const struct hantro_variant rk3288_vpu_variant = {
- 	.dec_fmts = rk3288_vpu_dec_fmts,
- 	.num_dec_fmts = ARRAY_SIZE(rk3288_vpu_dec_fmts),
- 	.codec = HANTRO_JPEG_ENCODER | HANTRO_MPEG2_DECODER |
--		 HANTRO_VP8_DECODER,
-+		 HANTRO_VP8_DECODER | HANTRO_H264_DECODER,
- 	.codec_ops = rk3288_vpu_codec_ops,
- 	.irqs = rk3288_irqs,
- 	.num_irqs = ARRAY_SIZE(rk3288_irqs),
+
 -- 
-2.22.0
-
+Thanks,
+~Nick Desaulniers
