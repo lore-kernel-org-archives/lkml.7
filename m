@@ -2,193 +2,111 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91293C32750
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C192C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB5F20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B75320663
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:58:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lXXWzyMj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfHLR6G (ORCPT
+        id S1726762AbfHLR6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 13:58:06 -0400
-Received: from mga07.intel.com ([134.134.136.100]:16540 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbfHLR6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 13:58:06 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 10:52:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,378,1559545200"; 
-   d="scan'208";a="376033949"
-Received: from megha-z97x-ud7-th.sc.intel.com ([143.183.85.162])
-  by fmsmga006.fm.intel.com with ESMTP; 12 Aug 2019 10:52:30 -0700
-Message-ID: <1565633624.7042.23.camel@intel.com>
-Subject: Re: [RFC V1 RESEND 5/6] PCI/MSI: Free MSI-X resources by group
-From:   Megha Dey <megha.dey@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, marc.zyngier@arm.com,
-        ashok.raj@intel.com, jacob.jun.pan@linux.intel.com
-Date:   Mon, 12 Aug 2019 11:13:44 -0700
-In-Reply-To: <alpine.DEB.2.21.1908110912470.7324@nanos.tec.linutronix.de>
-References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
-          <1561162778-12669-6-git-send-email-megha.dey@linux.intel.com>
-          <alpine.DEB.2.21.1906291002190.1802@nanos.tec.linutronix.de>
-         <1565118597.2401.116.camel@intel.com>
-         <alpine.DEB.2.21.1908110912470.7324@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 12 Aug 2019 13:58:14 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45352 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbfHLR6O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 13:58:14 -0400
+Received: by mail-pg1-f196.google.com with SMTP id o13so49853648pgp.12
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 10:58:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1erNNaRmZnyWkQt/DrclmgvWnql7ho7Foo2FJUHD6as=;
+        b=lXXWzyMjDH5TeHtbdRFhkEjkV47HTYV3Vf7/YAcY2UCGzLQu8E5YZKbOSBBFievTjb
+         ruCp9bs6dq2WGfKVAjLkHHlc+CeX9kn/s6gzt3o6JhIP4qyV518mmIWUMrVCikmgwII1
+         2Lzno6qbDQW1yuALyl/iUbEeshVBxQnaVlCxU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1erNNaRmZnyWkQt/DrclmgvWnql7ho7Foo2FJUHD6as=;
+        b=MRTUonJMnAhg4VlDAiZ7Hn2m45EjCzTylOSWcXAhK3rtx3htF8M7paQsdv0aAMItjt
+         Z45TukIrTQJv2wZSDR31F45J34yqomjzNKXRQgeNEqjRspVfPWRLCRlJ+XnL089ZNm7+
+         ukqPt3M1j1gti6LlnheOBG5owr9EdH/kCVI7dNjQfifC323WEEXB5TBDFtVB2/m0TfaS
+         Fx/wWNSkNpWZ7qezF+dFD8tNQyqWJkpyzO55LUgixpRh8sLA6y3bugPhZAD48GoryN5r
+         AzW3F2yysZ+yM9mB3RbhYdUnX8iiX2/MN+F7BE8g23A+4tO+zYeD/0EgloT/ho7xVH3b
+         yQbw==
+X-Gm-Message-State: APjAAAXjsjWmHH4zDB2imsq1LsbJkMgkLboc4P/48h7ELGggSCTtD6u5
+        dr8/3RMntuOjAIATkMLU4Qjlbg==
+X-Google-Smtp-Source: APXvYqzIL/ii78dQ8BFRBPLdJqqMoMehADxBmc3BeycFVL6zPCWpdl1sOBjIrPBoPs6B/tqvTB0XmA==
+X-Received: by 2002:a63:5f09:: with SMTP id t9mr31418071pgb.351.1565632693539;
+        Mon, 12 Aug 2019 10:58:13 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n5sm113918495pfn.38.2019.08.12.10.58.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 12 Aug 2019 10:58:12 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 10:58:11 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     akpm@linux-foundation.org, joe@perches.com,
+        johannes@sipsolutions.net, linux-kernel@vger.kernel.org,
+        yamada.masahiro@socionext.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Subject: Re: [PATCH v3 0/3] Add compile time sanity check of GENMASK inputs
+Message-ID: <201908121055.7DC9244@keescook>
+References: <20190801230358.4193-1-rikard.falkeborn@gmail.com>
+ <20190811184938.1796-1-rikard.falkeborn@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190811184938.1796-1-rikard.falkeborn@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-08-11 at 09:18 +0200, Thomas Gleixner wrote:
-> On Tue, 6 Aug 2019, Megha Dey wrote:
+On Sun, Aug 11, 2019 at 08:49:35PM +0200, Rikard Falkeborn wrote:
+> Hello,
 > 
-> > 
-> > On Sat, 2019-06-29 at 10:08 +0200, Thomas Gleixner wrote:
-> > > 
-> > > Megha,
-> > > 
-> > > On Fri, 21 Jun 2019, Megha Dey wrote:
-> > > > 
-> > > > 
-> > > > +static int free_msi_irqs_grp(struct pci_dev *dev, int
-> > > > group_id)
-> > > > +{
-> > > > 
-> > > > +
-> > > > +	for_each_pci_msi_entry(entry, dev) {
-> > > > +		if (entry->group_id == group_id && entry->irq)
-> > > > +			for (i = 0; i < entry->nvec_used; i++)
-> > > > +				BUG_ON(irq_has_action(entry-
-> > > > >irq +
-> > > > i));
-> > > BUG_ON is wrong here. This can and must be handled gracefully.
-> > > 
-> > Hmm, I reused this code from the 'free_msi_irqs' function. I am not
-> > sure why it is wrong to use BUG_ON here but ok to use it there,
-> > please
-> > let me know.
-> We are not adding BUG_ON() anymore except for situations where there
-> is
-> absolutely no way out. Just because there is still older code having
-> BUG_ON() does not make it any better. Copying it surely is no
-> justification.
+> A new attempt to try to add build time validity checks of GENMASK (and
+> GENMASK_ULL) inputs. There main differences from v2:
 > 
-> If there is really no way out, then you need to explain it.
+> Remove a define of BUILD_BUG_ON in x86/boot to avoid a compiler warning
+> about redefining BUILD_BUG_ON. Instead, use the common one from
+> include/.
 > 
-
-Ok, got it. I will look into it closely to see if the BUG_ON is
-absolutely required.
-
->  
-> > 
-> > > 
-> > > > 
-> > > > +static void pci_msix_shutdown_grp(struct pci_dev *dev, int
-> > > > group_id)
-> > > > +{
-> > > > +	struct msi_desc *entry;
-> > > > +	int grp_present = 0;
-> > > > +
-> > > > +	if (pci_dev_is_disconnected(dev)) {
-> > > > +		dev->msix_enabled = 0;
-> > > Huch? What's that? I can't figure out why this is needed and of
-> > > course it
-> > > completely lacks a comment explaining this. 
-> > > 
-> > Again, I have reused this code from the pci_msix_shutdown()
-> > function.
-> > So for the group case, this is not required?
-> Copy and paste is not an argument, really. Can this happen here? If
-> so,
-> then please add a comment.
+> Drop patch 2 in v2 where GENMASK arguments where made more verbose.
 > 
-
-Ok, will do.
-> > 
-> > > 
-> > > > 
-> > > > 
-> > > > +		return;
-> > > > +	}
-> > > > +
-> > > > +	/* Return the device with MSI-X masked as initial
-> > > > states
-> > > > */
-> > > > +	for_each_pci_msi_entry(entry, dev) {
-> > > > +		if (entry->group_id == group_id) {
-> > > > +			/* Keep cached states to be restored
-> > > > */
-> > > > +			__pci_msix_desc_mask_irq(entry, 1);
-> > > > +			grp_present = 1;
-> > > > +		}
-> > > > +	}
-> > > > +
-> > > > +	if (!grp_present) {
-> > > > +		pci_err(dev, "Group to be disabled not
-> > > > present\n");
-> > > > +		return;
-> > > So you print an error and silently return
-> > > 
-> > This is a void function, hence no error value can be returned. What
-> > do
-> > you think is the right thing to do if someone wants to delete a
-> > group
-> > which is not present?
-> Well, you made it a void function. 
-
-ok sure, got your point.
->  
-> > 
-> > > 
-> > > > 
-> > > > 
-> > > > +	}
-> > > > +}
-> > > > +
-> > > > +int pci_disable_msix_grp(struct pci_dev *dev, int group_id)
-> > > > +{
-> > > > +	int num_vecs;
-> > > > +
-> > > > +	if (!pci_msi_enable || !dev)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	pci_msix_shutdown_grp(dev, group_id);
-> > > > +	num_vecs = free_msi_irqs_grp(dev, group_id);
-> > > just to call in another function which has to do the same
-> > > group_id
-> > > lookup
-> > > muck again.
-> > Even with the new proposal, we are to have 2 sets of functions: one
-> > to
-> > delete all the msic_desc entries associated with the device, and
-> > the
-> > other to delete those only belonging a 'user specified' group. So
-> > we do
-> > need to pass a group_id to these functions right? Yes, internally
-> > the
-> > deletion would be straightforward with the new approach.
-> That does not matter. If pci_msix_shutdown_grp() does not find a
-> group, why
-> proceeding instead of having a proper error return and telling the
-> caller?
+> Add a cast in the BUILD_BUG_ON_ZERO macro change the type to int to
+> avoid the somewhat clumpsy casts of BUILD_BUG_ON_ZERO. The second patch
+> in this series adds such a cast to BUILD_BUG_ON_ZERO, which makes it
+> possible to avoid casts when using BUILD_BUG_ON_ZERO in patch 3.
 > 
-
-Oh ok, I got it now, I will return a proper error code in the
-pci_msi_shutdown_grp and do the free_msi_irqs_grp only if the group is
-found.
-
-> Thanks,
+> I have checked all users of BUILD_BUG_ON_ZERO and I did not find a case
+> where adding a cast to int would affect existing users but I'd feel much
+> more comfortable if someone else double (or tripple) checked (there are
+> ~80 instances plus ~10 copies in tools). Perhaps I should have CC:d
+> maintainers of files using BUILD_BUG_ON_ZERO?
 > 
-> 	tglx
+> Finally, use __builtin_constant_p instead of __is_constexpr. This avoids
+> pulling in kernel.h in bits.h.
+
+Cool; I like this. I spent some time convincing myself that the
+side-effects really aren't double-evaluated, and it looks fine to me. :)
+
+For the series:
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
