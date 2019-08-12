@@ -2,98 +2,200 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 724B3C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD80C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 456E9214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7BE720820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:22:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="f4g55UqE"
+	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="eDua6EN6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbfHLJWE (ORCPT
+        id S1727361AbfHLJWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 05:22:04 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:48579 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727023AbfHLJWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 05:22:04 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 466VjP4FBJz9sN1;
-        Mon, 12 Aug 2019 19:22:01 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565601721;
-        bh=Ts0BS2lBSwZD9i7w2vfUNt/uLevPqGYZiTJy11OCM8Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=f4g55UqEoW8DKaZ58XlQAJMv7FNQhR238Ww/42Jej3QMJQ2AfqeDjfjWEtokCamIr
-         jyfZVVw2XNO0k9JKt4AOLlePbFRvKH/Jy9vO9s5kQTSJpYZ2ARetXIGogM98TVeXlE
-         q4LkUnDnUjOz2iBM8dWT0HhA/4nY0hMooWCnXCBals9p5s1m+LXvXqAggVWNmgNjQv
-         Ix848O6njUDUOZ5bOlCPlh3mtcg5djozcih/TDc51MIhTbA68E1P10PWN9QnSPalWI
-         iAo/toEFEpftD/bW7N5X8Gc1oE+uuAvCulid3cq4xxDppQV9vnp7doBDm6fJZkBpc0
-         BsnlQx2rJkOTg==
-Date:   Mon, 12 Aug 2019 19:21:47 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the slave-dma tree
-Message-ID: <20190812192147.5dd41ab7@canb.auug.org.au>
-In-Reply-To: <CAK8P3a0eOyD2iTFeLC1J95WMAwyzBJJ0S5nOb+Z_y9nUy=8=qg@mail.gmail.com>
-References: <20190812171411.31ec6ae3@canb.auug.org.au>
-        <CAK8P3a0eOyD2iTFeLC1J95WMAwyzBJJ0S5nOb+Z_y9nUy=8=qg@mail.gmail.com>
+        Mon, 12 Aug 2019 05:22:53 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45786 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbfHLJWx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 05:22:53 -0400
+Received: by mail-pg1-f194.google.com with SMTP id o13so49159066pgp.12
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 02:22:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fossix-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U6PbBPFQneTnWRSxGV1ZGwptN/j/UovpAnCRf5tW94s=;
+        b=eDua6EN6D9snB4k0r7kjlDLSzH1gchP/j6Pee+1mifWl1e6oK+JKWqq805ED4lCkyq
+         qfQMyO/z4CPeX6UETEc6lk+BtXNSSbkubvIprtIW9JrxWVcVVE4DbhqIbgGm13sPTb7Z
+         dLBmjBh6qiRNRgau/N0Lc4OtwEAybdkMitlqm1bqj091D1QkzlyiztZqlIz+EK2H6NwC
+         Cgx9H0S+MVuRb+M3fiXDErJJw/EY3v+vIfWL0ji0s2+pWvdJrDmUHS2/aIL5upVVrQrF
+         O9pji0dyTQLH6QFvg1ex6wg2J7pWHci0/xRzXz+A3RpctrG67YsAITw+fShw5zge/TYD
+         7FRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U6PbBPFQneTnWRSxGV1ZGwptN/j/UovpAnCRf5tW94s=;
+        b=asePniGnj+sdkxyHmBSTkxo5nD29quPcbltVtcERh+sgzqT+QSS7ssdS6Kw6Tcdv5I
+         /8DLNKKqyphLE0z9owr67Zk4/SWCZnqQgtmi8F/7vlT7QWex7KaeScDBSIBUJNUNwzzb
+         o2xd7acimfnoQ7KfBDN07segk6SuxFcqAE7U/cGBlR0iKOr90DJ7TG4PMZjcrqRgmHbF
+         DJkemmi8bQe1SU0wLL7nwresX0ew4MNjiroiovC/EXMe54buSCkUozlr+ZTNX+F/BZXi
+         SJuPfGzfYEJa6f79yaSrt+XWCp6DOB9v7U5CbHn5H9ea73OJECdQ1u2yoOB+IR7zxe2A
+         up6Q==
+X-Gm-Message-State: APjAAAXmwepR94AGk/HrNROtvjST3TEBXQKpl8oECHCvWmQs3tTm0s/u
+        hOQw2f/6JFfHe1q+IbeSD7OtMt+lLwfBvA==
+X-Google-Smtp-Source: APXvYqw/iayZzWl7GAdg0pSTHSaZhH8j+y1/gw4EbFFhNuvIz8boOjfmK89tKaXpcnd2roRtKXcC2g==
+X-Received: by 2002:a17:90a:342d:: with SMTP id o42mr8711979pjb.27.1565601772156;
+        Mon, 12 Aug 2019 02:22:52 -0700 (PDT)
+Received: from santosiv.in.ibm.com ([129.41.84.75])
+        by smtp.gmail.com with ESMTPSA id y188sm10543517pfb.115.2019.08.12.02.22.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 02:22:50 -0700 (PDT)
+From:   Santosh Sivaraj <santosh@fossix.org>
+To:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Reza Arbab <arbab@linux.ibm.com>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Chandan Rajendra <chandan@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        christophe leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v9 0/7] powerpc: implement machine check safe memcpy
+Date:   Mon, 12 Aug 2019 14:52:29 +0530
+Message-Id: <20190812092236.16648-1-santosh@fossix.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/2ntkKCQ=Lv/uHWV.m3yc27U";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/2ntkKCQ=Lv/uHWV.m3yc27U
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+During a memcpy from a pmem device, if a machine check exception is
+generated we end up in a panic. In case of fsdax read, this should
+only result in a -EIO. Avoid MCE by implementing memcpy_mcsafe.
 
-Hi Arnd,
+Before this patch series:
 
-On Mon, 12 Aug 2019 11:14:08 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
->
-> The warning is valid, I will send a fix.
+```
+bash-4.4# mount -o dax /dev/pmem0 /mnt/pmem/
+[ 7621.714094] Disabling lock debugging due to kernel taint
+[ 7621.714099] MCE: CPU0: machine check (Severe) Host UE Load/Store [Not recovered]
+[ 7621.714104] MCE: CPU0: NIP: [c000000000088978] memcpy_power7+0x418/0x7e0
+[ 7621.714107] MCE: CPU0: Hardware error
+[ 7621.714112] opal: Hardware platform error: Unrecoverable Machine Check exception
+[ 7621.714118] CPU: 0 PID: 1368 Comm: mount Tainted: G   M              5.2.0-rc5-00239-g241e39004581
+#50
+[ 7621.714123] NIP:  c000000000088978 LR: c0000000008e16f8 CTR: 00000000000001de
+[ 7621.714129] REGS: c0000000fffbfd70 TRAP: 0200   Tainted: G   M              
+(5.2.0-rc5-00239-g241e39004581)
+[ 7621.714131] MSR:  9000000002209033 <SF,HV,VEC,EE,ME,IR,DR,RI,LE>  CR: 24428840  XER: 00040000
+[ 7621.714160] CFAR: c0000000000889a8 DAR: deadbeefdeadbeef DSISR: 00008000 IRQMASK: 0
+[ 7621.714171] GPR00: 000000000e000000 c0000000f0b8b1e0 c0000000012cf100 c0000000ed8e1100 
+[ 7621.714186] GPR04: c000020000001100 0000000000010000 0000000000000200 03fffffff1272000 
+[ 7621.714201] GPR08: 0000000080000000 0000000000000010 0000000000000020 0000000000000030 
+[ 7621.714216] GPR12: 0000000000000040 00007fffb8c6d390 0000000000000050 0000000000000060 
+[ 7621.714232] GPR16: 0000000000000070 0000000000000000 0000000000000001 c0000000f0b8b960 
+[ 7621.714247] GPR20: 0000000000000001 c0000000f0b8b940 0000000000000001 0000000000010000 
+[ 7621.714262] GPR24: c000000001382560 c00c0000003b6380 c00c0000003b6380 0000000000010000 
+[ 7621.714277] GPR28: 0000000000000000 0000000000010000 c000020000000000 0000000000010000 
+[ 7621.714294] NIP [c000000000088978] memcpy_power7+0x418/0x7e0
+[ 7621.714298] LR [c0000000008e16f8] pmem_do_bvec+0xf8/0x430
+... <snip> ...
+```
 
-Thanks.
+After this patch series:
 
-> I have never seen this message though, I guess the build system just intr=
-oduced
-> a check for this? I don't see where this would come from in next-20190809
-> (only checking with grep, not actually trying to build right now).
+```
+bash-4.4# mount -o dax /dev/pmem0 /mnt/pmem/
+[25302.883978] Buffer I/O error on dev pmem0, logical block 0, async page read
+[25303.020816] EXT4-fs (pmem0): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
+[25303.021236] EXT4-fs (pmem0): Can't read superblock on 2nd try
+[25303.152515] EXT4-fs (pmem0): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
+[25303.284031] EXT4-fs (pmem0): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
+[25304.084100] UDF-fs: bad mount option "dax" or missing value
+mount: /mnt/pmem: wrong fs type, bad option, bad superblock on /dev/pmem0, missing codepage or helper
+program, or other error.
+```
 
-Yeah, we had a version of this a week or so ago and it has come back
-today (I haven't done today's release yet).
+MCE is injected on a pmem address using mambo. The last patch which adds a
+nop is only for testing on mambo, where r13 is not restored upon hitting
+vector 200.
 
---=20
-Cheers,
-Stephen Rothwell
+The memcpy code can be optimised by adding VMX optimizations and GAS macros
+can be used to enable code reusablity, which I will send as another series.
 
---Sig_/2ntkKCQ=Lv/uHWV.m3yc27U
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+---
+Change-log:
+v9:
+* Add a new IRQ work for UE events [mahesh]
+* Reorder patches, and copy stable
 
------BEGIN PGP SIGNATURE-----
+v8:
+* While ignoring UE events, return was used instead of continue.
+* Checkpatch fixups for commit log
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1RL6sACgkQAVBC80lX
-0GzU5ggAiWC5r5/x0iURbEy6t17fpXwyQ/WYtWPEDodz6X9XlXdEf+DegSXS3zKI
-gVpTfq0i4rUmZS4CQ98PcGPgz5eKG2KEtI+oty6yZjXb3ePL5Dtmzx16/76SkW1X
-JH37O2s9nWAKshQRMaTMHcTh70hZE+tD38uhL55Yt1QxZeanD65pmfL4c0YpGr1I
-ROPhf3sO5MqOe3KzKO3g8s9Dyf/y5PxGkbWzuiH+VdrWg/IBU82pv3nn0s88r2U/
-Wveq7M4CbSuaw8MCd3KAOD55ak5E/ldjrJVvfOtKlVhlpue4+b2qkCMYQX+9rCnJ
-F/6a44PPxJtUFb/Jps0prGzyWpS49w==
-=Jn29
------END PGP SIGNATURE-----
+v7:
+* Move schedule_work to be called from irq_work.
 
---Sig_/2ntkKCQ=Lv/uHWV.m3yc27U--
+v6:
+* Don't return pfn, all callees are expecting physical address anyway [nick]
+* Patch re-ordering: move exception table patch before memcpy_mcsafe patch [nick]
+* Reword commit log for search_exception_tables patch [nick]
+
+v5:
+* Don't use search_exception_tables since it searches for module exception tables
+  also [Nicholas]
+* Fix commit message for patch 2 [Nicholas]
+
+v4:
+* Squash return remaining bytes patch to memcpy_mcsafe implemtation patch [christophe]
+* Access ok should be checked for copy_to_user_mcsafe() [christophe]
+
+v3:
+* Drop patch which enables DR/IR for external modules
+* Drop notifier call chain, we don't want to do that in real mode
+* Return remaining bytes from memcpy_mcsafe correctly
+* We no longer restore r13 for simulator tests, rather use a nop at 
+  vector 0x200 [workaround for simulator; not to be merged]
+
+v2:
+* Don't set RI bit explicitly [mahesh]
+* Re-ordered series to get r13 workaround as the last patch
+--
+Balbir Singh (2):
+  powerpc/mce: Fix MCE handling for huge pages
+  powerpc/memcpy: Add memcpy_mcsafe for pmem
+
+Reza Arbab (1):
+  powerpc/mce: Make machine_check_ue_event() static
+
+Santosh Sivaraj (4):
+  powerpc/mce: Schedule work from irq_work
+  extable: Add function to search only kernel exception table
+  powerpc/mce: Handle UE event for memcpy_mcsafe
+  powerpc: add machine check safe copy_to_user
+
+ arch/powerpc/Kconfig                 |   1 +
+ arch/powerpc/include/asm/mce.h       |   6 +-
+ arch/powerpc/include/asm/string.h    |   2 +
+ arch/powerpc/include/asm/uaccess.h   |  14 ++
+ arch/powerpc/kernel/mce.c            |  31 +++-
+ arch/powerpc/kernel/mce_power.c      |  70 ++++----
+ arch/powerpc/lib/Makefile            |   2 +-
+ arch/powerpc/lib/memcpy_mcsafe_64.S  | 242 +++++++++++++++++++++++++++
+ arch/powerpc/platforms/pseries/ras.c |   9 +-
+ include/linux/extable.h              |   2 +
+ kernel/extable.c                     |  11 +-
+ 11 files changed, 347 insertions(+), 43 deletions(-)
+ create mode 100644 arch/powerpc/lib/memcpy_mcsafe_64.S
+
+-- 
+2.21.0
+
