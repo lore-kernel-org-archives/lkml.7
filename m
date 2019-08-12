@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D642C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4F4C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B18208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE965208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:09:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WD2YxYTp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L85U5s9V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbfHLUJt (ORCPT
+        id S1727885AbfHLUJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 16:09:49 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35062 "EHLO
+        Mon, 12 Aug 2019 16:09:57 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37942 "EHLO
         mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727496AbfHLUJp (ORCPT
+        with ESMTP id S1727845AbfHLUJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 16:09:45 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w24so48288655plp.2;
-        Mon, 12 Aug 2019 13:09:45 -0700 (PDT)
+        Mon, 12 Aug 2019 16:09:47 -0400
+Received: by mail-pl1-f195.google.com with SMTP id m12so9677874plt.5;
+        Mon, 12 Aug 2019 13:09:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=RxWEj5XMwOhp9jEr2BxVYNQrB7abAMc2i7oVzlWuaws=;
-        b=WD2YxYTpoBV1JC+G2nKak6sdXHA3qCJi8wJA+7zeuD5M9aSSf2wmtsl7QzQ+A5qvkc
-         xO0ZSxarhAiHUXECiVGFUAC1TlEbB/a7xbmV5Nn0pJeUW9Uma32kSsnMmusKqax0mScI
-         CrRBdipJJkm4hbLzXtIOBikrtq1qpHct/m4rSH9b1wprYKGw1MFzEOPtiCenFBYIBD5A
-         sPDnypOwlfaaAt6FarR544rmqr1l9Y6YFOsHUMQNlgKhgJfv5MVDrlpuZvLpuWkJeCx2
-         BwJu1LCwCtT0JjhYyqQG0RynzwzRSNYOh+Jl7oNKCBynZyo/RqTrwYguMaM25ZiOGXqG
-         hYzw==
+        bh=rSn4tuKZh7KjRckQWxe8eHwjIPe1tvzNwIGDPWFexuA=;
+        b=L85U5s9VnXBzPRt7PgMVfUXCp3mUWeCz2zIrBHDPgy2M3a5LA7zC548ijnAqRUvFMi
+         B3QeuoZVIRyryI/cj7631lBmjkirVO6hsqZNDgtmYVGOr9k7JTDPEou2wifbSQjUoap+
+         xXq7Y0NEPJb7i4Y5GSFFwzs9ia/fUIDv1HAKEmpm/emMwWaFa2Yro24/SHjAiYAQs36i
+         iak/u2OedUbaT8jZV5bpsNnCUKP9TLxEBdJTRzdYweF8SFQFcJ3JZHKit/tmlT9BVZ6c
+         1daQLqR5uEhDuCeU1uwzs/sgTGKsXyfsSBWb1Cu6ztz9n6fdDMau9GFpNxK8ABFCzywT
+         PJzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RxWEj5XMwOhp9jEr2BxVYNQrB7abAMc2i7oVzlWuaws=;
-        b=fm3AD7giNxJh+Totymbx/nJLxkNhxKJpWxpCkD4Uwezv9MEKpKMs4MWCW3P1zX/rIe
-         7YTiZZG1ndUm5pNzTHQvc7yOi41cH2qiEO61OCHxn8DBStiNkgBrYlcFRTp2omdKn7xa
-         L3iChPsypmuU7+0HbTG0W7RwpdhAHKb/az7DCIPSPQSBE1MX1emUq8CoFi/+HE5oiZK+
-         MPr2FEoIegBE/7qjq21guz4wwZbUJiuN6cGV6rR9Teq/3IS/etUydWsmUwFUxQqxC+C7
-         AEG0ITmIHr7AetrfVAYJHYsi6SaPoGMg8TpgHNMYQGIamG4hdseojIXumM57frTH/NrQ
-         r5SA==
-X-Gm-Message-State: APjAAAXHBfuU5A2VrMkX0/fjj2QZ/T6jZjmJ1hAdxSYzBFDBQCxAVPMZ
-        td3Yi72JvHcwTVmMFeQ9DS1LP0G7
-X-Google-Smtp-Source: APXvYqzkSsXZeoXM7L24AckIu+2acToD1OycG49Ca+NmMtt6Bk0QCXvBSoK2nsomtXYmVCPZ71OIfw==
-X-Received: by 2002:a17:902:100a:: with SMTP id b10mr33728350pla.338.1565640584405;
-        Mon, 12 Aug 2019 13:09:44 -0700 (PDT)
+        bh=rSn4tuKZh7KjRckQWxe8eHwjIPe1tvzNwIGDPWFexuA=;
+        b=lWvPZuOdKwl7gePZzC4tjKbGk3S9lq0qks/Ut+/bnxvucoqLO7vLVhIqWsnaSA0vTD
+         Cq/UR4Xe8j/aOLbI/kwSfjRlxtCIa4zze5mDYZXMMVkrqqoNvBjoYX5OAYP8I1qw8dcA
+         24HpVjD41dSXOhPZpwoJS1zB/2lsLzjahAUoVFn3MeLNSTkTf+Gl1imZGeD7mwaePvkj
+         s9WsSH0u8y0a+WKy9XgPqpOdV6Ve6qaOuDgN9XnIbDJA+mXjgD/D0ac5Rpq/NlCvKmIP
+         WQNke2lD+kLE9+wWa1o2vsC1RQDjvnGD1YM9FNhxsWXlXcVP7NtkT+tHbYCP7CL278kT
+         Xbxw==
+X-Gm-Message-State: APjAAAUvOrxEtwfGX+95ucTPmCm1ez9hTFOjyZzxrm0jdF6AQapM64qB
+        4rER33AlIskJndZxWtvNr1nSoMl7
+X-Google-Smtp-Source: APXvYqxgLPHrsjbeN3KKiZy1HL5N9Jye7eNgNXlR2sJEh5MyAo6nY8jKCeWFYGX34RD1zRgDOIFTdA==
+X-Received: by 2002:a17:902:b202:: with SMTP id t2mr6440736plr.303.1565640586869;
+        Mon, 12 Aug 2019 13:09:46 -0700 (PDT)
 Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id n26sm110286451pfa.83.2019.08.12.13.09.43
+        by smtp.gmail.com with ESMTPSA id n26sm110286451pfa.83.2019.08.12.13.09.45
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 13:09:43 -0700 (PDT)
+        Mon, 12 Aug 2019 13:09:46 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-watchdog@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -64,9 +64,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Rick Ramstetter <rick@anteaterllc.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 20/22] watchdog: ziirave_wdt: Fix DOWNLOAD_START payload
-Date:   Mon, 12 Aug 2019 13:09:04 -0700
-Message-Id: <20190812200906.31344-21-andrew.smirnov@gmail.com>
+Subject: [PATCH v2 22/22] watchdog: ziirave_wdt: Update checked I2C functionality mask
+Date:   Mon, 12 Aug 2019 13:09:06 -0700
+Message-Id: <20190812200906.31344-23-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190812200906.31344-1-andrew.smirnov@gmail.com>
 References: <20190812200906.31344-1-andrew.smirnov@gmail.com>
@@ -77,17 +77,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bootloader firmware expects the following traffic for DOWNLOAD_END:
-
-S Addr Wr [A] 0x10 [A] P
-
-using ziirave_firm_write_byte() will result in
-
-S Addr Wr [A] 0x10 [A] 0x01 [A] 0x01 [A] P
-
-which happens to work because firmware will ignore any extra bytes
-sent. Fix this by converting the code to use i2c_smbus_write_byte()
-instead.
+Update checked I2C functionality mask to reflect all of the SMBus
+primitives used by this driver.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Chris Healy <cphealy@gmail.com>
@@ -96,47 +87,25 @@ Cc: Rick Ramstetter <rick@anteaterllc.com>
 Cc: linux-watchdog@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/watchdog/ziirave_wdt.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ drivers/watchdog/ziirave_wdt.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/watchdog/ziirave_wdt.c b/drivers/watchdog/ziirave_wdt.c
-index 681f65349779..ed69fa82e09c 100644
+index 48278034cda6..4a363a8b2d20 100644
 --- a/drivers/watchdog/ziirave_wdt.c
 +++ b/drivers/watchdog/ziirave_wdt.c
-@@ -217,13 +217,6 @@ static int ziirave_firm_write_block_data(struct watchdog_device *wdd,
- 	return ret;
- }
+@@ -602,7 +602,10 @@ static int ziirave_wdt_probe(struct i2c_client *client,
+ 	struct ziirave_wdt_data *w_priv;
+ 	int val;
  
--static int ziirave_firm_write_byte(struct watchdog_device *wdd, u8 command,
--				   u8 byte, bool wait_for_ack)
--{
--	return ziirave_firm_write_block_data(wdd, command, 1, &byte,
--					     wait_for_ack);
--}
--
- static bool ziirave_firm_addr_readonly(u32 addr)
- {
- 	return addr < ZIIRAVE_FIRM_FLASH_MEMORY_START ||
-@@ -375,12 +368,18 @@ static int ziirave_firm_upload(struct watchdog_device *wdd,
+-	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
++	if (!i2c_check_functionality(client->adapter,
++				     I2C_FUNC_SMBUS_BYTE |
++				     I2C_FUNC_SMBUS_BYTE_DATA |
++				     I2C_FUNC_SMBUS_WRITE_BLOCK_DATA))
+ 		return -ENODEV;
  
- 	msleep(500);
- 
--	ret = ziirave_firm_write_byte(wdd, ZIIRAVE_CMD_DOWNLOAD_START, 1, true);
-+	ret = i2c_smbus_write_byte(client, ZIIRAVE_CMD_DOWNLOAD_START);
- 	if (ret) {
- 		dev_err(&client->dev, "Failed to start download\n");
- 		return ret;
- 	}
- 
-+	ret = ziirave_firm_read_ack(wdd);
-+	if (ret) {
-+		dev_err(&client->dev, "No ACK for start download\n");
-+		return ret;
-+	}
-+
- 	msleep(500);
- 
- 	for (rec = (void *)fw->data; rec; rec = ihex_next_binrec(rec)) {
+ 	w_priv = devm_kzalloc(&client->dev, sizeof(*w_priv), GFP_KERNEL);
 -- 
 2.21.0
 
