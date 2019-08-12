@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70176C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5ABC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E6D4214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D4AD206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:26:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tG0A6dG9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y3uL4xR0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfHLHZp (ORCPT
+        id S1726973AbfHLH0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 03:25:45 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33831 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbfHLHZo (ORCPT
+        Mon, 12 Aug 2019 03:26:15 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36487 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbfHLH0P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 03:25:44 -0400
-Received: by mail-wm1-f67.google.com with SMTP id e8so9962457wme.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 00:25:43 -0700 (PDT)
+        Mon, 12 Aug 2019 03:26:15 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g67so10837433wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 00:26:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=tXk2RW16lQ2ByKWP571LcOH/rEVKPhvpFkOpaKcZwDQ=;
-        b=tG0A6dG9qOdEGSl1oJwMiWG1aNxgFj5NfRvt2j61VyL1rtYkMWnXJQGI2qxLkY3zCa
-         JOCjUgAxdBjQ8MkDVbQ7iM+5lMk/0gIEbEQ7vjw8cbiKb+5xqgRomEUKjjXAhmiSTIPt
-         ZMePKlCMOg4LTLGtgfRpfOR3936CIRQHzcSYBGmYecjoMegi+5C8v4KjuXlnVSJsihCz
-         mTfdgjikOMK2W+KULEIsO54AKWcgKWfN0Ya1VNWgcVKqufW46m64rzII3FSJfq/pg/3j
-         0G6wL+VAdkFjt40PaykNwIIDnOgHOaiRR+imjya3As5+HNOlj88JeGfZI6OMfSDXX58G
-         484Q==
+        bh=PUYFwTQM6k2TXKtGxVv6RCi/wuf9Urwy1FkTCccMbMM=;
+        b=y3uL4xR0fxckWe7u9pXs2CnyVYlPo79kFLr/DMANHHmkBudJM4/K/1xI7EEIhlNozo
+         ezwdujfO+X49ep5M195RGpIb9t/mE4/VeeWKQG5VX75D5K92l68ipqM3+M/Jw0wqakPw
+         52wzx89vLtQaQB++citGQ9Su8srwMt4qs55twOTTI1Rv043lSsf42wyWGcigaReI4Vkg
+         Hxdd9tIIuyamv6a9i5+nVNJh5uFLIsIJCbChTKEB8FURUJGKXw1cy1+cXhUd6YaquW+W
+         PgLALkkLuzZwNo+XNWbWuPBIBLbUaK9BceODRQEbrAdtIhg6ePgiFrQFXyotoaUL61Cz
+         btZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=tXk2RW16lQ2ByKWP571LcOH/rEVKPhvpFkOpaKcZwDQ=;
-        b=riFrDEYXFFANJxLTONrf3PARF2m2WTv7YUDyzTEkXPxYNazIxx6AoFF9GIEm6IX+Wx
-         V/PhU88UXjlsVD0qrWqdzhWfoe8JePgxJ4bjuqb5tDcjbPHRoPzw6no7NA0k2cJKsAMk
-         P6RxqBj1WD4qoy8nucZk1M04PMfmVFVozAUcT4yTCnrON0j/l91btbTl7SoKJH9C84t/
-         vthXifFKOs2JzAHt8sQYdSPRLB1xRLwxoHxIFRG8A0Y+rLu/K/amz46Xqu7lqQuXM4Ys
-         8YSMyLNnmOFMPqKk3rFfDOn9pUKrzue47kAErCWv9IHfWMrSxXO5P8wAXBFZ+ntjKaKT
-         Mhlw==
-X-Gm-Message-State: APjAAAU8Nom4kEP99uRdxPGd9H429CYyS8uL6wgVWyR/5Y3cYBWkLtmg
-        S1RxqvOVKbQuRIiDA2TdYUHa9w==
-X-Google-Smtp-Source: APXvYqyye4ZANQ/TT7kn4h6lyWtqwqPX4Wr8h5VYWc/qTw4GvLTxaxVrK80w5k+/r+4R5ao2ZuI5rQ==
-X-Received: by 2002:a05:600c:145:: with SMTP id w5mr1487403wmm.75.1565594742463;
-        Mon, 12 Aug 2019 00:25:42 -0700 (PDT)
+        bh=PUYFwTQM6k2TXKtGxVv6RCi/wuf9Urwy1FkTCccMbMM=;
+        b=dK5urX4IMChDBFRhHKAXAd6S/tKjtP6uMnfSYXued6crxxGH/mH8gMxHK34pZY5CzE
+         6IZXWrPMySZZD4p5s5k+Ufpne2WUADn4u8SBcXpmaNj++Q29yusHH1/8J3knzhiwy40D
+         Bowk7I2eejb3dPEBa5xF+at5a9aOCpovuZQgyW5YUNAgIjqrJ/Ytjmq6Bk0Fsa3XjJdI
+         LeTR+Fni4lF8wbCjeoNW0U5/rxAvKIdCXf8AGNROlYpUswHNKOZZwV6dp6gC+0/eIpGM
+         +zSyEFDkzb6oZN74NE2Jxie16yG8adVmdYi/FdsyNVHn+Oa9IA54f2x4C9vhgSlRsEoj
+         bsqw==
+X-Gm-Message-State: APjAAAXUWWPkgvBkcnC5+1ksI1GJuuA5oSpOes7KzTn4R7x+Ea156PBc
+        3zlVUXWGOFKM90kRZm/F6eIJ+Q==
+X-Google-Smtp-Source: APXvYqxPlhRcIfUjd9eqy3ozHPa5VIaOKS3K6/AEqQ5O/FTwOXFHwvqbbymK8vUaxNSsUvOgT6Mrkw==
+X-Received: by 2002:a05:600c:292:: with SMTP id 18mr25884378wmk.51.1565594773385;
+        Mon, 12 Aug 2019 00:26:13 -0700 (PDT)
 Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id l62sm7118863wml.13.2019.08.12.00.25.41
+        by smtp.gmail.com with ESMTPSA id r11sm165582541wre.14.2019.08.12.00.26.12
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 00:25:41 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 08:25:40 +0100
+        Mon, 12 Aug 2019 00:26:12 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 08:26:11 +0100
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
@@ -79,18 +79,17 @@ Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Neil Armstrong <narmstrong@baylibre.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Collabora kernel ML <kernel@collabora.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Gwendal Grignou <gwendal@chromium.org>
-Subject: Re: [PATCH v5 09/11] mfd: cros_ec: Add convenience struct to define
- autodetectable CrOS EC subdevices
-Message-ID: <20190812072540.GL4594@dell>
+Subject: Re: [PATCH v5 11/11] arm/arm64: defconfig: Update configs to use the
+ new CROS_EC options
+Message-ID: <20190812072611.GM4594@dell>
 References: <20190722133257.9336-1-enric.balletbo@collabora.com>
- <20190722133257.9336-10-enric.balletbo@collabora.com>
+ <20190722133257.9336-12-enric.balletbo@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190722133257.9336-10-enric.balletbo@collabora.com>
+In-Reply-To: <20190722133257.9336-12-enric.balletbo@collabora.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -99,26 +98,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon, 22 Jul 2019, Enric Balletbo i Serra wrote:
 
-> The CrOS EC is gaining lots of subdevices that are autodetectable by
-> sending the EC_FEATURE_GET_CMD, it takes fair amount of boiler plate
-> code to add those devices. So, add a struct that can be used to quickly
-> add new subdevices without having to duplicate code.
+> Recently we refactored the CrOS EC drivers moving part of the code from
+> the MFD subsystem to the platform chrome subsystem. During this change
+> we needed to rename some config options, so, update the defconfigs
+> accordingly.
 > 
 > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 > Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
 > Tested-by: Gwendal Grignou <gwendal@chromium.org>
 > ---
 > 
 > Changes in v5: None
 > Changes in v4: None
-> Changes in v3:
-> - Use mfd_add_hotplug_devices helper (Gwendal)
-> 
+> Changes in v3: None
 > Changes in v2: None
 > 
->  drivers/mfd/cros_ec_dev.c | 131 +++++++++++++++++++++-----------------
->  1 file changed, 73 insertions(+), 58 deletions(-)
+>  arch/arm/configs/exynos_defconfig   | 3 ++-
+>  arch/arm/configs/multi_v7_defconfig | 8 ++++----
+>  arch/arm/configs/pxa_defconfig      | 8 ++++----
+>  arch/arm/configs/tegra_defconfig    | 6 ++++--
+>  arch/arm64/configs/defconfig        | 6 ++++--
+>  5 files changed, 18 insertions(+), 13 deletions(-)
 
 For my own reference:
   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
