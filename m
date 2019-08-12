@@ -2,162 +2,347 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C7BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21160C32753
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE4B2070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:48:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EtBAz1CB"
+	by mail.kernel.org (Postfix) with ESMTP id E6C9E2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:48:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfHLQse (ORCPT
+        id S1727011AbfHLQsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 12:48:34 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:56810 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbfHLQsd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 12:48:33 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7CGmPFa126458;
-        Mon, 12 Aug 2019 11:48:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1565628505;
-        bh=K2kWznbWIdZ/ricVAmUmB19KtEM09fU55kzjXYmQvME=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=EtBAz1CBkH6KcNuHZ+Xzm2pfaPkKbZD01UtweuaQzS5/iMmyGZ3UADy2KWVd9o/HU
-         HdfJuEV/QBDS7wWe3EFjlqJ5dpmbrFARrTynOdIS2Knqb5eNkdxR4GLd5/M8y+Ru0l
-         APAEACMfboFZtCAGY99C7YtiMJo+DWXjnVMBuYeg=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7CGmP2G090732
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 12 Aug 2019 11:48:25 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 12
- Aug 2019 11:48:25 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 12 Aug 2019 11:48:25 -0500
-Received: from [10.250.88.190] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7CGmOjZ130439;
-        Mon, 12 Aug 2019 11:48:24 -0500
-Subject: Re: [PATCH] rpmsg: virtio_rpmsg_bus: replace "%p" with "%pK"
-To:     Suman Anna <s-anna@ti.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     <linux-remoteproc@vger.kernel.org>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20181024011909.21674-1-s-anna@ti.com>
- <1cc3d697-6fde-901b-2e35-2e2b53b44425@ti.com>
- <2ef5e274-df09-c3a0-41ed-a945d1902eaf@ti.com>
- <92dc4403-8782-8dbf-b912-cc832ac748a7@ti.com>
- <ea1efb4e-43be-4efc-10f8-9d182313bf12@ti.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <292d913f-7f4e-52ee-13bc-36014acee646@ti.com>
-Date:   Mon, 12 Aug 2019 12:48:24 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <ea1efb4e-43be-4efc-10f8-9d182313bf12@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 12 Aug 2019 12:48:42 -0400
+Received: from enpas.org ([46.38.239.100]:55150 "EHLO mail.enpas.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726969AbfHLQsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 12:48:41 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        by mail.enpas.org (Postfix) with ESMTPSA id 8159EFF813;
+        Mon, 12 Aug 2019 16:48:36 +0000 (UTC)
+From:   Max Staudt <max@enpas.org>
+To:     b.zolnierkie@samsung.com, axboe@kernel.dk
+Cc:     linux-ide@vger.kernel.org, linux-m68k@vger.kernel.org,
+        linux-kernel@vger.kernel.org, glaubitz@physik.fu-berlin.de,
+        schmitzmic@gmail.com, geert@linux-m68k.org,
+        Max Staudt <max@enpas.org>
+Subject: [PATCH v5] ata/pata_buddha: Probe via modalias instead of initcall
+Date:   Mon, 12 Aug 2019 18:48:30 +0200
+Message-Id: <20190812164830.16244-1-max@enpas.org>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/12/19 12:39 PM, Suman Anna wrote:
-> On 8/12/19 11:36 AM, Andrew F. Davis wrote:
->> On 8/12/19 12:28 PM, Suman Anna wrote:
->>> On 8/12/19 10:47 AM, Andrew F. Davis wrote:
->>>> On 10/23/18 9:19 PM, Suman Anna wrote:
->>>>> The virtio_rpmsg_bus driver uses the "%p" format-specifier for
->>>>> printing the vring buffer address. This prints only a hashed
->>>>> pointer even for previliged users. Use "%pK" instead so that
->>>>> the address can be printed during debug using kptr_restrict
->>>>> sysctl.
->>>>>
->>>>
->>>>
->>>> s/previliged/privileged
->>>
->>> Bjorn,
->>> Can you fix this up when applying.
->>>
->>>>
->>>> You describe what the code does, but not why you need this. %pK is used
->>>> for only about 1% of pointer printing, why do you want to leak this
->>>> address to userspace at all?
->>>
->>> Andrew,
->>> Default behavior of %pK is same as %p, but it does allow you to control
->>> the print. The reason is clearly mentioned in the last sentence in the
->>> patch description.
->>>
->>
->>
->> Let me rephrase then, why would you ever set 'kptr_restrict' to anything
->> other than 0, or why do you want to be able to leak this address to
->> userspace at all? If the answer is just because you can, then all 12,000
->> instances of %p in kernel could be converted for the same reason.
-> 
-> It is a dev_dbg statement, so it is already under dynamic debug control.
-> We would only ever use it during debug.
-> 
+Up until now, the pata_buddha driver would only check for cards on
+initcall time. Now, the kernel will call its probe function as soon
+as a compatible card is detected.
 
+v5: Remove module_exit(): There's no good way to handle the X-Surf hack.
+    Also include a workaround to save X-Surf's drvdata in case zorro8390
+    is active.
 
-Most pointer printings are in debug statements..
+v4: Clean up pata_buddha_probe() by using ent->driver_data.
+    Support X-Surf via late_initcall()
 
-I'm simply not seeing what this helps us do. The DMA address I can
-understand, it may be given to a remote core so we may want to verify it
-is the same on both sides, but the actual virtual kernel address is of
-no value to us, a hash to track it across uses is just as good.
+v3: Clean up devm_*, implement device removal.
 
-Andrew
+v2: Rename 'zdev' to 'z' to make the patch easy to analyse with
+    git diff --ignore-space-change
 
+Signed-off-by: Max Staudt <max@enpas.org>
+---
+ drivers/ata/pata_buddha.c | 234 +++++++++++++++++++++++++++-------------------
+ 1 file changed, 140 insertions(+), 94 deletions(-)
 
-> regards
-> Suman
-> 
->>
->> Andrew
->>
->>
->>> regards
->>> Suman
->>>
->>>>
->>>> Andrew
->>>>
->>>>
->>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>>>> ---
->>>>>  drivers/rpmsg/virtio_rpmsg_bus.c | 2 +-
->>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
->>>>> index f29dee731026..1345f373a1a0 100644
->>>>> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
->>>>> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
->>>>> @@ -950,7 +950,7 @@ static int rpmsg_probe(struct virtio_device *vdev)
->>>>>  		goto vqs_del;
->>>>>  	}
->>>>>  
->>>>> -	dev_dbg(&vdev->dev, "buffers: va %p, dma %pad\n",
->>>>> +	dev_dbg(&vdev->dev, "buffers: va %pK, dma %pad\n",
->>>>>  		bufs_va, &vrp->bufs_dma);
->>>>>  
->>>>>  	/* half of the buffers is dedicated for RX */
->>>>>
->>>
-> 
+diff --git a/drivers/ata/pata_buddha.c b/drivers/ata/pata_buddha.c
+index 11a8044ff..6014befc9 100644
+--- a/drivers/ata/pata_buddha.c
++++ b/drivers/ata/pata_buddha.c
+@@ -18,7 +18,9 @@
+ #include <linux/kernel.h>
+ #include <linux/libata.h>
+ #include <linux/mm.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/module.h>
++#include <linux/types.h>
+ #include <linux/zorro.h>
+ #include <scsi/scsi_cmnd.h>
+ #include <scsi/scsi_host.h>
+@@ -29,7 +31,7 @@
+ #include <asm/setup.h>
+ 
+ #define DRV_NAME "pata_buddha"
+-#define DRV_VERSION "0.1.0"
++#define DRV_VERSION "0.1.1"
+ 
+ #define BUDDHA_BASE1	0x800
+ #define BUDDHA_BASE2	0xa00
+@@ -47,11 +49,11 @@ enum {
+ 	BOARD_XSURF
+ };
+ 
+-static unsigned int buddha_bases[3] __initdata = {
++static unsigned int buddha_bases[3] = {
+ 	BUDDHA_BASE1, BUDDHA_BASE2, BUDDHA_BASE3
+ };
+ 
+-static unsigned int xsurf_bases[2] __initdata = {
++static unsigned int xsurf_bases[2] = {
+ 	XSURF_BASE1, XSURF_BASE2
+ };
+ 
+@@ -145,111 +147,155 @@ static struct ata_port_operations pata_xsurf_ops = {
+ 	.set_mode	= pata_buddha_set_mode,
+ };
+ 
+-static int __init pata_buddha_init_one(void)
++static int pata_buddha_probe(struct zorro_dev *z,
++			     const struct zorro_device_id *ent)
+ {
+-	struct zorro_dev *z = NULL;
+-
+-	while ((z = zorro_find_device(ZORRO_WILDCARD, z))) {
+-		static const char *board_name[]
+-			= { "Buddha", "Catweasel", "X-Surf" };
+-		struct ata_host *host;
+-		void __iomem *buddha_board;
+-		unsigned long board;
+-		unsigned int type, nr_ports = 2;
+-		int i;
+-
+-		if (z->id == ZORRO_PROD_INDIVIDUAL_COMPUTERS_BUDDHA) {
+-			type = BOARD_BUDDHA;
+-		} else if (z->id == ZORRO_PROD_INDIVIDUAL_COMPUTERS_CATWEASEL) {
+-			type = BOARD_CATWEASEL;
+-			nr_ports++;
+-		} else if (z->id == ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF) {
+-			type = BOARD_XSURF;
+-		} else
+-			continue;
+-
+-		dev_info(&z->dev, "%s IDE controller\n", board_name[type]);
+-
+-		board = z->resource.start;
++	static const char * const board_name[]
++		= { "Buddha", "Catweasel", "X-Surf" };
++	struct ata_host *host;
++	void __iomem *buddha_board;
++	unsigned long board;
++	unsigned int type = ent->driver_data;
++	unsigned int nr_ports = (type == BOARD_CATWEASEL) ? 3 : 2;
++	void *old_drvdata;
++	int i;
++
++	dev_info(&z->dev, "%s IDE controller\n", board_name[type]);
++
++	board = z->resource.start;
++
++	if (type != BOARD_XSURF) {
++		if (!devm_request_mem_region(&z->dev,
++					     board + BUDDHA_BASE1,
++					     0x800, DRV_NAME))
++			return -ENXIO;
++	} else {
++		if (!devm_request_mem_region(&z->dev,
++					     board + XSURF_BASE1,
++					     0x1000, DRV_NAME))
++			return -ENXIO;
++		if (!devm_request_mem_region(&z->dev,
++					     board + XSURF_BASE2,
++					     0x1000, DRV_NAME)) {
++		}
++	}
++
++	/* Workaround for X-Surf: Save drvdata in case zorro8390 has set it */
++	old_drvdata = dev_get_drvdata(&z->dev);
++
++	/* allocate host */
++	host = ata_host_alloc(&z->dev, nr_ports);
++	dev_set_drvdata(&z->dev, old_drvdata);
++	if (!host)
++		return -ENXIO;
++
++
++	buddha_board = ZTWO_VADDR(board);
++
++	/* enable the board IRQ on Buddha/Catweasel */
++	if (type != BOARD_XSURF)
++		z_writeb(0, buddha_board + BUDDHA_IRQ_MR);
++
++	for (i = 0; i < nr_ports; i++) {
++		struct ata_port *ap = host->ports[i];
++		void __iomem *base, *irqport;
++		unsigned long ctl = 0;
+ 
+ 		if (type != BOARD_XSURF) {
+-			if (!devm_request_mem_region(&z->dev,
+-						     board + BUDDHA_BASE1,
+-						     0x800, DRV_NAME))
+-				continue;
++			ap->ops = &pata_buddha_ops;
++			base = buddha_board + buddha_bases[i];
++			ctl = BUDDHA_CONTROL;
++			irqport = buddha_board + BUDDHA_IRQ + i * 0x40;
+ 		} else {
+-			if (!devm_request_mem_region(&z->dev,
+-						     board + XSURF_BASE1,
+-						     0x1000, DRV_NAME))
+-				continue;
+-			if (!devm_request_mem_region(&z->dev,
+-						     board + XSURF_BASE2,
+-						     0x1000, DRV_NAME))
+-				continue;
++			ap->ops = &pata_xsurf_ops;
++			base = buddha_board + xsurf_bases[i];
++			/* X-Surf has no CS1* (Control/AltStat) */
++			irqport = buddha_board + XSURF_IRQ;
+ 		}
+ 
+-		/* allocate host */
+-		host = ata_host_alloc(&z->dev, nr_ports);
+-		if (!host)
+-			continue;
+-
+-		buddha_board = ZTWO_VADDR(board);
+-
+-		/* enable the board IRQ on Buddha/Catweasel */
+-		if (type != BOARD_XSURF)
+-			z_writeb(0, buddha_board + BUDDHA_IRQ_MR);
+-
+-		for (i = 0; i < nr_ports; i++) {
+-			struct ata_port *ap = host->ports[i];
+-			void __iomem *base, *irqport;
+-			unsigned long ctl = 0;
+-
+-			if (type != BOARD_XSURF) {
+-				ap->ops = &pata_buddha_ops;
+-				base = buddha_board + buddha_bases[i];
+-				ctl = BUDDHA_CONTROL;
+-				irqport = buddha_board + BUDDHA_IRQ + i * 0x40;
+-			} else {
+-				ap->ops = &pata_xsurf_ops;
+-				base = buddha_board + xsurf_bases[i];
+-				/* X-Surf has no CS1* (Control/AltStat) */
+-				irqport = buddha_board + XSURF_IRQ;
+-			}
+-
+-			ap->pio_mask = ATA_PIO4;
+-			ap->flags |= ATA_FLAG_SLAVE_POSS | ATA_FLAG_NO_IORDY;
+-
+-			ap->ioaddr.data_addr		= base;
+-			ap->ioaddr.error_addr		= base + 2 + 1 * 4;
+-			ap->ioaddr.feature_addr		= base + 2 + 1 * 4;
+-			ap->ioaddr.nsect_addr		= base + 2 + 2 * 4;
+-			ap->ioaddr.lbal_addr		= base + 2 + 3 * 4;
+-			ap->ioaddr.lbam_addr		= base + 2 + 4 * 4;
+-			ap->ioaddr.lbah_addr		= base + 2 + 5 * 4;
+-			ap->ioaddr.device_addr		= base + 2 + 6 * 4;
+-			ap->ioaddr.status_addr		= base + 2 + 7 * 4;
+-			ap->ioaddr.command_addr		= base + 2 + 7 * 4;
+-
+-			if (ctl) {
+-				ap->ioaddr.altstatus_addr = base + ctl;
+-				ap->ioaddr.ctl_addr	  = base + ctl;
+-			}
+-
+-			ap->private_data = (void *)irqport;
+-
+-			ata_port_desc(ap, "cmd 0x%lx ctl 0x%lx", board,
+-				      ctl ? board + buddha_bases[i] + ctl : 0);
++		ap->pio_mask = ATA_PIO4;
++		ap->flags |= ATA_FLAG_SLAVE_POSS | ATA_FLAG_NO_IORDY;
++
++		ap->ioaddr.data_addr		= base;
++		ap->ioaddr.error_addr		= base + 2 + 1 * 4;
++		ap->ioaddr.feature_addr		= base + 2 + 1 * 4;
++		ap->ioaddr.nsect_addr		= base + 2 + 2 * 4;
++		ap->ioaddr.lbal_addr		= base + 2 + 3 * 4;
++		ap->ioaddr.lbam_addr		= base + 2 + 4 * 4;
++		ap->ioaddr.lbah_addr		= base + 2 + 5 * 4;
++		ap->ioaddr.device_addr		= base + 2 + 6 * 4;
++		ap->ioaddr.status_addr		= base + 2 + 7 * 4;
++		ap->ioaddr.command_addr		= base + 2 + 7 * 4;
++
++		if (ctl) {
++			ap->ioaddr.altstatus_addr = base + ctl;
++			ap->ioaddr.ctl_addr	  = base + ctl;
+ 		}
+ 
+-		ata_host_activate(host, IRQ_AMIGA_PORTS, ata_sff_interrupt,
+-				  IRQF_SHARED, &pata_buddha_sht);
++		ap->private_data = (void *)irqport;
+ 
++		ata_port_desc(ap, "cmd 0x%lx ctl 0x%lx", board,
++			      ctl ? board + buddha_bases[i] + ctl : 0);
+ 	}
+ 
++	ata_host_activate(host, IRQ_AMIGA_PORTS, ata_sff_interrupt,
++			  IRQF_SHARED, &pata_buddha_sht);
++
++
+ 	return 0;
+ }
+ 
+-module_init(pata_buddha_init_one);
++static void pata_buddha_remove(struct zorro_dev *z)
++{
++	struct ata_host *host = dev_get_drvdata(&z->dev);
++
++	ata_host_detach(host);
++}
++
++static const struct zorro_device_id pata_buddha_zorro_tbl[] = {
++	{ ZORRO_PROD_INDIVIDUAL_COMPUTERS_BUDDHA, BOARD_BUDDHA},
++	{ ZORRO_PROD_INDIVIDUAL_COMPUTERS_CATWEASEL, BOARD_CATWEASEL},
++	/* { ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, BOARD_XSURF}, */
++	{ 0 }
++};
++
++MODULE_DEVICE_TABLE(zorro, pata_buddha_zorro_tbl);
++
++static struct zorro_driver pata_buddha_driver = {
++	.name           = "pata_buddha",
++	.id_table       = pata_buddha_zorro_tbl,
++	.probe          = pata_buddha_probe,
++	.remove         = pata_buddha_remove,
++};
++
++
++
++/*
++ * We cannot have a modalias for X-Surf boards, as it competes with the
++ * zorro8390 network driver. As a stopgap measure until we have proper
++ * MFC support for this board, we manually attach to it late after Zorro
++ * has enumerated its boards.
++ */
++static int __init pata_buddha_late_init(void)
++{
++        struct zorro_dev *z = NULL;
++
++	pr_info("pata_buddha: Scanning for stand-alone IDE controllers...\n");
++	zorro_register_driver(&pata_buddha_driver);
++
++	pr_info("pata_buddha: Scanning for X-Surf boards...\n");
++        while ((z = zorro_find_device(ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, z))) {
++		static struct zorro_device_id xsurf_ent =
++			{ ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, BOARD_XSURF};
++
++		pata_buddha_probe(z, &xsurf_ent);
++        }
++
++        return 0;
++}
++
++late_initcall(pata_buddha_late_init);
++
+ 
+ MODULE_AUTHOR("Bartlomiej Zolnierkiewicz");
+ MODULE_DESCRIPTION("low-level driver for Buddha/Catweasel/X-Surf PATA");
+-- 
+2.11.0
+
