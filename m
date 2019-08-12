@@ -2,121 +2,493 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 951FDC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FC0C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6530C20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4656C20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfHLRAc (ORCPT
+        id S1726935AbfHLRDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 13:00:32 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:52646 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726548AbfHLRAc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 13:00:32 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TZKRUC-_1565629223;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TZKRUC-_1565629223)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 13 Aug 2019 01:00:26 +0800
-Subject: Re: [RESEND PATCH 1/2 -mm] mm: account lazy free pages separately
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     kirill.shutemov@linux.intel.com, hannes@cmpxchg.org,
-        vbabka@suse.cz, rientjes@google.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1565308665-24747-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190809083216.GM18351@dhcp22.suse.cz>
- <1a3c4185-c7ab-8d6f-8191-77dce02025a7@linux.alibaba.com>
- <20190809180238.GS18351@dhcp22.suse.cz>
- <79c90f6b-fcac-02e1-015a-0eaa4eafdf7d@linux.alibaba.com>
- <fb1f4958-5147-2fab-531f-d234806c2f37@linux.alibaba.com>
- <20190812093430.GD5117@dhcp22.suse.cz>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <297aefa2-ba64-cb91-d2c8-733054db01a3@linux.alibaba.com>
-Date:   Mon, 12 Aug 2019 10:00:17 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Mon, 12 Aug 2019 13:03:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:52862 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726334AbfHLRDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 13:03:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E63915AB;
+        Mon, 12 Aug 2019 10:03:49 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 580963F706;
+        Mon, 12 Aug 2019 10:03:47 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 18:03:36 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Jonathan Chocron <jonnyc@amazon.com>
+Cc:     bhelgaas@google.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org,
+        alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com,
+        talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 6/8] PCI: al: Add support for DW based driver type
+Message-ID: <20190812170336.GA23142@e121166-lin.cambridge.arm.com>
+References: <20190723092529.11310-1-jonnyc@amazon.com>
+ <20190723092711.11786-2-jonnyc@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <20190812093430.GD5117@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190723092711.11786-2-jonnyc@amazon.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+"PCI: dwc: al: Add support for DW based driver type"
 
+Make $SUBJECT compliant with other host controllers patches.
 
-On 8/12/19 2:34 AM, Michal Hocko wrote:
-> On Fri 09-08-19 16:54:43, Yang Shi wrote:
->>
->> On 8/9/19 11:26 AM, Yang Shi wrote:
->>>
->>> On 8/9/19 11:02 AM, Michal Hocko wrote:
-> [...]
->>>> I have to study the code some more but is there any reason why those
->>>> pages are not accounted as proper THPs anymore? Sure they are partially
->>>> unmaped but they are still THPs so why cannot we keep them accounted
->>>> like that. Having a new counter to reflect that sounds like papering
->>>> over the problem to me. But as I've said I might be missing something
->>>> important here.
->>> I think we could keep those pages accounted for NR_ANON_THPS since they
->>> are still THP although they are unmapped as you mentioned if we just
->>> want to fix the improper accounting.
->> By double checking what NR_ANON_THPS really means,
->> Documentation/filesystems/proc.txt says "Non-file backed huge pages mapped
->> into userspace page tables". Then it makes some sense to dec NR_ANON_THPS
->> when removing rmap even though they are still THPs.
->>
->> I don't think we would like to change the definition, if so a new counter
->> may make more sense.
-> Yes, changing NR_ANON_THPS semantic sounds like a bad idea. Let
-> me try whether I understand the problem. So we have some THP in
-> limbo waiting for them to be split and unmapped parts to be freed,
-> right? I can see that page_remove_anon_compound_rmap does correctly
-> decrement NR_ANON_MAPPED for sub pages that are no longer mapped by
-> anybody. LRU pages seem to be accounted properly as well.  As you've
-> said NR_ANON_THPS reflects the number of THPs mapped and that should be
-> reflecting the reality already IIUC.
->
-> So the only problem seems to be that deferred THP might aggregate a lot
-> of immediately freeable memory (if none of the subpages are mapped) and
-> that can confuse MemAvailable because it doesn't know about the fact.
-> Has an skewed counter resulted in a user observable behavior/failures?
+On Tue, Jul 23, 2019 at 12:27:09PM +0300, Jonathan Chocron wrote:
+> This driver is DT based and utilizes the DesignWare APIs.
+> It allows using a smaller ECAM range for a larger bus range -
+> usually an entire bus uses 1MB of address space, but the driver
+> can use it for a larger number of buses.
 
-No. But the skewed counter may make big difference for a big scale 
-cluster. The MemAvailable is an important factor for cluster scheduler 
-to determine the capacity.
+I would appreciate if you can add a simple explanation of
+the mechanism for completeness.
 
-Even though the scheduler could place one more small container due to 
-extra available memory, it would make big difference for a cluster with 
-thousands of nodes.
+AFAIU, with ACPI you don't support all these variants.
 
-> I can see that memcg rss size was the primary problem David was looking
-> at. But MemAvailable will not help with that, right? Moreover is
+> All link initializations are handled by the boot FW.
+> 
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> ---
+>  drivers/pci/controller/dwc/Kconfig   |  12 +
+>  drivers/pci/controller/dwc/pcie-al.c | 367 +++++++++++++++++++++++++++
+>  2 files changed, 379 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index 6ea778ae4877..3c6094cbcc3b 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -230,4 +230,16 @@ config PCIE_UNIPHIER
+>  	  Say Y here if you want PCIe controller support on UniPhier SoCs.
+>  	  This driver supports LD20 and PXs3 SoCs.
+>  
+> +config PCIE_AL
+> +	bool "Amazon Annapurna Labs PCIe controller"
+> +	depends on OF && (ARM64 || COMPILE_TEST)
+> +	depends on PCI_MSI_IRQ_DOMAIN
+> +	select PCIE_DW_HOST
+> +	help
+> +	  Say Y here to enable support of the Amazon's Annapurna Labs PCIe
+> +	  controller IP on Amazon SoCs. The PCIe controller uses the DesignWare
+> +	  core plus Annapurna Labs proprietary hardware wrappers. This is
+> +	  required only for DT-based platforms. ACPI platforms with the
+> +	  Annapurna Labs PCIe controller don't need to enable this.
+> +
+>  endmenu
+> diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
+> index 3ab58f0584a8..3ffdd3c97617 100644
+> --- a/drivers/pci/controller/dwc/pcie-al.c
+> +++ b/drivers/pci/controller/dwc/pcie-al.c
+> @@ -91,3 +91,370 @@ struct pci_ecam_ops al_pcie_ops = {
+>  };
+>  
+>  #endif /* defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS) */
+> +
+> +#ifdef CONFIG_PCIE_AL
+> +
+> +#include <linux/of_pci.h>
+> +#include "pcie-designware.h"
+> +
+> +#define AL_PCIE_REV_ID_2	2
+> +#define AL_PCIE_REV_ID_3	3
+> +#define AL_PCIE_REV_ID_4	4
+> +
+> +#define AXI_BASE_OFFSET		0x0
+> +
+> +#define DEVICE_ID_OFFSET	0x16c
+> +
+> +#define DEVICE_REV_ID			0x0
+> +#define DEVICE_REV_ID_DEV_ID_MASK	GENMASK(31, 16)
+> +
+> +#define DEVICE_REV_ID_DEV_ID_X4		0
+> +#define DEVICE_REV_ID_DEV_ID_X8		2
+> +#define DEVICE_REV_ID_DEV_ID_X16	4
+> +
+> +#define OB_CTRL_REV1_2_OFFSET	0x0040
+> +#define OB_CTRL_REV3_5_OFFSET	0x0030
+> +
+> +#define CFG_TARGET_BUS			0x0
+> +#define CFG_TARGET_BUS_MASK_MASK	GENMASK(7, 0)
+> +#define CFG_TARGET_BUS_BUSNUM_MASK	GENMASK(15, 8)
+> +
+> +#define CFG_CONTROL			0x4
+> +#define CFG_CONTROL_SUBBUS_MASK		GENMASK(15, 8)
+> +#define CFG_CONTROL_SEC_BUS_MASK	GENMASK(23, 16)
+> +
+> +struct al_pcie_reg_offsets {
+> +	unsigned int ob_ctrl;
+> +};
+> +
+> +struct al_pcie_target_bus_cfg {
+> +	u8 reg_val;
+> +	u8 reg_mask;
+> +	u8 ecam_mask;
+> +};
+> +
+> +struct al_pcie {
+> +	struct dw_pcie *pci;
+> +	void __iomem *controller_base; /* base of PCIe unit (not DW core) */
+> +	struct device *dev;
+> +	resource_size_t ecam_size;
+> +	unsigned int controller_rev_id;
+> +	struct al_pcie_reg_offsets reg_offsets;
+> +	struct al_pcie_target_bus_cfg target_bus_cfg;
+> +};
+> +
+> +#define PCIE_ECAM_DEVFN(x)		(((x) & 0xff) << 12)
+> +
+> +#define to_al_pcie(x)		dev_get_drvdata((x)->dev)
+> +
+> +static inline u32 al_pcie_controller_readl(struct al_pcie *pcie, u32 offset)
+> +{
+> +	return readl(pcie->controller_base + offset);
+> +}
+> +
+> +static inline void al_pcie_controller_writel(struct al_pcie *pcie, u32 offset,
+> +					     u32 val)
+> +{
+> +	writel(val, pcie->controller_base + offset);
+> +}
 
-Yes, but David actually would like to have memcg MemAvailable (the 
-accounter like the global one), which should be counted like the global 
-one and should account per memcg deferred split THP properly.
+You should be able to use the read/write{_relaxed} API.
 
-> accounting the full THP correct? What if subpages are still mapped?
+> +
+> +static int al_pcie_rev_id_get(struct al_pcie *pcie, unsigned int *rev_id)
+> +{
+> +	u32 dev_rev_id_val;
+> +	u32 dev_id_val;
+> +
+> +	dev_rev_id_val = al_pcie_controller_readl(pcie, AXI_BASE_OFFSET +
+> +						  DEVICE_ID_OFFSET +
+> +						  DEVICE_REV_ID);
+> +	dev_id_val = FIELD_GET(DEVICE_REV_ID_DEV_ID_MASK, dev_rev_id_val);
+> +
+> +	switch (dev_id_val) {
+> +	case DEVICE_REV_ID_DEV_ID_X4:
+> +		*rev_id = AL_PCIE_REV_ID_2;
+> +		break;
+> +	case DEVICE_REV_ID_DEV_ID_X8:
+> +		*rev_id = AL_PCIE_REV_ID_3;
+> +		break;
+> +	case DEVICE_REV_ID_DEV_ID_X16:
+> +		*rev_id = AL_PCIE_REV_ID_4;
+> +		break;
+> +	default:
+> +		dev_err(pcie->dev, "Unsupported dev_id_val (0x%x)\n",
+> +			dev_id_val);
+> +		return -EINVAL;
+> +	}
+> +
+> +	dev_dbg(pcie->dev, "dev_id_val: 0x%x\n", dev_id_val);
+> +
+> +	return 0;
+> +}
+> +
+> +static int al_pcie_reg_offsets_set(struct al_pcie *pcie)
+> +{
+> +	switch (pcie->controller_rev_id) {
+> +	case AL_PCIE_REV_ID_2:
+> +		pcie->reg_offsets.ob_ctrl = OB_CTRL_REV1_2_OFFSET;
+> +		break;
+> +	case AL_PCIE_REV_ID_3:
+> +	case AL_PCIE_REV_ID_4:
+> +		pcie->reg_offsets.ob_ctrl = OB_CTRL_REV3_5_OFFSET;
+> +		break;
+> +	default:
+> +		dev_err(pcie->dev, "Unsupported controller rev_id: 0x%x\n",
+> +			pcie->controller_rev_id);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static inline void al_pcie_target_bus_set(struct al_pcie *pcie,
+> +					  u8 target_bus,
+> +					  u8 mask_target_bus)
+> +{
+> +	u32 reg;
+> +
+> +	reg = FIELD_PREP(CFG_TARGET_BUS_MASK_MASK, mask_target_bus) |
+> +	      FIELD_PREP(CFG_TARGET_BUS_BUSNUM_MASK, target_bus);
+> +
+> +	al_pcie_controller_writel(pcie, AXI_BASE_OFFSET +
+> +				  pcie->reg_offsets.ob_ctrl + CFG_TARGET_BUS,
+> +				  reg);
+> +}
+> +
+> +static void __iomem *al_pcie_conf_addr_map(struct al_pcie *pcie,
+> +					   unsigned int busnr,
+> +					   unsigned int devfn)
+> +{
+> +	struct al_pcie_target_bus_cfg *target_bus_cfg = &pcie->target_bus_cfg;
+> +	unsigned int busnr_ecam = busnr & target_bus_cfg->ecam_mask;
+> +	unsigned int busnr_reg = busnr & target_bus_cfg->reg_mask;
+> +	struct pcie_port *pp = &pcie->pci->pp;
+> +	void __iomem *pci_base_addr;
+> +
+> +	pci_base_addr = (void __iomem *)((uintptr_t)pp->va_cfg0_base +
+> +					 (busnr_ecam << 20) +
+> +					 PCIE_ECAM_DEVFN(devfn));
+> +
+> +	if (busnr_reg != target_bus_cfg->reg_val) {
+> +		dev_dbg(pcie->pci->dev, "Changing target bus busnum val from 0x%x to 0x%x\n",
+> +			target_bus_cfg->reg_val, busnr_reg);
+> +		target_bus_cfg->reg_val = busnr_reg;
+> +		al_pcie_target_bus_set(pcie,
+> +				       target_bus_cfg->reg_val,
+> +				       target_bus_cfg->reg_mask);
+> +	}
+> +
+> +	return pci_base_addr;
+> +}
+> +
+> +static int al_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+> +				 unsigned int devfn, int where, int size,
+> +				 u32 *val)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct al_pcie *pcie = to_al_pcie(pci);
+> +	unsigned int busnr = bus->number;
+> +	void __iomem *pci_addr;
+> +	int rc;
+> +
+> +	pci_addr = al_pcie_conf_addr_map(pcie, busnr, devfn);
+> +
+> +	rc = dw_pcie_read(pci_addr + where, size, val);
+> +
+> +	dev_dbg(pci->dev, "%d-byte config read from %04x:%02x:%02x.%d offset 0x%x (pci_addr: 0x%px) - val:0x%x\n",
+> +		size, pci_domain_nr(bus), bus->number,
+> +		PCI_SLOT(devfn), PCI_FUNC(devfn), where,
+> +		(pci_addr + where), *val);
+> +
+> +	return rc;
+> +}
+> +
+> +static int al_pcie_wr_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+> +				 unsigned int devfn, int where, int size,
+> +				 u32 val)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct al_pcie *pcie = to_al_pcie(pci);
+> +	unsigned int busnr = bus->number;
+> +	void __iomem *pci_addr;
+> +	int rc;
+> +
+> +	pci_addr = al_pcie_conf_addr_map(pcie, busnr, devfn);
+> +
+> +	rc = dw_pcie_write(pci_addr + where, size, val);
+> +
+> +	dev_err(pci->dev, "%d-byte config write to %04x:%02x:%02x.%d offset 0x%x (pci_addr: 0x%px) - val:0x%x\n",
+> +		size, pci_domain_nr(bus), bus->number,
+> +		PCI_SLOT(devfn), PCI_FUNC(devfn), where,
+> +		(pci_addr + where), val);
 
-"Deferred split" definitely doesn't mean they are free. When memory 
-pressure is hit, they would be split, then the unmapped normal pages 
-would be freed. So, when calculating MemAvailable, they are not 
-accounted 100%, but like "available += lazyfree - min(lazyfree / 2, 
-wmark_low)", just like how page cache is accounted.
+dev_dbg() ?
 
-We could get more accurate account, i.e. checking each sub page's 
-mapcount when accounting, but it may change before shrinker start 
-scanning. So, just use the ballpark estimation to trade off the 
-complexity for accurate accounting.
+> +
+> +	return rc;
+> +}
+> +
+> +static void al_pcie_config_prepare(struct al_pcie *pcie)
+> +{
+> +	struct al_pcie_target_bus_cfg *target_bus_cfg;
+> +	struct pcie_port *pp = &pcie->pci->pp;
+> +	unsigned int ecam_bus_mask;
+> +	u32 cfg_control_offset;
+> +	u8 subordinate_bus;
+> +	u8 secondary_bus;
+> +	u32 cfg_control;
+> +	u32 reg;
+> +
+> +	target_bus_cfg = &pcie->target_bus_cfg;
+> +
+> +	ecam_bus_mask = (pcie->ecam_size >> 20) - 1;
+> +	if (ecam_bus_mask > 255) {
+> +		dev_warn(pcie->dev, "ECAM window size is larger than 256MB. Cutting off at 256\n");
+> +		ecam_bus_mask = 255;
+> +	}
+> +
+> +	/* This portion is taken from the transaction address */
+> +	target_bus_cfg->ecam_mask = ecam_bus_mask;
+> +	/* This portion is taken from the cfg_target_bus reg */
+> +	target_bus_cfg->reg_mask = ~target_bus_cfg->ecam_mask;
+> +	target_bus_cfg->reg_val = pp->busn->start & target_bus_cfg->reg_mask;
+> +
+> +	al_pcie_target_bus_set(pcie, target_bus_cfg->reg_val,
+> +			       target_bus_cfg->reg_mask);
+> +
+> +	secondary_bus = pp->busn->start + 1;
+> +	subordinate_bus = pp->busn->end;
+> +
+> +	/* Set the valid values of secondary and subordinate buses */
+> +	cfg_control_offset = AXI_BASE_OFFSET + pcie->reg_offsets.ob_ctrl +
+> +			     CFG_CONTROL;
+> +
+> +	cfg_control = al_pcie_controller_readl(pcie, cfg_control_offset);
+> +
+> +	reg = cfg_control &
+> +	      ~(CFG_CONTROL_SEC_BUS_MASK | CFG_CONTROL_SUBBUS_MASK);
+> +
+> +	reg |= FIELD_PREP(CFG_CONTROL_SUBBUS_MASK, subordinate_bus) |
+> +	       FIELD_PREP(CFG_CONTROL_SEC_BUS_MASK, secondary_bus);
+> +
+> +	al_pcie_controller_writel(pcie, cfg_control_offset, reg);
+> +}
+> +
+> +static int al_pcie_host_init(struct pcie_port *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct al_pcie *pcie = to_al_pcie(pci);
+> +	int link_up;
+> +	int rc;
+> +
+> +	rc = al_pcie_rev_id_get(pcie, &pcie->controller_rev_id);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = al_pcie_reg_offsets_set(pcie);
+> +	if (rc)
+> +		return rc;
+> +
+> +	al_pcie_config_prepare(pcie);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dw_pcie_host_ops al_pcie_host_ops = {
+> +	.rd_other_conf = al_pcie_rd_other_conf,
+> +	.wr_other_conf = al_pcie_wr_other_conf,
+> +	.host_init = al_pcie_host_init,
+> +};
+> +
+> +static int al_add_pcie_port(struct pcie_port *pp,
+> +			    struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	int ret;
+> +
+> +	pp->ops = &al_pcie_host_ops;
+> +
+> +	ret = dw_pcie_host_init(pp);
+> +	if (ret) {
+> +		dev_err(dev, "failed to initialize host\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dw_pcie_ops dw_pcie_ops = {
+> +};
 
->
+I understand you have to have it - probably we should improve
+the generic DW layer to check for a pointer before dereferencing
+so that we avoid this empty struct. Anyway, that's for another
+series.
 
+> +
+> +static int al_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *controller_res;
+> +	struct resource *ecam_res;
+> +	struct resource *dbi_res;
+> +	struct al_pcie *al_pcie;
+> +	struct dw_pcie *pci;
+> +	int ret;
+> +
+> +	al_pcie = devm_kzalloc(dev, sizeof(*al_pcie), GFP_KERNEL);
+> +	if (!al_pcie)
+> +		return -ENOMEM;
+> +
+> +	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
+> +	if (!pci)
+> +		return -ENOMEM;
+> +
+> +	pci->dev = dev;
+> +	pci->ops = &dw_pcie_ops;
+> +
+> +	al_pcie->pci = pci;
+> +	al_pcie->dev = dev;
+> +
+> +	dbi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_res);
+> +	if (IS_ERR(pci->dbi_base)) {
+> +		dev_err(dev, "couldn't remap dbi base %pR\n", dbi_res);
+> +		return PTR_ERR(pci->dbi_base);
+> +	}
+> +
+> +	ecam_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+> +	if (!ecam_res) {
+> +		dev_err(dev, "couldn't find 'config' reg in DT\n");
+> +		return -ENOENT;
+> +	}
+> +	al_pcie->ecam_size = resource_size(ecam_res);
+> +
+> +	controller_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +						      "controller");
+> +	al_pcie->controller_base = devm_ioremap_resource(dev, controller_res);
+> +	if (IS_ERR(al_pcie->controller_base)) {
+> +		dev_err(dev, "couldn't remap controller base %pR\n",
+> +			controller_res);
+> +		return PTR_ERR(al_pcie->controller_base);
+> +	}
+> +
+> +	dev_dbg(dev, "From DT: dbi_base: %pR, controller_base: %pR\n",
+> +		dbi_res, controller_res);
+> +
+> +	platform_set_drvdata(pdev, al_pcie);
+> +
+> +	ret = al_add_pcie_port(&pci->pp, pdev);
+> +
+> +	return ret;
+
+Nit:
+
+return al_add_pcie_port(&pci->pp, pdev);
+
+?
+
+Lorenzo
+
+> +}
+> +
+> +static const struct of_device_id al_pcie_of_match[] = {
+> +	{ .compatible = "amazon,al-pcie",
+> +	},
+> +	{},
+> +};
+> +
+> +static struct platform_driver al_pcie_driver = {
+> +	.driver = {
+> +		.name	= "al-pcie",
+> +		.of_match_table = al_pcie_of_match,
+> +		.suppress_bind_attrs = true,
+> +	},
+> +	.probe = al_pcie_probe,
+> +};
+> +builtin_platform_driver(al_pcie_driver);
+> +
+> +#endif /* CONFIG_PCIE_AL*/
+> -- 
+> 2.17.1
+> 
