@@ -2,91 +2,135 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF90C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6750C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF2052070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:43:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565592231;
-	bh=Au2I1+pUG8x4q8Vy+c0mrDmoxr5LQjnxTD3Xa5TQ1QU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nsP7H2aTPUrqmEo5KnufKdVSgF6srI2tPRS32851Au8ajoXAPmWh4ta3XhmtPucuT
-	 h+FFHdKZWOIcBWP+i/gDxJnpi7l8QxT5aiqZtJ/vfV62iyD+9KB9ECCu3tdHZ7llLb
-	 XotoumKrHfvHKe9ILqV+vebeSvPQZ0pihgwKwfxs=
+	by mail.kernel.org (Postfix) with ESMTP id 846D9206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:52:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbfHLGnt (ORCPT
+        id S1726541AbfHLGv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 02:43:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725923AbfHLGnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 02:43:49 -0400
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3175E208C2;
-        Mon, 12 Aug 2019 06:43:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565592228;
-        bh=Au2I1+pUG8x4q8Vy+c0mrDmoxr5LQjnxTD3Xa5TQ1QU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Mbt0BRjkREv80x2Y1XC6k01N3P07Y10yQ0YuB/ojwaH/IlA4yjz+wrMCxIM2bVyq5
-         PT4q8AY+Q/0MTBx2VYvfDiW8s/UGZzey9WNhPzsO6iw183/5duURR5uS2WF5IZhscv
-         mZGKDaC7SoOt80tFLSB5eU3kVqm2I4ELWgO3hhuI=
-Received: by mail-lj1-f174.google.com with SMTP id 15so5534874ljr.9;
-        Sun, 11 Aug 2019 23:43:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAW64XNYsW1FiwOe67PcZ4ZxCcU5X6JEUBFeSbDrmKC7cGq/4Maj
-        oMBap0U7WbTT8pCnTTAe5CBVZc/29AiRqDP+0/c=
-X-Google-Smtp-Source: APXvYqwTeVn92BEolAItuNZHe53VnNj3QCoRCdIpcVGtJTAkEKRjOqmtUpzwDjY4TbKPcg+mlkRd1l0/IhIzzOgy18Y=
-X-Received: by 2002:a2e:8197:: with SMTP id e23mr608659ljg.80.1565592226364;
- Sun, 11 Aug 2019 23:43:46 -0700 (PDT)
+        Mon, 12 Aug 2019 02:51:59 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4231 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725843AbfHLGv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 02:51:58 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5D421518EAA4334DA815;
+        Mon, 12 Aug 2019 14:51:54 +0800 (CST)
+Received: from [127.0.0.1] (10.74.184.86) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Mon, 12 Aug 2019
+ 14:51:50 +0800
+Subject: Re: [PATCH v2 1/1] efi: cper: print AER info of PCIe fatal error
+To:     <linux-kernel@vger.kernel.org>
+References: <1564105417-232048-1-git-send-email-tanxiaofei@huawei.com>
+CC:     <linux-acpi@vger.kernel.org>, <linux-efi@vger.kernel.org>,
+        <rjw@rjwysocki.net>, <lenb@kernel.org>, <tony.luck@intel.com>,
+        <bp@alien8.de>, <ying.huang@intel.com>,
+        <ross.lagerwall@citrix.com>, <ard.biesheuvel@linaro.org>,
+        <james.morse@arm.com>
+From:   tanxiaofei <tanxiaofei@huawei.com>
+Message-ID: <5D510C86.5040000@huawei.com>
+Date:   Mon, 12 Aug 2019 14:51:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-References: <20190808172616.11728-1-krzk@kernel.org> <20190808172616.11728-2-krzk@kernel.org>
- <de032954-2b6e-5aa9-0d91-c37417c8e162@kontron.de>
-In-Reply-To: <de032954-2b6e-5aa9-0d91-c37417c8e162@kontron.de>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 12 Aug 2019 08:43:35 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPf_uJUhNrciK1mFddN+gZ8vxtTEsz_uF7k60+EWYW94OA@mail.gmail.com>
-Message-ID: <CAJKOXPf_uJUhNrciK1mFddN+gZ8vxtTEsz_uF7k60+EWYW94OA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] dt-bindings: eeprom: at25: Add Anvo ANV32E61W
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "notify@kernel.org" <notify@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1564105417-232048-1-git-send-email-tanxiaofei@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.184.86]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 8 Aug 2019 at 20:09, Schrempf Frieder
-<frieder.schrempf@kontron.de> wrote:
->
-> On 08.08.19 19:26, Krzysztof Kozlowski wrote:
-> > Document the compatible for ANV32E61W EEPROM chip.
->
-> This chip is actually not an EEPROM, but a SPI nvSRAM. It can be
-> interfaced by the at25 driver similar to an EEPROM. This is not the
-> ideal solution, but it works until there's a proper driver for such
-> chips. Maybe you can add some of these details to the commit message
-> here. Also there is more information on this topic here:
-> https://patchwork.ozlabs.org/patch/1043950/.
 
-Indeed, I'll correct the description of commit.
+ping...
 
-Best regards,
-Krzysztof
+On 2019/7/26 9:43, Xiaofei Tan wrote:
+> AER info of PCIe fatal error is not printed in the current driver.
+> Because APEI driver will panic directly for fatal error, and can't
+> run to the place of printing AER info.
+> 
+> An example log is as following:
+> {763}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 11
+> {763}[Hardware Error]: event severity: fatal
+> {763}[Hardware Error]:  Error 0, type: fatal
+> {763}[Hardware Error]:   section_type: PCIe error
+> {763}[Hardware Error]:   port_type: 0, PCIe end point
+> {763}[Hardware Error]:   version: 4.0
+> {763}[Hardware Error]:   command: 0x0000, status: 0x0010
+> {763}[Hardware Error]:   device_id: 0000:82:00.0
+> {763}[Hardware Error]:   slot: 0
+> {763}[Hardware Error]:   secondary_bus: 0x00
+> {763}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10fb
+> {763}[Hardware Error]:   class_code: 000002
+> Kernel panic - not syncing: Fatal hardware error!
+> 
+> This issue was imported by the patch, '37448adfc7ce ("aerdrv: Move
+> cper_print_aer() call out of interrupt context")'. To fix this issue,
+> this patch adds print of AER info in cper_print_pcie() for fatal error.
+> 
+> Here is the example log after this patch applied:
+> {24}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 10
+> {24}[Hardware Error]: event severity: fatal
+> {24}[Hardware Error]:  Error 0, type: fatal
+> {24}[Hardware Error]:   section_type: PCIe error
+> {24}[Hardware Error]:   port_type: 0, PCIe end point
+> {24}[Hardware Error]:   version: 4.0
+> {24}[Hardware Error]:   command: 0x0546, status: 0x4010
+> {24}[Hardware Error]:   device_id: 0000:01:00.0
+> {24}[Hardware Error]:   slot: 0
+> {24}[Hardware Error]:   secondary_bus: 0x00
+> {24}[Hardware Error]:   vendor_id: 0x15b3, device_id: 0x1019
+> {24}[Hardware Error]:   class_code: 000002
+> {24}[Hardware Error]:   aer_uncor_status: 0x00040000, aer_uncor_mask: 0x00000000
+> {24}[Hardware Error]:   aer_uncor_severity: 0x00062010
+> {24}[Hardware Error]:   TLP Header: 000000c0 01010000 00000001 00000000
+> Kernel panic - not syncing: Fatal hardware error!
+> 
+> Fixes: 37448adfc7ce ("aerdrv: Move cper_print_aer() call out of interrupt context")
+> Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
+> Reviewed-by: James Morse <james.morse@arm.com>
+> ---
+>  drivers/firmware/efi/cper.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+> index 8fa977c..78b8922 100644
+> --- a/drivers/firmware/efi/cper.c
+> +++ b/drivers/firmware/efi/cper.c
+> @@ -390,6 +390,21 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
+>  		printk(
+>  	"%s""bridge: secondary_status: 0x%04x, control: 0x%04x\n",
+>  	pfx, pcie->bridge.secondary_status, pcie->bridge.control);
+> +
+> +	/* Fatal errors call __ghes_panic() before AER handler prints this */
+> +	if (pcie->validation_bits & CPER_PCIE_VALID_AER_INFO &&
+> +	    gdata->error_severity & CPER_SEV_FATAL) {
+> +		struct aer_capability_regs *aer;
+> +
+> +		aer = (struct aer_capability_regs *)pcie->aer_info;
+> +		printk("%saer_uncor_status: 0x%08x, aer_uncor_mask: 0x%08x\n",
+> +		       pfx, aer->uncor_status, aer->uncor_mask);
+> +		printk("%saer_uncor_severity: 0x%08x\n",
+> +		       pfx, aer->uncor_severity);
+> +		printk("%sTLP Header: %08x %08x %08x %08x\n", pfx,
+> +		       aer->header_log.dw0, aer->header_log.dw1,
+> +		       aer->header_log.dw2, aer->header_log.dw3);
+> +	}
+>  }
+>  
+>  static void cper_print_tstamp(const char *pfx,
+> 
+
+-- 
+ thanks
+tanxiaofei
+
