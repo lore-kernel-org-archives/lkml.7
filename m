@@ -2,140 +2,183 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0F2C32750
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE68C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEA4120684
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBEBD2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:01:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="g/j7NXhT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbfHLVBT (ORCPT
+        id S1727303AbfHLVBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 17:01:19 -0400
-Received: from mga11.intel.com ([192.55.52.93]:63746 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727224AbfHLVBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 17:01:19 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 14:01:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,378,1559545200"; 
-   d="scan'208";a="176002236"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga008.fm.intel.com with ESMTP; 12 Aug 2019 14:01:17 -0700
-Date:   Mon, 12 Aug 2019 14:01:17 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Michal Hocko <mhocko@suse.com>,
-        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 15/19] mm/gup: Introduce vaddr_pin_pages()
-Message-ID: <20190812210116.GD20634@iweiny-DESK2.sc.intel.com>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
- <20190809225833.6657-16-ira.weiny@intel.com>
- <88d82639-c0b2-0b35-1919-999a8438031c@nvidia.com>
+        Mon, 12 Aug 2019 17:01:24 -0400
+Received: from mail-eopbgr50075.outbound.protection.outlook.com ([40.107.5.75]:15329
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727148AbfHLVBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 17:01:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M30wn+hK7jXJZFqjIRImPd9p9GNMlah3AGmR36ckMKC4IL+toTMFzjlNQCoTPMz1txEUsmAR7kD3LuL2cfdT9WpkJU+wSOJrdXICzx+8wbVwLmxIFWsBt6C2bbD1RNwc94P8JsXEzmg1QQnvf2y7Rakoa0/Ok/X0DkL5jfkeLG8SERcW/ah6G8bkPYaC6CaGsqfGxkQb8aBs7Du1no9Q+XhycQHkJsLIcGl82+3qz326cANvFjcgM4DILp5dDOHQ1VS1tbBK8kO6siGWybKN3wA3/VflKMJSfV9V+GHDmU7PmsI5yeozj3Z/S0XuiIh1c2C49G67yO0q6uecrrLghQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m5Zc1plXoUEoUZrAqh7n3UA7BB1zA7OiTRTmEIjv9ec=;
+ b=Ene0UDGoQSGvsj3MZWRz6snKDDIm0IAPD/4Dudn11crhXeQiW1UAOq3/g7rIzcYZV5E3Nlfv1PsxW30cbXbARPciyO7Wk7IizT02EOshpFHq8DjzFPbkUbjwl4oU/NbQp+Mta360VQmxhHQl+oBBi3MvZXiOyTwFmlltyQY3ESJiE7ZIsJmpZfmiQj93N9N83rf1HNCpBYyGkuzxx8Fw2tcE/ta3bJe02DESeeyBGsIciMhMG03dMd27vK0PFyq8YLzGYz9ljew61xEAxCscIe0jW5BKNi+ADknypNhL2JYy/wW9Elk0zEvPVkoECs1bvmIdZQgspM7MHOTYjBfpIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m5Zc1plXoUEoUZrAqh7n3UA7BB1zA7OiTRTmEIjv9ec=;
+ b=g/j7NXhTQWDlxCtZgyVVOYwbvsjD6C6x9r+Lay2JTTtr9VMzzrzgK/a9EWV2ysKZeCbnuxS+rI/pog42LYErCfe11JlHNyCEnXG8PghPPOzP41VWKqoXivj18zN84HzR2tM+OriWAeGs4tzcPEQdtWIgaH0lsUiCOf9d3JbCYVc=
+Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.235.152) by
+ VE1PR04MB6365.eurprd04.prod.outlook.com (10.255.118.78) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.15; Mon, 12 Aug 2019 21:01:16 +0000
+Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
+ ([fe80::3d61:6e52:a83c:7c59]) by VE1PR04MB6687.eurprd04.prod.outlook.com
+ ([fe80::3d61:6e52:a83c:7c59%6]) with mapi id 15.20.2136.018; Mon, 12 Aug 2019
+ 21:01:16 +0000
+From:   Leo Li <leoyang.li@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Hui Song <hui.song_1@nxp.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: RE: [PATCH] arm64: dts: ls1028a: fix gpio nodes
+Thread-Topic: [PATCH] arm64: dts: ls1028a: fix gpio nodes
+Thread-Index: AQHVS1xblpcZ3Pq6W0S1i4g4uemWo6b3ki+AgAB5MaA=
+Date:   Mon, 12 Aug 2019 21:01:16 +0000
+Message-ID: <VE1PR04MB6687FD06F5E8DADE55F495D38FD30@VE1PR04MB6687.eurprd04.prod.outlook.com>
+References: <20190805065700.7601-1-hui.song_1@nxp.com>
+ <20190812134716.GF27041@X250>
+In-Reply-To: <20190812134716.GF27041@X250>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leoyang.li@nxp.com; 
+x-originating-ip: [64.157.242.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 292d8597-4316-4697-e572-08d71f6837cd
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6365;
+x-ms-traffictypediagnostic: VE1PR04MB6365:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6365742E0F7A89332BC4D3298FD30@VE1PR04MB6365.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:935;
+x-forefront-prvs: 012792EC17
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(346002)(39860400002)(396003)(189003)(199004)(13464003)(33656002)(81156014)(55016002)(86362001)(71190400001)(7696005)(6506007)(7736002)(9686003)(53936002)(6436002)(186003)(102836004)(52536014)(74316002)(476003)(53546011)(486006)(6246003)(8676002)(76176011)(25786009)(316002)(229853002)(110136005)(26005)(5660300002)(305945005)(4326008)(99286004)(446003)(6636002)(11346002)(54906003)(3846002)(6116002)(64756008)(71200400001)(66446008)(14454004)(14444005)(66066001)(66946007)(478600001)(76116006)(8936002)(66476007)(256004)(66556008)(81166006)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6365;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: QKiiM4qg/gxSOO7lXh04gyDz1WuUoz+3JT9Tkn3P0oZUrwWY+fYen+hnfheCu10n8+yjroxqjgyW2Gc/IL9ixnBsiA6j64cQ1d0P4jJ6Q3RFvgxxb9eflBsBEyM+P1S97XZZNsy8Tah8gSr/Ht+I3x2I0XUjFIqyEYJPLxxFkgZCMhgt4D6ZQERQB6Jp/dkc2gGq45TQJM8Mqj/siRqTrDhhvdHnXOk9Ip3XfYLpo4e1j78l7oUKkNvQcLHRVXdjTJpsepuO/fqzUZDkEG5pn3IfjJLwVInDg0wkgNgqqSuVFhtCCwD1Qf4kT/NmNwHtx0VQOsKLi3T/A//OY3pYNeVrnrYjwNfQiZP/3TqhxmWxbqWxoWkS6GCzYfafOcW0ot7BoSwilyEMOoP2wBlYa/pjy+4wlcfsuoY1ONomTYc=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <88d82639-c0b2-0b35-1919-999a8438031c@nvidia.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 292d8597-4316-4697-e572-08d71f6837cd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 21:01:16.8605
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: leoyang.li@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6365
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 04:07:23PM -0700, John Hubbard wrote:
-> On 8/9/19 3:58 PM, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > The addition of FOLL_LONGTERM has taken on additional meaning for CMA
-> > pages.
-> > 
-> > In addition subsystems such as RDMA require new information to be passed
-> > to the GUP interface to track file owning information.  As such a simple
-> > FOLL_LONGTERM flag is no longer sufficient for these users to pin pages.
-> > 
-> > Introduce a new GUP like call which takes the newly introduced vaddr_pin
-> > information.  Failure to pass the vaddr_pin object back to a vaddr_put*
-> > call will result in a failure if pins were created on files during the
-> > pin operation.
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > 
-> 
-> I'm creating a new call site conversion series, to replace the 
-> "put_user_pages(): miscellaneous call sites" series. This uses
-> vaddr_pin_pages*() where appropriate. So it's based on your series here.
-> 
-> btw, while doing that, I noticed one more typo while re-reading some of the comments. 
-> Thought you probably want to collect them all for the next spin. Below...
-> 
+
+
+> -----Original Message-----
+> From: Shawn Guo <shawnguo@kernel.org>
+> Sent: Monday, August 12, 2019 8:47 AM
+> To: Hui Song <hui.song_1@nxp.com>; Leo Li <leoyang.li@nxp.com>
+> Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> <mark.rutland@arm.com>; Linus Walleij <linus.walleij@linaro.org>; Bartosz
+> Golaszewski <bgolaszewski@baylibre.com>; linux-arm-
+> kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linux-gpio@vger.kernel.org
+> Subject: Re: [PATCH] arm64: dts: ls1028a: fix gpio nodes
+>=20
+> On Mon, Aug 05, 2019 at 02:57:00PM +0800, Hui Song wrote:
+> > From: Song Hui <hui.song_1@nxp.com>
+> >
+> > Update the nodes to include little-endian property to be consistent
+> > with the hardware.
+> >
+> > Signed-off-by: Song Hui <hui.song_1@nxp.com>
+>=20
+> @Leo, looks good?
+
+Acked-by: Li Yang <leoyang.li@nxp.com>
+
+>=20
+> Shawn
+>=20
 > > ---
-> > Changes from list:
-> > 	Change to vaddr_put_pages_dirty_lock
-> > 	Change to vaddr_unpin_pages_dirty_lock
-> > 
-> >  include/linux/mm.h |  5 ++++
-> >  mm/gup.c           | 59 ++++++++++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 64 insertions(+)
-> > 
-> > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > index 657c947bda49..90c5802866df 100644
-> > --- a/include/linux/mm.h
-> > +++ b/include/linux/mm.h
-> > @@ -1603,6 +1603,11 @@ int account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc);
-> >  int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
-> >  			struct task_struct *task, bool bypass_rlim);
-> >  
-> > +long vaddr_pin_pages(unsigned long addr, unsigned long nr_pages,
-> > +		     unsigned int gup_flags, struct page **pages,
-> > +		     struct vaddr_pin *vaddr_pin);
-> > +void vaddr_unpin_pages_dirty_lock(struct page **pages, unsigned long nr_pages,
-> > +				  struct vaddr_pin *vaddr_pin, bool make_dirty);
-> >  bool mapping_inode_has_layout(struct vaddr_pin *vaddr_pin, struct page *page);
-> >  
-> >  /* Container for pinned pfns / pages */
-> > diff --git a/mm/gup.c b/mm/gup.c
-> > index eeaa0ddd08a6..6d23f70d7847 100644
-> > --- a/mm/gup.c
-> > +++ b/mm/gup.c
-> > @@ -2536,3 +2536,62 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
-> >  	return ret;
-> >  }
-> >  EXPORT_SYMBOL_GPL(get_user_pages_fast);
-> > +
-> > +/**
-> > + * vaddr_pin_pages pin pages by virtual address and return the pages to the
-> > + * user.
-> > + *
-> > + * @addr, start address
-> > + * @nr_pages, number of pages to pin
-> > + * @gup_flags, flags to use for the pin
-> > + * @pages, array of pages returned
-> > + * @vaddr_pin, initalized meta information this pin is to be associated
-> 
-> Typo:
->                   initialized
-
-Thanks fixed.
-Ira
-
-> 
-> 
-> thanks,
-> -- 
-> John Hubbard
-> NVIDIA
+> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 9 ++++++---
+> >  1 file changed, 6 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > index aef5b06..7ccbbfc 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > @@ -277,33 +277,36 @@
+> >  		};
+> >
+> >  		gpio1: gpio@2300000 {
+> > -			compatible =3D "fsl,qoriq-gpio";
+> > +			compatible =3D "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+> >  			reg =3D <0x0 0x2300000 0x0 0x10000>;
+> >  			interrupts =3D <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+> >  			gpio-controller;
+> >  			#gpio-cells =3D <2>;
+> >  			interrupt-controller;
+> >  			#interrupt-cells =3D <2>;
+> > +			little-endian;
+> >  		};
+> >
+> >  		gpio2: gpio@2310000 {
+> > -			compatible =3D "fsl,qoriq-gpio";
+> > +			compatible =3D "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+> >  			reg =3D <0x0 0x2310000 0x0 0x10000>;
+> >  			interrupts =3D <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+> >  			gpio-controller;
+> >  			#gpio-cells =3D <2>;
+> >  			interrupt-controller;
+> >  			#interrupt-cells =3D <2>;
+> > +			little-endian;
+> >  		};
+> >
+> >  		gpio3: gpio@2320000 {
+> > -			compatible =3D "fsl,qoriq-gpio";
+> > +			compatible =3D "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+> >  			reg =3D <0x0 0x2320000 0x0 0x10000>;
+> >  			interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+> >  			gpio-controller;
+> >  			#gpio-cells =3D <2>;
+> >  			interrupt-controller;
+> >  			#interrupt-cells =3D <2>;
+> > +			little-endian;
+> >  		};
+> >
+> >  		usb0: usb@3100000 {
+> > --
+> > 2.9.5
+> >
