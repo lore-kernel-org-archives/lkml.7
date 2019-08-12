@@ -2,110 +2,128 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D161AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5829DC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A06FE2087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:50:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J/FQAQab"
+	by mail.kernel.org (Postfix) with ESMTP id 2D64B2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:52:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbfHLJu6 (ORCPT
+        id S1727632AbfHLJw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 05:50:58 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35906 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727466AbfHLJu6 (ORCPT
+        Mon, 12 Aug 2019 05:52:29 -0400
+Received: from smtprelay08.ispgateway.de ([134.119.228.111]:33948 "EHLO
+        smtprelay08.ispgateway.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727425AbfHLJw2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 05:50:58 -0400
-Received: by mail-ot1-f66.google.com with SMTP id k18so24447295otr.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 02:50:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Kb6hKbAOMVuL+Z26AT+EFtx5MG6TEv4wDdw/myrwQ+U=;
-        b=J/FQAQab+aixe22PRiNBu7L0NDde/C2hXCpVftTRoFGOw8pRPugy3jP0wAggy8vjCm
-         t6iYDnybfvsXId9UDaJ6ra2ggQZjX/pPV7V0RaQQo5sWAlef03HV1CBPikWbu35fGUaP
-         +2CY8yvvMO5AVEWYwePAUANCHClK5pvFLXHuGXJ8zJYXkHxttupBdaMQ+vMsDf0Ek7Io
-         GSxTlREe+2RKcuaQIPUqEbKOEoGsUH1zL6busYQSHgBYFmjYzScZKtab9ogTkKx4BaGZ
-         omp227gqxhuEVfzZTRokfaSkUgdbU3MKAkbZqDJEn7Qcy4Dqnx1ITa/GaH5H0y4pYKxQ
-         MGtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Kb6hKbAOMVuL+Z26AT+EFtx5MG6TEv4wDdw/myrwQ+U=;
-        b=r0IYdxF4+/PkCsQuXYIVYfnp4aeP50XIH9dv3CjZOBAlq2tYtnn8Odt4XaIic701lk
-         HVgpf1Jdkd5DWaSVvKzPA1LCYM3Hpzg7x4b+9GJLaYSbC6G3Polu++r6EjphArhr2RnH
-         fIKNcM1XXiqvDlz9cr0A/OYO0LNvDR+HJiZO27MnoElB/BmuathO2xWhWsFlu4RDVr5f
-         HZZ1CIfpvM/KscfTL9fBO7ZGCXyt4a2Su6+az0QFQXnii50zS583Fz/Np/q3tsxQUjhi
-         NjBzUm34Z/JApiQBtBUCLS02fVZspLkOUuRjWRPC17rJmcQjWqSK0gEm1HDurdedThVN
-         abhw==
-X-Gm-Message-State: APjAAAUCCHJ5UTINX3pHEUAEmLzwHOeuublpsfEEvWQof7uwG6ZyllFo
-        0cpID5L7Y97LPx/6JDQcB/S1LQmduh2gWcMfMr+kLg==
-X-Google-Smtp-Source: APXvYqz4lQF7XDSq19OS08secxgAHIh9LEA1ri4DLDT1TwYKNppMdi6ToK3pQQF+F0v8y5u7kQqQDs82eRZLhuJM5A8=
-X-Received: by 2002:aca:6056:: with SMTP id u83mr14334202oib.27.1565603457156;
- Mon, 12 Aug 2019 02:50:57 -0700 (PDT)
+        Mon, 12 Aug 2019 05:52:28 -0400
+X-Greylist: delayed 607 seconds by postgrey-1.27 at vger.kernel.org; Mon, 12 Aug 2019 05:52:27 EDT
+Received: from [79.249.13.39] (helo=C02YV1XMLVDM.Speedport_W_724V_01011603_06_003)
+        by smtprelay08.ispgateway.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <marc@koderer.com>)
+        id 1hx6qF-0004O4-Qd; Mon, 12 Aug 2019 11:42:15 +0200
+From:   Marc Koderer <marc@koderer.com>
+To:     idryomov@gmail.com, jlayton@kernel.org, sage@redhat.com,
+        davem@davemloft.net
+Cc:     ceph-devel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Marc Koderer <marc@koderer.com>
+Subject: [PATCH] net/ceph replace ceph_kvmalloc with kvmalloc
+Date:   Mon, 12 Aug 2019 11:42:42 +0200
+Message-Id: <20190812094242.44735-1-marc@koderer.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <6a38a3655bc8100764d85cb04dea5c2546a311e1.1565168564.git.baolin.wang@linaro.org>
- <40127356a1acd1f2ff1be1d8a120b305a4e17af4.1565168564.git.baolin.wang@linaro.org>
- <20190809091013.vguj4wty7qiab64t@pengutronix.de> <CAMz4kuLQsrBWjta1s=ZRPgxUd0_+_f-GbJV138tccuMLg2XCLA@mail.gmail.com>
- <20190809144124.3as3rtctlywxkudr@pengutronix.de> <CAMz4ku+o6dCyxhR3-5yM+zr2nBpTQG5A8Pbnxpo7yRciwPbv3Q@mail.gmail.com>
- <20190812083556.dvprpwv6mjy3cjae@pengutronix.de> <CAMz4kuJA81ZP6Kc63dPV1jEn1ah=jow6tQBfO=UDCcTzSf3y-A@mail.gmail.com>
- <20190812094607.yg7efmvefewxicke@pengutronix.de>
-In-Reply-To: <20190812094607.yg7efmvefewxicke@pengutronix.de>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Mon, 12 Aug 2019 17:50:45 +0800
-Message-ID: <CAMz4kuKDcFxbNPqS-MToiCGQCXKDSvFX75ML+iVJGZx6kL0gzA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pwm: sprd: Add Spreadtrum PWM support
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Df-Sender: bWFyY0Brb2RlcmVyLmNvbQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 12 Aug 2019 at 17:46, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> Hello Baolin,
->
-> On Mon, Aug 12, 2019 at 05:11:56PM +0800, Baolin Wang wrote:
-> > On Mon, 12 Aug 2019 at 16:36, Uwe Kleine-K=C3=B6nig
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> > > On Mon, Aug 12, 2019 at 03:29:07PM +0800, Baolin Wang wrote:
-> > > > The clock framework supplies 'assigned-clocks' and
-> > > > 'assigned-clock-parents' properties to set parent, but for our case=
- we
-> > > > still want to set a default clock rate if failed to set parent when
-> > > > met some abnormal things.
-> > >
-> > > Without understanding the complete problem I'd say this is out of the
-> > > area the driver should care about.
-> >
-> > Fair enough, I will try to use 'assigned-clocks' and
-> > 'assigned-clock-parents' to simplify the code.
->
-> There is also assigned-clock-rates if you need that.
+There is nearly no difference between both implemenations.
+ceph_kvmalloc existed before kvmalloc which makes me think it's
+a leftover.
 
-Thanks for reminding, but we have no use case to set clock rate in PWM driv=
-er.
+Signed-off-by: Marc Koderer <marc@koderer.com>
+---
+ net/ceph/buffer.c      |  3 +--
+ net/ceph/ceph_common.c | 11 -----------
+ net/ceph/crypto.c      |  2 +-
+ net/ceph/messenger.c   |  2 +-
+ 4 files changed, 3 insertions(+), 15 deletions(-)
 
---=20
-Baolin Wang
-Best Regards
+diff --git a/net/ceph/buffer.c b/net/ceph/buffer.c
+index 5622763ad402..6ca273d2246a 100644
+--- a/net/ceph/buffer.c
++++ b/net/ceph/buffer.c
+@@ -7,7 +7,6 @@
+ 
+ #include <linux/ceph/buffer.h>
+ #include <linux/ceph/decode.h>
+-#include <linux/ceph/libceph.h> /* for ceph_kvmalloc */
+ 
+ struct ceph_buffer *ceph_buffer_new(size_t len, gfp_t gfp)
+ {
+@@ -17,7 +16,7 @@ struct ceph_buffer *ceph_buffer_new(size_t len, gfp_t gfp)
+ 	if (!b)
+ 		return NULL;
+ 
+-	b->vec.iov_base = ceph_kvmalloc(len, gfp);
++	b->vec.iov_base = kvmalloc(len, gfp);
+ 	if (!b->vec.iov_base) {
+ 		kfree(b);
+ 		return NULL;
+diff --git a/net/ceph/ceph_common.c b/net/ceph/ceph_common.c
+index 4eeea4d5c3ef..6c1769a815af 100644
+--- a/net/ceph/ceph_common.c
++++ b/net/ceph/ceph_common.c
+@@ -185,17 +185,6 @@ int ceph_compare_options(struct ceph_options *new_opt,
+ }
+ EXPORT_SYMBOL(ceph_compare_options);
+ 
+-void *ceph_kvmalloc(size_t size, gfp_t flags)
+-{
+-	if (size <= (PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER)) {
+-		void *ptr = kmalloc(size, flags | __GFP_NOWARN);
+-		if (ptr)
+-			return ptr;
+-	}
+-
+-	return __vmalloc(size, flags, PAGE_KERNEL);
+-}
+-
+ 
+ static int parse_fsid(const char *str, struct ceph_fsid *fsid)
+ {
+diff --git a/net/ceph/crypto.c b/net/ceph/crypto.c
+index 5d6724cee38f..a9deead1e4ff 100644
+--- a/net/ceph/crypto.c
++++ b/net/ceph/crypto.c
+@@ -144,7 +144,7 @@ void ceph_crypto_key_destroy(struct ceph_crypto_key *key)
+ static const u8 *aes_iv = (u8 *)CEPH_AES_IV;
+ 
+ /*
+- * Should be used for buffers allocated with ceph_kvmalloc().
++ * Should be used for buffers allocated with kvmalloc().
+  * Currently these are encrypt out-buffer (ceph_buffer) and decrypt
+  * in-buffer (msg front).
+  *
+diff --git a/net/ceph/messenger.c b/net/ceph/messenger.c
+index 962f521c863e..f1f2fcc6f780 100644
+--- a/net/ceph/messenger.c
++++ b/net/ceph/messenger.c
+@@ -3334,7 +3334,7 @@ struct ceph_msg *ceph_msg_new2(int type, int front_len, int max_data_items,
+ 
+ 	/* front */
+ 	if (front_len) {
+-		m->front.iov_base = ceph_kvmalloc(front_len, flags);
++		m->front.iov_base = kvmalloc(front_len, flags);
+ 		if (m->front.iov_base == NULL) {
+ 			dout("ceph_msg_new can't allocate %d bytes\n",
+ 			     front_len);
+-- 
+2.22.0
+
