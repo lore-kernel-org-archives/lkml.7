@@ -2,171 +2,181 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E82CC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BCBC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A92B2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:57:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KAP0kqf7"
+	by mail.kernel.org (Postfix) with ESMTP id 0D2262067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:59:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfHLV5j (ORCPT
+        id S1727089AbfHLV66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 17:57:39 -0400
-Received: from mail-pl1-f173.google.com ([209.85.214.173]:42913 "EHLO
-        mail-pl1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbfHLV5j (ORCPT
+        Mon, 12 Aug 2019 17:58:58 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40287 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfHLV66 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 17:57:39 -0400
-Received: by mail-pl1-f173.google.com with SMTP id ay6so48449655plb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 14:57:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AKVPSiv3Nnc1bJ+Orobrf91FytlMVmCtFO3DISjriR8=;
-        b=KAP0kqf7LGZjCS4T+BVf2dAxU13OgXC14RRjAaVnn7yH/C4czgnUS6tZscf3cL8ZyX
-         XhEOQNe2/W3KNkBPz7P91r6UjFQJL+4niChimsYkngJaKALSykFHBPukNwNDA/JNVXWR
-         HteceawbJ4HI2QrIQdN7hjLTafm81aDabxOwhFNeqcf93ZwVvh4SqMmymL4gpkd8BrGW
-         8D1AWVv8xu3yIMSz1ahgUe4gRokZM+tmuVToP6rGhystYyI1iac/pAyh/8REi1M4GTBk
-         lCRvy+a8pi21ruXi24QsPxLCrOnKRQ9cn/3JjeCksQjLTeVF00PqjI4TK0DhYTHvacDC
-         cytA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AKVPSiv3Nnc1bJ+Orobrf91FytlMVmCtFO3DISjriR8=;
-        b=lVPFCWQqUpe5zjRD9a3gWSidSW1766b6SSYUikw/k/8+UHjzVGZGI9pWNhmPF62+Mz
-         IXbkILKkFQ1jlwTwfHqUh8B7HkxzXecCBlH8ZnI8wc0/QIFLdt7pvAVLwf4wZtK+qyiT
-         /A1/m9dLXZ2TucF4k9M40BD8dH0gDtp7aPMZiPlPh2r6IEZPSieApOSilELEO4eCzROW
-         qgYTTuPJN3LK22LAA+Nstng7uG2KtIoUd55M3ZEmDndmt4gb6o+QntseAfmOrF8Dok35
-         G4V6ypKAZLX1bNbni0HMTCbOhy0/cg7DMzlVHisV7BlHAuVVV4NwrMmuF7d30rbSw4de
-         x9uA==
-X-Gm-Message-State: APjAAAXVAvSKbL1qusa9bLnlqY2xSMfXGMWoW1KDo9pxTVUFKr6U5lcA
-        igECwYguphKtxKpyHCIqHd8M13/Zq939OO/jaXzAQw==
-X-Google-Smtp-Source: APXvYqzUHVKkObxXnEjsDJOVwzsB5+NNPFpbrcDe96GY0r4g6He80uVToB1oNPerTz4L0ERdIFDE6SpBCO9mjLO7gcw=
-X-Received: by 2002:a17:902:3363:: with SMTP id a90mr33160394plc.119.1565647057895;
- Mon, 12 Aug 2019 14:57:37 -0700 (PDT)
+        Mon, 12 Aug 2019 17:58:58 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hxIL8-0004s7-An; Mon, 12 Aug 2019 23:58:54 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hxIL7-0007mA-VV; Mon, 12 Aug 2019 23:58:53 +0200
+Date:   Mon, 12 Aug 2019 23:58:53 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/7] pwm: jz4740: Make PWM start with the active part
+Message-ID: <20190812215853.hbhihhtvdziarj3y@pengutronix.de>
+References: <20190809123031.24219-1-paul@crapouillou.net>
+ <20190809123031.24219-7-paul@crapouillou.net>
+ <20190809171058.gothydohec6qx7hu@pengutronix.de>
+ <1565372004.2091.3@crapouillou.net>
+ <20190812055515.ne7o4ujchfeubjid@pengutronix.de>
+ <1565643001.2007.2@crapouillou.net>
 MIME-Version: 1.0
-References: <20190812215052.71840-1-ndesaulniers@google.com> <20190812215052.71840-17-ndesaulniers@google.com>
-In-Reply-To: <20190812215052.71840-17-ndesaulniers@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 12 Aug 2019 14:57:26 -0700
-Message-ID: <CAKwvOdmrxK-WBqRwG7PtF4QH1_VySwzOLyGJOFHF9QsUiW-dCQ@mail.gmail.com>
-Subject: Fwd: [PATCH 00/16] treewide: prefer __section from compiler_attributes.h
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Joe Perches <joe@perches.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Yonghong Song <yhs@fb.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1565643001.2007.2@crapouillou.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
----------- Forwarded message ---------
-From: Nick Desaulniers <ndesaulniers@google.com>
-Date: Mon, Aug 12, 2019 at 2:53 PM
-Subject: [PATCH 00/16] treewide: prefer __section from compiler_attributes.h
-To: <akpm@linux-foundation.org>
-Cc: <sedat.dilek@gmail.com>, <jpoimboe@redhat.com>, <yhs@fb.com>,
-<miguel.ojeda.sandonis@gmail.com>,
-<clang-built-linux@googlegroups.com>, Nick Desaulniers
-<ndesaulniers@google.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
-Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Song
-Liu <songliubraving@fb.com>, <netdev@vger.kernel.org>,
-<bpf@vger.kernel.org>
+On Mon, Aug 12, 2019 at 10:50:01PM +0200, Paul Cercueil wrote:
+> 
+> 
+> Le lun. 12 août 2019 à 7:55, Uwe =?iso-8859-1?q?Kleine-K=F6nig?=
+> <u.kleine-koenig@pengutronix.de> a écrit :
+> > On Fri, Aug 09, 2019 at 07:33:24PM +0200, Paul Cercueil wrote:
+> > > 
+> > > 
+> > >  Le ven. 9 août 2019 à 19:10, Uwe =?iso-8859-1?q?Kleine-K=F6nig?=
+> > >  <u.kleine-koenig@pengutronix.de> a écrit :
+> > >  > On Fri, Aug 09, 2019 at 02:30:30PM +0200, Paul Cercueil wrote:
+> > >  > >  The PWM will always start with the inactive part. To counter
+> > > that,
+> > >  > >  when PWM is enabled we switch the configured polarity, and use
+> > >  > >  'period - duty + 1' as the real duty.
+> > >  >
+> > >  > Where does the + 1 come from? This looks wrong. (So if duty=0 is
+> > >  > requested you use duty = period + 1?)
+> > > 
+> > >  You'd never request duty == 0, would you?
+> > > 
+> > >  Your duty must always be in the inclusive range [1, period]
+> > >  (hardware values, not ns). A duty of 0 is a hardware fault
+> > >  (on the jz4740 it is).
+> > 
+> > From the PWM framework's POV duty cycle = 0 is perfectly valid. Similar
+> > to duty == period. Not supporting dutz cycle 0 is another limitation of
+> > your PWM that should be documented.
+> > 
+> > For actual use cases of duty cycle = 0 see drivers/hwmon/pwm-fan.c or
+> > drivers/leds/leds-pwm.c.
+> 
+> Perfectly valid for the PWM framework, maybe; but what is the expected
+> output then? A constant inactive state?
 
+Yes, a constant inactive state is expected. This is consistent and in a
+similar way when using duty == period an constant active output is
+expected.
 
-GCC unescapes escaped string section names while Clang does not. Because
-__section uses the `#` stringification operator for the section name, it
-doesn't need to be escaped.
+> Then I guess I can just disable the PWM output in the driver when
+> configured with duty == 0.
 
-This fixes an Oops observed in distro's that use systemd and not
-net.core.bpf_jit_enable=1, when their kernels are compiled with Clang.
+Some time ago I argued with Thierry that we could drop the concept of
+enabled/disabled for a PWM because a disabled PWM is supposed to behave
+identically to duty=0. This is however only nearly true because with
+duty=0 the time the PWM is inactive still is a multiple of the period.
 
-Instead, we should:
-1. Prefer __section(.section_name_no_quotes).
-2. Only use __attribute__((__section(".section"))) when creating the
-section name via C preprocessor (see the definition of __define_initcall
-in arch/um/include/shared/init.h).
+I tend to agree that disabling the PWM when duty=0 is requested is
+better than to fail the request (or configure for duty=1 $whateverunit).
+I'm looking forward to what Thierry's opinion is here.
 
-This antipattern was found with:
-$ grep -e __section\(\" -e __section__\(\" -r
+> > >  If you request duty == 1 (the minimum), then the new duty is equal
+> > >  to (period - 1 + 1) == period, which is the maximum of your range.
+> > > 
+> > >  If you request duty == period (the maximum), then the new duty
+> > >  calculated is equal to (period - period + 1) == 1, which is the
+> > >  minimum of your range.
 
-See the discussions in:
-https://bugs.llvm.org/show_bug.cgi?id=42950
-https://marc.info/?l=linux-netdev&m=156412960619946&w=2
+Note that the wrong border (because duty=0 is impossible for your
+hardware) shifts the whole space. The right inverse of duty = period - 1
+is duty = 1, isn't it?
 
-Nick Desaulniers (16):
-  s390/boot: fix section name escaping
-  arc: prefer __section from compiler_attributes.h
-  parisc: prefer __section from compiler_attributes.h
-  um: prefer __section from compiler_attributes.h
-  sh: prefer __section from compiler_attributes.h
-  ia64: prefer __section from compiler_attributes.h
-  arm: prefer __section from compiler_attributes.h
-  mips: prefer __section from compiler_attributes.h
-  sparc: prefer __section from compiler_attributes.h
-  powerpc: prefer __section and __printf from compiler_attributes.h
-  x86: prefer __section from compiler_attributes.h
-  arm64: prefer __section from compiler_attributes.h
-  include/asm-generic: prefer __section from compiler_attributes.h
-  include/linux: prefer __section from compiler_attributes.h
-  include/linux/compiler.h: remove unused KENTRY macro
-  compiler_attributes.h: add note about __section
+> > > > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> > > > >  ---
+> > > > >   drivers/pwm/pwm-jz4740.c | 22 +++++++++++++---------
+> > > > >   1 file changed, 13 insertions(+), 9 deletions(-)
+> > > > >
+> > > > >  diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+> > > > >  index 85e2110aae4f..8df898429d47 100644
+> > > > >  --- a/drivers/pwm/pwm-jz4740.c
+> > > > >  +++ b/drivers/pwm/pwm-jz4740.c
+> > > > >  @@ -121,6 +121,7 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > > > >   		   *parent_clk = clk_get_parent(clk);
+> > > > >   	unsigned long rate, parent_rate, period, duty;
+> > > > >   	unsigned long long tmp;
+> > > > >  +	bool polarity_inversed;
+> > > > >   	int ret;
+> > > > >
+> > > > >   	parent_rate = clk_get_rate(parent_clk);
+> > > > >  @@ -183,24 +184,27 @@ static int jz4740_pwm_apply(struct pwm_chip
+> > > > > *chip, struct pwm_device *pwm,
+> > > > >   	/* Reset counter to 0 */
+> > > > >   	regmap_write(jz4740->map, TCU_REG_TCNTc(pwm->hwpwm), 0);
+> > > > >
+> > > > >  -	/* Set duty */
+> > > > >  -	regmap_write(jz4740->map, TCU_REG_TDHRc(pwm->hwpwm), duty);
+> > > > >  -
+> > > > >   	/* Set period */
+> > > > >   	regmap_write(jz4740->map, TCU_REG_TDFRc(pwm->hwpwm), period);
+> > > > >
+> > > > >  +	/*
+> > > > >  +	 * The PWM will always start with the inactive part. To counter that,
+> > > > >  +	 * when PWM is enabled we switch the configured polarity, and use
+> > > > >  +	 * 'period - duty + 1' as the real duty.
+> > > > >  +	 */
+> > > > >  +
+> > > > >  +	/* Set duty */
+> > > > >  +	regmap_write(jz4740->map, TCU_REG_TDHRc(pwm->hwpwm), period - duty + 1);
+> > > > >  +
+> > > >
+> > > > Before you set duty first, then period, now you do it the other way
+> > > > round. Is there a good reason?
+> > > 
+> > >  To move it below the comment that explains why we use 'period - duty + 1'.
+> > > 
+> > >  We modify that line anyway, so it's not like it makes the patch much more
+> > >  verbose.
+> > 
+> > It doesn't make it more verbose, but that's not the background of my
+> > question. For most(?) PWM implementation the order of hardware accesses
+> > matters and introducing such a difference as an unneeded side effect
+> > isn't optimal.
+> 
+> There's no side effect. The PWM is disabled when reconfigured.
 
- arch/arc/include/asm/linkage.h        |  8 +++----
- arch/arc/include/asm/mach_desc.h      |  3 +--
- arch/arm/include/asm/cache.h          |  2 +-
- arch/arm/include/asm/mach/arch.h      |  4 ++--
- arch/arm/include/asm/setup.h          |  2 +-
- arch/arm64/include/asm/cache.h        |  2 +-
- arch/arm64/kernel/smp_spin_table.c    |  2 +-
- arch/ia64/include/asm/cache.h         |  2 +-
- arch/mips/include/asm/cache.h         |  2 +-
- arch/parisc/include/asm/cache.h       |  2 +-
- arch/parisc/include/asm/ldcw.h        |  2 +-
- arch/powerpc/boot/main.c              |  3 +--
- arch/powerpc/boot/ps3.c               |  6 ++----
- arch/powerpc/include/asm/cache.h      |  2 +-
- arch/powerpc/kernel/btext.c           |  2 +-
- arch/s390/boot/startup.c              |  2 +-
- arch/sh/include/asm/cache.h           |  2 +-
- arch/sparc/include/asm/cache.h        |  2 +-
- arch/sparc/kernel/btext.c             |  2 +-
- arch/um/kernel/um_arch.c              |  6 +++---
- arch/x86/include/asm/cache.h          |  2 +-
- arch/x86/include/asm/intel-mid.h      |  2 +-
- arch/x86/include/asm/iommu_table.h    |  5 ++---
- arch/x86/include/asm/irqflags.h       |  2 +-
- arch/x86/include/asm/mem_encrypt.h    |  2 +-
- arch/x86/kernel/cpu/cpu.h             |  3 +--
- include/asm-generic/error-injection.h |  2 +-
- include/asm-generic/kprobes.h         |  5 ++---
- include/linux/cache.h                 |  6 +++---
- include/linux/compiler.h              | 31 ++++-----------------------
- include/linux/compiler_attributes.h   | 10 +++++++++
- include/linux/cpu.h                   |  2 +-
- include/linux/export.h                |  2 +-
- include/linux/init_task.h             |  4 ++--
- include/linux/interrupt.h             |  5 ++---
- include/linux/sched/debug.h           |  2 +-
- include/linux/srcutree.h              |  2 +-
- 37 files changed, 62 insertions(+), 83 deletions(-)
+Then please mention it in the commit log.
 
---
-2.23.0.rc1.153.gdeed80330f-goog
-
-
+Best regards
+Uwe
 
 -- 
-Thanks,
-~Nick Desaulniers
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
