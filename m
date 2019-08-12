@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D319C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D642C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4149F214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B18208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:09:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VyJrl7Yd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WD2YxYTp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbfHLUJu (ORCPT
+        id S1727858AbfHLUJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 16:09:50 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34706 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727832AbfHLUJq (ORCPT
+        Mon, 12 Aug 2019 16:09:49 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35062 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727496AbfHLUJp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 16:09:46 -0400
-Received: by mail-pl1-f196.google.com with SMTP id i2so48333008plt.1;
-        Mon, 12 Aug 2019 13:09:46 -0700 (PDT)
+        Mon, 12 Aug 2019 16:09:45 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w24so48288655plp.2;
+        Mon, 12 Aug 2019 13:09:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=G3aE0HR7FH8dxZEfkREqg9dVCNPdu5b7189bsJL1s1I=;
-        b=VyJrl7Ydz3J26svxaTUS+WXyPZFZyX6onCknUDHWfh3YZrXjzwb6N7C8QDOQeZgv0l
-         Jcv+4p5v5/UBKLMfJZ7/S7jXpfbrqRwhNbgGeJY/3jZ25jFOlJLkVqFH1B4/vJ1yB4ac
-         KjVum2kt3pONCmil63qjxxe//95Y+3NKPNYaFU2hfZ/ye+kMXaV6eKhNn1wY+ts7hNvV
-         ++oop01X74XIhItmvH6ZmKEoK+0uQ33iNDvLtATHyeaCuN7sr5gguixciutmyHHpy1di
-         8QtHR5AByJ+auXIggRAfO2sGXlEPkhVKCyzxOAHMU+qgekXGsw2lDNaSKqdjSnVnoPRG
-         IjEw==
+        bh=RxWEj5XMwOhp9jEr2BxVYNQrB7abAMc2i7oVzlWuaws=;
+        b=WD2YxYTpoBV1JC+G2nKak6sdXHA3qCJi8wJA+7zeuD5M9aSSf2wmtsl7QzQ+A5qvkc
+         xO0ZSxarhAiHUXECiVGFUAC1TlEbB/a7xbmV5Nn0pJeUW9Uma32kSsnMmusKqax0mScI
+         CrRBdipJJkm4hbLzXtIOBikrtq1qpHct/m4rSH9b1wprYKGw1MFzEOPtiCenFBYIBD5A
+         sPDnypOwlfaaAt6FarR544rmqr1l9Y6YFOsHUMQNlgKhgJfv5MVDrlpuZvLpuWkJeCx2
+         BwJu1LCwCtT0JjhYyqQG0RynzwzRSNYOh+Jl7oNKCBynZyo/RqTrwYguMaM25ZiOGXqG
+         hYzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=G3aE0HR7FH8dxZEfkREqg9dVCNPdu5b7189bsJL1s1I=;
-        b=XN5oZZvb9F46UIMwIMRBQ/Ed4i8ZC1YsHKMyNNfB6kPGdU99D/pB4FH9XNKqQeieWi
-         CREFjxkbe4m8SH/qbH31wfePmQQefA/leS9fIi745nwF1V88AO/nRzVJN0siQSmn099w
-         WU/i0IitZNVc7s+MleEsOaQfkdEFZIpFz93smMu7Ua2NsIQT7RJF8lA8WQpDAp4ciqc1
-         p0scmFfNU+/3WgBnuJmfH74kn44dWQZx87BUTU+Ka+0o/8dBpUZnU2KOIMmBviHNqrxH
-         YaCWpJUBpQTk4A6TD74jBrfkhBEkZjpr19J2rSng1+G1b4Ru1a7VQy7ummEClUvrkahH
-         TbRA==
-X-Gm-Message-State: APjAAAU/Xy2dyadJNNRY3bvmkb/+jqF3dVYkq/3KtLDCdwq4cakVNE1i
-        Crm8wQujKqni691tbTbhoGs/drnj
-X-Google-Smtp-Source: APXvYqzC5WkgKM6qxhcGrKVd7zOiPyHZItfP6NE4i8jBUw8R8pdqODfSOlB82hwMuHUFAHFO/GGcMw==
-X-Received: by 2002:a17:902:be01:: with SMTP id r1mr14556016pls.229.1565640585591;
-        Mon, 12 Aug 2019 13:09:45 -0700 (PDT)
-Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id n26sm110286451pfa.83.2019.08.12.13.09.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        bh=RxWEj5XMwOhp9jEr2BxVYNQrB7abAMc2i7oVzlWuaws=;
+        b=fm3AD7giNxJh+Totymbx/nJLxkNhxKJpWxpCkD4Uwezv9MEKpKMs4MWCW3P1zX/rIe
+         7YTiZZG1ndUm5pNzTHQvc7yOi41cH2qiEO61OCHxn8DBStiNkgBrYlcFRTp2omdKn7xa
+         L3iChPsypmuU7+0HbTG0W7RwpdhAHKb/az7DCIPSPQSBE1MX1emUq8CoFi/+HE5oiZK+
+         MPr2FEoIegBE/7qjq21guz4wwZbUJiuN6cGV6rR9Teq/3IS/etUydWsmUwFUxQqxC+C7
+         AEG0ITmIHr7AetrfVAYJHYsi6SaPoGMg8TpgHNMYQGIamG4hdseojIXumM57frTH/NrQ
+         r5SA==
+X-Gm-Message-State: APjAAAXHBfuU5A2VrMkX0/fjj2QZ/T6jZjmJ1hAdxSYzBFDBQCxAVPMZ
+        td3Yi72JvHcwTVmMFeQ9DS1LP0G7
+X-Google-Smtp-Source: APXvYqzkSsXZeoXM7L24AckIu+2acToD1OycG49Ca+NmMtt6Bk0QCXvBSoK2nsomtXYmVCPZ71OIfw==
+X-Received: by 2002:a17:902:100a:: with SMTP id b10mr33728350pla.338.1565640584405;
         Mon, 12 Aug 2019 13:09:44 -0700 (PDT)
+Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
+        by smtp.gmail.com with ESMTPSA id n26sm110286451pfa.83.2019.08.12.13.09.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 13:09:43 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-watchdog@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -64,9 +64,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Rick Ramstetter <rick@anteaterllc.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 21/22] watchdog: ziirave_wdt: Drop ziirave_firm_write_block_data()
-Date:   Mon, 12 Aug 2019 13:09:05 -0700
-Message-Id: <20190812200906.31344-22-andrew.smirnov@gmail.com>
+Subject: [PATCH v2 20/22] watchdog: ziirave_wdt: Fix DOWNLOAD_START payload
+Date:   Mon, 12 Aug 2019 13:09:04 -0700
+Message-Id: <20190812200906.31344-21-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190812200906.31344-1-andrew.smirnov@gmail.com>
 References: <20190812200906.31344-1-andrew.smirnov@gmail.com>
@@ -77,8 +77,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's only one user of ziirave_firm_write_block_data(), so we may as
-well inline it.
+Bootloader firmware expects the following traffic for DOWNLOAD_END:
+
+S Addr Wr [A] 0x10 [A] P
+
+using ziirave_firm_write_byte() will result in
+
+S Addr Wr [A] 0x10 [A] 0x01 [A] 0x01 [A] P
+
+which happens to work because firmware will ignore any extra bytes
+sent. Fix this by converting the code to use i2c_smbus_write_byte()
+instead.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Chris Healy <cphealy@gmail.com>
@@ -87,58 +96,47 @@ Cc: Rick Ramstetter <rick@anteaterllc.com>
 Cc: linux-watchdog@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/watchdog/ziirave_wdt.c | 31 +++++++++----------------------
- 1 file changed, 9 insertions(+), 22 deletions(-)
+ drivers/watchdog/ziirave_wdt.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/watchdog/ziirave_wdt.c b/drivers/watchdog/ziirave_wdt.c
-index ed69fa82e09c..48278034cda6 100644
+index 681f65349779..ed69fa82e09c 100644
 --- a/drivers/watchdog/ziirave_wdt.c
 +++ b/drivers/watchdog/ziirave_wdt.c
-@@ -197,26 +197,6 @@ static int ziirave_firm_set_read_addr(struct watchdog_device *wdd, u32 addr)
- 					  sizeof(address), address);
+@@ -217,13 +217,6 @@ static int ziirave_firm_write_block_data(struct watchdog_device *wdd,
+ 	return ret;
  }
  
--static int ziirave_firm_write_block_data(struct watchdog_device *wdd,
--					 u8 command, u8 length, const u8 *data,
--					 bool wait_for_ack)
+-static int ziirave_firm_write_byte(struct watchdog_device *wdd, u8 command,
+-				   u8 byte, bool wait_for_ack)
 -{
--	struct i2c_client *client = to_i2c_client(wdd->parent);
--	int ret;
--
--	ret = i2c_smbus_write_block_data(client, command, length, data);
--	if (ret) {
--		dev_err(&client->dev,
--			"Failed to send command 0x%02x: %d\n", command, ret);
--		return ret;
--	}
--
--	if (wait_for_ack)
--		ret = ziirave_firm_read_ack(wdd);
--
--	return ret;
+-	return ziirave_firm_write_block_data(wdd, command, 1, &byte,
+-					     wait_for_ack);
 -}
 -
  static bool ziirave_firm_addr_readonly(u32 addr)
  {
  	return addr < ZIIRAVE_FIRM_FLASH_MEMORY_START ||
-@@ -273,8 +253,15 @@ static int __ziirave_firm_write_pkt(struct watchdog_device *wdd,
- 		checksum += packet[i];
- 	packet[ZIIRAVE_FIRM_PKT_TOTAL_SIZE - 1] = checksum;
+@@ -375,12 +368,18 @@ static int ziirave_firm_upload(struct watchdog_device *wdd,
  
--	ret = ziirave_firm_write_block_data(wdd, ZIIRAVE_CMD_DOWNLOAD_PACKET,
--					    sizeof(packet), packet, true);
-+	ret = i2c_smbus_write_block_data(client, ZIIRAVE_CMD_DOWNLOAD_PACKET,
-+					 sizeof(packet), packet);
+ 	msleep(500);
+ 
+-	ret = ziirave_firm_write_byte(wdd, ZIIRAVE_CMD_DOWNLOAD_START, 1, true);
++	ret = i2c_smbus_write_byte(client, ZIIRAVE_CMD_DOWNLOAD_START);
+ 	if (ret) {
+ 		dev_err(&client->dev, "Failed to start download\n");
+ 		return ret;
+ 	}
+ 
++	ret = ziirave_firm_read_ack(wdd);
 +	if (ret) {
-+		dev_err(&client->dev,
-+			"Failed to send DOWNLOAD_PACKET: %d\n", ret);
++		dev_err(&client->dev, "No ACK for start download\n");
 +		return ret;
 +	}
 +
-+	ret = ziirave_firm_read_ack(wdd);
- 	if (ret)
- 		dev_err(&client->dev,
- 		      "Failed to write firmware packet at address 0x%04x: %d\n",
+ 	msleep(500);
+ 
+ 	for (rec = (void *)fw->data; rec; rec = ihex_next_binrec(rec)) {
 -- 
 2.21.0
 
