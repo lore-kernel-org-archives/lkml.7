@@ -2,158 +2,162 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD898C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B58C32750
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE2EC2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:35:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="blXKchJT"
+	by mail.kernel.org (Postfix) with ESMTP id EB5342085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:35:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbfHLLfv (ORCPT
+        id S1728268AbfHLLfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 12 Aug 2019 07:35:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:48936 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728066AbfHLLfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 12 Aug 2019 07:35:51 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:17672 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727691AbfHLLfv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 07:35:51 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d514f170000>; Mon, 12 Aug 2019 04:35:51 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 12 Aug 2019 04:35:49 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 12 Aug 2019 04:35:49 -0700
-Received: from [10.24.70.124] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 12 Aug
- 2019 11:35:44 +0000
-Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        Parav Pandit <parav@mellanox.com>
-CC:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <cohuck@redhat.com>, <cjia@nvidia.com>
-References: <20190802065905.45239-1-parav@mellanox.com>
- <20190808141255.45236-1-parav@mellanox.com> <20190808170247.1fc2c4c4@x1.home>
-X-Nvconfidentiality: public
-From:   Kirti Wankhede <kwankhede@nvidia.com>
-Message-ID: <77ffb1f8-e050-fdf5-e306-0a81614f7a88@nvidia.com>
-Date:   Mon, 12 Aug 2019 17:05:35 +0530
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3FC615AB;
+        Mon, 12 Aug 2019 04:35:50 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4384D3F706;
+        Mon, 12 Aug 2019 04:35:48 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 12:35:43 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     "kishon@ti.com" <kishon@ti.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
+        "pombredanne@nexb.com" <pombredanne@nexb.com>,
+        "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [EXT] Re: [PATCHv3 1/2] PCI: layerscape: Add the bar_fixed_64bit
+ property in EP driver.
+Message-ID: <20190812113543.GA25040@e121166-lin.cambridge.arm.com>
+References: <20190628013826.4705-1-xiaowei.bao@nxp.com>
+ <20190812101213.GB20861@e121166-lin.cambridge.arm.com>
+ <AM5PR04MB329929A0B046F6BEB94B0120F5D30@AM5PR04MB3299.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190808170247.1fc2c4c4@x1.home>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565609751; bh=fpHvHHJL8wyOLDiEfQdubvRYA+qG1k/+C72xvd/LHRQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=blXKchJTCoja53q4QJ8ExzCyn1pWzmxPHrtImiRE//hESE7MIbP+UxofWHdYsY4Gv
-         GKk3HQN0w6m2V8kLq/xaA7kQIlsVjC5DMdNVsjzr322QbAq5Z+Ggn9Mv1J+sPp2E9A
-         /L9/qQ85m0NiGMMO1hCG2CsXcDUzvobEgyM3ymj+PhX2CZ2p3SqakukpYNKzkvDRWG
-         f+9qKYCSsbtyENegLRTUEyNYBhi8sNgfwYDdK+H6zVzQyNb05z7xgpGAs6F9IRzAB/
-         DhqfBfvnaR2EtmR+WVMSP2icu6D8Z+UY2byAgshKZ0OcA3VRBfeNpa7HXCFXVDEWyA
-         U041fgBWnGoTQ==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM5PR04MB329929A0B046F6BEB94B0120F5D30@AM5PR04MB3299.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Aug 12, 2019 at 10:39:00AM +0000, Xiaowei Bao wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Sent: 2019年8月12日 18:12
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>; kishon@ti.com
+> > Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; arnd@arndb.de;
+> > gregkh@linuxfoundation.org; M.h. Lian <minghuan.lian@nxp.com>; Mingkai
+> > Hu <mingkai.hu@nxp.com>; Roy Zang <roy.zang@nxp.com>;
+> > kstewart@linuxfoundation.org; pombredanne@nexb.com;
+> > shawn.lin@rock-chips.com; linux-pci@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
+> > Subject: [EXT] Re: [PATCHv3 1/2] PCI: layerscape: Add the bar_fixed_64bit
+> > property in EP driver.
+> > 
+> > Caution: EXT Email
+> > 
+> > First off:
+> > 
+> > Trim the CC list, you CC'ed maintainers (and mailing lists) for no reasons
+> > whatsover.
+> [Xiaowei Bao]Hi Lorenzo, I am not clear why the mail list is the CC, I use the command "git send-email --to", I will try to send the patch again, do I need to modify the version is v4 when I send this patch again?
 
+Yes you do.
 
-On 8/9/2019 4:32 AM, Alex Williamson wrote:
-> On Thu,  8 Aug 2019 09:12:53 -0500
-> Parav Pandit <parav@mellanox.com> wrote:
-> 
->> Currently mtty sample driver uses mdev state and UUID in convoluated way to
->> generate an interrupt.
->> It uses several translations from mdev_state to mdev_device to mdev uuid.
->> After which it does linear search of long uuid comparision to
->> find out mdev_state in mtty_trigger_interrupt().
->> mdev_state is already available while generating interrupt from which all
->> such translations are done to reach back to mdev_state.
->>
->> This translations are done during interrupt generation path.
->> This is unnecessary and reduandant.
-> 
-> Is the interrupt handling efficiency of this particular sample driver
-> really relevant, or is its purpose more to illustrate the API and
-> provide a proof of concept?  If we go to the trouble to optimize the
-> sample driver and remove this interface from the API, what do we lose?
-> 
-> This interface was added via commit:
-> 
-> 99e3123e3d72 vfio-mdev: Make mdev_device private and abstract interfaces
-> 
-> Where the goal was to create a more formal interface and abstract
-> driver access to the struct mdev_device.  In part this served to make
-> out-of-tree mdev vendor drivers more supportable; the object is
-> considered opaque and access is provided via an API rather than through
-> direct structure fields.
-> 
-> I believe that the NVIDIA GRID mdev driver does make use of this
-> interface and it's likely included in the sample driver specifically so
-> that there is an in-kernel user for it (ie. specifically to avoid it
-> being removed so casually).  An interesting feature of the NVIDIA mdev
-> driver is that I believe it has portions that run in userspace.  As we
-> know, mdevs are named with a UUID, so I can imagine there are some
-> efficiencies to be gained in having direct access to the UUID for a
-> device when interacting with userspace, rather than repeatedly parsing
-> it from a device name.
+Wrap lines to max 80 characters. There is no need to add [Xiaowei Bao].
 
-That's right.
+1) Read, email etiquette
 
->  Is that really something we want to make more
-> difficult in order to optimize a sample driver?  Knowing that an mdev
-> device uses a UUID for it's name, as tools like libvirt and mdevctl
-> expect, is it really worthwhile to remove such a trivial API?
-> 
->> Hence,
->> Patch-1 simplifies mtty sample driver to directly use mdev_state.
->>
->> Patch-2, Since no production driver uses mdev_uuid(), simplifies and
->> removes redandant mdev_uuid() exported symbol.
-> 
-> s/no production driver/no in-kernel production driver/
-> 
-> I'd be interested to hear how the NVIDIA folks make use of this API
-> interface.  Thanks,
-> 
+https://kernelnewbies.org/PatchCulture
 
-Yes, NVIDIA mdev driver do use this interface. I don't agree on removing
-mdev_uuid() interface.
+2) get_maintainer.pl -f drivers/pci/controller/dwc/pci-layerscape.c
+
+Compare the output to the people in CC, trim it accordingly.
+
+3) The NXP maintainers in the MAINTAINERS file have not given a single
+   comment for this patchset. Either they show up or I will remove them
+   from the MAINTAINERS list.
+
+4) Before submitting patches, talk to someone at NXP who can help you
+   format them in preparation for posting, I do not have time to write
+   guidelines for everyone posting on linux-pci, sorry, the information
+   is out there if you care to read it.
 
 Thanks,
-Kirti
+Lorenzo
 
-
-> Alex
-> 
->> ---
->> Changelog:
->> v1->v2:
->>  - Corrected email of Kirti
->>  - Updated cover letter commit log to address comment from Cornelia
->>  - Added Reviewed-by tag
->> v0->v1:
->>  - Updated commit log
->>
->> Parav Pandit (2):
->>   vfio-mdev/mtty: Simplify interrupt generation
->>   vfio/mdev: Removed unused and redundant API for mdev UUID
->>
->>  drivers/vfio/mdev/mdev_core.c |  6 ------
->>  include/linux/mdev.h          |  1 -
->>  samples/vfio-mdev/mtty.c      | 39 +++++++----------------------------
->>  3 files changed, 8 insertions(+), 38 deletions(-)
->>
-> 
+> > 
+> > Then, read this:
+> > 
+> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.ke
+> > rnel.org%2Flinux-pci%2F20171026223701.GA25649%40bhelgaas-glaptop.roa
+> > m.corp.google.com%2F&amp;data=02%7C01%7Cxiaowei.bao%40nxp.com%7
+> > C1c586178e23c423a0e8808d71f0d8f6f%7C686ea1d3bc2b4c6fa92cd99c5c30
+> > 1635%7C0%7C0%7C637012015426788575&amp;sdata=3bx1bDFIzik8FnD0wl
+> > duAUv7wtLdD1J3hQ3xNH2xmFY%3D&amp;reserved=0
+> > 
+> > and make your patches compliant please.
+> > 
+> > On Fri, Jun 28, 2019 at 09:38:25AM +0800, Xiaowei Bao wrote:
+> > > The PCIe controller of layerscape just have 4 BARs, BAR0 and BAR1 is
+> > > 32bit, BAR3 and BAR4 is 64bit, this is determined by hardware, so set
+> > > the bar_fixed_64bit with 0x14.
+> > >
+> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > ---
+> > > v2:
+> > >  - Replace value 0x14 with a macro.
+> > > v3:
+> > >  - No change.
+> > >
+> > >  drivers/pci/controller/dwc/pci-layerscape-ep.c |    1 +
+> > >  1 files changed, 1 insertions(+), 0 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > index be61d96..227c33b 100644
+> > > --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > @@ -44,6 +44,7 @@ static int ls_pcie_establish_link(struct dw_pcie *pci)
+> > >       .linkup_notifier = false,
+> > >       .msi_capable = true,
+> > >       .msix_capable = false,
+> > > +     .bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+> > 
+> > I would appreciate Kishon's ACK on this.
+> > 
+> > Lorenzo
+> > 
+> > >  };
+> > >
+> > >  static const struct pci_epc_features*
+> > > --
+> > > 1.7.1
+> > >
