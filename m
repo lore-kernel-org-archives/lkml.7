@@ -2,65 +2,113 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6729C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28EAC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 886F620679
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D3AA20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:56:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="ijCC3jwm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfHLPwI (ORCPT
+        id S1726541AbfHLP4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 11:52:08 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:36846 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726219AbfHLPwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 11:52:08 -0400
-Received: from [172.16.1.162]
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hxCbx-0006Ga-2Z; Mon, 12 Aug 2019 09:51:54 -0600
-To:     Greentime Hu <green.hu@gmail.com>
-Cc:     greentime.hu@sifive.com, paul.walmsley@sifive.com,
-        Rob Herring <robh@kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Andrew Waterman <andrew@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Bates <sbates@raithlin.com>,
-        Zong Li <zong@andestech.com>, Olof Johansson <olof@lixom.net>,
-        linux-riscv@lists.infradead.org,
-        Michael Clark <michaeljclark@mac.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20190109203911.7887-1-logang@deltatee.com>
- <20190109203911.7887-3-logang@deltatee.com>
- <CAEbi=3d0RNVKbDUwRL-o70O12XBV7q6n_UT-pLqFoh9omYJZKQ@mail.gmail.com>
- <c4298fdd-6fd6-fa7f-73f7-5ff016788e49@deltatee.com>
- <CAEbi=3cn4+7zk2DU1iRa45CDwTsJYfkAV8jXHf-S7Jz63eYy-A@mail.gmail.com>
- <CAEbi=3eZcgWevpX9VO9ohgxVDFVprk_t52Xbs3-TdtZ+js3NVA@mail.gmail.com>
- <0926a261-520e-4c40-f926-ddd40bb8ce44@deltatee.com>
- <CAEbi=3ebNM-t_vA4OA7KCvQUF08o6VmL1j=kMojVnYsYsN_fBw@mail.gmail.com>
- <e2603558-7b2c-2e5f-e28c-f01782dc4e66@deltatee.com>
- <CAEbi=3d7_xefYaVXEnMJW49Bzdbbmc2+UOwXWrCiBo7YkTAihg@mail.gmail.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <96156909-1453-d487-ff66-a041d67c74d6@deltatee.com>
-Date:   Mon, 12 Aug 2019 09:51:50 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 12 Aug 2019 11:56:08 -0400
+Received: from mail-eopbgr700136.outbound.protection.outlook.com ([40.107.70.136]:39393
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726219AbfHLP4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 11:56:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ioTVZ8tUxzNWpOIdfm/mXTSJb1bn0qOyqLPyu/0+oKh3OyYXSehhcV5Cm4b7valUtYhH9TbWYGuwoREusz13nDrZATI6msRDFvGqeP47cf4YcDm0i77qkKsa+DcqCl6tDf2gZOtDmm8U+yTvV2yzez6ID3hTJ0GYkyEowHswBt8xV0usgUmOYrzTA7o9W2UQz08l00rPygyv61hh19RyL3RtBm8NQKeVnWg/bMg8+bUdW0+8uQvqPUd/rwlvQDWVLHWnefuPT0AazSfNykn6/cRR4seNs06tnnM28KQvVVK9HrbISL9daFaJSkZdTGmkEyasd9rExOoOt4lXCiE26A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RB27NeJ5tG+cRlrAkYIf07bbwnSrdLlZ7zPXg6xmvKw=;
+ b=E3FIexV6IL+aJN8lUSQrJ//+n75wyRTZYxT17X4e9Fo4rBtZ55e15AwV8aQ7VaWm+h0CjwMnH25N151hGma0ABzL7MkqPcKtLa++j1Yqub/Nkdzm+vy/nuyMiH+JWqxhrhDS3WRqAKVGyh4u1Uq9Dk5NmIWKIQi9yFyVF7wIHbGIrhuA/vnRO7vQa/aLd6m7ILDI0aruIgfqRxO4G4Op053chQV8M9zms4vfmM/ivvfM6u7vtkpfCR60muzGhsSUNWe1Vj9SZziMVt9IcUHgQhy7atpruMnpyJMLK8oZ9i2VaVwcqDXjegtv9bCpLodb4KHXCd7mnW/WGDSVLc8iEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RB27NeJ5tG+cRlrAkYIf07bbwnSrdLlZ7zPXg6xmvKw=;
+ b=ijCC3jwmFZh78iz8lGQVbGrcUsIDJyg5e2HhyZmpLqhxbG1vdnd/+A7uFZ38ym7VsIUqSq0fPG26mmCoCH97dSF19lJ79Jhl2qbwuzDuiOv7HJWVUKp7nhQPxsnC5ZomwnE+KfF3QxtNfzFkyIC+ZCRNXUCRIPpTG+6aLASx3Vw=
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
+ DM6PR21MB1338.namprd21.prod.outlook.com (20.179.53.81) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.6; Mon, 12 Aug 2019 15:56:05 +0000
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::257a:6f7f:1126:a61d]) by DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::257a:6f7f:1126:a61d%6]) with mapi id 15.20.2178.006; Mon, 12 Aug 2019
+ 15:56:05 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     "sashal@kernel.org" <sashal@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Thread-Topic: [PATCH v2] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Thread-Index: AQHVTLH3GagQ2bG1NUyV/+P043l1Z6b3rpuAgAABZXA=
+Date:   Mon, 12 Aug 2019 15:56:05 +0000
+Message-ID: <DM6PR21MB1337424D893B60F48F45A289CAD30@DM6PR21MB1337.namprd21.prod.outlook.com>
+References: <1565135484-31351-1-git-send-email-haiyangz@microsoft.com>
+ <20190812153833.GA30794@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20190812153833.GA30794@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-12T15:56:03.3755135Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b79b9147-92f9-4119-8236-67be47ff75cc;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=haiyangz@microsoft.com; 
+x-originating-ip: [96.61.92.94]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1247fec9-e6e6-46a9-f0b2-08d71f3d952f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600158)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR21MB1338;
+x-ms-traffictypediagnostic: DM6PR21MB1338:|DM6PR21MB1338:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM6PR21MB133863259570AE5236FBA976CAD30@DM6PR21MB1338.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 012792EC17
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(136003)(346002)(396003)(376002)(13464003)(199004)(189003)(26005)(256004)(14454004)(229853002)(4326008)(66066001)(10090500001)(54906003)(52536014)(53936002)(6116002)(9686003)(6436002)(3846002)(2906002)(66476007)(66446008)(66556008)(55016002)(64756008)(66946007)(6246003)(76176011)(33656002)(14444005)(6916009)(305945005)(7736002)(76116006)(478600001)(316002)(71200400001)(186003)(7696005)(71190400001)(22452003)(8936002)(81156014)(74316002)(8676002)(99286004)(476003)(25786009)(81166006)(8990500004)(86362001)(11346002)(6506007)(53546011)(5660300002)(446003)(102836004)(10290500003)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1338;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: s4XFq481U9xZ3J+7mpUj83smK+y9cxmROjCoo1Ta2DDoWA3zmj0Hv7HssgzWu1hPlr3BDuPjYdKSvVpKnaTVDGonkOu3EKuPXSlltdwVL7TbvqprpvkZSn+NcmqnA9QUMzR1e8df9HHejnUOXJ7C8DswJjvUs7rozvFpKiKlip29dpROwSCQiyAvnp/bBdCXv5LEtKWofIQERzBRCKGbWHTRTC8jbb5CNwCyhri2yeDrx8Zdko3NPiSmHxAeW1LOqYJhRpi4ZKaUfQJIvejRcGEZ76eQdEqvUaaY7Gi8ZgxAEW9q7CUklkuLyHqrKwgPuTHsoTDp7yBX3M35be6Avq96VFPNRKOL+OHJ5OqeM+GYy3/bXgKCFF0sydFDEl+GFY5EQasM0e+eqdAu7dy29InsOAgKs2ElJDnuovybE3c=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <CAEbi=3d7_xefYaVXEnMJW49Bzdbbmc2+UOwXWrCiBo7YkTAihg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: hch@lst.de, michaeljclark@mac.com, linux-riscv@lists.infradead.org, olof@lixom.net, zong@andestech.com, sbates@raithlin.com, linux-kernel@vger.kernel.org, palmer@sifive.com, andrew@sifive.com, aou@eecs.berkeley.edu, robh@kernel.org, paul.walmsley@sifive.com, greentime.hu@sifive.com, green.hu@gmail.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v4 2/2] RISC-V: Implement sparsemem
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1247fec9-e6e6-46a9-f0b2-08d71f3d952f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 15:56:05.1203
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fOo6anCblGEw8zO/UlBEin47AlovXZnGwZs2zIkQUCDS0E2Km+8hrok5MEdXtisQN1cTv7UTUoxkbQyuQIcOfA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1338
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -68,131 +116,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 2019-08-11 10:01 p.m., Greentime Hu wrote:
-> Hi Logan,
-> 
-> Logan Gunthorpe <logang@deltatee.com> 於 2019年8月10日 週六 上午3:03寫道：
->>
->>
->>
->> On 2019-08-09 11:01 a.m., Greentime Hu wrote:
->>> Hi Logan,
->>>
->>> Logan Gunthorpe <logang@deltatee.com> 於 2019年8月9日 週五 下午11:47寫道：
->>>>
->>>>
->>>>
->>>> On 2019-08-08 10:23 p.m., Greentime Hu wrote:
->>>>> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
->>>>> index 3f12b069af1d..208b3e14ccd8 100644
->>>>> --- a/arch/riscv/Kconfig
->>>>> +++ b/arch/riscv/Kconfig
->>>>> @@ -116,7 +116,8 @@ config PGTABLE_LEVELS
->>>>>         default 2
->>>>>
->>>>>  config HAVE_ARCH_PFN_VALID
->>>>> -       def_bool y
->>>>> +       bool
->>>>> +       default !SPARSEMEM_VMEMMAP
->>>>>
->>>>>  menu "Platform type"
->>>>>
->>>>> diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
->>>>> index 8ddb6c7fedac..6991f7a5a4a7 100644
->>>>> --- a/arch/riscv/include/asm/page.h
->>>>> +++ b/arch/riscv/include/asm/page.h
->>>>> @@ -93,16 +93,20 @@ extern unsigned long min_low_pfn;
->>>>>  #define virt_to_pfn(vaddr)     (phys_to_pfn(__pa(vaddr)))
->>>>>  #define pfn_to_virt(pfn)       (__va(pfn_to_phys(pfn)))
->>>>>
->>>>> +#if !defined(CONFIG_SPARSEMEM_VMEMMAP)
->>>>> +#define pfn_valid(pfn) \
->>>>> +       (((pfn) >= pfn_base) && (((pfn)-pfn_base) < max_mapnr))
->>>>>  #define virt_to_page(vaddr)    (pfn_to_page(virt_to_pfn(vaddr)))
->>>>>  #define page_to_virt(page)     (pfn_to_virt(page_to_pfn(page)))
->>>>> +#else
->>>>> +#define virt_to_page(vaddr)    ((struct page *)((((u64)vaddr -
->>>>> va_pa_offset) / PAGE_SIZE) * sizeof(struct page) + VMEMMAP_START))
->>>>> +#define page_to_virt(pg)       ((void *)(((((u64)pg - VMEMMAP_START) /
->>>>> sizeof(struct page)) * PAGE_SIZE) + va_pa_offset))
->>>>> +#endif
->>>>
->>>> This doesn't make sense to me at all. It should always use pfn_to_page()
->>>> for virt_to_page() and the generic pfn_to_page()/page_to_pfn()
->>>> implementations essentially already do what you are doing in a cleaner
->>>> way. So I'd be really surprised if this does anything at all.
->>>>
->>>
->>> Thank you for point me out that. I just checked the generic
->>> implementation and I should use that one.
->>> Sorry I didn't check the generic one and just implement it again.
->>> I think the only patch we need is the first part to use generic
->>> pfn_valid(). I just tested it and yes it can boot successfully in dts
->>> with hole.
->>>
->>> It will fail in this check ((pfn)-pfn_base) < max_mapnr.
->>
->> Sounds to me like max_mapnr is not set correctly. See the code in
->> setup_bootmem(). Seems like 'mem_size' should be set to the largest
->> memory block, not just the one that contains the kernel...
->>
->>
->>> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
->>> index 3f12b069af1d..208b3e14ccd8 100644
->>> --- a/arch/riscv/Kconfig
->>> +++ b/arch/riscv/Kconfig
->>> @@ -116,7 +116,8 @@ config PGTABLE_LEVELS
->>>         default 2
->>>
->>>  config HAVE_ARCH_PFN_VALID
->>> -       def_bool y
->>> +       bool
->>> +       default !SPARSEMEM_VMEMMAP
->>>
->>>  menu "Platform type"
->>>
->>> diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
->>> index 8ddb6c7fedac..80d28fa1e2eb 100644
->>> --- a/arch/riscv/include/asm/page.h
->>> +++ b/arch/riscv/include/asm/page.h
->>> @@ -100,8 +100,10 @@ extern unsigned long min_low_pfn;
->>>  #define page_to_bus(page)      (page_to_phys(page))
->>>  #define phys_to_page(paddr)    (pfn_to_page(phys_to_pfn(paddr)))
->>>
->>> +#if !defined(CONFIG_SPARSEMEM_VMEMMAP)
->>>  #define pfn_valid(pfn) \
->>>         (((pfn) >= pfn_base) && (((pfn)-pfn_base) < max_mapnr))
->>> +#endif
->>>
->>>  #define ARCH_PFN_OFFSET                (pfn_base)
->>
->>
->> This patch still makes no sense. I'm not sure why we have an arch
->> specific pfn_valid() because it's very similar to the generic one. But
->> my guess is there's a reason for it and it's not doing what it is
->> supposed when you remove it for the sparsemem case.
-> 
-> It will use another pfn_valid() implementation in
-> include/linux/mmzone.h if CONFIG_SPARSEMEM and
-> !CONFIG_HAVE_ARCH_PFN_VALID
-> It will be this one.
-> 
-> static inline int pfn_valid(unsigned long pfn)
-> {
->         if (pfn_to_section_nr(pfn) >= NR_MEM_SECTIONS)
->                 return 0;
->         return valid_section(__nr_to_section(pfn_to_section_nr(pfn)));
-> }
+> -----Original Message-----
+> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Sent: Monday, August 12, 2019 11:39 AM
+> To: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: sashal@kernel.org; bhelgaas@google.com; linux-
+> hyperv@vger.kernel.org; linux-pci@vger.kernel.org; KY Srinivasan
+> <kys@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> olaf@aepfle.de; vkuznets <vkuznets@redhat.com>; linux-
+> kernel@vger.kernel.org
+> Subject: Re: [PATCH v2] PCI: hv: Detect and fix Hyper-V PCI domain number
+> collision
+>=20
+> On Tue, Aug 06, 2019 at 11:52:11PM +0000, Haiyang Zhang wrote:
+> > Currently in Azure cloud, for passthrough devices including GPU, the
+> > host sets the device instance ID's bytes 8 - 15 to a value derived from
+> > the host HWID, which is the same on all devices in a VM. So, the device
+> > instance ID's bytes 8 and 9 provided by the host are no longer unique.
+> >
+> > This can cause device passthrough to VMs to fail because the bytes 8 an=
+d
+> > 9 is used as PCI domain number. So, as recommended by Azure host team,
+> > we now use the bytes 4 and 5 which usually contain unique numbers as PC=
+I
+> > domain. The chance of collision is greatly reduced. In the rare cases o=
+f
+> > collision, we will detect and find another number that is not in use.
+>=20
+> This is not clear at all. Why "finding another number" is fine with
+> this patch while it is not with current kernel code ? Also does this
+> have backward compatibility issues ?
+The bytes 4, 5 have more uniqueness (info entropy) than bytes 8, 9, so we u=
+se
+bytes 4, 5. On older hosts, bytes 4, 5 can also be used -- so it has no bac=
+kward
+compatibility issues.
+=20
+> I do not understand if a collision is a problem or not from the
+> log above.
+Collision will cause the second device with the same domain number fails to=
+ load.
+I will include these info into the patch description.
 
-Ah, ok I see. "page.h" is only included in no-mmu arches. Which explains
-why riscv re-implements that macro. Couple follow up questions then:
-
-* Did you test the memory-with-hole scenario without the sparsemem
-patches? It seems pfn_valid() will be wrong regardless of sparse/flat mem.
-
-* Any chance we can just use the generic pfn_valid() function in all
-cases not just sparsemem? Can you test that?
+>=20
+> > Thanks to Michael Kelley <mikelley@microsoft.com> for proposing this
+> idea.
+>=20
+> Add it as Suggested-by: tag.
+I will add this line.
 
 Thanks,
-
-Logan
+- Haiyang
