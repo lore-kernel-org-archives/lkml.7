@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEB3C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E31C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE10214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F3B214C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:10:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X+pEynRi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nPY4ul+w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfHLUJl (ORCPT
+        id S1727775AbfHLUJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 16:09:41 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36900 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727758AbfHLUJj (ORCPT
+        Mon, 12 Aug 2019 16:09:40 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33791 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727442AbfHLUJg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 16:09:39 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 129so3332740pfa.4;
-        Mon, 12 Aug 2019 13:09:38 -0700 (PDT)
+        Mon, 12 Aug 2019 16:09:36 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n190so9224057pgn.0;
+        Mon, 12 Aug 2019 13:09:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fEQpbh35kmetbOwWrx+8yJXAYsmEnojnvAEv4480YIA=;
-        b=X+pEynRi2mvcOZjNBWuJ/XWBTcZPw8Wnkx+NVbZtAK0OmaiCpAIqGzB0YIY+y6IkQf
-         jNvFwvw7rdsXL/LEmf+t+HVeT4TfCAWukobpEV6BagJNiFZJ9v9W/pMAGuzXhd8zv6m/
-         UwW8NXVUEt3aWPkyU1lWpbqi+/4oq3dE+Ig74tTmgegA+ZM5IVHOcDRWJZR0xd/REMv7
-         OQiD33BmL1qYhoC8qiBSxCA6wnETr21KysxoLxfgb7YnTauNtOXtdvqQ8lhqVGsRCRzW
-         dKdbiikmKcI6xLldRANuGsxhW66t5PNro+gI5S2ZVFbLCzUIkZjslOY/CXrx/LuYDjpc
-         3R3g==
+        bh=Al/DgRidHVqo/g9YdSiEeqYKH6WNvd2YSDNAidLE1ZA=;
+        b=nPY4ul+wXuULh52bDJnhEiH9sAiZvMb5ajFLmzcI1SOrnt0MlbILBY5UlE8F8l4Pkj
+         1/WFaz+82IrsMuFa2jkrfwUqcBpYZxrGOmg64k6soAh00ztHlUh1BkfQ/AlUrOrU7ul+
+         fie1PCYMslcj26JD9I9ayC2IX9+02aoKqVHQMZFvQfLaDQbgJKCtiJHf4BJVKGwAE99/
+         X0JPsyRSxb1zMeljN6jjmq4iCArrekt4CzcmNLVGh/RyJzcUs8JjUVzB+gQD+FV6JMhv
+         kjSl9Bw9PdInwJMYO8ZTdGUyhPTDx66ooXlFegSFuXLEZSgfEZR8jXcYTFQF2liW12Te
+         Wrxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fEQpbh35kmetbOwWrx+8yJXAYsmEnojnvAEv4480YIA=;
-        b=owuaY8FljkmCYgx89D7oWNaLe4tB2rPu7AqupTKU3P5JQ6s+8MllNn03OryVO7S3GR
-         PYQiWndL/5gXE4pBUC4Vbc8nfUXxGeBNQRCwQtlB+ELqQApwsgv213br+RVHh+Y3BhUW
-         UQbHsHNfdmWY9urNHkXgmWxlGupyN87qNMS9bGnSsS9g8mZVf5El0xPdfitZFrupBMgF
-         zbGj3BsD+QgJVLlyjT5j+XRdLvVDmeP6eyU2enLZiiGlPKSr52Jkg9OIygssCLYCY8NW
-         kDaC+FYbglAR53GQTNo9igD0TuZaqrPrCh79qyNAp/KbmY4dXwSvBCvfABPHFkQKPeQE
-         CJSg==
-X-Gm-Message-State: APjAAAVRJfRRyRCzCtvCIsJLqI414oW+s3IjCq2H1Nm/c9Fk2m0OZ0VQ
-        oX/MR2cdockXDPkEABOHsZiL9xa6
-X-Google-Smtp-Source: APXvYqxA1gL+MXZ4IG2JLjwA/6cNQ/lJsRKvitucNa0eGKGYQIz0jr8UIIEH2fzdQQ8BZKq2qLtrBQ==
-X-Received: by 2002:a65:6114:: with SMTP id z20mr32068911pgu.141.1565640577821;
-        Mon, 12 Aug 2019 13:09:37 -0700 (PDT)
+        bh=Al/DgRidHVqo/g9YdSiEeqYKH6WNvd2YSDNAidLE1ZA=;
+        b=IWYjyh6y2wIVH2i0fUiEVicTtigLhwTfM8dcEBQhFKlhyxLwsquUFfE7LAANIxfKwN
+         Ckp3cSYeaAoOG6Cr5W9UcsOQ29uhlyHi76KV/RViw45Crw2B9olkYKHD5ARhs0I0GZm0
+         jD2VdPnlI5ziLkasny/phoWjf8seJBP0BlcPsvKGby7enCuUVIuGgydqvHjpzHBbqwTq
+         TS9ERJNTy5huxaPsxmH/zGQhBOD+xXmy2DQXEmPuJfy5xnglHbNMIVWUeCyZ10tvuTox
+         iD9XFdi45atDljyyjDS8nnE0k1QxSA6kutGhl+/nGp3NN4POagPkTGtpp6ZM8yDmRZrW
+         Ir+Q==
+X-Gm-Message-State: APjAAAULfjXRVimfvYkpT71tZarAnW8mlWOs3eLR7a9oGQclvm1bf/HU
+        LQbY+Xn/v5Bm1hQyLYDtRkRU0MVv
+X-Google-Smtp-Source: APXvYqwNWHDTLHBZCyyK/C6H2ACoxORIKQr5blSl8h7eNNs9y3QLOqiTZIrF52txfoftssM0xnLdQg==
+X-Received: by 2002:a63:2887:: with SMTP id o129mr25132359pgo.179.1565640575365;
+        Mon, 12 Aug 2019 13:09:35 -0700 (PDT)
 Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id n26sm110286451pfa.83.2019.08.12.13.09.36
+        by smtp.gmail.com with ESMTPSA id n26sm110286451pfa.83.2019.08.12.13.09.34
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 13:09:37 -0700 (PDT)
+        Mon, 12 Aug 2019 13:09:34 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-watchdog@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -64,9 +64,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Rick Ramstetter <rick@anteaterllc.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 15/22] watchdog: ziirave_wdt: Fix misleading error message
-Date:   Mon, 12 Aug 2019 13:08:59 -0700
-Message-Id: <20190812200906.31344-16-andrew.smirnov@gmail.com>
+Subject: [PATCH v2 13/22] watchdog: ziirave_wdt: Don't read out more than 'len' firmware bytes
+Date:   Mon, 12 Aug 2019 13:08:57 -0700
+Message-Id: <20190812200906.31344-14-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190812200906.31344-1-andrew.smirnov@gmail.com>
 References: <20190812200906.31344-1-andrew.smirnov@gmail.com>
@@ -77,12 +77,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix misleading error message in ziirave_wdt_init_duration(). Saying
-"unable to set ..." implies that an attempt at communication with
-watchdog device has taken palce and was not successful. In this case,
-however, all it indicates is that no reset pulse duration was
-specified either via kernel parameter or Device Tree. Re-phase the log
-message to be more clear about benign nature of this event.
+We only compare first 'len' bytes of read firmware, so we don't need
+to read more that that.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Chris Healy <cphealy@gmail.com>
@@ -91,22 +87,40 @@ Cc: Rick Ramstetter <rick@anteaterllc.com>
 Cc: linux-watchdog@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/watchdog/ziirave_wdt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/watchdog/ziirave_wdt.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/watchdog/ziirave_wdt.c b/drivers/watchdog/ziirave_wdt.c
-index a3cc936858ad..0c150f3cf408 100644
+index 4b95467bf239..f05095b08016 100644
 --- a/drivers/watchdog/ziirave_wdt.c
 +++ b/drivers/watchdog/ziirave_wdt.c
-@@ -603,7 +603,7 @@ static int ziirave_wdt_init_duration(struct i2c_client *client)
- 						   &reset_duration);
- 		if (ret) {
- 			dev_info(&client->dev,
--				 "Unable to set reset pulse duration, using default\n");
-+			 "No reset pulse duration specified, using default\n");
- 			return 0;
+@@ -318,6 +318,8 @@ static int ziirave_firm_verify(struct watchdog_device *wdd,
+ 	u16 addr;
+ 
+ 	for (rec = (void *)fw->data; rec; rec = ihex_next_binrec(rec)) {
++		const u16 len = be16_to_cpu(rec->len);
++
+ 		addr = (be32_to_cpu(rec->addr) & 0xffff) >> 1;
+ 		if (addr < ZIIRAVE_FIRM_FLASH_MEMORY_START ||
+ 		    addr > ZIIRAVE_FIRM_FLASH_MEMORY_END)
+@@ -331,7 +333,7 @@ static int ziirave_firm_verify(struct watchdog_device *wdd,
+ 			return ret;
  		}
- 	}
+ 
+-		for (i = 0; i < ARRAY_SIZE(data); i++) {
++		for (i = 0; i < len; i++) {
+ 			ret = i2c_smbus_read_byte_data(client,
+ 						ZIIRAVE_CMD_DOWNLOAD_READ_BYTE);
+ 			if (ret < 0) {
+@@ -342,7 +344,7 @@ static int ziirave_firm_verify(struct watchdog_device *wdd,
+ 			data[i] = ret;
+ 		}
+ 
+-		if (memcmp(data, rec->data, be16_to_cpu(rec->len))) {
++		if (memcmp(data, rec->data, len)) {
+ 			dev_err(&client->dev,
+ 				"Firmware mismatch at address 0x%04x\n", addr);
+ 			return -EINVAL;
 -- 
 2.21.0
 
