@@ -2,106 +2,166 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C62C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA7DC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB25A20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB1220665
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:41:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="1Ukepgq5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JT6Sj7wj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727284AbfHLWk6 (ORCPT
+        id S1727324AbfHLWl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 18:40:58 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:44807 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbfHLWk6 (ORCPT
+        Mon, 12 Aug 2019 18:41:26 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36316 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726568AbfHLWl0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 18:40:58 -0400
-Received: by mail-qk1-f193.google.com with SMTP id d79so78164750qke.11
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 15:40:57 -0700 (PDT)
+        Mon, 12 Aug 2019 18:41:26 -0400
+Received: by mail-pf1-f195.google.com with SMTP id r7so50430124pfl.3;
+        Mon, 12 Aug 2019 15:41:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=kdeR2ekazPPacbcNxY/1Vu/Or4DQHYsQYtQCeaE7Fv8=;
-        b=1Ukepgq5x/sRZRBTKuW2bpxHjMqNBl9lA3fZd6ACoiOUlZrodm76pXyqZQHI6GOx+D
-         xbi8W+2Hpek7iJlTtNsJ0n/GY3d0zOO/+hMncALdkrptGAausq8GAz02qlSLFUyGOnSO
-         YlvcdLw19C5ddbsT4NyTYU2Ys9pnHk36jh3IQReKoKYk4E0NuhOsQtW4YkAswNeM+hwN
-         VQ5jcq+D4+praHjSGgxeQNEdusvSTHHhoJudTQrpbNmO6PDHYQwVHDsGqtPCqCxOoq0D
-         Sms3GbZiZCRjwtbV69MHRoIsDh6VqW7czkwAZ7TA/aKeQ3Gm2/2OKK1kdBPY20t8Bp+v
-         6xPQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=CMz7i9qw+sOH5k0dxWaG58ILkYNVc1L40HPXdZwUwoY=;
+        b=JT6Sj7wj9J0P2CanFSptW2tpxN5c3aNuFz/bFRJLsCNHmLBzMnOOxQ3GkBD4Fg4v+z
+         7TcWjaZyQJ1D/adzvGa/s1MMKgL4Bv7O+FKDnhVrcPXxd5if9NyyXG9bL783ozjA/8mm
+         IocUptMXLMRoto3PE6yiIOkXM02tI+ocGOypfqgRT6JSe4kFQJtiSzRXrZIjP4tRCl+V
+         +nOvEgM5u5OjdEL9GxKhVKUDAGQNHysc9NMJddkttfzkwGn9ICs4MbNoZpax+I7DO1xp
+         7Dx8HmJ6JxRZZMOskxW8hXC7BkpXYFAd4X4D+zIxB7wkvJasKByrORCuEwl3aDAAU6B3
+         oUNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=kdeR2ekazPPacbcNxY/1Vu/Or4DQHYsQYtQCeaE7Fv8=;
-        b=Q0HDMGdfgSqu5BAWi9McHcIrZ9mWWFocE59myjPJIhvvBGM1D6Vqxb78dM4ZLvjEYd
-         4DPAx1h98YaKe6H5neujT0ZYHEoesNepOUvdQaqdSQmtcX1Y3iC1mnROh/SsMMBmqwgC
-         2+Y5paRR+A0mmOCrdXCPrxSZk6Osab0+0togQB8hSK/0er7TDPho23ay+DYUl5Stmat9
-         GHtT405utblruoJpI1Kbu1w1SWG04mwbz7haa0c2KtIeS2R/efF6/rLldD+/nFXVX4rx
-         zh9lJsqY7brCrLqDedLDbbDdOG51m15LbFv2/3XpvtTBb79LNgp8Svt01qlSsjtGvDGp
-         Qnmw==
-X-Gm-Message-State: APjAAAVcvceg6CmowUaIuxcLrL0pMBsOm9nq5uvseoe0pFx9hFJ1D9YF
-        73FiNjJP0Sj7B27/uNcs+8rzvw==
-X-Google-Smtp-Source: APXvYqyxtPM7GqksDlKwbnRQDvRzu7ixT+BoGcvf6Isa5kkNd+JSjdxb275tOajGZo7sCTYRRLzmuQ==
-X-Received: by 2002:a37:b982:: with SMTP id j124mr2940613qkf.251.1565649657128;
-        Mon, 12 Aug 2019 15:40:57 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id p23sm47935782qke.44.2019.08.12.15.40.55
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CMz7i9qw+sOH5k0dxWaG58ILkYNVc1L40HPXdZwUwoY=;
+        b=bE2wKTHoFNJ75veHtnp4Ap2Wgu3p2/RxHWu/ubHu9dgGMORLv5gmAirkGrSurwTzXP
+         VtYcChu2Wa6E4sj4W4S+JRAAo/a1wSJpzIO2bPqiVteBr5IU9aL3ojyDpkqI26WAtN1i
+         oY9tFT4MHurxVK+ohK3G8hTszBYADLw3JWkLoLp9OuIzRkubkTqXsVgOSbtgL1aj1tWb
+         n/PuxIrubDea8IEkTmctl5iW3MS8ScKpuI9cKpPWVdTU4qYhFgHjK4B4NF7UcPUqM2xe
+         AviablnpZyV6RbURDRIyJ/i2krqhVQezFwO2evhUHguDchIlL5xBi15RU8mycayUojOV
+         cuRg==
+X-Gm-Message-State: APjAAAWQSClc4Ql4AiJ1jvYd1hcR4RxCBXrBxOLZSDZSW3Vmpmljz4aR
+        YFVeJqC36a5I7j6o4+DHWlU=
+X-Google-Smtp-Source: APXvYqzPGgD8yq7ImIrKtk8x8BMHHumX1bpuHOOoNv6ukNJWAzfAaf/wxd88FUW1vPOkDz2Vcn4bKA==
+X-Received: by 2002:a63:3ec7:: with SMTP id l190mr32754296pga.334.1565649685155;
+        Mon, 12 Aug 2019 15:41:25 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id w1sm584147pjt.30.2019.08.12.15.41.24
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 15:40:57 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 15:40:47 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     syzbot <syzbot+193e29e9387ea5837f1d@syzkaller.appspotmail.com>
-Cc:     arvid.brodin@alten.se, davem@davemloft.net, dhowells@redhat.com,
-        dirk.vandermerwe@netronome.com, edumazet@google.com,
-        jiri@mellanox.com, john.hurley@netronome.com,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, oss-drivers@netronome.com,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: BUG: corrupted list in rxrpc_local_processor
-Message-ID: <20190812154047.25d60679@cakuba.netronome.com>
-In-Reply-To: <000000000000ac9048058ff3176e@google.com>
-References: <000000000000492086058fad2979@google.com>
-        <000000000000ac9048058ff3176e@google.com>
-Organization: Netronome Systems, Ltd.
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 12 Aug 2019 15:41:24 -0700 (PDT)
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com
+Cc:     linux-mmc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vdumpa@nvidia.com
+Subject: [PATCH] mmc: tegra: Implement enable_dma() to set dma_mask
+Date:   Mon, 12 Aug 2019 15:42:17 -0700
+Message-Id: <20190812224217.12423-1-nicoleotsuka@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 12 Aug 2019 15:32:00 -0700, syzbot wrote:
-> syzbot has bisected this bug to:
-> 
-> commit 427545b3046326cd7b4dbbd7869f08737df2ad2b
-> Author: Jakub Kicinski <jakub.kicinski@netronome.com>
-> Date:   Tue Jul 9 02:53:12 2019 +0000
-> 
->      nfp: tls: count TSO segments separately for the TLS offload
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11d04eee600000
-> start commit:   125b7e09 net: tc35815: Explicitly check NET_IP_ALIGN is no..
-> git tree:       net
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=13d04eee600000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15d04eee600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=a4c9e9f08e9e8960
-> dashboard link: https://syzkaller.appspot.com/bug?extid=193e29e9387ea5837f1d
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=159d4eba600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16ba194a600000
-> 
-> Reported-by: syzbot+193e29e9387ea5837f1d@syzkaller.appspotmail.com
-> Fixes: 427545b30463 ("nfp: tls: count TSO segments separately for the TLS  
-> offload")
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Commit 68481a7e1c84 ("mmc: tegra: Mark 64 bit dma broken on Tegra186")
+added a SDHCI_QUIRK2_BROKEN_64_BIT_DMA flag to let sdhci core fallback
+to 32-bit DMA so as to fit the 40-bit addressing on Tegra186. However,
+there's a common way, being mentioned in sdhci.c file, to set dma_mask
+via enable_dma() callback in the device driver directly.
 
-Is there a way perhaps to tell syzbot to discard clearly bogus
-bisection results?
+So this patch implements an enable_dma() callback in the sdhci-tegra,
+in order to set an accurate DMA_BIT_MASK, other than 32-bit or 64-bit.
+
+Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+---
+ drivers/mmc/host/sdhci-tegra.c | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+index f4d4761cf20a..23289adb78d6 100644
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -16,6 +16,7 @@
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/reset.h>
++#include <linux/dma-mapping.h>
+ #include <linux/mmc/card.h>
+ #include <linux/mmc/host.h>
+ #include <linux/mmc/mmc.h>
+@@ -104,6 +105,7 @@
+ 
+ struct sdhci_tegra_soc_data {
+ 	const struct sdhci_pltfm_data *pdata;
++	u64 dma_bit_mask;
+ 	u32 nvquirks;
+ 	u8 min_tap_delay;
+ 	u8 max_tap_delay;
+@@ -749,6 +751,19 @@ static void tegra_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+ 	}
+ }
+ 
++static int tegra_sdhci_enable_dma(struct sdhci_host *host)
++{
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
++	const struct sdhci_tegra_soc_data *soc_data = tegra_host->soc_data;
++	struct device *dev = mmc_dev(host->mmc);
++
++	if (soc_data->dma_bit_mask)
++		return dma_set_mask_and_coherent(dev, soc_data->dma_bit_mask);
++
++	return 0;
++}
++
+ static unsigned int tegra_sdhci_get_max_clock(struct sdhci_host *host)
+ {
+ 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+@@ -1370,6 +1385,7 @@ static const struct sdhci_ops tegra186_sdhci_ops = {
+ 	.write_l    = tegra_sdhci_writel,
+ 	.set_clock  = tegra_sdhci_set_clock,
+ 	.set_bus_width = sdhci_set_bus_width,
++	.enable_dma = tegra_sdhci_enable_dma,
+ 	.reset      = tegra_sdhci_reset,
+ 	.set_uhs_signaling = tegra_sdhci_set_uhs_signaling,
+ 	.voltage_switch = tegra_sdhci_voltage_switch,
+@@ -1384,20 +1400,13 @@ static const struct sdhci_pltfm_data sdhci_tegra186_pdata = {
+ 		  SDHCI_QUIRK_NO_HISPD_BIT |
+ 		  SDHCI_QUIRK_BROKEN_ADMA_ZEROLEN_DESC |
+ 		  SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
+-	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+-		   /* SDHCI controllers on Tegra186 support 40-bit addressing.
+-		    * IOVA addresses are 48-bit wide on Tegra186.
+-		    * With 64-bit dma mask used for SDHCI, accesses can
+-		    * be broken. Disable 64-bit dma, which would fall back
+-		    * to 32-bit dma mask. Ideally 40-bit dma mask would work,
+-		    * But it is not supported as of now.
+-		    */
+-		   SDHCI_QUIRK2_BROKEN_64_BIT_DMA,
++	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+ 	.ops  = &tegra186_sdhci_ops,
+ };
+ 
+ static const struct sdhci_tegra_soc_data soc_data_tegra186 = {
+ 	.pdata = &sdhci_tegra186_pdata,
++	.dma_bit_mask = DMA_BIT_MASK(40),
+ 	.nvquirks = NVQUIRK_NEEDS_PAD_CONTROL |
+ 		    NVQUIRK_HAS_PADCALIB |
+ 		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
+@@ -1410,6 +1419,7 @@ static const struct sdhci_tegra_soc_data soc_data_tegra186 = {
+ 
+ static const struct sdhci_tegra_soc_data soc_data_tegra194 = {
+ 	.pdata = &sdhci_tegra186_pdata,
++	.dma_bit_mask = DMA_BIT_MASK(39),
+ 	.nvquirks = NVQUIRK_NEEDS_PAD_CONTROL |
+ 		    NVQUIRK_HAS_PADCALIB |
+ 		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
+-- 
+2.17.1
+
