@@ -2,105 +2,127 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98213C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35149C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68F8420679
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 065B720679
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:59:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="qvbz5QY8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ox3zecLL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbfHLM6M (ORCPT
+        id S1728656AbfHLM7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 08:58:12 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:42157 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbfHLM6M (ORCPT
+        Mon, 12 Aug 2019 08:59:55 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44458 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfHLM7z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 08:58:12 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7CCw4rY913410
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 12 Aug 2019 05:58:04 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7CCw4rY913410
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1565614684;
-        bh=/vWIPuqqcmV4ncD4F+mnVPU92vCEwG4t02RLeeViSfU=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=qvbz5QY8ds08x0AekT7VQjP7fQrSICH4nQzgvjeFR1+mShT0Mi4K9M+X4SJ7Ks+Bb
-         wBeBEuqbBaM+fMUjncxZZdLm9bFLM3du3zbhqnKMoKCux7gDSAimiryqwuSXyswajT
-         aQAZyDGSkY5dLto+/t7G6apbDyzakb8Cg/5ibzFoU6B7C+tvEMMLvheilpElwf95Za
-         cvK24cwmfi4YhJOKB6x0N5ygY+lTPeWiix07JNg6uJiAHCSQoQsiUPs6dAGEg//WYZ
-         0Vrqigo9xocKAPL+T65ZhYEnRQuILUF/P84Z/BsZdZZpF4+ALaBLGoYQXK1Mc0uZDg
-         KM7aZTW+A06jQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7CCw4MN913407;
-        Mon, 12 Aug 2019 05:58:04 -0700
-Date:   Mon, 12 Aug 2019 05:58:04 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Vlastimil Babka <tipbot@zytor.com>
-Message-ID: <tip-2e1da13fba4cb529c2c8c1d9f657690d1e853d7d@git.kernel.org>
-Cc:     vbabka@suse.cz, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, hpa@zytor.com
-Reply-To: vbabka@suse.cz, tglx@linutronix.de, mingo@kernel.org,
-          linux-kernel@vger.kernel.org, hpa@zytor.com
-In-Reply-To: <20190807130258.22185-1-vbabka@suse.cz>
-References: <20190807130258.22185-1-vbabka@suse.cz>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/mm] x86/kconfig: Remove X86_DIRECT_GBPAGES dependency on
- !DEBUG_PAGEALLOC
-Git-Commit-ID: 2e1da13fba4cb529c2c8c1d9f657690d1e853d7d
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 12 Aug 2019 08:59:55 -0400
+Received: by mail-lj1-f193.google.com with SMTP id e24so1504856ljg.11
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 05:59:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F2Nq/zcAHmKnyWJZUFugKDFlDxB+1xeCPHyjsiZ4S/U=;
+        b=Ox3zecLLBuTUitWMEKguTdU+91neVQRMhUjF6XXwufTANvpF5wwbvg6lM78G+Xci5J
+         G1tchLUxkpKCj/Y26M92mAcJRJSu9KaiN6smELAF0Q2nUpe6XEUap8WZ//TMKWUR5DwT
+         +cw4rg1DGLeah4TpC2+nEkyq+6Lc9hakaFV2uI45V9ZqAUP4v+f2lR7ah2r6nDBtXpUQ
+         xfIOmb52HehnFaFM9Gs84NzOw3jrumOVjQfcQqZEbDFNgjifAG20QNgIOeP5JcEblyYv
+         tPkUqHQ9MhstecI/OjGLmqhkAPbiLgfcSui740aqrmvu8m5+P1FZf4GVGKLUQUzJyIVM
+         w5cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F2Nq/zcAHmKnyWJZUFugKDFlDxB+1xeCPHyjsiZ4S/U=;
+        b=lyIb1ddV2tJYsR+Q+RQZb8W9+FwgyCmUKvFY5fyl75/FV7x9PFdx9kqhM6hnnIQptt
+         gp5F3IzSV1HIIb+2AIInssAGuEu48e0ZdwMXkDlS0RsNXEWE2WOXoI++7Zy1buwid0fg
+         a1ewgrOqWhTSgptfugzDWu+ydMXb8Xv0DMNxCQOmhzpjrtvxQzgyJFIpdFnlBORxjKuh
+         PNg+eGjSyHUH+4XR5eHr2k3rbS2r1tfIloJo+LG6YNUie1jGbwcRef2e2JdPUmkaBmpw
+         Rxqnt2+o7VsQ1W8qPNdNemb+7U5znqxhJxoVDUXx0/lfRnQ6F7vniS+brEyFuDZc93/t
+         /n0g==
+X-Gm-Message-State: APjAAAVRLhJF+g/bywcG0cy2aLJGn7TI+L2uo7lyGGP7+k7k2VK+NQ4m
+        B0vNpnz80gwdUrpDVjiGo0oBPE1Hqqc3WMBRbf4=
+X-Google-Smtp-Source: APXvYqxwe25Z+YQzEjGWC7ePKovdbzR8uhCgFxhBz9fGHIchB8hh/uLGhqKsLm+UkHO3cKBtu/UqoezbFItlEudWmEk=
+X-Received: by 2002:a2e:9b83:: with SMTP id z3mr18122610lji.84.1565614793893;
+ Mon, 12 Aug 2019 05:59:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <CAD8Lp448i7jOk9C5NJtC2wHMaGuRLD4pxVqK17YqRCuMVXhsOA@mail.gmail.com>
+ <CAERHkruxfBc8DqNUr=fbYuQWrXrHC7cK6HnVR3xp0iLA9QtxiQ@mail.gmail.com>
+ <alpine.DEB.2.21.1908010931550.1788@nanos.tec.linutronix.de>
+ <CAERHkrtaVAQHDU1cj2_GLL59LPjp7E=3X0Zna0spfFB=Ve5__w@mail.gmail.com>
+ <alpine.DEB.2.21.1908011011250.1788@nanos.tec.linutronix.de>
+ <81666b28-d029-56c3-8978-90abc219d1b7@linux.intel.com> <alpine.DEB.2.21.1908011054210.1965@nanos.tec.linutronix.de>
+ <3d14b0cc-3cca-1874-3521-4ee2ec52141d@amd.com> <alpine.DEB.2.21.1908082235590.2882@nanos.tec.linutronix.de>
+ <5bf28ba4-b7c1-51de-88ae-feebae2a28db@amd.com> <alpine.DEB.2.21.1908082306220.2882@nanos.tec.linutronix.de>
+ <75e59ac6-5165-bd0a-aec9-be16d662ece9@amd.com> <alpine.DEB.2.21.1908091443030.21433@nanos.tec.linutronix.de>
+ <1803ad97-74f4-28c6-58c8-c52b3d1e5b1f@linux.intel.com> <alpine.DEB.2.21.1908121423040.7324@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1908121423040.7324@nanos.tec.linutronix.de>
+From:   Aubrey Li <aubrey.intel@gmail.com>
+Date:   Mon, 12 Aug 2019 20:59:42 +0800
+Message-ID: <CAERHkrttXdZhZHZs+JasZU6a2kEb1vc6KB25+LbpQycenJZpOg@mail.gmail.com>
+Subject: Re: [PATCH] x86/apic: Handle missing global clockevent gracefully
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Daniel Drake <drake@endlessm.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Endless Linux Upstreaming Team <linux@endlessm.com>,
+        Jiri Slaby <jslaby@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  2e1da13fba4cb529c2c8c1d9f657690d1e853d7d
-Gitweb:     https://git.kernel.org/tip/2e1da13fba4cb529c2c8c1d9f657690d1e853d7d
-Author:     Vlastimil Babka <vbabka@suse.cz>
-AuthorDate: Wed, 7 Aug 2019 15:02:58 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Mon, 12 Aug 2019 14:52:30 +0200
+On Mon, Aug 12, 2019 at 8:25 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Mon, 12 Aug 2019, Li, Aubrey wrote:
+> > On 2019/8/9 20:54, Thomas Gleixner wrote:
+> > > +   local_irq_disable();
+> > >     /*
+> > >      * Setup the APIC counter to maximum. There is no way the lapic
+> > >      * can underflow in the 100ms detection time frame
+> > >      */
+> > >     __setup_APIC_LVTT(0xffffffff, 0, 0);
+> > >
+> > > -   /* Let the interrupts run */
+> > > -   local_irq_enable();
+> > > +   /*
+> > > +    * Methods to terminate the calibration loop:
+> > > +    *  1) Global clockevent if available (jiffies)
+> > > +    *  2) TSC if available and frequency is known
+> > > +    */
+> > > +   jif_start = READ_ONCE(jiffies);
+> > > +
+> > > +   if (tsc_khz) {
+> > > +           tsc_start = rdtsc();
+> > > +           tsc_perj = div_u64((u64)tsc_khz * 1000, HZ);
+> > > +   }
+> > > +
+> > > +   while (lapic_cal_loops <= LAPIC_CAL_LOOPS) {
+> >
+> > Is this loop still meaningful, can we just invoke the handler twice
+> > before and after the tick?
+>
+> And that solves what?
+>
 
-x86/kconfig: Remove X86_DIRECT_GBPAGES dependency on !DEBUG_PAGEALLOC
+I meant, can we do this one time?
+- lapic_cal_t1 = read APIC counter
+- /* Wait for a tick to elapse */
+- lapic_cal_t2 = read APIC counter
 
-These days CONFIG_DEBUG_PAGEALLOC just compiles in the code that has to be
-enabled on boot time, or with an extra config option, and only then are the
-large page based direct mappings disabled.
+I'm not clear why we still need this loop, to use the
+existing lapic_cal_handler()?
 
-Therefore remove the config dependency, allowing 1GB direct mappings with
-debug_pagealloc compiled in but not enabled.
-
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190807130258.22185-1-vbabka@suse.cz
----
- arch/x86/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 222855cc0158..58eae28c3dd6 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1503,7 +1503,7 @@ config X86_5LEVEL
- 
- config X86_DIRECT_GBPAGES
- 	def_bool y
--	depends on X86_64 && !DEBUG_PAGEALLOC
-+	depends on X86_64
- 	---help---
- 	  Certain kernel features effectively disable kernel
- 	  linear 1 GB mappings (even if the CPU otherwise
+Thanks,
+-Aubrey
