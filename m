@@ -6,103 +6,156 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACF4C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76178C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 249FA2070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F34D2070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 06:38:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfHLGi1 (ORCPT
+        id S1726909AbfHLGir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 02:38:27 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:59767 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbfHLGi1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 02:38:27 -0400
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1hx3yJ-0005o4-HU; Mon, 12 Aug 2019 08:38:23 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <sha@pengutronix.de>)
-        id 1hx3yI-0001gf-KU; Mon, 12 Aug 2019 08:38:22 +0200
-Date:   Mon, 12 Aug 2019 08:38:22 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Biwen Li <biwen.li@nxp.com>
-Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: Re: [EXT] Re: i2c: imx: support slave mode for imx I2C driver
-Message-ID: <20190812063822.7odhnj5ueqjam3g6@pengutronix.de>
-References: <20190808035343.34120-1-biwen.li@nxp.com>
- <20190808141814.wr4hlmbaek6p7dy2@pengutronix.de>
- <DB7PR04MB4490F2C2C4B69F0F011420C98FD60@DB7PR04MB4490.eurprd04.prod.outlook.com>
+        Mon, 12 Aug 2019 02:38:47 -0400
+Received: from mga11.intel.com ([192.55.52.93]:62393 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725822AbfHLGiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 02:38:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Aug 2019 23:38:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,376,1559545200"; 
+   d="scan'208";a="193891549"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
+  by fmsmga001.fm.intel.com with ESMTP; 11 Aug 2019 23:38:41 -0700
+Subject: Re: [PATCH v4 1/2] perf machine: Support arch's specific kernel start
+ address
+To:     Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        David Miller <davem@davemloft.net>,
+        Milian Wolff <milian.wolff@kdab.com>,
+        Donald Yandt <donald.yandt@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Wei Li <liwei391@huawei.com>, Mark Drayton <mbd@fb.com>,
+        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+References: <20190810072135.27072-1-leo.yan@linaro.org>
+ <20190810072135.27072-2-leo.yan@linaro.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <c1818f6f-37df-6971-fddc-6663e5b6ff95@intel.com>
+Date:   Mon, 12 Aug 2019 09:37:33 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB7PR04MB4490F2C2C4B69F0F011420C98FD60@DB7PR04MB4490.eurprd04.prod.outlook.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:36:37 up 35 days, 12:46, 41 users,  load average: 0.19, 0.15,
- 0.11
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190810072135.27072-2-leo.yan@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 04:04:45AM +0000, Biwen Li wrote:
-> > 
-> > Hi,
-> > 
-> > On Thu, Aug 08, 2019 at 11:53:43AM +0800, Biwen Li wrote:
-> > > The patch supports slave mode for imx I2C driver
-> > >
-> > > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > > ---
-> > >  drivers/i2c/busses/i2c-imx.c | 199
-> > > ++++++++++++++++++++++++++++++++---
-> > >  1 file changed, 185 insertions(+), 14 deletions(-)
-> > >
-> > > diff --git a/drivers/i2c/busses/i2c-imx.c
-> > > b/drivers/i2c/busses/i2c-imx.c index b1b8b938d7f4..f7583a9fa56f 100644
-> > > --- a/drivers/i2c/busses/i2c-imx.c
-> > > +++ b/drivers/i2c/busses/i2c-imx.c
-> > > @@ -202,6 +202,9 @@ struct imx_i2c_struct {
-> > >       struct pinctrl_state *pinctrl_pins_gpio;
-> > >
-> > >       struct imx_i2c_dma      *dma;
-> > > +#if IS_ENABLED(CONFIG_I2C_SLAVE)
-> > > +     struct i2c_client               *slave;
-> > > +#endif /* CONFIG_I2C_SLAVE */
-> > 
-> > Other drivers just do a "select I2C_SLAVE" in Kconfig to get rid of these #ifs. We
-> > should do the same.
-> Hi sascha, I don't know your meaning, could you let it clearer?
+On 10/08/19 10:21 AM, Leo Yan wrote:
+> machine__get_kernel_start() gives out the kernel start address; some
+> architectures need to tweak the start address so that can reflect the
+> kernel start address correctly.  This is not only for x86_64 arch, but
+> it is also required by other architectures, e.g. arm/arm64 needs to
+> tweak the kernel start address so can include the kernel memory regions
+> which are used before the '_stext' symbol.
+> 
+> This patch refactors machine__get_kernel_start() by adding a weak
+> arch__fix_kernel_text_start(), any architecture can implement it to
+> tweak its specific start address; this also allows the arch specific
+> code to be placed into 'arch' folder.
+> 
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  tools/perf/arch/x86/util/machine.c | 10 ++++++++++
+>  tools/perf/util/machine.c          | 13 +++++++------
+>  tools/perf/util/machine.h          |  2 ++
+>  3 files changed, 19 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/perf/arch/x86/util/machine.c b/tools/perf/arch/x86/util/machine.c
+> index 1e9ec783b9a1..9f012131534a 100644
+> --- a/tools/perf/arch/x86/util/machine.c
+> +++ b/tools/perf/arch/x86/util/machine.c
+> @@ -101,4 +101,14 @@ int machine__create_extra_kernel_maps(struct machine *machine,
+>  	return ret;
+>  }
+>  
+> +void arch__fix_kernel_text_start(u64 *start)
+> +{
+> +	/*
+> +	 * On x86_64, PTI entry trampolines are less than the
+> +	 * start of kernel text, but still above 2^63. So leave
+> +	 * kernel_start = 1ULL << 63 for x86_64.
+> +	 */
+> +	*start = 1ULL << 63;
+> +}
 
-Other drivers have "select I2C_SLAVE" in Kconfig, so they do not need
-any #ifdef CONFIG_I2C_SLAVE as this is always true.
+That is needed for reporting x86 data on any arch i.e. it is not specific to
+the compile-time architecture, it is specific to the perf.data file
+architecture, which is what machine__is() compares. So, this looks wrong.
 
-Sascha
+> +
+>  #endif
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index f6ee7fbad3e4..603518835692 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -2671,6 +2671,10 @@ int machine__nr_cpus_avail(struct machine *machine)
+>  	return machine ? perf_env__nr_cpus_avail(machine->env) : 0;
+>  }
+>  
+> +void __weak arch__fix_kernel_text_start(u64 *start __maybe_unused)
+> +{
+> +}
+> +
+>  int machine__get_kernel_start(struct machine *machine)
+>  {
+>  	struct map *map = machine__kernel_map(machine);
+> @@ -2687,14 +2691,11 @@ int machine__get_kernel_start(struct machine *machine)
+>  	machine->kernel_start = 1ULL << 63;
+>  	if (map) {
+>  		err = map__load(map);
+> -		/*
+> -		 * On x86_64, PTI entry trampolines are less than the
+> -		 * start of kernel text, but still above 2^63. So leave
+> -		 * kernel_start = 1ULL << 63 for x86_64.
+> -		 */
+> -		if (!err && !machine__is(machine, "x86_64"))
+> +		if (!err)
+>  			machine->kernel_start = map->start;
+>  	}
+> +
+> +	arch__fix_kernel_text_start(&machine->kernel_start);
+>  	return err;
+>  }
+>  
+> diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+> index ef803f08ae12..9cb459f4bfbc 100644
+> --- a/tools/perf/util/machine.h
+> +++ b/tools/perf/util/machine.h
+> @@ -278,6 +278,8 @@ void machine__get_kallsyms_filename(struct machine *machine, char *buf,
+>  int machine__create_extra_kernel_maps(struct machine *machine,
+>  				      struct dso *kernel);
+>  
+> +void arch__fix_kernel_text_start(u64 *start);
+> +
+>  /* Kernel-space maps for symbols that are outside the main kernel map and module maps */
+>  struct extra_kernel_map {
+>  	u64 start;
+> 
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
