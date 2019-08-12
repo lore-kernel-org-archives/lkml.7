@@ -2,127 +2,114 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54917C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7F6C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB3C206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D839206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:14:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uy79aJTk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfHLIOu (ORCPT
+        id S1727117AbfHLIOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 04:14:50 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:43401 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbfHLIOu (ORCPT
+        Mon, 12 Aug 2019 04:14:53 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33505 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727077AbfHLIOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 04:14:50 -0400
-X-Originating-IP: 86.250.200.211
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 6446E20011;
-        Mon, 12 Aug 2019 08:14:46 +0000 (UTC)
-Date:   Mon, 12 Aug 2019 10:14:45 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Jernej Skrabec <jernej.skrabec@gmail.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [linux-sunxi] [PATCH v8 0/4] Add support for Orange Pi 3
-Message-ID: <20190812081445.kfsbikfrt3pmsh6d@flea>
-References: <20190806155744.10263-1-megous@megous.com>
- <2218280.0sI6yjypBf@jernej-laptop>
- <CAGb2v67JVG2rhOdUwBmfsO0+RYb4DNOPmUo=Q_UhL3N+niLiEg@mail.gmail.com>
+        Mon, 12 Aug 2019 04:14:52 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n9so103882000wru.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 01:14:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=qEF5FXIF7WGBf6aJazFjpcACOgco/DNFUKkyRA8p7dM=;
+        b=Uy79aJTkTjamb+Vu1pzYBjsU9r5Qzghk+FQaDMW1XYZ3n6lIdPX7k1To3q3htFHTR6
+         4sB5/KqTjpydFvhjfW0DdzS/uwZPMr88jd/uf4G9NpkHCRATL4WxpUxX79t7z+mAdeFA
+         W5wB66YET1eytyP9Xn0qJrN3s9SALUhdQuYm62giJKC2LYgCoaDYPdRrCi3VRPeiWudh
+         oqv1mnnGFlrUpBj5n0uSjZkdN+6DzpRVirXbzwqra50yrl4nzbQIreDNP/kh3zQ6BLFU
+         OlD16xo5CnIiIoJaGv8ASnJ9wQFBcwIGX3ZWX9kV92Rxs1Pc2XcUf8E4YA/VjkLhI5WL
+         rbzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=qEF5FXIF7WGBf6aJazFjpcACOgco/DNFUKkyRA8p7dM=;
+        b=DgWSx+fkxmVE3Gl1BvMMfPhBuieHJKtEkF506zuqNdtcrnaag/z5jcNsO4w7uahSK+
+         3qc+sBFZJk2uXc4PPWflLWbGO6fHYQ2eyoe2f6qZzuTErX4vVrLAFeK2bxN2RdNoRdMy
+         5qGUp2uBVDul2M47XPjSJUjDBlOAmOjh8Ggn6l0JRfVROKtg7UjETLnR8z4fL6vDLtSw
+         1Uu3XRWYoKJRE7tGVUVcEmCIg8N6HZLJ+i+OGW3qeWwsWSRyDzD0O7G4DrAl3TzyIn1e
+         818CNU6UfAAXNtTUq/sGvkSsO515y8d5ipF6r7vAXIfOAdDuxW0g26yue7L7gv47JDNA
+         MHKA==
+X-Gm-Message-State: APjAAAWLYoWIcKBIi7JDWSWq3ZMMbhAdiD0nVzwCbo6LHEsZRiMtWRum
+        HMUi0Fk+r0i47qfktrVafbuZgP6f6x4=
+X-Google-Smtp-Source: APXvYqwPJFnjS2XTDyp7EXOHWGcmXMZXQjXOwzyeo8HVPNvbhSJk2Dflgi3oKdZg/bNBPvjtmcGX0Q==
+X-Received: by 2002:a5d:4e82:: with SMTP id e2mr34014823wru.149.1565597690638;
+        Mon, 12 Aug 2019 01:14:50 -0700 (PDT)
+Received: from dell ([2.27.35.255])
+        by smtp.gmail.com with ESMTPSA id r4sm69876247wrq.82.2019.08.12.01.14.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 12 Aug 2019 01:14:49 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 09:14:48 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] mfd: omap-usb-host: Mark expected switch fall-throughs
+Message-ID: <20190812081448.GJ4594@dell>
+References: <20190728235858.GA23755@embeddedor>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wnuh5gs25vfqywb6"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAGb2v67JVG2rhOdUwBmfsO0+RYb4DNOPmUo=Q_UhL3N+niLiEg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190728235858.GA23755@embeddedor>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 28 Jul 2019, Gustavo A. R. Silva wrote:
 
---wnuh5gs25vfqywb6
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Mark switch cases where we are expecting to fall through.
+> 
+> This patch fixes the following warnings:
+> 
+> drivers/mfd/omap-usb-host.c: In function 'usbhs_runtime_resume':
+> drivers/mfd/omap-usb-host.c:303:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>     if (!IS_ERR(omap->hsic480m_clk[i])) {
+>        ^
+> drivers/mfd/omap-usb-host.c:313:3: note: here
+>    case OMAP_EHCI_PORT_MODE_TLL:
+>    ^~~~
+> drivers/mfd/omap-usb-host.c: In function 'usbhs_runtime_suspend':
+> drivers/mfd/omap-usb-host.c:345:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>     if (!IS_ERR(omap->hsic480m_clk[i]))
+>        ^
+> drivers/mfd/omap-usb-host.c:349:3: note: here
+>    case OMAP_EHCI_PORT_MODE_TLL:
+>    ^~~~
+> 
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/mfd/omap-usb-host.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-On Mon, Aug 12, 2019 at 03:54:03PM +0800, Chen-Yu Tsai wrote:
-> On Mon, Aug 12, 2019 at 3:45 PM Jernej =C5=A0krabec <jernej.skrabec@gmail=
-=2Ecom> wrote:
-> >
-> > Dne torek, 06. avgust 2019 ob 17:57:39 CEST je megous@megous.com napisa=
-l(a):
-> > > From: Ondrej Jirman <megous@megous.com>
-> > >
-> > > This series implements support for Xunlong Orange Pi 3 board. There
-> > > are only a few patches remaining.
-> > >
-> > > - ethernet support - just a DT change (patch 1)
-> > > - HDMI support (patches 2-4)
-> > >
-> > > For some people, ethernet doesn't work after reboot because u-boot do=
-esn't
-> > > support AXP805 PMIC, and will not turn off the etherent PHY regulator=
-s.
-> > > So the regulator controlled by gpio will be shut down, but the other =
-one
-> > > controlled by the AXP PMIC will not.
-> > >
-> > > This is a problem only when running with a builtin driver. This needs
-> > > to be fixed in u-boot.
-> > >
-> > >
-> > > Please take a look.
-> >
-> > Is there anything missing? It would be nice to get this in 5.4. There i=
-s a lot
-> > of H6 boards which needs DDC bus enable mechanism (part of H6 reference
-> > design), including Beelink GS1 which already has HDMI node in mainline =
-kernel
-> > DT, but due to disabled DDC lines works only with 1024x768 (fallback
-> > resolution in DRM core).
->
-> I have a few minor comments about patch 1.
->
-> I think the HDMI bits are good, but I don't have maintainership / commit
-> permissions for drm-misc, so I'll have to wait until someone applies patc=
-hes
-> 2 and 3 before I apply patch 4.
+Applied, thanks.
 
-I've applied 2,3 and 4
-
-Thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---wnuh5gs25vfqywb6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVEf9QAKCRDj7w1vZxhR
-xXlgAP9MFKL3iPUwZUiy1/l5hoQrktuJFTIedDN9ko3r/H6TDAD/RZg3u4WBh6O3
-tteR/L/slzyHzMHsyD72abKseY8/IQE=
-=i2m2
------END PGP SIGNATURE-----
-
---wnuh5gs25vfqywb6--
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
