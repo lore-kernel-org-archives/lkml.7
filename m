@@ -2,171 +2,230 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7187C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B98BC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E1BD21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30F8620842
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:09:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rM4BK921"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S8w048S1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfHLQJN (ORCPT
+        id S1726734AbfHLQJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 12:09:13 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46816 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbfHLQJN (ORCPT
+        Mon, 12 Aug 2019 12:09:30 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46125 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbfHLQJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 12:09:13 -0400
-Received: by mail-qt1-f195.google.com with SMTP id j15so9741209qtl.13
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 09:09:12 -0700 (PDT)
+        Mon, 12 Aug 2019 12:09:29 -0400
+Received: by mail-wr1-f68.google.com with SMTP id z1so105061690wru.13;
+        Mon, 12 Aug 2019 09:09:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jnaZNj6OcIrJnBFWcRbWSkY4xvepDmg4dEtDDEvjaC0=;
-        b=rM4BK921mK8jKTrz9MbRlgFiOPaChAQ15XigvY/jAwEMMmDjYs+frqzS9w0lCcBJ2y
-         LGHmgem/txYDZlL6lL1NndLexe2xsTsATmLxsr1ZR6w/ArOF8I+GYdm5k4I4zt4w8d9m
-         4B/bfXraf5DMKa6mheJn03H+NfDgHpFJEo4P7dUZ1UI81eKjI2XkWslh07PPm1Igq83k
-         S4rnb5ZrF04v9S0JYjHJyPaZ/tsGcqfmski9/9jrIBiLvPgz24cpRvO9W2N3xQlgGKZB
-         2sgoRt+hNct+yDOozBW3wK30nlZ3XJ1XyvHVscTMM4skUtmNFIOOphCzkMVN+2ykIxiW
-         YP2g==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wQDudG+kkcGbnnVsgirExeE5TJAvPH8BcoTOdSWcbpI=;
+        b=S8w048S1FiKQE4kpcxrfsH1AMpFzduSfYRNTLKhJQ33pc5ebJvNltMcUkH0DUI2KUC
+         GBpYcFZXNQAecONLobNZh0QOHG+SWeo8/o7i2ESVFGOdVT3KslXL3kji4+j/iPVF0VyK
+         oTYq2yQONkIYbJqOa9idUujLRIXE6gn+fk6SbWcM9HZBu49I84Y3v7MNXmN8cEsgvfJQ
+         OoUyyBUwEHP3jXMgBdbvxG3yJS6a/4CefRHgSYpUdJS/T5bmUTpHgh946lfyXiRxqHaZ
+         41hAs9WPHvaV6FrF9K7DZ8Wqg7s4M60kVkfNjtCKoxTW2BccrWx1YzVp8dVpncDdV5Yx
+         ZisQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jnaZNj6OcIrJnBFWcRbWSkY4xvepDmg4dEtDDEvjaC0=;
-        b=lkm25xLfJ1xDUePoMszca2AIBSa4eqEggjXPqYpE3VyA0qsFk8nKxkUXkNYBPz5wyE
-         PtrFrm+TnAPp5lnGApfSw7QFkq5iyxX2X+WG0rpmWXWCRaFNBt0UQkMt3G9NKrB82WeA
-         joM8CGxgfpjmnqUyLhf3yAz29ibFeWg7GldJA6EXJqkE/Zs/q0iJ09kbjE4MNISio2Uh
-         8S7kPqP4YcMpFu1cJRrG59jDLX0CyjgGivpz9pP9fxq9AuFpQdduKEjvcPTbHMwqBANp
-         YC016kUuEAXFyAvIpnjWrD8pN/eT+tu+sf7IBZFiTzw0GtTXyRHj3OTrldh3oaC809C1
-         gj6w==
-X-Gm-Message-State: APjAAAUeuIzpJ2pangg3F58XhNMzQHo+6c2h1SAtm/JS2mfqyVXGus86
-        ybLVl09QEof0pTHm7JVbG4FymA==
-X-Google-Smtp-Source: APXvYqw1JCAIgiCqB+pKXAs2o/kKQN4tbl59wY+nts7LpDjypCtYx4/rlvkaywOcvdN+2GK2rbwv4w==
-X-Received: by 2002:a05:6214:10ea:: with SMTP id q10mr15711217qvt.128.1565626151734;
-        Mon, 12 Aug 2019 09:09:11 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id o50sm19991310qtj.17.2019.08.12.09.09.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 09:09:11 -0700 (PDT)
-Message-ID: <1565626149.8572.1.camel@lca.pw>
-Subject: Re: [PATCH] hugetlbfs: fix hugetlb page migration/fault race
- causing SIGBUS
-From:   Qian Cai <cai@lca.pw>
-To:     Sasha Levin <sashal@kernel.org>, Michal Hocko <mhocko@kernel.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, ltp@lists.linux.it,
-        Li Wang <liwang@redhat.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Cyril Hrubis <chrubis@suse.cz>, xishi.qiuxishi@alibaba-inc.com
-Date:   Mon, 12 Aug 2019 12:09:09 -0400
-In-Reply-To: <20190812153326.GB17747@sasha-vm>
-References: <20190808074736.GJ11812@dhcp22.suse.cz>
-         <416ee59e-9ae8-f72d-1b26-4d3d31501330@oracle.com>
-         <20190808185313.GG18351@dhcp22.suse.cz>
-         <20190808163928.118f8da4f4289f7c51b8ffd4@linux-foundation.org>
-         <20190809064633.GK18351@dhcp22.suse.cz>
-         <20190809151718.d285cd1f6d0f1cf02cb93dc8@linux-foundation.org>
-         <20190811234614.GZ17747@sasha-vm> <20190812084524.GC5117@dhcp22.suse.cz>
-         <39b59001-55c1-a98b-75df-3a5dcec74504@suse.cz>
-         <20190812132226.GI5117@dhcp22.suse.cz> <20190812153326.GB17747@sasha-vm>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wQDudG+kkcGbnnVsgirExeE5TJAvPH8BcoTOdSWcbpI=;
+        b=afcspCDHEvl32McV7G/dO1+xPnVsM+kyLHtIINm/6vRaA4Turome2FTdVU92refqqL
+         7AAwpV0/Mk3r63y3laLaZ1tRpnIGyCCWd3u5YAYvnNjBTvRZMq2o8qwwS8EbV26E2OaY
+         AwttXFfdxeAPLkqoL6QR/3lO3nhmMOQVvDCZeI3gzPWzx10ozHsMA7bq5i+uGzYqSJjR
+         InmlOSq4z2LLtlUkUmjPsPU9g3dR/5FPIGZntsRL1G5rblZ11A+gFh820khJ4CY9Ymc/
+         syNPU6gH2dvYPRIIo7ZcMMosT2Dmpy1qqRH8DAHDpDOKAaYR2SPmX0ECauP37A3xOKHr
+         cWtw==
+X-Gm-Message-State: APjAAAX/xOFysKfAa6QKLuaiSmXdQw3bAFh9OGoQh59M1vZSccT9UNy6
+        JEC9+Jzz7hHUYr6JYFDvOXLW9zXQNY5YWgQy8T4=
+X-Google-Smtp-Source: APXvYqwA2G8KxSDLIpB4nxWCDIea1NkkIuXIaaINWUZGHpReKkV/2DiRLL1Z+7KsLbL587UFZjosbhgZI5JlzwcNhts=
+X-Received: by 2002:a5d:6b11:: with SMTP id v17mr41041362wrw.323.1565626167467;
+ Mon, 12 Aug 2019 09:09:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190809201219.629-1-christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20190809201219.629-1-christophe.jaillet@wanadoo.fr>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 12 Aug 2019 12:09:14 -0400
+Message-ID: <CADnq5_MM+ojG+jmuW-FpdusYzsa2BW_pguGPoMYSQFo4d5z72g@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/display: Fix a typo - dce_aduio_mask --> dce_audio_mask
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     "Wentland, Harry" <harry.wentland@amd.com>,
+        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        kernel-janitors@vger.kernel.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-08-12 at 11:33 -0400, Sasha Levin wrote:
-> On Mon, Aug 12, 2019 at 03:22:26PM +0200, Michal Hocko wrote:
-> > On Mon 12-08-19 15:14:12, Vlastimil Babka wrote:
-> > > On 8/12/19 10:45 AM, Michal Hocko wrote:
-> > > > On Sun 11-08-19 19:46:14, Sasha Levin wrote:
-> > > > > On Fri, Aug 09, 2019 at 03:17:18PM -0700, Andrew Morton wrote:
-> > > > > > On Fri, 9 Aug 2019 08:46:33 +0200 Michal Hocko <mhocko@kernel.org>
-> > > > > > wrote:
-> > > > > > 
-> > > > > > It should work if we ask stable trees maintainers not to backport
-> > > > > > such patches.
-> > > > > > 
-> > > > > > Sasha, please don't backport patches which are marked Fixes-no-
-> > > > > > stable:
-> > > > > > and which lack a cc:stable tag.
-> > > > > 
-> > > > > I'll add it to my filter, thank you!
-> > > > 
-> > > > I would really prefer to stick with Fixes: tag and stable only picking
-> > > > up cc: stable patches. I really hate to see workarounds for sensible
-> > > > workflows (marking the Fixes) just because we are trying to hide
-> > > > something from stable maintainers. Seriously, if stable maintainers have
-> > > > a different idea about what should be backported, it is their call. They
-> > > > are the ones to deal with regressions and the backporting effort in
-> > > > those cases of disagreement.
-> > > 
-> > > +1 on not replacing Fixes: tag with some other name, as there might be
-> > > automation (not just at SUSE) relying on it.
-> > > As a compromise, we can use something else to convey the "maintainers
-> > > really don't recommend a stable backport", that Sasha can add to his
-> > > filter.
-> > > Perhaps counter-intuitively, but it could even look like this:
-> > > Cc: stable@vger.kernel.org # not recommended at all by maintainer
-> > 
-> > I thought that absence of the Cc is the indication :P. Anyway, I really
-> > do not understand why should we bother, really. I have tried to explain
-> > that stable maintainers should follow Cc: stable because we bother to
-> > consider that part and we are quite good at not forgetting (Thanks
-> > Andrew for persistence). Sasha has told me that MM will be blacklisted
-> > from automagic selection procedure.
-> 
-> I'll add mm/ to the ignore list for AUTOSEL patches.
-> 
-> > I really do not know much more we can do and I really have strong doubts
-> > we should care at all. What is the worst that can happen? A potentially
-> > dangerous commit gets to the stable tree and that blows up? That is
-> > something that is something inherent when relying on AI and
-> > aplies-it-must-be-ok workflow.
-> 
-> The issue I see here is that there's no way to validate the patches that
-> go in mm/. I'd happily run whatever test suite you use to validate these
-> patches, but it doesn't exist.
-> 
-> I can run xfstests for fs/, I can run blktests for block/, I can run
-> kselftests for quite a few other subsystems in the kernel. What can I
-> run for mm?
+Applied.  thanks!
 
-I have been running this for linux-next daily.
+Alex
 
-https://github.com/cailca/linux-mm
-
-"test.sh" will give you some ideas. All the .config has almost all the MM
-debugging options turned on, but it might need some modifications to run on QEMU
- etc.
-
-"compile.sh" will have some additional MM debugging command-line options, and
-some keywords to catch compilation warnings for MM.
-
-> 
-> I'd be happy to run whatever validation/regression suite for mm/ you
-> would suggest.
-> 
-> I've heard the "every patch is a snowflake" story quite a few times, and
-> I understand that most mm/ patches are complex, but we agree that
-> manually testing every patch isn't scalable, right? Even for patches
-> that mm/ tags for stable, are they actually tested on every stable tree?
-> How is it different from the "aplies-it-must-be-ok workflow"?
-> 
+On Sat, Aug 10, 2019 at 9:55 AM Christophe JAILLET
+<christophe.jaillet@wanadoo.fr> wrote:
+>
+> This should be 'dce_audio_mask', not 'dce_aduio_mask'.
+>
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+>  drivers/gpu/drm/amd/display/dc/dce/dce_audio.c          | 2 +-
+>  drivers/gpu/drm/amd/display/dc/dce/dce_audio.h          | 6 +++---
+>  drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c | 2 +-
+>  drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c | 2 +-
+>  drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c | 2 +-
+>  drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c | 2 +-
+>  drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c   | 2 +-
+>  drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c   | 2 +-
+>  8 files changed, 10 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c b/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c
+> index 549704998f84..1e88c5f46be7 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c
+> +++ b/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c
+> @@ -937,7 +937,7 @@ struct audio *dce_audio_create(
+>                 unsigned int inst,
+>                 const struct dce_audio_registers *reg,
+>                 const struct dce_audio_shift *shifts,
+> -               const struct dce_aduio_mask *masks
+> +               const struct dce_audio_mask *masks
+>                 )
+>  {
+>         struct dce_audio *audio = kzalloc(sizeof(*audio), GFP_KERNEL);
+> diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_audio.h b/drivers/gpu/drm/amd/display/dc/dce/dce_audio.h
+> index a0d5724aab31..1392fab0860b 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dce/dce_audio.h
+> +++ b/drivers/gpu/drm/amd/display/dc/dce/dce_audio.h
+> @@ -101,7 +101,7 @@ struct dce_audio_shift {
+>         uint32_t DCCG_AUDIO_DTO1_USE_512FBR_DTO;
+>  };
+>
+> -struct dce_aduio_mask {
+> +struct dce_audio_mask {
+>         uint32_t AZALIA_ENDPOINT_REG_INDEX;
+>         uint32_t AZALIA_ENDPOINT_REG_DATA;
+>
+> @@ -125,7 +125,7 @@ struct dce_audio {
+>         struct audio base;
+>         const struct dce_audio_registers *regs;
+>         const struct dce_audio_shift *shifts;
+> -       const struct dce_aduio_mask *masks;
+> +       const struct dce_audio_mask *masks;
+>  };
+>
+>  struct audio *dce_audio_create(
+> @@ -133,7 +133,7 @@ struct audio *dce_audio_create(
+>                 unsigned int inst,
+>                 const struct dce_audio_registers *reg,
+>                 const struct dce_audio_shift *shifts,
+> -               const struct dce_aduio_mask *masks);
+> +               const struct dce_audio_mask *masks);
+>
+>  void dce_aud_destroy(struct audio **audio);
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c b/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c
+> index 6248c8455314..81116286b15b 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c
+> +++ b/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c
+> @@ -304,7 +304,7 @@ static const struct dce_audio_shift audio_shift = {
+>                 AUD_COMMON_MASK_SH_LIST(__SHIFT)
+>  };
+>
+> -static const struct dce_aduio_mask audio_mask = {
+> +static const struct dce_audio_mask audio_mask = {
+>                 AUD_COMMON_MASK_SH_LIST(_MASK)
+>  };
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c b/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c
+> index 764329264c3b..765e26454a18 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c
+> +++ b/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c
+> @@ -331,7 +331,7 @@ static const struct dce_audio_shift audio_shift = {
+>                 AUD_COMMON_MASK_SH_LIST(__SHIFT)
+>  };
+>
+> -static const struct dce_aduio_mask audio_mask = {
+> +static const struct dce_audio_mask audio_mask = {
+>                 AUD_COMMON_MASK_SH_LIST(_MASK)
+>  };
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c b/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c
+> index c6136e0ed1a4..3ac4c7e73050 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c
+> +++ b/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c
+> @@ -337,7 +337,7 @@ static const struct dce_audio_shift audio_shift = {
+>                 AUD_COMMON_MASK_SH_LIST(__SHIFT)
+>  };
+>
+> -static const struct dce_aduio_mask audio_mask = {
+> +static const struct dce_audio_mask audio_mask = {
+>                 AUD_COMMON_MASK_SH_LIST(_MASK)
+>  };
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c b/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
+> index 54be7ab370df..9a922cd39cf2 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
+> +++ b/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
+> @@ -352,7 +352,7 @@ static const struct dce_audio_shift audio_shift = {
+>                 DCE120_AUD_COMMON_MASK_SH_LIST(__SHIFT)
+>  };
+>
+> -static const struct dce_aduio_mask audio_mask = {
+> +static const struct dce_audio_mask audio_mask = {
+>                 DCE120_AUD_COMMON_MASK_SH_LIST(_MASK)
+>  };
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c b/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c
+> index 860a524ebcfa..2a1ce9ecc66e 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c
+> +++ b/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c
+> @@ -322,7 +322,7 @@ static const struct dce_audio_shift audio_shift = {
+>                 AUD_COMMON_MASK_SH_LIST(__SHIFT)
+>  };
+>
+> -static const struct dce_aduio_mask audio_mask = {
+> +static const struct dce_audio_mask audio_mask = {
+>                 AUD_COMMON_MASK_SH_LIST(_MASK)
+>  };
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
+> index 1a20461c2937..1c5835975935 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
+> +++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
+> @@ -270,7 +270,7 @@ static const struct dce_audio_shift audio_shift = {
+>                 DCE120_AUD_COMMON_MASK_SH_LIST(__SHIFT)
+>  };
+>
+> -static const struct dce_aduio_mask audio_mask = {
+> +static const struct dce_audio_mask audio_mask = {
+>                 DCE120_AUD_COMMON_MASK_SH_LIST(_MASK)
+>  };
+>
 > --
-> Thanks,
-> Sasha
-> 
+> 2.20.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
