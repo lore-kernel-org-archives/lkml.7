@@ -2,109 +2,133 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A42BC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 697A8C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 343152070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:15:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565648116;
-	bh=145YKy79++lHqMQiQrXETO0ifzL6+sXQEiqdBVEh9gA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WWgV7DK8jCoZtW4IMCyW0QZplkYUOSSJGH6jJN8V0FCnbpqwwsMpmkEERh1O1CeQc
-	 gVhyfvVgW051vjWEIs+d2wXkJ/+p7TLe324uYB3eqiFmRd2QWMt8u7hlN6wH2M1nwg
-	 nbS4eVgKhkLTwaL+kuDd7wO559R0K+R3jKXAH6wI=
+	by mail.kernel.org (Postfix) with ESMTP id 3C255206A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfHLWPP (ORCPT
+        id S1726729AbfHLWSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 18:15:15 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33889 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbfHLWPO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 18:15:14 -0400
-Received: by mail-ot1-f68.google.com with SMTP id n5so165101775otk.1;
-        Mon, 12 Aug 2019 15:15:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5Hl8Ot2aSHBMEKcD9YMEz708iweSmdqsv8l8Mi9vl6U=;
-        b=hJ5aZ2OuwrVPr36Y8BEuHlqMTyM2wzHmmKUgUyZPusvXdVvynDP1bpV6WCwWammJVy
-         LPVO0EZ/tuYcWi31HBHsFHu+ODGG3F0nFArgUfpFKeSWqHZdlqbJuBwOQT0W3x2AIRhw
-         9bSDxaTefY2E5md4eu4lT0GkEpr6YhJMm4Y+hOPnMAkXhOPam/YRxrGx5eMhUlXhqIuh
-         oMLzLqMzdRcHBhBCiLMYwxl5+C7kXLSE8y9lftBBjI95Ozmgocx/oXNMbXQL7yrskXkF
-         ikYFo1QMsubTcoPUQCiTwM+OGOPiPXDkcsrBof/mZ+16MlbLIKlyKoKV1S8WP4XZMkvG
-         M2sA==
-X-Gm-Message-State: APjAAAWyoKdJNezBiDglqVpNjYGhAykxXhAlL6x4qTO4DExXDtgT7u9G
-        5MDbLwrSngVpB1mqiEwstQ==
-X-Google-Smtp-Source: APXvYqxITl4/8wD2qF1OX3crvab5FCfVn+l0zPlE0D/ekVjf18e2o5f8bw/6PsZEPiWUQhTL3E0zOg==
-X-Received: by 2002:a02:c996:: with SMTP id b22mr16399239jap.39.1565648113681;
-        Mon, 12 Aug 2019 15:15:13 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id w23sm90581004ioa.51.2019.08.12.15.15.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 15:15:13 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 16:15:12 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jitao Shi <jitao.shi@mediatek.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        Sascha Hauer <kernel@pengutronix.de>,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
-        ck.hu@mediatek.com, stonea168@163.com,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH wn 3/4] dt-bindings: display: panel: add auo
- kd101n80-45na panel bindings
-Message-ID: <20190812221512.GA24378@bogus>
-References: <20190811091001.49555-1-jitao.shi@mediatek.com>
- <20190811091001.49555-4-jitao.shi@mediatek.com>
+        Mon, 12 Aug 2019 18:18:12 -0400
+Received: from mga12.intel.com ([192.55.52.136]:56539 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726236AbfHLWSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 18:18:12 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 15:18:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,379,1559545200"; 
+   d="scan'208";a="327494056"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga004.jf.intel.com with ESMTP; 12 Aug 2019 15:18:11 -0700
+Date:   Mon, 12 Aug 2019 15:18:11 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, mst@redhat.com, rkrcmar@redhat.com,
+        jmattson@google.com
+Subject: Re: [PATCH v6 2/8] KVM: x86: Add a helper function for
+ CPUID(0xD,n>=1) enumeration
+Message-ID: <20190812221811.GB4996@linux.intel.com>
+References: <20190725031246.8296-1-weijiang.yang@intel.com>
+ <20190725031246.8296-3-weijiang.yang@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190811091001.49555-4-jitao.shi@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190725031246.8296-3-weijiang.yang@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 11 Aug 2019 17:10:00 +0800, Jitao Shi wrote:
-> Add documentation for auo kd101n80-45na panel.
+On Thu, Jul 25, 2019 at 11:12:40AM +0800, Yang Weijiang wrote:
+> To make the code look clean, wrap CPUID(0xD,n>=1) enumeration
+> code in a helper function now.
 > 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 > ---
->  .../display/panel/auo,kd101n80-45na.txt       | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/auo,kd101n80-45na.txt
+>  arch/x86/kvm/cpuid.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
 > 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 4992e7c99588..29cbde7538a3 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -313,6 +313,50 @@ static int __do_cpuid_ent_emulated(struct kvm_cpuid_entry2 *entry,
+>  	return 0;
+>  }
+>  
+> +static inline int __do_cpuid_dx_leaf(struct kvm_cpuid_entry2 *entry, int *nent,
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+'dx' makes me think of the generic reference to RDX vs EDX.  Maybe
+__do_cpuid_0xd_leaf()?
 
-If a tag was not added on purpose, please state why and what changed.
+> +				     int maxnent, u64 xss_mask, u64 xcr0_mask,
+> +				     u32 eax_mask)
+> +{
+> +	int idx, i;
+> +	u64 mask;
+> +	u64 supported;
+> +
+> +	for (idx = 1, i = 1; idx < 64; ++idx) {
+
+Rather than loop here, I think it makes sense to loop in the caller to
+make the code consistent with do_cpuid_7_mask() added by commit
+
+  54d360d41211 ("KVM: cpuid: extract do_cpuid_7_mask and support multiple subleafs")
+
+> +		mask = ((u64)1 << idx);
+> +		if (*nent >= maxnent)
+> +			return -EINVAL;
+> +
+> +		do_cpuid_1_ent(&entry[i], 0xD, idx);
+> +		if (idx == 1) {
+> +			entry[i].eax &= eax_mask;
+> +			cpuid_mask(&entry[i].eax, CPUID_D_1_EAX);
+> +			supported = xcr0_mask | xss_mask;
+> +			entry[i].ebx = 0;
+> +			entry[i].edx = 0;
+> +			entry[i].ecx &= xss_mask;
+> +			if (entry[i].eax & (F(XSAVES) | F(XSAVEC))) {
+> +				entry[i].ebx =
+> +					xstate_required_size(supported,
+> +							     true);
+> +			}
+> +		} else {
+> +			supported = (entry[i].ecx & 1) ? xss_mask :
+> +				     xcr0_mask;
+> +			if (entry[i].eax == 0 || !(supported & mask))
+> +				continue;
+> +			entry[i].ecx &= 1;
+> +			entry[i].edx = 0;
+> +			if (entry[i].ecx)
+> +				entry[i].ebx = 0;
+> +		}
+> +		entry[i].flags |=
+> +			KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
+> +		++*nent;
+> +		++i;
+> +	}
+> +	return 0;
+> +}
+> +
+
+Extracting code into a helper should be done in the same patch that the
+existing code is replaced with a call to the helper, i.e. the chunk of the
+next patch that invokes the helper should be squashed with this patch.
+
+>  static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+>  				 u32 index, int *nent, int maxnent)
+>  {
+> -- 
+> 2.17.2
+> 
