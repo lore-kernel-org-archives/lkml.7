@@ -4,158 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA31C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D411FC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F3432067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5B92070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:19:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565651771;
-	bh=lq64BGYeaCKExseawRRT/mHq8m+p7hqsbHJTSxV6j30=;
+	s=default; t=1565651990;
+	bh=oNm45q/R4r4wXWQG7sV4uuywIEiKxekb7Sy9tWL9SNU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=juNXgUryCgyYeFOZTCcDtakMp2e55/WV98CR5PokBPAGfD/6YrGWtBKDTZFFANYjL
-	 vp/Ca8+QbPZVjFjilB1dIMfky2W9ewB9UnkQbKduxJc5R03nApPUilY2x8ZPyDhkMz
-	 r5zX7WBpH8chjzGm1e8hT6p0j3QvE03ZKiWXJqfs=
+	b=l+3WhehC/sDM79AtmnsKt8b+ZsGLq2+MASyy/3dRpOj17cqTJSdJ0d9Nd9F+B2SfS
+	 3YD6AGEWwKi8KyoNfbK6WRGSV+WTkh2wcET3+VQOsR9+5SOCY+QbNj687GUskIPtU2
+	 r4NPildqTj8EhnqLhFDEDdxV0MydypV7wE/ZbWAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfHLXQK (ORCPT
+        id S1726685AbfHLXTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 19:16:10 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34936 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726316AbfHLXQJ (ORCPT
+        Mon, 12 Aug 2019 19:19:49 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39769 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbfHLXTt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 19:16:09 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g17so14558703otl.2;
-        Mon, 12 Aug 2019 16:16:09 -0700 (PDT)
+        Mon, 12 Aug 2019 19:19:49 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r21so159614197otq.6;
+        Mon, 12 Aug 2019 16:19:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b3F8cSXbwyXxOx36/4par1yDAVAF3gxElrC7BSSyulw=;
-        b=Ue5kVppAklRtSKkS2ATfBwxCY3ziWNTHnCACtMoHI/vQHf01WpEuHrgB7w+coi/Ec/
-         s5EJ5J/5lPJIm6LqBsYTBdKZ792nYZh2/EgUm3ciWefNjaZVdgAaPeGJfNqnKehKjSNe
-         DWvf4cfL7sPnAjtMJtm0gC7PSu+/oL16eUzMcbH5bwOaSDYL2Nz3maMW3x4KwoGne6QR
-         sNP83fn9p4+thP+W4xrZ7DpvWNVeL6G+VGvc3hbyerWL00gmPxwaHK7/eMbpR95dRa96
-         ZzTd2Dub3nn8/x4E/XyYSL9ZeAjmAH8Eac5GINK/VsmS+YLGSYz0FWqCXoxB/Ju1Eqcq
-         TUww==
-X-Gm-Message-State: APjAAAXbiEAWEDdOZYEvnRNxfRgXFLTQ4jIhFiatsfodLknJpxyLuJfc
-        L9pZoa716u2z/LCYFJSCng==
-X-Google-Smtp-Source: APXvYqxsdId/zjMYF6BYZWwhP/EwTVKYWAwb0W4bGfR8//ahEJLuOXW0jurLYRTwC5NiDRtI2sJnvg==
-X-Received: by 2002:a5e:9e42:: with SMTP id j2mr15577447ioq.133.1565651768590;
-        Mon, 12 Aug 2019 16:16:08 -0700 (PDT)
+        bh=lqrNtsY3z/GqboCx94xUohSgcAprstWJeqrp2vVk0Is=;
+        b=d0Nc+1hq54Ja7S5fzMZyKTbQjeAvKICKmn9JhAqVBljzCaPg8sHg/jV/NkG0zHVpts
+         ABW3vACRA5V2esh0DSztOVdlG9eEW9X1iMLDJnpsXXM9bHwo0gGAdYKse7MKrvnLQvc4
+         rgDuJPHR764/lqBA34YfasS0mPjiYJMQK46piPhoRfkHgvQJq/66TKhef+K7Wo6UNUMY
+         /Ja36+16StO9SJHX/GG0zSiM/clEQDGwlaBt3MbWGeIDDWbLDzrgqQVVAWqMYaDZerIF
+         /meEwQiGM/hBzqv5h59SlhK+F//nMVP5v6KxFLcCjJNo4X36OjFAzNadkUqSgp9qlZc1
+         7i5w==
+X-Gm-Message-State: APjAAAXEW8F+Vm/HdoloLel9CwdRpyhmH5iYYyjS9LO2o36vH4dvu2Lp
+        Jq7PnOYmCusLH68mpNJPbU6/b/A=
+X-Google-Smtp-Source: APXvYqzwBkIvZBYjlD4u+kjMaZdM68xR5wuwLJn2T+FcAD1ydiPZOHSTU9O9tYsk3wdi1CNOJnVggw==
+X-Received: by 2002:a5e:9e03:: with SMTP id i3mr880391ioq.66.1565651988117;
+        Mon, 12 Aug 2019 16:19:48 -0700 (PDT)
 Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id o3sm19123521ioo.74.2019.08.12.16.16.07
+        by smtp.gmail.com with ESMTPSA id f1sm11826048ioh.73.2019.08.12.16.19.47
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 16:16:08 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 17:16:07 -0600
+        Mon, 12 Aug 2019 16:19:47 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 17:19:46 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Biwen Li <biwen.li@nxp.com>
-Cc:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        leoyang.li@nxp.com, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xiaobo.xie@nxp.com,
-        jiafei.pan@nxp.com, ran.wang_1@nxp.com, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Subject: Re: [v6,2/2] dt-bindings: rtc: add bindings for FlexTimer Module
-Message-ID: <20190812231607.GA21242@bogus>
-References: <20190719035400.9800-1-biwen.li@nxp.com>
- <20190719035400.9800-2-biwen.li@nxp.com>
+To:     Wen He <wen.he_1@nxp.com>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, mark.rutland@arm.com,
+        liviu.dudau@arm.com, brian.starkey@arm.com, airlied@linux.ie,
+        daniel@ffwll.ch, leoyang.li@nxp.com
+Subject: Re: [v2 2/3] dt/bindings: display: Add optional property node
+ defined for Mali DP500
+Message-ID: <20190812231946.GA31179@bogus>
+References: <20190719095842.11683-1-wen.he_1@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190719035400.9800-2-biwen.li@nxp.com>
+In-Reply-To: <20190719095842.11683-1-wen.he_1@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 11:54:00AM +0800, Biwen Li wrote:
-> The patch adds bindings for FlexTimer Module
+On Fri, Jul 19, 2019 at 05:58:42PM +0800, Wen He wrote:
+> Add optional property node 'arm,malidp-arqos-value' for the Mali DP500.
+> This property describe the ARQoS levels of DP500's QoS signaling.
 > 
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
 > ---
-> Change in v6:
->     - correct subject
->     - delete note
->     - remove reg property about IP Powerdown exception register
+>  Documentation/devicetree/bindings/display/arm,malidp.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> Change in v5:
->     - None
-> 
-> Change in v4:
->     - add note about dts and kernel options
->     - add aliases in example
-> 
-> Change in v3:
-> 	- remove reg-names property
-> 	- correct cells number
-> 
-> Change in v2:
-> 	- replace ls1043a with ls1088a as example
-> 	- add rcpm node and fsl,rcpm-wakeup property
-> 
->  .../bindings/rtc/rtc-fsl-ftm-alarm.txt        | 41 +++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> new file mode 100644
-> index 000000000000..9291b022ffc7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> @@ -0,0 +1,41 @@
-> +Freescale FlexTimer Module (FTM) Alarm
-> +
-> +Required properties:
-> +- compatible : Should be "fsl,<chip>-ftm-alarm", the
-> +	       supported chips include
-> +	       "fsl,ls1012a-ftm-alarm"
-> +	       "fsl,ls1021a-ftm-alarm"
-> +	       "fsl,ls1028a-ftm-alarm"
-> +	       "fsl,ls1043a-ftm-alarm"
-> +	       "fsl,ls1046a-ftm-alarm"
-> +	       "fsl,ls1088a-ftm-alarm"
-> +	       "fsl,ls208xa-ftm-alarm"
-> +- reg : Specifies base physical address and size of the register sets for the
-> +  FlexTimer Module.
-> +- interrupts : Should be the FlexTimer Module interrupt.
-> +- fsl,rcpm-wakeup property and rcpm node : Please refer
-> +	Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> +
-> +Optional properties:
-> +- big-endian: If the host controller is big-endian mode, specify this property.
-> +  The default endian mode is little-endian.
-> +
-> +Example:
-> +aliases {
-> +	...
-> +	rtc1 = ftm_alarm0; // Use FlexTimer Module as /dev/rtc1
-> +	...
-> +};
+> diff --git a/Documentation/devicetree/bindings/display/arm,malidp.txt b/Documentation/devicetree/bindings/display/arm,malidp.txt
+> index 2f7870983ef1..76a0e7251251 100644
+> --- a/Documentation/devicetree/bindings/display/arm,malidp.txt
+> +++ b/Documentation/devicetree/bindings/display/arm,malidp.txt
+> @@ -37,6 +37,8 @@ Optional properties:
+>      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt)
+>      to be used for the framebuffer; if not present, the framebuffer may
+>      be located anywhere in memory.
+> +  - arm,malidp-arqos-high-level: integer of u32 value describing the ARQoS
+> +    levels of DP500's QoS signaling.
 
-As I said before, drop this. It's not going to work when this is 
-converted to schema and the example is compiled. Feel free to convert 
-this to schema and see...
- 
-> +
-> +rcpm: rcpm@1e34040 {
-> +	compatible = "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
-> +	reg = <0x0 0x1e34040 0x0 0x18>;
-> +	#fsl,rcpm-wakeup-cells = <6>;
-> +};
-> +
-> +ftm_alarm0: timer@2800000 {
+u32 here, and...
 
-If this is an RTC, then rtc@...
+>  
+>  
+>  Example:
+> @@ -54,6 +56,7 @@ Example:
+>  		clocks = <&oscclk2>, <&fpgaosc0>, <&fpgaosc1>, <&fpgaosc1>;
+>  		clock-names = "pxlclk", "mclk", "aclk", "pclk";
+>  		arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
+> +		arm,malidp-arqos-high-level = <&rqosvalue>;
 
-> +	compatible = "fsl,ls1088a-ftm-alarm";
-> +	reg = <0x0 0x2800000 0x0 0x10000>;
-> +	fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-> +	interrupts = <0 44 4>;
-> +};
+phandle here?
+
+>  		port {
+>  			dp0_output: endpoint {
+>  				remote-endpoint = <&tda998x_2_input>;
 > -- 
 > 2.17.1
 > 
