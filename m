@@ -2,122 +2,140 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B535FC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 234D5C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9456921721
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 037C12067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:34:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbfHLReX (ORCPT
+        id S1727308AbfHLReo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 13:34:23 -0400
-Received: from mga06.intel.com ([134.134.136.31]:26428 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbfHLReV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 13:34:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 10:33:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,378,1559545200"; 
-   d="scan'208";a="376025887"
-Received: from megha-z97x-ud7-th.sc.intel.com ([143.183.85.162])
-  by fmsmga006.fm.intel.com with ESMTP; 12 Aug 2019 10:33:35 -0700
-Message-ID: <1565632489.7042.17.camel@intel.com>
-Subject: Re: [RFC V1 RESEND 2/6] PCI/MSI: Dynamic allocation of MSI-X
- vectors by group
-From:   Megha Dey <megha.dey@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        jacob.jun.pan@linux.intel.com
-Date:   Mon, 12 Aug 2019 10:54:49 -0700
-In-Reply-To: <alpine.DEB.2.21.1908110919310.7324@nanos.tec.linutronix.de>
-References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
-         <1561162778-12669-3-git-send-email-megha.dey@linux.intel.com>
-         <alpine.DEB.2.21.1906280739100.32342@nanos.tec.linutronix.de>
-         <1565118316.2401.112.camel@intel.com>
-         <alpine.DEB.2.21.1908071525390.24014@nanos.tec.linutronix.de>
-         <48a44ffc-4b5b-5eef-73de-020f1710c41e@arm.com>
-         <alpine.DEB.2.21.1908110919310.7324@nanos.tec.linutronix.de>
+        Mon, 12 Aug 2019 13:34:44 -0400
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:41928 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfHLReo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 13:34:44 -0400
+Received: by mail-vk1-f194.google.com with SMTP id u64so20870530vku.8;
+        Mon, 12 Aug 2019 10:34:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XCsKdiFdCyUb9h1XpQVRtFcaXFlzTncnJBLcRKOgyMM=;
+        b=AnxMh+t8b0773ZzHDr31aS5lKDV9T9SzVCmQT/Sw3iVpt8oCqyN202akVsNfKec/4B
+         dep1gbQs/pKoJxl532mIRPpFyXSYpmNB+Lot3bcgzemFI4D5rIhrxkSNvCqyurS5nV79
+         ANj/uRGKGnw2Wv/3MDh82P52VMctHhOvyvjERGzOWPfrqwqHB4eEoHiYIhhm+waYyoIR
+         omYnxcomRI3zXRyWB+vMFC4c9HKDF9sqSAtf46SV/nnyQC+ep262OZzJQsX+YcrOtyR6
+         70wUaMV3/vKtHf7K8X860ADjdACgnZoWdMgxzxyTfpllnlMq0oL5fL1SQTllwijfxt0k
+         d9IA==
+X-Gm-Message-State: APjAAAVctJ51NxmI66r0mPP54LQ/en4JATnnaP+/KNYKBOF9FMOK0uwv
+        Moc5ohwGFZZ2fds4ElPcR54LFKuf2MkW6XUFIzs7KGxxXVMbUA==
+X-Google-Smtp-Source: APXvYqzcrQcBsk0/Yrys6c8GgXQrSpsNz4FqdTvJYCSbqFE1AU6tZPX+nx2Ca0ELNiwlAPTAwEcFEPS8L5YbFKICUH4=
+X-Received: by 2002:a1f:d687:: with SMTP id n129mr12600410vkg.71.1565631281261;
+ Mon, 12 Aug 2019 10:34:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190809002104.18599-1-stancheff@cray.com> <20190809002104.18599-2-stancheff@cray.com>
+ <CAK7LNAScm9P+QMZiqqSQnOoPsN54OTcTGpaDgxTbjJ_knoeGhA@mail.gmail.com>
+In-Reply-To: <CAK7LNAScm9P+QMZiqqSQnOoPsN54OTcTGpaDgxTbjJ_knoeGhA@mail.gmail.com>
+From:   Shaun Tancheff <shaun@tancheff.com>
+Date:   Mon, 12 Aug 2019 12:34:30 -0500
+Message-ID: <CAJ48U8Xp40is+R1dMW8sXq77ZS5D_h+hHte5Mq5eOrtpb41Qxw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] kbuild: recursive build of external kernel modules
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Shaun Tancheff <stancheff@cray.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Renninger <trenn@suse.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM mailing list <linux-pm@vger.kernel.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-08-11 at 09:20 +0200, Thomas Gleixner wrote:
-> On Wed, 7 Aug 2019, Marc Zyngier wrote:
-> > 
-> > On 07/08/2019 14:56, Thomas Gleixner wrote:
-> > > 
-> > > On Tue, 6 Aug 2019, Megha Dey wrote:
-> > > > 
-> > > > On Sat, 2019-06-29 at 09:59 +0200, Thomas Gleixner wrote:
-> > > > > 
-> > > > > On Fri, 21 Jun 2019, Megha Dey wrote:
-> > > > Totally agreed. The request to add a dynamic MSI-X
-> > > > infrastructure came
-> > > > from some driver teams internally and currently they do not
-> > > > have
-> > > > bandwidth to come up with relevant test cases. <sigh>
-> > > Hahahaha.
-> > > 
-> > > > 
-> > > > But we hope that this patch set could serve as a precursor to
-> > > > the
-> > > > interrupt message store (IMS) patch set, and we can use this
-> > > > patch set
-> > > > as the baseline for the IMS patches.
-> > > If IMS needs the same functionality, then we need to think about
-> > > it
-> > > slightly differently because IMS is not necessarily tied to PCI.
-> > >  
-> > > IMS has some similarity to the ARM GIC ITS stuff IIRC, which
-> > > already
-> > > provides these things outside of PCI. Marc?
-> > Indeed. We have MSI-like functionality almost everywhere, and make
-> > heavy
-> > use of the generic MSI framework. Platform-MSI is probably the most
-> > generic example we have (it's the Far West transposed to MSIs).
-> > 
-> > > 
-> > > We probably need some generic infrastructure for this so PCI and
-> > > everything
-> > > else can use it.
-> > Indeed. Overall, I'd like the concept of MSI on whatever bus to
-> > have one
-> > single behaviour across the board, as long as it makes sense for
-> > that
-> > bus (nobody needs another PCI MultiMSI, for example).
-> Right.
-> 
-> @Intel: Is there documentation and perhaps early code for that IMS
-> muck to
-> 	look at?
+On Mon, Aug 12, 2019 at 10:24 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> On Fri, Aug 9, 2019 at 9:21 AM Shaun Tancheff <shaun@tancheff.com> wrote:
+> >
+> > When building a tree of external modules stage 2 fails
+> > silently as the root modules.order is empty.
+> >
+> > Modify the modules.order location to be fixed to the
+> > root when KBUILD_EXTMOD is specified and write all
+> > module paths to the single modules.order file.
+>
+> Could you try v5.3-rc4 please?
 
-Hi Thomas,
+So it seems we are using 'subdir-m' but that is now gone?
 
-We have some early documentation on IMS which can be found here (part
-of the Scalable I/O Virtualization spec):
+Is there a recommend pattern for backward compatibility?
 
-https://software.intel.com/sites/default/files/managed/cc/0e/intel-scal
-able-io-virtualization-technical-specification.pdf
-(Section 3.4.1)
-
-Also, I do have some initial IMS patches that we use internally for
-testing. I will clean it up and send it as an RFC patchset shortly.
- 
-> 
-> Thanks,
-> 
-> 	tglx
+Thanks!
+>
+> > Signed-off-by: Shaun Tancheff <stancheff@cray.com>
+> > ---
+> >  Makefile               | 1 +
+> >  scripts/Makefile.build | 8 +++++++-
+> >  2 files changed, 8 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Makefile b/Makefile
+> > index 23cdf1f41364..a9964492f47e 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -1622,6 +1622,7 @@ $(module-dirs): prepare $(objtree)/Module.symvers
+> >
+> >  modules: $(module-dirs)
+> >         @$(kecho) '  Building modules, stage 2.';
+> > +       $(Q)$rm -f $(KBUILD_EXTMOD)/modules.order
+> >         $(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
+> >
+> >  PHONY += modules_install
+> > diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> > index 0d434d0afc0b..f9908b3d59e0 100644
+> > --- a/scripts/Makefile.build
+> > +++ b/scripts/Makefile.build
+> > @@ -64,7 +64,13 @@ builtin-target := $(obj)/built-in.a
+> >  endif
+> >
+> >  ifeq ($(CONFIG_MODULES)$(need-modorder),y1)
+> > +ifneq ($(KBUILD_EXTMOD),)
+> > +modorder-target := $(KBUILD_EXTMOD)/modules.order
+> > +modorder-add := >>
+> > +else
+> >  modorder-target := $(obj)/modules.order
+> > +modorder-add := >
+> > +endif
+> >  endif
+> >
+> >  mod-targets := $(patsubst %.o, %.mod, $(obj-m))
+> > @@ -423,7 +429,7 @@ endif # builtin-target
+> >  $(modorder-target): $(subdir-ym) FORCE
+> >         $(Q){ $(foreach m, $(modorder), \
+> >         $(if $(filter %/modules.order, $m), cat $m, echo $m);) :; } \
+> > -       | $(AWK) '!x[$$0]++' - > $@
+> > +       | $(AWK) '!x[$$0]++' - $(modorder-add) $@
+> >
+> >  #
+> >  # Rule to compile a set of .o files into one .a file (with symbol table)
+> > --
+> > 2.20.1
+> >
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
