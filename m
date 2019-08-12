@@ -2,182 +2,111 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7D4C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1A8C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E01142054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:56:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kj+TnowR"
+	by mail.kernel.org (Postfix) with ESMTP id 6A56D2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:56:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfHLX4n (ORCPT
+        id S1727136AbfHLX46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 19:56:43 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42095 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfHLX4n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 19:56:43 -0400
-Received: by mail-pg1-f196.google.com with SMTP id t132so50272193pgb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 16:56:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gYpSAuCXXKxryh8QTeN+G2zHTLzdvz4q0W6bw5kxZF4=;
-        b=kj+TnowRhwNBHJOh8ghz79tlvll8x/4UGw5bdSUzfSM675Bmppn0T+5pwwMqUi1Pj8
-         SkfxC53wkTjuPEqLDzqpMT8o02usB1hT7ISXFNR37RoScwW9mBXE4G6OWWcEhGxQ4RjE
-         ZULQCeKPfhmyKaUvhvxsP1ztH072L3pIFOOb1mQPoepGl9JYtada5S4xJGf8kTW6G2ed
-         agtpkDcP4Se/8cfElAOE/jMH6pWLmTG0sCRAYFHxhMUFNN99If6/5pZXWUcydlo5gP79
-         cH+LRfP7b/BQG+d1ym6KyAQRfa3JaLfiK6f13kXjD96rm3bbdFV/J9GFHUpWjzV//M/H
-         yS1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gYpSAuCXXKxryh8QTeN+G2zHTLzdvz4q0W6bw5kxZF4=;
-        b=dK0Haq4aJrqt35QljYyHITVSAziI0LHNOpNk9wQbrlrK8XPrfzU8IJI+2k64meeEy3
-         U7cRTPvhyI2sIyfslLEbiNDvhmTNFPq6vpwQ+A0CWd/kG6DD94RtpjkyujoU94HshjEd
-         UDvWJ0c1wNJyXt/q9iKn0lUXIhCgKJuMETmzNgr9iVUNs3VKGaSQNi0LxSYPEXvkaWlH
-         V1ChDyjKl20JqnWH2QktGIGW3pB9RV41NXqN4K1gSFRtoEt1d41NaHnCgoYC+rO9POoS
-         h45K3BkE+t5qvlkJAG6wgUNZxUfRYqiptO1sA4SHIeZhfksCphyszj7VpsQuF8GC7Mhp
-         cDOQ==
-X-Gm-Message-State: APjAAAWJ9Exh9k58u+xn2whOT4XdYwsqE/WiHxIfnHcfqdEV38wCsh/C
-        rOPOpPhhff6YENK6fpsrra77VY8j58pgkoDazY3NSg==
-X-Google-Smtp-Source: APXvYqw7Md+FhMdhe7gt7ZbaYFjad4Qutk9q143YLYnyDZF1R0tUF3skBOerqPAJS3PaDxgm1xGa9mrupUlIDIlaGXw=
-X-Received: by 2002:a63:b919:: with SMTP id z25mr31882885pge.201.1565654201390;
- Mon, 12 Aug 2019 16:56:41 -0700 (PDT)
+        Mon, 12 Aug 2019 19:56:58 -0400
+Received: from mga06.intel.com ([134.134.136.31]:57192 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726578AbfHLX46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 19:56:58 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 16:56:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,379,1559545200"; 
+   d="scan'208";a="187598790"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga002.jf.intel.com with ESMTP; 12 Aug 2019 16:56:32 -0700
+Date:   Mon, 12 Aug 2019 16:56:32 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, mst@redhat.com, rkrcmar@redhat.com,
+        jmattson@google.com
+Subject: Re: [PATCH v6 5/8] KVM: VMX: Load Guest CET via VMCS when CET is
+ enabled in Guest
+Message-ID: <20190812235632.GH4996@linux.intel.com>
+References: <20190725031246.8296-1-weijiang.yang@intel.com>
+ <20190725031246.8296-6-weijiang.yang@intel.com>
 MIME-Version: 1.0
-References: <20190812182421.141150-1-brendanhiggins@google.com>
- <20190812182421.141150-5-brendanhiggins@google.com> <20190812234644.E054D20679@mail.kernel.org>
-In-Reply-To: <20190812234644.E054D20679@mail.kernel.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 12 Aug 2019 16:56:29 -0700
-Message-ID: <CAFd5g44huOiR9B0H1C2TtiPy63BDuwi_Qpb_exF3zmT3ttV8eg@mail.gmail.com>
-Subject: Re: [PATCH v12 04/18] kunit: test: add assertion printing library
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725031246.8296-6-weijiang.yang@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 4:46 PM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Brendan Higgins (2019-08-12 11:24:07)
-> > Add `struct kunit_assert` and friends which provide a structured way to
-> > capture data from an expectation or an assertion (introduced later in
-> > the series) so that it may be printed out in the event of a failure.
-> >
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > ---
->
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->
-> Just some minor nits below
->
-> > diff --git a/include/kunit/assert.h b/include/kunit/assert.h
-> > new file mode 100644
-> > index 0000000000000..55f1b88b0cb4d
-> > --- /dev/null
-> > +++ b/include/kunit/assert.h
-> > @@ -0,0 +1,183 @@
-> [...]
-> > +                           struct string_stream *stream);
-> > +
-> > +struct kunit_fail_assert {
-> > +       struct kunit_assert assert;
-> > +};
-> > +
-> > +void kunit_fail_assert_format(const struct kunit_assert *assert,
-> > +                             struct string_stream *stream);
-> > +
-> > +#define KUNIT_INIT_FAIL_ASSERT_STRUCT(test, type) {                           \
-> > +               .assert = KUNIT_INIT_ASSERT_STRUCT(test,                       \
-> > +                                                  type,                       \
-> > +                                                  kunit_fail_assert_format)   \
->
-> This one got indented one too many times?
+On Thu, Jul 25, 2019 at 11:12:43AM +0800, Yang Weijiang wrote:
+> "Load Guest CET state" bit controls whether Guest CET states
+> will be loaded at Guest entry. Before doing that, KVM needs
+> to check if CPU CET feature is enabled on host and available
+> to Guest.
+> 
+> Note: SHSTK and IBT features share one control MSR:
+> MSR_IA32_{U,S}_CET, which means it's difficult to hide
+> one feature from another in the case of SHSTK != IBT,
+> after discussed in community, it's agreed to allow Guest
+> control two features independently as it won't introduce
+> security hole.
+> 
+> Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index ce5d1e45b7a5..fbf9c335cf7b 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -44,6 +44,7 @@
+>  #include <asm/spec-ctrl.h>
+>  #include <asm/virtext.h>
+>  #include <asm/vmx.h>
+> +#include <asm/cet.h>
+>  
+>  #include "capabilities.h"
+>  #include "cpuid.h"
+> @@ -2923,6 +2924,18 @@ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+>  		if (!nested_vmx_allowed(vcpu) || is_smm(vcpu))
+>  			return 1;
+>  	}
+> +	if (cpu_x86_cet_enabled() &&
 
-Not unless I have been using the wrong formatting for multiline
-macros. You can see this commit applied here:
-https://kunit.googlesource.com/linux/+/870964da2990920030990dd1ffb647ef408e52df/include/kunit/assert.h#59
+It'd probably be better to check a KVM function here, e.g. a wrapper of
+kvm_supported_xss().  I don't think it will ever matter, but it'd be nice
+to have a single kill switch given the variety of different enable bits
+for CET.
 
-I have test, type, and kunit_fail_assert_format all column aligned (it
-just doesn't render nicely in the patch format).
-
-> > +}
-> > +
-> > +struct kunit_unary_assert {
-> > +       struct kunit_assert assert;
-> > +       const char *condition;
-> > +       bool expected_true;
-> > +};
-> > +
-> > +void kunit_unary_assert_format(const struct kunit_assert *assert,
-> > +                              struct string_stream *stream);
-> > +
-> [...]
-> > +#define KUNIT_INIT_BINARY_STR_ASSERT_STRUCT(test,                             \
-> > +                                           type,                              \
-> > +                                           op_str,                            \
-> > +                                           left_str,                          \
-> > +                                           left_val,                          \
-> > +                                           right_str,                         \
-> > +                                           right_val) {                       \
-> > +       .assert = KUNIT_INIT_ASSERT_STRUCT(test,                               \
-> > +                                          type,                               \
-> > +                                          kunit_binary_str_assert_format),    \
-> > +       .operation = op_str,                                                   \
-> > +       .left_text = left_str,                                                 \
-> > +       .left_value = left_val,                                                \
-> > +       .right_text = right_str,                                               \
-> > +       .right_value = right_val                                               \
-> > +}
->
-> It would be nice to have kernel doc on these macros so we know how to
-> use them.
-
-Sounds good. Will fix.
+> +	    (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
+> +	    guest_cpuid_has(vcpu, X86_FEATURE_IBT))) {
+> +		if (cr4 & X86_CR4_CET)
+> +			vmcs_set_bits(VM_ENTRY_CONTROLS,
+> +				      VM_ENTRY_LOAD_GUEST_CET_STATE);
+> +		else
+> +			vmcs_clear_bits(VM_ENTRY_CONTROLS,
+> +					VM_ENTRY_LOAD_GUEST_CET_STATE);
+> +	} else if (cr4 & X86_CR4_CET) {
+> +		return 1;
+> +	}
+>  
+>  	if (to_vmx(vcpu)->nested.vmxon && !nested_cr4_valid(vcpu, cr4))
+>  		return 1;
+> -- 
+> 2.17.2
+> 
