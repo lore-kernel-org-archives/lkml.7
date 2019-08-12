@@ -2,97 +2,96 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B642C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAA6C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35F2B20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:38:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="eSmgO6DX"
+	by mail.kernel.org (Postfix) with ESMTP id 5D6B220663
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbfHLMiE (ORCPT
+        id S1726632AbfHLMiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 08:38:04 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:58618 "EHLO mail.skyhub.de"
+        Mon, 12 Aug 2019 08:38:52 -0400
+Received: from mga01.intel.com ([192.55.52.88]:28018 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726219AbfHLMiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 08:38:03 -0400
-Received: from zn.tnic (p200300EC2F06270038B9220C3BC92516.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:2700:38b9:220c:3bc9:2516])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6522C1EC067D;
-        Mon, 12 Aug 2019 14:38:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1565613482;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=SaArodZx+5q7Iuxt2E8Pyvzs8NOQXSzRyvMaHdT3syI=;
-        b=eSmgO6DXKEyca86l5+4J4tIVGCZ/wU4V9IB66NTCZ71OAAM2iR8Wb1scWcC33SOpXpN7MB
-        To8Tyy7l39W585Yf4gFkhLT/H5R4fBkf3FGThVe9LoUmumsD8FmviH4Gpuk7IMaZukXl67
-        0DBk5dI7EgOvPkrtT8od+y5oD2qAYq4=
-Date:   Mon, 12 Aug 2019 14:38:47 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 02/24] EDAC, ghes: Fix grain calculation
-Message-ID: <20190812123847.GC23772@zn.tnic>
-References: <20190624150758.6695-1-rrichter@marvell.com>
- <20190624150758.6695-3-rrichter@marvell.com>
- <20190809131559.GF2152@zn.tnic>
- <20190812064147.5czmkj7e6hxgvje3@rric.localdomain>
- <20190812073221.GA23772@zn.tnic>
- <20190812120517.2kktugib244ujgvb@rric.localdomain>
+        id S1726557AbfHLMiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 08:38:52 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 05:38:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,377,1559545200"; 
+   d="scan'208";a="375930903"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga006.fm.intel.com with ESMTP; 12 Aug 2019 05:38:48 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 149315B; Mon, 12 Aug 2019 15:38:48 +0300 (EEST)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Mario.Limonciello@dell.com,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Raanan Avargil <raanan.avargil@intel.com>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH v2 1/8] thunderbolt: Correct path indices for PCIe tunnel
+Date:   Mon, 12 Aug 2019 15:38:40 +0300
+Message-Id: <20190812123847.50802-2-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190812123847.50802-1-mika.westerberg@linux.intel.com>
+References: <20190812123847.50802-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190812120517.2kktugib244ujgvb@rric.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 12:05:25PM +0000, Robert Richter wrote:
-> So for masks in the range from 0xffffffffff000000 to
-> 0xffffffffff7fffff we have grain_bits set to 24, which corresponds to
-> a grain of 0x1000000.
+PCIe tunnel path indices got mixed up when we added support for tunnels
+between switches that are not adjacent. This did not affect the
+functionality as it is just an index but fix it now nevertheless to make
+the code easier to understand.
 
-I don't think you're reading what I'm trying to say so let me go into
-more detail:
+Reported-by: Rajmohan Mani <rajmohan.mani@intel.com>
+Fixes: 8c7acaaf020f ("thunderbolt: Extend tunnel creation to more than 2 adjacent switches")
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Yehezkel Bernat <YehezkelShB@gmail.com>
+---
+ drivers/thunderbolt/tunnel.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I'm very suspicious about any and all information we get from firmware.
-I think that is clear why by now.
-
-If we get an address mask, we better sanity-check that mask. For
-example, whether it is contiguous or whether the set bits in it are even
-making any sense and so on.
-
-What you're doing is assuming the firmware will give you a sensible mask
-and you start working with it without checking it.
-
-For example, if you get a mask of 0xffffffffff00ff00, how do you know
-that the grain bits are really 24? Says who? There's a hole in the damn
-mask so it could just as well be *anything* *but* an address mask. Hell,
-it can be some random garbage.
-
-Do you catch my drift now?
-
-But, since we don't use the grain all too much and don't depend on it
-yet, we keep it simple and lazy for now:
-
-> > "I guess we can leave it like that for now until some "inventive"
-> > firmware actually does it."
-
+diff --git a/drivers/thunderbolt/tunnel.c b/drivers/thunderbolt/tunnel.c
+index 31d0234837e4..5a99234826e7 100644
+--- a/drivers/thunderbolt/tunnel.c
++++ b/drivers/thunderbolt/tunnel.c
+@@ -211,7 +211,7 @@ struct tb_tunnel *tb_tunnel_alloc_pci(struct tb *tb, struct tb_port *up,
+ 		return NULL;
+ 	}
+ 	tb_pci_init_path(path);
+-	tunnel->paths[TB_PCI_PATH_UP] = path;
++	tunnel->paths[TB_PCI_PATH_DOWN] = path;
+ 
+ 	path = tb_path_alloc(tb, up, TB_PCI_HOPID, down, TB_PCI_HOPID, 0,
+ 			     "PCIe Up");
+@@ -220,7 +220,7 @@ struct tb_tunnel *tb_tunnel_alloc_pci(struct tb *tb, struct tb_port *up,
+ 		return NULL;
+ 	}
+ 	tb_pci_init_path(path);
+-	tunnel->paths[TB_PCI_PATH_DOWN] = path;
++	tunnel->paths[TB_PCI_PATH_UP] = path;
+ 
+ 	return tunnel;
+ }
 -- 
-Regards/Gruss,
-    Boris.
+2.20.1
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
