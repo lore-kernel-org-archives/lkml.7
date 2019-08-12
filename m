@@ -2,111 +2,237 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C380C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55168C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E651220684
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:39:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="SHtmwssO"
+	by mail.kernel.org (Postfix) with ESMTP id 20D70208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:43:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565610183;
+	bh=J2QUGN2hFs/Xmtt8ck2TuwPo3LA4u4ESomEY8TkK5lc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ykse/S7H1Er0hbjHmhOCLtyU9VcLBPYoY2uK+ZdYsmpV3248U9ov5IsQJR2XJHzLx
+	 cjuP2SR6tJXJ8ONJOAoI//x/5D+fgLZG6mWRVAcInmrBtEZ7YzRsz7WnYrkYq35eDf
+	 +idHTwoNbmH/y4Fx7l7qqBOS3drlVdEbxXd2JrvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728233AbfHLLjB (ORCPT
+        id S1728207AbfHLLnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 07:39:01 -0400
-Received: from mout.gmx.net ([212.227.17.22]:37675 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728063AbfHLLjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 07:39:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1565609876;
-        bh=cqTzwEWo2DoYlZe7Z0sB1ny2nOtt1yNZ8bt6W3A1KII=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=SHtmwssOFA7m8ncbj+fKxg4+NldWg44nOIZudJyEmYYfzmraAQiiAFMqUmEF7SkOC
-         CvPMkkHknAz2so4e/Oiz89+hZBW9KpLinFdMz5l/3KmrGXybOP9325tSyPjxhH7Ij8
-         NuW2hD0H2kzD9LTusmNuSoZdqRlnCFBDKqOIhXXg=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [217.61.152.193] ([217.61.152.193]) by web-mail.gmx.net
- (3c-app-gmx-bs80.server.lan [172.19.170.228]) (via HTTP); Mon, 12 Aug 2019
- 13:37:55 +0200
+        Mon, 12 Aug 2019 07:43:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50972 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728063AbfHLLnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 07:43:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BA11AAF98;
+        Mon, 12 Aug 2019 11:42:58 +0000 (UTC)
+Date:   Mon, 12 Aug 2019 13:42:56 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Edward Chron <echron@arista.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        David Rientjes <rientjes@google.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Ivan Delalande <colona@arista.com>
+Subject: Re: [PATCH] mm/oom: Add killed process selection information
+Message-ID: <20190812114256.GG5117@dhcp22.suse.cz>
+References: <20190808183247.28206-1-echron@arista.com>
+ <20190808185119.GF18351@dhcp22.suse.cz>
+ <CAM3twVT0_f++p1jkvGuyMYtaYtzgEiaUtb8aYNCmNScirE4=og@mail.gmail.com>
+ <20190808200715.GI18351@dhcp22.suse.cz>
+ <CAM3twVS7tqcHmHqjzJqO5DEsxzLfBaYF0FjVP+Jjb1ZS4rA9qA@mail.gmail.com>
+ <20190809064032.GJ18351@dhcp22.suse.cz>
+ <CAM3twVRCTLdn+Lhcr+4ZdY3nYVvXFe1O19UR9H121W34H=oV7g@mail.gmail.com>
 MIME-Version: 1.0
-Message-ID: <trinity-738d59ed-ecac-4025-a729-0888eaea1f95-1565609875829@3c-app-gmx-bs80>
-From:   "Frank Wunderlich" <frank-w@public-files.de>
-To:     "Lee Jones" <lee.jones@linaro.org>
-Cc:     "Alessandro Zummo" <a.zummo@towertech.it>,
-        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
-        "Allison Randal" <allison@lohutok.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org,
-        "Eddie Huang" <eddie.huang@mediatek.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
-        "Kate Stewart" <kstewart@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, "Mark Rutland" <mark.rutland@arm.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
-        "Nicolas Ferre" <nicolas.ferre@microchip.com>,
-        "Richard Fontana" <rfontana@redhat.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Sean Wang" <sean.wang@mediatek.com>,
-        "Sebastian Reichel" <sre@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Tianping . Fang" <tianping.fang@mediatek.com>,
-        "Josef Friedl" <josef.friedl@speed.at>
-Subject: Aw: Re: Re: [PATCH v3 01/10] dt-bindings: add powercontroller
-Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 12 Aug 2019 13:37:55 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <20190812112507.GR26727@dell>
-References: <20190729174154.4335-1-frank-w@public-files.de>
- <20190729174154.4335-2-frank-w@public-files.de>
- <20190812102035.GH26727@dell>
- <trinity-a6c06411-16d3-40ab-a4fb-3494131c8ed6-1565608221532@3c-app-gmx-bs80>
- <20190812112507.GR26727@dell>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:rorlieaqUDCjznq/tycElIF6v/GTKDuIZAUVviT+MmLqGw0eg4RkqZ7ycwz8b8lDdV4+O
- 2TVUoeCUbv0y6rLGfW46rV272fwlqbSJCMfmM9T11BdNY7qytID/LYU/aj5V3HEiQIOXDdtejNmh
- D4lAYBCcbSo4fblFEtXcioNffyMD/cw2g3ibWb5CicM8DdVgulUL56qIlILE5iCgLt7ht++uYcQi
- gILb8XvcFlMgYLYkslMB142bpJ7X5lpUJuIc0+wP/tbrjSep5Knsj2Ml0HZgpjqkqCrn7MzQ4N7/
- Mk=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:KAhLhdHEyW4=:JfL6yTj4iO6NngvcIzYiG7
- QjaNkg7fFf+twakK9TwhwslxomlUmSaVBcvwfsFDit/4YwtFxcy+X9tE4bphavqoHK2AaUMRX
- Gpq2T4Dy2MsSyjsif//ggHEkBvPHW9ZQsOQmfSEgJ9rF3c3+Svu34dq6rg3cd2dRQC6KAG8fz
- YNalJ9iYQQoUxOFE0/+mwHUtIgujSjnVr5dXmfDXLJPLyQhgj93uaBzHtm3EigYYowGXCV+bn
- xmkl2DCjW0PrleBNebXYckjIbb7/MuifXCU9WxBCA02ooV3ZNctGcca9pH629Zy4+WFEj2CpK
- o/swOjGaY96QYPT+bRm8DsCLCgjqQVG1NlYEzUoMcn43TgH0K2CLeXsiiFzSE1XEj+aqkbbsp
- hGlB+hj+i1uQ1IRY67enjsiuQB6FmXiEHV6kRAfRQtH7vggot4Vw3f+XbfzCGr9tha8+C/7c7
- JgKH2a9727wcq01Q96EuCaUR8SAFb7hcH0ry17HgykirMGKv7kgASPp8DvKjOahAQwqlriXlb
- k6z26pdIWqwqNFPgwMV/3/dJkC4Rey3pr4slWt5s/opixXZDyJrAkDSvcd2jn76UeUOQsd3az
- 0p+gPDD93Oy4F1I/8MoQXHFdSd9K6l/9ZRS6KpRJnrz0ehn99uKqhDIVE1fCE9qrDq8spRGqU
- Lno9HoEwStbEYpRgXyPFDZvJ79YoecY5veO+A9EZyZZ/cEQ==
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM3twVRCTLdn+Lhcr+4ZdY3nYVvXFe1O19UR9H121W34H=oV7g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Gesendet: Montag, 12. August 2019 um 13:25 Uhr
-> Von: "Lee Jones" <lee.jones@linaro.org>
-> It was an example (hence the "E.g.").
->
-> You will need to adapt it depending on where the file ends up.
+On Fri 09-08-19 15:15:18, Edward Chron wrote:
+[...]
+> So it is optimal if you only have to go and find the correct log and search
+> or run your script(s) when you absolutely need to, not on every OOM event.
 
-i saw the e.g., but i wanted to know relative to which directory ;) your e=
-xample mentions that it should contain the dt-bindings-folder and i think =
-it should be relative to current file...
+OK, understood.
 
-have applied your suggestions to my tree
+> That is the whole point of triage and triage is easier when you have
+> relevant information to decide which events require action and with what
+> priority.
+> 
+> The OOM Killed message is the one message that we have go to
+> the console and or is sent as SNMP alert to the Admin to let the
+> Admin know that a server or switch has suffered a low memory OOM
+> event.
+> 
+> Maybe a few examples would be helpful to show why the few extra
+> bits of information would be helpful in such an environment.
+> 
+> For example if we see serverA and serverB are taking oom events
+> with the fooWidget being killed, something along the lines of
+> the following you will get message likes this:
+> 
+> Jul 21 20:07:48 serverA kernel: Out of memory: Killed process 2826
+>  (fooWidget) total-vm:10493400kB, anon-rss:10492996kB, file-rss:128kB,
+>  shmem-rss:0kB memory-usage:32.0% oom_score: 320 oom_score_adj:0
+>  total-pages: 32791748kB
+> 
+> Jul 21 20:13:51 serverB kernel: Out of memory: Killed process 2911
+>  (fooWidget) total-vm:11149196kB, anon-rss:11148508kB, file-rss:128kB,
+>  shmem-rss:0kB memory-usage:34.0% oom_score: 340 oom_score_adj:0
+>  total-pages: 32791748kB
+> 
+> It is often possible to recognize that fooWidget is using more memory than
+> expected on those systems and you can act on that possibly without ever
+> having to hunt down the log and run a script or otherwise analyze the
+> log. The % of memory and memory size can often be helpful to understand
+> if the numbers look reasonable or not. Maybe the application was updated
+> on just the those systems which explains why we don't see issues on the
+> other servers running that application, possible application memory leak.
 
-https://github.com/frank-w/BPI-R2-4.14/commits/5.3-poweroff
+This is all quite vague and requires a lot of guessing. Also your
+trained guess eye might easily get confused for constrained OOMs (e.g.
+due to NUMA or memcg). So I am not really sold to the percentage idea.
+And likewise the oom_score.
 
-please take a short look if i don't miss anything
+[...]
 
-regards Frank
+> You can also imagine that if for example systemd-udev gets OOM killed,
+> well that should really grab your attention:
+> 
+> Jul 21 20:08:11 serverX kernel: Out of memory: Killed process 2911
+>  (systemd-udevd) total-vm:83128kB, anon-rss:80520kB, file-rss:128kB,
+>  shmem-rss:0kB memory-usage:0.1% oom_score: 1001 oom_score_adj:1000
+>  total-pages: 8312512kB
+> 
+> Here we see an obvious issue: systemd-udevd is a critical system app
+> and it should not have an oom_score_adj: 1000 that clearly has been changed
+> it should be -1000.
+
+I do agree here. As I've said in the previous email oom_score_adj indeed
+has some value, and this is a nice example of that. So I am completely
+fine with a patch that adds this part to the changelog.
+
+[...]
+> > > The oom_score tells us how Linux calculated the score for the task,
+> > > the oom_score_adj effects this so it is helpful to have that in
+> > > conjunction with the oom_score.
+> > > If the adjust is high it can tell us that the task was acting as a
+> > > canary and so it's oom_score is high even though it's memory
+> > > utilization can be modest or low.
+> >
+> > I am sorry but I still do not get it. How are you going to use that
+> > information without seeing other eligible tasks. oom_score is just a
+> > normalized memory usage + some heuristics potentially (we have given a
+> > discount to root processes until just recently). So this value only
+> > makes sense to the kernel oom killer implementation. Note that the
+> > equation might change in the future (that has happen in the past several
+> > times) so looking at the value in isolation might be quite misleading.
+> 
+> We've been through the change where oom_scores went from -17 to 16
+> to -1000 to 1000. This was the change David Rientjes from Google made
+> back around 2010.
+> 
+> This was not a problem for us then and if you change again in the future
+> (though the current implementation seems quite reasonable) it shouldn't
+> be an issue for us going forward or for anyone else that can use the
+> additional information in the OOM Kill message we're proposing.
+
+While I appreciate that you are flexible enough to cope with those
+changes there are other users which might be less so and there is a
+strong "no regressions" rule which might get us into the corner so we
+are trying hard to not export to much of an internal information so that
+userspace doesn't start depending on them.
+
+[...]
+
+> Now what about the oom_score value changing that you mentioned?
+> What if you toss David's OOM Kill algorithm for a new algorithm?
+> That could happen. What happens to the message and how do we
+> tell things have changed?
+> 
+> A different oom_score requires a different oom adjustment variable.
+> I hope we can agree on that and history supports this.
+
+The idea is that we would have to try to fit oom_score_adj semantic into
+a new algoritm and -1000..1000 value range would be hopefully good
+enough. That doesn't really dictate the internal calculation of the
+badness, if such a theretical alg. would use at all.
+
+> As you recall when David's algorithm was brought in, the Kernel OOM
+> team took good care of us. They added a new adjustment value:
+> oom_score_adj. As you'll recall the previous oom adjustment variable
+> was oom_adj. To keep user level code from breaking the Kernel OOM
+> developers provided a conversion so that if your application set
+> oom_adj = -17 the Linux OOM code internally set oom_score_adj = -1000.
+> They had a conversion that handled all the values. Eventually the
+> deprecated oom_adj field was removed, but it was around for several years.
+
+Yes, the scaling just happened to work back then.
+
+[...]
+
+> Further, you export oom_score through the /proc/pid/oom_score
+> interface. How the score is calculated could change but it is
+> accessible. It's accessible for a reason, it's useful to know how
+> the OOM algorithm scores a task and that can be used to help
+> set appropriate oom adjustment values. This because what the
+> oom_score means is in fact well documented. It needs to.
+> Otherwise, the oom adjustment value becomes impossible to
+> use intelligently. Thanks to David Rientjes et al for making this so.
+
+The point I am trying to push through is that the score (exported via
+proc or displayed via dump_tasks) is valuable only as far as you have a
+meaningful comparision to make - aka compare to scores of other tasks.
+The value on its own cannot tell you really much without a deep
+understanding of how it is calculated. And I absolutely do not want
+userspace to hardcode that alg. and rely on it being stable. You really
+do not need this internal knowledge when comparing scores of different
+tasks, though so it is quite safe and robust from future changes.
+
+We have made those mistakes when exporting way to much internal details
+to userspace in the past and got burnt.
+ 
+> One of the really nice design points of David Rientjes implementation
+> is that it is very straight forward to use and understand. So hopefully
+> if there is a change in the future it's to something that is just as easy
+> to use and to understand.
+> 
+> >
+> > I can see some point in printing oom_score_adj, though. Seeing biased -
+> > one way or the other - tasks being selected might confirm the setting is
+> > reasonable or otherwise (e.g. seeing tasks with negative scores will
+> > give an indication that they might be not biased enough). Then you can
+> > go and check the eligible tasks dump and see what happened. So this part
+> > makes some sense to me.
+> 
+> Agreed, the oom_score_adj is sorely needed and should be included.
+
+I am willing to ack a patch to add oom_score_adj on the grounds that
+this information is helpful to pinpoint misconfigurations and it is not
+generally available when dump_tasks is disabled.
+
+> In Summary:
+> ----------------
+> I hope I have presented a reasonable enough argument for the proposed
+> additional parameters.
+
+I am not convinced on oom_score and percentage part because score on its
+own is an implementation detail that makes sense when comparing tasks
+but on on its own and percentage might be even confusing as explained
+above.
+
+Thanks for your detailed information!
+-- 
+Michal Hocko
+SUSE Labs
