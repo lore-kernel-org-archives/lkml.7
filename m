@@ -2,204 +2,121 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0231C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DD3C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8F42070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895642070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 08:53:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gL1S3cqa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfHLIwp (ORCPT
+        id S1727303AbfHLIxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 04:52:45 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:34123 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726495AbfHLIwp (ORCPT
+        Mon, 12 Aug 2019 04:53:37 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46733 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbfHLIxh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 04:52:45 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=luoben@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TZFSTZI_1565599949;
-Received: from localhost(mailfrom:luoben@linux.alibaba.com fp:SMTPD_---0TZFSTZI_1565599949)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 12 Aug 2019 16:52:37 +0800
-From:   Ben Luo <luoben@linux.alibaba.com>
-To:     tglx@linutronix.de, alex.williamson@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     tao.ma@linux.alibaba.com, gerry@linux.alibaba.com,
-        nanhai.zou@linux.alibaba.com, linyunsheng@huawei.com
-Subject: [PATCH v2 3/3] vfio_pci: make use of update_irq_devid and optimize irq ops
-Date:   Mon, 12 Aug 2019 16:52:06 +0800
-Message-Id: <c8114c70d33a75b08b2453c91eaf381fff44cd94.1565594108.git.luoben@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1565594108.git.luoben@linux.alibaba.com>
-References: <cover.1565594108.git.luoben@linux.alibaba.com>
-In-Reply-To: <cover.1565594108.git.luoben@linux.alibaba.com>
-References: <cover.1565263723.git.luoben@linux.alibaba.com> <cover.1565594108.git.luoben@linux.alibaba.com>
+        Mon, 12 Aug 2019 04:53:37 -0400
+Received: by mail-wr1-f68.google.com with SMTP id z1so103858602wru.13;
+        Mon, 12 Aug 2019 01:53:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=seSi3n95uUD8W4p/6j5kcYSqF/k8upBA9PgsWMWJ7bo=;
+        b=gL1S3cqaH2kcFGJ+D0mmDlLbZNLWmyvKbnXOS3cN+w2qXfmjF6ORunVFU3P5LrNb4v
+         2fG8te6m8bi+vV6geLz39oHTVCPBZNrtBu6kQHNo9wVxIHuLfcRiSQVjbM5Ukyk4cTTl
+         RG6IJtRV79vTLhpLqOLTf6hkPxW52XEBx8UAYsF5HW9CNh2YlIusPHzj/PK5mQDnPoL1
+         92pQgCtFLsWx29TEhrMOI31ucZ21t1AhMzZpSDk9/vBdot2fzFHDur6+vOLzfu9jfiMs
+         42ZUHIs0EjQu3InmSY0/l8XH35Q2XuNCmvMjBGtNnlUwQuNuqjcZsM9/SPRLaNyDUNQ0
+         zYNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=seSi3n95uUD8W4p/6j5kcYSqF/k8upBA9PgsWMWJ7bo=;
+        b=B9UmRfsXX7jGpEb5guAXQZVyLl6bF5UIQ+lrfnl9ZlAKUdCsPaOlR/w5ypmWubdwXN
+         DfBim6JofAayAJdLJNURawmjAsrh5Sb2lGT6kpit8fDBhZ8Lf9odEGv9dbhrE9iA20X2
+         8SAGu4ug9HdJDnU+0CZiKdCawrn20dqDOFFgv2rHzCsM8Ift8913HJiDDMsDc4lkQUv5
+         Wnuk5tWcRfrv9wTDvzDyLxzW/52FHBvVVNJ5/MO09GBz/BC+OMpY/m2+GT+xYzfp6Uqr
+         81a5TKVUlcxL4kb5UhbFzxpsmQPaEkyZ8HqGOeT/qJ/ScSYWH3SJnPwn+DX7ProPymrF
+         oYbw==
+X-Gm-Message-State: APjAAAUy7Q39ixxyfs7bI/geuGuOsO887oO6Jy13NKvMf0i5WO5NNO2C
+        WdGkdsNgkQF2RhVs/+pWqxccytQJ
+X-Google-Smtp-Source: APXvYqwdVmUaxgGtGQM8j0YJJLJuWAoTqInIoMHALirw91ZoA/TbTRW80piD15HwmOFiqFp8ZbLhig==
+X-Received: by 2002:a05:6000:14b:: with SMTP id r11mr39722594wrx.196.1565600015270;
+        Mon, 12 Aug 2019 01:53:35 -0700 (PDT)
+Received: from ?IPv6:2a00:23c4:1c64:3600:ef32:9810:b6a2:ebe? ([2a00:23c4:1c64:3600:ef32:9810:b6a2:ebe])
+        by smtp.googlemail.com with ESMTPSA id o9sm1305900wrj.17.2019.08.12.01.53.34
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 12 Aug 2019 01:53:34 -0700 (PDT)
+Subject: Re: [PATCH] media: docs-rst: Clarify duration of LP-11 mode
+To:     Steve Longerbeam <slongerbeam@gmail.com>,
+        linux-media@vger.kernel.org
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190811173621.20454-1-slongerbeam@gmail.com>
+From:   Ian Arkver <ian.arkver.dev@gmail.com>
+Message-ID: <3f31cde6-8faf-f9a0-626e-dc995260a640@gmail.com>
+Date:   Mon, 12 Aug 2019 09:53:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190811173621.20454-1-slongerbeam@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When userspace (e.g. qemu) triggers a switch between KVM
-irqfd and userspace eventfd, only dev_id of irq action
-(i.e. the "trigger" in this patch's context) will be
-changed, but a free-then-request-irq action is taken in
-current code. And, irq affinity setting in VM will also
-trigger a free-then-request-irq action, which actully
-changes nothing, but only fires a producer re-registration
-to update irte in case that posted-interrupt is in use.
+Hi Steve,
 
-This patch makes use of update_irq_devid() and optimize
-both cases above, which reduces the risk of losing interrupt
-and also cuts some overhead.
+On 11/08/2019 18:36, Steve Longerbeam wrote:
+> Add a sentence that makes it more clear when the CSI-2 transmitter
+> must, if possible, exit LP-11 mode. That is, maintain LP-11 mode
+> until stream on, at which point the transmitter activates the clock
+> lane and transition to HS mode.
+> 
+> Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+> ---
+>   Documentation/media/kapi/csi2.rst | 10 +++++++---
+>   1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/media/kapi/csi2.rst b/Documentation/media/kapi/csi2.rst
+> index a7e75e2eba85..6cd1d4b0df17 100644
+> --- a/Documentation/media/kapi/csi2.rst
+> +++ b/Documentation/media/kapi/csi2.rst
+> @@ -49,9 +49,13 @@ where
+>   
+>   The transmitter drivers must, if possible, configure the CSI-2
+>   transmitter to *LP-11 mode* whenever the transmitter is powered on but
+> -not active. Some transmitters do this automatically but some have to
+> -be explicitly programmed to do so, and some are unable to do so
+> -altogether due to hardware constraints.
+> +not active, and maintain *LP-11 mode* until stream on. Only until
 
-Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
-Reviewed-by: Liu Jiang <gerry@linux.alibaba.com>
-Reviewed-by: Zou Nanhai <nanhai.zou@linux.alibaba.com>
-Reviewed-by: Yunsheng Lin <linyunsheng@huawei.com>
----
- drivers/vfio/pci/vfio_pci_intrs.c | 99 ++++++++++++++++++++++++---------------
- 1 file changed, 61 insertions(+), 38 deletions(-)
+s/until/at/ perhaps?
 
-diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vfio_pci_intrs.c
-index 3fa3f72..541153d 100644
---- a/drivers/vfio/pci/vfio_pci_intrs.c
-+++ b/drivers/vfio/pci/vfio_pci_intrs.c
-@@ -284,70 +284,93 @@ static int vfio_msi_enable(struct vfio_pci_device *vdev, int nvec, bool msix)
- static int vfio_msi_set_vector_signal(struct vfio_pci_device *vdev,
- 				      int vector, int fd, bool msix)
- {
-+	struct eventfd_ctx *trigger = NULL;
- 	struct pci_dev *pdev = vdev->pdev;
--	struct eventfd_ctx *trigger;
- 	int irq, ret;
- 
- 	if (vector < 0 || vector >= vdev->num_ctx)
- 		return -EINVAL;
- 
-+	if (fd >= 0) {
-+		trigger = eventfd_ctx_fdget(fd);
-+		if (IS_ERR(trigger))
-+			return PTR_ERR(trigger);
-+	}
-+
- 	irq = pci_irq_vector(pdev, vector);
- 
- 	if (vdev->ctx[vector].trigger) {
--		free_irq(irq, vdev->ctx[vector].trigger);
--		irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
--		kfree(vdev->ctx[vector].name);
--		eventfd_ctx_put(vdev->ctx[vector].trigger);
--		vdev->ctx[vector].trigger = NULL;
-+		if (vdev->ctx[vector].trigger == trigger) {
-+			irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
-+		} else if (trigger) {
-+			ret = update_irq_devid(irq,
-+					vdev->ctx[vector].trigger, trigger);
-+			if (unlikely(ret)) {
-+				dev_info(&pdev->dev,
-+						"update_irq_devid %d (token %p) fails: %d\n",
-+						irq, vdev->ctx[vector].trigger, ret);
-+				eventfd_ctx_put(trigger);
-+				return ret;
-+			}
-+			irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
-+			eventfd_ctx_put(vdev->ctx[vector].trigger);
-+			vdev->ctx[vector].producer.token = trigger;
-+			vdev->ctx[vector].trigger = trigger;
-+		} else {
-+			free_irq(irq, vdev->ctx[vector].trigger);
-+			irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
-+			kfree(vdev->ctx[vector].name);
-+			eventfd_ctx_put(vdev->ctx[vector].trigger);
-+			vdev->ctx[vector].trigger = NULL;
-+		}
- 	}
- 
- 	if (fd < 0)
- 		return 0;
- 
--	vdev->ctx[vector].name = kasprintf(GFP_KERNEL, "vfio-msi%s[%d](%s)",
--					   msix ? "x" : "", vector,
--					   pci_name(pdev));
--	if (!vdev->ctx[vector].name)
--		return -ENOMEM;
-+	if (!vdev->ctx[vector].trigger) {
-+		vdev->ctx[vector].name = kasprintf(GFP_KERNEL, "vfio-msi%s[%d](%s)",
-+						   msix ? "x" : "", vector,
-+						   pci_name(pdev));
-+		if (!vdev->ctx[vector].name) {
-+			eventfd_ctx_put(trigger);
-+			return -ENOMEM;
-+		}
- 
--	trigger = eventfd_ctx_fdget(fd);
--	if (IS_ERR(trigger)) {
--		kfree(vdev->ctx[vector].name);
--		return PTR_ERR(trigger);
--	}
-+		/*
-+		 * The MSIx vector table resides in device memory which may be cleared
-+		 * via backdoor resets. We don't allow direct access to the vector
-+		 * table so even if a userspace driver attempts to save/restore around
-+		 * such a reset it would be unsuccessful. To avoid this, restore the
-+		 * cached value of the message prior to enabling.
-+		 */
-+		if (msix) {
-+			struct msi_msg msg;
- 
--	/*
--	 * The MSIx vector table resides in device memory which may be cleared
--	 * via backdoor resets. We don't allow direct access to the vector
--	 * table so even if a userspace driver attempts to save/restore around
--	 * such a reset it would be unsuccessful. To avoid this, restore the
--	 * cached value of the message prior to enabling.
--	 */
--	if (msix) {
--		struct msi_msg msg;
-+			get_cached_msi_msg(irq, &msg);
-+			pci_write_msi_msg(irq, &msg);
-+		}
- 
--		get_cached_msi_msg(irq, &msg);
--		pci_write_msi_msg(irq, &msg);
--	}
-+		ret = request_irq(irq, vfio_msihandler, 0,
-+				  vdev->ctx[vector].name, trigger);
-+		if (ret) {
-+			kfree(vdev->ctx[vector].name);
-+			eventfd_ctx_put(trigger);
-+			return ret;
-+		}
- 
--	ret = request_irq(irq, vfio_msihandler, 0,
--			  vdev->ctx[vector].name, trigger);
--	if (ret) {
--		kfree(vdev->ctx[vector].name);
--		eventfd_ctx_put(trigger);
--		return ret;
-+		vdev->ctx[vector].producer.token = trigger;
-+		vdev->ctx[vector].producer.irq = irq;
-+		vdev->ctx[vector].trigger = trigger;
- 	}
- 
--	vdev->ctx[vector].producer.token = trigger;
--	vdev->ctx[vector].producer.irq = irq;
-+	/* always update irte for posted mode */
- 	ret = irq_bypass_register_producer(&vdev->ctx[vector].producer);
- 	if (unlikely(ret))
- 		dev_info(&pdev->dev,
- 		"irq bypass producer (token %p) registration fails: %d\n",
- 		vdev->ctx[vector].producer.token, ret);
- 
--	vdev->ctx[vector].trigger = trigger;
--
- 	return 0;
- }
- 
--- 
-1.8.3.1
-
+Regards,
+Ian
+> +stream on should the transmitter activate the clock on the clock lane
+> +and transition to *HS mode*.
+> +
+> +Some transmitters do this automatically but some have to be explicitly
+> +programmed to do so, and some are unable to do so altogether due to
+> +hardware constraints.
+>   
+>   Stopping the transmitter
+>   ^^^^^^^^^^^^^^^^^^^^^^^^
+> 
