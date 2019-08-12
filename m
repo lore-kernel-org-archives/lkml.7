@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E17BC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D0DC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7932075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F4D82070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 16:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565629160;
-	bh=PdtTcSZjjJb+bU2tlX229LVd2lD6fC6ue5lm35NYCHw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=IsKuIGuIUVD0kdOHPW6Tck6H2nyioOoqwMGdFsJCjkASYcCE04C/HGxKpAZrKOg8d
-	 vUm36J2Chru5H19ua/cu0FaVKSRsNTeDZc4ZPSI1j4qCMPzcrpCsTUvsAH3e+5Bmsf
-	 eEkzXnfieFOOiKWI9k6C94OLy0zcte0SNfbXO+sU=
+	s=default; t=1565629164;
+	bh=Ci82lONq88I3sucz76yHUJovvhW4UMeWeK/z+hWWIaA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=h70l4vuAtVfyLBhIfBY5cL+8Q+dcZQ30V9tM5CDPD9i1Yb8owzKFPiC99t+C//zxJ
+	 RxtyYlGEmkeveY4TB+6Upc+iVyOLNMi1gqv3ZJgGzqQWbJ5aUuZD1bWf1u7/qdF1/Y
+	 OVG5jqw/n4gnuRsPLtEUFuxwclsY7EZrEogltQBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfHLQ7T (ORCPT
+        id S1726998AbfHLQ7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 12:59:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39564 "EHLO mail.kernel.org"
+        Mon, 12 Aug 2019 12:59:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbfHLQ7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 12:59:18 -0400
+        id S1725843AbfHLQ7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 12:59:22 -0400
 Received: from localhost.localdomain (unknown [194.230.155.124])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAB2F20684;
-        Mon, 12 Aug 2019 16:59:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C5B02070C;
+        Mon, 12 Aug 2019 16:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565629158;
-        bh=PdtTcSZjjJb+bU2tlX229LVd2lD6fC6ue5lm35NYCHw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=z/VxHqm0kOKZ63yv5i5XC4nglhJhjI+fsBKbPB6XB6TZybUVrSAdc79Zx3EPdzgxQ
-         1FjX/wS0tZH0gPiMCrwBiDf6U+ElPP0RWiCRuNYlNgHZIzKw0DfVnS1b5pq7BKXLdI
-         tipzjy21DO9n9C/xEI8L2w01ciBbp10omrfz3S+s=
+        s=default; t=1565629161;
+        bh=Ci82lONq88I3sucz76yHUJovvhW4UMeWeK/z+hWWIaA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PVc7swFB2gvBEN8sHIIC2yxSfxMS0vHNLNlyFG5ZotexZ8VHm51rJsBaeUzzL0iip
+         uwuaFY4R4yXLUc5jZpz2o5CX7apIoByQ7mUEv04ZQZx0QpFtrP5w0ijH4b9uJYS/L6
+         TJBvHCfOPeNmoQZUr6M2faySX/lrRlxjvbXJAaC8=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Schrempf Frieder <frieder.schrempf@kontron.de>,
         Rob Herring <robh+dt@kernel.org>,
@@ -51,52 +51,45 @@ To:     Schrempf Frieder <frieder.schrempf@kontron.de>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v5 1/3] dt-bindings: vendor-prefixes: Add Anvo-Systems
-Date:   Mon, 12 Aug 2019 18:59:07 +0200
-Message-Id: <20190812165909.12387-1-krzk@kernel.org>
+Subject: [PATCH v5 2/3] dt-bindings: eeprom: at25: Add Anvo ANV32E61W
+Date:   Mon, 12 Aug 2019 18:59:08 +0200
+Message-Id: <20190812165909.12387-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190812165909.12387-1-krzk@kernel.org>
+References: <20190812165909.12387-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add vendor prefix for Anvo-Systems Dresden GmbH.
+Document the compatible for ANV32E61W 64kb Serial SPI non-volatile SRAM.
+Although it is a SRAM device, it can be accessed through EEPROM
+interface. At least until there is no proper SRAM driver support for
+it.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
 ---
 
 Changes since v4:
-None
-
-Changes since v3:
-1. Add Rob's tag,
-2. Remove Admatec (not needed anymore).
-
-Changes since v2:
-1. Use admatecde vendor prefix.
-2. Add Anvo-Systems Dresden GmbH.
-
-Changes since v1:
-New patch
+1. Update commit msg.
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/eeprom/at25.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 6992bbbbffab..519889f5aec8 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -81,6 +81,8 @@ patternProperties:
-     description: Analogix Semiconductor, Inc.
-   "^andestech,.*":
-     description: Andes Technology Corporation
-+  "^anvo,.*":
-+    description: Anvo-Systems Dresden GmbH
-   "^apm,.*":
-     description: Applied Micro Circuits Corporation (APM)
-   "^aptina,.*":
+diff --git a/Documentation/devicetree/bindings/eeprom/at25.txt b/Documentation/devicetree/bindings/eeprom/at25.txt
+index b3bde97dc199..42577dd113dd 100644
+--- a/Documentation/devicetree/bindings/eeprom/at25.txt
++++ b/Documentation/devicetree/bindings/eeprom/at25.txt
+@@ -3,6 +3,7 @@ EEPROMs (SPI) compatible with Atmel at25.
+ Required properties:
+ - compatible : Should be "<vendor>,<type>", and generic value "atmel,at25".
+   Example "<vendor>,<type>" values:
++    "anvo,anv32e61w"
+     "microchip,25lc040"
+     "st,m95m02"
+     "st,m95256"
 -- 
 2.17.1
 
