@@ -2,178 +2,106 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2304BC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2ABFC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD927208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C93492085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:26:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="mEE6Oxk/"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="MGnSkv10"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbfHLLYN (ORCPT
+        id S1728273AbfHLL0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 07:24:13 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:26260 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728002AbfHLLYM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 07:24:12 -0400
-Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7CBNN1V003863;
-        Mon, 12 Aug 2019 07:24:00 -0400
-Received: from nam03-by2-obe.outbound.protection.outlook.com (mail-by2nam03lp2058.outbound.protection.outlook.com [104.47.42.58])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2u9tj5w5yy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 12 Aug 2019 07:24:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d7j6mIQy/pirK6YxvJeIrIWGjYqxWyrDHlrRiEXDBiKf8bTeXymYQem/w0hPBLracM2U/8saM4AzkrS4m72Xt5ekA9Se9t5qA4qFkDYpdz30C/+1oQyuRH1pPCvxw5Y9EIISBU6NVMvuO9kB68f7KyAW6ARFi0MJ8diYFb1VtBLnUnTBQoBULXbYs+N06x2rJmSu3VuPiR6yGQwi15O9qz3NWvOCD9/85iH0LD38XOEntxy6OCMQoA/aJ2kiLQA9ZmdbNIOoO0pBVu6UxGL4W2Y6eHVM1GQYvrgXwe/vtNrZdz2JpLByVvT5y55qdzZw6SKbxkEKGSqE8CMb1mYWvQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bVq3khXPCmQbD5YaUjvVmg0dyGSbBBI56yR29sxBudU=;
- b=U2KpxbrBXhw1S1w/pAIn5MjoLW4Rlenw3DO6OdtgKEyI6f4DeMirIEte1YtlH1xRUtf4hov/jnixzrevwas+oBSZhgZGTHHfkXn/vcHNbs5a5gb77VEi1rM9vlfnJdm/P9AJDvqmQeytRCfeWY50dvKiUSTr1qIc0UPjM+ViV2sMiLjMsnQzfW8JIGhvNjEAqjnE22IQYRnEZ7dHL92gXVHOtKHQibuSOEd6JBpLNnapVuXaQWKLtkAy2OhOTUPXHy8DSKVbT6aU/IKLFBIbBfeHUPFbQnZ8SVQqn7K/H/4asztY49UtEZirJ/fhSNtpVZNYHGgZ9LZPTtaMxZz5xg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bVq3khXPCmQbD5YaUjvVmg0dyGSbBBI56yR29sxBudU=;
- b=mEE6Oxk/Csj2eAf2rAka8P/HQpkY7nhDvRjm/MCaB5bYjD9Fj9PjVyNYXHvJqKTprlD4eHyoxORe54LnzOEsGBQXKiQdBucDSm5ckCHExzsEzEpsO5M8CH7eONdVWgIC2CF6gkAGKfDBmB/eaqjCcakQ+mq5SKxSLC51w53n6xY=
-Received: from DM6PR03CA0016.namprd03.prod.outlook.com (2603:10b6:5:40::29) by
- DM5PR03MB3161.namprd03.prod.outlook.com (2603:10b6:4:3c::34) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.21; Mon, 12 Aug 2019 11:23:57 +0000
-Received: from BL2NAM02FT024.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::204) by DM6PR03CA0016.outlook.office365.com
- (2603:10b6:5:40::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.13 via Frontend
- Transport; Mon, 12 Aug 2019 11:23:57 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- BL2NAM02FT024.mail.protection.outlook.com (10.152.77.62) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2157.15
- via Frontend Transport; Mon, 12 Aug 2019 11:23:56 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x7CBNtXK004141
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Mon, 12 Aug 2019 04:23:55 -0700
-Received: from saturn.ad.analog.com (10.48.65.113) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Mon, 12 Aug 2019 07:23:54 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <davem@davemloft.net>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <f.fainelli@gmail.com>,
-        <hkallweit1@gmail.com>, <andrew@lunn.ch>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v4 00/14] net: phy: adin: add support for Analog Devices PHYs
-Date:   Mon, 12 Aug 2019 14:23:36 +0300
-Message-ID: <20190812112350.15242-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 12 Aug 2019 07:26:22 -0400
+Received: from mout.gmx.net ([212.227.15.19]:49285 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728085AbfHLL0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 07:26:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1565609116;
+        bh=v7b7BvrXciV3NBubwOpaemt2kAsPrl1BPe/Nz2NswBU=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=MGnSkv10s6bJr+2LYe0Vg+T5aQQgWun0XdWZhVJjH0OTeFdRRlBmS6Ih2lFLvyv5L
+         vWF5UvQnSdqCZULmjwQ9RVEYSZYOAIXomyeYoAZIvUPv/MqCc2QtBZUOL0fxHIZnVy
+         VqBXryDgJhswl2xOlxSt0waDs6QiYE7+ZufmluR4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [217.61.152.193] ([217.61.152.193]) by web-mail.gmx.net
+ (3c-app-gmx-bs80.server.lan [172.19.170.228]) (via HTTP); Mon, 12 Aug 2019
+ 13:25:16 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(376002)(39860400002)(396003)(136003)(2980300002)(199004)(189003)(54534003)(8676002)(106002)(246002)(1076003)(48376002)(54906003)(2906002)(110136005)(8936002)(478600001)(966005)(86362001)(44832011)(6306002)(50466002)(2201001)(47776003)(6666004)(356004)(50226002)(126002)(7636002)(26005)(305945005)(51416003)(7696005)(186003)(426003)(107886003)(476003)(336012)(486006)(2616005)(316002)(14444005)(70586007)(70206006)(5660300002)(36756003)(2870700001)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR03MB3161;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 262d0c84-3178-4de6-67e2-08d71f1790c4
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:DM5PR03MB3161;
-X-MS-TrafficTypeDiagnostic: DM5PR03MB3161:
-X-MS-Exchange-PUrlCount: 2
-X-Microsoft-Antispam-PRVS: <DM5PR03MB3161A2CBA4B0EA42DB4511B2F9D30@DM5PR03MB3161.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 012792EC17
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: dH3UAJUj25k23XlL4X0cHwUM/bo9jRpyOIXw7Z3zKgQIxNPbSWuQIHyUi5b24l/DVYq+YsckdaniLBFVH9jgmSZJ3s9Avx5JfvslMRKDbRLbin6OAL+O4ghoDLT3HJLmm2gWVMBJc6MY0dx4zK0Ux2GjCkZ/lQztpq0rnbsypCtl7IBK7T5FEqSPf1qzQcfYILC2zDfFeBT23g9GLd5AMozJIct9x+HhTLEcM3FIk1TSYALXgyOSrNUdlvi6ra0FK0zCv6yqPcXKb9kq56RnDYpF0zRKgtIOFIDbSjiMWl7gTWZIIez4rwiQ6LZQPU54zkRryk8zVxhwj0xMRhWSMK6kYgCy5QqO5YeH79f4JQk7eOtUEQk3E2bR2xJpuNwQ02rMlYfyZrWvYRGZenyATAhqwFlynMY+d5hLl0SUOeM=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2019 11:23:56.8693
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 262d0c84-3178-4de6-67e2-08d71f1790c4
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR03MB3161
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-12_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=759 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908120128
+Message-ID: <trinity-0fa641df-f7bb-4627-a9ab-aac3cabc90ba-1565609115974@3c-app-gmx-bs80>
+From:   "Frank Wunderlich" <frank-w@public-files.de>
+To:     "Lee Jones" <lee.jones@linaro.org>
+Cc:     "Kate Stewart" <kstewart@linuxfoundation.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+        linux-kernel@vger.kernel.org,
+        "Richard Fontana" <rfontana@redhat.com>,
+        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
+        linux-rtc@vger.kernel.org, "Allison Randal" <allison@lohutok.net>,
+        "Nicolas Ferre" <nicolas.ferre@microchip.com>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        "Sean Wang" <sean.wang@mediatek.com>,
+        "Tianping . Fang" <tianping.fang@mediatek.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Eddie Huang" <eddie.huang@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "Alessandro Zummo" <a.zummo@towertech.it>,
+        "Josef Friedl" <josef.friedl@speed.at>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Sebastian Reichel" <sre@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Aw: Re: [PATCH v3 06/10] mfd: mt6323: some improvements of
+ mt6397-core
+Content-Type: text/plain; charset=UTF-8
+Date:   Mon, 12 Aug 2019 13:25:16 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <20190812102209.GI26727@dell>
+References: <20190729174154.4335-1-frank-w@public-files.de>
+ <20190729174154.4335-7-frank-w@public-files.de>
+ <20190812102209.GI26727@dell>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:+H+zrFxbX3u65Kz8Q14UR+W2QL6KWeuqbqDXcd/mwlEXxknDmP8VniBO4dlsPO8lvzAXn
+ 3Y5NyGNEFcxG/hiDEMdhlb6mGUuC2oM0phOjueOu2MDtHhyNSzKa7zzri7AaOrLyXgls+u8sTwPQ
+ oAV/CbSBYlmUVInmmRiS2kzjJFgTPVlFkzP+Rwz8lHdNBK149VceMK36vw/RyB+IoFv+U8FKiztO
+ yMwrHuIbMWrhlGq1Uj1J+0nxuOtWnyd5GyKRFUYsqojA8ecuYK6tOXNnVm1cb1FrnaNST1QYDBxU
+ Mg=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8Yj7l7CH0Mw=:gZd+QnMoJMQ46IbcpRg+69
+ uYQ9PWSHzCb4jiQPAL0RN4XqGKUkZP7au9BlZu0WeAXvh2moFGkS+Qh6H/UHvlfwoK/zckQts
+ cSjLWlFMupqJc7aAKUQfYQeemHELWiYqn7OHSi3fCzZ5BWFF4A3nQ4g4yoiqnt0pEuncDClxD
+ qyoAVq9ArjxiVhYQYJA+PBrs7RziX5GkbBGDbwU5A9oGzVXvGiaDnBv6dUZOnhrW42dabqHS0
+ lXU6xDXmrEAtePWxyeJZ40FbZOUl2nBhcn0Ctq5enGlq6vSuThfpLhU/cMvkVj9nHxdUkAeqy
+ ASvjyoO1IKTe/Leg8l0X6YSD2sTyzyv7YXtP0U0sEOo1WUBWGayxs4gAzARxamymbaBjlhfx/
+ OUyC1XD9pmsdx+kOvL61uobd2H29U8aF9pvGk1JBGdzDPzbNvzGqg7Oc1VOkBk9gGzSzeaCdw
+ EWqUYj0GKkc5wRo4mB/yfqKK3ymFbRVrkA8YxocvAnR/cXIcxS+jvKmY2YyDG6p2BMGEPvXKZ
+ 7xzezeddUuOzzBfMo3wupso6yj2SDGjeO5OPEwTvJNjgdfUr8uCyYRFquSH5DsOvA7C4xYYjT
+ gN3DvuN67PPM5sP0cvLOSC6YEijq4vcf44N36E+tBQs7z/K5g6lA0LQzCD7+B4ZjLv1wdYjDw
+ 06kiD9astcDCR5QcII++ExU97eegbwccVgVGX0HqIddrKtQ==
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This changeset adds support for Analog Devices Industrial Ethernet PHYs.
-Particularly the PHYs this driver adds support for:
- * ADIN1200 - Robust, Industrial, Low Power 10/100 Ethernet PHY
- * ADIN1300 - Robust, Industrial, Low Latency 10/100/1000 Gigabit
-   Ethernet PHY
+> Gesendet: Montag, 12. August 2019 um 12:22 Uhr
+> Von: "Lee Jones" <lee.jones@linaro.org>
 
-The 2 chips are register compatible with one another. The main
-difference being that ADIN1200 doesn't operate in gigabit mode.
+> > - * Copyright (c) 2014 MediaTek Inc.
+> > + * Copyright (c) 2014-2018 MediaTek Inc.
+>
+> This is out of date.  Please update it.
 
-The chips can be operated by the Generic PHY driver as well via the
-standard IEEE PHY registers (0x0000 - 0x000F) which are supported by the
-kernel as well. This assumes that configuration of the PHY has been done
-completely in HW, according to spec, i.e. no extra SW configuration
-required.
+maybe i should drop change of this line completely (else it needs to be ad=
+justed every year)
 
-This changeset also implements the ability to configure the chips via SW
-registers.
-
-Datasheets:
-  https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1300.pdf
-  https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1200.pdf
-
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-
-Alexandru Ardelean (14):
-  net: phy: adin: add support for Analog Devices PHYs
-  net: phy: adin: hook genphy_{suspend,resume} into the driver
-  net: phy: adin: add support for interrupts
-  net: phy: adin: add {write,read}_mmd hooks
-  net: phy: adin: configure RGMII/RMII/MII modes on config
-  net: phy: adin: make RGMII internal delays configurable
-  net: phy: adin: make RMII fifo depth configurable
-  net: phy: adin: add support MDI/MDIX/Auto-MDI selection
-  net: phy: adin: add EEE translation layer from Clause 45 to Clause 22
-  net: phy: adin: implement PHY subsystem software reset
-  net: phy: adin: implement Energy Detect Powerdown mode
-  net: phy: adin: implement downshift configuration via phy-tunable
-  net: phy: adin: add ethtool get_stats support
-  dt-bindings: net: add bindings for ADIN PHY driver
-
- .../devicetree/bindings/net/adi,adin.yaml     |  73 ++
- MAINTAINERS                                   |   8 +
- drivers/net/phy/Kconfig                       |   9 +
- drivers/net/phy/Makefile                      |   1 +
- drivers/net/phy/adin.c                        | 763 ++++++++++++++++++
- 5 files changed, 854 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/adi,adin.yaml
- create mode 100644 drivers/net/phy/adin.c
-
---
-
-Changelog v3 -> v4:
-
-* [PATCH v3 03/14] net: phy: adin: add support for interrupts
-   - using only Link status interrupt
-* [PATCH v3 04/14] net: phy: adin: add {write,read}_mmd hooks
-   - dropped C45 access code; it is dead-code, since `is_c45` will never be true
-
-2.20.1
-
+regards Frank
