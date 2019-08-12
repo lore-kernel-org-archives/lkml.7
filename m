@@ -2,192 +2,151 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 848F8C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F302C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5887A2087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5245A2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 05:24:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GZMjNpkN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cmt25JmB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfHLFUs (ORCPT
+        id S1726872AbfHLFYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 01:20:48 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:32957 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfHLFUs (ORCPT
+        Mon, 12 Aug 2019 01:24:00 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:32890 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbfHLFYA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 01:20:48 -0400
-Received: by mail-ot1-f66.google.com with SMTP id q20so1717016otl.0
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 22:20:47 -0700 (PDT)
+        Mon, 12 Aug 2019 01:24:00 -0400
+Received: by mail-wm1-f67.google.com with SMTP id p77so10079636wme.0;
+        Sun, 11 Aug 2019 22:23:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NNApVqLDhxhV5GW+zjfatyr91CgCXJ+9+OYZrhYmN0Q=;
-        b=GZMjNpkNtxbv5PiNrferR3A8fwAHY/VcpmdZARBlA76B2M92CFLkLkNykU1a7MUxEM
-         gf5KI4t+UMfh9YZc1CBtJTUKYN1bzpAX3O1aZgmt0t//8ciWbiPdScaO8I5odj227eKa
-         aqbJQSGPXHWV6cKG58qpbARELDufXd5JCj1f7rmT98kUIJfelJNs3fQbFgksRz8/gLHN
-         H9iQlsG2MDvF2uzYw/96/Bu9zoCXKJbhMV2wvHK/yYPaYxw7ydvULdMby9ux5Xjk5lyo
-         0WOzTn7t77IeKH8rylwRvNnOAvdz4IODRHMpHIOxdl/eCcXX5K6VRnU8BWKh4/X86gVx
-         2OpA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3G+7nnAoIeoj8pl8gwLC4j538STzFlKu9JRfT8QamrY=;
+        b=Cmt25JmBFBzRZH9o6r2weMvR9QbDFlaOqk0pEQmjPcr7R42kFqy188ZbvpjM1j2kxU
+         tiOfSjCYJFeMtz8Ip60cjoY9Ki8f2oUSfJDudk/hU1MTf8e1KhIaXMDNNFN6+eQJNu+B
+         zs4BW1qoyT8sJUQ3ESU+ZvP0s2ARsQlyQLrXn/BNZnHQi6sftgtP+AHi+wePV4Pex9Z5
+         cGExYLpYW9425m3ofGrhaiw5tkUh/mKnv4bfRzqS44/0N5ywXEYUrGcWFGorxx6BuTBb
+         zykE9yGxTmVyPNURdXdExoiwEP9fu5Hs+QkwkNPeMpmtwCg/gIwlatkACV4k60XYhno9
+         wckg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NNApVqLDhxhV5GW+zjfatyr91CgCXJ+9+OYZrhYmN0Q=;
-        b=CnMXiCALzaF2S9OaIyMvVvaec4DmujXgayPYHB9b312OOJAw6PMaJWD4AiO+DCut28
-         E3Fn5o2zqviClBF1/bWnTneVJwR88omogxkSNEga9kfT0OZvnTxQFpJ3WrwEBvfLM/W7
-         YETLRbVmwqWGQUe/qbRklbzzjf1b5zSHg2+J7dygQ74DPQhzeXBxbnRhitN8y0woTjJt
-         mK/+Hs66EPisIJoOQQ9KVAWvh37LL/w96qduh/fX90WTNwrZ8gaxqXPCiPeB3KbJuFiv
-         ZTl+wwrLCyu7vooPgwpzCzcCPvXeKdXu10bYQERzh+2cjp240pBVqn3K2aM8R1MXiBKs
-         nRFg==
-X-Gm-Message-State: APjAAAWeKibkB7W6MOkY+UaasV60z4claHX+hd/pIssguoxG9gk0146T
-        D2W9t5k6J+UPVT7zYgpPh9j8+uAboFjjaG0RK+7Etw==
-X-Google-Smtp-Source: APXvYqwc1J0LHVsxC15wIek6Y+de63tnfv65ANYE5KIuFICkP6M9TU7xNixOegAoyyDezFKzLAeXegf32xgO/no/RNM=
-X-Received: by 2002:a9d:590d:: with SMTP id t13mr18440283oth.281.1565587246724;
- Sun, 11 Aug 2019 22:20:46 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3G+7nnAoIeoj8pl8gwLC4j538STzFlKu9JRfT8QamrY=;
+        b=egHngYetJmfPsL9EtFMHJO/5voEfuB7piuZMDCfuYkYf2hQmqCS2mxXkXnvoUC14lC
+         AqF7X0FIajPb4F1mZiGotHQwJCfRZptnTPGPcOvBdzBrWDodKY8d8Y8YCgS+Ce7RdPR2
+         VOUBAf698hg+jqjpxd0hxluEG+RhqnMD64MLdSSU1lwWgu+AsgZ8qIYqF0XEZCXdS7ro
+         iC/lMaiSqeudocclH0rZm/HPFJXATwf2RXuC9jfL+04MMMs6cRsGN/wf6XdHL/riyhfn
+         5ihhMDREh0/OIUIWn3w14w1AbDHvVwbkrfRYuob4f2RhbyayBgXKYfsEazWQxyC9PL37
+         LoOQ==
+X-Gm-Message-State: APjAAAVw6dzMWmhgArFzyt7AeP5ewSPwUt/I4vHaswPHYYZpfA2axQtL
+        MKm8TjwrJ3XaCPVLWGI8SBk=
+X-Google-Smtp-Source: APXvYqzxBT1GjR+HXBUYMH2naomA6rQ/kLlkfxmJfBUdVOcOstXLOPPWqkW9YZ8HvdkZ8wrIwYaUCg==
+X-Received: by 2002:a7b:c928:: with SMTP id h8mr26234799wml.93.1565587438068;
+        Sun, 11 Aug 2019 22:23:58 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id f17sm17575259wmf.27.2019.08.11.22.23.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 11 Aug 2019 22:23:57 -0700 (PDT)
+Date:   Sun, 11 Aug 2019 22:23:55 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Vladimir Serbinenko <phcoder@gmail.com>,
+        Jussi Kivilinna <jussi.kivilinna@iki.fi>
+Subject: Re: [PATCH 3/5] lib/mpi: Fix for building for MIPS32 with Clang
+Message-ID: <20190812052355.GA47342@archlinux-threadripper>
+References: <20190812033120.43013-1-natechancellor@gmail.com>
+ <20190812033120.43013-4-natechancellor@gmail.com>
 MIME-Version: 1.0
-References: <cover.1563782844.git.baolin.wang@linaro.org>
-In-Reply-To: <cover.1563782844.git.baolin.wang@linaro.org>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Mon, 12 Aug 2019 13:20:35 +0800
-Message-ID: <CAMz4ku+NjcqLY0tWRxrBCRUnkpyWih42LYieKaf0FO6WsqO2vA@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/7] Add MMC packed function
-To:     Jens Axboe <axboe@kernel.dk>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Chunyan Zhang <zhang.lyra@gmail.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812033120.43013-4-natechancellor@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sun, Aug 11, 2019 at 08:31:18PM -0700, Nathan Chancellor wrote:
+> From: Vladimir Serbinenko <phcoder@gmail.com>
+> 
+> clang doesn't recognise =l / =h assembly operand specifiers but apparently
+> handles C version well.
+> 
+> lib/mpi/generic_mpih-mul1.c:37:24: error: invalid use of a cast in a
+> inline asm context requiring an l-value: remove the cast or build with
+> -fheinous-gnu-extensions
+>                 umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
+>                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> lib/mpi/longlong.h:652:20: note: expanded from macro 'umul_ppmm'
+>         : "=l" ((USItype)(w0)), \
+>                 ~~~~~~~~~~^~~
+> lib/mpi/generic_mpih-mul1.c:37:3: error: invalid output constraint '=h'
+> in asm
+>                 umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
+>                 ^
+> lib/mpi/longlong.h:653:7: note: expanded from macro 'umul_ppmm'
+>              "=h" ((USItype)(w1)) \
+>              ^
+> 2 errors generated.
+> 
+> Fixes: 5ce3e312ec5c ("crypto: GnuPG based MPI lib - header files (part 2)")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/605
+> Link: https://github.com/gpg/libgcrypt/commit/1ecbd0bca31d462719a2a6590c1d03244e76ef89
+> Signed-off-by: Vladimir Serbinenko <phcoder@gmail.com>
+> [jk: add changelog, rebase on libgcrypt repository, reformat changed
+>  line so it does not go over 80 characters]
+> Signed-off-by: Jussi Kivilinna <jussi.kivilinna@iki.fi>
+> [nc: Added build error and tags to commit message
+>      Added Vladimir's signoff with his permission
+>      Adjusted Jussi's comment to wrap at 73 characters
+>      Modified commit subject to mirror MIPS64 commit
+>      Removed space between defined and (__clang__)]
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  lib/mpi/longlong.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/lib/mpi/longlong.h b/lib/mpi/longlong.h
+> index 3bb6260d8f42..8a1507fc94dd 100644
+> --- a/lib/mpi/longlong.h
+> +++ b/lib/mpi/longlong.h
+> @@ -639,7 +639,8 @@ do { \
+>  	**************  MIPS  *****************
+>  	***************************************/
+>  #if defined(__mips__) && W_TYPE_SIZE == 32
+> -#if (__GNUC__ >= 5) || (__GNUC__ >= 4 && __GNUC_MINOR__ >= 4)
+> +#if defined(__clang__) || (__GNUC__ >= 5) || (__GNUC__ == 4 && \
+> +					      __GNUC_MINOR__ >= 4)
+>  #define umul_ppmm(w1, w0, u, v)			\
+>  do {						\
+>  	UDItype __ll = (UDItype)(u) * (v);	\
+> -- 
+> 2.23.0.rc2
+> 
 
-On Mon, 22 Jul 2019 at 21:10, Baolin Wang <baolin.wang@linaro.org> wrote:
->
-> Hi All,
->
-> Now some SD/MMC controllers can support packed command or packed request,
-> that means it can package multiple requests to host controller to be handled
-> at one time, which can improve the I/O performence. Thus this patchset is
-> used to add the MMC packed function to support packed request or packed
-> command.
->
-> In this patch set, I implemented the SD host ADMA3 transfer mode to support
-> packed request. The ADMA3 transfer mode can process a multi-block data transfer
-> by using a pair of command descriptor and ADMA2 descriptor. In future we can
-> easily expand the MMC packed function to support packed command.
->
-> Below are some comparison data between packed request and non-packed request
-> with fio tool. The fio command I used is like below with changing the
-> '--rw' parameter and enabling the direct IO flag to measure the actual hardware
-> transfer speed.
->
-> ./fio --filename=/dev/mmcblk0p30 --direct=1 --iodepth=20 --rw=read --bs=4K --size=512M --group_reporting --numjobs=20 --name=test_read
->
-> My eMMC card working at HS400 Enhanced strobe mode:
-> [    2.229856] mmc0: new HS400 Enhanced strobe MMC card at address 0001
-> [    2.237566] mmcblk0: mmc0:0001 HBG4a2 29.1 GiB
-> [    2.242621] mmcblk0boot0: mmc0:0001 HBG4a2 partition 1 4.00 MiB
-> [    2.249110] mmcblk0boot1: mmc0:0001 HBG4a2 partition 2 4.00 MiB
-> [    2.255307] mmcblk0rpmb: mmc0:0001 HBG4a2 partition 3 4.00 MiB, chardev (248:0)
->
-> 1. Non-packed request
-> I tested 3 times for each case and output a average speed.
->
-> 1) Sequential read:
-> Speed: 28.9MiB/s, 26.4MiB/s, 30.9MiB/s
-> Average speed: 28.7MiB/s
->
-> 2) Random read:
-> Speed: 18.2MiB/s, 8.9MiB/s, 15.8MiB/s
-> Average speed: 14.3MiB/s
->
-> 3) Sequential write:
-> Speed: 21.1MiB/s, 27.9MiB/s, 25MiB/s
-> Average speed: 24.7MiB/s
->
-> 4) Random write:
-> Speed: 21.5MiB/s, 18.1MiB/s, 18.1MiB/s
-> Average speed: 19.2MiB/s
->
-> 2. Packed request
-> In packed request mode, I set the host controller can package maximum 10
-> requests at one time (Actually I can increase the package number), and I
-> enabled read/write packed request mode. Also I tested 3 times for each
-> case and output a average speed.
->
-> 1) Sequential read:
-> Speed: 165MiB/s, 167MiB/s, 164MiB/s
-> Average speed: 165.3MiB/s
->
-> 2) Random read:
-> Speed: 147MiB/s, 141MiB/s, 144MiB/s
-> Average speed: 144MiB/s
->
-> 3) Sequential write:
-> Speed: 87.8MiB/s, 89.1MiB/s, 90.0MiB/s
-> Average speed: 89MiB/s
->
-> 4) Random write:
-> Speed: 90.9MiB/s, 89.8MiB/s, 90.4MiB/s
-> Average speed: 90.4MiB/s
->
-> Form above data, we can see the packed request can improve the performance greatly.
-> Any comments are welcome. Thanks a lot.
+ Hi Paul,
 
-Any comments for this patch set? Thanks.
+ I noticed you didn't pick up this patch with the other ones you
+ applied. I just wanted to make sure it wasn't because it was sent to
+ the wrong person. This set of files doesn't appear to have an owner in
+ MAINTAINERS, I guess based on git history either Andrew or Hubert (on
+ CC) pick up patches for this set of files? If I need to, I can resend
+ it to the proper people.
 
->
-> Baolin Wang (7):
->   blk-mq: Export blk_mq_hctx_has_pending() function
->   mmc: core: Add MMC packed request function
->   mmc: host: sdhci: Introduce ADMA3 transfer mode
->   mmc: host: sdhci: Factor out the command configuration
->   mmc: host: sdhci: Remove redundant sg_count member of struct
->     sdhci_host
->   mmc: host: sdhci: Add MMC packed request support
->   mmc: host: sdhci-sprd: Add MMC packed request support
->
->  block/blk-mq.c                |    3 +-
->  drivers/mmc/core/Kconfig      |    2 +
->  drivers/mmc/core/Makefile     |    1 +
->  drivers/mmc/core/block.c      |   71 +++++-
->  drivers/mmc/core/block.h      |    3 +-
->  drivers/mmc/core/core.c       |   51 ++++
->  drivers/mmc/core/core.h       |    3 +
->  drivers/mmc/core/packed.c     |  478 ++++++++++++++++++++++++++++++++++++++
->  drivers/mmc/core/queue.c      |   28 ++-
->  drivers/mmc/host/Kconfig      |    1 +
->  drivers/mmc/host/sdhci-sprd.c |   22 +-
->  drivers/mmc/host/sdhci.c      |  513 +++++++++++++++++++++++++++++++++++------
->  drivers/mmc/host/sdhci.h      |   59 ++++-
->  include/linux/blk-mq.h        |    1 +
->  include/linux/mmc/core.h      |    1 +
->  include/linux/mmc/host.h      |    3 +
->  include/linux/mmc/packed.h    |  123 ++++++++++
->  17 files changed, 1286 insertions(+), 77 deletions(-)
->  create mode 100644 drivers/mmc/core/packed.c
->  create mode 100644 include/linux/mmc/packed.h
->
-> --
-> 1.7.9.5
->
-
-
--- 
-Baolin Wang
-Best Regards
+ Cheers,
+ Nathan
