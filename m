@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E71AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5905BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3E05208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EC7A208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:05:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lDWHBYhs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uUtpswhj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbfHLPFZ (ORCPT
+        id S1727666AbfHLPFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 11:05:25 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38302 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727770AbfHLPFU (ORCPT
+        Mon, 12 Aug 2019 11:05:15 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52269 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727146AbfHLPFM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 11:05:20 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g17so104853948wrr.5
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 08:05:18 -0700 (PDT)
+        Mon, 12 Aug 2019 11:05:12 -0400
+Received: by mail-wm1-f67.google.com with SMTP id s3so12503722wms.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 08:05:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ZTec1syIGwZQpjCOa7POHoiRLVfdieJdx9Ak1va9vi8=;
-        b=lDWHBYhsJD4SluAUQH+k1cxC/HkQA6QyXUUC8mqE2tv4zchVBW+r/KGX8bWburrO3r
-         y13sX7Jo6qY2YYvdm7+H4X7KDQdMYjuVXzNJYHahwDFDVmFssOLZKcfukyF/uDl/miCC
-         aYA+LYXwQyMh8+KdcfbO9VKgLTQB6tLAdbB1dcCPQazP/KpKOr5PAVxiwXlFTV9eJBEG
-         CMBlU4rYv+2s7CiaYtNpD7B9eb6HhNzC8lbuybFOeCekbHBtsKr75fPBHd9KmwqapPTO
-         tfSRY2IlFWQFuj1a7zzUdg+uNb6zlX0U1+WEQajfECRSg4mbSq2dLCYuZ0tryZmd7QTv
-         VOIg==
+        bh=Z3sLGJ9Y6NSuUVoK4Ad/f3JwEEVat2vLXpskef4Wjpw=;
+        b=uUtpswhjcXonrclDX2pzC/OLlMB8CR4jdNsbVCyyJfbFyBbMWg+0Aew0YrDSAbgynn
+         UBHZ5qxiR/FLZ0Ct92Vg9vySGyIMlp0Yt/g4bYii5IWID7ZLPf+RyFBRXZAedOHhY3f1
+         x8kbYQmk9C1++IuCm9gK2XiUkD/aqYVIN9apkB5giAeUyZKNaA/0ZJXRkq79Y5kkKhE4
+         1SGL8XBz3c2V4QL0D7Qs4FM7A3jQbeESD3X1qiLoi9x1D7WoWNGemRbTg5N+WEtmjXeP
+         zpXj0JUd+0iUU29AgEne7VQpoPzhKcNXb81u+/xT9VS4QG/w5s0GItw7dh6fJS+Hrplh
+         PIyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ZTec1syIGwZQpjCOa7POHoiRLVfdieJdx9Ak1va9vi8=;
-        b=jVuAj0Oq6p2sB/ndglo+FQL3yqGXv/z/v0n1f2JfdmWsUdrrc3aLw+4xFDYVlHDI65
-         a3rakSZ19qIO8rWjoGlQmXsbLWVpzSm/BlfedLXKMOt5Scot9+n+NfyiG1hnByMluBXB
-         nOisPpCFE7Chz6R1rLBr6n15kjBfWYemeNf+by++nWLKu+EhnRoX6cbDT20Cmr3tkAtK
-         kY26i/abHlmkMJXmleh1Ph86FNj932Iijs5LUkcUNT9oFY3sjoHfkLfWOFcu/s48npAN
-         Z/Wb6MwM0QU5VhiJeRx+8dDGcIPGj2ROg80UNLeTMnGEtu1j43ouyZSmnq3tmsDysWDR
-         8JdQ==
-X-Gm-Message-State: APjAAAUO7sOiCKlL7qlOaHROGerhUq0mYiRoJvWyHYSzur6rKqOsOd2V
-        dq7nbE/xPWVDTrIMiWJTpXG3eNaQ0rDh+Q==
-X-Google-Smtp-Source: APXvYqxiKsruZKL3xX+ku0zJ2TgnLN6uMgpFOd0dTwLZPXaJ+3VlJ+TOg9XDsr9cTzkcl9b7aBWPCA==
-X-Received: by 2002:a5d:4589:: with SMTP id p9mr31989747wrq.276.1565622317455;
-        Mon, 12 Aug 2019 08:05:17 -0700 (PDT)
+        bh=Z3sLGJ9Y6NSuUVoK4Ad/f3JwEEVat2vLXpskef4Wjpw=;
+        b=pKH9ltWlhDQBxpeIeftIlSmGTIGs7v12UAFPqUkW/sy25oW6PcstYGGaWhy+F4HF41
+         0T7OIYQyODZiRqx2h9qA/jkDTGa2YbiwioyEKmcJ8+uF3k5NPRRcX2WSVFOFRFLcjp7b
+         z42FRmXlyD3qO9lE2aImSEcz7M3AI+fWOGHSfEdZbTsh/NmTufjl997PcnxpFZHz06eV
+         /EsLKMW/hJXUD37rx90IOTGs6Nd9k7uh6TZLkvaslfBTK4y9FoNx5N2fQo/zgc+6rsKx
+         Me9bHnXGHzYQKSG9U3qh4IWfXcndjpmvTeO4/fiQxsEHpZZVgq8BC/IMRUsX+S0ouS42
+         Ru1A==
+X-Gm-Message-State: APjAAAXe9YxU3aYb21xYRCBcjp22+8ZDcyCbskGSkVxHSyq3aUI9vaNd
+        k8psHrqvLKBLcbxCnKOmLMoLKQ==
+X-Google-Smtp-Source: APXvYqwjMTQwZ5HfDfZM+Cgs8md0RkIXE6Dfx5lrM/wyv+HTDldo8cpMPCTwuzIY2DevaLtmSA4WEw==
+X-Received: by 2002:a1c:4c06:: with SMTP id z6mr3789211wmf.47.1565622310553;
+        Mon, 12 Aug 2019 08:05:10 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:587:a407:da00:1c0e:f938:89a1:8e17])
-        by smtp.gmail.com with ESMTPSA id h97sm31027269wrh.74.2019.08.12.08.05.13
+        by smtp.gmail.com with ESMTPSA id h97sm31027269wrh.74.2019.08.12.08.05.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 08:05:16 -0700 (PDT)
+        Mon, 12 Aug 2019 08:05:09 -0700 (PDT)
 From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -63,9 +63,9 @@ Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Mario Limonciello <mario.limonciello@dell.com>,
         Narendra K <Narendra.K@dell.com>,
         Xiaofei Tan <tanxiaofei@huawei.com>
-Subject: [PATCH 4/5] efi: Export Runtime Configuration Interface table to sysfs
-Date:   Mon, 12 Aug 2019 18:04:51 +0300
-Message-Id: <20190812150452.27983-5-ard.biesheuvel@linaro.org>
+Subject: [PATCH 2/5] efi/x86: move UV_SYSTAB handling into arch/x86
+Date:   Mon, 12 Aug 2019 18:04:49 +0300
+Message-Id: <20190812150452.27983-3-ard.biesheuvel@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190812150452.27983-1-ard.biesheuvel@linaro.org>
 References: <20190812150452.27983-1-ard.biesheuvel@linaro.org>
@@ -74,290 +74,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Narendra K <Narendra.K@dell.com>
+The SGI UV UEFI machines are tightly coupled to the x86 architecture
+so there is no need to keep any awareness of its existence in the
+generic EFI layer, especially since we already have the infrastructure
+to handle arch-specific configuration tables, and were even already
+using it to some extent.
 
-System firmware advertises the address of the 'Runtime
-Configuration Interface table version 2 (RCI2)' via
-an EFI Configuration Table entry. This code retrieves the RCI2
-table from the address and exports it to sysfs as a binary
-attribute 'rci2' under /sys/firmware/efi/tables directory.
-The approach adopted is similar to the attribute 'DMI' under
-/sys/firmware/dmi/tables.
-
-RCI2 table contains BIOS HII in XML format and is used to populate
-BIOS setup page in Dell EMC OpenManage Server Administrator tool.
-The BIOS setup page contains BIOS tokens which can be configured.
-
-Signed-off-by: Narendra K <Narendra.K@dell.com>
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 ---
- Documentation/ABI/testing/sysfs-firmware-efi |   8 +
- arch/x86/platform/efi/efi.c                  |   3 +
- drivers/firmware/efi/Kconfig                 |  13 ++
- drivers/firmware/efi/Makefile                |   1 +
- drivers/firmware/efi/efi.c                   |   3 +
- drivers/firmware/efi/rci2-table.c            | 147 +++++++++++++++++++
- include/linux/efi.h                          |   5 +
- 7 files changed, 180 insertions(+)
- create mode 100644 drivers/firmware/efi/rci2-table.c
+ arch/x86/include/asm/uv/uv.h   |  4 +++-
+ arch/x86/platform/efi/efi.c    |  6 ++++--
+ arch/x86/platform/uv/bios_uv.c | 10 ++++++----
+ drivers/firmware/efi/efi.c     |  1 -
+ include/linux/efi.h            |  1 -
+ 5 files changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-firmware-efi b/Documentation/ABI/testing/sysfs-firmware-efi
-index e794eac32a90..5e4d0b27cdfe 100644
---- a/Documentation/ABI/testing/sysfs-firmware-efi
-+++ b/Documentation/ABI/testing/sysfs-firmware-efi
-@@ -28,3 +28,11 @@ Description:	Displays the physical addresses of all EFI Configuration
- 		versions are always printed first, i.e. ACPI20 comes
- 		before ACPI.
- Users:		dmidecode
+diff --git a/arch/x86/include/asm/uv/uv.h b/arch/x86/include/asm/uv/uv.h
+index e60c45fd3679..6bc6d89d8e2a 100644
+--- a/arch/x86/include/asm/uv/uv.h
++++ b/arch/x86/include/asm/uv/uv.h
+@@ -12,10 +12,12 @@ struct mm_struct;
+ #ifdef CONFIG_X86_UV
+ #include <linux/efi.h>
+ 
++extern unsigned long uv_systab_phys;
 +
-+What:		/sys/firmware/efi/tables/rci2
-+Date:		July 2019
-+Contact:	Narendra K <Narendra.K@dell.com>, linux-bugs@dell.com
-+Description:	Displays the content of the Runtime Configuration Interface
-+		Table version 2 on Dell EMC PowerEdge systems in binary format
-+Users:		It is used by Dell EMC OpenManage Server Administrator tool to
-+		populate BIOS setup page.
+ extern enum uv_system_type get_uv_system_type(void);
+ static inline bool is_early_uv_system(void)
+ {
+-	return !((efi.uv_systab == EFI_INVALID_TABLE_ADDR) || !efi.uv_systab);
++	return uv_systab_phys && uv_systab_phys != EFI_INVALID_TABLE_ADDR;
+ }
+ extern int is_uv_system(void);
+ extern int is_uv_hubless(void);
 diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index 6697c109c449..c202e1b07e29 100644
+index 8d9be97a5607..9866a3584765 100644
 --- a/arch/x86/platform/efi/efi.c
 +++ b/arch/x86/platform/efi/efi.c
-@@ -82,6 +82,9 @@ static const unsigned long * const efi_tables[] = {
- 	&efi.esrt,
- 	&efi.properties_table,
- 	&efi.mem_attr_table,
-+#ifdef CONFIG_EFI_RCI2_TABLE
-+	&rci2_table_phys,
-+#endif
- };
+@@ -59,7 +59,7 @@ static efi_system_table_t efi_systab __initdata;
  
- u64 efi_setup;		/* efi setup_data physical address */
-diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-index d4ea929e8b34..178ee8106828 100644
---- a/drivers/firmware/efi/Kconfig
-+++ b/drivers/firmware/efi/Kconfig
-@@ -180,6 +180,19 @@ config RESET_ATTACK_MITIGATION
- 	  have been evicted, since otherwise it will trigger even on clean
- 	  reboots.
- 
-+config EFI_RCI2_TABLE
-+	bool "EFI Runtime Configuration Interface Table Version 2 Support"
-+	help
-+	  Displays the content of the Runtime Configuration Interface
-+	  Table version 2 on Dell EMC PowerEdge systems as a binary
-+	  attribute 'rci2' under /sys/firmware/efi/tables directory.
-+
-+	  RCI2 table contains BIOS HII in XML format and is used to populate
-+	  BIOS setup page in Dell EMC OpenManage Server Administrator tool.
-+	  The BIOS setup page contains BIOS tokens which can be configured.
-+
-+	  Say Y here for Dell EMC PowerEdge systems.
-+
- endmenu
- 
- config UEFI_CPER
-diff --git a/drivers/firmware/efi/Makefile b/drivers/firmware/efi/Makefile
-index d2d0d2030620..4ac2de4dfa72 100644
---- a/drivers/firmware/efi/Makefile
-+++ b/drivers/firmware/efi/Makefile
-@@ -25,6 +25,7 @@ obj-$(CONFIG_EFI_BOOTLOADER_CONTROL)	+= efibc.o
- obj-$(CONFIG_EFI_TEST)			+= test/
- obj-$(CONFIG_EFI_DEV_PATH_PARSER)	+= dev-path-parser.o
- obj-$(CONFIG_APPLE_PROPERTIES)		+= apple-properties.o
-+obj-$(CONFIG_EFI_RCI2_TABLE)		+= rci2-table.o
- 
- arm-obj-$(CONFIG_EFI)			:= arm-init.o arm-runtime.o
- obj-$(CONFIG_ARM)			+= $(arm-obj-y)
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index 801925c5bcfb..8f1ab04f6743 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -465,6 +465,9 @@ static __initdata efi_config_table_type_t common_tables[] = {
- 	{LINUX_EFI_TPM_EVENT_LOG_GUID, "TPMEventLog", &efi.tpm_log},
- 	{LINUX_EFI_TPM_FINAL_LOG_GUID, "TPMFinalLog", &efi.tpm_final_log},
- 	{LINUX_EFI_MEMRESERVE_TABLE_GUID, "MEMRESERVE", &efi.mem_reserve},
-+#ifdef CONFIG_EFI_RCI2_TABLE
-+	{DELLEMC_EFI_RCI2_TABLE_GUID, NULL, &rci2_table_phys},
-+#endif
+ static efi_config_table_type_t arch_tables[] __initdata = {
+ #ifdef CONFIG_X86_UV
+-	{UV_SYSTEM_TABLE_GUID, "UVsystab", &efi.uv_systab},
++	{UV_SYSTEM_TABLE_GUID, "UVsystab", &uv_systab_phys},
+ #endif
  	{NULL_GUID, NULL, NULL},
  };
+@@ -74,7 +74,9 @@ static const unsigned long * const efi_tables[] = {
+ 	&efi.boot_info,
+ 	&efi.hcdp,
+ 	&efi.uga,
+-	&efi.uv_systab,
++#ifdef CONFIG_X86_UV
++	&uv_systab_phys,
++#endif
+ 	&efi.fw_vendor,
+ 	&efi.runtime,
+ 	&efi.config_table,
+diff --git a/arch/x86/platform/uv/bios_uv.c b/arch/x86/platform/uv/bios_uv.c
+index 7c69652ffeea..c2ee31953372 100644
+--- a/arch/x86/platform/uv/bios_uv.c
++++ b/arch/x86/platform/uv/bios_uv.c
+@@ -14,6 +14,8 @@
+ #include <asm/uv/bios.h>
+ #include <asm/uv/uv_hub.h>
  
-diff --git a/drivers/firmware/efi/rci2-table.c b/drivers/firmware/efi/rci2-table.c
-new file mode 100644
-index 000000000000..3e290f96620a
---- /dev/null
-+++ b/drivers/firmware/efi/rci2-table.c
-@@ -0,0 +1,147 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Export Runtime Configuration Interface Table Version 2 (RCI2)
-+ * to sysfs
-+ *
-+ * Copyright (C) 2019 Dell Inc
-+ * by Narendra K <Narendra.K@dell.com>
-+ *
-+ * System firmware advertises the address of the RCI2 Table via
-+ * an EFI Configuration Table entry. This code retrieves the RCI2
-+ * table from the address and exports it to sysfs as a binary
-+ * attribute 'rci2' under /sys/firmware/efi/tables directory.
-+ */
++unsigned long uv_systab_phys __ro_after_init = EFI_INVALID_TABLE_ADDR;
 +
-+#include <linux/kobject.h>
-+#include <linux/device.h>
-+#include <linux/sysfs.h>
-+#include <linux/efi.h>
-+#include <linux/types.h>
-+#include <linux/io.h>
-+
-+#define RCI_SIGNATURE	"_RC_"
-+
-+struct rci2_table_global_hdr {
-+	u16 type;
-+	u16 resvd0;
-+	u16 hdr_len;
-+	u8 rci2_sig[4];
-+	u16 resvd1;
-+	u32 resvd2;
-+	u32 resvd3;
-+	u8 major_rev;
-+	u8 minor_rev;
-+	u16 num_of_structs;
-+	u32 rci2_len;
-+	u16 rci2_chksum;
-+} __packed;
-+
-+static u8 *rci2_base;
-+static u32 rci2_table_len;
-+unsigned long rci2_table_phys __ro_after_init = EFI_INVALID_TABLE_ADDR;
-+
-+static ssize_t raw_table_read(struct file *file, struct kobject *kobj,
-+			      struct bin_attribute *attr, char *buf,
-+			      loff_t pos, size_t count)
-+{
-+	memcpy(buf, attr->private + pos, count);
-+	return count;
-+}
-+
-+static BIN_ATTR(rci2, S_IRUSR, raw_table_read, NULL, 0);
-+
-+static u16 checksum(void)
-+{
-+	u8 len_is_odd = rci2_table_len % 2;
-+	u32 chksum_len = rci2_table_len;
-+	u16 *base = (u16 *)rci2_base;
-+	u8 buf[2] = {0};
-+	u32 offset = 0;
-+	u16 chksum = 0;
-+
-+	if (len_is_odd)
-+		chksum_len -= 1;
-+
-+	while (offset < chksum_len) {
-+		chksum += *base;
-+		offset += 2;
-+		base++;
-+	}
-+
-+	if (len_is_odd) {
-+		buf[0] = *(u8 *)base;
-+		chksum += *(u16 *)(buf);
-+	}
-+
-+	return chksum;
-+}
-+
-+int __init efi_rci2_sysfs_init(void)
-+{
-+	struct kobject *tables_kobj;
-+	int ret = -ENOMEM;
-+
-+	rci2_base = memremap(rci2_table_phys,
-+			     sizeof(struct rci2_table_global_hdr),
-+			     MEMREMAP_WB);
-+	if (!rci2_base) {
-+		pr_debug("RCI2 table init failed - could not map RCI2 table\n");
-+		goto err;
-+	}
-+
-+	if (strncmp(rci2_base +
-+		    offsetof(struct rci2_table_global_hdr, rci2_sig),
-+		    RCI_SIGNATURE, 4)) {
-+		pr_debug("RCI2 table init failed - incorrect signature\n");
-+		ret = -ENODEV;
-+		goto err_unmap;
-+	}
-+
-+	rci2_table_len = *(u32 *)(rci2_base +
-+				  offsetof(struct rci2_table_global_hdr,
-+				  rci2_len));
-+
-+	memunmap(rci2_base);
-+
-+	if (!rci2_table_len) {
-+		pr_debug("RCI2 table init failed - incorrect table length\n");
-+		goto err;
-+	}
-+
-+	rci2_base = memremap(rci2_table_phys, rci2_table_len, MEMREMAP_WB);
-+	if (!rci2_base) {
-+		pr_debug("RCI2 table - could not map RCI2 table\n");
-+		goto err;
-+	}
-+
-+	if (checksum() != 0) {
-+		pr_debug("RCI2 table - incorrect checksum\n");
-+		ret = -ENODEV;
-+		goto err_unmap;
-+	}
-+
-+	tables_kobj = kobject_create_and_add("tables", efi_kobj);
-+	if (!tables_kobj) {
-+		pr_debug("RCI2 table - tables_kobj creation failed\n");
-+		goto err_unmap;
-+	}
-+
-+	bin_attr_rci2.size = rci2_table_len;
-+	bin_attr_rci2.private = rci2_base;
-+	ret = sysfs_create_bin_file(tables_kobj, &bin_attr_rci2);
-+	if (ret != 0) {
-+		pr_debug("RCI2 table - rci2 sysfs bin file creation failed\n");
-+		kobject_del(tables_kobj);
-+		kobject_put(tables_kobj);
-+		goto err_unmap;
-+	}
-+
-+	return 0;
-+
-+ err_unmap:
-+	memunmap(rci2_base);
-+ err:
-+	pr_debug("RCI2 table - sysfs initialization failed\n");
-+	return ret;
-+}
-+late_initcall(efi_rci2_sysfs_init);
+ struct uv_systab *uv_systab;
+ 
+ static s64 __uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3,
+@@ -185,13 +187,13 @@ EXPORT_SYMBOL_GPL(uv_bios_set_legacy_vga_target);
+ void uv_bios_init(void)
+ {
+ 	uv_systab = NULL;
+-	if ((efi.uv_systab == EFI_INVALID_TABLE_ADDR) ||
+-	    !efi.uv_systab || efi_runtime_disabled()) {
++	if ((uv_systab_phys == EFI_INVALID_TABLE_ADDR) ||
++	    !uv_systab_phys || efi_runtime_disabled()) {
+ 		pr_crit("UV: UVsystab: missing\n");
+ 		return;
+ 	}
+ 
+-	uv_systab = ioremap(efi.uv_systab, sizeof(struct uv_systab));
++	uv_systab = ioremap(uv_systab_phys, sizeof(struct uv_systab));
+ 	if (!uv_systab || strncmp(uv_systab->signature, UV_SYSTAB_SIG, 4)) {
+ 		pr_err("UV: UVsystab: bad signature!\n");
+ 		iounmap(uv_systab);
+@@ -203,7 +205,7 @@ void uv_bios_init(void)
+ 		int size = uv_systab->size;
+ 
+ 		iounmap(uv_systab);
+-		uv_systab = ioremap(efi.uv_systab, size);
++		uv_systab = ioremap(uv_systab_phys, size);
+ 		if (!uv_systab) {
+ 			pr_err("UV: UVsystab: ioremap(%d) failed!\n", size);
+ 			return;
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index cbdbdbc8f9eb..4dfd873373bd 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -43,7 +43,6 @@ struct efi __read_mostly efi = {
+ 	.boot_info		= EFI_INVALID_TABLE_ADDR,
+ 	.hcdp			= EFI_INVALID_TABLE_ADDR,
+ 	.uga			= EFI_INVALID_TABLE_ADDR,
+-	.uv_systab		= EFI_INVALID_TABLE_ADDR,
+ 	.fw_vendor		= EFI_INVALID_TABLE_ADDR,
+ 	.runtime		= EFI_INVALID_TABLE_ADDR,
+ 	.config_table		= EFI_INVALID_TABLE_ADDR,
 diff --git a/include/linux/efi.h b/include/linux/efi.h
-index f88318b85fb0..bd3837022307 100644
+index 60a6242765d8..171bb1005a10 100644
 --- a/include/linux/efi.h
 +++ b/include/linux/efi.h
-@@ -692,6 +692,9 @@ void efi_native_runtime_setup(void);
- #define LINUX_EFI_TPM_FINAL_LOG_GUID		EFI_GUID(0x1e2ed096, 0x30e2, 0x4254,  0xbd, 0x89, 0x86, 0x3b, 0xbe, 0xf8, 0x23, 0x25)
- #define LINUX_EFI_MEMRESERVE_TABLE_GUID		EFI_GUID(0x888eb0c6, 0x8ede, 0x4ff5,  0xa8, 0xf0, 0x9a, 0xee, 0x5c, 0xb9, 0x77, 0xc2)
- 
-+/* OEM GUIDs */
-+#define DELLEMC_EFI_RCI2_TABLE_GUID		EFI_GUID(0x2d9f28a2, 0xa886, 0x456a,  0x97, 0xa8, 0xf1, 0x1e, 0xf2, 0x4f, 0xf4, 0x55)
-+
- typedef struct {
- 	efi_guid_t guid;
- 	u64 table;
-@@ -1713,6 +1716,8 @@ struct efi_tcg2_final_events_table {
- };
- extern int efi_tpm_final_log_size;
- 
-+extern unsigned long rci2_table_phys;
-+
- /*
-  * efi_runtime_service() function identifiers.
-  * "NONE" is used by efi_recover_from_page_fault() to check if the page
+@@ -988,7 +988,6 @@ extern struct efi {
+ 	unsigned long boot_info;	/* boot info table */
+ 	unsigned long hcdp;		/* HCDP table */
+ 	unsigned long uga;		/* UGA table */
+-	unsigned long uv_systab;	/* UV system table */
+ 	unsigned long fw_vendor;	/* fw_vendor */
+ 	unsigned long runtime;		/* runtime table */
+ 	unsigned long config_table;	/* config tables */
 -- 
 2.17.1
 
