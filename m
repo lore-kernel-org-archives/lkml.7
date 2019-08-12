@@ -2,145 +2,110 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CDDC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D86C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5B8A206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77EAF206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:50:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SokAhW9T"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Or8HpsYZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbfHLRuW (ORCPT
+        id S1726707AbfHLRuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 13:50:22 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41865 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfHLRuV (ORCPT
+        Mon, 12 Aug 2019 13:50:25 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40342 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfHLRuY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 13:50:21 -0400
-Received: by mail-ot1-f67.google.com with SMTP id o101so9150455ota.8
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 10:50:21 -0700 (PDT)
+        Mon, 12 Aug 2019 13:50:24 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r1so6246356wrl.7
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 10:50:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lh/TAVkIHkjw7wbFiAXoulegggwXhgu3dpeEPlXbbTY=;
-        b=SokAhW9TXd9Q5100mLJ6XjNOP42lNy06oZpwonmrYqth7B51usfE3DgJjtV8ZY0cvc
-         aehw1AaVCMJyLNBMH92d9Zda3ebSSw3XmaCgkT2ir37hzJhtYmZSUL6J2bWn+g0IArrA
-         fCjDf5b9dEzfmCZGzWEoMVyNYGTFX2iWtF7RYuU172zjKe2CG3Rmd0LC90VZD+95+kwc
-         QGaNY1ioc5eO74g4wWXNtisPo1Gi5W8EGNnopYM87uBruicBBDHKGZ2FyjRMZAOgEu5P
-         K/5VjsIp121YfUfoMr4lXZzRbEvUsHGCagQQEXeK+3kAxH6RyP1ZVc9UrGCMgTYYKpJj
-         M0tQ==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=stBKKVsI+4UvfEdFNUUprqBQVBNTUmemikvPps8gLE8=;
+        b=Or8HpsYZpLiaPQQNpEID7tVw7MxJmfcAKHT4O/iVrJgsBwWJShl/XcOewcvSHSVEDQ
+         k1pnMrQ9FnGFQurkDorTlrcEdAqBwoO1n4I4dbDkMJISpj0YCXjfFb28ieOiL5NRjTtt
+         89Sxl690KoN0W+p4ouvNXnqEsBFxEBi13nDzOYF/8/YaaMEkeA0zG05dgPcPDc+f+l0D
+         3r9FvjHSccqzm5ydUyCW9wytjP3QoQNJD43V2k0wPkGFCjvZ6sWcQb7mTmMzDlqOm1e4
+         jUeuY2lNdxLKeA2OVP0l4rNY9UsW8qIrb+GdKrL6d9G6m+nOW4OZSzbcC4sIz+sllNX3
+         dbWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lh/TAVkIHkjw7wbFiAXoulegggwXhgu3dpeEPlXbbTY=;
-        b=pxsrMPVHFZLLpzdpKojkMYf/vzuHhsEtFGsJ7J0duPBvf6gYJRzMhwaS+Hl5jDJvqS
-         hC84i00GJsrBakSXTN5ZXf72usUWDx27vwVIrV4c9O4lkHOOIoptxzSbq5YRnlJHUrs5
-         4Sxi+ZbgTyAxHV8ccxbADu+uHC5YkCBWCArI5LDRcS1G3hD7iggND0SRDisoGCoAUxjG
-         R5S4qhtyI5uKam3EFai8Ugi2LgFuK3/C7x+owJKHfICz5tEanf3Ioh6kcR3i/qpFFcZd
-         ymAkvnZhYQCn7PefYNlAxs1vuqTJVfzlO/drPz7JB9+i1BDxYWMOuLV6z6+w3ABvG7xO
-         0+GQ==
-X-Gm-Message-State: APjAAAVB8KlivOJLZsWuJzIUbaTmSor+O1qMSYpwJ0E567LEtltw0rEY
-        FcjYLviI2X/kzXoTR9qpDA5YbMQYwLIw9jfn/E5N9VOpxHfjXA==
-X-Google-Smtp-Source: APXvYqzReVmTJaevXF+CS2yxduFJc6vhYut6UbJQPwN7A4Oplun6ql0Zcg/gZalAgHyARd+q4BHOg44/vfZytLZWHos=
-X-Received: by 2002:a63:f94c:: with SMTP id q12mr30756736pgk.10.1565631762244;
- Mon, 12 Aug 2019 10:42:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=stBKKVsI+4UvfEdFNUUprqBQVBNTUmemikvPps8gLE8=;
+        b=FBsLdhi8LD4dhHz17jowmZR1sMAC9NMVgGRssaRBBwvtJrp5iZ7VJjFiVrIfcoOptT
+         Z+H473cMCurke8hm1anLopglYiJcA5wSI2a96P3lLj6r6OGYg3ME1WTE7Pau3/FMnYsC
+         27N6Z8Tk4PUIdKJq4/X1XiHcJrSSIA4A5EsUt+l9p6SqSwSgM2W18cc8AfQN9oGQz4VP
+         suFEH77Ian+ibTYCoxmt+kqzemB4coF1ZDCmgGwSOFitJBau38irWbv0irLpqDzyTB22
+         axmoqXwoJGid4JuDZL5mYSBBMCU4kMQIsFL5/pUDzJ0Kftm7jO5Msdom27dfy84zXC0i
+         Tzrg==
+X-Gm-Message-State: APjAAAUWiNakkA5A4wQED2a8zqvVH6y0opNT7v4HRembLpJ0OC5Chy29
+        nlaNmKU9u5BauVTHowJdhqA=
+X-Google-Smtp-Source: APXvYqxZ085YucVRWLR7bncRkqmFLN0Av/atoYmK+5kGSsLcfHbtwGk/UrRgTGET2hkx+86R75kfkw==
+X-Received: by 2002:adf:9b9d:: with SMTP id d29mr19369660wrc.132.1565632223084;
+        Mon, 12 Aug 2019 10:50:23 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133C1F600059A26DE113A463E.dip0.t-ipconnect.de. [2003:f1:33c1:f600:59a:26de:113a:463e])
+        by smtp.googlemail.com with ESMTPSA id u7sm4084858wrp.96.2019.08.12.10.50.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 10:50:21 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux.amoon@gmail.com, ottuzzi@gmail.com, narmstrong@baylibre.com,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/1] ARM: dts: meson8b: persistent MAC address for Odroid-C1
+Date:   Mon, 12 Aug 2019 19:50:03 +0200
+Message-Id: <20190812175004.24943-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <20190812033120.43013-1-natechancellor@gmail.com> <20190812033120.43013-5-natechancellor@gmail.com>
-In-Reply-To: <20190812033120.43013-5-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 12 Aug 2019 10:42:31 -0700
-Message-ID: <CAKwvOd=BYmsExYeOQmuEJ-Yybgqd_22vQ_WwU0jEXTXAaKpQVw@mail.gmail.com>
-Subject: Re: [PATCH 4/5] lib/mpi: Fix for building for MIPS64 with Clang
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Werner Koch <wk@gnupg.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 8:31 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> From: Werner Koch <wk@gnupg.org>
->
-> * mpi/longlong.h [MIPS64][__clang__]: Use the C version like we
-> already do for 32 bit MIPS
->
-> clang errors:
->
-> lib/mpi/generic_mpih-mul1.c:37:24: error: invalid use of a cast in a
-> inline asm context requiring an l-value: remove the cast or build with
-> -fheinous-gnu-extensions
+This series makes Odroid-C1 use the MAC address which is programmed into
+the eFuse.
 
-Reminds me of:
-https://github.com/ClangBuiltLinux/linux/commit/7b7c1df2883dd4393592859758c3e76207da8b1d
+build-time dependencies:
+none
 
->                 umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
->                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> lib/mpi/longlong.h:652:20: note: expanded from macro 'umul_ppmm'
->         : "=l" ((USItype)(w0)), \
->                 ~~~~~~~~~~^~~
-> lib/mpi/generic_mpih-mul1.c:37:3: error: invalid output constraint '=h'
-> in asm
->                 umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
->                 ^
-> lib/mpi/longlong.h:653:7: note: expanded from macro 'umul_ppmm'
->              "=h" ((USItype)(w1)) \
->              ^
-> 2 errors generated.
->
-> Fixes: 5ce3e312ec5c ("crypto: GnuPG based MPI lib - header files (part 2)")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/605
-> Link: https://github.com/gpg/libgcrypt/commit/e7ae0ae243c8978a67c802169183187d88557be8
-> Signed-off-by: Werner Koch <wk@gnupg.org>
-> [nc: Added build error and tags to commit message
->      Modified subject line
->      Removed GnuPG-bug-id
->      Removed space between defined and (__clang__)]
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->  lib/mpi/longlong.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/lib/mpi/longlong.h b/lib/mpi/longlong.h
-> index 8a1507fc94dd..5636e6a09f7a 100644
-> --- a/lib/mpi/longlong.h
-> +++ b/lib/mpi/longlong.h
-> @@ -688,7 +688,8 @@ do {                                                                        \
->                  : "d" ((UDItype)(u)),                                  \
->                    "d" ((UDItype)(v)));                                 \
->  } while (0)
-> -#elif (__GNUC__ >= 5) || (__GNUC__ >= 4 && __GNUC_MINOR__ >= 4)
-> +#elif defined(__clang__) || (__GNUC__ >= 5) || (__GNUC__ == 4 && \
-> +                                               __GNUC_MINOR__ >= 4)
+runtime dependencies (without these a random MAC address is assigned,
+just like before these patches), both are already part of -next:
+- "nvmem: meson-mx-efuse: allow reading data smaller than word_size"
+  from [1]
+- "net: stmmac: manage errors returned by of_get_mac_address()" from [1]
 
-So the minimum supported version of GCC to build the kernel is
-currently 4.6, so we can clean up a lot more here.  I'd remove the
-check, and delete the #elif and #else implementations.
 
->  #define umul_ppmm(w1, w0, u, v) \
->  do {                                                                   \
->         typedef unsigned int __ll_UTItype __attribute__((mode(TI)));    \
-> --
-> 2.23.0.rc2
->
+Changes since v1 at [2]:
+- only add the nvmem cell to meson8b-odroidc1.dts as suggested by Neil.
+  It turns out that neither MXQ and EC-100 have the MAC address in eFuse
+  (which means only 1/3 boards has it at the given eFuse offset, so it's
+  not worth having it the common .dtsi)
 
+Kevin: you already have v1 of this series in your tree. Feel free to
+replace the two patches from v1 with this single one.
+
+
+[0] https://patchwork.kernel.org/patch/11062659/
+[1] https://patchwork.kernel.org/patch/11062657/
+[2] https://patchwork.kernel.org/cover/11062663/
+
+
+Martin Blumenstingl (1):
+  ARM: dts: meson8b: odroidc1: use the MAC address stored in the eFuse
+
+ arch/arm/boot/dts/meson8b-odroidc1.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 -- 
-Thanks,
-~Nick Desaulniers
+2.22.0
+
