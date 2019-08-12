@@ -2,125 +2,279 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA5AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C05FC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2CCC2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC8742085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:21:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BokZEpTI"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JxMMK1A9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfHLJVB (ORCPT
+        id S1727412AbfHLJVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 05:21:01 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38045 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727023AbfHLJVA (ORCPT
+        Mon, 12 Aug 2019 05:21:13 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:57640 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727248AbfHLJVN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 05:21:00 -0400
-Received: by mail-wm1-f66.google.com with SMTP id m125so7051413wmm.3;
-        Mon, 12 Aug 2019 02:20:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OKZ9N3pv+WuWQW5k/9EdD8ie6o1wYHnw2hNyQDcPSF8=;
-        b=BokZEpTItaQqtP46xPeDW7jYunBIgW/1meAOF1NI3K8kSvAOlqPUjzMv9ylGJAIfTO
-         xN9G4OdiWFRGX4AXV7sEJknzYL//hOGxdUoVKiLKCV6p2hMCdTmOM30adkg3Kwlbupmg
-         rfdVOagoDau3buS2xxNV22MPhnD0CzS+OSLvNPUqrVG93QiH6zKm+/6l4nxsPL++RXSZ
-         481dpXAITNxibg/ObZ08+DWiokp/KDBSWNYhvjVB9xluQrKyYbSaTYtZaVXRpph2f+iI
-         pJvKY1xgAnLOAdc/eY8BJviBUQSmwdiIYiYtCok4wy9RydmRyv+FqojfkYmq3v5qofgI
-         BkzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OKZ9N3pv+WuWQW5k/9EdD8ie6o1wYHnw2hNyQDcPSF8=;
-        b=eh/cFFsGbIUWcE1tonIfoMtOSKBELg/XXtkF3DT8heWacxlR86j/VUpPI/HeXNBuWK
-         8db/r+0EwdybyCzr5d6wTrWnvqkEyI6V1Sho/STARjzaDOh852K7zkw60ha0iR/kwN0d
-         C86pPbXD8ZFDARZOfNcxHcF/WhHdit+ZZki2R9fT3836ipHukJLXwWQY7S7/gmBAvCje
-         xM4Hh4MYvbXjRsw445VIXsFRq8l0Wt1hCZuOkabywFLpPTQBYUFBfAxehKaU0EAxUfjO
-         mBXo2zWHZkZkvIKCYd2swdidnoCsj3c21PWBZy0q2Gqi/GidYWXAUdz0gM9U0j0QkWNE
-         hsIQ==
-X-Gm-Message-State: APjAAAVODqMjenb/0plILWcQkOz5k67V5aKNVF+nBN67pJjrC5Hc7v+t
-        BmM3ftRUKuAMB3G4ZmyNii0=
-X-Google-Smtp-Source: APXvYqwgBCDoSM51Eoys/pu2KzGtOQvGA+KEm5sAZ80UfbHJbDxVMIvkiQNkcJzTks7yoCwFyM3dyQ==
-X-Received: by 2002:a1c:7619:: with SMTP id r25mr20216597wmc.153.1565601658506;
-        Mon, 12 Aug 2019 02:20:58 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id f192sm16350196wmg.30.2019.08.12.02.20.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 02:20:57 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 11:20:56 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v8 02/21] pinctrl: tegra: Add write barrier after all
- pinctrl register writes
-Message-ID: <20190812092056.GD8903@ulmo>
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-3-git-send-email-skomatineni@nvidia.com>
+        Mon, 12 Aug 2019 05:21:13 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190812092110euoutp01a5514f44720b166ffdaaac7095a74804~6Imy1goLj0539105391euoutp01M
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 09:21:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190812092110euoutp01a5514f44720b166ffdaaac7095a74804~6Imy1goLj0539105391euoutp01M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1565601670;
+        bh=XADl3E0ocFQktGQLli+F4PApnzQiN9HeNOsiSPxkCBc=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=JxMMK1A9ww1W6OL8JciMBpBYm6OpY4smWIogbXNv2VZUc413rdU1EpHnt5LOir/M5
+         LtZlZ3pgZwjqEPEQ2xZvjBkqdSPSdLr4ZZ6OkSMhe80kD7PSf3Mg/Q++Y+trcX0/WD
+         HnOVa8OGMDwafwXJ2D+FMMNeQ4r/uo0WoPmgysGc=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190812092109eucas1p1a8c70054cf60f6f7891e5329afb42db6~6ImyHmub80898908989eucas1p11;
+        Mon, 12 Aug 2019 09:21:09 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 3A.B2.04469.58F215D5; Mon, 12
+        Aug 2019 10:21:09 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190812092108eucas1p2484e38c892c4efd7d84aa26efd6b3b4e~6ImxHzFCL3275032750eucas1p2G;
+        Mon, 12 Aug 2019 09:21:08 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190812092108eusmtrp19368d65c7cbbab771e52de4cbaa9d227~6Imw4vXoB1828418284eusmtrp1F;
+        Mon, 12 Aug 2019 09:21:08 +0000 (GMT)
+X-AuditID: cbfec7f2-54fff70000001175-7e-5d512f859754
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id C4.F2.04117.48F215D5; Mon, 12
+        Aug 2019 10:21:08 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190812092108eusmtip1694326cce266e2d779ea087f823c0236~6ImwV-gVd0771907719eusmtip1g;
+        Mon, 12 Aug 2019 09:21:08 +0000 (GMT)
+Subject: Re: [PATCH 02/22] ARM: omap1: make omapfb standalone compilable
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <9b2b4623-f1cb-0e50-691e-e18f8f864c8f@samsung.com>
+Date:   Mon, 12 Aug 2019 11:21:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="C+ts3FVlLX8+P6JN"
-Content-Disposition: inline
-In-Reply-To: <1565308020-31952-3-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAK8P3a0_v1XM-fH5TOr-osrdLOsfYGbG8VCqktuSgUU7jKtgNQ@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRj1t3t3dx1OrtPyy8pqmJWUj0i5pJiFwS0qHPVHFGIrLyrq1E0t
+        LcjIUkzQZiW+C82pWC7fTwxHrvARltoSSTMRjSzTJvmY5HYn+d/5zncO53zwkZi4j+9ERsjj
+        WYVcFiUhhHhj99L7Q/c8pMGeb8v309XTAbRR1S2gBw2/CPpuaQ1BP1pV8+jab8N8+mNrIUEX
+        lGXhdE3JCEF3Dp4OEDIryyrELBpUOKM1PMOZ0eF2guksqhYwYw90PKau7Daj0zfxmIVa5yDr
+        S0K/UDYqIpFVePhfEYY3lxZjsQ3uNwYWM7EU9MQlA1mTQB2B0cEpXgYSkmKqAkF7Qy3BDX8Q
+        LHX3I25YQLAwPklsWApmJywLNYI6wzDGDbMI0lf+IpPKnmIgrb1HYMIO1B54PD1lFmFUHgZv
+        XrXwTQuCOgoP06rMBhHlD3PqVDOPU3thLbXfzG+hLsJYt4bPaezgXd4kbsLWlBRSC4zmShjl
+        CCOTJTwO74Km2UJzGFAzAijLu2PpHQg5RRMCDtvDd129Be+AnpxMnDO8RGBMn7a4mxCoc9Ys
+        bl/Q6gbWa5DrEQegptWDo4/Dz9UaZKKBsgX9rB1XwhZUjbkYR4sg/b6YU7uCplxDbMRmtFRi
+        2UiSv+m0/E3n5G86J/9/7lOEVyFHNkEZHcYqveTsdXelLFqZIA9zvxYTXYvWn6xnTTffjAwf
+        rnYhikQSG5FmJShYzJclKpOiuxCQmMRBFG9cp0ShsqRkVhETokiIYpVdaDuJSxxFN63GL4up
+        MFk8G8mysaxiY8sjrZ1SUPyFc3a7bZ7beb7O7WjLkeuTNd6+q+ywNK7wls3gwU+ey8KFfSHn
+        ez0Olw4N9RY1nvA2hmrPuqu+bN05x/9tpd/GnNS1+8gCXUojs91KpGc0qx36H83auUpjYfHK
+        vOsMljUQ9Zms8HOjTzm7+rw41haZpXXVdfnlxdX3TfYK0FcJrgyXeblhCqXsH6J5AkNgAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLIsWRmVeSWpSXmKPExsVy+t/xu7ot+oGxBuc3qViseeFg8XfSMXaL
+        K1/fs1k0L17PZjHlz3Imi02Pr7FaXN41h81i9pJ+Fov182+xWey/4uXA5fH71yRGj29fJ7F4
+        HP66kMXjzrU9bB77565h97jffZzJY/OSeo/jN7YzeXzeJBfAGaVnU5RfWpKqkJFfXGKrFG1o
+        YaRnaGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRvl6CXsWPxPOaCrXoVF7/1MDcwTlPpYuTk
+        kBAwkZj99hFjFyMXh5DAUkaJvqkX2LsYOYASMhLH15dB1AhL/LnWxQZR85pRYtbml4wgCWEB
+        D4n2PafZQWwRAUWJqS+eMYMUMQvMZZZY9ugyWEJIYDWzxIalwiA2m4CVxMT2VWDNvAJ2Eh+W
+        t7CC2CwCqhL/Ws6BxUUFIiTOvF/BAlEjKHFy5hMwm1MgUKJl9l82EJtZQF3iz7xLzBC2uMSt
+        J/OZIGx5ie1v5zBPYBSahaR9FpKWWUhaZiFpWcDIsopRJLW0ODc9t9hIrzgxt7g0L10vOT93
+        EyMwarcd+7llB2PXu+BDjAIcjEo8vBE/A2KFWBPLiitzDzFKcDArifCW/AUK8aYkVlalFuXH
+        F5XmpBYfYjQFem4is5Rocj4woeSVxBuaGppbWBqaG5sbm1koifN2CByMERJITyxJzU5NLUgt
+        gulj4uCUamC05Ir9tXx7rcfizUs+qK/g2nX+8N+ko2fTWiod/P6pfPL2Zzv1+9xujo2b2s4e
+        2tyj8X+JS5di2LFwl+uJ1U3id8wiVXvviEZ3LWb4yD1zVVS0SdmB/x/3fZ3w/uoXv11JbH92
+        JVw6Z/r/+9mA7yYNBv9XOCpMvW9w9oXacukp8w679wU+TG9yUWIpzkg01GIuKk4EAJ7Ifh7w
+        AgAA
+X-CMS-MailID: 20190812092108eucas1p2484e38c892c4efd7d84aa26efd6b3b4e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190808212453epcas2p44ff418662ee1acf428c6842ee4488f9f
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190808212453epcas2p44ff418662ee1acf428c6842ee4488f9f
+References: <20190808212234.2213262-1-arnd@arndb.de>
+        <CGME20190808212453epcas2p44ff418662ee1acf428c6842ee4488f9f@epcas2p4.samsung.com>
+        <20190808212234.2213262-3-arnd@arndb.de>
+        <55c9608d-68c4-17f6-2682-7668d5d7720a@samsung.com>
+        <CAK8P3a3grFEGr33s327yNMabK5=1kCJc3k7y55dhzQx9sTvkyQ@mail.gmail.com>
+        <487da98d-a862-0207-289a-bca8ff18e51a@samsung.com>
+        <CAK8P3a0_v1XM-fH5TOr-osrdLOsfYGbG8VCqktuSgUU7jKtgNQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---C+ts3FVlLX8+P6JN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 8/9/19 9:55 PM, Arnd Bergmann wrote:
+> On Fri, Aug 9, 2019 at 4:36 PM Bartlomiej Zolnierkiewicz
+> <b.zolnierkie@samsung.com> wrote:
+>> On 8/9/19 1:43 PM, Arnd Bergmann wrote:
+> 
+>>>
+>>> That would have been ok as well, but having the addition here was
+>>> intentional and seems more logical to me as this is where the headers
+>>> get moved around.
+>> I see that this is an optimization for making the patch series more
+>> compact but I think that this addition logically belongs to patch #9
+>> (which adds support for COMPILE_TEST) where the new code is required.
+>>
+>> Moreover patch description for patch #2 lacks any comment about this
+>> addition being a preparation for changes in patch #9 so I was quite
+>> puzzled about its purpose when seeing it first.
+>>
+>> Therefore please have mercy on the poor/stupid reviewer and don't do
+>> such optimizations intentionally (or at least describe them properly
+>> somewhere).. ;-)
+> 
+> Ok, I looked at it some more and agree that you are right. I've split it
+> up further now into patches that make more sense by themselves:
+> 
+> commit ad71cdc54404ecde2e88678ee6bc7ae7fb8aec97
+> Author: Arnd Bergmann <arnd@arndb.de>
+> Date:   Tue Aug 6 16:08:34 2019 +0200
+> 
+>     fbdev: omap: avoid using mach/*.h files
+> 
+>     All the headers we actually need are now in include/linux/soc,
+>     so use those versions instead and allow compile-testing on
+>     other architectures.
+> 
+>     Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+>     Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> 
+>  drivers/video/backlight/Kconfig          | 4 ++--
+>  drivers/video/backlight/omap1_bl.c       | 4 ++--
+>  drivers/video/fbdev/omap/Kconfig         | 4 ++--
+>  drivers/video/fbdev/omap/lcd_ams_delta.c | 2 +-
+>  drivers/video/fbdev/omap/lcd_dma.c       | 3 ++-
+>  drivers/video/fbdev/omap/lcd_inn1510.c   | 2 +-
+>  drivers/video/fbdev/omap/lcd_osk.c       | 4 ++--
+>  drivers/video/fbdev/omap/lcdc.c          | 2 ++
+>  drivers/video/fbdev/omap/omapfb_main.c   | 3 +--
+>  drivers/video/fbdev/omap/sossi.c         | 1 +
+>  10 files changed, 16 insertions(+), 13 deletions(-)
+> 
+> commit 959e0d68751757e84dd703f60405c7268763dba4
+> Author: Arnd Bergmann <arnd@arndb.de>
+> Date:   Fri Aug 9 21:27:01 2019 +0200
+> 
+>     fbdev: omap: pass irqs as resource
+> 
+>     To avoid relying on the mach/irqs.h header, stop using
+>     OMAP_LCDC_IRQ and INT_1610_SoSSI_MATCH directly in the driver
+>     code, but instead pass these as resources.
+> 
+>     Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> 
+>  arch/arm/mach-omap1/fb.c               | 19 ++++++++++++++++++-
+>  drivers/video/fbdev/omap/lcdc.c        |  6 +++---
+>  drivers/video/fbdev/omap/omapfb.h      |  2 ++
+>  drivers/video/fbdev/omap/omapfb_main.c | 16 +++++++++++++++-
+>  drivers/video/fbdev/omap/sossi.c       |  2 +-
+>  5 files changed, 39 insertions(+), 6 deletions(-)
+> 
+> 
+> commit 6643f7a7da3ca7ce8f2ff094fecab7a0fd706acf
+> Author: Arnd Bergmann <arnd@arndb.de>
+> Date:   Fri Aug 9 21:42:31 2019 +0200
+> 
+>     ARM: omap1: declare a dummy omap_set_dma_priority
+> 
+>     omapfb calls directly into the omap_set_dma_priority() function in
+>     the DMA driver. This prevents compile-testing omapfb on other
+>     architectures. Add an inline function next to the other ones
+>     for non-omap configurations.
+> 
+>     Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> 
+>  include/linux/omap-dma.h | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> commit 154bfb7ddcecdbca66d9a086776a3108831ef0b9
+> Author: Arnd Bergmann <arnd@arndb.de>
+> Date:   Mon Aug 5 23:15:37 2019 +0200
+> 
+>     ARM: omap1: move lcd_dma code into omapfb driver
+> 
+>     The omapfb driver is split into platform specific code for omap1, and
+>     driver code that is also specific to omap1.
+> 
+>     Moving both parts into the driver directory simplifies the structure
+>     and avoids the dependency on certain omap machine header files.
+> 
+>     As mach/lcd_dma.h can not be included from include/linux/omap-dma.h
+>     any more now, move the omap_lcd_dma_running() declaration into the
+>     omap-dma header, which matches where it is defined.
+> 
+>     Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> 
+>  arch/arm/mach-omap1/Makefile
+>    |  4 ----
+>  arch/arm/mach-omap1/include/mach/lcdc.h
+>    | 44 --------------------------------------------
+>  drivers/video/fbdev/Makefile
+>    |  2 +-
+>  drivers/video/fbdev/omap/Makefile
+>    |  5 +++++
+>  {arch/arm/mach-omap1 => drivers/video/fbdev/omap}/lcd_dma.c
+>    |  4 +++-
+>  {arch/arm/mach-omap1/include/mach =>
+> drivers/video/fbdev/omap}/lcd_dma.h |  2 --
+>  drivers/video/fbdev/omap/lcdc.c
+>    |  2 +-
+>  drivers/video/fbdev/omap/lcdc.h
+>    | 35 +++++++++++++++++++++++++++++++++++
+>  drivers/video/fbdev/omap/sossi.c                                         |  1 +
+>  include/linux/omap-dma.h
+>    |  4 ++--
+>  10 files changed, 48 insertions(+), 55 deletions(-)
+> 
+> commit b8ddb98d29a43fecb4387d0d8218935cb1997a28
+> Author: Arnd Bergmann <arnd@arndb.de>
+> Date:   Tue Aug 6 14:59:00 2019 +0200
+> 
+>     ARM: omap1: innovator: pass lcd control address as pdata
+> 
+>     To avoid using the mach/omap1510.h header file, pass the correct
+>     address as platform data.
+> 
+>     Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+>     Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> 
+>  arch/arm/mach-omap1/board-innovator.c  | 3 +++
+>  drivers/video/fbdev/omap/lcd_inn1510.c | 7 +++++--
+>  2 files changed, 8 insertions(+), 2 deletions(-)
 
-On Thu, Aug 08, 2019 at 04:46:41PM -0700, Sowjanya Komatineni wrote:
-> This patch adds write barrier after all pinctrl register writes
-> during resume to make sure all pinctrl changes are complete.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/pinctrl/tegra/pinctrl-tegra.c | 2 ++
->  1 file changed, 2 insertions(+)
+Thank you for reworking the patch series.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+> The resulting code is the same as before, I'll post that again along
+> the rest of the series next week. Should I add your Ack to each
+> patch already?
 
---C+ts3FVlLX8+P6JN
-Content-Type: application/pgp-signature; name="signature.asc"
+Yes, please do.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1RL3gACgkQ3SOs138+
-s6FnFhAAkgf/BiMUj/jlPfe6CGMU/2j+3heSekAmXhJfo1aq1v5F2JenrTTU3rdW
-9lBsT0PnAgIGsSz/0eny9BCg2LksG19hn2zB94YlgA/j4eWgh+zEm0eXll4V1gXR
-ZyADhb9TCC3Ez5OrMXwt/31F5qXK/npVjeTvXEAZEt2mHHYj4wniS1s76DXNBMxe
-TZwHmDKVqVf8swjWnNzNthITXG79YNl4M1yBCeiKHiLPkAszrX0V6JVJv+Leq7cL
-xAztBfPrZfXx5kX9rFYeqWwCPBx5oqQL+pMDyhqafcyIiB1wMvXPUGHIxcTitXHX
-AHsdazSNFfK394leUuNQ/b8WEBCjw9h4rL4KQ05spl3J9WJSrMI9cf2eHhWx6O1R
-g6MNZ+nZ1LbSmiIfhcqy0Uit364/vXqj3Luzu7FVa1ld15EkdhmWAaO3gWHWLbLP
-VEPviaC+byT6g7Sd5Z3Hv/BflOC+McrY2oBASo1D8tQecmKJI6JPJ0A4MkHLOZJI
-v2w6ohTCcdzy6zt7Z8IIBsFFwtAL5oGxJ3TdPaDKNh523mQSjyoyGjpnNNgHb0N6
-sGoOGsdV4K+6Fx6i0TQOFeBPDkwmbWwnv6Jcy2ASqI44N2CiAUd2Vfg+9liX47BY
-vRHKJTkliMrmxh+XfarOWRT5RfaGJSLVU4hUQcXi3aAORedVhm8=
-=UfG9
------END PGP SIGNATURE-----
-
---C+ts3FVlLX8+P6JN--
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
