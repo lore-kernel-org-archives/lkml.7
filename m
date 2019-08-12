@@ -2,221 +2,154 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC51C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AADB0C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4667D2070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:01:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="ORW3LkB3"
+	by mail.kernel.org (Postfix) with ESMTP id 85C67208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:01:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfHLJBN (ORCPT
+        id S1727299AbfHLJBc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 05:01:13 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:6068 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727170AbfHLJBN (ORCPT
+        Mon, 12 Aug 2019 05:01:32 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:43958 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727170AbfHLJBc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 05:01:13 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7C8wsWk005544;
-        Mon, 12 Aug 2019 05:00:50 -0400
-Received: from nam01-by2-obe.outbound.protection.outlook.com (mail-by2nam01lp2050.outbound.protection.outlook.com [104.47.34.50])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2u9tu6mm0q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 12 Aug 2019 05:00:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RBlUIR8bqp0Cu3P3g2BCWBY0EWJPtGT35n6GMLtknnZv481dlHbYEWKk5SA0hugXAUjiQOdfMTIqBJaOL6t+bFqllAJvERa7M8KJlvkm3UAaqKtVM+Racz7P36Xol5/HyHR9SsQoIwvV/VuPiNBTQarDz4luIdEMBlBRCkU5rULbH06uNS+7wwP2MOt6dMBApcROqF0uPWhcMZ1pyxviUgyXu2u+y+DnWls3tuHKYJA3BzZTKgjAQ3CXhidd7VayxoDcmuwssLgs2PprOYu2mSjXDKLjR5Z+WSEwZWQ+MWjyk9HMji0+Vzo+V12ckLEe8i5FxbpRUPQppJmNjzjpNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zZ3jOC3BcruAnx3mzNXR+eXYowISk9eZTffynHomYcw=;
- b=J+lFBPP6vcrajKEKVP97+mWRmKqAC6fXaAx88F6RdH+Bvva0mk9XU0i2U6IbG2XxJxl5GbhNL4Y9gva33DoCTBTMOt2e9/rtBPjxq+n/+CnKzpVYHEU7S6/s4dJJ+FM12adamA+pNJP3hEL0djI3zYP2YxQGTz1es7y/qIIbAFqCwtu0pC02m+7ZQLDr4hZOl4uZLHRpQkqlLo2Ktt71ddfgvzNLMh0DDKOAnvWplcdvJEjX59utjCyDjheNWKXzJ95AMQ2byxKaVYGtlApQZ5v8QX2l/+nVPpPQ+aWmOW7TDZHBfCjQKcuQTWczEycCT9+Xj6GB83vZYwTpqN5J/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=metafoo.de smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zZ3jOC3BcruAnx3mzNXR+eXYowISk9eZTffynHomYcw=;
- b=ORW3LkB38ckhdyojzJtKDP1kuyoqsBuk/PrM/CiavzSPqnvPE+C4DLlihgF+szb10mhFBVosSkF0FXWa9+WfdU0WPWh4tdpxuaMUdch9tkbISWhTSxI+AexhwSxTqa0waPkUd40f+hpOX6To+zjCpHxzeKgNNZkTrjMVDCkCkAI=
-Received: from CY4PR03CA0087.namprd03.prod.outlook.com (2603:10b6:910:4d::28)
- by MN2PR03MB5200.namprd03.prod.outlook.com (2603:10b6:208:1e1::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.14; Mon, 12 Aug
- 2019 09:00:48 +0000
-Received: from BL2NAM02FT027.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::208) by CY4PR03CA0087.outlook.office365.com
- (2603:10b6:910:4d::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2157.16 via Frontend
- Transport; Mon, 12 Aug 2019 09:00:47 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- BL2NAM02FT027.mail.protection.outlook.com (10.152.77.160) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2157.15
- via Frontend Transport; Mon, 12 Aug 2019 09:00:47 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x7C90lir008334
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Mon, 12 Aug 2019 02:00:47 -0700
-Received: from mircea-Latitude-E6540.ad.analog.com (10.48.65.115) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Mon, 12 Aug 2019 05:00:46 -0400
-From:   Mircea Caprioru <mircea.caprioru@analog.com>
-To:     <jic23@kernel.org>
-CC:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
-        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        Mircea Caprioru <mircea.caprioru@analog.com>
-Subject: [PATCH] staging: iio: adc: ad7192: Remove platform data
-Date:   Mon, 12 Aug 2019 12:00:34 +0300
-Message-ID: <20190812090034.26769-1-mircea.caprioru@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 12 Aug 2019 05:01:32 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-167-o1ho9AClPlujEPqzHyiv3g-1; Mon, 12 Aug 2019 10:01:29 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon,
+ 12 Aug 2019 10:01:28 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 12 Aug 2019 10:01:28 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Mika Westerberg' <mika.westerberg@linux.intel.com>
+CC:     'Yehezkel Bernat' <yehezkelshb@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        "Anthony Wong" <anthony.wong@canonical.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Subject: RE: [PATCH 3/8] thunderbolt: Use 32-bit writes when writing ring
+ producer/consumer
+Thread-Topic: [PATCH 3/8] thunderbolt: Use 32-bit writes when writing ring
+ producer/consumer
+Thread-Index: AQHVMyIznn3HI+p3CEuvWWeqi0Ulhqa8L0swgDPP6oCAABFywP//9NeAgAAR0ICAARElgIAGSXbA
+Date:   Mon, 12 Aug 2019 09:01:28 +0000
+Message-ID: <60b8b8d8ff14405bb86b9bd30addb94f@AcuMS.aculab.com>
+References: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
+ <20190705095800.43534-4-mika.westerberg@linux.intel.com>
+ <CA+CmpXtMBEtyh77fcrhX2BU8esiit56CWfZmey6LYEHZVUxf8A@mail.gmail.com>
+ <0f3a47d8133945b181d623ea6e0d53f2@AcuMS.aculab.com>
+ <20190807161359.GT2716@lahna.fi.intel.com>
+ <79616dd147864771b0b74901e77f2607@AcuMS.aculab.com>
+ <20190807163629.GV2716@lahna.fi.intel.com>
+ <91a579eb2f614739a9a1177bdde5513e@AcuMS.aculab.com>
+ <20190808095751.GA2716@lahna.fi.intel.com>
+In-Reply-To: <20190808095751.GA2716@lahna.fi.intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(376002)(136003)(39860400002)(396003)(2980300002)(199004)(189003)(47776003)(7636002)(246002)(14444005)(4326008)(478600001)(426003)(336012)(26005)(186003)(486006)(44832011)(126002)(305945005)(2616005)(476003)(1076003)(8676002)(7696005)(51416003)(107886003)(2351001)(50226002)(5660300002)(316002)(16586007)(8936002)(36756003)(86362001)(50466002)(2906002)(6916009)(48376002)(6666004)(356004)(54906003)(70586007)(106002)(70206006);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR03MB5200;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 571db007-db00-47b2-27e9-08d71f039114
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:MN2PR03MB5200;
-X-MS-TrafficTypeDiagnostic: MN2PR03MB5200:
-X-Microsoft-Antispam-PRVS: <MN2PR03MB52007514D25A6AA4C17EE1D481D30@MN2PR03MB5200.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 012792EC17
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: JpE0K0s4gg5PDeVW1kcMJdnXG6JumzmJnnJNcExfDG0oOlupexWt6r7/1NXDF/xEFsp6aZVwktlGe0ro0RfA9tl9YJy1EfOixHFCYptXbkOb1bx/2ktKFoEo48qi8ffJztlJUe6bpLAslm5B0Kxobgc78i6HHjDhtoz5YhlW7aIbq11VmgON0NyjIX1GRTTNqSpkpo0jBFpdOCYl+vYrRYSRMqR4DhOZYLSHoJy/AldpvssrO7nz9HxymCtIZXyHIfp2vkrcrYMgHrzdbQ8pWr4ajNbAXKZu46/d3AbknyMREftToMYr+WNK/MFvxH2T2U+M2qcUkNyz2jGFfln7yaC8ls+DL3dMxTokNFpkhhN5jyAdLZbvRW6cLNZgoBC6DViD+3wSY7jTZd7MWw/wXXJON8+8XHuZs2+ibcyoJNs=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2019 09:00:47.4673
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 571db007-db00-47b2-27e9-08d71f039114
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR03MB5200
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-12_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908120101
+X-MC-Unique: o1ho9AClPlujEPqzHyiv3g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch removes the reference voltage entry from the platform_data
-structure. This is no longer needed since the reference voltage is obtained
-from the device tree. With this we also remove the entire ad7192.h file.
+From: 'Mika Westerberg'
+> Sent: 08 August 2019 10:58
+> On Wed, Aug 07, 2019 at 04:41:30PM +0000, David Laight wrote:
+> > From: 'Mika Westerberg' [mailto:mika.westerberg@linux.intel.com]
+> > > Sent: 07 August 2019 17:36
+> > >
+> > > On Wed, Aug 07, 2019 at 04:22:26PM +0000, David Laight wrote:
+> > > > From: Mika Westerberg
+> > > > > Sent: 07 August 2019 17:14
+> > > > > To: David Laight
+> > > > >
+> > > > > On Fri, Jul 05, 2019 at 04:04:19PM +0000, David Laight wrote:
+> > > > > > > Really a matter of taste, but maybe you want to consider having a single
+> > > > > > > function, with a 3rd parameter, bool is_tx.
+> > > > > > > The calls here will be unified to:
+> > > > > > >         ring_iowrite(ring, ring->head, ring->is_tx);
+> > > > > > > (No condition is needed here).
+> > > > > > >
+> > > > > > > The implementation uses the new parameter to decide which part of the register
+> > > > > > > to mask, reducing the code duplication (in my eyes):
+> > > > > > >
+> > > > > > >         val = ioread32(ring_desc_base(ring) + 8);
+> > > > > > >         if (is_tx) {
+> > > > > > >                 val &= 0x0000ffff;
+> > > > > > >                 val |= value << 16;
+> > > > > > >         } else {
+> > > > > > >                 val &= 0xffff0000;
+> > > > > > >                 val |= value;
+> > > > > > >         }
+> > > > > > >         iowrite32(val, ring_desc_base(ring) + 8);
+> > > > > > >
+> > > > > > > I'm not sure if it improves the readability or makes it worse. Your call.
+> > > > > >
+> > > > > > Gah, that is all horrid beyond belief.
+> > > > > > If a 32bit write is valid then the hardware must not be updating
+> > > > > > the other 16 bits.
+> > > > > > In which case the driver knows what they should be.
+> > > > > > So it can do a single 32bit write of the required value.
+> > > > >
+> > > > > I'm not entirely sure I understand what you say above. Can you shed some
+> > > > > light on this by a concrete example how it should look like? :-)
+> > > >
+> > > > The driver must know both the tx and rx ring values, so:
+> > > > 	iowrite32(tx_val << 16 | rx_val, ring_desc_base(ring) + 8);
+> > > >
+> > >
+> > > I see. However, prod or cons side gets updated by the hardware as it
+> > > processes buffers and other side is only updated by the driver. I'm not
+> > > sure the above works here.
+> >
+> > If the hardware updates the other half of the 32bit word it doesn't ever work.
+> >
+> > In that case you must do 16bit writes.
+> > If the hardware is ignoring the byte-enables it is broken and unusable.
+> 
+> It is quite usable as I'm running this code on real hardware ;-) but
+> 32-bit access is needed.
+> 
+> The low or high 16-bits are read-only depending on the ring (Tx or Rx)
+> and updated by the hardware. It ignores writes to that part so we could
+> do this for Tx ring:
+> 
+> 	iowrite32(prod << 16, ring_desc_base(ring) + 8);
+> 
+> and this for Rx ring:
+> 
+> 	iowrite32(cons, ring_desc_base(ring) + 8);
+> 
+> Do you see any issues with this?
 
-The undefined reference voltage warning is promoted to an error signaling a
-problem with the device tree.
+No, just comment that the hardware ignores the write to the other bytes.
 
-Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
----
- drivers/staging/iio/adc/ad7192.c | 14 ++----------
- drivers/staging/iio/adc/ad7192.h | 37 --------------------------------
- 2 files changed, 2 insertions(+), 49 deletions(-)
- delete mode 100644 drivers/staging/iio/adc/ad7192.h
+You probably want separate functions - to remove the mispredicted branch.
 
-diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
-index df06e0570f9b..81ea2639c67c 100644
---- a/drivers/staging/iio/adc/ad7192.c
-+++ b/drivers/staging/iio/adc/ad7192.c
-@@ -25,8 +25,6 @@
- #include <linux/iio/triggered_buffer.h>
- #include <linux/iio/adc/ad_sigma_delta.h>
- 
--#include "ad7192.h"
+	David
+
 -
- /* Registers */
- #define AD7192_REG_COMM		0 /* Communications Register (WO, 8-bit) */
- #define AD7192_REG_STAT		0 /* Status Register	     (RO, 8-bit) */
-@@ -666,16 +664,10 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
- 
- static int ad7192_probe(struct spi_device *spi)
- {
--	const struct ad7192_platform_data *pdata = dev_get_platdata(&spi->dev);
- 	struct ad7192_state *st;
- 	struct iio_dev *indio_dev;
- 	int ret, voltage_uv = 0;
- 
--	if (!pdata) {
--		dev_err(&spi->dev, "no platform data?\n");
--		return -ENODEV;
--	}
--
- 	if (!spi->irq) {
- 		dev_err(&spi->dev, "no IRQ?\n");
- 		return -ENODEV;
-@@ -713,12 +705,10 @@ static int ad7192_probe(struct spi_device *spi)
- 
- 	voltage_uv = regulator_get_voltage(st->avdd);
- 
--	if (pdata->vref_mv)
--		st->int_vref_mv = pdata->vref_mv;
--	else if (voltage_uv)
-+	if (voltage_uv)
- 		st->int_vref_mv = voltage_uv / 1000;
- 	else
--		dev_warn(&spi->dev, "reference voltage undefined\n");
-+		dev_err(&spi->dev, "Device tree error, reference voltage undefined\n");
- 
- 	spi_set_drvdata(spi, indio_dev);
- 	st->devid = spi_get_device_id(spi)->driver_data;
-diff --git a/drivers/staging/iio/adc/ad7192.h b/drivers/staging/iio/adc/ad7192.h
-deleted file mode 100644
-index f3669e1df084..000000000000
---- a/drivers/staging/iio/adc/ad7192.h
-+++ /dev/null
-@@ -1,37 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * AD7190 AD7192 AD7195 SPI ADC driver
-- *
-- * Copyright 2011 Analog Devices Inc.
-- */
--#ifndef IIO_ADC_AD7192_H_
--#define IIO_ADC_AD7192_H_
--
--/*
-- * TODO: struct ad7192_platform_data needs to go into include/linux/iio
-- */
--
--/**
-- * struct ad7192_platform_data - platform/board specific information
-- * @vref_mv:		the external reference voltage in millivolt
-- * @clock_source_sel:	[0..3]
-- *			0 External 4.92 MHz clock connected from MCLK1 to MCLK2
-- *			1 External Clock applied to MCLK2
-- *			2 Internal 4.92 MHz Clock not available at the MCLK2 pin
-- *			3 Internal 4.92 MHz Clock available at the MCLK2 pin
-- * @ext_clk_Hz:		the external clock frequency in Hz, if not set
-- *			the driver uses the internal clock (16.776 MHz)
-- * @refin2_en:		REFIN1/REFIN2 Reference Select (AD7190/2 only)
-- * @rej60_en:		50/60Hz notch filter enable
-- * @sinc3_en:		SINC3 filter enable (default SINC4)
-- * @chop_en:		CHOP mode enable
-- * @buf_en:		buffered input mode enable
-- * @unipolar_en:	unipolar mode enable
-- * @burnout_curr_en:	constant current generators on AIN(+|-) enable
-- */
--
--struct ad7192_platform_data {
--	u16		vref_mv;
--};
--
--#endif /* IIO_ADC_AD7192_H_ */
--- 
-2.17.1
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
