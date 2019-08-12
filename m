@@ -2,180 +2,325 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5577CC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B96C0C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27D54214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F6020651
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:08:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j4ZfFTyn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728653AbfHLMIJ (ORCPT
+        id S1728664AbfHLMIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 08:08:09 -0400
-Received: from mail-ot1-f69.google.com ([209.85.210.69]:56381 "EHLO
-        mail-ot1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728336AbfHLMII (ORCPT
+        Mon, 12 Aug 2019 08:08:11 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34282 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728604AbfHLMIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 08:08:08 -0400
-Received: by mail-ot1-f69.google.com with SMTP id q22so83864069otl.23
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 05:08:07 -0700 (PDT)
+        Mon, 12 Aug 2019 08:08:09 -0400
+Received: by mail-pl1-f195.google.com with SMTP id i2so47825943plt.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 05:08:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YeYkAPIcmxzpHPZ195gR0bICOHCgq2HW4JQ5vcVf1wY=;
+        b=j4ZfFTynji+OHG4LRMxt2JXwsgTFRyuPYDJ/WtK6Ww44SyFpdbKTVCYZsONowBqKX6
+         HuLATsGkihKns6npVOG+MACCF3hDCT983C862e+/j+xKkorf6gw0AQhwp+UXfFgyBLGT
+         2GyzlPsEN2fCww4yYXXq0iXABThU3M/sUSVwCxAWzWNLRWT5tDGnWUF2Dc9wILGcu6t/
+         QJ6EueyHe5lDv81xKqiiW9TqJ08wKIcaVmub5MC2WbT/4eoHn/q3+BZ9vWhgbaLQ2195
+         63bgf2dik/vHXiAzxm0aOX8DDZELO72HyNIjuJzWQehLp9LWD5DH8owEq4Nrip7OJanP
+         JPsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=k3c8LcSazCwKFrNziC6TBhoXX/eRW9ZM+i9e/h5ipd4=;
-        b=awyD751W2bEcBNEycEjfbAVlBy9ntbv4UfZcufgo4stl15FlzbXn/YnrTMh36Bf7w8
-         pHDwE0eYsDOAWoXHFn69mkNs2iXHVpqCOHjLN5HoRYDnnoVPFYwb/h9X3xRhOC89QcZO
-         jMNWTCtvsTU0ns67+A2IkleUzVnutnhQ2O2aKdNQVpy3bsfQ8gVeLThlN1UxIS4kAZ/+
-         FR5pKZY5QwDpSODo/IB8vyDvG049ry0gAHi7aJ/Iok8BPdXy39HkzgGA4mVIvWlgAYmM
-         XVFTbOSaJDRPdQGtLEXkTvrabCj/PCjLcLLwA6DArMJ5i0XewG5xAdp19MgB+GANbW3+
-         GDmg==
-X-Gm-Message-State: APjAAAVEwJrGGFN18aalk1TudyUcySMLNalkVuEmW6XQiSUnAoP+Ggh9
-        9tjL4kpD1CJ/uvEgAn2dbrXhNLgg/Jm4uSCPiCzBsL0XgmO4
-X-Google-Smtp-Source: APXvYqxXM8QGVFHauf9s3BqfHHnqc0AEu6j0Lg3VV6mpTQQlFA7JqojoSeaXhSR84bvXhex4/fT4mgYzMkawCgGm/mNXv2L3tBPp
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YeYkAPIcmxzpHPZ195gR0bICOHCgq2HW4JQ5vcVf1wY=;
+        b=cFF5w+c7cMxQC7sXu8D6OXwoYq36rGNYIGcd25H1v7BjK0Nfnq/zntPUCZyNemeq/2
+         R1deYZTdBiQblTKzvZNMeruIB3p5P3/0rMse0GTy6XtrXrt9MHRFUduQUvpzDyxWAU19
+         N5qE7em9CYQeJgC9efghpPTGl+HB/LxG7mmgL6DQV57Va+bhnJ5BgaqTPdqcVz7y1og0
+         rzOFy/W1gXboVNz592932wxuhwpiWP6R7+jOUp0iuC6Dbo1ZJ01MkCMzHBzFQYmTRIUy
+         Hg+SVAyBMEpYq8MjzfpELnsAs3r0+itJMAZj2mbx1icj7HUWsOKinKMQXLUfj1+a30O+
+         L7+w==
+X-Gm-Message-State: APjAAAUr0YXH2AEG4gaWgcOrnPygRCyCYD8dPOqAPkr4+yV56T6TFdtL
+        9mDOOgXiERGPO3nJjFG+D1cYB5Xx08F6EZQySrD/nw==
+X-Google-Smtp-Source: APXvYqzYjmpnrrcWIxeRpB3FzxxI1pgZ+GMeXWsWvv9eeaviga+4Uj6DB03QG8ot31n/KPEcAGOsFaVJV1a5UutRZbA=
+X-Received: by 2002:a17:902:ab96:: with SMTP id f22mr26471739plr.147.1565611687846;
+ Mon, 12 Aug 2019 05:08:07 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a02:390c:: with SMTP id l12mr24992612jaa.76.1565611686987;
- Mon, 12 Aug 2019 05:08:06 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 05:08:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007593f4058fea60d8@google.com>
-Subject: KASAN: use-after-free Read in rxrpc_queue_local
-From:   syzbot <syzbot+78e71c5bab4f76a6a719@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dhowells@redhat.com,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <000000000000475ecc058faf017f@google.com> <Pine.LNX.4.44L0.1908091229540.1630-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1908091229540.1630-100000@iolanthe.rowland.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 12 Aug 2019 14:07:56 +0200
+Message-ID: <CAAeHK+xZgjD+gP=pCkk0uKVkuPG+XZ26mgNQCGzw2ea5mqFTJg@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in ld_usb_release
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Greg KH <greg@kroah.com>,
+        syzbot <syzbot+30cf45ebfe0b0c4847a1@syzkaller.appspotmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, kirr@nexedi.com,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>, lkundrak@v3.sk,
+        logang@deltatee.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Aug 9, 2019 at 6:51 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> Greg:
+>
+> See below...
+>
+> On Fri, 9 Aug 2019, syzbot wrote:
+>
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=15a16f26600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=30cf45ebfe0b0c4847a1
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1416df26600000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11ce511c600000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+30cf45ebfe0b0c4847a1@syzkaller.appspotmail.com
+> >
+> > ==================================================================
+> > BUG: KASAN: use-after-free in __mutex_lock_common
+> > kernel/locking/mutex.c:912 [inline]
+> > BUG: KASAN: use-after-free in __mutex_lock+0xf23/0x1360
+> > kernel/locking/mutex.c:1077
+> > Read of size 8 at addr ffff8881d21fc2d8 by task syz-executor834/1878
+> >
+> > CPU: 0 PID: 1878 Comm: syz-executor834 Not tainted 5.3.0-rc2+ #25
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0xca/0x13e lib/dump_stack.c:113
+> >   print_address_description+0x6a/0x32c mm/kasan/report.c:351
+> >   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
+> >   kasan_report+0xe/0x12 mm/kasan/common.c:612
+> >   __mutex_lock_common kernel/locking/mutex.c:912 [inline]
+> >   __mutex_lock+0xf23/0x1360 kernel/locking/mutex.c:1077
+> >   ld_usb_release+0xb1/0x400 drivers/usb/misc/ldusb.c:386
+> >   __fput+0x2d7/0x840 fs/file_table.c:280
+> >   task_work_run+0x13f/0x1c0 kernel/task_work.c:113
+> >   tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+> >   exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
+> >   prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+> >   syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+> >   do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:299
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > RIP: 0033:0x406b31
+> > Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 19 00 00 c3 48
+> > 83 ec 08 e8 6a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48
+> > 89 c2 e8 b3 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+> > RSP: 002b:00007ffcf13bd080 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+> > RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000406b31
+> > RDX: fffffffffffffff7 RSI: 0000000000000080 RDI: 0000000000000004
+> > RBP: 0000000000000159 R08: 0000000000000020 R09: 0000000000000020
+> > R10: 00007ffcf13bd0b0 R11: 0000000000000293 R12: 000000000001d884
+> > R13: 0000000000000004 R14: 00000000006e39ec R15: 0000000000000064
+> >
+> > Allocated by task 1775:
+> >   save_stack+0x1b/0x80 mm/kasan/common.c:69
+> >   set_track mm/kasan/common.c:77 [inline]
+> >   __kasan_kmalloc mm/kasan/common.c:487 [inline]
+> >   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
+> >   kmalloc include/linux/slab.h:552 [inline]
+> >   kzalloc include/linux/slab.h:748 [inline]
+> >   ld_usb_probe+0x6e/0xa65 drivers/usb/misc/ldusb.c:661
+> >   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+> >   really_probe+0x281/0x650 drivers/base/dd.c:548
+> >   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+> >   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+> >   __device_attach+0x217/0x360 drivers/base/dd.c:882
+> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> >   device_add+0xae6/0x16f0 drivers/base/core.c:2114
+> >   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+> >   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+> >   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+> >   really_probe+0x281/0x650 drivers/base/dd.c:548
+> >   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+> >   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+> >   __device_attach+0x217/0x360 drivers/base/dd.c:882
+> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> >   device_add+0xae6/0x16f0 drivers/base/core.c:2114
+> >   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+> >   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+> >   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+> >   port_event drivers/usb/core/hub.c:5359 [inline]
+> >   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+> >   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+> >   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+> >   kthread+0x318/0x420 kernel/kthread.c:255
+> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> >
+> > Freed by task 1775:
+> >   save_stack+0x1b/0x80 mm/kasan/common.c:69
+> >   set_track mm/kasan/common.c:77 [inline]
+> >   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
+> >   slab_free_hook mm/slub.c:1423 [inline]
+> >   slab_free_freelist_hook mm/slub.c:1470 [inline]
+> >   slab_free mm/slub.c:3012 [inline]
+> >   kfree+0xe4/0x2f0 mm/slub.c:3953
+> >   ld_usb_probe+0x728/0xa65 drivers/usb/misc/ldusb.c:744
+> >   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+> >   really_probe+0x281/0x650 drivers/base/dd.c:548
+> >   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+> >   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+> >   __device_attach+0x217/0x360 drivers/base/dd.c:882
+> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> >   device_add+0xae6/0x16f0 drivers/base/core.c:2114
+> >   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+> >   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+> >   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+> >   really_probe+0x281/0x650 drivers/base/dd.c:548
+> >   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+> >   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+> >   __device_attach+0x217/0x360 drivers/base/dd.c:882
+> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> >   device_add+0xae6/0x16f0 drivers/base/core.c:2114
+> >   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+> >   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+> >   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+> >   port_event drivers/usb/core/hub.c:5359 [inline]
+> >   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+> >   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+> >   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+> >   kthread+0x318/0x420 kernel/kthread.c:255
+> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> >
+> > The buggy address belongs to the object at ffff8881d21fc280
+> >   which belongs to the cache kmalloc-512 of size 512
+> > The buggy address is located 88 bytes inside of
+> >   512-byte region [ffff8881d21fc280, ffff8881d21fc480)
+> > The buggy address belongs to the page:
+> > page:ffffea0007487f00 refcount:1 mapcount:0 mapping:ffff8881da002500
+> > index:0x0 compound_mapcount: 0
+> > flags: 0x200000000010200(slab|head)
+> > raw: 0200000000010200 ffffea000739fc80 0000000900000009 ffff8881da002500
+> > raw: 0000000000000000 00000000000c000c 00000001ffffffff 0000000000000000
+> > page dumped because: kasan: bad access detected
+> >
+> > Memory state around the buggy address:
+> >   ffff8881d21fc180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >   ffff8881d21fc200: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> > > ffff8881d21fc280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >                                                      ^
+> >   ffff8881d21fc300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >   ffff8881d21fc380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> > ==================================================================
+>
+> I have tracked this bug down.  The root causes lie in
+> usb_register_dev() and usb_deregister_dev().
+>
+> The first problem is that usb_deregister_dev() sets
+> usb_minors[intf->minor] to NULL before calling device_destroy() on the
+> class device.  This leaves a window during which another thread can
+> allocate the same minor number but will encounter a duplicate name
+> error when it tries to register its own class device.
+>
+> This error shows up in the kernel log from the syzbot test (not shown
+> in the bug report above, though):
+>
+> [  120.583776][ T1775] sysfs: cannot create duplicate filename '/class/usbmisc/ldusb0'
+>
+> This can be fixed easily enough by reordering the statements in
+> usb_deregister_dev().
+>
+> The second problem is in usb_register_dev().  When that routine runs,
+> it first allocates a minor number, then drops minor_rwsem, and then
+> creates the class device.  If the device creation fails, the minor
+> number is deallocated and the whole routine returns an error.  But
+> during the time while minor_rwsem was dropped, there is a window in
+> which the minor number is allocated and so another thread could
+> successfully open the device file!
+>
+> These two scenarios are exactly what happened during the syzbot test.
+> Minor number 0 was deallocated and then allocated in another thread.
+> The second allocation failed because the old class device was still in
+> existence.  As a result of this failure, ldusb's private data structure
+> was released.  Nevertheless, a third thread managed to open the device
+> file during the brief time that minor number 0 was re-allocated.  When
+> that thread closed the file, it tried to access the private data
+> structure that had already been released.
+>
+> I believe the patch below will fix both problems.  But you should take
+> a look at it first to see if it seems right; syzbot can't really test
+> the patch because it involves two separate races both coming out wrong!
+>
+> Alan Stern
 
-syzbot found the following crash on:
+Alan, could you submit this patch (if you haven't already)? Looks like
+it fixes this bug (and might fix some others).
 
-HEAD commit:    125b7e09 net: tc35815: Explicitly check NET_IP_ALIGN is no..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=174a6536600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a4c9e9f08e9e8960
-dashboard link: https://syzkaller.appspot.com/bug?extid=78e71c5bab4f76a6a719
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=165ec172600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=119d4eba600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+78e71c5bab4f76a6a719@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in atomic_read  
-include/asm-generic/atomic-instrumented.h:26 [inline]
-BUG: KASAN: use-after-free in rxrpc_queue_local+0x7c/0x3e0  
-net/rxrpc/local_object.c:354
-Read of size 4 at addr ffff8880a7724014 by task syz-executor522/16188
-
-CPU: 0 PID: 16188 Comm: syz-executor522 Not tainted 5.3.0-rc3+ #159
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
-  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
-  kasan_report+0x12/0x17 mm/kasan/common.c:612
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
-  __kasan_check_read+0x11/0x20 mm/kasan/common.c:92
-  atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
-  rxrpc_queue_local+0x7c/0x3e0 net/rxrpc/local_object.c:354
-  rxrpc_unuse_local+0x52/0x80 net/rxrpc/local_object.c:408
-  rxrpc_release_sock net/rxrpc/af_rxrpc.c:904 [inline]
-  rxrpc_release+0x47d/0x840 net/rxrpc/af_rxrpc.c:930
-  __sock_release+0xce/0x280 net/socket.c:590
-  sock_close+0x1e/0x30 net/socket.c:1268
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
-  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-  do_syscall_64+0x5a9/0x6a0 arch/x86/entry/common.c:299
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x407bb1
-Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 24 1a 00 00 c3 48  
-83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
-89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007ffc861e4d10 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000407bb1
-RDX: 0000000000000000 RSI: 0000000000000080 RDI: 0000000000000003
-RBP: 00000000006e5a0c R08: 00000000004b1939 R09: 00000000004b1939
-R10: 00007ffc861e4d40 R11: 0000000000000293 R12: 00000000006e5a00
-R13: 0000000000000000 R14: 000000000000002d R15: 20c49ba5e353f7cf
-
-Allocated by task 16189:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:487 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:460
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:501
-  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3550
-  kmalloc include/linux/slab.h:552 [inline]
-  kzalloc include/linux/slab.h:748 [inline]
-  rxrpc_alloc_local net/rxrpc/local_object.c:79 [inline]
-  rxrpc_lookup_local+0x562/0x1b70 net/rxrpc/local_object.c:277
-  rxrpc_bind+0x34d/0x5e0 net/rxrpc/af_rxrpc.c:149
-  __sys_bind+0x239/0x290 net/socket.c:1647
-  __do_sys_bind net/socket.c:1658 [inline]
-  __se_sys_bind net/socket.c:1656 [inline]
-  __x64_sys_bind+0x73/0xb0 net/socket.c:1656
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 9:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:449
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:457
-  __cache_free mm/slab.c:3425 [inline]
-  kfree+0x10a/0x2c0 mm/slab.c:3756
-  rxrpc_local_rcu+0x62/0x80 net/rxrpc/local_object.c:495
-  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
-  rcu_do_batch kernel/rcu/tree.c:2114 [inline]
-  rcu_core+0x67f/0x1580 kernel/rcu/tree.c:2314
-  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2323
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-
-The buggy address belongs to the object at ffff8880a7724000
-  which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 20 bytes inside of
-  1024-byte region [ffff8880a7724000, ffff8880a7724400)
-The buggy address belongs to the page:
-page:ffffea00029dc900 refcount:1 mapcount:0 mapping:ffff8880aa400c40  
-index:0xffff8880a7725200 compound_mapcount: 0
-flags: 0x1fffc0000010200(slab|head)
-raw: 01fffc0000010200 ffffea0002a6ad08 ffffea0002a6a808 ffff8880aa400c40
-raw: ffff8880a7725200 ffff8880a7724000 0000000100000005 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8880a7723f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff8880a7723f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff8880a7724000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                          ^
-  ffff8880a7724080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8880a7724100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+>
+>
+>  drivers/usb/core/file.c |   10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> Index: usb-devel/drivers/usb/core/file.c
+> ===================================================================
+> --- usb-devel.orig/drivers/usb/core/file.c
+> +++ usb-devel/drivers/usb/core/file.c
+> @@ -193,9 +193,10 @@ int usb_register_dev(struct usb_interfac
+>                 intf->minor = minor;
+>                 break;
+>         }
+> -       up_write(&minor_rwsem);
+> -       if (intf->minor < 0)
+> +       if (intf->minor < 0) {
+> +               up_write(&minor_rwsem);
+>                 return -EXFULL;
+> +       }
+>
+>         /* create a usb class device for this usb interface */
+>         snprintf(name, sizeof(name), class_driver->name, minor - minor_base);
+> @@ -203,12 +204,11 @@ int usb_register_dev(struct usb_interfac
+>                                       MKDEV(USB_MAJOR, minor), class_driver,
+>                                       "%s", kbasename(name));
+>         if (IS_ERR(intf->usb_dev)) {
+> -               down_write(&minor_rwsem);
+>                 usb_minors[minor] = NULL;
+>                 intf->minor = -1;
+> -               up_write(&minor_rwsem);
+>                 retval = PTR_ERR(intf->usb_dev);
+>         }
+> +       up_write(&minor_rwsem);
+>         return retval;
+>  }
+>  EXPORT_SYMBOL_GPL(usb_register_dev);
+> @@ -234,12 +234,12 @@ void usb_deregister_dev(struct usb_inter
+>                 return;
+>
+>         dev_dbg(&intf->dev, "removing %d minor\n", intf->minor);
+> +       device_destroy(usb_class->class, MKDEV(USB_MAJOR, intf->minor));
+>
+>         down_write(&minor_rwsem);
+>         usb_minors[intf->minor] = NULL;
+>         up_write(&minor_rwsem);
+>
+> -       device_destroy(usb_class->class, MKDEV(USB_MAJOR, intf->minor));
+>         intf->usb_dev = NULL;
+>         intf->minor = -1;
+>         destroy_usb_class();
+>
