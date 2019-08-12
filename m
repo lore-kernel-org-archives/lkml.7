@@ -2,72 +2,107 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F65EC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3301FC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 046CF208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0466920820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:57:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="pYCNqKVD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="VAEQ/fXY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbfHLN4S (ORCPT
+        id S1726859AbfHLN5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 09:56:18 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:41672 "EHLO mail.skyhub.de"
+        Mon, 12 Aug 2019 09:57:52 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:53402 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbfHLN4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 09:56:17 -0400
-Received: from zn.tnic (p200300EC2F0627009817776DE5A4173C.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:2700:9817:776d:e5a4:173c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 867A61EC0716;
-        Mon, 12 Aug 2019 15:56:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1565618176;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=sOTJPwoCws/W5B4gjQ5XrTQUGLpEMhk29kPSAYtagHs=;
-        b=pYCNqKVDhyKc71xmMVdmJNJ0ZlCt2f7s+xxBa4SW2H6x/Zp/9VOq9niuE+n6B1/pGs0Y1a
-        r0+PBSURnEi2J+zAcesR2CXAhK9mfXT8fZhzGZik0v5dLutGf3RDCBbFJW0Y9rjUqLHB9m
-        jkk5BvQXM3nNjq7mashohehhgqmXgb0=
-Date:   Mon, 12 Aug 2019 15:57:01 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Thomas Garnier <thgarnie@chromium.org>
-Cc:     kernel-hardening@lists.openwall.com, kristen@linux.intel.com,
-        keescook@chromium.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nadav Amit <namit@vmware.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 11/11] x86/alternatives: Adapt assembly for PIE support
-Message-ID: <20190812135701.GH23772@zn.tnic>
-References: <20190730191303.206365-1-thgarnie@chromium.org>
- <20190730191303.206365-12-thgarnie@chromium.org>
+        id S1726515AbfHLN5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 09:57:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=d+WbDGHWK1bv6un2kiH7eS6pfMuc4M5sJiRdTV3G+xM=; b=VAEQ/fXYa8Hcpl+nn8HZZH8Byp
+        h+HkfITIfaeJ8nGM+q8WYDnRuJmTyaE6c5j8G56KYgIbs3cFAy0vxfH9uGOS16hBDT57fHI1bPcm+
+        SrCavP4EVRjNi/EFSUgwfPWaBKLSlDSftJGvAQ/F/0ejnGxb+n6wqcjS2ky4g9wqA7oY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hxApW-0000YC-2r; Mon, 12 Aug 2019 15:57:46 +0200
+Date:   Mon, 12 Aug 2019 15:57:46 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Ioana Ciornei <ioana.ciornei@nxp.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>
+Subject: Re: [PATCH] dpaa2-ethsw: move the DPAA2 Ethernet Switch driver out
+ of staging
+Message-ID: <20190812135746.GL14290@lunn.ch>
+References: <1565366213-20063-1-git-send-email-ioana.ciornei@nxp.com>
+ <20190809190459.GW27917@lunn.ch>
+ <VI1PR0402MB2800FF2E5C4DE24B25E7D843E0D10@VI1PR0402MB2800.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190730191303.206365-12-thgarnie@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <VI1PR0402MB2800FF2E5C4DE24B25E7D843E0D10@VI1PR0402MB2800.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 12:12:55PM -0700, Thomas Garnier wrote:
-> Change the assembly options to work with pointers instead of integers.
+> In the DPAA2 architecture MACs are not the only entities that can be 
+> connected to a switch port.
+> Below is an exemple of a 4 port DPAA2 switch which is configured to 
+> interconnect 2 DPNIs (network interfaces) and 2 DPMACs.
+> 
+> 
+>   [ethA]     [ethB]     [ethC]     [ethD]     [ethE]     [ethF]
+>      :          :          :          :          :          :
+>      :          :          :          :          :          :
+> [eth drv]  [eth drv]  [                ethsw drv              ]
+>      :          :          :          :          :          :        kernel
+> ========================================================================
+>      :          :          :          :          :          : 
+> hardware
+>   [DPNI]      [DPNI]     [============= DPSW =================]
+>      |          |          |          |          |          |
+>      |           ----------           |       [DPMAC]    [DPMAC]
+>       -------------------------------            |          |
+>                                                  |          |
+>                                                [PHY]      [PHY]
+> 
+> You can see it as a hardware-accelerated software bridge where
+> forwarding rules are managed from the host software partition.
 
-This commit message is too vague. A before/after example would make it a
-lot more clear why the change is needed.
+Hi Ioana
 
-Thx.
+What are the use cases for this?
 
--- 
-Regards/Gruss,
-    Boris.
+Configuration is rather unintuitive. To bridge etha and ethb you need
+to
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+ip link add name br0 type bridge
+ip link set ethc master br0
+ip link set ethd master br0
+
+And once you make ethc and ethd actually send/receive frames, etha and
+ethc become equivalent.
+
+If this was a PCI device, i could imagine passing etha into a VM as a
+PCI VF. But i don't think it is PCI?
+
+I'm not sure moving etha into a different name space makes much sense
+either. My guess would be, a veth pair with one end connected to the
+software bridge would be more efficient than DMAing the packet out and
+then back in again.
+
+     Thanks
+	Andrew
