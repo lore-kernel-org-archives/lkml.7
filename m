@@ -2,191 +2,223 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09937C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 379B0C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C67D72070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:46:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvfn+YRW"
+	by mail.kernel.org (Postfix) with ESMTP id E6B3A20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:49:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfHLXqx (ORCPT
+        id S1726910AbfHLXtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 19:46:53 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40604 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbfHLXqw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 19:46:52 -0400
-Received: by mail-ot1-f68.google.com with SMTP id c34so25720547otb.7;
-        Mon, 12 Aug 2019 16:46:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vEM0WhT9KiGV+XzQ8g0ACsk29KSJO4/VurYJJqZPp1s=;
-        b=fvfn+YRWH317swlTo7hCPy+eX8eEw/abKK+fMBhLIYnM8OjH86td55IXA8ix7SQbF5
-         hvvGOEUBAhdjtfcpEf5pmVFoa1NtP4COg618jqD+zN1L0pDB8VjjcEuJwCc0iSLIe2Cb
-         n+FuhOTWDugB5dRMhur5Ns2NX+syHET6SxeYowRsUaNElv6kVkop6c4o1W7Du4D6mB5q
-         uTUoLELtMZ3fekQJuPNtEqr8mnsCtuRokYSI2NqZMAPtFUYYEeSJoOk5d6uw+JbnxC2x
-         ZmvjPf7ES3PzdZNwPVG8iEIcjbDilYpXVVn3lnf9g2Q9tYKgi0KmhSA9ghx99su/HHsj
-         Meuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vEM0WhT9KiGV+XzQ8g0ACsk29KSJO4/VurYJJqZPp1s=;
-        b=Fsv/mi2/t3HNjIakCOW70wvA+hFd6NHabA6tr7jY+ZEYXaxXu9Gyav2904Qe7qUMSC
-         WzqRpDr+fwUzdrr8+4rRw5nHT4zEu5DfA5un5OS1xmRyuz1KYOpBlsvApnLZ5SrkWoYo
-         t3LQ/a7nE6FIZAuS/niDmwAFwQHdd8tPf2YSVKTjS671kPFqp1z2uqxUK3kaf+KZoqu3
-         LC6LORIcIMr4YR86DCymsa3mMECg4Eyf+JKprKV4mrgNuhfA0y378X9GhQEzsAvU0lJm
-         Khu+rxLnQ/5u0Q7CeV/FOpMWorQjHml2JzSak4DKSeZKqW0kBTQ27GI8l2D0gspJgVsN
-         w8KA==
-X-Gm-Message-State: APjAAAXk2T+2syyY9JvyahPohvkAXw1vdYZaCmB+Cwz1f2y6sRiHccTa
-        vMHzdDDxH8ytyyikpvabX9WcImHMydC/Xzn7kro=
-X-Google-Smtp-Source: APXvYqxgnXw3/hTVBwv8iDNhwE1yPX+hGlamB9R+ygkZWpAtXLSQV6s2CpUv+ICng0kTSrIM+MBId9mZ5Wuia3348wE=
-X-Received: by 2002:a6b:f002:: with SMTP id w2mr257922ioc.104.1565653610461;
- Mon, 12 Aug 2019 16:46:50 -0700 (PDT)
+        Mon, 12 Aug 2019 19:49:51 -0400
+Received: from mga05.intel.com ([192.55.52.43]:48708 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726296AbfHLXtv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 19:49:51 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 16:49:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,379,1559545200"; 
+   d="scan'208";a="200305528"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Aug 2019 16:49:50 -0700
+Date:   Mon, 12 Aug 2019 16:49:50 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     john.hubbard@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [RFC PATCH 2/2] mm/gup: introduce vaddr_pin_pages_remote()
+Message-ID: <20190812234950.GA6455@iweiny-DESK2.sc.intel.com>
+References: <20190812015044.26176-1-jhubbard@nvidia.com>
+ <20190812015044.26176-3-jhubbard@nvidia.com>
 MIME-Version: 1.0
-References: <20190810052829.6032-1-tiny.windzz@gmail.com> <20190810052829.6032-9-tiny.windzz@gmail.com>
- <CA+E=qVfp-rProxOwX__J6jM-pZ9g_SmeuOCOgvC_5DJVQw4OGw@mail.gmail.com>
-In-Reply-To: <CA+E=qVfp-rProxOwX__J6jM-pZ9g_SmeuOCOgvC_5DJVQw4OGw@mail.gmail.com>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Tue, 13 Aug 2019 07:46:39 +0800
-Message-ID: <CAEExFWubLqtPZ=ZKJTCb6x2-PeYebXb3sr-t-XvtrLJTRiUU1A@mail.gmail.com>
-Subject: Re: [PATCH v5 08/18] thermal: sun8i: support mod clocks
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan.Cameron@huawei.com,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812015044.26176-3-jhubbard@nvidia.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI Vasily,
+On Sun, Aug 11, 2019 at 06:50:44PM -0700, john.hubbard@gmail.com wrote:
+> From: John Hubbard <jhubbard@nvidia.com>
+> 
+> This is the "vaddr_pin_pages" corresponding variant to
+> get_user_pages_remote(), but with FOLL_PIN semantics: the implementation
+> sets FOLL_PIN. That, in turn, means that the pages must ultimately be
+> released by put_user_page*()--typically, via vaddr_unpin_pages*().
+> 
+> Note that the put_user_page*() requirement won't be truly
+> required until all of the call sites have been converted, and
+> the tracking of pages is actually activated.
+> 
+> Also introduce vaddr_unpin_pages(), in order to have a simpler
+> call for the error handling cases.
+> 
+> Use both of these new calls in the Infiniband drive, replacing
+> get_user_pages_remote() and put_user_pages().
+> 
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  drivers/infiniband/core/umem_odp.c | 15 +++++----
+>  include/linux/mm.h                 |  7 +++++
+>  mm/gup.c                           | 50 ++++++++++++++++++++++++++++++
+>  3 files changed, 66 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
+> index 53085896d718..fdff034a8a30 100644
+> --- a/drivers/infiniband/core/umem_odp.c
+> +++ b/drivers/infiniband/core/umem_odp.c
+> @@ -534,7 +534,7 @@ static int ib_umem_odp_map_dma_single_page(
+>  	}
+>  
+>  out:
+> -	put_user_page(page);
+> +	vaddr_unpin_pages(&page, 1, &umem_odp->umem.vaddr_pin);
+>  
+>  	if (remove_existing_mapping) {
+>  		ib_umem_notifier_start_account(umem_odp);
+> @@ -635,9 +635,10 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 user_virt,
+>  		 * complex (and doesn't gain us much performance in most use
+>  		 * cases).
+>  		 */
+> -		npages = get_user_pages_remote(owning_process, owning_mm,
+> +		npages = vaddr_pin_pages_remote(owning_process, owning_mm,
+>  				user_virt, gup_num_pages,
+> -				flags, local_page_list, NULL, NULL);
+> +				flags, local_page_list, NULL, NULL,
+> +				&umem_odp->umem.vaddr_pin);
 
-On Sat, Aug 10, 2019 at 2:17 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
->
-> On Fri, Aug 9, 2019 at 10:31 PM Yangtao Li <tiny.windzz@gmail.com> wrote:
-> >
-> > H3 has extra clock, so introduce something in ths_thermal_chip/ths_device
-> > and adds the process of the clock.
-> >
-> > This is pre-work for supprt it.
-> >
-> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > ---
-> >  drivers/thermal/sun8i_thermal.c | 17 ++++++++++++++++-
-> >  1 file changed, 16 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-> > index b934bc81eba7..6f4294c2aba7 100644
-> > --- a/drivers/thermal/sun8i_thermal.c
-> > +++ b/drivers/thermal/sun8i_thermal.c
-> > @@ -54,6 +54,7 @@ struct tsensor {
-> >  };
-> >
-> >  struct ths_thermal_chip {
-> > +       bool            has_mod_clk;
-> >         int             sensor_num;
-> >         int             offset;
-> >         int             scale;
-> > @@ -69,6 +70,7 @@ struct ths_device {
-> >         struct regmap                           *regmap;
-> >         struct reset_control                    *reset;
-> >         struct clk                              *bus_clk;
-> > +       struct clk                              *mod_clk;
-> >         struct tsensor                          sensor[MAX_SENSOR_NUM];
-> >  };
-> >
-> > @@ -274,6 +276,12 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
-> >         if (IS_ERR(tmdev->bus_clk))
-> >                 return PTR_ERR(tmdev->bus_clk);
-> >
-> > +       if (tmdev->chip->has_mod_clk) {
-> > +               tmdev->mod_clk = devm_clk_get(&pdev->dev, "mod");
-> > +               if (IS_ERR(tmdev->mod_clk))
-> > +                       return PTR_ERR(tmdev->mod_clk);
-> > +       }
-> > +
-> >         ret = reset_control_deassert(tmdev->reset);
-> >         if (ret)
-> >                 return ret;
-> > @@ -282,12 +290,18 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
-> >         if (ret)
-> >                 goto assert_reset;
-> >
-> > -       ret = sun50i_ths_calibrate(tmdev);
-> > +       ret = clk_prepare_enable(tmdev->mod_clk);
->
-> You have to set rate of modclk before enabling it since you can't rely
-> on whatever bootloader left for you.
->
-> Also I found that parameters you're using for PC_TEMP_PERIOD, ACQ0 and
-> ACQ1 are too aggressive and may result in high interrupt rate to the
-> point when it may stall RCU. I changed driver a bit to use params from
-> Philipp Rossak's work (modclk set to 4MHz, PC_TEMP_PERIOD is 7, ACQ0
-> is 255, ACQ1 is 63) and it fixed RCU stalls for me, see [1] for
-> details.
+Thinking about this part of the patch... is this pin really necessary?  This
+code is not doing a long term pin.  The page just needs a reference while we
+map it into the devices page tables.  Once that is done we should get notifiers
+if anything changes and we can adjust.  right?
 
-Why is the RCU stall happening, is it caused by a deadlock?
-Can you provide log information and your configuration?
-I am a bit curious.
+Ira
 
-Thx,
-Yangtao
-
->
-> [1] https://github.com/anarsoul/linux-2.6/commit/46b8bb0fe2ccd1cd88fa9181a2ecbf79e8d513b2
->
->
-> >         if (ret)
-> >                 goto bus_disable;
-> >
-> > +       ret = sun50i_ths_calibrate(tmdev);
-> > +       if (ret)
-> > +               goto mod_disable;
-> > +
-> >         return 0;
-> >
-> > +mod_disable:
-> > +       clk_disable_unprepare(tmdev->mod_clk);
-> >  bus_disable:
-> >         clk_disable_unprepare(tmdev->bus_clk);
-> >  assert_reset:
-> > @@ -395,6 +409,7 @@ static int sun8i_ths_remove(struct platform_device *pdev)
-> >  {
-> >         struct ths_device *tmdev = platform_get_drvdata(pdev);
-> >
-> > +       clk_disable_unprepare(tmdev->mod_clk);
-> >         clk_disable_unprepare(tmdev->bus_clk);
-> >         reset_control_assert(tmdev->reset);
-> >
-> > --
-> > 2.17.1
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>  		up_read(&owning_mm->mmap_sem);
+>  
+>  		if (npages < 0) {
+> @@ -657,7 +658,8 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 user_virt,
+>  					ret = -EFAULT;
+>  					break;
+>  				}
+> -				put_user_page(local_page_list[j]);
+> +				vaddr_unpin_pages(&local_page_list[j], 1,
+> +						  &umem_odp->umem.vaddr_pin);
+>  				continue;
+>  			}
+>  
+> @@ -684,8 +686,9 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 user_virt,
+>  			 * ib_umem_odp_map_dma_single_page().
+>  			 */
+>  			if (npages - (j + 1) > 0)
+> -				put_user_pages(&local_page_list[j+1],
+> -					       npages - (j + 1));
+> +				vaddr_unpin_pages(&local_page_list[j+1],
+> +						  npages - (j + 1),
+> +						  &umem_odp->umem.vaddr_pin);
+>  			break;
+>  		}
+>  	}
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 61b616cd9243..2bd76ad8787e 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -1606,6 +1606,13 @@ int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
+>  long vaddr_pin_pages(unsigned long addr, unsigned long nr_pages,
+>  		     unsigned int gup_flags, struct page **pages,
+>  		     struct vaddr_pin *vaddr_pin);
+> +long vaddr_pin_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
+> +			    unsigned long start, unsigned long nr_pages,
+> +			    unsigned int gup_flags, struct page **pages,
+> +			    struct vm_area_struct **vmas, int *locked,
+> +			    struct vaddr_pin *vaddr_pin);
+> +void vaddr_unpin_pages(struct page **pages, unsigned long nr_pages,
+> +		       struct vaddr_pin *vaddr_pin);
+>  void vaddr_unpin_pages_dirty_lock(struct page **pages, unsigned long nr_pages,
+>  				  struct vaddr_pin *vaddr_pin, bool make_dirty);
+>  bool mapping_inode_has_layout(struct vaddr_pin *vaddr_pin, struct page *page);
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 85f09958fbdc..bb95adfaf9b6 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -2518,6 +2518,38 @@ long vaddr_pin_pages(unsigned long addr, unsigned long nr_pages,
+>  }
+>  EXPORT_SYMBOL(vaddr_pin_pages);
+>  
+> +/**
+> + * vaddr_pin_pages pin pages by virtual address and return the pages to the
+> + * user.
+> + *
+> + * @tsk:	the task_struct to use for page fault accounting, or
+> + *		NULL if faults are not to be recorded.
+> + * @mm:		mm_struct of target mm
+> + * @addr:	start address
+> + * @nr_pages:	number of pages to pin
+> + * @gup_flags:	flags to use for the pin
+> + * @pages:	array of pages returned
+> + * @vaddr_pin:	initialized meta information this pin is to be associated
+> + * with.
+> + *
+> + * This is the "vaddr_pin_pages" corresponding variant to
+> + * get_user_pages_remote(), but with FOLL_PIN semantics: the implementation sets
+> + * FOLL_PIN. That, in turn, means that the pages must ultimately be released
+> + * by put_user_page().
+> + */
+> +long vaddr_pin_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
+> +			    unsigned long start, unsigned long nr_pages,
+> +			    unsigned int gup_flags, struct page **pages,
+> +			    struct vm_area_struct **vmas, int *locked,
+> +			    struct vaddr_pin *vaddr_pin)
+> +{
+> +	gup_flags |= FOLL_TOUCH | FOLL_REMOTE | FOLL_PIN;
+> +
+> +	return __get_user_pages_locked(tsk, mm, start, nr_pages, pages, vmas,
+> +				       locked, gup_flags, vaddr_pin);
+> +}
+> +EXPORT_SYMBOL(vaddr_pin_pages_remote);
+> +
+>  /**
+>   * vaddr_unpin_pages_dirty_lock - counterpart to vaddr_pin_pages
+>   *
+> @@ -2536,3 +2568,21 @@ void vaddr_unpin_pages_dirty_lock(struct page **pages, unsigned long nr_pages,
+>  	__put_user_pages_dirty_lock(vaddr_pin, pages, nr_pages, make_dirty);
+>  }
+>  EXPORT_SYMBOL(vaddr_unpin_pages_dirty_lock);
+> +
+> +/**
+> + * vaddr_unpin_pages - simple, non-dirtying counterpart to vaddr_pin_pages
+> + *
+> + * @pages: array of pages returned
+> + * @nr_pages: number of pages in pages
+> + * @vaddr_pin: same information passed to vaddr_pin_pages
+> + *
+> + * Like vaddr_unpin_pages_dirty_lock, but for non-dirty pages. Useful in putting
+> + * back pages in an error case: they were never made dirty.
+> + */
+> +void vaddr_unpin_pages(struct page **pages, unsigned long nr_pages,
+> +		       struct vaddr_pin *vaddr_pin)
+> +{
+> +	__put_user_pages_dirty_lock(vaddr_pin, pages, nr_pages, false);
+> +}
+> +EXPORT_SYMBOL(vaddr_unpin_pages);
+> +
+> -- 
+> 2.22.0
+> 
