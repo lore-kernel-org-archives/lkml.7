@@ -2,90 +2,87 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FF2C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A79C2C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC90206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EFE3206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:25:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbfHLNZA (ORCPT
+        id S1728890AbfHLNZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 09:25:00 -0400
-Received: from mga11.intel.com ([192.55.52.93]:26089 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728552AbfHLNY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 09:24:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 06:24:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,377,1559545200"; 
-   d="scan'208";a="375946636"
-Received: from aferozpu-mobl2.amr.corp.intel.com (HELO [10.254.109.160]) ([10.254.109.160])
-  by fmsmga006.fm.intel.com with ESMTP; 12 Aug 2019 06:24:57 -0700
-Subject: Re: [alsa-devel] [PATCH 1/3] soundwire: add debugfs support
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        linux-kernel@vger.kernel.org, vkoul@kernel.org, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190809224341.15726-1-pierre-louis.bossart@linux.intel.com>
- <20190809224341.15726-2-pierre-louis.bossart@linux.intel.com>
- <20190810070139.GA6896@kroah.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <89e456e7-35a6-c7e9-64bd-1b30f0f019cc@linux.intel.com>
-Date:   Mon, 12 Aug 2019 08:24:57 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 12 Aug 2019 09:25:43 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:40790 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728552AbfHLNZn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 09:25:43 -0400
+Received: from [167.98.27.226] (helo=xylophone)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1hxAKR-00033l-Iv; Mon, 12 Aug 2019 14:25:39 +0100
+Message-ID: <53df9d81bfb4ee7ec64fabf1089f91d80dceb491.camel@codethink.co.uk>
+Subject: Re: [Y2038] [PATCH 04/20] mount: Add mount warning for impending
+ timestamp expiry
+From:   Ben Hutchings <ben.hutchings@codethink.co.uk>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 12 Aug 2019 14:25:38 +0100
+In-Reply-To: <CABeXuvruROn7j1DiCDbP6MLBt9SB4Pp3HoKqcQbUNPDJgGWLgw@mail.gmail.com>
+References: <20190730014924.2193-1-deepa.kernel@gmail.com>
+         <20190730014924.2193-5-deepa.kernel@gmail.com>
+         <c508fe0116b77ff0496ebb17a69f756c47be62b7.camel@codethink.co.uk>
+         <CABeXuvruROn7j1DiCDbP6MLBt9SB4Pp3HoKqcQbUNPDJgGWLgw@mail.gmail.com>
+Organization: Codethink Ltd.
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <20190810070139.GA6896@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
->>   #Cadence Objs
->> diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
->> index 49f64b2115b9..89d5f1537d9b 100644
->> --- a/drivers/soundwire/bus.c
->> +++ b/drivers/soundwire/bus.c
->> @@ -49,6 +49,8 @@ int sdw_add_bus_master(struct sdw_bus *bus)
->>   		}
->>   	}
->>   
->> +	bus->debugfs = sdw_bus_debugfs_init(bus);
->> +
+On Sat, 2019-08-10 at 13:44 -0700, Deepa Dinamani wrote:
+> On Mon, Aug 5, 2019 at 7:14 AM Ben Hutchings
+> <ben.hutchings@codethink.co.uk> wrote:
+> > On Mon, 2019-07-29 at 18:49 -0700, Deepa Dinamani wrote:
+> > > The warning reuses the uptime max of 30 years used by the
+> > > setitimeofday().
+> > > 
+> > > Note that the warning is only added for new filesystem mounts
+> > > through the mount syscall. Automounts do not have the same warning.
+> > [...]
+> > 
+> > Another thing - perhaps this warning should be suppressed for read-only
+> > mounts?
 > 
-> It's "nicer" to just put that assignment into sdw_bus_debugfs_init().
-> 
-> That way you just call the function, no need to return anything.
+> Many filesystems support read only mounts only. We do fill in right
+> granularities and limits for these filesystems as well. In keeping
+> with the trend, I have added the warning accordingly. I don't think I
+> have a preference either way. But, not warning for the red only mounts
+> adds another if case. If you have a strong preference, I could add it
+> in.
 
-ok, thanks for the suggestion.
+It seems to me that the warning is needed if there is a possibility of
+data loss (incorrect timestamps, potentially leading to incorrect
+decisions about which files are newer).  This can happen only when a
+filesystem is mounted read-write, or when a filesystem image is
+created.
 
-> 
->>   	/*
->>   	 * Device numbers in SoundWire are 0 through 15. Enumeration device
->>   	 * number (0), Broadcast device number (15), Group numbers (12 and
->> @@ -109,6 +111,8 @@ static int sdw_delete_slave(struct device *dev, void *data)
->>   	struct sdw_slave *slave = dev_to_sdw_dev(dev);
->>   	struct sdw_bus *bus = slave->bus;
->>   
->> +	sdw_slave_debugfs_exit(slave->debugfs);
-> 
-> Same here, just pass in slave:
-> 	sdw_slave_debugfs_exit(slave);
-> and have that function remove the debugfs entry in the structure.  That
-> way, if you are really paranoid about size, you could even drop the
-> debugfs structure member from non-debugfs builds without any changes to
-> bus.c or other non-debugfs files.
+I think that warning for read-only mounts would be an annoyance to
+users retrieving files from old filesystems.
 
-ok makes sense. will fix in v2.
+Ben.
+
+-- 
+Ben Hutchings, Software Developer                         Codethink Ltd
+https://www.codethink.co.uk/                 Dale House, 35 Dale Street
+                                     Manchester, M1 2HF, United Kingdom
+
