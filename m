@@ -2,144 +2,137 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFCCC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E17C41514
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84727206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5590120663
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:56:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="aT1+Cp+K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mux8a8LR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfHLR4R (ORCPT
+        id S1726727AbfHLR4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 13:56:17 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33334 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfHLR4R (ORCPT
+        Mon, 12 Aug 2019 13:56:24 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40022 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbfHLR4X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 13:56:17 -0400
-Received: by mail-qt1-f196.google.com with SMTP id v38so11317459qtb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 10:56:16 -0700 (PDT)
+        Mon, 12 Aug 2019 13:56:23 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c34so22133999otb.7;
+        Mon, 12 Aug 2019 10:56:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YeHGfRcz7/xDdQu045YPZqSeRdWuIL5U3pex4BeV6Co=;
-        b=aT1+Cp+KGWQyozFDowVXklkNZVi/kM9KamsNgl23DUo+IJyNPad8EzXuoAG7s3f5bf
-         bOSW7DhNODTjMskeg1DRPDb4g7NB2wX2AWkHQuyR0cct0HrdnZzak9aU8g7CHTL0qHoO
-         IKZcX3vXDSq/u24mEPYpzVVHpbOB2TSRpMchVGlB+vxEwN6TXEtwOQ8uYyw5P8+cz9Hd
-         j1BzALymBU6a7rw2q7wWcxOSnVbjWppZ0IMW4+9rMtyvhB+q0F08Mu3PWUPEGDQxvNfD
-         RqDlAaDfsxyO370w/XugHLZnyfoDs8iN8igYYDuAHaeRZtKy3Zg+yOMKiyalzWN131uL
-         Eqkw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DwkJnZQwcd2vdtvKtixBQGDvtW9rbIGj3aJiuLEEfEw=;
+        b=Mux8a8LRF8dsI5HB6we1YRsuzPlDkVt/DE+bSeIlvt5J4wTpRiAMlxErc2mSeE8f5x
+         Ars+Buig/NYgI/C8GATm4HWWMrLMFIrgmPjcjRgnEtNoUcnrhnnUh6wRB4Erkco0b/5G
+         hp9C21qRYKvHXaEywD0D+Z3Kno+R6OKsKKXW1xHwOAAjUwkOg4GAiGsbkQNvaYMfVAXr
+         SjV/DIsIwfCQGFryADIe0tge0yDGBezynvYiMn+lbiuK8N/kbzV+9IsHgCAegQvmeGol
+         rS034sRa2Th+HSNdzjVzjEwQWInBZxxDY2EG8S1IduwwWjHTIhny76MJ25mgzpLY4bDs
+         +YWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YeHGfRcz7/xDdQu045YPZqSeRdWuIL5U3pex4BeV6Co=;
-        b=Cf3gLK7y1JG0Kxt3HKy/O67rXdKbQR3l3rQOe7ROCoYJHDVGC5S+vIVyKRX8TaNaVL
-         OU6iNB+WlQh/luGokEUqJFxZATyPNes49ALHEtdqlDmrXVNEoZnHMsOKS0M7T1LF280/
-         kqbF5ZJxIBNf0WLc+QXAZzyZUZrlaL597sAx7S3RIwDuhwScQ3y9wafnMo+yLZh/9HnP
-         WmbJ1C0544zcRjgy7Qmi7iGJJf/k8RnzTFtzonthmz9TaJ3Fk3WCxybxrzNvUWYH57O1
-         Xgt7dHUoQRzaT4SLBv3DDyYG4cQao+zmF4BuuiuUZCJsTTryTZX1QnvHg4UR20eg6LfA
-         X8AQ==
-X-Gm-Message-State: APjAAAUkAL0URj/tghSXLRw/QrzlzRr6A98+t3kIJQVeNazwLg5q/zJL
-        fch80LVwsMEFWxKUVtJVj/e1/w==
-X-Google-Smtp-Source: APXvYqx5MBD9MG64lV9iZUYWN/EeNo5U4lzvE+q4eQc5jVQAxZ4QmzhDKvfOk+m1tNY0/uiYKcLUcw==
-X-Received: by 2002:ac8:43c4:: with SMTP id w4mr15414493qtn.238.1565632576300;
-        Mon, 12 Aug 2019 10:56:16 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id r15sm5883158qtp.94.2019.08.12.10.56.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 10:56:15 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hxEYJ-0004LN-Ev; Mon, 12 Aug 2019 14:56:15 -0300
-Date:   Mon, 12 Aug 2019 14:56:15 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 16/19] RDMA/uverbs: Add back pointer to system
- file object
-Message-ID: <20190812175615.GI24457@ziepe.ca>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
- <20190809225833.6657-17-ira.weiny@intel.com>
- <20190812130039.GD24457@ziepe.ca>
- <20190812172826.GA19746@iweiny-DESK2.sc.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DwkJnZQwcd2vdtvKtixBQGDvtW9rbIGj3aJiuLEEfEw=;
+        b=EkdqB1nwTi5DCV/ZEXu+qJHnRuaAA6iyBbYdpMTyDRAVquhibrBv3FKcH2GAj7KXXR
+         9SvYShEZX15zIxuF/PeXlXELmpmKRHyN29vw2lBChgdsSRMgT6NF5G4BE9JtzdxQBh/w
+         m+HY55vDOBf62hR3+O/F7+Sgs5cEw14dE2d/CdxRggOufo2GyDOSiLhUyZWiwqkofJPO
+         5OKQmEiWgM82WXb7cAQtG/cVQJZXIuRgy/lzcm6xmsfxhU//x/DOQaEh/Gze0iTjveCP
+         hpPNdMGdJ0IwtnFX6GnYJG82Owbxynf5rCSbGlUCyp1pQmi0HA1XoJvmioJ/KqIP52Fy
+         xVpQ==
+X-Gm-Message-State: APjAAAWmwJJcKVIkkCXM5A2E2/HtO/OJqniK9qBXTzDwmvbc6OBVBaJD
+        amp3BenJ1fS5sHQRCil1CHv35LLUiTlNYlnGq10=
+X-Google-Smtp-Source: APXvYqx3ZW8jVc7kI7rD18JChyHGb8gtCcVTNL5M4EJrHiQf0uMaV9kOvHszHGopenJZP0cGJ2qTzgDhoLL6yyjHdFY=
+X-Received: by 2002:a02:16c5:: with SMTP id a188mr22241140jaa.86.1565632582885;
+ Mon, 12 Aug 2019 10:56:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812172826.GA19746@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190717152458.22337-1-andrew.smirnov@gmail.com>
+ <20190717152458.22337-3-andrew.smirnov@gmail.com> <VI1PR0402MB3485E4DDB5E3BDCBC2AAAFE398C70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR0402MB3485E4DDB5E3BDCBC2AAAFE398C70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Mon, 12 Aug 2019 10:56:11 -0700
+Message-ID: <CAHQ1cqF=7h=mcKSBNRoYX5mkRetEbvb8dGkDyqHcDf1TCpr40w@mail.gmail.com>
+Subject: Re: [PATCH v6 02/14] crypto: caam - simplfy clock initialization
+To:     Horia Geanta <horia.geanta@nxp.com>
+Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Chris Spencer <christopher.spencer@sea.co.uk>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 10:28:27AM -0700, Ira Weiny wrote:
-> On Mon, Aug 12, 2019 at 10:00:40AM -0300, Jason Gunthorpe wrote:
-> > On Fri, Aug 09, 2019 at 03:58:30PM -0700, ira.weiny@intel.com wrote:
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > In order for MRs to be tracked against the open verbs context the ufile
-> > > needs to have a pointer to hand to the GUP code.
-> > > 
-> > > No references need to be taken as this should be valid for the lifetime
-> > > of the context.
-> > > 
-> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > >  drivers/infiniband/core/uverbs.h      | 1 +
-> > >  drivers/infiniband/core/uverbs_main.c | 1 +
-> > >  2 files changed, 2 insertions(+)
-> > > 
-> > > diff --git a/drivers/infiniband/core/uverbs.h b/drivers/infiniband/core/uverbs.h
-> > > index 1e5aeb39f774..e802ba8c67d6 100644
-> > > +++ b/drivers/infiniband/core/uverbs.h
-> > > @@ -163,6 +163,7 @@ struct ib_uverbs_file {
-> > >  	struct page *disassociate_page;
-> > >  
-> > >  	struct xarray		idr;
-> > > +	struct file             *sys_file; /* backpointer to system file object */
-> > >  };
-> > 
-> > The 'struct file' has a lifetime strictly shorter than the
-> > ib_uverbs_file, which is kref'd on its own lifetime. Having a back
-> > pointer like this is confouding as it will be invalid for some of the
-> > lifetime of the struct.
-> 
-> Ah...  ok.  I really thought it was the other way around.
-> 
-> __fput() should not call ib_uverbs_close() until the last reference on struct
-> file is released...  What holds references to struct ib_uverbs_file past that?
+On Tue, Jul 23, 2019 at 7:17 AM Horia Geanta <horia.geanta@nxp.com> wrote:
+>
+> On 7/17/2019 6:25 PM, Andrey Smirnov wrote:
+> > Simplify clock initialization code by converting it to use clk-bulk,
+> > devres and soc_device_match() match table. No functional change
+> > intended.
+> >
+> Thanks.
+> Two nitpicks below.
+>
+> > +static int init_clocks(struct device *dev,
+> > +                    struct caam_drv_private *ctrlpriv,
+> > +                    const struct caam_imx_data *data)
+> > +{
+> > +     int ret;
+> > +
+> > +     ctrlpriv->num_clks = data->num_clks;
+> > +     ctrlpriv->clks = devm_kmemdup(dev, data->clks,
+> > +                                   data->num_clks * sizeof(data->clks[0]),
+> > +                                   GFP_KERNEL);
+> > +     if (!ctrlpriv->clks)
+> > +             return -ENOMEM;
+> > +
+> > +     ret = devm_clk_bulk_get(dev, ctrlpriv->num_clks, ctrlpriv->clks);
+> > +     if (ret) {
+> > +             dev_err(dev,
+> > +                     "Failed to request all necessary clocks\n");
+> > +             return ret;
+> > +     }
+> > +
+> > +     ret = clk_bulk_prepare_enable(ctrlpriv->num_clks, ctrlpriv->clks);
+> > +     if (ret) {
+> > +             dev_err(dev,
+> > +                     "Failed to prepare/enable all necessary clocks\n");
+> > +             return ret;
+> > +     }
+> > +
+> > +     ret = devm_add_action_or_reset(dev, disable_clocks, ctrlpriv);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     return 0;
+> Or directly:
+>         return devm_add_action_or_reset(dev, disable_clocks, ctrlpriv);
+>
+> > +     imx_soc_match = soc_device_match(caam_imx_soc_table);
+> > +     if (imx_soc_match) {
+> > +             if (!imx_soc_match->data) {
+> > +                     dev_err(dev, "No clock data provided for i.MX SoC");
+> > +                     return -EINVAL;
+> [...]
+> > +             ret = init_clocks(dev, ctrlpriv, imx_soc_match->data);
+> ctrlpriv can be retrieved using dev_get_drvdata(dev), thus there's no need
+> to pass it as parameter.
+>
 
-Child fds hold onto the internal ib_uverbs_file until they are closed
+Will fix in v7.
 
-> Perhaps I need to add this (untested)?
-> 
-> diff --git a/drivers/infiniband/core/uverbs_main.c
-> b/drivers/infiniband/core/uverbs_main.c
-> index f628f9e4c09f..654e774d9cf2 100644
-> +++ b/drivers/infiniband/core/uverbs_main.c
-> @@ -1125,6 +1125,8 @@ static int ib_uverbs_close(struct inode *inode, struct file *filp)
->         list_del_init(&file->list);
->         mutex_unlock(&file->device->lists_mutex);
->  
-> +       file->sys_file = NULL;
-
-Now this has unlocked updates to that data.. you'd need some lock and
-get not zero pattern
-
-Jason
+Thanks,
+Andrey Smirnov
