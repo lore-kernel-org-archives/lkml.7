@@ -2,148 +2,144 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7D4C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 02:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA92C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 02:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1346A20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 02:03:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PKpTKrgE"
+	by mail.kernel.org (Postfix) with ESMTP id B5289205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 02:07:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfHLCDr (ORCPT
+        id S1726579AbfHLCHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 22:03:47 -0400
-Received: from mail-eopbgr140047.outbound.protection.outlook.com ([40.107.14.47]:19394
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726200AbfHLCDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 22:03:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=idHGjKn+uz71cp0GvPsvBxF755AOuvXo3z/dDGKQx1Du7Woo+JFjV2go/qT16w6F1zbxLaZ/X1pAqhtu4ephZGUlB44eQSdso/Oc6HCabWjUW1MABzRD7CsdQGJZQHk+zJdHuK0a51BDg58WUufWAy8ZNM98mc6yD2FT4Zyl2IwYdmOF/3czEzbmhXsZmx97/uW6MX8V6qctqUaGgR7gxyM0TWNG71w5eZvPP0IWWmYmo/IP85ympfpIIBUaKNPAqVmNMegFNUb+sPxWyuVGjnNeD/nT+Te/3zQTSAT0DX6WwXFDaaJFVqmqidlSU2kty0R1OmxWxi1TDtpv2r8csg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=arWxFWLs/I/Yt9qT6aFIGOPRsxen3mDIw01xD4jgdjU=;
- b=HpxsPwkpIqqy4n5iDRcbp/tB6qz9Ny48SjSafG4HlS4Etl4cgE2H2qdzExleJYh3rqKgOHZmGyc5r4FUiCnUwiSOHEzyCyhwb1bIe/1U9SfzXg3RAjwH1yadeEWEUMaKAQN7vG8e0+hqDBiOab4hp63Tpo8OhRhv3C0V/71kl1xaFpqAsVx0Oy+bKSRrJz+BNKAd4IT/hwQj9Optd6jfc4fGxU1ygqkv6QYjno+RH/0Yvy1yd0+R/781/ALJ9ZqBjuU8egOyp0kNXu2ooYv3i4x6umdsk7aR5aZQbkS2diOPvQAbclqHCfBE65zp5fMf6URKz6O3yPXiuefEXyq2tA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=arWxFWLs/I/Yt9qT6aFIGOPRsxen3mDIw01xD4jgdjU=;
- b=PKpTKrgEHtEcSDiPk5Q7Z6qvqEdueHSnwzWFaFcfOtZrQIFHzHIzKeQ68MExpK70Axd0P9dWfczhKI65pDw08qmVqKnDsaO9qTse30mJpyDRG/Aw51FLTkprf3PpI8ouIt0xg3jDoUUYSnFUSN0w4ZatlcbAw/ke0uB9CG0G7DU=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3771.eurprd04.prod.outlook.com (52.134.67.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.15; Mon, 12 Aug 2019 02:03:03 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::7cdf:bddc:212c:f77e]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::7cdf:bddc:212c:f77e%4]) with mapi id 15.20.2157.022; Mon, 12 Aug 2019
- 02:03:03 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 1/4] dt-bindings: watchdog: Add i.MX7ULP bindings
-Thread-Topic: [PATCH 1/4] dt-bindings: watchdog: Add i.MX7ULP bindings
-Thread-Index: AQHVToVB4MOOtXDeCkyHClI34d9xYKbzBeaAgAO7LsA=
-Date:   Mon, 12 Aug 2019 02:03:03 +0000
-Message-ID: <DB3PR0402MB39161E58AFF5681757DE1C06F5D30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1565334842-28161-1-git-send-email-Anson.Huang@nxp.com>
- <20190809164245.GA17136@roeck-us.net>
-In-Reply-To: <20190809164245.GA17136@roeck-us.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5ef953b6-18d9-475b-2d17-08d71ec935a7
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3771;
-x-ms-traffictypediagnostic: DB3PR0402MB3771:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB3771E2CB34DAA7ABEAEC49ECF5D30@DB3PR0402MB3771.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 012792EC17
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(136003)(346002)(39860400002)(366004)(189003)(199004)(186003)(53936002)(71190400001)(71200400001)(86362001)(26005)(486006)(66066001)(9686003)(6916009)(3846002)(6116002)(229853002)(44832011)(8936002)(256004)(81156014)(81166006)(7736002)(4326008)(7416002)(305945005)(74316002)(8676002)(25786009)(52536014)(102836004)(6246003)(6436002)(54906003)(478600001)(7696005)(6506007)(2906002)(66946007)(66476007)(66556008)(64756008)(66446008)(76116006)(11346002)(316002)(55016002)(446003)(5660300002)(99286004)(33656002)(476003)(14454004)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3771;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 3PGCiGJVhQMuNFPqIaFwKs8mxISmuxPkWRa72htJ/sHtPxo3yO6Bpf2O3UVHwYmdJb+qbO2IEzVnaByIZabumDDDyvLqXe6aZuX18+Y4Nm+Jm0fRNzcJvIHDvrHkV4lcme6E3jED6bbaDmSDDuvFJ2GsdPqd8skZdSEYS0/cgVv9w/NktoVCxlCtzjhgJ6zcLo7SV7QwzX9g9VB6dvyv6WVBOGG6f7VsW3E2stkAO6wDeWBrjdGvwbAGuLtCVcHvxHjHSN8tuwCEoWZI99/gHcURrHrc6hrR2XpR1q/Lm7qSBTD6lGpXjaY9AI1Iy7VZaIybzYcyyBT8IHTIZKFC01XEcR8P5ynaql3jr7ZNbYwQ13Dc2ZVujWOncJLmPPuim7JgQSRS2vNp4V+YLhBHBT4OqGtvfXXvi9eYKF3JUOk=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 11 Aug 2019 22:07:07 -0400
+Received: from mail-ot1-f69.google.com ([209.85.210.69]:34756 "EHLO
+        mail-ot1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbfHLCHH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 11 Aug 2019 22:07:07 -0400
+Received: by mail-ot1-f69.google.com with SMTP id a26so7856622otl.1
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 19:07:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=pA4ajK2mL+OR2q0DCzQWIvgz3qE+KSagbdoGlUva7a4=;
+        b=ZEX3Pf0/au/KrJr8dzSMQ/y/YLlxLVSlohmjBzbwF/ZaI059KAZTMUDuPp3VYZYOq0
+         2VzEv+aZpZzg7+c4LULRdioVvMSu4EsGdlwAs8oC2XdfMm38w1OnfWK2jez3pbsziOJf
+         aBsC0C3cSBHbVBQ0JCgRqlK0674gE0rjQFvtaueCoPGjxXiK51XNxvlwN5x62M9hFucf
+         R0v4s2bRrtDPSvWZk+QSpHcp0dXtyfFdlX00hsf8ennW3adQa2ArVvt8sYoW4AXZdS1Q
+         tnLV5D4uDappalfbPtFSp9ucsxNO2jJjrbxcoqIfaAFGMN6RDZxZdPX4rlVBJL37/lTa
+         n8zw==
+X-Gm-Message-State: APjAAAW/pRjuNopL6UZZ6K8c4WIzF8R5UeDDecJTfYkGS4ga5ioxEXLu
+        PH+IBkl0KeiMn1b/DDwaDDV7X4z5+gdvMh76pT7wP0oqehTV
+X-Google-Smtp-Source: APXvYqx1J6ZW+jxF/lQ3V1d2KJ2ik/J0TW7ZaJ61DK+gwmOM93ZnyWMxf+0k89SajqAmZLaFwW0gFQ58e5AGgbREvxXb7QiplNpo
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ef953b6-18d9-475b-2d17-08d71ec935a7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 02:03:03.2763
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aT8N0ZwayjIGjlu8M/uF7JmxdEqM0AVk1diAAOWR3ym1QtKyjdoaSIH7MSDJEh5gmW7ZsYQ928mVwV8dW+UReA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3771
+X-Received: by 2002:a6b:e317:: with SMTP id u23mr20541853ioc.38.1565575626132;
+ Sun, 11 Aug 2019 19:07:06 -0700 (PDT)
+Date:   Sun, 11 Aug 2019 19:07:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001097b6058fe1fb22@google.com>
+Subject: BUG: Dentry still in use [unmount of nfsd nfsd]
+From:   syzbot <syzbot+2c95195d5d433f6ed6cb@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEd1ZW50ZXINCg0KPiBPbiBGcmksIEF1ZyAwOSwgMjAxOSBhdCAwMzoxMzo1OVBNICswODAw
-LCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gPiBBZGQgdGhlIHdhdGNoZG9nIGJpbmRpbmdzIGZvciBG
-cmVlc2NhbGUgaS5NWDdVTFAuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8
-QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2JpbmRpbmdzL3dhdGNoZG9n
-L2ZzbC1pbXg3dWxwLXdkdC50eHQgICAgICAgICAgfCAyMg0KPiArKysrKysrKysrKysrKysrKysr
-KysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBt
-b2RlIDEwMDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRv
-Zy9mc2wtaW14N3VscC13ZHQudHh0DQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvZnNsLWlteDd1bHAtd2R0LnR4dA0K
-PiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL2ZzbC1pbXg3
-dWxwLXdkdC50eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAu
-LmQ4M2ZjNWMNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL2ZzbC1pbXg3dWxwLXdkdC50eHQNCj4gPiBAQCAtMCww
-ICsxLDIyIEBADQo+ID4gKyogRnJlZXNjYWxlIGkuTVg3VUxQIFdhdGNoZG9nIFRpbWVyIChXRFQp
-IENvbnRyb2xsZXINCj4gPiArDQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKy0gY29t
-cGF0aWJsZSA6IFNob3VsZCBiZSAiZnNsLGlteDd1bHAtd2R0Ig0KPiA+ICstIHJlZyA6IFNob3Vs
-ZCBjb250YWluIFdEVCByZWdpc3RlcnMgbG9jYXRpb24gYW5kIGxlbmd0aA0KPiA+ICstIGludGVy
-cnVwdHMgOiBTaG91bGQgY29udGFpbiBXRFQgaW50ZXJydXB0DQo+ID4gKy0gY2xvY2tzOiBTaG91
-bGQgY29udGFpbiBhIHBoYW5kbGUgcG9pbnRpbmcgdG8gdGhlIGdhdGVkIHBlcmlwaGVyYWwgY2xv
-Y2suDQo+IA0KPiBUaGUgZHJpdmVyIGFzIHN1Ym1pdHRlZCBkb2VzIG5vdCBpbmNsdWRlIGNsb2Nr
-IG9yIGludGVycnVwdCBoYW5kbGluZy4NCj4gV2h5IGFyZSB0aG9zZSBwcm9wZXJ0aWVzIGxpc3Rl
-ZCBhcyBtYW5kYXRvcnkgaWYgdGhleSBhcmUgbm90IHJlYWxseSBuZWVkZWQNCj4gKG5vciB1c2Vk
-KSA/DQoNCkkgbWlzc2VkIHRoZSBjbGsgcGFydCBpbiBkcml2ZXIsIGl0IGlzIHdvcmtpbmcgT05M
-WSBiZWNhdXNlIHRoZSB3ZG9nIGNsb2NrIGlzIGVuYWJsZWQNCnVuZXhwZWN0ZWQsIEkgd2lsbCBh
-ZGQgaXQgaW4gVjIsIHRoYW5rcyBmb3IgcG9pbnRpbmcgb3V0IHN1Y2ggYmlnIG1pc3Rha2UhDQoN
-CkFuc29uDQoNCj4gDQo+ID4gKw0KPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ICstIHRp
-bWVvdXQtc2VjIDogQ29udGFpbnMgdGhlIHdhdGNoZG9nIHRpbWVvdXQgaW4gc2Vjb25kcw0KPiA+
-ICsNCj4gPiArRXhhbXBsZXM6DQo+ID4gKw0KPiA+ICt3ZG9nMTogd2RvZ0A0MDNkMDAwMCB7DQo+
-ID4gKwljb21wYXRpYmxlID0gImZzbCxpbXg3dWxwLXdkdCI7DQo+ID4gKwlyZWcgPSA8MHg0MDNk
-MDAwMCAweDEwMDAwPjsNCj4gPiArCWludGVycnVwdHMgPSA8R0lDX1NQSSA1NSBJUlFfVFlQRV9M
-RVZFTF9ISUdIPjsNCj4gPiArCWNsb2NrcyA9IDwmcGNjMiBJTVg3VUxQX0NMS19XREcxPjsNCj4g
-PiArCWFzc2lnbmVkLWNsb2NrcyA9IDwmcGNjMiBJTVg3VUxQX0NMS19XREcxPjsNCj4gPiArCWFz
-c2lnbmVkLWNsb2Nrcy1wYXJlbnRzID0gPCZzY2cxIElNWDdVTFBfQ0xLX0ZJUkNfQlVTX0NMSz47
-DQo+ID4gKwl0aW1lb3V0LXNlYyA9IDw0MD47DQo+ID4gK307DQo+ID4gLS0NCj4gPiAyLjcuNA0K
-PiA+DQo=
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    f4eb1423 Merge branch 'for-linus' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11ab1c74600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a4c9e9f08e9e8960
+dashboard link: https://syzkaller.appspot.com/bug?extid=2c95195d5d433f6ed6cb
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+2c95195d5d433f6ed6cb@syzkaller.appspotmail.com
+
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa0af7a86d4
+R13: 00000000004c018f R14: 00000000004d2228 R15: 0000000000000004
+BUG: Dentry 00000000117d3c54{i=0,n=clients}  still in use (1) [unmount of  
+nfsd nfsd]
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 18817 at fs/dcache.c:1595 umount_check  
+fs/dcache.c:1595 [inline]
+WARNING: CPU: 1 PID: 18817 at fs/dcache.c:1595 umount_check.cold+0xf5/0x116  
+fs/dcache.c:1576
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 18817 Comm: syz-executor.3 Not tainted 5.3.0-rc3+ #100
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2dc/0x755 kernel/panic.c:219
+  __warn.cold+0x20/0x4c kernel/panic.c:576
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:umount_check fs/dcache.c:1595 [inline]
+RIP: 0010:umount_check.cold+0xf5/0x116 fs/dcache.c:1576
+Code: 00 00 45 89 e8 4c 89 e1 53 4d 8b 0f 4c 89 f2 4c 89 e6 48 c7 c7 80 97  
+96 87 e8 61 a6 9f ff 48 c7 c7 00 98 96 87 e8 55 a6 9f ff <0f> 0b 58 e9 b1  
+15 ff ff e8 24 1f f0 ff e9 1d ff ff ff 45 31 f6 e9
+RSP: 0018:ffff888060187b88 EFLAGS: 00010282
+RAX: 0000000000000024 RBX: ffff8880624f8bb8 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815c3ba6 RDI: ffffed100c030f63
+RBP: ffff888060187bb8 R08: 0000000000000024 R09: fffffbfff11b42c5
+R10: fffffbfff11b42c4 R11: ffffffff88da1623 R12: ffff88803f50fa20
+R13: 0000000000000001 R14: 0000000000000000 R15: ffffffff88f75220
+  d_walk+0x283/0x950 fs/dcache.c:1305
+  do_one_tree+0x28/0x40 fs/dcache.c:1602
+  shrink_dcache_for_umount+0x72/0x170 fs/dcache.c:1618
+  generic_shutdown_super+0x6d/0x370 fs/super.c:443
+  kill_anon_super+0x3e/0x60 fs/super.c:1102
+  kill_litter_super+0x50/0x60 fs/super.c:1111
+  nfsd_umount+0x3f/0x90 fs/nfsd/nfsctl.c:1416
+  deactivate_locked_super+0x95/0x100 fs/super.c:331
+  vfs_get_super+0x210/0x270 fs/super.c:1185
+  nfsd_fs_get_tree+0x7a/0x90 fs/nfsd/nfsctl.c:1390
+  vfs_get_tree+0x8e/0x390 fs/super.c:1413
+  vfs_fsconfig_locked+0x236/0x3d0 fs/fsopen.c:232
+  __do_sys_fsconfig fs/fsopen.c:445 [inline]
+  __se_sys_fsconfig fs/fsopen.c:314 [inline]
+  __x64_sys_fsconfig+0x8e0/0xa40 fs/fsopen.c:314
+  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459829
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fa0af7a7c78 EFLAGS: 00000246 ORIG_RAX: 00000000000001af
+RAX: ffffffffffffffda RBX: 00007fa0af7a7c90 RCX: 0000000000459829
+RDX: 0000000000000000 RSI: 0000000000000006 RDI: 0000000000000003
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa0af7a86d4
+R13: 00000000004c018f R14: 00000000004d2228 R15: 0000000000000004
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
