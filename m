@@ -2,184 +2,129 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A502C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82DC8C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7614208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572742085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:20:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MRdxqniA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727342AbfHLJSu (ORCPT
+        id S1727351AbfHLJU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 05:18:50 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44837 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbfHLJSu (ORCPT
+        Mon, 12 Aug 2019 05:20:27 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55053 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727023AbfHLJU1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 05:18:50 -0400
-Received: by mail-qt1-f196.google.com with SMTP id 44so71053186qtg.11
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 02:18:49 -0700 (PDT)
+        Mon, 12 Aug 2019 05:20:27 -0400
+Received: by mail-wm1-f67.google.com with SMTP id p74so11473724wme.4;
+        Mon, 12 Aug 2019 02:20:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MgLPMTtg6Jyzs9wt4ekHIpThJOy3S51fX4Pbs5028Qw=;
+        b=MRdxqniAXGFwWGp6ovZBRFM5kKVCzLuypXpwid6B4G8z7Twcw1CyFlX5XZduWh6krN
+         BvoiV1sQSftc9cDjUaJAIOA/xdD5x5IaNN4fT2PbmzflVMWDP+lnn4Uj0gJ9mrnTDb//
+         QN9BugW6+JENQzNq/HeN8qdi9AxVJ5WyVlu/z74wAoImfMnLfr1BdDzzhR0VUaX/NK7B
+         DjFAfJuOmwwnepWyG9icGE30RhNahktJMk1z8ZBV9B2HcjMfnrEw9PueE3xjbd5ao0ls
+         4dceqzuANg44kgeClcK0gxjc/+68HYucfwePMGct+S/xb/Woo+wd1CzjNrg24nC5bztP
+         11Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eQ6iC6FPotbDLw/yqSrmxneRMN32NSA1RVINhFfjlLs=;
-        b=m4rAfSqawLwrTOH2PRhvlnWaHBdcRcEmd4LsTTKPrq0O/1SHJa6j2BmY7FBHhOBqb2
-         ameabMrG5YCUpylJpu85gnqUNa+x89gUPOs+tnkKiTOaj91h9iD6fWFVEDsLjV4G50Lc
-         Ih7U6DXQ5dK5nuuanO43MNFwOwRng2wibGUnVbMogUuoHv3hj0u+y5LSbxHu+eZ1KnRf
-         BMF1kkO9Sht7sd/uUjtMt5a7V+xH6h2oaUhAohbcWLSxJw+RtlWsi/BqeCFPbpgX9zHE
-         ctzSvZkHx7njR7e73Z3bND6A7vcDeosOTu7KWxxpop+Gai2p0TSupj2x5SAOrJnlR6ZD
-         eJMQ==
-X-Gm-Message-State: APjAAAV8aF4lnV+aH/I8rcpz5MplX6HGTsNfRsEOJG8yLJ42brqAA6iz
-        Tz/H0p17sTjD0Qm8HdWfsNRorA==
-X-Google-Smtp-Source: APXvYqzgOdql+JK/PJhPFMelOxcGaMkTyi0NmRPnztTdE++1Jkqyr19sSEGOPDgOeu1nQnMgqKnsSQ==
-X-Received: by 2002:a0c:b036:: with SMTP id k51mr30009599qvc.103.1565601528843;
-        Mon, 12 Aug 2019 02:18:48 -0700 (PDT)
-Received: from redhat.com ([147.234.38.29])
-        by smtp.gmail.com with ESMTPSA id h26sm60625829qta.58.2019.08.12.02.18.44
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MgLPMTtg6Jyzs9wt4ekHIpThJOy3S51fX4Pbs5028Qw=;
+        b=uLH+2WOkrWNz0tTDoB+NX4b++ENxLOgWMFLL/GNehwRSLJTcXd9LFKmRMZLDj+I2pT
+         bL8TaTDDzYPX72wOhPYP5T/FByuR50JiC7ZgCzDADzyhK0auxjtGpjEvjgf2Rh2yqprR
+         4NVmHzHI4EY2gETMozMiGpLxS+PZSryMEdmpIG5Mv1DUJxHvBskVTQfdBYFic6n+j8G+
+         uYeFWJpJdPPftYwmuYPMX2KxrruqdZEMZZGY3sw+PzJrlaRtH20FceU6vqA3vSX5SxmW
+         OTQO/2OEfq2Y+/vwsAmF/SmuE6n2HXZEMMirQ4j6L1T9o7vRhehZEE7oR0yQUTkmz/EX
+         VH8g==
+X-Gm-Message-State: APjAAAU4BcbzardcI25fwQQmnMQGN2cp8WC7/KrMqWvz7Gm7C/R0ga3a
+        Slhtt+P6WaIDbLccF8Acq74=
+X-Google-Smtp-Source: APXvYqxHLPKNrpdLLMqp0G4bXC5Z91yn/gIGCzLXSVN9445Z3ZyS5vnf0Dqr+tLu8Cusm5o3P0Nl2Q==
+X-Received: by 2002:a05:600c:10ce:: with SMTP id l14mr25953651wmd.118.1565601624096;
+        Mon, 12 Aug 2019 02:20:24 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id w13sm44443446wre.44.2019.08.12.02.20.22
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 02:18:47 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 05:18:41 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Pankaj Gupta <pagupta@redhat.com>
-Cc:     amit@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
-        virtualization@lists.linux-foundation.org, jasowang@redhat.com,
-        linux-kernel@vger.kernel.org, xiaohli@redhat.com
-Subject: Re: [PATCH v3 1/2] virtio_console: free unused buffers with port
- delete
-Message-ID: <20190812051642-mutt-send-email-mst@kernel.org>
-References: <20190809064847.28918-1-pagupta@redhat.com>
- <20190809064847.28918-2-pagupta@redhat.com>
- <20190810141019-mutt-send-email-mst@kernel.org>
- <361928616.7829318.1565588208467.JavaMail.zimbra@redhat.com>
+        Mon, 12 Aug 2019 02:20:22 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 11:20:21 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
+        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
+        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        sboyd@kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
+        talho@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v8 01/21] pinctrl: tegra: Fix write barrier placement in
+ pmx_writel
+Message-ID: <20190812092021.GC8903@ulmo>
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-2-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="i7F3eY7HS/tUJxUd"
 Content-Disposition: inline
-In-Reply-To: <361928616.7829318.1565588208467.JavaMail.zimbra@redhat.com>
+In-Reply-To: <1565308020-31952-2-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 01:36:48AM -0400, Pankaj Gupta wrote:
-> 
-> > 
-> > On Fri, Aug 09, 2019 at 12:18:46PM +0530, Pankaj Gupta wrote:
-> > > The commit a7a69ec0d8e4 ("virtio_console: free buffers after reset")
-> > > deferred detaching of unused buffer to virtio device unplug time.
-> > > This causes unplug/replug of single port in virtio device with an
-> > > error "Error allocating inbufs\n". As we don't free the unused buffers
-> > > attached with the port. Re-plug the same port tries to allocate new
-> > > buffers in virtqueue and results in this error if queue is full.
-> > 
-> > So why not reuse the buffers that are already there in this case?
-> > Seems quite possible.
-> 
-> I took this approach because reusing the buffers will involve tweaking
-> the existing core functionality like managing the the virt queue indexes.
 
-I don't see why frankly, if you keep a list of outstanding
-buffers on plug you can assume they have been added.
+--i7F3eY7HS/tUJxUd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Compared to that deleting the buffers while hot-unplugging port is simple
-> and was working fine before. It seems logically correct as well.   
-> 
-> I agree we need a spec change for this.
-> 
-> > 
-> > > This patch removes the unused buffers in vq's when we unplug the port.
-> > > This is the best we can do as we cannot call device_reset because virtio
-> > > device is still active.
-> > > 
-> > > Reported-by: Xiaohui Li <xiaohli@redhat.com>
-> > > Fixes: a7a69ec0d8e4 ("virtio_console: free buffers after reset")
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> > 
-> > This is really a revert of a7a69ec0d8e4, just tagged confusingly.
-> > 
-> > And the original is also supposed to be a bugfix.
-> > So how will the original bug be fixed?
-> 
-> Yes, Even I was confused while adding this tag.
-> I will remove remove 'fixes' tag completely for this patch?
-> because its a revert to original behavior which also is a bugfix.
-> 
-> > 
-> > "this is the best we can do" is rarely the case.
-> > 
-> > I am not necessarily against the revert. But if we go that way then what
-> > we need to do is specify the behaviour in the spec, since strict spec
-> > compliance is exactly what the original patch was addressing.
-> 
-> Agree.
-> 
-> > 
-> > In particular, we'd document that console has a special property that
-> > when port is detached virtqueue is considered stopped, device must not
-> > use any buffers, and it is legal to take buffers out of the device.
-> 
-> Yes. This documents the exact scenario. Thanks.
-> You want me to send a patch for the spec change?
-> 
-> Best regards,
-> Pankaj
+On Thu, Aug 08, 2019 at 04:46:40PM -0700, Sowjanya Komatineni wrote:
+> pmx_writel uses writel which inserts write barrier before the
+> register write rather.
+>=20
+> This patch has fix to replace writel with writel_relaxed followed
+> by a write barrier to ensure write operation before the barrier
+> is completed for successful pinctrl change.
+>=20
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/pinctrl/tegra/pinctrl-tegra.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-Go ahead.
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-> > 
-> > 
-> > 
-> > > ---
-> > >  drivers/char/virtio_console.c | 14 +++++++++++---
-> > >  1 file changed, 11 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
-> > > index 7270e7b69262..e8be82f1bae9 100644
-> > > --- a/drivers/char/virtio_console.c
-> > > +++ b/drivers/char/virtio_console.c
-> > > @@ -1494,15 +1494,25 @@ static void remove_port(struct kref *kref)
-> > >          kfree(port);
-> > >  }
-> > >  
-> > > +static void remove_unused_bufs(struct virtqueue *vq)
-> > > +{
-> > > +        struct port_buffer *buf;
-> > > +
-> > > +        while ((buf = virtqueue_detach_unused_buf(vq)))
-> > > +                free_buf(buf, true);
-> > > +}
-> > > +
-> > >  static void remove_port_data(struct port *port)
-> > >  {
-> > >          spin_lock_irq(&port->inbuf_lock);
-> > >          /* Remove unused data this port might have received. */
-> > >          discard_port_data(port);
-> > > +        remove_unused_bufs(port->in_vq);
-> > >          spin_unlock_irq(&port->inbuf_lock);
-> > >  
-> > >          spin_lock_irq(&port->outvq_lock);
-> > >          reclaim_consumed_buffers(port);
-> > > +        remove_unused_bufs(port->out_vq);
-> > >          spin_unlock_irq(&port->outvq_lock);
-> > >  }
-> > >  
-> > > @@ -1938,11 +1948,9 @@ static void remove_vqs(struct ports_device *portdev)
-> > >          struct virtqueue *vq;
-> > >  
-> > >          virtio_device_for_each_vq(portdev->vdev, vq) {
-> > > -                struct port_buffer *buf;
-> > >  
-> > >                  flush_bufs(vq, true);
-> > > -                while ((buf = virtqueue_detach_unused_buf(vq)))
-> > > -                        free_buf(buf, true);
-> > > +                remove_unused_bufs(vq);
-> > >          }
-> > >          portdev->vdev->config->del_vqs(portdev->vdev);
-> > >          kfree(portdev->in_vqs);
-> > > --
-> > > 2.21.0
-> > 
+--i7F3eY7HS/tUJxUd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1RL1EACgkQ3SOs138+
+s6GgOQ/+KHEjD8Jzg9BS66GmKuNoOclOxDM03l3CoYiOGhyyUsPjifCTvtnDFGwa
+lqaq7sH3V7fOCC/qun2i5BE8pumI+NgLEkm9tYKvmLCn2vKCzIpv2LGX37+e91M8
+GiMD27bmKkEDW4nLgIza9y3v/t6kJ4XhwKnFA2+eMjqZB9SNleworpYAZp832AIj
+nl0HbqRiGpkLjcIaWAibNY5+0OEpRB6AhZlhsCWz5h7c00Jad8qK1rBnoLxDiq7a
+s5jPfDc8fYWQ6OnIutLEjm+GdSx17odH7R+mprW9OiKqWPmdZUp/aZEHDyS434Al
++c8I0wEpxWWCEk924kF6oPytP6KKjOHy29SdhPg0RV7uuK/qPm6ylaSxem3NyCMi
+sibGMlfXuMKdFaDbCEIv0XbVsu7nmu1I0h7PV1Gy+oCSnPI8EJ+tFiGozbYoy9hQ
+INdJWkMQLWXsCRsECrP1zWyDdiA5zhI0nRNVSflZi5Lz9GkcGa8fmi+r0o4vOL+x
+Lsy85RpW8ukLteRRUf51hpXNcvsXTGXZEempESfd+uLu7eHTpq8WciMDDT0//ekQ
+L4xaq/9TB7s0sDH3D2O8VOd5s1tR0nHl0DojzeY/YS25hOi3nW/8/fHaz+1c6z/C
+cZ7LUpJxyGhfs9Sj00Ftyj2fWVZGuIxFDQXh5ny339ST1DhgPRQ=
+=NUo9
+-----END PGP SIGNATURE-----
+
+--i7F3eY7HS/tUJxUd--
