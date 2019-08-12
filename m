@@ -2,228 +2,130 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D17C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A04C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC872085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 671B520820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:41:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kapsi.fi header.i=@kapsi.fi header.b="wIN/hM1R"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="dxEq5xKY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfHLTlB (ORCPT
+        id S1727031AbfHLTlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 15:41:01 -0400
-Received: from mail.kapsi.fi ([91.232.154.25]:45645 "EHLO mail.kapsi.fi"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726549AbfHLTk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 15:40:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
-         s=20161220; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=bllTEPdtYxFtEj5i4vB0U6tjHTx1DsMUqgajDbKwJCs=; b=wIN/hM1Ra2zXHsUAj9TM68eii2
-        WCD1q6LSiG42b3R804suuUOy9c10k1jGRjVIQSwRVCcgHDkLbaLsqzKL8yUB1fmHVK8KVi/+0cuWm
-        4hmYvOQQzaStNxQdcWiIRGgmqJyeH/51BWi3X1O/0PWyqny9C5DvLDfMhi1WAth9qdvY02pfNWbEY
-        7zjv4/lyE/9c9df3rXfqi/7LerycDdFfC0eOOlboygz+X1DSKCvdMypOCSZGNZtezHCAwy4XVYjyD
-        zxciiXUk8mogm+0j1PYKym52ZPii4BjH9LF4husQeG7sMG9/muVLGU652CuNo2kln2nZ48jknVH7u
-        nVh3UR+g==;
-Received: from 87-92-99-237.bb.dnainternet.fi ([87.92.99.237] helo=[10.0.0.10])
-        by mail.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <jussi.kivilinna@iki.fi>)
-        id 1hxGBV-0007yR-Qo; Mon, 12 Aug 2019 22:40:49 +0300
-Subject: Re: [PATCH 3/5] lib/mpi: Fix for building for MIPS32 with Clang
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Vladimir Serbinenko <phcoder@gmail.com>,
-        gcrypt-devel <gcrypt-devel@gnupg.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-References: <20190812033120.43013-1-natechancellor@gmail.com>
- <20190812033120.43013-4-natechancellor@gmail.com>
- <ec4666a6-c7db-247b-de81-bb784bb9d649@iki.fi>
- <20190812171448.GA10039@archlinux-threadripper>
-From:   Jussi Kivilinna <jussi.kivilinna@iki.fi>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jussi.kivilinna@iki.fi; prefer-encrypt=mutual; keydata=
- mQGNBE3ihugBDADESXATJw5TPYbTHDZfl6qkS/CPbn9ecRZnL74h5w1grX7gjsscafjj7s9G
- Yf8hkapJ72rlR2vG54MufsUUKGde5hkJ0Ntvgt2I0LjQM2+tqGkBm4NAi4tVdUsXZiWTlSWd
- kTtlk7jVUH2IcYZU/VE7qeq9UNAGd+h/XEE0ytolcf1Ou84H/Nd4FE6vxCACLhVa1qVC/daA
- SkgFjXHFO+UnRNRIKVDQysMUJXPljYWIJLLSbf1ZDzaVTF6exyoKcrUefMRA3276KLui4nW4
- F+RIMgqrVwzNs6oFGd5P2Cy+qGlo6hv8+Sr5b+/h+Qns99tcSM4RK2P9uwrGFbAleQHJv2fh
- r6BfHPrSROep5h0QqaoKrz4OtTc+D0gsefEj9ayGQFN7RC2DbKDnOfwgVl5WRCJRGJisu2zb
- FWnHW40KIAvRw0r+eOUvzYyXF9x0JNSvViOqZO34FunWbCKpjoqqpSXDkGFS/LzoKAz36E0P
- U3BcUo9GiFbh50EcNXVo7iUAEQEAAbQoSnVzc2kgS2l2aWxpbm5hIDxqdXNzaS5raXZpbGlu
- bmFAaWtpLmZpPokB3gQTAQgASAIbAwIeAQIXgAIZAQUJFC6hLxYhBGDH5o5pZGA/sWNuRwaL
- +yOpMWaGBQJZEaK3CgsNCgkMCAcEAwIHFQoJCAsDAgUWAwIBAAAKCRAGi/sjqTFmhvXAC/9f
- EyRa7gSNyKyWn7x0/ETmF5oJ+DAKiefsPszU9HfiM5MDCAkeEZKdxLSPQk6UAPH15f4l2U7R
- hblFJU2h6vQBIOlbeO41TyP0/qLBemQY3Cvh+z6rrA364QcSwWhj/eCK5KQ3mw6nDKz3cwKG
- mjY0w3XxgeGJv36YbAIybsGC82OmX8rcBqBPgmVgiZ1BvgSQEZrJPdinm8H9C1FcWW3oEA/J
- 6k0HVGwMH//nUzSrsmI5cBS1E7gyHGdAkufGubcDdb886SgGn2vXjVLeab1rRU8YAioZ7RkI
- tK/Kfp7U6GFYEdM4wTAjIahJZgaa5SA59lJbF0bKEdd9uMb0auT7mj5v9gpIML5I7Ir1rMWK
- GU07+rTRHVYnZdTfYpo3OFzq4CITTGb0XW+VmkKnhZYtYZBW4xvd120pLEMv7ic7LQK4QZnr
- 3H+fsXhKlmzwQMGYUlL0qOAfjLeJwQRSh36fOvcG/A8aolU94jVhCemHOVrOuHAgw+mamMRP
- 9t5/B0q5AZEEU5C0HwEMIJ85y335IwTMV0EtuMkQva5g+pYlJoXf8vAtyUwUdeo/PJA7p90w
- MuC7HsytR9HeCrwz622agbEcq4K8OYzKe+yp7m2ZxQ30w+IFK4kdf6o3TjPNHSaiA6Pv3eEE
- xpjY6HnCDwkn5cTeoeBllzvzrTvoiH820Pv6WVOWMslrlivbo05JYOsvYwP1kWfzXJMaUPzQ
- VNX3Xcu9wNioYuAmRyYfzqHGp3CMdgyI3V3a9ktbrHWsnhE/2ly2k8ZlmuZk8yv+0lLjU5BH
- QkScPDdObIO11exV5Gj8BM+ELye0QgZBZVVQ9ElaG/GBi+Pk7EaA+8ENg9pJHBQCsm7zLxep
- LMHRXcLZxNigcvVtDMOPs4iMn7oQkCiJ/j2qwxl7ezYyZdYLIN1232mhdxRXB6u2TqFXQR6K
- uHDZWPAUArLmMecQceYNgOMPRw7TaRc0oBSDPl/Bjk+qxaIZc90P5oVZ6/Bd505TTSAqXuVx
- IfZ+rDOJEvm4xDp+JKgzj4abGuI1ahx/1SUAEQEAAYkBpQQYAQgADwIbDAUCWKsm4wUJDoB0
- RAAKCRAGi/sjqTFmhqCsDACzuYx7GumNeWgj+7ZApds0amOZJnYhxxz/DRGP4H/PqHcWFzwB
- 4yqIKh5HG2LgsWzo/otvAZjqgw7cItEl3OprhftP67jjOCwUO0vzHEnW3tSi+TDyQAKTxS9o
- cSK+y0YyDUOebZHGAyO7dfmB25QA/AD9O0dzGSK2XeS3inPI1lOZP1GfgXaByHYQ5X9nhOkW
- SKv0opZStODLADk9QUwFNP7FJJB/efw1iVaTc1i/TWpzEvL08xlLQXss5NXAiXA9tU3BvyrY
- kVa/c5oMkQFwQGVa4b3XKP5bRH3ikevYIXEdH9Kp5310cCY7FCww3VmdB1r+i4qCrVtnn0qq
- tgcpCEuXeuzItkgec7imfVT3Z5KWbmAzXGFu1P1Ih0VHe2Fb1eLcRyzgsNqtm6mc4DTL6D5c
- Fh/u9EpehbQiRE9fKwNCAkU9XSFHqbqQmt9dBu0FAiqjoB2+SUqQDM/yUUtkKRi7uURxf1Jh
- 6m4qtGfYcAezgBPHyx6lsNjPRfPCW1W5AZUEWKsoYAEMQOktXcAEico9ftjoZlsy0iaQN/n0
- JXXyjMSgD0FNyyB/44kam9/U15hiTH/vZUEWmTy+43BkYUqZrOHdTW+LrlhJlS0wvMG1vtu9
- YsWhXoQM7vKBZIHjB7polGJ/JAQo51P6C/APC0F/lj8eHp43m2PojhEByqrLzbb7mrC6ZyvP
- xsbaTWndKKO5ho7q93qXLPINHxanz5MbJWOTbaS40CjHxT92UNjqJiYBmQc41PgOdk0MPsRX
- lJ4sK/xntHAcnvnsyflcXRoKxVbR03e9CTdkokeMiamWLuxWh01QJgJ1qey+xXKmvxL16GJ2
- kNkWc2nzShLS5O3Dub3wShlNMkogA/qJZiikHY/Oca+uuehFppN3hKsySA0v7U+pEJiXVGPQ
- Xhn9U3wTNI037w05JxXMrtUBxwkh+T0N5mWUS/ZPi865mNnSJEjf7QWACsdXcMYySv1+Guuo
- 2BizfaR5YGPx6/LhEmRUEIUFOe0upUGlkLWdYCub41nv6/ME860dmfPiuHy9d4b3ABEBAAGJ
- A0wEGAEIAA8FAlirKGACGwIFCQlmAYABsQkQBov7I6kxZobA5SAEGQEIAAYFAlirKGAACgkQ
- ao0rCcXkrmt+jAxAyDAn/VDTJ98oKPD8bDOBl90iHedcDrDo+GZ2p6gYYx/xDJC8fe1tIe0g
- 0jCkoY08lAE4N0IT6TZcawouEopGwLC0l/m2GZKp24MtCDt1B3aEc5/DoqNTTNB+ztAEzRGY
- L1je9z7BwHDFt1CF4hsh/fHsuvJnTXnKvGz1Gq2LnKhzSCTgzVrZgVkUd0KWq193D8RwVsBP
- T5rKmmDe33/J/WuNt39IxTNQ2cGxKWorqMX5ogjisGFY51GsM6BWuMABqnD6WA4pOmhMvrHN
- HGIMhil6RtC9jPTCmDKv0ZTWE6R4346bnLeGiXj96pFygFR28eBvB6cBCwpPswNyxlqAQ9xl
- gw+W+Ol6yvOM8+NRkgtY6pGYpNjha4yVunupzFhNeflOCW81vLuv9QIDQDeWzOAlgHnLu/zz
- WRzPvWyy+WuKah/rf1OeNJ5oKHmVFyuT+vA9JBIj5AL+QEwP21nx+VDqUjIGgYAj1jRUA/T3
- FbYXJE+I3G9PmAov2JlxQSG7ECzQS5ZRkTPXUgv/f3nCEYM0A6tDGqtSXcD4Gavl6ozDu4PD
- V/387JqjxmWks/rX6OVtLXeiVwfHaS8pG027kVgmvpiSzwHP9HlgingiSt5pfx3eUwWMosg1
- hjPoPsVqRii9keJ7YeeZm9Oyu2qfF9ANivB3JEHah+xGodFvYT4HhW99VKEigRIs50I84xcL
- A+S2TkpBBRK+L2+DxbCVTAQbphP3uzC17ycOrRsWWR8Uq1xAjcle3YMumo/ChHlQyrA+0NZR
- PATCiJCz4HMGL57lDCId7xVDLb+M2VimGbGxMDHP1Cg9BKCp9oc+T2TeHC3fas4va1f2iXJk
- LbQY9oVvMmuyJvFyg8jnMHLOAVzvFbvT8XtWcL0kwePmgSwUY6RrZcRxn1Egk3UKioU7n4uK
- VmD7uQ+cf92mQtoiS1ceGKCT5CBPJF2PV/7Q5wBnN+R8WWAjtGPXshA5A9pB9DKjBXgVGPXY
- NYA8W1oeddC39o0ipr/NWR6cEMmPW5Qrn2Q0zqWdHuVfq4Me
-Message-ID: <1ba05172-500b-6b42-00ad-27fb33eff070@iki.fi>
-Date:   Mon, 12 Aug 2019 22:40:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 12 Aug 2019 15:41:05 -0400
+Received: from mail-eopbgr70082.outbound.protection.outlook.com ([40.107.7.82]:51911
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726973AbfHLTlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 15:41:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D+xZsCUucq3VGeOZ2dVg4eyVN7+ZvxJ1OnCfXVXAlSATVPHqj3t3EqDJZQK2v+kzvglndKd/qzFG0TLUgjyojduLRo5IUwBDMS25WpPb5jD9v3WWLPHxYmYwEV0KgzZTZ5gtlzVqP2RBi6De4NKMRda8ZF88ZPSOZ+fXWdVZzIBcJB+QOv34ALvOtOKUVFPy8NlqikSKz4JLknYtJkJ64o9J6hsQjWLocKmjWBCjYeGFyRkCcRGdaadyZiEUdcaOoqZej8V76RBUQpKgBiypNRwFQTF5h7G8KpHWVmA14KEhcve5uPfGDBaptdHUv1Fned5lOlD1DDpgOnV2hR034Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Hg2DmKUxfug3yUUwflDCB3ejSA4zSZtbC43QPCWR9j0=;
+ b=fk/GpU3EUv+Vw5eJmMApnxTMfdE+iDpzJP3hMtTjWRLKb/h8v5x43T3Pb8G9HcYBwSm4sQLxY5bXg7LJbRP2u43T1JFuuKutS4OIWqa2f0urnBpHBJS6GJE7w59qKZN9MUWkkCygZBqKSjXSGy4cmDLsEdpjxpcH435qLLcq8M98G1dELkzutUn05zSCuTWYgCL/PRp/MSlG9xDGISklJU0v2lGLX6L6PZOkuNhWqhGf0w32KIuc0108pUuRrerLiiKNVd2JrpV36eKviiAzQqcLPcZ5Idn/cFrlKjxA4D+n07vNlIvrkUzTUT98a2APuhwRoO7Y10vWjqpvOlilwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Hg2DmKUxfug3yUUwflDCB3ejSA4zSZtbC43QPCWR9j0=;
+ b=dxEq5xKYVgsCnd2NWWqojjIYleGrS6p1s19kdehml1JPa6qzsRjG722SXdYIngbcghdd0QL75U++NiSgsgyKA5cuRmqN2CcRnc8sLk9L1Gj5mFoWkgoT32bK/hEWKaHdmwyPsXxDRicsICRpE9KGT7z+QzvtLTjGhlWLzX/VcZQ=
+Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.235.152) by
+ VE1PR04MB6509.eurprd04.prod.outlook.com (20.179.233.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.23; Mon, 12 Aug 2019 19:40:58 +0000
+Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
+ ([fe80::3d61:6e52:a83c:7c59]) by VE1PR04MB6687.eurprd04.prod.outlook.com
+ ([fe80::3d61:6e52:a83c:7c59%6]) with mapi id 15.20.2136.018; Mon, 12 Aug 2019
+ 19:40:58 +0000
+From:   Leo Li <leoyang.li@nxp.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Zhang Wei <zw@zh-kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] dmaengine: fsldma: Mark expected switch fall-through
+Thread-Topic: [PATCH] dmaengine: fsldma: Mark expected switch fall-through
+Thread-Index: AQHVUKP5RUYlyDnoZkqg5dHV6OqYpqb36lNA
+Date:   Mon, 12 Aug 2019 19:40:58 +0000
+Message-ID: <VE1PR04MB6687030F764BAAB24FDE80378FD30@VE1PR04MB6687.eurprd04.prod.outlook.com>
+References: <20190812002159.GA26899@embeddedor>
+In-Reply-To: <20190812002159.GA26899@embeddedor>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leoyang.li@nxp.com; 
+x-originating-ip: [64.157.242.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1163b1d1-ffc2-4ea3-40fb-08d71f5d0001
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6509;
+x-ms-traffictypediagnostic: VE1PR04MB6509:
+x-microsoft-antispam-prvs: <VE1PR04MB6509329803F117F61B9F85D18FD30@VE1PR04MB6509.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:843;
+x-forefront-prvs: 012792EC17
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(39860400002)(346002)(396003)(13464003)(189003)(199004)(486006)(14454004)(476003)(53546011)(7736002)(26005)(8936002)(71190400001)(186003)(11346002)(81156014)(6506007)(305945005)(8676002)(81166006)(102836004)(71200400001)(446003)(14444005)(256004)(66066001)(6116002)(3846002)(99286004)(33656002)(478600001)(5660300002)(2906002)(55016002)(52536014)(316002)(6436002)(9686003)(66946007)(76176011)(25786009)(66556008)(66476007)(229853002)(66446008)(64756008)(6246003)(7696005)(53936002)(4326008)(110136005)(54906003)(86362001)(76116006)(74316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6509;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 6/S78OHNcDcTbPW9gsiqQr8ozDoAMd3zikyIwZMBlQQpooo5VS2C4UNME+LIPOg3qTurfBIUOWlJaik1ZRjfUM/xv4bSZ4AH72U35swzmJegLIBXMf6vUUEdFwWWACljGAcNP/Jh2GQEcwkiXg460GzaO/w7namNnrmtPgmu31QM81iVBS3EORf3Zz78dPYDbym21poqaEYKHi2MYnooV9qPDnU78X3tS6yjOgUer6hr1TDmNvA5LWVI3cOsN0WplcrBIWEPtEZhzbA3cPO2aUm125BqvFmdAI/m381u1Ed6vP7oQg4lzu+oXi0TZysH9WmPdKkgWVBGgtFvce8yjo2SVlNoc7mRt399srgUodLs1XxskHJvqsJs90tt5clNxM+H/YEHrwnzp2VUSm+3UVIwSLyvIbxhbRORnxPH30c=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20190812171448.GA10039@archlinux-threadripper>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 87.92.99.237
-X-SA-Exim-Mail-From: jussi.kivilinna@iki.fi
-X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1163b1d1-ffc2-4ea3-40fb-08d71f5d0001
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 19:40:58.7347
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: leoyang.li@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6509
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On 12.8.2019 20.14, Nathan Chancellor wrote:
-> On Mon, Aug 12, 2019 at 10:35:53AM +0300, Jussi Kivilinna wrote:
->> Hello,
->>
->> On 12.8.2019 6.31, Nathan Chancellor wrote:
->>> From: Vladimir Serbinenko <phcoder@gmail.com>
->>>
->>> clang doesn't recognise =l / =h assembly operand specifiers but apparently
->>> handles C version well.
->>>
->>> lib/mpi/generic_mpih-mul1.c:37:24: error: invalid use of a cast in a
->>> inline asm context requiring an l-value: remove the cast or build with
->>> -fheinous-gnu-extensions
->>>                 umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
->>>                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>> lib/mpi/longlong.h:652:20: note: expanded from macro 'umul_ppmm'
->>>         : "=l" ((USItype)(w0)), \
->>>                 ~~~~~~~~~~^~~
->>> lib/mpi/generic_mpih-mul1.c:37:3: error: invalid output constraint '=h'
->>> in asm
->>>                 umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
->>>                 ^
->>> lib/mpi/longlong.h:653:7: note: expanded from macro 'umul_ppmm'
->>>              "=h" ((USItype)(w1)) \
->>>              ^
->>> 2 errors generated.
->>>
->>> Fixes: 5ce3e312ec5c ("crypto: GnuPG based MPI lib - header files (part 2)")
->>> Link: https://github.com/ClangBuiltLinux/linux/issues/605
->>> Link: https://github.com/gpg/libgcrypt/commit/1ecbd0bca31d462719a2a6590c1d03244e76ef89
->>> Signed-off-by: Vladimir Serbinenko <phcoder@gmail.com>
->>> [jk: add changelog, rebase on libgcrypt repository, reformat changed
->>>  line so it does not go over 80 characters]
->>> Signed-off-by: Jussi Kivilinna <jussi.kivilinna@iki.fi>
->>
->> This is my signed-off-by for libgcrypt project, not kernel. I do not think
->> signed-offs can be passed from other projects in this way.
->>
->> -Jussi
-> 
-> Hi Jussi,
-> 
-> I am no signoff expert but if I am reading the developer certificate of
-> origin in the libgcrypt repo correctly [1], your signoff on this commit
-> falls under:
-> 
-> (d) I understand and agree that this project and the contribution
->     are public and that a record of the contribution (including all
->     personal information I submit with it, including my sign-off) is
->     maintained indefinitely and may be redistributed consistent with
->     this project or the open source license(s) involved.
-
-There is nothing wrong with the commit in libgcrypt repo and/or my 
-libgcrypt-DCO-sign-off.
-
-> 
-> This file is maintained under the LGPL because it was taken straight
-> from the libgcrypr repo and per (b), I can submit this commit here
-> with everything intact.
-
-But you do not have my kernel-DCO-sign-off for this patch. I have not
-been involved with this kernel patch in anyway, have not integrated 
-it to kernel, not testing it on kernel.. I do not own it. However, 
-with this signed-off-by line you have involved me to kernel patch 
-process in which for this patch I'm not interested. So to be clear, 
-I retract my kernel-DCO-signed-off for this kernel patch:
-
-  NOT-Signed-off-by: Jussi Kivilinna <jussi.kivilinna@iki.fi>
-
-Of course you can copy the original libgcrypt commit message to this
-patch, but I think it needs to be clearly quoted so that my 
-libgcrypt-DCO-signed-off line wont be mixed with kernel-DOC-signed-off
-lines. 
-
-> 
-> However, I don't want to upset you in any way though so if you are not
-> comfortable with that, I suppose I can remove it as if Vladimir
-> submitted this fix to me directly (as I got permission for his signoff).
-> I need to resubmit this fix to an appropriate maintainer so let me know
-> what you think.
-
-That's quite complicated approach. Fast and easier process would be if you
-just own the patch yourself. Libgcrypt (and target file in libgcrypt) 
-is LGPL v2.1+, so the license is compatible with kernel and you are good 
-to go with just your own (kernel DCO) signed-off-by.
-
--Jussi
-
-> 
-> [1]: https://github.com/gpg/libgcrypt/blob/3bb858551cd5d84e43b800edfa2b07d1529718a9/doc/DCO
-> 
-> Cheers,
-> Nathan
-> 
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR3VzdGF2byBBLiBSLiBT
+aWx2YSA8Z3VzdGF2b0BlbWJlZGRlZG9yLmNvbT4NCj4gU2VudDogU3VuZGF5LCBBdWd1c3QgMTEs
+IDIwMTkgNzoyMiBQTQ0KPiBUbzogTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBaaGFuZyBX
+ZWkgPHp3QHpoLWtlcm5lbC5vcmc+OyBWaW5vZA0KPiBLb3VsIDx2a291bEBrZXJuZWwub3JnPjsg
+RGFuIFdpbGxpYW1zIDxkYW4uai53aWxsaWFtc0BpbnRlbC5jb20+DQo+IENjOiBsaW51eHBwYy1k
+ZXZAbGlzdHMub3psYWJzLm9yZzsgZG1hZW5naW5lQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+
+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IEd1c3Rhdm8gQS4gUi4gU2lsdmEgPGd1c3Rhdm9AZW1i
+ZWRkZWRvci5jb20+DQo+IFN1YmplY3Q6IFtQQVRDSF0gZG1hZW5naW5lOiBmc2xkbWE6IE1hcmsg
+ZXhwZWN0ZWQgc3dpdGNoIGZhbGwtdGhyb3VnaA0KPiANCj4gTWFyayBzd2l0Y2ggY2FzZXMgd2hl
+cmUgd2UgYXJlIGV4cGVjdGluZyB0byBmYWxsIHRocm91Z2guDQo+IA0KPiBGaXggdGhlIGZvbGxv
+d2luZyB3YXJuaW5nIChCdWlsZGluZzogcG93ZXJwYy1wcGE4NTQ4X2RlZmNvbmZpZyBwb3dlcnBj
+KToNCj4gDQo+IGRyaXZlcnMvZG1hL2ZzbGRtYS5jOiBJbiBmdW5jdGlvbiDigJhmc2xfZG1hX2No
+YW5fcHJvYmXigJk6DQo+IGRyaXZlcnMvZG1hL2ZzbGRtYS5jOjExNjU6MjY6IHdhcm5pbmc6IHRo
+aXMgc3RhdGVtZW50IG1heSBmYWxsIHRocm91Z2ggWy0NCj4gV2ltcGxpY2l0LWZhbGx0aHJvdWdo
+PV0NCj4gICAgY2hhbi0+dG9nZ2xlX2V4dF9wYXVzZSA9IGZzbF9jaGFuX3RvZ2dsZV9leHRfcGF1
+c2U7DQo+ICAgIH5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+Xn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
+fn5+DQo+IGRyaXZlcnMvZG1hL2ZzbGRtYS5jOjExNjY6Mjogbm90ZTogaGVyZQ0KPiAgIGNhc2Ug
+RlNMX0RNQV9JUF84M1hYOg0KPiAgIF5+fn4NCj4gDQo+IFJlcG9ydGVkLWJ5OiBrYnVpbGQgdGVz
+dCByb2JvdCA8bGtwQGludGVsLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogR3VzdGF2byBBLiBSLiBT
+aWx2YSA8Z3VzdGF2b0BlbWJlZGRlZG9yLmNvbT4NCg0KQWNrZWQtYnk6IExpIFlhbmcgPGxlb3lh
+bmcubGlAbnhwLmNvbT4NCg0KPiAtLS0NCj4gIGRyaXZlcnMvZG1hL2ZzbGRtYS5jIHwgMSArDQo+
+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL2RtYS9mc2xkbWEuYyBiL2RyaXZlcnMvZG1hL2ZzbGRtYS5jIGluZGV4DQo+IDIzZTBhMzU2
+ZjE2Ny4uYWQ3MmIzZjQyZmZhIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2RtYS9mc2xkbWEuYw0K
+PiArKysgYi9kcml2ZXJzL2RtYS9mc2xkbWEuYw0KPiBAQCAtMTE2Myw2ICsxMTYzLDcgQEAgc3Rh
+dGljIGludCBmc2xfZG1hX2NoYW5fcHJvYmUoc3RydWN0DQo+IGZzbGRtYV9kZXZpY2UgKmZkZXYs
+DQo+ICAJc3dpdGNoIChjaGFuLT5mZWF0dXJlICYgRlNMX0RNQV9JUF9NQVNLKSB7DQo+ICAJY2Fz
+ZSBGU0xfRE1BX0lQXzg1WFg6DQo+ICAJCWNoYW4tPnRvZ2dsZV9leHRfcGF1c2UgPSBmc2xfY2hh
+bl90b2dnbGVfZXh0X3BhdXNlOw0KPiArCQkvKiBGYWxsIHRocm91Z2ggKi8NCj4gIAljYXNlIEZT
+TF9ETUFfSVBfODNYWDoNCj4gIAkJY2hhbi0+dG9nZ2xlX2V4dF9zdGFydCA9IGZzbF9jaGFuX3Rv
+Z2dsZV9leHRfc3RhcnQ7DQo+ICAJCWNoYW4tPnNldF9zcmNfbG9vcF9zaXplID0gZnNsX2NoYW5f
+c2V0X3NyY19sb29wX3NpemU7DQo+IC0tDQo+IDIuMjIuMA0KDQo=
