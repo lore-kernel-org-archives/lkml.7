@@ -2,104 +2,141 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC97C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3EEC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F409E20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 973482070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 15:24:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Da6iRB9r"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="OJzpQWw2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbfHLPV4 (ORCPT
+        id S1727675AbfHLPYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 11:21:56 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40721 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727037AbfHLPVz (ORCPT
+        Mon, 12 Aug 2019 11:24:40 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:28767 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727037AbfHLPYk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 11:21:55 -0400
-Received: by mail-qt1-f194.google.com with SMTP id e8so2646722qtp.7;
-        Mon, 12 Aug 2019 08:21:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HGNfZqb//UE8Rwbt9ezhCRmZv0hIhCrmCUMdoLSoZzg=;
-        b=Da6iRB9rFTs7lc+LG4fFemCiG9uF5zxlB+oaqFVGCQBkulwnlRZexoCYW5S/q4qqzQ
-         FgMD29oTGWmDkVvLCp7EOogIiWF/gIFm+4j8h2NWNH3Lv+HqAR1As9Cla3SF/KXFfqLR
-         RWNFYyIhh3byvCeEKMMOcvPZe1rvgo2Itj5fTCDOOAD4ljYQBqC0IiCGWzXHh0PY3l78
-         fO5BynvzgqRZkYTShkIM7+aCeHm05ZvxUBOcmOP3HBRVFURhToU7PGv20CMishawSFfG
-         FJblyv7z8CV+1kfqqSXBzFtOZ5nCwtQqho2QLonsZ1zb0IP6VDUXqMcylh8IbKLQaKkt
-         ljyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HGNfZqb//UE8Rwbt9ezhCRmZv0hIhCrmCUMdoLSoZzg=;
-        b=Mjlz5iD9Z+jNJ6IFwmxryv+BRWBYWkVKjMSMjRhS0MzENJEDJQKlRe19LRxH7jZVVn
-         YvPTxUjcpgoSo7K1pniaW89Ge1+KQMZ7D7FfBfOYcutVKbyM4M05Q6zn5KztIIaqDmsF
-         /b45zD8PxxOvYXBhyTd4qq1/chh+05FYe0vIM/RwJLP5pG9dfJpkefQt/SLAex2rEUzR
-         co8LPkaxLhCupxlIEQCLGvfjpdnLUAfNPUtJd95E9J8OzB6mAx7QSHzGvTuvCjj5PAXe
-         PUMNoL4hlE6aefMK7Kp/39gL3DSfkV/zRnhxqWefSgIFjOIY5/7cO20gWCnommu6BmsH
-         wU8A==
-X-Gm-Message-State: APjAAAW9RYAMK39mXSnU6qSzW7K/JFvDZXeGmhKuNPTcyv0e4vQSXyhs
-        foiRRS6YDlu8DxWBimme57Y=
-X-Google-Smtp-Source: APXvYqzvT1LrfNnS7N4q3ahnxX+gHCw/UxmIyNQJLfT0ExKpyxBZuE1thu3aMF/vsubhv2RVfvgFBg==
-X-Received: by 2002:ac8:31dc:: with SMTP id i28mr31271085qte.226.1565623314356;
-        Mon, 12 Aug 2019 08:21:54 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c0a8:11c9::1085? ([2620:10d:c091:480::d0c4])
-        by smtp.gmail.com with ESMTPSA id r4sm68259567qta.93.2019.08.12.08.21.52
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 08:21:53 -0700 (PDT)
-From:   Jes Sorensen <jes.sorensen@gmail.com>
-X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
-Subject: Re: [RFC PATCH v7] rtl8xxxu: Improve TX performance of RTL8723BU on
- rtl8xxxu driver
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Chris Chiu <chiu@endlessm.com>, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com,
-        Daniel Drake <drake@endlessm.com>
-References: <20190805131452.13257-1-chiu@endlessm.com>
- <d0047834-957d-0cf3-5792-31faa5315ad1@gmail.com>
- <87wofibgk7.fsf@kamboji.qca.qualcomm.com>
-Message-ID: <a3ac212d-b976-fb16-227f-3246a317c4a2@gmail.com>
-Date:   Mon, 12 Aug 2019 11:21:51 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 12 Aug 2019 11:24:40 -0400
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x7CFOFVG015133;
+        Tue, 13 Aug 2019 00:24:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x7CFOFVG015133
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1565623456;
+        bh=/ZLs0+GV+nR6TLnoM6cTJUiEDAyiLErBYzFGbX3v72M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OJzpQWw2Fwn/3fQ8DT/dj2bh1YFydaCAq5v8YJE8AxCIe3WPS2T5YtkW77TWjg9Tz
+         NoPYiwNyTZ1D4o7k8CKS1haSTcSef3BiTAMomiGs87V+5ICLpWQfMf9oiUGg/NdJVa
+         XR/HQovpgZ5u/XigRZl1C435CMvqiCsSUiMIch+Wvjr3r+UX2mL8LAttxrl0kqyAOH
+         GanJ99UvCbY4bHWZ/zsww5K0gRvD2Ezm7Tx8AWjUNbXiMzoe7Saef+lIqw8OrswMSy
+         VLezLRZfFoAtfQ8/5mqinYzP2XYhoQ0knpYwMA0q5isCpqxmy4PKpUdZaJ2QyPTriE
+         7FK8Zf13mX2xQ==
+X-Nifty-SrcIP: [209.85.221.182]
+Received: by mail-vk1-f182.google.com with SMTP id r13so292799vke.12;
+        Mon, 12 Aug 2019 08:24:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAVMe2zbbQ5LGhS2eWq39HREyZFrilPa36wIzmT03ve3zkXzkpQM
+        WLG01bFqrJDQRsZ72sSK5Y+it/954scagU/RzWM=
+X-Google-Smtp-Source: APXvYqyf2GMOFUsRxNDu7JdMijybibC42MDZO/L+m1JKVxZCXdD83lEdp4K2xTiKxVjtWaNp/waolXng2NwGRKVWNbI=
+X-Received: by 2002:a1f:93cd:: with SMTP id v196mr5084585vkd.84.1565623454953;
+ Mon, 12 Aug 2019 08:24:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87wofibgk7.fsf@kamboji.qca.qualcomm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190809002104.18599-1-stancheff@cray.com> <20190809002104.18599-2-stancheff@cray.com>
+In-Reply-To: <20190809002104.18599-2-stancheff@cray.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 13 Aug 2019 00:23:38 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAScm9P+QMZiqqSQnOoPsN54OTcTGpaDgxTbjJ_knoeGhA@mail.gmail.com>
+Message-ID: <CAK7LNAScm9P+QMZiqqSQnOoPsN54OTcTGpaDgxTbjJ_knoeGhA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] kbuild: recursive build of external kernel modules
+To:     Shaun Tancheff <shaun@tancheff.com>
+Cc:     Shaun Tancheff <stancheff@cray.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Renninger <trenn@suse.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM mailing list <linux-pm@vger.kernel.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/12/19 10:32 AM, Kalle Valo wrote:
-> Jes Sorensen <jes.sorensen@gmail.com> writes:
->> Looks good to me! Nice work! I am actually very curious if this will
->> improve performance 8192eu as well.
->>
->> Ideally I'd like to figure out how to make host controlled rates work,
->> but in all my experiments with that, I never really got it to work well.
->>
->> Signed-off-by: Jes Sorensen <Jes.Sorensen@gmail.com>
-> 
-> This is marked as RFC so I'm not sure what's the plan. Should I apply
-> this?
+On Fri, Aug 9, 2019 at 9:21 AM Shaun Tancheff <shaun@tancheff.com> wrote:
+>
+> When building a tree of external modules stage 2 fails
+> silently as the root modules.order is empty.
+>
+> Modify the modules.order location to be fixed to the
+> root when KBUILD_EXTMOD is specified and write all
+> module paths to the single modules.order file.
 
-I think it's at a point where it's worth applying - I kinda wish I had
-had time to test it, but I won't be near my stash of USB dongles for a
-little while.
+Could you try v5.3-rc4 please?
 
-Cheers,
-Jes
 
+
+
+> Signed-off-by: Shaun Tancheff <stancheff@cray.com>
+> ---
+>  Makefile               | 1 +
+>  scripts/Makefile.build | 8 +++++++-
+>  2 files changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/Makefile b/Makefile
+> index 23cdf1f41364..a9964492f47e 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1622,6 +1622,7 @@ $(module-dirs): prepare $(objtree)/Module.symvers
+>
+>  modules: $(module-dirs)
+>         @$(kecho) '  Building modules, stage 2.';
+> +       $(Q)$rm -f $(KBUILD_EXTMOD)/modules.order
+>         $(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
+>
+>  PHONY += modules_install
+> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> index 0d434d0afc0b..f9908b3d59e0 100644
+> --- a/scripts/Makefile.build
+> +++ b/scripts/Makefile.build
+> @@ -64,7 +64,13 @@ builtin-target := $(obj)/built-in.a
+>  endif
+>
+>  ifeq ($(CONFIG_MODULES)$(need-modorder),y1)
+> +ifneq ($(KBUILD_EXTMOD),)
+> +modorder-target := $(KBUILD_EXTMOD)/modules.order
+> +modorder-add := >>
+> +else
+>  modorder-target := $(obj)/modules.order
+> +modorder-add := >
+> +endif
+>  endif
+>
+>  mod-targets := $(patsubst %.o, %.mod, $(obj-m))
+> @@ -423,7 +429,7 @@ endif # builtin-target
+>  $(modorder-target): $(subdir-ym) FORCE
+>         $(Q){ $(foreach m, $(modorder), \
+>         $(if $(filter %/modules.order, $m), cat $m, echo $m);) :; } \
+> -       | $(AWK) '!x[$$0]++' - > $@
+> +       | $(AWK) '!x[$$0]++' - $(modorder-add) $@
+>
+>  #
+>  # Rule to compile a set of .o files into one .a file (with symbol table)
+> --
+> 2.20.1
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
