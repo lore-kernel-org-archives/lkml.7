@@ -2,151 +2,131 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCB9C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 892C1C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB79920644
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59C5720644
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:19:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c9m2bRW2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfHLRSu (ORCPT
+        id S1727123AbfHLRTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 13:18:50 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45667 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbfHLRSt (ORCPT
+        Mon, 12 Aug 2019 13:19:30 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43802 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbfHLRT3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 13:18:49 -0400
-Received: by mail-wr1-f66.google.com with SMTP id q12so14990416wrj.12
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 10:18:48 -0700 (PDT)
+        Mon, 12 Aug 2019 13:19:29 -0400
+Received: by mail-pl1-f196.google.com with SMTP id 4so41128246pld.10
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 10:19:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jQdWi79UOET3NcbXkAwjygJB1Ir2fsPCLcASHFDPOY4=;
+        b=c9m2bRW2HxuvJEovBcFUuEjhkoaeh3/hBEi96hf8jC4GhpACXRSOH0yNlpDL3OIUbE
+         vwQd9eJVNG/ktDg4zdgWQ3zTq12opNssQy/H8Pae3V5y22ELcxrwUYkuTDnzLK4GnXc/
+         PDJioUs8RXnlaFZFm6PkEx6IwDnD8BzaoJ0CI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pBmApiQS/+gQxohoTnkThlw2oRZGT6Jx6zrcPnHDklQ=;
-        b=uI289dW/RX4ZrB2VLK7KfjPprvgcH5OZ/eTb+c0PYlerhqDcE08CdhMqX60VHgqbzp
-         XMK0pvMQyacwKl58oOC1o04j2wk1I9VC+Mht5bOvidBJmpFveH2vf6PuBDssGwRlLyCc
-         cP1dMqL/GnlAZcQliv0PXcUXN/x1avJfvv6cZbuYyz+DmJttzn+xXj3HzsBtsVe5uP8Z
-         jRbJKnCfjhZMtDgnJmRa8vgqAT8GmjxAQGp70kPq+qDns6SYpHnll/HAtFFZ5j3nu1es
-         lGYuWgCYJrEB2jvuSF5x5HlavC7gnV6ldogXJYoyGDwKVUlJJ1BY6M531tKRf8x2l64b
-         yhyA==
-X-Gm-Message-State: APjAAAU61nV0moHStxr6yY7SlKPZ9LECXEyQGy2SU5BrLOaIGWCXaCF0
-        +Bil1/iQFXHTOJ3WFhiUcPy/4A==
-X-Google-Smtp-Source: APXvYqzwJk21tvZbLfhDZjYO1RRyP+UbRZ7w5iO/fbLosDG72tal138bwmCjorD9+/+wHLlasZTdSA==
-X-Received: by 2002:adf:e452:: with SMTP id t18mr5297027wrm.0.1565630327577;
-        Mon, 12 Aug 2019 10:18:47 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id i93sm11419929wri.57.2019.08.12.10.18.46
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 10:18:46 -0700 (PDT)
-Subject: Re: [PATCH] extcon-intel-cht-wc: Don't reset USB data connection at
- probe
-To:     Yauhen Kharuzhy <jekhor@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <20190808220129.2737-1-jekhor@gmail.com>
- <fbe20a5f-0f64-cadf-2c1e-88a468d54a07@redhat.com>
- <20190809151116.GD30248@jeknote.loshitsa1.net>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <492098ce-ec4c-a860-4625-27c410d7deb3@redhat.com>
-Date:   Mon, 12 Aug 2019 19:18:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jQdWi79UOET3NcbXkAwjygJB1Ir2fsPCLcASHFDPOY4=;
+        b=qUBZ3qSbGY4k3Rl00BedJXuO0AQGOUbk6erRz9C7WFwvLveGgjtZ/iOfEJgC3vgYhL
+         STBQyinMwdJb3EdrsUABN9io6/llnBjnPetZA4vlcgJLSUW7h+xN/41jV+x8Yb4FBYux
+         CxqHBrAHLwfwphCcrzz8NldvRCFSf0oDBZqciq6E198qHOpiMexa1LMbo6agIh/f80kQ
+         PRiRELX5iqTCJfUJouFM/qblzZtpmhItLqtcBAlBf87PA2CvD4yThKMMpUsW9s6MySCB
+         bmiNOyA8KhodCsUIVzI+1qZDx2OnRWenfM9ycyJ9gEeoWMDHcI89igQUUL82g4W2wuGR
+         veOA==
+X-Gm-Message-State: APjAAAX9uqK/gDH6TkvfmU8bq2xZj7XUTgecs1nXk6PKIOY1FmCQXsmI
+        IA3SHRZenpazZtPsYGxlWwBG/g==
+X-Google-Smtp-Source: APXvYqy10JjsFB3axHFNMgROpGcmwPwO4mBb8G1S0iRV3C7gVjicasx85fhT3Py/5umslxym0I5lrg==
+X-Received: by 2002:a17:902:b698:: with SMTP id c24mr34036132pls.28.1565630369208;
+        Mon, 12 Aug 2019 10:19:29 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e9sm161724pja.17.2019.08.12.10.19.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 12 Aug 2019 10:19:28 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 10:19:27 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Oliver Hartkopp <socketcan@hartkopp.net>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        linux-sparse@vger.kernel.org, Mao Wenan <maowenan@huawei.com>,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH net-next] net: can: Fix compiling warning
+Message-ID: <201908121001.0AC0A90@keescook>
+References: <20190802033643.84243-1-maowenan@huawei.com>
+ <0050efdb-af9f-49b9-8d83-f574b3d46a2e@hartkopp.net>
+ <20190806135231.GJ1974@kadam>
+ <6e1c5aa0-8ed3-eec3-a34d-867ea8f54e9d@hartkopp.net>
+ <20190807105042.GK1974@kadam>
 MIME-Version: 1.0
-In-Reply-To: <20190809151116.GD30248@jeknote.loshitsa1.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807105042.GK1974@kadam>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 09-08-19 17:11, Yauhen Kharuzhy wrote:
-> On Fri, Aug 09, 2019 at 01:06:01PM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 8/9/19 12:01 AM, Yauhen Kharuzhy wrote:
->>> Intel Cherry Trail Whiskey Cove extcon driver connect USB data lines to
->>> PMIC at driver probing for further charger detection. This causes reset of
->>> USB data sessions and removing all devices from bus. If system was
->>> booted from Live CD or USB dongle, this makes system unusable.
->>>
->>> Check if USB ID pin is floating and re-route data lines in this case
->>> only, don't touch otherwise.
->>>
->>> Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
->>> ---
->>>    drivers/extcon/extcon-intel-cht-wc.c | 16 ++++++++++++++--
->>>    1 file changed, 14 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/extcon/extcon-intel-cht-wc.c b/drivers/extcon/extcon-intel-cht-wc.c
->>> index 9d32150e68db..3ae573e93e6e 100644
->>> --- a/drivers/extcon/extcon-intel-cht-wc.c
->>> +++ b/drivers/extcon/extcon-intel-cht-wc.c
->>> @@ -338,6 +338,7 @@ static int cht_wc_extcon_probe(struct platform_device *pdev)
->>>    	struct intel_soc_pmic *pmic = dev_get_drvdata(pdev->dev.parent);
->>>    	struct cht_wc_extcon_data *ext;
->>>    	unsigned long mask = ~(CHT_WC_PWRSRC_VBUS | CHT_WC_PWRSRC_USBID_MASK);
->>> +	int pwrsrc_sts, id;
->>>    	int irq, ret;
->>>    	irq = platform_get_irq(pdev, 0);
->>> @@ -387,8 +388,19 @@ static int cht_wc_extcon_probe(struct platform_device *pdev)
->>>    		goto disable_sw_control;
->>>    	}
->>> -	/* Route D+ and D- to PMIC for initial charger detection */
->>> -	cht_wc_extcon_set_phymux(ext, MUX_SEL_PMIC);
->>> +	ret = regmap_read(ext->regmap, CHT_WC_PWRSRC_STS, &pwrsrc_sts);
->>> +	if (ret) {
->>> +		dev_err(ext->dev, "Error reading pwrsrc status: %d\n", ret);
->>> +		goto disable_sw_control;
->>> +	}
->>> +
->>> +	id = cht_wc_extcon_get_id(ext, pwrsrc_sts);
->>> +
->>> +	/* If no USB host or device connected, route D+ and D- to PMIC for
->>> +	 * initial charger detection
->>> +	 */
->>> +	if (id == INTEL_USB_ID_FLOAT)
->>> +		cht_wc_extcon_set_phymux(ext, MUX_SEL_PMIC);
->>
->> The check here should be != INTEL_USB_ID_GND, when we are connected as
->> device we are charging from the host we are connected to and the port
->> we are connected to may be a CDP (charging downstream port) instead of
->> a SDP (standard downstream port) allowing us to charge at 1.5A instead
->> of 0.5A, also != INTEL_USB_ID_GND matches the condition used in
->> cht_wc_extcon_pwrsrc_event to determine if we should continue with
->> charger detection there.
+On Wed, Aug 07, 2019 at 01:50:42PM +0300, Dan Carpenter wrote:
+> On Tue, Aug 06, 2019 at 06:41:44PM +0200, Oliver Hartkopp wrote:
+> > I compiled the code (the original version), but I do not get that "Should it
+> > be static?" warning:
+> > 
+> > user@box:~/net-next$ make C=1
+> >   CALL    scripts/checksyscalls.sh
+> >   CALL    scripts/atomic/check-atomics.sh
+> >   DESCEND  objtool
+> >   CHK     include/generated/compile.h
+> >   CHECK   net/can/af_can.c
+> > ./include/linux/sched.h:609:43: error: bad integer constant expression
+> > ./include/linux/sched.h:609:73: error: invalid named zero-width bitfield
+> > `value'
+> > ./include/linux/sched.h:610:43: error: bad integer constant expression
+> > ./include/linux/sched.h:610:67: error: invalid named zero-width bitfield
+> > `bucket_id'
+> >   CC [M]  net/can/af_can.o
 > 
-> Actually it should be checked as ((id != INTEL_USB_ID_GND) && (id !=
-> INTEL_USB_RID_A)), to not interrupt connection if ACA used and our host
-> is OTG A device (for example, if LiveCD boots from USB flash inserted
-> into an ACA USB hub).
+> The sched.h errors suppress Sparse warnings so it's broken/useless now.
+> The code looks like this:
+> 
+> include/linux/sched.h
+>    613  struct uclamp_se {
+>    614          unsigned int value              : bits_per(SCHED_CAPACITY_SCALE);
+>    615          unsigned int bucket_id          : bits_per(UCLAMP_BUCKETS);
+>    616          unsigned int active             : 1;
+>    617          unsigned int user_defined       : 1;
+>    618  };
+> 
+> bits_per() is zero and Sparse doesn't like zero sized bitfields.
 
-Right, except that cht_wc_extcon_get_id never returns INTEL_USB_RID_A,
-so checking for that would be superfluous and also would be inconsistent
-with what cht_wc_extcon_pwrsrc_event is doing, so for now please just test
-for != INTEL_USB_ID_GND, if cht_wc_extcon_get_id ever starts supporting
-RID_A then we should fix both cht_wc_extcon_pwrsrc_event and you new check
-at that time.
+I just noticed these sparse warnings too -- what's happening here? Are
+they _supposed_ to be 0-width fields? It doesn't look like it to me:
 
-Hmm, I now see that cht_wc_extcon_get_id currently only reports one of:
-INTEL_USB_ID_GND or INTEL_USB_ID_FLOAT so == INTEL_USB_ID_FLOAT is
-equivalent to != INTEL_USB_ID_GND still please check for 1= INTEL_USB_ID_GND
-as that is what cht_wc_extcon_pwrsrc_event is doing.
+CONFIG_UCLAMP_BUCKETS_COUNT=5
+...
+#define UCLAMP_BUCKETS CONFIG_UCLAMP_BUCKETS_COUNT
+...
+        unsigned int bucket_id          : bits_per(UCLAMP_BUCKETS);
 
->> Like your other patch I will try to give this one a  test-run tomorrow.
+I would expect this to be 3 bits wide. ... Looks like gcc agrees:
 
-I've given this patch a test-run today and I can confirm that BC1.2 charger
-detection still works fine on my device using this driver.
+struct uclamp_se {
+    unsigned int               value:11;             /*     0: 0  4 */
+    unsigned int               bucket_id:3;          /*     0:11  4 */
+...
 
-Regards,
+So this is a sparse issue?
 
-Hans
+-- 
+Kees Cook
