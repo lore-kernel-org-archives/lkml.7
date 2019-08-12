@@ -2,90 +2,125 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF635C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 00:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD84CC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 00:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A62DA20874
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 00:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E2FE20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 00:51:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IKqPzlkB"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="OQek2Bg6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="l4EgbgtF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfHLAji (ORCPT
+        id S1726734AbfHLAv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 11 Aug 2019 20:39:38 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:43524 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfHLAjh (ORCPT
+        Sun, 11 Aug 2019 20:51:56 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:58985 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726144AbfHLAv4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 11 Aug 2019 20:39:37 -0400
-Received: by mail-ua1-f65.google.com with SMTP id o2so39694913uae.10
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Aug 2019 17:39:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6K0DvhL9RJkMUKWGy9bBRNsMSDRRIMczdHWxj2ZlOLY=;
-        b=IKqPzlkBpTxY+A47jneyPgFuefY8XtvBtZMXnqH7VkTU2q0nJcG3iIRUuKxPVzsVSJ
-         qaquyNCY/6XJ7D82HonO4EBmwolNEFZ0EKXfqOGLmnfrGtGIpfHMNqIlMKefsCRAFSqZ
-         JoExbp3p4N4WfyaHmR6RVo8ExwftKr4w/E5HNtfOeBbT3xa+aoWI8ruwrdtCuWimPd7I
-         V3y+2iKeKtWpb4vFKx67OmWGvsA4thlgxbOSxsJnlK/b/PEdRHBI7Ylo+rUgOPHJMOjh
-         BmhzmtoZeu51qfUhDBUGVzA8g+COBbey3b1/Z7KDSww6AYJInUYcnDhyf5zz4TAnOhqH
-         Un5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6K0DvhL9RJkMUKWGy9bBRNsMSDRRIMczdHWxj2ZlOLY=;
-        b=HtBCKmbjdLWNkW2jLt8Osea39p+fu4nUe481PY3jBByms6SB5G4jMgoe8eyOBt9EHB
-         M8oE0HPgieCy2QPZLZZD5BMW333UG6JVD9VJ3zWNplTwEq0VEeuCo05Syu/EMsI/sO6T
-         8yK8SbvbfY8npIq3tkUTlTyKTnuRLtqxj9yAIcUwxtRTn8Thnb1IVOo2ykQRCZJPqi3b
-         uCqAiUK6+KX2hcm5yGCL/e4gdyyJ2XKqkowW0suVfepAfEt3FeacO1HZRKIfV/15AFu3
-         dE1K2IsVJ8eq2J1dWE85xbQiUqXWOtFQ9AEklIWvB9hbvHYwjXElVsOM7T75yTZX/qdI
-         K43Q==
-X-Gm-Message-State: APjAAAW2FoTMWNegay2LctcNGBFQ6buGUTldqFAsiT372QzZbgEBH0Ss
-        Gf204vCYr0IXZo/s+uApPrepviKLWacUOa3cwVQEsg==
-X-Google-Smtp-Source: APXvYqxvKmRyM1n6aAxPB7BHyG0ztTWG0OjK+dcEQcs9gVLd7ek1DWS6G6ppS8xScBCLvhhXvUQFgbNQHh9Vv1eg9D0=
-X-Received: by 2002:ab0:7618:: with SMTP id o24mr18290583uap.39.1565570376227;
- Sun, 11 Aug 2019 17:39:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190811184613.20463-1-urezki@gmail.com> <20190811184613.20463-3-urezki@gmail.com>
-In-Reply-To: <20190811184613.20463-3-urezki@gmail.com>
-From:   Michel Lespinasse <walken@google.com>
-Date:   Sun, 11 Aug 2019 17:39:23 -0700
-Message-ID: <CANN689Hh-Pr-3r9HD7w=FcNGfj_E7-9HVsHu3J9gZts_DYug8A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mm/vmalloc: use generated callback to populate subtree_max_size
-To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Roman Gushchin <guro@fb.com>, Hillf Danton <hdanton@sina.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 11 Aug 2019 20:51:56 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id A1B5321E;
+        Sun, 11 Aug 2019 20:51:54 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Sun, 11 Aug 2019 20:51:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=/vRZS0DH6BibYTI+jPSXeATx8DCWgvz
+        KB2bf68zgCYQ=; b=OQek2Bg6nPx+MsQpoORrSMQGYewK50sRAfUejX06ZLWlOBG
+        gn7XgbylvKurPPS5ys0R5IVfpXhTFMDXdWyX0mKClfr7T75O5bD3f7IJCU8Gh1s9
+        YLSS1rsgbUsk6QfhyFv/srD+1BbDXgAD/89Y6r5vMCbhP9aHbxgE3KuY82EDN/lr
+        ZvhX5WsHp78jWXRxsr1DhvuTJ+Kwk7Fe9op7n1PpfNiGdGVukF2WR1N6g33Be3Vc
+        bM/HCQrRjmhxp7v/owwpJezKnNwEDyY3ZcYKrLEIXy9CSCRiHnaPJmHKzW+D760P
+        DtNmt1qWG4i9DP9UQQSYbunB5/D26fewO9BxAow==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=/vRZS0
+        DH6BibYTI+jPSXeATx8DCWgvzKB2bf68zgCYQ=; b=l4EgbgtFwY2Rpc1UyNz2W+
+        SVRmVfLyLc4sGVwItuaAv9LJ/jyolnlF5S9783mgLebzuLBhoA29b1mfBtjfXlts
+        nt6Qa/vDIhZUFwfSEXXitbVgP54MPr45swxOvFlpy1+X3/48Sn0flYvsdCrocClv
+        MS3KOs2ZS3tyoY8zAwtSmlqSnwXglqStBVKdLy+19+/SJEqTHkK1H2fie7Hp1zmr
+        s/KUU61alWy7z+Exs29OZunIrAoHKqq2YxK/idCRFkgRJ9dDk7/GeUA6L/jk0Y2V
+        rtlWVclnKR7Ik144F39sFM0Y3e3Uk4/gh97MJmSnTUM/2RfPfMPFeW61hPmPH+9A
+        ==
+X-ME-Sender: <xms:KbhQXUG9-62aDcJWln-0fRcKkW7dmXKPACWIugq9hkhX3w-TU-muhQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddruddvfedggeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuffhomh
+    grihhnpehgihhthhhusgdrtghomhenucfrrghrrghmpehmrghilhhfrhhomheprghnughr
+    vgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:KbhQXU9W_omMMMEsdmyjaJCTtlhrXfmQ3KUB8ekL7_ANC9twYQ9hXA>
+    <xmx:KbhQXby0EuRf6TnVmdBphx1eiSVUUC8rYJuvXidsen8cy4t_cOTOeg>
+    <xmx:KbhQXQOaNCOxABK2Jby3AbZlBGd4snluNAwo42JMlCx9npfu7ftg5g>
+    <xmx:KrhQXTalqmfKIW_ZqyRhUrTSCKbpaRqhFzQ2d9LCJDTIvYS19-x12w>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 0A5CCE00A2; Sun, 11 Aug 2019 20:51:52 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-809-g8e5c451-fmstable-20190809v1
+Mime-Version: 1.0
+Message-Id: <e5aa4940-41d8-4c35-9783-09548e406885@www.fastmail.com>
+In-Reply-To: <CACRpkdbDgOQXfxgM4dEyzBRhtske3=V+858B7J8jGExnJE5fJQ@mail.gmail.com>
+References: <20190807003037.48457-1-natechancellor@gmail.com>
+ <CACRpkdbDgOQXfxgM4dEyzBRhtske3=V+858B7J8jGExnJE5fJQ@mail.gmail.com>
+Date:   Mon, 12 Aug 2019 10:21:55 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Linus Walleij" <linus.walleij@linaro.org>,
+        "Nathan Chancellor" <natechancellor@gmail.com>
+Cc:     "Joel Stanley" <joel@jms.id.au>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        "OpenBMC Maillist" <openbmc@lists.ozlabs.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: =?UTF-8?Q?Re:_[PATCH]_pinctrl:_aspeed:_g6:_Remove_const_specifier_from_a?=
+ =?UTF-8?Q?speed=5Fg6=5Fsig=5Fexpr=5Fset's_ctx_parameter?=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 11:46 AM Uladzislau Rezki (Sony)
-<urezki@gmail.com> wrote:
-> RB_DECLARE_CALLBACKS_MAX defines its own callback to update the
-> augmented subtree information after a node is modified. It makes
-> sense to use it instead of our own propagate implementation.
->
-> Apart of that, in case of using generated callback we can eliminate
-> compute_subtree_max_size() function and get rid of duplication.
->
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 
-Reviewed-by: Michel Lespinasse <walken@google.com>
 
-Love it. Thanks a lot for the cleanup!
+On Sat, 10 Aug 2019, at 17:43, Linus Walleij wrote:
+> On Wed, Aug 7, 2019 at 2:32 AM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> 
+> > clang errors:
+> >
+> > drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c:2325:9: error: incompatible
+> > pointer types initializing 'int (*)(struct aspeed_pinmux_data *, const
+> > struct aspeed_sig_expr *, bool)' with an expression of type 'int (const
+> > struct aspeed_pinmux_data *, const struct aspeed_sig_expr *, bool)'
+> > [-Werror,-Wincompatible-pointer-types]
+> >         .set = aspeed_g6_sig_expr_set,
+> >                ^~~~~~~~~~~~~~~~~~~~~~
+> > 1 error generated.
+> >
+> > Commit 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps")
+> > changed the set function pointer declaration and the g6 one wasn't
+> > updated (I assume because it wasn't merged yet).
+> >
+> > Fixes: 2eda1cdec49f ("pinctrl: aspeed: Add AST2600 pinmux support")
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/632
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> 
+> Patch applied with Andrew's ACK.
+
+FYI this fixes pinctrl/for-next which is likely where Nathan ran into the issue,
+however to fix pinctrl/devel we'll need a back-merge of pinctrl/fixes, or to
+apply 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps") to
+pinctrl/devel also.
+
+Fixing that bug was unfortunate timing wrt the 2600 driver.
+
+Andrew
