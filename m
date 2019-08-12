@@ -2,128 +2,136 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B09C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 829EBC32756
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36EC92070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C8B12070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:05:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K2BFc4di"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="aPztfcN3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbfHLJFJ (ORCPT
+        id S1727335AbfHLJFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 05:05:09 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52978 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727205AbfHLJFI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 05:05:08 -0400
-Received: by mail-wm1-f68.google.com with SMTP id s3so11441584wms.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 02:05:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AWJiL+7zg6Ima534bZuseIPwdWeNk9fdB/sixhxGumQ=;
-        b=K2BFc4diF9MOIydBpGiljdW9VVNeZjGfd7Trdr70W1zmTCMm++cfT3I4Gs1DJf8Hq3
-         62ci06FebJH+iG7T+nbdizfzyr5OfCrOPDvPxFEaumY09OdROikoGmdWal5qANtysrHj
-         lOZxURyUC3Tgenf1MwcdW828jqGejbQAMrhSgRd8A06JVpaLH0ym7VZeHROEIFxIVyvI
-         2YeU/Y1crAYUffJeliGjfHNo8pm+WQshMEogGKM5u9gkYrISTdt9S10iA3JQ1pS7kUVf
-         rSn8UH7WzYItHdPpj4DJV7GXZDBZL6W8wg5JBlcx1m8ZdsJkRX49MofZm9FGVqSmGY1e
-         /ktA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AWJiL+7zg6Ima534bZuseIPwdWeNk9fdB/sixhxGumQ=;
-        b=WN7y4fNKd8/SD44HjFJXkrHkP3TSH2s2euCt7QQw/KA56CGuT75vXVZHOBtQ72XsAn
-         Qx7v9mLWjjBNWIvWbv7EpHNOU8w0i2iM4K6pbtfBOcUwoFG6AXBvgQfLkBQzHVZOWhR6
-         n5c6WbUEVxDfuugfrSvac8bgZkC+E3wwTcj08iQXjtuxEXAj4cPMSIRIMj6kg/TZPOGV
-         0sCDjcLAYPAO+a1eosx6xnu8LJB/m5IY4sDJ9gqPs9i+NYp2a/gKUXRd8rPZn9jyEFau
-         i2qq8NH3eMRYg0E3geYoo99aRZYRtCkjmmGwpdJUzgNVISstE7uWpsLSayJkb5kw2ed7
-         2dXg==
-X-Gm-Message-State: APjAAAVf2sc6OnP1iEwzsWMG9uRuTeXFO2PtEzDxoU7/zAF3rH1Bj2fH
-        7gzv+3N6p81PO47/o+l3wFKUrHo2lXw=
-X-Google-Smtp-Source: APXvYqx3TsRhS9G0jmEqnE5mj/Efoz83lMVWBRL4X5b8foKuB4AOhkC5BGzEj3PchftN1c/+c42EqQ==
-X-Received: by 2002:a1c:7914:: with SMTP id l20mr2426303wme.130.1565600706659;
-        Mon, 12 Aug 2019 02:05:06 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id d69sm7205314wmd.4.2019.08.12.02.05.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 02:05:06 -0700 (PDT)
-Subject: Re: [PATCH v3 4/4] ASoC: codecs: add wsa881x amplifier support
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@01.org, vkoul@kernel.org, broonie@kernel.org,
-        bgoswami@codeaurora.org, plai@codeaurora.org,
-        pierre-louis.bossart@linux.intel.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, lgirdwood@gmail.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20190809133407.25918-5-srinivas.kandagatla@linaro.org>
- <201908121031.HBxXaLjU%lkp@intel.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <a89e6a52-35da-15bf-6561-c58cb3453178@linaro.org>
-Date:   Mon, 12 Aug 2019 10:05:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <201908121031.HBxXaLjU%lkp@intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+        Mon, 12 Aug 2019 05:05:43 -0400
+Received: from mail-eopbgr10084.outbound.protection.outlook.com ([40.107.1.84]:53509
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727181AbfHLJFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 05:05:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cFmpaiDRtPGjKutyllLUgxvMBslQavPLQczVUqBSS1hVq+CmfZSVDrHms6IeJ2/9g2RsGsl0Nt8UGm6I1zg2hVHOysRQPvNB+D9LQDvwEl58q9XaLf31+1c+dnMGaq3QWROyuqB03yQ5Jp8R2p4ybCzI9o8vzjXMlInevU9zVMxMGHc9UO4YYX4tnGzs2vFgUG8aILamfeSm8XDGOkWbo6G14xHHqGJTihKmuPJg2DlrdVXwgRWWBQ7J5mU+n+7cxGQ2wHXf8QJbCYDK7ZOLqfnDed1qfn+JHdmWp0ZboezAukrGWgHY5MTRSNfR7QG0dBi/SeXYzQzuzDNicf6WVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xaKv4UiFyOgemcQmmsOdXQLdo1Si4yTTeYfHSZf9XgQ=;
+ b=E9WhdYqZ2Y7DA8FJHttHEercVAQaLV+FfQGgbOvtkf+1xGhCC80LXgPMA4gIBe52usA/qH3kfZVnEvr20so7zW33szVULNz9GJ3LlHQs8TQToGZCLVE/0nsIoEujsJKpLCZsJwWn30cczExtNino9iQZxqFNzkO+9Vt5Omi6WcSHQ9HU5aXVRwIVZ04V0vIoTa9EEejdqLxihZYA/FyUcSNnEUZ7tYzl3cmGXRKBeugd06pNnC+nsK9QfTlnUpULrm/u3vF8HJOfMNCkY551uUV1eyPLiajczqQPAdCwV2GPmeKvuvOHZjxNBkJYVcj548l2OpLXZ1o15ivShuLW8g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xaKv4UiFyOgemcQmmsOdXQLdo1Si4yTTeYfHSZf9XgQ=;
+ b=aPztfcN3uuIdyemXy4Vm7g5DXbh2aWQoEHAHW/20IRigfhCQdv34zXn9yQCpLBOa+QDpo7xhoMsX+1UZH5seqRLYGD6UyO2PzmrKqMO+Kyg8wsZcKKuoLtFsLA6kiiJl+5n5GgptaioUB1jT1z90TxrddjvUnIDA1qcaPB45OqI=
+Received: from DBBPR05MB6283.eurprd05.prod.outlook.com (20.179.40.84) by
+ DBBPR05MB6554.eurprd05.prod.outlook.com (20.179.44.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.20; Mon, 12 Aug 2019 09:04:59 +0000
+Received: from DBBPR05MB6283.eurprd05.prod.outlook.com
+ ([fe80::c5c1:c1d:85e9:a16a]) by DBBPR05MB6283.eurprd05.prod.outlook.com
+ ([fe80::c5c1:c1d:85e9:a16a%6]) with mapi id 15.20.2157.022; Mon, 12 Aug 2019
+ 09:04:59 +0000
+From:   Tariq Toukan <tariqt@mellanox.com>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+CC:     Tariq Toukan <tariqt@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:MELLANOX ETHERNET DRIVER (mlx4_en)" 
+        <netdev@vger.kernel.org>,
+        "open list:MELLANOX MLX4 core VPI driver" 
+        <linux-rdma@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net/mlx4_en: fix a memory leak bug
+Thread-Topic: [PATCH] net/mlx4_en: fix a memory leak bug
+Thread-Index: AQHVUNg+K+c1E2gjG02bEtXNUDsXd6b3OFQA
+Date:   Mon, 12 Aug 2019 09:04:59 +0000
+Message-ID: <75e09920-4ae3-0a19-4c2a-112d16bb81a5@mellanox.com>
+References: <1565591765-6461-1-git-send-email-wenwen@cs.uga.edu>
+In-Reply-To: <1565591765-6461-1-git-send-email-wenwen@cs.uga.edu>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR0P264CA0174.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1c::18) To DBBPR05MB6283.eurprd05.prod.outlook.com
+ (2603:10a6:10:c1::20)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=tariqt@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.47.165.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1a5ed917-807d-4454-05cc-08d71f0426e1
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DBBPR05MB6554;
+x-ms-traffictypediagnostic: DBBPR05MB6554:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DBBPR05MB6554E94DDFDEB9B8981A0F44AED30@DBBPR05MB6554.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3631;
+x-forefront-prvs: 012792EC17
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(396003)(366004)(136003)(199004)(189003)(25786009)(2171002)(54906003)(11346002)(446003)(2906002)(476003)(2616005)(52116002)(8676002)(76176011)(53936002)(3846002)(36756003)(6246003)(31686004)(6116002)(186003)(102836004)(6512007)(81156014)(99286004)(4326008)(86362001)(53546011)(386003)(31696002)(6506007)(256004)(14444005)(81166006)(26005)(66476007)(66446008)(64756008)(66556008)(66946007)(5660300002)(6486002)(66066001)(14454004)(6916009)(8936002)(229853002)(71190400001)(71200400001)(7736002)(6436002)(305945005)(316002)(486006)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:DBBPR05MB6554;H:DBBPR05MB6283.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 1vvfTivX0uTIGkC7IFmnkz2JsJFtan30TcsWANDqBn8uf4ccdX0uRIgvaLwF9BmGcRwfD/P2qrkpJWqdFK8B3C6Gmim/bqS/HkmVHSZnMwXotvriusBnBV8oiP9lSETGXw6g1AI16r+YpxkA/Mp3AL6FxqBOqJISPiYLQW018bbhVcnvUp4yGiBoNvCL6FFQbFuWzuyQCvDEnXYoUwCkmPZZMd+Sa/qan441J5qdzQjzDIKaDCS+7kdrtr4ph10KXIP4/MkEZ/YQenW4rC0YW/nbt0VVFVqLowXBc7jDx/+AfE50370Hn+Pon4NMAu5QqQaXBYHjj6HqmkxrDVXnfz+TEQ50ktzYQhk8jIr2/l13lniYxDROO6VLGhJiT9hnSATojfkoOdqDxFKoQOjymwOTBSgMdG8ug/+wxQvrAYM=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2A6B1C4F980D244AB1DD60C0F10AF81E@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a5ed917-807d-4454-05cc-08d71f0426e1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 09:04:59.2144
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CBNUJPbCJSr1TBbko808d2mW2ELgjCQgyLDSnnOfq/0jrL6OuUk48PWTntDR87RECw8jPDnFqZo5c8D1onZ+EA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR05MB6554
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for reporting this,
-
-On 12/08/2019 03:46, kbuild test robot wrote:
-> Hi Srinivas,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on linus/master]
-> [cannot apply to v5.3-rc4 next-20190809]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Srinivas-Kandagatla/ASoC-codecs-Add-WSA881x-Smart-Speaker-amplifier-support/20190812-080612
-> config: m68k-allmodconfig (attached as .config)
-> compiler: m68k-linux-gcc (GCC) 7.4.0
-> reproduce:
->          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->          chmod +x ~/bin/make.cross
->          # save the attached .config to linux build tree
->          GCC_VERSION=7.4.0 make.cross ARCH=m68k
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->>> ERROR: "sdw_unregister_driver" [sound/soc/codecs/snd-soc-wsa881x.ko] undefined!
->>> ERROR: "sdw_write" [sound/soc/codecs/snd-soc-wsa881x.ko] undefined!
->>> ERROR: "__sdw_register_driver" [sound/soc/codecs/snd-soc-wsa881x.ko] undefined!
->>> ERROR: "sdw_write" [drivers/base/regmap/regmap-sdw.ko] undefined!
->>> ERROR: "sdw_read" [drivers/base/regmap/regmap-sdw.ko] undefined!
-> 
-
-
-There are changes in SoundWire Kconfigs 
-(https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/soundwire.git/commit/?h=fixes&id=8676b3ca4673517650fd509d7fa586aff87b3c28) 
-which are not available in linux/master yet so this error!
-
-Once this patch lands then below errors should disappear.
-
-
-thanks,
-srini
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> 
+SGkgV2Vud2VuLA0KDQpUaGFua3MgZm9yIHlvdXIgcGF0Y2guDQoNCk9uIDgvMTIvMjAxOSA5OjM2
+IEFNLCBXZW53ZW4gV2FuZyB3cm90ZToNCj4gSW4gbWx4NF9lbl9jb25maWdfcnNzX3N0ZWVyKCks
+ICdyc3NfbWFwLT5pbmRpcl9xcCcgaXMgYWxsb2NhdGVkIHRocm91Z2gNCj4ga3phbGxvYygpLiBB
+ZnRlciB0aGF0LCBtbHg0X3FwX2FsbG9jKCkgaXMgaW52b2tlZCB0byBjb25maWd1cmUgUlNTDQo+
+IGluZGlyZWN0aW9uLiBIb3dldmVyLCBpZiBtbHg0X3FwX2FsbG9jKCkgZmFpbHMsIHRoZSBhbGxv
+Y2F0ZWQNCj4gJ3Jzc19tYXAtPmluZGlyX3FwJyBpcyBub3QgZGVhbGxvY2F0ZWQsIGxlYWRpbmcg
+dG8gYSBtZW1vcnkgbGVhayBidWcuDQo+IA0KPiBUbyBmaXggdGhlIGFib3ZlIGlzc3VlLCBhZGQg
+dGhlICdtbHg0X2VycicgbGFiZWwgdG8gZnJlZQ0KPiAncnNzX21hcC0+aW5kaXJfcXAnLg0KPiAN
+Cg0KQWRkIGEgRml4ZXMgbGluZS4NCg0KPiBTaWduZWQtb2ZmLWJ5OiBXZW53ZW4gV2FuZyA8d2Vu
+d2VuQGNzLnVnYS5lZHU+ID4gLS0tDQo+ICAgZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gv
+bWx4NC9lbl9yeC5jIHwgMyArKy0NCj4gICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCsp
+LCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQv
+bWVsbGFub3gvbWx4NC9lbl9yeC5jIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4
+NC9lbl9yeC5jDQo+IGluZGV4IDZjMDEzMTQuLjk0NzZkYmQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZl
+cnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDQvZW5fcnguYw0KPiArKysgYi9kcml2ZXJzL25l
+dC9ldGhlcm5ldC9tZWxsYW5veC9tbHg0L2VuX3J4LmMNCj4gQEAgLTExODcsNyArMTE4Nyw3IEBA
+IGludCBtbHg0X2VuX2NvbmZpZ19yc3Nfc3RlZXIoc3RydWN0IG1seDRfZW5fcHJpdiAqcHJpdikN
+Cj4gICAJZXJyID0gbWx4NF9xcF9hbGxvYyhtZGV2LT5kZXYsIHByaXYtPmJhc2VfcXBuLCByc3Nf
+bWFwLT5pbmRpcl9xcCk7DQo+ICAgCWlmIChlcnIpIHsNCj4gICAJCWVuX2Vycihwcml2LCAiRmFp
+bGVkIHRvIGFsbG9jYXRlIFJTUyBpbmRpcmVjdGlvbiBRUFxuIik7DQo+IC0JCWdvdG8gcnNzX2Vy
+cjsNCj4gKwkJZ290byBtbHg0X2VycjsNCj4gICAJfQ0KPiAgIA0KPiAgIAlyc3NfbWFwLT5pbmRp
+cl9xcC0+ZXZlbnQgPSBtbHg0X2VuX3NxcF9ldmVudDsNCj4gQEAgLTEyNDEsNiArMTI0MSw3IEBA
+IGludCBtbHg0X2VuX2NvbmZpZ19yc3Nfc3RlZXIoc3RydWN0IG1seDRfZW5fcHJpdiAqcHJpdikN
+Cj4gICAJCSAgICAgICBNTFg0X1FQX1NUQVRFX1JTVCwgTlVMTCwgMCwgMCwgcnNzX21hcC0+aW5k
+aXJfcXApOw0KPiAgIAltbHg0X3FwX3JlbW92ZShtZGV2LT5kZXYsIHJzc19tYXAtPmluZGlyX3Fw
+KTsNCj4gICAJbWx4NF9xcF9mcmVlKG1kZXYtPmRldiwgcnNzX21hcC0+aW5kaXJfcXApOw0KPiAr
+bWx4NF9lcnI6DQoNCkkgZG9uJ3QgbGlrZSB0aGUgbGFiZWwgbmFtZS4gSXQncyB0b28gZ2VuZXJh
+bCBhbmQgbm90IGluZm9ybWF0aXZlLg0KTWF5YmUgcXBfYWxsb2NfZXJyPw0KDQo+ICAgCWtmcmVl
+KHJzc19tYXAtPmluZGlyX3FwKTsNCj4gICAJcnNzX21hcC0+aW5kaXJfcXAgPSBOVUxMOw0KPiAg
+IHJzc19lcnI6DQo+IA0K
