@@ -2,147 +2,458 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 909F9C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCDCC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59843208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54BF92087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:29:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ZJd1+i9M"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ve/gw486"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfHLH3S (ORCPT
+        id S1727134AbfHLH3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 03:29:18 -0400
-Received: from mail-eopbgr820089.outbound.protection.outlook.com ([40.107.82.89]:62816
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727104AbfHLH3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 03:29:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y48GWkyDWbU8hsGUymZsZAkFH98ENCsXe7Uu1pJjJ0iJ7d3a57OrDPDbXTwqbwZIUhfhK6Trb7FZOnxcBUimpT1/8WHvIbelZcu4ZisMKLwZnwAOf/kPtZAhL9H/+QAhqyXBOOj7tM+HfO9yTbD6y4SeMIajf5GXfx9qCIEWcXkYLIvHuSfJbkVIB7RHNCeJcw2JBCkWIuVorkwghX574GA36MpSVjjf5vuLCFkUvyGPapg/e3D8r/oCQwPCwPpuop021hs/KOHP5YFDAAZTOh9tJ8fee7AVZRuN0cQtH/nz9vJ13yv/YQVtB412wBUEFpVGb2D7LgWE4sPB17SdgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XmYCJiOPkOguhih9u3keBjFyHQJiwN9tjcr4KkyQS/E=;
- b=c1I7khnjAmmJ0Ivl+rRp150Y65L9C0ehlbFi4EWRba84NFW9JlX72hvkB7Fs1zXi0xfHTw3R6e+tWxYSyDelR2ePytkAltmS9Nw+9AysNlHptK9fM/4JRPgpUkqJ9Hkxx0+YrDgryXX1c+/ayaoDNC5LCflzw59ELqtpDTEzDCtaMxSUn6qXbZJrrXuCX0vRZbC88IKYRsN0WT+RpHPajgOFZWrRYbmuGh6+6ddzULcuyat11Lj9tqZuYFvoVq2wftjAZflLX4gn+xMGTnNB8nKCKo6/nk0lcMe1coSTo2r4DOXXhE7RUXlItvtJYJXFDcg4fn7lZ4Pl6TopfLHy7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Mon, 12 Aug 2019 03:29:23 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36201 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727104AbfHLH3V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 03:29:21 -0400
+Received: by mail-ot1-f68.google.com with SMTP id k18so23356421otr.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 00:29:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XmYCJiOPkOguhih9u3keBjFyHQJiwN9tjcr4KkyQS/E=;
- b=ZJd1+i9Mz2pvMWsU/JLU7I8QtuKA3SI46fml0wSCFwpqI0EcA1q0Wp4sQyupMwHTYxkAkicfEOKkQgbORpxz4bOHY/i/IoJJjhMoEFP2jsvrJl0HX5r0rJRB5//EM0HIVfsvMWGwMGHqx/7meRpFWP8kSedu5LEXOiog495cBww=
-Received: from CY4PR02CA0017.namprd02.prod.outlook.com (2603:10b6:903:18::27)
- by MWHPR0201MB3626.namprd02.prod.outlook.com (2603:10b6:301:77::39) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.18; Mon, 12 Aug
- 2019 07:29:12 +0000
-Received: from SN1NAM02FT032.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::209) by CY4PR02CA0017.outlook.office365.com
- (2603:10b6:903:18::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.14 via Frontend
- Transport; Mon, 12 Aug 2019 07:29:12 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.100)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
-Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
- SN1NAM02FT032.mail.protection.outlook.com (10.152.72.126) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2157.15
- via Frontend Transport; Mon, 12 Aug 2019 07:29:11 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66]:47951 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
-        (envelope-from <appana.durga.rao@xilinx.com>)
-        id 1hx4lS-00072d-FV; Mon, 12 Aug 2019 00:29:10 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <appana.durga.rao@xilinx.com>)
-        id 1hx4lN-0000hp-CK; Mon, 12 Aug 2019 00:29:05 -0700
-Received: from xsj-pvapsmtp01 (smtp3.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x7C7SsGs021540;
-        Mon, 12 Aug 2019 00:28:54 -0700
-Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <appana.durga.rao@xilinx.com>)
-        id 1hx4lC-0000d9-5D; Mon, 12 Aug 2019 00:28:54 -0700
-From:   Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-To:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
-        michal.simek@xilinx.com
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Srinivas Neeli <srinivas.neeli@xilinx.com>
-Subject: [PATCH 5/5] can: xilinx_can: Fix the data phase btr1 calculation
-Date:   Mon, 12 Aug 2019 12:58:34 +0530
-Message-Id: <1565594914-18999-6-git-send-email-appana.durga.rao@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1565594914-18999-1-git-send-email-appana.durga.rao@xilinx.com>
-References: <1565594914-18999-1-git-send-email-appana.durga.rao@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(136003)(39850400004)(2980300002)(199004)(189003)(8676002)(70206006)(70586007)(63266004)(81156014)(48376002)(81166006)(478600001)(6636002)(186003)(4326008)(486006)(305945005)(126002)(426003)(9786002)(336012)(76176011)(6666004)(356004)(7696005)(51416003)(106002)(16586007)(446003)(316002)(4744005)(36386004)(2616005)(476003)(5660300002)(47776003)(14444005)(2906002)(11346002)(50226002)(107886003)(36756003)(50466002)(8936002)(26005)(5001870100001);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR0201MB3626;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-100.xilinx.com,xapps1.xilinx.com;A:1;MX:1;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=a5aTkNyNQpnTDblbg7EX7YSfJ3L9MslqQrpJziWh5Tc=;
+        b=Ve/gw486vDcHiLqJx8sVIKEa5aF0Cz0pUACQeRj1uGg65ADuTT92pXhepEAZdPaJy5
+         Ktp0OXXWcUgo8id91YutizXIMcnzyx+TzZna0CAypokpRz1+h+wHGQz8Gl4gc/L2kqau
+         99TBcCVqd+G1BaYPNvLN8TKqXCkoJn4BYeiengs/SOtuCOKuyToEbU+9G75qHogl/iqb
+         Gyqk8z3FspIohFazaXX5aiw8YL+P9Pp6I6OaxueDqyhO08xQR8IbbYxdSRCeBnTm+BYu
+         ZoZ1v7EiGY1kdNCwTyK+7q/MD9MPqFvYK8xzhEBdQn4i3fi0t8ol5bpruC5/AZR132zG
+         ko1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=a5aTkNyNQpnTDblbg7EX7YSfJ3L9MslqQrpJziWh5Tc=;
+        b=gK2TiB/QMKGwtFalEPEVUyR/+FpEbrk9e3Z/yaFD/v/GJcOuUJhikpexPgbep/q+MP
+         2k77TY30EzZh7TGBQREsTXbTIGQz42M12Z0/PrcKOtTBMfiwRH93ThUQVN2JaIIszeJg
+         i9CDls6u4tsZtRVWA2uACTidXdWPVa8OcTZXOcs2T9gBdCdfbxYbpS3cXX2gqykTU59e
+         jFxy1oAw1pmDM1htOnYHVKIGW2UeZy0LYUGp4mfWEChQLfljYtsgdmzQyX1Cl7PDDVbq
+         Z2wRyT6fUkBS9kS9V5c2O0CN27i7YuwG19usPDjmAZO3Zj15nkMdtrZFmGw8GUGeFIU7
+         4xIA==
+X-Gm-Message-State: APjAAAXWm4bYlVL6mJ5//VTOA+uHwcr+I7T6HrRMurYQeR0hodlimvyT
+        ZipH7JKFQOaMyzn7aOtwZR52sivQ6fX58bdWs9MSvA==
+X-Google-Smtp-Source: APXvYqzGG0KBTmlQlvXvsrXa/TpjrvX3+wyWt5cLGy5eFqwtUJQneBoAK5mOZ9lZMY+iquFGH2zUoV5IAhUkvRrRyks=
+X-Received: by 2002:aca:6056:: with SMTP id u83mr14078528oib.27.1565594959591;
+ Mon, 12 Aug 2019 00:29:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6b36ce4f-5e3e-4a94-2a69-08d71ef6c594
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:MWHPR0201MB3626;
-X-MS-TrafficTypeDiagnostic: MWHPR0201MB3626:
-X-Microsoft-Antispam-PRVS: <MWHPR0201MB3626DEEBD9112FDC4B32EEF7DCD30@MWHPR0201MB3626.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
-X-Forefront-PRVS: 012792EC17
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: XVvaD0A9dfnjEGSqvWcz0IQo+v4oaUiALxBC5skXGnJw1MKtsO2yp/Nv4H1ZO49r7KIVGlj+9GU9Y3rWCjyUmvScdX7ic70POl7mrSGPdEsiHGkv9EA6Vek8ZkFwun7DakwCvIecYEFtq9L9tvSG/lSxdUKNQsl1AixEw6LrfXfaLlRgFQfmT9ke+M9eQgZUyGxXuXcO2MerVg0H5c2aY2mNWpG/96C3WOgWZeH0vI0tFVw8qXLiy9cvBGOpUZjzrjIbH8zoqtR0fItBOQyakQlNNK9NLjPhpQFXfk4m7F37fnmizHykXtbnnCWlg/+IJEz2upTvLHLVlagMlyl3LtdI7GDdbX9C5CJXnsyOXaXQFv+5GkCLPgorZRk5rSHnZqe1Y9RvrQv3SIOR+BWA6LztRsfIV5Pg5ueA6QjKDf8=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2019 07:29:11.8932
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b36ce4f-5e3e-4a94-2a69-08d71ef6c594
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0201MB3626
+References: <6a38a3655bc8100764d85cb04dea5c2546a311e1.1565168564.git.baolin.wang@linaro.org>
+ <40127356a1acd1f2ff1be1d8a120b305a4e17af4.1565168564.git.baolin.wang@linaro.org>
+ <20190809091013.vguj4wty7qiab64t@pengutronix.de> <CAMz4kuLQsrBWjta1s=ZRPgxUd0_+_f-GbJV138tccuMLg2XCLA@mail.gmail.com>
+ <20190809144124.3as3rtctlywxkudr@pengutronix.de>
+In-Reply-To: <20190809144124.3as3rtctlywxkudr@pengutronix.de>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Mon, 12 Aug 2019 15:29:07 +0800
+Message-ID: <CAMz4ku+o6dCyxhR3-5yM+zr2nBpTQG5A8Pbnxpo7yRciwPbv3Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pwm: sprd: Add Spreadtrum PWM support
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Neeli <srinivas.neeli@xilinx.com>
+Hi Uwe,
 
-While calculating bitrate for the data phase, the driver is using phase
-segment 1 of the arbitration phase instead of the data phase.
+On Fri, 9 Aug 2019 at 22:41, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello Baolin,
+>
+> On Fri, Aug 09, 2019 at 06:06:21PM +0800, Baolin Wang wrote:
+> > On Fri, 9 Aug 2019 at 17:10, Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > On Thu, Aug 08, 2019 at 04:59:39PM +0800, Baolin Wang wrote:
+> > > > +{
+> > > > +     struct sprd_pwm_chip *spc =3D
+> > > > +             container_of(chip, struct sprd_pwm_chip, chip);
+> > > > +     struct sprd_pwm_chn *chn =3D &spc->chn[pwm->hwpwm];
+> > > > +     u64 div, tmp;
+> > > > +     u32 prescale, duty;
+> > > > +     int ret;
+> > > > +
+> > > > +     /*
+> > > > +      * NOTE: the clocks to PWM channel has to be enabled first be=
+fore
+> > > > +      * writing to the registers.
+> > > > +      */
+> > > > +     if (!chn->clk_enabled) {
+> > > > +             ret =3D clk_bulk_prepare_enable(SPRD_PWM_NUM_CLKS, ch=
+n->clks);
+> > >
+> > > Do you really need to enable all 8 clocks to configure a single chann=
+el?
+> >
+> > We have 4 channels, and each channel use 2 clocks, so here only enable
+> > 2 clocks, see SPRD_PWM_NUM_CLKS.
+>
+> Ah, I thought SPRD_PWM_NUM_CLKS was 8.
+>
+> > > > +             if (ret) {
+> > > > +                     dev_err(spc->dev, "failed to enable pwm%u clo=
+ck\n",
+> > > > +                             pwm->hwpwm);
+> > > > +                     return ret;
+> > > > +             }
+> > > > +
+> > > > +             chn->clk_enabled =3D true;
+> > > > +     }
+> > > > +
+> > > > +     duty =3D duty_ns * SPRD_PWM_MOD_MAX / period_ns;
+> > >
+> > > @Baolin: until we're there that there are framework requirements how =
+to
+> > > round, please document at least how you do it here. Also describing t=
+he
+> > > underlying concepts would be good for the driver reader.
+> > >
+> > > Something like:
+> > >
+> > > /*
+> > >  * The hardware provides a counter that is feed by the source clock.
+> > >  * The period length is (PRESCALE + 1) * MOD counter steps.
+> > >  * The duty cycle length is (PRESCALE + 1) * DUTY counter steps.
+> > >  *
+> > >  * To keep the maths simple we're always using MOD =3D MOD_MAX.
+> > >  * The value for PRESCALE is selected such that the resulting period
+> > >  * gets the maximal length not bigger than the requested one with the
+> > >  * given settings (MOD =3D MOD_MAX and input clock).
+> > >  */
+> >
+> > Yes, totally agree with you. I will add some documentation for our
+> > controller's setting.
+> >
+> > >
+> > > @Thierry: having a framework guideline here would be good. Or still
+> > > better a guideline and a debug setting that notices drivers stepping =
+out
+> > > of line.
+> > >
+> > > I assume using MOD =3D 0 is forbidden?
+> > >
+> > > > +     /*
+> > > > +      * According to the datasheet, the period_ns calculation form=
+ula
+> > > > +      * should be:
+> > > > +      * period_ns =3D 10^9 * (prescale + 1) * mod / clk_rate
+> > > > +      *
+> > > > +      * Then we can get the prescale formula:
+> > > > +      * prescale =3D (period_ns * clk_rate) / (10^9 * mod) -1
+> > > > +      */
+> > > > +     tmp =3D chn->clk_rate * period_ns;
+> > > > +     div =3D 1000000000ULL * SPRD_PWM_MOD_MAX;
+> > >
+> > > Please use NSEC_PER_SEC instead of 1000000000ULL.
+> >
+> > Sure.
+> >
+> > >
+> > > > +     prescale =3D div64_u64(tmp, div) - 1;
+> > >
+> > > If tmp is smaller than div you end up with prescale =3D 0xffffffff wh=
+ich
+> > > should be catched. What if prescale > 0xffff?
+> >
+> > Usually we can not meet this case, but you are right, the prescale has
+> > a limit according to the register definition. So will add a validation
+> > here.
+> >
+> > >
+> > > > +     sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_MOD, SPRD_PWM_MOD_MA=
+X);
+> > > > +     sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_DUTY, duty);
+> > >
+> > > You're losing precision here as you always use SPRD_PWM_MOD_MAX, righ=
+t?
+> > > (Just for my understanding, if this simpler approach is good enough
+> > > here that's fine.)
+> >
+> > Yes, SPRD_PWM_MOD_MAX is good enough.
+>
+> ok.
+>
+> > >
+> > > > +     sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_PAT_LOW, SPRD_PWM_RE=
+G_MSK);
+> > > > +     sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_PAT_HIGH, SPRD_PWM_R=
+EG_MSK);
+> > >
+> > > Please describe these two registers in a short comment.
+> >
+> > Sure.
+> >
+> > >
+> > > > +     sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_PRESCALE, prescale);
+> > >
+> > > Is the configuration here atomic in the sense that the write of DUTY
+> > > above only gets effective when PRESCALE is written? If not, please ad=
+d
+> >
+> > Yes.
+> >
+> > > a describing paragraph at the top of the driver similar to what is
+> > > written in pwm-sifive.c. When the PWM is already running before, how
+> > > does a configuration change effects the output? Is the currently runn=
+ing
+> > > period completed?
+> >
+> > Anyway, I'll add some comments to explain how it works.
+>
+> I'd apreciate if you'd stick to the format in pwm-sifive.c to make it
+> easier to grep for that.
 
-Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
-Acked-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
- drivers/net/can/xilinx_can.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+OK.
 
-diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c
-index 4cb8c1c9..ab26691 100644
---- a/drivers/net/can/xilinx_can.c
-+++ b/drivers/net/can/xilinx_can.c
-@@ -425,7 +425,7 @@ static int xcan_set_bittiming(struct net_device *ndev)
- 		btr0 = dbt->brp - 1;
- 
- 		/* Setting Time Segment 1 in BTR Register */
--		btr1 = dbt->prop_seg + bt->phase_seg1 - 1;
-+		btr1 = dbt->prop_seg + dbt->phase_seg1 - 1;
- 
- 		/* Setting Time Segment 2 in BTR Register */
- 		btr1 |= (dbt->phase_seg2 - 1) << priv->devtype.btr_ts2_shift;
--- 
-2.7.4
+>
+> > > > +static void sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_d=
+evice *pwm,
+> > > > +                            struct pwm_state *state)
+> > > > +{
+> > > > +     struct sprd_pwm_chip *spc =3D
+> > > > +             container_of(chip, struct sprd_pwm_chip, chip);
+> > > > +     struct sprd_pwm_chn *chn =3D &spc->chn[pwm->hwpwm];
+> > > > +     u32 enabled, duty, prescale;
+> > > > +     u64 tmp;
+> > > > +     int ret;
+> > > > +
+> > > > +     ret =3D clk_bulk_prepare_enable(SPRD_PWM_NUM_CLKS, chn->clks)=
+;
+> > > > +     if (ret) {
+> > > > +             dev_err(spc->dev, "failed to enable pwm%u clocks\n",
+> > > > +                     pwm->hwpwm);
+> > > > +             return;
+> > > > +     }
+> > > > +
+> > > > +     chn->clk_enabled =3D true;
+> > > > +
+> > > > +     duty =3D sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_DUTY) & SPRD=
+_PWM_REG_MSK;
+> > > > +     prescale =3D sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE=
+) & SPRD_PWM_REG_MSK;
+> > > > +     enabled =3D sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_ENABLE) &=
+ SPRD_PWM_ENABLE_BIT;
+> > > > +
+> > > > +     /*
+> > > > +      * According to the datasheet, the period_ns and duty_ns calc=
+ulation
+> > > > +      * formula should be:
+> > > > +      * period_ns =3D 10^9 * (prescale + 1) * mod / clk_rate
+> > > > +      * duty_ns =3D 10^9 * (prescale + 1) * duty / clk_rate
+> > > > +      */
+> > > > +     tmp =3D (prescale + 1) * 1000000000ULL * SPRD_PWM_MOD_MAX;
+> > > > +     state->period =3D div64_u64(tmp, chn->clk_rate);
+> > >
+> > > This is not idempotent. If you apply the configuration that is return=
+ed
+> > > here this shouldn't result in a reconfiguration.
+> >
+> > Since we may configure the  PWM in bootloader, so in kernel part we
+> > should get current PWM state to avoid reconfiguration if state
+> > configuration are same.
+>
+> This is also important as some consumers might do something like:
+>
+>         state =3D pwm_get_state(mypwm)
+>         if (something):
+>                 state->duty =3D 0
+>         else:
+>                 state->duty =3D state->period / 2
+>         pwm_set_state(mypwm, state)
+>
+> and then period shouldn't get smaller in each step.
+> (This won't happen as of now because the PWM framework caches the last
+> state that was set and returns this for pwm_get_state. Still getting
+> this right would be good.)
 
+I understood your concern, but the period can be configured in
+bootloader, we have no software things to save the accurate period.
+Moreover I think I can change to use DIV_ROUND_CLOSET_ULL to keep the
+accuracy.
+
+>
+> > > > +     tmp =3D (prescale + 1) * 1000000000ULL * duty;
+> > > > +     state->duty_cycle =3D div64_u64(tmp, chn->clk_rate);
+> > > > +
+> > > > +     state->enabled =3D !!enabled;
+> > > > +
+> > > > +     /* Disable PWM clocks if the PWM channel is not in enable sta=
+te. */
+> > > > +     if (!enabled) {
+> > > > +             clk_bulk_disable_unprepare(SPRD_PWM_NUM_CLKS, chn->cl=
+ks);
+> > > > +             chn->clk_enabled =3D false;
+> > > > +     }
+> > > > +}
+> > > > +
+> > > > +static const struct pwm_ops sprd_pwm_ops =3D {
+> > > > +     .config =3D sprd_pwm_config,
+> > > > +     .enable =3D sprd_pwm_enable,
+> > > > +     .disable =3D sprd_pwm_disable,
+> > > > +     .get_state =3D sprd_pwm_get_state,
+> > > > +     .owner =3D THIS_MODULE,
+> > > > +};
+> > > > +
+> > > > +static int sprd_pwm_clk_init(struct sprd_pwm_chip *spc)
+> > > > +{
+> > > > +     struct clk *clk_parent, *clk_pwm;
+> > > > +     int ret, i, clk_index =3D 0;
+> > > > +
+> > > > +     clk_parent =3D devm_clk_get(spc->dev, "source");
+> > > > +     if (IS_ERR(clk_parent)) {
+> > > > +             dev_err(spc->dev, "failed to get source clock\n");
+> > > > +             return PTR_ERR(clk_parent);
+> > > > +     }
+> > > > +
+> > > > +     for (i =3D 0; i < SPRD_PWM_NUM; i++) {
+> > > > +             struct sprd_pwm_chn *chn =3D &spc->chn[i];
+> > > > +             int j;
+> > > > +
+> > > > +             for (j =3D 0; j < SPRD_PWM_NUM_CLKS; ++j)
+> > > > +                     chn->clks[j].id =3D sprd_pwm_clks[clk_index++=
+];
+> > > > +
+> > > > +             ret =3D devm_clk_bulk_get(spc->dev, SPRD_PWM_NUM_CLKS=
+, chn->clks);
+> > > > +             if (ret) {
+> > > > +                     if (ret =3D=3D -ENOENT)
+> > > > +                             break;
+> > >
+> > > devm_clk_bulk_get_optional ? I'm sure you don't want to get all 8 clo=
+cks
+> > > 8 times.
+> >
+> > This is not optional, each channel has 2 required clocks, and we have
+> > 4 channels. (SPRD_PWM_NUM_CLKS =3D=3D 2)
+>
+> I see. Currently it is not possible to use channel 2 if there are no
+> clocks for channel 0, right? There is no hardware related problem here,
+
+Yes.
+
+> just a shortcoming of the driver?
+
+Yes.
+
+>
+> > > > +
+> > > > +                     dev_err(spc->dev, "failed to get channel cloc=
+ks\n");
+> > > > +                     return ret;
+> > > > +             }
+> > > > +
+> > > > +             clk_pwm =3D chn->clks[1].clk;
+> > >
+> > > This 1 looks suspicious. Are you using all clocks provided in the dtb=
+ at
+> > > all? You're not using i in the loop at all, this doesn't look right.
+> >
+> > Like I said above, each channel has 2 clocks: enable clock and pwm
+> > clock, the 2nd clock of each channel's bulk clocks is the pwm clock,
+> > which is used to set the source clock. I know this's not easy to read,
+> > so do you have any good suggestion?
+>
+> Not sure this is easily possible to rework to make this clearer.
+>
+> Do these clks have different uses? e.g. one to enable register access
+> and the other to enable the pwm output? If so just using
+
+Yes.
+
+> devm_clk_bulk_get isn't the right thing because you should be able know
+> if clks[0] or clks[1] is the one you need to enable the output (or
+> register access).
+
+We've fixed the clock order in bulk clocks by the array
+'sprd_pwm_clks', maybe I should define one readable macro instead of
+magic number.
+
+>
+> > > > +             if (!clk_set_parent(clk_pwm, clk_parent))
+> > > > +                     chn->clk_rate =3D clk_get_rate(clk_pwm);
+> > > > +             else
+> > > > +                     chn->clk_rate =3D SPRD_PWM_DEFAULT_CLK;
+> > >
+> > > I don't know all the clock framework details, but I think there are
+> > > better ways to ensure that a given clock is used as parent for anothe=
+r
+> > > given clock. Please read the chapter about "Assigned clock parents an=
+d
+> > > rates" in the clock bindings and check if this could be used for the
+> > > purpose here and so simplify the driver.
+> >
+> > Actually there are many other drivers set the parent clock like this,
+> > and we want a default clock if failed to set the parent clock.
+>
+> These might be older than the clk framework capabilities, or the
+> reviewers didn't pay attention to this detail; both shouldn't be a
+> reason to not make it better here.
+
+The clock framework supplies 'assigned-clocks' and
+'assigned-clock-parents' properties to set parent, but for our case we
+still want to set a default clock rate if failed to set parent when
+met some abnormal things.
+
+>
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > > +static int sprd_pwm_remove(struct platform_device *pdev)
+> > > > +{
+> > > > +     struct sprd_pwm_chip *spc =3D platform_get_drvdata(pdev);
+> > > > +     int i;
+> > > > +
+> > > > +     for (i =3D 0; i < spc->num_pwms; i++)
+> > > > +             pwm_disable(&spc->chip.pwms[i]);
+> > >
+> > > This is wrong. You must not call pwm_disable here. It's the consumer'=
+s
+> > > responsibility to disable the hardware.
+> >
+> > Emm, I saw some drivers did like this, like pwm-spear.c.
+> > Could you elaborate on what's the problem if the driver issues pwm_disa=
+ble?
+>
+> This is a function to be called from code that called pwm_get before
+> (i.e. pwm consumers). This just doesn't explode because up to now the
+> PWM framework is only a thin wrapper around the lowlevel driver
+> callbacks.
+>
+> The reasoning is similar to what I wrote in commit
+> f82d15e223403b05fffb33ba792b87a8620f6fee. I'd like to have a PWM_DEBUG
+> setting that catches such problems but the discussion with Thierry to
+> even document the expectations is stuck, see
+> https://patchwork.ozlabs.org/patch/1021566/.
+>
+
+Thanks for your explanation, and I'll remove pwm_disable from driver.
+
+Thanks for your comments.
+
+--=20
+Baolin Wang
+Best Regards
