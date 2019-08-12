@@ -2,70 +2,164 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E9BC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 840E8C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C372206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63551206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 11:57:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbfHLL5c (ORCPT
+        id S1728372AbfHLL55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 07:57:32 -0400
-Received: from verein.lst.de ([213.95.11.211]:47706 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728063AbfHLL5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 07:57:31 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9DBBD227A81; Mon, 12 Aug 2019 13:57:26 +0200 (CEST)
-Date:   Mon, 12 Aug 2019 13:57:26 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc:     linux-arch@vger.kernel.org, Olav Kongas <ok@artecdesign.ee>,
-        Gavin Li <git@thegavinli.com>, linuxppc-dev@lists.ozlabs.org,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Geoff Levand <geoff@infradead.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-usb@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
-        linux-kernel@vger.kernel.org, Tony Prisk <linux@prisktech.co.nz>,
-        iommu@lists.linux-foundation.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Shawn Guo <shawnguo@kernel.org>, Bin Liu <b-liu@ti.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: Re: [PATCH 3/6] usb: add a HCD_DMA flag instead of guestimating
- DMA capabilities
-Message-ID: <20190812115726.GA9180@lst.de>
-References: <20190811080520.21712-1-hch@lst.de> <20190811080520.21712-4-hch@lst.de>
+        Mon, 12 Aug 2019 07:57:57 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:55293 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728168AbfHLL55 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 07:57:57 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id x8xShQXe9ur8Tx8xWhiCxs; Mon, 12 Aug 2019 13:57:54 +0200
+Subject: Re: [PATCH v4 04/11] media: uapi: h264: Add the concept of start code
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
+References: <20190808103432.12062-1-ezequiel@collabora.com>
+ <20190808103432.12062-5-ezequiel@collabora.com>
+ <a729d241-6550-c23a-4f75-f106ab1c7ff9@xs4all.nl>
+ <95b8f8f8d5d4f6394cfd5858a29d507b7e77be2f.camel@collabora.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <c4adc667-590b-438d-f8ef-ebcc7eee6004@xs4all.nl>
+Date:   Mon, 12 Aug 2019 13:57:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190811080520.21712-4-hch@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <95b8f8f8d5d4f6394cfd5858a29d507b7e77be2f.camel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfCk8vclEi7DhOmsRf+mZqZE5k2wrBfPOCz9ZkKbXijWxmyESvKbELCeBx3YAl2BMJh0GwDs3EWsX2hNziHOkMWo6/AiLopGEzckfU9nU/3sra/7MO317
+ T1CjTxi4CMhuhSB/tzD967aiTEsORkz/2UW4oQrcGJrhMXyhD30cWT7FOSYx+X0Nmx6JKFOEEFFG9UR04mWCJ8JERQ87t7PjreqnbzHm/PTIkmSeQblmp9TV
+ YjhoWo9MGyXY4fYBA/OuiLECfbFmrTMMZz9W0vUui3eGosqkkmn20AIQCXpCuEzX48Su36t27U7dF5M41l+VVgjYV09k7E3UEE+soFTmDqAsFNYd+khlPX/P
+ a+Z5TBGubRLAjaOOepXXAAz/VLSdLzaWwaStI8dHMmG6J0bdsTac5ZQWKO4Ki8Ec9oM0Eg6HK4DfdZpSDcc4ZQH5PNJtTl/pr7MSfs5ZWv3DXBVASWP1y1UC
+ O8gq15WQBPVntEqDdXHowpDTXAmgVWKXJejz7uEAYTFJjx8L/thjy86fipyuYwvlrJ/ChAqNLgK9QmImIFC2oPxsN2a9zNbzqyy/eYFHU9sfQisBzNh1IbKd
+ z44+GZLPCUfdmk5JKGwaAn+MEPVx75Ax+Ys1KLkkB8Me+kanHSd8p+AKN9ZpEtYdBUk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> diff --git a/drivers/usb/host/ehci-ppc-of.c b/drivers/usb/host/ehci-ppc-of.c
-> index 576f7d79ad4e..9d17e0695e35 100644
-> --- a/drivers/usb/host/ehci-ppc-of.c
-> +++ b/drivers/usb/host/ehci-ppc-of.c
-> @@ -31,7 +31,7 @@ static const struct hc_driver ehci_ppc_of_hc_driver = {
->  	 * generic hardware linkage
->  	 */
->  	.irq			= ehci_irq,
-> -	.flags			= HCD_MEMORY | HCD_USB2 | HCD_BH,
-> +	.flags			= HCD_MEMORY | HC_DMA | HCD_USB2 | HCD_BH,
+On 8/12/19 1:56 PM, Ezequiel Garcia wrote:
+> On Mon, 2019-08-12 at 12:11 +0200, Hans Verkuil wrote:
+>> On 8/8/19 12:34 PM, Ezequiel Garcia wrote:
+>>> Stateless decoders have different expectations about the
+>>> start code that is prepended on H264 slices. Add a
+>>> menu control to express the supported start code types
+>>> (including no start code).
+>>>
+>>> Drivers are allowed to support only one start code type,
+>>> but they can support both too.
+>>>
+>>> Note that this is independent of the H264 decoding mode,
+>>> which specifies the granularity of the decoding operations.
+>>> Either in frame-based or slice-based mode, this new control
+>>> will allow to define the start code expected on H264 slices.
+>>>
+>>> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+>>> ---
+>>> Changes in v4:
+>>> * New patch.
+>>> ---
+>>>  .../media/uapi/v4l/ext-ctrls-codec.rst        | 31 +++++++++++++++++++
+>>>  drivers/media/v4l2-core/v4l2-ctrls.c          |  9 ++++++
+>>>  include/media/h264-ctrls.h                    |  6 ++++
+>>>  3 files changed, 46 insertions(+)
+>>>
+>>> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+>>> index ea0455957149..94fd3a9b8b9e 100644
+>>> --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+>>> +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+>>> @@ -2062,6 +2062,37 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+>>>          The OUTPUT buffer should contain all slices needed to decode the
+>>>          frame/field.
+>>>  
+>>> +``V4L2_CID_MPEG_VIDEO_H264_STARTCODE (enum)``
+>>> +    Specifies the H264 slice start code expected for each slice.
+>>> +    This control shall e used to complement V4L2_PIX_FMT_H264_SLICE
+>>
+>> e -> be
+>>
+>>> +    pixel format. Drivers may expose a single or multiple
+>>> +    start codes, depending on what they can support.
+>>> +
+>>> +    .. note::
+>>> +
+>>> +       This menu control is not yet part of the public kernel API and
+>>> +       it is expected to change.
+>>> +
+>>> +.. c:type:: v4l2_mpeg_video_h264_startcode
+>>> +
+>>> +.. cssclass:: longtable
+>>> +
+>>> +.. flat-table::
+>>> +    :header-rows:  0
+>>> +    :stub-columns: 0
+>>> +    :widths:       1 1 2
+>>> +
+>>> +    * - ``V4L2_MPEG_VIDEO_H264_NO_STARTCODE``
+>>> +      - 0
+>>> +      - Selecting this value specifies that H264 slices are passed
+>>> +        to the driver without any start code.
+>>> +        Bla.
+>>
+>> Bla?
+>>
+> 
+> Well, despite how many times I reviewed this doc, it seems
+> this slipped through :-(
+> 
+>>> +    * - ``V4L2_MPEG_VIDEO_H264_ANNEX_B_STARTCODE``
+>>> +      - 1
+>>> +      - Selecting this value specifies that H264 slices are expected
+>>> +        to be prefixed by Annex B start codes. According to :ref:`h264`
+>>> +        valid start codes can be 3-bytes 0x000001, or 4-bytes 0x00000001.
+>>> +
+>>
+>> I had the impression that it is more common to require startcodes. If that's
+>> indeed the case, shouldn't this have value 0 instead of 1?
+>> 1?
+>>
+> 
+> I'm not sure this is indeed the case.
+> 
+> For instance, VA-API accelerators work on H264 slices that are not
+> prepended by the NALU start code.
+> 
+> I'm fine flipping the values, but at this point, with only cedrus and hantro,
+> there's doesn't seem to be a "natural" choice.
 
-FYI, the kbuild bot found a little typo here, so even for the unlikely
-case that the series is otherwise perfect I'll have to resend it at
-least once.
+OK, let's keep this as-is then.
+
+Regards,
+
+	Hans
+
+> 
+> Thanks,
+> Ezequiel
+> 
+
