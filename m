@@ -2,99 +2,197 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83052C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD88C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 511032085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 241E62085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 07:39:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W5kHaBH5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UZbvpYbc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfHLHj3 (ORCPT
+        id S1727014AbfHLHjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 03:39:29 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52315 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbfHLHj2 (ORCPT
+        Mon, 12 Aug 2019 03:39:40 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45691 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbfHLHjk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 03:39:28 -0400
-Received: by mail-wm1-f68.google.com with SMTP id s3so11223733wms.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 00:39:27 -0700 (PDT)
+        Mon, 12 Aug 2019 03:39:40 -0400
+Received: by mail-pf1-f196.google.com with SMTP id w26so4014431pfq.12
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 00:39:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=M13tLMxCexcc8Z1uqfW6aAj4BpGJ9ZJbzcQPVQwL51o=;
-        b=W5kHaBH5ar5neih6e2V4kFpagCZINwjYVGEKK4Bqxuo9Ch5k8VnxdzthNOQ1kCwJgc
-         hfi0Qwyh/0b/ZgitbpGSibu0fJysjhL0nBEZPZHfwukaCuYsGXye9WX1ZIiu6hP09QsK
-         HMPX1mC+ibxRs37XnZnsU8NMnNjTW+36c96SQzlUnA+I6EYyhgdvqlBL3SQYJ9h9syWF
-         v+51aQzC3gLTR6bW4pYHoT6E9lyy/JVVLRqxwZJrGIplwGTvGfRbxGUDVTYHSxYZ/PC1
-         2vC6FbftV21+EwXRn30E0nmGX0qQIJVTLptRbvzNt+tM+KSuFAAf08ThidsG6yd/s1tL
-         oSgg==
+         :content-disposition:in-reply-to:user-agent;
+        bh=2quQnHJeT9Fa5IrcwEwRCo1YcerZTXomN5HFRZFMkZA=;
+        b=UZbvpYbcRKMB/b1QsY8X3xIXLrbQEdCpA4iv13KRfFJsy7ZRirVFICaxDYOri61lmI
+         /kPemgdrhQXdHaDh5SYmHoB06YaJICbPKKh5UjTUqeOZPR0/yAVReQ981EUoIPLWHoue
+         HdNp0+7bLSTsZQ3ZzvBkRI4aNF8cSRi6tEwa3xCZMoD3V//LdModJ5MZxOCsiEGWUmwf
+         5ftBQ9yml82PT+YSCWCIa/cGWj7xRg6+KIfxzDqQz95QAfsqF5syMu2pj7crCYOp5MwK
+         lZ3e2Qxq9uOgPMIZ4d7gc7E8ffRUBNVI8KTgbRriTGU/JNG6ndglyx8GhUTUP9KaHqCA
+         CUig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=M13tLMxCexcc8Z1uqfW6aAj4BpGJ9ZJbzcQPVQwL51o=;
-        b=Vk6ffKCnpF8G+k+E3JGUFYlfoTRv3DYBmqnZtQYdU4DoiUWwmhDcgD9LhYs7r5F5hT
-         Hha7D0ueysGpVHRt6CE1/wugdxNp/N6i/JC0ou5EaWwbFV4gLh6bvi2U2NzFAPsVRem9
-         QZEPzZDRVogdYjhCy6WY87IfAAt4x5BP/5Wp4M4q3HHMrkDqkD8u5ncJk+K1Xrvusm+T
-         ayhf8skmfAzql+p1UcF2fEHNTvRiQQy+THtghg8mmT8oK2+ohvpJTFrZYhIQYxs87BFf
-         zUTr8rQnCccWpauZqCHE0eK4HFawwvK+fxNax6wSoVH3fWquYnLS3KiXlt+utzMKmfzg
-         RQPQ==
-X-Gm-Message-State: APjAAAUP9W5yrNAjlEfLT7K16DyCeJfFD2ELO+A0LQfwgRzmSXtlDny3
-        IMSkDcJX3WBTnPppfIzOvimWQw==
-X-Google-Smtp-Source: APXvYqyGqn5ITtulwW9kTlid+OHGP9VuUkCGhXl/QBcHYrK9vTHNB4YheHPMWezSiIlzH2x6xBegVQ==
-X-Received: by 2002:a1c:c1cd:: with SMTP id r196mr12621147wmf.127.1565595566948;
-        Mon, 12 Aug 2019 00:39:26 -0700 (PDT)
-Received: from dell ([2.27.35.255])
-        by smtp.gmail.com with ESMTPSA id c12sm3076016wrx.46.2019.08.12.00.39.26
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2quQnHJeT9Fa5IrcwEwRCo1YcerZTXomN5HFRZFMkZA=;
+        b=ixzakMFWn8JTzKkrj2JUxPmrlI6vJWfZtC51xW24rd1Z0lrXog0DV2+MOk8z3YdsQj
+         MhgPJ4fLPT0FrYzl7xHbJvetpoezxGKCwykirQwS3DBzavaDRP27grsbwPw7Po7poXBw
+         JF8G7pUpv/aqD9d3Q2lqTDOVdFOSwS7a4mSjeInoXmn05RG/qdeJhhLEwbBdGjgyHUEM
+         4PjN/oi+XYZCrGTl092mcNeWm8O3NIPv8ozRucQXoBvlPAK9DWUKZpXLryTrtV7qsOhy
+         HLEekKgLEjal4DZHrYfpG1nnAg6Zi2YzxP3k4nuvwU+TYunD6avt7DqC01SfM1u7GBnU
+         Yctg==
+X-Gm-Message-State: APjAAAUDaaDCFkG10x6/y1DcpCpzsoXhCMQB2fU79Z+k/xXc/Q/in1x3
+        0D6GVppN4OBp3ECqvPj70qJsGQ==
+X-Google-Smtp-Source: APXvYqxsTbOEkvNmm97I6dKg6Jvq/xPehRt6IenrYIjfZP9tbVsVlR9H+zzFNqA/n8mNeFGwsh9AAw==
+X-Received: by 2002:a65:4505:: with SMTP id n5mr26188138pgq.301.1565595579238;
+        Mon, 12 Aug 2019 00:39:39 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li456-16.members.linode.com. [50.116.10.16])
+        by smtp.gmail.com with ESMTPSA id k6sm115551672pfi.12.2019.08.12.00.39.33
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 00:39:26 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 08:39:25 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Support Opensource <support.opensource@diasemi.com>
-Subject: Re: [PATCH] mfd: da9063: remove now unused platform_data
-Message-ID: <20190812073925.GQ4594@dell>
-References: <20190722182628.7533-1-wsa+renesas@sang-engineering.com>
+        Mon, 12 Aug 2019 00:39:38 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 15:39:31 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        David Miller <davem@davemloft.net>,
+        Milian Wolff <milian.wolff@kdab.com>,
+        Donald Yandt <donald.yandt@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Wei Li <liwei391@huawei.com>, Mark Drayton <mbd@fb.com>,
+        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v4 1/2] perf machine: Support arch's specific kernel
+ start address
+Message-ID: <20190812073931.GB8062@leoy-ThinkPad-X240s>
+References: <20190810072135.27072-1-leo.yan@linaro.org>
+ <20190810072135.27072-2-leo.yan@linaro.org>
+ <c1818f6f-37df-6971-fddc-6663e5b6ff95@intel.com>
+ <20190812070236.GA8062@leoy-ThinkPad-X240s>
+ <250165c6-908a-c57e-8d83-03da4272f568@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190722182628.7533-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <250165c6-908a-c57e-8d83-03da4272f568@intel.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jul 2019, Wolfram Sang wrote:
+On Mon, Aug 12, 2019 at 10:23:21AM +0300, Adrian Hunter wrote:
+> On 12/08/19 10:02 AM, Leo Yan wrote:
+> > On Mon, Aug 12, 2019 at 09:37:33AM +0300, Adrian Hunter wrote:
+> >> On 10/08/19 10:21 AM, Leo Yan wrote:
+> >>> machine__get_kernel_start() gives out the kernel start address; some
+> >>> architectures need to tweak the start address so that can reflect the
+> >>> kernel start address correctly.  This is not only for x86_64 arch, but
+> >>> it is also required by other architectures, e.g. arm/arm64 needs to
+> >>> tweak the kernel start address so can include the kernel memory regions
+> >>> which are used before the '_stext' symbol.
+> >>>
+> >>> This patch refactors machine__get_kernel_start() by adding a weak
+> >>> arch__fix_kernel_text_start(), any architecture can implement it to
+> >>> tweak its specific start address; this also allows the arch specific
+> >>> code to be placed into 'arch' folder.
+> >>>
+> >>> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> >>> ---
+> >>>  tools/perf/arch/x86/util/machine.c | 10 ++++++++++
+> >>>  tools/perf/util/machine.c          | 13 +++++++------
+> >>>  tools/perf/util/machine.h          |  2 ++
+> >>>  3 files changed, 19 insertions(+), 6 deletions(-)
+> >>>
+> >>> diff --git a/tools/perf/arch/x86/util/machine.c b/tools/perf/arch/x86/util/machine.c
+> >>> index 1e9ec783b9a1..9f012131534a 100644
+> >>> --- a/tools/perf/arch/x86/util/machine.c
+> >>> +++ b/tools/perf/arch/x86/util/machine.c
+> >>> @@ -101,4 +101,14 @@ int machine__create_extra_kernel_maps(struct machine *machine,
+> >>>  	return ret;
+> >>>  }
+> >>>  
+> >>> +void arch__fix_kernel_text_start(u64 *start)
+> >>> +{
+> >>> +	/*
+> >>> +	 * On x86_64, PTI entry trampolines are less than the
+> >>> +	 * start of kernel text, but still above 2^63. So leave
+> >>> +	 * kernel_start = 1ULL << 63 for x86_64.
+> >>> +	 */
+> >>> +	*start = 1ULL << 63;
+> >>> +}
+> >>
+> >> That is needed for reporting x86 data on any arch i.e. it is not specific to
+> >> the compile-time architecture, it is specific to the perf.data file
+> >> architecture, which is what machine__is() compares. So, this looks wrong.
+> > 
+> > Thanks for reviewing, Adrian.
+> > 
+> > If so, I think we should extend the function machine__get_kernel_start()
+> > as below; for building successfully, will always define the macro
+> > ARM_PRE_START_SIZE in Makefile.config.
+> > 
+> > @Arnaldo, @Adrian, Please let me know if this works for you?
+> 
+> I don't know how you intend to calculate ARM_PRE_START_SIZE, but below is OK
+> for x86.
+> 
+> > 
+> > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> > index f6ee7fbad3e4..30a0ff627263 100644
+> > --- a/tools/perf/util/machine.c
+> > +++ b/tools/perf/util/machine.c
+> > @@ -2687,13 +2687,26 @@ int machine__get_kernel_start(struct machine *machine)
+> >         machine->kernel_start = 1ULL << 63;
+> >         if (map) {
+> >                 err = map__load(map);
+> > +               if (err)
+> > +                       return err;
+> > +
+> >                 /*
+> >                  * On x86_64, PTI entry trampolines are less than the
+> >                  * start of kernel text, but still above 2^63. So leave
+> >                  * kernel_start = 1ULL << 63 for x86_64.
+> >                  */
+> > -               if (!err && !machine__is(machine, "x86_64"))
+> > +               if (!machine__is(machine, "x86_64"))
+> >                         machine->kernel_start = map->start;
+> > +
+> > +               /*
+> > +                * On arm/arm64, some memory regions are prior to '_stext'
+> > +                * symbol; to reflect the complete kernel address space,
+> > +                * compensate these pre-defined regions for kernel start
+> > +                * address.
+> > +                */
+> > +               if (machine__is(machine, "arm64") ||
+> > +                   machine__is(machine, "arm"))
+> 
+> machine__is() does not normalize the architecture, so you may want to use
+> perf_env__arch() instead.
 
-> All preparational patches have been applied, we can now remove the
-> include file for platform_data. Yiha!
+You are right, thanks for suggestion.  Will use perf_env__arch() in
+next spin.
 
-Hiya,
+Thanks,
+Leo Yan
 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->  include/Kbuild                   |  1 -
->  include/linux/mfd/da9063/pdata.h | 60 --------------------------------
->  2 files changed, 61 deletions(-)
->  delete mode 100644 include/linux/mfd/da9063/pdata.h
+> 
+> > +                       machine->kernel_start -= ARM_PRE_START_SIZE;
+> >         }
+> >         return err;
+> >  }
 
-Applied, thanks.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+[...]
