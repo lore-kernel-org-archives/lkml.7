@@ -2,134 +2,108 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF08C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA0FC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 668C9208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 296A0206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:22:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565616150;
+	bh=+fDGEVimuwSaula7taHzE+uI8/ClWgKUj7LFctw3QXA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RpBnEBNiXkBu6z6qx/w9+cIr6uzC+lo9aERgP56W4p4ruLIkaIVShAAsUQYXeLe+J
+	 h4aXSt2sdzVMCK3bOC6nMJvFU7v9sWhNcgkbUvEFQgBbG0TQ39/MkmzZq9EENoqiNI
+	 cpvAs0Quqno+duIQousZa85gtJQlQWH8D/Y7zCQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbfHLNVw (ORCPT
+        id S1728857AbfHLNW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 09:21:52 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57058 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728117AbfHLNVw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 09:21:52 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 41601260787
-Message-ID: <614221186ed37383778d8890d39e829a0e924796.camel@collabora.com>
-Subject: Re: [PATCH] media: em28xx: modules workqueue not inited for 2nd
- device
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Sean Young <sean@mess.org>,
-        syzbot <syzbot+b7f57261c521087d89bb@syzkaller.appspotmail.com>
-Cc:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
-        mchehab@kernel.org, syzkaller-bugs@googlegroups.com
-Date:   Mon, 12 Aug 2019 10:21:39 -0300
-In-Reply-To: <20190811051110.hsdwmjrbvqgrmssc@gofer.mess.org>
-References: <0000000000004bcc0d058faf01c4@google.com>
-         <20190811051110.hsdwmjrbvqgrmssc@gofer.mess.org>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Mon, 12 Aug 2019 09:22:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50836 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728117AbfHLNW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 09:22:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B855DAF5A;
+        Mon, 12 Aug 2019 13:22:27 +0000 (UTC)
+Date:   Mon, 12 Aug 2019 15:22:26 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, ltp@lists.linux.it,
+        Li Wang <liwang@redhat.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Cyril Hrubis <chrubis@suse.cz>, xishi.qiuxishi@alibaba-inc.com
+Subject: Re: [PATCH] hugetlbfs: fix hugetlb page migration/fault race causing
+ SIGBUS
+Message-ID: <20190812132226.GI5117@dhcp22.suse.cz>
+References: <20190808074607.GI11812@dhcp22.suse.cz>
+ <20190808074736.GJ11812@dhcp22.suse.cz>
+ <416ee59e-9ae8-f72d-1b26-4d3d31501330@oracle.com>
+ <20190808185313.GG18351@dhcp22.suse.cz>
+ <20190808163928.118f8da4f4289f7c51b8ffd4@linux-foundation.org>
+ <20190809064633.GK18351@dhcp22.suse.cz>
+ <20190809151718.d285cd1f6d0f1cf02cb93dc8@linux-foundation.org>
+ <20190811234614.GZ17747@sasha-vm>
+ <20190812084524.GC5117@dhcp22.suse.cz>
+ <39b59001-55c1-a98b-75df-3a5dcec74504@suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <39b59001-55c1-a98b-75df-3a5dcec74504@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-08-11 at 06:11 +0100, Sean Young wrote:
-> syzbot reports an error on flush_request_modules() for the second device.
-> This workqueue was never initialised so simply remove the offending line.
+On Mon 12-08-19 15:14:12, Vlastimil Babka wrote:
+> On 8/12/19 10:45 AM, Michal Hocko wrote:
+> > On Sun 11-08-19 19:46:14, Sasha Levin wrote:
+> >> On Fri, Aug 09, 2019 at 03:17:18PM -0700, Andrew Morton wrote:
+> >>> On Fri, 9 Aug 2019 08:46:33 +0200 Michal Hocko <mhocko@kernel.org> wrote:
+> >>>
+> >>> It should work if we ask stable trees maintainers not to backport
+> >>> such patches.
+> >>>
+> >>> Sasha, please don't backport patches which are marked Fixes-no-stable:
+> >>> and which lack a cc:stable tag.
+> >>
+> >> I'll add it to my filter, thank you!
+> > 
+> > I would really prefer to stick with Fixes: tag and stable only picking
+> > up cc: stable patches. I really hate to see workarounds for sensible
+> > workflows (marking the Fixes) just because we are trying to hide
+> > something from stable maintainers. Seriously, if stable maintainers have
+> > a different idea about what should be backported, it is their call. They
+> > are the ones to deal with regressions and the backporting effort in
+> > those cases of disagreement.
 > 
-> usb 1-1: USB disconnect, device number 2
-> em28xx 1-1:1.153: Disconnecting em28xx #1
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 12 at kernel/workqueue.c:3031
-> __flush_work.cold+0x2c/0x36 kernel/workqueue.c:3031
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc2+ #25
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   panic+0x2a3/0x6da kernel/panic.c:219
->   __warn.cold+0x20/0x4a kernel/panic.c:576
->   report_bug+0x262/0x2a0 lib/bug.c:186
->   fixup_bug arch/x86/kernel/traps.c:179 [inline]
->   fixup_bug arch/x86/kernel/traps.c:174 [inline]
->   do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
->   do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
->   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1026
-> RIP: 0010:__flush_work.cold+0x2c/0x36 kernel/workqueue.c:3031
-> Code: 9a 22 00 48 c7 c7 20 e4 c5 85 e8 d9 3a 0d 00 0f 0b 45 31 e4 e9 98 86
-> ff ff e8 51 9a 22 00 48 c7 c7 20 e4 c5 85 e8 be 3a 0d 00 <0f> 0b 45 31 e4
-> e9 7d 86 ff ff e8 36 9a 22 00 48 c7 c7 20 e4 c5 85
-> RSP: 0018:ffff8881da20f720 EFLAGS: 00010286
-> RAX: 0000000000000024 RBX: dffffc0000000000 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: ffffffff8128a0fd RDI: ffffed103b441ed6
-> RBP: ffff8881da20f888 R08: 0000000000000024 R09: fffffbfff11acd9a
-> R10: fffffbfff11acd99 R11: ffffffff88d66ccf R12: 0000000000000000
-> R13: 0000000000000001 R14: ffff8881c6685df8 R15: ffff8881d2a85b78
->   flush_request_modules drivers/media/usb/em28xx/em28xx-cards.c:3325 [inline]
->   em28xx_usb_disconnect.cold+0x280/0x2a6
-> drivers/media/usb/em28xx/em28xx-cards.c:4023
->   usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
->   __device_release_driver drivers/base/dd.c:1120 [inline]
->   device_release_driver_internal+0x404/0x4c0 drivers/base/dd.c:1151
->   bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
->   device_del+0x420/0xb10 drivers/base/core.c:2288
->   usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
->   usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
->   hub_port_connect drivers/usb/core/hub.c:4949 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   process_scheduled_works kernel/workqueue.c:2331 [inline]
->   worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
-> 
-> Reported-by: syzbot+b7f57261c521087d89bb@syzkaller.appspotmail.com
-> Signed-off-by: Sean Young <sean@mess.org>
+> +1 on not replacing Fixes: tag with some other name, as there might be
+> automation (not just at SUSE) relying on it.
+> As a compromise, we can use something else to convey the "maintainers
+> really don't recommend a stable backport", that Sasha can add to his filter.
+> Perhaps counter-intuitively, but it could even look like this:
+> Cc: stable@vger.kernel.org # not recommended at all by maintainer
 
-I reviewed the syzbot report, but was left head-scratching and
-failing to see how the module-loading worker was supposed to be used :-)
+I thought that absence of the Cc is the indication :P. Anyway, I really
+do not understand why should we bother, really. I have tried to explain
+that stable maintainers should follow Cc: stable because we bother to
+consider that part and we are quite good at not forgetting (Thanks
+Andrew for persistence). Sasha has told me that MM will be blacklisted
+from automagic selection procedure.
 
-Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
-
-Also, this seems a bug, so how about this tag?
-
-Fixes: be7fd3c3a8c5e ("media: em28xx: Hauppauge DualHD second tuner functionality)
-
-> ---
->  drivers/media/usb/em28xx/em28xx-cards.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/em28xx-cards.c
-> index 6e33782c3ca6..5983e72a0622 100644
-> --- a/drivers/media/usb/em28xx/em28xx-cards.c
-> +++ b/drivers/media/usb/em28xx/em28xx-cards.c
-> @@ -4019,7 +4019,6 @@ static void em28xx_usb_disconnect(struct usb_interface *intf)
->  		dev->dev_next->disconnected = 1;
->  		dev_info(&dev->intf->dev, "Disconnecting %s\n",
->  			 dev->dev_next->name);
-> -		flush_request_modules(dev->dev_next);
->  	}
->  
->  	dev->disconnected = 1;
-
-
+I really do not know much more we can do and I really have strong doubts
+we should care at all. What is the worst that can happen? A potentially
+dangerous commit gets to the stable tree and that blows up? That is
+something that is something inherent when relying on AI and
+aplies-it-must-be-ok workflow.
+-- 
+Michal Hocko
+SUSE Labs
