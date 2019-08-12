@@ -2,128 +2,80 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FD3C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0BFC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD34820684
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 469E920684
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 13:07:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728819AbfHLNHD (ORCPT
+        id S1728844AbfHLNHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 12 Aug 2019 09:07:05 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58690 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726458AbfHLNHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 12 Aug 2019 09:07:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60570 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726822AbfHLNHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 09:07:03 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DDE87300895B;
-        Mon, 12 Aug 2019 13:07:02 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 048676FDA5;
-        Mon, 12 Aug 2019 13:07:00 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 12 Aug 2019 15:07:02 +0200 (CEST)
-Date:   Mon, 12 Aug 2019 15:06:59 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <matthew.wilcox@oracle.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Kernel Team <Kernel-team@fb.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        "srikar@linux.vnet.ibm.com" <srikar@linux.vnet.ibm.com>
-Subject: Re: [PATCH v12 5/6] khugepaged: enable collapse pmd for pte-mapped
- THP
-Message-ID: <20190812130659.GA31560@redhat.com>
-References: <20190807233729.3899352-1-songliubraving@fb.com>
- <20190807233729.3899352-6-songliubraving@fb.com>
- <20190808163303.GB7934@redhat.com>
- <770B3C29-CE8F-4228-8992-3C6E2B5487B6@fb.com>
- <20190809152404.GA21489@redhat.com>
- <3B09235E-5CF7-4982-B8E6-114C52196BE5@fb.com>
- <4D8B8397-5107-456B-91FC-4911F255AE11@fb.com>
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id F079DCBBE20D890C1DCE;
+        Mon, 12 Aug 2019 21:07:01 +0800 (CST)
+Received: from [127.0.0.1] (10.63.139.185) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Mon, 12 Aug 2019
+ 21:06:59 +0800
+Subject: Re: [PATCH][crypto-next] crypto: hisilicon: fix spelling mistake
+ "HZIP_COMSUMED_BYTE" -> "HZIP_CONSUMED_BYTE"
+To:     Colin King <colin.king@canonical.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        <linux-crypto@vger.kernel.or>
+References: <20190812111525.574-1-colin.king@canonical.com>
+CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Zhou Wang <wangzhou1@hisilicon.com>
+Message-ID: <5D516472.4000905@hisilicon.com>
+Date:   Mon, 12 Aug 2019 21:06:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4D8B8397-5107-456B-91FC-4911F255AE11@fb.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 12 Aug 2019 13:07:03 +0000 (UTC)
+In-Reply-To: <20190812111525.574-1-colin.king@canonical.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.63.139.185]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/09, Song Liu wrote:
->
-> +void collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr)
-> +{
-> +	unsigned long haddr = addr & HPAGE_PMD_MASK;
-> +	struct vm_area_struct *vma = find_vma(mm, haddr);
-> +	struct page *hpage = NULL;
-> +	pmd_t *pmd, _pmd;
-> +	spinlock_t *ptl;
-> +	int count = 0;
-> +	int i;
-> +
-> +	if (!vma || !vma->vm_file ||
-> +	    vma->vm_start > haddr || vma->vm_end < haddr + HPAGE_PMD_SIZE)
-> +		return;
-> +
-> +	/*
-> +	 * This vm_flags may not have VM_HUGEPAGE if the page was not
-> +	 * collapsed by this mm. But we can still collapse if the page is
-> +	 * the valid THP. Add extra VM_HUGEPAGE so hugepage_vma_check()
-> +	 * will not fail the vma for missing VM_HUGEPAGE
-> +	 */
-> +	if (!hugepage_vma_check(vma, vma->vm_flags | VM_HUGEPAGE))
-> +		return;
-> +
-> +	pmd = mm_find_pmd(mm, haddr);
-> +	if (!pmd)
-> +		return;
-> +
-> +	/* step 1: check all mapped PTEs are to the right huge page */
-> +	for (i = 0, addr = haddr; i < HPAGE_PMD_NR; i++, addr += PAGE_SIZE) {
-> +		pte_t *pte = pte_offset_map(pmd, addr);
-> +		struct page *page;
-> +
-> +		if (pte_none(*pte) || !pte_present(*pte))
-> +			continue;
+On 2019/8/12 19:15, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a spelling mistake in the hzip_dfx_regs array, fix this.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/crypto/hisilicon/zip/zip_main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
+> index 6e0ca75585d4..00ecae387fdd 100644
+> --- a/drivers/crypto/hisilicon/zip/zip_main.c
+> +++ b/drivers/crypto/hisilicon/zip/zip_main.c
+> @@ -206,7 +206,7 @@ static struct debugfs_reg32 hzip_dfx_regs[] = {
+>  	{"HZIP_AVG_DELAY                 ",  0x28ull},
+>  	{"HZIP_MEM_VISIBLE_DATA          ",  0x30ull},
+>  	{"HZIP_MEM_VISIBLE_ADDR          ",  0x34ull},
+> -	{"HZIP_COMSUMED_BYTE             ",  0x38ull},
+> +	{"HZIP_CONSUMED_BYTE             ",  0x38ull},
 
-		if (!pte_present(*pte))
-			return;
+Yes, thanks.
 
-you can't simply flush pmd if this page is swapped out.
+Zhou
 
-> +
-> +		page = vm_normal_page(vma, addr, *pte);
-> +
-> +		if (!page || !PageCompound(page))
-> +			return;
-> +
-> +		if (!hpage) {
-> +			hpage = compound_head(page);
-> +			/*
-> +			 * The mapping of the THP should not change.
-> +			 *
-> +			 * Note that uprobe may change the page table,
-
-Not only uprobe can cow the page. Debugger can do. Or mmap(PROT_WRITE, MAP_PRIVATE).
-
-uprobe() is "special" because it a) it works with a foreign mm and b)
-it can't stop the process which uses this mm. Otherwise it could simply
-update the page returned by get_user_pages_remote(FOLL_FORCE), just we
-would need to add FOLL_WRITE and if we do this we do not even need SPLIT,
-that is why, say, __access_remote_vm() works without SPLIT.
-
-Oleg.
+>  	{"HZIP_PRODUCED_BYTE             ",  0x40ull},
+>  	{"HZIP_COMP_INF                  ",  0x70ull},
+>  	{"HZIP_PRE_OUT                   ",  0x78ull},
+> 
 
