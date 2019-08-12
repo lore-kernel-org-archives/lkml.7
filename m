@@ -2,148 +2,133 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B817DC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985E5C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1F120644
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:14:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D84320644
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:16:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JQXJHyjA"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="RR7TtUdP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfHLROx (ORCPT
+        id S1726942AbfHLRQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 13:14:53 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54186 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbfHLROx (ORCPT
+        Mon, 12 Aug 2019 13:16:52 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43100 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbfHLRQw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 13:14:53 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 10so253200wmp.3;
-        Mon, 12 Aug 2019 10:14:51 -0700 (PDT)
+        Mon, 12 Aug 2019 13:16:52 -0400
+Received: by mail-qk1-f196.google.com with SMTP id m2so13227855qkd.10;
+        Mon, 12 Aug 2019 10:16:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uyuxaCQlT0KbWKY6B1ulai8tYcYjc2klD2HfPgScdF0=;
-        b=JQXJHyjAk7lWyWI7W23UJnM0/xNj0XYcihfDl9IHywflTohM4i+zhIhe0f5XkmnffO
-         PmcXp8E32BARMv2dlUihsfO59jmkrjwuN6k0owr4xLbz6DzKHt0n7WBHo2LAc/Nq5LAN
-         ewTC0PHSRjAt5JtvkEZdic4v6aFqtLf9Kq2rY0nm8QdWw3mzQ8v22Pah7C+Av99ksaz3
-         YhypOl38+WM1bk7ifDb5EBIWSGDHUiyLGvmJBR3AjsXq/nPo5tRbWIFpp5gRVx3D2tau
-         jvxRx/U8la00423RHGNkuBRf/p6remzgRA1RSR7h3knkpNvwo63IoZjWQ6/EyO48WUP3
-         pV6Q==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BtBXM090wQ33aSD3OfaN8dNIs/4MWHf6KDcAkchuLpQ=;
+        b=RR7TtUdP82ci6fgUyyFPtz5v03ncaUV+qUbf9QTbsSN48mhud6FQMJIWcnmdGgx3/v
+         kA+oZAE70C3ETI1ZxHHg6MUIiJeF8a/f09srgpsLn/sYpWM2iY71ZdaVa2XK5kuO670q
+         p3VW/ObwgBXNqNkSGuppsgKJimQJvTWk6X4HGQGSALkV3Rh+Q38/lB9K1PtuuG9FiJ87
+         hPoJR+hWaga1WJeKluEZwHQmP0CRJMbd5W/JlPmoMhruDlyZZBbEgDUT9AhCvIxfpzXe
+         GGiEvoyW8XMDSbzwbvlzgDJDfrsXd9tJVi1jYoilIw5EFnHSvZViqPBPqIralIv2fRHX
+         6TWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uyuxaCQlT0KbWKY6B1ulai8tYcYjc2klD2HfPgScdF0=;
-        b=H+L8fyMwqIXl0CDVrHDdn9BXzkq0MvVE5rLTqqkHCQbP+1YdxBNGYJ1zVpZWM9YMdU
-         LO7ZRe87D2Uptuxv2g494ps6D3RzmWVAoYUfqKS3/9xznbMqc7jtSO0GXcsHjX34z8ib
-         /7yk3j8wJUXBzbYMbfqUG1kn3uu56a3qqAnLdRcWZQG0WptfJ74cllufbx4l90dkKZgi
-         q6uzZvEJdOFVJf+i2FVaFWABFv/NQR41iwMwknCJpg6Zo5U/FNuT9sU4FjJozI8Ckl+q
-         4I9acxe3CcYJDcfdwxBjSJSR06vODyEcnowAd8bIPmoWclL1ehLN828BtUtcckkDcYrC
-         Z0jw==
-X-Gm-Message-State: APjAAAXJi4TFB2hRRvDIfW5jNS8ycHx1UjYBjCeZ0bFE/0boXMusNl8w
-        /ZLMm+49q8HHCHVHxSFi2ho=
-X-Google-Smtp-Source: APXvYqwtZdVAubbdgW1cTuVJeqK9imDOI51oD7i00kYAvM2fCDYcdypFeXbskL8XirVHiW+gg1bjTw==
-X-Received: by 2002:a1c:be15:: with SMTP id o21mr350444wmf.140.1565630090353;
-        Mon, 12 Aug 2019 10:14:50 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id d9sm125544wmb.9.2019.08.12.10.14.49
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 10:14:49 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 10:14:48 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Jussi Kivilinna <jussi.kivilinna@iki.fi>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Vladimir Serbinenko <phcoder@gmail.com>
-Subject: Re: [PATCH 3/5] lib/mpi: Fix for building for MIPS32 with Clang
-Message-ID: <20190812171448.GA10039@archlinux-threadripper>
-References: <20190812033120.43013-1-natechancellor@gmail.com>
- <20190812033120.43013-4-natechancellor@gmail.com>
- <ec4666a6-c7db-247b-de81-bb784bb9d649@iki.fi>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BtBXM090wQ33aSD3OfaN8dNIs/4MWHf6KDcAkchuLpQ=;
+        b=TlU2dnkkkD8SZ10YMSoTtgD+rJ99y22xz8e/znNcxLVfWhxIPrm/W2o1kjpFriB2T8
+         yxOFlD3VjTXLBxGKduIcEAQY+N6MmH/TYpoA5LNZ1lHQdCHdD7KoPzn5SEfyWTg5o2vJ
+         RJIRA/NQND75cSyLOGPZUTHrDlL7g0Y/PlsdXZTcdNnMA9hHTSQ+1JAz5R/8NC0hJmP1
+         fQMNK9tfpLKSNiHOMji6f6TbcrFYaNuJPu7yX41QfbaHMQgDMNrX13UgaD1dUgZiImu1
+         flE0NLzRAw+RmE4vtQAiHeefBQUrCTh6X7qeJ+jOj3WKIzlQn8MProOXrdAndDRG7qQ2
+         AGqw==
+X-Gm-Message-State: APjAAAX5Gpy5Lo4yTSHAgOoc6zftwfQZ4UA9dStLSQySSUa00u/V79fg
+        lEBit4ZfUt0P3dABs366TRdi8S9w5XzMX7khUkE=
+X-Google-Smtp-Source: APXvYqyLHmujuBanHsJfl5xNeVIrqPmRXrXe6Gt6bY0l1E1v1ndOo/T1IuOolwjZjXVUcDrOQJ2UWWeX2ocPzTjbE9Y=
+X-Received: by 2002:a37:7144:: with SMTP id m65mr24542013qkc.149.1565630211206;
+ Mon, 12 Aug 2019 10:16:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ec4666a6-c7db-247b-de81-bb784bb9d649@iki.fi>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <1560928518-243100-1-git-send-email-jiping.ma2@windriver.com> <1560928518-243100-2-git-send-email-jiping.ma2@windriver.com>
+In-Reply-To: <1560928518-243100-2-git-send-email-jiping.ma2@windriver.com>
+From:   Tony Luck <tony.luck@intel.com>
+Date:   Mon, 12 Aug 2019 10:16:40 -0700
+Message-ID: <CA+8MBbKegE2Z3YqB+a4XFEwN=C23YG3c9ju3su-WS5pt1HPCwA@mail.gmail.com>
+Subject: Re: [PATCH] EDAC, ie31200: Add Intel Corporation 3rd Gen Core processor
+To:     Jiping Ma <jiping.ma2@windriver.com>
+Cc:     Jason Baron <jbaron@akamai.com>,
+        Linux Edac Mailing List <linux-edac@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 10:35:53AM +0300, Jussi Kivilinna wrote:
-> Hello,
-> 
-> On 12.8.2019 6.31, Nathan Chancellor wrote:
-> > From: Vladimir Serbinenko <phcoder@gmail.com>
-> > 
-> > clang doesn't recognise =l / =h assembly operand specifiers but apparently
-> > handles C version well.
-> > 
-> > lib/mpi/generic_mpih-mul1.c:37:24: error: invalid use of a cast in a
-> > inline asm context requiring an l-value: remove the cast or build with
-> > -fheinous-gnu-extensions
-> >                 umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
-> >                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > lib/mpi/longlong.h:652:20: note: expanded from macro 'umul_ppmm'
-> >         : "=l" ((USItype)(w0)), \
-> >                 ~~~~~~~~~~^~~
-> > lib/mpi/generic_mpih-mul1.c:37:3: error: invalid output constraint '=h'
-> > in asm
-> >                 umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
-> >                 ^
-> > lib/mpi/longlong.h:653:7: note: expanded from macro 'umul_ppmm'
-> >              "=h" ((USItype)(w1)) \
-> >              ^
-> > 2 errors generated.
-> > 
-> > Fixes: 5ce3e312ec5c ("crypto: GnuPG based MPI lib - header files (part 2)")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/605
-> > Link: https://github.com/gpg/libgcrypt/commit/1ecbd0bca31d462719a2a6590c1d03244e76ef89
-> > Signed-off-by: Vladimir Serbinenko <phcoder@gmail.com>
-> > [jk: add changelog, rebase on libgcrypt repository, reformat changed
-> >  line so it does not go over 80 characters]
-> > Signed-off-by: Jussi Kivilinna <jussi.kivilinna@iki.fi>
-> 
-> This is my signed-off-by for libgcrypt project, not kernel. I do not think
-> signed-offs can be passed from other projects in this way.
-> 
-> -Jussi
+On Wed, Jun 19, 2019 at 12:34 AM Jiping Ma <jiping.ma2@windriver.com> wrote:
 
-Hi Jussi,
+Oops. Boris pointed out to me that this has been left hanging. Sorry
+for the delay.
 
-I am no signoff expert but if I am reading the developer certificate of
-origin in the libgcrypt repo correctly [1], your signoff on this commit
-falls under:
+> 3rd Gen Core seems to work just like Skylake.
 
-(d) I understand and agree that this project and the contribution
-    are public and that a record of the contribution (including all
-    personal information I submit with it, including my sign-off) is
-    maintained indefinitely and may be redistributed consistent with
-    this project or the open source license(s) involved.
+Maybe "just like all the other Xeon-E3 processors?
 
-This file is maintained under the LGPL because it was taken straight
-from the libgcrypr repo and per (b), I can submit this commit here
-with everything intact.
+"3rd Gen Core" seems to be Ivybridge generation (based on the PCI
+device ID below).
+I.e. "Xeon E3-12xx V2". Is that correct?
 
-However, I don't want to upset you in any way though so if you are not
-comfortable with that, I suppose I can remove it as if Vladimir
-submitted this fix to me directly (as I got permission for his signoff).
-I need to resubmit this fix to an appropriate maintainer so let me know
-what you think.
+I don't have a way to test that, so I'd like some more details on the
+testing that
+you have done.  Specifically has this driver been run on a system and correctly
+reported at least one error?
 
-[1]: https://github.com/gpg/libgcrypt/blob/3bb858551cd5d84e43b800edfa2b07d1529718a9/doc/DCO
+> Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+> ---
+>  drivers/edac/ie31200_edac.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
+> index aac9b9b..1445336 100644
+> --- a/drivers/edac/ie31200_edac.c
+> +++ b/drivers/edac/ie31200_edac.c
+> @@ -19,6 +19,7 @@
+>   * 0c08: Xeon E3-1200 v3 Processor DRAM Controller
+>   * 1918: Xeon E3-1200 v5 Skylake Host Bridge/DRAM Registers
+>   * 5918: Xeon E3-1200 Xeon E3-1200 v6/7th Gen Core Processor Host Bridge/DRAM Registers
+> + * 0154: 3rd Gen Core processor DRAM Controller
 
-Cheers,
-Nathan
+I think this line should be added chronologically by age of processor
+(i.e. at the start
+of the list)
+
+>   *
+>   * Based on Intel specification:
+>   * http://www.intel.com/content/dam/www/public/us/en/documents/datasheets/xeon-e3-1200v3-vol-2-datasheet.pdf
+> @@ -59,6 +60,7 @@
+>  #define PCI_DEVICE_ID_INTEL_IE31200_HB_7 0x0c08
+>  #define PCI_DEVICE_ID_INTEL_IE31200_HB_8 0x1918
+>  #define PCI_DEVICE_ID_INTEL_IE31200_HB_9 0x5918
+> +#define PCI_DEVICE_ID_INTEL_IE31200_HB_10 0x0154
+>
+>  #define IE31200_DIMMS                  4
+>  #define IE31200_RANKS                  8
+> @@ -569,6 +571,9 @@ static void ie31200_remove_one(struct pci_dev *pdev)
+>                 PCI_VEND_DEV(INTEL, IE31200_HB_9), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+>                 IE31200},
+>         {
+> +               PCI_VEND_DEV(INTEL, IE31200_HB_10), PCI_ANY_ID, PCI_ANY_ID, 0, 0
+> +               , IE31200},
+> +       {
+>                 0,
+>         }            /* 0 terminated list. */
+>  };
+> --
+> 1.9.1
+>
