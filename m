@@ -2,109 +2,150 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF35C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83048C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A782075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CAE4206C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 19:35:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbfHLTex (ORCPT
+        id S1726925AbfHLTfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 15:34:53 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60578 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726749AbfHLTex (ORCPT
+        Mon, 12 Aug 2019 15:35:41 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60016 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726681AbfHLTfk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 15:34:53 -0400
-Received: from p200300ddd71876867e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7686:7e7a:91ff:fec9:8e25])
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hxG5V-0004X8-7w; Mon, 12 Aug 2019 21:34:37 +0200
-Date:   Mon, 12 Aug 2019 21:34:31 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Josh Hunt <joshhunt00@gmail.com>
-cc:     Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "Liang, Kan" <kan.liang@intel.com>, jolsa@redhat.com,
-        bigeasy@linutronix.de, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Long standing kernel warning: perfevents: irq loop stuck!
-In-Reply-To: <CAKA=qzY=F-wj8YXhb-B7RahNceeab0rSA=06qBc8+7V-SyY-+Q@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1908122133310.7324@nanos.tec.linutronix.de>
-References: <CAM_iQpXvuYKn94WjJ9nSjzhk8DzYAvDmdgxsi6cc9CdBfkdTnw@mail.gmail.com> <20180223121456.GZ25201@hirez.programming.kicks-ass.net> <20180226203937.GA21543@tassilo.jf.intel.com> <CAKA=qzYOU-VtEC5p6djRNmVS0xGe=jpTd3ZgUr++1G3Jj1=PTg@mail.gmail.com>
- <alpine.DEB.2.21.1908121933310.7324@nanos.tec.linutronix.de> <CAKA=qzY=F-wj8YXhb-B7RahNceeab0rSA=06qBc8+7V-SyY-+Q@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 12 Aug 2019 15:35:40 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 6A236283C52
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v5 00/11] media: hantro: Add support for H264 decoding
+Date:   Mon, 12 Aug 2019 16:35:11 -0300
+Message-Id: <20190812193522.10911-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 12 Aug 2019, Josh Hunt wrote:
-> On Mon, Aug 12, 2019 at 10:55 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > On Mon, 12 Aug 2019, Josh Hunt wrote:
-> > > Was there any progress made on debugging this issue? We are still
-> > > seeing it on 4.19.44:
-> >
-> > I haven't seen anyone looking at this.
-> >
-> > Can you please try the patch Ingo posted:
-> >
-> >   https://lore.kernel.org/lkml/20150501070226.GB18957@gmail.com/
-> >
-> > and if it fixes the issue decrease the value from 128 to the point where it
-> > comes back, i.e. 128 -> 64 -> 32 ...
-> >
-> > Thanks,
-> >
-> >         tglx
-> 
-> I just checked the machines where this problem occurs and they're both
-> Nehalem boxes. I think Ingo's patch would only help Haswell machines.
-> Please let me know if I misread the patch or if what I'm seeing is a
-> different issue than the one Cong originally reported.
+A new version of H264 uAPI review and Hantro G1 H264 decoding support.
+Compared to previous version, this version takes care of the
+suggestions from Hans Verkuil clarifying the uAPI spec.
 
-Find the NHM hack below.
+This series consolidates the two recent H264 series submitted
+by Boris [1] [2]. Some patches from [2] have been merged (namely,
+helpers for the Hantro driver), and so I'm adding the remanining
+bits required to support H264 on Hantro G1 VPU.
 
-Thanks,
+* Patch 1 adds support for the sort_r() variant and has
+  been posted separately by Rasmus. It would be good to merge this patch
+  via the media tree, ideally as soon as possible, to avoid the
+  synchronisation burden that might appear if we decide to delay it.
 
-	tglx
-	
-8<----------------
+* Patch 2 to 4 extends the H264 uAPI, introducing frame-based vs slice-based
+  decoding granularity, and also support for different NALU start codes.
+  Currently, Annex B and no start codes are the supported options.
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 648260b5f367..93c1a4f0e73e 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3572,6 +3572,11 @@ static u64 bdw_limit_period(struct perf_event *event, u64 left)
- 	return left;
- }
- 
-+static u64 nhm_limit_period(struct perf_event *event, u64 left)
-+{
-+	return max(left, 128ULL);
-+}
-+
- PMU_FORMAT_ATTR(event,	"config:0-7"	);
- PMU_FORMAT_ATTR(umask,	"config:8-15"	);
- PMU_FORMAT_ATTR(edge,	"config:18"	);
-@@ -4606,6 +4611,7 @@ __init int intel_pmu_init(void)
- 		x86_pmu.pebs_constraints = intel_nehalem_pebs_event_constraints;
- 		x86_pmu.enable_all = intel_pmu_nhm_enable_all;
- 		x86_pmu.extra_regs = intel_nehalem_extra_regs;
-+		x86_pmu.limit_period = nhm_limit_period;
- 
- 		mem_attr = nhm_mem_events_attrs;
- 
+  With the introduction of the start code control, the H264 parsed
+  slices pixel format should be renamed, dropping the _RAW suffix,
+  which is now meaningless.
+
+* Patch 5 removes the P0/B0/B1 ref lists from the decode_params control.
+  These lists are no longer needed since we build them on the
+  kernel side based on the DPB.
+
+* Patch 6 and 7 exposes the proper decoding mode and start code
+  on the cedrus driver. The driver functionality is not changed,
+  and only the Cedrus support is now being properly exposed to
+  userspace.
+
+* Patch 8 is needed to properly propagate the OUTPUT buffer timestamp to
+  the CAPTURE buffer one, which is required for intra-frame references.
+
+* Patches 9 to 11 adds H264 support for Hantro G1 and then enable
+  H264 decoding on RK3288.
+
+This is based on media master and tested on Rockchip RK3288 for Hantro and
+Allwinner H3 boards for Cedrus. Philipp Zabel tested on i.MX8MQ EVK using [3].
+
+The Ffmpeg branch used to test is based on the great work of Jonas and Boris,
+and is available in [4]. Instructions to build and run are as follows:
+
+./configure --enable-v4l2-request --enable-libdrm
+make -j4
+
+(test via framebuffer rendering):
+
+./ffmpeg -loglevel debug -hwaccel drm -hwaccel_device /dev/dri/card0 -i $some_file.avi -pix_fmt bgra -f fbdev /dev/fb0
+
+[1] https://www.mail-archive.com/linux-media@vger.kernel.org/msg148299.html
+[2] https://lkml.org/lkml/2019/6/19/379
+[3] git://git.pengutronix.de/git/pza/linux.git hantro/imx8m-wip
+[4] https://gitlab.collabora.com/ezequiel/ffmpeg/tree/stateless-mpeg2-vp8-h264-v4
+
+Boris Brezillon (3):
+  media: uapi: h264: Add the concept of decoding mode
+  media: uapi: h264: Get rid of the p0/b0/b1 ref-lists
+  media: hantro: Move copy_metadata() before doing a decode operation
+
+Ezequiel Garcia (4):
+  media: uapi: h264: Rename pixel format
+  media: uapi: h264: Add the concept of start code
+  media: cedrus: Cleanup control initialization
+  media: cedrus: Specify H264 startcode and decoding mode
+
+Hertz Wong (3):
+  media: hantro: Add core bits to support H264 decoding
+  media: hantro: Add support for H264 decoding on G1
+  media: hantro: Enable H264 decoding on rk3288
+
+Rasmus Villemoes (1):
+  lib/sort.c: implement sort() variant taking context argument
+
+ .../media/uapi/v4l/ext-ctrls-codec.rst        |  89 ++-
+ .../media/uapi/v4l/pixfmt-compressed.rst      |   8 +-
+ drivers/media/v4l2-core/v4l2-ctrls.c          |  18 +
+ drivers/media/v4l2-core/v4l2-ioctl.c          |   2 +-
+ drivers/staging/media/hantro/Makefile         |   2 +
+ drivers/staging/media/hantro/hantro.h         |   9 +-
+ drivers/staging/media/hantro/hantro_drv.c     |  50 +-
+ .../staging/media/hantro/hantro_g1_h264_dec.c | 292 ++++++++
+ drivers/staging/media/hantro/hantro_h264.c    | 651 ++++++++++++++++++
+ drivers/staging/media/hantro/hantro_hw.h      |  56 ++
+ drivers/staging/media/hantro/hantro_v4l2.c    |  10 +
+ drivers/staging/media/hantro/rk3288_vpu_hw.c  |  21 +-
+ drivers/staging/media/sunxi/cedrus/cedrus.c   |  65 +-
+ drivers/staging/media/sunxi/cedrus/cedrus.h   |   3 +-
+ .../staging/media/sunxi/cedrus/cedrus_dec.c   |   2 +-
+ .../staging/media/sunxi/cedrus/cedrus_video.c |   6 +-
+ include/linux/sort.h                          |   5 +
+ include/media/h264-ctrls.h                    |  22 +-
+ lib/sort.c                                    |  34 +-
+ 19 files changed, 1290 insertions(+), 55 deletions(-)
+ create mode 100644 drivers/staging/media/hantro/hantro_g1_h264_dec.c
+ create mode 100644 drivers/staging/media/hantro/hantro_h264.c
+
+-- 
+2.22.0
+
