@@ -2,94 +2,67 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B99CC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B38C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D4F20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6786F206C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbfHLRGh (ORCPT
+        id S1726981AbfHLRK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 13:06:37 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52383 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbfHLRGg (ORCPT
+        Mon, 12 Aug 2019 13:10:56 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:36092 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbfHLRKz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 13:06:36 -0400
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1hxDkk-0004XM-EI; Mon, 12 Aug 2019 17:05:02 +0000
-Date:   Mon, 12 Aug 2019 19:05:01 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Adrian Reber <areber@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelianov <xemul@virtuozzo.com>,
-        Jann Horn <jannh@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v5 1/2] fork: extend clone3() to support CLONE_SET_TID
-Message-ID: <20190812170500.37xhv6eute6xujcj@wittgenstein>
-References: <20190811203327.5385-1-areber@redhat.com>
- <20190812163710.GC31560@redhat.com>
- <20190812165130.d3b5smm45dpxk6m4@wittgenstein>
- <20190812165733.GD31560@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190812165733.GD31560@redhat.com>
-User-Agent: NeoMutt/20180716
+        Mon, 12 Aug 2019 13:10:55 -0400
+Received: from marcel-macbook.fritz.box (p4FEFC580.dip0.t-ipconnect.de [79.239.197.128])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 7D922CECF5;
+        Mon, 12 Aug 2019 19:19:35 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH -next] Bluetooth: hci_bcm: Fix -Wunused-const-variable
+ warnings
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20190812062211.69984-1-yuehaibing@huawei.com>
+Date:   Mon, 12 Aug 2019 19:10:53 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <AE59FB65-6D4A-46AA-AFF7-EC80D11028D1@holtmann.org>
+References: <20190812062211.69984-1-yuehaibing@huawei.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 06:57:34PM +0200, Oleg Nesterov wrote:
-> On 08/12, Christian Brauner wrote:
-> > On Mon, Aug 12, 2019 at 06:37:10PM +0200, Oleg Nesterov wrote:
-> > > On 08/11, Adrian Reber wrote:
-> > > >
-> > > >  include/linux/pid.h        |  2 +-
-> > > >  include/linux/sched/task.h |  1 +
-> > > >  include/uapi/linux/sched.h |  1 +
-> > > >  kernel/fork.c              | 22 ++++++++++++++++++++--
-> > > >  kernel/pid.c               | 36 +++++++++++++++++++++++++++++-------
-> > > >  5 files changed, 52 insertions(+), 10 deletions(-)
-> > > 
-> > > Looks good to me...
-> > > 
-> > > A couple of nits below, but I won't insist, feel free to ignore.
-> > > 
-> > > > +/*
-> > > > + * Different sizes of struct clone_args
-> > > > + */
-> > > > +#define CLONE3_ARGS_SIZE_V0 64
-> > > 
-> > > I don't really understand why do we want the "size < CLONE3_ARGS_SIZE_V0"
-> > > check in copy_clone_args_from_user(), but I won't argue.
-> > 
-> > To make sure a user can't give us a garbage sized struct that is smaller
-> > than the initial version of the struct.
+Hi Yue,
+
+> If CONFIG_ACPI is not set, gcc warn this:
 > 
-> But why do we want to detect this case?
-
-I have to admit I don't understand that question. Because it's a garbage
-sized struct that we can't do anything with. Why shouldn't we detect
-this case?
-
+> drivers/bluetooth/hci_bcm.c:831:39: warning:
+> acpi_bcm_int_last_gpios defined but not used [-Wunused-const-variable=]
+> drivers/bluetooth/hci_bcm.c:838:39: warning:
+> acpi_bcm_int_first_gpios defined but not used [-Wunused-const-variable=]
 > 
-> And why CLONE3_ARGS_SIZE_V0 is special?
+> move them to #ifdef CONFIG_ACPI block.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+> drivers/bluetooth/hci_bcm.c | 30 +++++++++++++++---------------
+> 1 file changed, 15 insertions(+), 15 deletions(-)
 
-Hm? Because that is the first-well known struct size. In fact this
-pattern is also used for perf and sched:
+patch has been applied to bluetooth-next tree.
 
-	if (!access_ok(uattr, PERF_ATTR_SIZE_VER0))
-		return -EFAULT;
+Regards
+
+Marcel
+
