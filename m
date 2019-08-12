@@ -2,229 +2,93 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E56C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20775C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02014214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:45:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="PfYYqanj"
+	by mail.kernel.org (Postfix) with ESMTP id 00084208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:45:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbfHLJo3 (ORCPT
+        id S1727729AbfHLJpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 05:44:29 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:50904 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727494AbfHLJoZ (ORCPT
+        Mon, 12 Aug 2019 05:45:04 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:51325 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727430AbfHLJpC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 05:44:25 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E1A33C2175;
-        Mon, 12 Aug 2019 09:44:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1565603065; bh=RVdfzAnkLd2cFbezBg+5+IcJ5jUr94r8t2wC6fXWHBw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=PfYYqanjxndnblrG+5DUrlPCPx78aCvQKQrKzaxzuM0oVmpysCGkOeEy9Fbqi+D6m
-         jIeXVjq0pS44wsVXB4COBy46rmizPN8NbubE71zuBTXaDMcPcjhkKeE/u7GEQr1xyA
-         gBMmG+FaAyfR77rZscSmTEeU5OR1di3nbHtcZo5nYNYdOk1Xz8zxaUhsJ0lAWEfktI
-         8/OemqVooL/Zf1uFOrjQLf5JOuEV3k6tDnXuGkU6onlEidwvlGr5k/nUNmueF+qLy6
-         Adst0rMiegyubL1VA0VXK2R4kTfeIukJ2X9nJ58oDcRSp3kkMTDfFpjrXCXW6EFs0f
-         UeBLibNXme6IQ==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 9B060A0080;
-        Mon, 12 Aug 2019 09:44:23 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 12/12] net: stmmac: selftests: Add selftest for VLAN TX Offload
-Date:   Mon, 12 Aug 2019 11:44:11 +0200
-Message-Id: <6ca59f405df8632e00fb4cae360f013bf0c289c6.1565602974.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1565602974.git.joabreu@synopsys.com>
-References: <cover.1565602974.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1565602974.git.joabreu@synopsys.com>
-References: <cover.1565602974.git.joabreu@synopsys.com>
+        Mon, 12 Aug 2019 05:45:02 -0400
+X-Originating-IP: 91.118.195.70
+Received: from jirafa.cyrius.com (91-118-195-70.static.upcbusiness.at [91.118.195.70])
+        (Authenticated sender: tbm@cyrius.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id DA1BF40003;
+        Mon, 12 Aug 2019 09:44:56 +0000 (UTC)
+Received: by jirafa.cyrius.com (Postfix, from userid 1000)
+        id 58518A887E; Mon, 12 Aug 2019 11:44:56 +0200 (CEST)
+Date:   Mon, 12 Aug 2019 11:44:56 +0200
+From:   Martin Michlmayr <tbm@cyrius.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, soc@kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org,
+        Peter Teichmann <lists@peter-teichmann.de>
+Subject: Re: [PATCH 1/7] [RFC] ARM: remove Intel iop33x and iop13xx support
+Message-ID: <20190812094456.GI10598@jirafa.cyrius.com>
+References: <20190809162956.488941-1-arnd@arndb.de>
+ <20190809163334.489360-1-arnd@arndb.de>
+ <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add 2 new selftests for VLAN Insertion offloading. Tests are for inner
-and outer VLAN offloading.
+* Dan Williams <dan.j.williams@intel.com> [2019-08-09 11:34]:
+> > Earlier versions of OpenWRT and Debian both had support for iop32x
+> > but not the others, and they both dropped iop32x as well in their 2015
+> > releases.
+> >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> > I'm just guessing that iop32x is still needed, and the other two are
+> > not. If anyone disagrees with that assessment, let me know so we
+> > can come up with an alternative approach.
+> 
+> I'm not sure who would scream if iop32x support went away as well, but
+> I have not followed this space in years hence copying Martin.
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+I believe iop13xx were mostly Intel dev boards.  I'm not aware of any
+major devices based on iop33x.
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 96 +++++++++++++++++++++-
- 1 file changed, 94 insertions(+), 2 deletions(-)
+As Arnd points out, Debian used to have support for various iop32x
+devices.  While Debian hasn't supported iop32x in a number of years,
+these devices are still usable and in use (RMK being a prime example).
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-index acfab86431b1..ecc8602c6799 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-@@ -296,7 +296,9 @@ static int __stmmac_test_loopback(struct stmmac_priv *priv,
- 	tpriv->pt.dev = priv->dev;
- 	tpriv->pt.af_packet_priv = tpriv;
- 	tpriv->packet = attr;
--	dev_add_pack(&tpriv->pt);
-+
-+	if (!attr->dont_wait)
-+		dev_add_pack(&tpriv->pt);
- 
- 	skb = stmmac_test_get_udp_skb(priv, attr);
- 	if (!skb) {
-@@ -319,7 +321,8 @@ static int __stmmac_test_loopback(struct stmmac_priv *priv,
- 	ret = !tpriv->ok;
- 
- cleanup:
--	dev_remove_pack(&tpriv->pt);
-+	if (!attr->dont_wait)
-+		dev_remove_pack(&tpriv->pt);
- 	kfree(tpriv);
- 	return ret;
- }
-@@ -731,6 +734,9 @@ static int stmmac_test_vlan_validate(struct sk_buff *skb,
- 	struct ethhdr *ehdr;
- 	struct udphdr *uhdr;
- 	struct iphdr *ihdr;
-+	u16 proto;
-+
-+	proto = tpriv->double_vlan ? ETH_P_8021AD : ETH_P_8021Q;
- 
- 	skb = skb_unshare(skb, GFP_ATOMIC);
- 	if (!skb)
-@@ -740,6 +746,12 @@ static int stmmac_test_vlan_validate(struct sk_buff *skb,
- 		goto out;
- 	if (skb_headlen(skb) < (STMMAC_TEST_PKT_SIZE - ETH_HLEN))
- 		goto out;
-+	if (tpriv->vlan_id) {
-+		if (skb->vlan_proto != htons(proto))
-+			goto out;
-+		if (skb->vlan_tci != tpriv->vlan_id)
-+			goto out;
-+	}
- 
- 	ehdr = (struct ethhdr *)skb_mac_header(skb);
- 	if (!ether_addr_equal(ehdr->h_dest, tpriv->packet->dst))
-@@ -1084,6 +1096,78 @@ static int stmmac_test_reg_sar(struct stmmac_priv *priv)
- 	return ret;
- }
- 
-+static int stmmac_test_vlanoff_common(struct stmmac_priv *priv, bool svlan)
-+{
-+	struct stmmac_packet_attrs attr = { };
-+	struct stmmac_test_priv *tpriv;
-+	struct sk_buff *skb = NULL;
-+	int ret = 0;
-+	u16 proto;
-+
-+	if (!priv->dma_cap.vlins)
-+		return -EOPNOTSUPP;
-+
-+	tpriv = kzalloc(sizeof(*tpriv), GFP_KERNEL);
-+	if (!tpriv)
-+		return -ENOMEM;
-+
-+	proto = svlan ? ETH_P_8021AD : ETH_P_8021Q;
-+
-+	tpriv->ok = false;
-+	tpriv->double_vlan = svlan;
-+	init_completion(&tpriv->comp);
-+
-+	tpriv->pt.type = svlan ? htons(ETH_P_8021Q) : htons(ETH_P_IP);
-+	tpriv->pt.func = stmmac_test_vlan_validate;
-+	tpriv->pt.dev = priv->dev;
-+	tpriv->pt.af_packet_priv = tpriv;
-+	tpriv->packet = &attr;
-+	tpriv->vlan_id = 0x123;
-+	dev_add_pack(&tpriv->pt);
-+
-+	ret = vlan_vid_add(priv->dev, htons(proto), tpriv->vlan_id);
-+	if (ret)
-+		goto cleanup;
-+
-+	attr.dst = priv->dev->dev_addr;
-+
-+	skb = stmmac_test_get_udp_skb(priv, &attr);
-+	if (!skb) {
-+		ret = -ENOMEM;
-+		goto vlan_del;
-+	}
-+
-+	__vlan_hwaccel_put_tag(skb, htons(proto), tpriv->vlan_id);
-+	skb->protocol = htons(proto);
-+
-+	skb_set_queue_mapping(skb, 0);
-+	ret = dev_queue_xmit(skb);
-+	if (ret)
-+		goto vlan_del;
-+
-+	wait_for_completion_timeout(&tpriv->comp, STMMAC_LB_TIMEOUT);
-+	ret = tpriv->ok ? 0 : -ETIMEDOUT;
-+
-+vlan_del:
-+	vlan_vid_del(priv->dev, htons(proto), tpriv->vlan_id);
-+cleanup:
-+	dev_remove_pack(&tpriv->pt);
-+	kfree(tpriv);
-+	return ret;
-+}
-+
-+static int stmmac_test_vlanoff(struct stmmac_priv *priv)
-+{
-+	return stmmac_test_vlanoff_common(priv, false);
-+}
-+
-+static int stmmac_test_svlanoff(struct stmmac_priv *priv)
-+{
-+	if (!priv->dma_cap.dvlan)
-+		return -EOPNOTSUPP;
-+	return stmmac_test_vlanoff_common(priv, true);
-+}
-+
- #define STMMAC_LOOPBACK_NONE	0
- #define STMMAC_LOOPBACK_MAC	1
- #define STMMAC_LOOPBACK_PHY	2
-@@ -1161,6 +1245,14 @@ static const struct stmmac_test {
- 		.name = "SA Replacement (reg)",
- 		.lb = STMMAC_LOOPBACK_PHY,
- 		.fn = stmmac_test_reg_sar,
-+	}, {
-+		.name = "VLAN TX Insertion   ",
-+		.lb = STMMAC_LOOPBACK_PHY,
-+		.fn = stmmac_test_vlanoff,
-+	}, {
-+		.name = "SVLAN TX Insertion  ",
-+		.lb = STMMAC_LOOPBACK_PHY,
-+		.fn = stmmac_test_svlanoff,
- 	},
- };
- 
+So I think it's safe to drop iop33x/iop13xx while retaining support
+for iop32x.
+
+As I was looking at my email archives, I saw an email from Peter
+Teichmann who was working on an iop33x based platform (around 2009) so
+I've copied him as well.
+
+> In any event:
+> 
+> Acked-by: Dan Williams <dan.j.williams@intel.com>
+
+Acked-by: Martin Michlmayr <tbm@cyrius.com>
+
 -- 
-2.7.4
-
+Martin Michlmayr
+https://www.cyrius.com/
