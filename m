@@ -4,32 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90913C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAC6C32750
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6866420663
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F228620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:39:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbfHLMjJ (ORCPT
+        id S1726734AbfHLMiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 08:39:09 -0400
-Received: from mga11.intel.com ([192.55.52.93]:22553 "EHLO mga11.intel.com"
+        Mon, 12 Aug 2019 08:38:55 -0400
+Received: from mga14.intel.com ([192.55.52.115]:31861 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726609AbfHLMi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 08:38:56 -0400
+        id S1726609AbfHLMiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 08:38:52 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 05:38:55 -0700
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 05:38:51 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,377,1559545200"; 
-   d="scan'208";a="193954998"
+   d="scan'208";a="175871412"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Aug 2019 05:38:52 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 12 Aug 2019 05:38:48 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 5621D3EA; Mon, 12 Aug 2019 15:38:48 +0300 (EEST)
+        id 3167D314; Mon, 12 Aug 2019 15:38:48 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Andreas Noever <andreas.noever@gmail.com>,
@@ -44,9 +45,9 @@ Cc:     Andreas Noever <andreas.noever@gmail.com>,
         David Laight <David.Laight@ACULAB.COM>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-acpi@vger.kernel.org
-Subject: [PATCH v2 6/8] thunderbolt: Expose active parts of NVM even if upgrade is not supported
-Date:   Mon, 12 Aug 2019 15:38:45 +0300
-Message-Id: <20190812123847.50802-7-mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 3/8] thunderbolt: Use 32-bit writes when writing ring producer/consumer
+Date:   Mon, 12 Aug 2019 15:38:42 +0300
+Message-Id: <20190812123847.50802-4-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190812123847.50802-1-mika.westerberg@linux.intel.com>
 References: <20190812123847.50802-1-mika.westerberg@linux.intel.com>
@@ -57,85 +58,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ice Lake Thunderbolt controller NVM firmware is part of the BIOS image
-which means it is not writable through the DMA port anymore. However, we
-can still read it so we can keep nvm_version and active parts of NVM.
-This way users still can find out the active NVM version and other
-potentially useful information directly from Linux.
+The register access should be using 32-bit reads/writes according to the
+datasheet. With the previous generation hardware 16-bit writes have been
+working but starting with ICL this is not the case anymore so fix
+producer/consumer register update to use correct width register address.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Yehezkel Bernat <YehezkelShB@gmail.com>
 ---
- drivers/thunderbolt/switch.c | 28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+ drivers/thunderbolt/nhi.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index bd3eaaf34ea1..531f11fecf75 100644
---- a/drivers/thunderbolt/switch.c
-+++ b/drivers/thunderbolt/switch.c
-@@ -364,12 +364,14 @@ static int tb_switch_nvm_add(struct tb_switch *sw)
- 		nvm->active = nvm_dev;
- 	}
+diff --git a/drivers/thunderbolt/nhi.c b/drivers/thunderbolt/nhi.c
+index 27fbe62c7ddd..9c782706e652 100644
+--- a/drivers/thunderbolt/nhi.c
++++ b/drivers/thunderbolt/nhi.c
+@@ -143,9 +143,20 @@ static void __iomem *ring_options_base(struct tb_ring *ring)
+ 	return io;
+ }
  
--	nvm_dev = register_nvmem(sw, nvm->id, NVM_MAX_SIZE, false);
--	if (IS_ERR(nvm_dev)) {
--		ret = PTR_ERR(nvm_dev);
--		goto err_nvm_active;
-+	if (!sw->no_nvm_upgrade) {
-+		nvm_dev = register_nvmem(sw, nvm->id, NVM_MAX_SIZE, false);
-+		if (IS_ERR(nvm_dev)) {
-+			ret = PTR_ERR(nvm_dev);
-+			goto err_nvm_active;
-+		}
-+		nvm->non_active = nvm_dev;
- 	}
--	nvm->non_active = nvm_dev;
- 
- 	sw->nvm = nvm;
- 	return 0;
-@@ -398,7 +400,8 @@ static void tb_switch_nvm_remove(struct tb_switch *sw)
- 	if (!nvm->authenticating)
- 		nvm_clear_auth_status(sw);
- 
--	nvmem_unregister(nvm->non_active);
-+	if (nvm->non_active)
-+		nvmem_unregister(nvm->non_active);
- 	if (nvm->active)
- 		nvmem_unregister(nvm->active);
- 	ida_simple_remove(&nvm_ida, nvm->id);
-@@ -1355,8 +1358,11 @@ static umode_t switch_attr_is_visible(struct kobject *kobj,
- 		    sw->security_level == TB_SECURITY_SECURE)
- 			return attr->mode;
- 		return 0;
--	} else if (attr == &dev_attr_nvm_authenticate.attr ||
--		   attr == &dev_attr_nvm_version.attr) {
-+	} else if (attr == &dev_attr_nvm_authenticate.attr) {
-+		if (sw->dma_port && !sw->no_nvm_upgrade)
-+			return attr->mode;
-+		return 0;
-+	} else if (attr == &dev_attr_nvm_version.attr) {
- 		if (sw->dma_port)
- 			return attr->mode;
- 		return 0;
-@@ -1707,13 +1713,17 @@ static int tb_switch_add_dma_port(struct tb_switch *sw)
- 		break;
- 	}
- 
--	if (sw->no_nvm_upgrade)
-+	/* Root switch DMA port requires running firmware */
-+	if (!tb_route(sw) && sw->config.enabled)
- 		return 0;
- 
- 	sw->dma_port = dma_port_alloc(sw);
- 	if (!sw->dma_port)
- 		return 0;
- 
-+	if (sw->no_nvm_upgrade)
-+		return 0;
+-static void ring_iowrite16desc(struct tb_ring *ring, u32 value, u32 offset)
++static void ring_iowrite_cons(struct tb_ring *ring, u16 cons)
+ {
+-	iowrite16(value, ring_desc_base(ring) + offset);
++	/*
++	 * The other 16-bits in the register is read-only and writes to it
++	 * are ignored by the hardware so we can save one ioread32() by
++	 * filling the read-only bits with zeroes.
++	 */
++	iowrite32(cons, ring_desc_base(ring) + 8);
++}
 +
- 	/*
- 	 * Check status of the previous flash authentication. If there
- 	 * is one we need to power cycle the switch in any case to make
++static void ring_iowrite_prod(struct tb_ring *ring, u16 prod)
++{
++	/* See ring_iowrite_cons() above for explanation */
++	iowrite32(prod << 16, ring_desc_base(ring) + 8);
+ }
+ 
+ static void ring_iowrite32desc(struct tb_ring *ring, u32 value, u32 offset)
+@@ -197,7 +208,10 @@ static void ring_write_descriptors(struct tb_ring *ring)
+ 			descriptor->sof = frame->sof;
+ 		}
+ 		ring->head = (ring->head + 1) % ring->size;
+-		ring_iowrite16desc(ring, ring->head, ring->is_tx ? 10 : 8);
++		if (ring->is_tx)
++			ring_iowrite_prod(ring, ring->head);
++		else
++			ring_iowrite_cons(ring, ring->head);
+ 	}
+ }
+ 
+@@ -662,7 +676,7 @@ void tb_ring_stop(struct tb_ring *ring)
+ 
+ 	ring_iowrite32options(ring, 0, 0);
+ 	ring_iowrite64desc(ring, 0, 0);
+-	ring_iowrite16desc(ring, 0, ring->is_tx ? 10 : 8);
++	ring_iowrite32desc(ring, 0, 8);
+ 	ring_iowrite32desc(ring, 0, 12);
+ 	ring->head = 0;
+ 	ring->tail = 0;
 -- 
 2.20.1
 
