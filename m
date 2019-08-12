@@ -2,113 +2,117 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 774AAC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E37C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4579F206A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:46:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="WIRUIIjk"
+	by mail.kernel.org (Postfix) with ESMTP id A27052085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:50:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565621428;
+	bh=Fyy1cHG7OLQ50YJfdvzpSVl+ewYcIEnhuo+BGNnPczw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=U72VJbFSwl8xOOkSF8OiLZyC/nQ8RG1sVr5VEgPhlklIzjkuClKkC+/KZr+bC6diy
+	 DuRzAdL1aWYTwhGsnVqLghL5xUfSVw1TxZCvcgpqgJAAr11A2WqJz8v8wDPqQmQ8k7
+	 /ix+Y7vWBSgdwqpPRS/lOcbcU7XOz43f12YSPZZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbfHLOqB (ORCPT
+        id S1726911AbfHLOu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 10:46:01 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41935 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbfHLOqA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 10:46:00 -0400
-Received: by mail-lj1-f196.google.com with SMTP id d24so98516591ljg.8
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 07:45:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZaGlV5OBaG8I83pvsjihid45NFnJRTn9496TwujIaXI=;
-        b=WIRUIIjknYqkFNwJtm38+0CsZRBPiSpzwtVX5R6JN55OGVYc4XsWYFX8X4zJLPeJKq
-         CSjXoysXYS5Y5zwLr7gvMjHYEzFyJW8nEQ5lJPD4OIOjy0krjWl0/wh+o8ejQRuz8dyZ
-         ZaqWAyxRJ7FHf86RVRZPM4Mv6VjuL49tMSTt4P5WgBhgovdP1LV++xjkwR3yhDFVvLPl
-         hmishGIPfyKnJTy1MB+0lRaL3sbqpkDJCOfrhB1GQ4HFWcr+OZ9x0jy6TDwn/uN1uPdG
-         jAOMLThn9V5WAjgyQKOBQDWZf80kAvxutL41GmstiWeFCnC8KZ0QjGZXxGjSpq5BI5FW
-         sDvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZaGlV5OBaG8I83pvsjihid45NFnJRTn9496TwujIaXI=;
-        b=RE4Vv2nVJ9SSVuskEeOOUu5oxVmgA2SVxqy6QHiI487PsUV9jD+REaw7BsDQ8JuPFm
-         RT0TIPKmNSZD/wHcOzkppeRRErSVvW5l+I52/y1UE64UYiwyK7GBAYkDBeIM+xsRGhpJ
-         HSGJb72MhP1toqTO51YOJlK4mAa2/ll0sxcj+4f1zQ2NWo5e1ylShjLcDnucdBKevUr9
-         JLrZM7bHYRFT/OchHQMHdRwJcQHFfmPqjr3BHevKR6YeT3Hz07+NnsFcEN/hf0rroLKn
-         T7XK+8iR3/9kxVc0guyfFe4KSojQ/L2MsRrsMk1g6aKpjXR/0pNWZtK8aJIacNtWJt/k
-         YNyA==
-X-Gm-Message-State: APjAAAUoynjVJ7E6ZTWacNKeygI4lb3rcUJmOL4UpthBLFp3bz3okMlQ
-        Xjt/Hv7zlCImghZM8j05HbdnoVwtQvvSVoT0j7Mw
-X-Google-Smtp-Source: APXvYqzujkc2BH0FIqLuHrfT33Rlx6ggSYmZDFa3Ywl40gD0HkUkA9LWgXfs4wdbLflpo9wrcvV+NGkJ7yGDcN6IubE=
-X-Received: by 2002:a2e:9dc1:: with SMTP id x1mr6576889ljj.0.1565621158391;
- Mon, 12 Aug 2019 07:45:58 -0700 (PDT)
+        Mon, 12 Aug 2019 10:50:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59652 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726648AbfHLOu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 10:50:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8031206A2;
+        Mon, 12 Aug 2019 14:50:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565621426;
+        bh=Fyy1cHG7OLQ50YJfdvzpSVl+ewYcIEnhuo+BGNnPczw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IMtwFqxiGdSMBqAb8WYJoKoL8TTUEU0ifoOs/tMi2+VK0TGwJurcHubsJs7ZtEcja
+         AuuYE0yNXluBItCb5JrcdRF9YOkNhiEWx7pB52/5fk9MSemu56aBihzJDFpUQ8l8AY
+         1CwKn2nXPwIwrhO727rVr1sPsxsbMKgx7IM3TGL4=
+Date:   Mon, 12 Aug 2019 16:50:23 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Oded Gabbay <oded.gabbay@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Dotan Barak <dbarak@habana.ai>
+Subject: Re: [PATCH] habanalabs: explicitly set the queue-id enumerated
+ numbers
+Message-ID: <20190812145023.GA22363@kroah.com>
+References: <20190812074144.12630-1-oded.gabbay@gmail.com>
 MIME-Version: 1.0
-References: <20190731153443.4984-1-acgoide@tycho.nsa.gov> <CAHC9VhQUoDwBiLi+BiW=_Px18v3xMhhGYDD2mLdu9YZJDWw1yg@mail.gmail.com>
- <CAOQ4uxigYZunXgq0BubRFNM51Kh_g3wrtyNH77PozUX+3sM=aQ@mail.gmail.com>
- <CAHC9VhRpTuL2Lj1VFwHW4YLpx0hJVSxMnXefooHqsxpEUg6-0A@mail.gmail.com>
- <CAOQ4uxiGNXbZ-DWeXTkNM4ySFbBbo1XOF1=3pjknsf+EjbNuOw@mail.gmail.com>
- <16c7c0c4a60.280e.85c95baa4474aabc7814e68940a78392@paul-moore.com> <20190812134145.GA11343@quack2.suse.cz>
-In-Reply-To: <20190812134145.GA11343@quack2.suse.cz>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 12 Aug 2019 10:45:46 -0400
-Message-ID: <CAHC9VhTzQr3aUV8waM_VNQorDeWGz2SQuP9PVZO+oTWL+3oAHA@mail.gmail.com>
-Subject: Re: [PATCH] fanotify, inotify, dnotify, security: add security hook
- for fs notifications
-To:     Jan Kara <jack@suse.cz>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Aaron Goidel <acgoide@tycho.nsa.gov>, selinux@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812074144.12630-1-oded.gabbay@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 9:41 AM Jan Kara <jack@suse.cz> wrote:
-> On Sat 10-08-19 11:01:16, Paul Moore wrote:
-> > On August 10, 2019 6:05:27 AM Amir Goldstein <amir73il@gmail.com> wrote:
-> >
-> > >>>> Other than Casey's comments, and ACK, I'm not seeing much commentary
-> > >>>> on this patch so FS and LSM folks consider this your last chance - if
-> > >>>> I don't hear any objections by the end of this week I'll plan on
-> > >>>> merging this into selinux/next next week.
-> > >>>
-> > >>> Please consider it is summer time so people may be on vacation like I was...
-> > >>
-> > >> This is one of the reasons why I was speaking to the mailing list and
-> > >> not a particular individual :)
-> > >
-> > > Jan is fsnotify maintainer, so I think you should wait for an explicit ACK
-> > > from Jan or just merge the hook definition and ask Jan to merge to
-> > > fsnotify security hooks.
-> >
-> > Aaron posted his first patch a month ago in the beginning of July and I
-> > don't recall seeing any comments from Jan on any of the patch revisions.
-> > I would feel much better with an ACK/Reviewed-by from Jan, or you - which
-> > is why I sent that email - but I'm not going to wait forever and I'd like
-> > to get this into -next soon so we can get some testing.
->
-> Yeah, sorry for the delays. I'm aware of the patch but I was also on
-> vacation and pretty busy at work so Amir always beat me in commenting on
-> the patch and I didn't have much to add. Once Aaron fixes the latest
-> comments from Amir, I'll give the patch the final look and give my ack.
+On Mon, Aug 12, 2019 at 10:41:44AM +0300, Oded Gabbay wrote:
+> From: Dotan Barak <dbarak@habana.ai>
+> 
+> When looking at kernel log messages and when debugging user applications,
+> we only see the queue id. This patch explicitly set the queue id in the
+> queue enumeration which will be helpful for finding the queue name when we
+> have its id.
+> 
+> Signed-off-by: Dotan Barak <dbarak@habana.ai>
+> Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+> Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+> ---
+>  include/uapi/misc/habanalabs.h | 28 ++++++++++++++--------------
+>  1 file changed, 14 insertions(+), 14 deletions(-)
+> 
+> diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.h
+> index a5a1d0e7ec82..6cf50177cd21 100644
+> --- a/include/uapi/misc/habanalabs.h
+> +++ b/include/uapi/misc/habanalabs.h
+> @@ -28,20 +28,20 @@
+>  
+>  enum goya_queue_id {
+>  	GOYA_QUEUE_ID_DMA_0 = 0,
+> -	GOYA_QUEUE_ID_DMA_1,
+> -	GOYA_QUEUE_ID_DMA_2,
+> -	GOYA_QUEUE_ID_DMA_3,
+> -	GOYA_QUEUE_ID_DMA_4,
+> -	GOYA_QUEUE_ID_CPU_PQ,
+> -	GOYA_QUEUE_ID_MME,	/* Internal queues start here */
+> -	GOYA_QUEUE_ID_TPC0,
+> -	GOYA_QUEUE_ID_TPC1,
+> -	GOYA_QUEUE_ID_TPC2,
+> -	GOYA_QUEUE_ID_TPC3,
+> -	GOYA_QUEUE_ID_TPC4,
+> -	GOYA_QUEUE_ID_TPC5,
+> -	GOYA_QUEUE_ID_TPC6,
+> -	GOYA_QUEUE_ID_TPC7,
+> +	GOYA_QUEUE_ID_DMA_1 = 1,
+> +	GOYA_QUEUE_ID_DMA_2 = 2,
+> +	GOYA_QUEUE_ID_DMA_3 = 3,
+> +	GOYA_QUEUE_ID_DMA_4 = 4,
+> +	GOYA_QUEUE_ID_CPU_PQ = 5,
+> +	GOYA_QUEUE_ID_MME = 6,	/* Internal queues start here */
+> +	GOYA_QUEUE_ID_TPC0 = 7,
+> +	GOYA_QUEUE_ID_TPC1 = 8,
+> +	GOYA_QUEUE_ID_TPC2 = 9,
+> +	GOYA_QUEUE_ID_TPC3 = 10,
+> +	GOYA_QUEUE_ID_TPC4 = 11,
+> +	GOYA_QUEUE_ID_TPC5 = 12,
+> +	GOYA_QUEUE_ID_TPC6 = 13,
+> +	GOYA_QUEUE_ID_TPC7 = 14,
+>  	GOYA_QUEUE_ID_SIZE
+>  };
 
-That is prefect, thanks.
+This is good anyway, uapi enums should ALWAYS be explicitly set,
+otherwise you could have problems with different compilers setting the
+values to different numbers.
 
--- 
-paul moore
-www.paul-moore.com
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
