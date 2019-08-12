@@ -2,139 +2,139 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 892E5C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 178B0C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D26D20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:25:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OCwdg+fJ"
+	by mail.kernel.org (Postfix) with ESMTP id EA79920842
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:25:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfHLKZZ (ORCPT
+        id S1727934AbfHLKZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:25:25 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46819 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727703AbfHLKZZ (ORCPT
+        Mon, 12 Aug 2019 06:25:49 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:34112
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727678AbfHLKZt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:25:25 -0400
-Received: by mail-wr1-f66.google.com with SMTP id z1so104086669wru.13;
-        Mon, 12 Aug 2019 03:25:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PIAupDPuXjY8vH3r8F2CpCcWnZ4atzq5h0b+kQLhH+s=;
-        b=OCwdg+fJef/L9XVuxGY6Alc24Gm4QyZwIk/wWZcJYtfVz0llGuYy8hWIL6dE+CA3Dw
-         foGBga0+uFwLxB9DqB/HFPOP0dD/j5Re/mq7r0FkzKjWRgMOBaatS6DAYsW64Q0IoCgT
-         v3frKbqCMimQUei0PcaZs3yRncEgP3eVPiVmT2TwOXUAMZDNRzujsM57IKh+zZ1A5DAI
-         kOrbhdFdgonKD+eFZttxFiDHiUk2waWwVBdVjv0BsA0OHm9PhEsvKBor4AACD2p938D9
-         rKHREm9//MXZEIgDLZ3TArowHQJ0UaDHyG7/ITkQrpNG3ELS+qdc27o00i8tiI5jd3ZL
-         ZbTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PIAupDPuXjY8vH3r8F2CpCcWnZ4atzq5h0b+kQLhH+s=;
-        b=EVZF18kU9L9nvCTMdSqvX2BGdT4TIHNWIIdR4D50n9QaSuLDt1z6BNOiLgl57OFWmJ
-         FdeMoGiETctJwqasy+ceHYAuRCjrNChINbx8MXMnIrUGevTNsT4xCiE17NCYhyn8yMeO
-         7QcW633fbSk/FROLnRsYNXJYe3Iz/LMQDMKDpLkM1pdBZvwo1sKq6XwgpURcKpP+0DDM
-         mLxCP0vMAaCmx+BkkkyOa8JnHvjor0BX1C06RbPsn7zm6scRezBELJEk76Sy2FQVFDMo
-         TyHKfGQ4b6A0e6FRUztc+hqoghRkJr79mhhVD9L6d9KJRYlOcqCOnAMzbDP9Y34a/Re3
-         tAgg==
-X-Gm-Message-State: APjAAAUEGDb/qkT8P6uLmBDDjUOb2r60SMWhbypTDTd8YHQ+D089TTqL
-        2QdoJnz/bSeq9dm4yWiH0Rk=
-X-Google-Smtp-Source: APXvYqzOg/oqt5FDmrHHGm4UwI9Lwb2F5Q0/VdEDMZCcUfcUWnykIVeThG56IyoyM5PHpJ5vVFM8hA==
-X-Received: by 2002:adf:a2cd:: with SMTP id t13mr20581202wra.251.1565605522275;
-        Mon, 12 Aug 2019 03:25:22 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id a84sm16437631wmf.29.2019.08.12.03.25.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 03:25:20 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 12:25:19 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, digetx@gmail.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V15 00/13] PCI: tegra: Add Tegra194 PCIe support
-Message-ID: <20190812102519.GN8903@ulmo>
-References: <20190809044609.20401-1-vidyas@nvidia.com>
+        Mon, 12 Aug 2019 06:25:49 -0400
+X-IronPort-AV: E=Sophos;i="5.64,377,1559512800"; 
+   d="scan'208";a="316182877"
+Received: from portablejulia.rsr.lip6.fr ([132.227.76.63])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 12:25:45 +0200
+Date:   Mon, 12 Aug 2019 12:25:45 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: julia@hadrien
+To:     Alexander Popov <alex.popov@linux.com>
+cc:     Julia Lawall <julia.lawall@lip6.fr>, Jann Horn <jannh@google.com>,
+        Jens Axboe <axboe@kernel.dk>, Jiri Kosina <jikos@kernel.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>,
+        Denis Efremov <efremov@linux.com>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>, cocci@systeme.lip6.fr
+Subject: Re: [PATCH] floppy: fix usercopy direction
+In-Reply-To: <3ee24295-6d63-6da9-774f-f1a599418685@linux.com>
+Message-ID: <alpine.DEB.2.21.1908121210570.3718@hadrien>
+References: <20190326220348.61172-1-jannh@google.com> <9ced7a06-5048-ad1a-3428-c8f943f7469c@linux.com> <alpine.DEB.2.21.1908091555090.2946@hadrien> <3ee24295-6d63-6da9-774f-f1a599418685@linux.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="e8/wErwm0bqugfcz"
-Content-Disposition: inline
-In-Reply-To: <20190809044609.20401-1-vidyas@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---e8/wErwm0bqugfcz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, 9 Aug 2019, Alexander Popov wrote:
 
-On Fri, Aug 09, 2019 at 10:15:56AM +0530, Vidya Sagar wrote:
-> Tegra194 has six PCIe controllers based on Synopsys DesignWare core.
-> There are two Universal PHY (UPHY) blocks with each supporting 12(HSIO:
-> Hisg Speed IO) and 8(NVHS: NVIDIA High Speed) lanes respectively.
-> Controllers:0~4 use UPHY lanes from HSIO brick whereas Controller:5 uses
-> UPHY lanes from NVHS brick. Lane mapping in HSIO UPHY brick to each PCIe
-> controller (0~4) is controlled in XBAR module by BPMP-FW. Since PCIe
-> core has PIPE interface, a glue module called PIPE-to-UPHY (P2U) is used
-> to connect each UPHY lane (applicable to both HSIO and NVHS UPHY bricks)
-> to PCIe controller
-> This patch series
-> - Adds support for P2U PHY driver
-> - Adds support for PCIe host controller
-> - Adds device tree nodes each PCIe controllers
-> - Enables nodes applicable to p2972-0000 platform
-> - Adds helper APIs in Designware core driver to get capability regs offset
-> - Adds defines for new feature registers of PCIe spec revision 4
-> - Makes changes in DesignWare core driver to get Tegra194 PCIe working
->=20
-> Testing done on P2972-0000 platform
-> - Able to get PCIe link up with on-board Marvel eSATA controller
-> - Able to get PCIe link up with NVMe cards connected to M.2 Key-M slot
-> - Able to do data transfers with both SATA drives and NVMe cards
-> - Able to perform suspend-resume sequence
+> On 09.08.2019 16:56, Julia Lawall wrote:
+> > On Fri, 9 Aug 2019, Alexander Popov wrote:
+> >> On 27.03.2019 1:03, Jann Horn wrote:
+> >>> As sparse points out, these two copy_from_user() should actually be
+> >>> copy_to_user().
+> >>
+> >> I also wrote a coccinelle rule for detecting similar bugs (adding coccinelle
+> >> experts to CC).
+> >>
+> >>
+> >> virtual report
+> >>
+> >> @cfu@
+> >
+> > You can replace the above line with @cfu exists@.  You want to find the
+> > existence of such a call, not ensure that the call occurs on every
+> > control-flow path, which is the default.
+>
+> Thanks Julia, I see `exists` allows to drop `<+ +>`, right?
 
-Do you happen to have a patch for P2972-0000 PCI support? I don't see it
-in this series.
+Exists is more efficient when it is possible.  It just finds the existence
+of a path that has the property rather than collecting information about
+all paths.  It is related to <+... ...+> because for that there has to
+exist at least one match.  You could probably do something like
 
-Thierry
+... when any
+copy_from_user
+... when any
 
---e8/wErwm0bqugfcz
-Content-Type: application/pgp-signature; name="signature.asc"
+Then with exists you will consider each call one at a time.
 
------BEGIN PGP SIGNATURE-----
+>
+> > Do you want this rule to go into the kernel?
+>
+> It turned out that sparse already can find these bugs.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1RPo8ACgkQ3SOs138+
-s6H7Pg//dh1al8/AaKqfOXUV7vJCuuAAP7eFAzEZssLuFIavDHghC4X+d5w0OsdZ
-eOnaJyrojkIFvpialETEQ3G+MLw2HyFoBt+f1G827JsyxMvVe+LDkGa2skg79F1y
-wa3gCp2zTkMM1mzS7cfm4wxGSdN1nUuuu63kMvBHpBOALTYnWeGv6hov5/rO+Yqg
-B9Wjbwu2rzNjNKirRW98/nUL5A9Ilxd4rVBu7o7JLz0VSoCdZ/5+DpursUTzZZz/
-9EbUFzy7pngftxrHxOL4DabxegjdehBj5JKQ7vR1ORmSo/9iukVrXh8dptqayijU
-8KUUWoYpnXmCCjBIAoc7mBwrwGfqZm9hF9rGedCILnpWxlVLgrXCxClsvBUn84TL
-db/VKF34Qo20wUfEPwUl0k5QjFwUc369XjfBEhBibkIXQb8+/4pA0EvolU7kedv7
-VrcLkUkEEPgGpTieaEKN11N3gARx8sEDde0muyKMG/bnRQmnvbq65nT0iiNI+lbj
-anvrkE3goyCno6raR0u7JLiWxCOgLVXA94aY+95h+16XpG6+jSQzgJfYWV0Xhi2L
-yPAuIH5zKzz2uzzbyqa4eF39lW0P4oBxghVt8jEvUfuqzcTXnR4VenQaciTjUb2A
-4S5Rtd/jNgp48OFTOpJTxcSPIBRZLzPKZnGGRhFGrpWZWUGikmY=
-=BYfL
------END PGP SIGNATURE-----
+If sparse is already doing this, then perhaps that's sufficient.  Someone
+just has to be running it :)
 
---e8/wErwm0bqugfcz--
+julia
+
+> Is this rule useful anyway? If so, I can prepare a patch.
+>
+> >> identifier f;
+> >> type t;
+> >> identifier v;
+> >> position decl_p;
+> >> position copy_p;
+> >> @@
+> >>
+> >> f(..., t v@decl_p, ...)
+> >> {
+> >> <+...
+> >> copy_from_user@copy_p(v, ...)
+> >> ...+>
+> >> }
+> >>
+> >> @script:python@
+> >> f << cfu.f;
+> >> t << cfu.t;
+> >> v << cfu.v;
+> >> decl_p << cfu.decl_p;
+> >> copy_p << cfu.copy_p;
+> >> @@
+> >>
+> >> if '__user' in t:
+> >>   msg0 = "function \"" + f + "\" has arg \"" + v + "\" of type \"" + t + "\""
+> >>   coccilib.report.print_report(decl_p[0], msg0)
+> >>   msg1 = "copy_from_user uses \"" + v + "\" as the destination. What a shame!\n"
+> >>   coccilib.report.print_report(copy_p[0], msg1)
+> >>
+> >>
+> >> The rule output:
+> >>
+> >> ./drivers/block/floppy.c:3756:49-52: function "compat_getdrvprm" has arg "arg"
+> >> of type "struct compat_floppy_drive_params __user *"
+> >> ./drivers/block/floppy.c:3783:5-19: copy_from_user uses "arg" as the
+> >> destination. What a shame!
+> >>
+> >> ./drivers/block/floppy.c:3789:49-52: function "compat_getdrvstat" has arg "arg"
+> >> of type "struct compat_floppy_drive_struct __user *"
+> >> ./drivers/block/floppy.c:3819:5-19: copy_from_user uses "arg" as the
+> >> destination. What a shame!
+>
