@@ -2,93 +2,105 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE8EC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47680C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5092720679
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:21:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="aVtZY53y"
+	by mail.kernel.org (Postfix) with ESMTP id 15EB920679
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 14:21:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfHLOVN (ORCPT
+        id S1727432AbfHLOVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 10:21:13 -0400
-Received: from mout.gmx.net ([212.227.15.15]:58913 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbfHLOVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 10:21:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1565619665;
-        bh=zUhEadOAUQhcWm7AGcip/egPCwT9J+4/k4dDXd7AnpI=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=aVtZY53yHXM6A/aYymGfzmI5MAaya69O9DZsW9mkloKh34+ayHdHeuEafJ9IxlgW/
-         t+K0V8OJZlTgfI4TVsR6hfrRXWFCDNUqQF2chbQxMCrPipuACz3vd3KQqcCiVFfNEj
-         aoVX8QsYUbLbWu044DWZft0BlM4iqFIX29eqqakg=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [217.61.152.193] ([217.61.152.193]) by web-mail.gmx.net
- (3c-app-gmx-bs80.server.lan [172.19.170.228]) (via HTTP); Mon, 12 Aug 2019
- 16:21:05 +0200
+        Mon, 12 Aug 2019 10:21:17 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:46964 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726354AbfHLOVP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 10:21:15 -0400
+Received: (qmail 2945 invoked by uid 2102); 12 Aug 2019 10:21:14 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 12 Aug 2019 10:21:14 -0400
+Date:   Mon, 12 Aug 2019 10:21:14 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Andrey Konovalov <andreyknvl@google.com>
+cc:     Greg KH <greg@kroah.com>,
+        syzbot <syzbot+30cf45ebfe0b0c4847a1@syzkaller.appspotmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, <kirr@nexedi.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>, <lkundrak@v3.sk>,
+        <logang@deltatee.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: use-after-free Read in ld_usb_release
+In-Reply-To: <CAAeHK+xZgjD+gP=pCkk0uKVkuPG+XZ26mgNQCGzw2ea5mqFTJg@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1908121020180.1659-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Message-ID: <trinity-b3a8466a-f95c-4f43-88b0-6f66c5850fee-1565619665734@3c-app-gmx-bs80>
-From:   "Frank Wunderlich" <frank-w@public-files.de>
-To:     "Andrew Lunn" <andrew@lunn.ch>
-Cc:     "Vivien Didelot" <vivien.didelot@gmail.com>,
-        "Florian Fainelli" <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Aw: Re: [BUG] access to null-pointer in dsa_switch_event when
- bridge set up
-Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 12 Aug 2019 16:21:05 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <20190812134243.GK14290@lunn.ch>
-References: <trinity-99bcd71d-8f78-4bbe-a439-f6a915040b0a-1565606589515@3c-app-gmx-bs80>
- <20190812134243.GK14290@lunn.ch>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:5qDa2BE/sSzjmKbbE1/R41wXv0iMXfdGeKoYVdxoO2G8CtortXU6rgZmOu2HfJnIapbLD
- yHWBngVLeo63yS9nkk5W/c0hbJVdAfdjFlXPXMEJSFGRv3l74tqZDdLpRziGX/n76IejZ2MOaqeS
- TCrnMOOq6B09lXPp79HPfQ7CfVSXqShK4GZZg+tK5Bv98AnFV7OCBOg9AZeSzUw9Xbod+SS27ZfC
- o5Fd3azB2ltmzNLWDJyzHCb/wchJe6HlU0OEfoiEVnT/uy2BYmmi3TLpGUQ4DAGJWzMbucBKqJt6
- yw=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+dQG7yZZiFI=:yL7wtFUMDsAMaCujFfkZg5
- CWwV4LZnhVkBCvrsquaHA5icHbTH/fc1zHi3BaIo+NxWlh81HU9nWmmyXP9ZvLp9QdEt8EU6T
- MJA93f3/PhepC+5W8jDhwJ5ft0trwDxlfUeSUaNta+YFDF7tKvfucdawzpfej4bxtZyxuD5co
- BsJhcXiUGnHCtALhVJoiPWuWmWNIW39fF7Vj14bNklwhq4S54BwVj08MqesxECOgDaqgDCsp1
- oezp4sRlEnsMpL1FwbEaaEif05Pj6wWbrziP7LEaQ14TANWkNi93tMgFxe3Cvz7kOt1p2mtS5
- 6ykuVItgsqP+GpCE9+KQlBBROQ5JQt3MkXBi6zijvWdv2fhTLCNGPRCmfSGlomkKkhuYvzEzD
- KnejvYJtgtNjv8K86Xye2P5OBuueKslx8Ga/PvIPr1wnFuhrM/zacyRCtg4f0iU63MG8cwAom
- A4784N7vOLNI4BQS/5xmmF+1jrGSpqZD2GSRoGF8n6FQaTM6KQ/8/Jsv+eeWyIxNRl7QwDbcR
- cwzs+RSoWXT+oZ9C2xSEJe5euq1KvVGPFvwei3KTLiMagUra1luMY6JxRNva3uirXNMff8nxs
- ZHoo+2aKcsg1fnpXu3tKBKAscAQ72HfTu4j1afwyT0uv5FWPJhGss1yQ2HkUzj19d9NM8h0BL
- 2l+2/gSPwT09fjKzjJERom+MYShpRKe/Ye5TXvCrbred8eA==
-Content-Transfer-Encoding: quoted-printable
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On Mon, 12 Aug 2019, Andrey Konovalov wrote:
 
-[1] seems to fix it, thank you
+> Alan, could you submit this patch (if you haven't already)? Looks like
+> it fixes this bug (and might fix some others).
 
-regards Frank
+I will.  I was waiting to see if Greg KH had any comments.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git/commit/?=
-id=3D58799865be84e2a895dab72de0e1b996ed943f22
+Alan Stern
 
-> Gesendet: Montag, 12. August 2019 um 15:42 Uhr
-> Von: "Andrew Lunn" <andrew@lunn.ch>
-> Hi Frank
->
-> A patch was merged last night with a fix for dsa_port_mdb_add. The
-> call stack looks the same. So i think this is fixed.
->
->      Andrew
+
+> >  drivers/usb/core/file.c |   10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> >
+> > Index: usb-devel/drivers/usb/core/file.c
+> > ===================================================================
+> > --- usb-devel.orig/drivers/usb/core/file.c
+> > +++ usb-devel/drivers/usb/core/file.c
+> > @@ -193,9 +193,10 @@ int usb_register_dev(struct usb_interfac
+> >                 intf->minor = minor;
+> >                 break;
+> >         }
+> > -       up_write(&minor_rwsem);
+> > -       if (intf->minor < 0)
+> > +       if (intf->minor < 0) {
+> > +               up_write(&minor_rwsem);
+> >                 return -EXFULL;
+> > +       }
+> >
+> >         /* create a usb class device for this usb interface */
+> >         snprintf(name, sizeof(name), class_driver->name, minor - minor_base);
+> > @@ -203,12 +204,11 @@ int usb_register_dev(struct usb_interfac
+> >                                       MKDEV(USB_MAJOR, minor), class_driver,
+> >                                       "%s", kbasename(name));
+> >         if (IS_ERR(intf->usb_dev)) {
+> > -               down_write(&minor_rwsem);
+> >                 usb_minors[minor] = NULL;
+> >                 intf->minor = -1;
+> > -               up_write(&minor_rwsem);
+> >                 retval = PTR_ERR(intf->usb_dev);
+> >         }
+> > +       up_write(&minor_rwsem);
+> >         return retval;
+> >  }
+> >  EXPORT_SYMBOL_GPL(usb_register_dev);
+> > @@ -234,12 +234,12 @@ void usb_deregister_dev(struct usb_inter
+> >                 return;
+> >
+> >         dev_dbg(&intf->dev, "removing %d minor\n", intf->minor);
+> > +       device_destroy(usb_class->class, MKDEV(USB_MAJOR, intf->minor));
+> >
+> >         down_write(&minor_rwsem);
+> >         usb_minors[intf->minor] = NULL;
+> >         up_write(&minor_rwsem);
+> >
+> > -       device_destroy(usb_class->class, MKDEV(USB_MAJOR, intf->minor));
+> >         intf->usb_dev = NULL;
+> >         intf->minor = -1;
+> >         destroy_usb_class();
 
