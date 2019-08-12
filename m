@@ -2,126 +2,67 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD52C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D938C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B168206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E684A20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:55:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbfHLRwH (ORCPT
+        id S1726549AbfHLRzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 13:52:07 -0400
-Received: from smtprelay0037.hostedemail.com ([216.40.44.37]:51767 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726263AbfHLRwG (ORCPT
+        Mon, 12 Aug 2019 13:55:17 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60461 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbfHLRzR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 13:52:06 -0400
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave08.hostedemail.com (Postfix) with ESMTP id B1683182D3681
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 17:42:31 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 83FA9182CF666;
-        Mon, 12 Aug 2019 17:42:31 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: truck80_6d27145108e3b
-X-Filterd-Recvd-Size: 3646
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf20.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 12 Aug 2019 17:42:29 +0000 (UTC)
-Message-ID: <b27facb8d794c58353736f88a60c24f7b2c001d7.camel@perches.com>
-Subject: Re: [PATCH] Makefile: Convert -Wimplicit-fallthrough=3 to just
- -Wimplicit-fallthrough for clang
-From:   Joe Perches <joe@perches.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Date:   Mon, 12 Aug 2019 10:42:28 -0700
-In-Reply-To: <CAKwvOdmAj34xDcMUn7Fu_aXdtD-7xHjHuU20qY=rFcr_Kz7gpg@mail.gmail.com>
-References: <c0005a09c89c20093ac699c97e7420331ec46b01.camel@perches.com>
-         <9c7a79b4d21aea52464d00c8fa4e4b92638560b6.camel@perches.com>
-         <CAHk-=wiL7jqYNfYrNikgBw3byY+Zn37-8D8yR=WUu0x=_2BpZA@mail.gmail.com>
-         <6a5f470c1375289908c37632572c4aa60d6486fa.camel@perches.com>
-         <20190811020442.GA22736@archlinux-threadripper>
-         <871efd6113ee2f6491410409511b871b7637f9e3.camel@perches.com>
-         <CAKwvOdmAj34xDcMUn7Fu_aXdtD-7xHjHuU20qY=rFcr_Kz7gpg@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Mon, 12 Aug 2019 13:55:17 -0400
+Received: from p200300ddd71876867e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7686:7e7a:91ff:fec9:8e25])
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hxEX8-0002xp-C9; Mon, 12 Aug 2019 19:55:02 +0200
+Date:   Mon, 12 Aug 2019 19:54:56 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Josh Hunt <joshhunt00@gmail.com>
+cc:     Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "Liang, Kan" <kan.liang@intel.com>, jolsa@redhat.com,
+        bigeasy@linutronix.de, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Long standing kernel warning: perfevents: irq loop stuck!
+In-Reply-To: <CAKA=qzYOU-VtEC5p6djRNmVS0xGe=jpTd3ZgUr++1G3Jj1=PTg@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1908121933310.7324@nanos.tec.linutronix.de>
+References: <CAM_iQpXvuYKn94WjJ9nSjzhk8DzYAvDmdgxsi6cc9CdBfkdTnw@mail.gmail.com> <20180223121456.GZ25201@hirez.programming.kicks-ass.net> <20180226203937.GA21543@tassilo.jf.intel.com> <CAKA=qzYOU-VtEC5p6djRNmVS0xGe=jpTd3ZgUr++1G3Jj1=PTg@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-08-12 at 09:28 -0700, Nick Desaulniers wrote:
-> Isn't [[fallthrough]] the C++ style attribute?
+On Mon, 12 Aug 2019, Josh Hunt wrote:
+> Was there any progress made on debugging this issue? We are still
+> seeing it on 4.19.44:
 
-double brackets will likely at some point become the default
-attribute style for c as well.  It is not now though and
-linux will continue to support gcc 7+ and the __attribute__
-style for quite a while.
+I haven't seen anyone looking at this.
 
-The minimum gcc version just moved to 4.6 which was
-released in 2013 so likely linux won't move to something
-that requires [[<attribute>]] for a decade or more.
+Can you please try the patch Ingo posted:
 
-> **eek** Seems to be a
-> waste for Clang to implement __attribute__((fallthrough)) just as we
-> switch the kernel to not use it.
+  https://lore.kernel.org/lkml/20150501070226.GB18957@gmail.com/
 
-clang already supports the __attribute__((<foo>)) style for
-gcc compatibility.
+and if it fixes the issue decrease the value from 128 to the point where it
+comes back, i.e. 128 -> 64 -> 32 ...
 
-This is just clang supporting a new <foo> type which would
-nominally be required for gcc compatibility anyway.
+Thanks,
 
-> Also, I'd recommend making the
-> preprocessor define all caps to help folks recognize it's a
-> preprocessor define.
-
-It's more a matching styles thing.
-
-I rather suspect that the c committees would choose to add
-fallthrough as a keyword if it was possible, but it is not
-possible without risking breaking existing code.
-
-linux source code is not constrained by this requirement.
-
-In my opinion, case statement blocks should always use a
-terminating keyword.  I think the best option is to add
-fallthrough as a keyword, but there are other options:
-
-IMO the best option is:
-	break;; goto; return; fallthrough;
-or (slightly worse)
-	break; goto; return; __fallthrough;
-or (even worse)
-	break; goto; return; FALLTHROUGH;
-
-
-Generic arguments pro/con for each style:
-----------------------------------------
-fallthrough looks like normal code but could not be
-used in uapi headers.
-
-__fallthrough is underscore prefixed, so reserved and
-generic, and could be used in uapi headers.  __fallthrough
-is rather unnatural looking when used to terminate a case
-statement block.
-
-FALLTHROUGH looks like a macro, but could not be used in
-uapi headers.  It is also rather unnatural looking when
-used to terminate a case statement block.
-----------------------------------------
-
-There are no existing uses of fallthrough in uapi headers.
-
-
+	tglx
