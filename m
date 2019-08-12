@@ -2,84 +2,110 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 943EFC32750
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B760DC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C52C2070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:19:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565644768;
-	bh=dHo2t329Id4otpA/Rrjyv9seqUsvy6Z6EEJcEyMJIMw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=W22N28nDaPAjx+9xQYvQLUeIWocyGL8DaQM07u4N4WQK8kIfPlpgIi7sIqIMGlE3J
-	 5L2HHeIb+0GOykv613f437T0twfvlob//+Bci8BcuNCLmqLcLv5za9G7ImfUVKNIny
-	 280cjzYD6WSGyuk7/ZW8xl5w2roN5a7eLKTqhLhc=
+	by mail.kernel.org (Postfix) with ESMTP id 89104206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:20:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="i3VfG8jw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfHLVT1 (ORCPT
+        id S1727411AbfHLVUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 17:19:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbfHLVT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 17:19:26 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26DD0206C2;
-        Mon, 12 Aug 2019 21:19:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565644765;
-        bh=dHo2t329Id4otpA/Rrjyv9seqUsvy6Z6EEJcEyMJIMw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XyRII+3I9wWVWSEqAOP7ZcGdiajnySWhn+aeL+QjbQeopq1r8BppDCR7LG+WCZTaC
-         rhX8JnwudyqzoxJPmWfE9gCemQK+DLgIsu4tnU1xB8d8BwM4X/tFP/ypcGwOIo0ei5
-         qidMBcxIItLjf+ISX6m2+F3bbZnLUpPWTUODQd9U=
-Date:   Mon, 12 Aug 2019 14:19:24 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     bjorn.topel@intel.com, linux-mm@kvack.org,
-        xdp-newbies@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, ast@kernel.org,
-        magnus.karlsson@intel.com
-Subject: Re: [PATCH v2 bpf-next] mm: mmap: increase sockets maximum memory
- size pgoff for 32bits
-Message-Id: <20190812141924.32136e040904d0c5a819dcb1@linux-foundation.org>
-In-Reply-To: <20190812124326.32146-1-ivan.khoronzhuk@linaro.org>
-References: <20190812113429.2488-1-ivan.khoronzhuk@linaro.org>
-        <20190812124326.32146-1-ivan.khoronzhuk@linaro.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 12 Aug 2019 17:20:20 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:4930 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726809AbfHLVUU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 17:20:20 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d51d81e0001>; Mon, 12 Aug 2019 14:20:30 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 12 Aug 2019 14:20:19 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 12 Aug 2019 14:20:19 -0700
+Received: from MacBook-Pro-10.local (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 12 Aug
+ 2019 21:20:16 +0000
+Subject: Re: [RFC PATCH v2 15/19] mm/gup: Introduce vaddr_pin_pages()
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>, Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>,
+        <linux-xfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-nvdimm@lists.01.org>, <linux-ext4@vger.kernel.org>,
+        <linux-mm@kvack.org>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-16-ira.weiny@intel.com>
+ <6ed26a08-4371-9dc1-09eb-7b8a4689d93b@nvidia.com>
+ <20190812210013.GC20634@iweiny-DESK2.sc.intel.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <b4e15390-701d-c6e9-564c-04e6a3effd50@nvidia.com>
+Date:   Mon, 12 Aug 2019 14:20:14 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190812210013.GC20634@iweiny-DESK2.sc.intel.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565644830; bh=JroT/x6S1SiN0zFyCuj22OCuZxP8/vKF5Bd4ngANWFg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=i3VfG8jwOmXxQPogIwZ3sMCwfa3CGn1sVpvN5L89ZpC8daRGO/R9vtPcQ47P9mJKh
+         RafMQn1lyj28wP20RL4bwfklVqGKlcfPAph9NXoIwgiQdHwPgcKbnROYw10gmdDVRB
+         1aS4zaWboi6HStNT7Yrmu295QTNK0j6K5HIrCLRwR8jCgH/8n6x020QR0zeCSySUVY
+         VAXLG041hhDzAzbF3ygoB+7XO9fFnjFaejfE1ChOqzhEU5/hswkEAbHCgQ7dScaDdG
+         w+6XfT+PtAoSQVM3gP/Vv3ydQrcAmDn+XK4KuZZlDuKzgjlPJSCpn8JEDKzDbcX5Uy
+         UcyfVCRj6Jjvg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 12 Aug 2019 15:43:26 +0300 Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
-
-> The AF_XDP sockets umem mapping interface uses XDP_UMEM_PGOFF_FILL_RING
-> and XDP_UMEM_PGOFF_COMPLETION_RING offsets. The offsets seems like are
-> established already and are part of configuration interface.
+On 8/12/19 2:00 PM, Ira Weiny wrote:
+> On Fri, Aug 09, 2019 at 05:09:54PM -0700, John Hubbard wrote:
+>> On 8/9/19 3:58 PM, ira.weiny@intel.com wrote:
+>>> From: Ira Weiny <ira.weiny@intel.com>
+...
 > 
-> But for 32-bit systems, while AF_XDP socket configuration, the values
-> are to large to pass maximum allowed file size verification.
-> The offsets can be tuned ofc, but instead of changing existent
-> interface - extend max allowed file size for sockets.
+> At one point I wanted to (and had in my tree) a new flag but I went away from
+> it.  Prior to the discussion on mlock last week I did not think we needed it.
+> But I'm ok to add it back in.
+> 
+> I was not ignoring the idea for this RFC I just wanted to get this out there
+> for people to see.  I see that you threw out a couple of patches which add this
+> flag in.
+> 
+> FWIW, I think it would be good to differentiate between an indefinite pinned
+> page vs a referenced "gotten" page.
+> 
+> What you and I have been working on is the former.  So it would be easy to
+> change your refcounting patches to simply key off of FOLL_PIN.
+> 
+> Would you like me to add in your FOLL_PIN patches to this series?
 
+Sure, that would be perfect. They don't make any sense on their own, and
+it's all part of the same design idea.
 
-What are the implications of this?  That all code in the kernel which
-handles mapped sockets needs to be audited (and tested) for correctly
-handling mappings larger than 4G on 32-bit machines?  Has that been
-done?  Are we confident that we aren't introducing user-visible buggy
-behaviour into unsuspecting legacy code?
-
-Also...  what are the user-visible runtime effects of this change? 
-Please send along a paragraph which explains this, for the changelog. 
-Does this patch fix some user-visible problem?  If so, should be code
-be backported into -stable kernels?
-
+thanks,
+-- 
+John Hubbard
+NVIDIA
