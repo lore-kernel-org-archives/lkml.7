@@ -2,98 +2,70 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2BAC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD67C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31EDA20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:38:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="02IXqmiP"
+	by mail.kernel.org (Postfix) with ESMTP id DE85220684
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfHLUid (ORCPT
+        id S1726702AbfHLUk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 16:38:33 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38729 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbfHLUic (ORCPT
+        Mon, 12 Aug 2019 16:40:27 -0400
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:56027 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfHLUk1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 16:38:32 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m12so9705604plt.5
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 13:38:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OvGyvW5Iklte0Ea4752AqZSzCvI47sv01KixS4E1a7s=;
-        b=02IXqmiPZReQAgyCJd5XNSGkstTKxtHUCQnsagaaTI/Nh5YcPVKftq4hsoImftWUiy
-         UNSJu/7l6MF1Uxfqn0NJMq7zLVQWoWjNBYVt6UcKgPMAj4J3vLYX67YbINJzY8O3BvxS
-         t59P7WwHqAVA9qyEwtZTq4zBCZwRtvgHdH/2NeLIfUbRhknUrJmreVlGM4iBrRFbGyKa
-         FB0S3uNTBf3hEp40WFwr6mnjtWn8CazvUeaTEtQaPHox5O79Zq5gAYLY2pnV99UNu5fX
-         Idy85JpYma2zzK/JF1tyDIb57JjheW480EHyTesQUyYt/1+5SNmYiKuQxPLzDnLN41NU
-         /AQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OvGyvW5Iklte0Ea4752AqZSzCvI47sv01KixS4E1a7s=;
-        b=FlFlahTFzQkumcgNEBb6SPYq0Q4VK2QdqtT6p4K0tAOUYMQbbGZzkocpD+c/mQuVmO
-         V13y/TlaCUF4f38Wst5gcBxGfhcV6Yf/onyqvvt2ewrmkyFiPrrmD7XMplJ79n3uZp5l
-         Tq3kwxtV9lBGNB5zrKiW8r4rv/kGw7WRvqy9fS+nXipJqD0AVBHKEPX+UcJFVsdPA94G
-         B4rWQG3rVcK5fEYULXzGJ7SUyi/1tuKLKuQvnR41HKhTCjQ6/jEkudNUUwYE5pck+B4m
-         zerA/0neqwARZ81c/1ko4otCiMOlGYyjipxWxgN5y8y0Cp0NtE/TrU7vC9XyVLSJiFJA
-         q3sQ==
-X-Gm-Message-State: APjAAAVHca9B6Ccr0aWvBKGPmRCjk/6qPjnOH+6VZmSqID0nwJ7FXE2Y
-        rocJBf30TIkm+UtraRaXNX32Xg==
-X-Google-Smtp-Source: APXvYqx7UX+07QB6rf7tI+JsJp388bL6hSKEDw7jHgHpKKJOqgKh3l4/VtJ/B/CdbYmtlZD9R7SOJg==
-X-Received: by 2002:a17:902:74c4:: with SMTP id f4mr33092313plt.13.1565642312071;
-        Mon, 12 Aug 2019 13:38:32 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:f08])
-        by smtp.gmail.com with ESMTPSA id cx22sm387516pjb.25.2019.08.12.13.38.30
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 13:38:31 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 16:38:29 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, matthew.wilcox@oracle.com,
-        kirill.shutemov@linux.intel.com, kernel-team@fb.com,
-        william.kucharski@oracle.com, akpm@linux-foundation.org,
-        hdanton@sina.com
-Subject: Re: [PATCH v10 7/7] mm,thp: avoid writes to file with THP in
- pagecache
-Message-ID: <20190812203829.GC15498@cmpxchg.org>
-References: <20190801184244.3169074-1-songliubraving@fb.com>
- <20190801184244.3169074-8-songliubraving@fb.com>
+        Mon, 12 Aug 2019 16:40:27 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 32D7330000CF7;
+        Mon, 12 Aug 2019 22:40:25 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 0786210A7C; Mon, 12 Aug 2019 22:40:24 +0200 (CEST)
+Date:   Mon, 12 Aug 2019 22:40:24 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     sathyanarayanan kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] PCI: pciehp: Add pciehp_set_indicators() to
+ jointly set LED indicators
+Message-ID: <20190812204024.r54ihfwdcbwdj563@wunner.de>
+References: <20190811195944.23765-1-efremov@linux.com>
+ <20190811195944.23765-2-efremov@linux.com>
+ <925a00be-c2b6-697d-d46b-a279856105b4@linux.intel.com>
+ <d243b4e7-acd9-790f-9332-2654a908cf6e@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190801184244.3169074-8-songliubraving@fb.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <d243b4e7-acd9-790f-9332-2654a908cf6e@linux.intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 11:42:44AM -0700, Song Liu wrote:
-> In previous patch, an application could put part of its text section in
-> THP via madvise(). These THPs will be protected from writes when the
-> application is still running (TXTBSY). However, after the application
-> exits, the file is available for writes.
+On Mon, Aug 12, 2019 at 11:49:23AM -0700, sathyanarayanan kuppuswamy wrote:
+> > On 8/11/19 12:59 PM, Denis Efremov wrote:
+> > > +    if ((!PWR_LED(ctrl)  || pwr  == PWR_NONE) &&
+> > > +        (!ATTN_LED(ctrl) || attn == ATTN_NONE))
+> > > +        return;
 > 
-> This patch avoids writes to file THP by dropping page cache for the file
-> when the file is open for write. A new counter nr_thps is added to struct
-> address_space. In do_dentry_open(), if the file is open for write and
-> nr_thps is non-zero, we drop page cache for the whole file.
+> Also I think this condition needs to expand to handle the case whether pwr
+> != PWR_NONE and !PWR_LED(ctrl) is true.
 > 
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Acked-by: Rik van Riel <riel@surriel.com>
-> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Signed-off-by: Song Liu <songliubraving@fb.com>
+> you need to return for case, pwr = PWR_ON, !PWR_LED(ctrl)=true ,
+> !ATTN_LED(ctrl)=false, attn=on
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Why should we return in that case?  We need to update the Attention
+Indicator Control to On.
+
+Thanks,
+
+Lukas
