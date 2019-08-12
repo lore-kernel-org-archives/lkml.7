@@ -2,151 +2,105 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3F3C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4922BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 805562070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:36:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dc0IemBH"
+	by mail.kernel.org (Postfix) with ESMTP id 185362070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 23:36:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565652987;
+	bh=BM4sVVQhsgV0eA0tvBOKqoxFmCiLYfxMnLfacEen5tc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jS1MhEq/yk/9TeKq0Ci025WVjEsiK//Oi73byojZ1EzU6EcSOdFrk2tATRam8bRqa
+	 ulxYFk40mIfmze3W1rnFkpi2X0mJ+Mi79bz0DQ3FlBLDrBLAfVFZniKkd07k4vDrq6
+	 9TvPDUP87wnc+Gcr/jLMnS6r94De7jdb0ZIRdp38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfHLXgN (ORCPT
+        id S1726819AbfHLXg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 19:36:13 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42580 "EHLO
+        Mon, 12 Aug 2019 19:36:26 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45901 "EHLO
         mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbfHLXgN (ORCPT
+        with ESMTP id S1726358AbfHLXg0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 19:36:13 -0400
-Received: by mail-ot1-f67.google.com with SMTP id j7so20884911ota.9;
-        Mon, 12 Aug 2019 16:36:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=mdMrX21nqMnvIo0oSW5nynBC7o2j74UpdSvh/i3TCuw=;
-        b=Dc0IemBH6ncFvomx4DuvnPw47t9stKmlDKr174FZc3Govzrg+3isbhY8bAEhZMFZSM
-         EJwTO7PC5sc2aIM1Edj9q+rHGs1QDBbUtcvHaM5FlZvnj1nrnNKtRP4+BH4KkI5svDM/
-         rG7q1A8/+GSQ0XYBE/zavAFd8ivbsG4uDI9t0Gk/S2IeAqJlyU+8XncCly65BRRzeQk/
-         4cZl5vn0GX5UTK2mhGgURbWmw+tzQYKBDIFjN72ckCJRJ80gV6g+TWhJKQPmy0vWR0OQ
-         Phq4uZ0RKXJT1T76zva460FaPlcXKtsampSsiCafYOeeFLds+tWobvtYROdKcENNUd/o
-         C07g==
+        Mon, 12 Aug 2019 19:36:26 -0400
+Received: by mail-ot1-f67.google.com with SMTP id m24so12665375otp.12;
+        Mon, 12 Aug 2019 16:36:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=mdMrX21nqMnvIo0oSW5nynBC7o2j74UpdSvh/i3TCuw=;
-        b=QiYNd+vgOQoKzRnoeUjCF1GsMgovqPKZaZiUJ8ZH9hsBIf6CbX9YU/QlM6YTx7PUEw
-         JLmBDtVZH/+YDaGXXC4g2yD0W9TNGC1TgNGt4wZTai3io05xnnYwwGTvGIDlGtMaKba1
-         WRDbSj+gRUVgAWlFldxrFxc1FsikWe8xqZPCkMXoro56cAmV35qjr33zH+Pqcn7uPgAU
-         3ThsqF4zkSr/oC7nYvUNxAhFmQkYyCj9e4qTtwqWH0CfIaYc58iLoM+irn15QcVwSsIm
-         js32dY2OHdAA4mg+Tygv49+1b+Xe5by8S3lWusl1rCOBBiU0yBsY7pndA9eg2MBh92e8
-         M4cQ==
-X-Gm-Message-State: APjAAAXAxz93t8ohf59nVQDFth5LqL9eO8oUwLExsY2dto7oT2/eJTra
-        RjZmNuGGJDafIxk2pXlVZHLVOyvHsPfOywuUDm0=
-X-Google-Smtp-Source: APXvYqwzQ8RzLpMPAB55e3s5PL0qjJ7LLgXXH8BJGqGYod4lRp0CQ5+iGkhGj8srHUw4054ayr+0QdORe2rXP1OVJtA=
-X-Received: by 2002:a5d:9047:: with SMTP id v7mr26934439ioq.18.1565652972130;
- Mon, 12 Aug 2019 16:36:12 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JUhoBbFfJyoEZHhxE0yhHd01Inh7+bhFFQBfYp/6IHI=;
+        b=C0wtaisBxNDTA6BgfyRVYslK5Mgpvp8Twaar+oyBoQ34Ki+jw7ss98bZDh0R+Azdf5
+         mjLxbOQR0WD65SsY/fv/7nJFyxUgo7OIRx9kwnnXRF4LHvWvEoQhkY14bA2CJqby5yVt
+         FyFBJ62lQhqIIULcn5eEfN/Cyvy+J2Fj4qazcuU/Cn1mlceF4CAw0jAO6sFj6pGN8AJv
+         Nc4MCl6B6/QTlPlGgFsR1BohWGNOaZl881LMuAXHZxV7jMyrtWBAwx8Fq5rGx6sqVTHH
+         GPgkiBNTtT1WAjRaIGwPF1pmBDh6mikJdcQoiQHMx4/OnVM7eMVzSMCsaReu3YlzcpQy
+         lAUA==
+X-Gm-Message-State: APjAAAV9QRXUUPTCVwvRVJTTDz9Kwz/qSp0f+7+nAReaGPimqs/37kqu
+        fHDH5fcjczCKBw96QnqTE3/PxQw=
+X-Google-Smtp-Source: APXvYqz7S8FkR6SwClag3erlK+yDMUQoYwEC/imJe9WJrw+kMtxqR06+H2rRmQKOwlNcvAwWgGSluQ==
+X-Received: by 2002:a5e:8c11:: with SMTP id n17mr313906ioj.64.1565652984885;
+        Mon, 12 Aug 2019 16:36:24 -0700 (PDT)
+Received: from localhost ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id i4sm131555614iog.31.2019.08.12.16.36.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 16:36:24 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 17:36:23 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de,
+        gregkh@linuxfoundation.org, mark.rutland@arm.com,
+        avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com,
+        yuenn@google.com, benjaminfair@google.com, sumit.garg@linaro.org,
+        jens.wiklander@linaro.org, vkoul@kernel.org, tglx@linutronix.de,
+        joel@jms.id.au, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        openbmc@lists.ozlabs.org
+Subject: Re: [PATCH v1 1/2] dt-binding: hwrng: add NPCM RNG documentation
+Message-ID: <20190812233623.GA24924@bogus>
+References: <20190722150241.345609-1-tmaimon77@gmail.com>
+ <20190722150241.345609-2-tmaimon77@gmail.com>
 MIME-Version: 1.0
-References: <20190810052829.6032-1-tiny.windzz@gmail.com> <f479c162-4eac-f320-3583-b9ddbef79b1a@gmail.com>
-In-Reply-To: <f479c162-4eac-f320-3583-b9ddbef79b1a@gmail.com>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Tue, 13 Aug 2019 07:36:00 +0800
-Message-ID: <CAEExFWu+CNqjDF218kaVu2xHq1yYL8XgxrM1o=S9axNNebb8XA@mail.gmail.com>
-Subject: Re: [PATCH v5 00/18] add thermal driver for h6
-To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan.Cameron@huawei.com,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722150241.345609-2-tmaimon77@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 5:14 AM Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.c=
-om> wrote:
->
-> Hi Yangtao,
->
-> On 10/08/2019 07:28, Yangtao Li wrote:
-> > This patchset add support for A64, H3, H5, H6 and R40 thermal sensor.
->
-> Could you add the device-tree configuration in the same series?
-> This will allow user to test it.
+On Mon, Jul 22, 2019 at 06:02:40PM +0300, Tomer Maimon wrote:
+> Added device tree binding documentation for Nuvoton BMC
+> NPCM Random Number Generator (RNG).
+> 
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> ---
+>  .../bindings/rng/nuvoton,npcm-rng.txt           | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+> new file mode 100644
+> index 000000000000..a697b4425fb3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+> @@ -0,0 +1,17 @@
+> +NPCM SoC Random Number Generator
+> +
+> +Required properties:
+> +- compatible  : "nuvoton,npcm750-rng" for the NPCM7XX BMC.
+> +- reg         : Specifies physical base address and size of the registers.
+> +
+> +Optional property:
+> +- quality : estimated number of bits of true entropy per 1024 bits
+> +			read from the rng.
+> +			If this property is not defined, it defaults to 1000.
 
-Ok, it will be added later.
-
-Yangtao
-
->
-> Thanks,
-> Cl=C3=A9ment
->
-> >
-> > Thx to Icenowy and Vasily.
-> >
-> > BTY, do a cleanup in thermal makfile.
-> >
-> > Icenowy Zheng (3):
-> >    thermal: sun8i: allow to use custom temperature calculation function
-> >    thermal: sun8i: add support for Allwinner H5 thermal sensor
-> >    thermal: sun8i: add support for Allwinner R40 thermal sensor
-> >
-> > Vasily Khoruzhick (1):
-> >    thermal: sun8i: add thermal driver for A64
-> >
-> > Yangtao Li (14):
-> >    thermal: sun8i: add thermal driver for h6
-> >    dt-bindings: thermal: add binding document for h6 thermal controller
-> >    thermal: fix indentation in makefile
-> >    thermal: sun8i: get ths sensor number from device compatible
-> >    thermal: sun8i: rework for sun8i_ths_get_temp()
-> >    thermal: sun8i: get ths init func from device compatible
-> >    thermal: sun8i: rework for ths irq handler func
-> >    thermal: sun8i: support mod clocks
-> >    thermal: sun8i: rework for ths calibrate func
-> >    dt-bindings: thermal: add binding document for h3 thermal controller
-> >    thermal: sun8i: add thermal driver for h3
-> >    dt-bindings: thermal: add binding document for a64 thermal controlle=
-r
-> >    dt-bindings: thermal: add binding document for h5 thermal controller
-> >    dt-bindings: thermal: add binding document for r40 thermal controlle=
-r
-> >
-> >   .../bindings/thermal/sun8i-thermal.yaml       | 157 +++++
-> >   MAINTAINERS                                   |   7 +
-> >   drivers/thermal/Kconfig                       |  14 +
-> >   drivers/thermal/Makefile                      |   9 +-
-> >   drivers/thermal/sun8i_thermal.c               | 596 +++++++++++++++++=
-+
-> >   5 files changed, 779 insertions(+), 4 deletions(-)
-> >   create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-th=
-ermal.yaml
-> >   create mode 100644 drivers/thermal/sun8i_thermal.c
-> > ---
-> > v5:
-> > -add more support
-> > -some trival fix
-> > ---
-> > 2.17.1
-> >
-> >
+This would need a vendor prefix, however, I think it should be implied 
+by the compatible string. It is fixed per SoC, right?
