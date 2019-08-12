@@ -2,153 +2,179 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF42C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F89C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB13E20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BB1E20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 10:07:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="IY022Gbe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="koRkDpUJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbfHLKHe (ORCPT
+        id S1727792AbfHLKHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 06:07:34 -0400
-Received: from mail-eopbgr780074.outbound.protection.outlook.com ([40.107.78.74]:36006
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727559AbfHLKHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:07:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WFxQ5cnXpcK10Yu9qw62qPT4x5T/FKKk+kOYUCsrM33ixPMZ0pCrIE55iBcCz6W4145Ku6WujdqNUmkdkmlfZF06zNTgl5Szhci3tfEXOEya50QV9Gvxkd9jQ7N3DaggsPrqsTsW5VVEr20mtxd2LAKyo63kNsVJyL/oLwBZDxLvw4d1IrwusjvOboojegJd6UEmZ1QnKDSTaSjek92geUbmGb4PXmyFlxa09bSee4Xl8r9GgrFbcDao4KaazFrTkwen31ncok9ba1f8tscV1sZi8UYK1gBqi+iGUZz2jbsULERs3e3PPtgs82REJTkQeE68miGDDEujcSe4N7C4Zg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Gd9Sde4mXA9xbp6C+h9Ib1RAFiN2ZowJDMuKLdP0gqc=;
- b=XQ+eMW7dRNe6RIijB871W92/obEAsSYlI9+axy1Qxuo7d6NBFoxJ3173ZnGQyDbMsSd7YSP0eUxSMmE0RwmyKdLSGiKLX1BpRnwGLPa6CXzDl0PSWJFJSyAd2qNeTMH382yZep7wn5fV9EsHs77XNet0XGTpq/Qq8x3nDvs6blISlBY+uBFvBI+R08iq6odsp2FZDxf8ggiEKS8F1qzQEknn1vB077gN0GXkg9Ehyaa1aesmytrb8HeaZIEz9Zy0N/H4R6e66ruUyDCsSdlSoo8r0sXVWL2mPjsp/PrJGZEHNZxlxEkAOAvyzO+UzHfqYkA22L4QfZOYyJSLx4WFnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass (sender ip is
- 149.199.60.100) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=xilinx.com;dmarc=bestguesspass action=none
- header.from=xilinx.com;dkim=none (message not signed);arc=none
+        Mon, 12 Aug 2019 06:07:13 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33215 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727409AbfHLKHM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 06:07:12 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n9so104158710wru.0;
+        Mon, 12 Aug 2019 03:07:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Gd9Sde4mXA9xbp6C+h9Ib1RAFiN2ZowJDMuKLdP0gqc=;
- b=IY022Gbe5KM7+pGMZIyn4u5m/a7EqIJqNRAuFhF4XS3rodDoD214p+gttIicsUFCPHJnn/1J8LqyeR3rK7KW/auJAjbkqMMR2N8fHDEFhPtut5rCIibbxPKLawI/lm7N7nKD6Cwsu3elQzKcktrpvT0NWNsqNgLaRCFuots8sw8=
-Received: from CY4PR02CA0007.namprd02.prod.outlook.com (10.169.188.17) by
- BYAPR02MB4823.namprd02.prod.outlook.com (52.135.234.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.20; Mon, 12 Aug 2019 10:07:09 +0000
-Received: from SN1NAM02FT015.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::208) by CY4PR02CA0007.outlook.office365.com
- (2603:10b6:903:18::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.16 via Frontend
- Transport; Mon, 12 Aug 2019 10:07:09 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.100)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
-Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
- SN1NAM02FT015.mail.protection.outlook.com (10.152.72.109) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2157.15
- via Frontend Transport; Mon, 12 Aug 2019 10:07:08 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66]:54751 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
-        (envelope-from <appana.durga.rao@xilinx.com>)
-        id 1hx7EK-0007SN-Bv; Mon, 12 Aug 2019 03:07:08 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <appana.durga.rao@xilinx.com>)
-        id 1hx7EF-0004Wy-8A; Mon, 12 Aug 2019 03:07:03 -0700
-Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x7CA6r2s032297;
-        Mon, 12 Aug 2019 03:06:54 -0700
-Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <appana.durga.rao@xilinx.com>)
-        id 1hx7E5-0004OP-A3; Mon, 12 Aug 2019 03:06:53 -0700
-From:   Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-To:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
-        michal.simek@xilinx.com
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Venkatesh Yadav Abbarapu <venkatesh.abbarapu@xilinx.com>,
-        Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-Subject: [PATCH v2 1/5] can: xilinx_can: Skip error message on deferred probe
-Date:   Mon, 12 Aug 2019 15:36:42 +0530
-Message-Id: <1565604406-4920-2-git-send-email-appana.durga.rao@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1565604406-4920-1-git-send-email-appana.durga.rao@xilinx.com>
-References: <1565604406-4920-1-git-send-email-appana.durga.rao@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(396003)(376002)(2980300002)(189003)(199004)(50226002)(54906003)(316002)(6636002)(51416003)(7696005)(70206006)(16586007)(70586007)(76176011)(106002)(11346002)(36386004)(36756003)(6666004)(4326008)(8936002)(486006)(2616005)(336012)(8676002)(5660300002)(426003)(356004)(478600001)(14444005)(2906002)(305945005)(81156014)(446003)(47776003)(48376002)(81166006)(50466002)(63266004)(476003)(126002)(107886003)(26005)(15650500001)(186003)(9786002)(5001870100001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB4823;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:xapps1.xilinx.com,unknown-60-100.xilinx.com;MX:1;A:1;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=62GUIJaxsBr0ns4SlEavg70SWuAMSrdfYiBgGd57XwE=;
+        b=koRkDpUJs8FTTEu+44bl2ey1mrNgtTjT+bTugu+eIyQg7hsNVOy5j7iOjWTJqAP8MQ
+         2LqlsSn95ssNqyFoIfESU563xqDB+zB0Oh3K8FXIGJyd+4JfZ4mQWYtfIh90UaoOME1f
+         o/4ZxOnvGrCE+I7z9oRMQaEyZs3Lx8iNk3yVd4QAp0f6AXu+lnPQeT2Oiom2zYDu2GR6
+         o/y1zD13X49NUWXxbMAzMyTfc5eshBlMerUT1Lf7Z86/RjC++8QYBFRoINc1RyqVWj+o
+         Q0uz7KoiRHoMeFBlEPVPGI46wBVUBoujXXN0UKElYyJ3vUiAt/Z6DpzVvAJ/O73dQGPi
+         ofxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=62GUIJaxsBr0ns4SlEavg70SWuAMSrdfYiBgGd57XwE=;
+        b=Kvf3WIjBFnnMBdakTG+YPkFcQCHkqEXxk4iPkK7Yb1I1C7A/EYA5SJMGGt/PY0Hq9e
+         GK1WsqHDI2Dn+3FIMqXD2sQn/KBVUbbIDbFbwtSMeTMQiVWeWoVfXIowRKojhj+BvYbr
+         5p70oLGWb0XEb5L6oQ2ZlzafDfdR7kf5zbjd1bfeiILXsXfmwt9VLqlpsbBZBuhkIrIN
+         S9IAotlT9ESorTEsz/6O/oGgGjlkF8loPwkaKDznpxGX8hMjh7g2sVA90RVr8O+jW+6I
+         OJ5a8seRVjJlW0P4tGl51SLtTn0/KCkuwMX7M1Z1HyjdDo9uxRgxrjJwBBfDFYnqWnX/
+         x3Eg==
+X-Gm-Message-State: APjAAAWYE3FqP6dzIcCiL5m7c/oySiy758LX9QIakBAaiycd9oe7szKR
+        1nwrBXdP7KBdJZMxieAMen0=
+X-Google-Smtp-Source: APXvYqyGe3Uwpwg7TpcsDIQdq3Bc6K7fyTqjMAwH5wH1xbomsRFtWiYH1mhqegRSYkgIiRW1ibmNkg==
+X-Received: by 2002:adf:f710:: with SMTP id r16mr5314208wrp.81.1565604428659;
+        Mon, 12 Aug 2019 03:07:08 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id e4sm29119075wrh.39.2019.08.12.03.07.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 03:07:07 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 12:07:06 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
+        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
+        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        sboyd@kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
+        talho@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v8 12/21] cpufreq: tegra124: Add suspend and resume
+ support
+Message-ID: <20190812100706.GK8903@ulmo>
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-13-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d9369a2b-50c7-43e5-4070-08d71f0cd64a
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BYAPR02MB4823;
-X-MS-TrafficTypeDiagnostic: BYAPR02MB4823:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB48235DC7D255CAE77E7AE689DCD30@BYAPR02MB4823.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 012792EC17
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: yB4axrFC+M5ioS++W1yBPc9KjEPXR7Yiztc7zHFRN59tKdc5SialusTqgnHwrZEWeFvROjfdhVLU/5OqHs+jkR5bpgUqZjh+HBkH+n79OM+yfqTEKD/NqaaA/MefsUBocZP7mCjIbFOrjQr9Pf9PpbpHifoeHJ78WRgyfBZV8pfS+EO6/FH5WsBLmPs54Qh59qq+K4PmXIZYx9mTcgZLAMExwI+b+z5Zcm5rAFETnZZhMPS1Ryx0mxdp+rqCXGHdX5v9jWr7+arab+2A0gvL8r076AVzId3swscbHiOV7mZhU79xrE31TpAzE8+z5e0U3tDfbv5Cu8wrlQefLvt5i6+QlnTV2kUz3OZuLfXuvAEg6BK9JNp+Tf1sF8jjr2rUTpoZubB4U3ofgOGtsJaJzj72POM25FdX4+K5sL+iojY=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2019 10:07:08.8581
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9369a2b-50c7-43e5-4070-08d71f0cd64a
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4823
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rwbb4r/vLufKlfJs"
+Content-Disposition: inline
+In-Reply-To: <1565308020-31952-13-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Venkatesh Yadav Abbarapu <venkatesh.abbarapu@xilinx.com>
 
-When can clock is provided from the clock wizard, clock wizard driver may
-not be available when can driver probes resulting to the error message
-"Device clock not found error".
+--rwbb4r/vLufKlfJs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-As this error message is not very userful to the end user, skip printing
-it in the case of deferred probe.
+On Thu, Aug 08, 2019 at 04:46:51PM -0700, Sowjanya Komatineni wrote:
+> This patch adds suspend and resume pm ops for cpufreq driver.
+>=20
+> PLLP is the safe clock source for CPU during system suspend and
+> resume as PLLP rate is below the CPU Fmax at Vmin.
+>=20
+> CPUFreq driver suspend switches the CPU clock source to PLLP and
+> disables the DFLL clock.
+>=20
+> During system resume, warmboot code powers up the CPU with PLLP
+> clock source. So CPUFreq driver resume enabled DFLL clock and
+> switches CPU back to DFLL clock source.
+>=20
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/cpufreq/tegra124-cpufreq.c | 60 ++++++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 60 insertions(+)
+>=20
+> diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra12=
+4-cpufreq.c
+> index 4f0c637b3b49..e979a3370988 100644
+> --- a/drivers/cpufreq/tegra124-cpufreq.c
+> +++ b/drivers/cpufreq/tegra124-cpufreq.c
+> @@ -6,6 +6,7 @@
+>  #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
+> =20
+>  #include <linux/clk.h>
+> +#include <linux/cpufreq.h>
+>  #include <linux/err.h>
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+> @@ -128,8 +129,67 @@ static int tegra124_cpufreq_probe(struct platform_de=
+vice *pdev)
+>  	return ret;
+>  }
+> =20
+> +static int __maybe_unused tegra124_cpufreq_suspend(struct device *dev)
+> +{
+> +	struct tegra124_cpufreq_priv *priv =3D dev_get_drvdata(dev);
+> +	int err;
+> +
+> +	/*
+> +	 * PLLP rate 408Mhz is below the CPU Fmax at Vmin and is safe to
+> +	 * use during suspend and resume. So, switch the CPU clock source
+> +	 * to PLLP and disable DFLL.
+> +	 */
+> +	err =3D clk_set_parent(priv->cpu_clk, priv->pllp_clk);
+> +	if (err < 0) {
+> +		dev_err(dev, "failed to reparent to PLLP: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	/* disable DFLL clock */
+> +	clk_disable_unprepare(priv->dfll_clk);
 
-Fixes: b1201e44 ("can: xilinx CAN controller support")
-Signed-off-by: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-Signed-off-by: Venkatesh Yadav Abbarapu <venkatesh.abbarapu@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
- drivers/net/can/xilinx_can.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This comment is superfluous since it doesn't explain anything that the
+code below doesn't explain already.
 
-diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c
-index bd95cfa..ac175ab 100644
---- a/drivers/net/can/xilinx_can.c
-+++ b/drivers/net/can/xilinx_can.c
-@@ -1791,7 +1791,8 @@ static int xcan_probe(struct platform_device *pdev)
- 	/* Getting the CAN can_clk info */
- 	priv->can_clk = devm_clk_get(&pdev->dev, "can_clk");
- 	if (IS_ERR(priv->can_clk)) {
--		dev_err(&pdev->dev, "Device clock not found.\n");
-+		if (PTR_ERR(priv->can_clk) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Device clock not found.\n");
- 		ret = PTR_ERR(priv->can_clk);
- 		goto err_free;
- 	}
--- 
-2.7.4
+Not sure who will end up merging this. If not me, then this is:
 
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--rwbb4r/vLufKlfJs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1ROkoACgkQ3SOs138+
+s6EJKQ/+I3cbYEQ/nCqI+FT9m+vu0hLSkyzx0lJlJVnxlgxIi4AJGx6Pb3bXgNy4
+LEOQC2nlCzm1Lr9JeKBVpZ/AtP8axsHNXtAffRCITM3nfaXZhLCq1dhCXbf4uobC
+RCS8mOavaYc3hiqjb3Kg0V7CsGJ7TbNmAiCv32yIRKt21/vFz4nR+cyEEFZqYmkc
+BoCTX1+soYNwseydeRYxzCh619PxkfhENk41LrFlERSmQ7Ao4NVi1kq0FKLANmoi
+eY0Z++jK0OBTn74N2txmRuzguQe5UwqC6AAgMAzB7dvBHyFLc8iOJUmrNNL8bqj7
+vorJ7UK5f61JX9rEDC8Wq4i3RApb9aEyG+PiCpRTXlMbQOscpIZUnTU7P86DSfBt
+OxB1ZF2VZs9m/zoGOOKBPkO6ZpPNGKjjC+W1vhNNcHbB7uKolgABRgqvIK74wUrK
+ldM4+ba2hQxur5YU3Nrffaml2KORg2zBXm4YAm0DElONwx4Xtx0eQ1ymX2k9k/Dj
+KMiWTNSrN+jXruhyECkO90ogxk/DIzaBkVfieIDTzKYOggXKEo/PNUAepL0Osq7q
+IpQ576FFctxafQLakYMk0O89nTJnNtVkAUmdVi1BK2m0vKQclpzlE4w43UcJl3zb
+MYbIcsCnKZwWz9QsUmRI76d8JLPKsPiTtFjUopToIkOhSMcVO10=
+=xDLq
+-----END PGP SIGNATURE-----
+
+--rwbb4r/vLufKlfJs--
