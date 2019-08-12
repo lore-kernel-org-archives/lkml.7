@@ -2,138 +2,107 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A51C32750
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B69EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5239821744
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4223121855
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:30:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565613045;
+	bh=Ijmr7L4rj9fAdpDTeN+I568sFcwLmUT8CgsOo/en4AA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Uq+FIYn5XaibkcqMfamEU3YziR+s2TdWfazwxR0fa00Qv44qNVn9Du7HHaZVznDQd
+	 6+T8XnAcJL1F0ZWMLtyL6Ix91FKNYB/tXQmWOoEzgqIztypbBa1k6wEJTdqxTxvC6z
+	 S/gyhfc0PHJF7zGnjaG3SMj1iW1WkEYM0dRAWpmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbfHLMaM (ORCPT
+        id S1728732AbfHLMao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 08:30:12 -0400
-Received: from mail-ot1-f72.google.com ([209.85.210.72]:48151 "EHLO
-        mail-ot1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728486AbfHLMaI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 08:30:08 -0400
-Received: by mail-ot1-f72.google.com with SMTP id b4so84102341otf.15
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 05:30:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=zNDPGmT8G+26asZc3oWG0z1sMep9s7XdIuJHVrTs56k=;
-        b=dS9zOtd5gNFBvJlY8V6Pq7kEp1KQGEUPyKmPGbe5F8q3VK9q1hq0I4H14eruIqDd8Z
-         GzdPwxGyEma4M86VWyC1umTZeUemVFVAXsRL9pc9T7ujNHmCHARWyWhaAl0d8APAF+TZ
-         chfTCY0CA8NtxJu34l4/Gq+JNCKOr98Jcc4nxxAmoRu2f40czgA+1QB78Yk+Ta448epW
-         ubBeCx0T5WcOSIrsUNLGia1BeAkFasJY+icjNz/0cpqXPrlyLOje+Yit1bwiQRMzIOAW
-         wBGP2dvquUH7ylbB57BbI0Ev8JHHDGLka6JxtFAGIk2nHHHXwV+Kz9jz1zOFD3QGsJ7S
-         8TFA==
-X-Gm-Message-State: APjAAAXcJ5awXXqa36mEb0Gn/q1SJp4pnn3ChbXU6zIjgS53JEM3hP/c
-        NYLIKmsVTnMfKahRvPH0Zjd2JoUmlh2hRaRJm4g0sL8jixJM
-X-Google-Smtp-Source: APXvYqyZzGcFvQpsI+4sC7CHQPAzaqE/uti+1pxPQbJQGViLZPooh4iy4aPBUxAlRx2mjqyXyqM2GIbe6ThZjkFP4XjMUsVrsEhd
+        Mon, 12 Aug 2019 08:30:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728449AbfHLMao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 08:30:44 -0400
+Received: from X250 (37.80-203-192.nextgentel.com [80.203.192.37])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E61D021744;
+        Mon, 12 Aug 2019 12:30:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565613043;
+        bh=Ijmr7L4rj9fAdpDTeN+I568sFcwLmUT8CgsOo/en4AA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S4GKmEuU3TYlyUYRKAnckZZb1Qg5JvWhhhH8O5Io14pQ48FHhe12HFwxtUuZ3BNdu
+         ez6RpxAdFpRTHYvheWx7FPUhY1lC76AZL6SSJARrmIXW+34fMtPid+LMjcRkNZd4Bh
+         HF/vN8apPq1sJgZbMgDe36lbuDhZq6p/TcEpc8EI=
+Date:   Mon, 12 Aug 2019 14:30:28 +0200
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson.Huang@nxp.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        andrew.smirnov@gmail.com, manivannan.sadhasivam@linaro.org,
+        j.neuschaefer@gmx.net, u.kleine-koenig@pengutronix.de,
+        leoyang.li@nxp.com, aisheng.dong@nxp.com, l.stach@pengutronix.de,
+        vabhav.sharma@nxp.com, bhaskar.upadhaya@nxp.com, ping.bai@nxp.com,
+        pramod.kumar_1@nxp.com, leonard.crestez@nxp.com,
+        daniel.baluta@nxp.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V4 4/4] dt-bindings: arm: imx: Add the soc binding for
+ i.MX8MQ
+Message-ID: <20190812123026.GA27041@X250>
+References: <20190619022145.42398-1-Anson.Huang@nxp.com>
+ <20190619022145.42398-4-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:968b:: with SMTP id m11mr28741858ion.16.1565613007314;
- Mon, 12 Aug 2019 05:30:07 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 05:30:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002825fc058feaafc1@google.com>
-Subject: WARNING in xfrm_policy_inexact_insert
-From:   syzbot <syzbot+0ffe44015de138d98e79@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        steffen.klassert@secunet.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190619022145.42398-4-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Jun 19, 2019 at 10:21:45AM +0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+> 
+> This patch adds the soc & board binding for i.MX8MQ.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> No changes.
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> index b35abb1..f944df8 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> @@ -183,6 +183,12 @@ properties:
+>                - fsl,imx8mn-ddr4-evk            # i.MX8MN DDR4 EVK Board
+>            - const: fsl,imx8mn
+>  
+> +      - description: i.MX8MQ based Boards
+> +        items:
+> +          - enum:
+> +              - fsl,imx8mq-evk            # i.MX8MQ EVK Board
+> +          - const: fsl,imx8mq
+> +
 
-syzbot found the following crash on:
+We already have this with e126417ff1b1 (dt-bindings: arm: fsl: Add the
+imx8mq boards).
 
-HEAD commit:    296d05cb Merge tag 'riscv/for-v5.3-rc4' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=163917c2600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2031e7d221391b8a
-dashboard link: https://syzkaller.appspot.com/bug?extid=0ffe44015de138d98e79
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
+Shawn
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+0ffe44015de138d98e79@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 907 at net/xfrm/xfrm_policy.c:1506  
-xfrm_policy_insert_inexact_list net/xfrm/xfrm_policy.c:1506 [inline]
-WARNING: CPU: 1 PID: 907 at net/xfrm/xfrm_policy.c:1506  
-xfrm_policy_inexact_insert+0x102a/0x1540 net/xfrm/xfrm_policy.c:1195
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 907 Comm: syz-executor.2 Not tainted 5.3.0-rc3+ #72
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
-  panic+0x25c/0x799 kernel/panic.c:219
-  __warn+0x22f/0x230 kernel/panic.c:576
-  report_bug+0x190/0x290 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  do_error_trap+0xd7/0x440 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-RIP: 0010:xfrm_policy_insert_inexact_list net/xfrm/xfrm_policy.c:1506  
-[inline]
-RIP: 0010:xfrm_policy_inexact_insert+0x102a/0x1540  
-net/xfrm/xfrm_policy.c:1195
-Code: c1 03 38 c1 0f 8c 0a f7 ff ff 48 89 df e8 6e 3a 38 fb e9 fd f6 ff ff  
-e8 44 41 ff fa 48 c7 c7 82 bf 3a 88 31 c0 e8 e9 8a e8 fa <0f> 0b e9 b4 fc  
-ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c 04 f7 ff
-RSP: 0018:ffff888088ca78b0 EFLAGS: 00010246
-RAX: 0000000000000024 RBX: ffff8880a752d8a0 RCX: 2f5cd5be3d6cb100
-RDX: ffffc9000a35f000 RSI: 0000000000005caf RDI: 0000000000005cb0
-RBP: ffff888088ca79b8 R08: ffffffff815cf524 R09: ffffed1015d66088
-R10: ffffed1015d66088 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: dffffc0000000000 R15: 0000000000000000
-  xfrm_policy_insert+0xdf/0xce0 net/xfrm/xfrm_policy.c:1574
-  pfkey_spdadd+0xe47/0x1980 net/key/af_key.c:2325
-  pfkey_process net/key/af_key.c:2834 [inline]
-  pfkey_sendmsg+0xacd/0xeb0 net/key/af_key.c:3673
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg net/socket.c:657 [inline]
-  ___sys_sendmsg+0x60d/0x910 net/socket.c:2311
-  __sys_sendmsg net/socket.c:2356 [inline]
-  __do_sys_sendmsg net/socket.c:2365 [inline]
-  __se_sys_sendmsg net/socket.c:2363 [inline]
-  __x64_sys_sendmsg+0x17c/0x200 net/socket.c:2363
-  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459829
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fa22f5f1c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
-RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa22f5f26d4
-R13: 00000000004c76ea R14: 00000000004dceb0 R15: 00000000ffffffff
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>        - description: i.MX8QXP based Boards
+>          items:
+>            - enum:
+> -- 
+> 2.7.4
+> 
