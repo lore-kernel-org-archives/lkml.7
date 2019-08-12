@@ -5,42 +5,42 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83585C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E56C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 582A3208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02014214C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 09:45:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Yzh+UtJX"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="PfYYqanj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbfHLJoc (ORCPT
+        id S1727607AbfHLJo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 05:44:32 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:50840 "EHLO
+        Mon, 12 Aug 2019 05:44:29 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:50904 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727451AbfHLJoZ (ORCPT
+        by vger.kernel.org with ESMTP id S1727494AbfHLJoZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 12 Aug 2019 05:44:25 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 554CCC2174;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E1A33C2175;
         Mon, 12 Aug 2019 09:44:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1565603064; bh=XI2I5+R2SHYrVzVFNLd0PzPsC/OJn37cwzcytnQNIFQ=;
+        t=1565603065; bh=RVdfzAnkLd2cFbezBg+5+IcJ5jUr94r8t2wC6fXWHBw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=Yzh+UtJXRTy7CZaq//jhIE4TfQrTXnO3X+9iI6w3THwON/FTW9jcK8Rkuh8kp5SEh
-         mXBDg+XMGOhlvHqt9d9U61+VIuaagGR+e5CR5B/V6QSe9zQ7/YVU0Obhc+jZzYOj7D
-         z/5O5/bk8DVYyCUg9xjS/oZRtNjVoWQMAIT24BbgkYex7bJSSAQUhLMrgdZ+HYj57t
-         VwMtHdf5lxha72iEy861nZSsra7BWIEgDcIvtZs/dSy6TRYYGnzdjqGgFA6+oo+UAo
-         IuAIpwEb5tA89Pes+3qChOdFywGFHJSGdQRoI/ntYuo1PnkGTG2b23Ci35uR9EXx1C
-         b/5j56GPWxbQQ==
+        b=PfYYqanjxndnblrG+5DUrlPCPx78aCvQKQrKzaxzuM0oVmpysCGkOeEy9Fbqi+D6m
+         jIeXVjq0pS44wsVXB4COBy46rmizPN8NbubE71zuBTXaDMcPcjhkKeE/u7GEQr1xyA
+         gBMmG+FaAyfR77rZscSmTEeU5OR1di3nbHtcZo5nYNYdOk1Xz8zxaUhsJ0lAWEfktI
+         8/OemqVooL/Zf1uFOrjQLf5JOuEV3k6tDnXuGkU6onlEidwvlGr5k/nUNmueF+qLy6
+         Adst0rMiegyubL1VA0VXK2R4kTfeIukJ2X9nJ58oDcRSp3kkMTDfFpjrXCXW6EFs0f
+         UeBLibNXme6IQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id F1343A0062;
-        Mon, 12 Aug 2019 09:44:22 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 9B060A0080;
+        Mon, 12 Aug 2019 09:44:23 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -51,9 +51,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 03/12] net: stmmac: xgmac: Correctly return that RX descriptor is not last one
-Date:   Mon, 12 Aug 2019 11:44:02 +0200
-Message-Id: <fb881abf7700041e4658fc999349b867e05b6856.1565602974.git.joabreu@synopsys.com>
+Subject: [PATCH net-next v2 12/12] net: stmmac: selftests: Add selftest for VLAN TX Offload
+Date:   Mon, 12 Aug 2019 11:44:11 +0200
+Message-Id: <6ca59f405df8632e00fb4cae360f013bf0c289c6.1565602974.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1565602974.git.joabreu@synopsys.com>
 References: <cover.1565602974.git.joabreu@synopsys.com>
@@ -64,7 +64,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Return the correct value when RX descriptor is not the last one.
+Add 2 new selftests for VLAN Insertion offloading. Tests are for inner
+and outer VLAN offloading.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
@@ -79,33 +80,151 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 96 +++++++++++++++++++++-
+ 1 file changed, 94 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-index 2391ede97597..717b50d4aa93 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-@@ -26,16 +26,15 @@ static int dwxgmac2_get_rx_status(void *data, struct stmmac_extra_stats *x,
- 				  struct dma_desc *p)
- {
- 	unsigned int rdes3 = le32_to_cpu(p->des3);
--	int ret = good_frame;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+index acfab86431b1..ecc8602c6799 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+@@ -296,7 +296,9 @@ static int __stmmac_test_loopback(struct stmmac_priv *priv,
+ 	tpriv->pt.dev = priv->dev;
+ 	tpriv->pt.af_packet_priv = tpriv;
+ 	tpriv->packet = attr;
+-	dev_add_pack(&tpriv->pt);
++
++	if (!attr->dont_wait)
++		dev_add_pack(&tpriv->pt);
  
- 	if (unlikely(rdes3 & XGMAC_RDES3_OWN))
- 		return dma_own;
- 	if (likely(!(rdes3 & XGMAC_RDES3_LD)))
-+		return rx_not_ls;
-+	if (unlikely((rdes3 & XGMAC_RDES3_ES) && (rdes3 & XGMAC_RDES3_LD)))
- 		return discard_frame;
--	if (unlikely(rdes3 & XGMAC_RDES3_ES))
--		ret = discard_frame;
+ 	skb = stmmac_test_get_udp_skb(priv, attr);
+ 	if (!skb) {
+@@ -319,7 +321,8 @@ static int __stmmac_test_loopback(struct stmmac_priv *priv,
+ 	ret = !tpriv->ok;
  
--	return ret;
-+	return good_frame;
+ cleanup:
+-	dev_remove_pack(&tpriv->pt);
++	if (!attr->dont_wait)
++		dev_remove_pack(&tpriv->pt);
+ 	kfree(tpriv);
+ 	return ret;
+ }
+@@ -731,6 +734,9 @@ static int stmmac_test_vlan_validate(struct sk_buff *skb,
+ 	struct ethhdr *ehdr;
+ 	struct udphdr *uhdr;
+ 	struct iphdr *ihdr;
++	u16 proto;
++
++	proto = tpriv->double_vlan ? ETH_P_8021AD : ETH_P_8021Q;
+ 
+ 	skb = skb_unshare(skb, GFP_ATOMIC);
+ 	if (!skb)
+@@ -740,6 +746,12 @@ static int stmmac_test_vlan_validate(struct sk_buff *skb,
+ 		goto out;
+ 	if (skb_headlen(skb) < (STMMAC_TEST_PKT_SIZE - ETH_HLEN))
+ 		goto out;
++	if (tpriv->vlan_id) {
++		if (skb->vlan_proto != htons(proto))
++			goto out;
++		if (skb->vlan_tci != tpriv->vlan_id)
++			goto out;
++	}
+ 
+ 	ehdr = (struct ethhdr *)skb_mac_header(skb);
+ 	if (!ether_addr_equal(ehdr->h_dest, tpriv->packet->dst))
+@@ -1084,6 +1096,78 @@ static int stmmac_test_reg_sar(struct stmmac_priv *priv)
+ 	return ret;
  }
  
- static int dwxgmac2_get_tx_len(struct dma_desc *p)
++static int stmmac_test_vlanoff_common(struct stmmac_priv *priv, bool svlan)
++{
++	struct stmmac_packet_attrs attr = { };
++	struct stmmac_test_priv *tpriv;
++	struct sk_buff *skb = NULL;
++	int ret = 0;
++	u16 proto;
++
++	if (!priv->dma_cap.vlins)
++		return -EOPNOTSUPP;
++
++	tpriv = kzalloc(sizeof(*tpriv), GFP_KERNEL);
++	if (!tpriv)
++		return -ENOMEM;
++
++	proto = svlan ? ETH_P_8021AD : ETH_P_8021Q;
++
++	tpriv->ok = false;
++	tpriv->double_vlan = svlan;
++	init_completion(&tpriv->comp);
++
++	tpriv->pt.type = svlan ? htons(ETH_P_8021Q) : htons(ETH_P_IP);
++	tpriv->pt.func = stmmac_test_vlan_validate;
++	tpriv->pt.dev = priv->dev;
++	tpriv->pt.af_packet_priv = tpriv;
++	tpriv->packet = &attr;
++	tpriv->vlan_id = 0x123;
++	dev_add_pack(&tpriv->pt);
++
++	ret = vlan_vid_add(priv->dev, htons(proto), tpriv->vlan_id);
++	if (ret)
++		goto cleanup;
++
++	attr.dst = priv->dev->dev_addr;
++
++	skb = stmmac_test_get_udp_skb(priv, &attr);
++	if (!skb) {
++		ret = -ENOMEM;
++		goto vlan_del;
++	}
++
++	__vlan_hwaccel_put_tag(skb, htons(proto), tpriv->vlan_id);
++	skb->protocol = htons(proto);
++
++	skb_set_queue_mapping(skb, 0);
++	ret = dev_queue_xmit(skb);
++	if (ret)
++		goto vlan_del;
++
++	wait_for_completion_timeout(&tpriv->comp, STMMAC_LB_TIMEOUT);
++	ret = tpriv->ok ? 0 : -ETIMEDOUT;
++
++vlan_del:
++	vlan_vid_del(priv->dev, htons(proto), tpriv->vlan_id);
++cleanup:
++	dev_remove_pack(&tpriv->pt);
++	kfree(tpriv);
++	return ret;
++}
++
++static int stmmac_test_vlanoff(struct stmmac_priv *priv)
++{
++	return stmmac_test_vlanoff_common(priv, false);
++}
++
++static int stmmac_test_svlanoff(struct stmmac_priv *priv)
++{
++	if (!priv->dma_cap.dvlan)
++		return -EOPNOTSUPP;
++	return stmmac_test_vlanoff_common(priv, true);
++}
++
+ #define STMMAC_LOOPBACK_NONE	0
+ #define STMMAC_LOOPBACK_MAC	1
+ #define STMMAC_LOOPBACK_PHY	2
+@@ -1161,6 +1245,14 @@ static const struct stmmac_test {
+ 		.name = "SA Replacement (reg)",
+ 		.lb = STMMAC_LOOPBACK_PHY,
+ 		.fn = stmmac_test_reg_sar,
++	}, {
++		.name = "VLAN TX Insertion   ",
++		.lb = STMMAC_LOOPBACK_PHY,
++		.fn = stmmac_test_vlanoff,
++	}, {
++		.name = "SVLAN TX Insertion  ",
++		.lb = STMMAC_LOOPBACK_PHY,
++		.fn = stmmac_test_svlanoff,
+ 	},
+ };
+ 
 -- 
 2.7.4
 
