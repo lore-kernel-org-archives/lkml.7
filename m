@@ -2,312 +2,234 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC108C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3FAC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A70F12085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:05:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565640315;
-	bh=5FzscgA9Lz09h5al5eQNGLK6KBM1ZTFFMlqtbO4bRzA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZgOrSOccGvY+UcQjn95SXk7jvyEZ8bh+1U6UmVuEkKjD2IyYwEU9oSEsSVUL38oaK
-	 cFmqyOyZlps3j8+O3H6ljf0j2idn0IR8LY7p0xHFe1U9RuH5JYvBMqER4nxbQirL9t
-	 Rv+q/rHKRWqAf1/NWJiUsobdVpL71HuOuUNvzbOA=
+	by mail.kernel.org (Postfix) with ESMTP id F14C12085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:05:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbfHLUFO (ORCPT
+        id S1727480AbfHLUF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 16:05:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34798 "EHLO mail.kernel.org"
+        Mon, 12 Aug 2019 16:05:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:21621 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727439AbfHLUFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 16:05:12 -0400
-Received: from localhost (c-73-15-1-175.hsd1.ca.comcast.net [73.15.1.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727193AbfHLUF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 16:05:26 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E2A0214C6;
-        Mon, 12 Aug 2019 20:05:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565640310;
-        bh=5FzscgA9Lz09h5al5eQNGLK6KBM1ZTFFMlqtbO4bRzA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QggEPBdc9O4R+cCEOpdwd5mYtgCobyP9CPniHaXcX53ySz1qH5EPbqiCRphHct9rH
-         /ECoDO6VnMjCbOv+qg6F4Fy8zSl1eKj0PqO5MA04EL53vO6amAn3SlopAJFQsDfmBo
-         rksBTZtrJh0+dluXYSx82EAwI8MMyjd7GEGJSwNs=
-Date:   Mon, 12 Aug 2019 15:05:08 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v5 5/7] PCI/ATS: Add PASID support for PCIe VF devices
-Message-ID: <20190812200508.GM11785@google.com>
-References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <d10b5f08212a42c4a710ec649bffe082599dbb46.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id B27CBC0022F1;
+        Mon, 12 Aug 2019 20:05:25 +0000 (UTC)
+Received: from [10.36.116.42] (ovpn-116-42.ams2.redhat.com [10.36.116.42])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 78F061000182;
+        Mon, 12 Aug 2019 20:05:15 +0000 (UTC)
+Subject: Re: [RFC][Patch v12 1/2] mm: page_reporting: core infrastructure
+To:     Alexander Duyck <alexander.duyck@gmail.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
+        john.starks@microsoft.com, Dave Hansen <dave.hansen@intel.com>,
+        Michal Hocko <mhocko@suse.com>, cohuck@redhat.com
+References: <20190812131235.27244-1-nitesh@redhat.com>
+ <20190812131235.27244-2-nitesh@redhat.com>
+ <CAKgT0UcSabyrO=jUwq10KpJKLSuzorHDnKAGrtWVigKVgvD-6Q@mail.gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <ca362045-9668-18ff-39b0-de91fa72e73c@redhat.com>
+Date:   Mon, 12 Aug 2019 22:05:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d10b5f08212a42c4a710ec649bffe082599dbb46.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAKgT0UcSabyrO=jUwq10KpJKLSuzorHDnKAGrtWVigKVgvD-6Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 12 Aug 2019 20:05:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 05:06:02PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> ---
+>>  include/linux/mmzone.h         |  11 ++
+>>  include/linux/page_reporting.h |  63 +++++++
+>>  mm/Kconfig                     |   6 +
+>>  mm/Makefile                    |   1 +
+>>  mm/page_alloc.c                |  42 ++++-
+>>  mm/page_reporting.c            | 332 +++++++++++++++++++++++++++++++++
+>>  6 files changed, 448 insertions(+), 7 deletions(-)
+>>  create mode 100644 include/linux/page_reporting.h
+>>  create mode 100644 mm/page_reporting.c
+>>
+>> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+>> index d77d717c620c..ba5f5b508f25 100644
+>> --- a/include/linux/mmzone.h
+>> +++ b/include/linux/mmzone.h
+>> @@ -559,6 +559,17 @@ struct zone {
+>>         /* Zone statistics */
+>>         atomic_long_t           vm_stat[NR_VM_ZONE_STAT_ITEMS];
+>>         atomic_long_t           vm_numa_stat[NR_VM_NUMA_STAT_ITEMS];
+>> +#ifdef CONFIG_PAGE_REPORTING
+>> +       /* Pointer to the bitmap in PAGE_REPORTING_MIN_ORDER granularity */
+>> +       unsigned long *bitmap;
+>> +       /* Preserve start and end PFN in case they change due to hotplug */
+>> +       unsigned long base_pfn;
+>> +       unsigned long end_pfn;
+>> +       /* Free pages of granularity PAGE_REPORTING_MIN_ORDER */
+>> +       atomic_t free_pages;
+>> +       /* Number of bits required in the bitmap */
+>> +       unsigned long nbits;
+>> +#endif
+>>  } ____cacheline_internodealigned_in_smp;
 > 
-> When IOMMU tries to enable PASID for VF device in
-> iommu_enable_dev_iotlb(), it always fails because PASID support for PCIe
-> VF device is currently broken in PCIE driver. Current implementation
-> expects the given PCIe device (PF & VF) to implement PASID capability
-> before enabling the PASID support. But this assumption is incorrect. As
-> per PCIe spec r4.0, sec 9.3.7.14, all VFs associated with PF can only
-> use the PASID of the PF and not implement it.
+> Okay, so the original thing this patch set had going for it was that
+> it was non-invasive. However, now you are adding a bunch of stuff to
+> the zone. That kind of loses the non-invasive argument for this patch
+> set compared to mine.
 > 
-> Also, since PASID is a shared resource between PF/VF, following rules
-> should apply.
-> 
-> 1. Use proper locking before accessing/modifying PF resources in VF
->    PASID enable/disable call.
-> 2. Use reference count logic to track the usage of PASID resource.
-> 3. Disable PASID only if the PASID reference count (pasid_ref_cnt) is zero.
-> 
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Suggested-by: Ashok Raj <ashok.raj@intel.com>
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->  drivers/pci/ats.c   | 113 ++++++++++++++++++++++++++++++++++----------
->  include/linux/pci.h |   2 +
->  2 files changed, 90 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> index 079dc5444444..9384afd7d00e 100644
-> --- a/drivers/pci/ats.c
-> +++ b/drivers/pci/ats.c
-> @@ -402,6 +402,8 @@ void pci_pasid_init(struct pci_dev *pdev)
->  	if (pdev->is_virtfn)
->  		return;
->  
-> +	mutex_init(&pdev->pasid_lock);
-> +
->  	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
->  	if (!pos)
->  		return;
-> @@ -436,32 +438,57 @@ void pci_pasid_init(struct pci_dev *pdev)
->  int pci_enable_pasid(struct pci_dev *pdev, int features)
->  {
->  	u16 control, supported;
-> +	int ret = 0;
-> +	struct pci_dev *pf = pci_physfn(pdev);
->  
-> -	if (WARN_ON(pdev->pasid_enabled))
-> -		return -EBUSY;
-> +	mutex_lock(&pf->pasid_lock);
->  
-> -	if (!pdev->eetlp_prefix_path)
-> -		return -EINVAL;
-> +	if (WARN_ON(pdev->pasid_enabled)) {
-> +		ret = -EBUSY;
-> +		goto pasid_unlock;
-> +	}
->  
-> -	if (!pdev->pasid_cap)
-> -		return -EINVAL;
-> +	if (!pdev->eetlp_prefix_path) {
-> +		ret = -EINVAL;
-> +		goto pasid_unlock;
-> +	}
->  
-> -	pci_read_config_word(pdev, pdev->pasid_cap + PCI_PASID_CAP,
-> -			     &supported);
-> +	if (!pf->pasid_cap) {
-> +		ret = -EINVAL;
-> +		goto pasid_unlock;
-> +	}
-> +
-> +	if (pdev->is_virtfn && pf->pasid_enabled)
-> +		goto update_status;
-> +
-> +	pci_read_config_word(pf, pf->pasid_cap + PCI_PASID_CAP, &supported);
->  	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
->  
->  	/* User wants to enable anything unsupported? */
-> -	if ((supported & features) != features)
-> -		return -EINVAL;
-> +	if ((supported & features) != features) {
-> +		ret = -EINVAL;
-> +		goto pasid_unlock;
-> +	}
->  
->  	control = PCI_PASID_CTRL_ENABLE | features;
-> -	pdev->pasid_features = features;
-> -
-> +	pf->pasid_features = features;
->  	pci_write_config_word(pdev, pdev->pasid_cap + PCI_PASID_CTRL, control);
->  
-> -	pdev->pasid_enabled = 1;
-> +	/*
-> +	 * If PASID is not already enabled in PF, increment pasid_ref_cnt
-> +	 * to count PF PASID usage.
-> +	 */
-> +	if (pdev->is_virtfn && !pf->pasid_enabled) {
-> +		atomic_inc(&pf->pasid_ref_cnt);
-> +		pf->pasid_enabled = 1;
-> +	}
->  
-> -	return 0;
-> +update_status:
-> +	atomic_inc(&pf->pasid_ref_cnt);
-> +	pdev->pasid_enabled = 1;
-> +pasid_unlock:
-> +	mutex_unlock(&pf->pasid_lock);
-> +	return ret;
->  }
->  EXPORT_SYMBOL_GPL(pci_enable_pasid);
->  
-> @@ -472,16 +499,29 @@ EXPORT_SYMBOL_GPL(pci_enable_pasid);
->  void pci_disable_pasid(struct pci_dev *pdev)
->  {
->  	u16 control = 0;
-> +	struct pci_dev *pf = pci_physfn(pdev);
-> +
-> +	mutex_lock(&pf->pasid_lock);
->  
->  	if (WARN_ON(!pdev->pasid_enabled))
-> -		return;
-> +		goto pasid_unlock;
->  
-> -	if (!pdev->pasid_cap)
-> -		return;
-> +	if (!pf->pasid_cap)
-> +		goto pasid_unlock;
->  
-> -	pci_write_config_word(pdev, pdev->pasid_cap + PCI_PASID_CTRL, control);
-> +	atomic_dec(&pf->pasid_ref_cnt);
->  
-> +	if (atomic_read(&pf->pasid_ref_cnt))
-> +		goto done;
-> +
-> +	/* Disable PASID only if pasid_ref_cnt is zero */
-> +	pci_write_config_word(pf, pf->pasid_cap + PCI_PASID_CTRL, control);
-> +
-> +done:
->  	pdev->pasid_enabled = 0;
-> +pasid_unlock:
-> +	mutex_unlock(&pf->pasid_lock);
-> +
->  }
->  EXPORT_SYMBOL_GPL(pci_disable_pasid);
->  
-> @@ -492,15 +532,25 @@ EXPORT_SYMBOL_GPL(pci_disable_pasid);
->  void pci_restore_pasid_state(struct pci_dev *pdev)
->  {
->  	u16 control;
-> +	struct pci_dev *pf = pci_physfn(pdev);
->  
->  	if (!pdev->pasid_enabled)
->  		return;
->  
-> -	if (!pdev->pasid_cap)
-> +	if (!pf->pasid_cap)
->  		return;
->  
-> +	mutex_lock(&pf->pasid_lock);
-> +
-> +	pci_read_config_word(pf, pf->pasid_cap + PCI_PASID_CTRL, &control);
-> +	if (control & PCI_PASID_CTRL_ENABLE)
-> +		goto pasid_unlock;
-> +
->  	control = PCI_PASID_CTRL_ENABLE | pdev->pasid_features;
-> -	pci_write_config_word(pdev, pdev->pasid_cap + PCI_PASID_CTRL, control);
-> +	pci_write_config_word(pf, pf->pasid_cap + PCI_PASID_CTRL, control);
-> +
-> +pasid_unlock:
-> +	mutex_unlock(&pf->pasid_lock);
->  }
->  EXPORT_SYMBOL_GPL(pci_restore_pasid_state);
->  
-> @@ -517,15 +567,22 @@ EXPORT_SYMBOL_GPL(pci_restore_pasid_state);
->  int pci_pasid_features(struct pci_dev *pdev)
->  {
->  	u16 supported;
-> +	struct pci_dev *pf = pci_physfn(pdev);
-> +
-> +	mutex_lock(&pf->pasid_lock);
->  
-> -	if (!pdev->pasid_cap)
-> +	if (!pf->pasid_cap) {
-> +		mutex_unlock(&pf->pasid_lock);
->  		return -EINVAL;
-> +	}
->  
-> -	pci_read_config_word(pdev, pdev->pasid_cap + PCI_PASID_CAP,
-> +	pci_read_config_word(pf, pf->pasid_cap + PCI_PASID_CAP,
->  			     &supported);
->  
->  	supported &= PCI_PASID_CAP_EXEC | PCI_PASID_CAP_PRIV;
->  
-> +	mutex_unlock(&pf->pasid_lock);
-> +
->  	return supported;
->  }
->  EXPORT_SYMBOL_GPL(pci_pasid_features);
-> @@ -579,15 +636,21 @@ EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
->  int pci_max_pasids(struct pci_dev *pdev)
->  {
->  	u16 supported;
-> +	struct pci_dev *pf = pci_physfn(pdev);
-> +
-> +	mutex_lock(&pf->pasid_lock);
->  
-> -	if (!pdev->pasid_cap)
-> +	if (!pf->pasid_cap) {
-> +		mutex_unlock(&pf->pasid_lock);
->  		return -EINVAL;
-> +	}
->  
-> -	pci_read_config_word(pdev, pdev->pasid_cap + PCI_PASID_CAP,
-> -			     &supported);
-> +	pci_read_config_word(pf, pf->pasid_cap + PCI_PASID_CAP, &supported);
->  
->  	supported = (supported & PASID_NUMBER_MASK) >> PASID_NUMBER_SHIFT;
->  
-> +	mutex_unlock(&pf->pasid_lock);
-> +
->  	return (1 << supported);
->  }
->  EXPORT_SYMBOL_GPL(pci_max_pasids);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 3c9c4c82be27..4bfcca045afd 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -461,8 +461,10 @@ struct pci_dev {
->  	atomic_t	pri_ref_cnt;	/* Number of PF/VF PRI users */
->  #endif
->  #ifdef CONFIG_PCI_PASID
-> +	struct mutex	pasid_lock;	/* PASID enable lock */
 
-I think these locks are finer-grained than necessary.  I'm not sure
-it's worth having two mutexes for every device (one for PRI and
-another for PASID).  Is there really a performance benefit for having
-two?
+Adding something to "struct zone" is certainly less invasive than core
+buddy modifications, just saying (I agree that this is suboptimal. I
+would have guessed that all that's needed is a pointer to some private
+structure here). However, the migratetype thingy below looks fishy to me.
 
-Do it (or do they) need to be in struct pci_dev?  You only use the PF
-mutexes, so maybe it could be in the struct pci_sriov, which I think
-is only one per PF.
+> If we are going to continue further with this patch set then it might
+> be worth looking into dynamically allocating the space you need for
+> this block. At a minimum you could probably look at making the bitmap
+> an RCU based setup so you could define the base and end along with the
+> bitmap. It would probably help to resolve the hotplug issues you still
+> need to address.
 
->  	u16		pasid_cap;	/* PASID Capability offset */
->  	u16		pasid_features;
-> +	atomic_t	pasid_ref_cnt;	/* Number of VFs with PASID enabled */
->  #endif
->  #ifdef CONFIG_PCI_P2PDMA
->  	struct pci_p2pdma *p2pdma;
-> -- 
-> 2.21.0
+Yeah, I guess that makes sense.
+
+[...]
+>> +
+>> +static int process_free_page(struct page *page,
+>> +                            struct page_reporting_config *phconf, int count)
+>> +{
+>> +       int mt, order, ret = 0;
+>> +
+>> +       mt = get_pageblock_migratetype(page);
+>> +       order = page_private(page);
+>> +       ret = __isolate_free_page(page, order);
+>> +
+
+I just started looking into the wonderful world of
+isolation/compaction/migration.
+
+I don't think saving/restoring the migratetype is correct here. AFAIK,
+MOVABLE/UNMOVABLE/RECLAIMABLE is just a hint, doesn't mean that e.g.,
+movable pages and up in UNMOVABLE or ordinary kernel allocations on
+MOVABLE. So that shouldn't be an issue - I guess.
+
+1. You should never allocate something that is no
+MOVABLE/UNMOVABLE/RECLAIMABLE. Especially not, if you have ISOLATE or
+CMA here. There should at least be a !is_migrate_isolate_page() check
+somewhere
+
+2. set_migratetype_isolate() takes the zone lock, so to avoid racing
+with isolation code, you have to hold the zone lock. Your code seems to
+do that, so at least you cannot race against isolation.
+
+3. You could end up temporarily allocating something in the
+ZONE_MOVABLE. The pages you allocate are, however, not movable. There
+would have to be a way to make alloc_contig_range()/offlining code
+properly wait until the pages have been processed. Not sure about the
+real implications, though - too many details in the code (I wonder if
+Alex' series has a way of dealing with that)
+
+When you restore the migratetype, you could suddenly overwrite e.g.,
+ISOLATE, which feels wrong.
+
+[...]
+> So as per your comments in the cover page, the two functions above
+> should also probably be plugged into the zone resizing logic somewhere
+> so if a zone is resized the bitmap is adjusted.
 > 
+>> +/**
+>> + * zone_reporting_init - For each zone initializes the page reporting fields
+>> + * and allocates the respective bitmap.
+>> + *
+>> + * This function returns 0 on successful initialization, -ENOMEM otherwise.
+>> + */
+>> +static int zone_reporting_init(void)
+>> +{
+>> +       struct zone *zone;
+>> +       int ret;
+>> +
+>> +       for_each_populated_zone(zone) {
+>> +#ifdef CONFIG_ZONE_DEVICE
+>> +               /* we can not report pages which are not in the buddy */
+>> +               if (zone_idx(zone) == ZONE_DEVICE)
+>> +                       continue;
+>> +#endif
+> 
+> I'm pretty sure this isn't needed since I don't think the ZONE_DEVICE
+> zone will be considered "populated".
+> 
+I think you are right (although it's confusing, we will have present
+sections part of a zone but the zone has no present_pages - screams like
+a re factoring - leftover from ZONE_DEVICE introduction).
+
+-- 
+
+Thanks,
+
+David / dhildenb
