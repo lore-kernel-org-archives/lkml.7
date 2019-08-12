@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B561C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2BAC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41AFD206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31EDA20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:38:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="rG0dFUj7"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="02IXqmiP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfHLUgS (ORCPT
+        id S1726663AbfHLUid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 16:36:18 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41361 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfHLUgR (ORCPT
+        Mon, 12 Aug 2019 16:38:33 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38729 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfHLUic (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 16:36:17 -0400
-Received: by mail-pg1-f194.google.com with SMTP id x15so39720788pgg.8
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 13:36:17 -0700 (PDT)
+        Mon, 12 Aug 2019 16:38:32 -0400
+Received: by mail-pl1-f196.google.com with SMTP id m12so9705604plt.5
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 13:38:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=JmUZr7y0Vz2xdCv3h+uqvQ8rGr3KsFz2eHJHYMvJh/8=;
-        b=rG0dFUj7rqFxLYUcS0Cl/+bBlfn0vxQ4HWngVOp21pFxw6lq/KzhhDSznW3J87rEMa
-         dFAQl10nuUQwmCt9l6ekbkPPd2bFCzydLmUORfOuDM0+UaVEdaod420qe0IgaHsUqCCv
-         ahUb/2XWujO52+WJhX0vBthKQUIYrR48hR12iJzIKEU/d6qXHx/wQZeHYg6+emIT6InX
-         VL5suQAGwauW8UJRK5pcroiM1jD0zbTAmtme2prRjcEqMLvwELSZw0Cx5R2FxRDVpTLc
-         rAkprfGc1K3fX92MGMI8mhRm9ViL/qJHidlqfIIPGjw1SJrKaZfDWvS+tVLevc9Iybxz
-         lpYQ==
+        bh=OvGyvW5Iklte0Ea4752AqZSzCvI47sv01KixS4E1a7s=;
+        b=02IXqmiPZReQAgyCJd5XNSGkstTKxtHUCQnsagaaTI/Nh5YcPVKftq4hsoImftWUiy
+         UNSJu/7l6MF1Uxfqn0NJMq7zLVQWoWjNBYVt6UcKgPMAj4J3vLYX67YbINJzY8O3BvxS
+         t59P7WwHqAVA9qyEwtZTq4zBCZwRtvgHdH/2NeLIfUbRhknUrJmreVlGM4iBrRFbGyKa
+         FB0S3uNTBf3hEp40WFwr6mnjtWn8CazvUeaTEtQaPHox5O79Zq5gAYLY2pnV99UNu5fX
+         Idy85JpYma2zzK/JF1tyDIb57JjheW480EHyTesQUyYt/1+5SNmYiKuQxPLzDnLN41NU
+         /AQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JmUZr7y0Vz2xdCv3h+uqvQ8rGr3KsFz2eHJHYMvJh/8=;
-        b=E0/rJlofO49sGk6FhTWTwAHfjrd4MLaXRf7f9m279sefXnk0kHGNJe7PL1sA/U5V+h
-         ixPg/+guw6YY1O0Hm0RDBO6PV58yPRIb+KNjHqFGTiveJrV8PlJ4dTQpzDGRoqaDLzP5
-         TVuPmP2MhF+QZUE0Puz30VDgnCulDaNEwDVVZx9UGGWqMYbT5X4pD6M/9vHFz1GlGfKQ
-         5bM8xAFxJAOfj09Wg/n3zeOtQe407TbM9Tf3mYyilfQkHFxiW5PpATvG9z2eVPUjALTr
-         lWI+nlZKK2SJPUV0hr7tzKxo703JclB9PKsB9GgJOuOK/t+UwMXYVIPYFuN2D1/fk7C4
-         lJwg==
-X-Gm-Message-State: APjAAAUPftIu5vEVwgNBeNj6OWTIDuih1uSf/3rEz3LCWQF2Es1I+4/K
-        0htnFOyD9keEn97xxTSMlhIfoQ==
-X-Google-Smtp-Source: APXvYqyDaod1Q2sAKlRtRSeBrWfVVeu4bsRdV3UDrzaWFpPL3Qya8lka3ODeB7cFVNwLPTX48WepJA==
-X-Received: by 2002:aa7:9882:: with SMTP id r2mr5141299pfl.146.1565642176946;
-        Mon, 12 Aug 2019 13:36:16 -0700 (PDT)
+        bh=OvGyvW5Iklte0Ea4752AqZSzCvI47sv01KixS4E1a7s=;
+        b=FlFlahTFzQkumcgNEBb6SPYq0Q4VK2QdqtT6p4K0tAOUYMQbbGZzkocpD+c/mQuVmO
+         V13y/TlaCUF4f38Wst5gcBxGfhcV6Yf/onyqvvt2ewrmkyFiPrrmD7XMplJ79n3uZp5l
+         Tq3kwxtV9lBGNB5zrKiW8r4rv/kGw7WRvqy9fS+nXipJqD0AVBHKEPX+UcJFVsdPA94G
+         B4rWQG3rVcK5fEYULXzGJ7SUyi/1tuKLKuQvnR41HKhTCjQ6/jEkudNUUwYE5pck+B4m
+         zerA/0neqwARZ81c/1ko4otCiMOlGYyjipxWxgN5y8y0Cp0NtE/TrU7vC9XyVLSJiFJA
+         q3sQ==
+X-Gm-Message-State: APjAAAVHca9B6Ccr0aWvBKGPmRCjk/6qPjnOH+6VZmSqID0nwJ7FXE2Y
+        rocJBf30TIkm+UtraRaXNX32Xg==
+X-Google-Smtp-Source: APXvYqx7UX+07QB6rf7tI+JsJp388bL6hSKEDw7jHgHpKKJOqgKh3l4/VtJ/B/CdbYmtlZD9R7SOJg==
+X-Received: by 2002:a17:902:74c4:: with SMTP id f4mr33092313plt.13.1565642312071;
+        Mon, 12 Aug 2019 13:38:32 -0700 (PDT)
 Received: from localhost ([2620:10d:c091:500::2:f08])
-        by smtp.gmail.com with ESMTPSA id m145sm9023428pfd.68.2019.08.12.13.36.15
+        by smtp.gmail.com with ESMTPSA id cx22sm387516pjb.25.2019.08.12.13.38.30
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 13:36:16 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 16:36:14 -0400
+        Mon, 12 Aug 2019 13:38:31 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 16:38:29 -0400
 From:   Johannes Weiner <hannes@cmpxchg.org>
 To:     Song Liu <songliubraving@fb.com>
 Cc:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
@@ -64,44 +64,34 @@ Cc:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
         kirill.shutemov@linux.intel.com, kernel-team@fb.com,
         william.kucharski@oracle.com, akpm@linux-foundation.org,
         hdanton@sina.com
-Subject: Re: [PATCH v10 6/7] mm,thp: add read-only THP support for
- (non-shmem) FS
-Message-ID: <20190812203614.GB15498@cmpxchg.org>
+Subject: Re: [PATCH v10 7/7] mm,thp: avoid writes to file with THP in
+ pagecache
+Message-ID: <20190812203829.GC15498@cmpxchg.org>
 References: <20190801184244.3169074-1-songliubraving@fb.com>
- <20190801184244.3169074-7-songliubraving@fb.com>
+ <20190801184244.3169074-8-songliubraving@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190801184244.3169074-7-songliubraving@fb.com>
+In-Reply-To: <20190801184244.3169074-8-songliubraving@fb.com>
 User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 11:42:43AM -0700, Song Liu wrote:
-> This patch is (hopefully) the first step to enable THP for non-shmem
-> filesystems.
+On Thu, Aug 01, 2019 at 11:42:44AM -0700, Song Liu wrote:
+> In previous patch, an application could put part of its text section in
+> THP via madvise(). These THPs will be protected from writes when the
+> application is still running (TXTBSY). However, after the application
+> exits, the file is available for writes.
 > 
-> This patch enables an application to put part of its text sections to THP
-> via madvise, for example:
-> 
->     madvise((void *)0x600000, 0x200000, MADV_HUGEPAGE);
-> 
-> We tried to reuse the logic for THP on tmpfs.
-> 
-> Currently, write is not supported for non-shmem THP. khugepaged will only
-> process vma with VM_DENYWRITE. sys_mmap() ignores VM_DENYWRITE requests
-> (see ksys_mmap_pgoff). The only way to create vma with VM_DENYWRITE is
-> execve(). This requirement limits non-shmem THP to text sections.
-> 
-> The next patch will handle writes, which would only happen when the all
-> the vmas with VM_DENYWRITE are unmapped.
-> 
-> An EXPERIMENTAL config, READ_ONLY_THP_FOR_FS, is added to gate this
-> feature.
+> This patch avoids writes to file THP by dropping page cache for the file
+> when the file is open for write. A new counter nr_thps is added to struct
+> address_space. In do_dentry_open(), if the file is open for write and
+> nr_thps is non-zero, we drop page cache for the whole file.
 > 
 > Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Reported-by: kbuild test robot <lkp@intel.com>
 > Acked-by: Rik van Riel <riel@surriel.com>
 > Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 > Signed-off-by: Song Liu <songliubraving@fb.com>
