@@ -2,216 +2,154 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FF1C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AFDC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0CA7208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB75D208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:50:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vk6xeIpk"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hS7Kx+wO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbfHLMsT (ORCPT
+        id S1726991AbfHLMue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 08:48:19 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45474 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbfHLMsT (ORCPT
+        Mon, 12 Aug 2019 08:50:34 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54771 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfHLMue (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 08:48:19 -0400
-Received: by mail-pg1-f194.google.com with SMTP id o13so49409680pgp.12
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 05:48:18 -0700 (PDT)
+        Mon, 12 Aug 2019 08:50:34 -0400
+Received: by mail-wm1-f67.google.com with SMTP id p74so12053576wme.4
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 05:50:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b0QVDbwzpD6p/rhtAsac9CPlvi66FPJCbH2ofPwqDsM=;
-        b=vk6xeIpkeBpLmcpzbPM6kVLX+aCnMfkjDOpH/FhTv+ylmcDq6QVuceYu4hiWLkiPSv
-         CRN56U+s/v5ZeGnycV35/TVv57LzdRzeWvM0CshoVIE+Uw584T21KP2EMtRWArAxbdTv
-         KSVOyjWnRrnAwbFh1e2iKNEFu2862m6yzVyppGSSVFE+MtcSOPAhpLIWB004v8erkNGO
-         vCVGaPqmVCSUI0V4yf7qveW+PCZ1ZMeecpC0mJ4PuOa/iGPIlc7qDWPxz3EL3vY3oi3m
-         WzbDUrhAUudYVIYt4b3TEPwEJHf5dgyZMAdYd3mGHPT6B2R6rEzJbJ+wTpoJHg20rkCt
-         SLig==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nuL4TLbuiajteIBUcLht3A9vUK/cqgNo9Cf0dYF6/nc=;
+        b=hS7Kx+wOvRPyPbK4skt43H1PfDxHj/p/cn434dg/BQt9yVt/ySb9q4VxmXqpbcQvqR
+         GavtSTsLNe7rVhEjG9UPXpd0Q7ymkWVCgxHP386VObqiwHXgMFGPBTQr5lKcLnI5D10z
+         IqGc1dLK1K9isXdUt/aZcrMcFzgt2z3Bru0+ZqQX6A6fzH3MhBHTaq05EXAHg9DhamBm
+         eIjC+dOqRKSvw5FRqmqCJgzh3bZNJe4gc/YH9Gi0jmgpJouQ1nSXlc/7LBH/9FvJWrg1
+         ckSYGMBCIFESxN1VyIveMVps/K52K7gnD9oUz2/vJfT3BzZmGTNHlrJZTauoo4NF+A0i
+         Kuig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b0QVDbwzpD6p/rhtAsac9CPlvi66FPJCbH2ofPwqDsM=;
-        b=Xlqnr5Tnx8iWpsCwozeGrcul5gFwZIPSZgDkxWO9nvo8JPILCwxPIyXzpk73GATA71
-         gPnObzz/PP7stAs7xQilv7/qKkFNT9N6YHB+VwcZO77+uHOxTlTTsRTg0i9waMuoYut0
-         HN57SAyAEppbzL84xiEwtOBOTM4lC2bDTMieT+jjaMXDHEbUFilhxPwIDemuRrpfnvwq
-         R3Pxc+TJgw6t/iDT72Tgj4uYN1OxWanQPEclHb0S7Y3Ke+9Gf5XuBorj62lrHXuQAdKP
-         8M67NJwo8qeCH5egf9OdTc9fcNrNNpn4LxluGt+7fBB1wJaPywtt7C1QcvZWS/8VsYQ1
-         EUUQ==
-X-Gm-Message-State: APjAAAUiSp50/Woy4CziY+/wSHfZkFtkV2DajliiAQVQBjxQ2nmROJ93
-        sNY/DGlZmNnXvko6KbRa5073uyFyes9bxFyg98okKg==
-X-Google-Smtp-Source: APXvYqxtIVI1KaxF0rbj0wYhVgaq3ncNIGrBEB0+V7+P6aKtIGSm2hz2pfSXGgLw0ttE9UdsILI1z8gXlizIvkVQek0=
-X-Received: by 2002:aa7:9e0a:: with SMTP id y10mr11679648pfq.93.1565614097528;
- Mon, 12 Aug 2019 05:48:17 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nuL4TLbuiajteIBUcLht3A9vUK/cqgNo9Cf0dYF6/nc=;
+        b=rvM/yx0dHhM//PLYWu4R9xOOW77NfeNIeONCnz5zvl1lSpsQ5yy0OuaEbz7RBk1LWI
+         QN5iRfN3DoVqN+1UxGx9kICEO+Ew8HUYywT3KR0Z9eklIslZIO7JQY0bPm5roTBZRoYw
+         b3W6MKRN3RDx+pHYgi+noQIV8peHT70HNIW3dlek+bkWfW1N9aYU25Lk8jVn6R/oBKpQ
+         yyxXI3pEI29+Pu5dpRw8dTi5l7ubqO7XjovpnVCIfjXodrha8F81KA7lyqNFCGfbgFsY
+         FY1C7q0lcTcRY2WLHe92PMB/Gp50dRzwLJ/AH25vMtyOFtnZTxiNfp4BsHyujeyAtGGD
+         VzWQ==
+X-Gm-Message-State: APjAAAW2bvA2sP7RP4TEmPKl6MkfjfZtsC+7OXYrj4C5hQ9DASXAzcXB
+        YxqzGfnPssuwQ5gMzY5gTseBfw==
+X-Google-Smtp-Source: APXvYqzz/wdsFPSBb7Iv51fpxD7mYrRzkV5Mt16VX8X+OU4vA0sD1wYsRjv5/wSlhihAoZqsMX27Aw==
+X-Received: by 2002:a1c:7a02:: with SMTP id v2mr27485520wmc.159.1565614231714;
+        Mon, 12 Aug 2019 05:50:31 -0700 (PDT)
+Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id e11sm13740504wrc.4.2019.08.12.05.50.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 05:50:31 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: [RESEND PATCH v2 8/8] drm/bridge: dw-hdmi-i2s: add .get_eld support
+Date:   Mon, 12 Aug 2019 14:50:16 +0200
+Message-Id: <20190812125016.20169-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190812120726.1528-9-jbrunet@baylibre.com>
+References: <20190812120726.1528-9-jbrunet@baylibre.com>
 MIME-Version: 1.0
-References: <0000000000005ff828058f9a5480@google.com>
-In-Reply-To: <0000000000005ff828058f9a5480@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 12 Aug 2019 14:48:06 +0200
-Message-ID: <CAAeHK+wGZ+KpYKR1Ybc9Eu72fWMA+JCfVq=qYU-sq8dNQJ7iyg@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in usbhid_raw_request
-To:     syzbot <syzbot+75e6910bf03e266a277f@syzkaller.appspotmail.com>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 8, 2019 at 2:38 PM syzbot
-<syzbot+75e6910bf03e266a277f@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16000516600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
-> dashboard link: https://syzkaller.appspot.com/bug?extid=75e6910bf03e266a277f
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+75e6910bf03e266a277f@syzkaller.appspotmail.com
->
-> ==================================================================
-> BUG: KASAN: use-after-free in usbhid_get_raw_report
-> drivers/hid/usbhid/hid-core.c:865 [inline]
-> BUG: KASAN: use-after-free in usbhid_raw_request+0x5f2/0x640
-> drivers/hid/usbhid/hid-core.c:1263
-> Read of size 8 at addr ffff8881c8702270 by task syz-executor.4/8993
->
-> CPU: 0 PID: 8993 Comm: syz-executor.4 Not tainted 5.3.0-rc2+ #25
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   print_address_description+0x6a/0x32c mm/kasan/report.c:351
->   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
->   kasan_report+0xe/0x12 mm/kasan/common.c:612
->   usbhid_get_raw_report drivers/hid/usbhid/hid-core.c:865 [inline]
->   usbhid_raw_request+0x5f2/0x640 drivers/hid/usbhid/hid-core.c:1263
->   hid_hw_raw_request include/linux/hid.h:1079 [inline]
->   hidraw_get_report drivers/hid/hidraw.c:228 [inline]
->   hidraw_ioctl+0x936/0xae0 drivers/hid/hidraw.c:426
+Provide the eld to the generic hdmi-codec driver.
+This will let the driver enforce the maximum channel number and set the
+channel allocation depending on the hdmi sink.
 
-#syz dup: WARNING in usbhid_raw_request/usb_submit_urb
+Cc: Jonas Karlman <jonas@kwiboo.se>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h     |  1 +
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c | 11 +++++++++++
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c           |  1 +
+ 3 files changed, 13 insertions(+)
 
->   vfs_ioctl fs/ioctl.c:46 [inline]
->   file_ioctl fs/ioctl.c:509 [inline]
->   do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
->   ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
->   __do_sys_ioctl fs/ioctl.c:720 [inline]
->   __se_sys_ioctl fs/ioctl.c:718 [inline]
->   __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
->   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x459829
-> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007f7f49878c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
-> RDX: 0000000020000180 RSI: 00000000c0404807 RDI: 0000000000000004
-> RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7f498796d4
-> R13: 00000000004c2152 R14: 00000000004d54f8 R15: 00000000ffffffff
->
-> Allocated by task 83:
->   save_stack+0x1b/0x80 mm/kasan/common.c:69
->   set_track mm/kasan/common.c:77 [inline]
->   __kasan_kmalloc mm/kasan/common.c:487 [inline]
->   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
->   kmalloc include/linux/slab.h:552 [inline]
->   kzalloc include/linux/slab.h:748 [inline]
->   usb_set_configuration+0x2c4/0x1670 drivers/usb/core/message.c:1846
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x281/0x650 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:882
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2114
->   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
->   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> Freed by task 83:
->   save_stack+0x1b/0x80 mm/kasan/common.c:69
->   set_track mm/kasan/common.c:77 [inline]
->   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
->   slab_free_hook mm/slub.c:1423 [inline]
->   slab_free_freelist_hook mm/slub.c:1470 [inline]
->   slab_free mm/slub.c:3012 [inline]
->   kfree+0xe4/0x2f0 mm/slub.c:3953
->   device_release+0x71/0x200 drivers/base/core.c:1064
->   kobject_cleanup lib/kobject.c:693 [inline]
->   kobject_release lib/kobject.c:722 [inline]
->   kref_put include/linux/kref.h:65 [inline]
->   kobject_put+0x171/0x280 lib/kobject.c:739
->   put_device+0x1b/0x30 drivers/base/core.c:2213
->   usb_disable_device+0x2ce/0x690 drivers/usb/core/message.c:1244
->   usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
->   hub_port_connect drivers/usb/core/hub.c:4949 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> The buggy address belongs to the object at ffff8881c8702200
->   which belongs to the cache kmalloc-2k of size 2048
-> The buggy address is located 112 bytes inside of
->   2048-byte region [ffff8881c8702200, ffff8881c8702a00)
-> The buggy address belongs to the page:
-> page:ffffea000721c000 refcount:1 mapcount:0 mapping:ffff8881da00c000
-> index:0x0 compound_mapcount: 0
-> flags: 0x200000000010200(slab|head)
-> raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da00c000
-> raw: 0000000000000000 00000000000f000f 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->   ffff8881c8702100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->   ffff8881c8702180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> > ffff8881c8702200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->                                                               ^
->   ffff8881c8702280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->   ffff8881c8702300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ==================================================================
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h
+index 63b5756f463b..cb07dc0da5a7 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h
+@@ -14,6 +14,7 @@ struct dw_hdmi_audio_data {
+ 
+ struct dw_hdmi_i2s_audio_data {
+ 	struct dw_hdmi *hdmi;
++	u8 *eld;
+ 
+ 	void (*write)(struct dw_hdmi *hdmi, u8 val, int offset);
+ 	u8 (*read)(struct dw_hdmi *hdmi, int offset);
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+index b8ece9c1ba2c..1d15cf9b6821 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+@@ -10,6 +10,7 @@
+ #include <linux/module.h>
+ 
+ #include <drm/bridge/dw_hdmi.h>
++#include <drm/drm_crtc.h>
+ 
+ #include <sound/hdmi-codec.h>
+ 
+@@ -121,6 +122,15 @@ static void dw_hdmi_i2s_audio_shutdown(struct device *dev, void *data)
+ 	dw_hdmi_audio_disable(hdmi);
+ }
+ 
++static int dw_hdmi_i2s_get_eld(struct device *dev, void *data, uint8_t *buf,
++			       size_t len)
++{
++	struct dw_hdmi_i2s_audio_data *audio = data;
++
++	memcpy(buf, audio->eld, min_t(size_t, MAX_ELD_BYTES, len));
++	return 0;
++}
++
+ static int dw_hdmi_i2s_get_dai_id(struct snd_soc_component *component,
+ 				  struct device_node *endpoint)
+ {
+@@ -144,6 +154,7 @@ static int dw_hdmi_i2s_get_dai_id(struct snd_soc_component *component,
+ static struct hdmi_codec_ops dw_hdmi_i2s_ops = {
+ 	.hw_params	= dw_hdmi_i2s_hw_params,
+ 	.audio_shutdown	= dw_hdmi_i2s_audio_shutdown,
++	.get_eld	= dw_hdmi_i2s_get_eld,
+ 	.get_dai_id	= dw_hdmi_i2s_get_dai_id,
+ };
+ 
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+index bed4bb017afd..8df69c9dbfad 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+@@ -2797,6 +2797,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
+ 		struct dw_hdmi_i2s_audio_data audio;
+ 
+ 		audio.hdmi	= hdmi;
++		audio.eld	= hdmi->connector.eld;
+ 		audio.write	= hdmi_writeb;
+ 		audio.read	= hdmi_readb;
+ 		hdmi->enable_audio = dw_hdmi_i2s_audio_enable;
+-- 
+2.21.0
+
