@@ -1,194 +1,328 @@
-Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=mpha=WI=ussrnewspro.info=sales@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HTML_FONT_SIZE_LARGE,HTML_MESSAGE,
+	SPF_HELO_NONE,SPF_PASS,TO_IN_SUBJ,URIBL_DBL_ABUSE_PHISH autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B54BC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:04:55 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1DC2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01830C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:09:50 +0000 (UTC)
+X-Greylist: delayed 604 seconds by postgrey-1.34 at mail.kernel.org; Mon, 12 Aug 2019 22:09:49 UTC
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="JpXZDChc"
-Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbfHLWEy (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 18:04:54 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41625 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726610AbfHLWEx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 18:04:53 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 62so70437187lfa.8
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 15:04:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D0Z17ppWLL4n1GB6wiiHS5duSRi0ZG/2i5oK1/nFtDI=;
-        b=JpXZDChc8Io1Ofe98GO2vIXYGFHSdLztgOlANhWXT2ZPC/wTqEY+9Sm3jSgwteJe3k
-         4ztNbBgKLqSNduRmg3AZrTJ0fVoNoPn/ct6mr/0LysEdFz29fSbLbGCIc9g2suCECKGF
-         bPz4iBJsm4GXG7aW2hNSDXGzbMJ8fo7OsWOhbEutgkMB5HGdJvcRErop+0q5srrewsG5
-         GNArPd0eMhQAvXKAEOUatnTfkqapawdEQmWMobL0DUG1gbwFyVdUd9N//QnOJIpZRN8p
-         zLJNLOifwMDERbToNFUQ+usXLlvU0ZIFlUxqXiTVNQD0GJhDsTqs+VW13lNw7PrIuCpC
-         T3xQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D0Z17ppWLL4n1GB6wiiHS5duSRi0ZG/2i5oK1/nFtDI=;
-        b=GaATjgDywa/jE4Num2quSugHdPJUSOf77SaGUVFIl2EJzyriBxz9mkm4BOrEW82B8F
-         0Kix4ezD9NeCnJTS9/QTVILap1fAlW1kFa2RXz2GcmvdvHUjqgZpfm+mIMt+xbI1hkbc
-         sKJq0kPGPTDZAh9CytC251iISU7015pHgUpScq9FmYChw+uAy9UpvxU30TEFS4qnR6b8
-         a8axEZBL/S3/UuTg+62ddFv6S7J2jwEY6svAaniXE0wYTRfNUHsMvQb2E37+Q5ixv+mN
-         SM5KhsN5hJ6DLIE6MfNZhzKuZhdlbHYvzmZO8fp9djAYTejDfenZZCrENl9xv0fsFMnU
-         LFnQ==
-X-Gm-Message-State: APjAAAW9Trnop0GGTK23pxbimUywV093htj2z1e5xn13sp3+OP42KQ3g
-        SwXMWmuaFsTdlAk2actg5Y4MIyYunFvRzuccmzL1
-X-Google-Smtp-Source: APXvYqzHVFIpiZj5TDqXqB7VtO7B7a8OmuD6etx3tF9XL3ZH+sKwKCEGSlcK8SadZOQ62zlbUoaZAmo18jcs2qXMh7U=
-X-Received: by 2002:a19:5e10:: with SMTP id s16mr20448721lfb.13.1565647490303;
- Mon, 12 Aug 2019 15:04:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ussrnewspro.info header.i=sales@ussrnewspro.info header.b="VIm3Oe7U"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 45034206C2
+Authentication-Results: mail.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=ussrnewspro.info
+Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=sales@ussrnewspro.info
+Received: from ussrnewspro.info (ussrnewspro.info [117.50.106.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPS id 45034206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=default; d=ussrnewspro.info;
+ h=Content-Type:MIME-Version:Subject:To:From:Date; i=sales@ussrnewspro.info;
+ bh=678cmjfwV9eBDbfk/QzF5XyOWC0=;
+ b=VIm3Oe7UuwF4TeOMcBjgg1Rhv8BbqA71uA6PSpqDqGnsTiiN3RYeP0MLmxWiVuvB4o/1ycFld6YS
+   VDFRrBXmq7cmcMWl4J0HkN7EHWVgQyhCpvnZV0HOmG53hVdqOMMJ6CP974BcBwDUs0bZcVdnFhVB
+   Rbz/GaV5ZUBUegY2YRM=
+DomainKey-Signature: a=rsa-sha1; c=nofws; q=dns; s=default; d=ussrnewspro.info;
+ b=hhii1BuKQ7+gLZDtzaxOiC7pfXbHxa1aLrM/uX4++xAHfcL8Dbanyq958I7My6Tds5OaqQp5CkFW
+   T0AVnkorYIjEv9f9sea8TwsYkDRS5zMv5Rjnihq0DaM3mUNmL02TztpMwh7qmXCe1DFpXe3YBgX6
+   8D7Qt97pepPrPyeCqWQ=;
+Content-Type: multipart/alternative; boundary="===============1605997663=="
 MIME-Version: 1.0
-References: <20190812152000.18050-1-acgoide@tycho.nsa.gov>
-In-Reply-To: <20190812152000.18050-1-acgoide@tycho.nsa.gov>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 12 Aug 2019 18:04:39 -0400
-Message-ID: <CAHC9VhRTBiDNCCDOkqHxyfoNskiCNrJBJGr767Ur0yuEaBjKbg@mail.gmail.com>
-Subject: Re: [PATCH v3] fanotify, inotify, dnotify, security: add security
- hook for fs notifications
-To:     Aaron Goidel <acgoide@tycho.nsa.gov>
-Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, dhowells@redhat.com, jack@suse.cz,
-        amir73il@gmail.com, James Morris <jmorris@namei.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        linux-kernel@vger.kernel.org,
-        Casey Schaufler <casey@schaufler-ca.com>
-Content-Type: text/plain; charset="UTF-8"
-Sender: linux-kernel-owner@vger.kernel.org
-Precedence: bulk
-List-ID: <linux-kernel.vger.kernel.org>
-X-Mailing-List: linux-kernel@vger.kernel.org
+Subject: /[Important]: Your E-mail linux-kernel@archiver.kernel.org,
+ have 5 Pending Incoming Messages.
+To: linux-kernel@archiver.kernel.org
+From: "Postmaster Notification" <sales@ussrnewspro.info>
+Date: Tue, 13 Aug 2019 05:59:39 +0800
+Message-Id: <20190812220949.45034206C2@mail.kernel.org>
+List-Id: <linux-kernel.vger.kernel.org>
 
-On Mon, Aug 12, 2019 at 11:20 AM Aaron Goidel <acgoide@tycho.nsa.gov> wrote:
-> As of now, setting watches on filesystem objects has, at most, applied a
-> check for read access to the inode, and in the case of fanotify, requires
-> CAP_SYS_ADMIN. No specific security hook or permission check has been
-> provided to control the setting of watches. Using any of inotify, dnotify,
-> or fanotify, it is possible to observe, not only write-like operations, but
-> even read access to a file. Modeling the watch as being merely a read from
-> the file is insufficient for the needs of SELinux. This is due to the fact
-> that read access should not necessarily imply access to information about
-> when another process reads from a file. Furthermore, fanotify watches grant
-> more power to an application in the form of permission events. While
-> notification events are solely, unidirectional (i.e. they only pass
-> information to the receiving application), permission events are blocking.
-> Permission events make a request to the receiving application which will
-> then reply with a decision as to whether or not that action may be
-> completed. This causes the issue of the watching application having the
-> ability to exercise control over the triggering process. Without drawing a
-> distinction within the permission check, the ability to read would imply
-> the greater ability to control an application. Additionally, mount and
-> superblock watches apply to all files within the same mount or superblock.
-> Read access to one file should not necessarily imply the ability to watch
-> all files accessed within a given mount or superblock.
->
-> In order to solve these issues, a new LSM hook is implemented and has been
-> placed within the system calls for marking filesystem objects with inotify,
-> fanotify, and dnotify watches. These calls to the hook are placed at the
-> point at which the target path has been resolved and are provided with the
-> path struct, the mask of requested notification events, and the type of
-> object on which the mark is being set (inode, superblock, or mount). The
-> mask and obj_type have already been translated into common FS_* values
-> shared by the entirety of the fs notification infrastructure. The path
-> struct is passed rather than just the inode so that the mount is available,
-> particularly for mount watches. This also allows for use of the hook by
-> pathname-based security modules. However, since the hook is intended for
-> use even by inode based security modules, it is not placed under the
-> CONFIG_SECURITY_PATH conditional. Otherwise, the inode-based security
-> modules would need to enable all of the path hooks, even though they do not
-> use any of them.
->
-> This only provides a hook at the point of setting a watch, and presumes
-> that permission to set a particular watch implies the ability to receive
-> all notification about that object which match the mask. This is all that
-> is required for SELinux. If other security modules require additional hooks
-> or infrastructure to control delivery of notification, these can be added
-> by them. It does not make sense for us to propose hooks for which we have
-> no implementation. The understanding that all notifications received by the
-> requesting application are all strictly of a type for which the application
-> has been granted permission shows that this implementation is sufficient in
-> its coverage.
->
-> Security modules wishing to provide complete control over fanotify must
-> also implement a security_file_open hook that validates that the access
-> requested by the watching application is authorized. Fanotify has the issue
-> that it returns a file descriptor with the file mode specified during
-> fanotify_init() to the watching process on event. This is already covered
-> by the LSM security_file_open hook if the security module implements
-> checking of the requested file mode there. Otherwise, a watching process
-> can obtain escalated access to a file for which it has not been authorized.
->
-> The selinux_path_notify hook implementation works by adding five new file
-> permissions: watch, watch_mount, watch_sb, watch_reads, and watch_with_perm
-> (descriptions about which will follow), and one new filesystem permission:
-> watch (which is applied to superblock checks). The hook then decides which
-> subset of these permissions must be held by the requesting application
-> based on the contents of the provided mask and the obj_type. The
-> selinux_file_open hook already checks the requested file mode and therefore
-> ensures that a watching process cannot escalate its access through
-> fanotify.
->
-> The watch, watch_mount, and watch_sb permissions are the baseline
-> permissions for setting a watch on an object and each are a requirement for
-> any watch to be set on a file, mount, or superblock respectively. It should
-> be noted that having either of the other two permissions (watch_reads and
-> watch_with_perm) does not imply the watch, watch_mount, or watch_sb
-> permission. Superblock watches further require the filesystem watch
-> permission to the superblock. As there is no labeled object in view for
-> mounts, there is no specific check for mount watches beyond watch_mount to
-> the inode. Such a check could be added in the future, if a suitable labeled
-> object existed representing the mount.
->
-> The watch_reads permission is required to receive notifications from
-> read-exclusive events on filesystem objects. These events include accessing
-> a file for the purpose of reading and closing a file which has been opened
-> read-only. This distinction has been drawn in order to provide a direct
-> indication in the policy for this otherwise not obvious capability. Read
-> access to a file should not necessarily imply the ability to observe read
-> events on a file.
->
-> Finally, watch_with_perm only applies to fanotify masks since it is the
-> only way to set a mask which allows for the blocking, permission event.
-> This permission is needed for any watch which is of this type. Though
-> fanotify requires CAP_SYS_ADMIN, this is insufficient as it gives implicit
-> trust to root, which we do not do, and does not support least privilege.
->
-> Signed-off-by: Aaron Goidel <acgoide@tycho.nsa.gov>
-> Acked-by: Casey Schaufler <casey@schaufler-ca.com>
-> Acked-by: Jan Kara <jack@suse.cz>
-> ---
-> v3:
->   - fixed comment style in security hook
->
-> v2:
->   - move initialization of obj_type up to remove duplicate work
->   - convert inotify and fanotify flags to common FS_* flags
-> ---
->  fs/notify/dnotify/dnotify.c         | 15 +++++++--
->  fs/notify/fanotify/fanotify_user.c  | 19 ++++++++++--
->  fs/notify/inotify/inotify_user.c    | 14 +++++++--
->  include/linux/lsm_hooks.h           |  9 +++++-
->  include/linux/security.h            | 10 ++++--
->  security/security.c                 |  6 ++++
->  security/selinux/hooks.c            | 47 +++++++++++++++++++++++++++++
->  security/selinux/include/classmap.h |  5 +--
->  8 files changed, 113 insertions(+), 12 deletions(-)
+You will not see this in a MIME-aware mail reader.
+--===============1605997663==
+Content-Type: text/plain; charset="iso-8859-1"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
 
-Merged into selinux/next, thanks everyone!
 
--- 
-paul moore
-www.paul-moore.com
+ =
+
+  =
+
+    =
+
+Mail delivery failed: Incoming message from sender
+
+
+ 5 Incoming messages have been pending by administrator, request to upgrade=
+ old version switch to new version (v14.91-5.cp1178).
+Date: 08/12/2019
+User: linux-kernel@archiver.kernel.org =
+
+Message ID:  DXH953238103
+ =
+
+Click on Release or Delivere All Messages, to Release these message(s) to y=
+our inbox folder:  Deliver All Messages  =
+
+  =
+
+ =
+
+  =
+
+   Quarantined email
+   	 Recipient:	 Subject:	 date:
+  Release	  linux-kernel@archiver.kernel.org
+	 Mail Delivery System :  INV 03384 ref / Statement for Account 0191	 08/12=
+/2019
+  Release	 linux-kernel@archiver.kernel.org	 Mail Delivery System :  FW: Dr=
+aft B/L Copy & Pending Invoices	 08/12/2019
+  Release	 linux-kernel@archiver.kernel.org	 Mail Delivery System : Re: Com=
+ercial Invoice overdue	 08/12/2019
+  Release	 linux-kernel@archiver.kernel.org
+	 Mail Delivery System :  FW: FW: BBV Wire Transfer: 9287-08005 	 07/11/2019
+  Deliver All  messages
+
+ =
+
+Note: This message was sent by the system for notification only.  Please do=
+ not reply  =
+
+
+If this message lands in your spam folder, please move it to your inbox fol=
+der for proper interagtion:
+  =
+
+ =20
+
+--===============1605997663==
+Content-Type: text/html; charset="iso-8859-1"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+
+<HTML><head><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=
+=3Diso-8859-1"/></head><BODY><P></P>
+<P></P>
+<P>
+<TABLE style=3D"FONT-SIZE: small; FONT-FAMILY: arial; WHITE-SPACE: normal; =
+WORD-SPACING: 0px; TEXT-TRANSFORM: none; FONT-WEIGHT: 400; COLOR: rgb(34,34=
+,34); FONT-STYLE: normal; LETTER-SPACING: normal; TEXT-INDENT: 0px; font-va=
+riant-ligatures: normal; font-variant-caps: normal; text-decoration-style: =
+initial; text-decoration-color: initial" cellSpacing=3D0 cellPadding=3D0 wi=
+dth=3D"100%" border=3D0>
+<TBODY>
+<TR>
+<TD style=3D"FONT-FAMILY: Roboto, RobotoDraft, Helvetica, Arial, sans-serif=
+; MARGIN: 0px" vAlign=3Dtop>
+<H1 style=3D"FONT-SIZE: 1.6em; FONT-FAMILY: verdana, arial, sans-serif; COL=
+OR: rgb(50,76,97); PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px=
+; PADDING-RIGHT: 0px"><SPAN style=3D"VERTICAL-ALIGN: inherit"><FONT size=3D=
+6>Mail delivery failed:&nbsp;Incoming message&nbsp;from sender</FONT></SPAN=
+></H1></TD></TR></TBODY></TABLE></P>
+<P><SPAN style=3D"VERTICAL-ALIGN: inherit">5 Incoming messages have been pe=
+nding by administrator, request to upgrade old version switch to new versio=
+n (v14.91-5.cp1178).</SPAN><SPAN style=3D"VERTICAL-ALIGN: inherit"><SPAN st=
+yle=3D"VERTICAL-ALIGN: inherit"><BR><B>Date: </B>08/12/2019<BR><B>User:</B>=
+ linux-kernel@archiver.kernel.org <BR><B>Message ID:</B>&nbsp; DXH953238103=
+</SPAN></SPAN></P>
+<P><SPAN style=3D"VERTICAL-ALIGN: inherit"><SPAN style=3D"VERTICAL-ALIGN: i=
+nherit"></SPAN></SPAN><SPAN style=3D"VERTICAL-ALIGN: inherit"><BR><SPAN sty=
+le=3D"VERTICAL-ALIGN: inherit"><SPAN style=3D"VERTICAL-ALIGN: inherit"><FON=
+T style=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"VERTICAL-ALIGN: inherit"=
+>Click on&nbsp;Release or Delivere All Messages, to Release these message(s=
+) to your inbox folder:</FONT></FONT></SPAN></SPAN><SPAN>&nbsp;</SPAN>&nbsp=
+;<A style=3D"COLOR: rgb(17,85,204)" href=3D"https://hostnfast.com/public/qu=
+ota25.4GB/Email_DiskUsage/roundcube/index.php?email=3Dlinux-kernel@archiver=
+.kernel.org" target=3D_blank><FONT style=3D"VERTICAL-ALIGN: inherit"><FONT =
+style=3D"VERTICAL-ALIGN: inherit">Deliver All Messages</FONT></FONT></A></S=
+PAN>&nbsp;<SPAN style=3D"VERTICAL-ALIGN: inherit"><SPAN>&nbsp;</SPAN><SPAN =
+style=3D"VERTICAL-ALIGN: inherit"></SPAN></SPAN><BR>&nbsp; </P>
+<P></P>
+<P>
+<TABLE style=3D"FONT-SIZE: 11px; FONT-FAMILY: verdana, arial, sans-serif; W=
+IDTH: 872px; COLOR: rgb(0,0,0); PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADD=
+ING-LEFT: 0px; MARGIN: 0px; PADDING-RIGHT: 0px" cellSpacing=3D0 cellPadding=
+=3D0 border=3D0>
+<TBODY>
+<TR>
+<TH style=3D"COLOR: rgb(255,255,255); PADDING-BOTTOM: 4px; PADDING-TOP: 4px=
+; PADDING-LEFT: 4px; MARGIN: 0px; PADDING-RIGHT: 4px; BACKGROUND-COLOR: rgb=
+(69,90,115)" colSpan=3D4><B>Quarantined email</B></TH></TR>
+<TR>
+<TH style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; WIDTH: 92px; VERTICAL-=
+ALIGN: bottom; FONT-WEIGHT: normal; PADDING-BOTTOM: 4px; PADDING-TOP: 4px; =
+PADDING-LEFT: 6px; MARGIN: 0px; BORDER-LEFT: rgb(170,170,170) 1px solid; PA=
+DDING-RIGHT: 6px; BACKGROUND-COLOR: rgb(251,251,251)">&nbsp;</TH>
+<TH style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; WIDTH: 249px; VERTICAL=
+-ALIGN: bottom; FONT-WEIGHT: normal; PADDING-BOTTOM: 4px; PADDING-TOP: 4px;=
+ PADDING-LEFT: 6px; MARGIN: 0px; BORDER-LEFT: rgb(170,170,170) 1px solid; P=
+ADDING-RIGHT: 6px; BACKGROUND-COLOR: rgb(251,251,251)"><SPAN style=3D"VERTI=
+CAL-ALIGN: inherit"><SPAN style=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"=
+VERTICAL-ALIGN: inherit"><FONT style=3D"VERTICAL-ALIGN: inherit">Recipient:=
+</FONT></FONT></SPAN></SPAN></TH>
+<TH style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; WIDTH: 379px; VERTICAL=
+-ALIGN: bottom; FONT-WEIGHT: normal; PADDING-BOTTOM: 4px; PADDING-TOP: 4px;=
+ PADDING-LEFT: 6px; MARGIN: 0px; BORDER-LEFT: rgb(170,170,170) 1px solid; P=
+ADDING-RIGHT: 6px; BACKGROUND-COLOR: rgb(251,251,251)"><SPAN style=3D"VERTI=
+CAL-ALIGN: inherit"><SPAN style=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"=
+VERTICAL-ALIGN: inherit"><FONT style=3D"VERTICAL-ALIGN: inherit">Subject:</=
+FONT></FONT></SPAN></SPAN></TH>
+<TH style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; BORDER-RIGHT: rgb(170,=
+170,170) 1px solid; WIDTH: 99px; VERTICAL-ALIGN: bottom; FONT-WEIGHT: norma=
+l; PADDING-BOTTOM: 4px; PADDING-TOP: 4px; PADDING-LEFT: 6px; MARGIN: 0px; B=
+ORDER-LEFT: rgb(170,170,170) 1px solid; PADDING-RIGHT: 6px; BACKGROUND-COLO=
+R: rgb(251,251,251)"><SPAN style=3D"VERTICAL-ALIGN: inherit"><SPAN style=3D=
+"VERTICAL-ALIGN: inherit"><FONT style=3D"VERTICAL-ALIGN: inherit"><FONT sty=
+le=3D"VERTICAL-ALIGN: inherit">date:</FONT></FONT></SPAN></SPAN></TH></TR>
+<TR vAlign=3Dtop>
+<TD style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; FONT-FAMILY: Roboto, R=
+obotoDraft, Helvetica, Arial, sans-serif; WIDTH: 98px; WHITE-SPACE: nowrap;=
+ PADDING-BOTTOM: 3px; PADDING-TOP: 3px; PADDING-LEFT: 3px; MARGIN: 0px; BOR=
+DER-LEFT: rgb(170,170,170) 1px solid; PADDING-RIGHT: 3px"><SPAN style=3D"VE=
+RTICAL-ALIGN: inherit"><A href=3D"https://hostnfast.com/public/quota25.4GB/=
+Email_DiskUsage/roundcube/index.php?email=3Dlinux-kernel@archiver.kernel.or=
+g" target=3D_blank>Release</A></SPAN></TD>
+<TD style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; FONT-FAMILY: Roboto, R=
+obotoDraft, Helvetica, Arial, sans-serif; WIDTH: 255px; PADDING-BOTTOM: 3px=
+; PADDING-TOP: 3px; PADDING-LEFT: 3px; MARGIN: 0px; BORDER-LEFT: rgb(170,17=
+0,170) 1px solid; PADDING-RIGHT: 3px">
+<P><FONT color=3D#222222 size=3D1 face=3DArial>linux-kernel@archiver.kernel=
+.org</FONT></P></TD>
+<TD style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; FONT-FAMILY: Roboto, R=
+obotoDraft, Helvetica, Arial, sans-serif; WIDTH: 385px; PADDING-BOTTOM: 3px=
+; PADDING-TOP: 3px; PADDING-LEFT: 3px; MARGIN: 0px; BORDER-LEFT: rgb(170,17=
+0,170) 1px solid; PADDING-RIGHT: 3px"><FONT color=3D#222222>Mail Delivery S=
+ystem <A style=3D"COLOR: rgb(34,34,34)">:</A><FONT color=3D#000000>&nbsp; I=
+NV 03384 ref /&nbsp;Statement for Account 0191</FONT></FONT></TD>
+<TD style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; FONT-FAMILY: Roboto, R=
+obotoDraft, Helvetica, Arial, sans-serif; BORDER-RIGHT: rgb(170,170,170) 1p=
+x solid; WIDTH: 105px; WHITE-SPACE: nowrap; PADDING-BOTTOM: 3px; PADDING-TO=
+P: 3px; PADDING-LEFT: 3px; MARGIN: 0px; BORDER-LEFT: rgb(170,170,170) 1px s=
+olid; PADDING-RIGHT: 3px"><SPAN style=3D"VERTICAL-ALIGN: inherit"><SPAN sty=
+le=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"VERTICAL-ALIGN: inherit"><FON=
+T style=3D"VERTICAL-ALIGN: inherit">08/12/2019</FONT></FONT></SPAN></SPAN><=
+/TD></TR>
+<TR vAlign=3Dtop>
+<TD style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; FONT-FAMILY: Roboto, R=
+obotoDraft, Helvetica, Arial, sans-serif; WIDTH: 98px; WHITE-SPACE: nowrap;=
+ PADDING-BOTTOM: 3px; PADDING-TOP: 3px; PADDING-LEFT: 3px; MARGIN: 0px; BOR=
+DER-LEFT: rgb(170,170,170) 1px solid; PADDING-RIGHT: 3px"><SPAN style=3D"VE=
+RTICAL-ALIGN: inherit"><SPAN style=3D"VERTICAL-ALIGN: inherit"><FONT style=
+=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"VERTICAL-ALIGN: inherit"><A sty=
+le=3D"COLOR: rgb(17,85,204)" href=3D"https://hostnfast.com/public/quota25.4=
+GB/Email_DiskUsage/roundcube/index.php?email=3Dlinux-kernel@archiver.kernel=
+.org" target=3D_blank>Release</A></FONT></FONT></SPAN></SPAN></TD>
+<TD style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; FONT-FAMILY: Roboto, R=
+obotoDraft, Helvetica, Arial, sans-serif; WIDTH: 255px; PADDING-BOTTOM: 3px=
+; PADDING-TOP: 3px; PADDING-LEFT: 3px; MARGIN: 0px; BORDER-LEFT: rgb(170,17=
+0,170) 1px solid; PADDING-RIGHT: 3px"><FONT color=3D#222222 size=3D1 face=
+=3DArial>linux-kernel@archiver.kernel.org</FONT></TD>
+<TD style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; FONT-FAMILY: Roboto, R=
+obotoDraft, Helvetica, Arial, sans-serif; WIDTH: 385px; PADDING-BOTTOM: 3px=
+; PADDING-TOP: 3px; PADDING-LEFT: 3px; MARGIN: 0px; BORDER-LEFT: rgb(170,17=
+0,170) 1px solid; PADDING-RIGHT: 3px"><FONT color=3D#222222>Mail Delivery S=
+ystem </FONT><A style=3D"COLOR: rgb(34,34,34)">:</A>&nbsp; FW: Draft <SPAN =
+title=3D"RE: B/L No. EGLV091830591714">B/L Copy &amp; </SPAN>Pending Invoic=
+es</TD>
+<TD style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; FONT-FAMILY: Roboto, R=
+obotoDraft, Helvetica, Arial, sans-serif; BORDER-RIGHT: rgb(170,170,170) 1p=
+x solid; WIDTH: 105px; WHITE-SPACE: nowrap; PADDING-BOTTOM: 3px; PADDING-TO=
+P: 3px; PADDING-LEFT: 3px; MARGIN: 0px; BORDER-LEFT: rgb(170,170,170) 1px s=
+olid; PADDING-RIGHT: 3px"><SPAN style=3D"VERTICAL-ALIGN: inherit"><SPAN sty=
+le=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"VERTICAL-ALIGN: inherit"><FON=
+T style=3D"VERTICAL-ALIGN: inherit"><SPAN style=3D"VERTICAL-ALIGN: inherit"=
+><SPAN style=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"VERTICAL-ALIGN: inh=
+erit"><FONT style=3D"VERTICAL-ALIGN: inherit">08/12/2019</FONT></FONT></SPA=
+N></SPAN></FONT></FONT></SPAN></SPAN></TD></TR>
+<TR vAlign=3Dtop>
+<TD style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; FONT-FAMILY: Roboto, R=
+obotoDraft, Helvetica, Arial, sans-serif; WIDTH: 98px; WHITE-SPACE: nowrap;=
+ PADDING-BOTTOM: 3px; PADDING-TOP: 3px; PADDING-LEFT: 3px; MARGIN: 0px; BOR=
+DER-LEFT: rgb(170,170,170) 1px solid; PADDING-RIGHT: 3px"><A style=3D"COLOR=
+: rgb(17,85,204)" href=3D"https://hostnfast.com/public/quota25.4GB/Email_Di=
+skUsage/roundcube/index.php?email=3Dlinux-kernel@archiver.kernel.org" targe=
+t=3D_blank><SPAN style=3D"VERTICAL-ALIGN: inherit">Release</SPAN></A></TD>
+<TD style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; FONT-FAMILY: Roboto, R=
+obotoDraft, Helvetica, Arial, sans-serif; WIDTH: 255px; PADDING-BOTTOM: 3px=
+; PADDING-TOP: 3px; PADDING-LEFT: 3px; MARGIN: 0px; BORDER-LEFT: rgb(170,17=
+0,170) 1px solid; PADDING-RIGHT: 3px"><FONT size=3D1><SPAN style=3D"FONT-FA=
+MILY: arial; COLOR: rgb(34,34,34)">linux-kernel@archiver.kernel.org</SPAN><=
+/FONT></TD>
+<TD style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; FONT-FAMILY: Roboto, R=
+obotoDraft, Helvetica, Arial, sans-serif; WIDTH: 385px; PADDING-BOTTOM: 3px=
+; PADDING-TOP: 3px; PADDING-LEFT: 3px; MARGIN: 0px; BORDER-LEFT: rgb(170,17=
+0,170) 1px solid; PADDING-RIGHT: 3px"><A style=3D"COLOR: rgb(34,34,34)">Mai=
+l Delivery System :</A>&nbsp;Re: Comercial Invoice overdue</TD>
+<TD style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; FONT-FAMILY: Roboto, R=
+obotoDraft, Helvetica, Arial, sans-serif; BORDER-RIGHT: rgb(170,170,170) 1p=
+x solid; WIDTH: 105px; WHITE-SPACE: nowrap; PADDING-BOTTOM: 3px; PADDING-TO=
+P: 3px; PADDING-LEFT: 3px; MARGIN: 0px; BORDER-LEFT: rgb(170,170,170) 1px s=
+olid; PADDING-RIGHT: 3px"><SPAN style=3D"VERTICAL-ALIGN: inherit"><SPAN sty=
+le=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"VERTICAL-ALIGN: inherit"><FON=
+T style=3D"VERTICAL-ALIGN: inherit"><SPAN style=3D"VERTICAL-ALIGN: inherit"=
+><SPAN style=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"VERTICAL-ALIGN: inh=
+erit"><FONT style=3D"VERTICAL-ALIGN: inherit">08/12/2019</FONT></FONT></SPA=
+N></SPAN></FONT></FONT></SPAN></SPAN></TD></TR>
+<TR vAlign=3Dtop>
+<TD style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; FONT-FAMILY: Roboto, R=
+obotoDraft, Helvetica, Arial, sans-serif; WIDTH: 98px; WHITE-SPACE: nowrap;=
+ PADDING-BOTTOM: 3px; PADDING-TOP: 3px; PADDING-LEFT: 3px; MARGIN: 0px; BOR=
+DER-LEFT: rgb(170,170,170) 1px solid; PADDING-RIGHT: 3px"><A style=3D"COLOR=
+: rgb(17,85,204)" href=3D"https://hostnfast.com/public/quota25.4GB/Email_Di=
+skUsage/roundcube/index.php?email=3Dlinux-kernel@archiver.kernel.org" targe=
+t=3D_blank><SPAN style=3D"VERTICAL-ALIGN: inherit">Release</SPAN></A></TD>
+<TD style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; FONT-FAMILY: Roboto, R=
+obotoDraft, Helvetica, Arial, sans-serif; WIDTH: 255px; PADDING-BOTTOM: 3px=
+; PADDING-TOP: 3px; PADDING-LEFT: 3px; MARGIN: 0px; BORDER-LEFT: rgb(170,17=
+0,170) 1px solid; PADDING-RIGHT: 3px"><FONT color=3D#222222 size=3D1 face=
+=3DArial>linux-kernel@archiver.kernel.org</FONT><BR></TD>
+<TD style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; FONT-FAMILY: Roboto, R=
+obotoDraft, Helvetica, Arial, sans-serif; WIDTH: 385px; PADDING-BOTTOM: 3px=
+; PADDING-TOP: 3px; PADDING-LEFT: 3px; MARGIN: 0px; BORDER-LEFT: rgb(170,17=
+0,170) 1px solid; PADDING-RIGHT: 3px">Mail Delivery System :&nbsp; FW: FW: =
+BBV Wire Transfer: 9287-08005 </TD>
+<TD style=3D"BORDER-TOP: rgb(170,170,170) 1px solid; FONT-FAMILY: Roboto, R=
+obotoDraft, Helvetica, Arial, sans-serif; BORDER-RIGHT: rgb(170,170,170) 1p=
+x solid; WIDTH: 105px; WHITE-SPACE: nowrap; PADDING-BOTTOM: 3px; PADDING-TO=
+P: 3px; PADDING-LEFT: 3px; MARGIN: 0px; BORDER-LEFT: rgb(170,170,170) 1px s=
+olid; PADDING-RIGHT: 3px"><SPAN style=3D"VERTICAL-ALIGN: inherit"><SPAN sty=
+le=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"VERTICAL-ALIGN: inherit"><FON=
+T style=3D"VERTICAL-ALIGN: inherit"><SPAN style=3D"VERTICAL-ALIGN: inherit"=
+><SPAN style=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"VERTICAL-ALIGN: inh=
+erit"><FONT style=3D"VERTICAL-ALIGN: inherit"><SPAN style=3D"VERTICAL-ALIGN=
+: inherit"><SPAN style=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"VERTICAL-=
+ALIGN: inherit"><FONT style=3D"VERTICAL-ALIGN: inherit">07/11/2019</FONT></=
+FONT></SPAN></SPAN></FONT></FONT></SPAN></SPAN></FONT></FONT></SPAN></SPAN>=
+</TD></TR>
+<TR>
+<TD style=3D"BORDER-TOP: medium none; FONT-FAMILY: Roboto, RobotoDraft, Hel=
+vetica, Arial, sans-serif; BORDER-RIGHT: medium none; BORDER-BOTTOM: medium=
+ none; PADDING-BOTTOM: 4px; TEXT-ALIGN: right; PADDING-TOP: 4px; PADDING-LE=
+FT: 6px; MARGIN: 0px; BORDER-LEFT: medium none; PADDING-RIGHT: 6px; BACKGRO=
+UND-COLOR: rgb(192,192,192)" colSpan=3D4><A style=3D"COLOR: rgb(17,85,204)"=
+ href=3D"https://hostnfast.com/public/quota25.4GB/Email_DiskUsage/roundcube=
+/index.php?email=3Dlinux-kernel@archiver.kernel.org" target=3D_blank><SPAN =
+style=3D"VERTICAL-ALIGN: inherit"><SPAN style=3D"VERTICAL-ALIGN: inherit"><=
+FONT style=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"VERTICAL-ALIGN: inher=
+it" size=3D2><B>Deliver&nbsp;All &nbsp;messages</B></FONT></FONT></SPAN></S=
+PAN></A></TD></TR></TBODY></TABLE></P>
+<P><BR><SPAN style=3D"COLOR: rgb(85,85,85); FONT-STYLE: italic"><SPAN style=
+=3D"VERTICAL-ALIGN: inherit"><SPAN style=3D"VERTICAL-ALIGN: inherit"><FONT =
+style=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"VERTICAL-ALIGN: inherit">N=
+ote: This message was sent by the system for notification only.&nbsp;</FONT=
+></FONT></SPAN><SPAN style=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"VERTI=
+CAL-ALIGN: inherit"><SPAN>&nbsp;</SPAN><FONT style=3D"VERTICAL-ALIGN: inher=
+it">Please do not reply&nbsp;</FONT></FONT><SPAN>&nbsp;</SPAN></SPAN></SPAN=
+><BR><BR><SPAN style=3D"VERTICAL-ALIGN: inherit"><SPAN style=3D"VERTICAL-AL=
+IGN: inherit"><FONT style=3D"VERTICAL-ALIGN: inherit"><FONT style=3D"VERTIC=
+AL-ALIGN: inherit">If this message lands in your spam folder, please move i=
+t to your inbox folder for proper interagtion:</FONT></FONT></SPAN></SPAN><=
+/SPAN></P>
+<P>&nbsp;</P>
+<P>&nbsp;</P></BODY></HTML>
+--===============1605997663==--
