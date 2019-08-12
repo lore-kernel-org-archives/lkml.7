@@ -2,60 +2,126 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DCCC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A83C32750
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7174320820
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A0DF20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:32:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565645579;
+	bh=pE9d1ETM9PZtC2/ePSz5Dq38p/NF0aRA+ifph0kDNq0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MjWneMDJSBI8pRQcsjDyr2OJUNnnjcdsWkilULKaY1yBfA9HSRvaLNMcvfaZ3i/eZ
+	 MHdvY5+15+mFzTkKFSjqLJbvtBxy8Vh4pCxLIO4Wrjh7kxCNaOa9TyoGxk344ZgxdR
+	 dn239UHjs7sYd74jg32sZD3yqv/kumXri7Yx0ERg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfHLV0M (ORCPT
+        id S1727345AbfHLVc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 17:26:12 -0400
-Received: from ms.lwn.net ([45.79.88.28]:37204 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbfHLV0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 17:26:12 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id EEAA6737;
-        Mon, 12 Aug 2019 21:26:11 +0000 (UTC)
-Date:   Mon, 12 Aug 2019 15:26:11 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
-Cc:     linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation/arm/samsung-s3c24xx: Remove stray U+FEFF
- character to fix title
-Message-ID: <20190812152611.3e8f5e9d@lwn.net>
-In-Reply-To: <20190808164811.15645-1-j.neuschaefer@gmx.net>
-References: <20190808164811.15645-1-j.neuschaefer@gmx.net>
-Organization: LWN.net
+        Mon, 12 Aug 2019 17:32:58 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38755 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfHLVc5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 17:32:57 -0400
+Received: by mail-ot1-f67.google.com with SMTP id r20so14798929ota.5;
+        Mon, 12 Aug 2019 14:32:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T15PQcJHH7yU42jE/kUBJ3OwgXX/58NrUUahBWzpzL4=;
+        b=G2R9656/rcW0V4dhF2uQBWvIRaxHl52h+Y2tDCFsLRcOreggoyvLGqQP2FQJnzlg6c
+         VbfLKSYwmVRQvjiFIaTx6RNOeMgR3NbVPZzZN6uEQ+Ol0Nusci3Cavg85K6JkTF5rtzY
+         fXzIan4315aUwm+j9qmURv/gJQQCi7BI3Azdtr2ivkFfz+od+iS8i5BYccugUP1v/YLG
+         xpOGhNujtHtiQd/W+Q8J3FeMGb/8VsqORuOmtySVBiya0J3QGSVxxd2iwADQPJaiD1N8
+         yEzJn4CC6xEN9O5mknqCC6wppufPDsqaw85J8f8+nZRdvinnYC6AM3Dp1PV7NO5WiLWB
+         lEDA==
+X-Gm-Message-State: APjAAAVsau3izYZIyyWmQowVwO6tyVgjx3iRIVn9MCkV+jHGMkbwyeSY
+        toHK1gzGgakwS92/pDG++jx8jlsY9hoGtybncvs=
+X-Google-Smtp-Source: APXvYqwaK5aWRHJ+wdTXMof/4nNlU3VL0vED6upaBLHtMIxnpspFhM/Rtu6oTRDYjm55WB455ZAI702KHRy0rJHmJg0=
+X-Received: by 2002:aca:d907:: with SMTP id q7mr840724oig.68.1565645576650;
+ Mon, 12 Aug 2019 14:32:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <5997740.FPbUVk04hV@kreacher> <a5548466-2e8e-84d0-357d-e2ca0c72097c@linux.intel.com>
+In-Reply-To: <a5548466-2e8e-84d0-357d-e2ca0c72097c@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 12 Aug 2019 23:32:45 +0200
+Message-ID: <CAJZ5v0jpcJDN75EhcWWgtMWwYt0dWa+XE8RK2hFzbskeb2f3pA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/8] PM / ACPI: sleep: Additional changes related to suspend-to-idle
+To:     "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  8 Aug 2019 18:48:09 +0200
-Jonathan Neuschäfer <j.neuschaefer@gmx.net> wrote:
+On Mon, Aug 12, 2019 at 3:55 PM Bhardwaj, Rajneesh
+<rajneesh.bhardwaj@linux.intel.com> wrote:
+>
+> Hi Rafael
+>
+> On 02-Aug-19 4:03 PM, Rafael J. Wysocki wrote:
+> > Hi All,
+> >
+> >>> On top of the "Simplify the suspend-to-idle control flow" patch series
+> >>> posted previously:
+> >>>
+> >>> https://lore.kernel.org/lkml/71085220.z6FKkvYQPX@kreacher/
+> >>>
+> >>> sanitize the suspend-to-idle flow even further.
+> >>>
+> >>> First off, decouple EC wakeup from the LPS0 _DSM processing (patch 1).
+> >>>
+> >>> Next, reorder the code to invoke LPS0 _DSM Functions 5 and 6 in the
+> >>> specification-compliant order with respect to suspending and resuming
+> >>> devices (patch 2).
+> >>>
+> >>> Finally, rearrange lps0_device_attach() (patch 3) and add a command line
+> >>> switch to prevent the LPS0 _DSM from being used.
+> >> The v2 is because I found a (minor) bug in patch 1, decided to use a module
+> >> parameter instead of a kernel command line option in patch 4.  Also, there
+> >> are 4 new patches:
+> >>
+> >> Patch 5: Switch the EC over to polling during "noirq" suspend and back
+> >> during "noirq" resume.
+> >>
+> >> Patch 6: Eliminate acpi_sleep_no_ec_events().
+> >>
+> >> Patch 7: Consolidate some EC code depending on PM_SLEEP.
+> >>
+> >> Patch 8: Add EC GPE dispatching debug message.
+> > The v3 is just a rearranged v2 so as to move the post sensitive patch (previous patch 2)
+> > to the end of the series.   [After applying the full series the code is the same as before.]
+> >
+> > For easier testing, the series (along with some previous patches depended on by it)
+> > is available in the pm-s2idle-testing branch of the linux-pm.git tree at kernel.org:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=pm-s2idle-testing
+> >
+> > Please refer to the changelogs for details.
+>
+>
+> I have tested both pm-s2idle-testing and pm-s2idle-rework branches
+> including recently introduced commit "PM: suspend: Fix
+> platform_suspend_prepare_noirq()".
+>
+> Works fine for me on Ice Lake platform.
+>
+>   Acked-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+>
+> Tested-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 
-> It seems a UTF-8 byte order mark (the least useful kind of BOM...) snuck
-> into the file and broke Sphinx's detection of the title line.
-> 
-> Besides making arm/samsung-s3c24xx/index.html look a little better, this
-> patch also confines the non-index pages in arm/samsung-s3c24xx to their
-> own table of contents.
-> 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-
-Applied, thanks.
-
-jon
+Thanks!
