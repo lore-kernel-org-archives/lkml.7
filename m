@@ -2,123 +2,278 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E384C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 386A1C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3E832070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:46:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IkVsjy3Q"
+	by mail.kernel.org (Postfix) with ESMTP id 0C0AF20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:47:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbfHLUqi (ORCPT
+        id S1726836AbfHLUrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 16:46:38 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44185 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbfHLUqi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 16:46:38 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c81so1285534pfc.11
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 13:46:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:cc:to:user-agent:date;
-        bh=9CfjXilodmw9BsgbwaSAlw+obuKZRe+IX22W8bs4rYc=;
-        b=IkVsjy3Qlswuptc8SNo3wFzVDH0wtJRsCr4rT8zG3fa+YDeYAYgW3a1Gbw/ow7XJMJ
-         jV4pTeMYAtCVs9ZBCZNbgn1B8wi29HRiG5r9Dwa0uZcPQFyabZVeeEwAW//9DoQ2iGQU
-         Qgfxy8Is7G+w517i9KgGGkwO1Ml89RglKyUZc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
-         :user-agent:date;
-        bh=9CfjXilodmw9BsgbwaSAlw+obuKZRe+IX22W8bs4rYc=;
-        b=In8ce6d7qoioe5w0OdAYN2mmYBh/quf3KxmCeaTQSz0SxejEnZHL/P2IOBNTexeB3W
-         vekiBtfTT86fj9z6v81TuLfi2cwn54y+kCWGLzd00hmAsf8wgBdMURT6i61elSnURNSV
-         H+Ul2uKPGJaxfVdyoIXPzqB1iPBz6fakn7HvHC0JW/9Pazsb/9vDWkVPARzLLh0v/PdK
-         2AdmsfMP+MXenrNW4M7vob3mCFHX9cC9XEce7TW6E1Hs3SBnOtX9kO/rjm+PP65Tf24+
-         fm2bA9ZMGWlPhwzkNZaTRfgTpqRHq6Yoo+Jvhan9TZ3La9iKF0dEzy+ROLb/ec9+u0ts
-         pOKA==
-X-Gm-Message-State: APjAAAVeshrO2ADxmxt1DRJk93bi5yIt+IFic9u6lI71kiCPyGT3Azx/
-        zYpvB5JmPJ1J6s7tNT/VIPQeCg==
-X-Google-Smtp-Source: APXvYqyDQqDbCcR+d7VFmdaWIiHiJ6hJdgKP21T2ghZY/bltbjkjp+2smqWYE/yUIBH9VWiQmY5Slg==
-X-Received: by 2002:a63:4612:: with SMTP id t18mr31918123pga.85.1565642797467;
-        Mon, 12 Aug 2019 13:46:37 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id k36sm107716672pgl.42.2019.08.12.13.46.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 13:46:36 -0700 (PDT)
-Message-ID: <5d51d02c.1c69fb81.6f113.f06a@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 12 Aug 2019 16:47:01 -0400
+Received: from mga02.intel.com ([134.134.136.20]:38434 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbfHLUrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 16:47:00 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 13:46:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,378,1559545200"; 
+   d="scan'208";a="177592713"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga007.fm.intel.com with ESMTP; 12 Aug 2019 13:46:33 -0700
+Date:   Mon, 12 Aug 2019 13:46:33 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>, Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 12/19] mm/gup: Prep put_user_pages() to take an
+ vaddr_pin struct
+Message-ID: <20190812204633.GB20634@iweiny-DESK2.sc.intel.com>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-13-ira.weiny@intel.com>
+ <12b6a576-7a64-102c-f4d7-7a4ad34df710@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <e7951cb251116e903cf0040ee6f271dc4e68ff2e.camel@linux.intel.com>
-References: <20190806220750.86597-1-swboyd@chromium.org> <20190806220750.86597-5-swboyd@chromium.org> <e7951cb251116e903cf0040ee6f271dc4e68ff2e.camel@linux.intel.com>
-Subject: Re: [PATCH v3 4/4] tpm: add driver for cr50 on SPI
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>
-User-Agent: alot/0.8.1
-Date:   Mon, 12 Aug 2019 13:46:35 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <12b6a576-7a64-102c-f4d7-7a4ad34df710@nvidia.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jarkko Sakkinen (2019-08-09 13:31:04)
-> On Tue, 2019-08-06 at 15:07 -0700, Stephen Boyd wrote:
-> > From: Andrey Pronin <apronin@chromium.org>
-> >=20
-> > Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
-> > firmware. The firmware running on the currently supported H1
-> > Secure Microcontroller requires a special driver to handle its
-> > specifics:
-> >=20
-> >  - need to ensure a certain delay between spi transactions, or else
-> >    the chip may miss some part of the next transaction;
-> >  - if there is no spi activity for some time, it may go to sleep,
-> >    and needs to be waken up before sending further commands;
-> >  - access to vendor-specific registers.
->=20
-> Which Chromebook models have this chip?
+On Fri, Aug 09, 2019 at 05:30:00PM -0700, John Hubbard wrote:
+> On 8/9/19 3:58 PM, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > Once callers start to use vaddr_pin the put_user_pages calls will need
+> > to have access to this data coming in.  Prep put_user_pages() for this
+> > data.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Pretty much all Chromebooks released in the last year or two have this
-chip in them. I don't have an exhaustive list, but you can usually check
-this by putting your device into dev mode and then looking at the driver
-attached to the TPM device in sysfs or by grepping the dmesg output for
-cr50.
+[snip]
 
->=20
-> If I had an access to one, how do I do kernel testing with it i.e.
-> how do I get it to boot initramfs and bzImage from a USB stick?
->=20
->=20
+> > diff --git a/mm/gup.c b/mm/gup.c
+> > index a7a9d2f5278c..10cfd30ff668 100644
+> > --- a/mm/gup.c
+> > +++ b/mm/gup.c
+> > @@ -24,30 +24,41 @@
+> >  
+> >  #include "internal.h"
+> >  
+> > -/**
+> > - * put_user_pages_dirty_lock() - release and optionally dirty gup-pinned pages
+> > - * @pages:  array of pages to be maybe marked dirty, and definitely released.
+> 
+> A couple comments from our circular review chain: some fellow with the same
+> last name as you, recommended wording it like this:
+> 
+>       @pages:  array of pages to be put
 
-You can follow the developer guide[1] and build a USB image for the
-board you have. You can usually checkout the latest upstream kernel in
-place of where the kernel is built from in the chroot, typically
-~/trunk/src/third_party/kernel/<version number>. The build should pick
-up that it's an upstream tree and try to use some default defconfig.
-This driver isn't upstream yet, so you may need to enable it in the
-defconfig, located in
-~/trunk/src/third_party/chromiumos-overlay/eclass/cros-kernel/ so that
-the driver is actually built. After that, use 'cros flash' to flash the
-new kernel image to your USB stick and boot from USB with 'ctrl+u' and
-you should be on your way to chromeos kernel testing.
+Sure, see below...
 
-[1] https://chromium.googlesource.com/chromiumos/docs/+/master/developer_gu=
-ide.md
+> 
+> > - * @npages: number of pages in the @pages array.
+> > - * @make_dirty: whether to mark the pages dirty
+> > - *
+> > - * "gup-pinned page" refers to a page that has had one of the get_user_pages()
+> > - * variants called on that page.
+> > - *
+> > - * For each page in the @pages array, make that page (or its head page, if a
+> > - * compound page) dirty, if @make_dirty is true, and if the page was previously
+> > - * listed as clean. In any case, releases all pages using put_user_page(),
+> > - * possibly via put_user_pages(), for the non-dirty case.
+> > - *
+> > - * Please see the put_user_page() documentation for details.
+> > - *
+> > - * set_page_dirty_lock() is used internally. If instead, set_page_dirty() is
+> > - * required, then the caller should a) verify that this is really correct,
+> > - * because _lock() is usually required, and b) hand code it:
+> > - * set_page_dirty_lock(), put_user_page().
+> > - *
+> > - */
+> > -void put_user_pages_dirty_lock(struct page **pages, unsigned long npages,
+> > -			       bool make_dirty)
+> > +static void __put_user_page(struct vaddr_pin *vaddr_pin, struct page *page)
+> > +{
+> > +	page = compound_head(page);
+> > +
+> > +	/*
+> > +	 * For devmap managed pages we need to catch refcount transition from
+> > +	 * GUP_PIN_COUNTING_BIAS to 1, when refcount reach one it means the
+> > +	 * page is free and we need to inform the device driver through
+> > +	 * callback. See include/linux/memremap.h and HMM for details.
+> > +	 */
+> > +	if (put_devmap_managed_page(page))
+> > +		return;
+> > +
+> > +	if (put_page_testzero(page))
+> > +		__put_page(page);
+> > +}
+> > +
+> > +static void __put_user_pages(struct vaddr_pin *vaddr_pin, struct page **pages,
+> > +			     unsigned long npages)
+> > +{
+> > +	unsigned long index;
+> > +
+> > +	/*
+> > +	 * TODO: this can be optimized for huge pages: if a series of pages is
+> > +	 * physically contiguous and part of the same compound page, then a
+> > +	 * single operation to the head page should suffice.
+> > +	 */
+> 
+> As discussed in the other review thread (""), let's just delete that comment,
+> as long as you're moving things around.
 
+Done.
+
+> 
+> 
+> > +	for (index = 0; index < npages; index++)
+> > +		__put_user_page(vaddr_pin, pages[index]);
+> > +}
+> > +
+> > +static void __put_user_pages_dirty_lock(struct vaddr_pin *vaddr_pin,
+> > +					struct page **pages,
+> > +					unsigned long npages,
+> > +					bool make_dirty)
+> 
+> Elsewhere in this series, we pass vaddr_pin at the end of the arg list.
+> Here we pass it at the beginning, and it caused a minor jar when reading it.
+> Obviously just bike shedding at this point, though. Either way. :)
+
+Yea I guess that is odd...  I changed it.  Not a big deal.
+
+> 
+> >  {
+> >  	unsigned long index;
+> >  
+> > @@ -58,7 +69,7 @@ void put_user_pages_dirty_lock(struct page **pages, unsigned long npages,
+> >  	 */
+> >  
+> >  	if (!make_dirty) {
+> > -		put_user_pages(pages, npages);
+> > +		__put_user_pages(vaddr_pin, pages, npages);
+> >  		return;
+> >  	}
+> >  
+> > @@ -86,9 +97,58 @@ void put_user_pages_dirty_lock(struct page **pages, unsigned long npages,
+> >  		 */
+> >  		if (!PageDirty(page))
+> >  			set_page_dirty_lock(page);
+> > -		put_user_page(page);
+> > +		__put_user_page(vaddr_pin, page);
+> >  	}
+> >  }
+> > +
+> > +/**
+> > + * put_user_page() - release a gup-pinned page
+> > + * @page:            pointer to page to be released
+> > + *
+> > + * Pages that were pinned via get_user_pages*() must be released via
+> > + * either put_user_page(), or one of the put_user_pages*() routines
+> > + * below. This is so that eventually, pages that are pinned via
+> > + * get_user_pages*() can be separately tracked and uniquely handled. In
+> > + * particular, interactions with RDMA and filesystems need special
+> > + * handling.
+> > + *
+> > + * put_user_page() and put_page() are not interchangeable, despite this early
+> > + * implementation that makes them look the same. put_user_page() calls must
+> > + * be perfectly matched up with get_user_page() calls.
+> > + */
+> > +void put_user_page(struct page *page)
+> > +{
+> > +	__put_user_page(NULL, page);
+> > +}
+> > +EXPORT_SYMBOL(put_user_page);
+> > +
+> > +/**
+> > + * put_user_pages_dirty_lock() - release and optionally dirty gup-pinned pages
+> > + * @pages:  array of pages to be maybe marked dirty, and definitely released.
+> 
+> Same here:
+> 
+>       @pages:  array of pages to be put
+
+Actually here is the only place.  Above was removing the text to be put here...
+
+Done -- I'll made a lead in patch because this was just copied text.
+
+> 
+> > + * @npages: number of pages in the @pages array.
+> > + * @make_dirty: whether to mark the pages dirty
+> > + *
+> > + * "gup-pinned page" refers to a page that has had one of the get_user_pages()
+> > + * variants called on that page.
+> > + *
+> > + * For each page in the @pages array, make that page (or its head page, if a
+> > + * compound page) dirty, if @make_dirty is true, and if the page was previously
+> > + * listed as clean. In any case, releases all pages using put_user_page(),
+> > + * possibly via put_user_pages(), for the non-dirty case.
+> > + *
+> > + * Please see the put_user_page() documentation for details.
+> > + *
+> > + * set_page_dirty_lock() is used internally. If instead, set_page_dirty() is
+> > + * required, then the caller should a) verify that this is really correct,
+> > + * because _lock() is usually required, and b) hand code it:
+> > + * set_page_dirty_lock(), put_user_page().
+> > + *
+> > + */
+> > +void put_user_pages_dirty_lock(struct page **pages, unsigned long npages,
+> > +			       bool make_dirty)
+> > +{
+> > +	__put_user_pages_dirty_lock(NULL, pages, npages, make_dirty);
+> > +}
+> >  EXPORT_SYMBOL(put_user_pages_dirty_lock);
+> >  
+> >  /**
+> > @@ -102,15 +162,7 @@ EXPORT_SYMBOL(put_user_pages_dirty_lock);
+> >   */
+> >  void put_user_pages(struct page **pages, unsigned long npages)
+> >  {
+> > -	unsigned long index;
+> > -
+> > -	/*
+> > -	 * TODO: this can be optimized for huge pages: if a series of pages is
+> > -	 * physically contiguous and part of the same compound page, then a
+> > -	 * single operation to the head page should suffice.
+> > -	 */
+> > -	for (index = 0; index < npages; index++)
+> > -		put_user_page(pages[index]);
+> > +	__put_user_pages(NULL, pages, npages);
+> >  }
+> >  EXPORT_SYMBOL(put_user_pages);
+> >  
+> > 
+> 
+> This all looks pretty good, so regardless of the outcome of the minor
+> points above,
+>    
+>     Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+
+Thanks,
+Ira
+
+> 
+> 
+> thanks,
+> -- 
+> John Hubbard
+> NVIDIA
