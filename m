@@ -2,168 +2,247 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AD0C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86961C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 957822070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D8F1206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 17:46:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RsNkwjci"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KCSyHIgG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfHLRgI (ORCPT
+        id S1727220AbfHLRqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 13:36:08 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37609 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbfHLRgI (ORCPT
+        Mon, 12 Aug 2019 13:46:22 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45323 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfHLRqW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 13:36:08 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d1so17022570pgp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 10:36:08 -0700 (PDT)
+        Mon, 12 Aug 2019 13:46:22 -0400
+Received: by mail-qt1-f196.google.com with SMTP id k13so6381605qtm.12
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 10:46:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=oZi4p9sU++IMNyLOoMu4O4MSpldoBC3la4O/D+JmVeE=;
-        b=RsNkwjciAZJFroOX5ILBuBvMy8TWcIT9hJzrTA5xuOZfMYJaav94/bNa1G1AZHA/sx
-         IqeuX0m5wrq1olWYnCUFdWcRs4HHNmD+fSaxGCDngxV9gs9hEaGvpwiel6l6FYROI+wM
-         b2h/J/0MtTn4wk+24P+lye5PvT7SR216V5ztbRz1yijbJD2TeXZKy39Wwf+AkV8DYbM0
-         CP6fjXz/iairhkQqUorj+Ear31cpwrY8D8/ls28sODMfPbYKCYDBl2dAo83EtHCePTLH
-         MGmTVzL/6+j8BOjr0vRr/sKO1HKHpXTj0Kqk+R5o3T3ezXSVTGqzUJFXtYU7FXUZdbq9
-         iK5Q==
+        bh=LVxEDKrf04Xopgme4UW2pTYkpgrPm8vtbBKdwKPRb9c=;
+        b=KCSyHIgGOsuO8VlJboapGrv3uhEopskXPDsFu7H1p9LYYyS2CGX6Vrw/1AhAqUASy7
+         S3MODho1pvt3/WGIDnCuXZR+zweI0QhhmUL3NhHq/nPbNc9BJ4M4XBZShrlMpGWBor0G
+         veS6Z92NKz/8JQUXJryAP553TL7cfe+X6Fc3fjbgP3YmZsfw/pdY2jvA5ogkpvPaWpCg
+         ulxbnezJQUw8xPfIPYQ5T+aOp88nk4ELGkDN9FUiHX2pPeiPaf7m0jwbCDqQ8kEcaqXj
+         9I4nSuC0vDo6Zlo0e93FMP4xeuhnZIxWGkWL4YdgmLpNfD8oUuz8Hq3LrQkjaGUvBGL5
+         CxJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oZi4p9sU++IMNyLOoMu4O4MSpldoBC3la4O/D+JmVeE=;
-        b=fHEvlF0KAbj1FM8BfOEB/S4q0vwxtiUUB+XL3bxPpQtpGPaR/U4dKTKeDBc21ymY26
-         luD9JxmWVY9WZdbnejtsmtyGTU53U3MmIZc52t72hLJariTiqLD4ELWsZ0IFI4Oucvhc
-         dvzeimdW6gKe6aPlQU6aNB1kCXy+CywwJimmQyt21Brgsm/fRhrsXTss+jCGHWKCIoSF
-         8JXGb+bof1OOmp3ENJeki5ZQt4sfGVZL92Mt+muQOeU17V7jwscpr7bciay8ZPcewlcX
-         yGc3smst9gw6k5qI+LxH5mbRbowxz6xwpWRFeSeJtc0Ep18ULl0/7F1SQwVh11Fc35VT
-         /3ZQ==
-X-Gm-Message-State: APjAAAXQSssolG2j+73D4djyj5rjTmxPMXKNlmbg0HZwe2SLtFrc7CAH
-        qOTd/kV0U/iu3u33bYvaqG2w0b6OaM1lcijrIAlw7Q==
-X-Google-Smtp-Source: APXvYqy2zouhlUGYS7Kh1lajVcXBTrIvaZyDmn96K5pB0TaQUQP3OryMKFONA/xS83RgDSxvOsb01vVyUXq5xlXLvmE=
-X-Received: by 2002:a63:f94c:: with SMTP id q12mr30736518pgk.10.1565631367302;
- Mon, 12 Aug 2019 10:36:07 -0700 (PDT)
+        bh=LVxEDKrf04Xopgme4UW2pTYkpgrPm8vtbBKdwKPRb9c=;
+        b=gG+PdMF77qXx2pDl45yWodrOBFlU/cKO4AsTLPGXzGP1us/6t3cmlOayjJjjgZ57YW
+         UtTofzJePRw6vMZceIGCxY6Q+v/oj05/M4L7ADR0cAF9XYxd5MBsD8oDgNNlTZ9H/3iY
+         EMzrF2dfBsVOdARsoZpqff0XvSOlI80dVulCsjQiiC5QF0kTGEB0ksP6XCqKzWq91OER
+         8/4dAg/gtdVFjDGOjWw7SL2xKzGe5QlM/HS60bbjbmyB5sct5LGmYJFr5IIHRWuZX6vk
+         4C/VwGOv4R+44FcHKm7cBx7Thle7Ehq9RzxUPvLa6n/KlA+7Y612T2npspqWsHOyDaji
+         nYLA==
+X-Gm-Message-State: APjAAAX7U5thTwNhuFV6Ih1LqAGIq16L8XKljAyFJzRG/rvQdm6l8n9B
+        g53pEX3xA32PFGkeTPMOgVjTwKJIsFUACl/gJwU=
+X-Google-Smtp-Source: APXvYqy+Jmbzf7jTZ24TOrSSq9r08v/LQV+Makklb/THjSKpsq6jEo20OqmNUNgrzG2PWnH9KYA42WeZlWvVFrzuXsY=
+X-Received: by 2002:ac8:1e9b:: with SMTP id c27mr24683751qtm.171.1565631980750;
+ Mon, 12 Aug 2019 10:46:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190812023214.107817-1-natechancellor@gmail.com>
-In-Reply-To: <20190812023214.107817-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 12 Aug 2019 10:35:56 -0700
-Message-ID: <CAKwvOd=RzY2bkOOYUrvNSxZxz6B2VPn2siXA8pRFc9EP-W77qQ@mail.gmail.com>
-Subject: Re: [PATCH] powerpc: Avoid clang warnings around setjmp and longjmp
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "# 3.4.x" <stable@vger.kernel.org>
+References: <20190809214642.12078-1-dxu@dxuuu.xyz> <20190809214642.12078-5-dxu@dxuuu.xyz>
+In-Reply-To: <20190809214642.12078-5-dxu@dxuuu.xyz>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 12 Aug 2019 10:46:09 -0700
+Message-ID: <CAEf4Bza3tz+3N6UyL2e9xM9yyf6=C+s0qa46bYyptuAioFtWuQ@mail.gmail.com>
+Subject: Re: [PATCH v2 bpf-next 4/4] tracing/probe: Add self test for PERF_EVENT_IOC_QUERY_PROBE
+To:     Daniel Xu <dxu@dxuuu.xyz>
+Cc:     Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, peterz@infraded.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexei Starovoitov <ast@fb.com>,
+        alexander.shishkin@linux.intel.com, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 7:42 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
+On Fri, Aug 9, 2019 at 2:49 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
 >
-> Commit aea447141c7e ("powerpc: Disable -Wbuiltin-requires-header when
-> setjmp is used") disabled -Wbuiltin-requires-header because of a warning
-> about the setjmp and longjmp declarations.
->
-> r367387 in clang added another diagnostic around this, complaining that
-> there is no jmp_buf declaration.
->
-> In file included from ../arch/powerpc/xmon/xmon.c:47:
-> ../arch/powerpc/include/asm/setjmp.h:10:13: error: declaration of
-> built-in function 'setjmp' requires the declaration of the 'jmp_buf'
-> type, commonly provided in the header <setjmp.h>.
-> [-Werror,-Wincomplete-setjmp-declaration]
-> extern long setjmp(long *);
->             ^
-> ../arch/powerpc/include/asm/setjmp.h:11:13: error: declaration of
-> built-in function 'longjmp' requires the declaration of the 'jmp_buf'
-> type, commonly provided in the header <setjmp.h>.
-> [-Werror,-Wincomplete-setjmp-declaration]
-> extern void longjmp(long *, long);
->             ^
-> 2 errors generated.
->
-> Take the same approach as the above commit by disabling the warning for
-> the same reason, we provide our own longjmp/setjmp function.
->
-> Cc: stable@vger.kernel.org # 4.19+
-> Link: https://github.com/ClangBuiltLinux/linux/issues/625
-> Link: https://github.com/llvm/llvm-project/commit/3be25e79477db2d31ac46493d97eca8c20592b07
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-
-Thanks for the patch, Nathan.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
+> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
 > ---
+
+Getting verbose, we might want to rethink this test checks at some
+point, but I think it's fine for now.
+
+Please fix typos below, but overall:
+
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+
+>  .../selftests/bpf/prog_tests/attach_probe.c   | 102 ++++++++++++++++++
+>  1 file changed, 102 insertions(+)
 >
-> It may be worth using -fno-builtin-setjmp and -fno-builtin-longjmp
-> instead as it makes it clear to clang that we are not using the builtin
-> longjmp and setjmp functions, which I think is why these warnings are
-> appearing (at least according to the commit that introduced this waring).
+> diff --git a/tools/testing/selftests/bpf/prog_tests/attach_probe.c b/tools/testing/selftests/bpf/prog_tests/attach_probe.c
+> index 5ecc267d98b0..bb53103ddb66 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/attach_probe.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/attach_probe.c
+> @@ -27,17 +27,27 @@ void test_attach_probe(void)
+>         const char *kretprobe_name = "kretprobe/sys_nanosleep";
+>         const char *uprobe_name = "uprobe/trigger_func";
+>         const char *uretprobe_name = "uretprobe/trigger_func";
+> +       struct perf_event_query_probe kprobe_query = {};
+> +       struct perf_event_query_probe kretprobe_query = {};
+> +       struct perf_event_query_probe uprobe_query = {};
+> +       struct perf_event_query_probe uretprobe_query = {};
+>         const int kprobe_idx = 0, kretprobe_idx = 1;
+>         const int uprobe_idx = 2, uretprobe_idx = 3;
+>         const char *file = "./test_attach_probe.o";
+>         struct bpf_program *kprobe_prog, *kretprobe_prog;
+>         struct bpf_program *uprobe_prog, *uretprobe_prog;
+>         struct bpf_object *obj;
+> +       const struct bpf_link_fd *kprobe_fd_link;
+> +       const struct bpf_link_fd *kretprobe_fd_link;
+> +       const struct bpf_link_fd *uprobe_fd_link;
+> +       const struct bpf_link_fd *uretprobe_fd_link;
+>         int err, prog_fd, duration = 0, res;
+>         struct bpf_link *kprobe_link = NULL;
+>         struct bpf_link *kretprobe_link = NULL;
+>         struct bpf_link *uprobe_link = NULL;
+>         struct bpf_link *uretprobe_link = NULL;
+> +       int kprobe_fd, kretprobe_fd;
+> +       int uprobe_fd, uretprobe_fd;
+>         int results_map_fd;
+>         size_t uprobe_offset;
+>         ssize_t base_addr;
+> @@ -116,6 +126,52 @@ void test_attach_probe(void)
+>         /* trigger & validate kprobe && kretprobe */
+>         usleep(1);
 >
-> Sample patch:
-> https://github.com/ClangBuiltLinux/linux/issues/625#issuecomment-519251372
+> +       kprobe_fd_link = bpf_link__as_fd(kprobe_link);
+> +       if (CHECK(!kprobe_fd_link, "kprobe_link_as_fd",
+> +                 "failed to cast link to fd link\n"))
+> +               goto cleanup;
+> +
+> +       kprobe_fd = bpf_link_fd__fd(kprobe_fd_link);
+> +       if (CHECK(kprobe_fd < 0, "kprobe_get_perf_fd",
+> +           "failed to get perf fd from kprobe link\n"))
+> +               goto cleanup;
+> +
+> +       kretprobe_fd_link = bpf_link__as_fd(kretprobe_link);
+> +       if (CHECK(!kretprobe_fd_link, "kretprobe_link_as_fd",
+> +                 "failed to cast link to fd link\n"))
+> +               goto cleanup;
+> +
+> +       kretprobe_fd = bpf_link_fd__fd(kretprobe_fd_link);
+> +       if (CHECK(kretprobe_fd < 0, "kretprobe_get_perf_fd",
+> +           "failed to get perf fd from kretprobe link\n"))
+> +               goto cleanup;
+> +
+> +       err = ioctl(kprobe_fd, PERF_EVENT_IOC_QUERY_PROBE, &kprobe_query);
+> +       if (CHECK(err, "get_kprobe_ioctl",
+> +                 "failed to issue kprobe query ioctl\n"))
+> +               goto cleanup;
+> +       if (CHECK(kprobe_query.nmissed > 0, "get_kprobe_ioctl",
+> +                 "read incorect nmissed from kprobe_ioctl: %llu\n",
+
+typo: incorrect
+
+> +                 kprobe_query.nmissed))
+> +               goto cleanup;
+> +       if (CHECK(kprobe_query.nhit == 0, "get_kprobe_ioctl",
+> +                 "read incorect nhit from kprobe_ioctl: %llu\n",
+
+typo: incorrect
+
+> +                 kprobe_query.nhit))
+> +               goto cleanup;
+> +
+> +       err = ioctl(kretprobe_fd, PERF_EVENT_IOC_QUERY_PROBE, &kretprobe_query);
+> +       if (CHECK(err, "get_kretprobe_ioctl",
+> +                 "failed to issue kretprobe query ioctl\n"))
+> +               goto cleanup;
+> +       if (CHECK(kretprobe_query.nmissed > 0, "get_kretprobe_ioctl",
+> +                 "read incorect nmissed from kretprobe_ioctl: %llu\n",
+
+same typo :)
+
+> +                 kretprobe_query.nmissed))
+> +               goto cleanup;
+> +       if (CHECK(kretprobe_query.nhit <= 0, "get_kretprobe_ioctl",
+> +                 "read incorect nhit from kretprobe_ioctl: %llu\n",
+
+the power of copy/paste! :)
+
+> +                 kretprobe_query.nhit))
+> +               goto cleanup;
+> +
+>         err = bpf_map_lookup_elem(results_map_fd, &kprobe_idx, &res);
+>         if (CHECK(err, "get_kprobe_res",
+>                   "failed to get kprobe res: %d\n", err))
+> @@ -135,6 +191,52 @@ void test_attach_probe(void)
+>         /* trigger & validate uprobe & uretprobe */
+>         get_base_addr();
 >
-> However, this is the most conservative approach, as I have already had
-> someone notice this error when building LLVM with PGO on tip of tree
-> LLVM.
->
->  arch/powerpc/kernel/Makefile | 5 +++--
->  arch/powerpc/xmon/Makefile   | 5 +++--
->  2 files changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-> index ea0c69236789..44e340ed4722 100644
-> --- a/arch/powerpc/kernel/Makefile
-> +++ b/arch/powerpc/kernel/Makefile
-> @@ -5,8 +5,9 @@
->
->  CFLAGS_ptrace.o                += -DUTS_MACHINE='"$(UTS_MACHINE)"'
->
-> -# Disable clang warning for using setjmp without setjmp.h header
-> -CFLAGS_crash.o         += $(call cc-disable-warning, builtin-requires-header)
-> +# Avoid clang warnings about longjmp and setjmp built-ins (inclusion of setjmp.h and declaration of jmp_buf type)
-> +CFLAGS_crash.o         += $(call cc-disable-warning, builtin-requires-header) \
-> +                          $(call cc-disable-warning, incomplete-setjmp-declaration)
->
->  ifdef CONFIG_PPC64
->  CFLAGS_prom_init.o     += $(NO_MINIMAL_TOC)
-> diff --git a/arch/powerpc/xmon/Makefile b/arch/powerpc/xmon/Makefile
-> index f142570ad860..53f341391210 100644
-> --- a/arch/powerpc/xmon/Makefile
-> +++ b/arch/powerpc/xmon/Makefile
-> @@ -1,8 +1,9 @@
->  # SPDX-License-Identifier: GPL-2.0
->  # Makefile for xmon
->
-> -# Disable clang warning for using setjmp without setjmp.h header
-> -subdir-ccflags-y := $(call cc-disable-warning, builtin-requires-header)
-> +# Avoid clang warnings about longjmp and setjmp built-ins (inclusion of setjmp.h and declaration of jmp_buf type)
-> +subdir-ccflags-y := $(call cc-disable-warning, builtin-requires-header) \
-> +                   $(call cc-disable-warning, incomplete-setjmp-declaration)
->
->  GCOV_PROFILE := n
->  KCOV_INSTRUMENT := n
+> +       uprobe_fd_link = bpf_link__as_fd(uprobe_link);
+> +       if (CHECK(!uprobe_fd_link, "uprobe_link_as_fd",
+> +                 "failed to cast link to fd link\n"))
+> +               goto cleanup;
+> +
+> +       uprobe_fd = bpf_link_fd__fd(uprobe_fd_link);
+> +       if (CHECK(uprobe_fd < 0, "uprobe_get_perf_fd",
+> +           "failed to get perf fd from uprobe link\n"))
+> +               goto cleanup;
+> +
+> +       uretprobe_fd_link = bpf_link__as_fd(uretprobe_link);
+> +       if (CHECK(!uretprobe_fd_link, "uretprobe_link_as_fd",
+> +                 "failed to cast link to fd link\n"))
+> +               goto cleanup;
+> +
+> +       uretprobe_fd = bpf_link_fd__fd(uretprobe_fd_link);
+> +       if (CHECK(uretprobe_fd < 0, "uretprobe_get_perf_fd",
+> +           "failed to get perf fd from uretprobe link\n"))
+> +               goto cleanup;
+> +
+> +       err = ioctl(uprobe_fd, PERF_EVENT_IOC_QUERY_PROBE, &uprobe_query);
+> +       if (CHECK(err, "get_uprobe_ioctl",
+> +                 "failed to issue uprobe query ioctl\n"))
+> +               goto cleanup;
+> +       if (CHECK(uprobe_query.nmissed > 0, "get_uprobe_ioctl",
+> +                 "read incorect nmissed from uprobe_ioctl: %llu\n",
+> +                 uprobe_query.nmissed))
+> +               goto cleanup;
+> +       if (CHECK(uprobe_query.nhit == 0, "get_uprobe_ioctl",
+> +                 "read incorect nhit from uprobe_ioctl: %llu\n",
+> +                 uprobe_query.nhit))
+> +               goto cleanup;
+> +
+> +       err = ioctl(uretprobe_fd, PERF_EVENT_IOC_QUERY_PROBE, &uretprobe_query);
+> +       if (CHECK(err, "get_uretprobe_ioctl",
+> +                 "failed to issue uretprobe query ioctl\n"))
+> +               goto cleanup;
+> +       if (CHECK(uretprobe_query.nmissed > 0, "get_uretprobe_ioctl",
+> +                 "read incorect nmissed from uretprobe_ioctl: %llu\n",
+> +                 uretprobe_query.nmissed))
+> +               goto cleanup;
+> +       if (CHECK(uretprobe_query.nhit <= 0, "get_uretprobe_ioctl",
+> +                 "read incorect nhit from uretprobe_ioctl: %llu\n",
+> +                 uretprobe_query.nhit))
+> +               goto cleanup;
+> +
+
+same typos
+
+>         err = bpf_map_lookup_elem(results_map_fd, &uprobe_idx, &res);
+>         if (CHECK(err, "get_uprobe_res",
+>                   "failed to get uprobe res: %d\n", err))
 > --
-> 2.23.0.rc2
+> 2.20.1
 >
-
-
--- 
-Thanks,
-~Nick Desaulniers
