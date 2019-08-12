@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A0DC32750
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA890C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0252D20651
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EA4520651
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:07:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Or3uQR6Q"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="L/jjE0Z+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728433AbfHLMHf (ORCPT
+        id S1728469AbfHLMHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 08:07:35 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41347 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727975AbfHLMHd (ORCPT
+        Mon, 12 Aug 2019 08:07:37 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50955 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727975AbfHLMHg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 08:07:33 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j16so2073622wrr.8
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 05:07:31 -0700 (PDT)
+        Mon, 12 Aug 2019 08:07:36 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v15so11926308wml.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 05:07:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ceoz58HJhiw+4Z6q1/xd/gAe7VVmzCvD6fU8sO+lm5o=;
-        b=Or3uQR6QO71RP1JieY4+QIypkqR1ZLSwxIsThtNzg2pwMJw3ABCgPudYblpSyj9V9U
-         Ur910YS8Rv83kYjvTFn8d8JSeGMX0uL0dP2qioI7DJ2HB81GTaYS0I7ia+Pm4V0WNunt
-         9Cep9ntP0tfqwN+EqG8JABr2Up4KQM/Fb2AsNgOkuPhktdjG+hCt6PJSr98UMiBlKvy5
-         3ibft6dtlkFlG2OgeL12AMKbPtVlpitDZfN0XFZIOZlkjRLFplktrwwat9WpWDFv4tqp
-         s0pWWckNeTbPaB2h0XABYkbZFQhwX2jPQI5Hcv34lLxlKWju91BJM3kA19oGZXZImzxQ
-         Nd1A==
+        bh=dBAKQK2TWb6YSZRcSfCJBhSpAFaSf3bVHWGaQNvZ07Y=;
+        b=L/jjE0Z+uh9feCmkguYc7tOOBvXTJ2DTkbUR4kDzZ6isTnRr7TZDjGDEF6mDLN8STZ
+         3GZGeVOI/dBYGZa6vyrOZB8Dj6VWwEAJR0uv1rxGJVEZvh9DW41NSo4aMra+MPz5b36A
+         UFoTyytB4L/uzrZZdbjUV1mDHzMgHzpls39fSbcyuOrCahhcac5jv3fY+uyTA4nh4OXW
+         qrzV7pQHNBFW3NqoZTG8Y1ns1WE5CEI7I5bgg+t2saPZdgk22y7ggPFf7dn3/HLwODVw
+         PeX5EWRAKOrympN/IGlN4Qwt0NrARSKDvPGYJehhTQcksDpIWpcYJluUoUUbSfhndXbz
+         dXlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ceoz58HJhiw+4Z6q1/xd/gAe7VVmzCvD6fU8sO+lm5o=;
-        b=juVtlE4FLqLA6JNz+JBG3x09YZ3Vu8H4MRhWcdFtKXOwqtDaeonQNz9KlFsr08+BYn
-         E6cBcRuOGoxbWZRZM8JxKdtMfuD+LnNTyBO6B9WboSg/OpQAsvIOtYuiTfSK00W980Ef
-         LTSQtdg0FnriF9HKkEuubXlRHG9lCPAANDtEh+R3BF92olHdj2IdXU8gIATMp5qLbdo8
-         MiEL4I0Kw92BjIZxzV8JiqUTmpHzp2p92/oDNQgtzGP83kgXNlEjn65PqqZsHBMfhTQ4
-         FQ5llmOkrO8uecES6ciBj862l0DIsK0NNA9vDZ/7u2P7DJRM/wdQfDim6BRWaPHKSsy0
-         hYzw==
-X-Gm-Message-State: APjAAAWJJmpYby1YWYZX0TnaCSSPJj0gcZPT2kTPyCLMTLfQH+al7r/t
-        Oob5aourx2u33HztYx0VIP1eQ/qS1kc=
-X-Google-Smtp-Source: APXvYqy32yxW6ITSLrDXLyZ6668kqusWzhq85fvzCQmJeabhxKDQLSSVz4Wz9i/mCgPzAFNi0NpyqA==
-X-Received: by 2002:adf:f705:: with SMTP id r5mr16743424wrp.342.1565611650885;
-        Mon, 12 Aug 2019 05:07:30 -0700 (PDT)
+        bh=dBAKQK2TWb6YSZRcSfCJBhSpAFaSf3bVHWGaQNvZ07Y=;
+        b=KhswzfV0sBJub+o1pofpVrc1TDHoR7IX94Zr8PnhZoWUeSNKhKRtk9kebVxSsQ7eNk
+         a0F0r8XXkGge2kVz7f6HDDQrifZyhF7s9iveP0fICGIdX6BUCjiMlOkMuGTnaYvATvCE
+         INKgjbtvd3TZZG+cDZHnEgmgpwc+TnDW2ylQh0xPgI+CRV7smAUa/GSFBsZtAOaa3Eer
+         FJpQYYczP8+nJLyEsyhEu6/7MIhU3AbkkPlE+KERP0bNJevTtj17KbLXKutcoB3gMKps
+         Lw6qHci8gFJg2abNQl0a2aBYWcklbtYTZy0yJAx1wRLzGMrPD9QU8+nLj5l6UFoBD3UH
+         X8rw==
+X-Gm-Message-State: APjAAAV3ayjv3H4I5DwJC8B1hab76EzUj+B3fLAGBdTCpaZ9FCG5l5Yl
+        Xj/rX8dK/q+Pmfbt1+TBEgzGPQ==
+X-Google-Smtp-Source: APXvYqzfW3eeOX4MX+i/CqoB9uhQnpRtsA/vpMtmJNdTO6GoCfgbeP6QdCyPmPxK8IqalPIZIB0rSg==
+X-Received: by 2002:a1c:f409:: with SMTP id z9mr27445823wma.176.1565611654629;
+        Mon, 12 Aug 2019 05:07:34 -0700 (PDT)
 Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id j9sm1883415wrx.66.2019.08.12.05.07.29
+        by smtp.googlemail.com with ESMTPSA id j9sm1883415wrx.66.2019.08.12.05.07.33
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 05:07:30 -0700 (PDT)
+        Mon, 12 Aug 2019 05:07:33 -0700 (PDT)
 From:   Jerome Brunet <jbrunet@baylibre.com>
 To:     Andrzej Hajda <a.hajda@samsung.com>,
         Neil Armstrong <narmstrong@baylibre.com>
@@ -64,9 +64,9 @@ Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         Jonas Karlman <jonas@kwiboo.se>,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH v2 1/8] drm/bridge: dw-hdmi-i2s: support more i2s format
-Date:   Mon, 12 Aug 2019 14:07:19 +0200
-Message-Id: <20190812120726.1528-2-jbrunet@baylibre.com>
+Subject: [PATCH v2 5/8] drm/bridge: dw-hdmi-i2s: set the channel allocation
+Date:   Mon, 12 Aug 2019 14:07:23 +0200
+Message-Id: <20190812120726.1528-6-jbrunet@baylibre.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190812120726.1528-1-jbrunet@baylibre.com>
 References: <20190812120726.1528-1-jbrunet@baylibre.com>
@@ -78,78 +78,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dw-hdmi-i2s supports more formats than just regular i2s.
-Add support for left justified, right justified and dsp modes
-A and B.
+setup the channel allocation provided by the generic hdmi-codec driver
 
 Reviewed-by: Jonas Karlman <jonas@kwiboo.se>
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- .../drm/bridge/synopsys/dw-hdmi-i2s-audio.c   | 26 ++++++++++++++++---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.h     |  6 +++--
- 2 files changed, 27 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
-index 5cbb71a866d5..2b624cff541d 100644
+index caf8aed78fea..0864dee8d180 100644
 --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
 +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
-@@ -44,9 +44,8 @@ static int dw_hdmi_i2s_hw_params(struct device *dev, void *data,
- 	u8 inputclkfs = 0;
+@@ -85,6 +85,7 @@ static int dw_hdmi_i2s_hw_params(struct device *dev, void *data,
  
- 	/* it cares I2S only */
--	if ((fmt->fmt != HDMI_I2S) ||
--	    (fmt->bit_clk_master | fmt->frame_clk_master)) {
--		dev_err(dev, "unsupported format/settings\n");
-+	if (fmt->bit_clk_master | fmt->frame_clk_master) {
-+		dev_err(dev, "unsupported clock settings\n");
- 		return -EINVAL;
- 	}
- 
-@@ -63,6 +62,27 @@ static int dw_hdmi_i2s_hw_params(struct device *dev, void *data,
- 		break;
- 	}
- 
-+	switch (fmt->fmt) {
-+	case HDMI_I2S:
-+		conf1 |= HDMI_AUD_CONF1_MODE_I2S;
-+		break;
-+	case HDMI_RIGHT_J:
-+		conf1 |= HDMI_AUD_CONF1_MODE_RIGHT_J;
-+		break;
-+	case HDMI_LEFT_J:
-+		conf1 |= HDMI_AUD_CONF1_MODE_LEFT_J;
-+		break;
-+	case HDMI_DSP_A:
-+		conf1 |= HDMI_AUD_CONF1_MODE_BURST_1;
-+		break;
-+	case HDMI_DSP_B:
-+		conf1 |= HDMI_AUD_CONF1_MODE_BURST_2;
-+		break;
-+	default:
-+		dev_err(dev, "unsupported format\n");
-+		return -EINVAL;
-+	}
-+
  	dw_hdmi_set_sample_rate(hdmi, hparms->sample_rate);
+ 	dw_hdmi_set_channel_count(hdmi, hparms->channels);
++	dw_hdmi_set_channel_allocation(hdmi, hparms->cea.channel_allocation);
  
  	hdmi_write(audio, inputclkfs, HDMI_AUD_INPUTCLKFS);
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-index 4e3ec09d3ca4..091d7c28aa17 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-@@ -869,8 +869,10 @@ enum {
- 
- /* AUD_CONF1 field values */
- 	HDMI_AUD_CONF1_MODE_I2S = 0x00,
--	HDMI_AUD_CONF1_MODE_RIGHT_J = 0x02,
--	HDMI_AUD_CONF1_MODE_LEFT_J = 0x04,
-+	HDMI_AUD_CONF1_MODE_RIGHT_J = 0x20,
-+	HDMI_AUD_CONF1_MODE_LEFT_J = 0x40,
-+	HDMI_AUD_CONF1_MODE_BURST_1 = 0x60,
-+	HDMI_AUD_CONF1_MODE_BURST_2 = 0x80,
- 	HDMI_AUD_CONF1_WIDTH_16 = 0x10,
- 	HDMI_AUD_CONF1_WIDTH_24 = 0x18,
- 
+ 	hdmi_write(audio, conf0, HDMI_AUD_CONF0);
 -- 
 2.21.0
 
