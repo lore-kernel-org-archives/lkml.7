@@ -2,110 +2,134 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 179B3C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 533A8C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D77BD206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C92D206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 20:29:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="erYZ3Yjo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfHLU3g (ORCPT
+        id S1727637AbfHLU3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 16:29:36 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61448 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726907AbfHLU3g (ORCPT
+        Mon, 12 Aug 2019 16:29:55 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46939 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726907AbfHLU3y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 16:29:36 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7CKLwFx099237
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 16:29:34 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ubcqvwju6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 16:29:34 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
-        Mon, 12 Aug 2019 21:29:32 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 12 Aug 2019 21:29:27 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7CKTQn254526030
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 12 Aug 2019 20:29:26 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F1065A404D;
-        Mon, 12 Aug 2019 20:29:25 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C6E1A4055;
-        Mon, 12 Aug 2019 20:29:23 +0000 (GMT)
-Received: from ram.ibm.com (unknown [9.85.191.17])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 12 Aug 2019 20:29:22 +0000 (GMT)
-Date:   Mon, 12 Aug 2019 13:29:20 -0700
-From:   Ram Pai <linuxram@us.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-devel@lists.ozlabs.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alexey Kardashevskiy <aik@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Reply-To: Ram Pai <linuxram@us.ibm.com>
-References: <87zhrj8kcp.fsf@morokweng.localdomain>
- <20190810143038-mutt-send-email-mst@kernel.org>
- <20190810220702.GA5964@ram.ibm.com>
- <20190811055607.GA12488@lst.de>
- <20190811064621.GB5964@ram.ibm.com>
- <20190812121324.GA9405@lst.de>
+        Mon, 12 Aug 2019 16:29:54 -0400
+Received: by mail-qt1-f195.google.com with SMTP id j15so10612990qtl.13
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 13:29:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=okQCanS41NVfsqts5AJnKPYxoZvv6fudHvTlcVUrGb4=;
+        b=erYZ3YjobyGfzlBoxLc42M3F2RosVw0ZLJ8jT8ORF/CXfU5fuK1ic4KNz8H7G/MZUc
+         TpEJqrKmiQoupS4h55fSjKWdfsZ9GTdfueOQ6dPAacplMEouOBo48ORxGA+y88n4dI+l
+         +DKmoViQB7lujSgP6zatSKVxGCwL0NPYKdfjB8zbLU38V2osbC9TScaVwcg8aaJgnU2D
+         sCA1ifDiEstx71dcNXDT1gs6OgwSb0meF4fm9mv+AZU01XfZa5C9RphIIX4Mhn6T5/38
+         AntxHq5JjZ2R2qldCfQuE81uFpKfxjAxLR9OzS8LBgPKduNdddLZ6gtKMhPoVxaEJoBV
+         0OWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=okQCanS41NVfsqts5AJnKPYxoZvv6fudHvTlcVUrGb4=;
+        b=It/o8uhAYcV3vH3srCpelZWPcWxuR/zfmEY2vYOcPnQtam3korOe5ThgG7ew3uZx6T
+         y4gYZsZbDJoQ1qf/hmqEr0Y6ylqu6zzBUlozzAIkhD+DtvdbeXSrzjTL+QruWYiC/XZ9
+         8OEi3cBhEDP/YQwn1voFUwean+WD/lJFWlilZs4zi/wl2ZU30wgdA9jCZ/5hB+HkofzP
+         hrOI4jcIBzUNggRtvMvzJRBn+F6OZtShPO3RpAhy7Bf+MQJ2qKB/y+Tj0e2VYYHTcrPp
+         dOHG4WNtPlOTpcHbTBVhFSlxxNFVoRCMbObg8RKfGItCSfO9b3LR7anPvRZIiC5FXugv
+         HALQ==
+X-Gm-Message-State: APjAAAVherCG6bXTGp8Rdw1E4OG3LJ5A5GJmuMfeP6QQ61RXmS/IaTOU
+        EQTJfjcCTzUjwgMOaeHzkww=
+X-Google-Smtp-Source: APXvYqwTpsVawcNiJenRqIgzSQZqFPPVYNx449w5EoHaVgkXcuz2UimxK1d9twMADDsK95KCb7HLpQ==
+X-Received: by 2002:ac8:6112:: with SMTP id a18mr9255751qtm.272.1565641793538;
+        Mon, 12 Aug 2019 13:29:53 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (187-26-98-68.3g.claro.net.br. [187.26.98.68])
+        by smtp.gmail.com with ESMTPSA id f20sm1343362qtf.68.2019.08.12.13.29.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 13:29:50 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6AA6940340; Mon, 12 Aug 2019 17:29:47 -0300 (-03)
+Date:   Mon, 12 Aug 2019 17:29:47 -0300
+To:     Igor Lubashev <ilubashe@akamai.com>
+Cc:     linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        James Morris <jmorris@namei.org>
+Subject: Re: [PATCH v3 4/4] perf: Use CAP_SYS_ADMIN instead of euid==0 with
+ ftrace
+Message-ID: <20190812202947.GI9280@kernel.org>
+References: <cover.1565188228.git.ilubashe@akamai.com>
+ <bd8763b72ed4d58d0b42d44fbc7eb474d32e53a3.1565188228.git.ilubashe@akamai.com>
+ <20190812202251.GG9280@kernel.org>
+ <20190812202706.GH9280@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190812121324.GA9405@lst.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19081220-0008-0000-0000-000003084E4A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19081220-0009-0000-0000-00004A265E9B
-Message-Id: <20190812202920.GC5964@ram.ibm.com>
-Subject: RE: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-12_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=710 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908120202
+In-Reply-To: <20190812202706.GH9280@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 02:13:24PM +0200, Christoph Hellwig wrote:
-> On Sat, Aug 10, 2019 at 11:46:21PM -0700, Ram Pai wrote:
-> > If the hypervisor (hardware for hw virtio devices) does not mandate a
-> > DMA API, why is it illegal for the driver to request, special handling
-> > of its i/o buffers? Why are we associating this special handling to
-> > always mean, some DMA address translation? Can't there be 
-> > any other kind of special handling needs, that has nothing to do with
-> > DMA address translation?
+Em Mon, Aug 12, 2019 at 05:27:06PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Mon, Aug 12, 2019 at 05:22:51PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Wed, Aug 07, 2019 at 10:44:17AM -0400, Igor Lubashev escreveu:
+> > > @@ -281,7 +283,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+> > >  		.events = POLLIN,
+> > >  	};
+> > >  
+> > > -	if (geteuid() != 0) {
+> > > +	if (!perf_cap__capable(CAP_SYS_ADMIN)) {
+> > >  		pr_err("ftrace only works for root!\n");
+> > 
+> > I guess we should update the error message too? 
+> > 
 > 
-> I don't think it is illegal per se.  It is however completely broken
-> if we do that decision on a system weide scale rather than properly
-> requesting it through a per-device flag in the normal virtio framework.
+> I.e. I applied this as a follow up patch:
+> 
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index 01a5bb58eb04..ba8b65c2f9dc 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -284,7 +284,12 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+>  	};
+>  
+>  	if (!perf_cap__capable(CAP_SYS_ADMIN)) {
+> -		pr_err("ftrace only works for root!\n");
+> +		pr_err("ftrace only works for %s!\n",
+> +#ifdef HAVE_LIBCAP_SUPPORT
+> +		"users with the SYS_ADMIN capability"
+> +#else
+> +		"root"
+> +#endif
 
-if the decision has to be system-wide; for reasons known locally only to the
-kernel/driver, something that is independent of any device-flag,
-what would be the mechanism?
+                );
 
-RP
+:-)
+ 
+>  		return -1;
+>  	}
+>  
 
+I've pushed the whole set to my tmp.perf/cap branch, please chec
+
+- Arnaldo
