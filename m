@@ -2,112 +2,158 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25264C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E866C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB121206C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0BE12075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:49:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lzYAmOqb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727501AbfHLVs5 (ORCPT
+        id S1727533AbfHLVtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 17:48:57 -0400
-Received: from mga03.intel.com ([134.134.136.65]:15780 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbfHLVs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 17:48:56 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 14:48:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,379,1559545200"; 
-   d="scan'208";a="375391550"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga005.fm.intel.com with ESMTP; 12 Aug 2019 14:48:55 -0700
-Date:   Mon, 12 Aug 2019 14:48:55 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 15/19] mm/gup: Introduce vaddr_pin_pages()
-Message-ID: <20190812214854.GF20634@iweiny-DESK2.sc.intel.com>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
- <20190809225833.6657-16-ira.weiny@intel.com>
- <20190812122814.GC24457@ziepe.ca>
+        Mon, 12 Aug 2019 17:49:14 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42177 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfHLVtO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 17:49:14 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i30so1658639pfk.9
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 14:49:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=SxB55hS+dMxQE9HtSOzkt2R+4Ww8VTS/3uqSYLsuna8=;
+        b=lzYAmOqbwT9CeDgDl15mFv5TdBb1wbf3WeSr2Od/BcCxri4TcJpC4oGHXsxNo+nIm9
+         4UY8TGtG+c1GNcfBP3jlGRMkahWtZ8KjXFAcMh3FPNN2djLS0KjYin05hlqnu4Y5wal7
+         S1qgMuIvQsiN1lVji4aUaHXHcMySssMiixIkw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=SxB55hS+dMxQE9HtSOzkt2R+4Ww8VTS/3uqSYLsuna8=;
+        b=DG+FL/PKJILt3MoWMyhk1NEfVJANvBqjSXh/RYjmvu2N+8wPm5U5l7yqOzN+gD4I3j
+         5ulK7fk3BKhixqJZnroazF1uZJ8tLfRZPjBb4JBbIHDj92ulfHeo9fGagfqSYMjoVSqA
+         oIqgHxOpqG6f7qg5rSyE+Vb9bMITVUA1680DA8Mmgi4+mfGTjWAV+ggWE8AJ+LAryJvJ
+         eQm+1xa8ULi3OcAbl/3eEyF1mbUvaqJcEp9gVPjFbHQprXqNmGYFX3Y1WTt1j706g74A
+         bm5+mQjL/UVPpe7TIx0JcudpZXlsz78tEJjFBbJ70RlEx0B6JIGk3Mq4tXF/Wse2TSP3
+         yWig==
+X-Gm-Message-State: APjAAAWxjiFdsJ2bWkjr8u6Ns6Mt1FelGO0QQI1seQ+B87ajaJPVIk2V
+        ZzRJ09Cl1187tIcH5xXdNO6nYyCN+sU=
+X-Google-Smtp-Source: APXvYqyLfuIW+ob8nSQJagwEjJ+GYX0/WNpe63lBYSawHUQh2XGtOWLZsLANqss4+EgGiW1AD5Ae9g==
+X-Received: by 2002:a17:90a:9903:: with SMTP id b3mr1250682pjp.80.1565646553526;
+        Mon, 12 Aug 2019 14:49:13 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c71sm3236846pfc.106.2019.08.12.14.49.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 12 Aug 2019 14:49:12 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 14:49:11 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org
+Subject: [PATCH] kbuild: Parameterize kallsyms generation and correct
+ reporting
+Message-ID: <201908121448.4D023D7@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190812122814.GC24457@ziepe.ca>
-User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 09:28:14AM -0300, Jason Gunthorpe wrote:
-> On Fri, Aug 09, 2019 at 03:58:29PM -0700, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > The addition of FOLL_LONGTERM has taken on additional meaning for CMA
-> > pages.
-> > 
-> > In addition subsystems such as RDMA require new information to be passed
-> > to the GUP interface to track file owning information.  As such a simple
-> > FOLL_LONGTERM flag is no longer sufficient for these users to pin pages.
-> > 
-> > Introduce a new GUP like call which takes the newly introduced vaddr_pin
-> > information.  Failure to pass the vaddr_pin object back to a vaddr_put*
-> > call will result in a failure if pins were created on files during the
-> > pin operation.
-> 
-> Is this a 'vaddr' in the traditional sense, ie does it work with
-> something returned by valloc?
+When kallsyms generation happens, temporary vmlinux outputs are linked
+but the quiet make output doesn't report it, giving the impression that
+the prior command is taking longer than expected.
 
-...or malloc in user space, yes.  I think the idea is that it is a user virtual
-address.
+Instead, report the KSYM step before the temporary linking. While at it,
+this consolidates the repeated "kallsyms generation step" into a single
+function and removes the existing copy/pasting.
 
-> 
-> Maybe another name would be better?
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ scripts/link-vmlinux.sh | 39 ++++++++++++++++++++-------------------
+ 1 file changed, 20 insertions(+), 19 deletions(-)
 
-Maybe, the name I had was way worse...  So I'm not even going to admit to it...
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index 96b6c0233a61..ed52be015523 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -170,7 +170,6 @@ gen_btf()
+ # Create ${2} .o file with all symbols from the ${1} object file
+ kallsyms()
+ {
+-	info KSYM ${2}
+ 	local kallsymopt;
+ 
+ 	if [ -n "${CONFIG_KALLSYMS_ALL}" ]; then
+@@ -277,7 +276,22 @@ info MODINFO modules.builtin.modinfo
+ ${OBJCOPY} -j .modinfo -O binary vmlinux.o modules.builtin.modinfo
+ 
+ kallsymso=""
++kallsymso_previous=""
+ kallsyms_vmlinux=""
++
++# Perform one step in kallsyms generation, including temporary linking of
++# vmlinux.
++kallsyms_step()
++{
++	kallsymso_previous=${kallsymso}
++	kallsymso=.tmp_kallsyms${1}.o
++	kallsyms_vmlinux=.tmp_vmlinux${1}
++
++	info KSYM ${kallsymso}
++	vmlinux_link "${kallsymso_previous}" ${kallsyms_vmlinux}
++	kallsyms ${kallsyms_vmlinux} ${kallsymso}
++}
++
+ if [ -n "${CONFIG_KALLSYMS}" ]; then
+ 
+ 	# kallsyms support
+@@ -303,28 +317,15 @@ if [ -n "${CONFIG_KALLSYMS}" ]; then
+ 	# a)  Verify that the System.map from vmlinux matches the map from
+ 	#     ${kallsymso}.
+ 
+-	kallsymso=.tmp_kallsyms2.o
+-	kallsyms_vmlinux=.tmp_vmlinux2
+-
+-	# step 1
+-	vmlinux_link "" .tmp_vmlinux1
+-	kallsyms .tmp_vmlinux1 .tmp_kallsyms1.o
+-
+-	# step 2
+-	vmlinux_link .tmp_kallsyms1.o .tmp_vmlinux2
+-	kallsyms .tmp_vmlinux2 .tmp_kallsyms2.o
++	kallsyms_step 1
++	kallsyms_step 2
+ 
+ 	# step 3
+-	size1=$(${CONFIG_SHELL} "${srctree}/scripts/file-size.sh" .tmp_kallsyms1.o)
+-	size2=$(${CONFIG_SHELL} "${srctree}/scripts/file-size.sh" .tmp_kallsyms2.o)
++	size1=$(${CONFIG_SHELL} "${srctree}/scripts/file-size.sh" ${kallsymso_previous})
++	size2=$(${CONFIG_SHELL} "${srctree}/scripts/file-size.sh" ${kallsymso})
+ 
+ 	if [ $size1 -ne $size2 ] || [ -n "${KALLSYMS_EXTRA_PASS}" ]; then
+-		kallsymso=.tmp_kallsyms3.o
+-		kallsyms_vmlinux=.tmp_vmlinux3
+-
+-		vmlinux_link .tmp_kallsyms2.o .tmp_vmlinux3
+-
+-		kallsyms .tmp_vmlinux3 .tmp_kallsyms3.o
++		kallsyms_step 3
+ 	fi
+ fi
+ 
+-- 
+2.17.1
 
-;-)
 
-So I'm open to suggestions.  Jan gave me this one, so I figured it was safer to
-suggest it...
-
-:-D
-
-> 
-> I also wish GUP like functions took in a 'void __user *' instead of
-> the unsigned long to make this clear :\
-
-Not a bad idea.  But I only see a couple of call sites who actually use a 'void
-__user *' to pass into GUP...  :-/
-
-For RDMA the address is _never_ a 'void __user *' AFAICS.
-
-For the new API, it may be tractable to force users to cast to 'void __user *'
-but it is not going to provide any type safety.
-
-But it is easy to change in this series.
-
-What do others think?
-
-Ira
-
-> 
-> Jason
-> 
+-- 
+Kees Cook
