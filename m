@@ -2,171 +2,160 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47655C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3313C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C12B20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ECDF20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:06:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uJEt2ROV"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="tMcBup0L";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="tucfsSI5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbfHLMGV (ORCPT
+        id S1728388AbfHLMGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 08:06:21 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43471 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbfHLMGU (ORCPT
+        Mon, 12 Aug 2019 08:06:25 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:57298 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728356AbfHLMGY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 08:06:20 -0400
-Received: by mail-pg1-f196.google.com with SMTP id r26so13421859pgl.10
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 05:06:20 -0700 (PDT)
+        Mon, 12 Aug 2019 08:06:24 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x7CC0dW0000630;
+        Mon, 12 Aug 2019 05:06:14 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=g8UGPPQL+Z7HQib+zGHctZgqYyhbQkfxiIsZz5kk00k=;
+ b=tMcBup0LoE5pBKBDTKRnAXspeLng8mBT2JBxXbr863YTeeVfiS5/gP4eORrl+DpcWGkn
+ oGXbaszHoR9el1zq7N4pFl1C5xLfYspUuD3Zfr3Iwq75+r28Ldf4oyVpXNoX2b7SiXE7
+ 6h1ZaLWOUvzUzIZ9KYy8L5cM5ZPyHV6Z9X+q3KCDDYCU5tWHoR4WlQZCst9+/jVDEOME
+ JGOzXjoDc/M/LMNg3DaUqRL7RzDcf/gD/IjOiHuQPT/pN1AroWOVTDhaFtlimONBfy+D
+ cXhRf8vzb0zXGGG53M4r27OnyGbntK0FekhcIsVTTCi8+Mc+1nmZsl/TD1u714a0/jur ew== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2u9u9qe8ht-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 12 Aug 2019 05:06:14 -0700
+Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 12 Aug
+ 2019 05:05:27 -0700
+Received: from NAM01-BN3-obe.outbound.protection.outlook.com (104.47.33.54) by
+ SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Mon, 12 Aug 2019 05:05:27 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TnRWpxCuQnxAa1TAQEL6RtPqc3Iyl8JaSEtoHJGfxD6Sbu8LQdPnhOEFzZ8wfNsRHpLjwUN4Kgi595lcWXvqYy8rtueE1mOO0FmIwaFAyvmGjppa0uirtLaVya+yuub1cISQpIzLHKgHhgIN2FeKKozychKjisvzrSK03zKBTZqy6/uQlDRIXFXxJruGutlTaPsUdmPRPEvLWMa+aK2jwCxwoJX7hvFSYovbjNP3vAKXyk7zNMH/fwfFJhoLNBMYAoAIL5+11qRRbi6OrYv7lZ8F2MgbVnUfxh1ta9H2vqMozKNZeZgUvdYYkvhARstTB0z7N8Am2HsLKeibZibwDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g8UGPPQL+Z7HQib+zGHctZgqYyhbQkfxiIsZz5kk00k=;
+ b=W7tzod/wDMHvMsCO7ktahabFMHJsPZq7+djrdrb5S92O7zgVZckTmV+FLIgDMAmnwzHmxreB+mN7+vI896ERshTCQaR2MxJV6QINBlhgWdYXi/NR1Dxy4vhr4hYDOiXhPpSE5wjOXXGSkHf7VvnPS7kc0zT2eQAnCm6qeb8F6KVvZKxQm1KTw9XGOucLuRMd6/VWUZqOGMgeXXMAkTST4qHRzO7X/qEugNtAGDRGPpfy27jFEui4rd9g+qsHkVYFAV66LYQLJPI0G7u9UwnqFVbSKh9GvRfNA5LnCR3dGFzbOrDF8b9OTECDwIVJae59pnpuLKlQyHoQ3QCCjwy2lA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sgx0vew/l/5gv4406bm2WvE+6I0CHR07hqlrz86Z3sc=;
-        b=uJEt2ROVPd1UqcXIH8AZcEWJe2gU2l2WikWj/lTXEu5TAQO5UI7HxMZhSjWGSNpSM/
-         kD67Pst1Dyzx7qbYrLXSvu+Mr08ddVTHrPLPkSReXtjEyuOfJ2szasvJY7Q1juthSE+O
-         ZN5d5+3WpJ8VQexHVYk2PQhh6erlNiX5z9RVYgbCQIuL3cODpt1V8Jl+vCfCixh/0O7E
-         92/TSySWGPp9zO0p00eOTgQmAdQTHS88ikyrRrA73j948ugOl+8ULRHL2jU6SZXLcic4
-         YmfbiWs7shR+wQkLf29qMOFftl73S3yAhgbTADzXO1DxWuSyQjH0/iK3D3AGpyYzODyS
-         j5vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sgx0vew/l/5gv4406bm2WvE+6I0CHR07hqlrz86Z3sc=;
-        b=LbkpLzaCj8wF+6N+vBLk16kFI7AahmcVfMbnP5fYkL9mItPeiB3bjc8fdBMibkVEE3
-         mwO2/BhdRAssT08WnYl/ooyGcvw+JHjfAwPoQc/0gL+6IMskA89hIMQsKnMl4KWnFM+S
-         zGW17eb+MGGgpSVRhzYFUKPTDpXXcnkwLoDjEMxgKJpknI9Cvy6rmuaZrK0Dq7HnFe5B
-         ExTwQdrGvIGf0gA+QqbwKCnVWejLaGvtnXgL9MbLoFTJMSJa/STD2Tre6lZn789HkDX9
-         SK0W3SC/JXN9ndxY4aYo5eke3NRjDtL9O7ks+tAAzgQqBZuKv+oazDR6UJAz0M9/+KkZ
-         DwLg==
-X-Gm-Message-State: APjAAAW7YadvXFsNbzrz89f9ek2twypBPAYBmLOVeeSw9qdsKBaTP7rO
-        CS7LQqcmcIyIX2wo0KEn9frMrI1Fq4A7bUrO4rUTkg==
-X-Google-Smtp-Source: APXvYqzdCQuAop5oRPu4EMtfBSPg2dydPnlQBeJzj9Fz8EdqkN3nC2NN4tp/bM/cPBx2GTfWFoh9z4egZLpy0FJbn4E=
-X-Received: by 2002:aa7:86c6:: with SMTP id h6mr35801985pfo.51.1565611579482;
- Mon, 12 Aug 2019 05:06:19 -0700 (PDT)
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g8UGPPQL+Z7HQib+zGHctZgqYyhbQkfxiIsZz5kk00k=;
+ b=tucfsSI5tVARqlaKfxal6o/Ot38O83bwg36ZLWPZYDe/zN2LFmgSovS4Sj8a6ixnKyE8iSzr9AYY6Zuy71X87r2k65kzcQIfcnwjxbtIyxMpLKl0eWW89VYIwLq4URsZxUL+HhPCcJl86Y8IjSLXp15ylIO6jNwunoiM6/Je9dM=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
+ MN2PR18MB2480.namprd18.prod.outlook.com (20.179.82.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.23; Mon, 12 Aug 2019 12:05:25 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::1b3:8b34:63fe:aad2]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::1b3:8b34:63fe:aad2%6]) with mapi id 15.20.2157.022; Mon, 12 Aug 2019
+ 12:05:25 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 02/24] EDAC, ghes: Fix grain calculation
+Thread-Topic: [PATCH v2 02/24] EDAC, ghes: Fix grain calculation
+Thread-Index: AQHVUQY528Xmn3pGVkWm7FH417vWZw==
+Date:   Mon, 12 Aug 2019 12:05:25 +0000
+Message-ID: <20190812120517.2kktugib244ujgvb@rric.localdomain>
+References: <20190624150758.6695-1-rrichter@marvell.com>
+ <20190624150758.6695-3-rrichter@marvell.com> <20190809131559.GF2152@zn.tnic>
+ <20190812064147.5czmkj7e6hxgvje3@rric.localdomain>
+ <20190812073221.GA23772@zn.tnic>
+In-Reply-To: <20190812073221.GA23772@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0701CA0067.eurprd07.prod.outlook.com
+ (2603:10a6:3:64::11) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:16c::25)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [31.208.96.227]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 90a105f3-fa89-42fe-f3e9-08d71f1d5bb2
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2480;
+x-ms-traffictypediagnostic: MN2PR18MB2480:
+x-microsoft-antispam-prvs: <MN2PR18MB24800B203BDCB9DFAC82F244D9D30@MN2PR18MB2480.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 012792EC17
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(396003)(39850400004)(366004)(346002)(189003)(199004)(9686003)(6486002)(76176011)(66946007)(66476007)(25786009)(229853002)(6436002)(5660300002)(2906002)(6512007)(316002)(66556008)(6916009)(86362001)(64756008)(66446008)(6246003)(54906003)(52116002)(4326008)(53936002)(81166006)(11346002)(305945005)(6506007)(186003)(81156014)(8676002)(446003)(71200400001)(1076003)(102836004)(14454004)(476003)(26005)(7736002)(486006)(53546011)(386003)(8936002)(4744005)(71190400001)(3846002)(6116002)(99286004)(478600001)(256004)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2480;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: aXrEFN+eA9o0P74qkqOx8qjz/GGkhSt0ghtJkePQW9UuiLOCYZ8hRoKW6llMwuouKd/N9XlwrMnvQS1o9OJWNDmmFnd76N+/AC3/xIF4GEkBLUH/QNcM4ayPz4GLwRRfMUlWz5orogS2OndrTTer0sk0EBbu+7e2qky3atWm8sXIr2yHumIyRlqv1FS0zRurVnVec11b9ZqiTOLN3DXohFo+7mG7/9f0XxHzv4gTfk49EhjWsYuRye5RAcaJIamy2VSmfruyZ3GnE+pq1iL4XUUVH04rp2J3/EFxXdKM1y/jFhmOhYLcl1xQPSmON5/5tPpStlBji7ZAppLtnbunPq5bmZUEIGbx8L64EBnT/Cj3U2DbWeYIBq9qdK/lxhg0E2pOPKnXat9aI3DGfxsMfP7zHd4TNb+LR/DiaYOXz9Q=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <E74C6359FF15E942AA05DEB9CD815928@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <0000000000005c056c058f9a5437@google.com>
-In-Reply-To: <0000000000005c056c058f9a5437@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 12 Aug 2019 14:06:08 +0200
-Message-ID: <CAAeHK+wcAgqNvEO_S_EXgdvhBN2qkQbPii8XVT_7UVnS1WaB6g@mail.gmail.com>
-Subject: Re: BUG: bad usercopy in ld_usb_read
-To:     syzbot <syzbot+45b2f40f0778cfa7634e@syzkaller.appspotmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, Qian Cai <cai@lca.pw>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90a105f3-fa89-42fe-f3e9-08d71f1d5bb2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 12:05:25.0680
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NGu76aKDuK41VVsj2F5hu60dyeRP3EaTI35KHqgSsKMcYBdgp+6dfI094MXW2X57pQ5+9nsxZm3SQHCaNRQMRw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2480
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:5.22.84,1.0.8
+ definitions=2019-08-12_05:2019-08-09,2019-08-12 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 8, 2019 at 2:38 PM syzbot
-<syzbot+45b2f40f0778cfa7634e@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13aeaece600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
-> dashboard link: https://syzkaller.appspot.com/bug?extid=45b2f40f0778cfa7634e
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+45b2f40f0778cfa7634e@syzkaller.appspotmail.com
->
-> ldusb 6-1:0.124: Read buffer overflow, -131383996186150 bytes dropped
-> usercopy: Kernel memory exposure attempt detected from SLUB
-> object 'kmalloc-2k' (offset 8, size 65062)!
-> ------------[ cut here ]------------
-> kernel BUG at mm/usercopy.c:98!
-> invalid opcode: 0000 [#1] SMP KASAN
-> CPU: 0 PID: 15185 Comm: syz-executor.2 Not tainted 5.3.0-rc2+ #25
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> RIP: 0010:usercopy_abort+0xb9/0xbb mm/usercopy.c:98
-> Code: e8 c1 f7 d6 ff 49 89 d9 4d 89 e8 4c 89 e1 41 56 48 89 ee 48 c7 c7 e0
-> f3 cd 85 ff 74 24 08 41 57 48 8b 54 24 20 e8 15 98 c1 ff <0f> 0b e8 95 f7
-> d6 ff e8 80 9f fd ff 8b 54 24 04 49 89 d8 4c 89 e1
-> RSP: 0018:ffff8881ccb3fc38 EFLAGS: 00010286
-> RAX: 0000000000000067 RBX: ffffffff86a659d4 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: ffffffff8128a0fd RDI: ffffed1039967f79
-> RBP: ffffffff85cdf2c0 R08: 0000000000000067 R09: fffffbfff11acdaa
-> R10: fffffbfff11acda9 R11: ffffffff88d66d4f R12: ffffffff86a696e8
-> R13: ffffffff85cdf180 R14: 000000000000fe26 R15: ffffffff85cdf140
-> FS:  00007ff6daf91700(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f1de6600000 CR3: 00000001ca554000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->   __check_heap_object+0xdd/0x110 mm/slub.c:3914
->   check_heap_object mm/usercopy.c:234 [inline]
->   __check_object_size mm/usercopy.c:280 [inline]
->   __check_object_size+0x32d/0x39b mm/usercopy.c:250
->   check_object_size include/linux/thread_info.h:119 [inline]
->   check_copy_size include/linux/thread_info.h:150 [inline]
->   copy_to_user include/linux/uaccess.h:151 [inline]
->   ld_usb_read+0x304/0x780 drivers/usb/misc/ldusb.c:495
+On 12.08.19 09:32:22, Borislav Petkov wrote:
+> On Mon, Aug 12, 2019 at 06:42:00AM +0000, Robert Richter wrote:
 
-#syz dup: KASAN: use-after-free Read in ld_usb_release
+> > With the grain_bits calculation the mask is rounded up to the next
+> > power of 2 value.
+>=20
+> mask	  =3D 0xffffffffff00ff00
 
->   __vfs_read+0x76/0x100 fs/read_write.c:425
->   vfs_read+0x1ea/0x430 fs/read_write.c:461
->   ksys_read+0x1e8/0x250 fs/read_write.c:587
->   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x459829
-> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007ff6daf90c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
-> RDX: 000000000000fe26 RSI: 00000000200000c0 RDI: 0000000000000003
-> RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00007ff6daf916d4
-> R13: 00000000004c6c73 R14: 00000000004dbee8 R15: 00000000ffffffff
-> Modules linked in:
-> ---[ end trace 4fe8dba032d24ceb ]---
-> RIP: 0010:usercopy_abort+0xb9/0xbb mm/usercopy.c:98
-> Code: e8 c1 f7 d6 ff 49 89 d9 4d 89 e8 4c 89 e1 41 56 48 89 ee 48 c7 c7 e0
-> f3 cd 85 ff 74 24 08 41 57 48 8b 54 24 20 e8 15 98 c1 ff <0f> 0b e8 95 f7
-> d6 ff e8 80 9f fd ff 8b 54 24 04 49 89 d8 4c 89 e1
-> RSP: 0018:ffff8881ccb3fc38 EFLAGS: 00010286
-> RAX: 0000000000000067 RBX: ffffffff86a659d4 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: ffffffff8128a0fd RDI: ffffed1039967f79
-> RBP: ffffffff85cdf2c0 R08: 0000000000000067 R09: fffffbfff11acdaa
-> R10: fffffbfff11acda9 R11: ffffffff88d66d4f R12: ffffffff86a696e8
-> R13: ffffffff85cdf180 R14: 000000000000fe26 R15: ffffffff85cdf140
-> FS:  00007ff6daf91700(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f1de6600000 CR3: 00000001ca554000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+grain =3D ~mask + 1
+
+> ~mask	  =3D 0x0000000000ff00ff
+> ~mask + 1 =3D 0x0000000000ff0100
+
+grain_bits =3D fls_long(e->grain - 1);
+grain_bits =3D 24
+
+grain =3D 1 << grain_bits
+grain =3D 0x1000000
+
+So for masks in the range from 0xffffffffff000000 to
+0xffffffffff7fffff we have grain_bits set to 24, which corresponds to
+a grain of 0x1000000. Looks good to me.
+
+>=20
+> Your "trick" of adding a 1 to get to the most significant bit simply
+> doesn't work here. Thus:
+>=20
+> "I guess we can leave it like that for now until some "inventive"
+> firmware actually does it."
+
+Fine to me.
+
+-Robert
