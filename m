@@ -2,361 +2,335 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06133C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A320C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B82E620820
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:14:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iXjwC9Y2"
+	by mail.kernel.org (Postfix) with ESMTP id B400A20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 22:14:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565648096;
+	bh=HuWzclWA0xlQ3D8KSG7RsMBpTzyl3fzoloKOEdcCD1o=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=1G8ry5RSe8XeYayT2Q634AoO8rFZfTbMsQlA7cKNWA/02JAunEfbeMA/bIZj+RY7f
+	 mB+1Qm6BCe9dez2t+t3g3E4hJgRWv3csFVNN2pcBirQgiZ/b938ElWrCV3Qs52G0nc
+	 UiZeEPrrLegrOVByqDHqBOReDFeCgerdkSVY0RwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfHLWOg (ORCPT
+        id S1726800AbfHLWOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 18:14:36 -0400
-Received: from mail-qk1-f201.google.com ([209.85.222.201]:40174 "EHLO
-        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbfHLWOg (ORCPT
+        Mon, 12 Aug 2019 18:14:55 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41210 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbfHLWOz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 18:14:36 -0400
-Received: by mail-qk1-f201.google.com with SMTP id g125so7174350qkd.7
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 15:14:35 -0700 (PDT)
+        Mon, 12 Aug 2019 18:14:55 -0400
+Received: by mail-ot1-f66.google.com with SMTP id o101so12094739ota.8
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 15:14:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=YzrsGQWJ9vf69SNd20htWu1bd7T+J/M+qkSI3MhX4Ko=;
-        b=iXjwC9Y27Pyh6en1ZnbDa1fykedsqhqOp1ZdMaRwYKA/BsVXNK4LjdCxOffkRdq2EA
-         p4q1VdnEwfp5vDbFLEexJXk/E8jf1pXAfnuxWa7bUkgUKxKUWVIXx8futJWOKsg5tgRi
-         t3ooQZ078lhn4jxx4pd7k6bEFrYpxJB1vanwsyLajRwYh9MRqaPPoUqrp0+b51qB5KWG
-         5bbGA9QKKBMkyjzSjzupOYaoshw/SLswq48o083JipcVXn1lS53QSdbDbanb29/BjTB4
-         Pl+Db5fwFXJs/xvuUfU7Y55JbRGSZ7WjYmHSJ7BJWzCoa3kDYU9wZg6PUxYsxS4G5HSq
-         snhQ==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=D3uhUHoi9fIhFDarQ5dVaoJ2UEG6yemXSPdF6iZjRc8=;
+        b=DbgEtLhdiGgYHQOt9LEDk6Vkqr+DhuXlqGzXQvbfE3TNSe4C/1yiY4nDgj0MdXBcuW
+         /N9x0pcmXkOdA8tylngZOMPfhA0NBQbtflNV2hYFMmhkP7YDZ5l6v0RjiHm8LCaHRq3j
+         tAikViBsRrdcxapOQ1IPlT6XgS/Aqmc2Ib3UQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=YzrsGQWJ9vf69SNd20htWu1bd7T+J/M+qkSI3MhX4Ko=;
-        b=o63BAhly9cAK1i4MAGFxa+/zcFZue3zyOeO2HkQRCHquTmG/LK82qunkgFfvl/RfpG
-         ceCzRNo5ELQon7T5WA/MpSKEhamEOiPvjekjHMis1alm7DrSgTY5sgyRMk5wPl8j2YkA
-         +ooshRnkGUX4qra1smjO1lpUwvLp4ZE+xIR1zXt0iWjtP0xGTuS6fFhYD7yPUSDYCJKQ
-         zS8W7TCqErd0x68GNFReVNvPIAp6Uw1jfXwVldtmCKyqOyjC0umIt/nbwRgQf8nK2lPR
-         qN+3lnmM510SOKvHrpi5YaU7Rc1LdAVQ34FfBngAX87YqOGNfFO6k8gAVuY5rv2+5kxJ
-         yn7g==
-X-Gm-Message-State: APjAAAVTOnWzeXXii1xVawvCf6ROOaRHSvMnqi0W7cgIV+DrVPIsAJ/k
-        aBtX3eDheyUTZqsZhJCsUW2VHjaSDg==
-X-Google-Smtp-Source: APXvYqwItN2fhw3RZGfjP0FGuB7HJ+AD1Ro7BeqFi9haqdm/rxaIb60UELBKJiM5gqgLIKQSChRdRnAO0w==
-X-Received: by 2002:a05:620a:1f0:: with SMTP id x16mr20622958qkn.11.1565648074752;
- Mon, 12 Aug 2019 15:14:34 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 15:14:16 -0700
-In-Reply-To: <20190812214711.83710-1-nhuck@google.com>
-Message-Id: <20190812221416.139678-1-nhuck@google.com>
-Mime-Version: 1.0
-References: <20190812214711.83710-1-nhuck@google.com>
-X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
-Subject: [PATCH v2] kbuild: Change fallthrough comments to attributes
-From:   Nathan Huckleberry <nhuck@google.com>
-To:     yamada.masahiro@socionext.com, michal.lkml@markovi.net
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, clang-built-linux@googlegroups.com,
-        Nathan Huckleberry <nhuck@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=D3uhUHoi9fIhFDarQ5dVaoJ2UEG6yemXSPdF6iZjRc8=;
+        b=B32uTOzrGSKNm72FraRXyKTHT8rsgx7bqNya876lLhfwdnIrvRhGOkz8KhVsusYKr9
+         VGrg2nWFjjZ4dnobr2QJqXdPJ5Sv4aGuQBFugkzCfde3i4BavwiPoBq+infv1B5p+Z+C
+         0RYcJn0EoW8Il8l6jMz/naSjzaFykozygCZz4hxWkaHEytwQ5fRAmWqvqYkK+bshSs62
+         MTwG4UH2tRW85RLwyEtFq64gbr9jbiZQjaujXd3/1OSuziFjBNeYff1OlbN2Z3E+SlYJ
+         6kVMB6eFRzbCyni2HrMewmEdDesgoYJCgpVtD0TvS/2gYrbk8x17SmZA9b+mCszouzM9
+         K6dg==
+X-Gm-Message-State: APjAAAU/gLybPwog7gW6uP4/irHhq4SlmnkypR32pnjQABcTVKGc/t3z
+        KhwwKtJVZggsNE19kNHxLIaxsw==
+X-Google-Smtp-Source: APXvYqw9Vxa0jH2IOu4OJxkzqTeHYxwvu/K/Mda2PWDYE6f0H/ngZqjqVGVwIdIbliZevLzx3lOpMw==
+X-Received: by 2002:a02:cc6c:: with SMTP id j12mr11808857jaq.29.1565648093449;
+        Mon, 12 Aug 2019 15:14:53 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id l26sm21374004ioj.24.2019.08.12.15.14.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 12 Aug 2019 15:14:52 -0700 (PDT)
+Subject: Re: [PATCH 0/3] Collapse vimc into single monolithic driver
+To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>, mchehab@kernel.org,
+        hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com
+Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        kernel@collabora.com,
+        "skh >> Shuah Khan" <skhan@linuxfoundation.org>
+References: <cover.1565386363.git.skhan@linuxfoundation.org>
+ <3118bc46-14ac-8015-9a6c-a8dfcdcea940@collabora.com>
+ <4e9b8eb3-23c5-62ea-07dc-b51acb238dee@linuxfoundation.org>
+ <15badf5e-49fa-7fbe-de6b-296e9a7f5cd9@collabora.com>
+ <e21d38a5-4fcd-7b02-f5f2-e445c280f769@collabora.com>
+ <2ee23903-8e99-a0a0-619a-be5bdaa71802@linuxfoundation.org>
+ <374574f2-0ecd-723a-4a66-c190332aaa04@collabora.com>
+ <737dbfd4-8e86-289b-1827-736e3d6ffff5@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <03b51b1e-3d78-72e6-3b3e-210b4411c897@linuxfoundation.org>
+Date:   Mon, 12 Aug 2019 16:14:51 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <737dbfd4-8e86-289b-1827-736e3d6ffff5@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang does not support the use of comments to label
-intentional fallthrough. This patch replaces some uses
-of comments to attributesto cut down a significant number
-of warnings on clang (from ~50000 to ~200). Only comments
-in commonly used header files have been replaced.
+On 8/12/19 1:10 PM, Shuah Khan wrote:
+> On 8/12/19 12:52 PM, André Almeida wrote:
+>> Hi Shuah,
+>>
+>> On 8/12/19 11:08 AM, Shuah Khan wrote:
+>>> On 8/9/19 9:51 PM, Helen Koike wrote:
+>>>> Hi Andre,
+>>>>
+>>>> Thanks for testing this.
+>>>>
+>>>> On 8/9/19 9:24 PM, André Almeida wrote:
+>>>>> On 8/9/19 9:17 PM, Shuah Khan wrote:
+>>>>>> Hi Andre,
+>>>>>>
+>>>>>> On 8/9/19 5:52 PM, André Almeida wrote:
+>>>>>>> Hello Shuah,
+>>>>>>>
+>>>>>>> Thanks for the patch, I did some comments below.
+>>>>>>>
+>>>>>>> On 8/9/19 6:45 PM, Shuah Khan wrote:
+>>>>>>>> vimc uses Component API to split the driver into functional
+>>>>>>>> components.
+>>>>>>>> The real hardware resembles a monolith structure than component and
+>>>>>>>> component structure added a level of complexity making it hard to
+>>>>>>>> maintain without adding any real benefit.
+>>>>>>>>        The sensor is one vimc component that would makes sense 
+>>>>>>>> to be a
+>>>>>>>> separate
+>>>>>>>> module to closely align with the real hardware. It would be 
+>>>>>>>> easier to
+>>>>>>>> collapse vimc into single monolithic driver first and then split 
+>>>>>>>> the
+>>>>>>>> sensor off as a separate module.
+>>>>>>>>
+>>>>>>>> This patch series emoves the component API and makes minimal
+>>>>>>>> changes to
+>>>>>>>> the code base preserving the functional division of the code
+>>>>>>>> structure.
+>>>>>>>> Preserving the functional structure allows us to split the 
+>>>>>>>> sensor off
+>>>>>>>> as a separate module in the future.
+>>>>>>>>
+>>>>>>>> Major design elements in this change are:
+>>>>>>>>        - Use existing struct vimc_ent_config and struct
+>>>>>>>> vimc_pipeline_config
+>>>>>>>>          to drive the initialization of the functional components.
+>>>>>>>>        - Make vimc_ent_config global by moving it to vimc.h
+>>>>>>>>        - Add two new hooks add and rm to initialize and register,
+>>>>>>>> unregister
+>>>>>>>>          and free subdevs.
+>>>>>>>>        - All component API is now gone and bind and unbind hooks 
+>>>>>>>> are
+>>>>>>>> modified
+>>>>>>>>          to do "add" and "rm" with minimal changes to just add 
+>>>>>>>> and rm
+>>>>>>>> subdevs.
+>>>>>>>>        - vimc-core's bind and unbind are now register and 
+>>>>>>>> unregister.
+>>>>>>>>        - vimc-core invokes "add" hooks from its
+>>>>>>>> vimc_register_devices().
+>>>>>>>>          The "add" hooks remain the same and register subdevs. They
+>>>>>>>> don't
+>>>>>>>>          create platform devices of their own and use vimc's
+>>>>>>>> pdev.dev as
+>>>>>>>>          their reference device. The "add" hooks save their
+>>>>>>>> vimc_ent_device(s)
+>>>>>>>>          in the corresponding vimc_ent_config.
+>>>>>>>>        - vimc-core invokes "rm" hooks from its unregister to
+>>>>>>>> unregister
+>>>>>>>> subdevs
+>>>>>>>>          and cleanup.
+>>>>>>>>        - vimc-core invokes "add" and "rm" hooks with pointer to 
+>>>>>>>> struct
+>>>>>>>> vimc_device
+>>>>>>>>          and the corresponding struct vimc_ent_config pointer.
+>>>>>>>>        The following configure and stream test works on all 
+>>>>>>>> devices.
+>>>>>>>>             media-ctl -d platform:vimc -V '"Sensor
+>>>>>>>> A":0[fmt:SBGGR8_1X8/640x480]'
+>>>>>>>>        media-ctl -d platform:vimc -V '"Debayer
+>>>>>>>> A":0[fmt:SBGGR8_1X8/640x480]'
+>>>>>>>>        media-ctl -d platform:vimc -V '"Sensor
+>>>>>>>> B":0[fmt:SBGGR8_1X8/640x480]'
+>>>>>>>>        media-ctl -d platform:vimc -V '"Debayer
+>>>>>>>> B":0[fmt:SBGGR8_1X8/640x480]'
+>>>>>>>>             v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v
+>>>>>>>> width=1920,height=1440
+>>>>>>>>        v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v
+>>>>>>>> pixelformat=BA81
+>>>>>>>>        v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v
+>>>>>>>> pixelformat=BA81
+>>>>>>>>             v4l2-ctl --stream-mmap --stream-count=100 -d 
+>>>>>>>> /dev/video1
+>>>>>>>>        v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video2
+>>>>>>>>        v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video3
+>>>>>>>>
+>>>>>>>> The third patch in the series fixes a general protection fault 
+>>>>>>>> found
+>>>>>>>> when rmmod is done while stream is active.
+>>>>>>>
+>>>>>>> I applied your patch on top of media_tree/master and I did some
+>>>>>>> testing.
+>>>>>>> Not sure if I did something wrong, but just adding and removing the
+>>>>>>> module generated a kernel panic:
+>>>>>>
+>>>>>> Thanks for testing.
+>>>>>>
+>>>>>> Odd. I tested modprobe and rmmod both.I was working on Linux 5.3-rc2.
+>>>>>> I will apply these to media latest and work from there. I have to
+>>>>>> rebase these on top of the reverts from Lucas and Helen
+>>>>>
+>>>>> Ok, please let me know if I succeeded to reproduce.
+>>>>>
+>>>>>>>
+>>>>>>> ~# modprobe vimc
+>>>>>>> ~# rmmod vimc
+>>>>>>> [   16.452974] stack segment: 0000 [#1] SMP PTI
+>>>>>>> [   16.453688] CPU: 0 PID: 2038 Comm: rmmod Not tainted 
+>>>>>>> 5.3.0-rc2+ #36
+>>>>>>> [   16.454678] Hardware name: QEMU Standard PC (i440FX + PIIX, 
+>>>>>>> 1996),
+>>>>>>> BIOS 1.12.0-20181126_142135-anatol 04/01/2014
+>>>>>>> [   16.456191] RIP: 0010:kfree+0x4d/0x240
+>>>>>>>
+>>>>>>> <registers values...>
+>>>>>>>
+>>>>>>> [   16.469188] Call Trace:
+>>>>>>> [   16.469666]  vimc_remove+0x35/0x90 [vimc]
+>>>>>>> [   16.470436]  platform_drv_remove+0x1f/0x40
+>>>>>>> [   16.471233]  device_release_driver_internal+0xd3/0x1b0
+>>>>>>> [   16.472184]  driver_detach+0x37/0x6b
+>>>>>>> [   16.472882]  bus_remove_driver+0x50/0xc1
+>>>>>>> [   16.473569]  vimc_exit+0xc/0xca0 [vimc]
+>>>>>>> [   16.474231]  __x64_sys_delete_module+0x18d/0x240
+>>>>>>> [   16.475036]  do_syscall_64+0x43/0x110
+>>>>>>> [   16.475656]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>>>>>> [   16.476504] RIP: 0033:0x7fceb8dafa4b
+>>>>>>>
+>>>>>>> <registers values...>
+>>>>>>>
+>>>>>>> [   16.484853] Modules linked in: vimc(-) videobuf2_vmalloc
+>>>>>>> videobuf2_memops v4l2_tpg videobuf2_v4l2 videobuf2_common
+>>>>>>> [   16.486187] ---[ end trace 91e5e0894e254d49 ]---
+>>>>>>> [   16.486758] RIP: 0010:kfree+0x4d/0x240
+>>>>>>>
+>>>>>>> <registers values...>
+>>>>>>>
+>>>>>>> fish: “rmmod vimc” terminated by signal SIGSEGV (Address boundary
+>>>>>>> error)
+>>>>>>>
+>>>>>>> I just added the module after booting, no other action was made.
+>>>>>>> Here is
+>>>>>>> how my `git log --oneline` looks like:
+>>>>>>>
+>>>>>>> 897d708e922b media: vimc: Fix gpf in rmmod path when stream is 
+>>>>>>> active
+>>>>>>> 2e4a5ad8ad6d media: vimc: Collapse component structure into a single
+>>>>>>> monolithic driver
+>>>>>>> 7c8da1687e92 media: vimc: move private defines to a common header
+>>>>>>> 97299a303532 media: Remove dev_err() usage after platform_get_irq()
+>>>>>>> 25a3d6bac6b9 media: adv7511/cobalt: rename driver name to 
+>>>>>>> adv7511-v4l2
+>>>>
+>>>> I couldn't reproduce the error, my tree looks the same:
+>>>>
+>>>> [I] koike@floko ~/m/o/linux> git log --oneline
+>>>> e3345155c8ed (HEAD) media: vimc: Fix gpf in rmmod path when stream is
+>>>> active
+>>>> 43e9e2fe761f media: vimc: Collapse component structure into a single
+>>>> monolithic driver
+>>>> 8a6d0b9adde0 media: vimc: move private defines to a common header
+>>>> 97299a303532 (media/master) media: Remove dev_err() usage after
+>>>> platform_get_irq()
+>>>> 25a3d6bac6b9 media: adv7511/cobalt: rename driver name to adv7511-v4l2
+>>>
+>>> Thanks Helen for trying to reproduce and sharing the result.
+>>
+>> Me and Helen found out what is the problem. If you follow this call 
+>> trace:
+>>
+>> vimc_ent_sd_unregister()
+>> v4l2_device_unregister_subdev()
+>> v4l2_subdev_release()
+>>
+>> You'll notice that this last function calls the `release` callback
+>> implementation of the subdevice. For instance, the `release` of
+>> vimc-sensor is this one:
+>>
+>> static void vimc_sen_release(struct v4l2_subdev *sd)
+>> {
+>>     struct vimc_sen_device *vsen =
+>>                 container_of(sd, struct vimc_sen_device, sd);
+>>
+>>     v4l2_ctrl_handler_free(&vsen->hdl);
+>>     tpg_free(&vsen->tpg);
+>>     kfree(vsen);
+>> }
+>>
+>> And then you can see that `vsen` has been freed. Back to
+>> vimc_ent_sd_unregister(), after v4l2_device_unregister_subdev(), the
+>> function will call vimc_pads_cleanup(). This is basically a
+>> kfree(ved->pads), but `ved` has just been freed at
+>> v4l2_subdev_release(), producing a memory fault.
+>>
+>> To fix that, we found two options:
+>>
+>> - place the kfree(ved->pads) inside the release callback of each
+>> subdevice and removing vimc_pads_cleanup() from
+>> vimc_ent_sd_unregister()
+>> - use a auxiliary variable to hold the address of the pads, for instance:
+>>
+>> void vimc_ent_sd_unregister(...)
+>> {
+>>      struct media_pad *pads = ved->pads;
+>>      ...
+>>      vimc_pads_cleanup(pads);
+>> }
+>>
+>>
+> 
+> I fixed a problem in the thirds patch. vimc-capture uses the first
+> approach - placing the kfree(ved->pads) inside the release callback.
+> 
+> I am debugging another such problem in unbind path while streaming.
+> I am working on v2 and I will look for the rmmod problem and fix it.
+> 
+> thanks again for testing and finding the root cause.
+> -- Shuah
 
-Since there is still quite a bit of noise, this
-patch moves -Wimplicit-fallthrough to
-Makefile.extrawarn if you are compiling with
-clang.
+Hi Andre,
 
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
----
- Makefile                            |  4 ++
- include/linux/compiler_attributes.h |  4 ++
- include/linux/jhash.h               | 60 +++++++++++++++++++++--------
- include/linux/mm.h                  |  9 +++--
- include/linux/signal.h              | 14 ++++---
- include/linux/skbuff.h              | 12 +++---
- lib/zstd/bitstream.h                | 10 ++---
- scripts/Makefile.extrawarn          |  3 ++
- 8 files changed, 81 insertions(+), 35 deletions(-)
+Here is what's happening.
 
-diff --git a/Makefile b/Makefile
-index 1b23f95db176..93b9744e66a2 100644
---- a/Makefile
-+++ b/Makefile
-@@ -846,7 +846,11 @@ NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
- KBUILD_CFLAGS += -Wdeclaration-after-statement
- 
- # Warn about unmarked fall-throughs in switch statement.
-+# If the compiler is clang, this warning is only enabled if W=1 in
-+# Makefile.extrawarn
-+ifndef CONFIG_CC_IS_CLANG
- KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
-+endif
- 
- # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
- KBUILD_CFLAGS += -Wvla
-diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
-index 6b318efd8a74..86c26bc0ace5 100644
---- a/include/linux/compiler_attributes.h
-+++ b/include/linux/compiler_attributes.h
-@@ -253,4 +253,8 @@
-  */
- #define __weak                          __attribute__((__weak__))
- 
-+#if __has_attribute(fallthrough)
-+#define __fallthrough                   __attribute__((fallthrough))
-+#endif
-+
- #endif /* __LINUX_COMPILER_ATTRIBUTES_H */
-diff --git a/include/linux/jhash.h b/include/linux/jhash.h
-index ba2f6a9776b6..1d21e3f32823 100644
---- a/include/linux/jhash.h
-+++ b/include/linux/jhash.h
-@@ -86,19 +86,43 @@ static inline u32 jhash(const void *key, u32 length, u32 initval)
- 	}
- 	/* Last block: affect all 32 bits of (c) */
- 	switch (length) {
--	case 12: c += (u32)k[11]<<24;	/* fall through */
--	case 11: c += (u32)k[10]<<16;	/* fall through */
--	case 10: c += (u32)k[9]<<8;	/* fall through */
--	case 9:  c += k[8];		/* fall through */
--	case 8:  b += (u32)k[7]<<24;	/* fall through */
--	case 7:  b += (u32)k[6]<<16;	/* fall through */
--	case 6:  b += (u32)k[5]<<8;	/* fall through */
--	case 5:  b += k[4];		/* fall through */
--	case 4:  a += (u32)k[3]<<24;	/* fall through */
--	case 3:  a += (u32)k[2]<<16;	/* fall through */
--	case 2:  a += (u32)k[1]<<8;	/* fall through */
--	case 1:  a += k[0];
-+	case 12:
-+		c += (u32)k[11]<<24;
-+		__fallthrough;
-+	case 11:
-+		c += (u32)k[10]<<16;
-+		__fallthrough;
-+	case 10:
-+		c += (u32)k[9]<<8;
-+		__fallthrough;
-+	case 9:
-+		c += k[8];
-+		__fallthrough;
-+	case 8:
-+		b += (u32)k[7]<<24;
-+		__fallthrough;
-+	case 7:
-+		b += (u32)k[6]<<16;
-+		__fallthrough;
-+	case 6:
-+		b += (u32)k[5]<<8;
-+		__fallthrough;
-+	case 5:
-+		b += k[4];
-+		__fallthrough;
-+	case 4:
-+		a += (u32)k[3]<<24;
-+		__fallthrough;
-+	case 3:
-+		a += (u32)k[2]<<16;
-+		__fallthrough;
-+	case 2:
-+		a += (u32)k[1]<<8;
-+		__fallthrough;
-+	case 1:
-+		a += k[0];
- 		 __jhash_final(a, b, c);
-+		break;
- 	case 0: /* Nothing left to add */
- 		break;
- 	}
-@@ -132,10 +156,16 @@ static inline u32 jhash2(const u32 *k, u32 length, u32 initval)
- 
- 	/* Handle the last 3 u32's */
- 	switch (length) {
--	case 3: c += k[2];	/* fall through */
--	case 2: b += k[1];	/* fall through */
--	case 1: a += k[0];
-+	case 3:
-+		c += k[2];
-+		__fallthrough;
-+	case 2:
-+		b += k[1];
-+		__fallthrough;
-+	case 1:
-+		a += k[0];
- 		__jhash_final(a, b, c);
-+		break;
- 	case 0:	/* Nothing left to add */
- 		break;
- 	}
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 0334ca97c584..7acb131e287f 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -158,11 +158,14 @@ static inline void __mm_zero_struct_page(struct page *page)
- 
- 	switch (sizeof(struct page)) {
- 	case 80:
--		_pp[9] = 0;	/* fallthrough */
-+		_pp[9] = 0;
-+		__fallthrough;
- 	case 72:
--		_pp[8] = 0;	/* fallthrough */
-+		_pp[8] = 0;
-+		__fallthrough;
- 	case 64:
--		_pp[7] = 0;	/* fallthrough */
-+		_pp[7] = 0;
-+		__fallthrough;
- 	case 56:
- 		_pp[6] = 0;
- 		_pp[5] = 0;
-diff --git a/include/linux/signal.h b/include/linux/signal.h
-index b5d99482d3fe..fb750e87566f 100644
---- a/include/linux/signal.h
-+++ b/include/linux/signal.h
-@@ -129,11 +129,11 @@ static inline void name(sigset_t *r, const sigset_t *a, const sigset_t *b) \
- 		b3 = b->sig[3]; b2 = b->sig[2];				\
- 		r->sig[3] = op(a3, b3);					\
- 		r->sig[2] = op(a2, b2);					\
--		/* fall through */					\
-+		__fallthrough;						\
- 	case 2:								\
- 		a1 = a->sig[1]; b1 = b->sig[1];				\
- 		r->sig[1] = op(a1, b1);					\
--		/* fall through */					\
-+		__fallthrough;						\
- 	case 1:								\
- 		a0 = a->sig[0]; b0 = b->sig[0];				\
- 		r->sig[0] = op(a0, b0);					\
-@@ -163,9 +163,9 @@ static inline void name(sigset_t *set)					\
- 	switch (_NSIG_WORDS) {						\
- 	case 4:	set->sig[3] = op(set->sig[3]);				\
- 		set->sig[2] = op(set->sig[2]);				\
--		/* fall through */					\
-+		__fallthrough;				\
- 	case 2:	set->sig[1] = op(set->sig[1]);				\
--		/* fall through */					\
-+		__fallthrough;				\
- 	case 1:	set->sig[0] = op(set->sig[0]);				\
- 		    break;						\
- 	default:							\
-@@ -186,7 +186,7 @@ static inline void sigemptyset(sigset_t *set)
- 		memset(set, 0, sizeof(sigset_t));
- 		break;
- 	case 2: set->sig[1] = 0;
--		/* fall through */
-+		__fallthrough;
- 	case 1:	set->sig[0] = 0;
- 		break;
- 	}
-@@ -199,7 +199,7 @@ static inline void sigfillset(sigset_t *set)
- 		memset(set, -1, sizeof(sigset_t));
- 		break;
- 	case 2: set->sig[1] = -1;
--		/* fall through */
-+		__fallthrough;
- 	case 1:	set->sig[0] = -1;
- 		break;
- 	}
-@@ -230,6 +230,7 @@ static inline void siginitset(sigset_t *set, unsigned long mask)
- 		memset(&set->sig[1], 0, sizeof(long)*(_NSIG_WORDS-1));
- 		break;
- 	case 2: set->sig[1] = 0;
-+		__fallthrough;
- 	case 1: ;
- 	}
- }
-@@ -242,6 +243,7 @@ static inline void siginitsetinv(sigset_t *set, unsigned long mask)
- 		memset(&set->sig[1], -1, sizeof(long)*(_NSIG_WORDS-1));
- 		break;
- 	case 2: set->sig[1] = -1;
-+		__fallthrough;
- 	case 1: ;
- 	}
- }
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index d8af86d995d6..1b7d3cf81dd8 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -3639,19 +3639,19 @@ static inline bool __skb_metadata_differs(const struct sk_buff *skb_a,
- #define __it(x, op) (x -= sizeof(u##op))
- #define __it_diff(a, b, op) (*(u##op *)__it(a, op)) ^ (*(u##op *)__it(b, op))
- 	case 32: diffs |= __it_diff(a, b, 64);
--		 /* fall through */
-+		__fallthrough;
- 	case 24: diffs |= __it_diff(a, b, 64);
--		 /* fall through */
-+		__fallthrough;
- 	case 16: diffs |= __it_diff(a, b, 64);
--		 /* fall through */
-+		__fallthrough;
- 	case  8: diffs |= __it_diff(a, b, 64);
- 		break;
- 	case 28: diffs |= __it_diff(a, b, 64);
--		 /* fall through */
-+		__fallthrough;
- 	case 20: diffs |= __it_diff(a, b, 64);
--		 /* fall through */
-+		__fallthrough;
- 	case 12: diffs |= __it_diff(a, b, 64);
--		 /* fall through */
-+		__fallthrough;
- 	case  4: diffs |= __it_diff(a, b, 32);
- 		break;
- 	}
-diff --git a/lib/zstd/bitstream.h b/lib/zstd/bitstream.h
-index 3a49784d5c61..36c9aeafd801 100644
---- a/lib/zstd/bitstream.h
-+++ b/lib/zstd/bitstream.h
-@@ -259,15 +259,15 @@ ZSTD_STATIC size_t BIT_initDStream(BIT_DStream_t *bitD, const void *srcBuffer, s
- 		bitD->bitContainer = *(const BYTE *)(bitD->start);
- 		switch (srcSize) {
- 		case 7: bitD->bitContainer += (size_t)(((const BYTE *)(srcBuffer))[6]) << (sizeof(bitD->bitContainer) * 8 - 16);
--			/* fall through */
-+			__fallthrough;
- 		case 6: bitD->bitContainer += (size_t)(((const BYTE *)(srcBuffer))[5]) << (sizeof(bitD->bitContainer) * 8 - 24);
--			/* fall through */
-+			__fallthrough;
- 		case 5: bitD->bitContainer += (size_t)(((const BYTE *)(srcBuffer))[4]) << (sizeof(bitD->bitContainer) * 8 - 32);
--			/* fall through */
-+			__fallthrough;
- 		case 4: bitD->bitContainer += (size_t)(((const BYTE *)(srcBuffer))[3]) << 24;
--			/* fall through */
-+			__fallthrough;
- 		case 3: bitD->bitContainer += (size_t)(((const BYTE *)(srcBuffer))[2]) << 16;
--			/* fall through */
-+			__fallthrough;
- 		case 2: bitD->bitContainer += (size_t)(((const BYTE *)(srcBuffer))[1]) << 8;
- 		default:;
- 		}
-diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-index a74ce2e3c33e..e12359d69bb7 100644
---- a/scripts/Makefile.extrawarn
-+++ b/scripts/Makefile.extrawarn
-@@ -30,6 +30,9 @@ warning-1 += $(call cc-option, -Wunused-but-set-variable)
- warning-1 += $(call cc-option, -Wunused-const-variable)
- warning-1 += $(call cc-option, -Wpacked-not-aligned)
- warning-1 += $(call cc-option, -Wstringop-truncation)
-+ifdef CONFIG_CC_IS_CLANG
-+KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
-+endif
- # The following turn off the warnings enabled by -Wextra
- warning-1 += -Wno-missing-field-initializers
- warning-1 += -Wno-sign-compare
--- 
-2.23.0.rc1.153.gdeed80330f-goog
+Before this change, you can't really do rmmod vimc, because vimc is in
+use by other component drivers. With the collapse, now you can actually
+do rmmod on vimc and this problem in vimc_ent_sd_unregister() that frees
+pads first and the does v4l2_device_unregister_subdev().
 
+I fixed this in the 3/3 patch. I can reproduce the problem with patches 
+1 and 2, and patch 3 fixes it.
+
+Did you test with the third patch in this series?
+
+thanks,
+-- Shuah
