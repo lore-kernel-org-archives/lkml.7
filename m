@@ -2,78 +2,124 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E0FC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBE8C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37CA9206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88DC6206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 21:16:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727404AbfHLVOM (ORCPT
+        id S1727160AbfHLVQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 17:14:12 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46954 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfHLVOL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 17:14:11 -0400
-Received: by mail-wr1-f68.google.com with SMTP id z1so105825295wru.13;
-        Mon, 12 Aug 2019 14:14:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Bf5EEMuQJ8I7zXlqZc3Yp5KPqhakmwIzRIocebTFYaU=;
-        b=U1Aii+r1L7INEQ4mV1DcH9a1kdVRZt4+F4vbpQgZU0z8irjyHxSCha6XBlzOwq+0hw
-         2KHjlGtr2OUXqO0nnqadVnx9hWDnQ/0TZ7eRpMcZdTEh6arUoclk3TSKsNIASZYh+UHr
-         V0Lrj2/zh+qIQjNURizwMrsHRoHlXzi3grvJR5HLzROv3ijs4paJfYk/E0K5sLssoCOF
-         kSEzFk/YPiw8gkTxl6fmqPKI66I1a4Cx5cqE26oaM2jgawArc7kaRJdKyD7L07Lee6NT
-         BDq7RKU8v8L4sK/3N/oCVIxotlZGif9sgWQoj+BGCNo/mB33UcT3xA9ZYHhdnPW6tSmG
-         q4lQ==
-X-Gm-Message-State: APjAAAWmxFFhjJvNO5OVXGXfKuWFnd9gnkRlCGVM1/mJrZP9IiRdVfbr
-        XeSmxSWnXVspfKenTA1z845lQoQQQc0=
-X-Google-Smtp-Source: APXvYqyHrCg/SBbpcO+GaWIgRY5ig1WwSB3MMB/3Y6y9/oYTpP1qN8QDTx92AfOmZD0bxVCA8BmrBQ==
-X-Received: by 2002:a5d:618d:: with SMTP id j13mr41944410wru.195.1565644449642;
-        Mon, 12 Aug 2019 14:14:09 -0700 (PDT)
-Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.gmail.com with ESMTPSA id n14sm209762486wra.75.2019.08.12.14.14.08
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 14:14:09 -0700 (PDT)
-Subject: Re: [PATCH v2 4/4] PCI: pciehp: Replace
- pciehp_green_led_{on,off,blink}()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190811195944.23765-1-efremov@linux.com>
- <20190811195944.23765-5-efremov@linux.com>
- <20190812200330.GH11785@google.com>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <b948bc25-e643-a43c-de70-136a041f13b1@linux.com>
-Date:   Tue, 13 Aug 2019 00:14:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 12 Aug 2019 17:16:04 -0400
+Received: from mga06.intel.com ([134.134.136.31]:44879 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726663AbfHLVQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 17:16:04 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 14:15:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,378,1559545200"; 
+   d="scan'208";a="376081222"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga006.fm.intel.com with ESMTP; 12 Aug 2019 14:15:37 -0700
+Date:   Mon, 12 Aug 2019 14:15:37 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 16/19] RDMA/uverbs: Add back pointer to system
+ file object
+Message-ID: <20190812211537.GE20634@iweiny-DESK2.sc.intel.com>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-17-ira.weiny@intel.com>
+ <20190812130039.GD24457@ziepe.ca>
+ <20190812172826.GA19746@iweiny-DESK2.sc.intel.com>
+ <20190812175615.GI24457@ziepe.ca>
 MIME-Version: 1.0
-In-Reply-To: <20190812200330.GH11785@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812175615.GI24457@ziepe.ca>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> You must have a reason, but why didn't you completely remove
-> pciehp_green_led_on(), etc, and change the callers to use
-> pciehp_set_indicators() instead?
+On Mon, Aug 12, 2019 at 02:56:15PM -0300, Jason Gunthorpe wrote:
+> On Mon, Aug 12, 2019 at 10:28:27AM -0700, Ira Weiny wrote:
+> > On Mon, Aug 12, 2019 at 10:00:40AM -0300, Jason Gunthorpe wrote:
+> > > On Fri, Aug 09, 2019 at 03:58:30PM -0700, ira.weiny@intel.com wrote:
+> > > > From: Ira Weiny <ira.weiny@intel.com>
+> > > > 
+> > > > In order for MRs to be tracked against the open verbs context the ufile
+> > > > needs to have a pointer to hand to the GUP code.
+> > > > 
+> > > > No references need to be taken as this should be valid for the lifetime
+> > > > of the context.
+> > > > 
+> > > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > > >  drivers/infiniband/core/uverbs.h      | 1 +
+> > > >  drivers/infiniband/core/uverbs_main.c | 1 +
+> > > >  2 files changed, 2 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/infiniband/core/uverbs.h b/drivers/infiniband/core/uverbs.h
+> > > > index 1e5aeb39f774..e802ba8c67d6 100644
+> > > > +++ b/drivers/infiniband/core/uverbs.h
+> > > > @@ -163,6 +163,7 @@ struct ib_uverbs_file {
+> > > >  	struct page *disassociate_page;
+> > > >  
+> > > >  	struct xarray		idr;
+> > > > +	struct file             *sys_file; /* backpointer to system file object */
+> > > >  };
+> > > 
+> > > The 'struct file' has a lifetime strictly shorter than the
+> > > ib_uverbs_file, which is kref'd on its own lifetime. Having a back
+> > > pointer like this is confouding as it will be invalid for some of the
+> > > lifetime of the struct.
+> > 
+> > Ah...  ok.  I really thought it was the other way around.
+> > 
+> > __fput() should not call ib_uverbs_close() until the last reference on struct
+> > file is released...  What holds references to struct ib_uverbs_file past that?
+> 
+> Child fds hold onto the internal ib_uverbs_file until they are closed
 
-Well, I don't have the exact reason here. I thought that it would be nice to preserve
-an existing interface and to hide some implementation details (e.g., status of the
-second indicator). I could completely remove pciehp_green_led_{on,off,blink}() and
-pciehp_set_attention_status() in v3 if you prefer.
+The FDs hold the struct file, don't they?
 
-Thanks, 
-Denis
+> 
+> > Perhaps I need to add this (untested)?
+> > 
+> > diff --git a/drivers/infiniband/core/uverbs_main.c
+> > b/drivers/infiniband/core/uverbs_main.c
+> > index f628f9e4c09f..654e774d9cf2 100644
+> > +++ b/drivers/infiniband/core/uverbs_main.c
+> > @@ -1125,6 +1125,8 @@ static int ib_uverbs_close(struct inode *inode, struct file *filp)
+> >         list_del_init(&file->list);
+> >         mutex_unlock(&file->device->lists_mutex);
+> >  
+> > +       file->sys_file = NULL;
+> 
+> Now this has unlocked updates to that data.. you'd need some lock and
+> get not zero pattern
+
+You can't call "get" here because I'm 99% sure we only get here when struct
+file has no references left...  I could be wrong.  It took me a while to work
+through the reference counting so I could have missed something.
+
+Ira
+
