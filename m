@@ -2,109 +2,141 @@ Return-Path: <SRS0=zoc3=WI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F7DC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E94BC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F97A20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48F6C20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 12 Aug 2019 12:52:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjkrzO7K"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="MFGjidgY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728692AbfHLMvi (ORCPT
+        id S1728724AbfHLMw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 08:51:38 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38662 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbfHLMvh (ORCPT
+        Mon, 12 Aug 2019 08:52:29 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:57435 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfHLMw2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 08:51:37 -0400
-Received: by mail-ed1-f67.google.com with SMTP id r12so717239edo.5
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 05:51:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kGrGeul0SC/umyrFN5VVINyiciJfk+nILd0h/dFFtd0=;
-        b=hjkrzO7KDdoCyrll/AIT9a5zlI5P9yMGmS9KOUbaiSUwmlgmfohkjMgRW7iFmuY/kg
-         BAMuoV3oCnAjCNuowFU2Rmfpp3s5/q2ULB4PJ3pSWu7IEdHfpMOrqEykRhLTjVBGsW0o
-         C/jK7YNqSRTaUS0f4quizSP02RTiK22iytfYvD50kwHoCR73Glku+2qHChYVKIgXnjvu
-         C37cV7Gg/FvbVp+ks/PuHAsecNMkmETXx9I0qD+C1gDLtbKeosoLRE2G7XCVDlhcJcsL
-         X9EWwYehg5WFlZRmKtfihCcU3e2JNm6aav4YZcILrd7nDMRWrMpdv4Cn3wc3qwcpQDH9
-         csvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kGrGeul0SC/umyrFN5VVINyiciJfk+nILd0h/dFFtd0=;
-        b=LI0bbW+e0y72p/ogpgHIjr1oEt+6KixsN350FhlnQIRxXeRT0sJqJqIF0zWCREdn1u
-         2KM1pdfLu+ok5gv2jjMHsQBfoAmyW/O28sUP43Az62lUB1kYuZoAgcjWkaykKI2t6+om
-         I9UP6YShP1jTGJK7nh8hbffuWFFU4fGbilveDMcTcllJfMMojefV09EAP+6aFEw1gEB+
-         9opaPMK2mCB59D8wwozJBCmeoeDz8GMV3aa0YYwsfb3wfnP0w2tr26wGwZSu7fOHfsJZ
-         uon/QkUy/dfaynxwDtbdQ53RPQH9/HAC4AMAaBn+7NKoZcEHuQCRNP5J+HJhk1mTWt7j
-         IDfw==
-X-Gm-Message-State: APjAAAUuisxfu/Tla92hEQnwhYE6hPOhwmFr+ml3O5Ya+KlPdlGhz8qd
-        U/2h0GtkaJWoB15UMTteZIX/ymGPwSJjEid2W5fPqi4EBQA=
-X-Google-Smtp-Source: APXvYqwT2NNHOrzwcYifunWugAjwGKFkuM7CQhD6a4PeKBA6EtZsLdqYIP9HnY07POUFb7wTuVYsSkeDd1p7dUW39PE=
-X-Received: by 2002:a50:b66f:: with SMTP id c44mr36364139ede.171.1565614296251;
- Mon, 12 Aug 2019 05:51:36 -0700 (PDT)
+        Mon, 12 Aug 2019 08:52:28 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x7CCq5qj911603
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 12 Aug 2019 05:52:05 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x7CCq5qj911603
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1565614325;
+        bh=/bsntWjVZfImfzcAidw6AqiGCqtrKOJA5xIxNE3KE38=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=MFGjidgYHnRptP4j4A+xUuLQakdlBKAeoXGOIkZOCZvzhojLNt56q9FRF5HHrFurt
+         wiYOkQG4w1tXF3raEDgSn+lghtDz20/q+4KR6qgvp6jez/gjxUKk4hTOzSHbUx7bWr
+         a5TrLunfROAMNhLEmdDdF88+lxFRNOZy5jmB+qG1jjA5oKJw15DZofLFf+RmnI6HP6
+         yRGNVF7c0YMBPADgJ91R594akdZGsraD/CR+CHr41SOLQuNznspGZRJRs2mA7NodcK
+         OtskiXRX903FX4A7F4P4FMjDdAAM7hPDwbyQkKU3f3Zry+4EyNkmZveS8F3vc2w9Eq
+         M8NolsgciccPA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x7CCq46H911600;
+        Mon, 12 Aug 2019 05:52:04 -0700
+Date:   Mon, 12 Aug 2019 05:52:04 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Phil Auld <tipbot@zytor.com>
+Message-ID: <tip-a46d14eca7b75fffe35603aa8b81df654353d80f@git.kernel.org>
+Cc:     pauld@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        peterz@infradead.org, vincent.guittot@linaro.org, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com
+Reply-To: peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
+          pauld@redhat.com, hpa@zytor.com, linux-kernel@vger.kernel.org,
+          mingo@kernel.org, vincent.guittot@linaro.org
+In-Reply-To: <20190801133749.11033-1-pauld@redhat.com>
+References: <20190801133749.11033-1-pauld@redhat.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/core] sched/fair: Use rq_lock/unlock in
+ online_fair_sched_group
+Git-Commit-ID: a46d14eca7b75fffe35603aa8b81df654353d80f
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <20190809030352.8387-1-hslester96@gmail.com> <20190809151114.GD3963@sirena.co.uk>
- <CANhBUQ09+q9_=7nMs63w4KRLGOhW1=z-AnuwOzAnUrWRY6uC6A@mail.gmail.com> <20190812110719.GE4592@sirena.co.uk>
-In-Reply-To: <20190812110719.GE4592@sirena.co.uk>
-From:   Chuhong Yuan <hslester96@gmail.com>
-Date:   Mon, 12 Aug 2019 20:51:25 +0800
-Message-ID: <CANhBUQ2XWAJBgfzbiiffaJ60wnoP__kDPHOF4d+Z_1b1HzSpPQ@mail.gmail.com>
-Subject: Re: [PATCH] regulator: core: Add devres versions of regulator_enable/disable
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 7:07 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Sat, Aug 10, 2019 at 09:44:45AM +0800, Chuhong Yuan wrote:
-> > On Fri, Aug 9, 2019 at 11:11 PM Mark Brown <broonie@kernel.org> wrote:
->
-> > > I'm not super keen on managed versions of these functions since they're
-> > > very likely to cause reference counting issues between the probe/remove
-> > > path and the suspend/resume path which aren't obvious from the code, I'm
-> > > especially worried about double frees on release.
->
-> > I find that 29 of 31 cases I found call regulator_disable() only when encounter
-> > probe failure or in .remove.
-> > So I think the devm versions of regulator_enable/disable() will not cause big
-> > problems.
->
-> There's way more drivers using regulators than that...
->
+Commit-ID:  a46d14eca7b75fffe35603aa8b81df654353d80f
+Gitweb:     https://git.kernel.org/tip/a46d14eca7b75fffe35603aa8b81df654353d80f
+Author:     Phil Auld <pauld@redhat.com>
+AuthorDate: Thu, 1 Aug 2019 09:37:49 -0400
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Mon, 12 Aug 2019 14:45:34 +0200
 
-I wrote a new coccinelle script to detect all regulator_disable() in .remove,
-101 drivers are found in total.
-Within them, 25 drivers cannot benefit from devres version of regulator_enable()
-since they have additional non-devm operations after
-regulator_disable() in .remove.
-Within the left 76 cases, 60 drivers (79%) only use
-regulator_disable() when encounter
-probe failure or in .remove.
-The left 16 cases mostly use regulator_disable() in _suspend().
-Furthermore, 3 cases of 76 are found to forget to disable regulator
-when fail in probe.
-So I think a devres version of regulator_enable/disable() has more
-benefits than potential
-risk.
+sched/fair: Use rq_lock/unlock in online_fair_sched_group
 
-> > I even found a driver to forget to disable regulator when encounter
-> > probe failure,
-> > which is drivers/iio/adc/ti-adc128s052.c.
-> > And a devm version of regulator_enable() can prevent such mistakes.
->
-> Yes, it's useful for that.
+Enabling WARN_DOUBLE_CLOCK in /sys/kernel/debug/sched_features causes
+warning to fire in update_rq_clock. This seems to be caused by onlining
+a new fair sched group not using the rq lock wrappers.
+
+  [] rq->clock_update_flags & RQCF_UPDATED
+  [] WARNING: CPU: 5 PID: 54385 at kernel/sched/core.c:210 update_rq_clock+0xec/0x150
+
+  [] Call Trace:
+  []  online_fair_sched_group+0x53/0x100
+  []  cpu_cgroup_css_online+0x16/0x20
+  []  online_css+0x1c/0x60
+  []  cgroup_apply_control_enable+0x231/0x3b0
+  []  cgroup_mkdir+0x41b/0x530
+  []  kernfs_iop_mkdir+0x61/0xa0
+  []  vfs_mkdir+0x108/0x1a0
+  []  do_mkdirat+0x77/0xe0
+  []  do_syscall_64+0x55/0x1d0
+  []  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Using the wrappers in online_fair_sched_group instead of the raw locking
+removes this warning.
+
+[ tglx: Use rq_*lock_irq() ]
+
+Signed-off-by: Phil Auld <pauld@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20190801133749.11033-1-pauld@redhat.com
+---
+ kernel/sched/fair.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 19c58599e967..1054d2cf6aaa 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -10281,18 +10281,18 @@ err:
+ void online_fair_sched_group(struct task_group *tg)
+ {
+ 	struct sched_entity *se;
++	struct rq_flags rf;
+ 	struct rq *rq;
+ 	int i;
+ 
+ 	for_each_possible_cpu(i) {
+ 		rq = cpu_rq(i);
+ 		se = tg->se[i];
+-
+-		raw_spin_lock_irq(&rq->lock);
++		rq_lock_irq(rq, &rf);
+ 		update_rq_clock(rq);
+ 		attach_entity_cfs_rq(se);
+ 		sync_throttle(tg, i);
+-		raw_spin_unlock_irq(&rq->lock);
++		rq_unlock_irq(rq, &rf);
+ 	}
+ }
+ 
