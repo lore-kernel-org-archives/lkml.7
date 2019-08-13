@@ -2,101 +2,82 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 757C0C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBF2C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 410702067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E1DE20842
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:00:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="jfQM7BGd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfHMV7Y (ORCPT
+        id S1727004AbfHMWAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:59:24 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:58580 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726155AbfHMV7X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 17:59:23 -0400
-Received: from 79.184.255.155.ipv4.supernova.orange.pl (79.184.255.155) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 470f59cd6541f77a; Tue, 13 Aug 2019 23:59:21 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Al Stone <ahs3@redhat.com>
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH] ACPI / CPPC: do not require the _PSD method when using CPPC
-Date:   Tue, 13 Aug 2019 23:59:21 +0200
-Message-ID: <521915646.RcUJINxfhL@kreacher>
-In-Reply-To: <20190805170338.29493-1-ahs3@redhat.com>
-References: <20190805170338.29493-1-ahs3@redhat.com>
+        Tue, 13 Aug 2019 18:00:50 -0400
+Received: from mx1.riseup.net ([198.252.153.129]:33330 "EHLO mx1.riseup.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726155AbfHMWAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 18:00:50 -0400
+Received: from capuchin.riseup.net (capuchin-pn.riseup.net [10.0.1.176])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "*.riseup.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (verified OK))
+        by mx1.riseup.net (Postfix) with ESMTPS id 658A01A0DDB;
+        Tue, 13 Aug 2019 15:00:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+        t=1565733649; bh=snueQ5ea0m316y6QFWnWrb6K2FiHwMRYrFbwQgo1Rms=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:Reply-To:From;
+        b=jfQM7BGdUk5wGjhgKAngxXLvykzdhjqI+LKCH2qVzvYctcHY7jWTmm/7hbobo7+Y6
+         lNgEqdlqpxj0gf0RpkFV8CNKPxxrS9RLeHHmUpeCuPJ6yPyco8+Dp0hoJxfX8l/NZD
+         HDOHwRyiKbZ4GLXxm95RhwjyhlHwVFOugc50GnqA=
+X-Riseup-User-ID: FB2E98594011E55C4CB89A6E24A970AA2E7F65BED2E8F68C161F2CB88B360DD8
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+         by capuchin.riseup.net (Postfix) with ESMTPSA id C84E812087B;
+        Tue, 13 Aug 2019 15:00:46 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 01:00:41 +0300
+From:   Kernel User <linux-kernel@riseup.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     mhocko@suse.com, x86@kernel.org
+Subject: Re: /sys/devices/system/cpu/vulnerabilities/ doesn't show all known
+ CPU vulnerabilities
+Message-ID: <20190814010041.098fe4be@localhost>
+In-Reply-To: <20190813212115.GO16770@zn.tnic>
+References: <20190813232829.3a1962cc@localhost>
+        <20190813212115.GO16770@zn.tnic>
+Reply-To: linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, August 5, 2019 7:03:38 PM CEST Al Stone wrote:
-> According to the ACPI 6.3 specification, the _PSD method is optional
-> when using CPPC.  The underlying assumption appears to be that each CPU
-> can change frequency independently from all other CPUs; _PSD is provided
-> to tell the OS that some processors can NOT do that.
-> 
-> However, the acpi_get_psd() function returns -ENODEV if there is no _PSD
-> method present, or an ACPI error status if an error occurs when evaluating
-> _PSD, if present.  This essentially makes _PSD mandatory when using CPPC,
-> in violation of the specification, and only on Linux.
-> 
-> This has forced some firmware writers to provide a dummy _PSD, even though
-> it is irrelevant, but only because Linux requires it; other OSPMs follow
-> the spec.  We really do not want to have OS specific ACPI tables, though.
-> 
-> So, correct acpi_get_psd() so that it does not return an error if there
-> is no _PSD method present, but does return a failure when the method can
-> not be executed properly.  This allows _PSD to be optional as it should
-> be.
-> 
-> Signed-off-by: Al Stone <ahs3@redhat.com>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: Len Brown <lenb@kernel.org>
-> ---
->  drivers/acpi/cppc_acpi.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-> index 15f103d7532b..e9ecfa13e997 100644
-> --- a/drivers/acpi/cppc_acpi.c
-> +++ b/drivers/acpi/cppc_acpi.c
-> @@ -365,10 +365,13 @@ static int acpi_get_psd(struct cpc_desc *cpc_ptr, acpi_handle handle)
->  	union acpi_object  *psd = NULL;
->  	struct acpi_psd_package *pdomain;
->  
-> -	status = acpi_evaluate_object_typed(handle, "_PSD", NULL, &buffer,
-> -			ACPI_TYPE_PACKAGE);
-> -	if (ACPI_FAILURE(status))
-> -		return -ENODEV;
-> +	if (acpi_has_method(handle, "_PSD")) {
+On Tue, 13 Aug 2019 23:21:15 +0200 Borislav Petkov wrote:
 
-It would be better to compare the status below to AE_NOT_FOUND
-and return 0 if that's the case.
+> You have to consider that some of those are addressed by a single
+mitigation like MDS
 
-A couple of code lines could be saved this way at least.
+That could be clarified like:
 
-> +		status = acpi_evaluate_object_typed(handle, "_PSD", NULL,
-> +						    &buffer, ACPI_TYPE_PACKAGE);
-> +		if (ACPI_FAILURE(status))
-> +			return -ENODEV;
-> +	} else
-> +		return 0;		/* _PSD is optional */
->  
->  	psd = buffer.pointer;
->  	if (!psd || psd->package.count != 1) {
-> 
+vulnerability1 - mitigation MDS
+vulnerability2 - mitigation MDS
+vulnerability3 - mitigation 3 (another mitigation)
+...
 
+> the mitigation for others like lazy FPU restore is not even present
+> in /sys/devices/system/cpu/vulnerabilities/.
 
+Then it could be a file with content saying "No mitigation".
 
+> Also, depending on the CPU, some are not even affected.
 
+That could say "Not affected" (which AFAIK is the case for some cases).
+
+> So maintaining this in the kernel is unnecessary to say the least.
+
+Knowing that there is no mitigation or that a CPU is not affected is
+quite different from not knowing anything. So I don't see why you
+conclude that knowledge is unnecessary.
