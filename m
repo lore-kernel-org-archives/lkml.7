@@ -2,183 +2,193 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78260C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4AFC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44BCB2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1DD120840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:52:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="f7nrvRhT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jm8wdiOc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729306AbfHMNv5 (ORCPT
+        id S1729324AbfHMNwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:51:57 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43662 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729264AbfHMNvz (ORCPT
+        Tue, 13 Aug 2019 09:52:20 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:47018 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729190AbfHMNwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:51:55 -0400
-Received: by mail-pf1-f194.google.com with SMTP id v12so3868240pfn.10
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:51:55 -0700 (PDT)
+        Tue, 13 Aug 2019 09:52:20 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w3so14094875pgt.13
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:52:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=62sEQ9UsiJhcclRMyKqZ3t5XOCcMxxKpyjm1UZtT1rQ=;
-        b=f7nrvRhTXp9uue1H7nAtD3gUt/kdApcgjPByYIMpfshqNDLzNDwXkVEB23h3SYYqpd
-         +Vr2PqxXbv0BcOZA2KGmmEYjCJdKHLO/HZ9759zTlvN9d2EqjoE4HHnVKZAqABbEZnJ9
-         i9HxXjx4604T18/h2vPltIiw4UHhVioMF2Apw=
+        bh=4omLmk4w6GxhJ6Ep/AGChVMuZmOFfkXmdaJYpOvWVdk=;
+        b=Jm8wdiOchfcFJ0gRIk1GejkC9wyb0VHkwgGVXz8gKdqL7fzLdNe4X+BSaGG9GuV7hq
+         7sD0rsng093Rsmzie0SdLHRA90thFE9fYj9WOv0ACjtbPytWctwLPNobjvwDlDrUm4jM
+         +RiB/SkxEIKpmhyQWtb2ylSHLydV8aBHuQApwmN8zntmaCpdalFNBJkSWHshpYyVFOaE
+         Qxc6xffuXBWRbS4E3gyJNLpoMCzlVb7s7hqB5moABRoHMHcPlrO7/sTM4WZowUZ3rGWX
+         ZoYV4s/si/3dn7P9hJev1D9DePTX2DxnvqcyFilWTIfI+RaWWt2/x4YIohOqR7cPbIrn
+         sc4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=62sEQ9UsiJhcclRMyKqZ3t5XOCcMxxKpyjm1UZtT1rQ=;
-        b=a+lZ9CKLZrCSqoM02Ib3c9zmKBQR0cG1mi7zAvBM61D6rOGvVy2LvPaScdZ8uAzz6L
-         IqAHp4rbeF6zXIOwX9nM/o/pqZ9Lv1IwJZ5bWBtJv9uSQG9m6VtaMpM5KLBqaWcrx1uD
-         aN6PcwkvCJZYzQIQu9xgKvAQyrsy6dKyVM5/0lusq3btwPDOW3gVSJivFBbSk53jMCzP
-         krWSwpNWeUKUzvVTl4zqUdwxOLXq87HxUtQ5VMx8LOd3B3uYuQHCTUDwTyMbQx4ZBbG6
-         f/jWLLRUs0AaxClDwiE0tG6Z+a1bpHeel2nwAVXVSurpEogMAUzu5o/LJDBrcZ0UxUgu
-         29tQ==
-X-Gm-Message-State: APjAAAXR6M2nSd2lJrbCoGWJ8xfPJqshhmZZdkOD87vLHDmWuDFDlExp
-        1agPTIn+Jx6nRKxUoE/cPLy23A==
-X-Google-Smtp-Source: APXvYqxhO7tKD2Ct4ACAinWPlcqbL6OvBvPKuXBpuAsbrD4FXwQ3R7h+s+KsjdFosYM2UXvMiv5U1g==
-X-Received: by 2002:a65:6093:: with SMTP id t19mr3676061pgu.79.1565704314954;
-        Tue, 13 Aug 2019 06:51:54 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id m13sm50097285pgn.57.2019.08.13.06.51.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 06:51:54 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 09:51:52 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
-        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
-        namhyung@google.com, paulmck@linux.ibm.com,
-        Robin Murphy <robin.murphy@arm.com>,
-        Roman Gushchin <guro@fb.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
-        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v5 1/6] mm/page_idle: Add per-pid idle page tracking
- using virtual index
-Message-ID: <20190813135152.GC258732@google.com>
-References: <20190807171559.182301-1-joel@joelfernandes.org>
- <20190807130402.49c9ea8bf144d2f83bfeb353@linux-foundation.org>
- <20190807204530.GB90900@google.com>
- <20190807135840.92b852e980a9593fe91fbf59@linux-foundation.org>
- <20190807213105.GA14622@google.com>
- <20190808080044.GA18351@dhcp22.suse.cz>
- <20190812145620.GB224541@google.com>
- <20190813091430.GE17933@dhcp22.suse.cz>
+        bh=4omLmk4w6GxhJ6Ep/AGChVMuZmOFfkXmdaJYpOvWVdk=;
+        b=W/BEAWuLPcoWDlMC4NJMJ6R29drIe9XZYMnZ27t339H82KE2UHS7zdFi67oF/ISGXE
+         GxKne/b3iC6C9wpowt1NVV5J7cxPsrrO1f5SBDTmxn5YQv+ZWvXjR2bDDzYq7a8N/xqF
+         J+YddqEoXU19sOM6n3UNVUGclrWasxRnTx/ZTQM1R6Nd7ENvAEugXnEzIn7WWJ049qg1
+         WcHFiURTP5UMjiatk+U7tsSjeOdLOieOV6mcbhawz9mjQ/zmdn0hWUfvtE7tEWFtXnrr
+         VkEI5JoA1/8U2JxnQULPcG0VvQFv9Y4PhXhN3Ru4HyEoBxpUAdZnoKVSgyhaMDxdbhwV
+         hLCg==
+X-Gm-Message-State: APjAAAW8gxHzI6srS6Z4jcMH6y0omkAP1Dm/eY0jXUOkOCAznHkyooYP
+        e2f1ZKry1hepsBFsVgUUdycg
+X-Google-Smtp-Source: APXvYqwav0H6AVbnE2BwPov0OYBYEHoA+VkHR9bqs+s/y71GBF2NtI/p4j6/PJKhz+s8rgdAUXLynw==
+X-Received: by 2002:aa7:8b52:: with SMTP id i18mr41768736pfd.194.1565704339044;
+        Tue, 13 Aug 2019 06:52:19 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:649c:6ce0:9d44:669c:5d6c:bc5f])
+        by smtp.gmail.com with ESMTPSA id j9sm16595539pfe.103.2019.08.13.06.52.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 13 Aug 2019 06:52:18 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 19:22:09 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com
+Subject: Re: [PATCH v2 1/3] dt-bindings: media: i2c: Add IMX290 CMOS sensor
+ binding
+Message-ID: <20190813135209.GA30945@Mani-XPS-13-9360>
+References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
+ <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
+ <20190813094526.GG835@valkosipuli.retiisi.org.uk>
+ <20190813113358.GA28877@Mani-XPS-13-9360>
+ <20190813114643.GA2527@valkosipuli.retiisi.org.uk>
+ <20190813121400.GA29378@Mani-XPS-13-9360>
+ <20190813122212.GE2527@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190813091430.GE17933@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190813122212.GE2527@valkosipuli.retiisi.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 11:14:30AM +0200, Michal Hocko wrote:
-> On Mon 12-08-19 10:56:20, Joel Fernandes wrote:
-> > On Thu, Aug 08, 2019 at 10:00:44AM +0200, Michal Hocko wrote:
-> > > On Wed 07-08-19 17:31:05, Joel Fernandes wrote:
-> > > > On Wed, Aug 07, 2019 at 01:58:40PM -0700, Andrew Morton wrote:
-> > > > > On Wed, 7 Aug 2019 16:45:30 -0400 Joel Fernandes <joel@joelfernandes.org> wrote:
-> > > > > 
-> > > > > > On Wed, Aug 07, 2019 at 01:04:02PM -0700, Andrew Morton wrote:
-> > > > > > > On Wed,  7 Aug 2019 13:15:54 -0400 "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
-> > > > > > > 
-> > > > > > > > In Android, we are using this for the heap profiler (heapprofd) which
-> > > > > > > > profiles and pin points code paths which allocates and leaves memory
-> > > > > > > > idle for long periods of time. This method solves the security issue
-> > > > > > > > with userspace learning the PFN, and while at it is also shown to yield
-> > > > > > > > better results than the pagemap lookup, the theory being that the window
-> > > > > > > > where the address space can change is reduced by eliminating the
-> > > > > > > > intermediate pagemap look up stage. In virtual address indexing, the
-> > > > > > > > process's mmap_sem is held for the duration of the access.
-> > > > > > > 
-> > > > > > > So is heapprofd a developer-only thing?  Is heapprofd included in
-> > > > > > > end-user android loads?  If not then, again, wouldn't it be better to
-> > > > > > > make the feature Kconfigurable so that Android developers can enable it
-> > > > > > > during development then disable it for production kernels?
-> > > > > > 
-> > > > > > Almost all of this code is already configurable with
-> > > > > > CONFIG_IDLE_PAGE_TRACKING. If you disable it, then all of this code gets
-> > > > > > disabled.
-> > > > > > 
-> > > > > > Or are you referring to something else that needs to be made configurable?
-> > > > > 
-> > > > > Yes - the 300+ lines of code which this patchset adds!
-> > > > > 
-> > > > > The impacted people will be those who use the existing
-> > > > > idle-page-tracking feature but who will not use the new feature.  I
-> > > > > guess we can assume this set is small...
-> > > > 
-> > > > Yes, I think this set should be small. The code size increase of page_idle.o
-> > > > is from ~1KB to ~2KB. Most of the extra space is consumed by
-> > > > page_idle_proc_generic() function which this patch adds. I don't think adding
-> > > > another CONFIG option to disable this while keeping existing
-> > > > CONFIG_IDLE_PAGE_TRACKING enabled, is worthwhile but I am open to the
-> > > > addition of such an option if anyone feels strongly about it. I believe that
-> > > > once this patch is merged, most like this new interface being added is what
-> > > > will be used more than the old interface (for some of the usecases) so it
-> > > > makes sense to keep it alive with CONFIG_IDLE_PAGE_TRACKING.
-> > > 
-> > > I would tend to agree with Joel here. The functionality falls into an
-> > > existing IDLE_PAGE_TRACKING config option quite nicely. If there really
-> > > are users who want to save some space and this is standing in the way
-> > > then they can easily add a new config option with some justification so
-> > > the savings are clear. Without that an additional config simply adds to
-> > > the already existing configurability complexity and balkanization.
-> > 
-> > Michal, Andrew, Minchan,
-> > 
-> > Would you have any other review comments on the v5 series? This is just a new
-> > interface that does not disrupt existing users of the older page-idle
-> > tracking, so as such it is a safe change (as in, doesn't change existing
-> > functionality except for the draining bug fix).
+Hi Sakari,
+
+On Tue, Aug 13, 2019 at 03:22:12PM +0300, Sakari Ailus wrote:
+> Hi Manivannan,
 > 
-> I hope to find some more time to finish the review but let me point out
-> that "it's new it is regression safe" is not really a great argument for
-> a new user visible API.
+> On Tue, Aug 13, 2019 at 05:44:00PM +0530, Manivannan Sadhasivam wrote:
+> > Hi Sakari,
+> > 
+> > On Tue, Aug 13, 2019 at 02:46:43PM +0300, Sakari Ailus wrote:
+> > > Hi Manivannan,
+> > > 
+> > > On Tue, Aug 13, 2019 at 05:03:58PM +0530, Manivannan Sadhasivam wrote:
+> > > > Hi Sakari,
+> > > > 
+> > > > Thanks for the review!
+> > > > 
+> > > > On Tue, Aug 13, 2019 at 12:45:26PM +0300, Sakari Ailus wrote:
+> > > > > Hi Manivannan,
+> > > > > 
+> > > > > On Tue, Aug 06, 2019 at 06:39:36PM +0530, Manivannan Sadhasivam wrote:
+> > > > > > Add devicetree binding for IMX290 CMOS image sensor.
+> > > > > > 
+> > > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > > > ---
+> > > > > >  .../devicetree/bindings/media/i2c/imx290.txt  | 51 +++++++++++++++++++
+> > > > > >  1 file changed, 51 insertions(+)
+> > > > > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx290.txt
+> > > > > > 
+> > > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/imx290.txt b/Documentation/devicetree/bindings/media/i2c/imx290.txt
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..7535b5b5b24b
+> > > > > > --- /dev/null
+> > > > > > +++ b/Documentation/devicetree/bindings/media/i2c/imx290.txt
+> > > > > > @@ -0,0 +1,51 @@
+> > > > > > +* Sony IMX290 1/2.8-Inch CMOS Image Sensor
+> > > > > > +
+> > > > > > +The Sony IMX290 is a 1/2.8-Inch CMOS Solid-state image sensor with
+> > > > > > +Square Pixel for Color Cameras. It is programmable through I2C and 4-wire
+> > > > > > +interfaces. The sensor output is available via CMOS logic parallel SDR output,
+> > > > > > +Low voltage LVDS DDR output and CSI-2 serial data output.
+> > > > > 
+> > > > > If there are three to choose from, then you should specify which one is in
+> > > > > use. Given that I think chances remain slim we'd add support for the other
+> > > > > two (it's certainly not ruled out though), CSI-2 could be the default. But
+> > > > > this needs to be documented.
+> > > > > 
+> > > > 
+> > > > Hmm... I'm not sure here. Bindings should describe the hardware and not the
+> > > > limitations of the driver. Here as you said, the sensor can output frames
+> > > > in 3 different modes/formats but the driver only supports CSI2. I can add a
+> > > > note in the driver but not sure whether dt-binding is the right place or not!
+> > > 
+> > > I guess alternatively you could document the necessary bindings for the
+> > > other two busses.
+> > > 
+> > > But what I'm saying here is that it's highly unlikely they'll be ever
+> > > needed, and it'd be mostly a waste of time to implement that. (That said, I
+> > > have nothing against the use of these busses, but I've never seen anyone
+> > > using them.) Many other devices use defaults for more contentious settings.
+> > > 
+> > 
+> > Agree with you but my question was, whether I could document the supported
+> > mode in bindings or not! I have seen comments from Rob in the past that the
+> > binding should not document the limitations of the driver. But anyway, one
+> > can infer from the current binding that only CSI2 is supported for now, it's
+> > just stating it explicitly makes me doubtful!
+> 
+> I think it could be e.g.:
+> 
+> The CSI-2 bus is the default. No bindings have been defined for the other
+> busses.
+> 
 
-Actually, I think you misunderstood me and took it out of context. I never
-intended to say "it is regression safe". I meant to say it is "low risk", as
-in that in all likelihood should not be hurting *existing users* of the *old
-interface*. Also as you know, it has been tested.
+Ack.
 
-> If the API is flawed then this is likely going
-> to kick us later and will be hard to fix. I am still not convinced about
-> the swap part of the thing TBH.
+> ...
+> 
+> > > > > I suppose you can't change the lane order, so clock-lanes is redundant
+> > > > > (don't use it in the example) and data-lanes should be monotonically
+> > > > > incrementing series from 1 to 4.
+> > > > > 
+> > > > 
+> > > > We can change the order and the example here illustrates how it has been
+> > > > wired in FRAMOS module. If I change the lane order like you said, it won't
+> > > > work.
+> > > 
+> > > I highly doubt that. Neither the driver nor the sensor uses the lane
+> > > ordering information.
+> > > 
+> > 
+> > Agree but CSI2 host will need this informtion, right? Please correct me if
+> > I'm wrong!
+> 
+> The CSI-2 receiver may need that configuration, but it's not addressed by a
+> sensor's binding documentation (it's configured in the endpoint on the
+> receiver's side).
+> 
 
-Ok, then let us discuss it. As I mentioned before, without this we lose the
-access information due to MADVISE or swapping. Minchan and Konstantin both
-suggested it that's why I also added it (other than me also realizing that it
-is neeed). For x86, it uses existing bits in pte so it is not adding any more
-bits. For arm64, it uses unused bits that the hardware cannot use. So I
-don't see why this is an issue to you.
+Yes but I thought that documenting the sensor lane configuration based on one
+example implementation might help interfacing w/ different hosts. Anyway, to be
+host agnostic, I can drop the clock lane and make data lane start from 1 as you
+suggested.
 
-thanks,
+Thanks,
+Mani
 
- - Joel
-
+> -- 
+> Sakari Ailus
