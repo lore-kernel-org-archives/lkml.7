@@ -2,153 +2,69 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2872CC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D28AC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC56020840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:16:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EidlyDnJ"
+	by mail.kernel.org (Postfix) with ESMTP id 6A69220840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:20:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfHMDQP (ORCPT
+        id S1727129AbfHMDUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 23:16:15 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41587 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727064AbfHMDQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 23:16:14 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 466yXq4zK8z9sND;
-        Tue, 13 Aug 2019 13:16:11 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565666171;
-        bh=dmS1vUryG/NssiQnUHqe7M4xKFDhBiJSovCkiCc/Sn8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EidlyDnJDIMUu26l/JKs5ZoOmYzoSSb8Z6UFiVvjpWxT13BcsBblKl5kUVKSRUUZQ
-         qY8iS/57yoTsv8ncPgaHPuBAYzU0nKf04cJFBSZpEnGu7Gdk49nY9XgvYDnGjCsidm
-         BdPtrAtovvv5pPzM2xFWAANu35d+V+Lfz1k6UVWEXEV/RUvmacjiD05ymlCnr6TcnP
-         FrN2gvF36Pg3TQGJeRCt4HRrBvnHlKNZpRY6s03NfmS0f6xXFEkzrt3xWuwlg3n03M
-         wKM6/hFvjseP4LhoI7qn6WCvCvChiF279F+LhP3ZLoeyX6TSrVhADgz4F60S8tT4NB
-         8Z1d64KOTDQig==
-Date:   Tue, 13 Aug 2019 13:16:11 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the sound-asoc tree
-Message-ID: <20190813131611.6d2b8710@canb.auug.org.au>
-In-Reply-To: <20190809130811.58eb1d78@canb.auug.org.au>
-References: <20190809130811.58eb1d78@canb.auug.org.au>
+        Mon, 12 Aug 2019 23:20:32 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4666 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726516AbfHMDUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 23:20:32 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C41CBBDF5305D4C95974;
+        Tue, 13 Aug 2019 11:20:29 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 13 Aug
+ 2019 11:20:21 +0800
+Subject: Re: [PATCH 3/3] staging: erofs: xattr.c: avoid BUG_ON
+To:     Gao Xiang <gaoxiang25@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>, <linux-fsdevel@vger.kernel.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+References: <20190813023054.73126-1-gaoxiang25@huawei.com>
+ <20190813023054.73126-3-gaoxiang25@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <84f50ca2-3411-36a6-049a-0d343d8df325@huawei.com>
+Date:   Tue, 13 Aug 2019 11:20:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/XXlR37OZVpI/umYIBjhd8O9";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20190813023054.73126-3-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/XXlR37OZVpI/umYIBjhd8O9
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2019/8/13 10:30, Gao Xiang wrote:
+> Kill all the remaining BUG_ON in EROFS:
+>  - one BUG_ON was used to detect xattr on-disk corruption,
+>    proper error handling should be added for it instead;
+>  - the other BUG_ONs are used to detect potential issues,
+>    use DBG_BUGON only in (eng) debugging version.
 
-Hi all,
+BTW, do we need add WARN_ON() into DBG_BUGON() to show some details function or
+call stack in where we encounter the issue?
 
-On Fri, 9 Aug 2019 13:08:11 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> After merging the sound-asoc tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->=20
-> In file included from include/linux/kobject.h:19,
->                  from include/linux/device.h:16,
->                  from include/sound/hdaudio.h:9,
->                  from include/sound/hdaudio_ext.h:5,
->                  from sound/soc/sof/intel/hda-dsp.c:18:
-> sound/soc/sof/intel/hda-dsp.c: In function 'hda_resume':
-> sound/soc/sof/intel/hda-dsp.c:360:22: error: 'hlink' undeclared (first us=
-e in this function)
->   list_for_each_entry(hlink, &bus->hlink_list, list)
->                       ^~~~~
-> include/linux/list.h:577:7: note: in definition of macro 'list_for_each_e=
-ntry'
->   for (pos =3D list_first_entry(head, typeof(*pos), member); \
->        ^~~
-> sound/soc/sof/intel/hda-dsp.c:360:22: note: each undeclared identifier is=
- reported only once for each function it appears in
->   list_for_each_entry(hlink, &bus->hlink_list, list)
->                       ^~~~~
-> include/linux/list.h:577:7: note: in definition of macro 'list_for_each_e=
-ntry'
->   for (pos =3D list_first_entry(head, typeof(*pos), member); \
->        ^~~
-> In file included from include/linux/list.h:9,
->                  from include/linux/kobject.h:19,
->                  from include/linux/device.h:16,
->                  from include/sound/hdaudio.h:9,
->                  from include/sound/hdaudio_ext.h:5,
->                  from sound/soc/sof/intel/hda-dsp.c:18:
-> sound/soc/sof/intel/hda-dsp.c:360:30: error: 'bus' undeclared (first use =
-in this function)
->   list_for_each_entry(hlink, &bus->hlink_list, list)
->                               ^~~
-> include/linux/kernel.h:972:26: note: in definition of macro 'container_of'
->   void *__mptr =3D (void *)(ptr);     \
->                           ^~~
-> include/linux/list.h:490:2: note: in expansion of macro 'list_entry'
->   list_entry((ptr)->next, type, member)
->   ^~~~~~~~~~
-> include/linux/list.h:577:13: note: in expansion of macro 'list_first_entr=
-y'
->   for (pos =3D list_first_entry(head, typeof(*pos), member); \
->              ^~~~~~~~~~~~~~~~
-> sound/soc/sof/intel/hda-dsp.c:360:2: note: in expansion of macro 'list_fo=
-r_each_entry'
->   list_for_each_entry(hlink, &bus->hlink_list, list)
->   ^~~~~~~~~~~~~~~~~~~
-> sound/soc/sof/intel/hda-dsp.c:364:2: error: #else without #if
->  #else
->   ^~~~
-> sound/soc/sof/intel/hda-dsp.c:390:2: error: #endif without #if
->  #endif
->   ^~~~~
->=20
-> Caused by commit
->=20
->   c2f16a94a804 ("Merge branch 'topic/hda-bus-ops-cleanup' of https://git.=
-kernel.org/pub/scm/linux/kernel/git/tiwai/sound into asoc-5.4")
->=20
-> Looks like the merge resolution is not quite right.
->=20
-> I have used the sound-asoc tree from next-20190808 for today.
+> 
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
-I am still getting this failure ...
---=20
-Cheers,
-Stephen Rothwell
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
---Sig_/XXlR37OZVpI/umYIBjhd8O9
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1SK3sACgkQAVBC80lX
-0GxebggAm+2PVT9KHHm+6QU3UMx4W2WplKtEZ9IvUzk330srsxF5qhKOLWmoM5Co
-wbXQ2TwxHOcxxDlYMjG08ndrH+40jjIKkprCL+7X3HJdBQqiKtmaCrZp+flm3Gus
-BZhcaPmPTXxK/UYZOy9GY9IoJWFLb42Iy5a+9FtNGfk6I9E3wOFC27mtB2wPNngJ
-3BRFx/K7PKyfUA9ZnaPMVactsKPPYrqrzDRfW1nCXRLlBbZLDkhrsTHjcxSnuQye
-MR469DR2NTp81ll24nxHhWrkFNjze3XQt4N7xQKNlhbrXG4cnKe67Yc1Z3eT8bxM
-Ci6VgQQ0lJT06Ib118+PfBuABE+SFw==
-=/Bdn
------END PGP SIGNATURE-----
-
---Sig_/XXlR37OZVpI/umYIBjhd8O9--
+Thanks,
