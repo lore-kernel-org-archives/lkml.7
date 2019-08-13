@@ -2,107 +2,94 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D961FC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 180CDC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8108D20844
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1ED82067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:07:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AMQCAmjV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KmK5lYfX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbfHMNHF (ORCPT
+        id S1728946AbfHMNHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:07:05 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:41925 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728359AbfHMNHF (ORCPT
+        Tue, 13 Aug 2019 09:07:24 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60956 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728486AbfHMNHX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:07:05 -0400
-Received: by mail-qk1-f196.google.com with SMTP id g17so8865156qkk.8;
-        Tue, 13 Aug 2019 06:07:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=u2xvKIFDx1GL5oTSP01MeCVOPBZI+ggPw3/ysWgy6nQ=;
-        b=AMQCAmjVMkny/5BGWEJOty2vX6MCoQOq1G95l9/RhyYwDeuU1PMYleA2bWX5YliVyH
-         rOauuQZa/wbMZf2yl6pD0hCEWri5sJtc3UjkvirA0NdQZoRA6c8M94xWGChvU/JmHNqt
-         AMVDQAKeV8OOie/K4ms5uDBSsivZB7M+hlK/9skh8vbJJCO6V0a2vgY7cn8oEYUNeubg
-         1Lg52jf2CO154nU8/4GHcAoz8DThCz1yU76rM2x+akAQjE8TesDkXLiCRVGfZ4bXEgyW
-         kpOXbQ9xTc0dlYdPf2yGSqH43dJ5sNs6pDt3QOF8N/DPjsWSmy+59G0ej6J3mPFa6WAd
-         P8vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=u2xvKIFDx1GL5oTSP01MeCVOPBZI+ggPw3/ysWgy6nQ=;
-        b=J/0rPUQRWvFXnfzCc+YSoxt016YnAEtZAoHutTgMaYzGVJShF9kVWgLa5Ks8cLXjjD
-         C+or4lPP/LMp7Jg33jn/IDMhOiid02aXWsdPa7vmhZA3BUwX6Nalby3w8Rm/yGIpb1eL
-         A9H/vWM2huvRY22SRUN7bkqptYnMNCHzTaWqg71/F6C9LW4ZXpqGTrf8e2/09n679TT9
-         cqDebtDO4wT/ACVO9+TJrL/AOvGNv8FjBwZAZdbuyx6Zc+aXFWKjPj4TThHicHLu2HRw
-         pHRFKtEHUOhuykudsGi8HRtt8+FSktFWVD5tBxeZDld9ndLYCmS9NidosRWVl04hyEUG
-         tOFw==
-X-Gm-Message-State: APjAAAXVySD/hJNQnH4AfRteSKqOyCa3RmBOfHYR+pbF2Xqxe/ocasx/
-        LCBJaqngp2VeU9nt6cMvaOc=
-X-Google-Smtp-Source: APXvYqwQcmk/rYDeQGfkSovcy7x1HElxEfyMb+XjS4Vy1redRSZJ+8OA4u4px8DqFuh6ELZ0M4OLzg==
-X-Received: by 2002:a05:620a:12d2:: with SMTP id e18mr33667320qkl.176.1565701623607;
-        Tue, 13 Aug 2019 06:07:03 -0700 (PDT)
-Received: from localhost (tripoint.kitware.com. [66.194.253.20])
-        by smtp.gmail.com with ESMTPSA id f7sm2448257qtj.16.2019.08.13.06.07.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Aug 2019 06:07:03 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 09:07:02 -0400
-From:   Ben Boeckel <mathstuf@gmail.com>
-To:     Alison Schofield <alison.schofield@intel.com>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>, linux-mm@kvack.org,
-        kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCHv2 57/59] x86/mktme: Document the MKTME Key Service API
-Message-ID: <20190813130702.GC9079@rotor.kitware.com>
-Reply-To: mathstuf@gmail.com
-References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
- <20190731150813.26289-58-kirill.shutemov@linux.intel.com>
- <20190805115837.GB31656@rotor>
- <20190805204453.GB7592@alison-desk.jf.intel.com>
+        Tue, 13 Aug 2019 09:07:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=TsShzSbt4bhSjgobAYTU3+tEcGq+xbDvcHgE2PR7JFE=; b=KmK5lYfXHKPZIOmbtg/9TeMAU
+        jR94qd1Da/h0kWRTW7hGeEUlH1c4KOrfkC2dSXptMHhtZWircaTyetQorlqnfzWKzV9C6Cg+ft2Fo
+        OQuLSVQp9GHA79JrrHXsck2yRrzH6LkOOjR8Kqik8b5ubb2W0h6Ae2NNfAV8YqCNajfiomtWGipvp
+        WxW7vXm0ChbaigStFbDzEJAT/TzVxS9UKwU6vPkS/4Frrx+8+Me3QvNyyf7JX6x2ZvnHvebD7Xr4G
+        bR/wTN8GvtoDBRStGqvkfPy3jZX2zb50jyZE+l6CnSEppunxtiEfoeuzHRhptk7SE1ztKeERzvXXz
+        dwfHkwDNQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hxWW7-0002GY-Ir; Tue, 13 Aug 2019 13:07:11 +0000
+Date:   Tue, 13 Aug 2019 06:07:11 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Tom Murphy <murphyt7@tcd.ie>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Will Deacon <will.deacon@arm.com>,
+        virtualization@lists.linux-foundation.org,
+        David Brown <david.brown@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-rockchip@lists.infradead.org, Kukjin Kim <kgene@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        David Woodhouse <dwmw2@infradead.org>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v4 0/5] iommu/amd: Convert the AMD iommu driver to the
+ dma-iommu api
+Message-ID: <20190813130711.GA30468@infradead.org>
+References: <20190613223901.9523-1-murphyt7@tcd.ie>
+ <20190624061945.GA4912@infradead.org>
+ <20190810071952.GA25550@infradead.org>
+ <CALQxJuvxBc3MH3_B_fZ3FvURHOM3F3dvvZ6x=GtALUAvyu7Qxw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190805204453.GB7592@alison-desk.jf.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CALQxJuvxBc3MH3_B_fZ3FvURHOM3F3dvvZ6x=GtALUAvyu7Qxw@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 13:44:53 -0700, Alison Schofield wrote:
-> Yes. Fixed up as follows:
+On Tue, Aug 13, 2019 at 08:09:26PM +0800, Tom Murphy wrote:
+> Hi Christoph,
 > 
-> 	Add a "no-encrypt' type key::
+> I quit my job and am having a great time traveling South East Asia.
+
+Enjoy!  I just returned from my vacation.
+
+> I definitely don't want this work to go to waste and I hope to repost it
+> later this week but I can't guarantee it.
 > 
->         char \*options_NOENCRYPT = "type=no-encrypt";
-> 
->         key = add_key("mktme", "name", options_NOENCRYPT,
->                       strlen(options_NOENCRYPT), KEY_SPEC_THREAD_KEYRING);
+> Let me know if you need this urgently.
 
-Thanks. Looks good to me.
-
-Reviewed-by: Ben Boeckel <mathstuf@gmail.com>
-
---Ben
+It isn't in any strict sense urgent.  I just have various DMA API plans
+that I'd rather just implement in dma-direct and dma-iommu rather than
+also in two additional commonly used iommu drivers.  So on the one had
+the sooner the better, on the other hand no real urgency.
