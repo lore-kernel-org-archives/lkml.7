@@ -2,161 +2,217 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EDAC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B930C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F09C5206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D84572067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:34:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Ty87d9bO";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="I0ZBRgjn"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="namSPmDW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfHMAaR (ORCPT
+        id S1726743AbfHMAeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 20:30:17 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:32292 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726144AbfHMAaR (ORCPT
+        Mon, 12 Aug 2019 20:34:00 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45479 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726512AbfHMAd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 20:30:17 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7D0T2A2018299;
-        Mon, 12 Aug 2019 17:30:12 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=OJdFUMuGCy9ny5x/pIXKc2ddPq8O6p3lJyTW+St83K4=;
- b=Ty87d9bOFWIACbaYUljUAM8EN5CkNbQctY9yivNz2LAn8W7O7T/5LaGg48DxwfjMFrlU
- XeBXVxdfssDyhlM94iG4krm7tsfDxPVoZQfHvfyRW8av8WuK50PCRDe/411AXGXfUW+p
- JNc+Y1dXE8AZWnfBYtZuJxuaXIu5B7YOyqA= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2ubecv90q1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 12 Aug 2019 17:30:12 -0700
-Received: from prn-mbx03.TheFacebook.com (2620:10d:c081:6::17) by
- prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 12 Aug 2019 17:30:11 -0700
-Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
- prn-mbx03.TheFacebook.com (2620:10d:c081:6::17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 12 Aug 2019 17:30:11 -0700
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Mon, 12 Aug 2019 17:30:10 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ux4ZvDe1W9itFe8ecdWAxAohgZhLxVtXFa6gqh43u5lFi+mMzxJy33wj7MqbdgA3nX41eFKINvqT3xG0sliAhTDX1i5sgGUn4CcaqZBLDfeVAoov7rV7N65YsUnkid5R/UU0FpkxGXg5a7rJj8ypMCIoC2FLuD4CHXOf2SjRSiJoT25mhRUjD9YVPwwosYPGL0ZfCVaqnAGR5fT2tzldb/frd1YAoWBj0HaQjA0uWNKfHRrlUr2qS4xcLosl/mZtBP3Tl7aoYgKAZVYaQ+APma5eI9DLSuNYoqTCuTQYcdGX0bGc/usiamPz+BKNKcDjyNo5BVhwMQpgBxqnVt//xQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OJdFUMuGCy9ny5x/pIXKc2ddPq8O6p3lJyTW+St83K4=;
- b=GUKmaAT+xfwg77l+nLEOvvXVLL66GxOr00EMnaCGF8/X6OiaImockzHilDZWCt2ouHkamvLqFxHanRd2o08wmHzncJGDE+QlWV/xGD6vNZwW0SINVnis5JrJbFEBlq34/xv1XTX+OllZnCeMMcJmXKCg7Qf6PCrzSieGFshmAOyA3k/KqZ2R134Nr/I2wfkWm8zE58TKmEVHYvIHJ5qOnl/3i0+Id1Pw9QLfHYSeMk12YrciZ6d4JWjyknb1hnss2haEbdEQntw1R7WKDiOJ7yF7B30tz/KRLY5w6IJzaeRu3q3pEHNWXn2LCVykqbFAetnjD0CuBKvNLjP6FqGajg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OJdFUMuGCy9ny5x/pIXKc2ddPq8O6p3lJyTW+St83K4=;
- b=I0ZBRgjnA1OW8mXHDxvPrfLuSd1QdfDQDRxTrAFvS+RaR1w7AraG+nAK3QoT+yNVrZU3ObgJYrYuX5ZlMM8W4RZGIrhphff/9Bxe9ndagM33aaELdwfq0PgPGatgOpwxdU42NUtN3mjwnP6h6lJDIXIt2ZawfvKvNjw/wB6Ncns=
-Received: from DM6PR15MB2635.namprd15.prod.outlook.com (20.179.161.152) by
- DM6PR15MB3339.namprd15.prod.outlook.com (20.179.50.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.20; Tue, 13 Aug 2019 00:30:10 +0000
-Received: from DM6PR15MB2635.namprd15.prod.outlook.com
- ([fe80::d1fc:b5c5:59a1:bd7e]) by DM6PR15MB2635.namprd15.prod.outlook.com
- ([fe80::d1fc:b5c5:59a1:bd7e%3]) with mapi id 15.20.2157.022; Tue, 13 Aug 2019
- 00:30:10 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-CC:     Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>
-Subject: Re: [PATCH] mm: memcontrol: flush percpu vmevents before releasing
- memcg
-Thread-Topic: [PATCH] mm: memcontrol: flush percpu vmevents before releasing
- memcg
-Thread-Index: AQHVUWcJo041kAovIUqPQ99aFT9BKqb4ObQA
-Date:   Tue, 13 Aug 2019 00:30:09 +0000
-Message-ID: <20190813003006.GA2146@tower.dhcp.thefacebook.com>
-References: <20190812233754.2570543-1-guro@fb.com>
-In-Reply-To: <20190812233754.2570543-1-guro@fb.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR05CA0032.namprd05.prod.outlook.com
- (2603:10b6:a03:c0::45) To DM6PR15MB2635.namprd15.prod.outlook.com
- (2603:10b6:5:1a6::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::1:ee94]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 508b7880-1240-4852-be0e-08d71f8565f9
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR15MB3339;
-x-ms-traffictypediagnostic: DM6PR15MB3339:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR15MB3339BA1B02222A7C0C559D41BED20@DM6PR15MB3339.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01283822F8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(396003)(39860400002)(346002)(136003)(199004)(189003)(52314003)(186003)(8936002)(46003)(4326008)(476003)(229853002)(6486002)(11346002)(446003)(256004)(25786009)(4744005)(6512007)(2501003)(9686003)(5660300002)(86362001)(102836004)(33656002)(1076003)(386003)(71190400001)(71200400001)(76176011)(53936002)(6436002)(6246003)(52116002)(316002)(66946007)(66476007)(66446008)(54906003)(66556008)(64756008)(6506007)(2906002)(305945005)(8676002)(478600001)(81156014)(81166006)(14454004)(110136005)(486006)(99286004)(7736002)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR15MB3339;H:DM6PR15MB2635.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 51moVEEcat8EiazeK2mi4AUnslWV8fVSjzm8pdG4qX7zRzJGZ2GhaITCLSazwftbqAhkyV/TryHVV2f6qJu2YMVZnZMkcwb5n6DlWLkm3xp4HcbNZHtJJh7h5LTa2kooGmgvjnExFowODNw7I/8W9DZMIwkVtqTTj0JHPgmuwk7x/Z6qm4Y/bbcmGsvRPuKQ4OgHHj0F6VRuNmEKJyZ1WoKkY4+I9+Cm6hZr3DBiu2JeKz+Dh02z5ZYPYzq02xgB0Gafx4p3eLH0eynZ4EVBp7PnSakpcTQvAC54D9KZhxxsposKJU4Ftr2NPp9k9zhvr2PmWlQf9dtJoJLtfztDm7U1+csuwHcFJShAPR9ToIDXwAUNP+IpRs3eQbnmUwmv0GxTFwAmk92LQwO5Hy6CEyNPRurdd4gqEwOpub4t2BY=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <320C88B52CE1B3408C22FE36DF00648C@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 12 Aug 2019 20:33:59 -0400
+Received: by mail-pf1-f195.google.com with SMTP id w26so5284129pfq.12
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 17:33:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Zq6yHL2C60RwcDmlpshxa1wOQkUxi3yYyWuvX6Jr4HM=;
+        b=namSPmDWPujc9+lfquW9m9ZpboLlU1GpXC90hrm7My2wALTeQGovCGeuZeoLPKDSjJ
+         DPnzh7Y+F6ZapREAMTLVxQZrviv1eRlvHMlffAnktNPvtsaYfgv/HuEgBsY2QrOo0MZs
+         nE5JrVUKP9CgWZePaSr61slKkLrb+gpW5RLUbSyHEZcmQpKomsq1IAcpf8aQcFR1ZzcC
+         pbhJzddvNnULPjOfPycV2nj/vsXw3HM0ePAOrnoYPxMcKCNqqjXJyNERbNaXrHH4I6Qe
+         8XEuxJNNe0v8zBXjNRU7Pd1TCUbPC3LGaWGg1bvuBHstTQGPVL0WQxCYeaoFZfNh0X+l
+         HFWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Zq6yHL2C60RwcDmlpshxa1wOQkUxi3yYyWuvX6Jr4HM=;
+        b=njIPBbbSQCZKdHXBQkBP6unuBWjyBtZM4+8bp256qH7CSlaYXIyhlJjf6u7uBp7be6
+         vXN8eOocCN6xjZN5z8e2OYAAaN2uNlgoNkil+vWgJq5alCVzdJGnj4ueMZmpymfRZthj
+         5X8yw5aRhZMHq+G55/D1NjiMAhV2POzhwsTrrDmzz7d6xP2qGYZw2zuqc4/k29YLtV4C
+         mNsGmeBJpCpPncJQ4xqQtcYYSW0xkR9eXoqvtEsUqMt2yhG6fxNclIzooifvLfpQPc5q
+         1350WaGUibt1xyB0+Rck2A5yNxV+VCLDCv+XWOiPAfTdvfTj/AKNX2XbEv7cBc8FGI6O
+         /0vA==
+X-Gm-Message-State: APjAAAVGquuyVRfUd1wehZDOfvLbXNpPAbQ/VWntipwkqpO0ZEytqBsO
+        +yU4SQYU4IT/SgbAVFqwD7oT6w==
+X-Google-Smtp-Source: APXvYqzfHrFqfVRu0MgZ/V5gvwVgMJn7qSDV7sNF8V3DEvMYQp7KqAKffNLgf1l1YpJPVE1awdWI2Q==
+X-Received: by 2002:a63:5402:: with SMTP id i2mr32378986pgb.414.1565656437536;
+        Mon, 12 Aug 2019 17:33:57 -0700 (PDT)
+Received: from google.com ([2620:15c:2cb:1:e90c:8e54:c2b4:29e7])
+        by smtp.gmail.com with ESMTPSA id 97sm661739pjz.12.2019.08.12.17.33.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 17:33:56 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 17:33:52 -0700
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
+        tytso@mit.edu, yamada.masahiro@socionext.com,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com
+Subject: Re: [PATCH v12 05/18] kunit: test: add the concept of expectations
+Message-ID: <20190813003352.GA235915@google.com>
+References: <20190812182421.141150-1-brendanhiggins@google.com>
+ <20190812182421.141150-6-brendanhiggins@google.com>
+ <20190812235701.533E82063F@mail.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 508b7880-1240-4852-be0e-08d71f8565f9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2019 00:30:09.9960
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rdM22WiZt7FbNtHjvHeGOy7XEwd/Ig8gQUcPcal+HF6ppF5TmQWX4pLEPZ+VU6oi
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR15MB3339
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-12_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=979 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908130001
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812235701.533E82063F@mail.kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 04:37:54PM -0700, Roman Gushchin wrote:
-> Similar to vmstats, percpu caching of local vmevents leads to an
-> accumulation of errors on non-leaf levels. This happens because
-> some leftovers may remain in percpu caches, so that they are
-> never propagated up by the cgroup tree and just disappear into
-> nonexistence with on releasing of the memory cgroup.
->=20
-> To fix this issue let's accumulate and propagate percpu vmevents
-> values before releasing the memory cgroup similar to what we're
-> doing with vmstats.
->=20
-> Since on cpu hotplug we do flush percpu vmstats anyway, we can
-> iterate only over online cpus.
+On Mon, Aug 12, 2019 at 04:57:00PM -0700, Stephen Boyd wrote:
+> Quoting Brendan Higgins (2019-08-12 11:24:08)
+> > Add support for expectations, which allow properties to be specified and
+> > then verified in tests.
+> > 
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> 
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> 
+> Just some minor nits again.
+> 
+> > diff --git a/include/kunit/test.h b/include/kunit/test.h
+> > index d0bf112910caf..2625bcfeb19ac 100644
+> > --- a/include/kunit/test.h
+> > +++ b/include/kunit/test.h
+> > @@ -9,8 +9,10 @@
+> >  #ifndef _KUNIT_TEST_H
+> >  #define _KUNIT_TEST_H
+> >  
+> > +#include <linux/kernel.h>
+> >  #include <linux/types.h>
+> >  #include <linux/slab.h>
+> > +#include <kunit/assert.h>
+> 
+> Can you alphabet sort these?
 
-Just to clarify: this patch should be placed on top of two other
-patches, which I sent a bit earlier today:
+Sure. Will fix.
 
-1) mm: memcontrol: flush percpu slab vmstats on kmem offlining
-2) mm: memcontrol: flush percpu vmstats before releasing memcg
+> >  
+> >  struct kunit_resource;
+> >  
+> > @@ -319,4 +321,845 @@ void __printf(3, 4) kunit_printk(const char *level,
+> >  #define kunit_err(test, fmt, ...) \
+> >                 kunit_printk(KERN_ERR, test, fmt, ##__VA_ARGS__)
+> >  
+> > +/*
+> > + * Generates a compile-time warning in case of comparing incompatible types.
+> > + */
+> > +#define __kunit_typecheck(lhs, rhs) \
+> > +       ((void) __typecheck(lhs, rhs))
+> 
+> Is there a reason why this can't be inlined and the __kunit_typecheck()
+> macro can't be removed?
 
-Sorry for the inconvenience, I forgot about vmevents during
-working on the final version, and remembered too late.
+No real reason anymore. I used it in multiple places before and we
+weren't sure if we wanted to stick with the warnings that __typecheck
+produces long term, but now that it is only used in one place, I guess
+that doesn't make sense anymore. Will fix.
 
-Thanks!
+> > +
+> > +/**
+> > + * KUNIT_SUCCEED() - A no-op expectation. Only exists for code clarity.
+> > + * @test: The test context object.
+> [...]
+> > + * @condition: an arbitrary boolean expression. The test fails when this does
+> > + * not evaluate to true.
+> > + *
+> > + * This and expectations of the form `KUNIT_EXPECT_*` will cause the test case
+> > + * to fail when the specified condition is not met; however, it will not prevent
+> > + * the test case from continuing to run; this is otherwise known as an
+> > + * *expectation failure*.
+> > + */
+> > +#define KUNIT_EXPECT_TRUE(test, condition) \
+> > +               KUNIT_TRUE_ASSERTION(test, KUNIT_EXPECTATION, condition)
+> 
+> A lot of these macros seem double indented.
+
+In a case you pointed out in the preceding patch, I was just keeping the
+arguments column aligned.
+
+In this case I am just indenting two tabs for a line continuation. I
+thought I found other instances in the kernel that did this early on
+(and that's also what the Linux kernel vim plugin wanted me to do).
+After a couple of spot checks, it seems like one tab for this kind of
+line continuation seems more common. I personally don't feel strongly
+about any particular version. I just want to know now what the correct
+indentation is for macros before I go through and change them all.
+
+I think there are three cases:
+
+#define macro0(param0, param1) \
+		a_really_long_macro(...)
+
+In this first case, I use two tabs for the first indent, I think you are
+telling me this should be one tab.
+
+#define macro1(param0, param1) {					       \
+	statement_in_a_block0;						       \
+	statement_in_a_block1;						       \
+	...								       \
+}
+
+In this case, every line is in a block and is indented as it would be in
+a function body. I think you are okay with this, and now that I am
+thinking about it, what I think you are proposing for macro0 will make
+these two cases more consistent.
+
+#define macro2(param0,							       \
+	       param1,							       \
+	       param2,							       \
+	       param3,							       \
+	       ...,							       \
+	       paramn) ...						       \
+
+In this last case, the body would be indented as in macro0, or macro1,
+but the parameters passed into the macro are column aligned, consistent
+with one of the acceptable ways of formatting function parameters that
+don't fit on a single line.
+
+In all cases, I put 1 space in between the closing parameter paren and
+the line continuation `\`, if only one `\` is needed. Otherwise, I align
+all the `\s` to the 80th column. Is this okay, or would you prefer that
+I align them all to the 80th column, or something else?
+
+> > +
+> > +#define KUNIT_EXPECT_TRUE_MSG(test, condition, fmt, ...)                      \
+> > +               KUNIT_TRUE_MSG_ASSERTION(test,                                 \
+> > +                                        KUNIT_EXPECTATION,                    \
+> > +                                        condition,                            \
+> > +                                        fmt,                                  \
+> > +                                        ##__VA_ARGS__)
+> > +
