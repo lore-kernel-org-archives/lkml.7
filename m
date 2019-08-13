@@ -2,150 +2,99 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E55C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A13AC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A84220874
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A76A2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:24:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbfHMMWW (ORCPT
+        id S1727720AbfHMMYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 08:22:22 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:53518 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726453AbfHMMWW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 08:22:22 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id D73A0634C88;
-        Tue, 13 Aug 2019 15:22:12 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1hxVoa-0000g3-6a; Tue, 13 Aug 2019 15:22:12 +0300
-Date:   Tue, 13 Aug 2019 15:22:12 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com
-Subject: Re: [PATCH v2 1/3] dt-bindings: media: i2c: Add IMX290 CMOS sensor
- binding
-Message-ID: <20190813122212.GE2527@valkosipuli.retiisi.org.uk>
-References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
- <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
- <20190813094526.GG835@valkosipuli.retiisi.org.uk>
- <20190813113358.GA28877@Mani-XPS-13-9360>
- <20190813114643.GA2527@valkosipuli.retiisi.org.uk>
- <20190813121400.GA29378@Mani-XPS-13-9360>
+        Tue, 13 Aug 2019 08:24:32 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:53192 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726974AbfHMMYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 08:24:31 -0400
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 24BE8814EBC503C5B605;
+        Tue, 13 Aug 2019 20:24:29 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 13 Aug 2019 20:24:28 +0800
+Received: from 138 (10.175.124.28) by dggeme762-chm.china.huawei.com
+ (10.3.19.108) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Tue, 13
+ Aug 2019 20:24:27 +0800
+Date:   Tue, 13 Aug 2019 20:41:37 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Pavel Machek <pavel@denx.de>
+CC:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        "Jaegeuk Kim" <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Richard Weinberger <richard@nod.at>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
+        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v7 08/24] erofs: add namei functions
+Message-ID: <20190813124136.GB17429@138>
+References: <20190813091326.84652-1-gaoxiang25@huawei.com>
+ <20190813091326.84652-9-gaoxiang25@huawei.com>
+ <20190813114821.GB11559@amd>
+ <20190813122332.GA17429@138>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190813121400.GA29378@Mani-XPS-13-9360>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190813122332.GA17429@138>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Originating-IP: [10.175.124.28]
+X-ClientProxiedBy: dggeme708-chm.china.huawei.com (10.1.199.104) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Manivannan,
-
-On Tue, Aug 13, 2019 at 05:44:00PM +0530, Manivannan Sadhasivam wrote:
-> Hi Sakari,
+On Tue, Aug 13, 2019 at 08:23:32PM +0800, Gao Xiang wrote:
+> Hi Pavel,
 > 
-> On Tue, Aug 13, 2019 at 02:46:43PM +0300, Sakari Ailus wrote:
-> > Hi Manivannan,
-> > 
-> > On Tue, Aug 13, 2019 at 05:03:58PM +0530, Manivannan Sadhasivam wrote:
-> > > Hi Sakari,
-> > > 
-> > > Thanks for the review!
-> > > 
-> > > On Tue, Aug 13, 2019 at 12:45:26PM +0300, Sakari Ailus wrote:
-> > > > Hi Manivannan,
-> > > > 
-> > > > On Tue, Aug 06, 2019 at 06:39:36PM +0530, Manivannan Sadhasivam wrote:
-> > > > > Add devicetree binding for IMX290 CMOS image sensor.
-> > > > > 
-> > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > > > ---
-> > > > >  .../devicetree/bindings/media/i2c/imx290.txt  | 51 +++++++++++++++++++
-> > > > >  1 file changed, 51 insertions(+)
-> > > > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx290.txt
-> > > > > 
-> > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/imx290.txt b/Documentation/devicetree/bindings/media/i2c/imx290.txt
-> > > > > new file mode 100644
-> > > > > index 000000000000..7535b5b5b24b
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/media/i2c/imx290.txt
-> > > > > @@ -0,0 +1,51 @@
-> > > > > +* Sony IMX290 1/2.8-Inch CMOS Image Sensor
-> > > > > +
-> > > > > +The Sony IMX290 is a 1/2.8-Inch CMOS Solid-state image sensor with
-> > > > > +Square Pixel for Color Cameras. It is programmable through I2C and 4-wire
-> > > > > +interfaces. The sensor output is available via CMOS logic parallel SDR output,
-> > > > > +Low voltage LVDS DDR output and CSI-2 serial data output.
-> > > > 
-> > > > If there are three to choose from, then you should specify which one is in
-> > > > use. Given that I think chances remain slim we'd add support for the other
-> > > > two (it's certainly not ruled out though), CSI-2 could be the default. But
-> > > > this needs to be documented.
-> > > > 
-> > > 
-> > > Hmm... I'm not sure here. Bindings should describe the hardware and not the
-> > > limitations of the driver. Here as you said, the sensor can output frames
-> > > in 3 different modes/formats but the driver only supports CSI2. I can add a
-> > > note in the driver but not sure whether dt-binding is the right place or not!
-> > 
-> > I guess alternatively you could document the necessary bindings for the
-> > other two busses.
-> > 
-> > But what I'm saying here is that it's highly unlikely they'll be ever
-> > needed, and it'd be mostly a waste of time to implement that. (That said, I
-> > have nothing against the use of these busses, but I've never seen anyone
-> > using them.) Many other devices use defaults for more contentious settings.
-> > 
+> On Tue, Aug 13, 2019 at 01:48:21PM +0200, Pavel Machek wrote:
+
+[]
+
+> There is something needing to be concerned, is, whether namei() should
+> report any potential on-disk issues or just return -ENOENT for these
+> corrupted dirs, I think I tend to use the latter one.
+>
+
+Add a word, I didn't mean for any cases return -ENOENT, just this
+one only since this is the hottest path in every lookup. Other
+places should have reported any potential issues as much as
+possible if it finds.
+
+Thanks,
+Gao Xiang
+ 
 > 
-> Agree with you but my question was, whether I could document the supported
-> mode in bindings or not! I have seen comments from Rob in the past that the
-> binding should not document the limitations of the driver. But anyway, one
-> can infer from the current binding that only CSI2 is supported for now, it's
-> just stating it explicitly makes me doubtful!
-
-I think it could be e.g.:
-
-The CSI-2 bus is the default. No bindings have been defined for the other
-busses.
-
-...
-
-> > > > I suppose you can't change the lane order, so clock-lanes is redundant
-> > > > (don't use it in the example) and data-lanes should be monotonically
-> > > > incrementing series from 1 to 4.
-> > > > 
-> > > 
-> > > We can change the order and the example here illustrates how it has been
-> > > wired in FRAMOS module. If I change the lane order like you said, it won't
-> > > work.
 > > 
-> > I highly doubt that. Neither the driver nor the sensor uses the lane
-> > ordering information.
-> > 
+> > 								Pavel
+> > -- 
+> > DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+> > HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 > 
-> Agree but CSI2 host will need this informtion, right? Please correct me if
-> I'm wrong!
-
-The CSI-2 receiver may need that configuration, but it's not addressed by a
-sensor's binding documentation (it's configured in the endpoint on the
-receiver's side).
-
--- 
-Sakari Ailus
+> 
