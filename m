@@ -2,149 +2,78 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11DFC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD10C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 918DC20840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:19:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YxnsGrUD"
+	by mail.kernel.org (Postfix) with ESMTP id 243112054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:21:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbfHMQTf (ORCPT
+        id S1728578AbfHMQVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 12:19:35 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:33022 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727211AbfHMQTf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 12:19:35 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7DG8mQW196607;
-        Tue, 13 Aug 2019 16:19:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : subject
- : from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=corp-2019-08-05;
- bh=HTb/5J0BxVV9yBflGge7ur7d2g2RQgG9Szn5YAC5Qi4=;
- b=YxnsGrUDIMQnzffjadT6wZJ1O7v7EcxMSFdST2astU26n1dhaoXZ+dGbGYWFWGsMpCn4
- iiXWn0sd+JxeRckdCxllKWddBRgCpFVkShEuBQt7czpK6EZCBjX8WLScT1s3VdyBetU+
- NhYwMeKuhZIouo2tua4Kprwfqvk7A09fWLasW8wcCmr8kYtOlsGyyqc3Ct6k2u4mZAQz
- RRcXVUzlyPOkAWQ0apgOv7imzoixgU16YIVkVQfAV2J7elRl0ecQP3/ecbL1Y4urLMVO
- D9qCZKaYKz7qX7LUBXaPd4wwL+TNnQYJTNX1+HKFJn9ncjC8v4lM67zvSTIQ5/1TjZR/ Vw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2u9nvp7ffp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 16:19:10 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7DG8PSe111097;
-        Tue, 13 Aug 2019 16:19:10 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2ubwrg68be-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 16:19:10 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7DGJ7xS032677;
-        Tue, 13 Aug 2019 16:19:07 GMT
-Received: from asu (/92.220.18.196)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 13 Aug 2019 09:19:06 -0700
-Message-ID: <14b99d26a4cff1c813c92818dc1234007fa06fc9.camel@oracle.com>
-Subject: Re: [RFC 01/19] kbuild: Fixes to rules for host-cshlib and
- host-cxxshlib
-From:   Knut Omang <knut.omang@oracle.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shreyans Devendra Doshi <0xinfosect0r@gmail.com>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Hidenori Yamaji <hidenori.yamaji@sony.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Timothy Bird <Tim.Bird@sony.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Daniel Vetter <daniel@ffwll.ch>,
-        Stephen Boyd <sboyd@kernel.org>
-Date:   Tue, 13 Aug 2019 18:19:01 +0200
-In-Reply-To: <CAK7LNASX4jPRxRxD+JafAfKqjck=x27HuHZgPV1VFfW8MzcwZA@mail.gmail.com>
-References: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
-         <be2c361eac49ded2848b2a555b75e30cc3c24e71.1565676440.git-series.knut.omang@oracle.com>
-         <CAK7LNASX4jPRxRxD+JafAfKqjck=x27HuHZgPV1VFfW8MzcwZA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 13 Aug 2019 12:21:44 -0400
+Received: from mga18.intel.com ([134.134.136.126]:9598 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728172AbfHMQVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 12:21:43 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 09:21:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
+   d="scan'208";a="205137067"
+Received: from um.fi.intel.com (HELO localhost) ([10.237.72.183])
+  by fmsmga002.fm.intel.com with ESMTP; 13 Aug 2019 09:21:39 -0700
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        kan.liang@linux.intel.com, Adrian Hunter <adrian.hunter@intel.com>,
+        alexander.shishkin@linux.intel.com
+Subject: Re: [PATCH v6 7/7] perf intel-pt: Add brief documentation for PEBS via Intel PT
+In-Reply-To: <20190813141453.GB3754@redhat.com>
+References: <20190806084606.4021-1-alexander.shishkin@linux.intel.com> <20190806084606.4021-8-alexander.shishkin@linux.intel.com> <20190813135149.GA3754@redhat.com> <87imr12m9x.fsf@ashishki-desk.ger.corp.intel.com> <20190813141453.GB3754@redhat.com>
+Date:   Tue, 13 Aug 2019 19:21:39 +0300
+Message-ID: <87ftm52fzg.fsf@ashishki-desk.ger.corp.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9348 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908130161
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9348 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908130161
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-08-13 at 23:01 +0900, Masahiro Yamada wrote:
-> On Tue, Aug 13, 2019 at 3:13 PM Knut Omang <knut.omang@oracle.com> wrote:
-> >
-> > C++ libraries interfacing to C APIs might sometimes need some glue
-> > logic more easily written in C.
-> > Allow a C++ library to also contain 0 or more C objects.
-> >
-> > Also fix rules for both C and C++ shared libraries:
-> > - C++ shared libraries depended on .c instead of .cc files
-> > - Rules were referenced as -objs instead of the intended
-> >   -cobjs and -cxxobjs following the pattern from hostprogs*.
-> >
-> > Signed-off-by: Knut Omang <knut.omang@oracle.com>
-> 
-> 
-> How is this patch related to the rest of this series?
+Arnaldo Carvalho de Melo <acme@redhat.com> writes:
 
-This is just my (likely naive) way I to get what I had working 
-using autotools in the Github version of KTF) translated into something 
-comparable using kbuild only. We need to build a shared library consisting 
-of a few C++ files and a very simple C file, and a couple of simple binaries, 
-and the rule in there does seem to take .c files and subject them to the 
-C++ compiler, which makes this difficult to achieve?
+> I've just blindly followed the provided documentation :)
 
-> This patch breaks GCC-plugins.
-> Did you really compile-test this patch before the submission?
+Yes, I should have checked it also before I sent it out. :)
 
-Sorry for my ignorance here:
-I ran through the kernel build and installed the resulting kernel 
-on a VM that I used to test this, if that's what you are asking 
-about?
+> So you say I should have tried this instead:
+>
+>   # perf record -c 10000 -e '{intel_pt/branch=0/,cycles/aux-output/ppp}' uname
 
-Do I need some unusual .config options or run a special make target 
-to trigger the problem you see?
+Right. For the purposes of illustrating the error condition, you can
+probably drop the '-c ...' and 'branch=0' also, but either way is fine.
 
-I used a recent Fedora config with default values for new options,
-and ran the normal default make target (also with O=) and make selftests 
-to test the patch itself.
+>   Error:
+>   The 'aux_output' feature is not supported, update the kernel.
+
+Or it's not supported by the hardware. I don't think we make a
+distinction at the moment. You can tell if it's available from dmesg,
+but not otherwise.
+
+>   #
+>
+> Or with leader sampling?
+>
+>   # perf record -c 10000 -e '{intel_pt/branch=0/,cycles/aux-output/ppp}:S' uname
+
+Not sure if we should even allow this. Maybe Adrian can chime in.
 
 Thanks,
-Knut
-
-> --
-> Best Regards
-> 
-> Masahiro Yamada
-
+--
+Alex
