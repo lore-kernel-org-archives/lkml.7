@@ -2,167 +2,208 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00592C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9A1C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCB1620679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A46420679
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:44:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oNyITElN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="odKCFzez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729271AbfHMNoJ (ORCPT
+        id S1729285AbfHMNoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:44:09 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38155 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728338AbfHMNoJ (ORCPT
+        Tue, 13 Aug 2019 09:44:13 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37980 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729169AbfHMNoL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:44:09 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r20so22722494ota.5
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:44:08 -0700 (PDT)
+        Tue, 13 Aug 2019 09:44:11 -0400
+Received: by mail-pg1-f195.google.com with SMTP id e11so725161pga.5
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:44:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=G+G9l6sHBySdRwXOFFe8DEk9Xv/ufJQ2kG5hgA77tBk=;
-        b=oNyITElNlRS5IKoO27dbnlQeDTR3di9cBknbLl/TzRy0OfFrN7FrszKKF9RogU+82h
-         dh650Zy/aJ4tb2PDVCTCfpkkEtuK7CP6wyvhe59rsHuW4ArpqsV5CicnCSEDxJvq8knl
-         pxnMGex44S9+BkbN+5C35qqGSCMt3pRK06ciJuCeUc2AuQ1Gyy/RH5yzkEcWx2Zp0ykC
-         nP8+N08rETqiN+2n5IEgRGCOBFtUKkdarfGWJvBcf464iZJc5meuswLu6uVksgkDyLtR
-         I+FyVSHqKfTjSTFMaRiP0la+7BNZVziBcovbP5SIe7+1EiEDcVAHrjaSYDSusCvhisMx
-         6OTQ==
+         :cc;
+        bh=0CRyMeS/Mrus+6z29I+wc+bFKUyv5pLPQRQZcJjNIt4=;
+        b=odKCFzezdljWNojiREGSDl50miEt47GGCvHGfPbll0ZnegkreUq+ZshrEVCT7BsR9f
+         XIorHucFgyC16lgMnYc351KLKP4RPMig/afn1C0yazjvoUuKqU6eOgEImT+tw1wBPAOg
+         y7pREeRPIquzfOO1hRAwKH1I/Q2DH6POqVI+KUojLY41XSQRh+OiYP5DfTIjT1YtZSXj
+         aOgFGY1xTfLW5aSbU/lZxz3wCUfcHWqBIUpunRS6rZD0/gSKVfEuq3KjrKzI8ktMXBsJ
+         VpUGzTO5BfpBE1IPUzyoJBKHtX488aTbK66NDrMcZyXVoYZeisprgmOPKOz0iwO+xgSr
+         /4Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=G+G9l6sHBySdRwXOFFe8DEk9Xv/ufJQ2kG5hgA77tBk=;
-        b=e5TqLQRIMQj7+s8cCPxwO8GqkL6iA/E5hpGvmxN212Tka2kmU1t0IjDek8m+Cp4QcJ
-         b+I9b+c2G3fid/sfLrsy7GsJ3nqVz0ixsjPZRy22jHpUOl8Jv97NC0L9DkhjczpDge+f
-         bwNzzAe+NWE5KpOTnkeA2xj6xFGfdzaCrRB3LrohCkspsIPnpRz3ooReyyPbJW54pA0y
-         PJrI0VYsEgy4G/k5AQ1PuFsPXPeNP/WLryR//Um+dk7V5jg0+/6KsZQzDwuayxgGHMHv
-         2lGo+nR6dc7scYEmv1CU5khhibN4PwUzS1gtsqH1UedD6murLH1E26F4a3MSfgWElhLO
-         3Rxg==
-X-Gm-Message-State: APjAAAUAtPp5XpxGOXeixKVz0qZvmpyYMM+HisqELZ8UOZuiFq+y4SLl
-        HwoyWE4BVGbnZPd4ksXKJpnzPTXgqlaqLZ+JvS7baw==
-X-Google-Smtp-Source: APXvYqxsl0OjYU2QpOHrN2OzlJzdHW5Wiwko6BTDqu1Xxe8c8ISrQKbzx5myTiJVU5yAF7c/V/QpovgcR7IAVS7lIKo=
-X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr22258479otk.145.1565703848169;
- Tue, 13 Aug 2019 06:44:08 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=0CRyMeS/Mrus+6z29I+wc+bFKUyv5pLPQRQZcJjNIt4=;
+        b=DrYKP/P2SVyNdyexfetYJDbstFTaqJPdhUbypAVnVCKS1FOhBxZ4XajgBgzrAzwGgQ
+         0f4kwhPeuCGEhe6AJoXuQGXpvWhPzmHVRrjqwHNdj4BtmUgQu1Z/vhzeTz6PpdjutA0k
+         Tc3374WeUAfKddNbxEq5OheCd/2g9lNEAEbplxX1+duBQRf4orwefJTUtx5m7r/jCzKp
+         8Vd7gD4CzWE8N+oMs7HfhudzHAeR+F0LAIu9btpvd0k45HCy9G1zkMi3v50VauWhzGzg
+         VBdGQ6mNBSahq64HiO+XG38zPXHM97qK9AgvZ2ANm43bPAbVWcro7Q00/+Iqia1fIXrh
+         j3Vw==
+X-Gm-Message-State: APjAAAXIo75XXA1K89hQ1XDcHr7oWJLc2y8r51N5iZrLETy50dYT2NrH
+        ID6RuYG8GKanJUnaE4Pp7i9EeMUVVuLY14h83ieVGg==
+X-Google-Smtp-Source: APXvYqzE5Uhlq4Ulu63SZVHRYbTfDIA0gNBZo+oLd6oVs9hi66p9Zw68q0wBy4lC2TqXBYXSIoqcRwZ/1WKD/LjVLpY=
+X-Received: by 2002:a17:90a:c20f:: with SMTP id e15mr2268251pjt.123.1565703849569;
+ Tue, 13 Aug 2019 06:44:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <6a38a3655bc8100764d85cb04dea5c2546a311e1.1565168564.git.baolin.wang@linaro.org>
- <40127356a1acd1f2ff1be1d8a120b305a4e17af4.1565168564.git.baolin.wang@linaro.org>
- <20190809091013.vguj4wty7qiab64t@pengutronix.de> <CAMz4kuLQsrBWjta1s=ZRPgxUd0_+_f-GbJV138tccuMLg2XCLA@mail.gmail.com>
-In-Reply-To: <CAMz4kuLQsrBWjta1s=ZRPgxUd0_+_f-GbJV138tccuMLg2XCLA@mail.gmail.com>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Tue, 13 Aug 2019 21:43:56 +0800
-Message-ID: <CAMz4kuL-YFpV-JxAq2cM2=vKo1AUU2uWzrfG6SXG0NFqzOnq3Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pwm: sprd: Add Spreadtrum PWM support
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
+References: <000000000000333f53058fb33243@google.com>
+In-Reply-To: <000000000000333f53058fb33243@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 13 Aug 2019 15:43:58 +0200
+Message-ID: <CAAeHK+xYSPwq8uroMZ9_9rf0uCr7Hac61fdGvcwpFoLH6939qA@mail.gmail.com>
+Subject: Re: KASAN: out-of-bounds Read in hidraw_ioctl
+To:     syzbot <syzbot+f817d84b72194c4a5fe2@syzkaller.appspotmail.com>
+Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe,
+On Fri, Aug 9, 2019 at 8:18 PM syzbot
+<syzbot+f817d84b72194c4a5fe2@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=126120e2600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
+> dashboard link: https://syzkaller.appspot.com/bug?extid=f817d84b72194c4a5fe2
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>
+> Unfortunately, I don't have any reproducer for this crash yet.
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+f817d84b72194c4a5fe2@syzkaller.appspotmail.com
+>
+> ==================================================================
+> BUG: KASAN: out-of-bounds in hidraw_ioctl+0x609/0xae0
+> drivers/hid/hidraw.c:380
+> Read of size 4 at addr ffff8881cb9fc018 by task syz-executor.1/3309
+>
+> CPU: 1 PID: 3309 Comm: syz-executor.1 Not tainted 5.3.0-rc2+ #25
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xca/0x13e lib/dump_stack.c:113
+>   print_address_description+0x6a/0x32c mm/kasan/report.c:351
+>   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
+>   kasan_report+0xe/0x12 mm/kasan/common.c:612
+>   hidraw_ioctl+0x609/0xae0 drivers/hid/hidraw.c:380
+>   vfs_ioctl fs/ioctl.c:46 [inline]
+>   file_ioctl fs/ioctl.c:509 [inline]
+>   do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
+>   ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
+>   __do_sys_ioctl fs/ioctl.c:720 [inline]
+>   __se_sys_ioctl fs/ioctl.c:718 [inline]
+>   __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
+>   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x459829
+> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007f877bde2c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
+> RDX: 0000000020001300 RSI: 0000000080044801 RDI: 0000000000000004
+> RBP: 000000000075c118 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f877bde36d4
+> R13: 00000000004c2206 R14: 00000000004d5610 R15: 00000000ffffffff
+>
+> Allocated by task 2751:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:69
+>   set_track mm/kasan/common.c:77 [inline]
+>   __kasan_kmalloc mm/kasan/common.c:487 [inline]
+>   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
+>   slab_post_alloc_hook mm/slab.h:520 [inline]
+>   slab_alloc_node mm/slub.c:2766 [inline]
+>   __kmalloc_node_track_caller+0xd0/0x230 mm/slub.c:4361
+>   __kmalloc_reserve.isra.0+0x39/0xe0 net/core/skbuff.c:141
+>   __alloc_skb+0xef/0x5a0 net/core/skbuff.c:209
+>   alloc_skb include/linux/skbuff.h:1055 [inline]
+>   alloc_uevent_skb+0x7b/0x210 lib/kobject_uevent.c:289
+>   uevent_net_broadcast_untagged lib/kobject_uevent.c:325 [inline]
+>   kobject_uevent_net_broadcast lib/kobject_uevent.c:408 [inline]
+>   kobject_uevent_env+0x8ee/0x1160 lib/kobject_uevent.c:592
+>   device_del+0x6b2/0xb10 drivers/base/core.c:2298
+>   usb_disconnect+0x4c3/0x8d0 drivers/usb/core/hub.c:2225
+>   hub_port_connect drivers/usb/core/hub.c:4949 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+>   port_event drivers/usb/core/hub.c:5359 [inline]
+>   hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
+>   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+>   kthread+0x318/0x420 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> Freed by task 238:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:69
+>   set_track mm/kasan/common.c:77 [inline]
+>   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
+>   slab_free_hook mm/slub.c:1423 [inline]
+>   slab_free_freelist_hook mm/slub.c:1470 [inline]
+>   slab_free mm/slub.c:3012 [inline]
+>   kfree+0xe4/0x2f0 mm/slub.c:3953
+>   skb_free_head+0x8b/0xa0 net/core/skbuff.c:591
+>   skb_release_data+0x41f/0x7c0 net/core/skbuff.c:611
+>   skb_release_all+0x46/0x60 net/core/skbuff.c:665
+>   __kfree_skb net/core/skbuff.c:679 [inline]
+>   consume_skb net/core/skbuff.c:838 [inline]
+>   consume_skb+0xd9/0x320 net/core/skbuff.c:832
+>   skb_free_datagram+0x16/0xf0 net/core/datagram.c:328
+>   netlink_recvmsg+0x65e/0xee0 net/netlink/af_netlink.c:1996
+>   sock_recvmsg_nosec net/socket.c:871 [inline]
+>   sock_recvmsg net/socket.c:889 [inline]
+>   sock_recvmsg+0xca/0x110 net/socket.c:885
+>   ___sys_recvmsg+0x271/0x5a0 net/socket.c:2480
+>   __sys_recvmsg+0xe9/0x1b0 net/socket.c:2537
+>   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> The buggy address belongs to the object at ffff8881cb9fc000
+>   which belongs to the cache kmalloc-1k of size 1024
+> The buggy address is located 24 bytes inside of
+>   1024-byte region [ffff8881cb9fc000, ffff8881cb9fc400)
+> The buggy address belongs to the page:
+> page:ffffea00072e7f00 refcount:1 mapcount:0 mapping:ffff8881da002280
+> index:0x0 compound_mapcount: 0
+> flags: 0x200000000010200(slab|head)
+> raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da002280
+> raw: 0000000000000000 00000000000e000e 00000001ffffffff 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>   ffff8881cb9fbf00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>   ffff8881cb9fbf80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > ffff8881cb9fc000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                              ^
+>   ffff8881cb9fc080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   ffff8881cb9fc100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ==================================================================
 
-On Fri, 9 Aug 2019 at 18:06, Baolin Wang <baolin.wang@linaro.org> wrote:
->
->  Hi Uwe,
->
-> On Fri, 9 Aug 2019 at 17:10, Uwe Kleine-K=C3=B6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> >
-> > On Thu, Aug 08, 2019 at 04:59:39PM +0800, Baolin Wang wrote:
-> > > From: Neo Hou <neo.hou@unisoc.com>
-> > >
-> > > This patch adds the Spreadtrum PWM support, which provides maximum 4
-> > > channels.
-> > >
-> > > Signed-off-by: Neo Hou <neo.hou@unisoc.com>
-> > > Co-developed-by: Baolin Wang <baolin.wang@linaro.org>
-> > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> > > ---
-> > >  drivers/pwm/Kconfig    |   10 ++
-> > >  drivers/pwm/Makefile   |    1 +
-> > >  drivers/pwm/pwm-sprd.c |  311 ++++++++++++++++++++++++++++++++++++++=
-++++++++++
-> > >  3 files changed, 322 insertions(+)
-> > >  create mode 100644 drivers/pwm/pwm-sprd.c
-> > >
-> > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> > > index a7e5751..4963b4d 100644
-> > > --- a/drivers/pwm/Kconfig
-> > > +++ b/drivers/pwm/Kconfig
-> > > @@ -423,6 +423,16 @@ config PWM_SPEAR
-> > >         To compile this driver as a module, choose M here: the module
-> > >         will be called pwm-spear.
-> > >
-> > > +config PWM_SPRD
-> > > +     tristate "Spreadtrum PWM support"
-> > > +     depends on ARCH_SPRD || COMPILE_TEST
-> >
-> > I think you need
-> >
-> >         depends on HAS_IOMEM
->
-> OK.
->
-> >
-> > > +     help
-> > > +       Generic PWM framework driver for the PWM controller on
-> > > +       Spreadtrum SoCs.
-> > > +
-> > > +       To compile this driver as a module, choose M here: the module
-> > > +       will be called pwm-sprd.
-> > > +
-> > >  config PWM_STI
-> > >       tristate "STiH4xx PWM support"
-> > >       depends on ARCH_STI
-> > > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> > > index 76b555b..26326ad 100644
-> > > --- a/drivers/pwm/Makefile
-> > > +++ b/drivers/pwm/Makefile
-> > > @@ -41,6 +41,7 @@ obj-$(CONFIG_PWM_ROCKCHIP)  +=3D pwm-rockchip.o
-> > >  obj-$(CONFIG_PWM_SAMSUNG)    +=3D pwm-samsung.o
-> > >  obj-$(CONFIG_PWM_SIFIVE)     +=3D pwm-sifive.o
-> > >  obj-$(CONFIG_PWM_SPEAR)              +=3D pwm-spear.o
-> > > +obj-$(CONFIG_PWM_SPRD)               +=3D pwm-sprd.o
-> > >  obj-$(CONFIG_PWM_STI)                +=3D pwm-sti.o
-> > >  obj-$(CONFIG_PWM_STM32)              +=3D pwm-stm32.o
-> > >  obj-$(CONFIG_PWM_STM32_LP)   +=3D pwm-stm32-lp.o
-> > > diff --git a/drivers/pwm/pwm-sprd.c b/drivers/pwm/pwm-sprd.c
-> > > new file mode 100644
-> > > index 0000000..f6fc793
-> > > --- /dev/null
-> > > +++ b/drivers/pwm/pwm-sprd.c
-> > > @@ -0,0 +1,311 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Copyright (C) 2019 Spreadtrum Communications Inc.
-> >
-> > If there is a publicly available reference manual available, please add
-> > a link to it here.
->
-> Sure.
+#syz dup: BUG: bad usercopy in hidraw_ioctl
 
-Sorry, we have not supplied a publicly available reference manual now.
-So no change for this comment in next version.
-
---=20
-Baolin Wang
-Best Regards
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
