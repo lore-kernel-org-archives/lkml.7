@@ -4,20 +4,21 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DA5C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 071F4C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA9A2173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D993C20840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:04:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfHMVES (ORCPT
+        id S1727432AbfHMVEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:04:18 -0400
-Received: from mga09.intel.com ([134.134.136.24]:18664 "EHLO mga09.intel.com"
+        Tue, 13 Aug 2019 17:04:21 -0400
+Received: from mga09.intel.com ([134.134.136.24]:18661 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727252AbfHMVDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727253AbfHMVDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 13 Aug 2019 17:03:44 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,9 +26,9 @@ Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 14:03:42 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="194275998"
+   d="scan'208";a="194276005"
 Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Aug 2019 14:03:41 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 13 Aug 2019 14:03:42 -0700
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
 To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -54,9 +55,9 @@ To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
         Dave Martin <Dave.Martin@arm.com>
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v8 11/14] x86/vsyscall/64: Fixup shadow stack and branch tracking for vsyscall
-Date:   Tue, 13 Aug 2019 13:53:56 -0700
-Message-Id: <20190813205359.12196-12-yu-cheng.yu@intel.com>
+Subject: [PATCH v8 13/14] x86: Discard .note.gnu.property sections
+Date:   Tue, 13 Aug 2019 13:53:58 -0700
+Message-Id: <20190813205359.12196-14-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190813205359.12196-1-yu-cheng.yu@intel.com>
 References: <20190813205359.12196-1-yu-cheng.yu@intel.com>
@@ -65,74 +66,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When emulating a RET, also unwind the task's shadow stack and cancel
-the current branch tracking status.
+From: "H.J. Lu" <hjl.tools@gmail.com>
 
+With the command-line option, -mx86-used-note=yes, the x86 assembler
+in binutils 2.32 and above generates a program property note in a note
+section, .note.gnu.property, to encode used x86 ISAs and features.
+To exclude .note.gnu.property sections from NOTE segment in x86 kernel
+linker script:
+
+PHDRS {
+ text PT_LOAD FLAGS(5);
+ data PT_LOAD FLAGS(6);
+ percpu PT_LOAD FLAGS(6);
+ init PT_LOAD FLAGS(7);
+ note PT_NOTE FLAGS(0);
+}
+SECTIONS
+{
+...
+ .notes : AT(ADDR(.notes) - 0xffffffff80000000) { __start_notes = .; KEEP(*(.not
+e.*)) __stop_notes = .; } :text :note
+...
+}
+
+this patch discards .note.gnu.property sections in kernel linker script
+by adding
+
+ /DISCARD/ : {
+  *(.note.gnu.property)
+ }
+
+before .notes sections.  Since .exit.text and .exit.data sections are
+discarded at runtime, it undefines EXIT_TEXT and EXIT_DATA to exclude
+.exit.text and .exit.data sections from default discarded sections.
+
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 ---
- arch/x86/entry/vsyscall/vsyscall_64.c    | 29 ++++++++++++++++++++++++
- arch/x86/entry/vsyscall/vsyscall_trace.h |  1 +
- 2 files changed, 30 insertions(+)
+ arch/x86/kernel/vmlinux.lds.S | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
-index e7c596dea947..27ff81f75c82 100644
---- a/arch/x86/entry/vsyscall/vsyscall_64.c
-+++ b/arch/x86/entry/vsyscall/vsyscall_64.c
-@@ -38,6 +38,9 @@
- #include <asm/fixmap.h>
- #include <asm/traps.h>
- #include <asm/paravirt.h>
-+#include <asm/fpu/xstate.h>
-+#include <asm/fpu/types.h>
-+#include <asm/fpu/internal.h>
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index e2feacf921a0..5ef137493a85 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -146,6 +146,10 @@ SECTIONS
+ 		_etext = .;
+ 	} :text = 0x9090
  
- #define CREATE_TRACE_POINTS
- #include "vsyscall_trace.h"
-@@ -286,6 +289,32 @@ bool emulate_vsyscall(unsigned long error_code,
- 	/* Emulate a ret instruction. */
- 	regs->ip = caller;
- 	regs->sp += 8;
-+
-+	/* Unwind shadow stack. */
-+
-+#ifdef CONFIG_X86_INTEL_SHADOW_STACK_USER
-+	if (current->thread.cet.shstk_enabled) {
-+		u64 r;
-+
-+		modify_fpu_regs_begin();
-+		rdmsrl(MSR_IA32_PL3_SSP, r);
-+		wrmsrl(MSR_IA32_PL3_SSP, r + 8);
-+		modify_fpu_regs_end();
++	/* .note.gnu.property sections should be discarded */
++	/DISCARD/ : {
++		*(.note.gnu.property)
 +	}
-+#endif
-+
-+	/* Fixup branch tracking */
-+#ifdef CONFIG_X86_INTEL_BRANCH_TRACKING_USER
-+	if (current->thread.cet.ibt_enabled) {
-+		u64 r;
-+
-+		modify_fpu_regs_begin();
-+		rdmsrl(MSR_IA32_U_CET, r);
-+		wrmsrl(MSR_IA32_U_CET, r & ~MSR_IA32_CET_WAIT_ENDBR);
-+		modify_fpu_regs_end();
-+	}
-+#endif
-+
- 	return true;
+ 	NOTES :text :note
  
- sigsegv:
-diff --git a/arch/x86/entry/vsyscall/vsyscall_trace.h b/arch/x86/entry/vsyscall/vsyscall_trace.h
-index 3c3f9765a85c..7aa2101ada44 100644
---- a/arch/x86/entry/vsyscall/vsyscall_trace.h
-+++ b/arch/x86/entry/vsyscall/vsyscall_trace.h
-@@ -25,6 +25,7 @@ TRACE_EVENT(emulate_vsyscall,
- #endif
+ 	EXCEPTION_TABLE(16) :text = 0x9090
+@@ -415,6 +419,12 @@ SECTIONS
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
  
- #undef TRACE_INCLUDE_PATH
-+#undef TRACE_INCLUDE_FILE
- #define TRACE_INCLUDE_PATH ../../arch/x86/entry/vsyscall/
- #define TRACE_INCLUDE_FILE vsyscall_trace
- #include <trace/define_trace.h>
++	/* Sections to be discarded.  EXIT_TEXT and EXIT_DATA discard at
++	 * runtime, not link time. */
++#undef EXIT_TEXT
++#define EXIT_TEXT
++#undef EXIT_DATA
++#define EXIT_DATA
+ 	DISCARDS
+ 	/DISCARD/ : {
+ 		*(.eh_frame)
 -- 
 2.17.1
 
