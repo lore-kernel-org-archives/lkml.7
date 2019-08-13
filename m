@@ -2,144 +2,75 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 594D8C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681B1C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3649F20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39F6A20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:39:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729618AbfHMOix (ORCPT
+        id S1729626AbfHMOjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 10:38:53 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41322 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727768AbfHMOiw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 10:38:52 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7DEcbRd134127
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 10:38:51 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ubx5p33j3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 10:38:51 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 13 Aug 2019 15:38:50 +0100
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 13 Aug 2019 15:38:47 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7DEckeT20447612
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 14:38:47 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E2228B206B;
-        Tue, 13 Aug 2019 14:38:46 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C590EB2068;
-        Tue, 13 Aug 2019 14:38:46 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 13 Aug 2019 14:38:46 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 8094316C0A22; Tue, 13 Aug 2019 07:38:47 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 07:38:47 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: build failure after merge of the rcu tree
-Reply-To: paulmck@linux.ibm.com
-References: <20190812161236.21defb17@canb.auug.org.au>
- <20190812161934.GJ28441@linux.ibm.com>
- <20190813152511.21737e32@canb.auug.org.au>
+        Tue, 13 Aug 2019 10:39:10 -0400
+Received: from mga14.intel.com ([192.55.52.115]:24870 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727768AbfHMOjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 10:39:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 07:39:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,381,1559545200"; 
+   d="scan'208";a="194204561"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 13 Aug 2019 07:39:08 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 7EA4211C; Tue, 13 Aug 2019 17:39:07 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Matt Porter <mporter@kernel.crashing.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandre Bounine <alexandre.bounine@idt.com>
+Subject: [PATCH v1] rapidio: Make it dependent to DMADEVICES
+Date:   Tue, 13 Aug 2019 17:39:06 +0300
+Message-Id: <20190813143906.9865-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813152511.21737e32@canb.auug.org.au>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19081314-0060-0000-0000-0000036C2F42
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011588; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01246250; UDB=6.00657646; IPR=6.01027755;
- MB=3.00028160; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-13 14:38:49
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19081314-0061-0000-0000-00004A8984B8
-Message-Id: <20190813143847.GA28441@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-13_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908130156
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 03:25:11PM +1000, Stephen Rothwell wrote:
-> Hi Paul,
-> 
-> On Mon, 12 Aug 2019 09:19:34 -0700 "Paul E. McKenney" <paulmck@linux.ibm.com> wrote:
-> >
-> > Huh.  "It has been building fine for me."  I added
-> > 
-> > 	#include <uapi/asm-generic/types.h>
-> > 	#include <asm-generic/atomic-long.h>
-> > 
-> > to include/linux/rcu_segcblist.h, which hopefully fixes it at your end.
-> 
-> That did not work as I got a lot of errors from
-> include/asm-generic/atomic-long.h.  I have added the following patch
-> for today (which does build).  These errors come from having
-> CONFIG_{,KERNEL_,UAPI_}HEADER_TEST set (which allmodconfig a should do).
-> 
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Tue, 13 Aug 2019 15:12:00 +1000
-> Subject: [PATCH] rcu: use the correct includes
-> 
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+DMADEVICES option depends on HAS_DMA, and this dependency is ignored
+when DMADEVICES is being selected.
 
-Thank you, Stephen, I have merged this in with attribution.  Apologies
-for my not being with the times on this one, and "make allmodconfig" it
-will be in the future!
+Replace 'select' by 'depends on' in Kconfig for RAPIDIO_DMA_ENGINE.
 
-							Thanx, Paul
+Fixes: e42d98ebe7d7 ("rapidio: add DMA engine support for RIO data transfers")
+Cc: Alexandre Bounine <alexandre.bounine@idt.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/rapidio/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->  include/linux/rcu_segcblist.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/rcu_segcblist.h b/include/linux/rcu_segcblist.h
-> index 43e2935e8966..646759042333 100644
-> --- a/include/linux/rcu_segcblist.h
-> +++ b/include/linux/rcu_segcblist.h
-> @@ -14,8 +14,8 @@
->  #ifndef __INCLUDE_LINUX_RCU_SEGCBLIST_H
->  #define __INCLUDE_LINUX_RCU_SEGCBLIST_H
->  
-> -#include <uapi/asm-generic/types.h>
-> -#include <asm-generic/atomic-long.h>
-> +#include <linux/types.h>
-> +#include <linux/atomic.h>
->  
->  /* Simple unsegmented callback lists. */
->  struct rcu_cblist {
-> -- 
-> 2.20.1
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-
+diff --git a/drivers/rapidio/Kconfig b/drivers/rapidio/Kconfig
+index 677d1aff61b7..788e7830771b 100644
+--- a/drivers/rapidio/Kconfig
++++ b/drivers/rapidio/Kconfig
+@@ -37,7 +37,7 @@ config RAPIDIO_ENABLE_RX_TX_PORTS
+ config RAPIDIO_DMA_ENGINE
+ 	bool "DMA Engine support for RapidIO"
+ 	depends on RAPIDIO
+-	select DMADEVICES
++	depends on DMADEVICES
+ 	select DMA_ENGINE
+ 	help
+ 	  Say Y here if you want to use DMA Engine frameork for RapidIO data
+-- 
+2.20.1
 
