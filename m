@@ -2,67 +2,106 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D456C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1961C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C90F20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9949920665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:12:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IcH5DOon"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728382AbfHMSLX (ORCPT
+        id S1728422AbfHMSMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 14:11:23 -0400
-Received: from mga05.intel.com ([192.55.52.43]:40507 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728267AbfHMSLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 14:11:23 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 11:11:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="177876696"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga007.fm.intel.com with ESMTP; 13 Aug 2019 11:11:22 -0700
-Date:   Tue, 13 Aug 2019 11:11:22 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH v4 7/7] x86: KVM: svm: eliminate hardcoded RIP
- advancement from vmrun_interception()
-Message-ID: <20190813181121.GH13991@linux.intel.com>
-References: <20190813135335.25197-1-vkuznets@redhat.com>
- <20190813135335.25197-8-vkuznets@redhat.com>
+        Tue, 13 Aug 2019 14:12:10 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39772 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728345AbfHMSMJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 14:12:09 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7DIC0Ih061504;
+        Tue, 13 Aug 2019 13:12:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565719920;
+        bh=rcJORkZ6Sdyk2JGl2jXoFIyuGmwVg+r6vi7peaiEtlw=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=IcH5DOonvzv3nLDM3nm1vW+BUC0irajM0A9YqwmHZa+LIzbOfEjHwrdFn/Rrk9L2T
+         ekD2KMtoXmjE95vzRZVTO3yF+iwXryCu4MVwEJF45c3h2qE4xOf/0ErrPdTFTHU2/K
+         whAHXPbqHlmuEEkEg6V80NZATq+cLAN3M1StgEYw=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7DIC0QR004387
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 13 Aug 2019 13:12:00 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 13
+ Aug 2019 13:11:59 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 13 Aug 2019 13:11:59 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7DIBxNe051021;
+        Tue, 13 Aug 2019 13:11:59 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <tony@atomide.com>,
+        <sre@kernel.org>, <nekit1000@gmail.com>, <mpartap@gmx.net>,
+        <merlijn@wizzup.org>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v2 3/4] dt: lm3532: Add property for full scale current.
+Date:   Tue, 13 Aug 2019 13:11:53 -0500
+Message-ID: <20190813181154.6614-3-dmurphy@ti.com>
+X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
+In-Reply-To: <20190813181154.6614-1-dmurphy@ti.com>
+References: <20190813181154.6614-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813135335.25197-8-vkuznets@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 03:53:35PM +0200, Vitaly Kuznetsov wrote:
-> Just like we do with other intercepts, in vmrun_interception() we should be
-> doing kvm_skip_emulated_instruction() and not just RIP += 3. Also, it is
-> wrong to increment RIP before nested_svm_vmrun() as it can result in
-> kvm_inject_gp().
-> 
-> We can't call kvm_skip_emulated_instruction() after nested_svm_vmrun() so
-> move it inside.
-> 
-> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
+Add a property for each control bank to configure the
+full scale current setting for the device.
 
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+
+v2 - Change ti,fs-current to led-max-microamp - https://lore.kernel.org/patchwork/patch/1109501/
+
+ Documentation/devicetree/bindings/leds/leds-lm3532.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm3532.txt b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
+index c087f85ddddc..53793213dd52 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lm3532.txt
++++ b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
+@@ -62,6 +62,9 @@ Optional LED child properties:
+ 	- label : see Documentation/devicetree/bindings/leds/common.txt
+ 	- linux,default-trigger :
+ 	   see Documentation/devicetree/bindings/leds/common.txt
++	- led-max-microamp : Defines the full scale current value for each control
++			  bank.  The range is from 5000uA-29800uA in increments
++			  of 800uA.
+ 
+ Example:
+ led-controller@38 {
+@@ -85,6 +88,7 @@ led-controller@38 {
+ 		reg = <0>;
+ 		led-sources = <2>;
+ 		ti,led-mode = <1>;
++		led-max-microamp = <21800>;
+ 		label = ":backlight";
+ 		linux,default-trigger = "backlight";
+ 	};
+-- 
+2.22.0.214.g8dca754b1e
+
