@@ -2,91 +2,226 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FFAC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D86FFC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E7D2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A17792084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:50:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bHz038m5"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nxnLGmHZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbfHMRtW (ORCPT
+        id S1728192AbfHMRun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 13:49:22 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39750 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbfHMRtW (ORCPT
+        Tue, 13 Aug 2019 13:50:43 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:37508 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbfHMRun (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 13:49:22 -0400
-Received: by mail-pf1-f195.google.com with SMTP id f17so48023158pfn.6;
-        Tue, 13 Aug 2019 10:49:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=F66mmM6EpiHfgT+wmNXzuAKlf0zawQ3GnOz6AOmAuGQ=;
-        b=bHz038m5C/2FpOEmiV6MVrcdI738f1BL3zH+kWhjdIpc/3B+H7IEhBTqCF66tmHMX1
-         C+vwor+2C3z8nK/0emr237nmk2ZncKxMqw32Wm1PjqQQopt1FVnXHfsPwqumOVRXckHB
-         6bLJLY+4/vErJ5Lg5Y1yDNxxtTjnZPwBHGFtqjBLm9/Es242+7GT+X/Uc5gHKS91PM4/
-         +DlMed5bfIsfef+XwPeg+Sf9HotWs6fd0is9rDklmDKRPa8GslHhHD9nA7Nq3k+6zpVP
-         vsidKZR+tIl2Yc3HA4ftwzb9JEdJlZ1aaKoEd1t/3CYWPAk6FVQZgA1nHFUIPCcOY51p
-         ILkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=F66mmM6EpiHfgT+wmNXzuAKlf0zawQ3GnOz6AOmAuGQ=;
-        b=Fun2T+mJzUqWXOP9GUSiqaXYAYvW+P7D6wW2iPAjvzo0bTY871TxK0NPEcvYzKZtoQ
-         iUC1vE2uA34BXpQBU5rW+stcV1wkZtb4lRJkflrq5ojo2irmAROHK74N+DZF2G76HQvj
-         3m65f6g/ELS8cyuO3hNieyikp3K/PlrD4t8lYG4IEWkzULgn7iCgDxPgI4bC6WmtJCFM
-         yTA6FQkIKnwYlFT+ougVXv4xbA4wlfX3yh/fxql7XcrArQ6ZRWHggtcyL27lNPw/kTaC
-         mndGh9MeEy3gfjVlX1efp+b92CRrJhefFzhTVbkai4Ilz258yF7rCWJPLrE9hDHlJkYg
-         2h+g==
-X-Gm-Message-State: APjAAAXSg1qagzYtZ8zTs5kZyHFb23QT19TXg0RrVn5x/CBSN5ahlX02
-        zZY3YltkMpofdsDHpEVH4UE=
-X-Google-Smtp-Source: APXvYqxSIN440OuHNUQtrQGpo5lWr5OJoC/yqSvN5iAKUzLDFiFP2TPiu/T5h5+CIOFpui5kECxHZg==
-X-Received: by 2002:a17:90a:9ea:: with SMTP id 97mr3217519pjo.68.1565718561499;
-        Tue, 13 Aug 2019 10:49:21 -0700 (PDT)
-Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
-        by smtp.gmail.com with ESMTPSA id b3sm128953179pfp.65.2019.08.13.10.49.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 10:49:20 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 10:49:18 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+        Tue, 13 Aug 2019 13:50:43 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7DHnXTS055863;
+        Tue, 13 Aug 2019 12:49:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565718573;
+        bh=b3NXbVt7j4BNDJSrXSjS89196MKYwtPw38V5K9ccPys=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nxnLGmHZHQ6/itQTUurYXPSohuD5ehSgQfONEs5mXo6aC0EU4hVxXiqETzpKLZfwC
+         uHVRC/VlOd9ARZ8VVt+nxWwxXTZpKFFVrDfw7dNIS1VMgQ46M/HOqv2ASKxraBIvtf
+         WTpd+jXTZRsWLyP5ksdAlA4OfB4ZPWcVZnhmQ5jo=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7DHnXd2108561
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 13 Aug 2019 12:49:33 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 13
+ Aug 2019 12:49:33 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 13 Aug 2019 12:49:33 -0500
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7DHnWZY068892;
+        Tue, 13 Aug 2019 12:49:33 -0500
+Subject: Re: [PATCH v2 4/6] irqchip/irq-pruss-intc: Add helper functions to
+ configure internal mapping
+To:     David Lechner <david@lechnology.com>,
+        Marc Zyngier <maz@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Christopher S . Hall" <christopher.s.hall@intel.com>
-Subject: Re: [RFC PATCH 0/5] PTP: add support for Intel's TGPIO controller
-Message-ID: <20190813174918.GD3207@localhost>
-References: <20190716072038.8408-1-felipe.balbi@linux.intel.com>
- <20190718195040.GL25635@lunn.ch>
- <87h87isci5.fsf@linux.intel.com>
- <20190719132021.GC24930@lunn.ch>
- <87wofhy05t.fsf@gmail.com>
+        Jason Cooper <jason@lakedaemon.net>
+CC:     Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>,
+        "Andrew F. Davis" <afd@ti.com>, Roger Quadros <rogerq@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190731224149.11153-1-s-anna@ti.com>
+ <20190731224149.11153-5-s-anna@ti.com>
+ <1a63eb50-7c5c-eb3d-3cbe-bd1cc59ce3fe@kernel.org>
+ <89abc27f-5d02-a8ce-df0e-b185c2a647cd@ti.com>
+ <1ac233f6-f3a3-6cec-9ad2-49e985fdfaca@lechnology.com>
+ <6c17875e-496d-1277-278f-239d3a9d8ca2@ti.com>
+ <124b03b8-f8e7-682b-8767-13a739329da2@lechnology.com>
+ <fed95ae1-86a5-af75-c017-08b19e8e743b@ti.com>
+ <de94d398-4768-17b0-b9ef-a66d43d34ae3@lechnology.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <6ccdbdbc-cc84-0b2e-87af-e69252b4074a@ti.com>
+Date:   Tue, 13 Aug 2019 12:49:32 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87wofhy05t.fsf@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <de94d398-4768-17b0-b9ef-a66d43d34ae3@lechnology.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 10:50:06AM +0300, Felipe Balbi wrote:
-> If we do that we make it difficult for those reading specification and
-> trying to find the matching driver.
+Hi David,
 
-+1
+On 8/13/19 9:26 AM, David Lechner wrote:
+> On 8/12/19 2:39 PM, Suman Anna wrote:
+>> Hi David,
+>>
+>> On 8/8/19 12:09 PM, David Lechner wrote:
+>>> On 8/2/19 4:26 PM, Suman Anna wrote:
+>>>> Point is different applications might use mapping differently as per
+>>>> their firmware and driver/application design and their split across one
+>>>> or more PRUs (design by contract). And we need to set this up at
+>>>> runtime
+>>>> when the application driver is getting run. We will have either the
+>>>> Soft
+>>>> UART or the Ethernet running at a time depending on the end goal
+>>>> desired
+>>>>
+>>>>> I have an idea that we can use multiple struct irq_domains to make
+>>>>> this work in the existing IRQ framework, but it would be helpful to
+>>>>> know more about the bigger picture first.
+>>>>
+>>>> Yeah, would be great if there is a way this can be solved without
+>>>> having
+>>>> to introduce additional API.
+>>>>
+>>>
+>>>
+>>> Here is what I came up with to use existing IRQ APIs to implement event
+>>> mapping.
+>>> Basically it is the same as my previous suggestion [1], with the
+>>> addition of
+>>> multiple IRQ domains.
+>>
+>> First of all, many thanks for looking into the problem and providing
+>> patches for the alternate solutions. If we were to not use any exported
+>> functions, this approach does seem to be a viable solution. I am going
+>> to play around with both [1] and this patch with all our existing
+>> usecases and see if I run into any issues.
+>>
+>> So, w.r.t this patch compared to [1], is the multiple IRQ domain solving
+>> anything specifically? Our main issue is the re-purposing of a event
+>> (and its mapping depending on the application), and the same issue will
+>> remain whether we have multiple domains or not. Also, now we would
+>> expect an event to migrate between different domains based on its usage.
+> 
+> The only thing using multiple IRQ domains gets us is that it allows us to
+> have multiple IRQ descriptors (virq) for a single PRU event. In other
+> words, if we needed to map a single system event to both a PRU core and
+> the MCU interrupt controller at the same time, then we would need separate
+> IRQ domains to do this. I we would never need to do something like this,
+> then we don't the IRQ domains.
 
-Thanks,
-Richard
+Yeah, this is not a realistic usecase. A event can only be mapped to a
+single channel which in turn can be mapped to only a single output
+interrupt and we expect this to be processed by only a single entity
+even if it may be connected to multiple processors. That is going to be
+a system integration partitioning design choice. This is where the
+irqs-shared and irqs-reserved logic comes in, so that MPU doesn't deal
+with that interrupt line if it is expected to be handled by a different
+processor.
+
+> 
+> Previously, you said "We can have two different applications use the same
+> event with different mappings." So I took this to mean that the events
+> would actually be mapped in hardware at the same time, but now I
+> understand it to just mean that a single firmware blob could contain
+> multiple mappings that contain the same events, but won't actually be used
+> at the same time. So if this is the case, then we probably don't need to
+> mess with IRQ domains.
+
+The different applications (like PRU Dual-EMAC or PRU Soft UART I
+mentioned earlier) will indeed be running at separate times, PRU cores
+are a very limited resource, so it is treated as an exclusive resource.
+The INTC is expected to be programmed as per the application running at
+a given time. We also expect the firmware blob to change as per the
+application.
+
+> 
+> 
+>>
+>>>
+>>> The idea is that each external interrupt controller (or DMA controller,
+>>> etc.)
+>>> that is connected to the PRUSS interrupt controller is considered an
+>>> interrupt
+>>> domain. One of the objections to my previous patch was that we could
+>>> only have
+>>> one IRQ descriptor per event. Now we can have one descriptor per
+>>> event per
+>>> domain.
+>>>
+>>> I am still proposing that we use the interrupt-cells and identical
+>>> vendor
+>>> resource data structures in the PRU firmware be used to provide the
+>>> mapping
+>>> information. (As a side note, I still think it is important to include
+>>> EVTSEL
+>>> on AM18xx in order to fully describe the event.)
+>>
+>> W.r.t EVTSEL, it is a global value and applies to a range of events. I
+>> have another equivalent register/functionality on most of the other SoCs
+>> as well (a register in PRUSS_CFG space) that muxes standard events vs
+>> MII_RT events. Again, that is limited to only a subset of all the system
+>> events. So, should this continue to be a per event specifier, it will be
+>> yet another mapping configuration data item (my idea was to manage this
+>> once per application within the PRU remoteproc driver along with the
+>> fwspec mapping).
+> 
+> I guess it just seems a bit fragile to me to specify EVTSEL elsewhere. My
+> thinking is that the first event registered that requires a specific EVTSEL
+> value "wins" and if any other events are registered with a different EVTSEL
+> value, then we will get an error. Likewise, if all users of a specific
+> EVTSEL value are unmapped, then it is up for grabs for any value again.
+
+We usually expect an application to have possibly multiple events, and
+so all of them are expected to match if it is using multiple events
+within the range controlled by EVTSEL or the CFG register. It only needs
+to be programmed once if the application needs it. The first one to win
+introduces ordering issues in general. Anyway, for this solution to work
+in general, I am expecting the irq_create_fwspec_mapping()s to be per
+application, and they should be overwriting any previous configured values.
+
+> 
+> On the other hand, with a global value as you have proposed, we can just
+> leave comments in the device tree and the firmware about which EVTSEL value
+> is required for a specific event number. We won't be able to catch mistakes
+> at runtime, but at least there will be something to remind us what we did
+> wrong. So, I suppose that is good enough.
+
+With the global value, I expect it to be a property of the client node
+alongside interrupts. The management and selection of this will be left
+to the PRU remoteproc driver. Encoding this on the firmware-side per
+event also seems a waste of memory. End of the day, it is going to be
+design contract with the application and firmware.
+
+regards
+Suman
