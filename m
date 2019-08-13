@@ -2,175 +2,183 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 839A8C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B76C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ACD32064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 283DA20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:43:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="My6DqltM"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="aB2MSub4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbfHMJmO (ORCPT
+        id S1727890AbfHMJne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 05:42:14 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:32812 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfHMJmO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:42:14 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n9so107240895wru.0;
-        Tue, 13 Aug 2019 02:42:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WREN+U1ZBJtkCx6rZxLMPYPtq8iC0/1y5O5MBNsQ1KM=;
-        b=My6DqltMM12YPnxB0MAoyuQSR0gEHqgIg8Vn3uc+eKTeWMDjUeVINKqtHJHo54Lda9
-         32m9BF+G78qhswVZxsvLL/pNmSFHO8ge8GeS79yTD/uq4odLUyS+wYTYwo0bsavMFoNs
-         OYaCVj3ili7cuOpHlgovXy680Bh0hohoWcU2CPRtSwx1WexIhltjx2tHF8ZIDG7IXLIm
-         wTeYMdLVMR7w7a8j1OKvCcVYQMqtuR5fH/6PQ+8YVG6HgNJJhFE5+wk3vtQ1pSva0Iq6
-         IutnBpjKJmC3iE/onxqKnQ6JkRSNeJF45T6W+zH4DgY9Jbz6Q0otwNp19cS7eXNmEMMg
-         qR0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WREN+U1ZBJtkCx6rZxLMPYPtq8iC0/1y5O5MBNsQ1KM=;
-        b=Ye+PE1fBfmc1yeyPA61LYdbQbIf2K2okS8JTMCGiI8UTXUVNg14ymAtZfhF2Qdulh2
-         9veERCosoqGTf8T2g6VlLD+Z+H5SAU2kp2XuTwu77tzPEuuErS4SGNEtFQxhMT3yEVQW
-         kJCLzyOqtC7OHa4suyyIWtxCbLiWCGgqKTOL7sQI1ardI33hL+q2LLmfyJ3o/k/F4DT/
-         WFuGKfO92BO7xXhgRfVCNb9QTmXTWKKLyR+QsHcoKp2cal2DQwTs2J63+ln8NM4ijJid
-         qW8x/3WB7w4WIxey8MmpXIWNk8e+9Hbb902fKu2iRRgbC4xgRW+0onO1jIVuFyqiOAgY
-         PtxA==
-X-Gm-Message-State: APjAAAW0avRBX8N2eUobucwSNm2q0R3bjipMmwfWFuqVr4IN/EOKT8JH
-        7W8BcgUJfaiw9Deb/NjAnxQ=
-X-Google-Smtp-Source: APXvYqyu80loLBQ+pQU4CrxlM8ctJymubjJiPfnmpnRRC68p3OdSIMXFPPCyzEyrdm6rpEcoF8izZA==
-X-Received: by 2002:a5d:55cf:: with SMTP id i15mr4069396wrw.151.1565689331175;
-        Tue, 13 Aug 2019 02:42:11 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id n16sm762043wmk.12.2019.08.13.02.42.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 02:42:09 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 11:42:08 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Krishna Yarlagadda <kyarlagadda@nvidia.com>
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, jonathanh@nvidia.com, ldewangan@nvidia.com,
-        jslaby@suse.com, linux-serial@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Shardar Shariff Md <smohammed@nvidia.com>
-Subject: Re: [PATCH 02/14] serial: tegra: add support to ignore read
-Message-ID: <20190813094208.GG1137@ulmo>
-References: <1565609303-27000-1-git-send-email-kyarlagadda@nvidia.com>
- <1565609303-27000-3-git-send-email-kyarlagadda@nvidia.com>
+        Tue, 13 Aug 2019 05:43:34 -0400
+Received: from mail-eopbgr20073.outbound.protection.outlook.com ([40.107.2.73]:5280
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727129AbfHMJne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 05:43:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gFTD64uHghqNzPErwXSZfcSENZaSl8ZttrswjA5fgzMD5z+xJeOSBBBJmcu4iN++rmHJklrbrMakYMO/wwf8y1XFAcNfIb0Qa71Lsho7FCgSL6o3ecNQbidFEOg/t9Xk8e0xOyb0mVQynysW/1lXMM8RMRk/ZPzQkXX/Io+3A7QvElp/OTSFmXnrsqclX8F8aBzicNx40DXmZynDYprC9R2dLgyCjmUyfMT6djdfDS0e9VPK0tqYgK4we5uzTUZaWsfDmV1mLScBxBBhoPQ4AKFaeCI3aoNXfK3WVhR2efc5eembBbwooh7IpDGTm5RscR2ZJTXz+xgdPYuNV7w5yw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5cR7/OTTxRjkMUN9n8h1w5W+uNFKCWulxcJHq4CKXzI=;
+ b=YeDjTYDMxxtYHmBSiIc9tOm1Bg/RuQBGdC+fPP0p8m0FRpTaWEdZAvKKlTf50NGzYxgqrCCKHXLoKEUZnj1cCCx/+JkBo6rAGdU39lECRK/JcONvTa06L8omihmT70mlKML0R9GpfG2Ph+C2MGlF3hsdIzAeTuNZisW5Te0oMrfEM1RVb9WJjDjitbncJg9VYXNJ4uYrC2V9pHQITIBwj7Q4YpodccRDPJ26tfy4I37VPcH6PfeWRDIpKufY5cmptKCO9BMXqpRlhooWd70jdlWcDP8JS+zGjOQXP5WthZ0w78vmsxm7L+nT9J0viJtjw32Rq9Lx0+UmVvUv2o3A6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5cR7/OTTxRjkMUN9n8h1w5W+uNFKCWulxcJHq4CKXzI=;
+ b=aB2MSub4mv/uRlMOq3shWqGCWaxvHGXDy38pTY+GE8Bn/9gdtS3yiNZQDCWCgqqoucqfruz/vL6OloH9zteMP1wj0bxNhxjc4rSKRWx0atFvZTKZP8D5w6HY0JXbChZvUoGmjsM5ba5R74PbE6yS4fC6nEu28B6PO5XxB4RLIk4=
+Received: from VI1PR0402MB2800.eurprd04.prod.outlook.com (10.175.24.138) by
+ VI1PR0402MB3376.eurprd04.prod.outlook.com (52.134.1.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.18; Tue, 13 Aug 2019 09:43:30 +0000
+Received: from VI1PR0402MB2800.eurprd04.prod.outlook.com
+ ([fe80::85d1:9f00:3d4c:1860]) by VI1PR0402MB2800.eurprd04.prod.outlook.com
+ ([fe80::85d1:9f00:3d4c:1860%7]) with mapi id 15.20.2157.022; Tue, 13 Aug 2019
+ 09:43:30 +0000
+From:   Ioana Ciornei <ioana.ciornei@nxp.com>
+To:     "Razvan.Stefanescu@microchip.com" <Razvan.Stefanescu@microchip.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "joe@perches.com" <joe@perches.com>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>
+Subject: Re: [PATCH v2 10/10] staging: fsl-dpaa2/ethsw: do not force user to
+ bring interface down
+Thread-Topic: [PATCH v2 10/10] staging: fsl-dpaa2/ethsw: do not force user to
+ bring interface down
+Thread-Index: AQHVUbTHyjGcqRlAKEevkuFP/1mSKQ==
+Date:   Tue, 13 Aug 2019 09:43:30 +0000
+Message-ID: <VI1PR0402MB28002A870C6EBA30DBA8EBD7E0D20@VI1PR0402MB2800.eurprd04.prod.outlook.com>
+References: <1565686479-32577-1-git-send-email-ioana.ciornei@nxp.com>
+ <1565686479-32577-11-git-send-email-ioana.ciornei@nxp.com>
+ <9f932adb-fb6d-2973-f5af-6ba9a83be454@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ioana.ciornei@nxp.com; 
+x-originating-ip: [188.25.91.80]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 569fa08f-7adb-4e71-255f-08d71fd2b360
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3376;
+x-ms-traffictypediagnostic: VI1PR0402MB3376:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB3376A97DF6BC891A8A7D06E6E0D20@VI1PR0402MB3376.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01283822F8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(346002)(39860400002)(396003)(136003)(189003)(199004)(76116006)(81156014)(66556008)(66476007)(478600001)(81166006)(64756008)(6246003)(7736002)(66946007)(305945005)(86362001)(14454004)(66446008)(8676002)(14444005)(53936002)(2906002)(3846002)(2201001)(256004)(71190400001)(71200400001)(33656002)(74316002)(6116002)(4326008)(25786009)(66066001)(9686003)(55016002)(99286004)(476003)(54906003)(76176011)(316002)(486006)(229853002)(7696005)(26005)(6436002)(446003)(110136005)(53546011)(6506007)(2501003)(52536014)(186003)(8936002)(102836004)(5660300002)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3376;H:VI1PR0402MB2800.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: z5RVLEIL4GNuKkJtE9zsSLhLiuLysCyDbY5i1A72uOKV/cnRzoIBHKamVll5jW6xprjq1PIS0+Qh1ehTu6eDgMTEVTpBlGvL+zRyCo0UU+1SGoVUGKK9ogxaMNK9vtWQsjFeCgC8eh005QebgXmgRXMrSPXk2wy8oj1e3MbnfiA3YdbSqaPgku+A7LbdwlylWgfrktrJDlVWMdrEj1XUsBHiCvpVsvEhS1SZWKa4qlpJ6+1JLJV28IODdEbgoBb2DcizAgza+HIcIDxS6zZ36CX+yLiTfFv3oVvGeBTVS9T59PkSqgXqBo9xYGE4D7m96KDkCRZm2U4tMOzFHHykD5EqNILt717vRFMlfHjeC8ulwWfXEzYcUIvIIvtiGEtXO0i3FhOeP/wQZfpihp/9AR2EU6mRql6OjfyL9zzb66o=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="w/VI3ydZO+RcZ3Ux"
-Content-Disposition: inline
-In-Reply-To: <1565609303-27000-3-git-send-email-kyarlagadda@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 569fa08f-7adb-4e71-255f-08d71fd2b360
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2019 09:43:30.7561
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2EE5x+ptT5qJGm5vBiZIwFcCSfy4UWbwAU9HvOCQ2BGbYJlzXeVx4TObwBi/6FxhQ9mg1bA77EQy+iBeSySjiw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3376
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---w/VI3ydZO+RcZ3Ux
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Aug 12, 2019 at 04:58:11PM +0530, Krishna Yarlagadda wrote:
-> From: Shardar Shariff Md <smohammed@nvidia.com>
->=20
-> Add support to ignore read characters if CREAD flag is not set.
->=20
-> Signed-off-by: Shardar Shariff Md <smohammed@nvidia.com>
-> Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-> ---
->  drivers/tty/serial/serial-tegra.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->=20
-> diff --git a/drivers/tty/serial/serial-tegra.c b/drivers/tty/serial/seria=
-l-tegra.c
-> index 19f4c24..93d299e 100644
-> --- a/drivers/tty/serial/serial-tegra.c
-> +++ b/drivers/tty/serial/serial-tegra.c
-> @@ -542,6 +542,9 @@ static void tegra_uart_handle_rx_pio(struct tegra_uar=
-t_port *tup,
->  		ch =3D (unsigned char) tegra_uart_read(tup, UART_RX);
->  		tup->uport.icount.rx++;
-> =20
-> +		if (tup->uport.ignore_status_mask & UART_LSR_DR)
-> +			continue;
-> +
->  		if (!uart_handle_sysrq_char(&tup->uport, ch) && tty)
->  			tty_insert_flip_char(tty, ch, flag);
-
-Is it a good idea to ignore even sysrq characters if CREAD is not set?
-According to termios, CREAD enables the receiver, so technically if it
-isn't set you can't even receive sysrq characters. But I don't know if
-there are any rules regarding this.
-
-Is this the same way that other drivers work?
-
-Thierry
-
->  	} while (1);
-> @@ -562,6 +565,10 @@ static void tegra_uart_copy_rx_to_tty(struct tegra_u=
-art_port *tup,
->  		dev_err(tup->uport.dev, "No tty port\n");
->  		return;
->  	}
-> +
-> +	if (tup->uport.ignore_status_mask & UART_LSR_DR)
-> +		return;
-> +
->  	dma_sync_single_for_cpu(tup->uport.dev, tup->rx_dma_buf_phys,
->  				TEGRA_UART_RX_DMA_BUFFER_SIZE, DMA_FROM_DEVICE);
->  	copied =3D tty_insert_flip_string(tty,
-> @@ -1190,6 +1197,11 @@ static void tegra_uart_set_termios(struct uart_por=
-t *u,
->  	tegra_uart_write(tup, tup->ier_shadow, UART_IER);
->  	tegra_uart_read(tup, UART_IER);
-> =20
-> +	tup->uport.ignore_status_mask =3D 0;
-> +	/* Ignore all characters if CREAD is not set */
-> +	if ((termios->c_cflag & CREAD) =3D=3D 0)
-> +		tup->uport.ignore_status_mask |=3D UART_LSR_DR;
-> +
->  	spin_unlock_irqrestore(&u->lock, flags);
->  }
-> =20
-> --=20
-> 2.7.4
->=20
-
---w/VI3ydZO+RcZ3Ux
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1ShfAACgkQ3SOs138+
-s6FVpg/9GPeTbw/45dZ/HWvsmLm2iaqKG106inOD5HVGDZXJKkwDQOSrqGMMriL4
-4P5s43rU58YErMzCly57ETyrADsZQbyI0N+/Bsk2kuN138RzhplzSFwad8K/J/V3
-QMtXJQ5jHoaSi97NjGBVmSApgg2i3BT9Ro8vVEG1aje4KAswACcR+WZS9tTQ4u69
-8TR1A5skZ5BSWrXz0gbxEKcrmlfHtLiqTtAtvRNNyqoSaspUETEv4LV1WywlkX/1
-7xqwYm0RkuPuMoQnuGv2zH40ZPZPrnRj3OeEoAXYN42XauihHjcVfvVguvjSdObd
-EmFyZQiseCVm07vLImYFXkh4kbSUAIYtO2RVBF9mbSiYsfJKjdGDgfCCvNpnUzbA
-BKbgWBQAM1vsvdMenhZvISdtPNTO9bLpffHPydEwLFMLAecAfJyAzmUw6XNxW0k4
-QVYlH49a5+V6C2cgoqzttMKyx9AbCxiGIAxYTOeqRJxLRAYy/eNFpvGdRml0S9tf
-ZyUCysOxM413iZ+tRlbGWy3DI+lmDyqJEw/VE6I7CVfa44aRrdkzKTvHCgISRAEt
-5BzVQw0yWrcXaDBdG7QnR8Wl0Gk/apezX3KL723FV0vUdYcX3ejIyWaBo4ijukG8
-InudQyl4SNS25B8RknOJ9uJkrYfG7x0eC+0lFoV7xx6ojPif8oc=
-=eDP7
------END PGP SIGNATURE-----
-
---w/VI3ydZO+RcZ3Ux--
+On 8/13/19 12:38 PM, Razvan.Stefanescu@microchip.com wrote:=0A=
+> =0A=
+> =0A=
+> On 13/08/2019 11:54, Ioana Ciornei wrote:=0A=
+>> Link settings can be changed only when the interface is down. Disable=0A=
+>> and re-enable the interface, if necessary, behind the scenes so that we =
+do=0A=
+>> not force users to an if down/up sequence.=0A=
+>>=0A=
+>> Reported-by: Andrew Lunn <andrew@lunn.ch>=0A=
+>> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>=0A=
+>> ---=0A=
+>> Changes in v2:=0A=
+>>    - added Reported-by tag=0A=
+>>=0A=
+>>    drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c | 32 ++++++++++++++++=
+++-------=0A=
+>>    1 file changed, 23 insertions(+), 9 deletions(-)=0A=
+>>=0A=
+>> diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c b/drivers/s=
+taging/fsl-dpaa2/ethsw/ethsw-ethtool.c=0A=
+>> index 0f9f8345e534..99d658fefa14 100644=0A=
+>> --- a/drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c=0A=
+>> +++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c=0A=
+>> @@ -88,16 +88,21 @@ static void ethsw_get_drvinfo(struct net_device *net=
+dev,=0A=
+>>    			 const struct ethtool_link_ksettings *link_ksettings)=0A=
+>>    {=0A=
+>>    	struct ethsw_port_priv *port_priv =3D netdev_priv(netdev);=0A=
+>> +	struct ethsw_core *ethsw =3D port_priv->ethsw_data;=0A=
+>>    	struct dpsw_link_cfg cfg =3D {0};=0A=
+>> -	int err =3D 0;=0A=
+>> -=0A=
+>> -	/* Due to a temporary MC limitation, the DPSW port must be down=0A=
+>> -	 * in order to be able to change link settings. Taking steps to let=0A=
+>> -	 * the user know that.=0A=
+>> -	 */=0A=
+>> -	if (netif_running(netdev)) {=0A=
+>> -		netdev_info(netdev, "Sorry, interface must be brought down first.\n")=
+;=0A=
+>> -		return -EACCES;=0A=
+>> +	bool if_running;=0A=
+>> +	int err =3D 0, ret;=0A=
+>> +=0A=
+>> +	/* Interface needs to be down to change link settings */=0A=
+>> +	if_running =3D netif_running(netdev);=0A=
+>> +	if (if_running) {=0A=
+>> +		err =3D dpsw_if_disable(ethsw->mc_io, 0,=0A=
+>> +				      ethsw->dpsw_handle,=0A=
+>> +				      port_priv->idx);=0A=
+>> +		if (err) {=0A=
+>> +			netdev_err(netdev, "dpsw_if_disable err %d\n", err);=0A=
+>> +			return err;=0A=
+>> +		}=0A=
+>>    	}=0A=
+>>    =0A=
+>>    	cfg.rate =3D link_ksettings->base.speed;=0A=
+>> @@ -115,6 +120,15 @@ static void ethsw_get_drvinfo(struct net_device *ne=
+tdev,=0A=
+>>    				   port_priv->idx,=0A=
+>>    				   &cfg);=0A=
+>>    =0A=
+>> +	if (if_running) {=0A=
+>> +		ret =3D dpsw_if_enable(ethsw->mc_io, 0,=0A=
+>> +				     ethsw->dpsw_handle,=0A=
+>> +				     port_priv->idx);=0A=
+>> +		if (ret) {=0A=
+>> +			return ret;=0A=
+>> +			netdev_err(netdev, "dpsw_if_enable err %d\n", ret);=0A=
+> Hello, >=0A=
+> These last two lines need to be swapped.=0A=
+> =0A=
+> Best regards,=0A=
+> Razvan=0A=
+> =0A=
+=0A=
+Oops, my bad. Will fix.=0A=
+=0A=
+Thanks for pointing this out,=0A=
+Ioana=0A=
+=0A=
+=0A=
