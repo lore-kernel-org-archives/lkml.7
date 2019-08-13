@@ -2,156 +2,108 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E4DC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B24BC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 754A82084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:49:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="LZOR6+sJ"
+	by mail.kernel.org (Postfix) with ESMTP id 5AA1B20842
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbfHMQtC (ORCPT
+        id S1727683AbfHMQtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 12:49:02 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:14867 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbfHMQtC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 12:49:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1565714941; x=1597250941;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=dDOBz4vnkONayUHCFyTxOXbi2aI1o2S0rcTQvTWaqjY=;
-  b=LZOR6+sJtjQLG57YytRl4+N2RHm+Sjz5oQbVWHsQ3HxeTq1CZHDJ5C7S
-   NgG1tevExwjDSHxDN1fPk35UJ65fUGcXT1tvHHbPD5PsY/tFDUrHJz+lF
-   o4fJAhUuoXEaALe9YHfc9fqpnf0WE3Ia5M5vdPo8IgmTRSBKgDu3S9uw8
-   I=;
-X-IronPort-AV: E=Sophos;i="5.64,382,1559520000"; 
-   d="scan'208";a="779080235"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 13 Aug 2019 16:48:58 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com (Postfix) with ESMTPS id E2E06A24B4;
-        Tue, 13 Aug 2019 16:48:57 +0000 (UTC)
-Received: from EX13D13UWA002.ant.amazon.com (10.43.160.172) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 13 Aug 2019 16:48:57 +0000
-Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
- EX13D13UWA002.ant.amazon.com (10.43.160.172) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 13 Aug 2019 16:48:57 +0000
-Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
- EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1367.000;
- Tue, 13 Aug 2019 16:48:56 +0000
-From:   "Chocron, Jonathan" <jonnyc@amazon.com>
-To:     "robh@kernel.org" <robh@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Hanoch, Uri" <hanochu@amazon.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "Wasserstrom, Barak" <barakw@amazon.com>,
-        "Saidi, Ali" <alisaidi@amazon.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>
-Subject: Re: [PATCH v3 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe
- host bridge binding
-Thread-Topic: [PATCH v3 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs
- PCIe host bridge binding
-Thread-Index: AQHVQTjX5ibJ8twrf0Koy9tsFtVyC6b5VbUAgAAV1QA=
-Date:   Tue, 13 Aug 2019 16:48:56 +0000
-Message-ID: <06c198ff2f8f9b1b29283a7b8764ab776c1e574b.camel@amazon.com>
-References: <20190723092529.11310-1-jonnyc@amazon.com>
-         <20190723092711.11786-1-jonnyc@amazon.com> <20190813153046.GA31480@bogus>
-In-Reply-To: <20190813153046.GA31480@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.162.67]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BB54D34F35A0854085A24351C45F19EB@amazon.com>
-Content-Transfer-Encoding: base64
+        Tue, 13 Aug 2019 12:49:36 -0400
+Received: from mga18.intel.com ([134.134.136.126]:12190 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726769AbfHMQtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 12:49:35 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 09:49:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
+   d="scan'208";a="194231033"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 13 Aug 2019 09:49:31 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 13 Aug 2019 19:49:30 +0300
+Date:   Tue, 13 Aug 2019 19:49:30 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Mario.Limonciello@dell.com,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Raanan Avargil <raanan.avargil@intel.com>,
+        David Laight <David.Laight@aculab.com>,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 7/8] thunderbolt: Add support for Intel Ice Lake
+Message-ID: <20190813164930.GA18281@lahna.fi.intel.com>
+References: <20190812123847.50802-1-mika.westerberg@linux.intel.com>
+ <20190812123847.50802-8-mika.westerberg@linux.intel.com>
+ <20190813161038.tip2u2z22xqnmfjl@wunner.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813161038.tip2u2z22xqnmfjl@wunner.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA4LTEzIGF0IDA5OjMwIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gVHVlLCBKdWwgMjMsIDIwMTkgYXQgMTI6Mjc6MDhQTSArMDMwMCwgSm9uYXRoYW4gQ2hvY3Jv
-biB3cm90ZToNCj4gPiBEb2N1bWVudCBBbWF6b24ncyBBbm5hcHVybmEgTGFicyBQQ0llIGhvc3Qg
-YnJpZGdlLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEpvbmF0aGFuIENob2Nyb24gPGpvbm55
-Y0BhbWF6b24uY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kv
-cGNpZS1hbC50eHQgICAgICAgfCA0NQ0KPiA+ICsrKysrKysrKysrKysrKysrKysNCj4gPiAgTUFJ
-TlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDMgKy0NCj4gPiAg
-MiBmaWxlcyBjaGFuZ2VkLCA0NyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3Bj
-aWUtDQo+ID4gYWwudHh0DQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9wY2kvcGNpZS1hbC50eHQNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9wY2kvcGNpZS1hbC50eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0
-NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uODk4NzYxOTBlYjVhDQo+ID4gLS0tIC9kZXYvbnVs
-bA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvcGNpZS1h
-bC50eHQNCj4gPiBAQCAtMCwwICsxLDQ1IEBADQo+ID4gKyogQW1hem9uIEFubmFwdXJuYSBMYWJz
-IFBDSWUgaG9zdCBicmlkZ2UNCj4gPiArDQo+ID4gK0FtYXpvbidzIEFubmFwdXJuYSBMYWJzIFBD
-SWUgSG9zdCBDb250cm9sbGVyIGlzIGJhc2VkIG9uIHRoZQ0KPiA+IFN5bm9wc3lzIERlc2lnbldh
-cmUNCj4gPiArUENJIGNvcmUuDQo+ID4gK0l0IHNoYXJlcyBjb21tb24gZnVuY3Rpb25zIHdpdGgg
-dGhlIFBDSWUgRGVzaWduV2FyZSBjb3JlIGRyaXZlcg0KPiA+IGFuZCBpbmhlcml0cw0KPiANCj4g
-RHJpdmVyIGRldGFpbHMgYXJlIGlycmVsZXZhbnQgdG8gdGhlIGJpbmRpbmcuDQo+IA0KV2lsbCBy
-ZW1vdmUuDQoNCj4gPiArY29tbW9uIHByb3BlcnRpZXMgZGVmaW5lZCBpbg0KPiA+IERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvZGVzaWdud2FyZS1wY2llLnR4dC4NCj4gPiAr
-UHJvcGVydGllcyBvZiB0aGUgaG9zdCBjb250cm9sbGVyIG5vZGUgdGhhdCBkaWZmZXIgZnJvbSBp
-dCBhcmU6DQo+ID4gKw0KPiA+ICstIGNvbXBhdGlibGU6DQo+ID4gKwlVc2FnZTogcmVxdWlyZWQN
-Cj4gPiArCVZhbHVlIHR5cGU6IDxzdHJpbmdsaXN0Pg0KPiA+ICsJRGVmaW5pdGlvbjogVmFsdWUg
-c2hvdWxkIGNvbnRhaW4NCj4gPiArCQkJLSAiYW1hem9uLGFsLXBjaWUiDQo+IA0KPiBOZWVkcyB0
-byBiZSBTb0Mgc3BlY2lmaWMuDQo+IA0KSSdtIG5vdCBzdXJlIEkgZm9sbG93LiBUaGUgUENJZSBj
-b250cm9sbGVyIGNhbiBiZSBpbXBsZW1lbnRlZCBpbg0KZGlmZmVyZW50IFNvQ3MuIENvdWxkIHlv
-dSBwbGVhc2UgY2xhcmlmeT8NCg0KPiA+ICsNCj4gPiArLSByZWc6DQo+ID4gKwlVc2FnZTogcmVx
-dWlyZWQNCj4gPiArCVZhbHVlIHR5cGU6IDxwcm9wLWVuY29kZWQtYXJyYXk+DQo+ID4gKwlEZWZp
-bml0aW9uOiBSZWdpc3RlciByYW5nZXMgYXMgbGlzdGVkIGluIHRoZSByZWctbmFtZXMgcHJvcGVy
-dHkNCj4gPiArDQo+ID4gKy0gcmVnLW5hbWVzOg0KPiA+ICsJVXNhZ2U6IHJlcXVpcmVkDQo+ID4g
-KwlWYWx1ZSB0eXBlOiA8c3RyaW5nbGlzdD4NCj4gPiArCURlZmluaXRpb246IE11c3QgaW5jbHVk
-ZSB0aGUgZm9sbG93aW5nIGVudHJpZXMNCj4gPiArCQkJLSAiY29uZmlnIglQQ0llIEVDQU0gc3Bh
-Y2UNCj4gPiArCQkJLSAiY29udHJvbGxlciIJQUwgcHJvcHJpZXRhcnkgcmVnaXN0ZXJzDQo+ID4g
-KwkJCS0gImRiaSIJCURlc2lnbndhcmUgUENJZSByZWdpc3RlcnMNCj4gPiArDQo+ID4gK0V4YW1w
-bGU6DQo+ID4gKw0KPiA+ICsJcGNpZS1leHRlcm5hbDA6IHBjaWVAZmI2MDAwMDAgew0KPiA+ICsJ
-CWNvbXBhdGlibGUgPSAiYW1hem9uLGFsLXBjaWUiOw0KPiA+ICsJCXJlZyA9IDwweDAgMHhmYjYw
-MDAwMCAweDAgMHgwMDEwMDAwMA0KPiA+ICsJCSAgICAgICAweDAgMHhmZDgwMDAwMCAweDAgMHgw
-MDAxMDAwMA0KPiA+ICsJCSAgICAgICAweDAgMHhmZDgxMDAwMCAweDAgMHgwMDAwMTAwMD47DQo+
-ID4gKwkJcmVnLW5hbWVzID0gImNvbmZpZyIsICJjb250cm9sbGVyIiwgImRiaSI7DQo+ID4gKwkJ
-YnVzLXJhbmdlID0gPDAgMjU1PjsNCj4gPiArCQlkZXZpY2VfdHlwZSA9ICJwY2kiOw0KPiA+ICsJ
-CSNhZGRyZXNzLWNlbGxzID0gPDM+Ow0KPiA+ICsJCSNzaXplLWNlbGxzID0gPDI+Ow0KPiA+ICsJ
-CSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47DQo+ID4gKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDQ5
-IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ICsJCWludGVycnVwdC1tYXAtbWFzayA9IDwweDAw
-IDAgMCA3PjsNCj4gPiArCQlpbnRlcnJ1cHQtbWFwID0gPDB4MDAwMCAwIDAgMSAmZ2ljIEdJQ19T
-UEkgNDENCj4gPiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsgLyogSU5UYSAqLw0KPiA+ICsJCXJhbmdl
-cyA9IDwweDAyMDAwMDAwIDB4MCAweGMwMDEwMDAwIDB4MCAweGMwMDEwMDAwIDB4MA0KPiA+IDB4
-MDdmZjAwMDA+Ow0KPiA+ICsJfTsNCj4gPiBkaWZmIC0tZ2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlO
-VEFJTkVSUw0KPiA+IGluZGV4IDVhNjEzN2RmM2YwZS4uMjljY2ExNGEwNWE2IDEwMDY0NA0KPiA+
-IC0tLSBhL01BSU5UQUlORVJTDQo+ID4gKysrIGIvTUFJTlRBSU5FUlMNCj4gPiBAQCAtMTIyMDEs
-MTAgKzEyMjAxLDExIEBAIFQ6CWdpdA0KPiA+IGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20v
-bGludXgva2VybmVsL2dpdC9scGllcmFsaXNpL3BjaS5naXQvDQo+ID4gIFM6CVN1cHBvcnRlZA0K
-PiA+ICBGOglkcml2ZXJzL3BjaS9jb250cm9sbGVyLw0KPiA+ICANCj4gPiAtUENJRSBEUklWRVIg
-Rk9SIEFOTkFQVVJOQSBMQUJTDQo+ID4gK1BDSUUgRFJJVkVSIEZPUiBBTUFaT04gQU5OQVBVUk5B
-IExBQlMNCj4gPiAgTToJSm9uYXRoYW4gQ2hvY3JvbiA8am9ubnljQGFtYXpvbi5jb20+DQo+ID4g
-IEw6CWxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiAgUzoJTWFpbnRhaW5lZA0KPiA+ICtG
-OglEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3BjaWUtYWwudHh0DQo+ID4g
-IEY6CWRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtYWwuYw0KPiA+ICANCj4gPiAgUENJ
-RSBEUklWRVIgRk9SIEFNTE9HSUMgTUVTT04NCj4gPiAtLSANCj4gPiAyLjE3LjENCj4gPiANCg==
+On Tue, Aug 13, 2019 at 06:10:38PM +0200, Lukas Wunner wrote:
+> On Mon, Aug 12, 2019 at 03:38:46PM +0300, Mika Westerberg wrote:
+> > +static void icm_veto_begin(struct tb *tb)
+> > +{
+> > +	struct icm *icm = tb_priv(tb);
+> > +
+> > +	if (!icm->veto) {
+> > +		icm->veto = true;
+> > +		/* Keep the domain powered while veto is in effect */
+> > +		pm_runtime_get(&tb->dev);
+> > +	}
+> > +}
+> 
+> Hm, don't you need memory barriers when accessing icm->veto?
+
+AFAICT it does not need them, it is protected under mutex where there
+can be concurrency.
+
+> If so, I'd suggest:
+> 
+> 	/* Keep the domain powered while veto is in effect */
+> 	if (cmpxchg(&icm->veto, false, true))
+> 		pm_runtime_get(&tb->dev);
+> 
+> You'll have to declare icm->veto unsigned int instead of bool
+> because thunderbolt.ko is compiled if CONFIG_COMPILE_TEST is
+> enabled and there are arches which do not support cmpxchg for
+> a size of 1 byte.
+> 
+> The other bools in struct icm should likewise be unsigned int
+> per Linus' dictum:
+> https://lkml.org/lkml/2017/11/21/384
+
+Yeah, it probably wastes some space but I like them because IMHO they
+are more readable than bitfields. We have a bunch of other bools in the
+driver structures so if we are going to convert struct icm we should do
+the same for others to keep things consistent. Probably should be a
+separate cleanup patch.
+
+> > --- a/drivers/thunderbolt/nhi.c
+> > +++ b/drivers/thunderbolt/nhi.c
+> > +/* Ice Lake specific NHI operations */
+> > +
+> 
+> Again, can't this be moved to a separate file for maintainability?
+
+Sure.
