@@ -2,82 +2,91 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDB4C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CD3C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43DD820665
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D62A72070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfHMUvI (ORCPT
+        id S1726329AbfHMUyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 16:51:08 -0400
-Received: from gofer.mess.org ([88.97.38.141]:33375 "EHLO gofer.mess.org"
+        Tue, 13 Aug 2019 16:54:38 -0400
+Received: from mga02.intel.com ([134.134.136.20]:10802 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726074AbfHMUvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 16:51:08 -0400
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id 6D880603E8; Tue, 13 Aug 2019 21:51:05 +0100 (BST)
-Date:   Tue, 13 Aug 2019 21:51:05 +0100
-From:   Sean Young <sean@mess.org>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     syzbot <syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com>,
-        bnvandana@gmail.com, allison@lohutok.net, hverkuil-cisco@xs4all.nl,
-        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        USB list <linux-usb@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        rfontana@redhat.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>, tskd08@gmail.com
-Subject: Re: KASAN: global-out-of-bounds Read in dvb_pll_attach
-Message-ID: <20190813205104.pnyan3kafz26wsse@gofer.mess.org>
-References: <CAAeHK+zPDgvDr_Bao9dz_7hGEg+Ud6-tj7pZaihKeYHJ8M386Q@mail.gmail.com>
- <00000000000054f8bd058ddfa341@google.com>
- <CAAeHK+xZRH9-ue0QyEdiWmbFJF6P3RXMud+tE6t3x6Orcxnbkg@mail.gmail.com>
+        id S1725903AbfHMUyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 16:54:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 13:54:37 -0700
+X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
+   d="scan'208";a="167173049"
+Received: from tsduncan-ubuntu.jf.intel.com (HELO [10.7.169.130]) ([10.7.169.130])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 13 Aug 2019 13:54:37 -0700
+Subject: Re: [PATCH net-next] net/ncsi: allow to customize BMC MAC Address
+ offset
+To:     Tao Ren <taoren@fb.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+        Ben Wei <benwei@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
+        "David S.Miller" <davem@davemloft.net>,
+        William Kennington <wak@google.com>
+References: <20190807002118.164360-1-taoren@fb.com>
+ <20190807112518.644a21a2@cakuba.netronome.com>
+ <20190807184143.GE26047@lunn.ch>
+ <806a76a8-229a-7f24-33c7-2cf2094f3436@fb.com>
+ <20190808133209.GB32706@lunn.ch>
+ <77762b10-b8e7-b8a4-3fc0-e901707a1d54@fb.com>
+ <20190808211629.GQ27917@lunn.ch>
+ <ac22bbe0-36ca-b4b9-7ea7-7b1741c2070d@fb.com>
+ <20190808230312.GS27917@lunn.ch>
+ <f1519844-4e21-a9a4-1a69-60c37bd07f75@fb.com>
+ <10079A1AC4244A41BC7939A794B72C238FCE0E03@fmsmsx104.amr.corp.intel.com>
+ <bc9da695-3fd3-6643-8e06-562cc08fbc62@linux.intel.com>
+ <dc0382c9-7995-edf5-ee1c-508b0f759c3d@linux.intel.com>
+ <faa1b3c9-9ba3-0fff-e1d4-f6dddb60c52c@fb.com>
+From:   Terry Duncan <terry.s.duncan@linux.intel.com>
+Message-ID: <33e3e783-fb93-e628-8baa-a8374540ea25@linux.intel.com>
+Date:   Tue, 13 Aug 2019 13:54:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAeHK+xZRH9-ue0QyEdiWmbFJF6P3RXMud+tE6t3x6Orcxnbkg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <faa1b3c9-9ba3-0fff-e1d4-f6dddb60c52c@fb.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 03:22:49PM +0200, Andrey Konovalov wrote:
-> On Wed, Jul 17, 2019 at 2:29 PM syzbot
-> <syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot has tested the proposed patch and the reproducer did not trigger
-> > crash:
-> >
-> > Reported-and-tested-by:
-> > syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com
-> >
-> > Tested on:
-> >
-> > commit:         6a3599ce usb-fuzzer: main usb gadget fuzzer driver
-> > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=d90745bdf884fc0a
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > patch:          https://syzkaller.appspot.com/x/patch.diff?x=1454f4d0600000
-> >
-> > Note: testing is done by a robot and is best-effort only.
+
+On 8/13/19 11:28 AM, Tao Ren wrote:
+> On 8/13/19 9:31 AM, Terry Duncan wrote:
+>> Tao, in your new patch will it be possible to disable the setting of the BMC MAC?  I would like to be able to send NCSI_OEM_GET_MAC perhaps with netlink (TBD) to get the system address without it affecting the BMC address.
+>>
+>> I was about to send patches to add support for the Intel adapters when I saw this thread.
+>>
+>> Thanks,
+>>
+>> Terry
 > 
-> Hi bnvandana,
+> Hi Terry,
 > 
-> Could you submit this patch? Syzbot testing shows that is fixes the issue.
+> Sounds like you are planning to configure BMC MAC address from user space via netlink? Ben Wei <benwei@fb.com> started a thread "Out-of-band NIC management" in openbmc community for NCSI management using netlink, and you may follow up with him for details.
+> 
+> I haven't decided what to do in my v2 patch: maybe using device tree, maybe moving the logic to uboot, and I'm also evaluating the netlink option. But it shouldn't impact your patch, because you can disable NCSI_OEM_GET_MAC option from your config file.
 
-The patch had issues (see discussion in the thread). I created this patch
-but I see now I did not include the correct Reported-by: tag. 
+Thanks Tao. I see now that disabling the NCSI_OEM_GET_MAC option will do 
+what I want.
 
-https://www.mail-archive.com/linux-media@vger.kernel.org/msg148889.html
-
-Thanks
-
-Sean
+Best,
+Terry
