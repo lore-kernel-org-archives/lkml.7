@@ -3,190 +3,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EBFC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B76DC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB63E205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7E7F205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:00:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="MHc2fVjg"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="dzbIYMoR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729878AbfHMO7E (ORCPT
+        id S1729880AbfHMPAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 10:59:04 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:54658 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729586AbfHMO7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 10:59:03 -0400
-Received: from zn.tnic (p200300EC2F0D2400E0D08C31C935E2D1.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:2400:e0d0:8c31:c935:e2d1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 98D691EC0554;
-        Tue, 13 Aug 2019 16:59:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1565708341;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=UJvUPa8TlyHMjA7KAjQ12fSS5RfewWjyVvXnmvubFlw=;
-        b=MHc2fVjg/PJ1Q7bAVSzAvk9yRXJLRfvZO/eBs0lWZHVl7w1fsulVCudq3dV2EaQB7PmjYp
-        fqOqjYGwkU6jm2HUWALOPoL622W1L9jswE5nYyeJwSg27EhPu2hPP6suzXN5ufAwmt1HoR
-        wk82+GEXDp2TVVCc6CJ5geBQ+ihkqMI=
-Date:   Tue, 13 Aug 2019 16:59:47 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 06/24] EDAC: Kill EDAC_DIMM_PTR() macro
-Message-ID: <20190813145947.GE16770@zn.tnic>
-References: <20190624150758.6695-1-rrichter@marvell.com>
- <20190624150758.6695-7-rrichter@marvell.com>
+        Tue, 13 Aug 2019 11:00:03 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39123 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729060AbfHMPAD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 11:00:03 -0400
+Received: by mail-ot1-f65.google.com with SMTP id b1so5475248otp.6
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 08:00:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=OBSBHOWBi0TEv/V0/1s9tAyHS9rLQ+x44wNZD/HrkLA=;
+        b=dzbIYMoRiy9vx9rKEBuPcH/mGrArbJfiwJ7ot057oEwafi1mYopo5TS45ZGfU2Tmwe
+         SLBPqgIMOrEkCecn0w57P/yGOR/d0N23xNAgHwxYLkMRv5H+NhgbobUFp2ICtHe5BRH5
+         GbIm4qBk6hMIm+NPgLSYJgtDYxGY7QDf7AIpMTT6sktBJYnpLjG3FK3zI1obJ75IUzvc
+         CwZwYPupTtwIOGSkKBn71MZLcIk+Gw1yi1TZVHVhBvmHg6zL06/3TKtlmSTECtHfpSl+
+         SYIopnbJP7tqKWRjn6KfBfDEEk9A3lazC9zFZFqtAQ4BKm6TdFY1hy6XJ1fekCbmULHI
+         RG6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=OBSBHOWBi0TEv/V0/1s9tAyHS9rLQ+x44wNZD/HrkLA=;
+        b=oKkr9k6TPOUKcUW5356NVbQpkv5tNeEfyDk1Dnfop9OIArwoiuoJeLrHfllb9v4KZJ
+         tofOIiGymrIIvxXFLa8kIzj7i+SgjHOeRBJyoldOb32w3R1Bm0NkbnvBsioerEzAF3XP
+         Ei7Jb/OI4C8ByUeD/5gmxN6WfDRjqve1JgOUgCmKxXBxNNYeFSh+NCXiwEZmwh4fFlAr
+         xFrTZLKaIHy4NRPx551dbCPgSngu34c9Tqdq+UFhVCJZ06EvprPIzRDSasXgQWUM5mkw
+         Sbv5RdQs6ZLrZWocdepgbeqtSWFXQTt5Qk+RRHXl6tD5GwOp8Umc9N7W754Lpzdm0zid
+         5n7Q==
+X-Gm-Message-State: APjAAAUwCA8c64gGMFAuAXK6XMeYdIBcs+rVMQt3VKDWaz5Dick8gRn/
+        cLiEeURV2eVFpun1eOa9HDPflA==
+X-Google-Smtp-Source: APXvYqzyvc5FubiG3PND2CV+AkpmsPRzV4pLljW3e2iTjvTSUTJIOAqABu4MArwAhjoI85WgQ/29gQ==
+X-Received: by 2002:a05:6602:2193:: with SMTP id b19mr35481897iob.113.1565708402482;
+        Tue, 13 Aug 2019 08:00:02 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id j5sm81309698iom.69.2019.08.13.08.00.01
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 13 Aug 2019 08:00:01 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 08:00:00 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Bin Meng <bmeng.cn@gmail.com>
+cc:     Albert Ou <aou@eecs.berkeley.edu>,
+        Palmer Dabbelt <palmer@sifive.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH] riscv: dts: sifive: Add missing "clock-frequency" to
+ cpu0/cpu1 nodes
+In-Reply-To: <1565158960-12240-1-git-send-email-bmeng.cn@gmail.com>
+Message-ID: <alpine.DEB.2.21.9999.1908130758550.27195@viisi.sifive.com>
+References: <1565158960-12240-1-git-send-email-bmeng.cn@gmail.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190624150758.6695-7-rrichter@marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 6 Aug 2019, Bin Meng wrote:
 
-> Subject: Re: [PATCH v2 06/24] EDAC: Kill EDAC_DIMM_PTR() macro
+> Add the missing "clock-frequency" property to the cpu0/cpu1 nodes
+> for consistency with other cpu nodes.
+> 
+> Signed-off-by: Bin Meng <bmeng.cn@gmail.com>
 
-s/Kill/Replace ... with/
+Is this being driven by a schema validator warning?  If not, and this 
+property isn't required, it seems better just to drop it.  It seems 
+useless?
 
-On Mon, Jun 24, 2019 at 03:09:06PM +0000, Robert Richter wrote:
-> Get rid of this macro and instead use the new function
-> edac_get_dimm(). Also introduce the edac_get_dimm_by_index() function
-> for later use.
 
-Some blurb about *why* you're doing this won't hurt here.
-
-> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-> index bd3be25d0d3f..8050f9577fe6 100644
-> --- a/drivers/edac/ghes_edac.c
-> +++ b/drivers/edac/ghes_edac.c
-> @@ -97,9 +97,8 @@ static void ghes_edac_dmidecode(const struct dmi_header *dh, void *arg)
->  
->  	if (dh->type == DMI_ENTRY_MEM_DEVICE) {
->  		struct memdev_dmi_entry *entry = (struct memdev_dmi_entry *)dh;
-> -		struct dimm_info *dimm = EDAC_DIMM_PTR(mci->layers, mci->dimms,
-> -						       mci->n_layers,
-> -						       dimm_fill->count, 0, 0);
-> +		struct dimm_info *dimm = edac_get_dimm(mci, dimm_fill->count,
-> +						       0, 0);
-
-You can let it stick out.
-
->  		u16 rdr_mask = BIT(7) | BIT(13);
->  
->  		if (entry->size == 0xffff) {
-
-...
-
-> diff --git a/drivers/edac/i5400_edac.c b/drivers/edac/i5400_edac.c
-> index 6f8bcdb9256a..a50a8707337b 100644
-> --- a/drivers/edac/i5400_edac.c
-> +++ b/drivers/edac/i5400_edac.c
-> @@ -1196,8 +1196,8 @@ static int i5400_init_dimms(struct mem_ctl_info *mci)
->  			if (!MTR_DIMMS_PRESENT(mtr))
->  				continue;
->  
-> -			dimm = EDAC_DIMM_PTR(mci->layers, mci->dimms, mci->n_layers,
-> -				       channel / 2, channel % 2, slot);
-> +			dimm = edac_get_dimm(mci, channel / 2, channel % 2,
-> +					     slot);
-
-Also, let it stick out.
-
-> @@ -669,4 +639,56 @@ struct mem_ctl_info {
->  	bool fake_inject_ue;
->  	u16 fake_inject_count;
->  };
-> +
-> +/**
-> + * edac_get_dimm_by_index - Get DIMM info from a memory controller
-> + *                          given by an index
-> + *
-> + * @mci:	a struct mem_ctl_info
-> + * @index:	index in the memory controller's DIMM array
-> + *
-> + * Returns a struct dimm_info*.
-
-or NULL on failure.
-
-> + */
-> +static inline struct dimm_info *
-> +edac_get_dimm_by_index(struct mem_ctl_info *mci, int index)
-> +{
-> +	if (index < 0 || index >= mci->tot_dimms)
-> +		return NULL;
-> +
-> +	if (WARN_ON_ONCE(mci->dimms[index]->idx != index))
-> +		return NULL;
-> +
-> +	return mci->dimms[index];
-> +}
-> +
-> +/**
-> + * edac_get_dimm - Get DIMM info from a memory controller given by
-> + *                 [layer0,layer1,layer2] position
-> + *
-> + * @mci:	a struct mem_ctl_info
-> + * @layer0:	layer0 position
-> + * @layer1:	layer1 position. Unused if n_layers < 2
-> + * @layer2:	layer2 position. Unused if n_layers < 3
-> + *
-> + * For 1 layer, this macro returns "dimms[layer0]";
-
-macro? Copy-paste I guess :)
-
-Below too.
-
-> + *
-> + * For 2 layers, this macro is similar to allocate a bi-dimensional array
-> + * and to return "dimms[layer0][layer1]";
-> + *
-> + * For 3 layers, this macro is similar to allocate a tri-dimensional array
-> + * and to return "dimms[layer0][layer1][layer2]";
-> + */
-> +static inline struct dimm_info *
-> +edac_get_dimm(struct mem_ctl_info *mci, int layer0, int layer1, int layer2)
-> +{
-> +	int index = layer0;
-> +
-> +	if (index >= 0 && mci->n_layers > 1)
-
-Can layer0 be negative here to warrant that check?
-
-> +		index = index * mci->layers[1].size + layer1;
-> +	if (index >= 0 && mci->n_layers > 2)
-
-Same here.
-
-> +		index = index * mci->layers[2].size + layer2;
-> +
-> +	return edac_get_dimm_by_index(mci, index);
-> +}
-> +
->  #endif
-> -- 
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+- Paul
