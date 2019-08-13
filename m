@@ -2,129 +2,286 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC775C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFE1C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A667D20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:53:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EUdHy4gM"
+	by mail.kernel.org (Postfix) with ESMTP id 19A5020665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:53:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfHMHxs (ORCPT
+        id S1727890AbfHMHx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 03:53:48 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42386 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbfHMHxq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 03:53:46 -0400
-Received: by mail-pf1-f196.google.com with SMTP id i30so2415668pfk.9
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 00:53:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=BkX27APDVJ4zeW7H5E4Qx7Yc0d0xGm41vKaV5VvGjbc=;
-        b=EUdHy4gMsfvnN4CUa0oecjGACMAqEVtxiUGdmUM3Ngncip9f6n/2Rw3ZJn3X3l9sZS
-         ny7AGcTCFJ27zwjOfnJYgheFkweH5FQbRnDxSUbatFM1XzLPKIrQ0NsauE3UI+Pn2wN4
-         UE/C03Zfv4d623FqJOP5vQnECBcvuG6mCHsddHNdxCQiCpjZsrsiXlkRAF4EwV8bKEuE
-         eDubrM7GZHn2mlNSjuQ8nRtqxC1F6z4Zpxp6mFZ46jTNGRrarGKsv3ypYdN2n9ojSJNd
-         Ysgt6PpD7gEePDOcIc4ocX6twitoDfuOom2ZT+6tneIx2mXRrQjm58Ql21kdt6VTnIo6
-         YyQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=BkX27APDVJ4zeW7H5E4Qx7Yc0d0xGm41vKaV5VvGjbc=;
-        b=csR1GkT68bU5ehLrRi30ka5RluOC+z10lJiURvJcNqaRK/0yxcmjDkIegmF8tncyZX
-         p1/V0bfWADRFOchK9qX/agwLE+ffMneOnrU2b9PQ6G7AAB5bgAK+t1fMbFyohCgk60cW
-         Rt6gcflkL8aiYSvwYnTZSMiSEXhh5rS2//sQIj9gPEK8GMsitVLbHw35tPZsPXs1qsf8
-         t/1sPt/7spVzhEU1zxBKgYNmHITXBEFwodCzXGiJQxKBHTFA3bER1UeSPbon6oddoJI6
-         7roLXsnMww51bdiwqVYQTyijbo3uhwnb0QU7EJXaoi7apZ2aGQ8Hti81G90glns1c40X
-         r1lQ==
-X-Gm-Message-State: APjAAAVzff/YRCaqNphSk9XTaVtHjMzKXDqG9HNwXKCJBKWqc6cLAOTo
-        mM98+z8Z3o4HyczuFMUyyWhIXw==
-X-Google-Smtp-Source: APXvYqxRe3kDEnRmKsgK98qrW7tpR2Jo5TKYlmK35RYqch6gNYKDeSUOOqqDMefeWOISDFFAHhX7kQ==
-X-Received: by 2002:a17:90b:8c1:: with SMTP id ds1mr1040437pjb.114.1565682826009;
-        Tue, 13 Aug 2019 00:53:46 -0700 (PDT)
-Received: from localhost.localdomain ([45.114.72.100])
-        by smtp.gmail.com with ESMTPSA id l25sm131462563pff.143.2019.08.13.00.53.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 13 Aug 2019 00:53:45 -0700 (PDT)
-From:   Sumit Garg <sumit.garg@linaro.org>
-To:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-security-module@vger.kernel.org
-Cc:     dhowells@redhat.com, herbert@gondor.apana.org.au,
-        davem@davemloft.net, peterhuewe@gmx.de, jgg@ziepe.ca,
-        jejb@linux.ibm.com, jarkko.sakkinen@linux.intel.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, zohar@linux.ibm.com, jmorris@namei.org,
-        serge@hallyn.com, casey@schaufler-ca.com,
-        ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
-        linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org,
-        Sumit Garg <sumit.garg@linaro.org>
-Subject: [RFC/RFT v4 0/5] Add generic trusted keys framework/subsystem
-Date:   Tue, 13 Aug 2019 13:22:59 +0530
-Message-Id: <1565682784-10234-1-git-send-email-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 13 Aug 2019 03:53:58 -0400
+Received: from mga09.intel.com ([134.134.136.24]:44494 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727777AbfHMHx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 03:53:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 00:53:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,380,1559545200"; 
+   d="scan'208";a="166982586"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by orsmga007.jf.intel.com with ESMTP; 13 Aug 2019 00:53:54 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     netdev@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Christopher S . Hall" <christopher.s.hall@intel.com>
+Subject: Re: [RFC PATCH 4/5] PTP: Add flag for non-periodic output
+In-Reply-To: <20190718164121.GB1533@localhost>
+References: <20190716072038.8408-1-felipe.balbi@linux.intel.com> <20190716072038.8408-5-felipe.balbi@linux.intel.com> <20190716163927.GA2125@localhost> <87k1ch2m1i.fsf@linux.intel.com> <20190717173645.GD1464@localhost> <87ftn3iuqp.fsf@linux.intel.com> <20190718164121.GB1533@localhost>
+Date:   Tue, 13 Aug 2019 10:53:53 +0300
+Message-ID: <87tvalxzzi.fsf@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch-set is an outcome of discussion here [1]. It has evolved very
-much since v1 to create, consolidate and generalize trusted keys
-subsystem.
 
-This framework has been tested with trusted keys support provided via TEE
-but I wasn't able to test it with a TPM device as I don't possess one. It
-would be really helpful if others could test this patch-set using a TPM
-device.
+Hi,
 
-[1] https://www.mail-archive.com/linux-doc@vger.kernel.org/msg30591.html
+Richard Cochran <richardcochran@gmail.com> writes:
 
-Changes in v4:
-1. Separate patch for export of tpm_buf code to include/linux/tpm.h
-2. Change TPM1.x trusted keys code to use common tpm_buf
-3. Keep module name as trusted.ko only
+> On Thu, Jul 18, 2019 at 11:59:10AM +0300, Felipe Balbi wrote:
+>> no problem, anything in particular in mind? Just create new versions of
+>> all the IOCTLs so we can actually use the reserved fields in the future?
+>
+> Yes, please!
 
-Changes in v3:
+before I send a new series built on top of this change, I thought I'd
+check with you if I'm on the right path. Below you can find my current
+take at the new IOCTLs. I maintained the same exact structures so that
+there's no maintenance burden. Also introduce a new IOCTL for every
+single one of the previously existing ones even though not all of them
+needed changes. The reason for that was just to make it easier for
+libary authors to update their library by a simple sed script adding '2'
+to the end of the IOCTL macro.
 
-Move TPM2 trusted keys code to trusted keys subsystem.
+Let me know if you want anything to be changed or had a different idea
+about any of this. Also, if you prefer that I finish the entire series
+before you review, no worries either ;-)
 
-Changes in v2:
+Cheers, patch follows:
 
-Split trusted keys abstraction patch for ease of review.
+From bc2aa511d4c2e2228590fb29604c6c33b56527ad Mon Sep 17 00:00:00 2001
+From: Felipe Balbi <felipe.balbi@linux.intel.com>
+Date: Tue, 13 Aug 2019 10:32:35 +0300
+Subject: [PATCH] PTP: introduce new versions of IOCTLs
 
-Sumit Garg (5):
-  tpm: move tpm_buf code to include/linux/
-  KEYS: trusted: use common tpm_buf for TPM1.x code
-  KEYS: trusted: create trusted keys subsystem
-  KEYS: trusted: move tpm2 trusted keys code
-  KEYS: trusted: Add generic trusted keys framework
+The current version of the IOCTL have a small problem which prevents
+us from extending the API by making use of reserved fields. In these
+new IOCTLs, we are now making sure that flags and rsv fields are zero
+which will allow us to extend the API in the future.
 
- crypto/asymmetric_keys/asym_tpm.c                  |   2 +-
- drivers/char/tpm/tpm-chip.c                        |   1 +
- drivers/char/tpm/tpm-interface.c                   |  56 ---
- drivers/char/tpm/tpm.h                             | 230 -----------
- drivers/char/tpm/tpm2-cmd.c                        | 308 +--------------
- include/keys/trusted-type.h                        |  45 +++
- include/keys/{trusted.h => trusted_tpm.h}          |  61 +--
- include/linux/tpm.h                                | 270 ++++++++++++-
- security/keys/Makefile                             |   2 +-
- security/keys/trusted-keys/Makefile                |   9 +
- security/keys/trusted-keys/trusted-common.c        | 343 ++++++++++++++++
- .../keys/{trusted.c => trusted-keys/trusted-tpm.c} | 437 +++++----------------
- security/keys/trusted-keys/trusted-tpm2.c          | 378 ++++++++++++++++++
- 13 files changed, 1141 insertions(+), 1001 deletions(-)
- rename include/keys/{trusted.h => trusted_tpm.h} (64%)
- create mode 100644 security/keys/trusted-keys/Makefile
- create mode 100644 security/keys/trusted-keys/trusted-common.c
- rename security/keys/{trusted.c => trusted-keys/trusted-tpm.c} (72%)
- create mode 100644 security/keys/trusted-keys/trusted-tpm2.c
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+---
+ drivers/ptp/ptp_chardev.c      | 105 +++++++++++++++++++++++++++++++++
+ include/uapi/linux/ptp_clock.h |  12 ++++
+ 2 files changed, 117 insertions(+)
+
+diff --git a/drivers/ptp/ptp_chardev.c b/drivers/ptp/ptp_chardev.c
+index 18ffe449efdf..94775073527b 100644
+--- a/drivers/ptp/ptp_chardev.c
++++ b/drivers/ptp/ptp_chardev.c
+@@ -126,6 +126,7 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+ 	switch (cmd) {
+ 
+ 	case PTP_CLOCK_GETCAPS:
++	case PTP_CLOCK_GETCAPS2:
+ 		memset(&caps, 0, sizeof(caps));
+ 		caps.max_adj = ptp->info->max_adj;
+ 		caps.n_alarm = ptp->info->n_alarm;
+@@ -153,6 +154,28 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+ 		err = ops->enable(ops, &req, enable);
+ 		break;
+ 
++	case PTP_EXTTS_REQUEST2:
++		memset(&req, 0, sizeof(req));
++		if (copy_from_user(&req.extts, (void __user *)arg,
++				   sizeof(req.extts))) {
++			err = -EFAULT;
++			break;
++		}
++		if (req.extts.flags || req.extts.rsv[0]
++				|| req.extts.rsv[1]) {
++			err = -EINVAL;
++			break;
++		}
++			
++		if (req.extts.index >= ops->n_ext_ts) {
++			err = -EINVAL;
++			break;
++		}
++		req.type = PTP_CLK_REQ_EXTTS;
++		enable = req.extts.flags & PTP_ENABLE_FEATURE ? 1 : 0;
++		err = ops->enable(ops, &req, enable);
++		break;
++
+ 	case PTP_PEROUT_REQUEST:
+ 		if (copy_from_user(&req.perout, (void __user *)arg,
+ 				   sizeof(req.perout))) {
+@@ -168,6 +191,28 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+ 		err = ops->enable(ops, &req, enable);
+ 		break;
+ 
++	case PTP_PEROUT_REQUEST2:
++		memset(&req, 0, sizeof(req));
++		if (copy_from_user(&req.perout, (void __user *)arg,
++				   sizeof(req.perout))) {
++			err = -EFAULT;
++			break;
++		}
++		if (req.perout.flags || req.perout.rsv[0]
++				|| req.perout.rsv[1] || req.perout.rsv[2]
++				|| req.perout.rsv[3]) {
++			err = -EINVAL;
++			break;
++		}
++		if (req.perout.index >= ops->n_per_out) {
++			err = -EINVAL;
++			break;
++		}
++		req.type = PTP_CLK_REQ_PEROUT;
++		enable = req.perout.period.sec || req.perout.period.nsec;
++		err = ops->enable(ops, &req, enable);
++		break;
++
+ 	case PTP_ENABLE_PPS:
+ 		if (!capable(CAP_SYS_TIME))
+ 			return -EPERM;
+@@ -176,7 +221,17 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+ 		err = ops->enable(ops, &req, enable);
+ 		break;
+ 
++	case PTP_ENABLE_PPS2:
++		if (!capable(CAP_SYS_TIME))
++			return -EPERM;
++		memset(&req, 0, sizeof(req));
++		req.type = PTP_CLK_REQ_PPS;
++		enable = arg ? 1 : 0;
++		err = ops->enable(ops, &req, enable);
++		break;
++
+ 	case PTP_SYS_OFFSET_PRECISE:
++	case PTP_SYS_OFFSET_PRECISE2:
+ 		if (!ptp->info->getcrosststamp) {
+ 			err = -EOPNOTSUPP;
+ 			break;
+@@ -201,6 +256,7 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+ 		break;
+ 
+ 	case PTP_SYS_OFFSET_EXTENDED:
++	case PTP_SYS_OFFSET_EXTENDED2:
+ 		if (!ptp->info->gettimex64) {
+ 			err = -EOPNOTSUPP;
+ 			break;
+@@ -232,6 +288,7 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+ 		break;
+ 
+ 	case PTP_SYS_OFFSET:
++	case PTP_SYS_OFFSET2:
+ 		sysoff = memdup_user((void __user *)arg, sizeof(*sysoff));
+ 		if (IS_ERR(sysoff)) {
+ 			err = PTR_ERR(sysoff);
+@@ -284,6 +341,31 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+ 			err = -EFAULT;
+ 		break;
+ 
++	case PTP_PIN_GETFUNC2:
++		memset(&pd, 0, sizeof(pd));
++		if (copy_from_user(&pd, (void __user *)arg, sizeof(pd))) {
++			err = -EFAULT;
++			break;
++		}
++		if (pd.rsv[0] || pd.rsv[1] || pd.rsv[2]
++				|| pd.rsv[3] || pd.rsv[4]) {
++			err = -EINVAL;
++			break;
++		}
++		pin_index = pd.index;
++		if (pin_index >= ops->n_pins) {
++			err = -EINVAL;
++			break;
++		}
++		pin_index = array_index_nospec(pin_index, ops->n_pins);
++		if (mutex_lock_interruptible(&ptp->pincfg_mux))
++			return -ERESTARTSYS;
++		pd = ops->pin_config[pin_index];
++		mutex_unlock(&ptp->pincfg_mux);
++		if (!err && copy_to_user((void __user *)arg, &pd, sizeof(pd)))
++			err = -EFAULT;
++		break;
++
+ 	case PTP_PIN_SETFUNC:
+ 		if (copy_from_user(&pd, (void __user *)arg, sizeof(pd))) {
+ 			err = -EFAULT;
+@@ -301,6 +383,29 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
+ 		mutex_unlock(&ptp->pincfg_mux);
+ 		break;
+ 
++	case PTP_PIN_SETFUNC2:
++		memset(&pd, 0, sizeof(pd));
++		if (copy_from_user(&pd, (void __user *)arg, sizeof(pd))) {
++			err = -EFAULT;
++			break;
++		}
++		if (pd.rsv[0] || pd.rsv[1] || pd.rsv[2]
++				|| pd.rsv[3] || pd.rsv[4]) {
++			err = -EINVAL;
++			break;
++		}
++		pin_index = pd.index;
++		if (pin_index >= ops->n_pins) {
++			err = -EINVAL;
++			break;
++		}
++		pin_index = array_index_nospec(pin_index, ops->n_pins);
++		if (mutex_lock_interruptible(&ptp->pincfg_mux))
++			return -ERESTARTSYS;
++		err = ptp_set_pinfunc(ptp, pin_index, pd.func, pd.chan);
++		mutex_unlock(&ptp->pincfg_mux);
++		break;
++
+ 	default:
+ 		err = -ENOTTY;
+ 		break;
+diff --git a/include/uapi/linux/ptp_clock.h b/include/uapi/linux/ptp_clock.h
+index 1bc794ad957a..039cd62ec706 100644
+--- a/include/uapi/linux/ptp_clock.h
++++ b/include/uapi/linux/ptp_clock.h
+@@ -149,6 +149,18 @@ struct ptp_pin_desc {
+ #define PTP_SYS_OFFSET_EXTENDED \
+ 	_IOWR(PTP_CLK_MAGIC, 9, struct ptp_sys_offset_extended)
+ 
++#define PTP_CLOCK_GETCAPS2  _IOR(PTP_CLK_MAGIC, 10, struct ptp_clock_caps)
++#define PTP_EXTTS_REQUEST2  _IOW(PTP_CLK_MAGIC, 11, struct ptp_extts_request)
++#define PTP_PEROUT_REQUEST2 _IOW(PTP_CLK_MAGIC, 12, struct ptp_perout_request)
++#define PTP_ENABLE_PPS2     _IOW(PTP_CLK_MAGIC, 13, int)
++#define PTP_SYS_OFFSET2     _IOW(PTP_CLK_MAGIC, 14, struct ptp_sys_offset)
++#define PTP_PIN_GETFUNC2    _IOWR(PTP_CLK_MAGIC, 15, struct ptp_pin_desc)
++#define PTP_PIN_SETFUNC2    _IOW(PTP_CLK_MAGIC, 16, struct ptp_pin_desc)
++#define PTP_SYS_OFFSET_PRECISE2 \
++	_IOWR(PTP_CLK_MAGIC, 17, struct ptp_sys_offset_precise)
++#define PTP_SYS_OFFSET_EXTENDED2 \
++	_IOWR(PTP_CLK_MAGIC, 18, struct ptp_sys_offset_extended)
++
+ struct ptp_extts_event {
+ 	struct ptp_clock_time t; /* Time event occured. */
+ 	unsigned int index;      /* Which channel produced the event. */
+-- 
+2.22.0
+
+
 
 -- 
-2.7.4
-
+balbi
