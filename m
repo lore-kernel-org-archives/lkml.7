@@ -2,260 +2,217 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307DFC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DF3C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED43920651
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D88152067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:33:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbfHMMbd (ORCPT
+        id S1728113AbfHMMdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 08:31:33 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:64249
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726903AbfHMMbc (ORCPT
+        Tue, 13 Aug 2019 08:33:37 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:47319 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727837AbfHMMdh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 08:31:32 -0400
-X-IronPort-AV: E=Sophos;i="5.64,381,1559512800"; 
-   d="scan'208";a="316282409"
-Received: from portablejulia.rsr.lip6.fr ([132.227.76.63])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 14:31:18 +0200
-Date:   Tue, 13 Aug 2019 14:31:18 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: julia@hadrien
-To:     Matthias Maennich <maennich@google.com>
-cc:     linux-kernel@vger.kernel.org, maco@android.com,
-        kernel-team@android.com, arnd@arndb.de, geert@linux-m68k.org,
-        gregkh@linuxfoundation.org, hpa@zytor.com, jeyu@kernel.org,
-        joel@joelfernandes.org, kstewart@linuxfoundation.org,
-        linux-arch@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-m68k@vger.kernel.org, linux-modules@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
-        lucas.de.marchi@gmail.com, maco@google.com,
-        michal.lkml@markovi.net, mingo@redhat.com, oneukum@suse.com,
-        pombredanne@nexb.com, sam@ravnborg.org, sboyd@codeaurora.org,
-        sspatil@google.com, stern@rowland.harvard.edu, tglx@linutronix.de,
-        usb-storage@lists.one-eyed-alien.net, x86@kernel.org,
-        yamada.masahiro@socionext.com, Julia Lawall <Julia.Lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        cocci@systeme.lip6.fr
-Subject: Re: [PATCH v2 08/10] scripts: Coccinelle script for namespace
- dependencies.
-In-Reply-To: <20190813121733.52480-9-maennich@google.com>
-Message-ID: <alpine.DEB.2.21.1908131430530.4608@hadrien>
-References: <20180716122125.175792-1-maco@android.com> <20190813121733.52480-1-maennich@google.com> <20190813121733.52480-9-maennich@google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 13 Aug 2019 08:33:37 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hxVzZ-0000ny-8r; Tue, 13 Aug 2019 14:33:33 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hxVzX-0004N0-LM; Tue, 13 Aug 2019 14:33:31 +0200
+Date:   Tue, 13 Aug 2019 14:33:31 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Malaterre <malat@debian.org>,
+        Artur Rojek <contact@artur-rojek.eu>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 4/7] pwm: jz4740: Improve algorithm of clock calculation
+Message-ID: <20190813123331.m4ttfhcgt6wyrcfi@pengutronix.de>
+References: <20190809123031.24219-1-paul@crapouillou.net>
+ <20190809123031.24219-5-paul@crapouillou.net>
+ <20190809170551.u4ybilf5ay2rsvnn@pengutronix.de>
+ <1565370885.2091.2@crapouillou.net>
+ <20190812061520.lwzk3us4ginwwxov@pengutronix.de>
+ <1565642590.2007.1@crapouillou.net>
+ <20190812214838.e5hyhnlcyykjfvsb@pengutronix.de>
+ <1565648183.2007.3@crapouillou.net>
+ <20190813052726.g37upws5rlvrszc4@pengutronix.de>
+ <1565694066.1856.1@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1565694066.1856.1@crapouillou.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Paul,
 
+On Tue, Aug 13, 2019 at 01:01:06PM +0200, Paul Cercueil wrote:
+> Le mar. 13 août 2019 à 7:27, Uwe =?iso-8859-1?q?Kleine-K=F6nig?=
+> <u.kleine-koenig@pengutronix.de> a écrit :
+> > [adding Stephen Boyd to Cc]
+> > 
+> > On Tue, Aug 13, 2019 at 12:16:23AM +0200, Paul Cercueil wrote:
+> > > Le lun. 12 août 2019 à 23:48, Uwe Kleine-König a écrit :
+> > > > On Mon, Aug 12, 2019 at 10:43:10PM +0200, Paul Cercueil wrote:
+> > > > > Le lun. 12 août 2019 à 8:15, Uwe Kleine-König a écrit :
+> > > > > > On Fri, Aug 09, 2019 at 07:14:45PM +0200, Paul Cercueil wrote:
+> > > > > > > Le ven. 9 août 2019 à 19:05, Uwe Kleine-König a écrit :
+> > > > > > > > On Fri, Aug 09, 2019 at 02:30:28PM +0200, Paul Cercueil wrote:
+> > > > > > > > > [...]
+> > > > > > > > >  +	/* Reset the clock to the maximum rate, and we'll reduce it if needed */
+> > > > > > > > >  +	ret = clk_set_max_rate(clk, parent_rate);
+> > > > > > > >
+> > > > > > > > What is the purpose of this call? IIUC this limits the allowed range of
+> > > > > > > > rates for clk. I assume the idea is to prevent other consumers to change
+> > > > > > > > the rate in a way that makes it unsuitable for this pwm. But this only
+> > > > > > > > makes sense if you had a notifier for clk changes, doesn't it? I'm
+> > > > > > > > confused.
+> > > > > > >
+> > > > > > > Nothing like that. The second call to clk_set_max_rate() might have set
+> > > > > > > a maximum clock rate that's lower than the parent's rate, and we want to
+> > > > > > > undo that.
+> > > > > >
+> > > > > > I still don't get the purpose of this call. Why do you limit the clock
+> > > > > > rate at all?
+> > > > >
+> > > > > As it says below, we "limit the clock to a maximum rate that still gives
+> > > > > us a period value which fits in 16 bits". So that the computed hardware
+> > > > > values won't overflow.
+> > > >
+> > > > But why not just using clk_set_rate? You want to have the clock running
+> > > > at a certain rate, not any rate below that certain rate, don't you?
+> > > 
+> > >  I'll let yourself answer yourself:
+> > >  https://patchwork.ozlabs.org/patch/1018969/
+> > 
+> > In that thread I claimed that you used clk_round_rate wrongly, not that
+> > you should use clk_set_max_rate(). (The claim was somewhat weakend by
+> > Stephen, but still I think that clk_round_rate is the right approach.)
+> 
+> Well, you said that I shouln't rely on the fact that clk_round_rate() will
+> round down. That completely defeats the previous algorithm. So please tell
+> me how to use it correctly, because I don't see it.
 
-On Tue, 13 Aug 2019, Matthias Maennich wrote:
+Using clk_round_rate correctly without additional knowledge is hard. If
+you assume at least some sane behaviour you'd still have to call it
+multiple times. Assuming maxrate is the maximal rate you can handle
+without overflowing your PWM registers you have to do:
 
-> A script that uses the '<module>.ns_deps' file generated by modpost to
-> automatically add the required symbol namespace dependencies to each
-> module.
->
-> Usage:
-> 1) Move some symbols to a namespace with EXPORT_SYMBOL_NS() or define
->    DEFAULT_SYMBOL_NAMESPACE
-> 2) Run 'make' (or 'make modules') and get warnings about modules not
->    importing that namespace.
-> 3) Run 'make nsdeps' to automatically add required import statements
->    to said modules.
->
-> This makes it easer for subsystem maintainers to introduce and maintain
-> symbol namespaces into their codebase.
->
-> Co-developed-by: Martijn Coenen <maco@android.com>
-> Signed-off-by: Martijn Coenen <maco@android.com>
-> Signed-off-by: Matthias Maennich <maennich@google.com>
+	rate = maxrate;
+	rounded_rate = clk_round_rate(clk, rate);
+	while (rounded_rate > rate) {
+		if (rate < rounded_rate - rate) {
+			/*
+			 * clk doesn't support a rate smaller than
+			 * maxrate (or the round_rate callback doesn't
+			 * round consistently).
+			 */
+			 return -ESOMETHING;
+		}
+		rate = rate - (rounded_rate - rate)
+		rounded_rate = clk_round_rate(clk, rate);
+	}
 
-Acked-by: Julia Lawall <julia.lawall@lip6.fr>
+	return rate;
 
+Probably it would be sensible to put that in a function provided by the
+clk framework (maybe call it clk_round_rate_down and maybe with
+additional checks).
 
-> ---
->  MAINTAINERS                                 |  5 ++
->  Makefile                                    | 12 +++++
->  scripts/Makefile.modpost                    |  4 +-
->  scripts/coccinelle/misc/add_namespace.cocci | 23 +++++++++
->  scripts/nsdeps                              | 54 +++++++++++++++++++++
->  5 files changed, 97 insertions(+), 1 deletion(-)
->  create mode 100644 scripts/coccinelle/misc/add_namespace.cocci
->  create mode 100644 scripts/nsdeps
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e81e60bd7c26..aa169070a052 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11414,6 +11414,11 @@ S:	Maintained
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/wtarreau/nolibc.git
->  F:	tools/include/nolibc/
->
-> +NSDEPS
-> +M:	Matthias Maennich <maennich@google.com>
-> +S:	Maintained
-> +F:	scripts/nsdeps
-> +
->  NTB AMD DRIVER
->  M:	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->  L:	linux-ntb@googlegroups.com
-> diff --git a/Makefile b/Makefile
-> index 1b23f95db176..c5c3356e133c 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1500,6 +1500,9 @@ help:
->  	@echo  '  headerdep       - Detect inclusion cycles in headers'
->  	@echo  '  coccicheck      - Check with Coccinelle'
->  	@echo  ''
-> +	@echo  'Tools:'
-> +	@echo  '  nsdeps          - Generate missing symbol namespace dependencies'
-> +	@echo  ''
->  	@echo  'Kernel selftest:'
->  	@echo  '  kselftest       - Build and run kernel selftest (run as root)'
->  	@echo  '                    Build, install, and boot kernel before'
-> @@ -1687,6 +1690,15 @@ quiet_cmd_tags = GEN     $@
->  tags TAGS cscope gtags: FORCE
->  	$(call cmd,tags)
->
-> +# Script to generate missing namespace dependencies
-> +# ---------------------------------------------------------------------------
-> +
-> +PHONY += nsdeps
-> +
-> +nsdeps:
-> +	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost nsdeps
-> +	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/$@
-> +
->  # Scripts to check various things for consistency
->  # ---------------------------------------------------------------------------
->
-> diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-> index 26e6574ecd08..743fe3a2e885 100644
-> --- a/scripts/Makefile.modpost
-> +++ b/scripts/Makefile.modpost
-> @@ -56,7 +56,8 @@ MODPOST = scripts/mod/modpost						\
->  	$(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)))	\
->  	$(if $(KBUILD_EXTMOD),-o $(modulesymfile))			\
->  	$(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)			\
-> -	$(if $(KBUILD_MODPOST_WARN),-w)
-> +	$(if $(KBUILD_MODPOST_WARN),-w)					\
-> +	$(if $(filter nsdeps,$(MAKECMDGOALS)),-d)
->
->  ifdef MODPOST_VMLINUX
->
-> @@ -134,6 +135,7 @@ $(modules): %.ko :%.o %.mod.o FORCE
->
->  targets += $(modules)
->
-> +nsdeps: __modpost
->
->  # Add FORCE to the prequisites of a target to force it to be always rebuilt.
->  # ---------------------------------------------------------------------------
-> diff --git a/scripts/coccinelle/misc/add_namespace.cocci b/scripts/coccinelle/misc/add_namespace.cocci
-> new file mode 100644
-> index 000000000000..c832bb6445a8
-> --- /dev/null
-> +++ b/scripts/coccinelle/misc/add_namespace.cocci
-> @@ -0,0 +1,23 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +//
-> +/// Adds missing MODULE_IMPORT_NS statements to source files
-> +///
-> +/// This script is usually called from scripts/nsdeps with -D ns=<namespace> to
-> +/// add a missing namespace tag to a module source file.
-> +///
-> +
-> +@has_ns_import@
-> +declarer name MODULE_IMPORT_NS;
-> +identifier virtual.ns;
-> +@@
-> +MODULE_IMPORT_NS(ns);
-> +
-> +// Add missing imports, but only adjacent to a MODULE_LICENSE statement.
-> +// That ensures we are adding it only to the main module source file.
-> +@do_import depends on !has_ns_import@
-> +declarer name MODULE_LICENSE;
-> +expression license;
-> +identifier virtual.ns;
-> +@@
-> +MODULE_LICENSE(license);
-> ++ MODULE_IMPORT_NS(ns);
-> diff --git a/scripts/nsdeps b/scripts/nsdeps
-> new file mode 100644
-> index 000000000000..148db65a830f
-> --- /dev/null
-> +++ b/scripts/nsdeps
-> @@ -0,0 +1,54 @@
-> +#!/bin/bash
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Linux kernel symbol namespace import generator
-> +#
-> +# This script requires at least spatch
-> +# version 1.0.4.
-> +SPATCH_REQ_VERSION="1.0.4"
-> +
-> +DIR="$(dirname $(readlink -f $0))/.."
-> +SPATCH="`which ${SPATCH:=spatch}`"
-> +if [ ! -x "$SPATCH" ]; then
-> +    echo 'spatch is part of the Coccinelle project and is available at http://coccinelle.lip6.fr/'
-> +    exit 1
-> +fi
-> +
-> +SPATCH_REQ_VERSION_NUM=$(echo $SPATCH_REQ_VERSION | ${DIR}/scripts/ld-version.sh)
-> +SPATCH_VERSION=$($SPATCH --version | head -1 | awk '{print $3}')
-> +SPATCH_VERSION_NUM=$(echo $SPATCH_VERSION | ${DIR}/scripts/ld-version.sh)
-> +
-> +if [ "$SPATCH_VERSION_NUM" -lt "$SPATCH_REQ_VERSION_NUM" ] ; then
-> +    echo 'spatch needs to be version 1.06 or higher'
-> +    exit 1
-> +fi
-> +
-> +generate_deps_for_ns() {
-> +    $SPATCH --very-quiet --in-place --sp-file \
-> +	    $srctree/scripts/coccinelle/misc/add_namespace.cocci -D ns=$1 $2
-> +}
-> +
-> +generate_deps() {
-> +    local mod_file=`echo $@ | sed -e 's/\.ns_deps/\.mod/'`
-> +    local mod_name=`cat $mod_file | sed -n 1p | sed -e 's/\/[^.]*$//'`
-> +    local mod_source_files=`cat $mod_file | sed -n 2p | sed -e 's/\.o/\.c/g'`
-> +    for ns in `cat $@`; do
-> +	echo "Adding namespace $ns to module $mod_name (if needed)."
-> +        generate_deps_for_ns $ns $mod_source_files
-> +	# sort the imports
-> +        for source_file in $mod_source_files; do
-> +            sed '/MODULE_IMPORT_NS/Q' $source_file > ${source_file}.tmp
-> +            offset=$(wc -l ${source_file}.tmp | awk '{print $1;}')
-> +            cat $source_file | grep MODULE_IMPORT_NS | sort -u >> ${source_file}.tmp
-> +            tail -n +$((offset +1)) ${source_file} | grep -v MODULE_IMPORT_NS >> ${source_file}.tmp
-> +            if ! diff -q ${source_file} ${source_file}.tmp; then
-> +                mv ${source_file}.tmp ${source_file}
-> +            else
-> +                rm ${source_file}.tmp
-> +            fi
-> +        done
-> +    done
-> +}
-> +
-> +for f in `find $srctree/.tmp_versions/ -name *.ns_deps`; do
-> +    generate_deps $f
-> +done
-> --
-> 2.23.0.rc1.153.gdeed80330f-goog
->
->
+> I came up with a much smarter alternative, that doesn't rely on the rounding
+> method of clk_round_rate, and which is better overall (no loop needed). It
+> sounds to me like you're bashing the code without making the effort to
+> understand what it does.
+> 
+> Thierry called it a "neat trick"
+> (https://patchwork.kernel.org/patch/10836879/) so it cannot be as bad as you
+> say.
+
+Either that or Thierry failed to see the downside. The obvious downside
+is that once you set the period to something long (and so the clk was
+limited to a small frequency) you never make the clock any faster
+afterwards.
+
+Also I wonder how clk_set_max_rate() is supposed to be used like that or
+if instead some work should be invested to make it easier for clk
+consumers to use clk_round_rate() (e.g. by providing helper functions
+like the above). Stephen, can you shed some light into this?
+ 
+> > The upside of clk_round_rate is that it allows you to test for the
+> > capabilities of the clock without actually changing it before you found
+> > a setting you consider to be good.
+> 
+> I know what clk_round_rate() is for. But here we don't do trial-and-error to
+> find the first highest clock rate that works, we compute the maximum clock
+> we can use and limit the clock rate to that.
+> 
+> > 
+> > >  It's enough to run it below a certain rate, yes. The actual rate
+> > > doesn't
+> > >  actually matter that much.
+> > 
+> > 1 Hz would be fine? I doubt it.
+> 
+> We use the highest possible clock rate. We wouldn't use 1 Hz unless it's the
+> highest clock rate available.
+
+That's wrong. If the clk already runs at 1 Hz and you call
+clk_set_max_rate(rate, somethingincrediblehigh); it still runs at 1 Hz
+afterwards. (Unless I missed something.)
+
+> > > > >  E.g. if at a rate of 12 MHz your computed hardware value for the period
+> > > > >  is 0xf000, then at a rate of 24 MHz it won't fit in 16 bits. So the clock
+> > > > >  rate must be reduced to the highest possible that will still give you a
+> > > > >  < 16-bit value.
+> > > > >
+> > > > >  We always want the highest possible clock rate that works, for the sake of
+> > > > >  precision.
+> > > >
+> > > > This is dubious; but ok to keep the driver simple. (Consider a PWM that
+> > > > can run at i MHz for i in [1, .. 30]. If a period of 120 ns and a duty
+> > > > cycle of 40 ns is requested you can get an exact match with 25 MHz, but
+> > > > not with 30 MHz.)
+> > >
+> > > The clock rate is actually (parent_rate >> (2 * x) )
+> > > for x = 0, 1, 2, ...
+> > >
+> > > So if your parent_rate is 30 MHz the next valid one is 7.5 MHz, and the
+> > > next one is 1.875 MHz. It'd be very unlikely that you get a better match at
+> > > a lower clock.
+> > 
+> > If the smaller freqs are all dividers of the fastest that's fine. Please
+> > note in a code comment that you're assuming this.
+> 
+> No, I am not assuming this. The current driver just picks the highest clock
+> rate that works. We're not changing the behaviour here.
+
+But you hide it behind clk API functions that don't guarantee this
+behaviour. And even if it works for you it might not for the next person
+who copies your code to support another hardware.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
