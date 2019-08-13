@@ -2,163 +2,99 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA91C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1A3C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F68A20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:51:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565668314;
-	bh=HuT+OglXnLSHgrFdcHs/jiQsLDXIOqJOqXN8r0ibKLc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=laDGXfjgF0kEb1exfY+3KzZAdZcmKuJ8Yyf2ZGdh02aYjE2c7kVs14W7w6B7UFFxw
-	 a8WOCD3roupcJD8vBNro048Zj+UOeRniLNlNja6tgvUFqp9PcA6nLmVu6DkyuamDt/
-	 4Oo6PHPGZ85IQQHZgv/Q2I++8x3jNq6BrRmr7YuQ=
+	by mail.kernel.org (Postfix) with ESMTP id 603A1206C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:58:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbfHMDvx (ORCPT
+        id S1726884AbfHMD6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 23:51:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbfHMDvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 23:51:52 -0400
-Received: from localhost (c-73-15-1-175.hsd1.ca.comcast.net [73.15.1.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8930D20644;
-        Tue, 13 Aug 2019 03:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565668311;
-        bh=HuT+OglXnLSHgrFdcHs/jiQsLDXIOqJOqXN8r0ibKLc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lJ5k+JKoa8E1MKlqOGRqEB1XCz1OSkGZrGGFDkEtfXFiLHtCnXRQ099L3jsmjx190
-         JcX0sCRWCyXEFGA9/Jne2EGozyWhYS+GLxbvw895WpMmuSHghi0VK5hdYZim0Bly1p
-         1Oqeuq5c0L5ELXNPZ1UYVv4VOhUS+ez7Vgo/pDL0=
-Date:   Mon, 12 Aug 2019 22:51:48 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v5 1/7] PCI/ATS: Fix pci_prg_resp_pasid_required()
- dependency issues
-Message-ID: <20190813035148.GI7302@google.com>
-References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <0d7e0e0d079c438897f4da8cdca4b55994b1233b.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190812200418.GJ11785@google.com>
- <09a2faf0-a26f-6374-130a-3b33b1b712d5@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <09a2faf0-a26f-6374-130a-3b33b1b712d5@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 12 Aug 2019 23:58:55 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35153 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbfHMD6y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 23:58:54 -0400
+Received: from mail-pf1-f200.google.com ([209.85.210.200])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hxNxU-0002PH-KW
+        for linux-kernel@vger.kernel.org; Tue, 13 Aug 2019 03:58:52 +0000
+Received: by mail-pf1-f200.google.com with SMTP id y66so67594837pfb.21
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 20:58:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=0RN74NEyE4YfkXEtFGNzvr/832XZOZUykyHY7A5RitY=;
+        b=ATuts+2UJ3HoI4PKH9TimJL8D7+Ypb8hl6vdDRg8ssD48slXnUSXlnrHqXZwBxnzIU
+         dgz1mfiCe/hnP4B27lLbVtZ8lUp5VEd/3bFgpe2F2X4aGnosoQzZjOxpHUlFtO6Aki5z
+         ZkQSCd/AaqcGGp0hImw+pcPn6C/iJ6lZAnXNarOv7VNQAekHnPkqFq1BgsHanHd8YmgR
+         OUx6OHM267b2kgC3GJKxMXUtkq00sgv0179aKl6A1dMgi63FXyQRxPo6K5hERC+gdscA
+         Y0Hz7IRf9CmVe5xUWP7w7WkOo6ec5HsadHdeag4nzm7sPwjz6FSWMG9XJHmw0rhkvjrb
+         EtlQ==
+X-Gm-Message-State: APjAAAW0UeT1C36Tpwee12ISd6/qLcySMi4XLXx/JPAkDXukKVO9JmMr
+        7+SNU0DJhhpFfDNGmhWfdvg+3DrpSORhIh2+yvcCOXknnm4yfcL9bKO5XLGmx7uRBOqN8Tg5Eyj
+        Fr67xmFZvS0Sy9op1PKBRiXLXeo4nrGE9OKfHg20Y5w==
+X-Received: by 2002:a17:90a:d14a:: with SMTP id t10mr318816pjw.85.1565668731118;
+        Mon, 12 Aug 2019 20:58:51 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxxuV/Lcsw+F16jq6jQRQgKglOfoLNFaaDsBOz1aR2V7gfQF8jz13DYbzWHcSIR1MEo5JOeUg==
+X-Received: by 2002:a17:90a:d14a:: with SMTP id t10mr318806pjw.85.1565668730881;
+        Mon, 12 Aug 2019 20:58:50 -0700 (PDT)
+Received: from 2001-b011-380f-37d3-6d14-cecd-5a43-d44b.dynamic-ip6.hinet.net (2001-b011-380f-37d3-6d14-cecd-5a43-d44b.dynamic-ip6.hinet.net. [2001:b011:380f:37d3:6d14:cecd:5a43:d44b])
+        by smtp.gmail.com with ESMTPSA id y11sm116156829pfb.119.2019.08.12.20.58.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 12 Aug 2019 20:58:50 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] iommu/amd: Override wrong IVRS IOAPIC on Raven Ridge
+ systems
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20190809153931.GG12930@8bytes.org>
+Date:   Tue, 13 Aug 2019 11:58:48 +0800
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Message-Id: <9CDD544D-DE4C-4AC6-B0DC-CD30C99EA71C@canonical.com>
+References: <20190808101707.16783-1-kai.heng.feng@canonical.com>
+ <20190809153931.GG12930@8bytes.org>
+To:     Joerg Roedel <joro@8bytes.org>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 01:20:55PM -0700, sathyanarayanan kuppuswamy wrote:
-> On 8/12/19 1:04 PM, Bjorn Helgaas wrote:
-> > On Thu, Aug 01, 2019 at 05:05:58PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > 
-> > > Since pci_prg_resp_pasid_required() function has dependency on both
-> > > PASID and PRI, define it only if both CONFIG_PCI_PRI and
-> > > CONFIG_PCI_PASID config options are enabled.
+at 23:39, Joerg Roedel <joro@8bytes.org> wrote:
 
-> > I don't really like this.  It makes the #ifdefs more complicated and I
-> > don't think it really buys us anything.  Will anything break if we
-> > just drop this patch?
+> On Thu, Aug 08, 2019 at 06:17:07PM +0800, Kai-Heng Feng wrote:
+>> Raven Ridge systems may have malfunction touchpad or hang at boot if
+>> incorrect IVRS IOAPIC is provided by BIOS.
+>>
+>> Users already found correct "ivrs_ioapic=" values, let's put them inside
+>> kernel to workaround buggy BIOS.
+>
+> Will that still work when a fixed BIOS for these laptops is released?
 
-> Yes, this function uses "pri_lock" mutex which is only defined if
-> CONFIG_PCI_PRI is enabled. So not protecting this function within
-> CONFIG_PCI_PRI will lead to compilation issues.
+Do you mean that we should stop applying these quirks once a BIOS fix is  
+confirmed?
 
-Ah, OK.  That helps a lot.  "pri_lock" doesn't exist at this point in
-the series, so the patch makes no sense without knowing that.
+We can modify the quirk to compare BIOS version, if there’s an unlikely  
+BIOS update really fixes the issue.
+Before that happens, I think it’s OK to let the quirks stay this way.
 
-I'm still not convinced this is the right thing because I'm not sure
-the lock is necessary.  I'll respond to the patch that adds the lock.
+Kai-Heng
 
-> > > Fixes: e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required()
-> > > interface.")
-> > > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > ---
-> > >   drivers/pci/ats.c       | 10 ++++++----
-> > >   include/linux/pci-ats.h | 12 +++++++++---
-> > >   2 files changed, 15 insertions(+), 7 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> > > index e18499243f84..cdd936d10f68 100644
-> > > --- a/drivers/pci/ats.c
-> > > +++ b/drivers/pci/ats.c
-> > > @@ -395,6 +395,8 @@ int pci_pasid_features(struct pci_dev *pdev)
-> > >   }
-> > >   EXPORT_SYMBOL_GPL(pci_pasid_features);
-> > > +#ifdef CONFIG_PCI_PRI
-> > > +
-> > >   /**
-> > >    * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
-> > >    *				 status.
-> > > @@ -402,10 +404,8 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
-> > >    *
-> > >    * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
-> > >    *
-> > > - * Even though the PRG response PASID status is read from PRI Status
-> > > - * Register, since this API will mainly be used by PASID users, this
-> > > - * function is defined within #ifdef CONFIG_PCI_PASID instead of
-> > > - * CONFIG_PCI_PRI.
-> > > + * Since this API has dependency on both PRI and PASID, protect it
-> > > + * with both CONFIG_PCI_PRI and CONFIG_PCI_PASID.
-> > >    */
-> > >   int pci_prg_resp_pasid_required(struct pci_dev *pdev)
-> > >   {
-> > > @@ -425,6 +425,8 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
-> > >   }
-> > >   EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
-> > > +#endif
-> > > +
-> > >   #define PASID_NUMBER_SHIFT	8
-> > >   #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
-> > >   /**
-> > > diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-> > > index 1ebb88e7c184..1a0bdaee2f32 100644
-> > > --- a/include/linux/pci-ats.h
-> > > +++ b/include/linux/pci-ats.h
-> > > @@ -40,7 +40,6 @@ void pci_disable_pasid(struct pci_dev *pdev);
-> > >   void pci_restore_pasid_state(struct pci_dev *pdev);
-> > >   int pci_pasid_features(struct pci_dev *pdev);
-> > >   int pci_max_pasids(struct pci_dev *pdev);
-> > > -int pci_prg_resp_pasid_required(struct pci_dev *pdev);
-> > >   #else  /* CONFIG_PCI_PASID */
-> > > @@ -67,11 +66,18 @@ static inline int pci_max_pasids(struct pci_dev *pdev)
-> > >   	return -EINVAL;
-> > >   }
-> > > +#endif /* CONFIG_PCI_PASID */
-> > > +
-> > > +#if defined(CONFIG_PCI_PRI) && defined(CONFIG_PCI_PASID)
-> > > +
-> > > +int pci_prg_resp_pasid_required(struct pci_dev *pdev);
-> > > +
-> > > +#else /* CONFIG_PCI_PASID && CONFIG_PCI_PRI */
-> > > +
-> > >   static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
-> > >   {
-> > >   	return 0;
-> > >   }
-> > > -#endif /* CONFIG_PCI_PASID */
-> > > -
-> > > +#endif
-> > >   #endif /* LINUX_PCI_ATS_H*/
-> > > -- 
-> > > 2.21.0
-> > > 
-> -- 
-> Sathyanarayanan Kuppuswamy
-> Linux kernel developer
-> 
+>
+>
+> 	Joerg
+
+
