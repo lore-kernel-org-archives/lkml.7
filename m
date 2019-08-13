@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 071F4C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 407E7C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D993C20840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B1BA2070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:04:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbfHMVEV (ORCPT
+        id S1727442AbfHMVEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:04:21 -0400
-Received: from mga09.intel.com ([134.134.136.24]:18661 "EHLO mga09.intel.com"
+        Tue, 13 Aug 2019 17:04:31 -0400
+Received: from mga09.intel.com ([134.134.136.24]:18664 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727253AbfHMVDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 17:03:44 -0400
+        id S1727225AbfHMVDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 17:03:42 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 14:03:42 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 14:03:40 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="194276005"
+   d="scan'208";a="194275982"
 Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Aug 2019 14:03:42 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 13 Aug 2019 14:03:40 -0700
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
 To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -55,9 +55,9 @@ To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
         Dave Martin <Dave.Martin@arm.com>
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v8 13/14] x86: Discard .note.gnu.property sections
-Date:   Tue, 13 Aug 2019 13:53:58 -0700
-Message-Id: <20190813205359.12196-14-yu-cheng.yu@intel.com>
+Subject: [PATCH v8 07/14] x86/cet/ibt: Add ENDBR to op-code-map
+Date:   Tue, 13 Aug 2019 13:53:52 -0700
+Message-Id: <20190813205359.12196-8-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190813205359.12196-1-yu-cheng.yu@intel.com>
 References: <20190813205359.12196-1-yu-cheng.yu@intel.com>
@@ -66,74 +66,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "H.J. Lu" <hjl.tools@gmail.com>
+Add control transfer terminating instructions:
 
-With the command-line option, -mx86-used-note=yes, the x86 assembler
-in binutils 2.32 and above generates a program property note in a note
-section, .note.gnu.property, to encode used x86 ISAs and features.
-To exclude .note.gnu.property sections from NOTE segment in x86 kernel
-linker script:
+ENDBR64/ENDBR32:
+    Mark a valid 64/32-bit control transfer endpoint.
 
-PHDRS {
- text PT_LOAD FLAGS(5);
- data PT_LOAD FLAGS(6);
- percpu PT_LOAD FLAGS(6);
- init PT_LOAD FLAGS(7);
- note PT_NOTE FLAGS(0);
-}
-SECTIONS
-{
-...
- .notes : AT(ADDR(.notes) - 0xffffffff80000000) { __start_notes = .; KEEP(*(.not
-e.*)) __stop_notes = .; } :text :note
-...
-}
-
-this patch discards .note.gnu.property sections in kernel linker script
-by adding
-
- /DISCARD/ : {
-  *(.note.gnu.property)
- }
-
-before .notes sections.  Since .exit.text and .exit.data sections are
-discarded at runtime, it undefines EXIT_TEXT and EXIT_DATA to exclude
-.exit.text and .exit.data sections from default discarded sections.
-
-Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 ---
- arch/x86/kernel/vmlinux.lds.S | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/x86/lib/x86-opcode-map.txt               | 13 +++++++++++--
+ tools/objtool/arch/x86/lib/x86-opcode-map.txt | 13 +++++++++++--
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index e2feacf921a0..5ef137493a85 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -146,6 +146,10 @@ SECTIONS
- 		_etext = .;
- 	} :text = 0x9090
+diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
+index c5e825d44766..fbc53481bc59 100644
+--- a/arch/x86/lib/x86-opcode-map.txt
++++ b/arch/x86/lib/x86-opcode-map.txt
+@@ -620,7 +620,16 @@ ea: SAVEPREVSSP (f3)
+ # Skip 0xeb-0xff
+ EndTable
  
-+	/* .note.gnu.property sections should be discarded */
-+	/DISCARD/ : {
-+		*(.note.gnu.property)
-+	}
- 	NOTES :text :note
+-Table: 3-byte opcode 2 (0x0f 0x38)
++Table: 3-byte opcode 2 (0x0f 0x1e)
++Referrer:
++AVXcode:
++# Skip 0x00-0xf9
++fa: ENDBR64 (f3)
++fb: ENDBR32 (f3)
++#skip 0xfc-0xff
++EndTable
++
++Table: 3-byte opcode 3 (0x0f 0x38)
+ Referrer: 3-byte escape 1
+ AVXcode: 2
+ # 0x0f 0x38 0x00-0x0f
+@@ -804,7 +813,7 @@ f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v) | WRSS Pq,Qq
+ f7: BEXTR Gy,Ey,By (v) | SHLX Gy,Ey,By (66),(v) | SARX Gy,Ey,By (F3),(v) | SHRX Gy,Ey,By (F2),(v)
+ EndTable
  
- 	EXCEPTION_TABLE(16) :text = 0x9090
-@@ -415,6 +419,12 @@ SECTIONS
- 	STABS_DEBUG
- 	DWARF_DEBUG
+-Table: 3-byte opcode 3 (0x0f 0x3a)
++Table: 3-byte opcode 4 (0x0f 0x3a)
+ Referrer: 3-byte escape 2
+ AVXcode: 3
+ # 0x0f 0x3a 0x00-0xff
+diff --git a/tools/objtool/arch/x86/lib/x86-opcode-map.txt b/tools/objtool/arch/x86/lib/x86-opcode-map.txt
+index c5e825d44766..fbc53481bc59 100644
+--- a/tools/objtool/arch/x86/lib/x86-opcode-map.txt
++++ b/tools/objtool/arch/x86/lib/x86-opcode-map.txt
+@@ -620,7 +620,16 @@ ea: SAVEPREVSSP (f3)
+ # Skip 0xeb-0xff
+ EndTable
  
-+	/* Sections to be discarded.  EXIT_TEXT and EXIT_DATA discard at
-+	 * runtime, not link time. */
-+#undef EXIT_TEXT
-+#define EXIT_TEXT
-+#undef EXIT_DATA
-+#define EXIT_DATA
- 	DISCARDS
- 	/DISCARD/ : {
- 		*(.eh_frame)
+-Table: 3-byte opcode 2 (0x0f 0x38)
++Table: 3-byte opcode 2 (0x0f 0x1e)
++Referrer:
++AVXcode:
++# Skip 0x00-0xf9
++fa: ENDBR64 (f3)
++fb: ENDBR32 (f3)
++#skip 0xfc-0xff
++EndTable
++
++Table: 3-byte opcode 3 (0x0f 0x38)
+ Referrer: 3-byte escape 1
+ AVXcode: 2
+ # 0x0f 0x38 0x00-0x0f
+@@ -804,7 +813,7 @@ f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v) | WRSS Pq,Qq
+ f7: BEXTR Gy,Ey,By (v) | SHLX Gy,Ey,By (66),(v) | SARX Gy,Ey,By (F3),(v) | SHRX Gy,Ey,By (F2),(v)
+ EndTable
+ 
+-Table: 3-byte opcode 3 (0x0f 0x3a)
++Table: 3-byte opcode 4 (0x0f 0x3a)
+ Referrer: 3-byte escape 2
+ AVXcode: 3
+ # 0x0f 0x3a 0x00-0xff
 -- 
 2.17.1
 
