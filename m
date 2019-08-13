@@ -2,103 +2,162 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E33EC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6E2C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC8B2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:55:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565736924;
-	bh=+rrGnvdcanVtNKSBWoGJHi/njpfEfmBbO4E1AUigxgg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cu0ZGpOCih69qv7DdHMCNWYPU526wL69RkjWuaOInbeFiLrtHSKeF3DF2UD1kwcVR
-	 j3iJCkJObBt40Vcfu8M8WrLjisMTsQ2ntNRhQeNoYUK7HLd038p/2hS8b/vZumcVMA
-	 ufhastUtxrYhMHUB38oTFlKaAwF7Eu+4IbE0KAiY=
+	by mail.kernel.org (Postfix) with ESMTP id AEA5C2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:59:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727467AbfHMWzW (ORCPT
+        id S1727448AbfHMW7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 18:55:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59224 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbfHMWzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 18:55:22 -0400
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF7AE2070D
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 22:55:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565736921;
-        bh=+rrGnvdcanVtNKSBWoGJHi/njpfEfmBbO4E1AUigxgg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ywdw8i9NOLTIIMCBL4r7dwTOGtr9jQVBQm2Nfi4QSKZ5TDuLbpD9BYu+MoNU50rde
-         W1tfa4sGxkMsyAhZ8YrFO5xzfxyA9tQ1NJMN+KFszGDWDnu3nYJ5D8+ayQf/onHMht
-         XUrwBquLBtXbY8oQ8Evp9cZErtU2KDJXP2HM3BiQ=
-Received: by mail-wm1-f46.google.com with SMTP id 207so2924231wma.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 15:55:20 -0700 (PDT)
-X-Gm-Message-State: APjAAAXOZl0cnbwUcmvnMAg3x0duaZzT6iVgusozVtg0gZ53wN7pshIf
-        mj2Xe/xedbzF6NGBx2rpUuy/NhZl1xW3sUNeVyNbsQ==
-X-Google-Smtp-Source: APXvYqz81rhcDjLrUXa949/jjm55ToItN38xIeCcUB+xCMtSJjaFWmN9F1yAoi+Z2N937R71Fz0pHZpiJ2OikJCF6K0=
-X-Received: by 2002:a05:600c:24cf:: with SMTP id 15mr5069335wmu.76.1565736919249;
- Tue, 13 Aug 2019 15:55:19 -0700 (PDT)
+        Tue, 13 Aug 2019 18:59:30 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:43006 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfHMW7a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 18:59:30 -0400
+Received: from 79.184.255.155.ipv4.supernova.orange.pl (79.184.255.155) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
+ id 8199637f5f8090f3; Wed, 14 Aug 2019 00:59:26 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/5] PCI / PM: Check for error when reading Power State
+Date:   Wed, 14 Aug 2019 00:59:26 +0200
+Message-ID: <27964051.NtteWoIlyA@kreacher>
+In-Reply-To: <20190809220116.GA221706@google.com>
+References: <20190805205214.194981-1-helgaas@kernel.org> <CAJZ5v0jFPU38zDugumJB0iq5d-LctcMCdygTrFU4=gYP3UJ+oA@mail.gmail.com> <20190809220116.GA221706@google.com>
 MIME-Version: 1.0
-References: <20190813205225.12032-1-yu-cheng.yu@intel.com> <20190813205225.12032-16-yu-cheng.yu@intel.com>
-In-Reply-To: <20190813205225.12032-16-yu-cheng.yu@intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 13 Aug 2019 15:55:07 -0700
-X-Gmail-Original-Message-ID: <CALCETrVKbqzivPfUOiGi5efHUpEsfPkNzP0CrmAZzcwUgf7quA@mail.gmail.com>
-Message-ID: <CALCETrVKbqzivPfUOiGi5efHUpEsfPkNzP0CrmAZzcwUgf7quA@mail.gmail.com>
-Subject: Re: [PATCH v8 15/27] mm: Handle shadow stack page fault
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 2:02 PM Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
->
-> When a task does fork(), its shadow stack (SHSTK) must be duplicated
-> for the child.  This patch implements a flow similar to copy-on-write
-> of an anonymous page, but for SHSTK.
->
-> A SHSTK PTE must be RO and dirty.  This dirty bit requirement is used
-> to effect the copying.  In copy_one_pte(), clear the dirty bit from a
-> SHSTK PTE to cause a page fault upon the next SHSTK access.  At that
-> time, fix the PTE and copy/re-use the page.
+On Saturday, August 10, 2019 12:01:16 AM CEST Bjorn Helgaas wrote:
+> On Mon, Aug 05, 2019 at 11:09:19PM +0200, Rafael J. Wysocki wrote:
+> > On Mon, Aug 5, 2019 at 10:52 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >
+> > > From: Bjorn Helgaas <bhelgaas@google.com>
+> > >
+> > > The Power Management Status Register is in config space, and reads while
+> > > the device is in D3cold typically return ~0 data (PCI_ERROR_RESPONSE).  If
+> > > we just look at the PCI_PM_CTRL_STATE_MASK bits, that is 0x3, which looks
+> > > like D3hot, not D3cold.
+> > >
+> > > Check the entire register for PCI_ERROR_RESPONSE so we can distinguish
+> > > D3cold from D3hot.
+> > >
+> > > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > ---
+> > >  drivers/pci/pci.c   |  6 +++---
+> > >  include/linux/pci.h | 13 +++++++++++++
+> > >  2 files changed, 16 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > index af6a97d7012b..d8686e3cd5eb 100644
+> > > --- a/drivers/pci/pci.c
+> > > +++ b/drivers/pci/pci.c
+> > > @@ -894,7 +894,7 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+> > >                 udelay(PCI_PM_D2_DELAY);
+> > >
+> > >         pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+> > > -       dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
+> > > +       dev->current_state = pci_power_state(pmcsr);
+> > 
+> > But pci_raw_set_power_state() should not even be called for devices in
+> > D3_cold, so this at best is redundant.
+> 
+> I tried to verify that we don't call pci_raw_set_power_state() for
+> devices in D3cold, but it wasn't obvious to me.  Is there an easy way
+> to verify that?  I'd rather have code that doesn't rely on deep
+> knowledge about other areas.
 
-Is using VM_SHSTK and special-casing all of this really better than
-using a special mapping or other pseudo-file-backed VMA and putting
-all the magic in the vm_operations?
+It is called in two places, pci_power_up() and pci_set_power_state().
 
---Andy
+pci_power_up() is called on resume when the whole hierarchy is
+turned on and pci_set_power_state() explicitly powers up the
+device if in D3cold (with the help of the platform).
+
+And the "device not accessible at all" case should be covered by patch [2/5]
+in this series.
+
+> Even if the device was in, say D0, what if it is hot-removed just
+> before we read PCI_PM_CTRL?
+
+I guess you mean surprise-hot-removed?
+
+Then it may as well be hot-removed after setting current_state.
+
+> We'll set dev->current_state to D3hot,
+> when I think D3cold would better correspond to the state of the
+> device.  Maybe that's harmless, but I don't know how to verify that.
+
+Well, D3cold may just be equally misleading, because the device may
+very well not be present at all any more.
+
+> > >         if (dev->current_state != state && printk_ratelimit())
+> > >                 pci_info(dev, "Refused to change power state, currently in D%d\n",
+> > >                          dev->current_state);
+> > > @@ -942,7 +942,7 @@ void pci_update_current_state(struct pci_dev *dev, pci_power_t state)
+> > >                 u16 pmcsr;
+> > >
+> > >                 pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+> > > -               dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
+> > > +               dev->current_state = pci_power_state(pmcsr);
+> > 
+> > The if () branch above should cover the D3cold case, shouldn't it?
+> 
+> You mean the "if (platform_pci_get_power_state(dev) == PCI_D3cold)"
+> test?
+
+Not exactly.
+
+I mean "if (platform_pci_get_power_state(dev) == PCI_D3cold ||
+!pci_device_is_present(dev))".
+
+> platform_pci_get_power_state() returns PCI_UNKNOWN in some cases.
+> When that happens, might we not read PCI_PM_CTRL of a device in
+> D3cold?  I think this also has the same hotplug question as above.
+
+Surprise hot-removal can take place at any time, in particular after setting
+current_state, so adding extra checks here doesn't prevent the value of
+it from becoming stale at least sometimes anyway.
+
+> > >         } else {
+> > >                 dev->current_state = state;
+> > >         }
+> > > @@ -1677,7 +1677,7 @@ static int pci_enable_device_flags(struct pci_dev *dev, unsigned long flags)
+> > >         if (dev->pm_cap) {
+> > >                 u16 pmcsr;
+> > >                 pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+> > > -               dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
+> > > +               dev->current_state = pci_power_state(pmcsr);
+> > 
+> > So this appears to be only case in which pci_power_state(pmcsr) is
+> > useful at all.
+> > 
+> > It might be better to use the code from it directly here IMO.
+> 
+> If we're decoding CSR values, I think it's better to notice error
+> responses when we can than it is to try to figure out whether the
+> error response is theoretically impossible or the incorrectly decoded
+> value (e.g., D3hot instead of D3cold) is harmless.
+
+IMO this means more complex code and extra overhead for a very
+little practical value, however.
+
+
+
