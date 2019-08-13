@@ -2,193 +2,142 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73897C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD20EC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 547E7214C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B060A20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:14:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565687682;
+	bh=xZ0yDCRCZhWIVPha+yGLmDnMfafoheMG6TLAvsUcobs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P/dZ5r6dSjFWASun5DccyCrdX5U8CZty9n/AdgFQOXyv3i4Sc6w0U4hEMjzsT7UG3
+	 UH5tjlMdYAue8WL5iXPJVNti1kLa1YtIRGSeh7PY7w3zAo08bQSob5nvzx/V697jew
+	 x6P5MkZ24WBRzS1zzokWhGWSoBSCkdRQUxe0kEBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbfHMJOh (ORCPT
+        id S1728536AbfHMJOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 05:14:37 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39068 "EHLO huawei.com"
+        Tue, 13 Aug 2019 05:14:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58966 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728466AbfHMJOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:14:32 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 052351F6582B8A360753;
-        Tue, 13 Aug 2019 17:14:30 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 13 Aug
- 2019 17:14:20 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
-        David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        "Dave Chinner" <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Richard Weinberger <richard@nod.at>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
-        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v7 14/24] erofs: introduce superblock registration
-Date:   Tue, 13 Aug 2019 17:13:16 +0800
-Message-ID: <20190813091326.84652-15-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190813091326.84652-1-gaoxiang25@huawei.com>
-References: <20190813091326.84652-1-gaoxiang25@huawei.com>
+        id S1728436AbfHMJOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 05:14:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 117B6AB91;
+        Tue, 13 Aug 2019 09:14:32 +0000 (UTC)
+Date:   Tue, 13 Aug 2019 11:14:30 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
+        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
+        namhyung@google.com, paulmck@linux.ibm.com,
+        Robin Murphy <robin.murphy@arm.com>,
+        Roman Gushchin <guro@fb.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
+        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v5 1/6] mm/page_idle: Add per-pid idle page tracking
+ using virtual index
+Message-ID: <20190813091430.GE17933@dhcp22.suse.cz>
+References: <20190807171559.182301-1-joel@joelfernandes.org>
+ <20190807130402.49c9ea8bf144d2f83bfeb353@linux-foundation.org>
+ <20190807204530.GB90900@google.com>
+ <20190807135840.92b852e980a9593fe91fbf59@linux-foundation.org>
+ <20190807213105.GA14622@google.com>
+ <20190808080044.GA18351@dhcp22.suse.cz>
+ <20190812145620.GB224541@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812145620.GB224541@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to introducing shrinker solution for erofs,
-let's manage all mounted erofs instances at first.
+On Mon 12-08-19 10:56:20, Joel Fernandes wrote:
+> On Thu, Aug 08, 2019 at 10:00:44AM +0200, Michal Hocko wrote:
+> > On Wed 07-08-19 17:31:05, Joel Fernandes wrote:
+> > > On Wed, Aug 07, 2019 at 01:58:40PM -0700, Andrew Morton wrote:
+> > > > On Wed, 7 Aug 2019 16:45:30 -0400 Joel Fernandes <joel@joelfernandes.org> wrote:
+> > > > 
+> > > > > On Wed, Aug 07, 2019 at 01:04:02PM -0700, Andrew Morton wrote:
+> > > > > > On Wed,  7 Aug 2019 13:15:54 -0400 "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
+> > > > > > 
+> > > > > > > In Android, we are using this for the heap profiler (heapprofd) which
+> > > > > > > profiles and pin points code paths which allocates and leaves memory
+> > > > > > > idle for long periods of time. This method solves the security issue
+> > > > > > > with userspace learning the PFN, and while at it is also shown to yield
+> > > > > > > better results than the pagemap lookup, the theory being that the window
+> > > > > > > where the address space can change is reduced by eliminating the
+> > > > > > > intermediate pagemap look up stage. In virtual address indexing, the
+> > > > > > > process's mmap_sem is held for the duration of the access.
+> > > > > > 
+> > > > > > So is heapprofd a developer-only thing?  Is heapprofd included in
+> > > > > > end-user android loads?  If not then, again, wouldn't it be better to
+> > > > > > make the feature Kconfigurable so that Android developers can enable it
+> > > > > > during development then disable it for production kernels?
+> > > > > 
+> > > > > Almost all of this code is already configurable with
+> > > > > CONFIG_IDLE_PAGE_TRACKING. If you disable it, then all of this code gets
+> > > > > disabled.
+> > > > > 
+> > > > > Or are you referring to something else that needs to be made configurable?
+> > > > 
+> > > > Yes - the 300+ lines of code which this patchset adds!
+> > > > 
+> > > > The impacted people will be those who use the existing
+> > > > idle-page-tracking feature but who will not use the new feature.  I
+> > > > guess we can assume this set is small...
+> > > 
+> > > Yes, I think this set should be small. The code size increase of page_idle.o
+> > > is from ~1KB to ~2KB. Most of the extra space is consumed by
+> > > page_idle_proc_generic() function which this patch adds. I don't think adding
+> > > another CONFIG option to disable this while keeping existing
+> > > CONFIG_IDLE_PAGE_TRACKING enabled, is worthwhile but I am open to the
+> > > addition of such an option if anyone feels strongly about it. I believe that
+> > > once this patch is merged, most like this new interface being added is what
+> > > will be used more than the old interface (for some of the usecases) so it
+> > > makes sense to keep it alive with CONFIG_IDLE_PAGE_TRACKING.
+> > 
+> > I would tend to agree with Joel here. The functionality falls into an
+> > existing IDLE_PAGE_TRACKING config option quite nicely. If there really
+> > are users who want to save some space and this is standing in the way
+> > then they can easily add a new config option with some justification so
+> > the savings are clear. Without that an additional config simply adds to
+> > the already existing configurability complexity and balkanization.
+> 
+> Michal, Andrew, Minchan,
+> 
+> Would you have any other review comments on the v5 series? This is just a new
+> interface that does not disrupt existing users of the older page-idle
+> tracking, so as such it is a safe change (as in, doesn't change existing
+> functionality except for the draining bug fix).
 
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
- fs/erofs/Makefile   |  2 +-
- fs/erofs/internal.h | 13 +++++++++++++
- fs/erofs/super.c    |  9 +++++++++
- fs/erofs/utils.c    | 32 ++++++++++++++++++++++++++++++++
- 4 files changed, 55 insertions(+), 1 deletion(-)
- create mode 100644 fs/erofs/utils.c
-
-diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
-index 481a966caf06..930770be124f 100644
---- a/fs/erofs/Makefile
-+++ b/fs/erofs/Makefile
-@@ -5,7 +5,7 @@ EROFS_VERSION = "1.0"
- ccflags-y += -DEROFS_VERSION=\"$(EROFS_VERSION)\"
- 
- obj-$(CONFIG_EROFS_FS) += erofs.o
--erofs-objs := super.o inode.o data.o namei.o dir.o
-+erofs-objs := super.o inode.o data.o namei.o dir.o utils.o
- erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
- erofs-$(CONFIG_EROFS_FS_ZIP) += zmap.o
- 
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index d6dbd3937bdb..60cc77b42b19 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -60,6 +60,10 @@ typedef u64 erofs_off_t;
- typedef u32 erofs_blk_t;
- 
- struct erofs_sb_info {
-+#ifdef CONFIG_EROFS_FS_ZIP
-+	/* list for all registered superblocks, mainly for shrinker */
-+	struct list_head list;
-+#endif	/* CONFIG_EROFS_FS_ZIP */
- 	u32 blocks;
- 	u32 meta_blkaddr;
- #ifdef CONFIG_EROFS_FS_XATTR
-@@ -400,5 +404,14 @@ int erofs_namei(struct inode *dir, struct qstr *name,
- /* dir.c */
- extern const struct file_operations erofs_dir_fops;
- 
-+/* utils.c */
-+#ifdef CONFIG_EROFS_FS_ZIP
-+void erofs_shrinker_register(struct super_block *sb);
-+void erofs_shrinker_unregister(struct super_block *sb);
-+#else
-+static inline void erofs_shrinker_register(struct super_block *sb) {}
-+static inline void erofs_shrinker_unregister(struct super_block *sb) {}
-+#endif	/* !CONFIG_EROFS_FS_ZIP */
-+
- #endif	/* __EROFS_INTERNAL_H */
- 
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 561ae6f7fe13..2eca3b25db75 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -354,6 +354,8 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
- 	if (unlikely(!sb->s_root))
- 		return -ENOMEM;
- 
-+	erofs_shrinker_register(sb);
-+
- 	if (!silent)
- 		infoln("mounted on %s with opts: %s.", sb->s_id, (char *)data);
- 	return 0;
-@@ -385,6 +387,12 @@ static void erofs_kill_sb(struct super_block *sb)
- 	sb->s_fs_info = NULL;
- }
- 
-+/* called when ->s_root is non-NULL */
-+static void erofs_put_super(struct super_block *sb)
-+{
-+	erofs_shrinker_unregister(sb);
-+}
-+
- static struct file_system_type erofs_fs_type = {
- 	.owner          = THIS_MODULE,
- 	.name           = "erofs",
-@@ -496,6 +504,7 @@ static int erofs_remount(struct super_block *sb, int *flags, char *data)
- }
- 
- const struct super_operations erofs_sops = {
-+	.put_super = erofs_put_super,
- 	.alloc_inode = alloc_inode,
- 	.free_inode = free_inode,
- 	.statfs = erofs_statfs,
-diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
-new file mode 100644
-index 000000000000..791b2df1f761
---- /dev/null
-+++ b/fs/erofs/utils.c
-@@ -0,0 +1,32 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * linux/fs/erofs/utils.c
-+ *
-+ * Copyright (C) 2018 HUAWEI, Inc.
-+ *             http://www.huawei.com/
-+ * Created by Gao Xiang <gaoxiang25@huawei.com>
-+ */
-+#include "internal.h"
-+
-+#ifdef CONFIG_EROFS_FS_ZIP
-+/* protects the mounted 'erofs_sb_list' */
-+static DEFINE_SPINLOCK(erofs_sb_list_lock);
-+static LIST_HEAD(erofs_sb_list);
-+
-+void erofs_shrinker_register(struct super_block *sb)
-+{
-+	struct erofs_sb_info *sbi = EROFS_SB(sb);
-+
-+	spin_lock(&erofs_sb_list_lock);
-+	list_add(&sbi->list, &erofs_sb_list);
-+	spin_unlock(&erofs_sb_list_lock);
-+}
-+
-+void erofs_shrinker_unregister(struct super_block *sb)
-+{
-+	spin_lock(&erofs_sb_list_lock);
-+	list_del(&EROFS_SB(sb)->list);
-+	spin_unlock(&erofs_sb_list_lock);
-+}
-+#endif	/* !CONFIG_EROFS_FS_ZIP */
-+
+I hope to find some more time to finish the review but let me point out
+that "it's new it is regression safe" is not really a great argument for
+a new user visible API. If the API is flawed then this is likely going
+to kick us later and will be hard to fix. I am still not convinced about
+the swap part of the thing TBH.
 -- 
-2.17.1
-
+Michal Hocko
+SUSE Labs
