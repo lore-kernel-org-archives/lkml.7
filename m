@@ -2,74 +2,221 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 142C2C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0E7C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D699820663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F1F620663
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:59:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="oX9/ZD77"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbfHMJ7A (ORCPT
+        id S1728672AbfHMJ7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 05:59:00 -0400
-Received: from correo.us.es ([193.147.175.20]:35542 "EHLO mail.us.es"
+        Tue, 13 Aug 2019 05:59:39 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:28634 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728590AbfHMJ7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:59:00 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 068DDDA708
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 11:58:58 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id ED1F6DA730
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 11:58:57 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id E1DF3202D1; Tue, 13 Aug 2019 11:58:57 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id E81A4DA730;
-        Tue, 13 Aug 2019 11:58:55 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Tue, 13 Aug 2019 11:58:55 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [31.4.218.116])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id BB08A4265A2F;
-        Tue, 13 Aug 2019 11:58:55 +0200 (CEST)
-Date:   Tue, 13 Aug 2019 11:58:55 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net/netfilter/nf_nat_proto.c - make tables static
-Message-ID: <20190813095855.hcxlzzuadvgwfzw7@salvia>
-References: <55481.1565243002@turing-police>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <55481.1565243002@turing-police>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1727818AbfHMJ7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 05:59:38 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4677VH4Nw2z9v1W3;
+        Tue, 13 Aug 2019 11:59:35 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=oX9/ZD77; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id gBlsqgwwDUqb; Tue, 13 Aug 2019 11:59:35 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4677VH38Zsz9v1W2;
+        Tue, 13 Aug 2019 11:59:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1565690375; bh=JYJjMFrksQkJQzsMa6XK5CV26FTWiMKh7UYmj9qLwak=;
+        h=From:Subject:To:Cc:Date:From;
+        b=oX9/ZD77VnUKlJ4pXoro5/1y0fvUrWValY7FqUx/ZyHeJsJc25Mlv8qiSQOQRonE5
+         MpZFJssbj+GFAMPEUraYfEKHC3OeNo3irfS/9X2R8SzqbXok4ei6dK3sXLCx17o0fq
+         JumRZszgPt0LLwrJ9kvPaUk+JyhP8E/y3fYQWxms=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A6D438B7D4;
+        Tue, 13 Aug 2019 11:59:36 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id RY1JyRUjw1C7; Tue, 13 Aug 2019 11:59:36 +0200 (CEST)
+Received: from pc17473vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5D5F58B7D3;
+        Tue, 13 Aug 2019 11:59:36 +0200 (CEST)
+Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 18DD968F37; Tue, 13 Aug 2019 09:59:36 +0000 (UTC)
+Message-Id: <61d2a0b6f0c89b1ee546851ce9b6bd345e5ec968.1565690241.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH 1/2] powerpc: rewrite LOAD_REG_IMMEDIATE() as an intelligent
+ macro
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        segher@kernel.crashing.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 13 Aug 2019 09:59:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 01:43:22AM -0400, Valdis Klētnieks wrote:
-> Sparse warns about two tables not being declared.
-> 
->   CHECK   net/netfilter/nf_nat_proto.c
-> net/netfilter/nf_nat_proto.c:725:26: warning: symbol 'nf_nat_ipv4_ops' was not declared. Should it be static?
-> net/netfilter/nf_nat_proto.c:964:26: warning: symbol 'nf_nat_ipv6_ops' was not declared. Should it be static?
-> 
-> And in fact they can indeed be static.
+Today LOAD_REG_IMMEDIATE() is a basic #define which loads all
+parts on a value into a register, including the parts that are NUL.
 
-Applied, thanks.
+This means always 2 instructions on PPC32 and always 5 instructions
+on PPC64. And those instructions cannot run in parallele as they are
+updating the same register.
+
+Ex: LOAD_REG_IMMEDIATE(r1,THREAD_SIZE) in head_64.S results in:
+
+3c 20 00 00     lis     r1,0
+60 21 00 00     ori     r1,r1,0
+78 21 07 c6     rldicr  r1,r1,32,31
+64 21 00 00     oris    r1,r1,0
+60 21 40 00     ori     r1,r1,16384
+
+Rewrite LOAD_REG_IMMEDIATE() with GAS macro in order to skip
+the parts that are NUL.
+
+Rename existing LOAD_REG_IMMEDIATE() as LOAD_REG_IMMEDIATE_SYM()
+and use that one for loading value of symbols which are not known
+at compile time.
+
+Now LOAD_REG_IMMEDIATE(r1,THREAD_SIZE) in head_64.S results in:
+
+38 20 40 00     li      r1,16384
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/include/asm/ppc_asm.h   | 42 +++++++++++++++++++++++++++++++-----
+ arch/powerpc/kernel/exceptions-64e.S | 10 ++++-----
+ arch/powerpc/kernel/head_64.S        |  2 +-
+ 3 files changed, 43 insertions(+), 11 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/ppc_asm.h b/arch/powerpc/include/asm/ppc_asm.h
+index e0637730a8e7..9a7c2ca9b714 100644
+--- a/arch/powerpc/include/asm/ppc_asm.h
++++ b/arch/powerpc/include/asm/ppc_asm.h
+@@ -311,13 +311,43 @@ GLUE(.,name):
+ 	addis	reg,reg,(name - 0b)@ha;		\
+ 	addi	reg,reg,(name - 0b)@l;
+ 
+-#ifdef __powerpc64__
+-#ifdef HAVE_AS_ATHIGH
++#if defined(__powerpc64__) && defined(HAVE_AS_ATHIGH)
+ #define __AS_ATHIGH high
+ #else
+ #define __AS_ATHIGH h
+ #endif
+-#define LOAD_REG_IMMEDIATE(reg,expr)		\
++
++.macro __LOAD_REG_IMMEDIATE_32 r, x
++	.if (\x) >= 0x8000 || (\x) < -0x8000
++		lis \r, (\x)@__AS_ATHIGH
++		.if (\x) & 0xffff != 0
++			ori \r, \r, (\x)@l
++		.endif
++	.else
++		li \r, (\x)@l
++	.endif
++.endm
++
++.macro __LOAD_REG_IMMEDIATE r, x
++	.if \x & ~0xffffffff != 0
++		__LOAD_REG_IMMEDIATE_32 \r, (\x) >> 32
++		rldicr	\r, \r, 32, 31
++		.if (\x) & 0xffff0000 != 0
++			oris \r, \r, (\x)@__AS_ATHIGH
++		.endif
++		.if (\x) & 0xffff != 0
++			oris \r, \r, (\x)@l
++		.endif
++	.else
++		__LOAD_REG_IMMEDIATE_32 \r, \x
++	.endif
++.endm
++
++#ifdef __powerpc64__
++
++#define LOAD_REG_IMMEDIATE(reg, expr) __LOAD_REG_IMMEDIATE reg, expr
++
++#define LOAD_REG_IMMEDIATE_SYM(reg,expr)	\
+ 	lis     reg,(expr)@highest;		\
+ 	ori     reg,reg,(expr)@higher;	\
+ 	rldicr  reg,reg,32,31;		\
+@@ -335,11 +365,13 @@ GLUE(.,name):
+ 
+ #else /* 32-bit */
+ 
+-#define LOAD_REG_IMMEDIATE(reg,expr)		\
++#define LOAD_REG_IMMEDIATE(reg, expr) __LOAD_REG_IMMEDIATE_32 reg, expr
++
++#define LOAD_REG_IMMEDIATE_SYM(reg,expr)		\
+ 	lis	reg,(expr)@ha;		\
+ 	addi	reg,reg,(expr)@l;
+ 
+-#define LOAD_REG_ADDR(reg,name)		LOAD_REG_IMMEDIATE(reg, name)
++#define LOAD_REG_ADDR(reg,name)		LOAD_REG_IMMEDIATE_SYM(reg, name)
+ 
+ #define LOAD_REG_ADDRBASE(reg, name)	lis	reg,name@ha
+ #define ADDROFF(name)			name@l
+diff --git a/arch/powerpc/kernel/exceptions-64e.S b/arch/powerpc/kernel/exceptions-64e.S
+index 1cfb3da4a84a..898aae6da167 100644
+--- a/arch/powerpc/kernel/exceptions-64e.S
++++ b/arch/powerpc/kernel/exceptions-64e.S
+@@ -751,8 +751,8 @@ END_FTR_SECTION_IFSET(CPU_FTR_ALTIVEC)
+ 	ld	r14,interrupt_base_book3e@got(r15)
+ 	ld	r15,__end_interrupts@got(r15)
+ #else
+-	LOAD_REG_IMMEDIATE(r14,interrupt_base_book3e)
+-	LOAD_REG_IMMEDIATE(r15,__end_interrupts)
++	LOAD_REG_IMMEDIATE_SYM(r14,interrupt_base_book3e)
++	LOAD_REG_IMMEDIATE_SYM(r15,__end_interrupts)
+ #endif
+ 	cmpld	cr0,r10,r14
+ 	cmpld	cr1,r10,r15
+@@ -821,8 +821,8 @@ kernel_dbg_exc:
+ 	ld	r14,interrupt_base_book3e@got(r15)
+ 	ld	r15,__end_interrupts@got(r15)
+ #else
+-	LOAD_REG_IMMEDIATE(r14,interrupt_base_book3e)
+-	LOAD_REG_IMMEDIATE(r15,__end_interrupts)
++	LOAD_REG_IMMEDIATE_SYM(r14,interrupt_base_book3e)
++	LOAD_REG_IMMEDIATE_SYM(r15,__end_interrupts)
+ #endif
+ 	cmpld	cr0,r10,r14
+ 	cmpld	cr1,r10,r15
+@@ -1449,7 +1449,7 @@ a2_tlbinit_code_start:
+ a2_tlbinit_after_linear_map:
+ 
+ 	/* Now we branch the new virtual address mapped by this entry */
+-	LOAD_REG_IMMEDIATE(r3,1f)
++	LOAD_REG_IMMEDIATE_SYM(r3,1f)
+ 	mtctr	r3
+ 	bctr
+ 
+diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
+index 91d297e696dd..1fd44761e997 100644
+--- a/arch/powerpc/kernel/head_64.S
++++ b/arch/powerpc/kernel/head_64.S
+@@ -635,7 +635,7 @@ __after_prom_start:
+ 	sub	r5,r5,r11
+ #else
+ 	/* just copy interrupts */
+-	LOAD_REG_IMMEDIATE(r5, FIXED_SYMBOL_ABS_ADDR(__end_interrupts))
++	LOAD_REG_IMMEDIATE_SYM(r5, FIXED_SYMBOL_ABS_ADDR(__end_interrupts))
+ #endif
+ 	b	5f
+ 3:
+-- 
+2.13.3
+
