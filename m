@@ -2,103 +2,120 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE00EC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 809D0C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFCEE20673
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E40320673
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:30:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfHML3f (ORCPT
+        id S1727251AbfHMLaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 07:29:35 -0400
-Received: from muru.com ([72.249.23.125]:57164 "EHLO muru.com"
+        Tue, 13 Aug 2019 07:30:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60400 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726650AbfHML3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 07:29:35 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 00CBA805C;
-        Tue, 13 Aug 2019 11:30:00 +0000 (UTC)
-Date:   Tue, 13 Aug 2019 04:29:30 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Jyri Sarha <jsarha@ti.com>
-Cc:     Suman Anna <s-anna@ti.com>, linux-omap@vger.kernel.org,
-        Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/8] ARM: OMAP2+: Remove unconfigured midlemode for am3
- lcdc
-Message-ID: <20190813112930.GO52127@atomide.com>
-References: <20190723112811.44381-1-tony@atomide.com>
- <20190723112811.44381-3-tony@atomide.com>
- <bcc130a5-f7e0-e182-9f4b-5a48fc3d6e17@ti.com>
- <b5d757dc-6326-4b93-c2a2-2db02a440c26@ti.com>
+        id S1726650AbfHMLaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 07:30:12 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 17BC98535C;
+        Tue, 13 Aug 2019 11:30:12 +0000 (UTC)
+Received: from gondolin (dhcp-192-232.str.redhat.com [10.33.192.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 82C315799C;
+        Tue, 13 Aug 2019 11:29:59 +0000 (UTC)
+Date:   Tue, 13 Aug 2019 13:29:57 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, mjrosato@linux.ibm.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+Subject: Re: [PATCH] s390: vfio-ap: remove unnecessary calls to disable
+ queue interrupts
+Message-ID: <20190813132957.7fafad2d.cohuck@redhat.com>
+In-Reply-To: <1565642829-20157-1-git-send-email-akrowiak@linux.ibm.com>
+References: <1565642829-20157-1-git-send-email-akrowiak@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b5d757dc-6326-4b93-c2a2-2db02a440c26@ti.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 13 Aug 2019 11:30:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Jyri Sarha <jsarha@ti.com> [190813 11:05]:
-> On 23/07/2019 22:03, Suman Anna wrote:
-> > + Jyri
-> > 
-> > On 7/23/19 6:28 AM, Tony Lindgren wrote:
-> >> We currently get a warning for lcdc because of a difference
-> >> with dts provided configuration compared to the legacy platform
-> >> data. This is because lcdc has SYSC_HAS_MIDLEMODE configured in
-> >> the platform data without configuring the modes.
-> > 
-> > Hi Tony,
-> > While I understand that you are trying to match the DT data with the
-> > existing legacy data, do you know if there was a reason why this was
-> > omitted in the first place? Should we be really adding the MSTANDBY_
-> > flags and fix up the DTS node accordingly? I tried looking through the
-> > git log, and the initial commit itself didn't add the MSTANDBY_ flags
-> > but used the SYSC_HAS_MIDLEMODE.
-> > 
-> > Jyri,
-> > Do you know the history?
-> > 
+On Mon, 12 Aug 2019 16:47:09 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+
+> When an AP queue is reset (zeroized), interrupts are disabled. The queue
+> reset function currently tries to disable interrupts unnecessarily. This patch
+> removes the unnecessary calls to disable interrupts after queue reset.
 > 
-> Sorry. This all has happened before my time. This is all new to me.
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>  drivers/s390/crypto/vfio_ap_ops.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index 0604b49a4d32..407c2f0f25f9 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -1114,18 +1114,19 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>  	return NOTIFY_OK;
+>  }
+>  
+> -static void vfio_ap_irq_disable_apqn(int apqn)
+> +static struct vfio_ap_queue *vfio_ap_find_qdev(int apqn)
+>  {
+>  	struct device *dev;
+> -	struct vfio_ap_queue *q;
+> +	struct vfio_ap_queue *q = NULL;
+>  
+>  	dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
+>  				 &apqn, match_apqn);
+>  	if (dev) {
+>  		q = dev_get_drvdata(dev);
+> -		vfio_ap_irq_disable(q);
+>  		put_device(dev);
+>  	}
+> +
+> +	return q;
+>  }
+>  
+>  int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+> @@ -1164,6 +1165,7 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>  	int rc = 0;
+>  	unsigned long apid, apqi;
+>  	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+> +	struct vfio_ap_queue *q;
+>  
+>  	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm,
+>  			     matrix_mdev->matrix.apm_max + 1) {
+> @@ -1177,7 +1179,10 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>  			 */
+>  			if (ret)
+>  				rc = ret;
+> -			vfio_ap_irq_disable_apqn(AP_MKQID(apid, apqi));
 
-Oh OK. Well if possible, could you please check if the following patch
-behaves with v5.2 for you for LCDC? I only have rack access to a
-beaglebone with hdmi right now.
+Might be useful to stick a comment in this function that resetting the
+queue has also disabled the interrupts, as the architecture
+documentation for that is not publicly available.
 
-TRM "Table 13-34. SYSCONFIG Register Field Descriptions" lists both
-standbymode and idlemode that should be just the sidle and midle
-registers where midle is currently unconfigured.
+> +
+> +			q = vfio_ap_find_qdev(AP_MKQID(apid, apqi));
+> +			if (q)
+> +				vfio_ap_free_aqic_resources(q);
+>  		}
+>  	}
+>  
 
-Regards,
-
-Tony
-
-8< ---------------------
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-@@ -255,8 +255,9 @@ static struct omap_hwmod am33xx_gpio0_hwmod = {
- static struct omap_hwmod_class_sysconfig lcdc_sysc = {
- 	.rev_offs	= 0x0,
- 	.sysc_offs	= 0x54,
--	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_MIDLEMODE),
--	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
-+	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_MIDLEMODE,
-+	.idlemodes	= SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
-+			  MSTANDBY_FORCE | MSTANDBY_NO | MSTANDBY_SMART,
- 	.sysc_fields	= &omap_hwmod_sysc_type2,
- };
- 
+Trusting your reading of the architecture,
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
