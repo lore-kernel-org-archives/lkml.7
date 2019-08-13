@@ -2,70 +2,91 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB8BC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF90C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB222084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13CCD205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:57:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729827AbfHMO4w (ORCPT
+        id S1729841AbfHMO5o convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 10:56:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54560 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729539AbfHMO4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 10:56:51 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEFA5205F4;
-        Tue, 13 Aug 2019 14:56:49 +0000 (UTC)
-Date:   Tue, 13 Aug 2019 10:56:45 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Tue, 13 Aug 2019 10:57:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30246 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729586AbfHMO5o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 10:57:44 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7DErXIl094890
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 10:57:43 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uby7crkjy-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 10:57:43 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
+        Tue, 13 Aug 2019 15:57:41 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 13 Aug 2019 15:57:38 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7DEvbID60686372
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Aug 2019 14:57:37 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B5699A405D;
+        Tue, 13 Aug 2019 14:57:37 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 777C8A4053;
+        Tue, 13 Aug 2019 14:57:37 +0000 (GMT)
+Received: from localhost (unknown [9.152.212.112])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 13 Aug 2019 14:57:37 +0000 (GMT)
+Date:   Tue, 13 Aug 2019 16:57:36 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
         Matthew Garrett <matthewgarrett@google.com>,
         James Morris <jmorris@namei.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Subject: Re: linux-next: Tree for Aug 13
-Message-ID: <20190813105645.4ffba70c@gandalf.local.home>
-In-Reply-To: <your-ad-here.call-01565700115-ext-9407@work.hours>
 References: <20190813191924.7c5310dd@canb.auug.org.au>
-        <your-ad-here.call-01565700115-ext-9407@work.hours>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+ <your-ad-here.call-01565700115-ext-9407@work.hours>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <your-ad-here.call-01565700115-ext-9407@work.hours>
+X-TM-AS-GCONF: 00
+x-cbid: 19081314-0016-0000-0000-0000029E32C3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19081314-0017-0000-0000-000032FE47CD
+Message-Id: <your-ad-here.call-01565708256-ext-1951@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-13_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908130157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-This looks related to what Marek posted.
-
-  https://lore.kernel.org/linux-security-module/3028ed35-3b6d-459f-f3c8-103c5636fe95@samsung.com/
-
-Care to apply the change he suggested to see if it fixes the issue for
-you. If it does, Marek, can you make an official patch?
-
--- Steve
-
-
-On Tue, 13 Aug 2019 14:41:55 +0200
-Vasily Gorbik <gor@linux.ibm.com> wrote:
-
+On Tue, Aug 13, 2019 at 02:41:55PM +0200, Vasily Gorbik wrote:
 > On Tue, Aug 13, 2019 at 07:19:24PM +1000, Stephen Rothwell wrote:
 > > Merging security/next-testing (a4848e06f9af Merge branch 'next-lockdown' into next-testing)
 > > CONFLICT (content): Merge conflict in kernel/trace/trace_kprobe.c
 > > CONFLICT (content): Merge conflict in fs/tracefs/inode.c
-> > Applying: early_security_init() needs a stub got !CONFIG_SECURITY  
+> > Applying: early_security_init() needs a stub got !CONFIG_SECURITY
 > 
 > Hi all,
 > 
@@ -137,5 +158,15 @@ Vasily Gorbik <gor@linux.ibm.com> wrote:
 > 
 > Using default s390 config, where
 > # CONFIG_SECURITY_LOCKDOWN_LSM is not set
-> 
+
+Hm, this actually looks like a general problem. Please, consider the
+following patch, if it makes sense. It fixes the problem for me.
+
+-- 
+⣿⣿⣿⣿⢋⡀⣀⠹⣿⣿⣿⣿
+⣿⣿⣿⣿⠠⣶⡦⠀⣿⣿⣿⣿
+⣿⣿⣿⠏⣴⣮⣴⣧⠈⢿⣿⣿
+⣿⣿⡏⢰⣿⠖⣠⣿⡆⠈⣿⣿
+⣿⢛⣵⣄⠙⣶⣶⡟⣅⣠⠹⣿
+⣿⣜⣛⠻⢎⣉⣉⣀⠿⣫⣵⣿
 
