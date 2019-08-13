@@ -2,157 +2,216 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D769DC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D822C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A793F2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:13:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LbiMr+LU"
+	by mail.kernel.org (Postfix) with ESMTP id 429B12067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:16:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbfHMNNR (ORCPT
+        id S1728959AbfHMNQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:13:17 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44064 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728134AbfHMNNR (ORCPT
+        Tue, 13 Aug 2019 09:16:03 -0400
+Received: from mail-ot1-f70.google.com ([209.85.210.70]:46833 "EHLO
+        mail-ot1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727311AbfHMNQB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:13:17 -0400
-Received: by mail-ed1-f66.google.com with SMTP id a21so4033924edt.11
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:13:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ubTbMeSv2M83GvfRwkB/P+VL404uyP8HpfpedP/OoAY=;
-        b=LbiMr+LUmaZQrw0UyPVfcE20C2rhk/qkyZVK+3mYVCagAEE8U/paBXrjyllhdz6qtK
-         Wzyo4uPi6N3fin0E1mVY9if56H4zb9YiKT42Fw945pXhXBVv8S0YTiidT67x5mLUlNDf
-         g9b3ExT+UD6gq0KpgfVTPNpdEYLQUgk6xdw1mGSodufjLObjZ8vlHlJcOkuIqQRHQs2h
-         i5tMQILnrg1tWoOOFbCbnBec0cRn2C0XZDoQpYkUbEh1S7kiLV6VU2k6/2ERXkSFxH+s
-         +jkQs/sxXRCPpGZ0782kYlorhUlcaFR7Hnm3JOSxGlLlFVSUG0SKHT6NxMTgWJKS5Sbj
-         1vSA==
+        Tue, 13 Aug 2019 09:16:01 -0400
+Received: by mail-ot1-f70.google.com with SMTP id g6so30174051otq.13
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:16:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ubTbMeSv2M83GvfRwkB/P+VL404uyP8HpfpedP/OoAY=;
-        b=g8mX1oa0UScWrmcPpPUok3xE/tBKh9u6j1p8fS+5S7NlC/kc4gX6DYOm4LxVRjfCiY
-         JHb6Nt37CjYlnHFnuyRwCk3tSS9gM4Ml+0dcyURH9uZ4bsRBJ1/N3m5Znn4cALj4dzWI
-         MdlgjJZDwsAyJayPl2pIAQ6haULriST2Fl4YRIsZtAmcYSjQ5upFyLkXvAI3lQqo5KrK
-         ckmTW7+7ZiSqX2RA+r27MijFWwlbJ42RvVqTY8Vg3C7xEP70WUYXFXRqv66qOBYZ58HU
-         KXCMHEJF+3e5XX00ZZMfzf3W9QBahKULb0RpII8RL8sABZ0+qLwNmSbTdke5bvxMaH7b
-         FM0g==
-X-Gm-Message-State: APjAAAW0rs3IGZ0lh62H17oEb9t5nWv/p91N4YZ9CCh4tRh7AowsKGU3
-        5fen+tC73hdWjon9MCNTpPI=
-X-Google-Smtp-Source: APXvYqwdvW3aE7k5RgRuOYmrOfG36rPCpQtWz80XoYTilWeyUOHf94znm2sC9lo7U0BNc43D3/8rag==
-X-Received: by 2002:a50:f285:: with SMTP id f5mr29025998edm.109.1565701995522;
-        Tue, 13 Aug 2019 06:13:15 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id z9sm3562897edd.18.2019.08.13.06.13.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 13 Aug 2019 06:13:14 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 13:13:12 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, osalvador@suse.de, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/hotplug: prevent memory leak when reuse pgdat
-Message-ID: <20190813131312.l4pzy7ornmc4a5yj@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20190813020608.10194-1-richardw.yang@linux.intel.com>
- <20190813075707.GA17933@dhcp22.suse.cz>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=d0r87t9CMJReMCIKgADceWEv1Iat/T7XNQ2Cc2NBdKE=;
+        b=h0TaN55gbmL5HudxVrs7Mq9deQMNr2kG+tQ5BdLo3Z4Qc2CgDCBSFfEXv8mvlXLnDi
+         KPFCfMhfvvvO7cmxj9xTpFABSr7Ma2XrzYZE/jI4oKflSnU+k6jt3mY/6CqktBySMnBJ
+         bp9mH90gnWU2Kqn/Yj5TGVZ/6Sb6ZI+CtHighUdK0SxleFcuk1MbSOkYjAmSru1Dgl1/
+         XUo338BLIu/2wLYETHhcDkX8OpQ/U1j5e7j1A9rLVGhDnDBgDbIrfTMHGpHFW1a2kOXz
+         jNfb+Fs/Sm/mJeazaVCgbnYRDfi6ts9/7/spTdCE7T8UwHoAgPBJoQmcOVYbsaiAMqZL
+         rZfw==
+X-Gm-Message-State: APjAAAVK6twX8qwV+PNTj+n1A/32iC2Vp+A70vM91MvcTmBFj8LOx06u
+        3c7lbh3v/0sXLMhjOHKVGJckVsPvBTQs8l0/d1JR9nsK4D3q
+X-Google-Smtp-Source: APXvYqwg8efLPEJCxZEQfv9hR8WXl5BIq9Gqby8BQemxWa0W5JTjEXd5+qVJNcnjjaCdZu44Txe0fJzDN+RwYCTnLehdS6HyoGQ1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813075707.GA17933@dhcp22.suse.cz>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-Received: by 2002:a6b:da1a:: with SMTP id x26mr38773136iob.285.1565702160485;
+ Tue, 13 Aug 2019 06:16:00 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 06:16:00 -0700
+In-Reply-To: <CAAeHK+waUUNpGp1b2WqXQHkbBcQT_MonG62-bK-aEj2dvYr-gA@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000199b6c058fff71c8@google.com>
+Subject: Re: general protection fault in cdev_del
+From:   syzbot <syzbot+67b2bd0e34f952d0321e@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        oneukum@suse.com, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 09:57:07AM +0200, Michal Hocko wrote:
->On Tue 13-08-19 10:06:08, Wei Yang wrote:
->> When offline a node in try_offline_node, pgdat is not released. So that
->> pgdat could be reused in hotadd_new_pgdat. While we re-allocate
->> pgdat->per_cpu_nodestats if this pgdat is reused.
->> 
->> This patch prevents the memory leak by just allocate per_cpu_nodestats
->> when it is a new pgdat.
->
->Yes this makes sense! I was slightly confused why we haven't initialized
->the allocated pcp area because __alloc_percpu does GFP_KERNEL without
->__GFP_ZERO but then I've just found out that the zeroying is done
->regardless. A bit unexpected...
->
->> NOTE: This is not tested since I didn't manage to create a case to
->> offline a whole node. If my analysis is not correct, please let me know.
->> 
->> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->
->Acked-by: Michal Hocko <mhocko@suse.com>
->
->Thanks!
->
+Hello,
 
-Thanks :-)
+syzbot has tested the proposed patch but the reproducer still triggered  
+crash:
+KASAN: use-after-free Read in hso_free_interface
 
->> ---
->>  mm/memory_hotplug.c | 10 +++++++++-
->>  1 file changed, 9 insertions(+), 1 deletion(-)
->> 
->> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
->> index c73f09913165..efaf9e6f580a 100644
->> --- a/mm/memory_hotplug.c
->> +++ b/mm/memory_hotplug.c
->> @@ -933,8 +933,11 @@ static pg_data_t __ref *hotadd_new_pgdat(int nid, u64 start)
->>  		if (!pgdat)
->>  			return NULL;
->>  
->> +		pgdat->per_cpu_nodestats =
->> +			alloc_percpu(struct per_cpu_nodestat);
->>  		arch_refresh_nodedata(nid, pgdat);
->>  	} else {
->> +		int cpu;
->>  		/*
->>  		 * Reset the nr_zones, order and classzone_idx before reuse.
->>  		 * Note that kswapd will init kswapd_classzone_idx properly
->> @@ -943,6 +946,12 @@ static pg_data_t __ref *hotadd_new_pgdat(int nid, u64 start)
->>  		pgdat->nr_zones = 0;
->>  		pgdat->kswapd_order = 0;
->>  		pgdat->kswapd_classzone_idx = 0;
->> +		for_each_online_cpu(cpu) {
->> +			struct per_cpu_nodestat *p;
->> +
->> +			p = per_cpu_ptr(pgdat->per_cpu_nodestats, cpu);
->> +			memset(p, 0, sizeof(*p));
->> +		}
->>  	}
->>  
->>  	/* we can use NODE_DATA(nid) from here */
->> @@ -952,7 +961,6 @@ static pg_data_t __ref *hotadd_new_pgdat(int nid, u64 start)
->>  
->>  	/* init node's zones as empty zones, we don't have any present pages.*/
->>  	free_area_init_core_hotplug(nid);
->> -	pgdat->per_cpu_nodestats = alloc_percpu(struct per_cpu_nodestat);
->>  
->>  	/*
->>  	 * The node we allocated has no zone fallback lists. For avoiding
->> -- 
->> 2.17.1
->> 
->
->-- 
->Michal Hocko
->SUSE Labs
+==================================================================
+BUG: KASAN: use-after-free in hso_free_interface+0x3f2/0x4f0  
+drivers/net/usb/hso.c:3108
+Read of size 8 at addr ffff8881d112d998 by task kworker/0:1/12
 
--- 
-Wei Yang
-Help you, Help me
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.0-rc1+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description+0x67/0x231 mm/kasan/report.c:188
+  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
+  kasan_report+0xe/0x20 mm/kasan/common.c:614
+  hso_free_interface+0x3f2/0x4f0 drivers/net/usb/hso.c:3108
+  hso_probe+0x362/0x1a50 drivers/net/usb/hso.c:2963
+  usb_probe_interface+0x30b/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x287/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
+  bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x1700 drivers/base/core.c:2111
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0xa2/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x287/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
+  bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x1700 drivers/base/core.c:2111
+  usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x1adc/0x35a0 drivers/usb/core/hub.c:5432
+  process_one_work+0x90a/0x1580 kernel/workqueue.c:2268
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+  kthread+0x30e/0x420 kernel/kthread.c:254
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+
+Allocated by task 12:
+  save_stack+0x1b/0x80 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_kmalloc mm/kasan/common.c:489 [inline]
+  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:462
+  kmalloc include/linux/slab.h:547 [inline]
+  kzalloc include/linux/slab.h:742 [inline]
+  hso_create_device+0x43/0x390 drivers/net/usb/hso.c:2336
+  hso_create_bulk_serial_device drivers/net/usb/hso.c:2617 [inline]
+  hso_probe+0xbb0/0x1a50 drivers/net/usb/hso.c:2948
+  usb_probe_interface+0x30b/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x287/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
+  bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x1700 drivers/base/core.c:2111
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0xa2/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x287/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
+  bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x1700 drivers/base/core.c:2111
+  usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x1adc/0x35a0 drivers/usb/core/hub.c:5432
+  process_one_work+0x90a/0x1580 kernel/workqueue.c:2268
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+  kthread+0x30e/0x420 kernel/kthread.c:254
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+
+Freed by task 12:
+  save_stack+0x1b/0x80 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:451
+  slab_free_hook mm/slub.c:1421 [inline]
+  slab_free_freelist_hook mm/slub.c:1448 [inline]
+  slab_free mm/slub.c:2994 [inline]
+  kfree+0xd7/0x290 mm/slub.c:3949
+  hso_create_bulk_serial_device drivers/net/usb/hso.c:2687 [inline]
+  hso_probe+0x13c6/0x1a50 drivers/net/usb/hso.c:2948
+  usb_probe_interface+0x30b/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x287/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
+  bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x1700 drivers/base/core.c:2111
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0xa2/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x287/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
+  bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x1700 drivers/base/core.c:2111
+  usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x1adc/0x35a0 drivers/usb/core/hub.c:5432
+  process_one_work+0x90a/0x1580 kernel/workqueue.c:2268
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+  kthread+0x30e/0x420 kernel/kthread.c:254
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff8881d112d900
+  which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 152 bytes inside of
+  512-byte region [ffff8881d112d900, ffff8881d112db00)
+The buggy address belongs to the page:
+page:ffffea0007444b00 refcount:1 mapcount:0 mapping:ffff8881dac02c00  
+index:0x0 compound_mapcount: 0
+flags: 0x200000000010200(slab|head)
+raw: 0200000000010200 ffffea000744ea80 0000000400000004 ffff8881dac02c00
+raw: 0000000000000000 00000000000c000c 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8881d112d880: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff8881d112d900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff8881d112d980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                             ^
+  ffff8881d112da00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881d112da80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+Tested on:
+
+commit:         69bbe8c7 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=14e6156a600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c309d28e15db39c5
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1715ad4a600000
+
