@@ -2,262 +2,160 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3C4C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B54C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E37D520679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2DE4206C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:37:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TOnfWH7i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbfHMHgi (ORCPT
+        id S1727692AbfHMHho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 03:36:38 -0400
-Received: from comms.puri.sm ([159.203.221.185]:43680 "EHLO comms.puri.sm"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727796AbfHMHgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 03:36:36 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id 300C3E030B;
-        Tue, 13 Aug 2019 00:36:34 -0700 (PDT)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id xFwXyHI2Sh7X; Tue, 13 Aug 2019 00:36:32 -0700 (PDT)
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-To:     lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Martin Kepplinger <martin.kepplinger@puri.sm>
-Subject: [PATCH v4 2/3] iio: imu: st_lsm6dsx: add support for accel/gyro unit of lsm9sd1
-Date:   Tue, 13 Aug 2019 09:35:32 +0200
-Message-Id: <20190813073533.8007-3-martin.kepplinger@puri.sm>
-In-Reply-To: <20190813073533.8007-1-martin.kepplinger@puri.sm>
-References: <20190813073533.8007-1-martin.kepplinger@puri.sm>
-Content-Transfer-Encoding: 8bit
+        Tue, 13 Aug 2019 03:37:44 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36498 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfHMHho (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 03:37:44 -0400
+Received: by mail-pg1-f196.google.com with SMTP id l21so50802648pgm.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 00:37:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=9bL0R1CxC+6qn/SXYb8QC8YPxi7C0X8KV0QY0awgnqs=;
+        b=TOnfWH7iCQfqZdPtJYvcaU1bpkVbRTBH0X1zYgXX/CPoG9/HYmr1u3RRMLoEdoJlPI
+         YhippxdT7Aap5SalLXDSkiTxYjkgUDnTYO6SWZpiygm0VRin7KIblU7Bef1rf5yiZFKf
+         vZeqVccUOZ7q5t6N8ZNzzhHz05Z06gcD6+svkhIDX0VWRRRFWhvhJJqm/vsP85k1M3o8
+         FmOvY13kaBIhAPJAihiz9Bopu3cJqT6kFDfXpcGDY2gb00pNXewRG+a7WEgn2S+76hm+
+         2VgI/r6Ael1eFPLVvIwsMJbSUDrPp/M5HPc2+2GnT7uDGcGaz76nQetnFafAe+sB/NIO
+         8zAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9bL0R1CxC+6qn/SXYb8QC8YPxi7C0X8KV0QY0awgnqs=;
+        b=IEmD17eWj2PVIiDoVyulgQ3Fb9W9orAyPaYOeCtVt2e+oyV/wAhotk5lZJnDId/vJ5
+         jF7iD1aXSdcTuzyljVUtNkE9t1ynrj7BVzR2TPPoHxsEfH4j60OPbhDSHRqJZAx4uXKP
+         11OSRV21CHkiV8O4q/n83JVqcvlaISDuXSzGtPZJ55U1M0qLOZX/nbQPBTh21sevnmFL
+         q4PllEuEd8Zxi6jV9yAgDmTv4kGiR0n3wmkIy3XjMm4+A//BwCmh9OvKiwlbbP3/RFsx
+         +ycHdANcc7e4yBD2KWk+kDYFKDwYylQ+0a5E2YZEbwNtdKMUVxN2fNzfafHYkRXQETNX
+         zXzA==
+X-Gm-Message-State: APjAAAWF8NCULEYRVXF3KODHI0Um4Njj4OfmtigJLye9q4dv/+qkRo9+
+        4+VZNm6WH+IuZsb9pHFzN5RlK3IO
+X-Google-Smtp-Source: APXvYqyPkxZNFAo0ne81beBuI7oPlOK6YuTRXBDvKbvyzprdjTOUi5Dqb8HgeLMTgEX+y81FU4bU3Q==
+X-Received: by 2002:a17:90a:8688:: with SMTP id p8mr981605pjn.57.1565681863098;
+        Tue, 13 Aug 2019 00:37:43 -0700 (PDT)
+Received: from [10.0.2.15] ([122.163.110.75])
+        by smtp.gmail.com with ESMTPSA id j6sm2885460pje.11.2019.08.13.00.37.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 13 Aug 2019 00:37:42 -0700 (PDT)
+Subject: Re: [PATCH v2] bus: ti-sysc: sysc_check_one_child(): Change return
+ type to void
+To:     Roger Quadros <rogerq@ti.com>, tony@atomide.com,
+        linux-kernel@vger.kernel.org
+References: <20190813071714.27970-1-nishkadg.linux@gmail.com>
+ <85a1d7eb-dd9a-2276-ed13-67291188538e@ti.com>
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+Message-ID: <5285a1f4-644c-9e97-6e1c-9b3e66948dca@gmail.com>
+Date:   Tue, 13 Aug 2019 13:07:37 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <85a1d7eb-dd9a-2276-ed13-67291188538e@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LSM9DS1's accelerometer / gyroscope unit and it's magnetometer (separately
-supported in iio/magnetometer/st_magn*) are located on a separate i2c addresses
-on the bus.
+On 13/08/19 12:58 PM, Roger Quadros wrote:
+> 
+> 
+> On 13/08/2019 10:17, Nishka Dasgupta wrote:
+>> Change return type of function sysc_check_one_child() from int to void
+>> as it always returns 0. Accordingly, at its callsite, delete the
+>> variable that previously stored the return value.
+>>
+>> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+>> ---
+>> Changes in v2:
+>> - Remove error variable entirely.
+>> - Change return type of sysc_check_one_child().
+>>
+>>   drivers/bus/ti-sysc.c | 9 +++------
+>>   1 file changed, 3 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+>> index e6deabd8305d..1c30fa58d70c 100644
+>> --- a/drivers/bus/ti-sysc.c
+>> +++ b/drivers/bus/ti-sysc.c
+>> @@ -615,8 +615,8 @@ static void sysc_check_quirk_stdout(struct sysc *ddata,
+>>    * node but children have "ti,hwmods". These belong to the interconnect
+>>    * target node and are managed by this driver.
+>>    */
+>> -static int sysc_check_one_child(struct sysc *ddata,
+>> -				struct device_node *np)
+>> +static void sysc_check_one_child(struct sysc *ddata,
+>> +				 struct device_node *np)
+>>   {
+>>   	const char *name;
+>>   
+> 
+> You didn't remove the "return 0" at end of this function.
+> Doesn't it complain during build?
+> 
+>> @@ -633,12 +633,9 @@ static int sysc_check_one_child(struct sysc *ddata,
+>>   static int sysc_check_children(struct sysc *ddata)
+>>   {
+> 
+> This could return void as well.
 
-For the datasheet, see https://www.st.com/resource/en/datasheet/lsm9ds1.pdf
+Okay. Sorry for the errors; I'll fix-up and resend.
 
-Treat it just like the LSM6* devices and, despite it's name, hook it up
-to the st_lsm6dsx driver, using it's basic functionality.
+However, while building it, I'm running into a compilation problem:
+on line 764 (function sysc_ioremap) there is apparently an "undeclared 
+variable", "SZ_1K". Is it a problem with the architecture? What arch 
+should I compile it with?
 
-accelerometer and gyroscope are not independently clocked. It runs at the gyro
-frequencies if both are enabled, see chapter 7.12 of the datasheet.
-We could have handled this as a single IIO device but we have split
-it up to be more consistent with the other more flexible devices.
+Thanking you,
+Nishka
 
-Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
----
- drivers/iio/imu/st_lsm6dsx/Kconfig           |  2 +-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  2 +
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 87 ++++++++++++++++++++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c  |  5 ++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c  |  5 ++
- 5 files changed, 100 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
-index 939058b27746..77aa0e77212d 100644
---- a/drivers/iio/imu/st_lsm6dsx/Kconfig
-+++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
-@@ -12,7 +12,7 @@ config IIO_ST_LSM6DSX
- 	  Say yes here to build support for STMicroelectronics LSM6DSx imu
- 	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
- 	  ism330dlc, lsm6dso, lsm6dsox, asm330lhh, lsm6dsr, lsm6ds3tr-c,
--	  ism330dhcx
-+	  ism330dhcx and the accelerometer/gyroscope of lsm9ds1.
- 
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called st_lsm6dsx.
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-index c8f333902eb7..d03b5a2d8549 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-@@ -24,6 +24,7 @@
- #define ST_LSM6DSR_DEV_NAME	"lsm6dsr"
- #define ST_LSM6DS3TRC_DEV_NAME	"lsm6ds3tr-c"
- #define ST_ISM330DHCX_DEV_NAME	"ism330dhcx"
-+#define ST_LSM9DS1_DEV_NAME	"lsm9ds1"
- 
- enum st_lsm6dsx_hw_id {
- 	ST_LSM6DS3_ID,
-@@ -37,6 +38,7 @@ enum st_lsm6dsx_hw_id {
- 	ST_LSM6DSR_ID,
- 	ST_LSM6DS3TRC_ID,
- 	ST_ISM330DHCX_ID,
-+	ST_LSM9DS1_ID,
- 	ST_LSM6DSX_MAX_ID,
- };
- 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-index 56e1c5262a2c..f038bb06f635 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -10,6 +10,8 @@
-  * +-125/+-245/+-500/+-1000/+-2000 dps
-  * LSM6DSx series has an integrated First-In-First-Out (FIFO) buffer
-  * allowing dynamic batching of sensor data.
-+ * LSM9DSx series is similar but includes an additional magnetometer, handled
-+ * by a different driver.
-  *
-  * Supported sensors:
-  * - LSM6DS3:
-@@ -30,6 +32,13 @@
-  *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
-  *   - FIFO size: 3KB
-  *
-+ * - LSM9DS1:
-+ *   - Accelerometer supported ODR [Hz]: 10, 50, 119, 238, 476, 952
-+ *   - Accelerometer supported full-scale [g]: +-2/+-4/+-8/+-16
-+ *   - Gyroscope supported ODR [Hz]: 15, 60, 119, 238, 476, 952
-+ *   - Gyroscope supported full-scale [dps]: +-245/+-500/+-2000
-+ *   - FIFO size: 32
-+ *
-  * Copyright 2016 STMicroelectronics Inc.
-  *
-  * Lorenzo Bianconi <lorenzo.bianconi@st.com>
-@@ -70,7 +79,85 @@ static const struct iio_chan_spec st_lsm6dsx_gyro_channels[] = {
- 	IIO_CHAN_SOFT_TIMESTAMP(3),
- };
- 
-+static const struct iio_chan_spec st_lsm9dsx_gyro_channels[] = {
-+	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, 0x18, IIO_MOD_X, 0),
-+	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, 0x1a, IIO_MOD_Y, 1),
-+	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, 0x1c, IIO_MOD_Z, 2),
-+	IIO_CHAN_SOFT_TIMESTAMP(3),
-+};
-+
- static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
-+	{
-+		.wai = 0x68,
-+		.int1_addr = 0x0c,
-+		.int2_addr = 0x0d,
-+		.reset_addr = 0x22,
-+		.max_fifo_size = 32,
-+		.id = {
-+			{
-+				.hw_id = ST_LSM9DS1_ID,
-+				.name = ST_LSM9DS1_DEV_NAME,
-+			},
-+		},
-+		.channels = {
-+			[ST_LSM6DSX_ID_ACC] = {
-+				.chan = st_lsm6dsx_acc_channels,
-+				.len = ARRAY_SIZE(st_lsm6dsx_acc_channels),
-+			},
-+			[ST_LSM6DSX_ID_GYRO] = {
-+				.chan = st_lsm9dsx_gyro_channels,
-+				.len = ARRAY_SIZE(st_lsm9dsx_gyro_channels),
-+			},
-+		},
-+		.odr_table = {
-+			[ST_LSM6DSX_ID_ACC] = {
-+				.reg = {
-+					.addr = 0x20,
-+					.mask = GENMASK(7, 5),
-+				},
-+				.odr_avl[0] = {  10, 0x01 },
-+				.odr_avl[1] = {  50, 0x02 },
-+				.odr_avl[2] = { 119, 0x03 },
-+				.odr_avl[3] = { 238, 0x04 },
-+				.odr_avl[4] = { 476, 0x05 },
-+				.odr_avl[5] = { 952, 0x06 },
-+			},
-+			[ST_LSM6DSX_ID_GYRO] = {
-+				.reg = {
-+					.addr = 0x10,
-+					.mask = GENMASK(7, 5),
-+				},
-+				.odr_avl[0] = {  15, 0x01 },
-+				.odr_avl[1] = {  60, 0x02 },
-+				.odr_avl[2] = { 119, 0x03 },
-+				.odr_avl[3] = { 238, 0x04 },
-+				.odr_avl[4] = { 476, 0x05 },
-+				.odr_avl[5] = { 952, 0x06 },
-+			},
-+		},
-+		.fs_table = {
-+			[ST_LSM6DSX_ID_ACC] = {
-+				.reg = {
-+					.addr = 0x20,
-+					.mask = GENMASK(4, 3),
-+				},
-+				.fs_avl[0] = {  599, 0x0 },
-+				.fs_avl[1] = { 1197, 0x2 },
-+				.fs_avl[2] = { 2394, 0x3 },
-+				.fs_avl[3] = { 4788, 0x1 },
-+			},
-+			[ST_LSM6DSX_ID_GYRO] = {
-+				.reg = {
-+					.addr = 0x10,
-+					.mask = GENMASK(4, 3),
-+				},
-+				.fs_avl[0] = { IIO_DEGREE_TO_RAD(245), 0x0 },
-+				.fs_avl[1] = { IIO_DEGREE_TO_RAD(500), 0x1 },
-+				.fs_avl[2] = { IIO_DEGREE_TO_RAD(0), 0x2 },
-+				.fs_avl[3] = { IIO_DEGREE_TO_RAD(2000), 0x3 },
-+			},
-+		},
-+	},
- 	{
- 		.wai = 0x69,
- 		.int1_addr = 0x0d,
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-index 15c6aa5b6caa..2f1b30ff083b 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-@@ -83,6 +83,10 @@ static const struct of_device_id st_lsm6dsx_i2c_of_match[] = {
- 		.compatible = "st,ism330dhcx",
- 		.data = (void *)ST_ISM330DHCX_ID,
- 	},
-+	{
-+		.compatible = "st,lsm9ds1",
-+		.data = (void *)ST_LSM9DS1_ID,
-+	},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, st_lsm6dsx_i2c_of_match);
-@@ -99,6 +103,7 @@ static const struct i2c_device_id st_lsm6dsx_i2c_id_table[] = {
- 	{ ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID },
- 	{ ST_LSM6DS3TRC_DEV_NAME, ST_LSM6DS3TRC_ID },
- 	{ ST_ISM330DHCX_DEV_NAME, ST_ISM330DHCX_ID },
-+	{ ST_LSM9DS1_DEV_NAME, ST_LSM9DS1_ID },
- 	{},
- };
- MODULE_DEVICE_TABLE(i2c, st_lsm6dsx_i2c_id_table);
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-index a8430ee11310..421ce704f346 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-@@ -83,6 +83,10 @@ static const struct of_device_id st_lsm6dsx_spi_of_match[] = {
- 		.compatible = "st,ism330dhcx",
- 		.data = (void *)ST_ISM330DHCX_ID,
- 	},
-+	{
-+		.compatible = "st,lsm9ds1",
-+		.data = (void *)ST_LSM9DS1_ID,
-+	},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, st_lsm6dsx_spi_of_match);
-@@ -99,6 +103,7 @@ static const struct spi_device_id st_lsm6dsx_spi_id_table[] = {
- 	{ ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID },
- 	{ ST_LSM6DS3TRC_DEV_NAME, ST_LSM6DS3TRC_ID },
- 	{ ST_ISM330DHCX_DEV_NAME, ST_ISM330DHCX_ID },
-+	{ ST_LSM9DS1_DEV_NAME, ST_LSM9DS1_ID },
- 	{},
- };
- MODULE_DEVICE_TABLE(spi, st_lsm6dsx_spi_id_table);
--- 
-2.20.1
+> 
+>>   	struct device_node *child;
+>> -	int error;
+>>   
+>>   	for_each_child_of_node(ddata->dev->of_node, child) {
+>> -		error = sysc_check_one_child(ddata, child);
+>> -		if (error)
+>> -			return error;
+>> +		sysc_check_one_child(ddata, child);
+>>   	}
+> 
+> You don't need the braces { }.
+> 
+> Please run ./scripts/checkpatch.pl --strict on your patch and fix any
+> issues.
+> 
+>>   
+>>   	return 0;
+>>
+> 
+> return not required.
+> 
+> You will also need to fix all instances using sysc_check_children()
+> 
+> cheers,
+> -roger
+> 
 
