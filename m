@@ -2,127 +2,144 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 379E0C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1696C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01814206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:18:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="tMv7PD0d";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Ot30WIQF"
+	by mail.kernel.org (Postfix) with ESMTP id CEAF02067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728700AbfHMKR7 (ORCPT
+        id S1728784AbfHMKSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 06:17:59 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:54800 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727097AbfHMKR7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 06:17:59 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id E95008EE1F3;
-        Tue, 13 Aug 2019 03:17:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1565691479;
-        bh=0x61KgL+epPE4UqSL9XfER8aosdyl0oQssYuIO7NwOM=;
-        h=Subject:From:To:Cc:Date:From;
-        b=tMv7PD0d08pVBYycgoiVxTDJXXZZnbT/J5PD+KTk/NQtBnAags1//nSBTPcaYl2Wg
-         5ayjB0eQOr6JI6+KO7ywa01bUft8UQVyS7cMkGIfvktjCxOgmKoqe+ZRYdrxRbIMgh
-         41evSBSdqZu4+X329lcUP6z/G0g6Vh2Ca637GaWo=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 5hD8y0w54OvB; Tue, 13 Aug 2019 03:17:58 -0700 (PDT)
-Received: from [172.16.180.52] (unknown [217.16.13.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 8A88C8EE1B4;
-        Tue, 13 Aug 2019 03:17:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1565691478;
-        bh=0x61KgL+epPE4UqSL9XfER8aosdyl0oQssYuIO7NwOM=;
-        h=Subject:From:To:Cc:Date:From;
-        b=Ot30WIQFr11SxLsve0CAtv12Vzo/HJFqLRAM7pOS2JfI+GTxkar3XJdSWRVx3nSfx
-         RDcLh6m6+SMBWrtj7yPzYSQjPF0NaHd3mB/EDVBG26xTQw01xK8MSsDfA9BZDFkGha
-         7xkKlwc6snPNWUBqc00XK1eY+CicuZPQ+06wT0Hk=
-Message-ID: <1565691473.3371.4.camel@HansenPartnership.com>
-Subject: [GIT PULL] SCSI fixes for 5.3-rc4
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Tue, 13 Aug 2019 12:17:53 +0200
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 13 Aug 2019 06:18:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:33294 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727632AbfHMKSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 06:18:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F8E0337;
+        Tue, 13 Aug 2019 03:18:48 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 55BF33F694;
+        Tue, 13 Aug 2019 03:18:47 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 11:18:45 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Yuehaibing <yuehaibing@huawei.com>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH] PCI: hv: Fix build error without CONFIG_SYSFS
+Message-ID: <20190813101845.GB14977@e121166-lin.cambridge.arm.com>
+References: <20190531150923.12376-1-yuehaibing@huawei.com>
+ <BYAPR21MB12211EEA95200F437C8E37ECD71A0@BYAPR21MB1221.namprd21.prod.outlook.com>
+ <7d8ca05e-7519-45d8-e694-d31e221696d5@huawei.com>
+ <b049b0f9-e31e-897a-6f2e-e30d6d865f24@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b049b0f9-e31e-897a-6f2e-e30d6d865f24@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-single lpfc fix, for a single cpu corner case.
+On Sat, Jun 15, 2019 at 02:48:24PM +0800, Yuehaibing wrote:
+> +cc Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 
-The patch is available here:
+Can we drop this patch and merge:
 
-git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+https://patchwork.ozlabs.org/patch/1131444/
 
-The short changelog is:
+instead ?
 
-James Smart (1):
-      scsi: lpfc: Fix crash when cpu count is 1 and null irq affinity mask
+Thanks,
+Lorenzo
 
-And the diffstat
-
- drivers/scsi/lpfc/lpfc_init.c | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
-
-With full diff below.
-
-James
-
----
-
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index faf43b1d3dbe..a7549ae32542 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -10776,12 +10776,31 @@ lpfc_cpu_affinity_check(struct lpfc_hba *phba, int vectors)
- 	/* This loop sets up all CPUs that are affinitized with a
- 	 * irq vector assigned to the driver. All affinitized CPUs
- 	 * will get a link to that vectors IRQ and EQ.
-+	 *
-+	 * NULL affinity mask handling:
-+	 * If irq count is greater than one, log an error message.
-+	 * If the null mask is received for the first irq, find the
-+	 * first present cpu, and assign the eq index to ensure at
-+	 * least one EQ is assigned.
- 	 */
- 	for (idx = 0; idx <  phba->cfg_irq_chann; idx++) {
- 		/* Get a CPU mask for all CPUs affinitized to this vector */
- 		maskp = pci_irq_get_affinity(phba->pcidev, idx);
--		if (!maskp)
--			continue;
-+		if (!maskp) {
-+			if (phba->cfg_irq_chann > 1)
-+				lpfc_printf_log(phba, KERN_ERR, LOG_INIT,
-+						"3329 No affinity mask found "
-+						"for vector %d (%d)\n",
-+						idx, phba->cfg_irq_chann);
-+			if (!idx) {
-+				cpu = cpumask_first(cpu_present_mask);
-+				cpup = &phba->sli4_hba.cpu_map[cpu];
-+				cpup->eq = idx;
-+				cpup->irq = pci_irq_vector(phba->pcidev, idx);
-+				cpup->flag |= LPFC_CPU_FIRST_IRQ;
-+			}
-+			break;
-+		}
- 
- 		i = 0;
- 		/* Loop through all CPUs associated with vector idx */
+> 
+> On 2019/6/15 14:18, Yuehaibing wrote:
+> > 
+> > On 2019/6/2 6:59, Michael Kelley wrote:
+> >> From: YueHaibing <yuehaibing@huawei.com>  Sent: Friday, May 31, 2019 8:09 AM
+> >>>
+> >>> while building without CONFIG_SYSFS, fails as below:
+> >>>
+> >>> drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_assign_slots':
+> >>> pci-hyperv.c:(.text+0x40a): undefined reference to 'pci_create_slot'
+> >>> drivers/pci/controller/pci-hyperv.o: In function 'pci_devices_present_work':
+> >>> pci-hyperv.c:(.text+0xc02): undefined reference to 'pci_destroy_slot'
+> >>> drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_remove':
+> >>> pci-hyperv.c:(.text+0xe50): undefined reference to 'pci_destroy_slot'
+> >>> drivers/pci/controller/pci-hyperv.o: In function 'hv_eject_device_work':
+> >>> pci-hyperv.c:(.text+0x11f9): undefined reference to 'pci_destroy_slot'
+> >>>
+> >>> Select SYSFS while PCI_HYPERV is set to fix this.
+> >>>
+> >>
+> >> I'm wondering if is the right way to fix the problem.  Conceptually
+> >> is it possible to setup & operate virtual PCI devices like 
+> >> pci-hyperv.c does, even if sysfs is not present?  Or is it right to
+> >> always required sysfs?
+> >>
+> >> The function pci_dev_assign_slot() in slot.c has a null implementation
+> >> in include/linux/pci.h when CONFIG_SYSFS is not defined, which
+> >> seems to be trying to solve the same problem for that function.  And
+> >> if CONFIG_HOTPLUG_PCI is defined but CONFIG_SYSFS is not,
+> >> pci_hp_create_module_link() and pci_hp_remove_module_link()
+> >> look like they would have the same problem.  Maybe there should
+> >> be degenerate implementations of pci_create_slot() and
+> >> pci_destroy_slot() for cases when CONFIG_SYSFS is not defined?
+> >>
+> >> But I'll admit I don't know the full story behind how PCI slots
+> >> are represented and used, so maybe I'm off base.  I just noticed
+> >> the inconsistency in how other functions in slot.c are handled.
+> >>
+> >> Thoughts?
+> > 
+> > 268a03a42d33 ("PCI: drivers/pci/slot.c should depend on CONFIG_SYSFS")
+> > 
+> > make slot.o depends CONFIG_SYSFS
+> > 
+> > commit 268a03a42d3377d5fb41e6e7cbdec4e0b65cab2e
+> > Author: Alex Chiang <achiang@hp.com>
+> > Date:   Wed Jun 17 19:03:57 2009 -0600
+> > 
+> >     PCI: drivers/pci/slot.c should depend on CONFIG_SYSFS
+> > 
+> >     There is no way to interact with a physical PCI slot without
+> >     sysfs, so encode the dependency and prevent this build error:
+> > 
+> >         drivers/pci/slot.c: In function 'pci_hp_create_module_link':
+> >         drivers/pci/slot.c:327: error: 'module_kset' undeclared
+> > 
+> >     This patch _should_ make pci-sysfs.o depend on CONFIG_SYSFS too,
+> >     but we cannot (yet) because the PCI core merrily assumes the
+> >     existence of sysfs:
+> > 
+> >         drivers/built-in.o: In function `pci_bus_add_device':
+> >         drivers/pci/bus.c:89: undefined reference to `pci_create_sysfs_dev_files'
+> >         drivers/built-in.o: In function `pci_stop_dev':
+> >         drivers/pci/remove.c:24: undefined reference to `pci_remove_sysfs_dev_files'
+> > 
+> >     So do the minimal bit for now and figure out how to untangle it
+> >     later.
+> > 
+> > If No CONFIG_SYSFS, slot.o is not build
+> > 
+> >>
+> >> Michael
+> >>
+> >>
+> > 
+> > 
+> > .
+> > 
+> 
