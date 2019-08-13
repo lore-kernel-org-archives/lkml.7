@@ -2,90 +2,117 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8624C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 187B9C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC9A320679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E398120679
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:56:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="r1myjWjQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728136AbfHMRz2 (ORCPT
+        id S1728243AbfHMR4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 13:55:28 -0400
-Received: from zimbra.cs.ucla.edu ([131.179.128.68]:33280 "EHLO
-        zimbra.cs.ucla.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727491AbfHMRz1 (ORCPT
+        Tue, 13 Aug 2019 13:56:53 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:16788 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725923AbfHMR4x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 13:55:27 -0400
-X-Greylist: delayed 381 seconds by postgrey-1.27 at vger.kernel.org; Tue, 13 Aug 2019 13:55:26 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.cs.ucla.edu (Postfix) with ESMTP id A263716272D;
-        Tue, 13 Aug 2019 10:49:04 -0700 (PDT)
-Received: from zimbra.cs.ucla.edu ([127.0.0.1])
-        by localhost (zimbra.cs.ucla.edu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Avtv7kHLBo3l; Tue, 13 Aug 2019 10:49:03 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.cs.ucla.edu (Postfix) with ESMTP id D6F6316272F;
-        Tue, 13 Aug 2019 10:49:03 -0700 (PDT)
-X-Virus-Scanned: amavisd-new at zimbra.cs.ucla.edu
-Received: from zimbra.cs.ucla.edu ([127.0.0.1])
-        by localhost (zimbra.cs.ucla.edu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id B3FBW389qoKq; Tue, 13 Aug 2019 10:49:03 -0700 (PDT)
-Received: from [192.168.1.9] (cpe-23-242-74-103.socal.res.rr.com [23.242.74.103])
-        by zimbra.cs.ucla.edu (Postfix) with ESMTPSA id 4DC3F16272D;
-        Tue, 13 Aug 2019 10:49:03 -0700 (PDT)
-Subject: Re: New kernel interface for sys_tz and timewarp?
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        Karel Zak <kzak@redhat.com>,
-        Lennart Poettering <lennart@poettering.net>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-References: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com>
- <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com>
-From:   Paul Eggert <eggert@cs.ucla.edu>
-Organization: UCLA Computer Science Department
-Message-ID: <ecf2742a-6cab-cc00-16ab-589fad07b8db@cs.ucla.edu>
-Date:   Tue, 13 Aug 2019 10:49:03 -0700
+        Tue, 13 Aug 2019 13:56:53 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d52f9ef0000>; Tue, 13 Aug 2019 10:57:03 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 13 Aug 2019 10:56:52 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 13 Aug 2019 10:56:52 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 13 Aug
+ 2019 17:56:51 +0000
+Subject: Re: [RFC PATCH v2 15/19] mm/gup: Introduce vaddr_pin_pages()
+To:     Ira Weiny <ira.weiny@intel.com>, Jason Gunthorpe <jgg@ziepe.ca>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>, Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>,
+        <linux-xfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-nvdimm@lists.01.org>, <linux-ext4@vger.kernel.org>,
+        <linux-mm@kvack.org>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-16-ira.weiny@intel.com>
+ <20190812122814.GC24457@ziepe.ca>
+ <20190812214854.GF20634@iweiny-DESK2.sc.intel.com>
+ <20190813114706.GA29508@ziepe.ca>
+ <20190813174635.GC11882@iweiny-DESK2.sc.intel.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <95b05c4f-0bd6-ac31-20a2-28ee761c6238@nvidia.com>
+Date:   Tue, 13 Aug 2019 10:56:51 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190813174635.GC11882@iweiny-DESK2.sc.intel.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565719023; bh=KDoBH7FMcOFVaHbTNky7KSvvCBIevQY0atcdz7yZpyo=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=r1myjWjQb9mZf2jmH/nl8EOm2qt2HUka2TVsF2Jum+qndnndTVwaD2327vhXLSeCi
+         XIpGwaKAZwWCMLAlTX/kfRa98I9xBwpMhAZ6eTqZRPz4zmMPa7tC2viy+Eub4ulUG/
+         fSd52XCv1zuDNwzHlnr6RMY/WlH/M4OFEPUek/8HPyi9Vdb1JGuOUy8IiDorNa+3Ua
+         2c/160jTWmEuUnof8/fNzqwgbNxD4seyIajR2G3YwfSZ/dqoIJN7D6+C64cqw5CxFF
+         Q03mIRJipiEmdnJCLEzKxeQsVQgOdkVfG2OprbuepROCdrgWbL6zWz92e+Qp+ecaJ4
+         wPrDn3x7NUcew==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds wrote:
-> I assume/think that glibc uses (a) environment
-> variables and (b) a filesystem-set default (per-user file with a
-> system-wide default? I don't know what people do).
-glibc relies on the TZ environment variable, with a system-wide default 
-specified in /etc/localtime or suchlike (there is no per-user default). glibc 
-ignores the kernel's 'struct timezone' settings for of this, as 'struct 
-timezone' is obsolete/vestigial and doesn't contain enough info to do proper 
-conversions anyway.
+On 8/13/19 10:46 AM, Ira Weiny wrote:
+> On Tue, Aug 13, 2019 at 08:47:06AM -0300, Jason Gunthorpe wrote:
+>> On Mon, Aug 12, 2019 at 02:48:55PM -0700, Ira Weiny wrote:
+>>> On Mon, Aug 12, 2019 at 09:28:14AM -0300, Jason Gunthorpe wrote:
+>>>> On Fri, Aug 09, 2019 at 03:58:29PM -0700, ira.weiny@intel.com wrote:
+>>>>> From: Ira Weiny <ira.weiny@intel.com>
+...
+>>> So I'm open to suggestions.  Jan gave me this one, so I figured it was safer to
+>>> suggest it...
+>>
+>> Should have the word user in it, imho
+> 
+> Fair enough...
+> 
+> user_addr_pin_pages(void __user * addr, ...) ?
+> 
+> uaddr_pin_pages(void __user * addr, ...) ?
+> 
+> I think I like uaddr...
+> 
 
-I've been thinking of adding NetBSD's localtime_rz etc. functions to glibc. 
-These functions let user programs specify the time zone for each conversion 
-between time_t and local time, and simplify and/or speed up applications dealing 
-with many requests coming from different time zones. These functions also ignore 
-'struct timezone'.
+Better to spell out "user". "u" prefixes are used for "unsigned" and it
+is just too ambiguous here. Maybe:
 
-There's no need to put any of this stuff into the kernel.
+    vaddr_pin_user_pages()
+
+...which also sounds close enough to get_user_pages() that a bit of
+history and continuity is preserved, too.
+
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
