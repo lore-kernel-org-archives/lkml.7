@@ -2,87 +2,87 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FB7C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6332C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63F9F206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A50E206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:41:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbfHMTih (ORCPT
+        id S1726303AbfHMTle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 15:38:37 -0400
-Received: from mga02.intel.com ([134.134.136.20]:5176 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbfHMTih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 15:38:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 12:38:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="183972065"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 13 Aug 2019 12:38:35 -0700
-Received: from dalyrusx-mobl.amr.corp.intel.com (unknown [10.251.3.205])
-        by linux.intel.com (Postfix) with ESMTP id 361CD580372;
-        Tue, 13 Aug 2019 12:38:34 -0700 (PDT)
-Subject: Re: [alsa-devel] [PATCH v2 3/5] ASoC: core: add support to
- snd_soc_dai_get_sdw_stream()
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        vkoul@kernel.org, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org, bgoswami@codeaurora.org,
-        plai@codeaurora.org, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        spapothi@codeaurora.org
-References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
- <20190813083550.5877-4-srinivas.kandagatla@linaro.org>
- <ba88e0f9-ae7d-c26e-d2dc-83bf910c2c01@linux.intel.com>
- <c2eecd44-f06a-7287-2862-0382bf697f8d@linaro.org>
- <d2b7773b-d52a-7769-aa5b-ef8c8845d447@linux.intel.com>
- <d7c1fdb2-602f-ecb1-9b32-91b893e7f408@linaro.org>
- <f0228cb4-0a6f-17f3-fe03-9be7f5f2e59d@linux.intel.com>
- <20190813191827.GI5093@sirena.co.uk>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <cc360858-571a-6a46-1789-1020bcbe4bca@linux.intel.com>
-Date:   Tue, 13 Aug 2019 14:38:53 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Tue, 13 Aug 2019 15:41:34 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:38944 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725923AbfHMTle (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 15:41:34 -0400
+Received: by mail-qk1-f196.google.com with SMTP id 125so7613244qkl.6;
+        Tue, 13 Aug 2019 12:41:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MCvgFN5GXnda2r43SDXMWKSjfSyNoGtkYFt/JRtKgrU=;
+        b=i4HT8YeOngNKCfhfVwlHiFADe+2dFSI1RzR2HBqrv86R/8YCik9iIDdCbzf2uJ1ZWI
+         fg2KMOUUO0KZ4f4yTFGFQ3xMmYUkvdSO4ou9Psc9UZu22Lys3tNWvv4EVIFX73Sj2dG7
+         rPszXlbhXu11+Xw7OnWu/tvupVT9ow5yan4Furx1idZqcNNnXWY4rIDdQ4IL8O0dhDR8
+         HHzA0W/79UQW+hBu1bUUPVkHET1/U5MjEn2rHcaEL+Th5419hDF2l6ApUl9r3yOz3WU2
+         8obrev341QVJ80cSbcni7e0WisAXSS6TAjdfLDvMAXRMTLzZf9Hn6gwJWxsy+ytIBXkO
+         7e9Q==
+X-Gm-Message-State: APjAAAVE1EVL2kxQa60Iy4gGuLsiyde78I3F7VM691qP+qhUvFjBLreS
+        ilwLsqRn8IP0N4AhJ/e+VhlpJPHyzfLBYDNb7O2soZmb
+X-Google-Smtp-Source: APXvYqwCYEm8WDqUZ9AXa597kLLirzp9B1fRYVLZztN7ofbKzh/wg2jhEWnoRHxLGsp8iip61vuq36gmEXTnqu6XLiw=
+X-Received: by 2002:a05:620a:b:: with SMTP id j11mr35177645qki.352.1565725293275;
+ Tue, 13 Aug 2019 12:41:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190813191827.GI5093@sirena.co.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190810010758.16407-1-alistair.francis@wdc.com>
+ <CAK8P3a2wYMsBRm1X-TFo1d7-B7Xug9gwqF77HitoE7wmOqD7rw@mail.gmail.com> <CAKmqyKNH7G=_gs2Hfc3OZMFaHzUwU8fSomfu_r92hJrnJHJT3A@mail.gmail.com>
+In-Reply-To: <CAKmqyKNH7G=_gs2Hfc3OZMFaHzUwU8fSomfu_r92hJrnJHJT3A@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 13 Aug 2019 21:41:17 +0200
+Message-ID: <CAK8P3a0phB6hb=Da6V=CWWmi_oYwUcpSRi6CZTqAPz7QXKFJTA@mail.gmail.com>
+Subject: Re: [PATCH] syscalls: Update the syscall #defines to match uapi
+To:     Alistair Francis <alistair23@gmail.com>
+Cc:     Alistair Francis <alistair.francis@wdc.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/19 2:18 PM, Mark Brown wrote:
-> On Tue, Aug 13, 2019 at 02:15:18PM -0500, Pierre-Louis Bossart wrote:
->> On 8/13/19 1:06 PM, Srinivas Kandagatla wrote:
-> 
->>> sorry for the confusion. It was too quick reply. :-)
->>> I was suppose to say sdw_stream_add_slave() instead of set_sdw_stream().
-> 
->> ok, so get_sdw_stream() and set_sdw_stream() are not meant to be mirrors or
->> both implemented. It's just a helper to respectively get a context or set a
->> context but a get-modify-set type of operation is not expected.
-> 
->> Do I get this right?
-> 
-> This seems like it's going to be confusing...
+On Tue, Aug 13, 2019 at 9:01 PM Alistair Francis <alistair23@gmail.com> wrote:
+> On Mon, Aug 12, 2019 at 2:49 AM Arnd Bergmann <arnd@arndb.de> wrote:
 
-Indeed. I don't have a full understanding of that part to be honest, nor 
-why we need something SoundWire-specific. We already abused the 
-set_tdm_slot API to store an HDaudio stream, now we have a rather 
-confusing stream information for SoundWire and I have about 3 other 
-'stream' contexts in SOF... I am still doing basic cleanups but this has 
-been on my radar for a while.
+> > > diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+> > > index 2bcef4c70183..e4bf5e480d60 100644
+> > > --- a/include/linux/syscalls.h
+> > > +++ b/include/linux/syscalls.h
+> > > @@ -512,7 +512,7 @@ asmlinkage long sys_readlinkat(int dfd, const char __user *path, char __user *bu
+> > >  asmlinkage long sys_newfstatat(int dfd, const char __user *filename,
+> > >                                struct stat __user *statbuf, int flag);
+> > >  asmlinkage long sys_newfstat(unsigned int fd, struct stat __user *statbuf);
+> > > -#if defined(__ARCH_WANT_STAT64) || defined(__ARCH_WANT_COMPAT_STAT64)
+> > > +#if defined(__ARCH_WANT_NEW_STAT) || defined(__ARCH_WANT_STAT64)
+> > >  asmlinkage long sys_fstat64(unsigned long fd, struct stat64 __user *statbuf);
+> > >  asmlinkage long sys_fstatat64(int dfd, const char __user *filename,
+> > >                                struct stat64 __user *statbuf, int flag);
+> >
+> > I think this is wrong: when __ARCH_WANT_NEW_STAT is set, we are
+> > on a 64-bit architecture and only want the sys_newfstat{,at} system
+> > calls, not sys_fstat{,at}64 that gets used on 32-bit machines.
+>
+> Ah, that would make sense then. I don't think you will see the error then.
 
+So we don't need this patch to build riscv32 kernels, right? It's possible
+that it was the result of an incorrect forward port of some other patch,
+as older riscv32 kernels did provide stat64(), but newer ones only have
+statx().
 
+       Arnd
