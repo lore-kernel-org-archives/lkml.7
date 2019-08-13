@@ -2,110 +2,108 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50877C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FECFC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4822064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C45F2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:09:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbfHMHIz (ORCPT
+        id S1727411AbfHMHJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 03:08:55 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37392 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfHMHIy (ORCPT
+        Tue, 13 Aug 2019 03:09:39 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40083 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfHMHJj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 03:08:54 -0400
-Received: by mail-ot1-f66.google.com with SMTP id f17so33365150otq.4;
-        Tue, 13 Aug 2019 00:08:53 -0700 (PDT)
+        Tue, 13 Aug 2019 03:09:39 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w10so50768720pgj.7;
+        Tue, 13 Aug 2019 00:09:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wTT+rg6SG7UBUHob0HZt48vAmE4ApsnQp1E/BlW8Ffs=;
-        b=DL2/2woCXIGfwoubqoDRWb0hqPqG3lbIrqu6JYPHqPjVCHpvbp9BCMcSipRDaOKiK6
-         JJI8KoDKTdo4PnekGqpLZ0fXfai/WlkGjb2pcaog3dS46FsSesjxmjzK2wBpcGnKJb4c
-         FOU/qG6tcL8wTa7Fj4BJ60sO4a5P6V4ev2DhdRYkqeDBKqzOCvlv9wRPgnDJf2LI2nDY
-         cpLdraLsaDWMRvSjq28yunpogUHiCojJ7F7WxDhuJEYLKDMaTZ/e0jPGA4R+BWH14eNS
-         oZuVBx21kJbUYVJwKXLgnW1NRdyJwh2AGCs/YKQL9A2WKFe3Bg5Cf/8FuWWWZV0CTcXI
-         4Pfg==
-X-Gm-Message-State: APjAAAUmbCgfJ47GOp0yPsMx9/Pk7Y/0xxXoK2zVnflPqohEfqTy7/sT
-        ZfjMIUvXUdz+kytKrNAf5AIW06lkw9DCXk0v3DM=
-X-Google-Smtp-Source: APXvYqyxIBNomwwxuMp7gXjXaQeSsLp7cLO7iGbIbBd1HLTwSnMOtbU5U45ex3/GUZRUjjcCoh6+5196SaVwJtYYRzU=
-X-Received: by 2002:aca:f4ca:: with SMTP id s193mr513752oih.131.1565680133423;
- Tue, 13 Aug 2019 00:08:53 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QfOWwE3vQqw8AQeTEb1rIQcn0tF6xiUbmO1pG5NRG+s=;
+        b=Gan8a50Nmqjlr7WRcPXSe2ZlPvKnwFR6l1+ATvhtzQw/7zYWygSiP2QoVHJzvomZKf
+         YUOYVp1+qb3hSi8j9i0rIIOpuatXvw4vLTo683QnbWmxEB05R41W2f0mHBA/JZ26IX8b
+         P++Z1DncNryfBvCAVwpVj5wNaE6bRryCeynabJDXSMJ9RJkYMqj8hzy1QQ9RXO1h+lsk
+         gmVyVZAOUZvcSnkveC8moDQYjoCKmiputU3THtFFoYH0X/SnaLxhCGGHOOLh5Eit3ly0
+         HNlIxXJgEfLcC02GIl+dSizV2bvdZe1DKEl5GdKdMRh35ukio/EQ44aspGEU5Y8ipbTZ
+         iX2A==
+X-Gm-Message-State: APjAAAWLAMtIBmZD0x+0F1ZoKPSkp7Zc8oLkjYd2+5asVjezo688F1UV
+        Meg+faIXeQBq2h/O+hqI2+g=
+X-Google-Smtp-Source: APXvYqxqBL7GOftYx/bXsrKx/R0dxSvRGoxLVF1NsqWuqX8vj/CY5YzmVz/Gb0wsiaxEGZFCF1MkuA==
+X-Received: by 2002:a17:90a:d151:: with SMTP id t17mr902510pjw.60.1565680178510;
+        Tue, 13 Aug 2019 00:09:38 -0700 (PDT)
+Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.gmail.com with ESMTPSA id x1sm18787633pfj.182.2019.08.13.00.09.32
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 13 Aug 2019 00:09:37 -0700 (PDT)
+Subject: Re: Bad file pattern in MAINTAINERS section 'SAMSUNG EXYNOS TRUE
+ RANDOM NUMBER GENERATOR (TRNG) DRIVER'
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?=c5=81ukasz_Stelmach?= <l.stelmach@samsung.com>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, efremov@linux.com
+References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
+ <20190325212751.27532-1-joe@perches.com>
+ <CAJKOXPcyOVLboJHZyEcUx_9HNh+iVq=7OFQN4=qnfL+O4Ld_4g@mail.gmail.com>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <f4e91a72-2d0d-b02e-706e-e53f6f9a2368@linux.com>
+Date:   Tue, 13 Aug 2019 10:09:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190812235237.21797-1-max@enpas.org>
-In-Reply-To: <20190812235237.21797-1-max@enpas.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 13 Aug 2019 09:08:42 +0200
-Message-ID: <CAMuHMdWCm9peP9P5_6KBC63cMHXiC3p1oycb0DvKqEd8G4Nx6g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] i2c/busses: Add i2c-icy for I2C on m68k/Amiga
-To:     Max Staudt <max@enpas.org>
-Cc:     Linux I2C <linux-i2c@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAJKOXPcyOVLboJHZyEcUx_9HNh+iVq=7OFQN4=qnfL+O4Ld_4g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Max,
+Hi All,
 
-On Tue, Aug 13, 2019 at 1:53 AM Max Staudt <max@enpas.org> wrote:
-> This is the i2c-icy driver for the ICY board for Amiga computers.
-> It connects a PCF8584 I2C controller to the Zorro bus, providing I2C
-> connectivity. The original documentation can be found on Aminet:
->
-> https://aminet.net/package/docs/hard/icy
->
-> IRQ support is currently not implemented, as i2c-algo-pcf is built for
-> the ISA bus and a straight implementation of the same stack locks up a
-> Zorro machine.
->
-> v2: Matched function names to callbacks from i2c-algo-pcf
->     Used z_readb()/z_writeb()
->     Removed BROKEN_ON_SMP in Kconfig
->     Moved LTC2990 to a separate commit
->
-> Signed-off-by: Max Staudt <max@enpas.org>
+Initially, I've prepared a patch and only after found this discussion. So, please,
+look at this patch no more than just a simple reminder that get_maintainers.pl
+still emits this warning.
 
-Thanks for the update!
+Best regards,
+Denis
 
-> --- /dev/null
-> +++ b/drivers/i2c/busses/i2c-icy.c
-> @@ -0,0 +1,189 @@
+------------------------ >8 ------------------------
+Subject: [PATCH] MAINTAINERS: exynos trng: Remove samsung,exynos5250-trng.txt record
 
-> +       dev_info(&z->dev, "ICY I2C controller at %#x, IRQ not implemented\n",
-> +                z->resource.start);
+Update MAINTAINERS to reflect that samsung,exynos5250-trng.txt
+file never existed.
 
-z->resource.start has type phys_addr_t, so you should pas a reference, and
-use %pa to print it.
-Alternatively, you can print the full resource using %pR.
-See Documentation/core-api/printk-formats.rst
+Cc: Łukasz Stelmach <l.stelmach@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-samsung-soc@vger.kernel.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
 
-> +
-> +       return 0;
-> +}
-
-The rest looks fine to me.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2ea3f82e256b..7d213e192626 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14033,7 +14033,6 @@ M:	Łukasz Stelmach <l.stelmach@samsung.com>
+ L:	linux-samsung-soc@vger.kernel.org
+ S:	Maintained
+ F:	drivers/char/hw_random/exynos-trng.c
+-F:	Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
+ 
+ SAMSUNG FRAMEBUFFER DRIVER
+ M:	Jingoo Han <jingoohan1@gmail.com>
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.21.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
