@@ -2,172 +2,175 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF641C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B29C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA91204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:37:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rEa6SXAc"
+	by mail.kernel.org (Postfix) with ESMTP id 9066D204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbfHMLh5 (ORCPT
+        id S1728104AbfHMLiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 07:37:57 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:18791 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726600AbfHMLh4 (ORCPT
+        Tue, 13 Aug 2019 07:38:06 -0400
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:37339 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726600AbfHMLiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 07:37:56 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d52a1160000>; Tue, 13 Aug 2019 04:37:58 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 13 Aug 2019 04:37:56 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 13 Aug 2019 04:37:56 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 13 Aug
- 2019 11:37:55 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 13 Aug 2019 11:37:55 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d52a10e0000>; Tue, 13 Aug 2019 04:37:55 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
-CC:     <digetx@gmail.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V16 11/13] dt-bindings: PHY: P2U: Add Tegra194 P2U block
-Date:   Tue, 13 Aug 2019 17:06:25 +0530
-Message-ID: <20190813113627.27251-12-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190813113627.27251-1-vidyas@nvidia.com>
-References: <20190813113627.27251-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        Tue, 13 Aug 2019 07:38:05 -0400
+Received: from [IPv6:2001:420:44c1:2579:155e:93d7:78eb:5531] ([IPv6:2001:420:44c1:2579:155e:93d7:78eb:5531])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id xV7hhKyl4qTdhxV7lh9QWs; Tue, 13 Aug 2019 13:38:03 +0200
+Subject: Re: [PATCH v6 7/8] drm: dw-hdmi: use cec_notifier_conn_(un)register
+To:     Dariusz Marcinkiewicz <darekm@google.com>,
+        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190813110300.83025-1-darekm@google.com>
+ <20190813110300.83025-8-darekm@google.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <41c95313-fe39-b201-5238-24df7e72879a@xs4all.nl>
+Date:   Tue, 13 Aug 2019 13:37:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565696278; bh=Vdd2VSumfzaEhairOxY7KEXJ0QuJYlnQSwYQFm9/8EM=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=rEa6SXAc3bYcFletBkvqGLd0zScjdN+AfzTYKey4H8ATdpZnz7HtfYRG316QN9Hth
-         bbg9NAbAIekxjwoKdVku7DYfonlv7EM96EsHKyoqZe3KjCj6CoMcyr3xjoGFy8F4s/
-         0EYWiqBUh2XBxY0HA/FwA+X7Qf8tDQunEnJKdUz+SwkgPawB7lN9xtRphA8w+JzbsG
-         4LDGisASWYbxQDDTkUcIYO+SEaxXw9fQa8i3CqP/HoyUaI07e+kdzl5wl8T5h0z5VI
-         ohbrhxmAbThNuUuSMCVSWdfsH/Hq7ljQZGCmQ7LV1iscRmuxBMIskaVhsYy+OAEgJg
-         AUVwwyfXu+W1w==
+In-Reply-To: <20190813110300.83025-8-darekm@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfIBagj28XgFXymMISKdyrWMjFt9IjTRiBXHeYQ8i3w0U4Wmg+lnZ4GDTQICxwIRE85AT9cLb1gSIzU3XCyCFb06QnkcTTCxjaQdd9IIIDbMS7bs5/Seq
+ 6wtzY0AoNHNv4XZ9VmC4qEaDiqB6IEjBr73ptDVWgMelCSl9YXJXPJMO0ivIG5B+CrTxcI74sSrvID5kdg2f3tMIENv57PbTFy18gzjJWLz8G69CYhaLdIJz
+ gMo7szk+Ysud2+ULZN5BuGjhvxHqCqnMiZ16x26Rz8wqkJ0p/cfuKBvLRUYrcGOn9drZjQbC4+oqfiWwh8v0Lvjs3JaFCiCsoygSJQh5oMbS2ewOC0gZGHVt
+ 0YESTERspXC9yG9j6vUXZ1TUnXIRm6tfqYNysThfBOgkTmKKaLe147ZJvmvPuR6PJH8sXGBX0mcmwtqs+IUyDjRYLoiAFuQ9JYadKltmz5Yhwca6jxnFEH3U
+ U67fCyYxZK+6Pnl6kTZhZc4B+Q8g1stYW7QHS6V+mT0Z5YCwKrDhxjfoZrL/GmNGU7Q6W504ilzQ5oDoP103BJ4w5pT4uu3R/AIvZSJ35782yKdbmWgkCJuE
+ X8lcNgQisp/ICI9RN+zYMhIHhskKnJQY5rqthEzspk/T/Y6zGuWxT0oHh4mWuC/g0Mkq6mKFAvRcwbQY8IY6faGxg/Xj8TlZtw63BtR/VMCeRA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for Tegra194 P2U (PIPE to UPHY) module block which is a glue
-module instantiated one for each PCIe lane between Synopsys DesignWare core
-based PCIe IP and Universal PHY block.
+On 8/13/19 1:02 PM, Dariusz Marcinkiewicz wrote:
+> Use the new cec_notifier_conn_(un)register() functions to
+> (un)register the notifier for the HDMI connector, and fill in
+> the cec_connector_info.
+> 
+> Changes since v4:
+> 	- typo fix
+> Changes since v2:
+> 	- removed unnecessary NULL check before a call to
+> 	cec_notifier_conn_unregister,
+> 	- use cec_notifier_phys_addr_invalidate to invalidate physical
+> 	address.
+> Changes since v1:
+> 	Add memory barrier to make sure that the notifier
+> 	becomes visible to the irq thread once it is fully
+> 	constructed.
+> 
+> Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+> Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 36 ++++++++++++++---------
+>  1 file changed, 22 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> index 83b94b66e464e..c00184700bb9d 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -2194,6 +2194,8 @@ static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
+>  	struct dw_hdmi *hdmi = bridge->driver_private;
+>  	struct drm_encoder *encoder = bridge->encoder;
+>  	struct drm_connector *connector = &hdmi->connector;
+> +	struct cec_connector_info conn_info;
+> +	struct cec_notifier *notifier;
+>  
+>  	connector->interlace_allowed = 1;
+>  	connector->polled = DRM_CONNECTOR_POLL_HPD;
+> @@ -2207,6 +2209,18 @@ static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
+>  
+>  	drm_connector_attach_encoder(connector, encoder);
+>  
+> +	cec_fill_conn_info_from_drm(&conn_info, connector);
+> +
+> +	notifier = cec_notifier_conn_register(hdmi->dev, NULL, &conn_info);
+> +	if (!notifier)
+> +		return -ENOMEM;
+> +	/*
+> +	 * Make sure that dw_hdmi_irq thread does see the notifier
+> +	 * when it fully constructed.
+> +	 */
+> +	smp_wmb();
+> +	hdmi->cec_notifier = notifier;
+> +
+>  	return 0;
+>  }
+>  
+> @@ -2373,9 +2387,13 @@ static irqreturn_t dw_hdmi_irq(int irq, void *dev_id)
+>  				       phy_stat & HDMI_PHY_HPD,
+>  				       phy_stat & HDMI_PHY_RX_SENSE);
+>  
+> -		if ((phy_stat & (HDMI_PHY_RX_SENSE | HDMI_PHY_HPD)) == 0)
+> -			cec_notifier_set_phys_addr(hdmi->cec_notifier,
+> -						   CEC_PHYS_ADDR_INVALID);
+> +		if ((phy_stat & (HDMI_PHY_RX_SENSE | HDMI_PHY_HPD)) == 0) {
+> +			struct cec_notifier *notifier;
+> +
+> +			notifier = READ_ONCE(hdmi->cec_notifier);
+> +			if (notifier)
+> +				cec_notifier_phys_addr_invalidate(notifier);
+> +		}
+>  	}
+>  
+>  	if (intr_stat & HDMI_IH_PHY_STAT0_HPD) {
+> @@ -2693,12 +2711,6 @@ __dw_hdmi_probe(struct platform_device *pdev,
+>  	if (ret)
+>  		goto err_iahb;
+>  
+> -	hdmi->cec_notifier = cec_notifier_get(dev);
+> -	if (!hdmi->cec_notifier) {
+> -		ret = -ENOMEM;
+> -		goto err_iahb;
+> -	}
+> -
+>  	/*
+>  	 * To prevent overflows in HDMI_IH_FC_STAT2, set the clk regenerator
+>  	 * N and cts values before enabling phy
+> @@ -2796,9 +2808,6 @@ __dw_hdmi_probe(struct platform_device *pdev,
+>  		hdmi->ddc = NULL;
+>  	}
+>  
+> -	if (hdmi->cec_notifier)
+> -		cec_notifier_put(hdmi->cec_notifier);
+> -
+>  	clk_disable_unprepare(hdmi->iahb_clk);
+>  	if (hdmi->cec_clk)
+>  		clk_disable_unprepare(hdmi->cec_clk);
+> @@ -2820,8 +2829,7 @@ static void __dw_hdmi_remove(struct dw_hdmi *hdmi)
+>  	/* Disable all interrupts */
+>  	hdmi_writeb(hdmi, ~0, HDMI_IH_MUTE_PHY_STAT0);
+>  
+> -	if (hdmi->cec_notifier)
+> -		cec_notifier_put(hdmi->cec_notifier);
+> +	cec_notifier_conn_unregister(hdmi->cec_notifier);
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
----
-V16:
-* None
+Russell's review caused me to take another look at this series, and it made
+wonder if cec_notifier_conn_unregister() shouldn't be called from bridge_detach?
 
-V15:
-* None
+Regards,
 
-V14:
-* None
+	Hans
 
-V13:
-* None
-
-V12:
-* None
-
-V11:
-* None
-
-V10:
-* None
-
-V9:
-* None
-
-V8:
-* None
-
-V7:
-* None
-
-V6:
-* Added Sob
-* Changed node name from "p2u@xxxxxxxx" to "phy@xxxxxxxx"
-
-V5:
-* None
-
-V4:
-* None
-
-V3:
-* Changed node label to reflect new format that includes either 'hsio' or
-  'nvhs' in its name to reflect which UPHY brick they belong to
-
-V2:
-* This is a new patch in v2 series
-
- .../bindings/phy/phy-tegra194-p2u.txt         | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
-new file mode 100644
-index 000000000000..d23ff90baad5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
-@@ -0,0 +1,28 @@
-+NVIDIA Tegra194 P2U binding
-+
-+Tegra194 has two PHY bricks namely HSIO (High Speed IO) and NVHS (NVIDIA High
-+Speed) each interfacing with 12 and 8 P2U instances respectively.
-+A P2U instance is a glue logic between Synopsys DesignWare Core PCIe IP's PIPE
-+interface and PHY of HSIO/NVHS bricks. Each P2U instance represents one PCIe
-+lane.
-+
-+Required properties:
-+- compatible: For Tegra19x, must contain "nvidia,tegra194-p2u".
-+- reg: Should be the physical address space and length of respective each P2U
-+       instance.
-+- reg-names: Must include the entry "ctl".
-+
-+Required properties for PHY port node:
-+- #phy-cells: Defined by generic PHY bindings.  Must be 0.
-+
-+Refer to phy/phy-bindings.txt for the generic PHY binding properties.
-+
-+Example:
-+
-+p2u_hsio_0: phy@3e10000 {
-+	compatible = "nvidia,tegra194-p2u";
-+	reg = <0x03e10000 0x10000>;
-+	reg-names = "ctl";
-+
-+	#phy-cells = <0>;
-+};
--- 
-2.17.1
+>  
+>  	clk_disable_unprepare(hdmi->iahb_clk);
+>  	clk_disable_unprepare(hdmi->isfr_clk);
+> 
 
