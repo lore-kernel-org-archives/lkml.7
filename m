@@ -2,116 +2,104 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1C5C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B13C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4EC22067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:52:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CpmOQTlB"
+	by mail.kernel.org (Postfix) with ESMTP id CB2482067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:56:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfHMVwP (ORCPT
+        id S1726761AbfHMV4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:52:15 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39925 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbfHMVwP (ORCPT
+        Tue, 13 Aug 2019 17:56:20 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:47889 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbfHMV4U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 17:52:15 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i63so2700844wmg.4;
-        Tue, 13 Aug 2019 14:52:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Aq+Y2GhebEKnLBnrxQhotqb+IDj71O/k31BTDDdJ94c=;
-        b=CpmOQTlBTp4oKABypS3aBgls/6oK6Kwi/RlPNB6D9pLZvAG+x6JOmW6O5ArUQg3/tq
-         /JGLy5u72qq5Gnum9haNKtMN9Em05dviEf5tL/FZJSQn4KgiFCDKSYy6MuZAK5PZBrfM
-         aurYzQg1X2V4YA4wYnlquLAKESp1RBLagEvlOPj+Gaw4NC7014GoY5hpgjVHkJrJBmBV
-         qQRjA4PU607GOO/+Y7rTg840JQValwoVZ/bAFXVv2+Uo+Esvn3xDYXFab70PK7DHLrG1
-         /o44k+qFYWf+uLtj3TEBS1eoRPsU/rxTFftqSucA8zb3F7cdQCu0pyWXjJ3UBoGHOmfG
-         +55g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Aq+Y2GhebEKnLBnrxQhotqb+IDj71O/k31BTDDdJ94c=;
-        b=UtknEb/dpXyftUMKaNIyPvrwegBzrO/B7aoMowY/eBz7s92k4yuhPrhQbyLNL4iX5b
-         L6R40ySrZEgWOGgaRb80rv7DMTLf75PmXZowzljMO6YbMhreMs3oXitz0fBD6CE//AdD
-         +jQdBsX0ySUWeFlPNBk4hLWrQ8tJ4y/ieG5vqywBf6Q+znHXmLaTmXyz4LipPBsAz1ny
-         HAEINXQjHUrMHOAUt1vxm6uATs1HNTMi9k3xRhpgTJW8SNJ8lYnEi6qgHLUmIPEmwvak
-         cW+mJNE2NW06/P0SAzrDtfHltK6TfWhhuuiOBl8dsYzySQ39SF8GCe+4Ry8j+m+Ja7T+
-         b+pg==
-X-Gm-Message-State: APjAAAXR75ZknkLW1HyYPJ52QAUHqbyeIkEB1WD2P3N937654ZDkFiUG
-        ckyur2JSKpTXLL++AHGn6zWskZOs
-X-Google-Smtp-Source: APXvYqwYnbR/jrmC7swOOoNJx78NLELh0rDowKVHL2lNer6mbgViai3DyldbLMPnpFs1vPX0XSXPbA==
-X-Received: by 2002:a1c:f106:: with SMTP id p6mr4556035wmh.148.1565733132831;
-        Tue, 13 Aug 2019 14:52:12 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f2f:3200:e1e2:64b7:ee24:2d4a? (p200300EA8F2F3200E1E264B7EE242D4A.dip0.t-ipconnect.de. [2003:ea:8f2f:3200:e1e2:64b7:ee24:2d4a])
-        by smtp.googlemail.com with ESMTPSA id a18sm7039606wrt.18.2019.08.13.14.52.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 13 Aug 2019 14:52:12 -0700 (PDT)
-Subject: Re: [PATCH] MAINTAINERS: r8169: Update path to the driver
-To:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org
-Cc:     joe@perches.com, nic_swsd@realtek.com,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
- <20190813060759.14256-1-efremov@linux.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <69fac52e-8464-ea87-e2e5-422ae36a92c8@gmail.com>
-Date:   Tue, 13 Aug 2019 23:52:05 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 13 Aug 2019 17:56:20 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id D4C101BF209;
+        Tue, 13 Aug 2019 21:56:15 +0000 (UTC)
+Date:   Tue, 13 Aug 2019 23:56:15 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        Karel Zak <kzak@redhat.com>,
+        Lennart Poettering <lennart@poettering.net>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Subject: Re: New kernel interface for sys_tz and timewarp?
+Message-ID: <20190813215615.GE3600@piout.net>
+References: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com>
+ <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190813060759.14256-1-efremov@linux.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.08.2019 08:07, Denis Efremov wrote:
-> Update MAINTAINERS record to reflect the filename change
-> from r8169.c to r8169_main.c
+On 13/08/2019 10:30:34-0700, Linus Torvalds wrote:
+> On Tue, Aug 13, 2019 at 2:06 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > * Should we allow setting the sys_tz on new architectures that use only
+> >   time64 interfaces at all, or should we try to get away from that anyway?
 > 
-> Cc: Heiner Kallweit <hkallweit1@gmail.com>
-> Cc: nic_swsd@realtek.com
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: netdev@vger.kernel.org
-> Fixes: 25e992a4603c ("r8169: rename r8169.c to r8169_main.c")
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> We should not do TZ on a kernel level at all. At least not a global
+> one. It makes no sense.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 99a7392ad6bc..25eb86f3261e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -183,7 +183,7 @@ M:	Realtek linux nic maintainers <nic_swsd@realtek.com>
->  M:	Heiner Kallweit <hkallweit1@gmail.com>
->  L:	netdev@vger.kernel.org
->  S:	Maintained
-> -F:	drivers/net/ethernet/realtek/r8169.c
-> +F:	drivers/net/ethernet/realtek/r8169_main.c
->  
-That's better than before, but wouldn't cover e.g. changes
-to r8169_firmware.c. Better may be:
-
-F:	drivers/net/ethernet/realtek/r8169*
-
->  8250/16?50 (AND CLONE UARTS) SERIAL DRIVER
->  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> If the original TZ had been defined to have some sane model (perhaps
+> per session? Something like that), it would be worth doing. As it is,
+> a global TZ is just plain wrong. Per process would be sane (but
+> largely useless, I suspect).
+> 
+> > * Should the NTP timewarp setting ("int persistent_clock_is_local" and
+> >   its offset) be controllable separately from the timezone used in other
+> >   drivers?
+> >
+> > * If we want keep having a way to set the sys_tz, what interface
+> > should that use?
+> 
+> I suspect we need to have _some_ way to set the kernel TZ for legacy
+> reasons, but it should be deprecated and if we can make do without it
+> entirely on architectures where the legacy doesn't make sense, then
+> all the better.
+> 
+> I suspect the only actual _valid_ use in the kernel for a time zone
+> setting is likely for RTC clock setting, but even that isn't really
+> "global", as much as "per RTC".
 > 
 
-Heiner
+Userspace doesn't need help from the kernel to set the RTC using local
+time if necessary, this info is in /etc/adjtime and hwclock uses it
+correctly. It is only needed when the kernel sets the rtc time 
 
+> That said, if glibc has some sane semantics for TZ, maybe the kernel
+> can help with that. But I assume/think that glibc uses (a) environment
+> variables and (b) a filesystem-set default (per-user file with a
+> system-wide default? I don't know what people do). I suspect the
+> kernel can't really do any better.
+> 
+>                 Linus
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
