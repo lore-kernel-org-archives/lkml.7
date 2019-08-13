@@ -2,189 +2,171 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D800BC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDC4C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C13D20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F287120663
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:22:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gJBMgCy7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wqulxs/I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfHMRRR (ORCPT
+        id S1726935AbfHMRWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 13:17:17 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35547 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfHMRRR (ORCPT
+        Tue, 13 Aug 2019 13:22:44 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45148 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbfHMRWo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 13:17:17 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g17so24457126otl.2;
-        Tue, 13 Aug 2019 10:17:15 -0700 (PDT)
+        Tue, 13 Aug 2019 13:22:44 -0400
+Received: by mail-pf1-f196.google.com with SMTP id w26so6708239pfq.12
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 10:22:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=NGLe9R6TH0gA90LodsbIsArKREL2u+B16+/2nJh97c0=;
-        b=gJBMgCy7nt3IeZMNu2hBgVLvhtgwuryD2slw94jAVFQLR855zVUPI3SVTD8vdegQq3
-         lJASni0EAd20uPZVN+s8xhTXSXySFAeklSClTk9oIfAwS+KhP7ak88rCFMtgkoavI9JV
-         G/rU/KBnKpnYWUZkyEK/tzlbMYFUXZwilL9E40y9EXjIeTNsPMI3TCf2RkIdvzDxxDpO
-         yIC69Ng2VVeEd2BqIpIxeGIfyKk/gTWJiVANzgTe9e0Vh2V9zH9vlwRuwEWCzBo/Pr33
-         hamiGZWdiYbSb0hdRKsnI66yLBLExsWnPZRpLIfcUc3X8HMmG63rBnta3X5UqGwwgm8U
-         tciA==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=k8N1+CVxt+RJj8Si9vYbnsuXtAKEpExU7o2UK2KgdhA=;
+        b=Wqulxs/IqBFJerqJEhOtZ6R8tJJJ4oo6uKVQRnyyCSK6crKU0MUkbeWvT+IutOzfK7
+         I6KpqsK28kEq5P5h/CNsz/7Iic03Pu3YnV5l6xv2IOPAEguLIuXxPrp5KtIf3T+Wxkbo
+         HFMJFR8kaC9/kGtWe+PQe3dnMf92OxiYZWZYY0Mqc21LETZr9UX9BYAoeyWOMef9x1+U
+         yl4E6RhhBtjYdDN8tZc6cSaW3viAsk2jgUnmZK1zmbgIGHEQHhED5T4ahqKVm3AI/YEo
+         QJkMfqqGEox5DER+eJJl3xVcge13QA9IJZkoaLR7BhJ2CBT3yH/w0l5fIjhd+6eYkhqA
+         F76Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=NGLe9R6TH0gA90LodsbIsArKREL2u+B16+/2nJh97c0=;
-        b=HzOSfrpRb7imUkLPozFA4cluauHUBP0aJPxjyUqoPCUYcxUoCej6pVC4+/yLozWEBw
-         YgU7b+X+9kIPj85jTgHQ7zL7mJka/uqv6IZyB6QcE58ROou2t1y2sDUPk5h8JWI7jnM0
-         lxlKU1MVVCWhg28K+Ze2YWYaHBoujkLOITCT9nMspaqDWyLCl3peBzzMh/Z2yXMwLo8U
-         Ge8I73zpFYENpkN/47vl6hcwUANvsLYxl7m3PtruxPwYQV+C0+n4D+jIKVk/CdO6JFyC
-         nATFfY+DmOVRMQ3FfQcYplErRgyPzGC3eWdaZYp08/lJn0ON+nEZ3Ta0xSAl2G30Y2i+
-         LpKQ==
-X-Gm-Message-State: APjAAAX8fEcUk1eZ9s7513Y0R33rapdkjh2KMLhKRl7M3U0nMhwPBCpH
-        rTw3JYpmnDtqDnqsavmX+YI=
-X-Google-Smtp-Source: APXvYqy1K9u54o25aGY1RYmHvPMcG4xIhnKq66m5aq1oMVKhWqOfdXnCWA7rxZGNCZ9U3vrrmsIXBg==
-X-Received: by 2002:a6b:5a0b:: with SMTP id o11mr3445697iob.98.1565716635498;
-        Tue, 13 Aug 2019 10:17:15 -0700 (PDT)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id v10sm101031303iob.43.2019.08.13.10.17.13
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=k8N1+CVxt+RJj8Si9vYbnsuXtAKEpExU7o2UK2KgdhA=;
+        b=FsP3QynjCW/BXzMco9kApQ/ECuNvgBgMTz1cD8Vw1YzUWMynvr+jLl6oFZjAMwyPYB
+         xUUcN94IwbQN8lLorvwdwL97Pd638p0gDhrcnTu6RP7RmSPz6sVXzszBH1WWVPHaJm6Q
+         QX5Hy/4BhUQodoh5prPC8iYgJ8EFDfjEEM0QFItNP7sj7ZD809J1689SL8EPlx1Grjj2
+         iI9oqtNWEPK9HClNeFV9aE3pMsT/+0TPe+O3QNLtSR1grvXvBhxDO0rcBWepxk9wXEgr
+         BJ+xC9tqbOBfUHKXNUh8H/1PGAwQCxRugxmhVlLYnd48PqVjrC4Nr1hi8HTOLFtsbe1j
+         1SrQ==
+X-Gm-Message-State: APjAAAWj7W+sTxPBpDawEpofDbXN+qwlhnZVEQmYPIV6b2TKisZwM6fX
+        5Ua6Yf8Y465aQ7K3UNzkc8ySLw==
+X-Google-Smtp-Source: APXvYqzgpMvNagdXqj1a0ANkB3Dtmxg8Umv6rI8BDjlaJFsyT8mZstls16B/grRHwkMkJtMnZcrlsA==
+X-Received: by 2002:a17:90a:bb0c:: with SMTP id u12mr3272874pjr.132.1565716962792;
+        Tue, 13 Aug 2019 10:22:42 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id z4sm166362957pfg.166.2019.08.13.10.22.41
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 10:17:14 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 10:17:06 -0700
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+dcdc9deefaec44785f32@syzkaller.appspotmail.com>
-Cc:     aviadye@mellanox.com, borisp@mellanox.com, daniel@iogearbox.net,
-        davejwatson@fb.com, davem@davemloft.net,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        oss-drivers@netronome.com, syzkaller-bugs@googlegroups.com,
-        willemb@google.com
-Message-ID: <5d52f09299e91_40c72adb748b25c0d3@john-XPS-13-9370.notmuch>
-In-Reply-To: <20190810135900.2820-1-hdanton@sina.com>
-References: <000000000000f5d619058faea744@google.com>
- <20190810135900.2820-1-hdanton@sina.com>
-Subject: Re: general protection fault in tls_write_space
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Tue, 13 Aug 2019 10:22:41 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 10:22:41 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Vlastimil Babka <vbabka@suse.cz>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [patch] mm, page_alloc: move_freepages should not examine struct
+ page of reserved memory
+In-Reply-To: <3aadeed1-3f38-267d-8dae-839e10a2f9d2@suse.cz>
+Message-ID: <alpine.DEB.2.21.1908131018450.230426@chino.kir.corp.google.com>
+References: <alpine.DEB.2.21.1908122036560.10779@chino.kir.corp.google.com> <3aadeed1-3f38-267d-8dae-839e10a2f9d2@suse.cz>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hillf Danton wrote:
+On Tue, 13 Aug 2019, Vlastimil Babka wrote:
+
+> > After commit 907ec5fca3dc ("mm: zero remaining unavailable struct pages"),
+> > struct page of reserved memory is zeroed.  This causes page->flags to be 0
+> > and fixes issues related to reading /proc/kpageflags, for example, of
+> > reserved memory.
+> > 
+> > The VM_BUG_ON() in move_freepages_block(), however, assumes that
+> > page_zone() is meaningful even for reserved memory.  That assumption is no
+> > longer true after the aforementioned commit.
 > 
-> On Sat, 10 Aug 2019 01:23:06 -0700
-> > 
-> > syzbot has found a reproducer for the following crash on:
-> > 
-> > HEAD commit:    ca497fb6 taprio: remove unused variable 'entry_list_policy'
-> > git tree:       net-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=109f3802600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=d4cf1ffb87d590d7
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=dcdc9deefaec44785f32
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11c78cd2600000
-> > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+dcdc9deefaec44785f32@syzkaller.appspotmail.com
-> > 
-> > kasan: CONFIG_KASAN_INLINE enabled
-> > kasan: GPF could be caused by NULL-ptr deref or user memory access
-> > general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> > CPU: 0 PID: 9 Comm: ksoftirqd/0 Not tainted 5.3.0-rc3+ #125
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> > Google 01/01/2011
-> > RIP: 0010:tls_write_space+0x51/0x170 net/tls/tls_main.c:239
-> > Code: c1 ea 03 80 3c 02 00 0f 85 26 01 00 00 49 8b 9c 24 b0 06 00 00 48 b8  
-> > 00 00 00 00 00 fc ff df 48 8d 7b 6a 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48  
-> > 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 df 00 00 00
-> > RSP: 0018:ffff8880a98b74c8 EFLAGS: 00010202
-> > RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff860a27a2
-> > RDX: 000000000000000d RSI: ffffffff862c86c1 RDI: 000000000000006a
-> > RBP: ffff8880a98b74e0 R08: ffff8880a98a2240 R09: fffffbfff167c289
-> > R10: fffffbfff167c288 R11: ffffffff8b3e1447 R12: ffff8880a4de41c0
-> > R13: ffff8880a4de45b8 R14: 000000000000000a R15: 0000000000000000
-> > FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 0000000000000000 CR3: 000000008c9d1000 CR4: 00000000001406f0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > Call Trace:
-> >   tcp_new_space net/ipv4/tcp_input.c:5151 [inline]
-> >   tcp_check_space+0x191/0x760 net/ipv4/tcp_input.c:5162
-> >   tcp_data_snd_check net/ipv4/tcp_input.c:5172 [inline]
-> >   tcp_rcv_state_process+0xe24/0x4e48 net/ipv4/tcp_input.c:6303
-> >   tcp_v6_do_rcv+0x7d7/0x12c0 net/ipv6/tcp_ipv6.c:1381
-> >   tcp_v6_rcv+0x31f1/0x3500 net/ipv6/tcp_ipv6.c:1588
-> >   ip6_protocol_deliver_rcu+0x2fe/0x1660 net/ipv6/ip6_input.c:397
-> >   ip6_input_finish+0x84/0x170 net/ipv6/ip6_input.c:438
-> >   NF_HOOK include/linux/netfilter.h:305 [inline]
-> >   NF_HOOK include/linux/netfilter.h:299 [inline]
-> >   ip6_input+0xe4/0x3f0 net/ipv6/ip6_input.c:447
-> >   dst_input include/net/dst.h:442 [inline]
-> >   ip6_rcv_finish+0x1de/0x2f0 net/ipv6/ip6_input.c:76
-> >   NF_HOOK include/linux/netfilter.h:305 [inline]
-> >   NF_HOOK include/linux/netfilter.h:299 [inline]
-> >   ipv6_rcv+0x10e/0x420 net/ipv6/ip6_input.c:272
-> >   __netif_receive_skb_one_core+0x113/0x1a0 net/core/dev.c:5006
-> >   __netif_receive_skb+0x2c/0x1d0 net/core/dev.c:5120
-> >   process_backlog+0x206/0x750 net/core/dev.c:5951
-> >   napi_poll net/core/dev.c:6388 [inline]
-> >   net_rx_action+0x4d6/0x1080 net/core/dev.c:6456
-> >   __do_softirq+0x262/0x98c kernel/softirq.c:292
-> >   run_ksoftirqd kernel/softirq.c:603 [inline]
-> >   run_ksoftirqd+0x8e/0x110 kernel/softirq.c:595
-> >   smpboot_thread_fn+0x6a3/0xa40 kernel/smpboot.c:165
-> >   kthread+0x361/0x430 kernel/kthread.c:255
-> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> > Modules linked in:
-> > ---[ end trace c21a83505707bb9d ]---
+> How comes that move_freepages_block() gets called on reserved memory in
+> the first place?
 > 
-> Followup of commit 95fa145479fb
-> ("bpf: sockmap/tls, close can race with map free")
+
+It's simply math after finding a valid free page from the per-zone free 
+area to use as fallback.  We find the beginning and end of the pageblock 
+of the valid page and that can bring us into memory that was reserved per 
+the e820.  pfn_valid() is still true (it's backed by a struct page), but 
+since it's zero'd we shouldn't make any inferences here about comparing 
+its node or zone.  The current node check just happens to succeed most of 
+the time by luck because reserved memory typically appears on node 0.
+
+The fix here is to validate that we actually have buddy pages before 
+testing if there's any type of zone or node strangeness going on.
+
+> > There's no reason why move_freepages_block() should be testing the
+> > legitimacy of page_zone() for reserved memory; its scope is limited only
+> > to pages on the zone's freelist.
+> > 
+> > Note that pfn_valid() can be true for reserved memory: there is a backing
+> > struct page.  The check for page_to_nid(page) is also buggy but reserved
+> > memory normally only appears on node 0 so the zeroing doesn't affect this.
+> > 
+> > Move the debug checks to after verifying PageBuddy is true.  This isolates
+> > the scope of the checks to only be for buddy pages which are on the zone's
+> > freelist which move_freepages_block() is operating on.  In this case, an
+> > incorrect node or zone is a bug worthy of being warned about (and the
+> > examination of struct page is acceptable bcause this memory is not
+> > reserved).
+> > 
+> > Signed-off-by: David Rientjes <rientjes@google.com>
+> > ---
+> >  mm/page_alloc.c | 19 ++++---------------
+> >  1 file changed, 4 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> > --- a/mm/page_alloc.c
+> > +++ b/mm/page_alloc.c
+> > @@ -2238,27 +2238,12 @@ static int move_freepages(struct zone *zone,
+> >  	unsigned int order;
+> >  	int pages_moved = 0;
+> >  
+> > -#ifndef CONFIG_HOLES_IN_ZONE
+> > -	/*
+> > -	 * page_zone is not safe to call in this context when
+> > -	 * CONFIG_HOLES_IN_ZONE is set. This bug check is probably redundant
+> > -	 * anyway as we check zone boundaries in move_freepages_block().
+> > -	 * Remove at a later date when no bug reports exist related to
+> > -	 * grouping pages by mobility
+> > -	 */
+> > -	VM_BUG_ON(pfn_valid(page_to_pfn(start_page)) &&
+> > -	          pfn_valid(page_to_pfn(end_page)) &&
+> > -	          page_zone(start_page) != page_zone(end_page));
+> > -#endif
+> >  	for (page = start_page; page <= end_page;) {
+> >  		if (!pfn_valid_within(page_to_pfn(page))) {
+> >  			page++;
+> >  			continue;
+> >  		}
+> >  
+> > -		/* Make sure we are not inadvertently changing nodes */
+> > -		VM_BUG_ON_PAGE(page_to_nid(page) != zone_to_nid(zone), page);
+> > -
+> >  		if (!PageBuddy(page)) {
+> >  			/*
+> >  			 * We assume that pages that could be isolated for
+> > @@ -2273,6 +2258,10 @@ static int move_freepages(struct zone *zone,
+> >  			continue;
+> >  		}
+> >  
+> > +		/* Make sure we are not inadvertently changing nodes */
+> > +		VM_BUG_ON_PAGE(page_to_nid(page) != zone_to_nid(zone), page);
+> > +		VM_BUG_ON_PAGE(page_zone(page) != zone, page);
 > 
-> --- a/net/tls/tls_main.c
-> +++ b/net/tls/tls_main.c
-> @@ -308,6 +308,9 @@ static void tls_sk_proto_close(struct so
->  	if (free_ctx)
->  		icsk->icsk_ulp_data = NULL;
->  	sk->sk_prot = ctx->sk_proto;
-> +	/* tls will go; restore sock callback before enabling bh */
-> +	if (sk->sk_write_space == tls_write_space)
-> +		sk->sk_write_space = ctx->sk_write_space;
->  	write_unlock_bh(&sk->sk_callback_lock);
->  	release_sock(sk);
->  	if (ctx->tx_conf == TLS_SW)
+> The later check implies the former check, so if it's to stay, the first
+> one could be removed and comment adjusted s/nodes/zones/
+> 
 
-Hi Hillf,
-
-We need this patch (although slightly updated for bpf tree) do
-you want to send it? Otherwise I can. We should only set this if
-TX path was enabled otherwise we null it. Checking against
-tls_write_space seems best to me as well.
-
-Against bpf this patch should fix it.
-
-diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-index ce6ef56a65ef..43252a801c3f 100644
---- a/net/tls/tls_main.c
-+++ b/net/tls/tls_main.c
-@@ -308,7 +308,8 @@ static void tls_sk_proto_close(struct sock *sk, long timeout)
-        if (free_ctx)
-                icsk->icsk_ulp_data = NULL;
-        sk->sk_prot = ctx->sk_proto;
--       sk->sk_write_space = ctx->sk_write_space;
-+       if (sk->sk_write_space == tls_write_space)
-+               sk->sk_write_space = ctx->sk_write_space;
-        write_unlock_bh(&sk->sk_callback_lock);
-        release_sock(sk);
-        if (ctx->tx_conf == TLS_SW)
+Does it?  The first is checking for a corrupted page_to_nid the second is 
+checking for a corrupted or unexpected page_zone.  What's being tested 
+here is the state of struct page, as it was previous to this patch, not 
+the state of struct zone.
