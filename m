@@ -2,286 +2,676 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFE1C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E423CC32753
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19A5020665
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E6E020665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:54:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HNBfjmha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbfHMHx6 (ORCPT
+        id S1727911AbfHMHyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 03:53:58 -0400
-Received: from mga09.intel.com ([134.134.136.24]:44494 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727777AbfHMHx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 03:53:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 00:53:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,380,1559545200"; 
-   d="scan'208";a="166982586"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga007.jf.intel.com with ESMTP; 13 Aug 2019 00:53:54 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     netdev@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Christopher S . Hall" <christopher.s.hall@intel.com>
-Subject: Re: [RFC PATCH 4/5] PTP: Add flag for non-periodic output
-In-Reply-To: <20190718164121.GB1533@localhost>
-References: <20190716072038.8408-1-felipe.balbi@linux.intel.com> <20190716072038.8408-5-felipe.balbi@linux.intel.com> <20190716163927.GA2125@localhost> <87k1ch2m1i.fsf@linux.intel.com> <20190717173645.GD1464@localhost> <87ftn3iuqp.fsf@linux.intel.com> <20190718164121.GB1533@localhost>
-Date:   Tue, 13 Aug 2019 10:53:53 +0300
-Message-ID: <87tvalxzzi.fsf@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Tue, 13 Aug 2019 03:54:02 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44927 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727777AbfHMHyA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 03:54:00 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i18so50833818pgl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 00:53:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=XiLT8JJGX9uceLIR/eagArmQGE9PBHPG6APlyqXqF3U=;
+        b=HNBfjmhal70YjiBtzQ8XUCmseT2tpX02DvvqFDMQckJFPPM5ZY0+aqNAv8vDMRw7xE
+         4X8bAXRYqG5Tuv0qnrpDa+3Wav/45ed7MrxaBBVMBXkswGUJ4R+jV91ADtQIW3FGVjGp
+         8efgx/1680z/ufTjoQloSQbggUU1h7jvOfEhi0N1/Oxs5xUHkxJ0PCkkQPgSsi8d/xma
+         pCJzkn0MY08ICp6amgdn/CW6M3gG5vFxBxQyX5sckW8YMjcjWogsij9272CYXWP4mtkW
+         XYlwnZL758aXrYRtKoy3VEY/gdZLfHwgS5AwCbgvwvUijQq06vnbdR8uDNW/zz8jtBaP
+         snWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=XiLT8JJGX9uceLIR/eagArmQGE9PBHPG6APlyqXqF3U=;
+        b=S5laGlIEB+Md8I7XyAhqYx/cMQLY3ln54xiSilpi1Gqw+0CN4f1hZopgAPc1FfNYue
+         /avMRtkhYVhhzWuyXmphqhESXd/rBCrF8QXGz56B+UFZ9GMHHY6zYSmetmHL70gMOiBD
+         2ZXgiDcxn6PKa92OREE4zBQ2DVDiAunAtUeWBxic2uv9Yr7Qbyb4wjigJ5W3XAz39Nme
+         szgUDgoE5crPrbvkqngF5KLaZSNpck+S2QmVt0uCTxT2s4opwXgrkq/UaSjEs9665iFq
+         2v5fGMM0KIc6YRzipYpc2JGIrbmiOez2WyyfYFp+GJ/joETTCdzXic2sjbaTGI/qvmqC
+         BvIw==
+X-Gm-Message-State: APjAAAWvdJONBoTNirD2bAaHrC7OMrAjsvMR//JxebiZxNw9Wa0oXrAm
+        Ryss3OH37Oc7t/i5eXoODyCFGw==
+X-Google-Smtp-Source: APXvYqy96iD4zwQ1qvdYDG5n2OkOROyT+m9niDT2LDtjEztXvTvTPFgMnRmT70M359weDccESwhs8A==
+X-Received: by 2002:a17:90a:109:: with SMTP id b9mr986688pjb.112.1565682838995;
+        Tue, 13 Aug 2019 00:53:58 -0700 (PDT)
+Received: from localhost.localdomain ([45.114.72.100])
+        by smtp.gmail.com with ESMTPSA id l25sm131462563pff.143.2019.08.13.00.53.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 13 Aug 2019 00:53:58 -0700 (PDT)
+From:   Sumit Garg <sumit.garg@linaro.org>
+To:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-security-module@vger.kernel.org
+Cc:     dhowells@redhat.com, herbert@gondor.apana.org.au,
+        davem@davemloft.net, peterhuewe@gmx.de, jgg@ziepe.ca,
+        jejb@linux.ibm.com, jarkko.sakkinen@linux.intel.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, zohar@linux.ibm.com, jmorris@namei.org,
+        serge@hallyn.com, casey@schaufler-ca.com,
+        ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
+        linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org,
+        Sumit Garg <sumit.garg@linaro.org>
+Subject: [RFC/RFT v4 1/5] tpm: move tpm_buf code to include/linux/
+Date:   Tue, 13 Aug 2019 13:23:00 +0530
+Message-Id: <1565682784-10234-2-git-send-email-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1565682784-10234-1-git-send-email-sumit.garg@linaro.org>
+References: <1565682784-10234-1-git-send-email-sumit.garg@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Move tpm_buf code to common include/linux/tpm.h header so that it can
+be reused via other subsystems like trusted keys etc.
 
-Hi,
+Also rename trusted keys TPM 1.x buffer implementation to tpm1_buf to
+avoid any compilation errors.
 
-Richard Cochran <richardcochran@gmail.com> writes:
-
-> On Thu, Jul 18, 2019 at 11:59:10AM +0300, Felipe Balbi wrote:
->> no problem, anything in particular in mind? Just create new versions of
->> all the IOCTLs so we can actually use the reserved fields in the future?
->
-> Yes, please!
-
-before I send a new series built on top of this change, I thought I'd
-check with you if I'm on the right path. Below you can find my current
-take at the new IOCTLs. I maintained the same exact structures so that
-there's no maintenance burden. Also introduce a new IOCTL for every
-single one of the previously existing ones even though not all of them
-needed changes. The reason for that was just to make it easier for
-libary authors to update their library by a simple sed script adding '2'
-to the end of the IOCTL macro.
-
-Let me know if you want anything to be changed or had a different idea
-about any of this. Also, if you prefer that I finish the entire series
-before you review, no worries either ;-)
-
-Cheers, patch follows:
-
-From bc2aa511d4c2e2228590fb29604c6c33b56527ad Mon Sep 17 00:00:00 2001
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
-Date: Tue, 13 Aug 2019 10:32:35 +0300
-Subject: [PATCH] PTP: introduce new versions of IOCTLs
-
-The current version of the IOCTL have a small problem which prevents
-us from extending the API by making use of reserved fields. In these
-new IOCTLs, we are now making sure that flags and rsv fields are zero
-which will allow us to extend the API in the future.
-
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 ---
- drivers/ptp/ptp_chardev.c      | 105 +++++++++++++++++++++++++++++++++
- include/uapi/linux/ptp_clock.h |  12 ++++
- 2 files changed, 117 insertions(+)
+ drivers/char/tpm/tpm.h  | 214 ------------------------------------------------
+ include/keys/trusted.h  |  12 +--
+ include/linux/tpm.h     | 214 ++++++++++++++++++++++++++++++++++++++++++++++++
+ security/keys/trusted.c |  12 +--
+ 4 files changed, 226 insertions(+), 226 deletions(-)
 
-diff --git a/drivers/ptp/ptp_chardev.c b/drivers/ptp/ptp_chardev.c
-index 18ffe449efdf..94775073527b 100644
---- a/drivers/ptp/ptp_chardev.c
-+++ b/drivers/ptp/ptp_chardev.c
-@@ -126,6 +126,7 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
- 	switch (cmd) {
+diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+index e503ffc..0b5498a 100644
+--- a/drivers/char/tpm/tpm.h
++++ b/drivers/char/tpm/tpm.h
+@@ -25,7 +25,6 @@
+ #include <linux/platform_device.h>
+ #include <linux/io.h>
+ #include <linux/tpm.h>
+-#include <linux/highmem.h>
+ #include <linux/tpm_eventlog.h>
  
- 	case PTP_CLOCK_GETCAPS:
-+	case PTP_CLOCK_GETCAPS2:
- 		memset(&caps, 0, sizeof(caps));
- 		caps.max_adj = ptp->info->max_adj;
- 		caps.n_alarm = ptp->info->n_alarm;
-@@ -153,6 +154,28 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
- 		err = ops->enable(ops, &req, enable);
- 		break;
+ #ifdef CONFIG_X86
+@@ -58,123 +57,6 @@ enum tpm_addr {
+ #define TPM_ERR_DISABLED        0x7
+ #define TPM_ERR_INVALID_POSTINIT 38
  
-+	case PTP_EXTTS_REQUEST2:
-+		memset(&req, 0, sizeof(req));
-+		if (copy_from_user(&req.extts, (void __user *)arg,
-+				   sizeof(req.extts))) {
-+			err = -EFAULT;
-+			break;
-+		}
-+		if (req.extts.flags || req.extts.rsv[0]
-+				|| req.extts.rsv[1]) {
-+			err = -EINVAL;
-+			break;
-+		}
-+			
-+		if (req.extts.index >= ops->n_ext_ts) {
-+			err = -EINVAL;
-+			break;
-+		}
-+		req.type = PTP_CLK_REQ_EXTTS;
-+		enable = req.extts.flags & PTP_ENABLE_FEATURE ? 1 : 0;
-+		err = ops->enable(ops, &req, enable);
-+		break;
+-#define TPM_HEADER_SIZE		10
+-
+-enum tpm2_const {
+-	TPM2_PLATFORM_PCR       =     24,
+-	TPM2_PCR_SELECT_MIN     = ((TPM2_PLATFORM_PCR + 7) / 8),
+-};
+-
+-enum tpm2_timeouts {
+-	TPM2_TIMEOUT_A          =    750,
+-	TPM2_TIMEOUT_B          =   2000,
+-	TPM2_TIMEOUT_C          =    200,
+-	TPM2_TIMEOUT_D          =     30,
+-	TPM2_DURATION_SHORT     =     20,
+-	TPM2_DURATION_MEDIUM    =    750,
+-	TPM2_DURATION_LONG      =   2000,
+-	TPM2_DURATION_LONG_LONG = 300000,
+-	TPM2_DURATION_DEFAULT   = 120000,
+-};
+-
+-enum tpm2_structures {
+-	TPM2_ST_NO_SESSIONS	= 0x8001,
+-	TPM2_ST_SESSIONS	= 0x8002,
+-};
+-
+-/* Indicates from what layer of the software stack the error comes from */
+-#define TSS2_RC_LAYER_SHIFT	 16
+-#define TSS2_RESMGR_TPM_RC_LAYER (11 << TSS2_RC_LAYER_SHIFT)
+-
+-enum tpm2_return_codes {
+-	TPM2_RC_SUCCESS		= 0x0000,
+-	TPM2_RC_HASH		= 0x0083, /* RC_FMT1 */
+-	TPM2_RC_HANDLE		= 0x008B,
+-	TPM2_RC_INITIALIZE	= 0x0100, /* RC_VER1 */
+-	TPM2_RC_FAILURE		= 0x0101,
+-	TPM2_RC_DISABLED	= 0x0120,
+-	TPM2_RC_COMMAND_CODE    = 0x0143,
+-	TPM2_RC_TESTING		= 0x090A, /* RC_WARN */
+-	TPM2_RC_REFERENCE_H0	= 0x0910,
+-	TPM2_RC_RETRY		= 0x0922,
+-};
+-
+-enum tpm2_command_codes {
+-	TPM2_CC_FIRST		        = 0x011F,
+-	TPM2_CC_HIERARCHY_CONTROL       = 0x0121,
+-	TPM2_CC_HIERARCHY_CHANGE_AUTH   = 0x0129,
+-	TPM2_CC_CREATE_PRIMARY          = 0x0131,
+-	TPM2_CC_SEQUENCE_COMPLETE       = 0x013E,
+-	TPM2_CC_SELF_TEST	        = 0x0143,
+-	TPM2_CC_STARTUP		        = 0x0144,
+-	TPM2_CC_SHUTDOWN	        = 0x0145,
+-	TPM2_CC_NV_READ                 = 0x014E,
+-	TPM2_CC_CREATE		        = 0x0153,
+-	TPM2_CC_LOAD		        = 0x0157,
+-	TPM2_CC_SEQUENCE_UPDATE         = 0x015C,
+-	TPM2_CC_UNSEAL		        = 0x015E,
+-	TPM2_CC_CONTEXT_LOAD	        = 0x0161,
+-	TPM2_CC_CONTEXT_SAVE	        = 0x0162,
+-	TPM2_CC_FLUSH_CONTEXT	        = 0x0165,
+-	TPM2_CC_VERIFY_SIGNATURE        = 0x0177,
+-	TPM2_CC_GET_CAPABILITY	        = 0x017A,
+-	TPM2_CC_GET_RANDOM	        = 0x017B,
+-	TPM2_CC_PCR_READ	        = 0x017E,
+-	TPM2_CC_PCR_EXTEND	        = 0x0182,
+-	TPM2_CC_EVENT_SEQUENCE_COMPLETE = 0x0185,
+-	TPM2_CC_HASH_SEQUENCE_START     = 0x0186,
+-	TPM2_CC_CREATE_LOADED           = 0x0191,
+-	TPM2_CC_LAST		        = 0x0193, /* Spec 1.36 */
+-};
+-
+-enum tpm2_permanent_handles {
+-	TPM2_RS_PW		= 0x40000009,
+-};
+-
+-enum tpm2_capabilities {
+-	TPM2_CAP_HANDLES	= 1,
+-	TPM2_CAP_COMMANDS	= 2,
+-	TPM2_CAP_PCRS		= 5,
+-	TPM2_CAP_TPM_PROPERTIES = 6,
+-};
+-
+-enum tpm2_properties {
+-	TPM_PT_TOTAL_COMMANDS	= 0x0129,
+-};
+-
+-enum tpm2_startup_types {
+-	TPM2_SU_CLEAR	= 0x0000,
+-	TPM2_SU_STATE	= 0x0001,
+-};
+-
+-enum tpm2_cc_attrs {
+-	TPM2_CC_ATTR_CHANDLES	= 25,
+-	TPM2_CC_ATTR_RHANDLE	= 28,
+-};
+-
+-#define TPM_VID_INTEL    0x8086
+-#define TPM_VID_WINBOND  0x1050
+-#define TPM_VID_STM      0x104A
+-
+-enum tpm_chip_flags {
+-	TPM_CHIP_FLAG_TPM2		= BIT(1),
+-	TPM_CHIP_FLAG_IRQ		= BIT(2),
+-	TPM_CHIP_FLAG_VIRTUAL		= BIT(3),
+-	TPM_CHIP_FLAG_HAVE_TIMEOUTS	= BIT(4),
+-	TPM_CHIP_FLAG_ALWAYS_POWERED	= BIT(5),
+-};
+-
+-#define to_tpm_chip(d) container_of(d, struct tpm_chip, dev)
+-
+-struct tpm_header {
+-	__be16 tag;
+-	__be32 length;
+-	union {
+-		__be32 ordinal;
+-		__be32 return_code;
+-	};
+-} __packed;
+-
+ #define TPM_TAG_RQU_COMMAND 193
+ 
+ struct	stclear_flags_t {
+@@ -274,102 +156,6 @@ enum tpm_sub_capabilities {
+  * compiler warnings about stack frame size. */
+ #define TPM_MAX_RNG_DATA	128
+ 
+-/* A string buffer type for constructing TPM commands. This is based on the
+- * ideas of string buffer code in security/keys/trusted.h but is heap based
+- * in order to keep the stack usage minimal.
+- */
+-
+-enum tpm_buf_flags {
+-	TPM_BUF_OVERFLOW	= BIT(0),
+-};
+-
+-struct tpm_buf {
+-	struct page *data_page;
+-	unsigned int flags;
+-	u8 *data;
+-};
+-
+-static inline void tpm_buf_reset(struct tpm_buf *buf, u16 tag, u32 ordinal)
+-{
+-	struct tpm_header *head = (struct tpm_header *)buf->data;
+-
+-	head->tag = cpu_to_be16(tag);
+-	head->length = cpu_to_be32(sizeof(*head));
+-	head->ordinal = cpu_to_be32(ordinal);
+-}
+-
+-static inline int tpm_buf_init(struct tpm_buf *buf, u16 tag, u32 ordinal)
+-{
+-	buf->data_page = alloc_page(GFP_HIGHUSER);
+-	if (!buf->data_page)
+-		return -ENOMEM;
+-
+-	buf->flags = 0;
+-	buf->data = kmap(buf->data_page);
+-	tpm_buf_reset(buf, tag, ordinal);
+-	return 0;
+-}
+-
+-static inline void tpm_buf_destroy(struct tpm_buf *buf)
+-{
+-	kunmap(buf->data_page);
+-	__free_page(buf->data_page);
+-}
+-
+-static inline u32 tpm_buf_length(struct tpm_buf *buf)
+-{
+-	struct tpm_header *head = (struct tpm_header *)buf->data;
+-
+-	return be32_to_cpu(head->length);
+-}
+-
+-static inline u16 tpm_buf_tag(struct tpm_buf *buf)
+-{
+-	struct tpm_header *head = (struct tpm_header *)buf->data;
+-
+-	return be16_to_cpu(head->tag);
+-}
+-
+-static inline void tpm_buf_append(struct tpm_buf *buf,
+-				  const unsigned char *new_data,
+-				  unsigned int new_len)
+-{
+-	struct tpm_header *head = (struct tpm_header *)buf->data;
+-	u32 len = tpm_buf_length(buf);
+-
+-	/* Return silently if overflow has already happened. */
+-	if (buf->flags & TPM_BUF_OVERFLOW)
+-		return;
+-
+-	if ((len + new_len) > PAGE_SIZE) {
+-		WARN(1, "tpm_buf: overflow\n");
+-		buf->flags |= TPM_BUF_OVERFLOW;
+-		return;
+-	}
+-
+-	memcpy(&buf->data[len], new_data, new_len);
+-	head->length = cpu_to_be32(len + new_len);
+-}
+-
+-static inline void tpm_buf_append_u8(struct tpm_buf *buf, const u8 value)
+-{
+-	tpm_buf_append(buf, &value, 1);
+-}
+-
+-static inline void tpm_buf_append_u16(struct tpm_buf *buf, const u16 value)
+-{
+-	__be16 value2 = cpu_to_be16(value);
+-
+-	tpm_buf_append(buf, (u8 *) &value2, 2);
+-}
+-
+-static inline void tpm_buf_append_u32(struct tpm_buf *buf, const u32 value)
+-{
+-	__be32 value2 = cpu_to_be32(value);
+-
+-	tpm_buf_append(buf, (u8 *) &value2, 4);
+-}
+-
+ extern struct class *tpm_class;
+ extern struct class *tpmrm_class;
+ extern dev_t tpm_devt;
+diff --git a/include/keys/trusted.h b/include/keys/trusted.h
+index 0071298..841ae11 100644
+--- a/include/keys/trusted.h
++++ b/include/keys/trusted.h
+@@ -17,7 +17,7 @@
+ #define LOAD32N(buffer, offset)	(*(uint32_t *)&buffer[offset])
+ #define LOAD16(buffer, offset)	(ntohs(*(uint16_t *)&buffer[offset]))
+ 
+-struct tpm_buf {
++struct tpm1_buf {
+ 	int len;
+ 	unsigned char data[MAX_BUF_SIZE];
+ };
+@@ -46,7 +46,7 @@ int TSS_checkhmac1(unsigned char *buffer,
+ 			  unsigned int keylen, ...);
+ 
+ int trusted_tpm_send(unsigned char *cmd, size_t buflen);
+-int oiap(struct tpm_buf *tb, uint32_t *handle, unsigned char *nonce);
++int oiap(struct tpm1_buf *tb, uint32_t *handle, unsigned char *nonce);
+ 
+ #define TPM_DEBUG 0
+ 
+@@ -110,24 +110,24 @@ static inline void dump_tpm_buf(unsigned char *buf)
+ }
+ #endif
+ 
+-static inline void store8(struct tpm_buf *buf, const unsigned char value)
++static inline void store8(struct tpm1_buf *buf, const unsigned char value)
+ {
+ 	buf->data[buf->len++] = value;
+ }
+ 
+-static inline void store16(struct tpm_buf *buf, const uint16_t value)
++static inline void store16(struct tpm1_buf *buf, const uint16_t value)
+ {
+ 	*(uint16_t *) & buf->data[buf->len] = htons(value);
+ 	buf->len += sizeof value;
+ }
+ 
+-static inline void store32(struct tpm_buf *buf, const uint32_t value)
++static inline void store32(struct tpm1_buf *buf, const uint32_t value)
+ {
+ 	*(uint32_t *) & buf->data[buf->len] = htonl(value);
+ 	buf->len += sizeof value;
+ }
+ 
+-static inline void storebytes(struct tpm_buf *buf, const unsigned char *in,
++static inline void storebytes(struct tpm1_buf *buf, const unsigned char *in,
+ 			      const int len)
+ {
+ 	memcpy(buf->data + buf->len, in, len);
+diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+index 53c0ea9..130c167 100644
+--- a/include/linux/tpm.h
++++ b/include/linux/tpm.h
+@@ -21,6 +21,7 @@
+ #include <linux/acpi.h>
+ #include <linux/cdev.h>
+ #include <linux/fs.h>
++#include <linux/highmem.h>
+ #include <crypto/hash_info.h>
+ 
+ #define TPM_DIGEST_SIZE 20	/* Max TPM v1.2 PCR size */
+@@ -161,6 +162,219 @@ struct tpm_chip {
+ 	int locality;
+ };
+ 
++#define TPM_HEADER_SIZE		10
 +
- 	case PTP_PEROUT_REQUEST:
- 		if (copy_from_user(&req.perout, (void __user *)arg,
- 				   sizeof(req.perout))) {
-@@ -168,6 +191,28 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
- 		err = ops->enable(ops, &req, enable);
- 		break;
- 
-+	case PTP_PEROUT_REQUEST2:
-+		memset(&req, 0, sizeof(req));
-+		if (copy_from_user(&req.perout, (void __user *)arg,
-+				   sizeof(req.perout))) {
-+			err = -EFAULT;
-+			break;
-+		}
-+		if (req.perout.flags || req.perout.rsv[0]
-+				|| req.perout.rsv[1] || req.perout.rsv[2]
-+				|| req.perout.rsv[3]) {
-+			err = -EINVAL;
-+			break;
-+		}
-+		if (req.perout.index >= ops->n_per_out) {
-+			err = -EINVAL;
-+			break;
-+		}
-+		req.type = PTP_CLK_REQ_PEROUT;
-+		enable = req.perout.period.sec || req.perout.period.nsec;
-+		err = ops->enable(ops, &req, enable);
-+		break;
++enum tpm2_const {
++	TPM2_PLATFORM_PCR       =     24,
++	TPM2_PCR_SELECT_MIN     = ((TPM2_PLATFORM_PCR + 7) / 8),
++};
 +
- 	case PTP_ENABLE_PPS:
- 		if (!capable(CAP_SYS_TIME))
- 			return -EPERM;
-@@ -176,7 +221,17 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
- 		err = ops->enable(ops, &req, enable);
- 		break;
- 
-+	case PTP_ENABLE_PPS2:
-+		if (!capable(CAP_SYS_TIME))
-+			return -EPERM;
-+		memset(&req, 0, sizeof(req));
-+		req.type = PTP_CLK_REQ_PPS;
-+		enable = arg ? 1 : 0;
-+		err = ops->enable(ops, &req, enable);
-+		break;
++enum tpm2_timeouts {
++	TPM2_TIMEOUT_A          =    750,
++	TPM2_TIMEOUT_B          =   2000,
++	TPM2_TIMEOUT_C          =    200,
++	TPM2_TIMEOUT_D          =     30,
++	TPM2_DURATION_SHORT     =     20,
++	TPM2_DURATION_MEDIUM    =    750,
++	TPM2_DURATION_LONG      =   2000,
++	TPM2_DURATION_LONG_LONG = 300000,
++	TPM2_DURATION_DEFAULT   = 120000,
++};
 +
- 	case PTP_SYS_OFFSET_PRECISE:
-+	case PTP_SYS_OFFSET_PRECISE2:
- 		if (!ptp->info->getcrosststamp) {
- 			err = -EOPNOTSUPP;
- 			break;
-@@ -201,6 +256,7 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
- 		break;
- 
- 	case PTP_SYS_OFFSET_EXTENDED:
-+	case PTP_SYS_OFFSET_EXTENDED2:
- 		if (!ptp->info->gettimex64) {
- 			err = -EOPNOTSUPP;
- 			break;
-@@ -232,6 +288,7 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
- 		break;
- 
- 	case PTP_SYS_OFFSET:
-+	case PTP_SYS_OFFSET2:
- 		sysoff = memdup_user((void __user *)arg, sizeof(*sysoff));
- 		if (IS_ERR(sysoff)) {
- 			err = PTR_ERR(sysoff);
-@@ -284,6 +341,31 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
- 			err = -EFAULT;
- 		break;
- 
-+	case PTP_PIN_GETFUNC2:
-+		memset(&pd, 0, sizeof(pd));
-+		if (copy_from_user(&pd, (void __user *)arg, sizeof(pd))) {
-+			err = -EFAULT;
-+			break;
-+		}
-+		if (pd.rsv[0] || pd.rsv[1] || pd.rsv[2]
-+				|| pd.rsv[3] || pd.rsv[4]) {
-+			err = -EINVAL;
-+			break;
-+		}
-+		pin_index = pd.index;
-+		if (pin_index >= ops->n_pins) {
-+			err = -EINVAL;
-+			break;
-+		}
-+		pin_index = array_index_nospec(pin_index, ops->n_pins);
-+		if (mutex_lock_interruptible(&ptp->pincfg_mux))
-+			return -ERESTARTSYS;
-+		pd = ops->pin_config[pin_index];
-+		mutex_unlock(&ptp->pincfg_mux);
-+		if (!err && copy_to_user((void __user *)arg, &pd, sizeof(pd)))
-+			err = -EFAULT;
-+		break;
++enum tpm2_structures {
++	TPM2_ST_NO_SESSIONS	= 0x8001,
++	TPM2_ST_SESSIONS	= 0x8002,
++};
 +
- 	case PTP_PIN_SETFUNC:
- 		if (copy_from_user(&pd, (void __user *)arg, sizeof(pd))) {
- 			err = -EFAULT;
-@@ -301,6 +383,29 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
- 		mutex_unlock(&ptp->pincfg_mux);
- 		break;
- 
-+	case PTP_PIN_SETFUNC2:
-+		memset(&pd, 0, sizeof(pd));
-+		if (copy_from_user(&pd, (void __user *)arg, sizeof(pd))) {
-+			err = -EFAULT;
-+			break;
-+		}
-+		if (pd.rsv[0] || pd.rsv[1] || pd.rsv[2]
-+				|| pd.rsv[3] || pd.rsv[4]) {
-+			err = -EINVAL;
-+			break;
-+		}
-+		pin_index = pd.index;
-+		if (pin_index >= ops->n_pins) {
-+			err = -EINVAL;
-+			break;
-+		}
-+		pin_index = array_index_nospec(pin_index, ops->n_pins);
-+		if (mutex_lock_interruptible(&ptp->pincfg_mux))
-+			return -ERESTARTSYS;
-+		err = ptp_set_pinfunc(ptp, pin_index, pd.func, pd.chan);
-+		mutex_unlock(&ptp->pincfg_mux);
-+		break;
++/* Indicates from what layer of the software stack the error comes from */
++#define TSS2_RC_LAYER_SHIFT	 16
++#define TSS2_RESMGR_TPM_RC_LAYER (11 << TSS2_RC_LAYER_SHIFT)
 +
- 	default:
- 		err = -ENOTTY;
- 		break;
-diff --git a/include/uapi/linux/ptp_clock.h b/include/uapi/linux/ptp_clock.h
-index 1bc794ad957a..039cd62ec706 100644
---- a/include/uapi/linux/ptp_clock.h
-+++ b/include/uapi/linux/ptp_clock.h
-@@ -149,6 +149,18 @@ struct ptp_pin_desc {
- #define PTP_SYS_OFFSET_EXTENDED \
- 	_IOWR(PTP_CLK_MAGIC, 9, struct ptp_sys_offset_extended)
- 
-+#define PTP_CLOCK_GETCAPS2  _IOR(PTP_CLK_MAGIC, 10, struct ptp_clock_caps)
-+#define PTP_EXTTS_REQUEST2  _IOW(PTP_CLK_MAGIC, 11, struct ptp_extts_request)
-+#define PTP_PEROUT_REQUEST2 _IOW(PTP_CLK_MAGIC, 12, struct ptp_perout_request)
-+#define PTP_ENABLE_PPS2     _IOW(PTP_CLK_MAGIC, 13, int)
-+#define PTP_SYS_OFFSET2     _IOW(PTP_CLK_MAGIC, 14, struct ptp_sys_offset)
-+#define PTP_PIN_GETFUNC2    _IOWR(PTP_CLK_MAGIC, 15, struct ptp_pin_desc)
-+#define PTP_PIN_SETFUNC2    _IOW(PTP_CLK_MAGIC, 16, struct ptp_pin_desc)
-+#define PTP_SYS_OFFSET_PRECISE2 \
-+	_IOWR(PTP_CLK_MAGIC, 17, struct ptp_sys_offset_precise)
-+#define PTP_SYS_OFFSET_EXTENDED2 \
-+	_IOWR(PTP_CLK_MAGIC, 18, struct ptp_sys_offset_extended)
++enum tpm2_return_codes {
++	TPM2_RC_SUCCESS		= 0x0000,
++	TPM2_RC_HASH		= 0x0083, /* RC_FMT1 */
++	TPM2_RC_HANDLE		= 0x008B,
++	TPM2_RC_INITIALIZE	= 0x0100, /* RC_VER1 */
++	TPM2_RC_FAILURE		= 0x0101,
++	TPM2_RC_DISABLED	= 0x0120,
++	TPM2_RC_COMMAND_CODE    = 0x0143,
++	TPM2_RC_TESTING		= 0x090A, /* RC_WARN */
++	TPM2_RC_REFERENCE_H0	= 0x0910,
++	TPM2_RC_RETRY		= 0x0922,
++};
 +
- struct ptp_extts_event {
- 	struct ptp_clock_time t; /* Time event occured. */
- 	unsigned int index;      /* Which channel produced the event. */
++enum tpm2_command_codes {
++	TPM2_CC_FIRST		        = 0x011F,
++	TPM2_CC_HIERARCHY_CONTROL       = 0x0121,
++	TPM2_CC_HIERARCHY_CHANGE_AUTH   = 0x0129,
++	TPM2_CC_CREATE_PRIMARY          = 0x0131,
++	TPM2_CC_SEQUENCE_COMPLETE       = 0x013E,
++	TPM2_CC_SELF_TEST	        = 0x0143,
++	TPM2_CC_STARTUP		        = 0x0144,
++	TPM2_CC_SHUTDOWN	        = 0x0145,
++	TPM2_CC_NV_READ                 = 0x014E,
++	TPM2_CC_CREATE		        = 0x0153,
++	TPM2_CC_LOAD		        = 0x0157,
++	TPM2_CC_SEQUENCE_UPDATE         = 0x015C,
++	TPM2_CC_UNSEAL		        = 0x015E,
++	TPM2_CC_CONTEXT_LOAD	        = 0x0161,
++	TPM2_CC_CONTEXT_SAVE	        = 0x0162,
++	TPM2_CC_FLUSH_CONTEXT	        = 0x0165,
++	TPM2_CC_VERIFY_SIGNATURE        = 0x0177,
++	TPM2_CC_GET_CAPABILITY	        = 0x017A,
++	TPM2_CC_GET_RANDOM	        = 0x017B,
++	TPM2_CC_PCR_READ	        = 0x017E,
++	TPM2_CC_PCR_EXTEND	        = 0x0182,
++	TPM2_CC_EVENT_SEQUENCE_COMPLETE = 0x0185,
++	TPM2_CC_HASH_SEQUENCE_START     = 0x0186,
++	TPM2_CC_CREATE_LOADED           = 0x0191,
++	TPM2_CC_LAST		        = 0x0193, /* Spec 1.36 */
++};
++
++enum tpm2_permanent_handles {
++	TPM2_RS_PW		= 0x40000009,
++};
++
++enum tpm2_capabilities {
++	TPM2_CAP_HANDLES	= 1,
++	TPM2_CAP_COMMANDS	= 2,
++	TPM2_CAP_PCRS		= 5,
++	TPM2_CAP_TPM_PROPERTIES = 6,
++};
++
++enum tpm2_properties {
++	TPM_PT_TOTAL_COMMANDS	= 0x0129,
++};
++
++enum tpm2_startup_types {
++	TPM2_SU_CLEAR	= 0x0000,
++	TPM2_SU_STATE	= 0x0001,
++};
++
++enum tpm2_cc_attrs {
++	TPM2_CC_ATTR_CHANDLES	= 25,
++	TPM2_CC_ATTR_RHANDLE	= 28,
++};
++
++#define TPM_VID_INTEL    0x8086
++#define TPM_VID_WINBOND  0x1050
++#define TPM_VID_STM      0x104A
++
++enum tpm_chip_flags {
++	TPM_CHIP_FLAG_TPM2		= BIT(1),
++	TPM_CHIP_FLAG_IRQ		= BIT(2),
++	TPM_CHIP_FLAG_VIRTUAL		= BIT(3),
++	TPM_CHIP_FLAG_HAVE_TIMEOUTS	= BIT(4),
++	TPM_CHIP_FLAG_ALWAYS_POWERED	= BIT(5),
++};
++
++#define to_tpm_chip(d) container_of(d, struct tpm_chip, dev)
++
++struct tpm_header {
++	__be16 tag;
++	__be32 length;
++	union {
++		__be32 ordinal;
++		__be32 return_code;
++	};
++} __packed;
++
++/* A string buffer type for constructing TPM commands. This is based on the
++ * ideas of string buffer code in security/keys/trusted.h but is heap based
++ * in order to keep the stack usage minimal.
++ */
++
++enum tpm_buf_flags {
++	TPM_BUF_OVERFLOW	= BIT(0),
++};
++
++struct tpm_buf {
++	struct page *data_page;
++	unsigned int flags;
++	u8 *data;
++};
++
++static inline void tpm_buf_reset(struct tpm_buf *buf, u16 tag, u32 ordinal)
++{
++	struct tpm_header *head = (struct tpm_header *)buf->data;
++
++	head->tag = cpu_to_be16(tag);
++	head->length = cpu_to_be32(sizeof(*head));
++	head->ordinal = cpu_to_be32(ordinal);
++}
++
++static inline int tpm_buf_init(struct tpm_buf *buf, u16 tag, u32 ordinal)
++{
++	buf->data_page = alloc_page(GFP_HIGHUSER);
++	if (!buf->data_page)
++		return -ENOMEM;
++
++	buf->flags = 0;
++	buf->data = kmap(buf->data_page);
++	tpm_buf_reset(buf, tag, ordinal);
++	return 0;
++}
++
++static inline void tpm_buf_destroy(struct tpm_buf *buf)
++{
++	kunmap(buf->data_page);
++	__free_page(buf->data_page);
++}
++
++static inline u32 tpm_buf_length(struct tpm_buf *buf)
++{
++	struct tpm_header *head = (struct tpm_header *)buf->data;
++
++	return be32_to_cpu(head->length);
++}
++
++static inline u16 tpm_buf_tag(struct tpm_buf *buf)
++{
++	struct tpm_header *head = (struct tpm_header *)buf->data;
++
++	return be16_to_cpu(head->tag);
++}
++
++static inline void tpm_buf_append(struct tpm_buf *buf,
++				  const unsigned char *new_data,
++				  unsigned int new_len)
++{
++	struct tpm_header *head = (struct tpm_header *)buf->data;
++	u32 len = tpm_buf_length(buf);
++
++	/* Return silently if overflow has already happened. */
++	if (buf->flags & TPM_BUF_OVERFLOW)
++		return;
++
++	if ((len + new_len) > PAGE_SIZE) {
++		WARN(1, "tpm_buf: overflow\n");
++		buf->flags |= TPM_BUF_OVERFLOW;
++		return;
++	}
++
++	memcpy(&buf->data[len], new_data, new_len);
++	head->length = cpu_to_be32(len + new_len);
++}
++
++static inline void tpm_buf_append_u8(struct tpm_buf *buf, const u8 value)
++{
++	tpm_buf_append(buf, &value, 1);
++}
++
++static inline void tpm_buf_append_u16(struct tpm_buf *buf, const u16 value)
++{
++	__be16 value2 = cpu_to_be16(value);
++
++	tpm_buf_append(buf, (u8 *) &value2, 2);
++}
++
++static inline void tpm_buf_append_u32(struct tpm_buf *buf, const u32 value)
++{
++	__be32 value2 = cpu_to_be32(value);
++
++	tpm_buf_append(buf, (u8 *) &value2, 4);
++}
++
+ #if defined(CONFIG_TCG_TPM) || defined(CONFIG_TCG_TPM_MODULE)
+ 
+ extern int tpm_is_tpm2(struct tpm_chip *chip);
+diff --git a/security/keys/trusted.c b/security/keys/trusted.c
+index 9a94672..0736671 100644
+--- a/security/keys/trusted.c
++++ b/security/keys/trusted.c
+@@ -395,7 +395,7 @@ static int pcrlock(const int pcrnum)
+ /*
+  * Create an object specific authorisation protocol (OSAP) session
+  */
+-static int osap(struct tpm_buf *tb, struct osapsess *s,
++static int osap(struct tpm1_buf *tb, struct osapsess *s,
+ 		const unsigned char *key, uint16_t type, uint32_t handle)
+ {
+ 	unsigned char enonce[TPM_NONCE_SIZE];
+@@ -430,7 +430,7 @@ static int osap(struct tpm_buf *tb, struct osapsess *s,
+ /*
+  * Create an object independent authorisation protocol (oiap) session
+  */
+-int oiap(struct tpm_buf *tb, uint32_t *handle, unsigned char *nonce)
++int oiap(struct tpm1_buf *tb, uint32_t *handle, unsigned char *nonce)
+ {
+ 	int ret;
+ 
+@@ -464,7 +464,7 @@ struct tpm_digests {
+  * Have the TPM seal(encrypt) the trusted key, possibly based on
+  * Platform Configuration Registers (PCRs). AUTH1 for sealing key.
+  */
+-static int tpm_seal(struct tpm_buf *tb, uint16_t keytype,
++static int tpm_seal(struct tpm1_buf *tb, uint16_t keytype,
+ 		    uint32_t keyhandle, const unsigned char *keyauth,
+ 		    const unsigned char *data, uint32_t datalen,
+ 		    unsigned char *blob, uint32_t *bloblen,
+@@ -579,7 +579,7 @@ static int tpm_seal(struct tpm_buf *tb, uint16_t keytype,
+ /*
+  * use the AUTH2_COMMAND form of unseal, to authorize both key and blob
+  */
+-static int tpm_unseal(struct tpm_buf *tb,
++static int tpm_unseal(struct tpm1_buf *tb,
+ 		      uint32_t keyhandle, const unsigned char *keyauth,
+ 		      const unsigned char *blob, int bloblen,
+ 		      const unsigned char *blobauth,
+@@ -670,7 +670,7 @@ static int tpm_unseal(struct tpm_buf *tb,
+ static int key_seal(struct trusted_key_payload *p,
+ 		    struct trusted_key_options *o)
+ {
+-	struct tpm_buf *tb;
++	struct tpm1_buf *tb;
+ 	int ret;
+ 
+ 	tb = kzalloc(sizeof *tb, GFP_KERNEL);
+@@ -696,7 +696,7 @@ static int key_seal(struct trusted_key_payload *p,
+ static int key_unseal(struct trusted_key_payload *p,
+ 		      struct trusted_key_options *o)
+ {
+-	struct tpm_buf *tb;
++	struct tpm1_buf *tb;
+ 	int ret;
+ 
+ 	tb = kzalloc(sizeof *tb, GFP_KERNEL);
 -- 
-2.22.0
+2.7.4
 
-
-
--- 
-balbi
