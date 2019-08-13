@@ -2,335 +2,570 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0D6C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E31EC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA8A720840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B534E20842
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565669794;
-	bh=KwLkNRfhiRocCSXs2a0TKCl3DF8tGTOsBGkDeVjFNRI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=glXrL3wqqW1arb5BXU4ipkS9o85GN0MMpCqFs9vTpERyDtkfHgOhU7xY0RqA/gq+T
-	 TmgGjuoJBkxfwxbUEwl8NlRDEFNUuNJzBtNhQQa/Y/RqkUK4xHDaHou/57UH+mKkQE
-	 0F2hwDVi+++KdHNzHh99OzoEf8clZMl2c5wDK2bI=
+	s=default; t=1565670122;
+	bh=2wsciK8EQNkiIDpIzT9gqNOBT1vFkTwhm0156mR8+vg=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=ieYo//pSvpZGdW0kwS6ztO2bN4bVIRIRrIJy1eeTwcWF3PL/RpF9AWu+ESatOdcR3
+	 mtaoZt4C+yeygwu4DaJ1mXgoe5Agz40UskGh0vHM5JuSxgFBUtMyYKTT3CFM6pIftB
+	 m+9VGjUxFcn0B9uK534vNPpThI8XwdODE6PhX8cw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbfHMEQc (ORCPT
+        id S1726347AbfHMEWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 00:16:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52702 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 00:22:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfHMEQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 00:16:32 -0400
-Received: from localhost (c-73-15-1-175.hsd1.ca.comcast.net [73.15.1.175])
+        id S1725899AbfHMEWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 00:22:00 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E841E2067D;
-        Tue, 13 Aug 2019 04:16:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46814206C2;
+        Tue, 13 Aug 2019 04:21:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565669791;
-        bh=KwLkNRfhiRocCSXs2a0TKCl3DF8tGTOsBGkDeVjFNRI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GCCII4tIJ57+oSpzwILQyDvcq0NiX+6ixYbazw4sv1oB9NRY5JV2ubY4MUpLCeIcV
-         h7CFjTW7RpG8CWEdImtTv8Lr0k1GjxsLGb2oGu57ZlElv3XNbWMevpGUsxXnc4qLvz
-         IxtNxPIxE4jhgbUtcBgvqhgDTJtLRReAsbNjmXNs=
-Date:   Mon, 12 Aug 2019 23:16:30 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v5 4/7] PCI/ATS: Add PRI support for PCIe VF devices
-Message-ID: <20190813041630.GK7302@google.com>
-References: <cover.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <827d051ef8c8bbfa815908ce927e607870780cb6.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        s=default; t=1565670119;
+        bh=2wsciK8EQNkiIDpIzT9gqNOBT1vFkTwhm0156mR8+vg=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=wecwCow5B+6BYtZFhLgSBtfBg3HYwUxRc7BK/brCT0tDKGApHgFlM+vfqd81P64X0
+         04JP0Nu9+FaPoa3LNBz2rHGjoJcRlNjXPSlwk78/5FIAJiFy49LChFOYIg/iHUwNr0
+         72imQjPEbEhZyBYzzpi7XEUQSlI3qDs3pOlrbs2w=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <827d051ef8c8bbfa815908ce927e607870780cb6.1564702313.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190812182421.141150-10-brendanhiggins@google.com>
+References: <20190812182421.141150-1-brendanhiggins@google.com> <20190812182421.141150-10-brendanhiggins@google.com>
+Subject: Re: [PATCH v12 09/18] kunit: test: add support for test abort
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
+        tytso@mit.edu, yamada.masahiro@socionext.com
+User-Agent: alot/0.8.1
+Date:   Mon, 12 Aug 2019 21:21:58 -0700
+Message-Id: <20190813042159.46814206C2@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 05:06:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> When IOMMU tries to enable Page Request Interface (PRI) for VF device
-> in iommu_enable_dev_iotlb(), it always fails because PRI support for
-> PCIe VF device is currently broken. Current implementation expects
-> the given PCIe device (PF & VF) to implement PRI capability before
-> enabling the PRI support. But this assumption is incorrect. As per PCIe
-> spec r4.0, sec 9.3.7.11, all VFs associated with PF can only use the
-> PRI of the PF and not implement it. Hence we need to create exception
-> for handling the PRI support for PCIe VF device.
-> 
-> Also, since PRI is a shared resource between PF/VF, following rules
-> should apply.
-> 
-> 1. Use proper locking before accessing/modifying PF resources in VF
->    PRI enable/disable call.
-> 2. Use reference count logic to track the usage of PRI resource.
-> 3. Disable PRI only if the PRI reference count (pri_ref_cnt) is zero.
-> 
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Suggested-by: Ashok Raj <ashok.raj@intel.com>
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->  drivers/pci/ats.c   | 143 ++++++++++++++++++++++++++++++++++----------
->  include/linux/pci.h |   2 +
->  2 files changed, 112 insertions(+), 33 deletions(-)
-> 
-> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> index 1f4be27a071d..079dc5444444 100644
-> --- a/drivers/pci/ats.c
-> +++ b/drivers/pci/ats.c
-> @@ -189,6 +189,8 @@ void pci_pri_init(struct pci_dev *pdev)
->  	if (pdev->is_virtfn)
->  		return;
->  
-> +	mutex_init(&pdev->pri_lock);
+Quoting Brendan Higgins (2019-08-12 11:24:12)
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> index 2625bcfeb19ac..93381f841e09f 100644
+> --- a/include/kunit/test.h
+> +++ b/include/kunit/test.h
+> @@ -13,6 +13,7 @@
+>  #include <linux/types.h>
+>  #include <linux/slab.h>
+>  #include <kunit/assert.h>
+> +#include <kunit/try-catch.h>
+> =20
+>  struct kunit_resource;
+> =20
+> @@ -167,6 +168,7 @@ struct kunit {
+> =20
+>         /* private: internal use only. */
+>         const char *name; /* Read only after initialization! */
+> +       struct kunit_try_catch try_catch;
+>         /*
+>          * success starts as true, and may only be set to false during a =
+test
+>          * case; thus, it is safe to update this across multiple threads =
+using
+> @@ -176,6 +178,11 @@ struct kunit {
+>          */
+>         bool success; /* Read only after test_case finishes! */
+>         spinlock_t lock; /* Gaurds all mutable test state. */
+> +       /*
+> +        * death_test may be both set and unset from multiple threads in =
+a test
+> +        * case.
+> +        */
+> +       bool death_test; /* Protected by lock. */
+>         /*
+>          * Because resources is a list that may be updated multiple times=
+ (with
+>          * new resources) from any thread associated with a test case, we=
+ must
+> @@ -184,6 +191,13 @@ struct kunit {
+>         struct list_head resources; /* Protected by lock. */
+>  };
+> =20
+> +static inline void kunit_set_death_test(struct kunit *test, bool death_t=
+est)
+> +{
+> +       spin_lock(&test->lock);
+> +       test->death_test =3D death_test;
+> +       spin_unlock(&test->lock);
+> +}
+
+These getters and setters are using spinlocks again. It doesn't make any
+sense. It probably needs a rework like was done for the other bool
+member, success.
+
 > +
->  	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
->  	if (!pos)
->  		return;
-> @@ -221,29 +223,57 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
->  {
->  	u16 control, status;
->  	u32 max_requests;
-> +	int ret = 0;
-> +	struct pci_dev *pf = pci_physfn(pdev);
->  
-> -	if (WARN_ON(pdev->pri_enabled))
-> -		return -EBUSY;
-> +	mutex_lock(&pf->pri_lock);
->  
-> -	if (!pdev->pri_cap)
-> -		return -EINVAL;
-> +	if (WARN_ON(pdev->pri_enabled)) {
-> +		ret = -EBUSY;
-> +		goto pri_unlock;
-> +	}
->  
-> -	pci_read_config_word(pdev, pdev->pri_cap + PCI_PRI_STATUS, &status);
-> -	if (!(status & PCI_PRI_STATUS_STOPPED))
-> -		return -EBUSY;
-> +	if (!pf->pri_cap) {
-> +		ret = -EINVAL;
-> +		goto pri_unlock;
-> +	}
+>  void kunit_init_test(struct kunit *test, const char *name);
+> =20
+>  int kunit_run_tests(struct kunit_suite *suite);
+> diff --git a/include/kunit/try-catch.h b/include/kunit/try-catch.h
+> new file mode 100644
+> index 0000000000000..8a414a9af0b64
+> --- /dev/null
+> +++ b/include/kunit/try-catch.h
+> @@ -0,0 +1,69 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * An API to allow a function, that may fail, to be executed, and recove=
+r in a
+> + * controlled manner.
+> + *
+> + * Copyright (C) 2019, Google LLC.
+> + * Author: Brendan Higgins <brendanhiggins@google.com>
+> + */
 > +
-> +	if (pdev->is_virtfn && pf->pri_enabled)
-> +		goto update_status;
+> +#ifndef _KUNIT_TRY_CATCH_H
+> +#define _KUNIT_TRY_CATCH_H
 > +
-> +	/*
-> +	 * Before updating PRI registers, make sure there is no
-> +	 * outstanding PRI requests.
-> +	 */
-> +	pci_read_config_word(pf, pf->pri_cap + PCI_PRI_STATUS, &status);
-> +	if (!(status & PCI_PRI_STATUS_STOPPED)) {
-> +		ret = -EBUSY;
-> +		goto pri_unlock;
-> +	}
->  
-> -	pci_read_config_dword(pdev, pdev->pri_cap + PCI_PRI_MAX_REQ,
-> -			      &max_requests);
-> +	pci_read_config_dword(pf, pf->pri_cap + PCI_PRI_MAX_REQ, &max_requests);
->  	reqs = min(max_requests, reqs);
-> -	pdev->pri_reqs_alloc = reqs;
-> -	pci_write_config_dword(pdev, pdev->pri_cap + PCI_PRI_ALLOC_REQ, reqs);
-> +	pf->pri_reqs_alloc = reqs;
-> +	pci_write_config_dword(pf, pf->pri_cap + PCI_PRI_ALLOC_REQ, reqs);
->  
->  	control = PCI_PRI_CTRL_ENABLE;
-> -	pci_write_config_word(pdev, pdev->pri_cap + PCI_PRI_CTRL, control);
-> +	pci_write_config_word(pf, pf->pri_cap + PCI_PRI_CTRL, control);
->  
-> -	pdev->pri_enabled = 1;
-> +	/*
-> +	 * If PRI is not already enabled in PF, increment the PF
-> +	 * pri_ref_cnt to track the usage of PRI interface.
-> +	 */
-> +	if (pdev->is_virtfn && !pf->pri_enabled) {
-> +		atomic_inc(&pf->pri_ref_cnt);
-> +		pf->pri_enabled = 1;
-> +	}
->  
-> -	return 0;
-> +update_status:
-> +	atomic_inc(&pf->pri_ref_cnt);
-> +	pdev->pri_enabled = 1;
-> +pri_unlock:
-> +	mutex_unlock(&pf->pri_lock);
-> +	return ret;
->  }
->  EXPORT_SYMBOL_GPL(pci_enable_pri);
->  
-> @@ -256,18 +286,30 @@ EXPORT_SYMBOL_GPL(pci_enable_pri);
->  void pci_disable_pri(struct pci_dev *pdev)
->  {
->  	u16 control;
-> +	struct pci_dev *pf = pci_physfn(pdev);
->  
-> -	if (WARN_ON(!pdev->pri_enabled))
-> -		return;
-> +	mutex_lock(&pf->pri_lock);
->  
-> -	if (!pdev->pri_cap)
-> -		return;
-> +	if (WARN_ON(!pdev->pri_enabled) || !pf->pri_cap)
-> +		goto pri_unlock;
+> +#include <linux/types.h>
 > +
-> +	atomic_dec(&pf->pri_ref_cnt);
->  
-> -	pci_read_config_word(pdev, pdev->pri_cap + PCI_PRI_CTRL, &control);
-> +	/*
-> +	 * If pri_ref_cnt is not zero, then don't modify hardware
-> +	 * registers.
-> +	 */
-> +	if (atomic_read(&pf->pri_ref_cnt))
-> +		goto done;
+> +typedef void (*kunit_try_catch_func_t)(void *);
 > +
-> +	pci_read_config_word(pf, pf->pri_cap + PCI_PRI_CTRL, &control);
->  	control &= ~PCI_PRI_CTRL_ENABLE;
-> -	pci_write_config_word(pdev, pdev->pri_cap + PCI_PRI_CTRL, control);
-> +	pci_write_config_word(pf, pf->pri_cap + PCI_PRI_CTRL, control);
->  
-> +done:
->  	pdev->pri_enabled = 0;
-> +pri_unlock:
-> +	mutex_unlock(&pf->pri_lock);
->  }
->  EXPORT_SYMBOL_GPL(pci_disable_pri);
->  
-> @@ -277,17 +319,31 @@ EXPORT_SYMBOL_GPL(pci_disable_pri);
+> +struct kunit;
+
+Forward declare struct completion?
+
+> +
+> +/*
+> + * struct kunit_try_catch - provides a generic way to run code which mig=
+ht fail.
+> + * @context: used to pass user data to the try and catch functions.
+> + *
+> + * kunit_try_catch provides a generic, architecture independent way to e=
+xecute
+> + * an arbitrary function of type kunit_try_catch_func_t which may bail o=
+ut by
+> + * calling kunit_try_catch_throw(). If kunit_try_catch_throw() is called=
+, @try
+> + * is stopped at the site of invocation and @catch is catch is called.
+> + *
+> + * struct kunit_try_catch provides a generic interface for the functiona=
+lity
+> + * needed to implement kunit->abort() which in turn is needed for implem=
+enting
+> + * assertions. Assertions allow stating a precondition for a test simpli=
+fying
+> + * how test cases are written and presented.
+> + *
+> + * Assertions are like expectations, except they abort (call
+> + * kunit_try_catch_throw()) when the specified condition is not met. Thi=
+s is
+> + * useful when you look at a test case as a logical statement about some=
+ piece
+> + * of code, where assertions are the premises for the test case, and the
+> + * conclusion is a set of predicates, rather expectations, that must all=
+ be
+> + * true. If your premises are violated, it does not makes sense to conti=
+nue.
+> + */
+> +struct kunit_try_catch {
+> +       /* private: internal use only. */
+> +       struct kunit *test;
+> +       struct completion *try_completion;
+> +       int try_result;
+> +       kunit_try_catch_func_t try;
+> +       kunit_try_catch_func_t catch;
+
+Can these other variables be documented in the kernel doc? And should
+context be marked as 'public'?
+
+> +       void *context;
+> +};
+> +
+> +void kunit_try_catch_init(struct kunit_try_catch *try_catch,
+> +                         struct kunit *test,
+> +                         kunit_try_catch_func_t try,
+> +                         kunit_try_catch_func_t catch);
+> +
+> +void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *contex=
+t);
+> +
+> +void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch);
+> +
+> +static inline int kunit_try_catch_get_result(struct kunit_try_catch *try=
+_catch)
+> +{
+> +       return try_catch->try_result;
+> +}
+> +
+> +/*
+> + * Exposed for testing only.
+
+Ugh that's sad. I hope we don't expose more functions just for testing
+in other cases.
+
+> + */
+> +void kunit_generic_try_catch_init(struct kunit_try_catch *try_catch);
+> +
+> +#endif /* _KUNIT_TRY_CATCH_H */
+> diff --git a/kunit/test.c b/kunit/test.c
+> index e5080a2c6b29c..995cb53fe4ee9 100644
+> --- a/kunit/test.c
+> +++ b/kunit/test.c
+> @@ -7,13 +7,26 @@
 >   */
->  void pci_restore_pri_state(struct pci_dev *pdev)
+> =20
+>  #include <linux/kernel.h>
+> +#include <linux/sched/debug.h>
+>  #include <kunit/test.h>
+> +#include <kunit/try-catch.h>
+> =20
+>  static void kunit_set_failure(struct kunit *test)
 >  {
-> -	u16 control = PCI_PRI_CTRL_ENABLE;
-> -	u32 reqs = pdev->pri_reqs_alloc;
-> +	u16 control;
-> +	u32 reqs;
-> +	struct pci_dev *pf = pci_physfn(pdev);
->  
->  	if (!pdev->pri_enabled)
->  		return;
->  
-> -	if (!pdev->pri_cap)
-> +	if (!pf->pri_cap)
->  		return;
->  
-> -	pci_write_config_dword(pdev, pdev->pri_cap + PCI_PRI_ALLOC_REQ, reqs);
-> -	pci_write_config_word(pdev, pdev->pri_cap + PCI_PRI_CTRL, control);
-> +	mutex_lock(&pf->pri_lock);
-> +
-> +	/* If PRI is already enabled by other VF's or PF, return */
-> +	pci_read_config_word(pf, pf->pri_cap + PCI_PRI_CTRL, &control);
-> +	if (control & PCI_PRI_CTRL_ENABLE)
-> +		goto pri_unlock;
-> +
-> +	reqs = pf->pri_reqs_alloc;
-> +	control = PCI_PRI_CTRL_ENABLE;
-> +
-> +	pci_write_config_dword(pf, pf->pri_cap + PCI_PRI_ALLOC_REQ, reqs);
-> +	pci_write_config_word(pf, pf->pri_cap + PCI_PRI_CTRL, control);
-> +
-> +pri_unlock:
-> +	mutex_unlock(&pf->pri_lock);
+>         WRITE_ONCE(test->success, false);
 >  }
->  EXPORT_SYMBOL_GPL(pci_restore_pri_state);
->  
-> @@ -300,18 +356,32 @@ EXPORT_SYMBOL_GPL(pci_restore_pri_state);
+> =20
+> +static bool kunit_get_death_test(struct kunit *test)
+> +{
+> +       bool death_test;
+> +
+> +       spin_lock(&test->lock);
+> +       death_test =3D test->death_test;
+> +       spin_unlock(&test->lock);
+> +
+> +       return death_test;
+> +}
+> +
+>  static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
+>  {
+>         return vprintk_emit(0, level, NULL, 0, fmt, args);
+> @@ -158,6 +171,21 @@ static void kunit_fail(struct kunit *test, struct ku=
+nit_assert *assert)
+>         kunit_print_string_stream(test, stream);
+>  }
+> =20
+> +void __noreturn kunit_abort(struct kunit *test)
+> +{
+> +       kunit_set_death_test(test, true);
+> +
+> +       kunit_try_catch_throw(&test->try_catch);
+> +
+> +       /*
+> +        * Throw could not abort from test.
+> +        *
+> +        * XXX: we should never reach this line! As kunit_try_catch_throw=
+ is
+> +        * marked __noreturn.
+> +        */
+> +       WARN_ONCE(true, "Throw could not abort from test!\n");
+
+Should this just be a BUG_ON? It's supposedly impossible.
+
+> +}
+> +
+>  void kunit_do_assertion(struct kunit *test,
+>                         struct kunit_assert *assert,
+>                         bool pass,
+> @@ -176,6 +204,9 @@ void kunit_do_assertion(struct kunit *test,
+>         kunit_fail(test, assert);
+> =20
+>         va_end(args);
+> +
+> +       if (assert->type =3D=3D KUNIT_ASSERTION)
+> +               kunit_abort(test);
+>  }
+> =20
+>  void kunit_init_test(struct kunit *test, const char *name)
+> @@ -184,36 +215,154 @@ void kunit_init_test(struct kunit *test, const cha=
+r *name)
+>         INIT_LIST_HEAD(&test->resources);
+>         test->name =3D name;
+>         test->success =3D true;
+> +       test->death_test =3D false;
+>  }
+> =20
+>  /*
+> - * Performs all logic to run a test case.
+> + * Initializes and runs test case. Does not clean up or do post validati=
+ons.
 >   */
->  int pci_reset_pri(struct pci_dev *pdev)
+> -static void kunit_run_case(struct kunit_suite *suite,
+> -                          struct kunit_case *test_case)
+> +static void kunit_run_case_internal(struct kunit *test,
+> +                                   struct kunit_suite *suite,
+> +                                   struct kunit_case *test_case)
 >  {
-> +	struct pci_dev *pf = pci_physfn(pdev);
->  	u16 control;
-> +	int ret = 0;
->  
-> -	if (WARN_ON(pdev->pri_enabled))
-> -		return -EBUSY;
-> +	mutex_lock(&pf->pri_lock);
->  
-> -	if (!pdev->pri_cap)
-> -		return -EINVAL;
-> +	if (WARN_ON(pdev->pri_enabled)) {
-> +		ret = -EBUSY;
-> +		goto done;
-> +	}
+> -       struct kunit test;
+> -
+> -       kunit_init_test(&test, test_case->name);
+> -
+>         if (suite->init) {
+>                 int ret;
+> =20
+> -               ret =3D suite->init(&test);
+> +               ret =3D suite->init(test);
+>                 if (ret) {
+> -                       kunit_err(&test, "failed to initialize: %d\n", re=
+t);
+> -                       kunit_set_failure(&test);
+> -                       test_case->success =3D test.success;
+> +                       kunit_err(test, "failed to initialize: %d\n", ret=
+);
+> +                       kunit_set_failure(test);
+>                         return;
+>                 }
+>         }
+> =20
+> -       test_case->run_case(&test);
+> +       test_case->run_case(test);
+> +}
 > +
-> +	if (!pf->pri_cap) {
-> +		ret = -EINVAL;
-> +		goto done;
-> +	}
+> +static void kunit_case_internal_cleanup(struct kunit *test)
+> +{
+> +       kunit_cleanup(test);
+> +}
+> =20
+> +/*
+> + * Performs post validations and cleanup after a test case was run.
+> + * XXX: Should ONLY BE CALLED AFTER kunit_run_case_internal!
+> + */
+> +static void kunit_run_case_cleanup(struct kunit *test,
+> +                                  struct kunit_suite *suite)
+> +{
+>         if (suite->exit)
+> -               suite->exit(&test);
+> +               suite->exit(test);
 > +
-> +	/* If PRI is already enabled by other VF's or PF, return 0 */
-> +	if (pf->pri_enabled)
-> +		goto done;
->  
->  	control = PCI_PRI_CTRL_RESET;
-> -	pci_write_config_word(pdev, pdev->pri_cap + PCI_PRI_CTRL, control);
->  
-> -	return 0;
-> +	pci_write_config_word(pf, pf->pri_cap + PCI_PRI_CTRL, control);
-> +done:
-> +	mutex_unlock(&pf->pri_lock);
-> +	return ret;
->  }
->  EXPORT_SYMBOL_GPL(pci_reset_pri);
->  #endif /* CONFIG_PCI_PRI */
-> @@ -475,11 +545,18 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
->  int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->  {
->  	u16 status;
-> +	struct pci_dev *pf = pci_physfn(pdev);
+> +       kunit_case_internal_cleanup(test);
+> +}
 > +
-> +	mutex_lock(&pf->pri_lock);
+> +/*
+> + * Handles an unexpected crash in a test case.
+> + */
+> +static void kunit_handle_test_crash(struct kunit *test,
+> +                                  struct kunit_suite *suite,
+> +                                  struct kunit_case *test_case)
+> +{
+> +       kunit_err(test, "kunit test case crashed!");
 
-I don't believe this lock is necessary.  What is it protecting?
+Does this need a newline?
 
-We're only doing a single read of PCI_PRI_STATUS here, and with the
-lock, we'll read it either before or after the critical sections in
-pci_enable_pri(), pci_disable_pri(), pci_restore_pri_state(), and
-pci_reset_pri().
-
-And without the lock, we'll *also* read PCI_PRI_STATUS either before
-or after anything in those functions that affects it.
-
-> -	if (!pdev->pri_cap)
-> +	if (!pf->pri_cap) {
-> +		mutex_unlock(&pf->pri_lock);
->  		return 0;
-> +	}
+> +       /*
+> +        * TODO(brendanhiggins@google.com): This prints the stack trace up
+> +        * through this frame, not up to the frame that caused the crash.
+> +        */
+> +       show_stack(NULL, NULL);
 > +
-> +	pci_read_config_word(pf, pf->pri_cap + PCI_PRI_STATUS, &status);
->  
-> -	pci_read_config_word(pdev, pdev->pri_cap + PCI_PRI_STATUS, &status);
-> +	mutex_unlock(&pf->pri_lock);
->  
->  	if (status & PCI_PRI_STATUS_PASID)
->  		return 1;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 27224c0db849..3c9c4c82be27 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -455,8 +455,10 @@ struct pci_dev {
->  	atomic_t	ats_ref_cnt;	/* Number of VFs with ATS enabled */
->  #endif
->  #ifdef CONFIG_PCI_PRI
-> +	struct mutex	pri_lock;	/* PRI enable lock */
->  	u16		pri_cap;	/* PRI Capability offset */
->  	u32		pri_reqs_alloc; /* Number of PRI requests allocated */
-> +	atomic_t	pri_ref_cnt;	/* Number of PF/VF PRI users */
->  #endif
->  #ifdef CONFIG_PCI_PASID
->  	u16		pasid_cap;	/* PASID Capability offset */
-> -- 
-> 2.21.0
-> 
+> +       kunit_case_internal_cleanup(test);
+> +}
+> +
+> +struct kunit_try_catch_context {
+> +       struct kunit *test;
+> +       struct kunit_suite *suite;
+> +       struct kunit_case *test_case;
+> +};
+> +
+> +static void kunit_try_run_case(void *data)
+> +{
+> +       struct kunit_try_catch_context *ctx =3D data;
+> +       struct kunit *test =3D ctx->test;
+> +       struct kunit_suite *suite =3D ctx->suite;
+> +       struct kunit_case *test_case =3D ctx->test_case;
+> +
+> +       /*
+> +        * kunit_run_case_internal may encounter a fatal error; if it doe=
+s,
+> +        * abort will be called, this thread will exit, and finally the p=
+arent
+> +        * thread will resume control and handle any necessary clean up.
+> +        */
+> +       kunit_run_case_internal(test, suite, test_case);
+> +       /* This line may never be reached. */
+> +       kunit_run_case_cleanup(test, suite);
+> +}
+> +
+> +static void kunit_catch_run_case(void *data)
+> +{
+> +       struct kunit_try_catch_context *ctx =3D data;
+> +       struct kunit *test =3D ctx->test;
+> +       struct kunit_suite *suite =3D ctx->suite;
+> +       struct kunit_case *test_case =3D ctx->test_case;
+> +       int try_exit_code =3D kunit_try_catch_get_result(&test->try_catch=
+);
+> +
+> +       if (try_exit_code) {
+> +               kunit_set_failure(test);
+> +               /*
+> +                * Test case could not finish, we have no idea what state=
+ it is
+> +                * in, so don't do clean up.
+> +                */
+> +               if (try_exit_code =3D=3D -ETIMEDOUT)
+> +                       kunit_err(test, "test case timed out\n");
+> +               /*
+> +                * Unknown internal error occurred preventing test case f=
+rom
+> +                * running, so there is nothing to clean up.
+> +                */
+> +               else
+> +                       kunit_err(test, "internal error occurred preventi=
+ng test case from running: %d\n",
+> +                                 try_exit_code);
+
+Nitpick: I would add braces here because you make the if statement into
+multi-line arms for each case.
+
+> +               return;
+> +       }
+> +
+> +       if (kunit_get_death_test(test)) {
+> +               /*
+> +                * EXPECTED DEATH: kunit_run_case_internal encountered
+> +                * anticipated fatal error. Everything should be in a safe
+> +                * state.
+> +                */
+> +               kunit_run_case_cleanup(test, suite);
+> +       } else {
+> +               /*
+> +                * UNEXPECTED DEATH: kunit_run_case_internal encountered =
+an
+> +                * unanticipated fatal error. We have no idea what the st=
+ate of
+> +                * the test case is in.
+> +                */
+> +               kunit_handle_test_crash(test, suite, test_case);
+> +               kunit_set_failure(test);
+
+Like was done here.
+
+> +       }
+> +}
+> +
+> +/*
+> + * Performs all logic to run a test case. It also catches most errors th=
+at
+> + * occurs in a test case and reports them as failures.
+
+s/occurs/occur/
+
+> + */
+> +static void kunit_run_case_catch_errors(struct kunit_suite *suite,
+[...]
+> diff --git a/kunit/try-catch.c b/kunit/try-catch.c
+> new file mode 100644
+> index 0000000000000..de580f074387b
+> --- /dev/null
+> +++ b/kunit/try-catch.c
+> @@ -0,0 +1,95 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * An API to allow a function, that may fail, to be executed, and recove=
+r in a
+> + * controlled manner.
+> + *
+> + * Copyright (C) 2019, Google LLC.
+> + * Author: Brendan Higgins <brendanhiggins@google.com>
+> + */
+> +
+> +#include <kunit/try-catch.h>
+> +#include <kunit/test.h>
+> +#include <linux/completion.h>
+> +#include <linux/kthread.h>
+> +
+> +void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch)
+> +{
+> +       try_catch->try_result =3D -EFAULT;
+> +       complete_and_exit(try_catch->try_completion, -EFAULT);
+> +}
+> +
+> +static int kunit_generic_run_threadfn_adapter(void *data)
+> +{
+> +       struct kunit_try_catch *try_catch =3D data;
+> +
+> +       try_catch->try(try_catch->context);
+> +
+> +       complete_and_exit(try_catch->try_completion, 0);
+> +}
+> +
+> +void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *contex=
+t)
+> +{
+> +       DECLARE_COMPLETION_ONSTACK(try_completion);
+> +       struct kunit *test =3D try_catch->test;
+> +       struct task_struct *task_struct;
+> +       int exit_code, status;
+> +
+> +       try_catch->context =3D context;
+> +       try_catch->try_completion =3D &try_completion;
+> +       try_catch->try_result =3D 0;
+> +       task_struct =3D kthread_run(kunit_generic_run_threadfn_adapter,
+> +                                 try_catch,
+> +                                 "kunit_try_catch_thread");
+> +       if (IS_ERR(task_struct)) {
+> +               try_catch->catch(try_catch->context);
+> +               return;
+> +       }
+> +
+> +       /*
+> +        * TODO(brendanhiggins@google.com): We should probably have some =
+type of
+> +        * variable timeout here. The only question is what that timeout =
+value
+> +        * should be.
+> +        *
+> +        * The intention has always been, at some point, to be able to la=
+bel
+> +        * tests with some type of size bucket (unit/small, integration/m=
+edium,
+> +        * large/system/end-to-end, etc), where each size bucket would ge=
+t a
+> +        * default timeout value kind of like what Bazel does:
+> +        * https://docs.bazel.build/versions/master/be/common-definitions=
+.html#test.size
+> +        * There is still some debate to be had on exactly how we do this=
+. (For
+> +        * one, we probably want to have some sort of test runner level
+> +        * timeout.)
+> +        *
+> +        * For more background on this topic, see:
+> +        * https://mike-bland.com/2011/11/01/small-medium-large.html
+> +        */
+> +       status =3D wait_for_completion_timeout(&try_completion,
+> +                                            300 * MSEC_PER_SEC); /* 5 mi=
+n */
+> +       if (status < 0) {
+
+wait_for_completion_timeout() doesn't return a negative value on
+timeout. It returns 0. Please rename 'status' to 'time_remaining' and
+test with if (!time_remaining) instead or some other suitably named
+variable name indicating that the return value is the time remaining
+before the timeout.
+
+May also want to clamp this to the hung task timeout value, which is
+typically less than 5 minutes. Otherwise, the hung task detector may
+find the problem first before this timeout happens.
+
+> +               kunit_err(test, "try timed out\n");
+> +               try_catch->try_result =3D -ETIMEDOUT;
+> +       }
