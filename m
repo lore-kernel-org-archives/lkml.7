@@ -2,172 +2,164 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEC0C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF92C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35EC420679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:48:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ElQFKkMa"
+	by mail.kernel.org (Postfix) with ESMTP id B527720665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:49:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbfHMJsi (ORCPT
+        id S1728434AbfHMJtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 05:48:38 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53294 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfHMJsi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:48:38 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 10so889875wmp.3;
-        Tue, 13 Aug 2019 02:48:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=O5RNYQ/pIxNnsl2jiqY8E9iJasfstc8DMldf5IawoNU=;
-        b=ElQFKkMaFL1kgBgMTEWmorIjNtk/TTzL2UuCTEHFKXiz9+vNBhMx/RNL4FDCdITYvB
-         49VsSMZNRbGLjusFwbArr+2bnNu514amW8cZKhDeIk5Cjs54ao3oXrDaDSJ/JZuPCD0h
-         uwaSZQMOFf/dt2gfZjTJTRiZ/oY3wCwIWPNS+JvGqxaSI1zimLaYZDrBc0YqwmEJzNzS
-         Tz5p2bggY1C1bpBJMIaJn/A9rqD7+SYNPSX688vwqrzmfrWMh26OrCTrzQ4F57wd00Tq
-         l6wUo573t+o7dm2p2U0O0/iEDYG8outNyuWTd48cLyiw+CJjdb+G2LNDf0zrBdQqHjMV
-         zTCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O5RNYQ/pIxNnsl2jiqY8E9iJasfstc8DMldf5IawoNU=;
-        b=q/mV6Ab21s9dAq4DVv8jLi3EgPW9mKkuWf6ZVlo98vnWNguVYzqtIHSCwzf8fTetxa
-         fpNrjnWv86xJawjSD5/7eLQk2uwf3cNDkBPnVFTX589sPCkUf54Vxs0qlPJiuepnwLgE
-         CkTFCqCYdTrtl7DvfzQe6kdpKEL8nB85rnSy7Uv2LIpQBFKT8Y16ZBhTQsUK26cHqouB
-         5yq7RcaZ3OxTdKRStJ/vx/O9eNM55NNCc6qMtsDUsdGvxh8tTWGS62NMrcmy1YOJ/h6p
-         9GKNAW3CXWpe86siAemReJB+sP60e70GfmVRmVnzFSpyG1Hg+1Rtctek7CRDvcTDS8b3
-         Ir0A==
-X-Gm-Message-State: APjAAAUpx2FL0X1vMrmREQ/J+HJpd9iaEgRVrZQ7MWr3KzRjeuhc5RsI
-        fVTuZxynj4RW5LbC65+xBNs=
-X-Google-Smtp-Source: APXvYqw40PfFx6A7DfkQoninorUojIQNdwEEmloNMQ6AlDORXn9VZdnIGMfeVsaj2DHd3756z8ah3Q==
-X-Received: by 2002:a7b:c383:: with SMTP id s3mr2186427wmj.44.1565689714826;
-        Tue, 13 Aug 2019 02:48:34 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id 25sm747482wmi.40.2019.08.13.02.48.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 02:48:33 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 11:48:32 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Krishna Yarlagadda <kyarlagadda@nvidia.com>
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, jonathanh@nvidia.com, ldewangan@nvidia.com,
-        jslaby@suse.com, linux-serial@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Shardar Shariff Md <smohammed@nvidia.com>
-Subject: Re: [PATCH 05/14] serial: tegra: flush the RX fifo on frame error
-Message-ID: <20190813094832.GJ1137@ulmo>
-References: <1565609303-27000-1-git-send-email-kyarlagadda@nvidia.com>
- <1565609303-27000-6-git-send-email-kyarlagadda@nvidia.com>
+        Tue, 13 Aug 2019 05:49:11 -0400
+Received: from enpas.org ([46.38.239.100]:56334 "EHLO mail.enpas.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726685AbfHMJtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 05:49:11 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        by mail.enpas.org (Postfix) with ESMTPSA id 7A75410016D;
+        Tue, 13 Aug 2019 09:49:07 +0000 (UTC)
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux I2C <linux-i2c@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linux/m68k <linux-m68k@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+References: <20190812235237.21797-1-max@enpas.org>
+ <20190812235237.21797-2-max@enpas.org>
+ <CAMuHMdX3NtKwxb6BJzJR1qLs5vC9zhU3d+cdrrHx4B9r1opkvQ@mail.gmail.com>
+From:   Max Staudt <max@enpas.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=max@enpas.org; prefer-encrypt=mutual; keydata=
+ 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
+ urZIw0nz8zec+73Bv/qF4GHHftLYfA==
+Subject: Re: [PATCH v2 2/4] i2c/busses/i2c-icy: Add LTC2990 present on 2019
+ board revision
+Message-ID: <fa145f84-4249-44da-57dc-10cfe25dbde3@enpas.org>
+Date:   Tue, 13 Aug 2019 11:49:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Xssso5lpTBgMxDfe"
-Content-Disposition: inline
-In-Reply-To: <1565609303-27000-6-git-send-email-kyarlagadda@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAMuHMdX3NtKwxb6BJzJR1qLs5vC9zhU3d+cdrrHx4B9r1opkvQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 08/13/2019 09:03 AM, Geert Uytterhoeven wrote:
+> Hi Max,
+> 
+> On Tue, Aug 13, 2019 at 1:53 AM Max Staudt <max@enpas.org> wrote:
+>> Since the 2019 a1k.org community re-print of these PCBs sports an
+>> LTC2990 hwmon chip as an example use case, let this driver autoprobe
+>> for that as well. If it is present, modprobing ltc2990 is sufficient.
+>>
+>> Signed-off-by: Max Staudt <max@enpas.org>
+> 
+> Thanks for your patch!
+> 
+>> --- a/drivers/i2c/busses/i2c-icy.c
+>> +++ b/drivers/i2c/busses/i2c-icy.c
+>> @@ -160,6 +180,8 @@ static void icy_remove(struct zorro_dev *z)
+>>  {
+>>         struct icy_i2c *i2c = dev_get_drvdata(&z->dev);
+>>
+>> +       i2c_unregister_device(i2c->client_ltc2990);
+> 
+> Is this needed?
+> In my understanding, i2c_del_adapter() below takes care of that.
+It seems to do that in i2c_del_adapter():
 
---Xssso5lpTBgMxDfe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  device_for_each_child(&adap->dev, NULL, __unregister_dummy);
 
-On Mon, Aug 12, 2019 at 04:58:14PM +0530, Krishna Yarlagadda wrote:
-> From: Shardar Shariff Md <smohammed@nvidia.com>
->=20
-> FIFO reset/flush code implemented now does not follow programming
-> guidelines. RTS line has to be turned off while flushing fifos to
-> avoid new transfers. Also check LSR bits UART_LSR_TEMT and UART_LSR_DR
-> to confirm fifos are flushed.
 
-You use inconsistent spelling for FIFO here.
+However, I'm not sure I'm supposed to do that. I went by Documentation/i2c/instantiating-devices, which in "Method 2" says:
 
-> Signed-off-by: Shardar Shariff Md <smohammed@nvidia.com>
-> Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-> ---
->  drivers/tty/serial/serial-tegra.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->=20
-> diff --git a/drivers/tty/serial/serial-tegra.c b/drivers/tty/serial/seria=
-l-tegra.c
-> index ae7225c..f6a3f4e 100644
-> --- a/drivers/tty/serial/serial-tegra.c
-> +++ b/drivers/tty/serial/serial-tegra.c
-> @@ -266,6 +266,10 @@ static void tegra_uart_wait_sym_time(struct tegra_ua=
-rt_port *tup,
->  static void tegra_uart_fifo_reset(struct tegra_uart_port *tup, u8 fcr_bi=
-ts)
->  {
->  	unsigned long fcr =3D tup->fcr_shadow;
-> +	unsigned int lsr, tmout =3D 10000;
-> +
-> +	if (tup->rts_active)
-> +		set_rts(tup, false);
-> =20
->  	if (tup->cdata->allow_txfifo_reset_fifo_mode) {
->  		fcr |=3D fcr_bits & (UART_FCR_CLEAR_RCVR | UART_FCR_CLEAR_XMIT);
-> @@ -289,6 +293,17 @@ static void tegra_uart_fifo_reset(struct tegra_uart_=
-port *tup, u8 fcr_bits)
->  	 * to propagate, otherwise data could be lost.
->  	 */
->  	tegra_uart_wait_cycle_time(tup, 32);
-> +
-> +	do {
-> +		lsr =3D tegra_uart_read(tup, UART_LSR);
-> +		if (lsr | UART_LSR_TEMT)
-> +			if (!(lsr & UART_LSR_DR))
+  The driver which instantiated the I2C device is responsible for destroying
+  it on cleanup. This is done by calling i2c_unregister_device() on the
+  pointer that was earlier returned by i2c_new_device() or
+  i2c_new_probed_device().
 
-Can't both of these go on the same line?
 
-Thierry
+So, what is preferred and why?
 
-> +				break;
-> +		udelay(1);
-> +	} while (--tmout);
-> +
-> +	if (tup->rts_active)
-> +		set_rts(tup, true);
->  }
-> =20
->  static int tegra_set_baudrate(struct tegra_uart_port *tup, unsigned int =
-baud)
-> --=20
-> 2.7.4
->=20
 
---Xssso5lpTBgMxDfe
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks!
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1Sh28ACgkQ3SOs138+
-s6EtEg//doVYuGtPItd+PnimbHPvK65iBFfPnNyDNeLkFEWRXc9Lr/YNMEZRvXXk
-jSCB5dOOO6bawhT2cAqpph/9dza4Vvc+944teuITF9d42ymDjjMfcFjAFegqtFsb
-zTlE8CzX2bs1y+0xks/8LGhHgaUPDU1NgVHnhwWjo2IIZvnOBjL8eWalCwfiNO6M
-jo9UOV5xAZyXOk+RtheaE4VfGcgSBW3TbqWtl1TjhZ73E9d/S+r4eHo918GhD+n6
-c4/Z9155gI0KEJyvQBGBSUaWAW6Ok9Yzq9rn2IjW9/uaU7Su3n+UBuv1bIB50Juj
-ihpWn/k/07mM+T8AKeu0COxpmoLUvbYM9kU0gAz7xLFsFws68/+nJfUigmwCZgLA
-BnOixrT6rgSmZcyR/50fep2hrqwBNZ51fZ2u5fKWBBUGDGwbsef4wLKmih5OC6Le
-5+bDoP70Z8xhLZYEeXsSOTn4lPka+6NRXha8W+LE3OYeeBYOrNYfDUc/jPeif47J
-guZLpd1CH3bJnvR0mQR0DIZGKhRMd3Czbcw+opvnepeVO7kmzSkUl1bbX/6J9h7I
-ODfTut2Y6Q9OzqdwJObm3VpnchB/uEHkMrOVMYjYPzkhbH5sgX2mXr60+O8VAzHI
-My0BQvCge2+Ybv3e8SV1YusY6pV4Fjp8svAC9LmuB0WnAxJszZw=
-=dpAL
------END PGP SIGNATURE-----
-
---Xssso5lpTBgMxDfe--
+Max
