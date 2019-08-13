@@ -2,299 +2,163 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9B5C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A856C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B366820844
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:30:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Cdj2X0H1"
+	by mail.kernel.org (Postfix) with ESMTP id 5C5FC20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:30:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565710250;
+	bh=JwsVvjjndoNVXUvimlODGhmK8FSx2mCFWgY1bGidOIQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AYhWYgSVktdvwqGtUIVqxdGMl8URXXbn/tMOPrdew7HINGPQdIlOcI511WOb582/9
+	 zefo+J/OEFybFCZRr5an4PW/mYylMUITDevEbACfbi9jZnKN3FemiWtkd4/PDIEnjJ
+	 tKCiAnSWZyYDd0G9aPQ+IRgF2u3OUWXujoX/kZOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728906AbfHMPaX (ORCPT
+        id S1728974AbfHMPat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 11:30:23 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37916 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728695AbfHMPaX (ORCPT
+        Tue, 13 Aug 2019 11:30:49 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42958 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728526AbfHMPat (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 11:30:23 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m12so10806281plt.5
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 08:30:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LKZJWtoWyWG5oxOm0+yUDXsQTGCyVoWJLlMAumAfqVk=;
-        b=Cdj2X0H1Yse9eA+Td/DY9JIndyhgdmD87pLz6SjLZTyJP1uBHk7IkGYh7fc3ZuMMcW
-         VhZs53HifLCOjUiexLisADVqi8ni23lvgD94h8kRcYcbTuZn7Qgtf5NGHLhqILTgCEm5
-         5gkOrwR3dWK6jyxnae5MPATeQDCe9PffHXxYc=
+        Tue, 13 Aug 2019 11:30:49 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j7so29264014ota.9;
+        Tue, 13 Aug 2019 08:30:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LKZJWtoWyWG5oxOm0+yUDXsQTGCyVoWJLlMAumAfqVk=;
-        b=jXvhUs8EGpx8pQk7wBYYAeXgYiY1F3QV6uxIRa0RsvXTK6OXVonVWDIMTnUp8FDkwq
-         8qcQJOwvsStbv0Z50UoZzWCAA5pnji1Vf66I+yDGffIecUnLdxT9Azc0iqMWabAdEcK/
-         80rpScD072OWEGf5A8aEunw7461y+ni4CEVbzmWb8npu4e9UVuO/MzuOPvnO3XQIZTTr
-         gUEMSibY4fcz0d8YN4FRVrIU5gtHodzjXsJYIgPU1oAs1maVaoCdCPxgCwIHsfuRVrmY
-         UyxH2bbPfiAfzvB8A1z4zzfQ8NxdCrCA6OooYazZKqBwogDjSAQV1PXWg8NNZtJ96K4U
-         4uzw==
-X-Gm-Message-State: APjAAAW9Ov3sL9psvhKeuS+ZPA8t2i9av8E8FKU8mz2msAuMlp4W75y5
-        IdLi/HLokP/mXA84I4yuxNMQbg==
-X-Google-Smtp-Source: APXvYqyyFJ/TRIiPoznYFZ5GRhe5I4cJo1AfaIwTrvJcDh2aWhHM5FAN95mujqC58WgWlcLX0Mc0tA==
-X-Received: by 2002:a17:902:461:: with SMTP id 88mr27248372ple.296.1565710222196;
-        Tue, 13 Aug 2019 08:30:22 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id k5sm10597088pgo.45.2019.08.13.08.30.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Aug 2019 08:30:21 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 11:30:20 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Hansen <chansen3@cisco.com>,
-        Daniel Colascione <dancol@google.com>, fmayer@google.com,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        kernel-team <kernel-team@android.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Minchan Kim <minchan@kernel.org>, namhyung@google.com,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Roman Gushchin <guro@fb.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Todd Kjos <tkjos@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v5 1/6] mm/page_idle: Add per-pid idle page tracking
- using virtual index
-Message-ID: <20190813153020.GC14622@google.com>
-References: <20190807171559.182301-1-joel@joelfernandes.org>
- <CAG48ez0ysprvRiENhBkLeV9YPTN_MB18rbu2HDa2jsWo5FYR8g@mail.gmail.com>
+        bh=F3iDcqciF20w4Uv8REvfNc176GVhGh7FqmfmhGEIDug=;
+        b=ktib7JqQ/X+/nRNIN4zRyXNI0NRx3BHTDfwBLQGNjbA42HdXk4rhTX/SfA7bUgm7rQ
+         v2aWZBdeAGQOJixwZx87TNVLtX9EvdzEQea8T+8pptTQim+omwr+0/9XEbVrBuh6zp75
+         dQWU3BNAb9FLugZIY3ctf2TV4bj/51uBpiNNr0/Nd3TZ5Wv4dWzHI3w99cXjTg3pOnqe
+         hFeukAQDfmdP60eLo/Blib3Tjhlov2IFUff4YAxu14k4fqUAOWaavHr2npK56XBlnwSj
+         QxRMz3zXFtYBflcgAF/b9eAEMKHQd4Y/F6kP10Ani9j70FDE/jmdLy8h+1HY5eyJT/LD
+         a1Iw==
+X-Gm-Message-State: APjAAAUmt0DDgqEmu2fUyQx6EHiozgqip5s2owvWsz+HuITqEtpnDD1s
+        eXF/yxTtJsV7ZGnjB1g6Xw==
+X-Google-Smtp-Source: APXvYqxS/NE+2RYGWfGfwrPDfgjfsNpT/w8j9CnFNaWvIovgfq7VOv6gYIztL7DJlY/jL6n/EmqHvg==
+X-Received: by 2002:a6b:7a0a:: with SMTP id h10mr1727905iom.45.1565710247972;
+        Tue, 13 Aug 2019 08:30:47 -0700 (PDT)
+Received: from localhost ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id l2sm21851157ioq.83.2019.08.13.08.30.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 13 Aug 2019 08:30:47 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 09:30:46 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan Chocron <jonnyc@amazon.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        mark.rutland@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org,
+        alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com,
+        talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs
+ PCIe host bridge binding
+Message-ID: <20190813153046.GA31480@bogus>
+References: <20190723092529.11310-1-jonnyc@amazon.com>
+ <20190723092711.11786-1-jonnyc@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAG48ez0ysprvRiENhBkLeV9YPTN_MB18rbu2HDa2jsWo5FYR8g@mail.gmail.com>
+In-Reply-To: <20190723092711.11786-1-jonnyc@amazon.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 08:14:38PM +0200, Jann Horn wrote:
-[snip] 
-> > +/* Helper to get the start and end frame given a pos and count */
-> > +static int page_idle_get_frames(loff_t pos, size_t count, struct mm_struct *mm,
-> > +                               unsigned long *start, unsigned long *end)
-> > +{
-> > +       unsigned long max_frame;
-> > +
-> > +       /* If an mm is not given, assume we want physical frames */
-> > +       max_frame = mm ? (mm->task_size >> PAGE_SHIFT) : max_pfn;
-> > +
-> > +       if (pos % BITMAP_CHUNK_SIZE || count % BITMAP_CHUNK_SIZE)
-> > +               return -EINVAL;
-> > +
-> > +       *start = pos * BITS_PER_BYTE;
-> > +       if (*start >= max_frame)
-> > +               return -ENXIO;
-> > +
-> > +       *end = *start + count * BITS_PER_BYTE;
-> > +       if (*end > max_frame)
-> > +               *end = max_frame;
-> > +       return 0;
-> > +}
+On Tue, Jul 23, 2019 at 12:27:08PM +0300, Jonathan Chocron wrote:
+> Document Amazon's Annapurna Labs PCIe host bridge.
 > 
-> You could add some overflow checks for the multiplications. I haven't
-> seen any place where it actually matters, but it seems unclean; and in
-> particular, on a 32-bit architecture where the maximum user address is
-> very high (like with a 4G:4G split), it looks like this function might
-> theoretically return with `*start > *end`, which could be confusing to
-> callers.
-
-I could store the multiplication result in unsigned long long (since we are
-bounds checking with max_frame, start > end would not occur). Something like
-the following (with extraneous casts). But I'll think some more about the
-point you are raising.
-
-diff --git a/mm/page_idle.c b/mm/page_idle.c
-index 1ea21bbb36cb..8fd7a5559986 100644
---- a/mm/page_idle.c
-+++ b/mm/page_idle.c
-@@ -135,6 +135,7 @@ static int page_idle_get_frames(loff_t pos, size_t count, struct mm_struct *mm,
- 				unsigned long *start, unsigned long *end)
- {
- 	unsigned long max_frame;
-+	unsigned long long tmp;
- 
- 	/* If an mm is not given, assume we want physical frames */
- 	max_frame = mm ? (mm->task_size >> PAGE_SHIFT) : max_pfn;
-@@ -142,13 +143,16 @@ static int page_idle_get_frames(loff_t pos, size_t count, struct mm_struct *mm,
- 	if (pos % BITMAP_CHUNK_SIZE || count % BITMAP_CHUNK_SIZE)
- 		return -EINVAL;
- 
--	*start = pos * BITS_PER_BYTE;
--	if (*start >= max_frame)
-+	tmp = pos * BITS_PER_BYTE;
-+	if (tmp >= (unsigned long long)max_frame)
- 		return -ENXIO;
-+	*start = (unsigned long)tmp;
- 
--	*end = *start + count * BITS_PER_BYTE;
--	if (*end > max_frame)
-+	tmp = *start + count * BITS_PER_BYTE;
-+	if (tmp > (unsigned long long)max_frame)
- 		*end = max_frame;
-+	else
-+		*end = (unsigned long)tmp;
- 	return 0;
- }
- 
-> [...]
-> >         for (; pfn < end_pfn; pfn++) {
-> >                 bit = pfn % BITMAP_CHUNK_BITS;
-> >                 if (!bit)
-> >                         *out = 0ULL;
-> > -               page = page_idle_get_page(pfn);
-> > -               if (page) {
-> > -                       if (page_is_idle(page)) {
-> > -                               /*
-> > -                                * The page might have been referenced via a
-> > -                                * pte, in which case it is not idle. Clear
-> > -                                * refs and recheck.
-> > -                                */
-> > -                               page_idle_clear_pte_refs(page);
-> > -                               if (page_is_idle(page))
-> > -                                       *out |= 1ULL << bit;
-> > -                       }
-> > +               page = page_idle_get_page_pfn(pfn);
-> > +               if (page && page_idle_pte_check(page)) {
-> > +                       *out |= 1ULL << bit;
-> >                         put_page(page);
-> >                 }
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> ---
+>  .../devicetree/bindings/pci/pcie-al.txt       | 45 +++++++++++++++++++
+>  MAINTAINERS                                   |  3 +-
+>  2 files changed, 47 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
 > 
-> The `page && !page_idle_pte_check(page)` case looks like it's missing
-> a put_page(); you probably intended to write something like this?
+> diff --git a/Documentation/devicetree/bindings/pci/pcie-al.txt b/Documentation/devicetree/bindings/pci/pcie-al.txt
+> new file mode 100644
+> index 000000000000..89876190eb5a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/pcie-al.txt
+> @@ -0,0 +1,45 @@
+> +* Amazon Annapurna Labs PCIe host bridge
+> +
+> +Amazon's Annapurna Labs PCIe Host Controller is based on the Synopsys DesignWare
+> +PCI core.
+> +It shares common functions with the PCIe DesignWare core driver and inherits
+
+Driver details are irrelevant to the binding.
+
+> +common properties defined in Documentation/devicetree/bindings/pci/designware-pcie.txt.
+> +Properties of the host controller node that differ from it are:
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: Value should contain
+> +			- "amazon,al-pcie"
+
+Needs to be SoC specific.
+
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: Register ranges as listed in the reg-names property
+> +
+> +- reg-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: Must include the following entries
+> +			- "config"	PCIe ECAM space
+> +			- "controller"	AL proprietary registers
+> +			- "dbi"		Designware PCIe registers
+> +
+> +Example:
+> +
+> +	pcie-external0: pcie@fb600000 {
+> +		compatible = "amazon,al-pcie";
+> +		reg = <0x0 0xfb600000 0x0 0x00100000
+> +		       0x0 0xfd800000 0x0 0x00010000
+> +		       0x0 0xfd810000 0x0 0x00001000>;
+> +		reg-names = "config", "controller", "dbi";
+> +		bus-range = <0 255>;
+> +		device_type = "pci";
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		#interrupt-cells = <1>;
+> +		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-map-mask = <0x00 0 0 7>;
+> +		interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>; /* INTa */
+> +		ranges = <0x02000000 0x0 0xc0010000 0x0 0xc0010000 0x0 0x07ff0000>;
+> +	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5a6137df3f0e..29cca14a05a6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12201,10 +12201,11 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
+>  S:	Supported
+>  F:	drivers/pci/controller/
+>  
+> -PCIE DRIVER FOR ANNAPURNA LABS
+> +PCIE DRIVER FOR AMAZON ANNAPURNA LABS
+>  M:	Jonathan Chocron <jonnyc@amazon.com>
+>  L:	linux-pci@vger.kernel.org
+>  S:	Maintained
+> +F:	Documentation/devicetree/bindings/pci/pcie-al.txt
+>  F:	drivers/pci/controller/dwc/pcie-al.c
+>  
+>  PCIE DRIVER FOR AMLOGIC MESON
+> -- 
+> 2.17.1
 > 
->     page = page_idle_get_page_pfn(pfn);
->     if (page) {
->         if (page_idle_pte_check(page))
->             *out |= 1ULL << bit;
->         put_page(page);
->     }
-
-Ah, you're right. Will fix, good eyes and thank you!
-
-> [...]
-> > +/*  page_idle tracking for /proc/<pid>/page_idle */
-> > +
-> > +struct page_node {
-> > +       struct page *page;
-> > +       unsigned long addr;
-> > +       struct list_head list;
-> > +};
-> > +
-> > +struct page_idle_proc_priv {
-> > +       unsigned long start_addr;
-> > +       char *buffer;
-> > +       int write;
-> > +
-> > +       /* Pre-allocate and provide nodes to pte_page_idle_proc_add() */
-> > +       struct page_node *page_nodes;
-> > +       int cur_page_node;
-> > +       struct list_head *idle_page_list;
-> > +};
-> 
-> A linked list is a weird data structure to use if the list elements
-> are just consecutive array elements.
-
-Not all of the pages will be considered in the later parts of the code, some
-pages are skipped.
-
-However, in v4 I added an array to allocate all the page_node structures,
-since Andrew did not want GFP_ATOMIC allocations of individual list nodes.
-
-So I think I could get rid of the linked list and leave the unused
-page_node(s) as NULL, but I don't know I have to check if that is possible. I
-could be missing a corner case, regardless I'll make a note of this and try!
-
-> > +/*
-> > + * Add page to list to be set as idle later.
-> > + */
-> > +static void pte_page_idle_proc_add(struct page *page,
-> > +                              unsigned long addr, struct mm_walk *walk)
-> > +{
-> > +       struct page *page_get = NULL;
-> > +       struct page_node *pn;
-> > +       int bit;
-> > +       unsigned long frames;
-> > +       struct page_idle_proc_priv *priv = walk->private;
-> > +       u64 *chunk = (u64 *)priv->buffer;
-> > +
-> > +       if (priv->write) {
-> > +               VM_BUG_ON(!page);
-> > +
-> > +               /* Find whether this page was asked to be marked */
-> > +               frames = (addr - priv->start_addr) >> PAGE_SHIFT;
-> > +               bit = frames % BITMAP_CHUNK_BITS;
-> > +               chunk = &chunk[frames / BITMAP_CHUNK_BITS];
-> > +               if (((*chunk >> bit) & 1) == 0)
-> > +                       return;
-> 
-> This means that BITMAP_CHUNK_SIZE is UAPI on big-endian systems,
-> right? My opinion is that it would be slightly nicer to design the
-> UAPI such that incrementing virtual addresses are mapped to
-> incrementing offsets in the buffer (iow, either use bytewise access or
-> use little-endian), but I'm not going to ask you to redesign the UAPI
-> this late.
-
-That would also be slow and consume more memory in userspace buffers.
-Currently, a 64-bit (8 byte) chunk accounts for 64 pages worth or 256KB.
-
-Also I wanted to keep the interface consistent with the global
-/sys/kernel/mm/page_idle interface.
-
-> [...]
-> > +ssize_t page_idle_proc_generic(struct file *file, char __user *ubuff,
-> > +                              size_t count, loff_t *pos, int write)
-> > +{
-> [...]
-> > +       down_read(&mm->mmap_sem);
-> [...]
-> > +
-> > +       if (!write && !walk_error)
-> > +               ret = copy_to_user(ubuff, buffer, count);
-> > +
-> > +       up_read(&mm->mmap_sem);
-> 
-> I'd move the up_read() above the copy_to_user(); copy_to_user() can
-> block, and there's no reason to hold the mmap_sem across
-> copy_to_user().
-
-Will do.
-
-> Sorry about only chiming in at v5 with all this.
-
-No problem, I'm glad you did!
-
-thanks,
-
- - Joel
-
