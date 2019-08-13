@@ -2,74 +2,111 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C0FC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC46C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8535F20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 077EA2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbfHMOXD convert rfc822-to-8bit (ORCPT
+        id S1729591AbfHMOXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 10:23:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33934 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729151AbfHMOXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 10:23:03 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1133C3064FD4;
-        Tue, 13 Aug 2019 14:23:03 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4365360852;
-        Tue, 13 Aug 2019 14:23:01 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CACT4Y+bjLBwVK_6fz2H8fXm0baAVX+vRJ4UbVWG_7yNUO-SOUg@mail.gmail.com>
-References: <CACT4Y+bjLBwVK_6fz2H8fXm0baAVX+vRJ4UbVWG_7yNUO-SOUg@mail.gmail.com> <0000000000004c2416058c594b30@google.com> <24282.1562074644@warthog.procyon.org.uk> <CACT4Y+YjdV8CqX5=PzKsHnLsJOzsydqiq3igYDm_=nSdmFo2YQ@mail.gmail.com> <20330.1564583454@warthog.procyon.org.uk> <CACT4Y+Y4cRgaRPJ_gz_53k85inDKq+X+bWmOTv1gPLo=Yod1=A@mail.gmail.com> <22318.1564586386@warthog.procyon.org.uk>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     dhowells@redhat.com,
-        syzbot <syzbot+1e0edc4b8b7494c28450@syzkaller.appspotmail.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        linux-afs@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: kernel BUG at net/rxrpc/local_object.c:LINE!
+        Tue, 13 Aug 2019 10:23:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25540 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729513AbfHMOXM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 10:23:12 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7DEJ7cq111818;
+        Tue, 13 Aug 2019 10:23:00 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ubxub09te-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Aug 2019 10:23:00 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7DEJjkL016478;
+        Tue, 13 Aug 2019 14:22:59 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma03dal.us.ibm.com with ESMTP id 2u9nj6x95n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Aug 2019 14:22:59 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7DEMwoa46530858
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Aug 2019 14:22:58 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B1968B2065;
+        Tue, 13 Aug 2019 14:22:58 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 95178B205F;
+        Tue, 13 Aug 2019 14:22:58 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 13 Aug 2019 14:22:58 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 6743E16C1293; Tue, 13 Aug 2019 07:22:59 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 07:22:59 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>, Greg KH <greg@kroah.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: Re: linux-next: manual merge of the driver-core tree with the rcu
+ tree
+Message-ID: <20190813142259.GZ28441@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190813155048.59dd9bdf@canb.auug.org.au>
+ <0d7ff624-dce3-3961-b9a6-7de8eba2bdee@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3134.1565706180.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Tue, 13 Aug 2019 15:23:00 +0100
-Message-ID: <3135.1565706180@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 13 Aug 2019 14:23:03 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0d7ff624-dce3-3961-b9a6-7de8eba2bdee@intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-13_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908130152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dmitry Vyukov <dvyukov@google.com> wrote:
-
-> > > Please send a patch for testing that enables this tracing
-> > > unconditionally. This should have the same effect. There is no way to
-> > > hook into a middle of the automated process and arbitrary tune things.
+On Tue, Aug 13, 2019 at 10:50:05AM +0200, Rafael J. Wysocki wrote:
+> On 8/13/2019 7:50 AM, Stephen Rothwell wrote:
+> >Hi all,
 > >
-> > I don't know how to do that off hand.  Do you have an example?
-> 
-> Few messages above I asked it to test:
-> https://groups.google.com/d/msg/syzkaller-bugs/gEnZkmEWf1s/r2_X_KVQAQAJ
-> 
-> Basically, git repo + branch + patch. Here are the docs:
-> https://github.com/google/syzkaller/blob/master/docs/syzbot.md#testing-patches
+> >Today's linux-next merge of the driver-core tree got a conflict in:
+> >
+> >   drivers/base/power/runtime.c
+> >
+> >between commit:
+> >
+> >   4a3a5474b4c1 ("driver/core: Convert to use built-in RCU list checking")
+> >
+> >from the rcu tree and commit:
+> >
+> >   515db266a9da ("driver core: Remove device link creation limitation")
+> >
+> >from the driver-core tree.
+> >
+> >I fixed it up (see below) and can carry the fix as necessary. This
+> >is now fixed as far as linux-next is concerned, but any non trivial
+> >conflicts should be mentioned to your upstream maintainer when your tree
+> >is submitted for merging.  You may also want to consider cooperating
+> >with the maintainer of the conflicting tree to minimise any particularly
+> >complex conflicts.
+> >
+> The fix looks good to me, thanks!
 
-I meant that I don't know how to turn a tracepoint on from inside the kernel.
+Same here, and thank you!
 
-David
+							Thanx, Paul
