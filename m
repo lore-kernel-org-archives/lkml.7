@@ -2,146 +2,101 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F05C41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5F3C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E384E20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:55:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565672118;
-	bh=sNs8Jd2xkQEsuQp9rhkHGchWAQJXpnxX1ZLCePCDf18=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=OcC5dLmhtdL4WsrGWCiecyocxucAzej15qyCjcfyD3bYQf2oONwealvgMeq3D1Tcb
-	 uq8UR4PnbWO0c4vWjLDW2DmJUwAEf1WaIqrvHze+0DRu+qbjCuwgpPrwb6rdfhghuG
-	 UzlchMme7Aw3nFRbcsUYvnwel6+snlTop3OUa77Q=
+	by mail.kernel.org (Postfix) with ESMTP id 1715A206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:55:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfHMEzN (ORCPT
+        id S1726881AbfHMEzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 00:55:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32862 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 00:55:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33202 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbfHMEzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 00:55:12 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725820AbfHMEzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 00:55:37 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1D6E206C2;
-        Tue, 13 Aug 2019 04:55:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565672110;
-        bh=sNs8Jd2xkQEsuQp9rhkHGchWAQJXpnxX1ZLCePCDf18=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=r6BR1VpnUPJtcLpxSN6MzduXH/yQRPwo8roQ2PhzFBwrjyUmuDeet29A/zAYIKzoB
-         rXSL+H7vMbDJlLtVTxK+pxHOYx2XBv7vlL5PTxOzCH7sywF+WyBUoRmzmArBuhPF9v
-         rnjMiiYeiR/EOunpx0iR0Cc/RMwL2jKukJ0nIsg4=
-Content-Type: text/plain; charset="utf-8"
+        by mx1.redhat.com (Postfix) with ESMTPS id 51ED33001A9A;
+        Tue, 13 Aug 2019 04:55:37 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 45320600C6;
+        Tue, 13 Aug 2019 04:55:37 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 2CA2D4A460;
+        Tue, 13 Aug 2019 04:55:37 +0000 (UTC)
+Date:   Tue, 13 Aug 2019 00:55:37 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     dan j williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        vishal l verma <vishal.l.verma@intel.com>,
+        dave jiang <dave.jiang@intel.com>,
+        keith busch <keith.busch@intel.com>,
+        ira weiny <ira.weiny@intel.com>
+Message-ID: <633367382.8144845.1565672137069.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190731111207.12836-1-pagupta@redhat.com>
+References: <20190731111207.12836-1-pagupta@redhat.com>
+Subject: Re: [PATCH] libnvdimm: change disk name of virtio pmem disk
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190812182421.141150-12-brendanhiggins@google.com>
-References: <20190812182421.141150-1-brendanhiggins@google.com> <20190812182421.141150-12-brendanhiggins@google.com>
-Subject: Re: [PATCH v12 11/18] kunit: test: add the concept of assertions
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
-        tytso@mit.edu, yamada.masahiro@socionext.com
-User-Agent: alot/0.8.1
-Date:   Mon, 12 Aug 2019 21:55:09 -0700
-Message-Id: <20190813045510.C1D6E206C2@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.116.143, 10.4.195.9]
+Thread-Topic: libnvdimm: change disk name of virtio pmem disk
+Thread-Index: ASQEzVN+jHT3VdoSZrcGE/HqL5+QgQ==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 13 Aug 2019 04:55:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brendan Higgins (2019-08-12 11:24:14)
-> Add support for assertions which are like expectations except the test
-> terminates if the assertion is not satisfied.
->=20
-> The idea with assertions is that you use them to state all the
-> preconditions for your test. Logically speaking, these are the premises
-> of the test case, so if a premise isn't true, there is no point in
-> continuing the test case because there are no conclusions that can be
-> drawn without the premises. Whereas, the expectation is the thing you
-> are trying to prove. It is not used universally in x-unit style test
-> frameworks, but I really like it as a convention.  You could still
-> express the idea of a premise using the above idiom, but I think
-> KUNIT_ASSERT_* states the intended idea perfectly.
->=20
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Ping.
 
-> + * Sets an expectation that the values that @left and @right evaluate to=
- are
-> + * not equal. This is semantically equivalent to
-> + * KUNIT_ASSERT_TRUE(@test, strcmp((@left), (@right))). See KUNIT_ASSERT=
-_TRUE()
-> + * for more information.
-> + */
-> +#define KUNIT_ASSERT_STRNEQ(test, left, right)                          =
-      \
-> +               KUNIT_BINARY_STR_NE_ASSERTION(test,                      =
-      \
-> +                                             KUNIT_ASSERTION,           =
-      \
-> +                                             left,                      =
-      \
-> +                                             right)
+> 
+> This patch adds prefix 'v' in disk name for virtio pmem.
+> This differentiates virtio-pmem disks from the pmem disks.
+> 
+> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> ---
+>  drivers/nvdimm/namespace_devs.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/nvdimm/namespace_devs.c
+> b/drivers/nvdimm/namespace_devs.c
+> index a16e52251a30..8e5d29266fb0 100644
+> --- a/drivers/nvdimm/namespace_devs.c
+> +++ b/drivers/nvdimm/namespace_devs.c
+> @@ -182,8 +182,12 @@ const char *nvdimm_namespace_disk_name(struct
+> nd_namespace_common *ndns,
+>  		char *name)
+>  {
+>  	struct nd_region *nd_region = to_nd_region(ndns->dev.parent);
+> +	const char *prefix = "";
+>  	const char *suffix = NULL;
+>  
+> +	if (!is_nvdimm_sync(nd_region))
+> +		prefix = "v";
 > +
-> +#define KUNIT_ASSERT_STRNEQ_MSG(test, left, right, fmt, ...)            =
-      \
-> +               KUNIT_BINARY_STR_NE_MSG_ASSERTION(test,                  =
-      \
-> +                                                 KUNIT_ASSERTION,       =
-      \
-> +                                                 left,                  =
-      \
-> +                                                 right,                 =
-      \
-> +                                                 fmt,                   =
-      \
-
-Same question about tabbing too.
-
-> diff --git a/kunit/test-test.c b/kunit/test-test.c
-> index 88f4cdf03db2a..058f3fb37458a 100644
-> --- a/kunit/test-test.c
-> +++ b/kunit/test-test.c
-> @@ -78,11 +78,13 @@ static int kunit_try_catch_test_init(struct kunit *te=
-st)
->         struct kunit_try_catch_test_context *ctx;
-> =20
->         ctx =3D kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
-> +       KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
-
-Ah ok. Question still stands if kunit_kzalloc() should just have the
-assertion on failure.
-
->         test->priv =3D ctx;
-> =20
->         ctx->try_catch =3D kunit_kmalloc(test,
->                                        sizeof(*ctx->try_catch),
->                                        GFP_KERNEL);
-> +       KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->try_catch);
-> =20
+>  	if (ndns->claim && is_nd_btt(ndns->claim))
+>  		suffix = "s";
+>  
+> @@ -201,7 +205,7 @@ const char *nvdimm_namespace_disk_name(struct
+> nd_namespace_common *ndns,
+>  			sprintf(name, "pmem%d.%d%s", nd_region->id, nsidx,
+>  					suffix ? suffix : "");
+>  		else
+> -			sprintf(name, "pmem%d%s", nd_region->id,
+> +			sprintf(name, "%spmem%d%s", prefix, nd_region->id,
+>  					suffix ? suffix : "");
+>  	} else if (is_namespace_blk(&ndns->dev)) {
+>  		struct nd_namespace_blk *nsblk;
+> --
+> 2.20.1
+> 
+> 
