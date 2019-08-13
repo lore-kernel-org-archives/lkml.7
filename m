@@ -2,91 +2,104 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6BDC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DC7C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E26320843
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:22:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565731350;
-	bh=61BEBiism8+ah6KfYnPIAoueUmImP8BoQp3cWp1WYxw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=W45z7NjcJxuyO6rrIMPvJbkonzIEju0Vr6pKrqb3LeOlgArNsVYe34rWi882AbwKY
-	 HUNQV6BUC1AwhOAvxIF4JoaOCH6a+unwgmc4YSdryWi+CDny0BtWd1UGq8uZlYdrxz
-	 YtnHE6ozc+i2BXOR1j1oLdY7zgEOYFmG4xCIK9SU=
+	by mail.kernel.org (Postfix) with ESMTP id DCB8320665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:23:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="flk5D1GQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbfHMVW3 (ORCPT
+        id S1726916AbfHMVXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:22:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbfHMVW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 17:22:29 -0400
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EA2E20844;
-        Tue, 13 Aug 2019 21:22:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565731348;
-        bh=61BEBiism8+ah6KfYnPIAoueUmImP8BoQp3cWp1WYxw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QO927A/DHs15dKgl0uKA8E/PQY35yt2Fo1OFYfRmf998P122pPT5lvN4KSBMGd4sM
-         XEaopRMIrtZESspUSyXgCBciNM/mvRbOqVtaLvj030AuZRit3cEVm7YYH6AGG3pYMK
-         Ri24fFbSGjzGbbGIUswMvcQNC80RaWVAunXzAklM=
-Received: by mail-qt1-f178.google.com with SMTP id 44so76852554qtg.11;
-        Tue, 13 Aug 2019 14:22:28 -0700 (PDT)
-X-Gm-Message-State: APjAAAXV46AhZD6lAPNH1c4lzajlB9Y7AbZAH7+MSCU1uyD8tXKGvN1V
-        c6P6A4r/BQ6uE4TtozEkgxgOY923/VrObRkJDQ==
-X-Google-Smtp-Source: APXvYqxSBfgtU0Qq0DmuHIKF4215omaq3x32du27czWIrPeuK1YLiDC7YDd/MNctQx5C2gGeVR82JMJ4pAiB4fPkMXY=
-X-Received: by 2002:ac8:7593:: with SMTP id s19mr27846131qtq.136.1565731347578;
- Tue, 13 Aug 2019 14:22:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190813125147.29605-1-dafna.hirschfeld@collabora.com> <20190813125147.29605-2-dafna.hirschfeld@collabora.com>
-In-Reply-To: <20190813125147.29605-2-dafna.hirschfeld@collabora.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 13 Aug 2019 15:22:16 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJxQu1CYG3ZTFDME13cUwWgCt7hkQg41bdJKvY27JcCZQ@mail.gmail.com>
-Message-ID: <CAL_JsqJxQu1CYG3ZTFDME13cUwWgCt7hkQg41bdJKvY27JcCZQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: arm: imx: add imx8mq nitrogen support
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>, kernel@collabora.com,
-        Gary Bisson <gary.bisson@boundarydevices.com>,
-        Troy Kisky <troy.kisky@boundarydevices.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 13 Aug 2019 17:23:50 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:32878 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbfHMVXu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 17:23:50 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n9so109217361wru.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 14:23:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=WHUBb+H0Fi59TuSnrPphyzWvLSNTI5lBd4Ed7ZWbKac=;
+        b=flk5D1GQPH6bz87YfESC50J2CIiPCWuM1ESgqDS/4CVkPN3FZ6KMdbBY7q10WQi4hf
+         DX2kCmk/72jGOrGnEFKaZwZzrcXkjqklChRHJu67ZZCMIf7atO9XzBNs3C8HJTptTkaS
+         xpdBn8bHPh15KFc4EQXh/zPuXXuzSkyB9VAzxY3f5TJdX7s9+Bdk96rl+vc6RoB+CCdY
+         G2cWaO07eTpKKNa4Od2HyP6tfiJNm/aVekGeE5gfR4Ir5J5xyqI4niDBTlKr/LhXqcWH
+         /rffdla4tc9HHN0vx4DG8TxAQqDrTk7tS+G0gjsivKZrdtV7PSOtTsBAuKM26+UIhmzC
+         Pisw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=WHUBb+H0Fi59TuSnrPphyzWvLSNTI5lBd4Ed7ZWbKac=;
+        b=d52Z09SEoic2lHeiVn6BkX6mHlH05H+Pj57/eXCB045oUivDp+1hpE0PwqTpKuZf/S
+         mEfatgK25oe14OAZPYdfRCgFuURfi6z5rjbOMd0SdY+TXUB2vhOofKiUhmx7kotWdReH
+         XV+ODyYbu6KYG8DlnNqmrFPJndCMydpj0oe+jbLeS8KreEmj9dXtIPgypP1Xjq9MTH9K
+         bDttOoWmbkdMs9SvEqRCibbzMML2Pd7hnXrtt3PngS3REBhEkokZX2gPyY+cScZTFBf4
+         F2S1SVUzBTztGNT29BxCS7CCXAMnJIcAbaxPeVnB30xoRKKXnt4NDmm6lWyiTv37Kuse
+         RKhA==
+X-Gm-Message-State: APjAAAVFp5Jpg/4lXL/tzVk0BW9b7kaDx5b5nsGZBf5qyASA6z/CUV73
+        ZkQ7jMkeaYkYqMDJYFOK6XpEf8iZ2vhfH0uk
+X-Google-Smtp-Source: APXvYqxqDe0eC1jvfVvG5Yg3H7Sma318HlwxlATwTpE2EYroxmXRO+UeMNarOHV9lOjqRVfNUal2HQ==
+X-Received: by 2002:a5d:4205:: with SMTP id n5mr48505235wrq.52.1565731428327;
+        Tue, 13 Aug 2019 14:23:48 -0700 (PDT)
+Received: from Lappy.lan (cpc96340-rdng26-2-0-cust780.15-3.cable.virginm.net. [86.14.239.13])
+        by smtp.gmail.com with ESMTPSA id o20sm273957797wrh.8.2019.08.13.14.23.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Aug 2019 14:23:47 -0700 (PDT)
+From:   Ben Whitten <ben.whitten@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     afaerber@suse.de, Ben Whitten <ben.whitten@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [PATCH] regmap: fix writes to non incrementing registers
+Date:   Tue, 13 Aug 2019 22:22:51 +0100
+Message-Id: <20190813212251.12316-1-ben.whitten@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 6:51 AM Dafna Hirschfeld
-<dafna.hirschfeld@collabora.com> wrote:
->
-> From: Gary Bisson <gary.bisson@boundarydevices.com>
->
-> The Nitrogen8M is an ARM based single board computer (SBC)
-> designed to leverage the full capabilities of NXP=E2=80=99s i.MX8M
-> Quad processor.
->
-> Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
-> Signed-off-by: Troy Kisky <troy.kisky@boundarydevices.com>
-> [Dafna: porting vendor's code to mainline]
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
->  1 file changed, 1 insertion(+)
+When checking if a register is writable we must first check if the
+register is a non incrementing writable register.
+Non incrementing register are deep and do not move to the next
+register when writing, for example a FIFO.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
+---
+ drivers/base/regmap/regmap.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index f1025452bb39..70645a28897c 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -1489,10 +1489,11 @@ static int _regmap_raw_write_impl(struct regmap *map, unsigned int reg,
+ 	WARN_ON(!map->bus);
+ 
+ 	/* Check for unwritable registers before we start */
+-	for (i = 0; i < val_len / map->format.val_bytes; i++)
+-		if (!regmap_writeable(map,
+-				     reg + regmap_get_offset(map, i)))
+-			return -EINVAL;
++	if (!regmap_writeable_noinc(map, reg))
++		for (i = 0; i < val_len / map->format.val_bytes; i++)
++			if (!regmap_writeable(map,
++					     reg + regmap_get_offset(map, i)))
++				return -EINVAL;
+ 
+ 	if (!map->cache_bypass && map->format.parse_val) {
+ 		unsigned int ival;
+-- 
+2.17.1
+
