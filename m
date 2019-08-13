@@ -2,107 +2,145 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EF9C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76052C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8696D20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B78B20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:59:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gMNzHJkj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ElNxu9XW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbfHMH7e (ORCPT
+        id S1728021AbfHMH7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 03:59:34 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42670 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727948AbfHMH7c (ORCPT
+        Tue, 13 Aug 2019 03:59:41 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40337 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727451AbfHMH7a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 03:59:32 -0400
-Received: by mail-lj1-f193.google.com with SMTP id 15so8919892ljr.9
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 00:59:31 -0700 (PDT)
+        Tue, 13 Aug 2019 03:59:30 -0400
+Received: by mail-pl1-f196.google.com with SMTP id a93so48898861pla.7
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 00:59:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ppVR4stowlIJ6/4pZZBiqz7XFOa7GBtQMtynjohKpDM=;
-        b=gMNzHJkjPlTKg8J3P1ItvpHxlkyUzWeShHE+QJSJ32VauPTGnzGKsD+QuZrHHI76pj
-         RQaLjgiFHttMYl1YL5egx0p1M2IIOgyXxDeB1ftBhbKgE91RpNxJqdP+/QCc15BfoOhL
-         Z1+PP778xl2OwXclKn24vrxEMqdB2zsz1S9Mo+1+LLBC3XvBF1qfh81VIeKQdgw15Wfs
-         3UPAiB+GQfna3uzgBhqY2DIQZ1U1Dd6wdEjtIkq7MQrftD+JJ76fJF/zUJB30qtgXZ8g
-         gkbmkqgpWNNJ+9OWrPYhYkczySrcOktUtmOi5kVY6tzWBM01UKaeDCvccNuWK35inzMd
-         u0UQ==
+        bh=5R0Mn+kXy6miNBPjF2nukdlARFsEwajrrqyvCbZs0pA=;
+        b=ElNxu9XWCw3bi/ATpZFZYjmD1lNIywxKKFS5/SHJ+NwUixjR7oQpJwrCG6C82nHfPy
+         YE8W4U4AeTrAMqQ2pXMKDLv0qv25tWwlR4csBdCEP98WPeUFvsBeDL1m4hdGu9A+ggXq
+         rIp38mmbymsY1BBKpvxm+hERpjOI6axxwbcZj1V8AikaF+Z1aQ1dWRUa9wjwGG01d9h8
+         sKGT9tDrSb5EvJwPrCnDwx2/CHTHsgoyEks8OTr6XOvgVMfyBNDjqNOfEiBRGJ6z8hZW
+         ZIB+cqqvARstSDttQQKSBm5mxEfD8wl+hAodt9NBsSLUg9+gEPC8zU5ZICyW930HwyEc
+         VCXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ppVR4stowlIJ6/4pZZBiqz7XFOa7GBtQMtynjohKpDM=;
-        b=nAZIlAx64zFvDwscgwSZdBRP7LIBA8NjXA2t/yRcFag3lE+AQeSdHsNY8b551lp7F+
-         0PT4EjFmmjTqhhG7wz7XG81gxihGLmonoexQhpz7AV74lSdQO+OdvlAPnajhpwuWAkTd
-         BcAsA7sWGG2cc1+2HFpB9PP1zq/DrBG40wggmXEpa3TJEnJG7CqIpWDHYpJhV4KUX4C0
-         MwG00Krp9QqeIh7Ub//13Jwlv9F7ccwTV3KSSQo8kBGUvp/NnmTDlQJY0jhUJbZns201
-         HVB+j3tt8bCV0TDsrw14QbsRqYz1/BFjmb7xJjJQbOBa4FDHxHPRx1v2O93PYBGZnq8k
-         bG2Q==
-X-Gm-Message-State: APjAAAVya/SgdTXIwtfAAvhx9wbBj2F/Fk6qg9Z2ckctj14UAWsbXAap
-        t12vHecHrse9qyTACQHHVJPlRP+6TbTTInD80PeAnA==
-X-Google-Smtp-Source: APXvYqy9Xa1Q8vdR2OCkDVG7ShxG5L9IQXmi6qKK2LlN8HtiapeB1JlrnTXdtXIphrZmMJ+SZciCiafKR0IU/QMDd44=
-X-Received: by 2002:a2e:970a:: with SMTP id r10mr19876829lji.115.1565683170315;
- Tue, 13 Aug 2019 00:59:30 -0700 (PDT)
+        bh=5R0Mn+kXy6miNBPjF2nukdlARFsEwajrrqyvCbZs0pA=;
+        b=MK/86mPrRbklWbKEnUD00u2zBJsr8nOaDf+os2vQvYT5LR40baPmiCGeZBLLxoGuis
+         qqtGTvCAntfmmaPGJiWlUIeKvaqh3jUK0w9wKbOh92El6inifkiEoUglzuKw7UUAS+JT
+         76QSL85dk8RUUvJdwkhtFRcPDqQECStTedIGX/G3Wektj2iV2DPFZNK+wb/zI2FZ8pfb
+         pMPnioNb+dFucGxIFunR+W6yJDafSh4luHLiPIRWVrTr12XYZTe8/kLsNKaUu5qvOZ26
+         Le8I+yQHN0xCjZ+D9A2WjHMsySWx/UbwtsKNK+3yYQyvK0qdEQUMTtcdtygv7ae7ClmP
+         ke+Q==
+X-Gm-Message-State: APjAAAV5dCIuceJeA05S/t2XRQ0jAiXEIg+LgygrP99Ycbko1ckbdLd6
+        G+HS/5NU+VmM58Vlf8R7c7mBwzl45O0v6c0dnwYf4A==
+X-Google-Smtp-Source: APXvYqyvbUK5kDHossVyHcMfS13gJpm82JS1lGa4QkU7lNSWK1exa+MkZF0H451Y+v9ozGPzr6jJly+0fJd6rna7v9Y=
+X-Received: by 2002:a17:902:169:: with SMTP id 96mr23827974plb.297.1565683169131;
+ Tue, 13 Aug 2019 00:59:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <1565098640-12536-1-git-send-email-sumit.garg@linaro.org>
- <1565098640-12536-3-git-send-email-sumit.garg@linaro.org> <20190807190320.th4sbnsnmwb7myzx@linux.intel.com>
- <CAFA6WYN-6MpP2TZQEz49BmjSQiMSqghVFWRZCCY0o1UVad1AFw@mail.gmail.com> <20190808151500.ypfcqowklalu76uq@linux.intel.com>
-In-Reply-To: <20190808151500.ypfcqowklalu76uq@linux.intel.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Tue, 13 Aug 2019 13:29:19 +0530
-Message-ID: <CAFA6WYNqBH9aAM-uke6jFTCeLB2GG7UYyrYEPHgyVy8p_q+Pww@mail.gmail.com>
-Subject: Re: [RFC/RFT v3 2/3] KEYS: trusted: move tpm2 trusted keys code
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        linux-security-module@vger.kernel.org, dhowells@redhat.com,
-        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
-        peterhuewe@gmx.de, jgg@ziepe.ca, jejb@linux.ibm.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
+References: <20190812182421.141150-1-brendanhiggins@google.com>
+ <20190812182421.141150-15-brendanhiggins@google.com> <20190813043859.661F82054F@mail.kernel.org>
+In-Reply-To: <20190813043859.661F82054F@mail.kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 13 Aug 2019 00:59:18 -0700
+Message-ID: <CAFd5g44wUOhmxr3r+-LR_igePMjtaRrtT5jGdqPJgb0xPdf+Ag@mail.gmail.com>
+Subject: Re: [PATCH v12 14/18] kunit: defconfig: add defconfigs for building
+ KUnit tests
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 8 Aug 2019 at 20:46, Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
+On Mon, Aug 12, 2019 at 9:39 PM Stephen Boyd <sboyd@kernel.org> wrote:
 >
-> On Thu, Aug 08, 2019 at 06:51:38PM +0530, Sumit Garg wrote:
-> > It seems to be a functional change which I think requires proper unit
-> > testing. I am afraid that I don't posses a TPM device to test this and
-> > also very less conversant with tpm_buf code.
-> >
-> > So what I have done here is to rename existing TPM 1.x trusted keys
-> > code to use tpm1_buf.
-> >
-> > And I would be happy to integrate a tested patch if anyone familiar
-> > could work on this.
+> Quoting Brendan Higgins (2019-08-12 11:24:17)
+> > diff --git a/arch/um/configs/kunit_defconfig b/arch/um/configs/kunit_defconfig
+> > new file mode 100644
+> > index 0000000000000..bfe49689038f1
+> > --- /dev/null
+> > +++ b/arch/um/configs/kunit_defconfig
+> > @@ -0,0 +1,8 @@
+> > +CONFIG_OF=y
+> > +CONFIG_OF_UNITTEST=y
+> > +CONFIG_OF_OVERLAY=y
+> > +CONFIG_I2C=y
+> > +CONFIG_I2C_MUX=y
+> > +CONFIG_KUNIT=y
+> > +CONFIG_KUNIT_TEST=y
+> > +CONFIG_KUNIT_EXAMPLE_TEST=y
+> > diff --git a/tools/testing/kunit/configs/all_tests.config b/tools/testing/kunit/configs/all_tests.config
+> > new file mode 100644
+> > index 0000000000000..bfe49689038f1
+> > --- /dev/null
+> > +++ b/tools/testing/kunit/configs/all_tests.config
+> > @@ -0,0 +1,8 @@
+> > +CONFIG_OF=y
+> > +CONFIG_OF_UNITTEST=y
+> > +CONFIG_OF_OVERLAY=y
+> > +CONFIG_I2C=y
+> > +CONFIG_I2C_MUX=y
 >
-> I can test it on TPM 1.2.
->
+> Are these above config options necessary? I don't think they're part of
+> the patch series anymore so it looks odd to enable the OF unittests and
+> i2c configs.
 
-I have posted v4 with changes as you requested. I hope they work well
-with a real TPM 1.x or TPM 2.0 device.
+Oh whoops, I forgot that we dropped the OF_UNITTEST from this
+patchset. Will fix.
 
--Sumit
-
-> /Jarkko
+> > +CONFIG_KUNIT=y
+> > +CONFIG_KUNIT_TEST=y
+> > +CONFIG_KUNIT_EXAMPLE_TEST=y
