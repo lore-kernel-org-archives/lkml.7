@@ -2,170 +2,116 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44903C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D6FC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A0CB206C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9333206C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbfHMKKh (ORCPT
+        id S1728864AbfHMKLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 06:10:37 -0400
-Received: from enpas.org ([46.38.239.100]:56410 "EHLO mail.enpas.org"
+        Tue, 13 Aug 2019 06:11:01 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:52062 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728736AbfHMKKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 06:10:35 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        by mail.enpas.org (Postfix) with ESMTPSA id 13A3510016D;
-        Tue, 13 Aug 2019 10:10:31 +0000 (UTC)
-Subject: Re: [PATCH v2 3/4] hwmon/ltc2990: Add platform_data support
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>, linux-m68k@vger.kernel.org,
-        linux-kernel@vger.kernel.org, glaubitz@physik.fu-berlin.de
-References: <20190812235237.21797-1-max@enpas.org>
- <20190812235237.21797-3-max@enpas.org> <20190813080237.GA29986@roeck-us.net>
-From:   Max Staudt <max@enpas.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=max@enpas.org; prefer-encrypt=mutual; keydata=
- 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
- urZIw0nz8zec+73Bv/qF4GHHftLYfA==
-Message-ID: <6912362a-1f58-a9d6-f86b-d16930aa359c@enpas.org>
-Date:   Tue, 13 Aug 2019 12:10:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1727466AbfHMKLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 06:11:00 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 030BEFB03;
+        Tue, 13 Aug 2019 12:10:59 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id j52cSuWGG3AI; Tue, 13 Aug 2019 12:10:57 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id B21FD416CC; Tue, 13 Aug 2019 12:10:57 +0200 (CEST)
+Date:   Tue, 13 Aug 2019 12:10:57 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v2 1/3] arm64: imx8mq: add imx8mq iomux-gpr field defines
+Message-ID: <20190813101057.GB10751@bogon.m.sigxcpu.org>
+References: <cover.1565367567.git.agx@sigxcpu.org>
+ <e0562d8bb4098dc4cdb4023b41fb75b312be22a5.1565367567.git.agx@sigxcpu.org>
+ <CAK8P3a3Vrd+sttJrQwD-jA9p_egG4x-hc41eGK8H-_aVm-uoYw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190813080237.GA29986@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK8P3a3Vrd+sttJrQwD-jA9p_egG4x-hc41eGK8H-_aVm-uoYw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/13/2019 10:02 AM, Guenter Roeck wrote:
-> On Tue, Aug 13, 2019 at 01:52:36AM +0200, Max Staudt wrote:
->> This allows code using i2c_new_device() to specify a measurement mode.
->>
->> Signed-off-by: Max Staudt <max@enpas.org>
->> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
->> ---
->>  drivers/hwmon/ltc2990.c               |  9 +++++++++
->>  include/linux/platform_data/ltc2990.h | 11 +++++++++++
->>  2 files changed, 20 insertions(+)
->>  create mode 100644 include/linux/platform_data/ltc2990.h
->>
->> diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
->> index f9431ad43..f19b9c50c 100644
->> --- a/drivers/hwmon/ltc2990.c
->> +++ b/drivers/hwmon/ltc2990.c
->> @@ -14,6 +14,7 @@
->>  #include <linux/kernel.h>
->>  #include <linux/module.h>
->>  #include <linux/of.h>
->> +#include <linux/platform_data/ltc2990.h>
->>  
->>  #define LTC2990_STATUS	0x00
->>  #define LTC2990_CONTROL	0x01
->> @@ -206,6 +207,7 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
->>  	int ret;
->>  	struct device *hwmon_dev;
->>  	struct ltc2990_data *data;
->> +	struct ltc2990_platform_data *pdata = dev_get_platdata(&i2c->dev);
->>  	struct device_node *of_node = i2c->dev.of_node;
->>  
->>  	if (!i2c_check_functionality(i2c->adapter, I2C_FUNC_SMBUS_BYTE_DATA |
->> @@ -227,6 +229,13 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
->>  		if (data->mode[0] & ~LTC2990_MODE0_MASK ||
->>  		    data->mode[1] & ~LTC2990_MODE1_MASK)
->>  			return -EINVAL;
->> +	} else if (pdata) {
->> +		data->mode[0] = pdata->meas_mode[0];
->> +		data->mode[1] = pdata->meas_mode[1];
->> +
->> +		if (data->mode[0] & ~LTC2990_MODE0_MASK ||
->> +		    data->mode[1] & ~LTC2990_MODE1_MASK)
->> +			return -EINVAL;
+Hi Arnd,
+On Tue, Aug 13, 2019 at 10:08:44AM +0200, Arnd Bergmann wrote:
+> On Fri, Aug 9, 2019 at 6:24 PM Guido Günther <agx@sigxcpu.org> wrote:
+> >
+> > This adds all the gpr registers and the define needed for selecting
+> > the input source in the imx-nwl drm bridge.
+> >
+> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> > +
+> > +#define IOMUXC_GPR0    0x00
+> > +#define IOMUXC_GPR1    0x04
+> > +#define IOMUXC_GPR2    0x08
+> > +#define IOMUXC_GPR3    0x0c
+> > +#define IOMUXC_GPR4    0x10
+> > +#define IOMUXC_GPR5    0x14
+> > +#define IOMUXC_GPR6    0x18
+> > +#define IOMUXC_GPR7    0x1c
+> (more of the same)
 > 
-> I would prefer if the driver was modified to accept device
-> properties, and if those were set using the appropriate
-> fwnode function. Any reason for not doing that ?
+> huh?
 
-The driver does have DT support implemented right above my new platform_data code, and DT takes precedence. However, I can't set DT data programatically when instantiating the client using i2c_new_device() - hence the platform_data support.
+These are the names from the imx8MQ reference manual (general purpose
+registers, they lump together all sorts of things), it's the same on
+imx6/imx7):
 
-Max
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/mfd/syscon/imx7-iomuxc-gpr.h     
+
+> > +/* i.MX8Mq iomux gpr register field defines */
+> > +#define IMX8MQ_GPR13_MIPI_MUX_SEL              BIT(2)
+> 
+> I think this define should probably be local to the pinctrl driver, to
+> ensure that no other drivers fiddle with the registers manually.
+
+The purpose of these bits is for a driver to fiddle with them to select
+the input source. Similar on imx7 it's already used for e.g. the phy
+refclk in the pci controller:
+
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pci-imx6.c#n638
+
+The GPRs are not about pad configuration but gather all sorts of things
+(section 8.2.4 of the imx8mq reference manual): pcie setup, dsi related
+bits so I don't think this should be done via a pinctrl
+driver. Should we handle that differently than on imx6/7?
+
+Cheers,
+ -- Guido
