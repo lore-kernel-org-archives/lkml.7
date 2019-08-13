@@ -2,127 +2,120 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D336BC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4DEC41517
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CC1420665
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E7E420842
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:03:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tj4sQol1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AYFA0Q48"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727625AbfHMICl (ORCPT
+        id S1727816AbfHMIDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 04:02:41 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44239 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbfHMICk (ORCPT
+        Tue, 13 Aug 2019 04:03:07 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39067 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfHMIDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 04:02:40 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c81so2131552pfc.11;
-        Tue, 13 Aug 2019 01:02:40 -0700 (PDT)
+        Tue, 13 Aug 2019 04:03:06 -0400
+Received: by mail-ot1-f65.google.com with SMTP id b1so1071664otp.6;
+        Tue, 13 Aug 2019 01:03:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=k/6wKTc53OC0UoKco+IHEoMX3rwe81VTNIAepCWXh/w=;
-        b=tj4sQol176Upm6T0xavK0OYlwKCkQiO0Eylg00C+Q2aEkT3zNyzepErrKnXAhBNOA9
-         XTbASJ6cNDSu/hJ0jSzAUKlHkxt7MOcylyDIYU33ZiS6PBYdsFvHmbGR31IvpyqPRNEu
-         ZanywJH3P+DPqb51mWZVLvTP4A+WzXCpJakQaN6s1CQ7Tz4g+I6QnvBxZqLCrl3Wpy+b
-         RE08m+1+h4nZon8iRKlqeDdmwePZHsbDnHe5GBe5N21roExt5GjBO/odnO+ErpFq9MJx
-         zbKlxKTizUwtMIDVD6bUqPReIR5GyMFPXBGa7mkk9p6nflVcIUSzl3deZQ1kJASAzUjc
-         Z3nA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xpTjmXViSqIki2Cb2qHpkfQ62APVJj7AGYZMRIsoCJ8=;
+        b=AYFA0Q48dX8onM7zG1H8BuQOm2zh/w79ApEK6ezu93//mTeriuACrbmOrAUH4FTlRE
+         grdX+HbfBfjYQM3DPrOGRw5HZpIEFcrBB4mLP0Jn2ue/W+RdzBXlYtDl8eajDOiUjZzl
+         S2BStp2whwPW/DdQ4FqQUVOn+d5agQUeEAKJdzy9A53jzAmj72y2/7DlBvubA+K6cLUV
+         W30iWaGSFvtDIrjrU7ZmVTy19Evq518Xe1klm+es+rjpGJYW2VXkgFkqPCQOBJFJlWAY
+         +IgfLW8ged01WvOmEibmynVe5lN8t6yD1am79qSRamNXI0x6/2qQBD0WzzuN/iPgWlhf
+         QPSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k/6wKTc53OC0UoKco+IHEoMX3rwe81VTNIAepCWXh/w=;
-        b=JC2Z0AtVX/p3m3jCFrtmYQRpsF9XlmVSD7WBdDz+qxE+3D1Q+bZxgrukjFtyWAaWAU
-         Tj+Bl/S5lDjqFUnz21chiI7ofj5pWyiIQi9mFfGj/nouXcrzVOAi2GJT4PRWL/YhciDa
-         wCNsRsFb/qoE2vykzuMtdfl8/aAIHvTDhS7Z1D/kMc5YWGDuPvLpcV5CPmay819C4wNJ
-         R/cwafxQscuScdyW08K+CKorc9mv2QKAtPc/jkUPWcUMA+xJeI5Aj7S7/B/eRg1O5Fdi
-         KowEIVf10rDDLXBf6ziX7B5Z/+bi5vXk+H9m5HpNKLbIz82YRIx/0wqNCDpmuGzjdv0J
-         ne9w==
-X-Gm-Message-State: APjAAAW7iMrsY20QAogjMtQBNBngUo4wRzxYJVitUD8+/1mpvIBJHdbm
-        EAAnPmd/bZXy47xXLxutMOKyrKum
-X-Google-Smtp-Source: APXvYqzg+LpLRDxEnrzIayn33qIS4rLLIS+1xej7SVfd8zkZpsH/hvU8xhpaYTXutpa7glcZBqPZdw==
-X-Received: by 2002:a65:690f:: with SMTP id s15mr32542467pgq.432.1565683359926;
-        Tue, 13 Aug 2019 01:02:39 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f14sm35410531pgu.8.2019.08.13.01.02.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 13 Aug 2019 01:02:38 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 01:02:37 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Max Staudt <max@enpas.org>
-Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>, linux-m68k@vger.kernel.org,
-        linux-kernel@vger.kernel.org, glaubitz@physik.fu-berlin.de
-Subject: Re: [PATCH v2 3/4] hwmon/ltc2990: Add platform_data support
-Message-ID: <20190813080237.GA29986@roeck-us.net>
-References: <20190812235237.21797-1-max@enpas.org>
- <20190812235237.21797-3-max@enpas.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xpTjmXViSqIki2Cb2qHpkfQ62APVJj7AGYZMRIsoCJ8=;
+        b=KjApIHuXb/AyCeiXN7/OxPhmZPuJfOXgl/QQS3ci5G9FkSsfCGaFH/N1KkzCr2suv8
+         1G7/jRWHeJ/zsKMizL57W22co+gXyZqcPWVz1ytk3uox1pr6amNUpK9VDmPjVafKYpFY
+         1/gWyBnRrpm6ctMLcPa0GJ/yOBfLptue0KJM6vVedtHoV38gIi/EIQjLtYAytEb+bRQd
+         ZjHS51IV0/u/t9zfBjff5ERM1fG5A9EZyWdHkio8FFWi1edfh6xrKs64c0x61dh2jBKz
+         I1aBPE33YzaqrBZjrExts6GBU3JU2N5ftqGGgWdhFaCMK3S3aU4UnNsUwcu6wmFFG7Zl
+         R+tA==
+X-Gm-Message-State: APjAAAXEPlNfB2L3JnG1z3l6QuxwWzdw+ft9/lCYbPufyPLlw+POepSz
+        44INt5VNEkhm9xTSQpl9Z+Pb/HDaM7jCS4q/wxc=
+X-Google-Smtp-Source: APXvYqzzSJbUR/V1lvk2p/n+pBFYlV3r4RaXqZ8riQxviItgG2T6vtN6lVbqJgCVjr/mfYonAVDHl6acFGgXOfajAzU=
+X-Received: by 2002:aca:fcc4:: with SMTP id a187mr619358oii.126.1565683385526;
+ Tue, 13 Aug 2019 01:03:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812235237.21797-3-max@enpas.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190812113429.2488-1-ivan.khoronzhuk@linaro.org> <20190812124326.32146-1-ivan.khoronzhuk@linaro.org>
+In-Reply-To: <20190812124326.32146-1-ivan.khoronzhuk@linaro.org>
+From:   Magnus Karlsson <magnus.karlsson@gmail.com>
+Date:   Tue, 13 Aug 2019 10:02:54 +0200
+Message-ID: <CAJ8uoz0bBhdQSocQz8Y9tvrGCsCE9TDf3m1u6=sL4Eo5tZ17YQ@mail.gmail.com>
+Subject: Re: [PATCH v2 bpf-next] mm: mmap: increase sockets maximum memory
+ size pgoff for 32bits
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        linux-mm@kvack.org, Xdp <xdp-newbies@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        akpm@linux-foundation.org, Alexei Starovoitov <ast@kernel.org>,
+        "Karlsson, Magnus" <magnus.karlsson@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 01:52:36AM +0200, Max Staudt wrote:
-> This allows code using i2c_new_device() to specify a measurement mode.
-> 
-> Signed-off-by: Max Staudt <max@enpas.org>
-> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+On Mon, Aug 12, 2019 at 2:45 PM Ivan Khoronzhuk
+<ivan.khoronzhuk@linaro.org> wrote:
+>
+> The AF_XDP sockets umem mapping interface uses XDP_UMEM_PGOFF_FILL_RING
+> and XDP_UMEM_PGOFF_COMPLETION_RING offsets. The offsets seems like are
+> established already and are part of configuration interface.
+>
+> But for 32-bit systems, while AF_XDP socket configuration, the values
+> are to large to pass maximum allowed file size verification.
+> The offsets can be tuned ofc, but instead of changing existent
+> interface - extend max allowed file size for sockets.
+
+Can you use mmap2() instead that takes a larger offset (2^44) even on
+32-bit systems?
+
+/Magnus
+
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 > ---
->  drivers/hwmon/ltc2990.c               |  9 +++++++++
->  include/linux/platform_data/ltc2990.h | 11 +++++++++++
->  2 files changed, 20 insertions(+)
->  create mode 100644 include/linux/platform_data/ltc2990.h
-> 
-> diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
-> index f9431ad43..f19b9c50c 100644
-> --- a/drivers/hwmon/ltc2990.c
-> +++ b/drivers/hwmon/ltc2990.c
-> @@ -14,6 +14,7 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> +#include <linux/platform_data/ltc2990.h>
->  
->  #define LTC2990_STATUS	0x00
->  #define LTC2990_CONTROL	0x01
-> @@ -206,6 +207,7 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
->  	int ret;
->  	struct device *hwmon_dev;
->  	struct ltc2990_data *data;
-> +	struct ltc2990_platform_data *pdata = dev_get_platdata(&i2c->dev);
->  	struct device_node *of_node = i2c->dev.of_node;
->  
->  	if (!i2c_check_functionality(i2c->adapter, I2C_FUNC_SMBUS_BYTE_DATA |
-> @@ -227,6 +229,13 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
->  		if (data->mode[0] & ~LTC2990_MODE0_MASK ||
->  		    data->mode[1] & ~LTC2990_MODE1_MASK)
->  			return -EINVAL;
-> +	} else if (pdata) {
-> +		data->mode[0] = pdata->meas_mode[0];
-> +		data->mode[1] = pdata->meas_mode[1];
+>
+> Based on bpf-next/master
+>
+> v2..v1:
+>         removed not necessarily #ifdev as ULL and UL for 64 has same size
+>
+>  mm/mmap.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index 7e8c3e8ae75f..578f52812361 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -1358,6 +1358,9 @@ static inline u64 file_mmap_size_max(struct file *file, struct inode *inode)
+>         if (S_ISBLK(inode->i_mode))
+>                 return MAX_LFS_FILESIZE;
+>
+> +       if (S_ISSOCK(inode->i_mode))
+> +               return MAX_LFS_FILESIZE;
 > +
-> +		if (data->mode[0] & ~LTC2990_MODE0_MASK ||
-> +		    data->mode[1] & ~LTC2990_MODE1_MASK)
-> +			return -EINVAL;
-
-I would prefer if the driver was modified to accept device
-properties, and if those were set using the appropriate
-fwnode function. Any reason for not doing that ?
-
-Thanks,
-Guenter
+>         /* Special "we do even unsigned file positions" case */
+>         if (file->f_mode & FMODE_UNSIGNED_OFFSET)
+>                 return 0;
+> --
+> 2.17.1
+>
