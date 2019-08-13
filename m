@@ -2,276 +2,884 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDDDC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04628C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08C90206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA37420844
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:08:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbfHMVHx (ORCPT
+        id S1727129AbfHMVIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:07:53 -0400
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:58372 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726066AbfHMVHw (ORCPT
+        Tue, 13 Aug 2019 17:08:09 -0400
+Received: from mail-oi1-f199.google.com ([209.85.167.199]:47607 "EHLO
+        mail-oi1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbfHMVII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 17:07:52 -0400
-Received: from pps.filterd (m0134423.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7DL13Zp010952;
-        Tue, 13 Aug 2019 21:07:46 GMT
-Received: from g4t3427.houston.hpe.com (g4t3427.houston.hpe.com [15.241.140.73])
-        by mx0b-002e3701.pphosted.com with ESMTP id 2uc287s1y3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Aug 2019 21:07:46 +0000
-Received: from G2W6311.americas.hpqcorp.net (g2w6311.austin.hp.com [16.197.64.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by g4t3427.houston.hpe.com (Postfix) with ESMTPS id 992D97A;
-        Tue, 13 Aug 2019 21:07:44 +0000 (UTC)
-Received: from G4W9333.americas.hpqcorp.net (16.208.32.119) by
- G2W6311.americas.hpqcorp.net (16.197.64.53) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 13 Aug 2019 21:07:34 +0000
-Received: from G9W9209.americas.hpqcorp.net (2002:10dc:429c::10dc:429c) by
- G4W9333.americas.hpqcorp.net (2002:10d0:2077::10d0:2077) with Microsoft SMTP
- Server (TLS) id 15.0.1367.3; Tue, 13 Aug 2019 21:07:33 +0000
-Received: from NAM01-BY2-obe.outbound.protection.outlook.com (15.241.52.13) by
- G9W9209.americas.hpqcorp.net (16.220.66.156) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3 via Frontend Transport; Tue, 13 Aug 2019 21:07:33 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EWQ9WpBWGoCMnWSdLR9LylzW7OkJ0q/dwn22rK393cs/aWTs2ncwv+lBjm5WtBUmrYE+H4zqHRAAbky2o7QVCEVK099PCuFidNhVJF400lowWKz4RyKK5Dp0HTu5d5qDIdYLfJLay1ZpX2tPSo0mMoft0IKpdJR1DobPhKHrYZjBW8oD/caAn5WuO6mWYtGTcDz42Y2rTHkQwFJbT+uE7c0MWqCdHTZI6Xm/NwKsXuJeN/HhOOAF/khyZNigRERKvnJUaaa4bhO/hRUwoCqeO/G078Liw2aoKhbbg4bN3bn11x1a5Pdh5NUWBrnn+3ze3VX4MvgHewxIBWinql7vUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FyqN2tMMN8wzdxK8FY20pw3PmU9jUz5iRrY0mhzC22k=;
- b=oHO/uUDuN+lIyr3Ojmo4cFTXj3smpSuHsyX5CgQrwhWrlg7OSfyZLiytz7jRhzH+8Kog3Qdot1sWE2eGzEzUoIyd1IpVsn7oNPVhJpjcKS1WPI4Qt8W++JXSQtmH0q6qLS005FdyDqFtr0fi/qJFEQx9gv0VMloGlrU2eI2zf4tpCr/TrU3KIx7Q9WVykx57XJnKKT/hzh9QReBWLHn28C19xVC0Lrby6X9inFbjhkleTghj3Gq96me8fWRH8dD9OR1AuNLjbSVuPwT69O3n8sP+RIewE9d88rmKSGoKmEWThSpAwp9F/NFa82MHprR2e8+UuXpsSRvsmcj/48rEbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hpe.com; dmarc=pass action=none header.from=hpe.com; dkim=pass
- header.d=hpe.com; arc=none
-Received: from CS1PR8401MB0727.NAMPRD84.PROD.OUTLOOK.COM (10.169.15.135) by
- CS1PR8401MB1141.NAMPRD84.PROD.OUTLOOK.COM (10.169.14.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.18; Tue, 13 Aug 2019 21:07:31 +0000
-Received: from CS1PR8401MB0727.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::9dd6:863e:f72c:e742]) by CS1PR8401MB0727.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::9dd6:863e:f72c:e742%10]) with mapi id 15.20.2157.022; Tue, 13 Aug
- 2019 21:07:31 +0000
-From:   "Vaden, Tom (HPE Server OS Architecture)" <tom.vaden@hpe.com>
-To:     Christoph Hellwig <hch@lst.de>, Tony Luck <tony.luck@intel.com>,
-        "Fenghua Yu" <fenghua.yu@intel.com>,
-        "Travis, Mike" <mike.travis@hpe.com>,
-        "Sivanich, Dimitri" <dimitri.sivanich@hpe.com>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 19/28] ia64: remove CONFIG_ACPI ifdefs
-Thread-Topic: [PATCH 19/28] ia64: remove CONFIG_ACPI ifdefs
-Thread-Index: AQHVUahyfRnAjRhSaku7FBPhlNlbDab5kugA
-Date:   Tue, 13 Aug 2019 21:07:31 +0000
-Message-ID: <562c8803-1ba1-fbfd-99ef-3976e28f7e98@hpe.com>
-References: <20190813072514.23299-1-hch@lst.de>
- <20190813072514.23299-20-hch@lst.de>
-In-Reply-To: <20190813072514.23299-20-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR13CA0021.namprd13.prod.outlook.com
- (2603:10b6:208:160::34) To CS1PR8401MB0727.NAMPRD84.PROD.OUTLOOK.COM
- (2a01:111:e400:750d::7)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2601:85:c100:2d8d:dbb0:2ed9:59d1:461]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 365b8aa2-32d4-4222-f581-08d720324129
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CS1PR8401MB1141;
-x-ms-traffictypediagnostic: CS1PR8401MB1141:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CS1PR8401MB11419A22885D30B9C4857542E8D20@CS1PR8401MB1141.NAMPRD84.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:462;
-x-forefront-prvs: 01283822F8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(376002)(346002)(366004)(396003)(136003)(39860400002)(199004)(189003)(6506007)(66476007)(64756008)(66946007)(6436002)(6636002)(81166006)(386003)(99286004)(71190400001)(102836004)(81156014)(478600001)(31686004)(186003)(71200400001)(53546011)(8676002)(66446008)(66556008)(486006)(305945005)(6486002)(4326008)(46003)(52116002)(76176011)(6116002)(316002)(14444005)(110136005)(86362001)(476003)(6512007)(446003)(5660300002)(2616005)(11346002)(36756003)(8936002)(229853002)(25786009)(7736002)(14454004)(6246003)(2906002)(256004)(54906003)(31696002)(53936002)(309714004)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:CS1PR8401MB1141;H:CS1PR8401MB0727.NAMPRD84.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hpe.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: jTS7uUqXTuocpQFlbUoZ8JqWkh8Mc5GuxDNdG9xoem2ZBPpAwS2Ybgl+82w53WJftFxtLTMiyGADFVAkEXxx7yYgGpSk25B5oUGoo3+nmw0kEURA0Qcnh1U8AtQPI1afaG5KsZlgcz+F/ochiKjYae+BwtSwB8bOPPocHql1bg+b1/9fiWiAwoXDBuMQrqfcMSDNpn93iPF3ZlbIngcfKncc5ZwUy26IYGvPK81pfh/pBKWJ4cpx20flCPRXQu0jYGe6YHmdgVgl8gy40EC9+u8Wz1bwLoe64bMi8+AJTzc0dxBcsbrE1GbsJ2UTPxxi+M9cp7+XBUqn+VO+AzovHTnwSO2WRzzBw9rmCH7Oe4a/OwksSV2QHzx8F3JiyzJrYmftIHklPAnQOyDduiD4lCupy7Kx5CYhSj6bI8oIpq0=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <600990D24EE3134B964F1EC6ED458ACA@NAMPRD84.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+        Tue, 13 Aug 2019 17:08:08 -0400
+Received: by mail-oi1-f199.google.com with SMTP id g204so400026oif.14
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 14:08:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=mCvcXc2rClVVP29gxTet4gxy92I90eC1AEZNFxdO40I=;
+        b=ne5LHuXqJbh8tKpFIouoxVUiiJH8RNaC9+2PDJ4wWGbhUOB6wgB4qJVozL+yS5LcRe
+         LmkLoR1UvikcFidkvnWsdjnpS0s9QJ+VCIko0B8t7t6bAmMtQ44kNyOC46ujFLlmPvdI
+         dGGlgLoFEb2tS0u0TBWhcyR7wRPFATjDtX804PvtyxL3JAktd2wBMev4+J86ujDrWhpB
+         wossyyWBR2P5TTnk0GQfX7RtXNOkDFVl1bVQCKsmHeS94ZHOSjEv43lbxrtwD0jqtPmn
+         WR/gR9Kr0/ngX1+MvKocW0E19amhseZt4auJTxfGIhqbHBRr4ty2bQG8/LF5vjV0E2PC
+         gXBA==
+X-Gm-Message-State: APjAAAUuPVP3R+cFduw1CXoPgis+QsnODD2y6kF/XNTzRTBzoGUoiDTb
+        fXf/WNIH1ZWZ9lLzSlUimutTOjon/My+OkkK+ZHBK274Cz/F
+X-Google-Smtp-Source: APXvYqz0S9DUOiX+LxngFnA8kSoOw62sD4BX3kqFTwNERIr0M7U4Yn05DRwqD7VJPVXLKUMC221+YhKN9BQwrZ1bQPex4fspFiJP
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 365b8aa2-32d4-4222-f581-08d720324129
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2019 21:07:31.1736
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 105b2061-b669-4b31-92ac-24d304d195dc
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: r01AgeZQC5MlQywf5CrBX1M2jDgP+LBRuLXNXh9qBJALfnkKOCrvCUdns+xYjxQUaBDKg3bJ03msOijX/o5taQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CS1PR8401MB1141
-X-OriginatorOrg: hpe.com
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-13_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908130201
+X-Received: by 2002:a5d:888d:: with SMTP id d13mr2909822ioo.135.1565730486477;
+ Tue, 13 Aug 2019 14:08:06 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 14:08:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000075fa50059006098c@google.com>
+Subject: memory leak in bio_clone_fast
+From:   syzbot <syzbot+0265846a0cb9a0547905@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, baijiaju1990@gmail.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com,
+        rppt@linux.ibm.com, syzkaller-bugs@googlegroups.com,
+        willy@infradead.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDgvMTMvMTkgMzoyNSBBTSwgQ2hyaXN0b3BoIEhlbGx3aWcgd3JvdGU6DQo+IE5vdyB0
-aGF0IGhwc2ltIHN1cHBvcnQgaXMgZ29uZSwgQ09ORklHX0FDUEkgaXMgZm9yY2VkIG9uIGZvciBp
-YTY0LCBhbmQNCj4gd2UgY2FuIHJlbW92ZSBhIGZldyBpZmRlZnMgZm9yIGl0Lg0KPiANCj4gU2ln
-bmVkLW9mZi1ieTogQ2hyaXN0b3BoIEhlbGx3aWcgPGhjaEBsc3QuZGU+DQoNCk9rYXkgdG8gcmVt
-b3ZlIGhwc2ltIHN1cHBvcnQNCkFja2VkLWJ5OiBUb20gVmFkZW4gPHRvbS52YWRlbkBocGUuY29t
-Pg0KDQo+IC0tLQ0KPiAgIGFyY2gvaWE2NC9pbmNsdWRlL2FzbS9hY3BpLmggfCAgNCArKy0tDQo+
-ICAgYXJjaC9pYTY0L2tlcm5lbC9NYWtlZmlsZSAgICB8ICA0ICsrLS0NCj4gICBhcmNoL2lhNjQv
-a2VybmVsL2lvc2FwaWMuYyAgIHwgIDIgLS0NCj4gICBhcmNoL2lhNjQva2VybmVsL2lycV9pYTY0
-LmMgIHwgIDIgLS0NCj4gICBhcmNoL2lhNjQva2VybmVsL21jYS5jICAgICAgIHwgMTggLS0tLS0t
-LS0tLS0tLS0tLS0tDQo+ICAgYXJjaC9pYTY0L2tlcm5lbC9zZXR1cC5jICAgICB8IDEwICsrKyst
-LS0tLS0NCj4gICBhcmNoL2lhNjQva2VybmVsL3RvcG9sb2d5LmMgIHwgIDQgLS0tLQ0KPiAgIDcg
-ZmlsZXMgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCAzNiBkZWxldGlvbnMoLSkNCj4gDQo+IGRp
-ZmYgLS1naXQgYS9hcmNoL2lhNjQvaW5jbHVkZS9hc20vYWNwaS5oIGIvYXJjaC9pYTY0L2luY2x1
-ZGUvYXNtL2FjcGkuaA0KPiBpbmRleCAwYWZiM2JjNGI0YTEuLjAxYzFjMjY5YWExMyAxMDA2NDQN
-Cj4gLS0tIGEvYXJjaC9pYTY0L2luY2x1ZGUvYXNtL2FjcGkuaA0KPiArKysgYi9hcmNoL2lhNjQv
-aW5jbHVkZS9hc20vYWNwaS5oDQo+IEBAIC0xNyw3ICsxNyw3IEBADQo+ICAgI2luY2x1ZGUgPGxp
-bnV4L251bWEuaD4NCj4gICAjaW5jbHVkZSA8YXNtL251bWEuaD4NCj4gICANCj4gLSNpZmRlZglD
-T05GSUdfQUNQSQ0KPiArDQo+ICAgZXh0ZXJuIGludCBhY3BpX2xhcGljOw0KPiAgICNkZWZpbmUg
-YWNwaV9kaXNhYmxlZCAwCS8qIEFDUEkgYWx3YXlzIGVuYWJsZWQgb24gSUE2NCAqLw0KPiAgICNk
-ZWZpbmUgYWNwaV9ub2lycSAwCS8qIEFDUEkgYWx3YXlzIGVuYWJsZWQgb24gSUE2NCAqLw0KPiBA
-QCAtMjgsNyArMjgsNyBAQCBzdGF0aWMgaW5saW5lIGJvb2wgYWNwaV9oYXNfY3B1X2luX21hZHQo
-dm9pZCkNCj4gICB7DQo+ICAgCXJldHVybiAhIWFjcGlfbGFwaWM7DQo+ICAgfQ0KPiAtI2VuZGlm
-DQo+ICsNCj4gICAjZGVmaW5lIGFjcGlfcHJvY2Vzc29yX2NzdGF0ZV9jaGVjayh4KSAoeCkgLyog
-bm8gaWRsZSBsaW1pdHMgb24gSUE2NCA6KSAqLw0KPiAgIHN0YXRpYyBpbmxpbmUgdm9pZCBkaXNh
-YmxlX2FjcGkodm9pZCkgeyB9DQo+ICAgDQo+IGRpZmYgLS1naXQgYS9hcmNoL2lhNjQva2VybmVs
-L01ha2VmaWxlIGIvYXJjaC9pYTY0L2tlcm5lbC9NYWtlZmlsZQ0KPiBpbmRleCAzYWRhNDQwZmY4
-OTMuLmRiZGUzNjcwMmNmMiAxMDA2NDQNCj4gLS0tIGEvYXJjaC9pYTY0L2tlcm5lbC9NYWtlZmls
-ZQ0KPiArKysgYi9hcmNoL2lhNjQva2VybmVsL01ha2VmaWxlDQo+IEBAIC0xMiw5ICsxMiw5IEBA
-IGV4dHJhLXkJOj0gaGVhZC5vIHZtbGludXgubGRzDQo+ICAgb2JqLXkgOj0gZW50cnkubyBlZmku
-byBlZmlfc3R1Yi5vIGdhdGUtZGF0YS5vIGZzeXMubyBpYTY0X2tzeW1zLm8gaXJxLm8gaXJxX2lh
-NjQubwlcDQo+ICAgCSBpcnFfbHNhcGljLm8gaXZ0Lm8gbWFjaHZlYy5vIHBhbC5vIHBhdGNoLm8g
-cHJvY2Vzcy5vIHBlcmZtb24ubyBwdHJhY2UubyBzYWwubwkJXA0KPiAgIAkgc2FsaW5mby5vIHNl
-dHVwLm8gc2lnbmFsLm8gc3lzX2lhNjQubyB0aW1lLm8gdHJhcHMubyB1bmFsaWduZWQubyBcDQo+
-IC0JIHVud2luZC5vIG1jYS5vIG1jYV9hc20ubyB0b3BvbG9neS5vIGRtYS1tYXBwaW5nLm8gaW9z
-YXBpYy5vDQo+ICsJIHVud2luZC5vIG1jYS5vIG1jYV9hc20ubyB0b3BvbG9neS5vIGRtYS1tYXBw
-aW5nLm8gaW9zYXBpYy5vIGFjcGkubyBcDQo+ICsJIGFjcGktZXh0Lm8NCj4gICANCj4gLW9iai0k
-KENPTkZJR19BQ1BJKQkJKz0gYWNwaS5vIGFjcGktZXh0Lm8NCj4gICBvYmotJChDT05GSUdfSUE2
-NF9CUkxfRU1VKQkrPSBicmxfZW11Lm8NCj4gICANCj4gICBvYmotJChDT05GSUdfSUE2NF9QQUxJ
-TkZPKQkrPSBwYWxpbmZvLm8NCj4gZGlmZiAtLWdpdCBhL2FyY2gvaWE2NC9rZXJuZWwvaW9zYXBp
-Yy5jIGIvYXJjaC9pYTY0L2tlcm5lbC9pb3NhcGljLmMNCj4gaW5kZXggOWU0OWZkMDA2ODU5Li4y
-ZDI1OTU4YTdlZDcgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvaWE2NC9rZXJuZWwvaW9zYXBpYy5jDQo+
-ICsrKyBiL2FyY2gvaWE2NC9rZXJuZWwvaW9zYXBpYy5jDQo+IEBAIC02NDMsMTAgKzY0Myw4IEBA
-IGdldF90YXJnZXRfY3B1ICh1bnNpZ25lZCBpbnQgZ3NpLCBpbnQgaXJxKQ0KPiAgIAlpZiAoIWNw
-dV9vbmxpbmUoc21wX3Byb2Nlc3Nvcl9pZCgpKSkNCj4gICAJCXJldHVybiBjcHVfcGh5c2ljYWxf
-aWQoc21wX3Byb2Nlc3Nvcl9pZCgpKTsNCj4gICANCj4gLSNpZmRlZiBDT05GSUdfQUNQSQ0KPiAg
-IAlpZiAoY3BlX3ZlY3RvciA+IDAgJiYgaXJxX3RvX3ZlY3RvcihpcnEpID09IElBNjRfQ1BFUF9W
-RUNUT1IpDQo+ICAgCQlyZXR1cm4gZ2V0X2NwZWlfdGFyZ2V0X2NwdSgpOw0KPiAtI2VuZGlmDQo+
-ICAgDQo+ICAgI2lmZGVmIENPTkZJR19OVU1BDQo+ICAgCXsNCj4gZGlmZiAtLWdpdCBhL2FyY2gv
-aWE2NC9rZXJuZWwvaXJxX2lhNjQuYyBiL2FyY2gvaWE2NC9rZXJuZWwvaXJxX2lhNjQuYw0KPiBp
-bmRleCBlMzg3NDczNGIxNDkuLmI5ODk3MzFiYmVhYyAxMDA2NDQNCj4gLS0tIGEvYXJjaC9pYTY0
-L2tlcm5lbC9pcnFfaWE2NC5jDQo+ICsrKyBiL2FyY2gvaWE2NC9rZXJuZWwvaXJxX2lhNjQuYw0K
-PiBAQCAtNjMzLDkgKzYzMyw3IEBAIGlhNjRfbmF0aXZlX3JlZ2lzdGVyX2lwaSh2b2lkKQ0KPiAg
-IHZvaWQgX19pbml0DQo+ICAgaW5pdF9JUlEgKHZvaWQpDQo+ICAgew0KPiAtI2lmZGVmIENPTkZJ
-R19BQ1BJDQo+ICAgCWFjcGlfYm9vdF9pbml0KCk7DQo+IC0jZW5kaWYNCj4gICAJaWE2NF9yZWdp
-c3Rlcl9pcGkoKTsNCj4gICAJcmVnaXN0ZXJfcGVyY3B1X2lycShJQTY0X1NQVVJJT1VTX0lOVF9W
-RUNUT1IsIE5VTEwpOw0KPiAgICNpZmRlZiBDT05GSUdfU01QDQo+IGRpZmYgLS1naXQgYS9hcmNo
-L2lhNjQva2VybmVsL21jYS5jIGIvYXJjaC9pYTY0L2tlcm5lbC9tY2EuYw0KPiBpbmRleCBmNzJi
-MDVmZTkxOGIuLmE3ZjA1ODgzOTM1YiAxMDA2NDQNCj4gLS0tIGEvYXJjaC9pYTY0L2tlcm5lbC9t
-Y2EuYw0KPiArKysgYi9hcmNoL2lhNjQva2VybmVsL21jYS5jDQo+IEBAIC0xNDksOSArMTQ5LDcg
-QEAgc3RhdGljIGlhNjRfbWNfaW5mb190CQlpYTY0X21jX2luZm87DQo+ICAgI2RlZmluZSBDUEVf
-SElTVE9SWV9MRU5HVEggICAgNQ0KPiAgICNkZWZpbmUgQ01DX0hJU1RPUllfTEVOR1RIICAgIDUN
-Cj4gICANCj4gLSNpZmRlZiBDT05GSUdfQUNQSQ0KPiAgIHN0YXRpYyBzdHJ1Y3QgdGltZXJfbGlz
-dCBjcGVfcG9sbF90aW1lcjsNCj4gLSNlbmRpZg0KPiAgIHN0YXRpYyBzdHJ1Y3QgdGltZXJfbGlz
-dCBjbWNfcG9sbF90aW1lcjsNCj4gICAvKg0KPiAgICAqIFRoaXMgdmFyaWFibGUgdGVsbHMgd2hl
-dGhlciB3ZSBhcmUgY3VycmVudGx5IGluIHBvbGxpbmcgbW9kZS4NCj4gQEAgLTUzMiw4ICs1MzAs
-NiBAQCBpbnQgbWNhX3JlY292ZXJfcmFuZ2UodW5zaWduZWQgbG9uZyBhZGRyKQ0KPiAgIH0NCj4g
-ICBFWFBPUlRfU1lNQk9MX0dQTChtY2FfcmVjb3Zlcl9yYW5nZSk7DQo+ICAgDQo+IC0jaWZkZWYg
-Q09ORklHX0FDUEkNCj4gLQ0KPiAgIGludCBjcGVfdmVjdG9yID0gLTE7DQo+ICAgaW50IGlhNjRf
-Y3BlX2lycSA9IC0xOw0KPiAgIA0KPiBAQCAtNTk1LDkgKzU5MSw2IEBAIGlhNjRfbWNhX2NwZV9p
-bnRfaGFuZGxlciAoaW50IGNwZV9pcnEsIHZvaWQgKmFyZykNCj4gICAJcmV0dXJuIElSUV9IQU5E
-TEVEOw0KPiAgIH0NCj4gICANCj4gLSNlbmRpZiAvKiBDT05GSUdfQUNQSSAqLw0KPiAtDQo+IC0j
-aWZkZWYgQ09ORklHX0FDUEkNCj4gICAvKg0KPiAgICAqIGlhNjRfbWNhX3JlZ2lzdGVyX2NwZXYN
-Cj4gICAgKg0KPiBAQCAtNjI1LDcgKzYxOCw2IEBAIGlhNjRfbWNhX3JlZ2lzdGVyX2NwZXYgKGlu
-dCBjcGV2KQ0KPiAgIAlJQTY0X01DQV9ERUJVRygiJXM6IGNvcnJlY3RlZCBwbGF0Zm9ybSBlcnJv
-ciAiDQo+ICAgCQkgICAgICAgInZlY3RvciAlI3ggcmVnaXN0ZXJlZFxuIiwgX19mdW5jX18sIGNw
-ZXYpOw0KPiAgIH0NCj4gLSNlbmRpZiAvKiBDT05GSUdfQUNQSSAqLw0KPiAgIA0KPiAgIC8qDQo+
-ICAgICogaWE2NF9tY2FfY21jX3ZlY3Rvcl9zZXR1cA0KPiBAQCAtMTU0MCw4ICsxNTMyLDYgQEAg
-aWE2NF9tY2FfY21jX3BvbGwgKHN0cnVjdCB0aW1lcl9saXN0ICp1bnVzZWQpDQo+ICAgICogT3V0
-cHV0cw0KPiAgICAqIAloYW5kbGVkDQo+ICAgICovDQo+IC0jaWZkZWYgQ09ORklHX0FDUEkNCj4g
-LQ0KPiAgIHN0YXRpYyBpcnFyZXR1cm5fdA0KPiAgIGlhNjRfbWNhX2NwZV9pbnRfY2FsbGVyKGlu
-dCBjcGVfaXJxLCB2b2lkICphcmcpDQo+ICAgew0KPiBAQCAtMTYwNCw4ICsxNTk0LDYgQEAgaWE2
-NF9tY2FfY3BlX3BvbGwgKHN0cnVjdCB0aW1lcl9saXN0ICp1bnVzZWQpDQo+ICAgCQkJCQkJCUlB
-NjRfSVBJX0RNX0lOVCwgMCk7DQo+ICAgfQ0KPiAgIA0KPiAtI2VuZGlmIC8qIENPTkZJR19BQ1BJ
-ICovDQo+IC0NCj4gICBzdGF0aWMgaW50DQo+ICAgZGVmYXVsdF9tb25hcmNoX2luaXRfcHJvY2Vz
-cyhzdHJ1Y3Qgbm90aWZpZXJfYmxvY2sgKnNlbGYsIHVuc2lnbmVkIGxvbmcgdmFsLCB2b2lkICpk
-YXRhKQ0KPiAgIHsNCj4gQEAgLTE3OTksNyArMTc4Nyw2IEBAIHN0YXRpYyBzdHJ1Y3QgaXJxYWN0
-aW9uIG1jYV93a3VwX2lycWFjdGlvbiA9IHsNCj4gICAJLm5hbWUgPQkJIm1jYV93a3VwIg0KPiAg
-IH07DQo+ICAgDQo+IC0jaWZkZWYgQ09ORklHX0FDUEkNCj4gICBzdGF0aWMgc3RydWN0IGlycWFj
-dGlvbiBtY2FfY3BlX2lycWFjdGlvbiA9IHsNCj4gICAJLmhhbmRsZXIgPQlpYTY0X21jYV9jcGVf
-aW50X2hhbmRsZXIsDQo+ICAgCS5uYW1lID0JCSJjcGVfaG5kbHIiDQo+IEBAIC0xODA5LDcgKzE3
-OTYsNiBAQCBzdGF0aWMgc3RydWN0IGlycWFjdGlvbiBtY2FfY3BlcF9pcnFhY3Rpb24gPSB7DQo+
-ICAgCS5oYW5kbGVyID0JaWE2NF9tY2FfY3BlX2ludF9jYWxsZXIsDQo+ICAgCS5uYW1lID0JCSJj
-cGVfcG9sbCINCj4gICB9Ow0KPiAtI2VuZGlmIC8qIENPTkZJR19BQ1BJICovDQo+ICAgDQo+ICAg
-LyogTWluaW1hbCBmb3JtYXQgb2YgdGhlIE1DQS9JTklUIHN0YWNrcy4gIFRoZSBwc2V1ZG8gcHJv
-Y2Vzc2VzIHRoYXQgcnVuIG9uDQo+ICAgICogdGhlc2Ugc3RhY2tzIGNhbiBuZXZlciBzbGVlcCwg
-dGhleSBjYW5ub3QgcmV0dXJuIGZyb20gdGhlIGtlcm5lbCB0byB1c2VyDQo+IEBAIC0yMDgxLDEw
-ICsyMDY3LDggQEAgdm9pZCBfX2luaXQgaWE2NF9tY2FfaXJxX2luaXQodm9pZCkNCj4gICAJLyog
-U2V0dXAgdGhlIE1DQSB3YWtldXAgaW50ZXJydXB0IHZlY3RvciAqLw0KPiAgIAlyZWdpc3Rlcl9w
-ZXJjcHVfaXJxKElBNjRfTUNBX1dBS0VVUF9WRUNUT1IsICZtY2Ffd2t1cF9pcnFhY3Rpb24pOw0K
-PiAgIA0KPiAtI2lmZGVmIENPTkZJR19BQ1BJDQo+ICAgCS8qIFNldHVwIHRoZSBDUEVJL1AgaGFu
-ZGxlciAqLw0KPiAgIAlyZWdpc3Rlcl9wZXJjcHVfaXJxKElBNjRfQ1BFUF9WRUNUT1IsICZtY2Ff
-Y3BlcF9pcnFhY3Rpb24pOw0KPiAtI2VuZGlmDQo+ICAgfQ0KPiAgIA0KPiAgIC8qDQo+IEBAIC0y
-MTEyLDcgKzIwOTYsNiBAQCBpYTY0X21jYV9sYXRlX2luaXQodm9pZCkNCj4gICAJCQkgIGlhNjRf
-bWNhX2NwdV9vbmxpbmUsIE5VTEwpOw0KPiAgIAlJQTY0X01DQV9ERUJVRygiJXM6IENNQ0kvUCBz
-ZXR1cCBhbmQgZW5hYmxlZC5cbiIsIF9fZnVuY19fKTsNCj4gICANCj4gLSNpZmRlZiBDT05GSUdf
-QUNQSQ0KPiAgIAkvKiBTZXR1cCB0aGUgQ1BFSS9QIHZlY3RvciBhbmQgaGFuZGxlciAqLw0KPiAg
-IAljcGVfdmVjdG9yID0gYWNwaV9yZXF1ZXN0X3ZlY3RvcihBQ1BJX0lOVEVSUlVQVF9DUEVJKTsN
-Cj4gICAJdGltZXJfc2V0dXAoJmNwZV9wb2xsX3RpbWVyLCBpYTY0X21jYV9jcGVfcG9sbCwgMCk7
-DQo+IEBAIC0yMTQzLDcgKzIxMjYsNiBAQCBpYTY0X21jYV9sYXRlX2luaXQodm9pZCkNCj4gICAJ
-CQlJQTY0X01DQV9ERUJVRygiJXM6IENQRVAgc2V0dXAgYW5kIGVuYWJsZWQuXG4iLCBfX2Z1bmNf
-Xyk7DQo+ICAgCQl9DQo+ICAgCX0NCj4gLSNlbmRpZg0KPiAgIA0KPiAgIAlyZXR1cm4gMDsNCj4g
-ICB9DQo+IGRpZmYgLS1naXQgYS9hcmNoL2lhNjQva2VybmVsL3NldHVwLmMgYi9hcmNoL2lhNjQv
-a2VybmVsL3NldHVwLmMNCj4gaW5kZXggNDJlZjAzY2UyZmQ0Li44ZDQ3ODM2ZDkzMmMgMTAwNjQ0
-DQo+IC0tLSBhL2FyY2gvaWE2NC9rZXJuZWwvc2V0dXAuYw0KPiArKysgYi9hcmNoL2lhNjQva2Vy
-bmVsL3NldHVwLmMNCj4gQEAgLTUzNywyMSArNTM3LDE5IEBAIHNldHVwX2FyY2ggKGNoYXIgKipj
-bWRsaW5lX3ApDQo+ICAgCWlmIChlYXJseV9jb25zb2xlX3NldHVwKCpjbWRsaW5lX3ApID09IDAp
-DQo+ICAgCQltYXJrX2JzcF9vbmxpbmUoKTsNCj4gICANCj4gLSNpZmRlZiBDT05GSUdfQUNQSQ0K
-PiAgIAkvKiBJbml0aWFsaXplIHRoZSBBQ1BJIGJvb3QtdGltZSB0YWJsZSBwYXJzZXIgKi8NCj4g
-ICAJYWNwaV90YWJsZV9pbml0KCk7DQo+ICAgCWVhcmx5X2FjcGlfYm9vdF9pbml0KCk7DQo+IC0j
-IGlmZGVmIENPTkZJR19BQ1BJX05VTUENCj4gKyNpZmRlZiBDT05GSUdfQUNQSV9OVU1BDQo+ICAg
-CWFjcGlfbnVtYV9pbml0KCk7DQo+ICAgCWFjcGlfbnVtYV9maXh1cCgpOw0KPiAtIyAgaWZkZWYg
-Q09ORklHX0FDUElfSE9UUExVR19DUFUNCj4gKyNpZmRlZiBDT05GSUdfQUNQSV9IT1RQTFVHX0NQ
-VQ0KPiAgIAlwcmVmaWxsX3Bvc3NpYmxlX21hcCgpOw0KPiAtIyAgZW5kaWYNCj4gKyNlbmRpZg0K
-PiAgIAlwZXJfY3B1X3NjYW5fZmluYWxpemUoKGNwdW1hc2tfd2VpZ2h0KCZlYXJseV9jcHVfcG9z
-c2libGVfbWFwKSA9PSAwID8NCj4gICAJCTMyIDogY3B1bWFza193ZWlnaHQoJmVhcmx5X2NwdV9w
-b3NzaWJsZV9tYXApKSwNCj4gICAJCWFkZGl0aW9uYWxfY3B1cyA+IDAgPyBhZGRpdGlvbmFsX2Nw
-dXMgOiAwKTsNCj4gLSMgZW5kaWYNCj4gLSNlbmRpZiAvKiBDT05GSUdfQVBDSV9CT09UICovDQo+
-ICsjZW5kaWYgLyogQ09ORklHX0FDUElfTlVNQSAqLw0KPiAgIA0KPiAgICNpZmRlZiBDT05GSUdf
-U01QDQo+ICAgCXNtcF9idWlsZF9jcHVfbWFwKCk7DQo+IGRpZmYgLS1naXQgYS9hcmNoL2lhNjQv
-a2VybmVsL3RvcG9sb2d5LmMgYi9hcmNoL2lhNjQva2VybmVsL3RvcG9sb2d5LmMNCj4gaW5kZXgg
-ZTMxMWVlMTNlNjFkLi4wOWZjMzg1YzJhY2QgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvaWE2NC9rZXJu
-ZWwvdG9wb2xvZ3kuYw0KPiArKysgYi9hcmNoL2lhNjQva2VybmVsL3RvcG9sb2d5LmMNCj4gQEAg
-LTQyLDcgKzQyLDYgQEAgRVhQT1JUX1NZTUJPTF9HUEwoYXJjaF9maXhfcGh5c19wYWNrYWdlX2lk
-KTsNCj4gICAjaWZkZWYgQ09ORklHX0hPVFBMVUdfQ1BVDQo+ICAgaW50IF9fcmVmIGFyY2hfcmVn
-aXN0ZXJfY3B1KGludCBudW0pDQo+ICAgew0KPiAtI2lmZGVmIENPTkZJR19BQ1BJDQo+ICAgCS8q
-DQo+ICAgCSAqIElmIENQRUkgY2FuIGJlIHJlLXRhcmdldGVkIG9yIGlmIHRoaXMgaXMgbm90DQo+
-ICAgCSAqIENQRUkgdGFyZ2V0LCB0aGVuIGl0IGlzIGhvdHBsdWdnYWJsZQ0KPiBAQCAtNTAsNyAr
-NDksNiBAQCBpbnQgX19yZWYgYXJjaF9yZWdpc3Rlcl9jcHUoaW50IG51bSkNCj4gICAJaWYgKGNh
-bl9jcGVpX3JldGFyZ2V0KCkgfHwgIWlzX2NwdV9jcGVpX3RhcmdldChudW0pKQ0KPiAgIAkJc3lz
-ZnNfY3B1c1tudW1dLmNwdS5ob3RwbHVnZ2FibGUgPSAxOw0KPiAgIAltYXBfY3B1X3RvX25vZGUo
-bnVtLCBub2RlX2NwdWlkW251bV0ubmlkKTsNCj4gLSNlbmRpZg0KPiAgIAlyZXR1cm4gcmVnaXN0
-ZXJfY3B1KCZzeXNmc19jcHVzW251bV0uY3B1LCBudW0pOw0KPiAgIH0NCj4gICBFWFBPUlRfU1lN
-Qk9MKGFyY2hfcmVnaXN0ZXJfY3B1KTsNCj4gQEAgLTU4LDkgKzU2LDcgQEAgRVhQT1JUX1NZTUJP
-TChhcmNoX3JlZ2lzdGVyX2NwdSk7DQo+ICAgdm9pZCBfX3JlZiBhcmNoX3VucmVnaXN0ZXJfY3B1
-KGludCBudW0pDQo+ICAgew0KPiAgIAl1bnJlZ2lzdGVyX2NwdSgmc3lzZnNfY3B1c1tudW1dLmNw
-dSk7DQo+IC0jaWZkZWYgQ09ORklHX0FDUEkNCj4gICAJdW5tYXBfY3B1X2Zyb21fbm9kZShudW0s
-IGNwdV90b19ub2RlKG51bSkpOw0KPiAtI2VuZGlmDQo+ICAgfQ0KPiAgIEVYUE9SVF9TWU1CT0wo
-YXJjaF91bnJlZ2lzdGVyX2NwdSk7DQo+ICAgI2Vsc2UNCj4gDQo=
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    d45331b0 Linux 5.3-rc4
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1651e6d2600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6c5e70dcab57c6af
+dashboard link: https://syzkaller.appspot.com/bug?extid=0265846a0cb9a0547905
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12c9c336600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1766156a600000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+0265846a0cb9a0547905@syzkaller.appspotmail.com
+
+executing program
+executing program
+executing program
+executing program
+BUG: memory leak
+unreferenced object 0xffff8881226da6c0 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 15.840s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da600 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 15.840s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da540 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 15.840s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da6c0 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 16.750s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da600 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 16.750s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da540 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 16.750s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da6c0 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 17.650s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da600 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 17.650s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da540 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 17.650s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da6c0 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 18.550s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da600 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 18.550s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da540 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 18.550s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da6c0 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 19.450s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da600 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 19.450s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da540 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 19.450s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da6c0 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 19.510s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da600 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 19.510s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da540 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 19.510s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da6c0 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 19.560s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da600 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 19.560s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+BUG: memory leak
+unreferenced object 0xffff8881226da540 (size 192):
+   comm "syz-executor332", pid 6977, jiffies 4294941214 (age 19.560s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 f0 bc 28 81 88 ff ff  ...........(....
+     01 c8 60 00 02 0b 00 00 00 00 00 00 00 00 00 00  ..`.............
+   backtrace:
+     [<00000000b06a638e>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000b06a638e>] slab_post_alloc_hook mm/slab.h:522 [inline]
+     [<00000000b06a638e>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000b06a638e>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+     [<00000000950a289d>] mempool_alloc_slab+0x1e/0x30 mm/mempool.c:513
+     [<00000000bfcc27e2>] mempool_alloc+0x64/0x1b0 mm/mempool.c:393
+     [<00000000cdf95a4a>] bio_alloc_bioset+0x180/0x2c0 block/bio.c:477
+     [<00000000b239bb68>] bio_clone_fast+0x25/0x90 block/bio.c:609
+     [<000000005d58c2dc>] bio_split+0x4a/0xd0 block/bio.c:1856
+     [<00000000ab943734>] blk_bio_segment_split block/blk-merge.c:250  
+[inline]
+     [<00000000ab943734>] __blk_queue_split+0x355/0x730 block/blk-merge.c:272
+     [<00000000e702c0ac>] blk_mq_make_request+0xb0/0x890 block/blk-mq.c:1943
+     [<000000003c89773a>] generic_make_request block/blk-core.c:1052 [inline]
+     [<000000003c89773a>] generic_make_request+0xf6/0x4a0  
+block/blk-core.c:994
+     [<00000000a4dcaf78>] submit_bio+0x5a/0x1e0 block/blk-core.c:1163
+     [<000000003e1ce7f8>] __blkdev_direct_IO fs/block_dev.c:459 [inline]
+     [<000000003e1ce7f8>] blkdev_direct_IO+0x2b3/0x6d0 fs/block_dev.c:515
+     [<0000000087ec76a4>] generic_file_direct_write+0xb0/0x1a0  
+mm/filemap.c:3230
+     [<00000000ff259b44>] __generic_file_write_iter+0xec/0x230  
+mm/filemap.c:3413
+     [<00000000223d9b6c>] blkdev_write_iter fs/block_dev.c:2026 [inline]
+     [<00000000223d9b6c>] blkdev_write_iter+0xbe/0x160 fs/block_dev.c:2003
+     [<000000003c4a5c94>] call_write_iter include/linux/fs.h:1870 [inline]
+     [<000000003c4a5c94>] aio_write+0x10b/0x1d0 fs/aio.c:1583
+     [<00000000581f0c84>] __io_submit_one fs/aio.c:1815 [inline]
+     [<00000000581f0c84>] io_submit_one+0x59b/0xe50 fs/aio.c:1862
+
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
