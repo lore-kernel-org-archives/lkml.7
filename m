@@ -2,88 +2,81 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 440B2C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB6BC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C04020842
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A99D220842
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfHMVUm (ORCPT
+        id S1726864AbfHMVVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:20:42 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:38642 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbfHMVUm (ORCPT
+        Tue, 13 Aug 2019 17:21:11 -0400
+Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:50446 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbfHMVVK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 17:20:42 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x4so9889713qts.5
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 14:20:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0y+xA4yq9k1MfUYROc/R4ymqEbAd0mXn2MH3goPeuIk=;
-        b=spGI6IyA+KlaTio+zh3z8WjPksQj/SQtCiIhVUZF1mJoxJIyZChMqIRIMpZeYv1t1K
-         GSHDjWfSakJmyTJOPntsr6OOERPLD1M37ujkmijjqMbe2w69cRtomO6qtviIaMs7wkbA
-         3BmR8Mpn1bUTDCT7DxJneOT9/4F3AMEC4ftFmNV3Afm1f72XEbEVIaAiVoePheJwJTfT
-         u4JTprG7JPjtBHasSrXBtcHAKiFVSY+3P8cJdICp2wdL2vV9jL4UN4ApjtHusnGoK8za
-         fAiKJXPZTwFRHNFc0fVdxx33Fwl9a5hrvJiG+lX4eJ66VXTRaYCZfS/L8im7+tBn3Kin
-         we1g==
-X-Gm-Message-State: APjAAAV6IOj1Zzv6A2Z1u5Kl0Pea3rdkvvnExTmkNHbEvV/boZlYsrLC
-        INDXe/3O90sZHc29PMiztHg=
-X-Google-Smtp-Source: APXvYqyW2z3U2drQntXGk1OXXbAuNi4yvbuF8dvDKv04BFli2qxyjK3BWTjJkRISMZgumOIjY3fDfg==
-X-Received: by 2002:ac8:7593:: with SMTP id s19mr27841639qtq.136.1565731241516;
-        Tue, 13 Aug 2019 14:20:41 -0700 (PDT)
-Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.gmail.com with ESMTPSA id r15sm6983815qkm.27.2019.08.13.14.20.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Aug 2019 14:20:40 -0700 (PDT)
-Subject: Re: [PATCH] MAINTAINERS: Remove FMC subsystem
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Joe Perches <joe@perches.com>,
-        Federico Vaga <federico.vaga@cern.ch>,
-        Pat Riehecky <riehecky@fnal.gov>
-References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
- <20190813061547.17847-1-efremov@linux.com>
- <CACRpkdaAE6RA1iQ-iqK3GGHOovTkuDDqi8vcoFnmG8UBwuim8w@mail.gmail.com>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <e52ce7fa-c4fc-04b4-36fb-a89222024d2e@linux.com>
-Date:   Wed, 14 Aug 2019 00:20:35 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 13 Aug 2019 17:21:10 -0400
+Received: from belgarion ([90.76.53.202])
+        by mwinf5d80 with ME
+        id olM4200044MlyVm03lM4ry; Tue, 13 Aug 2019 23:21:07 +0200
+X-ME-Helo: belgarion
+X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
+X-ME-Date: Tue, 13 Aug 2019 23:21:07 +0200
+X-ME-IP: 90.76.53.202
+From:   Robert Jarzmik <robert.jarzmik@free.fr>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     dan.j.williams@intel.com, vkoul@kernel.org,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] dma: pxa_dma: no need to check return value of debugfs_create functions
+References: <20190612122557.24158-1-gregkh@linuxfoundation.org>
+        <20190612122557.24158-4-gregkh@linuxfoundation.org>
+        <87tvaorfc1.fsf@belgarion.home> <20190811070350.GA28202@kroah.com>
+X-URL:  http://belgarath.falguerolles.org/
+Date:   Tue, 13 Aug 2019 23:21:04 +0200
+In-Reply-To: <20190811070350.GA28202@kroah.com> (Greg Kroah-Hartman's message
+        of "Sun, 11 Aug 2019 09:03:50 +0200")
+Message-ID: <87o90srccf.fsf@belgarion.home>
+User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdaAE6RA1iQ-iqK3GGHOovTkuDDqi8vcoFnmG8UBwuim8w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.08.2019 11:54, Linus Walleij wrote:
-> On Tue, Aug 13, 2019 at 8:15 AM Denis Efremov <efremov@linux.com> wrote:
-> 
->> Cleanup MAINTAINERS from FMC record since the subsystem was removed.
->>
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Cc: Federico Vaga <federico.vaga@cern.ch>
->> Cc: Pat Riehecky <riehecky@fnal.gov>
->> Fixes: 6a80b30086b8 ("fmc: Delete the FMC subsystem")
->> Signed-off-by: Denis Efremov <efremov@linux.com>
-> 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> Do you need help to merge the patch? I can take it in the
-> GPIO tree since the subsystem was removed there.
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 
-Yes, please. I kindly ask you to take this patch in your tree.
+> On Sat, Aug 10, 2019 at 09:27:26PM +0200, Robert Jarzmik wrote:
+>> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+>> 
+>> This is not strictly equivalent.
+>> Imagine that the debugfs_create_dir() fails and returns NULL :
+> How can that happen?
+Well in v5.0-rc1 that could happen ... unfortunately that's also the code I
+checked ...
 
-Thanks,
-Denis
+>>  - in the former case, neither "state", "descriptors" nor "requesters" would be
+>>    created
+>>  - in the new code, "state", "descriptors" nor "requesters" will be created in
+>>    the debugfs root directory
+>
+> I agree, but debugfs_create_dir() does not return a NULL on an error
+> since many kernel releases.  Neither can debugfs_create_file() so really
+> this test is not working at all as-is :)
+Ah yes, you're right, I wasn't aware of the debugfs changes ...
+
+But checking a bit further, your original mail is 2 monthes old, and this patch
+was already merged in v5.2. I probably fell in a time-space anomaly, as I
+received this mail only a couple of days ago.
+
+Have a nice day.
+
+-- 
+Robert
