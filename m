@@ -2,70 +2,125 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B2CC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C10A5C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C46E208C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:56:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="fp16Kl6V"
+	by mail.kernel.org (Postfix) with ESMTP id 8F897208C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:58:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565726288;
+	bh=X82eQ3JesOlbLJhrRrufAi8tlKQch8wVXL6Dn+B2NqY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uVKe/mLDZ3Z0uFaaiACL87hRwYivbEEFd21eyCe5krzqxuJ2xfY8dgUXcokUyZVzv
+	 eCyHddO5kAbQRaAP/w3UMbDS2hwGvppq8ZkxkgiBrBTSusEI5drBjCp4d91TG8JYXf
+	 1yUwsI3qkavjMuTVerfYxcSyiArak5zetAz8uepU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726724AbfHMT4i (ORCPT
+        id S1726693AbfHMT6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 15:56:38 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:58152 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbfHMT4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 15:56:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=ZjCsSWfN9G7Of10s0gDDcUZQG5Ub4aFGqWQWzCdBjqg=; b=fp16Kl6VPCWeY4P5HDmTyU4XsJ
-        Skxnz2L6mBBSx/f2G4TuIoVHCYplB9/TgDBJCspR4mHVSVEE4VyJ+uzagg/upc0BWZVWgLkEeFlyc
-        wMulNjp2Htyr/dYELR6sl5bovskiel9qOG7DVVDZlPDv8Sl365E6IWEooazkbDI0ULkg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hxcuH-0004BZ-5Z; Tue, 13 Aug 2019 21:56:33 +0200
-Date:   Tue, 13 Aug 2019 21:56:33 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v6 2/4] net: phy: Add support for generic LED
- configuration through the DT
-Message-ID: <20190813195633.GJ15047@lunn.ch>
-References: <20190813191147.19936-1-mka@chromium.org>
- <20190813191147.19936-3-mka@chromium.org>
+        Tue, 13 Aug 2019 15:58:07 -0400
+Received: from mail-wm1-f100.google.com ([209.85.128.100]:37663 "EHLO
+        mail-wm1-f100.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfHMT6H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 15:58:07 -0400
+Received: by mail-wm1-f100.google.com with SMTP id z23so2486223wmf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 12:58:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X82eQ3JesOlbLJhrRrufAi8tlKQch8wVXL6Dn+B2NqY=;
+        b=Px4GBaIN5mg506MaggC/NsDMKTZQehrtOOMUGnDtsOrhO1yZ6DvAauMsHK7FBpK4QE
+         PcwRY5DPxpl8hY+KIRc7sSoxPRaJdEmx2/GZ4fZ5Fp3lFDAm+HEGkg1ZzOK4uWCLdpcW
+         ejzmepyG8wKJWQzdHV7hyBSBvbQJ8dObY2kttAD0RVKaMscaoZ2IA8PBok7JP6oJU3w2
+         9wGGhL6CuxuwJcoQ3ZOivuP5czQctfL8X8vd0YPXo6D/Qw5O+QCx1jfseUyFQ4WO+bkH
+         hgxX17mOSjmp0tScnSN4Fwtqkqeik/APC6nyy6xaBZrmMaPfDQxSkyCKslAYZPS9izST
+         HRtQ==
+X-Gm-Message-State: APjAAAVckReRW/aUijno/hLT/n+/ud6odZosUJxGx4LdNXEg0/mLnzY3
+        IY6uj+drRhXlQ1HUcN8sxHIQPMAyz/VoQb1hLgIVPcXPcymxzWebRajKbUEXO/DjcA==
+X-Google-Smtp-Source: APXvYqxon/uIKJW/6DSkZ8aDwhMWpVie1mmPg+IR6ytDM3UjTwfMbi1b1iVaauIXbL6K4CEGs+8TGRrQW6+T
+X-Received: by 2002:a1c:1d42:: with SMTP id d63mr4521112wmd.34.1565726285375;
+        Tue, 13 Aug 2019 12:58:05 -0700 (PDT)
+Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
+        by smtp-relay.gmail.com with ESMTPS id q2sm1475349wre.51.2019.08.13.12.58.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 13 Aug 2019 12:58:05 -0700 (PDT)
+X-Relaying-Domain: sirena.org.uk
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1hxcvl-0001Al-5G; Tue, 13 Aug 2019 19:58:05 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id A97052742B44; Tue, 13 Aug 2019 20:58:04 +0100 (BST)
+Date:   Tue, 13 Aug 2019 20:58:04 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        vkoul@kernel.org, devicetree@vger.kernel.org,
+        alsa-devel@alsa-project.org, bgoswami@codeaurora.org,
+        plai@codeaurora.org, lgirdwood@gmail.com,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        spapothi@codeaurora.org
+Subject: Re: [alsa-devel] [PATCH v2 3/5] ASoC: core: add support to
+ snd_soc_dai_get_sdw_stream()
+Message-ID: <20190813195804.GL5093@sirena.co.uk>
+References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
+ <20190813083550.5877-4-srinivas.kandagatla@linaro.org>
+ <ba88e0f9-ae7d-c26e-d2dc-83bf910c2c01@linux.intel.com>
+ <c2eecd44-f06a-7287-2862-0382bf697f8d@linaro.org>
+ <d2b7773b-d52a-7769-aa5b-ef8c8845d447@linux.intel.com>
+ <d7c1fdb2-602f-ecb1-9b32-91b893e7f408@linaro.org>
+ <f0228cb4-0a6f-17f3-fe03-9be7f5f2e59d@linux.intel.com>
+ <20190813191827.GI5093@sirena.co.uk>
+ <cc360858-571a-6a46-1789-1020bcbe4bca@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="k1BdFSKqAqVdu8k/"
 Content-Disposition: inline
-In-Reply-To: <20190813191147.19936-3-mka@chromium.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <cc360858-571a-6a46-1789-1020bcbe4bca@linux.intel.com>
+X-Cookie: Poverty begins at home.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 12:11:45PM -0700, Matthias Kaehlcke wrote:
-> For PHYs with a device tree node look for LED trigger configuration
-> using the generic binding, if it exists try to apply it via the new
-> driver hook .config_led.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+--k1BdFSKqAqVdu8k/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-    Andrew
+On Tue, Aug 13, 2019 at 02:38:53PM -0500, Pierre-Louis Bossart wrote:
+
+> Indeed. I don't have a full understanding of that part to be honest, nor why
+> we need something SoundWire-specific. We already abused the set_tdm_slot API
+> to store an HDaudio stream, now we have a rather confusing stream
+> information for SoundWire and I have about 3 other 'stream' contexts in
+> SOF... I am still doing basic cleanups but this has been on my radar for a
+> while.
+
+There is something to be said for not abusing the TDM slot API if it can
+make things clearer by using bus-idiomatic mechanisms, but it does mean
+everything needs to know about each individual bus :/ .
+
+--k1BdFSKqAqVdu8k/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1TFksACgkQJNaLcl1U
+h9BHfQgAhhh0D7Hg5E7dHFAw9gfqCTOCQFEV16Tm0f23eAZ2yPanGpNNC0hohDnH
+y77jzS/Zh0WxkcN5gH7rQI0bTrbDVeZpQd0+Wo1egQK9eqfVkjZi+gE2O8v/VjCW
+Hcou9+7P7205uP/LB7vuMzVbhKpTF4fPpbhIuJ44MV39BO+sQ+nptMl4ialTd/Y2
+kjLdoCl/v6TIAY3GztKKmOvUo58xPak85st45COal2f5bUIBbKxs1Ss/x8VMSPlE
+OvPxl5aUzKuFFiVXGekHr+hR/INMri9LWuBQpqrTatdyS0P2p/Sc/r9oNzrl8z+7
+PKRpKAk3EYaOsSo49DWaJw3wREGyqQ==
+=REil
+-----END PGP SIGNATURE-----
+
+--k1BdFSKqAqVdu8k/--
