@@ -2,120 +2,104 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 809D0C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF0EC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E40320673
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D795D206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:30:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565695816;
+	bh=Zq++AH36LcJV8AEMAUwSGNdy/skc7edYjMJDAHmF7M8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QZYcvryH1XDSaUzIZs8mUzOnssEX9gG1SByTCsSz3nKC+S9wwVlyGlLZtfZ9o2Foq
+	 CGN5+ugse3S8iuqwAQguD7b00t874umY/QBAmW6PXunvkpNKWRbI1auyHEW22XBGn5
+	 wsrM2mWi7Zj8w9WTYoXYyl5DcaVwuZgYNwkDmuj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727251AbfHMLaN (ORCPT
+        id S1727491AbfHMLaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 13 Aug 2019 07:30:15 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32970 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725953AbfHMLaN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 13 Aug 2019 07:30:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60400 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726650AbfHMLaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 07:30:12 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 17BC98535C;
-        Tue, 13 Aug 2019 11:30:12 +0000 (UTC)
-Received: from gondolin (dhcp-192-232.str.redhat.com [10.33.192.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 82C315799C;
-        Tue, 13 Aug 2019 11:29:59 +0000 (UTC)
-Date:   Tue, 13 Aug 2019 13:29:57 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, mjrosato@linux.ibm.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com
-Subject: Re: [PATCH] s390: vfio-ap: remove unnecessary calls to disable
- queue interrupts
-Message-ID: <20190813132957.7fafad2d.cohuck@redhat.com>
-In-Reply-To: <1565642829-20157-1-git-send-email-akrowiak@linux.ibm.com>
-References: <1565642829-20157-1-git-send-email-akrowiak@linux.ibm.com>
-Organization: Red Hat GmbH
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Zq++AH36LcJV8AEMAUwSGNdy/skc7edYjMJDAHmF7M8=; b=ZwZWUKiUxBj9FOa8Z3s5c7GoJ
+        gxwgBVHVPGQ1V7ib3cLwm9AnJDH7Q8QWguLFsVEuAm+7DWkAaoeLwvHz63FLLjr8UUVAkcDi7PQR1
+        C/oixVlRFcRW+k+7Hl6NEAaolSkzzgHYlUYl3tz7AgQm7Rzmg4KyjeJWVRlb3CGAvxwIc=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1hxUzR-0007lv-EK; Tue, 13 Aug 2019 11:29:21 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 983992742B44; Tue, 13 Aug 2019 12:29:20 +0100 (BST)
+Date:   Tue, 13 Aug 2019 12:29:20 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [alsa-devel] Regression in next with codec unload and
+ snd_soc_component_get/put
+Message-ID: <20190813112920.GC5093@sirena.co.uk>
+References: <20190809070003.GA52127@atomide.com>
+ <s5hwofmhkbs.wl-tiwai@suse.de>
+ <20190809074643.GB52127@atomide.com>
+ <s5hv9v6hhm9.wl-tiwai@suse.de>
+ <20190813102451.GJ52127@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 13 Aug 2019 11:30:12 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="raC6veAxrt5nqIoY"
+Content-Disposition: inline
+In-Reply-To: <20190813102451.GJ52127@atomide.com>
+X-Cookie: Poverty begins at home.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 12 Aug 2019 16:47:09 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-> When an AP queue is reset (zeroized), interrupts are disabled. The queue
-> reset function currently tries to disable interrupts unnecessarily. This patch
-> removes the unnecessary calls to disable interrupts after queue reset.
-> 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->  drivers/s390/crypto/vfio_ap_ops.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index 0604b49a4d32..407c2f0f25f9 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -1114,18 +1114,19 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
->  	return NOTIFY_OK;
->  }
->  
-> -static void vfio_ap_irq_disable_apqn(int apqn)
-> +static struct vfio_ap_queue *vfio_ap_find_qdev(int apqn)
->  {
->  	struct device *dev;
-> -	struct vfio_ap_queue *q;
-> +	struct vfio_ap_queue *q = NULL;
->  
->  	dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
->  				 &apqn, match_apqn);
->  	if (dev) {
->  		q = dev_get_drvdata(dev);
-> -		vfio_ap_irq_disable(q);
->  		put_device(dev);
->  	}
-> +
-> +	return q;
->  }
->  
->  int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
-> @@ -1164,6 +1165,7 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
->  	int rc = 0;
->  	unsigned long apid, apqi;
->  	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
-> +	struct vfio_ap_queue *q;
->  
->  	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm,
->  			     matrix_mdev->matrix.apm_max + 1) {
-> @@ -1177,7 +1179,10 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
->  			 */
->  			if (ret)
->  				rc = ret;
-> -			vfio_ap_irq_disable_apqn(AP_MKQID(apid, apqi));
+--raC6veAxrt5nqIoY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Might be useful to stick a comment in this function that resetting the
-queue has also disabled the interrupts, as the architecture
-documentation for that is not publicly available.
+On Tue, Aug 13, 2019 at 03:24:51AM -0700, Tony Lindgren wrote:
+> * Takashi Iwai <tiwai@suse.de> [190809 08:24]:
 
-> +
-> +			q = vfio_ap_find_qdev(AP_MKQID(apid, apqi));
-> +			if (q)
-> +				vfio_ap_free_aqic_resources(q);
->  		}
->  	}
->  
+> > ... and it was already fixed in the later commit 0e36f36b04e7
+> > "ASoC: soc-core: fix module_put() warning in soc_cleanup_component".
 
-Trusting your reading of the architecture,
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> Mark, looks like this commit is still not in Linux next, forgot
+> to push out something?
+
+There's a build failure the Intel guys haven't fixed.
+
+--raC6veAxrt5nqIoY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1Snw8ACgkQJNaLcl1U
+h9DF/Qf/WDdJEsNmRPfcsZFd9wcH/l/YYYCUVgA62rjOVqjdmJimIzjWXlc+W4xw
+CZk3JtYhXgKz31j0/toBAkOS8bbArTQtWi5+40EuzExrZKV/MYBA2dlSSYKazuQO
+bDQBxTg5kKAafEyViBEVMxCey+ubNGO4Ms69de/KW1lmZeEqtfSHPzOjWgrEI+H9
+1xjLx4KVTDk2o3TaSc0iKj7MNCKJy0nBW/VnW8RxJiOnKu+kO2G4lBpCu+/0afjm
+f+oufYCVjGXJKKv5SBsfB30/c11H+PindiU1ECSY5mn0YytmPY+cC2d00aE20GXY
+v3jxVVy7d8M5zo4qooHjGF84oeCX7w==
+=XIoR
+-----END PGP SIGNATURE-----
+
+--raC6veAxrt5nqIoY--
