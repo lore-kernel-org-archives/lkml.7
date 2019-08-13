@@ -2,92 +2,128 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74582C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFF6C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51F2720663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DAA520663
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:30:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565717457;
+	bh=Bk+/PhZhQeH7Oy2cW+sHt860DBgIyZ1zaTr/4b5mDZ8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=iUsGCbDyPSz1Ba8xWAMyDH5uFX7juEEl6uyqP5KYr7uIwmDduByfMw7yaO3gTC7Vl
+	 l4hv6IoC7ktpeHNIIG/eAK2nSoICvhmCgq2gwT8lK1cP/9nTNK1Y/NjwNYu1UFq0kP
+	 VD19ABIOuaPHUWOAeVAfQ0hVAmrVHn8aFkL8o8qo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfHMR36 (ORCPT
+        id S1727267AbfHMRa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 13:29:58 -0400
-Received: from mga12.intel.com ([192.55.52.136]:27763 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbfHMR35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 13:29:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 10:29:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="177864759"
-Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.252.1.240]) ([10.252.1.240])
-  by fmsmga007.fm.intel.com with ESMTP; 13 Aug 2019 10:29:52 -0700
-Subject: Re: [PATCH v2 3/5] ASoC: core: add support to
- snd_soc_dai_get_sdw_stream()
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     vkoul@kernel.org, broonie@kernel.org, bgoswami@codeaurora.org,
-        plai@codeaurora.org, pierre-louis.bossart@linux.intel.com,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, spapothi@codeaurora.org
-References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
- <20190813083550.5877-4-srinivas.kandagatla@linaro.org>
- <95c517ab-7c63-5d13-a03a-1db01812bb69@intel.com>
- <71fb21d0-3083-e590-db83-dbe489a4357e@linaro.org>
-From:   Cezary Rojewski <cezary.rojewski@intel.com>
-Message-ID: <34a1a317-ac6b-bb1e-6b1b-08209f0d1923@intel.com>
-Date:   Tue, 13 Aug 2019 19:29:50 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 13 Aug 2019 13:30:56 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33904 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfHMRaz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 13:30:55 -0400
+Received: by mail-lj1-f196.google.com with SMTP id x18so5851091ljh.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 10:30:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PcCwXVLm6QInE6f6YnLzxsQVruGBu70an/s0ARJn0xM=;
+        b=PsN6mTRe/RPI2hT2jq/fSCvTqDjEFGZ58VoUAFieJsIyl3xqt3TIuHSf8o8ZiNpmaB
+         Ccoio3Rt4D6J7p5XFf44/kwkyEnKxhdZ+A9Hq2HaJlzcOe8Y94fe/BnIESBWdVF3FuvO
+         YDsGcpHsLNXUwszqTyIKxHV95Y4BEhzPOcmeA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PcCwXVLm6QInE6f6YnLzxsQVruGBu70an/s0ARJn0xM=;
+        b=JYj4AUzOPNFEablFm3OOwjSb6JvepB3/cS1EQx7pnLC2OKse0lAm4stWv/ct+BZ6vf
+         i21+oNS7UG+c2lAKiDGZ3Eaak7zSvocQh5fi4KlswpYYZxoqTWsHlQvNaHEIHAB2vRUp
+         PNsO0XbJ+H3BcnVdFV3dDTTF5cr1RvaB6b9MwdnxdmmzRdOIOByvtQFSZHwjoTM+/JYI
+         EcpCbjQyWJNMGLS+6K9HRZ8Di7aW7mFVisufWQRNr90GgUPgXhNGTqFsy6VmHFqpTSGO
+         9ovbyyD5sADWMvp2owb3ad6rLsFA0B3hK9Vh60Bwzupoqdu3VO4IUA1a5pT7tIwT19y8
+         6/RQ==
+X-Gm-Message-State: APjAAAXZLq6mNyk7ggo7tqFN69za5HZgRNr0kb91LTHp8lLqOMIvI3Gp
+        KNzZTQQmxL7dzuGfzylabZmaO0ROOMU=
+X-Google-Smtp-Source: APXvYqz4ByPdS0fx/sI4vD/+vbfW6/OLVvdlnVLJL4DPa23wLVTNmcmRESzbdd24Oo14N9cg011Tmg==
+X-Received: by 2002:a2e:980d:: with SMTP id a13mr7705724ljj.145.1565717451898;
+        Tue, 13 Aug 2019 10:30:51 -0700 (PDT)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id c23sm377872ljj.69.2019.08.13.10.30.50
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 13 Aug 2019 10:30:50 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id t14so47172lji.4
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 10:30:50 -0700 (PDT)
+X-Received: by 2002:a2e:3a0e:: with SMTP id h14mr5710820lja.180.1565717449994;
+ Tue, 13 Aug 2019 10:30:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <71fb21d0-3083-e590-db83-dbe489a4357e@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com>
+In-Reply-To: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 13 Aug 2019 10:30:34 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com>
+Message-ID: <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com>
+Subject: Re: New kernel interface for sys_tz and timewarp?
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        "Theodore Ts'o" <tytso@mit.edu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        Karel Zak <kzak@redhat.com>,
+        Lennart Poettering <lennart@poettering.net>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-08-13 18:52, Srinivas Kandagatla wrote:
-> Thanks for the review,
-> 
-> On 13/08/2019 17:03, Cezary Rojewski wrote:
->> On 2019-08-13 10:35, Srinivas Kandagatla wrote:
->>> On platforms which have smart speaker amplifiers connected via
->>> soundwire and modeled as aux devices in ASoC, in such usecases machine
->>> driver should be able to get sdw master stream from dai so that it can
->>> use the runtime stream to setup slave streams.
->>>
->>> soundwire already as a set function, get function would provide more
->>> flexibility to above configurations.
->>>
->>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>> ---
+On Tue, Aug 13, 2019 at 2:06 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> * Should we allow setting the sys_tz on new architectures that use only
+>   time64 interfaces at all, or should we try to get away from that anyway?
 
->>> +static inline void *snd_soc_dai_get_sdw_stream(struct snd_soc_dai *dai,
->>> +                           int direction)
->>> +{
->>> +    if (dai->driver->ops->get_sdw_stream)
->>> +        return dai->driver->ops->get_sdw_stream(dai, direction);
->>> +    else
->>> +        return ERR_PTR(-ENOTSUPP);
->>> +}
->>
->> Drop redundant else.
-> Not all the dai drivers would implement this function, I guess else is 
-> not redundant here!
-> 
-> --srini
->>
+We should not do TZ on a kernel level at all. At least not a global
+one. It makes no sense.
 
-Eh. By that I meant dropping "else" keyword and reducing indentation for 
-"return ERR_PTR(-ENOTSUPP);"
+If the original TZ had been defined to have some sane model (perhaps
+per session? Something like that), it would be worth doing. As it is,
+a global TZ is just plain wrong. Per process would be sane (but
+largely useless, I suspect).
 
-Czarek
+> * Should the NTP timewarp setting ("int persistent_clock_is_local" and
+>   its offset) be controllable separately from the timezone used in other
+>   drivers?
+>
+> * If we want keep having a way to set the sys_tz, what interface
+> should that use?
+
+I suspect we need to have _some_ way to set the kernel TZ for legacy
+reasons, but it should be deprecated and if we can make do without it
+entirely on architectures where the legacy doesn't make sense, then
+all the better.
+
+I suspect the only actual _valid_ use in the kernel for a time zone
+setting is likely for RTC clock setting, but even that isn't really
+"global", as much as "per RTC".
+
+That said, if glibc has some sane semantics for TZ, maybe the kernel
+can help with that. But I assume/think that glibc uses (a) environment
+variables and (b) a filesystem-set default (per-user file with a
+system-wide default? I don't know what people do). I suspect the
+kernel can't really do any better.
+
+                Linus
