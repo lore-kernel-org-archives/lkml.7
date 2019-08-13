@@ -2,56 +2,77 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63199C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E83C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29B43206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:16:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565730993;
-	bh=5lO5nG45fLOHTgE1yvwYm5c55LUdkLb+cAFPTo7XcbE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ke1408VU3CbVLbhJeeEgrK4sKsd8m/ACqAsN2TF/ej+kJiMvATWS9TkWUwFYkSl2+
-	 DCK5VNYqk9p5CexIKdw+Rwk+/p/ThuPVBaNWxkJRCeH5MSv3wYD9BwPQpGE/gBrOzh
-	 A2gEWmgsMTwvZC897LKh0TEmTNnabDCQ1ChPEFh8=
+	by mail.kernel.org (Postfix) with ESMTP id 5B3C720842
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:19:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="Uhqq6zLg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbfHMVQc (ORCPT
+        id S1726758AbfHMVTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:16:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53546 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726188AbfHMVQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 17:16:31 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5EA8205C9;
-        Tue, 13 Aug 2019 21:16:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565730991;
-        bh=5lO5nG45fLOHTgE1yvwYm5c55LUdkLb+cAFPTo7XcbE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OkG7QgjoGy1/FLMnWjN6QVHtQGDQE7lx3AF09Wq1TzQirB9nW7PhsZgi97LYakzAS
-         kpNmEhjjpIsqmSORExdEosdrLv2gJP/YeSBEFOMn1H5v5ee8hvFz/1qjptsMpcWS3X
-         KSFzaA/tLs+FDl9iSVKMYNQ4/gNMWqHEiPVBbtww=
-Date:   Tue, 13 Aug 2019 14:16:30 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [patch] mm, page_alloc: move_freepages should not examine
- struct page of reserved memory
-Message-Id: <20190813141630.bd8cee48e6a83ca77eead6ad@linux-foundation.org>
-In-Reply-To: <alpine.DEB.2.21.1908122036560.10779@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.1908122036560.10779@chino.kir.corp.google.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        Tue, 13 Aug 2019 17:19:30 -0400
+Received: from mail-qt1-f169.google.com ([209.85.160.169]:46004 "EHLO
+        mail-qt1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbfHMVTa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 17:19:30 -0400
+Received: by mail-qt1-f169.google.com with SMTP id k13so10620348qtm.12
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 14:19:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=EFWQ4jRCEd8FDkIajgVLnR+9FJPAclCDJqxx4O3K6cM=;
+        b=Uhqq6zLgUzH8NOnI6um+OvZlJTV4BOdsi9we2uNC6K9kKPpRJ/fKLAXMTOND4i58/4
+         jUQeGgcoCwewV8FUpAKWd5CJPlt6G9tfZlDrFtQus00zfDwWbg19riTtLBj4XAqRG9Lj
+         e6omlbWCvIA9q0rzQWEGDWrhCLNHK8xuAJ6t9XIY5ZxNghs4gn9Z4XhJmqcYQKxCFFK8
+         HYYOaE/MHrthxHR8PaeSXpgrGMAsBQAYCRtzxsprE/JjO4hWMx5D3pSxLzZGbxTfes33
+         uAIgEjcf+KZhxUqwgD07/+JNDvvmiutIWtHdbEpU4pSXxZLo/LHMK4n+w9Y2tWO8qM2r
+         UqVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=EFWQ4jRCEd8FDkIajgVLnR+9FJPAclCDJqxx4O3K6cM=;
+        b=scHqMHng09AAv1dH+/m+MtM8MO+CKZkoMPMGa306owEEJBzs/zwLaGnJy8Vrib5y/F
+         GHPQSgNpEo5zO3qCh498BA+clG7ldSlptcFvB1+IMT1XAILBtl1L3m+eT3n3oAECEucT
+         aicKEIG9Nb5d2wFzoribF+2hEmTUnS8HFLm4CoQBovRDVGUPF8N+bgzrCuX/TBsqTZUt
+         JCVwI1GflTjJeTqtSb5umm9Atkp5CRSjQowzefmGWeXZJp0J1iPG/jP3IjqJOL3GumlI
+         7+Wn+2bDtvadFyWcu4CyYws8syxoaDY9gFHfcg74g7Oka+MJYpT/W8zhUATLPE3lFd2O
+         V09g==
+X-Gm-Message-State: APjAAAUUhX8eoLX5TzKqyeFZUjxM+AYCR4jKvEG2A/E708yV+wE2M+uG
+        oMLtsLrYIeTSbMdMJjISS1gLGQ==
+X-Google-Smtp-Source: APXvYqx8AHPEuStN+ub7pm2zn9aiQcHCFLgI8UqHRNn5qyIpv84YbbRdbjZrRhAdb/Zul9jpQxkcRA==
+X-Received: by 2002:ac8:43c5:: with SMTP id w5mr35103972qtn.280.1565731169195;
+        Tue, 13 Aug 2019 14:19:29 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id m38sm13989192qta.43.2019.08.13.14.19.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Aug 2019 14:19:29 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 14:19:18 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     netdev@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 07/12] net: stmmac: Add ethtool register
+ dump for XGMAC cores
+Message-ID: <20190813141918.1601a649@cakuba.netronome.com>
+In-Reply-To: <3d860a78ce4e98941f7e292d251d7360755fdf2e.1565602974.git.joabreu@synopsys.com>
+References: <cover.1565602974.git.joabreu@synopsys.com>
+        <3d860a78ce4e98941f7e292d251d7360755fdf2e.1565602974.git.joabreu@synopsys.com>
+Organization: Netronome Systems, Ltd.
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,32 +80,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 12 Aug 2019 20:37:11 -0700 (PDT) David Rientjes <rientjes@google.com> wrote:
+On Mon, 12 Aug 2019 11:44:06 +0200, Jose Abreu wrote:
+>  static void stmmac_ethtool_gregs(struct net_device *dev,
+>  			  struct ethtool_regs *regs, void *space)
+>  {
+> -	u32 *reg_space = (u32 *) space;
+> -
+>  	struct stmmac_priv *priv = netdev_priv(dev);
+> +	int size = stmmac_ethtool_get_regs_len(dev);
+> +	u32 *reg_space = (u32 *) space;
+>  
+> -	memset(reg_space, 0x0, REG_SPACE_SIZE);
+> +	memset(reg_space, 0x0, size);
 
-> After commit 907ec5fca3dc ("mm: zero remaining unavailable struct pages"),
-> struct page of reserved memory is zeroed.  This causes page->flags to be 0
-> and fixes issues related to reading /proc/kpageflags, for example, of
-> reserved memory.
-> 
-> The VM_BUG_ON() in move_freepages_block(), however, assumes that
-> page_zone() is meaningful even for reserved memory.  That assumption is no
-> longer true after the aforementioned commit.
-> 
-> There's no reason why move_freepages_block() should be testing the
-> legitimacy of page_zone() for reserved memory; its scope is limited only
-> to pages on the zone's freelist.
-> 
-> Note that pfn_valid() can be true for reserved memory: there is a backing
-> struct page.  The check for page_to_nid(page) is also buggy but reserved
-> memory normally only appears on node 0 so the zeroing doesn't affect this.
-> 
-> Move the debug checks to after verifying PageBuddy is true.  This isolates
-> the scope of the checks to only be for buddy pages which are on the zone's
-> freelist which move_freepages_block() is operating on.  In this case, an
-> incorrect node or zone is a bug worthy of being warned about (and the
-> examination of struct page is acceptable bcause this memory is not
-> reserved).
-
-I'm thinking Fixes:907ec5fca3dc and Cc:stable?  But 907ec5fca3dc is
-almost a year old, so you were doing something special to trigger this?
-
+no need to zero regs, ethtool core zallocs them
