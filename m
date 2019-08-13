@@ -2,95 +2,163 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9455C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF2BC32753
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED39208C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:14:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565734476;
-	bh=6wCizBaaZT2k/09mFrNXRExfBAwJv2YLSMnChPGtw4g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cdGWj0nFtWrGgmDEAMpwmmaU+WK8XHXhJ+yi/mcRr+8GyYnMkQfUaVlNMSaDRNVXG
-	 1j5PnSTBau+SRDuu/LtMP7yQ7aIRy9aapT5HXDg7f9Fsk61cp2vEtAtsj5ruWtxGKG
-	 tWy6/A1O5fFXJUo19y1I0uVPd9fvTO4pTc/0Dp6E=
+	by mail.kernel.org (Postfix) with ESMTP id 4A94020665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfHMWOf (ORCPT
+        id S1727176AbfHMWPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 18:14:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40616 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726155AbfHMWOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 18:14:35 -0400
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 368582070D;
-        Tue, 13 Aug 2019 22:14:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565734474;
-        bh=6wCizBaaZT2k/09mFrNXRExfBAwJv2YLSMnChPGtw4g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0uaRXv8D5HRtmKK3R9sZVd0gtdGEAJy9OAYrUbynXlMjib/y//8/8b1GMIl0koAge
-         zvdeq5RXKS0RUpLgqM+wsU8tmSLaxzBvsjGnlrjpFHlq8frKD/7T7Y1NciVDfSwTpC
-         34kSkZyb8+4NWRxQuPpvthHnzOYQkdnd6haJ4Kwc=
-Received: by mail-qk1-f178.google.com with SMTP id r4so80901244qkm.13;
-        Tue, 13 Aug 2019 15:14:34 -0700 (PDT)
-X-Gm-Message-State: APjAAAUmVma8FonAfubrxl1pv6qK7mtjv2TnRGvqIaf5bBr5R15kfheQ
-        ObUnbYYi5KqWJY4GJBP6fGEGgMVef9/axznA9g==
-X-Google-Smtp-Source: APXvYqwk126OivmGjH6r+ni/zAgOht3m3QXJodkzCFH+TUHs2iVPGSLnoqVVTdkeSVJkGVzE/d/O+3TNCBaPTI7BGz4=
-X-Received: by 2002:a37:a48e:: with SMTP id n136mr36131378qke.223.1565734473435;
- Tue, 13 Aug 2019 15:14:33 -0700 (PDT)
+        Tue, 13 Aug 2019 18:15:55 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46602 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfHMWPy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 18:15:54 -0400
+Received: by mail-ot1-f66.google.com with SMTP id z17so59325961otk.13
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 15:15:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=l3UiqyQdkzzBfC+pgGtBbYgwOzNc0kqIlToMjux/dcg=;
+        b=H4D66IVuxsPwcOUE4nxYHq523bCvmc3MWiDGqCLgoRkv5apROAPjQ3xRJkirsDVsZS
+         F1QZhzd1DOJVlW8+YeF/3CDfI387rlrEvmhD+tnstmd6Gotx1hHck9793n+oNyMz66AK
+         bxsEmJ7TyhbIWJ4w35+vTPLuNQq3JDMbZOCwl7878mk2RWZohJEbyS/jL17GbKmt1gsq
+         5uMkH1HdPzsvBhbjbvI4yhABG3MewOAmVfGbHUUftOYbWUOhyg45wnPzO+lqDSzwcTLK
+         yiNpoQMuTu8JxiwJrKufQw96juuNnoyfWm3DMtE7SlpV0GDFdnjL6ZMMoCaGHhBBsxUY
+         qyAg==
+X-Gm-Message-State: APjAAAUKcIe9X8psiBFN4mcfZZcnENdFEFE2olGmIk/DblmZGzJtKnas
+        gyuo3NsQeEsgcPU7ZjiVqQ4wFg==
+X-Google-Smtp-Source: APXvYqxv+oF6XIEC+dv7wJmSSoinLlXdDjSl0WGd3LDyf4pIirWgA7sw8J1fy8iFq9Uq2j49IrwB8w==
+X-Received: by 2002:a5e:9308:: with SMTP id k8mr28048240iom.143.1565734553758;
+        Tue, 13 Aug 2019 15:15:53 -0700 (PDT)
+Received: from masetto.ahs3 (c-67-165-232-89.hsd1.co.comcast.net. [67.165.232.89])
+        by smtp.gmail.com with ESMTPSA id r20sm15757418ioj.32.2019.08.13.15.15.53
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 13 Aug 2019 15:15:53 -0700 (PDT)
+Reply-To: ahs3@redhat.com
+Subject: Re: [PATCH] ACPI / CPPC: do not require the _PSD method when using
+ CPPC
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Len Brown <lenb@kernel.org>
+References: <20190805170338.29493-1-ahs3@redhat.com>
+ <d60f5bed-ca91-fc72-2e4d-309fb8f42960@redhat.com>
+ <3154828.dzdK0YMts5@kreacher>
+From:   Al Stone <ahs3@redhat.com>
+Organization: Red Hat, Inc.
+Message-ID: <84c60c6c-949e-2ebd-e9be-7e7cb0fcca00@redhat.com>
+Date:   Tue, 13 Aug 2019 16:15:52 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190807003629.2974-1-andrew@aj.id.au> <20190807003629.2974-2-andrew@aj.id.au>
-In-Reply-To: <20190807003629.2974-2-andrew@aj.id.au>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 13 Aug 2019 16:14:22 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKXda7f43=ZdtTsyrdhdqn+H4L=7zQXtB_EEfHdi=rHLg@mail.gmail.com>
-Message-ID: <CAL_JsqKXda7f43=ZdtTsyrdhdqn+H4L=7zQXtB_EEfHdi=rHLg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: mmc: Document Aspeed SD controller
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ryan Chen <ryanchen.aspeed@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3154828.dzdK0YMts5@kreacher>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 6:38 PM Andrew Jeffery <andrew@aj.id.au> wrote:
->
-> The ASPEED SD/SDIO/MMC controller exposes two slots implementing the
-> SDIO Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit
-> data bus if only a single slot is enabled.
->
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
->
-> ---
-> v4:
-> * Make use of mmc-controller.yaml
-> * Document sdhci,auto-cmd12
->
-> v2:
-> * Fix compatible enums
-> * Add AST2600 compatibles
-> * Describe #address-cells / #size-cells
-> ---
->  .../devicetree/bindings/mmc/aspeed,sdhci.yaml | 105 ++++++++++++++++++
->  1 file changed, 105 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+On 8/13/19 3:57 PM, Rafael J. Wysocki wrote:
+> On Tuesday, August 13, 2019 4:00:56 PM CEST Al Stone wrote:
+>> On 8/5/19 11:03 AM, Al Stone wrote:
+>>> According to the ACPI 6.3 specification, the _PSD method is optional
+>>> when using CPPC.  The underlying assumption appears to be that each CPU
+>>> can change frequency independently from all other CPUs; _PSD is provided
+>>> to tell the OS that some processors can NOT do that.
+>>>
+>>> However, the acpi_get_psd() function returns -ENODEV if there is no _PSD
+>>> method present, or an ACPI error status if an error occurs when evaluating
+>>> _PSD, if present.  This essentially makes _PSD mandatory when using CPPC,
+>>> in violation of the specification, and only on Linux.
+>>>
+>>> This has forced some firmware writers to provide a dummy _PSD, even though
+>>> it is irrelevant, but only because Linux requires it; other OSPMs follow
+>>> the spec.  We really do not want to have OS specific ACPI tables, though.
+>>>
+>>> So, correct acpi_get_psd() so that it does not return an error if there
+>>> is no _PSD method present, but does return a failure when the method can
+>>> not be executed properly.  This allows _PSD to be optional as it should
+>>> be.
+>>>
+>>> Signed-off-by: Al Stone <ahs3@redhat.com>
+>>> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+>>> Cc: Len Brown <lenb@kernel.org>
+>>> ---
+>>>  drivers/acpi/cppc_acpi.c | 11 +++++++----
+>>>  1 file changed, 7 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
+>>> index 15f103d7532b..e9ecfa13e997 100644
+>>> --- a/drivers/acpi/cppc_acpi.c
+>>> +++ b/drivers/acpi/cppc_acpi.c
+>>> @@ -365,10 +365,13 @@ static int acpi_get_psd(struct cpc_desc *cpc_ptr, acpi_handle handle)
+>>>  	union acpi_object  *psd = NULL;
+>>>  	struct acpi_psd_package *pdomain;
+>>>  
+>>> -	status = acpi_evaluate_object_typed(handle, "_PSD", NULL, &buffer,
+>>> -			ACPI_TYPE_PACKAGE);
+>>> -	if (ACPI_FAILURE(status))
+>>> -		return -ENODEV;
+>>> +	if (acpi_has_method(handle, "_PSD")) {
+>>> +		status = acpi_evaluate_object_typed(handle, "_PSD", NULL,
+>>> +						    &buffer, ACPI_TYPE_PACKAGE);
+>>> +		if (ACPI_FAILURE(status))
+>>> +			return -ENODEV;
+>>> +	} else
+>>> +		return 0;		/* _PSD is optional */
+>>>  
+>>>  	psd = buffer.pointer;
+>>>  	if (!psd || psd->package.count != 1) {
+>>>
+>>
+>> Rafael,
+>>
+>> Any other comments?
+> 
+> Yes (they will be sent separately).
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thanks, I appreciate it.
+
+>> Would it be possible to pull this into an -rc?
+>> I'd really like to avoid anyone else having to ship Linux-specific
+>> DSDTs and SSDTs.
+> 
+> You won't achieve that through this patch alone, because they will
+> also want older kernels that don't include it to run on their platforms.
+
+My apologies for not mentioning this before, but these are platforms
+that are not widely available yet.  As far as I know they will not be
+able to use older kernels at all, even with this fix.  They are very
+heavily reliant on the most recent changes to quite a few other things
+such as HMAT, PPTT, and CPPC in general.  This was just one of the items
+their firmware developers ran into, so a 5.3 fix is plenty.
+
+Unless, of course, I missed your point entirely....
+
+> Thanks,
+> Rafael
+> 
+> 
+> 
+
+
+-- 
+ciao,
+al
+-----------------------------------
+Al Stone
+Software Engineer
+Red Hat, Inc.
+ahs3@redhat.com
+-----------------------------------
