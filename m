@@ -2,115 +2,108 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1006AC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A6DC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7E362054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:38:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vZT9vUuH"
+	by mail.kernel.org (Postfix) with ESMTP id 33A8820842
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:39:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565671143;
+	bh=3xMxQdsEpxtjj+1yTxgV9WOlUO2WQ552exvs56/rr1o=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=I4MNtueZlg2yoFxq3ew1F7r1JDDetigMUKrJfEWyafHKchCxww9TEPrVumyF+5we2
+	 KbtwPkCIPZilv8jYJuxvKy3LPIJHk/NsKQ8DOxusm9jWDJjYgifXF42mOR6uodvqk4
+	 Bl+MZz62nWIVn+LFJs6ALqSZH2JWoNzqSYASvFWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbfHMEiz (ORCPT
+        id S1726869AbfHMEjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 00:38:55 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:51936 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbfHMEiz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 00:38:55 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7D4cMHO075138;
-        Mon, 12 Aug 2019 23:38:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1565671102;
-        bh=Ew8tzQEV3bzDzArZx0dSvuT8DgjzVr1McyreXZiBsSc=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=vZT9vUuHjeJfqpbHC4JPY+yhxRma4e4qSkeST+7paoKsG84W2UZByMArh6fPFnWJq
-         dIgNfQbSX2IfvtZnQIUuh1wRrWHV1Cl2fSl/20zrLzPmdAg0BUy5hJ4UdsWDpJTgAV
-         ZryYQFfcBi+I0FwLxytw7j2IyY14hveNKE/bPrU8=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7D4cMeS030426
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 12 Aug 2019 23:38:22 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 12
- Aug 2019 23:38:21 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 12 Aug 2019 23:38:21 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7D4cDdj022723;
-        Mon, 12 Aug 2019 23:38:14 -0500
-Subject: Re: [PATCHv4 1/2] PCI: layerscape: Add the bar_fixed_64bit property
- in EP driver.
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>, <lorenzo.pieralisi@arm.com>,
-        <bhelgaas@google.com>, <minghuan.Lian@nxp.com>,
-        <mingkai.hu@nxp.com>, <roy.zang@nxp.com>, <l.stach@pengutronix.de>,
-        <tpiepho@impinj.com>, <leonard.crestez@nxp.com>,
-        <andrew.smirnov@gmail.com>, <yue.wang@amlogic.com>,
-        <hayashi.kunihiko@socionext.com>, <dwmw@amazon.co.uk>,
-        <jonnyc@amazon.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190813025317.48290-1-xiaowei.bao@nxp.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <4a456d72-f5b5-e860-0215-dd215e2edf09@ti.com>
-Date:   Tue, 13 Aug 2019 10:06:20 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190813025317.48290-1-xiaowei.bao@nxp.com>
+        Tue, 13 Aug 2019 00:39:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58330 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725298AbfHMEjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 00:39:01 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 661F82054F;
+        Tue, 13 Aug 2019 04:38:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565671139;
+        bh=3xMxQdsEpxtjj+1yTxgV9WOlUO2WQ552exvs56/rr1o=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=LR11it/I3O8CGTrv+Ng5zvucPa8uUkEfa3LmKFjw6O5u9qhsOj4v0EPjTnoOYONrH
+         u/tnKqLjb2VOMamzmBD+bQ92PSyu/l9yjopx4tVHE3QOH9DwxrVN/Ixn8t2s8dlBob
+         UQtw5MZJLoTm4I6qlCWqOvb7Iah3ocYPA4XTG7DY=
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190812182421.141150-15-brendanhiggins@google.com>
+References: <20190812182421.141150-1-brendanhiggins@google.com> <20190812182421.141150-15-brendanhiggins@google.com>
+Subject: Re: [PATCH v12 14/18] kunit: defconfig: add defconfigs for building KUnit tests
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
+        tytso@mit.edu, yamada.masahiro@socionext.com
+User-Agent: alot/0.8.1
+Date:   Mon, 12 Aug 2019 21:38:58 -0700
+Message-Id: <20190813043859.661F82054F@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Brendan Higgins (2019-08-12 11:24:17)
+> diff --git a/arch/um/configs/kunit_defconfig b/arch/um/configs/kunit_defc=
+onfig
+> new file mode 100644
+> index 0000000000000..bfe49689038f1
+> --- /dev/null
+> +++ b/arch/um/configs/kunit_defconfig
+> @@ -0,0 +1,8 @@
+> +CONFIG_OF=3Dy
+> +CONFIG_OF_UNITTEST=3Dy
+> +CONFIG_OF_OVERLAY=3Dy
+> +CONFIG_I2C=3Dy
+> +CONFIG_I2C_MUX=3Dy
+> +CONFIG_KUNIT=3Dy
+> +CONFIG_KUNIT_TEST=3Dy
+> +CONFIG_KUNIT_EXAMPLE_TEST=3Dy
+> diff --git a/tools/testing/kunit/configs/all_tests.config b/tools/testing=
+/kunit/configs/all_tests.config
+> new file mode 100644
+> index 0000000000000..bfe49689038f1
+> --- /dev/null
+> +++ b/tools/testing/kunit/configs/all_tests.config
+> @@ -0,0 +1,8 @@
+> +CONFIG_OF=3Dy
+> +CONFIG_OF_UNITTEST=3Dy
+> +CONFIG_OF_OVERLAY=3Dy
+> +CONFIG_I2C=3Dy
+> +CONFIG_I2C_MUX=3Dy
 
+Are these above config options necessary? I don't think they're part of
+the patch series anymore so it looks odd to enable the OF unittests and
+i2c configs.
 
-On 13/08/19 8:23 AM, Xiaowei Bao wrote:
-> The PCIe controller of layerscape just have 4 BARs, BAR0 and BAR1
-> is 32bit, BAR3 and BAR4 is 64bit, this is determined by hardware,
-
-Do you mean BAR2 instead of BAR3 here?
-
-Thanks
-Kishon
-
-> so set the bar_fixed_64bit with 0x14.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
-> v2:
->  - Replace value 0x14 with a macro.
-> v3:
->  - No change.
-> v4:
->  - send the patch again with '--to'.
-> 
->  drivers/pci/controller/dwc/pci-layerscape-ep.c |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> index be61d96..227c33b 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> @@ -44,6 +44,7 @@ static int ls_pcie_establish_link(struct dw_pcie *pci)
->  	.linkup_notifier = false,
->  	.msi_capable = true,
->  	.msix_capable = false,
-> +	.bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
->  };
->  
->  static const struct pci_epc_features*
-> 
+> +CONFIG_KUNIT=3Dy
+> +CONFIG_KUNIT_TEST=3Dy
+> +CONFIG_KUNIT_EXAMPLE_TEST=3Dy
