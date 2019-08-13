@@ -2,71 +2,157 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED16C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B97C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16DC720840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:46:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="CGijbDHE"
+	by mail.kernel.org (Postfix) with ESMTP id B00242067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbfHMLqE (ORCPT
+        id S1727528AbfHMLqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 07:46:04 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:56466 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726810AbfHMLqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 07:46:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Ul9hI6QimlOvjEhozLFgbc5R2VjdFU/OBfMdgHG5UDg=; b=CGijbDHEFEPFM35d9bfhlI27rW
-        1+75Yf3zkNmbo6C9exJsJ/wvNAkdWzVcE+NQr5k58w6tZmJhgNOaTdeg9j1JFGBMtYyb1G6kDCLdM
-        w+flQZbCQ2jcvOejH9UgQjxUy2zXLYl+ui0f6NpVeZJQZCLvCkX83xvlH/3gVAT5gypA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hxVFS-0000Yz-Vl; Tue, 13 Aug 2019 13:45:55 +0200
-Date:   Tue, 13 Aug 2019 13:45:54 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     linux-kernel@vger.kernel.org, joe@perches.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: PHY LIBRARY: Remove sysfs-bus-mdio record
-Message-ID: <20190813114554.GU14290@lunn.ch>
-References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
- <20190813061439.17529-1-efremov@linux.com>
+        Tue, 13 Aug 2019 07:46:52 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:53126 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726810AbfHMLqw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 07:46:52 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id D8AB3634C88;
+        Tue, 13 Aug 2019 14:46:43 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1hxVGF-0000fC-7e; Tue, 13 Aug 2019 14:46:43 +0300
+Date:   Tue, 13 Aug 2019 14:46:43 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com
+Subject: Re: [PATCH v2 1/3] dt-bindings: media: i2c: Add IMX290 CMOS sensor
+ binding
+Message-ID: <20190813114643.GA2527@valkosipuli.retiisi.org.uk>
+References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
+ <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
+ <20190813094526.GG835@valkosipuli.retiisi.org.uk>
+ <20190813113358.GA28877@Mani-XPS-13-9360>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190813061439.17529-1-efremov@linux.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190813113358.GA28877@Mani-XPS-13-9360>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 09:14:39AM +0300, Denis Efremov wrote:
-> Update MAINTAINERS to reflect that sysfs-bus-mdio documentation
-> was removed.
+Hi Manivannan,
+
+On Tue, Aug 13, 2019 at 05:03:58PM +0530, Manivannan Sadhasivam wrote:
+> Hi Sakari,
 > 
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Heiner Kallweit <hkallweit1@gmail.com>
-> Cc: netdev@vger.kernel.org
-> Fixes: a6cd0d2d493a ("Documentation: net-sysfs: Remove duplicate PHY device documentation")
-> Signed-off-by: Denis Efremov <efremov@linux.com>
+> Thanks for the review!
+> 
+> On Tue, Aug 13, 2019 at 12:45:26PM +0300, Sakari Ailus wrote:
+> > Hi Manivannan,
+> > 
+> > On Tue, Aug 06, 2019 at 06:39:36PM +0530, Manivannan Sadhasivam wrote:
+> > > Add devicetree binding for IMX290 CMOS image sensor.
+> > > 
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > >  .../devicetree/bindings/media/i2c/imx290.txt  | 51 +++++++++++++++++++
+> > >  1 file changed, 51 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx290.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/media/i2c/imx290.txt b/Documentation/devicetree/bindings/media/i2c/imx290.txt
+> > > new file mode 100644
+> > > index 000000000000..7535b5b5b24b
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/i2c/imx290.txt
+> > > @@ -0,0 +1,51 @@
+> > > +* Sony IMX290 1/2.8-Inch CMOS Image Sensor
+> > > +
+> > > +The Sony IMX290 is a 1/2.8-Inch CMOS Solid-state image sensor with
+> > > +Square Pixel for Color Cameras. It is programmable through I2C and 4-wire
+> > > +interfaces. The sensor output is available via CMOS logic parallel SDR output,
+> > > +Low voltage LVDS DDR output and CSI-2 serial data output.
+> > 
+> > If there are three to choose from, then you should specify which one is in
+> > use. Given that I think chances remain slim we'd add support for the other
+> > two (it's certainly not ruled out though), CSI-2 could be the default. But
+> > this needs to be documented.
+> > 
+> 
+> Hmm... I'm not sure here. Bindings should describe the hardware and not the
+> limitations of the driver. Here as you said, the sensor can output frames
+> in 3 different modes/formats but the driver only supports CSI2. I can add a
+> note in the driver but not sure whether dt-binding is the right place or not!
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+I guess alternatively you could document the necessary bindings for the
+other two busses.
 
-    Andrew
+But what I'm saying here is that it's highly unlikely they'll be ever
+needed, and it'd be mostly a waste of time to implement that. (That said, I
+have nothing against the use of these busses, but I've never seen anyone
+using them.) Many other devices use defaults for more contentious settings.
+
+> 
+> > > +
+> > > +Required Properties:
+> > > +- compatible: Should be "sony,imx290"
+> > > +- reg: I2C bus address of the device
+> > > +- clocks: Reference to the xclk clock.
+> > > +- clock-names: Should be "xclk".
+> > > +- clock-frequency: Frequency of the xclk clock.
+> > 
+> > ...in Hz.
+> > 
+> 
+> Ack.
+> 
+> > > +- vdddo-supply: Sensor digital IO regulator.
+> > > +- vdda-supply: Sensor analog regulator.
+> > > +- vddd-supply: Sensor digital core regulator.
+> > > +
+> > > +Optional Properties:
+> > > +- reset-gpios: Sensor reset GPIO
+> > > +
+> > > +The imx290 device node should contain one 'port' child node with
+> > > +an 'endpoint' subnode. For further reading on port node refer to
+> > > +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > 
+> > Which other properties are relevant for the device?
+> 
+> Not much other than, clock/data lanes.
+
+Please document data-lanes, and which values it may have.
+
+> 
+> > I suppose you can't change the lane order, so clock-lanes is redundant
+> > (don't use it in the example) and data-lanes should be monotonically
+> > incrementing series from 1 to 4.
+> > 
+> 
+> We can change the order and the example here illustrates how it has been
+> wired in FRAMOS module. If I change the lane order like you said, it won't
+> work.
+
+I highly doubt that. Neither the driver nor the sensor uses the lane
+ordering information.
+
+And even if the driver only supported four lanes, then it should check the
+number of lanes is actually four.
+
+-- 
+Regards,
+
+Sakari Ailus
