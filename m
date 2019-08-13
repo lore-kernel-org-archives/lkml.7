@@ -2,136 +2,159 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A64BEC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D7AC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 825232064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A73DE2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:06:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565698010;
+	bh=TET6WjOQahzKuCbEBc/ELlWuL5zy2JXUgDdm39iIfKE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I0X0LsCWIVGJG1k6/r8kvpZlIa1ia9Qps4CvHXWrh4oOK4N3eFWf3KOwX4fF5a3RI
+	 PrSruN9+Gz52+oOrCpnBHt15CuihRKYUxLEtIrKpqsDKeF4cvtAjQ9+3OoETXpaMc7
+	 5IkGazMzK3Anb0V4Nat9wk61XMpFtMeneJMKa9no=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbfHMMG3 (ORCPT
+        id S1727837AbfHMMGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 08:06:29 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:3087 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726935AbfHMMG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 08:06:28 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id CF558F30528089ECDCC9;
-        Tue, 13 Aug 2019 20:06:26 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 13 Aug 2019 20:06:26 +0800
-Received: from 138 (10.175.124.28) by dggeme762-chm.china.huawei.com
- (10.3.19.108) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Tue, 13
- Aug 2019 20:06:25 +0800
-Date:   Tue, 13 Aug 2019 20:23:32 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Pavel Machek <pavel@denx.de>
-CC:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>, David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        "Jaegeuk Kim" <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Richard Weinberger <richard@nod.at>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
-        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH v7 08/24] erofs: add namei functions
-Message-ID: <20190813122332.GA17429@138>
-References: <20190813091326.84652-1-gaoxiang25@huawei.com>
- <20190813091326.84652-9-gaoxiang25@huawei.com>
- <20190813114821.GB11559@amd>
+        Tue, 13 Aug 2019 08:06:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38290 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726600AbfHMMGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 08:06:49 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE6D020578;
+        Tue, 13 Aug 2019 12:06:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565698008;
+        bh=TET6WjOQahzKuCbEBc/ELlWuL5zy2JXUgDdm39iIfKE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vOqcEo9DN08hqiKR3LQUsdgfppxOeTWnE/FRtSeNk8YDI9lY1+JQfiHsqAVoTl10M
+         ZfyAt2ot6Gxj0JNN7DgFCftwU/8DuU4lmOWdTryiULq9CV+n1lSIH8/jmyt/IQ3jgc
+         AlTFjS71ifJBWAOsSwnmMjIvLYg9WBe94TywDnjI=
+Date:   Tue, 13 Aug 2019 13:06:44 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        steve.capper@arm.com
+Subject: Re: "arm64/for-next/core" causes boot panic
+Message-ID: <20190813120643.25y5px4andu6cfwp@willie-the-truck>
+References: <1565646695.8572.6.camel@lca.pw>
+ <20190813090200.h2rz4xphgnb5j5bc@willie-the-truck>
+ <20190813105852.ovk5gtzddwlsm4ly@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190813114821.GB11559@amd>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Originating-IP: [10.175.124.28]
-X-ClientProxiedBy: dggeme716-chm.china.huawei.com (10.1.199.112) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190813105852.ovk5gtzddwlsm4ly@willie-the-truck>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+[+Steve]
 
-On Tue, Aug 13, 2019 at 01:48:21PM +0200, Pavel Machek wrote:
-> Hi!
+On Tue, Aug 13, 2019 at 11:58:52AM +0100, Will Deacon wrote:
+> On Tue, Aug 13, 2019 at 10:02:01AM +0100, Will Deacon wrote:
+> > On Mon, Aug 12, 2019 at 05:51:35PM -0400, Qian Cai wrote:
+> > > Booting today's linux-next on an arm64 server triggers a panic with
+> > > CONFIG_KASAN_SW_TAGS=y pointing to this line,
+> > 
+> > Is this the only change on top of defconfig? If not, please can you share
+> > your full .config?
+> > 
+> > > kfree()->virt_to_head_page()->compound_head()
+> > > 
+> > > unsigned long head = READ_ONCE(page->compound_head);
+> > > 
+> > > The bisect so far indicates one of those could be bad,
+> > 
+> > I guess that means the issue is reproducible on the arm64 for-next/core
+> > branch. Once I have your .config, I'll give it a go.
 > 
-> > +	/*
-> > +	 * on-disk error, let's only BUG_ON in the debugging mode.
-> > +	 * otherwise, it will return 1 to just skip the invalid name
-> > +	 * and go on (in consideration of the lookup performance).
-> > +	 */
-> > +	DBG_BUGON(qd->name > qd->end);
-> 
-> I believe you should check for errors in non-debug mode, too.
+> FWIW, I've managed to reproduce this using defconfig + SW_TAGS on
+> for-next/core, so I'll keep investigating.
 
-Thanks for your kindly reply!
-
-The following is just my personal thought... If I am wrong, please
-kindly point out...
-
-As you can see, this is a new prefixed string binary search algorithm
-which can provide similar performance with hashed approach (but no
-need to store hash value at all), so I really care about its lookup
-performance.
-
-There is something needing to be concerned, is, whether namei() should
-report any potential on-disk issues or just return -ENOENT for these
-corrupted dirs, I think I tend to use the latter one.
-
-The reason (in my opinion) is if you consider another some another
-complicated non-transverse ondisk implementation, it cannot transverse
-all the entires so they could/couldn't report all potential issues
-in namei() (For such corrupted dir, they can return -ENOENT due
-to lack of information of course, just avoiding crashing the kernel
-is OK).
-
-Therefore, in my thought, such issue can be reported by fsck-like
-tools such as erofs.fsck. And actually readdir() will also report
-all issues as well, thus we can have performance gain on lookup.
-
-> 
-> 
-> > +			if (unlikely(!ndirents)) {
-> > +				DBG_BUGON(1);
-> > +				kunmap_atomic(de);
-> > +				put_page(page);
-> > +				page = ERR_PTR(-EIO);
-> > +				goto out;
-> > +			}
-> 
-> -EUCLEAN is right error code for corrupted filesystem. (And you
->  probably want to print something to the syslog, too).
-
-Yes, you are right :) -EUCLEAN/EFSCORRUPTED is actually for such thing,
-nowadays, EROFS treats all EFSCORRUPTED cases into EIO, and I will
-update that in one patch... (Yes, it needs to print something of course :))
+Right, hacky diff below seems to resolve this, so I'll split this up into
+some proper patches as there is more than one bug here.
 
 Thanks,
-Gao Xiang
 
-> 
-> 								Pavel
-> -- 
-> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Will
 
+--->8
 
+diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
+index afaf512c0e1b..541e8dcb5ab3 100644
+--- a/arch/arm64/include/asm/memory.h
++++ b/arch/arm64/include/asm/memory.h
+@@ -244,7 +244,7 @@ static inline const void *__tag_set(const void *addr, u8 tag)
+ /*
+  * The linear kernel range starts in the middle of the virtual adddress
+  * space. Testing the top bit for the start of the region is a
+- * sufficient check.
++ * sufficient check and avoids having to worry about the tag.
+  */
+ #define __is_lm_address(addr)	(!((addr) & BIT(vabits_actual - 1)))
+ 
+@@ -252,7 +252,7 @@ static inline const void *__tag_set(const void *addr, u8 tag)
+ #define __kimg_to_phys(addr)	((addr) - kimage_voffset)
+ 
+ #define __virt_to_phys_nodebug(x) ({					\
+-	phys_addr_t __x = (phys_addr_t)(x);				\
++	phys_addr_t __x = (phys_addr_t)(__tag_reset(x));		\
+ 	__is_lm_address(__x) ? __lm_to_phys(__x) :			\
+ 			       __kimg_to_phys(__x);			\
+ })
+@@ -301,8 +301,8 @@ static inline void *phys_to_virt(phys_addr_t x)
+ #define __pa_nodebug(x)		__virt_to_phys_nodebug((unsigned long)(x))
+ #define __va(x)			((void *)__phys_to_virt((phys_addr_t)(x)))
+ #define pfn_to_kaddr(pfn)	__va((pfn) << PAGE_SHIFT)
+-#define virt_to_pfn(x)      __phys_to_pfn(__virt_to_phys((unsigned long)(x)))
+-#define sym_to_pfn(x)	    __phys_to_pfn(__pa_symbol(x))
++#define virt_to_pfn(x)		__phys_to_pfn(__virt_to_phys((unsigned long)(x)))
++#define sym_to_pfn(x)		__phys_to_pfn(__pa_symbol(x))
+ 
+ /*
+  *  virt_to_page(k)	convert a _valid_ virtual address to struct page *
+@@ -311,7 +311,7 @@ static inline void *phys_to_virt(phys_addr_t x)
+ #define ARCH_PFN_OFFSET		((unsigned long)PHYS_PFN_OFFSET)
+ 
+ #if !defined(CONFIG_SPARSEMEM_VMEMMAP) || defined(CONFIG_DEBUG_VIRTUAL)
+-#define virt_to_page(kaddr)	pfn_to_page(__pa(kaddr) >> PAGE_SHIFT)
++#define virt_to_page(kaddr)	pfn_to_page(virt_to_pfn(kaddr))
+ #else
+ #define __virt_to_pgoff(kaddr)	(((u64)(kaddr) - PAGE_OFFSET) / PAGE_SIZE * sizeof(struct page))
+ #define __page_to_voff(kaddr)	(((u64)(kaddr) - VMEMMAP_START) * PAGE_SIZE / sizeof(struct page))
+@@ -324,15 +324,17 @@ static inline void *phys_to_virt(phys_addr_t x)
+ 	((void *)__addr_tag);						\
+ })
+ 
+-#define virt_to_page(vaddr)	((struct page *)((__virt_to_pgoff(vaddr)) + VMEMMAP_START))
++#define virt_to_page(kaddr)	({					\
++	unsigned long __addr = __tag_reset((unsigned long)kaddr);	\
++	(struct page *)((__virt_to_pgoff(__addr) + VMEMMAP_START));	\
++})
+ #endif
+ #endif
+ 
+-#define _virt_addr_is_linear(kaddr)	\
+-	(__tag_reset((u64)(kaddr)) >= PAGE_OFFSET)
+-
+-#define virt_addr_valid(kaddr)		\
+-	(_virt_addr_is_linear(kaddr) && pfn_valid(virt_to_pfn(kaddr)))
++#define virt_addr_valid(kaddr)	({					\
++	unsigned long __addr = (unsigned long)kaddr;			\
++	__is_lm_address(__addr) && pfn_valid(virt_to_pfn(__addr));	\
++})
+ 
+ /*
+  * Given that the GIC architecture permits ITS implementations that can only be
