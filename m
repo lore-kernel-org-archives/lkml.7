@@ -2,58 +2,139 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BF4C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B30C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0DB120578
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D300A20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:25:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n/PBxuPv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbfHMNYh (ORCPT
+        id S1729131AbfHMNZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:24:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52340 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728134AbfHMNYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:24:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C6C30AE62;
-        Tue, 13 Aug 2019 13:24:35 +0000 (UTC)
-Date:   Tue, 13 Aug 2019 15:24:30 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Petr Mladek <pmladek@suse.com>
-cc:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] livepatch: Keep replaced patches until post_patch
- callback is called
-In-Reply-To: <20190719074034.29761-2-pmladek@suse.com>
-Message-ID: <alpine.LSU.2.21.1908131523260.10477@pobox.suse.cz>
-References: <20190719074034.29761-1-pmladek@suse.com> <20190719074034.29761-2-pmladek@suse.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 13 Aug 2019 09:25:01 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46058 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728134AbfHMNZA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 09:25:00 -0400
+Received: by mail-pf1-f195.google.com with SMTP id w26so6344082pfq.12;
+        Tue, 13 Aug 2019 06:25:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=icok7aUr9NjweCwQOu8d7MJikZLhsx5ZtDw4IRqdFmk=;
+        b=n/PBxuPvRSj5AVujeC45Mob83CCsceHP3yjY1iNaBLJwlMFst4E2GqrYsM0PROsXZ5
+         wJ6mj+XWYBBsKBfXXxUbI0CQius4QTLEl3YCwm9D4GZligWL4yceNNdWsGPaEb2CxGvU
+         GA1F88P4BCZGrkAwk1aKBTn+pAOlVhMhTPeH8lH3A0Qf4LUzh1cdkUsVPDBQ63nY8l8e
+         UnzHJFeYj8OHFQi3+99VI+vxI1WYPjyQjmWcbagGHNEPGjUg7qpcladCGgMFCpfung24
+         qaYRgDe2lhzQP1Nsgk4A2WhzgVkwXNrXaiLFKzpJQASpU1P14/Gf0OcpVfr9HZppWt12
+         Mwag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=icok7aUr9NjweCwQOu8d7MJikZLhsx5ZtDw4IRqdFmk=;
+        b=rTl2rCgZ9jT64V+qJgaaOV0AG4xoiNeehVr9JZNuhliK8DtNJEtyCLfCzGIBWMYdRp
+         F1h7YO35yB9wJxOwNLITbdqQ9Q1VuGZUdn08BtGtTXSiVhfleOMN1x06bV4WUEaN70nC
+         lvwFJTkDKEB5haxp6M7H92sBRgQht5qsNGy1s2xAHcuE8gGphxFUjJM7M3vTLIUo+KgI
+         s9TeP31OLemWFzdF3ru8FxG/6IF4XYH3+mtupj9a6aYimb4b5GoX1sesiQrym4VU6m1a
+         FC5u4a+2nbDLRfT2eGN4eKUt0OXh+2aAtqpoaa+LoIf0Yq32FmK4Y9QIr3BN9oZOdJAC
+         izgQ==
+X-Gm-Message-State: APjAAAVgBG6ykGi6qGcml7Xt6WLx3NHYukT+9HvuzU53W+lPmwfWUhlW
+        lgUcHOXPzl9sSHO6AkBdHx/3APQj
+X-Google-Smtp-Source: APXvYqytu7jljMXl7piQTtFyuq5M5HqC4HT4b0x+oerpWvA/dJtA2SMtGmXVK6JxQNJW6ot9uaCZ6Q==
+X-Received: by 2002:a65:68c8:: with SMTP id k8mr34088677pgt.192.1565702699770;
+        Tue, 13 Aug 2019 06:24:59 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p65sm110032557pfp.58.2019.08.13.06.24.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 13 Aug 2019 06:24:58 -0700 (PDT)
+Subject: Re: [PATCH v2 3/4] hwmon/ltc2990: Add platform_data support
+To:     Max Staudt <max@enpas.org>
+Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jean Delvare <jdelvare@suse.com>, linux-m68k@vger.kernel.org,
+        linux-kernel@vger.kernel.org, glaubitz@physik.fu-berlin.de
+References: <20190812235237.21797-1-max@enpas.org>
+ <20190812235237.21797-3-max@enpas.org> <20190813080237.GA29986@roeck-us.net>
+ <6912362a-1f58-a9d6-f86b-d16930aa359c@enpas.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <275c42b3-9a91-a73a-0696-3c5a0a344509@roeck-us.net>
+Date:   Tue, 13 Aug 2019 06:24:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <6912362a-1f58-a9d6-f86b-d16930aa359c@enpas.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Jul 2019, Petr Mladek wrote:
-
-> Pre/post (un)patch callbacks might manipulate the system state. Cumulative
-> livepatches might need to take over the changes made by the replaced
-> ones. For this they might need to access some data stored or referenced
-> by the old livepatches.
+On 8/13/19 3:10 AM, Max Staudt wrote:
+> On 08/13/2019 10:02 AM, Guenter Roeck wrote:
+>> On Tue, Aug 13, 2019 at 01:52:36AM +0200, Max Staudt wrote:
+>>> This allows code using i2c_new_device() to specify a measurement mode.
+>>>
+>>> Signed-off-by: Max Staudt <max@enpas.org>
+>>> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>>> ---
+>>>   drivers/hwmon/ltc2990.c               |  9 +++++++++
+>>>   include/linux/platform_data/ltc2990.h | 11 +++++++++++
+>>>   2 files changed, 20 insertions(+)
+>>>   create mode 100644 include/linux/platform_data/ltc2990.h
+>>>
+>>> diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
+>>> index f9431ad43..f19b9c50c 100644
+>>> --- a/drivers/hwmon/ltc2990.c
+>>> +++ b/drivers/hwmon/ltc2990.c
+>>> @@ -14,6 +14,7 @@
+>>>   #include <linux/kernel.h>
+>>>   #include <linux/module.h>
+>>>   #include <linux/of.h>
+>>> +#include <linux/platform_data/ltc2990.h>
+>>>   
+>>>   #define LTC2990_STATUS	0x00
+>>>   #define LTC2990_CONTROL	0x01
+>>> @@ -206,6 +207,7 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
+>>>   	int ret;
+>>>   	struct device *hwmon_dev;
+>>>   	struct ltc2990_data *data;
+>>> +	struct ltc2990_platform_data *pdata = dev_get_platdata(&i2c->dev);
+>>>   	struct device_node *of_node = i2c->dev.of_node;
+>>>   
+>>>   	if (!i2c_check_functionality(i2c->adapter, I2C_FUNC_SMBUS_BYTE_DATA |
+>>> @@ -227,6 +229,13 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
+>>>   		if (data->mode[0] & ~LTC2990_MODE0_MASK ||
+>>>   		    data->mode[1] & ~LTC2990_MODE1_MASK)
+>>>   			return -EINVAL;
+>>> +	} else if (pdata) {
+>>> +		data->mode[0] = pdata->meas_mode[0];
+>>> +		data->mode[1] = pdata->meas_mode[1];
+>>> +
+>>> +		if (data->mode[0] & ~LTC2990_MODE0_MASK ||
+>>> +		    data->mode[1] & ~LTC2990_MODE1_MASK)
+>>> +			return -EINVAL;
+>>
+>> I would prefer if the driver was modified to accept device
+>> properties, and if those were set using the appropriate
+>> fwnode function. Any reason for not doing that ?
 > 
-> Therefore the replaced livepatches has to stay around until post_patch()
+> The driver does have DT support implemented right above my new platform_data code, and DT takes precedence. However, I can't set DT data programatically when instantiating the client using i2c_new_device() - hence the platform_data support.
+> 
 
-s/has/have/
+Sorry, I don't understand. Why exactly can't you replace of_property_read_u32_array()
+with device_property_read_u32_array() and use fwnode_create_software_node()
+in the calling code to set the properties ?
 
-Miroslav
+Guenter
