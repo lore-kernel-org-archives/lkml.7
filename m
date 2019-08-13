@@ -2,148 +2,122 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3B0C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49485C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69D57205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22EBC205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:53:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbfHMOwu (ORCPT
+        id S1729809AbfHMOxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 10:52:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37416 "EHLO mx1.redhat.com"
+        Tue, 13 Aug 2019 10:53:10 -0400
+Received: from mga12.intel.com ([192.55.52.136]:12037 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727561AbfHMOws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 10:52:48 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 65C4D30BA084;
-        Tue, 13 Aug 2019 14:52:47 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E6DC228D02;
-        Tue, 13 Aug 2019 14:52:46 +0000 (UTC)
-Date:   Tue, 13 Aug 2019 08:52:46 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     Kirti Wankhede <kwankhede@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>
-Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-Message-ID: <20190813085246.1d642ae5@x1.home>
-In-Reply-To: <AM0PR05MB4866993536C0C8ACEA2F92DBD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190802065905.45239-1-parav@mellanox.com>
-        <20190808141255.45236-1-parav@mellanox.com>
-        <20190808170247.1fc2c4c4@x1.home>
-        <77ffb1f8-e050-fdf5-e306-0a81614f7a88@nvidia.com>
-        <AM0PR05MB4866993536C0C8ACEA2F92DBD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
-Organization: Red Hat
+        id S1729670AbfHMOxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 10:53:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 07:53:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,381,1559545200"; 
+   d="scan'208";a="170418266"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 13 Aug 2019 07:53:09 -0700
+Received: from dalyrusx-mobl.amr.corp.intel.com (unknown [10.251.3.205])
+        by linux.intel.com (Postfix) with ESMTP id 3C297580238;
+        Tue, 13 Aug 2019 07:53:08 -0700 (PDT)
+Subject: Re: [PATCH v2 1/5] soundwire: Add compute_params callback
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        vkoul@kernel.org, broonie@kernel.org
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@codeaurora.org, linux-kernel@vger.kernel.org,
+        plai@codeaurora.org, lgirdwood@gmail.com, robh+dt@kernel.org,
+        spapothi@codeaurora.org
+References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
+ <20190813083550.5877-2-srinivas.kandagatla@linaro.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <7e462330-a357-698a-b259-5ff136963a57@linux.intel.com>
+Date:   Tue, 13 Aug 2019 09:34:37 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190813083550.5877-2-srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 13 Aug 2019 14:52:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 13 Aug 2019 14:40:02 +0000
-Parav Pandit <parav@mellanox.com> wrote:
+On 8/13/19 3:35 AM, Srinivas Kandagatla wrote:
+> From: Vinod Koul <vkoul@kernel.org>
+> 
+> This callback allows masters to compute the bus parameters required.
 
-> > -----Original Message-----
-> > From: Kirti Wankhede <kwankhede@nvidia.com>
-> > Sent: Monday, August 12, 2019 5:06 PM
-> > To: Alex Williamson <alex.williamson@redhat.com>; Parav Pandit
-> > <parav@mellanox.com>
-> > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org; cohuck@redhat.com;
-> > cjia@nvidia.com
-> > Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-> > 
-> > 
-> > 
-> > On 8/9/2019 4:32 AM, Alex Williamson wrote:  
-> > > On Thu,  8 Aug 2019 09:12:53 -0500
-> > > Parav Pandit <parav@mellanox.com> wrote:
-> > >  
-> > >> Currently mtty sample driver uses mdev state and UUID in convoluated
-> > >> way to generate an interrupt.
-> > >> It uses several translations from mdev_state to mdev_device to mdev uuid.
-> > >> After which it does linear search of long uuid comparision to find
-> > >> out mdev_state in mtty_trigger_interrupt().
-> > >> mdev_state is already available while generating interrupt from which
-> > >> all such translations are done to reach back to mdev_state.
-> > >>
-> > >> This translations are done during interrupt generation path.
-> > >> This is unnecessary and reduandant.  
-> > >
-> > > Is the interrupt handling efficiency of this particular sample driver
-> > > really relevant, or is its purpose more to illustrate the API and
-> > > provide a proof of concept?  If we go to the trouble to optimize the
-> > > sample driver and remove this interface from the API, what do we lose?
-> > >
-> > > This interface was added via commit:
-> > >
-> > > 99e3123e3d72 vfio-mdev: Make mdev_device private and abstract
-> > > interfaces
-> > >
-> > > Where the goal was to create a more formal interface and abstract
-> > > driver access to the struct mdev_device.  In part this served to make
-> > > out-of-tree mdev vendor drivers more supportable; the object is
-> > > considered opaque and access is provided via an API rather than
-> > > through direct structure fields.
-> > >
-> > > I believe that the NVIDIA GRID mdev driver does make use of this
-> > > interface and it's likely included in the sample driver specifically
-> > > so that there is an in-kernel user for it (ie. specifically to avoid
-> > > it being removed so casually).  An interesting feature of the NVIDIA
-> > > mdev driver is that I believe it has portions that run in userspace.
-> > > As we know, mdevs are named with a UUID, so I can imagine there are
-> > > some efficiencies to be gained in having direct access to the UUID for
-> > > a device when interacting with userspace, rather than repeatedly
-> > > parsing it from a device name.  
-> > 
-> > That's right.
-> >   
-> > >  Is that really something we want to make more difficult in order to
-> > > optimize a sample driver?  Knowing that an mdev device uses a UUID for
-> > > it's name, as tools like libvirt and mdevctl expect, is it really
-> > > worthwhile to remove such a trivial API?
-> > >  
-> > >> Hence,
-> > >> Patch-1 simplifies mtty sample driver to directly use mdev_state.
-> > >>
-> > >> Patch-2, Since no production driver uses mdev_uuid(), simplifies and
-> > >> removes redandant mdev_uuid() exported symbol.  
-> > >
-> > > s/no production driver/no in-kernel production driver/
-> > >
-> > > I'd be interested to hear how the NVIDIA folks make use of this API
-> > > interface.  Thanks,
-> > >  
-> > 
-> > Yes, NVIDIA mdev driver do use this interface. I don't agree on removing
-> > mdev_uuid() interface.
-> >   
-> We need to ask Greg or Linus on the kernel policy on whether an API
-> should exist without in-kernel driver. We don't add such API in
-> netdev, rdma and possibly other subsystem. Where can we find this
-> mdev driver in-tree?
+This looks like a partial use of the patch ('soundwire: Add Intel 
+resource management algorithm')? see comments below
 
-We probably would not have added the API only for an out of tree
-driver, but we do have a sample driver that uses it, even if it's
-rather convoluted.  The sample driver is showing an example of using the
-API, which is rather its purpose more so than absolutely efficient
-interrupt handling.  Also, let's not overstate what this particular
-API callback provides, it's simply access to the uuid of the device,
-which is a fundamental property of a mediated device.  This API was
-added simply to provide data abstraction, allowing the struct
-mdev_device to be opaque to vendor drivers.  Thanks,
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>   drivers/soundwire/stream.c    | 10 ++++++++++
+>   include/linux/soundwire/sdw.h |  2 ++
+>   2 files changed, 12 insertions(+)
+> 
+> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+> index a0476755a459..60bc2fe42928 100644
+> --- a/drivers/soundwire/stream.c
+> +++ b/drivers/soundwire/stream.c
+> @@ -1483,6 +1483,16 @@ static int _sdw_prepare_stream(struct sdw_stream_runtime *stream)
+>   		bus->params.bandwidth += m_rt->stream->params.rate *
+>   			m_rt->ch_count * m_rt->stream->params.bps;
+>   
+> +		/* Compute params */
+> +		if (bus->compute_params) {
+> +			ret = bus->compute_params(bus);
+> +			if (ret < 0) {
+> +				dev_err(bus->dev, "Compute params failed: %d",
+> +					ret);
+> +				return ret;
+> +			}
+> +		}
+> +
 
-Alex
+This would need to be duplicated for deprepare (as was done in the Intel 
+patch).
+
+>   		/* Program params */
+>   		ret = sdw_program_params(bus);
+>   		if (ret < 0) {
+> diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
+> index bea46bd8b6ce..aac68e879fae 100644
+> --- a/include/linux/soundwire/sdw.h
+> +++ b/include/linux/soundwire/sdw.h
+> @@ -718,6 +718,7 @@ struct sdw_master_ops {
+>    * Bit set implies used number, bit clear implies unused number.
+>    * @bus_lock: bus lock
+>    * @msg_lock: message lock
+> + * @compute_params: points to Bus resource management implementation
+>    * @ops: Master callback ops
+>    * @port_ops: Master port callback ops
+>    * @params: Current bus parameters
+> @@ -739,6 +740,7 @@ struct sdw_bus {
+>   	DECLARE_BITMAP(assigned, SDW_MAX_DEVICES);
+>   	struct mutex bus_lock;
+>   	struct mutex msg_lock;
+> +	int (*compute_params)(struct sdw_bus *bus);
+
+not sure I understand how it's set? We have a default in the Intel patch.
+
+>   	const struct sdw_master_ops *ops;
+>   	const struct sdw_master_port_ops *port_ops;
+>   	struct sdw_bus_params params;
+> 
+
