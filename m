@@ -2,120 +2,79 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4DEC41517
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC6DC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E7E420842
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635A820665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:03:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AYFA0Q48"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="HojvWsnu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbfHMIDH (ORCPT
+        id S1727908AbfHMIDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 04:03:07 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39067 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfHMIDG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 04:03:06 -0400
-Received: by mail-ot1-f65.google.com with SMTP id b1so1071664otp.6;
-        Tue, 13 Aug 2019 01:03:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xpTjmXViSqIki2Cb2qHpkfQ62APVJj7AGYZMRIsoCJ8=;
-        b=AYFA0Q48dX8onM7zG1H8BuQOm2zh/w79ApEK6ezu93//mTeriuACrbmOrAUH4FTlRE
-         grdX+HbfBfjYQM3DPrOGRw5HZpIEFcrBB4mLP0Jn2ue/W+RdzBXlYtDl8eajDOiUjZzl
-         S2BStp2whwPW/DdQ4FqQUVOn+d5agQUeEAKJdzy9A53jzAmj72y2/7DlBvubA+K6cLUV
-         W30iWaGSFvtDIrjrU7ZmVTy19Evq518Xe1klm+es+rjpGJYW2VXkgFkqPCQOBJFJlWAY
-         +IgfLW8ged01WvOmEibmynVe5lN8t6yD1am79qSRamNXI0x6/2qQBD0WzzuN/iPgWlhf
-         QPSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xpTjmXViSqIki2Cb2qHpkfQ62APVJj7AGYZMRIsoCJ8=;
-        b=KjApIHuXb/AyCeiXN7/OxPhmZPuJfOXgl/QQS3ci5G9FkSsfCGaFH/N1KkzCr2suv8
-         1G7/jRWHeJ/zsKMizL57W22co+gXyZqcPWVz1ytk3uox1pr6amNUpK9VDmPjVafKYpFY
-         1/gWyBnRrpm6ctMLcPa0GJ/yOBfLptue0KJM6vVedtHoV38gIi/EIQjLtYAytEb+bRQd
-         ZjHS51IV0/u/t9zfBjff5ERM1fG5A9EZyWdHkio8FFWi1edfh6xrKs64c0x61dh2jBKz
-         I1aBPE33YzaqrBZjrExts6GBU3JU2N5ftqGGgWdhFaCMK3S3aU4UnNsUwcu6wmFFG7Zl
-         R+tA==
-X-Gm-Message-State: APjAAAXEPlNfB2L3JnG1z3l6QuxwWzdw+ft9/lCYbPufyPLlw+POepSz
-        44INt5VNEkhm9xTSQpl9Z+Pb/HDaM7jCS4q/wxc=
-X-Google-Smtp-Source: APXvYqzzSJbUR/V1lvk2p/n+pBFYlV3r4RaXqZ8riQxviItgG2T6vtN6lVbqJgCVjr/mfYonAVDHl6acFGgXOfajAzU=
-X-Received: by 2002:aca:fcc4:: with SMTP id a187mr619358oii.126.1565683385526;
- Tue, 13 Aug 2019 01:03:05 -0700 (PDT)
+        Tue, 13 Aug 2019 04:03:32 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:48728 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725842AbfHMIDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 04:03:32 -0400
+Received: from zn.tnic (p200300EC2F0D240075AA4C13F769B7E7.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:2400:75aa:4c13:f769:b7e7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DB4771EC0716;
+        Tue, 13 Aug 2019 10:03:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565683411;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=wl48/yP8ym+uAxlHWjHE76DYRPjIBsOyJqj9CuF2dDw=;
+        b=HojvWsnu4z3l24NK1FunWmVH/LMCwJ92cMf1vgSxKUSF/ZcwW93/nsIVtHdOrjMXeNkNQK
+        SVIAIhTkIFQhq2NH5Gc/obcuQIpikRgovZtLCpW8k/lCRubfAwIxiJax8kyWD1yudp4dO8
+        8cqabak02k+wK7M22yAuYYxpNfnznP0=
+Date:   Tue, 13 Aug 2019 10:04:16 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Isaku Yamahata <isaku.yamahata@gmail.com>
+Cc:     "Kani, Toshi" <toshi.kani@hpe.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "fei1.li@intel.com" <fei1.li@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH 0/3] x86/mtrr, pat: make PAT independent from MTRR
+Message-ID: <20190813080416.GB16770@zn.tnic>
+References: <cover.1565300606.git.isaku.yamahata@gmail.com>
+ <20190809070647.GA2152@zn.tnic>
+ <3355d77da5e094ad1d3149b9236cdd204486fd69.camel@hpe.com>
+ <20190813074920.GA24196@private.email.ne.jp>
 MIME-Version: 1.0
-References: <20190812113429.2488-1-ivan.khoronzhuk@linaro.org> <20190812124326.32146-1-ivan.khoronzhuk@linaro.org>
-In-Reply-To: <20190812124326.32146-1-ivan.khoronzhuk@linaro.org>
-From:   Magnus Karlsson <magnus.karlsson@gmail.com>
-Date:   Tue, 13 Aug 2019 10:02:54 +0200
-Message-ID: <CAJ8uoz0bBhdQSocQz8Y9tvrGCsCE9TDf3m1u6=sL4Eo5tZ17YQ@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf-next] mm: mmap: increase sockets maximum memory
- size pgoff for 32bits
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        linux-mm@kvack.org, Xdp <xdp-newbies@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org, Alexei Starovoitov <ast@kernel.org>,
-        "Karlsson, Magnus" <magnus.karlsson@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190813074920.GA24196@private.email.ne.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 2:45 PM Ivan Khoronzhuk
-<ivan.khoronzhuk@linaro.org> wrote:
->
-> The AF_XDP sockets umem mapping interface uses XDP_UMEM_PGOFF_FILL_RING
-> and XDP_UMEM_PGOFF_COMPLETION_RING offsets. The offsets seems like are
-> established already and are part of configuration interface.
->
-> But for 32-bit systems, while AF_XDP socket configuration, the values
-> are to large to pass maximum allowed file size verification.
-> The offsets can be tuned ofc, but instead of changing existent
-> interface - extend max allowed file size for sockets.
+On Tue, Aug 13, 2019 at 12:49:20AM -0700, Isaku Yamahata wrote:
+> In addition to Xen, KVM+qemu can enable/disable MTRR, PAT independently.
+> So user may want to disable MTRR to reduce attack surface.
 
-Can you use mmap2() instead that takes a larger offset (2^44) even on
-32-bit systems?
+No, no "user may want" etc vague formulations. Just because some virt
+thing "can" do stuff doesn't mean we should change the kernel. What are
+the clear benefits of your proposal, why should it go upstream and why
+should it be exposed to everybody?
 
-/Magnus
+How is going to be used it and what would it bring?
 
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> ---
->
-> Based on bpf-next/master
->
-> v2..v1:
->         removed not necessarily #ifdev as ULL and UL for 64 has same size
->
->  mm/mmap.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index 7e8c3e8ae75f..578f52812361 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -1358,6 +1358,9 @@ static inline u64 file_mmap_size_max(struct file *file, struct inode *inode)
->         if (S_ISBLK(inode->i_mode))
->                 return MAX_LFS_FILESIZE;
->
-> +       if (S_ISSOCK(inode->i_mode))
-> +               return MAX_LFS_FILESIZE;
-> +
->         /* Special "we do even unsigned file positions" case */
->         if (file->f_mode & FMODE_UNSIGNED_OFFSET)
->                 return 0;
-> --
-> 2.17.1
->
+Are there any downsides?
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
