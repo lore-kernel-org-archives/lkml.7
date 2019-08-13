@@ -2,121 +2,237 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F56C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F239C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5EB320840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5988720840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:19:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o14OiLgV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="evSR8//j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbfHMNS6 (ORCPT
+        id S1729025AbfHMNTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:18:58 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38633 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728536AbfHMNS6 (ORCPT
+        Tue, 13 Aug 2019 09:19:12 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35329 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729003AbfHMNTM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:18:58 -0400
-Received: by mail-pg1-f196.google.com with SMTP id e11so689597pga.5;
-        Tue, 13 Aug 2019 06:18:57 -0700 (PDT)
+        Tue, 13 Aug 2019 09:19:12 -0400
+Received: by mail-pf1-f196.google.com with SMTP id d85so1108001pfd.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:19:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sHh4gRVuTNEz/9Zouanj7QoExBSgjZ5iFTJ9fA5JXDw=;
-        b=o14OiLgVHhcWhq6SW9DwPfghLvr5el3qyk4ClwdcQ+5mAlcCVFkDGYySK48ObliEJK
-         P/H+xc3kvb49yZ1abKJxfvHgMM3QmkzHF007ZKV5jXOaV02Eo8rMjUFqYZ6sUVbaNL+8
-         AfRjpkbY+wZZVwnxgCQYDiEYk7orhJhT150t8m6+RhH4d+pIcS/rInoxx3gFYHSAhyWA
-         RopGtcLkC7UE1sBZcOls+yhMCLpLHsP60u93J+Rbmihuhj5NPst2XuOR8bLF/HYtgq/e
-         drXVR6tNqgzYaJtqpMLQ2UggsNP4zyFsOK4PZduVG4Uz0Ap39lQ0PQNsMBx1YhRr4l13
-         2a7w==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uemjYFdEavebUhJ0GnBokqufqwKQ33FBu/l/dF+LEI0=;
+        b=evSR8//jkv4lh38FHcIvPUs+vf6YgyDKYqB+w9LuRCeFO5POAJJ7GS9E6ChvQS7RNT
+         8w7SpU/u0XqSHkOk4E8iFHBsk8KN+lrfw/d3IktH2HPC+EGJ6sjA7bV6Vwtpo+T9rht9
+         ZsvPr84KY/jBfXo099RxMIJ6V6HB1kDzK94OCAoCVs/lUn8DfAR6Cc+pXFJPbWgbkmmL
+         vo0eLBBp+DllyrgqyGix3qKRjCFAnq5TmJPCCJ/LdYt/S4g6BV7KLukFYopY8fGPbpAl
+         JeuyZACyOK8y/9otuexUGK2bf4m4TgJKk719OVP4Kg6lKpDFPwJ6fVEg7/tGybQO2Yal
+         8XoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sHh4gRVuTNEz/9Zouanj7QoExBSgjZ5iFTJ9fA5JXDw=;
-        b=Na0PhHQ8JmnGjN5wXwwBKxJBdM5RdzZXGRIhb5r5kZln+72lpBNFysPWkVWbr3UW1e
-         RnouXcXglcedTI+1LTDLiwrlakAyChp0TEYNlSZU0d6lzbdTuLqwFAO/aEB2GnYTA1+n
-         15iupN181it3Dyp9nyPQ0YgrH/mIWUeWYgR0u8tSD2wJYcxjHm85BK0+qNXj7QJ6sNmY
-         puimSOx/krJYGlpohdJnLiFEH7tIfA5Q6LAhBfxS2HPO6kKZsgRKMa27nMR4umO+caXC
-         tdXqil28NWgZlTKPZ0FudgQjvGFzl9pxJDOhc00NHZOEfgSfuJkEdVvrzhmjD/FQ5iV5
-         fzSw==
-X-Gm-Message-State: APjAAAXY/Jx0GKH+UJ+V6rLl8oyYtfTMcfjZlw5ByX9Q8IlECBlWI3pL
-        xK/1T/6/q6mMS/KltKQaVLxRIALO
-X-Google-Smtp-Source: APXvYqwhuO8K9gkkF7I++N05w2HGY66rdTVi4eaylF9KWizW+4rFGBAyk+LHvO3bPfOFKS6DYolCcw==
-X-Received: by 2002:a62:1515:: with SMTP id 21mr24148021pfv.81.1565702337439;
-        Tue, 13 Aug 2019 06:18:57 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y194sm120339536pfg.116.2019.08.13.06.18.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 13 Aug 2019 06:18:56 -0700 (PDT)
-Subject: Re: [PATCH] sh: Drop -Werror from kernel Makefile
-To:     Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc:     Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>
-References: <1564971263-21562-1-git-send-email-linux@roeck-us.net>
- <87a7cdpi06.wl-ysato@users.sourceforge.jp>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <ee8b2e37-643d-9b29-b7de-d83c7739c3a0@roeck-us.net>
-Date:   Tue, 13 Aug 2019 06:18:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uemjYFdEavebUhJ0GnBokqufqwKQ33FBu/l/dF+LEI0=;
+        b=rS3Pl+fVyKtrUKpBdlkaFpgb3sjtbWO8nwHynyB8qvXhKyN/32ijNcGRU81unRC8Yd
+         zAGhTrdajrl8BDE/OG38C03RNtVXn1KIaAVfhHUHqBT9jmoEDCtQylcDOoyas2aTN+AF
+         fLROrZWCOcM0pXuWtYicmgh3FPhJXO121TO7K/e6AFXZxnjrVSZvTuqLaMn28NQvAD3V
+         Pq3J+ojRe9cW54sG65pocslP4NRwXUWl2GMGsDsVKsHDTLjJNy2ZuaHFEkhX1EDSbTwk
+         L7TFfppYdIHkUiooRV47jdzhIacWcpLcGm7D92HwXpDYSp13Vu5QQJ4nW9qLoJuIHW3x
+         EMEg==
+X-Gm-Message-State: APjAAAXM3P1Nvt+O0XYpXCixIpiT1K1t4XWas8aQWW4FN2mqpyr6SJDb
+        s7pNH7eBxKxQFICeUiovDYvM4Sslmjtv6TMqSsv0iep3EF+XWA==
+X-Google-Smtp-Source: APXvYqwZtj5tYeZMHKa6hclTPlvzQlfXEebFzx4k80bKtFWSwOYcrQTPEwu0jntuYYbj/vWDYwba+Ws6peFvq3n0cl0=
+X-Received: by 2002:a63:c442:: with SMTP id m2mr35220963pgg.286.1565702350668;
+ Tue, 13 Aug 2019 06:19:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87a7cdpi06.wl-ysato@users.sourceforge.jp>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAAeHK+waUUNpGp1b2WqXQHkbBcQT_MonG62-bK-aEj2dvYr-gA@mail.gmail.com>
+ <000000000000199b6c058fff71c8@google.com>
+In-Reply-To: <000000000000199b6c058fff71c8@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 13 Aug 2019 15:18:59 +0200
+Message-ID: <CAAeHK+wa8zgfstvHSwHTHJANW=s_aJYQ3qc_aUDMpMHTtveFGg@mail.gmail.com>
+Subject: Re: general protection fault in cdev_del
+To:     syzbot <syzbot+67b2bd0e34f952d0321e@syzkaller.appspotmail.com>,
+        Oliver Neukum <oneukum@suse.com>
+Cc:     linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/19 1:49 AM, Yoshinori Sato wrote:
-> On Mon, 05 Aug 2019 11:14:23 +0900,
-> Guenter Roeck wrote:
->>
->> Since commit a035d552a93b ("Makefile: Globally enable fall-through
->> warning"), all sh builds fail with errors such as
->>
->> arch/sh/kernel/disassemble.c: In function 'print_sh_insn':
->> arch/sh/kernel/disassemble.c:478:8: error: this statement may fall through
->>
->> Since this effectively disables all build and boot tests for the
->> architecture, let's drop -Werror from the sh kernel Makefile until
->> the problems are fixed.
->>
->> Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
->> ---
->>   arch/sh/kernel/Makefile | 2 --
->>   1 file changed, 2 deletions(-)
->>
->> diff --git a/arch/sh/kernel/Makefile b/arch/sh/kernel/Makefile
->> index 59673f8a3379..ef65f0625c6c 100644
->> --- a/arch/sh/kernel/Makefile
->> +++ b/arch/sh/kernel/Makefile
->> @@ -47,5 +47,3 @@ obj-$(CONFIG_DWARF_UNWINDER)	+= dwarf.o
->>   obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o perf_callchain.o
->>   obj-$(CONFIG_DMA_NONCOHERENT)	+= dma-coherent.o
->>   obj-$(CONFIG_HAVE_HW_BREAKPOINT)		+= hw_breakpoint.o
->> -
->> -ccflags-y := -Werror
->> -- 
->> 2.7.4
->>
-> 
-> Applied sh-next.
-> Sorry too late replay.
-> 
+On Tue, Aug 13, 2019 at 3:16 PM syzbot
+<syzbot+67b2bd0e34f952d0321e@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot has tested the proposed patch but the reproducer still triggered
+> crash:
+> KASAN: use-after-free Read in hso_free_interface
+>
+> ==================================================================
+> BUG: KASAN: use-after-free in hso_free_interface+0x3f2/0x4f0
+> drivers/net/usb/hso.c:3108
+> Read of size 8 at addr ffff8881d112d998 by task kworker/0:1/12
+>
+> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.0-rc1+ #1
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xca/0x13e lib/dump_stack.c:113
+>   print_address_description+0x67/0x231 mm/kasan/report.c:188
+>   __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
+>   kasan_report+0xe/0x20 mm/kasan/common.c:614
+>   hso_free_interface+0x3f2/0x4f0 drivers/net/usb/hso.c:3108
+>   hso_probe+0x362/0x1a50 drivers/net/usb/hso.c:2963
+>   usb_probe_interface+0x30b/0x7a0 drivers/usb/core/driver.c:361
+>   really_probe+0x287/0x660 drivers/base/dd.c:509
+>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+>   __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
+>   bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+>   bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x1700 drivers/base/core.c:2111
+>   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>   usb_probe_device+0xa2/0x100 drivers/usb/core/driver.c:266
+>   really_probe+0x287/0x660 drivers/base/dd.c:509
+>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+>   __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
+>   bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+>   bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x1700 drivers/base/core.c:2111
+>   usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
+>   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+>   port_event drivers/usb/core/hub.c:5350 [inline]
+>   hub_event+0x1adc/0x35a0 drivers/usb/core/hub.c:5432
+>   process_one_work+0x90a/0x1580 kernel/workqueue.c:2268
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+>   kthread+0x30e/0x420 kernel/kthread.c:254
+>   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+>
+> Allocated by task 12:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:71
+>   set_track mm/kasan/common.c:79 [inline]
+>   __kasan_kmalloc mm/kasan/common.c:489 [inline]
+>   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:462
+>   kmalloc include/linux/slab.h:547 [inline]
+>   kzalloc include/linux/slab.h:742 [inline]
+>   hso_create_device+0x43/0x390 drivers/net/usb/hso.c:2336
+>   hso_create_bulk_serial_device drivers/net/usb/hso.c:2617 [inline]
+>   hso_probe+0xbb0/0x1a50 drivers/net/usb/hso.c:2948
+>   usb_probe_interface+0x30b/0x7a0 drivers/usb/core/driver.c:361
+>   really_probe+0x287/0x660 drivers/base/dd.c:509
+>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+>   __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
+>   bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+>   bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x1700 drivers/base/core.c:2111
+>   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>   usb_probe_device+0xa2/0x100 drivers/usb/core/driver.c:266
+>   really_probe+0x287/0x660 drivers/base/dd.c:509
+>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+>   __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
+>   bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+>   bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x1700 drivers/base/core.c:2111
+>   usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
+>   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+>   port_event drivers/usb/core/hub.c:5350 [inline]
+>   hub_event+0x1adc/0x35a0 drivers/usb/core/hub.c:5432
+>   process_one_work+0x90a/0x1580 kernel/workqueue.c:2268
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+>   kthread+0x30e/0x420 kernel/kthread.c:254
+>   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+>
+> Freed by task 12:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:71
+>   set_track mm/kasan/common.c:79 [inline]
+>   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:451
+>   slab_free_hook mm/slub.c:1421 [inline]
+>   slab_free_freelist_hook mm/slub.c:1448 [inline]
+>   slab_free mm/slub.c:2994 [inline]
+>   kfree+0xd7/0x290 mm/slub.c:3949
+>   hso_create_bulk_serial_device drivers/net/usb/hso.c:2687 [inline]
+>   hso_probe+0x13c6/0x1a50 drivers/net/usb/hso.c:2948
+>   usb_probe_interface+0x30b/0x7a0 drivers/usb/core/driver.c:361
+>   really_probe+0x287/0x660 drivers/base/dd.c:509
+>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+>   __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
+>   bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+>   bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x1700 drivers/base/core.c:2111
+>   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>   usb_probe_device+0xa2/0x100 drivers/usb/core/driver.c:266
+>   really_probe+0x287/0x660 drivers/base/dd.c:509
+>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+>   __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
+>   bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+>   bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x1700 drivers/base/core.c:2111
+>   usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
+>   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+>   port_event drivers/usb/core/hub.c:5350 [inline]
+>   hub_event+0x1adc/0x35a0 drivers/usb/core/hub.c:5432
+>   process_one_work+0x90a/0x1580 kernel/workqueue.c:2268
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+>   kthread+0x30e/0x420 kernel/kthread.c:254
+>   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+>
+> The buggy address belongs to the object at ffff8881d112d900
+>   which belongs to the cache kmalloc-512 of size 512
+> The buggy address is located 152 bytes inside of
+>   512-byte region [ffff8881d112d900, ffff8881d112db00)
+> The buggy address belongs to the page:
+> page:ffffea0007444b00 refcount:1 mapcount:0 mapping:ffff8881dac02c00
+> index:0x0 compound_mapcount: 0
+> flags: 0x200000000010200(slab|head)
+> raw: 0200000000010200 ffffea000744ea80 0000000400000004 ffff8881dac02c00
+> raw: 0000000000000000 00000000000c000c 00000001ffffffff 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>   ffff8881d112d880: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>   ffff8881d112d900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> > ffff8881d112d980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                              ^
+>   ffff8881d112da00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   ffff8881d112da80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ==================================================================
+>
+>
+> Tested on:
+>
+> commit:         69bbe8c7 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14e6156a600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c309d28e15db39c5
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=1715ad4a600000
+>
 
-Please note that _mainline_ builds are currently broken.
-
-Guenter
+This bug looks very similar to the "KASAN: use-after-free Read in
+device_del" one, but the fix from that thread doesn't work here.
