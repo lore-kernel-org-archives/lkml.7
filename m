@@ -2,235 +2,194 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E14C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B92BC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D40F20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:32:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ECIziFnQ"
+	by mail.kernel.org (Postfix) with ESMTP id D2E0E20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:33:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbfHMQcb (ORCPT
+        id S1727536AbfHMQd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 12:32:31 -0400
-Received: from mout.gmx.net ([212.227.17.22]:53551 "EHLO mout.gmx.net"
+        Tue, 13 Aug 2019 12:33:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:40390 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727251AbfHMQcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 12:32:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1565713944;
-        bh=blTFPMwnYHnMZmyKuQRXcVHgNHyKeNg986XxwvUTgFk=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=ECIziFnQOj/78IuMkhD3MDBRGu6/ehZ8c4DT7fgw82Ir5YJbLoozVD+hK3EiOyOgy
-         +f1egkrmPefxpN+umKb61IhTSqNM7JFZxy5JdQD0DseXnl0D35KpzwfGahE0QdWraD
-         18ZpEnIUrkcZ6PLN5KYq4ICt3g96bfdUPzKvgSbo=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.162] ([37.4.249.106]) by mail.gmx.com (mrgmx102
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0MXmpv-1hl6sh2AI3-00Wn5u; Tue, 13
- Aug 2019 18:32:24 +0200
-Subject: Re: [PATCH v2] gpiolib: Take MUX usage into account
-To:     "Fried, Ramon" <ramon.fried@linux.intel.com>,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190813014210.15519-1-ramon.fried@linux.intel.com>
- <1650c967-5176-70db-ff9a-b2af432ba1e7@i2se.com>
- <88cbb5b2-fd95-afb3-3645-e5b799844941@linux.intel.com>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <f568ca31-c9f0-0dc2-be12-22de25891794@gmx.net>
-Date:   Tue, 13 Aug 2019 18:32:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726637AbfHMQd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 12:33:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AFD3337;
+        Tue, 13 Aug 2019 09:33:23 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C64A03F706;
+        Tue, 13 Aug 2019 09:33:20 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 17:33:18 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V16 00/13] PCI: tegra: Add Tegra194 PCIe support
+Message-ID: <20190813163318.GB5070@e121166-lin.cambridge.arm.com>
+References: <20190813113627.27251-1-vidyas@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <88cbb5b2-fd95-afb3-3645-e5b799844941@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Provags-ID: V03:K1:9UI5IqQVTdHWrD4023tJk9Mg4wAVmjc56Wh6hMHAN7a+xFJuyrG
- FYgoFnXz1rj0aKOLJNKjaUpW1IPeGLQHp/rIcm1ycDHBznk52xm643wniZKfHR6aZDlNoik
- i/Mvi6K26UuZi8N1FMs97clc2baUmDUS+r7sH0oIkFNtlAPx4b97ijLusE9Ckvt7SYEsgAm
- q+d6cXFqH/OVCYmeqsVtQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Tgsr0F5bASI=:49rSrdT0RGN83rogyGNssC
- 2VroncK8WIQeAI/qk0utCzUtKvlvsU/cbCQkjz+VV+Dz5Vp4DGefpgLgtNz5lw1cMMMadv3uY
- ZeNOO8S+GCYF5g6jSWi13HCxhOQPOCN9wnN0/21edV71qnp4O8Ee680K54OBMuivWRxl3qeyu
- TYPF4GXSfmumWJIzX1FBZa6D6meLaNDSV2E8uKcUa3BRGYN1eqdCMGps8bBXLbOWG/4xhsJ5r
- 9SzNI289U5JRdyCMn9DepijX2usrR06tg6csKk4hVmrNDpCDGMCPFqSbqE/Pg6s70TARsq5rO
- GVMzKg5Y2Wq+7W/3siRnw5NF4y8KhQ0GKucObMHzorg8FucU6ApF/Rb+YumzibO9m5/fih0hf
- VLxf7bwrcfVX3bRdAe+yV7pebwXEjOjsBhs6MvWNyN/cTYeX1gcuXvAQplx6fLsHCu9HxZZo/
- zwUTehZ0jAH9h5pgPThVYi4Vp9HIerl72P5dxncYN3U0TvAywpR/wIPuEBpPREY+i1Dj8ceL/
- 4QqjrDi59bNi7pPiqJ6LnJQEdnln3xm7z3Bnv4p6O390kgCf4CIJn7zcPH9g8tKeJz5v+P2Hp
- V2F2siLGze34h+1N9JFRgTC6lit43/jk5AWSMMh7pss324Xbo+i3B+6iprdPdVo9XRO4GkLEO
- 2KeQcqUAGxPZyzoXYz9WqCj/hQ2xijxg++gSBWZDhgaYamthkZQ3JakHvgTOV27QPjOXPdkJH
- /XNdk/kZzined/WeWyerc/n27TxTVlHz/IiI2PH0TfvxYoKk1z03HJ9YEgE1+BTd3gyqLBx/I
- IIeg9boJRBoTQPzmDSuuIX6NpvtTNP60ORgR4jEx5C8Q9zehm3plJOrFbqQ4oGsREXacgpqwS
- o2UWgURYdsGfkMqrSEre6DChFki9qhRpcDmGq/pbxDIl30cy0y5hqkkIaFnVivzetphjQ797O
- XwVSrKZirTeUn+Ou0rjS3Fq3BE2hEk1cfnHfHy4aUzH/2ic7+moDmy/0P0FGmGX7E57SdcZjl
- i+lV9MS1o/gTofWcg9RmpDeShXf3xjnFUz7cBDslhJUKRnthhK+JVBcY4BusYrgT2Tc9ekLad
- cAOphv5LvDJzpI6JzZKa7rMdcOB8kPA0n0p8aBpsJ0bUlW0PYO8hhi9WCF7MZITYaoCrj7jvn
- 0q4U0=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813113627.27251-1-vidyas@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 13.08.19 um 08:10 schrieb Fried, Ramon:
->
-> On 8/13/2019 08:38, Stefan Wahren wrote:
->> Hi Ramon,
->>
->> On 13.08.19 03:42, Ramon Fried wrote:
->>> From: Stefan Wahren <stefan.wahren@i2se.com>
->>>
->>> The user space like gpioinfo only see the GPIO usage but not the
->>> MUX usage (e.g. I2C or SPI usage) of a pin. As a user we want to
->>> know which
->>> pin is free/safe to use. So take the MUX usage of strict pinmux
->>> controllers
->>> into account to get a more realistic view for ioctl
->>> GPIO_GET_LINEINFO_IOCTL.
->>>
->>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->>> Tested-by: Ramon Fried <rfried.dev@gmail.com>
->>> Signed-off-by: Ramon Fried <rfried.dev@gmail.com>
->>> ---
->>> v2: Address review from linus:
->>> * ** Please notive logic was reversed **
->>> * renamed pinctrl_gpio_is_in_use() to pinctrl_gpio_can_use_line()
->>> * renamed pinmux_is_in_use() to pinmux_can_be_used_for_gpio()
->>> * changed dev_err to dev_dbg (Linus suggested removing it altogether, =
-I
->>> =C2=A0=C2=A0 find it better to keep it for debug).
->> thanks for taking care of this.
->>> =C2=A0 drivers/gpio/gpiolib.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 3 ++-
->>> =C2=A0 drivers/pinctrl/core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 | 28 ++++++++++++++++++++++++++++
->>> =C2=A0 drivers/pinctrl/pinmux.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 27 +++++++++++++++++++++++++++
->>> =C2=A0 drivers/pinctrl/pinmux.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 8 ++++++++
->>> =C2=A0 include/linux/pinctrl/consumer.h |=C2=A0 6 ++++++
->>> =C2=A0 5 files changed, 71 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
->>> index f497003f119c..52937bf8e514 100644
->>> --- a/drivers/gpio/gpiolib.c
->>> +++ b/drivers/gpio/gpiolib.c
->>> @@ -1084,7 +1084,8 @@ static long gpio_ioctl(struct file *filp,
->>> unsigned int cmd, unsigned long arg)
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 test_bit(FLAG_IS_HOGGED, &desc->flags) ||
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 test_bit(FLAG_EXPORT, &desc->flags) ||
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 te=
-st_bit(FLAG_SYSFS, &desc->flags))
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 te=
-st_bit(FLAG_SYSFS, &desc->flags) ||
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 !p=
-inctrl_gpio_can_use_line(chip->base +
->>> lineinfo.line_offset))
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 lineinfo.flags |=3D GPIOLINE_FLAG_KERNEL;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (test_bit(FL=
-AG_IS_OUT, &desc->flags))
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 lineinfo.flags |=3D GPIOLINE_FLAG_IS_OUT;
->>> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
->>> index b70df27874d1..2bbd8ee93507 100644
->>> --- a/drivers/pinctrl/core.c
->>> +++ b/drivers/pinctrl/core.c
->>> @@ -736,6 +736,34 @@ int pinctrl_get_group_selector(struct
->>> pinctrl_dev *pctldev,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
->>> =C2=A0 }
->>> =C2=A0 +bool pinctrl_gpio_can_use_line(unsigned gpio)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct pinctrl_dev *pctldev;
->>> +=C2=A0=C2=A0=C2=A0 struct pinctrl_gpio_range *range;
->>> +=C2=A0=C2=A0=C2=A0 bool result;
->>> +=C2=A0=C2=A0=C2=A0 int pin;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 /*
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * Try to obtain GPIO range, if it fails
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * we're probably dealing with GPIO driver
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * without a backing pin controller - bail ou=
-t.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
->>> +=C2=A0=C2=A0=C2=A0 if (pinctrl_get_device_gpio_range(gpio, &pctldev, =
-&range))
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return true;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 mutex_lock(&pctldev->mutex);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 /* Convert to the pin controllers number space */
->>> +=C2=A0=C2=A0=C2=A0 pin =3D gpio_to_pin(range, gpio);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 result =3D pinmux_can_be_used_for_gpio(pctldev, pi=
-n);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 mutex_unlock(&pctldev->mutex);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 return result;
->>> +}
->>> +EXPORT_SYMBOL_GPL(pinctrl_gpio_can_use_line);
->>> +
->>> =C2=A0 /**
->>> =C2=A0=C2=A0 * pinctrl_gpio_request() - request a single pin to be use=
-d as GPIO
->>> =C2=A0=C2=A0 * @gpio: the GPIO pin number from the GPIO subsystem numb=
-er space
->>> diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
->>> index 020e54f843f9..7e42a5738d82 100644
->>> --- a/drivers/pinctrl/pinmux.c
->>> +++ b/drivers/pinctrl/pinmux.c
->>> @@ -70,6 +70,33 @@ int pinmux_validate_map(const struct pinctrl_map
->>> *map, int i)
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>> =C2=A0 }
->>> =C2=A0 +/**
->>> + * pinmux_can_be_used_for_gpio() - check if a specific pin
->>> + *=C2=A0=C2=A0=C2=A0 is either muxed to a different function or used =
-as gpio.
->>> + *
->>> + * @pin: the pin number in the global pin space
->>> + *
->>> + * Controllers not defined as strict will always return true,
->>> + * menaning that the gpio can be used.
->>> + */
->>> +bool pinmux_can_be_used_for_gpio(struct pinctrl_dev *pctldev,
->>> unsigned pin)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct pin_desc *desc =3D pin_desc_get(pctldev, pi=
-n);
->>> +=C2=A0=C2=A0=C2=A0 const struct pinmux_ops *ops =3D pctldev->desc->pm=
-xops;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 if (!desc) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_dbg(pctldev->dev,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "p=
-in %u is not registered so it cannot be requested\n",
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pi=
-n);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return true;
->> This return value looks strange to me.
->
-> Basically, it's just the reversed return value you returned in the
-> original patch,
-> It means in this context that if the pin is not owned by a
-> pin-controller it can be used for GPIO.
-As long as the provided pin is valid. Btw shouldn't we change the logic
-in the debug message?
->
-> Thanks,
-> Ramon.
->
->>
->> Stefan
->>
+On Tue, Aug 13, 2019 at 05:06:14PM +0530, Vidya Sagar wrote:
+> Tegra194 has six PCIe controllers based on Synopsys DesignWare core.
+> There are two Universal PHY (UPHY) blocks with each supporting 12(HSIO:
+> Hisg Speed IO) and 8(NVHS: NVIDIA High Speed) lanes respectively.
+> Controllers:0~4 use UPHY lanes from HSIO brick whereas Controller:5 uses
+> UPHY lanes from NVHS brick. Lane mapping in HSIO UPHY brick to each PCIe
+> controller (0~4) is controlled in XBAR module by BPMP-FW. Since PCIe
+> core has PIPE interface, a glue module called PIPE-to-UPHY (P2U) is used
+> to connect each UPHY lane (applicable to both HSIO and NVHS UPHY bricks)
+> to PCIe controller
+> This patch series
+> - Adds support for P2U PHY driver
+> - Adds support for PCIe host controller
+> - Adds device tree nodes each PCIe controllers
+> - Enables nodes applicable to p2972-0000 platform
+> - Adds helper APIs in Designware core driver to get capability regs offset
+> - Adds defines for new feature registers of PCIe spec revision 4
+> - Makes changes in DesignWare core driver to get Tegra194 PCIe working
+> 
+> Testing done on P2972-0000 platform
+> - Able to get PCIe link up with on-board Marvel eSATA controller
+> - Able to get PCIe link up with NVMe cards connected to M.2 Key-M slot
+> - Able to do data transfers with both SATA drives and NVMe cards
+> - Able to perform suspend-resume sequence
+> 
+> Note
+> - Enabling x8 slot on P2972-0000 platform requires pinmux driver for Tegra194.
+>   It is being worked on currently and hence Controller:5 (i.e. x8 slot) is
+>   disabled in this patch series. A future patch series would enable this.
+> - This series is based on top of the following series
+>   Jisheng's patches to add support to .remove() in Designware sub-system
+>   https://patchwork.kernel.org/project/linux-pci/list/?series=98559
+>   (Update: Jisheng's patches are now accepted and applied for v5.2)
+>   My patches made on top of Jisheng's patches to export various symbols
+>   http://patchwork.ozlabs.org/project/linux-pci/list/?series=115671
+>   (Update: My above patch series is accepted and applied for v5.3)
+>   Another patch of mine to enable BPMP-FW resume in noirq phase
+>   http://patchwork.ozlabs.org/patch/1140973/
+>   (This is already accepted)
+> 
+> V16:
+> * Added empty lines (cosmetic changes) where required in pcie-tegra194.c file
+>   to address Lorenzo's review comments.
+> 
+> V15:
+> * Refactored pcie-tegra194.c code to call only tegra_bpmp_transfer() API
+>   in both .probe() path and .resume_noirq() path.
+> 
+> V14:
+> * Addressed Lorenzo's review comments in pcie-tegra194.c file (Patch 13/13)
+> * Added a new patch to export dw_pcie_wait_for_link() API
+> 
+> V13:
+> * Addressed Bjorn's review comments for adding Gen-4 specific defines to pci_regs.h header file
+> 
+> V12:
+> * Modified the commit message of patch-3 in this series to address review
+>   comments from Lorenzo
+> 
+> V11:
+> * Removed device-tree patches from the series as they are applied to relevant
+>   Tegra specific trees by Thierry Reding.
+> * Included older Tegra chips to extend quirk that disables MSI interrupt being
+>   used for Tegra PCIe root ports.
+> * Addressed review comments in P2U driver file.
+> 
+> V10:
+> * Used _relaxed() versions of readl() & writel()
+> 
+> V9:
+> * Made the drivers dependent on ARCH_TEGRA_194_SOC directly
+> * Addressed review comments from Dmitry
+> 
+> V8:
+> * Changed P2U driver file name from pcie-p2u-tegra194.c to phy-tegra194-p2u.c
+> * Addressed review comments from Thierry and Rob
+> 
+> V7:
+> * Took care of review comments from Rob
+> * Added a quirk to disable MSI for root ports
+> * Removed using pcie_pme_disable_msi() API in host controller driver
+> 
+> V6:
+> * Removed patch that exports pcie_bus_config symbol
+> * Took care of review comments from Thierry and Rob
+> 
+> V5:
+> * Removed redundant APIs in pcie-designware-ep.c file after moving them
+>   to pcie-designware.c file based on Bjorn's review comments
+> 
+> V4:
+> * Rebased on top of linux-next top of the tree
+> * Addressed Gustavo's comments and added his Ack for some of the changes.
+> 
+> V3:
+> * Addressed review comments from Thierry
+> 
+> V2:
+> * Addressed review comments from Bjorn, Thierry, Jonathan, Rob & Kishon
+> * Added more patches in v2 series
+> 
+> Vidya Sagar (13):
+>   PCI: Add #defines for some of PCIe spec r4.0 features
+>   PCI: Disable MSI for Tegra root ports
+>   PCI: dwc: Perform dbi regs write lock towards the end
+>   PCI: dwc: Move config space capability search API
+>   PCI: dwc: Add ext config space capability search API
+>   PCI: dwc: Export dw_pcie_wait_for_link() API
+>   dt-bindings: PCI: designware: Add binding for CDM register check
+>   PCI: dwc: Add support to enable CDM register check
+>   dt-bindings: Add PCIe supports-clkreq property
+>   dt-bindings: PCI: tegra: Add device tree support for Tegra194
+>   dt-bindings: PHY: P2U: Add Tegra194 P2U block
+>   phy: tegra: Add PCIe PIPE2UPHY support
+>   PCI: tegra: Add Tegra194 PCIe support
+> 
+>  .../bindings/pci/designware-pcie.txt          |    5 +
+>  .../bindings/pci/nvidia,tegra194-pcie.txt     |  155 ++
+>  Documentation/devicetree/bindings/pci/pci.txt |    5 +
+>  .../bindings/phy/phy-tegra194-p2u.txt         |   28 +
+>  drivers/pci/controller/dwc/Kconfig            |   10 +
+>  drivers/pci/controller/dwc/Makefile           |    1 +
+>  .../pci/controller/dwc/pcie-designware-ep.c   |   37 +-
+>  .../pci/controller/dwc/pcie-designware-host.c |   14 +-
+>  drivers/pci/controller/dwc/pcie-designware.c  |   88 +
+>  drivers/pci/controller/dwc/pcie-designware.h  |   12 +
+>  drivers/pci/controller/dwc/pcie-tegra194.c    | 1631 +++++++++++++++++
+>  drivers/pci/quirks.c                          |   53 +
+>  drivers/phy/tegra/Kconfig                     |    7 +
+>  drivers/phy/tegra/Makefile                    |    1 +
+>  drivers/phy/tegra/phy-tegra194-p2u.c          |  120 ++
+>  include/uapi/linux/pci_regs.h                 |   14 +-
+>  16 files changed, 2139 insertions(+), 42 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+>  create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
+>  create mode 100644 drivers/phy/tegra/phy-tegra194-p2u.c
+> 
+
+I have applied it to pci/tegra, subject to kbuild test validation,
+for v5.4.
+
+Thanks,
+Lorenzo
