@@ -2,119 +2,148 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C54F6C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8EF6C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A45F02070C
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84750206C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbfHMDDS (ORCPT
+        id S1726881AbfHMDEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 23:03:18 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:37186 "EHLO inva020.nxp.com"
+        Mon, 12 Aug 2019 23:04:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726483AbfHMDDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 23:03:17 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BFCB91A0717;
-        Tue, 13 Aug 2019 05:03:14 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 757D01A0022;
-        Tue, 13 Aug 2019 05:03:06 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 28A63402BF;
-        Tue, 13 Aug 2019 11:02:56 +0800 (SGT)
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
-        l.stach@pengutronix.de, kishon@ti.com, tpiepho@impinj.com,
-        leonard.crestez@nxp.com, andrew.smirnov@gmail.com,
-        yue.wang@amlogic.com, hayashi.kunihiko@socionext.com,
-        dwmw@amazon.co.uk, jonnyc@amazon.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCHv4 2/2] PCI: layerscape: Add CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately
-Date:   Tue, 13 Aug 2019 10:53:17 +0800
-Message-Id: <20190813025317.48290-2-xiaowei.bao@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20190813025317.48290-1-xiaowei.bao@nxp.com>
-References: <20190813025317.48290-1-xiaowei.bao@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726236AbfHMDEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 23:04:06 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EAD7206C1;
+        Tue, 13 Aug 2019 03:04:04 +0000 (UTC)
+Date:   Mon, 12 Aug 2019 23:04:03 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Cc:     Tom Zanussi <zanussi@kernel.org>, mingo@redhat.com,
+        tom.zanussi@linux.intel.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] trace:Add "gfp_t" support in synthetic_events
+Message-ID: <20190812230403.01491479@oasis.local.home>
+In-Reply-To: <ac10cc35-96f4-7f67-a259-2398d3136417@linux.intel.com>
+References: <20190712015308.9908-1-zhengjun.xing@linux.intel.com>
+        <1562947506.12920.0.camel@kernel.org>
+        <ac10cc35-96f4-7f67-a259-2398d3136417@linux.intel.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately.
+On Tue, 13 Aug 2019 09:04:28 +0800
+Xing Zhengjun <zhengjun.xing@linux.intel.com> wrote:
 
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
----
-v2:
- - No change.
-v3:
- - modify the commit message.
-v4:
- - send the patch again with '--to'.
+> Hi Steve,
+> 
+>     Could you help to review? Thanks.
 
- drivers/pci/controller/dwc/Kconfig  |   20 ++++++++++++++++++--
- drivers/pci/controller/dwc/Makefile |    3 ++-
- 2 files changed, 20 insertions(+), 3 deletions(-)
+Thanks for the ping. Yes, I'll take a look at it. I'll be pulling in a
+lot of patches that have queued up.
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index a6ce1ee..a41ccf5 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -131,13 +131,29 @@ config PCI_KEYSTONE_EP
- 	  DesignWare core functions to implement the driver.
- 
- config PCI_LAYERSCAPE
--	bool "Freescale Layerscape PCIe controller"
-+	bool "Freescale Layerscape PCIe controller - Host mode"
- 	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select MFD_SYSCON
- 	select PCIE_DW_HOST
- 	help
--	  Say Y here if you want PCIe controller support on Layerscape SoCs.
-+	  Say Y here if you want to enable PCIe controller support on Layerscape
-+	  SoCs to work in Host mode.
-+	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
-+	  determines which PCIe controller works in EP mode and which PCIe
-+	  controller works in RC mode.
-+
-+config PCI_LAYERSCAPE_EP
-+	bool "Freescale Layerscape PCIe controller - Endpoint mode"
-+	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
-+	depends on PCI_ENDPOINT
-+	select PCIE_DW_EP
-+	help
-+	  Say Y here if you want to enable PCIe controller support on Layerscape
-+	  SoCs to work in Endpoint mode.
-+	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
-+	  determines which PCIe controller works in EP mode and which PCIe
-+	  controller works in RC mode.
- 
- config PCI_HISI
- 	depends on OF && (ARM64 || COMPILE_TEST)
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index b085dfd..824fde7 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -8,7 +8,8 @@ obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
- obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
- obj-$(CONFIG_PCIE_SPEAR13XX) += pcie-spear13xx.o
- obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone.o
--obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o pci-layerscape-ep.o
-+obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
-+obj-$(CONFIG_PCI_LAYERSCAPE_EP) += pci-layerscape-ep.o
- obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
- obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
--- 
-1.7.1
+-- Steve
+
+
+> 
+> On 7/13/2019 12:05 AM, Tom Zanussi wrote:
+> > Hi Zhengjun,
+> > 
+> > On Fri, 2019-07-12 at 09:53 +0800, Zhengjun Xing wrote:  
+> >> Add "gfp_t" support in synthetic_events, then the "gfp_t" type
+> >> parameter in some functions can be traced.
+> >>
+> >> Prints the gfp flags as hex in addition to the human-readable flag
+> >> string.  Example output:
+> >>
+> >>    whoopsie-630 [000] ...1 78.969452: testevent: bar=b20
+> >> (GFP_ATOMIC|__GFP_ZERO)
+> >>      rcuc/0-11  [000] ...1 81.097555: testevent: bar=a20 (GFP_ATOMIC)
+> >>      rcuc/0-11  [000] ...1 81.583123: testevent: bar=a20 (GFP_ATOMIC)
+> >>
+> >> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+> >> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>  
+> > 
+> > Looks good to me, thanks!
+> > 
+> > Tom
+> >   
+> >> ---
+> >>   kernel/trace/trace_events_hist.c | 19 +++++++++++++++++++
+> >>   1 file changed, 19 insertions(+)
+> >>
+> >> diff --git a/kernel/trace/trace_events_hist.c
+> >> b/kernel/trace/trace_events_hist.c
+> >> index ca6b0dff60c5..30f0f32aca62 100644
+> >> --- a/kernel/trace/trace_events_hist.c
+> >> +++ b/kernel/trace/trace_events_hist.c
+> >> @@ -13,6 +13,10 @@
+> >>   #include <linux/rculist.h>
+> >>   #include <linux/tracefs.h>
+> >>   
+> >> +/* for gfp flag names */
+> >> +#include <linux/trace_events.h>
+> >> +#include <trace/events/mmflags.h>
+> >> +
+> >>   #include "tracing_map.h"
+> >>   #include "trace.h"
+> >>   #include "trace_dynevent.h"
+> >> @@ -752,6 +756,8 @@ static int synth_field_size(char *type)
+> >>   		size = sizeof(unsigned long);
+> >>   	else if (strcmp(type, "pid_t") == 0)
+> >>   		size = sizeof(pid_t);
+> >> +	else if (strcmp(type, "gfp_t") == 0)
+> >> +		size = sizeof(gfp_t);
+> >>   	else if (synth_field_is_string(type))
+> >>   		size = synth_field_string_size(type);
+> >>   
+> >> @@ -792,6 +798,8 @@ static const char *synth_field_fmt(char *type)
+> >>   		fmt = "%lu";
+> >>   	else if (strcmp(type, "pid_t") == 0)
+> >>   		fmt = "%d";
+> >> +	else if (strcmp(type, "gfp_t") == 0)
+> >> +		fmt = "%x";
+> >>   	else if (synth_field_is_string(type))
+> >>   		fmt = "%s";
+> >>   
+> >> @@ -834,9 +842,20 @@ static enum print_line_t
+> >> print_synth_event(struct trace_iterator *iter,
+> >>   					 i == se->n_fields - 1 ? ""
+> >> : " ");
+> >>   			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
+> >>   		} else {
+> >> +			struct trace_print_flags __flags[] = {
+> >> +			    __def_gfpflag_names, {-1, NULL} };
+> >> +
+> >>   			trace_seq_printf(s, print_fmt, se-  
+> >>> fields[i]->name,  
+> >>   					 entry->fields[n_u64],
+> >>   					 i == se->n_fields - 1 ? ""
+> >> : " ");
+> >> +
+> >> +			if (strcmp(se->fields[i]->type, "gfp_t") ==
+> >> 0) {
+> >> +				trace_seq_puts(s, " (");
+> >> +				trace_print_flags_seq(s, "|",
+> >> +						      entry-  
+> >>> fields[n_u64],  
+> >> +						      __flags);
+> >> +				trace_seq_putc(s, ')');
+> >> +			}
+> >>   			n_u64++;
+> >>   		}
+> >>   	}  
+> 
 
