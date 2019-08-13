@@ -2,130 +2,241 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EACC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F33ABC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C28C820840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E3020840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:10:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="dY3N7FwQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbfHMVJA (ORCPT
+        id S1726638AbfHMVKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:09:00 -0400
-Received: from mga11.intel.com ([192.55.52.93]:8766 "EHLO mga11.intel.com"
+        Tue, 13 Aug 2019 17:10:49 -0400
+Received: from first.geanix.com ([116.203.34.67]:53280 "EHLO first.geanix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbfHMVI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 17:08:59 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 14:08:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="167177095"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga007.jf.intel.com with ESMTP; 13 Aug 2019 14:08:57 -0700
-Date:   Tue, 13 Aug 2019 14:08:57 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] mm/gup: introduce vaddr_pin_pages_remote()
-Message-ID: <20190813210857.GB12695@iweiny-DESK2.sc.intel.com>
-References: <20190812015044.26176-1-jhubbard@nvidia.com>
- <20190812015044.26176-3-jhubbard@nvidia.com>
- <20190812234950.GA6455@iweiny-DESK2.sc.intel.com>
- <38d2ff2f-4a69-e8bd-8f7c-41f1dbd80fae@nvidia.com>
+        id S1725923AbfHMVKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 17:10:49 -0400
+Received: from [192.168.8.20] (unknown [85.184.140.241])
+        by first.geanix.com (Postfix) with ESMTPSA id 85D234B441;
+        Tue, 13 Aug 2019 21:09:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
+        t=1565730578; bh=HnRrkMnK2x5biGgdnBcO7bDH82LVKWeShQafsKrCa4g=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To;
+        b=dY3N7FwQTee1xMDY+q1fZ2CG38Sn4Agm+s9vQmv/0bGtxEsgAA7AM67QUxURna11R
+         NFLVnt1lCyaweKFLTmnVtpIL27j+hL7Y6/2mzx3+fdQ7EBQGFnpKThYZt7Hv8l1V0a
+         eTx1Z3aHEMsIBkbYMpVSNSnZ61hmQO5piKoJuYNTBqGSLYuS2Ct7rr0X+w/cxb9wlk
+         dwEeOrKYLehlUplyByLxB/QJjRSLo1jGQ3K2ISmPTjLbX032/aRisIQDY4/eDws98K
+         dU3ED80VktW+/RY+/3Gqp7QYtu6BrkTf4u92+Jf3lw0mgUpKzv3h7rmQuGw0C4Z+FF
+         8eINEf/JkVGSQ==
+Subject: Re: [BUG] n_gsm: possible recursive locking detected
+From:   =?UTF-8?Q?Martin_Hundeb=c3=b8ll?= <martin@geanix.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Dirkjan Bussink <dirkjan.bussink@nedap.com>
+References: <e2e9cc8f-6bb4-f66f-2d2b-3875c2e66cd3@geanix.com>
+ <20190725112651.GA12309@kroah.com>
+ <79b38084-8867-0972-ca6c-155e5dbb0d90@geanix.com>
+Message-ID: <cbae9e00-d3cf-848a-636d-8d4b3d0973f5@geanix.com>
+Date:   Tue, 13 Aug 2019 23:10:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <38d2ff2f-4a69-e8bd-8f7c-41f1dbd80fae@nvidia.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <79b38084-8867-0972-ca6c-155e5dbb0d90@geanix.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US-large
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 05:07:32PM -0700, John Hubbard wrote:
-> On 8/12/19 4:49 PM, Ira Weiny wrote:
-> > On Sun, Aug 11, 2019 at 06:50:44PM -0700, john.hubbard@gmail.com wrote:
-> > > From: John Hubbard <jhubbard@nvidia.com>
-> ...
-> > > diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
-> > > index 53085896d718..fdff034a8a30 100644
-> > > --- a/drivers/infiniband/core/umem_odp.c
-> > > +++ b/drivers/infiniband/core/umem_odp.c
-> > > @@ -534,7 +534,7 @@ static int ib_umem_odp_map_dma_single_page(
-> > >   	}
-> > >   out:
-> > > -	put_user_page(page);
-> > > +	vaddr_unpin_pages(&page, 1, &umem_odp->umem.vaddr_pin);
-> > >   	if (remove_existing_mapping) {
-> > >   		ib_umem_notifier_start_account(umem_odp);
-> > > @@ -635,9 +635,10 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 user_virt,
-> > >   		 * complex (and doesn't gain us much performance in most use
-> > >   		 * cases).
-> > >   		 */
-> > > -		npages = get_user_pages_remote(owning_process, owning_mm,
-> > > +		npages = vaddr_pin_pages_remote(owning_process, owning_mm,
-> > >   				user_virt, gup_num_pages,
-> > > -				flags, local_page_list, NULL, NULL);
-> > > +				flags, local_page_list, NULL, NULL,
-> > > +				&umem_odp->umem.vaddr_pin);
-> > 
-> > Thinking about this part of the patch... is this pin really necessary?  This
-> > code is not doing a long term pin.  The page just needs a reference while we
-> > map it into the devices page tables.  Once that is done we should get notifiers
-> > if anything changes and we can adjust.  right?
-> > 
+
+
+On 12/08/2019 22.59, Martin Hundebøll wrote:
 > 
-> OK, now it's a little interesting: the FOLL_PIN is necessary, but maybe not
-> FOLL_LONGTERM. Illustrating once again that it's actually necessary to allow
-> these flags to vary independently.
-
-Why is PIN necessary?  I think we do want all drivers to use the new
-user_uaddr_vaddr_pin_user_pages() call...  :-P  But in this case I think a
-simple "get" reference is enough to reference the page while we are using it.
-If it changes after the "put/unpin" we get a fault which should handle the
-change right?
-
-The other issue I have with FOLL_PIN is what does it mean to call "...pin...()"
-without FOLL_PIN?
-
-This is another confusion of get_user_pages()...  you can actually call it
-without FOLL_GET...  :-/  And you just don't get pages back.  I've never really
-dug into how (or if) you "put" them later...
-
 > 
-> And that leads to another API refinement idea: let's set FOLL_PIN within the
-> vaddr_pin_pages*() wrappers, and set FOLL_LONGTER in the *callers* of those
-> wrappers, yes?
+> On 25/07/2019 13.26, Greg Kroah-Hartman wrote:
+>> On Wed, Jul 17, 2019 at 11:40:02AM +0200, Martin Hundebøll wrote:
+>>> Hi,
+>>>
+>>> The GSM0710 line discipline driver triggers a lockdep warning when 
+>>> disabling
+>>> the ldisc while holding a multiplexed virtual tty open:
+>>>
+>>> ============================================
+>>> WARNING: possible recursive locking detected
+>>> 5.2.0-00114-gdab52e30156b #6 Not tainted
+>>> --------------------------------------------
+>>> cmux/263 is trying to acquire lock:
+>>> e1e23b18 (&tty->legacy_mutex){+.+.}, at: __tty_hangup.part.0+0x58/0x27c
+>>>
+>>> but task is already holding lock:
+>>> d6eddf48 (&tty->legacy_mutex){+.+.}, at: tty_set_ldisc+0x3c/0x1bc
+>>>
+>>> other info that might help us debug this:
+>>>   Possible unsafe locking scenario:
+>>>
+>>>         CPU0
+>>>         ----
+>>>    lock(&tty->legacy_mutex);
+>>>    lock(&tty->legacy_mutex);
+>>>
+>>>   *** DEADLOCK ***
+>>>
+>>>   May be due to missing lock nesting notation
+>>>
+>>> 3 locks held by cmux/263:
+>>>   #0: d6eddf48 (&tty->legacy_mutex){+.+.}, at: tty_set_ldisc+0x3c/0x1bc
+>>>   #1: f28bead9 (&tty->ldisc_sem){++++}, at: tty_ldisc_lock+0x50/0x74
+>>>   #2: e5d20e4f (&gsm->mutex){+.+.}, at: gsm_cleanup_mux+0x9c/0x15c
+>>>
+>>> stack backtrace:
+>>> CPU: 0 PID: 263 Comm: cmux Not tainted 5.2.0-00114-gdab52e30156b #6
+>>> Hardware name: Freescale i.MX6 Ultralite (Device Tree)
+>>> [<c011184c>] (unwind_backtrace) from [<c010cc74>] (show_stack+0x10/0x14)
+>>> [<c010cc74>] (show_stack) from [<c0852488>] (dump_stack+0xd4/0x108)
+>>> [<c0852488>] (dump_stack) from [<c017be90>] 
+>>> (__lock_acquire+0x6ec/0x1e84)
+>>> [<c017be90>] (__lock_acquire) from [<c017ddc4>] 
+>>> (lock_acquire+0xcc/0x204)
+>>> [<c017ddc4>] (lock_acquire) from [<c086e9d0>] (__mutex_lock+0x64/0x90c)
+>>> [<c086e9d0>] (__mutex_lock) from [<c086f294>] 
+>>> (mutex_lock_nested+0x1c/0x24)
+>>> [<c086f294>] (mutex_lock_nested) from [<c04c02fc>]
+>>> (__tty_hangup.part.0+0x58/0x27c)
+>>> [<c04c02fc>] (__tty_hangup.part.0) from [<c04ce718>]
+>>> (gsm_cleanup_mux+0xe8/0x15c)
+>>> [<c04ce718>] (gsm_cleanup_mux) from [<c04ce7d4>] (gsmld_close+0x48/0x90)
+>>> [<c04ce7d4>] (gsmld_close) from [<c04c7e24>] (tty_set_ldisc+0xb8/0x1bc)
+>>> [<c04c7e24>] (tty_set_ldisc) from [<c04c0b70>] (tty_ioctl+0x640/0xcb0)
+>>> [<c04c0b70>] (tty_ioctl) from [<c0297e68>] (do_vfs_ioctl+0x41c/0xa5c)
+>>> [<c0297e68>] (do_vfs_ioctl) from [<c02984dc>] (ksys_ioctl+0x34/0x60)
+>>> [<c02984dc>] (ksys_ioctl) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+>>> Exception stack(0xc8ce1fa8 to 0xc8ce1ff0)
+>>> 1fa0:                   00438000 00000000 00000003 00005423 beb6cc04
+>>> beb6cc04
+>>> 1fc0: 00438000 00000000 00000000 00000036 00000000 00000000 00438000
+>>> beb6ccd4
+>>> 1fe0: 00438048 beb6cbfc 00427684 b6f58b88
+>>>
+>>>
+>>> Steps to reproduce using the attached cmux util:
+>>>
+>>> root@iwg26:~# ./cmux &
+>>> [1] 254
+>>> SERIAL_PORT = /dev/ttymxc0
+>>> AT+IFC=2: Ie5   +CFUN: 1    +CPIN: READY    Call Ready  AT+IFC=2,2   OK
+>>> AT+GMM  : AT+GMM   Quectel_M95    OK
+>>> AT      : AT   OK
+>>> AT+IPR=1: AT+IPR=115200&w   OK
+>>> AT+CMUX=: AT+CMUX=0,0,5,512,10,3,30,10,2   OK
+>>> Line dicipline set
+>>>
+>>> root@iwg26:~# cat /dev/gsmtty1 &
+>>> [2] 262
+>>> root@iwg26:~# kill %1
+>>> [   74.517449] ============================================
+>>> [   74.522769] WARNING: possible recursive locking detected
+>>> [   74.528094] 5.2.0-00114-gdab52e30156b #6 Not tainted
+>>> [   74.533065] --------------------------------------------
+>>> <...>
+>>>
+>>>
+>>> This has supposedly been fixed before in 4d9b109060f6 ("tty: Prevent
+>>> deadlock in n_gsm driver"), but the fix was undone in be7065725590
+>>> ("TTY/n_gsm: Removing the wrong tty_unlock/lock() in 
+>>> gsm_dlci_release()")
+>>
+>> Do you have a patch that can resolve this given you have a test case?
+> 
+> No, sorry.
+> 
+> I can try to cook a patch, but chances are I will break locking for 
+> someone else. Hints are welcome.
 
-I've thought about this before and I think any default flags should simply
-define what we want follow_pages to do.
+The recursive locking happens when restoring the initial line discipline:
 
-Also, the addition of vaddr_pin information creates an implicit flag which if
-not there disallows any file pages from being pinned.  It becomes our new
-"longterm" flag.  FOLL_PIN _could_ be what we should use "internally".  But we
-could also just use this implicit vaddr_pin flag and not add a new flag.
+	ioctl(serial_fd, TIOCSETD, &ldisc_save);
 
-Finally, I struggle with converting everyone to a new call.  It is more
-overhead to use vaddr_pin in the call above because now the GUP code is going
-to associate a file pin object with that file when in ODP we don't need that
-because the pages can move around.
+If I remove the restore, and let close() do the ldisc tear down I get a 
+circular lockdep warning:
 
-This overhead may be fine, not sure in this case, but I don't see everyone
-wanting it.
+[   56.254258] ======================================================
+[   56.260447] WARNING: possible circular locking dependency detected
+[   56.266641] 5.2.0-00118-g1fd58e20e5b0 #30 Not tainted
+[   56.271701] ------------------------------------------------------
+[   56.277890] cmux/271 is trying to acquire lock:
+[   56.282436] 8215283a (&tty->legacy_mutex){+.+.}, at: 
+__tty_hangup.part.0+0x58/0x27c
+[   56.290128]
+[   56.290128] but task is already holding lock:
+[   56.295970] e9e2b842 (&gsm->mutex){+.+.}, at: gsm_cleanup_mux+0x9c/0x15c
+[   56.302699]
+[   56.302699] which lock already depends on the new lock.
+[   56.302699]
+[   56.310884]
+[   56.310884] the existing dependency chain (in reverse order) is:
+[   56.318372]
+[   56.318372] -> #2 (&gsm->mutex){+.+.}:
+[   56.323624]        mutex_lock_nested+0x1c/0x24
+[   56.328079]        gsm_cleanup_mux+0x9c/0x15c
+[   56.332448]        gsmld_ioctl+0x418/0x4e8
+[   56.336554]        tty_ioctl+0x96c/0xcb0
+[   56.340492]        do_vfs_ioctl+0x41c/0xa5c
+[   56.344685]        ksys_ioctl+0x34/0x60
+[   56.348535]        ret_fast_syscall+0x0/0x28
+[   56.352815]        0xbe97cc04
+[   56.355791]
+[   56.355791] -> #1 (&tty->ldisc_sem){++++}:
+[   56.361388]        tty_ldisc_lock+0x50/0x74
+[   56.365581]        tty_init_dev+0x88/0x1c4
+[   56.369687]        tty_open+0x1c8/0x430
+[   56.373536]        chrdev_open+0xa8/0x19c
+[   56.377560]        do_dentry_open+0x118/0x3c4
+[   56.381928]        path_openat+0x2fc/0x1190
+[   56.386123]        do_filp_open+0x68/0xd4
+[   56.390146]        do_sys_open+0x164/0x220
+[   56.394257]        kernel_init_freeable+0x328/0x3e4
+[   56.399146]        kernel_init+0x8/0x110
+[   56.403078]        ret_from_fork+0x14/0x20
+[   56.407183]        0x0
+[   56.409548]
+[   56.409548] -> #0 (&tty->legacy_mutex){+.+.}:
+[   56.415402]        __mutex_lock+0x64/0x90c
+[   56.419508]        mutex_lock_nested+0x1c/0x24
+[   56.423961]        __tty_hangup.part.0+0x58/0x27c
+[   56.428676]        gsm_cleanup_mux+0xe8/0x15c
+[   56.433043]        gsmld_close+0x48/0x90
+[   56.436979]        tty_ldisc_kill+0x2c/0x6c
+[   56.441173]        tty_ldisc_release+0x88/0x194
+[   56.445715]        tty_release_struct+0x14/0x44
+[   56.450254]        tty_release+0x36c/0x43c
+[   56.454365]        __fput+0x94/0x1e8
 
-Ira
 
+Doing the hangup asynchronously fixes both cases for me (tested on 5.2):
+
+diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+index d30525946892..36a3eb4ad4c5 100644
+--- a/drivers/tty/n_gsm.c
++++ b/drivers/tty/n_gsm.c
+@@ -1716,7 +1716,7 @@ static void gsm_dlci_release(struct gsm_dlci *dlci)
+                 gsm_destroy_network(dlci);
+                 mutex_unlock(&dlci->mutex);
+
+-               tty_vhangup(tty);
++               tty_hangup(tty);
+
+                 tty_port_tty_set(&dlci->port, NULL);
+                 tty_kref_put(tty);
+
+What am I missing ?
+
+// Martin
