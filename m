@@ -2,44 +2,47 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BF9C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 912D7C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E57BE2063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 710B52063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:53:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbfHMIxa (ORCPT
+        id S1728090AbfHMIxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 04:53:30 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:15185 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727715AbfHMIx3 (ORCPT
+        Tue, 13 Aug 2019 04:53:33 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:24059 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727705AbfHMIx3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 13 Aug 2019 04:53:29 -0400
-X-UUID: 48d1413672114bf0bd830e48652dbd16-20190813
-X-UUID: 48d1413672114bf0bd830e48652dbd16-20190813
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+X-UUID: 207f83eaaac248eda72b8f4d70f4bedd-20190813
+X-UUID: 207f83eaaac248eda72b8f4d70f4bedd-20190813
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
         (envelope-from <light.hsieh@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 1334987500; Tue, 13 Aug 2019 16:53:22 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by mtkexhb02.mediatek.inc
- (172.21.101.103) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 13 Aug
- 2019 16:53:20 +0800
+        with ESMTP id 405668400; Tue, 13 Aug 2019 16:53:21 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 13 Aug 2019 16:53:20 +0800
 Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 13 Aug 2019 16:53:19 +0800
+ Transport; Tue, 13 Aug 2019 16:53:20 +0800
 From:   Light Hsieh <light.hsieh@mediatek.com>
 To:     <linus.walleij@linaro.org>
 CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>
-Subject: [PATCH v1 0/5] Improve MediaTek pinctrl v2 and make backward compatible to smartphone mass production usage
-Date:   Tue, 13 Aug 2019 16:53:15 +0800
-Message-ID: <1565686400-5711-1-git-send-email-light.hsieh@mediatek.com>
+        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
+        Light Hsieh <light.hsieh@mediatek.com>
+Subject: [PATCH v1 2/5] pinctrl: mediatek: Supporting driving setting without mapping current to register value
+Date:   Tue, 13 Aug 2019 16:53:17 +0800
+Message-ID: <1565686400-5711-3-git-send-email-light.hsieh@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1565686400-5711-1-git-send-email-light.hsieh@mediatek.com>
+References: <1565686400-5711-1-git-send-email-light.hsieh@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MTK:  N
@@ -48,12 +51,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch improves MediaTek pinctrl v2 and makes backward compatible to
-current smartphone mass production usage by:
-1.Check gpio pin number and use binary search in control address lookup
-2.Supporting driving setting without mapping current to register value
-3.Correct usage of PIN_CONFIG get/set implementation
-4.Backward compatible to previous Mediatek's bias-pull usage
-5.Add support for pin configuration dump via sysfs
+From: Light Hsieh <light.hsieh@mediatek.com>
 
+Mediatek's smarphone project actual usage does need to know current value
+(in mA) in procedure of finding the best driving setting.
+The steps in the procedure is like as follow:
+
+1. set driving setting field in setting register as 0, measure waveform,
+   perform test, and etc.
+2. set driving setting field in setting register as 1, measure waveform,
+   perform test, and etc.
+...
+n. set driving setting field in setting register as n-1, measure
+   waveform, perform test, and etc.
+Check the results of steps 1~n and adopt the setting that get best result.
+
+This procedure does need to know the mapping between current to register
+value.
+Therefore, setting driving without mapping current is more pratical for
+Mediatek's smartphone usage.
+
+Change-Id: Iacdabf0cada230fc5acad96673810c12a6c4556d
+---
+ drivers/pinctrl/mediatek/pinctrl-mt6765.c        |  4 ++--
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 21 +++++++++++++++++++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h |  5 +++++
+ drivers/pinctrl/mediatek/pinctrl-paris.c         |  1 +
+ 4 files changed, 29 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mt6765.c b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+index 32451e8..e024ebc 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mt6765.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+@@ -1077,8 +1077,8 @@
+ 	.bias_disable_get = mtk_pinconf_bias_disable_get,
+ 	.bias_set = mtk_pinconf_bias_set,
+ 	.bias_get = mtk_pinconf_bias_get,
+-	.drive_set = mtk_pinconf_drive_set_rev1,
+-	.drive_get = mtk_pinconf_drive_get_rev1,
++	.drive_set = mtk_pinconf_drive_set_direct_val,
++	.drive_get = mtk_pinconf_drive_get_direct_val,
+ 	.adv_pull_get = mtk_pinconf_adv_pull_get,
+ 	.adv_pull_set = mtk_pinconf_adv_pull_set,
+ };
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+index 4687f63..23a9529 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+@@ -607,6 +607,27 @@ int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
+ 	return 0;
+ }
+ 
++/* Revision direct value */
++int mtk_pinconf_drive_set_direct_val(struct mtk_pinctrl *hw,
++			       const struct mtk_pin_desc *desc, u32 arg)
++{
++	int err;
++
++	err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV, arg);
++
++	return err;
++}
++
++int mtk_pinconf_drive_get_direct_val(struct mtk_pinctrl *hw,
++			       const struct mtk_pin_desc *desc, int *val)
++{
++	int err;
++
++	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV, val);
++
++	return err;
++}
++
+ int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
+ 			     const struct mtk_pin_desc *desc, bool pullup,
+ 			     u32 arg)
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+index 1b7da42..b3bada0 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+@@ -288,6 +288,11 @@ int mtk_pinconf_drive_set_rev1(struct mtk_pinctrl *hw,
+ int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
+ 			       const struct mtk_pin_desc *desc, int *val);
+ 
++int mtk_pinconf_drive_set_direct_val(struct mtk_pinctrl *hw,
++			       const struct mtk_pin_desc *desc, u32 arg);
++int mtk_pinconf_drive_get_direct_val(struct mtk_pinctrl *hw,
++			       const struct mtk_pin_desc *desc, int *val);
++
+ int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
+ 			     const struct mtk_pin_desc *desc, bool pullup,
+ 			     u32 arg);
+diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+index 28b4951..71c94b2 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-paris.c
++++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+@@ -964,3 +964,4 @@ static int mtk_paris_pinctrl_resume(struct device *device)
+ 	.suspend_noirq = mtk_paris_pinctrl_suspend,
+ 	.resume_noirq = mtk_paris_pinctrl_resume,
+ };
++
+-- 
+1.8.1.1.dirty
 
