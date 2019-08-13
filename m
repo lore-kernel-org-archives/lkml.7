@@ -2,195 +2,107 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1150FC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EF9C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5ED820665
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8696D20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:59:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="BuR1tuqD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gMNzHJkj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbfHMH7a (ORCPT
+        id S1728061AbfHMH7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 03:59:30 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:28424 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726986AbfHMH7a (ORCPT
+        Tue, 13 Aug 2019 03:59:34 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42670 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727948AbfHMH7c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 03:59:30 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x7D7wkVX015820;
-        Tue, 13 Aug 2019 02:59:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=drWtMvMOAVnhK8sSftAQV6/8V0+8UJy3F8iMkB2QTgk=;
- b=BuR1tuqDlRal7QIiMhpyfz40pfaoc+tN9CYekkRSsIbfdERQZXrEgMF8AVMipZ0dreSh
- rZNJ8eC5IrQaA9WpGgPbY8Idwo33n39NdCYG7hEtNImzsH1oE8Hm0SLGbsXjTI28RfAe
- J/Me83MaLYbghlvtmQiIhcM5WT/T+hP9B2U5xox18bBNXPCo3I6Qwwf5RUKbxiAqQvVL
- y+UQXLthLDjzBHI599FLCUyUixcEQJWJa6/tVghreZpBgEQ4TjWT4wL1FRRoNUkLagTH
- vIfC3QGIK9kDgL2Hjxs/BlS7PR6FoQrP1z+JJ1z4BuWIVZdaaqF1JTTPmtu26RzmJCMC oQ== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2ubf9brmee-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 13 Aug 2019 02:59:25 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 13 Aug
- 2019 08:59:23 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Tue, 13 Aug 2019 08:59:23 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 1D51345;
-        Tue, 13 Aug 2019 08:59:23 +0100 (BST)
-Date:   Tue, 13 Aug 2019 08:59:23 +0100
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Lee Jones <lee.jones@linaro.org>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: Re: [PATCH 2/2] mfd: madera: Add support for requesting the supply
- clocks
-Message-ID: <20190813075923.GN54126@ediswmail.ad.cirrus.com>
-References: <20190806151321.31137-1-ckeepax@opensource.cirrus.com>
- <20190806151321.31137-2-ckeepax@opensource.cirrus.com>
- <20190812103853.GM26727@dell>
- <20190812160937.GM54126@ediswmail.ad.cirrus.com>
- <20190813071814.GY26727@dell>
+        Tue, 13 Aug 2019 03:59:32 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 15so8919892ljr.9
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 00:59:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ppVR4stowlIJ6/4pZZBiqz7XFOa7GBtQMtynjohKpDM=;
+        b=gMNzHJkjPlTKg8J3P1ItvpHxlkyUzWeShHE+QJSJ32VauPTGnzGKsD+QuZrHHI76pj
+         RQaLjgiFHttMYl1YL5egx0p1M2IIOgyXxDeB1ftBhbKgE91RpNxJqdP+/QCc15BfoOhL
+         Z1+PP778xl2OwXclKn24vrxEMqdB2zsz1S9Mo+1+LLBC3XvBF1qfh81VIeKQdgw15Wfs
+         3UPAiB+GQfna3uzgBhqY2DIQZ1U1Dd6wdEjtIkq7MQrftD+JJ76fJF/zUJB30qtgXZ8g
+         gkbmkqgpWNNJ+9OWrPYhYkczySrcOktUtmOi5kVY6tzWBM01UKaeDCvccNuWK35inzMd
+         u0UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ppVR4stowlIJ6/4pZZBiqz7XFOa7GBtQMtynjohKpDM=;
+        b=nAZIlAx64zFvDwscgwSZdBRP7LIBA8NjXA2t/yRcFag3lE+AQeSdHsNY8b551lp7F+
+         0PT4EjFmmjTqhhG7wz7XG81gxihGLmonoexQhpz7AV74lSdQO+OdvlAPnajhpwuWAkTd
+         BcAsA7sWGG2cc1+2HFpB9PP1zq/DrBG40wggmXEpa3TJEnJG7CqIpWDHYpJhV4KUX4C0
+         MwG00Krp9QqeIh7Ub//13Jwlv9F7ccwTV3KSSQo8kBGUvp/NnmTDlQJY0jhUJbZns201
+         HVB+j3tt8bCV0TDsrw14QbsRqYz1/BFjmb7xJjJQbOBa4FDHxHPRx1v2O93PYBGZnq8k
+         bG2Q==
+X-Gm-Message-State: APjAAAVya/SgdTXIwtfAAvhx9wbBj2F/Fk6qg9Z2ckctj14UAWsbXAap
+        t12vHecHrse9qyTACQHHVJPlRP+6TbTTInD80PeAnA==
+X-Google-Smtp-Source: APXvYqy9Xa1Q8vdR2OCkDVG7ShxG5L9IQXmi6qKK2LlN8HtiapeB1JlrnTXdtXIphrZmMJ+SZciCiafKR0IU/QMDd44=
+X-Received: by 2002:a2e:970a:: with SMTP id r10mr19876829lji.115.1565683170315;
+ Tue, 13 Aug 2019 00:59:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190813071814.GY26727@dell>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 lowpriorityscore=0
- clxscore=1015 spamscore=0 adultscore=0 suspectscore=0 mlxscore=0
- priorityscore=1501 malwarescore=0 phishscore=0 mlxlogscore=999
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1908130088
+References: <1565098640-12536-1-git-send-email-sumit.garg@linaro.org>
+ <1565098640-12536-3-git-send-email-sumit.garg@linaro.org> <20190807190320.th4sbnsnmwb7myzx@linux.intel.com>
+ <CAFA6WYN-6MpP2TZQEz49BmjSQiMSqghVFWRZCCY0o1UVad1AFw@mail.gmail.com> <20190808151500.ypfcqowklalu76uq@linux.intel.com>
+In-Reply-To: <20190808151500.ypfcqowklalu76uq@linux.intel.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Tue, 13 Aug 2019 13:29:19 +0530
+Message-ID: <CAFA6WYNqBH9aAM-uke6jFTCeLB2GG7UYyrYEPHgyVy8p_q+Pww@mail.gmail.com>
+Subject: Re: [RFC/RFT v3 2/3] KEYS: trusted: move tpm2 trusted keys code
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        linux-security-module@vger.kernel.org, dhowells@redhat.com,
+        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
+        peterhuewe@gmx.de, jgg@ziepe.ca, jejb@linux.ibm.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 08:18:14AM +0100, Lee Jones wrote:
-> On Mon, 12 Aug 2019, Charles Keepax wrote:
-> > On Mon, Aug 12, 2019 at 11:38:53AM +0100, Lee Jones wrote:
-> > > On Tue, 06 Aug 2019, Charles Keepax wrote:
-> > > 
-> > > > Add the ability to get the clock for each clock input pin of the chip
-> > > > and enable MCLK2 since that is expected to be a permanently enabled
-> > > > 32kHz clock.
-> > > > 
-> > > > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> > > > ---
-> > > >  int madera_dev_init(struct madera *madera)
-> > > >  {
-> > > > +	static const char * const mclk_name[] = { "mclk1", "mclk2", "mclk3" };
-> > > >  	struct device *dev = madera->dev;
-> > > >  	unsigned int hwid;
-> > > >  	int (*patch_fn)(struct madera *) = NULL;
-> > > > @@ -450,6 +451,17 @@ int madera_dev_init(struct madera *madera)
-> > > >  		       sizeof(madera->pdata));
-> > > >  	}
-> > > >  
-> > > > +	BUILD_BUG_ON(ARRAY_SIZE(madera->mclk) != ARRAY_SIZE(mclk_name));
-> > > 
-> > > Not sure how this could happen.  Surely we don't need it.
-> > > 
-> > 
-> > mclk_name is defined locally in this function and the mclk array in
-> > include/linux/mfd/madera/core.h. This is to guard against one of
-> > them being updated but not the other. It is by no means essential
-> > but it feels like a good trade off given there is really limited
-> > downside.
-> 
-> It's fine in general I guess.  How likely would it be for anyone to
-> update either of the definitions?  Can there be more/less clocks on a
-> supported platform?
-> 
+On Thu, 8 Aug 2019 at 20:46, Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Thu, Aug 08, 2019 at 06:51:38PM +0530, Sumit Garg wrote:
+> > It seems to be a functional change which I think requires proper unit
+> > testing. I am afraid that I don't posses a TPM device to test this and
+> > also very less conversant with tpm_buf code.
+> >
+> > So what I have done here is to rename existing TPM 1.x trusted keys
+> > code to use tpm1_buf.
+> >
+> > And I would be happy to integrate a tested patch if anyone familiar
+> > could work on this.
+>
+> I can test it on TPM 1.2.
+>
 
-It's not super likely but if the hardware guys make a new spin
-out chip with an extra clock pin which is possible. But my
-problem here is there really is no down side to this check, we
-have two things that need to be in sync and if the compiler can
-warn me if they are not in sync that is clearly a win.
+I have posted v4 with changes as you requested. I hope they work well
+with a real TPM 1.x or TPM 2.0 device.
 
-> > > > +	for (i = 0; i < ARRAY_SIZE(madera->mclk); i++) {
-> > > > +		madera->mclk[i] = devm_clk_get_optional(madera->dev,
-> > > > +							mclk_name[i]);
-> > > > +		if (IS_ERR(madera->mclk[i])) {
-> > > > +			dev_warn(madera->dev, "Failed to get %s: %ld\n",
-> > > > +				 mclk_name[i], PTR_ERR(madera->mclk[i]));
-> > > 
-> > > Do we even want to warn on the non-acquisition of an optional clock?
-> > > 
-> > > Especially with a message that looks like something actually failed.
-> > > 
-> > 
-> > devm_clk_get_optional will return NULL if the clock was not
-> > specified, so this is silent in that case. A warning in the case
-> > something actually went wrong seems reasonable even if the clock
-> > is optional as the user tried to do something and it didn't
-> > behave as they intended.
-> 
-> If something actually went wrong, then doesn't then become and error
-> and should be reported (returned)?
-> 
+-Sumit
 
-Yeah I guess its a judgement call but there is not really any
-reason we need to proceed in the case of an error. I will update
-to fail probe here.
-
-> > > > +			madera->mclk[i] = NULL;
-> > > > +		}
-> > > > +	}
-> > > > +
-> > > >  	ret = madera_get_reset_gpio(madera);
-> > > >  	if (ret)
-> > > >  		return ret;
-> > > > @@ -660,13 +672,19 @@ int madera_dev_init(struct madera *madera)
-> > > >  	}
-> > > >  
-> > > >  	/* Init 32k clock sourced from MCLK2 */
-> > > > +	ret = clk_prepare_enable(madera->mclk[MADERA_MCLK2]);
-> > > > +	if (ret != 0) {
-> > > > +		dev_err(madera->dev, "Failed to enable 32k clock: %d\n", ret);
-> > > > +		goto err_reset;
-> > > > +	}
-> > > 
-> > > What happened to this being optional?
-> > > 
-> > 
-> > The device needs the clock but specifying it through DT is
-> > optional (the clock framework functions are no-ops and return
-> > success if the clock pointer is NULL). Normally the 32kHz
-> > clock is always on, and more importantly no existing users of
-> > the driver will be specifying one.
-> > 
-> > We could remove the optional status for MCLK2, but it could break
-> > existing users who don't yet specify the clock until they update
-> > their DT and it will complicate the code as the other clocks are
-> > definitely optional, so MCLK2 will need special handling.
-> 
-> I'd prefer the code to reflect the actual situation.  If the clock is
-> not optional it doesn't sound correct to specify it as such.  Maybe as
-> an intermediary step we attempt to obtain it, but ignore missing
-> clocks (with a message and comment) if it is not yet specified.  We
-> can look to change the behaviour once users have had the chance to
-> update their DTs.
-> 
-
-Ok I will add a print for a missing MCLK2.
-
-Thanks,
-Charles
+> /Jarkko
