@@ -2,80 +2,86 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7D5C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A99A1C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7C0F206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77A54206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:16:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbfHMLOS (ORCPT
+        id S1727291AbfHMLQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 07:14:18 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:53201 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbfHMLOS (ORCPT
+        Tue, 13 Aug 2019 07:16:52 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:43928 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbfHMLQw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 07:14:18 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 9B7B380737; Tue, 13 Aug 2019 13:14:03 +0200 (CEST)
-Date:   Tue, 13 Aug 2019 13:14:15 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ulf.hansson@linaro.org,
-        linus.walleij@linaro.org, bfq-iosched@googlegroups.com,
-        oleksandr@natalenko.name, pavel@denx.de
-Subject: Re: [PATCH BUGFIX 0/2] block, bfq: fix user after free
-Message-ID: <20190813111415.GE3635@amd>
-References: <20190807141754.3567-1-paolo.valente@linaro.org>
+        Tue, 13 Aug 2019 07:16:52 -0400
+Received: by mail-yb1-f195.google.com with SMTP id o82so7998346ybg.10;
+        Tue, 13 Aug 2019 04:16:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fpL8tgOC7LhjHn63gsTa4JL9oUa9w1GDwbaAmgEP2eo=;
+        b=snBotTZ38Vl4tuBBLQTXq8oZVjEdhV3Yz6uIoWUcnqrI61cP3Iie+j6R7kMW0dfrwF
+         z++0tDZSYyBoPiV7CQgnyUS1BksZsj0gV5uof87LcPoiMBdlEhTFRzwmSlZ1zllSha5U
+         p5UmvL0ET1ZknYLNvW4dJ3iw6odIF+yjRKkiflkT1OhrRBAzg1aZpzuu4T5Z2OImmOMH
+         Izpv6MZoTrooJA2cP0Qv6lSIxvJQkjEd8mf2XgUBNX9CIvTW3Ojr3swUwjnKgeTUWlS3
+         mzj466D5sGLdSJ074ztXvIbpwm8feRPuDn+qcRcmGnfIujoxoNch4jOIQaP0uzzO74Qf
+         Leng==
+X-Gm-Message-State: APjAAAVURlC1C+VdtkaTr05jI3opO8La+hxMoF0UCADj3d+jlmUscaqb
+        iakQ0lsX4d5Am81MCqptLTT9lvmprfcPmB3bq50=
+X-Google-Smtp-Source: APXvYqxMqmMA/lHhb+ernHEQv3Mdn/NK06RJyi0cT1iBcpqYg5D9awj5M1Bel1AXoKonUVrriQpWnz/gGQYPyNBjXxI=
+X-Received: by 2002:a25:5f06:: with SMTP id t6mr26379839ybb.325.1565695011491;
+ Tue, 13 Aug 2019 04:16:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="o0ZfoUVt4BxPQnbU"
-Content-Disposition: inline
-In-Reply-To: <20190807141754.3567-1-paolo.valente@linaro.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <1564565779-29537-1-git-send-email-harini.katakam@xilinx.com>
+ <1564565779-29537-3-git-send-email-harini.katakam@xilinx.com> <20190801040648.GJ2713@lunn.ch>
+In-Reply-To: <20190801040648.GJ2713@lunn.ch>
+From:   Harini Katakam <harinik@xilinx.com>
+Date:   Tue, 13 Aug 2019 16:46:40 +0530
+Message-ID: <CAFcVEC+DyVhLzbMdSDsadivbnZJxSEg-0kUF5_Q+mtSbBnmhSA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] net: gmii2rgmii: Switch priv field in mdio device structure
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Harini Katakam <harini.katakam@xilinx.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        radhey.shyam.pandey@xilinx.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Andrew,
 
---o0ZfoUVt4BxPQnbU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Aug 1, 2019 at 9:36 AM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Wed, Jul 31, 2019 at 03:06:19PM +0530, Harini Katakam wrote:
+> > Use the priv field in mdio device structure instead of the one in
+> > phy device structure. The phy device priv field may be used by the
+> > external phy driver and should not be overwritten.
+>
+> Hi Harini
+>
+> I _think_ you could use dev_set_drvdata(&mdiodev->dev) in xgmiitorgmii_probe() and
+> dev_get_drvdata(&phydev->mdiomdio.dev) in _read_status()
 
-Hi!
+Thanks for the review. This works if I do:
+dev_set_drvdata(&priv->phy_dev->mdio.dev->dev) in probe
+and then
+dev_get_drvdata(&phydev->mdio.dev) in _read_status()
 
-> this series contains a pair of fixes for the UAF reported in
-> [1]. These patches are the result of the testing described in this
-> Chrome OS issue [2] since Comment 57.
+i.e mdiodev in gmii2rgmii probe and priv->phy_dev->mdio are not the same.
 
-This seems to have solved crashes with chromium on x220 from
-"v5.3-rc2: crashes and scrolling in web browser now has audio
-feedback" thread.
+If this is acceptable, I can send a v2.
 
-Best regards,
-							Pavel
-
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---o0ZfoUVt4BxPQnbU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1Sm4cACgkQMOfwapXb+vICdwCcCB60eReiiKRUm/N94d9zpFLx
-/L4AniJT1qX6xQEcdc35HpctQ+fKFgd3
-=acen
------END PGP SIGNATURE-----
-
---o0ZfoUVt4BxPQnbU--
+Regards,
+Harini
