@@ -2,61 +2,126 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 662CEC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 277C2C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E33D20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC60D20844
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:48:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565714901;
+	bh=+ClQXQZYMO3oD0vJh2iCm8rSEOKMIpNSMDMOjbE3t+k=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=tPqBdu5VS5IXQurKconTnMu1ZU3THk8H523mLQ+IqONH/d7DM+r+lEhkDRvPuvJHE
+	 QktaGWiX3b3kJHhYQOg8PizMUi7hGMorRJLXOBFAPwwU8PE4Qga1jlkPZwMozSxKNw
+	 Rgk8npWh4+isWX7RbA7kj9jZXKin7laWu1x0GM00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbfHMQnA (ORCPT
+        id S1728061AbfHMQsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 12:43:00 -0400
-Received: from verein.lst.de ([213.95.11.211]:58583 "EHLO verein.lst.de"
+        Tue, 13 Aug 2019 12:48:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726705AbfHMQnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 12:43:00 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 6435568B02; Tue, 13 Aug 2019 18:42:57 +0200 (CEST)
-Date:   Tue, 13 Aug 2019 18:42:57 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Palmer Dabbelt <palmer@sifive.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Atish Patra <atish.patra@wdc.com>
-Subject: Re: [PATCH 02/15] riscv: use CSR_SATP instead of the legacy sptbr
- name in switch_mm
-Message-ID: <20190813164257.GA10019@lst.de>
-References: <20190813154747.24256-1-hch@lst.de> <20190813154747.24256-3-hch@lst.de> <alpine.DEB.2.21.9999.1908130935310.30024@viisi.sifive.com>
+        id S1726769AbfHMQsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 12:48:19 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06A2D20842;
+        Tue, 13 Aug 2019 16:48:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565714898;
+        bh=+ClQXQZYMO3oD0vJh2iCm8rSEOKMIpNSMDMOjbE3t+k=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=pjR7+sDpG5QV8mqVLOqQHM+8vC+tRobkv0ngA4hd4MBaO/KrG4XqTeZ1bpn5bn1bq
+         KhfBsT1su6Wd2h61ArrsWNQlNeGWtPTPht9QXac/YRw1heGospZwGZg3FIXZ4HQ+Nu
+         vKsI/4s3VfFW3biZ3Mbn7FIY6xfwnAsdy1fw46EY=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.9999.1908130935310.30024@viisi.sifive.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAFd5g452+-6m1eiVK0ccTDkJ2wH8GBwxRDw5owwC8h3NscE1ag@mail.gmail.com>
+References: <20190812182421.141150-1-brendanhiggins@google.com> <20190812225520.5A67C206A2@mail.kernel.org> <20190812233336.GA224410@google.com> <20190812235940.100842063F@mail.kernel.org> <CAFd5g44xciLPBhH_J3zUcY3TedWTijdnWgF055qffF+dAguhPQ@mail.gmail.com> <20190813045623.F3D9520842@mail.kernel.org> <CAFd5g46PJNTOUAA4GOOrW==74Zy7u1sRESTanL_BXBn6QykscA@mail.gmail.com> <20190813053023.CC86120651@mail.kernel.org> <CAFd5g47v7410QRAizPV8zaHrKrc95-Sk-GNzRRVngN741OKnvg@mail.gmail.com> <CAFd5g452+-6m1eiVK0ccTDkJ2wH8GBwxRDw5owwC8h3NscE1ag@mail.gmail.com>
+Subject: Re: [PATCH v12 03/18] kunit: test: add string_stream a std::stream like string builder
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+To:     Brendan Higgins <brendanhiggins@google.com>
+User-Agent: alot/0.8.1
+Date:   Tue, 13 Aug 2019 09:48:17 -0700
+Message-Id: <20190813164818.06A2D20842@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 09:36:23AM -0700, Paul Walmsley wrote:
-> On Tue, 13 Aug 2019, Christoph Hellwig wrote:
-> 
-> > Switch to our own constant for the satp register instead of using
-> > the old name from a legacy version of the privileged spec.
-> > 
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > Reviewed-by: Atish Patra <atish.patra@wdc.com>
-> 
-> Didn't you want us to replace this with Bin Meng's patch?
-> 
-> https://lore.kernel.org/linux-riscv/20190807151316.GB16432@infradead.org/
-> 
-> If so, probably best just to drop this one and state a dependency.
+Quoting Brendan Higgins (2019-08-13 02:12:54)
+> On Tue, Aug 13, 2019 at 2:04 AM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+> >
+> > On Mon, Aug 12, 2019 at 10:30 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > >
+> > > Quoting Brendan Higgins (2019-08-12 22:02:59)
+> > > > However, now that I added the kunit_resource_destroy, I thought it
+> > > > might be good to free the string_stream after I use it in each call=
+ to
+> > > > kunit_assert->format(...) in which case I will be using this logic.
+> > > >
+> > > > So I think the right thing to do is to expose string_stream_destroy=
+ so
+> > > > kunit_do_assert can clean up when it's done, and then demote
+> > > > string_stream_clear to static. Sound good?
+> > >
+> > > Ok, sure. I don't really see how clearing it explicitly when the
+> > > assertion prints vs. never allocating it to begin with is really any
+> > > different. Maybe I've missed something though.
+> >
+> > It's for the case that we *do* print something out. Once we are doing
+> > printing, we don't want the fragments anymore.
+>=20
+> Oops, sorry fat fingered: s/doing/done
 
-Either way is fine with me.  But until you have a branch with
-either one applied I'm going to keep resending my patch, as random
-dependencies on uncommitted patches don't work.
+Yes, but when we print something out we've run into some sort of problem
+and then the test is over. So freeing the memory when it fails vs. when
+the test is over seems like a minor difference. Or is it also used to
+print other informational messages while the test is running?
+
+I'm not particularly worried here, just trying to see if less code is
+possible.
+
