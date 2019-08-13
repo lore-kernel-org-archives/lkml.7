@@ -2,191 +2,168 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96335C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C691C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BEE92064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:06:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="crKc/7fw"
+	by mail.kernel.org (Postfix) with ESMTP id 26A8120663
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:08:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbfHMSGu (ORCPT
+        id S1728341AbfHMSIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 14:06:50 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35283 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727491AbfHMSGt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 14:06:49 -0400
-Received: by mail-wr1-f65.google.com with SMTP id k2so22760960wrq.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 11:06:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dbz/igoDoo4+zLxs3kF9+hv9Esg794AftEWjrVInnJg=;
-        b=crKc/7fwPh5m+g0e/i39wYeK5QmB4xu5OeW7rfKDO+Bq/9qNZgYMaLTqHvSawI94wE
-         jBqROdM2P1VWbYHmQKvFY+DFOlrTE91xcSAH0k6BpHu9v0sYwByfulGgpq8db8lxbinI
-         hGM44abSoBlDNcRhNKS2vt0xv357FOof9cDZm6viVbbfVB7Wrj6cwWbzGtLCZFjuCxHo
-         FlLxfxc5ixtJTkgDG7Y8zml7gbd4SdtWcvmOhYONMNUCdYiBfb3pF6iLmxCgqrUFw4KX
-         0xq3fDXUiqHCQgC4AZN+jPCSv9PPjRsd9RBJI+J6g7U/baizMlf5WEpO1Udmplxj1Zxa
-         +2uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dbz/igoDoo4+zLxs3kF9+hv9Esg794AftEWjrVInnJg=;
-        b=PlJGjGDSyulLjuxXi5PXxXkdIx35ARlaEEVxgg/gZE5c6gsjPZ8ZolC+hJdLdrPtxb
-         ZZV/TtSRt6EcnvL8Udnaf2RlnUv9ISJ/S5n/9NACe3f9DrA64iS3p/tgaugB5Z0MCs1J
-         Q38TgnyyMoOUZFpZAiwbPsM7V7xW1WLCD13LAEyS7iY+ZLlwmLY5BzvcRGQia9qm+JOo
-         O50cxx8ML+lGeiQ8xRA1xi4x/w9IPwjnzSzUgvsT9rTiqv0sqHr7H++Ptg6TutcP5Snc
-         A5h4s7YC9dlvYLw0TKgIgiBR4bLkNfKMWQ07YyAtP3A/kkcVRht++n9kIAW6SgCi98DM
-         hHPQ==
-X-Gm-Message-State: APjAAAXBMH9zJ17OH3uc5IPmxLre6PAu97BHFah1GYFDoV9Ru47LOqfP
-        lgVZvZ3W+hz1vr7+lPwJmaH/RA==
-X-Google-Smtp-Source: APXvYqzgl6xdkykBM+mhjTBQLfQ5t1yXWfJm/Upuv3NFiGY2+Yb08ANGQdW5WEwn7wKhRxX0zMlI5Q==
-X-Received: by 2002:a05:6000:152:: with SMTP id r18mr39426525wrx.41.1565719606987;
-        Tue, 13 Aug 2019 11:06:46 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id u186sm3990440wmu.26.2019.08.13.11.06.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 13 Aug 2019 11:06:46 -0700 (PDT)
-Subject: Re: [alsa-devel] [PATCH v2 3/5] ASoC: core: add support to
- snd_soc_dai_get_sdw_stream()
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        vkoul@kernel.org, broonie@kernel.org
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        bgoswami@codeaurora.org, plai@codeaurora.org, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        spapothi@codeaurora.org
-References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
- <20190813083550.5877-4-srinivas.kandagatla@linaro.org>
- <ba88e0f9-ae7d-c26e-d2dc-83bf910c2c01@linux.intel.com>
- <c2eecd44-f06a-7287-2862-0382bf697f8d@linaro.org>
- <d2b7773b-d52a-7769-aa5b-ef8c8845d447@linux.intel.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <d7c1fdb2-602f-ecb1-9b32-91b893e7f408@linaro.org>
-Date:   Tue, 13 Aug 2019 19:06:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 13 Aug 2019 14:08:01 -0400
+Received: from mga17.intel.com ([192.55.52.151]:31145 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726363AbfHMSIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 14:08:00 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 11:07:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
+   d="scan'208";a="200566948"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga004.fm.intel.com with ESMTP; 13 Aug 2019 11:07:59 -0700
+Date:   Tue, 13 Aug 2019 11:07:59 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH v4 2/7] x86: kvm: svm: propagate errors from
+ skip_emulated_instruction()
+Message-ID: <20190813180759.GF13991@linux.intel.com>
+References: <20190813135335.25197-1-vkuznets@redhat.com>
+ <20190813135335.25197-3-vkuznets@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <d2b7773b-d52a-7769-aa5b-ef8c8845d447@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813135335.25197-3-vkuznets@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 13, 2019 at 03:53:30PM +0200, Vitaly Kuznetsov wrote:
+> @@ -3899,20 +3898,25 @@ static int task_switch_interception(struct vcpu_svm *svm)
+>  	if (reason != TASK_SWITCH_GATE ||
+>  	    int_type == SVM_EXITINTINFO_TYPE_SOFT ||
+>  	    (int_type == SVM_EXITINTINFO_TYPE_EXEPT &&
+> -	     (int_vec == OF_VECTOR || int_vec == BP_VECTOR)))
+> -		skip_emulated_instruction(&svm->vcpu);
+> +	     (int_vec == OF_VECTOR || int_vec == BP_VECTOR))) {
+> +		if (skip_emulated_instruction(&svm->vcpu) != EMULATE_DONE)
+
+This isn't broken in the current code, but it's flawed in the sense that
+it assumes skip_emulated_instruction() never returns EMULATE_USER_EXIT.
+
+Note, both SVM and VMX make the opposite assumption when handling
+kvm_task_switch() and kvm_inject_realmode_interrupt().
+
+More below...
+
+> +			goto fail;
+> +	}
+>  
+>  	if (int_type != SVM_EXITINTINFO_TYPE_SOFT)
+>  		int_vec = -1;
+>  
+>  	if (kvm_task_switch(&svm->vcpu, tss_selector, int_vec, reason,
+> -				has_error_code, error_code) == EMULATE_FAIL) {
+> -		svm->vcpu.run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
+> -		svm->vcpu.run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
+> -		svm->vcpu.run->internal.ndata = 0;
+> -		return 0;
+> -	}
+> +				has_error_code, error_code) == EMULATE_FAIL)
+> +		goto fail;
+> +
+>  	return 1;
+> +
+> +fail:
+> +	svm->vcpu.run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
+> +	svm->vcpu.run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
+> +	svm->vcpu.run->internal.ndata = 0;
+> +	return 0;
+>  }
+>  
+>  static int cpuid_interception(struct vcpu_svm *svm)
+
+...
+
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index c6d951cbd76c..e8f797fe9d9e 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -6383,9 +6383,11 @@ static void kvm_vcpu_do_singlestep(struct kvm_vcpu *vcpu, int *r)
+>  int kvm_skip_emulated_instruction(struct kvm_vcpu *vcpu)
+>  {
+>  	unsigned long rflags = kvm_x86_ops->get_rflags(vcpu);
+> -	int r = EMULATE_DONE;
+> +	int r;
+>  
+> -	kvm_x86_ops->skip_emulated_instruction(vcpu);
+> +	r = kvm_x86_ops->skip_emulated_instruction(vcpu);
+> +	if (unlikely(r != EMULATE_DONE))
+> +		return 0;
+
+x86_emulate_instruction() doesn't set vcpu->run->exit_reason when emulation
+fails with EMULTYPE_SKIP, i.e. this will exit to userspace with garbage in
+the exit_reason.
+
+handle_ept_misconfig() also has the same (pre-existing) flaw.
+
+Given the handle_ept_misconfig() bug and that kvm_emulate_instruction()
+sets vcpu->run->exit_reason when it returns EMULATE_FAIL in the normal
+case, I think it makes sense to fix the issue in x86_emulate_instruction().
+That would also eliminate the need to worry about EMULATE_USER_EXIT in
+task_switch_interception(), e.g. the SVM code can just return 0 when it
+gets a non-EMULATE_DONE return type.
+
+E.g.:
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 07ab14d73094..73b86f81ed9c 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -6201,7 +6201,8 @@ static int handle_emulation_failure(struct kvm_vcpu *vcpu, int emulation_type)
+        if (emulation_type & EMULTYPE_NO_UD_ON_FAIL)
+                return EMULATE_FAIL;
+
+-       if (!is_guest_mode(vcpu) && kvm_x86_ops->get_cpl(vcpu) == 0) {
++       if ((!is_guest_mode(vcpu) && kvm_x86_ops->get_cpl(vcpu) == 0) ||
++           (emulation_type & EMULTYPE_SKIP)) {
+                vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
+                vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
+                vcpu->run->internal.ndata = 0;
+@@ -6525,8 +6526,6 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
+                                return EMULATE_DONE;
+                        if (ctxt->have_exception && inject_emulated_exception(vcpu))
+                                return EMULATE_DONE;
+-                       if (emulation_type & EMULTYPE_SKIP)
+-                               return EMULATE_FAIL;
+                        return handle_emulation_failure(vcpu, emulation_type);
+                }
+        }
 
 
-On 13/08/2019 18:51, Pierre-Louis Bossart wrote:
-> On 8/13/19 11:50 AM, Srinivas Kandagatla wrote:
->> Thanks for the review,
->>
->> On 13/08/2019 15:44, Pierre-Louis Bossart wrote:
->>> On 8/13/19 3:35 AM, Srinivas Kandagatla wrote:
->>>> On platforms which have smart speaker amplifiers connected via
->>>> soundwire and modeled as aux devices in ASoC, in such usecases machine
->>>> driver should be able to get sdw master stream from dai so that it can
->>>> use the runtime stream to setup slave streams.
->>>
->>> using the _set_sdw_stream? I don't fully get the sequence with the 
->>> wording above.
->>
->> Yes, using set_sdw_stream().
-> 
-> Maybe I am missing something here, but I don't see where the 
-> set_sdw_stream() is called.
+As for the kvm_task_switch() handling and other cases, I think it's
+possible to rework all of the functions and callers that return/handle
+EMULATE_DONE to instead return 0/1, i.e. contain EMULATE_* to x86.c.
+I'll put together a series, I think you've suffered more than enough scope
+creep as it is :-)
 
-sorry for the confusion. It was too quick reply. :-)
-I was suppose to say sdw_stream_add_slave() instead of set_sdw_stream().
-
-As Aux device is dailess there is no way to get hold of sdw stream 
-runtime for slave device associated with it.
-
-Having snd_soc_dai_get_sdw_stream() would help machine driver to get 
-hold of sdw_stream_runtime from controller dai and setup slave streams 
-using sdw_stream_add_slave().
-
-
-thanks,
-srini
-
-
-> 
-> Also I don't fully get the rule. set_sdw_stream() looks required, 
-> get_sdw_stream() is optional, is this what you are suggesting?
-> 
->>>
->>>>
->>>> soundwire already as a set function, get function would provide more
->>>> flexibility to above configurations.
->>>
->>> I am not clear if you are asking for both to be used, or get only or 
->>> set only?
->>
->> It depends on the usecase, in db845c usecase  [1] as Aux device is dai 
->> less, machine driver is using get function to get hold of master 
->> stream so that it can setup slave port config.
->>
->>
->> Looks like there is a typo in above like
->>
->> This was supposed to be "soundwire already has a set function, get 
->> function would provide more flexibility to above configurations"
->>
->> [1] 
->> https://git.linaro.org/landing-teams/working/qualcomm/kernel.git/tree/sound/soc/qcom/db845c.c?h=integration-linux-qcomlt 
->>
->>
->> thanks,
->> srini
->>
->>>
->>>>
->>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>>> ---
->>>>   include/sound/soc-dai.h | 10 ++++++++++
->>>>   1 file changed, 10 insertions(+)
->>>>
->>>> diff --git a/include/sound/soc-dai.h b/include/sound/soc-dai.h
->>>> index dc48fe081a20..1e01f4a302e0 100644
->>>> --- a/include/sound/soc-dai.h
->>>> +++ b/include/sound/soc-dai.h
->>>> @@ -202,6 +202,7 @@ struct snd_soc_dai_ops {
->>>>       int (*set_sdw_stream)(struct snd_soc_dai *dai,
->>>>               void *stream, int direction);
->>>> +    void *(*get_sdw_stream)(struct snd_soc_dai *dai, int direction);
->>>>       /*
->>>>        * DAI digital mute - optional.
->>>>        * Called by soc-core to minimise any pops.
->>>> @@ -410,4 +411,13 @@ static inline int 
->>>> snd_soc_dai_set_sdw_stream(struct snd_soc_dai *dai,
->>>>           return -ENOTSUPP;
->>>>   }
->>>> +static inline void *snd_soc_dai_get_sdw_stream(struct snd_soc_dai 
->>>> *dai,
->>>> +                           int direction)
->>>> +{
->>>> +    if (dai->driver->ops->get_sdw_stream)
->>>> +        return dai->driver->ops->get_sdw_stream(dai, direction);
->>>> +    else
->>>> +        return ERR_PTR(-ENOTSUPP);
->>>> +}
->>>> +
->>>>   #endif
->>>>
->>>
->> _______________________________________________
->> Alsa-devel mailing list
->> Alsa-devel@alsa-project.org
->> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+>  
+>  	/*
+>  	 * rflags is the old, "raw" value of the flags.  The new value has
+> -- 
+> 2.20.1
 > 
