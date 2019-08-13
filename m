@@ -2,75 +2,81 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E595C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 586E5C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 008E320679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E2820840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:23:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbfHMKXL (ORCPT
+        id S1728321AbfHMKX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 06:23:11 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:52392 "EHLO honk.sigxcpu.org"
+        Tue, 13 Aug 2019 06:23:27 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:33966 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727632AbfHMKXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 06:23:11 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id BA4B5FB03;
-        Tue, 13 Aug 2019 12:23:08 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0wcZcnLC9pE5; Tue, 13 Aug 2019 12:23:07 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 88682416CC; Tue, 13 Aug 2019 12:23:07 +0200 (CEST)
-Date:   Tue, 13 Aug 2019 12:23:07 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Robert Chiras <robert.chiras@nxp.com>
-Cc:     Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 00/10] Improvements and fixes for mxsfb DRM driver
-Message-ID: <20190813102307.GA22623@bogon.m.sigxcpu.org>
-References: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727959AbfHMKX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 06:23:26 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A1C61200154;
+        Tue, 13 Aug 2019 12:23:24 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C1DD3200783;
+        Tue, 13 Aug 2019 12:23:20 +0200 (CEST)
+Received: from lsv03124.swis.in-blr01.nxp.com (lsv03124.swis.in-blr01.nxp.com [92.120.146.121])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8636B402F0;
+        Tue, 13 Aug 2019 18:23:15 +0800 (SGT)
+From:   Ashish Kumar <Ashish.Kumar@nxp.com>
+To:     linux-kernel@vger.kernel.org, broonie@kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-next@vger.kernel.org, Ashish Kumar <Ashish.Kumar@nxp.com>
+Subject: [Patch v4 3/3] dt-bindings: Enhance binding to extend example for flash entry
+Date:   Tue, 13 Aug 2019 15:53:11 +0530
+Message-Id: <1565691791-26167-3-git-send-email-Ashish.Kumar@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1565691791-26167-1-git-send-email-Ashish.Kumar@nxp.com>
+References: <1565691791-26167-1-git-send-email-Ashish.Kumar@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
-On Wed, Jun 26, 2019 at 04:32:08PM +0300, Robert Chiras wrote:
-> This patch-set improves the use of eLCDIF block on iMX 8 SoCs (like 8MQ, 8MM
-> and 8QXP). Following, are the new features added and fixes from this
-> patch-set:
+Add example for adding flash entry on various boards' dts
+using flash manufacture spansion/cypress.
 
-There was some feedback on various patches, do you intend to pick that
-up again? That would be cool since there's some overlapping work popping
-up already e.g. in
+Signed-off-by: Ashish Kumar <Ashish.Kumar@nxp.com>
+---
+v4:
+-Add new patch to series.
+v3:
+Not present
+v2:
+Not present
+ 
+ Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-    https://patchwork.freedesktop.org/series/64595/
+diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
+index 2c2a3e9..7ba0472 100644
+--- a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
+@@ -35,7 +35,11 @@ qspi0: quadspi@40044000 {
+ 	clock-names = "qspi_en", "qspi";
+ 
+ 	flash0: s25fl128s@0 {
+-		....
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spansion,s25fl128s", "jedec,spi-nor";
++		spi-max-frequency = <50000000>;
++		reg = <0>;
+ 	};
+ };
+ 
+-- 
+2.7.4
 
-showing up and it's the base for the tiny
-
-    https://patchwork.freedesktop.org/series/64300/    
-
-Cheers,
- -- Guido
