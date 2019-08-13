@@ -2,110 +2,156 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6F0C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E4DC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D5D420844
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 754A82084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:49:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="PVaDn1Ye"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="LZOR6+sJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbfHMQsq (ORCPT
+        id S1728175AbfHMQtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 12:48:46 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42906 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbfHMQsq (ORCPT
+        Tue, 13 Aug 2019 12:49:02 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:14867 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbfHMQtC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 12:48:46 -0400
-Received: by mail-ot1-f66.google.com with SMTP id j7so30294943ota.9
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 09:48:45 -0700 (PDT)
+        Tue, 13 Aug 2019 12:49:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=wWYXt7jx7G31cd0rE9luks4j70Eji+/vHa4Z1GbiX1s=;
-        b=PVaDn1YePRT9j9KWakxbJ5aZbPHOe1J33ryNWuvT223ufkBNGNMfeasLJ4OrxmwPQZ
-         zC9YYVf5EuudnD8g2gF+COcciyXunWMzIWBn3kPO03qtPucFcPSAcXnoBJ6kR8EpWhD1
-         n2kN9d52DP0eEmM3jbQMP5LVdVgEvBpuKKVeVwA4eSx6BVuM8ibVKAoD7BR6I9ULnXs5
-         FAoNg0DL0iJBEqca3QwrsWRVpN2G6Rn3ar6llSZc784HZGsYUJgp2ajlMF+fYDPicuzH
-         95qrxSmcS0SEyuOAfEnmAETTEAs+VX2awtZGt/ux0Jucg+YEytTtvv1a97y1iTAEt4ja
-         F88g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=wWYXt7jx7G31cd0rE9luks4j70Eji+/vHa4Z1GbiX1s=;
-        b=N3upIU1OULUHruXflvxxi+Heh+lbmzxeteNaR7svuQrjsR5YIPKx+JIOlxlWUKjWEA
-         GXzkYHYmlY267SQSZyvfPTDGqhkweIPDJUSizQ3J8kNwd2oYt60yomVNcmg+1TMXPEZk
-         Cbilyu0zr2mHzF65bPiMLzl74j0d5AeRJfzS2FnjDJWZWnlJWaPb8affcxs5bDGyy0Ay
-         a0Sc7BedOp6QQRfOu0tYWj9UISnwEuoLt72WpIH04OFIt4e+k3HVfrL2VTIGe3L0RRYH
-         GAC77GcpKzoCdx+5jZtuW5rFxTkLm/JYSxtnp21Uzx3PoDERkxOfwqinpqhfv4rTZrda
-         ccLg==
-X-Gm-Message-State: APjAAAVcOiatYwUB9qrGKNuRHLxGMaS6x0JKEzRslcqO0TrNsoCqIJFc
-        8v9bHt//nI5KYbfayiJ8qgvaIxOmKQI=
-X-Google-Smtp-Source: APXvYqxPVuDBsGAd9o9o1k5X+B5nMlPiCHWLeDxvNl/FUOtJzCoioboXTdGD/sGypvrgZDoyB/qP5A==
-X-Received: by 2002:a5d:8497:: with SMTP id t23mr39094733iom.298.1565714925017;
-        Tue, 13 Aug 2019 09:48:45 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id t19sm91323213iog.41.2019.08.13.09.48.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Aug 2019 09:48:44 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 09:48:43 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Logan Gunthorpe <logang@deltatee.com>
-cc:     Greentime Hu <green.hu@gmail.com>, Rob Herring <robh@kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Andrew Waterman <andrew@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Bates <sbates@raithlin.com>,
-        Olof Johansson <olof@lixom.net>, greentime.hu@sifive.com,
-        linux-riscv@lists.infradead.org,
-        Michael Clark <michaeljclark@mac.com>,
-        Christoph Hellwig <hch@lst.de>, linux-mm@kvack.org
-Subject: Re: [PATCH v4 2/2] RISC-V: Implement sparsemem
-In-Reply-To: <alpine.DEB.2.21.9999.1908130921170.30024@viisi.sifive.com>
-Message-ID: <alpine.DEB.2.21.9999.1908130947130.30024@viisi.sifive.com>
-References: <20190109203911.7887-1-logang@deltatee.com> <20190109203911.7887-3-logang@deltatee.com> <CAEbi=3d0RNVKbDUwRL-o70O12XBV7q6n_UT-pLqFoh9omYJZKQ@mail.gmail.com> <c4298fdd-6fd6-fa7f-73f7-5ff016788e49@deltatee.com> <CAEbi=3cn4+7zk2DU1iRa45CDwTsJYfkAV8jXHf-S7Jz63eYy-A@mail.gmail.com>
- <CAEbi=3eZcgWevpX9VO9ohgxVDFVprk_t52Xbs3-TdtZ+js3NVA@mail.gmail.com> <0926a261-520e-4c40-f926-ddd40bb8ce44@deltatee.com> <CAEbi=3ebNM-t_vA4OA7KCvQUF08o6VmL1j=kMojVnYsYsN_fBw@mail.gmail.com> <e2603558-7b2c-2e5f-e28c-f01782dc4e66@deltatee.com>
- <CAEbi=3d7_xefYaVXEnMJW49Bzdbbmc2+UOwXWrCiBo7YkTAihg@mail.gmail.com> <96156909-1453-d487-ff66-a041d67c74d6@deltatee.com> <CAEbi=3dC86dhGdwdarS_x+6-5=WPydUBKjo613qRZxKLDAqU_g@mail.gmail.com> <5506c875-9387-acc9-a7fe-5b7c10036c40@deltatee.com>
- <alpine.DEB.2.21.9999.1908130921170.30024@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1565714941; x=1597250941;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=dDOBz4vnkONayUHCFyTxOXbi2aI1o2S0rcTQvTWaqjY=;
+  b=LZOR6+sJtjQLG57YytRl4+N2RHm+Sjz5oQbVWHsQ3HxeTq1CZHDJ5C7S
+   NgG1tevExwjDSHxDN1fPk35UJ65fUGcXT1tvHHbPD5PsY/tFDUrHJz+lF
+   o4fJAhUuoXEaALe9YHfc9fqpnf0WE3Ia5M5vdPo8IgmTRSBKgDu3S9uw8
+   I=;
+X-IronPort-AV: E=Sophos;i="5.64,382,1559520000"; 
+   d="scan'208";a="779080235"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 13 Aug 2019 16:48:58 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com (Postfix) with ESMTPS id E2E06A24B4;
+        Tue, 13 Aug 2019 16:48:57 +0000 (UTC)
+Received: from EX13D13UWA002.ant.amazon.com (10.43.160.172) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 13 Aug 2019 16:48:57 +0000
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13D13UWA002.ant.amazon.com (10.43.160.172) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 13 Aug 2019 16:48:57 +0000
+Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
+ EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1367.000;
+ Tue, 13 Aug 2019 16:48:56 +0000
+From:   "Chocron, Jonathan" <jonnyc@amazon.com>
+To:     "robh@kernel.org" <robh@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Hanoch, Uri" <hanochu@amazon.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "Wasserstrom, Barak" <barakw@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>
+Subject: Re: [PATCH v3 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe
+ host bridge binding
+Thread-Topic: [PATCH v3 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs
+ PCIe host bridge binding
+Thread-Index: AQHVQTjX5ibJ8twrf0Koy9tsFtVyC6b5VbUAgAAV1QA=
+Date:   Tue, 13 Aug 2019 16:48:56 +0000
+Message-ID: <06c198ff2f8f9b1b29283a7b8764ab776c1e574b.camel@amazon.com>
+References: <20190723092529.11310-1-jonnyc@amazon.com>
+         <20190723092711.11786-1-jonnyc@amazon.com> <20190813153046.GA31480@bogus>
+In-Reply-To: <20190813153046.GA31480@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.162.67]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BB54D34F35A0854085A24351C45F19EB@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 13 Aug 2019, Paul Walmsley wrote:
-
-> On Tue, 13 Aug 2019, Logan Gunthorpe wrote:
-> 
-> > On 2019-08-13 12:04 a.m., Greentime Hu wrote:
-> > 
-> > > Every architecture with mmu defines their own pfn_valid().
-> > 
-> > Not true. Arm64, for example just uses the generic implementation in
-> > mmzone.h. 
-> 
-> arm64 seems to define their own:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/Kconfig#n899
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/mm/init.c#n235
-> 
-> While there are many architectures which have their own pfn_valid(); 
-> oddly, almost none of them set HAVE_ARCH_PFN_VALID ?
-
-(fixed the linux-mm@ address)
-
-
-- Paul
+T24gVHVlLCAyMDE5LTA4LTEzIGF0IDA5OjMwIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gVHVlLCBKdWwgMjMsIDIwMTkgYXQgMTI6Mjc6MDhQTSArMDMwMCwgSm9uYXRoYW4gQ2hvY3Jv
+biB3cm90ZToNCj4gPiBEb2N1bWVudCBBbWF6b24ncyBBbm5hcHVybmEgTGFicyBQQ0llIGhvc3Qg
+YnJpZGdlLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEpvbmF0aGFuIENob2Nyb24gPGpvbm55
+Y0BhbWF6b24uY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kv
+cGNpZS1hbC50eHQgICAgICAgfCA0NQ0KPiA+ICsrKysrKysrKysrKysrKysrKysNCj4gPiAgTUFJ
+TlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDMgKy0NCj4gPiAg
+MiBmaWxlcyBjaGFuZ2VkLCA0NyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3Bj
+aWUtDQo+ID4gYWwudHh0DQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9wY2kvcGNpZS1hbC50eHQNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9wY2kvcGNpZS1hbC50eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0
+NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uODk4NzYxOTBlYjVhDQo+ID4gLS0tIC9kZXYvbnVs
+bA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvcGNpZS1h
+bC50eHQNCj4gPiBAQCAtMCwwICsxLDQ1IEBADQo+ID4gKyogQW1hem9uIEFubmFwdXJuYSBMYWJz
+IFBDSWUgaG9zdCBicmlkZ2UNCj4gPiArDQo+ID4gK0FtYXpvbidzIEFubmFwdXJuYSBMYWJzIFBD
+SWUgSG9zdCBDb250cm9sbGVyIGlzIGJhc2VkIG9uIHRoZQ0KPiA+IFN5bm9wc3lzIERlc2lnbldh
+cmUNCj4gPiArUENJIGNvcmUuDQo+ID4gK0l0IHNoYXJlcyBjb21tb24gZnVuY3Rpb25zIHdpdGgg
+dGhlIFBDSWUgRGVzaWduV2FyZSBjb3JlIGRyaXZlcg0KPiA+IGFuZCBpbmhlcml0cw0KPiANCj4g
+RHJpdmVyIGRldGFpbHMgYXJlIGlycmVsZXZhbnQgdG8gdGhlIGJpbmRpbmcuDQo+IA0KV2lsbCBy
+ZW1vdmUuDQoNCj4gPiArY29tbW9uIHByb3BlcnRpZXMgZGVmaW5lZCBpbg0KPiA+IERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvZGVzaWdud2FyZS1wY2llLnR4dC4NCj4gPiAr
+UHJvcGVydGllcyBvZiB0aGUgaG9zdCBjb250cm9sbGVyIG5vZGUgdGhhdCBkaWZmZXIgZnJvbSBp
+dCBhcmU6DQo+ID4gKw0KPiA+ICstIGNvbXBhdGlibGU6DQo+ID4gKwlVc2FnZTogcmVxdWlyZWQN
+Cj4gPiArCVZhbHVlIHR5cGU6IDxzdHJpbmdsaXN0Pg0KPiA+ICsJRGVmaW5pdGlvbjogVmFsdWUg
+c2hvdWxkIGNvbnRhaW4NCj4gPiArCQkJLSAiYW1hem9uLGFsLXBjaWUiDQo+IA0KPiBOZWVkcyB0
+byBiZSBTb0Mgc3BlY2lmaWMuDQo+IA0KSSdtIG5vdCBzdXJlIEkgZm9sbG93LiBUaGUgUENJZSBj
+b250cm9sbGVyIGNhbiBiZSBpbXBsZW1lbnRlZCBpbg0KZGlmZmVyZW50IFNvQ3MuIENvdWxkIHlv
+dSBwbGVhc2UgY2xhcmlmeT8NCg0KPiA+ICsNCj4gPiArLSByZWc6DQo+ID4gKwlVc2FnZTogcmVx
+dWlyZWQNCj4gPiArCVZhbHVlIHR5cGU6IDxwcm9wLWVuY29kZWQtYXJyYXk+DQo+ID4gKwlEZWZp
+bml0aW9uOiBSZWdpc3RlciByYW5nZXMgYXMgbGlzdGVkIGluIHRoZSByZWctbmFtZXMgcHJvcGVy
+dHkNCj4gPiArDQo+ID4gKy0gcmVnLW5hbWVzOg0KPiA+ICsJVXNhZ2U6IHJlcXVpcmVkDQo+ID4g
+KwlWYWx1ZSB0eXBlOiA8c3RyaW5nbGlzdD4NCj4gPiArCURlZmluaXRpb246IE11c3QgaW5jbHVk
+ZSB0aGUgZm9sbG93aW5nIGVudHJpZXMNCj4gPiArCQkJLSAiY29uZmlnIglQQ0llIEVDQU0gc3Bh
+Y2UNCj4gPiArCQkJLSAiY29udHJvbGxlciIJQUwgcHJvcHJpZXRhcnkgcmVnaXN0ZXJzDQo+ID4g
+KwkJCS0gImRiaSIJCURlc2lnbndhcmUgUENJZSByZWdpc3RlcnMNCj4gPiArDQo+ID4gK0V4YW1w
+bGU6DQo+ID4gKw0KPiA+ICsJcGNpZS1leHRlcm5hbDA6IHBjaWVAZmI2MDAwMDAgew0KPiA+ICsJ
+CWNvbXBhdGlibGUgPSAiYW1hem9uLGFsLXBjaWUiOw0KPiA+ICsJCXJlZyA9IDwweDAgMHhmYjYw
+MDAwMCAweDAgMHgwMDEwMDAwMA0KPiA+ICsJCSAgICAgICAweDAgMHhmZDgwMDAwMCAweDAgMHgw
+MDAxMDAwMA0KPiA+ICsJCSAgICAgICAweDAgMHhmZDgxMDAwMCAweDAgMHgwMDAwMTAwMD47DQo+
+ID4gKwkJcmVnLW5hbWVzID0gImNvbmZpZyIsICJjb250cm9sbGVyIiwgImRiaSI7DQo+ID4gKwkJ
+YnVzLXJhbmdlID0gPDAgMjU1PjsNCj4gPiArCQlkZXZpY2VfdHlwZSA9ICJwY2kiOw0KPiA+ICsJ
+CSNhZGRyZXNzLWNlbGxzID0gPDM+Ow0KPiA+ICsJCSNzaXplLWNlbGxzID0gPDI+Ow0KPiA+ICsJ
+CSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47DQo+ID4gKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDQ5
+IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ICsJCWludGVycnVwdC1tYXAtbWFzayA9IDwweDAw
+IDAgMCA3PjsNCj4gPiArCQlpbnRlcnJ1cHQtbWFwID0gPDB4MDAwMCAwIDAgMSAmZ2ljIEdJQ19T
+UEkgNDENCj4gPiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsgLyogSU5UYSAqLw0KPiA+ICsJCXJhbmdl
+cyA9IDwweDAyMDAwMDAwIDB4MCAweGMwMDEwMDAwIDB4MCAweGMwMDEwMDAwIDB4MA0KPiA+IDB4
+MDdmZjAwMDA+Ow0KPiA+ICsJfTsNCj4gPiBkaWZmIC0tZ2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlO
+VEFJTkVSUw0KPiA+IGluZGV4IDVhNjEzN2RmM2YwZS4uMjljY2ExNGEwNWE2IDEwMDY0NA0KPiA+
+IC0tLSBhL01BSU5UQUlORVJTDQo+ID4gKysrIGIvTUFJTlRBSU5FUlMNCj4gPiBAQCAtMTIyMDEs
+MTAgKzEyMjAxLDExIEBAIFQ6CWdpdA0KPiA+IGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20v
+bGludXgva2VybmVsL2dpdC9scGllcmFsaXNpL3BjaS5naXQvDQo+ID4gIFM6CVN1cHBvcnRlZA0K
+PiA+ICBGOglkcml2ZXJzL3BjaS9jb250cm9sbGVyLw0KPiA+ICANCj4gPiAtUENJRSBEUklWRVIg
+Rk9SIEFOTkFQVVJOQSBMQUJTDQo+ID4gK1BDSUUgRFJJVkVSIEZPUiBBTUFaT04gQU5OQVBVUk5B
+IExBQlMNCj4gPiAgTToJSm9uYXRoYW4gQ2hvY3JvbiA8am9ubnljQGFtYXpvbi5jb20+DQo+ID4g
+IEw6CWxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiAgUzoJTWFpbnRhaW5lZA0KPiA+ICtG
+OglEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3BjaWUtYWwudHh0DQo+ID4g
+IEY6CWRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtYWwuYw0KPiA+ICANCj4gPiAgUENJ
+RSBEUklWRVIgRk9SIEFNTE9HSUMgTUVTT04NCj4gPiAtLSANCj4gPiAyLjE3LjENCj4gPiANCg==
