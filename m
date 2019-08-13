@@ -4,113 +4,174 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A30C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C62CC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D7B720679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10BE420673
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:38:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbfHMFhC (ORCPT
+        id S1726500AbfHMFip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 01:37:02 -0400
-Received: from mga02.intel.com ([134.134.136.20]:14276 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbfHMFhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 01:37:02 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 22:36:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,380,1559545200"; 
-   d="scan'208";a="327576483"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by orsmga004.jf.intel.com with ESMTP; 12 Aug 2019 22:36:34 -0700
-Date:   Tue, 13 Aug 2019 13:38:18 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com, mst@redhat.com,
-        rkrcmar@redhat.com, jmattson@google.com
-Subject: Re: [PATCH v6 5/8] KVM: VMX: Load Guest CET via VMCS when CET is
- enabled in Guest
-Message-ID: <20190813053818.GA2432@local-michael-cet-test>
-References: <20190725031246.8296-1-weijiang.yang@intel.com>
- <20190725031246.8296-6-weijiang.yang@intel.com>
- <20190812235632.GH4996@linux.intel.com>
+        Tue, 13 Aug 2019 01:38:45 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:52263 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbfHMFio (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 01:38:44 -0400
+Received: from [192.168.178.60] ([109.104.47.130]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MQMqN-1hbdV81Pf7-00MN08; Tue, 13 Aug 2019 07:38:39 +0200
+Subject: Re: [PATCH v2] gpiolib: Take MUX usage into account
+To:     Ramon Fried <ramon.fried@linux.intel.com>,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190813014210.15519-1-ramon.fried@linux.intel.com>
+Reply-To: Stefan Wahren <wahrenst@gmx.net>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Message-ID: <1650c967-5176-70db-ff9a-b2af432ba1e7@i2se.com>
+Date:   Tue, 13 Aug 2019 07:38:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812235632.GH4996@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190813014210.15519-1-ramon.fried@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:GlqnZkg1THBOLCVRM66b8COLiBJs9tJmHP25dZDrzPLL21FgkSe
+ Kq3JPQBjXnsC8Vh5lcJaiXH5I3tIUTGH4fTzp63TaLYai9KXtCMwXaPJJiBgU8AuyBBaOd7
+ X1SxeahtrTpUKmIYF33SvNgMNktBS/bFOAorKvtKNZfiX/eUy3kTk5AZ4Ek1wPcQrAI/DdV
+ sz9KobSbAYC1ikrSTHJow==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:930VAuWktZc=:o+zK9PAtwUdR4khEreCpfB
+ gTKpmJwr+iJaUn8tsG2/qUpKE47sRKRJ+2OXgjxbtfhXalN8Usl52qJX0Zsj0bA3xIHzmcpfl
+ kFQlkP/vjf3ino5WyY7jEP4LHhuDYFiIGt7kTi2fsxweDYrEq4UtFeSAg8Jf/MPWIMFGsheVk
+ 84Z7TbR4Nk8Jj3Dqd+JnMw9imA9E01KyyBTMbM2ZiTOjP8HA3Edebej2zcJSnWBtMUc6Bk88Y
+ VYPkWqH1375a14rwQ/YhS4i1J+ghSBBp7xWBLGrMd9IfS5I8yT1rn7xZSmDl27Ns9OPQV1+TD
+ eNK6Ojaz4PGxBkodNUA/p7nG2TVqgeGIY5PDbNg08zULjz2jCGBEv+3D+ku4w0c6k4DjlARQ3
+ ar1UK16rieFyNFOLgzKElK7KEgJCMOtF5gPWSbnPID0nNpD2amK4EA0QPFzAHBixcZ0ubOZZu
+ XYjyUYs0rs8LLWXNKHq0+kZFYl6EFBqvBsTgWqHNYPh6qNA3a/0+YrklTVT06HNUZ+WAcxgyj
+ 0nXtsiUrBzPMbnIwccoiY+H5sGGI4BfDC0luIbODiN12IL4A7Qre/WW8dd/x0g5oSUulULz3v
+ 1rBwyP5F86gTaK1XzHGdard1Wxxi9EIE6AGU/eL0nN2XWMaeW1R5VF31RuHnqndHKXY7mv8iR
+ UFuX9jDHT670wG4LieY6mTF6QSDOsrr4q7sR+G9cwOwRCbyD/ywKon2CL4R4RtWTPqZTYIPF8
+ novDlwyQDPghUmkIfIGrxpdRD9fbDE4xuiQg92JhNO5Q8zEnzdeSWRkAWnY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 04:56:32PM -0700, Sean Christopherson wrote:
-> On Thu, Jul 25, 2019 at 11:12:43AM +0800, Yang Weijiang wrote:
-> > "Load Guest CET state" bit controls whether Guest CET states
-> > will be loaded at Guest entry. Before doing that, KVM needs
-> > to check if CPU CET feature is enabled on host and available
-> > to Guest.
-> > 
-> > Note: SHSTK and IBT features share one control MSR:
-> > MSR_IA32_{U,S}_CET, which means it's difficult to hide
-> > one feature from another in the case of SHSTK != IBT,
-> > after discussed in community, it's agreed to allow Guest
-> > control two features independently as it won't introduce
-> > security hole.
-> > 
-> > Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> > ---
-> >  arch/x86/kvm/vmx/vmx.c | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> > 
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index ce5d1e45b7a5..fbf9c335cf7b 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -44,6 +44,7 @@
-> >  #include <asm/spec-ctrl.h>
-> >  #include <asm/virtext.h>
-> >  #include <asm/vmx.h>
-> > +#include <asm/cet.h>
-> >  
-> >  #include "capabilities.h"
-> >  #include "cpuid.h"
-> > @@ -2923,6 +2924,18 @@ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
-> >  		if (!nested_vmx_allowed(vcpu) || is_smm(vcpu))
-> >  			return 1;
-> >  	}
-> > +	if (cpu_x86_cet_enabled() &&
-> 
-> It'd probably be better to check a KVM function here, e.g. a wrapper of
-> kvm_supported_xss().  I don't think it will ever matter, but it'd be nice
-> to have a single kill switch given the variety of different enable bits
-> for CET.
->
-OK, will try to make it nicer in next version.
+Hi Ramon,
 
-> > +	    (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-> > +	    guest_cpuid_has(vcpu, X86_FEATURE_IBT))) {
-> > +		if (cr4 & X86_CR4_CET)
-> > +			vmcs_set_bits(VM_ENTRY_CONTROLS,
-> > +				      VM_ENTRY_LOAD_GUEST_CET_STATE);
-> > +		else
-> > +			vmcs_clear_bits(VM_ENTRY_CONTROLS,
-> > +					VM_ENTRY_LOAD_GUEST_CET_STATE);
-> > +	} else if (cr4 & X86_CR4_CET) {
-> > +		return 1;
-> > +	}
-> >  
-> >  	if (to_vmx(vcpu)->nested.vmxon && !nested_cr4_valid(vcpu, cr4))
-> >  		return 1;
-> > -- 
-> > 2.17.2
-> > 
+On 13.08.19 03:42, Ramon Fried wrote:
+> From: Stefan Wahren <stefan.wahren@i2se.com>
+>
+> The user space like gpioinfo only see the GPIO usage but not the
+> MUX usage (e.g. I2C or SPI usage) of a pin. As a user we want to know which
+> pin is free/safe to use. So take the MUX usage of strict pinmux controllers
+> into account to get a more realistic view for ioctl GPIO_GET_LINEINFO_IOCTL.
+>
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Tested-by: Ramon Fried <rfried.dev@gmail.com>
+> Signed-off-by: Ramon Fried <rfried.dev@gmail.com>
+> ---
+> v2: Address review from linus:
+> * ** Please notive logic was reversed **
+> * renamed pinctrl_gpio_is_in_use() to pinctrl_gpio_can_use_line()
+> * renamed pinmux_is_in_use() to pinmux_can_be_used_for_gpio()
+> * changed dev_err to dev_dbg (Linus suggested removing it altogether, I
+>   find it better to keep it for debug).
+thanks for taking care of this.
+>
+>  drivers/gpio/gpiolib.c           |  3 ++-
+>  drivers/pinctrl/core.c           | 28 ++++++++++++++++++++++++++++
+>  drivers/pinctrl/pinmux.c         | 27 +++++++++++++++++++++++++++
+>  drivers/pinctrl/pinmux.h         |  8 ++++++++
+>  include/linux/pinctrl/consumer.h |  6 ++++++
+>  5 files changed, 71 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index f497003f119c..52937bf8e514 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1084,7 +1084,8 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  		    test_bit(FLAG_IS_HOGGED, &desc->flags) ||
+>  		    test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
+>  		    test_bit(FLAG_EXPORT, &desc->flags) ||
+> -		    test_bit(FLAG_SYSFS, &desc->flags))
+> +		    test_bit(FLAG_SYSFS, &desc->flags) ||
+> +		    !pinctrl_gpio_can_use_line(chip->base + lineinfo.line_offset))
+>  			lineinfo.flags |= GPIOLINE_FLAG_KERNEL;
+>  		if (test_bit(FLAG_IS_OUT, &desc->flags))
+>  			lineinfo.flags |= GPIOLINE_FLAG_IS_OUT;
+> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+> index b70df27874d1..2bbd8ee93507 100644
+> --- a/drivers/pinctrl/core.c
+> +++ b/drivers/pinctrl/core.c
+> @@ -736,6 +736,34 @@ int pinctrl_get_group_selector(struct pinctrl_dev *pctldev,
+>  	return -EINVAL;
+>  }
+>  
+> +bool pinctrl_gpio_can_use_line(unsigned gpio)
+> +{
+> +	struct pinctrl_dev *pctldev;
+> +	struct pinctrl_gpio_range *range;
+> +	bool result;
+> +	int pin;
+> +
+> +	/*
+> +	 * Try to obtain GPIO range, if it fails
+> +	 * we're probably dealing with GPIO driver
+> +	 * without a backing pin controller - bail out.
+> +	 */
+> +	if (pinctrl_get_device_gpio_range(gpio, &pctldev, &range))
+> +		return true;
+> +
+> +	mutex_lock(&pctldev->mutex);
+> +
+> +	/* Convert to the pin controllers number space */
+> +	pin = gpio_to_pin(range, gpio);
+> +
+> +	result = pinmux_can_be_used_for_gpio(pctldev, pin);
+> +
+> +	mutex_unlock(&pctldev->mutex);
+> +
+> +	return result;
+> +}
+> +EXPORT_SYMBOL_GPL(pinctrl_gpio_can_use_line);
+> +
+>  /**
+>   * pinctrl_gpio_request() - request a single pin to be used as GPIO
+>   * @gpio: the GPIO pin number from the GPIO subsystem number space
+> diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
+> index 020e54f843f9..7e42a5738d82 100644
+> --- a/drivers/pinctrl/pinmux.c
+> +++ b/drivers/pinctrl/pinmux.c
+> @@ -70,6 +70,33 @@ int pinmux_validate_map(const struct pinctrl_map *map, int i)
+>  	return 0;
+>  }
+>  
+> +/**
+> + * pinmux_can_be_used_for_gpio() - check if a specific pin
+> + *	is either muxed to a different function or used as gpio.
+> + *
+> + * @pin: the pin number in the global pin space
+> + *
+> + * Controllers not defined as strict will always return true,
+> + * menaning that the gpio can be used.
+> + */
+> +bool pinmux_can_be_used_for_gpio(struct pinctrl_dev *pctldev, unsigned pin)
+> +{
+> +	struct pin_desc *desc = pin_desc_get(pctldev, pin);
+> +	const struct pinmux_ops *ops = pctldev->desc->pmxops;
+> +
+> +	if (!desc) {
+> +		dev_dbg(pctldev->dev,
+> +			"pin %u is not registered so it cannot be requested\n",
+> +			pin);
+> +		return true;
+
+This return value looks strange to me.
+
+Stefan
+
