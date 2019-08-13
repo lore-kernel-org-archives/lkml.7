@@ -2,224 +2,220 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8248EC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCA6C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E4F320663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37ACE20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:00:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="G0XJGwOa"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="jJ1flULg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbfHMJ7l (ORCPT
+        id S1728704AbfHMKAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 05:59:41 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:29054 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727833AbfHMJ7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:59:39 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4677VJ34pyz9v1W4;
-        Tue, 13 Aug 2019 11:59:36 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=G0XJGwOa; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id vSrX1KcuQ-VW; Tue, 13 Aug 2019 11:59:36 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4677VJ1lHKz9v1W2;
-        Tue, 13 Aug 2019 11:59:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1565690376; bh=lnUnk3ooBw/XqwMbx+4a4xnllXDvLHT9GQzyEzuvjsE=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=G0XJGwOazh0JuONBHfhQInKiEm9ZutlpFDZfW0xflkYFLb3Mxvc2fW1iyJehEWw73
-         0twthb/HLY3x/XEDfvMsOsvzPFnEq9wiyhwbAFkWHORgVy7y5umlqnoKfV3mF663zB
-         QPmgrfa9Hb/lip0kTU2vzkj0DxURrNB5z6TE/5Sw=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7A1F68B7D4;
-        Tue, 13 Aug 2019 11:59:37 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 6rsyKkhS7CZ5; Tue, 13 Aug 2019 11:59:37 +0200 (CEST)
-Received: from pc17473vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 385F48B7D3;
-        Tue, 13 Aug 2019 11:59:37 +0200 (CEST)
-Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 23CA068F37; Tue, 13 Aug 2019 09:59:37 +0000 (UTC)
-Message-Id: <db961e057f67865896c2c153475f8f32119e1492.1565690241.git.christophe.leroy@c-s.fr>
-In-Reply-To: <61d2a0b6f0c89b1ee546851ce9b6bd345e5ec968.1565690241.git.christophe.leroy@c-s.fr>
-References: <61d2a0b6f0c89b1ee546851ce9b6bd345e5ec968.1565690241.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH 2/2] powerpc/32: replace LOAD_MSR_KERNEL() by
- LOAD_REG_IMMEDIATE()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        segher@kernel.crashing.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 13 Aug 2019 09:59:37 +0000 (UTC)
+        Tue, 13 Aug 2019 06:00:32 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:51572 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728410AbfHMKAb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 06:00:31 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7D9v0oJ019980;
+        Tue, 13 Aug 2019 12:00:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=zMT76XrZdrJ/EPXAeRIWxjFDs506pA3po4wu+4Lf2cc=;
+ b=jJ1flULglu5ROI6e/7eE+t0Qlt0I+d2imZvZk5MNfneS0nk474Lb6oa2a8nMafRsj9XE
+ /jFHCU8WbUW0pdovk6eJ54J0K0HIClB6f1LTZ7/lMo2fwkgKfc+BUh3HoEcKSo08cVpo
+ LYkgkWvCR3SOqF7jQ0MqPI5QlSlRo+hh3wA6f9JB85BkLr8R1S73XQgUe1HTo4dOURRh
+ 7PCGpnFnppmi2U9sI57dRk0qqi20o2SBecMN24w1XCDiL07UffP1obFPEPVnPJ21BtWG
+ LGfwQyi3zlUm+u6cVuE1MlFEH6C7Qkz7ZRyXDFEuDuP/hUqEdiqneU5yhwkbyP2/nmSB RA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2u9mtky9uq-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 13 Aug 2019 12:00:15 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 37B7E38;
+        Tue, 13 Aug 2019 10:00:14 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2771A2CC9D2;
+        Tue, 13 Aug 2019 12:00:14 +0200 (CEST)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 13 Aug
+ 2019 12:00:13 +0200
+Received: from lmecxl0923.lme.st.com (10.48.0.237) by webmail-ga.st.com
+ (10.75.90.48) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 13 Aug
+ 2019 12:00:12 +0200
+From:   Ludovic Barre <ludovic.Barre@st.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Ludovic Barre <ludovic.barre@st.com>
+Subject: [PATCH V5 1/3] mmc: mmci: add hardware busy timeout feature
+Date:   Tue, 13 Aug 2019 11:59:49 +0200
+Message-ID: <20190813095951.26275-2-ludovic.Barre@st.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190813095951.26275-1-ludovic.Barre@st.com>
+References: <20190813095951.26275-1-ludovic.Barre@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.48.0.237]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-13_04:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LOAD_MSR_KERNEL() and LOAD_REG_IMMEDIATE() are doing the same thing
-in the same way. Drop LOAD_MSR_KERNEL()
+From: Ludovic Barre <ludovic.barre@st.com>
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+In some variants, the data timer starts and decrements
+when the DPSM enters in Wait_R or Busy state
+(while data transfer or MMC_RSP_BUSY), and generates a
+data timeout error if the counter reach 0.
+
+-Define max_busy_timeout (in ms) according to clock.
+-Set data timer register if the command has rsp_busy flag.
+ If busy_timeout is not defined by framework, the busy
+ length after Data Burst is defined as 1 second
+ (refer: 4.6.2.2 Write of sd specification part1 v6-0).
+-Add MCI_DATATIMEOUT error management in mmci_cmd_irq.
+
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 ---
- arch/powerpc/kernel/entry_32.S | 18 +++++++++---------
- arch/powerpc/kernel/head_32.h  | 21 ++++-----------------
- 2 files changed, 13 insertions(+), 26 deletions(-)
+ drivers/mmc/host/mmci.c | 37 ++++++++++++++++++++++++++++++++-----
+ drivers/mmc/host/mmci.h |  3 +++
+ 2 files changed, 35 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
-index 54fab22c9a43..972b05504a0a 100644
---- a/arch/powerpc/kernel/entry_32.S
-+++ b/arch/powerpc/kernel/entry_32.S
-@@ -230,7 +230,7 @@ transfer_to_handler_cont:
- 	 */
- 	lis	r12,reenable_mmu@h
- 	ori	r12,r12,reenable_mmu@l
--	LOAD_MSR_KERNEL(r0, MSR_KERNEL)
-+	LOAD_REG_IMMEDIATE(r0, MSR_KERNEL)
- 	mtspr	SPRN_SRR0,r12
- 	mtspr	SPRN_SRR1,r0
- 	SYNC
-@@ -304,7 +304,7 @@ stack_ovf:
- 	addi	r1,r1,THREAD_SIZE-STACK_FRAME_OVERHEAD
- 	lis	r9,StackOverflow@ha
- 	addi	r9,r9,StackOverflow@l
--	LOAD_MSR_KERNEL(r10,MSR_KERNEL)
-+	LOAD_REG_IMMEDIATE(r10,MSR_KERNEL)
- #if defined(CONFIG_PPC_8xx) && defined(CONFIG_PERF_EVENTS)
- 	mtspr	SPRN_NRI, r0
- #endif
-@@ -324,7 +324,7 @@ trace_syscall_entry_irq_off:
- 	bl	trace_hardirqs_on
+diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+index c37e70dbe250..c50586540765 100644
+--- a/drivers/mmc/host/mmci.c
++++ b/drivers/mmc/host/mmci.c
+@@ -1075,6 +1075,7 @@ static void
+ mmci_start_command(struct mmci_host *host, struct mmc_command *cmd, u32 c)
+ {
+ 	void __iomem *base = host->base;
++	unsigned long long clks = 0;
  
- 	/* Now enable for real */
--	LOAD_MSR_KERNEL(r10, MSR_KERNEL | MSR_EE)
-+	LOAD_REG_IMMEDIATE(r10, MSR_KERNEL | MSR_EE)
- 	mtmsr	r10
+ 	dev_dbg(mmc_dev(host->mmc), "op %02x arg %08x flags %08x\n",
+ 	    cmd->opcode, cmd->arg, cmd->flags);
+@@ -1097,6 +1098,19 @@ mmci_start_command(struct mmci_host *host, struct mmc_command *cmd, u32 c)
+ 		else
+ 			c |= host->variant->cmdreg_srsp;
+ 	}
++
++	if (host->variant->busy_timeout && !host->mrq->data) {
++		if (cmd->flags & MMC_RSP_BUSY) {
++			if (!cmd->busy_timeout)
++				cmd->busy_timeout = 1000;
++
++			clks = (unsigned long long)cmd->busy_timeout;
++			clks *=	host->cclk;
++			do_div(clks, MSEC_PER_SEC);
++		}
++		writel_relaxed(clks, host->base + MMCIDATATIMER);
++	}
++
+ 	if (/*interrupt*/0)
+ 		c |= MCI_CPSM_INTERRUPT;
  
- 	REST_GPR(0, r1)
-@@ -394,7 +394,7 @@ ret_from_syscall:
- #endif
- 	mr	r6,r3
- 	/* disable interrupts so current_thread_info()->flags can't change */
--	LOAD_MSR_KERNEL(r10,MSR_KERNEL)	/* doesn't include MSR_EE */
-+	LOAD_REG_IMMEDIATE(r10,MSR_KERNEL)	/* doesn't include MSR_EE */
- 	/* Note: We don't bother telling lockdep about it */
- 	SYNC
- 	MTMSRD(r10)
-@@ -824,7 +824,7 @@ ret_from_except:
- 	 * can't change between when we test it and when we return
- 	 * from the interrupt. */
- 	/* Note: We don't bother telling lockdep about it */
--	LOAD_MSR_KERNEL(r10,MSR_KERNEL)
-+	LOAD_REG_IMMEDIATE(r10,MSR_KERNEL)
- 	SYNC			/* Some chip revs have problems here... */
- 	MTMSRD(r10)		/* disable interrupts */
+@@ -1203,6 +1217,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+ {
+ 	void __iomem *base = host->base;
+ 	bool sbc, busy_resp;
++	u32 err_msk;
  
-@@ -991,7 +991,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRED_STWCX)
- 	 * can restart the exception exit path at the label
- 	 * exc_exit_restart below.  -- paulus
+ 	if (!cmd)
+ 		return;
+@@ -1215,8 +1230,12 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+ 	 * handling. Note that we tag on any latent IRQs postponed
+ 	 * due to waiting for busy status.
  	 */
--	LOAD_MSR_KERNEL(r10,MSR_KERNEL & ~MSR_RI)
-+	LOAD_REG_IMMEDIATE(r10,MSR_KERNEL & ~MSR_RI)
- 	SYNC
- 	MTMSRD(r10)		/* clear the RI bit */
- 	.globl exc_exit_restart
-@@ -1066,7 +1066,7 @@ exc_exit_restart_end:
- 	REST_NVGPRS(r1);						\
- 	lwz	r3,_MSR(r1);						\
- 	andi.	r3,r3,MSR_PR;						\
--	LOAD_MSR_KERNEL(r10,MSR_KERNEL);				\
-+	LOAD_REG_IMMEDIATE(r10,MSR_KERNEL);				\
- 	bne	user_exc_return;					\
- 	lwz	r0,GPR0(r1);						\
- 	lwz	r2,GPR2(r1);						\
-@@ -1236,7 +1236,7 @@ recheck:
- 	 * neither. Those disable/enable cycles used to peek at
- 	 * TI_FLAGS aren't advertised.
- 	 */
--	LOAD_MSR_KERNEL(r10,MSR_KERNEL)
-+	LOAD_REG_IMMEDIATE(r10,MSR_KERNEL)
- 	SYNC
- 	MTMSRD(r10)		/* disable interrupts */
- 	lwz	r9,TI_FLAGS(r2)
-@@ -1329,7 +1329,7 @@ _GLOBAL(enter_rtas)
- 	lwz	r4,RTASBASE(r4)
- 	mfmsr	r9
- 	stw	r9,8(r1)
--	LOAD_MSR_KERNEL(r0,MSR_KERNEL)
-+	LOAD_REG_IMMEDIATE(r0,MSR_KERNEL)
- 	SYNC			/* disable interrupts so SRR0/1 */
- 	MTMSRD(r0)		/* don't get trashed */
- 	li	r9,MSR_KERNEL & ~(MSR_IR|MSR_DR)
-diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
-index 4a692553651f..8abc7783dbe5 100644
---- a/arch/powerpc/kernel/head_32.h
-+++ b/arch/powerpc/kernel/head_32.h
-@@ -5,19 +5,6 @@
- #include <asm/ptrace.h>	/* for STACK_FRAME_REGS_MARKER */
+-	if (!((status|host->busy_status) &
+-	      (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT|MCI_CMDSENT|MCI_CMDRESPEND)))
++	err_msk = MCI_CMDCRCFAIL | MCI_CMDTIMEOUT;
++	if (host->variant->busy_timeout && busy_resp)
++		err_msk |= MCI_DATATIMEOUT;
++
++	if (!((status | host->busy_status) &
++	      (err_msk | MCI_CMDSENT | MCI_CMDRESPEND)))
+ 		return;
  
- /*
-- * MSR_KERNEL is > 0x8000 on 4xx/Book-E since it include MSR_CE.
-- */
--.macro __LOAD_MSR_KERNEL r, x
--.if \x >= 0x8000
--	lis \r, (\x)@h
--	ori \r, \r, (\x)@l
--.else
--	li \r, (\x)
--.endif
--.endm
--#define LOAD_MSR_KERNEL(r, x) __LOAD_MSR_KERNEL r, x
--
--/*
-  * Exception entry code.  This code runs with address translation
-  * turned off, i.e. using physical addresses.
-  * We assume sprg3 has the physical address of the current
-@@ -92,7 +79,7 @@
- #ifdef CONFIG_40x
- 	rlwinm	r9,r9,0,14,12		/* clear MSR_WE (necessary?) */
- #else
--	LOAD_MSR_KERNEL(r10, MSR_KERNEL & ~(MSR_IR|MSR_DR)) /* can take exceptions */
-+	LOAD_REG_IMMEDIATE(r10, MSR_KERNEL & ~(MSR_IR|MSR_DR)) /* can take exceptions */
- 	MTMSRD(r10)			/* (except for mach check in rtas) */
- #endif
- 	lis	r10,STACK_FRAME_REGS_MARKER@ha /* exception frame marker */
-@@ -140,10 +127,10 @@
- 	 * otherwise we might risk taking an interrupt before we tell lockdep
- 	 * they are enabled.
+ 	/* Handle busy detection on DAT0 if the variant supports it. */
+@@ -1235,8 +1254,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+ 		 * while, to allow it to be set, but tests indicates that it
+ 		 * isn't needed.
+ 		 */
+-		if (!host->busy_status &&
+-		    !(status & (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT)) &&
++		if (!host->busy_status && !(status & err_msk) &&
+ 		    (readl(base + MMCISTATUS) & host->variant->busy_detect_flag)) {
+ 
+ 			writel(readl(base + MMCIMASK0) |
+@@ -1290,6 +1308,9 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+ 		cmd->error = -ETIMEDOUT;
+ 	} else if (status & MCI_CMDCRCFAIL && cmd->flags & MMC_RSP_CRC) {
+ 		cmd->error = -EILSEQ;
++	} else if (host->variant->busy_timeout && busy_resp &&
++		   status & MCI_DATATIMEOUT) {
++		cmd->error = -ETIMEDOUT;
+ 	} else {
+ 		cmd->resp[0] = readl(base + MMCIRESPONSE0);
+ 		cmd->resp[1] = readl(base + MMCIRESPONSE1);
+@@ -1948,6 +1969,8 @@ static int mmci_probe(struct amba_device *dev,
+ 	 * Enable busy detection.
  	 */
--	LOAD_MSR_KERNEL(r10, MSR_KERNEL)
-+	LOAD_REG_IMMEDIATE(r10, MSR_KERNEL)
- 	rlwimi	r10, r9, 0, MSR_EE
- #else
--	LOAD_MSR_KERNEL(r10, MSR_KERNEL | MSR_EE)
-+	LOAD_REG_IMMEDIATE(r10, MSR_KERNEL | MSR_EE)
- #endif
- #if defined(CONFIG_PPC_8xx) && defined(CONFIG_PERF_EVENTS)
- 	mtspr	SPRN_NRI, r0
-@@ -187,7 +174,7 @@
- #define EXC_XFER_TEMPLATE(hdlr, trap, msr, tfer, ret)		\
- 	li	r10,trap;					\
- 	stw	r10,_TRAP(r11);					\
--	LOAD_MSR_KERNEL(r10, msr);				\
-+	LOAD_REG_IMMEDIATE(r10, msr);				\
- 	bl	tfer;						\
- 	.long	hdlr;						\
- 	.long	ret
+ 	if (variant->busy_detect) {
++		u32 max_busy_timeout = 0;
++
+ 		mmci_ops.card_busy = mmci_card_busy;
+ 		/*
+ 		 * Not all variants have a flag to enable busy detection
+@@ -1957,7 +1980,11 @@ static int mmci_probe(struct amba_device *dev,
+ 			mmci_write_datactrlreg(host,
+ 					       host->variant->busy_dpsm_flag);
+ 		mmc->caps |= MMC_CAP_WAIT_WHILE_BUSY;
+-		mmc->max_busy_timeout = 0;
++
++		if (variant->busy_timeout)
++			max_busy_timeout = ~0UL / (mmc->f_max / MSEC_PER_SEC);
++
++		mmc->max_busy_timeout = max_busy_timeout;
+ 	}
+ 
+ 	/* Prepare a CMD12 - needed to clear the DPSM on some variants. */
+diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+index 833236ecb31e..d8b7f6774e8f 100644
+--- a/drivers/mmc/host/mmci.h
++++ b/drivers/mmc/host/mmci.h
+@@ -287,6 +287,8 @@ struct mmci_host;
+  * @signal_direction: input/out direction of bus signals can be indicated
+  * @pwrreg_clkgate: MMCIPOWER register must be used to gate the clock
+  * @busy_detect: true if the variant supports busy detection on DAT0.
++ * @busy_timeout: true if the variant starts data timer when the DPSM
++ *		  enter in Wait_R or Busy state.
+  * @busy_dpsm_flag: bitmask enabling busy detection in the DPSM
+  * @busy_detect_flag: bitmask identifying the bit in the MMCISTATUS register
+  *		      indicating that the card is busy
+@@ -333,6 +335,7 @@ struct variant_data {
+ 	u8			signal_direction:1;
+ 	u8			pwrreg_clkgate:1;
+ 	u8			busy_detect:1;
++	u8			busy_timeout:1;
+ 	u32			busy_dpsm_flag;
+ 	u32			busy_detect_flag;
+ 	u32			busy_detect_mask;
 -- 
-2.13.3
+2.17.1
 
