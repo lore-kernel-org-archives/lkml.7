@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E088C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5EEC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D569820665
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B63C020679
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:25:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BsCY4fn9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d3g5BTho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbfHMHZ2 (ORCPT
+        id S1727651AbfHMHZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 03:25:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50042 "EHLO
+        Tue, 13 Aug 2019 03:25:33 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50070 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfHMHZ0 (ORCPT
+        with ESMTP id S1725820AbfHMHZa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 03:25:26 -0400
+        Tue, 13 Aug 2019 03:25:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=6uN6U5oiirn5R2m1a8VqkcPDz/fhGlAHOn+fQI2hsgw=; b=BsCY4fn9kDXDAiJliI+Ibc54Fq
-        QVWZVMC6hm/FF23UZER654GM6rRSniyaCZiOR3BRZqGDnfzKPdcIpOV35P6CJsVF+e7wquL4m0jAk
-        Wr09wSU15Odknx3E+qMvtpAptJns/po8N+wlrVoVbm70jw/5K3FC9Sx1nG+EO4spkz/njVNBoEAvK
-        Fm6KnEtBt1YcY1ycaHINZcgg1GR7u2vwFUoI7m73Nru6ctjkHYxI8AVdUzf6o/N8lrW6kYn4JZa+h
-        nLGZimaEYuF7aBUkq/GWAwnw/3vaKtHTFsmtPMh9eIcOp4NnRj+fwipKBw6Ez7W1Cix7xWjz+7tu8
-        wULrGCwQ==;
+        bh=2TWbhhl2LAlCGPgVDVZf1/2nM9NMXeFRfLqZwHts8K4=; b=d3g5BThoUO45/fm1GYNZQAxP3a
+        BZh8YSFbIZtjDNZjXDFGyhmXMrR1L0G02s6xXKjpQXwW4+O/yg/yMX4iqphrSlVkQUohAzBH3Otfr
+        32ScLVJdDwfN/s+KjbYwX4UTtXo3VjCu5BLilI3hvjoXZkdVSyj665zmOY4e6xHqxSgs6ona8yLK7
+        tEX2vEgOn0gE/CSxiuYOsm6qLCyooJ+w98v6gCKdGuPSJJuuRWlWOAfrhSNuxF7P0WPZqjsjWjsRS
+        M5ls+LqmOOgtKxy4GGyRpIOq9UABcO9F7Cu0ymxMOQNtP0jUvNGlXCsMQRBi6H6HVTTCKZ5N+x54F
+        qX8XdW3g==;
 Received: from [2001:4bb8:180:1ec3:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hxRBK-00064r-C5; Tue, 13 Aug 2019 07:25:23 +0000
+        id 1hxRBQ-00065i-Gw; Tue, 13 Aug 2019 07:25:28 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
         Mike Travis <mike.travis@hpe.com>,
@@ -46,9 +46,9 @@ Cc:     Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-ia64@vger.kernel.org, linux-ide@vger.kernel.org,
         linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 02/28] char: remove the SGI tiocx/mbcs driver
-Date:   Tue, 13 Aug 2019 09:24:48 +0200
-Message-Id: <20190813072514.23299-3-hch@lst.de>
+Subject: [PATCH 04/28] ide: remove the sgiioc4 driver
+Date:   Tue, 13 Aug 2019 09:24:50 +0200
+Message-Id: <20190813072514.23299-5-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190813072514.23299-1-hch@lst.de>
 References: <20190813072514.23299-1-hch@lst.de>
@@ -65,2063 +65,720 @@ depends on the SN2 support.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/ia64/configs/generic_defconfig   |   2 -
- arch/ia64/configs/gensparse_defconfig |   2 -
- arch/ia64/sn/kernel/Makefile          |   1 -
- arch/ia64/sn/kernel/tiocx.c           | 569 ------------------
- drivers/char/Kconfig                  |  14 -
- drivers/char/Makefile                 |   1 -
- drivers/char/mbcs.c                   | 831 --------------------------
- drivers/char/mbcs.h                   | 553 -----------------
- 8 files changed, 1973 deletions(-)
- delete mode 100644 arch/ia64/sn/kernel/tiocx.c
- delete mode 100644 drivers/char/mbcs.c
- delete mode 100644 drivers/char/mbcs.h
+ arch/ia64/configs/generic_defconfig   |   1 -
+ arch/ia64/configs/gensparse_defconfig |   1 -
+ drivers/Kconfig                       |   2 -
+ drivers/ide/Kconfig                   |   9 -
+ drivers/ide/Makefile                  |   1 -
+ drivers/ide/sgiioc4.c                 | 630 --------------------------
+ 6 files changed, 644 deletions(-)
+ delete mode 100644 drivers/ide/sgiioc4.c
 
 diff --git a/arch/ia64/configs/generic_defconfig b/arch/ia64/configs/generic_defconfig
-index 22b98ddc9913..1fc4d5a77e0d 100644
+index 79b88384c885..a41afb3ef209 100644
 --- a/arch/ia64/configs/generic_defconfig
 +++ b/arch/ia64/configs/generic_defconfig
-@@ -90,8 +90,6 @@ CONFIG_IGB=y
- # CONFIG_SERIO_SERPORT is not set
- CONFIG_GAMEPORT=m
- CONFIG_SERIAL_NONSTANDARD=y
--CONFIG_SGI_TIOCX=y
--CONFIG_SGI_MBCS=m
- CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
- CONFIG_SERIAL_8250_NR_UARTS=6
+@@ -51,7 +51,6 @@ CONFIG_BLK_DEV_IDECD=y
+ CONFIG_BLK_DEV_GENERIC=y
+ CONFIG_BLK_DEV_CMD64X=y
+ CONFIG_BLK_DEV_PIIX=y
+-CONFIG_BLK_DEV_SGIIOC4=y
+ CONFIG_BLK_DEV_SD=y
+ CONFIG_CHR_DEV_ST=m
+ CONFIG_BLK_DEV_SR=m
 diff --git a/arch/ia64/configs/gensparse_defconfig b/arch/ia64/configs/gensparse_defconfig
-index 1d230c0a90bd..289ed714ad8b 100644
+index f1490580ed69..07484aa6f16f 100644
 --- a/arch/ia64/configs/gensparse_defconfig
 +++ b/arch/ia64/configs/gensparse_defconfig
-@@ -79,8 +79,6 @@ CONFIG_E1000=y
- # CONFIG_SERIO_SERPORT is not set
- CONFIG_GAMEPORT=m
- CONFIG_SERIAL_NONSTANDARD=y
--CONFIG_SGI_TIOCX=y
--CONFIG_SGI_MBCS=m
- CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
- CONFIG_SERIAL_8250_NR_UARTS=6
-diff --git a/arch/ia64/sn/kernel/Makefile b/arch/ia64/sn/kernel/Makefile
-index 9c349dd23265..2f580603370d 100644
---- a/arch/ia64/sn/kernel/Makefile
-+++ b/arch/ia64/sn/kernel/Makefile
-@@ -14,5 +14,4 @@ obj-y				+= setup.o bte.o bte_error.o irq.o mca.o idle.o \
- 				   io_init.o iomv.o klconflib.o pio_phys.o \
- 				   sn2/
- obj-$(CONFIG_IA64_GENERIC)      += machvec.o
--obj-$(CONFIG_SGI_TIOCX)		+= tiocx.o
- obj-$(CONFIG_PCI_MSI)		+= msi_sn.o
-diff --git a/arch/ia64/sn/kernel/tiocx.c b/arch/ia64/sn/kernel/tiocx.c
+@@ -44,7 +44,6 @@ CONFIG_IDE_GENERIC=y
+ CONFIG_BLK_DEV_GENERIC=y
+ CONFIG_BLK_DEV_CMD64X=y
+ CONFIG_BLK_DEV_PIIX=y
+-CONFIG_BLK_DEV_SGIIOC4=y
+ CONFIG_SCSI=y
+ CONFIG_BLK_DEV_SD=y
+ CONFIG_CHR_DEV_ST=m
+diff --git a/drivers/Kconfig b/drivers/Kconfig
+index 61cf4ea2c229..477d63d0364d 100644
+--- a/drivers/Kconfig
++++ b/drivers/Kconfig
+@@ -30,8 +30,6 @@ source "drivers/block/Kconfig"
+ 
+ source "drivers/nvme/Kconfig"
+ 
+-# misc before ide - BLK_DEV_SGIIOC4 depends on SGI_IOC4
+-
+ source "drivers/misc/Kconfig"
+ 
+ source "drivers/ide/Kconfig"
+diff --git a/drivers/ide/Kconfig b/drivers/ide/Kconfig
+index 9eada392df15..1c227ea8ecd3 100644
+--- a/drivers/ide/Kconfig
++++ b/drivers/ide/Kconfig
+@@ -567,15 +567,6 @@ config BLK_DEV_SVWKS
+ 	  This driver adds PIO/(U)DMA support for the ServerWorks OSB4/CSB5
+ 	  chipsets.
+ 
+-config BLK_DEV_SGIIOC4
+-	tristate "Silicon Graphics IOC4 chipset ATA/ATAPI support"
+-	depends on (IA64_SGI_SN2 || IA64_GENERIC) && SGI_IOC4
+-	select BLK_DEV_IDEDMA_PCI
+-	help
+-	  This driver adds PIO & MultiMode DMA-2 support for the SGI IOC4
+-	  chipset, which has one channel and can support two devices.
+-	  Please say Y here if you have an Altix System from SGI.
+-
+ config BLK_DEV_SIIMAGE
+ 	tristate "Silicon Image chipset support"
+ 	select BLK_DEV_IDEDMA_PCI
+diff --git a/drivers/ide/Makefile b/drivers/ide/Makefile
+index 9f617a77970f..cac02db4098d 100644
+--- a/drivers/ide/Makefile
++++ b/drivers/ide/Makefile
+@@ -59,7 +59,6 @@ obj-$(CONFIG_BLK_DEV_PDC202XX_NEW)	+= pdc202xx_new.o
+ obj-$(CONFIG_BLK_DEV_PIIX)		+= piix.o
+ obj-$(CONFIG_BLK_DEV_RZ1000)		+= rz1000.o
+ obj-$(CONFIG_BLK_DEV_SVWKS)		+= serverworks.o
+-obj-$(CONFIG_BLK_DEV_SGIIOC4)		+= sgiioc4.o
+ obj-$(CONFIG_BLK_DEV_SIIMAGE)		+= siimage.o
+ obj-$(CONFIG_BLK_DEV_SIS5513)		+= sis5513.o
+ obj-$(CONFIG_BLK_DEV_SL82C105)		+= sl82c105.o
+diff --git a/drivers/ide/sgiioc4.c b/drivers/ide/sgiioc4.c
 deleted file mode 100644
-index 32d0380eb72e..000000000000
---- a/arch/ia64/sn/kernel/tiocx.c
+index 2d35e9f7516f..000000000000
+--- a/drivers/ide/sgiioc4.c
 +++ /dev/null
-@@ -1,569 +0,0 @@
+@@ -1,630 +0,0 @@
 -/*
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file "COPYING" in the main directory of this archive
-- * for more details.
+- * Copyright (c) 2003-2006 Silicon Graphics, Inc.  All Rights Reserved.
+- * Copyright (C) 2008-2009 MontaVista Software, Inc.
 - *
-- * Copyright (c) 2005 Silicon Graphics, Inc.  All rights reserved.
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms of version 2 of the GNU General Public License
+- * as published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it would be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+- *
+- * You should have received a copy of the GNU General Public
+- * License along with this program; if not, write the Free Software
+- * Foundation, Inc., 59 Temple Place - Suite 330, Boston MA 02111-1307, USA.
+- *
+- * For further information regarding this notice, see:
+- *
+- * http://oss.sgi.com/projects/GenInfo/NoticeExplan
 - */
 -
 -#include <linux/module.h>
--#include <linux/kernel.h>
--#include <linux/slab.h>
--#include <linux/spinlock.h>
--#include <linux/proc_fs.h>
--#include <linux/capability.h>
--#include <linux/device.h>
--#include <linux/delay.h>
--#include <linux/uaccess.h>
--#include <asm/sn/sn_sal.h>
--#include <asm/sn/addrs.h>
--#include <asm/sn/io.h>
--#include <asm/sn/types.h>
--#include <asm/sn/shubio.h>
--#include <asm/sn/tiocx.h>
--#include <asm/sn/l1.h>
--#include <asm/sn/module.h>
--#include "tio.h"
--#include "xtalk/xwidgetdev.h"
--#include "xtalk/hubdev.h"
--
--#define CX_DEV_NONE 0
--#define DEVICE_NAME "tiocx"
--#define WIDGET_ID 0
--#define TIOCX_DEBUG 0
--
--#if TIOCX_DEBUG
--#define DBG(fmt...)    printk(KERN_ALERT fmt)
--#else
--#define DBG(fmt...)
--#endif
--
--struct device_attribute dev_attr_cxdev_control;
--
--/**
-- * tiocx_match - Try to match driver id list with device.
-- * @dev: device pointer
-- * @drv: driver pointer
-- *
-- * Returns 1 if match, 0 otherwise.
-- */
--static int tiocx_match(struct device *dev, struct device_driver *drv)
--{
--	struct cx_dev *cx_dev = to_cx_dev(dev);
--	struct cx_drv *cx_drv = to_cx_driver(drv);
--	const struct cx_device_id *ids = cx_drv->id_table;
--
--	if (!ids)
--		return 0;
--
--	while (ids->part_num) {
--		if (ids->part_num == cx_dev->cx_id.part_num)
--			return 1;
--		ids++;
--	}
--	return 0;
--
--}
--
--static int tiocx_uevent(struct device *dev, struct kobj_uevent_env *env)
--{
--	return -ENODEV;
--}
--
--static void tiocx_bus_release(struct device *dev)
--{
--	kfree(to_cx_dev(dev));
--}
--
--/**
-- * cx_device_match - Find cx_device in the id table.
-- * @ids: id table from driver
-- * @cx_device: part/mfg id for the device
-- *
-- */
--static const struct cx_device_id *cx_device_match(const struct cx_device_id
--						  *ids,
--						  struct cx_dev *cx_device)
--{
--	/*
--	 * NOTES: We may want to check for CX_ANY_ID too.
--	 *        Do we want to match against nasid too?
--	 *        CX_DEV_NONE == 0, if the driver tries to register for
--	 *        part/mfg == 0 we should return no-match (NULL) here.
--	 */
--	while (ids->part_num && ids->mfg_num) {
--		if (ids->part_num == cx_device->cx_id.part_num &&
--		    ids->mfg_num == cx_device->cx_id.mfg_num)
--			return ids;
--		ids++;
--	}
--
--	return NULL;
--}
--
--/**
-- * cx_device_probe - Look for matching device.
-- *			Call driver probe routine if found.
-- * @cx_driver: driver table (cx_drv struct) from driver
-- * @cx_device: part/mfg id for the device
-- */
--static int cx_device_probe(struct device *dev)
--{
--	const struct cx_device_id *id;
--	struct cx_drv *cx_drv = to_cx_driver(dev->driver);
--	struct cx_dev *cx_dev = to_cx_dev(dev);
--	int error = 0;
--
--	if (!cx_dev->driver && cx_drv->probe) {
--		id = cx_device_match(cx_drv->id_table, cx_dev);
--		if (id) {
--			if ((error = cx_drv->probe(cx_dev, id)) < 0)
--				return error;
--			else
--				cx_dev->driver = cx_drv;
--		}
--	}
--
--	return error;
--}
--
--/**
-- * cx_driver_remove - Remove driver from device struct.
-- * @dev: device
-- */
--static int cx_driver_remove(struct device *dev)
--{
--	struct cx_dev *cx_dev = to_cx_dev(dev);
--	struct cx_drv *cx_drv = cx_dev->driver;
--	if (cx_drv->remove)
--		cx_drv->remove(cx_dev);
--	cx_dev->driver = NULL;
--	return 0;
--}
--
--struct bus_type tiocx_bus_type = {
--	.name = "tiocx",
--	.match = tiocx_match,
--	.uevent = tiocx_uevent,
--	.probe = cx_device_probe,
--	.remove = cx_driver_remove,
--};
--
--/**
-- * cx_driver_register - Register the driver.
-- * @cx_driver: driver table (cx_drv struct) from driver
-- * 
-- * Called from the driver init routine to register a driver.
-- * The cx_drv struct contains the driver name, a pointer to
-- * a table of part/mfg numbers and a pointer to the driver's
-- * probe/attach routine.
-- */
--int cx_driver_register(struct cx_drv *cx_driver)
--{
--	cx_driver->driver.name = cx_driver->name;
--	cx_driver->driver.bus = &tiocx_bus_type;
--
--	return driver_register(&cx_driver->driver);
--}
--
--/**
-- * cx_driver_unregister - Unregister the driver.
-- * @cx_driver: driver table (cx_drv struct) from driver
-- */
--int cx_driver_unregister(struct cx_drv *cx_driver)
--{
--	driver_unregister(&cx_driver->driver);
--	return 0;
--}
--
--/**
-- * cx_device_register - Register a device.
-- * @nasid: device's nasid
-- * @part_num: device's part number
-- * @mfg_num: device's manufacturer number
-- * @hubdev: hub info associated with this device
-- * @bt: board type of the device
-- *
-- */
--int
--cx_device_register(nasid_t nasid, int part_num, int mfg_num,
--		   struct hubdev_info *hubdev, int bt)
--{
--	struct cx_dev *cx_dev;
--	int r;
--
--	cx_dev = kzalloc(sizeof(struct cx_dev), GFP_KERNEL);
--	DBG("cx_dev= 0x%p\n", cx_dev);
--	if (cx_dev == NULL)
--		return -ENOMEM;
--
--	cx_dev->cx_id.part_num = part_num;
--	cx_dev->cx_id.mfg_num = mfg_num;
--	cx_dev->cx_id.nasid = nasid;
--	cx_dev->hubdev = hubdev;
--	cx_dev->bt = bt;
--
--	cx_dev->dev.parent = NULL;
--	cx_dev->dev.bus = &tiocx_bus_type;
--	cx_dev->dev.release = tiocx_bus_release;
--	dev_set_name(&cx_dev->dev, "%d", cx_dev->cx_id.nasid);
--	r = device_register(&cx_dev->dev);
--	if (r) {
--		kfree(cx_dev);
--		return r;
--	}
--	get_device(&cx_dev->dev);
--
--	device_create_file(&cx_dev->dev, &dev_attr_cxdev_control);
--
--	return 0;
--}
--
--/**
-- * cx_device_unregister - Unregister a device.
-- * @cx_dev: part/mfg id for the device
-- */
--int cx_device_unregister(struct cx_dev *cx_dev)
--{
--	put_device(&cx_dev->dev);
--	device_unregister(&cx_dev->dev);
--	return 0;
--}
--
--/**
-- * cx_device_reload - Reload the device.
-- * @nasid: device's nasid
-- * @part_num: device's part number
-- * @mfg_num: device's manufacturer number
-- *
-- * Remove the device associated with 'nasid' from device list and then
-- * call device-register with the given part/mfg numbers.
-- */
--static int cx_device_reload(struct cx_dev *cx_dev)
--{
--	cx_device_unregister(cx_dev);
--	return cx_device_register(cx_dev->cx_id.nasid, cx_dev->cx_id.part_num,
--				  cx_dev->cx_id.mfg_num, cx_dev->hubdev,
--				  cx_dev->bt);
--}
--
--static inline u64 tiocx_intr_alloc(nasid_t nasid, int widget,
--					u64 sn_irq_info,
--					int req_irq, nasid_t req_nasid,
--					int req_slice)
--{
--	struct ia64_sal_retval rv;
--	rv.status = 0;
--	rv.v0 = 0;
--
--	ia64_sal_oemcall_nolock(&rv, SN_SAL_IOIF_INTERRUPT,
--				SAL_INTR_ALLOC, nasid,
--				widget, sn_irq_info, req_irq,
--				req_nasid, req_slice);
--	return rv.status;
--}
--
--static inline void tiocx_intr_free(nasid_t nasid, int widget,
--				   struct sn_irq_info *sn_irq_info)
--{
--	struct ia64_sal_retval rv;
--	rv.status = 0;
--	rv.v0 = 0;
--
--	ia64_sal_oemcall_nolock(&rv, SN_SAL_IOIF_INTERRUPT,
--				SAL_INTR_FREE, nasid,
--				widget, sn_irq_info->irq_irq,
--				sn_irq_info->irq_cookie, 0, 0);
--}
--
--struct sn_irq_info *tiocx_irq_alloc(nasid_t nasid, int widget, int irq,
--				    nasid_t req_nasid, int slice)
--{
--	struct sn_irq_info *sn_irq_info;
--	int status;
--	int sn_irq_size = sizeof(struct sn_irq_info);
--
--	if ((nasid & 1) == 0)
--		return NULL;
--
--	sn_irq_info = kzalloc(sn_irq_size, GFP_KERNEL);
--	if (sn_irq_info == NULL)
--		return NULL;
--
--	status = tiocx_intr_alloc(nasid, widget, __pa(sn_irq_info), irq,
--				  req_nasid, slice);
--	if (status) {
--		kfree(sn_irq_info);
--		return NULL;
--	} else {
--		return sn_irq_info;
--	}
--}
--
--void tiocx_irq_free(struct sn_irq_info *sn_irq_info)
--{
--	u64 bridge = (u64) sn_irq_info->irq_bridge;
--	nasid_t nasid = NASID_GET(bridge);
--	int widget;
--
--	if (nasid & 1) {
--		widget = TIO_SWIN_WIDGETNUM(bridge);
--		tiocx_intr_free(nasid, widget, sn_irq_info);
--		kfree(sn_irq_info);
--	}
--}
--
--u64 tiocx_dma_addr(u64 addr)
--{
--	return PHYS_TO_TIODMA(addr);
--}
--
--u64 tiocx_swin_base(int nasid)
--{
--	return TIO_SWIN_BASE(nasid, TIOCX_CORELET);
--}
--
--EXPORT_SYMBOL(cx_driver_register);
--EXPORT_SYMBOL(cx_driver_unregister);
--EXPORT_SYMBOL(cx_device_register);
--EXPORT_SYMBOL(cx_device_unregister);
--EXPORT_SYMBOL(tiocx_irq_alloc);
--EXPORT_SYMBOL(tiocx_irq_free);
--EXPORT_SYMBOL(tiocx_bus_type);
--EXPORT_SYMBOL(tiocx_dma_addr);
--EXPORT_SYMBOL(tiocx_swin_base);
--
--static void tio_conveyor_set(nasid_t nasid, int enable_flag)
--{
--	u64 ice_frz;
--	u64 disable_cb = (1ull << 61);
--
--	if (!(nasid & 1))
--		return;
--
--	ice_frz = REMOTE_HUB_L(nasid, TIO_ICE_FRZ_CFG);
--	if (enable_flag) {
--		if (!(ice_frz & disable_cb))	/* already enabled */
--			return;
--		ice_frz &= ~disable_cb;
--	} else {
--		if (ice_frz & disable_cb)	/* already disabled */
--			return;
--		ice_frz |= disable_cb;
--	}
--	DBG(KERN_ALERT "TIO_ICE_FRZ_CFG= 0x%lx\n", ice_frz);
--	REMOTE_HUB_S(nasid, TIO_ICE_FRZ_CFG, ice_frz);
--}
--
--#define tio_conveyor_enable(nasid) tio_conveyor_set(nasid, 1)
--#define tio_conveyor_disable(nasid) tio_conveyor_set(nasid, 0)
--
--static void tio_corelet_reset(nasid_t nasid, int corelet)
--{
--	if (!(nasid & 1))
--		return;
--
--	REMOTE_HUB_S(nasid, TIO_ICE_PMI_TX_CFG, 1 << corelet);
--	udelay(2000);
--	REMOTE_HUB_S(nasid, TIO_ICE_PMI_TX_CFG, 0);
--	udelay(2000);
--}
--
--static int is_fpga_tio(int nasid, int *bt)
--{
--	u16 uninitialized_var(ioboard_type);	/* GCC be quiet */
--	long rc;
--
--	rc = ia64_sn_sysctl_ioboard_get(nasid, &ioboard_type);
--	if (rc) {
--		printk(KERN_WARNING "ia64_sn_sysctl_ioboard_get failed: %ld\n",
--		       rc);
--		return 0;
--	}
--
--	switch (ioboard_type) {
--	case L1_BRICKTYPE_SA:
--	case L1_BRICKTYPE_ATHENA:
--	case L1_BOARDTYPE_DAYTONA:
--		*bt = ioboard_type;
--		return 1;
--	}
--
--	return 0;
--}
--
--static int bitstream_loaded(nasid_t nasid)
--{
--	u64 cx_credits;
--
--	cx_credits = REMOTE_HUB_L(nasid, TIO_ICE_PMI_TX_DYN_CREDIT_STAT_CB3);
--	cx_credits &= TIO_ICE_PMI_TX_DYN_CREDIT_STAT_CB3_CREDIT_CNT_MASK;
--	DBG("cx_credits= 0x%lx\n", cx_credits);
--
--	return (cx_credits == 0xf) ? 1 : 0;
--}
--
--static int tiocx_reload(struct cx_dev *cx_dev)
--{
--	int part_num = CX_DEV_NONE;
--	int mfg_num = CX_DEV_NONE;
--	nasid_t nasid = cx_dev->cx_id.nasid;
--
--	if (bitstream_loaded(nasid)) {
--		u64 cx_id;
--		int rv;
--
--		rv = ia64_sn_sysctl_tio_clock_reset(nasid);
--		if (rv) {
--			printk(KERN_ALERT "CX port JTAG reset failed.\n");
--		} else {
--			cx_id = *(volatile u64 *)
--				(TIO_SWIN_BASE(nasid, TIOCX_CORELET) +
--					  WIDGET_ID);
--			part_num = XWIDGET_PART_NUM(cx_id);
--			mfg_num = XWIDGET_MFG_NUM(cx_id);
--			DBG("part= 0x%x, mfg= 0x%x\n", part_num, mfg_num);
--			/* just ignore it if it's a CE */
--			if (part_num == TIO_CE_ASIC_PARTNUM)
--				return 0;
--		}
--	}
--
--	cx_dev->cx_id.part_num = part_num;
--	cx_dev->cx_id.mfg_num = mfg_num;
--
--	/*
--	 * Delete old device and register the new one.  It's ok if
--	 * part_num/mfg_num == CX_DEV_NONE.  We want to register
--	 * devices in the table even if a bitstream isn't loaded.
--	 * That allows use to see that a bitstream isn't loaded via
--	 * TIOCX_IOCTL_DEV_LIST.
--	 */
--	return cx_device_reload(cx_dev);
--}
--
--static ssize_t show_cxdev_control(struct device *dev, struct device_attribute *attr, char *buf)
--{
--	struct cx_dev *cx_dev = to_cx_dev(dev);
--
--	return sprintf(buf, "0x%x 0x%x 0x%x 0x%x\n",
--		       cx_dev->cx_id.nasid,
--		       cx_dev->cx_id.part_num, cx_dev->cx_id.mfg_num,
--		       cx_dev->bt);
--}
--
--static ssize_t store_cxdev_control(struct device *dev, struct device_attribute *attr, const char *buf,
--				   size_t count)
--{
--	int n;
--	struct cx_dev *cx_dev = to_cx_dev(dev);
--
--	if (!capable(CAP_SYS_ADMIN))
--		return -EPERM;
--
--	if (count <= 0)
--		return 0;
--
--	n = simple_strtoul(buf, NULL, 0);
--
--	switch (n) {
--	case 1:
--		tio_corelet_reset(cx_dev->cx_id.nasid, TIOCX_CORELET);
--		tiocx_reload(cx_dev);
--		break;
--	case 2:
--		tiocx_reload(cx_dev);
--		break;
--	case 3:
--		tio_corelet_reset(cx_dev->cx_id.nasid, TIOCX_CORELET);
--		break;
--	default:
--		break;
--	}
--
--	return count;
--}
--
--DEVICE_ATTR(cxdev_control, 0644, show_cxdev_control, store_cxdev_control);
--
--static int __init tiocx_init(void)
--{
--	cnodeid_t cnodeid;
--	int found_tiocx_device = 0;
--	int err;
--
--	if (!ia64_platform_is("sn2"))
--		return 0;
--
--	err = bus_register(&tiocx_bus_type);
--	if (err)
--		return err;
--
--	for (cnodeid = 0; cnodeid < num_cnodes; cnodeid++) {
--		nasid_t nasid;
--		int bt;
--
--		nasid = cnodeid_to_nasid(cnodeid);
--
--		if ((nasid & 0x1) && is_fpga_tio(nasid, &bt)) {
--			struct hubdev_info *hubdev;
--			struct xwidget_info *widgetp;
--
--			DBG("Found TIO at nasid 0x%x\n", nasid);
--
--			hubdev =
--			    (struct hubdev_info *)(NODEPDA(cnodeid)->pdinfo);
--
--			widgetp = &hubdev->hdi_xwidget_info[TIOCX_CORELET];
--
--			/* The CE hangs off of the CX port but is not an FPGA */
--			if (widgetp->xwi_hwid.part_num == TIO_CE_ASIC_PARTNUM)
--				continue;
--
--			tio_corelet_reset(nasid, TIOCX_CORELET);
--			tio_conveyor_enable(nasid);
--
--			if (cx_device_register
--			    (nasid, widgetp->xwi_hwid.part_num,
--			     widgetp->xwi_hwid.mfg_num, hubdev, bt) < 0)
--				return -ENXIO;
--			else
--				found_tiocx_device++;
--		}
--	}
--
--	/* It's ok if we find zero devices. */
--	DBG("found_tiocx_device= %d\n", found_tiocx_device);
--
--	return 0;
--}
--
--static int cx_remove_device(struct device * dev, void * data)
--{
--	struct cx_dev *cx_dev = to_cx_dev(dev);
--	device_remove_file(dev, &dev_attr_cxdev_control);
--	cx_device_unregister(cx_dev);
--	return 0;
--}
--
--static void __exit tiocx_exit(void)
--{
--	DBG("tiocx_exit\n");
--
--	/*
--	 * Unregister devices.
--	 */
--	bus_for_each_dev(&tiocx_bus_type, NULL, NULL, cx_remove_device);
--	bus_unregister(&tiocx_bus_type);
--}
--
--fs_initcall(tiocx_init);
--module_exit(tiocx_exit);
--
--/************************************************************************
-- * Module licensing and description
-- ************************************************************************/
--MODULE_LICENSE("GPL");
--MODULE_AUTHOR("Bruce Losure <blosure@sgi.com>");
--MODULE_DESCRIPTION("TIOCX module");
--MODULE_SUPPORTED_DEVICE(DEVICE_NAME);
-diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
-index c9fbbc6a3967..96156c729a31 100644
---- a/drivers/char/Kconfig
-+++ b/drivers/char/Kconfig
-@@ -26,20 +26,6 @@ config DEVKMEM
- 	  kind of kernel debugging operations.
- 	  When in doubt, say "N".
- 
--config SGI_TIOCX
--       bool "SGI TIO CX driver support"
--       depends on (IA64_SGI_SN2 || IA64_GENERIC)
--       help
--         If you have an SGI Altix and you have fpga devices attached
--         to your TIO, say Y here, otherwise say N.
--
--config SGI_MBCS
--       tristate "SGI FPGA Core Services driver support"
--       depends on SGI_TIOCX
--       help
--         If you have an SGI Altix with an attached SABrick
--         say Y or M here, otherwise say N.
--
- source "drivers/tty/serial/Kconfig"
- source "drivers/tty/serdev/Kconfig"
- 
-diff --git a/drivers/char/Makefile b/drivers/char/Makefile
-index 50835d420471..7c5ea6f9df14 100644
---- a/drivers/char/Makefile
-+++ b/drivers/char/Makefile
-@@ -12,7 +12,6 @@ obj-$(CONFIG_RAW_DRIVER)	+= raw.o
- obj-$(CONFIG_MSPEC)		+= mspec.o
- obj-$(CONFIG_UV_MMTIMER)	+= uv_mmtimer.o
- obj-$(CONFIG_IBM_BSR)		+= bsr.o
--obj-$(CONFIG_SGI_MBCS)		+= mbcs.o
- 
- obj-$(CONFIG_PRINTER)		+= lp.o
- 
-diff --git a/drivers/char/mbcs.c b/drivers/char/mbcs.c
-deleted file mode 100644
-index 0a31b60bee7b..000000000000
---- a/drivers/char/mbcs.c
-+++ /dev/null
-@@ -1,831 +0,0 @@
--/*
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file "COPYING" in the main directory of this archive
-- * for more details.
-- *
-- * Copyright (c) 2005 Silicon Graphics, Inc.  All rights reserved.
-- */
--
--/*
-- *	MOATB Core Services driver.
-- */
--
--#include <linux/interrupt.h>
--#include <linux/module.h>
--#include <linux/moduleparam.h>
 -#include <linux/types.h>
--#include <linux/ioport.h>
--#include <linux/kernel.h>
--#include <linux/notifier.h>
--#include <linux/reboot.h>
--#include <linux/init.h>
--#include <linux/fs.h>
+-#include <linux/pci.h>
 -#include <linux/delay.h>
--#include <linux/device.h>
--#include <linux/mm.h>
--#include <linux/uio.h>
--#include <linux/mutex.h>
--#include <linux/slab.h>
--#include <linux/pagemap.h>
--#include <asm/io.h>
--#include <linux/uaccess.h>
--#include <asm/pgtable.h>
--#include <asm/sn/addrs.h>
--#include <asm/sn/intr.h>
--#include <asm/sn/tiocx.h>
--#include "mbcs.h"
+-#include <linux/init.h>
+-#include <linux/kernel.h>
+-#include <linux/ioport.h>
+-#include <linux/blkdev.h>
+-#include <linux/scatterlist.h>
+-#include <linux/ioc4.h>
+-#include <linux/io.h>
+-#include <linux/ide.h>
 -
--#define MBCS_DEBUG 0
--#if MBCS_DEBUG
--#define DBG(fmt...)    printk(KERN_ALERT fmt)
--#else
--#define DBG(fmt...)
--#endif
--static DEFINE_MUTEX(mbcs_mutex);
--static int mbcs_major;
+-#define DRV_NAME "SGIIOC4"
 -
--static LIST_HEAD(soft_list);
+-/* IOC4 Specific Definitions */
+-#define IOC4_CMD_OFFSET		0x100
+-#define IOC4_CTRL_OFFSET	0x120
+-#define IOC4_DMA_OFFSET		0x140
+-#define IOC4_INTR_OFFSET	0x0
 -
--/*
-- * file operations
-- */
--static const struct file_operations mbcs_ops = {
--	.owner = THIS_MODULE,
--	.open = mbcs_open,
--	.llseek = mbcs_sram_llseek,
--	.read = mbcs_sram_read,
--	.write = mbcs_sram_write,
--	.mmap = mbcs_gscr_mmap,
+-#define IOC4_TIMING		0x00
+-#define IOC4_DMA_PTR_L		0x01
+-#define IOC4_DMA_PTR_H		0x02
+-#define IOC4_DMA_ADDR_L		0x03
+-#define IOC4_DMA_ADDR_H		0x04
+-#define IOC4_BC_DEV		0x05
+-#define IOC4_BC_MEM		0x06
+-#define	IOC4_DMA_CTRL		0x07
+-#define	IOC4_DMA_END_ADDR	0x08
+-
+-/* Bits in the IOC4 Control/Status Register */
+-#define	IOC4_S_DMA_START	0x01
+-#define	IOC4_S_DMA_STOP		0x02
+-#define	IOC4_S_DMA_DIR		0x04
+-#define	IOC4_S_DMA_ACTIVE	0x08
+-#define	IOC4_S_DMA_ERROR	0x10
+-#define	IOC4_ATA_MEMERR		0x02
+-
+-/* Read/Write Directions */
+-#define	IOC4_DMA_WRITE		0x04
+-#define	IOC4_DMA_READ		0x00
+-
+-/* Interrupt Register Offsets */
+-#define IOC4_INTR_REG		0x03
+-#define	IOC4_INTR_SET		0x05
+-#define	IOC4_INTR_CLEAR		0x07
+-
+-#define IOC4_IDE_CACHELINE_SIZE	128
+-#define IOC4_CMD_CTL_BLK_SIZE	0x20
+-#define IOC4_SUPPORTED_FIRMWARE_REV 46
+-
+-struct ioc4_dma_regs {
+-	u32 timing_reg0;
+-	u32 timing_reg1;
+-	u32 low_mem_ptr;
+-	u32 high_mem_ptr;
+-	u32 low_mem_addr;
+-	u32 high_mem_addr;
+-	u32 dev_byte_count;
+-	u32 mem_byte_count;
+-	u32 status;
 -};
 -
--struct mbcs_callback_arg {
--	int minor;
--	struct cx_dev *cx_dev;
--};
+-/* Each Physical Region Descriptor Entry size is 16 bytes (2 * 64 bits) */
+-/* IOC4 has only 1 IDE channel */
+-#define IOC4_PRD_BYTES		16
+-#define IOC4_PRD_ENTRIES	(PAGE_SIZE / (4 * IOC4_PRD_BYTES))
 -
--static inline void mbcs_getdma_init(struct getdma *gdma)
+-
+-static void sgiioc4_init_hwif_ports(struct ide_hw *hw,
+-				    unsigned long data_port,
+-				    unsigned long ctrl_port,
+-				    unsigned long irq_port)
 -{
--	memset(gdma, 0, sizeof(struct getdma));
--	gdma->DoneIntEnable = 1;
+-	unsigned long reg = data_port;
+-	int i;
+-
+-	/* Registers are word (32 bit) aligned */
+-	for (i = 0; i <= 7; i++)
+-		hw->io_ports_array[i] = reg + i * 4;
+-
+-	hw->io_ports.ctl_addr = ctrl_port;
+-	hw->io_ports.irq_addr = irq_port;
 -}
 -
--static inline void mbcs_putdma_init(struct putdma *pdma)
+-static int sgiioc4_checkirq(ide_hwif_t *hwif)
 -{
--	memset(pdma, 0, sizeof(struct putdma));
--	pdma->DoneIntEnable = 1;
--}
+-	unsigned long intr_addr = hwif->io_ports.irq_addr + IOC4_INTR_REG * 4;
 -
--static inline void mbcs_algo_init(struct algoblock *algo_soft)
--{
--	memset(algo_soft, 0, sizeof(struct algoblock));
--}
--
--static inline void mbcs_getdma_set(void *mmr,
--		       uint64_t hostAddr,
--		       uint64_t localAddr,
--		       uint64_t localRamSel,
--		       uint64_t numPkts,
--		       uint64_t amoEnable,
--		       uint64_t intrEnable,
--		       uint64_t peerIO,
--		       uint64_t amoHostDest,
--		       uint64_t amoModType, uint64_t intrHostDest,
--		       uint64_t intrVector)
--{
--	union dma_control rdma_control;
--	union dma_amo_dest amo_dest;
--	union intr_dest intr_dest;
--	union dma_localaddr local_addr;
--	union dma_hostaddr host_addr;
--
--	rdma_control.dma_control_reg = 0;
--	amo_dest.dma_amo_dest_reg = 0;
--	intr_dest.intr_dest_reg = 0;
--	local_addr.dma_localaddr_reg = 0;
--	host_addr.dma_hostaddr_reg = 0;
--
--	host_addr.dma_sys_addr = hostAddr;
--	MBCS_MMR_SET(mmr, MBCS_RD_DMA_SYS_ADDR, host_addr.dma_hostaddr_reg);
--
--	local_addr.dma_ram_addr = localAddr;
--	local_addr.dma_ram_sel = localRamSel;
--	MBCS_MMR_SET(mmr, MBCS_RD_DMA_LOC_ADDR, local_addr.dma_localaddr_reg);
--
--	rdma_control.dma_op_length = numPkts;
--	rdma_control.done_amo_en = amoEnable;
--	rdma_control.done_int_en = intrEnable;
--	rdma_control.pio_mem_n = peerIO;
--	MBCS_MMR_SET(mmr, MBCS_RD_DMA_CTRL, rdma_control.dma_control_reg);
--
--	amo_dest.dma_amo_sys_addr = amoHostDest;
--	amo_dest.dma_amo_mod_type = amoModType;
--	MBCS_MMR_SET(mmr, MBCS_RD_DMA_AMO_DEST, amo_dest.dma_amo_dest_reg);
--
--	intr_dest.address = intrHostDest;
--	intr_dest.int_vector = intrVector;
--	MBCS_MMR_SET(mmr, MBCS_RD_DMA_INT_DEST, intr_dest.intr_dest_reg);
--
--}
--
--static inline void mbcs_putdma_set(void *mmr,
--		       uint64_t hostAddr,
--		       uint64_t localAddr,
--		       uint64_t localRamSel,
--		       uint64_t numPkts,
--		       uint64_t amoEnable,
--		       uint64_t intrEnable,
--		       uint64_t peerIO,
--		       uint64_t amoHostDest,
--		       uint64_t amoModType,
--		       uint64_t intrHostDest, uint64_t intrVector)
--{
--	union dma_control wdma_control;
--	union dma_amo_dest amo_dest;
--	union intr_dest intr_dest;
--	union dma_localaddr local_addr;
--	union dma_hostaddr host_addr;
--
--	wdma_control.dma_control_reg = 0;
--	amo_dest.dma_amo_dest_reg = 0;
--	intr_dest.intr_dest_reg = 0;
--	local_addr.dma_localaddr_reg = 0;
--	host_addr.dma_hostaddr_reg = 0;
--
--	host_addr.dma_sys_addr = hostAddr;
--	MBCS_MMR_SET(mmr, MBCS_WR_DMA_SYS_ADDR, host_addr.dma_hostaddr_reg);
--
--	local_addr.dma_ram_addr = localAddr;
--	local_addr.dma_ram_sel = localRamSel;
--	MBCS_MMR_SET(mmr, MBCS_WR_DMA_LOC_ADDR, local_addr.dma_localaddr_reg);
--
--	wdma_control.dma_op_length = numPkts;
--	wdma_control.done_amo_en = amoEnable;
--	wdma_control.done_int_en = intrEnable;
--	wdma_control.pio_mem_n = peerIO;
--	MBCS_MMR_SET(mmr, MBCS_WR_DMA_CTRL, wdma_control.dma_control_reg);
--
--	amo_dest.dma_amo_sys_addr = amoHostDest;
--	amo_dest.dma_amo_mod_type = amoModType;
--	MBCS_MMR_SET(mmr, MBCS_WR_DMA_AMO_DEST, amo_dest.dma_amo_dest_reg);
--
--	intr_dest.address = intrHostDest;
--	intr_dest.int_vector = intrVector;
--	MBCS_MMR_SET(mmr, MBCS_WR_DMA_INT_DEST, intr_dest.intr_dest_reg);
--
--}
--
--static inline void mbcs_algo_set(void *mmr,
--		     uint64_t amoHostDest,
--		     uint64_t amoModType,
--		     uint64_t intrHostDest,
--		     uint64_t intrVector, uint64_t algoStepCount)
--{
--	union dma_amo_dest amo_dest;
--	union intr_dest intr_dest;
--	union algo_step step;
--
--	step.algo_step_reg = 0;
--	intr_dest.intr_dest_reg = 0;
--	amo_dest.dma_amo_dest_reg = 0;
--
--	amo_dest.dma_amo_sys_addr = amoHostDest;
--	amo_dest.dma_amo_mod_type = amoModType;
--	MBCS_MMR_SET(mmr, MBCS_ALG_AMO_DEST, amo_dest.dma_amo_dest_reg);
--
--	intr_dest.address = intrHostDest;
--	intr_dest.int_vector = intrVector;
--	MBCS_MMR_SET(mmr, MBCS_ALG_INT_DEST, intr_dest.intr_dest_reg);
--
--	step.alg_step_cnt = algoStepCount;
--	MBCS_MMR_SET(mmr, MBCS_ALG_STEP, step.algo_step_reg);
--}
--
--static inline int mbcs_getdma_start(struct mbcs_soft *soft)
--{
--	void *mmr_base;
--	struct getdma *gdma;
--	uint64_t numPkts;
--	union cm_control cm_control;
--
--	mmr_base = soft->mmr_base;
--	gdma = &soft->getdma;
--
--	/* check that host address got setup */
--	if (!gdma->hostAddr)
--		return -1;
--
--	numPkts =
--	    (gdma->bytes + (MBCS_CACHELINE_SIZE - 1)) / MBCS_CACHELINE_SIZE;
--
--	/* program engine */
--	mbcs_getdma_set(mmr_base, tiocx_dma_addr(gdma->hostAddr),
--		   gdma->localAddr,
--		   (gdma->localAddr < MB2) ? 0 :
--		   (gdma->localAddr < MB4) ? 1 :
--		   (gdma->localAddr < MB6) ? 2 : 3,
--		   numPkts,
--		   gdma->DoneAmoEnable,
--		   gdma->DoneIntEnable,
--		   gdma->peerIO,
--		   gdma->amoHostDest,
--		   gdma->amoModType,
--		   gdma->intrHostDest, gdma->intrVector);
--
--	/* start engine */
--	cm_control.cm_control_reg = MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
--	cm_control.rd_dma_go = 1;
--	MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL, cm_control.cm_control_reg);
--
--	return 0;
--
--}
--
--static inline int mbcs_putdma_start(struct mbcs_soft *soft)
--{
--	void *mmr_base;
--	struct putdma *pdma;
--	uint64_t numPkts;
--	union cm_control cm_control;
--
--	mmr_base = soft->mmr_base;
--	pdma = &soft->putdma;
--
--	/* check that host address got setup */
--	if (!pdma->hostAddr)
--		return -1;
--
--	numPkts =
--	    (pdma->bytes + (MBCS_CACHELINE_SIZE - 1)) / MBCS_CACHELINE_SIZE;
--
--	/* program engine */
--	mbcs_putdma_set(mmr_base, tiocx_dma_addr(pdma->hostAddr),
--		   pdma->localAddr,
--		   (pdma->localAddr < MB2) ? 0 :
--		   (pdma->localAddr < MB4) ? 1 :
--		   (pdma->localAddr < MB6) ? 2 : 3,
--		   numPkts,
--		   pdma->DoneAmoEnable,
--		   pdma->DoneIntEnable,
--		   pdma->peerIO,
--		   pdma->amoHostDest,
--		   pdma->amoModType,
--		   pdma->intrHostDest, pdma->intrVector);
--
--	/* start engine */
--	cm_control.cm_control_reg = MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
--	cm_control.wr_dma_go = 1;
--	MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL, cm_control.cm_control_reg);
--
--	return 0;
--
--}
--
--static inline int mbcs_algo_start(struct mbcs_soft *soft)
--{
--	struct algoblock *algo_soft = &soft->algo;
--	void *mmr_base = soft->mmr_base;
--	union cm_control cm_control;
--
--	if (mutex_lock_interruptible(&soft->algolock))
--		return -ERESTARTSYS;
--
--	atomic_set(&soft->algo_done, 0);
--
--	mbcs_algo_set(mmr_base,
--		 algo_soft->amoHostDest,
--		 algo_soft->amoModType,
--		 algo_soft->intrHostDest,
--		 algo_soft->intrVector, algo_soft->algoStepCount);
--
--	/* start algorithm */
--	cm_control.cm_control_reg = MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
--	cm_control.alg_done_int_en = 1;
--	cm_control.alg_go = 1;
--	MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL, cm_control.cm_control_reg);
--
--	mutex_unlock(&soft->algolock);
+-	if (readl((void __iomem *)intr_addr) & 0x03)
+-		return 1;
 -
 -	return 0;
 -}
 -
--static inline ssize_t
--do_mbcs_sram_dmawrite(struct mbcs_soft *soft, uint64_t hostAddr,
--		      size_t len, loff_t * off)
+-static u8 sgiioc4_read_status(ide_hwif_t *);
+-
+-static int sgiioc4_clearirq(ide_drive_t *drive)
 -{
--	int rv = 0;
+-	u32 intr_reg;
+-	ide_hwif_t *hwif = drive->hwif;
+-	struct ide_io_ports *io_ports = &hwif->io_ports;
+-	unsigned long other_ir = io_ports->irq_addr + (IOC4_INTR_REG << 2);
 -
--	if (mutex_lock_interruptible(&soft->dmawritelock))
--		return -ERESTARTSYS;
+-	/* Code to check for PCI error conditions */
+-	intr_reg = readl((void __iomem *)other_ir);
+-	if (intr_reg & 0x03) { /* Valid IOC4-IDE interrupt */
+-		/*
+-		 * Using sgiioc4_read_status to read the Status register has a
+-		 * side effect of clearing the interrupt.  The first read should
+-		 * clear it if it is set.  The second read should return
+-		 * a "clear" status if it got cleared.  If not, then spin
+-		 * for a bit trying to clear it.
+-		 */
+-		u8 stat = sgiioc4_read_status(hwif);
+-		int count = 0;
 -
--	atomic_set(&soft->dmawrite_done, 0);
+-		stat = sgiioc4_read_status(hwif);
+-		while ((stat & ATA_BUSY) && (count++ < 100)) {
+-			udelay(1);
+-			stat = sgiioc4_read_status(hwif);
+-		}
 -
--	soft->putdma.hostAddr = hostAddr;
--	soft->putdma.localAddr = *off;
--	soft->putdma.bytes = len;
+-		if (intr_reg & 0x02) {
+-			struct pci_dev *dev = to_pci_dev(hwif->dev);
+-			/* Error when transferring DMA data on PCI bus */
+-			u32 pci_err_addr_low, pci_err_addr_high,
+-			    pci_stat_cmd_reg;
 -
--	if (mbcs_putdma_start(soft) < 0) {
--		DBG(KERN_ALERT "do_mbcs_sram_dmawrite: "
--					"mbcs_putdma_start failed\n");
--		rv = -EAGAIN;
--		goto dmawrite_exit;
+-			pci_err_addr_low =
+-				readl((void __iomem *)io_ports->irq_addr);
+-			pci_err_addr_high =
+-				readl((void __iomem *)(io_ports->irq_addr + 4));
+-			pci_read_config_dword(dev, PCI_COMMAND,
+-					      &pci_stat_cmd_reg);
+-			printk(KERN_ERR "%s(%s): PCI Bus Error when doing DMA: "
+-			       "status-cmd reg is 0x%x\n",
+-			       __func__, drive->name, pci_stat_cmd_reg);
+-			printk(KERN_ERR "%s(%s): PCI Error Address is 0x%x%x\n",
+-			       __func__, drive->name,
+-			       pci_err_addr_high, pci_err_addr_low);
+-			/* Clear the PCI Error indicator */
+-			pci_write_config_dword(dev, PCI_COMMAND, 0x00000146);
+-		}
+-
+-		/* Clear the Interrupt, Error bits on the IOC4 */
+-		writel(0x03, (void __iomem *)other_ir);
+-
+-		intr_reg = readl((void __iomem *)other_ir);
 -	}
 -
--	if (wait_event_interruptible(soft->dmawrite_queue,
--					atomic_read(&soft->dmawrite_done))) {
--		rv = -ERESTARTSYS;
--		goto dmawrite_exit;
--	}
--
--	rv = len;
--	*off += len;
--
--dmawrite_exit:
--	mutex_unlock(&soft->dmawritelock);
--
--	return rv;
+-	return intr_reg & 3;
 -}
 -
--static inline ssize_t
--do_mbcs_sram_dmaread(struct mbcs_soft *soft, uint64_t hostAddr,
--		     size_t len, loff_t * off)
+-static void sgiioc4_dma_start(ide_drive_t *drive)
 -{
--	int rv = 0;
+-	ide_hwif_t *hwif = drive->hwif;
+-	unsigned long ioc4_dma_addr = hwif->dma_base + IOC4_DMA_CTRL * 4;
+-	unsigned int reg = readl((void __iomem *)ioc4_dma_addr);
+-	unsigned int temp_reg = reg | IOC4_S_DMA_START;
 -
--	if (mutex_lock_interruptible(&soft->dmareadlock))
--		return -ERESTARTSYS;
--
--	atomic_set(&soft->dmawrite_done, 0);
--
--	soft->getdma.hostAddr = hostAddr;
--	soft->getdma.localAddr = *off;
--	soft->getdma.bytes = len;
--
--	if (mbcs_getdma_start(soft) < 0) {
--		DBG(KERN_ALERT "mbcs_strategy: mbcs_getdma_start failed\n");
--		rv = -EAGAIN;
--		goto dmaread_exit;
--	}
--
--	if (wait_event_interruptible(soft->dmaread_queue,
--					atomic_read(&soft->dmaread_done))) {
--		rv = -ERESTARTSYS;
--		goto dmaread_exit;
--	}
--
--	rv = len;
--	*off += len;
--
--dmaread_exit:
--	mutex_unlock(&soft->dmareadlock);
--
--	return rv;
+-	writel(temp_reg, (void __iomem *)ioc4_dma_addr);
 -}
 -
--static int mbcs_open(struct inode *ip, struct file *fp)
+-static u32 sgiioc4_ide_dma_stop(ide_hwif_t *hwif, u64 dma_base)
 -{
--	struct mbcs_soft *soft;
--	int minor;
+-	unsigned long ioc4_dma_addr = dma_base + IOC4_DMA_CTRL * 4;
+-	u32	ioc4_dma;
+-	int	count;
 -
--	mutex_lock(&mbcs_mutex);
--	minor = iminor(ip);
+-	count = 0;
+-	ioc4_dma = readl((void __iomem *)ioc4_dma_addr);
+-	while ((ioc4_dma & IOC4_S_DMA_STOP) && (count++ < 200)) {
+-		udelay(1);
+-		ioc4_dma = readl((void __iomem *)ioc4_dma_addr);
+-	}
+-	return ioc4_dma;
+-}
 -
--	/* Nothing protects access to this list... */
--	list_for_each_entry(soft, &soft_list, list) {
--		if (soft->nasid == minor) {
--			fp->private_data = soft->cxdev;
--			mutex_unlock(&mbcs_mutex);
--			return 0;
+-/* Stops the IOC4 DMA Engine */
+-static int sgiioc4_dma_end(ide_drive_t *drive)
+-{
+-	u32 ioc4_dma, bc_dev, bc_mem, num, valid = 0, cnt = 0;
+-	ide_hwif_t *hwif = drive->hwif;
+-	unsigned long dma_base = hwif->dma_base;
+-	int dma_stat = 0;
+-	unsigned long *ending_dma = ide_get_hwifdata(hwif);
+-
+-	writel(IOC4_S_DMA_STOP, (void __iomem *)(dma_base + IOC4_DMA_CTRL * 4));
+-
+-	ioc4_dma = sgiioc4_ide_dma_stop(hwif, dma_base);
+-
+-	if (ioc4_dma & IOC4_S_DMA_STOP) {
+-		printk(KERN_ERR
+-		       "%s(%s): IOC4 DMA STOP bit is still 1 :"
+-		       "ioc4_dma_reg 0x%x\n",
+-		       __func__, drive->name, ioc4_dma);
+-		dma_stat = 1;
+-	}
+-
+-	/*
+-	 * The IOC4 will DMA 1's to the ending DMA area to indicate that
+-	 * previous data DMA is complete.  This is necessary because of relaxed
+-	 * ordering between register reads and DMA writes on the Altix.
+-	 */
+-	while ((cnt++ < 200) && (!valid)) {
+-		for (num = 0; num < 16; num++) {
+-			if (ending_dma[num]) {
+-				valid = 1;
+-				break;
+-			}
+-		}
+-		udelay(1);
+-	}
+-	if (!valid) {
+-		printk(KERN_ERR "%s(%s) : DMA incomplete\n", __func__,
+-		       drive->name);
+-		dma_stat = 1;
+-	}
+-
+-	bc_dev = readl((void __iomem *)(dma_base + IOC4_BC_DEV * 4));
+-	bc_mem = readl((void __iomem *)(dma_base + IOC4_BC_MEM * 4));
+-
+-	if ((bc_dev & 0x01FF) || (bc_mem & 0x1FF)) {
+-		if (bc_dev > bc_mem + 8) {
+-			printk(KERN_ERR
+-			       "%s(%s): WARNING!! byte_count_dev %d "
+-			       "!= byte_count_mem %d\n",
+-			       __func__, drive->name, bc_dev, bc_mem);
 -		}
 -	}
 -
--	mutex_unlock(&mbcs_mutex);
--	return -ENODEV;
+-	return dma_stat;
 -}
 -
--static ssize_t mbcs_sram_read(struct file * fp, char __user *buf, size_t len, loff_t * off)
+-static void sgiioc4_set_dma_mode(ide_hwif_t *hwif, ide_drive_t *drive)
 -{
--	struct cx_dev *cx_dev = fp->private_data;
--	struct mbcs_soft *soft = cx_dev->soft;
--	uint64_t hostAddr;
--	int rv = 0;
+-}
 -
--	hostAddr = __get_dma_pages(GFP_KERNEL, get_order(len));
--	if (hostAddr == 0)
+-/* Returns 1 if DMA IRQ issued, 0 otherwise */
+-static int sgiioc4_dma_test_irq(ide_drive_t *drive)
+-{
+-	return sgiioc4_checkirq(drive->hwif);
+-}
+-
+-static void sgiioc4_dma_host_set(ide_drive_t *drive, int on)
+-{
+-	if (!on)
+-		sgiioc4_clearirq(drive);
+-}
+-
+-static void sgiioc4_resetproc(ide_drive_t *drive)
+-{
+-	struct ide_cmd *cmd = &drive->hwif->cmd;
+-
+-	sgiioc4_dma_end(drive);
+-	ide_dma_unmap_sg(drive, cmd);
+-	sgiioc4_clearirq(drive);
+-}
+-
+-static void sgiioc4_dma_lost_irq(ide_drive_t *drive)
+-{
+-	sgiioc4_resetproc(drive);
+-
+-	ide_dma_lost_irq(drive);
+-}
+-
+-static u8 sgiioc4_read_status(ide_hwif_t *hwif)
+-{
+-	unsigned long port = hwif->io_ports.status_addr;
+-	u8 reg = (u8) readb((void __iomem *) port);
+-
+-	if (!(reg & ATA_BUSY)) {	/* Not busy... check for interrupt */
+-		unsigned long other_ir = port - 0x110;
+-		unsigned int intr_reg = (u32) readl((void __iomem *) other_ir);
+-
+-		/* Clear the Interrupt, Error bits on the IOC4 */
+-		if (intr_reg & 0x03) {
+-			writel(0x03, (void __iomem *) other_ir);
+-			intr_reg = (u32) readl((void __iomem *) other_ir);
+-		}
+-	}
+-
+-	return reg;
+-}
+-
+-/* Creates a DMA map for the scatter-gather list entries */
+-static int ide_dma_sgiioc4(ide_hwif_t *hwif, const struct ide_port_info *d)
+-{
+-	struct pci_dev *dev = to_pci_dev(hwif->dev);
+-	unsigned long dma_base = pci_resource_start(dev, 0) + IOC4_DMA_OFFSET;
+-	int num_ports = sizeof(struct ioc4_dma_regs);
+-	void *pad;
+-
+-	printk(KERN_INFO "    %s: MMIO-DMA\n", hwif->name);
+-
+-	if (request_mem_region(dma_base, num_ports, hwif->name) == NULL) {
+-		printk(KERN_ERR "%s(%s) -- ERROR: addresses 0x%08lx to 0x%08lx "
+-		       "already in use\n", __func__, hwif->name,
+-		       dma_base, dma_base + num_ports - 1);
+-		return -1;
+-	}
+-
+-	hwif->dma_base = (unsigned long)hwif->io_ports.irq_addr +
+-			 IOC4_DMA_OFFSET;
+-
+-	hwif->sg_max_nents = IOC4_PRD_ENTRIES;
+-
+-	hwif->prd_max_nents = IOC4_PRD_ENTRIES;
+-	hwif->prd_ent_size = IOC4_PRD_BYTES;
+-
+-	if (ide_allocate_dma_engine(hwif))
+-		goto dma_pci_alloc_failure;
+-
+-	pad = dma_alloc_coherent(&dev->dev, IOC4_IDE_CACHELINE_SIZE,
+-				   (dma_addr_t *)&hwif->extra_base, GFP_KERNEL);
+-	if (pad) {
+-		ide_set_hwifdata(hwif, pad);
+-		return 0;
+-	}
+-
+-	ide_release_dma_engine(hwif);
+-
+-	printk(KERN_ERR "%s(%s) -- ERROR: Unable to allocate DMA maps\n",
+-	       __func__, hwif->name);
+-	printk(KERN_INFO "%s: changing from DMA to PIO mode", hwif->name);
+-
+-dma_pci_alloc_failure:
+-	release_mem_region(dma_base, num_ports);
+-
+-	return -1;
+-}
+-
+-/* Initializes the IOC4 DMA Engine */
+-static void sgiioc4_configure_for_dma(int dma_direction, ide_drive_t *drive)
+-{
+-	u32 ioc4_dma;
+-	ide_hwif_t *hwif = drive->hwif;
+-	unsigned long dma_base = hwif->dma_base;
+-	unsigned long ioc4_dma_addr = dma_base + IOC4_DMA_CTRL * 4;
+-	u32 dma_addr, ending_dma_addr;
+-
+-	ioc4_dma = readl((void __iomem *)ioc4_dma_addr);
+-
+-	if (ioc4_dma & IOC4_S_DMA_ACTIVE) {
+-		printk(KERN_WARNING "%s(%s): Warning!! DMA from previous "
+-		       "transfer was still active\n", __func__, drive->name);
+-		writel(IOC4_S_DMA_STOP, (void __iomem *)ioc4_dma_addr);
+-		ioc4_dma = sgiioc4_ide_dma_stop(hwif, dma_base);
+-
+-		if (ioc4_dma & IOC4_S_DMA_STOP)
+-			printk(KERN_ERR "%s(%s): IOC4 DMA STOP bit is "
+-			       "still 1\n", __func__, drive->name);
+-	}
+-
+-	ioc4_dma = readl((void __iomem *)ioc4_dma_addr);
+-	if (ioc4_dma & IOC4_S_DMA_ERROR) {
+-		printk(KERN_WARNING "%s(%s): Warning!! DMA Error during "
+-		       "previous transfer, status 0x%x\n",
+-		       __func__, drive->name, ioc4_dma);
+-		writel(IOC4_S_DMA_STOP, (void __iomem *)ioc4_dma_addr);
+-		ioc4_dma = sgiioc4_ide_dma_stop(hwif, dma_base);
+-
+-		if (ioc4_dma & IOC4_S_DMA_STOP)
+-			printk(KERN_ERR "%s(%s): IOC4 DMA STOP bit is "
+-			       "still 1\n", __func__, drive->name);
+-	}
+-
+-	/* Address of the Scatter Gather List */
+-	dma_addr = cpu_to_le32(hwif->dmatable_dma);
+-	writel(dma_addr, (void __iomem *)(dma_base + IOC4_DMA_PTR_L * 4));
+-
+-	/* Address of the Ending DMA */
+-	memset(ide_get_hwifdata(hwif), 0, IOC4_IDE_CACHELINE_SIZE);
+-	ending_dma_addr = cpu_to_le32(hwif->extra_base);
+-	writel(ending_dma_addr, (void __iomem *)(dma_base +
+-						 IOC4_DMA_END_ADDR * 4));
+-
+-	writel(dma_direction, (void __iomem *)ioc4_dma_addr);
+-}
+-
+-/* IOC4 Scatter Gather list Format					 */
+-/* 128 Bit entries to support 64 bit addresses in the future		 */
+-/* The Scatter Gather list Entry should be in the BIG-ENDIAN Format	 */
+-/* --------------------------------------------------------------------- */
+-/* | Upper 32 bits - Zero	    |		Lower 32 bits- address | */
+-/* --------------------------------------------------------------------- */
+-/* | Upper 32 bits - Zero	    |EOL| 15 unused     | 16 Bit Length| */
+-/* --------------------------------------------------------------------- */
+-/* Creates the scatter gather list, DMA Table				 */
+-
+-static int sgiioc4_build_dmatable(ide_drive_t *drive, struct ide_cmd *cmd)
+-{
+-	ide_hwif_t *hwif = drive->hwif;
+-	unsigned int *table = hwif->dmatable_cpu;
+-	unsigned int count = 0, i = cmd->sg_nents;
+-	struct scatterlist *sg = hwif->sg_table;
+-
+-	while (i && sg_dma_len(sg)) {
+-		dma_addr_t cur_addr;
+-		int cur_len;
+-		cur_addr = sg_dma_address(sg);
+-		cur_len = sg_dma_len(sg);
+-
+-		while (cur_len) {
+-			if (count++ >= IOC4_PRD_ENTRIES) {
+-				printk(KERN_WARNING
+-				       "%s: DMA table too small\n",
+-				       drive->name);
+-				return 0;
+-			} else {
+-				u32 bcount =
+-				    0x10000 - (cur_addr & 0xffff);
+-
+-				if (bcount > cur_len)
+-					bcount = cur_len;
+-
+-				/*
+-				 * Put the address, length in
+-				 * the IOC4 dma-table format
+-				 */
+-				*table = 0x0;
+-				table++;
+-				*table = cpu_to_be32(cur_addr);
+-				table++;
+-				*table = 0x0;
+-				table++;
+-
+-				*table = cpu_to_be32(bcount);
+-				table++;
+-
+-				cur_addr += bcount;
+-				cur_len -= bcount;
+-			}
+-		}
+-
+-		sg = sg_next(sg);
+-		i--;
+-	}
+-
+-	if (count) {
+-		table--;
+-		*table |= cpu_to_be32(0x80000000);
+-		return count;
+-	}
+-
+-	return 0;		/* revert to PIO for this request */
+-}
+-
+-static int sgiioc4_dma_setup(ide_drive_t *drive, struct ide_cmd *cmd)
+-{
+-	int ddir;
+-	u8 write = !!(cmd->tf_flags & IDE_TFLAG_WRITE);
+-
+-	if (sgiioc4_build_dmatable(drive, cmd) == 0)
+-		/* try PIO instead of DMA */
+-		return 1;
+-
+-	if (write)
+-		/* Writes TO the IOC4 FROM Main Memory */
+-		ddir = IOC4_DMA_READ;
+-	else
+-		/* Writes FROM the IOC4 TO Main Memory */
+-		ddir = IOC4_DMA_WRITE;
+-
+-	sgiioc4_configure_for_dma(ddir, drive);
+-
+-	return 0;
+-}
+-
+-static const struct ide_tp_ops sgiioc4_tp_ops = {
+-	.exec_command		= ide_exec_command,
+-	.read_status		= sgiioc4_read_status,
+-	.read_altstatus		= ide_read_altstatus,
+-	.write_devctl		= ide_write_devctl,
+-
+-	.dev_select		= ide_dev_select,
+-	.tf_load		= ide_tf_load,
+-	.tf_read		= ide_tf_read,
+-
+-	.input_data		= ide_input_data,
+-	.output_data		= ide_output_data,
+-};
+-
+-static const struct ide_port_ops sgiioc4_port_ops = {
+-	.set_dma_mode		= sgiioc4_set_dma_mode,
+-	/* reset DMA engine, clear IRQs */
+-	.resetproc		= sgiioc4_resetproc,
+-};
+-
+-static const struct ide_dma_ops sgiioc4_dma_ops = {
+-	.dma_host_set		= sgiioc4_dma_host_set,
+-	.dma_setup		= sgiioc4_dma_setup,
+-	.dma_start		= sgiioc4_dma_start,
+-	.dma_end		= sgiioc4_dma_end,
+-	.dma_test_irq		= sgiioc4_dma_test_irq,
+-	.dma_lost_irq		= sgiioc4_dma_lost_irq,
+-};
+-
+-static const struct ide_port_info sgiioc4_port_info = {
+-	.name			= DRV_NAME,
+-	.chipset		= ide_pci,
+-	.init_dma		= ide_dma_sgiioc4,
+-	.tp_ops			= &sgiioc4_tp_ops,
+-	.port_ops		= &sgiioc4_port_ops,
+-	.dma_ops		= &sgiioc4_dma_ops,
+-	.host_flags		= IDE_HFLAG_MMIO,
+-	.irq_flags		= IRQF_SHARED,
+-	.mwdma_mask		= ATA_MWDMA2_ONLY,
+-};
+-
+-static int sgiioc4_ide_setup_pci_device(struct pci_dev *dev)
+-{
+-	unsigned long cmd_base, irqport;
+-	unsigned long bar0, cmd_phys_base, ctl;
+-	void __iomem *virt_base;
+-	struct ide_hw hw, *hws[] = { &hw };
+-	int rc;
+-
+-	/* Get the CmdBlk and CtrlBlk base registers */
+-	bar0 = pci_resource_start(dev, 0);
+-	virt_base = pci_ioremap_bar(dev, 0);
+-	if (virt_base == NULL) {
+-		printk(KERN_ERR "%s: Unable to remap BAR 0 address: 0x%lx\n",
+-				DRV_NAME, bar0);
 -		return -ENOMEM;
+-	}
+-	cmd_base = (unsigned long)virt_base + IOC4_CMD_OFFSET;
+-	ctl = (unsigned long)virt_base + IOC4_CTRL_OFFSET;
+-	irqport = (unsigned long)virt_base + IOC4_INTR_OFFSET;
 -
--	rv = do_mbcs_sram_dmawrite(soft, hostAddr, len, off);
--	if (rv < 0)
--		goto exit;
--
--	if (copy_to_user(buf, (void *)hostAddr, len))
--		rv = -EFAULT;
--
--      exit:
--	free_pages(hostAddr, get_order(len));
--
--	return rv;
--}
--
--static ssize_t
--mbcs_sram_write(struct file * fp, const char __user *buf, size_t len, loff_t * off)
--{
--	struct cx_dev *cx_dev = fp->private_data;
--	struct mbcs_soft *soft = cx_dev->soft;
--	uint64_t hostAddr;
--	int rv = 0;
--
--	hostAddr = __get_dma_pages(GFP_KERNEL, get_order(len));
--	if (hostAddr == 0)
--		return -ENOMEM;
--
--	if (copy_from_user((void *)hostAddr, buf, len)) {
--		rv = -EFAULT;
--		goto exit;
+-	cmd_phys_base = bar0 + IOC4_CMD_OFFSET;
+-	if (request_mem_region(cmd_phys_base, IOC4_CMD_CTL_BLK_SIZE,
+-			       DRV_NAME) == NULL) {
+-		printk(KERN_ERR "%s %s -- ERROR: addresses 0x%08lx to 0x%08lx "
+-		       "already in use\n", DRV_NAME, pci_name(dev),
+-		       cmd_phys_base, cmd_phys_base + IOC4_CMD_CTL_BLK_SIZE);
+-		rc = -EBUSY;
+-		goto req_mem_rgn_err;
 -	}
 -
--	rv = do_mbcs_sram_dmaread(soft, hostAddr, len, off);
+-	/* Initialize the IO registers */
+-	memset(&hw, 0, sizeof(hw));
+-	sgiioc4_init_hwif_ports(&hw, cmd_base, ctl, irqport);
+-	hw.irq = dev->irq;
+-	hw.dev = &dev->dev;
 -
--      exit:
--	free_pages(hostAddr, get_order(len));
+-	/* Initialize chipset IRQ registers */
+-	writel(0x03, (void __iomem *)(irqport + IOC4_INTR_SET * 4));
 -
--	return rv;
--}
--
--static loff_t mbcs_sram_llseek(struct file * filp, loff_t off, int whence)
--{
--	return generic_file_llseek_size(filp, off, whence, MAX_LFS_FILESIZE,
--					MBCS_SRAM_SIZE);
--}
--
--static uint64_t mbcs_pioaddr(struct mbcs_soft *soft, uint64_t offset)
--{
--	uint64_t mmr_base;
--
--	mmr_base = (uint64_t) (soft->mmr_base + offset);
--
--	return mmr_base;
--}
--
--static void mbcs_debug_pioaddr_set(struct mbcs_soft *soft)
--{
--	soft->debug_addr = mbcs_pioaddr(soft, MBCS_DEBUG_START);
--}
--
--static void mbcs_gscr_pioaddr_set(struct mbcs_soft *soft)
--{
--	soft->gscr_addr = mbcs_pioaddr(soft, MBCS_GSCR_START);
--}
--
--static int mbcs_gscr_mmap(struct file *fp, struct vm_area_struct *vma)
--{
--	struct cx_dev *cx_dev = fp->private_data;
--	struct mbcs_soft *soft = cx_dev->soft;
--
--	if (vma->vm_pgoff != 0)
--		return -EINVAL;
--
--	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
--
--	/* Remap-pfn-range will mark the range VM_IO */
--	if (remap_pfn_range(vma,
--			    vma->vm_start,
--			    __pa(soft->gscr_addr) >> PAGE_SHIFT,
--			    PAGE_SIZE,
--			    vma->vm_page_prot))
--		return -EAGAIN;
--
--	return 0;
--}
--
--/**
-- * mbcs_completion_intr_handler - Primary completion handler.
-- * @irq: irq
-- * @arg: soft struct for device
-- *
-- */
--static irqreturn_t
--mbcs_completion_intr_handler(int irq, void *arg)
--{
--	struct mbcs_soft *soft = (struct mbcs_soft *)arg;
--	void *mmr_base;
--	union cm_status cm_status;
--	union cm_control cm_control;
--
--	mmr_base = soft->mmr_base;
--	cm_status.cm_status_reg = MBCS_MMR_GET(mmr_base, MBCS_CM_STATUS);
--
--	if (cm_status.rd_dma_done) {
--		/* stop dma-read engine, clear status */
--		cm_control.cm_control_reg =
--		    MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
--		cm_control.rd_dma_clr = 1;
--		MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL,
--			     cm_control.cm_control_reg);
--		atomic_set(&soft->dmaread_done, 1);
--		wake_up(&soft->dmaread_queue);
--	}
--	if (cm_status.wr_dma_done) {
--		/* stop dma-write engine, clear status */
--		cm_control.cm_control_reg =
--		    MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
--		cm_control.wr_dma_clr = 1;
--		MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL,
--			     cm_control.cm_control_reg);
--		atomic_set(&soft->dmawrite_done, 1);
--		wake_up(&soft->dmawrite_queue);
--	}
--	if (cm_status.alg_done) {
--		/* clear status */
--		cm_control.cm_control_reg =
--		    MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
--		cm_control.alg_done_clr = 1;
--		MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL,
--			     cm_control.cm_control_reg);
--		atomic_set(&soft->algo_done, 1);
--		wake_up(&soft->algo_queue);
--	}
--
--	return IRQ_HANDLED;
--}
--
--/**
-- * mbcs_intr_alloc - Allocate interrupts.
-- * @dev: device pointer
-- *
-- */
--static int mbcs_intr_alloc(struct cx_dev *dev)
--{
--	struct sn_irq_info *sn_irq;
--	struct mbcs_soft *soft;
--	struct getdma *getdma;
--	struct putdma *putdma;
--	struct algoblock *algo;
--
--	soft = dev->soft;
--	getdma = &soft->getdma;
--	putdma = &soft->putdma;
--	algo = &soft->algo;
--
--	soft->get_sn_irq = NULL;
--	soft->put_sn_irq = NULL;
--	soft->algo_sn_irq = NULL;
--
--	sn_irq = tiocx_irq_alloc(dev->cx_id.nasid, TIOCX_CORELET, -1, -1, -1);
--	if (sn_irq == NULL)
--		return -EAGAIN;
--	soft->get_sn_irq = sn_irq;
--	getdma->intrHostDest = sn_irq->irq_xtalkaddr;
--	getdma->intrVector = sn_irq->irq_irq;
--	if (request_irq(sn_irq->irq_irq,
--			(void *)mbcs_completion_intr_handler, IRQF_SHARED,
--			"MBCS get intr", (void *)soft)) {
--		tiocx_irq_free(soft->get_sn_irq);
--		return -EAGAIN;
--	}
--
--	sn_irq = tiocx_irq_alloc(dev->cx_id.nasid, TIOCX_CORELET, -1, -1, -1);
--	if (sn_irq == NULL) {
--		free_irq(soft->get_sn_irq->irq_irq, soft);
--		tiocx_irq_free(soft->get_sn_irq);
--		return -EAGAIN;
--	}
--	soft->put_sn_irq = sn_irq;
--	putdma->intrHostDest = sn_irq->irq_xtalkaddr;
--	putdma->intrVector = sn_irq->irq_irq;
--	if (request_irq(sn_irq->irq_irq,
--			(void *)mbcs_completion_intr_handler, IRQF_SHARED,
--			"MBCS put intr", (void *)soft)) {
--		tiocx_irq_free(soft->put_sn_irq);
--		free_irq(soft->get_sn_irq->irq_irq, soft);
--		tiocx_irq_free(soft->get_sn_irq);
--		return -EAGAIN;
--	}
--
--	sn_irq = tiocx_irq_alloc(dev->cx_id.nasid, TIOCX_CORELET, -1, -1, -1);
--	if (sn_irq == NULL) {
--		free_irq(soft->put_sn_irq->irq_irq, soft);
--		tiocx_irq_free(soft->put_sn_irq);
--		free_irq(soft->get_sn_irq->irq_irq, soft);
--		tiocx_irq_free(soft->get_sn_irq);
--		return -EAGAIN;
--	}
--	soft->algo_sn_irq = sn_irq;
--	algo->intrHostDest = sn_irq->irq_xtalkaddr;
--	algo->intrVector = sn_irq->irq_irq;
--	if (request_irq(sn_irq->irq_irq,
--			(void *)mbcs_completion_intr_handler, IRQF_SHARED,
--			"MBCS algo intr", (void *)soft)) {
--		tiocx_irq_free(soft->algo_sn_irq);
--		free_irq(soft->put_sn_irq->irq_irq, soft);
--		tiocx_irq_free(soft->put_sn_irq);
--		free_irq(soft->get_sn_irq->irq_irq, soft);
--		tiocx_irq_free(soft->get_sn_irq);
--		return -EAGAIN;
--	}
--
--	return 0;
--}
--
--/**
-- * mbcs_intr_dealloc - Remove interrupts.
-- * @dev: device pointer
-- *
-- */
--static void mbcs_intr_dealloc(struct cx_dev *dev)
--{
--	struct mbcs_soft *soft;
--
--	soft = dev->soft;
--
--	free_irq(soft->get_sn_irq->irq_irq, soft);
--	tiocx_irq_free(soft->get_sn_irq);
--	free_irq(soft->put_sn_irq->irq_irq, soft);
--	tiocx_irq_free(soft->put_sn_irq);
--	free_irq(soft->algo_sn_irq->irq_irq, soft);
--	tiocx_irq_free(soft->algo_sn_irq);
--}
--
--static inline int mbcs_hw_init(struct mbcs_soft *soft)
--{
--	void *mmr_base = soft->mmr_base;
--	union cm_control cm_control;
--	union cm_req_timeout cm_req_timeout;
--	uint64_t err_stat;
--
--	cm_req_timeout.cm_req_timeout_reg =
--	    MBCS_MMR_GET(mmr_base, MBCS_CM_REQ_TOUT);
--
--	cm_req_timeout.time_out = MBCS_CM_CONTROL_REQ_TOUT_MASK;
--	MBCS_MMR_SET(mmr_base, MBCS_CM_REQ_TOUT,
--		     cm_req_timeout.cm_req_timeout_reg);
--
--	mbcs_gscr_pioaddr_set(soft);
--	mbcs_debug_pioaddr_set(soft);
--
--	/* clear errors */
--	err_stat = MBCS_MMR_GET(mmr_base, MBCS_CM_ERR_STAT);
--	MBCS_MMR_SET(mmr_base, MBCS_CM_CLR_ERR_STAT, err_stat);
--	MBCS_MMR_ZERO(mmr_base, MBCS_CM_ERROR_DETAIL1);
--
--	/* enable interrupts */
--	/* turn off 2^23 (INT_EN_PIO_REQ_ADDR_INV) */
--	MBCS_MMR_SET(mmr_base, MBCS_CM_ERR_INT_EN, 0x3ffffff7e00ffUL);
--
--	/* arm status regs and clear engines */
--	cm_control.cm_control_reg = MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
--	cm_control.rearm_stat_regs = 1;
--	cm_control.alg_clr = 1;
--	cm_control.wr_dma_clr = 1;
--	cm_control.rd_dma_clr = 1;
--
--	MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL, cm_control.cm_control_reg);
--
--	return 0;
--}
--
--static ssize_t show_algo(struct device *dev, struct device_attribute *attr, char *buf)
--{
--	struct cx_dev *cx_dev = to_cx_dev(dev);
--	struct mbcs_soft *soft = cx_dev->soft;
--	uint64_t debug0;
--
--	/*
--	 * By convention, the first debug register contains the
--	 * algorithm number and revision.
--	 */
--	debug0 = *(uint64_t *) soft->debug_addr;
--
--	return sprintf(buf, "0x%x 0x%x\n",
--		       upper_32_bits(debug0), lower_32_bits(debug0));
--}
--
--static ssize_t store_algo(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
--{
--	int n;
--	struct cx_dev *cx_dev = to_cx_dev(dev);
--	struct mbcs_soft *soft = cx_dev->soft;
--
--	if (count <= 0)
+-	rc = ide_host_add(&sgiioc4_port_info, hws, 1, NULL);
+-	if (!rc)
 -		return 0;
 -
--	n = simple_strtoul(buf, NULL, 0);
--
--	if (n == 1) {
--		mbcs_algo_start(soft);
--		if (wait_event_interruptible(soft->algo_queue,
--					atomic_read(&soft->algo_done)))
--			return -ERESTARTSYS;
--	}
--
--	return count;
+-	release_mem_region(cmd_phys_base, IOC4_CMD_CTL_BLK_SIZE);
+-req_mem_rgn_err:
+-	iounmap(virt_base);
+-	return rc;
 -}
 -
--DEVICE_ATTR(algo, 0644, show_algo, store_algo);
--
--/**
-- * mbcs_probe - Initialize for device
-- * @dev: device pointer
-- * @device_id: id table pointer
-- *
-- */
--static int mbcs_probe(struct cx_dev *dev, const struct cx_device_id *id)
+-static unsigned int pci_init_sgiioc4(struct pci_dev *dev)
 -{
--	struct mbcs_soft *soft;
+-	int ret;
 -
--	dev->soft = NULL;
+-	printk(KERN_INFO "%s: IDE controller at PCI slot %s, revision %d\n",
+-			 DRV_NAME, pci_name(dev), dev->revision);
 -
--	soft = kzalloc(sizeof(struct mbcs_soft), GFP_KERNEL);
--	if (soft == NULL)
--		return -ENOMEM;
--
--	soft->nasid = dev->cx_id.nasid;
--	list_add(&soft->list, &soft_list);
--	soft->mmr_base = (void *)tiocx_swin_base(dev->cx_id.nasid);
--	dev->soft = soft;
--	soft->cxdev = dev;
--
--	init_waitqueue_head(&soft->dmawrite_queue);
--	init_waitqueue_head(&soft->dmaread_queue);
--	init_waitqueue_head(&soft->algo_queue);
--
--	mutex_init(&soft->dmawritelock);
--	mutex_init(&soft->dmareadlock);
--	mutex_init(&soft->algolock);
--
--	mbcs_getdma_init(&soft->getdma);
--	mbcs_putdma_init(&soft->putdma);
--	mbcs_algo_init(&soft->algo);
--
--	mbcs_hw_init(soft);
--
--	/* Allocate interrupts */
--	mbcs_intr_alloc(dev);
--
--	device_create_file(&dev->dev, &dev_attr_algo);
--
--	return 0;
--}
--
--static int mbcs_remove(struct cx_dev *dev)
--{
--	if (dev->soft) {
--		mbcs_intr_dealloc(dev);
--		kfree(dev->soft);
+-	if (dev->revision < IOC4_SUPPORTED_FIRMWARE_REV) {
+-		printk(KERN_ERR "Skipping %s IDE controller in slot %s: "
+-				"firmware is obsolete - please upgrade to "
+-				"revision46 or higher\n",
+-				DRV_NAME, pci_name(dev));
+-		ret = -EAGAIN;
+-		goto out;
 -	}
--
--	device_remove_file(&dev->dev, &dev_attr_algo);
--
--	return 0;
+-	ret = sgiioc4_ide_setup_pci_device(dev);
+-out:
+-	return ret;
 -}
 -
--static const struct cx_device_id mbcs_id_table[] = {
--	{
--	 .part_num = MBCS_PART_NUM,
--	 .mfg_num = MBCS_MFG_NUM,
--	 },
--	{
--	 .part_num = MBCS_PART_NUM_ALG0,
--	 .mfg_num = MBCS_MFG_NUM,
--	 },
--	{0, 0}
+-static int ioc4_ide_attach_one(struct ioc4_driver_data *idd)
+-{
+-	/*
+-	 * PCI-RT does not bring out IDE connection.
+-	 * Do not attach to this particular IOC4.
+-	 */
+-	if (idd->idd_variant == IOC4_VARIANT_PCI_RT)
+-		return 0;
+-
+-	return pci_init_sgiioc4(idd->idd_pdev);
+-}
+-
+-static struct ioc4_submodule ioc4_ide_submodule = {
+-	.is_name = "IOC4_ide",
+-	.is_owner = THIS_MODULE,
+-	.is_probe = ioc4_ide_attach_one,
 -};
 -
--MODULE_DEVICE_TABLE(cx, mbcs_id_table);
--
--static struct cx_drv mbcs_driver = {
--	.name = DEVICE_NAME,
--	.id_table = mbcs_id_table,
--	.probe = mbcs_probe,
--	.remove = mbcs_remove,
--};
--
--static void __exit mbcs_exit(void)
+-static int __init ioc4_ide_init(void)
 -{
--	unregister_chrdev(mbcs_major, DEVICE_NAME);
--	cx_driver_unregister(&mbcs_driver);
+-	return ioc4_register_submodule(&ioc4_ide_submodule);
 -}
 -
--static int __init mbcs_init(void)
--{
--	int rv;
+-late_initcall(ioc4_ide_init); /* Call only after IDE init is done */
 -
--	if (!ia64_platform_is("sn2"))
--		return -ENODEV;
--
--	// Put driver into chrdevs[].  Get major number.
--	rv = register_chrdev(mbcs_major, DEVICE_NAME, &mbcs_ops);
--	if (rv < 0) {
--		DBG(KERN_ALERT "mbcs_init: can't get major number. %d\n", rv);
--		return rv;
--	}
--	mbcs_major = rv;
--
--	return cx_driver_register(&mbcs_driver);
--}
--
--module_init(mbcs_init);
--module_exit(mbcs_exit);
--
--MODULE_AUTHOR("Bruce Losure <blosure@sgi.com>");
--MODULE_DESCRIPTION("Driver for MOATB Core Services");
+-MODULE_AUTHOR("Aniket Malatpure/Jeremy Higdon");
+-MODULE_DESCRIPTION("IDE PCI driver module for SGI IOC4 Base-IO Card");
 -MODULE_LICENSE("GPL");
-diff --git a/drivers/char/mbcs.h b/drivers/char/mbcs.h
-deleted file mode 100644
-index 1a36884c48b5..000000000000
---- a/drivers/char/mbcs.h
-+++ /dev/null
-@@ -1,553 +0,0 @@
--/*
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file "COPYING" in the main directory of this archive
-- * for more details.
-- *
-- * Copyright (c) 2005 Silicon Graphics, Inc.  All rights reserved.
-- */
--
--#ifndef __MBCS_H__
--#define __MBCS_H__
--
--/*
-- * General macros
-- */
--#define MB	(1024*1024)
--#define MB2	(2*MB)
--#define MB4	(4*MB)
--#define MB6	(6*MB)
--
--/*
-- * Offsets and masks
-- */
--#define MBCS_CM_ID		0x0000	/* Identification */
--#define MBCS_CM_STATUS		0x0008	/* Status */
--#define MBCS_CM_ERROR_DETAIL1	0x0010	/* Error Detail1 */
--#define MBCS_CM_ERROR_DETAIL2	0x0018	/* Error Detail2 */
--#define MBCS_CM_CONTROL		0x0020	/* Control */
--#define MBCS_CM_REQ_TOUT	0x0028	/* Request Time-out */
--#define MBCS_CM_ERR_INT_DEST	0x0038	/* Error Interrupt Destination */
--#define MBCS_CM_TARG_FL		0x0050	/* Target Flush */
--#define MBCS_CM_ERR_STAT	0x0060	/* Error Status */
--#define MBCS_CM_CLR_ERR_STAT	0x0068	/* Clear Error Status */
--#define MBCS_CM_ERR_INT_EN	0x0070	/* Error Interrupt Enable */
--#define MBCS_RD_DMA_SYS_ADDR	0x0100	/* Read DMA System Address */
--#define MBCS_RD_DMA_LOC_ADDR	0x0108	/* Read DMA Local Address */
--#define MBCS_RD_DMA_CTRL	0x0110	/* Read DMA Control */
--#define MBCS_RD_DMA_AMO_DEST	0x0118	/* Read DMA AMO Destination */
--#define MBCS_RD_DMA_INT_DEST	0x0120	/* Read DMA Interrupt Destination */
--#define MBCS_RD_DMA_AUX_STAT	0x0130	/* Read DMA Auxiliary Status */
--#define MBCS_WR_DMA_SYS_ADDR	0x0200	/* Write DMA System Address */
--#define MBCS_WR_DMA_LOC_ADDR	0x0208	/* Write DMA Local Address */
--#define MBCS_WR_DMA_CTRL	0x0210	/* Write DMA Control */
--#define MBCS_WR_DMA_AMO_DEST	0x0218	/* Write DMA AMO Destination */
--#define MBCS_WR_DMA_INT_DEST	0x0220	/* Write DMA Interrupt Destination */
--#define MBCS_WR_DMA_AUX_STAT	0x0230	/* Write DMA Auxiliary Status */
--#define MBCS_ALG_AMO_DEST	0x0300	/* Algorithm AMO Destination */
--#define MBCS_ALG_INT_DEST	0x0308	/* Algorithm Interrupt Destination */
--#define MBCS_ALG_OFFSETS	0x0310
--#define MBCS_ALG_STEP		0x0318	/* Algorithm Step */
--
--#define MBCS_GSCR_START		0x0000000
--#define MBCS_DEBUG_START	0x0100000
--#define MBCS_RAM0_START		0x0200000
--#define MBCS_RAM1_START		0x0400000
--#define MBCS_RAM2_START		0x0600000
--
--#define MBCS_CM_CONTROL_REQ_TOUT_MASK 0x0000000000ffffffUL
--//#define PIO_BASE_ADDR_BASE_OFFSET_MASK 0x00fffffffff00000UL
--
--#define MBCS_SRAM_SIZE		(1024*1024)
--#define MBCS_CACHELINE_SIZE	128
--
--/*
-- * MMR get's and put's
-- */
--#define MBCS_MMR_ADDR(mmr_base, offset)((uint64_t *)(mmr_base + offset))
--#define MBCS_MMR_SET(mmr_base, offset, value) {			\
--	uint64_t *mbcs_mmr_set_u64p, readback;				\
--	mbcs_mmr_set_u64p = (uint64_t *)(mmr_base + offset);	\
--	*mbcs_mmr_set_u64p = value;					\
--	readback = *mbcs_mmr_set_u64p; \
--}
--#define MBCS_MMR_GET(mmr_base, offset) *(uint64_t *)(mmr_base + offset)
--#define MBCS_MMR_ZERO(mmr_base, offset) MBCS_MMR_SET(mmr_base, offset, 0)
--
--/*
-- * MBCS mmr structures
-- */
--union cm_id {
--	uint64_t cm_id_reg;
--	struct {
--		uint64_t always_one:1,	// 0
--		 mfg_id:11,	// 11:1
--		 part_num:16,	// 27:12
--		 bitstream_rev:8,	// 35:28
--		:28;		// 63:36
--	};
--};
--
--union cm_status {
--	uint64_t cm_status_reg;
--	struct {
--		uint64_t pending_reads:8,	// 7:0
--		 pending_writes:8,	// 15:8
--		 ice_rsp_credits:8,	// 23:16
--		 ice_req_credits:8,	// 31:24
--		 cm_req_credits:8,	// 39:32
--		:1,		// 40
--		 rd_dma_in_progress:1,	// 41
--		 rd_dma_done:1,	// 42
--		:1,		// 43
--		 wr_dma_in_progress:1,	// 44
--		 wr_dma_done:1,	// 45
--		 alg_waiting:1,	// 46
--		 alg_pipe_running:1,	// 47
--		 alg_done:1,	// 48
--		:3,		// 51:49
--		 pending_int_reqs:8,	// 59:52
--		:3,		// 62:60
--		 alg_half_speed_sel:1;	// 63
--	};
--};
--
--union cm_error_detail1 {
--	uint64_t cm_error_detail1_reg;
--	struct {
--		uint64_t packet_type:4,	// 3:0
--		 source_id:2,	// 5:4
--		 data_size:2,	// 7:6
--		 tnum:8,	// 15:8
--		 byte_enable:8,	// 23:16
--		 gfx_cred:8,	// 31:24
--		 read_type:2,	// 33:32
--		 pio_or_memory:1,	// 34
--		 head_cw_error:1,	// 35
--		:12,		// 47:36
--		 head_error_bit:1,	// 48
--		 data_error_bit:1,	// 49
--		:13,		// 62:50
--		 valid:1;	// 63
--	};
--};
--
--union cm_error_detail2 {
--	uint64_t cm_error_detail2_reg;
--	struct {
--		uint64_t address:56,	// 55:0
--		:8;		// 63:56
--	};
--};
--
--union cm_control {
--	uint64_t cm_control_reg;
--	struct {
--		uint64_t cm_id:2,	// 1:0
--		:2,		// 3:2
--		 max_trans:5,	// 8:4
--		:3,		// 11:9
--		 address_mode:1,	// 12
--		:7,		// 19:13
--		 credit_limit:8,	// 27:20
--		:5,		// 32:28
--		 rearm_stat_regs:1,	// 33
--		 prescalar_byp:1,	// 34
--		 force_gap_war:1,	// 35
--		 rd_dma_go:1,	// 36
--		 wr_dma_go:1,	// 37
--		 alg_go:1,	// 38
--		 rd_dma_clr:1,	// 39
--		 wr_dma_clr:1,	// 40
--		 alg_clr:1,	// 41
--		:2,		// 43:42
--		 alg_wait_step:1,	// 44
--		 alg_done_amo_en:1,	// 45
--		 alg_done_int_en:1,	// 46
--		:1,		// 47
--		 alg_sram0_locked:1,	// 48
--		 alg_sram1_locked:1,	// 49
--		 alg_sram2_locked:1,	// 50
--		 alg_done_clr:1,	// 51
--		:12;		// 63:52
--	};
--};
--
--union cm_req_timeout {
--	uint64_t cm_req_timeout_reg;
--	struct {
--		uint64_t time_out:24,	// 23:0
--		:40;		// 63:24
--	};
--};
--
--union intr_dest {
--	uint64_t intr_dest_reg;
--	struct {
--		uint64_t address:56,	// 55:0
--		 int_vector:8;	// 63:56
--	};
--};
--
--union cm_error_status {
--	uint64_t cm_error_status_reg;
--	struct {
--		uint64_t ecc_sbe:1,	// 0
--		 ecc_mbe:1,	// 1
--		 unsupported_req:1,	// 2
--		 unexpected_rsp:1,	// 3
--		 bad_length:1,	// 4
--		 bad_datavalid:1,	// 5
--		 buffer_overflow:1,	// 6
--		 request_timeout:1,	// 7
--		:8,		// 15:8
--		 head_inv_data_size:1,	// 16
--		 rsp_pactype_inv:1,	// 17
--		 head_sb_err:1,	// 18
--		 missing_head:1,	// 19
--		 head_inv_rd_type:1,	// 20
--		 head_cmd_err_bit:1,	// 21
--		 req_addr_align_inv:1,	// 22
--		 pio_req_addr_inv:1,	// 23
--		 req_range_dsize_inv:1,	// 24
--		 early_term:1,	// 25
--		 early_tail:1,	// 26
--		 missing_tail:1,	// 27
--		 data_flit_sb_err:1,	// 28
--		 cm2hcm_req_cred_of:1,	// 29
--		 cm2hcm_rsp_cred_of:1,	// 30
--		 rx_bad_didn:1,	// 31
--		 rd_dma_err_rsp:1,	// 32
--		 rd_dma_tnum_tout:1,	// 33
--		 rd_dma_multi_tnum_tou:1,	// 34
--		 wr_dma_err_rsp:1,	// 35
--		 wr_dma_tnum_tout:1,	// 36
--		 wr_dma_multi_tnum_tou:1,	// 37
--		 alg_data_overflow:1,	// 38
--		 alg_data_underflow:1,	// 39
--		 ram0_access_conflict:1,	// 40
--		 ram1_access_conflict:1,	// 41
--		 ram2_access_conflict:1,	// 42
--		 ram0_perr:1,	// 43
--		 ram1_perr:1,	// 44
--		 ram2_perr:1,	// 45
--		 int_gen_rsp_err:1,	// 46
--		 int_gen_tnum_tout:1,	// 47
--		 rd_dma_prog_err:1,	// 48
--		 wr_dma_prog_err:1,	// 49
--		:14;		// 63:50
--	};
--};
--
--union cm_clr_error_status {
--	uint64_t cm_clr_error_status_reg;
--	struct {
--		uint64_t clr_ecc_sbe:1,	// 0
--		 clr_ecc_mbe:1,	// 1
--		 clr_unsupported_req:1,	// 2
--		 clr_unexpected_rsp:1,	// 3
--		 clr_bad_length:1,	// 4
--		 clr_bad_datavalid:1,	// 5
--		 clr_buffer_overflow:1,	// 6
--		 clr_request_timeout:1,	// 7
--		:8,		// 15:8
--		 clr_head_inv_data_siz:1,	// 16
--		 clr_rsp_pactype_inv:1,	// 17
--		 clr_head_sb_err:1,	// 18
--		 clr_missing_head:1,	// 19
--		 clr_head_inv_rd_type:1,	// 20
--		 clr_head_cmd_err_bit:1,	// 21
--		 clr_req_addr_align_in:1,	// 22
--		 clr_pio_req_addr_inv:1,	// 23
--		 clr_req_range_dsize_i:1,	// 24
--		 clr_early_term:1,	// 25
--		 clr_early_tail:1,	// 26
--		 clr_missing_tail:1,	// 27
--		 clr_data_flit_sb_err:1,	// 28
--		 clr_cm2hcm_req_cred_o:1,	// 29
--		 clr_cm2hcm_rsp_cred_o:1,	// 30
--		 clr_rx_bad_didn:1,	// 31
--		 clr_rd_dma_err_rsp:1,	// 32
--		 clr_rd_dma_tnum_tout:1,	// 33
--		 clr_rd_dma_multi_tnum:1,	// 34
--		 clr_wr_dma_err_rsp:1,	// 35
--		 clr_wr_dma_tnum_tout:1,	// 36
--		 clr_wr_dma_multi_tnum:1,	// 37
--		 clr_alg_data_overflow:1,	// 38
--		 clr_alg_data_underflo:1,	// 39
--		 clr_ram0_access_confl:1,	// 40
--		 clr_ram1_access_confl:1,	// 41
--		 clr_ram2_access_confl:1,	// 42
--		 clr_ram0_perr:1,	// 43
--		 clr_ram1_perr:1,	// 44
--		 clr_ram2_perr:1,	// 45
--		 clr_int_gen_rsp_err:1,	// 46
--		 clr_int_gen_tnum_tout:1,	// 47
--		 clr_rd_dma_prog_err:1,	// 48
--		 clr_wr_dma_prog_err:1,	// 49
--		:14;		// 63:50
--	};
--};
--
--union cm_error_intr_enable {
--	uint64_t cm_error_intr_enable_reg;
--	struct {
--		uint64_t int_en_ecc_sbe:1,	// 0
--		 int_en_ecc_mbe:1,	// 1
--		 int_en_unsupported_re:1,	// 2
--		 int_en_unexpected_rsp:1,	// 3
--		 int_en_bad_length:1,	// 4
--		 int_en_bad_datavalid:1,	// 5
--		 int_en_buffer_overflo:1,	// 6
--		 int_en_request_timeou:1,	// 7
--		:8,		// 15:8
--		 int_en_head_inv_data_:1,	// 16
--		 int_en_rsp_pactype_in:1,	// 17
--		 int_en_head_sb_err:1,	// 18
--		 int_en_missing_head:1,	// 19
--		 int_en_head_inv_rd_ty:1,	// 20
--		 int_en_head_cmd_err_b:1,	// 21
--		 int_en_req_addr_align:1,	// 22
--		 int_en_pio_req_addr_i:1,	// 23
--		 int_en_req_range_dsiz:1,	// 24
--		 int_en_early_term:1,	// 25
--		 int_en_early_tail:1,	// 26
--		 int_en_missing_tail:1,	// 27
--		 int_en_data_flit_sb_e:1,	// 28
--		 int_en_cm2hcm_req_cre:1,	// 29
--		 int_en_cm2hcm_rsp_cre:1,	// 30
--		 int_en_rx_bad_didn:1,	// 31
--		 int_en_rd_dma_err_rsp:1,	// 32
--		 int_en_rd_dma_tnum_to:1,	// 33
--		 int_en_rd_dma_multi_t:1,	// 34
--		 int_en_wr_dma_err_rsp:1,	// 35
--		 int_en_wr_dma_tnum_to:1,	// 36
--		 int_en_wr_dma_multi_t:1,	// 37
--		 int_en_alg_data_overf:1,	// 38
--		 int_en_alg_data_under:1,	// 39
--		 int_en_ram0_access_co:1,	// 40
--		 int_en_ram1_access_co:1,	// 41
--		 int_en_ram2_access_co:1,	// 42
--		 int_en_ram0_perr:1,	// 43
--		 int_en_ram1_perr:1,	// 44
--		 int_en_ram2_perr:1,	// 45
--		 int_en_int_gen_rsp_er:1,	// 46
--		 int_en_int_gen_tnum_t:1,	// 47
--		 int_en_rd_dma_prog_er:1,	// 48
--		 int_en_wr_dma_prog_er:1,	// 49
--		:14;		// 63:50
--	};
--};
--
--struct cm_mmr {
--	union cm_id id;
--	union cm_status status;
--	union cm_error_detail1 err_detail1;
--	union cm_error_detail2 err_detail2;
--	union cm_control control;
--	union cm_req_timeout req_timeout;
--	uint64_t reserved1[1];
--	union intr_dest int_dest;
--	uint64_t reserved2[2];
--	uint64_t targ_flush;
--	uint64_t reserved3[1];
--	union cm_error_status err_status;
--	union cm_clr_error_status clr_err_status;
--	union cm_error_intr_enable int_enable;
--};
--
--union dma_hostaddr {
--	uint64_t dma_hostaddr_reg;
--	struct {
--		uint64_t dma_sys_addr:56,	// 55:0
--		:8;		// 63:56
--	};
--};
--
--union dma_localaddr {
--	uint64_t dma_localaddr_reg;
--	struct {
--		uint64_t dma_ram_addr:21,	// 20:0
--		 dma_ram_sel:2,	// 22:21
--		:41;		// 63:23
--	};
--};
--
--union dma_control {
--	uint64_t dma_control_reg;
--	struct {
--		uint64_t dma_op_length:16,	// 15:0
--		:18,		// 33:16
--		 done_amo_en:1,	// 34
--		 done_int_en:1,	// 35
--		:1,		// 36
--		 pio_mem_n:1,	// 37
--		:26;		// 63:38
--	};
--};
--
--union dma_amo_dest {
--	uint64_t dma_amo_dest_reg;
--	struct {
--		uint64_t dma_amo_sys_addr:56,	// 55:0
--		 dma_amo_mod_type:3,	// 58:56
--		:5;		// 63:59
--	};
--};
--
--union rdma_aux_status {
--	uint64_t rdma_aux_status_reg;
--	struct {
--		uint64_t op_num_pacs_left:17,	// 16:0
--		:5,		// 21:17
--		 lrsp_buff_empty:1,	// 22
--		:17,		// 39:23
--		 pending_reqs_left:6,	// 45:40
--		:18;		// 63:46
--	};
--};
--
--struct rdma_mmr {
--	union dma_hostaddr host_addr;
--	union dma_localaddr local_addr;
--	union dma_control control;
--	union dma_amo_dest amo_dest;
--	union intr_dest intr_dest;
--	union rdma_aux_status aux_status;
--};
--
--union wdma_aux_status {
--	uint64_t wdma_aux_status_reg;
--	struct {
--		uint64_t op_num_pacs_left:17,	// 16:0
--		:4,		// 20:17
--		 lreq_buff_empty:1,	// 21
--		:18,		// 39:22
--		 pending_reqs_left:6,	// 45:40
--		:18;		// 63:46
--	};
--};
--
--struct wdma_mmr {
--	union dma_hostaddr host_addr;
--	union dma_localaddr local_addr;
--	union dma_control control;
--	union dma_amo_dest amo_dest;
--	union intr_dest intr_dest;
--	union wdma_aux_status aux_status;
--};
--
--union algo_step {
--	uint64_t algo_step_reg;
--	struct {
--		uint64_t alg_step_cnt:16,	// 15:0
--		:48;		// 63:16
--	};
--};
--
--struct algo_mmr {
--	union dma_amo_dest amo_dest;
--	union intr_dest intr_dest;
--	union {
--		uint64_t algo_offset_reg;
--		struct {
--			uint64_t sram0_offset:7,	// 6:0
--			reserved0:1,	// 7
--			sram1_offset:7,	// 14:8
--			reserved1:1,	// 15
--			sram2_offset:7,	// 22:16
--			reserved2:14;	// 63:23
--		};
--	} sram_offset;
--	union algo_step step;
--};
--
--struct mbcs_mmr {
--	struct cm_mmr cm;
--	uint64_t reserved1[17];
--	struct rdma_mmr rdDma;
--	uint64_t reserved2[25];
--	struct wdma_mmr wrDma;
--	uint64_t reserved3[25];
--	struct algo_mmr algo;
--	uint64_t reserved4[156];
--};
--
--/*
-- * defines
-- */
--#define DEVICE_NAME "mbcs"
--#define MBCS_PART_NUM 0xfff0
--#define MBCS_PART_NUM_ALG0 0xf001
--#define MBCS_MFG_NUM  0x1
--
--struct algoblock {
--	uint64_t amoHostDest;
--	uint64_t amoModType;
--	uint64_t intrHostDest;
--	uint64_t intrVector;
--	uint64_t algoStepCount;
--};
--
--struct getdma {
--	uint64_t hostAddr;
--	uint64_t localAddr;
--	uint64_t bytes;
--	uint64_t DoneAmoEnable;
--	uint64_t DoneIntEnable;
--	uint64_t peerIO;
--	uint64_t amoHostDest;
--	uint64_t amoModType;
--	uint64_t intrHostDest;
--	uint64_t intrVector;
--};
--
--struct putdma {
--	uint64_t hostAddr;
--	uint64_t localAddr;
--	uint64_t bytes;
--	uint64_t DoneAmoEnable;
--	uint64_t DoneIntEnable;
--	uint64_t peerIO;
--	uint64_t amoHostDest;
--	uint64_t amoModType;
--	uint64_t intrHostDest;
--	uint64_t intrVector;
--};
--
--struct mbcs_soft {
--	struct list_head list;
--	struct cx_dev *cxdev;
--	int major;
--	int nasid;
--	void *mmr_base;
--	wait_queue_head_t dmawrite_queue;
--	wait_queue_head_t dmaread_queue;
--	wait_queue_head_t algo_queue;
--	struct sn_irq_info *get_sn_irq;
--	struct sn_irq_info *put_sn_irq;
--	struct sn_irq_info *algo_sn_irq;
--	struct getdma getdma;
--	struct putdma putdma;
--	struct algoblock algo;
--	uint64_t gscr_addr;	// pio addr
--	uint64_t ram0_addr;	// pio addr
--	uint64_t ram1_addr;	// pio addr
--	uint64_t ram2_addr;	// pio addr
--	uint64_t debug_addr;	// pio addr
--	atomic_t dmawrite_done;
--	atomic_t dmaread_done;
--	atomic_t algo_done;
--	struct mutex dmawritelock;
--	struct mutex dmareadlock;
--	struct mutex algolock;
--};
--
--static int mbcs_open(struct inode *ip, struct file *fp);
--static ssize_t mbcs_sram_read(struct file *fp, char __user *buf, size_t len,
--			      loff_t * off);
--static ssize_t mbcs_sram_write(struct file *fp, const char __user *buf, size_t len,
--			       loff_t * off);
--static loff_t mbcs_sram_llseek(struct file *filp, loff_t off, int whence);
--static int mbcs_gscr_mmap(struct file *fp, struct vm_area_struct *vma);
--
--#endif				// __MBCS_H__
 -- 
 2.20.1
 
