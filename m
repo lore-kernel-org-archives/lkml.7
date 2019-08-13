@@ -2,214 +2,247 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86687C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 01:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD09C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 01:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A345206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 01:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 479DD206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 01:42:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XasiF8h7";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wa69hRGW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbfHMBmt (ORCPT
+        id S1726693AbfHMBmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 21:42:49 -0400
-Received: from mga14.intel.com ([192.55.52.115]:29636 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbfHMBms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 21:42:48 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 18:42:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,379,1559545200"; 
-   d="scan'208";a="177657704"
-Received: from rfried-mobl1.iil.intel.com ([143.185.152.137])
-  by fmsmga007.fm.intel.com with ESMTP; 12 Aug 2019 18:42:46 -0700
-From:   Ramon Fried <ramon.fried@linux.intel.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        stefan.wahren@i2se.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] gpiolib: Take MUX usage into account
-Date:   Tue, 13 Aug 2019 04:42:10 +0300
-Message-Id: <20190813014210.15519-1-ramon.fried@linux.intel.com>
+        Mon, 12 Aug 2019 21:42:54 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:55158 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfHMBmy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 21:42:54 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D1csG5025908;
+        Tue, 13 Aug 2019 01:42:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2019-08-05; bh=BBBgJHWDpE3974ehXMOJUCh+tK0rPjMp6VqtBjvyEG0=;
+ b=XasiF8h71/edNlrX+r7tIBi/Nvz/KTzyFLfnI64/Ase4ZARfJ4OvjW+AcLIx9hjAcxsb
+ h2c2AIRx7+qJsKhUndSsS74cubMAlMIRYcSWwekqPrTAZVnZ66Btiz0KkHhZ+T+KBskN
+ /vuHsQVH8+e5pu+QdGvDg1Sacxj2/rYBXaoTZ9JcdRzqCz981eI4UtjH36r2MvQhKkN5
+ FLLL7KTpf+8RGKe7LhCAtMRS+oo8h+cAl2l50mRZ0QhdUWy5hxWqAcpNrhTqJ0svzC00
+ U6f9npIhLO6/fc4mbX3fkTf88abdv3jRfkGwFRlBLfK3bAJcA1k5Gprd7rXt5qgpufsF eQ== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2018-07-02; bh=BBBgJHWDpE3974ehXMOJUCh+tK0rPjMp6VqtBjvyEG0=;
+ b=wa69hRGWfqFlJoRwatoK1folQCoYJXGWr9xsbj+RkhmqOZtdWOSVv59eqU6qfpi9W/zh
+ sVovN3NplULVs/2axclYD1n3SZzSVkQsh33NGtMsnEiI7K0+aYz7LtIs8nRClOqzLpdW
+ L1jHOx4mLaJCTkVFnQed7Ex71pUchNQUVVzPFFfp/9GZTmh6XFUKJtlIaFBMRkrQ4MdH
+ ymU8ZSGRDdFbIpC6afca6VnsWxrucwaSvejIAPG9Wg3FvZJIFUZg4AObvewC7THT+QtA
+ vOsChfmJW4j9XMjJ7MZCS4cbufn329JRLHP7YnWLHG4+TjteIDsNYHxAcGHPc6K4SVa1 4A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2u9nvp31w0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Aug 2019 01:42:35 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D1bVDt072860;
+        Tue, 13 Aug 2019 01:40:34 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2u9n9hje19-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Aug 2019 01:40:34 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7D1ePJU005027;
+        Tue, 13 Aug 2019 01:40:25 GMT
+Received: from concerto.internal (/10.154.133.246)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 12 Aug 2019 18:40:25 -0700
+From:   Khalid Aziz <khalid.aziz@oracle.com>
+To:     akpm@linux-foundation.org, vbabka@suse.cz,
+        mgorman@techsingularity.net, mhocko@suse.com,
+        dan.j.williams@intel.com
+Cc:     Khalid Aziz <khalid.aziz@oracle.com>, osalvador@suse.de,
+        richard.weiyang@gmail.com, hannes@cmpxchg.org,
+        arunks@codeaurora.org, rppt@linux.vnet.ibm.com, jgg@ziepe.ca,
+        amir73il@gmail.com, alexander.h.duyck@linux.intel.com,
+        linux-mm@kvack.org, linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/2] Add predictive memory reclamation and compaction
+Date:   Mon, 12 Aug 2019 19:40:10 -0600
+Message-Id: <20190813014012.30232-1-khalid.aziz@oracle.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908130015
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908130015
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <stefan.wahren@i2se.com>
 
-The user space like gpioinfo only see the GPIO usage but not the
-MUX usage (e.g. I2C or SPI usage) of a pin. As a user we want to know which
-pin is free/safe to use. So take the MUX usage of strict pinmux controllers
-into account to get a more realistic view for ioctl GPIO_GET_LINEINFO_IOCTL.
+Page reclamation and compaction is triggered in response to reaching low
+watermark. This makes reclamation/compaction reactive based upon a
+snapshot of the system at a point in time. When that point is reached,
+system is already suffering from free memory shortage and must now try
+to recover. Recovery can often land system in direct
+reclamation/compaction path and while recovery happens, workloads start
+to experience unpredictable memory allocation latencies. In real life,
+forced direct reclamation has been seen to cause sudden spike in time it
+takes to populate a new database or an extraordinary unpredictable
+latency in launching a new server on cloud platform. These events create
+SLA violations which are expensive for businesses.
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Tested-by: Ramon Fried <rfried.dev@gmail.com>
-Signed-off-by: Ramon Fried <rfried.dev@gmail.com>
----
-v2: Address review from linus:
-* ** Please notive logic was reversed **
-* renamed pinctrl_gpio_is_in_use() to pinctrl_gpio_can_use_line()
-* renamed pinmux_is_in_use() to pinmux_can_be_used_for_gpio()
-* changed dev_err to dev_dbg (Linus suggested removing it altogether, I
-  find it better to keep it for debug).
+If the kernel could foresee a potential free page exhaustion or
+fragmentation event well before it happens, it could start reclamation
+proactively instead to avoid allocation stalls. A time based trend line
+for available free pages can show such potential future events by
+charting the current memory consumption trend on the system.
 
- drivers/gpio/gpiolib.c           |  3 ++-
- drivers/pinctrl/core.c           | 28 ++++++++++++++++++++++++++++
- drivers/pinctrl/pinmux.c         | 27 +++++++++++++++++++++++++++
- drivers/pinctrl/pinmux.h         |  8 ++++++++
- include/linux/pinctrl/consumer.h |  6 ++++++
- 5 files changed, 71 insertions(+), 1 deletion(-)
+These patches propose a way to capture enough memory usage information
+to compute a trend line based upon most recent data. Trend line is
+graphed with x-axis showing time and y-axis showing number of free
+pages. The proposal is to capture the number of free pages at opportune
+moments along with the current timestamp. Once system has enough data
+points (the lookback window for trend analysis), fit a line of the form
+y=mx+c to these points using least sqaure regression method.  As time
+advances, these points can be updated with new data points and a new
+best fit line can be computed. Capturing these data points and computing
+trend line for pages of order 0-MAX_ORDER allows us to not only foresee
+free pages exhaustion point but also severe fragmentation points in
+future.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index f497003f119c..52937bf8e514 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1084,7 +1084,8 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 		    test_bit(FLAG_IS_HOGGED, &desc->flags) ||
- 		    test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
- 		    test_bit(FLAG_EXPORT, &desc->flags) ||
--		    test_bit(FLAG_SYSFS, &desc->flags))
-+		    test_bit(FLAG_SYSFS, &desc->flags) ||
-+		    !pinctrl_gpio_can_use_line(chip->base + lineinfo.line_offset))
- 			lineinfo.flags |= GPIOLINE_FLAG_KERNEL;
- 		if (test_bit(FLAG_IS_OUT, &desc->flags))
- 			lineinfo.flags |= GPIOLINE_FLAG_IS_OUT;
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index b70df27874d1..2bbd8ee93507 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -736,6 +736,34 @@ int pinctrl_get_group_selector(struct pinctrl_dev *pctldev,
- 	return -EINVAL;
- }
- 
-+bool pinctrl_gpio_can_use_line(unsigned gpio)
-+{
-+	struct pinctrl_dev *pctldev;
-+	struct pinctrl_gpio_range *range;
-+	bool result;
-+	int pin;
-+
-+	/*
-+	 * Try to obtain GPIO range, if it fails
-+	 * we're probably dealing with GPIO driver
-+	 * without a backing pin controller - bail out.
-+	 */
-+	if (pinctrl_get_device_gpio_range(gpio, &pctldev, &range))
-+		return true;
-+
-+	mutex_lock(&pctldev->mutex);
-+
-+	/* Convert to the pin controllers number space */
-+	pin = gpio_to_pin(range, gpio);
-+
-+	result = pinmux_can_be_used_for_gpio(pctldev, pin);
-+
-+	mutex_unlock(&pctldev->mutex);
-+
-+	return result;
-+}
-+EXPORT_SYMBOL_GPL(pinctrl_gpio_can_use_line);
-+
- /**
-  * pinctrl_gpio_request() - request a single pin to be used as GPIO
-  * @gpio: the GPIO pin number from the GPIO subsystem number space
-diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
-index 020e54f843f9..7e42a5738d82 100644
---- a/drivers/pinctrl/pinmux.c
-+++ b/drivers/pinctrl/pinmux.c
-@@ -70,6 +70,33 @@ int pinmux_validate_map(const struct pinctrl_map *map, int i)
- 	return 0;
- }
- 
-+/**
-+ * pinmux_can_be_used_for_gpio() - check if a specific pin
-+ *	is either muxed to a different function or used as gpio.
-+ *
-+ * @pin: the pin number in the global pin space
-+ *
-+ * Controllers not defined as strict will always return true,
-+ * menaning that the gpio can be used.
-+ */
-+bool pinmux_can_be_used_for_gpio(struct pinctrl_dev *pctldev, unsigned pin)
-+{
-+	struct pin_desc *desc = pin_desc_get(pctldev, pin);
-+	const struct pinmux_ops *ops = pctldev->desc->pmxops;
-+
-+	if (!desc) {
-+		dev_dbg(pctldev->dev,
-+			"pin %u is not registered so it cannot be requested\n",
-+			pin);
-+		return true;
-+	}
-+
-+	if (ops->strict && desc->mux_usecount)
-+		return false;
-+
-+	return !(ops->strict && !!desc->gpio_owner);
-+}
-+
- /**
-  * pin_request() - request a single pin to be muxed in, typically for GPIO
-  * @pin: the pin number in the global pin space
-diff --git a/drivers/pinctrl/pinmux.h b/drivers/pinctrl/pinmux.h
-index 794cb3a003ff..78c3a31be882 100644
---- a/drivers/pinctrl/pinmux.h
-+++ b/drivers/pinctrl/pinmux.h
-@@ -15,6 +15,8 @@ int pinmux_check_ops(struct pinctrl_dev *pctldev);
- 
- int pinmux_validate_map(const struct pinctrl_map *map, int i);
- 
-+bool pinmux_can_be_used_for_gpio(struct pinctrl_dev *pctldev, unsigned pin);
-+
- int pinmux_request_gpio(struct pinctrl_dev *pctldev,
- 			struct pinctrl_gpio_range *range,
- 			unsigned pin, unsigned gpio);
-@@ -42,6 +44,12 @@ static inline int pinmux_validate_map(const struct pinctrl_map *map, int i)
- 	return 0;
- }
- 
-+static inline bool pinmux_can_be_used_for_gpio(struct pinctrl_dev *pctldev,
-+					       unsigned pin)
-+{
-+	return true;
-+}
-+
- static inline int pinmux_request_gpio(struct pinctrl_dev *pctldev,
- 			struct pinctrl_gpio_range *range,
- 			unsigned pin, unsigned gpio)
-diff --git a/include/linux/pinctrl/consumer.h b/include/linux/pinctrl/consumer.h
-index 86720a5a384f..7f8c7d9583d3 100644
---- a/include/linux/pinctrl/consumer.h
-+++ b/include/linux/pinctrl/consumer.h
-@@ -24,6 +24,7 @@ struct device;
- #ifdef CONFIG_PINCTRL
- 
- /* External interface to pin control */
-+extern bool pinctrl_gpio_can_use_line(unsigned gpio);
- extern int pinctrl_gpio_request(unsigned gpio);
- extern void pinctrl_gpio_free(unsigned gpio);
- extern int pinctrl_gpio_direction_input(unsigned gpio);
-@@ -61,6 +62,11 @@ static inline int pinctrl_pm_select_idle_state(struct device *dev)
- 
- #else /* !CONFIG_PINCTRL */
- 
-+static inline bool pinctrl_gpio_can_use_line(unsigned gpio)
-+{
-+	return true;
-+}
-+
- static inline int pinctrl_gpio_request(unsigned gpio)
- {
- 	return 0;
+If the line representing trend for total free pages has a negative slope
+(hence trending downward), solving y=mx+c for x with y=0 tells us if
+the current trend continues, at what point would the system run out of
+free pages. If average rate of page reclamation is computed by observing
+page reclamation behavior, that information can be used to compute the
+time to start reclamation at so that number of free pages does not fall
+to 0 or below low watermark if current memory consumption trend were to
+continue.
+
+Similarly, if kernel tracks the level of fragmentation for each order
+page (which can be done by computing the number of free pages below this
+order), a trend line for each order can be used to compute the point in
+time when no more pages of that order will be available for allocation.
+If the trend line represents number of unusable pages for that order,
+the intersection of this line with line representing number of free
+pages is the point of 100% fragmentation. This holds true because at
+this intersection point all free pages are of lower order. Intersetion
+point for two lines y0=m0x0+c0 and y1=m1x1+c1 can be computed
+mathematically which yields x and y coordinates on time and free pages
+graph. If average rate of compaction is computed by timing previous
+compaction runs, kernel can compute how soon does it need to start
+compaction to avoid this 100% fragmentation point.
+
+Patch 1 adds code to maintain a sliding lookback window of (time, number
+of free pages) points which can be updated continuously and adds code to
+compute best fit line across these points. It also adds code to use the
+best fit lines to determine if kernel must start reclamation or
+compaction.
+
+Patch 2 adds code to collect data points on free pages of various orders
+at different points in time, uses code in patch 1 to update sliding
+lookback window with these points and kicks off reclamation or
+compaction based upon the results it gets.
+
+Patch 1 maintains a fixed size lookback window. A fixed size lookback
+window limits the amount of data that has to be maintained to compute a
+best fit line. Routine mem_predict() in patch 1 uses best fit line to
+determine the immediate need for reclamation or compaction. To simplify
+initial concept implementation, it uses a fixed time threshold when
+compaction should start in anticipation of impending fragmentation.
+Similarly it uses a fixed minimum precentage free pages as criteria to
+detrmine if it is time to start reclamation if the current trend line
+shows continued drop in number of free pages. Both of these criteria can
+be improved upon in final implementation by taking rate of compaction
+and rate of reclamation into account.
+
+Patch 2 collects data points for best fit line in kswapd before we
+decide if kswapd should go to sleep or continue reclamation. It then
+uses that data to delay kswapd from sleeping and continue reclamation.
+Potential fragmentation information obtained from best fit line is used
+to decide if zone watermark should be boosted to avert impending
+fragmentation. This data is also used in balance_pgdat() to determine if
+kcompatcd should be woken up to start compaction.
+get_page_from_freelist() might be a better place to gather data points
+and make decision on starting reclamation or comapction but it can also
+impact page allocation latency. Another possibility is to create a
+separate kernel thread that gathers page usage data periodically and
+wakes up kswapd or kcompactd as needed based upon trend analysis. This
+is something that can be finalized before final implementation of this
+proposal.
+
+Impact of this implementation was measured using two sets of tests.
+First test consists of three concurrent dd processes writing large
+amounts of data (66 GB, 131 GB and 262 GB) to three different SSDs
+causing large number of free pages to be used up for buffer/page cache.
+Number of cumulative allocation stalls as reported by /proc/vmstat were
+recorded for 5 runs of this test.
+
+5.3-rc2
+-------
+
+allocstall_dma 0
+allocstall_dma32 0
+allocstall_normal 15
+allocstall_movable 1629
+compact_stall 0
+
+Total = 1644
+
+
+5.3-rc2 + this patch series
+---------------------------
+
+allocstall_dma 0
+allocstall_dma32 0
+allocstall_normal 182
+allocstall_movable 1266
+compact_stall 0
+
+Total = 1544
+
+There was no significant change in system time between these runs. This
+was a ~6.5% improvement in number of allocation stalls.
+
+A scond test used was the parallel dd test from mmtests. Average number
+of stalls over 4 runs with unpatched 5.3-rc2 kernel was 6057. Average
+number of stalls over 4 runs after applying these patches was 5584. This
+was an ~8% improvement in number of allocation stalls.
+
+This work is complementary to other allocation/compaction stall
+improvements. It attempts to address potential stalls proactively before
+they happen and will make use of any improvements made to the
+reclamation/compaction code.
+
+Any feedback on this proposal and associated implementation will be
+greatly appreciated. This is work in progress.
+
+Khalid Aziz (2):
+  mm: Add trend based prediction algorithm for memory usage
+  mm/vmscan: Add fragmentation prediction to kswapd
+
+ include/linux/mmzone.h |  72 +++++++++++
+ mm/Makefile            |   2 +-
+ mm/lsq.c               | 273 +++++++++++++++++++++++++++++++++++++++++
+ mm/page_alloc.c        |  27 ----
+ mm/vmscan.c            | 116 ++++++++++++++++-
+ 5 files changed, 456 insertions(+), 34 deletions(-)
+ create mode 100644 mm/lsq.c
+
 -- 
 2.20.1
 
