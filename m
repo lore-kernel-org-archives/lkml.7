@@ -2,104 +2,131 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC45EC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0411C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B29F20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A37EE2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:52:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="XgpQDDJM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mW5YUm5w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfHMQwA (ORCPT
+        id S1727752AbfHMQwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 12:52:00 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43219 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfHMQv7 (ORCPT
+        Tue, 13 Aug 2019 12:52:25 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56167 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbfHMQwZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 12:51:59 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e12so30842531otp.10
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 09:51:59 -0700 (PDT)
+        Tue, 13 Aug 2019 12:52:25 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f72so2142047wmf.5
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 09:52:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=uC6dDZKAip16b+mn3qV8AFtyarHS2Wtjrk4sIs9wXF4=;
-        b=XgpQDDJMv+/ruzPLaeBUwtQGSgQA4L3nxrBQ917gPpnuR6cUFXgim3kBcEa/w5jutY
-         1I9/+H2KPKPtxKPxy/8FlBxrLF+MmPmdZbuhYc8EDkrwdyqA6hVQoM95f8HcbpUpb1Qx
-         hZTvovsZfKBhDBxViQTvA8wfBcIFktwAJqiyuK92QW91ND+gAjrkFS95swU6Mb77+JJT
-         dWsfs+8qZJV00w+zYAJRBgLNShd42ftbjk5b5cCzZ2Wio/qFC7MchhHVkiLc0/4EM54U
-         4yszi7PJ41btEdlzVWQp+FYSYj7QgFW35VAqKh4gbuBkIL4TFcY3xDlkKtl0imc5VzCp
-         WJbA==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qLtqPAsEGfnUp7CDjhn/8fwHbe2P4gxMdN6KrPmONdo=;
+        b=mW5YUm5wvdISB+s0lKeJ43zd9eGbsQWF9DRWounfZBtWcu4JLOB8EQRlfB/rDhjSgr
+         DKFYgTyZvuGRIpRyo7qQJiookhVDTq8mKof/6PoFQpMuAM+rvAYNuvYwnDTgRkzkbdyU
+         l8Ig2cdjFoG1SQZcfNSo37LhmGznPEbjJ1q+DnJbjMlS87365uyRdL1U7wa/OvK5KjYT
+         Bfd5R1xpzaiOA8rPWtkmfraEvd+7lDXCVRvYHzjyC4ajwXRgI/RSEA6IZGu/HhYzuW99
+         TK+Gqiy54WUYpU20s7CUL6nkjGvhth9kyeBHhMX+SUBxOI6HHqyzPJ6B0TrpYWy7HA6K
+         0B5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=uC6dDZKAip16b+mn3qV8AFtyarHS2Wtjrk4sIs9wXF4=;
-        b=GbdmvphzU0HQbRaYHNTRx6YSdGUx+WIdGkO7Ls5zuWx8LezM98F3DTekgWeEtwG/u9
-         KOs5HYI+6Xh+ktu9W2FfXdh4CNwNfnDfkY3CXcgxdkVP+PcZWdH99kwXi+UQYofMAfnk
-         9u4m+ljcx2aWn/b3tC/V/4FNnicn5NKizRjKGA2JxaK3ujtvl+TGDj9dIz06QMJBb7Iw
-         Q4FijvvLlAMhJm6uauVJfUi0wZfWTq+lJd0OBHVJq7FXCjuPjZVtHoFhb5fdFxvHBfzI
-         awwtqI1CYrxKoNdv1R6SfusNnMIPziyTwlZt3PNOw3E6W6XrlTThSVAwksLkRatFW87O
-         +C5A==
-X-Gm-Message-State: APjAAAWPrEG2b/CZgV0oFFLbeowScms6T3sqWhMmtwU3XsfkK/5yzRUt
-        oZN7cQdDghwUdNXkGq84Ix9UxCPmNyQ=
-X-Google-Smtp-Source: APXvYqwPHBJM6jvKxBo1VW6csfTWhlFi+l+kj3B6joswy7ZnX59kuzbPWX+o7X/YHb6OhVNwnoh/Yw==
-X-Received: by 2002:a5d:9747:: with SMTP id c7mr8146194ioo.244.1565715118854;
-        Tue, 13 Aug 2019 09:51:58 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id e26sm85862802iod.10.2019.08.13.09.51.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Aug 2019 09:51:58 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 09:51:56 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Atish Patra <atish.patra@wdc.com>
-Subject: Re: [PATCH 02/15] riscv: use CSR_SATP instead of the legacy sptbr
- name in switch_mm
-In-Reply-To: <20190813164257.GA10019@lst.de>
-Message-ID: <alpine.DEB.2.21.9999.1908130951250.30024@viisi.sifive.com>
-References: <20190813154747.24256-1-hch@lst.de> <20190813154747.24256-3-hch@lst.de> <alpine.DEB.2.21.9999.1908130935310.30024@viisi.sifive.com> <20190813164257.GA10019@lst.de>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qLtqPAsEGfnUp7CDjhn/8fwHbe2P4gxMdN6KrPmONdo=;
+        b=kpd0XPBbzxf6TmEFiJtQnvikuBnyJ3OIempIL3EMQ0shbzZ6666L6hGgHnlqxT7TRP
+         l2BqEAmT7az23Q8F6J+XK+ZJMiW5RxpAayAjkDQbkv+bitNhpFAJqyFEBye/722njPtA
+         5kiFSfcWpCmhrZ+Zu2hzDPAaAHefK4HfHEJhW4oAtAWcShHqJbKBuOrhkH961rEc/QlC
+         usFyqa/Wq/1r5WTQaZdVX6+mEqypfqr4D6vi8PhXkXqOMaNdUT7wt3attXIZC7c0eT8r
+         2Mja9kqIbXsfaQtTkol7ufWKcFPsTOxXrl8OxyWUbEBB8wf3OT8mJRFXizYc4xB+uwei
+         p2FA==
+X-Gm-Message-State: APjAAAX4LtS/M9cYiYgmLQAaaQQ0L29yXyQk0i4eQekiWAdPPwnlwhye
+        Ab1jWk0ur9L6aQVbMF4meZP7TA==
+X-Google-Smtp-Source: APXvYqyDTslYtT+nos0C9th5ic6vn8MyRNZrZ/a7bFDyc53Tg0MzTNOzv1OYn9FBo/c6bVTFIpy9QQ==
+X-Received: by 2002:a7b:c947:: with SMTP id i7mr4274787wml.77.1565715142658;
+        Tue, 13 Aug 2019 09:52:22 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id z8sm25678055wru.13.2019.08.13.09.52.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 13 Aug 2019 09:52:22 -0700 (PDT)
+Subject: Re: [PATCH v2 3/5] ASoC: core: add support to
+ snd_soc_dai_get_sdw_stream()
+To:     Cezary Rojewski <cezary.rojewski@intel.com>
+Cc:     vkoul@kernel.org, broonie@kernel.org, bgoswami@codeaurora.org,
+        plai@codeaurora.org, pierre-louis.bossart@linux.intel.com,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, spapothi@codeaurora.org
+References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
+ <20190813083550.5877-4-srinivas.kandagatla@linaro.org>
+ <95c517ab-7c63-5d13-a03a-1db01812bb69@intel.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <71fb21d0-3083-e590-db83-dbe489a4357e@linaro.org>
+Date:   Tue, 13 Aug 2019 17:52:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <95c517ab-7c63-5d13-a03a-1db01812bb69@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 13 Aug 2019, Christoph Hellwig wrote:
+Thanks for the review,
 
-> On Tue, Aug 13, 2019 at 09:36:23AM -0700, Paul Walmsley wrote:
-> > On Tue, 13 Aug 2019, Christoph Hellwig wrote:
-> > 
-> > > Switch to our own constant for the satp register instead of using
-> > > the old name from a legacy version of the privileged spec.
-> > > 
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > Reviewed-by: Atish Patra <atish.patra@wdc.com>
-> > 
-> > Didn't you want us to replace this with Bin Meng's patch?
-> > 
-> > https://lore.kernel.org/linux-riscv/20190807151316.GB16432@infradead.org/
-> > 
-> > If so, probably best just to drop this one and state a dependency.
+On 13/08/2019 17:03, Cezary Rojewski wrote:
+> On 2019-08-13 10:35, Srinivas Kandagatla wrote:
+>> On platforms which have smart speaker amplifiers connected via
+>> soundwire and modeled as aux devices in ASoC, in such usecases machine
+>> driver should be able to get sdw master stream from dai so that it can
+>> use the runtime stream to setup slave streams.
+>>
+>> soundwire already as a set function, get function would provide more
+>> flexibility to above configurations.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>   include/sound/soc-dai.h | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+>> diff --git a/include/sound/soc-dai.h b/include/sound/soc-dai.h
+>> index dc48fe081a20..1e01f4a302e0 100644
+>> --- a/include/sound/soc-dai.h
+>> +++ b/include/sound/soc-dai.h
+>> @@ -202,6 +202,7 @@ struct snd_soc_dai_ops {
+>>       int (*set_sdw_stream)(struct snd_soc_dai *dai,
+>>               void *stream, int direction);
+>> +    void *(*get_sdw_stream)(struct snd_soc_dai *dai, int direction);
+>>       /*
+>>        * DAI digital mute - optional.
+>>        * Called by soc-core to minimise any pops.
+>> @@ -410,4 +411,13 @@ static inline int 
+>> snd_soc_dai_set_sdw_stream(struct snd_soc_dai *dai,
+>>           return -ENOTSUPP;
+>>   }
+>> +static inline void *snd_soc_dai_get_sdw_stream(struct snd_soc_dai *dai,
+>> +                           int direction)
+>> +{
+>> +    if (dai->driver->ops->get_sdw_stream)
+>> +        return dai->driver->ops->get_sdw_stream(dai, direction);
+>> +    else
+>> +        return ERR_PTR(-ENOTSUPP);
+>> +}
 > 
-> Either way is fine with me.  But until you have a branch with
-> either one applied I'm going to keep resending my patch, as random
-> dependencies on uncommitted patches don't work.
+> Drop redundant else.
+Not all the dai drivers would implement this function, I guess else is 
+not redundant here!
 
-If you're going to resend a patch, it's better to resend the other one 
-that you've explicitly endorsed in favor of your own.
-
-
-- Paul
+--srini
+> 
