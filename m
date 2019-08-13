@@ -2,139 +2,147 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECBFC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B949EC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7354221721
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:48:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565700483;
-	bh=c4y5Qjts7N/VOT4uSlIxH2JaJhhOQU5E5yCW2mxeICI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WEJARwAwe9ivwNn27P4qpztl5BTlXltJJYzeijvubyAi/TyUOhN0Kq4CuG8hNSTX5
-	 2KKJIg3elgiM4+zRzOoVp9gkM4b5VpPaPf6Lt3lHCWvExBLHLKADocggMhVmsQY1rd
-	 4p+O6sdRfdUeZTHBajlZmhIsFAdoKRL+GdAW456o=
+	by mail.kernel.org (Postfix) with ESMTP id 5A30920578
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:48:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GxsdQ6/x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbfHMMsC (ORCPT
+        id S1728774AbfHMMsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 08:48:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728750AbfHMMr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 08:47:59 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE24120874;
-        Tue, 13 Aug 2019 12:47:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565700478;
-        bh=c4y5Qjts7N/VOT4uSlIxH2JaJhhOQU5E5yCW2mxeICI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g899SHTS40cT9TonvzLmegaNMtr1gvDv6Ng8Xf6URZY1rHXkzNnFxpqlDwrCX2c7k
-         cGb563BVIBTipLzkO9UVJeEbf5qNV72TvH4sx+E74SpTFhTj+FxTWE8Cq+cL5LvplU
-         6T1f1QekY51IkiSPTAFDlgz7Q5C+tcg/+uhwSSm0=
-From:   Maxime Ripard <mripard@kernel.org>
-To:     linux@roeck-us.net, wim@linux-watchdog.org
-Cc:     linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 5/5] ARM: dts: sunxi: Add missing watchdog interrupts
-Date:   Tue, 13 Aug 2019 14:47:44 +0200
-Message-Id: <20190813124744.32614-5-mripard@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190813124744.32614-1-mripard@kernel.org>
-References: <20190813124744.32614-1-mripard@kernel.org>
+        Tue, 13 Aug 2019 08:48:38 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:56153 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728233AbfHMMsh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 08:48:37 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190813124836euoutp019ede24863fb8e3be4734c0e7ebb30820~6fFL20-ov1904919049euoutp01i
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 12:48:36 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190813124836euoutp019ede24863fb8e3be4734c0e7ebb30820~6fFL20-ov1904919049euoutp01i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1565700516;
+        bh=xJW2N+InaQSTPomm1XVnEng30foi6NAeLOPusdmdIo0=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=GxsdQ6/xYDYAKv4Lkn6CqM/mR7wacUeWb343ooTs+ofvvUZOMiQww7Py5eFAEILRV
+         GPzBjiIHaEzZ2jgFhIbpYfs8gyez4aXFNms19gX/SYqdEEJUxh7uXMXwZD7mlxLiNw
+         Zqqg3uzjBEt964nv5smzdmhUqZPBxVM8eTmzSZgY=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190813124835eucas1p13cf168bcd18f3c75ed1a5bf426829594~6fFLUKorf3217532175eucas1p1y;
+        Tue, 13 Aug 2019 12:48:35 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 8F.CA.04469.3A1B25D5; Tue, 13
+        Aug 2019 13:48:35 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190813124834eucas1p16c12b52102e18fd6dcfb02f44a2acd6f~6fFKif5F73225832258eucas1p1-;
+        Tue, 13 Aug 2019 12:48:34 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190813124834eusmtrp11d974e10d5e764a6e94e70b69bebd531~6fFKSqW4F0418804188eusmtrp1V;
+        Tue, 13 Aug 2019 12:48:34 +0000 (GMT)
+X-AuditID: cbfec7f2-54fff70000001175-3f-5d52b1a3149e
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 9D.32.04166.2A1B25D5; Tue, 13
+        Aug 2019 13:48:34 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190813124834eusmtip26b03372d95c5e25986128063367696a2~6fFJ8r4NG0656706567eusmtip2O;
+        Tue, 13 Aug 2019 12:48:34 +0000 (GMT)
+Subject: Re: [PATCH 6/7] efifb: Use PCI_STD_NUM_BARS in loops instead of
+ PCI_STD_RESOURCE_END
+To:     Denis Efremov <efremov@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Peter Jones <pjones@redhat.com>, linux-fbdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <6c4e491c-8afd-92b0-45b5-d915de399ccc@samsung.com>
+Date:   Tue, 13 Aug 2019 14:48:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190811150802.2418-7-efremov@linux.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPKsWRmVeSWpSXmKPExsWy7djP87qLNwbFGvQvEbNY0pRhceXUbkaL
+        E30fWC0u75rDZnF23nE2i66FN9gd2DwWbCr1eHJlOpPH+31X2Tw+b5ILYInisklJzcksSy3S
+        t0vgylj29TNzwTn2ilUfJ7M2MM5m62Lk5JAQMJFo+nGBvYuRi0NIYAWjxMM9/SwQzhdGiYYz
+        p6AynxklFi5Zw9TFyAHWcuqlJUR8OaPE2q3vmSGct0BFmzezg8wVFoiXuPvpOCuILSLgJfF2
+        /y2wfcwC1RJLj24Eq2ETsJKY2L6KEcTmFbCT+HXrAZjNIqAqsWBGB1i9qECExP1jG1ghagQl
+        Ts58wgJicwqYSTT/PcYEMVNc4taT+VC2vMT2t3PADpIQWMQu8WfhbahHXSTm9G9mgbCFJV4d
+        38IOYctInJ7cwwLRsI5R4m/HC6ju7YwSyyf/g+q2ljh8/CIryP/MApoS63fpQ4QdJTq/3mWB
+        BAufxI23ghBH8ElM2jadGSLMK9HRJgRRrSaxYdkGNpi1XTtXMk9gVJqF5LVZSN6ZheSdWQh7
+        FzCyrGIUTy0tzk1PLTbMSy3XK07MLS7NS9dLzs/dxAhMNqf/Hf+0g/HrpaRDjAIcjEo8vBUJ
+        gbFCrIllxZW5hxglOJiVRHgvmQTFCvGmJFZWpRblxxeV5qQWH2KU5mBREuetZngQLSSQnliS
+        mp2aWpBaBJNl4uCUamCU2R94qVNmQZt+bdynpwHsVlw3le69uF517kR5xTu1ouL12w7fvvet
+        32WrKIOD8p9K36hnPN3PN/6yK01d+49n602OgzMrA34pv/E1u/XVN+9G5o0v95ZsTOt0L5A4
+        tC9L5fQxC+lZwmwiTEcTlXXbWd9cus7byZH4jk/7d4jgfYdMwQlp6veVWIozEg21mIuKEwG7
+        qPvzMgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsVy+t/xe7qLNgbFGizrVLBY0pRhceXUbkaL
+        E30fWC0u75rDZnF23nE2i66FN9gd2DwWbCr1eHJlOpPH+31X2Tw+b5ILYInSsynKLy1JVcjI
+        Ly6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy1j29TNzwTn2ilUfJ7M2
+        MM5m62Lk4JAQMJE49dKyi5GLQ0hgKaPE9BXXWSHiMhLH15d1MXICmcISf651sUHUvGaUaJ21
+        hAkkISwQL3H303FWEFtEwEvi7f5bYDOZBaolLvRrQ9RvZZR4d7CVHaSGTcBKYmL7KkYQm1fA
+        TuLXrQdgNouAqsSCGR1sILaoQITEmfcrWCBqBCVOznwCZnMKmEk0/z0GtpdZQF3iz7xLzBC2
+        uMStJ/Oh4vIS29/OYZ7AKDQLSfssJC2zkLTMQtKygJFlFaNIamlxbnpusaFecWJucWleul5y
+        fu4mRmBkbTv2c/MOxksbgw8xCnAwKvHwViQExgqxJpYVV+YeYpTgYFYS4b1kEhQrxJuSWFmV
+        WpQfX1Sak1p8iNEU6LmJzFKiyfnAqM8riTc0NTS3sDQ0NzY3NrNQEuftEDgYIySQnliSmp2a
+        WpBaBNPHxMEp1cDo8Svr2Krt0xn9125e/nWTTWLYzJtmwnwfXr4vVPJ62iDpeqLw4L13DoVn
+        596x1+/3/9u674NwhstyodSG1pfKZ8N7Ne16jr2K05iqq1Nuksitc/Xk+nnHYzOWN7Tsf+QS
+        W5Bw+dX7qoNqpz5/eCH09Z2f9gzZvV/qI/bwRb7ti2796MC4w++cEktxRqKhFnNRcSIAf2dF
+        T8ICAAA=
+X-CMS-MailID: 20190813124834eucas1p16c12b52102e18fd6dcfb02f44a2acd6f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190811151322epcas3p283d7a3293a12dfac23d13d8a16349d1f
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190811151322epcas3p283d7a3293a12dfac23d13d8a16349d1f
+References: <20190811150802.2418-1-efremov@linux.com>
+        <CGME20190811151322epcas3p283d7a3293a12dfac23d13d8a16349d1f@epcas3p2.samsung.com>
+        <20190811150802.2418-7-efremov@linux.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-The watchdog has an interrupt on all our SoCs, but it wasn't always listed.
-Add it to the devicetree where it's missing.
+On 8/11/19 5:08 PM, Denis Efremov wrote:
+> This patch refactors the loop condition scheme from
+> 'i <= PCI_STD_RESOURCE_END' to 'i < PCI_STD_NUM_BARS'.
+> 
+> Signed-off-by: Denis Efremov <efremov@linux.com>
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- arch/arm/boot/dts/sun4i-a10.dtsi | 1 +
- arch/arm/boot/dts/sun5i.dtsi     | 1 +
- arch/arm/boot/dts/sun6i-a31.dtsi | 1 +
- arch/arm/boot/dts/sun7i-a20.dtsi | 1 +
- arch/arm/boot/dts/sun8i-r40.dtsi | 1 +
- 5 files changed, 5 insertions(+)
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index 077d45c7db6f..eed9fcb46185 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -815,6 +815,7 @@
- 		wdt: watchdog@1c20c90 {
- 			compatible = "allwinner,sun4i-a10-wdt";
- 			reg = <0x01c20c90 0x10>;
-+			interrupts = <24>;
- 		};
- 
- 		rtc: rtc@1c20d00 {
-diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
-index 4e725afe7203..29a825f7afd1 100644
---- a/arch/arm/boot/dts/sun5i.dtsi
-+++ b/arch/arm/boot/dts/sun5i.dtsi
-@@ -600,6 +600,7 @@
- 		wdt: watchdog@1c20c90 {
- 			compatible = "allwinner,sun4i-a10-wdt";
- 			reg = <0x01c20c90 0x10>;
-+			interrupts = <24>;
- 		};
- 
- 		ir0: ir@1c21800 {
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index 916f99db6206..b32d2d7cad4e 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -744,6 +744,7 @@
- 		wdt1: watchdog@1c20ca0 {
- 			compatible = "allwinner,sun6i-a31-wdt";
- 			reg = <0x01c20ca0 0x20>;
-+			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
- 		spdif: spdif@1c21000 {
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 9ad8e445b240..aeb682e757f2 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -1115,6 +1115,7 @@
- 		wdt: watchdog@1c20c90 {
- 			compatible = "allwinner,sun4i-a10-wdt";
- 			reg = <0x01c20c90 0x10>;
-+			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
- 		rtc: rtc@1c20d00 {
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index 09e20768228c..f1be554b5894 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -404,6 +404,7 @@
- 		wdt: watchdog@1c20c90 {
- 			compatible = "allwinner,sun4i-a10-wdt";
- 			reg = <0x01c20c90 0x10>;
-+			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
- 		uart0: serial@1c28000 {
--- 
-2.21.0
+> ---
+>  drivers/video/fbdev/efifb.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
+> index 04a22663b4fb..6c72b825e92a 100644
+> --- a/drivers/video/fbdev/efifb.c
+> +++ b/drivers/video/fbdev/efifb.c
+> @@ -668,7 +668,7 @@ static void efifb_fixup_resources(struct pci_dev *dev)
+>  	if (!base)
+>  		return;
+>  
+> -	for (i = 0; i <= PCI_STD_RESOURCE_END; i++) {
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  		struct resource *res = &dev->resource[i];
+>  
+>  		if (!(res->flags & IORESOURCE_MEM))
 
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
