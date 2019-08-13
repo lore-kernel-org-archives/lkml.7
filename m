@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE1EC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2707AC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BDC020663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEFCC20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:15:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbfHMJOX (ORCPT
+        id S1728699AbfHMJPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 05:14:23 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4676 "EHLO huawei.com"
+        Tue, 13 Aug 2019 05:15:48 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4244 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727820AbfHMJOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:14:18 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0DFE81B1747891BA7553;
-        Tue, 13 Aug 2019 17:14:15 +0800 (CST)
+        id S1728289AbfHMJOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 05:14:22 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id D6F5E3FBE442E72AABD2;
+        Tue, 13 Aug 2019 17:14:19 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 13 Aug
- 2019 17:14:03 +0800
+ 2019 17:14:11 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
@@ -47,9 +46,9 @@ CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v7 04/24] erofs: add raw address_space operations
-Date:   Tue, 13 Aug 2019 17:13:06 +0800
-Message-ID: <20190813091326.84652-5-gaoxiang25@huawei.com>
+Subject: [PATCH v7 09/24] erofs: support tracepoint
+Date:   Tue, 13 Aug 2019 17:13:11 +0800
+Message-ID: <20190813091326.84652-10-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190813091326.84652-1-gaoxiang25@huawei.com>
 References: <20190813091326.84652-1-gaoxiang25@huawei.com>
@@ -62,438 +61,262 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds functions for meta and raw data, and also
-provides address_space_operations for raw data access.
+Add basic tracepoints for ->readpage{,s}, ->lookup,
+->destroy_inode, fill_inode and map_blocks.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/erofs/data.c | 417 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 417 insertions(+)
- create mode 100644 fs/erofs/data.c
+ include/trace/events/erofs.h | 241 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 241 insertions(+)
+ create mode 100644 include/trace/events/erofs.h
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
 new file mode 100644
-index 000000000000..ea9ccf668119
+index 000000000000..0c5847c54b60
 --- /dev/null
-+++ b/fs/erofs/data.c
-@@ -0,0 +1,417 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * linux/fs/erofs/data.c
-+ *
-+ * Copyright (C) 2017-2018 HUAWEI, Inc.
-+ *             http://www.huawei.com/
-+ * Created by Gao Xiang <gaoxiang25@huawei.com>
-+ */
-+#include "internal.h"
-+#include <linux/prefetch.h>
-+
-+#include <trace/events/erofs.h>
-+
-+static inline void read_endio(struct bio *bio)
-+{
-+	struct super_block *const sb = bio->bi_private;
-+	struct bio_vec *bvec;
-+	blk_status_t err = bio->bi_status;
-+	struct bvec_iter_all iter_all;
-+
-+	if (time_to_inject(EROFS_SB(sb), FAULT_READ_IO)) {
-+		erofs_show_injection_info(FAULT_READ_IO);
-+		err = BLK_STS_IOERR;
-+	}
-+
-+	bio_for_each_segment_all(bvec, bio, iter_all) {
-+		struct page *page = bvec->bv_page;
-+
-+		/* page is already locked */
-+		DBG_BUGON(PageUptodate(page));
-+
-+		if (unlikely(err))
-+			SetPageError(page);
-+		else
-+			SetPageUptodate(page);
-+
-+		unlock_page(page);
-+		/* page could be reclaimed now */
-+	}
-+	bio_put(bio);
-+}
-+
-+/* prio -- true is used for dir */
-+struct page *__erofs_get_meta_page(struct super_block *sb,
-+				   erofs_blk_t blkaddr, bool prio, bool nofail)
-+{
-+	struct inode *const bd_inode = sb->s_bdev->bd_inode;
-+	struct address_space *const mapping = bd_inode->i_mapping;
-+	/* prefer retrying in the allocator to blindly looping below */
-+	const gfp_t gfp = mapping_gfp_constraint(mapping, ~__GFP_FS) |
-+		(nofail ? __GFP_NOFAIL : 0);
-+	unsigned int io_retries = nofail ? EROFS_IO_MAX_RETRIES_NOFAIL : 0;
-+	struct page *page;
-+	int err;
-+
-+repeat:
-+	page = find_or_create_page(mapping, blkaddr, gfp);
-+	if (unlikely(!page)) {
-+		DBG_BUGON(nofail);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+	DBG_BUGON(!PageLocked(page));
-+
-+	if (!PageUptodate(page)) {
-+		struct bio *bio;
-+
-+		bio = erofs_grab_bio(sb, blkaddr, 1, sb, read_endio, nofail);
-+		if (IS_ERR(bio)) {
-+			DBG_BUGON(nofail);
-+			err = PTR_ERR(bio);
-+			goto err_out;
-+		}
-+
-+		err = bio_add_page(bio, page, PAGE_SIZE, 0);
-+		if (unlikely(err != PAGE_SIZE)) {
-+			err = -EFAULT;
-+			goto err_out;
-+		}
-+
-+		__submit_bio(bio, REQ_OP_READ,
-+			     REQ_META | (prio ? REQ_PRIO : 0));
-+
-+		lock_page(page);
-+
-+		/* this page has been truncated by others */
-+		if (unlikely(page->mapping != mapping)) {
-+unlock_repeat:
-+			unlock_page(page);
-+			put_page(page);
-+			goto repeat;
-+		}
-+
-+		/* more likely a read error */
-+		if (unlikely(!PageUptodate(page))) {
-+			if (io_retries) {
-+				--io_retries;
-+				goto unlock_repeat;
-+			}
-+			err = -EIO;
-+			goto err_out;
-+		}
-+	}
-+	return page;
-+
-+err_out:
-+	unlock_page(page);
-+	put_page(page);
-+	return ERR_PTR(err);
-+}
-+
-+static int erofs_map_blocks_flatmode(struct inode *inode,
-+				     struct erofs_map_blocks *map,
-+				     int flags)
-+{
-+	int err = 0;
-+	erofs_blk_t nblocks, lastblk;
-+	u64 offset = map->m_la;
-+	struct erofs_vnode *vi = EROFS_V(inode);
-+
-+	trace_erofs_map_blocks_flatmode_enter(inode, map, flags);
-+
-+	nblocks = DIV_ROUND_UP(inode->i_size, PAGE_SIZE);
-+	lastblk = nblocks - is_inode_flat_inline(inode);
-+
-+	if (unlikely(offset >= inode->i_size)) {
-+		/* leave out-of-bound access unmapped */
-+		map->m_flags = 0;
-+		map->m_plen = 0;
-+		goto out;
-+	}
-+
-+	/* there is no hole in flatmode */
-+	map->m_flags = EROFS_MAP_MAPPED;
-+
-+	if (offset < blknr_to_addr(lastblk)) {
-+		map->m_pa = blknr_to_addr(vi->raw_blkaddr) + map->m_la;
-+		map->m_plen = blknr_to_addr(lastblk) - offset;
-+	} else if (is_inode_flat_inline(inode)) {
-+		/* 2 - inode inline B: inode, [xattrs], inline last blk... */
-+		struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
-+
-+		map->m_pa = iloc(sbi, vi->nid) + vi->inode_isize +
-+			vi->xattr_isize + erofs_blkoff(map->m_la);
-+		map->m_plen = inode->i_size - offset;
-+
-+		/* inline data should locate in one meta block */
-+		if (erofs_blkoff(map->m_pa) + map->m_plen > PAGE_SIZE) {
-+			DBG_BUGON(1);
-+			err = -EIO;
-+			goto err_out;
-+		}
-+
-+		map->m_flags |= EROFS_MAP_META;
-+	} else {
-+		errln("internal error @ nid: %llu (size %llu), m_la 0x%llx",
-+		      vi->nid, inode->i_size, map->m_la);
-+		DBG_BUGON(1);
-+		err = -EIO;
-+		goto err_out;
-+	}
-+
-+out:
-+	map->m_llen = map->m_plen;
-+
-+err_out:
-+	trace_erofs_map_blocks_flatmode_exit(inode, map, flags, 0);
-+	return err;
-+}
-+
-+int erofs_map_blocks(struct inode *inode,
-+		     struct erofs_map_blocks *map, int flags)
-+{
-+	if (is_inode_layout_compression(inode))
-+		return -ENOTSUPP;
-+
-+	return erofs_map_blocks_flatmode(inode, map, flags);
-+}
-+
-+static inline struct bio *erofs_read_raw_page(struct bio *bio,
-+					      struct address_space *mapping,
-+					      struct page *page,
-+					      erofs_off_t *last_block,
-+					      unsigned int nblocks,
-+					      bool ra)
-+{
-+	struct inode *const inode = mapping->host;
-+	struct super_block *const sb = inode->i_sb;
-+	erofs_off_t current_block = (erofs_off_t)page->index;
-+	int err;
-+
-+	DBG_BUGON(!nblocks);
-+
-+	if (PageUptodate(page)) {
-+		err = 0;
-+		goto has_updated;
-+	}
-+
-+	/* note that for readpage case, bio also equals to NULL */
-+	if (bio &&
-+	    /* not continuous */
-+	    *last_block + 1 != current_block) {
-+submit_bio_retry:
-+		__submit_bio(bio, REQ_OP_READ, 0);
-+		bio = NULL;
-+	}
-+
-+	if (!bio) {
-+		struct erofs_map_blocks map = {
-+			.m_la = blknr_to_addr(current_block),
-+		};
-+		erofs_blk_t blknr;
-+		unsigned int blkoff;
-+
-+		err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
-+		if (unlikely(err))
-+			goto err_out;
-+
-+		/* zero out the holed page */
-+		if (unlikely(!(map.m_flags & EROFS_MAP_MAPPED))) {
-+			zero_user_segment(page, 0, PAGE_SIZE);
-+			SetPageUptodate(page);
-+
-+			/* imply err = 0, see erofs_map_blocks */
-+			goto has_updated;
-+		}
-+
-+		/* for RAW access mode, m_plen must be equal to m_llen */
-+		DBG_BUGON(map.m_plen != map.m_llen);
-+
-+		blknr = erofs_blknr(map.m_pa);
-+		blkoff = erofs_blkoff(map.m_pa);
-+
-+		/* deal with inline page */
-+		if (map.m_flags & EROFS_MAP_META) {
-+			void *vsrc, *vto;
-+			struct page *ipage;
-+
-+			DBG_BUGON(map.m_plen > PAGE_SIZE);
-+
-+			ipage = erofs_get_meta_page(inode->i_sb, blknr, 0);
-+
-+			if (IS_ERR(ipage)) {
-+				err = PTR_ERR(ipage);
-+				goto err_out;
-+			}
-+
-+			vsrc = kmap_atomic(ipage);
-+			vto = kmap_atomic(page);
-+			memcpy(vto, vsrc + blkoff, map.m_plen);
-+			memset(vto + map.m_plen, 0, PAGE_SIZE - map.m_plen);
-+			kunmap_atomic(vto);
-+			kunmap_atomic(vsrc);
-+			flush_dcache_page(page);
-+
-+			SetPageUptodate(page);
-+			/* TODO: could we unlock the page earlier? */
-+			unlock_page(ipage);
-+			put_page(ipage);
-+
-+			/* imply err = 0, see erofs_map_blocks */
-+			goto has_updated;
-+		}
-+
-+		/* pa must be block-aligned for raw reading */
-+		DBG_BUGON(erofs_blkoff(map.m_pa));
-+
-+		/* max # of continuous pages */
-+		if (nblocks > DIV_ROUND_UP(map.m_plen, PAGE_SIZE))
-+			nblocks = DIV_ROUND_UP(map.m_plen, PAGE_SIZE);
-+		if (nblocks > BIO_MAX_PAGES)
-+			nblocks = BIO_MAX_PAGES;
-+
-+		bio = erofs_grab_bio(sb, blknr, nblocks, sb,
-+				     read_endio, false);
-+		if (IS_ERR(bio)) {
-+			err = PTR_ERR(bio);
-+			bio = NULL;
-+			goto err_out;
-+		}
-+	}
-+
-+	err = bio_add_page(bio, page, PAGE_SIZE, 0);
-+	/* out of the extent or bio is full */
-+	if (err < PAGE_SIZE)
-+		goto submit_bio_retry;
-+
-+	*last_block = current_block;
-+
-+	/* shift in advance in case of it followed by too many gaps */
-+	if (bio->bi_iter.bi_size >= bio->bi_max_vecs * PAGE_SIZE) {
-+		/* err should reassign to 0 after submitting */
-+		err = 0;
-+		goto submit_bio_out;
-+	}
-+
-+	return bio;
-+
-+err_out:
-+	/* for sync reading, set page error immediately */
-+	if (!ra) {
-+		SetPageError(page);
-+		ClearPageUptodate(page);
-+	}
-+has_updated:
-+	unlock_page(page);
-+
-+	/* if updated manually, continuous pages has a gap */
-+	if (bio)
-+submit_bio_out:
-+		__submit_bio(bio, REQ_OP_READ, 0);
-+
-+	return unlikely(err) ? ERR_PTR(err) : NULL;
-+}
-+
-+/*
-+ * since we dont have write or truncate flows, so no inode
-+ * locking needs to be held at the moment.
-+ */
-+static int erofs_raw_access_readpage(struct file *file, struct page *page)
-+{
-+	erofs_off_t last_block;
-+	struct bio *bio;
-+
-+	trace_erofs_readpage(page, true);
-+
-+	bio = erofs_read_raw_page(NULL, page->mapping,
-+				  page, &last_block, 1, false);
-+
-+	if (IS_ERR(bio))
-+		return PTR_ERR(bio);
-+
-+	DBG_BUGON(bio);	/* since we have only one bio -- must be NULL */
-+	return 0;
-+}
-+
-+static int erofs_raw_access_readpages(struct file *filp,
-+				      struct address_space *mapping,
-+				      struct list_head *pages,
-+				      unsigned int nr_pages)
-+{
-+	erofs_off_t last_block;
-+	struct bio *bio = NULL;
-+	gfp_t gfp = readahead_gfp_mask(mapping);
-+	struct page *page = list_last_entry(pages, struct page, lru);
-+
-+	trace_erofs_readpages(mapping->host, page, nr_pages, true);
-+
-+	for (; nr_pages; --nr_pages) {
-+		page = list_entry(pages->prev, struct page, lru);
-+
-+		prefetchw(&page->flags);
-+		list_del(&page->lru);
-+
-+		if (!add_to_page_cache_lru(page, mapping, page->index, gfp)) {
-+			bio = erofs_read_raw_page(bio, mapping, page,
-+						  &last_block, nr_pages, true);
-+
-+			/* all the page errors are ignored when readahead */
-+			if (IS_ERR(bio)) {
-+				pr_err("%s, readahead error at page %lu of nid %llu\n",
-+				       __func__, page->index,
-+				       EROFS_V(mapping->host)->nid);
-+
-+				bio = NULL;
-+			}
-+		}
-+
-+		/* pages could still be locked */
-+		put_page(page);
-+	}
-+	DBG_BUGON(!list_empty(pages));
-+
-+	/* the rare case (end in gaps) */
-+	if (unlikely(bio))
-+		__submit_bio(bio, REQ_OP_READ, 0);
-+	return 0;
-+}
-+
-+static int erofs_get_block(struct inode *inode, sector_t iblock,
-+			   struct buffer_head *bh, int create)
-+{
-+	struct erofs_map_blocks map = {
-+		.m_la = iblock << 9,
-+	};
-+	int err;
-+
-+	err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
-+	if (err)
-+		return err;
-+
-+	if (map.m_flags & EROFS_MAP_MAPPED)
-+		bh->b_blocknr = erofs_blknr(map.m_pa);
-+
-+	return err;
-+}
-+
-+static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
-+{
-+	struct inode *inode = mapping->host;
-+
-+	if (is_inode_flat_inline(inode)) {
-+		erofs_blk_t blks = i_size_read(inode) >> LOG_BLOCK_SIZE;
-+
-+		if (block >> LOG_SECTORS_PER_BLOCK >= blks)
-+			return 0;
-+	}
-+
-+	return generic_block_bmap(mapping, block, erofs_get_block);
-+}
-+
-+/* for uncompressed (aligned) files and raw access for other files */
-+const struct address_space_operations erofs_raw_access_aops = {
-+	.readpage = erofs_raw_access_readpage,
-+	.readpages = erofs_raw_access_readpages,
-+	.bmap = erofs_bmap,
-+};
-+
++++ b/include/trace/events/erofs.h
+@@ -0,0 +1,241 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM erofs
++
++#if !defined(_TRACE_EROFS_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_EROFS_H
++
++#include <linux/tracepoint.h>
++
++#define show_dev(dev)		MAJOR(dev), MINOR(dev)
++#define show_dev_nid(entry)	show_dev(entry->dev), entry->nid
++
++#define show_file_type(type)						\
++	__print_symbolic(type,						\
++		{ 0,		"FILE" },				\
++		{ 1,		"DIR" })
++
++#define show_map_flags(flags) __print_flags(flags, "|",	\
++	{ EROFS_GET_BLOCKS_RAW,	"RAW" })
++
++#define show_mflags(flags) __print_flags(flags, "",	\
++	{ EROFS_MAP_MAPPED,	"M" },			\
++	{ EROFS_MAP_META,	"I" })
++
++TRACE_EVENT(erofs_lookup,
++
++	TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
++
++	TP_ARGS(dir, dentry, flags),
++
++	TP_STRUCT__entry(
++		__field(dev_t,		dev	)
++		__field(erofs_nid_t,	nid	)
++		__field(const char *,	name	)
++		__field(unsigned int,	flags	)
++	),
++
++	TP_fast_assign(
++		__entry->dev	= dir->i_sb->s_dev;
++		__entry->nid	= EROFS_V(dir)->nid;
++		__entry->name	= dentry->d_name.name;
++		__entry->flags	= flags;
++	),
++
++	TP_printk("dev = (%d,%d), pnid = %llu, name:%s, flags:%x",
++		show_dev_nid(__entry),
++		__entry->name,
++		__entry->flags)
++);
++
++TRACE_EVENT(erofs_fill_inode,
++	TP_PROTO(struct inode *inode, int isdir),
++	TP_ARGS(inode, isdir),
++
++	TP_STRUCT__entry(
++		__field(dev_t,		dev	)
++		__field(erofs_nid_t,	nid	)
++		__field(erofs_blk_t,	blkaddr )
++		__field(unsigned int,	ofs	)
++		__field(int,		isdir	)
++	),
++
++	TP_fast_assign(
++		__entry->dev		= inode->i_sb->s_dev;
++		__entry->nid		= EROFS_V(inode)->nid;
++		__entry->blkaddr	= erofs_blknr(iloc(EROFS_I_SB(inode), __entry->nid));
++		__entry->ofs		= erofs_blkoff(iloc(EROFS_I_SB(inode), __entry->nid));
++		__entry->isdir		= isdir;
++	),
++
++	TP_printk("dev = (%d,%d), nid = %llu, blkaddr %u ofs %u, isdir %d",
++		  show_dev_nid(__entry),
++		  __entry->blkaddr, __entry->ofs,
++		  __entry->isdir)
++);
++
++TRACE_EVENT(erofs_readpage,
++
++	TP_PROTO(struct page *page, bool raw),
++
++	TP_ARGS(page, raw),
++
++	TP_STRUCT__entry(
++		__field(dev_t,		dev	)
++		__field(erofs_nid_t,    nid     )
++		__field(int,		dir	)
++		__field(pgoff_t,	index	)
++		__field(int,		uptodate)
++		__field(bool,		raw	)
++	),
++
++	TP_fast_assign(
++		__entry->dev	= page->mapping->host->i_sb->s_dev;
++		__entry->nid	= EROFS_V(page->mapping->host)->nid;
++		__entry->dir	= S_ISDIR(page->mapping->host->i_mode);
++		__entry->index	= page->index;
++		__entry->uptodate = PageUptodate(page);
++		__entry->raw = raw;
++	),
++
++	TP_printk("dev = (%d,%d), nid = %llu, %s, index = %lu, uptodate = %d "
++		"raw = %d",
++		show_dev_nid(__entry),
++		show_file_type(__entry->dir),
++		(unsigned long)__entry->index,
++		__entry->uptodate,
++		__entry->raw)
++);
++
++TRACE_EVENT(erofs_readpages,
++
++	TP_PROTO(struct inode *inode, struct page *page, unsigned int nrpage,
++		bool raw),
++
++	TP_ARGS(inode, page, nrpage, raw),
++
++	TP_STRUCT__entry(
++		__field(dev_t,		dev	)
++		__field(erofs_nid_t,	nid	)
++		__field(pgoff_t,	start	)
++		__field(unsigned int,	nrpage	)
++		__field(bool,		raw	)
++	),
++
++	TP_fast_assign(
++		__entry->dev	= inode->i_sb->s_dev;
++		__entry->nid	= EROFS_V(inode)->nid;
++		__entry->start	= page->index;
++		__entry->nrpage	= nrpage;
++		__entry->raw	= raw;
++	),
++
++	TP_printk("dev = (%d,%d), nid = %llu, start = %lu nrpage = %u raw = %d",
++		show_dev_nid(__entry),
++		(unsigned long)__entry->start,
++		__entry->nrpage,
++		__entry->raw)
++);
++
++DECLARE_EVENT_CLASS(erofs__map_blocks_enter,
++	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
++		 unsigned int flags),
++
++	TP_ARGS(inode, map, flags),
++
++	TP_STRUCT__entry(
++		__field(	dev_t,		dev		)
++		__field(	erofs_nid_t,	nid		)
++		__field(	erofs_off_t,	la		)
++		__field(	u64,		llen		)
++		__field(	unsigned int,	flags		)
++	),
++
++	TP_fast_assign(
++		__entry->dev    = inode->i_sb->s_dev;
++		__entry->nid    = EROFS_V(inode)->nid;
++		__entry->la	= map->m_la;
++		__entry->llen	= map->m_llen;
++		__entry->flags	= flags;
++	),
++
++	TP_printk("dev = (%d,%d), nid = %llu, la %llu llen %llu flags %s",
++		  show_dev_nid(__entry),
++		  __entry->la, __entry->llen,
++		  __entry->flags ? show_map_flags(__entry->flags) : "NULL")
++);
++
++DEFINE_EVENT(erofs__map_blocks_enter, erofs_map_blocks_flatmode_enter,
++	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
++		 unsigned flags),
++
++	TP_ARGS(inode, map, flags)
++);
++
++DECLARE_EVENT_CLASS(erofs__map_blocks_exit,
++	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
++		 unsigned int flags, int ret),
++
++	TP_ARGS(inode, map, flags, ret),
++
++	TP_STRUCT__entry(
++		__field(	dev_t,		dev		)
++		__field(	erofs_nid_t,	nid		)
++		__field(        unsigned int,   flags           )
++		__field(	erofs_off_t,	la		)
++		__field(	erofs_off_t,	pa		)
++		__field(	u64,		llen		)
++		__field(	u64,		plen		)
++		__field(        unsigned int,	mflags		)
++		__field(	int,		ret		)
++	),
++
++	TP_fast_assign(
++		__entry->dev    = inode->i_sb->s_dev;
++		__entry->nid    = EROFS_V(inode)->nid;
++		__entry->flags	= flags;
++		__entry->la	= map->m_la;
++		__entry->pa	= map->m_pa;
++		__entry->llen	= map->m_llen;
++		__entry->plen	= map->m_plen;
++		__entry->mflags	= map->m_flags;
++		__entry->ret	= ret;
++	),
++
++	TP_printk("dev = (%d,%d), nid = %llu, flags %s "
++		  "la %llu pa %llu llen %llu plen %llu mflags %s ret %d",
++		  show_dev_nid(__entry),
++		  __entry->flags ? show_map_flags(__entry->flags) : "NULL",
++		  __entry->la, __entry->pa, __entry->llen, __entry->plen,
++		  show_mflags(__entry->mflags), __entry->ret)
++);
++
++DEFINE_EVENT(erofs__map_blocks_exit, erofs_map_blocks_flatmode_exit,
++	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
++		 unsigned flags, int ret),
++
++	TP_ARGS(inode, map, flags, ret)
++);
++
++TRACE_EVENT(erofs_destroy_inode,
++	TP_PROTO(struct inode *inode),
++
++	TP_ARGS(inode),
++
++	TP_STRUCT__entry(
++		__field(	dev_t,		dev		)
++		__field(	erofs_nid_t,	nid		)
++	),
++
++	TP_fast_assign(
++		__entry->dev	= inode->i_sb->s_dev;
++		__entry->nid	= EROFS_V(inode)->nid;
++	),
++
++	TP_printk("dev = (%d,%d), nid = %llu", show_dev_nid(__entry))
++);
++
++#endif /* _TRACE_EROFS_H */
++
++ /* This part must be outside protection */
++#include <trace/define_trace.h>
 -- 
 2.17.1
 
