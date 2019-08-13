@@ -2,122 +2,107 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE5BC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 645DAC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 046C320679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A3E420679
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:40:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ho83/VvF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZvsLh64N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbfHMJii (ORCPT
+        id S1727811AbfHMJkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 05:38:38 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36405 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfHMJih (ORCPT
+        Tue, 13 Aug 2019 05:40:39 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53465 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbfHMJki (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:38:37 -0400
-Received: by mail-wm1-f68.google.com with SMTP id g67so864346wme.1;
-        Tue, 13 Aug 2019 02:38:35 -0700 (PDT)
+        Tue, 13 Aug 2019 05:40:38 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 10so866385wmp.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 02:40:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0lwNmBZD2LBdJ3AhnWwoF9mcY5exTpZEMicXowx8T4w=;
-        b=Ho83/VvFnT7V+Rw62VKunmKnm+5i2XBLB4rTHWDqPFzfZ19qOXkaehYrZ2oA+Ssc5C
-         HLo+bq0uDjwPnhWYq3BMU+z5+7ZEACn05h3x6mnuxPlfBjM7n1sl7WDSEIyEFwwajV0r
-         5xqJ46ODARKCpqU5h3L7lzrFcF7apsdXnamTCJ5sUypPuQeyqUu/O6RcWpWzQZe+5ca+
-         VHVbNBvhRSnMcQ66swhDg6Zui1k50HslhffAw35MLvwdxMWjAb1hy4CZbHhevENeyqQG
-         JWzaUT/f2fT41WrRBdwYBxKu2XHLpYvFir/lDk9EHwtZa+kMO2vvLlm3+UbytxbH4Pdz
-         rCPg==
+        d=linaro.org; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=t6fEiZ4sytTb7mfNqU+GHgkx4N2cyC0uVxBfUPG4iKY=;
+        b=ZvsLh64Nk3rAwaI66fNByKOuqlUAVATJ7Anm+IGbigwF8Q1o/w3VJaWo75OL9J4RRh
+         P6MM9VWap5aQfI/N7Lx2+MPdZtbDCPIaa38ij3O+dLMzs1uq4WksSPOpkiqrGPZURKOw
+         F9ySGABl4fJIkLR2xFs7vzM02DlcYhTIt+TzjRUa9xYdL1zKROAHi2grMg0I75OWzLFr
+         dNy0bYJ1bjGDxrwJnHYFPYYpdH9lagy5q2wRtvnRF6Vu6oz+I/mHuHZFELJiQ2Sm7GuK
+         YRLTo+KSwWDHBc4xeE4N5MDdSOEMhHG+XEenWOrsZXIIrZFvWTBFsPxKm2ppGMuAc3HW
+         6jiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0lwNmBZD2LBdJ3AhnWwoF9mcY5exTpZEMicXowx8T4w=;
-        b=TMry/db7t7IGEcX8UqI1MHsycWZhyZxRfp5Au2z9a4ilgyoioPAQfszIMWs0ofdx0n
-         yGQPkkvXt0pAJiFZde/oyWZWr2mXAxihKJXnDI+VWxsIU3INLmjktujC3InS+ZcrMm6x
-         2DaSIfKNSTO2159vNzl1QGlCPOWdgkUNNEdfoaPHqjsS7YPNWZaH/hEJBd4o+D7CMCbR
-         HSE94Xs1RorqiiRpPMzybNUvngjK8L8Q8wwDlsAvpco2fz0CJDs46aQBcKnTEz9MZmiC
-         4IfrpoT9Xz+0lRj/+a6QrQl1cqAE9KEku/h57h9/2DmEqGFcFX18PboMRue2+I2jWjDi
-         5Zdg==
-X-Gm-Message-State: APjAAAV6YDeSUJYZQzDk+12nNouMMGxkhnLmmr7cAE8ni5K1yIwwPOGc
-        QpZHzRWVFGf+Em7gJs4whi/0NFIG
-X-Google-Smtp-Source: APXvYqx4vTkOO5tY20d4WDh7mChWAxDK+99GDj6oAFQmBA0yPx48SbNlmxCp6HYMgXfrNThHzMR6FQ==
-X-Received: by 2002:a1c:e710:: with SMTP id e16mr2157890wmh.38.1565689114828;
-        Tue, 13 Aug 2019 02:38:34 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id 4sm1729860wmd.26.2019.08.13.02.38.33
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 02:38:33 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 11:38:32 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Krishna Yarlagadda <kyarlagadda@nvidia.com>
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, jonathanh@nvidia.com, ldewangan@nvidia.com,
-        jslaby@suse.com, linux-serial@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andreas Abel <aabel@nvidia.com>
-Subject: Re: [PATCH 01/14] serial: tegra: add internal loopback functionality
-Message-ID: <20190813093832.GF1137@ulmo>
-References: <1565609303-27000-1-git-send-email-kyarlagadda@nvidia.com>
- <1565609303-27000-2-git-send-email-kyarlagadda@nvidia.com>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=t6fEiZ4sytTb7mfNqU+GHgkx4N2cyC0uVxBfUPG4iKY=;
+        b=RKywjLq3zDdGTZudIMjtb+sKP0j3QIZFCDl1EV0vCXPFcyMxWFm5EhjBBbZx5wTHB2
+         q0Zzj3AfHj9du5rD4zldFXWybHDWDRPVNJm0wPdSxenN/j3roaXRjYyiQU/aNc9jBdMV
+         Vik7CIBA0XU2o0ap4vdXgDPt86X+35t9FCE6aCYxLtS2ig+0U4Rm4zinFQBT50Fsf3kP
+         /Jw2r3x+bbPCxC0UjIQMqPbtcL1ncSipwUJ4A7hk/5UBBYpLgV/iHA+K/UE9bpPUfyZo
+         0SHVvugFQf6Eay/au6xcutaBRb1rEXxERASXjxhJNw+WcLzDlXhzenxse87Y+gxqRlyR
+         zddA==
+X-Gm-Message-State: APjAAAU0+20e6mvXfKAIX3kUGT5idqvyY2AX5j0muL+W8VQsW9YEx0qg
+        prxzgqnnDjXgzROw2C4Zbvf0NQ==
+X-Google-Smtp-Source: APXvYqxtZp5y+W/eo8hxCFccDh9B73EN2zN9q/ucA2LVNH+5drh1g1mUkC7z2xIrJUpFbM+AMvB0iA==
+X-Received: by 2002:a1c:9a4b:: with SMTP id c72mr2089507wme.102.1565689236579;
+        Tue, 13 Aug 2019 02:40:36 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id f12sm122487785wrg.5.2019.08.13.02.40.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 13 Aug 2019 02:40:35 -0700 (PDT)
+Subject: Re: [PATCH v4 3/9] nvmem: core: add nvmem_device_find
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org
+References: <20190809103235.16338-1-tbogendoerfer@suse.de>
+ <20190809103235.16338-4-tbogendoerfer@suse.de>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <8d18de64-9234-fcba-aa3d-b46789eb62a5@linaro.org>
+Date:   Tue, 13 Aug 2019 10:40:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="QXO0/MSS4VvK6f+D"
-Content-Disposition: inline
-In-Reply-To: <1565609303-27000-2-git-send-email-kyarlagadda@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190809103235.16338-4-tbogendoerfer@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---QXO0/MSS4VvK6f+D
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 12, 2019 at 04:58:10PM +0530, Krishna Yarlagadda wrote:
-> From: Andreas Abel <aabel@nvidia.com>
->=20
-> Add the internal loopback functionality that can be enabled with
-> TIOCM_LOOP.
->=20
-> Signed-off-by: Andreas Abel <aabel@nvidia.com>
-> Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+On 09/08/2019 11:32, Thomas Bogendoerfer wrote:
+> nvmem_device_find provides a way to search for nvmem devices with
+> the help of a match function simlair to bus_find_device.
+> 
+> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 > ---
->  drivers/tty/serial/serial-tegra.c | 26 ++++++++++++++++++++++----
->  1 file changed, 22 insertions(+), 4 deletions(-)
+>   drivers/nvmem/core.c           | 62 ++++++++++++++++++++++--------------------
+>   include/linux/nvmem-consumer.h |  9 ++++++
+>   2 files changed, 41 insertions(+), 30 deletions(-)
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+Have you considered using nvmem_register_notifier() ?
 
---QXO0/MSS4VvK6f+D
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1ShRgACgkQ3SOs138+
-s6FvcA/+O460rdaqlCYb/O1T4GYVbOQkOb/QbYwx+jFmLZ1ZaX43C5NJ4d5vYmqc
-Eo9HNlYUgKut+AewjxX1fkNSebJT3SB0OlzW8ynLKsvAvEuloi54J2DfiSTqcRqr
-QfkpEb5mAjBV6124k69a8a4vIb3xtgyYtheBmRNmFDgWscPTzm5u5Pys1yaferWV
-mWvRFDQivavI/KH/OiN4/bB+w92ukbYZkK4gumohJD02T6T7CTscHLJscW5CGTUj
-DET5xdJPKUkDYiOaXSZWxkEyGojGCIIOMpZ+pASUyHI73JanVO3uXVT2lopo49px
-zVGqkXGqVCL2VhlHgnzVq/H+q6n2/sxDdeOcwzln/9vB/0BEDg7OI2kn9LcFRwOc
-ThnObc5zTHvzagJm4zfAj+kMmLBELAyNYPSXnoJl+/wHhbK9FJutyo7Ys9onuKIi
-tq1W34LBiWa6QkTjZaMRX4oLL0p6oa5upyMy5DJ4iaaUCQHlUHtD48UA3SqVQxxY
-BmOAtUTjYyDt/w7sg6Ci6cPMYiOTYPyqd7XwleVQnDsmYom9JU2pvaSC2XDdAH2U
-oFIrnX/CtBU9XSD8PSDjTl0m9yFVDH7RJQM0LhF7+fEa/2IxqgfgH7Y1yPQZGtQS
-nYa7ftvYSqSoz3QLGGOVZmrhYjOzDEOQ3uuH5HX5tPgPJISbAbU=
-=KYrm
------END PGP SIGNATURE-----
-
---QXO0/MSS4VvK6f+D--
+--srini
