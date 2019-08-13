@@ -2,173 +2,84 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1213C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E9FC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A52206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:09:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="blOJdc2k"
+	by mail.kernel.org (Postfix) with ESMTP id 8D3C5206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:15:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbfHMFJk (ORCPT
+        id S1726606AbfHMFPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 01:09:40 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39951 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfHMFJj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 01:09:39 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w10so50616543pgj.7
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 22:09:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uLkfmiy/QyxG+42Kpd1Hh2gG09JBSRi1kuJ0irEOT+Q=;
-        b=blOJdc2kt55ZqQDvPUZbAMrG0e9V6Lpz+glDC3wqeZ0WFkpdzH+BHVuWLKpOnhb42G
-         g/4gIqAUYUWwrSZVnoWlA0+3BTuFFHTn4QIkPhZ/yY/qHdFseTm5A1T8f5E1IwOIGPkQ
-         NjL2X3JkoAgV9wX66vJ01slCy0p6rnZ7bkyjxanoLsFcwNNC9ezGHFtGPQthuBsXEPdD
-         Vzi/25vZpUBOV4gIKVVTs3IY9Dq9AiSUtfWFy0iWSPQYG787ViekPjFY+1C9grp4yxiQ
-         WMAj2QOcebo3fC3yliGOOPA8v9/MAYuJN9q8LYDdlO8ROvEqJbK4dyCfU63RlOwjE9t3
-         XXgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uLkfmiy/QyxG+42Kpd1Hh2gG09JBSRi1kuJ0irEOT+Q=;
-        b=I3NZQA0OALwFPaQoCLB0TO00Jx5Qs+HHQn94vT4Cvg5YQVvrMj669ck4QcAY/EvVPe
-         XR1XlU3cM6iupXDm+PrUxTiffxOGhRhW1RdZTH8EMzHREaj6MCaVk/beApd3sQwwb9HQ
-         +TNf6bDIKFw7UybzmvuzF0Z8xX+tAsfdJiclxf+7YOsZQ537Jv9OHLLIF+c5pfmaVeuF
-         BoXHokGQQbEn5HvP5FKwqLzot9wFf1MA8M1G9Q0p4poYwSMumUTMgSHpoEnYXXkYFMTd
-         knm6d3Ny5BF2gjToR1P83cwj09z/GAezTdZBOWtSCe2QDy6LWoR9jm2vzoJ81M4fGUVN
-         lbmg==
-X-Gm-Message-State: APjAAAV6K3MXTy6vKYwNh43urr4urci/T2pWZgRtCkljnDOaUIQLzFaL
-        XhxtzEF/CFVMdk34YlbNe80K+fabtRJrXCuqk1hrPg==
-X-Google-Smtp-Source: APXvYqwuRvdkQRBufOH1je8RsECuoe8PsScuGBBjY118Ufh882DHOjHaTVKhOCRIYEV6VNsZUpt68lWBTKVfNRYZXa8=
-X-Received: by 2002:a17:90a:c391:: with SMTP id h17mr524990pjt.131.1565672978100;
- Mon, 12 Aug 2019 22:09:38 -0700 (PDT)
+        Tue, 13 Aug 2019 01:15:37 -0400
+Received: from mga07.intel.com ([134.134.136.100]:17191 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbfHMFPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 01:15:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 22:15:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,380,1559545200"; 
+   d="scan'208";a="166950923"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by orsmga007.jf.intel.com with ESMTP; 12 Aug 2019 22:15:33 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Roger Quadros <rogerq@ti.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Pawel Laszczak <pawell@cadence.com>
+Cc:     "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jbergsagel\@ti.com" <jbergsagel@ti.com>,
+        "nsekhar\@ti.com" <nsekhar@ti.com>, "nm\@ti.com" <nm@ti.com>,
+        Suresh Punnoose <sureshp@cadence.com>,
+        Jayshri Dajiram Pawar <jpawar@cadence.com>,
+        Rahul Kumar <kurahul@cadence.com>,
+        Anil Joy Varughese <aniljoy@cadence.com>
+Subject: Re: [PATCH v10 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
+In-Reply-To: <679b82bc-9f33-91ad-4acf-bf6a29e51bc1@ti.com>
+References: <1563733939-21214-1-git-send-email-pawell@cadence.com> <1563733939-21214-6-git-send-email-pawell@cadence.com> <88742d5b-ee10-cf4e-6724-58e7bdd19cb9@ti.com> <BYAPR07MB47090BCA728600F0C2F4E129DDD00@BYAPR07MB4709.namprd07.prod.outlook.com> <1e557bcf-2d50-f600-0e81-1f9fba5499a1@ti.com> <BYAPR07MB4709F306EC472B7AABEB7D4CDDD30@BYAPR07MB4709.namprd07.prod.outlook.com> <20190812103147.GA4691@kuha.fi.intel.com> <d3bba104-9a85-df8d-c62d-6acb8913c3fe@ti.com> <874l2mtuu6.fsf@gmail.com> <679b82bc-9f33-91ad-4acf-bf6a29e51bc1@ti.com>
+Date:   Tue, 13 Aug 2019 08:15:32 +0300
+Message-ID: <87v9v1bq8b.fsf@gmail.com>
 MIME-Version: 1.0
-References: <20190812182421.141150-1-brendanhiggins@google.com>
- <20190812182421.141150-12-brendanhiggins@google.com> <20190813045510.C1D6E206C2@mail.kernel.org>
-In-Reply-To: <20190813045510.C1D6E206C2@mail.kernel.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 12 Aug 2019 22:09:26 -0700
-Message-ID: <CAFd5g47jrUd+ES4AaWsLDRCfsGiKDB-rOP6TR-NdymCeVAK3Kg@mail.gmail.com>
-Subject: Re: [PATCH v12 11/18] kunit: test: add the concept of assertions
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 9:55 PM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Brendan Higgins (2019-08-12 11:24:14)
-> > Add support for assertions which are like expectations except the test
-> > terminates if the assertion is not satisfied.
-> >
-> > The idea with assertions is that you use them to state all the
-> > preconditions for your test. Logically speaking, these are the premises
-> > of the test case, so if a premise isn't true, there is no point in
-> > continuing the test case because there are no conclusions that can be
-> > drawn without the premises. Whereas, the expectation is the thing you
-> > are trying to prove. It is not used universally in x-unit style test
-> > frameworks, but I really like it as a convention.  You could still
-> > express the idea of a premise using the above idiom, but I think
-> > KUNIT_ASSERT_* states the intended idea perfectly.
-> >
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
->
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->
-> > + * Sets an expectation that the values that @left and @right evaluate to are
-> > + * not equal. This is semantically equivalent to
-> > + * KUNIT_ASSERT_TRUE(@test, strcmp((@left), (@right))). See KUNIT_ASSERT_TRUE()
-> > + * for more information.
-> > + */
-> > +#define KUNIT_ASSERT_STRNEQ(test, left, right)                                \
-> > +               KUNIT_BINARY_STR_NE_ASSERTION(test,                            \
-> > +                                             KUNIT_ASSERTION,                 \
-> > +                                             left,                            \
-> > +                                             right)
-> > +
-> > +#define KUNIT_ASSERT_STRNEQ_MSG(test, left, right, fmt, ...)                  \
-> > +               KUNIT_BINARY_STR_NE_MSG_ASSERTION(test,                        \
-> > +                                                 KUNIT_ASSERTION,             \
-> > +                                                 left,                        \
-> > +                                                 right,                       \
-> > +                                                 fmt,                         \
->
-> Same question about tabbing too.
 
-Yep. WIll fix.
+Hi,
 
-> > diff --git a/kunit/test-test.c b/kunit/test-test.c
-> > index 88f4cdf03db2a..058f3fb37458a 100644
-> > --- a/kunit/test-test.c
-> > +++ b/kunit/test-test.c
-> > @@ -78,11 +78,13 @@ static int kunit_try_catch_test_init(struct kunit *test)
-> >         struct kunit_try_catch_test_context *ctx;
-> >
-> >         ctx = kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
-> > +       KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
+Roger Quadros <rogerq@ti.com> writes:
+>> Roger Quadros <rogerq@ti.com> writes:
+>>>> The sysfs file we expose from the class for the role switches is
+>>>> primarily meant for supporting proprietary protocols that require us
+>>>> to basically override the connector USB data role. The default role
+>>>> should always be selected in the drivers.
+>>>
+>>> OK. Let's take this example
+>>> - Port is dual-role port micro AB.
+>>> - microAB to type-A adapter is connected which pulls ID low. port transitions
+>>> to "host" role by the controller driver.
+>>> - proprietary protocol want to switch role to device role so writes "device" to
+>>> mode switch sysfs. port transitions to "device" role.
+>>>
+>>> Now, how does controller driver know to fall back to HW based role switching?
+>> 
+>> Use a 'disconnect' or 'suspend' event to go reset it? But that should,
+>> probably, be done at kernel space, no?
+>> 
 >
-> Ah ok. Question still stands if kunit_kzalloc() should just have the
-> assertion on failure.
+> Yes that could be one option.
+> So after a disconnect, sysfs role should reflect actual hardware role. correct?
 
-Right. In the previous patch KUNIT_ASSERT_* doesn't exist yet, so I
-can't use it. And rather than fall back to return -ENOMEM like I
-should have, I evidently forgot to do that.
+that would be my expectation
 
-> >         test->priv = ctx;
-> >
-> >         ctx->try_catch = kunit_kmalloc(test,
-> >                                        sizeof(*ctx->try_catch),
-> >                                        GFP_KERNEL);
-> > +       KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->try_catch);
-> >
+-- 
+balbi
