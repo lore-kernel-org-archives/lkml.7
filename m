@@ -2,171 +2,125 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF90C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4E0C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13CCD205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B0D22084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:57:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565708273;
+	bh=8b6RpdlNrK67ydhLhfhoISrhSgVRuopiT/dUiaAFZ3A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y4ycJZSkffJKvs905GLB7jmuP4C2cRHyZrV3cUftzCQKTgPNvAnWKtfxkEXxi+6Mj
+	 t5/2Euc+4RX8nfoSE3rLUj76rlGkOrkj1CS2PKDZ4UTNJ8SNeWyr/edU4miSKqE2N8
+	 ZZxhcPNHfsesydlg94I/ePpBkRMI7/csMjmzoGUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729841AbfHMO5o convert rfc822-to-8bit (ORCPT
+        id S1729862AbfHMO5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 10:57:44 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30246 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729586AbfHMO5o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 10:57:44 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7DErXIl094890
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 10:57:43 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uby7crkjy-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 10:57:43 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
-        Tue, 13 Aug 2019 15:57:41 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 13 Aug 2019 15:57:38 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7DEvbID60686372
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 14:57:37 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B5699A405D;
-        Tue, 13 Aug 2019 14:57:37 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 777C8A4053;
-        Tue, 13 Aug 2019 14:57:37 +0000 (GMT)
-Received: from localhost (unknown [9.152.212.112])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 13 Aug 2019 14:57:37 +0000 (GMT)
-Date:   Tue, 13 Aug 2019 16:57:36 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        James Morris <jmorris@namei.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Tree for Aug 13
-References: <20190813191924.7c5310dd@canb.auug.org.au>
- <your-ad-here.call-01565700115-ext-9407@work.hours>
+        Tue, 13 Aug 2019 10:57:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52254 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729586AbfHMO5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 10:57:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 63704ABD6;
+        Tue, 13 Aug 2019 14:57:49 +0000 (UTC)
+Date:   Tue, 13 Aug 2019 16:57:48 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
+        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
+        namhyung@google.com, paulmck@linux.ibm.com,
+        Robin Murphy <robin.murphy@arm.com>,
+        Roman Gushchin <guro@fb.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
+        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v5 1/6] mm/page_idle: Add per-pid idle page tracking
+ using virtual index
+Message-ID: <20190813145748.GM17933@dhcp22.suse.cz>
+References: <20190807130402.49c9ea8bf144d2f83bfeb353@linux-foundation.org>
+ <20190807204530.GB90900@google.com>
+ <20190807135840.92b852e980a9593fe91fbf59@linux-foundation.org>
+ <20190807213105.GA14622@google.com>
+ <20190808080044.GA18351@dhcp22.suse.cz>
+ <20190812145620.GB224541@google.com>
+ <20190813091430.GE17933@dhcp22.suse.cz>
+ <20190813135152.GC258732@google.com>
+ <20190813141432.GL17933@dhcp22.suse.cz>
+ <20190813144517.GE258732@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <your-ad-here.call-01565700115-ext-9407@work.hours>
-X-TM-AS-GCONF: 00
-x-cbid: 19081314-0016-0000-0000-0000029E32C3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19081314-0017-0000-0000-000032FE47CD
-Message-Id: <your-ad-here.call-01565708256-ext-1951@work.hours>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-13_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908130157
+In-Reply-To: <20190813144517.GE258732@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 02:41:55PM +0200, Vasily Gorbik wrote:
-> On Tue, Aug 13, 2019 at 07:19:24PM +1000, Stephen Rothwell wrote:
-> > Merging security/next-testing (a4848e06f9af Merge branch 'next-lockdown' into next-testing)
-> > CONFLICT (content): Merge conflict in kernel/trace/trace_kprobe.c
-> > CONFLICT (content): Merge conflict in fs/tracefs/inode.c
-> > Applying: early_security_init() needs a stub got !CONFIG_SECURITY
+On Tue 13-08-19 10:45:17, Joel Fernandes wrote:
+> On Tue, Aug 13, 2019 at 04:14:32PM +0200, Michal Hocko wrote:
+> [snip] 
+> > > > If the API is flawed then this is likely going
+> > > > to kick us later and will be hard to fix. I am still not convinced about
+> > > > the swap part of the thing TBH.
+> > > 
+> > > Ok, then let us discuss it. As I mentioned before, without this we lose the
+> > > access information due to MADVISE or swapping. Minchan and Konstantin both
+> > > suggested it that's why I also added it (other than me also realizing that it
+> > > is neeed).
+> > 
+> > I have described my concerns about the general idle bit behavior after
+> > unmapping pointing to discrepancy with !anon pages. And I believe those
+> > haven't been addressed yet.
 > 
-> Hi all,
+> You are referring to this post right?
+> https://lkml.org/lkml/2019/8/6/637
 > 
-> next-lockdown causes panic on s390 when doing:
-> cat /sys/kernel/debug/tracing/events/syscalls/sys_enter_read/id
+> Specifically your question was:
+> How are you going to handle situation when the page is unmapped  and refaulted again (e.g. a normal reclaim of a pagecache)?
 > 
-> [ 3972.384027] Unable to handle kernel pointer dereference in virtual kernel address space
-> [ 3972.384031] Failing address: 0000000000000000 TEID: 0000000000000887
-> [ 3972.384032] Fault in home space mode while using kernel ASCE.
-> [ 3972.384033] AS:00000000744cc007 R3:00000001fffd0007 S:00000001fffd6000 P:000000000000013d 
-> [ 3972.384051] Oops: 0004 ilc:1 [#1] SMP 
-> [ 3972.384053] Modules linked in: binfmt_misc(E) dm_crypt(E) lcs(E) ctcm(E) fsm(E) algif_skcipher(E) af_alg(E) nfsv3(E) nfs_acl(E) nfs(E) lockd(E) grace(E) sctp(E) quota_v2(E) quota_tree(E) ntfs(E) vfat(E) fat(E) overlay(E) loop(E) dm_service_time(E) kvm(E) xt_CHECKSUM(E) xt_MASQUERADE(E) xt_tcpudp(E) ip6t_rpfilter(E) ip6t_REJECT(E) nf_reject_ipv6(E) ipt_REJECT(E) nf_reject_ipv4(E) xt_conntrack(E) ip6table_nat(E) ip6table_mangle(E) ip6table_raw(E) tun(E) ip6table_security(E) bridge(E) iptable_nat(E) nf_nat(E) stp(E) llc(E) iptable_mangle(E) iptable_raw(E) iptable_security(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) ip_set(E) nfnetlink(E) ip6table_filter(E) ip6_tables(E) iptable_filter(E) ip_tables(E) x_tables(E) sunrpc(E) dm_multipath(E) dm_mod(E) scsi_dh_rdac(E) scsi_dh_emc(E) scsi_dh_alua(E) s390_trng(E) ghash_s390(E) prng(E) aes_s390(E) des_s390(E) des_generic(E) sha512_s390(E) sha1_s390(E) vfio_ccw(E) vfio_mdev(E) mdev(E) vfio_iommu_type1(E) vfio(E) eadm_sch(E) sch_f
- q_codel(E)
-> [ 3972.384076]  sha256_s390(E) sha_common(E) pkey(E) zcrypt(E) rng_core(E) autofs4(E) [last unloaded: dummy_del_mod]
-> [ 3972.384084] CPU: 17 PID: 45118 Comm: psvc-ioctl-bpf1 Tainted: G           OE     5.3.0-20190813.rc4.git0.8e72ac275c63.301.fc30.s390x+next #1
-> [ 3972.384086] Hardware name: IBM 3906 M04 704 (LPAR)
-> [ 3972.384087] Krnl PSW : 0704c00180000000 0000000000000000 (0x0)
-> [ 3972.384090]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0 RI:0 EA:3
-> [ 3972.384103] Krnl GPRS: 000003e004c0fb90 0000000000000000 00000001f912abf0 0000000197b36800
-> [ 3972.384104]            0000000197b36810 0000000000000001 0000000100000000 0000000197b36810
-> [ 3972.384105]            00000000736ae3a0 0000000100000000 00000001f912abf0 0000000197b36800
-> [ 3972.384106]            000000013aff0000 0000000073c625a8 00000000734a1486 000003e004c0fbc8
-> [ 3972.384110] Krnl Code:>0000000000000000: 0000                illegal 
->                           0000000000000002: 0000                illegal 
->                           0000000000000004: 0000                illegal 
->                           0000000000000006: 0000                illegal 
->                           0000000000000008: 0000                illegal 
->                           000000000000000a: 0000                illegal 
->                           000000000000000c: 0000                illegal 
->                           000000000000000e: 0000                illegal 
-> [ 3972.384116] Call Trace:
-> [ 3972.384122] ([<00000000734a1486>] do_dentry_open+0x206/0x3c0)
-> [ 3972.384125]  [<00000000734b8c1e>] do_last+0x16e/0x918 
-> [ 3972.384126]  [<00000000734b944e>] path_openat+0x86/0x2b8 
-> [ 3972.384128]  [<00000000734baa64>] do_filp_open+0x7c/0xf8 
-> [ 3972.384129]  [<00000000734a3484>] do_sys_open+0x18c/0x258 
-> [ 3972.384134]  [<0000000073c457cc>] system_call+0xd8/0x2c8 
-> [ 3972.384135] Last Breaking-Event-Address:
-> [ 3972.384139]  [<00000000736ae3fa>] default_open_file+0x5a/0x78
-> [ 3972.384141] Kernel panic - not syncing: Fatal exception: panic_on_oops
-> 
-> Which correspond to:
-> fs/tracefs/inode.c:46
-> static int default_open_file(struct inode *inode, struct file *filp)
->  45         real_fops = dentry->d_fsdata;
->  46         return real_fops->open(inode, filp);
-> 
-> Commit which introduces the problem:
-> commit 757ff7244358406dd16a7f5f623ca40ed27c603c
-> Author:     Matthew Garrett <matthewgarrett@google.com>
-> AuthorDate: Wed Aug 7 17:07:19 2019 -0700
-> Commit:     James Morris <jmorris@namei.org>
-> CommitDate: Fri Aug 9 22:23:58 2019 -0700
-> 
->     tracefs: Restrict tracefs when the kernel is locked down
->     
->     Tracefs may release more information about the kernel than desirable, so
->     restrict it when the kernel is locked down in confidentiality mode by
->     preventing open().
->     
->     Signed-off-by: Matthew Garrett <mjg59@google.com>
->     Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
->     Signed-off-by: James Morris <jmorris@namei.org>
-> ---
->  fs/tracefs/inode.c           | 40 +++++++++++++++++++++++++++++++++++++++-
->  include/linux/security.h     |  1 +
->  security/lockdown/lockdown.c |  1 +
->  3 files changed, 41 insertions(+), 1 deletion(-)
-> 
-> Using default s390 config, where
-> # CONFIG_SECURITY_LOCKDOWN_LSM is not set
+> Currently I don't know how to implement that. Would it work if I stored the
+> page-idle bit information in the pte of the file page (after the page is
+> unmapped by reclaim?).
 
-Hm, this actually looks like a general problem. Please, consider the
-following patch, if it makes sense. It fixes the problem for me.
+It would work as long as we keep page tables around after unmap. As they
+are easily reconstructable this is a good candidate for reclaim as well.
+
+> Also, this could be a future extension - the Android heap profiler does not
+> need it right now. I know that's not a good argument but it is useful to say
+> that it doesn't affect a real world usecase.. the swap issue on the other
+> hand, is a real usecase. Since the profiler should not get affected by
+> swapping or MADVISE_COLD hints.
+> 
+> > Besides that I am still not seeing any
+> > description of the usecase that would suffer from the lack of the
+> > functionality in changelogs.
+> 
+> You are talking about the swap usecase? The usecase is well layed out in v5
+> 2/6. Did you see it? https://lore.kernel.org/patchwork/patch/1112283/
+
+For some reason I've missed it. I will coment on that.
 
 -- 
-⣿⣿⣿⣿⢋⡀⣀⠹⣿⣿⣿⣿
-⣿⣿⣿⣿⠠⣶⡦⠀⣿⣿⣿⣿
-⣿⣿⣿⠏⣴⣮⣴⣧⠈⢿⣿⣿
-⣿⣿⡏⢰⣿⠖⣠⣿⡆⠈⣿⣿
-⣿⢛⣵⣄⠙⣶⣶⡟⣅⣠⠹⣿
-⣿⣜⣛⠻⢎⣉⣉⣀⠿⣫⣵⣿
-
+Michal Hocko
+SUSE Labs
