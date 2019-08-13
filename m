@@ -4,237 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3F8C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC66C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23DAC206C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 166CE206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:17:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbfHMKOZ (ORCPT
+        id S1728536AbfHMKRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 06:14:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:33256 "EHLO foss.arm.com"
+        Tue, 13 Aug 2019 06:17:23 -0400
+Received: from muru.com ([72.249.23.125]:57048 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727416AbfHMKOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 06:14:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 958C5337;
-        Tue, 13 Aug 2019 03:14:23 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 40AEE3F694;
-        Tue, 13 Aug 2019 03:14:22 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 11:14:17 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     "sashal@kernel.org" <sashal@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Message-ID: <20190813101417.GA14977@e121166-lin.cambridge.arm.com>
-References: <1565634013-19404-1-git-send-email-haiyangz@microsoft.com>
+        id S1727097AbfHMKRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 06:17:23 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 0CD3B805C;
+        Tue, 13 Aug 2019 10:17:49 +0000 (UTC)
+Date:   Tue, 13 Aug 2019 03:17:19 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Andreas Klinger <ak@it-klinger.de>
+Cc:     linux-omap@vger.kernel.org, bcousson@baylibre.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: am335x-wega.dtsi: fix wrong card detect pin
+ level
+Message-ID: <20190813101719.GG52127@atomide.com>
+References: <20190709183209.y64keopah5rkismc@arbad>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1565634013-19404-1-git-send-email-haiyangz@microsoft.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190709183209.y64keopah5rkismc@arbad>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 06:20:53PM +0000, Haiyang Zhang wrote:
-> Currently in Azure cloud, for passthrough devices including GPU, the host
-> sets the device instance ID's bytes 8 - 15 to a value derived from the host
-> HWID, which is the same on all devices in a VM. So, the device instance
-> ID's bytes 8 and 9 provided by the host are no longer unique. This can
-> cause device passthrough to VMs to fail because the bytes 8 and 9 are used
-> as PCI domain number. Collision of domain numbers will cause the second
-> device with the same domain number fail to load.
+* Andreas Klinger <ak@it-klinger.de> [190709 11:32]:
+> mmc cards on mmc1 are not detected because of wrong card detect (cd) level.
 > 
-> As recommended by Azure host team, the bytes 4, 5 have more uniqueness
-> (info entropy) than bytes 8, 9. So now we use bytes 4, 5 as the PCI domain
-> numbers. On older hosts, bytes 4, 5 can also be used -- no backward
-> compatibility issues here. The chance of collision is greatly reduced. In
-> the rare cases of collision, we will detect and find another number that is
-> not in use.
-
-I have not explained what I meant correctly. This patch fixes an
-issue and the "find another number" fallback can be also applied
-to the current kernel without changing the bytes you use for
-domain numbers.
-
-This patch would leave old kernels susceptible to breakage.
-
-Again, I have no Azure knowledge but it seems better to me to
-add a fallback "find another number" allocation on top of mainline
-and send it to stable kernels. Then we can add another patch to
-change the bytes you use to reduce the number of collision.
-
-Please let me know what you think, thanks.
-
-Lorenzo
-
-> Suggested-by: Michael Kelley <mikelley@microsoft.com>
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> Acked-by: Sasha Levin <sashal@kernel.org>
+> Change cd from GPIO_ACTIVE_HIGH to GPIO_ACTIVE_LOW.
+> 
+> This is necessary because of commit e63201f19438 ("mmc: omap_hsmmc:
+> Delete platform data GPIO CD and WP")
+> 
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 > ---
->  drivers/pci/controller/pci-hyperv.c | 92 +++++++++++++++++++++++++++++++------
->  1 file changed, 79 insertions(+), 13 deletions(-)
+>  arch/arm/boot/dts/am335x-wega.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 40b6254..4f3d97e 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -2510,6 +2510,48 @@ static void put_hvpcibus(struct hv_pcibus_device *hbus)
->  		complete(&hbus->remove_event);
->  }
+> diff --git a/arch/arm/boot/dts/am335x-wega.dtsi b/arch/arm/boot/dts/am335x-wega.dtsi
+> index b7d28a20341f..84581fed3d06 100644
+> --- a/arch/arm/boot/dts/am335x-wega.dtsi
+> +++ b/arch/arm/boot/dts/am335x-wega.dtsi
+> @@ -157,7 +157,7 @@
+>  	bus-width = <4>;
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&mmc1_pins>;
+> -	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
+> +	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
+>  	status = "okay";
+>  };
 >  
-> +#define HVPCI_DOM_MAP_SIZE (64 * 1024)
-> +static DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
-> +
-> +/*
-> + * PCI domain number 0 is used by emulated devices on Gen1 VMs, so define 0
-> + * as invalid for passthrough PCI devices of this driver.
-> + */
-> +#define HVPCI_DOM_INVALID 0
-> +
-> +/**
-> + * hv_get_dom_num() - Get a valid PCI domain number
-> + * Check if the PCI domain number is in use, and return another number if
-> + * it is in use.
-> + *
-> + * @dom: Requested domain number
-> + *
-> + * return: domain number on success, HVPCI_DOM_INVALID on failure
-> + */
-> +static u16 hv_get_dom_num(u16 dom)
-> +{
-> +	unsigned int i;
-> +
-> +	if (test_and_set_bit(dom, hvpci_dom_map) == 0)
-> +		return dom;
-> +
-> +	for_each_clear_bit(i, hvpci_dom_map, HVPCI_DOM_MAP_SIZE) {
-> +		if (test_and_set_bit(i, hvpci_dom_map) == 0)
-> +			return i;
-> +	}
-> +
-> +	return HVPCI_DOM_INVALID;
-> +}
-> +
-> +/**
-> + * hv_put_dom_num() - Mark the PCI domain number as free
-> + * @dom: Domain number to be freed
-> + */
-> +static void hv_put_dom_num(u16 dom)
-> +{
-> +	clear_bit(dom, hvpci_dom_map);
-> +}
-> +
->  /**
->   * hv_pci_probe() - New VMBus channel probe, for a root PCI bus
->   * @hdev:	VMBus's tracking struct for this root PCI bus
-> @@ -2521,6 +2563,7 @@ static int hv_pci_probe(struct hv_device *hdev,
->  			const struct hv_vmbus_device_id *dev_id)
->  {
->  	struct hv_pcibus_device *hbus;
-> +	u16 dom_req, dom;
->  	int ret;
->  
->  	/*
-> @@ -2535,19 +2578,34 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	hbus->state = hv_pcibus_init;
->  
->  	/*
-> -	 * The PCI bus "domain" is what is called "segment" in ACPI and
-> -	 * other specs.  Pull it from the instance ID, to get something
-> -	 * unique.  Bytes 8 and 9 are what is used in Windows guests, so
-> -	 * do the same thing for consistency.  Note that, since this code
-> -	 * only runs in a Hyper-V VM, Hyper-V can (and does) guarantee
-> -	 * that (1) the only domain in use for something that looks like
-> -	 * a physical PCI bus (which is actually emulated by the
-> -	 * hypervisor) is domain 0 and (2) there will be no overlap
-> -	 * between domains derived from these instance IDs in the same
-> -	 * VM.
-> +	 * The PCI bus "domain" is what is called "segment" in ACPI and other
-> +	 * specs. Pull it from the instance ID, to get something usually
-> +	 * unique. In rare cases of collision, we will find out another number
-> +	 * not in use.
-> +	 *
-> +	 * Note that, since this code only runs in a Hyper-V VM, Hyper-V
-> +	 * together with this guest driver can guarantee that (1) The only
-> +	 * domain used by Gen1 VMs for something that looks like a physical
-> +	 * PCI bus (which is actually emulated by the hypervisor) is domain 0.
-> +	 * (2) There will be no overlap between domains (after fixing possible
-> +	 * collisions) in the same VM.
->  	 */
-> -	hbus->sysdata.domain = hdev->dev_instance.b[9] |
-> -			       hdev->dev_instance.b[8] << 8;
-> +	dom_req = hdev->dev_instance.b[5] << 8 | hdev->dev_instance.b[4];
-> +	dom = hv_get_dom_num(dom_req);
-> +
-> +	if (dom == HVPCI_DOM_INVALID) {
-> +		dev_err(&hdev->device,
-> +			"Unable to use dom# 0x%hx or other numbers", dom_req);
-> +		ret = -EINVAL;
-> +		goto free_bus;
-> +	}
-> +
-> +	if (dom != dom_req)
-> +		dev_info(&hdev->device,
-> +			 "PCI dom# 0x%hx has collision, using 0x%hx",
-> +			 dom_req, dom);
-> +
-> +	hbus->sysdata.domain = dom;
->  
->  	hbus->hdev = hdev;
->  	refcount_set(&hbus->remove_lock, 1);
-> @@ -2562,7 +2620,7 @@ static int hv_pci_probe(struct hv_device *hdev,
->  					   hbus->sysdata.domain);
->  	if (!hbus->wq) {
->  		ret = -ENOMEM;
-> -		goto free_bus;
-> +		goto free_dom;
->  	}
->  
->  	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
-> @@ -2639,6 +2697,8 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	vmbus_close(hdev->channel);
->  destroy_wq:
->  	destroy_workqueue(hbus->wq);
-> +free_dom:
-> +	hv_put_dom_num(hbus->sysdata.domain);
->  free_bus:
->  	free_page((unsigned long)hbus);
->  	return ret;
-> @@ -2720,6 +2780,9 @@ static int hv_pci_remove(struct hv_device *hdev)
->  	put_hvpcibus(hbus);
->  	wait_for_completion(&hbus->remove_event);
->  	destroy_workqueue(hbus->wq);
-> +
-> +	hv_put_dom_num(hbus->sysdata.domain);
-> +
->  	free_page((unsigned long)hbus);
->  	return 0;
->  }
-> @@ -2747,6 +2810,9 @@ static void __exit exit_hv_pci_drv(void)
->  
->  static int __init init_hv_pci_drv(void)
->  {
-> +	/* Set the invalid domain number's bit, so it will not be used */
-> +	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
-> +
->  	return vmbus_driver_register(&hv_pci_drv);
->  }
->  
-> -- 
-> 1.8.3.1
-> 
+
+Looks like this already got fixed with an earlier commit 8a0098c05a27
+("ARM: dts: am335x phytec boards: Fix cd-gpios active level").
+
+Regards,
+
+Tony
