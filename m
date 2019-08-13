@@ -2,102 +2,210 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E9DC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEB6C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506A2206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48436206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:19:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XNUFdEtT"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jD9ZzgIf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbfHMMQK (ORCPT
+        id S1727607AbfHMMTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 08:16:10 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37353 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbfHMMQK (ORCPT
+        Tue, 13 Aug 2019 08:19:07 -0400
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:57308 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727327AbfHMMTG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 08:16:10 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 129so4598697pfa.4
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 05:16:09 -0700 (PDT)
+        Tue, 13 Aug 2019 08:19:06 -0400
+Received: by mail-qk1-f201.google.com with SMTP id j81so95855188qke.23
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 05:19:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HVlLJiIzjaXDxFFkRwCgsS9CVo3aI/KKzGwIYcEyzZU=;
-        b=XNUFdEtT15n7SWbDoymnDWB6S1FHl3jTRMDvFq1tpn+deX4cDMtdSaifhruzfd5utA
-         Zm6EOCAz2i2aXTj/LvosazkuB1chumYOVHkJVyOztRrzdHDgtxXKQsag4uSefxubT8x+
-         x8F9fAzkGkBc7u9QgBuN/hq7bzEW/tmUINBC0DuoIUPEe455xY7RjQ2NFB3+cTbPFKny
-         eYCN6EhLj+4oY6s+oDAWKtGbhZo4r+HhznjjdW37EgA0ODTPkQnXJkWn5QB6sCpwgMb9
-         3jfjohhGwfSx4Y7y23bjrgF8Dgs8wqn4QCUrhRRoUK+AqAEGBXjikFMhsCwTCF9uuNa7
-         1VnQ==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=6PgFwT5ybpsMvR73n2NchUIwCDCLdMXSL/zekwZUPV0=;
+        b=jD9ZzgIfaS51gL704kQ5B3pyAxRwAkFR5KAAxqD03+kRrbNxZasQJhXNSpL5IUD3WC
+         2DcnSWgyDaPoRPIGpldT8mFFTh+D7IvMFxHm7iTt3sA8pZKFy6cUm7d9XJwv/DbGCbp4
+         apBL8JeZNEGLLuEGK/kJMrUVLy5ehYl2bswCIbpRo4AUdG9z8T7qN7EYG2g6iDYunndi
+         bgvRTsfFKIeh+lV0TGQh07MMCHE7knk8t4nlw97npIIZj92U8RBDn5AI9/CVxQe6kk0P
+         ifVqrzVa67t41udCVDvV3Mua+k4Gh9mqtC5Z6kseL7iHwIkqxHgzBvcScP5+7WLk7K57
+         pDSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HVlLJiIzjaXDxFFkRwCgsS9CVo3aI/KKzGwIYcEyzZU=;
-        b=YDHbMTSBjTQ02wHrJFizGFiIn5HnaeQLMUDpAaftiQSkPhrTKl6ZMUPPfNqqUVHbEA
-         PVXpr+hNwzq7uNcJgm3qD7CxJozVuW4mF9q5+YkQgMcR3r+k8j9Q5LlEt0RqU5xXf84q
-         HUteMUgUs9yIbC1hD8iQhsPfWfKE19QuLWenvHcNo9rIh66HqmtirtMB/olerpzPMQz5
-         GKq8FMIWqGmInvk0pNlEzXO/hgGs29Xlu7MevL/hlWzLmNtKxu6SySaD8FRHFMGfONXK
-         78o4nmjzKQg5/n275hnyaW5VnMtUPjI/KJD9UbRzvZHORyBIVsDThJ5ub6GMtKlq3jdF
-         madQ==
-X-Gm-Message-State: APjAAAXc1pfd6OhPsypzSrCw6rel9rSRbRum4QPraWxLBYPhKYDEzVOp
-        HEOw9jC1TxAupB0iUxGu1Oih
-X-Google-Smtp-Source: APXvYqyqBDGNMo4tLSC5P2L0ZMq6zP+MdPBF4+rrYMx7vSuFUW2VLy1NayISlC8n8x8eROfvPHOiTw==
-X-Received: by 2002:a17:90a:fe07:: with SMTP id ck7mr1936580pjb.68.1565698569207;
-        Tue, 13 Aug 2019 05:16:09 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:649c:6ce0:9d44:669c:5d6c:bc5f])
-        by smtp.gmail.com with ESMTPSA id o24sm200027991pfp.135.2019.08.13.05.16.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 13 Aug 2019 05:16:08 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 17:46:01 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com
-Subject: Re: [PATCH v2 1/3] dt-bindings: media: i2c: Add IMX290 CMOS sensor
- binding
-Message-ID: <20190813121601.GB29378@Mani-XPS-13-9360>
-References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
- <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
- <20190813115427.GC2527@valkosipuli.retiisi.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813115427.GC2527@valkosipuli.retiisi.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=6PgFwT5ybpsMvR73n2NchUIwCDCLdMXSL/zekwZUPV0=;
+        b=mMsZeiEGDXObKpNICoP1Pr827J15gdZFfclA/CJn4Xp90ExHFGjp1bvk4UHVDWz17u
+         tinerdFfTmHF53JGGdAU4CzZ3dkGinpZDUC8fi6TuQ3MDMdUSw9Fj4itpX2MthA/rfg2
+         CKt64xjD7vXPHtui8LV02vunPiFHEbuv57KR4JGw6lalmtZ5pLsYmsfLMrxnUCt1Iz+z
+         mMVuJWtjpiKiQzAslTiwQASx/tMT2QpmrZdmulY4Hh9IuZiuneQjBngU594uXPWYv/iJ
+         XxkHWlkXW0ltTN7cZqPsITUAZjw3w5CSGk/oXLm1S4ISlrRkpH4E6FBTC9nbQhXlCCey
+         yG9A==
+X-Gm-Message-State: APjAAAXdSNQM/0ielzCwxibsqFyFIgWEFaio8sbqGGLLbJTdvLsqEHm8
+        7NtwOfr7EgX4F+epTTYvtycloIMARigklRLIgiR1SUKA8ZyyN4NPecaGiGjAIJGEaP9YVdaLWnW
+        V1UbjHt1x7xBj9VEdjseVYnIDRb2RhGqVMalOxWHtuS4Xnn1DtmFu7O/8RW8vVJdVj7UspeAplf
+        s=
+X-Google-Smtp-Source: APXvYqwoPPvVp4wXK2/Ekm9uHbCBVrd0HTIovQY6Rl1JP2NcFK3PdJFfhx8kL4FpENxmnwm0ne/g50Y+okhRyQ==
+X-Received: by 2002:a0c:e28e:: with SMTP id r14mr11313674qvl.32.1565698744842;
+ Tue, 13 Aug 2019 05:19:04 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 13:16:57 +0100
+In-Reply-To: <20180716122125.175792-1-maco@android.com>
+Message-Id: <20190813121733.52480-1-maennich@google.com>
+Mime-Version: 1.0
+References: <20180716122125.175792-1-maco@android.com>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+Subject: [PATCH v2 0/10] Symbol namespaces - RFC
+From:   Matthias Maennich <maennich@google.com>
+To:     linux-kernel@vger.kernel.org, maco@android.com
+Cc:     kernel-team@android.com, maennich@google.com, arnd@arndb.de,
+        geert@linux-m68k.org, gregkh@linuxfoundation.org, hpa@zytor.com,
+        jeyu@kernel.org, joel@joelfernandes.org,
+        kstewart@linuxfoundation.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-modules@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-usb@vger.kernel.org, lucas.de.marchi@gmail.com,
+        maco@google.com, michal.lkml@markovi.net, mingo@redhat.com,
+        oneukum@suse.com, pombredanne@nexb.com, sam@ravnborg.org,
+        sboyd@codeaurora.org, sspatil@google.com,
+        stern@rowland.harvard.edu, tglx@linutronix.de,
+        usb-storage@lists.one-eyed-alien.net, x86@kernel.org,
+        yamada.masahiro@socionext.com, Adrian Reber <adrian@lisas.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        cocci@systeme.lip6.fr, Dan Williams <dan.j.williams@intel.com>,
+        David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 02:54:27PM +0300, Sakari Ailus wrote:
-> On Tue, Aug 06, 2019 at 06:39:36PM +0530, Manivannan Sadhasivam wrote:
-> ...
-> > +Required Properties:
-> > +- compatible: Should be "sony,imx290"
-> > +- reg: I2C bus address of the device
-> > +- clocks: Reference to the xclk clock.
-> > +- clock-names: Should be "xclk".
-> > +- clock-frequency: Frequency of the xclk clock.
-> > +- vdddo-supply: Sensor digital IO regulator.
-> > +- vdda-supply: Sensor analog regulator.
-> > +- vddd-supply: Sensor digital core regulator.
-> 
-> Could you also add the link-frequencies property, please?
-> 
+As of Linux 5.3-rc4, there are 31203 [1] exported symbols in the kernel.
+That is a growth of almost 1000 symbols since 4.17 (30206 [2]).  There
+seems to be some consensus amongst kernel devs that the export surface
+is too large, and hard to reason about.
 
-Sure, will do.
+Generally, these symbols fall in one of these categories:
+1) Symbols actually meant for drivers
+2) Symbols that are only exported because functionality is split over
+   multiple modules, yet they really shouldn't be used by modules outside
+   of their own subsystem
+3) Symbols really only meant for in-tree use
 
-Thanks,
-Mani
+When module developers try to upstream their code, it regularly turns
+out that they are using exported symbols that they really shouldn't be
+using. This problem is even bigger for drivers that are currently
+out-of-tree, which may be using many symbols that they shouldn't be
+using, and that break when those symbols are removed or modified.
 
-> -- 
-> Sakari Ailus
+This patch allows subsystem maintainers to partition their exported
+symbols into separate namespaces, and module authors to import such
+namespaces only when needed.
+
+This allows subsystem maintainers to more easily limit availability of
+these namespaced symbols to other parts of the kernel. It can also be
+used to partition the set of exported symbols for documentation
+purposes; for example, a set of symbols that is really only used for
+debugging could be in a "SUBSYSTEM_DEBUG" namespace.
+
+I continued the work mainly done by Martijn Coenen. In this v2 the
+following changes have been introduced compared to v1 of this series:
+
+- Rather than adding and evaluating separate sections __knsimport_NS,
+  use modinfo tags to declare the namespaces a module introduces.
+  Adjust modpost and the module loader accordingly.
+- Also add support for reading multiple modinfo values for the same tag
+  to allow list-like access to modinfo tags.
+- The macros in export.h have been cleaned up to avoid redundancy in the
+  macro parameters (ns, nspost, nspost2).
+- The introduction of relative references in the ksymtab entries caused
+  a rework of the macros to accommodate that configuration as well.
+- Alignment of kernel_symbol in the ksymtab needed to be fixed to allow
+  growing the kernel_symbol struct.
+- Modpost does now also append the namespace suffix to the symbol
+  entries in Module.symvers.
+- The configuration option MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS allows
+  relaxing the enforcement of properly declared namespace imports at module
+  loading time.
+- Symbols can be collectively exported into a namespace by defining
+  DEFAULT_SYMBOL_NAMESPACE in the corresponding Makefile.
+- The requirement for a very recent coccinelle spatch has been lifted by
+  simplifying the script.
+- nsdeps does now ensures MODULE_IMPORT_NS statements are sorted when
+  patching the module source files.
+- Some minor bugs have been addressed in nsdeps to allow it to work with
+  modules that have more than one source file.
+- The RFC for the usb-storage symbols has been simplified by using
+  DEFAULT_SYMBOL_NAMESPACE=USB_STORAGE rather than explicitly exporting each
+  and every symbol into that new namespace.
+
+This patch series was developed against v5.3-rc4.
+
+[1] git grep "^EXPORT_SYMBOL\w*(" v5.3-rc4 | wc -l
+[2] git grep "^EXPORT_SYMBOL\w*(" v4.17    | wc -l
+
+Matthias Maennich (10):
+  module: support reading multiple values per modinfo tag
+  export: explicitly align struct kernel_symbol
+  module: add support for symbol namespaces.
+  modpost: add support for symbol namespaces
+  module: add config option MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS
+  export: allow definition default namespaces in Makefiles or sources
+  modpost: add support for generating namespace dependencies
+  scripts: Coccinelle script for namespace dependencies.
+  usb-storage: remove single-use define for debugging
+  RFC: usb-storage: export symbols in USB_STORAGE namespace
+
+ MAINTAINERS                                 |   5 +
+ Makefile                                    |  12 ++
+ arch/m68k/include/asm/export.h              |   1 -
+ drivers/usb/storage/Makefile                |   2 +
+ drivers/usb/storage/alauda.c                |   1 +
+ drivers/usb/storage/cypress_atacb.c         |   1 +
+ drivers/usb/storage/datafab.c               |   1 +
+ drivers/usb/storage/debug.h                 |   2 -
+ drivers/usb/storage/ene_ub6250.c            |   1 +
+ drivers/usb/storage/freecom.c               |   1 +
+ drivers/usb/storage/isd200.c                |   1 +
+ drivers/usb/storage/jumpshot.c              |   1 +
+ drivers/usb/storage/karma.c                 |   1 +
+ drivers/usb/storage/onetouch.c              |   1 +
+ drivers/usb/storage/realtek_cr.c            |   1 +
+ drivers/usb/storage/scsiglue.c              |   2 +-
+ drivers/usb/storage/sddr09.c                |   1 +
+ drivers/usb/storage/sddr55.c                |   1 +
+ drivers/usb/storage/shuttle_usbat.c         |   1 +
+ drivers/usb/storage/uas.c                   |   1 +
+ include/asm-generic/export.h                |  14 +-
+ include/linux/export.h                      |  92 +++++++++++--
+ include/linux/module.h                      |   2 +
+ init/Kconfig                                |  14 ++
+ kernel/module.c                             |  67 ++++++++-
+ scripts/Makefile.modpost                    |   4 +-
+ scripts/coccinelle/misc/add_namespace.cocci |  23 ++++
+ scripts/mod/modpost.c                       | 144 ++++++++++++++++++--
+ scripts/mod/modpost.h                       |   9 ++
+ scripts/nsdeps                              |  54 ++++++++
+ 30 files changed, 421 insertions(+), 40 deletions(-)
+ create mode 100644 scripts/coccinelle/misc/add_namespace.cocci
+ create mode 100644 scripts/nsdeps
+
+-- 
+2.23.0.rc1.153.gdeed80330f-goog
+
