@@ -2,158 +2,299 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1C9C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D144BC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B7A620842
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A03EF206C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:10:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbfHMKJb (ORCPT
+        id S1728766AbfHMKKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 06:09:31 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58776 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728784AbfHMKJ3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 06:09:29 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7DA8BN7112575
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:09:28 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ubsw2uh7q-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:09:28 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Tue, 13 Aug 2019 11:09:26 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 13 Aug 2019 11:09:23 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7DA9Mcm50266166
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 10:09:22 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9D49BA405C;
-        Tue, 13 Aug 2019 10:09:22 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 286A9A405B;
-        Tue, 13 Aug 2019 10:09:21 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.59])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 13 Aug 2019 10:09:21 +0000 (GMT)
-Received: by rapoport-lnx (sSMTP sendmail emulation); Tue, 13 Aug 2019 13:09:20 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Simek <monstr@monstr.eu>,
-        Mark Rutland <mark.rutland@arm.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH] microblaze: switch to generic version of pte allocation
-Date:   Tue, 13 Aug 2019 13:09:12 +0300
-X-Mailer: git-send-email 2.7.4
-X-TM-AS-GCONF: 00
-x-cbid: 19081310-0016-0000-0000-0000029E1D2F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19081310-0017-0000-0000-000032FE30EB
-Message-Id: <1565690952-32158-1-git-send-email-rppt@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-13_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=773 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908130109
+        Tue, 13 Aug 2019 06:10:11 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:51972 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727097AbfHMKKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 06:10:11 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 4D013FB03;
+        Tue, 13 Aug 2019 12:10:08 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id qBv1tHLBoCNN; Tue, 13 Aug 2019 12:10:06 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 0825F416CC; Tue, 13 Aug 2019 12:10:05 +0200 (CEST)
+Date:   Tue, 13 Aug 2019 12:10:05 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: display/bridge: Add binding for NWL
+ mipi dsi host controller
+Message-ID: <20190813101005.GA10751@bogon.m.sigxcpu.org>
+References: <cover.1565367567.git.agx@sigxcpu.org>
+ <9c906bb6592424acdb1a67447a482e010a113b49.1565367567.git.agx@sigxcpu.org>
+ <CAL_JsqK-5=WMZgNuJDTJ3Dm3YOJNw_9QCrPOOSe7MQzMV26pHw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqK-5=WMZgNuJDTJ3Dm3YOJNw_9QCrPOOSe7MQzMV26pHw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The microblaze implementation of pte_alloc_one() has a provision to
-allocated PTEs from high memory, but neither CONFIG_HIGHPTE nor pte_map*()
-versions for suitable for HIGHPTE are defined.
+Hi Rob,
+thanks for having a look!
 
-Except that, microblaze version of pte_alloc_one() is identical to the
-generic one as well as the implementations of pte_free() and
-pte_free_kernel().
+On Fri, Aug 09, 2019 at 02:41:03PM -0600, Rob Herring wrote:
+> On Fri, Aug 9, 2019 at 10:24 AM Guido Günther <agx@sigxcpu.org> wrote:
+> >
+> > The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
+> >
+> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> > ---
+> >  .../bindings/display/bridge/nwl-dsi.yaml      | 155 ++++++++++++++++++
+> >  1 file changed, 155 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> > new file mode 100644
+> > index 000000000000..5ed8bc4a4d18
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> > @@ -0,0 +1,155 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/display/bridge/imx-nwl-dsi.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Northwest Logic MIPI-DSI on imx SoCs
+> > +
+> > +maintainers:
+> > +  - Guido Gúnther <agx@sigxcpu.org>
+> > +  - Robert Chiras <robert.chiras@nxp.com>
+> > +
+> > +description: |
+> > +  NWL MIPI-DSI host controller found on i.MX8 platforms. This is a dsi bridge for
+> > +  the SOCs NWL MIPI-DSI host controller.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +        - const: fsl,imx8mq-nwl-dsi
+> 
+> Don't need oneOf nor items here for a single possible value:
 
-Switch microblaze to use the generic versions of these functions.
-Also remove pte_free_slow() that is not referenced anywhere in the code.
+I wanted to prepare for adding other SoCs so there's less diff noise
+(other imx8 SoCs will be rather simple) but let's go with 'const' for
+now then.
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
-The patch is vs. mmots/master since this tree contains bothi "mm: remove
-quicklist page table caches" and "mm: treewide: clarify
-pgtable_page_{ctor,dtor}() naming" patches that had a conflict resulting in
-a build failure [1].
+> compatible:
+>   const: fsl,imx8mq-nwl-dsi
+> 
+> Or go ahead and add other compatibles because the 'if' below seems to
+> indicate you'll have more.
 
-[1] https://lore.kernel.org/linux-mm/201908131204.B910fkl1%25lkp@intel.com/
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    items:
+> > +      - description: DSI core clock
+> > +      - description: RX_ESC clock (used in escape mode)
+> > +      - description: TX_ESC clock (used in escape mode)
+> > +      - description: PHY_REF clock
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: core
+> > +      - const: rx_esc
+> > +      - const: tx_esc
+> > +      - const: phy_ref
+> > +
+> > +  phys:
+> > +    maxItems: 1
+> > +    description:
+> > +      A phandle to the phy module representing the DPHY
+> > +
+> > +  phy-names:
+> > +    items:
+> > +      - const: dphy
+> > +
+> > +  power-domains:
+> > +    maxItems: 1
+> > +    description:
+> > +      A phandle to the power domain
+> > +
+> > +  resets:
+> > +    maxItems: 4
+> > +    description:
+> > +      A phandle to the reset controller
+> 
+> Sounds like 4 phandles... This should look similar to 'clocks'.
 
- arch/microblaze/include/asm/pgalloc.h | 39 +++--------------------------------
- 1 file changed, 3 insertions(+), 36 deletions(-)
+Added them individually, will be soc specific too later on.
 
-diff --git a/arch/microblaze/include/asm/pgalloc.h b/arch/microblaze/include/asm/pgalloc.h
-index dbf25a3..7ecb05b 100644
---- a/arch/microblaze/include/asm/pgalloc.h
-+++ b/arch/microblaze/include/asm/pgalloc.h
-@@ -21,6 +21,9 @@
- #include <asm/cache.h>
- #include <asm/pgtable.h>
- 
-+#define __HAVE_ARCH_PTE_ALLOC_ONE_KERNEL
-+#include <asm-generic/pgalloc.h>
-+
- extern void __bad_pte(pmd_t *pmd);
- 
- static inline pgd_t *get_pgd(void)
-@@ -47,42 +50,6 @@ static inline void free_pgd(pgd_t *pgd)
- 
- extern pte_t *pte_alloc_one_kernel(struct mm_struct *mm);
- 
--static inline struct page *pte_alloc_one(struct mm_struct *mm)
--{
--	struct page *ptepage;
--
--#ifdef CONFIG_HIGHPTE
--	int flags = GFP_KERNEL | __GFP_ZERO | __GFP_HIGHMEM;
--#else
--	int flags = GFP_KERNEL | __GFP_ZERO;
--#endif
--
--	ptepage = alloc_pages(flags, 0);
--	if (!ptepage)
--		return NULL;
--	if (!pgtable_page_ctor(ptepage)) {
--		__free_page(ptepage);
--		return NULL;
--	}
--	return ptepage;
--}
--
--static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
--{
--	free_page((unsigned long)pte);
--}
--
--static inline void pte_free_slow(struct page *ptepage)
--{
--	__free_page(ptepage);
--}
--
--static inline void pte_free(struct mm_struct *mm, struct page *ptepage)
--{
--	pgtable_pte_page_dtor(ptepage);
--	__free_page(ptepage);
--}
--
- #define __pte_free_tlb(tlb, pte, addr)	pte_free((tlb)->mm, (pte))
- 
- #define pmd_populate(mm, pmd, pte) \
--- 
-2.7.4
+> 
+> > +
+> > +  reset-names:
+> > +    items:
+> > +      - const: byte
+> > +      - const: dpi
+> > +      - const: esc
+> > +      - const: pclk
+> > +
+> > +  mux-sel:
+> 
+> Needs a vendor prefix and will need a $ref to the type.
 
+Made that fsl,mux-sel. This require me to add '$ref:
+/schemas/types.yaml#definitions/phandle' as well which
+I hope is correct.
+
+> > +    maxItems: 1
+> > +    description:
+> > +      A phandle to the MUX register set
+> > +
+> > +  port:
+> > +    type: object
+> > +    description:
+> > +      A input put or output port node.
+> > +
+> > +  ports:
+> > +    type: object
+> > +    description:
+> > +      A node containing DSI input & output port nodes with endpoint
+> > +      definitions as documented in
+> > +      Documentation/devicetree/bindings/graph.txt.
+> 
+> You need to define what port@0 and port@1 are.
+
+Added.
+
+> 
+> > +
+> > +patternProperties:
+> > +  "^panel@[0-9]+$": true
+> > +
+> > +allOf:
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - fsl,imx8mq-nwl-dsi
+> 
+> This conditional isn't needed until you have more than one compatible.
+
+Again intended for other upcoming SoCs but dropped for now.
+
+> > +      required:
+> > +        - resets
+> > +        - reset-names
+> > +        - mux-sel
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - clocks
+> > +  - clock-names
+> > +  - phys
+> > +  - phy-names
+> 
+> ports should be required.
+
+Added.
+
+> > +
+> > +examples:
+> > + - |
+> > +
+> > +   mipi_dsi: mipi_dsi@30a00000 {
+> > +              #address-cells = <1>;
+> > +              #size-cells = <0>;
+> > +              compatible = "fsl,imx8mq-nwl-dsi";
+> > +              reg = <0x30A00000 0x300>;
+> > +              clocks = <&clk 163>, <&clk 244>, <&clk 245>, <&clk 164>;
+> > +              clock-names = "core", "rx_esc", "tx_esc", "phy_ref";
+> > +              interrupts = <0 34 4>;
+> > +              power-domains = <&pgc_mipi>;
+> > +              resets = <&src 0>, <&src 1>, <&src 2>, <&src 3>;
+> > +              reset-names = "byte", "dpi", "esc", "pclk";
+> > +              mux-sel = <&iomuxc_gpr>;
+> > +              phys = <&dphy>;
+> > +              phy-names = "dphy";
+> > +
+> > +              panel@0 {
+> > +                      compatible = "...";
+> 
+> Needs to be a valid compatible. Also need 'reg' here or drop the
+> unit-address.
+
+Fixed.
+
+> 
+> 
+> > +                      port@0 {
+> > +                           panel_in: endpoint {
+> > +                                     remote-endpoint = <&mipi_dsi_out>;
+> > +                           };
+> > +                      };
+> > +              };
+> > +
+> > +              ports {
+> > +                    #address-cells = <1>;
+> > +                    #size-cells = <0>;
+> > +
+> > +                    port@0 {
+> > +                           reg = <0>;
+> > +                           mipi_dsi_in: endpoint {
+> > +                                        remote-endpoint = <&lcdif_mipi_dsi>;
+> > +                           };
+> > +                    };
+> > +                    port@1 {
+> > +                           reg = <1>;
+> > +                           mipi_dsi_out: endpoint {
+> > +                                         remote-endpoint = <&panel_in>;
+> > +                           };
+> > +                    };
+> > +              };
+> > +      };
+> > --
+> > 2.20.1
+> >
+> 
+
+Cheers and thanks again for having a look!
+ -- Guido
