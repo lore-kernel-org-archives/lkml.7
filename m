@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0560C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E82C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BED50206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 600D220840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbfHML1l (ORCPT
+        id S1727470AbfHML1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 07:27:41 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:31410 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726086AbfHML1i (ORCPT
+        Tue, 13 Aug 2019 07:27:40 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:41430 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727221AbfHML1g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 07:27:38 -0400
-X-UUID: f8a3215a55fc4033896a0cf57fca320a-20190813
-X-UUID: f8a3215a55fc4033896a0cf57fca320a-20190813
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        Tue, 13 Aug 2019 07:27:36 -0400
+X-UUID: 0f564156c2224fd1b34e5e34dec02874-20190813
+X-UUID: 0f564156c2224fd1b34e5e34dec02874-20190813
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1122873722; Tue, 13 Aug 2019 19:27:35 +0800
+        with ESMTP id 2087766564; Tue, 13 Aug 2019 19:27:21 +0800
 Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 13 Aug 2019 19:27:28 +0800
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 13 Aug 2019 19:27:15 +0800
 Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 13 Aug 2019 19:27:25 +0800
+ Transport; Tue, 13 Aug 2019 19:27:18 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -52,97 +52,79 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-mediatek@lists.infradead.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Nagarjuna Kristam <nkristam@nvidia.com>,
-        Yu Chen <chenyu56@huawei.com>,
-        John Stultz <john.stultz@linaro.org>
-Subject: [PATCH next v9 05/11] usb: roles: Introduce stubs for the exiting functions in role.h
-Date:   Tue, 13 Aug 2019 19:27:08 +0800
-Message-ID: <1565695634-9711-6-git-send-email-chunfeng.yun@mediatek.com>
+        Yu Chen <chenyu56@huawei.com>
+Subject: [PATCH next v9 01/11] dt-binding: usb: add usb-role-switch property
+Date:   Tue, 13 Aug 2019 19:27:04 +0800
+Message-ID: <1565695634-9711-2-git-send-email-chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1565695634-9711-1-git-send-email-chunfeng.yun@mediatek.com>
 References: <1565695634-9711-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 9737C08D42A8AE0F6A36C02FECFEC8E765F4B4042968080360DD0413990E83582000:8
+X-TM-SNTS-SMTP: 4D4870D9DDE1AA1DBBFF399EF85E13D5FA9F4047E26415FA4F7AADC57F32E04E2000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu Chen <chenyu56@huawei.com>
+Add a property usb-role-switch to tell the driver that use
+USB Role Switch framework to handle the role switch,
+it's useful when the driver has already supported other ways,
+such as extcon framework etc.
 
-This patch adds stubs for the exiting functions while
-CONFIG_USB_ROLE_SWITCH does not enabled.
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: John Stultz <john.stultz@linaro.org>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Yu Chen <chenyu56@huawei.com>
+Cc: Biju Das <biju.das@bp.renesas.com>
+Cc: Yu Chen <chenyu56@huawei.com>
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
-v8~v9 no changes
-
-v7:
-  add Signed-off-by Chunfeng
+v7~v9: no changes
 
 v6:
-  merge this patch [1] into this series to add new API
+    1. merge into this series patch
+    2. add Reviewed-by
 
-	[1] https://patchwork.kernel.org/patch/10909971/
+(no v4, v5)
+
+v3:
+    add property type, modify description suggested by Heikki
+
+v2:
+    describe it in terms of h/w functionality suggested by Rob
+
+v1:
+    the property is discussed in:
+    [v2,2/7] dt-bindings: usb: renesas_usb3: add usb-role-switch property
+    https://patchwork.kernel.org/patch/10852497/
+
+    Mediatek and Hisilicon also try to use it:
+    [v4,3/6] dt-bindings: usb: mtu3: add properties about USB Role Switch
+    https://patchwork.kernel.org/patch/10918385/
+    [v4,6/6] usb: mtu3: register a USB Role Switch for dual role mode
+    https://patchwork.kernel.org/patch/10918367/
+
+    [v6,10/13] usb: dwc3: Registering a role switch in the DRD code
+    https://patchwork.kernel.org/patch/10909981/
 ---
- include/linux/usb/role.h | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ Documentation/devicetree/bindings/usb/generic.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
-index c05ffa6abda9..da2b9641b877 100644
---- a/include/linux/usb/role.h
-+++ b/include/linux/usb/role.h
-@@ -42,6 +42,8 @@ struct usb_role_switch_desc {
- 	bool allow_userspace_control;
- };
+diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+index 0a74ab8dfdc2..cf5a1ad456e6 100644
+--- a/Documentation/devicetree/bindings/usb/generic.txt
++++ b/Documentation/devicetree/bindings/usb/generic.txt
+@@ -30,6 +30,10 @@ Optional properties:
+ 			optional for OTG device.
+  - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
+ 			optional for OTG device.
++ - usb-role-switch: boolean, indicates that the device is capable of assigning
++			the USB data role (USB host or USB device) for a given
++			USB connector, such as Type-C, Type-B(micro).
++			see connector/usb-connector.txt.
  
-+
-+#if IS_ENABLED(CONFIG_USB_ROLE_SWITCH)
- int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
- enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
- struct usb_role_switch *usb_role_switch_get(struct device *dev);
-@@ -51,5 +53,33 @@ struct usb_role_switch *
- usb_role_switch_register(struct device *parent,
- 			 const struct usb_role_switch_desc *desc);
- void usb_role_switch_unregister(struct usb_role_switch *sw);
-+#else
-+static inline int usb_role_switch_set_role(struct usb_role_switch *sw,
-+		enum usb_role role)
-+{
-+	return 0;
-+}
-+
-+static inline enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
-+{
-+	return USB_ROLE_NONE;
-+}
-+
-+static inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
-+static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
-+
-+static inline struct usb_role_switch *
-+usb_role_switch_register(struct device *parent,
-+			 const struct usb_role_switch_desc *desc)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
-+static inline void usb_role_switch_unregister(struct usb_role_switch *sw) { }
-+#endif
+ This is an attribute to a USB controller such as:
  
- #endif /* __LINUX_USB_ROLE_H */
 -- 
 2.22.0
 
