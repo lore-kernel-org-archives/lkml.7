@@ -2,135 +2,132 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B627C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FC8C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6164C20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:51:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kcmhkiuO";
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Nc8KdvEM"
+	by mail.kernel.org (Postfix) with ESMTP id 64D0620665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:51:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728472AbfHMJvq (ORCPT
+        id S1728484AbfHMJvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 13 Aug 2019 05:51:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:32866 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728466AbfHMJvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 13 Aug 2019 05:51:46 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:57898 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727890AbfHMJvp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:51:45 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D9nFOG016489;
-        Tue, 13 Aug 2019 09:51:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : subject
- : from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=corp-2019-08-05;
- bh=kyPIjO27oB72GLTsVcnxsAv0kJDQtfl0IzTAum6ojek=;
- b=kcmhkiuOmv0oYQi5OPzF9osdz7+bo7yoSXgjRgG1NAhUu3WcDaebg2xHw97VJLaCHBcx
- F2jDxB9tMl32E2zoQm5QQHuvfy7mvmNx2nYorz5jehmaU7JqyQVNmL9FH8p+x97cAEGD
- 8+etznfdhqt9O+Fky33OsU4QGWoDAHTIJ+uknRlen5oZb8N89l6qtVgLCS+lvqCnoDDf
- iEcok/maVV3tAM21DjTaGWFOn8p+1l5z2bX7VFIDJvMMJLgzlspM5o5N7cO8CAbetZcf
- bn3RW4rcKulilvuQPkJPQ3RPlqF3jQ8iluSepqFZl+711xTqx+vz+yY1FGglA1HIeJF+ pQ== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : subject
- : from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=corp-2018-07-02;
- bh=kyPIjO27oB72GLTsVcnxsAv0kJDQtfl0IzTAum6ojek=;
- b=Nc8KdvEMmM3jNiuK3jeEAFgXthR4fLpum+U9m6yQ/Ysv81woltVn9LNejPlLREsYfMrX
- 2LxN/DiBxXCRP7S9QAy0mMeKfEmAnNNQgE69x5Zao2KpoAuINCSpFPW9yNVFPvEK9MPf
- HL5WJ9iBJuqh98WLFJ7FUuGmYzMRYpIA35aE1NjeQ4TLIqSCpfBcU40CEcs1iXqkYPQh
- M7KCxdmC84/wgU0ZNqPi4UxsKzfDp/2+WZLRBGQCekTkCTBBL2nZXCa4E9C3tTPZbmRb
- Je4Ozgen/wJq6jfx/9YbxIL9c6DaCAn4/CjKY/4+nK9QN4dJb1jlmWcZL4KQredQVimI lQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2u9nbtd996-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 09:51:18 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D9laLB094626;
-        Tue, 13 Aug 2019 09:51:17 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2u9m0b5ykf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 09:51:17 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7D9pAXh004636;
-        Tue, 13 Aug 2019 09:51:10 GMT
-Received: from abi.no.oracle.com (/141.143.213.43)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 13 Aug 2019 02:51:10 -0700
-Message-ID: <f0e1a6efa8f21ab93935c4c19e13b904d4a71f98.camel@oracle.com>
-Subject: Re: [RFC 00/19] Integration of Kernel Test Framework (KTF) into the
- kernel tree
-From:   Knut Omang <knut.omang@oracle.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Shuah Khan <shuah@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Shreyans Devendra Doshi <0xinfosect0r@gmail.com>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Hidenori Yamaji <hidenori.yamaji@sony.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Timothy Bird <Tim.Bird@sony.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Daniel Vetter <daniel@ffwll.ch>,
-        Stephen Boyd <sboyd@kernel.org>
-Date:   Tue, 13 Aug 2019 11:51:05 +0200
-In-Reply-To: <20190813082336.GB17627@kroah.com>
-References: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
-         <20190813082336.GB17627@kroah.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3AC3A337;
+        Tue, 13 Aug 2019 02:51:46 -0700 (PDT)
+Received: from red-moon (red-moon.cambridge.arm.com [10.1.197.39])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 026FC3F706;
+        Tue, 13 Aug 2019 02:51:43 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 10:51:51 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "tpiepho@impinj.com" <tpiepho@impinj.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "yue.wang@amlogic.com" <yue.wang@amlogic.com>,
+        "hayashi.kunihiko@socionext.com" <hayashi.kunihiko@socionext.com>,
+        "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
+        "jonnyc@amazon.com" <jonnyc@amazon.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [EXT] Re: [PATCHv5 1/2] PCI: layerscape: Add the bar_fixed_64bit
+ property in EP driver.
+Message-ID: <20190813095151.GA10070@red-moon>
+References: <20190813062840.2733-1-xiaowei.bao@nxp.com>
+ <61e6df1c-a0dc-8f05-f74a-85a3cac9823f@ti.com>
+ <AM5PR04MB32993CC1344DD660A298C7E1F5D20@AM5PR04MB3299.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908130105
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908130105
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM5PR04MB32993CC1344DD660A298C7E1F5D20@AM5PR04MB3299.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-08-13 at 10:23 +0200, Greg Kroah-Hartman wrote:
-> On Tue, Aug 13, 2019 at 08:09:15AM +0200, Knut Omang wrote:
-> > and in the making::
+You should fix your email client set-up to avoid sticking an [EXT]
+tag to your emails $SUBJECT.
+
+On Tue, Aug 13, 2019 at 07:39:48AM +0000, Xiaowei Bao wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Kishon Vijay Abraham I <kishon@ti.com>
+> > Sent: 2019年8月13日 15:30
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>; lorenzo.pieralisi@arm.com;
+> > bhelgaas@google.com; M.h. Lian <minghuan.lian@nxp.com>; Mingkai Hu
+> > <mingkai.hu@nxp.com>; Roy Zang <roy.zang@nxp.com>;
+> > l.stach@pengutronix.de; tpiepho@impinj.com; Leonard Crestez
+> > <leonard.crestez@nxp.com>; andrew.smirnov@gmail.com;
+> > yue.wang@amlogic.com; hayashi.kunihiko@socionext.com;
+> > dwmw@amazon.co.uk; jonnyc@amazon.com; linux-pci@vger.kernel.org;
+> > linux-kernel@vger.kernel.org; linuxppc-dev@lists.ozlabs.org;
+> > linux-arm-kernel@lists.infradead.org
+> > Subject: [EXT] Re: [PATCHv5 1/2] PCI: layerscape: Add the bar_fixed_64bit
+> > property in EP driver.
 > > 
-> > kunit/			  (kernel only (UML))
-> 
-> You are going to have to integrate this with kunit, to come up with a
-> superset of both in the end.
+> > Caution: EXT Email
 
-Yes, I agree - getting to a unified approach has been my intention since I first brought this
-up at LPC'17.
+See above, this "Caution" stuff should disappear.
 
-> And I do not think that kunit is only UML, it's just that seems to be
-> what Brendan tests with, but should work with other arches as well.
+Also, quoting the email header is useless, please configure your email
+client to remove it.
 
-If I get Brendan right, it is UML only now but can be extended to also support 
-kernels running on real hardware. Still it is kernel only, while KTF also has the 
-hybrid mode, where a test can have code and assertions both in user mode and kernel mode.
-This is made easier and more streamlined by letting all reporting happen from user mode.
+Thanks,
+Lorenzo
 
-Thanks!
-Knut
-
-> thanks,
-> 
-> greg k-h
-
+> > On 13/08/19 11:58 AM, Xiaowei Bao wrote:
+> > > The PCIe controller of layerscape just have 4 BARs, BAR0 and BAR1 is
+> > > 32bit, BAR2 and BAR4 is 64bit, this is determined by hardware, so set
+> > > the bar_fixed_64bit with 0x14.
+> > >
+> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > 
+> > Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> > > ---
+> > > v2:
+> > >  - Replace value 0x14 with a macro.
+> > > v3:
+> > >  - No change.
+> > > v4:
+> > >  - send the patch again with '--to'.
+> > > v5:
+> > >  - fix the commit message.
+> > >
+> > >  drivers/pci/controller/dwc/pci-layerscape-ep.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > index be61d96..ca9aa45 100644
+> > > --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > @@ -44,6 +44,7 @@ static const struct pci_epc_features
+> > ls_pcie_epc_features = {
+> > >       .linkup_notifier = false,
+> > >       .msi_capable = true,
+> > >       .msix_capable = false,
+> > > +     .bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+> > >  };
+> > >
+> > >  static const struct pci_epc_features*
+> I check other platforms, it is 'static const struct pci_epc_features', I can get the correct 
+> Value use this define way in pci-epf-test.c file.
+> > >
