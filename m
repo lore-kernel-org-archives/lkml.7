@@ -2,88 +2,122 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C66FCC41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1592C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B03220843
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9538420840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:05:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565676345;
+	bh=3uzo3mQSzc78ZoKZlKPkT2B9slgeag95jiTjsCYmpaA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oC69x+TJixWxSLjqwJk6pNwOSsBEK7OJ/ZWYPXUnlgejvX2CnKX/dXfngNyrAq8zS
+	 isxj3qq27bRe22ODaKUN5Zl6K3UgwVwWoaMW+365zEhdpP9CCaL+dqZ5JuOSeg8rBd
+	 YmEm5xaE7PNjujT5V/Ztl/6A75Znuls06gMk88bk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727342AbfHMGFm (ORCPT
+        id S1727371AbfHMGFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 13 Aug 2019 02:05:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44474 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725842AbfHMGFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 13 Aug 2019 02:05:42 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37280 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfHMGFm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 02:05:42 -0400
-Received: by mail-lf1-f66.google.com with SMTP id c9so75872757lfh.4;
-        Mon, 12 Aug 2019 23:05:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5zt07Eoa1ycI7ox8mSSL/qwrX1PHGOhlUz3HEiThMhQ=;
-        b=N0lZY//vVPaW4uShnsDoorYmV0G1e7RazGMG3NNE1jz0xoM+sGPGKfNr1yYr/Ao1ZV
-         f3YwnQkze4sAnzip9qTuqwHD25fmED3qOtYj0lH98N51302WTshX2Y6L0CVrhrHkzX0F
-         wU9o0JG1xEGqmyBBOUCR0l+wElM+KfcSd6qWkX81tippUWki8DPySNZt3Cl49ZPXvGfG
-         2qoazLmH/8xKXIhvUw0Qtuz7aTnlTr3zgQaODGc2GmOfuu3+90O7PEHZSYhNREg6aYCh
-         itk85w6w4aYfbRCgIXcjcrKAAOWRJ9/c8WqzfZHfR4OtGMm6mhXKo/2LSARZVLONS1eW
-         b1zA==
-X-Gm-Message-State: APjAAAVM1xxLHBuUXF/IjSLVYgWj2HIx1NUV1buNdQVA4iV08Gokbq63
-        u4L4VWDIEUlMUoHJG46zgtFklCfM0Ek=
-X-Google-Smtp-Source: APXvYqz7x0+9GQcedanCeYjvFHgaFR1ZNePXc3avojJiWzg/3aia86Ewg/Dr/+mKDN1JJxaROxfBMA==
-X-Received: by 2002:a19:c213:: with SMTP id l19mr21054090lfc.83.1565676339906;
-        Mon, 12 Aug 2019 23:05:39 -0700 (PDT)
-Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id n7sm4125276lfk.24.2019.08.12.23.05.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 23:05:39 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>, joe@perches.com,
-        Sridhar Samudrala <sridhar.samudrala@intel.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: net_failover: Fix typo in a filepath
-Date:   Tue, 13 Aug 2019 09:05:30 +0300
-Message-Id: <20190813060530.13138-1-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190325212732.27253-1-joe@perches.com>
-References: <20190325212732.27253-1-joe@perches.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D64AE206C2;
+        Tue, 13 Aug 2019 06:05:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565676342;
+        bh=3uzo3mQSzc78ZoKZlKPkT2B9slgeag95jiTjsCYmpaA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BY1UtaM6n6FcoS/iA1XdjC21fMDu+9Wxt4sbmhraEEStUVvaFlmnfinXcD0BEoy8b
+         pFQgZoiO82x5vt5JeCA5OLDzgJ8Rn8MgRIeCoFTNbrReVvZCAtCPRUeRufmmvXZ1oi
+         xariAfItaUFM41pVrfLpgveD55w1synbGRWF2ctc=
+Date:   Tue, 13 Aug 2019 08:05:40 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        kbuild test robot <lkp@intel.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v2] driver/core: Fix build error when SRCU and lockdep
+ disabled
+Message-ID: <20190813060540.GE6670@kroah.com>
+References: <20190812214918.101756-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812214918.101756-1-joel@joelfernandes.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace "driver" with "drivers" in the filepath to net_failover.c
+On Mon, Aug 12, 2019 at 05:49:17PM -0400, Joel Fernandes (Google) wrote:
+> Check if lockdep lock checking is disabled. If so, then do not define
+> device_links_read_lock_held(). It is used only from places where lockdep
+> checking is enabled.
+> 
+> Also fix a bug where I was not checking dep_map. Previously, I did not
+> test !SRCU configs so this got missed. Now it is sorted.
+> 
+> Link: https://lore.kernel.org/lkml/201908080026.WSAFx14k%25lkp@intel.com/
+> Fixes: c9e4d3a2fee8 ("acpi: Use built-in RCU list checking for acpi_ioremaps list")
+>  (Based on RCU's dev branch)
+> 
+> Cc: kernel-team@android.com
+> Cc: kbuild test robot <lkp@intel.com>,
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+> Cc: Josh Triplett <josh@joshtriplett.org>,
+> Cc: Lai Jiangshan <jiangshanlai@gmail.com>,
+> Cc: linux-doc@vger.kernel.org,
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>,
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+> Cc: rcu@vger.kernel.org,
+> Cc: Steven Rostedt <rostedt@goodmis.org>,
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Cc: Sridhar Samudrala <sridhar.samudrala@intel.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
-Fixes: cfc80d9a1163 ("net: Introduce net_failover driver")
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Nit, drop those blank lines above, should all be in one big "block">
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 51ab502485ac..c2117e5f4ff8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11071,7 +11071,7 @@ NET_FAILOVER MODULE
- M:	Sridhar Samudrala <sridhar.samudrala@intel.com>
- L:	netdev@vger.kernel.org
- S:	Supported
--F:	driver/net/net_failover.c
-+F:	drivers/net/net_failover.c
- F:	include/net/net_failover.h
- F:	Documentation/networking/net_failover.rst
- 
--- 
-2.21.0
+> ---
+>  drivers/base/core.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 32cf83d1c744..c22271577c84 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -97,10 +97,12 @@ void device_links_read_unlock(int not_used)
+>  	up_read(&device_links_lock);
+>  }
+>  
+> +#ifdef CONFIG_DEBUG_LOCK_ALLOC
+>  int device_links_read_lock_held(void)
+>  {
+> -	return lock_is_held(&device_links_lock);
+> +	return lock_is_held(&(device_links_lock.dep_map));
+>  }
+> +#endif
 
+I don't know what the original code looks like here, but I'm guessing
+that some .h file will need to be fixed up as you are just preventing
+this function from ever being present without that option enabled?
+
+thanks,
+
+greg k-h
