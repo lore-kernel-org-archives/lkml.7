@@ -2,143 +2,296 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 659C2C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CA2C32753
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD8420651
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AC0220665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:52:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="cZYdEYqH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d9yKr6zA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbfHMHvq (ORCPT
+        id S1727714AbfHMHwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 03:51:46 -0400
-Received: from mout.web.de ([212.227.15.3]:48099 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbfHMHvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 03:51:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1565682664;
-        bh=V01gp/w04ZjopqkMSgzFlyhYSrsB6LuFV8+G4mLHDnM=;
-        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
-        b=cZYdEYqHUIF71PCyXjlATlwdpEVAZ+vhpWKFUN3b+1zioxjZ2JTPowAMU5ogAjdrS
-         X/4ybfqUvdOTFCRqaX1sXEctegexyQKs3EQAkHedu58dAyEfohsjYux903HT16vMvs
-         H7G2KwusiDZPOLKhh/GAKeMkS2rShZdrZe0kq4Uw=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.76.64]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0La1Sn-1ij73t1fKv-00lmff; Tue, 13
- Aug 2019 09:51:04 +0200
-Cc:     kernel-hardening@lists.openwall.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Denis Efremov <efremov@linux.com>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Jann Horn <jannh@google.com>, Jens Axboe <axboe@kernel.dk>,
-        Jiri Kosina <jikos@kernel.org>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Nicolas Palix <nicolas.palix@imag.fr>
-References: <9ced7a06-5048-ad1a-3428-c8f943f7469c@linux.com>
-Subject: Re: floppy: fix usercopy direction
-To:     Alexander Popov <alex.popov@linux.com>, cocci@systeme.lip6.fr
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <6168f58a-891c-1527-93ec-4d3778a59aa2@web.de>
-Date:   Tue, 13 Aug 2019 09:50:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 13 Aug 2019 03:52:16 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41484 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727166AbfHMHwQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 03:52:16 -0400
+Received: by mail-pg1-f196.google.com with SMTP id x15so40483478pgg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 00:52:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QRTz9Xji1GnKtiBfvHtH9s0qQk1TmYlPxSNoKQScUSU=;
+        b=d9yKr6zAnRu5DLLhnVYGTN713jhVE7qQb/8wlQF/PDbGT/kyDXdm8ubBG3qPavV6nZ
+         u8/FB1rvN8wMU0yFPzjHRFBN1hKKU7wA/8PY9ud7efhPQJtWF8cp3djkdljM/WA8V8gm
+         bqlhiw6x+7V27woDkusatGNHK7XmvCHrSVdLLnEw0A9+0fZm3mPG7SlHF0PJ/Lupaifz
+         L71DVEtMYTgQuS82s2biq6SM/r1tk7PeT+IKYJss0dEuDaiJyvwR70N87LLGLnE/iHvq
+         az6JJK9ulszSFJIw00Tx/0ArednhKrhXSaivVF1sQb8YUpZB4etPZYKA7SF43FRjwDOA
+         SQPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QRTz9Xji1GnKtiBfvHtH9s0qQk1TmYlPxSNoKQScUSU=;
+        b=bcSHr+qNem4fb6I+jzpGRjsCZNvyYC+y60UbQYB6eTJBU5w72fi95PVQXyUfCealaq
+         2vzOcenVIztopXVY8qGSUnF+BuWgssk8B3Ml9duySW84DCdYYt1UzqH4GUenhICo9T1K
+         oaRLmLrqo8EXdiCVCO4pEeb1CJ2m8DByoZE1PAeNXrZlHyqjOCviUAZbACZZOji0FHb2
+         7ZgMIudClMxzPbz48KlaQTeWDmq3os91Ylk9FO1n5ADoZ7fwTM5TjYMfvbH7BAMX4r82
+         t8lTlGALboDD7NmjH7zuMZpo7patWlL2gYeVR8UCaL3Qmyilqs0z1Mei8goB6N094lOp
+         kpKA==
+X-Gm-Message-State: APjAAAWHzuy5I3QIVxTv0dDFS5loBDiXDleGCq4sBXrSrd9XmfKSpm5R
+        OZoYnKDhjYVCNhdbW9BhQxmMf5QGOqyvE0sKcRCI+A==
+X-Google-Smtp-Source: APXvYqyGp5FRBIbLsTLczd2XTjqdRRlw2nloNXwwo2pdocKRPV3RlOKTfDT9Lww7NrP1xso9VQHgOv3E8oAazxyso+4=
+X-Received: by 2002:aa7:8f2e:: with SMTP id y14mr10342747pfr.113.1565682734344;
+ Tue, 13 Aug 2019 00:52:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <9ced7a06-5048-ad1a-3428-c8f943f7469c@linux.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:RtvWsN85Lv08lGLSsKH9XvVQOe95drRnwlvrMlEEiFj+RuEg1o5
- J2lEmjxW9l5b2whmTn+59ttXvoYVGYYB4MWL5BdmTdNcEZTOkMlEJfxVWfvf/kurv8RxPOX
- 8QiRLdocKPm2lAK7j/XmNZwa8NZ35fkxQaslhD3QUcW7bUWKRm2IPKTrNBg+FWjDU/+xX9+
- fCFV6Vo2r96eStQaa33UA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:94H3yKCCfVM=:gEDyJIzOxmXRU/yY+w5GuA
- kKTyQJk6mvlRnbmDDNJ7fkJo/kvo0ylqFfvqDeIi63Y4bD4xL7Pyfo45iqtWfU9erCuJdor2M
- YuUQjLlpQBgX17kl9e9nAqxmdMpnp9mdCHOV6RPLqIv+2AxEOoN7Fe4m3AZ7kqNAaWPw8SxjX
- J5nvYGcYzOZRlS1S/G2tS4OEgDqByEyvKRdSYb0lnFpSoooEx2R7IZ0bd2ZvKfpnrQY/l0+WA
- 0ykfL/EishjZbXewDAk1g7XcJ+S7cjti3WU3KO9vClfmGIuuO43YwstwxCyLJ/m6kPd4RQ3Qz
- Zokm4AwDL7AwPLMIRNPyw8i3u11KJD0p4fJ1ffBuU8hC7liSDPIFjKXlvy27WLUUeikuyHOm+
- 8LKwTXc74V+EB33rUG5orGpP2l3aRZoxF1egZo0cnUrH6nRpveiI994BXq8SkiwtPoL712hHv
- wgn6zeC47Aa3fVjZyMhXPyOgqqjTOARPToDA18A35artmEchn32+1wGVZA+N59SonGjFXfKUb
- v6Ziu1ESbhHm5oAv/T9hfCc8ku2uID1fxroVRmJIE/opurxKqwYxPfrHKAMHpo8C8AIl3Uj/I
- zJiBqn4XFBXzga5vhMNe2x+plUUt9klgMCe5Ak/ht2f5fTXh+S+ptnzo3671o/j68e8sdrXAS
- kEx/eE5OQX+1racJxeWJ0VBvIrsrG6tg+hSpvfIGtqaC5fLSQ+LNIV39YiwLK8GMeeNILDZu5
- 8xEUiN0hKJ+56YGvg2+fTutaH8SBYJotJjIiK8D26vPSkSBb1Ysw8aS/UKdXZd6uTq+u9UQo1
- DjGJ8N9fJMZftm2H3n3H7AIyaSpndef5+/hbv87XAzxuRv0kj+cPVLZhcntNjCo0xThSDHBxM
- hH9nHA5qpAUNfhLE7p1XYvAHNQL4Xf6viZJStCass4QFt9xpCBbmerhLstnYUb1LrEHQwK3ix
- 23cseQoW7AGf9nqgPKvxghWUPw4JIPqXpEwxu2iSQBRwdHQeSff+Tw2/yqxnEd1843BKoms95
- qgmJ/g2vpI6yQJnK5JYgtRG8zA5Vuq8/m6ITeVN5ZROynfkXHkTnuKFS/GVtiwHto2foPyaGC
- v75pCT1eJd0k4R3rvhWrpyso1Hxm5H4weGplm0cxvdOL3Bpo1E02lRODCIYsQDX911latoRCj
- qtJxQ=
+References: <20190812182421.141150-1-brendanhiggins@google.com>
+ <20190812182421.141150-10-brendanhiggins@google.com> <20190813042159.46814206C2@mail.kernel.org>
+ <CAFd5g44XyQi-oprPcdgx-EPboQYaHY6Ocz8Te6NX2SxV=mVhQA@mail.gmail.com> <20190813055615.CA787206C2@mail.kernel.org>
+In-Reply-To: <20190813055615.CA787206C2@mail.kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 13 Aug 2019 00:52:03 -0700
+Message-ID: <CAFd5g4415URtJBKPhsEw98GxiExJr-fstW6SQ6nmV9ts9ggK-g@mail.gmail.com>
+Subject: Re: [PATCH v12 09/18] kunit: test: add support for test abort
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> @script:python@
-> f << cfu.f;
-> t << cfu.t;
-> v << cfu.v;
-> decl_p << cfu.decl_p;
-> copy_p << cfu.copy_p;
-> @@
+On Mon, Aug 12, 2019 at 10:56 PM Stephen Boyd <sboyd@kernel.org> wrote:
 >
-> if '__user' in t:
+> Quoting Brendan Higgins (2019-08-12 21:57:55)
+> > On Mon, Aug 12, 2019 at 9:22 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > >
+> > > Quoting Brendan Higgins (2019-08-12 11:24:12)
+> > > > diff --git a/include/kunit/test.h b/include/kunit/test.h
+> > > > index 2625bcfeb19ac..93381f841e09f 100644
+> > > > --- a/include/kunit/test.h
+> > > > +++ b/include/kunit/test.h
+> > > > @@ -176,6 +178,11 @@ struct kunit {
+> > > >          */
+> > > >         bool success; /* Read only after test_case finishes! */
+> > > >         spinlock_t lock; /* Gaurds all mutable test state. */
+> > > > +       /*
+> > > > +        * death_test may be both set and unset from multiple threads in a test
+> > > > +        * case.
+> > > > +        */
+> > > > +       bool death_test; /* Protected by lock. */
+> > > >         /*
+> > > >          * Because resources is a list that may be updated multiple times (with
+> > > >          * new resources) from any thread associated with a test case, we must
+> > > > @@ -184,6 +191,13 @@ struct kunit {
+> > > >         struct list_head resources; /* Protected by lock. */
+> > > >  };
+> > > >
+> > > > +static inline void kunit_set_death_test(struct kunit *test, bool death_test)
+> > > > +{
+> > > > +       spin_lock(&test->lock);
+> > > > +       test->death_test = death_test;
+> > > > +       spin_unlock(&test->lock);
+> > > > +}
+> > >
+> > > These getters and setters are using spinlocks again. It doesn't make any
+> > > sense. It probably needs a rework like was done for the other bool
+> > > member, success.
+> >
+> > No, this is intentional. death_test can transition from false to true
+> > and then back to false within the same test. Maybe that deserves a
+> > comment?
+>
+> Yes. How does it transition from true to false again?
 
-Can this check be specified as a constraint for a metavariable
-in the initial SmPL rule?
-Would you like to move it to an other place?
+The purpose is to tell try_catch that it was expected for the test to
+bail out. Given the default implementation there is no way for this to
+happen aside from abort() being called, but in some implementations it
+is possible to implement a fault catcher which allows a test suite to
+recover from an unexpected failure.
 
-Regards,
-Markus
+Maybe it would be best to drop this until I add one of those
+alternative implementations.
+
+> Either way, having a spinlock around a read/write API doesn't make sense
+> because it just makes sure that two writes don't overlap, but otherwise
+> does nothing to keep things synchronized. For example a set to true
+> after a set to false when the two calls to set true or false aren't
+> synchronized means they can happen in any order. So I don't see how it
+> needs a spinlock. The lock needs to be one level higher.
+
+There shouldn't be any cases where one thread is trying to set it
+while another is trying to unset it. The thing I am worried about here
+is making sure all the cores see the write, and making sure no reads
+or writes get reordered before it. So I guess I just want a fence. So
+I take it I should probably have is a WRITE_ONCE here and READ_ONCE in
+the getter?
+
+> >
+> > > > +
+> > > >  void kunit_init_test(struct kunit *test, const char *name);
+> > > >
+> > > >  int kunit_run_tests(struct kunit_suite *suite);
+> > > > diff --git a/include/kunit/try-catch.h b/include/kunit/try-catch.h
+> > > > new file mode 100644
+> > > > index 0000000000000..8a414a9af0b64
+> > > > --- /dev/null
+> > > > +++ b/include/kunit/try-catch.h
+> [...]
+> > > > +
+> > > > +/*
+> > > > + * struct kunit_try_catch - provides a generic way to run code which might fail.
+> > > > + * @context: used to pass user data to the try and catch functions.
+> > > > + *
+> > > > + * kunit_try_catch provides a generic, architecture independent way to execute
+> > > > + * an arbitrary function of type kunit_try_catch_func_t which may bail out by
+> > > > + * calling kunit_try_catch_throw(). If kunit_try_catch_throw() is called, @try
+> > > > + * is stopped at the site of invocation and @catch is catch is called.
+> > > > + *
+> > > > + * struct kunit_try_catch provides a generic interface for the functionality
+> > > > + * needed to implement kunit->abort() which in turn is needed for implementing
+> > > > + * assertions. Assertions allow stating a precondition for a test simplifying
+> > > > + * how test cases are written and presented.
+> > > > + *
+> > > > + * Assertions are like expectations, except they abort (call
+> > > > + * kunit_try_catch_throw()) when the specified condition is not met. This is
+> > > > + * useful when you look at a test case as a logical statement about some piece
+> > > > + * of code, where assertions are the premises for the test case, and the
+> > > > + * conclusion is a set of predicates, rather expectations, that must all be
+> > > > + * true. If your premises are violated, it does not makes sense to continue.
+> > > > + */
+> > > > +struct kunit_try_catch {
+> > > > +       /* private: internal use only. */
+> > > > +       struct kunit *test;
+> > > > +       struct completion *try_completion;
+> > > > +       int try_result;
+> > > > +       kunit_try_catch_func_t try;
+> > > > +       kunit_try_catch_func_t catch;
+> > >
+> > > Can these other variables be documented in the kernel doc? And should
+> > > context be marked as 'public'?
+> >
+> > Sure, I can document them.
+> >
+> > But I don't think context should be public; it should only be accessed
+> > by kunit_try_catch_* functions. context should only be populated by
+> > *_init, and will be passed into *try and *catch when they are called
+> > internally.
+>
+> Ok. Then I guess just document them all but keep them all marked as
+> private.
+
+Will do.
+
+> >
+> > > > + */
+> > > > +void kunit_generic_try_catch_init(struct kunit_try_catch *try_catch);
+> > > > +
+> > > > +#endif /* _KUNIT_TRY_CATCH_H */
+> > > > diff --git a/kunit/test.c b/kunit/test.c
+> > > > index e5080a2c6b29c..995cb53fe4ee9 100644
+> > > > --- a/kunit/test.c
+> > > > +++ b/kunit/test.c
+> > > > @@ -158,6 +171,21 @@ static void kunit_fail(struct kunit *test, struct kunit_assert *assert)
+> > > >         kunit_print_string_stream(test, stream);
+> > > >  }
+> > > >
+> > > > +void __noreturn kunit_abort(struct kunit *test)
+> > > > +{
+> > > > +       kunit_set_death_test(test, true);
+> > > > +
+> > > > +       kunit_try_catch_throw(&test->try_catch);
+> > > > +
+> > > > +       /*
+> > > > +        * Throw could not abort from test.
+> > > > +        *
+> > > > +        * XXX: we should never reach this line! As kunit_try_catch_throw is
+> > > > +        * marked __noreturn.
+> > > > +        */
+> > > > +       WARN_ONCE(true, "Throw could not abort from test!\n");
+> > >
+> > > Should this just be a BUG_ON? It's supposedly impossible.
+> >
+> > It should be impossible; it will only reach this line if there is a
+> > bug in kunit_try_catch_throw. The reason I didn't use BUG_ON was
+> > because I previously got yelled at for having BUG_ON in this code
+> > path.
+> >
+> > Nevertheless, I think BUG_ON is more correct, so if you will stand by
+> > it, then that's what I will do.
+>
+> Yeah BUG_ON is appropriate here and self documenting so please use it.
+
+Cool, will do.
+
+> >
+> > > > +               return;
+> > > > +       }
+> > > > +
+> > > > +       if (kunit_get_death_test(test)) {
+> > > > +               /*
+> > > > +                * EXPECTED DEATH: kunit_run_case_internal encountered
+> > > > +                * anticipated fatal error. Everything should be in a safe
+> > > > +                * state.
+> > > > +                */
+> > > > +               kunit_run_case_cleanup(test, suite);
+> > > > +       } else {
+> > > > +               /*
+> > > > +                * UNEXPECTED DEATH: kunit_run_case_internal encountered an
+> > > > +                * unanticipated fatal error. We have no idea what the state of
+> > > > +                * the test case is in.
+> > > > +                */
+> > > > +               kunit_handle_test_crash(test, suite, test_case);
+> > > > +               kunit_set_failure(test);
+> > >
+> > > Like was done here.
+> >
+> > Sorry, like what?
+>
+> Just saying this has braces for the if-else.
+
+Ah, gotcha.
