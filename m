@@ -2,122 +2,230 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDDBC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A28C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81F1420844
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7B5820840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:20:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HHI7V9VW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qNjNUq8z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbfHMNUF (ORCPT
+        id S1729070AbfHMNUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:20:05 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53265 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729004AbfHMNUD (ORCPT
+        Tue, 13 Aug 2019 09:20:33 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:34797 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728940AbfHMNUd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:20:03 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 10so1494423wmp.3
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:20:01 -0700 (PDT)
+        Tue, 13 Aug 2019 09:20:33 -0400
+Received: by mail-qt1-f194.google.com with SMTP id q4so9093669qtp.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:20:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=xfLZK+aLXf7IAAQGT9kpcQjUA//C9TO1nW5nQQ+lsfA=;
-        b=HHI7V9VWxdEm2ldMnuSEETf9TtQRRvw0u9IpAnbFdEDIldH0obuMMaRec5Agi5HTUa
-         5IW6bcvigEZ8VrczojbBgrCbpZx2BecDQoam7fTeIDEgcnUem6nskJgAs3Z2oqzXxqID
-         fI1giGDh1UEvzwuXJqe8vE/Ffyw+loocGo/rm8EmKNGyoz7QnMWQzpbYZ0x4/Rwpev8I
-         FE2xzCTqbj/+xYrlcb4PnJZVB0DNbOv0IulMGdy/Yifvnur34UyvGrDqYU5JeqHGz00R
-         O3LewDnqlT66dXkbyGQk+3uviMvG6EZ6SgIRA8KX1hSAP/JykmwXkxfDQls710u+6arZ
-         CaRg==
+        bh=K+RqCx8Sz4OY7JG4Zjdah7/bCRanDWn604Hcnz3VVsc=;
+        b=qNjNUq8zA8MmSyHBBcCk6bZPnsqx4TLLk+BKb6CH4zoKyNcO2VeDB7vgfzB6pWZVrg
+         k2ZPyNHBYK9tPMGdMvl6c7yLtSzHUDVn2kGdunqkDQuyGyFmQn7si5Hh8aFijnB+acSF
+         ucpwWO4nbjZ9saqnh/zPr6GCK0e8i0xXJ+I8YbFu8Oz3JIzO/hWtAanXAZ9+DhYDSffF
+         Lo8hcLSrpx04GYQl29TyIEafngrgLs2bhh2jI8oPWPQQsG0KoQ8rYNjHUcMymZcwshEU
+         qUC1A46/6Gq2/dPN0V++Q5mJB05qzPEAnPJhzQLJpAMPBPI9bDbW+142ucf03zTER08S
+         7X/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xfLZK+aLXf7IAAQGT9kpcQjUA//C9TO1nW5nQQ+lsfA=;
-        b=MZjThgS0xJDkLFXIo1HVnEpWwjttPKWk3sgsCxetQ28wynDqsjd04Ep8fdpmQpROEN
-         l2dLjbjmwaPv7nHvUYKPdhIYpg44khtPgapk6sg+w1AaJmnni1BTIsv1gJQHa8P72JFE
-         3uKcl4c3rAyOtNwug7Un1NHiLJo0cmV/nb5P2JtYU8A5z+aLPttzrW9wdUqJX39HcAN1
-         NoidcwWq6IUPd0N8kpcEaf7C8+yQ9yar+szo5CSiFk4PptU0sFCJT3If89tygbTkLM/W
-         n/J2uSJ0OvCyD/GWad91Mrb1BqpfOORzuWG+bvbWR3/biS406Gj8NvjWQnrpHxZSNDFi
-         J3BA==
-X-Gm-Message-State: APjAAAUqo0Ug1svqnXhDEFO81lCcDjO4J3bLGMEYJoGjxoXQxO3cPR2g
-        0tm+pVPqNz/UpRFzgIOe5FfTFw==
-X-Google-Smtp-Source: APXvYqxD9JIaAO8mg/yD2uQuL4bLr+ORAdUW5lgxOkILCPRyLV+UcWdOnX80lXIzt9mo7IA3xJko4w==
-X-Received: by 2002:a7b:ce0b:: with SMTP id m11mr3274136wmc.151.1565702400644;
-        Tue, 13 Aug 2019 06:20:00 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id d207sm1225341wmd.0.2019.08.13.06.19.59
+        bh=K+RqCx8Sz4OY7JG4Zjdah7/bCRanDWn604Hcnz3VVsc=;
+        b=hn+0TwTE5TSQOeort31nuw8CRB8AkNz7uxb4HqtSrHv8ESSEu7Ev5xBYvMpaE88ZCF
+         CrLtane4e6LHNIrtFJN94sLR3SOaHVUYKFWHsiJ8YBPxV+qrrizYhBM7v0cnyHjw7qRK
+         NvR8Hsnad6ri2PJLIEg+QOQL56R98j7LgRdxnnwyVnOIi8rryOFW6ajrDK1bOnVIBjj6
+         QcTn/wZCSIXJ1aD+aX9jzag3qcMUvMJeToQ2Z2z9/EMqUJbqKMz+wl/T12/tmO8uLZFl
+         uUvybjroO3PT7ZFCCKp/u/qwqQ6vvYwi0v0ElNYoLad7V4lKPCvrb2RfLVdbP633mCOy
+         1Rfw==
+X-Gm-Message-State: APjAAAUexIVi2WXVDKpNO/AEmTwXDT4mBdlZRsN4X6XSWYTBHCL2z/+7
+        pK/NHM4EsFYJ4K3hDUEyywg=
+X-Google-Smtp-Source: APXvYqwua5BPAkwUIl4HEdlri5HURtlX/H6492pLGLcmoLMBVmhK1tqHZucxQ3OMiZoT1jE9A/tQcQ==
+X-Received: by 2002:ad4:5405:: with SMTP id f5mr33807554qvt.242.1565702431854;
+        Tue, 13 Aug 2019 06:20:31 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id v75sm51933501qka.38.2019.08.13.06.20.25
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 06:20:00 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 14:19:58 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Alexander Shiyan <shc_work@mail.ru>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH resend] video: backlight: Drop default m for
- {LCD,BACKLIGHT_CLASS_DEVICE}
-Message-ID: <20190813131958.y3fgzeeuzhsfddbh@holly.lan>
-References: <20190813115853.30329-1-geert@linux-m68k.org>
+        Tue, 13 Aug 2019 06:20:25 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 790F140340; Tue, 13 Aug 2019 10:20:23 -0300 (-03)
+Date:   Tue, 13 Aug 2019 10:20:23 -0300
+To:     "Lubashev, Igor" <ilubashe@akamai.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        James Morris <jmorris@namei.org>
+Subject: Re: [PATCH v3 2/4] perf: Use CAP_SYS_ADMIN with perf_event_paranoid
+ checks
+Message-ID: <20190813132023.GA12299@kernel.org>
+References: <cover.1565188228.git.ilubashe@akamai.com>
+ <ad56df5452eeafb99dda9fc3d30f0f487aace503.1565188228.git.ilubashe@akamai.com>
+ <20190812200134.GE9280@kernel.org>
+ <20190812201557.GF9280@kernel.org>
+ <735aabdfa76f4435bdaff2c63d566044@usma1ex-dag1mb6.msg.corp.akamai.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190813115853.30329-1-geert@linux-m68k.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <735aabdfa76f4435bdaff2c63d566044@usma1ex-dag1mb6.msg.corp.akamai.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 01:58:53PM +0200, Geert Uytterhoeven wrote:
-> When running "make oldconfig" on a .config where
-> CONFIG_BACKLIGHT_LCD_SUPPORT is not set, two new config options
-> ("Lowlevel LCD controls" and "Lowlevel Backlight controls") appear, both
-> defaulting to "m".
+Em Mon, Aug 12, 2019 at 10:33:07PM +0000, Lubashev, Igor escreveu:
+> On Mon, August 12, 2019 at 4:16 PM Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
+> > Em Mon, Aug 12, 2019 at 05:01:34PM -0300, Arnaldo Carvalho de Melo
+> > escreveu:
+> > > Em Wed, Aug 07, 2019 at 10:44:15AM -0400, Igor Lubashev escreveu:
+> > > > +++ b/tools/perf/util/evsel.c
+> > > > @@ -279,7 +279,7 @@ struct evsel *perf_evsel__new_idx(struct
+> > > > perf_event_attr *attr, int idx)
+> > >
+> > > >  static bool perf_event_can_profile_kernel(void)
+> > > >  {
+> > > > -	return geteuid() == 0 || perf_event_paranoid() == -1;
+> > > > +	return perf_event_paranoid_check(-1);
+> > > >  }
+> > >
+> > > While looking at your changes I think the pre-existing code is wrong,
+> > > i.e. the check in sys_perf_event_open(), in the kernel is:
+> > >
+> > >         if (!attr.exclude_kernel) {
+> > >                 if (perf_paranoid_kernel() && !capable(CAP_SYS_ADMIN))
+> > >                         return -EACCES;
+> > >         }
+> > >
+> > > And:
+> > >
+> > > static inline bool perf_paranoid_kernel(void) {
+> > >         return sysctl_perf_event_paranoid > 1; }
+> > >
+> > > So we have to change that perf_event_paranoit_check(-1) to pass 1
+> > > instead?
 > 
-> Drop the "default m", as options should default to disabled, and because
-> several driver config options already select LCD_CLASS_DEVICE or
-> BACKLIGHT_CLASS_DEVICE when needed.
+> Indeed.  This seems right.  It was a pre-existing problem.
 > 
-> Fixes: 8c5dc8d9f19c7992 ("video: backlight: Remove useless BACKLIGHT_LCD_SUPPORT kernel symbol")
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> 
+> > > bool perf_event_paranoid_check(int max_level) {
+> > >         return perf_cap__capable(CAP_SYS_ADMIN) ||
+> > >                         perf_event_paranoid() <= max_level; }
+> > >
+> > > Also you defined perf_cap__capable(anything) as:
+> > >
+> > > #ifdef HAVE_LIBCAP_SUPPORT
+> > >
+> > > #include <sys/capability.h>
+> > >
+> > > bool perf_cap__capable(cap_value_t cap);
+> > >
+> > > #else
+> > >
+> > > static inline bool perf_cap__capable(int cap __maybe_unused)
+> > > {
+> > >         return false;
+> > > }
+> > >
+> > > #endif /* HAVE_LIBCAP_SUPPORT */
+> > >
+> > >
+> > > I think we should have:
+> > >
+> > > #else
+> > >
+> > > static inline bool perf_cap__capable(int cap __maybe_unused) {
+> > >         return geteuid() == 0;
+> > > }
+> > >
+> > > #endif /* HAVE_LIBCAP_SUPPORT */
+> > >
+> > > Right?
+> 
+> You can have EUID==0 and not have CAP_SYS_ADMIN, though this would be rare in practice.  I did not to use EUID in leu of libcap, since kernel does not do so, and therefore it seemed a bit misleading.  But this is a slight matter of taste, and I do not see a problem with choosing to fall back to EUID -- the kernel will do the right thing anyway.
+> 
+> Now, if I were pedantic, I'd say that to use geteuid(), you need to #include <unistd.h> .
 
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+Right, and that is how I did it :-)
 
-> ---
->  drivers/video/backlight/Kconfig | 2 --
->  1 file changed, 2 deletions(-)
+[acme@seventh perf]$ cat tools/perf/util/cap.h
+/* SPDX-License-Identifier: GPL-2.0 */
+#ifndef __PERF_CAP_H
+#define __PERF_CAP_H
+
+#include <stdbool.h>
+#include <linux/capability.h>
+#include <linux/compiler.h>
+
+#ifdef HAVE_LIBCAP_SUPPORT
+
+#include <sys/capability.h>
+
+bool perf_cap__capable(cap_value_t cap);
+
+#else
+
+#include <unistd.h>
+#include <sys/types.h>
+
+static inline bool perf_cap__capable(int cap __maybe_unused)
+{
+	return geteuid() == 0;
+}
+
+#endif /* HAVE_LIBCAP_SUPPORT */
+
+#endif /* __PERF_CAP_H */
+[acme@seventh perf]$
+ 
 > 
-> diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
-> index 8b081d61773e21eb..40676be2e46aae61 100644
-> --- a/drivers/video/backlight/Kconfig
-> +++ b/drivers/video/backlight/Kconfig
-> @@ -10,7 +10,6 @@ menu "Backlight & LCD device support"
->  #
->  config LCD_CLASS_DEVICE
->          tristate "Lowlevel LCD controls"
-> -	default m
->  	help
->  	  This framework adds support for low-level control of LCD.
->  	  Some framebuffer devices connect to platform-specific LCD modules
-> @@ -143,7 +142,6 @@ endif # LCD_CLASS_DEVICE
->  #
->  config BACKLIGHT_CLASS_DEVICE
->          tristate "Lowlevel Backlight controls"
-> -	default m
->  	help
->  	  This framework adds support for low-level control of the LCD
->            backlight. This includes support for brightness and power.
-> -- 
-> 2.17.1
+> > > So I am removing the introduction of perf_cap__capable() from the
+> > > first patch you sent, leaving it with _only_ the feature detection
+> > > part, using that feature detection to do anything is then moved to a
+> > > separate patch, after we finish this discussion about what we should
+> > > fallback to when libcap-devel isn't available, i.e. we should use the
+> > > previous checks, etc.
+> > 
+> > So, please take a look at the tmp.perf/cap branch in my git repo:
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=tmp.p
+> > erf/cap
+> > 
+> > I split the patch and made perf_cap__capable() fallback to 'return
+> > geteuid() == 0;' when libcap-devel isn't available, i.e. keep the checks made
+> > prior to your patchset.
 > 
+> Thank you.  And thanks for updating "make_minimal". 
+
+Ok!
+
+ 
+> > 
+> > Jiri, can I keep your Acked-by?
+> > 
+> > - Arnaldo
+
+-- 
+
+- Arnaldo
