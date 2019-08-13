@@ -2,167 +2,211 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BBEEC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A86C32759
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 624E520844
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E6CD2189D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:26:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565709962;
-	bh=SucDibVqB1Y6XJo22ADJTrZr/i/5Mo/9zkyEYvRtiyo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xXmrNbssEN7+5m4A9b5KcPwkOylm7SRAuB0Ds02rhJVy8S5tN5pj6F+TWcxUmBxvm
-	 VuEMH57WSzjspO9VOdu4CZ0ZdA6tGrVTFR/rHys1pFueE/Gy3xuCTPmuelCTa9d6rg
-	 /txyXxTyAQOjUtYtci/0X+ptSiSofQaJQK7vSrZE=
+	s=default; t=1565709966;
+	bh=HmV3d0tX/vIGU4K6vVAo5cUg5Z8uSssDtsYqHJAG5bg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=k8bjRVU0aOhtGaew9gkBKcY71BhT0UTPcmjGfpNQFVT8uMzWkKqhXxm7P+KTbFgSQ
+	 0GlH85aZ8K/Ucw07hTICvaLSmWlHmbMOi2IYqGsxP0cG0qBs8dS+X+UCI57mCRRGnX
+	 SDHOyY8vBe34AGOnzUq8Zpa/R61Lx0w96tCxLBRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbfHMP0B (ORCPT
+        id S1729997AbfHMP0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 11:26:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37354 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 11:26:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727035AbfHMP0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 11:26:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727494AbfHMP0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 11:26:01 -0400
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F20FA20663;
-        Tue, 13 Aug 2019 15:25:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAC942184B;
+        Tue, 13 Aug 2019 15:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565709959;
-        bh=SucDibVqB1Y6XJo22ADJTrZr/i/5Mo/9zkyEYvRtiyo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WDUzqsDwCUvJpPnUro5nrw2rYkWOE7CzVwQ6FTy1etS8EF51sHnkhLMPEqq0ROv4s
-         zElsbAeuayJ7FJRXjRLsTGwhN3xN60ua/oV5CdMCYcFDyCPSZzAY+LdX2vCNO2Ooxf
-         CYV16DXHVpzI/PVCFeMioa0zcbPqdhPHd9ogqzfo=
-Date:   Tue, 13 Aug 2019 17:25:56 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        kbuild test robot <lkp@intel.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2] driver/core: Fix build error when SRCU and lockdep
- disabled
-Message-ID: <20190813152556.GA26138@kroah.com>
-References: <20190812214918.101756-1-joel@joelfernandes.org>
- <20190813060540.GE6670@kroah.com>
- <20190813133905.GA258732@google.com>
- <20190813134014.GB258732@google.com>
+        s=default; t=1565709960;
+        bh=HmV3d0tX/vIGU4K6vVAo5cUg5Z8uSssDtsYqHJAG5bg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=oXTK/Z2XPavPmmocWCTzqLAhdopHEqr0+WhpFAK86e901QMUz2hwOJ782cXRzWt6O
+         dd73osGsviYHzdVpTeZ7PctENRLocN/S6i3IIyyXpit2zvkMSpRGWyOpqenE2s4clG
+         NWV+sTZ4ZhnFbgA7AijE2ghB1sb8nDYpGJvZVppw=
+Received: by mail-qk1-f176.google.com with SMTP id 201so79889272qkm.9;
+        Tue, 13 Aug 2019 08:26:00 -0700 (PDT)
+X-Gm-Message-State: APjAAAWLC6YJdMtPlS/iI+m/2q69RnrRQJSKhRbSsao4/flCJw99Muwd
+        V/7qONQvMCUEJMCrEzeSciYqz86Z16DgmEP+nQ==
+X-Google-Smtp-Source: APXvYqwu0CBqLROjtaQy/EXgqwp575KsDNniswfKsW6qsOEg0w760DgeRdr91KRxD6alIStviaHUoqrBGdSw3n2c0Xw=
+X-Received: by 2002:a37:6944:: with SMTP id e65mr31723600qkc.119.1565709959793;
+ Tue, 13 Aug 2019 08:25:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813134014.GB258732@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190812121511.4169-1-frank-w@public-files.de> <20190812121511.4169-2-frank-w@public-files.de>
+In-Reply-To: <20190812121511.4169-2-frank-w@public-files.de>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 13 Aug 2019 09:25:47 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+fW=x8MoL3GMj6+ZKC3fd6F6+8Rtx=j5R9vEuL9UHCuQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+fW=x8MoL3GMj6+ZKC3fd6F6+8Rtx=j5R9vEuL9UHCuQ@mail.gmail.com>
+Subject: Re: [PATCH v5 01/10] dt-bindings: add powercontroller
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Allison Randal <allison@lohutok.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Tianping . Fang" <tianping.fang@mediatek.com>,
+        Josef Friedl <josef.friedl@speed.at>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 09:40:14AM -0400, Joel Fernandes wrote:
-> On Tue, Aug 13, 2019 at 09:39:05AM -0400, Joel Fernandes wrote:
-> [snip] 
-> > > >  drivers/base/core.c | 4 +++-
-> > > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > > > index 32cf83d1c744..c22271577c84 100644
-> > > > --- a/drivers/base/core.c
-> > > > +++ b/drivers/base/core.c
-> > > > @@ -97,10 +97,12 @@ void device_links_read_unlock(int not_used)
-> > > >  	up_read(&device_links_lock);
-> > > >  }
-> > > >  
-> > > > +#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> > > >  int device_links_read_lock_held(void)
-> > > >  {
-> > > > -	return lock_is_held(&device_links_lock);
-> > > > +	return lock_is_held(&(device_links_lock.dep_map));
-> > > >  }
-> > > > +#endif
-> > > 
-> > > I don't know what the original code looks like here, but I'm guessing
-> > > that some .h file will need to be fixed up as you are just preventing
-> > > this function from ever being present without that option enabled?
-> > 
-> > No, it doesn't. I already thought about that and it is not an issue. I know
-> > this may be confusing because the patch I am fixing is not yet in mainline
-> > but in -rcu dev branch, however I did CC you on that RCU patch before but
-> > understandably it is not in the series so it was harder to review.
-> > 
-> > Let me explain, the lock checking facility that this patch uses is here:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/commit/?h=dev&id=28875945ba98d1b47a8a706812b6494d165bb0a0
-> > 
-> > If you see, the CONFIG_PROVE_RCU_LIST defines an alternate __list_check_rcu()
-> > which is just a NOOP if CONFIG_PROVE_RCU_LIST=n.
-> > 
-> > CONFIG_PROVE_RCU_LIST depends on CONFIG_PROVE_RCU which is def_bool on
-> > CONFIG_PROVE_LOCKING which selects CONFIG_DEBUG_LOCK_ALLOC.
-> > 
-> > So there cannot be a scenario where CONFIG_PROVE_RCU_LIST is enabled but
-> > CONFIG_DEBUG_LOCK_ALLOC is disabled.
-> > 
-> > To verify this, one could clone the RCU tree's dev branch and do this:
-> > 
-> > Initially PROVE_RCU_LIST is not in config:
-> > 
-> > joelaf@joelaf:~/repo/linux-master$ grep -i prove_rcu .config
-> > 
-> > Neither is DEBUG_LOCK_ALLOC:
-> > 
-> > joelaf@joelaf:~/repo/linux-master$ grep -i debug_lock .config
-> > # CONFIG_DEBUG_LOCK_ALLOC is not set
-> > 
-> > Enable all configs:
-> > joelaf@joelaf:~/repo/linux-master$ ./scripts/config -e CONFIG_RCU_EXPERT
-> > joelaf@joelaf:~/repo/linux-master$ ./scripts/config -e CONFIG_PROVE_LOCKING
-> > joelaf@joelaf:~/repo/linux-master$ ./scripts/config -e CONFIG_PROVE_RCU
-> > joelaf@joelaf:~/repo/linux-master$ ./scripts/config -e CONFIG_PROVE_RCU_LIST
-> > joelaf@joelaf:~/repo/linux-master$ make olddefconfig
-> > 
-> > DEBUG_LOCK_ALLOC shows up:
-> > 
-> > joelaf@joelaf:~/repo/linux-master$ grep -i debug_lock_all .config
-> > CONFIG_DEBUG_LOCK_ALLOC=y
-> > 
-> > So does PROVE_RCU options:
-> > joelaf@joelaf:~/repo/linux-master$ grep -i prove_rcu .config
-> > CONFIG_PROVE_RCU=y
-> > CONFIG_PROVE_RCU_LIST=y
-> > 
-> > Now, force disable DEBUG_LOCK_ALLOC:
-> > 
-> > joelaf@joelaf:~/repo/linux-master$ ./scripts/config -d CONFIG_DEBUG_LOCK_ALLOC
-> > 
-> > joelaf@joelaf:~/repo/linux-master$ make olddefconfig
-> > 
-> > Options are still enabled:
-> > 
-> > joelaf@joelaf:~/repo/linux-master$ grep -i debug_lock .config
-> > CONFIG_DEBUG_LOCK_ALLOC=y
-> > joelaf@joelaf:~/repo/linux-master$ grep -i prove_rcu .config
-> > CONFIG_PROVE_RCU=y
-> > CONFIG_PROVE_RCU_LIST=y
-> 
-> Also, appreciate if you could Ack the fix ;-)  (assuming the newlines in
-> commit message are fixed).
+On Mon, Aug 12, 2019 at 6:24 AM Frank Wunderlich
+<frank-w@public-files.de> wrote:
+>
+> From: Josef Friedl <josef.friedl@speed.at>
+>
+> add mt6323-rtc and mt6323-pwrc to mt6397 mfd DT bindings
+> an example is shown in mt6323-poweroff.txt
 
-I don't know enough here to ack it, given that I can't even remember the
-original patch...
+How does this get to v5 with such a terrible subject? At least give
+some indication this is for some Mediatek chip.
 
-If you think it's ok, that's fine with me, you can deal with the fallout
-if it fails later :)
+The recipient list needs some work too. Don't Cc git committers that
+get_maintainers.pl lists.
 
+>
+> Suggested-by: Frank Wunderlich <frank-w@public-files.de>
+> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> ---
+> changes since v4: use relative path
+> changes since v3: none
+> changes since v2: separated rtc-mt6397.txt to part 2
+> ---
+>  .../devicetree/bindings/mfd/mt6397.txt        | 20 +++++++++++++------
+>  .../bindings/power/reset/mt6323-poweroff.txt  | 20 +++++++++++++++++++
+>  2 files changed, 34 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
+> index 0ebd08af777d..063f5fe1cace 100644
+> --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
+> +++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
+> @@ -8,11 +8,12 @@ MT6397/MT6323 is a multifunction device with the following sub modules:
+>  - Clock
+>  - LED
+>  - Keys
+> +- Power controller
+>
+>  It is interfaced to host controller using SPI interface by a proprietary hardware
+>  called PMIC wrapper or pwrap. MT6397/MT6323 MFD is a child device of pwrap.
+>  See the following for pwarp node definitions:
+> -Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+> +../../bindings/soc/mediatek/pwrap.txt
 
-thanks,
+Unrelated change to what the subject says. Clean-ups and new things in
+separate patches please.
 
-greg k-h
+>
+>  This document describes the binding for MFD device and its sub module.
+>
+> @@ -22,14 +23,16 @@ compatible: "mediatek,mt6397" or "mediatek,mt6323"
+>  Optional subnodes:
+>
+>  - rtc
+> -       Required properties:
+> +       Required properties: Should be one of follows
+> +               - compatible: "mediatek,mt6323-rtc"
+
+How is this related to 'powercontroller'?
+
+>                 - compatible: "mediatek,mt6397-rtc"
+> +       For details, see ../../bindings/rtc/rtc-mt6397.txt
+>  - regulators
+>         Required properties:
+>                 - compatible: "mediatek,mt6397-regulator"
+> -       see Documentation/devicetree/bindings/regulator/mt6397-regulator.txt
+> +       see ../../bindings/regulator/mt6397-regulator.txt
+>                 - compatible: "mediatek,mt6323-regulator"
+> -       see Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
+> +       see ../../bindings/regulator/mt6323-regulator.txt
+>  - codec
+>         Required properties:
+>                 - compatible: "mediatek,mt6397-codec"
+> @@ -39,12 +42,17 @@ Optional subnodes:
+>  - led
+>         Required properties:
+>                 - compatible: "mediatek,mt6323-led"
+> -       see Documentation/devicetree/bindings/leds/leds-mt6323.txt
+> +       see ../../bindings/leds/leds-mt6323.txt
+>
+>  - keys
+>         Required properties:
+>                 - compatible: "mediatek,mt6397-keys" or "mediatek,mt6323-keys"
+> -       see Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
+> +       see ../../bindings/input/mtk-pmic-keys.txt
+> +
+> +- power-controller
+> +       Required properties:
+> +               - compatible: "mediatek,mt6323-pwrc"
+> +       For details, see ../../bindings/power/reset/mt6323-poweroff.txt
+>
+>  Example:
+>         pwrap: pwrap@1000f000 {
+> diff --git a/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+> new file mode 100644
+> index 000000000000..933f0c48e887
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+> @@ -0,0 +1,20 @@
+> +Device Tree Bindings for Power Controller on MediaTek PMIC
+> +
+> +The power controller which could be found on PMIC is responsible for externally
+> +powering off or on the remote MediaTek SoC through the circuit BBPU.
+> +
+> +Required properties:
+> +- compatible: Should be one of follows
+> +       "mediatek,mt6323-pwrc": for MT6323 PMIC
+> +
+> +Example:
+> +
+> +       pmic {
+> +               compatible = "mediatek,mt6323";
+> +
+> +               ...
+> +
+> +               power-controller {
+> +                       compatible = "mediatek,mt6323-pwrc";
+> +               };
+> +       }
+> --
+> 2.17.1
+>
