@@ -2,108 +2,90 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D1EC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709ABC32753
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72B9120840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:02:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565676124;
-	bh=Ocx25N/xyUSoVrReUcdErcb1izwm3iTofQJuv3zSZN4=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=jaJ+alGyJqSfwyrLrJcuXfRb1kG1qoD9+F+5wfZuaayL6k70Sb32ZgKL39yiSmhyp
-	 U3YmcRPqjUMSlVPxL4Unr5N1iQeai/Rb1DuO1FcwTDevmGXFkugbFuAHHcRQZc+Ajy
-	 cdtHUqqh0mdwoMduwwyMl7mH5QXmtOXmnSEVugkw=
+	by mail.kernel.org (Postfix) with ESMTP id 4460E206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:02:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbfHMGCD (ORCPT
+        id S1727020AbfHMGCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 02:02:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfHMGCC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 02:02:02 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9658A206C2;
-        Tue, 13 Aug 2019 06:02:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565676121;
-        bh=Ocx25N/xyUSoVrReUcdErcb1izwm3iTofQJuv3zSZN4=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=ycidyXsDZ2b2yk2By5o4ZcAnHEUeEnTJRk810aiZRrmdvgpwi6IAyTsm6lLp0P5Qq
-         lYNHCHb1ycTfLVST4OwEsrE6eAp4rQsG/ARqXSNx373v0QGki2WgeDepQWwi/kThha
-         fXnzhNABL8hllvXEfm+NiLtzcRWsb6JmvTXlWWfY=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 13 Aug 2019 02:02:49 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33100 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfHMGCs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 02:02:48 -0400
+Received: by mail-lf1-f66.google.com with SMTP id x3so76019973lfc.0;
+        Mon, 12 Aug 2019 23:02:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=AYs/TeSQkX85iQZMbtgHOzb7k5bWDJf7qaO4aRO65P0=;
+        b=M0Hs00+YMfK0l3khXgXrzYl9SKLaT6Q5lrdR+7DP15Nf4FbrKIPIFckS75D1Kc+riF
+         qZWC2qVQS2+q++e28SvQXtxmxcLi/WLSrk86ZdaomvHdwInB8Q59LA0xYASNGid65BM1
+         Kf9fZ1IeVEdHWUbcjenv0wXLL7W8Kv1+chHrLrfZ/P36Sml4jDZZKcgCzIOBShKG26nA
+         Ipx4TYsgNyyftBwGChK7LUX6vIjExPRXBLOYPnBj5sgXA4gv/N2n73Qk8ZdHjafW1bZ9
+         fpCwbzXbOomn0/3cEkpAA//mjK120cX3fsDzd7BjlY3X7cuCuiUx7U2HRMuQueqkxC3m
+         aibQ==
+X-Gm-Message-State: APjAAAUyPOS3cLjv49nY3SDElOL8nyxsbhr7BrnzJldB8rDmDEzBsHjB
+        vu6BQdk8bg2dKI1awEGVdP4jI9PH9is=
+X-Google-Smtp-Source: APXvYqzsXx97aM7qAQVYx4w7Fvwbfj/KqihGRJoXPwAOcP9e69r6uUv1QAngcjZL6bwotd1iR301sQ==
+X-Received: by 2002:a19:8586:: with SMTP id h128mr22421374lfd.62.1565676166636;
+        Mon, 12 Aug 2019 23:02:46 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id e26sm21426667ljl.33.2019.08.12.23.02.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 12 Aug 2019 23:02:46 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Denis Efremov <efremov@linux.com>, joe@perches.com,
+        Patrick Havelange <patrick.havelange@essensium.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-iio@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: ftm-quaddec: Fix typo in a filepath
+Date:   Tue, 13 Aug 2019 09:02:34 +0300
+Message-Id: <20190813060234.11940-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
+References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190812182421.141150-14-brendanhiggins@google.com>
-References: <20190812182421.141150-1-brendanhiggins@google.com> <20190812182421.141150-14-brendanhiggins@google.com>
-Subject: Re: [PATCH v12 13/18] kunit: tool: add Python wrappers for running KUnit tests
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com, Felix Guo <felixguoxiuping@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
-        tytso@mit.edu, yamada.masahiro@socionext.com
-User-Agent: alot/0.8.1
-Date:   Mon, 12 Aug 2019 23:02:00 -0700
-Message-Id: <20190813060201.9658A206C2@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brendan Higgins (2019-08-12 11:24:16)
-> From: Felix Guo <felixguoxiuping@gmail.com>
->=20
-> The ultimate goal is to create minimal isolated test binaries; in the
-> meantime we are using UML to provide the infrastructure to run tests, so
-> define an abstract way to configure and run tests that allow us to
-> change the context in which tests are built without affecting the user.
-> This also makes pretty and dynamic error reporting, and a lot of other
-> nice features easier.
->=20
-> kunit_config.py:
->   - parse .config and Kconfig files.
->=20
-> kunit_kernel.py: provides helper functions to:
->   - configure the kernel using kunitconfig.
->   - build the kernel with the appropriate configuration.
->   - provide function to invoke the kernel and stream the output back.
->=20
-> kunit_parser.py: parses raw logs returned out by kunit_kernel and
-> displays them in a user friendly way.
->=20
-> test_data/*: samples of test data for testing kunit.py, kunit_config.py,
-> etc.
->=20
-> Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
+Fix typo (s/quadddec/quaddec/) in the path to the documentation.
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Cc: Patrick Havelange <patrick.havelange@essensium.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-iio@vger.kernel.org
+Fixes: 517b2d045aeb ("MAINTAINERS: add counter/ftm-quaddec driver entry")
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I look forward to the single binary solution, but until then, we have
-this.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9b4717ea2cfe..f31b852acdf3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6321,7 +6321,7 @@ FLEXTIMER FTM-QUADDEC DRIVER
+ M:	Patrick Havelange <patrick.havelange@essensium.com>
+ L:	linux-iio@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/ABI/testing/sysfs-bus-counter-ftm-quadddec
++F:	Documentation/ABI/testing/sysfs-bus-counter-ftm-quaddec
+ F:	Documentation/devicetree/bindings/counter/ftm-quaddec.txt
+ F:	drivers/counter/ftm-quaddec.c
+ 
+-- 
+2.21.0
 
