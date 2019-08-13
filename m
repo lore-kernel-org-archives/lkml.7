@@ -2,327 +2,155 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 994F8C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9930C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE91205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:44:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565711083;
-	bh=PX+CkviHr7ov/2pSEydudWf4NIN1zHne6V6bYDlJc8U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x/hcvwVziit3nrCcMqNr+LtNjandNTHR976oRe3jcwVutypdNQzx/5PburL7iE/OO
-	 22fD3JoNHrlAhqtgu2YbBVzGZ1d6Dehbaq8Oxs4m3wPG+1f0WI4epNFKrqItKFY6Pn
-	 mcE/jVsYxZRSluiDU/a3dQV6zdJHWUQI5kVwvTbo=
+	by mail.kernel.org (Postfix) with ESMTP id A095A205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:45:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730106AbfHMPom (ORCPT
+        id S1730107AbfHMPpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 11:44:42 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33873 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727491AbfHMPom (ORCPT
+        Tue, 13 Aug 2019 11:45:53 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38132 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727284AbfHMPpx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 11:44:42 -0400
-Received: by mail-ot1-f68.google.com with SMTP id c7so1641533otp.1;
-        Tue, 13 Aug 2019 08:44:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SFxfynLI/PayVK9T09mSvJ64s8uI65LTsxBTjCv6WcM=;
-        b=hY3ddn4ZK5tGvPTBiLkxH+x7mamRXpGMTAuWyeXYo6VDrj+ZtRMFD2c0UQX9U2cIry
-         109T5HwR+t7wdJNtzQQ9YpCl572oey0n/mrzro9JRIqwhgDxS8X1E6Qhlqkh3d+QdlEY
-         bsCv/kUOnq+kAt4H5oVeUTZBku75zyBbwx3rDmUZXoy06+oUsisC2x1KWAljb3mUL066
-         n4VZ34/7WIL+u66s0SWglCfDB0tuFVdrtqMSoG5uSJD7gEUhsxJYFizETvprxIbdP8nU
-         Kshnh/HmGpqqJ/FiKtyzbWC/Fu3jWW2vmc8smx/A/v5Vhc4+3DW6Hl0m/WJq1mjMtodN
-         Jcaw==
-X-Gm-Message-State: APjAAAVeXeooLwFojWgE29zxAT9e+YlWqSM0I2y96V5sTakXQpKE9T4F
-        kPyh0J3TqlisAwmGt6iC4Q==
-X-Google-Smtp-Source: APXvYqwiOI2LwlaSaAXpu7WaNtoQaiiVUisNbPaGgLe845gRk8bidZjBEntLcLXJBp0UuKTM2tqjvA==
-X-Received: by 2002:a05:6638:52:: with SMTP id a18mr44508592jap.75.1565711080806;
-        Tue, 13 Aug 2019 08:44:40 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id f9sm16190844ioc.47.2019.08.13.08.44.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 08:44:40 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 09:44:39 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-media@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Peter Rosin <peda@axentia.se>
-Subject: Re: [RFC,v2 3/6] media: dt-bindings: add DS90UB954-Q1 video
- deserializer
-Message-ID: <20190813154439.GA29515@bogus>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-4-luca@lucaceresoli.net>
+        Tue, 13 Aug 2019 11:45:53 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7DFXWd5077074
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 11:45:52 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ubyka1m5b-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 11:45:51 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
+        Tue, 13 Aug 2019 16:45:49 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 13 Aug 2019 16:45:44 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7DFjgol60096752
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Aug 2019 15:45:42 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D35FFA4054;
+        Tue, 13 Aug 2019 15:45:42 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5D140A4060;
+        Tue, 13 Aug 2019 15:45:40 +0000 (GMT)
+Received: from ram.ibm.com (unknown [9.85.191.17])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 13 Aug 2019 15:45:40 +0000 (GMT)
+Date:   Tue, 13 Aug 2019 08:45:37 -0700
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     David Gibson <david@gibson.dropbear.id.au>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        linuxppc-devel@lists.ozlabs.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        Alexey Kardashevskiy <aik@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Reply-To: Ram Pai <linuxram@us.ibm.com>
+References: <87zhrj8kcp.fsf@morokweng.localdomain>
+ <20190810143038-mutt-send-email-mst@kernel.org>
+ <20190810220702.GA5964@ram.ibm.com>
+ <20190811055607.GA12488@lst.de>
+ <20190812095156.GD3947@umbus.fritz.box>
+ <20190813132617.GA6426@lst.de>
+ <20190813142439.GO3947@umbus.fritz.box>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190723203723.11730-4-luca@lucaceresoli.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190813142439.GO3947@umbus.fritz.box>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19081315-0012-0000-0000-0000033E3613
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19081315-0013-0000-0000-000021784637
+Message-Id: <20190813154537.GE5964@ram.ibm.com>
+Subject: RE: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-13_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=819 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908130159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 10:37:20PM +0200, Luca Ceresoli wrote:
-> Describe the Texas Instruments DS90UB954-Q1, a 2-input video deserializer
-> with I2C Address Translator and remote GPIOs.
+On Wed, Aug 14, 2019 at 12:24:39AM +1000, David Gibson wrote:
+> On Tue, Aug 13, 2019 at 03:26:17PM +0200, Christoph Hellwig wrote:
+> > On Mon, Aug 12, 2019 at 07:51:56PM +1000, David Gibson wrote:
+> > > AFAICT we already kind of abuse this for the VIRTIO_F_IOMMU_PLATFORM,
+> > > because to handle for cases where it *is* a device limitation, we
+> > > assume that if the hypervisor presents VIRTIO_F_IOMMU_PLATFORM then
+> > > the guest *must* select it.
+> > > 
+> > > What we actually need here is for the hypervisor to present
+> > > VIRTIO_F_IOMMU_PLATFORM as available, but not required.  Then we need
+> > > a way for the platform core code to communicate to the virtio driver
+> > > that *it* requires the IOMMU to be used, so that the driver can select
+> > > or not the feature bit on that basis.
+> > 
+> > I agree with the above, but that just brings us back to the original
+> > issue - the whole bypass of the DMA OPS should be an option that the
+> > device can offer, not the other way around.  And we really need to
+> > fix that root cause instead of doctoring around it.
 > 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> I'm not exactly sure what you mean by "device" in this context.  Do
+> you mean the hypervisor (qemu) side implementation?
 > 
-> ---
+> You're right that this was the wrong way around to begin with, but as
+> well as being hard to change now, I don't see how it really addresses
+> the current problem.  The device could default to IOMMU and allow
+> bypass, but the driver would still need to get information from the
+> platform to know that it *can't* accept that option in the case of a
+> secure VM.  Reversed sense, but the same basic problem.
 > 
-> Changes RFCv1 -> RFCv2:
+> The hypervisor does not, and can not be aware of the secure VM
+> restrictions - only the guest side platform code knows that.
+
+This statement is almost entirely right. I will rephrase it to make it
+entirely right.   
+
+The hypervisor does not, and can not be aware of the secure VM
+requirement that it needs to do some special processing that has nothing
+to do with DMA address translation - only the guest side platform code
+know that.
+
+BTW: I do not consider 'bounce buffering' as 'DMA address translation'.
+DMA address translation, translates CPU address to DMA address.  Bounce
+buffering moves the data from one buffer at a given CPU address to
+another buffer at a different CPU address.  Unfortunately the current
+DMA ops conflates the two.  The need to do 'DMA address translation' 
+is something the device can enforce.  But the need to do bounce
+buffering, is something that the device should not be aware and should be
+entirely a decision made locally by the kernel/driver in the secure VM.
+
+RP
+
 > 
->  - add explicit aliases for the FPD-link RX ports (optional)
->  - add proper remote GPIO description
-> ---
->  .../bindings/media/i2c/ti,ds90ub954-q1.txt    | 194 ++++++++++++++++++
->  1 file changed, 194 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ti,ds90ub954-q1.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ti,ds90ub954-q1.txt b/Documentation/devicetree/bindings/media/i2c/ti,ds90ub954-q1.txt
-> new file mode 100644
-> index 000000000000..73ce21ecc3b6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ti,ds90ub954-q1.txt
-> @@ -0,0 +1,194 @@
-> +Texas Instruments DS90UB954-Q1 dual video deserializer
-> +======================================================
-> +
-> +The TI DS90UB954-Q1 is a MIPI CSI-2 video deserializer that forwards video
-> +streams from up to two FPD-Link 3 connections to a MIPI CSI-2 output. It
-> +also allows access to remote I2C and GPIO.
-> +
-> +Required properties:
-> +
-> + - compatible: must be "ti,ds90ub954-q1"
-> +
-> + - reg: main I2C slave address; optionally aliases for RX port registers
-> +   and remote serializers. The main address is mandatory and must be the
-> +   first, others are optional and fall back to defaults if not
-> +   specified. See "reg-names".
-> +
-> + - reset-gpios: chip reset GPIO, active low (connected to PDB pin of the chip)
-> + - i2c-alias-pool: list of I2C addresses that are known to be available on the
-> +                   "local" (SoC-to-deser) I2C bus; they will be picked at
-> +		   runtime and used as aliases to reach remove I2C chips
-
-s/remove/remote/
-
-Needs a vendor prefix.
-
-> + - gpio-controller
-> + - #gpio-cells: must be 3: FPD-Link 3 RX port number, remote gpio number, flags
-
-We're pretty standardized on 2 cells for GPIO. Perhaps combine the port 
-and gpio number to 1 cell.
-
-> +
-> +Optional properties:
-> +
-> + - reg-names: names of I2C address used to communicate with the chip, must
-> +              match the "reg" values; mandatory if there are 2 or more
-> +              addresses
-> +    - "main": the main I2C address, used to access shared registers
-> +    - "rxport0", "rxport1": I2C alias to access FPD-link RX port specific
-> +      registers; must not be used by other slaves on the same bus
-> +    - "ser0", "ser1": I2C alias to access the remote serializer connected
-> +      on each FPD-link RX port; must not be used by other slaves on the
-> +      same bus
-> + - interrupts: interrupt pin from the chip
-> +
-> +Required subnodes:
-> +
-> + - ports: A ports node with one port child node per device input and output
-> +          port, in accordance with the video interface bindings defined in
-> +          Documentation/devicetree/bindings/media/video-interfaces.txt. The
-> +          port nodes are numbered as follows:
-> +
-> +          Port Description
-> +          ------------------------------------
-> +          0    Input from FPD-Link 3 RX port 0
-> +          1    Input from FPD-Link 3 RX port 1
-> +          2    CSI-2 output
-> +
-> +          Each port must have a "remote-chip" subnode that defines the remote
-> +	  chip (serializer) with at least a "compatible" property
-
-We don't allow other nodes within graph nodes. I'm not really clear what 
-you are trying to do here.
-
-> +
-> + - i2c-atr: contains one child per RX port, each describes the I2C bus on
-> +            the remote side
-> +
-> +	    Required properties:
-> +	    - #address-cells = <1>;
-> +	    - #size-cells = <0>;
-> +
-> +	    Subnodes: one per each FPD-link RX port, each having:
-> +
-> +	    Required properties for "i2c-atr" child bus nodes:
-> +	    - reg: The number of the port where the remove chip is connected
-
-s/remove/remote/
-
-> +	    - #address-cells = <1>;
-> +	    - #size-cells = <0>;
-> +
-> +	    Optional properties for "i2c-atr" child bus nodes:
-> +	    - Other properties specific to the remote hardware
-
-Such as?
-
-> +	    - Child nodes conforming to i2c bus binding
-> +
-> +
-> +Device node example
-> +-------------------
-> +
-> +&i2c0 {
-> +	deser: deser@3d {
-> +		compatible = "ti,ds90ub954-q1";
-> +		reg-names = "main", "rxport0", "rxport1", "ser0", "ser1";
-> +		reg       = <0x3d>,  <0x40>,    <0x41>,   <0x44>, <0x45>;
-> +		clocks = <&clk_25M>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <3 1 IRQ_TYPE_LEVEL_HIGH>;
-> +		reset-gpios = <&gpio_ctl 4 GPIO_ACTIVE_LOW>;
-> +
-> +		i2c-alias-pool = /bits/ 16 <0x4a 0x4b 0x4c 0x4d 0x4e 0x4f>;
-> +
-> +		gpio-controller;
-> +		#gpio-cells = <3>; /* rxport, remote gpio num, flags */
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				ds90ub954_fpd3_in0: endpoint {
-> +					remote-endpoint = <&sensor_0_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				ds90ub954_fpd3_in1: endpoint {
-> +					remote-endpoint = <&sensor_1_out>;
-> +				};
-> +			};
-> +
-> +			port@2 {
-> +				reg = <2>;
-> +				ds90ub954_mipi_out0: endpoint {
-> +					data-lanes = <1 2 3 4>;
-> +					/* Actually a REFCLK multiplier */
-> +					data-rate = <1600000000>;
-> +					remote-endpoint = <&csirx_0_in>;
-> +				};
-> +			};
-> +		};
-> +
-> +		i2c-atr {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			remote_i2c0: i2c@0 {
-> +				reg = <0>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-
-Presumably, there are child I2C devices here. Please show that in the 
-example.
-
-> +			};
-> +
-> +			remote_i2c1: i2c@1 {
-> +				reg = <1>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&ds90ub954_fpd3_in0 {
-> +	remote-chip {
-> +		compatible = "ti,ds90ub953-q1";
-> +		gpio-functions = <DS90_GPIO_FUNC_OUTPUT_REMOTE
-
-Not documented.
-
-> +				  DS90_GPIO_FUNC_UNUSED
-> +				  DS90_GPIO_FUNC_UNUSED
-> +				  DS90_GPIO_FUNC_UNUSED>;
-> +	};
-> +};
-> +
-> +&ds90ub954_fpd3_in1 {
-> +	remote-chip {
-> +		compatible = "ti,ds90ub953-q1";
-> +		gpio-functions = <DS90_GPIO_FUNC_OUTPUT_REMOTE
-> +				  DS90_GPIO_FUNC_UNUSED
-> +				  DS90_GPIO_FUNC_UNUSED
-> +				  DS90_GPIO_FUNC_UNUSED>;
-> +	};
-> +};
-> +
-> +&remote_i2c0 {
-> +	sensor_0@3c {
-> +		compatible = "sony,imx274";
-> +		reg = <0x3c>;
-> +
-> +		reset-gpios = <&deser 0 0 GPIO_ACTIVE_LOW>;
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@0 {
-> +			reg = <0>;
-> +			sensor_0_out: endpoint {
-> +				remote-endpoint = <&ds90ub954_fpd3_in0>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&remote_i2c1 {
-> +	sensor_0@3c {
-> +		compatible = "sony,imx274";
-> +		reg = <0x3c>;
-> +
-> +		reset-gpios = <&deser 1 0 GPIO_ACTIVE_LOW>;
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@0 {
-> +			reg = <0>;
-> +			sensor_1_out: endpoint {
-> +				remote-endpoint = <&ds90ub954_fpd3_in1>;
-> +			};
-> +		};
-> +	};
-> +};
 > -- 
-> 2.17.1
-> 
+> David Gibson			| I'll have my music baroque, and my code
+> david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+> 				| _way_ _around_!
+> http://www.ozlabs.org/~dgibson
+
+
+
+-- 
+Ram Pai
+
