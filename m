@@ -2,101 +2,92 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C54C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1781AC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED15520842
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:57:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GtRHyITL"
+	by mail.kernel.org (Postfix) with ESMTP id E4C0120679
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:58:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbfHMH56 (ORCPT
+        id S1728079AbfHMH6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 03:57:58 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58531 "EHLO ozlabs.org"
+        Tue, 13 Aug 2019 03:58:12 -0400
+Received: from mga02.intel.com ([134.134.136.20]:26608 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727232AbfHMH55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 03:57:57 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4674nt6YRbz9sNm;
-        Tue, 13 Aug 2019 17:57:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565683075;
-        bh=yDggRPhc2GSkJIFl1/H+L4pY1wqdl7Q3/g0mgM7BCN8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=GtRHyITLNkWDBznY3EVnN8w6l8seMv/kXr3mTsM00/im9x6U1ikD7AjUMaN6I9aiu
-         6UhTmJknBIw4FBPEWQwxxgJNYFkt8EWGDamNAynpsz6rVrn17PRj1ZeqYNdpSz4qtK
-         j5iEHeh8KDfOcjytEV+lCD3UU08Ayyppq6QwGlo9j5H0Q22lFeZDIqbrKKMfZZuAT2
-         FTzVCTEpWUBrVbILbGrePYAcKxnoyPE2FdAHpjc2pLy83b/YN+L2yIekJGv6vkPaeJ
-         8A2LOLAHn/yLQajevIoL8PgKQdchqmYEheiHIWkDEv3kOstLbVRn5H3sKarSeHW6x/
-         0/SpcvmN+mLkQ==
-Date:   Tue, 13 Aug 2019 17:57:32 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: linux-next: build failure after merge of the rcu tree
-Message-ID: <20190813175732.2c97d412@canb.auug.org.au>
+        id S1726986AbfHMH6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 03:58:12 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 00:50:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,380,1559545200"; 
+   d="scan'208";a="375517226"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga005.fm.intel.com with ESMTP; 13 Aug 2019 00:50:07 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Christopher S . Hall" <christopher.s.hall@intel.com>
+Subject: Re: [RFC PATCH 0/5] PTP: add support for Intel's TGPIO controller
+In-Reply-To: <20190719132021.GC24930@lunn.ch>
+References: <20190716072038.8408-1-felipe.balbi@linux.intel.com> <20190718195040.GL25635@lunn.ch> <87h87isci5.fsf@linux.intel.com> <20190719132021.GC24930@lunn.ch>
+Date:   Tue, 13 Aug 2019 10:50:06 +0300
+Message-ID: <87wofhy05t.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/PMBweslkJGQ1tTeaDx.LUR/";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/PMBweslkJGQ1tTeaDx.LUR/
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hi,
 
-After merging the rcu tree, today's linux-next build (powerpc allnoconfig)
-failed like this:
+Andrew Lunn <andrew@lunn.ch> writes:
+>> Andrew Lunn <andrew@lunn.ch> writes:
+>> > On Tue, Jul 16, 2019 at 10:20:33AM +0300, Felipe Balbi wrote:
+>> >> TGPIO is a new IP which allows for time synchronization between systems
+>> >> without any other means of synchronization such as PTP or NTP. The
+>> >> driver is implemented as part of the PTP framework since its features
+>> >> covered most of what this controller can do.
+>> >
+>> > Hi Felipe
+>> >
+>> > Given the name TGPIO, can it also be used for plain old boring GPIO?
+>> 
+>> not really, no. This is a misnomer, IMHO :-) We can only assert output
+>> pulses at specified intervals or capture a timestamp of an external
+>> signal.
+>
+> Hi Felipe
+>
+> So i guess Intel Marketing wants to call it a GPIO, but between
+> engineers can we give it a better name?
 
-drivers/base/core.c: In function 'device_links_read_lock_held':
-drivers/base/core.c:106:9: error: implicit declaration of function 'lock_is=
-_held'; did you mean 'lockref_get'? [-Werror=3Dimplicit-function-declaratio=
-n]
-  return lock_is_held(&device_links_lock);
-         ^~~~~~~~~~~~
-         lockref_get
+If we do that we make it difficult for those reading specification and
+trying to find the matching driver.
 
-Caused by commit
+>> > Also, is this always embedded into a SoC? Or could it actually be in a
+>> > discrete NIC?
+>> 
+>> Technically, this could be done as a discrete, but it isn't. In any
+>> case, why does that matter? From a linux-point of view, we have a device
+>> driver either way.
+>
+> I've seen a lot of i210 used with ARM SoCs. How necessary is the tsc
+> patch? Is there an architecture independent alternative?
 
-  4a3a5474b4c1 ("driver/core: Convert to use built-in RCU list checking")
+Without the TSC patch, we don't get the timestamp we need. One can argue
+that $this driver could call get_tsc_ns() directly instead of providing
+a wrapper for it. But that's something else entirely.
 
-lock_is_held() us only available if CONFIG_LOCKDEP is set.
-
-I have reverted that commit for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/PMBweslkJGQ1tTeaDx.LUR/
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1SbWwACgkQAVBC80lX
-0Gw6Xwf/YS2mW2kJX45IJzGSD4sICLGkWoPxzKloHd8v7tcc/hhuwDZEB4iCzoM8
-FVu+veUZoHOh17Hi7eNDqHKfClKF8OjTDvSSbw4xdWOWZNB3Asz5iiyMMhdOsFz5
-hKFTvA89oS+4cWk2WSK3PsFgak5oRxSsrI7aRIvFoM9PuYt3uoFO/6tLP7qpPXbG
-0K18yWhmwQvRbUgORAREBKixxx8sckxS3YfAH2d1iiPLV3fKI6gReukVY1CLHEsk
-HWBustLBQIAoyrPhRyYl7LO52B2DUxzh+8yQqAG8zbYgjSo+3P3K9eo5h2UKWU0J
-q4NYBb5VsAPs5zPyZv9ht3A3e5BoCw==
-=JoNt
------END PGP SIGNATURE-----
-
---Sig_/PMBweslkJGQ1tTeaDx.LUR/--
+-- 
+balbi
