@@ -2,64 +2,124 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDECBC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FD5C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87A62206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F897206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:11:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfHMDJ7 (ORCPT
+        id S1726932AbfHMDLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 23:09:59 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4236 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726236AbfHMDJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 23:09:59 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 975C9E2BE28127A51D05;
-        Tue, 13 Aug 2019 11:09:57 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 13 Aug
- 2019 11:09:48 +0800
-Subject: Re: [PATCH 2/3] staging: erofs: remove incomplete cleancache
-To:     Gao Xiang <gaoxiang25@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>, <linux-fsdevel@vger.kernel.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-References: <20190813023054.73126-1-gaoxiang25@huawei.com>
- <20190813023054.73126-2-gaoxiang25@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <b61abcf2-25cf-5c5f-09be-758e0ac4f16d@huawei.com>
-Date:   Tue, 13 Aug 2019 11:09:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20190813023054.73126-2-gaoxiang25@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+        Mon, 12 Aug 2019 23:11:53 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:58072 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726537AbfHMDLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 23:11:52 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8D2952002D8;
+        Tue, 13 Aug 2019 05:11:50 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1750A20072F;
+        Tue, 13 Aug 2019 05:11:45 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7E9304030E;
+        Tue, 13 Aug 2019 11:11:38 +0800 (SGT)
+From:   Biwen Li <biwen.li@nxp.com>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        leoyang.li@nxp.com, robh+dt@kernel.org
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xiaobo.xie@nxp.com, jiafei.pan@nxp.com, ran.wang_1@nxp.com,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        Biwen Li <biwen.li@nxp.com>
+Subject: [v7,2/2] dt-bindings: rtc: add bindings for FlexTimer Module
+Date:   Tue, 13 Aug 2019 11:01:57 +0800
+Message-Id: <20190813030157.48590-2-biwen.li@nxp.com>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20190813030157.48590-1-biwen.li@nxp.com>
+References: <20190813030157.48590-1-biwen.li@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/13 10:30, Gao Xiang wrote:
-> cleancache was not fully implemented in EROFS.
-> In addition, it's tend to remove the whole cleancache in
-> related attempt [1].
-> 
-> [1] https://lore.kernel.org/linux-fsdevel/20190527103207.13287-3-jgross@suse.com/
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+The patch adds bindings for FlexTimer Module
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+Change in v7:
+    - delete aliases
 
-Thanks,
+Change in v6:
+    - correct subject
+    - delete note
+    - remove reg property about IP Powerdown exception register
+
+Change in v5:
+    - None
+
+Change in v4:
+    - add note about dts and kernel options
+    - add aliases in example
+
+Change in v3:
+	- remove reg-names property
+	- correct cells number
+
+Change in v2:
+	- replace ls1043a with ls1088a as example
+	- add rcpm node and fsl,rcpm-wakeup property
+
+ .../bindings/rtc/rtc-fsl-ftm-alarm.txt        | 35 +++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+new file mode 100644
+index 000000000000..4bbb97da904c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+@@ -0,0 +1,35 @@
++Freescale FlexTimer Module (FTM) Alarm
++
++Required properties:
++- compatible : Should be "fsl,<chip>-ftm-alarm", the
++	       supported chips include
++	       "fsl,ls1012a-ftm-alarm"
++	       "fsl,ls1021a-ftm-alarm"
++	       "fsl,ls1028a-ftm-alarm"
++	       "fsl,ls1043a-ftm-alarm"
++	       "fsl,ls1046a-ftm-alarm"
++	       "fsl,ls1088a-ftm-alarm"
++	       "fsl,ls208xa-ftm-alarm"
++- reg : Specifies base physical address and size of the register sets for the
++  FlexTimer Module.
++- interrupts : Should be the FlexTimer Module interrupt.
++- fsl,rcpm-wakeup property and rcpm node : Please refer
++	Documentation/devicetree/bindings/soc/fsl/rcpm.txt
++
++Optional properties:
++- big-endian: If the host controller is big-endian mode, specify this property.
++  The default endian mode is little-endian.
++
++Example:
++rcpm: rcpm@1e34040 {
++	compatible = "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
++	reg = <0x0 0x1e34040 0x0 0x18>;
++	#fsl,rcpm-wakeup-cells = <6>;
++};
++
++ftm_alarm0: timer@2800000 {
++	compatible = "fsl,ls1088a-ftm-alarm";
++	reg = <0x0 0x2800000 0x0 0x10000>;
++	fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
++	interrupts = <0 44 4>;
++};
+-- 
+2.17.1
+
