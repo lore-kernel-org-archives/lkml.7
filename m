@@ -2,65 +2,66 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEB6C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13985C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48436206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D942F20840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:19:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jD9ZzgIf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kj2QCgHK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbfHMMTH (ORCPT
+        id S1727829AbfHMMTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 08:19:07 -0400
-Received: from mail-qk1-f201.google.com ([209.85.222.201]:57308 "EHLO
-        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727327AbfHMMTG (ORCPT
+        Tue, 13 Aug 2019 08:19:11 -0400
+Received: from mail-qk1-f202.google.com ([209.85.222.202]:57312 "EHLO
+        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727654AbfHMMTJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 08:19:06 -0400
-Received: by mail-qk1-f201.google.com with SMTP id j81so95855188qke.23
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 05:19:05 -0700 (PDT)
+        Tue, 13 Aug 2019 08:19:09 -0400
+Received: by mail-qk1-f202.google.com with SMTP id j81so95855293qke.23
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 05:19:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=6PgFwT5ybpsMvR73n2NchUIwCDCLdMXSL/zekwZUPV0=;
-        b=jD9ZzgIfaS51gL704kQ5B3pyAxRwAkFR5KAAxqD03+kRrbNxZasQJhXNSpL5IUD3WC
-         2DcnSWgyDaPoRPIGpldT8mFFTh+D7IvMFxHm7iTt3sA8pZKFy6cUm7d9XJwv/DbGCbp4
-         apBL8JeZNEGLLuEGK/kJMrUVLy5ehYl2bswCIbpRo4AUdG9z8T7qN7EYG2g6iDYunndi
-         bgvRTsfFKIeh+lV0TGQh07MMCHE7knk8t4nlw97npIIZj92U8RBDn5AI9/CVxQe6kk0P
-         ifVqrzVa67t41udCVDvV3Mua+k4Gh9mqtC5Z6kseL7iHwIkqxHgzBvcScP5+7WLk7K57
-         pDSw==
+        bh=Ey51rOQs6pREeIh9cdmyj66W3XNY9zI3cHQpc2k+3HQ=;
+        b=Kj2QCgHK1EXGXCElMh+j+E+YRK/wfgittksUPJYKcCq2HTXcsAROuHGcD8lwzMPeKN
+         FRuEY4ZJ4B5K6zrA1HwL334EfWDTWdX3NtetiJHeWa9GorOQdftb7ZFl6EKSx4u3xZc/
+         7wihld+w2BBSts7l0IWFmsA8phk/UcL6zJVHc/saACvhutCrFbaf8mO23uze0QWnNBrq
+         vYTou4ilb8mGMgPL02Xng92+rEko2PdVT7rfXODuJ6MfFN3kroS9fkNmsFz5YKN59B1J
+         z/cX3txyE3JspEYroOPPq3rlFHs4ewel3KUPhHTQrUFBOOUrKm5bW9fgQpBKQKrxy7dA
+         pBzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=6PgFwT5ybpsMvR73n2NchUIwCDCLdMXSL/zekwZUPV0=;
-        b=mMsZeiEGDXObKpNICoP1Pr827J15gdZFfclA/CJn4Xp90ExHFGjp1bvk4UHVDWz17u
-         tinerdFfTmHF53JGGdAU4CzZ3dkGinpZDUC8fi6TuQ3MDMdUSw9Fj4itpX2MthA/rfg2
-         CKt64xjD7vXPHtui8LV02vunPiFHEbuv57KR4JGw6lalmtZ5pLsYmsfLMrxnUCt1Iz+z
-         mMVuJWtjpiKiQzAslTiwQASx/tMT2QpmrZdmulY4Hh9IuZiuneQjBngU594uXPWYv/iJ
-         XxkHWlkXW0ltTN7cZqPsITUAZjw3w5CSGk/oXLm1S4ISlrRkpH4E6FBTC9nbQhXlCCey
-         yG9A==
-X-Gm-Message-State: APjAAAXdSNQM/0ielzCwxibsqFyFIgWEFaio8sbqGGLLbJTdvLsqEHm8
-        7NtwOfr7EgX4F+epTTYvtycloIMARigklRLIgiR1SUKA8ZyyN4NPecaGiGjAIJGEaP9YVdaLWnW
-        V1UbjHt1x7xBj9VEdjseVYnIDRb2RhGqVMalOxWHtuS4Xnn1DtmFu7O/8RW8vVJdVj7UspeAplf
-        s=
-X-Google-Smtp-Source: APXvYqwoPPvVp4wXK2/Ekm9uHbCBVrd0HTIovQY6Rl1JP2NcFK3PdJFfhx8kL4FpENxmnwm0ne/g50Y+okhRyQ==
-X-Received: by 2002:a0c:e28e:: with SMTP id r14mr11313674qvl.32.1565698744842;
- Tue, 13 Aug 2019 05:19:04 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 13:16:57 +0100
-In-Reply-To: <20180716122125.175792-1-maco@android.com>
-Message-Id: <20190813121733.52480-1-maennich@google.com>
+        bh=Ey51rOQs6pREeIh9cdmyj66W3XNY9zI3cHQpc2k+3HQ=;
+        b=ETGLKz3UluC00wOseCzAWzQ3qXLZRKLRNKCh5+4OdTTpaxsVMK1XfXbPaDjynIQlVK
+         2JRyWRvvRpSAIOe5Dh+ZnoTYaWgWn6DQUmg1suKU5VFG+9eZ1mgXnQ2PukF7bOx1vkLW
+         +eSJ2BOinAaAEK79wma6Q+NF/xaz6a1fUm1X+u2s2VZV0Idjzdj1GDs0p2bauQ6IkjJA
+         3NP4154XNNjaU7hyjS/8mJcmXJOLUh0noLDS1oN4cQj1lB7WUABTxbqTVJI91Ghoa/F3
+         3vY2K8viab7L8s+mVgM+rzJvJrBitMd2DQ/ln22ZpjeXEE+k+cCPNDuMfrpA7H5n/H1D
+         khiA==
+X-Gm-Message-State: APjAAAUnlvAxeaDnUf85kZODS9Oyud6qR/YB5WDzVt15NqE1cMtH6E+R
+        Zi8pvQEGEIEY3+y7ikIA1bVxF6AitwY/tjEhGAst2tMWgazIzvk7cG7CKor6REltrVg7wQUD52w
+        hE7weWk9mV1Vm5V2dU1jhCbDGl7D23nsWoQtqzMAm+0iSvc28URnvkbLrXlVOvaGfvf7AznJN5Z
+        8=
+X-Google-Smtp-Source: APXvYqx8Z3ce2Fq34vvTXoHfRI3jPxZxSV8ZFlwOArOAxzvMMWLUaLTe8i8AZbmoFtb4lXGU8fZ6nZcq2n3UrA==
+X-Received: by 2002:a37:6844:: with SMTP id d65mr33008934qkc.398.1565698748030;
+ Tue, 13 Aug 2019 05:19:08 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 13:16:58 +0100
+In-Reply-To: <20190813121733.52480-1-maennich@google.com>
+Message-Id: <20190813121733.52480-2-maennich@google.com>
 Mime-Version: 1.0
-References: <20180716122125.175792-1-maco@android.com>
+References: <20180716122125.175792-1-maco@android.com> <20190813121733.52480-1-maennich@google.com>
 X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
-Subject: [PATCH v2 0/10] Symbol namespaces - RFC
+Subject: [PATCH v2 01/10] module: support reading multiple values per modinfo tag
 From:   Matthias Maennich <maennich@google.com>
 To:     linux-kernel@vger.kernel.org, maco@android.com
 Cc:     kernel-team@android.com, maennich@google.com, arnd@arndb.de,
@@ -75,137 +76,68 @@ Cc:     kernel-team@android.com, maennich@google.com, arnd@arndb.de,
         sboyd@codeaurora.org, sspatil@google.com,
         stern@rowland.harvard.edu, tglx@linutronix.de,
         usb-storage@lists.one-eyed-alien.net, x86@kernel.org,
-        yamada.masahiro@socionext.com, Adrian Reber <adrian@lisas.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        cocci@systeme.lip6.fr, Dan Williams <dan.j.williams@intel.com>,
-        David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        Will Deacon <will@kernel.org>
+        yamada.masahiro@socionext.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As of Linux 5.3-rc4, there are 31203 [1] exported symbols in the kernel.
-That is a growth of almost 1000 symbols since 4.17 (30206 [2]).  There
-seems to be some consensus amongst kernel devs that the export surface
-is too large, and hard to reason about.
+Similar to modpost's get_next_modinfo(), introduce get_next_modinfo() in
+kernel/module.c to acquire any further values associated with the same
+modinfo tag name. That is useful for any tags that have multiple
+occurrences (such as 'alias'), but is in particular introduced here as
+part of the symbol namespaces patch series to read the (potentially)
+multiple namespaces a module is importing.
 
-Generally, these symbols fall in one of these categories:
-1) Symbols actually meant for drivers
-2) Symbols that are only exported because functionality is split over
-   multiple modules, yet they really shouldn't be used by modules outside
-   of their own subsystem
-3) Symbols really only meant for in-tree use
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Reviewed-by: Martijn Coenen <maco@android.com>
+Signed-off-by: Matthias Maennich <maennich@google.com>
+---
+ kernel/module.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-When module developers try to upstream their code, it regularly turns
-out that they are using exported symbols that they really shouldn't be
-using. This problem is even bigger for drivers that are currently
-out-of-tree, which may be using many symbols that they shouldn't be
-using, and that break when those symbols are removed or modified.
-
-This patch allows subsystem maintainers to partition their exported
-symbols into separate namespaces, and module authors to import such
-namespaces only when needed.
-
-This allows subsystem maintainers to more easily limit availability of
-these namespaced symbols to other parts of the kernel. It can also be
-used to partition the set of exported symbols for documentation
-purposes; for example, a set of symbols that is really only used for
-debugging could be in a "SUBSYSTEM_DEBUG" namespace.
-
-I continued the work mainly done by Martijn Coenen. In this v2 the
-following changes have been introduced compared to v1 of this series:
-
-- Rather than adding and evaluating separate sections __knsimport_NS,
-  use modinfo tags to declare the namespaces a module introduces.
-  Adjust modpost and the module loader accordingly.
-- Also add support for reading multiple modinfo values for the same tag
-  to allow list-like access to modinfo tags.
-- The macros in export.h have been cleaned up to avoid redundancy in the
-  macro parameters (ns, nspost, nspost2).
-- The introduction of relative references in the ksymtab entries caused
-  a rework of the macros to accommodate that configuration as well.
-- Alignment of kernel_symbol in the ksymtab needed to be fixed to allow
-  growing the kernel_symbol struct.
-- Modpost does now also append the namespace suffix to the symbol
-  entries in Module.symvers.
-- The configuration option MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS allows
-  relaxing the enforcement of properly declared namespace imports at module
-  loading time.
-- Symbols can be collectively exported into a namespace by defining
-  DEFAULT_SYMBOL_NAMESPACE in the corresponding Makefile.
-- The requirement for a very recent coccinelle spatch has been lifted by
-  simplifying the script.
-- nsdeps does now ensures MODULE_IMPORT_NS statements are sorted when
-  patching the module source files.
-- Some minor bugs have been addressed in nsdeps to allow it to work with
-  modules that have more than one source file.
-- The RFC for the usb-storage symbols has been simplified by using
-  DEFAULT_SYMBOL_NAMESPACE=USB_STORAGE rather than explicitly exporting each
-  and every symbol into that new namespace.
-
-This patch series was developed against v5.3-rc4.
-
-[1] git grep "^EXPORT_SYMBOL\w*(" v5.3-rc4 | wc -l
-[2] git grep "^EXPORT_SYMBOL\w*(" v4.17    | wc -l
-
-Matthias Maennich (10):
-  module: support reading multiple values per modinfo tag
-  export: explicitly align struct kernel_symbol
-  module: add support for symbol namespaces.
-  modpost: add support for symbol namespaces
-  module: add config option MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS
-  export: allow definition default namespaces in Makefiles or sources
-  modpost: add support for generating namespace dependencies
-  scripts: Coccinelle script for namespace dependencies.
-  usb-storage: remove single-use define for debugging
-  RFC: usb-storage: export symbols in USB_STORAGE namespace
-
- MAINTAINERS                                 |   5 +
- Makefile                                    |  12 ++
- arch/m68k/include/asm/export.h              |   1 -
- drivers/usb/storage/Makefile                |   2 +
- drivers/usb/storage/alauda.c                |   1 +
- drivers/usb/storage/cypress_atacb.c         |   1 +
- drivers/usb/storage/datafab.c               |   1 +
- drivers/usb/storage/debug.h                 |   2 -
- drivers/usb/storage/ene_ub6250.c            |   1 +
- drivers/usb/storage/freecom.c               |   1 +
- drivers/usb/storage/isd200.c                |   1 +
- drivers/usb/storage/jumpshot.c              |   1 +
- drivers/usb/storage/karma.c                 |   1 +
- drivers/usb/storage/onetouch.c              |   1 +
- drivers/usb/storage/realtek_cr.c            |   1 +
- drivers/usb/storage/scsiglue.c              |   2 +-
- drivers/usb/storage/sddr09.c                |   1 +
- drivers/usb/storage/sddr55.c                |   1 +
- drivers/usb/storage/shuttle_usbat.c         |   1 +
- drivers/usb/storage/uas.c                   |   1 +
- include/asm-generic/export.h                |  14 +-
- include/linux/export.h                      |  92 +++++++++++--
- include/linux/module.h                      |   2 +
- init/Kconfig                                |  14 ++
- kernel/module.c                             |  67 ++++++++-
- scripts/Makefile.modpost                    |   4 +-
- scripts/coccinelle/misc/add_namespace.cocci |  23 ++++
- scripts/mod/modpost.c                       | 144 ++++++++++++++++++--
- scripts/mod/modpost.h                       |   9 ++
- scripts/nsdeps                              |  54 ++++++++
- 30 files changed, 421 insertions(+), 40 deletions(-)
- create mode 100644 scripts/coccinelle/misc/add_namespace.cocci
- create mode 100644 scripts/nsdeps
-
+diff --git a/kernel/module.c b/kernel/module.c
+index 5933395af9a0..a23067907169 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -2481,7 +2481,8 @@ static char *next_string(char *string, unsigned long *secsize)
+ 	return string;
+ }
+ 
+-static char *get_modinfo(struct load_info *info, const char *tag)
++static char *get_next_modinfo(const struct load_info *info, const char *tag,
++			      char *prev)
+ {
+ 	char *p;
+ 	unsigned int taglen = strlen(tag);
+@@ -2492,13 +2493,25 @@ static char *get_modinfo(struct load_info *info, const char *tag)
+ 	 * get_modinfo() calls made before rewrite_section_headers()
+ 	 * must use sh_offset, as sh_addr isn't set!
+ 	 */
+-	for (p = (char *)info->hdr + infosec->sh_offset; p; p = next_string(p, &size)) {
++	char *modinfo = (char *)info->hdr + infosec->sh_offset;
++
++	if (prev) {
++		size -= prev - modinfo;
++		modinfo = next_string(prev, &size);
++	}
++
++	for (p = modinfo; p; p = next_string(p, &size)) {
+ 		if (strncmp(p, tag, taglen) == 0 && p[taglen] == '=')
+ 			return p + taglen + 1;
+ 	}
+ 	return NULL;
+ }
+ 
++static char *get_modinfo(const struct load_info *info, const char *tag)
++{
++	return get_next_modinfo(info, tag, NULL);
++}
++
+ static void setup_modinfo(struct module *mod, struct load_info *info)
+ {
+ 	struct module_attribute *attr;
 -- 
 2.23.0.rc1.153.gdeed80330f-goog
 
