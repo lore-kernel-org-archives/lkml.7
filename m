@@ -2,199 +2,207 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF688C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDC8C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BADA720844
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC5C420651
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:45:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="YJttE/9R"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="pcS4SbEu";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="kyGq+SHg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729672AbfHMOoY (ORCPT
+        id S1729711AbfHMOpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 10:44:24 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44909 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728681AbfHMOoY (ORCPT
+        Tue, 13 Aug 2019 10:45:05 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:33494 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728793AbfHMOpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 10:44:24 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t14so49341988plr.11
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 07:44:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=XKUXA8eyW+BaQrw7w0qbUBRN/bnvPttZ1UXO1rs4J4c=;
-        b=YJttE/9RWvcMqefXhYgIPeeC4h4DhPhCyq7DAqhgJnT4NeqYX33FdzkIXpYYQDYp2O
-         YXxGxvKBXu+uFVIGpz2bEYuEzhl45raNm+FADwcVL/WQaOWGTdEcsBSAl8tBdpuQ6frH
-         eKFf5NTX9WITSszxDRCrNitnYMsi+IfMYYZrNzvcXW5C2XekztyT4H1px4+BEUjF2F3Z
-         jwPOvqxG4IEwd0f2S1jkL54zGLowbCTw8jT4WBpV5WpyLUQc3UGAKXEJop5daA72tSE9
-         OCS1ij+lXO6ZqoFsleptE3lztOsU11WLD+6M2N5RPP7ew+aOVTbA6a7rAJwqbe4BpKk4
-         8UoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=XKUXA8eyW+BaQrw7w0qbUBRN/bnvPttZ1UXO1rs4J4c=;
-        b=gRQDf4gbzGhcn7n9f6s8/5yqNFHTFuUXfjDFnEUkN7b6YGFE9Zn78WVy4bfZsz6vUa
-         UE2puw1qdCZnnOatwcFKuwmIcL/jeGP4OVexYbTOWhCWY0kuvACKBsmMGsGuTaNagz51
-         n/Zf+YrarcrTeHFGfcKm82Cp9S/VcGvNlefrjfGE+V8VFF7rHQGtHrtjnauXp29hfLjc
-         sYNDd7WnDW1KLhg3riSyc18QhArOiNtkKYUFmJdJ3ypPJ9ZqtfLxicMMQ9R5N3mGEJJ5
-         Ro6cEoLXfabW+2UtgzP8VCVJLU5uG3afT370aZ8bqJPmqxkwiM/9kyZlpmi6q/1O9Pon
-         ezuQ==
-X-Gm-Message-State: APjAAAXWCte4NO8P523p5kzzRY2OSmrrdFpOpF+g/Dgiv2qcmaeY2bZ0
-        B7/JE2796mqDc0isKD/Uh4TsTA==
-X-Google-Smtp-Source: APXvYqyZJum8U+t53Mjh4x2zKudYcaUbDz9KuBq/6d7BWPPdIOsyFv8VBMCBvsYvsKsh6n0jliUGKg==
-X-Received: by 2002:a17:902:be15:: with SMTP id r21mr36859002pls.293.1565707463024;
-        Tue, 13 Aug 2019 07:44:23 -0700 (PDT)
-Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
-        by smtp.googlemail.com with ESMTPSA id o4sm5349667pje.28.2019.08.13.07.44.22
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 13 Aug 2019 07:44:22 -0700 (PDT)
-Subject: Re: [PATCH] Add flags option to get xattr method paired to
- __vfs_getxattr
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, Stephen Smalley <sds@tycho.nsa.gov>,
-        linux-security-module@vger.kernel.org, stable@vger.kernel.org
-References: <20190812193320.200472-1-salyzyn@android.com>
- <20190813124817.0B9EF2085A@mail.kernel.org>
-From:   Mark Salyzyn <salyzyn@android.com>
-Message-ID: <081260c7-17ff-a575-a706-4e181334d25f@android.com>
-Date:   Tue, 13 Aug 2019 07:44:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 13 Aug 2019 10:45:04 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7DEdfqM003202;
+        Tue, 13 Aug 2019 07:44:42 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=yH0xkvphXN2pvlHlFD8nixFsAn/Z/Bz3PIcG6BXDJ4U=;
+ b=pcS4SbEu45IvC9Mwn0o3YfOWbBYTbExWT1rviUm5fxPpBiR+oBhbO/a86GU+IsL0uYn3
+ cvYrAyw7KrncnQr2SMhabNRN/1hrwWT+wc1+bL8hGogWYnXLZMI5ZAgRFiqfheoinxrR
+ B98iyCd40QordCE/czNc6UDRoRuJ+UC69as= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2ubu810xnh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 13 Aug 2019 07:44:42 -0700
+Received: from ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) by
+ ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 13 Aug 2019 07:44:41 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 13 Aug 2019 07:44:41 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ExLSDDAN+5xj1wCvpxnMZ3F7mQTt5uCzwmw087AJbiKup9jxnROYQ3SU2WBIeIhj5Jelec90CRQ41cGaCmAkdMBlHk3qkzoSLonKbDgF/M6l7WgBFoeFY/Hg//c48XXxhkhu6tuRA2m7eu9P4PCCJgqGQP8QvnHh1teqTCci047Nr/5Butj9ja3ItGiyIr0QZtZagSM8hKkcGu0+yOuQPsBg0bW/0rsTifdJC126K89a3EMeHnxklz6sAlzdnH/QIn4wqPK3Uk5oc9OLvwGj0NCa09G8sPcysWvjF8LSwrbritegQKWTCcAtbg1Jo/zN0GB3/xY/8CAP3wyHyrLJTA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yH0xkvphXN2pvlHlFD8nixFsAn/Z/Bz3PIcG6BXDJ4U=;
+ b=JsqTwSdZhUhskR2gidGbCpm09f+IETczQ1dQP8izcTJGbvYhXYly8Dl1zQCen24VbH72yVSCMGn+erE3inpy9GAhwHdRnCmE+PVni+y3fTlZRXfOBVp/tcFJgqiTn7wSrgskHL5FrhSuNGEFIsfEZa/6UQKb9F6+MnBk5hXjV37rRirVMl+93cCuJpph0jaHD0+JgA1FI0wdmrMuioow+ixFSczSQO+u9Liv3yYMwsigkD9YlBq0rMKTh5n7Z1KPT6fJaqcoEbSpn0OcT+h4pWUhZ9oCfe1sgUtCowe5O1NlSjUJNy4NVJiZk+tV6kBAja2MpWqWkUanMYYCZQTf7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yH0xkvphXN2pvlHlFD8nixFsAn/Z/Bz3PIcG6BXDJ4U=;
+ b=kyGq+SHgBrOas7vBaPLd3vHleACKDdd9b5A/QQjHH27lv6jAOi73t/ityFCNnigYf12eGQqPC8EU8qzwuoMJ/NeaVLJdlm5ydP43cSKG+CO39q7wFUXxdKlJgXLY9olRI0bHTe1bFtOIs2j1lJy0LQQLKNa5z7atQpl/20x2/hY=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1312.namprd15.prod.outlook.com (10.175.4.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.14; Tue, 13 Aug 2019 14:44:40 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::79c8:442d:b528:802d]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::79c8:442d:b528:802d%9]) with mapi id 15.20.2157.022; Tue, 13 Aug 2019
+ 14:44:40 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Matthew Wilcox" <matthew.wilcox@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Kernel Team <Kernel-team@fb.com>,
+        "William Kucharski" <william.kucharski@oracle.com>,
+        "srikar@linux.vnet.ibm.com" <srikar@linux.vnet.ibm.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+Subject: Re: [PATCH v12 5/6] khugepaged: enable collapse pmd for pte-mapped
+ THP
+Thread-Topic: [PATCH v12 5/6] khugepaged: enable collapse pmd for pte-mapped
+ THP
+Thread-Index: AQHVTXlDuUiBx4u3AUqTmiQ0C68ad6bxcvOAgAAJMACAAXXfAIAAEp4AgAAZUACABFVTAIAAE+cAgAAVvICAAGtUAIABKBiA
+Date:   Tue, 13 Aug 2019 14:44:40 +0000
+Message-ID: <857DA509-D891-4F4C-A55C-EE58BC2CC452@fb.com>
+References: <20190807233729.3899352-1-songliubraving@fb.com>
+ <20190807233729.3899352-6-songliubraving@fb.com>
+ <20190808163303.GB7934@redhat.com>
+ <770B3C29-CE8F-4228-8992-3C6E2B5487B6@fb.com>
+ <20190809152404.GA21489@redhat.com>
+ <3B09235E-5CF7-4982-B8E6-114C52196BE5@fb.com>
+ <4D8B8397-5107-456B-91FC-4911F255AE11@fb.com>
+ <20190812121144.f46abvpg6lvxwwzs@box> <20190812132257.GB31560@redhat.com>
+ <20190812144045.tkvipsyit3nccvuk@box>
+ <2D11C742-BB7E-4296-9E97-5114FA58474B@fb.com>
+In-Reply-To: <2D11C742-BB7E-4296-9E97-5114FA58474B@fb.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.11)
+x-originating-ip: [2620:10d:c090:180::b9f9]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 39b36ae0-ec90-480f-8079-08d71ffcc58b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1312;
+x-ms-traffictypediagnostic: MWHPR15MB1312:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR15MB131251072713338671A14A87B3D20@MWHPR15MB1312.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01283822F8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(376002)(366004)(396003)(136003)(346002)(189003)(199004)(33656002)(53546011)(102836004)(46003)(6436002)(476003)(305945005)(2616005)(11346002)(53936002)(54906003)(229853002)(186003)(6506007)(76176011)(14454004)(6916009)(86362001)(99286004)(66946007)(6486002)(478600001)(446003)(2906002)(6116002)(57306001)(6512007)(316002)(486006)(256004)(14444005)(36756003)(5660300002)(6246003)(7416002)(81156014)(5024004)(71190400001)(66446008)(64756008)(8936002)(71200400001)(4326008)(25786009)(50226002)(8676002)(76116006)(81166006)(66476007)(66556008)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1312;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 6bCzqwWa4tBAMPh3N9kK6BiQJuzOPSwERYvtyzhtOSNYKMdRXFmfb+8Z+xmVjlpkpcMd9EGwERShEbyLh5iUjLk+QHFwB3ZTRJqsDK3kLEeHdOqNti/oE6+c4xhMDq1OU6J4hkYo7jUGv6SPdP3oPepvKkZWWCBi7H95pCsLPTsZ7dvn0vMNcYAxO/3eRhRipK2C0GmE8bg3TI5E5SFAPgtf3V8aEWipuKW+I0jN8PmyXIk16zamXEiTVELy1AIWBX6i+qnGTkI0fymdfsuBpnChJc2CiV30LxUmk6H37zl2m3I1LhKPHRiwhkdk3lpma9q/RpGIV4NFKAEuFE1wb4FQAAuhRYFdSDNzFptrV8b+P1jmaR5AGxUu+fz/U1ObDSO1P+BJT/nM4mJzhdHIMZECyxnHpJyYQ9OZ0TWhJo4=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <9FB0981101AC8245A04EE324AAD61837@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190813124817.0B9EF2085A@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+X-MS-Exchange-CrossTenant-Network-Message-Id: 39b36ae0-ec90-480f-8079-08d71ffcc58b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2019 14:44:40.0299
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oMfXHxipdLeSMNkpJ385Kd5lgC7X6CMX/ofJAFeyebDnASkq9EM3GvvgRLRWXIRnPVLTzbn8GJvj71+vTqqQgg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1312
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-13_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=680 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908130156
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/19 5:48 AM, Sasha Levin wrote:
-> Hi,
->
-> [This is an automated email]
->
-> This commit has been processed because it contains a -stable tag.
-> The stable tag indicates that it's relevant for the following trees: all
->
-> The bot has tested the following trees: v5.2.8, v4.19.66, v4.14.138, v4.9.189, v4.4.189.
->
-> v5.2.8: Build failed! Errors:
->      fs/afs/xattr.c:156:12: error: initialization of â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, size_t,  int)â€™ {aka â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, long unsigned int,  int)â€™} from incompatible pointer type â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, size_t)â€™ {aka â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, long unsigned int)â€™} [-Werror=incompatible-pointer-types]
->      fs/afs/xattr.c:327:9: error: initialization of â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, size_t,  int)â€™ {aka â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, long unsigned int,  int)â€™} from incompatible pointer type â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, size_t)â€™ {aka â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, long unsigned int)â€™} [-Werror=incompatible-pointer-types]
->      drivers/staging/erofs/xattr.c:492:9: error: initialization of â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, size_t,  int)â€™ {aka â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, long unsigned int,  int)â€™} from incompatible pointer type â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, size_t)â€™ {aka â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, long unsigned int)â€™} [-Werror=incompatible-pointer-types]
->      drivers/staging/erofs/xattr.c:499:9: error: initialization of â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, size_t,  int)â€™ {aka â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, long unsigned int,  int)â€™} from incompatible pointer type â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, size_t)â€™ {aka â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, long unsigned int)â€™} [-Werror=incompatible-pointer-types]
->      drivers/staging/erofs/xattr.c:506:9: error: initialization of â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, size_t,  int)â€™ {aka â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, long unsigned int,  int)â€™} from incompatible pointer type â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, size_t)â€™ {aka â€˜int (*)(const struct xattr_handler *, struct dentry *, struct inode *, const char *, void *, long unsigned int)â€™} [-Werror=incompatible-pointer-types]
->
-> v4.19.66: Failed to apply! Possible dependencies:
->      05895219627c ("kernfs: clean up struct kernfs_iattrs")
->      0ac6075a32fc ("kernfs: use simple_xattrs for security attributes")
->      1537ad15c9c5 ("kernfs: fix xattr name handling in LSM helpers")
->      426dcd4b600f ("hexagon: switch to NO_BOOTMEM")
->      57c8a661d95d ("mm: remove include/linux/bootmem.h")
->      6471f52af786 ("alpha: switch to NO_BOOTMEM")
->      b230d5aba2d1 ("LSM: add new hook for kernfs node initialization")
->      bcec54bf3118 ("mips: switch to NO_BOOTMEM")
->      d0c9c153b4bd ("kernfs: do not alloc iattrs in kernfs_xattr_get")
->      e0a9317d9004 ("hexagon: use generic dma_noncoherent_ops")
->      e262e32d6bde ("vfs: Suppress MS_* flag defs within the kernel unless explicitly enabled")
->      ec882da5cda9 ("selinux: implement the kernfs_init_security hook")
->      f406f222d4b2 ("hexagon: implement the sync_sg_for_device DMA operation")
->
-> v4.14.138: Failed to apply! Possible dependencies:
->      05895219627c ("kernfs: clean up struct kernfs_iattrs")
->      067cae47771c ("bpf: Use char in prog and map name")
->      0ac6075a32fc ("kernfs: use simple_xattrs for security attributes")
->      1537ad15c9c5 ("kernfs: fix xattr name handling in LSM helpers")
->      488dee96bb62 ("kernfs: allow creating kernfs objects with arbitrary uid/gid")
->      5cf9dd55a0ec ("afs: Prospectively look up extra files when doing a single lookup")
->      88cda1c9da02 ("bpf: libbpf: Provide basic API support to specify BPF obj name")
->      95582b008388 ("vfs: change inode times to use struct timespec64")
->      ad5b177bd73f ("bpf: Add map_name to bpf_map_info")
->      afdb09c720b6 ("security: bpf: Add LSM hooks for bpf object related syscall")
->      b230d5aba2d1 ("LSM: add new hook for kernfs node initialization")
->      cb4d2b3f03d8 ("bpf: Add name, load_time, uid and map_ids to bpf_prog_info")
->      d0c9c153b4bd ("kernfs: do not alloc iattrs in kernfs_xattr_get")
->      dd9fbcb8e103 ("afs: Rearrange status mapping")
->      df0ce17331e2 ("security: convert security hooks to use hlist")
->      e45b2546e23c ("fuse: Ensure posix acls are translated outside of init_user_ns")
->
-> v4.9.189: Failed to apply! Possible dependencies:
->      1537ad15c9c5 ("kernfs: fix xattr name handling in LSM helpers")
->      4eb5aaa3af8a ("sched/headers: Prepare for new header dependencies before moving code to <linux/sched/autogroup.h>")
->      4f17722c7256 ("sched/headers: Prepare for new header dependencies before moving code to <linux/sched/loadavg.h>")
->      5eca1c10cbaa ("sched/headers: Clean up <linux/sched.h>")
->      6e84f31522f9 ("sched/headers: Prepare for new header dependencies before moving code to <linux/sched/mm.h>")
->      91b467e0a3f5 ("afs: Make afs_readpages() fetch data in bulk")
->      944c74f472f9 ("afs: Distinguish mountpoints from symlinks by file mode alone")
->      acb04058de49 ("sched/clock: Fix hotplug crash")
->      ae7e81c077d6 ("sched/headers: Prepare for new header dependencies before moving code to <uapi/linux/sched/types.h>")
->      b230d5aba2d1 ("LSM: add new hook for kernfs node initialization")
->      b5a062344419 ("kernfs: Declare two local data structures static")
->      d3e3b7eac886 ("afs: Add metadata xattrs")
->      df0ce17331e2 ("security: convert security hooks to use hlist")
->      e45b2546e23c ("fuse: Ensure posix acls are translated outside of init_user_ns")
->      e4e55b47ed9a ("LSM: Revive security_task_alloc() hook and per "struct task_struct" security blob.")
->      e601757102cf ("sched/headers: Prepare for new header dependencies before moving code to <linux/sched/clock.h>")
->      ea8b1c4a6019 ("drivers: psci: PSCI checker module")
->      edd3ba94c4e5 ("afs: Convert to separately allocated bdi")
->      ee6a3d19f15b ("sched/headers: Remove the <linux/topology.h> include from <linux/sched.h>")
->      fd7712337ff0 ("sched/headers: Prepare to remove the <linux/gfp.h> include from <linux/sched.h>")
->
-> v4.4.189: Failed to apply! Possible dependencies:
->      1182fca3bc00 ("Orangefs: kernel client part 5")
->      24c8d0804be0 ("Orangefs: Clean up pvfs2_devreq_read.")
->      274dcf55bd4a ("Orangefs: kernel client part 3")
->      2c590d5fb698 ("Orangefs: kernel client update 1.")
->      3c2fcfcb6858 ("orangefs: make wait_for_direct_io() take iov_iter")
->      4d1c44043b26 ("Orangefs: use iov_iter interface")
->      548049495cb4 ("Orangefs: fix some checkpatch.pl complaints that had creeped in.")
->      5c278228bbfe ("orangefs: explicitly pass the size to pvfs_bufmap_copy_to_iovec()")
->      5db11c21a929 ("Orangefs: kernel client part 2")
->      5f0e3c953fd9 ("orangefs: make postcopy_buffers() take iov_iter")
->      8092895f759e ("orangefs: validate the response in decode_dirents()")
->      84d02150dea7 ("Orangefs: sooth most sparse complaints")
->      88309aae3ddb ("Orangefs: fix dir_emit code in pvfs2_readdir.")
->      894ac432b48b ("Orangefs: Clean up error decoding.")
->      8bb8aefd5afb ("OrangeFS: Change almost all instances of the string PVFS2 to OrangeFS.")
->      9172abbcd371 ("btrfs: Use xattr handler infrastructure")
->      9be68b08719c ("orangefs: get rid of dec_string and enc_string")
->      a5c126a52269 ("orangefs: make precopy_buffers() take iov_iter")
->      b296821a7c42 ("xattr_handler: pass dentry and inode as separate arguments of ->get()")
->      ef4af94edcf8 ("orangefs: switch decode_dirents() to use of kcalloc()")
->      f0ed4418d46d ("Orangefs: Remove upcall trailers which are not used.")
->      f7ab093f74bf ("Orangefs: kernel client part 1")
->      f7be4ee07fb7 ("Orangefs: kernel client part 4")
->
->
-> NOTE: The patch will not be queued to stable trees until it is upstream.
->
-> How should we proceed with this patch?
->
-> --
-> Thanks,
-> Sasha
+Hi Oleg,
 
-Wait for upstream of course.
+> On Aug 12, 2019, at 2:04 PM, Song Liu <songliubraving@fb.com> wrote:
+>=20
+>=20
+>=20
+>> On Aug 12, 2019, at 7:40 AM, Kirill A. Shutemov <kirill@shutemov.name> w=
+rote:
+>>=20
+>> On Mon, Aug 12, 2019 at 03:22:58PM +0200, Oleg Nesterov wrote:
+>>> On 08/12, Kirill A. Shutemov wrote:
+>>>>=20
+>>>> On Fri, Aug 09, 2019 at 06:01:18PM +0000, Song Liu wrote:
+>>>>> +		if (pte_none(*pte) || !pte_present(*pte))
+>>>>> +			continue;
+>>>>=20
+>>>> You don't need to check both. Present is never none.
+>>>=20
+>>> Agreed.
+>>>=20
+>>> Kirill, while you are here, shouldn't retract_page_tables() check
+>>> vma->anon_vma (and probably do mm_find_pmd) under vm_mm->mmap_sem?
+>>>=20
+>>> Can't it race with, say, do_cow_fault?
+>>=20
+>> vma->anon_vma can race, but it doesn't matter. False-negative is fine.
+>> It's attempt to avoid taking mmap_sem where it can be not productive.
+>>=20
+>> mm_find_pmd() cannot race with do_cow_fault() since the page is locked.
+>> __do_fault() has to return locked page before we touch page tables.
+>> It is somewhat subtle, but I wanted to avoid taking mmap_sem where it is
+>> possible.
+>>=20
+>> --=20
+>> Kirill A. Shutemov
+>=20
+> Updated version attached.=20
+>=20
+>=20
+> Besides feedbacks from Oleg and Kirill, I also revise the locking in=20
+> collapse_pte_mapped_thp(): use pte_offset_map_lock() for the two loops=20
+> to cover highmem. zap_pte_range() has similar use of the lock.=20
+>=20
+> This change is suggested by Johannes.=20
+>=20
 
-Given the conflicts, I can provide back-ports once upstream upon 
-request. It should be noted that the backports should be mechanical and 
-trivial (skip non-existent filesystems like orangfs, drop separate inode 
-argument that did not exist in earlier kernels).
+Do you have further comments for the version below? If not, could you
+please reply with your Acked-by or Reviewed-by?
 
-I will submit the next spin (missed a few filesystems, build errors) 
-with references to the requested stable trees again, so noise will continue.
-
-Sincerely -- Mark Salyzyn
+Thanks,
+Song
 
 
+>=20
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D 8< =3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> From 3d931bc4780abb6109fe478a4b1a0004ce81efe1 Mon Sep 17 00:00:00 2001
+> From: Song Liu <songliubraving@fb.com>
+> Date: Sun, 28 Jul 2019 03:43:48 -0700
+> Subject: [PATCH 5/6] khugepaged: enable collapse pmd for pte-mapped THP
+>=20
+
+[...]=
