@@ -2,99 +2,127 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8CCC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB67C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 093C620673
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CB0D20840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:48:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfHMFo3 (ORCPT
+        id S1726637AbfHMFsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 01:44:29 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:56277 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbfHMFo3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 01:44:29 -0400
-X-Originating-IP: 90.89.68.76
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 4F59DC0006;
-        Tue, 13 Aug 2019 05:44:27 +0000 (UTC)
-Date:   Tue, 13 Aug 2019 07:44:26 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: How to add multiple example with conflicting includes
-Message-ID: <20190813054426.73ret73tmkrkyqfo@flea>
-References: <20190726181108.GA17767@Red>
+        Tue, 13 Aug 2019 01:48:15 -0400
+Received: from mga01.intel.com ([192.55.52.88]:21760 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725836AbfHMFsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 01:48:15 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 22:48:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,380,1559545200"; 
+   d="scan'208";a="376191369"
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by fmsmga006.fm.intel.com with ESMTP; 12 Aug 2019 22:48:13 -0700
+Date:   Tue, 13 Aug 2019 13:49:57 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pbonzini@redhat.com, mst@redhat.com,
+        rkrcmar@redhat.com, jmattson@google.com
+Subject: Re: [PATCH v6 4/8] KVM: VMX: Pass through CET related MSRs to Guest
+Message-ID: <20190813054956.GC2432@local-michael-cet-test>
+References: <20190725031246.8296-1-weijiang.yang@intel.com>
+ <20190725031246.8296-5-weijiang.yang@intel.com>
+ <20190812235341.GG4996@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190726181108.GA17767@Red>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190812235341.GG4996@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Mon, Aug 12, 2019 at 04:53:41PM -0700, Sean Christopherson wrote:
+> On Thu, Jul 25, 2019 at 11:12:42AM +0800, Yang Weijiang wrote:
+> > CET MSRs pass through Guest directly to enhance performance.
+> > CET runtime control settings are stored in MSR_IA32_{U,S}_CET,
+> > Shadow Stack Pointer(SSP) are stored in MSR_IA32_PL{0,1,2,3}_SSP,
+> > SSP table base address is stored in MSR_IA32_INT_SSP_TAB,
+> > these MSRs are defined in kernel and re-used here.
+> > 
+> > MSR_IA32_U_CET and MSR_IA32_PL3_SSP are used for user mode protection,
+> > the contents could differ from process to process, therefore,
+> > kernel needs to save/restore them during context switch, it makes
+> > sense to pass through them so that the guest kernel can
+> > use xsaves/xrstors to operate them efficiently. Other MSRs are used
+> > for non-user mode protection. See CET spec for detailed info.
+> > 
+> > The difference between CET VMCS state fields and xsave components is that,
+> > the former used for CET state storage during VMEnter/VMExit,
+> > whereas the latter used for state retention between Guest task/process
+> > switch.
+> > 
+> > Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> > ---
+> >  arch/x86/kvm/vmx/vmx.c | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> > 
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index ce1d6fe21780..ce5d1e45b7a5 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -6952,6 +6952,7 @@ static void update_intel_pt_cfg(struct kvm_vcpu *vcpu)
+> >  static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
+> >  {
+> >  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> > +	unsigned long *msr_bitmap;
+> >  
+> >  	if (cpu_has_secondary_exec_ctrls()) {
+> >  		vmx_compute_secondary_exec_control(vmx);
+> > @@ -6973,6 +6974,19 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
+> >  	if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
+> >  			guest_cpuid_has(vcpu, X86_FEATURE_INTEL_PT))
+> >  		update_intel_pt_cfg(vcpu);
+> > +
+> > +	msr_bitmap = vmx->vmcs01.msr_bitmap;
+> > +
+> > +	if (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
+> > +	    guest_cpuid_has(vcpu, X86_FEATURE_IBT)) {
+> 
+> These should be exposed to the guest if and only if they're supported in
+> the host and guest, i.e. kvm_supported_xss() needs to be checked.  And,
+> again assuming USER and KERNEL can be virtualized independently, the logic
+> needs to account for exposting USER but KERNEL and vice versa.
+>
+this patch serial is supposed to enable both USER and KERNEL mode CET as
+long as platform and host kernel support so. I'll add condition check
+before pass through correspond MSR to guest OS.
 
-On Fri, Jul 26, 2019 at 08:11:08PM +0200, Corentin Labbe wrote:
-> When I try to check the following examples of a devicetree schema:
-> examples:
->   - |
->     #include <dt-bindings/interrupt-controller/arm-gic.h>
->     #include <dt-bindings/clock/sun50i-a64-ccu.h>
->     #include <dt-bindings/reset/sun50i-a64-ccu.h>
->
->     crypto: crypto@1c15000 {
->       compatible = "allwinner,sun8i-h3-crypto";
->       reg = <0x01c15000 0x1000>;
->       interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
->       clocks = <&ccu CLK_BUS_CE>, <&ccu CLK_CE>;
->       clock-names = "ahb", "mod";
->       resets = <&ccu RST_BUS_CE>;
->       reset-names = "ahb";
->     };
->
->   - |
->     #include <dt-bindings/interrupt-controller/arm-gic.h>
->     #include <dt-bindings/clock/sun50i-h6-ccu.h>
->     #include <dt-bindings/reset/sun50i-h6-ccu.h>
->
->     crypto: crypto@1904000 {
->       compatible = "allwinner,sun50i-h6-crypto";
->       reg = <0x01904000 0x1000>;
->       interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
->       clocks = <&ccu CLK_BUS_CE>, <&ccu CLK_CE>, <&ccu CLK_MBUS_CE>;
->       clock-names = "ahb", "mod", "mbus";
->       resets = <&ccu RST_BUS_CE>;
->       reset-names = "ahb";
->     };
->
-> I get:
-> In file included from Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.example.dts:42:
-> /linux-next/scripts/dtc/include-prefixes/dt-bindings/clock/sun50i-h6-ccu.h:9: warning: "CLK_PLL_PERIPH0" redefined
->  #define CLK_PLL_PERIPH0  3
-> [...]
->
-> So how can I add multiple examples which need somes conflicting
-> #include to be validated.
-
-I'm having the same issue right now, is there a proper fix /
-workaround?
-
-Thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> > +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_U_CET, MSR_TYPE_RW);
+> > +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_S_CET, MSR_TYPE_RW);
+> > +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_INT_SSP_TAB, MSR_TYPE_RW);
+> > +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL0_SSP, MSR_TYPE_RW);
+> > +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL1_SSP, MSR_TYPE_RW);
+> > +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL2_SSP, MSR_TYPE_RW);
+> > +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL3_SSP, MSR_TYPE_RW);
+> 
+> The SSP MSRs should only be passed through if the guest has SHSTK, e.g.
+> KVM should intercept RDMSR and WRMSR to inject #GP in those cases.
+> 
+> > +	}
+> >  }
+> >  
+> >  static void vmx_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
+> > -- 
+> > 2.17.2
+> > 
