@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01927C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D72C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD8DB2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1A3F20844
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:09:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="S7G8F/WQ"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FNnU6/LN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730025AbfHMPJG (ORCPT
+        id S1730048AbfHMPJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 11:09:06 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:54878 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729979AbfHMPJC (ORCPT
+        Tue, 13 Aug 2019 11:09:15 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:45927 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729982AbfHMPJE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 11:09:02 -0400
+        Tue, 13 Aug 2019 11:09:04 -0400
 Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190813150900euoutp020cb5f478d785f89094cbe5eb08843833~6g-xckxQA2044220442euoutp02D
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 15:09:00 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190813150900euoutp020cb5f478d785f89094cbe5eb08843833~6g-xckxQA2044220442euoutp02D
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190813150902euoutp01f7f1821b6d1a1bf4d1cec8df4ab1004e~6g-zwIVI22748627486euoutp01N
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 15:09:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190813150902euoutp01f7f1821b6d1a1bf4d1cec8df4ab1004e~6g-zwIVI22748627486euoutp01N
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1565708940;
-        bh=wXzGqmIiM4g/8jlmRMR0TMihFYWxqj3/S01UAEO/Wqg=;
+        s=mail20170921; t=1565708942;
+        bh=RSuWB2xKQuhROQTDhZij7BzEdzlLgFlLbdhuBzwZOp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S7G8F/WQ4Xvy1wesuUDpR/YGmygooyjSxRB7qWwVej8ADfyVH/lbaJyhYpQUzD58/
-         StVjHAKcY0x/OhhxjoAn6UUrYBgL4clZJE5D/yFfxIgnAbBFsRpDRRkexdSQP5Vhtt
-         +7X5WImygeUpmnhNJ2UwxfMOJ1etrSj400nVxkWs=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        b=FNnU6/LNKWK9Fxz/Eeylw0hL3enUfb1V/kax3zEvxV7KO3CUQlv31gE2+pFsUqXRv
+         nrsYcKPDlvD4NtMUJYpF92TdC3KrcXjIF/RJ4MV0lmUXt12VQ9BIVx2ZMSeVulCubk
+         JYndVcNqx2Q2BLZYJpCEk9wrpcpre52ARtun/qwE=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190813150859eucas1p1a772b5b1247300150f17a509184d9284~6g-wqymDb2542925429eucas1p1H;
-        Tue, 13 Aug 2019 15:08:59 +0000 (GMT)
+        20190813150902eucas1p1f5ce8352c88dcb2283b5d575b316a36c~6g-zCwXJZ2552325523eucas1p1I;
+        Tue, 13 Aug 2019 15:09:02 +0000 (GMT)
 Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 95.5B.04469.B82D25D5; Tue, 13
-        Aug 2019 16:08:59 +0100 (BST)
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 0D.9E.04309.D82D25D5; Tue, 13
+        Aug 2019 16:09:01 +0100 (BST)
 Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190813150858eucas1p1a5fbf425753e4911c50631c3a6d34ffd~6g-vph9Bx2552325523eucas1p1F;
-        Tue, 13 Aug 2019 15:08:58 +0000 (GMT)
+        20190813150900eucas1p12fbf753613c727d8cb6992b6f77aca80~6g-x4xntO0107601076eucas1p1I;
+        Tue, 13 Aug 2019 15:09:00 +0000 (GMT)
 Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
         eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190813150858eusmtrp1bb1b6866719503646f9f2c13eccb5562~6g-vZtKNw1601316013eusmtrp18;
-        Tue, 13 Aug 2019 15:08:58 +0000 (GMT)
-X-AuditID: cbfec7f2-54fff70000001175-b4-5d52d28bd712
+        20190813150900eusmtrp1ef12e9ff19451c11121bb092049a0cd6~6g-xo0_cP1601316013eusmtrp1_;
+        Tue, 13 Aug 2019 15:09:00 +0000 (GMT)
+X-AuditID: cbfec7f4-ae1ff700000010d5-01-5d52d28d84ff
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id B0.D1.04166.A82D25D5; Tue, 13
-        Aug 2019 16:08:58 +0100 (BST)
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id B1.D1.04166.C82D25D5; Tue, 13
+        Aug 2019 16:09:00 +0100 (BST)
 Received: from AMDC3061.DIGITAL.local (unknown [106.120.51.75]) by
         eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190813150857eusmtip24b15a9bd426f668841122b42c658106d~6g-uxuSu-1702317023eusmtip2D;
-        Tue, 13 Aug 2019 15:08:57 +0000 (GMT)
+        20190813150859eusmtip204ac58fffdac289ffdfa45d6d91ec1f8~6g-xDo-_d1702317023eusmtip2E;
+        Tue, 13 Aug 2019 15:08:59 +0000 (GMT)
 From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
 To:     krzk@kernel.org
 Cc:     robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
@@ -66,56 +66,56 @@ Cc:     robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
         linux-pm@vger.kernel.org, b.zolnierkie@samsung.com,
         m.szyprowski@samsung.com,
         Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v3 7/9] soc: samsung: Update the CHIP ID DT binding
- documentation
-Date:   Tue, 13 Aug 2019 17:08:25 +0200
-Message-Id: <20190813150827.31972-8-s.nawrocki@samsung.com>
+Subject: [PATCH v3 9/9] ARM: dts: Add samsung,asv-bin property for
+ odroidxu3-lite
+Date:   Tue, 13 Aug 2019 17:08:27 +0200
+Message-Id: <20190813150827.31972-10-s.nawrocki@samsung.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190813150827.31972-1-s.nawrocki@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0VSa0hTYRju2znbOS5np2n4skJh2Y8sb9mPA0pUCE1BMOtXYjbzoKZO27yk
-        /lCaqXk3CU0D7YbX2txUvOSyOR1lNrwimDfMhMwEL2mJ1o5H6d/zPs/zvs/Dx0di4sd8CRmt
-        SGSUCnmsVCDE2/p/W9zyh4NDPQunRHRzhYZPV5s+8+ni+SWMtli0BK2bH+fTI51PBfRaoQnR
-        FRYDj35tmiLo563rBP2g20TQvT9y+LR+tl9wUSTTNTwUyPQvM2RFLQ1ItqZzCsJvCH0jmNjo
-        ZEbpceGWMKo0+wuWoLG9t9rbhDKRRpiHbEigzkNNqR7LQ0JSTNUhWFls47GCmFpHUGdw5YQ1
-        BDVbtYKDjc3Wn4gTahGMLg7yuMG60Zy9g7MuAeUFhX1FiMUOlD1Mv6olWBNGTfNgYGFwL8Oe
-        ugbP5sYJFuPUKWhdKtzjRZQP6Dbe8Lg4Z2jU9mAstqF8oaN8hc8eAqqMgK2pXZwz+cFYvXof
-        28N3cwvB4RMwUFaAcwtqBAVdkwQ3lCCYMdcgzuUDveYh61nS2u80aDo9OPoSPMkZwlkaKDuY
-        WD7K0pgVPmorxzhaBLnZYs7tAtsN5fudJZD/9e9+HRnot7tx7oWKESy0NBElyLnyf1gNQg3I
-        kUlSxUUyKi8Fk+KuksepkhSR7rfj43TI+lkGds2r7WhjONyIKBJJbUVBLcGhYr48WZUaZ0RA
-        YlIHUcmQlRJFyFPTGGV8mDIpllEZ0XESlzqK0g/NhoipSHkiE8MwCYzyQOWRNpJMVDmb9CHs
-        zMeIsUBd2g4dGGNz2a6qx3ciPdrlsNtdWWrAzFpghv/85DuFzs/P27sR6mfOBmglfzqWosey
-        9S+W75x7G3Xz/WyM7mpxitEwanaayzppOKLO1fqYRnYcPP2qNoPtQr71MZ+OZU1Uz4XbzXgE
-        bd3v+qX2L/C3tKPrV7qkuCpK7uWKKVXyf/blT9coAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKLMWRmVeSWpSXmKPExsVy+t/xe7pdl4JiDRZuY7HYOGM9q8X8I+dY
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCKsWRmVeSWpSXmKPExsWy7djP87q9l4JiDZavMLDYOGM9q8X8I+dY
+        Lfofv2a2OH9+A7vFpsfXWC0u75rDZvG59wijxYzz+5gs1h65y26xaOsXdovWvUfYLQ6/aWe1
+        2PzgGJsDr8emVZ1sHpuX1Hv0bVnF6PF5k1wASxSXTUpqTmZZapG+XQJXxsqr5gXf2Cp29t5g
+        bGC8wdrFyMkhIWAicb7rCGMXIxeHkMAKRokZH06yQThfGCUav9xlh3A+M0r0HZoK17Jow21W
+        iMRyRon9LXMY4VomLXkIVsUmYCjRe7SPEcQWERCWuLd0OdgoZoF7TBKnn55lAkkICwRL7Ghv
+        AmtgEVCVuLPuAVgDr4CNxPqLGxgh1slLrN5wgBnE5gSK75z+Hmy1hMBkdolTky8wQxS5SDT9
+        bYSyhSVeHd/CDmHLSJye3MMC0dDMKNGz+zY7hDOBUeL+8QVQK6wlDh+/CDSWA+g+TYn1u/RB
+        TAkBR4krXfwQJp/EjbeCIMXMQOakbdOZIcK8Eh1tQhAzVCR+r5rOBGFLSXQ/+c8CYXtINH76
+        Dw2tfmAwHtnEPIFRfhbCrgWMjKsYxVNLi3PTU4uN8lLL9YoTc4tL89L1kvNzNzEC08rpf8e/
+        7GDc9SfpEKMAB6MSD2/AlqBYIdbEsuLK3EOMEhzMSiK8Ey4ChXhTEiurUovy44tKc1KLDzFK
+        c7AoifNWMzyIFhJITyxJzU5NLUgtgskycXBKNTAKbhW4ZfN6bcvNYsPOqvm/G0271bZ+sq+Z
+        J/9nukh+VvLEvwxBpWx9t7f3sE/Qy0hqiH3Lwvz8dWsg+6VZZYKvr97t6Fq3pVXguW3lhvBV
+        S7r0I+bdmP+Iby9X6eoTd4uORPk3u6QLe7SdL0rdl7DurF2Y2ZrVpRPrGQO4/iZs/LTtqTpj
+        fboSS3FGoqEWc1FxIgDctfmmJwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrCLMWRmVeSWpSXmKPExsVy+t/xe7o9l4JiDZ5PUbLYOGM9q8X8I+dY
         Lfofv2a2OH9+A7vFpsfXWC0u75rDZvG59wijxYzz+5gs1h65y26xaOsXdovWvUfYLQ6/aWe1
         2PzgGJsDr8emVZ1sHpuX1Hv0bVnF6PF5k1wAS5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJ
-        pZ6hsXmslZGpkr6dTUpqTmZZapG+XYJexsS2O8wF63kqPh1ew9jAuJ6ri5GTQ0LAROL71neM
-        XYxcHEICSxklHk79yNTFyAGUkJKY36IEUSMs8edaFxtEzSdGicbVn1lBEmwChhK9R/sYQWwR
-        oKJ7S5ezgxQxC7xikrg97z8TSEJYIFBiy8rNYA0sAqoSW1/3gsV5BawlNn1dxwSxQV5i9YYD
-        zCA2p4CNxM7p78HqhYBqnr5bzzyBkW8BI8MqRpHU0uLc9NxiQ73ixNzi0rx0veT83E2MwCDf
-        duzn5h2MlzYGH2IU4GBU4uEN2BIUK8SaWFZcmXuIUYKDWUmEd8JFoBBvSmJlVWpRfnxRaU5q
-        8SFGU6CjJjJLiSbnAyMwryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFMHxMH
-        p1QDo5mawtOLBwvVPFwEtFkZL1QERPjytZVx9Tc9vJLg5+1SeqmtJPhu60GRCZsfZ9T3L3jQ
-        fHNpw36312tEVj32yHl0NlDBqe9JTYVIUi733e4sjeB/f+oiNcJWvXY7tFNS4tTco4sv+NW7
-        Or90CJ0ckBJ8PeV1yGKDi+4CjxSFdmg4vrpTrLVUiaU4I9FQi7moOBEAsqHqx4gCAAA=
-X-CMS-MailID: 20190813150858eucas1p1a5fbf425753e4911c50631c3a6d34ffd
+        pZ6hsXmslZGpkr6dTUpqTmZZapG+XYJexsqr5gXf2Cp29t5gbGC8wdrFyMkhIWAisWjDbSCb
+        i0NIYCmjxNObZ5i6GDmAElIS81uUIGqEJf5c62KDqPnEKDF/eSdYM5uAoUTv0T5GEFsEqOje
+        0uXsIEXMAq+YJG7P+88EkhAWCJQ4s2UuC4jNIqAqcWfdA7AGXgEbifUXNzBCbJCXWL3hADOI
+        zQkU3zn9PdgCIQFriafv1jNPYORbwMiwilEktbQ4Nz232FCvODG3uDQvXS85P3cTIzDEtx37
+        uXkH46WNwYcYBTgYlXh4A7YExQqxJpYVV+YeYpTgYFYS4Z1wESjEm5JYWZValB9fVJqTWnyI
+        0RToqInMUqLJ+cD4yyuJNzQ1NLewNDQ3Njc2s1AS5+0QOBgjJJCeWJKanZpakFoE08fEwSnV
+        wJh54eb3R/aLPeUWFdSVbe8MDWfw+8zmOVWPvTvwTcIRputzzTe/uNWv3sJ1fdL/otaqm8lr
+        khcpKBgtbxP7F8Ly3iz12uZtp6bsW8j5bvqtAxo3l7EKqwQfnzl/oveDmC058qLRB0y41hi7
+        T521bmlIUOAx29CoOM+E+/v3sSxZlNQn3aIm2KLEUpyRaKjFXFScCADlvQxshwIAAA==
+X-CMS-MailID: 20190813150900eucas1p12fbf753613c727d8cb6992b6f77aca80
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190813150858eucas1p1a5fbf425753e4911c50631c3a6d34ffd
+X-RootMTR: 20190813150900eucas1p12fbf753613c727d8cb6992b6f77aca80
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20190813150858eucas1p1a5fbf425753e4911c50631c3a6d34ffd
+X-CMS-RootMailID: 20190813150900eucas1p12fbf753613c727d8cb6992b6f77aca80
 References: <20190813150827.31972-1-s.nawrocki@samsung.com>
-        <CGME20190813150858eucas1p1a5fbf425753e4911c50631c3a6d34ffd@eucas1p1.samsung.com>
+        <CGME20190813150900eucas1p12fbf753613c727d8cb6992b6f77aca80@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds documentation of a new optional "samsung,asv-bin"
-property in the chipid device node and documents requirement of
-"syscon" compatible string.  These additions are needed to support
-Exynos ASV (Adaptive Supply Voltage) feature.
+The Exynos5422 SoC used on Odroid XU3 Lite boards belongs to
+a special ASV bin but this information cannot be read from the
+CHIPID block registers. Add samsung,asv-bin property for XU3
+Lite to ensure the ASV bin is properly determined.
 
 Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 ---
@@ -125,34 +125,24 @@ Changes since v2:
 Changes since v1 (RFC):
  - new patch
 ---
- .../devicetree/bindings/arm/samsung/exynos-chipid.txt  | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
-index 85c5dfd4a720..be3657e6c00c 100644
---- a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
-+++ b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
-@@ -1,12 +1,18 @@
--SAMSUNG Exynos SoCs Chipid driver.
-+SAMSUNG Exynos SoC series CHIPID subsystem
+diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
+index c19b5a51ca44..a31ca2ef750f 100644
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
+@@ -26,6 +26,10 @@
+ 	status = "disabled";
+ };
  
- Required properties:
--- compatible : Should at least contain "samsung,exynos4210-chipid".
-+- compatible : Should at least contain "samsung,exynos4210-chipid", "syscon".
- 
- - reg: offset and length of the register set
- 
-+Optional properties:
-+ - samsung,asv-bin : Adaptive Supply Voltage bin selection. This can be used
-+   to determine the ASV bin of an SoC if respective information is missing
-+   in the CHIPID registers or in the OTP memory. Possible values: 0...3.
++&chipid {
++	samsung,asv-bin = <2>;
++};
 +
- Example:
- 	chipid@10000000 {
- 		compatible = "samsung,exynos4210-chipid";
- 		reg = <0x10000000 0x100>;
-+		samsung,asv-bin = <2>;
- 	};
+ &pwm {
+ 	/*
+ 	 * PWM 0 -- fan
 -- 
 2.17.1
 
