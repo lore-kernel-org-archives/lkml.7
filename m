@@ -2,86 +2,209 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7A2C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB02C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79ACE20844
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BF9D206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:14:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IwVoj/JJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xVsKlQnd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbfHMMKH (ORCPT
+        id S1727621AbfHMMOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 08:10:07 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:48290 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbfHMMKG (ORCPT
+        Tue, 13 Aug 2019 08:14:10 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36151 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbfHMMOJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 08:10:06 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7DC9su1053904;
-        Tue, 13 Aug 2019 07:09:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1565698194;
-        bh=cTM7S2PLpa3mnQ4eBvwPzdCvn8W5H1f6uFiW2fuHzLE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=IwVoj/JJDYlvqMb88DXh1W4/LfS9IGheVUuU65L6FAgfn8e7qrdz7e/DjCyJFluLZ
-         /4aDQ6gpwuTf+EYGnXRlcXzzOpUvzIO0WBWa4hcUclDsGloytKPIsIvBwRLc6dFkKX
-         p4YfaSxpYzgqAkpPQKruHi/jYXrxN0jNay5ncj8Y=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7DC9sGS071766
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 13 Aug 2019 07:09:54 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 13
- Aug 2019 07:09:54 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 13 Aug 2019 07:09:54 -0500
-Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7DC9pug081737;
-        Tue, 13 Aug 2019 07:09:52 -0500
-Subject: Re: [PATCH] soc: ti: pm33xx: Fix static checker warnings
-To:     Tony Lindgren <tony@atomide.com>
-CC:     <ssantosh@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <t-kristo@ti.com>,
-        <d-gerlach@ti.com>, <dan.carpenter@oracle.com>
-References: <20190626075014.2911-1-j-keerthy@ti.com>
- <20190813120453.GW52127@atomide.com>
-From:   Keerthy <j-keerthy@ti.com>
-Message-ID: <e66d31bb-1e03-919a-184f-32a1a5124009@ti.com>
-Date:   Tue, 13 Aug 2019 17:40:29 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 13 Aug 2019 08:14:09 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g4so2733590plo.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 05:14:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qSoVEIqNaOExh67Z6AKi/3gvBhmET7Q2JnQdOFBkG+Y=;
+        b=xVsKlQndmoKfmKjbH3yVxeW1V/Qao83PlCF8Fr+rgXVqfzS1f2OUp/FODQ3Lc4vbbC
+         bhIgdsO7DHtzKL4eq86oSP6AwFG2yq2b6WJjGtz862ByPdIwzwKCiL5ZnONtBN803mzJ
+         Hp0GoSDNg1ePUSOg6yarxQgtha3y4tfhUTUZ/IMU0HZzdbASQmt2Th8IirIdvaay0wHd
+         +OapeDH7N9/2fGO93QtWLxDHTanzS+lk6Jww5APWnGxcrvib4QPLAmq1BY+pqJux9KvG
+         1EM8U1fZC4sVg44n0gmoRPjyqLDBIh9QVCahB1Qo28qL9NEdIlH3SbMjA/l1Ehxu6m81
+         9CZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qSoVEIqNaOExh67Z6AKi/3gvBhmET7Q2JnQdOFBkG+Y=;
+        b=YalPVb6atm57KZTJS7Gp8zCSXh5GbgCxx5vy9VmcxQJaoIuPUpLDxzK2iHC5Pq/WRM
+         NnxDDDOviCzEv9bOgDJQHYOgn3fycCEQRM1z5HndQ7ECNY4I0dJntxsizBgNEYBB8SDz
+         P66rUPfHrl7G4Z7yXgdbKRZZZXp6qqhiOFeWNenHfHIHCz7AME0nLRYgMCV3tfHxB98u
+         kaIIsUVmh7bTd5gWzUZcqAjzNUJPdzVmJZo34xty47L2ssnCBiPbB+BAml8eOuzLCa/K
+         epMW2QxSlsMXvz3CSdu1/OEbPtPqCCVOE1xwz3+Ux44THC1Q/tPLvs97JICXYZMrK6EK
+         SoJA==
+X-Gm-Message-State: APjAAAUzityZfqWMijXtREygEBfgqUcpZ9Q3M5jEN9AXGVP/cPYv4kyw
+        E0GcfzfkbRS3WZppqcyfYoxn
+X-Google-Smtp-Source: APXvYqyqk5l2TCDeiILn8sdBnKDZ03tP2u4wc3zOtMi6rIRkZXzhbn5iaUNzL/6GdHA2nfzu68C0NQ==
+X-Received: by 2002:a17:902:d70e:: with SMTP id w14mr8185306ply.339.1565698448530;
+        Tue, 13 Aug 2019 05:14:08 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:649c:6ce0:9d44:669c:5d6c:bc5f])
+        by smtp.gmail.com with ESMTPSA id i124sm195773668pfe.61.2019.08.13.05.14.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 13 Aug 2019 05:14:07 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 17:44:00 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com
+Subject: Re: [PATCH v2 1/3] dt-bindings: media: i2c: Add IMX290 CMOS sensor
+ binding
+Message-ID: <20190813121400.GA29378@Mani-XPS-13-9360>
+References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
+ <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
+ <20190813094526.GG835@valkosipuli.retiisi.org.uk>
+ <20190813113358.GA28877@Mani-XPS-13-9360>
+ <20190813114643.GA2527@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20190813120453.GW52127@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813114643.GA2527@valkosipuli.retiisi.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sakari,
 
-
-On 13/08/19 5:34 PM, Tony Lindgren wrote:
-> * Keerthy <j-keerthy@ti.com> [190626 00:50]:
->> The patch fixes a bunch of static checker warnings.
+On Tue, Aug 13, 2019 at 02:46:43PM +0300, Sakari Ailus wrote:
+> Hi Manivannan,
 > 
-> Sorry I just noticed that this one is still pending, applying
-> into fixes.
-
-Thanks Tony
-
+> On Tue, Aug 13, 2019 at 05:03:58PM +0530, Manivannan Sadhasivam wrote:
+> > Hi Sakari,
+> > 
+> > Thanks for the review!
+> > 
+> > On Tue, Aug 13, 2019 at 12:45:26PM +0300, Sakari Ailus wrote:
+> > > Hi Manivannan,
+> > > 
+> > > On Tue, Aug 06, 2019 at 06:39:36PM +0530, Manivannan Sadhasivam wrote:
+> > > > Add devicetree binding for IMX290 CMOS image sensor.
+> > > > 
+> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > ---
+> > > >  .../devicetree/bindings/media/i2c/imx290.txt  | 51 +++++++++++++++++++
+> > > >  1 file changed, 51 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx290.txt
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/media/i2c/imx290.txt b/Documentation/devicetree/bindings/media/i2c/imx290.txt
+> > > > new file mode 100644
+> > > > index 000000000000..7535b5b5b24b
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/media/i2c/imx290.txt
+> > > > @@ -0,0 +1,51 @@
+> > > > +* Sony IMX290 1/2.8-Inch CMOS Image Sensor
+> > > > +
+> > > > +The Sony IMX290 is a 1/2.8-Inch CMOS Solid-state image sensor with
+> > > > +Square Pixel for Color Cameras. It is programmable through I2C and 4-wire
+> > > > +interfaces. The sensor output is available via CMOS logic parallel SDR output,
+> > > > +Low voltage LVDS DDR output and CSI-2 serial data output.
+> > > 
+> > > If there are three to choose from, then you should specify which one is in
+> > > use. Given that I think chances remain slim we'd add support for the other
+> > > two (it's certainly not ruled out though), CSI-2 could be the default. But
+> > > this needs to be documented.
+> > > 
+> > 
+> > Hmm... I'm not sure here. Bindings should describe the hardware and not the
+> > limitations of the driver. Here as you said, the sensor can output frames
+> > in 3 different modes/formats but the driver only supports CSI2. I can add a
+> > note in the driver but not sure whether dt-binding is the right place or not!
 > 
-> Tony
+> I guess alternatively you could document the necessary bindings for the
+> other two busses.
 > 
+> But what I'm saying here is that it's highly unlikely they'll be ever
+> needed, and it'd be mostly a waste of time to implement that. (That said, I
+> have nothing against the use of these busses, but I've never seen anyone
+> using them.) Many other devices use defaults for more contentious settings.
+> 
+
+Agree with you but my question was, whether I could document the supported
+mode in bindings or not! I have seen comments from Rob in the past that the
+binding should not document the limitations of the driver. But anyway, one
+can infer from the current binding that only CSI2 is supported for now, it's
+just stating it explicitly makes me doubtful!
+
+> > 
+> > > > +
+> > > > +Required Properties:
+> > > > +- compatible: Should be "sony,imx290"
+> > > > +- reg: I2C bus address of the device
+> > > > +- clocks: Reference to the xclk clock.
+> > > > +- clock-names: Should be "xclk".
+> > > > +- clock-frequency: Frequency of the xclk clock.
+> > > 
+> > > ...in Hz.
+> > > 
+> > 
+> > Ack.
+> > 
+> > > > +- vdddo-supply: Sensor digital IO regulator.
+> > > > +- vdda-supply: Sensor analog regulator.
+> > > > +- vddd-supply: Sensor digital core regulator.
+> > > > +
+> > > > +Optional Properties:
+> > > > +- reset-gpios: Sensor reset GPIO
+> > > > +
+> > > > +The imx290 device node should contain one 'port' child node with
+> > > > +an 'endpoint' subnode. For further reading on port node refer to
+> > > > +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > > 
+> > > Which other properties are relevant for the device?
+> > 
+> > Not much other than, clock/data lanes.
+> 
+> Please document data-lanes, and which values it may have.
+>
+
+Ack.
+
+> > 
+> > > I suppose you can't change the lane order, so clock-lanes is redundant
+> > > (don't use it in the example) and data-lanes should be monotonically
+> > > incrementing series from 1 to 4.
+> > > 
+> > 
+> > We can change the order and the example here illustrates how it has been
+> > wired in FRAMOS module. If I change the lane order like you said, it won't
+> > work.
+> 
+> I highly doubt that. Neither the driver nor the sensor uses the lane
+> ordering information.
+> 
+
+Agree but CSI2 host will need this informtion, right? Please correct me if
+I'm wrong!
+
+> And even if the driver only supported four lanes, then it should check the
+> number of lanes is actually four.
+> 
+
+Ack. Sensor works with 2/4 lanes but the driver only handles 4 for now. Will
+add the check in driver.
+
+Thanks,
+Mani
+
+> -- 
+> Regards,
+> 
+> Sakari Ailus
