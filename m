@@ -2,215 +2,189 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F41C4C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5826C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B543720844
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:03:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nkYZnagQ"
+	by mail.kernel.org (Postfix) with ESMTP id 9A9BA206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbfHMNDT (ORCPT
+        id S1728873AbfHMNDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 13 Aug 2019 09:03:19 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37595 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728303AbfHMNDT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mx2.suse.de ([195.135.220.15]:45246 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727621AbfHMNDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 13 Aug 2019 09:03:19 -0400
-Received: by mail-pl1-f193.google.com with SMTP id bj8so2244565plb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:03:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0YYrt8fX8NBe3Ix0ZR8N7yG5IdU706M3lTlC7xsDXZg=;
-        b=nkYZnagQ/N+uvwC9Ff9zhOFqbOrUlnQYXOHbaXVlcf1nr0dsS69AaKbg1Sdb4bHqsS
-         Rw0nONPYNHH+ZI1uW9Pl/qa6ZrBVPgrdhUJDjDb31Umw9OmTNIk12NcZOYodMhVYSAlG
-         23CPdOXA+MqHPsRg0w23i+m4zmC12TNmy+XXKAbb9MQiARYNFSUlJSQZnQpMnxwVsbOO
-         HRmYifIH193V8+HqAAajmwf/NH2chEnFGsi6FGS+rrAVoqfKdD+toWpZ1HaLEBO6YkeS
-         cSIGOPhQUTmJT/u3a3EgJI8cGav7YQtcz2AbqF1+PcBStArN4hpDMUQRk1Y1j+UKWLw/
-         mfCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0YYrt8fX8NBe3Ix0ZR8N7yG5IdU706M3lTlC7xsDXZg=;
-        b=TKSbqMdbHSRDZc3HVbNHKc6U+wgNvz1ZdmuVAjhcVoAXY1PILtX42eytYN8QVxc+g1
-         fEgfaizB9RR7Jrvd27yHMJSHNShdA5q/qOQisNEKMXmLRw7emsNfkSd764evW5TtBIrt
-         /+0NPmZcFAYtqKCxc39o/BynFUPzJm6DzLj6F48U7fFGBzdgcfMKYgyDGt8L0ac7gbLV
-         QPn3KGaikCltiupxkJRRZZGD5nFx7EQ9DMLsIww9PXxNJSIqwvRWNodl7SGvsh3USVj3
-         qSGD0cXrL4JOOzQy75mh0/8SGvloLZ9n5iqqWiVufXkSIikBbCGBzLR8TDEp11PYguHY
-         +Drg==
-X-Gm-Message-State: APjAAAVZN41DhKDs79wFPgOn4RBlHSH0iJg3MX4XeWJlA4p8P7cewfdq
-        Y6g/+YNrTCYwAiilVpcwQaQKH8+aaPdtMmeZBiVeB7fP0MDtkg==
-X-Google-Smtp-Source: APXvYqx5QN3Xu0FjLh/BJUrsZv+FEng8X5z4EG0iHTMxlFgLEZUcutUE5Zys4DzTpckKpqeQwJEkajNChyety2rhw38=
-X-Received: by 2002:a17:902:bb94:: with SMTP id m20mr5225493pls.336.1565701398386;
- Tue, 13 Aug 2019 06:03:18 -0700 (PDT)
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 25C0DAD95;
+        Tue, 13 Aug 2019 13:03:16 +0000 (UTC)
+Subject: Re: [patch] mm, page_alloc: move_freepages should not examine struct
+ page of reserved memory
+To:     David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <alpine.DEB.2.21.1908122036560.10779@chino.kir.corp.google.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <3aadeed1-3f38-267d-8dae-839e10a2f9d2@suse.cz>
+Date:   Tue, 13 Aug 2019 15:03:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <000000000000532b860589f0669a@google.com>
-In-Reply-To: <000000000000532b860589f0669a@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 13 Aug 2019 15:03:07 +0200
-Message-ID: <CAAeHK+waUUNpGp1b2WqXQHkbBcQT_MonG62-bK-aEj2dvYr-gA@mail.gmail.com>
-Subject: Re: general protection fault in cdev_del
-To:     syzbot <syzbot+67b2bd0e34f952d0321e@syzkaller.appspotmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Oliver Neukum <oneukum@suse.com>
-Content-Type: multipart/mixed; boundary="000000000000ad7835058fff43df"
+In-Reply-To: <alpine.DEB.2.21.1908122036560.10779@chino.kir.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000ad7835058fff43df
-Content-Type: text/plain; charset="UTF-8"
+On 8/13/19 5:37 AM, David Rientjes wrote:
+> After commit 907ec5fca3dc ("mm: zero remaining unavailable struct pages"),
+> struct page of reserved memory is zeroed.  This causes page->flags to be 0
+> and fixes issues related to reading /proc/kpageflags, for example, of
+> reserved memory.
+> 
+> The VM_BUG_ON() in move_freepages_block(), however, assumes that
+> page_zone() is meaningful even for reserved memory.  That assumption is no
+> longer true after the aforementioned commit.
 
-On Tue, May 28, 2019 at 12:48 PM syzbot
-<syzbot+67b2bd0e34f952d0321e@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    69bbe8c7 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=178e4526a00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=c309d28e15db39c5
-> dashboard link: https://syzkaller.appspot.com/bug?extid=67b2bd0e34f952d0321e
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10dc5d54a00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17cae526a00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+67b2bd0e34f952d0321e@syzkaller.appspotmail.com
->
-> kasan: CONFIG_KASAN_INLINE enabled
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] SMP KASAN PTI
-> CPU: 1 PID: 2486 Comm: kworker/1:2 Not tainted 5.2.0-rc1+ #9
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> RIP: 0010:cdev_del+0x22/0x90 fs/char_dev.c:592
-> Code: cf 0f 1f 80 00 00 00 00 55 48 89 fd 48 83 ec 08 e8 93 a5 d5 ff 48 8d
-> 7d 64 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48
-> 89 f8 83 e0 07 83 c0 03 38 d0 7c 04 84 d2 75 4f 48
-> RSP: 0018:ffff8881d18e7218 EFLAGS: 00010207
-> RAX: dffffc0000000000 RBX: ffff8881d249a100 RCX: ffffffff820d879e
-> RDX: 000000000000000c RSI: ffffffff8167705d RDI: 0000000000000064
-> RBP: 0000000000000000 R08: ffff8881d18d1800 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> R13: ffff8881d25c9100 R14: 0000000000000000 R15: ffff8881cc2a8070
-> FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f35af318000 CR3: 00000001cc182000 CR4: 00000000001406e0
-> Call Trace:
->   tty_unregister_device drivers/tty/tty_io.c:3192 [inline]
->   tty_unregister_device+0x10d/0x1a0 drivers/tty/tty_io.c:3187
->   hso_serial_tty_unregister drivers/net/usb/hso.c:2245 [inline]
->   hso_create_bulk_serial_device drivers/net/usb/hso.c:2682 [inline]
->   hso_probe.cold+0xc8/0x120 drivers/net/usb/hso.c:2948
->   usb_probe_interface+0x30b/0x7a0 drivers/usb/core/driver.c:361
->   really_probe+0x287/0x660 drivers/base/dd.c:509
->   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
->   __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
->   bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:843
->   bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x1700 drivers/base/core.c:2111
->   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0xa2/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x287/0x660 drivers/base/dd.c:509
->   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
->   __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
->   bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:843
->   bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x1700 drivers/base/core.c:2111
->   usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
->   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
->   port_event drivers/usb/core/hub.c:5350 [inline]
->   hub_event+0x1adc/0x35a0 drivers/usb/core/hub.c:5432
->   process_one_work+0x90a/0x1580 kernel/workqueue.c:2268
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2414
->   kthread+0x30e/0x420 kernel/kthread.c:254
->   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-> Modules linked in:
-> ---[ end trace 3b56fa5a205cba42 ]---
-> RIP: 0010:cdev_del+0x22/0x90 fs/char_dev.c:592
-> Code: cf 0f 1f 80 00 00 00 00 55 48 89 fd 48 83 ec 08 e8 93 a5 d5 ff 48 8d
-> 7d 64 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48
-> 89 f8 83 e0 07 83 c0 03 38 d0 7c 04 84 d2 75 4f 48
-> RSP: 0018:ffff8881d18e7218 EFLAGS: 00010207
-> RAX: dffffc0000000000 RBX: ffff8881d249a100 RCX: ffffffff820d879e
-> RDX: 000000000000000c RSI: ffffffff8167705d RDI: 0000000000000064
-> RBP: 0000000000000000 R08: ffff8881d18d1800 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> R13: ffff8881d25c9100 R14: 0000000000000000 R15: ffff8881cc2a8070
-> FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f35af318000 CR3: 00000001cc182000 CR4: 00000000001406e0
+How comes that move_freepages_block() gets called on reserved memory in
+the first place?
 
-Trying Oliver's fix from [1]:
-
-#syz test: https://github.com/google/kasan.git 69bbe8c7
-
-[1] https://groups.google.com/forum/#!msg/syzkaller-bugs/5qVDUDTxXYQ/OlN_ZX6LBwAJ
-
->
->
+> There's no reason why move_freepages_block() should be testing the
+> legitimacy of page_zone() for reserved memory; its scope is limited only
+> to pages on the zone's freelist.
+> 
+> Note that pfn_valid() can be true for reserved memory: there is a backing
+> struct page.  The check for page_to_nid(page) is also buggy but reserved
+> memory normally only appears on node 0 so the zeroing doesn't affect this.
+> 
+> Move the debug checks to after verifying PageBuddy is true.  This isolates
+> the scope of the checks to only be for buddy pages which are on the zone's
+> freelist which move_freepages_block() is operating on.  In this case, an
+> incorrect node or zone is a bug worthy of being warned about (and the
+> examination of struct page is acceptable bcause this memory is not
+> reserved).
+> 
+> Signed-off-by: David Rientjes <rientjes@google.com>
 > ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+>  mm/page_alloc.c | 19 ++++---------------
+>  1 file changed, 4 insertions(+), 15 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -2238,27 +2238,12 @@ static int move_freepages(struct zone *zone,
+>  	unsigned int order;
+>  	int pages_moved = 0;
+>  
+> -#ifndef CONFIG_HOLES_IN_ZONE
+> -	/*
+> -	 * page_zone is not safe to call in this context when
+> -	 * CONFIG_HOLES_IN_ZONE is set. This bug check is probably redundant
+> -	 * anyway as we check zone boundaries in move_freepages_block().
+> -	 * Remove at a later date when no bug reports exist related to
+> -	 * grouping pages by mobility
+> -	 */
+> -	VM_BUG_ON(pfn_valid(page_to_pfn(start_page)) &&
+> -	          pfn_valid(page_to_pfn(end_page)) &&
+> -	          page_zone(start_page) != page_zone(end_page));
+> -#endif
+>  	for (page = start_page; page <= end_page;) {
+>  		if (!pfn_valid_within(page_to_pfn(page))) {
+>  			page++;
+>  			continue;
+>  		}
+>  
+> -		/* Make sure we are not inadvertently changing nodes */
+> -		VM_BUG_ON_PAGE(page_to_nid(page) != zone_to_nid(zone), page);
+> -
+>  		if (!PageBuddy(page)) {
+>  			/*
+>  			 * We assume that pages that could be isolated for
+> @@ -2273,6 +2258,10 @@ static int move_freepages(struct zone *zone,
+>  			continue;
+>  		}
+>  
+> +		/* Make sure we are not inadvertently changing nodes */
+> +		VM_BUG_ON_PAGE(page_to_nid(page) != zone_to_nid(zone), page);
+> +		VM_BUG_ON_PAGE(page_zone(page) != zone, page);
 
---000000000000ad7835058fff43df
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-usb-hso-initialize-so-that-we-can-tear-down-in-the-e.patch"
-Content-Disposition: attachment; 
-	filename="0001-usb-hso-initialize-so-that-we-can-tear-down-in-the-e.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_jz9u5b6z0>
-X-Attachment-Id: f_jz9u5b6z0
+The later check implies the former check, so if it's to stay, the first
+one could be removed and comment adjusted s/nodes/zones/
 
-RnJvbSA2ODY3YWJjMTcwMWYxODg5MmQzMmU4YWVhZjY0NDkwMWU5YmNiZjgyIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29tPgpEYXRl
-OiBXZWQsIDUgSnVuIDIwMTkgMTM6NDk6MjEgKzAyMDAKU3ViamVjdDogW1BBVENIXSB1c2I6IGhz
-bzogaW5pdGlhbGl6ZSBzbyB0aGF0IHdlIGNhbiB0ZWFyIGRvd24gaW4gdGhlIGVycm9yCiBjYXNl
-CgpJbml0dWFsaXphdGlvbiBtdXN0IGZvbGxvdyB0aGUgc2VxdWVuY2Ugc3R1ZmYgaXMgdW5kb25l
-IGluIGNhc2UKd2UgYmFpbCBvdXQuIFRodXMgdGhlIHBhcmVudCBwb2ludGVyIG11c3QgYmUgc2V0
-IGVhcmxpZXIuCgpTaWduZWQtb2ZmLWJ5OiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29t
-PgotLS0KIGRyaXZlcnMvbmV0L3VzYi9oc28uYyB8IDYgKysrLS0tCiAxIGZpbGUgY2hhbmdlZCwg
-MyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0
-L3VzYi9oc28uYyBiL2RyaXZlcnMvbmV0L3VzYi9oc28uYwppbmRleCA2YTBlY2RkZmYzMTAuLjRk
-OTEwMGZiOWY2ZSAxMDA2NDQKLS0tIGEvZHJpdmVycy9uZXQvdXNiL2hzby5jCisrKyBiL2RyaXZl
-cnMvbmV0L3VzYi9oc28uYwpAQCAtMjY1Myw2ICsyNjUzLDkgQEAgc3RhdGljIHN0cnVjdCBoc29f
-ZGV2aWNlICpoc29fY3JlYXRlX2J1bGtfc2VyaWFsX2RldmljZSgKIAkJCQkgICAgIEJVTEtfVVJC
-X1RYX1NJWkUpKQogCQlnb3RvIGV4aXQ7CiAKKwkvKiBhbmQgcmVjb3JkIHRoaXMgc2VyaWFsICov
-CisJc2V0X3NlcmlhbF9ieV9pbmRleChzZXJpYWwtPm1pbm9yLCBzZXJpYWwpOworCiAJc2VyaWFs
-LT5pbl9lbmRwID0gaHNvX2dldF9lcChpbnRlcmZhY2UsIFVTQl9FTkRQT0lOVF9YRkVSX0JVTEss
-CiAJCQkJICAgICBVU0JfRElSX0lOKTsKIAlpZiAoIXNlcmlhbC0+aW5fZW5kcCkgewpAQCAtMjY2
-OSw5ICsyNjcyLDYgQEAgc3RhdGljIHN0cnVjdCBoc29fZGV2aWNlICpoc29fY3JlYXRlX2J1bGtf
-c2VyaWFsX2RldmljZSgKIAogCXNlcmlhbC0+d3JpdGVfZGF0YSA9IGhzb19zdGRfc2VyaWFsX3dy
-aXRlX2RhdGE7CiAKLQkvKiBhbmQgcmVjb3JkIHRoaXMgc2VyaWFsICovCi0Jc2V0X3NlcmlhbF9i
-eV9pbmRleChzZXJpYWwtPm1pbm9yLCBzZXJpYWwpOwotCiAJLyogc2V0dXAgdGhlIHByb2MgZGly
-cyBhbmQgZmlsZXMgaWYgbmVlZGVkICovCiAJaHNvX2xvZ19wb3J0KGhzb19kZXYpOwogCi0tIAoy
-LjE2LjQKCg==
---000000000000ad7835058fff43df--
+> +
+>  		order = page_order(page);
+>  		move_to_free_area(page, &zone->free_area[order], migratetype);
+>  		page += 1 << order;
+> 
+
