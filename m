@@ -2,159 +2,96 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5E7C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A59BC32753
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF3520663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F7A20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:25:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="F+3YgV5i";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="F+3YgV5i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbfHMIZT (ORCPT
+        id S1728087AbfHMIZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 04:25:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53287 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727166AbfHMIZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 04:25:15 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 13 Aug 2019 04:25:42 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48640 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727029AbfHMIZl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 04:25:41 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id DB61A607DE; Tue, 13 Aug 2019 08:25:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565684740;
+        bh=POHCskCBMH1ZdCeQ/s1wr7SV0EammuFdxrlrI4KWC7Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=F+3YgV5ieTKv1XlDc+0RfiorOfMs9Jmdg7l83A8gMSn9U/WiSNBOcj/08RHoIwMI9
+         x6bBh7wpmImdlVlVllKNJ7cTvvmX7F8UvetSCNhPlL02lKBJpya1Zeudj2rXZ2IQFf
+         On8BcVpcvGxB/ncL6TaPV22Qi1ffuFVocCqISdg0=
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3C70430BA07B;
-        Tue, 13 Aug 2019 08:25:15 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-144.ams2.redhat.com [10.36.116.144])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6387160C44;
-        Tue, 13 Aug 2019 08:25:11 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 64A5C9D42; Tue, 13 Aug 2019 10:25:09 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     olvaffe@gmail.com, Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 1/2] drm/virtio: cleanup queue functions
-Date:   Tue, 13 Aug 2019 10:25:08 +0200
-Message-Id: <20190813082509.29324-2-kraxel@redhat.com>
-In-Reply-To: <20190813082509.29324-1-kraxel@redhat.com>
-References: <20190813082509.29324-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 13 Aug 2019 08:25:15 +0000 (UTC)
+        (Authenticated sender: mkshah@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A3F4E60709;
+        Tue, 13 Aug 2019 08:25:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565684740;
+        bh=POHCskCBMH1ZdCeQ/s1wr7SV0EammuFdxrlrI4KWC7Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=F+3YgV5ieTKv1XlDc+0RfiorOfMs9Jmdg7l83A8gMSn9U/WiSNBOcj/08RHoIwMI9
+         x6bBh7wpmImdlVlVllKNJ7cTvvmX7F8UvetSCNhPlL02lKBJpya1Zeudj2rXZ2IQFf
+         On8BcVpcvGxB/ncL6TaPV22Qi1ffuFVocCqISdg0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A3F4E60709
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     agross@kernel.org, david.brown@linaro.org,
+        linux-arm-msm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        dianders@chromium.org, swboyd@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org, ulf.hansson@linaro.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH 0/4] Add RSC power domain support
+Date:   Tue, 13 Aug 2019 13:54:38 +0530
+Message-Id: <20190813082442.25796-1-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make the queue functions return void, none of
-the call sites checks the return value.
+Resource State Coordinator (RSC) is responsible for powering off/lowering
+the requirements from CPU subsystem for the associated hardware like buses,
+clocks, and regulators when all CPUs and cluster is powered down.
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/virtio/virtgpu_vq.c | 41 ++++++++++-------------------
- 1 file changed, 14 insertions(+), 27 deletions(-)
+RSC power domain uses last-man activities provided by genpd framework based on
+Ulf Hansoon's patch series[1], when the cluster of CPUs enter deepest idle
+states. As a part of domain poweroff, RSC can lower resource state requirements
+by flushing the cached sleep and wake state votes for resources.
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index 7ac20490e1b4..ca91e83ffaef 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -252,8 +252,8 @@ void virtio_gpu_dequeue_cursor_func(struct work_struct *work)
- 	wake_up(&vgdev->cursorq.ack_queue);
- }
- 
--static int virtio_gpu_queue_ctrl_buffer_locked(struct virtio_gpu_device *vgdev,
--					       struct virtio_gpu_vbuffer *vbuf)
-+static void virtio_gpu_queue_ctrl_buffer_locked(struct virtio_gpu_device *vgdev,
-+						struct virtio_gpu_vbuffer *vbuf)
- 		__releases(&vgdev->ctrlq.qlock)
- 		__acquires(&vgdev->ctrlq.qlock)
- {
-@@ -263,7 +263,7 @@ static int virtio_gpu_queue_ctrl_buffer_locked(struct virtio_gpu_device *vgdev,
- 	int ret;
- 
- 	if (!vgdev->vqs_ready)
--		return -ENODEV;
-+		return;
- 
- 	sg_init_one(&vcmd, vbuf->buf, vbuf->size);
- 	sgs[outcnt + incnt] = &vcmd;
-@@ -294,30 +294,22 @@ static int virtio_gpu_queue_ctrl_buffer_locked(struct virtio_gpu_device *vgdev,
- 
- 		virtqueue_kick(vq);
- 	}
--
--	if (!ret)
--		ret = vq->num_free;
--	return ret;
- }
- 
--static int virtio_gpu_queue_ctrl_buffer(struct virtio_gpu_device *vgdev,
--					struct virtio_gpu_vbuffer *vbuf)
-+static void virtio_gpu_queue_ctrl_buffer(struct virtio_gpu_device *vgdev,
-+					 struct virtio_gpu_vbuffer *vbuf)
- {
--	int rc;
--
- 	spin_lock(&vgdev->ctrlq.qlock);
--	rc = virtio_gpu_queue_ctrl_buffer_locked(vgdev, vbuf);
-+	virtio_gpu_queue_ctrl_buffer_locked(vgdev, vbuf);
- 	spin_unlock(&vgdev->ctrlq.qlock);
--	return rc;
- }
- 
--static int virtio_gpu_queue_fenced_ctrl_buffer(struct virtio_gpu_device *vgdev,
--					       struct virtio_gpu_vbuffer *vbuf,
--					       struct virtio_gpu_ctrl_hdr *hdr,
--					       struct virtio_gpu_fence *fence)
-+static void virtio_gpu_queue_fenced_ctrl_buffer(struct virtio_gpu_device *vgdev,
-+						struct virtio_gpu_vbuffer *vbuf,
-+						struct virtio_gpu_ctrl_hdr *hdr,
-+						struct virtio_gpu_fence *fence)
- {
- 	struct virtqueue *vq = vgdev->ctrlq.vq;
--	int rc;
- 
- again:
- 	spin_lock(&vgdev->ctrlq.qlock);
-@@ -338,13 +330,12 @@ static int virtio_gpu_queue_fenced_ctrl_buffer(struct virtio_gpu_device *vgdev,
- 
- 	if (fence)
- 		virtio_gpu_fence_emit(vgdev, hdr, fence);
--	rc = virtio_gpu_queue_ctrl_buffer_locked(vgdev, vbuf);
-+	virtio_gpu_queue_ctrl_buffer_locked(vgdev, vbuf);
- 	spin_unlock(&vgdev->ctrlq.qlock);
--	return rc;
- }
- 
--static int virtio_gpu_queue_cursor(struct virtio_gpu_device *vgdev,
--				   struct virtio_gpu_vbuffer *vbuf)
-+static void virtio_gpu_queue_cursor(struct virtio_gpu_device *vgdev,
-+				    struct virtio_gpu_vbuffer *vbuf)
- {
- 	struct virtqueue *vq = vgdev->cursorq.vq;
- 	struct scatterlist *sgs[1], ccmd;
-@@ -352,7 +343,7 @@ static int virtio_gpu_queue_cursor(struct virtio_gpu_device *vgdev,
- 	int outcnt;
- 
- 	if (!vgdev->vqs_ready)
--		return -ENODEV;
-+		return;
- 
- 	sg_init_one(&ccmd, vbuf->buf, vbuf->size);
- 	sgs[0] = &ccmd;
-@@ -374,10 +365,6 @@ static int virtio_gpu_queue_cursor(struct virtio_gpu_device *vgdev,
- 	}
- 
- 	spin_unlock(&vgdev->cursorq.qlock);
--
--	if (!ret)
--		ret = vq->num_free;
--	return ret;
- }
- 
- /* just create gem objects for userspace and long lived objects,
+Dependencies:
+
+[1] https://lkml.org/lkml/2019/5/13/839
+
+Maulik Shah (4):
+  drivers: qcom: rpmh: fix macro to accept NULL argument
+  drivers: qcom: rpmh: remove rpmh_flush export
+  dt-bindings: soc: qcom: Add RSC power domain specifier
+  drivers: qcom: rpmh-rsc: Add RSC power domain support
+
+ .../devicetree/bindings/soc/qcom/rpmh-rsc.txt |  7 ++
+ drivers/soc/qcom/rpmh-internal.h              |  3 +
+ drivers/soc/qcom/rpmh-rsc.c                   | 96 +++++++++++++++++++
+ drivers/soc/qcom/rpmh.c                       | 22 ++---
+ include/soc/qcom/rpmh.h                       |  5 -
+ 5 files changed, 116 insertions(+), 17 deletions(-)
+
 -- 
-2.18.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation.
