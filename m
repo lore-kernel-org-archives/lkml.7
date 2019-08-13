@@ -2,201 +2,88 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50715C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C66FCC41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B2FC206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B03220843
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:05:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfHMGFP (ORCPT
+        id S1727342AbfHMGFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 02:05:15 -0400
-Received: from mga01.intel.com ([192.55.52.88]:23032 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbfHMGFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 02:05:15 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 23:05:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,380,1559545200"; 
-   d="scan'208";a="178575624"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by orsmga003.jf.intel.com with ESMTP; 12 Aug 2019 23:05:12 -0700
-Date:   Tue, 13 Aug 2019 14:06:55 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com, mst@redhat.com,
-        rkrcmar@redhat.com, jmattson@google.com
-Subject: Re: [PATCH v6 7/8] KVM: x86: Load Guest fpu state when accessing
- MSRs managed by XSAVES
-Message-ID: <20190813060655.GE2432@local-michael-cet-test>
-References: <20190725031246.8296-1-weijiang.yang@intel.com>
- <20190725031246.8296-8-weijiang.yang@intel.com>
- <20190812230203.GC4996@linux.intel.com>
- <20190812232921.GE4996@linux.intel.com>
+        Tue, 13 Aug 2019 02:05:42 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37280 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfHMGFm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 02:05:42 -0400
+Received: by mail-lf1-f66.google.com with SMTP id c9so75872757lfh.4;
+        Mon, 12 Aug 2019 23:05:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5zt07Eoa1ycI7ox8mSSL/qwrX1PHGOhlUz3HEiThMhQ=;
+        b=N0lZY//vVPaW4uShnsDoorYmV0G1e7RazGMG3NNE1jz0xoM+sGPGKfNr1yYr/Ao1ZV
+         f3YwnQkze4sAnzip9qTuqwHD25fmED3qOtYj0lH98N51302WTshX2Y6L0CVrhrHkzX0F
+         wU9o0JG1xEGqmyBBOUCR0l+wElM+KfcSd6qWkX81tippUWki8DPySNZt3Cl49ZPXvGfG
+         2qoazLmH/8xKXIhvUw0Qtuz7aTnlTr3zgQaODGc2GmOfuu3+90O7PEHZSYhNREg6aYCh
+         itk85w6w4aYfbRCgIXcjcrKAAOWRJ9/c8WqzfZHfR4OtGMm6mhXKo/2LSARZVLONS1eW
+         b1zA==
+X-Gm-Message-State: APjAAAVM1xxLHBuUXF/IjSLVYgWj2HIx1NUV1buNdQVA4iV08Gokbq63
+        u4L4VWDIEUlMUoHJG46zgtFklCfM0Ek=
+X-Google-Smtp-Source: APXvYqz7x0+9GQcedanCeYjvFHgaFR1ZNePXc3avojJiWzg/3aia86Ewg/Dr/+mKDN1JJxaROxfBMA==
+X-Received: by 2002:a19:c213:: with SMTP id l19mr21054090lfc.83.1565676339906;
+        Mon, 12 Aug 2019 23:05:39 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id n7sm4125276lfk.24.2019.08.12.23.05.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 12 Aug 2019 23:05:39 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Denis Efremov <efremov@linux.com>, joe@perches.com,
+        Sridhar Samudrala <sridhar.samudrala@intel.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: net_failover: Fix typo in a filepath
+Date:   Tue, 13 Aug 2019 09:05:30 +0300
+Message-Id: <20190813060530.13138-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190325212732.27253-1-joe@perches.com>
+References: <20190325212732.27253-1-joe@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812232921.GE4996@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 04:29:21PM -0700, Sean Christopherson wrote:
-> On Mon, Aug 12, 2019 at 04:02:03PM -0700, Sean Christopherson wrote:
-> > On Thu, Jul 25, 2019 at 11:12:45AM +0800, Yang Weijiang wrote:
-> > > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> > > 
-> > > A handful of CET MSRs are not context switched through "traditional"
-> > > methods, e.g. VMCS or manual switching, but rather are passed through
-> > > to the guest and are saved and restored by XSAVES/XRSTORS, i.e. the
-> > > guest's FPU state.
-> > > 
-> > > Load the guest's FPU state if userspace is accessing MSRs whose values
-> > > are managed by XSAVES so that the MSR helper, e.g. vmx_{get,set}_msr(),
-> > > can simply do {RD,WR}MSR to access the guest's value.
-> > > 
-> > > Note that guest_cpuid_has() is not queried as host userspace is allowed
-> > > to access MSRs that have not been exposed to the guest, e.g. it might do
-> > > KVM_SET_MSRS prior to KVM_SET_CPUID2.
-> > > 
-> > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > > Co-developed-by: Yang Weijiang <weijiang.yang@intel.com>
-> > > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> > > ---
-> > >  arch/x86/kvm/x86.c | 29 ++++++++++++++++++++++++++++-
-> > >  1 file changed, 28 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > > index fafd81d2c9ea..c657e6a56527 100644
-> > > --- a/arch/x86/kvm/x86.c
-> > > +++ b/arch/x86/kvm/x86.c
-> > > @@ -102,6 +102,8 @@ static void enter_smm(struct kvm_vcpu *vcpu);
-> > >  static void __kvm_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags);
-> > >  static void store_regs(struct kvm_vcpu *vcpu);
-> > >  static int sync_regs(struct kvm_vcpu *vcpu);
-> > > +static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu);
-> > > +static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu);
-> > >  
-> > >  struct kvm_x86_ops *kvm_x86_ops __read_mostly;
-> > >  EXPORT_SYMBOL_GPL(kvm_x86_ops);
-> > > @@ -2959,6 +2961,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(kvm_get_msr_common);
-> > >  
-> > > +static bool is_xsaves_msr(u32 index)
-> > > +{
-> > > +	return index == MSR_IA32_U_CET ||
-> > > +	       (index >= MSR_IA32_PL0_SSP && index <= MSR_IA32_PL3_SSP);
-> > > +}
-> > > +
-> > >  /*
-> > >   * Read or write a bunch of msrs. All parameters are kernel addresses.
-> > >   *
-> > > @@ -2969,11 +2977,30 @@ static int __msr_io(struct kvm_vcpu *vcpu, struct kvm_msrs *msrs,
-> > >  		    int (*do_msr)(struct kvm_vcpu *vcpu,
-> > >  				  unsigned index, u64 *data))
-> > >  {
-> > > +	bool fpu_loaded = false;
-> > >  	int i;
-> > > +	u64 cet_bits = XFEATURE_MASK_CET_USER | XFEATURE_MASK_CET_KERNEL;
-> > 
-> > Dunno if the compiler will actually generate different code, but this can be a
-> > const.
-> > 
-> > > +	u64 host_xss = 0;
-> > > +
-> > > +	for (i = 0; i < msrs->nmsrs; ++i) {
-> > > +		if (!fpu_loaded && is_xsaves_msr(entries[i].index)) {
-> > > +			if (!kvm_x86_ops->xsaves_supported() ||
-> > > +			    !kvm_x86_ops->supported_xss())
-> > 
-> > The "!kvm_x86_ops->supported_xss()" is redundant with the host_xss check
-> > below.
-> > 
-> > > +				continue;
-> > 
-> > Hmm, vmx_set_msr() should be checking host_xss, arguably we should call
-> > do_msr() and let it handle the bad MSR access.  I don't have a strong
-> > opinion either way, practically speaking the end result will be the same.
-> > 
-> > If we do want to handle a misbehaving userspace here, this should be
-> > 'break' instead of 'continue'.
-> > 
-> > > +
-> > > +			host_xss = kvm_x86_ops->supported_xss();
-> > >  
-> > > -	for (i = 0; i < msrs->nmsrs; ++i)
-> > > +			if ((host_xss & cet_bits) != cet_bits)
-> > 
-> > I'm pretty sure this should check for either CET bit being set, not both,
-> > e.g. I assume it's possible to enable and expose XFEATURE_MASK_CET_USER
-> > but not XFEATURE_MASK_CET_KERNEL.
-> > 
-> > So something like
-> > 
-> > 	const u64 cet_bits = XFEATURE_MASK_CET_USER | XFEATURE_MASK_CET_KERNEL;
-> > 	const bool cet_supported = kvm_x86_ops->xsaves_supported() &&
-> > 				   (kvm_x86_ops->supported_xss() & cet_bits);
-> > 
-> > 	for (i = 0; i < msrs->nmsrs; ++i) {
-> > 		if (!fpu_loaded && cet_supported &&
-> > 		    is_xsaves_msr(entries[i].index)) {
-> > 			kvm_load_guest_fpu(vcpu);
-> > 			fpu_loaded = true;
-> > 		}
-> > 		if (do_msr(vcpu, entries[i].index, &entries[i].data))
-> > 			break;	
-> > 	}
-> 
-> After looking at patch 8/8, and assuming KVM can actually virtualize
-> USER and KERNEL independently, we should go with this version that defers
-> to do_msr(), otherwise this code would also need to differentiate between
-> USER and KERNEL MSRs.  In other words, have __msr_io() load the guest fpu
-> if CET is support and any CET MSRs is being accessed, and let vmx_set_msr()
-> do the fine grained fault/error handling.
->
-Sure, will follow that.
-> > or
-> > 
-> > 	const u64 cet_bits = XFEATURE_MASK_CET_USER | XFEATURE_MASK_CET_KERNEL;
-> > 
-> > 	for (i = 0; i < msrs->nmsrs; ++i) {
-> > 		if (!fpu_loaded && is_xsaves_msr(entries[i].index)) {
-> > 			if (!kvm_x86_ops->supported_xss() ||
-> > 			    !(kvm_x86_ops->supported_xss() & cet_bits))
-> > 				break;
-> > 			kvm_load_guest_fpu(vcpu);
-> > 			fpu_loaded = true;
-> > 		}
-> > 		if (do_msr(vcpu, entries[i].index, &entries[i].data))
-> > 			break;	
-> > 	}
-> > 
-> > 
-> > > +				continue;
-> > > +
-> > > +			kvm_load_guest_fpu(vcpu);
-> > > +			fpu_loaded = true;
-> > > +		}
-> > >  		if (do_msr(vcpu, entries[i].index, &entries[i].data))
-> > >  			break;
-> > > +	}
-> > > +	if (fpu_loaded)
-> > > +		kvm_put_guest_fpu(vcpu);
-> > >  
-> > >  	return i;
-> > >  }
-> > > -- 
-> > > 2.17.2
-> > > 
+Replace "driver" with "drivers" in the filepath to net_failover.c
+
+Cc: Sridhar Samudrala <sridhar.samudrala@intel.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
+Fixes: cfc80d9a1163 ("net: Introduce net_failover driver")
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 51ab502485ac..c2117e5f4ff8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11071,7 +11071,7 @@ NET_FAILOVER MODULE
+ M:	Sridhar Samudrala <sridhar.samudrala@intel.com>
+ L:	netdev@vger.kernel.org
+ S:	Supported
+-F:	driver/net/net_failover.c
++F:	drivers/net/net_failover.c
+ F:	include/net/net_failover.h
+ F:	Documentation/networking/net_failover.rst
+ 
+-- 
+2.21.0
+
