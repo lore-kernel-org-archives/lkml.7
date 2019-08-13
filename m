@@ -2,75 +2,160 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54192C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C32C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 330632067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78DC420840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:06:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565715991;
+	bh=mXleQo1BfGDF4Gvt8gwvemAiKY2B7AKwDPdsZQzGEig=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=oBETIFfzsbaI5afjm24l8VqFAKJENdeb1VsTFfImZpkGOL3KwtwLC4iviNmfkwSzb
+	 FGFMJwsHhHWXs2tJPWl+ZZ/2JTCsuYGEiTYPs0n9AVfkzDI+aCNccHFG51h9T6u6w6
+	 V4bzMxEK8Wq/Vt7dFubnw2xZAJ1NQ+sYUb7rXzEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbfHMRFc (ORCPT
+        id S1726469AbfHMRGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 13:05:32 -0400
-Received: from mga01.intel.com ([192.55.52.88]:16662 "EHLO mga01.intel.com"
+        Tue, 13 Aug 2019 13:06:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726094AbfHMRFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 13:05:31 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 10:05:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="177857549"
-Received: from hgenzken-mobl.ger.corp.intel.com (HELO localhost) ([10.252.53.32])
-  by fmsmga007.fm.intel.com with ESMTP; 13 Aug 2019 10:05:29 -0700
-Date:   Tue, 13 Aug 2019 20:05:28 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        jmorris@namei.org, roberto.sassu@huawei.com
-Subject: [GIT PULL] tpmdd fixes for Linux v5.3-rc4
-Message-ID: <20190813170528.6w6s5d6ka4lzpzq5@linux.intel.com>
+        id S1726000AbfHMRGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 13:06:30 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B0912067D;
+        Tue, 13 Aug 2019 17:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565715988;
+        bh=mXleQo1BfGDF4Gvt8gwvemAiKY2B7AKwDPdsZQzGEig=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=2YP/hufKMPeHV9Iqtm97Hg+EE9Q7yk3dpGfTYo+YIFuTd+znybtuf6QsdhYKGv2OL
+         bffgiZjbx8+MzDPbg9zNDOCLOmmjE13s1gxUgB6nndEdwsA+9gYRAddFBIlqnsF3wh
+         t+HdplopKKhd7nK05G6fCJXNmNCfRN1TXzWpMoO0=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAFd5g4415URtJBKPhsEw98GxiExJr-fstW6SQ6nmV9ts9ggK-g@mail.gmail.com>
+References: <20190812182421.141150-1-brendanhiggins@google.com> <20190812182421.141150-10-brendanhiggins@google.com> <20190813042159.46814206C2@mail.kernel.org> <CAFd5g44XyQi-oprPcdgx-EPboQYaHY6Ocz8Te6NX2SxV=mVhQA@mail.gmail.com> <20190813055615.CA787206C2@mail.kernel.org> <CAFd5g4415URtJBKPhsEw98GxiExJr-fstW6SQ6nmV9ts9ggK-g@mail.gmail.com>
+Subject: Re: [PATCH v12 09/18] kunit: test: add support for test abort
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+To:     Brendan Higgins <brendanhiggins@google.com>
+User-Agent: alot/0.8.1
+Date:   Tue, 13 Aug 2019 10:06:27 -0700
+Message-Id: <20190813170628.9B0912067D@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+Quoting Brendan Higgins (2019-08-13 00:52:03)
+> On Mon, Aug 12, 2019 at 10:56 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > Quoting Brendan Higgins (2019-08-12 21:57:55)
+> > > On Mon, Aug 12, 2019 at 9:22 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > > >
+> > > > Quoting Brendan Higgins (2019-08-12 11:24:12)
+> > > > > diff --git a/include/kunit/test.h b/include/kunit/test.h
+> > > > > index 2625bcfeb19ac..93381f841e09f 100644
+> > > > > --- a/include/kunit/test.h
+> > > > > +++ b/include/kunit/test.h
+> > > > > @@ -184,6 +191,13 @@ struct kunit {
+> > > > >         struct list_head resources; /* Protected by lock. */
+> > > > >  };
+> > > > >
+> > > > > +static inline void kunit_set_death_test(struct kunit *test, bool=
+ death_test)
+> > > > > +{
+> > > > > +       spin_lock(&test->lock);
+> > > > > +       test->death_test =3D death_test;
+> > > > > +       spin_unlock(&test->lock);
+> > > > > +}
+> > > >
+> > > > These getters and setters are using spinlocks again. It doesn't mak=
+e any
+> > > > sense. It probably needs a rework like was done for the other bool
+> > > > member, success.
+> > >
+> > > No, this is intentional. death_test can transition from false to true
+> > > and then back to false within the same test. Maybe that deserves a
+> > > comment?
+> >
+> > Yes. How does it transition from true to false again?
+>=20
+> The purpose is to tell try_catch that it was expected for the test to
+> bail out. Given the default implementation there is no way for this to
+> happen aside from abort() being called, but in some implementations it
+> is possible to implement a fault catcher which allows a test suite to
+> recover from an unexpected failure.
+>=20
+> Maybe it would be best to drop this until I add one of those
+> alternative implementations.
 
-One more bug fix for the next release.
+Ok.
 
-/Jarkko
+>=20
+> > Either way, having a spinlock around a read/write API doesn't make sense
+> > because it just makes sure that two writes don't overlap, but otherwise
+> > does nothing to keep things synchronized. For example a set to true
+> > after a set to false when the two calls to set true or false aren't
+> > synchronized means they can happen in any order. So I don't see how it
+> > needs a spinlock. The lock needs to be one level higher.
+>=20
+> There shouldn't be any cases where one thread is trying to set it
+> while another is trying to unset it. The thing I am worried about here
+> is making sure all the cores see the write, and making sure no reads
+> or writes get reordered before it. So I guess I just want a fence. So
+> I take it I should probably have is a WRITE_ONCE here and READ_ONCE in
+> the getter?
+>=20
 
-The following changes since commit d45331b00ddb179e291766617259261c112db872:
+Are the gets and sets in program order? If so, WRITE_ONCE and READ_ONCE
+aren't required. Otherwise, if it's possible for one thread to write it
+and another to read it but the threads are ordered with some other
+barrier like a completion or lock, then again the macros aren't needed.
+It would be good to read memory-barriers.txt to understand when to use
+the read/write macros.
 
-  Linux 5.3-rc4 (2019-08-11 13:26:41 -0700)
-
-are available in the Git repository at:
-
-  git://git.infradead.org/users/jjs/linux-tpmdd.git tags/tpmdd-next-20190813
-
-for you to fetch changes up to 2d6c25215ab26bb009de3575faab7b685f138e92:
-
-  KEYS: trusted: allow module init if TPM is inactive or deactivated (2019-08-13 19:59:23 +0300)
-
-----------------------------------------------------------------
-tpmdd fixes for Linux v5.3-rc4
-
-----------------------------------------------------------------
-Roberto Sassu (1):
-      KEYS: trusted: allow module init if TPM is inactive or deactivated
-
- security/keys/trusted.c | 13 -------------
- 1 file changed, 13 deletions(-)
