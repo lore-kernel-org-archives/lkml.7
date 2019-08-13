@@ -7,75 +7,114 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C130EC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 02:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 870F6C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 02:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED1A20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 02:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5973220665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 02:14:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfHMCNc (ORCPT
+        id S1726867AbfHMCOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 22:13:32 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42234 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726488AbfHMCNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 22:13:32 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A4171CD0CBA6D6613AF4;
-        Tue, 13 Aug 2019 09:57:01 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 13 Aug 2019
- 09:56:50 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <maz@kernel.org>,
-        <paul@crapouillou.net>, <malat@debian.org>, <paul.burton@mips.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-mips@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] irqchip/irq-ingenic-tcu: Fix COMPILE_TEST building
-Date:   Tue, 13 Aug 2019 09:56:02 +0800
-Message-ID: <20190813015602.30576-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+        Mon, 12 Aug 2019 22:14:50 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:55198 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726506AbfHMCOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 22:14:49 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 13F7A200716;
+        Tue, 13 Aug 2019 04:14:47 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 005DE20070A;
+        Tue, 13 Aug 2019 04:14:42 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7AF9F402BF;
+        Tue, 13 Aug 2019 10:14:35 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH v2] arm64: dts: ls1088a: fix gpio node
+Date:   Tue, 13 Aug 2019 10:04:57 +0800
+Message-Id: <20190813020457.45370-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While do COMPILE_TEST building, if GENERIC_IRQ_CHIP is
-not selected, it fails:
+From: Song Hui <hui.song_1@nxp.com>
 
-drivers/irqchip/irq-ingenic-tcu.o: In function `ingenic_tcu_intc_cascade':
-irq-ingenic-tcu.c:(.text+0x13f): undefined reference to `irq_get_domain_generic_chip'
-drivers/irqchip/irq-ingenic-tcu.o: In function `ingenic_tcu_irq_init':
-irq-ingenic-tcu.c:(.init.text+0x97): undefined reference to `irq_generic_chip_ops'
-irq-ingenic-tcu.c:(.init.text+0xdd): undefined reference to `__irq_alloc_domain_generic_chips'
-irq-ingenic-tcu.c:(.init.text+0x10b): undefined reference to `irq_get_domain_generic_chip'
+Update the nodes to include little-endian
+property to be consistent with the hardware
+and add ls1088a gpio specify compatible.
 
-select GENERIC_IRQ_CHIP to fix this.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 9536eba03ec7 ("irqchip: Add irq-ingenic-tcu driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
 ---
- drivers/irqchip/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 3c8308e..ccbb897 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -320,6 +320,7 @@ config INGENIC_TCU_IRQ
- 	default MACH_INGENIC
- 	depends on MIPS || COMPILE_TEST
- 	select MFD_SYSCON
-+	select GENERIC_IRQ_CHIP
- 	help
- 	  Support for interrupts in the Timer/Counter Unit (TCU) of the Ingenic
- 	  JZ47xx SoCs.
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index 20f5ebd..d58d203 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -269,43 +269,47 @@
+ 		};
+ 
+ 		gpio0: gpio@2300000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+ 			reg = <0x0 0x2300000 0x0 0x10000>;
+ 			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
+ 
+ 		gpio1: gpio@2310000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+ 			reg = <0x0 0x2310000 0x0 0x10000>;
+ 			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
+ 
+ 		gpio2: gpio@2320000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+ 			reg = <0x0 0x2320000 0x0 0x10000>;
+ 			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
+ 
+ 		gpio3: gpio@2330000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+ 			reg = <0x0 0x2330000 0x0 0x10000>;
+ 			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
+ 
+ 		ifc: ifc@2240000 {
 -- 
-2.7.4
-
+2.9.5
 
