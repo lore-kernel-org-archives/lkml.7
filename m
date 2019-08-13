@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D23C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E088C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDD320665
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D569820665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:25:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tGBzGzfy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BsCY4fn9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbfHMHZY (ORCPT
+        id S1727615AbfHMHZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 03:25:24 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50028 "EHLO
+        Tue, 13 Aug 2019 03:25:28 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50042 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfHMHZX (ORCPT
+        with ESMTP id S1725820AbfHMHZ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 03:25:23 -0400
+        Tue, 13 Aug 2019 03:25:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=vD3m7KhomNKY3ojUBv4CZDoJYm0aPjbAe9GckHbQ3po=; b=tGBzGzfyi6ofQ/RJ9JP/zLjpZa
-        dQoqdTkpsnn/EG0053IxewUD+BMDJI+7t9JQ4P9wbOVrcp9WLsdx7dBDYB+x43ewmXSPoIlwkZr/m
-        EHRysLaSNujmO5F/PnFIf3Jqcbru8rN6g+cyvcsKmlxDm5OfqvWiSktZrPJpErisOmnJwq5zA92Ep
-        CWfCmjWsDrdcxYkrCK4nVA6x0SNZTneWTybpQU7FfcS6F2vymY7qelYYOByLXBcvD2IKGSk4rPkmu
-        LARAfKYdvfDzYcCwY99CpcdwkW9KQOh+4BXmRXCUOh0pI6mo626qFkJzvd7BAXfqXY0FCxLpTWshO
-        EpvAuezw==;
+        bh=6uN6U5oiirn5R2m1a8VqkcPDz/fhGlAHOn+fQI2hsgw=; b=BsCY4fn9kDXDAiJliI+Ibc54Fq
+        QVWZVMC6hm/FF23UZER654GM6rRSniyaCZiOR3BRZqGDnfzKPdcIpOV35P6CJsVF+e7wquL4m0jAk
+        Wr09wSU15Odknx3E+qMvtpAptJns/po8N+wlrVoVbm70jw/5K3FC9Sx1nG+EO4spkz/njVNBoEAvK
+        Fm6KnEtBt1YcY1ycaHINZcgg1GR7u2vwFUoI7m73Nru6ctjkHYxI8AVdUzf6o/N8lrW6kYn4JZa+h
+        nLGZimaEYuF7aBUkq/GWAwnw/3vaKtHTFsmtPMh9eIcOp4NnRj+fwipKBw6Ez7W1Cix7xWjz+7tu8
+        wULrGCwQ==;
 Received: from [2001:4bb8:180:1ec3:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hxRBH-00064g-AB; Tue, 13 Aug 2019 07:25:19 +0000
+        id 1hxRBK-00064r-C5; Tue, 13 Aug 2019 07:25:23 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
         Mike Travis <mike.travis@hpe.com>,
@@ -46,9 +46,9 @@ Cc:     Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-ia64@vger.kernel.org, linux-ide@vger.kernel.org,
         linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 01/28] char: remove the SGI snsc driver
-Date:   Tue, 13 Aug 2019 09:24:47 +0200
-Message-Id: <20190813072514.23299-2-hch@lst.de>
+Subject: [PATCH 02/28] char: remove the SGI tiocx/mbcs driver
+Date:   Tue, 13 Aug 2019 09:24:48 +0200
+Message-Id: <20190813072514.23299-3-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190813072514.23299-1-hch@lst.de>
 References: <20190813072514.23299-1-hch@lst.de>
@@ -65,955 +65,2063 @@ depends on the SN2 support.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/ia64/configs/generic_defconfig   |   1 -
- arch/ia64/configs/gensparse_defconfig |   1 -
- drivers/char/Kconfig                  |   8 -
+ arch/ia64/configs/generic_defconfig   |   2 -
+ arch/ia64/configs/gensparse_defconfig |   2 -
+ arch/ia64/sn/kernel/Makefile          |   1 -
+ arch/ia64/sn/kernel/tiocx.c           | 569 ------------------
+ drivers/char/Kconfig                  |  14 -
  drivers/char/Makefile                 |   1 -
- drivers/char/snsc.c                   | 469 --------------------------
- drivers/char/snsc.h                   |  92 -----
- drivers/char/snsc_event.c             | 303 -----------------
- 7 files changed, 875 deletions(-)
- delete mode 100644 drivers/char/snsc.c
- delete mode 100644 drivers/char/snsc.h
- delete mode 100644 drivers/char/snsc_event.c
+ drivers/char/mbcs.c                   | 831 --------------------------
+ drivers/char/mbcs.h                   | 553 -----------------
+ 8 files changed, 1973 deletions(-)
+ delete mode 100644 arch/ia64/sn/kernel/tiocx.c
+ delete mode 100644 drivers/char/mbcs.c
+ delete mode 100644 drivers/char/mbcs.h
 
 diff --git a/arch/ia64/configs/generic_defconfig b/arch/ia64/configs/generic_defconfig
-index 81f686dee53c..22b98ddc9913 100644
+index 22b98ddc9913..1fc4d5a77e0d 100644
 --- a/arch/ia64/configs/generic_defconfig
 +++ b/arch/ia64/configs/generic_defconfig
-@@ -90,7 +90,6 @@ CONFIG_IGB=y
+@@ -90,8 +90,6 @@ CONFIG_IGB=y
  # CONFIG_SERIO_SERPORT is not set
  CONFIG_GAMEPORT=m
  CONFIG_SERIAL_NONSTANDARD=y
--CONFIG_SGI_SNSC=y
- CONFIG_SGI_TIOCX=y
- CONFIG_SGI_MBCS=m
+-CONFIG_SGI_TIOCX=y
+-CONFIG_SGI_MBCS=m
  CONFIG_SERIAL_8250=y
+ CONFIG_SERIAL_8250_CONSOLE=y
+ CONFIG_SERIAL_8250_NR_UARTS=6
 diff --git a/arch/ia64/configs/gensparse_defconfig b/arch/ia64/configs/gensparse_defconfig
-index 5b4fcdd51457..1d230c0a90bd 100644
+index 1d230c0a90bd..289ed714ad8b 100644
 --- a/arch/ia64/configs/gensparse_defconfig
 +++ b/arch/ia64/configs/gensparse_defconfig
-@@ -79,7 +79,6 @@ CONFIG_E1000=y
+@@ -79,8 +79,6 @@ CONFIG_E1000=y
  # CONFIG_SERIO_SERPORT is not set
  CONFIG_GAMEPORT=m
  CONFIG_SERIAL_NONSTANDARD=y
--CONFIG_SGI_SNSC=y
- CONFIG_SGI_TIOCX=y
- CONFIG_SGI_MBCS=m
+-CONFIG_SGI_TIOCX=y
+-CONFIG_SGI_MBCS=m
  CONFIG_SERIAL_8250=y
-diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
-index 3e866885a405..c9fbbc6a3967 100644
---- a/drivers/char/Kconfig
-+++ b/drivers/char/Kconfig
-@@ -26,14 +26,6 @@ config DEVKMEM
- 	  kind of kernel debugging operations.
- 	  When in doubt, say "N".
- 
--config SGI_SNSC
--	bool "SGI Altix system controller communication support"
--	depends on (IA64_SGI_SN2 || IA64_GENERIC)
--	help
--	  If you have an SGI Altix and you want to enable system
--	  controller communication from user space (you want this!),
--	  say Y.  Otherwise, say N.
--
- config SGI_TIOCX
-        bool "SGI TIO CX driver support"
-        depends on (IA64_SGI_SN2 || IA64_GENERIC)
-diff --git a/drivers/char/Makefile b/drivers/char/Makefile
-index fbea7dd12932..50835d420471 100644
---- a/drivers/char/Makefile
-+++ b/drivers/char/Makefile
-@@ -9,7 +9,6 @@ obj-y				+= misc.o
- obj-$(CONFIG_ATARI_DSP56K)	+= dsp56k.o
- obj-$(CONFIG_VIRTIO_CONSOLE)	+= virtio_console.o
- obj-$(CONFIG_RAW_DRIVER)	+= raw.o
--obj-$(CONFIG_SGI_SNSC)		+= snsc.o snsc_event.o
- obj-$(CONFIG_MSPEC)		+= mspec.o
- obj-$(CONFIG_UV_MMTIMER)	+= uv_mmtimer.o
- obj-$(CONFIG_IBM_BSR)		+= bsr.o
-diff --git a/drivers/char/snsc.c b/drivers/char/snsc.c
+ CONFIG_SERIAL_8250_CONSOLE=y
+ CONFIG_SERIAL_8250_NR_UARTS=6
+diff --git a/arch/ia64/sn/kernel/Makefile b/arch/ia64/sn/kernel/Makefile
+index 9c349dd23265..2f580603370d 100644
+--- a/arch/ia64/sn/kernel/Makefile
++++ b/arch/ia64/sn/kernel/Makefile
+@@ -14,5 +14,4 @@ obj-y				+= setup.o bte.o bte_error.o irq.o mca.o idle.o \
+ 				   io_init.o iomv.o klconflib.o pio_phys.o \
+ 				   sn2/
+ obj-$(CONFIG_IA64_GENERIC)      += machvec.o
+-obj-$(CONFIG_SGI_TIOCX)		+= tiocx.o
+ obj-$(CONFIG_PCI_MSI)		+= msi_sn.o
+diff --git a/arch/ia64/sn/kernel/tiocx.c b/arch/ia64/sn/kernel/tiocx.c
 deleted file mode 100644
-index 5918ea7499bb..000000000000
---- a/drivers/char/snsc.c
+index 32d0380eb72e..000000000000
+--- a/arch/ia64/sn/kernel/tiocx.c
 +++ /dev/null
-@@ -1,469 +0,0 @@
+@@ -1,569 +0,0 @@
 -/*
-- * SN Platform system controller communication support
-- *
 - * This file is subject to the terms and conditions of the GNU General Public
 - * License.  See the file "COPYING" in the main directory of this archive
 - * for more details.
 - *
-- * Copyright (C) 2004, 2006 Silicon Graphics, Inc. All rights reserved.
+- * Copyright (c) 2005 Silicon Graphics, Inc.  All rights reserved.
 - */
 -
--/*
-- * System controller communication driver
-- *
-- * This driver allows a user process to communicate with the system
-- * controller (a.k.a. "IRouter") network in an SGI SN system.
-- */
--
--#include <linux/interrupt.h>
--#include <linux/sched/signal.h>
--#include <linux/device.h>
--#include <linux/poll.h>
--#include <linux/init.h>
+-#include <linux/module.h>
+-#include <linux/kernel.h>
 -#include <linux/slab.h>
--#include <linux/mutex.h>
--#include <asm/sn/io.h>
+-#include <linux/spinlock.h>
+-#include <linux/proc_fs.h>
+-#include <linux/capability.h>
+-#include <linux/device.h>
+-#include <linux/delay.h>
+-#include <linux/uaccess.h>
 -#include <asm/sn/sn_sal.h>
+-#include <asm/sn/addrs.h>
+-#include <asm/sn/io.h>
+-#include <asm/sn/types.h>
+-#include <asm/sn/shubio.h>
+-#include <asm/sn/tiocx.h>
+-#include <asm/sn/l1.h>
 -#include <asm/sn/module.h>
--#include <asm/sn/geo.h>
--#include <asm/sn/nodepda.h>
--#include "snsc.h"
+-#include "tio.h"
+-#include "xtalk/xwidgetdev.h"
+-#include "xtalk/hubdev.h"
 -
--#define SYSCTL_BASENAME	"snsc"
+-#define CX_DEV_NONE 0
+-#define DEVICE_NAME "tiocx"
+-#define WIDGET_ID 0
+-#define TIOCX_DEBUG 0
 -
--#define SCDRV_BUFSZ	2048
--#define SCDRV_TIMEOUT	1000
+-#if TIOCX_DEBUG
+-#define DBG(fmt...)    printk(KERN_ALERT fmt)
+-#else
+-#define DBG(fmt...)
+-#endif
 -
--static DEFINE_MUTEX(scdrv_mutex);
--static irqreturn_t
--scdrv_interrupt(int irq, void *subch_data)
+-struct device_attribute dev_attr_cxdev_control;
+-
+-/**
+- * tiocx_match - Try to match driver id list with device.
+- * @dev: device pointer
+- * @drv: driver pointer
+- *
+- * Returns 1 if match, 0 otherwise.
+- */
+-static int tiocx_match(struct device *dev, struct device_driver *drv)
 -{
--	struct subch_data_s *sd = subch_data;
--	unsigned long flags;
--	int status;
+-	struct cx_dev *cx_dev = to_cx_dev(dev);
+-	struct cx_drv *cx_drv = to_cx_driver(drv);
+-	const struct cx_device_id *ids = cx_drv->id_table;
 -
--	spin_lock_irqsave(&sd->sd_rlock, flags);
--	spin_lock(&sd->sd_wlock);
--	status = ia64_sn_irtr_intr(sd->sd_nasid, sd->sd_subch);
+-	if (!ids)
+-		return 0;
 -
--	if (status > 0) {
--		if (status & SAL_IROUTER_INTR_RECV) {
--			wake_up(&sd->sd_rq);
--		}
--		if (status & SAL_IROUTER_INTR_XMIT) {
--			ia64_sn_irtr_intr_disable
--			    (sd->sd_nasid, sd->sd_subch,
--			     SAL_IROUTER_INTR_XMIT);
--			wake_up(&sd->sd_wq);
--		}
+-	while (ids->part_num) {
+-		if (ids->part_num == cx_dev->cx_id.part_num)
+-			return 1;
+-		ids++;
 -	}
--	spin_unlock(&sd->sd_wlock);
--	spin_unlock_irqrestore(&sd->sd_rlock, flags);
--	return IRQ_HANDLED;
+-	return 0;
+-
 -}
 -
--/*
-- * scdrv_open
-- *
-- * Reserve a subchannel for system controller communication.
-- */
--
--static int
--scdrv_open(struct inode *inode, struct file *file)
+-static int tiocx_uevent(struct device *dev, struct kobj_uevent_env *env)
 -{
--	struct sysctl_data_s *scd;
--	struct subch_data_s *sd;
--	int rv;
+-	return -ENODEV;
+-}
 -
--	/* look up device info for this device file */
--	scd = container_of(inode->i_cdev, struct sysctl_data_s, scd_cdev);
+-static void tiocx_bus_release(struct device *dev)
+-{
+-	kfree(to_cx_dev(dev));
+-}
 -
--	/* allocate memory for subchannel data */
--	sd = kzalloc(sizeof (struct subch_data_s), GFP_KERNEL);
--	if (sd == NULL) {
--		printk("%s: couldn't allocate subchannel data\n",
--		       __func__);
--		return -ENOMEM;
+-/**
+- * cx_device_match - Find cx_device in the id table.
+- * @ids: id table from driver
+- * @cx_device: part/mfg id for the device
+- *
+- */
+-static const struct cx_device_id *cx_device_match(const struct cx_device_id
+-						  *ids,
+-						  struct cx_dev *cx_device)
+-{
+-	/*
+-	 * NOTES: We may want to check for CX_ANY_ID too.
+-	 *        Do we want to match against nasid too?
+-	 *        CX_DEV_NONE == 0, if the driver tries to register for
+-	 *        part/mfg == 0 we should return no-match (NULL) here.
+-	 */
+-	while (ids->part_num && ids->mfg_num) {
+-		if (ids->part_num == cx_device->cx_id.part_num &&
+-		    ids->mfg_num == cx_device->cx_id.mfg_num)
+-			return ids;
+-		ids++;
 -	}
 -
--	/* initialize subch_data_s fields */
--	sd->sd_nasid = scd->scd_nasid;
--	sd->sd_subch = ia64_sn_irtr_open(scd->scd_nasid);
+-	return NULL;
+-}
 -
--	if (sd->sd_subch < 0) {
--		kfree(sd);
--		printk("%s: couldn't allocate subchannel\n", __func__);
--		return -EBUSY;
+-/**
+- * cx_device_probe - Look for matching device.
+- *			Call driver probe routine if found.
+- * @cx_driver: driver table (cx_drv struct) from driver
+- * @cx_device: part/mfg id for the device
+- */
+-static int cx_device_probe(struct device *dev)
+-{
+-	const struct cx_device_id *id;
+-	struct cx_drv *cx_drv = to_cx_driver(dev->driver);
+-	struct cx_dev *cx_dev = to_cx_dev(dev);
+-	int error = 0;
+-
+-	if (!cx_dev->driver && cx_drv->probe) {
+-		id = cx_device_match(cx_drv->id_table, cx_dev);
+-		if (id) {
+-			if ((error = cx_drv->probe(cx_dev, id)) < 0)
+-				return error;
+-			else
+-				cx_dev->driver = cx_drv;
+-		}
 -	}
 -
--	spin_lock_init(&sd->sd_rlock);
--	spin_lock_init(&sd->sd_wlock);
--	init_waitqueue_head(&sd->sd_rq);
--	init_waitqueue_head(&sd->sd_wq);
--	sema_init(&sd->sd_rbs, 1);
--	sema_init(&sd->sd_wbs, 1);
+-	return error;
+-}
 -
--	file->private_data = sd;
--
--	/* hook this subchannel up to the system controller interrupt */
--	mutex_lock(&scdrv_mutex);
--	rv = request_irq(SGI_UART_VECTOR, scdrv_interrupt,
--			 IRQF_SHARED, SYSCTL_BASENAME, sd);
--	if (rv) {
--		ia64_sn_irtr_close(sd->sd_nasid, sd->sd_subch);
--		kfree(sd);
--		printk("%s: irq request failed (%d)\n", __func__, rv);
--		mutex_unlock(&scdrv_mutex);
--		return -EBUSY;
--	}
--	mutex_unlock(&scdrv_mutex);
+-/**
+- * cx_driver_remove - Remove driver from device struct.
+- * @dev: device
+- */
+-static int cx_driver_remove(struct device *dev)
+-{
+-	struct cx_dev *cx_dev = to_cx_dev(dev);
+-	struct cx_drv *cx_drv = cx_dev->driver;
+-	if (cx_drv->remove)
+-		cx_drv->remove(cx_dev);
+-	cx_dev->driver = NULL;
 -	return 0;
 -}
 -
--/*
-- * scdrv_release
+-struct bus_type tiocx_bus_type = {
+-	.name = "tiocx",
+-	.match = tiocx_match,
+-	.uevent = tiocx_uevent,
+-	.probe = cx_device_probe,
+-	.remove = cx_driver_remove,
+-};
+-
+-/**
+- * cx_driver_register - Register the driver.
+- * @cx_driver: driver table (cx_drv struct) from driver
+- * 
+- * Called from the driver init routine to register a driver.
+- * The cx_drv struct contains the driver name, a pointer to
+- * a table of part/mfg numbers and a pointer to the driver's
+- * probe/attach routine.
+- */
+-int cx_driver_register(struct cx_drv *cx_driver)
+-{
+-	cx_driver->driver.name = cx_driver->name;
+-	cx_driver->driver.bus = &tiocx_bus_type;
+-
+-	return driver_register(&cx_driver->driver);
+-}
+-
+-/**
+- * cx_driver_unregister - Unregister the driver.
+- * @cx_driver: driver table (cx_drv struct) from driver
+- */
+-int cx_driver_unregister(struct cx_drv *cx_driver)
+-{
+-	driver_unregister(&cx_driver->driver);
+-	return 0;
+-}
+-
+-/**
+- * cx_device_register - Register a device.
+- * @nasid: device's nasid
+- * @part_num: device's part number
+- * @mfg_num: device's manufacturer number
+- * @hubdev: hub info associated with this device
+- * @bt: board type of the device
 - *
-- * Release a previously-reserved subchannel.
+- */
+-int
+-cx_device_register(nasid_t nasid, int part_num, int mfg_num,
+-		   struct hubdev_info *hubdev, int bt)
+-{
+-	struct cx_dev *cx_dev;
+-	int r;
+-
+-	cx_dev = kzalloc(sizeof(struct cx_dev), GFP_KERNEL);
+-	DBG("cx_dev= 0x%p\n", cx_dev);
+-	if (cx_dev == NULL)
+-		return -ENOMEM;
+-
+-	cx_dev->cx_id.part_num = part_num;
+-	cx_dev->cx_id.mfg_num = mfg_num;
+-	cx_dev->cx_id.nasid = nasid;
+-	cx_dev->hubdev = hubdev;
+-	cx_dev->bt = bt;
+-
+-	cx_dev->dev.parent = NULL;
+-	cx_dev->dev.bus = &tiocx_bus_type;
+-	cx_dev->dev.release = tiocx_bus_release;
+-	dev_set_name(&cx_dev->dev, "%d", cx_dev->cx_id.nasid);
+-	r = device_register(&cx_dev->dev);
+-	if (r) {
+-		kfree(cx_dev);
+-		return r;
+-	}
+-	get_device(&cx_dev->dev);
+-
+-	device_create_file(&cx_dev->dev, &dev_attr_cxdev_control);
+-
+-	return 0;
+-}
+-
+-/**
+- * cx_device_unregister - Unregister a device.
+- * @cx_dev: part/mfg id for the device
+- */
+-int cx_device_unregister(struct cx_dev *cx_dev)
+-{
+-	put_device(&cx_dev->dev);
+-	device_unregister(&cx_dev->dev);
+-	return 0;
+-}
+-
+-/**
+- * cx_device_reload - Reload the device.
+- * @nasid: device's nasid
+- * @part_num: device's part number
+- * @mfg_num: device's manufacturer number
+- *
+- * Remove the device associated with 'nasid' from device list and then
+- * call device-register with the given part/mfg numbers.
+- */
+-static int cx_device_reload(struct cx_dev *cx_dev)
+-{
+-	cx_device_unregister(cx_dev);
+-	return cx_device_register(cx_dev->cx_id.nasid, cx_dev->cx_id.part_num,
+-				  cx_dev->cx_id.mfg_num, cx_dev->hubdev,
+-				  cx_dev->bt);
+-}
+-
+-static inline u64 tiocx_intr_alloc(nasid_t nasid, int widget,
+-					u64 sn_irq_info,
+-					int req_irq, nasid_t req_nasid,
+-					int req_slice)
+-{
+-	struct ia64_sal_retval rv;
+-	rv.status = 0;
+-	rv.v0 = 0;
+-
+-	ia64_sal_oemcall_nolock(&rv, SN_SAL_IOIF_INTERRUPT,
+-				SAL_INTR_ALLOC, nasid,
+-				widget, sn_irq_info, req_irq,
+-				req_nasid, req_slice);
+-	return rv.status;
+-}
+-
+-static inline void tiocx_intr_free(nasid_t nasid, int widget,
+-				   struct sn_irq_info *sn_irq_info)
+-{
+-	struct ia64_sal_retval rv;
+-	rv.status = 0;
+-	rv.v0 = 0;
+-
+-	ia64_sal_oemcall_nolock(&rv, SN_SAL_IOIF_INTERRUPT,
+-				SAL_INTR_FREE, nasid,
+-				widget, sn_irq_info->irq_irq,
+-				sn_irq_info->irq_cookie, 0, 0);
+-}
+-
+-struct sn_irq_info *tiocx_irq_alloc(nasid_t nasid, int widget, int irq,
+-				    nasid_t req_nasid, int slice)
+-{
+-	struct sn_irq_info *sn_irq_info;
+-	int status;
+-	int sn_irq_size = sizeof(struct sn_irq_info);
+-
+-	if ((nasid & 1) == 0)
+-		return NULL;
+-
+-	sn_irq_info = kzalloc(sn_irq_size, GFP_KERNEL);
+-	if (sn_irq_info == NULL)
+-		return NULL;
+-
+-	status = tiocx_intr_alloc(nasid, widget, __pa(sn_irq_info), irq,
+-				  req_nasid, slice);
+-	if (status) {
+-		kfree(sn_irq_info);
+-		return NULL;
+-	} else {
+-		return sn_irq_info;
+-	}
+-}
+-
+-void tiocx_irq_free(struct sn_irq_info *sn_irq_info)
+-{
+-	u64 bridge = (u64) sn_irq_info->irq_bridge;
+-	nasid_t nasid = NASID_GET(bridge);
+-	int widget;
+-
+-	if (nasid & 1) {
+-		widget = TIO_SWIN_WIDGETNUM(bridge);
+-		tiocx_intr_free(nasid, widget, sn_irq_info);
+-		kfree(sn_irq_info);
+-	}
+-}
+-
+-u64 tiocx_dma_addr(u64 addr)
+-{
+-	return PHYS_TO_TIODMA(addr);
+-}
+-
+-u64 tiocx_swin_base(int nasid)
+-{
+-	return TIO_SWIN_BASE(nasid, TIOCX_CORELET);
+-}
+-
+-EXPORT_SYMBOL(cx_driver_register);
+-EXPORT_SYMBOL(cx_driver_unregister);
+-EXPORT_SYMBOL(cx_device_register);
+-EXPORT_SYMBOL(cx_device_unregister);
+-EXPORT_SYMBOL(tiocx_irq_alloc);
+-EXPORT_SYMBOL(tiocx_irq_free);
+-EXPORT_SYMBOL(tiocx_bus_type);
+-EXPORT_SYMBOL(tiocx_dma_addr);
+-EXPORT_SYMBOL(tiocx_swin_base);
+-
+-static void tio_conveyor_set(nasid_t nasid, int enable_flag)
+-{
+-	u64 ice_frz;
+-	u64 disable_cb = (1ull << 61);
+-
+-	if (!(nasid & 1))
+-		return;
+-
+-	ice_frz = REMOTE_HUB_L(nasid, TIO_ICE_FRZ_CFG);
+-	if (enable_flag) {
+-		if (!(ice_frz & disable_cb))	/* already enabled */
+-			return;
+-		ice_frz &= ~disable_cb;
+-	} else {
+-		if (ice_frz & disable_cb)	/* already disabled */
+-			return;
+-		ice_frz |= disable_cb;
+-	}
+-	DBG(KERN_ALERT "TIO_ICE_FRZ_CFG= 0x%lx\n", ice_frz);
+-	REMOTE_HUB_S(nasid, TIO_ICE_FRZ_CFG, ice_frz);
+-}
+-
+-#define tio_conveyor_enable(nasid) tio_conveyor_set(nasid, 1)
+-#define tio_conveyor_disable(nasid) tio_conveyor_set(nasid, 0)
+-
+-static void tio_corelet_reset(nasid_t nasid, int corelet)
+-{
+-	if (!(nasid & 1))
+-		return;
+-
+-	REMOTE_HUB_S(nasid, TIO_ICE_PMI_TX_CFG, 1 << corelet);
+-	udelay(2000);
+-	REMOTE_HUB_S(nasid, TIO_ICE_PMI_TX_CFG, 0);
+-	udelay(2000);
+-}
+-
+-static int is_fpga_tio(int nasid, int *bt)
+-{
+-	u16 uninitialized_var(ioboard_type);	/* GCC be quiet */
+-	long rc;
+-
+-	rc = ia64_sn_sysctl_ioboard_get(nasid, &ioboard_type);
+-	if (rc) {
+-		printk(KERN_WARNING "ia64_sn_sysctl_ioboard_get failed: %ld\n",
+-		       rc);
+-		return 0;
+-	}
+-
+-	switch (ioboard_type) {
+-	case L1_BRICKTYPE_SA:
+-	case L1_BRICKTYPE_ATHENA:
+-	case L1_BOARDTYPE_DAYTONA:
+-		*bt = ioboard_type;
+-		return 1;
+-	}
+-
+-	return 0;
+-}
+-
+-static int bitstream_loaded(nasid_t nasid)
+-{
+-	u64 cx_credits;
+-
+-	cx_credits = REMOTE_HUB_L(nasid, TIO_ICE_PMI_TX_DYN_CREDIT_STAT_CB3);
+-	cx_credits &= TIO_ICE_PMI_TX_DYN_CREDIT_STAT_CB3_CREDIT_CNT_MASK;
+-	DBG("cx_credits= 0x%lx\n", cx_credits);
+-
+-	return (cx_credits == 0xf) ? 1 : 0;
+-}
+-
+-static int tiocx_reload(struct cx_dev *cx_dev)
+-{
+-	int part_num = CX_DEV_NONE;
+-	int mfg_num = CX_DEV_NONE;
+-	nasid_t nasid = cx_dev->cx_id.nasid;
+-
+-	if (bitstream_loaded(nasid)) {
+-		u64 cx_id;
+-		int rv;
+-
+-		rv = ia64_sn_sysctl_tio_clock_reset(nasid);
+-		if (rv) {
+-			printk(KERN_ALERT "CX port JTAG reset failed.\n");
+-		} else {
+-			cx_id = *(volatile u64 *)
+-				(TIO_SWIN_BASE(nasid, TIOCX_CORELET) +
+-					  WIDGET_ID);
+-			part_num = XWIDGET_PART_NUM(cx_id);
+-			mfg_num = XWIDGET_MFG_NUM(cx_id);
+-			DBG("part= 0x%x, mfg= 0x%x\n", part_num, mfg_num);
+-			/* just ignore it if it's a CE */
+-			if (part_num == TIO_CE_ASIC_PARTNUM)
+-				return 0;
+-		}
+-	}
+-
+-	cx_dev->cx_id.part_num = part_num;
+-	cx_dev->cx_id.mfg_num = mfg_num;
+-
+-	/*
+-	 * Delete old device and register the new one.  It's ok if
+-	 * part_num/mfg_num == CX_DEV_NONE.  We want to register
+-	 * devices in the table even if a bitstream isn't loaded.
+-	 * That allows use to see that a bitstream isn't loaded via
+-	 * TIOCX_IOCTL_DEV_LIST.
+-	 */
+-	return cx_device_reload(cx_dev);
+-}
+-
+-static ssize_t show_cxdev_control(struct device *dev, struct device_attribute *attr, char *buf)
+-{
+-	struct cx_dev *cx_dev = to_cx_dev(dev);
+-
+-	return sprintf(buf, "0x%x 0x%x 0x%x 0x%x\n",
+-		       cx_dev->cx_id.nasid,
+-		       cx_dev->cx_id.part_num, cx_dev->cx_id.mfg_num,
+-		       cx_dev->bt);
+-}
+-
+-static ssize_t store_cxdev_control(struct device *dev, struct device_attribute *attr, const char *buf,
+-				   size_t count)
+-{
+-	int n;
+-	struct cx_dev *cx_dev = to_cx_dev(dev);
+-
+-	if (!capable(CAP_SYS_ADMIN))
+-		return -EPERM;
+-
+-	if (count <= 0)
+-		return 0;
+-
+-	n = simple_strtoul(buf, NULL, 0);
+-
+-	switch (n) {
+-	case 1:
+-		tio_corelet_reset(cx_dev->cx_id.nasid, TIOCX_CORELET);
+-		tiocx_reload(cx_dev);
+-		break;
+-	case 2:
+-		tiocx_reload(cx_dev);
+-		break;
+-	case 3:
+-		tio_corelet_reset(cx_dev->cx_id.nasid, TIOCX_CORELET);
+-		break;
+-	default:
+-		break;
+-	}
+-
+-	return count;
+-}
+-
+-DEVICE_ATTR(cxdev_control, 0644, show_cxdev_control, store_cxdev_control);
+-
+-static int __init tiocx_init(void)
+-{
+-	cnodeid_t cnodeid;
+-	int found_tiocx_device = 0;
+-	int err;
+-
+-	if (!ia64_platform_is("sn2"))
+-		return 0;
+-
+-	err = bus_register(&tiocx_bus_type);
+-	if (err)
+-		return err;
+-
+-	for (cnodeid = 0; cnodeid < num_cnodes; cnodeid++) {
+-		nasid_t nasid;
+-		int bt;
+-
+-		nasid = cnodeid_to_nasid(cnodeid);
+-
+-		if ((nasid & 0x1) && is_fpga_tio(nasid, &bt)) {
+-			struct hubdev_info *hubdev;
+-			struct xwidget_info *widgetp;
+-
+-			DBG("Found TIO at nasid 0x%x\n", nasid);
+-
+-			hubdev =
+-			    (struct hubdev_info *)(NODEPDA(cnodeid)->pdinfo);
+-
+-			widgetp = &hubdev->hdi_xwidget_info[TIOCX_CORELET];
+-
+-			/* The CE hangs off of the CX port but is not an FPGA */
+-			if (widgetp->xwi_hwid.part_num == TIO_CE_ASIC_PARTNUM)
+-				continue;
+-
+-			tio_corelet_reset(nasid, TIOCX_CORELET);
+-			tio_conveyor_enable(nasid);
+-
+-			if (cx_device_register
+-			    (nasid, widgetp->xwi_hwid.part_num,
+-			     widgetp->xwi_hwid.mfg_num, hubdev, bt) < 0)
+-				return -ENXIO;
+-			else
+-				found_tiocx_device++;
+-		}
+-	}
+-
+-	/* It's ok if we find zero devices. */
+-	DBG("found_tiocx_device= %d\n", found_tiocx_device);
+-
+-	return 0;
+-}
+-
+-static int cx_remove_device(struct device * dev, void * data)
+-{
+-	struct cx_dev *cx_dev = to_cx_dev(dev);
+-	device_remove_file(dev, &dev_attr_cxdev_control);
+-	cx_device_unregister(cx_dev);
+-	return 0;
+-}
+-
+-static void __exit tiocx_exit(void)
+-{
+-	DBG("tiocx_exit\n");
+-
+-	/*
+-	 * Unregister devices.
+-	 */
+-	bus_for_each_dev(&tiocx_bus_type, NULL, NULL, cx_remove_device);
+-	bus_unregister(&tiocx_bus_type);
+-}
+-
+-fs_initcall(tiocx_init);
+-module_exit(tiocx_exit);
+-
+-/************************************************************************
+- * Module licensing and description
+- ************************************************************************/
+-MODULE_LICENSE("GPL");
+-MODULE_AUTHOR("Bruce Losure <blosure@sgi.com>");
+-MODULE_DESCRIPTION("TIOCX module");
+-MODULE_SUPPORTED_DEVICE(DEVICE_NAME);
+diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
+index c9fbbc6a3967..96156c729a31 100644
+--- a/drivers/char/Kconfig
++++ b/drivers/char/Kconfig
+@@ -26,20 +26,6 @@ config DEVKMEM
+ 	  kind of kernel debugging operations.
+ 	  When in doubt, say "N".
+ 
+-config SGI_TIOCX
+-       bool "SGI TIO CX driver support"
+-       depends on (IA64_SGI_SN2 || IA64_GENERIC)
+-       help
+-         If you have an SGI Altix and you have fpga devices attached
+-         to your TIO, say Y here, otherwise say N.
+-
+-config SGI_MBCS
+-       tristate "SGI FPGA Core Services driver support"
+-       depends on SGI_TIOCX
+-       help
+-         If you have an SGI Altix with an attached SABrick
+-         say Y or M here, otherwise say N.
+-
+ source "drivers/tty/serial/Kconfig"
+ source "drivers/tty/serdev/Kconfig"
+ 
+diff --git a/drivers/char/Makefile b/drivers/char/Makefile
+index 50835d420471..7c5ea6f9df14 100644
+--- a/drivers/char/Makefile
++++ b/drivers/char/Makefile
+@@ -12,7 +12,6 @@ obj-$(CONFIG_RAW_DRIVER)	+= raw.o
+ obj-$(CONFIG_MSPEC)		+= mspec.o
+ obj-$(CONFIG_UV_MMTIMER)	+= uv_mmtimer.o
+ obj-$(CONFIG_IBM_BSR)		+= bsr.o
+-obj-$(CONFIG_SGI_MBCS)		+= mbcs.o
+ 
+ obj-$(CONFIG_PRINTER)		+= lp.o
+ 
+diff --git a/drivers/char/mbcs.c b/drivers/char/mbcs.c
+deleted file mode 100644
+index 0a31b60bee7b..000000000000
+--- a/drivers/char/mbcs.c
++++ /dev/null
+@@ -1,831 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (c) 2005 Silicon Graphics, Inc.  All rights reserved.
 - */
 -
--static int
--scdrv_release(struct inode *inode, struct file *file)
+-/*
+- *	MOATB Core Services driver.
+- */
+-
+-#include <linux/interrupt.h>
+-#include <linux/module.h>
+-#include <linux/moduleparam.h>
+-#include <linux/types.h>
+-#include <linux/ioport.h>
+-#include <linux/kernel.h>
+-#include <linux/notifier.h>
+-#include <linux/reboot.h>
+-#include <linux/init.h>
+-#include <linux/fs.h>
+-#include <linux/delay.h>
+-#include <linux/device.h>
+-#include <linux/mm.h>
+-#include <linux/uio.h>
+-#include <linux/mutex.h>
+-#include <linux/slab.h>
+-#include <linux/pagemap.h>
+-#include <asm/io.h>
+-#include <linux/uaccess.h>
+-#include <asm/pgtable.h>
+-#include <asm/sn/addrs.h>
+-#include <asm/sn/intr.h>
+-#include <asm/sn/tiocx.h>
+-#include "mbcs.h"
+-
+-#define MBCS_DEBUG 0
+-#if MBCS_DEBUG
+-#define DBG(fmt...)    printk(KERN_ALERT fmt)
+-#else
+-#define DBG(fmt...)
+-#endif
+-static DEFINE_MUTEX(mbcs_mutex);
+-static int mbcs_major;
+-
+-static LIST_HEAD(soft_list);
+-
+-/*
+- * file operations
+- */
+-static const struct file_operations mbcs_ops = {
+-	.owner = THIS_MODULE,
+-	.open = mbcs_open,
+-	.llseek = mbcs_sram_llseek,
+-	.read = mbcs_sram_read,
+-	.write = mbcs_sram_write,
+-	.mmap = mbcs_gscr_mmap,
+-};
+-
+-struct mbcs_callback_arg {
+-	int minor;
+-	struct cx_dev *cx_dev;
+-};
+-
+-static inline void mbcs_getdma_init(struct getdma *gdma)
 -{
--	struct subch_data_s *sd = (struct subch_data_s *) file->private_data;
--	int rv;
+-	memset(gdma, 0, sizeof(struct getdma));
+-	gdma->DoneIntEnable = 1;
+-}
 -
--	/* free the interrupt */
--	free_irq(SGI_UART_VECTOR, sd);
+-static inline void mbcs_putdma_init(struct putdma *pdma)
+-{
+-	memset(pdma, 0, sizeof(struct putdma));
+-	pdma->DoneIntEnable = 1;
+-}
 -
--	/* ask SAL to close the subchannel */
--	rv = ia64_sn_irtr_close(sd->sd_nasid, sd->sd_subch);
+-static inline void mbcs_algo_init(struct algoblock *algo_soft)
+-{
+-	memset(algo_soft, 0, sizeof(struct algoblock));
+-}
 -
--	kfree(sd);
+-static inline void mbcs_getdma_set(void *mmr,
+-		       uint64_t hostAddr,
+-		       uint64_t localAddr,
+-		       uint64_t localRamSel,
+-		       uint64_t numPkts,
+-		       uint64_t amoEnable,
+-		       uint64_t intrEnable,
+-		       uint64_t peerIO,
+-		       uint64_t amoHostDest,
+-		       uint64_t amoModType, uint64_t intrHostDest,
+-		       uint64_t intrVector)
+-{
+-	union dma_control rdma_control;
+-	union dma_amo_dest amo_dest;
+-	union intr_dest intr_dest;
+-	union dma_localaddr local_addr;
+-	union dma_hostaddr host_addr;
+-
+-	rdma_control.dma_control_reg = 0;
+-	amo_dest.dma_amo_dest_reg = 0;
+-	intr_dest.intr_dest_reg = 0;
+-	local_addr.dma_localaddr_reg = 0;
+-	host_addr.dma_hostaddr_reg = 0;
+-
+-	host_addr.dma_sys_addr = hostAddr;
+-	MBCS_MMR_SET(mmr, MBCS_RD_DMA_SYS_ADDR, host_addr.dma_hostaddr_reg);
+-
+-	local_addr.dma_ram_addr = localAddr;
+-	local_addr.dma_ram_sel = localRamSel;
+-	MBCS_MMR_SET(mmr, MBCS_RD_DMA_LOC_ADDR, local_addr.dma_localaddr_reg);
+-
+-	rdma_control.dma_op_length = numPkts;
+-	rdma_control.done_amo_en = amoEnable;
+-	rdma_control.done_int_en = intrEnable;
+-	rdma_control.pio_mem_n = peerIO;
+-	MBCS_MMR_SET(mmr, MBCS_RD_DMA_CTRL, rdma_control.dma_control_reg);
+-
+-	amo_dest.dma_amo_sys_addr = amoHostDest;
+-	amo_dest.dma_amo_mod_type = amoModType;
+-	MBCS_MMR_SET(mmr, MBCS_RD_DMA_AMO_DEST, amo_dest.dma_amo_dest_reg);
+-
+-	intr_dest.address = intrHostDest;
+-	intr_dest.int_vector = intrVector;
+-	MBCS_MMR_SET(mmr, MBCS_RD_DMA_INT_DEST, intr_dest.intr_dest_reg);
+-
+-}
+-
+-static inline void mbcs_putdma_set(void *mmr,
+-		       uint64_t hostAddr,
+-		       uint64_t localAddr,
+-		       uint64_t localRamSel,
+-		       uint64_t numPkts,
+-		       uint64_t amoEnable,
+-		       uint64_t intrEnable,
+-		       uint64_t peerIO,
+-		       uint64_t amoHostDest,
+-		       uint64_t amoModType,
+-		       uint64_t intrHostDest, uint64_t intrVector)
+-{
+-	union dma_control wdma_control;
+-	union dma_amo_dest amo_dest;
+-	union intr_dest intr_dest;
+-	union dma_localaddr local_addr;
+-	union dma_hostaddr host_addr;
+-
+-	wdma_control.dma_control_reg = 0;
+-	amo_dest.dma_amo_dest_reg = 0;
+-	intr_dest.intr_dest_reg = 0;
+-	local_addr.dma_localaddr_reg = 0;
+-	host_addr.dma_hostaddr_reg = 0;
+-
+-	host_addr.dma_sys_addr = hostAddr;
+-	MBCS_MMR_SET(mmr, MBCS_WR_DMA_SYS_ADDR, host_addr.dma_hostaddr_reg);
+-
+-	local_addr.dma_ram_addr = localAddr;
+-	local_addr.dma_ram_sel = localRamSel;
+-	MBCS_MMR_SET(mmr, MBCS_WR_DMA_LOC_ADDR, local_addr.dma_localaddr_reg);
+-
+-	wdma_control.dma_op_length = numPkts;
+-	wdma_control.done_amo_en = amoEnable;
+-	wdma_control.done_int_en = intrEnable;
+-	wdma_control.pio_mem_n = peerIO;
+-	MBCS_MMR_SET(mmr, MBCS_WR_DMA_CTRL, wdma_control.dma_control_reg);
+-
+-	amo_dest.dma_amo_sys_addr = amoHostDest;
+-	amo_dest.dma_amo_mod_type = amoModType;
+-	MBCS_MMR_SET(mmr, MBCS_WR_DMA_AMO_DEST, amo_dest.dma_amo_dest_reg);
+-
+-	intr_dest.address = intrHostDest;
+-	intr_dest.int_vector = intrVector;
+-	MBCS_MMR_SET(mmr, MBCS_WR_DMA_INT_DEST, intr_dest.intr_dest_reg);
+-
+-}
+-
+-static inline void mbcs_algo_set(void *mmr,
+-		     uint64_t amoHostDest,
+-		     uint64_t amoModType,
+-		     uint64_t intrHostDest,
+-		     uint64_t intrVector, uint64_t algoStepCount)
+-{
+-	union dma_amo_dest amo_dest;
+-	union intr_dest intr_dest;
+-	union algo_step step;
+-
+-	step.algo_step_reg = 0;
+-	intr_dest.intr_dest_reg = 0;
+-	amo_dest.dma_amo_dest_reg = 0;
+-
+-	amo_dest.dma_amo_sys_addr = amoHostDest;
+-	amo_dest.dma_amo_mod_type = amoModType;
+-	MBCS_MMR_SET(mmr, MBCS_ALG_AMO_DEST, amo_dest.dma_amo_dest_reg);
+-
+-	intr_dest.address = intrHostDest;
+-	intr_dest.int_vector = intrVector;
+-	MBCS_MMR_SET(mmr, MBCS_ALG_INT_DEST, intr_dest.intr_dest_reg);
+-
+-	step.alg_step_cnt = algoStepCount;
+-	MBCS_MMR_SET(mmr, MBCS_ALG_STEP, step.algo_step_reg);
+-}
+-
+-static inline int mbcs_getdma_start(struct mbcs_soft *soft)
+-{
+-	void *mmr_base;
+-	struct getdma *gdma;
+-	uint64_t numPkts;
+-	union cm_control cm_control;
+-
+-	mmr_base = soft->mmr_base;
+-	gdma = &soft->getdma;
+-
+-	/* check that host address got setup */
+-	if (!gdma->hostAddr)
+-		return -1;
+-
+-	numPkts =
+-	    (gdma->bytes + (MBCS_CACHELINE_SIZE - 1)) / MBCS_CACHELINE_SIZE;
+-
+-	/* program engine */
+-	mbcs_getdma_set(mmr_base, tiocx_dma_addr(gdma->hostAddr),
+-		   gdma->localAddr,
+-		   (gdma->localAddr < MB2) ? 0 :
+-		   (gdma->localAddr < MB4) ? 1 :
+-		   (gdma->localAddr < MB6) ? 2 : 3,
+-		   numPkts,
+-		   gdma->DoneAmoEnable,
+-		   gdma->DoneIntEnable,
+-		   gdma->peerIO,
+-		   gdma->amoHostDest,
+-		   gdma->amoModType,
+-		   gdma->intrHostDest, gdma->intrVector);
+-
+-	/* start engine */
+-	cm_control.cm_control_reg = MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
+-	cm_control.rd_dma_go = 1;
+-	MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL, cm_control.cm_control_reg);
+-
+-	return 0;
+-
+-}
+-
+-static inline int mbcs_putdma_start(struct mbcs_soft *soft)
+-{
+-	void *mmr_base;
+-	struct putdma *pdma;
+-	uint64_t numPkts;
+-	union cm_control cm_control;
+-
+-	mmr_base = soft->mmr_base;
+-	pdma = &soft->putdma;
+-
+-	/* check that host address got setup */
+-	if (!pdma->hostAddr)
+-		return -1;
+-
+-	numPkts =
+-	    (pdma->bytes + (MBCS_CACHELINE_SIZE - 1)) / MBCS_CACHELINE_SIZE;
+-
+-	/* program engine */
+-	mbcs_putdma_set(mmr_base, tiocx_dma_addr(pdma->hostAddr),
+-		   pdma->localAddr,
+-		   (pdma->localAddr < MB2) ? 0 :
+-		   (pdma->localAddr < MB4) ? 1 :
+-		   (pdma->localAddr < MB6) ? 2 : 3,
+-		   numPkts,
+-		   pdma->DoneAmoEnable,
+-		   pdma->DoneIntEnable,
+-		   pdma->peerIO,
+-		   pdma->amoHostDest,
+-		   pdma->amoModType,
+-		   pdma->intrHostDest, pdma->intrVector);
+-
+-	/* start engine */
+-	cm_control.cm_control_reg = MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
+-	cm_control.wr_dma_go = 1;
+-	MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL, cm_control.cm_control_reg);
+-
+-	return 0;
+-
+-}
+-
+-static inline int mbcs_algo_start(struct mbcs_soft *soft)
+-{
+-	struct algoblock *algo_soft = &soft->algo;
+-	void *mmr_base = soft->mmr_base;
+-	union cm_control cm_control;
+-
+-	if (mutex_lock_interruptible(&soft->algolock))
+-		return -ERESTARTSYS;
+-
+-	atomic_set(&soft->algo_done, 0);
+-
+-	mbcs_algo_set(mmr_base,
+-		 algo_soft->amoHostDest,
+-		 algo_soft->amoModType,
+-		 algo_soft->intrHostDest,
+-		 algo_soft->intrVector, algo_soft->algoStepCount);
+-
+-	/* start algorithm */
+-	cm_control.cm_control_reg = MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
+-	cm_control.alg_done_int_en = 1;
+-	cm_control.alg_go = 1;
+-	MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL, cm_control.cm_control_reg);
+-
+-	mutex_unlock(&soft->algolock);
+-
+-	return 0;
+-}
+-
+-static inline ssize_t
+-do_mbcs_sram_dmawrite(struct mbcs_soft *soft, uint64_t hostAddr,
+-		      size_t len, loff_t * off)
+-{
+-	int rv = 0;
+-
+-	if (mutex_lock_interruptible(&soft->dmawritelock))
+-		return -ERESTARTSYS;
+-
+-	atomic_set(&soft->dmawrite_done, 0);
+-
+-	soft->putdma.hostAddr = hostAddr;
+-	soft->putdma.localAddr = *off;
+-	soft->putdma.bytes = len;
+-
+-	if (mbcs_putdma_start(soft) < 0) {
+-		DBG(KERN_ALERT "do_mbcs_sram_dmawrite: "
+-					"mbcs_putdma_start failed\n");
+-		rv = -EAGAIN;
+-		goto dmawrite_exit;
+-	}
+-
+-	if (wait_event_interruptible(soft->dmawrite_queue,
+-					atomic_read(&soft->dmawrite_done))) {
+-		rv = -ERESTARTSYS;
+-		goto dmawrite_exit;
+-	}
+-
+-	rv = len;
+-	*off += len;
+-
+-dmawrite_exit:
+-	mutex_unlock(&soft->dmawritelock);
+-
 -	return rv;
 -}
 -
--/*
-- * scdrv_read
-- *
-- * Called to read bytes from the open IRouter pipe.
-- *
-- */
--
--static inline int
--read_status_check(struct subch_data_s *sd, int *len)
+-static inline ssize_t
+-do_mbcs_sram_dmaread(struct mbcs_soft *soft, uint64_t hostAddr,
+-		     size_t len, loff_t * off)
 -{
--	return ia64_sn_irtr_recv(sd->sd_nasid, sd->sd_subch, sd->sd_rb, len);
+-	int rv = 0;
+-
+-	if (mutex_lock_interruptible(&soft->dmareadlock))
+-		return -ERESTARTSYS;
+-
+-	atomic_set(&soft->dmawrite_done, 0);
+-
+-	soft->getdma.hostAddr = hostAddr;
+-	soft->getdma.localAddr = *off;
+-	soft->getdma.bytes = len;
+-
+-	if (mbcs_getdma_start(soft) < 0) {
+-		DBG(KERN_ALERT "mbcs_strategy: mbcs_getdma_start failed\n");
+-		rv = -EAGAIN;
+-		goto dmaread_exit;
+-	}
+-
+-	if (wait_event_interruptible(soft->dmaread_queue,
+-					atomic_read(&soft->dmaread_done))) {
+-		rv = -ERESTARTSYS;
+-		goto dmaread_exit;
+-	}
+-
+-	rv = len;
+-	*off += len;
+-
+-dmaread_exit:
+-	mutex_unlock(&soft->dmareadlock);
+-
+-	return rv;
+-}
+-
+-static int mbcs_open(struct inode *ip, struct file *fp)
+-{
+-	struct mbcs_soft *soft;
+-	int minor;
+-
+-	mutex_lock(&mbcs_mutex);
+-	minor = iminor(ip);
+-
+-	/* Nothing protects access to this list... */
+-	list_for_each_entry(soft, &soft_list, list) {
+-		if (soft->nasid == minor) {
+-			fp->private_data = soft->cxdev;
+-			mutex_unlock(&mbcs_mutex);
+-			return 0;
+-		}
+-	}
+-
+-	mutex_unlock(&mbcs_mutex);
+-	return -ENODEV;
+-}
+-
+-static ssize_t mbcs_sram_read(struct file * fp, char __user *buf, size_t len, loff_t * off)
+-{
+-	struct cx_dev *cx_dev = fp->private_data;
+-	struct mbcs_soft *soft = cx_dev->soft;
+-	uint64_t hostAddr;
+-	int rv = 0;
+-
+-	hostAddr = __get_dma_pages(GFP_KERNEL, get_order(len));
+-	if (hostAddr == 0)
+-		return -ENOMEM;
+-
+-	rv = do_mbcs_sram_dmawrite(soft, hostAddr, len, off);
+-	if (rv < 0)
+-		goto exit;
+-
+-	if (copy_to_user(buf, (void *)hostAddr, len))
+-		rv = -EFAULT;
+-
+-      exit:
+-	free_pages(hostAddr, get_order(len));
+-
+-	return rv;
 -}
 -
 -static ssize_t
--scdrv_read(struct file *file, char __user *buf, size_t count, loff_t *f_pos)
+-mbcs_sram_write(struct file * fp, const char __user *buf, size_t len, loff_t * off)
 -{
--	int status;
--	int len;
--	unsigned long flags;
--	struct subch_data_s *sd = (struct subch_data_s *) file->private_data;
+-	struct cx_dev *cx_dev = fp->private_data;
+-	struct mbcs_soft *soft = cx_dev->soft;
+-	uint64_t hostAddr;
+-	int rv = 0;
 -
--	/* try to get control of the read buffer */
--	if (down_trylock(&sd->sd_rbs)) {
--		/* somebody else has it now;
--		 * if we're non-blocking, then exit...
--		 */
--		if (file->f_flags & O_NONBLOCK) {
--			return -EAGAIN;
--		}
--		/* ...or if we want to block, then do so here */
--		if (down_interruptible(&sd->sd_rbs)) {
--			/* something went wrong with wait */
--			return -ERESTARTSYS;
--		}
+-	hostAddr = __get_dma_pages(GFP_KERNEL, get_order(len));
+-	if (hostAddr == 0)
+-		return -ENOMEM;
+-
+-	if (copy_from_user((void *)hostAddr, buf, len)) {
+-		rv = -EFAULT;
+-		goto exit;
 -	}
 -
--	/* anything to read? */
--	len = CHUNKSIZE;
--	spin_lock_irqsave(&sd->sd_rlock, flags);
--	status = read_status_check(sd, &len);
+-	rv = do_mbcs_sram_dmaread(soft, hostAddr, len, off);
 -
--	/* if not, and we're blocking I/O, loop */
--	while (status < 0) {
--		DECLARE_WAITQUEUE(wait, current);
+-      exit:
+-	free_pages(hostAddr, get_order(len));
 -
--		if (file->f_flags & O_NONBLOCK) {
--			spin_unlock_irqrestore(&sd->sd_rlock, flags);
--			up(&sd->sd_rbs);
--			return -EAGAIN;
--		}
--
--		len = CHUNKSIZE;
--		set_current_state(TASK_INTERRUPTIBLE);
--		add_wait_queue(&sd->sd_rq, &wait);
--		spin_unlock_irqrestore(&sd->sd_rlock, flags);
--
--		schedule_timeout(msecs_to_jiffies(SCDRV_TIMEOUT));
--
--		remove_wait_queue(&sd->sd_rq, &wait);
--		if (signal_pending(current)) {
--			/* wait was interrupted */
--			up(&sd->sd_rbs);
--			return -ERESTARTSYS;
--		}
--
--		spin_lock_irqsave(&sd->sd_rlock, flags);
--		status = read_status_check(sd, &len);
--	}
--	spin_unlock_irqrestore(&sd->sd_rlock, flags);
--
--	if (len > 0) {
--		/* we read something in the last read_status_check(); copy
--		 * it out to user space
--		 */
--		if (count < len) {
--			pr_debug("%s: only accepting %d of %d bytes\n",
--				 __func__, (int) count, len);
--		}
--		len = min((int) count, len);
--		if (copy_to_user(buf, sd->sd_rb, len))
--			len = -EFAULT;
--	}
--
--	/* release the read buffer and wake anyone who might be
--	 * waiting for it
--	 */
--	up(&sd->sd_rbs);
--
--	/* return the number of characters read in */
--	return len;
+-	return rv;
 -}
 -
--/*
-- * scdrv_write
-- *
-- * Writes a chunk of an IRouter packet (or other system controller data)
-- * to the system controller.
+-static loff_t mbcs_sram_llseek(struct file * filp, loff_t off, int whence)
+-{
+-	return generic_file_llseek_size(filp, off, whence, MAX_LFS_FILESIZE,
+-					MBCS_SRAM_SIZE);
+-}
+-
+-static uint64_t mbcs_pioaddr(struct mbcs_soft *soft, uint64_t offset)
+-{
+-	uint64_t mmr_base;
+-
+-	mmr_base = (uint64_t) (soft->mmr_base + offset);
+-
+-	return mmr_base;
+-}
+-
+-static void mbcs_debug_pioaddr_set(struct mbcs_soft *soft)
+-{
+-	soft->debug_addr = mbcs_pioaddr(soft, MBCS_DEBUG_START);
+-}
+-
+-static void mbcs_gscr_pioaddr_set(struct mbcs_soft *soft)
+-{
+-	soft->gscr_addr = mbcs_pioaddr(soft, MBCS_GSCR_START);
+-}
+-
+-static int mbcs_gscr_mmap(struct file *fp, struct vm_area_struct *vma)
+-{
+-	struct cx_dev *cx_dev = fp->private_data;
+-	struct mbcs_soft *soft = cx_dev->soft;
+-
+-	if (vma->vm_pgoff != 0)
+-		return -EINVAL;
+-
+-	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+-
+-	/* Remap-pfn-range will mark the range VM_IO */
+-	if (remap_pfn_range(vma,
+-			    vma->vm_start,
+-			    __pa(soft->gscr_addr) >> PAGE_SHIFT,
+-			    PAGE_SIZE,
+-			    vma->vm_page_prot))
+-		return -EAGAIN;
+-
+-	return 0;
+-}
+-
+-/**
+- * mbcs_completion_intr_handler - Primary completion handler.
+- * @irq: irq
+- * @arg: soft struct for device
 - *
 - */
--static inline int
--write_status_check(struct subch_data_s *sd, int count)
+-static irqreturn_t
+-mbcs_completion_intr_handler(int irq, void *arg)
 -{
--	return ia64_sn_irtr_send(sd->sd_nasid, sd->sd_subch, sd->sd_wb, count);
+-	struct mbcs_soft *soft = (struct mbcs_soft *)arg;
+-	void *mmr_base;
+-	union cm_status cm_status;
+-	union cm_control cm_control;
+-
+-	mmr_base = soft->mmr_base;
+-	cm_status.cm_status_reg = MBCS_MMR_GET(mmr_base, MBCS_CM_STATUS);
+-
+-	if (cm_status.rd_dma_done) {
+-		/* stop dma-read engine, clear status */
+-		cm_control.cm_control_reg =
+-		    MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
+-		cm_control.rd_dma_clr = 1;
+-		MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL,
+-			     cm_control.cm_control_reg);
+-		atomic_set(&soft->dmaread_done, 1);
+-		wake_up(&soft->dmaread_queue);
+-	}
+-	if (cm_status.wr_dma_done) {
+-		/* stop dma-write engine, clear status */
+-		cm_control.cm_control_reg =
+-		    MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
+-		cm_control.wr_dma_clr = 1;
+-		MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL,
+-			     cm_control.cm_control_reg);
+-		atomic_set(&soft->dmawrite_done, 1);
+-		wake_up(&soft->dmawrite_queue);
+-	}
+-	if (cm_status.alg_done) {
+-		/* clear status */
+-		cm_control.cm_control_reg =
+-		    MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
+-		cm_control.alg_done_clr = 1;
+-		MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL,
+-			     cm_control.cm_control_reg);
+-		atomic_set(&soft->algo_done, 1);
+-		wake_up(&soft->algo_queue);
+-	}
+-
+-	return IRQ_HANDLED;
 -}
 -
--static ssize_t
--scdrv_write(struct file *file, const char __user *buf,
--	    size_t count, loff_t *f_pos)
+-/**
+- * mbcs_intr_alloc - Allocate interrupts.
+- * @dev: device pointer
+- *
+- */
+-static int mbcs_intr_alloc(struct cx_dev *dev)
 -{
--	unsigned long flags;
--	int status;
--	struct subch_data_s *sd = (struct subch_data_s *) file->private_data;
+-	struct sn_irq_info *sn_irq;
+-	struct mbcs_soft *soft;
+-	struct getdma *getdma;
+-	struct putdma *putdma;
+-	struct algoblock *algo;
 -
--	/* try to get control of the write buffer */
--	if (down_trylock(&sd->sd_wbs)) {
--		/* somebody else has it now;
--		 * if we're non-blocking, then exit...
--		 */
--		if (file->f_flags & O_NONBLOCK) {
--			return -EAGAIN;
--		}
--		/* ...or if we want to block, then do so here */
--		if (down_interruptible(&sd->sd_wbs)) {
--			/* something went wrong with wait */
--			return -ERESTARTSYS;
--		}
+-	soft = dev->soft;
+-	getdma = &soft->getdma;
+-	putdma = &soft->putdma;
+-	algo = &soft->algo;
+-
+-	soft->get_sn_irq = NULL;
+-	soft->put_sn_irq = NULL;
+-	soft->algo_sn_irq = NULL;
+-
+-	sn_irq = tiocx_irq_alloc(dev->cx_id.nasid, TIOCX_CORELET, -1, -1, -1);
+-	if (sn_irq == NULL)
+-		return -EAGAIN;
+-	soft->get_sn_irq = sn_irq;
+-	getdma->intrHostDest = sn_irq->irq_xtalkaddr;
+-	getdma->intrVector = sn_irq->irq_irq;
+-	if (request_irq(sn_irq->irq_irq,
+-			(void *)mbcs_completion_intr_handler, IRQF_SHARED,
+-			"MBCS get intr", (void *)soft)) {
+-		tiocx_irq_free(soft->get_sn_irq);
+-		return -EAGAIN;
 -	}
 -
--	count = min((int) count, CHUNKSIZE);
--	if (copy_from_user(sd->sd_wb, buf, count)) {
--		up(&sd->sd_wbs);
--		return -EFAULT;
+-	sn_irq = tiocx_irq_alloc(dev->cx_id.nasid, TIOCX_CORELET, -1, -1, -1);
+-	if (sn_irq == NULL) {
+-		free_irq(soft->get_sn_irq->irq_irq, soft);
+-		tiocx_irq_free(soft->get_sn_irq);
+-		return -EAGAIN;
+-	}
+-	soft->put_sn_irq = sn_irq;
+-	putdma->intrHostDest = sn_irq->irq_xtalkaddr;
+-	putdma->intrVector = sn_irq->irq_irq;
+-	if (request_irq(sn_irq->irq_irq,
+-			(void *)mbcs_completion_intr_handler, IRQF_SHARED,
+-			"MBCS put intr", (void *)soft)) {
+-		tiocx_irq_free(soft->put_sn_irq);
+-		free_irq(soft->get_sn_irq->irq_irq, soft);
+-		tiocx_irq_free(soft->get_sn_irq);
+-		return -EAGAIN;
 -	}
 -
--	/* try to send the buffer */
--	spin_lock_irqsave(&sd->sd_wlock, flags);
--	status = write_status_check(sd, count);
--
--	/* if we failed, and we want to block, then loop */
--	while (status <= 0) {
--		DECLARE_WAITQUEUE(wait, current);
--
--		if (file->f_flags & O_NONBLOCK) {
--			spin_unlock_irqrestore(&sd->sd_wlock, flags);
--			up(&sd->sd_wbs);
--			return -EAGAIN;
--		}
--
--		set_current_state(TASK_INTERRUPTIBLE);
--		add_wait_queue(&sd->sd_wq, &wait);
--		spin_unlock_irqrestore(&sd->sd_wlock, flags);
--
--		schedule_timeout(msecs_to_jiffies(SCDRV_TIMEOUT));
--
--		remove_wait_queue(&sd->sd_wq, &wait);
--		if (signal_pending(current)) {
--			/* wait was interrupted */
--			up(&sd->sd_wbs);
--			return -ERESTARTSYS;
--		}
--
--		spin_lock_irqsave(&sd->sd_wlock, flags);
--		status = write_status_check(sd, count);
+-	sn_irq = tiocx_irq_alloc(dev->cx_id.nasid, TIOCX_CORELET, -1, -1, -1);
+-	if (sn_irq == NULL) {
+-		free_irq(soft->put_sn_irq->irq_irq, soft);
+-		tiocx_irq_free(soft->put_sn_irq);
+-		free_irq(soft->get_sn_irq->irq_irq, soft);
+-		tiocx_irq_free(soft->get_sn_irq);
+-		return -EAGAIN;
 -	}
--	spin_unlock_irqrestore(&sd->sd_wlock, flags);
+-	soft->algo_sn_irq = sn_irq;
+-	algo->intrHostDest = sn_irq->irq_xtalkaddr;
+-	algo->intrVector = sn_irq->irq_irq;
+-	if (request_irq(sn_irq->irq_irq,
+-			(void *)mbcs_completion_intr_handler, IRQF_SHARED,
+-			"MBCS algo intr", (void *)soft)) {
+-		tiocx_irq_free(soft->algo_sn_irq);
+-		free_irq(soft->put_sn_irq->irq_irq, soft);
+-		tiocx_irq_free(soft->put_sn_irq);
+-		free_irq(soft->get_sn_irq->irq_irq, soft);
+-		tiocx_irq_free(soft->get_sn_irq);
+-		return -EAGAIN;
+-	}
 -
--	/* release the write buffer and wake anyone who's waiting for it */
--	up(&sd->sd_wbs);
+-	return 0;
+-}
 -
--	/* return the number of characters accepted (should be the complete
--	 * "chunk" as requested)
+-/**
+- * mbcs_intr_dealloc - Remove interrupts.
+- * @dev: device pointer
+- *
+- */
+-static void mbcs_intr_dealloc(struct cx_dev *dev)
+-{
+-	struct mbcs_soft *soft;
+-
+-	soft = dev->soft;
+-
+-	free_irq(soft->get_sn_irq->irq_irq, soft);
+-	tiocx_irq_free(soft->get_sn_irq);
+-	free_irq(soft->put_sn_irq->irq_irq, soft);
+-	tiocx_irq_free(soft->put_sn_irq);
+-	free_irq(soft->algo_sn_irq->irq_irq, soft);
+-	tiocx_irq_free(soft->algo_sn_irq);
+-}
+-
+-static inline int mbcs_hw_init(struct mbcs_soft *soft)
+-{
+-	void *mmr_base = soft->mmr_base;
+-	union cm_control cm_control;
+-	union cm_req_timeout cm_req_timeout;
+-	uint64_t err_stat;
+-
+-	cm_req_timeout.cm_req_timeout_reg =
+-	    MBCS_MMR_GET(mmr_base, MBCS_CM_REQ_TOUT);
+-
+-	cm_req_timeout.time_out = MBCS_CM_CONTROL_REQ_TOUT_MASK;
+-	MBCS_MMR_SET(mmr_base, MBCS_CM_REQ_TOUT,
+-		     cm_req_timeout.cm_req_timeout_reg);
+-
+-	mbcs_gscr_pioaddr_set(soft);
+-	mbcs_debug_pioaddr_set(soft);
+-
+-	/* clear errors */
+-	err_stat = MBCS_MMR_GET(mmr_base, MBCS_CM_ERR_STAT);
+-	MBCS_MMR_SET(mmr_base, MBCS_CM_CLR_ERR_STAT, err_stat);
+-	MBCS_MMR_ZERO(mmr_base, MBCS_CM_ERROR_DETAIL1);
+-
+-	/* enable interrupts */
+-	/* turn off 2^23 (INT_EN_PIO_REQ_ADDR_INV) */
+-	MBCS_MMR_SET(mmr_base, MBCS_CM_ERR_INT_EN, 0x3ffffff7e00ffUL);
+-
+-	/* arm status regs and clear engines */
+-	cm_control.cm_control_reg = MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
+-	cm_control.rearm_stat_regs = 1;
+-	cm_control.alg_clr = 1;
+-	cm_control.wr_dma_clr = 1;
+-	cm_control.rd_dma_clr = 1;
+-
+-	MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL, cm_control.cm_control_reg);
+-
+-	return 0;
+-}
+-
+-static ssize_t show_algo(struct device *dev, struct device_attribute *attr, char *buf)
+-{
+-	struct cx_dev *cx_dev = to_cx_dev(dev);
+-	struct mbcs_soft *soft = cx_dev->soft;
+-	uint64_t debug0;
+-
+-	/*
+-	 * By convention, the first debug register contains the
+-	 * algorithm number and revision.
 -	 */
--	if ((status >= 0) && (status < count)) {
--		pr_debug("Didn't accept the full chunk; %d of %d\n",
--			 status, (int) count);
--	}
--	return status;
+-	debug0 = *(uint64_t *) soft->debug_addr;
+-
+-	return sprintf(buf, "0x%x 0x%x\n",
+-		       upper_32_bits(debug0), lower_32_bits(debug0));
 -}
 -
--static __poll_t
--scdrv_poll(struct file *file, struct poll_table_struct *wait)
+-static ssize_t store_algo(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 -{
--	__poll_t mask = 0;
--	int status = 0;
--	struct subch_data_s *sd = (struct subch_data_s *) file->private_data;
--	unsigned long flags;
+-	int n;
+-	struct cx_dev *cx_dev = to_cx_dev(dev);
+-	struct mbcs_soft *soft = cx_dev->soft;
 -
--	poll_wait(file, &sd->sd_rq, wait);
--	poll_wait(file, &sd->sd_wq, wait);
+-	if (count <= 0)
+-		return 0;
 -
--	spin_lock_irqsave(&sd->sd_rlock, flags);
--	spin_lock(&sd->sd_wlock);
--	status = ia64_sn_irtr_intr(sd->sd_nasid, sd->sd_subch);
--	spin_unlock(&sd->sd_wlock);
--	spin_unlock_irqrestore(&sd->sd_rlock, flags);
+-	n = simple_strtoul(buf, NULL, 0);
 -
--	if (status > 0) {
--		if (status & SAL_IROUTER_INTR_RECV) {
--			mask |= EPOLLIN | EPOLLRDNORM;
--		}
--		if (status & SAL_IROUTER_INTR_XMIT) {
--			mask |= EPOLLOUT | EPOLLWRNORM;
--		}
+-	if (n == 1) {
+-		mbcs_algo_start(soft);
+-		if (wait_event_interruptible(soft->algo_queue,
+-					atomic_read(&soft->algo_done)))
+-			return -ERESTARTSYS;
 -	}
 -
--	return mask;
+-	return count;
 -}
 -
--static const struct file_operations scdrv_fops = {
--	.owner =	THIS_MODULE,
--	.read =		scdrv_read,
--	.write =	scdrv_write,
--	.poll =		scdrv_poll,
--	.open =		scdrv_open,
--	.release =	scdrv_release,
--	.llseek =	noop_llseek,
+-DEVICE_ATTR(algo, 0644, show_algo, store_algo);
+-
+-/**
+- * mbcs_probe - Initialize for device
+- * @dev: device pointer
+- * @device_id: id table pointer
+- *
+- */
+-static int mbcs_probe(struct cx_dev *dev, const struct cx_device_id *id)
+-{
+-	struct mbcs_soft *soft;
+-
+-	dev->soft = NULL;
+-
+-	soft = kzalloc(sizeof(struct mbcs_soft), GFP_KERNEL);
+-	if (soft == NULL)
+-		return -ENOMEM;
+-
+-	soft->nasid = dev->cx_id.nasid;
+-	list_add(&soft->list, &soft_list);
+-	soft->mmr_base = (void *)tiocx_swin_base(dev->cx_id.nasid);
+-	dev->soft = soft;
+-	soft->cxdev = dev;
+-
+-	init_waitqueue_head(&soft->dmawrite_queue);
+-	init_waitqueue_head(&soft->dmaread_queue);
+-	init_waitqueue_head(&soft->algo_queue);
+-
+-	mutex_init(&soft->dmawritelock);
+-	mutex_init(&soft->dmareadlock);
+-	mutex_init(&soft->algolock);
+-
+-	mbcs_getdma_init(&soft->getdma);
+-	mbcs_putdma_init(&soft->putdma);
+-	mbcs_algo_init(&soft->algo);
+-
+-	mbcs_hw_init(soft);
+-
+-	/* Allocate interrupts */
+-	mbcs_intr_alloc(dev);
+-
+-	device_create_file(&dev->dev, &dev_attr_algo);
+-
+-	return 0;
+-}
+-
+-static int mbcs_remove(struct cx_dev *dev)
+-{
+-	if (dev->soft) {
+-		mbcs_intr_dealloc(dev);
+-		kfree(dev->soft);
+-	}
+-
+-	device_remove_file(&dev->dev, &dev_attr_algo);
+-
+-	return 0;
+-}
+-
+-static const struct cx_device_id mbcs_id_table[] = {
+-	{
+-	 .part_num = MBCS_PART_NUM,
+-	 .mfg_num = MBCS_MFG_NUM,
+-	 },
+-	{
+-	 .part_num = MBCS_PART_NUM_ALG0,
+-	 .mfg_num = MBCS_MFG_NUM,
+-	 },
+-	{0, 0}
 -};
 -
--static struct class *snsc_class;
+-MODULE_DEVICE_TABLE(cx, mbcs_id_table);
 -
--/*
-- * scdrv_init
-- *
-- * Called at boot time to initialize the system controller communication
-- * facility.
-- */
--int __init
--scdrv_init(void)
+-static struct cx_drv mbcs_driver = {
+-	.name = DEVICE_NAME,
+-	.id_table = mbcs_id_table,
+-	.probe = mbcs_probe,
+-	.remove = mbcs_remove,
+-};
+-
+-static void __exit mbcs_exit(void)
 -{
--	geoid_t geoid;
--	cnodeid_t cnode;
--	char devname[32];
--	char *devnamep;
--	struct sysctl_data_s *scd;
--	void *salbuf;
--	dev_t first_dev, dev;
--	nasid_t event_nasid;
+-	unregister_chrdev(mbcs_major, DEVICE_NAME);
+-	cx_driver_unregister(&mbcs_driver);
+-}
+-
+-static int __init mbcs_init(void)
+-{
+-	int rv;
 -
 -	if (!ia64_platform_is("sn2"))
 -		return -ENODEV;
 -
--	event_nasid = ia64_sn_get_console_nasid();
--
--	snsc_class = class_create(THIS_MODULE, SYSCTL_BASENAME);
--	if (IS_ERR(snsc_class)) {
--		printk("%s: failed to allocate class\n", __func__);
--		return PTR_ERR(snsc_class);
+-	// Put driver into chrdevs[].  Get major number.
+-	rv = register_chrdev(mbcs_major, DEVICE_NAME, &mbcs_ops);
+-	if (rv < 0) {
+-		DBG(KERN_ALERT "mbcs_init: can't get major number. %d\n", rv);
+-		return rv;
 -	}
+-	mbcs_major = rv;
 -
--	if (alloc_chrdev_region(&first_dev, 0, num_cnodes,
--				SYSCTL_BASENAME) < 0) {
--		printk("%s: failed to register SN system controller device\n",
--		       __func__);
--		return -ENODEV;
--	}
--
--	for (cnode = 0; cnode < num_cnodes; cnode++) {
--			geoid = cnodeid_get_geoid(cnode);
--			devnamep = devname;
--			format_module_id(devnamep, geo_module(geoid),
--					 MODULE_FORMAT_BRIEF);
--			devnamep = devname + strlen(devname);
--			sprintf(devnamep, "^%d#%d", geo_slot(geoid),
--				geo_slab(geoid));
--
--			/* allocate sysctl device data */
--			scd = kzalloc(sizeof (struct sysctl_data_s),
--				      GFP_KERNEL);
--			if (!scd) {
--				printk("%s: failed to allocate device info"
--				       "for %s/%s\n", __func__,
--				       SYSCTL_BASENAME, devname);
--				continue;
--			}
--
--			/* initialize sysctl device data fields */
--			scd->scd_nasid = cnodeid_to_nasid(cnode);
--			if (!(salbuf = kmalloc(SCDRV_BUFSZ, GFP_KERNEL))) {
--				printk("%s: failed to allocate driver buffer"
--				       "(%s%s)\n", __func__,
--				       SYSCTL_BASENAME, devname);
--				kfree(scd);
--				continue;
--			}
--
--			if (ia64_sn_irtr_init(scd->scd_nasid, salbuf,
--					      SCDRV_BUFSZ) < 0) {
--				printk
--				    ("%s: failed to initialize SAL for"
--				     " system controller communication"
--				     " (%s/%s): outdated PROM?\n",
--				     __func__, SYSCTL_BASENAME, devname);
--				kfree(scd);
--				kfree(salbuf);
--				continue;
--			}
--
--			dev = first_dev + cnode;
--			cdev_init(&scd->scd_cdev, &scdrv_fops);
--			if (cdev_add(&scd->scd_cdev, dev, 1)) {
--				printk("%s: failed to register system"
--				       " controller device (%s%s)\n",
--				       __func__, SYSCTL_BASENAME, devname);
--				kfree(scd);
--				kfree(salbuf);
--				continue;
--			}
--
--			device_create(snsc_class, NULL, dev, NULL,
--				      "%s", devname);
--
--			ia64_sn_irtr_intr_enable(scd->scd_nasid,
--						 0 /*ignored */ ,
--						 SAL_IROUTER_INTR_RECV);
--
--                        /* on the console nasid, prepare to receive
--                         * system controller environmental events
--                         */
--                        if(scd->scd_nasid == event_nasid) {
--                                scdrv_event_init(scd);
--                        }
--	}
--	return 0;
+-	return cx_driver_register(&mbcs_driver);
 -}
--device_initcall(scdrv_init);
-diff --git a/drivers/char/snsc.h b/drivers/char/snsc.h
+-
+-module_init(mbcs_init);
+-module_exit(mbcs_exit);
+-
+-MODULE_AUTHOR("Bruce Losure <blosure@sgi.com>");
+-MODULE_DESCRIPTION("Driver for MOATB Core Services");
+-MODULE_LICENSE("GPL");
+diff --git a/drivers/char/mbcs.h b/drivers/char/mbcs.h
 deleted file mode 100644
-index e8c52c882b21..000000000000
---- a/drivers/char/snsc.h
+index 1a36884c48b5..000000000000
+--- a/drivers/char/mbcs.h
 +++ /dev/null
-@@ -1,92 +0,0 @@
+@@ -1,553 +0,0 @@
 -/*
-- * SN Platform system controller communication support
-- *
 - * This file is subject to the terms and conditions of the GNU General Public
 - * License.  See the file "COPYING" in the main directory of this archive
 - * for more details.
 - *
-- * Copyright (C) 2004-2006 Silicon Graphics, Inc. All rights reserved.
+- * Copyright (c) 2005 Silicon Graphics, Inc.  All rights reserved.
 - */
+-
+-#ifndef __MBCS_H__
+-#define __MBCS_H__
 -
 -/*
-- * This file contains macros and data types for communication with the
-- * system controllers in SGI SN systems.
+- * General macros
 - */
+-#define MB	(1024*1024)
+-#define MB2	(2*MB)
+-#define MB4	(4*MB)
+-#define MB6	(6*MB)
 -
--#ifndef _SN_SYSCTL_H_
--#define _SN_SYSCTL_H_
+-/*
+- * Offsets and masks
+- */
+-#define MBCS_CM_ID		0x0000	/* Identification */
+-#define MBCS_CM_STATUS		0x0008	/* Status */
+-#define MBCS_CM_ERROR_DETAIL1	0x0010	/* Error Detail1 */
+-#define MBCS_CM_ERROR_DETAIL2	0x0018	/* Error Detail2 */
+-#define MBCS_CM_CONTROL		0x0020	/* Control */
+-#define MBCS_CM_REQ_TOUT	0x0028	/* Request Time-out */
+-#define MBCS_CM_ERR_INT_DEST	0x0038	/* Error Interrupt Destination */
+-#define MBCS_CM_TARG_FL		0x0050	/* Target Flush */
+-#define MBCS_CM_ERR_STAT	0x0060	/* Error Status */
+-#define MBCS_CM_CLR_ERR_STAT	0x0068	/* Clear Error Status */
+-#define MBCS_CM_ERR_INT_EN	0x0070	/* Error Interrupt Enable */
+-#define MBCS_RD_DMA_SYS_ADDR	0x0100	/* Read DMA System Address */
+-#define MBCS_RD_DMA_LOC_ADDR	0x0108	/* Read DMA Local Address */
+-#define MBCS_RD_DMA_CTRL	0x0110	/* Read DMA Control */
+-#define MBCS_RD_DMA_AMO_DEST	0x0118	/* Read DMA AMO Destination */
+-#define MBCS_RD_DMA_INT_DEST	0x0120	/* Read DMA Interrupt Destination */
+-#define MBCS_RD_DMA_AUX_STAT	0x0130	/* Read DMA Auxiliary Status */
+-#define MBCS_WR_DMA_SYS_ADDR	0x0200	/* Write DMA System Address */
+-#define MBCS_WR_DMA_LOC_ADDR	0x0208	/* Write DMA Local Address */
+-#define MBCS_WR_DMA_CTRL	0x0210	/* Write DMA Control */
+-#define MBCS_WR_DMA_AMO_DEST	0x0218	/* Write DMA AMO Destination */
+-#define MBCS_WR_DMA_INT_DEST	0x0220	/* Write DMA Interrupt Destination */
+-#define MBCS_WR_DMA_AUX_STAT	0x0230	/* Write DMA Auxiliary Status */
+-#define MBCS_ALG_AMO_DEST	0x0300	/* Algorithm AMO Destination */
+-#define MBCS_ALG_INT_DEST	0x0308	/* Algorithm Interrupt Destination */
+-#define MBCS_ALG_OFFSETS	0x0310
+-#define MBCS_ALG_STEP		0x0318	/* Algorithm Step */
 -
--#include <linux/types.h>
--#include <linux/spinlock.h>
--#include <linux/wait.h>
--#include <linux/fs.h>
--#include <linux/cdev.h>
--#include <linux/semaphore.h>
--#include <asm/sn/types.h>
+-#define MBCS_GSCR_START		0x0000000
+-#define MBCS_DEBUG_START	0x0100000
+-#define MBCS_RAM0_START		0x0200000
+-#define MBCS_RAM1_START		0x0400000
+-#define MBCS_RAM2_START		0x0600000
 -
--#define CHUNKSIZE 127
+-#define MBCS_CM_CONTROL_REQ_TOUT_MASK 0x0000000000ffffffUL
+-//#define PIO_BASE_ADDR_BASE_OFFSET_MASK 0x00fffffffff00000UL
 -
--/* This structure is used to track an open subchannel. */
--struct subch_data_s {
--	nasid_t sd_nasid;	/* node on which the subchannel was opened */
--	int sd_subch;		/* subchannel number */
--	spinlock_t sd_rlock;	/* monitor lock for rsv */
--	spinlock_t sd_wlock;	/* monitor lock for wsv */
--	wait_queue_head_t sd_rq;	/* wait queue for readers */
--	wait_queue_head_t sd_wq;	/* wait queue for writers */
--	struct semaphore sd_rbs;	/* semaphore for read buffer */
--	struct semaphore sd_wbs;	/* semaphore for write buffer */
+-#define MBCS_SRAM_SIZE		(1024*1024)
+-#define MBCS_CACHELINE_SIZE	128
 -
--	char sd_rb[CHUNKSIZE];	/* read buffer */
--	char sd_wb[CHUNKSIZE];	/* write buffer */
+-/*
+- * MMR get's and put's
+- */
+-#define MBCS_MMR_ADDR(mmr_base, offset)((uint64_t *)(mmr_base + offset))
+-#define MBCS_MMR_SET(mmr_base, offset, value) {			\
+-	uint64_t *mbcs_mmr_set_u64p, readback;				\
+-	mbcs_mmr_set_u64p = (uint64_t *)(mmr_base + offset);	\
+-	*mbcs_mmr_set_u64p = value;					\
+-	readback = *mbcs_mmr_set_u64p; \
+-}
+-#define MBCS_MMR_GET(mmr_base, offset) *(uint64_t *)(mmr_base + offset)
+-#define MBCS_MMR_ZERO(mmr_base, offset) MBCS_MMR_SET(mmr_base, offset, 0)
+-
+-/*
+- * MBCS mmr structures
+- */
+-union cm_id {
+-	uint64_t cm_id_reg;
+-	struct {
+-		uint64_t always_one:1,	// 0
+-		 mfg_id:11,	// 11:1
+-		 part_num:16,	// 27:12
+-		 bitstream_rev:8,	// 35:28
+-		:28;		// 63:36
+-	};
 -};
 -
--struct sysctl_data_s {
--	struct cdev scd_cdev;	/* Character device info */
--	nasid_t scd_nasid;	/* Node on which subchannels are opened. */
+-union cm_status {
+-	uint64_t cm_status_reg;
+-	struct {
+-		uint64_t pending_reads:8,	// 7:0
+-		 pending_writes:8,	// 15:8
+-		 ice_rsp_credits:8,	// 23:16
+-		 ice_req_credits:8,	// 31:24
+-		 cm_req_credits:8,	// 39:32
+-		:1,		// 40
+-		 rd_dma_in_progress:1,	// 41
+-		 rd_dma_done:1,	// 42
+-		:1,		// 43
+-		 wr_dma_in_progress:1,	// 44
+-		 wr_dma_done:1,	// 45
+-		 alg_waiting:1,	// 46
+-		 alg_pipe_running:1,	// 47
+-		 alg_done:1,	// 48
+-		:3,		// 51:49
+-		 pending_int_reqs:8,	// 59:52
+-		:3,		// 62:60
+-		 alg_half_speed_sel:1;	// 63
+-	};
 -};
 -
+-union cm_error_detail1 {
+-	uint64_t cm_error_detail1_reg;
+-	struct {
+-		uint64_t packet_type:4,	// 3:0
+-		 source_id:2,	// 5:4
+-		 data_size:2,	// 7:6
+-		 tnum:8,	// 15:8
+-		 byte_enable:8,	// 23:16
+-		 gfx_cred:8,	// 31:24
+-		 read_type:2,	// 33:32
+-		 pio_or_memory:1,	// 34
+-		 head_cw_error:1,	// 35
+-		:12,		// 47:36
+-		 head_error_bit:1,	// 48
+-		 data_error_bit:1,	// 49
+-		:13,		// 62:50
+-		 valid:1;	// 63
+-	};
+-};
 -
--/* argument types */
--#define IR_ARG_INT              0x00    /* 4-byte integer (big-endian)  */
--#define IR_ARG_ASCII            0x01    /* null-terminated ASCII string */
--#define IR_ARG_UNKNOWN          0x80    /* unknown data type.  The low
--                                         * 7 bits will contain the data
--                                         * length.                      */
--#define IR_ARG_UNKNOWN_LENGTH_MASK	0x7f
+-union cm_error_detail2 {
+-	uint64_t cm_error_detail2_reg;
+-	struct {
+-		uint64_t address:56,	// 55:0
+-		:8;		// 63:56
+-	};
+-};
 -
+-union cm_control {
+-	uint64_t cm_control_reg;
+-	struct {
+-		uint64_t cm_id:2,	// 1:0
+-		:2,		// 3:2
+-		 max_trans:5,	// 8:4
+-		:3,		// 11:9
+-		 address_mode:1,	// 12
+-		:7,		// 19:13
+-		 credit_limit:8,	// 27:20
+-		:5,		// 32:28
+-		 rearm_stat_regs:1,	// 33
+-		 prescalar_byp:1,	// 34
+-		 force_gap_war:1,	// 35
+-		 rd_dma_go:1,	// 36
+-		 wr_dma_go:1,	// 37
+-		 alg_go:1,	// 38
+-		 rd_dma_clr:1,	// 39
+-		 wr_dma_clr:1,	// 40
+-		 alg_clr:1,	// 41
+-		:2,		// 43:42
+-		 alg_wait_step:1,	// 44
+-		 alg_done_amo_en:1,	// 45
+-		 alg_done_int_en:1,	// 46
+-		:1,		// 47
+-		 alg_sram0_locked:1,	// 48
+-		 alg_sram1_locked:1,	// 49
+-		 alg_sram2_locked:1,	// 50
+-		 alg_done_clr:1,	// 51
+-		:12;		// 63:52
+-	};
+-};
 -
--/* system controller event codes */
--#define EV_CLASS_MASK		0xf000ul
--#define EV_SEVERITY_MASK	0x0f00ul
--#define EV_COMPONENT_MASK	0x00fful
+-union cm_req_timeout {
+-	uint64_t cm_req_timeout_reg;
+-	struct {
+-		uint64_t time_out:24,	// 23:0
+-		:40;		// 63:24
+-	};
+-};
 -
--#define EV_CLASS_POWER		0x1000ul
--#define EV_CLASS_FAN		0x2000ul
--#define EV_CLASS_TEMP		0x3000ul
--#define EV_CLASS_ENV		0x4000ul
--#define EV_CLASS_TEST_FAULT	0x5000ul
--#define EV_CLASS_TEST_WARNING	0x6000ul
--#define EV_CLASS_PWRD_NOTIFY	0x8000ul
+-union intr_dest {
+-	uint64_t intr_dest_reg;
+-	struct {
+-		uint64_t address:56,	// 55:0
+-		 int_vector:8;	// 63:56
+-	};
+-};
 -
--/* ENV class codes */
--#define ENV_PWRDN_PEND		0x4101ul
+-union cm_error_status {
+-	uint64_t cm_error_status_reg;
+-	struct {
+-		uint64_t ecc_sbe:1,	// 0
+-		 ecc_mbe:1,	// 1
+-		 unsupported_req:1,	// 2
+-		 unexpected_rsp:1,	// 3
+-		 bad_length:1,	// 4
+-		 bad_datavalid:1,	// 5
+-		 buffer_overflow:1,	// 6
+-		 request_timeout:1,	// 7
+-		:8,		// 15:8
+-		 head_inv_data_size:1,	// 16
+-		 rsp_pactype_inv:1,	// 17
+-		 head_sb_err:1,	// 18
+-		 missing_head:1,	// 19
+-		 head_inv_rd_type:1,	// 20
+-		 head_cmd_err_bit:1,	// 21
+-		 req_addr_align_inv:1,	// 22
+-		 pio_req_addr_inv:1,	// 23
+-		 req_range_dsize_inv:1,	// 24
+-		 early_term:1,	// 25
+-		 early_tail:1,	// 26
+-		 missing_tail:1,	// 27
+-		 data_flit_sb_err:1,	// 28
+-		 cm2hcm_req_cred_of:1,	// 29
+-		 cm2hcm_rsp_cred_of:1,	// 30
+-		 rx_bad_didn:1,	// 31
+-		 rd_dma_err_rsp:1,	// 32
+-		 rd_dma_tnum_tout:1,	// 33
+-		 rd_dma_multi_tnum_tou:1,	// 34
+-		 wr_dma_err_rsp:1,	// 35
+-		 wr_dma_tnum_tout:1,	// 36
+-		 wr_dma_multi_tnum_tou:1,	// 37
+-		 alg_data_overflow:1,	// 38
+-		 alg_data_underflow:1,	// 39
+-		 ram0_access_conflict:1,	// 40
+-		 ram1_access_conflict:1,	// 41
+-		 ram2_access_conflict:1,	// 42
+-		 ram0_perr:1,	// 43
+-		 ram1_perr:1,	// 44
+-		 ram2_perr:1,	// 45
+-		 int_gen_rsp_err:1,	// 46
+-		 int_gen_tnum_tout:1,	// 47
+-		 rd_dma_prog_err:1,	// 48
+-		 wr_dma_prog_err:1,	// 49
+-		:14;		// 63:50
+-	};
+-};
 -
--#define EV_SEVERITY_POWER_STABLE	0x0000ul
--#define EV_SEVERITY_POWER_LOW_WARNING	0x0100ul
--#define EV_SEVERITY_POWER_HIGH_WARNING	0x0200ul
--#define EV_SEVERITY_POWER_HIGH_FAULT	0x0300ul
--#define EV_SEVERITY_POWER_LOW_FAULT	0x0400ul
+-union cm_clr_error_status {
+-	uint64_t cm_clr_error_status_reg;
+-	struct {
+-		uint64_t clr_ecc_sbe:1,	// 0
+-		 clr_ecc_mbe:1,	// 1
+-		 clr_unsupported_req:1,	// 2
+-		 clr_unexpected_rsp:1,	// 3
+-		 clr_bad_length:1,	// 4
+-		 clr_bad_datavalid:1,	// 5
+-		 clr_buffer_overflow:1,	// 6
+-		 clr_request_timeout:1,	// 7
+-		:8,		// 15:8
+-		 clr_head_inv_data_siz:1,	// 16
+-		 clr_rsp_pactype_inv:1,	// 17
+-		 clr_head_sb_err:1,	// 18
+-		 clr_missing_head:1,	// 19
+-		 clr_head_inv_rd_type:1,	// 20
+-		 clr_head_cmd_err_bit:1,	// 21
+-		 clr_req_addr_align_in:1,	// 22
+-		 clr_pio_req_addr_inv:1,	// 23
+-		 clr_req_range_dsize_i:1,	// 24
+-		 clr_early_term:1,	// 25
+-		 clr_early_tail:1,	// 26
+-		 clr_missing_tail:1,	// 27
+-		 clr_data_flit_sb_err:1,	// 28
+-		 clr_cm2hcm_req_cred_o:1,	// 29
+-		 clr_cm2hcm_rsp_cred_o:1,	// 30
+-		 clr_rx_bad_didn:1,	// 31
+-		 clr_rd_dma_err_rsp:1,	// 32
+-		 clr_rd_dma_tnum_tout:1,	// 33
+-		 clr_rd_dma_multi_tnum:1,	// 34
+-		 clr_wr_dma_err_rsp:1,	// 35
+-		 clr_wr_dma_tnum_tout:1,	// 36
+-		 clr_wr_dma_multi_tnum:1,	// 37
+-		 clr_alg_data_overflow:1,	// 38
+-		 clr_alg_data_underflo:1,	// 39
+-		 clr_ram0_access_confl:1,	// 40
+-		 clr_ram1_access_confl:1,	// 41
+-		 clr_ram2_access_confl:1,	// 42
+-		 clr_ram0_perr:1,	// 43
+-		 clr_ram1_perr:1,	// 44
+-		 clr_ram2_perr:1,	// 45
+-		 clr_int_gen_rsp_err:1,	// 46
+-		 clr_int_gen_tnum_tout:1,	// 47
+-		 clr_rd_dma_prog_err:1,	// 48
+-		 clr_wr_dma_prog_err:1,	// 49
+-		:14;		// 63:50
+-	};
+-};
 -
--#define EV_SEVERITY_FAN_STABLE		0x0000ul
--#define EV_SEVERITY_FAN_WARNING		0x0100ul
--#define EV_SEVERITY_FAN_FAULT		0x0200ul
+-union cm_error_intr_enable {
+-	uint64_t cm_error_intr_enable_reg;
+-	struct {
+-		uint64_t int_en_ecc_sbe:1,	// 0
+-		 int_en_ecc_mbe:1,	// 1
+-		 int_en_unsupported_re:1,	// 2
+-		 int_en_unexpected_rsp:1,	// 3
+-		 int_en_bad_length:1,	// 4
+-		 int_en_bad_datavalid:1,	// 5
+-		 int_en_buffer_overflo:1,	// 6
+-		 int_en_request_timeou:1,	// 7
+-		:8,		// 15:8
+-		 int_en_head_inv_data_:1,	// 16
+-		 int_en_rsp_pactype_in:1,	// 17
+-		 int_en_head_sb_err:1,	// 18
+-		 int_en_missing_head:1,	// 19
+-		 int_en_head_inv_rd_ty:1,	// 20
+-		 int_en_head_cmd_err_b:1,	// 21
+-		 int_en_req_addr_align:1,	// 22
+-		 int_en_pio_req_addr_i:1,	// 23
+-		 int_en_req_range_dsiz:1,	// 24
+-		 int_en_early_term:1,	// 25
+-		 int_en_early_tail:1,	// 26
+-		 int_en_missing_tail:1,	// 27
+-		 int_en_data_flit_sb_e:1,	// 28
+-		 int_en_cm2hcm_req_cre:1,	// 29
+-		 int_en_cm2hcm_rsp_cre:1,	// 30
+-		 int_en_rx_bad_didn:1,	// 31
+-		 int_en_rd_dma_err_rsp:1,	// 32
+-		 int_en_rd_dma_tnum_to:1,	// 33
+-		 int_en_rd_dma_multi_t:1,	// 34
+-		 int_en_wr_dma_err_rsp:1,	// 35
+-		 int_en_wr_dma_tnum_to:1,	// 36
+-		 int_en_wr_dma_multi_t:1,	// 37
+-		 int_en_alg_data_overf:1,	// 38
+-		 int_en_alg_data_under:1,	// 39
+-		 int_en_ram0_access_co:1,	// 40
+-		 int_en_ram1_access_co:1,	// 41
+-		 int_en_ram2_access_co:1,	// 42
+-		 int_en_ram0_perr:1,	// 43
+-		 int_en_ram1_perr:1,	// 44
+-		 int_en_ram2_perr:1,	// 45
+-		 int_en_int_gen_rsp_er:1,	// 46
+-		 int_en_int_gen_tnum_t:1,	// 47
+-		 int_en_rd_dma_prog_er:1,	// 48
+-		 int_en_wr_dma_prog_er:1,	// 49
+-		:14;		// 63:50
+-	};
+-};
 -
--#define EV_SEVERITY_TEMP_STABLE		0x0000ul
--#define EV_SEVERITY_TEMP_ADVISORY	0x0100ul
--#define EV_SEVERITY_TEMP_CRITICAL	0x0200ul
--#define EV_SEVERITY_TEMP_FAULT		0x0300ul
+-struct cm_mmr {
+-	union cm_id id;
+-	union cm_status status;
+-	union cm_error_detail1 err_detail1;
+-	union cm_error_detail2 err_detail2;
+-	union cm_control control;
+-	union cm_req_timeout req_timeout;
+-	uint64_t reserved1[1];
+-	union intr_dest int_dest;
+-	uint64_t reserved2[2];
+-	uint64_t targ_flush;
+-	uint64_t reserved3[1];
+-	union cm_error_status err_status;
+-	union cm_clr_error_status clr_err_status;
+-	union cm_error_intr_enable int_enable;
+-};
 -
--void scdrv_event_init(struct sysctl_data_s *);
+-union dma_hostaddr {
+-	uint64_t dma_hostaddr_reg;
+-	struct {
+-		uint64_t dma_sys_addr:56,	// 55:0
+-		:8;		// 63:56
+-	};
+-};
 -
--#endif /* _SN_SYSCTL_H_ */
-diff --git a/drivers/char/snsc_event.c b/drivers/char/snsc_event.c
-deleted file mode 100644
-index e452673dff66..000000000000
---- a/drivers/char/snsc_event.c
-+++ /dev/null
-@@ -1,303 +0,0 @@
+-union dma_localaddr {
+-	uint64_t dma_localaddr_reg;
+-	struct {
+-		uint64_t dma_ram_addr:21,	// 20:0
+-		 dma_ram_sel:2,	// 22:21
+-		:41;		// 63:23
+-	};
+-};
+-
+-union dma_control {
+-	uint64_t dma_control_reg;
+-	struct {
+-		uint64_t dma_op_length:16,	// 15:0
+-		:18,		// 33:16
+-		 done_amo_en:1,	// 34
+-		 done_int_en:1,	// 35
+-		:1,		// 36
+-		 pio_mem_n:1,	// 37
+-		:26;		// 63:38
+-	};
+-};
+-
+-union dma_amo_dest {
+-	uint64_t dma_amo_dest_reg;
+-	struct {
+-		uint64_t dma_amo_sys_addr:56,	// 55:0
+-		 dma_amo_mod_type:3,	// 58:56
+-		:5;		// 63:59
+-	};
+-};
+-
+-union rdma_aux_status {
+-	uint64_t rdma_aux_status_reg;
+-	struct {
+-		uint64_t op_num_pacs_left:17,	// 16:0
+-		:5,		// 21:17
+-		 lrsp_buff_empty:1,	// 22
+-		:17,		// 39:23
+-		 pending_reqs_left:6,	// 45:40
+-		:18;		// 63:46
+-	};
+-};
+-
+-struct rdma_mmr {
+-	union dma_hostaddr host_addr;
+-	union dma_localaddr local_addr;
+-	union dma_control control;
+-	union dma_amo_dest amo_dest;
+-	union intr_dest intr_dest;
+-	union rdma_aux_status aux_status;
+-};
+-
+-union wdma_aux_status {
+-	uint64_t wdma_aux_status_reg;
+-	struct {
+-		uint64_t op_num_pacs_left:17,	// 16:0
+-		:4,		// 20:17
+-		 lreq_buff_empty:1,	// 21
+-		:18,		// 39:22
+-		 pending_reqs_left:6,	// 45:40
+-		:18;		// 63:46
+-	};
+-};
+-
+-struct wdma_mmr {
+-	union dma_hostaddr host_addr;
+-	union dma_localaddr local_addr;
+-	union dma_control control;
+-	union dma_amo_dest amo_dest;
+-	union intr_dest intr_dest;
+-	union wdma_aux_status aux_status;
+-};
+-
+-union algo_step {
+-	uint64_t algo_step_reg;
+-	struct {
+-		uint64_t alg_step_cnt:16,	// 15:0
+-		:48;		// 63:16
+-	};
+-};
+-
+-struct algo_mmr {
+-	union dma_amo_dest amo_dest;
+-	union intr_dest intr_dest;
+-	union {
+-		uint64_t algo_offset_reg;
+-		struct {
+-			uint64_t sram0_offset:7,	// 6:0
+-			reserved0:1,	// 7
+-			sram1_offset:7,	// 14:8
+-			reserved1:1,	// 15
+-			sram2_offset:7,	// 22:16
+-			reserved2:14;	// 63:23
+-		};
+-	} sram_offset;
+-	union algo_step step;
+-};
+-
+-struct mbcs_mmr {
+-	struct cm_mmr cm;
+-	uint64_t reserved1[17];
+-	struct rdma_mmr rdDma;
+-	uint64_t reserved2[25];
+-	struct wdma_mmr wrDma;
+-	uint64_t reserved3[25];
+-	struct algo_mmr algo;
+-	uint64_t reserved4[156];
+-};
+-
 -/*
-- * SN Platform system controller communication support
-- *
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file "COPYING" in the main directory of this archive
-- * for more details.
-- *
-- * Copyright (C) 2004-2006 Silicon Graphics, Inc. All rights reserved.
+- * defines
 - */
+-#define DEVICE_NAME "mbcs"
+-#define MBCS_PART_NUM 0xfff0
+-#define MBCS_PART_NUM_ALG0 0xf001
+-#define MBCS_MFG_NUM  0x1
 -
--/*
-- * System controller event handler
-- *
-- * These routines deal with environmental events arriving from the
-- * system controllers.
-- */
+-struct algoblock {
+-	uint64_t amoHostDest;
+-	uint64_t amoModType;
+-	uint64_t intrHostDest;
+-	uint64_t intrVector;
+-	uint64_t algoStepCount;
+-};
 -
--#include <linux/interrupt.h>
--#include <linux/sched/signal.h>
--#include <linux/slab.h>
--#include <asm/byteorder.h>
--#include <asm/sn/sn_sal.h>
--#include <asm/unaligned.h>
--#include "snsc.h"
+-struct getdma {
+-	uint64_t hostAddr;
+-	uint64_t localAddr;
+-	uint64_t bytes;
+-	uint64_t DoneAmoEnable;
+-	uint64_t DoneIntEnable;
+-	uint64_t peerIO;
+-	uint64_t amoHostDest;
+-	uint64_t amoModType;
+-	uint64_t intrHostDest;
+-	uint64_t intrVector;
+-};
 -
--static struct subch_data_s *event_sd;
+-struct putdma {
+-	uint64_t hostAddr;
+-	uint64_t localAddr;
+-	uint64_t bytes;
+-	uint64_t DoneAmoEnable;
+-	uint64_t DoneIntEnable;
+-	uint64_t peerIO;
+-	uint64_t amoHostDest;
+-	uint64_t amoModType;
+-	uint64_t intrHostDest;
+-	uint64_t intrVector;
+-};
 -
--void scdrv_event(unsigned long);
--DECLARE_TASKLET(sn_sysctl_event, scdrv_event, 0);
+-struct mbcs_soft {
+-	struct list_head list;
+-	struct cx_dev *cxdev;
+-	int major;
+-	int nasid;
+-	void *mmr_base;
+-	wait_queue_head_t dmawrite_queue;
+-	wait_queue_head_t dmaread_queue;
+-	wait_queue_head_t algo_queue;
+-	struct sn_irq_info *get_sn_irq;
+-	struct sn_irq_info *put_sn_irq;
+-	struct sn_irq_info *algo_sn_irq;
+-	struct getdma getdma;
+-	struct putdma putdma;
+-	struct algoblock algo;
+-	uint64_t gscr_addr;	// pio addr
+-	uint64_t ram0_addr;	// pio addr
+-	uint64_t ram1_addr;	// pio addr
+-	uint64_t ram2_addr;	// pio addr
+-	uint64_t debug_addr;	// pio addr
+-	atomic_t dmawrite_done;
+-	atomic_t dmaread_done;
+-	atomic_t algo_done;
+-	struct mutex dmawritelock;
+-	struct mutex dmareadlock;
+-	struct mutex algolock;
+-};
 -
--/*
-- * scdrv_event_interrupt
-- *
-- * Pull incoming environmental events off the physical link to the
-- * system controller and put them in a temporary holding area in SAL.
-- * Schedule scdrv_event() to move them along to their ultimate
-- * destination.
-- */
--static irqreturn_t
--scdrv_event_interrupt(int irq, void *subch_data)
--{
--	struct subch_data_s *sd = subch_data;
--	unsigned long flags;
--	int status;
+-static int mbcs_open(struct inode *ip, struct file *fp);
+-static ssize_t mbcs_sram_read(struct file *fp, char __user *buf, size_t len,
+-			      loff_t * off);
+-static ssize_t mbcs_sram_write(struct file *fp, const char __user *buf, size_t len,
+-			       loff_t * off);
+-static loff_t mbcs_sram_llseek(struct file *filp, loff_t off, int whence);
+-static int mbcs_gscr_mmap(struct file *fp, struct vm_area_struct *vma);
 -
--	spin_lock_irqsave(&sd->sd_rlock, flags);
--	status = ia64_sn_irtr_intr(sd->sd_nasid, sd->sd_subch);
--
--	if ((status > 0) && (status & SAL_IROUTER_INTR_RECV)) {
--		tasklet_schedule(&sn_sysctl_event);
--	}
--	spin_unlock_irqrestore(&sd->sd_rlock, flags);
--	return IRQ_HANDLED;
--}
--
--
--/*
-- * scdrv_parse_event
-- *
-- * Break an event (as read from SAL) into useful pieces so we can decide
-- * what to do with it.
-- */
--static int
--scdrv_parse_event(char *event, int *src, int *code, int *esp_code, char *desc)
--{
--	char *desc_end;
--
--	/* record event source address */
--	*src = get_unaligned_be32(event);
--	event += 4; 			/* move on to event code */
--
--	/* record the system controller's event code */
--	*code = get_unaligned_be32(event);
--	event += 4;			/* move on to event arguments */
--
--	/* how many arguments are in the packet? */
--	if (*event++ != 2) {
--		/* if not 2, give up */
--		return -1;
--	}
--
--	/* parse out the ESP code */
--	if (*event++ != IR_ARG_INT) {
--		/* not an integer argument, so give up */
--		return -1;
--	}
--	*esp_code = get_unaligned_be32(event);
--	event += 4;
--
--	/* parse out the event description */
--	if (*event++ != IR_ARG_ASCII) {
--		/* not an ASCII string, so give up */
--		return -1;
--	}
--	event[CHUNKSIZE-1] = '\0';	/* ensure this string ends! */
--	event += 2; 			/* skip leading CR/LF */
--	desc_end = desc + sprintf(desc, "%s", event);
--
--	/* strip trailing CR/LF (if any) */
--	for (desc_end--;
--	     (desc_end != desc) && ((*desc_end == 0xd) || (*desc_end == 0xa));
--	     desc_end--) {
--		*desc_end = '\0';
--	}
--
--	return 0;
--}
--
--
--/*
-- * scdrv_event_severity
-- *
-- * Figure out how urgent a message we should write to the console/syslog
-- * via printk.
-- */
--static char *
--scdrv_event_severity(int code)
--{
--	int ev_class = (code & EV_CLASS_MASK);
--	int ev_severity = (code & EV_SEVERITY_MASK);
--	char *pk_severity = KERN_NOTICE;
--
--	switch (ev_class) {
--	case EV_CLASS_POWER:
--		switch (ev_severity) {
--		case EV_SEVERITY_POWER_LOW_WARNING:
--		case EV_SEVERITY_POWER_HIGH_WARNING:
--			pk_severity = KERN_WARNING;
--			break;
--		case EV_SEVERITY_POWER_HIGH_FAULT:
--		case EV_SEVERITY_POWER_LOW_FAULT:
--			pk_severity = KERN_ALERT;
--			break;
--		}
--		break;
--	case EV_CLASS_FAN:
--		switch (ev_severity) {
--		case EV_SEVERITY_FAN_WARNING:
--			pk_severity = KERN_WARNING;
--			break;
--		case EV_SEVERITY_FAN_FAULT:
--			pk_severity = KERN_CRIT;
--			break;
--		}
--		break;
--	case EV_CLASS_TEMP:
--		switch (ev_severity) {
--		case EV_SEVERITY_TEMP_ADVISORY:
--			pk_severity = KERN_WARNING;
--			break;
--		case EV_SEVERITY_TEMP_CRITICAL:
--			pk_severity = KERN_CRIT;
--			break;
--		case EV_SEVERITY_TEMP_FAULT:
--			pk_severity = KERN_ALERT;
--			break;
--		}
--		break;
--	case EV_CLASS_ENV:
--		pk_severity = KERN_ALERT;
--		break;
--	case EV_CLASS_TEST_FAULT:
--		pk_severity = KERN_ALERT;
--		break;
--	case EV_CLASS_TEST_WARNING:
--		pk_severity = KERN_WARNING;
--		break;
--	case EV_CLASS_PWRD_NOTIFY:
--		pk_severity = KERN_ALERT;
--		break;
--	}
--
--	return pk_severity;
--}
--
--
--/*
-- * scdrv_dispatch_event
-- *
-- * Do the right thing with an incoming event.  That's often nothing
-- * more than printing it to the system log.  For power-down notifications
-- * we start a graceful shutdown.
-- */
--static void
--scdrv_dispatch_event(char *event, int len)
--{
--	static int snsc_shutting_down = 0;
--	int code, esp_code, src, class;
--	char desc[CHUNKSIZE];
--	char *severity;
--
--	if (scdrv_parse_event(event, &src, &code, &esp_code, desc) < 0) {
--		/* ignore uninterpretible event */
--		return;
--	}
--
--	/* how urgent is the message? */
--	severity = scdrv_event_severity(code);
--
--	class = (code & EV_CLASS_MASK);
--
--	if (class == EV_CLASS_PWRD_NOTIFY || code == ENV_PWRDN_PEND) {
--		if (snsc_shutting_down)
--			return;
--
--		snsc_shutting_down = 1;
--
--		/* give a message for each type of event */
--		if (class == EV_CLASS_PWRD_NOTIFY)
--			printk(KERN_NOTICE "Power off indication received."
--			       " Sending SIGPWR to init...\n");
--		else if (code == ENV_PWRDN_PEND)
--			printk(KERN_CRIT "WARNING: Shutting down the system"
--			       " due to a critical environmental condition."
--			       " Sending SIGPWR to init...\n");
--
--		/* give a SIGPWR signal to init proc */
--		kill_cad_pid(SIGPWR, 0);
--	} else {
--		/* print to system log */
--		printk("%s|$(0x%x)%s\n", severity, esp_code, desc);
--	}
--}
--
--
--/*
-- * scdrv_event
-- *
-- * Called as a tasklet when an event arrives from the L1.  Read the event
-- * from where it's temporarily stored in SAL and call scdrv_dispatch_event()
-- * to send it on its way.  Keep trying to read events until SAL indicates
-- * that there are no more immediately available.
-- */
--void
--scdrv_event(unsigned long dummy)
--{
--	int status;
--	int len;
--	unsigned long flags;
--	struct subch_data_s *sd = event_sd;
--
--	/* anything to read? */
--	len = CHUNKSIZE;
--	spin_lock_irqsave(&sd->sd_rlock, flags);
--	status = ia64_sn_irtr_recv(sd->sd_nasid, sd->sd_subch,
--				   sd->sd_rb, &len);
--
--	while (!(status < 0)) {
--		spin_unlock_irqrestore(&sd->sd_rlock, flags);
--		scdrv_dispatch_event(sd->sd_rb, len);
--		len = CHUNKSIZE;
--		spin_lock_irqsave(&sd->sd_rlock, flags);
--		status = ia64_sn_irtr_recv(sd->sd_nasid, sd->sd_subch,
--					   sd->sd_rb, &len);
--	}
--	spin_unlock_irqrestore(&sd->sd_rlock, flags);
--}
--
--
--/*
-- * scdrv_event_init
-- *
-- * Sets up a system controller subchannel to begin receiving event
-- * messages. This is sort of a specialized version of scdrv_open()
-- * in drivers/char/sn_sysctl.c.
-- */
--void
--scdrv_event_init(struct sysctl_data_s *scd)
--{
--	int rv;
--
--	event_sd = kzalloc(sizeof (struct subch_data_s), GFP_KERNEL);
--	if (event_sd == NULL) {
--		printk(KERN_WARNING "%s: couldn't allocate subchannel info"
--		       " for event monitoring\n", __func__);
--		return;
--	}
--
--	/* initialize subch_data_s fields */
--	event_sd->sd_nasid = scd->scd_nasid;
--	spin_lock_init(&event_sd->sd_rlock);
--
--	/* ask the system controllers to send events to this node */
--	event_sd->sd_subch = ia64_sn_sysctl_event_init(scd->scd_nasid);
--
--	if (event_sd->sd_subch < 0) {
--		kfree(event_sd);
--		printk(KERN_WARNING "%s: couldn't open event subchannel\n",
--		       __func__);
--		return;
--	}
--
--	/* hook event subchannel up to the system controller interrupt */
--	rv = request_irq(SGI_UART_VECTOR, scdrv_event_interrupt,
--			 IRQF_SHARED, "system controller events", event_sd);
--	if (rv) {
--		printk(KERN_WARNING "%s: irq request failed (%d)\n",
--		       __func__, rv);
--		ia64_sn_irtr_close(event_sd->sd_nasid, event_sd->sd_subch);
--		kfree(event_sd);
--		return;
--	}
--}
+-#endif				// __MBCS_H__
 -- 
 2.20.1
 
