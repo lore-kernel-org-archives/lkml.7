@@ -2,109 +2,87 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC406C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5B9C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB9D20840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:19:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kKYKcwkW"
+	by mail.kernel.org (Postfix) with ESMTP id 9EFC620840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:20:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729038AbfHMNT0 (ORCPT
+        id S1729049AbfHMNUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:19:26 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39030 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728416AbfHMNTZ (ORCPT
+        Tue, 13 Aug 2019 09:20:01 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51392 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727838AbfHMNUB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:19:25 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7DDEOUi005488;
-        Tue, 13 Aug 2019 13:19:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=k7TTtVj2NunJ0RECYPXm4Q9yMluI1ySqxRPbjTuFfSc=;
- b=kKYKcwkW7vRoJWzTqTE/HiDcA+NQYIkHTejMTDgTCnISFmhFK/t4tSol6FFQmo4qqv4F
- NGitYrBuvjUaiwUi9RWsMsyy5FOZy5ysLIeSV5swOx+CIm7e31aOHOYspxjv8bKWCNKc
- g67Rxs94k1V3hy7+zdKbtjSrlSlW1KLCgx+hSPoRsliA4kXdwIN35A8kP5S/KjGq4sOb
- 4kcLf2OXVfzNICwg+LdTviaY1eapQfriPFbbqTQosSs261JvqeaEeyLjTBO7WmSdW/6V
- VtZhR2bTppwEqnw1hX88/okPc8+hSOxjH5iKE8Vo60ZhEvlartkxZ9mRYppn/p042Uay Sw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2u9pjqe5c9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 13:19:11 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7DDHqcK090516;
-        Tue, 13 Aug 2019 13:19:10 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2ubwcwscwd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 13:19:10 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7DDJ7Oa004970;
-        Tue, 13 Aug 2019 13:19:07 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 13 Aug 2019 06:19:07 -0700
-Date:   Tue, 13 Aug 2019 16:14:20 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Colin King <colin.king@canonical.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: sym53c8xx_2: remove redundant assignment to retv
-Message-ID: <20190813131420.GS1974@kadam>
-References: <20190809175932.10197-1-colin.king@canonical.com>
- <20190809181733.GQ5482@bombadil.infradead.org>
+        Tue, 13 Aug 2019 09:20:01 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 207so1499188wma.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:20:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=s52NghQ7NeF3Ht+jwObNJp7TLBzdVRHeXL6recC2EpY=;
+        b=SfjO6RqqAvUtcEWzy17YzEdk6zYC2lsojb7ag5/00m6i4bDQQJiWqAaxWanHI/fJD8
+         AJ+jq2ym+Mq+FCGDdEx9NP4cZtfFEQIEAwoBy/XlSe4noY6CSfRltZPPBFtQTm3V4ZLs
+         nXyNItTWJFxQFIYt+vQ5EEUj0bIxKjipB9BZ7VtYmwhmXZ6p0GRtRzp9IOnh25jiPE5G
+         qgLwBMEOGgI1Eo6H7FwIp51wxtDK13jtWs845GEkWC/cZZocsIeDfxB5nBjcCtt8DUEd
+         Griex2l6Tuw1Zvg63Nhtp9HCOvSSwFwhIUYHcj75Xu5nGXuUD7Z5JkfnLTkswbPFHTPi
+         go1g==
+X-Gm-Message-State: APjAAAV6hbpXx9kJg7S4+HrgLvYtstgBYaj+1kpQ+L5FSAogrr5qTLNI
+        6owFogKHX7I9zaoEAWIDsY3bzA==
+X-Google-Smtp-Source: APXvYqwD7cPfb0fLaT9AvChqI7gm4G4sobvA99O8eWj5zAXkuHUDriH2zxRg6z82xfANdvYWReMImQ==
+X-Received: by 2002:a1c:39c5:: with SMTP id g188mr3078732wma.167.1565702399361;
+        Tue, 13 Aug 2019 06:19:59 -0700 (PDT)
+Received: from localhost.localdomain ([151.38.194.123])
+        by smtp.gmail.com with ESMTPSA id t14sm14870951wrv.12.2019.08.13.06.19.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 13 Aug 2019 06:19:58 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 15:19:55 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     tglx@linutronix.de, rostedt@goodmis.org,
+        linux-rt-users@vger.kernel.org, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, bristot@redhat.com,
+        williams@redhat.com
+Subject: Re: [RT PATCH] sched/deadline: Make inactive timer run in hardirq
+ context
+Message-ID: <20190813131955.GC4959@localhost.localdomain>
+References: <20190731103715.4047-1-juri.lelli@redhat.com>
+ <20190813130934.g37ob6wr4br4rkwg@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190809181733.GQ5482@bombadil.infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908130142
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908130142
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190813130934.g37ob6wr4br4rkwg@linutronix.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 11:17:33AM -0700, Matthew Wilcox wrote:
-> On Fri, Aug 09, 2019 at 06:59:32PM +0100, Colin King wrote:
-> > Variable retv is initialized to a value that is never read and it
-> > is re-assigned later. The initialization is redundant and can be
-> > removed.
+On 13/08/19 15:09, Sebastian Andrzej Siewior wrote:
+> On 2019-07-31 12:37:15 [+0200], Juri Lelli wrote:
+> > Hi,
+> Hi,
 > 
-> Acked-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> > Both v4.19-rt and v5.2-rt need this.
+> > 
+> > Mainline "sched: Mark hrtimers to expire in hard interrupt context"
+> > series needs this as well (20190726185753.077004842@linutronix.de in
+> > particular). Do I need to send out a separate patch for it?
 > 
-> Seems like a bit of a pointless class of warnings, given that gcc now
-> initialises all locals.  But I'm happy for James or Martin to pick it up.
+> time will show. I applied it now to my tree and will ping tglx later…
 
-GCC doesn't initialize all locals.  Just some depending on the
-optimization level.  It's related to a bug that's several years old.
+Thanks. tglx actually already applied it to tip (with a fixup):
 
-This warning does find some bugs.  The common one is where people forget
-to check the return.
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=4394ba872c36255d25c6bde151b061f04655ebfb
 
-	ret = something();
-	// blank line here indicates that ret is never checked again.
+Best,
 
-regards,
-dan carpenter
-
+Juri
