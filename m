@@ -2,53 +2,55 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2198C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FA0C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B87F820663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C5A20842
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:00:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Cs9uCuur"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vb/ucef+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbfHMKAg (ORCPT
+        id S1728730AbfHMKAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 06:00:36 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:7120 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728472AbfHMKAc (ORCPT
+        Tue, 13 Aug 2019 06:00:35 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:51578 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728434AbfHMKAc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 13 Aug 2019 06:00:32 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7D9vEqw021952;
-        Tue, 13 Aug 2019 12:00:12 +0200
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7D9uvqx019950;
+        Tue, 13 Aug 2019 12:00:21 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=aoyRokR5kzUkomjm7Ywbps3L0Afaxia9MCls/Ada1gA=;
- b=Cs9uCuurKtt/S7y9CqRY/NdQTCF7vinymf4wbVL/pujdLkggXqyEmfaCYq7NlKa7vieG
- 3m6H9UQdeNE2MjSEf6fM1OTqS3pNFAi20VJfo6vaCO0lH6CySonZqnccBEfz2cSmRgLq
- v9wFE4fod6B5bJUJBlieoZWe+9paVL+Xgu2jj2ktY5HpVK32l9NGMA0ko4ACjC0LMMMn
- mz04VOllLb2iq5m/0V7iVvkPLLO3557lDgQl7PnX95nYzbrz6O3VxWnmp89+FtxRyIul
- MDDnmiUQqQc8+/a6h+B2KveWZQlN5kIg9awAseoBtv1RflULRJ1GmaPqzxHsP52K9kME GA== 
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=Ew0jpCMbOhB8LJL0i2smq1Jsu/IjtJ4+t0EckSDmj7s=;
+ b=vb/ucef+X+hg73LkawoYQfoCed3ejnD4d/mbq55LGlU4sWrxvvDUJIstPrhovBdrbS9I
+ SrNkhWIIaM/LRJMD4WGd7LC4TacuSPc/8MBsF4VvSKy4Dh4OBTvHGMeZVqoiSR/TBJF6
+ FSXXFFJ04FRNIQKEGtywQYRtwrTs/hHyrY99Q+A6sbt/HsnTxuFDN7QDHo+hoPoTzQXb
+ k3GJFr2VHTJ3zgfnvlPSIEVt/YzjOT4VMoCmEm7hcerchypN349F/8Vw1uBBH0qMCy3V
+ wK3FR6twZS3la5n1cEpn3eeg4W+8G1ePoU4XhPmW8YNecF6xEs9eFRy/OlJKE57ciLy3 1w== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2u9kpuqdd0-1
+        by mx08-00178001.pphosted.com with ESMTP id 2u9mtky9vp-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 13 Aug 2019 12:00:12 +0200
+        Tue, 13 Aug 2019 12:00:21 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2B79C42;
-        Tue, 13 Aug 2019 10:00:11 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 163D52CC9D1;
-        Tue, 13 Aug 2019 12:00:11 +0200 (CEST)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 13 Aug
- 2019 12:00:10 +0200
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1041234;
+        Tue, 13 Aug 2019 10:00:20 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EC7F32CC9D3;
+        Tue, 13 Aug 2019 12:00:19 +0200 (CEST)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 13 Aug
+ 2019 12:00:19 +0200
 Received: from lmecxl0923.lme.st.com (10.48.0.237) by webmail-ga.st.com
  (10.75.90.48) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 13 Aug
- 2019 12:00:07 +0200
+ 2019 12:00:18 +0200
 From:   Ludovic Barre <ludovic.Barre@st.com>
 To:     Ulf Hansson <ulf.hansson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>
@@ -60,10 +62,12 @@ CC:     <srinivas.kandagatla@linaro.org>,
         <linux-mmc@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         Ludovic Barre <ludovic.barre@st.com>
-Subject: [PATCH V5 0/3] mmc: mmci: add busy detect for stm32 sdmmc variant
-Date:   Tue, 13 Aug 2019 11:59:48 +0200
-Message-ID: <20190813095951.26275-1-ludovic.Barre@st.com>
+Subject: [PATCH V5 3/3] mmc: mmci: sdmmc: add busy_complete callback
+Date:   Tue, 13 Aug 2019 11:59:51 +0200
+Message-ID: <20190813095951.26275-4-ludovic.Barre@st.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190813095951.26275-1-ludovic.Barre@st.com>
+References: <20190813095951.26275-1-ludovic.Barre@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.48.0.237]
@@ -76,45 +80,111 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ludovic Barre <ludovic.barre@st.com>
 
-This patch series adds busy detect for stm32 sdmmc variant.
-Some adaptations are required:
--On sdmmc the data timer is started on data transfert
-and busy state, so we must add hardware busy timeout support.
--Add busy_complete callback at mmci_host_ops to allow to define
-a specific busy completion by variant.
--Add sdmmc busy_complete calback.
+This patch adds a specific busy_complete callback for sdmmc variant.
 
-V5:
--Replaces !cmd->data to !host->mrq->data to avoid overwrite
- of datatimer register by the first command (cmd23, without data) of
- SBC request.
+sdmmc has 2 status flags:
+-busyd0: This is a hardware status flag (inverted value of d0 line).
+it does not generate an interrupt.
+-busyd0end: This indicates only end of busy following a CMD response.
+On busy to Not busy changes, an interrupt is generated (if unmask)
+and BUSYD0END status flag is set. Status flag is cleared by writing
+corresponding interrupt clear bit in MMCICLEAR.
 
-V4:
--Re-work with busy_complete callback
--In series, move "mmc: mmci: add hardware busy timeout feature" in
-first to simplify busy_complete prototype with err_msk parameter.
+The legacy busy completion monitors step by step the busy progression
+start/in-progress/end. On sdmmc variant, the monitoring of busy steps
+is difficult and not adapted (the software can miss a step and locks
+the monitoring), the sdmmc has just need to wait the busyd0end bit
+without monitoring all the changes.
 
-V3:
--rebase on latest mmc next
--replace re-read by status parameter. 
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+---
+ drivers/mmc/host/mmci.c             |  3 +++
+ drivers/mmc/host/mmci.h             |  1 +
+ drivers/mmc/host/mmci_stm32_sdmmc.c | 38 +++++++++++++++++++++++++++++
+ 3 files changed, 42 insertions(+)
 
-V2:
--mmci_cmd_irq cleanup in separate patch.
--simplify the busy_detect_flag exclude
--replace sdmmc specific comment in
-"mmc: mmci: avoid fake busy polling in mmci_irq"
-to focus on common behavior
-
-Ludovic Barre (3):
-  mmc: mmci: add hardware busy timeout feature
-  mmc: mmci: add busy_complete callback
-  mmc: mmci: sdmmc: add busy_complete callback
-
- drivers/mmc/host/mmci.c             | 178 +++++++++++++++++-----------
- drivers/mmc/host/mmci.h             |   7 +-
- drivers/mmc/host/mmci_stm32_sdmmc.c |  38 ++++++
- 3 files changed, 151 insertions(+), 72 deletions(-)
-
+diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+index 9eac3f482119..9bec82d2dbf7 100644
+--- a/drivers/mmc/host/mmci.c
++++ b/drivers/mmc/host/mmci.c
+@@ -260,6 +260,9 @@ static struct variant_data variant_stm32_sdmmc = {
+ 	.datalength_bits	= 25,
+ 	.datactrl_blocksz	= 14,
+ 	.stm32_idmabsize_mask	= GENMASK(12, 5),
++	.busy_timeout		= true,
++	.busy_detect_flag	= MCI_STM32_BUSYD0,
++	.busy_detect_mask	= MCI_STM32_BUSYD0ENDMASK,
+ 	.init			= sdmmc_variant_init,
+ };
+ 
+diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+index 733f9a035b06..841c5281beb5 100644
+--- a/drivers/mmc/host/mmci.h
++++ b/drivers/mmc/host/mmci.h
+@@ -164,6 +164,7 @@
+ #define MCI_ST_CARDBUSY		(1 << 24)
+ /* Extended status bits for the STM32 variants */
+ #define MCI_STM32_BUSYD0	BIT(20)
++#define MCI_STM32_BUSYD0END	BIT(21)
+ 
+ #define MMCICLEAR		0x038
+ #define MCI_CMDCRCFAILCLR	(1 << 0)
+diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
+index 8e83ae6920ae..bb5499cc9e81 100644
+--- a/drivers/mmc/host/mmci_stm32_sdmmc.c
++++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
+@@ -282,6 +282,43 @@ static u32 sdmmc_get_dctrl_cfg(struct mmci_host *host)
+ 	return datactrl;
+ }
+ 
++bool sdmmc_busy_complete(struct mmci_host *host, u32 status, u32 err_msk)
++{
++	void __iomem *base = host->base;
++	u32 busy_d0, busy_d0end, mask;
++
++	mask = readl_relaxed(base + MMCIMASK0);
++	busy_d0end = readl_relaxed(base + MMCISTATUS) & MCI_STM32_BUSYD0END;
++	busy_d0 = readl_relaxed(base + MMCISTATUS) & MCI_STM32_BUSYD0;
++
++	/* complete if there is an error or busy_d0end */
++	if ((status & err_msk) || busy_d0end)
++		goto complete;
++
++	/*
++	 * On response the busy signaling is reflected in the BUSYD0 flag.
++	 * if busy_d0 is in-progress we must activate busyd0end interrupt
++	 * to wait this completion. Else this request has no busy step.
++	 */
++	if (busy_d0) {
++		if (!host->busy_status) {
++			writel_relaxed(mask | host->variant->busy_detect_mask,
++				       base + MMCIMASK0);
++			host->busy_status = status &
++				(MCI_CMDSENT | MCI_CMDRESPEND);
++		}
++		return false;
++	}
++
++complete:
++	writel_relaxed(mask & ~host->variant->busy_detect_mask,
++		       base + MMCIMASK0);
++	writel_relaxed(host->variant->busy_detect_mask, base + MMCICLEAR);
++	host->busy_status = 0;
++
++	return true;
++}
++
+ static struct mmci_host_ops sdmmc_variant_ops = {
+ 	.validate_data = sdmmc_idma_validate_data,
+ 	.prep_data = sdmmc_idma_prep_data,
+@@ -292,6 +329,7 @@ static struct mmci_host_ops sdmmc_variant_ops = {
+ 	.dma_finalize = sdmmc_idma_finalize,
+ 	.set_clkreg = mmci_sdmmc_set_clkreg,
+ 	.set_pwrreg = mmci_sdmmc_set_pwrreg,
++	.busy_complete = sdmmc_busy_complete,
+ };
+ 
+ void sdmmc_variant_init(struct mmci_host *host)
 -- 
 2.17.1
 
