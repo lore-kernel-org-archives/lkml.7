@@ -2,88 +2,88 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A456C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F878C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E781C20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:54:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565686441;
-	bh=5Jyukqt4Utq68hS7TqPYdFq4fD2gKzv+NWjTdQEZTfo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rLBxr6Vp2lvwP+1GyuUheKtGdCNRypybGg6CLaZ+7B/Xb8/Jrjk9HCBn0E8D+Sh7b
-	 mOaEYTUyF4CgOiAAHqo+O9wpT2OgZk9NcN2W6Q4UXkSH/w8P/0O6acLNGZyC+Cz6fl
-	 3C3rlmabBqOq5gL1k0PUbMUeuGqaph0Cqf8UI+zg=
+	by mail.kernel.org (Postfix) with ESMTP id 2F51A20842
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:54:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gkZXLCWk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbfHMIyA (ORCPT
+        id S1727781AbfHMIyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 04:54:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727407AbfHMIx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 04:53:58 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DFD82063F;
-        Tue, 13 Aug 2019 08:53:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565686438;
-        bh=5Jyukqt4Utq68hS7TqPYdFq4fD2gKzv+NWjTdQEZTfo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vmpby7XCWMZSMkqL1uBE1R6f9W2VDDbo/s98BR0Sxbv1MuW62w3Hh9pOkEQi33yAQ
-         lamsoQ2xUe1mZz7lIpW+1wa2tiqfdc48U3TcIuh6/suWgrLSO2MzOli0kdsl/mBLJ6
-         DG4+D9Pa+p0Ux5IUxlvL498OUfmV8+9PvbR5x/Tg=
-Date:   Tue, 13 Aug 2019 09:53:53 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul@pwsan.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Atish Patra <atish.patra@wdc.com>
-Subject: Re: linux-next: manual merge of the risc-v tree with the arm64 tree
-Message-ID: <20190813085353.v6kpintr35kcwj4y@willie-the-truck>
-References: <20190813093447.747a5853@canb.auug.org.au>
- <20190813082422.lecgqtknnn5g4dyj@willie-the-truck>
- <20190813184211.09b93f31@canb.auug.org.au>
+        Tue, 13 Aug 2019 04:54:47 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36461 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbfHMIyr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 04:54:47 -0400
+Received: by mail-lj1-f194.google.com with SMTP id u15so5854312ljl.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 01:54:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D/NjDHCBpNI3hTJvACxzfGuX2r0xk5dG/sv+AEvcJ7A=;
+        b=gkZXLCWkhjhC/5Lmktp4rggT4C6E0LPBwrZKBVvaXiVXxRFx9HFppSXsslq67fs5WB
+         XNx8VxnNJrc2WJwNoMJdm4UpFqhLVQhnQHSqkGmnOncQR/AD9PK7acOBJG5R/L1j7EQ7
+         BbkfyN9ETUiohOpnhbk1DvSENYmp50pUggggJiYMHMLYKWODQf+I7yzSkLTREFXGR9K0
+         nsjOatCJdmvzRktGC0T6PQvVrTEf+Ri3VFMQdtmO/vABf4oXFqwpAeHvPh4CS+tq2lJb
+         +tqVGk1pqEEERIZ7dGBprSh7bLSlostsK/7SVS44/ME6AtuP4w0o5BpMqcj++UVe+l04
+         6h+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D/NjDHCBpNI3hTJvACxzfGuX2r0xk5dG/sv+AEvcJ7A=;
+        b=JgbxXuu/WEIZ1MwUn55F+HawN65xZ7RMb0mgmIAlBFSNMx/ezV06Lv73DxX47uUQnC
+         BjiCuKX6+rCfoo5+j9br55N02QQIafeo74CZga/xtyLhDkuC3hmdVy+SkaoTkjZH6Vxh
+         7wM8/3vcuB1aS6IPDQLXSOLK40HkJxltJQybEvkuPZQFifUjfIPLqgnMgrk99+WYQPFS
+         6sZ32Y70/XGph2sXbyBGx9cRy3AQU/jsLUSO8fj3lFO/9Kxe8sBoJ79RiLa0jlS3TPXk
+         F7mK4hHyRdQfY2WEXT4Yy3z1zG6DHK8pms2n8Bg5MwaMiqnsusvmHzmZdaVJYem34ccZ
+         WOww==
+X-Gm-Message-State: APjAAAUqCz7j209xD0RM2RcVFBZIdaYkhCiGAvD7pUdVOYXLhF+z2zTE
+        nsFVcNqSGUWsoy1uTMWDNd/XeiRiGESc6tlqUclgA+a3vds=
+X-Google-Smtp-Source: APXvYqzNUJF+d1XDwgYxjEbgL9UQ/nw8H1K68K4k/nmhFRTUbn/REEdAzOZ0fxRXpAWLugosAYWf9uwKnRePvW4bqkI=
+X-Received: by 2002:a2e:810b:: with SMTP id d11mr2047486ljg.62.1565686485396;
+ Tue, 13 Aug 2019 01:54:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813184211.09b93f31@canb.auug.org.au>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com> <20190813061547.17847-1-efremov@linux.com>
+In-Reply-To: <20190813061547.17847-1-efremov@linux.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 13 Aug 2019 10:54:33 +0200
+Message-ID: <CACRpkdaAE6RA1iQ-iqK3GGHOovTkuDDqi8vcoFnmG8UBwuim8w@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Remove FMC subsystem
+To:     Denis Efremov <efremov@linux.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Joe Perches <joe@perches.com>,
+        Federico Vaga <federico.vaga@cern.ch>,
+        Pat Riehecky <riehecky@fnal.gov>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 06:42:11PM +1000, Stephen Rothwell wrote:
-> On Tue, 13 Aug 2019 09:24:23 +0100 Will Deacon <will@kernel.org> wrote:
-> >
-> > Paul, Palmer -- If it's not too late, then it would probably be best to
-> > stick this commit (60c1b220d8bc) and any dependencies on their own stable
-> > branch so that we can both pull it into our respective trees and I can
-> > resolve this conflict in the arm64 tree, which I'll send early during the
-> > merge window.
-> > 
-> > Looking at your tree, I guess I could just pull in
-> > common/for-v5.4-rc1/cpu-topology if you promise never to rebase it. Failing
-> > that, you could fork a new branch from 60c1b220d8bc and I could just pull
-> > that part instead.
-> 
-> It may not be worth it, the conflict is not that bad.  Unless you
-> forsee more conflicts arising.
+On Tue, Aug 13, 2019 at 8:15 AM Denis Efremov <efremov@linux.com> wrote:
 
-Hopefully not, but it looks like it should be dead easy to resolve in this
-case since the riscv tree doesn't contain anything else and the arm64 stuff
-is already on its own branch.
+> Cleanup MAINTAINERS from FMC record since the subsystem was removed.
+>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Federico Vaga <federico.vaga@cern.ch>
+> Cc: Pat Riehecky <riehecky@fnal.gov>
+> Fixes: 6a80b30086b8 ("fmc: Delete the FMC subsystem")
+> Signed-off-by: Denis Efremov <efremov@linux.com>
 
-I'll leave it up to Paul/Palmer to see what they prefer.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Will
+Do you need help to merge the patch? I can take it in the
+GPIO tree since the subsystem was removed there.
+
+Yours,
+Linus Walleij
