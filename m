@@ -2,75 +2,106 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2291C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4376AC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E682064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13EC22064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:06:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DdrOiE/3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbfHMSBR (ORCPT
+        id S1728306AbfHMSGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 14:01:17 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38953 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbfHMSBR (ORCPT
+        Tue, 13 Aug 2019 14:06:32 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33976 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727491AbfHMSGb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 14:01:17 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hxb6f-0007FU-U5; Tue, 13 Aug 2019 18:01:14 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Jianyun Li <jyli@marvell.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: mvumi: fix 32 bit shift of a u32 value
-Date:   Tue, 13 Aug 2019 19:01:13 +0100
-Message-Id: <20190813180113.14245-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 13 Aug 2019 14:06:31 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n9so45436493pgc.1;
+        Tue, 13 Aug 2019 11:06:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kFehO82jdCviGuf5R66JFrCXPio1ptY0lQw9PECP1l0=;
+        b=DdrOiE/3bDKX6HraMJ2Su2YgXpBCfapfPisGFr8ZTZrUBOvQxyrizpUgjvGLH3bg2Y
+         IGe20CEw3E8B6sues1yt8n+KKd8KYVB1IrC1K880wvZo3uGgl7jwo+hOpTCUtAMCM6YW
+         Ohowm/FbaEW7yanjt8wQ2DoAAYlLZ4NeVkDnQn/RmSVBfeTGlz4/3BzxL4poDZIwZYCh
+         6ekG9u6FkLIyM2P4kiGoSsylL3yrkJaPE0acjr6lDgZQOanlHaY89SRj1SpeReJTI6R5
+         +/C7BOoHkwd3BodDiDNy6quyCVA2N7fj5uqgzjtEhY68JDBXnwGNPsw1Qttkio3vpa96
+         fCgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kFehO82jdCviGuf5R66JFrCXPio1ptY0lQw9PECP1l0=;
+        b=P6Xw+9hmSQerntKAcTLqpuc8Da42kaFh6jUHDntTjyNSgjucgwr/EsZUd6suH3cxzY
+         gMFaFu+X6Rt1AB6S9jtmwEQZHFLj8Tc+f3vuT/p8qR6TdLQcF83vsprMzvcBK9TnzcFe
+         ZJCbbjABcceSREPx9cDmX1a7mhwwtf9TVDCSrt5YADoOSaHZa+QWaVomYXAoAGHcz5iT
+         zJklfrKavZ5fOdCcKySKXu2CkFTV3lzx7KKsW5nWR2BHWcjM/Sg/M6dcEeY5oco3njji
+         35HIHUkjusSoS5RyumWmHXih3i7ny1NDxSOQSNu3BT/kqpiw2SsEj6+VPpmOxvRmENyx
+         VCPg==
+X-Gm-Message-State: APjAAAU2N6615WqTIzBL1yf3C8exIV7R1HKBuOE+b0Jiblapd+u+oGqy
+        cTBNR2ijRl5c4G3sszbVm1o=
+X-Google-Smtp-Source: APXvYqyErYOUyieMcTl9zfTAjH4jfmnWT0Gp0FeXitOmr+LhRTnH2/Xo4/eAA+Re/FnrarLOrwtQyA==
+X-Received: by 2002:a65:64c5:: with SMTP id t5mr36518218pgv.168.1565719591093;
+        Tue, 13 Aug 2019 11:06:31 -0700 (PDT)
+Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
+        by smtp.gmail.com with ESMTPSA id 65sm112487304pff.148.2019.08.13.11.06.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Aug 2019 11:06:30 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 11:06:28 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc:     netdev@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Christopher S . Hall" <christopher.s.hall@intel.com>
+Subject: Re: [RFC PATCH 4/5] PTP: Add flag for non-periodic output
+Message-ID: <20190813180628.GA4069@localhost>
+References: <20190716072038.8408-1-felipe.balbi@linux.intel.com>
+ <20190716072038.8408-5-felipe.balbi@linux.intel.com>
+ <20190716163927.GA2125@localhost>
+ <87k1ch2m1i.fsf@linux.intel.com>
+ <20190717173645.GD1464@localhost>
+ <87ftn3iuqp.fsf@linux.intel.com>
+ <20190718164121.GB1533@localhost>
+ <87tvalxzzi.fsf@gmail.com>
+ <20190813174821.GC3207@localhost>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813174821.GC3207@localhost>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue, Aug 13, 2019 at 10:48:21AM -0700, Richard Cochran wrote:
+> > +		if (copy_from_user(&req.extts, (void __user *)arg,
+> > +				   sizeof(req.extts))) {
+> > +			err = -EFAULT;
+> > +			break;
+> > +		}
+> > +		if (req.extts.flags || req.extts.rsv[0]
+> > +				|| req.extts.rsv[1]) {
+> > +			err = -EINVAL;
+> 
+> Since the code is mostly the same as in the PTP_EXTTS_REQUEST case,
+> maybe just double up the case statements (like in the other) and add
+> an extra test for (cmd == PTP_EXTTS_REQUEST2) for this if-block.
 
-Currently the top 32 bits of a 64 bit address is being calculated
-by shifting a u32 twice by 16 bits and then being cast into a 64
-bit address.  Shifting a u32 twice by 16 bits always ends up with
-a zero.  Fix this by casting the u32 to a 64 bit address first
-and then shifting it 32 bits.
+Thinking about the drivers, in the case of the legacy ioctls, let's
+also be sure to clear the flags and reserved fields before passing
+them to the drivers.
 
-Addresses-Coverity: ("Operands don't affect result")
-Fixes: f0c568a478f0 ("[SCSI] mvumi: Add Marvell UMI driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/scsi/mvumi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/mvumi.c b/drivers/scsi/mvumi.c
-index 8906aceda4c4..62df69f1e71e 100644
---- a/drivers/scsi/mvumi.c
-+++ b/drivers/scsi/mvumi.c
-@@ -296,7 +296,7 @@ static void mvumi_delete_internal_cmd(struct mvumi_hba *mhba,
- 			sgd_getsz(mhba, m_sg, size);
- 
- 			phy_addr = (dma_addr_t) m_sg->baseaddr_l |
--				(dma_addr_t) ((m_sg->baseaddr_h << 16) << 16);
-+				   (dma_addr_t) m_sg->baseaddr_h << 32;
- 
- 			dma_free_coherent(&mhba->pdev->dev, size, cmd->data_buf,
- 								phy_addr);
--- 
-2.20.1
-
+Thanks,
+Richard
