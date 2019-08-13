@@ -2,90 +2,70 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F26AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BBEC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70DD720663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1EF2206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbfHMIOz (ORCPT
+        id S1727975AbfHMIO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 04:14:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60970 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725981AbfHMIOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 04:14:55 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 22F3744BD7;
-        Tue, 13 Aug 2019 08:14:55 +0000 (UTC)
-Received: from localhost (ovpn-8-25.pek2.redhat.com [10.72.8.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7185B60C44;
-        Tue, 13 Aug 2019 08:14:51 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>,
-        linux-nvme@lists.infradead.org,
-        Jon Derrick <jonathan.derrick@intel.com>
-Subject: [PATCH V3 0/3] genriq/affinity: Make vectors allocation fair
-Date:   Tue, 13 Aug 2019 16:14:44 +0800
-Message-Id: <20190813081447.1396-1-ming.lei@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 13 Aug 2019 08:14:55 +0000 (UTC)
+        Tue, 13 Aug 2019 04:14:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42204 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725981AbfHMIO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 04:14:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5AA8AAC10;
+        Tue, 13 Aug 2019 08:14:57 +0000 (UTC)
+Message-ID: <1565684094.7043.3.camel@suse.com>
+Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb
+From:   Oliver Neukum <oneukum@suse.com>
+To:     Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+a7a6b9c609b9457c62c6@syzkaller.appspotmail.com>
+Cc:     gustavo@embeddedor.com, Jiri Slaby <jirislaby@gmail.com>,
+        andreyknvl@google.com, syzkaller-bugs@googlegroups.com,
+        gregkh@linuxfoundation.org, stern@rowland.harvard.edu,
+        Jiri Kosina <jkosina@suse.cz>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Date:   Tue, 13 Aug 2019 10:14:54 +0200
+In-Reply-To: <20190813042649.888-1-hdanton@sina.com>
+References: <CAAeHK+z-uCr-bWu9uVDynU2S=wCrtxRbuA-Cut=h5zYuYcS-Cw@mail.gmail.com>
+         <20190813042649.888-1-hdanton@sina.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Am Dienstag, den 13.08.2019, 12:26 +0800 schrieb Hillf Danton:
+> [respin with the mess in Cc list cleaned up]
 
-The 1st  patch enhances one warning check.
+> Followup of commit e3e14de50dff ("HID: fix start/stop cycle in usbhid driver")
+> 
+> --- a/drivers/hid/usbhid/hid-core.c
+> +++ b/drivers/hid/usbhid/hid-core.c
+> @@ -1214,6 +1214,8 @@ static void usbhid_stop(struct hid_devic
+>  
+>  	hid->claimed = 0;
+>  
+> +	if (!usbhid->urbin) /* freeing buffers only once */
+> +		return;
+>  	usb_free_urb(usbhid->urbin);
+>  	usb_free_urb(usbhid->urbctrl);
+>  	usb_free_urb(usbhid->urbout);
 
-The 2nd patch makes __irq_build_affinity_masks() more reliable, such as,
-all nodes can be covered in the spread.
+This looks rather suspicious. Why is stop() called multiple times?
+Do we have a refcounting issue? If not, what controls locking?
 
-The 3rd patch spread vectors on node according to the ratio of this node's
-CPU number to number of all remaining CPUs, then vectors assignment can
-become more fair. Meantime, the warning report from Jon Derrick can be
-fixed.
-
-Please review & comment!
-
-V3:
-	- re-order the patchset
-	- add helper of irq_spread_vectors_on_node()
-	- handle vector spread correctly in case that numvecs is > ncpus
-	- return -ENOMEM to API's caller
-
-V2:
-	- add patch3
-	- start to allocate vectors from node with minimized CPU number,
-	  then every node is guaranteed to be allocated at least one vector.
-	- avoid cross node spread
-
-
-Ming Lei (3):
-  genirq/affinity: Enhance warning check
-  genirq/affinity: Improve __irq_build_affinity_masks()
-  genirq/affinity: Spread vectors on node according to nr_cpu ratio
-
- kernel/irq/affinity.c | 191 ++++++++++++++++++++++++++++++++++--------
- 1 file changed, 158 insertions(+), 33 deletions(-)
-
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Keith Busch <kbusch@kernel.org>
-Cc: linux-nvme@lists.infradead.org,
-Cc: Jon Derrick <jonathan.derrick@intel.com>
--- 
-2.20.1
+	Regards
+		Oliver
 
