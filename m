@@ -2,79 +2,141 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DDCC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D40F3C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E44720665
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A943720665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:57:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fWxvwQ8J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbfHMH5i (ORCPT
+        id S1727992AbfHMH5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 03:57:38 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45641 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbfHMH5h (ORCPT
+        Tue, 13 Aug 2019 03:57:46 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39749 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727920AbfHMH5p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 03:57:37 -0400
-Received: by mail-qk1-f195.google.com with SMTP id m2so5128643qki.12;
-        Tue, 13 Aug 2019 00:57:36 -0700 (PDT)
+        Tue, 13 Aug 2019 03:57:45 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u17so50831414pgi.6
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 00:57:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qxe9OCB0IqyHnARJf+JfT+i9JEoP4MCbV860ULsGU5s=;
+        b=fWxvwQ8Jg+CWf05NnJCeSWeVicnOoXy6BXG5VhOfTHwJWFVTHFtRdcNqJwjLSDCsVu
+         jiiP3AZW2TJ9Y27gYXlQWYVFyW9cOeHAtkBDWUX3YWHKBu/HS+LKFfPpeMSX6W2l72tZ
+         BRhzYAO288V5DleisjNQBfRbcy/Mz40/cEOLiUMhsZ95Bxp04BvhX0q6796bywFqCBqp
+         NSnYasYkCLB4Txnd4bsLfaw/UOxBpmRM2L4ZKLjuNJtySeAykDmMbqKDwEkFdZmfV7CY
+         oOe6Xd9hvm7QvXiKG5lkjN3mPEgj0ajH3yxwTU51S77P9cnCG7u1CaWqpN7xPuHVgKBk
+         pF4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ajCXkLrc00rBA8ZUOVEgUaqN7M+DNR8LSQCK9+5f2+g=;
-        b=hR+W5SmZI7SOo4BGVPvIZJQxosWsVYirJtPWKqtwYUG4h951MUobU8A1IHUGe5qzao
-         TtBr/p8Vxy/lFiVmXGpiO5WBm9R51Xr5vthjncjDN/KKXlFmWgnFqZ65m0OAyiXtfElZ
-         S01PGGYrZpuQGqKrLZjUqz0Cuaezj6p/oemrkWZ/CFVWL9LDRx4WCoEiJAbOsMgdThK5
-         pTJksOW3/Wr0V/4IgjzceOz+3Ja3Uu7gbOzZsQc7cww6PUuOZb+yxyfGnQM/hj2ZCEsr
-         dG6uBKfeTPfR1sdzFe7Laj17gw9ztsrmbJDJQVTdqEy0Yco6QuRQiN8WV/xkJgzI5kZ3
-         BgnA==
-X-Gm-Message-State: APjAAAUJKhd+IZvDnXoyjnHErtGyZP31WaDrwgE5/ua5ZdHOnT0QZRoU
-        /f64Z+ixBn77xHjrSk3J4cN8pPVZl2sSLyG2qvo=
-X-Google-Smtp-Source: APXvYqyIdILv2tk5XVUYMgnMBZrQuAyYo/zEfj71JpNLscoa1cfLXGZuogSNmLMW/R63aVun8nd4KC2DKl1/nuu3cXA=
-X-Received: by 2002:a37:76c5:: with SMTP id r188mr32664415qkc.394.1565683056420;
- Tue, 13 Aug 2019 00:57:36 -0700 (PDT)
+        bh=Qxe9OCB0IqyHnARJf+JfT+i9JEoP4MCbV860ULsGU5s=;
+        b=esv0gqgqIS1bv2Bz7rs02EI73/7dyB6YB7/PwfmoClT0NoKnqh3C/0y2QK5q4E+nLA
+         ka5LcX9Yi33/9JOB+oVY0C32vBH7f+XR25/vo+lE2P8+0+Sbk58KN35VYC7o41kdrNF6
+         +M4yqwWmNts3tQBNtPvIcLb7rhDzBxe2EyjHy/PDNp/8OnoLX3ool6PetdbkwS7MjNhS
+         ZiTKnV4GVYmOwp6vn14wTAs1BUjacUfd0qV3+4+VHYZZW5Fq0D7gJYS0GjjCxGZ7fKZP
+         nv4jB7+atvD7RmKYkkh12KL9l73zp4CuxGvEJRmjDg4u3nSmJLVFKBj4y7PcXY623yaN
+         9eKQ==
+X-Gm-Message-State: APjAAAVMF2G09dRsJoQuVYhKk13eydrT5BHyUc3NPuy3eCDuFU3m8EVZ
+        tAB8UXkeegNgC5nipAJ3kk7iama0v9cv9d55MNvAEA==
+X-Google-Smtp-Source: APXvYqzWk2rxD82fR19g3JsVNBllToOJJzR2xQFo11AJZitYxxxUqNbN9+PHkwurw7oZzFeN69t+CYdvTXIlmBWBICY=
+X-Received: by 2002:a63:205f:: with SMTP id r31mr31222917pgm.159.1565683064346;
+ Tue, 13 Aug 2019 00:57:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190812215052.71840-1-ndesaulniers@google.com> <20190812215052.71840-13-ndesaulniers@google.com>
-In-Reply-To: <20190812215052.71840-13-ndesaulniers@google.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 13 Aug 2019 09:57:20 +0200
-Message-ID: <CAK8P3a2fSKT7AJXwfKQOJ5N3=NtwMOCw_5tuD+oOsmh2g-Kokw@mail.gmail.com>
-Subject: Re: [PATCH 13/16] include/asm-generic: prefer __section from compiler_attributes.h
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, sedat.dilek@gmail.com,
+References: <20190812182421.141150-1-brendanhiggins@google.com>
+ <20190812182421.141150-13-brendanhiggins@google.com> <20190813043140.67FF320644@mail.kernel.org>
+In-Reply-To: <20190813043140.67FF320644@mail.kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 13 Aug 2019 00:57:33 -0700
+Message-ID: <CAFd5g44Es4emKyQSxUkqckGJ02_o3sAcDLwUCW8ZFGX14j5=xg@mail.gmail.com>
+Subject: Re: [PATCH v12 12/18] kunit: test: add tests for KUnit managed resources
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Yonghong Song <yhs@fb.com>,
-        Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf@vger.kernel.org
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
+        Avinash Kondareddy <akndr41@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 11:52 PM 'Nick Desaulniers' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
+On Mon, Aug 12, 2019 at 9:31 PM Stephen Boyd <sboyd@kernel.org> wrote:
 >
-> Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> Quoting Brendan Higgins (2019-08-12 11:24:15)
+> > +
+> > +static int kunit_resource_test_init(struct kunit *test)
+> > +{
+> > +       struct kunit_test_resource_context *ctx =
+> > +                       kzalloc(sizeof(*ctx), GFP_KERNEL);
+> > +
+> > +       if (!ctx)
+> > +               return -ENOMEM;
+>
+> Should this use the test assertion logic to make sure that it's not
+> failing allocations during init?
 
-The patch looks fine, but it looks like you forgot to add a description.
+Yep. Will fix.
 
-       Arnd
+> BTW, maybe kunit allocation APIs should
+> fail the test if they fail to allocate in general. Unless we're unit
+> testing failure to allocate problems.
+
+Yeah, I thought about that. I wasn't sure how people would feel about
+it, and I thought it would be a pain to tease out all the issues
+arising from aborting in different contexts when someone might not
+expect it.
+
+I am thinking later we can have kunit_kmalloc_or_abort variants? And
+then we can punt this issue to a later time?
+
+> > +
+> > +       test->priv = ctx;
+> > +
+> > +       kunit_init_test(&ctx->test, "test_test_context");
+> > +
+> > +       return 0;
