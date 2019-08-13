@@ -2,145 +2,90 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D14C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8624C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F5B2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC9A320679
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:55:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbfHMRvh (ORCPT
+        id S1728136AbfHMRz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 13:51:37 -0400
-Received: from mga12.intel.com ([192.55.52.136]:29837 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727491AbfHMRvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 13:51:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 10:51:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="167124255"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 13 Aug 2019 10:51:32 -0700
-Received: from dalyrusx-mobl.amr.corp.intel.com (unknown [10.251.3.205])
-        by linux.intel.com (Postfix) with ESMTP id 77D37580372;
-        Tue, 13 Aug 2019 10:51:31 -0700 (PDT)
-Subject: Re: [alsa-devel] [PATCH v2 3/5] ASoC: core: add support to
- snd_soc_dai_get_sdw_stream()
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        vkoul@kernel.org, broonie@kernel.org
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        bgoswami@codeaurora.org, plai@codeaurora.org, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        spapothi@codeaurora.org
-References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
- <20190813083550.5877-4-srinivas.kandagatla@linaro.org>
- <ba88e0f9-ae7d-c26e-d2dc-83bf910c2c01@linux.intel.com>
- <c2eecd44-f06a-7287-2862-0382bf697f8d@linaro.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <d2b7773b-d52a-7769-aa5b-ef8c8845d447@linux.intel.com>
-Date:   Tue, 13 Aug 2019 12:51:49 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Tue, 13 Aug 2019 13:55:28 -0400
+Received: from zimbra.cs.ucla.edu ([131.179.128.68]:33280 "EHLO
+        zimbra.cs.ucla.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727491AbfHMRz1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 13:55:27 -0400
+X-Greylist: delayed 381 seconds by postgrey-1.27 at vger.kernel.org; Tue, 13 Aug 2019 13:55:26 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.cs.ucla.edu (Postfix) with ESMTP id A263716272D;
+        Tue, 13 Aug 2019 10:49:04 -0700 (PDT)
+Received: from zimbra.cs.ucla.edu ([127.0.0.1])
+        by localhost (zimbra.cs.ucla.edu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Avtv7kHLBo3l; Tue, 13 Aug 2019 10:49:03 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.cs.ucla.edu (Postfix) with ESMTP id D6F6316272F;
+        Tue, 13 Aug 2019 10:49:03 -0700 (PDT)
+X-Virus-Scanned: amavisd-new at zimbra.cs.ucla.edu
+Received: from zimbra.cs.ucla.edu ([127.0.0.1])
+        by localhost (zimbra.cs.ucla.edu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id B3FBW389qoKq; Tue, 13 Aug 2019 10:49:03 -0700 (PDT)
+Received: from [192.168.1.9] (cpe-23-242-74-103.socal.res.rr.com [23.242.74.103])
+        by zimbra.cs.ucla.edu (Postfix) with ESMTPSA id 4DC3F16272D;
+        Tue, 13 Aug 2019 10:49:03 -0700 (PDT)
+Subject: Re: New kernel interface for sys_tz and timewarp?
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        Karel Zak <kzak@redhat.com>,
+        Lennart Poettering <lennart@poettering.net>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+References: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com>
+ <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com>
+From:   Paul Eggert <eggert@cs.ucla.edu>
+Organization: UCLA Computer Science Department
+Message-ID: <ecf2742a-6cab-cc00-16ab-589fad07b8db@cs.ucla.edu>
+Date:   Tue, 13 Aug 2019 10:49:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <c2eecd44-f06a-7287-2862-0382bf697f8d@linaro.org>
+In-Reply-To: <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/19 11:50 AM, Srinivas Kandagatla wrote:
-> Thanks for the review,
-> 
-> On 13/08/2019 15:44, Pierre-Louis Bossart wrote:
->> On 8/13/19 3:35 AM, Srinivas Kandagatla wrote:
->>> On platforms which have smart speaker amplifiers connected via
->>> soundwire and modeled as aux devices in ASoC, in such usecases machine
->>> driver should be able to get sdw master stream from dai so that it can
->>> use the runtime stream to setup slave streams.
->>
->> using the _set_sdw_stream? I don't fully get the sequence with the 
->> wording above.
-> 
-> Yes, using set_sdw_stream().
+Linus Torvalds wrote:
+> I assume/think that glibc uses (a) environment
+> variables and (b) a filesystem-set default (per-user file with a
+> system-wide default? I don't know what people do).
+glibc relies on the TZ environment variable, with a system-wide default 
+specified in /etc/localtime or suchlike (there is no per-user default). glibc 
+ignores the kernel's 'struct timezone' settings for of this, as 'struct 
+timezone' is obsolete/vestigial and doesn't contain enough info to do proper 
+conversions anyway.
 
-Maybe I am missing something here, but I don't see where the 
-set_sdw_stream() is called.
+I've been thinking of adding NetBSD's localtime_rz etc. functions to glibc. 
+These functions let user programs specify the time zone for each conversion 
+between time_t and local time, and simplify and/or speed up applications dealing 
+with many requests coming from different time zones. These functions also ignore 
+'struct timezone'.
 
-Also I don't fully get the rule. set_sdw_stream() looks required, 
-get_sdw_stream() is optional, is this what you are suggesting?
-
->>
->>>
->>> soundwire already as a set function, get function would provide more
->>> flexibility to above configurations.
->>
->> I am not clear if you are asking for both to be used, or get only or 
->> set only?
-> 
-> It depends on the usecase, in db845c usecase  [1] as Aux device is dai 
-> less, machine driver is using get function to get hold of master stream 
-> so that it can setup slave port config.
-> 
-> 
-> Looks like there is a typo in above like
-> 
-> This was supposed to be "soundwire already has a set function, get 
-> function would provide more flexibility to above configurations"
-> 
-> [1] 
-> https://git.linaro.org/landing-teams/working/qualcomm/kernel.git/tree/sound/soc/qcom/db845c.c?h=integration-linux-qcomlt 
-> 
-> 
-> thanks,
-> srini
-> 
->>
->>>
->>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>> ---
->>>   include/sound/soc-dai.h | 10 ++++++++++
->>>   1 file changed, 10 insertions(+)
->>>
->>> diff --git a/include/sound/soc-dai.h b/include/sound/soc-dai.h
->>> index dc48fe081a20..1e01f4a302e0 100644
->>> --- a/include/sound/soc-dai.h
->>> +++ b/include/sound/soc-dai.h
->>> @@ -202,6 +202,7 @@ struct snd_soc_dai_ops {
->>>       int (*set_sdw_stream)(struct snd_soc_dai *dai,
->>>               void *stream, int direction);
->>> +    void *(*get_sdw_stream)(struct snd_soc_dai *dai, int direction);
->>>       /*
->>>        * DAI digital mute - optional.
->>>        * Called by soc-core to minimise any pops.
->>> @@ -410,4 +411,13 @@ static inline int 
->>> snd_soc_dai_set_sdw_stream(struct snd_soc_dai *dai,
->>>           return -ENOTSUPP;
->>>   }
->>> +static inline void *snd_soc_dai_get_sdw_stream(struct snd_soc_dai *dai,
->>> +                           int direction)
->>> +{
->>> +    if (dai->driver->ops->get_sdw_stream)
->>> +        return dai->driver->ops->get_sdw_stream(dai, direction);
->>> +    else
->>> +        return ERR_PTR(-ENOTSUPP);
->>> +}
->>> +
->>>   #endif
->>>
->>
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
-
+There's no need to put any of this stuff into the kernel.
