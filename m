@@ -2,157 +2,135 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B97C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E08C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B00242067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B35EF2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:46:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=AQUANTIA1COM.onmicrosoft.com header.i=@AQUANTIA1COM.onmicrosoft.com header.b="ZTHlDgel"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfHMLqw (ORCPT
+        id S1727609AbfHMLq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 07:46:52 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:53126 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726810AbfHMLqw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 07:46:52 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id D8AB3634C88;
-        Tue, 13 Aug 2019 14:46:43 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1hxVGF-0000fC-7e; Tue, 13 Aug 2019 14:46:43 +0300
-Date:   Tue, 13 Aug 2019 14:46:43 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com
-Subject: Re: [PATCH v2 1/3] dt-bindings: media: i2c: Add IMX290 CMOS sensor
- binding
-Message-ID: <20190813114643.GA2527@valkosipuli.retiisi.org.uk>
-References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
- <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
- <20190813094526.GG835@valkosipuli.retiisi.org.uk>
- <20190813113358.GA28877@Mani-XPS-13-9360>
+        Tue, 13 Aug 2019 07:46:57 -0400
+Received: from mail-eopbgr690081.outbound.protection.outlook.com ([40.107.69.81]:9105
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726600AbfHMLq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 07:46:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oXgnFMJ4OEcflYRlfvL1viFVGXeMGamjdSZeaqpIga3a5G4qZtdt8fV4rsy8x0XzD55bB84BFvwr8CBOlErI2SdS7Z/cXytpM+JNksw31iyCbAAztKlKr5azoCIhd4c+Rxow6qjFaovCVxJo6miS0SXu11mfAwnQXhdhuhizG5IvCf7yt68+YJddDG7EcrHDzTK5emMIuxTIJ7hG1BI++ZQwvNSzQ14O/ti4k6G3gW/KT5KfZrGI9/v0rtGOPPRxNWkiWKDm7yAh/Z0XCd4nErQd5zMIkebsaLmwkl6G+FKmUyLAB3cYSacVENDJrHqymy3SNKR8e0h3gnW3ZnIowQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=prGn0lXo4wrdG8JFkSfg5HQWfYdUM//wr5fnfefu6jA=;
+ b=aL1oVA4Ye5ZfLwQk6hEso/JbAiT6cnWzUzstI123f34QwN7nhVOKJPH6cEQKpmq55yNzUXCrkDJxu1vppaKIrFmNG8gKs0lscsFW+oIpeaGfVqDjnlt4np85yZ4YWCgsysVvR+arOLpRNH9SHtCNOtyhB8p+PwgaXeepL0vM1zswI+pEPSVCLSDCeAXHkRSgdxyiowVL6qtdY62zh8ttYf7FK3faUWFzhaTQUlMMismoa4eyyJ2b0+wneBDCge8jgdkHDw3e7k2c2Cli/P3U8VM2JAMLx+Hy1DPTLXRC0Pb3ygQXQGPUhKTvc+/9AA/qEfXhn1ZKNW03iXVskVMhBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aquantia.com; dmarc=pass action=none header.from=aquantia.com;
+ dkim=pass header.d=aquantia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=AQUANTIA1COM.onmicrosoft.com; s=selector2-AQUANTIA1COM-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=prGn0lXo4wrdG8JFkSfg5HQWfYdUM//wr5fnfefu6jA=;
+ b=ZTHlDgel8E8nfMjda6BHFZyGwIJG/jAWt9Z/MdLqiAJQ8FNp5tVxAwEMlqnwG8aQeFdQjRMNO+ceT81VAIJAaxDny1Nwtd4d1XkaH8fKGDHu47XxXaK3cgZWHOQLAJQLQduNQVzcIqgh2rn7JFiKmk2i/DyLFydaY3ZbihjlKDY=
+Received: from BL0PR11MB2899.namprd11.prod.outlook.com (20.177.206.27) by
+ BL0PR11MB3153.namprd11.prod.outlook.com (10.167.235.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.23; Tue, 13 Aug 2019 11:46:40 +0000
+Received: from BL0PR11MB2899.namprd11.prod.outlook.com
+ ([fe80::ad4a:3191:10f1:bd6d]) by BL0PR11MB2899.namprd11.prod.outlook.com
+ ([fe80::ad4a:3191:10f1:bd6d%6]) with mapi id 15.20.2157.022; Tue, 13 Aug 2019
+ 11:46:40 +0000
+From:   Igor Russkikh <Igor.Russkikh@aquantia.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Antoine Tenart <antoine.tenart@bootlin.com>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "sd@queasysnail.net" <sd@queasysnail.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
+        "camelia.groza@nxp.com" <camelia.groza@nxp.com>,
+        Simon Edelhaus <Simon.Edelhaus@aquantia.com>
+Subject: Re: [PATCH net-next v2 6/9] net: macsec: hardware offloading
+ infrastructure
+Thread-Topic: [PATCH net-next v2 6/9] net: macsec: hardware offloading
+ infrastructure
+Thread-Index: AQHVUczAk9O2Ca3OL0uT1Xyfcpu+cw==
+Date:   Tue, 13 Aug 2019 11:46:40 +0000
+Message-ID: <44663b69-6f37-ea38-0347-9408984cf3f8@aquantia.com>
+References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
+ <20190808140600.21477-7-antoine.tenart@bootlin.com>
+ <20190810163423.GA30120@lunn.ch>
+In-Reply-To: <20190810163423.GA30120@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1P189CA0034.EURP189.PROD.OUTLOOK.COM (2603:10a6:7:53::47)
+ To BL0PR11MB2899.namprd11.prod.outlook.com (2603:10b6:208:30::27)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Igor.Russkikh@aquantia.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [95.79.108.179]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c46b054e-2b97-47fe-2151-08d71fe3e785
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BL0PR11MB3153;
+x-ms-traffictypediagnostic: BL0PR11MB3153:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BL0PR11MB315386BF67D323576336EC4598D20@BL0PR11MB3153.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01283822F8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(39850400004)(396003)(366004)(376002)(199004)(189003)(81166006)(6436002)(6512007)(6486002)(229853002)(305945005)(8676002)(81156014)(6116002)(7736002)(25786009)(4326008)(2906002)(7416002)(5660300002)(14454004)(6246003)(107886003)(53936002)(71190400001)(256004)(31686004)(44832011)(71200400001)(99286004)(11346002)(486006)(476003)(2616005)(446003)(386003)(54906003)(53546011)(76176011)(110136005)(316002)(478600001)(66946007)(3846002)(66476007)(66446008)(64756008)(36756003)(66556008)(86362001)(66066001)(31696002)(102836004)(186003)(52116002)(8936002)(6506007)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR11MB3153;H:BL0PR11MB2899.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: aquantia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: mkixBMjcu8DszuBDmQDbYQ7uSNrPEObSYnOtCdFds+g0ueNx6Nf++iqAZss4ZIQFvFDUvqgszx7TnRothgCvE2dq6GFrP/mNhzrd5ZyKhWX6vafeYkRFZFc/l/dViu9/4WFJx0R1cbUzt7SqX/dO+EvmJMYbkyfR3Uludm/armse6FFQM3cWxrn73JdmjCyG8ziR8YHLf1W34BVF4dWlt5t0b6/wywnFFMEKtNbM3L8WmrzO+y1/0rAZxXAbx0mOfhbc8pJ2q3cRIvGCRacbgWX7iquCmPaWhUCv/Qf0FEyN+LTwPyW+0TgXiLMxIxa4+W1W7TBrx7vAk4blgGlj0NwIkqAkZAEeT+zjjnRzgzL/mp5Iq2QzVXiQMXJqFH+3R/BWwVXaDrZBNhAWf53GUcvHecTGZpJF3h8Y6aWiuCE=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <83E55DCDCA73F64B84C850F644888B9D@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813113358.GA28877@Mani-XPS-13-9360>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: aquantia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c46b054e-2b97-47fe-2151-08d71fe3e785
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2019 11:46:40.0772
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 83e2e134-991c-4ede-8ced-34d47e38e6b1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: iIPWTwpu308yrvGE5qAMau6mEjgeORlHQf37BnyBjSqChG6q9H0YBzfo3cCvTpzFruyeUKk47XsA2/fgtIG/LA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR11MB3153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Manivannan,
-
-On Tue, Aug 13, 2019 at 05:03:58PM +0530, Manivannan Sadhasivam wrote:
-> Hi Sakari,
-> 
-> Thanks for the review!
-> 
-> On Tue, Aug 13, 2019 at 12:45:26PM +0300, Sakari Ailus wrote:
-> > Hi Manivannan,
-> > 
-> > On Tue, Aug 06, 2019 at 06:39:36PM +0530, Manivannan Sadhasivam wrote:
-> > > Add devicetree binding for IMX290 CMOS image sensor.
-> > > 
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > >  .../devicetree/bindings/media/i2c/imx290.txt  | 51 +++++++++++++++++++
-> > >  1 file changed, 51 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx290.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/media/i2c/imx290.txt b/Documentation/devicetree/bindings/media/i2c/imx290.txt
-> > > new file mode 100644
-> > > index 000000000000..7535b5b5b24b
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/media/i2c/imx290.txt
-> > > @@ -0,0 +1,51 @@
-> > > +* Sony IMX290 1/2.8-Inch CMOS Image Sensor
-> > > +
-> > > +The Sony IMX290 is a 1/2.8-Inch CMOS Solid-state image sensor with
-> > > +Square Pixel for Color Cameras. It is programmable through I2C and 4-wire
-> > > +interfaces. The sensor output is available via CMOS logic parallel SDR output,
-> > > +Low voltage LVDS DDR output and CSI-2 serial data output.
-> > 
-> > If there are three to choose from, then you should specify which one is in
-> > use. Given that I think chances remain slim we'd add support for the other
-> > two (it's certainly not ruled out though), CSI-2 could be the default. But
-> > this needs to be documented.
-> > 
-> 
-> Hmm... I'm not sure here. Bindings should describe the hardware and not the
-> limitations of the driver. Here as you said, the sensor can output frames
-> in 3 different modes/formats but the driver only supports CSI2. I can add a
-> note in the driver but not sure whether dt-binding is the right place or not!
-
-I guess alternatively you could document the necessary bindings for the
-other two busses.
-
-But what I'm saying here is that it's highly unlikely they'll be ever
-needed, and it'd be mostly a waste of time to implement that. (That said, I
-have nothing against the use of these busses, but I've never seen anyone
-using them.) Many other devices use defaults for more contentious settings.
-
-> 
-> > > +
-> > > +Required Properties:
-> > > +- compatible: Should be "sony,imx290"
-> > > +- reg: I2C bus address of the device
-> > > +- clocks: Reference to the xclk clock.
-> > > +- clock-names: Should be "xclk".
-> > > +- clock-frequency: Frequency of the xclk clock.
-> > 
-> > ...in Hz.
-> > 
-> 
-> Ack.
-> 
-> > > +- vdddo-supply: Sensor digital IO regulator.
-> > > +- vdda-supply: Sensor analog regulator.
-> > > +- vddd-supply: Sensor digital core regulator.
-> > > +
-> > > +Optional Properties:
-> > > +- reset-gpios: Sensor reset GPIO
-> > > +
-> > > +The imx290 device node should contain one 'port' child node with
-> > > +an 'endpoint' subnode. For further reading on port node refer to
-> > > +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > 
-> > Which other properties are relevant for the device?
-> 
-> Not much other than, clock/data lanes.
-
-Please document data-lanes, and which values it may have.
-
-> 
-> > I suppose you can't change the lane order, so clock-lanes is redundant
-> > (don't use it in the example) and data-lanes should be monotonically
-> > incrementing series from 1 to 4.
-> > 
-> 
-> We can change the order and the example here illustrates how it has been
-> wired in FRAMOS module. If I change the lane order like you said, it won't
-> work.
-
-I highly doubt that. Neither the driver nor the sensor uses the lane
-ordering information.
-
-And even if the driver only supported four lanes, then it should check the
-number of lanes is actually four.
-
--- 
-Regards,
-
-Sakari Ailus
+DQoNCk9uIDEwLjA4LjIwMTkgMTk6MzQsIEFuZHJldyBMdW5uIHdyb3RlOg0KPiBPbiBUaHUsIEF1
+ZyAwOCwgMjAxOSBhdCAwNDowNTo1N1BNICswMjAwLCBBbnRvaW5lIFRlbmFydCB3cm90ZToNCg0K
+Pj4gVGhlIE1BQ3NlYyBjb25maWd1cmF0aW9uIGlzIHBhc3NlZCB0byBkZXZpY2UgZHJpdmVycyBz
+dXBwb3J0aW5nIGl0DQo+PiB0aHJvdWdoIG1hY3NlY19od19vZmZsb2FkKCkgd2hpY2ggaXMgY2Fs
+bGVkIGZyb20gdGhlIE1BQ3NlYyBnZW5sDQo+PiBoZWxwZXJzLiBUaGlzIGZ1bmN0aW9uIGNhbGxz
+IHRoZSBtYWNzZWMgb3BzIG9mIFBIWSBhbmQgRXRoZXJuZXQNCj4+IGRyaXZlcnMgaW4gdHdvIHN0
+ZXBzDQo+IA0KPiBIaSBBbnRvaW5lLCBJZ29yDQo+IA0KPiBJdCBpcyBncmVhdCB0aGF0IHlvdSBh
+cmUgdGhpbmtpbmcgaG93IGEgTUFDIGRyaXZlciB3b3VsZCBtYWtlIHVzZSBvZg0KPiB0aGlzLiBC
+dXQgb24gdGhlIGZsaXAgc2lkZSwgd2UgZG9uJ3QgdXN1YWwgYWRkIGFuIEFQSSB1bmxlc3MgdGhl
+cmUgaXMNCj4gYSB1c2VyLiBBbmQgYXMgZmFyIGFzIGkgc2VlLCB5b3Ugb25seSBhZGQgYSBQSFkg
+bGV2ZWwgaW1wbGVtZW50YXRpb24sDQo+IG5vdCBhIE1BQyBsZXZlbC4NCj4gDQo+IElnb3IsIHdo
+YXQgaXMgeW91ciBpbnRlcmVzdCBoZXJlPyBJIGtub3cgdGhlIEFxdWFudGlhIFBIWSBjYW4gZG8N
+Cj4gTUFDc2VjLCBidXQgaSBndWVzcyB5b3UgYXJlIG1vcmUgaW50ZXJlc3RlZCBpbiB0aGUgYXRs
+YW50aWMgYW5kIEFRQzExMQ0KPiBNQUMgZHJpdmVycyB3aGljaCBoaWRlIHRoZSBQSFkgYmVoaW5k
+IGZpcm13YXJlIHJhdGhlciB0aGFuIG1ha2UgdXNlIG9mDQo+IHRoZSBMaW51eCBhcXVhbnRpYSBQ
+SFkgZHJpdmVyLiBBcmUgeW91IGxpa2VseSB0byBiZSBjb250cmlidXRpbmcgYSBNQUMNCj4gZHJp
+dmVyIGxldmVsIGltcGxlbWVudGF0aW9uIG9mIE1BQ3NlYyBzb29uPw0KDQpIaSBBbmRyZXcsDQoN
+Clllcywgd2UgYXJlIGludGVyZXN0ZWQgaW4gTUFDIGxldmVsIE1BQ1NlYyBvZmZsb2FkIGltcGxl
+bWVudGF0aW9uLg0KQWx0aG91Z2ggaW4gb3VyIHNvbHV0aW9uIG1hY3NlYyBlbmdpbmUgaXRzZWxm
+IGlzIGluIFBoeSwgd2UgZG8NCmFjdGl2ZWx5IHVzZSBmaXJtd2FyZSBzdXBwb3J0IGluIGFyZWFz
+IG9mIGNvbmZpZ3VyYXRpb24sIGludGVycnVwdCBtYW5hZ2VtZW50Lg0KDQpTbyBmcm9tIFNXIHBl
+cnNwZWN0aXZlIHRoYXQnbGwgYmUgTUFDIGRyaXZlciBsZXZlbCBtYWNzZWMuDQoNClJlZ2FyZHMs
+DQogIElnb3INCg==
