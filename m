@@ -2,72 +2,84 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D09C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A82C32757
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13B4F2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:09:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Cdy/9K3I"
+	by mail.kernel.org (Postfix) with ESMTP id C91722067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:10:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565727002;
+	bh=IiCD7IsT67JhzKzMH/tdAui5BDrSXtu3NUCLmNQc6n0=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=ePYQm9wFuij6coth71TaR3UNTU4lxgf8Psp30XWqJzVS3JCO2mjHRYn1ramiWJSwy
+	 64JmBCm8D6V0dWUOunyLfeVQ5MB1FYSfZPsuP4NwTD/rgol66d9FNATh9ofUhvZLAt
+	 WcOug/er0/2zzWVQ880Ly44t20xgag8Tq3OYdo9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfHMUJY (ORCPT
+        id S1726730AbfHMUKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 16:09:24 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:58174 "EHLO vps0.lunn.ch"
+        Tue, 13 Aug 2019 16:10:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbfHMUJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 16:09:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=7aZwbEZYwkaMwsIk7S7vI8ZJhyHjXfPuMdvTzxY34DY=; b=Cdy/9K3IVmx0qfgQmAuRrYcHUN
-        8GH+ld2ARKa1/OqDiVPReo4MDHJJH8PWbeMx77nvg1rFnUhaFlVel93ptXCSFObYCwlsACJ5Xwp+P
-        JkuWkM1e0IX+dZi09+vjzRz1SiVcA54qdL3QsE6jNBezUvdnU0V/99NwaizlLwdy5Ejk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hxd6b-0004Fy-Uf; Tue, 13 Aug 2019 22:09:17 +0200
-Date:   Tue, 13 Aug 2019 22:09:17 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v6 3/4] net: phy: realtek: Add helpers for accessing
- RTL8211x extension pages
-Message-ID: <20190813200917.GK15047@lunn.ch>
-References: <20190813191147.19936-1-mka@chromium.org>
- <20190813191147.19936-4-mka@chromium.org>
+        id S1726007AbfHMUKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 16:10:01 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D5692067D;
+        Tue, 13 Aug 2019 20:10:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565727000;
+        bh=IiCD7IsT67JhzKzMH/tdAui5BDrSXtu3NUCLmNQc6n0=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=XXoWIRKlGSg9iDPpwqt+n7qPov9+Y81AxhP2IGS5o4ds4+Pf25nRy0LFC8t3z1klw
+         Xk+fVp92/JUXpkJShUwE+FrauPx8Ah4KPjQujcJPjhTERhCnnj5oePyrsVsgBbIi/O
+         OY6wc0S+N7ESGb6XRuu1kcS5gQF7Jl3V8D8lsqeY=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813191147.19936-4-mka@chromium.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190813184717.GA28465@jcrouse1-lnx.qualcomm.com>
+References: <1565037226-1684-1-git-send-email-jcrouse@codeaurora.org> <20190807234232.27AA720880@mail.kernel.org> <20190813184717.GA28465@jcrouse1-lnx.qualcomm.com>
+Subject: Re: [PATCH v2] drivers: qcom: Add BCM vote macro to header
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        linux-clk@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+User-Agent: alot/0.8.1
+Date:   Tue, 13 Aug 2019 13:09:59 -0700
+Message-Id: <20190813201000.6D5692067D@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 12:11:46PM -0700, Matthias Kaehlcke wrote:
-> Some RTL8211x PHYs have extension pages, which can be accessed
-> after selecting a page through a custom method. Add a function to
-> modify bits in a register of an extension page and a helper for
-> selecting an ext page. Use rtl8211x_modify_ext_paged() in
-> rtl8211e_config_init() instead of doing things 'manually'.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Quoting Jordan Crouse (2019-08-13 11:47:17)
+> On Wed, Aug 07, 2019 at 04:42:31PM -0700, Stephen Boyd wrote:
+> > Quoting Jordan Crouse (2019-08-05 13:33:46)
+> > > The macro to generate a Bus Controller Manager (BCM) TCS command is u=
+sed
+> > > by the interconnect driver but might also be interesting to other
+> > > drivers that need to construct TCS commands for sub processors so move
+> > > it out of the sdm845 specific file and into the header.
+> > >=20
+> > > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > > ---
+> >=20
+> > Acked-by: Stephen Boyd <sboyd@kernel.org>
+> >=20
+> > Unless this is supposed to be applied by me?
+>=20
+> I figured this landed in Bjorn's domain, but you guys can fight it out if=
+ you
+> want.
+>=20
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Ok. I'm happy to avoid the fight!
 
-    Andrew
