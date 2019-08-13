@@ -2,156 +2,66 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8415C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0082FC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9FEA20844
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:29:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bImk/Y4v"
+	by mail.kernel.org (Postfix) with ESMTP id D1F2E20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbfHMP3h (ORCPT
+        id S1728837AbfHMP3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 11:29:37 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34054 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727869AbfHMP3h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 11:29:37 -0400
-Received: by mail-ot1-f68.google.com with SMTP id c7so1439262otp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 08:29:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jMeI5ltMPEKZ0Tj88O24MXE9cWJp6pw2JTg4dO3y4Mo=;
-        b=bImk/Y4vshDj5gFBaBVzsjv6Rz+kwzqnWzrOBiLYKXqof3GfeusuSBS3ZiJ0pa2Biz
-         +tCSIZX2wDwVr22g3BeKZT3HzY/3F3KR5WgLqESzTmOD6PixUCsy4sgNyuiEqlGA2Bjp
-         O3h7Bxpj0KGCCfJLCDX5YuylzaDhD6YWh0+jnG/g8GPay7nwiIg92/zGE80yk/76C2Ir
-         tInAOj2kgN2/l0orZzstbjsX+QeiJpnBb75cjQr+tZH8sYPtvAJiOVQTMuMyxL1xu9O/
-         oCa/4Px4H0ZvIlllpY5mSai4UcuTIufdPCdutaJGOguKuqlkfxkxQaDhfVzv45rlbMpZ
-         AHIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jMeI5ltMPEKZ0Tj88O24MXE9cWJp6pw2JTg4dO3y4Mo=;
-        b=V70QVgn2BghRpZjegJfcpmB+lDwPe7IMKrvH0uF+0eD834WA7dQl3GAODfoYx+164G
-         RcCz/nK8RRhSyhpOJXomkj06mU53nGkWYxAWD9S8G+1riYscjYxxcPNkA3sOYc3w8mYe
-         DvRqGmuJgzObvY+nfOafggFsfs4KqnRnoe3ix0bGqsu5HNq79rIgdWVe5DfqAIxiIpNF
-         Pyc+uBDgbxZe+GIKgvVfY1KLcuMC5Jht6hSOzpOYhA5aztux03CQe+EtASkBq3GMzgPF
-         qyLBlsRcI4Mm2vpFxAF1gG8Um6yfFU6C038/vfbKC82jdz2Bm4BGxXgbJrVB+1i2Mc2y
-         JVFA==
-X-Gm-Message-State: APjAAAW7fC/WUUtxiEcJs7bOX+nuMSk0HjGSnmJa93VQQe59vSnZpM7s
-        Tp/SvpEX3ZfWO0sptzEEsiFBvrK5mYV/eBO/TL0rcw==
-X-Google-Smtp-Source: APXvYqxQEaHf3X4y40GcHw/mVHg70puR4hMjqYUOR1PPtguEpeRZ2mELIIydxgtCS2soxOtuvIFl0/ZHBeOF0COouWI=
-X-Received: by 2002:a9d:5a91:: with SMTP id w17mr35070043oth.32.1565710175793;
- Tue, 13 Aug 2019 08:29:35 -0700 (PDT)
+        Tue, 13 Aug 2019 11:29:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48158 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727869AbfHMP3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 11:29:53 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 60DCC30016E4;
+        Tue, 13 Aug 2019 15:29:53 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A83851001948;
+        Tue, 13 Aug 2019 15:29:51 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CACT4Y+YVyaTrwpaZfpfi9LKA=5TOdKSL60pjAH04dMPNCZTMSQ@mail.gmail.com>
+References: <CACT4Y+YVyaTrwpaZfpfi9LKA=5TOdKSL60pjAH04dMPNCZTMSQ@mail.gmail.com> <0000000000004c2416058c594b30@google.com> <24282.1562074644@warthog.procyon.org.uk> <CACT4Y+YjdV8CqX5=PzKsHnLsJOzsydqiq3igYDm_=nSdmFo2YQ@mail.gmail.com> <20330.1564583454@warthog.procyon.org.uk> <CACT4Y+Y4cRgaRPJ_gz_53k85inDKq+X+bWmOTv1gPLo=Yod1=A@mail.gmail.com> <22318.1564586386@warthog.procyon.org.uk> <CACT4Y+bjLBwVK_6fz2H8fXm0baAVX+vRJ4UbVWG_7yNUO-SOUg@mail.gmail.com> <3135.1565706180@warthog.procyon.org.uk> <CACT4Y+YCB3o5Ps9RNq9KpMcmGCwBM4R9DeX67prQ9Q3UppGowQ@mail.gmail.com> <8013.1565708810@warthog.procyon.org.uk>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     dhowells@redhat.com,
+        syzbot <syzbot+1e0edc4b8b7494c28450@syzkaller.appspotmail.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        linux-afs@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: kernel BUG at net/rxrpc/local_object.c:LINE!
 MIME-Version: 1.0
-References: <20190807171559.182301-1-joel@joelfernandes.org>
- <CAG48ez0ysprvRiENhBkLeV9YPTN_MB18rbu2HDa2jsWo5FYR8g@mail.gmail.com> <20190813100856.GF17933@dhcp22.suse.cz>
-In-Reply-To: <20190813100856.GF17933@dhcp22.suse.cz>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 13 Aug 2019 17:29:09 +0200
-Message-ID: <CAG48ez2cuqe_VYhhaqw8Hcyswv47cmz2XmkqNdvkXEhokMVaXg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] mm/page_idle: Add per-pid idle page tracking using
- virtual index
-To:     Michal Hocko <mhocko@kernel.org>,
-        Daniel Gruss <daniel.gruss@iaik.tugraz.at>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Hansen <chansen3@cisco.com>,
-        Daniel Colascione <dancol@google.com>, fmayer@google.com,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        kernel-team <kernel-team@android.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Minchan Kim <minchan@kernel.org>, namhyung@google.com,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Roman Gushchin <guro@fb.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Todd Kjos <tkjos@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <28571.1565710190.1@warthog.procyon.org.uk>
+Date:   Tue, 13 Aug 2019 16:29:50 +0100
+Message-ID: <28572.1565710190@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 13 Aug 2019 15:29:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 12:09 PM Michal Hocko <mhocko@kernel.org> wrote:
-> On Mon 12-08-19 20:14:38, Jann Horn wrote:
-> > On Wed, Aug 7, 2019 at 7:16 PM Joel Fernandes (Google)
-> > <joel@joelfernandes.org> wrote:
-> > > The page_idle tracking feature currently requires looking up the pagemap
-> > > for a process followed by interacting with /sys/kernel/mm/page_idle.
-> > > Looking up PFN from pagemap in Android devices is not supported by
-> > > unprivileged process and requires SYS_ADMIN and gives 0 for the PFN.
-> > >
-> > > This patch adds support to directly interact with page_idle tracking at
-> > > the PID level by introducing a /proc/<pid>/page_idle file.  It follows
-> > > the exact same semantics as the global /sys/kernel/mm/page_idle, but now
-> > > looking up PFN through pagemap is not needed since the interface uses
-> > > virtual frame numbers, and at the same time also does not require
-> > > SYS_ADMIN.
-> > >
-> > > In Android, we are using this for the heap profiler (heapprofd) which
-> > > profiles and pin points code paths which allocates and leaves memory
-> > > idle for long periods of time. This method solves the security issue
-> > > with userspace learning the PFN, and while at it is also shown to yield
-> > > better results than the pagemap lookup, the theory being that the window
-> > > where the address space can change is reduced by eliminating the
-> > > intermediate pagemap look up stage. In virtual address indexing, the
-> > > process's mmap_sem is held for the duration of the access.
-> >
-> > What happens when you use this interface on shared pages, like memory
-> > inherited from the zygote, library file mappings and so on? If two
-> > profilers ran concurrently for two different processes that both map
-> > the same libraries, would they end up messing up each other's data?
->
-> Yup PageIdle state is shared. That is the page_idle semantic even now
-> IIRC.
->
-> > Can this be used to observe which library pages other processes are
-> > accessing, even if you don't have access to those processes, as long
-> > as you can map the same libraries? I realize that there are already a
-> > bunch of ways to do that with side channels and such; but if you're
-> > adding an interface that allows this by design, it seems to me like
-> > something that should be gated behind some sort of privilege check.
->
-> Hmm, you need to be priviledged to get the pfn now and without that you
-> cannot get to any page so the new interface is weakening the rules.
-> Maybe we should limit setting the idle state to processes with the write
-> status. Or do you think that even observing idle status is useful for
-> practical side channel attacks? If yes, is that a problem of the
-> profiler which does potentially dangerous things?
+Dmitry Vyukov <dvyukov@google.com> wrote:
 
-I suppose read-only access isn't a real problem as long as the
-profiler isn't writing the idle state in a very tight loop... but I
-don't see a usecase where you'd actually want that? As far as I can
-tell, if you can't write the idle state, being able to read it is
-pretty much useless.
+> It only collects console output. I don't know what is trace log. If
+> the trace log is not console output, then it won't.
 
-If the profiler only wants to profile process-private memory, then
-that should be implementable in a safe way in principle, I think, but
-since Joel said that they want to profile CoW memory as well, I think
-that's inherently somewhat dangerous.
+Assuming the system is still alive:
+
+	cat /sys/kernel/debug/tracing/trace
+
+David
