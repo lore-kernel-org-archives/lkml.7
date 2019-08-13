@@ -4,31 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4A0C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39083C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3892070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 091442070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:05:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfHMVEs (ORCPT
+        id S1727060AbfHMVFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:04:48 -0400
-Received: from mga09.intel.com ([134.134.136.24]:18658 "EHLO mga09.intel.com"
+        Tue, 13 Aug 2019 17:05:09 -0400
+Received: from mga06.intel.com ([134.134.136.31]:16076 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727204AbfHMVDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 17:03:41 -0400
+        id S1726819AbfHMVC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 17:02:58 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 14:03:39 -0700
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 14:02:58 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="194275968"
+   d="scan'208";a="187901444"
 Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Aug 2019 14:03:39 -0700
+  by orsmga002.jf.intel.com with ESMTP; 13 Aug 2019 14:02:56 -0700
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
 To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -55,60 +54,54 @@ To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
         Dave Martin <Dave.Martin@arm.com>
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v8 03/14] x86/cet/ibt: Handle signals for end branch
-Date:   Tue, 13 Aug 2019 13:53:48 -0700
-Message-Id: <20190813205359.12196-4-yu-cheng.yu@intel.com>
+Subject: [PATCH v8 18/27] mm: Introduce do_mmap_locked()
+Date:   Tue, 13 Aug 2019 13:52:16 -0700
+Message-Id: <20190813205225.12032-19-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190813205359.12196-1-yu-cheng.yu@intel.com>
-References: <20190813205359.12196-1-yu-cheng.yu@intel.com>
+In-Reply-To: <20190813205225.12032-1-yu-cheng.yu@intel.com>
+References: <20190813205225.12032-1-yu-cheng.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Restore end branch tracking setting from thread header.
+There are a few places that need do_mmap() with mm->mmap_sem held.
+Create an in-line function for that.
 
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 ---
- arch/x86/kernel/cet.c | 18 ++++++++++++++++++
+ include/linux/mm.h | 18 ++++++++++++++++++
  1 file changed, 18 insertions(+)
 
-diff --git a/arch/x86/kernel/cet.c b/arch/x86/kernel/cet.c
-index 505a69f476e1..db542bd423cc 100644
---- a/arch/x86/kernel/cet.c
-+++ b/arch/x86/kernel/cet.c
-@@ -281,6 +281,15 @@ int cet_restore_signal(bool ia32, struct sc_ext *sc_ext)
- 		msr_ia32_u_cet |= MSR_IA32_CET_SHSTK_EN;
- 	}
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index bc58585014c9..275c385f53c6 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2394,6 +2394,24 @@ static inline void mm_populate(unsigned long addr, unsigned long len)
+ static inline void mm_populate(unsigned long addr, unsigned long len) {}
+ #endif
  
-+	if (current->thread.cet.ibt_enabled) {
-+		if (current->thread.cet.ibt_bitmap_used)
-+			msr_ia32_u_cet |= (IBT_BITMAP_ADDR |
-+					   MSR_IA32_CET_LEG_IW_EN);
++static inline unsigned long do_mmap_locked(struct file *file,
++	unsigned long addr, unsigned long len, unsigned long prot,
++	unsigned long flags, vm_flags_t vm_flags, struct list_head *uf)
++{
++	struct mm_struct *mm = current->mm;
++	unsigned long populate;
 +
-+		msr_ia32_u_cet |= (MSR_IA32_CET_ENDBR_EN |
-+				   MSR_IA32_CET_NO_TRACK_EN);
-+	}
++	down_write(&mm->mmap_sem);
++	addr = do_mmap(file, addr, len, prot, flags, vm_flags, 0,
++		       &populate, uf);
++	up_write(&mm->mmap_sem);
 +
- 	wrmsrl(MSR_IA32_PL3_SSP, new_ssp);
- 	wrmsrl(MSR_IA32_U_CET, msr_ia32_u_cet);
- 	return 0;
-@@ -321,6 +330,15 @@ int cet_setup_signal(bool ia32, unsigned long rstor_addr, struct sc_ext *sc_ext)
- 		sc_ext->ssp = new_ssp;
- 	}
- 
-+	if (current->thread.cet.ibt_enabled) {
-+		if (current->thread.cet.ibt_bitmap_used)
-+			msr_ia32_u_cet |= (IBT_BITMAP_ADDR |
-+					   MSR_IA32_CET_LEG_IW_EN);
++	if (populate)
++		mm_populate(addr, populate);
 +
-+		msr_ia32_u_cet |= (MSR_IA32_CET_ENDBR_EN |
-+				   MSR_IA32_CET_NO_TRACK_EN);
-+	}
++	return addr;
++}
 +
- 	modify_fpu_regs_begin();
- 	wrmsrl(MSR_IA32_PL3_SSP, ssp);
- 	wrmsrl(MSR_IA32_U_CET, msr_ia32_u_cet);
+ /* These take the mm semaphore themselves */
+ extern int __must_check vm_brk(unsigned long, unsigned long);
+ extern int __must_check vm_brk_flags(unsigned long, unsigned long, unsigned long);
 -- 
 2.17.1
 
