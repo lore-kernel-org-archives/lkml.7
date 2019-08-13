@@ -2,82 +2,141 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4AFC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FADC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C04C2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB9A20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:43:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O4nqKWlZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbfHMNkU (ORCPT
+        id S1729224AbfHMNnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:40:20 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:40136 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729204AbfHMNkS (ORCPT
+        Tue, 13 Aug 2019 09:43:10 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44745 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728095AbfHMNnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:40:18 -0400
-Received: by mail-qk1-f196.google.com with SMTP id s145so79656139qke.7;
-        Tue, 13 Aug 2019 06:40:17 -0700 (PDT)
+        Tue, 13 Aug 2019 09:43:09 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c81so2632172pfc.11
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:43:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hbroNosbT3jj3xT50Om4hklhf3qmqa0/vsPm2jM2OfA=;
+        b=O4nqKWlZKZZ1e2LApPIoUKMRygbZDfvL7IojIg58Hvn6qF28yOQF8heQgsjZuYcyhd
+         3jEyzNMv797LrLXq8SYPXsml5JBroCY+w56I2TUHkINPfTUUekQ1aFldgBiKLi7LTIPe
+         02g6MCKcDznDloANBtkUBovWtBB3xDdHacz3wUAsnoYuH/ViOrtJQVmUWXw7zsRWtsNh
+         thFQ2rW2sTwvJIWzvY6UZGEMsckWo3PFl2ecpAbhr9UvXobvCtMD8+CRAvekCdLK570F
+         K9mWBIru76bQ5Ds+ruqLXDGvQ0avhvhVMyAxMpbtGFPLK7NZNTAxstZ22k0IPER8+JB5
+         J/YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/uXix37ClKT+tvsFUNGWguiFM+/73+Mp/B4lwLf0u84=;
-        b=lKAMgBdZ08iFl0gdw98nun7PNJOGh4H08rCrtDbIHX76VCUacTv0otKd2l8ynhMB98
-         WMaLHvjR0i5yB2NJ2vztMnmmDhDyJcUAC55yEdUGo+zdzWFD6nV7hLYv/gqj/troVLL/
-         lnzOjXe5xTCuH/VnOPM21nQQA7zcPeOM8V0FX/8n0AoGd8f3+Ca1VXYNhwIaQnamKfj4
-         TaUwnd4uKNxtsx/AKf5FDKXPv+A3CLxUWRJIFHYIgQ+9S3IKaX7zX7z5lAcCVxQDrAxl
-         32TTNydaKkq6vtLdB1nG1W75HcZ4iA2UpQqbDa+kPXYQaLkp/7MyRcc3Wf3gTHG6Yr3S
-         Rynw==
-X-Gm-Message-State: APjAAAVNtPqpi1hoVPXoYKPePOEpAUhtPRZpSWKa5cc9biVJDbJeyzR9
-        +6JX/CCoOpZsWqDuUd/ugMCXk5TtM3IW6o84U70=
-X-Google-Smtp-Source: APXvYqxf5nJUrTaAzvwJdLif3TENX3xr9UxDNpNQFLH3ZLixVu+bnz+O3k7KO8Y9aYEt+ldFlGPD+WFo1hr9qLomMq8=
-X-Received: by 2002:a37:76c5:: with SMTP id r188mr33868639qkc.394.1565703617234;
- Tue, 13 Aug 2019 06:40:17 -0700 (PDT)
+        bh=hbroNosbT3jj3xT50Om4hklhf3qmqa0/vsPm2jM2OfA=;
+        b=JxioXuQGuZGNcQ4I1i3UzfscER+SBoPP3c6X8IPCJU3v2+OHfOyPwUqxN3oJD5xTLK
+         bHJXs6xo3qOeBr1cH1r8HuSFmjUxEeNQCzjq+db4eUM8kVoh94hr3YPwog8E1uq/2RRL
+         mbf8SMHAbHRD/RScyCyn7os537FPP5hTs47H0ysTqHaa5rf4M6VsfgUHsXHFG7TpgwXm
+         ll02ntuq5yTaS2lTtWV1u6V89MDGdbcqKW63a9jsq3Ya1jf5Dxsa0GEsPcioCkAwxmKM
+         R6laWZ8cXt4e3yyEF6kgG2Q9f9e5X7sOkDllzNLOCAum5dY9VHiCkVyxvCqciKdo12Qw
+         D01Q==
+X-Gm-Message-State: APjAAAVvFylTqtpWW5ItRk4MT7f/deoKxdcbVPkNqnYW9g/Bb2E0YVMr
+        FZ7XTH8RJYtaYFxjZ2B2RdmP3rEiY6RSddic/PR5uV0gcOL0gg==
+X-Google-Smtp-Source: APXvYqzEYicmEDBmYjcPR3bO5l0ihkY1ZO+rSWVZpQ9MlCT7RJwv+miC3Wni9hQ+HVHsK5m/N/ZMZ4J1DybPmYBKjUA=
+X-Received: by 2002:aa7:9790:: with SMTP id o16mr3937688pfp.51.1565703788822;
+ Tue, 13 Aug 2019 06:43:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190809202749.742267-1-arnd@arndb.de> <CGME20190809202857epcas2p14ab10d8ce2e50647671ab8c0ded385a8@epcas2p1.samsung.com>
- <20190809202749.742267-10-arnd@arndb.de> <cc732000-a147-bec2-1082-7bf58ee8f309@samsung.com>
-In-Reply-To: <cc732000-a147-bec2-1082-7bf58ee8f309@samsung.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 13 Aug 2019 15:40:00 +0200
-Message-ID: <CAK8P3a0=5rmWw1vvKX3evVbpk-3Z204QZ3x-DaMs_5e9Kg-YAQ@mail.gmail.com>
-Subject: Re: [PATCH 09/16] fbdev: remove w90x900/nuc900 platform drivers
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     soc@kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>
+References: <0000000000000de921058ee524e1@google.com>
+In-Reply-To: <0000000000000de921058ee524e1@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 13 Aug 2019 15:42:57 +0200
+Message-ID: <CAAeHK+x9pZec1rJ=rpGvX-O9wmCic27zqd_8xKXgviSymy=ajQ@mail.gmail.com>
+Subject: Re: KASAN: user-memory-access Read in hidraw_ioctl
+To:     syzbot <syzbot+5a8c44432a51154ff6d5@syzkaller.appspotmail.com>
+Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 3:30 PM Bartlomiej Zolnierkiewicz
-<b.zolnierkie@samsung.com> wrote:
+On Tue, Jul 30, 2019 at 2:28 PM syzbot
+<syzbot+5a8c44432a51154ff6d5@syzkaller.appspotmail.com> wrote:
 >
+> Hello,
 >
-> On 8/9/19 10:27 PM, Arnd Bergmann wrote:
-> > The ARM w90x900 platform is getting removed, so this driver is obsolete.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> syzbot found the following crash on:
 >
-> Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> HEAD commit:    7f7867ff usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13c21ab4600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
+> dashboard link: https://syzkaller.appspot.com/bug?extid=5a8c44432a51154ff6d5
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 >
-> BTW there is a very minor issue with internal bisectability of
-> this patch series (non-issue in reality because it affects only
-> configs with ARCH_W90X900=y and such are now gone, just FYI):
+> Unfortunately, I don't have any reproducer for this crash yet.
 >
-> arch/arm/mach-w90x900/dev.c (which stays in tree until patch #16
-> ("ARM: remove w90x900 platform") uses include/linux/platform_data/
-> files removed in patches #7 (spi), #9 (fbdev) and #10 (keyboard).
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+5a8c44432a51154ff6d5@syzkaller.appspotmail.com
+>
+> ==================================================================
+> BUG: KASAN: user-memory-access in _copy_to_user+0x124/0x150
+> lib/usercopy.c:27
+> Read of size 148 at addr 0000100000000000 by task syz-executor.2/19576
+>
+> CPU: 1 PID: 19576 Comm: syz-executor.2 Not tainted 5.3.0-rc2+ #23
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xca/0x13e lib/dump_stack.c:113
+>   __kasan_report.cold+0x5/0x33 mm/kasan/report.c:486
+>   kasan_report+0xe/0x12 mm/kasan/common.c:612
+>   check_memory_region_inline mm/kasan/generic.c:185 [inline]
+>   check_memory_region+0x128/0x190 mm/kasan/generic.c:192
+>   _copy_to_user+0x124/0x150 lib/usercopy.c:27
+>   copy_to_user include/linux/uaccess.h:152 [inline]
+>   hidraw_ioctl+0x39c/0xae0 drivers/hid/hidraw.c:392
+>   vfs_ioctl fs/ioctl.c:46 [inline]
+>   file_ioctl fs/ioctl.c:509 [inline]
+>   do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
+>   ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
+>   __do_sys_ioctl fs/ioctl.c:720 [inline]
+>   __se_sys_ioctl fs/ioctl.c:718 [inline]
+>   __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
+>   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x459829
+> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007f6587cfbc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
+> RDX: 0000000020005640 RSI: 0000000090044802 RDI: 0000000000000004
+> RBP: 000000000075c070 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6587cfc6d4
+> R13: 00000000004c21db R14: 00000000004d5540 R15: 00000000ffffffff
+> ==================================================================
 
-Ah right, I actually planned to change that originally but forgot.
-As you say, it's not a huge issue except for building randconfig or
-nuc900_defconfig.
+#syz dup: BUG: bad usercopy in hidraw_ioctl
 
-       Arnd
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
