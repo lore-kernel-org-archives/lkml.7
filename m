@@ -2,91 +2,77 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D343C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F252C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DEB320843
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:32:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565731966;
-	bh=ocGtIgTgq9tRn05MEA2AseiewpPV58nDV6Bz5EJeVWk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Yu4e5dR8CjcQZV9kqf2OFjAb70rtJnUbZZEkWJ1y2JQJ5bpauNdZ3BEbccUE2cAZU
-	 QLXfYbuuxchrcYL11FBWbUob9OnzADayfKKhDbfDdxf6hk9WqkxvJj6SFIyO8auC0z
-	 P3DhOMygvFk3CN4CApPQGtAhrWvkEYAmPkFavq1E=
+	by mail.kernel.org (Postfix) with ESMTP id 5C8F32067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:32:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbfHMVcp (ORCPT
+        id S1727075AbfHMVct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:32:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58274 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 17:32:49 -0400
+Received: from mga06.intel.com ([134.134.136.31]:18152 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726260AbfHMVco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 17:32:44 -0400
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E24320874;
-        Tue, 13 Aug 2019 21:32:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565731963;
-        bh=ocGtIgTgq9tRn05MEA2AseiewpPV58nDV6Bz5EJeVWk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Ryp35nFyB4LnjvwmcCk+mgcBlhlO9BoGGEbJqCuysxgMYE3QrXhMpNU3pFzcephid
-         2eNvhTsz6fl6tXCc9h5oWhr8XJ2JVTIdVMNyhKFCFQNvMRXbeO3LBh7o0ekIv+8Jvk
-         RiHcWeAQT0plw55xtzmZyqe1cwYGYxCeQwnApwjo=
-Received: by mail-qt1-f178.google.com with SMTP id z4so108023057qtc.3;
-        Tue, 13 Aug 2019 14:32:43 -0700 (PDT)
-X-Gm-Message-State: APjAAAX8a7WihbC08SvvG/YBZisgrmqmBVGbcRu4RecmfWD96/PT5jEh
-        qHtxKQwPkFywDxZHSGXBvkq2tYhn7+iy/oDh3w==
-X-Google-Smtp-Source: APXvYqx48HpN2WmRdaQx2jqeMfSS99pR9DuL4bLmyJdzDJvvyzz7a7PeTjZtWFPiQUCpm5ztHYxh1a0HIsggmFI0ZZU=
-X-Received: by 2002:ac8:368a:: with SMTP id a10mr35482240qtc.143.1565731962734;
- Tue, 13 Aug 2019 14:32:42 -0700 (PDT)
+        id S1726774AbfHMVcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 17:32:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 14:32:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
+   d="scan'208";a="177922890"
+Received: from ccalgarr-mobl.amr.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.252.205.92])
+  by fmsmga007.fm.intel.com with ESMTP; 13 Aug 2019 14:32:42 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH 0/6] soundwire: inits and PM additions for 5.4
+Date:   Tue, 13 Aug 2019 16:32:20 -0500
+Message-Id: <20190813213227.5163-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190813124744.32614-1-mripard@kernel.org> <20190813124744.32614-3-mripard@kernel.org>
-In-Reply-To: <20190813124744.32614-3-mripard@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 13 Aug 2019 15:32:31 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL5v1nd85FuuU1aHDDvojnWqs-4aDZAUDm0iCR0akhF9g@mail.gmail.com>
-Message-ID: <CAL_JsqL5v1nd85FuuU1aHDDvojnWqs-4aDZAUDm0iCR0akhF9g@mail.gmail.com>
-Subject: Re: [PATCH 3/5] dt-bindings: watchdog: sun4i: Add the watchdog interrupts
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 6:47 AM Maxime Ripard <mripard@kernel.org> wrote:
->
-> From: Maxime Ripard <maxime.ripard@bootlin.com>
->
-> The Allwinner watchdog has an interrupt, either shared or dedicated
-> depending on the SoC, that has been described in some DT, but not all of
-> them.
->
-> The binding is also completely missing that description. Let's add that
-> property to be consistent.
+This is an update on the RFC, to be applied after the '[PATCH v2 0/3]
+soundwire: debugfs support for 5.4' and '[PATCH 00/17] soundwire:
+fixes for 5.4' series.
 
-I'm fine with fixing errors like this in the conversion patch.
+Total that makes 28 patches submitted for review, broken in 3 sets.
 
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  .../bindings/watchdog/allwinner,sun4i-a10-wdt.yaml           | 5 +++++
->  1 file changed, 5 insertions(+)
+Changes since RFC (Feedback from GregKH, Vinod, Cezary, Guennadi):
+Squashed init sequence fixes in one patch, which remains
+readable. Tested all return values and called update_config() as
+needed.
+Fixed hw-reset debugfs (removed -unsafe and noisy dev_info traces)
+Simplified enable_interrupt() with goto
+Fixed style, removed typos and FIXMES in pm_runtime code
+Clarified commit messages
 
-Either way:
+Pierre-Louis Bossart (6):
+  soundwire: fix startup sequence for Intel/Cadence
+  soundwire: cadence_master: add hw_reset capability in debugfs
+  soundwire: intel: add helper for initialization
+  soundwire: intel: Add basic power management support
+  soundwire: cadence_master: make clock stop exit configurable on init
+  soundwire: intel: add pm_runtime support
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+ drivers/soundwire/cadence_master.c | 135 ++++++++++++++------
+ drivers/soundwire/cadence_master.h |   5 +-
+ drivers/soundwire/intel.c          | 194 +++++++++++++++++++++++++++--
+ 3 files changed, 289 insertions(+), 45 deletions(-)
+
+-- 
+2.20.1
+
