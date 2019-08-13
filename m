@@ -2,143 +2,140 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B21E9C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D3CC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 870822067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0E3B20840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:46:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="NfTsfbgV"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="j6j9cc3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbfHMRoF (ORCPT
+        id S1728084AbfHMRqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 13:44:05 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34782 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfHMRoF (ORCPT
+        Tue, 13 Aug 2019 13:46:30 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33083 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727679AbfHMRq3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 13:44:05 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c7so3173886otp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 10:44:04 -0700 (PDT)
+        Tue, 13 Aug 2019 13:46:29 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n190so10818077pgn.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 10:46:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=e//tFyHxvVn4RxWw0GV+f727CP/Uza8Mg4HOvjD9WwM=;
-        b=NfTsfbgV5WGpTvlyy9A2mUGXaPdLqooU2lc+4m1FQdAHncqrJoJ61g1Z/JBUHlUuFo
-         +dA4vaoxJ7F+AQcVHAKmchrxWvSscoyuSUif6QJ0ONNejw3dWzOxsSa1qEqhuwI5pEdz
-         u/uBFATnFPuT5dIsF6QYDaDvDP6kZJffd6sQqhyDTwHgzxET4apWFXmw8w1hjDkuZi7s
-         ilIa0b46bfzxj+OcIFG+xqhYhiVnO8tIJjLYRY+CjN4z2RiC2V97fHg2bEaBh/2/7P7h
-         3B+qDE8umFimLohSegAxkrj35As+rRFinFw7yZgAYV6yEdkBpPQPPWoQFXtlvOhaZkYu
-         GVFw==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mXGH6sfF5Mv8489pO8HNMnvL4N6Kj76jRZqkd1Btows=;
+        b=j6j9cc3oeGRVjeb4q1mX5UvZe7oyDjzfb402Fg+7HhPoR8ZZ6I+HCu+AQE3gq0eDDd
+         5SBPUQaw2UJReVDDVyXNzMhXDX6rSNUrGZEzebEzR3mC+q1snggT0oxh7Uly5MzYNf5r
+         yJLjMHsZJW7MI2LqKKAA1/VIg6caDPkH/ibZtIg4WtRiccYwshL2Lm7PbBhc9gdSlBBi
+         BZoO7hz6wHRCK6BnX9Ew8PkGymJjUq48Of9zE+Aq9pDUvh2e/I/OMBDu85QL/WNz3rPv
+         lyKbsxEcKoQzkyqDhiw2oQOo/gaNSd8BdY6gFL1sHjdu/3qsLd9O7/r4sNtlcfFs2fOa
+         62CQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=e//tFyHxvVn4RxWw0GV+f727CP/Uza8Mg4HOvjD9WwM=;
-        b=H+1Fpzpyr9/96tUXlPitta8n1mYX3YZig/ZPZVVd9XWwIp1xL7AeDph1lYs2Z60Ixb
-         ZiBBmhaJ8MHSLT8gjUx5rbIbOhNY4ueSuqhKpUw6Vxpmlek9Qa7VwKSQdqODX7oVHGw3
-         miX5uxxGa0tZOAVHhChhmYZD6h61B1eKx/O0LtKGyyBrQiXaFiy5Cw9QY24kaDqFOR1i
-         +P9KarzQ91Hg5RVmW+A2WRDofBoaMwCptODzdFXvioLbmIgyzHPswvdxP1yOBD32vDLJ
-         pEjPFHU9Oreoh+cECZu6QTiCW7vZ0GwAGvcwb5NzI0l8WJ/ENTbyQWbL6tcbmu255HMp
-         Wi9g==
-X-Gm-Message-State: APjAAAWry1WRWJ/dpCTTpgHL0bJ6NDiCyjEVIzmre8R/XWQD/x865GLV
-        T9nCxz2z6qKBRWpNI4hmhDjkbkQwvuM=
-X-Google-Smtp-Source: APXvYqycnXJThie+s/45ClHCc8Nm2hhnBi6KBWzn8Vazilpo9gUuJDafqhZi+w14fYjO2RKqUobGyA==
-X-Received: by 2002:a02:cb51:: with SMTP id k17mr9208388jap.4.1565718243824;
-        Tue, 13 Aug 2019 10:44:03 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id s3sm88083226iob.49.2019.08.13.10.44.03
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mXGH6sfF5Mv8489pO8HNMnvL4N6Kj76jRZqkd1Btows=;
+        b=CvVJHk8HXD1S3uxT4Aw26yOkCkSIRHzO9/YtF4Jilj/iqCsNUZVt83tsdihJGctGiU
+         Y42STOZUhPie74edS+uN1bbZ+lTc6hiepS7MuVRYPeqUlK62J89qEPZFpGxH1sbhk75h
+         SPP2ahwZfp4yie8qrfhfuzKeHcCrob4T3rb6RVl8uIZO1QKGDJMlGLgJvBb05J/5SK7c
+         VQLhiOKkFDw5X2oXDb6x8px0607C/ihaQExxvaOPzGSlAibzk8FVaUX8QGhWry9NTYWE
+         xMIgFBCyryNh/3DviLst2lu1+v5hrrtNSWA5cT0FQLhQF4knYVFPRBuInOJcaiY0ng08
+         NGtg==
+X-Gm-Message-State: APjAAAVjpUQQibJshpFyuj6jYymMmPM2OCaZSEJQ/Wjyw5qQmHx6isgm
+        ir6z51g6SBglNYQ1Hl7cHaT6QMJHZzA=
+X-Google-Smtp-Source: APXvYqyIrpmWgiXBiK3PDYma3AbBRu7FLdOh0ZmeN1sG7QioNu25fJleeVa7zulYpZwXNMNhBdfcVQ==
+X-Received: by 2002:a17:90b:d8f:: with SMTP id bg15mr3266929pjb.65.1565718388234;
+        Tue, 13 Aug 2019 10:46:28 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:674])
+        by smtp.gmail.com with ESMTPSA id g11sm9780395pfh.121.2019.08.13.10.46.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Aug 2019 10:44:03 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 10:44:02 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org
-cc:     Christoph Hellwig <hch@lst.de>, Palmer Dabbelt <palmer@sifive.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/15] irqchip/sifive-plic: set max threshold for ignored
- handlers
-In-Reply-To: <20190813154747.24256-2-hch@lst.de>
-Message-ID: <alpine.DEB.2.21.9999.1908131032260.30024@viisi.sifive.com>
-References: <20190813154747.24256-1-hch@lst.de> <20190813154747.24256-2-hch@lst.de>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Tue, 13 Aug 2019 10:46:27 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 13:46:25 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-btrfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] block: annotate refault stalls from IO submission
+Message-ID: <20190813174625.GA21982@cmpxchg.org>
+References: <20190808190300.GA9067@cmpxchg.org>
+ <20190809221248.GK7689@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809221248.GK7689@dread.disaster.area>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thomas, Jason, Marc,
-
-On Tue, 13 Aug 2019, Christoph Hellwig wrote:
-
-> When running in M-mode we still the S-mode plic handlers in the DT.
-> Ignore them by setting the maximum threshold.
+On Sat, Aug 10, 2019 at 08:12:48AM +1000, Dave Chinner wrote:
+> On Thu, Aug 08, 2019 at 03:03:00PM -0400, Johannes Weiner wrote:
+> > psi tracks the time tasks wait for refaulting pages to become
+> > uptodate, but it does not track the time spent submitting the IO. The
+> > submission part can be significant if backing storage is contended or
+> > when cgroup throttling (io.latency) is in effect - a lot of time is
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-
-If you're happy with this, could one of you ack it so we can merge it 
-with the rest of this series through the RISC-V tree?
-
-thanks
-
-- Paul
-
-> ---
->  drivers/irqchip/irq-sifive-plic.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
+> Or the wbt is throttling.
 > 
-> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-> index cf755964f2f8..c72c036aea76 100644
-> --- a/drivers/irqchip/irq-sifive-plic.c
-> +++ b/drivers/irqchip/irq-sifive-plic.c
-> @@ -244,6 +244,7 @@ static int __init plic_init(struct device_node *node,
->  		struct plic_handler *handler;
->  		irq_hw_number_t hwirq;
->  		int cpu, hartid;
-> +		u32 threshold = 0;
->  
->  		if (of_irq_parse_one(node, i, &parent)) {
->  			pr_err("failed to parse parent for context %d.\n", i);
-> @@ -266,10 +267,16 @@ static int __init plic_init(struct device_node *node,
->  			continue;
->  		}
->  
-> +		/*
-> +		 * When running in M-mode we need to ignore the S-mode handler.
-> +		 * Here we assume it always comes later, but that might be a
-> +		 * little fragile.
-> +		 */
->  		handler = per_cpu_ptr(&plic_handlers, cpu);
->  		if (handler->present) {
->  			pr_warn("handler already present for context %d.\n", i);
-> -			continue;
-> +			threshold = 0xffffffff;
-> +			goto done;
->  		}
->  
->  		handler->present = true;
-> @@ -279,8 +286,9 @@ static int __init plic_init(struct device_node *node,
->  		handler->enable_base =
->  			plic_regs + ENABLE_BASE + i * ENABLE_PER_HART;
->  
-> +done:
->  		/* priority must be > threshold to trigger an interrupt */
-> -		writel(0, handler->hart_base + CONTEXT_THRESHOLD);
-> +		writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
->  		for (hwirq = 1; hwirq <= nr_irqs; hwirq++)
->  			plic_toggle(handler, hwirq, 0);
->  		nr_handlers++;
-> -- 
-> 2.20.1
+> > spent in submit_bio(). In that case, we underreport memory pressure.
+> > 
+> > Annotate submit_bio() to account submission time as memory stall when
+> > the bio is reading userspace workingset pages.
 > 
+> PAtch looks fine to me, but it raises another question w.r.t. IO
+> stalls and reclaim pressure feedback to the vm: how do we make use
+> of the pressure stall infrastructure to track inode cache pressure
+> and stalls?
 > 
+> With the congestion_wait() and wait_iff_congested() being entire
+> non-functional for block devices since 5.0, there is no IO load
+> based feedback going into memory reclaim from shrinkers that might
+> require IO to free objects before they can be reclaimed. This is
+> directly analogous to page reclaim writing back dirty pages from
+> the LRU, and as I understand it one of things the PSI is supposed
+> to be tracking.
+>
+> Lots of workloads create inode cache pressure and often it can
+> dominate the time spent in memory reclaim, so it would seem to me
+> that having PSI only track/calculate pressure and stalls from LRU
+> pages misses a fair chunk of the memory pressure and reclaim stalls
+> that can be occurring.
 
+psi already tracks the entire reclaim operation. So if reclaim calls
+into the shrinker and the shrinker scans inodes, initiates IO, or even
+waits on IO, that time is accounted for as memory pressure stalling.
+
+If you can think of asynchronous events that are initiated from
+reclaim but cause indirect stalls in other contexts, contexts which
+can clearly link the stall back to reclaim activity, we can annotate
+them using psi_memstall_enter() / psi_memstall_leave().
+
+In that vein, what would be great to have is be a distinction between
+read stalls on dentries/inodes that have never been touched before
+versus those that have been recently reclaimed - analogous to cold
+page faults vs refaults.
+
+It would help psi, sure, but more importantly it would help us better
+balance pressure between filesystem metadata and the data pages. We
+would be able to tell the difference between a `find /' and actual
+thrashing, where hot inodes are getting kicked out and reloaded
+repeatedly - and we could backfeed that pressure to the LRU pages to
+allow the metadata caches to grow as needed.
+
+For example, it could make sense to swap out a couple of completely
+unused anonymous pages if it means we could hold the metadata
+workingset fully in memory. But right now we cannot do that, because
+we cannot risk swapping just because somebody runs find /.
+
+I have semi-seriously talked to Josef about this before, but it wasn't
+quite obvious where we could track non-residency or eviction
+information for inodes, dentries etc. Maybe you have an idea?
