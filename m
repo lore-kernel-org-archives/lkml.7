@@ -2,112 +2,148 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE4AC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F48C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8FF206C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:35:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aLIR1UYB"
+	by mail.kernel.org (Postfix) with ESMTP id 15758206C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:36:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbfHMJfq (ORCPT
+        id S1728047AbfHMJgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 05:35:46 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38642 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727107AbfHMJfq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:35:46 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7D9Z06h059610;
-        Tue, 13 Aug 2019 04:35:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1565688900;
-        bh=z5SehQ6Yf5BT5rg3RPDWJ4hLrJF6X7OEw5KQmH3sPbE=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=aLIR1UYBliStSX5k3OHl42m26KLHXoP0AkC9ZWWPZMx1oGzA02fKNuMZSzX9nzeui
-         1BaoruULQXBuSGCg+GK/edlb1RqEmyPBz0gG90TBgrXvle4g0z2eHMLh3LtdVdQD3/
-         0QPXsIyhG4QVW1ELFUnfXsMFqb1iGlZj+2Q84K6s=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7D9Z0VS014160
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 13 Aug 2019 04:35:00 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 13
- Aug 2019 04:34:59 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 13 Aug 2019 04:34:59 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7D9YvUf054466;
-        Tue, 13 Aug 2019 04:34:58 -0500
-Subject: Re: [PATCH] ASoC: ti: Fix typos in ti/Kconfig
-To:     Masanari Iida <standby24x7@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <tiwai@suse.com>, <perex@perex.cz>,
-        <alsa-devel@alsa-project.org>
-References: <20190813034235.30673-1-standby24x7@gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <9674e996-ef05-5da3-9d20-1ad5c44a6176@ti.com>
-Date:   Tue, 13 Aug 2019 12:35:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 13 Aug 2019 05:36:01 -0400
+Received: from mga11.intel.com ([192.55.52.93]:13805 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727377AbfHMJgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 05:36:00 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 02:36:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,381,1559545200"; 
+   d="scan'208";a="260076487"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.113])
+  by orsmga001.jf.intel.com with ESMTP; 13 Aug 2019 02:35:57 -0700
+Date:   Tue, 13 Aug 2019 17:36:16 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     Rong Chen <rong.a.chen@intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, michel@daenzer.net,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Daniel Vetter <daniel@ffwll.ch>, lkp@01.org,
+        linux-kernel@vger.kernel.org, ying.huang@intel.com
+Subject: Re: [LKP] [drm/mgag200] 90f479ae51: vm-scalability.median -18.8%
+ regression
+Message-ID: <20190813093616.GA65475@shbuild999.sh.intel.com>
+References: <20190729095155.GP22106@shao2-debian>
+ <1c0bf22b-2c69-6b45-f700-ed832a3a5c17@suse.de>
+ <14fdaaed-51c8-b270-b46b-cba7b5c4ba52@suse.de>
+ <20190805070200.GA91650@shbuild999.sh.intel.com>
+ <c0c3f387-dc93-3146-788c-23258b28a015@intel.com>
+ <045a23ab-78f7-f363-4a2e-bf24a7a2f79e@suse.de>
+ <37ae41e4-455d-c18d-5c93-7df854abfef9@intel.com>
+ <370747ca-4dc9-917b-096c-891dcc2aedf0@suse.de>
+ <c6e220fe-230c-265c-f2fc-b0948d1cb898@intel.com>
+ <20190812072545.GA63191@shbuild999.sh.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190813034235.30673-1-standby24x7@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20190812072545.GA63191@shbuild999.sh.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Thomas, 
 
-
-On 13/08/2019 6.42, Masanari Iida wrote:
-> This patch fixes some spelling typo in Kconfig.
+On Mon, Aug 12, 2019 at 03:25:45PM +0800, Feng Tang wrote:
+> Hi Thomas,
 > 
-> Signed-off-by: Masanari Iida <standby24x7@gmail.com>
-
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-
-> ---
->  sound/soc/ti/Kconfig | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> On Fri, Aug 09, 2019 at 04:12:29PM +0800, Rong Chen wrote:
+> > Hi,
+> > 
+> > >>Actually we run the benchmark as a background process, do we need to
+> > >>disable the cursor and test again?
+> > >There's a worker thread that updates the display from the shadow buffer.
+> > >The blinking cursor periodically triggers the worker thread, but the
+> > >actual update is just the size of one character.
+> > >
+> > >The point of the test without output is to see if the regression comes
+> > >from the buffer update (i.e., the memcpy from shadow buffer to VRAM), or
+> > >from the worker thread. If the regression goes away after disabling the
+> > >blinking cursor, then the worker thread is the problem. If it already
+> > >goes away if there's simply no output from the test, the screen update
+> > >is the problem. On my machine I have to disable the blinking cursor, so
+> > >I think the worker causes the performance drop.
+> > 
+> > We disabled redirecting stdout/stderr to /dev/kmsg,  and the regression is
+> > gone.
+> > 
+> > commit:
+> >   f1f8555dfb9 drm/bochs: Use shadow buffer for bochs framebuffer console
+> >   90f479ae51a drm/mgag200: Replace struct mga_fbdev with generic framebuffer
+> > emulation
+> > 
+> > f1f8555dfb9a70a2  90f479ae51afa45efab97afdde testcase/testparams/testbox
+> > ----------------  -------------------------- ---------------------------
+> >          %stddev      change         %stddev
+> >              \          |                \
+> >      43785                       44481
+> > vm-scalability/300s-8T-anon-cow-seq-hugetlb/lkp-knm01
+> >      43785                       44481        GEO-MEAN vm-scalability.median
 > 
-> diff --git a/sound/soc/ti/Kconfig b/sound/soc/ti/Kconfig
-> index 2197f3e1eaed..87a9b9dd4e98 100644
-> --- a/sound/soc/ti/Kconfig
-> +++ b/sound/soc/ti/Kconfig
-> @@ -12,7 +12,7 @@ config SND_SOC_TI_SDMA_PCM
->  
->  comment "Texas Instruments DAI support for:"
->  config SND_SOC_DAVINCI_ASP
-> -	tristate "daVinci Audio Serial Port (ASP) or McBSP suport"
-> +	tristate "daVinci Audio Serial Port (ASP) or McBSP support"
->  	depends on ARCH_DAVINCI || COMPILE_TEST
->  	select SND_SOC_TI_EDMA_PCM
->  	help
-> @@ -33,7 +33,7 @@ config SND_SOC_DAVINCI_MCASP
->  	  - Keystone devices
->  
->  config SND_SOC_DAVINCI_VCIF
-> -	tristate "daVinci Voice Interface (VCIF) suport"
-> +	tristate "daVinci Voice Interface (VCIF) support"
->  	depends on ARCH_DAVINCI || COMPILE_TEST
->  	select SND_SOC_TI_EDMA_PCM
->  	help
+> Till now, from Rong's tests:
+> 1. Disabling cursor blinking doesn't cure the regression.
+> 2. Disabling printint test results to console can workaround the
+> regression.
 > 
+> Also if we set the perfer_shadown to 0, the regression is also
+> gone.
 
-- Péter
+We also did some further break down for the time consumed by the
+new code.
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+The drm_fb_helper_dirty_work() calls sequentially 
+1. drm_client_buffer_vmap	  (290 us)
+2. drm_fb_helper_dirty_blit_real  (19240 us)
+3. helper->fb->funcs->dirty()    ---> NULL for mgag200 driver
+4. drm_client_buffer_vunmap       (215 us)
+
+The average run time is listed after the function names.
+
+From it, we can see drm_fb_helper_dirty_blit_real() takes too long
+time (about 20ms for each run). I guess this is the root cause
+of this regression, as the original code doesn't use this dirty worker.
+
+As said in last email, setting the prefer_shadow to 0 can avoid
+the regrssion. Could it be an option?
+
+Thanks,
+Feng
+
+> 
+> --- a/drivers/gpu/drm/mgag200/mgag200_main.c
+> +++ b/drivers/gpu/drm/mgag200/mgag200_main.c
+> @@ -167,7 +167,7 @@ int mgag200_driver_load(struct drm_device *dev, unsigned long flags)
+>  		dev->mode_config.preferred_depth = 16;
+>  	else
+>  		dev->mode_config.preferred_depth = 32;
+> -	dev->mode_config.prefer_shadow = 1;
+> +	dev->mode_config.prefer_shadow = 0;
+> 
+> And from the perf data, one obvious difference is good case don't
+> call drm_fb_helper_dirty_work(), while bad case calls.
+> 
+> Thanks,
+> Feng
+> 
+> > Best Regards,
+> > Rong Chen
