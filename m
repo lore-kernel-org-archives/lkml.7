@@ -2,114 +2,95 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8D0C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9455C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 307AE20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ED39208C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:14:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565734476;
+	bh=6wCizBaaZT2k/09mFrNXRExfBAwJv2YLSMnChPGtw4g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cdGWj0nFtWrGgmDEAMpwmmaU+WK8XHXhJ+yi/mcRr+8GyYnMkQfUaVlNMSaDRNVXG
+	 1j5PnSTBau+SRDuu/LtMP7yQ7aIRy9aapT5HXDg7f9Fsk61cp2vEtAtsj5ruWtxGKG
+	 tWy6/A1O5fFXJUo19y1I0uVPd9fvTO4pTc/0Dp6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbfHMWKZ (ORCPT
+        id S1727107AbfHMWOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 18:10:25 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:45840 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfHMWKY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 18:10:24 -0400
-Received: by mail-vs1-f66.google.com with SMTP id h28so73240935vsl.12;
-        Tue, 13 Aug 2019 15:10:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iTOCmMlUQI4Ou/DijdBIjbiZAWNFSaKrQKnKPO3XY8o=;
-        b=TUXM+SPFHY3k76fw8TXX2rhKycxcNktfOaZmgKU4b05jYMOsBfnQTSa6wAGSzcquwc
-         MvbBrJYiikbfk6Dc9dpqyEpUJFj5lG/DH3wT0dcXqDlKjhP2wLCdrS3sLblnypg1S1KW
-         n3wCmdf970WgN5xOMzjyoxG+7MDhsDFKt4MDdqPcEipKympffRDhsN2tYcWFtDqdlZKL
-         Bk+gEc+Ez6IUOcISTpI99hlEKKUpQCNErgLyh4+Qic3zFwvDzXiKc2YGF0iGL7hqjSHM
-         uJ1wk1qJLMr1fhR1VXlxpHjW5NpZiIsm93WCxN5G3zqbFllSpm7sYPIEA/PDZHWCFCLv
-         SWLw==
-X-Gm-Message-State: APjAAAXsbQjFexFM55EVRuyVPjWaKNGH+pM4JcZ1MwpmJKlxQywOcQa0
-        mST90q5rX68b1vg3L3etjS9HKzBUEDWCogrkif8=
-X-Google-Smtp-Source: APXvYqz0UYBfkcWb8zAzxB0wr6Gyxnzd4i5JutnFy3WCLJjC4APDP1rokNzg6YVyPjaXbINByjUSBwqnadpRO9ZhE9M=
-X-Received: by 2002:a67:cd09:: with SMTP id u9mr26551154vsl.222.1565734223495;
- Tue, 13 Aug 2019 15:10:23 -0700 (PDT)
+        Tue, 13 Aug 2019 18:14:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40616 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726155AbfHMWOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 18:14:35 -0400
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 368582070D;
+        Tue, 13 Aug 2019 22:14:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565734474;
+        bh=6wCizBaaZT2k/09mFrNXRExfBAwJv2YLSMnChPGtw4g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0uaRXv8D5HRtmKK3R9sZVd0gtdGEAJy9OAYrUbynXlMjib/y//8/8b1GMIl0koAge
+         zvdeq5RXKS0RUpLgqM+wsU8tmSLaxzBvsjGnlrjpFHlq8frKD/7T7Y1NciVDfSwTpC
+         34kSkZyb8+4NWRxQuPpvthHnzOYQkdnd6haJ4Kwc=
+Received: by mail-qk1-f178.google.com with SMTP id r4so80901244qkm.13;
+        Tue, 13 Aug 2019 15:14:34 -0700 (PDT)
+X-Gm-Message-State: APjAAAUmVma8FonAfubrxl1pv6qK7mtjv2TnRGvqIaf5bBr5R15kfheQ
+        ObUnbYYi5KqWJY4GJBP6fGEGgMVef9/axznA9g==
+X-Google-Smtp-Source: APXvYqwk126OivmGjH6r+ni/zAgOht3m3QXJodkzCFH+TUHs2iVPGSLnoqVVTdkeSVJkGVzE/d/O+3TNCBaPTI7BGz4=
+X-Received: by 2002:a37:a48e:: with SMTP id n136mr36131378qke.223.1565734473435;
+ Tue, 13 Aug 2019 15:14:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190809002104.18599-1-stancheff@cray.com> <20190809002104.18599-2-stancheff@cray.com>
- <CAK7LNAScm9P+QMZiqqSQnOoPsN54OTcTGpaDgxTbjJ_knoeGhA@mail.gmail.com>
- <CAJ48U8Xp40is+R1dMW8sXq77ZS5D_h+hHte5Mq5eOrtpb41Qxw@mail.gmail.com> <CAK7LNAT5OVcw9tJtaR8VE_JEemAzkqV6FeSHPEy38wotxjhkZg@mail.gmail.com>
-In-Reply-To: <CAK7LNAT5OVcw9tJtaR8VE_JEemAzkqV6FeSHPEy38wotxjhkZg@mail.gmail.com>
-From:   Shaun Tancheff <shaun@tancheff.com>
-Date:   Tue, 13 Aug 2019 17:10:12 -0500
-Message-ID: <CAJ48U8UKzGPj7JM2z2vnTDC4fT_7+X2NXVLf1T116-ym50i=xQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] kbuild: recursive build of external kernel modules
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Shaun Tancheff <stancheff@cray.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Renninger <trenn@suse.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM mailing list <linux-pm@vger.kernel.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>
+References: <20190807003629.2974-1-andrew@aj.id.au> <20190807003629.2974-2-andrew@aj.id.au>
+In-Reply-To: <20190807003629.2974-2-andrew@aj.id.au>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 13 Aug 2019 16:14:22 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKXda7f43=ZdtTsyrdhdqn+H4L=7zQXtB_EEfHdi=rHLg@mail.gmail.com>
+Message-ID: <CAL_JsqKXda7f43=ZdtTsyrdhdqn+H4L=7zQXtB_EEfHdi=rHLg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: mmc: Document Aspeed SD controller
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ryan Chen <ryanchen.aspeed@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 8:07 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+On Tue, Aug 6, 2019 at 6:38 PM Andrew Jeffery <andrew@aj.id.au> wrote:
 >
-> On Tue, Aug 13, 2019 at 2:34 AM Shaun Tancheff <shaun@tancheff.com> wrote:
-> >
-> > On Mon, Aug 12, 2019 at 10:24 AM Masahiro Yamada
-> > <yamada.masahiro@socionext.com> wrote:
-> > >
-> > > On Fri, Aug 9, 2019 at 9:21 AM Shaun Tancheff <shaun@tancheff.com> wrote:
-> > > >
-> > > > When building a tree of external modules stage 2 fails
-> > > > silently as the root modules.order is empty.
-> > > >
-> > > > Modify the modules.order location to be fixed to the
-> > > > root when KBUILD_EXTMOD is specified and write all
-> > > > module paths to the single modules.order file.
-> > >
-> > > Could you try v5.3-rc4 please?
-> >
-> > So it seems we are using 'subdir-m' but that is now gone?
-> >
-> > Is there a recommend pattern for backward compatibility?
-> >
-> > Thanks!
+> The ASPEED SD/SDIO/MMC controller exposes two slots implementing the
+> SDIO Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit
+> data bus if only a single slot is enabled.
 >
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 >
-> Please convert
+> ---
+> v4:
+> * Make use of mmc-controller.yaml
+> * Document sdhci,auto-cmd12
 >
-> subdir-m += dir1
-> subdir-m += dir2
->
-> into
->
-> obj-m += dir1/
-> obj-m += dir2/
+> v2:
+> * Fix compatible enums
+> * Add AST2600 compatibles
+> * Describe #address-cells / #size-cells
+> ---
+>  .../devicetree/bindings/mmc/aspeed,sdhci.yaml | 105 ++++++++++++++++++
+>  1 file changed, 105 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
 
-After working through some local quirks everything is working now.
-Thanks!
-
->
->
-> Thanks.
->
-> --
-> Best Regards
-> Masahiro Yamada
+Reviewed-by: Rob Herring <robh@kernel.org>
