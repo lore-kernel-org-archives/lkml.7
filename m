@@ -2,120 +2,143 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12704C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6B0C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6EFD206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 131582070C
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:41:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jtHRbV2j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbfHMAku (ORCPT
+        id S1726785AbfHMAlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 20:40:50 -0400
-Received: from mga14.intel.com ([192.55.52.115]:25093 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726453AbfHMAku (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 20:40:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 17:40:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,379,1559545200"; 
-   d="scan'208";a="259963261"
-Received: from unknown (HELO [10.239.196.24]) ([10.239.196.24])
-  by orsmga001.jf.intel.com with ESMTP; 12 Aug 2019 17:40:47 -0700
-Subject: Re: [PATCH v3] perf diff: Report noisy for cycles diff
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20190809233029.12265-1-yao.jin@linux.intel.com>
- <20190812083543.GA11752@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <959b3b52-269c-8f23-9ac7-a881334ca904@linux.intel.com>
-Date:   Tue, 13 Aug 2019 08:40:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 12 Aug 2019 20:41:19 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33017 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726578AbfHMAlS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 12 Aug 2019 20:41:18 -0400
+Received: by mail-pl1-f194.google.com with SMTP id c14so48443403plo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 17:41:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o2YhU7ZI7zRBNkSqHEOZBShLAkxc14NOfVdnGmm5fKU=;
+        b=jtHRbV2jvCMOrug1VL8DlniNesFQqe4mwKTZ3VzgssQ3VQs6b5LtUaNMVZsc5CuJDp
+         Iw8whkhdXJ7rcwjGwBhO6bOb4R9HDy3aGxnSkB24MJ9hY0F8GUX42o4R2L5RbO1mHvNQ
+         fgfZIIuryuM6MsMlE2FCQsFy9Ko0MwXC35YX0zFHFknsYf9vPZZbgUGmBgAsRIvp4Uqd
+         60LKpvXh51SGPv9+hzg4POm9qQcvjpOv0jvCdTcXtAwCmnYW+REf4ctA9Xh3nN2C0Pk2
+         Dfg6a9VXk1PXwpLh/pQidSNRP79rt83WW1lNCqDZaP/t4ID/ZKf6fmlxyUwdKcQccRx2
+         iAHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o2YhU7ZI7zRBNkSqHEOZBShLAkxc14NOfVdnGmm5fKU=;
+        b=RE/bgFd2CWhQg2g+z+gAUfgAerQLjdRWwMQ8hlaCy6FPAlQnJKdgCPb8rVNrziSwdj
+         KSsvFAYWxjhm/5npFqJDHXwCEIfJqHFCHN//Wp8KLiBr4l0FGFyErBzdmWsOSTIrhmwB
+         gQi98/5Btu0W3wHIkESuwpK5bYymlFPmDW049aWVxALfE/NnOdKVpGrHiJTPPfJQvme8
+         mUa3dFyQgSaHMt9a2WGdbsToD7qh6T2QVEZ2lGUuDuLoyntlghgwUU+UJnLSnVkkljGB
+         R53+rE4utqvUAu26P6zx8x5xElqjZre/5gZDH4nGOORaRZHGOA4Qlof/uxXSSfuf3du/
+         QWRw==
+X-Gm-Message-State: APjAAAV9psQlhDlrOztSamwUoCXgVmd+JJd6ixf21lHTN3gq3wkKLQdM
+        ji4C0r7L1es40IENv4OP69H9C3x2SQw5B9wWj4PRxg==
+X-Google-Smtp-Source: APXvYqwMN7m1oxhncwRThnueyB+Cpwr7fkWXdNKhV0HMwJO6gvgJeykiY4kuCkE7DaZ3nG+H6w12tIuXT7ijhEgDApc=
+X-Received: by 2002:a17:902:5983:: with SMTP id p3mr25962931pli.232.1565656877406;
+ Mon, 12 Aug 2019 17:41:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190812083543.GA11752@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190812182421.141150-1-brendanhiggins@google.com>
+ <20190812182421.141150-4-brendanhiggins@google.com> <20190812225520.5A67C206A2@mail.kernel.org>
+ <20190812233336.GA224410@google.com> <20190812235940.100842063F@mail.kernel.org>
+In-Reply-To: <20190812235940.100842063F@mail.kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 12 Aug 2019 17:41:05 -0700
+Message-ID: <CAFd5g44xciLPBhH_J3zUcY3TedWTijdnWgF055qffF+dAguhPQ@mail.gmail.com>
+Subject: Re: [PATCH v12 03/18] kunit: test: add string_stream a std::stream
+ like string builder
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Aug 12, 2019 at 4:59 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Brendan Higgins (2019-08-12 16:33:36)
+> > On Mon, Aug 12, 2019 at 03:55:19PM -0700, Stephen Boyd wrote:
+> > > Quoting Brendan Higgins (2019-08-12 11:24:06)
+> > > > +void string_stream_clear(struct string_stream *stream)
+> > > > +{
+> > > > +       struct string_stream_fragment *frag_container, *frag_container_safe;
+> > > > +
+> > > > +       spin_lock(&stream->lock);
+> > > > +       list_for_each_entry_safe(frag_container,
+> > > > +                                frag_container_safe,
+> > > > +                                &stream->fragments,
+> > > > +                                node) {
+> > > > +               list_del(&frag_container->node);
+> > >
+> > > Shouldn't we free the allocation here? Otherwise, if some test is going
+> > > to add, add, clear, add, it's going to leak until the test is over?
+> >
+> > So basically this means I should add a kunit_kfree and
+> > kunit_resource_destroy (respective equivalents to devm_kfree, and
+> > devres_destroy) and use kunit_kfree here?
+> >
+>
+> Yes, or drop the API entirely? Does anything need this functionality?
 
+Drop the kunit_resource API? I would strongly prefer not to.
+string_stream uses it; the expectation stuff uses it via string
+stream; some of the tests in this patchset allocate memory as part of
+the test setup that uses it. The intention is that we would provide a
+kunit_res_* version of many (hopefully eventually most) common
+resources required by tests and it would be used in the same way that
+the devm_* stuff is.
 
-On 8/12/2019 4:35 PM, Jiri Olsa wrote:
-> On Sat, Aug 10, 2019 at 07:30:29AM +0800, Jin Yao wrote:
-> 
-> SNIP
-> 
->>   static int process_block_per_sym(struct hist_entry *he)
->> @@ -684,6 +694,21 @@ static struct hist_entry *get_block_pair(struct hist_entry *he,
->>   	return NULL;
->>   }
->>   
->> +static void init_spark_values(unsigned long *svals, int num)
->> +{
->> +	for (int i = 0; i < num; i++)
->> +		svals[i] = 0;
->> +}
->> +
->> +static void update_spark_value(unsigned long *svals, int num,
->> +			       struct stats *stats, u64 val)
->> +{
->> +	int n = stats->n;
->> +
->> +	if (n < num)
->> +		svals[n] = val;
->> +}
->> +
->>   static void compute_cycles_diff(struct hist_entry *he,
->>   				struct hist_entry *pair)
->>   {
->> @@ -692,6 +717,23 @@ static void compute_cycles_diff(struct hist_entry *he,
->>   		pair->diff.cycles =
->>   			pair->block_info->cycles_aggr / pair->block_info->num_aggr -
->>   			he->block_info->cycles_aggr / he->block_info->num_aggr;
->> +
-> 
-> should below code be executed only for show_noisy?
-> 
-> jirka
-> 
-
-Oh, yes, following code should be executed only when show_noisy is 
-enabled. Thanks for pointing out this issue. I will refine the code.
-
-Thanks
-Jin Yao
-
->> +		init_stats(&pair->diff.stats);
->> +		init_spark_values(pair->diff.svals, NUM_SPARKS);
->> +
->> +		for (int i = 0; i < pair->block_info->num; i++) {
->> +			u64 val;
->> +
->> +			if (i >= he->block_info->num || i >= NUM_SPARKS)
->> +				break;
->> +
->> +			val = labs(pair->block_info->cycles_spark[i] -
->> +				     he->block_info->cycles_spark[i]);
->> +
->> +			update_spark_value(pair->diff.svals, NUM_SPARKS,
->> +					   &pair->diff.stats, val);
->> +			update_stats(&pair->diff.stats, val);
->> +		}
->>   	}
->>   }
-> 
-> SNIP
-> 
+Nevertheless, I am fine adding the kunit_resource_destroy, etc. I just
+wanted to make sure I understood what you were asking.
