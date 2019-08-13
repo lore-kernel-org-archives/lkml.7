@@ -2,139 +2,123 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B84FC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E747AC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF77420663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9534F20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 07:29:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="y1Nui8Yc"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="OYF/+NOE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbfHMH24 (ORCPT
+        id S1727666AbfHMH3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 03:28:56 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:43934 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfHMH24 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 03:28:56 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7D7Sr2q126775;
-        Tue, 13 Aug 2019 02:28:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1565681333;
-        bh=RTJzoiXVMikkp9s2WOQF+duohDPE5hWSoOGZjoZeRLs=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=y1Nui8YcwJE9ULpLNZwAn4uZeyoitISl9jFLdJPYVk62gPOe372RQxvmmiRx3MGVp
-         yYt84xTsCfCPPFD6YoOGuvLnip/UvDBPxXxgemVsntJYJt+owLvNVodU/v6X32JmIL
-         kOTCfdcw4yFgcG4o/XSK25MJAB5eBPwc6nkcshuY=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7D7SrqS117369
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 13 Aug 2019 02:28:53 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 13
- Aug 2019 02:28:52 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 13 Aug 2019 02:28:52 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7D7SpZw054000;
-        Tue, 13 Aug 2019 02:28:51 -0500
-Subject: Re: [PATCH v2] bus: ti-sysc: sysc_check_one_child(): Change return
- type to void
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>, <tony@atomide.com>,
-        <linux-kernel@vger.kernel.org>
-References: <20190813071714.27970-1-nishkadg.linux@gmail.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <85a1d7eb-dd9a-2276-ed13-67291188538e@ti.com>
-Date:   Tue, 13 Aug 2019 10:28:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190813071714.27970-1-nishkadg.linux@gmail.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 13 Aug 2019 03:29:50 -0400
+Received: from mail-eopbgr50086.outbound.protection.outlook.com ([40.107.5.86]:1693
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726789AbfHMH3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 03:29:50 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ir+TzaPFMju12iQesRF+MhbxaQni4LKC8jabklQx6mNspyr1vsqNIt/TdaCcD/UEVMUsV6XCrzrZ1Kget7ox58M1PDQvLp4bxfAiMgJQqywIZFP06cpoPWT7EwJybqDG0xVFMIGSaWLAW/9sREb8Mfyx+rssLCwt6ndfb3LKFInIKrg9ws9fvkjpJcXbJNhmbQKCj2IvF5vc1IDC2Apne0DYGwYZgUFuvlPg2ezq0Dg/zD9fwBcTSOv95wcLGPClIqpoqx64UyWiybySjSQO5JnUEJoeKrJBb9YCP8xM8narI/1BKpwq+5qTdRGBePmFzjN3Y4C5k1CeLthA6mUFDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CFDTqgKsLT+T3uo9cLffRrI640myAFatY9wgzDSuyOU=;
+ b=KNmd1FRA+BZ3ZUyNIGfsz3WCfja/zkQXgepE16AW9cR9HV2b/4C/Lqj0RgLy1Y0GMH65pZdA3Rf7L0+u3jIBYmyRG89+yyYxrq6NCd2ukCnblS2mK8gFn6WLSaopp5ueGU4pjwBtacJSghvZ4umZr36tQPu2DNrLvyuS7M23rxp2E7q08iT5DoGAUhj+FNweDfw//B8F5oZNVHbbzk9GcJaxqQdjxubxcL4ZLzBOMZnxAILM9tKqobr3/n4urjbaK6dm22zGu3K1mtpt9pMvj+DY0Bpli36yTGPPqqG0NGbqVEV6cdfxJE42Fp8tyKaF2CAdP4042iGfFbfxGPSvYg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CFDTqgKsLT+T3uo9cLffRrI640myAFatY9wgzDSuyOU=;
+ b=OYF/+NOEASRHD3GgYyk3BaXTYX1SHekDlPNC2XMmWHnTXWdhhGmT9VPTvHKeBFmy55/MIwEhtxg7gTZiL10JzeeAFO47XdVrkTi5lf9I4/yyFgn4yt6RSoIoq8CLiy6VKNdWhlggQZJbw/xJF8pwCPCY5d0Ywf8qVd0e0uV/jrU=
+Received: from VI1PR0402MB2800.eurprd04.prod.outlook.com (10.175.24.138) by
+ VI1PR0402MB3952.eurprd04.prod.outlook.com (52.134.17.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.15; Tue, 13 Aug 2019 07:29:47 +0000
+Received: from VI1PR0402MB2800.eurprd04.prod.outlook.com
+ ([fe80::85d1:9f00:3d4c:1860]) by VI1PR0402MB2800.eurprd04.prod.outlook.com
+ ([fe80::85d1:9f00:3d4c:1860%7]) with mapi id 15.20.2157.022; Tue, 13 Aug 2019
+ 07:29:47 +0000
+From:   Ioana Ciornei <ioana.ciornei@nxp.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>
+Subject: Re: [PATCH 03/10] staging: fsl-dpaa2/ethsw: add line terminator to
+ all formats
+Thread-Topic: [PATCH 03/10] staging: fsl-dpaa2/ethsw: add line terminator to
+ all formats
+Thread-Index: AQHVUPHZyY79KmlMrUC9ivwdgb2X+w==
+Date:   Tue, 13 Aug 2019 07:29:46 +0000
+Message-ID: <VI1PR0402MB280072E23E15D85AC7442105E0D20@VI1PR0402MB2800.eurprd04.prod.outlook.com>
+References: <1565602758-14434-1-git-send-email-ioana.ciornei@nxp.com>
+ <1565602758-14434-4-git-send-email-ioana.ciornei@nxp.com>
+ <20190812144414.GA25512@kroah.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ioana.ciornei@nxp.com; 
+x-originating-ip: [188.25.91.80]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ae885837-880f-4065-b920-08d71fc004d0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR0402MB3952;
+x-ms-traffictypediagnostic: VI1PR0402MB3952:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB3952747CD7028F9AA7D48018E0D20@VI1PR0402MB3952.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 01283822F8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(366004)(346002)(39860400002)(136003)(199004)(189003)(71190400001)(54906003)(71200400001)(316002)(4326008)(8676002)(4744005)(256004)(86362001)(102836004)(6246003)(7696005)(9686003)(6506007)(53546011)(6436002)(14454004)(229853002)(186003)(26005)(76176011)(99286004)(478600001)(52536014)(53936002)(44832011)(486006)(2906002)(64756008)(66556008)(5660300002)(55016002)(66446008)(7736002)(66476007)(66066001)(74316002)(446003)(3846002)(25786009)(6116002)(476003)(76116006)(66946007)(8936002)(33656002)(305945005)(6916009)(81156014)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3952;H:VI1PR0402MB2800.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: czjGwMrgOCddET5+NW2gVpYV5RcWSg1sRx3YOjjiY2cvRAbKJTvTQrSu5rlcef6jsj/evvehCdnY/eZCihLqARc4i0w5Knv2Zcx4AtbeVcWKNQ5H/Ix4JwcE2evvgqocXx2sA8Fi2VJ5psRLb3v4w5q50qBRjleehzKlvi32j4NSZIheBiMO7LT4VP4dY0Y8SMZZ8/VRobCBf3VCGntl4kUK3t575ZTFYX5NJHs+3th6+cj/42p6JrYDK0V1ngFxo9DdEVQjl83TitVHK5YzXNW3VDsRsUWZspgR720gfZumTSv936GQTB3YRiMLKKpWGzPkOmKvuyu0n9hl1nYO/H1We6P/kgN09W0vKJfoO60jfv3W4ROJ6W89ntomBqV/mf+49ajJbTNYcozZ1tUdPP4R5IEn9xoWf3UIV2J5tDE=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae885837-880f-4065-b920-08d71fc004d0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2019 07:29:47.0204
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NN1bH6Ue19GWmjoqzYK6MSNIkGoE0emAtQ4q0AK2MrDpkwoWDufPHH78wall1Ii8hO9k6H988tLQ1mrR9oFL5g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3952
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 13/08/2019 10:17, Nishka Dasgupta wrote:
-> Change return type of function sysc_check_one_child() from int to void
-> as it always returns 0. Accordingly, at its callsite, delete the
-> variable that previously stored the return value.
-> 
-> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
-> ---
-> Changes in v2:
-> - Remove error variable entirely.
-> - Change return type of sysc_check_one_child().
-> 
->  drivers/bus/ti-sysc.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-> index e6deabd8305d..1c30fa58d70c 100644
-> --- a/drivers/bus/ti-sysc.c
-> +++ b/drivers/bus/ti-sysc.c
-> @@ -615,8 +615,8 @@ static void sysc_check_quirk_stdout(struct sysc *ddata,
->   * node but children have "ti,hwmods". These belong to the interconnect
->   * target node and are managed by this driver.
->   */
-> -static int sysc_check_one_child(struct sysc *ddata,
-> -				struct device_node *np)
-> +static void sysc_check_one_child(struct sysc *ddata,
-> +				 struct device_node *np)
->  {
->  	const char *name;
->  
-
-You didn't remove the "return 0" at end of this function.
-Doesn't it complain during build?
-
-> @@ -633,12 +633,9 @@ static int sysc_check_one_child(struct sysc *ddata,
->  static int sysc_check_children(struct sysc *ddata)
->  {
-
-This could return void as well.
-
->  	struct device_node *child;
-> -	int error;
->  
->  	for_each_child_of_node(ddata->dev->of_node, child) {
-> -		error = sysc_check_one_child(ddata, child);
-> -		if (error)
-> -			return error;
-> +		sysc_check_one_child(ddata, child);
->  	}
-
-You don't need the braces { }.
-
-Please run ./scripts/checkpatch.pl --strict on your patch and fix any
-issues.
-
->  
->  	return 0;
-> 
-
-return not required.
-
-You will also need to fix all instances using sysc_check_children()
-
-cheers,
--roger
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+On 8/12/19 5:44 PM, Greg KH wrote:=0A=
+> On Mon, Aug 12, 2019 at 12:39:11PM +0300, Ioana Ciornei wrote:=0A=
+>> Add the '\n' line terminator to the string formats missing it.=0A=
+>>=0A=
+>> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>=0A=
+>> ---=0A=
+>>   drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c |  2 +-=0A=
+>>   drivers/staging/fsl-dpaa2/ethsw/ethsw.c         | 10 +++++-----=0A=
+>>   2 files changed, 6 insertions(+), 6 deletions(-)=0A=
+> =0A=
+> Are you sure none of these patches should have a "Reported-by:" tag on=0A=
+> them?  These were all done based on a review, so someone did that=0A=
+> review...=0A=
+> =0A=
+> Please fix up the whole series and resend.=0A=
+> =0A=
+> thanks,=0A=
+> =0A=
+> greg k-h=0A=
+> =0A=
+=0A=
+Sure, sorry for forgetting this. Will fix up.=0A=
+=0A=
+Ioana=0A=
