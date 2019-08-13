@@ -2,116 +2,131 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38072C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 848E6C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 127E5205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AA0920578
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:51:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565711507;
+	bh=Wzp/4xYbmDqbmpgVG0xprq2NjfU/7yfYmyfpL6wAN8A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EKqrhcNr78+azdNvOHkaHS6r1DOAob6zuCE5QRe8T66JuwEuCdMcx2BXRHwSBCjXk
+	 S8wuDiOeXp5N6UJ0OL6BqZtvIYeqGNF/Sae0VugtVs8Lm52yqgbuy2Svxj+Nn7gGRT
+	 jrIPH/azNOHqco3LSby3XD042wFwBrk7vzPID8wI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728959AbfHMPtu (ORCPT
+        id S1728434AbfHMPvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 11:49:50 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15226 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727942AbfHMPtu (ORCPT
+        Tue, 13 Aug 2019 11:51:46 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34951 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726705AbfHMPvp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 11:49:50 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7DFXKXP032229
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 11:49:49 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uby40b9uq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 11:49:48 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 13 Aug 2019 16:49:48 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 13 Aug 2019 16:49:45 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7DFnig949086872
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 15:49:44 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7BD27B2068;
-        Tue, 13 Aug 2019 15:49:44 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5FE68B2065;
-        Tue, 13 Aug 2019 15:49:44 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 13 Aug 2019 15:49:44 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 4272016C1057; Tue, 13 Aug 2019 08:49:45 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 08:49:45 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org
-Subject: Re: [rcu:dev.2019.08.09a 65/67] ERROR: "tick_nohz_full_running"
- [kernel/rcu/rcutorture.ko] undefined!
-Reply-To: paulmck@linux.ibm.com
-References: <201908131124.dw1rLYdU%lkp@intel.com>
+        Tue, 13 Aug 2019 11:51:45 -0400
+Received: by mail-ot1-f67.google.com with SMTP id g17so23350596otl.2;
+        Tue, 13 Aug 2019 08:51:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ohFLMScLjVByBJFrR6C+4j/VSebLPBigBTSwqkkayik=;
+        b=deu6LpXfX4eGd6ugD1/SvGVXVGEHISZcIQxoB/YHxAK1aXz0dokD7ipgkI2fLT2TFD
+         jECnCIgwDuqwR+VnRjY3pbWXuOOpBpYtg+3bUmEGQVKNfvHwxrZO/U55nPngZq6O1giE
+         uv+HtzlFPEoPFLut+RWdmwKC2xaW9aJ7lq2LkFxoCz/fbzcR3+Y0GMaNPhkvUK0kD9b5
+         ApFKiVXncNxQQKi/ca7o3IRPOZZdsZ3UiMssVJNn6CNoFMQ4d1LP+9NmLBOkSClA2q3f
+         J5cuC8NpzxhteIpMHMLtX06LrYagV08I5IchV+BCpBzEVR6U0Mo3SpEFa5HploqFa804
+         gF5w==
+X-Gm-Message-State: APjAAAWyQEmQ1bTWsYi/+uJsLgCRhFzPWQkKf5jVUBr1KO7NPYSVo4JG
+        J8Q6ZC2Uc4T9AQrWkj30Yg==
+X-Google-Smtp-Source: APXvYqxSeFwa1U2REzU2wk4Pb7uZS4OB2XVfpDeXm4KgsqA5BenxqxMVspOAXVlQLR7PyOR052yYjA==
+X-Received: by 2002:a6b:b549:: with SMTP id e70mr32598873iof.95.1565711504396;
+        Tue, 13 Aug 2019 08:51:44 -0700 (PDT)
+Received: from localhost ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id l26sm23511094ioj.24.2019.08.13.08.51.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 13 Aug 2019 08:51:43 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 09:51:43 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Chuanhong Guo <gch981213@gmail.com>
+Cc:     "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Weijie Gao <hackpascal@gmail.com>, NeilBrown <neil@brown.name>
+Subject: Re: [PATCH v2 4/6] dt: bindings: add mt7621-pll dt binding
+ documentation
+Message-ID: <20190813155143.GA19830@bogus>
+References: <20190724022310.28010-1-gch981213@gmail.com>
+ <20190724022310.28010-5-gch981213@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <201908131124.dw1rLYdU%lkp@intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19081315-2213-0000-0000-000003BB470E
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011588; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01246274; UDB=6.00657661; IPR=6.01027779;
- MB=3.00028160; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-13 15:49:46
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19081315-2214-0000-0000-00005FA13275
-Message-Id: <20190813154945.GF28441@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-13_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908130159
+In-Reply-To: <20190724022310.28010-5-gch981213@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 11:23:34AM +0800, kbuild test robot wrote:
-> Hi Paul,
+On Wed, Jul 24, 2019 at 10:23:08AM +0800, Chuanhong Guo wrote:
+> This commit adds device tree binding documentation for MT7621
+> PLL controller.
 > 
-> First bad commit (maybe != root cause):
+> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+> ---
 > 
-> tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2019.08.09a
-> head:   8997cc705c8156fd638c6296c800ceb4f2cd4eb0
-> commit: 7bcd11ce830f32631a378ff0e75836f27b202f1b [65/67] squash! idle: Prevent late-arriving interrupts from disrupting offline
-> config: x86_64-rhel (attached as .config)
-> compiler: gcc-7 (Debian 7.4.0-10) 7.4.0
-> reproduce:
->         git checkout 7bcd11ce830f32631a378ff0e75836f27b202f1b
->         # save the attached .config to linux build tree
->         make ARCH=x86_64 
+> Change since v1:
+> drop useless syscon in compatible string
 > 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
+>  .../bindings/clock/mediatek,mt7621-pll.txt     | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/mediatek,mt7621-pll.txt
 > 
-> All errors (new ones prefixed by >>):
-> 
-> >> ERROR: "tick_nohz_full_running" [kernel/rcu/rcutorture.ko] undefined!
+> diff --git a/Documentation/devicetree/bindings/clock/mediatek,mt7621-pll.txt b/Documentation/devicetree/bindings/clock/mediatek,mt7621-pll.txt
+> new file mode 100644
+> index 000000000000..7dcfbd5283e3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/mediatek,mt7621-pll.txt
+> @@ -0,0 +1,18 @@
+> +Binding for Mediatek MT7621 PLL controller
+> +
+> +The PLL controller provides the 2 main clocks of the SoC: CPU and BUS.
+> +
+> +Required Properties:
+> +- compatible: has to be "mediatek,mt7621-pll"
+> +- #clock-cells: has to be one
+> +
+> +Optional properties:
+> +- clock-output-names: should be "cpu", "bus"
+> +
+> +Example:
+> +	pll {
+> +		compatible = "mediatek,mt7621-pll";
 
-Given that this commit did not change rcutorture or anything that
-rcutorture invokes, I am having difficulty seeing how it caused
-this failure.  Or am I missing some indirect series of inline function
-invocations?
+You didn't answer Stephen's question on v1.
 
-Easy enough to add the EXPORT_SYMBOL_GPL() if it is needed!  ;-)
+Based on this binding, there is no way to control/program the PLL. Is 
+this part of some IP block?
 
-							Thanx, Paul
-
+> +
+> +		#clock-cells = <1>;
+> +		clock-output-names = "cpu", "bus";
+> +	};
+> -- 
+> 2.21.0
+> 
