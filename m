@@ -2,135 +2,160 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA5FC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 01:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 821C1C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 01:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D175206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 01:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EDC620665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 01:34:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Vw73LRF6"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="pqX+AsGx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfHMBQi (ORCPT
+        id S1726543AbfHMBeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 21:16:38 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:33910 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbfHMBQh (ORCPT
+        Mon, 12 Aug 2019 21:34:05 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45590 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfHMBeF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 21:16:37 -0400
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x7D1GOuZ007521;
-        Tue, 13 Aug 2019 10:16:25 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x7D1GOuZ007521
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1565658985;
-        bh=x5smtKv6h2v/8yhnlgaNROKfkSxy4oSJJ2BG1gO1UMU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Vw73LRF6GvWcTkIk4YL9p7Mb6B2ipWQdGfpjJZARhYwmrBOfg7f4Zwb8QaZBAM+sS
-         DocaYDtxt3u0Oqe7+VfbltV5qtgiq09xFQw1eR03H2dWzBaVouilThMbW+Qb3Loxnu
-         LYvbmUw5nKY2i9tHHYmo7ZJIzyjZbmhC1lJXFJoN2X3/h977H1IFdPz5KKTPw0gAcE
-         l+XVJTyCnan/GIxeyiUNQrIUqjrahZbG8c/N7S1StGE6NQuW2MKw8H3q4AwEx5JB2W
-         R5+Yltnaw60YNIwD8qvlfesHtUzkUmAERkMUTfTMK1nA5jXb8w1LCdDm5V5s/DmIov
-         WUp9kVtgm2wug==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id i7so4739238vsp.0;
-        Mon, 12 Aug 2019 18:16:24 -0700 (PDT)
-X-Gm-Message-State: APjAAAXGH32cVmxuQGHEKsYuZqLqqPCP7v7VpRos7avdHj2ZbIl1yiCa
-        W0hd26kO86aMo20hMh84h+BFYpulUpU4t74VnsM=
-X-Google-Smtp-Source: APXvYqz0M1H6vtA4f5I9ILfLTT+esNuxyIIfdFn001huHK5PQ6k9uZlOmUoXF2iErLZKRfLW0k/uYpfT0pVky1QDD3I=
-X-Received: by 2002:a67:8e0a:: with SMTP id q10mr24146079vsd.215.1565658983739;
- Mon, 12 Aug 2019 18:16:23 -0700 (PDT)
+        Mon, 12 Aug 2019 21:34:05 -0400
+Received: by mail-lf1-f66.google.com with SMTP id a30so12525719lfk.12
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 18:34:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xhOMsZgraPbofDXHGlEAPblhYgeF7xROTk8w4FSX/Q8=;
+        b=pqX+AsGxsOOmro0DhzbCC8yIL18XGXrlTdxb1jh2O7AQ4Zpxtc3qR66hu/oqhESsq7
+         lruMije3Zt2EqNSnR5czmrGtEA4wnN5fIAo2BEK7CYe5z3SQ4bs1oCx/sSg8LmGpwP6Q
+         RCNhUECyMsRJmV5xsX8q48Aq7xOvj0C7qZw6s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xhOMsZgraPbofDXHGlEAPblhYgeF7xROTk8w4FSX/Q8=;
+        b=F9Z9IJWmFCrKNet/mEpstAzCMSF9u7qiPMOR5hoR5p9LHZubOFYtEdsEcv/NM3mN/D
+         xlhhrm3mjrbzoZn4Y9ZQKTt+epOoeEdpOGer0IVE6WmUrr6vv18c/g2O2na22+nSYiZR
+         sO0CIMQXyG1dqf2cgbRegU9hjRMaLd5qUYXw/DdUxvmEtBFh1UwNIb6+vkarmZIl9n6y
+         Ec/UmkA0awgUWjgHbZIa8ApwHluDbVVbgZaxMELoOakRxXC43jdOnWozrn9abejmrcq1
+         9pj+Ra1NDHhgeKY8ok48SYNiIjc0DzZEB8/mYDFOkyxVVTIaHAfW/Hd3VYdkov0icvq/
+         RHtQ==
+X-Gm-Message-State: APjAAAW0uyQeQOLZuySi2xcFMIgej3yOout9ghzwVetTyL+oT2+/EWJU
+        3L4EHoH1v8g1cVl56hODqiNQTJo3sA88dexom5O8BQ==
+X-Google-Smtp-Source: APXvYqywVV126qBkpvCj9wilDgs7/ubL/o2+AGR81L9EPWfdcToV8DH6PE+74TIUSlJiAqOlP4zxXU+RTHhqUSv+3kY=
+X-Received: by 2002:ac2:5394:: with SMTP id g20mr22731532lfh.112.1565660042882;
+ Mon, 12 Aug 2019 18:34:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190509143859.9050-1-joe.lawrence@redhat.com>
- <20190509143859.9050-4-joe.lawrence@redhat.com> <CAK7LNAT3qZ8EESs0eEtaezjgjzRa1XqoAAxpKh_sLi_JPJie2A@mail.gmail.com>
- <CAK7LNAToLyKSk9C0hwuMRxDK8yjJtghi_y6fH1p0+wK7N1wKow@mail.gmail.com> <20190809184253.GA31811@redhat.com>
-In-Reply-To: <20190809184253.GA31811@redhat.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 13 Aug 2019 10:15:47 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARHQY_7E2ar47EZJmh=SD_Mf3p51AcKAecVLQip27+3Ug@mail.gmail.com>
-Message-ID: <CAK7LNARHQY_7E2ar47EZJmh=SD_Mf3p51AcKAecVLQip27+3Ug@mail.gmail.com>
-Subject: Re: [PATCH v4 03/10] livepatch: Add klp-convert tool
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+References: <20190802151435.GA1081@linux.ibm.com> <20190802151501.13069-14-paulmck@linux.ibm.com>
+ <20190812210232.GA3648@lenoir> <20190812232316.GT28441@linux.ibm.com>
+In-Reply-To: <20190812232316.GT28441@linux.ibm.com>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Mon, 12 Aug 2019 21:33:51 -0400
+Message-ID: <CAEXW_YRm6cBp-J3tPeRH+Jx=38LaAtNoCM9f0FeFG+ZBZKBH6w@mail.gmail.com>
+Subject: Re: [PATCH RFC tip/core/rcu 14/14] rcu/nohz: Make multi_cpu_stop()
+ enable tick on all online CPUs
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        dipankar <dipankar@in.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Thomas Glexiner <tglx@linutronix.de>,
+        Peter Zilstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Howells <dhowells@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 10, 2019 at 3:42 AM Joe Lawrence <joe.lawrence@redhat.com> wrote:
-
-> > > > diff --git a/scripts/livepatch/Makefile b/scripts/livepatch/Makefile
-> > > > new file mode 100644
-> > > > index 000000000000..2842ecdba3fd
-> > > > --- /dev/null
-> > > > +++ b/scripts/livepatch/Makefile
-> > > > @@ -0,0 +1,7 @@
-> > > > +hostprogs-y                    := klp-convert
-> > > > +always                         := $(hostprogs-y)
-> > > > +
-> > > > +klp-convert-objs               := klp-convert.o elf.o
-> > > > +
-> > > > +HOST_EXTRACFLAGS               := -g -I$(INSTALL_HDR_PATH)/include -Wall
-> > >
-> > > This looks strange.
-> > >
-> > > Theoretically, you cannot include headers in $(INSTALL_HDR_PATH)/include
-> > > from host programs.
-> > >
-> > > headers_install works for the target architecture, not host architecture.
-> > > This may cause a strange result when you are cross-compiling the kernel.
-> > >
-> > > BTW, which header in $(INSTALL_HDR_PATH)/include do you need to include ?
-> > >
-> > >
-> > > Also, -Wall is redundant because it is set by the top-level Makefile.
-> >
-> >
-> > I deleted HOST_EXTRACFLAGS entirely,
-> > and I was still able to build klp-convert.
-> >
-> >
-> > What is the purpose of '-g' ?
-> > If it is only needed for local debugging,
-> > it should be removed from the upstream code, in my opinion.
-> >
+On Mon, Aug 12, 2019 at 7:23 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
 >
-> HOST_EXTRACFLAGS looks like it was present in the patchset from the
-> early RFC days and inherited through each revision.
+> On Mon, Aug 12, 2019 at 11:02:33PM +0200, Frederic Weisbecker wrote:
+> > On Fri, Aug 02, 2019 at 08:15:01AM -0700, Paul E. McKenney wrote:
+> > > The multi_cpu_stop() function relies on the scheduler to gain control from
+> > > whatever is running on the various online CPUs, including any nohz_full
+> > > CPUs running long loops in kernel-mode code.  Lack of the scheduler-clock
+> > > interrupt on such CPUs can delay multi_cpu_stop() for several minutes
+> > > and can also result in RCU CPU stall warnings.  This commit therefore
+> > > causes multi_cpu_stop() to enable the scheduler-clock interrupt on all
+> > > online CPUs.
+> > >
+> > > Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+> > > ---
+> > >  kernel/stop_machine.c | 9 ++++++++-
+> > >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
+> > > index b4f83f7bdf86..a2659f61ed92 100644
+> > > --- a/kernel/stop_machine.c
+> > > +++ b/kernel/stop_machine.c
+> > > @@ -20,6 +20,7 @@
+> > >  #include <linux/smpboot.h>
+> > >  #include <linux/atomic.h>
+> > >  #include <linux/nmi.h>
+> > > +#include <linux/tick.h>
+> > >  #include <linux/sched/wake_q.h>
+> > >
+> > >  /*
+> > > @@ -187,15 +188,19 @@ static int multi_cpu_stop(void *data)
+> > >  {
+> > >     struct multi_stop_data *msdata = data;
+> > >     enum multi_stop_state curstate = MULTI_STOP_NONE;
+> > > -   int cpu = smp_processor_id(), err = 0;
+> > > +   int cpu, err = 0;
+> > >     const struct cpumask *cpumask;
+> > >     unsigned long flags;
+> > >     bool is_active;
+> > >
+> > > +   for_each_online_cpu(cpu)
+> > > +           tick_nohz_dep_set_cpu(cpu, TICK_DEP_MASK_RCU);
+> >
+> > Looks like it's not the right fix but, should you ever need to set an
+> > all-CPUs (system wide) tick dependency in the future, you can use tick_set_dep().
 >
-> These are the files that the klp-convert code includes, mostly typical C
-> usercode headers like stdio.h and a few local headers like elf.h:
+> Indeed, I have dropped this patch, but I now do something similar in
+> RCU's CPU-hotplug notifiers.  Which does have an effect, especially on
+> the system that isn't subject to the insane-latency cpu_relax().
 >
->   % grep -h '^#include' scripts/livepatch/*.{c,h} | sort -u
->   #include "elf.h"
->   #include <fcntl.h>
->   #include <gelf.h>
->   #include "klp-convert.h"
->   #include "list.h"
->   #include <stdbool.h>
->   #include <stdio.h>
->   #include <stdlib.h>
->   #include <string.h>
->   #include <sys/stat.h>
->   #include <sys/types.h>
->   #include <unistd.h>
+> Plus I am having to put a similar workaround into RCU's quiescent-state
+> forcing logic.
 >
-> If HOST_EXTRACFLAGS is really unneeded, we can easily drop it in the
-> next patchset version.
+> But how should this really be done?
+>
+> Isn't there some sort of monitoring of nohz_full CPUs for accounting
+> purposes?  If so, would it make sense for this monitoring to check for
+> long-duration kernel execution and enable the tick in this case?  The
+> RCU dyntick machinery can be used to remotely detect the long-duration
+> kernel execution using something like the following:
+>
+>         int nohz_in_kernel_snap = rcu_dynticks_snap_cpu(cpu);
+>
+>         ...
+>
+>         if (rcu_dynticks_in_eqs_cpu(cpu, nohz_in_kernel_snap)
+>                 nohz_in_kernel_snap = rcu_dynticks_snap_cpu(cpu);
+>         else
+>                 /* Turn on the tick! */
 
-Yes, please do so.
+This solution does make sense to me and is simpler than the
+rcu_nmi_exit_common() solution you proposed in the other thread.
 
-Thanks.
+Though I am not sure about the intricacies of remotely enabling the
+timer tick for a CPU. But overall, the above solution does seem
+simpler.
 
+thanks,
 
-
--- 
-Best Regards
-Masahiro Yamada
+ - Joel
