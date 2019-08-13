@@ -4,30 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA2CC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E0BC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08BD720842
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0627620840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:04:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbfHMVDw (ORCPT
+        id S1727308AbfHMVDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:03:52 -0400
-Received: from mga09.intel.com ([134.134.136.24]:18664 "EHLO mga09.intel.com"
+        Tue, 13 Aug 2019 17:03:50 -0400
+Received: from mga09.intel.com ([134.134.136.24]:18661 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727200AbfHMVDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 17:03:44 -0400
+        id S1726957AbfHMVDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 17:03:41 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 14:03:41 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 14:03:40 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="194275985"
+   d="scan'208";a="194275971"
 Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Aug 2019 14:03:40 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 13 Aug 2019 14:03:39 -0700
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
 To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -54,9 +55,9 @@ To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
         Dave Martin <Dave.Martin@arm.com>
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v8 08/14] x86/vdso: Insert endbr32/endbr64 to vDSO
-Date:   Tue, 13 Aug 2019 13:53:53 -0700
-Message-Id: <20190813205359.12196-9-yu-cheng.yu@intel.com>
+Subject: [PATCH v8 04/14] mm/mmap: Add IBT bitmap size to address space limit check
+Date:   Tue, 13 Aug 2019 13:53:49 -0700
+Message-Id: <20190813205359.12196-5-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190813205359.12196-1-yu-cheng.yu@intel.com>
 References: <20190813205359.12196-1-yu-cheng.yu@intel.com>
@@ -65,69 +66,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "H.J. Lu" <hjl.tools@gmail.com>
+The indirect branch tracking legacy bitmap takes a large address
+space.  This causes may_expand_vm() failure on the address limit
+check.  For a IBT-enabled task, add the bitmap size to the
+address limit.
 
-When Intel indirect branch tracking is enabled, functions in vDSO which
-may be called indirectly must have endbr32 or endbr64 as the first
-instruction.  Compiler must support -fcf-protection=branch so that it
-can be used to compile vDSO.
-
-Acked-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 ---
- arch/x86/entry/vdso/Makefile          | 12 +++++++++++-
- arch/x86/entry/vdso/vdso-layout.lds.S |  1 +
- 2 files changed, 12 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/mmu_context.h | 10 ++++++++++
+ mm/mmap.c                          | 19 ++++++++++++++++++-
+ 2 files changed, 28 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 8df549138193..1e6a95881e73 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -114,13 +114,17 @@ vobjx32s := $(foreach F,$(vobjx32s-y),$(obj)/$F)
+diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
+index a9a768529540..e18e89ef332d 100644
+--- a/arch/x86/include/asm/mmu_context.h
++++ b/arch/x86/include/asm/mmu_context.h
+@@ -360,6 +360,16 @@ static inline unsigned long __get_current_cr3_fast(void)
+ 	return cr3;
+ }
  
- # Convert 64bit object file to x32 for x32 vDSO.
- quiet_cmd_x32 = X32     $@
--      cmd_x32 = $(OBJCOPY) -O elf32-x86-64 $< $@
-+      cmd_x32 = $(OBJCOPY) -R .note.gnu.property -O elf32-x86-64 $< $@
- 
- $(obj)/%-x32.o: $(obj)/%.o FORCE
- 	$(call if_changed,x32)
- 
- targets += vdsox32.lds $(vobjx32s-y)
- 
-+ifdef CONFIG_X86_INTEL_BRANCH_TRACKING_USER
-+    $(obj)/vclock_gettime.o $(obj)/vgetcpu.o $(obj)/vdso32/vclock_gettime.o: KBUILD_CFLAGS += -fcf-protection=branch
-+endif
++#ifdef CONFIG_X86_INTEL_BRANCH_TRACKING_USER
++static inline unsigned long arch_as_limit(void)
++{
++	if (current->thread.cet.ibt_enabled)
++		return IBT_BITMAP_SIZE;
++	else
++		return 0;
++}
++#endif
 +
- $(obj)/%.so: OBJCOPYFLAGS := -S
- $(obj)/%.so: $(obj)/%.so.dbg FORCE
- 	$(call if_changed,objcopy)
-@@ -178,6 +182,12 @@ quiet_cmd_vdso = VDSO    $@
+ typedef struct {
+ 	struct mm_struct *mm;
+ } temp_mm_state_t;
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 1acded00f003..1bfd9aec9aed 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -3283,13 +3283,30 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+ 	return NULL;
+ }
  
- VDSO_LDFLAGS = -shared --hash-style=both --build-id \
- 	$(call ld-option, --eh-frame-hdr) -Bsymbolic
-+ifdef CONFIG_X86_INTEL_BRANCH_TRACKING_USER
-+  VDSO_LDFLAGS += $(call ldoption, -z$(comma)ibt)
-+endif
-+ifdef CONFIG_X86_INTEL_SHADOW_STACK_USER
-+  VDSO_LDFLAGS += $(call ldoption, -z$(comma)shstk)
-+endif
- GCOV_PROFILE := n
++#ifndef CONFIG_ARCH_HAS_AS_LIMIT
++static inline unsigned long arch_as_limit(void)
++{
++	return 0;
++}
++#endif
++
+ /*
+  * Return true if the calling process may expand its vm space by the passed
+  * number of pages
+  */
+ bool may_expand_vm(struct mm_struct *mm, vm_flags_t flags, unsigned long npages)
+ {
+-	if (mm->total_vm + npages > rlimit(RLIMIT_AS) >> PAGE_SHIFT)
++	unsigned long as_limit = rlimit(RLIMIT_AS);
++	unsigned long as_limit_plus = as_limit + arch_as_limit();
++
++	/* as_limit_plus overflowed */
++	if (as_limit_plus < as_limit)
++		as_limit_plus = RLIM_INFINITY;
++
++	if (as_limit_plus > as_limit)
++		as_limit = as_limit_plus;
++
++	if (mm->total_vm + npages > as_limit >> PAGE_SHIFT)
+ 		return false;
  
- quiet_cmd_vdso_and_check = VDSO    $@
-diff --git a/arch/x86/entry/vdso/vdso-layout.lds.S b/arch/x86/entry/vdso/vdso-layout.lds.S
-index 93c6dc7812d0..3fea2ce318bc 100644
---- a/arch/x86/entry/vdso/vdso-layout.lds.S
-+++ b/arch/x86/entry/vdso/vdso-layout.lds.S
-@@ -52,6 +52,7 @@ SECTIONS
- 		*(.gnu.linkonce.b.*)
- 	}						:text
- 
-+	.note.gnu.property : { *(.note.gnu.property) }	:text	:note
- 	.note		: { *(.note.*) }		:text	:note
- 
- 	.eh_frame_hdr	: { *(.eh_frame_hdr) }		:text	:eh_frame_hdr
+ 	if (is_data_mapping(flags) &&
 -- 
 2.17.1
 
