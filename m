@@ -2,58 +2,59 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C27C7C32753
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B92DDC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99D8220679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EEF520679
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:24:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sv074q9r"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oz80OPwm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728907AbfHMKXt (ORCPT
+        id S1728952AbfHMKYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 06:23:49 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42317 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727632AbfHMKXs (ORCPT
+        Tue, 13 Aug 2019 06:24:08 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43493 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728883AbfHMKXt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 06:23:48 -0400
-Received: by mail-lf1-f67.google.com with SMTP id s19so13706180lfb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 03:23:46 -0700 (PDT)
+        Tue, 13 Aug 2019 06:23:49 -0400
+Received: by mail-lj1-f196.google.com with SMTP id h15so7367071ljg.10
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 03:23:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=QNDFND62EBxa/CZRfT2L528o2r4UiKoyt1lXZ8Vl8r0=;
-        b=Sv074q9r6jjjV52+0QfZzuE3FVJ3Gnln117xHMSh0yUvexXHce7Ca19L/ufyAwW2HO
-         GIClTLInezjob7m5kYcfJp06RDsK5LbIt1PVa0yyOiPjYGT1MX0emf5Qw+8LsdQmqD4G
-         i7TyVRxmOnXFrQ2F1yS5yYC1UD4dqbZoqyS8f1FFm8zfVPnI/i10qZFH7zRYx62ei9PA
-         ouW68VPvY60rLwI0xusK8FygNzR41KW2tS6pxLqHVQUr1qWFq5yzk6VczQGboJWjG7lI
-         7+bMfcre/Fj5GJ8/+vMBLq84HkDazNq5iFBJTRQXEf934J6KXvaTZe8jxZMyBQKNoSGU
-         V00Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=+vEsZUSwAdb3YjNql7rDM4PtC51lwjYe4ypkHR8meNg=;
+        b=Oz80OPwmh9X4xSAJ07288MD1guPoiHr5QzEzTKNgbbW0yOVRUE+9R2dtHoUBEsUqOh
+         jfyncogTYoy1qjVIr3i7veHJPy5PAhWPX4InfS2/fcPCxjXha0LkuDHcKVMFu/h35tBF
+         7OvwwIzhLUNCmRZq/09ERQQedSeX9zk0DwXKJqoVegM8JC2G32PctQ3IReLpRJ+mKVDp
+         HiwFTs8BXBnbAWsMmIx81qOWKhLfmDGGrY8SLnzwyu36w01+Ny16cUGqE8QmnsU/i0X2
+         R5hxQLuB3m6D1bKOaEPLUABe02nOxqEFSg8c9rBfkb0AJAgNkW5LPsYVtb/aWMtMnCFx
+         +XsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=QNDFND62EBxa/CZRfT2L528o2r4UiKoyt1lXZ8Vl8r0=;
-        b=IRGkmBviEj3Rxs5cGrSOaQWRoN+qXj+A5PiPoijGs5xWpdb2sQ6UL58RLxsW9ia3Ru
-         cXWdYXkyog2nwqBoj/NfeyRfX7Nx5ARmVe4uZIQvRqGVKwp/qEmuSn0I9ad9luTjVBaN
-         FOliSSjbyyQwqFUwcSaMLTogr6FkxJ1A3L3ettTypwnwfIUiO8WxIzT8EiZiSI4kzbmm
-         5p4ef+7TEtBNF/q2M5BPLpf4QkToZeKZXS0+qtmhR4R7cQhwFe0M5h7n051zFMhsbihE
-         vxjn2SQ1Bqjc6CK1A7fN9DDLoYrM4ZC/c0ljEfQYLEUKpp12s4Z6aHmNsBytFvsl/TKy
-         /plg==
-X-Gm-Message-State: APjAAAXs9IfZOL3V2Y5CYDD0tt8CmZeCvlCST8kT4Un6J0xubn/vc8mB
-        Mmwq0DIgpXsiuHu0+d7XkUpC9g==
-X-Google-Smtp-Source: APXvYqzIeZP4BTswUMbAIKKYK0uFCs4Sn6L/wWwzKIQ+KwsGx46yWPFum+AePDpFDtH7gV8rVc/mKw==
-X-Received: by 2002:a19:c213:: with SMTP id l19mr21590844lfc.83.1565691826113;
-        Tue, 13 Aug 2019 03:23:46 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=+vEsZUSwAdb3YjNql7rDM4PtC51lwjYe4ypkHR8meNg=;
+        b=eUZxK2L5oj1+oBD0v5G7ZnRRwOJ5/ACKHAa8etKuQt9e05c7Zi4PtFuS6fwIZYwvBg
+         9diDKTcYCLPfCVps6Fr+hZerUs60gA1jPS+ApeEvoPbEUxYBWIKO48Zn+xj7M5CbuKvY
+         TTXoDMiRmJQ7OZAFkxx/fIz3SDZOlSWWw7xHZgTBCJvVApJmvR50LMVtHwH6HC8VFm5H
+         iytGo9JZCPuO3xlu5OaX185O/zNch12MSdP3tN4f4BdzjCjeAuxWx3GB7/VRtUHGoNDN
+         d+EwCRG8hBYEDBNZ7YacOtzvL/tUvd5gMAuyC0NWgh9k4RqxCMX9FnVlXGL6rkS1AxCQ
+         XLDA==
+X-Gm-Message-State: APjAAAV4J5nkdSTkZP/VrE9QS3G+/I47IMgfuYyhEwiFkHLPNm89fIVG
+        pR7Nri/X6U80bXPNkZOG0mr5tg==
+X-Google-Smtp-Source: APXvYqxfBIXDeO0fClkXCBT9GDNG7S0f2BKB42eF07OqmwBW8EB8GoIyGDNisQVq/AUlsE7V5UoY4g==
+X-Received: by 2002:a2e:9ad1:: with SMTP id p17mr21649917ljj.34.1565691827242;
+        Tue, 13 Aug 2019 03:23:47 -0700 (PDT)
 Received: from localhost.localdomain (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id e87sm24796942ljf.54.2019.08.13.03.23.44
+        by smtp.gmail.com with ESMTPSA id e87sm24796942ljf.54.2019.08.13.03.23.46
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 03:23:45 -0700 (PDT)
+        Tue, 13 Aug 2019 03:23:46 -0700 (PDT)
 From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 To:     magnus.karlsson@intel.com, bjorn.topel@intel.com
 Cc:     davem@davemloft.net, hawk@kernel.org, john.fastabend@gmail.com,
@@ -61,35 +62,36 @@ Cc:     davem@davemloft.net, hawk@kernel.org, john.fastabend@gmail.com,
         netdev@vger.kernel.org, bpf@vger.kernel.org,
         xdp-newbies@vger.kernel.org, linux-kernel@vger.kernel.org,
         Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH bpf-next 0/3] xdpsock: allow mmap2 usage for 32bits
-Date:   Tue, 13 Aug 2019 13:23:15 +0300
-Message-Id: <20190813102318.5521-1-ivan.khoronzhuk@linaro.org>
+Subject: [PATCH bpf-next 1/3] libbpf: add asm/unistd.h to xsk to get __NR_mmap2
+Date:   Tue, 13 Aug 2019 13:23:16 +0300
+Message-Id: <20190813102318.5521-2-ivan.khoronzhuk@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190813102318.5521-1-ivan.khoronzhuk@linaro.org>
+References: <20190813102318.5521-1-ivan.khoronzhuk@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset contains several improvements for af_xdp socket umem
-mappings for 32bit systems. Also, there is one more patch outside of
-othis series that can be applied to another tree and related to mmap2
-af_xdp umem offsets:
-"mm: mmap: increase sockets maximum memory size pgoff for 32bits"
-https://lkml.org/lkml/2019/8/12/549
+That's needed to get __NR_mmap2 when mmap2 syscall is used.
 
-Based on bpf-next/master
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+---
+ tools/lib/bpf/xsk.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Ivan Khoronzhuk (3):
-  libbpf: add asm/unistd.h to xsk to get __NR_mmap2
-  xdp: xdp_umem: replace kmap on vmap for umem map
-  samples: bpf: syscal_nrs: use mmap2 if defined
-
- net/xdp/xdp_umem.c         | 16 ++++++++++++----
- samples/bpf/syscall_nrs.c  |  5 +++++
- samples/bpf/tracex5_kern.c | 11 +++++++++++
- tools/lib/bpf/xsk.c        |  1 +
- 4 files changed, 29 insertions(+), 4 deletions(-)
-
+diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
+index 5007b5d4fd2c..f2fc40f9804c 100644
+--- a/tools/lib/bpf/xsk.c
++++ b/tools/lib/bpf/xsk.c
+@@ -12,6 +12,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <unistd.h>
++#include <asm/unistd.h>
+ #include <arpa/inet.h>
+ #include <asm/barrier.h>
+ #include <linux/compiler.h>
 -- 
 2.17.1
 
