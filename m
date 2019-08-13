@@ -2,65 +2,111 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 563FDC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79544C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31EBE206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55452206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:38:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbfHMNiP (ORCPT
+        id S1729255AbfHMNiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:38:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53351 "EHLO mx1.redhat.com"
+        Tue, 13 Aug 2019 09:38:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40697 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727311AbfHMNiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:38:14 -0400
+        id S1729233AbfHMNiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 09:38:16 -0400
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 629F13016F4A;
-        Tue, 13 Aug 2019 13:38:14 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0A25DC05168C;
+        Tue, 13 Aug 2019 13:38:16 +0000 (UTC)
 Received: from plouf.redhat.com (ovpn-117-165.ams2.redhat.com [10.36.117.165])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AA6E46E6F0;
-        Tue, 13 Aug 2019 13:38:10 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B45136E6F0;
+        Tue, 13 Aug 2019 13:38:14 +0000 (UTC)
 From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
 To:     =?UTF-8?q?Filipe=20La=C3=ADns?= <lains@archlinux.org>,
         Jiri Kosina <jikos@kernel.org>
 Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH 0/2] Fix support of a few Logitech devices broken in 5.3
-Date:   Tue, 13 Aug 2019 15:38:05 +0200
-Message-Id: <20190813133807.12384-1-benjamin.tissoires@redhat.com>
+Subject: [PATCH 1/2] Revert "HID: logitech-hidpp: add USB PID for a few more supported mice"
+Date:   Tue, 13 Aug 2019 15:38:06 +0200
+Message-Id: <20190813133807.12384-2-benjamin.tissoires@redhat.com>
+In-Reply-To: <20190813133807.12384-1-benjamin.tissoires@redhat.com>
+References: <20190813133807.12384-1-benjamin.tissoires@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 13 Aug 2019 13:38:14 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 13 Aug 2019 13:38:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
+This partially reverts commit 27fc32fd9417968a459d43d9a7c50fd423d53eb9.
 
-another set of patches to send to Linus ASAP.
-It turns out that we have been breaking devices, so this should
-be sent before 5.3 final.
+It turns out that the G502 has some issues with hid-logitech-hidpp:
+when plugging it in, the driver tries to contact it but it fails.
+So the driver bails out leaving only the mouse event node available.
 
-Cheers,
-Benjamin
+This timeout is problematic as it introduce a delay in the boot,
+and having only the mouse event node means that the hardware
+macros keys can not be relayed to the userspace.
 
-Benjamin Tissoires (2):
-  Revert "HID: logitech-hidpp: add USB PID for a few more supported
-    mice"
-  HID: logitech-hidpp: remove support for the G700 over USB
+Filipe and I just gave a shot at the following devices:
 
- drivers/hid/hid-logitech-hidpp.c | 22 ----------------------
- 1 file changed, 22 deletions(-)
+G403 Wireless (0xC082)
+G703 (0xC087)
+G703 Hero (0xC090)
+G903 (0xC086)
+G903 Hero (0xC091)
+G Pro (0xC088)
 
+Reverting the device we are not sure that works flawlessly.
+
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+---
+ drivers/hid/hid-logitech-hidpp.c | 20 --------------------
+ 1 file changed, 20 deletions(-)
+
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index 21268c9fa71a..343052b117a9 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -3749,30 +3749,10 @@ static const struct hid_device_id hidpp_devices[] = {
+ 
+ 	{ L27MHZ_DEVICE(HID_ANY_ID) },
+ 
+-	{ /* Logitech G203/Prodigy Gaming Mouse */
+-	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC084) },
+-	{ /* Logitech G302 Gaming Mouse */
+-	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC07F) },
+-	{ /* Logitech G303 Gaming Mouse */
+-	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC080) },
+-	{ /* Logitech G400 Gaming Mouse */
+-	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC07E) },
+ 	{ /* Logitech G403 Wireless Gaming Mouse over USB */
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC082) },
+-	{ /* Logitech G403 Gaming Mouse */
+-	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC083) },
+-	{ /* Logitech G403 Hero Gaming Mouse over USB */
+-	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC08F) },
+-	{ /* Logitech G502 Proteus Core Gaming Mouse */
+-	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC07D) },
+-	{ /* Logitech G502 Proteus Spectrum Gaming Mouse over USB */
+-	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC332) },
+-	{ /* Logitech G502 Hero Gaming Mouse over USB */
+-	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC08B) },
+ 	{ /* Logitech G700 Gaming Mouse over USB */
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC06B) },
+-	{ /* Logitech G700s Gaming Mouse over USB */
+-	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC07C) },
+ 	{ /* Logitech G703 Gaming Mouse over USB */
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC087) },
+ 	{ /* Logitech G703 Hero Gaming Mouse over USB */
 -- 
 2.19.2
 
