@@ -2,145 +2,178 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D406C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65579C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BDDB20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CDE020578
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:28:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKFtXvz1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nWLJmN3X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbfHMN14 (ORCPT
+        id S1729109AbfHMN2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:27:56 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45354 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727311AbfHMN1z (ORCPT
+        Tue, 13 Aug 2019 09:28:08 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42192 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727311AbfHMN2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:27:55 -0400
-Received: by mail-pf1-f194.google.com with SMTP id w26so6348724pfq.12;
-        Tue, 13 Aug 2019 06:27:55 -0700 (PDT)
+        Tue, 13 Aug 2019 09:28:07 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i30so2906938pfk.9
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:28:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4JmovL7f7Lc0USMR5vQs5t5TbhaKHeGM3aHleOs6qmw=;
-        b=LKFtXvz11efc7CJTzzmu1BuRwYK+8OrP73+IlmRQ559j/wXEsngo0iA3xEE+2EBpwK
-         oLdCdF6XfOLYtdukHfJNHrWOqNzp/4n/atIH6PIb5q6Twn1IhJK+EDygqlJKU6oRxOh/
-         X5XL4XWb/N9s72GzQda+4QoqiH3H7+1YjH2tgeEUiPogutNNFmGWNeEvLZkjA9R2VRpd
-         v8i3RolYLgQYaSRfy/0QAAVwRk8k1eUn6nY5ElpTr3em8oZWVl8FXRgdJ4yYlZiUfnkF
-         7jCy2PqT4Dnv5N8NADq1oU3zeT07s+88fQEaixJO73QTWI/Ha6ho04T0bVRh7gk8xWRh
-         J77A==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:cc;
+        bh=OUnI5qShYtHQYww3X1RCBrfCURbBQ7wCunEPYxXRUns=;
+        b=nWLJmN3XZAPFpmXl7Lv98vYL2f5xide0ABgIuYQFZZy15vy2ONsAm/1UZ1JzukTcw8
+         BDL9RltV2YBhTQzX/UahXxHNWCr/8Keym9JDfL3ahYwsNuC4giB2KQKu7++6dUgM8TFE
+         P6qh+xMHedLkv8UeXIvk2EEtNRkgXTxPRyLvS0BFcTiKCe5pEJJKl2C9mC/eGEO3YITH
+         DhjzZKGkp2ZpBHONUrIyNRZT3nllrg8L7eJ5iJLoOJ0IzAtMZO7BcMylAdEVx6QlokCn
+         a0MZnqnB0LTfx2UOYhlbfsLSiPNmhvVBO8Kverf0iE+bOYedAXdiln/RagrrcmBCM8QZ
+         QwwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4JmovL7f7Lc0USMR5vQs5t5TbhaKHeGM3aHleOs6qmw=;
-        b=YdeYmt1i96CHJRmZ4WAoRgHbC+HAHoVTt0zJ/p/ywKtYBZ3nxF5rd0JgtyZSIpEpSM
-         jvJtwuZTZGN35qg5eeXBKPS843LMTrzfq55iPdc09rtFAKhqESBQLVPosOEOJthn/HA8
-         ZItp4DVd9X0ySQUSwWfA0PRk2eiq60qMw6gKOZtnQBQ3iVkzSpw33EJqGnIDMIJ2AeCl
-         sOL5ZOM7Zus1QSL633sYEKIsIy01mNMkvRFksCxHcIzpcs6dUW8tE/8ibBL+ke3E1B5z
-         /DqGrNxwsXdylwHiE83tnGqINivNGbB18yBS+GGLiR6D3WiVz27NiM7C3RGc7oMJfx/T
-         sdXA==
-X-Gm-Message-State: APjAAAUkVbs1cI8Od0jpM4hLgGLHUczxYoyOmSLAdZUiO8YPG7P07fL6
-        a40wZNn11OoV2QfLYlwFAbM=
-X-Google-Smtp-Source: APXvYqys1+pYpliynHFt1addLrKuiPBg5I5dWMCuCfnBxy7e8zqoNwUxpHWnaWDqw2TCSIDNbMM9XQ==
-X-Received: by 2002:aa7:8611:: with SMTP id p17mr7366380pfn.41.1565702875093;
-        Tue, 13 Aug 2019 06:27:55 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s5sm93731155pfm.97.2019.08.13.06.27.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 13 Aug 2019 06:27:54 -0700 (PDT)
-Subject: Re: [PATCH v2 3/4] hwmon/ltc2990: Add platform_data support
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Max Staudt <max@enpas.org>, Linux I2C <linux-i2c@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Linux/m68k <linux-m68k@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-References: <20190812235237.21797-1-max@enpas.org>
- <20190812235237.21797-3-max@enpas.org> <20190813080237.GA29986@roeck-us.net>
- <CAMuHMdXHbjfrdusGB3qvcu1a=W65Ef1-NrvcCv1h9E9uicknLg@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <1aff162f-f548-954c-b9d4-c6207a6c5875@roeck-us.net>
-Date:   Tue, 13 Aug 2019 06:27:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:cc;
+        bh=OUnI5qShYtHQYww3X1RCBrfCURbBQ7wCunEPYxXRUns=;
+        b=Byy2TR6FxBFB/VA1njlMNPZuWQG6A9W5+CZnHHs5o8WUbhknEGZBx8Vjp2AuMT7heO
+         WpUKMNRrOAtfpKrycdnN/F83aXhDqmRs5oge6H0CsVqxcEiIz9NlaeaG7slBw3sAm4kg
+         bUNaWa+WonjNuOg+jYikjc3EqUvhAq146r9z/JlGO1x7CYBMNyP7vpuD/Wfrz5xvje+x
+         U7xrb+BpXoPxEHNpUpDFPVTFYL5lD5d7ZRk/+0Mw8uT7f36bJ7YJPdHDPSAU97j0JA68
+         Vtl20nA+beSMroXu7c78aWdXrqEFwxEjazisowDVwrrBQNeZxQZdlAR2PvUCprZAmjuw
+         OI+w==
+X-Gm-Message-State: APjAAAUCvHqueuCPfPqegfJfRPWDAO8N8slRsNWuUMiW5nojJtp1QNWZ
+        N61CCIEnIhfnpB3+FVF9kSCUzXD+ht405lm4aE9z2w==
+X-Received: by 2002:a17:90a:a116:: with SMTP id s22mt2038033pjp.47.1565702886660;
+ Tue, 13 Aug 2019 06:28:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdXHbjfrdusGB3qvcu1a=W65Ef1-NrvcCv1h9E9uicknLg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <000000000000f00cf1058bb7fb56@google.com> <Pine.LNX.4.44L0.1906201544001.1346-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1906201544001.1346-100000@iolanthe.rowland.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 13 Aug 2019 15:27:55 +0200
+Message-ID: <CAAeHK+zV84yDuXRL6TAiC9LW_kQQ0c1hgynNFw5aY+ofHAE85g@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in p54u_load_firmware_cb
+Cc:     syzbot <syzbot+6d237e74cdc13f036473@syzkaller.appspotmail.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        linux-wireless@vger.kernel.org, netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Alan Stern <stern@rowland.harvard.edu>
+Content-Type: text/plain; charset="UTF-8"
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/19 1:27 AM, Geert Uytterhoeven wrote:
-> Hi Günter,
-> 
-> On Tue, Aug 13, 2019 at 10:02 AM Guenter Roeck <linux@roeck-us.net> wrote:
->> On Tue, Aug 13, 2019 at 01:52:36AM +0200, Max Staudt wrote:
->>> This allows code using i2c_new_device() to specify a measurement mode.
->>>
->>> Signed-off-by: Max Staudt <max@enpas.org>
->>> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
->>> ---
->>>   drivers/hwmon/ltc2990.c               |  9 +++++++++
->>>   include/linux/platform_data/ltc2990.h | 11 +++++++++++
->>>   2 files changed, 20 insertions(+)
->>>   create mode 100644 include/linux/platform_data/ltc2990.h
->>>
->>> diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
->>> index f9431ad43..f19b9c50c 100644
->>> --- a/drivers/hwmon/ltc2990.c
->>> +++ b/drivers/hwmon/ltc2990.c
->>> @@ -14,6 +14,7 @@
->>>   #include <linux/kernel.h>
->>>   #include <linux/module.h>
->>>   #include <linux/of.h>
->>> +#include <linux/platform_data/ltc2990.h>
->>>
->>>   #define LTC2990_STATUS       0x00
->>>   #define LTC2990_CONTROL      0x01
->>> @@ -206,6 +207,7 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
->>>        int ret;
->>>        struct device *hwmon_dev;
->>>        struct ltc2990_data *data;
->>> +     struct ltc2990_platform_data *pdata = dev_get_platdata(&i2c->dev);
->>>        struct device_node *of_node = i2c->dev.of_node;
->>>
->>>        if (!i2c_check_functionality(i2c->adapter, I2C_FUNC_SMBUS_BYTE_DATA |
->>> @@ -227,6 +229,13 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
->>>                if (data->mode[0] & ~LTC2990_MODE0_MASK ||
->>>                    data->mode[1] & ~LTC2990_MODE1_MASK)
->>>                        return -EINVAL;
->>> +     } else if (pdata) {
->>> +             data->mode[0] = pdata->meas_mode[0];
->>> +             data->mode[1] = pdata->meas_mode[1];
->>> +
->>> +             if (data->mode[0] & ~LTC2990_MODE0_MASK ||
->>> +                 data->mode[1] & ~LTC2990_MODE1_MASK)
->>> +                     return -EINVAL;
->>
->> I would prefer if the driver was modified to accept device
->> properties, and if those were set using the appropriate
->> fwnode function. Any reason for not doing that ?
-> 
-> That was my first thought as well, but isn't that limited to DT and ACPI
-> properties (for now)?
-> 
+On Thu, Jun 20, 2019 at 9:46 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Wed, 19 Jun 2019, syzbot wrote:
+>
+> > syzbot has found a reproducer for the following crash on:
+> >
+> > HEAD commit:    9939f56e usb-fuzzer: main usb gadget fuzzer driver
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=135e29faa00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=df134eda130bb43a
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=6d237e74cdc13f036473
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=175d946ea00000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+6d237e74cdc13f036473@syzkaller.appspotmail.com
+> >
+> > usb 3-1: Direct firmware load for isl3887usb failed with error -2
+> > usb 3-1: Firmware not found.
+> > ==================================================================
+> > BUG: KASAN: slab-out-of-bounds in p54u_load_firmware_cb.cold+0x97/0x13d
+> > drivers/net/wireless/intersil/p54/p54usb.c:936
+> > Read of size 8 at addr ffff8881c9cf7588 by task kworker/1:5/2759
+> >
+> > CPU: 1 PID: 2759 Comm: kworker/1:5 Not tainted 5.2.0-rc5+ #11
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Workqueue: events request_firmware_work_func
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0xca/0x13e lib/dump_stack.c:113
+> >   print_address_description+0x67/0x231 mm/kasan/report.c:188
+> >   __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
+> >   kasan_report+0xe/0x20 mm/kasan/common.c:614
+> >   p54u_load_firmware_cb.cold+0x97/0x13d
+> > drivers/net/wireless/intersil/p54/p54usb.c:936
+> >   request_firmware_work_func+0x126/0x242
+> > drivers/base/firmware_loader/main.c:785
+> >   process_one_work+0x905/0x1570 kernel/workqueue.c:2269
+> >   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+> >   kthread+0x30b/0x410 kernel/kthread.c:255
+> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> >
+> > Allocated by task 1612:
+> >   save_stack+0x1b/0x80 mm/kasan/common.c:71
+> >   set_track mm/kasan/common.c:79 [inline]
+> >   __kasan_kmalloc mm/kasan/common.c:489 [inline]
+> >   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:462
+> >   kmalloc include/linux/slab.h:547 [inline]
+> >   syslog_print kernel/printk/printk.c:1346 [inline]
+> >   do_syslog kernel/printk/printk.c:1519 [inline]
+> >   do_syslog+0x4f4/0x12e0 kernel/printk/printk.c:1493
+> >   kmsg_read+0x8a/0xb0 fs/proc/kmsg.c:40
+> >   proc_reg_read+0x1c1/0x280 fs/proc/inode.c:221
+> >   __vfs_read+0x76/0x100 fs/read_write.c:425
+> >   vfs_read+0x18e/0x3d0 fs/read_write.c:461
+> >   ksys_read+0x127/0x250 fs/read_write.c:587
+> >   do_syscall_64+0xb7/0x560 arch/x86/entry/common.c:301
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >
+> > Freed by task 1612:
+> >   save_stack+0x1b/0x80 mm/kasan/common.c:71
+> >   set_track mm/kasan/common.c:79 [inline]
+> >   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:451
+> >   slab_free_hook mm/slub.c:1421 [inline]
+> >   slab_free_freelist_hook mm/slub.c:1448 [inline]
+> >   slab_free mm/slub.c:2994 [inline]
+> >   kfree+0xd7/0x280 mm/slub.c:3949
+> >   syslog_print kernel/printk/printk.c:1405 [inline]
+> >   do_syslog kernel/printk/printk.c:1519 [inline]
+> >   do_syslog+0xff3/0x12e0 kernel/printk/printk.c:1493
+> >   kmsg_read+0x8a/0xb0 fs/proc/kmsg.c:40
+> >   proc_reg_read+0x1c1/0x280 fs/proc/inode.c:221
+> >   __vfs_read+0x76/0x100 fs/read_write.c:425
+> >   vfs_read+0x18e/0x3d0 fs/read_write.c:461
+> >   ksys_read+0x127/0x250 fs/read_write.c:587
+> >   do_syscall_64+0xb7/0x560 arch/x86/entry/common.c:301
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >
+> > The buggy address belongs to the object at ffff8881c9cf7180
+> >   which belongs to the cache kmalloc-1k of size 1024
+> > The buggy address is located 8 bytes to the right of
+> >   1024-byte region [ffff8881c9cf7180, ffff8881c9cf7580)
+> > The buggy address belongs to the page:
+> > page:ffffea0007273d00 refcount:1 mapcount:0 mapping:ffff8881dac02a00
+> > index:0x0 compound_mapcount: 0
+> > flags: 0x200000000010200(slab|head)
+> > raw: 0200000000010200 dead000000000100 dead000000000200 ffff8881dac02a00
+> > raw: 0000000000000000 00000000000e000e 00000001ffffffff 0000000000000000
+> > page dumped because: kasan: bad access detected
+> >
+> > Memory state around the buggy address:
+> >   ffff8881c9cf7480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >   ffff8881c9cf7500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> > > ffff8881c9cf7580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> >                        ^
+> >   ffff8881c9cf7600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >   ffff8881c9cf7680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> > ==================================================================
+>
+> Isn't this the same as syzkaller bug 200d4bb11b23d929335f ?  Doesn't
+> the same patch fix it?
 
-tcpm and, for example, the wcove driver don't seem to have a problem using
-it, I don't see acpi involved there. Also, the code resides in the core driver
-code and is always enabled unless I am missing something. What am I missing ?
-
-Guenter
+#syz dup: KASAN: use-after-free Read in p54u_load_firmware_cb
