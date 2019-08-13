@@ -2,303 +2,187 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USB_DRIVES autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46022C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8972AC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15EF52067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C58F20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 03:47:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Wfxu1Oau";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="J8i+btKX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbfHMDnC (ORCPT
+        id S1726811AbfHMDrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 23:43:02 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:39398 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727329AbfHMDmp (ORCPT
+        Mon, 12 Aug 2019 23:47:13 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:59466 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbfHMDrM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 23:42:45 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7D3ggjR012009, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw [172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTP id x7D3ggjR012009;
-        Tue, 13 Aug 2019 11:42:42 +0800
-Received: from fc30.localdomain (172.21.177.138) by RTITCASV01.realtek.com.tw
- (172.21.6.18) with Microsoft SMTP Server id 14.3.468.0; Tue, 13 Aug 2019
- 11:42:41 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     <netdev@vger.kernel.org>
-CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, Hayes Wang <hayeswang@realtek.com>
-Subject: [PATCH net-next v2 4/5] r8152: support skb_add_rx_frag
-Date:   Tue, 13 Aug 2019 11:42:08 +0800
-Message-ID: <1394712342-15778-299-albertk@realtek.com>
-X-Mailer: Microsoft Office Outlook 11
-In-Reply-To: <1394712342-15778-295-albertk@realtek.com>
-References: <1394712342-15778-289-Taiwan-albertk@realtek.com>
- <1394712342-15778-295-albertk@realtek.com>
+        Mon, 12 Aug 2019 23:47:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1565668031; x=1597204031;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=wd0jLAEkpTE1eco8MznizPbS5zl4YLsBT6KGfzSmZ/I=;
+  b=Wfxu1OauFasnMH18eRuXlRP0lg6U70vLgeXUl1oxBj0U483E+IGKNhQW
+   t8XwGfGhVGA+ygF2Nk2JqgEYGH82Wl97Yamm1KKMrv3QetQ4IdMybLqVS
+   P+GwzuqAlOsN2NlZH6hIWYVt083o40xuE376KvSOQVPA7JYyyZGBTE8S/
+   ISQZ0ugHxp/NKArNHMp7Qt3aK5gUprXVVa9HT7QBU9t7mrTEXC/AcF3uQ
+   3o/p9BiRpUEciqSHMizhqZYsx5qDD0WwQq9gDZFa19AIhJLUKPIV5CcH2
+   C9VSjueFmM+hor40sH+knu2LExnShBn/Ip6R0pA0Sc1/H5PTh1+PBG+7l
+   A==;
+IronPort-SDR: 9aqHKmCrQKHvtOL42oRZW8N3I+i6/7Acy85xh8lgDd+dprZx1Sm8kEsgofRWpwS8Hd3qVWM+U3
+ I+FHlO/6SW9WptLqM8RePkmvPk73RiuDFZGwQhJzDn4KbzOplpL+RjYAmL+EJGN4vAdzocFu6L
+ miASWE0vpzxuR51TrukHmwcyCjVqhbeT8pYokkbLPSucKRlBCUEodHuYCZgVEZ2wdOYpKQBVh/
+ bAcdRvaUsGMshJs2gLb1LJMVKV6IE4W5qXX84l+jJTEsrRqA+gc+LKrj0Z1fnBprR6P1n1cIZL
+ J0k=
+X-IronPort-AV: E=Sophos;i="5.64,380,1559491200"; 
+   d="scan'208";a="116642671"
+Received: from mail-cys01nam02lp2056.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.56])
+  by ob1.hgst.iphmx.com with ESMTP; 13 Aug 2019 11:47:11 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IOwIpcen8GEJnZnH2M7TS6+sl22S5Jv+4C5AkmYGa2PP3VZBeRfc+ONUb3AHztFAqn+fxm/J8P4SbYRe1YQ+52TGds2esbI9y0HoDa5m6jTa2eDwLtZEnfT3jq8Seg84fMaQCTDrUYy6oW86WQTeRniyzLKeWBQb8ct0bN65jj/z1TfZt68rXcH0H484KWW4uKabP+IVtSJuJ4pTb7gaeQ2tT9LGkUxLKDxnHW8Eu8t/w5ss/SVJFPalulTX1ZyXzdqeVjL9mkxEcsgkzQxjpaV5jdl3DYOwXJbDschCU/nJVmjnJo2kCiRhjjMZMs2JM7XBhYMk0FWHbX4xa1qvQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5JTWSKsHYs0P4SeKELIUPF/5hKOMKzixNn5AA8ZXqUA=;
+ b=clQFJ0OyhaOqlR/seOEfk7Kgt/Qf/zMv5JVNsI1kcIekOdki8T0wsH0u/oDkg8OrIfsgmWCxtSg9cci7BvJ27jL+o6TzMKJ+sdOi4qqWlxNRAZzD5ScXVRB1+RNeoZdqYLyj5Q1/3UgOPsHoDYISTZD4+Bu8IFfV/rqdj4a212iyrY6ugxdHhFzgIxDUYmc8uMIy6X+73bEvLs44W/PjE/8wmRyNTsjt/9zUbEEh4U/qgpr51C6gVn7XwUYuhfRqnRcemZYprZO4Tpvx3GXaoIGLW4LdFI7N48IrCmykpIIempHcvUWGChlR60l6n3iEdXc3HMudbPYIsbhYH2VyQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=wdc.com;dmarc=pass action=none header.from=wdc.com;dkim=pass
+ header.d=wdc.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5JTWSKsHYs0P4SeKELIUPF/5hKOMKzixNn5AA8ZXqUA=;
+ b=J8i+btKXd/6+mgHEvk8TvsJExX+07sajFy7yOH6W8j4x+bIsvZ+mP6FxKDWE8AgBx79LPRsHUGUWl1yvIDfpEZLB/ELplxXNNZWxAeKDwSL65TnwbndUHJcn2WpS/s1Q2feO9MmlQDTdKcQxWTBG5CsguQ5HITE9cNceaEzqtNI=
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com (20.179.58.207) by
+ BYAPR04MB3942.namprd04.prod.outlook.com (52.135.215.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.17; Tue, 13 Aug 2019 03:47:09 +0000
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::a538:afd0:d62a:55bc]) by BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::a538:afd0:d62a:55bc%7]) with mapi id 15.20.2157.020; Tue, 13 Aug 2019
+ 03:47:09 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Justin Piszcz <jpiszcz@lucidpixels.com>
+CC:     'LKML' <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: Re: 5.2.x kernel: WD 8TB USB Drives: Unaligned partial completion
+ (resid=78, sector_sz=512)
+Thread-Topic: 5.2.x kernel: WD 8TB USB Drives: Unaligned partial completion
+ (resid=78, sector_sz=512)
+Thread-Index: AdVJ2z/+9mq0jIkOQpG4zabX2Rwi3A==
+Date:   Tue, 13 Aug 2019 03:47:09 +0000
+Message-ID: <BYAPR04MB5816F39A6F073D77499B8D85E7D20@BYAPR04MB5816.namprd04.prod.outlook.com>
+References: <006d01d549db$54e42140$feac63c0$@lucidpixels.com>
+ <yq1ftmcct1j.fsf@oracle.com>
+ <002d01d54dc3$17c278c0$47476a40$@lucidpixels.com>
+ <yq1r25p7qzp.fsf@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Damien.LeMoal@wdc.com; 
+x-originating-ip: [199.255.44.172]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: dd25149d-f910-4736-1432-08d71fa0eb30
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB3942;
+x-ms-traffictypediagnostic: BYAPR04MB3942:
+x-microsoft-antispam-prvs: <BYAPR04MB3942661603C07279E70F33F5E7D20@BYAPR04MB3942.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01283822F8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(396003)(39860400002)(346002)(366004)(199004)(189003)(51444003)(8936002)(52536014)(8676002)(7736002)(81156014)(74316002)(9686003)(55016002)(81166006)(53936002)(64756008)(66476007)(102836004)(6246003)(478600001)(66446008)(66556008)(6506007)(53546011)(256004)(5024004)(66066001)(3846002)(76176011)(71200400001)(6116002)(14454004)(4326008)(25786009)(14444005)(5660300002)(71190400001)(305945005)(66946007)(99286004)(2906002)(7696005)(6436002)(33656002)(186003)(229853002)(110136005)(316002)(54906003)(476003)(486006)(446003)(76116006)(86362001)(26005)(21314003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB3942;H:BYAPR04MB5816.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ymrUBuaSAPvQpYGXksaCPmB5m3QG1tac3/g7TMpRzf2Jd7O3oIa3kYQx6NN4e7Vf+SEZHPr+U8FWbc6SrqVI+Rf15Fb/4sxAY8abF/OI89zasMwawhCFvZiR7M55vx4YL+BnTg6Irvbsb4iy3ByXwU81uWAXySOA/P5izz3BzvMJIpCEOj2PEj1l6m6Ftaa1MZON4ZuNhrSCvtY/GgOiiWFIQlIHrLR5EnOpZJLoFKAt6SggWb+I8jeyR0GVw+9T944vt61naj31vTE1ASk1KT5bbEUgDZ8kKAgR7vASHPT0/pXfZrFNiK24IyeVhvnzrRnzoRvUJT9P7MVqLd/XMcsGlMEGpfkIe/+C3YYq+M7uYhrO+PQoAqokLxR3kYfqESreoCgY1ShPUWhgZvZKTtJNbpfohgsjYlzLfeeM59E=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [172.21.177.138]
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd25149d-f910-4736-1432-08d71fa0eb30
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2019 03:47:09.6310
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jrfKNRv1mMJJOWG1csEVkXDkymI2yekgZPM/1YP6D/dttdWXpYZ1+cLmzlQ5GX9hMnxaBjLG8hIyGcyYOuow3Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB3942
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use skb_add_rx_frag() to reduce the memory copy for rx data.
-
-Use a new list of rx_used to store the rx buffer which couldn't be
-reused yet.
-
-Besides, the total number of rx buffer may be increased or decreased
-dynamically. And it is limited by RTL8152_MAX_RX_AGG.
-
-Signed-off-by: Hayes Wang <hayeswang@realtek.com>
----
- drivers/net/usb/r8152.c | 120 +++++++++++++++++++++++++++++++++++-----
- 1 file changed, 105 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index f41cb728e999..2ae04522cd5a 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -584,6 +584,9 @@ enum rtl_register_content {
- #define TX_ALIGN		4
- #define RX_ALIGN		8
- 
-+#define RTL8152_MAX_RX_AGG	(10 * RTL8152_MAX_RX)
-+#define RTL8152_RXFG_HEADSZ	256
-+
- #define INTR_LINK		0x0004
- 
- #define RTL8152_REQT_READ	0xc0
-@@ -720,7 +723,7 @@ struct r8152 {
- 	struct net_device *netdev;
- 	struct urb *intr_urb;
- 	struct tx_agg tx_info[RTL8152_MAX_TX];
--	struct list_head rx_info;
-+	struct list_head rx_info, rx_used;
- 	struct list_head rx_done, tx_free;
- 	struct sk_buff_head tx_queue, rx_queue;
- 	spinlock_t rx_lock, tx_lock;
-@@ -1476,7 +1479,7 @@ static void free_rx_agg(struct r8152 *tp, struct rx_agg *agg)
- 	list_del(&agg->info_list);
- 
- 	usb_free_urb(agg->urb);
--	__free_pages(agg->page, get_order(tp->rx_buf_sz));
-+	put_page(agg->page);
- 	kfree(agg);
- 
- 	atomic_dec(&tp->rx_count);
-@@ -1494,7 +1497,7 @@ static struct rx_agg *alloc_rx_agg(struct r8152 *tp, gfp_t mflags)
- 	if (!rx_agg)
- 		return NULL;
- 
--	rx_agg->page = alloc_pages(mflags, order);
-+	rx_agg->page = alloc_pages(mflags | __GFP_COMP, order);
- 	if (!rx_agg->page)
- 		goto free_rx;
- 
-@@ -1947,6 +1950,46 @@ static u8 r8152_rx_csum(struct r8152 *tp, struct rx_desc *rx_desc)
- 	return checksum;
- }
- 
-+static inline bool rx_count_exceed(struct r8152 *tp)
-+{
-+	return atomic_read(&tp->rx_count) > RTL8152_MAX_RX;
-+}
-+
-+static inline int agg_offset(struct rx_agg *agg, void *addr)
-+{
-+	return (int)(addr - agg->buffer);
-+}
-+
-+static struct rx_agg *rtl_get_free_rx(struct r8152 *tp, gfp_t mflags)
-+{
-+	struct rx_agg *agg, *agg_next, *agg_free = NULL;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&tp->rx_lock, flags);
-+
-+	list_for_each_entry_safe(agg, agg_next, &tp->rx_used, list) {
-+		if (page_count(agg->page) == 1) {
-+			if (!agg_free) {
-+				list_del_init(&agg->list);
-+				agg_free = agg;
-+				continue;
-+			}
-+			if (rx_count_exceed(tp)) {
-+				list_del_init(&agg->list);
-+				free_rx_agg(tp, agg);
-+			}
-+			break;
-+		}
-+	}
-+
-+	spin_unlock_irqrestore(&tp->rx_lock, flags);
-+
-+	if (!agg_free && atomic_read(&tp->rx_count) < RTL8152_MAX_RX_AGG)
-+		agg_free = alloc_rx_agg(tp, mflags);
-+
-+	return agg_free;
-+}
-+
- static int rx_bottom(struct r8152 *tp, int budget)
- {
- 	unsigned long flags;
-@@ -1982,7 +2025,7 @@ static int rx_bottom(struct r8152 *tp, int budget)
- 
- 	list_for_each_safe(cursor, next, &rx_queue) {
- 		struct rx_desc *rx_desc;
--		struct rx_agg *agg;
-+		struct rx_agg *agg, *agg_free;
- 		int len_used = 0;
- 		struct urb *urb;
- 		u8 *rx_data;
-@@ -1994,6 +2037,8 @@ static int rx_bottom(struct r8152 *tp, int budget)
- 		if (urb->actual_length < ETH_ZLEN)
- 			goto submit;
- 
-+		agg_free = rtl_get_free_rx(tp, GFP_ATOMIC);
-+
- 		rx_desc = agg->buffer;
- 		rx_data = agg->buffer;
- 		len_used += sizeof(struct rx_desc);
-@@ -2001,7 +2046,7 @@ static int rx_bottom(struct r8152 *tp, int budget)
- 		while (urb->actual_length > len_used) {
- 			struct net_device *netdev = tp->netdev;
- 			struct net_device_stats *stats = &netdev->stats;
--			unsigned int pkt_len;
-+			unsigned int pkt_len, rx_frag_head_sz;
- 			struct sk_buff *skb;
- 
- 			/* limite the skb numbers for rx_queue */
-@@ -2019,22 +2064,37 @@ static int rx_bottom(struct r8152 *tp, int budget)
- 			pkt_len -= ETH_FCS_LEN;
- 			rx_data += sizeof(struct rx_desc);
- 
--			skb = napi_alloc_skb(napi, pkt_len);
-+			if (!agg_free || RTL8152_RXFG_HEADSZ > pkt_len)
-+				rx_frag_head_sz = pkt_len;
-+			else
-+				rx_frag_head_sz = RTL8152_RXFG_HEADSZ;
-+
-+			skb = napi_alloc_skb(napi, rx_frag_head_sz);
- 			if (!skb) {
- 				stats->rx_dropped++;
- 				goto find_next_rx;
- 			}
- 
- 			skb->ip_summed = r8152_rx_csum(tp, rx_desc);
--			memcpy(skb->data, rx_data, pkt_len);
--			skb_put(skb, pkt_len);
-+			memcpy(skb->data, rx_data, rx_frag_head_sz);
-+			skb_put(skb, rx_frag_head_sz);
-+			pkt_len -= rx_frag_head_sz;
-+			rx_data += rx_frag_head_sz;
-+			if (pkt_len) {
-+				skb_add_rx_frag(skb, 0, agg->page,
-+						agg_offset(agg, rx_data),
-+						pkt_len,
-+						SKB_DATA_ALIGN(pkt_len));
-+				get_page(agg->page);
-+			}
-+
- 			skb->protocol = eth_type_trans(skb, netdev);
- 			rtl_rx_vlan_tag(rx_desc, skb);
- 			if (work_done < budget) {
- 				napi_gro_receive(napi, skb);
- 				work_done++;
- 				stats->rx_packets++;
--				stats->rx_bytes += pkt_len;
-+				stats->rx_bytes += skb->len;
- 			} else {
- 				__skb_queue_tail(&tp->rx_queue, skb);
- 			}
-@@ -2042,10 +2102,24 @@ static int rx_bottom(struct r8152 *tp, int budget)
- find_next_rx:
- 			rx_data = rx_agg_align(rx_data + pkt_len + ETH_FCS_LEN);
- 			rx_desc = (struct rx_desc *)rx_data;
--			len_used = (int)(rx_data - (u8 *)agg->buffer);
-+			len_used = agg_offset(agg, rx_data);
- 			len_used += sizeof(struct rx_desc);
- 		}
- 
-+		WARN_ON(!agg_free && page_count(agg->page) > 1);
-+
-+		if (agg_free) {
-+			spin_lock_irqsave(&tp->rx_lock, flags);
-+			if (page_count(agg->page) == 1) {
-+				list_add(&agg_free->list, &tp->rx_used);
-+			} else {
-+				list_add_tail(&agg->list, &tp->rx_used);
-+				agg = agg_free;
-+				urb = agg->urb;
-+			}
-+			spin_unlock_irqrestore(&tp->rx_lock, flags);
-+		}
-+
- submit:
- 		if (!ret) {
- 			ret = r8152_submit_rx(tp, agg, GFP_ATOMIC);
-@@ -2373,13 +2447,14 @@ static int rtl_start_rx(struct r8152 *tp)
- 	struct rx_agg *agg, *agg_next;
- 	struct list_head tmp_list;
- 	unsigned long flags;
--	int ret = 0;
-+	int ret = 0, i = 0;
- 
- 	INIT_LIST_HEAD(&tmp_list);
- 
- 	spin_lock_irqsave(&tp->rx_lock, flags);
- 
- 	INIT_LIST_HEAD(&tp->rx_done);
-+	INIT_LIST_HEAD(&tp->rx_used);
- 
- 	list_splice_init(&tp->rx_info, &tmp_list);
- 
-@@ -2388,10 +2463,18 @@ static int rtl_start_rx(struct r8152 *tp)
- 	list_for_each_entry_safe(agg, agg_next, &tmp_list, info_list) {
- 		INIT_LIST_HEAD(&agg->list);
- 
--		if (ret < 0)
-+		/* Only RTL8152_MAX_RX rx_agg need to be submitted. */
-+		if (++i > RTL8152_MAX_RX) {
-+			spin_lock_irqsave(&tp->rx_lock, flags);
-+			list_add_tail(&agg->list, &tp->rx_used);
-+			spin_unlock_irqrestore(&tp->rx_lock, flags);
-+		} else if (unlikely(ret < 0)) {
-+			spin_lock_irqsave(&tp->rx_lock, flags);
- 			list_add_tail(&agg->list, &tp->rx_done);
--		else
-+			spin_unlock_irqrestore(&tp->rx_lock, flags);
-+		} else {
- 			ret = r8152_submit_rx(tp, agg, GFP_KERNEL);
-+		}
- 	}
- 
- 	spin_lock_irqsave(&tp->rx_lock, flags);
-@@ -2420,8 +2503,15 @@ static int rtl_stop_rx(struct r8152 *tp)
- 	list_splice_init(&tp->rx_info, &tmp_list);
- 	spin_unlock_irqrestore(&tp->rx_lock, flags);
- 
--	list_for_each_entry_safe(agg, agg_next, &tmp_list, info_list)
--		usb_kill_urb(agg->urb);
-+	list_for_each_entry_safe(agg, agg_next, &tmp_list, info_list) {
-+		/* At least RTL8152_MAX_RX rx_agg have the page_count being
-+		 * equal to 1, so the other ones could be freed safely.
-+		 */
-+		if (page_count(agg->page) > 1)
-+			free_rx_agg(tp, agg);
-+		else
-+			usb_kill_urb(agg->urb);
-+	}
- 
- 	/* Move back the list of temp to the rx_info */
- 	spin_lock_irqsave(&tp->rx_lock, flags);
--- 
-2.21.0
-
+On 2019/08/12 19:12, Martin K. Petersen wrote:=0A=
+> =0A=
+> Justin,=0A=
+> =0A=
+>>> Attached 2 x brand new Western Digital 8TB USB 3.0 drives awhile back=
+=0A=
+>>> and ran some file copy tests and was getting these warnings-- is=0A=
+>>> there any way to avoid these warnings?  I did confirm with parted=0A=
+>>> that the partition was aligned but this appears to be something=0A=
+>>> related to the firmware on the device according to [1] and [2]?=0A=
+> =0A=
+>> sg_vpd_bdc.txt=0A=
+>> Block device characteristics VPD page (SBC):=0A=
+>>   Nominal rotation rate: 5400 rpm=0A=
+>>   Product type: Not specified=0A=
+>>   WABEREQ=3D0=0A=
+>>   WACEREQ=3D0=0A=
+>>   Nominal form factor: 3.5 inch=0A=
+>>   ZONED=3D0=0A=
+> =0A=
+> Damien: What can we do to limit the messages in cases like this? Would=0A=
+> it make sense to make the residual warning conditional on sd_is_zoned()?=
+=0A=
+> =0A=
+=0A=
+These WD drives are regular disks, not SMR. Making the warning conditional =
+on=0A=
+sd_is_zoned() will not reduce the amount of messages. REPORT ZONES is the o=
+nly=0A=
+command that could result in a resid not being aligned to the block size si=
+nce=0A=
+by definition the command reply is composed of 64B zone descriptors. But th=
+at=0A=
+command is now processed through a device method and is not a REQ_OP_XXX=0A=
+anymore, so as an internal req, it does not go through sd_done() for comple=
+tion=0A=
+right ? All other zone commands either have no buffer, or the exact same=0A=
+requirement as regular disks, expecting a block aligned resid. So I think t=
+hat=0A=
+using sd_is_zoned() is not relevant to this problem.=0A=
+=0A=
+Bottom line: this USB adapter is weird and likely triggers all the unaligne=
+d=0A=
+resid. I do get regularly reports of similar problem with SAS HBAs, all alw=
+ays=0A=
+fixed with HBA FW updates. Not sure if there is a FW available for these dr=
+ives.=0A=
+I will ask internally.=0A=
+=0A=
+In the mean time, rate limiting or removing the sd_printk() call may be the=
+ only=0A=
+option. Failing all commands with an invalid resid would be safer I guess, =
+but=0A=
+will at best likely cause a lot of retry on these buggy devices, and break =
+the=0A=
+drive operation/perfomance completely in the worst case.=0A=
+=0A=
+Or the usb mass storage device driver could add some silent forced resid=0A=
+alignment too.=0A=
+=0A=
+Best regards.=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
