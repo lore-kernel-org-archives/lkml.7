@@ -2,161 +2,172 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA60C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA6DC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A86F020673
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F59206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 10:46:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="rksO+TLI";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="D1umlj0r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbfHMKpb (ORCPT
+        id S1728120AbfHMKqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 06:45:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38732 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727291AbfHMKpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 06:45:31 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5275230EA180;
-        Tue, 13 Aug 2019 10:45:30 +0000 (UTC)
-Received: from [10.36.117.2] (ovpn-117-2.ams2.redhat.com [10.36.117.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 47BEE80FDB;
-        Tue, 13 Aug 2019 10:45:05 +0000 (UTC)
-Subject: Re: [RFC][Patch v12 1/2] mm: page_reporting: core infrastructure
-To:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
-        john.starks@microsoft.com, Dave Hansen <dave.hansen@intel.com>,
-        Michal Hocko <mhocko@suse.com>, cohuck@redhat.com
-References: <20190812131235.27244-1-nitesh@redhat.com>
- <20190812131235.27244-2-nitesh@redhat.com>
- <CAKgT0UcSabyrO=jUwq10KpJKLSuzorHDnKAGrtWVigKVgvD-6Q@mail.gmail.com>
- <ca362045-9668-18ff-39b0-de91fa72e73c@redhat.com>
- <d39504c9-93bd-b8f7-e119-84baac5a42d4@redhat.com>
- <32f61f87-6205-5001-866c-a84e20fc9d85@redhat.com>
- <53fb1343-3b18-a566-aaa5-90a1d99d7333@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <8735a3a0-e1aa-e64d-af67-5cca3ae2c529@redhat.com>
-Date:   Tue, 13 Aug 2019 12:44:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <53fb1343-3b18-a566-aaa5-90a1d99d7333@redhat.com>
-Content-Type: text/plain; charset=utf-8
+        Tue, 13 Aug 2019 06:46:45 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:20052 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726287AbfHMKqo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 06:46:44 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x7DAjOmY022197;
+        Tue, 13 Aug 2019 03:46:40 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=Aa3vJQQyVr1uf6SV+3BVStbvqQShk6MjpPTKe4KBf4g=;
+ b=rksO+TLIT9uGQh/mzEec/CTaSP7gWKF0gDS4gE2k1ipvJFAIqfLOnB27hucdWvDbClz2
+ CR20oGD91Caui/6ph525AmTenGwSSOejOw98Pacoj1uPSVydkgroPMmBFyLS1nzZGGPA
+ pPz6ksSYvDRJi/3dY3vcVv9LChpTKGxtWxZNBC7ZHR+WcFyhk2OpKebd+4Qh7uyk8ckT
+ IwZlK43T0/eaDTvZFoRjmPuHULq0lO/psJJwaID0ctPwK7yaelyPwJZeaTv5qFDR5BNR
+ bjcDzjEr38pHM25VcskKkyYhG1iOQwb/ElXpoi2GoWk1h5QHllXcIhZ/LNsoopHbnA85 Qw== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2ubfactdk4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 13 Aug 2019 03:46:40 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 13 Aug
+ 2019 03:46:39 -0700
+Received: from NAM05-CO1-obe.outbound.protection.outlook.com (104.47.48.51) by
+ SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Tue, 13 Aug 2019 03:46:39 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iF2XD6WoH6EVOqUwGJ4tTCU/wsqvEptd5yp4sUADhfkwhuPf/lnxadgg4ze9mr9Nlgo1WM98L3Us1mI/rQtijo09jQfPlmnXymeTvjjA+txoFP7L6X5IEn8FUaGTJ/jStZ6ml80B9uTiZN/ABwrNuBMQVERtxyC88cGo5x+BBgmsNM+/UlatHWR+mNvX7fMY6DQjr0dTSIS8cyBK9ncHucFBs0Fqj71YwtKYtXG+aVTkHS7aqMEWDxqK40Ml6Jn4Hw8yb5SISdrVdM5tVsrOC+rupaCqGz+n44Akau/6+6P4NNjnNX9uUWZszTNauNC2PM/eaSwXZjOJXVMGT2SY3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Aa3vJQQyVr1uf6SV+3BVStbvqQShk6MjpPTKe4KBf4g=;
+ b=G2xeIhaKwZcI0GJQqKbFIPvfyqmgv98hp7fKoKm/tJRc9M/yFdvhrX0de/u6TSseFvvzHLsy5cWN5UsZy5TAi6hptjSL3uktGblCtks241GFHv23dlt2ZH7WCIaSWt3GzgM0JpHLrNw1kBu8v4G7KEOCnUfxdrqc4aBkFjgecycycuTgGN4nEABTt38QezSKaNKIF4yFUvD/b1gPZKF5G6+IVi0R5kTZUhRjBkJ9r1Eg2OkJUityEMB1RogXv7YCdUAsopsifD3lm+AdU96XlafWd/sOJY10pWoJaDaFHtGScj+S5jtT+pJi292nY3Wdu1YeYsjxaAHrKw19i0JXVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Aa3vJQQyVr1uf6SV+3BVStbvqQShk6MjpPTKe4KBf4g=;
+ b=D1umlj0rEILZduoEHkOV9Jb+M8PDZQ+VzCgnJ+Z2KXIX2YbFoSY4CAIbC1UxGSo+I3RgJ0pMzJd/R+fTNs+hxQd+Jek9J5/RObMCmRmRMLoaaEvMOp6475nHoolhsvPCiJLhV0jfU6B/+k/VD022c+kQAT5/C6vOS3I2+ZQ354M=
+Received: from MN2PR18MB2528.namprd18.prod.outlook.com (20.179.80.86) by
+ MN2PR18MB2512.namprd18.prod.outlook.com (20.179.82.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.21; Tue, 13 Aug 2019 10:46:37 +0000
+Received: from MN2PR18MB2528.namprd18.prod.outlook.com
+ ([fe80::cd80:d44a:f501:72a9]) by MN2PR18MB2528.namprd18.prod.outlook.com
+ ([fe80::cd80:d44a:f501:72a9%7]) with mapi id 15.20.2157.022; Tue, 13 Aug 2019
+ 10:46:37 +0000
+From:   Sudarsana Reddy Kalluru <skalluru@marvell.com>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+CC:     Ariel Elior <aelior@marvell.com>,
+        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:QLOGIC QL4xxx ETHERNET DRIVER" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] [PATCH] qed: Add cleanup in qed_slowpath_start()
+Thread-Topic: [EXT] [PATCH] qed: Add cleanup in qed_slowpath_start()
+Thread-Index: AQHVUb6iCK7ea0SB0U63wBrSN321uqb44kig
+Date:   Tue, 13 Aug 2019 10:46:36 +0000
+Message-ID: <MN2PR18MB2528D8046DFC6BB880D8EFF6D3D20@MN2PR18MB2528.namprd18.prod.outlook.com>
+References: <1565690709-3186-1-git-send-email-wenwen@cs.uga.edu>
+In-Reply-To: <1565690709-3186-1-git-send-email-wenwen@cs.uga.edu>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 13 Aug 2019 10:45:30 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [14.140.231.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: efc1ba30-387f-4077-c313-08d71fdb8412
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2512;
+x-ms-traffictypediagnostic: MN2PR18MB2512:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR18MB25129B987C391092F87678C7D3D20@MN2PR18MB2512.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 01283822F8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(136003)(366004)(346002)(13464003)(199004)(189003)(52536014)(66066001)(53936002)(6246003)(2171002)(8936002)(4326008)(6436002)(478600001)(6916009)(296002)(86362001)(25786009)(229853002)(9686003)(55016002)(316002)(14454004)(81156014)(54906003)(81166006)(5660300002)(99286004)(33656002)(186003)(476003)(76176011)(53546011)(6506007)(3846002)(14444005)(256004)(446003)(8676002)(7736002)(66946007)(74316002)(102836004)(26005)(2906002)(11346002)(486006)(71190400001)(71200400001)(55236004)(7696005)(6116002)(305945005)(66556008)(66476007)(76116006)(64756008)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2512;H:MN2PR18MB2528.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: wNQgKzPHaIVqEFaFMd3aaBLqKbaxI2QMofIaCSbc6sOdpSTb5xcWyckrQwI7YY8hnbzGy5MBYtHLwkA9e/v5MmDPH4wMrF4lViQwJLhTmS7JoFFuvMAbonkTKcCZ7AM+B4j1+wfq9ruN1J7hBpFInQ3oNE39419dSrqCG+XV7YPemw6EWHcL5vpS8VU7EJvrgTaoIDmUUjoQGleDe60lFJFTojTZUl9IRFwb3CiCqwFfWVpsZR5N67O8NxhBeCPqtvwy8+Tdu2heEwosXwrGX1fjrEKaNH4I9a9IQ9loyutTgHeXglnZVgl0T/G6rIXUPlW8abgNtAYNKPRVkRlzSZGd96MFc9kkQSFWTs6R/dPUx8/jzie7itR89cHWRjHfyiiIwOUs1Z8LMspBfcHp9waXwg8l28N1FxqgeqFMwDQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: efc1ba30-387f-4077-c313-08d71fdb8412
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2019 10:46:36.9645
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hxQ6G0GKphDwd60EFmBZCxbHKs80BHLRJCjWKxXf+DFjYlJkEBTMAUTAhhI1Mn9Z7m2GDFPwYD0yHSqlLRwo9g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2512
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:5.22.84,1.0.8
+ definitions=2019-08-13_04:2019-08-13,2019-08-13 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.08.19 12:42, Nitesh Narayan Lal wrote:
-> 
-> On 8/13/19 6:34 AM, David Hildenbrand wrote:
->>>>>> +static int process_free_page(struct page *page,
->>>>>> +                            struct page_reporting_config *phconf, int count)
->>>>>> +{
->>>>>> +       int mt, order, ret = 0;
-> [...]
->>>>>> +/**
->>>>>> + * zone_reporting_init - For each zone initializes the page reporting fields
->>>>>> + * and allocates the respective bitmap.
->>>>>> + *
->>>>>> + * This function returns 0 on successful initialization, -ENOMEM otherwise.
->>>>>> + */
->>>>>> +static int zone_reporting_init(void)
->>>>>> +{
->>>>>> +       struct zone *zone;
->>>>>> +       int ret;
->>>>>> +
->>>>>> +       for_each_populated_zone(zone) {
->>>>>> +#ifdef CONFIG_ZONE_DEVICE
->>>>>> +               /* we can not report pages which are not in the buddy */
->>>>>> +               if (zone_idx(zone) == ZONE_DEVICE)
->>>>>> +                       continue;
->>>>>> +#endif
->>>>> I'm pretty sure this isn't needed since I don't think the ZONE_DEVICE
->>>>> zone will be considered "populated".
->>>>>
->>>> I think you are right (although it's confusing, we will have present
->>>> sections part of a zone but the zone has no present_pages - screams like
->>>> a re factoring - leftover from ZONE_DEVICE introduction).
->>>
->>> I think in that case it is safe to have this check here.
->>> What do you guys suggest?
->> If it's not needed, I'd say drop it (eventually add a comment).
-> 
-> 
-> Comment to mention that we do not expect a zone with non-buddy page to be
-> initialized here?
+> -----Original Message-----
+> From: Wenwen Wang <wenwen@cs.uga.edu>
+> Sent: Tuesday, August 13, 2019 3:35 PM
+> To: Wenwen Wang <wenwen@cs.uga.edu>
+> Cc: Ariel Elior <aelior@marvell.com>; GR-everest-linux-l2 <GR-everest-lin=
+ux-
+> l2@marvell.com>; David S. Miller <davem@davemloft.net>; open
+> list:QLOGIC QL4xxx ETHERNET DRIVER <netdev@vger.kernel.org>; open list
+> <linux-kernel@vger.kernel.org>
+> Subject: [EXT] [PATCH] qed: Add cleanup in qed_slowpath_start()
+>=20
+> External Email
+>=20
+> ----------------------------------------------------------------------
+> If qed_mcp_send_drv_version() fails, no cleanup is executed, leading to
+> memory leaks. To fix this issue, redirect the execution to the label 'err=
+3'
+> before returning the error.
+>=20
+> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+> ---
+>  drivers/net/ethernet/qlogic/qed/qed_main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/ethernet/qlogic/qed/qed_main.c
+> b/drivers/net/ethernet/qlogic/qed/qed_main.c
+> index 829dd60..d16a251 100644
+> --- a/drivers/net/ethernet/qlogic/qed/qed_main.c
+> +++ b/drivers/net/ethernet/qlogic/qed/qed_main.c
+> @@ -1325,7 +1325,7 @@ static int qed_slowpath_start(struct qed_dev
+> *cdev,
+>  					      &drv_version);
+>  		if (rc) {
+>  			DP_NOTICE(cdev, "Failed sending drv version
+> command\n");
+> -			return rc;
+> +			goto err3;
 
-Something along these lines, or something like
+In this case, we might need to free the ll2-buf allocated at the below path=
+ (?),
+1312         /* Allocate LL2 interface if needed */
+1313         if (QED_LEADING_HWFN(cdev)->using_ll2) {
+1314                 rc =3D qed_ll2_alloc_if(cdev);
+May be by adding a new goto label 'err4'.
 
-/* ZONE_DEVICE is never considered populated */
+>  		}
+>  	}
+>=20
+> --
+> 2.7.4
 
--- 
-
-Thanks,
-
-David / dhildenb
