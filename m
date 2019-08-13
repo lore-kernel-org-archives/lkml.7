@@ -2,139 +2,69 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1581C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9612DC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B679720840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:01:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XQe6qEES"
+	by mail.kernel.org (Postfix) with ESMTP id 6D40C20840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:02:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729449AbfHMOBV (ORCPT
+        id S1729462AbfHMOCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 10:01:21 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52987 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727561AbfHMOBV (ORCPT
+        Tue, 13 Aug 2019 10:02:00 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:56163 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729384AbfHMOCA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 10:01:21 -0400
-Received: by mail-wm1-f68.google.com with SMTP id o4so1497362wmh.2;
-        Tue, 13 Aug 2019 07:01:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ky/0G1r/E47b3qMLySEW2K0XYi/tp5CsA6kbQT1Docg=;
-        b=XQe6qEESNVu+84o4mpV5IxOP2tMWBF13A5AN5TPmm/op1NRmPd4aktWCNwQXabIi7B
-         fXY+jgumHgPnZREKODcMeVrB7KU04CuH1SH55gsE02AQWXpSvKBdSXw2iIyyjmMQdfPe
-         H4MTrbDzEDVQBgTjLd4kQHxld74QGElq76UZGX5/yhOS9Aw8Q91vfgb5k7gXTVmIywQP
-         Y8lzROWvFROz6fJ7Pamrqvb8IgOuoKIpZbxZXQ0PgcYYBN+tmEtVaNODLQxdfSQHbKvZ
-         gkNgfQxY9LPnXuU8sR/p2BfmQxvgQ91A8gCzkdKQIkA0IzIknY/wB1rWOkzZmLUIEban
-         xYeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ky/0G1r/E47b3qMLySEW2K0XYi/tp5CsA6kbQT1Docg=;
-        b=aFxwRgRkmihJ7tgZv+Ymf8C1ah2Lu1Dsn2yyUhHYbQAb+Z1RohTrXdSiS0pC83J0fM
-         R1OJDDsToP+aX6rqod1BRDJuvZE8khkEUROGSQl0+6PzqVDj81NoReQFohf4T+cr14qY
-         oT6lUGT5MbSPFQ6Q0SLxn5TYhKysw3Uytb/CaO7CuygjaUtIr+nkVxNMNBig293tg+Ze
-         VmBTXp1bTIvPc811+ck3hvjQP/YBVr4rnT1xQQsg3TBV/+lQ03l2EFFaM2dFRfGfiLjU
-         AZmbKoRGl8fzH2Jt+xQjbLvRr8Dg7SjRfkgBQF8PC0mePlONKzM9zgwIXIMUedSa2CYD
-         qimQ==
-X-Gm-Message-State: APjAAAUQbtDSLmNLpRkZfprEwi3YOHNQdPn43T7r27oz4HqTPN7nDw2N
-        ckwzYJ6ruz8U+yAdK+Kx/+nE9zYg9lwVx/i0frMdGw==
-X-Google-Smtp-Source: APXvYqw0zbnDhh4DoH9t3jQVCRnpoZ6VJUK22NeN6UMrTRQB4NrXBEh1FXH9qFACsgkt1dFtqQfiMO8ZNbOh03Mn11E=
-X-Received: by 2002:a1c:1d42:: with SMTP id d63mr3197633wmd.34.1565704878839;
- Tue, 13 Aug 2019 07:01:18 -0700 (PDT)
+        Tue, 13 Aug 2019 10:02:00 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hxXN2-0007nU-8v; Tue, 13 Aug 2019 14:01:52 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ALSA: sb: remove redundant assignment to variable result
+Date:   Tue, 13 Aug 2019 15:01:51 +0100
+Message-Id: <20190813140151.9865-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190813181038.2c6aafb9@canb.auug.org.au> <MN2PR12MB3309141545B644DCA7F144B7ECD20@MN2PR12MB3309.namprd12.prod.outlook.com>
-In-Reply-To: <MN2PR12MB3309141545B644DCA7F144B7ECD20@MN2PR12MB3309.namprd12.prod.outlook.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 13 Aug 2019 10:01:07 -0400
-Message-ID: <CADnq5_MA-9pT=cZJYCZ62VXjwNtxaCLH2kb5ig5TLFKx4wsmjA@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the amdgpu tree
-To:     "Huang, Ray" <Ray.Huang@amd.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Liu, Aaron" <Aaron.Liu@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 4:21 AM Huang, Ray <Ray.Huang@amd.com> wrote:
->
-> > -----Original Message-----
-> > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Sent: Tuesday, August 13, 2019 4:11 PM
-> > To: Alex Deucher <alexdeucher@gmail.com>
-> > Cc: Linux Next Mailing List <linux-next@vger.kernel.org>; Linux Kernel
-> > Mailing List <linux-kernel@vger.kernel.org>; Liu, Aaron
-> > <Aaron.Liu@amd.com>; Huang, Ray <Ray.Huang@amd.com>
-> > Subject: linux-next: build failure after merge of the amdgpu tree
-> >
-> > Hi all,
-> >
-> > After merging the amdgpu tree, today's linux-next build (powerpc
-> > allyesconfig) failed like this:
-> >
-> > drivers/gpu/drm/amd/amdgpu/psp_v12_0.c:39:17: error: expected
-> > declaration specifiers or '...' before string constant
-> > MODULE_FIRMWARE("amdgpu/renoir_asd.bin");
-> >                  ^~~~~~~~~~~~~~~~~~~~~~~
-> >
-> > Caused by commit
-> >
-> >   6a7a0bdbfa0c ("drm/amdgpu: add psp_v12_0 for renoir (v2)")
-> >
-> > I have applied the following patch for today:
-> >
-> > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Date: Tue, 13 Aug 2019 18:03:16 +1000
-> > Subject: [PATCH] drm/amdgpu: MODULE_FIRMWARE requires
-> > linux/module.h
-> >
-> > Fixes: 6a7a0bdbfa0c ("drm/amdgpu: add psp_v12_0 for renoir (v2)")
-> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
->
-> Thanks!
->
-> Reviewed-by: Huang Rui <ray.huang@amd.com>
->
+From: Colin Ian King <colin.king@canonical.com>
 
-Applied.  thanks!
+Variable result is initialized to a value that is never read and it is
+re-assigned later. The initialization is redundant and can be removed.
 
-Alex
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ sound/isa/sb/sb_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > ---
-> >  drivers/gpu/drm/amd/amdgpu/psp_v12_0.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/psp_v12_0.c
-> > b/drivers/gpu/drm/amd/amdgpu/psp_v12_0.c
-> > index f37b8af4b986..b474dfb79375 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/psp_v12_0.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/psp_v12_0.c
-> > @@ -21,6 +21,7 @@
-> >   */
-> >
-> >  #include <linux/firmware.h>
-> > +#include <linux/module.h>
-> >  #include "amdgpu.h"
-> >  #include "amdgpu_psp.h"
-> >  #include "amdgpu_ucode.h"
-> > --
-> > 2.20.1
-> >
-> > --
-> > Cheers,
-> > Stephen Rothwell
+diff --git a/sound/isa/sb/sb_common.c b/sound/isa/sb/sb_common.c
+index 162338f1b68a..ff031d670400 100644
+--- a/sound/isa/sb/sb_common.c
++++ b/sound/isa/sb/sb_common.c
+@@ -80,7 +80,7 @@ int snd_sbdsp_reset(struct snd_sb *chip)
+ 
+ static int snd_sbdsp_version(struct snd_sb * chip)
+ {
+-	unsigned int result = -ENODEV;
++	unsigned int result;
+ 
+ 	snd_sbdsp_command(chip, SB_DSP_GET_VERSION);
+ 	result = (short) snd_sbdsp_get_byte(chip) << 8;
+-- 
+2.20.1
+
