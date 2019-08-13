@@ -2,155 +2,156 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 447FBC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D44C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 211EF2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E087C20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:33:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bR3xyAb5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfHMVc7 (ORCPT
+        id S1727243AbfHMVdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:32:59 -0400
-Received: from mga06.intel.com ([134.134.136.31]:18158 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727154AbfHMVcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 17:32:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 14:32:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="177922928"
-Received: from ccalgarr-mobl.amr.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.252.205.92])
-  by fmsmga007.fm.intel.com with ESMTP; 13 Aug 2019 14:32:53 -0700
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH 6/6] soundwire: intel: add pm_runtime support
-Date:   Tue, 13 Aug 2019 16:32:26 -0500
-Message-Id: <20190813213227.5163-7-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190813213227.5163-1-pierre-louis.bossart@linux.intel.com>
-References: <20190813213227.5163-1-pierre-louis.bossart@linux.intel.com>
-MIME-Version: 1.0
+        Tue, 13 Aug 2019 17:33:02 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:41208 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727197AbfHMVdA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 17:33:00 -0400
+Received: by mail-qt1-f194.google.com with SMTP id d17so28997497qtj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 14:32:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:mime-version
+         :content-transfer-encoding;
+        bh=qCbB+P5oHA9cZT/nz3Y/aGC8nM9/7bB2HylO7P1DLH0=;
+        b=bR3xyAb5DYDi5lyhiOo5mBPz5yoUVJC933X8edJw5MHjQdVxcXXzUDSUvmJcNyOdjo
+         YUGyXFKe4XJZ3RCAhhN6rmlBuf6N7UOCckovrJ6QPsaTrsTEndmO2rtY0BAvttWKiXr8
+         X775u1AfnnXV2oWsGhrphvYMdWIgWHj4VXvHVeLmHN+Dp6ZdDFZ8QRSx9hFiCMTMbqVs
+         WW3G/WB8dCIlt3S10CJRxOxsr8D9/KsZYTGznxZAr6A+fC+TXHKUWYMBSpBbwQihOMQW
+         s/YGmq1LvJ3mTTGkIu9EfqCSubl0Kpgg6Mw/b8kzXW9WS8hBt/XyLYIpj6u/1byZU6Az
+         G/+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:mime-version
+         :content-transfer-encoding;
+        bh=qCbB+P5oHA9cZT/nz3Y/aGC8nM9/7bB2HylO7P1DLH0=;
+        b=GSx572mPuQJHZO0HwIyoUek77GjQj/AU2I80H0xwbcpPq+i7Zi1qqtY5wqLhq4Q8GV
+         lOlU+n7VTabJuyRc0kJRdJv91jThRSw6Q4aIeOaj/2XsO5YAit3EhCOpRa0xOISRbehU
+         +4NOskvf9NrmBorZvbS8bHfjqrgqWlEeisIjbQ8P36tI/PV4Bm3hGMjrYJnW/sZ8a5NA
+         aAkCOu4XHQmCQ4VlgdxsaK9nNwL1x8PG4RaydUo6oUBwbYpEbIIZB+xcR4Lv2W8R81rM
+         MiK9gBlBW6OIt3g3mN/Z7F00m3awDSpVbm5TitIHOFUraehzjSbCq+aTXJRVMUdPa14A
+         c4Zw==
+X-Gm-Message-State: APjAAAVgUxB2wG6pgo8G8HG/YGN7ZAG6Zlhiu/H7+/0e4A/GmXZFKlB1
+        cQ2BaZxMSR1HcyVoam+d5ppj1w==
+X-Google-Smtp-Source: APXvYqzl5VHWHWJkDK+Cj5EMkuSBm4Co/Zg0gkn5tC+QN2hCZnLwbpKQmICGAhd+7CI3BeVXbt5plw==
+X-Received: by 2002:ac8:24b4:: with SMTP id s49mr11675536qts.255.1565731978799;
+        Tue, 13 Aug 2019 14:32:58 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id o18sm5935478qtt.4.2019.08.13.14.32.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 13 Aug 2019 14:32:58 -0700 (PDT)
+Message-ID: <1565731976.8572.16.camel@lca.pw>
+Subject: "PM / wakeup: Show wakeup sources stats in sysfs" causes boot
+ warnings
+From:   Qian Cai <cai@lca.pw>
+To:     Tri Vo <trong@android.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephen Boyd <swboyd@chromium.org>, rafael@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 13 Aug 2019 17:32:56 -0400
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add basic hooks in DAI .startup and .shutdown callbacks. The SoundWire
-IP should be powered between those two calls.
+The linux-next commit "PM / wakeup: Show wakeup sources stats in sysfs" [1]
+introduced some baddies during boot on several x86 servers. Reverted the commit
+fixed the issue.
 
-By default the platform_device is in SUSPENDED mode, it is required to
-call pm_runtime_set_active() before _enable()
+[1] https://lore.kernel.org/lkml/20190807014846.143949-4-trong@android.com/
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
- drivers/soundwire/intel.c | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
-
-diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-index fd2d0a9ccb00..c95222f18c75 100644
---- a/drivers/soundwire/intel.c
-+++ b/drivers/soundwire/intel.c
-@@ -716,6 +716,23 @@ static void intel_port_cleanup(struct sdw_cdns_dma_data *dma)
- 	}
- }
- 
-+static int intel_startup(struct snd_pcm_substream *substream,
-+			 struct snd_soc_dai *dai)
-+{
-+	struct sdw_cdns *cdns = snd_soc_dai_get_drvdata(dai);
-+	int ret;
-+
-+	ret = pm_runtime_get_sync(cdns->dev);
-+	if (ret < 0) {
-+		dev_err_ratelimited(cdns->dev,
-+				    "pm_runtime_get_sync failed in %s, ret %d\n",
-+				    __func__, ret);
-+		pm_runtime_put_noidle(cdns->dev);
-+	}
-+
-+	return ret;
-+}
-+
- static int intel_hw_params(struct snd_pcm_substream *substream,
- 			   struct snd_pcm_hw_params *params,
- 			   struct snd_soc_dai *dai)
-@@ -838,6 +855,8 @@ static void intel_shutdown(struct snd_pcm_substream *substream,
- 			   struct snd_soc_dai *dai)
- {
- 	struct sdw_cdns_dma_data *dma;
-+	struct sdw_cdns *cdns = snd_soc_dai_get_drvdata(dai);
-+	int ret;
- 
- 	dma = snd_soc_dai_get_dma_data(dai, substream);
- 	if (!dma)
-@@ -845,6 +864,13 @@ static void intel_shutdown(struct snd_pcm_substream *substream,
- 
- 	snd_soc_dai_set_dma_data(dai, substream, NULL);
- 	kfree(dma);
-+
-+	pm_runtime_mark_last_busy(cdns->dev);
-+	ret = pm_runtime_put_autosuspend(cdns->dev);
-+	if (ret < 0)
-+		dev_err_ratelimited(cdns->dev,
-+				    "pm_runtime_put_autosuspend failed in %s:, ret %d\n",
-+				    __func__, ret);
- }
- 
- static int intel_pcm_set_sdw_stream(struct snd_soc_dai *dai,
-@@ -860,6 +886,7 @@ static int intel_pdm_set_sdw_stream(struct snd_soc_dai *dai,
- }
- 
- static const struct snd_soc_dai_ops intel_pcm_dai_ops = {
-+	.startup = intel_startup,
- 	.hw_params = intel_hw_params,
- 	.hw_free = intel_hw_free,
- 	.shutdown = intel_shutdown,
-@@ -1141,6 +1168,15 @@ static int intel_probe(struct platform_device *pdev)
- 
- 	intel_debugfs_init(sdw);
- 
-+	/* Enable PM */
-+	pm_runtime_set_autosuspend_delay(&pdev->dev, 3000);
-+	pm_runtime_use_autosuspend(&pdev->dev);
-+
-+	pm_runtime_mark_last_busy(&pdev->dev);
-+
-+	pm_runtime_set_active(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+
- 	return 0;
- 
- err_dai:
-@@ -1158,6 +1194,7 @@ static int intel_remove(struct platform_device *pdev)
- 	sdw = platform_get_drvdata(pdev);
- 
- 	if (!sdw->cdns.bus.prop.hw_disabled) {
-+		pm_runtime_disable(&pdev->dev);
- 		intel_debugfs_exit(sdw);
- 		free_irq(sdw->res->irq, sdw);
- 		snd_soc_unregister_component(sdw->cdns.dev);
-@@ -1237,6 +1274,7 @@ static int intel_resume(struct device *dev)
- 
- static const struct dev_pm_ops intel_pm = {
- 	SET_SYSTEM_SLEEP_PM_OPS(intel_suspend, intel_resume)
-+	SET_RUNTIME_PM_OPS(intel_suspend, intel_resume, NULL)
- };
- 
- static struct platform_driver sdw_intel_drv = {
--- 
-2.20.1
+[   39.195053][    T1] serio: i8042 KBD port at 0x60,0x64 irq 1
+[   39.197347][    T1] kobject_add_internal failed for wakeup (error: -2 parent:
+serio0)
+[   39.199845][    T1] INFO: trying to register non-static key.
+[   39.201582][    T1] the code is fine but needs lockdep annotation.
+[   39.203477][    T1] turning off the locking correctness validator.
+[   39.205399][    T1] CPU: 12 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc4-
+next-20190813 #3
+[   39.207938][    T1] Hardware name: HP ProLiant XL420 Gen9/ProLiant XL420
+Gen9, BIOS U19 12/27/2015
+[   39.210606][    T1] Call Trace:
+[   39.210606][    T1]  dump_stack+0x62/0x9a
+[   39.210606][    T1]  register_lock_class+0x95a/0x960
+[   39.210606][    T1]  ? __platform_driver_probe+0xcd/0x230
+[   39.210606][    T1]  ? __platform_create_bundle+0xc0/0xe0
+[   39.210606][    T1]  ? i8042_init+0x4ec/0x578
+[   39.210606][    T1]  ? do_one_initcall+0xfe/0x45a
+[   39.219571][    T1]  ? kernel_init_freeable+0x614/0x6a7
+[   39.219571][    T1]  ? kernel_init+0x11/0x138
+[   39.219571][    T1]  ? ret_from_fork+0x35/0x40
+[   39.219571][    T1]  ? is_dynamic_key+0xf0/0xf0
+[   39.219571][    T1]  ? rwlock_bug.part.0+0x60/0x60
+[   39.219571][    T1]  ? __debug_check_no_obj_freed+0x8e/0x250
+[   39.219571][    T1]  __lock_acquire.isra.13+0x5f/0x830
+[   39.229491][    T1]  ? __debug_check_no_obj_freed+0x152/0x250
+[   39.229491][    T1]  lock_acquire+0x107/0x220
+[   39.229491][    T1]  ? __pm_relax.part.2+0x21/0xa0
+[   39.229491][    T1]  _raw_spin_lock_irqsave+0x35/0x50
+[   39.229491][    T1]  ? __pm_relax.part.2+0x21/0xa0
+[   39.229491][    T1]  __pm_relax.part.2+0x21/0xa0
+[   39.239588][    T1]  wakeup_source_destroy.part.3+0x18/0x190
+[   39.239588][    T1]  wakeup_source_register+0x43/0x50
+[   39.239588][    T1]  device_wakeup_enable+0x76/0x170
+[   39.239588][    T1]  device_set_wakeup_enable+0x13/0x20
+[   39.239588][    T1]  i80probe+0x921/0xa45
+[   39.339546][    T1]  ? i8042_toggle_aux+0xeb/0xeb
+[   39.349486][    T1]  ? kernfs_create_link+0xce/0x100
+[   39.349486][    T1]  ? sysfs_do_create_link_sd+0x7b/0xe0
+[   39.349486][    T1]  ? acpi_dev_pm_attach+0x31/0xf0
+[   39.349486][    T1]  platform_drv_probe+0x51/0xe0
+[   39.349486][    T1]  really_probe+0x1a2/0x630
+[   39.349486][    T1]  ? device_driver_attach+0xa0/0xa0
+[   39.349486][    T1]  driver_probe_device+0xcd/0x1f0
+[   39.359562][    T1]  ? device_driver_attach+0xa0/0xa0
+[   39.359562][    T1]  device_driver_attach+0x8f/0xa0
+[   39.359562][    T1]  __driver_attach+0xc7/0x1a0
+[   39.359562][    T1]  bus_for_each_dev+0xfe/0x160
+[   39.359562][    T1]  ? subsys_dev_iter_init+0x80/0x80
+[   39.359562][    T1]  ? __kasan_check_read+0x11/0x20
+[   39.359562][    T1]  ? _raw_spin_unlock+0x27/0x40
+[   39.369488][    T1]  driver_attach+0x2b/0x30
+[   39.369488][    T1]  bus_add_driver+0x298/0x350
+[   39.369488][    T1]  driver_register+0xdc/0x1d0
+[   39.369488][    T1]  ? i8042_toggle_aux+0xeb/0xeb
+[   39.369488][    T1]  __platform_driver_probe+0xcd/0x230
+[   39.3  __platform_create_bundle+0xc0/0xe0
+[   39.769489][    T1]  ? i8042_toggle_aux+0xeb/0xeb
+[   39.779556][    T1]  ? i8042_probe+0xa45/0xa45
+[   39.779556][    T1]  i8042_init+0x4ec/0x578
+[   39.779556][    T1]  ? i8042_probe+0xa45/0xa45
+[   39.779556][    T1]  ? netdev_run_todo+0x2f/0x4a0
+[   39.779556][    T1]  ? qdisc_create_dflt+0xf0/0xf0
+[   39.779556][    T1]  ? net_olddevs_init+0x67/0x67
+[   39.779556][    T1]  ? i8042_probe+0xa45/0xa45
+[   39.789486][    T1]  do_one_initcall+0xfe/0x45a
+[   39.789486][    T1]  ? initcall_blacklisted+0x150/0x150
+[   39.789486][    T1]  ? __kasan_check_write+0x14/0x20
+[   39.789486][    T1]  ? up_write+0xee/0x2a0
+[   39.789486][    T1]  kernel_init_freeable+0x614/0x6a7
+[   39.789486][    T1]  ? rest_init+0x188/0x188
+[   39.789486][    T1]  kernel_init+0x11/0x138
+[   39.799563][    T1]  ? rest_init+0x188/0x188
+[   39.799563][    T1]  ret_from_fork+0x35/0x40
+[   39.803412][    T1] serio: i8042 AUX port at 0x60,0x64 irq 12
 
