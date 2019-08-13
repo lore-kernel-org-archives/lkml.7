@@ -2,100 +2,94 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49602C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDF7C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26ED820842
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B4D0206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565670704;
+	bh=bXySyH7oG8Qg7BF2tUIzY88o3nkMldgjGwGFcu7lqBI=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=nuOKL9ngG8xTvDxGOLmV3WHbHMEmh0ulMvZrFk50zkB8hfJ62+5O0TbYv316SevRl
+	 pSFN0nFxTI1OvnUDuJk+Wz9iGhU5sqxQRgGcYKYKdnZnDCPKgkjhrA+uxfvQWoGTP3
+	 aMeDYi/S/US+npeo7DDN2h9q9rhjpqrVd30QPtF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfHME2c (ORCPT
+        id S1726579AbfHMEbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 00:28:32 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:49568 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725815AbfHME2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 00:28:32 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 089BAF5CF0F1E40671D2;
-        Tue, 13 Aug 2019 12:28:29 +0800 (CST)
-Received: from [127.0.0.1] (10.184.194.169) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 13 Aug 2019
- 12:28:23 +0800
-Subject: Re: [PATCH] nbd: add a missed nbd_config_put() in nbd_xmit_timeout()
-To:     Mike Christie <mchristi@redhat.com>, <josef@toxicpanda.com>,
-        <axboe@kernel.dk>, <linux-block@vger.kernel.org>,
-        <nbd@other.debian.org>, <linux-kernel@vger.kernel.org>
-References: <1565613086-13776-1-git-send-email-sunke32@huawei.com>
- <5D518714.5000408@redhat.com>
-From:   "sunke (E)" <sunke32@huawei.com>
-Message-ID: <c2ca0231-b981-d01f-8d03-3cc392c7aa27@huawei.com>
-Date:   Tue, 13 Aug 2019 12:28:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 13 Aug 2019 00:31:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56866 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725298AbfHMEbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 00:31:41 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67FF320644;
+        Tue, 13 Aug 2019 04:31:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565670700;
+        bh=bXySyH7oG8Qg7BF2tUIzY88o3nkMldgjGwGFcu7lqBI=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=cn3hL1Bsuw/xu0q8nUGW5OVqNSM02gmqOxEj7OYVccBR3pVdlHQHfyV+9j4VK5VQ9
+         bBjRpi5awUcmcj/bU/NSzkg2lan5bKfaGdNGIkUpT77VE6EbkoCuI/ScUG0KINzgI5
+         ShJHcDr5aLfptCDpi5hT68kjow7hDCVTkDHNnS8o=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <5D518714.5000408@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.194.169]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190812182421.141150-13-brendanhiggins@google.com>
+References: <20190812182421.141150-1-brendanhiggins@google.com> <20190812182421.141150-13-brendanhiggins@google.com>
+Subject: Re: [PATCH v12 12/18] kunit: test: add tests for KUnit managed resources
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Avinash Kondareddy <akndr41@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
+        tytso@mit.edu, yamada.masahiro@socionext.com
+User-Agent: alot/0.8.1
+Date:   Mon, 12 Aug 2019 21:31:39 -0700
+Message-Id: <20190813043140.67FF320644@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for your review.
+Quoting Brendan Higgins (2019-08-12 11:24:15)
+> +
+> +static int kunit_resource_test_init(struct kunit *test)
+> +{
+> +       struct kunit_test_resource_context *ctx =3D
+> +                       kzalloc(sizeof(*ctx), GFP_KERNEL);
+> +
+> +       if (!ctx)
+> +               return -ENOMEM;
 
-在 2019/8/12 23:34, Mike Christie 写道:
-> On 08/12/2019 07:31 AM, Sun Ke wrote:
->> When try to get the lock failed, before return, execute the
->> nbd_config_put() to decrease the nbd->config_refs.
->>
->> If the nbd->config_refs is added but not decreased. Then will not
->> execute nbd_clear_sock() in nbd_config_put(). bd->task_setup will
->> not be cleared away. Finally, print"Device being setup by another
->> task" in nbd_add_sock() and nbd device can not be reused.
->>
->> Fixes: 8f3ea35929a0 ("nbd: handle unexpected replies better")
->> Signed-off-by: Sun Ke <sunke32@huawei.com>
->> ---
->>   drivers/block/nbd.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
->> index e21d2de..a69a90a 100644
->> --- a/drivers/block/nbd.c
->> +++ b/drivers/block/nbd.c
->> @@ -357,8 +357,10 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
->>   	}
->>   	config = nbd->config;
->>   
->> -	if (!mutex_trylock(&cmd->lock))
->> +	if (!mutex_trylock(&cmd->lock)) {
->> +		nbd_config_put(nbd);
->>   		return BLK_EH_RESET_TIMER;
->> +	}
->>   
->>   	if (config->num_connections > 1) {
->>   		dev_err_ratelimited(nbd_to_dev(nbd),
->>
-> 
-> I just sent the same patch
-> 
-> https://www.spinics.net/lists/linux-block/msg43718.html
-> 
-> here
-> 
-> https://www.spinics.net/lists/linux-block/msg43715.html
-> 
-> so it looks good to me.
-> 
-> Reviewed-by: Mike Christie <mchristi@redhat.com>
-> 
-> .
-> 
+Should this use the test assertion logic to make sure that it's not
+failing allocations during init? BTW, maybe kunit allocation APIs should
+fail the test if they fail to allocate in general. Unless we're unit
+testing failure to allocate problems.
 
+> +
+> +       test->priv =3D ctx;
+> +
+> +       kunit_init_test(&ctx->test, "test_test_context");
+> +
+> +       return 0;
