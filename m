@@ -2,124 +2,239 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A9CC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E13DDC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59B132054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA2DE2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:04:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="jXcIcld8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jTb0CaVw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfHMXEt (ORCPT
+        id S1727528AbfHMXEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 19:04:49 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33805 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726155AbfHMXEs (ORCPT
+        Tue, 13 Aug 2019 19:04:53 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34312 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbfHMXEw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 19:04:48 -0400
-Received: by mail-ot1-f68.google.com with SMTP id c7so5453680otp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 16:04:48 -0700 (PDT)
+        Tue, 13 Aug 2019 19:04:52 -0400
+Received: by mail-pl1-f196.google.com with SMTP id i2so49924881plt.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 16:04:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rUNzvroLFC8do+wMufMXyTxQgZ8KjnrEVE4dV3+vp2M=;
-        b=jXcIcld86cvD6MQslPUN0PNbwTaVDhfv2eh/5XGDrNNg/i5VMWQqHfk0gafXKJ0uFE
-         rNixph/5EQLNKQlxsdMsh5RFzo4xPseL3sD7kBWWwTGJ7W8BERYC6tY8rHU3nPqCf92A
-         k7n7ADkRmbBX6E4ChcANbtKk9Q9pIkFeEDBAfcpBc0h8D4zst4e88YN2yT/2XXZx+Fuj
-         ijqmqfywab0ETun+19+AD+8Ig1iaFLaIQxau43wfejtZNsX1dkdoUAK1WQNm8nUzMr0m
-         97+i4UKsMrw9eUARYWbImV6TS7bRQThe9oFlntsS5hip3KW08RenIgq45YVoO0HEShE8
-         xKtg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=b+JmorHFxBDjgjp81mdE+eQ+tC1x8WkQJkcE1tgqkc4=;
+        b=jTb0CaVwThVYx3vOwD1dWobGZmwwuJFAgFmShIxG1h6tk9h8u+FodDpc7Q6/DMNNBc
+         ehUsXMoEmvKIeVHXp+U1thNd/6WXmq2LVXRdui0s7VQWWVv9LLmuV2ZTxBan5mDbUjOw
+         F8qCtEw03kbY/4uMFXSgmw0+++sggXhYHCvz0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rUNzvroLFC8do+wMufMXyTxQgZ8KjnrEVE4dV3+vp2M=;
-        b=VEFaBqdrIuSExpUGrEgsjWFgFN/9gbiufg6N4FfZxPXZi4m4akNsZoFQQJRd/pa4+E
-         199PJuRyUzz+bdNIjbPS1e3cXjEossb5KBxcX+AD+5ZdfiyWc/oQVK8FnQqf2ybRBR3h
-         7yr149cmEIMeiNUjd4RbxmdXtMfcHEcEu4yUFS7kkh9LIlbXLcqnTBYjWrkeb9Wio0iq
-         PAppj/9gCr7CnD9Vjk4cwyrldXTuPyFzUEspijyVwt8XH/jKgUWIn5+EiE7PukhlP2u2
-         Uksk6LwliIY9YLPKSGRVZszgDwyDekZ5PZRcrWzyKqTcovm2fK13gnSyRTUeCFJCPe2z
-         GywA==
-X-Gm-Message-State: APjAAAXPgudw1sOBfFaqAEmIiCZE6msS2MKyAEkX1f5Ggzp9tvBSEl1K
-        bg0pctaYUA22opT3J7qgTqGgeVR5tQow4zGJfgqe4g==
-X-Google-Smtp-Source: APXvYqwmh3ulgn0EABQHYB0AM8fCIBo5cQgjBqcE8IZGhxeYY1z6j4rys4fhwfTs5bwchYNQT+/bNXfyQ5AyV1tD6I8=
-X-Received: by 2002:a9d:3466:: with SMTP id v93mr17829216otb.312.1565737487864;
- Tue, 13 Aug 2019 16:04:47 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=b+JmorHFxBDjgjp81mdE+eQ+tC1x8WkQJkcE1tgqkc4=;
+        b=sGACVJKSeffJqfzFWWXFAnZG1huF8h/e50X7MJSW2npgYpB6yni2NzsyoHdUgOeJVD
+         1mk2HVoAAetu/QQmof8+05Qs7T1+Q9IxPy5ftVTJMOrpB3m0ePnVvk+oekrURSaSkhy0
+         eHN+6EjoOPuchEo5KRKPOEhMvi7nvAceGaeZHVpLm7NDP28AcsQdN7Isl24ILxGs7TbG
+         Ehg2xOnS13NKWTKaPJfOhxow6GRnawQvgVp4gDxT4sfgZsubbSqCJRSRZCt173Q2xiMj
+         t/Iq+YEXqT/vopHsgilKl1y+A/JUYcbteFT5uHRhQtaLwrzMKCWJaGPo+WZxkdTO4ptW
+         fwfA==
+X-Gm-Message-State: APjAAAVf2FVKwe+1Z3sEseDE0rmiulY7GBeGlmL67sJG8/sUcFC8y36o
+        rtjuQOt6WQ10fPlLh94kdqEqJg==
+X-Google-Smtp-Source: APXvYqykdJqTdHuTeV+7Np9dvpfjLzBbQr3StktyfP/KteJaQUL8ByJ0OL/nBrBxD1YQlNAdMEvNAw==
+X-Received: by 2002:a17:902:f30e:: with SMTP id gb14mr6861249plb.32.1565737492192;
+        Tue, 13 Aug 2019 16:04:52 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s11sm116207822pgv.13.2019.08.13.16.04.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 13 Aug 2019 16:04:51 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 16:04:50 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Fangrui Song <maskray@google.com>,
+        Peter Smith <peter.smith@linaro.org>
+Subject: [PATCH] arm64/efi: Move variable assignments after SECTIONS
+Message-ID: <201908131602.6E858DEC@keescook>
 MIME-Version: 1.0
-References: <1565731976.8572.16.camel@lca.pw> <5d533b43.1c69fb81.5729.a6bc@mx.google.com>
-In-Reply-To: <5d533b43.1c69fb81.5729.a6bc@mx.google.com>
-From:   Tri Vo <trong@android.com>
-Date:   Tue, 13 Aug 2019 16:04:37 -0700
-Message-ID: <CANA+-vAXzHTSZa4Oq4osOOWJkme43cP8Cv2JySU--QCv-A0U_A@mail.gmail.com>
-Subject: Re: "PM / wakeup: Show wakeup sources stats in sysfs" causes boot warnings
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Qian Cai <cai@lca.pw>, Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 3:35 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Qian Cai (2019-08-13 14:32:56)
-> > The linux-next commit "PM / wakeup: Show wakeup sources stats in sysfs" [1]
-> > introduced some baddies during boot on several x86 servers. Reverted the commit
-> > fixed the issue.
-> >
-> > [1] https://lore.kernel.org/lkml/20190807014846.143949-4-trong@android.com/
-> >
-> > [   39.195053][    T1] serio: i8042 KBD port at 0x60,0x64 irq 1
-> > [   39.197347][    T1] kobject_add_internal failed for wakeup (error: -2 parent:
-> > serio0)
-> > [   39.199845][    T1] INFO: trying to register non-static key.
-> > [   39.201582][    T1] the code is fine but needs lockdep annotation.
-> > [   39.203477][    T1] turning off the locking correctness validator.
-> > [   39.205399][    T1] CPU: 12 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc4-
-> > next-20190813 #3
-> > [   39.207938][    T1] Hardware name: HP ProLiant XL420 Gen9/ProLiant XL420
-> > Gen9, BIOS U19 12/27/2015
-> > [   39.210606][    T1] Call Trace:
-> > [   39.210606][    T1]  dump_stack+0x62/0x9a
-> > [   39.210606][    T1]  register_lock_class+0x95a/0x960
-> > [   39.210606][    T1]  ? __platform_driver_probe+0xcd/0x230
-> > [   39.210606][    T1]  ? __platform_create_bundle+0xc0/0xe0
-> > [   39.210606][    T1]  ? i8042_init+0x4ec/0x578
-> > [   39.210606][    T1]  ? do_one_initcall+0xfe/0x45a
-> > [   39.219571][    T1]  ? kernel_init_freeable+0x614/0x6a7
-> > [   39.219571][    T1]  ? kernel_init+0x11/0x138
-> > [   39.219571][    T1]  ? ret_from_fork+0x35/0x40
-> > [   39.219571][    T1]  ? is_dynamic_key+0xf0/0xf0
-> > [   39.219571][    T1]  ? rwlock_bug.part.0+0x60/0x60
-> > [   39.219571][    T1]  ? __debug_check_no_obj_freed+0x8e/0x250
-> > [   39.219571][    T1]  __lock_acquire.isra.13+0x5f/0x830
-> > [   39.229491][    T1]  ? __debug_check_no_obj_freed+0x152/0x250
-> > [   39.229491][    T1]  lock_acquire+0x107/0x220
-> > [   39.229491][    T1]  ? __pm_relax.part.2+0x21/0xa0
-> > [   39.229491][    T1]  _raw_spin_lock_irqsave+0x35/0x50
-> > [   39.229491][    T1]  ? __pm_relax.part.2+0x21/0xa0
-> > [   39.229491][    T1]  __pm_relax.part.2+0x21/0xa0
-> > [   39.239588][    T1]  wakeup_source_destroy.part.3+0x18/0x190
-> > [   39.239588][    T1]  wakeup_source_register+0x43/0x50
->
-> We shouldn't call wakeup_source_destroy() from the error path in
-> wakeup_source_register() because that calls __pm_relax() and that takes
-> a lock that isn't initialized until wakeup_source_add() is called. Can
-> you try this patch?
+It seems that LLVM's linker does not correctly handle variable assignments
+involving section positions that are updated during the SECTIONS
+parsing. Commit aa69fb62bea1 ("arm64/efi: Mark __efistub_stext_offset as
+an absolute symbol explicitly") ran into this too, but found a different
+workaround.
 
-Right, that makes sense. Thanks for sending a fix, Stephen!
+However, this was not enough, as other variables were also miscalculated
+which manifested as boot failures under UEFI where __efistub__end was
+not taking the correct _end value (they should be the same):
 
-What's the preferred procedure for merging this fix? Should we apply
-this commit on top of pm tree? Or should I resend a new version of the
-offending patch? Sorry, I'm still new to this.
+$ ld.lld -EL -maarch64elf --no-undefined -X -shared \
+	-Bsymbolic -z notext -z norelro --no-apply-dynamic-relocs \
+	-o vmlinux.lld -T poc.lds --whole-archive vmlinux.o && \
+  readelf -Ws vmlinux.lld | egrep '\b(__efistub_|)_end\b'
+368272: ffff000002218000     0 NOTYPE  LOCAL  HIDDEN    38 __efistub__end
+368322: ffff000012318000     0 NOTYPE  GLOBAL DEFAULT   38 _end
+
+$ aarch64-linux-gnu-ld.bfd -EL -maarch64elf --no-undefined -X -shared \
+	-Bsymbolic -z notext -z norelro --no-apply-dynamic-relocs \
+	-o vmlinux.bfd -T poc.lds --whole-archive vmlinux.o && \
+  readelf -Ws vmlinux.bfd | egrep '\b(__efistub_|)_end\b'
+338124: ffff000012318000     0 NOTYPE  LOCAL  DEFAULT  ABS __efistub__end
+383812: ffff000012318000     0 NOTYPE  GLOBAL DEFAULT 15325 _end
+
+To work around this, all of the __efistub_-prefixed variable assignments
+need to be moved after the linker script's SECTIONS entry. As it turns
+out, this also solves the problem fixed in commit aa69fb62bea1, so those
+changes are reverted here.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/634
+Link: https://bugs.llvm.org/show_bug.cgi?id=42990
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/arm64/kernel/image-vars.h  | 51 +++++++++++++++++++++++++++++++++
+ arch/arm64/kernel/image.h       | 42 ---------------------------
+ arch/arm64/kernel/vmlinux.lds.S |  2 ++
+ 3 files changed, 53 insertions(+), 42 deletions(-)
+ create mode 100644 arch/arm64/kernel/image-vars.h
+
+diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
+new file mode 100644
+index 000000000000..25a2a9b479c2
+--- /dev/null
++++ b/arch/arm64/kernel/image-vars.h
+@@ -0,0 +1,51 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Linker script variables to be set after section resolution, as
++ * ld.lld does not like variables assigned before SECTIONS is processed.
++ */
++#ifndef __ARM64_KERNEL_IMAGE_VARS_H
++#define __ARM64_KERNEL_IMAGE_VARS_H
++
++#ifndef LINKER_SCRIPT
++#error This file should only be included in vmlinux.lds.S
++#endif
++
++#ifdef CONFIG_EFI
++
++__efistub_stext_offset = stext - _text;
++
++/*
++ * The EFI stub has its own symbol namespace prefixed by __efistub_, to
++ * isolate it from the kernel proper. The following symbols are legally
++ * accessed by the stub, so provide some aliases to make them accessible.
++ * Only include data symbols here, or text symbols of functions that are
++ * guaranteed to be safe when executed at another offset than they were
++ * linked at. The routines below are all implemented in assembler in a
++ * position independent manner
++ */
++__efistub_memcmp		= __pi_memcmp;
++__efistub_memchr		= __pi_memchr;
++__efistub_memcpy		= __pi_memcpy;
++__efistub_memmove		= __pi_memmove;
++__efistub_memset		= __pi_memset;
++__efistub_strlen		= __pi_strlen;
++__efistub_strnlen		= __pi_strnlen;
++__efistub_strcmp		= __pi_strcmp;
++__efistub_strncmp		= __pi_strncmp;
++__efistub_strrchr		= __pi_strrchr;
++__efistub___flush_dcache_area	= __pi___flush_dcache_area;
++
++#ifdef CONFIG_KASAN
++__efistub___memcpy		= __pi_memcpy;
++__efistub___memmove		= __pi_memmove;
++__efistub___memset		= __pi_memset;
++#endif
++
++__efistub__text			= _text;
++__efistub__end			= _end;
++__efistub__edata		= _edata;
++__efistub_screen_info		= screen_info;
++
++#endif
++
++#endif /* __ARM64_KERNEL_IMAGE_VARS_H */
+diff --git a/arch/arm64/kernel/image.h b/arch/arm64/kernel/image.h
+index 2b85c0d6fa3d..c7d38c660372 100644
+--- a/arch/arm64/kernel/image.h
++++ b/arch/arm64/kernel/image.h
+@@ -65,46 +65,4 @@
+ 	DEFINE_IMAGE_LE64(_kernel_offset_le, TEXT_OFFSET);	\
+ 	DEFINE_IMAGE_LE64(_kernel_flags_le, __HEAD_FLAGS);
+ 
+-#ifdef CONFIG_EFI
+-
+-/*
+- * Use ABSOLUTE() to avoid ld.lld treating this as a relative symbol:
+- * https://github.com/ClangBuiltLinux/linux/issues/561
+- */
+-__efistub_stext_offset = ABSOLUTE(stext - _text);
+-
+-/*
+- * The EFI stub has its own symbol namespace prefixed by __efistub_, to
+- * isolate it from the kernel proper. The following symbols are legally
+- * accessed by the stub, so provide some aliases to make them accessible.
+- * Only include data symbols here, or text symbols of functions that are
+- * guaranteed to be safe when executed at another offset than they were
+- * linked at. The routines below are all implemented in assembler in a
+- * position independent manner
+- */
+-__efistub_memcmp		= __pi_memcmp;
+-__efistub_memchr		= __pi_memchr;
+-__efistub_memcpy		= __pi_memcpy;
+-__efistub_memmove		= __pi_memmove;
+-__efistub_memset		= __pi_memset;
+-__efistub_strlen		= __pi_strlen;
+-__efistub_strnlen		= __pi_strnlen;
+-__efistub_strcmp		= __pi_strcmp;
+-__efistub_strncmp		= __pi_strncmp;
+-__efistub_strrchr		= __pi_strrchr;
+-__efistub___flush_dcache_area	= __pi___flush_dcache_area;
+-
+-#ifdef CONFIG_KASAN
+-__efistub___memcpy		= __pi_memcpy;
+-__efistub___memmove		= __pi_memmove;
+-__efistub___memset		= __pi_memset;
+-#endif
+-
+-__efistub__text			= _text;
+-__efistub__end			= _end;
+-__efistub__edata		= _edata;
+-__efistub_screen_info		= screen_info;
+-
+-#endif
+-
+ #endif /* __ARM64_KERNEL_IMAGE_H */
+diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+index 7fa008374907..803b24d2464a 100644
+--- a/arch/arm64/kernel/vmlinux.lds.S
++++ b/arch/arm64/kernel/vmlinux.lds.S
+@@ -245,6 +245,8 @@ SECTIONS
+ 	HEAD_SYMBOLS
+ }
+ 
++#include "image-vars.h"
++
+ /*
+  * The HYP init code and ID map text can't be longer than a page each,
+  * and should not cross a page boundary.
+-- 
+2.17.1
+
+
+-- 
+Kees Cook
