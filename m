@@ -2,124 +2,215 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A03A0C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 238BEC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 730BF2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:50:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ez7AmR8I"
+	by mail.kernel.org (Postfix) with ESMTP id DCC502067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:54:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565736882;
+	bh=T7Z6w1xsGWAFfny9O4/iOR2E3uaR8Uz9otlJR/il04s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=U5263sGru6imvC3FyMFmMCDwBEmv1F9fE8rlg4utADZzmAsjkM69KQKPrl6TlxI9C
+	 aC4JyZov7n6AWaFmiLGySx9t1/LexWPzug/QGWOgeUeEz2GZ6pJtreBN/xy/GulLye
+	 LiXJVvGUpkRs7SH9aLJfdERKqy/oKcZ+fT6H92AY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfHMWuJ (ORCPT
+        id S1727348AbfHMWyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 18:50:09 -0400
-Received: from ozlabs.org ([203.11.71.1]:48515 "EHLO ozlabs.org"
+        Tue, 13 Aug 2019 18:54:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726155AbfHMWuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 18:50:08 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726964AbfHMWyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 18:54:40 -0400
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 467SbJ15qjz9sBF;
-        Wed, 14 Aug 2019 08:50:04 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565736605;
-        bh=z8UzHeUAlWaGfTsCQDaIbFrumXsCw0qF+4m8oeFkVbs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ez7AmR8IXa7fZfwsYlUqNBZ63TWJtOdyy5sD4t3Bwq3fsw9liQocwP4SWhHJ39VnF
-         GkMgcywBrlpl3Np4PL0PSj732LTQFyiS4oFjGqeaN1IU/lheS63uh1JiSejOlzRtGU
-         ZxqIuChuWG4lFOiZnUCPnhMAdBi8CW6j7hSXCmN68Y2P43wGI1ynla6rlkzOK8kdTK
-         Io+wQhaXC4NXVTmke5FnT8GtsLPB/2ktaCx3Rjs0Whv7FoJZgppVFl/GONgBA/k5CY
-         mJr2ngkHEkH4Zc+qbv6Yiv8v27PZV2WWsLftDXsmKN2XX93EqDuUotfO2ZqyLdZhAM
-         DfUOtlSE7qMqg==
-Date:   Wed, 14 Aug 2019 08:49:49 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the arm-soc tree
-Message-ID: <20190814084949.70867809@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id C353B206C2;
+        Tue, 13 Aug 2019 22:54:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565736879;
+        bh=T7Z6w1xsGWAFfny9O4/iOR2E3uaR8Uz9otlJR/il04s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=toi9x0nUOLJf0v9iPqYkAOh9i512tGkURD7IlhzYTokb2y0w/JW8yc2d7QK+6Xzbh
+         gt09MXUKOALFMQ85wAWfcMD0EuE6xLzy6AXuFPTnL3B1mkoWLs4gwPJIBpZFX3WDfq
+         tGmUUkb/Nx5/+JMFUkBpncQjpDi66Im5xP/umAwk=
+Received: by mail-wr1-f41.google.com with SMTP id q12so18991155wrj.12;
+        Tue, 13 Aug 2019 15:54:38 -0700 (PDT)
+X-Gm-Message-State: APjAAAWvg9agj4deTiOIGIajiuYcc2dLeHTUwBT40fSCQQ+J0zNadJP/
+        rhtOT+TR94t8wM2rJkaYJ/GL9eyjBJ6QcWrGnsE=
+X-Google-Smtp-Source: APXvYqxJC2AxU5bz7n9E8cpm+XdQnNO3ckQI8JhBZibLzaTj5Q5LS505othzwIsDKUwZZe5QuheOaD8p6XNhVA5hW9o=
+X-Received: by 2002:a5d:51c7:: with SMTP id n7mr21616412wrv.73.1565736877309;
+ Tue, 13 Aug 2019 15:54:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/JMaBuXtewfH4O4vb9TMker2";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <1565686400-5711-1-git-send-email-light.hsieh@mediatek.com> <1565686400-5711-2-git-send-email-light.hsieh@mediatek.com>
+In-Reply-To: <1565686400-5711-2-git-send-email-light.hsieh@mediatek.com>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Tue, 13 Aug 2019 15:54:26 -0700
+X-Gmail-Original-Message-ID: <CAGp9Lzq7SnZBO4QEkycszZ29D7FVn_WUvi3uGX5s8Wzqn2a3CQ@mail.gmail.com>
+Message-ID: <CAGp9Lzq7SnZBO4QEkycszZ29D7FVn_WUvi3uGX5s8Wzqn2a3CQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] pinctrl: mediatek: Check gpio pin number and use
+ binary search in mtk_hw_pin_field_lookup()
+To:     Light Hsieh <light.hsieh@mediatek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/JMaBuXtewfH4O4vb9TMker2
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Aug 13, 2019 at 1:53 AM Light Hsieh <light.hsieh@mediatek.com> wrote:
+>
+> From: Light Hsieh <light.hsieh@mediatek.com>
+>
+> 1. Check if gpio pin number is in valid range to prevent from get invalid
+>    pointer 'desc' in the following code:
+>         desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+>
+> 2. Use binary search in mtk_hw_pin_field_lookup()
+>    Modify mtk_hw_pin_field_lookup() to use binary search for accelerating
+>    search.
+>
+> Change-Id: I22b4644ec216b90dd9dd5e223cc41d43761701b0
 
-Hi all,
+remove all of Change-Id in all the patches in the series
 
-After merging the arm-soc tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 24 +++++++++++++++++++-----
+>  drivers/pinctrl/mediatek/pinctrl-paris.c         | 19 +++++++++++++++++++
+>  2 files changed, 38 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> index 20e1c89..4687f63 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> @@ -68,7 +68,7 @@ static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
+>  {
+>         const struct mtk_pin_field_calc *c, *e;
+>         const struct mtk_pin_reg_calc *rc;
+> -       u32 bits;
+> +       u32 bits, start = 0, end, found = 0, check;
 
-arch/arm/Kconfig:720: syntax error
-arch/arm/Kconfig:719: invalid statement
-arch/arm/Kconfig:720: can't open file "arch/arm/mach-ks8695/Kconfig"
+variable found should be bool type, and the declaration should be
+listed in reverse Xmas tree order
 
-Caused by commit
+>
+>         if (hw->soc->reg_cal && hw->soc->reg_cal[field].range) {
+>                 rc = &hw->soc->reg_cal[field];
+> @@ -79,21 +79,32 @@ static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
+>                 return -ENOTSUPP;
+>         }
+>
+> +       end = rc->nranges - 1;
+>         c = rc->range;
+>         e = c + rc->nranges;
+>
+> -       while (c < e) {
+> -               if (desc->number >= c->s_pin && desc->number <= c->e_pin)
+> +       while (start <= end) {
+> +               check = (start + end) >> 1;
+> +               if (desc->number >= rc->range[check].s_pin
+> +                && desc->number <= rc->range[check].e_pin) {
+> +                       found = 1;
 
-  eb4f78f8b8cb ("ARM: remove ks8695 platform")
+found = true;
 
-I applied the following patch for today
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Wed, 14 Aug 2019 08:46:39 +1000
-Subject: [PATCH] arm-soc: fix up bad rebase?
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- arch/arm/Kconfig | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 1597c542dc4f..769a853c8c6e 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -716,12 +716,6 @@ source "arch/arm/mach-ixp4xx/Kconfig"
-=20
- source "arch/arm/mach-keystone/Kconfig"
-=20
--<<<<<<< HEAD
--source "arch/arm/mach-ks8695/Kconfig"
--=3D=3D=3D=3D=3D=3D=3D
--source "arch/arm/mach-lpc32xx/Kconfig"
-->>>>>>> ARM: remove ks8695 platform
--
- source "arch/arm/mach-mediatek/Kconfig"
-=20
- source "arch/arm/mach-meson/Kconfig"
---=20
-2.20.1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/JMaBuXtewfH4O4vb9TMker2
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1TPo0ACgkQAVBC80lX
-0GzT3Af/T+r4U6O/x8ljEwRM9bk6+lXhY/23ZKJfdTWGjmPAVblYXDwJV1TyY6qZ
-eZtVOYC65rFZfY0tMGhnMaLUqdlsYfyOtaBWFAUh7bQIxBqnG+g7pczQlZ17kFwC
-DobBEBnQoF1jO5wKgENxm18U1FJ7NFVijwQBZTqwr3A6MwpwF9xI0G06zpHSWJFh
-g9U/CSUJLBNNqCg2tk6veogR89jQfblVZTFyTlUjkHUY/dfVuq8XvPVsniuArzUf
-9lBXf6pM3F4tlUGH/kO3XiBdLdcUb8ULCbIWUSWBRh/39hPW45eskV8zfJRoWqKT
-BXtjihCCiaClzY8kZonTTqetaUOSTw==
-=4xXI
------END PGP SIGNATURE-----
-
---Sig_/JMaBuXtewfH4O4vb9TMker2--
+>                         break;
+> -               c++;
+> +               } else if (start == end)
+> +                       break;
+> +               else if (desc->number < rc->range[check].s_pin)
+> +                       end = check - 1;
+> +               else
+> +                       start = check + 1;
+>         }
+>
+> -       if (c >= e) {
+> +       if (!found) {
+>                 dev_dbg(hw->dev, "Not support field %d for pin = %d (%s)\n",
+>                         field, desc->number, desc->name);
+>                 return -ENOTSUPP;
+>         }
+>
+> +       c = rc->range + check;
+> +
+>         if (c->i_base > hw->nbase - 1) {
+>                 dev_err(hw->dev,
+>                         "Invalid base for field %d for pin = %d (%s)\n",
+> @@ -182,6 +193,9 @@ int mtk_hw_set_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
+>         if (err)
+>                 return err;
+>
+> +       if (value < 0 || value > pf.mask)
+> +               return -EINVAL;
+> +
+>         if (!pf.next)
+>                 mtk_rmw(hw, pf.index, pf.offset, pf.mask << pf.bitpos,
+>                         (value & pf.mask) << pf.bitpos);
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> index 923264d..28b4951 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> @@ -693,6 +693,9 @@ static int mtk_gpio_get_direction(struct gpio_chip *chip, unsigned int gpio)
+>         const struct mtk_pin_desc *desc;
+>         int value, err;
+>
+> +       if (gpio > hw->soc->npins)
+> +               return -EINVAL;
+> +
+>         desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+>
+>         err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &value);
+> @@ -708,6 +711,9 @@ static int mtk_gpio_get(struct gpio_chip *chip, unsigned int gpio)
+>         const struct mtk_pin_desc *desc;
+>         int value, err;
+>
+> +       if (gpio > hw->soc->npins)
+> +               return -EINVAL;
+> +
+>         desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+>
+>         err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DI, &value);
+> @@ -722,6 +728,9 @@ static void mtk_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
+>         struct mtk_pinctrl *hw = gpiochip_get_data(chip);
+>         const struct mtk_pin_desc *desc;
+>
+> +       if (gpio > hw->soc->npins)
+> +               return;
+> +
+>         desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+>
+>         mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DO, !!value);
+> @@ -729,12 +738,22 @@ static void mtk_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
+>
+>  static int mtk_gpio_direction_input(struct gpio_chip *chip, unsigned int gpio)
+>  {
+> +       struct mtk_pinctrl *hw = gpiochip_get_data(chip);
+> +
+> +       if (gpio > hw->soc->npins)
+> +               return -EINVAL;
+> +
+>         return pinctrl_gpio_direction_input(chip->base + gpio);
+>  }
+>
+>  static int mtk_gpio_direction_output(struct gpio_chip *chip, unsigned int gpio,
+>                                      int value)
+>  {
+> +       struct mtk_pinctrl *hw = gpiochip_get_data(chip);
+> +
+> +       if (gpio > hw->soc->npins)
+> +               return -EINVAL;
+> +
+>         mtk_gpio_set(chip, gpio, value);
+>
+>         return pinctrl_gpio_direction_output(chip->base + gpio);
+> --
+> 1.8.1.1.dirty
+>
