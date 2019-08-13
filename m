@@ -2,253 +2,157 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USB_DRIVES autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7150EC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD86C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 376C120840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F302070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:59:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wxmh8QBc"
+	dkim=pass (1024-bit key) header.d=lucidpixels.com header.i=@lucidpixels.com header.b="RwjDgHIB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfHMU5v (ORCPT
+        id S1726673AbfHMU67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 16:57:51 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43497 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbfHMU5u (ORCPT
+        Tue, 13 Aug 2019 16:58:59 -0400
+Received: from mail-oi1-f172.google.com ([209.85.167.172]:41402 "EHLO
+        mail-oi1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbfHMU66 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 16:57:50 -0400
-Received: by mail-ot1-f66.google.com with SMTP id e12so33067147otp.10;
-        Tue, 13 Aug 2019 13:57:49 -0700 (PDT)
+        Tue, 13 Aug 2019 16:58:58 -0400
+Received: by mail-oi1-f172.google.com with SMTP id g7so69811601oia.8
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 13:58:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=CpiXTLPXXQGHgJOKOBWt0ZcsXIMyK8oTJKWg0lsyFmY=;
-        b=Wxmh8QBcva6vlwx0djbFqhijlZgrPF0bHrQVcEWJSggIEU8RLP0goOWe/4PZgNKQcz
-         V/VyPU00sqaRilMUlZl/K12RefjlxP4gEWY3dDZhS3OFUc8eZh3iyna92yb7CTbH5gKQ
-         C4g1pnszZv/xpg//gLup1hgXYiPLTlz3/bqUG4dq7u+K4RAmKJyiiJip/tfOkBqNrNVT
-         9EEERkl+F7N9N7U03YwygXCy/lZo4ZU7WCUjwkt8ndnUik1YdWD6n5KkrMtfd7yhIbmZ
-         YlEwduWmXK0VKpLzsGJouYKikPLjd54pza19B/zTN2zuDzeU7L36Gkoj5XMaIcuQ++xc
-         zaMA==
+        d=lucidpixels.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VLXSFRnf/VIzQ21AcmSK772oG4DlhLGeRGOKcwe7z2Y=;
+        b=RwjDgHIBooTMtsgMMMv7jZGN7mBlZ1nzEENknrebjwK9A6Wp6aUeAHB1auBdMY68VA
+         Tji92esv4uo8l5MCJ1BP+2/nW2CAjQNhhWztMtyYpCOmGt+A4E9wEAhQUXYAkxe0EB04
+         t8K5QC/AwYNiOGiB8eVzxFSiQo1JBhxcKwuQI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CpiXTLPXXQGHgJOKOBWt0ZcsXIMyK8oTJKWg0lsyFmY=;
-        b=hqxPNvfT4H6OGRCIP81f8eRWqOU1/4/HAXGE35hfAGz/UZprW48n6C5dFDRoq6GJa/
-         pMo8JX9xXHcS1qykBx98qlyvv11Jd/2/RZL7Tdjwqnu8JFkjZTirGhacE5jSgkTNq/Kp
-         WQW3L14S01Ez8EVwy2jcfwKnhTKahjFG4Jh5U+f/z38WNP+ARSbCKtZ0dW+53sLpvSyN
-         NK+ka7tkpWruuCXMxxzILWPcHqq7NTezOazmYpD6OIOXGRDe0Ca4rCqQkVWG7rFMO4v2
-         RFoHOrkdoEenl6rmNhJ10MiaHbMbpNlFve3AAalTTvi3NTuZAgCy4p9Xlz6IgBpbWN3j
-         pvcQ==
-X-Gm-Message-State: APjAAAWG4Cw0wmQkFaQ10SM8j+ouEEv77lzX1fpr7hcsJZxVF2D79L8c
-        Jrsuibbc44Rab7FhBnRQSMYJ7DZMDz0Xig==
-X-Google-Smtp-Source: APXvYqz0nlvlLWTTUhe3U4BFuHEl5gvUo+d5z+dssFN+VI+a/clRFpxxfizlHcFbwupXZD8Su5LFSw==
-X-Received: by 2002:a5d:994b:: with SMTP id v11mr42293837ios.165.1565729868741;
-        Tue, 13 Aug 2019 13:57:48 -0700 (PDT)
-Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id y25sm12874419iol.59.2019.08.13.13.57.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 13:57:48 -0700 (PDT)
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skunberg.kelsey@gmail.com
-Subject: [PATCH v2 1/3] PCI: sysfs: Define device attributes with DEVICE_ATTR*()
-Date:   Tue, 13 Aug 2019 14:45:11 -0600
-Message-Id: <20190813204513.4790-2-skunberg.kelsey@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190813204513.4790-1-skunberg.kelsey@gmail.com>
-References: <20190809195721.34237-1-skunberg.kelsey@gmail.com>
- <20190813204513.4790-1-skunberg.kelsey@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VLXSFRnf/VIzQ21AcmSK772oG4DlhLGeRGOKcwe7z2Y=;
+        b=HXd4+yRFeLzx7amjO+mAd7qpFjKx17X4zNQY+6pySIDUCQzHpUZycLJy63Qtsmcivz
+         6t0gMK54tcPRZWn00FodRzBuyDeXWr2VVX8REnG3wzgN75pGiOWDJ5jnqndlY/CsvHbv
+         0ktGNrfkxNBSFyat4FN7OYqIVjsiGogbtqJ/5TmYk5HzKj+vD5j6TNyQ6qchKunWKdmb
+         jks354GPAXG+uAqKopNUwqoB65O1kctacmeWir+GSQfKs0GW4eXq8gcZRCHhuzz3YmeR
+         EKuot9Tx6zNbKitr5NsSB+zgxDrt/hBTO4AUpWX229XF9HwAuPvxiQNeSdaYrLj/DnK2
+         dMng==
+X-Gm-Message-State: APjAAAUQAczgzjHvU2Pr6cLRk4/tNPtgk+nR5snuX2uz8gkJ+teiH52J
+        dPeGlgA80KRbTltnQL7CneeVAT1/1sK19IbMnkDLUg==
+X-Google-Smtp-Source: APXvYqwT9kvM1vnuNFGjd4qoVslPyJL8Ssw80+EBOGlrtoa0kEl6HdgrfAcXq6R3Lzz2qlWEvzcuAzUCWlqlYvNUaPc=
+X-Received: by 2002:aca:1109:: with SMTP id 9mr2984466oir.100.1565729936999;
+ Tue, 13 Aug 2019 13:58:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <006d01d549db$54e42140$feac63c0$@lucidpixels.com>
+ <yq1ftmcct1j.fsf@oracle.com> <002d01d54dc3$17c278c0$47476a40$@lucidpixels.com>
+ <yq1r25p7qzp.fsf@oracle.com> <BYAPR04MB58166DE7AFE1081CEDF674BDE7D20@BYAPR04MB5816.namprd04.prod.outlook.com>
+In-Reply-To: <BYAPR04MB58166DE7AFE1081CEDF674BDE7D20@BYAPR04MB5816.namprd04.prod.outlook.com>
+From:   Justin Piszcz <jpiszcz@lucidpixels.com>
+Date:   Tue, 13 Aug 2019 16:58:46 -0400
+Message-ID: <CAO9zADxursoc-tLjhCdJauzw4t_kokgOyg0kHC8b9kaBH8oUqA@mail.gmail.com>
+Subject: Re: 5.2.x kernel: WD 8TB USB Drives: Unaligned partial completion
+ (resid=78, sector_sz=512)
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Defining device attributes should be done through the helper
-DEVICE_ATTR*(_name, _mode, _show, _store). Change all instances using
-__ATTR*() to now use DEVICE_ATTR*().
+On Tue, Aug 13, 2019 at 6:48 AM Damien Le Moal <Damien.LeMoal@wdc.com> wrote:
+>
+> On 2019/08/12 19:12, Martin K. Petersen wrote:
+> >
+> > Justin,
+> >
+> >>> Attached 2 x brand new Western Digital 8TB USB 3.0 drives awhile back
+> >>> and ran some file copy tests and was getting these warnings-- is
+> >>> there any way to avoid these warnings?  I did confirm with parted
+> >>> that the partition was aligned but this appears to be something
+> >>> related to the firmware on the device according to [1] and [2]?
+> >
+> >> sg_vpd_bdc.txt
+> >> Block device characteristics VPD page (SBC):
+> >>   Nominal rotation rate: 5400 rpm
+> >>   Product type: Not specified
+> >>   WABEREQ=0
+> >>   WACEREQ=0
+> >>   Nominal form factor: 3.5 inch
+> >>   ZONED=0
+> >
+> > Damien: What can we do to limit the messages in cases like this? Would
+> > it make sense to make the residual warning conditional on sd_is_zoned()?
+> >
+>
+> Justin,
+>
+> Can you send the output of "lsscsi" for these drives ? I need the exact disk
+> model ref name and FW version to see if there is an update for this problem, if
+> it is a known one. If it is not, I will signal it and get a fix started.
+>
 
-Example of old:
+Requested lsscsi output:
 
-struct device_attribute dev_attr_##_name = __ATTR(_name, _mode, _show,
-						  _store)
 
-Example of new:
+[7:0:0:0]    disk    WD       My Book 25EE     4004  /dev/sdf
+[7:0:0:1]    enclosu WD       SES Device       4004  -
+[8:0:0:0]    disk    WD       My Book 25EE     4004  /dev/sdg
+[8:0:0:1]    enclosu WD       SES Device       4004  -
 
-static DEVICE_ATTR(foo, S_IWUSR | S_IRUGO, show_foo, store_foo)
+Host: scsi7 Channel: 00 Target: 00 Lun: 00
+  Vendor: WD       Model: My Book 25EE     Rev: 4004
+  Type:   Direct-Access                    ANSI SCSI revision: 06
+Host: scsi7 Channel: 00 Target: 00 Lun: 01
+  Vendor: WD       Model: SES Device       Rev: 4004
+  Type:   Enclosure                        ANSI SCSI revision: 06
+Host: scsi8 Channel: 00 Target: 00 Lun: 00
+  Vendor: WD       Model: My Book 25EE     Rev: 4004
+  Type:   Direct-Access                    ANSI SCSI revision: 06
+Host: scsi8 Channel: 00 Target: 00 Lun: 01
+  Vendor: WD       Model: SES Device       Rev: 4004
+  Type:   Enclosure                        ANSI SCSI revision: 06
 
-Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
----
- drivers/pci/pci-sysfs.c | 59 +++++++++++++++++++----------------------
- 1 file changed, 27 insertions(+), 32 deletions(-)
+[7:0:0:0]    disk    WD       My Book 25EE     4004  /dev/sdf
+  state=running queue_depth=1 scsi_level=7 type=0 device_blocked=0 timeout=30
+[7:0:0:1]    enclosu WD       SES Device       4004  -
+  state=running queue_depth=1 scsi_level=7 type=13 device_blocked=0 timeout=30
+[8:0:0:0]    disk    WD       My Book 25EE     4004  /dev/sdg
+  state=running queue_depth=1 scsi_level=7 type=0 device_blocked=0 timeout=30
+[8:0:0:1]    enclosu WD       SES Device       4004  -
+  state=running queue_depth=1 scsi_level=7 type=13 device_blocked=0 timeout=30
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 965c72104150..8af7944fdccb 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -464,9 +464,7 @@ static ssize_t dev_rescan_store(struct device *dev,
- 	}
- 	return count;
- }
--static struct device_attribute dev_rescan_attr = __ATTR(rescan,
--							(S_IWUSR|S_IWGRP),
--							NULL, dev_rescan_store);
-+static DEVICE_ATTR(rescan, (S_IWUSR | S_IWGRP), NULL, dev_rescan_store);
- 
- static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
- 			    const char *buf, size_t count)
-@@ -480,9 +478,8 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
- 		pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
- 	return count;
- }
--static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
--							(S_IWUSR|S_IWGRP),
--							NULL, remove_store);
-+static DEVICE_ATTR_IGNORE_LOCKDEP(remove, (S_IWUSR | S_IWGRP), NULL,
-+				  remove_store);
- 
- static ssize_t dev_bus_rescan_store(struct device *dev,
- 				    struct device_attribute *attr,
-@@ -504,7 +501,7 @@ static ssize_t dev_bus_rescan_store(struct device *dev,
- 	}
- 	return count;
- }
--static DEVICE_ATTR(rescan, (S_IWUSR|S_IWGRP), NULL, dev_bus_rescan_store);
-+static DEVICE_ATTR(bus_rescan, (S_IWUSR | S_IWGRP), NULL, dev_bus_rescan_store);
- 
- #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
- static ssize_t d3cold_allowed_store(struct device *dev,
-@@ -687,16 +684,14 @@ static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
- 	return count;
- }
- 
--static struct device_attribute sriov_totalvfs_attr = __ATTR_RO(sriov_totalvfs);
--static struct device_attribute sriov_numvfs_attr =
--		__ATTR(sriov_numvfs, (S_IRUGO|S_IWUSR|S_IWGRP),
--		       sriov_numvfs_show, sriov_numvfs_store);
--static struct device_attribute sriov_offset_attr = __ATTR_RO(sriov_offset);
--static struct device_attribute sriov_stride_attr = __ATTR_RO(sriov_stride);
--static struct device_attribute sriov_vf_device_attr = __ATTR_RO(sriov_vf_device);
--static struct device_attribute sriov_drivers_autoprobe_attr =
--		__ATTR(sriov_drivers_autoprobe, (S_IRUGO|S_IWUSR|S_IWGRP),
--		       sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
-+static DEVICE_ATTR_RO(sriov_totalvfs);
-+static DEVICE_ATTR(sriov_numvfs, (S_IRUGO | S_IWUSR | S_IWGRP),
-+				  sriov_numvfs_show, sriov_numvfs_store);
-+static DEVICE_ATTR_RO(sriov_offset);
-+static DEVICE_ATTR_RO(sriov_stride);
-+static DEVICE_ATTR_RO(sriov_vf_device);
-+static DEVICE_ATTR(sriov_drivers_autoprobe, (S_IRUGO | S_IWUSR | S_IWGRP),
-+		   sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
- #endif /* CONFIG_PCI_IOV */
- 
- static ssize_t driver_override_store(struct device *dev,
-@@ -792,7 +787,7 @@ static struct attribute *pcie_dev_attrs[] = {
- };
- 
- static struct attribute *pcibus_attrs[] = {
--	&dev_attr_rescan.attr,
-+	&dev_attr_bus_rescan.attr,
- 	&dev_attr_cpuaffinity.attr,
- 	&dev_attr_cpulistaffinity.attr,
- 	NULL,
-@@ -820,7 +815,7 @@ static ssize_t boot_vga_show(struct device *dev, struct device_attribute *attr,
- 		!!(pdev->resource[PCI_ROM_RESOURCE].flags &
- 		   IORESOURCE_ROM_SHADOW));
- }
--static struct device_attribute vga_attr = __ATTR_RO(boot_vga);
-+static DEVICE_ATTR_RO(boot_vga);
- 
- static ssize_t pci_read_config(struct file *filp, struct kobject *kobj,
- 			       struct bin_attribute *bin_attr, char *buf,
-@@ -1458,7 +1453,7 @@ static ssize_t reset_store(struct device *dev, struct device_attribute *attr,
- 	return count;
- }
- 
--static struct device_attribute reset_attr = __ATTR(reset, 0200, NULL, reset_store);
-+static DEVICE_ATTR(reset, 0200, NULL, reset_store);
- 
- static int pci_create_capabilities_sysfs(struct pci_dev *dev)
- {
-@@ -1468,7 +1463,7 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
- 	pcie_aspm_create_sysfs_dev_files(dev);
- 
- 	if (dev->reset_fn) {
--		retval = device_create_file(&dev->dev, &reset_attr);
-+		retval = device_create_file(&dev->dev, &dev_attr_reset);
- 		if (retval)
- 			goto error;
- 	}
-@@ -1553,7 +1548,7 @@ static void pci_remove_capabilities_sysfs(struct pci_dev *dev)
- 	pcie_vpd_remove_sysfs_dev_files(dev);
- 	pcie_aspm_remove_sysfs_dev_files(dev);
- 	if (dev->reset_fn) {
--		device_remove_file(&dev->dev, &reset_attr);
-+		device_remove_file(&dev->dev, &dev_attr_reset);
- 		dev->reset_fn = 0;
- 	}
- }
-@@ -1606,7 +1601,7 @@ static int __init pci_sysfs_init(void)
- late_initcall(pci_sysfs_init);
- 
- static struct attribute *pci_dev_dev_attrs[] = {
--	&vga_attr.attr,
-+	&dev_attr_boot_vga.attr,
- 	NULL,
- };
- 
-@@ -1616,7 +1611,7 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
- 	struct device *dev = kobj_to_dev(kobj);
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 
--	if (a == &vga_attr.attr)
-+	if (a == &dev_attr_boot_vga.attr)
- 		if ((pdev->class >> 8) != PCI_CLASS_DISPLAY_VGA)
- 			return 0;
- 
-@@ -1624,8 +1619,8 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
- }
- 
- static struct attribute *pci_dev_hp_attrs[] = {
--	&dev_remove_attr.attr,
--	&dev_rescan_attr.attr,
-+	&dev_attr_remove.attr,
-+	&dev_attr_rescan.attr,
- 	NULL,
- };
- 
-@@ -1699,12 +1694,12 @@ static const struct attribute_group pci_dev_hp_attr_group = {
- 
- #ifdef CONFIG_PCI_IOV
- static struct attribute *sriov_dev_attrs[] = {
--	&sriov_totalvfs_attr.attr,
--	&sriov_numvfs_attr.attr,
--	&sriov_offset_attr.attr,
--	&sriov_stride_attr.attr,
--	&sriov_vf_device_attr.attr,
--	&sriov_drivers_autoprobe_attr.attr,
-+	&dev_attr_sriov_totalvfs.attr,
-+	&dev_attr_sriov_numvfs.attr,
-+	&dev_attr_sriov_offset.attr,
-+	&dev_attr_sriov_stride.attr,
-+	&dev_attr_sriov_vf_device.attr,
-+	&dev_attr_sriov_drivers_autoprobe.attr,
- 	NULL,
- };
- 
--- 
-2.20.1
+[7:0:0:0]    disk    none                              /dev/sdf
+[7:0:0:1]    enclosu 5000cca252e63312  -
+[8:0:0:0]    disk    none                              /dev/sdg
+[8:0:0:1]    enclosu 5000cca252e6a2f9  -
 
+[7:0:0:0]    disk    WD       My Book 25EE     4004  /dev/sdf   8.00TB
+[7:0:0:1]    enclosu WD       SES Device       4004  -               -
+[8:0:0:0]    disk    WD       My Book 25EE     4004  /dev/sdg   8.00TB
+[8:0:0:1]    enclosu WD       SES Device       4004  -               -
+
+
+[7:0:0:0]    disk    usb:1-1.2:1.0                   /dev/sdf
+[7:0:0:1]    enclosu usb:1-1.2:1.0                   -
+[8:0:0:0]    disk    usb:1-1.1:1.0                   /dev/sdg
+[8:0:0:1]    enclosu usb:1-1.1:1.0                   -
+
+# smartctl -a /dev/sdg
+/dev/sdg: Unknown USB bridge [0x1058:0x25ee (0x4004)]
+
+# smartctl -a /dev/sdf
+/dev/sdf: Unknown USB bridge [0x1058:0x25ee (0x4004)]
+
+Regards,
+
+Justin.
