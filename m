@@ -2,208 +2,128 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9A1C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F74CC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A46420679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FACD206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:46:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="odKCFzez"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zBgk4VX/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbfHMNoN (ORCPT
+        id S1729226AbfHMNqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:44:13 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37980 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729169AbfHMNoL (ORCPT
+        Tue, 13 Aug 2019 09:46:53 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36851 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729117AbfHMNqw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:44:11 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e11so725161pga.5
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:44:10 -0700 (PDT)
+        Tue, 13 Aug 2019 09:46:52 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l21so51287094pgm.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:46:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0CRyMeS/Mrus+6z29I+wc+bFKUyv5pLPQRQZcJjNIt4=;
-        b=odKCFzezdljWNojiREGSDl50miEt47GGCvHGfPbll0ZnegkreUq+ZshrEVCT7BsR9f
-         XIorHucFgyC16lgMnYc351KLKP4RPMig/afn1C0yazjvoUuKqU6eOgEImT+tw1wBPAOg
-         y7pREeRPIquzfOO1hRAwKH1I/Q2DH6POqVI+KUojLY41XSQRh+OiYP5DfTIjT1YtZSXj
-         aOgFGY1xTfLW5aSbU/lZxz3wCUfcHWqBIUpunRS6rZD0/gSKVfEuq3KjrKzI8ktMXBsJ
-         VpUGzTO5BfpBE1IPUzyoJBKHtX488aTbK66NDrMcZyXVoYZeisprgmOPKOz0iwO+xgSr
-         /4Pg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=cHdPS6LfhQ0chTOP4Jgo7vkl2dbGuOfOJrvTrwDU67U=;
+        b=zBgk4VX//4dk1T3BhqLSAMAWe1tDwqyu9zEyHnfwXMClq8bvZ8KpxxcdahTS+OvPWg
+         ktSqGVOnKCdrrIHvxz8Hk13Ni8Ny9rB/WK/zIh1KCV2gBAcmCmBuVDdhutPw1X3G9FgK
+         7WRy0jUjeipkxhRvznEl/0FItIb9XI2cwieYWuQ1ZrRLMFKyF30bNXeFo86aVuHSb3OG
+         zZkDx5O4tYbHxVbzfierIdMi1Y1JqhjFQGFfSm7Q6QMRqmJeFEp9CmN3fr9Ugl/fmwcn
+         23y103lPDsx/v4ScGLYtipqfWh5PNgGbjwRLL9hlMVRPUoEBqMEBTdyZOzAV2YuwWnLF
+         ms9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0CRyMeS/Mrus+6z29I+wc+bFKUyv5pLPQRQZcJjNIt4=;
-        b=DrYKP/P2SVyNdyexfetYJDbstFTaqJPdhUbypAVnVCKS1FOhBxZ4XajgBgzrAzwGgQ
-         0f4kwhPeuCGEhe6AJoXuQGXpvWhPzmHVRrjqwHNdj4BtmUgQu1Z/vhzeTz6PpdjutA0k
-         Tc3374WeUAfKddNbxEq5OheCd/2g9lNEAEbplxX1+duBQRf4orwefJTUtx5m7r/jCzKp
-         8Vd7gD4CzWE8N+oMs7HfhudzHAeR+F0LAIu9btpvd0k45HCy9G1zkMi3v50VauWhzGzg
-         VBdGQ6mNBSahq64HiO+XG38zPXHM97qK9AgvZ2ANm43bPAbVWcro7Q00/+Iqia1fIXrh
-         j3Vw==
-X-Gm-Message-State: APjAAAXIo75XXA1K89hQ1XDcHr7oWJLc2y8r51N5iZrLETy50dYT2NrH
-        ID6RuYG8GKanJUnaE4Pp7i9EeMUVVuLY14h83ieVGg==
-X-Google-Smtp-Source: APXvYqzE5Uhlq4Ulu63SZVHRYbTfDIA0gNBZo+oLd6oVs9hi66p9Zw68q0wBy4lC2TqXBYXSIoqcRwZ/1WKD/LjVLpY=
-X-Received: by 2002:a17:90a:c20f:: with SMTP id e15mr2268251pjt.123.1565703849569;
- Tue, 13 Aug 2019 06:44:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <000000000000333f53058fb33243@google.com>
-In-Reply-To: <000000000000333f53058fb33243@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 13 Aug 2019 15:43:58 +0200
-Message-ID: <CAAeHK+xYSPwq8uroMZ9_9rf0uCr7Hac61fdGvcwpFoLH6939qA@mail.gmail.com>
-Subject: Re: KASAN: out-of-bounds Read in hidraw_ioctl
-To:     syzbot <syzbot+f817d84b72194c4a5fe2@syzkaller.appspotmail.com>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cHdPS6LfhQ0chTOP4Jgo7vkl2dbGuOfOJrvTrwDU67U=;
+        b=ogrMSbIyykm4sqNSfPDqKgF8X5z20pYKpByIpMLHRFuBvCbIbCmI60y0pdkH3mwFWl
+         CyPJRSUfp0YnJgqmcAuXgEZr4SQr8IFoWxsrN/oW2zzU+I74QGGGkgn+5XLiJ5bhlDqh
+         JmRiG818ZPoCfMzLNFhHO46mHjx8IDYEFpXp/oj/n6vzzHy2DKb2cxHQEOYrNhoEgtGm
+         n4bjFgkfmBhota2zIsXaCUbwNUxxLfNc/qBHRsQsC0D7l76T4mM2dUcz4yV28ShaKWKn
+         vnWMgxR3P4/m9En12AGPwWuBUuUTTWdqPQIdpFGQwWp2dfXSKKT1EZGgNylsvL+DGKI9
+         OCAA==
+X-Gm-Message-State: APjAAAXkoIrmJXGSUKknRw+HSM095C/XvX46UG12yFMG/xuo0V/OzxBs
+        Lx3HVdoSZN+u9d4yWBTC9bFAP3A5WrDXDA==
+X-Google-Smtp-Source: APXvYqyDj1kNGKtmrHhfB2Wuc0ta9AuD5DhObEKkiBr2JixNIIEHOG+ML3Fg9vUceywtNMdWdgvjbA==
+X-Received: by 2002:a63:fe17:: with SMTP id p23mr34436115pgh.103.1565704011820;
+        Tue, 13 Aug 2019 06:46:51 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id x67sm114266432pfb.21.2019.08.13.06.46.49
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 13 Aug 2019 06:46:51 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     thierry.reding@gmail.com, robh+dt@kernel.org
+Cc:     u.kleine-koenig@pengutronix.de, mark.rutland@arm.com,
+        orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang@linaro.org,
+        vincent.guittot@linaro.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] dt-bindings: pwm: sprd: Add Spreadtrum PWM documentation
+Date:   Tue, 13 Aug 2019 21:46:40 +0800
+Message-Id: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 8:18 PM syzbot
-<syzbot+f817d84b72194c4a5fe2@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=126120e2600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
-> dashboard link: https://syzkaller.appspot.com/bug?extid=f817d84b72194c4a5fe2
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+f817d84b72194c4a5fe2@syzkaller.appspotmail.com
->
-> ==================================================================
-> BUG: KASAN: out-of-bounds in hidraw_ioctl+0x609/0xae0
-> drivers/hid/hidraw.c:380
-> Read of size 4 at addr ffff8881cb9fc018 by task syz-executor.1/3309
->
-> CPU: 1 PID: 3309 Comm: syz-executor.1 Not tainted 5.3.0-rc2+ #25
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   print_address_description+0x6a/0x32c mm/kasan/report.c:351
->   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
->   kasan_report+0xe/0x12 mm/kasan/common.c:612
->   hidraw_ioctl+0x609/0xae0 drivers/hid/hidraw.c:380
->   vfs_ioctl fs/ioctl.c:46 [inline]
->   file_ioctl fs/ioctl.c:509 [inline]
->   do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
->   ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
->   __do_sys_ioctl fs/ioctl.c:720 [inline]
->   __se_sys_ioctl fs/ioctl.c:718 [inline]
->   __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
->   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x459829
-> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007f877bde2c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
-> RDX: 0000000020001300 RSI: 0000000080044801 RDI: 0000000000000004
-> RBP: 000000000075c118 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f877bde36d4
-> R13: 00000000004c2206 R14: 00000000004d5610 R15: 00000000ffffffff
->
-> Allocated by task 2751:
->   save_stack+0x1b/0x80 mm/kasan/common.c:69
->   set_track mm/kasan/common.c:77 [inline]
->   __kasan_kmalloc mm/kasan/common.c:487 [inline]
->   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
->   slab_post_alloc_hook mm/slab.h:520 [inline]
->   slab_alloc_node mm/slub.c:2766 [inline]
->   __kmalloc_node_track_caller+0xd0/0x230 mm/slub.c:4361
->   __kmalloc_reserve.isra.0+0x39/0xe0 net/core/skbuff.c:141
->   __alloc_skb+0xef/0x5a0 net/core/skbuff.c:209
->   alloc_skb include/linux/skbuff.h:1055 [inline]
->   alloc_uevent_skb+0x7b/0x210 lib/kobject_uevent.c:289
->   uevent_net_broadcast_untagged lib/kobject_uevent.c:325 [inline]
->   kobject_uevent_net_broadcast lib/kobject_uevent.c:408 [inline]
->   kobject_uevent_env+0x8ee/0x1160 lib/kobject_uevent.c:592
->   device_del+0x6b2/0xb10 drivers/base/core.c:2298
->   usb_disconnect+0x4c3/0x8d0 drivers/usb/core/hub.c:2225
->   hub_port_connect drivers/usb/core/hub.c:4949 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> Freed by task 238:
->   save_stack+0x1b/0x80 mm/kasan/common.c:69
->   set_track mm/kasan/common.c:77 [inline]
->   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
->   slab_free_hook mm/slub.c:1423 [inline]
->   slab_free_freelist_hook mm/slub.c:1470 [inline]
->   slab_free mm/slub.c:3012 [inline]
->   kfree+0xe4/0x2f0 mm/slub.c:3953
->   skb_free_head+0x8b/0xa0 net/core/skbuff.c:591
->   skb_release_data+0x41f/0x7c0 net/core/skbuff.c:611
->   skb_release_all+0x46/0x60 net/core/skbuff.c:665
->   __kfree_skb net/core/skbuff.c:679 [inline]
->   consume_skb net/core/skbuff.c:838 [inline]
->   consume_skb+0xd9/0x320 net/core/skbuff.c:832
->   skb_free_datagram+0x16/0xf0 net/core/datagram.c:328
->   netlink_recvmsg+0x65e/0xee0 net/netlink/af_netlink.c:1996
->   sock_recvmsg_nosec net/socket.c:871 [inline]
->   sock_recvmsg net/socket.c:889 [inline]
->   sock_recvmsg+0xca/0x110 net/socket.c:885
->   ___sys_recvmsg+0x271/0x5a0 net/socket.c:2480
->   __sys_recvmsg+0xe9/0x1b0 net/socket.c:2537
->   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
->
-> The buggy address belongs to the object at ffff8881cb9fc000
->   which belongs to the cache kmalloc-1k of size 1024
-> The buggy address is located 24 bytes inside of
->   1024-byte region [ffff8881cb9fc000, ffff8881cb9fc400)
-> The buggy address belongs to the page:
-> page:ffffea00072e7f00 refcount:1 mapcount:0 mapping:ffff8881da002280
-> index:0x0 compound_mapcount: 0
-> flags: 0x200000000010200(slab|head)
-> raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da002280
-> raw: 0000000000000000 00000000000e000e 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->   ffff8881cb9fbf00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->   ffff8881cb9fbf80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > ffff8881cb9fc000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->                              ^
->   ffff8881cb9fc080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->   ffff8881cb9fc100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ==================================================================
+Add Spreadtrum PWM controller documentation.
 
-#syz dup: BUG: bad usercopy in hidraw_ioctl
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+Changes from v1:
+ - Use assigned-clock-parents and assigned-clocks to set PWM clock parent.
+---
+ Documentation/devicetree/bindings/pwm/pwm-sprd.txt |   38 ++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sprd.txt
 
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-sprd.txt b/Documentation/devicetree/bindings/pwm/pwm-sprd.txt
+new file mode 100644
+index 0000000..e6cf312
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/pwm-sprd.txt
+@@ -0,0 +1,38 @@
++Spreadtrum PWM controller
++
++Spreadtrum SoCs PWM controller provides 4 PWM channels.
++
++Required porperties:
++- compatible : Should be "sprd,ums512-pwm".
++- reg: Physical base address and length of the controller's registers.
++- clocks: The phandle and specifier referencing the controller's clocks.
++- clock-names: Should contain following entries:
++  "pwmn": used to derive the functional clock for PWM channel n (n range: 0 ~ 3).
++  "enablen": for PWM channel n enable clock (n range: 0 ~ 3).
++- assigned-clocks: Reference to the PWM clock entroes.
++- assigned-clock-parents: The phandle of the parent clock of PWM clock.
++- #pwm-cells: Should be 2. See pwm.txt in this directory for a description of
++  the cells format.
++
++Example:
++	pwms: pwm@32260000 {
++		compatible = "sprd,ums512-pwm";
++		reg = <0 0x32260000 0 0x10000>;
++		clock-names = "pwm0", "enable0",
++			"pwm1", "enable1",
++			"pwm2", "enable2",
++			"pwm3", "enable3";
++		clocks = <&aon_clk CLK_PWM0>, <&aonapb_gate CLK_PWM0_EB>,
++		       <&aon_clk CLK_PWM1>, <&aonapb_gate CLK_PWM1_EB>,
++		       <&aon_clk CLK_PWM2>, <&aonapb_gate CLK_PWM2_EB>,
++		       <&aon_clk CLK_PWM3>, <&aonapb_gate CLK_PWM3_EB>;
++		assigned-clocks = <&aon_clk CLK_PWM0>,
++			<&aon_clk CLK_PWM1>,
++			<&aon_clk CLK_PWM2>,
++			<&aon_clk CLK_PWM3>;
++		assigned-clock-parents = <&ext_26m>,
++			<&ext_26m>,
++			<&ext_26m>,
++			<&ext_26m>;
++		#pwm-cells = <2>;
++	};
+-- 
+1.7.9.5
+
