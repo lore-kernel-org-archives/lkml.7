@@ -2,144 +2,76 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C950C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEBEC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE3420679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E24520679
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:49:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729312AbfHMNsH (ORCPT
+        id S1729259AbfHMNtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:48:07 -0400
-Received: from mail-ot1-f70.google.com ([209.85.210.70]:38420 "EHLO
-        mail-ot1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729263AbfHMNsG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:48:06 -0400
-Received: by mail-ot1-f70.google.com with SMTP id j4so91197412otc.5
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:48:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=wI5i1u19Qg/2UzcnukBir3zrUEiLPgI3wzEdXh6RbDM=;
-        b=b9cr4T+TgxKwvBtCf5aml0vlLauSBFrRHaBIbGQR4ryxMzQvghomzaTeKp0Xpxm/yP
-         9WdaETsmq2KVD8A5bAPmOMk5umLg0/T012fWbCkuXJd0NqwN7X+d8FPNzrM9IQZ1uN2Z
-         BlKVfwyviMvMDoWZe1pTSo2AfzgXnsqnuj8u81f5QIoCCRIhBGdvcYLBA4ZeK0KGH+bW
-         NBFuqEpuvdux64ywcdz6b7fPzRXGD/FQ9sHroWf1My84HWRzPslkAZnwaHMijljghlMY
-         ci2h8/rThTmq4Wmw2adMWY5fcZ6wQpfNxI9561pjTSJO4o4vlKqpKBUvFN5BmefSm68o
-         g08A==
-X-Gm-Message-State: APjAAAWrJSq2WIaLwSOoTUx1CEfiZEyQ81PwXTMHqKDHw6A5n1LtX/1M
-        V00fwkbJOVK6xs1zFZJDDOF/BlRRXd8J7diJjla1sYOxofJn
-X-Google-Smtp-Source: APXvYqyOW1hZvK9p5ysBJ9VWjLasAaMZ3upF6H5W+mnrn9EqpuDhSJixt+b//48TMNxd35+dQHCBy1HkAaa/HDB2vFx/A4jeXNBl
+        Tue, 13 Aug 2019 09:49:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:37302 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728933AbfHMNtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 09:49:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ADFFC344;
+        Tue, 13 Aug 2019 06:49:10 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB36B3F694;
+        Tue, 13 Aug 2019 06:49:09 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 14:49:07 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v3 3/3] mm: kmemleak: Use the memory pool for early
+ allocations
+Message-ID: <20190813134907.GJ62772@arrakis.emea.arm.com>
+References: <20190812160642.52134-1-catalin.marinas@arm.com>
+ <20190812160642.52134-4-catalin.marinas@arm.com>
+ <1565699754.8572.8.camel@lca.pw>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:3883:: with SMTP id f125mr26119162ioa.109.1565704085561;
- Tue, 13 Aug 2019 06:48:05 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 06:48:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d7edc0058fffe31a@google.com>
-Subject: KMSAN: uninit-value in nh_valid_get_del_req
-From:   syzbot <syzbot+86ec9d8c02c07571873c@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dsahern@kernel.org, glider@google.com,
-        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1565699754.8572.8.camel@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Aug 13, 2019 at 08:35:54AM -0400, Qian Cai wrote:
+> On Mon, 2019-08-12 at 17:06 +0100, Catalin Marinas wrote:
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index 4d39540011e2..39df06ffd9f4 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -592,17 +592,18 @@ config DEBUG_KMEMLEAK
+> >  	  In order to access the kmemleak file, debugfs needs to be
+> >  	  mounted (usually at /sys/kernel/debug).
+> >  
+> > -config DEBUG_KMEMLEAK_EARLY_LOG_SIZE
+> > -	int "Maximum kmemleak early log entries"
+> > +config DEBUG_KMEMLEAK_MEM_POOL_SIZE
+> > +	int "Kmemleak memory pool size"
+> >  	depends on DEBUG_KMEMLEAK
+> >  	range 200 40000
+> >  	default 16000
+> 
+> Hmm, this seems way too small. My previous round of testing with
+> kmemleak.mempool=524288 works quite well on all architectures.
 
-syzbot found the following crash on:
+We can change the upper bound here to 1M but I'd keep the default sane.
+Not everyone is running tests under OOM.
 
-HEAD commit:    61ccdad1 Revert "drm/bochs: Use shadow buffer for bochs fr..
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=14c120e2600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=27abc558ecb16a3b
-dashboard link: https://syzkaller.appspot.com/bug?extid=86ec9d8c02c07571873c
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15ed6c4a600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11de024a600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+86ec9d8c02c07571873c@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KMSAN: uninit-value in nh_valid_get_del_req+0x6f1/0x8c0  
-net/ipv4/nexthop.c:1510
-CPU: 0 PID: 11812 Comm: syz-executor444 Not tainted 5.3.0-rc3+ #17
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x162/0x2d0 mm/kmsan/kmsan_report.c:109
-  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:294
-  nh_valid_get_del_req+0x6f1/0x8c0 net/ipv4/nexthop.c:1510
-  rtm_del_nexthop+0x1b1/0x610 net/ipv4/nexthop.c:1543
-  rtnetlink_rcv_msg+0x115a/0x1580 net/core/rtnetlink.c:5223
-  netlink_rcv_skb+0x431/0x620 net/netlink/af_netlink.c:2477
-  rtnetlink_rcv+0x50/0x60 net/core/rtnetlink.c:5241
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0xf6c/0x1050 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x110f/0x1330 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg net/socket.c:657 [inline]
-  ___sys_sendmsg+0x14ff/0x1590 net/socket.c:2311
-  __sys_sendmmsg+0x53a/0xae0 net/socket.c:2413
-  __do_sys_sendmmsg net/socket.c:2442 [inline]
-  __se_sys_sendmmsg+0xbd/0xe0 net/socket.c:2439
-  __x64_sys_sendmmsg+0x56/0x70 net/socket.c:2439
-  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:297
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-RIP: 0033:0x440259
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fff15f10d08 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440259
-RDX: 0492492492492805 RSI: 0000000020000140 RDI: 0000000000000003
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401ae0
-R13: 0000000000401b70 R14: 0000000000000000 R15: 0000000000000000
-
-Uninit was created at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:187 [inline]
-  kmsan_internal_poison_shadow+0x53/0xa0 mm/kmsan/kmsan.c:146
-  kmsan_slab_alloc+0xaa/0x120 mm/kmsan/kmsan_hooks.c:175
-  slab_alloc_node mm/slub.c:2790 [inline]
-  __kmalloc_node_track_caller+0xb55/0x1320 mm/slub.c:4388
-  __kmalloc_reserve net/core/skbuff.c:141 [inline]
-  __alloc_skb+0x306/0xa10 net/core/skbuff.c:209
-  alloc_skb include/linux/skbuff.h:1056 [inline]
-  netlink_alloc_large_skb net/netlink/af_netlink.c:1174 [inline]
-  netlink_sendmsg+0x783/0x1330 net/netlink/af_netlink.c:1892
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg net/socket.c:657 [inline]
-  ___sys_sendmsg+0x14ff/0x1590 net/socket.c:2311
-  __sys_sendmmsg+0x53a/0xae0 net/socket.c:2413
-  __do_sys_sendmmsg net/socket.c:2442 [inline]
-  __se_sys_sendmmsg+0xbd/0xe0 net/socket.c:2439
-  __x64_sys_sendmmsg+0x56/0x70 net/socket.c:2439
-  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:297
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-- 
+Catalin
