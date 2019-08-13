@@ -2,141 +2,184 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B17C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5551EC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3990E206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2906B20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:26:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="LoW/iMar"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iycE6UXA";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iAIuNpwH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbfHMI0I (ORCPT
+        id S1728157AbfHMI0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 04:26:08 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:52086 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727793AbfHMI0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 04:26:07 -0400
-Received: from zn.tnic (p200300EC2F0D240075AA4C13F769B7E7.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:2400:75aa:4c13:f769:b7e7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 13 Aug 2019 04:26:12 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:49054 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727793AbfHMI0L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 04:26:11 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6FB3860A24; Tue, 13 Aug 2019 08:26:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565684769;
+        bh=ywXBBWxMTJ6nEUmFDL5tcAalqszcOwF+FOJjszNDL4g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iycE6UXAzhgJ2NQW63Hb1jrDnnsZzkdlnskCzo6sDkbr4f8teSJjCti0CZHXYBR0D
+         ZNTrycF6/TpfdtBPZYccqAYKuHI2lqiaKdIktPm36jGHgTLX1KFJvx5Ciz5VZtmVe8
+         o/Y9H152BUN+ktxAa0wEivqx0TpSsj5lUD5aNRxo=
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4C8A01EC04CD;
-        Tue, 13 Aug 2019 10:26:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1565684766;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=kMHQqLdJXGlWXDypDhXFGkicG1MjfC0RcqBNXKxeJyw=;
-        b=LoW/iMar3Wlq4ekq1oG1U/IP9qMzb9DTVQdgQ8q16OBILecjuGaswbzJnRbbCViXEKCbNY
-        1VbZUGF2/ejKyz2T7heBR6H/71Rgc6IbIBo5tEbP6edOIuMXNB6howRTl8i/guemt10w37
-        5ye2vqyukGIi3zUjSDv1vtEUdhKtlcg=
-Date:   Tue, 13 Aug 2019 10:26:55 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 05/24] EDAC, mc: Fix and improve sysfs init functions
-Message-ID: <20190813082655.GD16770@zn.tnic>
-References: <20190624150758.6695-1-rrichter@marvell.com>
- <20190624150758.6695-6-rrichter@marvell.com>
+        (Authenticated sender: mkshah@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D287B60909;
+        Tue, 13 Aug 2019 08:26:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565684766;
+        bh=ywXBBWxMTJ6nEUmFDL5tcAalqszcOwF+FOJjszNDL4g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iAIuNpwHyb8CsQCLnMAe+wPf8F0DDODNAew3cep8H4njKQZwRyZve+5CPkb5Kw/Fo
+         OjBG4u3IBQqA4oKM6nm4UOCrwbxj4CtdTE5koG+ULPpK+QKpxmc65UC4kX8XANATHZ
+         XHOwa5Y3VPUZiz9ajdHUvGWSVFlOfzpd4hSXj740=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D287B60909
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     agross@kernel.org, david.brown@linaro.org,
+        linux-arm-msm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        dianders@chromium.org, swboyd@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org, ulf.hansson@linaro.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH 2/4] drivers: qcom: rpmh: remove rpmh_flush export
+Date:   Tue, 13 Aug 2019 13:54:40 +0530
+Message-Id: <20190813082442.25796-3-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190813082442.25796-1-mkshah@codeaurora.org>
+References: <20190813082442.25796-1-mkshah@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190624150758.6695-6-rrichter@marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 03:09:02PM +0000, Robert Richter wrote:
-> Remove gotos as they just create overhead.
+rpmh_flush() was exported with the idea that an external entity
+operation during CPU idle would know when to flush the sleep and wake
+TCS. Since, this is not the case when defining a power domain for the
+RSC. Remove the function export and instead allow the function to be
+called internally.
 
-Overhead?
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+---
+ drivers/soc/qcom/rpmh-internal.h |  1 +
+ drivers/soc/qcom/rpmh.c          | 18 ++++++++----------
+ include/soc/qcom/rpmh.h          |  5 -----
+ 3 files changed, 9 insertions(+), 15 deletions(-)
 
-> Also, fix debug message for
-> the case edac_create_dimm_object() is failing.
-> 
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
-> ---
->  drivers/edac/edac_mc_sysfs.c | 25 +++++++++----------------
->  1 file changed, 9 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
-> index 7c01e1cc030c..29dd9719f82f 100644
-> --- a/drivers/edac/edac_mc_sysfs.c
-> +++ b/drivers/edac/edac_mc_sysfs.c
-> @@ -655,8 +655,9 @@ static int edac_create_dimm_object(struct mem_ctl_info *mci,
->  	err = device_add(&dimm->dev);
->  	if (err)
->  		put_device(&dimm->dev);
-> -
-> -	edac_dbg(0, "created rank/dimm device %s\n", dev_name(&dimm->dev));
-> +	else
-> +		edac_dbg(0, "created rank/dimm device %s\n",
-> +			dev_name(&dimm->dev));
-
-Please add a message to the error case too.
-
->  	return err;
->  }
-> @@ -938,7 +939,7 @@ int edac_create_sysfs_mci_device(struct mem_ctl_info *mci,
->  	if (err < 0) {
->  		edac_dbg(1, "failure: create device %s\n", dev_name(&mci->dev));
->  		put_device(&mci->dev);
-> -		goto out;
-> +		return err;
->  	}
->  
->  	/*
-> @@ -987,7 +988,6 @@ int edac_create_sysfs_mci_device(struct mem_ctl_info *mci,
->  	}
->  	device_unregister(&mci->dev);
->  
-> -out:
->  	return err;
->  }
->  
-> @@ -1044,10 +1044,8 @@ int __init edac_mc_sysfs_init(void)
->  	int err;
->  
->  	mci_pdev = kzalloc(sizeof(*mci_pdev), GFP_KERNEL);
-> -	if (!mci_pdev) {
-> -		err = -ENOMEM;
-> -		goto out;
-> -	}
-> +	if (!mci_pdev)
-> +		return -ENOMEM;
->  
->  	mci_pdev->bus = edac_get_sysfs_subsys();
->  	mci_pdev->type = &mc_attr_type;
-> @@ -1056,15 +1054,10 @@ int __init edac_mc_sysfs_init(void)
->  
->  	err = device_add(mci_pdev);
->  	if (err < 0)
-> -		goto out_put_device;
-> -
-> -	edac_dbg(0, "device %s created\n", dev_name(mci_pdev));
-> -
-> -	return 0;
-> +		put_device(mci_pdev);
-> +	else
-> +		edac_dbg(0, "device %s created\n", dev_name(mci_pdev));
-
-Ditto.
-
-Thx.
-
+diff --git a/drivers/soc/qcom/rpmh-internal.h b/drivers/soc/qcom/rpmh-internal.h
+index a7bbbb67991c..6eec32b97f83 100644
+--- a/drivers/soc/qcom/rpmh-internal.h
++++ b/drivers/soc/qcom/rpmh-internal.h
+@@ -110,5 +110,6 @@ int rpmh_rsc_write_ctrl_data(struct rsc_drv *drv,
+ int rpmh_rsc_invalidate(struct rsc_drv *drv);
+ 
+ void rpmh_tx_done(const struct tcs_request *msg, int r);
++int rpmh_flush(struct rpmh_ctrlr *ctrlr);
+ 
+ #endif /* __RPM_INTERNAL_H__ */
+diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+index 3a4579d056a4..eb0ded059d2e 100644
+--- a/drivers/soc/qcom/rpmh.c
++++ b/drivers/soc/qcom/rpmh.c
+@@ -427,11 +427,10 @@ static int is_req_valid(struct cache_req *req)
+ 		req->sleep_val != req->wake_val);
+ }
+ 
+-static int send_single(const struct device *dev, enum rpmh_state state,
++static int send_single(struct rpmh_ctrlr *ctrlr, enum rpmh_state state,
+ 		       u32 addr, u32 data)
+ {
+-	DEFINE_RPMH_MSG_ONSTACK(dev, state, NULL, rpm_msg);
+-	struct rpmh_ctrlr *ctrlr = get_rpmh_ctrlr(dev);
++	DEFINE_RPMH_MSG_ONSTACK(NULL, state, NULL, rpm_msg);
+ 
+ 	/* Wake sets are always complete and sleep sets are not */
+ 	rpm_msg.msg.wait_for_compl = (state == RPMH_WAKE_ONLY_STATE);
+@@ -445,7 +444,7 @@ static int send_single(const struct device *dev, enum rpmh_state state,
+ /**
+  * rpmh_flush: Flushes the buffered active and sleep sets to TCS
+  *
+- * @dev: The device making the request
++ * @ctrlr: controller making request to flush cached data
+  *
+  * Return: -EBUSY if the controller is busy, probably waiting on a response
+  * to a RPMH request sent earlier.
+@@ -454,10 +453,9 @@ static int send_single(const struct device *dev, enum rpmh_state state,
+  * that is powering down the entire system. Since no other RPMH API would be
+  * executing at this time, it is safe to run lockless.
+  */
+-int rpmh_flush(const struct device *dev)
++int rpmh_flush(struct rpmh_ctrlr *ctrlr)
+ {
+ 	struct cache_req *p;
+-	struct rpmh_ctrlr *ctrlr = get_rpmh_ctrlr(dev);
+ 	int ret;
+ 
+ 	if (!ctrlr->dirty) {
+@@ -480,11 +478,12 @@ int rpmh_flush(const struct device *dev)
+ 				 __func__, p->addr, p->sleep_val, p->wake_val);
+ 			continue;
+ 		}
+-		ret = send_single(dev, RPMH_SLEEP_STATE, p->addr, p->sleep_val);
++		ret = send_single(ctrlr, RPMH_SLEEP_STATE, p->addr,
++				  p->sleep_val);
+ 		if (ret)
+ 			return ret;
+-		ret = send_single(dev, RPMH_WAKE_ONLY_STATE,
+-				  p->addr, p->wake_val);
++		ret = send_single(ctrlr, RPMH_WAKE_ONLY_STATE, p->addr,
++				  p->wake_val);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -493,7 +492,6 @@ int rpmh_flush(const struct device *dev)
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL(rpmh_flush);
+ 
+ /**
+  * rpmh_invalidate: Invalidate all sleep and active sets
+diff --git a/include/soc/qcom/rpmh.h b/include/soc/qcom/rpmh.h
+index 619e07c75da9..f9ec353d24a5 100644
+--- a/include/soc/qcom/rpmh.h
++++ b/include/soc/qcom/rpmh.h
+@@ -20,8 +20,6 @@ int rpmh_write_async(const struct device *dev, enum rpmh_state state,
+ int rpmh_write_batch(const struct device *dev, enum rpmh_state state,
+ 		     const struct tcs_cmd *cmd, u32 *n);
+ 
+-int rpmh_flush(const struct device *dev);
+-
+ int rpmh_invalidate(const struct device *dev);
+ 
+ #else
+@@ -40,9 +38,6 @@ static inline int rpmh_write_batch(const struct device *dev,
+ 				   const struct tcs_cmd *cmd, u32 *n)
+ { return -ENODEV; }
+ 
+-static inline int rpmh_flush(const struct device *dev)
+-{ return -ENODEV; }
+-
+ static inline int rpmh_invalidate(const struct device *dev)
+ { return -ENODEV; }
+ 
 -- 
-Regards/Gruss,
-    Boris.
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
