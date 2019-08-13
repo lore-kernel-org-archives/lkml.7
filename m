@@ -2,121 +2,117 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F27C1C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88898C32757
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C736A20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:59:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565719159;
-	bh=weGVmXVZ+qD0Yvi3HDWQx4KPKOuPwIw9RW9vG3YkWcs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jYc1rZTQOWwFXVawLBsUmDei3il8v8WGIsyib4PORD3zeHozEHpHW3ARtobel11b7
-	 P17g4q4WSbnmMujKnwLmWIbTd82Hdis2XsMKgQHkDE6TpguaS/nWC1PARuh6QdLEO6
-	 Bg5LuqXPmXSJTPW16Md8brjSxzcsgst4xdiVT9GI=
+	by mail.kernel.org (Postfix) with ESMTP id 624F120843
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 18:00:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="JkdPDFhK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbfHMR7S (ORCPT
+        id S1728293AbfHMSAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 13:59:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727517AbfHMR7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 13:59:18 -0400
-Received: from linux-8ccs.fritz.box (unknown [92.117.154.3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22C372064A;
-        Tue, 13 Aug 2019 17:59:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565719157;
-        bh=weGVmXVZ+qD0Yvi3HDWQx4KPKOuPwIw9RW9vG3YkWcs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XQBsyULJnJa+js8YFNrJRoTGgohWBQ4uvkuEO3rFVO77Wn8lFl+Wsp2OI60SfMpPj
-         wwAejen4bG5OsZ+qL5t9C1TBRY2kNFJECuyDh+2zgm46MNHNbdf45uGt8rqBXad4/4
-         JunwFap6E8hdBSy3eeeP3b9vDfFuEQ27cnzy9evs=
-Date:   Tue, 13 Aug 2019 19:59:13 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     zhe.he@windriver.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] module: Fix load failure when CONFIG_STRICT_MODULE_RWX
- is diabled
-Message-ID: <20190813175912.GB24753@linux-8ccs.fritz.box>
-References: <1565421720-316924-1-git-send-email-zhe.he@windriver.com>
+        Tue, 13 Aug 2019 14:00:25 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44177 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727665AbfHMSAY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 14:00:24 -0400
+Received: by mail-qt1-f195.google.com with SMTP id 44so76182370qtg.11
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 11:00:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IBxnXq2Ic/FEKXbpZLemvQFxGE32/we3wuo4f4S9MyU=;
+        b=JkdPDFhKWlCBD9Qi7RNp1yC1abkdUc7/1dY6LV39VmLNemSn9Powu35LNiuyO8uczt
+         Nadnkpe9izQcaWOyGGeQHJ23tWPRR6bGmsg+cyaAilqF+z1rDRrm+slvgHjrpOBu79SN
+         04/Y6/+5Ps6m17X0m+HDUinYIh8C32SkpSSPGyvi4DXoJS3WXfpvU9blzoRZ5bcDgJEL
+         IDg+rbA5MUkHi8mQ00jNvvGVGA9O50CHREVVTEuNyId2Vgr0BUJk+6udZ7yoDqN0JsU4
+         gZy0AfBcuVAFDG6OCN/ZVHt5uncO6CdDnK24oMMrw6a/bv0Qfkyj1OjJY0s/rkuU/UyI
+         PpFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IBxnXq2Ic/FEKXbpZLemvQFxGE32/we3wuo4f4S9MyU=;
+        b=Y9wKE48jGMV2h1FaSZZn1M7ukuu1rsdB1Ec7mkY8+QB2WncP3ypj2F9n/ajgBeSb0r
+         n+DS1H/LGNWDPGjRYYcVMGePsoP2UhGPI1mf31nkeC1LzsWReoEeZGNLCdRvQEMCvnY3
+         MJt3JaestRiIyE61R+NsJKcf4g2tKvVUFdUFzjuAC1Ydy7GnQueup591bUntJly76jwd
+         YAX3s/d0p3+a+jIIlC8GZCsoAyJ5HpU6JlR0pM6nwuUTGEqVXmR5GAbXUUWAbxlqZg33
+         sFoMIeX6a6oD+PMaBoK03VoPQ2aHULFT7NFBx0TllRmvZzehNxrXlsps9v08ZRHBp60E
+         7czg==
+X-Gm-Message-State: APjAAAWz57p+PfxbcTvI4RVxAVxQVWD8v/V8wjmJXITM1/jqdrJMC1BF
+        +mFxA3OQMHnbRm8Sj5myvZrhZQ==
+X-Google-Smtp-Source: APXvYqwwH31e/CxiSAwLKzyYNpXPBlqnkZplwVbsfv2VH9N4iB3HSg736Ni8yTKYk8KDSLHvJDt7lg==
+X-Received: by 2002:ac8:1a6c:: with SMTP id q41mr32662928qtk.217.1565719223137;
+        Tue, 13 Aug 2019 11:00:23 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id y204sm5010562qka.54.2019.08.13.11.00.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 13 Aug 2019 11:00:22 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hxb5q-0000sY-7l; Tue, 13 Aug 2019 15:00:22 -0300
+Date:   Tue, 13 Aug 2019 15:00:22 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 16/19] RDMA/uverbs: Add back pointer to system
+ file object
+Message-ID: <20190813180022.GF29508@ziepe.ca>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-17-ira.weiny@intel.com>
+ <20190812130039.GD24457@ziepe.ca>
+ <20190812172826.GA19746@iweiny-DESK2.sc.intel.com>
+ <20190812175615.GI24457@ziepe.ca>
+ <20190812211537.GE20634@iweiny-DESK2.sc.intel.com>
+ <20190813114842.GB29508@ziepe.ca>
+ <20190813174142.GB11882@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1565421720-316924-1-git-send-email-zhe.he@windriver.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190813174142.GB11882@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ zhe.he@windriver.com [10/08/19 15:22 +0800]:
->From: He Zhe <zhe.he@windriver.com>
->
->When loading modules with CONFIG_ARCH_HAS_STRICT_MODULE_RWX enabled and
->CONFIG_STRICT_MODULE_RWX disabled, the memory allocated for modules would
->not be page-aligned and cause the following BUG during frob_text.
->
->------------[ cut here ]------------
->kernel BUG at kernel/module.c:1907!
->Internal error: Oops - BUG: 0 [#1] ARM
->Modules linked in:
->CPU: 0 PID: 89 Comm: systemd-modules Not tainted 5.3.0-rc2 #1
->Hardware name: ARM-Versatile (Device Tree Support)
->PC is at frob_text.constprop.0+0x2c/0x40
->LR is at load_module+0x14b4/0x1d28
->pc : [<c0082930>]    lr : [<c0084bb0>]    psr: 20000013
->sp : ce44fe58  ip : 00000000  fp : 00000000
->r10: 00000000  r9 : ce44feb8  r8 : 00000000
->r7 : 00000001  r6 : bf00032c  r5 : ce44ff40  r4 : bf000320
->r3 : bf000400  r2 : 00000fff  r1 : 00000220  r0 : bf000000
->Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
->Control: 00093177  Table: 0e4c0000  DAC: 00000051
->Process systemd-modules (pid: 89, stack limit = 0x9fccc8dc)
->Stack: (0xce44fe58 to 0xce450000)
->fe40:                                                       00000000 cf1b05b8
->fe60: 00000001 ce47cf08 bf002754 c07ae5d8 d0a2a484 bf002060 bf0004f8 00000000
->fe80: b6d17910 c017cf1c ce47cf00 d0a29000 ce47cf00 ce44ff34 000014fc 00000000
->fea0: 00000000 00000000 bf00025c 00000001 00000000 00000000 6e72656b 00006c65
->fec0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
->fee0: 00000000 00000000 00000000 00000000 00000000 c0ac9048 7fffffff 00000000
->ff00: b6d17910 00000005 0000017b c0009208 ce44e000 00000000 b6ebfe54 c008562c
->ff20: 7fffffff 00000000 00000003 cefd28f8 00000001 d0a29000 000014fc 00000000
->ff40: d0a292cb d0a29380 d0a29000 000014fc d0a29f0c d0a29d90 d0a29a60 00000520
->ff60: 00000710 00000718 00000826 00000000 00000000 00000000 00000708 00000023
->ff80: 00000024 0000001c 00000000 00000016 00000000 c0ac9048 0041c620 00000000
->ffa0: 00000000 c0009000 0041c620 00000000 00000005 b6d17910 00000000 00000000
->ffc0: 0041c620 00000000 00000000 0000017b 0041f078 00000000 004098b0 b6ebfe54
->ffe0: bedb6bc8 bedb6bb8 b6d0f91c b6c945a0 60000010 00000005 00000000 00000000
->[<c0082930>] (frob_text.constprop.0) from [<c0084bb0>] (load_module+0x14b4/0x1d28)
->[<c0084bb0>] (load_module) from [<c008562c>] (sys_finit_module+0xa0/0xc4)
->[<c008562c>] (sys_finit_module) from [<c0009000>] (ret_fast_syscall+0x0/0x50)
->Exception stack(0xce44ffa8 to 0xce44fff0)
->ffa0:                   0041c620 00000000 00000005 b6d17910 00000000 00000000
->ffc0: 0041c620 00000000 00000000 0000017b 0041f078 00000000 004098b0 b6ebfe54
->ffe0: bedb6bc8 bedb6bb8 b6d0f91c b6c945a0
->Code: e7f001f2 e5931008 e1110002 0a000001 (e7f001f2)
->---[ end trace e904557128d9aed5 ]---
->
->This patch enables page-aligned allocation when
->CONFIG_ARCH_HAS_STRICT_MODULE_RWX is enabled.
->
->Fixes: 93651f80dcb6 ("modules: fix compile error if don't have strict module rwx")
->Signed-off-by: He Zhe <zhe.he@windriver.com>
+On Tue, Aug 13, 2019 at 10:41:42AM -0700, Ira Weiny wrote:
 
-Hi!
+> And I was pretty sure uverbs_destroy_ufile_hw() would take care of (or ensure
+> that some other thread is) destroying all the MR's we have associated with this
+> FD.
 
-I have already committed a fix for this to modules-next and plan to
-send a pull request next week.
+fd's can't be revoked, so destroy_ufile_hw() can't touch them. It
+deletes any underlying HW resources, but the FD persists.
+ 
+> > This is why having a back pointer like this is so ugly, it creates a
+> > reference counting cycle
+> 
+> Yep...  I worked through this...  and it was giving me fits...
+> 
+> Anyway, the struct file is the only object in the core which was reasonable to
+> store this information in since that is what is passed around to other
+> processes...
 
-Thanks!
+It could be passed down in the uattr_bundle, once you are in file operations
+handle the file is guarenteed to exist, and we've now arranged things
+so the uattr_bundle flows into the umem, as umems can only be
+established under a system call.
 
-Jessica
+Jason
