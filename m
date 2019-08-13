@@ -4,161 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96492C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 143D1C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D3B420840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74ED20644
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:58:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfHMGyv (ORCPT
+        id S1727008AbfHMG6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 02:54:51 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:42029 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726769AbfHMGyu (ORCPT
+        Tue, 13 Aug 2019 02:58:05 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35620 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfHMG6E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 02:54:50 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id xQhchINqTqTdhxQhfh74b9; Tue, 13 Aug 2019 08:54:48 +0200
-Subject: Re: [PATCH] media: v4l: Add packed YUV444 24bpp pixel format
-To:     Mirela Rabulea <mirela.rabulea@nxp.com>, mchehab@kernel.org
-Cc:     vivek.kasireddy@intel.com, sakari.ailus@linux.intel.com,
-        s.nawrocki@samsung.com, niklas.soderlund+renesas@ragnatech.se,
-        ezequiel@collabora.com, paul.kocialkowski@bootlin.com,
-        boris.brezillon@collabora.com, robert.chiras@nxp.com,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com
-References: <1562166911-27454-1-git-send-email-mirela.rabulea@nxp.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <a6b91ccf-8961-d9a9-c007-d113bcba7156@xs4all.nl>
-Date:   Tue, 13 Aug 2019 08:54:40 +0200
+        Tue, 13 Aug 2019 02:58:04 -0400
+Received: by mail-ed1-f65.google.com with SMTP id w20so105943342edd.2;
+        Mon, 12 Aug 2019 23:58:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6clqX/GVRjqbh5VWBalBjmQ4fpsDd0SBiJaQ5yYYQNY=;
+        b=OXoYSAKbRE0i+wzKkGALiDLIQtX3BdCMtg7habSvTsAZXrtPt9ZOM3q4gp4LwpBuwF
+         vxnJVNHGenP3V99IM7Il7ZuotblSO0TjBhdb3zU7EXKsuSUmfTfveJ6DO/TRCv/3z+0F
+         K+4J+oqmVEfPxPcDjzcWdtL6bzfQMcDjtDW1INsUeNyEZxtlhTXw5qI2Spo2HQ6wEjvX
+         wVrEa1saoQzgAR/N6GUC9hadbT9oipyIwwPW7aDt/kjH7pnZuqZlmr5IURs9lIV8z6kj
+         6jSWf0+suTlrX47tfmJFHZKpO6UnJicLa4iQ1zekoKjPQzx+7zJ1fb7lFBZe4WVt7uzx
+         V49Q==
+X-Gm-Message-State: APjAAAXoeMrmK95FfyuU94FID2IpvDbO1fpqoSBhz1WFPKTZ51xx3DII
+        UMLA7vS1NjWXwy3Kf6u1zQP7J8VIL38=
+X-Google-Smtp-Source: APXvYqwY7oR4gKkJp2F88JWCL6jbjM5qJqzfAR7s5WDUijWol9n1ByPQwAP/IzTmTuqAIYZD0QcJRQ==
+X-Received: by 2002:a50:f702:: with SMTP id g2mr5664150edn.261.1565679482759;
+        Mon, 12 Aug 2019 23:58:02 -0700 (PDT)
+Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.gmail.com with ESMTPSA id v6sm17822998ejx.28.2019.08.12.23.58.00
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 12 Aug 2019 23:58:02 -0700 (PDT)
+Subject: Re: Bad file pattern in MAINTAINERS section 'KEYS-TRUSTED'
+To:     linux-kernel@vger.kernel.org
+Cc:     Joe Perches <joe@perches.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        Denis Kenzior <denkenz@gmail.com>, efremov@linux.com
+References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
+ <20190325212705.26837-1-joe@perches.com>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <7152d1c2-14bc-87ae-618b-830a1fa008b0@linux.com>
+Date:   Tue, 13 Aug 2019 09:57:59 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1562166911-27454-1-git-send-email-mirela.rabulea@nxp.com>
+In-Reply-To: <20190325212705.26837-1-joe@perches.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfKBSp+YyPXW+7DMk9aBFy0pAbkzzPAsi80OWEUAttJ0pNr0oFwCLe19GGRqICu69iHTJ6Rim9NoB38fOVA1cVQGJVdfJuEIOC49gnPVKJ+Ytfr7YWTyv
- a73fBFPAOxNprP6X+jYWQfepuaz2NB2sLWQleTcLLh/mBuZTr+aUEoDem5we32EsSfSYET4DpmU0/7nzPEF/Ynp0q6ntbD3bWDtHF/DsMji74t6I3dzqg9iK
- Xjb7anelMkuoo2ds2TMDcbwRBn5R1+ov1ruam0lWQf2bgucAd3233Rs6uCgUOan0ArU6QbDv87aWRlz5cYvEmfusClYQHo7YAj1E/iG9R/iyGFGaKUpUizq3
- 8gaUpfvMVCyoKYtHayHsLcVg5YZiHetssQ3BWUGeF3mLJy3UAEtdl6y/824R+0wKftvzboNIi9eB3e0e9mUct7FkcjOXcAHFMBWITgDNElG0IbsUvZEo+Xkr
- cd9g8iIyLtG+7qgtNvvvEzcMcIdS+VB3idy+Ofxw0dS+Mnc09FvUk+zCoH+dl0oTRM9XEnDevEq1nhgkig663c5KewFpNSTRv1ViuqKv0bOx2U++5eSQnsfH
- 4TsAypLItWAY3V6MCAFbMaU1a3nudAIgeHRPUNY9E79KUHVmm+vvOX4ObXZSyGSabb0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mirela,
+Hi All,
 
-On 7/3/19 5:15 PM, Mirela Rabulea wrote:
-> The added format is V4L2_PIX_FMT_YUV24, this is a packed
-> YUV 4:4:4 format, with 8 bits for each component, 24 bits
-> per sample.
-> 
-> This format is used by the i.MX 8QuadMax and i.MX 8DualXPlus/8QuadXPlus
-> JPEG encoder/decoder.
+Initially, I've prepared a patch and only after found this discussion. So, please,
+look at this patch no more than just a simple reminder that get_maintainers.pl
+still emits this warning.
 
-This patch looks good, but it can only be merged if we also have a driver
-that uses it. This to avoid having lots of pixelformat defines that nobody
-is using in the kernel.
+Thanks,
+Denis
 
-Are there plans to upstream this JPEG en/decoder?
+------------------------ >8 ------------------------
+Subject: [PATCH] MAINTAINERS: keys: Update path to trusted.h
 
-Regards,
+Update MAINTAINERS record to reflect that trusted.h
+was moved to a different directory.
 
-	Hans
+Cc: Denis Kenzior <denkenz@gmail.com>
+Cc: James Bottomley <jejb@linux.ibm.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Mimi Zohar <zohar@linux.ibm.com>
+Cc: linux-integrity@vger.kernel.org
+Fixes: 22447981fc05 ("KEYS: Move trusted.h to include/keys [ver #2]")
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
-> ---
->  Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst | 37 +++++++++++++++++++++-
->  drivers/media/v4l2-core/v4l2-ioctl.c               |  1 +
->  include/uapi/linux/videodev2.h                     |  1 +
->  3 files changed, 38 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst b/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
-> index 41b60fa..5750ff6 100644
-> --- a/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
-> +++ b/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
-> @@ -17,7 +17,8 @@ Description
->  ===========
->  
->  Similar to the packed RGB formats these formats store the Y, Cb and Cr
-> -component of each pixel in one 16 or 32 bit word.
-> +component of each pixel next to each other in memory. They occupy 16, 24 or 32
-> +bits per pixel.
->  
->  
->  .. raw:: latex
-> @@ -157,6 +158,40 @@ component of each pixel in one 16 or 32 bit word.
->  
->        -  :cspan:`15`
->  
-> +    * .. _V4L2-PIX-FMT-YUV24:
-> +
-> +      - ``V4L2_PIX_FMT_YUV24``
-> +      - 'YUV3'
-> +
-> +      - Y'\ :sub:`7`
-> +      - Y'\ :sub:`6`
-> +      - Y'\ :sub:`5`
-> +      - Y'\ :sub:`4`
-> +      - Y'\ :sub:`3`
-> +      - Y'\ :sub:`2`
-> +      - Y'\ :sub:`1`
-> +      - Y'\ :sub:`0`
-> +
-> +      - Cb\ :sub:`7`
-> +      - Cb\ :sub:`6`
-> +      - Cb\ :sub:`5`
-> +      - Cb\ :sub:`4`
-> +      - Cb\ :sub:`3`
-> +      - Cb\ :sub:`2`
-> +      - Cb\ :sub:`1`
-> +      - Cb\ :sub:`0`
-> +
-> +      - Cr\ :sub:`7`
-> +      - Cr\ :sub:`6`
-> +      - Cr\ :sub:`5`
-> +      - Cr\ :sub:`4`
-> +      - Cr\ :sub:`3`
-> +      - Cr\ :sub:`2`
-> +      - Cr\ :sub:`1`
-> +      - Cr\ :sub:`0`
-> +
-> +      -  :cspan:`7`
-> +
->      * .. _V4L2-PIX-FMT-YUV32:
->  
->        - ``V4L2_PIX_FMT_YUV32``
-> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-> index b1f4b99..9bb6579 100644
-> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> @@ -1215,6 +1215,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
->  	case V4L2_PIX_FMT_YUV444:	descr = "16-bit A/XYUV 4-4-4-4"; break;
->  	case V4L2_PIX_FMT_YUV555:	descr = "16-bit A/XYUV 1-5-5-5"; break;
->  	case V4L2_PIX_FMT_YUV565:	descr = "16-bit YUV 5-6-5"; break;
-> +	case V4L2_PIX_FMT_YUV24:	descr = "24-bit YUV 4:4:4 8-8-8"; break;
->  	case V4L2_PIX_FMT_YUV32:	descr = "32-bit A/XYUV 8-8-8-8"; break;
->  	case V4L2_PIX_FMT_AYUV32:	descr = "32-bit AYUV 8-8-8-8"; break;
->  	case V4L2_PIX_FMT_XYUV32:	descr = "32-bit XYUV 8-8-8-8"; break;
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index 9d9705c..752dd33 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -577,6 +577,7 @@ struct v4l2_pix_format {
->  #define V4L2_PIX_FMT_YUV444  v4l2_fourcc('Y', '4', '4', '4') /* 16  xxxxyyyy uuuuvvvv */
->  #define V4L2_PIX_FMT_YUV555  v4l2_fourcc('Y', 'U', 'V', 'O') /* 16  YUV-5-5-5     */
->  #define V4L2_PIX_FMT_YUV565  v4l2_fourcc('Y', 'U', 'V', 'P') /* 16  YUV-5-6-5     */
-> +#define V4L2_PIX_FMT_YUV24   v4l2_fourcc('Y', 'U', 'V', '3') /* 24  YUV-8-8-8     */
->  #define V4L2_PIX_FMT_YUV32   v4l2_fourcc('Y', 'U', 'V', '4') /* 32  YUV-8-8-8-8   */
->  #define V4L2_PIX_FMT_AYUV32  v4l2_fourcc('A', 'Y', 'U', 'V') /* 32  AYUV-8-8-8-8  */
->  #define V4L2_PIX_FMT_XYUV32  v4l2_fourcc('X', 'Y', 'U', 'V') /* 32  XYUV-8-8-8-8  */
-> 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7d213e192626..eeeb4097d5bd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8920,7 +8920,7 @@ S:	Supported
+ F:	Documentation/security/keys/trusted-encrypted.rst
+ F:	include/keys/trusted-type.h
+ F:	security/keys/trusted.c
+-F:	security/keys/trusted.h
++F:	include/keys/trusted.h
+ 
+ KEYS/KEYRINGS:
+ M:	David Howells <dhowells@redhat.com>
+-- 
+2.21.0
+
 
