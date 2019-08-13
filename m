@@ -2,125 +2,99 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C622C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFFDC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F10FE20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:12:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Hh5QxY6o";
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IGJKk4EZ"
+	by mail.kernel.org (Postfix) with ESMTP id E5D3920578
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:12:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565676756;
+	bh=/kbzKCVdF8E3NqOCCP0htEJ8jCfrIzVHyivdMvBxvmU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Eu1b9nh7K6t7pySmSfwiJ6jWHsAhn7nD5d60xej2w+mbDv15HmemYF855hUNBubI1
+	 OuMVMXML9tXjlr41Go3htZkhLkM/RPW0t+zBt9k+QFPi+ZUUHZ0aDtNG16VCkm618v
+	 xNP0wSr2oe7cc3iE3TClIEgPWSc+w9aWAmwHr/Bs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbfHMGMb (ORCPT
+        id S1727918AbfHMGMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 02:12:31 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33392 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727535AbfHMGM3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 02:12:29 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D68sM0010867;
-        Tue, 13 Aug 2019 06:12:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=XQCN31heGj0fx7iiZojr/ruGjvl/p/j3e97NBhsXhJ4=;
- b=Hh5QxY6oi4DhiIPJ94kk53OFSbFbraE7zsVJEFTCxJO8rt8AXjCqA2KTyWyUGjzB6WXA
- zZDJjGk53FDT3N27xLaGM8A4Khycl96/dZJD4n9Ju9zEwmwZDT9Xyp7j2zylN1CavrgX
- lqXzVJzEiSikgYf0SAqrEo5zemw2MaWAI9KwBzfG50SBRMdMTLuNjWSXr0hWy1dEYj8j
- BiIod3M6WAAw0G99ArhzvNHSzWO0B6mvB0v2g0gL6gLHvErMXTAxSg12AqGBXi7Lodj0
- fB+Ai1xgho8B1knHCd3ZI635InhUTgHK/1c8qEOEMVIj1aZ1V32Wfz5adNNTVENhtchg 6A== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2018-07-02;
- bh=XQCN31heGj0fx7iiZojr/ruGjvl/p/j3e97NBhsXhJ4=;
- b=IGJKk4EZ/+fm1qA7ajNbNJKALRXXJIHrIT8J3xdTfeXfqmhdA+5UzIg6P+IyX57b81x7
- 4Y1uZ2Zf45QhdpAqXWGCuEpFUKsRkW/pBFaY19lFPPGDeDRc9AY/kz0OsuepBgBz+jTv
- 1H76K34VkPA5tZHeLTKwRiv8LpgNh8NKbCHTNVjIrC+Fc50F1tsiVO2wf67kvKK4GCTd
- agDuynlJpl6xpbZX5aAb69Ys2ve/cvJhtCd9VOsfatc8ILfpGmxvCSp8WWbbwOQwKR4W
- 32asHbzwRU5Vu2Mt/hwqjlCtjBWKl6adJ/XeaSDoZyOFF7ROKsii88U1Xde9xRvMOH1k JA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2u9nbtc171-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 06:12:05 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D68auX050030;
-        Tue, 13 Aug 2019 06:12:05 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2u9k1w4239-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 06:12:04 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7D6C3Hg026964;
-        Tue, 13 Aug 2019 06:12:03 GMT
-Received: from abi.no.oracle.com (/10.172.144.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 12 Aug 2019 23:12:03 -0700
-From:   Knut Omang <knut.omang@oracle.com>
-To:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Shuah Khan <shuah@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shreyans Devendra Doshi <0xinfosect0r@gmail.com>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Hidenori Yamaji <hidenori.yamaji@sony.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Timothy Bird <Tim.Bird@sony.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Daniel Vetter <daniel@ffwll.ch>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Knut Omang <knut.omang@oracle.com>
-Subject: [RFC 19/19] Documentation/dev-tools: Add index entry for KTF documentation
-Date:   Tue, 13 Aug 2019 08:09:34 +0200
-Message-Id: <a4367b69bbfde842ca5bda21a5b07b601a703df0.1565676440.git-series.knut.omang@oracle.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
-References: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
+        Tue, 13 Aug 2019 02:12:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727535AbfHMGMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 02:12:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC29F20578;
+        Tue, 13 Aug 2019 06:12:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565676751;
+        bh=/kbzKCVdF8E3NqOCCP0htEJ8jCfrIzVHyivdMvBxvmU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ewe0rDIidQfm/k0kUS7CSsSV8o7j4yMDGNjgP2k5B5AeMGbDkaj65jxLRrImt+s7K
+         D1j5vhbylkyhVr5gZVr+CgVw01TBjtxrJdJS9w02J8XAbga8uxk5oJyzgkER6uo9pg
+         3kbPYKxp1OGOs9TSQXRgeTmQK5G9wdxuK2eF7nm8=
+Date:   Tue, 13 Aug 2019 08:12:28 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Morris Ku <morris_ku@sunix.com>,
+        Debbie Liu <debbie_liu@sunix.com>
+Subject: Re: [PATCH v2 1/2] serial: 8250_pci: Add support for Sunix serial
+ boards
+Message-ID: <20190813061228.GH6670@kroah.com>
+References: <20190809190130.30773-1-kai.heng.feng@canonical.com>
+ <CAHp75VeGs8K+da+4CaqNjm_ci86KoLcmhY8GaJO7jm__J0TcSQ@mail.gmail.com>
+ <93860D98-9CB7-4D3D-8917-E15591BD1EC4@canonical.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908130067
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908130067
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <93860D98-9CB7-4D3D-8917-E15591BD1EC4@canonical.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Knut Omang <knut.omang@oracle.com>
----
- Documentation/dev-tools/index.rst | 1 +
- 1 file changed, 1 insertion(+)
+On Tue, Aug 13, 2019 at 12:36:40PM +0800, Kai-Heng Feng wrote:
+> Hi Andy,
+> 
+> at 21:18, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> 
+> > On Fri, Aug 9, 2019 at 10:05 PM Kai-Heng Feng
+> > <kai.heng.feng@canonical.com> wrote:
+> > > Add support to Sunix serial boards with up to 16 ports.
+> > > 
+> > > Sunix board need its own setup callback instead of using Timedia's, to
+> > > properly support more than 4 ports.
+> > 
+> > Can you, please, split out the Sunix quirk driver to a separate module
+> > (see examples like: 8250_exar, 8250_lpss, 8250_mid)?
+> > And then with a fewer LOCs add a new boards.
+> 
+> Greg asked Sunix to use existing 8250_pci.c instead of its own module.
+> It only needs a special setup function, other parts are just 8250_pci.
 
-diff --git a/Documentation/dev-tools/index.rst b/Documentation/dev-tools/index.rst
-index b0522a4..f155205 100644
---- a/Documentation/dev-tools/index.rst
-+++ b/Documentation/dev-tools/index.rst
-@@ -24,6 +24,7 @@ whole; patches welcome!
-    gdb-kernel-debugging
-    kgdb
-    kselftest
-+   ktf/index
- 
- 
- .. only::  subproject and html
--- 
-git-series 0.9.1
+Agreed.  And this patch is already in my tree :)
+
+If people really worry about size issues, start carving this up by
+different configuration options, or yes, split it up into tiny modules
+(but note the overhead there when things get too tiny, it's a
+diminishing return).
+
+> Why does split them a better idea? I even think of squashing 8250_moxa into
+> 8250_pci.
+
+I would agree with you, I bet you save space if you do that.
+
+thanks,
+
+greg k-h
