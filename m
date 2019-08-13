@@ -2,99 +2,82 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE83BC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDB4C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F91220665
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:46:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XbX84biY"
+	by mail.kernel.org (Postfix) with ESMTP id 43DD820665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:51:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfHMUqk (ORCPT
+        id S1726463AbfHMUvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 16:46:40 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44854 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbfHMUqk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 16:46:40 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c81so3260268pfc.11
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 13:46:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lS7QbCBfWDAKJJ9AaXuhhnNJr4mtIGuJ160cegSICyM=;
-        b=XbX84biYjSyDgS6LxVzDQYkOcojz78WOlfZYnpj3lki92gGfubayTt/V04/ES1ESh4
-         5uieAy8/ybLD3n3wn8crXsm7826/o7NSknPmLlhmX9p+0FMDH8FnH3gjqF/T9l3XIcLo
-         XMWSGcF8jlWJ05xs7S21a08YMT1zxM1DYaoSI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lS7QbCBfWDAKJJ9AaXuhhnNJr4mtIGuJ160cegSICyM=;
-        b=ZP5ePgJ8CJR2lHuss5W54SPIwCqd/rvmrhAR/K/FHFuMdVpUXJrlgpk031qymRvuHQ
-         E2cAQazyRU7uHME0Dpmb6Mhun9goXF74UFRKtVh2XK5Ivfw3ZmT1mJMYDdGMFFjCCP6N
-         BObMqiNE7tdPokWPpOMgr0JtyhV8NbHj0rT8+lKq00GbNhKdS3pQu74ibSqTuEywXtsb
-         a2ZR1DOjSjBlLCJ0qhXUauJkofy19K7wSjgHQ9C4FfewxKwXaBQNMRMSrXSOuYwlDZZH
-         sFxP4gp0GA95ZTZSk+YoY8IK/3jD4lpI13d2mPvL+h8ykYo55MGqG0NHVFGopGKCO/4L
-         GizQ==
-X-Gm-Message-State: APjAAAUm2r4vZJuAwDApgRe+cPGoiJB7Kq6NRbvmsSkLmwURo6V4r/M9
-        T/cTlTArqzj/EKMuOIYnovU0DQ==
-X-Google-Smtp-Source: APXvYqyZj8SFNh8W8z2W8pR3iGEVcZWS7eycNEWabRA94Sd257PTZI0RRr7/3l/UmxBxc/RfktxIOg==
-X-Received: by 2002:a62:38d7:: with SMTP id f206mr18947803pfa.102.1565729199815;
-        Tue, 13 Aug 2019 13:46:39 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id e188sm70041869pfa.76.2019.08.13.13.46.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 13 Aug 2019 13:46:38 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 13:46:34 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v6 4/4] net: phy: realtek: Add LED configuration support
- for RTL8211E
-Message-ID: <20190813204634.GR250418@google.com>
-References: <20190813191147.19936-1-mka@chromium.org>
- <20190813191147.19936-5-mka@chromium.org>
- <20190813201411.GL15047@lunn.ch>
+        Tue, 13 Aug 2019 16:51:08 -0400
+Received: from gofer.mess.org ([88.97.38.141]:33375 "EHLO gofer.mess.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbfHMUvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 16:51:08 -0400
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id 6D880603E8; Tue, 13 Aug 2019 21:51:05 +0100 (BST)
+Date:   Tue, 13 Aug 2019 21:51:05 +0100
+From:   Sean Young <sean@mess.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     syzbot <syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com>,
+        bnvandana@gmail.com, allison@lohutok.net, hverkuil-cisco@xs4all.nl,
+        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        rfontana@redhat.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>, tskd08@gmail.com
+Subject: Re: KASAN: global-out-of-bounds Read in dvb_pll_attach
+Message-ID: <20190813205104.pnyan3kafz26wsse@gofer.mess.org>
+References: <CAAeHK+zPDgvDr_Bao9dz_7hGEg+Ud6-tj7pZaihKeYHJ8M386Q@mail.gmail.com>
+ <00000000000054f8bd058ddfa341@google.com>
+ <CAAeHK+xZRH9-ue0QyEdiWmbFJF6P3RXMud+tE6t3x6Orcxnbkg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190813201411.GL15047@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAAeHK+xZRH9-ue0QyEdiWmbFJF6P3RXMud+tE6t3x6Orcxnbkg@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 10:14:11PM +0200, Andrew Lunn wrote:
-> > +static int rtl8211e_config_led(struct phy_device *phydev, int led,
-> > +			       struct phy_led_config *cfg)
-> > +{
-> > +	u16 lacr_bits = 0, lcr_bits = 0;
-> > +	int oldpage, ret;
-> > +
+On Tue, Aug 13, 2019 at 03:22:49PM +0200, Andrey Konovalov wrote:
+> On Wed, Jul 17, 2019 at 2:29 PM syzbot
+> <syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com> wrote:
+> >
+> > Hello,
+> >
+> > syzbot has tested the proposed patch and the reproducer did not trigger
+> > crash:
+> >
+> > Reported-and-tested-by:
+> > syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com
+> >
+> > Tested on:
+> >
+> > commit:         6a3599ce usb-fuzzer: main usb gadget fuzzer driver
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=d90745bdf884fc0a
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > patch:          https://syzkaller.appspot.com/x/patch.diff?x=1454f4d0600000
+> >
+> > Note: testing is done by a robot and is best-effort only.
 > 
-> You should probably check that led is 0 or 1. 
+> Hi bnvandana,
+> 
+> Could you submit this patch? Syzbot testing shows that is fixes the issue.
 
-Actually this PHY has up to 3 LEDs, but yes, good point to validate
-the parameter. I'll wait a day or two for if there is other feedback
-and send a new version with the check.
+The patch had issues (see discussion in the thread). I created this patch
+but I see now I did not include the correct Reported-by: tag. 
 
-> Otherwise this looks good.
+https://www.mail-archive.com/linux-media@vger.kernel.org/msg148889.html
 
-Thanks for the reviews!
+Thanks
 
-Matthias
+Sean
