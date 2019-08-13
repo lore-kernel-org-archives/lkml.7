@@ -2,180 +2,232 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 662A6C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF41C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 320A7206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE639206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:58:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="hOaQ4PJW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VjqAe7ju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbfHMM4G (ORCPT
+        id S1728668AbfHMM6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 08:56:06 -0400
-Received: from mail-eopbgr730102.outbound.protection.outlook.com ([40.107.73.102]:31442
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726974AbfHMM4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 08:56:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Am+c/gGP2fulvVgpcNsvWqovEhV+aylpN8tMMvOm4y8xXC9bgga4uuJ7s4/XF59lUObJ7s+jqw855D2DfIlD+QxsfbyVtMac4IfyXLY/6R6RBUPbJXGm7XXvqFFDJKVFCcPsIH36g9Nxq4qmsTz9ctXLAmitji0AeDixYL17K6zRgXnMycctxAXuci9ZaTf3qlzSYyQ/MRGL/vmE9BiMFbNarXe8Z6tijhJZpYUci4Gnwbx2C8cFi/iUlG5oHdoaNq6zZHh01B4txXl3rIxks7xrGiXJQiXETuJpCfFj9bHETIMU8YI8NC2RPKux6d2IzBS5yPvNjkgLMCHfGSEePA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZIk0+13FJj+qtW5UGblWzQexpt38toni0ecJfqUfnyE=;
- b=hQ+OapxZQbGqVnq52Qm+uH6Z1JmHC+VbEJhonceoTdCcTl0v/NTSE4cn7wo0PHhSEFWH5GvwaqsHEfDaLIE3MCSDEYOq8yNbrhsw4k8yUCvDGCYjhbVWzELFVdcgGj5f5GwHZ4FprlbpljcCYofDUCf1T5WfFzAMueK24N25lIzzFHR5pzuyKhYezbwhu2HxaATf7MEwmhYl/ltkQ254eTZhm0uDQwtxf7sOYHTLtW2gMTSP53hxZWsRk0knig67ebQQBrEsDTNSu6wYCILlq4Wiqex7pj2fekkLXMik72REJTE5HoQNKp/WOddRU3GRHhMKmof4IjbrNnRpD5fLyA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZIk0+13FJj+qtW5UGblWzQexpt38toni0ecJfqUfnyE=;
- b=hOaQ4PJWayGz5Li/5yIbvyHBx954cR5JkrD/1AaJLwRsFwru4AEobyeTswcR61tsdG6s92x+wNhTD4LxkSE3W3Xyh7GuV55U6D9vpyZ8afjsBrAbtIhUFy0YYY2v6H/aKE82NdvwSagdoOAhdKzG+JwE5zntFe8d69dRPtvevo0=
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
- DM6PR21MB1355.namprd21.prod.outlook.com (20.179.53.86) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.10; Tue, 13 Aug 2019 12:56:00 +0000
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::257a:6f7f:1126:a61d]) by DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::257a:6f7f:1126:a61d%6]) with mapi id 15.20.2178.006; Tue, 13 Aug 2019
- 12:56:00 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "sashal@kernel.org" <sashal@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Thread-Topic: [PATCH v3] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Thread-Index: AQHVUTqte27Lajt/EEyKPTfwyVUoz6b43UWAgAAqP0A=
-Date:   Tue, 13 Aug 2019 12:55:59 +0000
-Message-ID: <DM6PR21MB1337D4F34CAA49BE369FB793CAD20@DM6PR21MB1337.namprd21.prod.outlook.com>
-References: <1565634013-19404-1-git-send-email-haiyangz@microsoft.com>
- <20190813101417.GA14977@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190813101417.GA14977@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-13T12:55:58.1733042Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=aac06c14-720d-4d87-ab8a-42247b19e931;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [96.61.92.94]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0b7ce7f3-357c-4c35-6de7-08d71fed972b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600158)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR21MB1355;
-x-ms-traffictypediagnostic: DM6PR21MB1355:|DM6PR21MB1355:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB1355DB8D3BDDD5394C37922DCAD20@DM6PR21MB1355.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01283822F8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(346002)(376002)(366004)(39860400002)(136003)(199004)(189003)(13464003)(10090500001)(478600001)(74316002)(53546011)(8990500004)(102836004)(81166006)(5660300002)(305945005)(81156014)(2906002)(6916009)(8936002)(66066001)(316002)(7736002)(6116002)(53936002)(33656002)(4326008)(3846002)(6246003)(22452003)(99286004)(54906003)(229853002)(6436002)(446003)(26005)(7696005)(25786009)(76176011)(6506007)(14454004)(9686003)(71190400001)(11346002)(8676002)(186003)(10290500003)(64756008)(66946007)(14444005)(52536014)(66476007)(66556008)(71200400001)(86362001)(476003)(66446008)(76116006)(256004)(55016002)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1355;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: EKSJjfBT2J8vJwx1uk1mxj/EvLioj1rUcF0CXiCGKOgVRbVOyp6uAyyyM1g/4lszxBaV4lgC4Js8377/FD5BtzXzsjhd9QAYKgI7iodwSZ3oU9xh3lUafqT1Z158iHKoYVpsSZanUweO4YOx3bxG5nyurDLorJnWNu0BuCK86qZhFzgB2La4JMXFa6jRkHXLciM6OR0c9HBUwVADeQfaxY9xzRyRLFPFwlv5XD4Wziuej0WQQIUERPpN9MYphJi8pomg/zIGa6PIm3hRRnpPr1xyVe3fwXkxanCOzyb8YIIDI3pHBY9p/oi75Qh0WuAUlxuav2kVECXMP4ybeVVM20YGdk9hMjN08daS2FDQ9QbK4DVmcW90C4pjMuW0nUUX+AXBuxIdU5cEEyZT4JjKXTQcUdUIbx+Y4wEiKU2qwkU=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 13 Aug 2019 08:58:08 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39372 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726993AbfHMM6I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 08:58:08 -0400
+Received: by mail-pf1-f196.google.com with SMTP id f17so47578402pfn.6
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 05:58:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YBEH/E97fNGfHJMCO2A7/uKFykWwKRyVI2RJK9a4N8g=;
+        b=VjqAe7jutL5njaRfO+Wh+Nu6P7WlyzERhmESxSBCtNfnmdtFWG2qbGwHmnNYfXwwbj
+         GkHeeISWvtZM57lU/hboyIuuvFyD5lnUqRGMKDdFrijrgwN1MfCbmUGJvQUNjVcONwbe
+         lGZjCMcUB2XETyvSJlawxriYNCGSls+O3AuMePSFZRgVnt4p2ltcvDR98wDKJXLvA8QW
+         xoobjHZViMIhE9/Nw3GCUD77o51Gg9K45UcpL2pg/1kULd29HaVthSTlPaZ14A2ZG+hc
+         kJrGpZ5eHEoGD6yyqsYK63khiDAmNPlHESfSLSMfnRMPtsO/pwJmQiZzLhYXD02/qzSi
+         5O/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YBEH/E97fNGfHJMCO2A7/uKFykWwKRyVI2RJK9a4N8g=;
+        b=WIkweRuYqnJBWPZvCmzwyqJzsZvUYGJcl3n2C2PzL8AZj5fVhoivlGJY02sqC1hDJ1
+         EyhZa+JNANJlIFlyYo3UvEkf8vjhzSzBObDvssrYlrmGZIxL4QENYWmPhu++258DbzBz
+         Kgy3K4VMhE3Q6Z44kzWoAi5DcFbrvt4S7khvbq1C9nktDlFG3T3aG7gTJSl5iIzlD826
+         tbo8+r0sZLQYjCjIq+ha4+GeigWD6VOVJBwE+VvUeLQdBrenQbylS/yxPdJBBzk3g577
+         KItWZ8QJUyeUhJ7xg2yu9f/pk9w7s2YxGrHAXD6SNTz0uZcDGeTfSCkS9Jgk0SwQvPdt
+         2QLw==
+X-Gm-Message-State: APjAAAV5O8UGEuOxPbIkBV5pGRkNPiGt8asbxUsmLPWMqgl9xJ8C5+hP
+        aaz7BPJPj2USe+3g1Kj0hR5xdGUNbH5nq3k/UhW0Dw==
+X-Google-Smtp-Source: APXvYqwLtm1uxulszoiL7gzwupbV95XZnfff9kPhEO11tTZQgbh62YWT8bxYt7nJHURgtDnDwEV0EvqXuKHcBWoP510=
+X-Received: by 2002:a65:4b8b:: with SMTP id t11mr34217049pgq.130.1565701087156;
+ Tue, 13 Aug 2019 05:58:07 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b7ce7f3-357c-4c35-6de7-08d71fed972b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2019 12:55:59.8895
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7SO6jj6BsEbs8uw2EkHkpGQAZ26tu9PyyARzEYf0KW9d0/pimtunNrDr7ZItpG/ouTC325H54PfxBFaJspZPlw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1355
+References: <000000000000f7047d058a69d653@google.com>
+In-Reply-To: <000000000000f7047d058a69d653@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 13 Aug 2019 14:57:56 +0200
+Message-ID: <CAAeHK+zZbH26TLdgYo_84gwqo29+yeZ-HciPbYhrnYA1nzAA=A@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Write in v4l2_prio_close
+To:     syzbot <syzbot+a6566701042e6e3e4ed1@syzkaller.appspotmail.com>
+Cc:     ezequiel@collabora.com, Hans Verkuil <hans.verkuil@cisco.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        niklas.soderlund+renesas@ragnatech.se,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        tfiga@chromium.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 3, 2019 at 1:41 PM syzbot
+<syzbot+a6566701042e6e3e4ed1@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    69bbe8c7 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=142ef636a00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=193d8457178b3229
+> dashboard link: https://syzkaller.appspot.com/bug?extid=a6566701042e6e3e4ed1
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>
+> Unfortunately, I don't have any reproducer for this crash yet.
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+a6566701042e6e3e4ed1@syzkaller.appspotmail.com
+>
+> ==================================================================
+> BUG: KASAN: use-after-free in atomic_dec
+> include/asm-generic/atomic-instrumented.h:329 [inline]
+> BUG: KASAN: use-after-free in v4l2_prio_close+0x45/0x60
+> drivers/media/v4l2-core/v4l2-dev.c:285
+> Write of size 4 at addr ffff8881d4d21890 by task v4l_id/3238
+>
+> CPU: 1 PID: 3238 Comm: v4l_id Not tainted 5.2.0-rc1+ #10
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xca/0x13e lib/dump_stack.c:113
+>   print_address_description+0x67/0x231 mm/kasan/report.c:188
+>   __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
+>   kasan_report+0xe/0x20 mm/kasan/common.c:614
+>   atomic_dec include/asm-generic/atomic-instrumented.h:329 [inline]
+>   v4l2_prio_close+0x45/0x60 drivers/media/v4l2-core/v4l2-dev.c:285
+>   v4l2_fh_release+0x41/0x70 drivers/media/v4l2-core/v4l2-fh.c:104
+>   v4l2_release+0x2e7/0x390 drivers/media/v4l2-core/v4l2-dev.c:459
+>   __fput+0x2d7/0x790 fs/file_table.c:279
+>   task_work_run+0x13f/0x1c0 kernel/task_work.c:113
+>   tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+>   exit_to_usermode_loop+0x1c5/0x1f0 arch/x86/entry/common.c:168
+>   prepare_exit_to_usermode arch/x86/entry/common.c:199 [inline]
+>   syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
+>   do_syscall_64+0x43f/0x560 arch/x86/entry/common.c:304
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x7f5bcbde22b0
+> Code: 40 75 0b 31 c0 48 83 c4 08 e9 0c ff ff ff 48 8d 3d c5 32 08 00 e8 c0
+> 07 02 00 83 3d 45 a3 2b 00 00 75 10 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff
+> ff 73 31 c3 48 83 ec 08 e8 ce 8a 01 00 48 89 04 24
+> RSP: 002b:00007ffd54ae7938 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+> RAX: 0000000000000000 RBX: 0000000000000003 RCX: 00007f5bcbde22b0
+> RDX: 0000000000000013 RSI: 0000000080685600 RDI: 0000000000000003
+> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000400884
+> R13: 00007ffd54ae7a90 R14: 0000000000000000 R15: 0000000000000000
+>
+> Allocated by task 2762:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:71
+>   set_track mm/kasan/common.c:79 [inline]
+>   __kasan_kmalloc mm/kasan/common.c:489 [inline]
+>   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:462
+>   slab_post_alloc_hook mm/slab.h:437 [inline]
+>   slab_alloc_node mm/slub.c:2748 [inline]
+>   __kmalloc_node_track_caller+0xee/0x370 mm/slub.c:4363
+>   alloc_dr drivers/base/devres.c:103 [inline]
+>   devm_kmalloc+0x87/0x190 drivers/base/devres.c:793
+>   devm_kzalloc include/linux/device.h:679 [inline]
+>   usb_raremono_probe+0x2f/0x231 drivers/media/radio/radio-raremono.c:298
+>   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+>   really_probe+0x281/0x660 drivers/base/dd.c:509
+>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2111
+>   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+>   really_probe+0x281/0x660 drivers/base/dd.c:509
+>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2111
+>   usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
+>   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+>   port_event drivers/usb/core/hub.c:5350 [inline]
+>   hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
+>   process_one_work+0x905/0x1570 kernel/workqueue.c:2268
+>   process_scheduled_works kernel/workqueue.c:2330 [inline]
+>   worker_thread+0x7ab/0xe20 kernel/workqueue.c:2416
+>   kthread+0x30b/0x410 kernel/kthread.c:254
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> Freed by task 2762:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:71
+>   set_track mm/kasan/common.c:79 [inline]
+>   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:451
+>   slab_free_hook mm/slub.c:1421 [inline]
+>   slab_free_freelist_hook mm/slub.c:1448 [inline]
+>   slab_free mm/slub.c:2994 [inline]
+>   kfree+0xd7/0x280 mm/slub.c:3949
+>   release_nodes+0x4a1/0x910 drivers/base/devres.c:508
+>   devres_release_all+0x74/0xc3 drivers/base/devres.c:529
+>   __device_release_driver drivers/base/dd.c:1085 [inline]
+>   device_release_driver_internal+0x21b/0x4c0 drivers/base/dd.c:1112
+>   bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
+>   device_del+0x460/0xb80 drivers/base/core.c:2274
+>   usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+>   usb_disconnect+0x284/0x830 drivers/usb/core/hub.c:2197
+>   hub_port_connect drivers/usb/core/hub.c:4940 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+>   port_event drivers/usb/core/hub.c:5350 [inline]
+>   hub_event+0x1409/0x3590 drivers/usb/core/hub.c:5432
+>   process_one_work+0x905/0x1570 kernel/workqueue.c:2268
+>   process_scheduled_works kernel/workqueue.c:2330 [inline]
+>   worker_thread+0x7ab/0xe20 kernel/workqueue.c:2416
+>   kthread+0x30b/0x410 kernel/kthread.c:254
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> The buggy address belongs to the object at ffff8881d4d21100
+>   which belongs to the cache kmalloc-4k of size 4096
+> The buggy address is located 1936 bytes inside of
+>   4096-byte region [ffff8881d4d21100, ffff8881d4d22100)
+> The buggy address belongs to the page:
+> page:ffffea0007534800 refcount:1 mapcount:0 mapping:ffff8881dac02600
+> index:0x0 compound_mapcount: 0
+> flags: 0x200000000010200(slab|head)
+> raw: 0200000000010200 dead000000000100 dead000000000200 ffff8881dac02600
+> raw: 0000000000000000 0000000000070007 00000001ffffffff 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>   ffff8881d4d21780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   ffff8881d4d21800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> > ffff8881d4d21880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                           ^
+>   ffff8881d4d21900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   ffff8881d4d21980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ==================================================================
 
+#syz dup: KASAN: use-after-free Read in v4l2_ioctl
 
-> -----Original Message-----
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Sent: Tuesday, August 13, 2019 6:14 AM
-> To: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: sashal@kernel.org; bhelgaas@google.com; linux-
-> hyperv@vger.kernel.org; linux-pci@vger.kernel.org; KY Srinivasan
-> <kys@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> olaf@aepfle.de; vkuznets <vkuznets@redhat.com>; linux-
-> kernel@vger.kernel.org
-> Subject: Re: [PATCH v3] PCI: hv: Detect and fix Hyper-V PCI domain number
-> collision
->=20
-> On Mon, Aug 12, 2019 at 06:20:53PM +0000, Haiyang Zhang wrote:
-> > Currently in Azure cloud, for passthrough devices including GPU, the ho=
-st
-> > sets the device instance ID's bytes 8 - 15 to a value derived from the =
-host
-> > HWID, which is the same on all devices in a VM. So, the device instance
-> > ID's bytes 8 and 9 provided by the host are no longer unique. This can
-> > cause device passthrough to VMs to fail because the bytes 8 and 9 are u=
-sed
-> > as PCI domain number. Collision of domain numbers will cause the second
-> > device with the same domain number fail to load.
-> >
-> > As recommended by Azure host team, the bytes 4, 5 have more uniqueness
-> > (info entropy) than bytes 8, 9. So now we use bytes 4, 5 as the PCI dom=
-ain
-> > numbers. On older hosts, bytes 4, 5 can also be used -- no backward
-> > compatibility issues here. The chance of collision is greatly reduced. =
-In
-> > the rare cases of collision, we will detect and find another number tha=
-t is
-> > not in use.
->=20
-> I have not explained what I meant correctly. This patch fixes an
-> issue and the "find another number" fallback can be also applied
-> to the current kernel without changing the bytes you use for
-> domain numbers.
->=20
-> This patch would leave old kernels susceptible to breakage.
->=20
-> Again, I have no Azure knowledge but it seems better to me to
-> add a fallback "find another number" allocation on top of mainline
-> and send it to stable kernels. Then we can add another patch to
-> change the bytes you use to reduce the number of collision.
->=20
-> Please let me know what you think, thanks.
-
-Thanks for your clarification.
-Actually, I hope the stable kernel will be patched to use bytes 4,5 too,
-because host provided numbers are persistent across reboots, we like
-to use them if possible.
-
-I think we can either --
-1) Apply this patch for mainline and stable kernels as well.
-2) Or, break this patch into two patches, and apply both of them for=20
-Mainline and stable kernels.
-
-Which way do you prefer?
-
-Thanks,
-- Haiyang
-
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
