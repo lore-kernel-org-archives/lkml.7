@@ -2,291 +2,182 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64564C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43777C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9D32067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 190C220840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:12:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="O9DrD3EH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PaRWVR3e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbfHMUMH (ORCPT
+        id S1727057AbfHMUM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 16:12:07 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:4377 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726770AbfHMULj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 16:11:39 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 467P4S3fLBz9v0CL;
-        Tue, 13 Aug 2019 22:11:36 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=O9DrD3EH; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id l6iNqXAQgTJL; Tue, 13 Aug 2019 22:11:36 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 467P4S2RdZz9v05l;
-        Tue, 13 Aug 2019 22:11:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1565727096; bh=Lcen1LNdA7+NgKMAunfBllg/nD1eaeDdJLKprC+pjIE=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=O9DrD3EHLCuvergN7OHcHWGxqBU9+q7K9xfOzD3B85bGsDZ5cr9DWN4+KxA86f0QS
-         kLhQ/GUOcqcj2fMw5fNCjiFPmc2t39/hRj+d7hDsuNtw4WyBmpZn7Q1S+Zi3HKNho2
-         tDgKlF4QkQVB7JpdT/3rYjJwbfoWoKTxAabRwGlU=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7D5E78B7F2;
-        Tue, 13 Aug 2019 22:11:36 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id brcuPcWHgM2M; Tue, 13 Aug 2019 22:11:36 +0200 (CEST)
-Received: from pc17473vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 211E38B7F0;
-        Tue, 13 Aug 2019 22:11:36 +0200 (CEST)
-Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id EE3D769632; Tue, 13 Aug 2019 20:11:35 +0000 (UTC)
-Message-Id: <baa13cb4e4940a406ff31577b9b073410ba7d24f.1565726867.git.christophe.leroy@c-s.fr>
-In-Reply-To: <6bc35eca507359075528bc0e55938bc1ce8ee485.1565726867.git.christophe.leroy@c-s.fr>
-References: <6bc35eca507359075528bc0e55938bc1ce8ee485.1565726867.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v1 03/10] powerpc/mm: move common 32/64 bits ioremap functions
- into ioremap.c
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 13 Aug 2019 20:11:35 +0000 (UTC)
+        Tue, 13 Aug 2019 16:12:56 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33344 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfHMUM4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 16:12:56 -0400
+Received: by mail-qk1-f194.google.com with SMTP id r6so80783508qkc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 13:12:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3lqf1BvRkrT0zFoMbdtExl8EI7GsnY3Mh1uu1vtSvfE=;
+        b=PaRWVR3er7psEDVsOhRlEoF2QZxAWb5s5r09Y9Y2D3p6C5+NPwM/XkzbD90RUEphLI
+         +Syn0GpMuCP0e0TN8DzZF3M0qmT10UKIkF7EBPHpVoZSNw4Cc0zogjYfN25CuTyeL3Jw
+         AClxM8m+Ygb0KlbUKWQtvAvKT/uEZAqndaE7aMuVXuKQ/tH9StsaN5Yn/ssDTkHPDwni
+         ne0yGHx8Wtp4S+FiahuEd09kqdMqWt2SS5umyL5a3BEYTp7KhrR7JFHdgVkYCerJdOvU
+         DRmdFGNJPTW+6eJmRO21zU8ONhPl1PEKDesxLD779RIybT9NkvjLlK5DXv2S//RbgyYJ
+         ylBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3lqf1BvRkrT0zFoMbdtExl8EI7GsnY3Mh1uu1vtSvfE=;
+        b=iA7i90TGZiYQvl+yjyfmxGbLUODGA/jXO6/uQDQ9TAhegbHkPHBjVGLBzMuB3srvPH
+         vRLJdjJGcN7TN9gbFSpz/Xbp1xzCxh71aRtx9qUQ+B7A+bN9qSyOWHSl1/L5yh4hW2hU
+         +KAy+9QWKdjbTmDrGw6VOzMnIPX95JVxSdtuXyH1pEk1LYllBdQCkhxIPOVfLiJjGWOW
+         Qjhmtodhetu2uhV+cjydeFH2DfZmBrSUT8/nU6Zko9xO6CmvR3LHnltTzHfBoHV6cRG4
+         qNywNiIukF3ju3VVOCVvSuTXog3pPrIRS5Q8cWuDRh/hWl/V0PJgXmp6SqJyEKKNotQF
+         VoIQ==
+X-Gm-Message-State: APjAAAWRBQmXNdy3kc54h5fdEGfijytrNQjRpWz7PnjIwnapnSy34ePt
+        gNfCqG+/p4uRI9o4vhQa2dV4S5YdNZuL69efFBBggA==
+X-Google-Smtp-Source: APXvYqyV/U0/+1MmPT+TGcVVYBP8Z8kW3m0SU/rhcx34vlDtB4WZg+oKZevkLnpngK5MGs7yUagnSRz+9Q5MEL08rU8=
+X-Received: by 2002:ae9:ec06:: with SMTP id h6mr12020396qkg.221.1565727174451;
+ Tue, 13 Aug 2019 13:12:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190613211228.34092-1-nhuck@google.com> <fd8b8a48-dfb7-1478-2d8d-0953acee39d3@linaro.org>
+In-Reply-To: <fd8b8a48-dfb7-1478-2d8d-0953acee39d3@linaro.org>
+From:   Nathan Huckleberry <nhuck@google.com>
+Date:   Tue, 13 Aug 2019 13:12:43 -0700
+Message-ID: <CAJkfWY6U3RF=2X4geFsUhFADf9x0GO8s28KQmR7TvnVgo_WTig@mail.gmail.com>
+Subject: Re: [PATCH] thermal: rcar_gen3_thermal: Fix Wshift-negative-value
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Yoshihiro Kaneko <ykaneko0929@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ioremap(), __ioremap(), ioremap_wc() and ioremap_coherent() are
-now identical on PPC32 and PPC64 as iowa_is_active() will always
-return false on PPC32. Move them into a new common location called
-ioremap.c
+I'm not familiar enough with the code to rewrite these parts of the
+driver. Silencing the warnings while maintaining the same
+functionality was the goal of this patch.
 
-Allthough ioremap_wt() only exists on PPC32, move it into ioremap.c
-as well. As it is the only one specific to PPC32, it is not worth
-creating an ioremap_32.c file and leaving it in pgtable_32.c would
-make it the only ioremap function in that file at the end of the
-series.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/mm/Makefile     |  2 +-
- arch/powerpc/mm/ioremap.c    | 52 ++++++++++++++++++++++++++++++++++++++++++++
- arch/powerpc/mm/pgtable_32.c | 43 ------------------------------------
- arch/powerpc/mm/pgtable_64.c | 39 ---------------------------------
- 4 files changed, 53 insertions(+), 83 deletions(-)
- create mode 100644 arch/powerpc/mm/ioremap.c
-
-diff --git a/arch/powerpc/mm/Makefile b/arch/powerpc/mm/Makefile
-index 0f499db315d6..29c682fe9144 100644
---- a/arch/powerpc/mm/Makefile
-+++ b/arch/powerpc/mm/Makefile
-@@ -7,7 +7,7 @@ ccflags-$(CONFIG_PPC64)	:= $(NO_MINIMAL_TOC)
- 
- obj-y				:= fault.o mem.o pgtable.o mmap.o \
- 				   init_$(BITS).o pgtable_$(BITS).o \
--				   pgtable-frag.o \
-+				   pgtable-frag.o ioremap.o \
- 				   init-common.o mmu_context.o drmem.o
- obj-$(CONFIG_PPC_MMU_NOHASH)	+= nohash/
- obj-$(CONFIG_PPC_BOOK3S_32)	+= book3s32/
-diff --git a/arch/powerpc/mm/ioremap.c b/arch/powerpc/mm/ioremap.c
-new file mode 100644
-index 000000000000..89479ee88344
---- /dev/null
-+++ b/arch/powerpc/mm/ioremap.c
-@@ -0,0 +1,52 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#include <linux/io.h>
-+#include <asm/io-workarounds.h>
-+
-+void __iomem *__ioremap(phys_addr_t addr, unsigned long size, unsigned long flags)
-+{
-+	return __ioremap_caller(addr, size, __pgprot(flags), __builtin_return_address(0));
-+}
-+EXPORT_SYMBOL(__ioremap);
-+
-+void __iomem *ioremap(phys_addr_t addr, unsigned long size)
-+{
-+	pgprot_t prot = pgprot_noncached(PAGE_KERNEL);
-+	void *caller = __builtin_return_address(0);
-+
-+	if (iowa_is_active())
-+		return iowa_ioremap(addr, size, prot, caller);
-+	return __ioremap_caller(addr, size, prot, caller);
-+}
-+EXPORT_SYMBOL(ioremap);
-+
-+void __iomem *ioremap_wc(phys_addr_t addr, unsigned long size)
-+{
-+	pgprot_t prot = pgprot_noncached_wc(PAGE_KERNEL);
-+	void *caller = __builtin_return_address(0);
-+
-+	if (iowa_is_active())
-+		return iowa_ioremap(addr, size, prot, caller);
-+	return __ioremap_caller(addr, size, prot, caller);
-+}
-+EXPORT_SYMBOL(ioremap_wc);
-+
-+#ifdef CONFIG_PPC32
-+void __iomem *ioremap_wt(phys_addr_t addr, unsigned long size)
-+{
-+	pgprot_t prot = pgprot_cached_wthru(PAGE_KERNEL);
-+
-+	return __ioremap_caller(addr, size, prot, __builtin_return_address(0));
-+}
-+EXPORT_SYMBOL(ioremap_wt);
-+#endif
-+
-+void __iomem *ioremap_coherent(phys_addr_t addr, unsigned long size)
-+{
-+	pgprot_t prot = pgprot_cached(PAGE_KERNEL);
-+	void *caller = __builtin_return_address(0);
-+
-+	if (iowa_is_active())
-+		return iowa_ioremap(addr, size, prot, caller);
-+	return __ioremap_caller(addr, size, prot, caller);
-+}
-diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
-index 35cb96cfc258..1999ec11706d 100644
---- a/arch/powerpc/mm/pgtable_32.c
-+++ b/arch/powerpc/mm/pgtable_32.c
-@@ -39,42 +39,6 @@ EXPORT_SYMBOL(ioremap_bot);	/* aka VMALLOC_END */
- extern char etext[], _stext[], _sinittext[], _einittext[];
- 
- void __iomem *
--ioremap(phys_addr_t addr, unsigned long size)
--{
--	pgprot_t prot = pgprot_noncached(PAGE_KERNEL);
--
--	return __ioremap_caller(addr, size, prot, __builtin_return_address(0));
--}
--EXPORT_SYMBOL(ioremap);
--
--void __iomem *
--ioremap_wc(phys_addr_t addr, unsigned long size)
--{
--	pgprot_t prot = pgprot_noncached_wc(PAGE_KERNEL);
--
--	return __ioremap_caller(addr, size, prot, __builtin_return_address(0));
--}
--EXPORT_SYMBOL(ioremap_wc);
--
--void __iomem *
--ioremap_wt(phys_addr_t addr, unsigned long size)
--{
--	pgprot_t prot = pgprot_cached_wthru(PAGE_KERNEL);
--
--	return __ioremap_caller(addr, size, prot, __builtin_return_address(0));
--}
--EXPORT_SYMBOL(ioremap_wt);
--
--void __iomem *
--ioremap_coherent(phys_addr_t addr, unsigned long size)
--{
--	pgprot_t prot = pgprot_cached(PAGE_KERNEL);
--
--	return __ioremap_caller(addr, size, prot, __builtin_return_address(0));
--}
--EXPORT_SYMBOL(ioremap_coherent);
--
--void __iomem *
- ioremap_prot(phys_addr_t addr, unsigned long size, unsigned long flags)
- {
- 	pte_t pte = __pte(flags);
-@@ -92,12 +56,6 @@ ioremap_prot(phys_addr_t addr, unsigned long size, unsigned long flags)
- EXPORT_SYMBOL(ioremap_prot);
- 
- void __iomem *
--__ioremap(phys_addr_t addr, unsigned long size, unsigned long flags)
--{
--	return __ioremap_caller(addr, size, __pgprot(flags), __builtin_return_address(0));
--}
--
--void __iomem *
- __ioremap_caller(phys_addr_t addr, unsigned long size, pgprot_t prot, void *caller)
- {
- 	unsigned long v, i;
-@@ -171,7 +129,6 @@ __ioremap_caller(phys_addr_t addr, unsigned long size, pgprot_t prot, void *call
- out:
- 	return (void __iomem *) (v + ((unsigned long)addr & ~PAGE_MASK));
- }
--EXPORT_SYMBOL(__ioremap);
- 
- void iounmap(volatile void __iomem *addr)
- {
-diff --git a/arch/powerpc/mm/pgtable_64.c b/arch/powerpc/mm/pgtable_64.c
-index 194efc6f39fb..3ad921ac4862 100644
---- a/arch/powerpc/mm/pgtable_64.c
-+++ b/arch/powerpc/mm/pgtable_64.c
-@@ -204,42 +204,6 @@ void __iomem * __ioremap_caller(phys_addr_t addr, unsigned long size,
- 	return ret;
- }
- 
--void __iomem * __ioremap(phys_addr_t addr, unsigned long size,
--			 unsigned long flags)
--{
--	return __ioremap_caller(addr, size, __pgprot(flags), __builtin_return_address(0));
--}
--
--void __iomem * ioremap(phys_addr_t addr, unsigned long size)
--{
--	pgprot_t prot = pgprot_noncached(PAGE_KERNEL);
--	void *caller = __builtin_return_address(0);
--
--	if (iowa_is_active())
--		return iowa_ioremap(addr, size, prot, caller);
--	return __ioremap_caller(addr, size, prot, caller);
--}
--
--void __iomem * ioremap_wc(phys_addr_t addr, unsigned long size)
--{
--	pgprot_t prot = pgprot_noncached_wc(PAGE_KERNEL);
--	void *caller = __builtin_return_address(0);
--
--	if (iowa_is_active())
--		return iowa_ioremap(addr, size, prot, caller);
--	return __ioremap_caller(addr, size, prot, caller);
--}
--
--void __iomem *ioremap_coherent(phys_addr_t addr, unsigned long size)
--{
--	pgprot_t prot = pgprot_cached(PAGE_KERNEL);
--	void *caller = __builtin_return_address(0);
--
--	if (iowa_is_active())
--		return iowa_ioremap(addr, size, prot, caller);
--	return __ioremap_caller(addr, size, prot, caller);
--}
--
- void __iomem * ioremap_prot(phys_addr_t addr, unsigned long size,
- 			     unsigned long flags)
- {
-@@ -289,10 +253,7 @@ void iounmap(volatile void __iomem *token)
- 	__iounmap(token);
- }
- 
--EXPORT_SYMBOL(ioremap);
--EXPORT_SYMBOL(ioremap_wc);
- EXPORT_SYMBOL(ioremap_prot);
--EXPORT_SYMBOL(__ioremap);
- EXPORT_SYMBOL(__ioremap_at);
- EXPORT_SYMBOL(iounmap);
- EXPORT_SYMBOL(__iounmap);
--- 
-2.13.3
-
+On Fri, Jun 14, 2019 at 3:52 AM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+>
+> Hi Nathan,
+>
+> On 13/06/2019 23:12, Nathan Huckleberry wrote:
+> > Clang produces the following warning
+> >
+> > vers/thermal/rcar_gen3_thermal.c:147:33: warning: shifting a negative
+> > signed value is undefined [-Wshift-negative-value] / (ptat[0] - ptat[2]=
+)) +
+> > FIXPT_INT(TJ_3); ^~~~~~~~~~~~~~~ drivers/thermal/rcar_gen3_thermal.c:12=
+6:29
+> > note: expanded from macro 'FIXPT_INT' #define FIXPT_INT(_x) ((_x) <<
+> > FIXPT_SHIFT) ~~~~ ^ drivers/thermal/rcar_gen3_thermal.c:150:18: warning=
+:
+> > shifting a negative signed value is undefined [-Wshift-negative-value]
+> > tsc->tj_t - FIXPT_INT(TJ_3)); ~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+> >
+> > Upon further investigating it looks like there is no real reason for
+> > TJ_3 to be -41. Usages subtract -41, code would be cleaner to just add.
+>
+> All the code seems broken regarding the negative value shifting as the
+> macros pass an integer:
+>
+> eg.
+>         tsc->coef.a2 =3D FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[0]),
+>                                  tsc->tj_t - FIXPT_INT(ths_tj_1));
+>
+> thcode[1] is always < than thcode[0],
+>
+> thcode[1] - thcode[0] < 0
+>
+> FIXPT_INT(thcode[1] - thcode[0]) is undefined
+>
+>
+> Is it done on purpose FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[0]) ?
+>
+> Try developing the macro with the coef.a2 computation ...
+>
+> The code quality of this driver could be better, it deserves a rework
+> IMHO ...
+>
+> I suggest to revert:
+>
+> 4eb39f79ef443fa566d36bd43f1f578d5c140305
+> bdc4480a669d476814061b4da6bb006f7048c8e5
+> 6a310f8f97bb8bc2e2bb9db6f49a1b8678c8d144
+>
+> Rework the coefficient computation and re-introduce what was reverted in
+> a nicer way.
+>
+>
+> > Fixes: 4eb39f79ef44 ("thermal: rcar_gen3_thermal: Update value of Tj_1"=
+)
+> > Cc: clang-built-linux@googlegroups.com
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/531
+> > Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+> > ---
+> >  drivers/thermal/rcar_gen3_thermal.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar=
+_gen3_thermal.c
+> > index a56463308694..f4b4558c08e9 100644
+> > --- a/drivers/thermal/rcar_gen3_thermal.c
+> > +++ b/drivers/thermal/rcar_gen3_thermal.c
+> > @@ -131,7 +131,7 @@ static inline void rcar_gen3_thermal_write(struct r=
+car_gen3_thermal_tsc *tsc,
+> >  #define RCAR3_THERMAL_GRAN 500 /* mili Celsius */
+> >
+> >  /* no idea where these constants come from */
+> > -#define TJ_3 -41
+> > +#define TJ_3 41
+> >
+> >  static void rcar_gen3_thermal_calc_coefs(struct rcar_gen3_thermal_tsc =
+*tsc,
+> >                                        int *ptat, const int *thcode,
+> > @@ -144,11 +144,11 @@ static void rcar_gen3_thermal_calc_coefs(struct r=
+car_gen3_thermal_tsc *tsc,
+> >        * the dividend (4095 * 4095 << 14 > INT_MAX) so keep it unscaled
+> >        */
+> >       tsc->tj_t =3D (FIXPT_INT((ptat[1] - ptat[2]) * 157)
+> > -                  / (ptat[0] - ptat[2])) + FIXPT_INT(TJ_3);
+> > +                  / (ptat[0] - ptat[2])) - FIXPT_INT(TJ_3);
+> >
+> >       tsc->coef.a1 =3D FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[2]),
+> > -                              tsc->tj_t - FIXPT_INT(TJ_3));
+> > -     tsc->coef.b1 =3D FIXPT_INT(thcode[2]) - tsc->coef.a1 * TJ_3;
+> > +                              tsc->tj_t + FIXPT_INT(TJ_3));
+> > +     tsc->coef.b1 =3D FIXPT_INT(thcode[2]) + tsc->coef.a1 * TJ_3;
+> >
+> >       tsc->coef.a2 =3D FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[0]),
+> >                                tsc->tj_t - FIXPT_INT(ths_tj_1));
+> >
+>
+>
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
+RM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
