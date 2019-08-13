@@ -2,214 +2,220 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E74DC32757
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1281C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06CD9206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:12:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SI1H4ybB";
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hWzOqaGX"
+	by mail.kernel.org (Postfix) with ESMTP id A52092084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:12:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfHMGMI (ORCPT
+        id S1727803AbfHMGMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 02:12:08 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:60904 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727776AbfHMGME (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 02:12:06 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4237 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727772AbfHMGME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 13 Aug 2019 02:12:04 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D68sFA010844;
-        Tue, 13 Aug 2019 06:11:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=tfjxeCtOt/zjkP/k6+2p52MgrQfqToiEPXPQHRk3l/0=;
- b=SI1H4ybBHfNsYu/Iq7509UOI1VugUK3iV4C2jN5o9Uhac0JNJ5it4UX5QPSrxZf2oGwj
- RgoEUetbN1autivZAxCizMV0pdEiZIP1cs4cCamatDBjsbUNirmTF2NLi1kQZsfJJobe
- kkaHIt4nCocvIrRkxPgSCvWDCH6Owzy7rK+my4nThcBKzl+lTWRJ0Co/xM3G3FqpDK+7
- AWyaCQWaDGQcZI0GPy8NitoNK5HE9n/UEQkv4RZfMTNf8tQDpfeEdGC6XF4QEKtl6Img
- gOe94eUzCaozXo25qnIpufC9qIGBjOMClQWqDDMLbmJvCnsqYZB48QT/FFhRRpGqcCFG Bg== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2018-07-02;
- bh=tfjxeCtOt/zjkP/k6+2p52MgrQfqToiEPXPQHRk3l/0=;
- b=hWzOqaGXKwpzIdSDdWIddVoqjiwHK+49GsjUFU8opMFYOQuSPlN+ZgJPKMDvR1M3gfg+
- d2qRY4wIZVnjuCQqSII+S5LQozuTfzSNb2KGWogQbeWS4zxqoEiZ9rfOtfsdkmcyN9Xl
- V/cMLDe5JB4Uu3koOm/K3WJaWHPmnvx+c7/ESMgCzjvcVYyKlyO9Ue0xaNJLHiDOxsCW
- Irbhua8yDqmDBf+qCnix/kxI+UZnuklVMk1nZi+qTkFyzd/UrdEWNVaVEUKk7/wxruor
- ZHmvkm4wzvdBbv3pB1jbz9R7x20sT6lHImhDN9KjjiwEVCKqe+eZlFwmHHfQlCksWtkS Lg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2u9nbtc13t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 06:11:45 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D67Txc157148;
-        Tue, 13 Aug 2019 06:11:44 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2u9nrenmd3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 06:11:44 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7D6Bif7013702;
-        Tue, 13 Aug 2019 06:11:44 GMT
-Received: from abi.no.oracle.com (/10.172.144.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 12 Aug 2019 23:11:43 -0700
-From:   Knut Omang <knut.omang@oracle.com>
-To:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Shuah Khan <shuah@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shreyans Devendra Doshi <0xinfosect0r@gmail.com>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Hidenori Yamaji <hidenori.yamaji@sony.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Timothy Bird <Tim.Bird@sony.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Daniel Vetter <daniel@ffwll.ch>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Knut Omang <knut.omang@oracle.com>
-Subject: [RFC 14/19] ktf: Internal debugging facilities
-Date:   Tue, 13 Aug 2019 08:09:29 +0200
-Message-Id: <2e0a915bf97d241eced54efa540c9a11a1996c27.1565676440.git-series.knut.omang@oracle.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
-References: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D5DD77C092C7A2CF99D1;
+        Tue, 13 Aug 2019 14:11:58 +0800 (CST)
+Received: from [127.0.0.1] (10.184.12.158) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Tue, 13 Aug 2019
+ 14:11:52 +0800
+Subject: Re: [PATCH 9/9] arm64: Retrieve stolen time as paravirtualized guest
+To:     Steven Price <steven.price@arm.com>
+CC:     <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        <linux-doc@vger.kernel.org>, Russell King <linux@armlinux.org.uk>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Will Deacon <will@kernel.org>, <kvmarm@lists.cs.columbia.edu>
+References: <20190802145017.42543-1-steven.price@arm.com>
+ <20190802145017.42543-10-steven.price@arm.com>
+ <5d763c8e-9c06-c448-2644-25bfa0e57e8c@huawei.com>
+ <07075994-3a32-8f20-23d8-1759ec2874e3@arm.com>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <42698e3c-c382-8621-7d9e-af09398f4aef@huawei.com>
+Date:   Tue, 13 Aug 2019 14:06:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
+ Thunderbird/64.0
 MIME-Version: 1.0
+In-Reply-To: <07075994-3a32-8f20-23d8-1759ec2874e3@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908130067
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908130067
+X-Originating-IP: [10.184.12.158]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Utilities for convenient and runtime enabled/disabled
-printk debugging mainly intended for debugging ktf itself and subtle
-early issues with execution/running of tests.
+On 2019/8/12 18:39, Steven Price wrote:
+> On 09/08/2019 14:51, Zenghui Yu wrote:
+> [...]
+>> Hi Steven,
+>>
+>> Since userspace is not involved yet (right?), no one will create the
+>> PV_TIME device for guest (and no one will specify the IPA of the shared
+>> stolen time region), and I guess we will get a "not supported" error
+>> here.
+>>
+>> So what should we do if we want to test this series now?  Any userspace
+>> tools?  If no, do you have any plans for userspace developing? ;-)
+> 
+> At the moment I have the following patch to kvmtool which creates the
+> PV_TIME device - this isn't in a state to go upstream, and Marc has
+> asked that I rework the memory allocation, so this will need to change.
+> 
+> It's a little ugly as it simply reserves the first page of RAM to use
+> for the PV time structures.
 
-ktf_debug.h:     User mode debug function definitions
+Thanks for sharing the code. It's good enough to show what is required
+in user-space.
 
-Signed-off-by: Knut Omang <knut.omang@oracle.com>
----
- tools/testing/selftests/ktf/lib/ktf_debug.cc | 20 +++++++-
- tools/testing/selftests/ktf/lib/ktf_debug.h  | 59 +++++++++++++++++++++-
- 2 files changed, 79 insertions(+)
- create mode 100644 tools/testing/selftests/ktf/lib/ktf_debug.cc
- create mode 100644 tools/testing/selftests/ktf/lib/ktf_debug.h
+(I'm not familiar with kvmtool. I will first take some time to move the
+steal time part to Qemu and see what will happen.)
 
-diff --git a/tools/testing/selftests/ktf/lib/ktf_debug.cc b/tools/testing/selftests/ktf/lib/ktf_debug.cc
-new file mode 100644
-index 0000000..18ff443
---- /dev/null
-+++ b/tools/testing/selftests/ktf/lib/ktf_debug.cc
-@@ -0,0 +1,20 @@
-+/* Copyright (c) 2012 Oracle Corporation. All rights reserved
-+ *
-+ * SPDX-License-Identifier: GPL-2.0
-+ */
-+
-+#include "ktf_debug.h"
-+#include <stdlib.h>
-+
-+unsigned long ktf_debug_mask = 0;
-+
-+
-+void ktf_debug_init()
-+{
-+  ktf_debug_mask = 0;
-+  char* dbg_mask_str = getenv("KTF_DEBUG_MASK");
-+  if (dbg_mask_str) {
-+    ktf_debug_mask = strtol(dbg_mask_str, NULL, 0);
-+    log(KTF_INFO_V, "debug mask set to 0x%lx\n", ktf_debug_mask);
-+  }
-+}
-diff --git a/tools/testing/selftests/ktf/lib/ktf_debug.h b/tools/testing/selftests/ktf/lib/ktf_debug.h
-new file mode 100644
-index 0000000..dc761a4
---- /dev/null
-+++ b/tools/testing/selftests/ktf/lib/ktf_debug.h
-@@ -0,0 +1,59 @@
-+/* Copyright (c) 2012 Oracle Corporation. All rights reserved
-+ *    Author: Knut Omang <knut.omang@oracle.com>
-+ *
-+ * SPDX-License-Identifier: GPL-2.0
-+ *
-+ * ktf_debug.h: User mode debug function definitions
-+ * - intended for test debugging.
-+ *
-+ * Enabled by setting bits in the environment variable KTF_DEBUG_MASK
-+ */
-+
-+#ifndef _KTF_DEBUG_H
-+#define _KTF_DEBUG_H
-+#include <time.h>
-+#include <stdio.h>
-+#include <sys/types.h>
-+#include <pthread.h>
-+#include <unistd.h>
-+#include <sys/syscall.h>
-+
-+extern unsigned long ktf_debug_mask;
-+
-+
-+#define KTF_ERR             0x1
-+#define KTF_WARN            0x2
-+#define KTF_INFO            0x4
-+#define KTF_INFO_V        0x100
-+#define KTF_MR           0x2000
-+#define KTF_DEBUG       0x10000
-+#define KTF_POLL        0x20000
-+#define KTF_EVENT       0x40000
-+#define KTF_DEBUG_V   0x1000000
-+#define KTF_DUMP      0x2000000
-+
-+/* Call this to initialize the debug logic from
-+ * environment KTF_DEBUG_MASK
-+ */
-+void ktf_debug_init();
-+
-+#define log(level, format, arg...)		\
-+do {\
-+  if (level & ktf_debug_mask) {\
-+    char _tm[30]; \
-+    time_t _tv = time(NULL);\
-+    ctime_r(&_tv,_tm);\
-+    _tm[24] = '\0';\
-+    fprintf(stderr, "%s [%ld] %s: " format, \
-+            _tm, (long unsigned int) pthread_self(), __func__, ## arg);     \
-+  }\
-+} while (0)
-+
-+#define logs(class, stmt_list) \
-+  do {							    \
-+    if (ktf_debug_mask & class) { \
-+      stmt_list;  \
-+    }   \
-+  } while (0)
-+
-+#endif
--- 
-git-series 0.9.1
+
+Thanks,
+zenghui
+
+> ----8<----
+> diff --git a/Makefile b/Makefile
+> index 3862112..a79956b 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -158,7 +158,7 @@ endif
+>   # ARM
+>   OBJS_ARM_COMMON		:= arm/fdt.o arm/gic.o arm/gicv2m.o arm/ioport.o \
+>   			   arm/kvm.o arm/kvm-cpu.o arm/pci.o arm/timer.o \
+> -			   arm/pmu.o
+> +			   arm/pmu.o arm/pvtime.o
+>   HDRS_ARM_COMMON		:= arm/include
+>   ifeq ($(ARCH), arm)
+>   	DEFINES		+= -DCONFIG_ARM
+> diff --git a/arm/fdt.c b/arm/fdt.c
+> index c80e6da..19eccbc 100644
+> --- a/arm/fdt.c
+> +++ b/arm/fdt.c
+> @@ -119,6 +119,7 @@ static int setup_fdt(struct kvm *kvm)
+>   
+>   	/* Create new tree without a reserve map */
+>   	_FDT(fdt_create(fdt, FDT_MAX_SIZE));
+> +	_FDT(fdt_add_reservemap_entry(fdt, kvm->arch.memory_guest_start, 4096));
+>   	_FDT(fdt_finish_reservemap(fdt));
+>   
+>   	/* Header */
+> diff --git a/arm/kvm.c b/arm/kvm.c
+> index 1f85fc6..8bbfef1 100644
+> --- a/arm/kvm.c
+> +++ b/arm/kvm.c
+> @@ -11,6 +11,8 @@
+>   #include <linux/kvm.h>
+>   #include <linux/sizes.h>
+>   
+> +int pvtime_create(struct kvm *kvm);
+> +
+>   struct kvm_ext kvm_req_ext[] = {
+>   	{ DEFINE_KVM_EXT(KVM_CAP_IRQCHIP) },
+>   	{ DEFINE_KVM_EXT(KVM_CAP_ONE_REG) },
+> @@ -86,6 +88,10 @@ void kvm__arch_init(struct kvm *kvm, const char *hugetlbfs_path, u64 ram_size)
+>   	/* Create the virtual GIC. */
+>   	if (gic__create(kvm, kvm->cfg.arch.irqchip))
+>   		die("Failed to create virtual GIC");
+> +
+> +	/* Setup PV time */
+> +	if (pvtime_create(kvm))
+> +		die("Failed to initialise PV time");
+>   }
+>   
+>   #define FDT_ALIGN	SZ_2M
+> diff --git a/arm/pvtime.c b/arm/pvtime.c
+> new file mode 100644
+> index 0000000..abcaab3
+> --- /dev/null
+> +++ b/arm/pvtime.c
+> @@ -0,0 +1,77 @@
+> +#include "kvm/kvm.h"
+> +
+> +#define KVM_DEV_TYPE_ARM_PV_TIME (KVM_DEV_TYPE_ARM_VGIC_ITS+2)
+> +
+> +/* Device Control API: PV_TIME */
+> +#define KVM_DEV_ARM_PV_TIME_PADDR	0
+> +#define KVM_DEV_ARM_PV_TIME_FREQUENCY	3
+> +
+> +#define KVM_DEV_ARM_PV_TIME_ST		0
+> +#define KVM_DEV_ARM_PV_TIME_LPT		1
+> +
+> +static int pvtime_fd;
+> +
+> +int pvtime_create(struct kvm *kvm);
+> +
+> +int pvtime_create(struct kvm *kvm)
+> +{
+> +	int err;
+> +	u64 lpt_paddr = 0x10000000;
+> +	u64 st_paddr = lpt_paddr + 4096;
+> +	u32 frequency = 100 * 1000 * 1000;
+> +
+> +	printf("lpt_paddr=%llx\n", lpt_paddr);
+> +
+> +	struct kvm_create_device pvtime_device = {
+> +		.type = KVM_DEV_TYPE_ARM_PV_TIME,
+> +		.flags = 0,
+> +	};
+> +
+> +	err = ioctl(kvm->vm_fd, KVM_CREATE_DEVICE, &pvtime_device);
+> +	if (err) {
+> +		printf("Failed to create PV device\n");
+> +		return 0;
+> +	}
+> +
+> +	pvtime_fd = pvtime_device.fd;
+> +
+> +	struct kvm_device_attr lpt_base = {
+> +		.group = KVM_DEV_ARM_PV_TIME_PADDR,
+> +		.attr = KVM_DEV_ARM_PV_TIME_LPT,
+> +		.addr = (u64)(unsigned long)&lpt_paddr
+> +	};
+> +	struct kvm_device_attr st_base = {
+> +		.group = KVM_DEV_ARM_PV_TIME_PADDR,
+> +		.attr = KVM_DEV_ARM_PV_TIME_ST,
+> +		.addr = (u64)(unsigned long)&st_paddr
+> +	};
+> +
+> +	struct kvm_device_attr lpt_freq = {
+> +		.group = KVM_DEV_ARM_PV_TIME_FREQUENCY,
+> +		.attr = KVM_DEV_ARM_PV_TIME_LPT,
+> +		.addr = (u64)(unsigned long)&frequency
+> +	};
+> +
+> +	err = ioctl(pvtime_fd, KVM_SET_DEVICE_ATTR, &lpt_base);
+> +	if (err) {
+> +		perror("ioctl lpt_base failed");
+> +		printf("Ignoring LPT...\n");
+> +	}
+> +	err = ioctl(pvtime_fd, KVM_SET_DEVICE_ATTR, &st_base);
+> +	if (err) {
+> +		perror("ioctl st_base failed");
+> +		goto out_err;
+> +	}
+> +	err = ioctl(pvtime_fd, KVM_SET_DEVICE_ATTR, &lpt_freq);
+> +	if (err) {
+> +		perror("ioctl lpt_freq failed");
+> +		printf("Ignoring LPT...\n");
+> +	}
+> +
+> +	printf("PV time setup\n");
+> +
+> +	return 0;
+> +out_err:
+> +	close(pvtime_fd);
+> +	return err;
+> +}
+
