@@ -2,126 +2,110 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 277C2C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6F0C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC60D20844
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:48:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565714901;
-	bh=+ClQXQZYMO3oD0vJh2iCm8rSEOKMIpNSMDMOjbE3t+k=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=tPqBdu5VS5IXQurKconTnMu1ZU3THk8H523mLQ+IqONH/d7DM+r+lEhkDRvPuvJHE
-	 QktaGWiX3b3kJHhYQOg8PizMUi7hGMorRJLXOBFAPwwU8PE4Qga1jlkPZwMozSxKNw
-	 Rgk8npWh4+isWX7RbA7kj9jZXKin7laWu1x0GM00=
+	by mail.kernel.org (Postfix) with ESMTP id 6D5D420844
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:48:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="PVaDn1Ye"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbfHMQsU (ORCPT
+        id S1728113AbfHMQsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 12:48:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726769AbfHMQsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 12:48:19 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06A2D20842;
-        Tue, 13 Aug 2019 16:48:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565714898;
-        bh=+ClQXQZYMO3oD0vJh2iCm8rSEOKMIpNSMDMOjbE3t+k=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=pjR7+sDpG5QV8mqVLOqQHM+8vC+tRobkv0ngA4hd4MBaO/KrG4XqTeZ1bpn5bn1bq
-         KhfBsT1su6Wd2h61ArrsWNQlNeGWtPTPht9QXac/YRw1heGospZwGZg3FIXZ4HQ+Nu
-         vKsI/4s3VfFW3biZ3Mbn7FIY6xfwnAsdy1fw46EY=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAFd5g452+-6m1eiVK0ccTDkJ2wH8GBwxRDw5owwC8h3NscE1ag@mail.gmail.com>
-References: <20190812182421.141150-1-brendanhiggins@google.com> <20190812225520.5A67C206A2@mail.kernel.org> <20190812233336.GA224410@google.com> <20190812235940.100842063F@mail.kernel.org> <CAFd5g44xciLPBhH_J3zUcY3TedWTijdnWgF055qffF+dAguhPQ@mail.gmail.com> <20190813045623.F3D9520842@mail.kernel.org> <CAFd5g46PJNTOUAA4GOOrW==74Zy7u1sRESTanL_BXBn6QykscA@mail.gmail.com> <20190813053023.CC86120651@mail.kernel.org> <CAFd5g47v7410QRAizPV8zaHrKrc95-Sk-GNzRRVngN741OKnvg@mail.gmail.com> <CAFd5g452+-6m1eiVK0ccTDkJ2wH8GBwxRDw5owwC8h3NscE1ag@mail.gmail.com>
-Subject: Re: [PATCH v12 03/18] kunit: test: add string_stream a std::stream like string builder
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Tue, 13 Aug 2019 12:48:46 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42906 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbfHMQsq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 12:48:46 -0400
+Received: by mail-ot1-f66.google.com with SMTP id j7so30294943ota.9
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 09:48:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=wWYXt7jx7G31cd0rE9luks4j70Eji+/vHa4Z1GbiX1s=;
+        b=PVaDn1YePRT9j9KWakxbJ5aZbPHOe1J33ryNWuvT223ufkBNGNMfeasLJ4OrxmwPQZ
+         zC9YYVf5EuudnD8g2gF+COcciyXunWMzIWBn3kPO03qtPucFcPSAcXnoBJ6kR8EpWhD1
+         n2kN9d52DP0eEmM3jbQMP5LVdVgEvBpuKKVeVwA4eSx6BVuM8ibVKAoD7BR6I9ULnXs5
+         FAoNg0DL0iJBEqca3QwrsWRVpN2G6Rn3ar6llSZc784HZGsYUJgp2ajlMF+fYDPicuzH
+         95qrxSmcS0SEyuOAfEnmAETTEAs+VX2awtZGt/ux0Jucg+YEytTtvv1a97y1iTAEt4ja
+         F88g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=wWYXt7jx7G31cd0rE9luks4j70Eji+/vHa4Z1GbiX1s=;
+        b=N3upIU1OULUHruXflvxxi+Heh+lbmzxeteNaR7svuQrjsR5YIPKx+JIOlxlWUKjWEA
+         GXzkYHYmlY267SQSZyvfPTDGqhkweIPDJUSizQ3J8kNwd2oYt60yomVNcmg+1TMXPEZk
+         Cbilyu0zr2mHzF65bPiMLzl74j0d5AeRJfzS2FnjDJWZWnlJWaPb8affcxs5bDGyy0Ay
+         a0Sc7BedOp6QQRfOu0tYWj9UISnwEuoLt72WpIH04OFIt4e+k3HVfrL2VTIGe3L0RRYH
+         GAC77GcpKzoCdx+5jZtuW5rFxTkLm/JYSxtnp21Uzx3PoDERkxOfwqinpqhfv4rTZrda
+         ccLg==
+X-Gm-Message-State: APjAAAVcOiatYwUB9qrGKNuRHLxGMaS6x0JKEzRslcqO0TrNsoCqIJFc
+        8v9bHt//nI5KYbfayiJ8qgvaIxOmKQI=
+X-Google-Smtp-Source: APXvYqxPVuDBsGAd9o9o1k5X+B5nMlPiCHWLeDxvNl/FUOtJzCoioboXTdGD/sGypvrgZDoyB/qP5A==
+X-Received: by 2002:a5d:8497:: with SMTP id t23mr39094733iom.298.1565714925017;
+        Tue, 13 Aug 2019 09:48:45 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id t19sm91323213iog.41.2019.08.13.09.48.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Aug 2019 09:48:44 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 09:48:43 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Logan Gunthorpe <logang@deltatee.com>
+cc:     Greentime Hu <green.hu@gmail.com>, Rob Herring <robh@kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Andrew Waterman <andrew@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-To:     Brendan Higgins <brendanhiggins@google.com>
-User-Agent: alot/0.8.1
-Date:   Tue, 13 Aug 2019 09:48:17 -0700
-Message-Id: <20190813164818.06A2D20842@mail.kernel.org>
+        Stephen Bates <sbates@raithlin.com>,
+        Olof Johansson <olof@lixom.net>, greentime.hu@sifive.com,
+        linux-riscv@lists.infradead.org,
+        Michael Clark <michaeljclark@mac.com>,
+        Christoph Hellwig <hch@lst.de>, linux-mm@kvack.org
+Subject: Re: [PATCH v4 2/2] RISC-V: Implement sparsemem
+In-Reply-To: <alpine.DEB.2.21.9999.1908130921170.30024@viisi.sifive.com>
+Message-ID: <alpine.DEB.2.21.9999.1908130947130.30024@viisi.sifive.com>
+References: <20190109203911.7887-1-logang@deltatee.com> <20190109203911.7887-3-logang@deltatee.com> <CAEbi=3d0RNVKbDUwRL-o70O12XBV7q6n_UT-pLqFoh9omYJZKQ@mail.gmail.com> <c4298fdd-6fd6-fa7f-73f7-5ff016788e49@deltatee.com> <CAEbi=3cn4+7zk2DU1iRa45CDwTsJYfkAV8jXHf-S7Jz63eYy-A@mail.gmail.com>
+ <CAEbi=3eZcgWevpX9VO9ohgxVDFVprk_t52Xbs3-TdtZ+js3NVA@mail.gmail.com> <0926a261-520e-4c40-f926-ddd40bb8ce44@deltatee.com> <CAEbi=3ebNM-t_vA4OA7KCvQUF08o6VmL1j=kMojVnYsYsN_fBw@mail.gmail.com> <e2603558-7b2c-2e5f-e28c-f01782dc4e66@deltatee.com>
+ <CAEbi=3d7_xefYaVXEnMJW49Bzdbbmc2+UOwXWrCiBo7YkTAihg@mail.gmail.com> <96156909-1453-d487-ff66-a041d67c74d6@deltatee.com> <CAEbi=3dC86dhGdwdarS_x+6-5=WPydUBKjo613qRZxKLDAqU_g@mail.gmail.com> <5506c875-9387-acc9-a7fe-5b7c10036c40@deltatee.com>
+ <alpine.DEB.2.21.9999.1908130921170.30024@viisi.sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brendan Higgins (2019-08-13 02:12:54)
-> On Tue, Aug 13, 2019 at 2:04 AM Brendan Higgins
-> <brendanhiggins@google.com> wrote:
-> >
-> > On Mon, Aug 12, 2019 at 10:30 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > >
-> > > Quoting Brendan Higgins (2019-08-12 22:02:59)
-> > > > However, now that I added the kunit_resource_destroy, I thought it
-> > > > might be good to free the string_stream after I use it in each call=
- to
-> > > > kunit_assert->format(...) in which case I will be using this logic.
-> > > >
-> > > > So I think the right thing to do is to expose string_stream_destroy=
- so
-> > > > kunit_do_assert can clean up when it's done, and then demote
-> > > > string_stream_clear to static. Sound good?
-> > >
-> > > Ok, sure. I don't really see how clearing it explicitly when the
-> > > assertion prints vs. never allocating it to begin with is really any
-> > > different. Maybe I've missed something though.
-> >
-> > It's for the case that we *do* print something out. Once we are doing
-> > printing, we don't want the fragments anymore.
->=20
-> Oops, sorry fat fingered: s/doing/done
+On Tue, 13 Aug 2019, Paul Walmsley wrote:
 
-Yes, but when we print something out we've run into some sort of problem
-and then the test is over. So freeing the memory when it fails vs. when
-the test is over seems like a minor difference. Or is it also used to
-print other informational messages while the test is running?
+> On Tue, 13 Aug 2019, Logan Gunthorpe wrote:
+> 
+> > On 2019-08-13 12:04 a.m., Greentime Hu wrote:
+> > 
+> > > Every architecture with mmu defines their own pfn_valid().
+> > 
+> > Not true. Arm64, for example just uses the generic implementation in
+> > mmzone.h. 
+> 
+> arm64 seems to define their own:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/Kconfig#n899
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/mm/init.c#n235
+> 
+> While there are many architectures which have their own pfn_valid(); 
+> oddly, almost none of them set HAVE_ARCH_PFN_VALID ?
 
-I'm not particularly worried here, just trying to see if less code is
-possible.
+(fixed the linux-mm@ address)
 
+
+- Paul
