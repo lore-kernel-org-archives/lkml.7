@@ -2,173 +2,144 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F81EC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9891AC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF9E206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:04:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="CXvxBtP6"
+	by mail.kernel.org (Postfix) with ESMTP id 6C99D20840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:06:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565701568;
+	bh=/XgDq0Sg1Ifb1GFIIHjqV+Hu7HputWWafjIl43pcTZ4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=RrM2lbgqT/BzN70TuHo9JTLKVSJpk6MtDU5sJXH42V3D5U/jqRRsEs3+598y2XphL
+	 9Lc8SWvQzy4zi/bJfM1ZvohqbYXR7PLwmg8XuWh3NanviT/aMa0a8r7IWUKF3WNeL1
+	 oVxwU0QUuD/rDDS0pVzu9+L0UhDwYsbtx7059Uzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbfHMNEW (ORCPT
+        id S1728903AbfHMNGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:04:22 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:41554 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727838AbfHMNEV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:04:21 -0400
-Received: by mail-ed1-f66.google.com with SMTP id w5so4012140edl.8
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:04:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=BeprlSRyo9i3tCmSN6bMyBMTJqsuh2Pl578/LN6Zv7E=;
-        b=CXvxBtP6BpeLUfjSTmWgYakTCBmeUGPojZavzZeBG44qwwncTnPDEeP8UL+7vlsgdr
-         KXuvguKssX2tx10gYosyLPDX5D8JnzR+/TaV5WQ8aZd9DtcdU3FYCe/mMLu0aBPlvIXF
-         sWnheBW/f0mZSYjdxIPI8uT9DLSrNHMKy/ZgM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=BeprlSRyo9i3tCmSN6bMyBMTJqsuh2Pl578/LN6Zv7E=;
-        b=faTNjcDMaumON2UXxQjg+0gETZl0hclydF97Ix3I8bip4nVOQPkcmojIcI5fO2mKFM
-         j7/BTWp+ZFfNGnWS4bx2Mf9VZL33OxM2/0AVOunPlL2Ruq48f0O3MbHqbAFA5ZeVOFmo
-         nSRhl7KMbePe6qit9KC6oK+Gb/2jbJBmZDGZZkEcENBTor982DgcFLqpsnKbNS+y9NWT
-         EMrnEvE9JVP1fyfji9KQJwA8r2nXrVWub3IC+BTpYT6fWbryVhF/JDRmpVqaxK6EwxDd
-         uL0mjTCK5GoIfS1VLIP9/fNAMv1mDIkKDLyNsvN3Wg21jR5sSBmKXZawbnEsES7/hgWy
-         DkcA==
-X-Gm-Message-State: APjAAAXxTIwP+5GofSswrkfFm4UmyMWEZ5mDubLTUtFTcqRQzSO+qzZD
-        tDDiLeYH8PHcddrBzeHGDetVrA==
-X-Google-Smtp-Source: APXvYqz7LBTCYHg7cQQTjZ5VNnLXvpeFWAxTBiBBcrQc0PK/POH7ZTNqynUrD+HS6e+r4Jpu65duGA==
-X-Received: by 2002:a50:ee89:: with SMTP id f9mr10253355edr.65.1565701459898;
-        Tue, 13 Aug 2019 06:04:19 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id j57sm1327262eda.61.2019.08.13.06.04.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 06:04:19 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 15:04:17 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, Juston Li <juston.li@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/26] drm/print: Add drm_err_printer()
-Message-ID: <20190813130417.GU7444@phenom.ffwll.local>
-Mail-Followup-To: Lyude Paul <lyude@redhat.com>,
-        dri-devel@lists.freedesktop.org, Juston Li <juston.li@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
-        Harry Wentland <hwentlan@amd.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org
-References: <20190718014329.8107-1-lyude@redhat.com>
- <20190718014329.8107-5-lyude@redhat.com>
+        Tue, 13 Aug 2019 09:06:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727425AbfHMNGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 09:06:07 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B68DA206C2;
+        Tue, 13 Aug 2019 13:06:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565701565;
+        bh=/XgDq0Sg1Ifb1GFIIHjqV+Hu7HputWWafjIl43pcTZ4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PhStlNDon4n1IlaA0NJHILAJUbaSV58XyxhA9I53Buw1zRzQn5gzGT5BOpXdDJ9n+
+         bwokpELD0QnRaAT6IaGFNNM16Dwxu+xylQ/sDg5VAkhxHkETOBLBkHBfkdNzGlUy6y
+         ea3V0D3QRPy8AfqfuH2rRlNCDt1TU5ocXhrzH7nQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     jarkko.sakkinen@linux.intel.com, peterhuewe@gmx.de
+Cc:     mark.rutland@arm.com, robh+dt@kernel.org, jgg@ziepe.ca,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-integrity@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH] tpm/tpm_ftpm_tee: trivial checkpatch fixes
+Date:   Tue, 13 Aug 2019 09:05:59 -0400
+Message-Id: <20190813130559.16936-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190718014329.8107-5-lyude@redhat.com>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 09:42:27PM -0400, Lyude Paul wrote:
-> A simple convienence function that returns a drm_printer which prints
-> using pr_err()
-> 
-> Cc: Juston Li <juston.li@intel.com>
-> Cc: Imre Deak <imre.deak@intel.com>
-> Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> Cc: Harry Wentland <hwentlan@amd.com>
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> ---
->  drivers/gpu/drm/drm_print.c |  6 ++++++
->  include/drm/drm_print.h     | 17 +++++++++++++++++
->  2 files changed, 23 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/drm_print.c b/drivers/gpu/drm/drm_print.c
-> index a17c8a14dba4..6112be358769 100644
-> --- a/drivers/gpu/drm/drm_print.c
-> +++ b/drivers/gpu/drm/drm_print.c
-> @@ -147,6 +147,12 @@ void __drm_printfn_debug(struct drm_printer *p, struct va_format *vaf)
->  }
->  EXPORT_SYMBOL(__drm_printfn_debug);
->  
-> +void __drm_printfn_err(struct drm_printer *p, struct va_format *vaf)
-> +{
-> +	pr_err("%s %pV", p->prefix, vaf);
+Fixes a few checkpatch warnings (and ignores some), mostly around
+spaces/tabs and documentation.
 
-DRM printing is a huge bikeshad (or tire fire?). We can't call DRM_ERROR,
-but for consistency mabye emulate the layout?
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml |  2 ++
+ drivers/char/tpm/Kconfig                               |  2 +-
+ drivers/char/tpm/tpm_ftpm_tee.c                        | 10 +++++-----
+ 3 files changed, 8 insertions(+), 6 deletions(-)
 
-Either way: Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-
-
-> +}
-> +EXPORT_SYMBOL(__drm_printfn_err);
-> +
->  /**
->   * drm_puts - print a const string to a &drm_printer stream
->   * @p: the &drm printer
-> diff --git a/include/drm/drm_print.h b/include/drm/drm_print.h
-> index a5d6f2f3e430..112165d3195d 100644
-> --- a/include/drm/drm_print.h
-> +++ b/include/drm/drm_print.h
-> @@ -83,6 +83,7 @@ void __drm_printfn_seq_file(struct drm_printer *p, struct va_format *vaf);
->  void __drm_puts_seq_file(struct drm_printer *p, const char *str);
->  void __drm_printfn_info(struct drm_printer *p, struct va_format *vaf);
->  void __drm_printfn_debug(struct drm_printer *p, struct va_format *vaf);
-> +void __drm_printfn_err(struct drm_printer *p, struct va_format *vaf);
->  
->  __printf(2, 3)
->  void drm_printf(struct drm_printer *p, const char *f, ...);
-> @@ -227,6 +228,22 @@ static inline struct drm_printer drm_debug_printer(const char *prefix)
->  	return p;
->  }
->  
-> +/**
-> + * drm_err_printer - construct a &drm_printer that outputs to pr_err()
-> + * @prefix: debug output prefix
-> + *
-> + * RETURNS:
-> + * The &drm_printer object
-> + */
-> +static inline struct drm_printer drm_err_printer(const char *prefix)
-> +{
-> +	struct drm_printer p = {
-> +		.printfn = __drm_printfn_err,
-> +		.prefix = prefix
-> +	};
-> +	return p;
-> +}
-> +
->  /*
->   * The following categories are defined:
->   *
-> -- 
-> 2.21.0
-> 
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 6992bbbbffab6..d61a203138cbe 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -575,6 +575,8 @@ patternProperties:
+     description: Micro Crystal AG
+   "^micron,.*":
+     description: Micron Technology Inc.
++  "^microsoft,.*":
++    description: Microsoft Corporation
+   "^mikroe,.*":
+     description: MikroElektronika d.o.o.
+   "^miniand,.*":
+diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+index 17bfbf9f572fc..9c37047f4b562 100644
+--- a/drivers/char/tpm/Kconfig
++++ b/drivers/char/tpm/Kconfig
+@@ -167,7 +167,7 @@ config TCG_VTPM_PROXY
+ config TCG_FTPM_TEE
+ 	tristate "TEE based fTPM Interface"
+ 	depends on TEE && OPTEE
+-	---help---
++	help
+ 	  This driver proxies for firmware TPM running in TEE.
+ 
+ source "drivers/char/tpm/st33zp24/Kconfig"
+diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
+index 5679a5af9a96a..6640a14dbe48c 100644
+--- a/drivers/char/tpm/tpm_ftpm_tee.c
++++ b/drivers/char/tpm/tpm_ftpm_tee.c
+@@ -38,7 +38,7 @@ static const uuid_t ftpm_ta_uuid =
+  * @count:	the number of bytes to read.
+  *
+  * Return:
+- * 	In case of success the number of bytes received.
++ *	In case of success the number of bytes received.
+  *	On failure, -errno.
+  */
+ static int ftpm_tee_tpm_op_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+@@ -67,7 +67,7 @@ static int ftpm_tee_tpm_op_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+  * @len:	the number of bytes to send.
+  *
+  * Return:
+- * 	In case of success, returns 0.
++ *	In case of success, returns 0.
+  *	On failure, -errno
+  */
+ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t len)
+@@ -212,7 +212,7 @@ static int ftpm_tee_match(struct tee_ioctl_version_data *ver, const void *data)
+  * @pdev: the platform_device description.
+  *
+  * Return:
+- * 	On success, 0. On failure, -errno.
++ *	On success, 0. On failure, -errno.
+  */
+ static int ftpm_tee_probe(struct platform_device *pdev)
+ {
+@@ -302,7 +302,7 @@ static int ftpm_tee_probe(struct platform_device *pdev)
+  * @pdev: the platform_device description.
+  *
+  * Return:
+- * 	0 always.
++ *	0 always.
+  */
+ static int ftpm_tee_remove(struct platform_device *pdev)
+ {
+@@ -323,7 +323,7 @@ static int ftpm_tee_remove(struct platform_device *pdev)
+ 	/* close the context with TEE driver */
+ 	tee_client_close_context(pvt_data->ctx);
+ 
+-        /* memory allocated with devm_kzalloc() is freed automatically */
++	/* memory allocated with devm_kzalloc() is freed automatically */
+ 
+ 	return 0;
+ }
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.20.1
+
