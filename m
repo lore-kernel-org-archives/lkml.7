@@ -2,105 +2,153 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C322C32753
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 928C7C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0040206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6789E20840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:32:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xiBNoaBz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfHMLb5 (ORCPT
+        id S1727487AbfHMLcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 07:31:57 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:54617 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfHMLb5 (ORCPT
+        Tue, 13 Aug 2019 07:32:18 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:35430 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfHMLcR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 07:31:57 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 39BDF8073E; Tue, 13 Aug 2019 13:31:42 +0200 (CEST)
-Date:   Tue, 13 Aug 2019 13:31:54 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     syzbot <syzbot+e1a4f80c370d2381e49f@syzkaller.appspotmail.com>
-Cc:     Julia.Lawall@lip6.fr, bp@alien8.de, dan.j.williams@intel.com,
-        dave.hansen@linux.intel.com, dave.jiang@intel.com,
-        dvyukov@google.com, haozhong.zhang@intel.com, hpa@zytor.com,
-        jacek.anaszewski@gmail.com, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
-        pbonzini@redhat.com, peterz@infradead.org, rkrcmar@redhat.com,
-        rpurdie@rpsys.net, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, x86@kernel.org
-Subject: Re: WARNING in untrack_pfn
-Message-ID: <20190813113154.GA8420@amd>
-References: <000000000000f70a0e0571ad8ffb@google.com>
- <000000000000c3fe1b058ffd7c99@google.com>
+        Tue, 13 Aug 2019 07:32:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8Cz0dhG8JlSQ8zGF79vjEHYxjSQnz3txKDT7QLmjLxw=; b=xiBNoaBz67Ngmks68l8gE5aH5
+        zIsOBxAGr5sqkC5CdQ/z8Vbf11g0UU9hxKAeoBC2XdOqEHVza2pPKPC2gRpHrzSmVa5P0zsE63NYq
+        uj74WAySYdSqhaW4PJyoDlO+cO/H/2Tt7y1+5yYLkDO1+PdWHQ/iBYmG6VI8nb9Y9swI2R+DBrTSZ
+        yLoL91CwrTeOXy6Om9ZrLhDxUzrFTo3JF3mTUnHjj6diabS0izAT44mUggMhBcPnb4V4h54o5C1bP
+        J+ozu2+DthD3z8XjCqcqEv1nQOfCorWHYk/0eWjzlz41yMWHMQDMtZeKMh5Jx3CvcdrUhL3dxH7xB
+        OBABDGFWA==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:51944)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hxV2D-0008RU-Hh; Tue, 13 Aug 2019 12:32:13 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hxV29-0007Sy-BL; Tue, 13 Aug 2019 12:32:09 +0100
+Date:   Tue, 13 Aug 2019 12:32:09 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Dariusz Marcinkiewicz <darekm@google.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+        hverkuil-cisco@xs4all.nl, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 3/8] tda9950: use cec_notifier_cec_adap_(un)register
+Message-ID: <20190813113209.GF13294@shell.armlinux.org.uk>
+References: <20190813110300.83025-1-darekm@google.com>
+ <20190813110300.83025-4-darekm@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="+HP7ph2BbKc20aGI"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <000000000000c3fe1b058ffd7c99@google.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190813110300.83025-4-darekm@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 13, 2019 at 01:02:35PM +0200, Dariusz Marcinkiewicz wrote:
+> Use the new cec_notifier_cec_adap_(un)register() functions to
+> (un)register the notifier for the CEC adapter.
+> 
+> Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> ---
+>  drivers/gpu/drm/i2c/tda9950.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i2c/tda9950.c b/drivers/gpu/drm/i2c/tda9950.c
+> index 8039fc0d83db4..a5a75bdeb7a5f 100644
+> --- a/drivers/gpu/drm/i2c/tda9950.c
+> +++ b/drivers/gpu/drm/i2c/tda9950.c
+> @@ -420,7 +420,8 @@ static int tda9950_probe(struct i2c_client *client,
+>  		priv->hdmi = glue->parent;
+>  
+>  	priv->adap = cec_allocate_adapter(&tda9950_cec_ops, priv, "tda9950",
+> -					  CEC_CAP_DEFAULTS,
+> +					  CEC_CAP_DEFAULTS |
+> +					  CEC_CAP_CONNECTOR_INFO,
+>  					  CEC_MAX_LOG_ADDRS);
+>  	if (IS_ERR(priv->adap))
+>  		return PTR_ERR(priv->adap);
+> @@ -457,13 +458,14 @@ static int tda9950_probe(struct i2c_client *client,
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	priv->notify = cec_notifier_get(priv->hdmi);
+> +	priv->notify = cec_notifier_cec_adap_register(priv->hdmi, NULL,
+> +						      priv->adap);
+>  	if (!priv->notify)
+>  		return -ENOMEM;
+>  
+>  	ret = cec_register_adapter(priv->adap, priv->hdmi);
+>  	if (ret < 0) {
+> -		cec_notifier_put(priv->notify);
+> +		cec_notifier_cec_adap_unregister(priv->notify);
+>  		return ret;
+>  	}
+>  
+> @@ -473,8 +475,6 @@ static int tda9950_probe(struct i2c_client *client,
+>  	 */
+>  	devm_remove_action(dev, tda9950_cec_del, priv);
+>  
+> -	cec_register_cec_notifier(priv->adap, priv->notify);
+> -
+>  	return 0;
+>  }
+>  
+> @@ -482,8 +482,8 @@ static int tda9950_remove(struct i2c_client *client)
+>  {
+>  	struct tda9950_priv *priv = i2c_get_clientdata(client);
+>  
+> +	cec_notifier_cec_adap_unregister(priv->notify);
+>  	cec_unregister_adapter(priv->adap);
+> -	cec_notifier_put(priv->notify);
 
---+HP7ph2BbKc20aGI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It looks weird to have an unexpectedly different ordering of
+unregistration from the registration path - normally, unregistration
+is the reverse order of initialisation.
 
-On Tue 2019-08-13 03:56:06, syzbot wrote:
-> syzbot has found a reproducer for the following crash on:
+In the initialisation path, it seems that we register the notifier
+and _then_ the adapter.  Here, we unregister the notifier and then
+the adapter rather than what would normally be expected.  Why is
+this?  I suspect there will be drivers created that do this the
+"normal" way round, so if this is a requirement, it needs to be made
+plainly obvious.
 
-Unsigned emails are ugly. Could the "From: " be modified to include
-name of responsible person?
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.23.0.rc1.153.gdeed80330f-goog
+> 
+> 
 
-> HEAD commit:    d45331b0 Linux 5.3-rc4
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D16130d4a600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D3d7eaed8496da=
-4da
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3De1a4f80c370d238=
-1e49f
-> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
-> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D131f8e0e600=
-000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D10e1a1ee600000
->=20
-> The bug was bisected to:
->=20
-> commit c68729119f4d2993bec3c9cb999ad76de5aeddba
-> Author: Julia Lawall <Julia.Lawall@lip6.fr>
-> Date:   Sat Jul 15 09:58:19 2017 +0000
->=20
->     leds: tlc591xx: add missing of_node_put
-
-And this looks like mistake. I don't think this commit is causing the
-crash. Can you somehow verify?
-
-								Pavel
-							=09
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---+HP7ph2BbKc20aGI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1Sn6oACgkQMOfwapXb+vI4QwCgoymvNRbg/fcRXs34awljQPfa
-GAwAnRWHuMB93tZPDz5C4dE+LjyU11lj
-=Llkh
------END PGP SIGNATURE-----
-
---+HP7ph2BbKc20aGI--
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
