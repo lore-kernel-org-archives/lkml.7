@@ -2,149 +2,121 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBF1C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 844A4C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 383FA20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57C5820578
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:01:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="e3XYEfdK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eibhSIM3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbfHMTAB (ORCPT
+        id S1726618AbfHMTBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 15:00:01 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36203 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbfHMTAA (ORCPT
+        Tue, 13 Aug 2019 15:01:15 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37868 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbfHMTBO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 15:00:00 -0400
-Received: by mail-qt1-f194.google.com with SMTP id z4so107526192qtc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 12:00:00 -0700 (PDT)
+        Tue, 13 Aug 2019 15:01:14 -0400
+Received: by mail-lf1-f65.google.com with SMTP id c9so77459142lfh.4;
+        Tue, 13 Aug 2019 12:01:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=hWnpwsctAkFfJ/Y7Dx2168l4gTaV9/DNkw70UP5BSgg=;
-        b=e3XYEfdK4qDqWEnJOy0jPQS2R+UFWXoFCTPxaoXbWHwcOV21V6gfctNchibdH84Coc
-         Viw1Qgk6JAbr5WFBDmEHsrg9pscOS3cbZQpuCZMSZRAzObO4nRVdK6PpWy83VAQNVEeu
-         g5NR0Ap9osg/313yfIg4rUfyp4j3C6Y2CJtUJgQdWl1ETgTXLt9QyQa0hZa3wwH5Sh2L
-         p0sRusV1zNDElhXu6jqG2CswSE3ekDPJdpTak81BW4MdktcRCrQENpeiruIRr1WLbmI0
-         X3+LbO2l+XzNSAfdO7WindmzMkCUkduFIWtZX0kXYo1cQtw5A+tainNkPP1v2W3vay0X
-         ULpA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CVOpJHPgn7fZLLPO6uI/O9bniRMMsZiS2eSUDvyGjF0=;
+        b=eibhSIM31XxD1E5+yfK7lMRwVGPXGrHLnIavFPZIBjAEVsmaFTEkBTMADv4aVVBktD
+         3gcyndT2yyBm0sFkEGy5uA7fxGjzovlzC8FytdDQXGZpe3UpzL7JtWsRsWj+jjp+qfUG
+         UIcP6A+++IdrjPKJNdl4oqF43jxS9cP02UuqssxWUCAjr49d3PBQb5jXaPhwUnr8xVAw
+         cmnHU6Tg9jK3whmmj0CLfg5dDJ6j0ZuuI/DGDjyE9Ub3SWsd1vorDTR9/xbeoAD+uRLk
+         PUhTky48a/YpBjrZapUFOLR0cFrOU8JRLByKfko3tQ7xMqtbZyRczv0i6NMuVkMRmuQl
+         vVdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=hWnpwsctAkFfJ/Y7Dx2168l4gTaV9/DNkw70UP5BSgg=;
-        b=dIoNp3AJhaYXeVemY40khmVtpCHs0xQkvC02dKmy9JT0JgA8mtpreUnyGR4Zv7xAlW
-         Ndc2oISeiPbEe0tAc1xW4UVRnPJAvBvU3xY3IafTyL/chAS4zWf7g2c15lGI1+0CuijE
-         Ir3+VXU2rDYYZetfimjKl1xBw9z6YMnrnwUXE7j8Gj8EcjC5vfgiUOi6jcAzVJ7SG/j/
-         z1Vhhn2b4bywXxiSfYi0RbLmNXsyQ0t75DnIEugZIdPPta8dReq9x0sVJ6FEXZ+HQZmx
-         ZbQdJTPkcjAQBzSRLcq5uEziCn0ByBQiml0ybb54hnJBFlzqU0rFpdd7VQaXK1vNbPAz
-         3FAQ==
-X-Gm-Message-State: APjAAAWV1feJfMfbmMITpy/eDfNdKHipzFVPedD44tQNt7GgBpQuv5uQ
-        8ls8YtqVpPbdf2ta9Yrihb0UTw==
-X-Google-Smtp-Source: APXvYqzMWVu3ASVVLZYFrN/WZNILWGDY1hK3UvvS1WCAOqUBWgo1DrucXspjqq0I7kLkP5ELVLTWsg==
-X-Received: by 2002:ad4:4373:: with SMTP id u19mr3060qvt.202.1565722799686;
-        Tue, 13 Aug 2019 11:59:59 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id i5sm4773269qti.0.2019.08.13.11.59.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Aug 2019 11:59:59 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 11:59:48 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     John Fastabend <john.fastabend@gmail.com>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+dcdc9deefaec44785f32@syzkaller.appspotmail.com>,
-        aviadye@mellanox.com, borisp@mellanox.com, daniel@iogearbox.net,
-        davejwatson@fb.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        oss-drivers@netronome.com, syzkaller-bugs@googlegroups.com,
-        willemb@google.com
-Subject: Re: general protection fault in tls_write_space
-Message-ID: <20190813115948.5f57b272@cakuba.netronome.com>
-In-Reply-To: <5d5301a82578_268d2b12c8efa5b470@john-XPS-13-9370.notmuch>
-References: <000000000000f5d619058faea744@google.com>
-        <20190810135900.2820-1-hdanton@sina.com>
-        <5d52f09299e91_40c72adb748b25c0d3@john-XPS-13-9370.notmuch>
-        <20190813102705.1f312b67@cakuba.netronome.com>
-        <5d5301a82578_268d2b12c8efa5b470@john-XPS-13-9370.notmuch>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CVOpJHPgn7fZLLPO6uI/O9bniRMMsZiS2eSUDvyGjF0=;
+        b=pUrldh05i4yKBjgU8AuLD6QUqrNyc7rIjEW5VilQhVEtiPFaRCnseHcqKBq4m7v9oG
+         Zd+CikbthmQe1XcvRbBEKHRqssVHx+Stcx2G5L10UqpOpdMV5wKGLVXZWWryw2wc7/vc
+         jc0a63Gy0v34hP0thHgPb2/fUSnWlJYthN/jeF3Izjq8qt622dejSRTZXQAeyW9joiwp
+         66rBFnPK/ZFP+e4DJQboEz+FNOdxJoIEcOZFicbCjkont66OEv13/ufnPsvBQrh3dekU
+         x3hJqUX8SHIXIy8CTssAFP6JwQLt9pfy1H2i/PE4n2+9VNCWQDieGRGP6AN+KAZz1pe6
+         mYsQ==
+X-Gm-Message-State: APjAAAWskKRzpPaZocRtAwp5st1s70SDR7oDjev/l4kta7BpeOJ49wh9
+        twtF+MtzUYBTpe3KnnbYaU//SesPpSxx+q7AgTvxKfQEy+w=
+X-Google-Smtp-Source: APXvYqy9ihD5YjQrktNuqJy73tR2xfmj1QsrkBqJo4sFuDo3kxK1ohAg5317GHr6OAVsc0nYjcyjRPrAkDZDzmVswBA=
+X-Received: by 2002:a19:7006:: with SMTP id h6mr23374733lfc.5.1565722872640;
+ Tue, 13 Aug 2019 12:01:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190810010758.16407-1-alistair.francis@wdc.com> <CAK8P3a2wYMsBRm1X-TFo1d7-B7Xug9gwqF77HitoE7wmOqD7rw@mail.gmail.com>
+In-Reply-To: <CAK8P3a2wYMsBRm1X-TFo1d7-B7Xug9gwqF77HitoE7wmOqD7rw@mail.gmail.com>
+From:   Alistair Francis <alistair23@gmail.com>
+Date:   Tue, 13 Aug 2019 11:57:20 -0700
+Message-ID: <CAKmqyKNH7G=_gs2Hfc3OZMFaHzUwU8fSomfu_r92hJrnJHJT3A@mail.gmail.com>
+Subject: Re: [PATCH] syscalls: Update the syscall #defines to match uapi
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Alistair Francis <alistair.francis@wdc.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 13 Aug 2019 11:30:00 -0700, John Fastabend wrote:
-> Jakub Kicinski wrote:
-> > On Tue, 13 Aug 2019 10:17:06 -0700, John Fastabend wrote:  
-> > > > Followup of commit 95fa145479fb
-> > > > ("bpf: sockmap/tls, close can race with map free")
-> > > > 
-> > > > --- a/net/tls/tls_main.c
-> > > > +++ b/net/tls/tls_main.c
-> > > > @@ -308,6 +308,9 @@ static void tls_sk_proto_close(struct so
-> > > >  	if (free_ctx)
-> > > >  		icsk->icsk_ulp_data = NULL;
-> > > >  	sk->sk_prot = ctx->sk_proto;
-> > > > +	/* tls will go; restore sock callback before enabling bh */
-> > > > +	if (sk->sk_write_space == tls_write_space)
-> > > > +		sk->sk_write_space = ctx->sk_write_space;
-> > > >  	write_unlock_bh(&sk->sk_callback_lock);
-> > > >  	release_sock(sk);
-> > > >  	if (ctx->tx_conf == TLS_SW)    
-> > > 
-> > > Hi Hillf,
-> > > 
-> > > We need this patch (although slightly updated for bpf tree) do
-> > > you want to send it? Otherwise I can. We should only set this if
-> > > TX path was enabled otherwise we null it. Checking against
-> > > tls_write_space seems best to me as well.
-> > > 
-> > > Against bpf this patch should fix it.
-> > > 
-> > > diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-> > > index ce6ef56a65ef..43252a801c3f 100644
-> > > --- a/net/tls/tls_main.c
-> > > +++ b/net/tls/tls_main.c
-> > > @@ -308,7 +308,8 @@ static void tls_sk_proto_close(struct sock *sk, long timeout)
-> > >         if (free_ctx)
-> > >                 icsk->icsk_ulp_data = NULL;
-> > >         sk->sk_prot = ctx->sk_proto;
-> > > -       sk->sk_write_space = ctx->sk_write_space;
-> > > +       if (sk->sk_write_space == tls_write_space)
-> > > +               sk->sk_write_space = ctx->sk_write_space;
-> > >         write_unlock_bh(&sk->sk_callback_lock);
-> > >         release_sock(sk);
-> > >         if (ctx->tx_conf == TLS_SW)  
-> > 
-> > This is already in net since Friday:  
-> 
-> Don't we need to guard that with an
-> 
->   if (sk->sk_write_space == tls_write_space)
-> 
-> or something similar? Where is ctx->sk_write_space set in the rx only
-> case? In do_tls_setsockop_conf() we have this block
-> 
-> 	if (tx) {
-> 		ctx->sk_write_space = sk->sk_write_space;
-> 		sk->sk_write_space = tls_write_space;
-> 	} else {
-> 		sk->sk_socket->ops = &tls_sw_proto_ops;
-> 	}
-> 
-> which makes me think ctx->sk_write_space may not be set correctly in
-> all cases.
+On Mon, Aug 12, 2019 at 2:49 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Sat, Aug 10, 2019 at 3:11 AM Alistair Francis
+> <alistair.francis@wdc.com> wrote:
+> >
+> > Update the #defines around sys_fstat64() and sys_fstatat64() to match
+> > the #defines around the __NR3264_fstatat and __NR3264_fstat definitions
+> > in include/uapi/asm-generic/unistd.h. This avoids compiler failures if
+> > one is defined.
+>
+> What is the compiler failure you get?
 
-Ah damn, you're right I remember looking at that but then I went down
-the rabbit hole of trying to repro and forgot :/
+I don't have it infornt of me but it was along the lines of
+sys_fstat64/sys_fstatat64 not being defined when __ARCH_WANT_NEW_STAT
+is defined but __ARCH_WANT_STAT64 isn't.
 
-Do you want to send an incremental change?
+>
+> > Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+> > ---
+> >  include/linux/syscalls.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+> > index 2bcef4c70183..e4bf5e480d60 100644
+> > --- a/include/linux/syscalls.h
+> > +++ b/include/linux/syscalls.h
+> > @@ -512,7 +512,7 @@ asmlinkage long sys_readlinkat(int dfd, const char __user *path, char __user *bu
+> >  asmlinkage long sys_newfstatat(int dfd, const char __user *filename,
+> >                                struct stat __user *statbuf, int flag);
+> >  asmlinkage long sys_newfstat(unsigned int fd, struct stat __user *statbuf);
+> > -#if defined(__ARCH_WANT_STAT64) || defined(__ARCH_WANT_COMPAT_STAT64)
+> > +#if defined(__ARCH_WANT_NEW_STAT) || defined(__ARCH_WANT_STAT64)
+> >  asmlinkage long sys_fstat64(unsigned long fd, struct stat64 __user *statbuf);
+> >  asmlinkage long sys_fstatat64(int dfd, const char __user *filename,
+> >                                struct stat64 __user *statbuf, int flag);
+>
+> I think this is wrong: when __ARCH_WANT_NEW_STAT is set, we are
+> on a 64-bit architecture and only want the sys_newfstat{,at} system
+> calls, not sys_fstat{,at}64 that gets used on 32-bit machines.
+
+Ah, that would make sense then. I don't think you will see the error then.
+
+Alistair
+
+>
+> The #if check in the syscalls.h file also matches the definition of
+> the function.
+>
+>        Arnd
