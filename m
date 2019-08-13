@@ -2,96 +2,122 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D46C7C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA9DC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3C3206C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90AF120663
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:10:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Uk8mQ7LH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbfHMIJg (ORCPT
+        id S1727936AbfHMIKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 04:09:36 -0400
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:15328 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfHMIJg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 04:09:36 -0400
-IronPort-SDR: zPXjHNeTtWka6OWrCsMSK3dZl0YuvYNBSsn3UZPrHcsI2AtZp19FZMUl9wxleapPHsAs34R8KO
- oPXNxcNOeCIw3jrmCxbTLNNTupuKiLNlMl9+8T8D9Uhz2tX0e2v1h0ZgwHTAweKzsf4bDUmuI+
- GzQ6EE2g82C4AHYuGkVMQS6J1DSZRu7Oc+IXgIrCc1MJUTQpszO3yx1ZU81O5T2ey8/2D/Mlh4
- ciP2ojNKryTYpKohy4RmFKVG7tn6zDbuYPNmREjFZm9eDVAEId+JR0/ByFveNHT+j6QMEraXgE
- a+Q=
-X-IronPort-AV: E=Sophos;i="5.64,380,1559548800"; 
-   d="scan'208";a="42205101"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa1.mentor.iphmx.com with ESMTP; 13 Aug 2019 00:09:35 -0800
-IronPort-SDR: s8i8PDGueMbmlQfnUAaS19Tsqell/mfvnFkq/xLV+c6Mvg1QS+O8rOEEed7+gWO09HiWSbEf9T
- H41h+H+DMvQltBWGAyy5HHC68McfvWqIWrDIKnBJHSESLPnAWIYfQIDhoDGG2wzF4wDLxMR0Nh
- NuouB1TujG0qBL738FEgR6nYDBUikYeOPQEJjxt68yT5R4qvZHVt8YEExDc7XZk7vZ8flbes3X
- UzijmW94hIOpzXnSpfL1C1ShCluC6JB3qD0EWxpJETOndWNv/gMrlY3RBXZpCntd+OHa9Nd3+d
- hLI=
-From:   "Schmid, Carsten" <Carsten_Schmid@mentor.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Wei Yang <richard.weiyang@gmail.com>
-CC:     "bp@suse.de" <bp@suse.de>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "osalvador@suse.de" <osalvador@suse.de>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "richardw.yang@linux.intel.com" <richardw.yang@linux.intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: AW: Resend [PATCH] kernel/resource.c: invalidate parent when freed
- resource has childs
-Thread-Topic: Resend [PATCH] kernel/resource.c: invalidate parent when freed
- resource has childs
-Thread-Index: AQHVTrktoAw70LsxJE6oaOICoAXoo6bzWCGAgAACFoCABWNbkA==
-Date:   Tue, 13 Aug 2019 08:09:29 +0000
-Message-ID: <421b9738bee141648d87a5b1c1b4d4aa@SVR-IES-MBX-03.mgc.mentorg.com>
-References: <1565278859475.1962@mentor.com> <1565358624103.3694@mentor.com>
- <20190809223831.fk4uyrzscr366syr@master>
- <CAHk-=wi_9sdMxurjZ1MbNnxt-pA=dqoyf8Fdn9aYc8xvjjnTBg@mail.gmail.com>
-In-Reply-To: <CAHk-=wi_9sdMxurjZ1MbNnxt-pA=dqoyf8Fdn9aYc8xvjjnTBg@mail.gmail.com>
-Accept-Language: de-DE, en-IE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [137.202.0.90]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 13 Aug 2019 04:10:43 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:56685 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725842AbfHMIKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 04:10:43 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46754c19vBz9sND;
+        Tue, 13 Aug 2019 18:10:40 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565683840;
+        bh=9YJW9vbhfXHgmO+AE93B2gmuMZ72onYOjLAtidZ8cT0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Uk8mQ7LHnhwY+ePMPLV6BVuFzJ10/9IQ9/381w52PvEGTmCsGRCILaHka5SZ/vCUI
+         Sujv0jh41el57+wyU6yyyFT321y9coBU8Wuud7V4hKgUBvD4yv/YYq9T8g5xfp49Eq
+         u9R3hNxKHVnvuK5P+kINrBb1S4LS6UDmwjbSN1JWLZrrzwskowlUNSxL9S2HJA6vzo
+         uIplZj+aM+g0leu3A2P6JtiYOkfRWYnVeBmpp3L8eNtq6Dm4AERq1tFy6OyXBM570K
+         tXXCM1C3pkaiHbKWMzyYDHnlbQ9sKVYAhVIDtj01xl+vKiKkRob4WSCA62DDTj6Fti
+         4kxJPl7GPNrqQ==
+Date:   Tue, 13 Aug 2019 18:10:38 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Aaron Liu <aaron.liu@amd.com>, Huang Rui <ray.huang@amd.com>
+Subject: linux-next: build failure after merge of the amdgpu tree
+Message-ID: <20190813181038.2c6aafb9@canb.auug.org.au>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/B1oqMGW08RKx81c05ysn+GP";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+DQo+ID4gSW4gdGhlb3J5LCBjaGlsZCBtYXkgaGF2ZSBzaWJsaW5ncy4gV291bGQgaXQgYmUg
-cG9zc2libGUgdG8gaGF2ZSBzZXZlcmFsDQo+ID4gZGV2aWNlcyB1bmRlciB4aGNpLWhjZD8NCj4g
-DQo+IEknbSBsZXNzIGludGVyZXN0ZWQgaW4gdGhlIHhoY2ktaGNkIGNhc2UgLSB3aGljaCBJIGNl
-cnRhaW5seSAqaG9wZSogaXMNCj4gZml4ZWQgYWxyZWFkeT8gLSB0aGFuIGluICJpZiB0aGlzIGhh
-cHBlbnMgc29tZXdoZXJlIGVsc2UiLg0KPiANCj4gU28gaWYgd2UgZG8gd2FudCB0byByZW1vdmUg
-dGhlIHBhcmVudCAod2hpY2ggbWF5IGJlIGEgZ29vZCBpZGVhIHdpdGggYQ0KPiB3YXJuaW5nKSwg
-YW5kIHdhbnQgdG8gbWFrZSBzdXJlIHRoYXQgdGhlIGNoaWxkcmVuIGFyZSByZWFsbHkgcmVtb3Zl
-ZA0KPiBmcm9tIHRoZSByZXNvdXJjZSBoaWVyYXJjaHksIHdlIHNob3VsZCBkbyBzb21ldGhpaW5n
-IGxpa2UNCj4gDQo+ICAgc3RhdGljIGJvb2wgZGV0YWNoX2NoaWxkcmVuKHN0cnVjdCByZXNvdXJj
-ZSAqcmVzKQ0KPiAgIHsNCj4gICAgICAgICByZXMgPSByZXMtPmNoaWxkOw0KPiAgICAgICAgIGlm
-ICghcmVzKQ0KPiAgICAgICAgICAgICAgICAgcmV0dXJuIGZhbHNlOw0KPiAgICAgICAgIGRvIHsN
-Cj4gICAgICAgICAgICAgICAgIHJlcy0+cGFyZW50ID0gTlVMTDsNCj4gICAgICAgICAgICAgICAg
-IHJlcyA9IHJlcy0+c2libGluZzsNCj4gICAgICAgICB9IHdoaWxlIChyZXMpOw0KPiAgICAgICAg
-IHJldHVybiB0cnVlOw0KPiAgIH0NCj4gDQo+IGFuZCB0aGVuIHdlIGNvdWxkIHdyaXRlIHRoZSBf
-X3JlbGVhc2VfcmVnaW9uKCkgd2FybmluZyBhcw0KPiANCj4gICAgICAgICAvKiBZb3Ugc2hvdWxk
-IG5vdCByZWxlYXNlIGEgcmVzb3VyY2UgdGhhdCBoYXMgY2hpbGRyZW4gKi8NCj4gICAgICAgICBX
-QVJOX09OX09OQ0UoZGV0YWNoX2NoaWxkcmVuKHJlcykpOw0KPiANCj4gb3Igc29tZXRoaW5nPw0K
-PiANCi4uLiBhbmQgYSBjaGlsZCBtYXkgaGF2ZSBjaGlsZHJlbiB0b28gLi4uDQoNClRoZXJlIGlz
-IGEgX19yZWxlYXNlX2NoaWxkX3Jlc291cmNlcyBpbiByZXNvdXJjZS5jIGFyb3VuZCBsaW5lIDI0
-Mi4NCkEgYml0IG5vaXN5LCBhbmQgZG9lcyBhIHNpbWlsYXIgdGhpbmcgeW91IG91dGxpbmVkIGFi
-b3ZlLg0KSSdtIHRoaW5raW5nIGFib3V0IHRvIHJlLXVzZSB0aGF0LCBidXQgd2l0aCBtb3JlIHBy
-ZWNpc2Ugb3V0cHV0DQphbmQgV0FSTl9PTl9PTkNFLg0KDQpTdWdnZXN0aW9ucyBiZWZvcmUgaSBz
-dGFydCB3b3JrIG9uIHRoYXQ/DQoNCkJlc3QgcmVnYXJkcw0KQ2Fyc3Rlbg0K
+--Sig_/B1oqMGW08RKx81c05ysn+GP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+After merging the amdgpu tree, today's linux-next build (powerpc
+allyesconfig) failed like this:
+
+drivers/gpu/drm/amd/amdgpu/psp_v12_0.c:39:17: error: expected declaration s=
+pecifiers or '...' before string constant
+ MODULE_FIRMWARE("amdgpu/renoir_asd.bin");
+                 ^~~~~~~~~~~~~~~~~~~~~~~
+
+Caused by commit
+
+  6a7a0bdbfa0c ("drm/amdgpu: add psp_v12_0 for renoir (v2)")
+
+I have applied the following patch for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Tue, 13 Aug 2019 18:03:16 +1000
+Subject: [PATCH] drm/amdgpu: MODULE_FIRMWARE requires linux/module.h
+
+Fixes: 6a7a0bdbfa0c ("drm/amdgpu: add psp_v12_0 for renoir (v2)")
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/gpu/drm/amd/amdgpu/psp_v12_0.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/psp_v12_0.c b/drivers/gpu/drm/amd/a=
+mdgpu/psp_v12_0.c
+index f37b8af4b986..b474dfb79375 100644
+--- a/drivers/gpu/drm/amd/amdgpu/psp_v12_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/psp_v12_0.c
+@@ -21,6 +21,7 @@
+  */
+=20
+ #include <linux/firmware.h>
++#include <linux/module.h>
+ #include "amdgpu.h"
+ #include "amdgpu_psp.h"
+ #include "amdgpu_ucode.h"
+--=20
+2.20.1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/B1oqMGW08RKx81c05ysn+GP
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1ScH4ACgkQAVBC80lX
+0GwKzAf9FckYRRBgv8b2Eqg/TRBHfijH0ezvMYt2kh65TKYbH0iScMg2onU/z5sJ
+HyI7jfnq/4tZtYXWKw7GeshhnY89hdf92U0DJLH6KEFKt7T1NPsXVmGqQzgQJcC6
+RLY25MO8YdoaWB7f8SjyqMwgps52AUDdOS/z5nyFACRzHN1vZIqXUDDaE1mvt0fb
+u8wzHo3opVzYE8N/En6GCSzBI8WqfOjY0w4PKgyeJmmDXNZz/osmtmkyrYHD+dIZ
+GW9U/eKMgXY66S80jCg5YaUBG9p9yTRk1IUcbsNL6XDm7Z2wBeSppMoOo8vFVkVV
+SeNxzJIqVDtEad/kLd3zzQN+1Pqk3A==
+=c4NM
+-----END PGP SIGNATURE-----
+
+--Sig_/B1oqMGW08RKx81c05ysn+GP--
