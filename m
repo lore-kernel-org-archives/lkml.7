@@ -2,63 +2,105 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B76C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37913C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 718FD20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFA2C2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:28:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbfHMP2C (ORCPT
+        id S1727981AbfHMP2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 11:28:02 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:44932 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbfHMP2C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 11:28:02 -0400
-Received: from [167.98.27.226] (helo=[10.35.5.101])
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1hxYiN-0006Cf-ER; Tue, 13 Aug 2019 16:27:59 +0100
-Subject: Re: [PATCH 01/16] ARM: remove ks8695 platform
-To:     Arnd Bergmann <arnd@arndb.de>, soc@kernel.org
-Cc:     Greg Ungerer <gerg@kernel.org>, Andrew Victor <linux@maxim.org.za>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190809202749.742267-1-arnd@arndb.de>
- <20190809202749.742267-2-arnd@arndb.de>
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-Message-ID: <3d6c7162-f802-6869-77cb-27aa456b237d@codethink.co.uk>
-Date:   Tue, 13 Aug 2019 16:27:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190809202749.742267-2-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Tue, 13 Aug 2019 11:28:13 -0400
+Received: from 8bytes.org ([81.169.241.247]:48956 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727546AbfHMP2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 11:28:11 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 0312144C; Tue, 13 Aug 2019 17:28:09 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 2/3] x86/mm: Sync also unmappings in vmalloc_sync_all()
+Date:   Tue, 13 Aug 2019 17:28:04 +0200
+Message-Id: <20190813152805.5251-3-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190813152805.5251-1-joro@8bytes.org>
+References: <20190813152805.5251-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/08/2019 21:27, Arnd Bergmann wrote:
-> ks8695 is an older SoC originally made by Kendin, which was later acquired
-> by Micrel, and subsequently by Microchip.
-> 
-> The platform port was originally contributed by Andrew Victor and Ben
-> Dooks, and later maintained by Greg Ungerer.
-> 
-> When I recently submitted cleanups, but Greg noted that the platform no
-> longer boots and nobody is using it any more, we decided to remove it.
-> 
-> Cc: Greg Ungerer <gerg@kernel.org>
-> Cc: Andrew Victor <linux@maxim.org.za>
-> Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-> Link: https://wikidevi.com/wiki/Micrel
-> Link: https://lore.kernel.org/linux-arm-kernel/2bc41895-d4f9-896c-0726-0b2862fcbf25@kernel.org/
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Ben Dooks <ben-linux@fluff.org>
+From: Joerg Roedel <jroedel@suse.de>
+
+commit 8e998fc24de47c55b47a887f6c95ab91acd4a720 upstream.
+
+With huge-page ioremap areas the unmappings also need to be synced between
+all page-tables. Otherwise it can cause data corruption when a region is
+unmapped and later re-used.
+
+Make the vmalloc_sync_one() function ready to sync unmappings and make sure
+vmalloc_sync_all() iterates over all page-tables even when an unmapped PMD
+is found.
+
+Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lkml.kernel.org/r/20190719184652.11391-3-joro@8bytes.org
+---
+ arch/x86/mm/fault.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 4d12176a470e..1bcb7242ad79 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -261,11 +261,12 @@ static inline pmd_t *vmalloc_sync_one(pgd_t *pgd, unsigned long address)
+ 
+ 	pmd = pmd_offset(pud, address);
+ 	pmd_k = pmd_offset(pud_k, address);
+-	if (!pmd_present(*pmd_k))
+-		return NULL;
+ 
+-	if (!pmd_present(*pmd))
++	if (pmd_present(*pmd) != pmd_present(*pmd_k))
+ 		set_pmd(pmd, *pmd_k);
++
++	if (!pmd_present(*pmd_k))
++		return NULL;
+ 	else
+ 		BUG_ON(pmd_pfn(*pmd) != pmd_pfn(*pmd_k));
+ 
+@@ -287,17 +288,13 @@ void vmalloc_sync_all(void)
+ 		spin_lock(&pgd_lock);
+ 		list_for_each_entry(page, &pgd_list, lru) {
+ 			spinlock_t *pgt_lock;
+-			pmd_t *ret;
+ 
+ 			/* the pgt_lock only for Xen */
+ 			pgt_lock = &pgd_page_get_mm(page)->page_table_lock;
+ 
+ 			spin_lock(pgt_lock);
+-			ret = vmalloc_sync_one(page_address(page), address);
++			vmalloc_sync_one(page_address(page), address);
+ 			spin_unlock(pgt_lock);
+-
+-			if (!ret)
+-				break;
+ 		}
+ 		spin_unlock(&pgd_lock);
+ 	}
+-- 
+2.16.4
+
