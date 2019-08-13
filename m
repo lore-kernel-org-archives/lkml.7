@@ -2,135 +2,77 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51111C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40911C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3362067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FB032067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565731866;
-	bh=XkpRbJVll+516C+jJvJAyZYjkbPpLw3esxFYVJy/wTM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IhyKPrG/oS3pCbPNgyrHTT/Ot9lSNAyji1fwHj3wnuEwHIQw5NGOfXyapvuzhwtbh
-	 N8P6FJIrnMEi1NzbOfJR/UqCr4OV8OcLQlnbbcPrRcjmd65gUyQ6EXGFl3/P6sNtl+
-	 5LJ1t/Xr2uGz0svRkN6B1RvH52y2KNMz1ChaioMc=
+	s=default; t=1565731880;
+	bh=tjFvWLPSSfcPrnSoEvYPNR+1ax/3i9N/XRtulBqxupU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=SjFK8bMmLKZNTDinQO5W8nOGSmht6/oZLQhC+VrWSjsLD15frnpXstwQakfh3G/EL
+	 +CsVYupFi2r894s79yOUQPZIJM3pO64JgSnYitNPoYNadoNvPoUUK6CV9RC6CP//vu
+	 sdns9cKBIU+0Gs+n46qD7kiO79l+5AOcPewOErUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfHMVbF (ORCPT
+        id S1727024AbfHMVbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:31:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57672 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 17:31:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726631AbfHMVbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 17:31:05 -0400
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726124AbfHMVbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 17:31:18 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E5CE216F4;
-        Tue, 13 Aug 2019 21:31:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79C9720665;
+        Tue, 13 Aug 2019 21:31:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565731864;
-        bh=XkpRbJVll+516C+jJvJAyZYjkbPpLw3esxFYVJy/wTM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BhKlEJ07K2sEEE5X4BQU8lEPMxeIpf0FdTFhXiajh0LjFw8bDbY3WzB2dNJ4vcMn3
-         UGtMwQUP93jw9omyNyPFpXjzVk9Hl234h1a8jhcbZevW85Qxd1ii4y5Fu06AyWI7Am
-         GHJYOHU67WvA4jTB6oS6YDAOleQ99BlwEqc6fckY=
-Received: by mail-qt1-f179.google.com with SMTP id e8so7422060qtp.7;
-        Tue, 13 Aug 2019 14:31:04 -0700 (PDT)
-X-Gm-Message-State: APjAAAVG9AITvDoE80FqxULHL+418M1t7jd0+2o5rB0rLoxzQGeIzM+u
-        7U6lL53Iov0isyDFvyhWWuIQfm1pzYs/it8yQA==
-X-Google-Smtp-Source: APXvYqxokdujfBE8cDSjy43/2Jcz08YFXVAXNp4Cx5lVzoxujubkxGKCo14iNFpW20deuL9aWMxvPVwsHCwUEklSXXc=
-X-Received: by 2002:ac8:7593:: with SMTP id s19mr27868839qtq.136.1565731863171;
- Tue, 13 Aug 2019 14:31:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190813124744.32614-1-mripard@kernel.org> <20190813124744.32614-2-mripard@kernel.org>
-In-Reply-To: <20190813124744.32614-2-mripard@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 13 Aug 2019 15:30:52 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJa-_x+QKkuQ2ZTt+tOtJWJ0NhywZMKomQhtShYr7WbTA@mail.gmail.com>
-Message-ID: <CAL_JsqJa-_x+QKkuQ2ZTt+tOtJWJ0NhywZMKomQhtShYr7WbTA@mail.gmail.com>
-Subject: Re: [PATCH 2/5] dt-bindings: watchdog: Convert Allwinner watchdog to
- a schema
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+        s=default; t=1565731877;
+        bh=tjFvWLPSSfcPrnSoEvYPNR+1ax/3i9N/XRtulBqxupU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=elLSkOtT891o1HflqX+iByvvwV+ByIjKKmOU9b3NfLMnPa+9erUcWokJI6XD7ymEU
+         7ttmBIX9VYtOUp1ZHrefdIAH/Fihhm2AVf11jHkHeMmAS4U4DpyTMpsY4VCoLMZmW9
+         alzjY58nI17Dwzg+5PuPNEm4GPMQO6UQnyFpzSPs=
+Date:   Tue, 13 Aug 2019 14:31:17 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>
+Subject: Re: [PATCH] mm: memcontrol: flush percpu vmevents before releasing
+ memcg
+Message-Id: <20190813143117.885bef5929813445ef39fa61@linux-foundation.org>
+In-Reply-To: <20190812233754.2570543-1-guro@fb.com>
+References: <20190812233754.2570543-1-guro@fb.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 6:47 AM Maxime Ripard <mripard@kernel.org> wrote:
->
-> From: Maxime Ripard <maxime.ripard@bootlin.com>
->
-> The Allwinner SoCs have a watchdog supported in Linux, with a matching
-> Device Tree binding.
->
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for that controller over to a YAML schemas.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  .../watchdog/allwinner,sun4i-a10-wdt.yaml     | 50 +++++++++++++++++++
->  .../bindings/watchdog/sunxi-wdt.txt           | 22 --------
->  2 files changed, 50 insertions(+), 22 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
->  delete mode 100644 Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
->
-> diff --git a/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml b/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
-> new file mode 100644
-> index 000000000000..93df27ec1664
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
-> @@ -0,0 +1,50 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/watchdog/allwinner,sun4i-a10-wdt.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Allwinner A10 Watchdog Device Tree Bindings
-> +
-> +maintainers:
-> +  - Chen-Yu Tsai <wens@csie.org>
-> +  - Maxime Ripard <maxime.ripard@bootlin.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: allwinner,sun4i-a10-wdt
-> +      - const: allwinner,sun6i-a31-wdt
-> +      - items:
-> +          - const: allwinner,sun50i-a64-wdt
-> +          - const: allwinner,sun6i-a31-wdt
-> +      - items:
-> +          - const: allwinner,sun50i-h6-wdt
-> +          - const: allwinner,sun6i-a31-wdt
-> +      - items:
-> +          - const: allwinner,suniv-f1c100s-wdt
-> +          - const: allwinner,sun4i-a10-wdt
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  timeout-sec:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Contains the watchdog timeout in seconds.
+On Mon, 12 Aug 2019 16:37:54 -0700 Roman Gushchin <guro@fb.com> wrote:
 
-Can you do a common watchdog schema to include with this and the node
-name at least.
+> Similar to vmstats, percpu caching of local vmevents leads to an
+> accumulation of errors on non-leaf levels. This happens because
+> some leftovers may remain in percpu caches, so that they are
+> never propagated up by the cgroup tree and just disappear into
+> nonexistence with on releasing of the memory cgroup.
+> 
+> To fix this issue let's accumulate and propagate percpu vmevents
+> values before releasing the memory cgroup similar to what we're
+> doing with vmstats.
+> 
+> Since on cpu hotplug we do flush percpu vmstats anyway, we can
+> iterate only over online cpus.
+> 
+> Fixes: 42a300353577 ("mm: memcontrol: fix recursive statistics correctness & scalabilty")
 
-Rob
+No cc:stable?
