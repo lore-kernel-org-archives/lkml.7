@@ -2,120 +2,92 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E25FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8012AC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A505214C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FA9820874
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:43:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbfHMMno (ORCPT
+        id S1728690AbfHMMnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 13 Aug 2019 08:43:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38764 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726903AbfHMMno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 13 Aug 2019 08:43:44 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:51586 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728412AbfHMMnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 08:43:15 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E466720079D;
-        Tue, 13 Aug 2019 14:43:12 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D7B9420078C;
-        Tue, 13 Aug 2019 14:43:12 +0200 (CEST)
-Received: from fsr-ub1464-137.ea.freescale.net (fsr-ub1464-137.ea.freescale.net [10.171.82.114])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 963682060E;
-        Tue, 13 Aug 2019 14:43:12 +0200 (CEST)
-From:   Ioana Ciornei <ioana.ciornei@nxp.com>
-To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Cc:     joe@perches.com, andrew@lunn.ch, ruxandra.radulescu@nxp.com,
-        Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: [PATCH v3 03/10] staging: fsl-dpaa2/ethsw: add line terminator to all formats
-Date:   Tue, 13 Aug 2019 15:43:00 +0300
-Message-Id: <1565700187-16048-4-git-send-email-ioana.ciornei@nxp.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1565700187-16048-1-git-send-email-ioana.ciornei@nxp.com>
-References: <1565700187-16048-1-git-send-email-ioana.ciornei@nxp.com>
-Reply-to: ioana.ciornei@nxp.com
-X-Virus-Scanned: ClamAV using ClamSMTP
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 22B2CACD8;
+        Tue, 13 Aug 2019 12:43:43 +0000 (UTC)
+Message-ID: <1565700220.7043.8.camel@suse.com>
+Subject: Re: KMSAN: uninit-value in smsc75xx_bind
+From:   Oliver Neukum <oneukum@suse.com>
+To:     syzbot <syzbot+6966546b78d050bb0b5d@syzkaller.appspotmail.com>,
+        davem@davemloft.net, glider@google.com,
+        syzkaller-bugs@googlegroups.com, steve.glendinning@shawell.net,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Date:   Tue, 13 Aug 2019 14:43:40 +0200
+In-Reply-To: <0000000000009f4316058fab3bd7@google.com>
+References: <0000000000009f4316058fab3bd7@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the '\n' line terminator to the string formats missing it.
+Am Freitag, den 09.08.2019, 01:48 -0700 schrieb syzbot:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    beaab8a3 fix KASAN build
+> git tree:       kmsan
 
-Reported-by: Joe Perches <joe@perches.com>
-Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
----
-Changes in v2:
- - added Reported-by tag
-Changes in v3:
- - none
+[..]
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+>   kmsan_report+0x162/0x2d0 mm/kmsan/kmsan_report.c:109
+>   __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:294
+>   smsc75xx_wait_ready drivers/net/usb/smsc75xx.c:976 [inline]
+>   smsc75xx_bind+0x541/0x12d0 drivers/net/usb/smsc75xx.c:1483
 
- drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c |  2 +-
- drivers/staging/fsl-dpaa2/ethsw/ethsw.c         | 10 +++++-----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> Local variable description: ----buf.i93@smsc75xx_bind
+> Variable was created at:
+>   __smsc75xx_read_reg drivers/net/usb/smsc75xx.c:83 [inline]
+>   smsc75xx_wait_ready drivers/net/usb/smsc75xx.c:969 [inline]
+>   smsc75xx_bind+0x44c/0x12d0 drivers/net/usb/smsc75xx.c:1483
+>   usbnet_probe+0x10d3/0x3950 drivers/net/usb/usbnet.c:1722
 
-diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c
-index 926a0c053e18..95e9f1096999 100644
---- a/drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c
-+++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw-ethtool.c
-@@ -65,7 +65,7 @@ static void ethsw_get_drvinfo(struct net_device *netdev,
- 				     port_priv->idx,
- 				     &state);
- 	if (err) {
--		netdev_err(netdev, "ERROR %d getting link state", err);
-+		netdev_err(netdev, "ERROR %d getting link state\n", err);
- 		goto out;
- 	}
- 
-diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-index 302842c3bdfe..9ade73928e60 100644
---- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-+++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-@@ -722,12 +722,12 @@ static irqreturn_t ethsw_irq0_handler_thread(int irq_num, void *arg)
- 	err = dpsw_get_irq_status(ethsw->mc_io, 0, ethsw->dpsw_handle,
- 				  DPSW_IRQ_INDEX_IF, &status);
- 	if (err) {
--		dev_err(dev, "Can't get irq status (err %d)", err);
-+		dev_err(dev, "Can't get irq status (err %d)\n", err);
- 
- 		err = dpsw_clear_irq_status(ethsw->mc_io, 0, ethsw->dpsw_handle,
- 					    DPSW_IRQ_INDEX_IF, 0xFFFFFFFF);
- 		if (err)
--			dev_err(dev, "Can't clear irq status (err %d)", err);
-+			dev_err(dev, "Can't clear irq status (err %d)\n", err);
- 		goto out;
- 	}
- 
-@@ -772,21 +772,21 @@ static int ethsw_setup_irqs(struct fsl_mc_device *sw_dev)
- 					IRQF_NO_SUSPEND | IRQF_ONESHOT,
- 					dev_name(dev), dev);
- 	if (err) {
--		dev_err(dev, "devm_request_threaded_irq(): %d", err);
-+		dev_err(dev, "devm_request_threaded_irq(): %d\n", err);
- 		goto free_irq;
- 	}
- 
- 	err = dpsw_set_irq_mask(ethsw->mc_io, 0, ethsw->dpsw_handle,
- 				DPSW_IRQ_INDEX_IF, mask);
- 	if (err) {
--		dev_err(dev, "dpsw_set_irq_mask(): %d", err);
-+		dev_err(dev, "dpsw_set_irq_mask(): %d\n", err);
- 		goto free_devm_irq;
- 	}
- 
- 	err = dpsw_set_irq_enable(ethsw->mc_io, 0, ethsw->dpsw_handle,
- 				  DPSW_IRQ_INDEX_IF, 1);
- 	if (err) {
--		dev_err(dev, "dpsw_set_irq_enable(): %d", err);
-+		dev_err(dev, "dpsw_set_irq_enable(): %d\n", err);
- 		goto free_devm_irq;
- 	}
- 
--- 
-1.9.1
+Hi,
+
+this looks like a false positive to me.
+The offending code is likely this:
+
+        if (size) {
+                buf = kmalloc(size, GFP_KERNEL);
+                if (!buf)
+                        goto out;
+        }
+
+        err = usb_control_msg(dev->udev, usb_rcvctrlpipe(dev->udev, 0),
+                              cmd, reqtype, value, index, buf, size,
+                              USB_CTRL_GET_TIMEOUT);
+
+which uses 'buf' uninitialized. But it is used for input.
+What is happening here?
+
+	Regards
+		Oliver
+
+
 
