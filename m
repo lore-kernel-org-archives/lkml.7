@@ -2,173 +2,151 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F69C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D98FC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D49EB2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DB13206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:39:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="hJdh3IZm";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fe/dmV2d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfHMAgC (ORCPT
+        id S1726668AbfHMAjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 20:36:02 -0400
-Received: from mail-ot1-f69.google.com ([209.85.210.69]:43579 "EHLO
-        mail-ot1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbfHMAgC (ORCPT
+        Mon, 12 Aug 2019 20:39:08 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:50657 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726200AbfHMAjH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 20:36:02 -0400
-Received: by mail-ot1-f69.google.com with SMTP id o1so18146264otp.10
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 17:36:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=DdharNhZ7fUYbdIIsQ/LEEyRD5VF53RtP1Ku2I74hAQ=;
-        b=k5/gZGlW/W+J8wyHuLqa+9vid2S1mP4qTk2yR1BbETDAxAF9ENba3qZnt+3sDU+HxY
-         bknm4kW1PkjPncMNyG7j0c+wdD/6K8GFL1h8krVtg46Sa8Mm05dAne7qH7/CVcvV4qVg
-         mcLvsGIQRvv0mIulm+kYf+EyIiwjzi9ZmAS4LOS6s5UVq+rEqI/Iuf0qg0vjx8QuDlsA
-         GoFwEt9g/bnRfgKirHSHhPqZle/ne80deIcvrJ540QrZ2pUMMUGXSXUKYFa1Xk1P+jew
-         3z8brOb3suugDTCrAi08/AlTEt2IjdfV3qSwVPFAH8WAFijVyT4CJJgXbZLP3CYAyBUC
-         yoKg==
-X-Gm-Message-State: APjAAAXb/X3f99Wyn0trcUrVwZsDKjqmzFfEQH3L3isDwb3MbDdfYbEJ
-        xHBC4F+JuFsEHDe1f42lu+67Jox9JpFYGg0jQpOgYZgR2fd8
-X-Google-Smtp-Source: APXvYqxMYAGcxlWJVOtPt7gFUbqfN2enOSd4JaOv/R/ou+1LqtPPq6T0aJbW880XaDuOAMXYaicGN5cLYZX1wKbO9PcKwvAA35DA
-MIME-Version: 1.0
-X-Received: by 2002:a6b:ea12:: with SMTP id m18mr19516038ioc.173.1565656561041;
- Mon, 12 Aug 2019 17:36:01 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 17:36:01 -0700
-In-Reply-To: <4694.1565649521@warthog.procyon.org.uk>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000029475c058ff4d32e@google.com>
-Subject: Re: KASAN: use-after-free Read in rxrpc_queue_local
-From:   syzbot <syzbot+78e71c5bab4f76a6a719@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dhowells@redhat.com,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Mon, 12 Aug 2019 20:39:07 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 64B9D2A08;
+        Mon, 12 Aug 2019 20:39:06 -0400 (EDT)
+Received: from imap35 ([10.202.2.85])
+  by compute4.internal (MEProxy); Mon, 12 Aug 2019 20:39:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=3jfb2lEVv1sOcUFflmmOQX9A1r3ygEe
+        TfYqbBLcpo8Y=; b=hJdh3IZmHwbjm2BdLjBVz1K5WYlciI8xqMSY6NRPqQ8WCx8
+        TsMpZIcSP7c8Qzl5F6dZAa4/0R0v8x+lw+HwqG0Uka2/bGLXQiJdRa6w3VY104Qd
+        BNE40Qe9M779kssLjnmCV2vvMdqhnbuS6jZQMVyOb4zoYOMvR7VxgQB8rZr4TNPq
+        z+pkOnV469CJ8H3LA/CpvafIlcDg24C3I4+XESDXAL6e469wci4OPLDZdueba7z8
+        NGh8IrbRT4Loz8VdXKG+mEZuEEUG8lzSpAtbp+7Itx2T0gGCYMAPQRmLTIJmCf6o
+        VlhvBVtAbeCT/o3Z9SMxau5MwtPP0D3BbFe8VYg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=3jfb2l
+        EVv1sOcUFflmmOQX9A1r3ygEeTfYqbBLcpo8Y=; b=fe/dmV2dO6a3mOK2iJGV7A
+        N+/JtWc4eBv/0iiW8FY3IuLyM82GD4XCrAhiKa8Te9loPhugzVoa1MR9IS06zkHh
+        7XoYggMu7g2TpHjM81fH6+Lc1eZyyAZ7N8IXJhX/pKN69YEKgaG7Q1mFRMOVSqgD
+        PF4EpeNT+5Ef5JmVb6fNwTo5iQND2eSxX8p3ycUaew2oFl/4p+k6mNV2s27jtyFm
+        YBhjIWrp36sVesRVUjDyJt05gnQXEAvAyUp6IdpcWPIgR6VekydxOPRPpHtHLYbR
+        HvIVoLPdaZ0V11gA3YImIT4VqnSaG/mq/umE1GBgD08rHNmoj9f+LLL4csrELLgQ
+        ==
+X-ME-Sender: <xms:qQZSXZl3VU0BFbHf8AOLrGdAt9e-e8IduBaO365x3bjgmdEXUpW3Eg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddruddvhedgfeekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdlfeehmdenucfjughrpefofgggkfgjfhffhffvufgtsehttdertder
+    reejnecuhfhrohhmpedfffgrnhhivghlucgiuhdfuceougiguhesugiguhhuuhdrgiihii
+    eqnecurfgrrhgrmhepmhgrihhlfhhrohhmpegugihusegugihuuhhurdighiiinecuvehl
+    uhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:qQZSXStouB65Wt9IPoixasDbIfd-WWU-ogxO3VU2zmJqPFzkczXRnQ>
+    <xmx:qQZSXYtwlL9Qh31SzEEGdYyNrbfVxeS6QxzImSK6vOSvToV_PWfC1Q>
+    <xmx:qQZSXa0qh9T44Uz5JRXPG2VFsNr27HYIJBAVfB4idLYISMk0l9os3w>
+    <xmx:qgZSXY-z2CnGVv4ww4ACyPqCJ7DKUPpo3qYtAQwCZAe7CAsz7WtDhw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id A44CD14C0062; Mon, 12 Aug 2019 20:39:05 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-809-g8e5c451-fmstable-20190809v1
+Mime-Version: 1.0
+Message-Id: <7232f649-78f8-4a2d-a3df-0ce9293f9de8@www.fastmail.com>
+In-Reply-To: <CAEf4Bzb0jBmsdeKZ_vN4w-z1tM8M2Ygz_CoBoO_2iV55tgL1Bg@mail.gmail.com>
+References: <20190809214642.12078-1-dxu@dxuuu.xyz>
+ <20190809214642.12078-2-dxu@dxuuu.xyz>
+ <CAEf4Bzb0jBmsdeKZ_vN4w-z1tM8M2Ygz_CoBoO_2iV55tgL1Bg@mail.gmail.com>
+Date:   Mon, 12 Aug 2019 17:38:53 -0700
+From:   "Daniel Xu" <dxu@dxuuu.xyz>
+To:     "Andrii Nakryiko" <andrii.nakryiko@gmail.com>
+Cc:     "Song Liu" <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
+        "Andrii Nakryiko" <andriin@fb.com>, peterz@infraded.org,
+        "Ingo Molnar" <mingo@redhat.com>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        "Alexei Starovoitov" <ast@fb.com>,
+        alexander.shishkin@linux.intel.com, "Jiri Olsa" <jolsa@redhat.com>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        "open list" <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?Q?Re:_[PATCH_v2_bpf-next_1/4]_tracing/probe:_Add_PERF=5FEVENT=5F?=
+ =?UTF-8?Q?IOC=5FQUERY=5FPROBE_ioctl?=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Aug 12, 2019, at 8:57 AM, Andrii Nakryiko wrote:
+> On Fri, Aug 9, 2019 at 2:47 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
+> >
+> > It's useful to know [uk]probe's nmissed and nhit stats. For example with
+> > tracing tools, it's important to know when events may have been lost.
+> > debugfs currently exposes a control file to get this information, but
+> > it is not compatible with probes registered with the perf API.
+> >
+> > While bpf programs may be able to manually count nhit, there is no way
+> > to gather nmissed. In other words, it is currently not possible to
+> > retrieve information about FD-based probes.
+> >
+> > This patch adds a new ioctl that lets users query nmissed (as well as
+> > nhit for completeness). We currently only add support for [uk]probes
+> > but leave the possibility open for other probes like tracepoint.
+> >
+> > Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+> > ---
+> >  include/linux/trace_events.h    | 12 ++++++++++++
+> >  include/uapi/linux/perf_event.h | 19 +++++++++++++++++++
+> >  kernel/events/core.c            | 20 ++++++++++++++++++++
+> >  kernel/trace/trace_kprobe.c     | 23 +++++++++++++++++++++++
+> >  kernel/trace/trace_uprobe.c     | 23 +++++++++++++++++++++++
+> >  5 files changed, 97 insertions(+)
+> >
+[...]
+> > +       struct trace_kprobe *tk = (struct trace_kprobe *)call->data;
+> > +       u64 nmissed, nhit;
+> > +
+> > +       if (!capable(CAP_SYS_ADMIN))
+> > +               return -EPERM;
+> > +       if (copy_from_user(&query, uquery, sizeof(query)))
+> 
+> what about forward/backward compatibility? Didn't you have a size
+> field for perf_event_query_probe?
 
-syzbot has tested the proposed patch but the reproducer still triggered  
-crash:
-KASAN: use-after-free Read in rxrpc_queue_local
+I initially did, yes. But after thinking about it more, I'm not convinced it
+is necessary. It seems the last change to the debugfs counterpart was in
+the initial comit cd7e7bd5e4, ~10 years ago. I cannot think of any other
+information that would be useful off the top of my head, so I figured it'd
+be best if we didn't make more complicated something that doesn't seem
+likely to change. If we really needed something else, I figured adding
+another ioctl is pretty cheap.
 
-==================================================================
-BUG: KASAN: use-after-free in atomic_read  
-include/asm-generic/atomic-instrumented.h:26 [inline]
-BUG: KASAN: use-after-free in rxrpc_queue_local+0x7c/0x3e0  
-net/rxrpc/local_object.c:354
-Read of size 4 at addr ffff888081e3db14 by task syz-executor.5/31180
+If you (or anyone) feels strongly about adding it back, I can make it a
+u64 so there's no holes.
 
-CPU: 0 PID: 31180 Comm: syz-executor.5 Not tainted 5.3.0-rc3+ #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
-  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
-  kasan_report+0x12/0x17 mm/kasan/common.c:612
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
-  __kasan_check_read+0x11/0x20 mm/kasan/common.c:92
-  atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
-  rxrpc_queue_local+0x7c/0x3e0 net/rxrpc/local_object.c:354
-  rxrpc_unuse_local+0x52/0x80 net/rxrpc/local_object.c:408
-  rxrpc_release_sock net/rxrpc/af_rxrpc.c:904 [inline]
-  rxrpc_release+0x47d/0x840 net/rxrpc/af_rxrpc.c:930
-  __sock_release+0xce/0x280 net/socket.c:590
-  sock_close+0x1e/0x30 net/socket.c:1268
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
-  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-  do_syscall_64+0x5a9/0x6a0 arch/x86/entry/common.c:299
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x413511
-Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48  
-83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
-89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007fffc45736d0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000413511
-RDX: 0000001b33920000 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 0000000000000001 R08: ffffffffffffffff R09: ffffffffffffffff
-R10: 00007fffc45737b0 R11: 0000000000000293 R12: 000000000075bf20
-R13: 000000000003624a R14: 0000000000760270 R15: ffffffffffffffff
+> 
+> > +               return -EFAULT;
+> > +
+> > +       nhit = trace_kprobe_nhit(tk);
+> > +       nmissed = tk->rp.kp.nmissed;
+> > +
+> > +       if (put_user(nmissed, &uquery->nmissed) ||
+> > +           put_user(nhit, &uquery->nhit))
+> 
+> Wouldn't it be nicer to just do one user put for entire struct (or at
+> least relevant part of it with backward/forward compatibility?).
 
-Allocated by task 31182:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:487 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:460
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:501
-  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3550
-  kmalloc include/linux/slab.h:552 [inline]
-  kzalloc include/linux/slab.h:748 [inline]
-  rxrpc_alloc_local net/rxrpc/local_object.c:79 [inline]
-  rxrpc_lookup_local+0x562/0x1ba0 net/rxrpc/local_object.c:277
-  rxrpc_bind+0x34d/0x5e0 net/rxrpc/af_rxrpc.c:149
-  __sys_bind+0x239/0x290 net/socket.c:1647
-  __do_sys_bind net/socket.c:1658 [inline]
-  __se_sys_bind net/socket.c:1656 [inline]
-  __x64_sys_bind+0x73/0xb0 net/socket.c:1656
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 9:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:449
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:457
-  __cache_free mm/slab.c:3425 [inline]
-  kfree+0x10a/0x2c0 mm/slab.c:3756
-  rxrpc_local_rcu+0x62/0x80 net/rxrpc/local_object.c:495
-  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
-  rcu_do_batch kernel/rcu/tree.c:2114 [inline]
-  rcu_core+0x67f/0x1580 kernel/rcu/tree.c:2314
-  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2323
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-
-The buggy address belongs to the object at ffff888081e3db00
-  which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 20 bytes inside of
-  1024-byte region [ffff888081e3db00, ffff888081e3df00)
-The buggy address belongs to the page:
-page:ffffea0002078f00 refcount:1 mapcount:0 mapping:ffff8880aa400c40  
-index:0x0 compound_mapcount: 0
-flags: 0x1fffc0000010200(slab|head)
-raw: 01fffc0000010200 ffffea0002073288 ffffea00022f1608 ffff8880aa400c40
-raw: 0000000000000000 ffff888081e3c000 0000000100000007 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff888081e3da00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff888081e3da80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff888081e3db00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                          ^
-  ffff888081e3db80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff888081e3dc00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
-Tested on:
-
-commit:         03a62469 rxrpc: Fix local endpoint replacement
-git tree:        
-git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=14500d36600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a4c9e9f08e9e8960
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
+Not sure how that didn't occur to me. Thanks.
