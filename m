@@ -2,52 +2,107 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EB9C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36FEC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2AD52067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F84B2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbfHMLrs (ORCPT
+        id S1727510AbfHMLsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 07:47:48 -0400
-Received: from muru.com ([72.249.23.125]:57216 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbfHMLrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 07:47:48 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 5CEAD805C;
-        Tue, 13 Aug 2019 11:48:15 +0000 (UTC)
-Date:   Tue, 13 Aug 2019 04:47:44 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        letux-kernel@openphoenux.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH 1/2] DTS: ARM: gta04: define chosen/stdout-path
-Message-ID: <20190813114744.GT52127@atomide.com>
-References: <cover.1562597164.git.hns@goldelico.com>
- <21ed570c5920346bf9dc1284c8dfee2e6ef79a51.1562597164.git.hns@goldelico.com>
+        Tue, 13 Aug 2019 07:48:25 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:55595 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfHMLsY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 07:48:24 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id BDA1980740; Tue, 13 Aug 2019 13:48:09 +0200 (CEST)
+Date:   Tue, 13 Aug 2019 13:48:21 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Richard Weinberger <richard@nod.at>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org,
+        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v7 08/24] erofs: add namei functions
+Message-ID: <20190813114821.GB11559@amd>
+References: <20190813091326.84652-1-gaoxiang25@huawei.com>
+ <20190813091326.84652-9-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="IiVenqGWf+H9Y6IX"
 Content-Disposition: inline
-In-Reply-To: <21ed570c5920346bf9dc1284c8dfee2e6ef79a51.1562597164.git.hns@goldelico.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190813091326.84652-9-gaoxiang25@huawei.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [190708 14:46]:
-> This allows to remove the console= entry in the kernel command line.
 
-Applying this patch into omap-for-v5.4/dt thanks.
+--IiVenqGWf+H9Y6IX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tony
+Hi!
+
+> +	/*
+> +	 * on-disk error, let's only BUG_ON in the debugging mode.
+> +	 * otherwise, it will return 1 to just skip the invalid name
+> +	 * and go on (in consideration of the lookup performance).
+> +	 */
+> +	DBG_BUGON(qd->name > qd->end);
+
+I believe you should check for errors in non-debug mode, too.
+
+
+> +			if (unlikely(!ndirents)) {
+> +				DBG_BUGON(1);
+> +				kunmap_atomic(de);
+> +				put_page(page);
+> +				page =3D ERR_PTR(-EIO);
+> +				goto out;
+> +			}
+
+-EUCLEAN is right error code for corrupted filesystem. (And you
+ probably want to print something to the syslog, too).
+
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--IiVenqGWf+H9Y6IX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1So4UACgkQMOfwapXb+vKgtQCgnPcBzF0lCtaBF3/a2HOvyqoZ
+WrgAoKKc3Oxnrh7f0dAM4iMbSPFCWbo6
+=JqsA
+-----END PGP SIGNATURE-----
+
+--IiVenqGWf+H9Y6IX--
