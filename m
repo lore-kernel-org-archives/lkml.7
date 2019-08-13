@@ -2,88 +2,132 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CCBC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 988F8C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B9620644
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C1D520679
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:37:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="woBLh51W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729128AbfHMPde (ORCPT
+        id S1729287AbfHMPhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 11:33:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38416 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728226AbfHMPde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 11:33:34 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2E3A730832DC;
-        Tue, 13 Aug 2019 15:33:34 +0000 (UTC)
-Received: from sandy.ghostprotocols.net (ovpn-112-35.phx2.redhat.com [10.3.112.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A735F80FD6;
-        Tue, 13 Aug 2019 15:33:33 +0000 (UTC)
-Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
-        id CAE4411E7; Tue, 13 Aug 2019 12:33:30 -0300 (BRT)
-Date:   Tue, 13 Aug 2019 12:33:30 -0300
-From:   Arnaldo Carvalho de Melo <acme@redhat.com>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>, acme@kernel.org
-Subject: Re: [PATCH v1] perf record: Add an option to take an AUX snapshot on
- exit
-Message-ID: <20190813153330.GF2142@redhat.com>
-References: <20190806144101.62892-1-alexander.shishkin@linux.intel.com>
+        Tue, 13 Aug 2019 11:37:02 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34832 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729193AbfHMPhC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 11:37:02 -0400
+Received: by mail-pf1-f193.google.com with SMTP id d85so1322493pfd.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 08:37:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lz+5UlOi1qxxGBIgahg/9X3yobOn5+akM80wHeA6n1k=;
+        b=woBLh51WQ/ct5Mau6CtW3e2fv+4gutMwYr5IF6AzhtA/gRawkgJVjfj3lL2I9cQW6b
+         oV9ghFkUDHHT6gzkNQmXvvL9gPL9RVP9dcZDUbOj0dMRylXq5DiVTQ3Oa5e6dut3Fj5v
+         HUodcSNN8oxsllcQZnMdwLzV7Fzr/EGmVES7M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lz+5UlOi1qxxGBIgahg/9X3yobOn5+akM80wHeA6n1k=;
+        b=qaMcpCkOvEleTiiKAryWoEekoTLc3ECw46tBDqu93S64AjGSR5tlExBGwNFh6A6xXC
+         Ml3CK6OaYWm4gWqLSxZXGgTQgSTrZVCFXzQN0xg60Foq1m47C4cZS891vuju7dkiwjVV
+         4OCcEWc9iVXGzQlYydonyGrEyClziuCj7Pl0bFtIMMOAz2iHSVboIGcvcM5lMHci2Z72
+         bl+5whE5T3d2t86wSBd23Sxdkx3QGFd14SXO7N/+Whm7trAlAgybXiiBuKqCuoHNHU5v
+         XDjdLuA/4hMGPzMOQ2J1qiAOuCHn6e4kTWukTKJoTeEBre7jZQQ3t/XTx0ZErNvIKctu
+         +X2w==
+X-Gm-Message-State: APjAAAUw0r3BYw17meIJrtUxoTRKoiYAjRnvTbLcI9njk9bM5phYdAjT
+        jVL1jrNE6xYIm4kOZiuM5wNuyQ==
+X-Google-Smtp-Source: APXvYqwI65ttP97pW8RMlWdF32CvIfYXb4EMrQUFfUK/y0oRINDva/d4Zii5+wrMV6aDl9WtJzxUgA==
+X-Received: by 2002:a62:f24b:: with SMTP id y11mr16086693pfl.0.1565710621336;
+        Tue, 13 Aug 2019 08:37:01 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id 124sm113820431pfw.142.2019.08.13.08.37.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Aug 2019 08:37:00 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 11:36:59 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Michal Hocko <mhocko@kernel.org>, khlebnikov@yandex-team.ru
+Cc:     linux-kernel@vger.kernel.org, Minchan Kim <minchan@kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
+        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Mike Rapoport <rppt@linux.ibm.com>, namhyung@google.com,
+        paulmck@linux.ibm.com, Robin Murphy <robin.murphy@arm.com>,
+        Roman Gushchin <guro@fb.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
+        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v5 2/6] mm/page_idle: Add support for handling swapped
+ PG_Idle pages
+Message-ID: <20190813153659.GD14622@google.com>
+References: <20190807171559.182301-1-joel@joelfernandes.org>
+ <20190807171559.182301-2-joel@joelfernandes.org>
+ <20190813150450.GN17933@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190806144101.62892-1-alexander.shishkin@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.5.20 (2009-12-10)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 13 Aug 2019 15:33:34 +0000 (UTC)
+In-Reply-To: <20190813150450.GN17933@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Aug 06, 2019 at 05:41:01PM +0300, Alexander Shishkin escreveu:
-> It is sometimes useful to generate a snapshot when perf record exits;
-> I've been using a wrapper script around the workload that would do a
-> killall -USR2 perf when the workload exits.
+On Tue, Aug 13, 2019 at 05:04:50PM +0200, Michal Hocko wrote:
+> On Wed 07-08-19 13:15:55, Joel Fernandes (Google) wrote:
+> > Idle page tracking currently does not work well in the following
+> > scenario:
+> >  1. mark page-A idle which was present at that time.
+> >  2. run workload
+> >  3. page-A is not touched by workload
+> >  4. *sudden* memory pressure happen so finally page A is finally swapped out
+> >  5. now see the page A - it appears as if it was accessed (pte unmapped
+> >     so idle bit not set in output) - but it's incorrect.
+> > 
+> > To fix this, we store the idle information into a new idle bit of the
+> > swap PTE during swapping of anonymous pages.
+> >
+> > Also in the future, madvise extensions will allow a system process
+> > manager (like Android's ActivityManager) to swap pages out of a process
+> > that it knows will be cold. To an external process like a heap profiler
+> > that is doing idle tracking on another process, this procedure will
+> > interfere with the idle page tracking similar to the above steps.
 > 
-> @@ -654,7 +670,7 @@ int record__auxtrace_mmap_read(struct record *rec __maybe_unused,
->  }
->  
->  static inline
-> -void record__read_auxtrace_snapshot(struct record *rec __maybe_unused)
-> +void record__read_auxtrace_snapshot(struct record *rec __maybe_unused, bool on_exit)
+> This could be solved by checking the !present/swapped out pages
+> right? Whoever decided to put the page out to the swap just made it
+> idle effectively.  So the monitor can make some educated guess for
+> tracking. If that is fundamentally not possible then please describe
+> why.
 
-You forgot to add the __maybe_unused for the on_exit and later for the
-'rec' in record__auxtrace_snapshot_exit, which causes the build to fail
-when auxtrace isn't being built, I've fixed those.
+But the monitoring process (profiler) does not have control over the 'whoever
+made it effectively idle' process.
 
-- Arnaldo
+As you said it will be a guess, it will not be accurate.
 
->  {
->  }
->  
-> @@ -664,6 +680,12 @@ int auxtrace_record__snapshot_start(struct auxtrace_record *itr __maybe_unused)
->  	return 0;
->  }
->  
-> +static inline
-> +int record__auxtrace_snapshot_exit(struct record *rec)
-> +{
-> +	return 0;
-> +}
-> +
->  static int record__auxtrace_init(struct record *rec __maybe_unused)
->  {
->  	return 0;
-> @@ -1536,7 +1558,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+I am curious what is your concern with using a bit in the swap PTE?
+
+(Adding Konstantin as well since we may be interested in this, since we also
+suggested this idea).
+
+thanks,
+
+ - Joel
+
