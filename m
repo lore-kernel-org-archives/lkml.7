@@ -2,140 +2,157 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69395C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D9EC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 486F320840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CB8A204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:37:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MkTmmKMf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbfHMLhk (ORCPT
+        id S1727979AbfHMLho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 07:37:40 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:47542 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726600AbfHMLhj (ORCPT
+        Tue, 13 Aug 2019 07:37:44 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:8848 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbfHMLhn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 07:37:39 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hxV7M-0007C4-Or; Tue, 13 Aug 2019 12:37:32 +0100
-Received: from ben by deadeye with local (Exim 4.92)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hxV7M-0002gA-GJ; Tue, 13 Aug 2019 12:37:32 +0100
-Message-ID: <8861ca0e9c4a171390b231941cd958189ca6ef33.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 043/157] ext4: brelse all indirect buffer 
- inext4_ind_remove_space()
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Jari Ruusu <jariruusu@users.sourceforge.net>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        Hulk Robot <hulkci@huawei.com>, Jan Kara <jack@suse.cz>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Ts'o <tytso@mit.edu>
-Date:   Tue, 13 Aug 2019 12:37:27 +0100
-In-Reply-To: <5D523729.B7BF986@users.sourceforge.net>
-References: <lsq.1565469607.761898531@decadent.org.uk>
-         <5D523729.B7BF986@users.sourceforge.net>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-x6352Adav+lzE9GJZMu/"
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 13 Aug 2019 07:37:43 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d52a1080000>; Tue, 13 Aug 2019 04:37:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 13 Aug 2019 04:37:42 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 13 Aug 2019 04:37:42 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 13 Aug
+ 2019 11:37:41 +0000
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 13 Aug
+ 2019 11:37:41 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 13 Aug 2019 11:37:41 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d52a1000001>; Tue, 13 Aug 2019 04:37:41 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
+CC:     <digetx@gmail.com>, <mperttunen@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V16 09/13] dt-bindings: Add PCIe supports-clkreq property
+Date:   Tue, 13 Aug 2019 17:06:23 +0530
+Message-ID: <20190813113627.27251-10-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190813113627.27251-1-vidyas@nvidia.com>
+References: <20190813113627.27251-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565696264; bh=RkulmOGoDFNKGypot8V8nm0linfaZGU2RQJ4ViJqy0s=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=MkTmmKMf4BqAGfxUsHDeODXKOWNgparJgpZVQ3cNOJebyFmsNYYkigzF4pqsmHUAq
+         kXQal/b3Pw/9bQkcM2uYbRrA9a4q8qwW7wUhb6v70pT7r5qlUua+M2pYlvySUOeueb
+         bKE2L/Pb7+T1OiypollP7gqMmPlmVn5271ymnwCVCeF9jEeZIrCj4HGvFtR7CyBPUL
+         2AupEoFF3Jlwf/9qfcH/e4WqNERbiPCZsQwrdwE/dZU74Cm4bgsrGSDQR7kXoXGMy+
+         Dn3JzSWcbOp1iQIPw7P38MmUL5PrOTGQT5cPosnCw2BWrRdBsfOajp7tCDQkFjPHoA
+         LBPyK5Gbf1GfQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Some host controllers need to know the existence of clkreq signal routing
+to downstream devices to be able to advertise low power features like
+ASPM L1 substates. Without clkreq signal routing being present, enabling
+ASPM L1 substates might lead to downstream devices being disconnected
+from the bus. Hence a new device tree property 'supports-clkreq' is added
+to make such host controllers aware of clkreq signal routing to
+downstream devices.
 
---=-x6352Adav+lzE9GJZMu/
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+---
+V16:
+* None
 
-On Tue, 2019-08-13 at 07:06 +0300, Jari Ruusu wrote:
-> Ben Hutchings wrote:
-> > From: "zhangyi (F)" <yi.zhang@huawei.com>
-> >=20
-> > commit 674a2b27234d1b7afcb0a9162e81b2e53aeef217 upstream.
->=20
-> [snip]
->=20
-> > --- a/fs/ext4/indirect.c
-> > +++ b/fs/ext4/indirect.c
-> > @@ -1481,10 +1481,14 @@ end_range:
-> >                                            partial->p + 1,
-> >                                            partial2->p,
-> >                                            (chain+n-1) - partial);
-> > -                       BUFFER_TRACE(partial->bh, "call brelse");
-> > -                       brelse(partial->bh);
-> > -                       BUFFER_TRACE(partial2->bh, "call brelse");
-> > -                       brelse(partial2->bh);
-> > +                       while (partial > chain) {
-> > +                               BUFFER_TRACE(partial->bh, "call brelse"=
-);
-> > +                               brelse(partial->bh);
-> > +                       }
-> > +                       while (partial2 > chain2) {
-> > +                               BUFFER_TRACE(partial2->bh, "call brelse=
-");
-> > +                               brelse(partial2->bh);
-> > +                       }
-> >                         return 0;
-> >                 }
-> >=20
->=20
-> Above patch is really messed up. Alone that patch is livelocking
-> and file system corrupting. Look at those new while loops. Once the
-> while condition is true once, it is ALWAYS true, so it livelocks.
+V15:
+* None
 
-Thank you very much for this information.
+V14:
+* s/falling off the bus/being disconnected from the bus/ in commit message.
 
-> It absolutely needs follow-up patch from <yi.zhang@huawei.com>
-> "ext4: cleanup bh release code in ext4_ind_remove_space()"
-> upstream commit 5e86bdda41534e17621d5a071b294943cae4376e.
->=20
-> For more info about how to trigger that bug, see this earlier email
->=20
-> https://marc.info/?l=3Dlinux-kernel&m=3D155419973129522&w=3D2
->=20
-> For 3.16 kernels you may need to set CONFIG_EXT4_USE_FOR_EXT23=3Dy
-> so that ext4 code handles ext3 file systems.
+V13:
+* None
 
-As I want to release the update right now, I'll defer both of these.
+V12:
+* Rebased on top of linux-next top of the tree
 
-Ben.
+V11:
+* None
 
---=20
-Ben Hutchings
-When in doubt, use brute force. - Ken Thompson
+V10:
+* None
 
+V9:
+* None
 
+V8:
+* None
 
---=-x6352Adav+lzE9GJZMu/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+V7:
+* None
 
------BEGIN PGP SIGNATURE-----
+V6:
+* s/Documentation\/devicetree/dt-bindings/ in the subject
 
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl1SoPcACgkQ57/I7JWG
-EQlMJg//W6aEnzB7UJEVpTqTkKayKeMrMjoKMV1KE+pzvoggh1QVopvFR1MoHk1T
-41wwKsnQhqOchtMnay3jvW3X++2lcjREYa8ckFDz2bZxOKEHwnDyx/A+TAVmZFf5
-vvn2PiV9NskLAPousCPMb/IFki6n9rM3nmYmyVwk8KmQCccX/drr6xItV9attkGI
-UNF/nKoEmCqQ9XrEb3t34H4aytbHQO9MAGVQy7PHxD+XlfSpU61NTQDjOisvef/U
-GxU6yVIGjhcaB/NT5x3tINMQok1G/NWmPiNkP3uAqdKQRQISpPh2SZ1lDRDI3XH1
-/gdBjPtKfB6KTMA6OfRPnkZrrUUyvcOVsmjiJrUt941h0S7xMbXh9rMkxv28k6fc
-0kHB8r9iwgbHH3MhWPKJ0YZeAaolSiFIAywAo/YZPnbQYDZWACtwcN+v78wVaUSw
-21wFH4eksHqF4mwn57Fzip3IS6G2mMSZ2Yfz5RMg7Knr2lgm2xYZ+Ky+J5RkkFvh
-8sVZp1OT5qtuVwnx6jVGgjATSP352ZD1ygVvMUpAePS6CpWIvwm0Xndx3JBIfXZm
-DJ27DezImMDTpTZKFEcG9x3P4Ch3CUxvI1b/oqzqEQjncHRxbIIUhjPvGAkWUgci
-xiADS7j+d+DwR3iGU07l3P5vS22oeYqY0T6IyzXpZbsL/iuF2/g=
-=j5b8
------END PGP SIGNATURE-----
+V5:
+* None
 
---=-x6352Adav+lzE9GJZMu/--
+V4:
+* Rebased on top of linux-next top of the tree
+
+V3:
+* None
+
+V2:
+* This is a new patch in v2 series
+
+ Documentation/devicetree/bindings/pci/pci.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+index 2a5d91024059..29bcbd88f457 100644
+--- a/Documentation/devicetree/bindings/pci/pci.txt
++++ b/Documentation/devicetree/bindings/pci/pci.txt
+@@ -27,6 +27,11 @@ driver implementation may support the following properties:
+ - reset-gpios:
+    If present this property specifies PERST# GPIO. Host drivers can parse the
+    GPIO and apply fundamental reset to endpoints.
++- supports-clkreq:
++   If present this property specifies that CLKREQ signal routing exists from
++   root port to downstream device and host bridge drivers can do programming
++   which depends on CLKREQ signal existence. For example, programming root port
++   not to advertise ASPM L1 Sub-States support if there is no CLKREQ signal.
+ 
+ PCI-PCI Bridge properties
+ -------------------------
+-- 
+2.17.1
+
