@@ -2,111 +2,119 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E170AC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B2AC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B187A20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A2FA20842
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565716035;
-	bh=fgW6Va1LDRwdq/a+4YEJkeWaGkuqaoxvU1J721UrWZU=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=mC6lMSu3MOSWwgOGJG8cWKZgouwXiyEDKfT34QWiRzMksC88rjwWTCSZ1qIqaP6+P
-	 eszLWqFyG9wqjf/q7FhpdfQNrpvV6Z3N+KuHir9XjMlzfW7EprlZYv78Wub/Pg7/Lv
-	 eKvG9SeueKbk7IoGp3irf+7tGx5QGsVf/Zq5m4cY=
+	s=default; t=1565716119;
+	bh=65STqoKxZejhRA8D9TwQa+K2PAMisn1xsEutBY/kUY0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=t9jRimQPFZQPOFxGoxDFdmCDuexq3lfz453gXFEEWVPUVxTixqYrxlc+olmbVsnFa
+	 dimRtdRqdlGMEJNnkpsW5WbiV/oRnTE4bp6MTt2ekH4Liu9acoy/6LpukiktxIeJvL
+	 TM4FTCLdOTCNDaD+J2Kz4Qg3AykNNzWIaKjonYRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfHMRHO (ORCPT
+        id S1726796AbfHMRIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 13:07:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40020 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 13:08:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbfHMRHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 13:07:14 -0400
-Received: from kernel.org (unknown [104.132.0.74])
+        id S1726094AbfHMRIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 13:08:37 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C89CA20679;
-        Tue, 13 Aug 2019 17:07:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50A5020679;
+        Tue, 13 Aug 2019 17:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565716032;
-        bh=fgW6Va1LDRwdq/a+4YEJkeWaGkuqaoxvU1J721UrWZU=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=treWSrq2kr/VcJofxmrL4w25Mma1xe0c8v1GBc5/aXPXBX/Qh1u42KfGgRAMZ0E7B
-         JnDwwQ837FHdqo8RQtK1lGQzBKI6OSJ9LmUHBI9Mkjtg2i718ItycmKZiAhZvxCmXX
-         sM2LnPO88BoqSh26Dp8VQGdXD9L0EbFEm7nrZp44=
-Content-Type: text/plain; charset="utf-8"
+        s=default; t=1565716117;
+        bh=65STqoKxZejhRA8D9TwQa+K2PAMisn1xsEutBY/kUY0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e8o5cKrg0h7l3Es4XUW2/tElqvpgDv1p8yDzOCq5FdWQnf1aMYy0Xzef2T/tELhCD
+         s0upFTQQ5MtnqWUt7HUvO/2NRH2JQikPkh4tk9SAzwfYzOGXhtLhiE0lh5gNu7Nibj
+         fm3edf+JH5WVs5yzATU7sOHcbCWCbW1hmNJjWplI=
+Date:   Tue, 13 Aug 2019 18:08:30 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, yhs@fb.com,
+        clang-built-linux@googlegroups.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH 12/16] arm64: prefer __section from compiler_attributes.h
+Message-ID: <20190813170829.c3lryb6va3eopxd7@willie-the-truck>
+References: <20190812215052.71840-1-ndesaulniers@google.com>
+ <20190812215052.71840-12-ndesaulniers@google.com>
+ <20190813082744.xmzmm4j675rqiz47@willie-the-truck>
+ <CANiq72mAfJ23PyWzZAELgbKQDCX2nvY0z+dmOMe14qz=wa6eFg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAFd5g44Es4emKyQSxUkqckGJ02_o3sAcDLwUCW8ZFGX14j5=xg@mail.gmail.com>
-References: <20190812182421.141150-1-brendanhiggins@google.com> <20190812182421.141150-13-brendanhiggins@google.com> <20190813043140.67FF320644@mail.kernel.org> <CAFd5g44Es4emKyQSxUkqckGJ02_o3sAcDLwUCW8ZFGX14j5=xg@mail.gmail.com>
-Subject: Re: [PATCH v12 12/18] kunit: test: add tests for KUnit managed resources
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
-        Avinash Kondareddy <akndr41@gmail.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-User-Agent: alot/0.8.1
-Date:   Tue, 13 Aug 2019 10:07:12 -0700
-Message-Id: <20190813170712.C89CA20679@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANiq72mAfJ23PyWzZAELgbKQDCX2nvY0z+dmOMe14qz=wa6eFg@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brendan Higgins (2019-08-13 00:57:33)
-> On Mon, Aug 12, 2019 at 9:31 PM Stephen Boyd <sboyd@kernel.org> wrote:
+On Tue, Aug 13, 2019 at 02:36:06PM +0200, Miguel Ojeda wrote:
+> On Tue, Aug 13, 2019 at 10:27 AM Will Deacon <will@kernel.org> wrote:
+> > On Mon, Aug 12, 2019 at 02:50:45PM -0700, Nick Desaulniers wrote:
+> > > GCC unescapes escaped string section names while Clang does not. Because
+> > > __section uses the `#` stringification operator for the section name, it
+> > > doesn't need to be escaped.
+> > >
+> > > This antipattern was found with:
+> > > $ grep -e __section\(\" -e __section__\(\" -r
+> > >
+> > > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > > Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> > > ---
+> > >  arch/arm64/include/asm/cache.h     | 2 +-
+> > >  arch/arm64/kernel/smp_spin_table.c | 2 +-
+> > >  2 files changed, 2 insertions(+), 2 deletions(-)
 > >
-> > BTW, maybe kunit allocation APIs should
-> > fail the test if they fail to allocate in general. Unless we're unit
-> > testing failure to allocate problems.
->=20
-> Yeah, I thought about that. I wasn't sure how people would feel about
-> it, and I thought it would be a pain to tease out all the issues
-> arising from aborting in different contexts when someone might not
-> expect it.
->=20
-> I am thinking later we can have kunit_kmalloc_or_abort variants? And
-> then we can punt this issue to a later time?
->=20
+> > Does this fix a build issue, or is it just cosmetic or do we end up with
+> > duplicate sections or something else?
+> 
+> This should be cosmetic -- basically we are trying to move all users
+> of current available __attribute__s in compiler_attributes.h to the
+> __attr forms. I am also adding (slowly) new attributes that are
+> already used but we don't have them yet in __attr form.
+> 
+> > Happy to route it via arm64, just having trouble working out whether it's
+> > 5.3 material!
+> 
+> As you prefer! Those that are not taken by a maintainer I will pick up
+> and send via compiler-attributes.
+> 
+> I would go for 5.4, since there is no particular rush anyway.
 
-Sure. Sounds good.
+Okey doke, I'll pick this one up for 5.4 then. Thanks for the explanation!
 
+Will
