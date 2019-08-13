@@ -2,95 +2,54 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE72C41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C10C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF4B20840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71A4F20673
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:28:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbfHMG0c (ORCPT
+        id S1726516AbfHMG2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 02:26:32 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48660 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726282AbfHMG0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 02:26:32 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 48E537F3B8CC13C0C464;
-        Tue, 13 Aug 2019 14:10:40 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 13 Aug
- 2019 14:10:32 +0800
-Subject: Re: [PATCH 3/3] staging: erofs: xattr.c: avoid BUG_ON
-To:     Gao Xiang <gaoxiang25@huawei.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>, <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        "Fang Wei" <fangwei1@huawei.com>
-References: <20190813023054.73126-1-gaoxiang25@huawei.com>
- <20190813023054.73126-3-gaoxiang25@huawei.com>
- <84f50ca2-3411-36a6-049a-0d343d8df325@huawei.com>
- <20190813035754.GA23614@138>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <aa7660a6-b8a9-f22f-2616-f51c45dd52ac@huawei.com>
-Date:   Tue, 13 Aug 2019 14:10:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 13 Aug 2019 02:28:35 -0400
+Received: from muru.com ([72.249.23.125]:57038 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725836AbfHMG2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 02:28:34 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id EDC38805C;
+        Tue, 13 Aug 2019 06:29:01 +0000 (UTC)
+Date:   Mon, 12 Aug 2019 23:28:31 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Roger Quadros <rogerq@ti.com>
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        linux-kernel@vger.kernel.org, "Kristo, Tero" <t-kristo@ti.com>
+Subject: Re: [PATCH] bus: ti-sysc: Remove if-block in sysc_check_children()
+Message-ID: <20190813062831.GF52127@atomide.com>
+References: <20190808074042.15403-1-nishkadg.linux@gmail.com>
+ <2038cdcd-1506-84c6-520d-6dda50d4f317@ti.com>
+ <a1f56fcc-2207-fa32-83bc-cd219c2b893c@gmail.com>
+ <b1f8756e-4b15-7f1a-8562-5b80063733de@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20190813035754.GA23614@138>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b1f8756e-4b15-7f1a-8562-5b80063733de@ti.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xiang,
+* Roger Quadros <rogerq@ti.com> [190813 06:26]:
+> None of those functions return anything.
+> Maybe you can fix sysc_check_one_child() to return void?
+> I think you can retain your patch but get rid of error variable.
 
-On 2019/8/13 11:57, Gao Xiang wrote:
-> Hi Chao,
-> 
-> On Tue, Aug 13, 2019 at 11:20:22AM +0800, Chao Yu wrote:
->> On 2019/8/13 10:30, Gao Xiang wrote:
->>> Kill all the remaining BUG_ON in EROFS:
->>>  - one BUG_ON was used to detect xattr on-disk corruption,
->>>    proper error handling should be added for it instead;
->>>  - the other BUG_ONs are used to detect potential issues,
->>>    use DBG_BUGON only in (eng) debugging version.
->>
->> BTW, do we need add WARN_ON() into DBG_BUGON() to show some details function or
->> call stack in where we encounter the issue?
-> 
-> Thanks for kindly review :)
-> 
-> Agreed, it seems much better. If there are no other considerations
-> here, I can submit another patch addressing it later or maybe we
-> can change it in the next linux version since I'd like to focusing
-> on moving out of staging for this round...
+Makes sense to me.
 
-No problem, we can change it in a proper time.
+Regards,
 
-Thanks,
-
-> 
-> Thanks,
-> Gao Xiang
-> 
->>
->>>
->>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
->>
->> Reviewed-by: Chao Yu <yuchao0@huawei.com>
->>
->> Thanks,
-> .
-> 
+Tony
