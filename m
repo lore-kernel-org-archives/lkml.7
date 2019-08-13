@@ -2,98 +2,89 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5879EC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63199C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28EBD205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29B43206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 21:16:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565730993;
+	bh=5lO5nG45fLOHTgE1yvwYm5c55LUdkLb+cAFPTo7XcbE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ke1408VU3CbVLbhJeeEgrK4sKsd8m/ACqAsN2TF/ej+kJiMvATWS9TkWUwFYkSl2+
+	 DCK5VNYqk9p5CexIKdw+Rwk+/p/ThuPVBaNWxkJRCeH5MSv3wYD9BwPQpGE/gBrOzh
+	 A2gEWmgsMTwvZC897LKh0TEmTNnabDCQ1ChPEFh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfHMVPf (ORCPT
+        id S1726799AbfHMVQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 17:15:35 -0400
-Received: from mga04.intel.com ([192.55.52.120]:64080 "EHLO mga04.intel.com"
+        Tue, 13 Aug 2019 17:16:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726188AbfHMVPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 17:15:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 14:15:34 -0700
-X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="167178710"
-Received: from tsduncan-ubuntu.jf.intel.com (HELO [10.7.169.130]) ([10.7.169.130])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 13 Aug 2019 14:15:34 -0700
-Subject: Re: [PATCH net-next] net/ncsi: allow to customize BMC MAC Address
- offset
-To:     Ben Wei <benwei@fb.com>, Tao Ren <taoren@fb.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        "David S.Miller" <davem@davemloft.net>,
-        William Kennington <wak@google.com>
-References: <20190807002118.164360-1-taoren@fb.com>
- <20190807112518.644a21a2@cakuba.netronome.com>
- <20190807184143.GE26047@lunn.ch>
- <806a76a8-229a-7f24-33c7-2cf2094f3436@fb.com>
- <20190808133209.GB32706@lunn.ch>
- <77762b10-b8e7-b8a4-3fc0-e901707a1d54@fb.com>
- <20190808211629.GQ27917@lunn.ch>
- <ac22bbe0-36ca-b4b9-7ea7-7b1741c2070d@fb.com>
- <20190808230312.GS27917@lunn.ch>
- <f1519844-4e21-a9a4-1a69-60c37bd07f75@fb.com>
- <10079A1AC4244A41BC7939A794B72C238FCE0E03@fmsmsx104.amr.corp.intel.com>
- <bc9da695-3fd3-6643-8e06-562cc08fbc62@linux.intel.com>
- <dc0382c9-7995-edf5-ee1c-508b0f759c3d@linux.intel.com>
- <faa1b3c9-9ba3-0fff-e1d4-f6dddb60c52c@fb.com>
- <CH2PR15MB3686B3A20A231FC111C42F40A3D20@CH2PR15MB3686.namprd15.prod.outlook.com>
-From:   Terry Duncan <terry.s.duncan@linux.intel.com>
-Message-ID: <39309d92-742b-ca5f-dea5-b93ad003119d@linux.intel.com>
-Date:   Tue, 13 Aug 2019 14:15:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <CH2PR15MB3686B3A20A231FC111C42F40A3D20@CH2PR15MB3686.namprd15.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S1726188AbfHMVQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 17:16:31 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5EA8205C9;
+        Tue, 13 Aug 2019 21:16:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565730991;
+        bh=5lO5nG45fLOHTgE1yvwYm5c55LUdkLb+cAFPTo7XcbE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OkG7QgjoGy1/FLMnWjN6QVHtQGDQE7lx3AF09Wq1TzQirB9nW7PhsZgi97LYakzAS
+         kpNmEhjjpIsqmSORExdEosdrLv2gJP/YeSBEFOMn1H5v5ee8hvFz/1qjptsMpcWS3X
+         KSFzaA/tLs+FDl9iSVKMYNQ4/gNMWqHEiPVBbtww=
+Date:   Tue, 13 Aug 2019 14:16:30 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [patch] mm, page_alloc: move_freepages should not examine
+ struct page of reserved memory
+Message-Id: <20190813141630.bd8cee48e6a83ca77eead6ad@linux-foundation.org>
+In-Reply-To: <alpine.DEB.2.21.1908122036560.10779@chino.kir.corp.google.com>
+References: <alpine.DEB.2.21.1908122036560.10779@chino.kir.corp.google.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/19 12:52 PM, Ben Wei wrote:
->> On 8/13/19 9:31 AM, Terry Duncan wrote:
->>> Tao, in your new patch will it be possible to disable the setting of the BMC MAC?  I would like to be able to send NCSI_OEM_GET_MAC perhaps with netlink (TBD) to get the system address without it affecting the BMC address.
->>>
->>> I was about to send patches to add support for the Intel adapters when I saw this thread.
->>> Thanks,
->>> Terry
->>
-> Hi Terry,
-> Do you plan to monitor and configure NIC through use space programs via netlink?  I'm curious if you have additional use cases.
-> I had planned to add some daemon in user space to monitor NIC through NC-SI, primarily to log AENs, check link status and retrieve NIC counters.
-> We can collaborate on these if they align with your needs as well.
-> 
-> Also about Intel NIC, do you not plan to derive system address from BMC MAC? Is the BMC MAC independent of system address?
-> 
-> Thanks,
-> -Ben
-> 
-Hi Ben,
-Intel has in the past programmed BMC MACs with an offset from the system 
-MAC address of the first shared interface. We have found this approach 
-causes problems and adds complexity when system interfaces / OCP cards 
-are added or removed or disabled in BIOS. Our approach in OpenBMC is to 
-keep this simple - provide means for the BMC MAC addresses to be set in 
-manufacturing and persist them.
+On Mon, 12 Aug 2019 20:37:11 -0700 (PDT) David Rientjes <rientjes@google.com> wrote:
 
-We do also have some of the same use cases you mention.
-Thanks,
-Terry
+> After commit 907ec5fca3dc ("mm: zero remaining unavailable struct pages"),
+> struct page of reserved memory is zeroed.  This causes page->flags to be 0
+> and fixes issues related to reading /proc/kpageflags, for example, of
+> reserved memory.
+> 
+> The VM_BUG_ON() in move_freepages_block(), however, assumes that
+> page_zone() is meaningful even for reserved memory.  That assumption is no
+> longer true after the aforementioned commit.
+> 
+> There's no reason why move_freepages_block() should be testing the
+> legitimacy of page_zone() for reserved memory; its scope is limited only
+> to pages on the zone's freelist.
+> 
+> Note that pfn_valid() can be true for reserved memory: there is a backing
+> struct page.  The check for page_to_nid(page) is also buggy but reserved
+> memory normally only appears on node 0 so the zeroing doesn't affect this.
+> 
+> Move the debug checks to after verifying PageBuddy is true.  This isolates
+> the scope of the checks to only be for buddy pages which are on the zone's
+> freelist which move_freepages_block() is operating on.  In this case, an
+> incorrect node or zone is a bug worthy of being warned about (and the
+> examination of struct page is acceptable bcause this memory is not
+> reserved).
+
+I'm thinking Fixes:907ec5fca3dc and Cc:stable?  But 907ec5fca3dc is
+almost a year old, so you were doing something special to trigger this?
+
