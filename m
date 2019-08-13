@@ -2,255 +2,142 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3604C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 143E3C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5BE42067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9D7F2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:59:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pJTCnEYv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbfHMQxm (ORCPT
+        id S1727150AbfHMQ7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 12:53:42 -0400
-Received: from mga18.intel.com ([134.134.136.126]:12530 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726769AbfHMQxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 12:53:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 09:53:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="351588121"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga005.jf.intel.com with ESMTP; 13 Aug 2019 09:53:41 -0700
-Date:   Tue, 13 Aug 2019 09:57:23 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v4 13/22] iommu/vt-d: Enlightened PASID allocation
-Message-ID: <20190813095723.467b0344@jacob-builder>
-In-Reply-To: <6d53fe3e-8d91-22f6-4bec-aad6745bee81@redhat.com>
-References: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1560087862-57608-14-git-send-email-jacob.jun.pan@linux.intel.com>
-        <6d53fe3e-8d91-22f6-4bec-aad6745bee81@redhat.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Tue, 13 Aug 2019 12:59:10 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51573 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbfHMQ7J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 12:59:09 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 207so2166340wma.1;
+        Tue, 13 Aug 2019 09:59:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jvn+xJgfLUWg0oXwDG1/WgGeCa0KABLkFtSVh2iBO0E=;
+        b=pJTCnEYvaONkSFviyZYN6oKWB+sO8j/jPcyI+oPfke2MSfXLq08BNqapVJ0Fa2LppR
+         /3wdo/n9fQo3RB0SBbTYjYYTRjBnXvBRbvIvfRk5vmcejF1PuJ8Sv5iri22KQ/YzIj3j
+         BrQaRha37iIUw32ZJLlXgTYdgKzyKc94WRkHF+9d1R+/UxJb+QKaNVit3cOh8px3RNlN
+         6qIIMZiJNMyOI2mvApeoSMGXpta6BIa/I238l24v4wHH6GQsJQV7nnkqxkLvjO/cQtiM
+         vO+1krbH7IWE2ozIkh9kfvFL3e+7bjTeWp0BFaqGUp7O3LZxUnk2ytF8kHkAL3pZNd5A
+         Gidg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jvn+xJgfLUWg0oXwDG1/WgGeCa0KABLkFtSVh2iBO0E=;
+        b=oDP5yI/4vhue0Wv9pVAqvMHNw3Bea/BXn44rdYUn/2nULkwdsnFSTLX26uZUWhgCSd
+         Gfnaaf53+hVNoiIFJny1JnXW3pzv+choB8toq6BPdG88c+mR9OtUbr7oE4Z9Yd+EncPn
+         bjokg65TxWlXRTqbF8Z9e/DU7IjwaCB8JBic1deiM0tgiZMR5LRRVwdg6A3Hscz9w8Q3
+         b30VY0KB7Xgx5zX9Xpa5tcAL5xZAKpyyTTf14bWGoiPBiFjLDOXl+fSqPAsqjb3rb9Zr
+         NndNNpBzoIKtlifIV3RQ12DabxSJd9y+L4dE9c9eR2S1H0vTnR51I8pJDLAZzi8dW/BY
+         C4pg==
+X-Gm-Message-State: APjAAAUtpW21WOXysJ33+6ADR6QuaQDV9J23PEG1fc8yWJxa/phq3l7Q
+        h569schzJXostJD56HSTjofs0Hv4
+X-Google-Smtp-Source: APXvYqxC+zEaAniG5VsaaNRjK3kHb4PttUpcJj2Fx0ezq3QBmPb2Z0KTrvDiz2rc9a2ulGgETpUoVQ==
+X-Received: by 2002:a1c:7dc8:: with SMTP id y191mr4263236wmc.78.1565715546399;
+        Tue, 13 Aug 2019 09:59:06 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.34.218])
+        by smtp.googlemail.com with ESMTPSA id r16sm35040989wrc.81.2019.08.13.09.59.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 13 Aug 2019 09:59:04 -0700 (PDT)
+Subject: Re: [PATCH v1 2/2] irqchip/tegra: Clean up coding style
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190811183044.13925-1-digetx@gmail.com>
+ <20190811183044.13925-2-digetx@gmail.com> <86a7cdnmpx.wl-maz@kernel.org>
+ <4fbc5a90-e110-b020-15d3-c4bbe81b15cc@gmail.com>
+ <867e7hnin7.wl-maz@kernel.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <19845d1b-d140-a765-d548-77644923f4f0@gmail.com>
+Date:   Tue, 13 Aug 2019 19:59:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <867e7hnin7.wl-maz@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
-
-Apologize for the delayed response below,
-
-On Tue, 16 Jul 2019 11:29:30 +0200
-Auger Eric <eric.auger@redhat.com> wrote:
-
-> Hi Jacob,
-> On 6/9/19 3:44 PM, Jacob Pan wrote:
-> > From: Lu Baolu <baolu.lu@linux.intel.com>
-> > 
-> > If Intel IOMMU runs in caching mode, a.k.a. virtual IOMMU, the
-> > IOMMU driver should rely on the emulation software to allocate
-> > and free PASID IDs. The Intel vt-d spec revision 3.0 defines a
-> > register set to support this. This includes a capability register,
-> > a virtual command register and a virtual response register. Refer
-> > to section 10.4.42, 10.4.43, 10.4.44 for more information.
-> > 
-> > This patch adds the enlightened PASID allocation/free interfaces
-> > via the virtual command register.>
-> > Cc: Ashok Raj <ashok.raj@intel.com>
-> > Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Cc: Kevin Tian <kevin.tian@intel.com>
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >  drivers/iommu/intel-pasid.c | 76
-> > +++++++++++++++++++++++++++++++++++++++++++++
-> > drivers/iommu/intel-pasid.h | 13 +++++++-
-> > include/linux/intel-iommu.h |  2 ++ 3 files changed, 90
-> > insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iommu/intel-pasid.c
-> > b/drivers/iommu/intel-pasid.c index 2fefeaf..69fddd3 100644
-> > --- a/drivers/iommu/intel-pasid.c
-> > +++ b/drivers/iommu/intel-pasid.c
-> > @@ -63,6 +63,82 @@ void *intel_pasid_lookup_id(int pasid)
-> >  	return p;
-> >  }
-> >  
-> > +int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int
-> > *pasid) +{
-> > +	u64 res;
-> > +	u64 cap;
-> > +	u8 status_code;
-> > +	unsigned long flags;
-> > +	int ret = 0;
-> > +
-> > +	if (!ecap_vcs(iommu->ecap)) {
-> > +		pr_warn("IOMMU: %s: Hardware doesn't support
-> > virtual command\n",
-> > +			iommu->name);
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	cap = dmar_readq(iommu->reg + DMAR_VCCAP_REG);
-> > +	if (!(cap & DMA_VCS_PAS)) {
-> > +		pr_warn("IOMMU: %s: Emulation software doesn't
-> > support PASID allocation\n",
-> > +			iommu->name);
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	raw_spin_lock_irqsave(&iommu->register_lock, flags);
-> > +	dmar_writeq(iommu->reg + DMAR_VCMD_REG, VCMD_CMD_ALLOC);
-> > +	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
-> > +		      !(res & VCMD_VRSP_IP), res);
-> > +	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
-> > +
-> > +	status_code = VCMD_VRSP_SC(res);
-> > +	switch (status_code) {
-> > +	case VCMD_VRSP_SC_SUCCESS:
-> > +		*pasid = VCMD_VRSP_RESULT(res);
-> > +		break;
-> > +	case VCMD_VRSP_SC_NO_PASID_AVAIL:
-> > +		pr_info("IOMMU: %s: No PASID available\n",
-> > iommu->name);
-> > +		ret = -ENOMEM;
-> > +		break;
-> > +	default:
-> > +		ret = -ENODEV;
-> > +		pr_warn("IOMMU: %s: Unkonwn error code %d\n",  
-> unknown
-> s/unknown/unexpected
-sounds good.
-> > +			iommu->name, status_code);
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +void vcmd_free_pasid(struct intel_iommu *iommu, unsigned int pasid)
-> > +{
-> > +	u64 res;
-> > +	u8 status_code;
-> > +	unsigned long flags;
-> > +
-> > +	if (!ecap_vcs(iommu->ecap)) {
-> > +		pr_warn("IOMMU: %s: Hardware doesn't support
-> > virtual command\n",
-> > +			iommu->name);
-> > +		return;
-> > +	}  
-> Logically shouldn't you also check DMAR_VCCAP_REG as well?
-Good point, we may have more than just PASID allocation virtual
-commands.
-> > +
-> > +	raw_spin_lock_irqsave(&iommu->register_lock, flags);
-> > +	dmar_writeq(iommu->reg + DMAR_VCMD_REG, (pasid << 8) |
-> > VCMD_CMD_FREE);
-> > +	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
-> > +		      !(res & VCMD_VRSP_IP), res);
-> > +	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
-> > +
-> > +	status_code = VCMD_VRSP_SC(res);
-> > +	switch (status_code) {
-> > +	case VCMD_VRSP_SC_SUCCESS:
-> > +		break;
-> > +	case VCMD_VRSP_SC_INVALID_PASID:
-> > +		pr_info("IOMMU: %s: Invalid PASID\n", iommu->name);
-> > +		break;
-> > +	default:
-> > +		pr_warn("IOMMU: %s: Unkonwn error code %d\n",
-> > +			iommu->name, status_code);  
-> s/Unkonwn/Unexpected
-will fix. 
-> > +	}
-> > +}
-> > +
-> >  /*
-> >   * Per device pasid table management:
-> >   */
-> > diff --git a/drivers/iommu/intel-pasid.h
-> > b/drivers/iommu/intel-pasid.h index 23537b3..4b26ab5 100644
-> > --- a/drivers/iommu/intel-pasid.h
-> > +++ b/drivers/iommu/intel-pasid.h
-> > @@ -19,6 +19,16 @@
-> >  #define PASID_PDE_SHIFT			6
-> >  #define MAX_NR_PASID_BITS		20
-> >  
-> > +/* Virtual command interface for enlightened pasid management. */
-> > +#define VCMD_CMD_ALLOC			0x1
-> > +#define VCMD_CMD_FREE			0x2
-> > +#define VCMD_VRSP_IP			0x1
-> > +#define VCMD_VRSP_SC(e)			(((e) >> 1) & 0x3)
-> > +#define VCMD_VRSP_SC_SUCCESS		0
-> > +#define VCMD_VRSP_SC_NO_PASID_AVAIL	1
-> > +#define VCMD_VRSP_SC_INVALID_PASID	1
-> > +#define VCMD_VRSP_RESULT(e)		(((e) >> 8) & 0xfffff)
-> > +
-> >  /*
-> >   * Domain ID reserved for pasid entries programmed for first-level
-> >   * only and pass-through transfer modes.
-> > @@ -69,5 +79,6 @@ int intel_pasid_setup_pass_through(struct
-> > intel_iommu *iommu, struct device *dev, int pasid);
-> >  void intel_pasid_tear_down_entry(struct intel_iommu *iommu,
-> >  				 struct device *dev, int pasid);
-> > -
-> > +int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int
-> > *pasid); +void vcmd_free_pasid(struct intel_iommu *iommu, unsigned
-> > int pasid); #endif /* __INTEL_PASID_H */
-> > diff --git a/include/linux/intel-iommu.h
-> > b/include/linux/intel-iommu.h index 6925a18..bff907b 100644
-> > --- a/include/linux/intel-iommu.h
-> > +++ b/include/linux/intel-iommu.h
-> > @@ -173,6 +173,7 @@
-> >  #define ecap_smpwc(e)		(((e) >> 48) & 0x1)
-> >  #define ecap_flts(e)		(((e) >> 47) & 0x1)
-> >  #define ecap_slts(e)		(((e) >> 46) & 0x1)
-> > +#define ecap_vcs(e)		(((e) >> 44) & 0x1)
-> >  #define ecap_smts(e)		(((e) >> 43) & 0x1)
-> >  #define ecap_dit(e)		((e >> 41) & 0x1)
-> >  #define ecap_pasid(e)		((e >> 40) & 0x1)
-> > @@ -289,6 +290,7 @@
-> >  
-> >  /* PRS_REG */
-> >  #define DMA_PRS_PPR	((u32)1)
-> > +#define DMA_VCS_PAS	((u64)1)
-> >  
-> >  #define IOMMU_WAIT_OP(iommu, offset, op, cond,
-> > sts)			\ do
-> > {
-> > \ 
-> Otherwise
+13.08.2019 19:18, Marc Zyngier пишет:
+> On Tue, 13 Aug 2019 16:40:27 +0100,
+> Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> 13.08.2019 17:50, Marc Zyngier пишет:
+>>> On Sun, 11 Aug 2019 19:30:44 +0100,
+>>> Dmitry Osipenko <digetx@gmail.com> wrote:
+>>>>
+>>>> Make coding style to conform to the kernel's standard by fixing checkpatch
+>>>> warnings about "line over 80 characters".
+>>>
+>>> The last time I used a VT100 was about 30 years ago. I still think
+>>> this was one of the most brilliant piece of equipment DEC ever
+>>> produced, but I replaced it at the time with a Wyse 50 that had a 132
+>>> column mode. But even then, I could make my XTerm as wide as I wanted,
+>>> and things haven't regressed much since.
+>>>
+>>> More seriously, I don't consider the 80 column limit a hard one, and
+>>> I'm pretty happy with code that spans more that 80 columns if that
+>>> allows to read an expression without messing with the flow.
+>>
+>> Usually I have multiple source files opened side-by-side and the
+>> view sizes are tuned for 80 chars, it messes at least my flow when
+>> something goes over 80 chars.
+>>
+>>>>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  drivers/irqchip/irq-tegra.c | 15 +++++----------
+>>>>  1 file changed, 5 insertions(+), 10 deletions(-)
+>>>>
+>>>> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
+>>>> index 14dcacc2ad38..f829a5990dae 100644
+>>>> --- a/drivers/irqchip/irq-tegra.c
+>>>> +++ b/drivers/irqchip/irq-tegra.c
+>>>> @@ -74,7 +74,7 @@ static struct tegra_ictlr_info *lic;
+>>>>  
+>>>>  static inline void tegra_ictlr_write_mask(struct irq_data *d, unsigned long reg)
+>>>>  {
+>>>> -	void __iomem *base = (void __iomem __force *)d->chip_data;
+>>>> +	void __iomem *base = lic->base[d->hwirq / 32];
+>>>
+>>> (1) This is an undocumented change
+>>
+>> In my opinion this is a very trivial change and then the end result
+>> is absolutely the same, hence nothing to document here. Just read
+>> the code, I'd say.
 > 
-> Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> 
-> Thanks
-> 
-> Eric
-> 
+> And that is the very reason why I won't take any of your patches any
+> time soon.
 
-[Jacob Pan]
+Sorry, the last part probably sounds a bit offending, but that's not
+what I meant (please note that english isn't my native language). I was
+just trying to say that the code is self-explanatory in my opinion.
+Anyway, it's not a bad excuse for me to get a break from it all. Sorry
+again.
