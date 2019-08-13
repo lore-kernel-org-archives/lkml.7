@@ -7,65 +7,67 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD887C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F077C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D1F2206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CB6D206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:36:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="izk76Jg7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="KJh6VI2G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfHMXgT (ORCPT
+        id S1726729AbfHMXgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 19:36:19 -0400
+        Tue, 13 Aug 2019 19:36:22 -0400
 Received: from esa3.hgst.iphmx.com ([216.71.153.141]:58944 "EHLO
         esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbfHMXgS (ORCPT
+        with ESMTP id S1726634AbfHMXgT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 19:36:18 -0400
+        Tue, 13 Aug 2019 19:36:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
   t=1565739379; x=1597275379;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=hJ0wcybIy8p5lozhUIdtK566sZh2c4A4f6FV+GFHlHc=;
-  b=izk76Jg7uzPl9TTanVLCxw+kb8tMYBp1fdYa0J5bPGd3ehBkzw2e3W54
-   TL8pZb4fpK1pc0Zt/gzOdA1YpbYQ4Xb/pah5dpZn2osFaziLhfinNhoEq
-   Hj3LvnGGG9FePLY2pC5u2b2yqyw5niQiTfQas5vOC2pp2bmkGd0up/DK7
-   7pWXE+taDSnmg3xgXvMCmRzEGQF8gC5Z37v30m/jlCbUlft4t3KqSnKo5
-   oWvvkkL4E/NltYSarQjZDapRNJuofaiv3FzW4Zh9tF4pvAgOwQ9HrNCl5
-   POyZQa2QRh392XBN5ivBztNpVg0s/w3KlxjYc/5RsRLiogCfzC8I/7njV
-   A==;
-IronPort-SDR: D/8LcQ6T+0QqG/0frjsX0n85iA5vtb2d9NLirVVFFli1Gpd1tsofqM0QCyrE4dviRRxpAPKLrl
- RvUELTJIsWSkuAHEokk8L+yT3VmNoRGQa8Qi4nPJXwLmO54GrlQN0H7Nmy7/X/GtxeJyw4qih/
- kF7ItpKQdGpNAXOvBKy3K4SZZFQ9aharUcm2LtyBH7Rd9RLIp50FTgJYT+4gA45hElzhGsdKYC
- 7/XDCogMPrMmD15c06hfgsc9cGRLClcDnireKMsx1CqByvbrzxHlZ63YMG5LVTv2Zv99lzLNIg
- VTc=
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Hs97oi1bXDwsAKNjlRuuADCZCDyWXPRBIwJFAwfMXmw=;
+  b=KJh6VI2GYjcJW0PcLyvfniAwAoTcnnJWFiTbzaIUOlEwgLRmreJNHG6t
+   PcJdUCWLSXc8ZpRJwUDBDnLCj0w/Jil1yiuGC3+rpuqju/SFCvkG6Ajq4
+   na5OpetWUHEqHj//jAJBwT/gByg4DmZCYjmxxqT6wjxkzr+bhlFaA1jVj
+   Jy857pXuCywdeiKrGQqZua6SSLmKV5d8WXj+8q4PxUN7qsUjNuLw/X29H
+   CXt/cUk1xdzmbSYDAey7WeBpS6y4q8FfhkrqD/iZkrMT7RqquTP6f/gEI
+   kHnMJKff8npkZJlzTofSzRBcs/Ci8s7uxfycpxz8u6mvP02Z84FYHm7XE
+   Q==;
+IronPort-SDR: DGYRZ2ahVtTMJDXlUOOgSjL7qkpYT5a6V81EqPtcanMwmc64q1RK1506Da3BQ8Tx2su7KXF+RV
+ 8hKLKcM++mu9NnZwvFZQbJ2Kqrqj9jAMP3NNAG7fp3IVOVx7aAPhk85cZtF3i+xq+vboM04g92
+ 80/cUkUC3idV8Fp23U7CXGbMqIat6rLmfbzjyBSO5C5sFE4GzBNR8FSmSSo1mxtnheXiL5vXwi
+ 9VL8PeP0nOo4U7+mtdWyjZGUGkUT2XOw6lQvLzqvDh3zEH0SxvlZLBV+Z9FA4LmKDXMJH+76uu
+ f4k=
 X-IronPort-AV: E=Sophos;i="5.64,382,1559491200"; 
-   d="scan'208";a="120378575"
+   d="scan'208";a="120378576"
 Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
   by ob1.hgst.iphmx.com with ESMTP; 14 Aug 2019 07:36:19 +0800
-IronPort-SDR: JO6W7a+S/HJmWgqKzy6HyUz73paSJNE+JzMJRrT/UsJu+7W+IpH6vScYp6uufJ2/rF3Bk1zuc8
- 9zWdbLWo85mAp1m9W50B+S9VfuWDIy9+HEegCqFno2RBuRkQG0F2jDrWr7J3YFvn9VqzK24E9V
- Zw2HNZ4bbmBD1cGL8KNWwdqlN0d1X6TSkL4vHegX7q3xooSOJhXPFHM6pHT2IeBzGdsCJXg2tF
- /ZYJDL/iR/2q55XLit40lm+mwVsP1+HIYEhu8ouDE2JJpVZ1ua316pDYgFA+OKk+u3l62anH5W
- HTGeb/UDkLqzj0h5oBOgU65B
+IronPort-SDR: OgK4lOLEQ5c1PLTqcBvODW67lelHXmJw5ygBCuMty2PmOAWFyLmrNTD6OmRbdkLGi6YJpX2NQ0
+ e7qs8+PfHRhilYCrLlJAcZImsPTzpM+swWPQYeceajlr+gO//XYFs54FDXmC33ry8kP20XxU4G
+ GaWjqrDDxtkcpKmQS6V6f1T1u2Out4Anufaea759ngq6ULBR7GpTtDR2jzZCyed2aS4koF/XT+
+ OQg9GDN0uJn9RZNbEm6U8Q95Llq7+a63nKbf2743NiTpCT15roKqk4Nn48A4GRVOPuv2S+uFuu
+ Hc+bbGNufv3NS70jg6fzWiqW
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
   by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 16:33:53 -0700
-IronPort-SDR: ynWM70NmSGSvm/NBmL4NJAHKIplLilDhmM0Icvg9oUo2nD7XK7CY1V7Xtlq1hKhgdt7gMKOcVo
- xwyOruqZ1/sWh9jdqv942QJsZgxOpMb9Fy2ECnCJKchmDbNBVLpHZ8op+Exa3K7WAyMIKRBnR5
- rq/hh5QY4tcCW5zefAvYI2F4KLsxfbGXM0CD7Te0dYo4/AZhZ2fkiQEOINbdEndJ3qhudjQy8H
- 2beb3ouwLSBCofBJtZN9spTyo2PkQHkd6AUOD501Mv/xVpRseLZGM4a+eA1lobG0HZZwLUPTGI
- ssY=
+IronPort-SDR: q4Durlzmo8hA1bu/t7Y4lpef2eadOlWFzAB0fDsP6ScLa6+o+Vd+rmyWPm/Rp6/PZmeH8B+hSm
+ 4Y/DMk8kspCtWOjCIBp2ePxOm2/iUzIyxg5sZe+TZArOGLTrVPYIFLffTpAPQ9BKJ1TqYjaR15
+ 1R8lRrWsl1AMpNLJnaeJGurfP0Fe7clKvYo8T//oFSmbmEBOVc+3twFBejBAchJG84kMXq5DAE
+ UYnT+f1ANMpPAQ9myL06jLYosOpYfXsv+BlE/0kpP6KTgxQ2FhZRVxPJBTACmW+HputN8zDPip
+ sn8=
 Received: from risc6-mainframe.sdcorp.global.sandisk.com (HELO risc6-mainframe.int.fusionio.com) ([10.196.157.58])
   by uls-op-cesaip02.wdc.com with ESMTP; 13 Aug 2019 16:36:19 -0700
 From:   Alistair Francis <alistair.francis@wdc.com>
 To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
 Cc:     alistair23@gmail.com, Alistair Francis <alistair.francis@wdc.com>
-Subject: [PATCH 1/2] riscv: rv32_defconfig: Update the defconfig
-Date:   Tue, 13 Aug 2019 16:32:29 -0700
-Message-Id: <20190813233230.21804-1-alistair.francis@wdc.com>
+Subject: [PATCH 2/2] riscv: defconfig: Update the defconfig
+Date:   Tue, 13 Aug 2019 16:32:30 -0700
+Message-Id: <20190813233230.21804-2-alistair.francis@wdc.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190813233230.21804-1-alistair.francis@wdc.com>
+References: <20190813233230.21804-1-alistair.francis@wdc.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,37 +75,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the rv32_defconfig:
- - Add 'CONFIG_DEVTMPFS_MOUNT=y' to match the RISC-V defconfig
+Update the defconfig:
  - Add CONFIG_HW_RANDOM=y and CONFIG_HW_RANDOM_VIRTIO=y to enable
    VirtIORNG when running on QEMU
 
 Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
 ---
- arch/riscv/configs/rv32_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/riscv/configs/defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/riscv/configs/rv32_defconfig b/arch/riscv/configs/rv32_defconfig
-index d5449ef805a3..7da93e494445 100644
---- a/arch/riscv/configs/rv32_defconfig
-+++ b/arch/riscv/configs/rv32_defconfig
-@@ -34,6 +34,7 @@ CONFIG_PCIEPORTBUS=y
- CONFIG_PCI_HOST_GENERIC=y
- CONFIG_PCIE_XILINX=y
- CONFIG_DEVTMPFS=y
-+CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_BLK_DEV_LOOP=y
- CONFIG_VIRTIO_BLK=y
- CONFIG_BLK_DEV_SD=y
-@@ -53,6 +54,8 @@ CONFIG_SERIAL_8250_CONSOLE=y
+diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+index 93205c0bf71d..3efff552a261 100644
+--- a/arch/riscv/configs/defconfig
++++ b/arch/riscv/configs/defconfig
+@@ -54,6 +54,8 @@ CONFIG_SERIAL_8250_CONSOLE=y
  CONFIG_SERIAL_OF_PLATFORM=y
  CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
  CONFIG_HVC_RISCV_SBI=y
 +CONFIG_HW_RANDOM=y
 +CONFIG_HW_RANDOM_VIRTIO=y
+ CONFIG_SPI=y
+ CONFIG_SPI_SIFIVE=y
  # CONFIG_PTP_1588_CLOCK is not set
- CONFIG_DRM=y
- CONFIG_DRM_RADEON=y
 -- 
 2.22.0
 
