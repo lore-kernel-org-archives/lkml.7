@@ -2,215 +2,145 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE134C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D14C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A29362067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:51:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wG3a3k31"
+	by mail.kernel.org (Postfix) with ESMTP id 25F5B2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:51:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbfHMRvD (ORCPT
+        id S1728237AbfHMRvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 13:51:03 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33998 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727837AbfHMRvD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 13:51:03 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b24so1509171pfp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 10:51:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bYvJDB8ENVMXI7xYb0Ylsc0wziPDSy3JqRQOkU0CNB4=;
-        b=wG3a3k31jsSF6BIw8bkJXaJI2NxjB+fdjeiW5Z94mwfwqnNKU5XLNXf7GJUmwneh8F
-         3+4lVI1GRH9lQcxHScomTp5mrcJRuXuQVeD3Q6mE1zSKDCCLbx1i0wEdWhs3iVc2YdTd
-         xhd8H8X9oAwqxtZKRsyozKJT6lA88T1G3bLtDBTqY2QDZpMR5nNvUx2koCL6DcD7N5qG
-         1YPcyP3wEqDe/BuBfxdbVpfCm/P7lXjphsb1sUO676202tsqc3ygNmA76O+a2OozdwKB
-         fWvA1i8dioD1rmDgz+0bCKYcYA/IxVXl3eUAT80SGOsC2d6bSuuL0sz3Tb9bEvGaQKlH
-         nHXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bYvJDB8ENVMXI7xYb0Ylsc0wziPDSy3JqRQOkU0CNB4=;
-        b=pgf05eCXQmYUksU2IIyhewALY2jczlkQ77Aro6E4O4loQ+zKULFv5pPAErasNGuPyj
-         txpaZO7wGxBrM5lqa5vY+KV7e+HngSa85n18FQOAeLnx7noUzPy0kv9KcKWsI1uiHcNd
-         JEIjnXKdHwcoww1z2PpIBOlWlIdhISD8hBLnci0euSJeIAGDztIOdlCo6QYez63AM8xX
-         3LaGVAyOSSNklZ52z0iYaRtMPRe8o9MwU/vJYwm+vku0q9RaCW24psLI+Vl3TmpSsyJj
-         fG97DglFdKZT1S0bNQmnG7yzlm/ltVHXUwM33LSkCMsPw0H2Wwn8uoQNkZs2ojuX9PRi
-         mKxg==
-X-Gm-Message-State: APjAAAVUMAaZN0lHBPDYq9vg27qYbVndRRB3WAILaX/9hIiCOpKfbSAg
-        v2M+rSPnpUD8jlSlCRtXGlQbKm8WNs5cWeliY0WLpgep
-X-Google-Smtp-Source: APXvYqxrLaoMidJUTH3HR3ySeiZBysRXGkgA8Tfb3y1r5OWM88+G8mJO83zwubWmBlkV2gYuE+Son415m2aWs0YE6pQ=
-X-Received: by 2002:aa7:8f2e:: with SMTP id y14mr12892823pfr.113.1565718661800;
- Tue, 13 Aug 2019 10:51:01 -0700 (PDT)
+        Tue, 13 Aug 2019 13:51:37 -0400
+Received: from mga12.intel.com ([192.55.52.136]:29837 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727491AbfHMRvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 13:51:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 10:51:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
+   d="scan'208";a="167124255"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 13 Aug 2019 10:51:32 -0700
+Received: from dalyrusx-mobl.amr.corp.intel.com (unknown [10.251.3.205])
+        by linux.intel.com (Postfix) with ESMTP id 77D37580372;
+        Tue, 13 Aug 2019 10:51:31 -0700 (PDT)
+Subject: Re: [alsa-devel] [PATCH v2 3/5] ASoC: core: add support to
+ snd_soc_dai_get_sdw_stream()
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        vkoul@kernel.org, broonie@kernel.org
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@codeaurora.org, plai@codeaurora.org, lgirdwood@gmail.com,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        spapothi@codeaurora.org
+References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
+ <20190813083550.5877-4-srinivas.kandagatla@linaro.org>
+ <ba88e0f9-ae7d-c26e-d2dc-83bf910c2c01@linux.intel.com>
+ <c2eecd44-f06a-7287-2862-0382bf697f8d@linaro.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <d2b7773b-d52a-7769-aa5b-ef8c8845d447@linux.intel.com>
+Date:   Tue, 13 Aug 2019 12:51:49 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
- <CAFd5g47bK2hv6dRvqE3hOyq-FrgrR8NJo__HonHFoYOOMkWh6w@mail.gmail.com> <b4d2cf8635103e30313773761b095f3a1cfd9a82.camel@oracle.com>
-In-Reply-To: <b4d2cf8635103e30313773761b095f3a1cfd9a82.camel@oracle.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 13 Aug 2019 10:50:49 -0700
-Message-ID: <CAFd5g47Q+bRQfyyqPx7CvcnUWnpDxO9goXtEaH8U4EWLbmhFUA@mail.gmail.com>
-Subject: Re: [RFC 00/19] Integration of Kernel Test Framework (KTF) into the
- kernel tree
-To:     Knut Omang <knut.omang@oracle.com>
-Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shreyans Devendra Doshi <0xinfosect0r@gmail.com>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Hidenori Yamaji <hidenori.yamaji@sony.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Timothy Bird <Tim.Bird@sony.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Daniel Vetter <daniel@ffwll.ch>,
-        Stephen Boyd <sboyd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <c2eecd44-f06a-7287-2862-0382bf697f8d@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 4:29 AM Knut Omang <knut.omang@oracle.com> wrote:
->
-> On Tue, 2019-08-13 at 01:17 -0700, Brendan Higgins wrote:
-> > On Mon, Aug 12, 2019 at 11:11 PM Knut Omang <knut.omang@oracle.com> wrote:
-> > [...]
-> > > Alan Maguire (3):
-> > >   ktf: Implementation of ktf support for overriding function entry and return.
-> > >   ktf: A simple debugfs interface to test results
-> > >   ktf: Simple coverage support
-> > >
-> > > Knut Omang (16):
-> > >   kbuild: Fixes to rules for host-cshlib and host-cxxshlib
-> > >   ktf: Introduce the main part of the kernel side of ktf
-> > >   ktf: Introduce a generic netlink protocol for test result communication
-> > >   ktf: An implementation of a generic associative array container
-> > >   ktf: Configurable context support for network info setup
-> > >   ktf: resolve: A helper utility to aid in exposing private kernel symbols to KTF tests.
-> > >   ktf: Add documentation for Kernel Test Framework (KTF)
-> > >   ktf: Add a small test suite with a few tests to test KTF itself
-> > >   ktf: Main part of user land library for executing tests
-> > >   ktf: Integration logic for running ktf tests from googletest
-> > >   ktf: Internal debugging facilities
-> > >   ktf: Some simple examples
-> > >   ktf: Some user applications to run tests
-> > >   ktf: Toplevel ktf Makefile/makefile includes and scripts to run from kselftest
-> > >   kselftests: Enable building ktf
-> > >   Documentation/dev-tools: Add index entry for KTF documentation
-> > >
-> > >  Documentation/dev-tools/index.rst                   |    1 +-
-> > >  Documentation/dev-tools/ktf/concepts.rst            |  242 +++-
-> > >  Documentation/dev-tools/ktf/debugging.rst           |  248 +++-
-> > >  Documentation/dev-tools/ktf/examples.rst            |   26 +-
-> > >  Documentation/dev-tools/ktf/features.rst            |  307 ++++-
-> > >  Documentation/dev-tools/ktf/implementation.rst      |   70 +-
-> > >  Documentation/dev-tools/ktf/index.rst               |   14 +-
-> > >  Documentation/dev-tools/ktf/installation.rst        |   73 +-
-> > >  Documentation/dev-tools/ktf/introduction.rst        |  134 ++-
-> > >  Documentation/dev-tools/ktf/progref.rst             |  144 ++-
-> > >  scripts/Makefile.host                               |   17 +-
-> > >  tools/testing/selftests/Makefile                    |    1 +-
-> > >  tools/testing/selftests/ktf/Makefile                |   21 +-
-> > >  tools/testing/selftests/ktf/examples/Makefile       |   17 +-
-> > >  tools/testing/selftests/ktf/examples/h2.c           |   45 +-
-> > >  tools/testing/selftests/ktf/examples/h3.c           |   84 +-
-> > >  tools/testing/selftests/ktf/examples/h4.c           |   62 +-
-> > >  tools/testing/selftests/ktf/examples/hello.c        |   38 +-
-> > >  tools/testing/selftests/ktf/examples/kgdemo.c       |   61 +-
-> > >  tools/testing/selftests/ktf/kernel/Makefile         |   15 +-
-> > >  tools/testing/selftests/ktf/kernel/ktf.h            |  604 +++++++-
-> > >  tools/testing/selftests/ktf/kernel/ktf_context.c    |  409 +++++-
-> > >  tools/testing/selftests/ktf/kernel/ktf_cov.c        |  690 ++++++++-
-> > >  tools/testing/selftests/ktf/kernel/ktf_cov.h        |   94 +-
-> > >  tools/testing/selftests/ktf/kernel/ktf_debugfs.c    |  356 ++++-
-> > >  tools/testing/selftests/ktf/kernel/ktf_debugfs.h    |   34 +-
-> > >  tools/testing/selftests/ktf/kernel/ktf_map.c        |  261 +++-
-> > >  tools/testing/selftests/ktf/kernel/ktf_map.h        |  154 ++-
-> > >  tools/testing/selftests/ktf/kernel/ktf_netctx.c     |  132 ++-
-> > >  tools/testing/selftests/ktf/kernel/ktf_netctx.h     |   64 +-
-> > >  tools/testing/selftests/ktf/kernel/ktf_nl.c         |  516 ++++++-
-> > >  tools/testing/selftests/ktf/kernel/ktf_nl.h         |   15 +-
-> > >  tools/testing/selftests/ktf/kernel/ktf_override.c   |   45 +-
-> > >  tools/testing/selftests/ktf/kernel/ktf_override.h   |   15 +-
-> > >  tools/testing/selftests/ktf/kernel/ktf_test.c       |  397 +++++-
-> > >  tools/testing/selftests/ktf/kernel/ktf_test.h       |  381 ++++-
-> > >  tools/testing/selftests/ktf/kernel/ktf_unlproto.h   |  105 +-
-> > >  tools/testing/selftests/ktf/lib/Makefile            |   21 +-
-> > >  tools/testing/selftests/ktf/lib/ktf.h               |  114 +-
-> > >  tools/testing/selftests/ktf/lib/ktf_debug.cc        |   20 +-
-> > >  tools/testing/selftests/ktf/lib/ktf_debug.h         |   59 +-
-> > >  tools/testing/selftests/ktf/lib/ktf_int.cc          | 1031 ++++++++++++-
-> > >  tools/testing/selftests/ktf/lib/ktf_int.h           |   84 +-
-> > >  tools/testing/selftests/ktf/lib/ktf_run.cc          |  177 ++-
-> > >  tools/testing/selftests/ktf/lib/ktf_unlproto.c      |   21 +-
-> > >  tools/testing/selftests/ktf/scripts/ktf_syms.mk     |   16 +-
-> > >  tools/testing/selftests/ktf/scripts/resolve         |  188 ++-
-> > >  tools/testing/selftests/ktf/scripts/runtests.mk     |    3 +-
-> > >  tools/testing/selftests/ktf/scripts/runtests.sh     |  100 +-
-> > >  tools/testing/selftests/ktf/scripts/top_make.mk     |   14 +-
-> > >  tools/testing/selftests/ktf/selftest/Makefile       |   17 +-
-> > >  tools/testing/selftests/ktf/selftest/context.c      |  149 ++-
-> > >  tools/testing/selftests/ktf/selftest/context.h      |   15 +-
-> > >  tools/testing/selftests/ktf/selftest/context_self.h |   34 +-
-> > >  tools/testing/selftests/ktf/selftest/hybrid.c       |   35 +-
-> > >  tools/testing/selftests/ktf/selftest/hybrid.h       |   24 +-
-> > >  tools/testing/selftests/ktf/selftest/hybrid_self.h  |   27 +-
-> > >  tools/testing/selftests/ktf/selftest/ktf_syms.txt   |   17 +-
-> > >  tools/testing/selftests/ktf/selftest/self.c         |  661 ++++++++-
-> > >  tools/testing/selftests/ktf/user/Makefile           |   26 +-
-> > >  tools/testing/selftests/ktf/user/hybrid.cc          |   39 +-
-> > >  tools/testing/selftests/ktf/user/ktfcov.cc          |   68 +-
-> > >  tools/testing/selftests/ktf/user/ktfrun.cc          |   20 +-
-> > >  tools/testing/selftests/ktf/user/ktftest.cc         |   46 +-
-> > >  64 files changed, 8909 insertions(+), 9 deletions(-)
-> >
-> > It also looks like all your test code lives outside of the kernel
-> > source dir. I take it you intend for tests to live in
-> > tools/testing/selftests/ktf/ ?
->
-> Good point,
-> with this RFC it would be just to add another directory under ktf/
-> but this was just to find a simple way to integrate it below selftests,
-> without interfering with the current structure.
->
-> I imagine a tighter integration/unification between normal Kbuild targets and selftests
-> targets that also took kernel module building into consideration would be a better solution.
+On 8/13/19 11:50 AM, Srinivas Kandagatla wrote:
+> Thanks for the review,
+> 
+> On 13/08/2019 15:44, Pierre-Louis Bossart wrote:
+>> On 8/13/19 3:35 AM, Srinivas Kandagatla wrote:
+>>> On platforms which have smart speaker amplifiers connected via
+>>> soundwire and modeled as aux devices in ASoC, in such usecases machine
+>>> driver should be able to get sdw master stream from dai so that it can
+>>> use the runtime stream to setup slave streams.
+>>
+>> using the _set_sdw_stream? I don't fully get the sequence with the 
+>> wording above.
+> 
+> Yes, using set_sdw_stream().
 
-I think tests should live alongside the code that they test, so if I
-understand what you are saying, then I agree. Where do you think KTF
-should go then?
+Maybe I am missing something here, but I don't see where the 
+set_sdw_stream() is called.
 
-> I think this is a good topic for discussion.
-> As I indicate above, I think it is problematic that test code has to be explicitly
-> configured in as we configure code features of the kernel, which changes the "logical"
-> kernel we build.
+Also I don't fully get the rule. set_sdw_stream() looks required, 
+get_sdw_stream() is optional, is this what you are suggesting?
 
-Yep, Luis Chamberlain and I have been discussing this for a while (I
-should probably try to open up that conversation and add you to it);
-it's a very tricky problem. I think that in the long term a good goal
-is to have a way to express code dependencies separate from the
-configuration system, but that would probably mean some substantial
-changes to Kbuild and friends. Even then, we have all these macros
-that generate different code (not just on/off) depending on how the
-kernel is configured.
+>>
+>>>
+>>> soundwire already as a set function, get function would provide more
+>>> flexibility to above configurations.
+>>
+>> I am not clear if you are asking for both to be used, or get only or 
+>> set only?
+> 
+> It depends on the usecase, in db845c usecase  [1] as Aux device is dai 
+> less, machine driver is using get function to get hold of master stream 
+> so that it can setup slave port config.
+> 
+> 
+> Looks like there is a typo in above like
+> 
+> This was supposed to be "soundwire already has a set function, get 
+> function would provide more flexibility to above configurations"
+> 
+> [1] 
+> https://git.linaro.org/landing-teams/working/qualcomm/kernel.git/tree/sound/soc/qcom/db845c.c?h=integration-linux-qcomlt 
+> 
+> 
+> thanks,
+> srini
+> 
+>>
+>>>
+>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>> ---
+>>>   include/sound/soc-dai.h | 10 ++++++++++
+>>>   1 file changed, 10 insertions(+)
+>>>
+>>> diff --git a/include/sound/soc-dai.h b/include/sound/soc-dai.h
+>>> index dc48fe081a20..1e01f4a302e0 100644
+>>> --- a/include/sound/soc-dai.h
+>>> +++ b/include/sound/soc-dai.h
+>>> @@ -202,6 +202,7 @@ struct snd_soc_dai_ops {
+>>>       int (*set_sdw_stream)(struct snd_soc_dai *dai,
+>>>               void *stream, int direction);
+>>> +    void *(*get_sdw_stream)(struct snd_soc_dai *dai, int direction);
+>>>       /*
+>>>        * DAI digital mute - optional.
+>>>        * Called by soc-core to minimise any pops.
+>>> @@ -410,4 +411,13 @@ static inline int 
+>>> snd_soc_dai_set_sdw_stream(struct snd_soc_dai *dai,
+>>>           return -ENOTSUPP;
+>>>   }
+>>> +static inline void *snd_soc_dai_get_sdw_stream(struct snd_soc_dai *dai,
+>>> +                           int direction)
+>>> +{
+>>> +    if (dai->driver->ops->get_sdw_stream)
+>>> +        return dai->driver->ops->get_sdw_stream(dai, direction);
+>>> +    else
+>>> +        return ERR_PTR(-ENOTSUPP);
+>>> +}
+>>> +
+>>>   #endif
+>>>
+>>
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
 
-> So some more "native" support for test modules are desired, IMHO.
-
-What do you mean by "native"? Just having the tests be more aware of the code?
