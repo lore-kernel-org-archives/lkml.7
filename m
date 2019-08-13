@@ -2,182 +2,138 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60115C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25343C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3425920663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E41C820673
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:26:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lR0mpVGl"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mOvkGQqz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbfHMGQ5 (ORCPT
+        id S1727411AbfHMG0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 02:16:57 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34277 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727404AbfHMGQ4 (ORCPT
+        Tue, 13 Aug 2019 02:26:02 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57896 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbfHMG0C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 02:16:56 -0400
-Received: by mail-pl1-f195.google.com with SMTP id i2so48881435plt.1;
-        Mon, 12 Aug 2019 23:16:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lB2W34FFRFhSU+6xsPtiaBhXXvBNBgq1m83tH9jQCgk=;
-        b=lR0mpVGl7S5m6GiFXrWKwRq9XC7qJOtZEOUALc7cmgel+BKbdeD2iiqbSm6eSQvJMy
-         nOuO40CVTkMbqWBy/vbyR1IBBGNQFVd/w+pb6qlW5FYWdsIqviQBhejEhP/0xveynMmI
-         vYEX5DvPhD6WtMhiBVmS6NoNE8EpTDP2nprVIoqp1dD4M8iwW/ZIbzIrdvUnnxOlfiwW
-         3X2olAWRnWo5GuLkRTzNn2959BE6SlZ5JD72dOEX0yCVy9I8Ty+6ERxWw4yJSBnqZNq2
-         WH47O9SfGx1ufW3OOF+gpMj4koZoFQX2Ejw6wNAJrtnGzpt+Z5JDDBMandk4lOtnQLVE
-         SzOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lB2W34FFRFhSU+6xsPtiaBhXXvBNBgq1m83tH9jQCgk=;
-        b=BcNU7JozQCrJnYAzxRcCbP9BwJTRJm7uevM3n4f0/Jv5SZKl79TncumAPB3EY4b1H3
-         8nuiA3ssuGsdqxcD/RmezF/t1lSKTBjhSrcLoqg6KDVSF64E5QYcxvJ0UOofyoMu21vQ
-         PN+BUJjh9fjsEbZl7a9YLp9NEvGX1DtDkzrSYdcoFlR8H8Ymm+a9XiDZy4qppN5IQDx1
-         PwIo66n4oF1f+5aR5h/s5zeDpWnyXdwH6GZtx4eW2TShRonZn5oJ5Zlr4qAXywOuIPb+
-         7FfrYYxBb8XJpZueUMvUgK6OdY4N003jxXwgBhXl7ldDu7HEtFP38f5VrkLsYHObvtel
-         Fzjw==
-X-Gm-Message-State: APjAAAXGIiqVDD5JkPkbDCQtysKWuErrGbXdbEkLi+yZ0wh5JOWvG5Is
-        LATyJzF9ZbH07hbHbo+h/Ig=
-X-Google-Smtp-Source: APXvYqy02phZk28jrMxAd/3ZbPtBeJasaqaq1E4b04hPXcUojIzejAySe0BILM0w/izcaXiRSARIRg==
-X-Received: by 2002:a17:902:7202:: with SMTP id ba2mr37151447plb.266.1565677015327;
-        Mon, 12 Aug 2019 23:16:55 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id j15sm140141434pfn.150.2019.08.12.23.16.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 23:16:54 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Jens Axboe <axboe@kernel.dk>, xen-devel@lists.xenproject.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2 3/3] xen/blkback: Use refcount_t for refcount
-Date:   Tue, 13 Aug 2019 14:16:50 +0800
-Message-Id: <20190813061650.5483-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 13 Aug 2019 02:26:02 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7D6Pwk0052886;
+        Tue, 13 Aug 2019 01:25:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565677558;
+        bh=ZS6jom8hyruNhhn92H7Pd6e1fN82ogmMfLmiZ4OzHJ4=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=mOvkGQqzHHjfYJMaaL5o0LlRwmSjyivPLSbPmtA5F/Tn3/1A2tvMhTzhz/E+zPZY2
+         GoyE6P4fy8xo1X8rQcsfcoPeTjlrg2WvOPnOl5Pnx3gWveJwqLmRNkSDPAGiKSFrqa
+         lO+G8BoQ21xk3yGbGo0GByCjHcOtLfX54U8mi/9k=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7D6Pw7j047582
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 13 Aug 2019 01:25:58 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 13
+ Aug 2019 01:25:58 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 13 Aug 2019 01:25:58 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7D6PuMJ122172;
+        Tue, 13 Aug 2019 01:25:57 -0500
+Subject: Re: [PATCH] bus: ti-sysc: Remove if-block in sysc_check_children()
+To:     Nishka Dasgupta <nishkadg.linux@gmail.com>, <tony@atomide.com>,
+        <linux-kernel@vger.kernel.org>, "Kristo, Tero" <t-kristo@ti.com>
+References: <20190808074042.15403-1-nishkadg.linux@gmail.com>
+ <2038cdcd-1506-84c6-520d-6dda50d4f317@ti.com>
+ <a1f56fcc-2207-fa32-83bc-cd219c2b893c@gmail.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <b1f8756e-4b15-7f1a-8562-5b80063733de@ti.com>
+Date:   Tue, 13 Aug 2019 09:25:56 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <a1f56fcc-2207-fa32-83bc-cd219c2b893c@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reference counters are preferred to use refcount_t instead of
-atomic_t.
-This is because the implementation of refcount_t can prevent
-overflows and detect possible use-after-free.
-So convert atomic_t ref counters to refcount_t.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v2:
-  - Also convert pending_req::pendcnt to refcount_t.
 
- drivers/block/xen-blkback/blkback.c | 6 +++---
- drivers/block/xen-blkback/common.h  | 9 +++++----
- drivers/block/xen-blkback/xenbus.c  | 2 +-
- 3 files changed, 9 insertions(+), 8 deletions(-)
+On 13/08/2019 07:35, Nishka Dasgupta wrote:
+> On 08/08/19 7:25 PM, Roger Quadros wrote:
+>> Nishka,
+>>
+>> On 08/08/2019 10:40, Nishka Dasgupta wrote:
+>>> In function sysc_check_children, there is an if-statement checking
+>>> whether the value returned by function sysc_check_one_child is non-zero.
+>>> However, sysc_check_one_child always returns 0, and hence this check is
+>>> not needed. Hence remove this if-block.
+>>>
+>>> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+>>> ---
+>>>   drivers/bus/ti-sysc.c | 2 --
+>>>   1 file changed, 2 deletions(-)
+>>>
+>>> diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+>>> index e6deabd8305d..bc8082ae7cb5 100644
+>>> --- a/drivers/bus/ti-sysc.c
+>>> +++ b/drivers/bus/ti-sysc.c
+>>> @@ -637,8 +637,6 @@ static int sysc_check_children(struct sysc *ddata)
+>>>         for_each_child_of_node(ddata->dev->of_node, child) {
+>>>           error = sysc_check_one_child(ddata, child);
+>>> -        if (error)
+>>> -            return error;
+>>
+>> We cannot assume that sysc_check_one_child() will never return error in the future.
+>> If it can never return an error then why does it have an int return type?
+> 
+> I'm not sure why it has an int return type, unfortunately. This is the function in its entirety:
+> 
+> static int sysc_check_one_child(struct sysc *ddata,
+>                 struct device_node *np)
+> {
+>     const char *name;
+> 
+>     name = of_get_property(np, "ti,hwmods", NULL);
+>     if (name)
+>         dev_warn(ddata->dev, "really a child ti,hwmods property?");
+> 
+>     sysc_check_quirk_stdout(ddata, np);
+>     sysc_parse_dts_quirks(ddata, np, true);
+> 
+>     return 0;
+> }
+> 
+> I'm not sure how to understand this function. Do dev_warn() or sysc_check_quirk_stdout() or sysc_parse_dts_quirks() cause a non-zero return from sysc_check_one_child()? Should I drop my patch?
 
-diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
-index fd1e19f1a49f..b24bb0aea35f 100644
---- a/drivers/block/xen-blkback/blkback.c
-+++ b/drivers/block/xen-blkback/blkback.c
-@@ -1098,7 +1098,7 @@ static void __end_block_io_op(struct pending_req *pending_req,
- 	 * the grant references associated with 'request' and provide
- 	 * the proper response on the ring.
- 	 */
--	if (atomic_dec_and_test(&pending_req->pendcnt))
-+	if (refcount_dec_and_test(&pending_req->pendcnt))
- 		xen_blkbk_unmap_and_respond(pending_req);
- }
- 
-@@ -1395,7 +1395,7 @@ static int dispatch_rw_block_io(struct xen_blkif_ring *ring,
- 		bio_set_op_attrs(bio, operation, operation_flags);
- 	}
- 
--	atomic_set(&pending_req->pendcnt, nbio);
-+	refcount_set(&pending_req->pendcnt, nbio);
- 	blk_start_plug(&plug);
- 
- 	for (i = 0; i < nbio; i++)
-@@ -1424,7 +1424,7 @@ static int dispatch_rw_block_io(struct xen_blkif_ring *ring,
-  fail_put_bio:
- 	for (i = 0; i < nbio; i++)
- 		bio_put(biolist[i]);
--	atomic_set(&pending_req->pendcnt, 1);
-+	refcount_set(&pending_req->pendcnt, 1);
- 	__end_block_io_op(pending_req, BLK_STS_RESOURCE);
- 	msleep(1); /* back off a bit */
- 	return -EIO;
-diff --git a/drivers/block/xen-blkback/common.h b/drivers/block/xen-blkback/common.h
-index 1d3002d773f7..824d64a8339b 100644
---- a/drivers/block/xen-blkback/common.h
-+++ b/drivers/block/xen-blkback/common.h
-@@ -35,6 +35,7 @@
- #include <linux/wait.h>
- #include <linux/io.h>
- #include <linux/rbtree.h>
-+#include <linux/refcount.h>
- #include <asm/setup.h>
- #include <asm/pgalloc.h>
- #include <asm/hypervisor.h>
-@@ -309,7 +310,7 @@ struct xen_blkif {
- 	struct xen_vbd		vbd;
- 	/* Back pointer to the backend_info. */
- 	struct backend_info	*be;
--	atomic_t		refcnt;
-+	refcount_t		refcnt;
- 	/* for barrier (drain) requests */
- 	struct completion	drain_complete;
- 	atomic_t		drain;
-@@ -343,7 +344,7 @@ struct pending_req {
- 	struct xen_blkif_ring   *ring;
- 	u64			id;
- 	int			nr_segs;
--	atomic_t		pendcnt;
-+	refcount_t		pendcnt;
- 	unsigned short		operation;
- 	int			status;
- 	struct list_head	free_list;
-@@ -362,10 +363,10 @@ struct pending_req {
- 			 (_v)->bdev->bd_part->nr_sects : \
- 			  get_capacity((_v)->bdev->bd_disk))
- 
--#define xen_blkif_get(_b) (atomic_inc(&(_b)->refcnt))
-+#define xen_blkif_get(_b) (refcount_inc(&(_b)->refcnt))
- #define xen_blkif_put(_b)				\
- 	do {						\
--		if (atomic_dec_and_test(&(_b)->refcnt))	\
-+		if (refcount_dec_and_test(&(_b)->refcnt))	\
- 			schedule_work(&(_b)->free_work);\
- 	} while (0)
- 
-diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
-index 3ac6a5d18071..ecc5f9c5bf3f 100644
---- a/drivers/block/xen-blkback/xenbus.c
-+++ b/drivers/block/xen-blkback/xenbus.c
-@@ -169,7 +169,7 @@ static struct xen_blkif *xen_blkif_alloc(domid_t domid)
- 		return ERR_PTR(-ENOMEM);
- 
- 	blkif->domid = domid;
--	atomic_set(&blkif->refcnt, 1);
-+	refcount_set(&blkif->refcnt, 1);
- 	init_completion(&blkif->drain_complete);
- 	INIT_WORK(&blkif->free_work, xen_blkif_deferred_free);
- 
+None of those functions return anything.
+Maybe you can fix sysc_check_one_child() to return void?
+I think you can retain your patch but get rid of error variable.
+
+> 
+> Thanking you,
+> Nishka
+>>
+>>>       }
+>>>         return 0;
+>>>
+>>
+
 -- 
-2.20.1
-
+cheers,
+-roger
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
