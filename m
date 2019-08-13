@@ -2,217 +2,173 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B930C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F69C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D84572067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:34:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="namSPmDW"
+	by mail.kernel.org (Postfix) with ESMTP id D49EB2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 00:36:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfHMAeA (ORCPT
+        id S1726640AbfHMAgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 20:34:00 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45479 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbfHMAd7 (ORCPT
+        Mon, 12 Aug 2019 20:36:02 -0400
+Received: from mail-ot1-f69.google.com ([209.85.210.69]:43579 "EHLO
+        mail-ot1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfHMAgC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 20:33:59 -0400
-Received: by mail-pf1-f195.google.com with SMTP id w26so5284129pfq.12
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 17:33:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Zq6yHL2C60RwcDmlpshxa1wOQkUxi3yYyWuvX6Jr4HM=;
-        b=namSPmDWPujc9+lfquW9m9ZpboLlU1GpXC90hrm7My2wALTeQGovCGeuZeoLPKDSjJ
-         DPnzh7Y+F6ZapREAMTLVxQZrviv1eRlvHMlffAnktNPvtsaYfgv/HuEgBsY2QrOo0MZs
-         nE5JrVUKP9CgWZePaSr61slKkLrb+gpW5RLUbSyHEZcmQpKomsq1IAcpf8aQcFR1ZzcC
-         pbhJzddvNnULPjOfPycV2nj/vsXw3HM0ePAOrnoYPxMcKCNqqjXJyNERbNaXrHH4I6Qe
-         8XEuxJNNe0v8zBXjNRU7Pd1TCUbPC3LGaWGg1bvuBHstTQGPVL0WQxCYeaoFZfNh0X+l
-         HFWA==
+        Mon, 12 Aug 2019 20:36:02 -0400
+Received: by mail-ot1-f69.google.com with SMTP id o1so18146264otp.10
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 17:36:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Zq6yHL2C60RwcDmlpshxa1wOQkUxi3yYyWuvX6Jr4HM=;
-        b=njIPBbbSQCZKdHXBQkBP6unuBWjyBtZM4+8bp256qH7CSlaYXIyhlJjf6u7uBp7be6
-         vXN8eOocCN6xjZN5z8e2OYAAaN2uNlgoNkil+vWgJq5alCVzdJGnj4ueMZmpymfRZthj
-         5X8yw5aRhZMHq+G55/D1NjiMAhV2POzhwsTrrDmzz7d6xP2qGYZw2zuqc4/k29YLtV4C
-         mNsGmeBJpCpPncJQ4xqQtcYYSW0xkR9eXoqvtEsUqMt2yhG6fxNclIzooifvLfpQPc5q
-         1350WaGUibt1xyB0+Rck2A5yNxV+VCLDCv+XWOiPAfTdvfTj/AKNX2XbEv7cBc8FGI6O
-         /0vA==
-X-Gm-Message-State: APjAAAVGquuyVRfUd1wehZDOfvLbXNpPAbQ/VWntipwkqpO0ZEytqBsO
-        +yU4SQYU4IT/SgbAVFqwD7oT6w==
-X-Google-Smtp-Source: APXvYqzfHrFqfVRu0MgZ/V5gvwVgMJn7qSDV7sNF8V3DEvMYQp7KqAKffNLgf1l1YpJPVE1awdWI2Q==
-X-Received: by 2002:a63:5402:: with SMTP id i2mr32378986pgb.414.1565656437536;
-        Mon, 12 Aug 2019 17:33:57 -0700 (PDT)
-Received: from google.com ([2620:15c:2cb:1:e90c:8e54:c2b4:29e7])
-        by smtp.gmail.com with ESMTPSA id 97sm661739pjz.12.2019.08.12.17.33.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 12 Aug 2019 17:33:56 -0700 (PDT)
-Date:   Mon, 12 Aug 2019 17:33:52 -0700
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
-        tytso@mit.edu, yamada.masahiro@socionext.com,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com
-Subject: Re: [PATCH v12 05/18] kunit: test: add the concept of expectations
-Message-ID: <20190813003352.GA235915@google.com>
-References: <20190812182421.141150-1-brendanhiggins@google.com>
- <20190812182421.141150-6-brendanhiggins@google.com>
- <20190812235701.533E82063F@mail.kernel.org>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=DdharNhZ7fUYbdIIsQ/LEEyRD5VF53RtP1Ku2I74hAQ=;
+        b=k5/gZGlW/W+J8wyHuLqa+9vid2S1mP4qTk2yR1BbETDAxAF9ENba3qZnt+3sDU+HxY
+         bknm4kW1PkjPncMNyG7j0c+wdD/6K8GFL1h8krVtg46Sa8Mm05dAne7qH7/CVcvV4qVg
+         mcLvsGIQRvv0mIulm+kYf+EyIiwjzi9ZmAS4LOS6s5UVq+rEqI/Iuf0qg0vjx8QuDlsA
+         GoFwEt9g/bnRfgKirHSHhPqZle/ne80deIcvrJ540QrZ2pUMMUGXSXUKYFa1Xk1P+jew
+         3z8brOb3suugDTCrAi08/AlTEt2IjdfV3qSwVPFAH8WAFijVyT4CJJgXbZLP3CYAyBUC
+         yoKg==
+X-Gm-Message-State: APjAAAXb/X3f99Wyn0trcUrVwZsDKjqmzFfEQH3L3isDwb3MbDdfYbEJ
+        xHBC4F+JuFsEHDe1f42lu+67Jox9JpFYGg0jQpOgYZgR2fd8
+X-Google-Smtp-Source: APXvYqxMYAGcxlWJVOtPt7gFUbqfN2enOSd4JaOv/R/ou+1LqtPPq6T0aJbW880XaDuOAMXYaicGN5cLYZX1wKbO9PcKwvAA35DA
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812235701.533E82063F@mail.kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a6b:ea12:: with SMTP id m18mr19516038ioc.173.1565656561041;
+ Mon, 12 Aug 2019 17:36:01 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 17:36:01 -0700
+In-Reply-To: <4694.1565649521@warthog.procyon.org.uk>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000029475c058ff4d32e@google.com>
+Subject: Re: KASAN: use-after-free Read in rxrpc_queue_local
+From:   syzbot <syzbot+78e71c5bab4f76a6a719@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dhowells@redhat.com,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 04:57:00PM -0700, Stephen Boyd wrote:
-> Quoting Brendan Higgins (2019-08-12 11:24:08)
-> > Add support for expectations, which allow properties to be specified and
-> > then verified in tests.
-> > 
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> 
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> 
-> Just some minor nits again.
-> 
-> > diff --git a/include/kunit/test.h b/include/kunit/test.h
-> > index d0bf112910caf..2625bcfeb19ac 100644
-> > --- a/include/kunit/test.h
-> > +++ b/include/kunit/test.h
-> > @@ -9,8 +9,10 @@
-> >  #ifndef _KUNIT_TEST_H
-> >  #define _KUNIT_TEST_H
-> >  
-> > +#include <linux/kernel.h>
-> >  #include <linux/types.h>
-> >  #include <linux/slab.h>
-> > +#include <kunit/assert.h>
-> 
-> Can you alphabet sort these?
+Hello,
 
-Sure. Will fix.
+syzbot has tested the proposed patch but the reproducer still triggered  
+crash:
+KASAN: use-after-free Read in rxrpc_queue_local
 
-> >  
-> >  struct kunit_resource;
-> >  
-> > @@ -319,4 +321,845 @@ void __printf(3, 4) kunit_printk(const char *level,
-> >  #define kunit_err(test, fmt, ...) \
-> >                 kunit_printk(KERN_ERR, test, fmt, ##__VA_ARGS__)
-> >  
-> > +/*
-> > + * Generates a compile-time warning in case of comparing incompatible types.
-> > + */
-> > +#define __kunit_typecheck(lhs, rhs) \
-> > +       ((void) __typecheck(lhs, rhs))
-> 
-> Is there a reason why this can't be inlined and the __kunit_typecheck()
-> macro can't be removed?
+==================================================================
+BUG: KASAN: use-after-free in atomic_read  
+include/asm-generic/atomic-instrumented.h:26 [inline]
+BUG: KASAN: use-after-free in rxrpc_queue_local+0x7c/0x3e0  
+net/rxrpc/local_object.c:354
+Read of size 4 at addr ffff888081e3db14 by task syz-executor.5/31180
 
-No real reason anymore. I used it in multiple places before and we
-weren't sure if we wanted to stick with the warnings that __typecheck
-produces long term, but now that it is only used in one place, I guess
-that doesn't make sense anymore. Will fix.
+CPU: 0 PID: 31180 Comm: syz-executor.5 Not tainted 5.3.0-rc3+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
+  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
+  kasan_report+0x12/0x17 mm/kasan/common.c:612
+  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
+  __kasan_check_read+0x11/0x20 mm/kasan/common.c:92
+  atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+  rxrpc_queue_local+0x7c/0x3e0 net/rxrpc/local_object.c:354
+  rxrpc_unuse_local+0x52/0x80 net/rxrpc/local_object.c:408
+  rxrpc_release_sock net/rxrpc/af_rxrpc.c:904 [inline]
+  rxrpc_release+0x47d/0x840 net/rxrpc/af_rxrpc.c:930
+  __sock_release+0xce/0x280 net/socket.c:590
+  sock_close+0x1e/0x30 net/socket.c:1268
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x5a9/0x6a0 arch/x86/entry/common.c:299
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x413511
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48  
+83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
+89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007fffc45736d0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000413511
+RDX: 0000001b33920000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 0000000000000001 R08: ffffffffffffffff R09: ffffffffffffffff
+R10: 00007fffc45737b0 R11: 0000000000000293 R12: 000000000075bf20
+R13: 000000000003624a R14: 0000000000760270 R15: ffffffffffffffff
 
-> > +
-> > +/**
-> > + * KUNIT_SUCCEED() - A no-op expectation. Only exists for code clarity.
-> > + * @test: The test context object.
-> [...]
-> > + * @condition: an arbitrary boolean expression. The test fails when this does
-> > + * not evaluate to true.
-> > + *
-> > + * This and expectations of the form `KUNIT_EXPECT_*` will cause the test case
-> > + * to fail when the specified condition is not met; however, it will not prevent
-> > + * the test case from continuing to run; this is otherwise known as an
-> > + * *expectation failure*.
-> > + */
-> > +#define KUNIT_EXPECT_TRUE(test, condition) \
-> > +               KUNIT_TRUE_ASSERTION(test, KUNIT_EXPECTATION, condition)
-> 
-> A lot of these macros seem double indented.
+Allocated by task 31182:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:487 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:460
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:501
+  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3550
+  kmalloc include/linux/slab.h:552 [inline]
+  kzalloc include/linux/slab.h:748 [inline]
+  rxrpc_alloc_local net/rxrpc/local_object.c:79 [inline]
+  rxrpc_lookup_local+0x562/0x1ba0 net/rxrpc/local_object.c:277
+  rxrpc_bind+0x34d/0x5e0 net/rxrpc/af_rxrpc.c:149
+  __sys_bind+0x239/0x290 net/socket.c:1647
+  __do_sys_bind net/socket.c:1658 [inline]
+  __se_sys_bind net/socket.c:1656 [inline]
+  __x64_sys_bind+0x73/0xb0 net/socket.c:1656
+  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-In a case you pointed out in the preceding patch, I was just keeping the
-arguments column aligned.
+Freed by task 9:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:449
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:457
+  __cache_free mm/slab.c:3425 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3756
+  rxrpc_local_rcu+0x62/0x80 net/rxrpc/local_object.c:495
+  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
+  rcu_do_batch kernel/rcu/tree.c:2114 [inline]
+  rcu_core+0x67f/0x1580 kernel/rcu/tree.c:2314
+  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2323
+  __do_softirq+0x262/0x98c kernel/softirq.c:292
 
-In this case I am just indenting two tabs for a line continuation. I
-thought I found other instances in the kernel that did this early on
-(and that's also what the Linux kernel vim plugin wanted me to do).
-After a couple of spot checks, it seems like one tab for this kind of
-line continuation seems more common. I personally don't feel strongly
-about any particular version. I just want to know now what the correct
-indentation is for macros before I go through and change them all.
+The buggy address belongs to the object at ffff888081e3db00
+  which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 20 bytes inside of
+  1024-byte region [ffff888081e3db00, ffff888081e3df00)
+The buggy address belongs to the page:
+page:ffffea0002078f00 refcount:1 mapcount:0 mapping:ffff8880aa400c40  
+index:0x0 compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea0002073288 ffffea00022f1608 ffff8880aa400c40
+raw: 0000000000000000 ffff888081e3c000 0000000100000007 0000000000000000
+page dumped because: kasan: bad access detected
 
-I think there are three cases:
+Memory state around the buggy address:
+  ffff888081e3da00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff888081e3da80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff888081e3db00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                          ^
+  ffff888081e3db80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff888081e3dc00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
-#define macro0(param0, param1) \
-		a_really_long_macro(...)
 
-In this first case, I use two tabs for the first indent, I think you are
-telling me this should be one tab.
+Tested on:
 
-#define macro1(param0, param1) {					       \
-	statement_in_a_block0;						       \
-	statement_in_a_block1;						       \
-	...								       \
-}
+commit:         03a62469 rxrpc: Fix local endpoint replacement
+git tree:        
+git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=14500d36600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a4c9e9f08e9e8960
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-In this case, every line is in a block and is indented as it would be in
-a function body. I think you are okay with this, and now that I am
-thinking about it, what I think you are proposing for macro0 will make
-these two cases more consistent.
-
-#define macro2(param0,							       \
-	       param1,							       \
-	       param2,							       \
-	       param3,							       \
-	       ...,							       \
-	       paramn) ...						       \
-
-In this last case, the body would be indented as in macro0, or macro1,
-but the parameters passed into the macro are column aligned, consistent
-with one of the acceptable ways of formatting function parameters that
-don't fit on a single line.
-
-In all cases, I put 1 space in between the closing parameter paren and
-the line continuation `\`, if only one `\` is needed. Otherwise, I align
-all the `\s` to the 80th column. Is this okay, or would you prefer that
-I align them all to the 80th column, or something else?
-
-> > +
-> > +#define KUNIT_EXPECT_TRUE_MSG(test, condition, fmt, ...)                      \
-> > +               KUNIT_TRUE_MSG_ASSERTION(test,                                 \
-> > +                                        KUNIT_EXPECTATION,                    \
-> > +                                        condition,                            \
-> > +                                        fmt,                                  \
-> > +                                        ##__VA_ARGS__)
-> > +
