@@ -2,131 +2,163 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F31AC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96492C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2A1720665
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:54:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vBQlbgXq"
+	by mail.kernel.org (Postfix) with ESMTP id 6D3B420840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:54:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfHMGye (ORCPT
+        id S1727205AbfHMGyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 02:54:34 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36390 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbfHMGye (ORCPT
+        Tue, 13 Aug 2019 02:54:51 -0400
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:42029 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726769AbfHMGyu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 02:54:34 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r3so12962143wrt.3;
-        Mon, 12 Aug 2019 23:54:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HmxWmdZQp2h3Mf8R3shm0zEHrmQAZMBjreMOHj/d7CE=;
-        b=vBQlbgXq5tVGz+djZUyAcs3vXxa5uTILuPadfGsIj0rhPqciYisx+jWAI9vvQOOp6W
-         aRNnSv4N/xEoeNJFj4/OTCc70xdq5k+DlkAdH1GPvhUvPs9NqaqNFkdLun9IFFdeDTPI
-         Art5aI1FM/5aCRnL8N7IJ1z3pahFR7Ne4lnSUHbeUxhvJNW64K/TfCKhYXK4a8UXumoD
-         4GeT6FMZsuDgqvN7WK1BlOZJr2KYXJmuxMkIe3b559PL3gSfpeLCEN19H805KY3scMqh
-         yvtcrMjhH5rFXupU1ng9AzOO/CLz4oNK7Mie4j/hPU6EGJOAVN0S4xhao+PNO90nGdQH
-         Y+vA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HmxWmdZQp2h3Mf8R3shm0zEHrmQAZMBjreMOHj/d7CE=;
-        b=Fcs2DlfX+zhDC4EQaS88OYHPW9DbWco+wfFCqq0dMBHLo/xTr6WsyoFX+EVZS6Dd8R
-         tW9MZoNGiJquIzl+1ao5TyNNmbstZ1jny4lONh9ntrDh6i6w8n5OIiqNwrmZ3P9dsPWL
-         MHGC+uPK2EDXjbyxQOEM+fgmaGsMgchiASlsQHp0XhrVjbIml/5lxRszV0WJtDrKc1Vc
-         XrC4r4KcVPKuODTIVkkaDAPYDQYub09DrkkLYkQFRy3zbNHpU7nhfgHenvT1za72qG9o
-         FJoPgAmRO3K8jTRIVuArxkLUT870r6S4LQ8EaHXUrSXeyEj197FvPji5WQcTG/bGh5M+
-         Yhew==
-X-Gm-Message-State: APjAAAUa5c990bbtH5bTISSRPzfIKCJG7QNRaCaOziSFglaBlLPg4uia
-        5fJD1J6gIbcnMnVsJX7WRpI=
-X-Google-Smtp-Source: APXvYqxCJe3WTU002Why8JfSlUSWeI3zWhooqTf6uJI7z7tieUSxWHXyZzgZ38Mwnb2pRpSoO2jdCg==
-X-Received: by 2002:adf:db49:: with SMTP id f9mr42709084wrj.112.1565679271277;
-        Mon, 12 Aug 2019 23:54:31 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id 4sm953644wmd.26.2019.08.12.23.54.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 12 Aug 2019 23:54:30 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 08:54:29 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     linux-kernel@vger.kernel.org, joe@perches.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: N900: Remove isp1704_charger.h record
-Message-ID: <20190813065429.xhlqgcdyaxlqp537@pali>
-References: <20190325212737.27322-1-joe@perches.com>
- <20190813061358.17223-1-efremov@linux.com>
+        Tue, 13 Aug 2019 02:54:50 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id xQhchINqTqTdhxQhfh74b9; Tue, 13 Aug 2019 08:54:48 +0200
+Subject: Re: [PATCH] media: v4l: Add packed YUV444 24bpp pixel format
+To:     Mirela Rabulea <mirela.rabulea@nxp.com>, mchehab@kernel.org
+Cc:     vivek.kasireddy@intel.com, sakari.ailus@linux.intel.com,
+        s.nawrocki@samsung.com, niklas.soderlund+renesas@ragnatech.se,
+        ezequiel@collabora.com, paul.kocialkowski@bootlin.com,
+        boris.brezillon@collabora.com, robert.chiras@nxp.com,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com
+References: <1562166911-27454-1-git-send-email-mirela.rabulea@nxp.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <a6b91ccf-8961-d9a9-c007-d113bcba7156@xs4all.nl>
+Date:   Tue, 13 Aug 2019 08:54:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="74iuywupsfvvy3b7"
-Content-Disposition: inline
-In-Reply-To: <20190813061358.17223-1-efremov@linux.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1562166911-27454-1-git-send-email-mirela.rabulea@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfKBSp+YyPXW+7DMk9aBFy0pAbkzzPAsi80OWEUAttJ0pNr0oFwCLe19GGRqICu69iHTJ6Rim9NoB38fOVA1cVQGJVdfJuEIOC49gnPVKJ+Ytfr7YWTyv
+ a73fBFPAOxNprP6X+jYWQfepuaz2NB2sLWQleTcLLh/mBuZTr+aUEoDem5we32EsSfSYET4DpmU0/7nzPEF/Ynp0q6ntbD3bWDtHF/DsMji74t6I3dzqg9iK
+ Xjb7anelMkuoo2ds2TMDcbwRBn5R1+ov1ruam0lWQf2bgucAd3233Rs6uCgUOan0ArU6QbDv87aWRlz5cYvEmfusClYQHo7YAj1E/iG9R/iyGFGaKUpUizq3
+ 8gaUpfvMVCyoKYtHayHsLcVg5YZiHetssQ3BWUGeF3mLJy3UAEtdl6y/824R+0wKftvzboNIi9eB3e0e9mUct7FkcjOXcAHFMBWITgDNElG0IbsUvZEo+Xkr
+ cd9g8iIyLtG+7qgtNvvvEzcMcIdS+VB3idy+Ofxw0dS+Mnc09FvUk+zCoH+dl0oTRM9XEnDevEq1nhgkig663c5KewFpNSTRv1ViuqKv0bOx2U++5eSQnsfH
+ 4TsAypLItWAY3V6MCAFbMaU1a3nudAIgeHRPUNY9E79KUHVmm+vvOX4ObXZSyGSabb0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Mirela,
 
---74iuywupsfvvy3b7
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 7/3/19 5:15 PM, Mirela Rabulea wrote:
+> The added format is V4L2_PIX_FMT_YUV24, this is a packed
+> YUV 4:4:4 format, with 8 bits for each component, 24 bits
+> per sample.
+> 
+> This format is used by the i.MX 8QuadMax and i.MX 8DualXPlus/8QuadXPlus
+> JPEG encoder/decoder.
 
-On Tuesday 13 August 2019 09:13:58 Denis Efremov wrote:
-> Update MAINTAINERS to reflect that isp1704_charger.h file was removed.
->=20
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
-> Cc: linux-pm@vger.kernel.org
-> Fixes: f5d782d46aa5 ("power: supply: isp1704: switch to gpiod API")
-> Signed-off-by: Denis Efremov <efremov@linux.com>
+This patch looks good, but it can only be merged if we also have a driver
+that uses it. This to avoid having lots of pixelformat defines that nobody
+is using in the kernel.
+
+Are there plans to upstream this JPEG en/decoder?
+
+Regards,
+
+	Hans
+
+> 
+> Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
 > ---
->  MAINTAINERS | 1 -
->  1 file changed, 1 deletion(-)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 29514fc19b01..2776e0797ae3 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11400,7 +11400,6 @@ NOKIA N900 POWER SUPPLY DRIVERS
->  R:	Pali Roh=C3=A1r <pali.rohar@gmail.com>
->  F:	include/linux/power/bq2415x_charger.h
->  F:	include/linux/power/bq27xxx_battery.h
-> -F:	include/linux/power/isp1704_charger.h
->  F:	drivers/power/supply/bq2415x_charger.c
->  F:	drivers/power/supply/bq27xxx_battery.c
->  F:	drivers/power/supply/bq27xxx_battery_i2c.c
+>  Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst | 37 +++++++++++++++++++++-
+>  drivers/media/v4l2-core/v4l2-ioctl.c               |  1 +
+>  include/uapi/linux/videodev2.h                     |  1 +
+>  3 files changed, 38 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst b/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
+> index 41b60fa..5750ff6 100644
+> --- a/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
+> +++ b/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
+> @@ -17,7 +17,8 @@ Description
+>  ===========
+>  
+>  Similar to the packed RGB formats these formats store the Y, Cb and Cr
+> -component of each pixel in one 16 or 32 bit word.
+> +component of each pixel next to each other in memory. They occupy 16, 24 or 32
+> +bits per pixel.
+>  
+>  
+>  .. raw:: latex
+> @@ -157,6 +158,40 @@ component of each pixel in one 16 or 32 bit word.
+>  
+>        -  :cspan:`15`
+>  
+> +    * .. _V4L2-PIX-FMT-YUV24:
+> +
+> +      - ``V4L2_PIX_FMT_YUV24``
+> +      - 'YUV3'
+> +
+> +      - Y'\ :sub:`7`
+> +      - Y'\ :sub:`6`
+> +      - Y'\ :sub:`5`
+> +      - Y'\ :sub:`4`
+> +      - Y'\ :sub:`3`
+> +      - Y'\ :sub:`2`
+> +      - Y'\ :sub:`1`
+> +      - Y'\ :sub:`0`
+> +
+> +      - Cb\ :sub:`7`
+> +      - Cb\ :sub:`6`
+> +      - Cb\ :sub:`5`
+> +      - Cb\ :sub:`4`
+> +      - Cb\ :sub:`3`
+> +      - Cb\ :sub:`2`
+> +      - Cb\ :sub:`1`
+> +      - Cb\ :sub:`0`
+> +
+> +      - Cr\ :sub:`7`
+> +      - Cr\ :sub:`6`
+> +      - Cr\ :sub:`5`
+> +      - Cr\ :sub:`4`
+> +      - Cr\ :sub:`3`
+> +      - Cr\ :sub:`2`
+> +      - Cr\ :sub:`1`
+> +      - Cr\ :sub:`0`
+> +
+> +      -  :cspan:`7`
+> +
+>      * .. _V4L2-PIX-FMT-YUV32:
+>  
+>        - ``V4L2_PIX_FMT_YUV32``
+> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+> index b1f4b99..9bb6579 100644
+> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> @@ -1215,6 +1215,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+>  	case V4L2_PIX_FMT_YUV444:	descr = "16-bit A/XYUV 4-4-4-4"; break;
+>  	case V4L2_PIX_FMT_YUV555:	descr = "16-bit A/XYUV 1-5-5-5"; break;
+>  	case V4L2_PIX_FMT_YUV565:	descr = "16-bit YUV 5-6-5"; break;
+> +	case V4L2_PIX_FMT_YUV24:	descr = "24-bit YUV 4:4:4 8-8-8"; break;
+>  	case V4L2_PIX_FMT_YUV32:	descr = "32-bit A/XYUV 8-8-8-8"; break;
+>  	case V4L2_PIX_FMT_AYUV32:	descr = "32-bit AYUV 8-8-8-8"; break;
+>  	case V4L2_PIX_FMT_XYUV32:	descr = "32-bit XYUV 8-8-8-8"; break;
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index 9d9705c..752dd33 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -577,6 +577,7 @@ struct v4l2_pix_format {
+>  #define V4L2_PIX_FMT_YUV444  v4l2_fourcc('Y', '4', '4', '4') /* 16  xxxxyyyy uuuuvvvv */
+>  #define V4L2_PIX_FMT_YUV555  v4l2_fourcc('Y', 'U', 'V', 'O') /* 16  YUV-5-5-5     */
+>  #define V4L2_PIX_FMT_YUV565  v4l2_fourcc('Y', 'U', 'V', 'P') /* 16  YUV-5-6-5     */
+> +#define V4L2_PIX_FMT_YUV24   v4l2_fourcc('Y', 'U', 'V', '3') /* 24  YUV-8-8-8     */
+>  #define V4L2_PIX_FMT_YUV32   v4l2_fourcc('Y', 'U', 'V', '4') /* 32  YUV-8-8-8-8   */
+>  #define V4L2_PIX_FMT_AYUV32  v4l2_fourcc('A', 'Y', 'U', 'V') /* 32  AYUV-8-8-8-8  */
+>  #define V4L2_PIX_FMT_XYUV32  v4l2_fourcc('X', 'Y', 'U', 'V') /* 32  XYUV-8-8-8-8  */
+> 
 
-Reviewed-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---74iuywupsfvvy3b7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXVJeowAKCRCL8Mk9A+RD
-Uu+7AJ9RfV1sAm7mMwwT23afLImsnB2TeQCfQV5ZJR+KocAVqw2e7tHcJGU8D6w=
-=ssDQ
------END PGP SIGNATURE-----
-
---74iuywupsfvvy3b7--
