@@ -2,167 +2,157 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA7AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D769DC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E53882067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A793F2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:13:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J18xRW5c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LbiMr+LU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729003AbfHMNNA (ORCPT
+        id S1729009AbfHMNNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:13:00 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45818 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728933AbfHMNM7 (ORCPT
+        Tue, 13 Aug 2019 09:13:17 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44064 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728134AbfHMNNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:12:59 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w26so6325240pfq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:12:58 -0700 (PDT)
+        Tue, 13 Aug 2019 09:13:17 -0400
+Received: by mail-ed1-f66.google.com with SMTP id a21so4033924edt.11
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:13:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M4yC4xxf7HHhY83Tsjzd2oLWRvGfccu1vv450hTOufI=;
-        b=J18xRW5cHmENHZkY1Pojt43C+r7J0hFGXA254znYXF4D1PudPwQYvQ0eukblN+Orre
-         r7ENEz7jM2zcE4vIh6oC7xhjFwfCk4kco/q8RxpuTI+2QBO4Gxo76h5VXGFoWdtwAPgg
-         0r0kc0A/6aFpxeiDfSl+XgEWEKD+nM5Mv7JQCA9DUdWpfwOrWUv1MDvQHR6lQjvm8knN
-         YH6yfXqHRIGqp/LrzrGeeNPVSlGiQiPzWMk1BXVEQmL8cOmr9DU07mgjcUa5lfx+rgtK
-         nroig8ph5D9Dlig1jMvUdFMP4GifpKUovnoqySm/JKFjUOxNdTk4PygUFTYEloflTOYm
-         73PA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ubTbMeSv2M83GvfRwkB/P+VL404uyP8HpfpedP/OoAY=;
+        b=LbiMr+LUmaZQrw0UyPVfcE20C2rhk/qkyZVK+3mYVCagAEE8U/paBXrjyllhdz6qtK
+         Wzyo4uPi6N3fin0E1mVY9if56H4zb9YiKT42Fw945pXhXBVv8S0YTiidT67x5mLUlNDf
+         g9b3ExT+UD6gq0KpgfVTPNpdEYLQUgk6xdw1mGSodufjLObjZ8vlHlJcOkuIqQRHQs2h
+         i5tMQILnrg1tWoOOFbCbnBec0cRn2C0XZDoQpYkUbEh1S7kiLV6VU2k6/2ERXkSFxH+s
+         +jkQs/sxXRCPpGZ0782kYlorhUlcaFR7Hnm3JOSxGlLlFVSUG0SKHT6NxMTgWJKS5Sbj
+         1vSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M4yC4xxf7HHhY83Tsjzd2oLWRvGfccu1vv450hTOufI=;
-        b=Wz0mDFZMdRXjZ4BNmA/GsFQCaKK2M0NiZqr47USdJdQBDWBYWUFD+qF1k5F+MCf2vw
-         C6FuVfh6jjD+BlnzYSV0X7e9QQoQ89VSSqgIL0CTHAaDC7qh3FGcwBvC5XpRZGl1CKwl
-         43LeSfZNniQ54PWQuTpiTFgCk3Z7tQSiDia2tuVr6Mqcq8E78lLVROK6Yg88igRWnGhy
-         6nIxO1n/MpQo9BXGwiqXe0IhC+peCKfUJVB8Xn4T08WLIURT0wdEw9u5n/E4rJKWU4ZP
-         N8VpiLfh0YvTQ1wklUQm5PGgDXDlpoaG3/Z96qqeJuctzRcRS4lRJT/3aJs+cvDkACg+
-         Yr0g==
-X-Gm-Message-State: APjAAAWdFAIZRpGsUNLVX1IPCsz+5FcCU65FsoEBwJLLkXFEcZGHLiY5
-        RLLpyUGickPN6jHwnR3sIl2h1O/1WHsrHmof1k1HGQ==
-X-Google-Smtp-Source: APXvYqxiMsoLr99dFyzUIJJy+54RKRDpYAGRJnBkj1+1NBqdnaH0AsVcu5UVehhSWp8iU4iWD+1oJqwVd/AHWJfHUGg=
-X-Received: by 2002:a17:90a:858c:: with SMTP id m12mr2175012pjn.129.1565701978037;
- Tue, 13 Aug 2019 06:12:58 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ubTbMeSv2M83GvfRwkB/P+VL404uyP8HpfpedP/OoAY=;
+        b=g8mX1oa0UScWrmcPpPUok3xE/tBKh9u6j1p8fS+5S7NlC/kc4gX6DYOm4LxVRjfCiY
+         JHb6Nt37CjYlnHFnuyRwCk3tSS9gM4Ml+0dcyURH9uZ4bsRBJ1/N3m5Znn4cALj4dzWI
+         MdlgjJZDwsAyJayPl2pIAQ6haULriST2Fl4YRIsZtAmcYSjQ5upFyLkXvAI3lQqo5KrK
+         ckmTW7+7ZiSqX2RA+r27MijFWwlbJ42RvVqTY8Vg3C7xEP70WUYXFXRqv66qOBYZ58HU
+         KXCMHEJF+3e5XX00ZZMfzf3W9QBahKULb0RpII8RL8sABZ0+qLwNmSbTdke5bvxMaH7b
+         FM0g==
+X-Gm-Message-State: APjAAAW0rs3IGZ0lh62H17oEb9t5nWv/p91N4YZ9CCh4tRh7AowsKGU3
+        5fen+tC73hdWjon9MCNTpPI=
+X-Google-Smtp-Source: APXvYqwdvW3aE7k5RgRuOYmrOfG36rPCpQtWz80XoYTilWeyUOHf94znm2sC9lo7U0BNc43D3/8rag==
+X-Received: by 2002:a50:f285:: with SMTP id f5mr29025998edm.109.1565701995522;
+        Tue, 13 Aug 2019 06:13:15 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id z9sm3562897edd.18.2019.08.13.06.13.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 13 Aug 2019 06:13:14 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 13:13:12 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, osalvador@suse.de, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/hotplug: prevent memory leak when reuse pgdat
+Message-ID: <20190813131312.l4pzy7ornmc4a5yj@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20190813020608.10194-1-richardw.yang@linux.intel.com>
+ <20190813075707.GA17933@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <000000000000c8bea1058f5d6bf6@google.com>
-In-Reply-To: <000000000000c8bea1058f5d6bf6@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 13 Aug 2019 15:12:47 +0200
-Message-ID: <CAAeHK+zczjS33oWa+FsD+sHt37m5eCEPf8HMtE4m-PH=3GyXUg@mail.gmail.com>
-Subject: Re: WARNING in usbtouch_reset_resume
-To:     syzbot <syzbot+91f7bbcce580376d784e@syzkaller.appspotmail.com>
-Cc:     allison@lohutok.net, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, rfontana@redhat.com,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813075707.GA17933@dhcp22.suse.cz>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 1:58 PM syzbot
-<syzbot+91f7bbcce580376d784e@syzkaller.appspotmail.com> wrote:
+On Tue, Aug 13, 2019 at 09:57:07AM +0200, Michal Hocko wrote:
+>On Tue 13-08-19 10:06:08, Wei Yang wrote:
+>> When offline a node in try_offline_node, pgdat is not released. So that
+>> pgdat could be reused in hotadd_new_pgdat. While we re-allocate
+>> pgdat->per_cpu_nodestats if this pgdat is reused.
+>> 
+>> This patch prevents the memory leak by just allocate per_cpu_nodestats
+>> when it is a new pgdat.
 >
-> Hello,
+>Yes this makes sense! I was slightly confused why we haven't initialized
+>the allocated pcp area because __alloc_percpu does GFP_KERNEL without
+>__GFP_ZERO but then I've just found out that the zeroying is done
+>regardless. A bit unexpected...
 >
-> syzbot found the following crash on:
+>> NOTE: This is not tested since I didn't manage to create a case to
+>> offline a whole node. If my analysis is not correct, please let me know.
+>> 
+>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
 >
-> HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1104baf8600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
-> dashboard link: https://syzkaller.appspot.com/bug?extid=91f7bbcce580376d784e
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14199a62600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17d94aaa600000
+>Acked-by: Michal Hocko <mhocko@suse.com>
 >
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+91f7bbcce580376d784e@syzkaller.appspotmail.com
+>Thanks!
 >
-> input: USB Touchscreen 0eef:0002 as
-> /devices/platform/dummy_hcd.0/usb1/1-1/1-1:0.180/input/input5
-> usb 1-1: reset high-speed USB device number 2 using dummy_hcd
-> usb 1-1: Using ep0 maxpacket: 32
-> ------------[ cut here ]------------
-> DEBUG_LOCKS_WARN_ON(lock->magic != lock)
-> WARNING: CPU: 0 PID: 12 at kernel/locking/mutex.c:912 __mutex_lock_common
-> kernel/locking/mutex.c:912 [inline]
-> WARNING: CPU: 0 PID: 12 at kernel/locking/mutex.c:912
-> __mutex_lock+0xd31/0x1360 kernel/locking/mutex.c:1077
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc2+ #25
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   panic+0x2a3/0x6da kernel/panic.c:219
->   __warn.cold+0x20/0x4a kernel/panic.c:576
->   report_bug+0x262/0x2a0 lib/bug.c:186
->   fixup_bug arch/x86/kernel/traps.c:179 [inline]
->   fixup_bug arch/x86/kernel/traps.c:174 [inline]
->   do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
->   do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
->   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1026
-> RIP: 0010:__mutex_lock_common kernel/locking/mutex.c:912 [inline]
-> RIP: 0010:__mutex_lock+0xd31/0x1360 kernel/locking/mutex.c:1077
-> Code: d2 0f 85 f6 05 00 00 44 8b 05 7b de 1c 02 45 85 c0 0f 85 0a f4 ff ff
-> 48 c7 c6 c0 92 c6 85 48 c7 c7 60 90 c6 85 e8 f4 c4 a6 fb <0f> 0b e9 f0 f3
-> ff ff 65 48 8b 1c 25 00 ef 01 00 be 08 00 00 00 48
-> RSP: 0018:ffff8881da20f6b0 EFLAGS: 00010286
-> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: ffffffff8128a0fd RDI: ffffed103b441ec8
-> RBP: ffff8881da20f820 R08: ffff8881da1f9800 R09: fffffbfff0d9ee35
-> R10: fffffbfff0d9ee34 R11: ffffffff86cf71a3 R12: 0000000000000000
-> R13: dffffc0000000000 R14: ffff8881d2e291c8 R15: ffff8881d2fba228
->   usbtouch_reset_resume+0xb1/0x170
-> drivers/input/touchscreen/usbtouchscreen.c:1611
->   usb_resume_interface drivers/usb/core/driver.c:1242 [inline]
->   usb_resume_interface.isra.0+0x184/0x390 drivers/usb/core/driver.c:1210
->   usb_resume_both+0x26a/0x7b0 drivers/usb/core/driver.c:1412
->   __rpm_callback+0x27e/0x3c0 drivers/base/power/runtime.c:355
->   rpm_callback+0x18f/0x230 drivers/base/power/runtime.c:485
->   rpm_resume+0x10f7/0x1870 drivers/base/power/runtime.c:849
->   __pm_runtime_resume+0x103/0x180 drivers/base/power/runtime.c:1076
->   pm_runtime_get_sync include/linux/pm_runtime.h:226 [inline]
->   usb_autoresume_device+0x1e/0x60 drivers/usb/core/driver.c:1599
->   usb_remote_wakeup+0x7b/0xb0 drivers/usb/core/hub.c:3603
->   hub_port_connect_change drivers/usb/core/hub.c:5199 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x246c/0x3640 drivers/usb/core/hub.c:5441
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
 
-#syz dup: WARNING in usbtouch_open
+Thanks :-)
 
+>> ---
+>>  mm/memory_hotplug.c | 10 +++++++++-
+>>  1 file changed, 9 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>> index c73f09913165..efaf9e6f580a 100644
+>> --- a/mm/memory_hotplug.c
+>> +++ b/mm/memory_hotplug.c
+>> @@ -933,8 +933,11 @@ static pg_data_t __ref *hotadd_new_pgdat(int nid, u64 start)
+>>  		if (!pgdat)
+>>  			return NULL;
+>>  
+>> +		pgdat->per_cpu_nodestats =
+>> +			alloc_percpu(struct per_cpu_nodestat);
+>>  		arch_refresh_nodedata(nid, pgdat);
+>>  	} else {
+>> +		int cpu;
+>>  		/*
+>>  		 * Reset the nr_zones, order and classzone_idx before reuse.
+>>  		 * Note that kswapd will init kswapd_classzone_idx properly
+>> @@ -943,6 +946,12 @@ static pg_data_t __ref *hotadd_new_pgdat(int nid, u64 start)
+>>  		pgdat->nr_zones = 0;
+>>  		pgdat->kswapd_order = 0;
+>>  		pgdat->kswapd_classzone_idx = 0;
+>> +		for_each_online_cpu(cpu) {
+>> +			struct per_cpu_nodestat *p;
+>> +
+>> +			p = per_cpu_ptr(pgdat->per_cpu_nodestats, cpu);
+>> +			memset(p, 0, sizeof(*p));
+>> +		}
+>>  	}
+>>  
+>>  	/* we can use NODE_DATA(nid) from here */
+>> @@ -952,7 +961,6 @@ static pg_data_t __ref *hotadd_new_pgdat(int nid, u64 start)
+>>  
+>>  	/* init node's zones as empty zones, we don't have any present pages.*/
+>>  	free_area_init_core_hotplug(nid);
+>> -	pgdat->per_cpu_nodestats = alloc_percpu(struct per_cpu_nodestat);
+>>  
+>>  	/*
+>>  	 * The node we allocated has no zone fallback lists. For avoiding
+>> -- 
+>> 2.17.1
+>> 
 >
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+>-- 
+>Michal Hocko
+>SUSE Labs
+
+-- 
+Wei Yang
+Help you, Help me
