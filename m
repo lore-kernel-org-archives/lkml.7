@@ -2,229 +2,156 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58129C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951C0C32757
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03703206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:59:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tCss9UF0"
+	by mail.kernel.org (Postfix) with ESMTP id 754C5206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:59:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbfHMM7B (ORCPT
+        id S1728811AbfHMM7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 08:59:01 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39055 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728682AbfHMM7A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 08:59:00 -0400
-Received: by mail-pl1-f194.google.com with SMTP id z3so2437362pln.6
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 05:59:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DhHHMldNA11v/SK2WsSGLAU/UTQ6fOX7HQpywB8nTAU=;
-        b=tCss9UF0DCoJJ290xSMja7MfUntYGAEA1DeuVnFyDUwT89HpJGVAWMYMXZB77kRjR4
-         GadDe3W7BIM704633FeIsD26lvjvTcSbYvl09t42QRUgUh4XIKkAB4t3vupGgkTEXqcB
-         +UihTQ4zJKnWd8y9aQOdY3uQduUEix1nIyy4hD7vR/+oD8jjW7o/8N0UCK89Jihl4RHK
-         8zvT1b3Txgr4bcUOHfFRlnWMOIRg0fa36KMkyr3I9HN0yBk4OG6OXgjv1sTW5odPuUE/
-         AVZ2WF7HvtsCFzMQcNZ/oPdo31vxHWCT3eLMk1aC/fhljxrnOLZHyBDCwm8m97Mnnvz/
-         9yAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DhHHMldNA11v/SK2WsSGLAU/UTQ6fOX7HQpywB8nTAU=;
-        b=a3PPuXMoOq90iChsZ9KT+pbYLw4/V78ru4aaV8086CBgW1c/pOWyqTZD9fS7FEGrc2
-         wklUjPQJV8kQ1EtDbtb1GvIoT1SNROtvlP8+rvVxjzvoRpChPwG5J4MbJVmcUUZ9pdrF
-         JKCPxfNMwzHhqbc+ceXqJo9BnpqrE469kEInR8EmI2blxYo/Tc/0twaOjgR+7kcQa2aK
-         JJ3bbDRbsGfbiMOsE+3hC/fs589wlBVgFZuPUQ4opwoEiMdVUR92Mdpe9QLrcogko+Dl
-         AjWislmIJ35poo6v2xVBKjPrb0lWKMz35hHlLjXqkD0oLRTkXvV2yRbPPLEqc27m8lFo
-         zhgg==
-X-Gm-Message-State: APjAAAUaBqDvYP+cYjp3JXGJdLpAxW6zseft2xSr7JQWtdaPDe+4+6/K
-        b4bkYVdXALm+NbNwFdxkdFbs4DBi4Gv8u4LUYgYb6w==
-X-Google-Smtp-Source: APXvYqzIOrQplJqd1l29SMBrKZETtZ3wT3HiZ92VFmevqGu0OWai1bWa1/BQWF/Fyd0j9dW0uRCuRvFkZ72wLiuF4LQ=
-X-Received: by 2002:a17:902:bb94:: with SMTP id m20mr5204966pls.336.1565701139685;
- Tue, 13 Aug 2019 05:58:59 -0700 (PDT)
+        Tue, 13 Aug 2019 08:59:32 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38052 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728289AbfHMM7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 08:59:32 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A4520AA611A670BAC016;
+        Tue, 13 Aug 2019 20:43:46 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Tue, 13 Aug 2019
+ 20:43:41 +0800
+Subject: Re: [PATCH] PCI: hv: Fix build error without CONFIG_SYSFS
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+References: <20190531150923.12376-1-yuehaibing@huawei.com>
+ <BYAPR21MB12211EEA95200F437C8E37ECD71A0@BYAPR21MB1221.namprd21.prod.outlook.com>
+ <7d8ca05e-7519-45d8-e694-d31e221696d5@huawei.com>
+ <b049b0f9-e31e-897a-6f2e-e30d6d865f24@huawei.com>
+ <20190813101845.GB14977@e121166-lin.cambridge.arm.com>
+CC:     Michael Kelley <mikelley@microsoft.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <7c651711-7bf6-f2ca-cd4e-edcc0a7438e2@huawei.com>
+Date:   Tue, 13 Aug 2019 20:43:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-References: <000000000000c08c230587e6e01e@google.com>
-In-Reply-To: <000000000000c08c230587e6e01e@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 13 Aug 2019 14:58:48 +0200
-Message-ID: <CAAeHK+zug7cAxPxhziuXzufxuBf=+=JDYix+BTyv2qz8VTRM_Q@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in v4l2_fh_del
-To:     syzbot <syzbot+d53275bc1af5eb01bfff@syzkaller.appspotmail.com>
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        USB list <linux-usb@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190813101845.GB14977@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 2:36 PM syzbot
-<syzbot+d53275bc1af5eb01bfff@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    43151d6c usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=145cd8ff200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=4183eeef650d1234
-> dashboard link: https://syzkaller.appspot.com/bug?extid=d53275bc1af5eb01bfff
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+d53275bc1af5eb01bfff@syzkaller.appspotmail.com
->
-> ==================================================================
-> BUG: KASAN: use-after-free in __lock_acquire+0x2930/0x37c0
-> kernel/locking/lockdep.c:3573
-> Read of size 8 at addr ffff88806b57ec90 by task v4l_id/7959
->
-> CPU: 0 PID: 7959 Comm: v4l_id Not tainted 5.1.0-rc3-319004-g43151d6 #6
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xe8/0x16e lib/dump_stack.c:113
->   print_address_description+0x6c/0x236 mm/kasan/report.c:187
->   kasan_report.cold+0x1a/0x3c mm/kasan/report.c:317
->   __lock_acquire+0x2930/0x37c0 kernel/locking/lockdep.c:3573
->   lock_acquire+0x10d/0x2f0 kernel/locking/lockdep.c:4211
->   __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
->   _raw_spin_lock_irqsave+0x44/0x60 kernel/locking/spinlock.c:152
->   v4l2_fh_del+0x4e/0x270 drivers/media/v4l2-core/v4l2-fh.c:81
->   v4l2_fh_release+0x46/0x70 drivers/media/v4l2-core/v4l2-fh.c:104
->   v4l2_release+0x2f0/0x390 drivers/media/v4l2-core/v4l2-dev.c:459
->   __fput+0x2df/0x8c0 fs/file_table.c:278
->   task_work_run+0x149/0x1c0 kernel/task_work.c:113
->   tracehook_notify_resume include/linux/tracehook.h:188 [inline]
->   exit_to_usermode_loop+0x243/0x270 arch/x86/entry/common.c:166
->   prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
->   syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
->   do_syscall_64+0x40c/0x4f0 arch/x86/entry/common.c:293
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x7fd157cde2b0
-> Code: 40 75 0b 31 c0 48 83 c4 08 e9 0c ff ff ff 48 8d 3d c5 32 08 00 e8 c0
-> 07 02 00 83 3d 45 a3 2b 00 00 75 10 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff
-> ff 73 31 c3 48 83 ec 08 e8 ce 8a 01 00 48 89 04 24
-> RSP: 002b:00007ffcf08bde38 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
-> RAX: 0000000000000000 RBX: 0000000000000003 RCX: 00007fd157cde2b0
-> RDX: 0000000000000013 RSI: 0000000080685600 RDI: 0000000000000003
-> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000400884
-> R13: 00007ffcf08bdf90 R14: 0000000000000000 R15: 0000000000000000
->
-> Allocated by task 17:
->   set_track mm/kasan/common.c:87 [inline]
->   __kasan_kmalloc mm/kasan/common.c:497 [inline]
->   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:470
->   slab_post_alloc_hook mm/slab.h:437 [inline]
->   slab_alloc_node mm/slub.c:2756 [inline]
->   __kmalloc_node_track_caller+0xf3/0x320 mm/slub.c:4372
->   alloc_dr drivers/base/devres.c:103 [inline]
->   devm_kmalloc+0x8c/0x190 drivers/base/devres.c:793
->   devm_kzalloc include/linux/device.h:679 [inline]
->   usb_raremono_probe+0x34/0x235 drivers/media/radio/radio-raremono.c:298
->   usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
->   really_probe+0x2da/0xb10 drivers/base/dd.c:509
->   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
->   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
->   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
->   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
->   device_add+0xad2/0x16e0 drivers/base/core.c:2106
->   usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2023
->   generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
->   usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
->   really_probe+0x2da/0xb10 drivers/base/dd.c:509
->   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
->   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
->   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
->   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
->   device_add+0xad2/0x16e0 drivers/base/core.c:2106
->   usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
->   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
->   port_event drivers/usb/core/hub.c:5350 [inline]
->   hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
->   process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
->   process_scheduled_works kernel/workqueue.c:2331 [inline]
->   worker_thread+0x7b0/0xe20 kernel/workqueue.c:2417
->   kthread+0x313/0x420 kernel/kthread.c:253
->   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
->
-> Freed by task 17:
->   set_track mm/kasan/common.c:87 [inline]
->   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
->   slab_free_hook mm/slub.c:1429 [inline]
->   slab_free_freelist_hook+0x5e/0x140 mm/slub.c:1456
->   slab_free mm/slub.c:3003 [inline]
->   kfree+0xce/0x290 mm/slub.c:3958
->   release_nodes+0x4ac/0x920 drivers/base/devres.c:508
->   devres_release_all+0x79/0xc8 drivers/base/devres.c:529
->   __device_release_driver drivers/base/dd.c:1086 [inline]
->   device_release_driver_internal+0x23a/0x4f0 drivers/base/dd.c:1113
->   bus_remove_device+0x302/0x5c0 drivers/base/bus.c:556
->   device_del+0x467/0xb90 drivers/base/core.c:2269
->   usb_disable_device+0x242/0x790 drivers/usb/core/message.c:1237
->   usb_disconnect+0x298/0x870 drivers/usb/core/hub.c:2197
->   hub_port_connect drivers/usb/core/hub.c:4940 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
->   port_event drivers/usb/core/hub.c:5350 [inline]
->   hub_event+0xcd2/0x3b00 drivers/usb/core/hub.c:5432
->   process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
->   process_scheduled_works kernel/workqueue.c:2331 [inline]
->   worker_thread+0x7b0/0xe20 kernel/workqueue.c:2417
->   kthread+0x313/0x420 kernel/kthread.c:253
->   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
->
-> The buggy address belongs to the object at ffff88806b57e600
->   which belongs to the cache kmalloc-4k of size 4096
-> The buggy address is located 1680 bytes inside of
->   4096-byte region [ffff88806b57e600, ffff88806b57f600)
-> The buggy address belongs to the page:
-> page:ffffea0001ad5e00 count:1 mapcount:0 mapping:ffff88812c3f4600 index:0x0
-> compound_mapcount: 0
-> flags: 0xfff00000010200(slab|head)
-> raw: 00fff00000010200 0000000000000000 0000000100000001 ffff88812c3f4600
-> raw: 0000000000000000 0000000000070007 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->   ffff88806b57eb80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->   ffff88806b57ec00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > ffff88806b57ec80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->                           ^
->   ffff88806b57ed00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->   ffff88806b57ed80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ==================================================================
+On 2019/8/13 18:18, Lorenzo Pieralisi wrote:
+> On Sat, Jun 15, 2019 at 02:48:24PM +0800, Yuehaibing wrote:
+>> +cc Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> 
+> Can we drop this patch and merge:
+> 
+> https://patchwork.ozlabs.org/patch/1131444/
+> 
+> instead ?
 
-#syz dup: KASAN: use-after-free Read in v4l2_ioctl
+Ok, it looks good to me, thanks!
 
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> Thanks,
+> Lorenzo
+> 
+>>
+>> On 2019/6/15 14:18, Yuehaibing wrote:
+>>>
+>>> On 2019/6/2 6:59, Michael Kelley wrote:
+>>>> From: YueHaibing <yuehaibing@huawei.com>  Sent: Friday, May 31, 2019 8:09 AM
+>>>>>
+>>>>> while building without CONFIG_SYSFS, fails as below:
+>>>>>
+>>>>> drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_assign_slots':
+>>>>> pci-hyperv.c:(.text+0x40a): undefined reference to 'pci_create_slot'
+>>>>> drivers/pci/controller/pci-hyperv.o: In function 'pci_devices_present_work':
+>>>>> pci-hyperv.c:(.text+0xc02): undefined reference to 'pci_destroy_slot'
+>>>>> drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_remove':
+>>>>> pci-hyperv.c:(.text+0xe50): undefined reference to 'pci_destroy_slot'
+>>>>> drivers/pci/controller/pci-hyperv.o: In function 'hv_eject_device_work':
+>>>>> pci-hyperv.c:(.text+0x11f9): undefined reference to 'pci_destroy_slot'
+>>>>>
+>>>>> Select SYSFS while PCI_HYPERV is set to fix this.
+>>>>>
+>>>>
+>>>> I'm wondering if is the right way to fix the problem.  Conceptually
+>>>> is it possible to setup & operate virtual PCI devices like 
+>>>> pci-hyperv.c does, even if sysfs is not present?  Or is it right to
+>>>> always required sysfs?
+>>>>
+>>>> The function pci_dev_assign_slot() in slot.c has a null implementation
+>>>> in include/linux/pci.h when CONFIG_SYSFS is not defined, which
+>>>> seems to be trying to solve the same problem for that function.  And
+>>>> if CONFIG_HOTPLUG_PCI is defined but CONFIG_SYSFS is not,
+>>>> pci_hp_create_module_link() and pci_hp_remove_module_link()
+>>>> look like they would have the same problem.  Maybe there should
+>>>> be degenerate implementations of pci_create_slot() and
+>>>> pci_destroy_slot() for cases when CONFIG_SYSFS is not defined?
+>>>>
+>>>> But I'll admit I don't know the full story behind how PCI slots
+>>>> are represented and used, so maybe I'm off base.  I just noticed
+>>>> the inconsistency in how other functions in slot.c are handled.
+>>>>
+>>>> Thoughts?
+>>>
+>>> 268a03a42d33 ("PCI: drivers/pci/slot.c should depend on CONFIG_SYSFS")
+>>>
+>>> make slot.o depends CONFIG_SYSFS
+>>>
+>>> commit 268a03a42d3377d5fb41e6e7cbdec4e0b65cab2e
+>>> Author: Alex Chiang <achiang@hp.com>
+>>> Date:   Wed Jun 17 19:03:57 2009 -0600
+>>>
+>>>     PCI: drivers/pci/slot.c should depend on CONFIG_SYSFS
+>>>
+>>>     There is no way to interact with a physical PCI slot without
+>>>     sysfs, so encode the dependency and prevent this build error:
+>>>
+>>>         drivers/pci/slot.c: In function 'pci_hp_create_module_link':
+>>>         drivers/pci/slot.c:327: error: 'module_kset' undeclared
+>>>
+>>>     This patch _should_ make pci-sysfs.o depend on CONFIG_SYSFS too,
+>>>     but we cannot (yet) because the PCI core merrily assumes the
+>>>     existence of sysfs:
+>>>
+>>>         drivers/built-in.o: In function `pci_bus_add_device':
+>>>         drivers/pci/bus.c:89: undefined reference to `pci_create_sysfs_dev_files'
+>>>         drivers/built-in.o: In function `pci_stop_dev':
+>>>         drivers/pci/remove.c:24: undefined reference to `pci_remove_sysfs_dev_files'
+>>>
+>>>     So do the minimal bit for now and figure out how to untangle it
+>>>     later.
+>>>
+>>> If No CONFIG_SYSFS, slot.o is not build
+>>>
+>>>>
+>>>> Michael
+>>>>
+>>>>
+>>>
+>>>
+>>> .
+>>>
+>>
+> 
+> .
+> 
+
