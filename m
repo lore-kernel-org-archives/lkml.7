@@ -2,142 +2,151 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7D9C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B2FC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E395720663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:24:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Cl10+Swp"
+	by mail.kernel.org (Postfix) with ESMTP id 15D7F20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:24:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729682AbfHMPYU (ORCPT
+        id S1729959AbfHMPYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 11:24:20 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:48588 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727274AbfHMPYU (ORCPT
+        Tue, 13 Aug 2019 11:24:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23760 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729802AbfHMPYu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 11:24:20 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7DFE7tL113127;
-        Tue, 13 Aug 2019 15:23:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=3lnMfPd7Gg7c53hK0P9zvawMvp/Er2oWH5wXpSpk/1A=;
- b=Cl10+SwpcauJ7sUnCom+B5Q1g20dzgbrM+XPg6v26kQrDGDYKCuEh+8gpq0t/aL9k4oN
- z0LM6r5u2R92SS5vkyS39wcDrFw6OCDd9owxpunhIXJys23Vg2CV1YN0mAD0zN7nZCX+
- zAz8x2b4VWT7Eb2HeeLdAf7Li0LFW4wOX0LUXfNGO5RFXvuviY8jHhBCI2R3cHbE8Qhp
- vAexMpBNPsRRS0k8HEYoSRfZOTjBSUXU76PUil5AyyBTtJ0mXJGUSEhIi2YYqllpXPG5
- ImwOsiqTFpEjXHi6C4SwXfSMMJPVZETaW0GBjfB74UJ18HduP1WEd0Nr7nfsZzjyX3Zc jw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2u9nbtf2y4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 15:23:02 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7DFDS0K029285;
-        Tue, 13 Aug 2019 15:21:01 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2ubwqrwbdq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 15:21:01 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7DFKtnY024258;
-        Tue, 13 Aug 2019 15:20:55 GMT
-Received: from [10.65.155.174] (/10.65.155.174)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 13 Aug 2019 08:20:54 -0700
-Subject: Re: [RFC PATCH 0/2] Add predictive memory reclamation and compaction
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     akpm@linux-foundation.org, vbabka@suse.cz,
-        mgorman@techsingularity.net, dan.j.williams@intel.com,
-        osalvador@suse.de, richard.weiyang@gmail.com, hannes@cmpxchg.org,
-        arunks@codeaurora.org, rppt@linux.vnet.ibm.com, jgg@ziepe.ca,
-        amir73il@gmail.com, alexander.h.duyck@linux.intel.com,
-        linux-mm@kvack.org, linux-kernel-mentees@lists.linuxfoundation.org,
+        Tue, 13 Aug 2019 11:24:50 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7DFCRXn034039;
+        Tue, 13 Aug 2019 11:23:52 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ubwm473au-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Aug 2019 11:23:52 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7DFCbCe034743;
+        Tue, 13 Aug 2019 11:23:51 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ubwm4739x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Aug 2019 11:23:51 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7DFFRw7002546;
+        Tue, 13 Aug 2019 15:23:50 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma04dal.us.ibm.com with ESMTP id 2u9nj6pj94-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Aug 2019 15:23:50 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7DFNnJ255312662
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Aug 2019 15:23:49 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9BDDDB2067;
+        Tue, 13 Aug 2019 15:23:49 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7EB14B205F;
+        Tue, 13 Aug 2019 15:23:49 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 13 Aug 2019 15:23:49 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 5FC1F16C1057; Tue, 13 Aug 2019 08:23:50 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 08:23:50 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20190813014012.30232-1-khalid.aziz@oracle.com>
- <20190813140553.GK17933@dhcp22.suse.cz>
-From:   Khalid Aziz <khalid.aziz@oracle.com>
-Organization: Oracle Corp
-Message-ID: <3cb0af00-f091-2f3e-d6cc-73a5171e6eda@oracle.com>
-Date:   Tue, 13 Aug 2019 09:20:51 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Subject: Re: rcu/nocb: Add bypass callback queueing, bug report
+Message-ID: <20190813152350.GC28441@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <e89f5af3-dcf3-986f-828f-14e10cef9915@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20190813140553.GK17933@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9348 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908130158
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9348 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908130158
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e89f5af3-dcf3-986f-828f-14e10cef9915@canonical.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-13_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908130158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/19 8:05 AM, Michal Hocko wrote:
-> On Mon 12-08-19 19:40:10, Khalid Aziz wrote:
-> [...]
->> Patch 1 adds code to maintain a sliding lookback window of (time, numb=
-er
->> of free pages) points which can be updated continuously and adds code =
-to
->> compute best fit line across these points. It also adds code to use th=
-e
->> best fit lines to determine if kernel must start reclamation or
->> compaction.
->>
->> Patch 2 adds code to collect data points on free pages of various orde=
-rs
->> at different points in time, uses code in patch 1 to update sliding
->> lookback window with these points and kicks off reclamation or
->> compaction based upon the results it gets.
->=20
-> An important piece of information missing in your description is why
-> do we need to keep that logic in the kernel. In other words, we have
-> the background reclaim that acts on a wmark range and those are tunable=
+On Tue, Aug 13, 2019 at 01:34:02PM +0100, Colin Ian King wrote:
+> Hi,
+> 
+> Static analysis on linux-next today found an issue in the following commit:
+> 
+> commit 1afc4b18724f8f7b7a21fdf66cd43cc4a932812d
+> Author: Paul E. McKenney <paulmck@linux.ibm.com>
+> Date:   Tue Jul 2 16:03:33 2019 -0700
+> 
+>     rcu/nocb: Add bypass callback queueing
+> 
+> 
+> The coverity report is as follows:
+> 
+> 1783        // If we have advanced to a new jiffy, reset counts to allow
+> 1784        // moving back from ->nocb_bypass to ->cblist.
+> 1785        if (j == rdp->nocb_nobypass_last) {
+> 1786                c = rdp->nocb_nobypass_count + 1;
+> 1787        } else {
+> 1788                WRITE_ONCE(rdp->nocb_nobypass_last, j);
+> 1789                c = rdp->nocb_nobypass_count -
+> nocb_nobypass_lim_per_jiffy;
+> 1790                if (c > nocb_nobypass_lim_per_jiffy)
+> 1791                        c = nocb_nobypass_lim_per_jiffy;
+> 
+> CID 85141 (#1 of 1): Unsigned compared against 0
+> unsigned_compare: This less-than-zero comparison of an unsigned value is
+> never true. c < 0UL.
+> 
+> 1792                else if (c < 0)
+> 1793                        c = 0;
+> 
+> Variable c is an unsigned long so the c < 0 check is never true. I'm not
+> sure what the ramifications are if c is made a signed long instead, so
+> I'm not fixing this and reporting this issue.
 
-> from the userspace. The primary point of this background reclaim is to
-> keep balance and prevent from direct reclaim. Why cannot you implement
-> this or any other dynamic trend watching watchdog and tune watermarks
-> accordingly? Something similar applies to kcompactd although we might b=
-e
-> lacking a good interface.
->=20
+Good catch!!!
 
-Hi Michal,
+How about the alleged fix shown below?
 
-That is a very good question. As a matter of fact the initial prototype
-to assess the feasibility of this approach was written in userspace for
-a very limited application. We wrote the initial prototype to monitor
-fragmentation and used /sys/devices/system/node/node*/compact to trigger
-compaction. The prototype demonstrated this approach has merits.
+							Thanx, Paul
 
-The primary reason to implement this logic in the kernel is to make the
-kernel self-tuning. The more knobs we have externally, the more complex
-it becomes to tune the kernel externally. If we can make the kernel
-self-tuning, we can actually eliminate external knobs and simplify
-kernel admin. Inspite of availability of tuning knobs and large number
-of tuning guides for databases and cloud platforms, allocation stalls is
-a routinely occurring problem on customer deployments. A best fit line
-algorithm shows immeasurable impact on system performance yet provides
-measurable improvement and room for further refinement. Makes sense?
+------------------------------------------------------------------------
 
-Thanks,
-Khalid
-
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 91cefa3bf943..2defc7fe74c3 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -1787,10 +1787,11 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
+ 	} else {
+ 		WRITE_ONCE(rdp->nocb_nobypass_last, j);
+ 		c = rdp->nocb_nobypass_count - nocb_nobypass_lim_per_jiffy;
+-		if (c > nocb_nobypass_lim_per_jiffy)
+-			c = nocb_nobypass_lim_per_jiffy;
+-		else if (c < 0)
++		if (ULONG_CMP_LT(rdp->nocb_nobypass_count,
++				 nocb_nobypass_lim_per_jiffy))
+ 			c = 0;
++		else if (c > nocb_nobypass_lim_per_jiffy)
++			c = nocb_nobypass_lim_per_jiffy;
+ 	}
+ 	WRITE_ONCE(rdp->nocb_nobypass_count, c);
+ 
