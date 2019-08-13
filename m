@@ -2,73 +2,142 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4723EC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53AEEC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA8A20840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:37:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565671076;
-	bh=aPLKTjqm5AOkaw3kj/RI5hMxBP/0Xl0VJbc0FtVQthQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Gbp84WdCmt9w3VUbDEpd9k30G1UmpTn9l+d7GO9oOL7piXfc9QHKk9C776DgzWxt1
-	 S2t8+86FKgEgbfNrrNO0TVndvXV8oQXai0zEmfng6S9pwWNNYqoVULws3yShqvJPpV
-	 tgE27cMGqVcaLwQsbCZ3d/7C3jm75vwIjeKdLBVs=
+	by mail.kernel.org (Postfix) with ESMTP id 239282054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:38:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZXoSPIGR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfHMEhz (ORCPT
+        id S1726802AbfHMEiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 00:37:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58050 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725298AbfHMEhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 00:37:55 -0400
-Received: from localhost (unknown [106.201.103.22])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 244EE2054F;
-        Tue, 13 Aug 2019 04:37:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565671074;
-        bh=aPLKTjqm5AOkaw3kj/RI5hMxBP/0Xl0VJbc0FtVQthQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J0ozBb7tQZvSqXd4AU5LVM1tOx1GTEyfRyCjKNa5+ax2ID05+0d6OypFXVRx8ZrFg
-         8mTLevAy+8NdgryU+33eoJ7/4i4Zl1xlFoIb6wQlQ39SH334z5N0YzcUQnAOjp/i0E
-         blaYR5hvf7Au1AHSDjsSe4vH2TADBMfHoN/gtmBc=
-Date:   Tue, 13 Aug 2019 10:06:42 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [v2] dma: ti: unexport filter functions
-Message-ID: <20190813043642.GP12733@vkoul-mobl.Dlink>
-References: <20190812101155.997721-1-arnd@arndb.de>
+        Tue, 13 Aug 2019 00:38:00 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:51800 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725298AbfHMEh7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 00:37:59 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7D4bfUa075008;
+        Mon, 12 Aug 2019 23:37:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565671061;
+        bh=FwJydpcr667N2/XPMOBcxx0wD/N0E+SUJhtqvw4Uofc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ZXoSPIGRf5bEd9CXF5888bXKA/dJVvEzd12eMCDYSiOBzIJd/NWnMSHge97ZmfqVN
+         jA3URMmrInM0u4TPbHr4inRbz1sDP3l5hWoeqXrEouBhjPpUcrcUgWWTRIQ9IomKS4
+         Zt2tRMZTzHzVZ8Oi58P4pW6t9AIgx3ylM/vzgs9I=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7D4bflI032016
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 12 Aug 2019 23:37:41 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 12
+ Aug 2019 23:37:40 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 12 Aug 2019 23:37:40 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7D4bZp5072921;
+        Mon, 12 Aug 2019 23:37:36 -0500
+Subject: Re: [PATCH 1/4] dt-bingings: PCI: Remove the num-lanes from Required
+ properties
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        Andrew Murray <andrew.murray@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Gabriele Paoloni <gabriele.paoloni@huawei.com>
+References: <20190812042435.25102-1-Zhiqiang.Hou@nxp.com>
+ <20190812042435.25102-2-Zhiqiang.Hou@nxp.com>
+ <20190812084517.GW56241@e119886-lin.cambridge.arm.com>
+ <DB8PR04MB67476309D3F7E30FE35C47DF84D20@DB8PR04MB6747.eurprd04.prod.outlook.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <286ea8d2-5467-6cc2-07cb-7707db13ad1a@ti.com>
+Date:   Tue, 13 Aug 2019 10:05:42 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812101155.997721-1-arnd@arndb.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <DB8PR04MB67476309D3F7E30FE35C47DF84D20@DB8PR04MB6747.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="gbk"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12-08-19, 12:11, Arnd Bergmann wrote:
-> The two filter functions are now marked static, but still exported,
-> which triggers a coming build-time check:
+Hi,
+
+On 13/08/19 8:37 AM, Z.q. Hou wrote:
+> Hi Andrew,
 > 
-> WARNING: "omap_dma_filter_fn" [vmlinux] is a static EXPORT_SYMBOL_GPL
-> WARNING: "edma_filter_fn" [vmlinux] is a static EXPORT_SYMBOL
+> Thanks a lot for your comments!
 > 
-> Remove the unneeded exports as well, as originally intended.
+>> -----Original Message-----
+>> From: Andrew Murray <andrew.murray@arm.com>
+>> Sent: 2019Äê8ÔÂ12ÈÕ 16:45
+>> To: Z.q. Hou <zhiqiang.hou@nxp.com>
+>> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org;
+>> linux-kernel@vger.kernel.org; gustavo.pimentel@synopsys.com;
+>> jingoohan1@gmail.com; bhelgaas@google.com; robh+dt@kernel.org;
+>> mark.rutland@arm.com; shawnguo@kernel.org; Leo Li
+>> <leoyang.li@nxp.com>; lorenzo.pieralisi@arm.com; M.h. Lian
+>> <minghuan.lian@nxp.com>; Kishon Vijay Abraham I <kishon@ti.com>;
+>> Gabriele Paoloni <gabriele.paoloni@huawei.com>
+>> Subject: Re: [PATCH 1/4] dt-bingings: PCI: Remove the num-lanes from
+>> Required properties
+>>
+>> On Mon, Aug 12, 2019 at 04:22:16AM +0000, Z.q. Hou wrote:
+>>> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>>>
+>>> The num-lanes is not a mandatory property, e.g. on FSL Layerscape
+>>> SoCs, the PCIe link training is completed automatically base on the
+>>> selected SerDes protocol, it doesn't need the num-lanes to set-up the
+>>> link width.
+>>>
+>>> It has been added in the Optional properties. This patch is to remove
+>>> it from the Required properties.
+>>
+>> For clarity, maybe this paragraph can be reworded to:
+>>
+>> "It is previously in both Required and Optional properties,  let's remove it
+>> from the Required properties".
+> 
+> Agree and will change in v2.
+> 
+>>
+>> I don't understand why this property is previously in both required and
+>> optional...
+>>
+>> It looks like num-lanes was first made optional back in
+>> 2015 and removed from the Required section (907fce090253).
+>> But then re-added back into the Required section in 2017 with the adition of
+>> bindings for EP mode (b12befecd7de).
+>>
+>> Is num-lanes actually required for EP mode?
+> 
+> Kishon, please help to answer this query?
 
-Change title to: "dmaengine: ti: unexport filter functions"
+It should be optional for EP too.
 
-and applied, thanks
-
--- 
-~Vinod
+Thanks
+Kishon
