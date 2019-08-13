@@ -2,66 +2,66 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA29C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E640C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85E0A206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A62820578
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 06:13:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ixpGsi+O";
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oks5hyZu"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mrvvWwB6";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="geKy5hJ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbfHMGMq (ORCPT
+        id S1727391AbfHMGNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 02:12:46 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:37820 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727467AbfHMGL6 (ORCPT
+        Tue, 13 Aug 2019 02:13:18 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:34508 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfHMGNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 02:11:58 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D68qNb021612;
-        Tue, 13 Aug 2019 06:11:42 GMT
+        Tue, 13 Aug 2019 02:13:17 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D68sYR010868;
+        Tue, 13 Aug 2019 06:12:58 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2019-08-05;
- bh=ejlUs24YGrV79jcN352Y8l7jHkjpvnNttU06LwDBubY=;
- b=ixpGsi+O3VJleSP15ikG8DnVPfw1bgBu5FUuB5N5uvhqhduEomHnyeaEBlIeogY6LPbg
- P6c9QmNrxCCQCfhm6QXI/Jtf3rI/HpEyrwd6Dotqv2oX4l37UJTEB21JsRzA0iPdaqHG
- lgqDnsszVVkBDktpxpPsGRd6AF3XTZWKbgOIjLECaYaQ/uJI3ralpC56QOiT1sxZX124
- E9pUHQU5yNn4RSVLYU3sXNMBTdNputCLl6qL8dte6DAgJwVzRXiVwHDR31ZutudaCAaC
- ZwByunbLN1tEsaUjiTARCGzn7Wkjno0duR9wyVvLaqQd+i1Izu016iHv8MpaV9Op/Sma oQ== 
+ bh=osSqMWHv28avjbTj6QcaJxUDRAMJ3ZlAiS9rfxGjYzg=;
+ b=mrvvWwB63K3x6ci1kK59RNlfNDoSK9mftOK1pAIyD2sL4atlRNxTN4BALkRAAcF92x1C
+ iunLyjenghtiqknMbUJGEWJ7uKhAJjttoqq07VTfMzcD2YNQJTfq0YUencNAzMFGSf4j
+ nVWGsVA9g+Aq+QXkktYlU3vAf2NexVAr3Ud2ORkdTKr5E9Fi9eR/8nTJPqinN5VwztyE
+ 8pCZPIxk14S960O+PddvoyweoaLt+3FTRwb8gnO57t7lN3mJcjlRXEn7UXY6THAxw3Ku
+ PUyEg0HLjR8kgGNYDL//MROvpkvGq1Q0ScC6XPNG4xj8a19Uw78U7Kxg7wEpQWxlcZCz IA== 
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2018-07-02;
- bh=ejlUs24YGrV79jcN352Y8l7jHkjpvnNttU06LwDBubY=;
- b=oks5hyZuQI3+W8D3FxxKvELSS5HyiK1rP0bJnQgVdZ6wy1I2Aa4o+hC2BEYFzej7joV6
- Pa7WfQXv73I3LfwRYN8JGmfr1vAZVeXqPw/gDMUyiBxZLvLLGbNkoOl9GCkxv6iIQ5ga
- HTjzgK13AKXLmrH/87HER4YJi1crnSBme7MFcXRxVwl3hRtlMvW1s5d892KWEfbxuSxW
- 6ZUa7rftxZRsU/bZasqQv30o5zVs+VX/+JGOUNBMWjo/PTkCAzRts3d0ARQcmH3FEGQy
- rNgARtAXp+yLf7LKUSa7OMCc6bjmssUAcQdhDRllo/Xt9nbE5A0TgvHvIVMSwFv8Fid6 UA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2u9pjqbvn9-1
+ bh=osSqMWHv28avjbTj6QcaJxUDRAMJ3ZlAiS9rfxGjYzg=;
+ b=geKy5hJ2TDNupb+fP/a2ESM5rZiqJx0vAaM/I8GC8WKJvGiulnpuj0AHfvgWB2STpf+n
+ NcnhECINUsWxZVBlaYjq0foHIMNwehq+IhRdEGH3k9v0JcICVhUTfj/FDJ6gmnj/NXRr
+ 2HfzlSfysRayBA7Fn43jCctNZjMWBVCydUhzV30lKenfTF1k3ODWMtcp2mKSUaHgdDLE
+ dv8G5OW0epmiMzRr3Wbn6BJJ75jwCzTc3+J3XiUgRCvbEumbPxyEgf3Vq6EoEBux3GJw
+ nnxEI/LLWUonnj/DUj5n/gV8u8Em4rBdFX1Qbz3m98IG4XAgr5rhYFGYNBQ76ssq+rHx qw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2u9nbtc1df-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 06:11:42 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D68PHb056292;
-        Tue, 13 Aug 2019 06:11:42 GMT
+        Tue, 13 Aug 2019 06:12:58 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7D67QY1096512;
+        Tue, 13 Aug 2019 06:10:58 GMT
 Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2u9n9hs2yk-1
+        by aserp3030.oracle.com with ESMTP id 2u9m0ayd7s-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 06:11:42 +0000
+        Tue, 13 Aug 2019 06:10:57 +0000
 Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7D6BeC8026485;
-        Tue, 13 Aug 2019 06:11:40 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7D6Ass3025920;
+        Tue, 13 Aug 2019 06:10:54 GMT
 Received: from abi.no.oracle.com (/10.172.144.123)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 12 Aug 2019 23:11:40 -0700
+        with ESMTP ; Mon, 12 Aug 2019 23:10:54 -0700
 From:   Knut Omang <knut.omang@oracle.com>
 To:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
@@ -81,9 +81,9 @@ Cc:     linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
         "Theodore Ts'o" <tytso@mit.edu>, Daniel Vetter <daniel@ffwll.ch>,
         Stephen Boyd <sboyd@kernel.org>,
         Knut Omang <knut.omang@oracle.com>
-Subject: [RFC 13/19] ktf: Integration logic for running ktf tests from googletest
-Date:   Tue, 13 Aug 2019 08:09:28 +0200
-Message-Id: <e3c629ef5f77dceefc5136e590bfc0c4bac664c3.1565676440.git-series.knut.omang@oracle.com>
+Subject: [RFC 01/19] kbuild: Fixes to rules for host-cshlib and host-cxxshlib
+Date:   Tue, 13 Aug 2019 08:09:16 +0200
+Message-Id: <be2c361eac49ded2848b2a555b75e30cc3c24e71.1565676440.git-series.knut.omang@oracle.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
 References: <cover.92d76bb4f6dcedc971d0b72a49e8e459a98bca54.1565676440.git-series.knut.omang@oracle.com>
@@ -105,227 +105,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently ktf only supports integration with googletest on the user
-side, but there's nothing that prevents integration towards other user
-land frameworks for running and reporting, if so desired.
+C++ libraries interfacing to C APIs might sometimes need some glue
+logic more easily written in C.
+Allow a C++ library to also contain 0 or more C objects.
+
+Also fix rules for both C and C++ shared libraries:
+- C++ shared libraries depended on .c instead of .cc files
+- Rules were referenced as -objs instead of the intended
+  -cobjs and -cxxobjs following the pattern from hostprogs*.
 
 Signed-off-by: Knut Omang <knut.omang@oracle.com>
 ---
- tools/testing/selftests/ktf/lib/ktf_run.cc     | 177 ++++++++++++++++++-
- tools/testing/selftests/ktf/lib/ktf_unlproto.c |  21 ++-
- 2 files changed, 198 insertions(+)
- create mode 100644 tools/testing/selftests/ktf/lib/ktf_run.cc
- create mode 100644 tools/testing/selftests/ktf/lib/ktf_unlproto.c
+ scripts/Makefile.host | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/tools/testing/selftests/ktf/lib/ktf_run.cc b/tools/testing/selftests/ktf/lib/ktf_run.cc
-new file mode 100644
-index 0000000..a26e04c
---- /dev/null
-+++ b/tools/testing/selftests/ktf/lib/ktf_run.cc
-@@ -0,0 +1,177 @@
-+/*
-+ * Copyright (c) 2012, 2017, Oracle and/or its affiliates. All rights reserved.
-+ *    Author: Knut Omang <knut.omang@oracle.com>
-+ *
-+ * SPDX-License-Identifier: GPL-2.0
-+ *
-+ * ktf_run.cpp:
-+ *  Gtest integration of ktf kernel tests -
-+ *  e.g. tests that are fully implemented on the test driver side
-+ *  and only initiated via run_test below
-+ */
-+
-+#include "ktf_int.h"
-+#include <assert.h>
-+#include <errno.h>
-+#include "ktf_debug.h"
-+
-+namespace ktf
-+{
-+
-+class KernelMetaFactory;
-+
-+class Kernel : public ::testing::TestWithParam<std::string>
-+{
-+public:
-+  Kernel()
-+  {
-+    assert(false); // Should not be hit but is needed for template resolving
-+  }
-+
-+  Kernel(std::string& setname, std::string& testname)
-+  {
-+    log(KTF_INFO, "%s.%s\n", setname.c_str(), testname.c_str());
-+
-+    ukt = ktf::find_test(setname,testname,&ctx);
-+    if (!ukt) {
-+      fprintf(stderr, "**** Internal error: Could not find test %s.%s (set %s, name %s) ****\n",
-+	      setname.c_str(), testname.c_str(), setname.c_str(), testname.c_str());
-+      exit(7);
-+    }
-+    log(KTF_INFO, "### Kernel ctor %s (%ld,%ld)\n", ukt->name.c_str(), ukt->setnum, ukt->testnum);
-+  }
-+
-+  virtual ~Kernel()
-+  {
-+    log(KTF_INFO, "### Kernel dtor %s\n", ukt->name.c_str());
-+
-+    /* For some reason errno sometimes get set
-+     * TBD: Figure out why - for now just reset it to avoid confusing the next test!
-+     */
-+    if (errno) {
-+      log(KTF_INFO, "### %s: errno was set to %d - resetting..\n", ukt->name.c_str(), errno);
-+      errno = 0;
-+    }
-+  }
-+
-+  virtual void TestBody();
-+private:
-+  ktf::KernelTest* ukt;
-+  std::string ctx;
-+  friend void setup(configurator c);
-+  static int AddToRegistry();
-+  static configurator configurator_;
-+};
-+
-+
-+
-+class TFactory : public ::testing::internal::ParameterizedTestFactory<Kernel>
-+{
-+public:
-+  TFactory(std::string s, ParamType parameter)
-+    : ::testing::internal::ParameterizedTestFactory<Kernel>(parameter),
-+      setname(s)
-+  {
-+    testname = parameter.c_str();
-+  }
-+
-+  virtual ::testing::Test* CreateTest()
-+  {
-+    return new Kernel(setname,testname);
-+  }
-+
-+private:
-+  std::string setname;
-+  std::string testname;
-+};
-+
-+
-+class KernelMetaFactory : public ::testing::internal::TestMetaFactory<Kernel>
-+{
-+public:
-+  virtual ::testing::internal::TestFactoryBase* CreateTestFactory(ParamType parameter) {
-+    TFactory* tf;
-+    std::string setname = get_current_setname();
-+    tf = new TFactory(setname, parameter.c_str());
-+    return tf;
-+  }
-+};
-+
-+testing::internal::ParamGenerator<Kernel::ParamType> gtest_query_tests(void);
-+std::string gtest_name_from_info(const testing::TestParamInfo<Kernel::ParamType>&);
-+void gtest_handle_test(int result,  const char* file, int line, const char* report);
-+
-+#ifndef INSTANTIATE_TEST_SUITE_P
-+/* This rename happens in Googletest commit 3a460a26b7.
-+ * Make sure we compile both before and after it:
-+ */
-+#define AddTestSuiteInstantiation AddTestCaseInstantiation
-+#endif
-+
-+int Kernel::AddToRegistry()
-+{
-+  if (!ktf::setup(ktf::gtest_handle_test)) return 1;
-+
-+  /* Run query against kernel to figure out which tests that exists: */
-+  stringvec& t = ktf::query_testsets();
-+
-+  ::testing::internal::ParameterizedTestCaseInfo<Kernel>* tci =
-+      ::testing::UnitTest::GetInstance()->parameterized_test_registry()
-+      .GetTestCasePatternHolder<Kernel>( "Kernel", ::testing::internal::CodeLocation("", 0));
-+
-+  for (stringvec::iterator it = t.begin(); it != t.end(); ++it)
-+  {
-+    ::testing::internal::TestMetaFactory<Kernel>* mf = new KernelMetaFactory();
-+    tci->AddTestPattern(it->c_str(), "", mf);
-+  }
-+
-+  tci->AddTestSuiteInstantiation("", &gtest_query_tests, &gtest_name_from_info, NULL, 0);
-+  return 0;
-+}
-+
-+void setup(configurator c)
-+{
-+  ktf::set_configurator(c);
-+  Kernel::AddToRegistry();
-+}
-+
-+
-+void Kernel::TestBody()
-+{
-+  run_test(ukt, ctx);
-+}
-+
-+
-+void gtest_handle_test(int result,  const char* file, int line, const char* report)
-+{
-+  if (result >= 0) {
-+    const ::testing::AssertionResult gtest_ar =
-+      !result ? (testing::AssertionFailure() << report) : testing::AssertionSuccess();
-+
-+    if (result) {
-+      /* We might get multiple partial results from the kernel in one positive
-+       * result report:
-+       */
-+#if HAVE_ASSERT_COUNT
-+      ::testing::UnitTest::GetInstance()->increment_success_assert_count(result);
-+#else
-+      GTEST_SUCCEED();
-+#endif
-+    } else {
-+      ::testing::internal::AssertHelper(::testing::TestPartResult::kNonFatalFailure,
-+					file, line, gtest_ar.failure_message()) = ::testing::Message();
-+    }
-+  }
-+}
-+
-+testing::internal::ParamGenerator<Kernel::ParamType> gtest_query_tests()
-+{
-+  return testing::ValuesIn(ktf::get_test_names());
-+}
-+
-+std::string gtest_name_from_info(const testing::TestParamInfo<Kernel::ParamType>& info)
-+{
-+  return info.param;
-+}
-+
-+} // end namespace ktf
-diff --git a/tools/testing/selftests/ktf/lib/ktf_unlproto.c b/tools/testing/selftests/ktf/lib/ktf_unlproto.c
-new file mode 100644
-index 0000000..3929b03
---- /dev/null
-+++ b/tools/testing/selftests/ktf/lib/ktf_unlproto.c
-@@ -0,0 +1,21 @@
-+/*
-+ * Copyright (c) 2012, 2017, Oracle and/or its affiliates. All rights reserved.
-+ *    Author: Knut Omang <knut.omang@oracle.com>
-+ *
-+ * SPDX-License-Identifier: GPL-2.0
-+ *
-+ * unlproto.c: This file is needed because the C struct init
-+ * used in kernel/unlproto.h is not allowed in C++
-+ */
-+
-+#include <netlink/netlink.h>
-+#include <netlink/genl/genl.h>
-+#include <netlink/genl/ctrl.h>
-+#define NL_INTERNAL 1
-+#include "kernel/ktf_unlproto.h"
-+
-+
-+struct nla_policy *ktf_get_gnl_policy(void)
-+{
-+  return ktf_gnl_policy;
-+}
+diff --git a/scripts/Makefile.host b/scripts/Makefile.host
+index b6a54bd..4e9bb21 100644
+--- a/scripts/Makefile.host
++++ b/scripts/Makefile.host
+@@ -46,8 +46,10 @@ host-cxxmulti	:= $(foreach m,$(__hostprogs),$(if $($(m)-cxxobjs),$(m)))
+ host-cxxobjs	:= $(sort $(foreach m,$(host-cxxmulti),$($(m)-cxxobjs)))
+ 
+ # Object (.o) files used by the shared libaries
+-host-cshobjs	:= $(sort $(foreach m,$(host-cshlib),$($(m:.so=-objs))))
+-host-cxxshobjs	:= $(sort $(foreach m,$(host-cxxshlib),$($(m:.so=-objs))))
++# Note: C++ libraries may contain both C and C++ objects, compiled differently:
++host-cshobjs	:= $(sort $(foreach m,$(host-cshlib),$($(m:.so=-cshobjs))))
++host-cshobjs	+= $(sort $(foreach m,$(host-cxxshlib),$($(m:.so=-cshobjs))))
++host-cxxshobjs	:= $(sort $(foreach m,$(host-cxxshlib),$($(m:.so=-cxxshobjs))))
+ 
+ host-csingle	:= $(addprefix $(obj)/,$(host-csingle))
+ host-cmulti	:= $(addprefix $(obj)/,$(host-cmulti))
+@@ -130,14 +132,10 @@ quiet_cmd_host-cshobjs	= HOSTCC  -fPIC $@
+ $(host-cshobjs): $(obj)/%.o: $(src)/%.c FORCE
+ 	$(call if_changed_dep,host-cshobjs)
+ 
+-# Compile .c file, create position independent .o file
+-# Note that plugin capable gcc versions can be either C or C++ based
+-# therefore plugin source files have to be compilable in both C and C++ mode.
+-# This is why a C++ compiler is invoked on a .c file.
+-# host-cxxshobjs -> .o
++# Compile .cc (C++) file, create position independent .o file
+ quiet_cmd_host-cxxshobjs	= HOSTCXX -fPIC $@
+       cmd_host-cxxshobjs	= $(HOSTCXX) $(hostcxx_flags) -fPIC -c -o $@ $<
+-$(host-cxxshobjs): $(obj)/%.o: $(src)/%.c FORCE
++$(host-cxxshobjs): $(obj)/%.o: $(src)/%.cc FORCE
+ 	$(call if_changed_dep,host-cxxshobjs)
+ 
+ # Link a shared library, based on position independent .o files
+@@ -154,7 +152,8 @@ $(call multi_depend, $(host-cshlib), .so, -objs)
+ # *.o -> .so shared library (host-cxxshlib)
+ quiet_cmd_host-cxxshlib	= HOSTLLD -shared $@
+       cmd_host-cxxshlib	= $(HOSTCXX) $(KBUILD_HOSTLDFLAGS) -shared -o $@ \
+-			  $(addprefix $(obj)/,$($(@F:.so=-objs))) \
++			  $(addprefix $(obj)/,$($(@F:.so=-cshobjs))) \
++			  $(addprefix $(obj)/,$($(@F:.so=-cxxshobjs))) \
+ 			  $(KBUILD_HOSTLDLIBS) $(HOSTLDLIBS_$(@F))
+ $(host-cxxshlib): FORCE
+ 	$(call if_changed,host-cxxshlib)
 -- 
 git-series 0.9.1
