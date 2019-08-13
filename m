@@ -2,444 +2,173 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E00BC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC725C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE6820843
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D48420665
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 20:37:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QUH+Zc6U"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AyImookG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbfHMUcq (ORCPT
+        id S1726441AbfHMUhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 16:32:46 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40459 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfHMUcq (ORCPT
+        Tue, 13 Aug 2019 16:37:25 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35154 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfHMUhZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 16:32:46 -0400
-Received: by mail-lf1-f68.google.com with SMTP id b17so77699667lff.7
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 13:32:44 -0700 (PDT)
+        Tue, 13 Aug 2019 16:37:25 -0400
+Received: by mail-pf1-f193.google.com with SMTP id d85so1762031pfd.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 13:37:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XDeds+3TjUGvvF1FUJPjkIvF6WB5JF89hFtXrGTRS24=;
-        b=QUH+Zc6UjgK9ptWnVJwsrCsf6HxQgzmiivRe9vSbbbr4XsnWfFW/qwoJ/4aeW2cy2W
-         liimVUpkeLeQjleTqcTTmAvz98SsRs3iHIRPgLCMiqzzolu62NO0wwTCprKJWvoRjrmg
-         mT6A3gfTnNxBCbv5FTa6tbqJTN/PGSwGOLwxk=
+        bh=O4bA+lMwAF10bVhJ27CrBxrtXthZNVrprWrQXBG1DjA=;
+        b=AyImookGIyRLr0aL4Rc+DP59fzn5/VINuYoCZPIMOJgE8+cmDF8oZORB3Y0jdKFLYI
+         J1ea5L2mlHJa2B/4kRBtfn0WrYfjBCjgm8JsobtRrs3W/qNOwUVkLEAcnudGm6BzRwkt
+         Y8llATcOyOIvyPT0/S18Uo/Tp+Vkdr7DrjVehgeYX2kdBMkY68x/o/Ne82TDF7XLzsVE
+         jD9ZN1XAr91d/SdADSF6Rr7sBGWjQaGCHtrIn3sPx9TlIf8xjtW3bFFDE8tb+fg2TPwp
+         DjOWPL+dNESs/mH8BE1uMMTll7MVA8AhFZjUr58IUFmjDt3cSoM0LP6BvsFauuVVVJSy
+         uxbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XDeds+3TjUGvvF1FUJPjkIvF6WB5JF89hFtXrGTRS24=;
-        b=k8/WdEODyeS9/Un6n3Vz1TzGEXSiZEnBrqoPk+2ZevcW/ELvzuWxmiUjHy58NLz26k
-         CXFeODVAX4bQNG356hSqbOFudt63ExU8j0rfUqzigNNE/Q9iUSqaL7+WMXwUeXYNrEcb
-         9xoRu/4wcoxEl0O/xANeajVKNOWdEwKUx/hWP4SUhlIOkWT+mIKMnps1hy0kYmk6n+VC
-         xEdrC6vbXUBfd4v/EFzgBDLsuHm21rHQpujtMn0qAsKBwHJh5NHb+dXZjC5QWwbUB9Z0
-         YNgjynRLXZVAXOM30XhH+wfYZyRUzgvhLffQtppFRKoQuWDDju8MuP2/pu0B8Wejctjc
-         kbag==
-X-Gm-Message-State: APjAAAWpitrd2KcxHVhBvWdyvuOBpxH6xxO0WXy79ErUrfPxbFsjhwWS
-        grGpTCQzoHj5F72KJdAbltT6H81twMM=
-X-Google-Smtp-Source: APXvYqwBR8yveF7HybNJozN+gc9pwhKLIM134BX2nIyvSVw/kKoKLq9cCy7DOkefv2jsKR7icz8DuA==
-X-Received: by 2002:a19:9104:: with SMTP id t4mr22589985lfd.179.1565728363222;
-        Tue, 13 Aug 2019 13:32:43 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id b6sm2347464ljk.31.2019.08.13.13.32.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 13 Aug 2019 13:32:42 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id e24so6076543ljg.11
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 13:32:41 -0700 (PDT)
-X-Received: by 2002:a2e:9117:: with SMTP id m23mr22962061ljg.134.1565728361423;
- Tue, 13 Aug 2019 13:32:41 -0700 (PDT)
+        bh=O4bA+lMwAF10bVhJ27CrBxrtXthZNVrprWrQXBG1DjA=;
+        b=oaswUVHBBPnRFTFz6LnT8cJkrFysrZtaahPktRJpVM0TexsQGVWr98AqFfwrIEOVK+
+         6yVCG1siJvTK+z6TVyCKDqEXkJ1I9ukqB68OJV4gC1VOetu7NRSCbD0hYwL9TmxU25ZU
+         9G2d9IySlvUwa9ibRCF/OXGR6gU0oiQ34VYSlgr6sARRirPBxHWIFqhJOOs/WPX9f7JF
+         5KO9oi3s/mKRClQuhhX4tjyPkf8DB5/mXNsemx1Tyxk3YqJi4ztodrsvRN+Cc55+zZA3
+         gogzwYKIEFMJN/icOC1rgfXy9MP5TY/k8tVMWlGr4k50wI5tsABbqwuLNTXULN+/13xj
+         OHWA==
+X-Gm-Message-State: APjAAAUEa4yHuku0kr1uQucmqgYrtN4BWRC70NpTVwMWLaZfOG1YvZE9
+        GDuUINtC9M6BE7J0Copkjll4NipcCNH5GtAHiclVJw==
+X-Google-Smtp-Source: APXvYqxBngouGxFq+Aa0fDJhgw/KggllMg5GoLFok4i6jE8qEaXlx75btnsrRm8SCeUVPyTLvxGGjGwPD1cI0kZztUM=
+X-Received: by 2002:a63:61cd:: with SMTP id v196mr36483266pgb.263.1565728644215;
+ Tue, 13 Aug 2019 13:37:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190807112432.26521-1-sibis@codeaurora.org> <20190807112432.26521-3-sibis@codeaurora.org>
-In-Reply-To: <20190807112432.26521-3-sibis@codeaurora.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Tue, 13 Aug 2019 13:32:03 -0700
-X-Gmail-Original-Message-ID: <CAE=gft45QSLyTG0Vi-ZHjbtu4d7vY51-trfLQhswVVrS3NNHew@mail.gmail.com>
-Message-ID: <CAE=gft45QSLyTG0Vi-ZHjbtu4d7vY51-trfLQhswVVrS3NNHew@mail.gmail.com>
-Subject: Re: [PATCH 2/2] interconnect: qcom: Add OSM L3 interconnect provider support
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        agross@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Dai <daidavid1@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>
+References: <20190813061014.45015-1-natechancellor@gmail.com> <20190813180929.22497-1-natechancellor@gmail.com>
+In-Reply-To: <20190813180929.22497-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 13 Aug 2019 13:37:13 -0700
+Message-ID: <CAKwvOdnOtR6s2KQVEZ2MRS1HE3W7L3B3ymsLmToJdzN_L2Nz-A@mail.gmail.com>
+Subject: Re: [PATCH v2] soundwire: Make slave.o depend on ACPI and rename to acpi_slave.o
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sibi,
-
-On Wed, Aug 7, 2019 at 4:24 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+On Tue, Aug 13, 2019 at 11:12 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
 >
-> On some Qualcomm SoCs, Operating State Manager (OSM) controls the
-> resources of scaling L3 caches. Add a driver to handle bandwidth
-> requests to OSM L3 from CPU/GPU.
+> clang warns when CONFIG_ACPI is unset:
 >
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ../drivers/soundwire/slave.c:16:12: warning: unused function
+> 'sdw_slave_add' [-Wunused-function]
+> static int sdw_slave_add(struct sdw_bus *bus,
+>            ^
+> 1 warning generated.
+>
+> Before commit 8676b3ca4673 ("soundwire: fix regmap dependencies and
+> align with other serial links"), this code would only be compiled when
+> ACPI was set because it was only selected by SOUNDWIRE_INTEL, which
+> depends on ACPI.
+>
+> Now, this code can be compiled without CONFIG_ACPI, which causes the
+> above warning. The IS_ENABLED(CONFIG_ACPI) guard could be moved to avoid
+> compiling the function; however, slave.c only contains three functions,
+> two of which are static. Since slave.c is completetely dependent on
+> ACPI, rename it to acpi_slave.c and only compile it when CONFIG_ACPI
+> is set so sdw_acpi_find_slaves will actually be used. bus.h contains
+> a stub for sdw_acpi_find_slaves so there will be no issues with an
+> undefined function.
+>
+> This has been build tested with CONFIG_ACPI set and unset in combination
+> with CONFIG_SOUNDWIRE unset, built in, and a module.
+>
+> Fixes: 8676b3ca4673 ("soundwire: fix regmap dependencies and align with other serial links")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/637
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-This looks good to me, just a couple minor comments below.
+Looks good, thanks Nathan.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
 > ---
->  drivers/interconnect/qcom/Kconfig  |   7 +
->  drivers/interconnect/qcom/Makefile |   2 +
->  drivers/interconnect/qcom/osm-l3.c | 292 +++++++++++++++++++++++++++++
->  3 files changed, 301 insertions(+)
->  create mode 100644 drivers/interconnect/qcom/osm-l3.c
 >
-> diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
-> index d5e70ebc24108..f6c2a11a1a2c9 100644
-> --- a/drivers/interconnect/qcom/Kconfig
-> +++ b/drivers/interconnect/qcom/Kconfig
-> @@ -5,6 +5,13 @@ config INTERCONNECT_QCOM
->         help
->           Support for Qualcomm's Network-on-Chip interconnect hardware.
+> v1 -> v2:
 >
-> +config INTERCONNECT_QCOM_OSM_L3
-> +       tristate "Qualcomm OSM L3 interconnect driver"
-> +       depends on INTERCONNECT_QCOM || COMPILE_TEST
-> +       help
-> +         Say y here to support the Operating State Manager (OSM) interconnect
-> +         driver which controls the scaling of L3 caches on Qualcomm SoCs.
-> +
->  config INTERCONNECT_QCOM_SDM845
->         tristate "Qualcomm SDM845 interconnect driver"
->         depends on INTERCONNECT_QCOM
-> diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
-> index 1c1cea690f922..9078af5fed109 100644
-> --- a/drivers/interconnect/qcom/Makefile
-> +++ b/drivers/interconnect/qcom/Makefile
-> @@ -1,5 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
+> * Rename slave.o to acpi_slave.o
+> * Reword commit message to reflect this
 >
-> +icc-osm-l3-objs                                := osm-l3.o
->  qnoc-sdm845-objs                       := sdm845.o
+>  drivers/soundwire/Makefile                  | 6 +++++-
+>  drivers/soundwire/{slave.c => acpi_slave.c} | 3 ---
+>  2 files changed, 5 insertions(+), 4 deletions(-)
+>  rename drivers/soundwire/{slave.c => acpi_slave.c} (98%)
 >
-> +obj-$(CONFIG_INTERCONNECT_QCOM_OSM_L3) += icc-osm-l3.o
->  obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
-> diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
-> new file mode 100644
-> index 0000000000000..1e7dfce6f4f9b
-> --- /dev/null
-> +++ b/drivers/interconnect/qcom/osm-l3.c
-> @@ -0,0 +1,292 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> + *
-> + */
+> diff --git a/drivers/soundwire/Makefile b/drivers/soundwire/Makefile
+> index 45b7e5001653..718d8dd0ac79 100644
+> --- a/drivers/soundwire/Makefile
+> +++ b/drivers/soundwire/Makefile
+> @@ -4,9 +4,13 @@
+>  #
+>
+>  #Bus Objs
+> -soundwire-bus-objs := bus_type.o bus.o slave.o mipi_disco.o stream.o
+> +soundwire-bus-objs := bus_type.o bus.o mipi_disco.o stream.o
+>  obj-$(CONFIG_SOUNDWIRE) += soundwire-bus.o
+>
+> +ifdef CONFIG_ACPI
+> +soundwire-bus-objs += acpi_slave.o
+> +endif
 > +
-> +#include <dt-bindings/interconnect/qcom,osm-l3.h>
-> +#include <dt-bindings/interconnect/qcom,sdm845.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/interconnect-provider.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define LUT_MAX_ENTRIES                        40U
-> +#define LUT_SRC                                GENMASK(31, 30)
-> +#define LUT_L_VAL                      GENMASK(7, 0)
-> +#define LUT_ROW_SIZE                   32
-> +#define CLK_HW_DIV                     2
-> +
-> +/* Register offsets */
-> +#define REG_ENABLE                     0x0
-> +#define REG_FREQ_LUT                   0x110
-> +#define REG_PERF_STATE                 0x920
-> +
-> +#define OSM_L3_MAX_LINKS               1
-> +
-> +#define to_qcom_provider(_provider) \
-> +       container_of(_provider, struct qcom_icc_provider, provider)
-> +
-> +enum {
-> +       SDM845_MASTER_OSM_L3_APPS = SLAVE_TCU + 1,
-> +       SDM845_MASTER_OSM_L3_GPU,
-> +       SDM845_SLAVE_OSM_L3,
-> +};
-> +
-> +struct qcom_icc_provider {
-
-Maybe we should rename this and the ones below to avoid collisions
-with drivers/interconnect/qcom/sdm845.c, even though those structures
-are currently local.
-
-> +       void __iomem *base;
-> +       unsigned int max_state;
-> +       unsigned long lut_tables[LUT_MAX_ENTRIES];
-> +       struct icc_provider provider;
-> +};
-> +
-> +/**
-> + * struct qcom_icc_node - Qualcomm specific interconnect nodes
-> + * @name: the node name used in debugfs
-> + * @links: an array of nodes where we can go next while traversing
-> + * @id: a unique node identifier
-> + * @num_links: the total number of @links
-> + * @buswidth: width of the interconnect between a node and the bus
-> + */
-> +struct qcom_icc_node {
-> +       const char *name;
-> +       u16 links[OSM_L3_MAX_LINKS];
-> +       u16 id;
-> +       u16 num_links;
-> +       u16 buswidth;
-> +};
-> +
-> +struct qcom_icc_desc {
-> +       struct qcom_icc_node **nodes;
-> +       size_t num_nodes;
-> +};
-> +
-> +#define DEFINE_QNODE(_name, _id, _buswidth, ...)                       \
-> +               static struct qcom_icc_node _name = {                   \
-> +               .name = #_name,                                         \
-> +               .id = _id,                                              \
-> +               .buswidth = _buswidth,                                  \
-> +               .num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ })),      \
-> +               .links = { __VA_ARGS__ },                               \
-> +       }
-> +
-> +DEFINE_QNODE(osm_apps_l3, SDM845_MASTER_OSM_L3_APPS, 16, SDM845_SLAVE_OSM_L3);
-> +DEFINE_QNODE(osm_gpu_l3, SDM845_MASTER_OSM_L3_GPU, 16, SDM845_SLAVE_OSM_L3);
-> +DEFINE_QNODE(osm_l3, SDM845_SLAVE_OSM_L3, 16);
-> +
-> +static struct qcom_icc_node *sdm845_osm_l3_nodes[] = {
-> +       [MASTER_OSM_L3_APPS] = &osm_apps_l3,
-> +       [MASTER_OSM_L3_GPU] = &osm_gpu_l3,
-> +       [SLAVE_OSM_L3] = &osm_l3,
-> +};
-> +
-> +static struct qcom_icc_desc sdm845_osm_l3 = {
-> +       .nodes = sdm845_osm_l3_nodes,
-> +       .num_nodes = ARRAY_SIZE(sdm845_osm_l3_nodes),
-> +};
-> +
-> +static int qcom_icc_aggregate(struct icc_node *node, u32 avg_bw,
-> +                             u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
-> +{
-> +       *agg_avg += avg_bw;
-> +       *agg_peak = max_t(u32, *agg_peak, peak_bw);
-> +
-> +       return 0;
-> +}
-> +
-> +static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
-> +{
-> +       struct icc_provider *provider;
-> +       struct qcom_icc_provider *qp;
-> +       struct qcom_icc_node *qn;
-> +       struct icc_node *n;
-> +       unsigned int index;
-> +       u32 agg_peak = 0;
-> +       u32 agg_avg = 0;
-> +       u64 rate;
-> +
-> +       qn = src->data;
-> +       provider = src->provider;
-> +       qp = to_qcom_provider(provider);
-> +
-> +       list_for_each_entry(n, &provider->nodes, node_list)
-> +               qcom_icc_aggregate(n, n->avg_bw, n->peak_bw,
-> +                                  &agg_avg, &agg_peak);
-> +
-> +       rate = max(agg_avg, agg_peak);
-> +       rate = icc_units_to_bps(rate);
-> +       do_div(rate, qn->buswidth);
-> +
-> +       for (index = 0; index < qp->max_state; index++) {
-> +               if (qp->lut_tables[index] >= rate)
-> +                       break;
-> +       }
-> +
-> +       writel_relaxed(index, qp->base + REG_PERF_STATE);
-> +
-> +       return 0;
-> +}
-> +
-> +static int qcom_osm_l3_probe(struct platform_device *pdev)
-> +{
-> +       u32 info, src, lval, i, prev_freq = 0, freq;
-> +       static unsigned long hw_rate, xo_rate;
-> +       const struct qcom_icc_desc *desc;
-> +       struct icc_onecell_data *data;
-> +       struct icc_provider *provider;
-> +       struct qcom_icc_node **qnodes;
-> +       struct qcom_icc_provider *qp;
-> +       struct icc_node *node;
-> +       size_t num_nodes;
-> +       struct clk *clk;
-> +       int ret;
-> +
-> +       clk = clk_get(&pdev->dev, "xo");
-> +       if (IS_ERR(clk))
-> +               return PTR_ERR(clk);
-> +
-> +       xo_rate = clk_get_rate(clk);
-> +       clk_put(clk);
-> +
-> +       clk = clk_get(&pdev->dev, "alternate");
-> +       if (IS_ERR(clk))
-> +               return PTR_ERR(clk);
-> +
-> +       hw_rate = clk_get_rate(clk) / CLK_HW_DIV;
-> +       clk_put(clk);
-> +
-> +       qp = devm_kzalloc(&pdev->dev, sizeof(*qp), GFP_KERNEL);
-> +       if (!qp)
-> +               return -ENOMEM;
-> +
-> +       qp->base = devm_platform_ioremap_resource(pdev, 0);
-> +       if (IS_ERR(qp->base))
-> +               return PTR_ERR(qp->base);
-> +
-> +       /* HW should be in enabled state to proceed */
-> +       if (!(readl_relaxed(qp->base + REG_ENABLE) & 0x1)) {
-> +               dev_err(&pdev->dev, "error hardware not enabled\n");
-> +               return -ENODEV;
-> +       }
-> +
-> +       for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-> +               info = readl_relaxed(qp->base + REG_FREQ_LUT +
-> +                                    i * LUT_ROW_SIZE);
-> +               src = FIELD_GET(LUT_SRC, info);
-> +               lval = FIELD_GET(LUT_L_VAL, info);
-> +               if (src)
-> +                       freq = xo_rate * lval;
-> +               else
-> +                       freq = hw_rate;
-> +
-> +               /*
-> +                * Two of the same frequencies with the same core counts means
-> +                * end of table
-> +                */
-> +               if (i > 0 && prev_freq == freq)
-> +                       break;
-> +
-> +               qp->lut_tables[i] = freq;
-> +               prev_freq = freq;
-> +       }
-> +       qp->max_state = i;
-> +
-> +       desc = of_device_get_match_data(&pdev->dev);
-> +       if (!desc)
-> +               return -EINVAL;
-> +
-> +       qnodes = desc->nodes;
-> +       num_nodes = desc->num_nodes;
-> +
-> +       data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       provider = &qp->provider;
-> +       provider->dev = &pdev->dev;
-> +       provider->set = qcom_icc_set;
-> +       provider->aggregate = qcom_icc_aggregate;
-> +       provider->xlate = of_icc_xlate_onecell;
-> +       INIT_LIST_HEAD(&provider->nodes);
-> +       provider->data = data;
-> +
-> +       ret = icc_provider_add(provider);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "error adding interconnect provider\n");
-> +               return ret;
-> +       }
-> +
-> +       for (i = 0; i < num_nodes; i++) {
-> +               size_t j;
-> +
-> +               node = icc_node_create(qnodes[i]->id);
-> +               if (IS_ERR(node)) {
-> +                       ret = PTR_ERR(node);
-> +                       goto err;
-> +               }
-> +
-> +               node->name = qnodes[i]->name;
-> +               node->data = qnodes[i];
-> +               icc_node_add(node, provider);
-> +
-> +               dev_dbg(&pdev->dev, "registered node %p %s %d\n", node,
-> +                       qnodes[i]->name, node->id);
-> +
-> +               /* populate links */
-> +               for (j = 0; j < qnodes[i]->num_links; j++)
-> +                       icc_link_create(node, qnodes[i]->links[j]);
-> +
-> +               data->nodes[i] = node;
-> +       }
-> +       data->num_nodes = num_nodes;
-> +
-> +       platform_set_drvdata(pdev, qp);
-> +
-> +       return ret;
-> +err:
-> +       list_for_each_entry(node, &provider->nodes, node_list) {
-> +               icc_node_del(node);
-> +               icc_node_destroy(node->id);
-> +       }
-> +
-> +       icc_provider_del(provider);
-
-I looks like you could just call qcom_osm_l3_remove() here instead of the above.
-
-
-> +       return ret;
-> +}
-> +
-> +static int qcom_osm_l3_remove(struct platform_device *pdev)
-> +{
-> +       struct qcom_icc_provider *qp = platform_get_drvdata(pdev);
-> +       struct icc_provider *provider = &qp->provider;
-> +       struct icc_node *n;
-> +
-> +       list_for_each_entry(n, &provider->nodes, node_list) {
-> +               icc_node_del(n);
-> +               icc_node_destroy(n->id);
-> +       }
-> +
-> +       return icc_provider_del(provider);
-> +}
-> +
-> +static const struct of_device_id osm_l3_of_match[] = {
-> +       { .compatible = "qcom,sdm845-osm-l3", .data = &sdm845_osm_l3 },
-> +       { },
-> +};
-> +MODULE_DEVICE_TABLE(of, osm_l3_of_match);
-> +
-> +static struct platform_driver osm_l3_driver = {
-> +       .probe = qcom_osm_l3_probe,
-> +       .remove = qcom_osm_l3_remove,
-> +       .driver = {
-> +               .name = "osm-l3",
-> +               .of_match_table = osm_l3_of_match,
-> +       },
-> +};
-> +module_platform_driver(osm_l3_driver);
-> +
-> +MODULE_DESCRIPTION("Qualcomm OSM L3 interconnect driver");
-> +MODULE_LICENSE("GPL v2");
+>  #Cadence Objs
+>  soundwire-cadence-objs := cadence_master.o
+>  obj-$(CONFIG_SOUNDWIRE_CADENCE) += soundwire-cadence.o
+> diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/acpi_slave.c
+> similarity index 98%
+> rename from drivers/soundwire/slave.c
+> rename to drivers/soundwire/acpi_slave.c
+> index f39a5815e25d..0dc188e6873b 100644
+> --- a/drivers/soundwire/slave.c
+> +++ b/drivers/soundwire/acpi_slave.c
+> @@ -60,7 +60,6 @@ static int sdw_slave_add(struct sdw_bus *bus,
+>         return ret;
+>  }
+>
+> -#if IS_ENABLED(CONFIG_ACPI)
+>  /*
+>   * sdw_acpi_find_slaves() - Find Slave devices in Master ACPI node
+>   * @bus: SDW bus instance
+> @@ -110,5 +109,3 @@ int sdw_acpi_find_slaves(struct sdw_bus *bus)
+>
+>         return 0;
+>  }
+> -
+> -#endif
 > --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> 2.23.0.rc2
 >
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20190813180929.22497-1-natechancellor%40gmail.com.
+
+
+
+-- 
+Thanks,
+~Nick Desaulniers
