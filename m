@@ -2,162 +2,91 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6E2C41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F01CC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEA5C2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 22:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D96E2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:01:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OiKmeGRZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbfHMW7a (ORCPT
+        id S1727458AbfHMXBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 18:59:30 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:43006 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfHMW7a (ORCPT
+        Tue, 13 Aug 2019 19:01:49 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:43020 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbfHMXBt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 18:59:30 -0400
-Received: from 79.184.255.155.ipv4.supernova.orange.pl (79.184.255.155) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 8199637f5f8090f3; Wed, 14 Aug 2019 00:59:26 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Keith Busch <keith.busch@intel.com>,
+        Tue, 13 Aug 2019 19:01:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=zMUtN7CmDAXW9uMH/sGSjpna+fgp+L5H+R+8MTcl8Oc=; b=OiKmeGRZOv4+HLAkUHlw0pYLaW
+        xtOd9wjiE5P7H6VgnSbkjzyFskOccWO0UvzvsNOv1tUF0Vjc6FW210R/glXW6LzGvM0HR9+GOTSj2
+        3UJdNAEDBSr1LHpaKrrSwuh52J2S6p4a1kGK2AJ378dQ+avvr2MJ5Gxg9MVhxTXzWhYOZS8JYOOj2
+        iDK5lG4QsPqpl4sDvqDFExGu5cXE2EHDIgGEkVRY9HetiEYU4D+ArvhrlLvdSV9Y5IT0LZ1X3QJSj
+        PxjIjha/28NLjV1+YA4tdWlwZOTIDkoqEECycidcCXBPvDVKeXPRZC+BeyTgzkJT1TWEicO72v9gx
+        N3g3iaqw==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hxfnD-0007AH-Pt; Tue, 13 Aug 2019 23:01:32 +0000
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/5] PCI / PM: Check for error when reading Power State
-Date:   Wed, 14 Aug 2019 00:59:26 +0200
-Message-ID: <27964051.NtteWoIlyA@kreacher>
-In-Reply-To: <20190809220116.GA221706@google.com>
-References: <20190805205214.194981-1-helgaas@kernel.org> <CAJZ5v0jFPU38zDugumJB0iq5d-LctcMCdygTrFU4=gYP3UJ+oA@mail.gmail.com> <20190809220116.GA221706@google.com>
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Arnd Bergmann <arnd@arndb.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] misc: xilinx-sdfec: fix dependency and build error
+Message-ID: <f9004be5-9925-327b-3ec2-6506e46fe565@infradead.org>
+Date:   Tue, 13 Aug 2019 16:01:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Saturday, August 10, 2019 12:01:16 AM CEST Bjorn Helgaas wrote:
-> On Mon, Aug 05, 2019 at 11:09:19PM +0200, Rafael J. Wysocki wrote:
-> > On Mon, Aug 5, 2019 at 10:52 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >
-> > > From: Bjorn Helgaas <bhelgaas@google.com>
-> > >
-> > > The Power Management Status Register is in config space, and reads while
-> > > the device is in D3cold typically return ~0 data (PCI_ERROR_RESPONSE).  If
-> > > we just look at the PCI_PM_CTRL_STATE_MASK bits, that is 0x3, which looks
-> > > like D3hot, not D3cold.
-> > >
-> > > Check the entire register for PCI_ERROR_RESPONSE so we can distinguish
-> > > D3cold from D3hot.
-> > >
-> > > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > ---
-> > >  drivers/pci/pci.c   |  6 +++---
-> > >  include/linux/pci.h | 13 +++++++++++++
-> > >  2 files changed, 16 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > index af6a97d7012b..d8686e3cd5eb 100644
-> > > --- a/drivers/pci/pci.c
-> > > +++ b/drivers/pci/pci.c
-> > > @@ -894,7 +894,7 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
-> > >                 udelay(PCI_PM_D2_DELAY);
-> > >
-> > >         pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> > > -       dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
-> > > +       dev->current_state = pci_power_state(pmcsr);
-> > 
-> > But pci_raw_set_power_state() should not even be called for devices in
-> > D3_cold, so this at best is redundant.
-> 
-> I tried to verify that we don't call pci_raw_set_power_state() for
-> devices in D3cold, but it wasn't obvious to me.  Is there an easy way
-> to verify that?  I'd rather have code that doesn't rely on deep
-> knowledge about other areas.
+From: Randy Dunlap <rdunlap@infradead.org>
 
-It is called in two places, pci_power_up() and pci_set_power_state().
+lib/devres.c, which implements devm_ioremap_resource(), is only built
+when CONFIG_HAS_IOMEM is set/enabled, so XILINX_SDFEC should depend
+on HAS_IOMEM.  Fixes this build error (as seen on UML builds):
 
-pci_power_up() is called on resume when the whole hierarchy is
-turned on and pci_set_power_state() explicitly powers up the
-device if in D3cold (with the help of the platform).
+ERROR: "devm_ioremap_resource" [drivers/misc/xilinx_sdfec.ko] undefined!
 
-And the "device not accessible at all" case should be covered by patch [2/5]
-in this series.
+Fixes: 76d83e1c3233 ("misc: xilinx-sdfec: add core driver")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Derek Kiernan <derek.kiernan@xilinx.com>
+Cc: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/misc/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
-> Even if the device was in, say D0, what if it is hot-removed just
-> before we read PCI_PM_CTRL?
-
-I guess you mean surprise-hot-removed?
-
-Then it may as well be hot-removed after setting current_state.
-
-> We'll set dev->current_state to D3hot,
-> when I think D3cold would better correspond to the state of the
-> device.  Maybe that's harmless, but I don't know how to verify that.
-
-Well, D3cold may just be equally misleading, because the device may
-very well not be present at all any more.
-
-> > >         if (dev->current_state != state && printk_ratelimit())
-> > >                 pci_info(dev, "Refused to change power state, currently in D%d\n",
-> > >                          dev->current_state);
-> > > @@ -942,7 +942,7 @@ void pci_update_current_state(struct pci_dev *dev, pci_power_t state)
-> > >                 u16 pmcsr;
-> > >
-> > >                 pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> > > -               dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
-> > > +               dev->current_state = pci_power_state(pmcsr);
-> > 
-> > The if () branch above should cover the D3cold case, shouldn't it?
-> 
-> You mean the "if (platform_pci_get_power_state(dev) == PCI_D3cold)"
-> test?
-
-Not exactly.
-
-I mean "if (platform_pci_get_power_state(dev) == PCI_D3cold ||
-!pci_device_is_present(dev))".
-
-> platform_pci_get_power_state() returns PCI_UNKNOWN in some cases.
-> When that happens, might we not read PCI_PM_CTRL of a device in
-> D3cold?  I think this also has the same hotplug question as above.
-
-Surprise hot-removal can take place at any time, in particular after setting
-current_state, so adding extra checks here doesn't prevent the value of
-it from becoming stale at least sometimes anyway.
-
-> > >         } else {
-> > >                 dev->current_state = state;
-> > >         }
-> > > @@ -1677,7 +1677,7 @@ static int pci_enable_device_flags(struct pci_dev *dev, unsigned long flags)
-> > >         if (dev->pm_cap) {
-> > >                 u16 pmcsr;
-> > >                 pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> > > -               dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
-> > > +               dev->current_state = pci_power_state(pmcsr);
-> > 
-> > So this appears to be only case in which pci_power_state(pmcsr) is
-> > useful at all.
-> > 
-> > It might be better to use the code from it directly here IMO.
-> 
-> If we're decoding CSR values, I think it's better to notice error
-> responses when we can than it is to try to figure out whether the
-> error response is theoretically impossible or the incorrectly decoded
-> value (e.g., D3hot instead of D3cold) is harmless.
-
-IMO this means more complex code and extra overhead for a very
-little practical value, however.
-
+--- lnx-53-rc4.orig/drivers/misc/Kconfig
++++ lnx-53-rc4/drivers/misc/Kconfig
+@@ -465,6 +465,7 @@ config PCI_ENDPOINT_TEST
+ 
+ config XILINX_SDFEC
+ 	tristate "Xilinx SDFEC 16"
++	depends on HAS_IOMEM
+ 	help
+ 	  This option enables support for the Xilinx SDFEC (Soft Decision
+ 	  Forward Error Correction) driver. This enables a char driver
 
 
