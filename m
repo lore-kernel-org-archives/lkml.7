@@ -2,101 +2,101 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0896C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D382DC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71AD720644
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:20:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AboJlEzH"
+	by mail.kernel.org (Postfix) with ESMTP id AE913205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:21:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729561AbfHMOUo (ORCPT
+        id S1729570AbfHMOVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 10:20:44 -0400
-Received: from mail-qt1-f169.google.com ([209.85.160.169]:44018 "EHLO
-        mail-qt1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729272AbfHMOUm (ORCPT
+        Tue, 13 Aug 2019 10:21:32 -0400
+Received: from orion.archlinux.org ([88.198.91.70]:54934 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbfHMOVc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 10:20:42 -0400
-Received: by mail-qt1-f169.google.com with SMTP id b11so6700042qtp.10
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 07:20:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=y+YPqjPZCrZJbdipSIWGCakf0rdeaXkvJ3zkU32yFlA=;
-        b=AboJlEzHANLJuRvwN0qONHsiKJoXhyw7Nlm5/vIwJhyTtUNPBVZhqeeGU7K1oZqAac
-         StIdo/k+xB8krR98tkjvzw4SLQhj+qK6/dUU6uYHD1rlxDHURtooD6vr616pPUXNzCeP
-         0ygm+c9oWNIE/KBrdyeuZS82cLZE2GLXk4BWGwkMVHH5IDf0LWj//4RlSQVqLgk9E3x1
-         hrH/aJVwHdakNnRclddzqosfchmwumWPDvXXVM9BP8RJu+UkJlJoxtJu4f+KT8iVmakk
-         41mBEjke31QHaibFmnJpSW5kq37yZ75mBZu6O0s23gNMSCRc7lAUk3jnjkHEbfQDLxds
-         V5cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=y+YPqjPZCrZJbdipSIWGCakf0rdeaXkvJ3zkU32yFlA=;
-        b=ZoszyABmKCGBG5+mINbFoJCi2H6x1ncFhni37xf9r5pdVDbi9nTvX/hphK4Qfl8YEd
-         VSVZszikne2kNaIkPCLwcymPRCLUVjJKBVmWbhu+9muEZlWN1RWN2e7BWh7/m78FTzo9
-         sVS2X4MifYRpO7nAZkAxb46mhaHiOuEYCplckFFa0b+DuPiEduB2YLU7VgmbJhGVBvuN
-         XGTyDw331TcOqKpOTCOxU9tDl+JyqUIrsEHntVCn4+Sx4pE27YTlbG/edZcAEG2Z3mlW
-         oxTSWHCfqhDeArq5IIwzyLoSTm2F4SD0tX6peZba5mWoKSPOITp92oTJyOt0i15/2WnQ
-         YRTA==
-X-Gm-Message-State: APjAAAWsdGqu4KqizqjVDRN2KUrdOxRy54HG+DxzCTJGnpR7Qsmc30Gt
-        O2DO0hLSggfv4rxErteSDZ8=
-X-Google-Smtp-Source: APXvYqyB22ltjLwXZhUAF1XgfU4XTTVgV+WCMMScFdQwuLZytLRNkdkV2VSXf05gmVpyx73Q/Vyr0Q==
-X-Received: by 2002:a0c:80cc:: with SMTP id 70mr17379443qvb.203.1565706040951;
-        Tue, 13 Aug 2019 07:20:40 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id y194sm50334031qkb.111.2019.08.13.07.20.39
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 07:20:39 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B67FD40340; Tue, 13 Aug 2019 11:20:37 -0300 (-03)
-Date:   Tue, 13 Aug 2019 11:20:37 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Vince Weaver <vincent.weaver@maine.edu>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Chong Jiang <chongjiang@chromium.org>,
-        Simon Que <sque@chromium.org>
-Subject: Re: [patch] perf.data documentation clarify HEADER_SAMPLE_TOPOLOGY
- format
-Message-ID: <20190813142037.GD12299@kernel.org>
-References: <alpine.DEB.2.21.1908011425240.14303@macbook-air>
- <20190802131440.GC27223@krava>
+        Tue, 13 Aug 2019 10:21:32 -0400
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id D29FB1477D7B20;
+        Tue, 13 Aug 2019 14:21:29 +0000 (UTC)
+Received: from saetre (unknown [154.53.1.40])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Tue, 13 Aug 2019 14:21:29 +0000 (UTC)
+Message-ID: <d558b953e88558b8d7955e591fefbe898edeb3ae.camel@archlinux.org>
+Subject: Re: [PATCH 0/2] Fix support of a few Logitech devices broken in 5.3
+From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190813133807.12384-1-benjamin.tissoires@redhat.com>
+References: <20190813133807.12384-1-benjamin.tissoires@redhat.com>
+Organization: Archlinux
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-C0SorkiN9smqF35MFDat"
+Date:   Tue, 13 Aug 2019 15:21:28 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190802131440.GC27223@krava>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.0 (2019-05-25)
+User-Agent: Evolution 3.32.4 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Aug 02, 2019 at 03:14:40PM +0200, Jiri Olsa escreveu:
-> On Thu, Aug 01, 2019 at 02:30:43PM -0400, Vince Weaver wrote:
-> > +        }
-> > +}[count];
-> 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
-> 
-> thanks for doing this,
 
-Thanks, applied.
+--=-C0SorkiN9smqF35MFDat
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-- Arnaldo
+On Tue, 2019-08-13 at 15:38 +0200, Benjamin Tissoires wrote:
+> Hi Jiri,
+>=20
+> another set of patches to send to Linus ASAP.
+> It turns out that we have been breaking devices, so this should
+> be sent before 5.3 final.
+>=20
+> Cheers,
+> Benjamin
+>=20
+> Benjamin Tissoires (2):
+>   Revert "HID: logitech-hidpp: add USB PID for a few more supported
+>     mice"
+>   HID: logitech-hidpp: remove support for the G700 over USB
+>=20
+>  drivers/hid/hid-logitech-hidpp.c | 22 ----------------------
+>  1 file changed, 22 deletions(-)
+>=20
+
+Reviewed-by: Filipe La=C3=ADns <lains@archlinux.org>
+
+Thanks,
+Filipe La=C3=ADns
+
+--=-C0SorkiN9smqF35MFDat
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl1Sx18ACgkQ+JPGdIFq
+qV0PSBAAtHhcycfda272Ii5CyvMWH8Xh965T8lnde3yUPyiBb6Yr913OAx13DCqa
+WWj4m+HTXVyrHR6ykuVwZhGX8M5WwCq5UnkIygup7+tHSzaPHtPmvOoJYqkjtsgp
+IMeH7swN9o7nHpjHcyUyM5mimbBhn/qX4mhJ6GTpF1vMtlJcbBvlj6H/Kl1XbxGA
+S2dc//wfJUOyxh6lp1Wxb4f/l87cZghX8meuWS3amzVkZm2LHcIIkzefs77Fj8P1
+bnaBsn1eh7vFFs4H154RBHxUM4qDW/i6WWGEUXAuEAE51XbzQoZIrVofipky553U
+/4We0roMJiOt423VG8tm90WuXFeDrPjW5CT/ud9x9Zc8NxXIP68tlrfDJsCZLaiI
+YQsOopy2k7fDrNBFSXQ8Ak5D6N7WPuJ7DXCPOK2+zEaPb3R7iEL5eBTaFFLq/oEj
+2GemuiWsHcXWo5SxhyeuMNlbVA9oZLtvLieG6tod8PI9r6c4H497N8+jfFQZohxO
+f/3lAmHen3LILBmcZXmfgma2avGHRq1PChoEMAyn0+Ef6xBgwlipGFKTveZ8nc8S
+7f1Sqp3H14oo/oS09NybkLgXHPaqTrmFTPDNR7qwuJxOA4ZwnE1l9r1sYYws9VTp
+Ug36Lp+Mj7vDQraqrwi7kYrxIHf8AqZRbx/diGRKdWtaPSmB3VA=
+=UHMC
+-----END PGP SIGNATURE-----
+
+--=-C0SorkiN9smqF35MFDat--
