@@ -2,129 +2,103 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E82C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE00EC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 600D220840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFCEE20673
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:29:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbfHML1k (ORCPT
+        id S1727035AbfHML3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 07:27:40 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:41430 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727221AbfHML1g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 07:27:36 -0400
-X-UUID: 0f564156c2224fd1b34e5e34dec02874-20190813
-X-UUID: 0f564156c2224fd1b34e5e34dec02874-20190813
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 2087766564; Tue, 13 Aug 2019 19:27:21 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 13 Aug 2019 19:27:15 +0800
-Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 13 Aug 2019 19:27:18 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
+        Tue, 13 Aug 2019 07:29:35 -0400
+Received: from muru.com ([72.249.23.125]:57164 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726650AbfHML3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 07:29:35 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 00CBA805C;
+        Tue, 13 Aug 2019 11:30:00 +0000 (UTC)
+Date:   Tue, 13 Aug 2019 04:29:30 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Jyri Sarha <jsarha@ti.com>
+Cc:     Suman Anna <s-anna@ti.com>, linux-omap@vger.kernel.org,
+        Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Biju Das <biju.das@bp.renesas.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nagarjuna Kristam <nkristam@nvidia.com>,
-        Yu Chen <chenyu56@huawei.com>
-Subject: [PATCH next v9 01/11] dt-binding: usb: add usb-role-switch property
-Date:   Tue, 13 Aug 2019 19:27:04 +0800
-Message-ID: <1565695634-9711-2-git-send-email-chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1565695634-9711-1-git-send-email-chunfeng.yun@mediatek.com>
-References: <1565695634-9711-1-git-send-email-chunfeng.yun@mediatek.com>
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/8] ARM: OMAP2+: Remove unconfigured midlemode for am3
+ lcdc
+Message-ID: <20190813112930.GO52127@atomide.com>
+References: <20190723112811.44381-1-tony@atomide.com>
+ <20190723112811.44381-3-tony@atomide.com>
+ <bcc130a5-f7e0-e182-9f4b-5a48fc3d6e17@ti.com>
+ <b5d757dc-6326-4b93-c2a2-2db02a440c26@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 4D4870D9DDE1AA1DBBFF399EF85E13D5FA9F4047E26415FA4F7AADC57F32E04E2000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b5d757dc-6326-4b93-c2a2-2db02a440c26@ti.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a property usb-role-switch to tell the driver that use
-USB Role Switch framework to handle the role switch,
-it's useful when the driver has already supported other ways,
-such as extcon framework etc.
+* Jyri Sarha <jsarha@ti.com> [190813 11:05]:
+> On 23/07/2019 22:03, Suman Anna wrote:
+> > + Jyri
+> > 
+> > On 7/23/19 6:28 AM, Tony Lindgren wrote:
+> >> We currently get a warning for lcdc because of a difference
+> >> with dts provided configuration compared to the legacy platform
+> >> data. This is because lcdc has SYSC_HAS_MIDLEMODE configured in
+> >> the platform data without configuring the modes.
+> > 
+> > Hi Tony,
+> > While I understand that you are trying to match the DT data with the
+> > existing legacy data, do you know if there was a reason why this was
+> > omitted in the first place? Should we be really adding the MSTANDBY_
+> > flags and fix up the DTS node accordingly? I tried looking through the
+> > git log, and the initial commit itself didn't add the MSTANDBY_ flags
+> > but used the SYSC_HAS_MIDLEMODE.
+> > 
+> > Jyri,
+> > Do you know the history?
+> > 
+> 
+> Sorry. This all has happened before my time. This is all new to me.
 
-Cc: Biju Das <biju.das@bp.renesas.com>
-Cc: Yu Chen <chenyu56@huawei.com>
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
-v7~v9: no changes
+Oh OK. Well if possible, could you please check if the following patch
+behaves with v5.2 for you for LCDC? I only have rack access to a
+beaglebone with hdmi right now.
 
-v6:
-    1. merge into this series patch
-    2. add Reviewed-by
+TRM "Table 13-34. SYSCONFIG Register Field Descriptions" lists both
+standbymode and idlemode that should be just the sidle and midle
+registers where midle is currently unconfigured.
 
-(no v4, v5)
+Regards,
 
-v3:
-    add property type, modify description suggested by Heikki
+Tony
 
-v2:
-    describe it in terms of h/w functionality suggested by Rob
-
-v1:
-    the property is discussed in:
-    [v2,2/7] dt-bindings: usb: renesas_usb3: add usb-role-switch property
-    https://patchwork.kernel.org/patch/10852497/
-
-    Mediatek and Hisilicon also try to use it:
-    [v4,3/6] dt-bindings: usb: mtu3: add properties about USB Role Switch
-    https://patchwork.kernel.org/patch/10918385/
-    [v4,6/6] usb: mtu3: register a USB Role Switch for dual role mode
-    https://patchwork.kernel.org/patch/10918367/
-
-    [v6,10/13] usb: dwc3: Registering a role switch in the DRD code
-    https://patchwork.kernel.org/patch/10909981/
----
- Documentation/devicetree/bindings/usb/generic.txt | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
-index 0a74ab8dfdc2..cf5a1ad456e6 100644
---- a/Documentation/devicetree/bindings/usb/generic.txt
-+++ b/Documentation/devicetree/bindings/usb/generic.txt
-@@ -30,6 +30,10 @@ Optional properties:
- 			optional for OTG device.
-  - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
- 			optional for OTG device.
-+ - usb-role-switch: boolean, indicates that the device is capable of assigning
-+			the USB data role (USB host or USB device) for a given
-+			USB connector, such as Type-C, Type-B(micro).
-+			see connector/usb-connector.txt.
+8< ---------------------
+diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+--- a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+@@ -255,8 +255,9 @@ static struct omap_hwmod am33xx_gpio0_hwmod = {
+ static struct omap_hwmod_class_sysconfig lcdc_sysc = {
+ 	.rev_offs	= 0x0,
+ 	.sysc_offs	= 0x54,
+-	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_MIDLEMODE),
+-	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
++	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_MIDLEMODE,
++	.idlemodes	= SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
++			  MSTANDBY_FORCE | MSTANDBY_NO | MSTANDBY_SMART,
+ 	.sysc_fields	= &omap_hwmod_sysc_type2,
+ };
  
- This is an attribute to a USB controller such as:
- 
--- 
-2.22.0
-
