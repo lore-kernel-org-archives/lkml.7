@@ -2,85 +2,113 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3E0C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 01:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBE9C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 01:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E973204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 01:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1279C2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 01:07:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aCjYjmya"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="FV0r+t/x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfHMBG1 (ORCPT
+        id S1726740AbfHMBHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 12 Aug 2019 21:06:27 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:43137 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbfHMBG0 (ORCPT
+        Mon, 12 Aug 2019 21:07:13 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:52583 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfHMBHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 12 Aug 2019 21:06:26 -0400
-Received: by mail-ed1-f66.google.com with SMTP id h13so2616996edq.10;
-        Mon, 12 Aug 2019 18:06:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=j4lyVR+ucz/sNBr6Uuq/ocVwe18iA7ulKcx4G6tyoUE=;
-        b=aCjYjmyaMNiomMMaGaGZsCa62g2hyeAOyf4+2CRXxLKdO598HULUn8YNFrJTTUGusc
-         kXW87UlSSFlzLpCEV51d+04lZjFLfEBKoyqi3lu6ksn4d2VjzF5Kb11SF2pdO8VeJdR2
-         4BMbp58YdFPYsKOJWfrJ80BVjhpJr49nM9GyBIdgB94I3PVPNf23Ks9MSEXz9+vP2lKq
-         nm3YiOXFHkvcK9yem2tMkAuvQi1nLZ7fh64Tgz6sLH159VIieKLvlSSzZwr3mC2EEvdw
-         Ep93Kgjgepi5Iw3o52lvnHdOLcBzSaBtPU3bEFjC4IltK5Z6YeeqS3Q/dK2yDtzpJ+SE
-         BDvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=j4lyVR+ucz/sNBr6Uuq/ocVwe18iA7ulKcx4G6tyoUE=;
-        b=erus9ZTDuhnWofiVq1iBTU2/LX1oWHOEkn25vy8zzhbk18YY3Q0RycpIIcfDd0a068
-         lNH8L09sEdPb/jvI9JE1Mb3iaSQxIZrvpsYvzC1S+9k3Z7IrwrmbFBdFONtcoEuVXDo8
-         sWPtCT2sZNHr4hQ/+1WjDmOdyY0k6FQ+JeWVO3svJ8cySaHARMeEwXfST3zj5DZIdv0Z
-         x9aNk2lcuusxm5LxUKPCyGoPAyTN8mdg46JAffWXcQGDy/V7LkCRCQJm+dE5it/JZgFw
-         iGAYeZKQjUgRW0yTPZo4g2eURnsIsOYPUdVoHkcDI0wViqVagrDeXBd/8O+Hv4f0SUlV
-         yotQ==
-X-Gm-Message-State: APjAAAUGOHqwZDcekS2CNzG6w6eVUi/EBaMLn+0heDvq5nQ9kwXCRh53
-        W5iv+fpVt1ZFsrh+BXw+GJbSHkCA2xvJRH1udxUZKA==
-X-Google-Smtp-Source: APXvYqxsCrHWWrWMc4dJWpWtHfMOKBXzWhxk9gpd3SLhKDy3qkruMVroVvkOqFD5XJJ7cCViAlN4JWxSZi5PS7T4pm4=
-X-Received: by 2002:a50:8687:: with SMTP id r7mr21038172eda.137.1565658385191;
- Mon, 12 Aug 2019 18:06:25 -0700 (PDT)
+        Mon, 12 Aug 2019 21:07:13 -0400
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x7D176Mn007003;
+        Tue, 13 Aug 2019 10:07:07 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x7D176Mn007003
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1565658427;
+        bh=L2h8Vjy+9Y09mIZApsXwsIOGlDr1pBAU/zwW1xEP40g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FV0r+t/xoyQLmuz2UDYkscN7ObVMkCWOksWupspNOfLUKXPjN2yEPK6vxvHZmspGY
+         7WiYNdb090oh5usm/+ZJKRKLOmFEGwQdoNnG4qaBFmJKm/vLVtG6Ecl5VVgEmnwJ2k
+         +bC1ACr0AKSRC+Irjv2kyzfLppI4yk53plPRnJGi/a6IyJkK7b0JqOz+k3qAV6BYcf
+         sztuXX/YGhsCBIY2dF3CaANg0SGd6DQFIWRyBmbYOX89s/pVDLi2nynHGiYxwg52Ex
+         iAgpXrNmu5kBXzmjTWAtTHPf5jw+MLm/FNz35LtmWCLSdO0C/VI3Pu46K+HEc8kFXY
+         MWp2sQwp3qR+A==
+X-Nifty-SrcIP: [209.85.221.179]
+Received: by mail-vk1-f179.google.com with SMTP id b64so21132641vke.13;
+        Mon, 12 Aug 2019 18:07:07 -0700 (PDT)
+X-Gm-Message-State: APjAAAVV+9Ln3Prvs5d5dO3KY2PuEGWj3I1d9X09Qq1vVgJM1D3KasEy
+        q+qfJ5vE563yqPA81OTb27U7RwBEz3ifs5ivHdw=
+X-Google-Smtp-Source: APXvYqyKjWR/Z/JcA6WmuFmnY8qTkln8CqolkATBJfU2C59DSnCk5mHe9UmWulyW2+MWtzJgbOu31LayBPnAgY6UAmU=
+X-Received: by 2002:a1f:93cd:: with SMTP id v196mr7101948vkd.84.1565658425832;
+ Mon, 12 Aug 2019 18:07:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <1565158960-12240-1-git-send-email-bmeng.cn@gmail.com>
-In-Reply-To: <1565158960-12240-1-git-send-email-bmeng.cn@gmail.com>
-From:   Bin Meng <bmeng.cn@gmail.com>
-Date:   Tue, 13 Aug 2019 09:06:14 +0800
-Message-ID: <CAEUhbmVo9vNsKBD9oA3XtA07jr24PqKFYsEmGeKwLH6WaQdgsQ@mail.gmail.com>
-Subject: Re: [PATCH] riscv: dts: sifive: Add missing "clock-frequency" to
- cpu0/cpu1 nodes
-To:     Albert Ou <aou@eecs.berkeley.edu>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>
+References: <20190809002104.18599-1-stancheff@cray.com> <20190809002104.18599-2-stancheff@cray.com>
+ <CAK7LNAScm9P+QMZiqqSQnOoPsN54OTcTGpaDgxTbjJ_knoeGhA@mail.gmail.com> <CAJ48U8Xp40is+R1dMW8sXq77ZS5D_h+hHte5Mq5eOrtpb41Qxw@mail.gmail.com>
+In-Reply-To: <CAJ48U8Xp40is+R1dMW8sXq77ZS5D_h+hHte5Mq5eOrtpb41Qxw@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 13 Aug 2019 10:06:29 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT5OVcw9tJtaR8VE_JEemAzkqV6FeSHPEy38wotxjhkZg@mail.gmail.com>
+Message-ID: <CAK7LNAT5OVcw9tJtaR8VE_JEemAzkqV6FeSHPEy38wotxjhkZg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] kbuild: recursive build of external kernel modules
+To:     Shaun Tancheff <shaun@tancheff.com>
+Cc:     Shaun Tancheff <stancheff@cray.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Renninger <trenn@suse.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM mailing list <linux-pm@vger.kernel.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 7, 2019 at 2:22 PM Bin Meng <bmeng.cn@gmail.com> wrote:
+On Tue, Aug 13, 2019 at 2:34 AM Shaun Tancheff <shaun@tancheff.com> wrote:
 >
-> Add the missing "clock-frequency" property to the cpu0/cpu1 nodes
-> for consistency with other cpu nodes.
+> On Mon, Aug 12, 2019 at 10:24 AM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > On Fri, Aug 9, 2019 at 9:21 AM Shaun Tancheff <shaun@tancheff.com> wrote:
+> > >
+> > > When building a tree of external modules stage 2 fails
+> > > silently as the root modules.order is empty.
+> > >
+> > > Modify the modules.order location to be fixed to the
+> > > root when KBUILD_EXTMOD is specified and write all
+> > > module paths to the single modules.order file.
+> >
+> > Could you try v5.3-rc4 please?
 >
-> Signed-off-by: Bin Meng <bmeng.cn@gmail.com>
-> ---
+> So it seems we are using 'subdir-m' but that is now gone?
 >
->  arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
+> Is there a recommend pattern for backward compatibility?
 >
+> Thanks!
 
-ping
+
+Please convert
+
+subdir-m += dir1
+subdir-m += dir2
+
+into
+
+obj-m += dir1/
+obj-m += dir2/
+
+
+Thanks.
+
+-- 
+Best Regards
+Masahiro Yamada
