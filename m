@@ -2,160 +2,480 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDA0C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F29AC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C38220840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:49:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bmyyGUCZ"
+	by mail.kernel.org (Postfix) with ESMTP id 3758320578
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:52:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbfHMMtU (ORCPT
+        id S1728395AbfHMMv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 08:49:20 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:54430 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728113AbfHMMtU (ORCPT
+        Tue, 13 Aug 2019 08:51:59 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:41106 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbfHMMv6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 08:49:20 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7DCmtam177067;
-        Tue, 13 Aug 2019 12:48:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=qTZYfY533gM7m4PsKVvKdAKeulPfWW1BX72qwu/Csrk=;
- b=bmyyGUCZjCw4iDEnI7eN1qIkc4JA3fOhtBMlmPJPFmnCeoJv7iczWAnovjKXyLZzsSXE
- WeKHuNZLmLoS6PVN72cd314GBdP45NaWVPEbVvX9sUxFJhjNQyPX/VqHGuIe3aAveXLy
- fQCggwFg3eePNY/1+w6SrHyL0u0J8JbVsIadnWmmHZoIWv4yVqHuQtZUVKCMikkHrlOg
- EQad5Mzaza8Mlpmk7unyFkuHiDSgVMwjrHAx7xrv/gKTvNxcV6GmU+xiaUu6mxG9/w/0
- vSXCeojkMU5RS74X/eGaossgAvuUruYV8nSjSKNfm7liYPIvms73OZPqUCJw4GM6QqMF 4g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2u9pjqdyax-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 12:48:55 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7DCmc6n187709;
-        Tue, 13 Aug 2019 12:48:50 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2ubwcwr8xr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 12:48:50 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7DCmlAq017058;
-        Tue, 13 Aug 2019 12:48:47 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 13 Aug 2019 05:48:47 -0700
-Date:   Tue, 13 Aug 2019 15:48:39 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Nicolai Stange <nicstange@gmail.com>
-Cc:     Oliver Hartkopp <socketcan@hartkopp.net>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        linux-sparse@vger.kernel.org, Mao Wenan <maowenan@huawei.com>,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH net-next] net: can: Fix compiling warning
-Message-ID: <20190813124838.GN1935@kadam>
-References: <20190802033643.84243-1-maowenan@huawei.com>
- <0050efdb-af9f-49b9-8d83-f574b3d46a2e@hartkopp.net>
- <20190806135231.GJ1974@kadam>
- <6e1c5aa0-8ed3-eec3-a34d-867ea8f54e9d@hartkopp.net>
- <20190807105042.GK1974@kadam>
- <201908121001.0AC0A90@keescook>
+        Tue, 13 Aug 2019 08:51:58 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: dafna)
+        with ESMTPSA id 1349F28A58F
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+To:     dafna.hirschfeld@collabora.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, ezequiel@collabora.com,
+        kernel@collabora.com,
+        Gary Bisson <gary.bisson@boundarydevices.com>,
+        Troy Kisky <troy.kisky@boundarydevices.com>
+Subject: [PATCH v3 2/2] arm64: dts: imx: Add i.mx8mq nitrogen8m basic dts support
+Date:   Tue, 13 Aug 2019 14:51:46 +0200
+Message-Id: <20190813125147.29605-1-dafna.hirschfeld@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201908121001.0AC0A90@keescook>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908130137
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9347 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908130137
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 10:19:27AM -0700, Kees Cook wrote:
-> On Wed, Aug 07, 2019 at 01:50:42PM +0300, Dan Carpenter wrote:
-> > On Tue, Aug 06, 2019 at 06:41:44PM +0200, Oliver Hartkopp wrote:
-> > > I compiled the code (the original version), but I do not get that "Should it
-> > > be static?" warning:
-> > > 
-> > > user@box:~/net-next$ make C=1
-> > >   CALL    scripts/checksyscalls.sh
-> > >   CALL    scripts/atomic/check-atomics.sh
-> > >   DESCEND  objtool
-> > >   CHK     include/generated/compile.h
-> > >   CHECK   net/can/af_can.c
-> > > ./include/linux/sched.h:609:43: error: bad integer constant expression
-> > > ./include/linux/sched.h:609:73: error: invalid named zero-width bitfield
-> > > `value'
-> > > ./include/linux/sched.h:610:43: error: bad integer constant expression
-> > > ./include/linux/sched.h:610:67: error: invalid named zero-width bitfield
-> > > `bucket_id'
-> > >   CC [M]  net/can/af_can.o
-> > 
-> > The sched.h errors suppress Sparse warnings so it's broken/useless now.
-> > The code looks like this:
-> > 
-> > include/linux/sched.h
-> >    613  struct uclamp_se {
-> >    614          unsigned int value              : bits_per(SCHED_CAPACITY_SCALE);
-> >    615          unsigned int bucket_id          : bits_per(UCLAMP_BUCKETS);
-> >    616          unsigned int active             : 1;
-> >    617          unsigned int user_defined       : 1;
-> >    618  };
-> > 
-> > bits_per() is zero and Sparse doesn't like zero sized bitfields.
-> 
-> I just noticed these sparse warnings too -- what's happening here? Are
-> they _supposed_ to be 0-width fields? It doesn't look like it to me:
+From: Gary Bisson <gary.bisson@boundarydevices.com>
 
-I'm sorr, I don't even know what code I was looking at before.  I think
-my cscope database was stale?  You're right.  Sparse doesn't think it's
-zero, it knows that it is 11 and 3.
+Add basic dts support for i.MX8MQ NITROGEN8M.
 
-What's happening is that it's failing the test in in
-bad_integer_constant_expression():
+Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
+Signed-off-by: Troy Kisky <troy.kisky@boundarydevices.com>
+[Dafna: porting vendor's code to mainline]
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+---
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../boot/dts/freescale/imx8mq-nitrogen.dts    | 400 ++++++++++++++++++
+ 2 files changed, 401 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-nitrogen.dts
 
-	if (!(expr->flags & CEF_ICE))
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index 8c0c4343e586..e2c6c93f47b6 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -25,6 +25,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mn-ddr4-evk.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
++dtb-$(CONFIG_ARCH_MXC) += imx8mq-nitrogen.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mq-pico-pi.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-nitrogen.dts b/arch/arm64/boot/dts/freescale/imx8mq-nitrogen.dts
+new file mode 100644
+index 000000000000..da25ea9055cd
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/imx8mq-nitrogen.dts
+@@ -0,0 +1,400 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright 2018 Boundary Devices
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/input/input.h>
++#include "imx8mq.dtsi"
++
++/ {
++	model = "Boundary Devices i.MX8MQ Nitrogen8M";
++	compatible = "boundary,imx8mq-nitrogen8m", "fsl,imx8mq";
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0x00000000 0x40000000 0 0x80000000>;
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_keys>;
++
++		power {
++			label = "Power Button";
++			gpios = <&gpio1 7 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_POWER>;
++			gpio-key,wakeup;
++		};
++	};
++
++	reg_vref_0v9: regulator-vref-0v9 {
++		compatible = "regulator-fixed";
++		regulator-name = "vref-0v9";
++		regulator-min-microvolt = <900000>;
++		regulator-max-microvolt = <900000>;
++	};
++
++	reg_vref_1v8: regulator-vref-1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "vref-1v8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	reg_vref_2v5: regulator-vref-2v5 {
++		compatible = "regulator-fixed";
++		regulator-name = "vref-2v5";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++	};
++
++	reg_vref_3v3: regulator-vref-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "vref-3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	reg_vref_5v: regulator-vref-5v {
++		compatible = "regulator-fixed";
++		regulator-name = "vref-5v";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++	};
++};
++
++
++&fec1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec1>;
++	phy-mode = "rgmii-id";
++	phy-handle = <&ethphy0>;
++	fsl,magic-packet;
++	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethphy0: ethernet-phy@4 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			reg = <4>;
++			interrupts-extended = <&gpio1 11 IRQ_TYPE_LEVEL_LOW>;
++		};
++	};
++};
++
++&i2c1 {
++	clock-frequency = <400000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++
++	i2cmux@70 {
++		compatible = "nxp,pca9546";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_i2c1_pca9546>;
++		reg = <0x70>;
++		reset-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		i2c1a: i2c1@0 {
++			reg = <0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg_arm_dram: regulator@60 {
++				compatible = "fcs,fan53555";
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_reg_arm_dram>;
++				reg = <0x60>;
++				regulator-min-microvolt =  <900000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-always-on;
++				vsel-gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>;
++			};
++		};
++
++		i2c1b: i2c1@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg_dram_1p1v: regulator@60 {
++				compatible = "fcs,fan53555";
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_reg_dram_1p1v>;
++				reg = <0x60>;
++				regulator-min-microvolt = <1100000>;
++				regulator-max-microvolt = <1100000>;
++				regulator-always-on;
++				vsel-gpios = <&gpio2 11 GPIO_ACTIVE_HIGH>;
++			};
++		};
++
++		i2c1c: i2c1@2 {
++			reg = <2>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg_soc_gpu_vpu: regulator@60 {
++				compatible = "fcs,fan53555";
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_reg_soc_gpu_vpu>;
++				reg = <0x60>;
++				regulator-min-microvolt =  <900000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-always-on;
++				vsel-gpios = <&gpio2 20 GPIO_ACTIVE_HIGH>;
++			};
++		};
++
++		i2c1d: i2c1@3 {
++			reg = <3>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			rtc@68 {
++				compatible = "microcrystal,rv4162";
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_i2c1d_rv4162>;
++				reg = <0x68>;
++				interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_LOW>;
++				wakeup-source;
++			};
++		};
++	};
++};
++
++&uart1 { /* console */
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	assigned-clocks = <&clk IMX8MQ_CLK_UART1>;
++	assigned-clock-parents = <&clk IMX8MQ_CLK_25M>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	assigned-clocks = <&clk IMX8MQ_CLK_UART2>;
++	assigned-clock-parents = <&clk IMX8MQ_CLK_25M>;
++	status = "okay";
++};
++
++&usdhc1 {
++	bus-width = <8>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	non-removable;
++	vmmc-supply = <&reg_vref_1v8>;
++	status = "okay";
++};
++
++&wdog1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_wdog>;
++	fsl,ext-reset-output;
++	status = "okay";
++};
++
++&iomuxc {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hog>;
++	pinctrl_hog: hoggrp {
++		fsl,pins = <
++			/* J17 connector, odd */
++			MX8MQ_IOMUXC_SAI1_RXFS_GPIO4_IO0		0x19	/* Pin 19 */
++			MX8MQ_IOMUXC_SAI1_RXC_GPIO4_IO1			0x19	/* Pin 21 */
++			MX8MQ_IOMUXC_SAI1_RXD1_GPIO4_IO3		0x19	/* Pin 23 */
++			MX8MQ_IOMUXC_SAI1_RXD2_GPIO4_IO4		0x19	/* Pin 25 */
++			MX8MQ_IOMUXC_SAI1_RXD3_GPIO4_IO5		0x19	/* Pin 27 */
++			MX8MQ_IOMUXC_SAI1_RXD4_GPIO4_IO6		0x19	/* Pin 29 */
++			MX8MQ_IOMUXC_SAI1_RXD5_GPIO4_IO7		0x19	/* Pin 31 */
++			MX8MQ_IOMUXC_SAI1_RXD6_GPIO4_IO8		0x19	/* Pin 33 */
++			MX8MQ_IOMUXC_SAI1_RXD7_GPIO4_IO9		0x19	/* Pin 35 */
++			MX8MQ_IOMUXC_SAI1_TXD1_GPIO4_IO13		0x19	/* Pin 39 */
++			MX8MQ_IOMUXC_SAI1_TXD2_GPIO4_IO14		0x19	/* Pin 41 */
++			MX8MQ_IOMUXC_SAI1_TXD3_GPIO4_IO15		0x19	/* Pin 43 */
++			MX8MQ_IOMUXC_SAI1_TXD4_GPIO4_IO16		0x19	/* Pin 45 */
++			MX8MQ_IOMUXC_SAI1_TXD5_GPIO4_IO17		0x19	/* Pin 47 */
++			MX8MQ_IOMUXC_SAI1_TXD6_GPIO4_IO18		0x19	/* Pin 49 */
++			MX8MQ_IOMUXC_SAI1_TXD7_GPIO4_IO19		0x19	/* Pin 51 */
++
++			/* J17 connector, even */
++			MX8MQ_IOMUXC_SAI3_RXFS_GPIO4_IO28		0x19	/* Pin 44 */
++			MX8MQ_IOMUXC_SAI3_RXC_GPIO4_IO29		0x19	/* Pin 48 */
++			MX8MQ_IOMUXC_GPIO1_IO10_GPIO1_IO10		0x19	/* Pin 50 */
++			MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3		0x19	/* Pin 54 */
++			MX8MQ_IOMUXC_GPIO1_IO05_GPIO1_IO5		0x19	/* Pin 56 */
++
++			/* J18 connector, odd */
++			MX8MQ_IOMUXC_NAND_CE3_B_GPIO3_IO4		0x19	/* Pin 41 */
++			MX8MQ_IOMUXC_NAND_CLE_GPIO3_IO5			0x19	/* Pin 43 */
++			MX8MQ_IOMUXC_NAND_READY_B_GPIO3_IO16		0x19	/* Pin 45 */
++			MX8MQ_IOMUXC_NAND_DATA05_GPIO3_IO11		0x19	/* Pin 47 */
++			MX8MQ_IOMUXC_NAND_WP_B_GPIO3_IO18		0x19	/* Pin 49 */
++			MX8MQ_IOMUXC_NAND_DQS_GPIO3_IO14		0x19	/* Pin 53 */
++
++			/* J18 connector, even */
++			MX8MQ_IOMUXC_NAND_ALE_GPIO3_IO0			0x19	/* Pin 32 */
++			MX8MQ_IOMUXC_NAND_CE0_B_GPIO3_IO1		0x19	/* Pin 36 */
++			MX8MQ_IOMUXC_NAND_DATA00_GPIO3_IO6		0x19	/* Pin 38 */
++			MX8MQ_IOMUXC_NAND_DATA01_GPIO3_IO7		0x19	/* Pin 40 */
++			MX8MQ_IOMUXC_NAND_DATA02_GPIO3_IO8		0x19	/* Pin 42 */
++			MX8MQ_IOMUXC_NAND_DATA03_GPIO3_IO9		0x19	/* Pin 44 */
++			MX8MQ_IOMUXC_NAND_DATA04_GPIO3_IO10		0x19	/* Pin 46 */
++
++			/* J13 Pin 2, WL_WAKE */
++			MX8MQ_IOMUXC_SAI5_RXD2_GPIO3_IO23		0xd6
++			/* J13 Pin 4, WL_IRQ, not needed for Silex */
++			MX8MQ_IOMUXC_SAI5_RXD0_GPIO3_IO21		0xd6
++			/* J13 pin 9, unused */
++			MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
++			/* J13 Pin 41, BT_CLK_REQ */
++			MX8MQ_IOMUXC_SAI5_RXD1_GPIO3_IO22		0xd6
++			/* J13 Pin 42, BT_HOST_WAKE */
++			MX8MQ_IOMUXC_SAI5_MCLK_GPIO3_IO25		0xd6
++
++			/* Clock for both CSI1 and CSI2 */
++			MX8MQ_IOMUXC_GPIO1_IO15_CCMSRCGPCMIX_CLKO2	0x07
++			/* test points */
++			MX8MQ_IOMUXC_GPIO1_IO04_GPIO1_IO4		0xc1	/* TP87 */
++		>;
++	};
++
++	pinctrl_fec1: fec1grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_ENET_MDC_ENET1_MDC			0x3
++			MX8MQ_IOMUXC_ENET_MDIO_ENET1_MDIO		0x23
++			MX8MQ_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
++			MX8MQ_IOMUXC_ENET_TXC_ENET1_RGMII_TXC		0x1f
++			MX8MQ_IOMUXC_ENET_TD0_ENET1_RGMII_TD0		0x1f
++			MX8MQ_IOMUXC_ENET_TD1_ENET1_RGMII_TD1		0x1f
++			MX8MQ_IOMUXC_ENET_TD2_ENET1_RGMII_TD2		0x1f
++			MX8MQ_IOMUXC_ENET_TD3_ENET1_RGMII_TD3		0x1f
++			MX8MQ_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
++			MX8MQ_IOMUXC_ENET_RXC_ENET1_RGMII_RXC		0x91
++			MX8MQ_IOMUXC_ENET_RD0_ENET1_RGMII_RD0		0x91
++			MX8MQ_IOMUXC_ENET_RD1_ENET1_RGMII_RD1		0x91
++			MX8MQ_IOMUXC_ENET_RD2_ENET1_RGMII_RD2		0x91
++			MX8MQ_IOMUXC_ENET_RD3_ENET1_RGMII_RD3		0x91
++			MX8MQ_IOMUXC_GPIO1_IO09_GPIO1_IO9		0x19
++			MX8MQ_IOMUXC_GPIO1_IO11_GPIO1_IO11		0x59
++		>;
++	};
++
++	pinctrl_gpio_keys: gpio-keysgrp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_GPIO1_IO07_GPIO1_IO7		0x19
++		>;
++	};
++
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL			0x4000007f
++			MX8MQ_IOMUXC_I2C1_SDA_I2C1_SDA			0x4000007f
++		>;
++	};
++
++	pinctrl_i2c1_pca9546: i2c1-pca9546grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8		0x49
++		>;
++	};
++
++	pinctrl_i2c1d_rv4162: i2c1d-rv4162grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_GPIO1_IO06_GPIO1_IO6		0x49
++		>;
++	};
++
++	pinctrl_reg_arm_dram: reg-arm-dram {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SAI5_RXD3_GPIO3_IO24	0x16
++		>;
++	};
++
++	pinctrl_reg_dram_1p1v: reg-dram-1p1v {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD1_STROBE_GPIO2_IO11	0x16
++		>;
++	};
++
++	pinctrl_reg_soc_gpu_vpu: reg-soc-gpu-vpu {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD2_WP_GPIO2_IO20		0x16
++		>;
++	};
++
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX		0x45
++			MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX		0x45
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_UART2_RXD_UART2_DCE_RX		0x45
++			MX8MQ_IOMUXC_UART2_TXD_UART2_DCE_TX		0x45
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x83
++			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc3
++			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc3
++			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc3
++			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc3
++			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc3
++			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc3
++			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc3
++			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc3
++			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc3
++			MX8MQ_IOMUXC_SD1_RESET_B_GPIO2_IO10		0x41
++		>;
++	};
++
++	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x8d
++			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xcd
++			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xcd
++			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xcd
++			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xcd
++			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xcd
++			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xcd
++			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xcd
++			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xcd
++			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xcd
++		>;
++	};
++
++	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x9f
++			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xdf
++			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xdf
++			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xdf
++			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xdf
++			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xdf
++			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xdf
++			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xdf
++			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xdf
++			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xdf
++		>;
++	};
++
++	pinctrl_wdog: wdoggrp {
++		fsl,pins = <
++		MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B	0xc6
++		>;
++	};
++};
+-- 
+2.20.1
 
-The ICE in CEF_ICE stands for Integer Constant Expression.  The rule
-here is that enums are not constant expressions in c99.  See the
-explanation in commit 274c154704db ("constexpr: introduce additional
-expression constness tracking flags").
-
-I don't think the CEF_ICE is set properly in evaluate_conditional_expression().
-If conditional is constant and it's true and the ->cond_true expression
-is constant then the result should be constant as well.  It shouldn't
-matter if the cond_false is constant.  But instead it is ANDing all
-three sub expressions:
-
-	expr->flags = (expr->conditional->flags & (*true)->flags &
-			expr->cond_false->flags & ~CEF_CONST_MASK);
-
-Or actually in this case it's doing:
-
-	if (expr->conditional->flags & (CEF_ACE | CEF_ADDR))
-		expr->flags = (*true)->flags & expr->cond_false->flags & ~CEF_CONST_MASK;
-
-But it's the same problem because it's should ignore cond_false.
-
-regards,
-dan carpenter
