@@ -2,152 +2,78 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BBAC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83393C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6904620663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6005020842
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 08:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbfHMIdo (ORCPT
+        id S1728231AbfHMIdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 04:33:44 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36213 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727249AbfHMIdn (ORCPT
+        Tue, 13 Aug 2019 04:33:53 -0400
+Received: from unicom145.biz-email.net ([210.51.26.145]:3859 "EHLO
+        unicom145.biz-email.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727429AbfHMIdw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 04:33:43 -0400
-Received: by mail-wm1-f68.google.com with SMTP id g67so695148wme.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 01:33:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=i0/UjSTsRJKJbyjXWi8yfVIZ9WUaTfbBMXtRMChek+4=;
-        b=iiQ/LyADN+uqaN9ltr+WsvSWqyVKCbGRMaGoVUEHVW0tjOtuY6/aaOHjv9QrLlapTt
-         OxARh5Gs0N8Erndi05SKdezSFbhhYT7mOKXigl2V/cheD7wUe3uH4JZSSPNxcjAKI6W2
-         /tajvVgCuItmWQL1OYcIGrkd1RIS6EjSFOSi3z69VEwXDscktbNOFFgEl5TaXc6m76O7
-         6EQgeWDx6lGGyF+WjJuVdftBSLWWK7F3C4oBCI7MbMgTR1Ifp/+PCGqoYpOh6hmyyR2K
-         b0XU0JWaeo5WQtbvkVWpGhKnyrpsZUiVC04sdNH1b5faITOyNuaV01rVBp5SL768Huo4
-         P/JA==
-X-Gm-Message-State: APjAAAVtvuMRmJNG40m9eed0Y99W6XfPMt8u7+RFvemwU3mQvf3peSUh
-        is4OrLYpgRPNYwV1xQ9bfBKpJg==
-X-Google-Smtp-Source: APXvYqyUfqZfLtR2Esa+Td8DFXYYAp7MU1a2o74SoqdyLzHA14yv0VpukFvmQdgqpzYxsXYqDLPgnA==
-X-Received: by 2002:a05:600c:296:: with SMTP id 22mr1658378wmk.148.1565685221880;
-        Tue, 13 Aug 2019 01:33:41 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id 4sm1438988wmd.26.2019.08.13.01.33.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 01:33:41 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        Tianyu Lan <lantianyu1986@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "linux-arch\@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel\@vger kernel org" <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "ashal\@kernel.org" <ashal@kernel.org>
-Subject: RE: [PATCH 0/2] clocksource/Hyper-V: Add Hyper-V specific sched clock function
-In-Reply-To: <DM5PR21MB0137E03AAD8C2EA61EC81ED7D7D30@DM5PR21MB0137.namprd21.prod.outlook.com>
-References: <20190729075243.22745-1-Tianyu.Lan@microsoft.com> <87zhkxksxd.fsf@vitty.brq.redhat.com> <20190729110927.GC31398@hirez.programming.kicks-ass.net> <87wog1kpib.fsf@vitty.brq.redhat.com> <CAOLK0py6ngy9kAnZcRMBK8U45s2L5Wo4X0NP_qPM0zv7WjeVQQ@mail.gmail.com> <DM5PR21MB0137E03AAD8C2EA61EC81ED7D7D30@DM5PR21MB0137.namprd21.prod.outlook.com>
-Date:   Tue, 13 Aug 2019 10:33:37 +0200
-Message-ID: <87sgq5a2hq.fsf@vitty.brq.redhat.com>
+        Tue, 13 Aug 2019 04:33:52 -0400
+Received: from ([60.208.111.195])
+        by unicom145.biz-email.net (Antispam) with ASMTP (SSL) id EQU82748;
+        Tue, 13 Aug 2019 16:33:48 +0800
+Received: from localhost (10.100.1.52) by Jtjnmail201618.home.langchao.com
+ (10.100.2.18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 13 Aug
+ 2019 16:33:47 +0800
+From:   John Wang <wangzqbj@inspur.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <trivial@kernel.org>,
+        <linux@roeck-us.net>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <openbmc@lists.ozlabs.org>,
+        <duanzhijia01@inspur.com>, <mine260309@gmail.com>, <joel@jms.id.au>
+Subject: [PATCH v4 1/2] dt-bindings: Add ipsps1 as a trivial device
+Date:   Tue, 13 Aug 2019 16:33:46 +0800
+Message-ID: <20190813083346.8558-1-wangzqbj@inspur.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.100.1.52]
+X-ClientProxiedBy: jtjnmail201601.home.langchao.com (10.100.2.1) To
+ Jtjnmail201618.home.langchao.com (10.100.2.18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Kelley <mikelley@microsoft.com> writes:
+The ipsps1 is an Inspur Power System power supply unit
 
-> From: Tianyu Lan <lantianyu1986@gmail.com> Sent: Tuesday, July 30, 2019 6:41 AM
->> 
->> On Mon, Jul 29, 2019 at 8:13 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->> >
->> > Peter Zijlstra <peterz@infradead.org> writes:
->> >
->> > > On Mon, Jul 29, 2019 at 12:59:26PM +0200, Vitaly Kuznetsov wrote:
->> > >> lantianyu1986@gmail.com writes:
->> > >>
->> > >> > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
->> > >> >
->> > >> > Hyper-V guests use the default native_sched_clock() in pv_ops.time.sched_clock
->> > >> > on x86.  But native_sched_clock() directly uses the raw TSC value, which
->> > >> > can be discontinuous in a Hyper-V VM.   Add the generic hv_setup_sched_clock()
->> > >> > to set the sched clock function appropriately.  On x86, this sets
->> > >> > pv_ops.time.sched_clock to read the Hyper-V reference TSC value that is
->> > >> > scaled and adjusted to be continuous.
->> > >>
->> > >> Hypervisor can, in theory, disable TSC page and then we're forced to use
->> > >> MSR-based clocksource but using it as sched_clock() can be very slow,
->> > >> I'm afraid.
->> > >>
->> > >> On the other hand, what we have now is probably worse: TSC can,
->> > >> actually, jump backwards (e.g. on migration) and we're breaking the
->> > >> requirements for sched_clock().
->> > >
->> > > That (obviously) also breaks the requirements for using TSC as
->> > > clocksource.
->> > >
->> > > IOW, it breaks the entire purpose of having TSC in the first place.
->> >
->> > Currently, we mark raw TSC as unstable when running on Hyper-V (see
->> > 88c9281a9fba6), 'TSC page' (which is TSC * scale + offset) is being used
->> > instead. The problem is that 'TSC page' can be disabled by the
->> > hypervisor and in that case the only remaining clocksource is MSR-based
->> > (slow).
->> >
->> 
->> Yes, that will be slow if Hyper-V doesn't expose hv tsc page and
->> kernel uses MSR based
->> clocksource. Each MSR read will trigger one VM-EXIT. This also happens on other
->> hypervisors (e,g, KVM doesn't expose KVM clock). Hypervisor should
->> take this into
->> account and determine which clocksource should be exposed or not.
->> 
->
-> We've confirmed with the Hyper-V team that the TSC page is always available
-> on Hyper-V 2016 and later, and on Hyper-V 2012 R2 when the physical
-> hardware presents an InvariantTSC.
+Signed-off-by: John Wang <wangzqbj@inspur.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+v4:
+    - Rebased on 5.3-rc4 instead of 5.2, No changes
+v3:
+    - Fix adding entry to the inappropriate line
+v2:
+    - No changes.
+---
+ Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Currently we check that TSC page is valid on every read and it seems
-this is redundant, right? It is either available on boot or not. I can
-only imagine migrating a VM to a non-InvariantTSC host when Hyper-V will
-likely disable the page (and we can get reenlightenment notification
-then).
-
->  But the Linux Kconfig's are set up so
-> the TSC page is not used for 32-bit guests -- all clock reads are synthetic MSR
-> reads.  For 32-bit, this set of changes will add more overhead because the
-> sched clock reads will now be MSR reads.
->
-> I would be inclined to fix the problem, even with the perf hit on 32-bit Linux.
-> I don’t have any data on 32-bit Linux being used in a Hyper-V guest, but it's not
-> supported in Azure so usage is pretty small.  The alternative would be to continue
-> to use the raw TSC value on 32-bit, even with the risk of a discontinuity in case of
-> live migration or similar scenarios.
-
-The issue needs fixing, I agree, however using MSR based clocksource as
-sched clock may give us too big of a performance hit (not sure who cares
-about 32 bit guest performance nowadays but still). What stops us from
-enabling TSC page for 32 bit guests if it is available?
-
+diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+index 2e742d399e87..870ac52d2225 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.yaml
++++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+@@ -104,6 +104,8 @@ properties:
+           - infineon,slb9645tt
+             # Infineon TLV493D-A1B6 I2C 3D Magnetic Sensor
+           - infineon,tlv493d-a1b6
++            # Inspur Power System power supply unit version 1
++          - inspur,ipsps1
+             # Intersil ISL29028 Ambient Light and Proximity Sensor
+           - isil,isl29028
+             # Intersil ISL29030 Ambient Light and Proximity Sensor
 -- 
-Vitaly
+2.17.1
+
