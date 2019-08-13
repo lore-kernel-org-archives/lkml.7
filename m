@@ -2,108 +2,99 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B24BC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D83B2C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA1B20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B27B920844
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:50:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbfHMQtg (ORCPT
+        id S1727995AbfHMQt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 12:49:36 -0400
-Received: from mga18.intel.com ([134.134.136.126]:12190 "EHLO mga18.intel.com"
+        Tue, 13 Aug 2019 12:49:59 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:51090 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726769AbfHMQtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 12:49:35 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 09:49:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
-   d="scan'208";a="194231033"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 13 Aug 2019 09:49:31 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 13 Aug 2019 19:49:30 +0300
-Date:   Tue, 13 Aug 2019 19:49:30 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Mario.Limonciello@dell.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Raanan Avargil <raanan.avargil@intel.com>,
-        David Laight <David.Laight@aculab.com>,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2 7/8] thunderbolt: Add support for Intel Ice Lake
-Message-ID: <20190813164930.GA18281@lahna.fi.intel.com>
-References: <20190812123847.50802-1-mika.westerberg@linux.intel.com>
- <20190812123847.50802-8-mika.westerberg@linux.intel.com>
- <20190813161038.tip2u2z22xqnmfjl@wunner.de>
+        id S1726769AbfHMQt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 12:49:59 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hxZzc-0000UT-Fb; Tue, 13 Aug 2019 10:49:53 -0600
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Greentime Hu <green.hu@gmail.com>, Rob Herring <robh@kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Andrew Waterman <andrew@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Bates <sbates@raithlin.com>,
+        Olof Johansson <olof@lixom.net>, greentime.hu@sifive.com,
+        linux-riscv@lists.infradead.org,
+        Michael Clark <michaeljclark@mac.com>,
+        Christoph Hellwig <hch@lst.de>, linux-mm@vger.kernel.org
+References: <20190109203911.7887-1-logang@deltatee.com>
+ <20190109203911.7887-3-logang@deltatee.com>
+ <CAEbi=3d0RNVKbDUwRL-o70O12XBV7q6n_UT-pLqFoh9omYJZKQ@mail.gmail.com>
+ <c4298fdd-6fd6-fa7f-73f7-5ff016788e49@deltatee.com>
+ <CAEbi=3cn4+7zk2DU1iRa45CDwTsJYfkAV8jXHf-S7Jz63eYy-A@mail.gmail.com>
+ <CAEbi=3eZcgWevpX9VO9ohgxVDFVprk_t52Xbs3-TdtZ+js3NVA@mail.gmail.com>
+ <0926a261-520e-4c40-f926-ddd40bb8ce44@deltatee.com>
+ <CAEbi=3ebNM-t_vA4OA7KCvQUF08o6VmL1j=kMojVnYsYsN_fBw@mail.gmail.com>
+ <e2603558-7b2c-2e5f-e28c-f01782dc4e66@deltatee.com>
+ <CAEbi=3d7_xefYaVXEnMJW49Bzdbbmc2+UOwXWrCiBo7YkTAihg@mail.gmail.com>
+ <96156909-1453-d487-ff66-a041d67c74d6@deltatee.com>
+ <CAEbi=3dC86dhGdwdarS_x+6-5=WPydUBKjo613qRZxKLDAqU_g@mail.gmail.com>
+ <5506c875-9387-acc9-a7fe-5b7c10036c40@deltatee.com>
+ <alpine.DEB.2.21.9999.1908130921170.30024@viisi.sifive.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <e1f78a33-18bb-bd6e-eede-e5e86758a4d0@deltatee.com>
+Date:   Tue, 13 Aug 2019 10:49:51 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813161038.tip2u2z22xqnmfjl@wunner.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <alpine.DEB.2.21.9999.1908130921170.30024@viisi.sifive.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: linux-mm@vger.kernel.org, hch@lst.de, michaeljclark@mac.com, linux-riscv@lists.infradead.org, greentime.hu@sifive.com, olof@lixom.net, sbates@raithlin.com, linux-kernel@vger.kernel.org, palmer@sifive.com, andrew@sifive.com, aou@eecs.berkeley.edu, robh@kernel.org, green.hu@gmail.com, paul.walmsley@sifive.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v4 2/2] RISC-V: Implement sparsemem
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 06:10:38PM +0200, Lukas Wunner wrote:
-> On Mon, Aug 12, 2019 at 03:38:46PM +0300, Mika Westerberg wrote:
-> > +static void icm_veto_begin(struct tb *tb)
-> > +{
-> > +	struct icm *icm = tb_priv(tb);
-> > +
-> > +	if (!icm->veto) {
-> > +		icm->veto = true;
-> > +		/* Keep the domain powered while veto is in effect */
-> > +		pm_runtime_get(&tb->dev);
-> > +	}
-> > +}
+On 2019-08-13 10:39 a.m., Paul Walmsley wrote:
+> On Tue, 13 Aug 2019, Logan Gunthorpe wrote:
 > 
-> Hm, don't you need memory barriers when accessing icm->veto?
-
-AFAICT it does not need them, it is protected under mutex where there
-can be concurrency.
-
-> If so, I'd suggest:
+>> On 2019-08-13 12:04 a.m., Greentime Hu wrote:
+>>
+>>> Every architecture with mmu defines their own pfn_valid().
+>>
+>> Not true. Arm64, for example just uses the generic implementation in
+>> mmzone.h. 
 > 
-> 	/* Keep the domain powered while veto is in effect */
-> 	if (cmpxchg(&icm->veto, false, true))
-> 		pm_runtime_get(&tb->dev);
+> arm64 seems to define their own:
 > 
-> You'll have to declare icm->veto unsigned int instead of bool
-> because thunderbolt.ko is compiled if CONFIG_COMPILE_TEST is
-> enabled and there are arches which do not support cmpxchg for
-> a size of 1 byte.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/Kconfig#n899
+
+Oh, yup. My mistake.
+
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/mm/init.c#n235
 > 
-> The other bools in struct icm should likewise be unsigned int
-> per Linus' dictum:
-> https://lkml.org/lkml/2017/11/21/384
+> While there are many architectures which have their own pfn_valid(); 
+> oddly, almost none of them set HAVE_ARCH_PFN_VALID ?
 
-Yeah, it probably wastes some space but I like them because IMHO they
-are more readable than bitfields. We have a bunch of other bools in the
-driver structures so if we are going to convert struct icm we should do
-the same for others to keep things consistent. Probably should be a
-separate cleanup patch.
+Yes, much of this is super confusing. Seems HAVE_ARCH_PFN_VALID only
+matters if SPARSEMEM is set. So risc-v probably doesn't need to set it
+and we just need a #ifdef !CONFIG_FLATMEM around the pfn_valid
+definition like other arches.
 
-> > --- a/drivers/thunderbolt/nhi.c
-> > +++ b/drivers/thunderbolt/nhi.c
-> > +/* Ice Lake specific NHI operations */
-> > +
-> 
-> Again, can't this be moved to a separate file for maintainability?
+Logan
 
-Sure.
