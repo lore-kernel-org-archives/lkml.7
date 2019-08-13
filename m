@@ -2,88 +2,106 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCFBC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0536EC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 321A520840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565686951;
-	bh=5BiaJ/yApWvwWT9xYpwix6hXyHdsGQBWDkvVoNxr9P4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IN10fmTqp2lPwg51G/6sA2QwBKrr81M6EbY+r1u1MnovA8k2aKbIqwbIgvaLZTZxj
-	 XF3XrxKCkkyAuxI/8GmbWtw6Tl95ShiRvukeh32SImCPG4yEv1VtsQuCGYjE4w1r3L
-	 CT2Je1c9+f6g0XtLEnsvcWfh/8yWPpw4SKLoRVaM=
+	by mail.kernel.org (Postfix) with ESMTP id CCFB220843
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:02:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hLZf25bq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbfHMJCa (ORCPT
+        id S1728416AbfHMJC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 05:02:30 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39027 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbfHMJC1 (ORCPT
+        Tue, 13 Aug 2019 05:02:28 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:42157 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbfHMJC0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:02:27 -0400
-Received: by mail-lj1-f193.google.com with SMTP id x4so8708674ljj.6;
-        Tue, 13 Aug 2019 02:02:25 -0700 (PDT)
+        Tue, 13 Aug 2019 05:02:26 -0400
+Received: by mail-lf1-f66.google.com with SMTP id s19so13555466lfb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 02:02:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zbadPFLbmftsI8N+IuNnBjaQB4827jD6fnEJgLKNTZs=;
+        b=hLZf25bqcvbX25xNuMZbR5PzvxV6GImnoNKHQjbf8sETv7Ar9mx/GVJVNlFBiUoI+x
+         OaBu+PCv1W1Alu6XSNHoHrNCp537Atpgj+R9HmRLZFXqzKsJ80D0kddeGkeb1Dqn7Kh4
+         2qCin8I2SdptK0jFV8ULLCBJ5lOvpY0rk8B58UyCaS71IqEbPmstIIGYsGLKFiUdRVeg
+         4x0pTMXVaKNeZJQeADuHIPNtlLphOYlT0XTQncnLpdJrQPPcNRRt+vf/l9AFxpkaF5yX
+         xnhwZBqi6uccNYt04vgFRAZzxWAC+/fwgCCIT+XdyRKjlzxTa9KCw0iUesn6i5pyFpVa
+         Nq0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wTepSsVHXSW1eYjUwZ1pH3F/70zTR4Vl8GGiERGTF58=;
-        b=BJ553ZpMJar1x18XVn344g4dDsvDk+TE6Ifi4t/meZqWMR/HLmX1E0cba7nAS2XQo5
-         HGg5Oqj9kO+xOhqPihS1cUGNZh/UllmgQrrIp8RsYGqm8GVTB9InuF5dHqAlH0ulKmHV
-         q9XSam4sn8Srk9EjZYEDYwPIxVrHmxn1eRsuRwEIF8BjlFofc/c0AL8MsSXpny/odCDO
-         TEv/jWPje6JARQ/8GZ31efMy/HsBzsxXCwjh76Cpk+Vv+eh4ZXU4z+yzzUF7DK2sNItT
-         6K1vyEv6uG/hw0V3MG8nreu9oXHdtuJ0Eifvh/Nz9gLaBXBJBDgJDrb+G9MeNU3Hfdoj
-         1ajg==
-X-Gm-Message-State: APjAAAXMCSqBI2dtCyQscqw7Hq/FBpZDT5OeZeeD+77S3DAA0YG90B69
-        6z3wzatvKg2KfMUHt7bp7cs=
-X-Google-Smtp-Source: APXvYqyQDKfZciI/rmUWmSfMPVbOpC9DONeUAS0NpBb7V9bk9PSuAZCXunVTpeF0Jjfinv37w8/Kbw==
-X-Received: by 2002:a2e:7001:: with SMTP id l1mr8898124ljc.48.1565686944801;
+        bh=zbadPFLbmftsI8N+IuNnBjaQB4827jD6fnEJgLKNTZs=;
+        b=TrIdJSoXycizfAhkQjk9ZKBuEd1iQwn80xYX69e6RTlb8vZ4KSj2/clKHF8MiYxWii
+         US1JTbv48aW5SkzuDN00sFv0rUtnN1SgQONsq/z67xZ/2Hd0l6P+i89NCwk/ukPLONo2
+         8TeR7jWf/mATQBXuB9JTvV4ntzwZGX0XrobTLnpGH4rAMpNef5uJZOj+LY8I04laicM3
+         3Uwlt8kEoCuIYkMjMD5dofqh9aQwjocvoeSxsCu8okKKcRoBqR8eoRZNLgUAqNYwrIT6
+         rdXgLXVw984mnWAr+L1s+78rguV9eYq6zyQcbhL8HvBptURp7bdhg5Nx9cS08sykGyts
+         +RZw==
+X-Gm-Message-State: APjAAAXeFu5QcTbRkK2GR8yI/xr2aVx+Jhb6uSOebqKFvLymRzhHojro
+        g/vFjY98HBuu5dDe/mYjq/E=
+X-Google-Smtp-Source: APXvYqy8fBTXU8joNbGcSdpzVSvcOsS+2SxvVrN6+XsBFW7jGeYY3vigBmz3AZfzQPtQkVS+Jua7Zg==
+X-Received: by 2002:ac2:4948:: with SMTP id o8mr1126632lfi.13.1565686944834;
         Tue, 13 Aug 2019 02:02:24 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id a15sm5244210lfo.2.2019.08.13.02.02.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+Received: from pc636 ([37.212.214.187])
+        by smtp.gmail.com with ESMTPSA id o3sm19538418lfb.40.2019.08.13.02.02.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
         Tue, 13 Aug 2019 02:02:24 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92)
-        (envelope-from <johan@kernel.org>)
-        id 1hxShA-0002zA-7R; Tue, 13 Aug 2019 11:02:20 +0200
-Date:   Tue, 13 Aug 2019 11:02:20 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Matthew Michilot <mmichilot@gateworks.com>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Matthew Michilot <matthew.michilot@gmail.com>
-Subject: Re: [PATCH] USB: serial: ftdi_sio: add support for FT232H CBUS gpios
-Message-ID: <20190813090220.GC15556@localhost>
-References: <20190808222348.4428-1-matthew.michilot@gmail.com>
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Tue, 13 Aug 2019 11:02:14 +0200
+To:     Michel Lespinasse <walken@google.com>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Roman Gushchin <guro@fb.com>, Hillf Danton <hdanton@sina.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 2/2] mm/vmalloc: use generated callback to populate
+ subtree_max_size
+Message-ID: <20190813090214.xy6tgvar6kiartkb@pc636>
+References: <20190811184613.20463-1-urezki@gmail.com>
+ <20190811184613.20463-3-urezki@gmail.com>
+ <CANN689Hh-Pr-3r9HD7w=FcNGfj_E7-9HVsHu3J9gZts_DYug8A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190808222348.4428-1-matthew.michilot@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CANN689Hh-Pr-3r9HD7w=FcNGfj_E7-9HVsHu3J9gZts_DYug8A@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 10:23:48PM +0000, Matthew Michilot wrote:
-> Enable support for cbus gpios on FT232H. The cbus configuration is
-> stored in one word in the EEPROM at byte-offset 0x1a with the mux
-> config for ACBUS5, ACBUS6, ACBUS8 and ACBUS9 (only pins that can be
-> configured as I/O mode).
+On Sun, Aug 11, 2019 at 05:39:23PM -0700, Michel Lespinasse wrote:
+> On Sun, Aug 11, 2019 at 11:46 AM Uladzislau Rezki (Sony)
+> <urezki@gmail.com> wrote:
+> > RB_DECLARE_CALLBACKS_MAX defines its own callback to update the
+> > augmented subtree information after a node is modified. It makes
+> > sense to use it instead of our own propagate implementation.
+> >
+> > Apart of that, in case of using generated callback we can eliminate
+> > compute_subtree_max_size() function and get rid of duplication.
+> >
+> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 > 
-> Tested using FT232H by configuring one ACBUS pin at a time.
+> Reviewed-by: Michel Lespinasse <walken@google.com>
 > 
-> Review-by: Tim Harvey <tharvey@gateworks.com>
-> Signed-off-by: Matthew Michilot <matthew.michilot@gmail.com>
+> Love it. Thanks a lot for the cleanup!
+Thank you for review!
 
-Also make sure your SoB matches the From line.
-
-Johan
+--
+Vlad Rezki
