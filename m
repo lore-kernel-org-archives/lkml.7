@@ -2,239 +2,108 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E13DDC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC001C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA2DE2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9210206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 23:07:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jTb0CaVw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sdgb6fcL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfHMXEx (ORCPT
+        id S1727487AbfHMXHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 19:04:53 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34312 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726155AbfHMXEw (ORCPT
+        Tue, 13 Aug 2019 19:07:09 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:43062 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727296AbfHMXHJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 19:04:52 -0400
-Received: by mail-pl1-f196.google.com with SMTP id i2so49924881plt.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 16:04:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=b+JmorHFxBDjgjp81mdE+eQ+tC1x8WkQJkcE1tgqkc4=;
-        b=jTb0CaVwThVYx3vOwD1dWobGZmwwuJFAgFmShIxG1h6tk9h8u+FodDpc7Q6/DMNNBc
-         ehUsXMoEmvKIeVHXp+U1thNd/6WXmq2LVXRdui0s7VQWWVv9LLmuV2ZTxBan5mDbUjOw
-         F8qCtEw03kbY/4uMFXSgmw0+++sggXhYHCvz0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=b+JmorHFxBDjgjp81mdE+eQ+tC1x8WkQJkcE1tgqkc4=;
-        b=sGACVJKSeffJqfzFWWXFAnZG1huF8h/e50X7MJSW2npgYpB6yni2NzsyoHdUgOeJVD
-         1mk2HVoAAetu/QQmof8+05Qs7T1+Q9IxPy5ftVTJMOrpB3m0ePnVvk+oekrURSaSkhy0
-         eHN+6EjoOPuchEo5KRKPOEhMvi7nvAceGaeZHVpLm7NDP28AcsQdN7Isl24ILxGs7TbG
-         Ehg2xOnS13NKWTKaPJfOhxow6GRnawQvgVp4gDxT4sfgZsubbSqCJRSRZCt173Q2xiMj
-         t/Iq+YEXqT/vopHsgilKl1y+A/JUYcbteFT5uHRhQtaLwrzMKCWJaGPo+WZxkdTO4ptW
-         fwfA==
-X-Gm-Message-State: APjAAAVf2FVKwe+1Z3sEseDE0rmiulY7GBeGlmL67sJG8/sUcFC8y36o
-        rtjuQOt6WQ10fPlLh94kdqEqJg==
-X-Google-Smtp-Source: APXvYqykdJqTdHuTeV+7Np9dvpfjLzBbQr3StktyfP/KteJaQUL8ByJ0OL/nBrBxD1YQlNAdMEvNAw==
-X-Received: by 2002:a17:902:f30e:: with SMTP id gb14mr6861249plb.32.1565737492192;
-        Tue, 13 Aug 2019 16:04:52 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s11sm116207822pgv.13.2019.08.13.16.04.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 13 Aug 2019 16:04:51 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 16:04:50 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Fangrui Song <maskray@google.com>,
-        Peter Smith <peter.smith@linaro.org>
-Subject: [PATCH] arm64/efi: Move variable assignments after SECTIONS
-Message-ID: <201908131602.6E858DEC@keescook>
+        Tue, 13 Aug 2019 19:07:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=XR/aTfxjW+u4/IwnrY5MnVS9VjSpHvSRvQz/tDpgxco=; b=sdgb6fcL0M6F1fiyrpgLRXefvJ
+        2JfPHBWZW8mQVHXce0aSdczbiZ8MaglNQ5bZOZO4se/4fCcy2sCVJ8R+cnAOjPd2o00G/gnCdxEvw
+        I4TqaEMfdneeWH6Uyx7QmXGFOa841NYs5YukBDoALKh4cS9CdqO16F2pvLGJUI0yd2zWm+Q82TVVf
+        Fvrn/+8tlnHMJ/oRbblf3JGW3KaH2q3FWEwS0H7XQemENHS8LpNc62rgzyJQbgRQvOQNsQ4ccta7O
+        GYnJaN00QGOU2P8xvXdodvVFK3WwOFFWFY+RUSWKhv9OtVWqdOhYOyMO3UqKKnyHDBnqNemAv+OK/
+        hU65PrTA==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hxfsi-0007CK-6Q; Tue, 13 Aug 2019 23:07:08 +0000
+Subject: Re: Build regressions/improvements in v5.3-rc4
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190812102049.27836-1-geert@linux-m68k.org>
+ <a74dd048-8501-a973-5b03-eefbc83d7f79@infradead.org>
+ <CAMuHMdVAKwTWeeT4H6NrzvRc2Fgav0owAqGjRtZawOLOf=HVAA@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <cce06e87-ff83-2e90-7748-28f05ddc80df@infradead.org>
+Date:   Tue, 13 Aug 2019 16:07:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <CAMuHMdVAKwTWeeT4H6NrzvRc2Fgav0owAqGjRtZawOLOf=HVAA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It seems that LLVM's linker does not correctly handle variable assignments
-involving section positions that are updated during the SECTIONS
-parsing. Commit aa69fb62bea1 ("arm64/efi: Mark __efistub_stext_offset as
-an absolute symbol explicitly") ran into this too, but found a different
-workaround.
+On 8/12/19 2:09 PM, Geert Uytterhoeven wrote:
+> Hi Randy,
+> 
+> On Mon, Aug 12, 2019 at 10:34 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>> On 8/12/19 3:20 AM, Geert Uytterhoeven wrote:
+>>> Below is the list of build error/warning regressions/improvements in
+>>> v5.3-rc4[1] compared to v5.2[2].
+>>>
+>>> Summarized:
+>>>   - build errors: +5/-1
+>>>   - build warnings: +137/-136
+>>>
+>>> JFYI, when comparing v5.3-rc4[1] to v5.3-rc3[3], the summaries are:
+>>>   - build errors: +0/-4
+>>>   - build warnings: +105/-69
+>>>
+>>> Happy fixing! ;-)
+>>>
+>>> Thanks to the linux-next team for providing the build service.
+>>>
+>>> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/d45331b00ddb179e291766617259261c112db872/ (all 242 configs)
+>>> [2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/0ecfebd2b52404ae0c54a878c872bb93363ada36/ (all 242 configs)
+>>> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/e21a712a9685488f5ce80495b37b9fdbe96c230d/ (all 242 configs)
+>>
+>>
+>>> *** WARNINGS ***
+>>>
+>>> 137 warning regressions:
+>>
+>>>   + warning: unmet direct dependencies detected for MTD_COMPLEX_MAPPINGS:  => N/A
+> 
+> WARNING: unmet direct dependencies detected for MTD_COMPLEX_MAPPINGS:
+> 8 warnings in 2 logs
+>         v5.3-rc4/um-x86_64/um-allyesconfig v5.3-rc4/um-x86_64/um-allmodconfig
 
-However, this was not enough, as other variables were also miscalculated
-which manifested as boot failures under UEFI where __efistub__end was
-not taking the correct _end value (they should be the same):
+Thanks.  I sent patches for 2 drivers that should depend on HAS_IOMEM.
 
-$ ld.lld -EL -maarch64elf --no-undefined -X -shared \
-	-Bsymbolic -z notext -z norelro --no-apply-dynamic-relocs \
-	-o vmlinux.lld -T poc.lds --whole-archive vmlinux.o && \
-  readelf -Ws vmlinux.lld | egrep '\b(__efistub_|)_end\b'
-368272: ffff000002218000     0 NOTYPE  LOCAL  HIDDEN    38 __efistub__end
-368322: ffff000012318000     0 NOTYPE  GLOBAL DEFAULT   38 _end
+>> It would be Really Good if there was some automated way to know which
+>> of the 242 configs this is from (instead of you having to grep and reply to
+>> email or someone/me having to download up to 242 log files).
+> 
+> I used to upload the summary containing that info to kernel.org. Then they
+> made kup mandatory, and during the last 7 years, I still haven't looked into
+> mastering kup. Ugh...
 
-$ aarch64-linux-gnu-ld.bfd -EL -maarch64elf --no-undefined -X -shared \
-	-Bsymbolic -z notext -z norelro --no-apply-dynamic-relocs \
-	-o vmlinux.bfd -T poc.lds --whole-archive vmlinux.o && \
-  readelf -Ws vmlinux.bfd | egrep '\b(__efistub_|)_end\b'
-338124: ffff000012318000     0 NOTYPE  LOCAL  DEFAULT  ABS __efistub__end
-383812: ffff000012318000     0 NOTYPE  GLOBAL DEFAULT 15325 _end
-
-To work around this, all of the __efistub_-prefixed variable assignments
-need to be moved after the linker script's SECTIONS entry. As it turns
-out, this also solves the problem fixed in commit aa69fb62bea1, so those
-changes are reverted here.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/634
-Link: https://bugs.llvm.org/show_bug.cgi?id=42990
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- arch/arm64/kernel/image-vars.h  | 51 +++++++++++++++++++++++++++++++++
- arch/arm64/kernel/image.h       | 42 ---------------------------
- arch/arm64/kernel/vmlinux.lds.S |  2 ++
- 3 files changed, 53 insertions(+), 42 deletions(-)
- create mode 100644 arch/arm64/kernel/image-vars.h
-
-diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
-new file mode 100644
-index 000000000000..25a2a9b479c2
---- /dev/null
-+++ b/arch/arm64/kernel/image-vars.h
-@@ -0,0 +1,51 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Linker script variables to be set after section resolution, as
-+ * ld.lld does not like variables assigned before SECTIONS is processed.
-+ */
-+#ifndef __ARM64_KERNEL_IMAGE_VARS_H
-+#define __ARM64_KERNEL_IMAGE_VARS_H
-+
-+#ifndef LINKER_SCRIPT
-+#error This file should only be included in vmlinux.lds.S
-+#endif
-+
-+#ifdef CONFIG_EFI
-+
-+__efistub_stext_offset = stext - _text;
-+
-+/*
-+ * The EFI stub has its own symbol namespace prefixed by __efistub_, to
-+ * isolate it from the kernel proper. The following symbols are legally
-+ * accessed by the stub, so provide some aliases to make them accessible.
-+ * Only include data symbols here, or text symbols of functions that are
-+ * guaranteed to be safe when executed at another offset than they were
-+ * linked at. The routines below are all implemented in assembler in a
-+ * position independent manner
-+ */
-+__efistub_memcmp		= __pi_memcmp;
-+__efistub_memchr		= __pi_memchr;
-+__efistub_memcpy		= __pi_memcpy;
-+__efistub_memmove		= __pi_memmove;
-+__efistub_memset		= __pi_memset;
-+__efistub_strlen		= __pi_strlen;
-+__efistub_strnlen		= __pi_strnlen;
-+__efistub_strcmp		= __pi_strcmp;
-+__efistub_strncmp		= __pi_strncmp;
-+__efistub_strrchr		= __pi_strrchr;
-+__efistub___flush_dcache_area	= __pi___flush_dcache_area;
-+
-+#ifdef CONFIG_KASAN
-+__efistub___memcpy		= __pi_memcpy;
-+__efistub___memmove		= __pi_memmove;
-+__efistub___memset		= __pi_memset;
-+#endif
-+
-+__efistub__text			= _text;
-+__efistub__end			= _end;
-+__efistub__edata		= _edata;
-+__efistub_screen_info		= screen_info;
-+
-+#endif
-+
-+#endif /* __ARM64_KERNEL_IMAGE_VARS_H */
-diff --git a/arch/arm64/kernel/image.h b/arch/arm64/kernel/image.h
-index 2b85c0d6fa3d..c7d38c660372 100644
---- a/arch/arm64/kernel/image.h
-+++ b/arch/arm64/kernel/image.h
-@@ -65,46 +65,4 @@
- 	DEFINE_IMAGE_LE64(_kernel_offset_le, TEXT_OFFSET);	\
- 	DEFINE_IMAGE_LE64(_kernel_flags_le, __HEAD_FLAGS);
- 
--#ifdef CONFIG_EFI
--
--/*
-- * Use ABSOLUTE() to avoid ld.lld treating this as a relative symbol:
-- * https://github.com/ClangBuiltLinux/linux/issues/561
-- */
--__efistub_stext_offset = ABSOLUTE(stext - _text);
--
--/*
-- * The EFI stub has its own symbol namespace prefixed by __efistub_, to
-- * isolate it from the kernel proper. The following symbols are legally
-- * accessed by the stub, so provide some aliases to make them accessible.
-- * Only include data symbols here, or text symbols of functions that are
-- * guaranteed to be safe when executed at another offset than they were
-- * linked at. The routines below are all implemented in assembler in a
-- * position independent manner
-- */
--__efistub_memcmp		= __pi_memcmp;
--__efistub_memchr		= __pi_memchr;
--__efistub_memcpy		= __pi_memcpy;
--__efistub_memmove		= __pi_memmove;
--__efistub_memset		= __pi_memset;
--__efistub_strlen		= __pi_strlen;
--__efistub_strnlen		= __pi_strnlen;
--__efistub_strcmp		= __pi_strcmp;
--__efistub_strncmp		= __pi_strncmp;
--__efistub_strrchr		= __pi_strrchr;
--__efistub___flush_dcache_area	= __pi___flush_dcache_area;
--
--#ifdef CONFIG_KASAN
--__efistub___memcpy		= __pi_memcpy;
--__efistub___memmove		= __pi_memmove;
--__efistub___memset		= __pi_memset;
--#endif
--
--__efistub__text			= _text;
--__efistub__end			= _end;
--__efistub__edata		= _edata;
--__efistub_screen_info		= screen_info;
--
--#endif
--
- #endif /* __ARM64_KERNEL_IMAGE_H */
-diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
-index 7fa008374907..803b24d2464a 100644
---- a/arch/arm64/kernel/vmlinux.lds.S
-+++ b/arch/arm64/kernel/vmlinux.lds.S
-@@ -245,6 +245,8 @@ SECTIONS
- 	HEAD_SYMBOLS
- }
- 
-+#include "image-vars.h"
-+
- /*
-  * The HYP init code and ID map text can't be longer than a page each,
-  * and should not cross a page boundary.
--- 
-2.17.1
-
+Ack and ditto here.
 
 -- 
-Kees Cook
+~Randy
