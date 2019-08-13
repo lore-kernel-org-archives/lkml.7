@@ -2,113 +2,88 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EB4C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F83C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F58C20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:57:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565675830;
-	bh=FyGUGMmt6VbbQd/XPCpah8cHXNq/mUzxgtr490TM5WA=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=WTI8Q3TIRzrjq5QXTkl3yNMT8Ky3G18q5ct7TSa1moh88dKx6mWS6M8u8dL1uqpfW
-	 9V8SQSCHeasJ0FsWW1sz+aLbuUuyZQX/nV5JNCbhTUxKaA9DDr1hqUFhHpI9PukoMg
-	 ovXe6q/H06+8nhk96xqBp9St9aEts6+B9RIuUtSc=
+	by mail.kernel.org (Postfix) with ESMTP id 7204C206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 05:58:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfHMF5J (ORCPT
+        id S1726298AbfHMF65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 01:57:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42848 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfHMF5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 01:57:08 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B2BB206C2;
-        Tue, 13 Aug 2019 05:57:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565675827;
-        bh=FyGUGMmt6VbbQd/XPCpah8cHXNq/mUzxgtr490TM5WA=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=ozCoFjdxFrUh5LQxMnAtmWn3xu8MGm+3oEgO4YFweTz+BBIbWxX5rPJEIqeQ7XIte
-         ULgzVckj3NDd47TQ8NJczzulniOe62Jxa8qjpvHzK5dOOwZuG9dYrC1oX/YMzL6A1L
-         EcSDLC5VAWszW8A7ahShAkQ2OWzEn+8uo7cZUSzE=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 13 Aug 2019 01:58:57 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40703 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfHMF65 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 01:58:57 -0400
+Received: by mail-lf1-f68.google.com with SMTP id b17so75911801lff.7
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 22:58:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=8cKF5OPDPR6lsToUJ5ub0RqfyHDWKLwL98RWj0ivUfs=;
+        b=pDXCt2nusqmRbHzbG5y81OzJdjTR6nt9iiQ+DdOW1rGY6xwCrJPEQOlchliTb0+lqH
+         KPBLeUuxWprTXxizLy5bE4/TLKbm7SqXiT1WohVgOhEubVIyzgZ6q559ffRFejHIIg81
+         MREJhWGEVfm+odbXm5lptWiCNDj8AafRVY1j8rFe9yS+6tcjH+x2nYOzE1ajWXKVe4ZV
+         ToAmi2hlDwTEbfSE98WsAVD0hKt0h8aemZV93yhdjVlyZ9GU8leDAml0+bWr3Pg6yRqt
+         sxvPp01CccI01CyCiQVb55gpptA6jjVvjFBUazE/EaWEx2UVpNhZST7LWXG2XMPqGn6O
+         LIsg==
+X-Gm-Message-State: APjAAAXJ1iiTpxr+P6wbXvbcY5mjtPhQ6nRum9dHwD3PFguFhlQEJ/3u
+        5zriV+uFSXaffY7JJrVxiWajvTbq7oM=
+X-Google-Smtp-Source: APXvYqwBYYhnC0tCFyVxpL59g/olpbVelKEQ1JQiCNTLz8txt9J+e/oZOFt1AJG3pXoyLccnKFePpA==
+X-Received: by 2002:ac2:550c:: with SMTP id j12mr17112807lfk.171.1565675934858;
+        Mon, 12 Aug 2019 22:58:54 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id p9sm21642147lji.107.2019.08.12.22.58.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 12 Aug 2019 22:58:54 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Denis Efremov <efremov@linux.com>, joe@perches.com,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH] MAINTAINERS: altera-sysmgr: Fix typo in a filepath
+Date:   Tue, 13 Aug 2019 08:58:41 +0300
+Message-Id: <20190813055841.9816-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
+References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAFd5g46LHq1sQaio2Vj5jt54YN-Y2HuCT8FbALQhJoekkYJ-uQ@mail.gmail.com>
-References: <20190812182421.141150-1-brendanhiggins@google.com> <20190812182421.141150-11-brendanhiggins@google.com> <20190813042455.4A04320644@mail.kernel.org> <CAFd5g46LHq1sQaio2Vj5jt54YN-Y2HuCT8FbALQhJoekkYJ-uQ@mail.gmail.com>
-Subject: Re: [PATCH v12 10/18] kunit: test: add tests for kunit test abort
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-To:     Brendan Higgins <brendanhiggins@google.com>
-User-Agent: alot/0.8.1
-Date:   Mon, 12 Aug 2019 22:57:06 -0700
-Message-Id: <20190813055707.8B2BB206C2@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brendan Higgins (2019-08-12 22:06:04)
-> On Mon, Aug 12, 2019 at 9:24 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> >
-> > Quoting Brendan Higgins (2019-08-12 11:24:13)
-> > > +
-> > > +static int kunit_try_catch_test_init(struct kunit *test)
-> > > +{
-> > > +       struct kunit_try_catch_test_context *ctx;
-> > > +
-> > > +       ctx =3D kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
-> >
-> > Can this fail? Should return -ENOMEM in that case?
->=20
-> Yes, I should do that.
+Fix typo (s/sysgmr/sysmgr/) in the header filepath.
 
-Looks like it's asserted to not be an error. If it's pushed into the API
-then there's nothing to do here, and you can have my reviewed-by on this
-patch.
+Cc: Thor Thayer <thor.thayer@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Lee Jones <lee.jones@linaro.org>
+Fixes: f36e789a1f8d ("mfd: altera-sysmgr: Add SOCFPGA System Manager")
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e81e60bd7c26..bf5f0467988c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -723,7 +723,7 @@ ALTERA SYSTEM MANAGER DRIVER
+ M:	Thor Thayer <thor.thayer@linux.intel.com>
+ S:	Maintained
+ F:	drivers/mfd/altera-sysmgr.c
+-F:	include/linux/mfd/altera-sysgmr.h
++F:	include/linux/mfd/altera-sysmgr.h
+ 
+ ALTERA SYSTEM RESOURCE DRIVER FOR ARRIA10 DEVKIT
+ M:	Thor Thayer <thor.thayer@linux.intel.com>
+-- 
+2.21.0
 
