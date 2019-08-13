@@ -2,99 +2,150 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80555C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73336C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 593CF20840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565718025;
-	bh=Zk2IO5dXX5Mv50sC16q2ZMnbxFjn3peaoGLBUXfuGcc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GHCk7e55bq1BUMpUfdJLDgMpeNdKd4ZHTv5QcqM8472q0BjeR55sUrJRSCU2nD6kr
-	 T/J9PjMp8ZZQh//6iJJF0eI05h2gUs1Y7eUbKMpL+Mohn5RbtrLqvWQ4wBszcb5VWa
-	 xCxA9RFUM5oo+QAqkWnnC/qXTUo1f2uH9afQY6Us=
+	by mail.kernel.org (Postfix) with ESMTP id 56681205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 17:41:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbfHMRkY (ORCPT
+        id S1727772AbfHMRlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 13:40:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46906 "EHLO mail.kernel.org"
+        Tue, 13 Aug 2019 13:41:44 -0400
+Received: from mga09.intel.com ([134.134.136.24]:57181 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725923AbfHMRkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 13:40:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E16A2067D;
-        Tue, 13 Aug 2019 17:40:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565718023;
-        bh=Zk2IO5dXX5Mv50sC16q2ZMnbxFjn3peaoGLBUXfuGcc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F9cSmalpVAHPvhcPEXJlu3Z6T659ePZ2N1uRORNIoX7zwobKZ43Jd6zM3tPh5/N38
-         NvNlmPoPSR8cZbKD+VZ7IQEVBQ7+vIqPE/VLEnv6cDcKlEne6+/s/AUZ9Y69WWwyEt
-         4es9ZuvdPX1hgdXT1epKU561781/gs0Ym31TlmEE=
-Date:   Tue, 13 Aug 2019 19:40:20 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Christoph Hellwig <hch@infradead.org>,
-        Parav Pandit <parav@mellanox.com>
-Cc:     Kirti Wankhede <kwankhede@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>
-Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-Message-ID: <20190813174020.GC470@kroah.com>
-References: <20190802065905.45239-1-parav@mellanox.com>
- <20190808141255.45236-1-parav@mellanox.com>
- <20190808170247.1fc2c4c4@x1.home>
- <77ffb1f8-e050-fdf5-e306-0a81614f7a88@nvidia.com>
- <AM0PR05MB4866993536C0C8ACEA2F92DBD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
- <20190813163721.GA22640@infradead.org>
+        id S1726137AbfHMRln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 13:41:43 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 10:41:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,382,1559545200"; 
+   d="scan'208";a="376374540"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga006.fm.intel.com with ESMTP; 13 Aug 2019 10:41:42 -0700
+Date:   Tue, 13 Aug 2019 10:41:42 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 16/19] RDMA/uverbs: Add back pointer to system
+ file object
+Message-ID: <20190813174142.GB11882@iweiny-DESK2.sc.intel.com>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-17-ira.weiny@intel.com>
+ <20190812130039.GD24457@ziepe.ca>
+ <20190812172826.GA19746@iweiny-DESK2.sc.intel.com>
+ <20190812175615.GI24457@ziepe.ca>
+ <20190812211537.GE20634@iweiny-DESK2.sc.intel.com>
+ <20190813114842.GB29508@ziepe.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190813163721.GA22640@infradead.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190813114842.GB29508@ziepe.ca>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 09:37:21AM -0700, Christoph Hellwig wrote:
-> On Tue, Aug 13, 2019 at 02:40:02PM +0000, Parav Pandit wrote:
-> > We need to ask Greg or Linus on the kernel policy on whether an API should exist without in-kernel driver.
-
-I "love" it when people try to ask a question of me and they don't
-actually cc: me.  That means they really do not want the answer (or they
-already know it...)  Thanks Christoph for adding me here.
-
-The policy is that the api should not exist at all, everyone knows this,
-why is this even a question?
-
-> > We don't add such API in netdev, rdma and possibly other subsystem.
-> > Where can we find this mdev driver in-tree?
+On Tue, Aug 13, 2019 at 08:48:42AM -0300, Jason Gunthorpe wrote:
+> On Mon, Aug 12, 2019 at 02:15:37PM -0700, Ira Weiny wrote:
+> > On Mon, Aug 12, 2019 at 02:56:15PM -0300, Jason Gunthorpe wrote:
+> > > On Mon, Aug 12, 2019 at 10:28:27AM -0700, Ira Weiny wrote:
+> > > > On Mon, Aug 12, 2019 at 10:00:40AM -0300, Jason Gunthorpe wrote:
+> > > > > On Fri, Aug 09, 2019 at 03:58:30PM -0700, ira.weiny@intel.com wrote:
+> > > > > > From: Ira Weiny <ira.weiny@intel.com>
+> > > > > > 
+> > > > > > In order for MRs to be tracked against the open verbs context the ufile
+> > > > > > needs to have a pointer to hand to the GUP code.
+> > > > > > 
+> > > > > > No references need to be taken as this should be valid for the lifetime
+> > > > > > of the context.
+> > > > > > 
+> > > > > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > > > > >  drivers/infiniband/core/uverbs.h      | 1 +
+> > > > > >  drivers/infiniband/core/uverbs_main.c | 1 +
+> > > > > >  2 files changed, 2 insertions(+)
+> > > > > > 
+> > > > > > diff --git a/drivers/infiniband/core/uverbs.h b/drivers/infiniband/core/uverbs.h
+> > > > > > index 1e5aeb39f774..e802ba8c67d6 100644
+> > > > > > +++ b/drivers/infiniband/core/uverbs.h
+> > > > > > @@ -163,6 +163,7 @@ struct ib_uverbs_file {
+> > > > > >  	struct page *disassociate_page;
+> > > > > >  
+> > > > > >  	struct xarray		idr;
+> > > > > > +	struct file             *sys_file; /* backpointer to system file object */
+> > > > > >  };
+> > > > > 
+> > > > > The 'struct file' has a lifetime strictly shorter than the
+> > > > > ib_uverbs_file, which is kref'd on its own lifetime. Having a back
+> > > > > pointer like this is confouding as it will be invalid for some of the
+> > > > > lifetime of the struct.
+> > > > 
+> > > > Ah...  ok.  I really thought it was the other way around.
+> > > > 
+> > > > __fput() should not call ib_uverbs_close() until the last reference on struct
+> > > > file is released...  What holds references to struct ib_uverbs_file past that?
+> > > 
+> > > Child fds hold onto the internal ib_uverbs_file until they are closed
+> > 
+> > The FDs hold the struct file, don't they?
 > 
-> The clear policy is that we don't keep such symbols around.  Been
-> there done that only recently again.
+> Only dups, there are other 'child' FDs we can create
+> 
+> > > Now this has unlocked updates to that data.. you'd need some lock and
+> > > get not zero pattern
+> > 
+> > You can't call "get" here because I'm 99% sure we only get here when struct
+> > file has no references left...
+> 
+> Nope, like I said the other FDs hold the uverbs_file independent of
+> the struct file it is related too. 
 
-Agreed.  If anyone knows of anything else that isn't being used, we will
-be glad to free up the space by cleaning it up.
+<sigh>
 
-> The other interesting thing is the amount of code nvidia and partner 
-> developers have pushed into the kernel tree for exclusive use of their
-> driver it should be clearly established by now that it is a derived
-> work, but that is for a different discussion.
+We don't allow memory registrations to be created with those other FDs...
 
-That's a discussion the lawyers on their side keep wanting us to ignore,
-it's as if they think we are stupid and they are "pulling one over on
-us."  ugh...
+And I was pretty sure uverbs_destroy_ufile_hw() would take care of (or ensure
+that some other thread is) destroying all the MR's we have associated with this
+FD.
 
-thanks,
+I'll have to think on this more since uverbs_destroy_ufile_hw() does not
+block...  Which means there is a window here within the GUP code...  :-/
 
-greg "not a lawyer, but spends lots of time with them" k-h
+> 
+> This is why having a back pointer like this is so ugly, it creates a
+> reference counting cycle
+
+Yep...  I worked through this...  and it was giving me fits...
+
+Anyway, the struct file is the only object in the core which was reasonable to
+store this information in since that is what is passed around to other
+processes...
+
+Another idea I explored was to create a callback into the driver from the core
+which put the responsibility of printing the pin information on the driver.
+
+But that started to be (and is likely going to be) a pretty complicated "dance"
+between the core and the drivers so I went this way...
+
+I also thought about holding some other reference on struct file which would
+allow release to be called while keeping struct file around.  But that seemed
+crazy...
+
+Ira
+
