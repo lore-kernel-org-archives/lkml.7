@@ -2,269 +2,165 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8641C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74903C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4E142067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355CC206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 11:02:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="I1j/bK/1"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qmgH3iXo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbfHMLBO (ORCPT
+        id S1728535AbfHMLC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 07:01:14 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:51944 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbfHMLBN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 07:01:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1565694071; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wyTl/h1jR+R1IfXTdZ80fJwRqvaC6+t87MXI23waFY4=;
-        b=I1j/bK/1NZGDyxwQGSpwkhJXDaiis2eN3zMtmPrIHRGXO+gevu6RlBUoxjQ1rN3Bj7nT1R
-        WpCKA8WBtscPG964M3qrCCtj8fHgrbjGpxwyArHzg1m9zB1cZ0AwGbAUwNul9zgG2o16AX
-        is0esKM7MGk7dAJpTY5MJxEnhS5+ubI=
-Date:   Tue, 13 Aug 2019 13:01:06 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 4/7] pwm: jz4740: Improve algorithm of clock calculation
-To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>,
-        Stephen Boyd <sboyd@kernel.org>
-Message-Id: <1565694066.1856.1@crapouillou.net>
-In-Reply-To: <20190813052726.g37upws5rlvrszc4@pengutronix.de>
-References: <20190809123031.24219-1-paul@crapouillou.net>
-        <20190809123031.24219-5-paul@crapouillou.net>
-        <20190809170551.u4ybilf5ay2rsvnn@pengutronix.de>
-        <1565370885.2091.2@crapouillou.net>
-        <20190812061520.lwzk3us4ginwwxov@pengutronix.de>
-        <1565642590.2007.1@crapouillou.net>
-        <20190812214838.e5hyhnlcyykjfvsb@pengutronix.de>
-        <1565648183.2007.3@crapouillou.net>
-        <20190813052726.g37upws5rlvrszc4@pengutronix.de>
+        Tue, 13 Aug 2019 07:02:27 -0400
+Received: from mail-eopbgr80049.outbound.protection.outlook.com ([40.107.8.49]:1411
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727097AbfHMLC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 07:02:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cu4QekkGaYQ3nhviXGoRLCrLj9eMms8Ke7D5DThgMIR21RsRrK3sZ5WPGkDu9rj5UfY/vGuyoxIMBm30Zh0n1Ck+pLSFiG2Gv6/al8srunNw/qRhBhJKcPol4NwawotTPv+GbtEfi5DTr25CbOnQDgcJGZ0ahxnueUb1gmlC6a0Zuc8Zffg/gGCpuLapCzN9Omhu+4aKV1w/6QcDwNu6SnXTOS5jXeZAR2qM3AkQPqLffmjx7lYslQZmWlOAeyBtpY1EcJgLBX8NgLz6BYPaVib6yH7RepbALPWBoOOq2tr2GXrf26DrzSvJZONhP0Yf2jSnXTFSnWlu+eYfjD6APA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4nDGezeV1UjdK0Fo4A5Hn2h2YZL/DfS8au5Bnwgoe3Y=;
+ b=Yr+b2v6XkrvqCrJQJisN7FSGHxv9ZsoStOEZV+iZbm3EruCqtaKBYWm9SsvaZ9M0lkQtphce4wHpyNh0fm/go/bvHAh7J3Ym2bAFvOJm19Rikr/gQcHEYhMnkDPkIrDKZt+3lyyOeyeOBQjEzo33QmmkaVRIWMIuyEfbfPgfrknF2sYkbhm9taUdh4ht5XJzmKbXKylrTAmANi+S0qqYOM5l/if3hX9rbkdVGG9k1wGATE6lPTgHulRwl1H2iynI51SvQnLxFFzzxiWJc2nSrhAIdwVk4jThFtCrLpo2XpX1saVJ2GNq1U3HvSem9sh1wypgQE0K/CphabRfbkCgfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4nDGezeV1UjdK0Fo4A5Hn2h2YZL/DfS8au5Bnwgoe3Y=;
+ b=qmgH3iXoAM0AZNkEWvINcncBePHap4DHAdP4TGh1dsEW2RUvIocznVjlJz6kGQ1HMPotxHEX+FHwAfZeLnb1bmwUWW1kcLMeK4rleOe/zRusxPJ/UBYvICoSTDw7f4B8hTwS8rIpDC6PLsS8xuq1o088Hh9bUc8tJ6Z1y7A2vU0=
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
+ AM5PR04MB3268.eurprd04.prod.outlook.com (10.167.171.31) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.21; Tue, 13 Aug 2019 11:02:20 +0000
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::5012:d47a:1f5d:9b84]) by AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::5012:d47a:1f5d:9b84%5]) with mapi id 15.20.2157.022; Tue, 13 Aug 2019
+ 11:02:20 +0000
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "tpiepho@impinj.com" <tpiepho@impinj.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "yue.wang@amlogic.com" <yue.wang@amlogic.com>,
+        "hayashi.kunihiko@socionext.com" <hayashi.kunihiko@socionext.com>,
+        "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
+        "jonnyc@amazon.com" <jonnyc@amazon.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [EXT] Re: [PATCHv5 1/2] PCI: layerscape: Add the bar_fixed_64bit
+ property in EP driver.
+Thread-Topic: [EXT] Re: [PATCHv5 1/2] PCI: layerscape: Add the bar_fixed_64bit
+ property in EP driver.
+Thread-Index: AQHVUaHA8E+uV7sB3kSdNrIxtC9aDKb42aKAgAAIM1A=
+Date:   Tue, 13 Aug 2019 11:02:19 +0000
+Message-ID: <AM5PR04MB32995F572C3FB85B35E52563F5D20@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190813062840.2733-1-xiaowei.bao@nxp.com>
+ <20190813100409.GB10070@red-moon>
+In-Reply-To: <20190813100409.GB10070@red-moon>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaowei.bao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a63507ec-10dd-4428-ab9b-08d71fddb627
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM5PR04MB3268;
+x-ms-traffictypediagnostic: AM5PR04MB3268:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR04MB3268D5C3454AC1D01264F97CF5D20@AM5PR04MB3268.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2512;
+x-forefront-prvs: 01283822F8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(366004)(396003)(136003)(376002)(189003)(199004)(13464003)(71190400001)(33656002)(25786009)(99286004)(7416002)(54906003)(256004)(53936002)(478600001)(316002)(6246003)(81166006)(81156014)(8676002)(55016002)(4326008)(71200400001)(5660300002)(9686003)(305945005)(64756008)(74316002)(6506007)(2906002)(186003)(66446008)(7736002)(52536014)(66476007)(66556008)(6916009)(76176011)(229853002)(26005)(14454004)(53546011)(8936002)(86362001)(66946007)(476003)(102836004)(44832011)(6116002)(76116006)(486006)(66066001)(446003)(3846002)(7696005)(11346002)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3268;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: clh7wvxuDryNhG2xgurm4SYYjrHT3WKwwR56I20jsYNmMSYzTAVA3nIVYsVLXBC3LuOSzj0bwMS/BEAr/fXUKBxEF4Xdnc3x3bY+dt42X9+YotePdrPNnr13xQpQTETJD3DMsFYF85ba0QGyvsU8FtTzOKjVtjzLiXoSvZcawe0+6m2WUWITTdOfYK4zriE/ER+1tnP7sgzcrqHYHHDt/t6+ESEYeac94BKRZm2WunHoSBC/PS3rZW21rkz/RlB8XZ3gyrRMJ3rOmtTJzkAH3Uwi7QmxiV9/1MpgqO1nzWd5n/gSCKyJH1xA3chLfV1jOa7reoUPGLkVO0IMlpYsLjyzGAG+Gs+0uJIOWGMRsZYp4hSr7NYn7AngH7j5Vbd3bdre7wN9SQ5UvqU2vm7DoWRbdpzTuZndcyoYKzzpYNg=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a63507ec-10dd-4428-ab9b-08d71fddb627
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2019 11:02:19.8801
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: S4DwoGpS2CpG+fYsOTnrqCu0XVg3eeqc8RGqd46TfH+Iby7U9rtxBwWNV6aG9zQqOZzIikRhqhxGepodVHBsHQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3268
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le mar. 13 ao=FBt 2019 =E0 7:27, Uwe =3D?iso-8859-1?q?Kleine-K=3DF6nig?=3D=20
-<u.kleine-koenig@pengutronix.de> a =E9crit :
-> Hello Paul,
->=20
-> [adding Stephen Boyd to Cc]
->=20
-> On Tue, Aug 13, 2019 at 12:16:23AM +0200, Paul Cercueil wrote:
->>  Le lun. 12 ao=FBt 2019 =E0 23:48, Uwe Kleine-K=F6nig a =E9crit :
->>  > On Mon, Aug 12, 2019 at 10:43:10PM +0200, Paul Cercueil wrote:
->>  > > Le lun. 12 ao=FBt 2019 =E0 8:15, Uwe Kleine-K=F6nig a =E9crit :
->>  > > > On Fri, Aug 09, 2019 at 07:14:45PM +0200, Paul Cercueil wrote:
->>  > > > > Le ven. 9 ao=FBt 2019 =E0 19:05, Uwe Kleine-K=F6nig a =E9crit :
->>  > > > > > On Fri, Aug 09, 2019 at 02:30:28PM +0200, Paul Cercueil=20
->> wrote:
->>  > > > > > > [...]
->>  > > > > > >  +	/* Reset the clock to the maximum rate, and we'll=20
->> reduce it if needed */
->>  > > > > > >  +	ret =3D clk_set_max_rate(clk, parent_rate);
->>  > > > > >
->>  > > > > > What is the purpose of this call? IIUC this limits the=20
->> allowed range of
->>  > > > > > rates for clk. I assume the idea is to prevent other=20
->> consumers to change
->>  > > > > > the rate in a way that makes it unsuitable for this pwm.=20
->> But this only
->>  > > > > > makes sense if you had a notifier for clk changes,=20
->> doesn't it? I'm
->>  > > > > > confused.
->>  > > > >
->>  > > > > Nothing like that. The second call to clk_set_max_rate()=20
->> might have set
->>  > > > > a maximum clock rate that's lower than the parent's rate,=20
->> and we want to
->>  > > > > undo that.
->>  > > >
->>  > > > I still don't get the purpose of this call. Why do you limit=20
->> the clock
->>  > > > rate at all?
->>  > >
->>  > > As it says below, we "limit the clock to a maximum rate that=20
->> still gives
->>  > > us a period value which fits in 16 bits". So that the computed=20
->> hardware
->>  > > values won't overflow.
->>  >
->>  > But why not just using clk_set_rate? You want to have the clock=20
->> running
->>  > at a certain rate, not any rate below that certain rate, don't=20
->> you?
->>=20
->>  I'll let yourself answer yourself:
->>  https://patchwork.ozlabs.org/patch/1018969/
->=20
-> In that thread I claimed that you used clk_round_rate wrongly, not=20
-> that
-> you should use clk_set_max_rate(). (The claim was somewhat weakend by
-> Stephen, but still I think that clk_round_rate is the right approach.)
-
-Well, you said that I shouln't rely on the fact that clk_round_rate()=20
-will round down. That completely defeats the previous algorithm. So=20
-please tell me how to use it correctly, because I don't see it.
-
-I came up with a much smarter alternative, that doesn't rely on the=20
-rounding method of clk_round_rate, and which is better overall (no loop=20
-needed). It sounds to me like you're bashing the code without making=20
-the effort to understand what it does.
-
-Thierry called it a "neat trick"=20
-(https://patchwork.kernel.org/patch/10836879/) so it cannot be as bad=20
-as you say.
-
-
->=20
-> The upside of clk_round_rate is that it allows you to test for the
-> capabilities of the clock without actually changing it before you=20
-> found
-> a setting you consider to be good.
-
-I know what clk_round_rate() is for. But here we don't do=20
-trial-and-error to find the first highest clock rate that works, we=20
-compute the maximum clock we can use and limit the clock rate to that.
-
-
->=20
->>  It's enough to run it below a certain rate, yes. The actual rate=20
->> doesn't
->>  actually matter that much.
->=20
-> 1 Hz would be fine? I doubt it.
-
-We use the highest possible clock rate. We wouldn't use 1 Hz unless=20
-it's the highest clock rate available.
-
-
->=20
->>  > >  E.g. if at a rate of 12 MHz your computed hardware value for=20
->> the period
->>  > >  is 0xf000, then at a rate of 24 MHz it won't fit in 16 bits.=20
->> So the clock
->>  > >  rate must be reduced to the highest possible that will still=20
->> give you a
->>  > >  < 16-bit value.
->>  > >
->>  > >  We always want the highest possible clock rate that works, for=20
->> the sake of
->>  > >  precision.
->>  >
->>  > This is dubious; but ok to keep the driver simple. (Consider a=20
->> PWM that
->>  > can run at i MHz for i in [1, .. 30]. If a period of 120 ns and a=20
->> duty
->>  > cycle of 40 ns is requested you can get an exact match with 25=20
->> MHz, but
->>  > not with 30 MHz.)
->>=20
->>  The clock rate is actually (parent_rate >> (2 * x) )
->>  for x =3D 0, 1, 2, ...
->>=20
->>  So if your parent_rate is 30 MHz the next valid one is 7.5 MHz, and=20
->> the
->>  next one is 1.875 MHz. It'd be very unlikely that you get a better=20
->> match at
->>  a lower clock.
->=20
-> If the smaller freqs are all dividers of the fastest that's fine.=20
-> Please
-> note in a code comment that you're assuming this.
-
-No, I am not assuming this. The current driver just picks the highest=20
-clock rate that works. We're not changing the behaviour here.
-
-
->=20
->>  > >  > >  Basically, we start from the maximum clock rate we can=20
->> get for that PWM
->>  > >  > >  - which is the rate of the parent clk - and from that=20
->> compute the maximum
->>  > >  > >  clock rate that we can support that still gives us <=20
->> 16-bits hardware
->>  > >  > >  values for the period and duty.
->>  > >  > >
->>  > >  > >  We then pass that computed maximum clock rate to=20
->> clk_set_max_rate(), which
->>  > >  > >  may or may not update the current PWM clock's rate to=20
->> match the new limits.
->>  > >  > >  Finally we read back the PWM clock's rate and compute the=20
->> period and duty
->>  > >  > >  from that.
->>  > >  >
->>  > >  > If you change the clk rate, is this externally visible on=20
->> the PWM
->>  > >  > output? Does this affect other PWM instances?
->>  > >
->>  > >  The clock rate doesn't change the PWM output because the=20
->> hardware values for
->>  > >  the period and duty are adapted accordingly to reflect the=20
->> change.
->>  >
->>  > It doesn't change it in the end. But in the (short) time frame=20
->> between
->>  > the call to change the clock and the update of the PWM registers=20
->> there
->>  > is a glitch, right?
->>=20
->>  The PWM is disabled, so the line is in inactive state, and will be=20
->> in that state
->>  until the PWM is enabled again. No glitch to fear.
->=20
-> ok, please note in the commit log that the reordering doesn't affect=20
-> the
-> output because the PWM is off and are done to make it more obvious=20
-> what
-> happens.
->=20
->>  > You didn't answer to the question about other PWM instances. Does=20
->> that
->>  > mean others are not affected?
->>=20
->>  Sorry. Yes, they are not affected - all PWM channels are=20
->> independent.
->=20
-> ok.
->=20
->>  > PS: It would be great if you could fix your mailer to not damage=20
->> the
->>  > quoted mail. Also it doesn't seem to understand how my name is=20
->> encoded
->>  > in the From line. I fixed up the quotes in my reply.
->>=20
->>  I switched Geary to "rich text". Is that better?
->=20
-> No. It looks exactly like the copy you bounced to the list. See
-> https://patchwork.ozlabs.org/comment/2236355/ for how it looks.
->=20
-> Best regards
-> Uwe
->=20
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=F6nig       =20
->     |
-> Industrial Linux Solutions                 |=20
-> http://www.pengutronix.de/  |
-
-=
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTG9yZW56byBQaWVyYWxp
+c2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+IFNlbnQ6IDIwMTnE6jjUwjEzyNUgMTg6
+MDQNCj4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBDYzogYmhlbGdh
+YXNAZ29vZ2xlLmNvbTsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2Fp
+IEh1DQo+IDxtaW5na2FpLmh1QG54cC5jb20+OyBSb3kgWmFuZyA8cm95LnphbmdAbnhwLmNvbT47
+DQo+IGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU7IGtpc2hvbkB0aS5jb207IHRwaWVwaG9AaW1waW5q
+LmNvbTsgTGVvbmFyZA0KPiBDcmVzdGV6IDxsZW9uYXJkLmNyZXN0ZXpAbnhwLmNvbT47IGFuZHJl
+dy5zbWlybm92QGdtYWlsLmNvbTsNCj4geXVlLndhbmdAYW1sb2dpYy5jb207IGhheWFzaGkua3Vu
+aWhpa29Ac29jaW9uZXh0LmNvbTsNCj4gZHdtd0BhbWF6b24uY28udWs7IGpvbm55Y0BhbWF6b24u
+Y29tOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJu
+ZWwub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsNCj4gbGludXgtYXJtLWtlcm5l
+bEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0h2NSAxLzJd
+IFBDSTogbGF5ZXJzY2FwZTogQWRkIHRoZSBiYXJfZml4ZWRfNjRiaXQNCj4gcHJvcGVydHkgaW4g
+RVAgZHJpdmVyLg0KPiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBnaXQgbG9nIC0tb25l
+bGluZSAtLWZvbGxvdyBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS5j
+DQo+IA0KPiBEbyB5b3Ugc2VlIGFueSBjb21taXQgd2l0aCBhICRTVUJKRUNUIGVuZGluZyB3aXRo
+IGEgcGVyaW9kID8NCj4gDQo+IFRoZXJlIGlzIG5vdC4gU28gcmVtb3ZlIGl0IGZyb20geW91cnMg
+dG9vLg0KT0ssIHRoYW5rcyBhIGxvdCwgSSB3aWxsIHJlbW92ZSBpdCBpbiB0aGUgbmV4dCB2ZXJz
+aW9uIHBhdGNoLCBJIGhhdmUgdG8gZ2V0IHRoZSBhcHByb3ZlZA0KRm9ybSBJVCB0ZWFtIG9mIG91
+ciBjb21wYW55LiANCj4gDQo+IE9uIFR1ZSwgQXVnIDEzLCAyMDE5IGF0IDAyOjI4OjM5UE0gKzA4
+MDAsIFhpYW93ZWkgQmFvIHdyb3RlOg0KPiA+IFRoZSBQQ0llIGNvbnRyb2xsZXIgb2YgbGF5ZXJz
+Y2FwZSBqdXN0IGhhdmUgNCBCQVJzLCBCQVIwIGFuZCBCQVIxIGlzDQo+ID4gMzJiaXQsIEJBUjIg
+YW5kIEJBUjQgaXMgNjRiaXQsIHRoaXMgaXMgZGV0ZXJtaW5lZCBieSBoYXJkd2FyZSwgc28gc2V0
+DQo+ID4gdGhlIGJhcl9maXhlZF82NGJpdCB3aXRoIDB4MTQuDQo+ID4NCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiB2MjoN
+Cj4gPiAgLSBSZXBsYWNlIHZhbHVlIDB4MTQgd2l0aCBhIG1hY3JvLg0KPiA+IHYzOg0KPiA+ICAt
+IE5vIGNoYW5nZS4NCj4gPiB2NDoNCj4gPiAgLSBzZW5kIHRoZSBwYXRjaCBhZ2FpbiB3aXRoICct
+LXRvJy4NCj4gPiB2NToNCj4gPiAgLSBmaXggdGhlIGNvbW1pdCBtZXNzYWdlLg0KPiA+DQo+ID4g
+IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMgfCAxICsNCj4g
+PiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQo+IA0KPiBzY3JpcHRzL2dldF9tYWlu
+dGFpbmVyLnBsIC1mIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVw
+LmMNCj4gTm93LCB3aXRoIHRoZSBvdXRwdXQgeW91IGdldCBqdXN0aWZ5IGFsbCB0aGUgcGVvcGxl
+IHlvdSBzZW5kIHRoaXMgZW1haWwgdG8uDQo+IA0KPiBTbywgYWdhaW4sIHRyaW0gdGhlIENDIGxp
+c3QgYW5kIGl0IGlzIHRoZSBsYXN0IHRpbWUgSSB0ZWxsIHlvdS4NCkRvIHlvdSBtZWFuIHRoYXQg
+SSB1c2Ugc2NyaXB0cy9nZXRfbWFpbnRhaW5lci5wbCAtZiBkcml2ZXJzL3BjaS9jb250cm9sbGVy
+Lw0KZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMgdG8gZ2V0IHRoZSBtYWlsIGxpc3Qgd2hvIEkgbmVl
+ZCB0byBzZW5kPyBJIHVzZSB0aGUNCmNvbW1hbmQgb2YgJyBzY3JpcHRzL2dldF9tYWludGFpbmVy
+LnBsICoucGF0Y2gnIHRvIGdldCB0aGUgbWFpbCBsaXN0IGJlZm9yZS4NCklmIHllcywgSSB3aWxs
+IHVzZSB0aGUgY29tbWFuZCB0aGF0IHlvdSBwcm92aWRlZC4gVGhhbmtzIGEgbG90Lg0KPiANCj4g
+QmVmb3JlIHNlbmRpbmcgcGF0Y2hlcyBvbiBtYWlsaW5nIGxpc3RzIHVzZSBnaXQgLS1kcnktcnVu
+IHRvIGNoZWNrIHRoZSBlbWFpbHMNCj4geW91IGFyZSBzZW5kaW5nLg0KPiANCj4gVGhhbmtzLA0K
+PiBMb3JlbnpvDQo+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3
+Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9w
+Y2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gaW5kZXggYmU2MWQ5Ni4uY2E5YWE0NSAxMDA2NDQNCj4g
+PiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+
+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0K
+PiA+IEBAIC00NCw2ICs0NCw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGNpX2VwY19mZWF0dXJl
+cw0KPiBsc19wY2llX2VwY19mZWF0dXJlcyA9IHsNCj4gPiAgICAgICAubGlua3VwX25vdGlmaWVy
+ID0gZmFsc2UsDQo+ID4gICAgICAgLm1zaV9jYXBhYmxlID0gdHJ1ZSwNCj4gPiAgICAgICAubXNp
+eF9jYXBhYmxlID0gZmFsc2UsDQo+ID4gKyAgICAgLmJhcl9maXhlZF82NGJpdCA9ICgxIDw8IEJB
+Ul8yKSB8ICgxIDw8IEJBUl80KSwNCj4gPiAgfTsNCj4gPg0KPiA+ICBzdGF0aWMgY29uc3Qgc3Ry
+dWN0IHBjaV9lcGNfZmVhdHVyZXMqDQo+ID4gLS0NCj4gPiAyLjkuNQ0KPiA+DQo=
