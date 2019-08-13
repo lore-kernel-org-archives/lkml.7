@@ -2,96 +2,96 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BD2C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B35C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7E820840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0951E20840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 16:15:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfHMQKl (ORCPT
+        id S1727482AbfHMQPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 12:10:41 -0400
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:47169 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfHMQKl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 12:10:41 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id EDF5C102F35CC;
-        Tue, 13 Aug 2019 18:10:38 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id B05271359A; Tue, 13 Aug 2019 18:10:38 +0200 (CEST)
-Date:   Tue, 13 Aug 2019 18:10:38 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Mario.Limonciello@dell.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Raanan Avargil <raanan.avargil@intel.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2 7/8] thunderbolt: Add support for Intel Ice Lake
-Message-ID: <20190813161038.tip2u2z22xqnmfjl@wunner.de>
-References: <20190812123847.50802-1-mika.westerberg@linux.intel.com>
- <20190812123847.50802-8-mika.westerberg@linux.intel.com>
+        Tue, 13 Aug 2019 12:15:01 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:50680 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726808AbfHMQPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 12:15:01 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hxZRj-0008W3-Gj; Tue, 13 Aug 2019 10:14:52 -0600
+To:     Greentime Hu <green.hu@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>,
+        Andrew Waterman <andrew@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Bates <sbates@raithlin.com>, paul.walmsley@sifive.com,
+        Olof Johansson <olof@lixom.net>, greentime.hu@sifive.com,
+        linux-riscv@lists.infradead.org,
+        Michael Clark <michaeljclark@mac.com>,
+        Christoph Hellwig <hch@lst.de>
+References: <20190109203911.7887-1-logang@deltatee.com>
+ <20190109203911.7887-3-logang@deltatee.com>
+ <CAEbi=3d0RNVKbDUwRL-o70O12XBV7q6n_UT-pLqFoh9omYJZKQ@mail.gmail.com>
+ <c4298fdd-6fd6-fa7f-73f7-5ff016788e49@deltatee.com>
+ <CAEbi=3cn4+7zk2DU1iRa45CDwTsJYfkAV8jXHf-S7Jz63eYy-A@mail.gmail.com>
+ <CAEbi=3eZcgWevpX9VO9ohgxVDFVprk_t52Xbs3-TdtZ+js3NVA@mail.gmail.com>
+ <0926a261-520e-4c40-f926-ddd40bb8ce44@deltatee.com>
+ <CAEbi=3ebNM-t_vA4OA7KCvQUF08o6VmL1j=kMojVnYsYsN_fBw@mail.gmail.com>
+ <e2603558-7b2c-2e5f-e28c-f01782dc4e66@deltatee.com>
+ <CAEbi=3d7_xefYaVXEnMJW49Bzdbbmc2+UOwXWrCiBo7YkTAihg@mail.gmail.com>
+ <96156909-1453-d487-ff66-a041d67c74d6@deltatee.com>
+ <CAEbi=3dC86dhGdwdarS_x+6-5=WPydUBKjo613qRZxKLDAqU_g@mail.gmail.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <5506c875-9387-acc9-a7fe-5b7c10036c40@deltatee.com>
+Date:   Tue, 13 Aug 2019 10:14:49 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812123847.50802-8-mika.westerberg@linux.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CAEbi=3dC86dhGdwdarS_x+6-5=WPydUBKjo613qRZxKLDAqU_g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: hch@lst.de, michaeljclark@mac.com, linux-riscv@lists.infradead.org, greentime.hu@sifive.com, olof@lixom.net, paul.walmsley@sifive.com, sbates@raithlin.com, linux-kernel@vger.kernel.org, palmer@sifive.com, andrew@sifive.com, aou@eecs.berkeley.edu, robh@kernel.org, green.hu@gmail.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v4 2/2] RISC-V: Implement sparsemem
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 03:38:46PM +0300, Mika Westerberg wrote:
-> +static void icm_veto_begin(struct tb *tb)
-> +{
-> +	struct icm *icm = tb_priv(tb);
-> +
-> +	if (!icm->veto) {
-> +		icm->veto = true;
-> +		/* Keep the domain powered while veto is in effect */
-> +		pm_runtime_get(&tb->dev);
-> +	}
-> +}
-
-Hm, don't you need memory barriers when accessing icm->veto?
-
-If so, I'd suggest:
-
-	/* Keep the domain powered while veto is in effect */
-	if (cmpxchg(&icm->veto, false, true))
-		pm_runtime_get(&tb->dev);
-
-You'll have to declare icm->veto unsigned int instead of bool
-because thunderbolt.ko is compiled if CONFIG_COMPILE_TEST is
-enabled and there are arches which do not support cmpxchg for
-a size of 1 byte.
-
-The other bools in struct icm should likewise be unsigned int
-per Linus' dictum:
-https://lkml.org/lkml/2017/11/21/384
 
 
-> --- a/drivers/thunderbolt/nhi.c
-> +++ b/drivers/thunderbolt/nhi.c
-> +/* Ice Lake specific NHI operations */
-> +
+On 2019-08-13 12:04 a.m., Greentime Hu wrote:
+> I think  flat mem doesn't support memory-with-hole scenario.
+> In mm/Kconfig, it says
+> "
+>           For systems that have holes in their physical address
+>           spaces and for features like NUMA and memory hotplug,
+>           choose "Sparse Memory"
+> "
+> IMHO, the memory-with-hole scenario should only be tested for sparse
+> mem but flat mem.
 
-Again, can't this be moved to a separate file for maintainability?
+Fair enough.
 
-Thanks,
+> The generic pfn_valid() is just for non-mmu arches. 
 
-Lukas
+The generic pfn_valid() in asm-generic is only for non-mmu arches.
+
+> Every architecture
+> with mmu defines their own pfn_valid().
+
+Not true. Arm64, for example just uses the generic implementation in
+mmzone.h. My main question is whether we can just do that. If we can't
+we should probably structure it like powerpc where they only use the
+arch-specific helper for CONFIG_FLATMEM instead of when CONFIG_SPARSEMEM
+isn't set.
+
+Logan
