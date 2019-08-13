@@ -2,207 +2,143 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDC8C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA982C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC5C420651
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D1582084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:45:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="pcS4SbEu";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="kyGq+SHg"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ppUSosWQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729711AbfHMOpF (ORCPT
+        id S1729729AbfHMOpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 10:45:05 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:33494 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728793AbfHMOpE (ORCPT
+        Tue, 13 Aug 2019 10:45:20 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33493 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729712AbfHMOpU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 10:45:04 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7DEdfqM003202;
-        Tue, 13 Aug 2019 07:44:42 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=yH0xkvphXN2pvlHlFD8nixFsAn/Z/Bz3PIcG6BXDJ4U=;
- b=pcS4SbEu45IvC9Mwn0o3YfOWbBYTbExWT1rviUm5fxPpBiR+oBhbO/a86GU+IsL0uYn3
- cvYrAyw7KrncnQr2SMhabNRN/1hrwWT+wc1+bL8hGogWYnXLZMI5ZAgRFiqfheoinxrR
- B98iyCd40QordCE/czNc6UDRoRuJ+UC69as= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2ubu810xnh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 13 Aug 2019 07:44:42 -0700
-Received: from ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) by
- ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 13 Aug 2019 07:44:41 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 13 Aug 2019 07:44:41 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ExLSDDAN+5xj1wCvpxnMZ3F7mQTt5uCzwmw087AJbiKup9jxnROYQ3SU2WBIeIhj5Jelec90CRQ41cGaCmAkdMBlHk3qkzoSLonKbDgF/M6l7WgBFoeFY/Hg//c48XXxhkhu6tuRA2m7eu9P4PCCJgqGQP8QvnHh1teqTCci047Nr/5Butj9ja3ItGiyIr0QZtZagSM8hKkcGu0+yOuQPsBg0bW/0rsTifdJC126K89a3EMeHnxklz6sAlzdnH/QIn4wqPK3Uk5oc9OLvwGj0NCa09G8sPcysWvjF8LSwrbritegQKWTCcAtbg1Jo/zN0GB3/xY/8CAP3wyHyrLJTA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yH0xkvphXN2pvlHlFD8nixFsAn/Z/Bz3PIcG6BXDJ4U=;
- b=JsqTwSdZhUhskR2gidGbCpm09f+IETczQ1dQP8izcTJGbvYhXYly8Dl1zQCen24VbH72yVSCMGn+erE3inpy9GAhwHdRnCmE+PVni+y3fTlZRXfOBVp/tcFJgqiTn7wSrgskHL5FrhSuNGEFIsfEZa/6UQKb9F6+MnBk5hXjV37rRirVMl+93cCuJpph0jaHD0+JgA1FI0wdmrMuioow+ixFSczSQO+u9Liv3yYMwsigkD9YlBq0rMKTh5n7Z1KPT6fJaqcoEbSpn0OcT+h4pWUhZ9oCfe1sgUtCowe5O1NlSjUJNy4NVJiZk+tV6kBAja2MpWqWkUanMYYCZQTf7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yH0xkvphXN2pvlHlFD8nixFsAn/Z/Bz3PIcG6BXDJ4U=;
- b=kyGq+SHgBrOas7vBaPLd3vHleACKDdd9b5A/QQjHH27lv6jAOi73t/ityFCNnigYf12eGQqPC8EU8qzwuoMJ/NeaVLJdlm5ydP43cSKG+CO39q7wFUXxdKlJgXLY9olRI0bHTe1bFtOIs2j1lJy0LQQLKNa5z7atQpl/20x2/hY=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
- MWHPR15MB1312.namprd15.prod.outlook.com (10.175.4.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.14; Tue, 13 Aug 2019 14:44:40 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::79c8:442d:b528:802d]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::79c8:442d:b528:802d%9]) with mapi id 15.20.2157.022; Tue, 13 Aug 2019
- 14:44:40 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Matthew Wilcox" <matthew.wilcox@oracle.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Kernel Team <Kernel-team@fb.com>,
-        "William Kucharski" <william.kucharski@oracle.com>,
-        "srikar@linux.vnet.ibm.com" <srikar@linux.vnet.ibm.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-Subject: Re: [PATCH v12 5/6] khugepaged: enable collapse pmd for pte-mapped
- THP
-Thread-Topic: [PATCH v12 5/6] khugepaged: enable collapse pmd for pte-mapped
- THP
-Thread-Index: AQHVTXlDuUiBx4u3AUqTmiQ0C68ad6bxcvOAgAAJMACAAXXfAIAAEp4AgAAZUACABFVTAIAAE+cAgAAVvICAAGtUAIABKBiA
-Date:   Tue, 13 Aug 2019 14:44:40 +0000
-Message-ID: <857DA509-D891-4F4C-A55C-EE58BC2CC452@fb.com>
-References: <20190807233729.3899352-1-songliubraving@fb.com>
- <20190807233729.3899352-6-songliubraving@fb.com>
- <20190808163303.GB7934@redhat.com>
- <770B3C29-CE8F-4228-8992-3C6E2B5487B6@fb.com>
- <20190809152404.GA21489@redhat.com>
- <3B09235E-5CF7-4982-B8E6-114C52196BE5@fb.com>
- <4D8B8397-5107-456B-91FC-4911F255AE11@fb.com>
- <20190812121144.f46abvpg6lvxwwzs@box> <20190812132257.GB31560@redhat.com>
- <20190812144045.tkvipsyit3nccvuk@box>
- <2D11C742-BB7E-4296-9E97-5114FA58474B@fb.com>
-In-Reply-To: <2D11C742-BB7E-4296-9E97-5114FA58474B@fb.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.104.11)
-x-originating-ip: [2620:10d:c090:180::b9f9]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 39b36ae0-ec90-480f-8079-08d71ffcc58b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1312;
-x-ms-traffictypediagnostic: MWHPR15MB1312:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR15MB131251072713338671A14A87B3D20@MWHPR15MB1312.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 01283822F8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(376002)(366004)(396003)(136003)(346002)(189003)(199004)(33656002)(53546011)(102836004)(46003)(6436002)(476003)(305945005)(2616005)(11346002)(53936002)(54906003)(229853002)(186003)(6506007)(76176011)(14454004)(6916009)(86362001)(99286004)(66946007)(6486002)(478600001)(446003)(2906002)(6116002)(57306001)(6512007)(316002)(486006)(256004)(14444005)(36756003)(5660300002)(6246003)(7416002)(81156014)(5024004)(71190400001)(66446008)(64756008)(8936002)(71200400001)(4326008)(25786009)(50226002)(8676002)(76116006)(81166006)(66476007)(66556008)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1312;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 6bCzqwWa4tBAMPh3N9kK6BiQJuzOPSwERYvtyzhtOSNYKMdRXFmfb+8Z+xmVjlpkpcMd9EGwERShEbyLh5iUjLk+QHFwB3ZTRJqsDK3kLEeHdOqNti/oE6+c4xhMDq1OU6J4hkYo7jUGv6SPdP3oPepvKkZWWCBi7H95pCsLPTsZ7dvn0vMNcYAxO/3eRhRipK2C0GmE8bg3TI5E5SFAPgtf3V8aEWipuKW+I0jN8PmyXIk16zamXEiTVELy1AIWBX6i+qnGTkI0fymdfsuBpnChJc2CiV30LxUmk6H37zl2m3I1LhKPHRiwhkdk3lpma9q/RpGIV4NFKAEuFE1wb4FQAAuhRYFdSDNzFptrV8b+P1jmaR5AGxUu+fz/U1ObDSO1P+BJT/nM4mJzhdHIMZECyxnHpJyYQ9OZ0TWhJo4=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <9FB0981101AC8245A04EE324AAD61837@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 13 Aug 2019 10:45:20 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c14so49282233plo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 07:45:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/DG06eqM38QIeCr7IhG3JFD4cD2ewwaHEcvvXfdRS3I=;
+        b=ppUSosWQ6sQWFc0IxI3Nzmy6G6kGbMK13Q7JBH1pQcc9bf+4UAFK5wkEfJuEq2XyLj
+         t9OBW+rPflJtJfIti+xJcNkoJHWUhFO5WsWzjJhB0nxVuJKsG+dJW/Jt+/IPwEjq5jsr
+         aZ9axBTFOg1N2CPyUZAQwMx0PG5wxwoentHNI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/DG06eqM38QIeCr7IhG3JFD4cD2ewwaHEcvvXfdRS3I=;
+        b=gkLcL6egH2EeKe6ig7lszkkv+E533jffYQOjerkg3DCOs8n4uGrMJgtQv5zxSsCPnH
+         ZmPHaexAxF2vTZ2rHAa9qLGASMD+hJMSVCZ6bBLwv0i40F0C2zVM/OAkVgUyrnbImE97
+         XJ0aK+sBLvepiJ6ztf8bFjMc3vIlKOFGJMBLSVU20FGopkkbyUj/QBw0V6sPmC+c70x4
+         ioNZmtsyFsWGateoEb67zWAjc3WtsOlJC2oyzfbi2U3AAB9M+Vsh21WxhO6tRXWh6Wue
+         srX78VLP3DFIQyodM7Z1z9Bv/OzaO05M0J60cn5P4FmGpKGUUxTsKGVt1i2is90Bw8N4
+         MDbQ==
+X-Gm-Message-State: APjAAAUPEIifABvZaQ6N4ljtW1mnuXbgfbRd1UHc9PirZOUuiOB8GEp8
+        Jrgqc4ji7rj0IZW5ulmCcR8HfQ==
+X-Google-Smtp-Source: APXvYqwu2kcgtFp5t6/t0JC/c/SSw4ArhZsHerk/StDup/KwlFxIPyKBmZzPisDuPSJvG83H6RolJA==
+X-Received: by 2002:a17:902:a508:: with SMTP id s8mr14768087plq.280.1565707519367;
+        Tue, 13 Aug 2019 07:45:19 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id k22sm117365235pfk.157.2019.08.13.07.45.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 13 Aug 2019 07:45:18 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 10:45:17 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
+        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
+        namhyung@google.com, paulmck@linux.ibm.com,
+        Robin Murphy <robin.murphy@arm.com>,
+        Roman Gushchin <guro@fb.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
+        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v5 1/6] mm/page_idle: Add per-pid idle page tracking
+ using virtual index
+Message-ID: <20190813144517.GE258732@google.com>
+References: <20190807171559.182301-1-joel@joelfernandes.org>
+ <20190807130402.49c9ea8bf144d2f83bfeb353@linux-foundation.org>
+ <20190807204530.GB90900@google.com>
+ <20190807135840.92b852e980a9593fe91fbf59@linux-foundation.org>
+ <20190807213105.GA14622@google.com>
+ <20190808080044.GA18351@dhcp22.suse.cz>
+ <20190812145620.GB224541@google.com>
+ <20190813091430.GE17933@dhcp22.suse.cz>
+ <20190813135152.GC258732@google.com>
+ <20190813141432.GL17933@dhcp22.suse.cz>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 39b36ae0-ec90-480f-8079-08d71ffcc58b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2019 14:44:40.0299
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oMfXHxipdLeSMNkpJ385Kd5lgC7X6CMX/ofJAFeyebDnASkq9EM3GvvgRLRWXIRnPVLTzbn8GJvj71+vTqqQgg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1312
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-13_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=680 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908130156
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813141432.GL17933@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Oleg,
+On Tue, Aug 13, 2019 at 04:14:32PM +0200, Michal Hocko wrote:
+[snip] 
+> > > If the API is flawed then this is likely going
+> > > to kick us later and will be hard to fix. I am still not convinced about
+> > > the swap part of the thing TBH.
+> > 
+> > Ok, then let us discuss it. As I mentioned before, without this we lose the
+> > access information due to MADVISE or swapping. Minchan and Konstantin both
+> > suggested it that's why I also added it (other than me also realizing that it
+> > is neeed).
+> 
+> I have described my concerns about the general idle bit behavior after
+> unmapping pointing to discrepancy with !anon pages. And I believe those
+> haven't been addressed yet.
 
-> On Aug 12, 2019, at 2:04 PM, Song Liu <songliubraving@fb.com> wrote:
->=20
->=20
->=20
->> On Aug 12, 2019, at 7:40 AM, Kirill A. Shutemov <kirill@shutemov.name> w=
-rote:
->>=20
->> On Mon, Aug 12, 2019 at 03:22:58PM +0200, Oleg Nesterov wrote:
->>> On 08/12, Kirill A. Shutemov wrote:
->>>>=20
->>>> On Fri, Aug 09, 2019 at 06:01:18PM +0000, Song Liu wrote:
->>>>> +		if (pte_none(*pte) || !pte_present(*pte))
->>>>> +			continue;
->>>>=20
->>>> You don't need to check both. Present is never none.
->>>=20
->>> Agreed.
->>>=20
->>> Kirill, while you are here, shouldn't retract_page_tables() check
->>> vma->anon_vma (and probably do mm_find_pmd) under vm_mm->mmap_sem?
->>>=20
->>> Can't it race with, say, do_cow_fault?
->>=20
->> vma->anon_vma can race, but it doesn't matter. False-negative is fine.
->> It's attempt to avoid taking mmap_sem where it can be not productive.
->>=20
->> mm_find_pmd() cannot race with do_cow_fault() since the page is locked.
->> __do_fault() has to return locked page before we touch page tables.
->> It is somewhat subtle, but I wanted to avoid taking mmap_sem where it is
->> possible.
->>=20
->> --=20
->> Kirill A. Shutemov
->=20
-> Updated version attached.=20
->=20
->=20
-> Besides feedbacks from Oleg and Kirill, I also revise the locking in=20
-> collapse_pte_mapped_thp(): use pte_offset_map_lock() for the two loops=20
-> to cover highmem. zap_pte_range() has similar use of the lock.=20
->=20
-> This change is suggested by Johannes.=20
->=20
+You are referring to this post right?
+https://lkml.org/lkml/2019/8/6/637
 
-Do you have further comments for the version below? If not, could you
-please reply with your Acked-by or Reviewed-by?
+Specifically your question was:
+How are you going to handle situation when the page is unmapped  and refaulted again (e.g. a normal reclaim of a pagecache)?
 
-Thanks,
-Song
+Currently I don't know how to implement that. Would it work if I stored the
+page-idle bit information in the pte of the file page (after the page is
+unmapped by reclaim?).
 
+Also, this could be a future extension - the Android heap profiler does not
+need it right now. I know that's not a good argument but it is useful to say
+that it doesn't affect a real world usecase.. the swap issue on the other
+hand, is a real usecase. Since the profiler should not get affected by
+swapping or MADVISE_COLD hints.
 
->=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D 8< =3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> From 3d931bc4780abb6109fe478a4b1a0004ce81efe1 Mon Sep 17 00:00:00 2001
-> From: Song Liu <songliubraving@fb.com>
-> Date: Sun, 28 Jul 2019 03:43:48 -0700
-> Subject: [PATCH 5/6] khugepaged: enable collapse pmd for pte-mapped THP
->=20
+> Besides that I am still not seeing any
+> description of the usecase that would suffer from the lack of the
+> functionality in changelogs.
 
-[...]=
+You are talking about the swap usecase? The usecase is well layed out in v5
+2/6. Did you see it? https://lore.kernel.org/patchwork/patch/1112283/
+
+thanks,
+
+ - Joel
+
