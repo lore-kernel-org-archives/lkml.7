@@ -4,123 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 919C7C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AADE2C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6283A20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D28220663
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:19:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbfHMJQR (ORCPT
+        id S1727833AbfHMJTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 05:16:17 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4241 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727795AbfHMJOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:14:18 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CAC1AEC6A1F0B25E3CDA;
-        Tue, 13 Aug 2019 17:14:14 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 13 Aug
- 2019 17:14:07 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
-        David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        "Dave Chinner" <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Richard Weinberger <richard@nod.at>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
-        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v7 06/24] erofs: support special inode
-Date:   Tue, 13 Aug 2019 17:13:08 +0800
-Message-ID: <20190813091326.84652-7-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190813091326.84652-1-gaoxiang25@huawei.com>
-References: <20190813091326.84652-1-gaoxiang25@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+        Tue, 13 Aug 2019 05:19:02 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:39429 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbfHMJTC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 05:19:02 -0400
+Received: by mail-yb1-f193.google.com with SMTP id s142so9802871ybc.6;
+        Tue, 13 Aug 2019 02:19:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kUBanlA+OewYHu2v1NZSgckcWYzqv9IZZgRNtPfde/g=;
+        b=d+Zq0j1xk01kcL7JLQQuf0rcJykzM1Q2WReVxSSIHTiaLwmA69IiDa4OBVM5trnh2D
+         hf0kPgOyIGaKv3sWT/Zp4Q+/A4Z+peAcFUd47w3k24QFrxmf/syBkDBlGueCzXXJYpgm
+         dtFVneZatUc0O9hTLSQmYHiDdkrUdX3tSlJ6U0ef9J5qDJq68YEjTS2WTDUx/FciHtMm
+         B57umdMpZJxLssyFzWP8cx9zxcTfkwZIrrAIMeDL+a8ZcrlcYMzeJU1WFPxC+dZKK4hL
+         PnkjAKoSCeItbQ0VJZ4PsD7J8f3/aE5JZCYPfs0uPwvC/VK/3bR1mGbWPDbduWJgFYR6
+         5cwA==
+X-Gm-Message-State: APjAAAVpLKnBOgYmxjsAGLdAZUt9VIh/lFym6j8eu+a9P7bdi6yXEEz7
+        cztX7St53spLXDzHfDPiX2Y=
+X-Google-Smtp-Source: APXvYqyoHIMWWV/Nk16YmgaFnSRnrejnpcOOOW4NSBuQgxkJI14N5BkT7qkjQjzx+L8npD+m4oT1oQ==
+X-Received: by 2002:a5b:d52:: with SMTP id f18mr9448758ybr.516.1565687941169;
+        Tue, 13 Aug 2019 02:19:01 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id r19sm27423518ywa.109.2019.08.13.02.18.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 13 Aug 2019 02:18:59 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Vishal Kulkarni <vishal@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev@vger.kernel.org (open list:CXGB4 ETHERNET DRIVER (CXGB4)),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] cxgb4: fix a memory leak bug
+Date:   Tue, 13 Aug 2019 04:18:52 -0500
+Message-Id: <1565687932-2870-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds to support special inode, such as
-block dev, char, socket, pipe inode.
+In blocked_fl_write(), 't' is not deallocated if bitmap_parse_user() fails,
+leading to a memory leak bug. To fix this issue, free t before returning
+the error.
 
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 ---
- fs/erofs/inode.c | 27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index b6ea997bc4ae..637bf6e4de44 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -34,7 +34,16 @@ static int read_inode(struct inode *inode, void *data)
- 		vi->xattr_isize = ondisk_xattr_ibody_size(v2->i_xattr_icount);
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+index 0295903..d692251 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+@@ -3236,8 +3236,10 @@ static ssize_t blocked_fl_write(struct file *filp, const char __user *ubuf,
+ 		return -ENOMEM;
  
- 		inode->i_mode = le16_to_cpu(v2->i_mode);
--		vi->raw_blkaddr = le32_to_cpu(v2->i_u.raw_blkaddr);
-+		if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
-+		    S_ISLNK(inode->i_mode))
-+			vi->raw_blkaddr = le32_to_cpu(v2->i_u.raw_blkaddr);
-+		else if (S_ISCHR(inode->i_mode) || S_ISBLK(inode->i_mode))
-+			inode->i_rdev =
-+				new_decode_dev(le32_to_cpu(v2->i_u.rdev));
-+		else if (S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode))
-+			inode->i_rdev = 0;
-+		else
-+			return -EIO;
+ 	err = bitmap_parse_user(ubuf, count, t, adap->sge.egr_sz);
+-	if (err)
++	if (err) {
++		kvfree(t);
+ 		return err;
++	}
  
- 		i_uid_write(inode, le32_to_cpu(v2->i_uid));
- 		i_gid_write(inode, le32_to_cpu(v2->i_gid));
-@@ -58,7 +67,16 @@ static int read_inode(struct inode *inode, void *data)
- 		vi->xattr_isize = ondisk_xattr_ibody_size(v1->i_xattr_icount);
- 
- 		inode->i_mode = le16_to_cpu(v1->i_mode);
--		vi->raw_blkaddr = le32_to_cpu(v1->i_u.raw_blkaddr);
-+		if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
-+		    S_ISLNK(inode->i_mode))
-+			vi->raw_blkaddr = le32_to_cpu(v1->i_u.raw_blkaddr);
-+		else if (S_ISCHR(inode->i_mode) || S_ISBLK(inode->i_mode))
-+			inode->i_rdev =
-+				new_decode_dev(le32_to_cpu(v1->i_u.rdev));
-+		else if (S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode))
-+			inode->i_rdev = 0;
-+		else
-+			return -EIO;
- 
- 		i_uid_write(inode, le16_to_cpu(v1->i_uid));
- 		i_gid_write(inode, le16_to_cpu(v1->i_gid));
-@@ -176,6 +194,11 @@ static int fill_inode(struct inode *inode, int isdir)
- 			/* by default, page_get_link is used for symlink */
- 			inode->i_op = &erofs_symlink_iops;
- 			inode_nohighmem(inode);
-+		} else if (S_ISCHR(inode->i_mode) || S_ISBLK(inode->i_mode) ||
-+			S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode)) {
-+			inode->i_op = &erofs_generic_iops;
-+			init_special_inode(inode, inode->i_mode, inode->i_rdev);
-+			goto out_unlock;
- 		} else {
- 			err = -EIO;
- 			goto out_unlock;
+ 	bitmap_copy(adap->sge.blocked_fl, t, adap->sge.egr_sz);
+ 	kvfree(t);
 -- 
-2.17.1
+2.7.4
 
