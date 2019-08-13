@@ -2,190 +2,96 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 324EDC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31EAC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFE2F20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EBD420843
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 04:27:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fbg8VeT4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l0rkni/t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbfHME1W (ORCPT
+        id S1726695AbfHME1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 00:27:22 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38733 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfHME1V (ORCPT
+        Tue, 13 Aug 2019 00:27:54 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46235 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfHME1x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 00:27:21 -0400
-Received: by mail-pf1-f196.google.com with SMTP id o70so5495619pfg.5
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 21:27:20 -0700 (PDT)
+        Tue, 13 Aug 2019 00:27:53 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q139so2546513pfc.13
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Aug 2019 21:27:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fQL9RUtIML/PZe8MNFP8yQiCjWtKgPLyEfIL1k8PJhc=;
-        b=fbg8VeT4fWy8MdPE5NDtumx+KrkUlXY0FY4hQL0ZwFaSB+aAw9A23C2a0B2+TAgTcn
-         QRSm6g30QyXjT5+Li/OxZJId+1mikYGNYaRjFswNcd6fvPG4iGcxHlUtL+YOAsZsA1S0
-         rcxRRdXDnZm1MmAStKLyKDuVzVZJLX5Lpcsp/wnXCV2B+DSuCumnuklf6b0VFdNwZEgN
-         UTua35jaJGosxDOytq+pTP+fwXsPV3GIbr3R559nMEJhIG1Zt9VqS/XG0JoEGRztyMPv
-         pjPkYqPfyv4d0basCqZO32/EFQQWHTlJ0mQAVIAE2306A8Q+UbbHGf9TCQnW3CYkOtTX
-         JP8Q==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GEFPODmOwtpyol0jKJkyySLW8YzPjzzTstkF4DAIU60=;
+        b=l0rkni/t5bJRUPWIxOO8pVWKUqfD0fcWxT9WIqZd1EmFotYbaua9tGlb0goy1db0pZ
+         zwjCQLB03DloiA9HKHM/fWQ7K/Zdu0Egwp1eMWhVGz4BXLJjCbv1tzgz1fEH++X6UlvF
+         7yW+VV0NXRr1gldz/wAwqH0y5R0fccqpdtiScsxRFFL9RfYHEk8uGpGKc8qtYu+paqEA
+         oe0EOfL/zhMEMC9Qb926bwpXZZ1ThYyWLBqwuEtjdyiHtNQ/b95+jfqvamIr0DwQU6mP
+         a/yHwmACTBgHUH00oMOzaz43CYnrNMq+WgO5X4wAjz9ly1tL1+sDMnxLror456lwU8ru
+         cxJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fQL9RUtIML/PZe8MNFP8yQiCjWtKgPLyEfIL1k8PJhc=;
-        b=jtwLIBEGrxIIZvMQX2PJAkiYgy5rW5wJjURX3bL8u9rvnzhr0yFv09RrpZFeLkc/DK
-         SCsIUsaoXxrOEfPPH1HzffBxavGWYoH/14afXE4TgnTRMNdEhnemqkaHE9r8jB2FTFXW
-         Xga9peMRB67V/XyiHdHbr4cCrMMx/8P5w3JZiW3jYuhlBllI062b/KDCa7VRkNywc3Up
-         t8/UoR+XI/JcpUHBoYBA0rSid3idjfJCqzIm3xUCoTXB9F2RnCRUoRMFi3GK8suGa7Rz
-         Oajau3QQpXUq8XhcXEiBxhSYRIaqEx4rHBZncNIMYSv/1XuZsiRjEtTpnao9MGOlv6sW
-         nzgA==
-X-Gm-Message-State: APjAAAVXd2SknzwoPYltFj2KfpSEwL78yenT2xCEbB0pSGrzsVQQ6B+U
-        T0WGrxJnUKTiQaLAXWHIHwiAhjodhP+V2QnfGobk2Q==
-X-Google-Smtp-Source: APXvYqyDNtjg1vEeMDr2gVCEsRefZmM7lb53WZNnRaIftMCnD83RA48eWcYK2L1Qi2YiTKmhvzfk7GUpdRuiK3gA3Wg=
-X-Received: by 2002:a63:b919:: with SMTP id z25mr32569272pge.201.1565670436109;
- Mon, 12 Aug 2019 21:27:16 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GEFPODmOwtpyol0jKJkyySLW8YzPjzzTstkF4DAIU60=;
+        b=ndCDfH8FDOFyMdIRkYYjla2vQbIkTHS+vROgzUoljyGKyZ6HxlBvoWc2qybnIp4g5F
+         VXkOwo9Fp7GEjkqyi1kCWK1PZTwUHhSdTleJDjkEULOfHp+y162NS08xmyD1a0xNHQTw
+         ycQQi2Uy0nTL6otaJ0Fvq6h+9HU9uIYbWIi4BCysoIxixt61XIk3Wjz4+mLjY2NVxYfj
+         IecmRbxAyY7QeH1Od/qP8UyaPKT41QH5MwsKo9MMFz5ZTpzU9lE/alAYHkoqkjpo5pgs
+         5R+DsryOlUOqoYZPKYyLGjShxSrn8tm6kSNhrmwZQKmIR+RuLib32RHuqiFNgOfVZ9zF
+         XwFg==
+X-Gm-Message-State: APjAAAWqIsOdGPoJF6YXGI06I5iDaT33gJW4IPeAqtwetBuarsLcVIhq
+        z1jWS6LYiabcL8CU+5HOJZn9FWxr
+X-Google-Smtp-Source: APXvYqz58t6lJ/02qNDLpTaCKkb3QA2zluFCFqqMgD/ftAEhBkijBFozd9OHgKjdmFye+ihUKt3a7A==
+X-Received: by 2002:a17:90a:a013:: with SMTP id q19mr428309pjp.64.1565670473129;
+        Mon, 12 Aug 2019 21:27:53 -0700 (PDT)
+Received: from [10.0.2.15] ([122.163.110.75])
+        by smtp.gmail.com with ESMTPSA id y16sm8383280pfc.36.2019.08.12.21.27.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 12 Aug 2019 21:27:52 -0700 (PDT)
+Subject: Re: [PATCH v2] regulator: core: Add of_node_put() before return
+To:     Mark Brown <broonie@kernel.org>
+Cc:     lgirdwood@gmail.com, linux-kernel@vger.kernel.org
+References: <20190808070553.13097-1-nishkadg.linux@gmail.com>
+ <20190808122740.GB3795@sirena.co.uk>
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+Message-ID: <106177ee-d6e0-5825-83f0-ca199b05ac20@gmail.com>
+Date:   Tue, 13 Aug 2019 09:57:47 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190812182421.141150-1-brendanhiggins@google.com>
- <20190812182421.141150-5-brendanhiggins@google.com> <20190812234644.E054D20679@mail.kernel.org>
- <CAFd5g44huOiR9B0H1C2TtiPy63BDuwi_Qpb_exF3zmT3ttV8eg@mail.gmail.com>
-In-Reply-To: <CAFd5g44huOiR9B0H1C2TtiPy63BDuwi_Qpb_exF3zmT3ttV8eg@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 12 Aug 2019 21:27:05 -0700
-Message-ID: <CAFd5g44GxE-p+Jk_46GYA-WWVHLW7w=yE+K_tbbdiniDfrk-2w@mail.gmail.com>
-Subject: Re: [PATCH v12 04/18] kunit: test: add assertion printing library
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190808122740.GB3795@sirena.co.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 4:56 PM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> On Mon, Aug 12, 2019 at 4:46 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> >
-> > Quoting Brendan Higgins (2019-08-12 11:24:07)
-> > > Add `struct kunit_assert` and friends which provide a structured way to
-> > > capture data from an expectation or an assertion (introduced later in
-> > > the series) so that it may be printed out in the event of a failure.
-> > >
-> > > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > > ---
-> >
-> > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> >
-> > Just some minor nits below
-> >
-> > > diff --git a/include/kunit/assert.h b/include/kunit/assert.h
-> > > new file mode 100644
-> > > index 0000000000000..55f1b88b0cb4d
-> > > --- /dev/null
-> > > +++ b/include/kunit/assert.h
-> > > @@ -0,0 +1,183 @@
-> > [...]
-> > > +                           struct string_stream *stream);
-> > > +
-> > > +struct kunit_fail_assert {
-> > > +       struct kunit_assert assert;
-> > > +};
-> > > +
-> > > +void kunit_fail_assert_format(const struct kunit_assert *assert,
-> > > +                             struct string_stream *stream);
-> > > +
-> > > +#define KUNIT_INIT_FAIL_ASSERT_STRUCT(test, type) {                           \
-> > > +               .assert = KUNIT_INIT_ASSERT_STRUCT(test,                       \
-> > > +                                                  type,                       \
-> > > +                                                  kunit_fail_assert_format)   \
-> >
-> > This one got indented one too many times?
->
-> Not unless I have been using the wrong formatting for multiline
-> macros. You can see this commit applied here:
-> https://kunit.googlesource.com/linux/+/870964da2990920030990dd1ffb647ef408e52df/include/kunit/assert.h#59
->
-> I have test, type, and kunit_fail_assert_format all column aligned (it
-> just doesn't render nicely in the patch format).
+On 08/08/19 5:57 PM, Mark Brown wrote:
+> On Thu, Aug 08, 2019 at 12:35:53PM +0530, Nishka Dasgupta wrote:
+>> In function of_get_child_regulator(), the loop for_each_child_of_node()
+>> contains two mid-loop return statements. Ordinarily the loop gets the
+>> node child at the beginning of every iteration and automatically puts
+> 
+> Please do not submit new versions of already applied patches, please
+> submit incremental updates to the existing code.  Modifying existing
+> commits creates problems for other users building on top of those
+> commits so it's best practice to only change pubished git commits if
+> absolutely essential.
+> 
+I am very sorry about this; I wasn't sure whether this particular commit 
+had been applied. Should I split the commit and resend only the change 
+to the old commit, or should I leave it as it is?
 
-Disregard that last comment. I just looked at the line immediately
-above your comment and thought it looked correct. Sorry about that
-(you were pointing out that the .assert line looked wrong, correct?).
-
-> > > +}
-> > > +
-> > > +struct kunit_unary_assert {
-> > > +       struct kunit_assert assert;
-> > > +       const char *condition;
-> > > +       bool expected_true;
-> > > +};
-> > > +
-> > > +void kunit_unary_assert_format(const struct kunit_assert *assert,
-> > > +                              struct string_stream *stream);
-> > > +
-> > [...]
-> > > +#define KUNIT_INIT_BINARY_STR_ASSERT_STRUCT(test,                             \
-> > > +                                           type,                              \
-> > > +                                           op_str,                            \
-> > > +                                           left_str,                          \
-> > > +                                           left_val,                          \
-> > > +                                           right_str,                         \
-> > > +                                           right_val) {                       \
-> > > +       .assert = KUNIT_INIT_ASSERT_STRUCT(test,                               \
-> > > +                                          type,                               \
-> > > +                                          kunit_binary_str_assert_format),    \
-> > > +       .operation = op_str,                                                   \
-> > > +       .left_text = left_str,                                                 \
-> > > +       .left_value = left_val,                                                \
-> > > +       .right_text = right_str,                                               \
-> > > +       .right_value = right_val                                               \
-> > > +}
-> >
-> > It would be nice to have kernel doc on these macros so we know how to
-> > use them.
->
-> Sounds good. Will fix.
+Thanking you,
+Nishka
