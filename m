@@ -5,200 +5,164 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27013C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3727C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6F23206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A1F206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:56:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UBQxDKIV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uudRipsg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbfHMMy3 (ORCPT
+        id S1728511AbfHMM4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 08:54:29 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36330 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbfHMMy3 (ORCPT
+        Tue, 13 Aug 2019 08:56:04 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41308 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbfHMM4D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 08:54:29 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g4so2774329plo.3
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 05:54:29 -0700 (PDT)
+        Tue, 13 Aug 2019 08:56:03 -0400
+Received: by mail-pl1-f194.google.com with SMTP id m9so49083462pls.8
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 05:56:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=MD+0g6zXoZq5Qyz/nfj2779Oyuui4Qlp1ZERXfuNGc8=;
-        b=UBQxDKIVIM0/h+T4ziLhDTkTjB01yVdzA8KTowgyvBdxYYU2xJZhJMUInpqERNqhGL
-         ODEI+Sfn0J8Y8OJeBv5eRiNNbyCe9+zZ9u6I86DRa1CzCNx5OAxC3boHBLAVGlZWpHbk
-         li+tdpG5ExavPPL3gSJ47aBcZV3KZNNZ0pADo2TOKz0ZxjUsf4mPwBt4/SZl9B3mJXZJ
-         TAUlaykL3aCzGRvGF2Kaa4VBv+H0NT7vblsyh8eOzZO0UoYMhnMOpr8qqBRUxDKjiGfU
-         zDMuTl6Ei95IyKIP+++NppNrsCz1F0l14ZBau6phFqVU2EZxLjYA7VC4Mo01ifXPyFaU
-         xCiw==
+        bh=gyW2erMceipu5+F3zK5iDrdeNg1j5OVxw2XccM0V1Fk=;
+        b=uudRipsgcfwoVFpRdCAbA5VHfkL8DiwXzc3CXG9MgdcYAB8oOgP9Zw5M0kN2uM2MME
+         T4c4vWzHOftNixTato2mzY2oluD2mchP/tRn78x3LUb3N9RSuL4E92s/CZCOq14eKni2
+         CyrttUkEZqWslPyOONBhjuyVeH0V4UTcOV+RfR7BwIzQmj/fVhiMYIbVLNUo52X/rS9/
+         WpzY1ja67SIsdnZ2mZJS7dOBRhXJr96kq4oCFoIu861SUg9VeUUTqx6Xt6cdWGDS/cIC
+         11s7jLsye2sSkYy+WJoz0oJFf4N/MY9S8I4Nxdigx4xNwKkyOtbKUMwJrB/fZ1djeFYh
+         ZOgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MD+0g6zXoZq5Qyz/nfj2779Oyuui4Qlp1ZERXfuNGc8=;
-        b=KKCBqzowAbiMLEcf7hUqNFt/Vxy21g5Z8DgguWnjmbj3Bldhk+JhY+N5Jk/JDUiHDt
-         EUXEsTwIITxT/XSPU/kwkdDkBUGVT+lbKTTGsQPnFtxDled8+vs1/UOqck5oYD8JUeHO
-         B7Zt2xct/TKGHS8NmmwD7GZkg66lmY2Mfi8s2qs913JpzopWuctqO4QrwNE3WeYfjPfo
-         mpAQsX8vRb8GGzjhnhjoHDAdlLvWAbCvLIhfl4/1jhvW4lMvtzSZPlDcimNdfkAsCH9f
-         c9KdXIoF1EQcP7VDfCS/IicdtwTh+hyZNBvoolUoM1YJmWVD0Nh3aC8bhp2fPK+j9DHj
-         S88A==
-X-Gm-Message-State: APjAAAUE+rRw6QvbisgLZelmvuCvYPfaM2xrqvp63utHc3cDY3nZd7L3
-        y55GCBqN/86fKLiHDEbUq9zSIJ1t0UdMypZKJWN8xA==
-X-Google-Smtp-Source: APXvYqx7jkynxzEtMLecLSDmVymzr+bz634fXi+SJbGZHeXaqwTv/aZUzS2ThdTw5spI5Ud7WUor0UNxz1Dsfq8pwYE=
-X-Received: by 2002:a17:902:8649:: with SMTP id y9mr10015510plt.252.1565700868367;
- Tue, 13 Aug 2019 05:54:28 -0700 (PDT)
+        bh=gyW2erMceipu5+F3zK5iDrdeNg1j5OVxw2XccM0V1Fk=;
+        b=E+/6DtxHX0kR/JV95fZY2f2urVigjF56y92Lyh2Se5Hmwm+nIZ0gowwEAT1hdpT5mk
+         fMBkvWeznBc+ulFAPqS2bIaHXa9BJBoswOqTtKx2Xhu/kmnbwVqWFaow72rmDCrGn/eb
+         A5SM24zTv+M62OdGWgdNBQXmK7nX4aLjafR/K0X7LKV6FsKqYJ91QzlnPmuZc49hkJNY
+         tVlFBIBWGE7OFdDGMUTTFswgx9zsZo185XGnm+67iBeXspatt3jAwQ655Fqkm5EMsTx3
+         kmiVoTnEuQRFyq15SWho12+njdnlVw4FrKPKLWYUxvpSGunCZLQm0BzgQpS+Bkt18+Nh
+         /reg==
+X-Gm-Message-State: APjAAAXtMvBULTqSescX25UWh1Y7Rn3fKiEIP71oxXJ3ySakxSvYsccF
+        yZFYy9x9XFgS/Yt3tyxqYvHQdVOeYrwwYCvcJ2xRcHu2K34=
+X-Google-Smtp-Source: APXvYqzyEAzRCTSpb8f6lxsYDA4oFJPcgDBjdknx5kDmUayS0YWoPu1UlifodZNAHiF44f7+PtshPaG8+0FfBEyby+c=
+X-Received: by 2002:a17:902:bb94:: with SMTP id m20mr5195508pls.336.1565700962846;
+ Tue, 13 Aug 2019 05:56:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <00000000000000631505868311c8@google.com>
-In-Reply-To: <00000000000000631505868311c8@google.com>
+References: <20190429210917.GA251866@gmail.com> <Pine.LNX.4.44L0.1904301007320.1465-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1904301007320.1465-100000@iolanthe.rowland.org>
 From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 13 Aug 2019 14:54:17 +0200
-Message-ID: <CAAeHK+zB8JikzfFgTigjNkxtpUOkGYkHixo480REJ_yQidLB_w@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in ds_probe
-To:     syzbot <syzbot+5620801aaaf778ca83c6@syzkaller.appspotmail.com>
-Cc:     florian.harbecke@fau.de,
+Date:   Tue, 13 Aug 2019 14:55:51 +0200
+Message-ID: <CAAeHK+y2G4rSCqwhuF102gNyVbGCEx6bXY=o9pGMhGNRvgjFDw@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in hex_string
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        Eric Biggers <ebiggers@kernel.org>
+Cc:     syzbot <syzbot+a9fefd18c7b240f19c54@syzkaller.appspotmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>, passt@h-hofmeier.de,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>, zbr@ioremap.net
+        USB list <linux-usb@vger.kernel.org>, rafael@kernel.org,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 14, 2019 at 10:06 PM syzbot
-<syzbot+5620801aaaf778ca83c6@syzkaller.appspotmail.com> wrote:
+On Tue, Apr 30, 2019 at 4:13 PM Alan Stern <stern@rowland.harvard.edu> wrote:
 >
-> Hello,
+> On Mon, 29 Apr 2019, Eric Biggers wrote:
 >
-> syzbot found the following crash on:
+> > On Mon, Apr 29, 2019 at 04:07:04PM -0400, Alan Stern wrote:
 >
-> HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15fb7cd3200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
-> dashboard link: https://syzkaller.appspot.com/bug?extid=5620801aaaf778ca83c6
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1676f06b200000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1373c65b200000
+> > > Accessing beyond the end of the descriptor.
+> > >
+> > > #syz test: https://github.com/google/kasan.git usb-fuzzer
+> > >
+> > > --- a/drivers/video/fbdev/udlfb.c
+> > > +++ b/drivers/video/fbdev/udlfb.c
+> > > @@ -1511,6 +1511,7 @@ static int dlfb_parse_vendor_descriptor(
+> > >     char *buf;
+> > >     char *desc_end;
+> > >     int total_len;
+> > > +   int width;
+> > >
+> > >     buf = kzalloc(MAX_VENDOR_DESCRIPTOR_SIZE, GFP_KERNEL);
+> > >     if (!buf)
+> > > @@ -1529,9 +1530,10 @@ static int dlfb_parse_vendor_descriptor(
+> > >     }
+> > >
+> > >     if (total_len > 5) {
+> > > +           width = min(total_len, 11);
+> > >             dev_info(&intf->dev,
+> > > -                    "vendor descriptor length: %d data: %11ph\n",
+> > > -                    total_len, desc);
+> > > +                    "vendor descriptor length: %d data: %*ph\n",
+> > > +                    total_len, width, desc);
+> > >
+> > >             if ((desc[0] != total_len) || /* descriptor length */
+> > >                 (desc[1] != 0x5f) ||   /* vendor descriptor type */
+> > >
+> > >
+> >
+> > Why not write just:
+> >
+> >                 dev_info(&intf->dev,
+> >                          "vendor descriptor length: %d data: %*ph\n",
+> >                          total_len, min(total_len, 11), desc);
 >
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+5620801aaaf778ca83c6@syzkaller.appspotmail.com
+> I did consider doing that.  In the end I decided adding an extra
+> temporary variable made the code a little more readable.  (For some
+> reason, extra recursion -- a function call embedded in a function
+> argument -- seems to demand more mental effort than an extra
+> temporary.  Maybe my brain is just getting old...)
 >
-> usb 1-1: config 0 has no interface number 0
-> usb 1-1: New USB device found, idVendor=04fa, idProduct=2490,
-> bcdDevice=89.a4
-> usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-> usb 1-1: config 0 descriptor??
-> ==================================================================
-> BUG: KASAN: use-after-free in ds_probe+0x604/0x760
-> drivers/w1/masters/ds2490.c:1019
-> Read of size 1 at addr ffff8880a7996862 by task kworker/0:1/12
+> > Also, aren't there more out-of-bounds reads in the code just after?  It only
+> > checks for at least 1 byte available, but then it reads up to 7 bytes:
+> >
+> >               while (desc < desc_end) {
+> >                       u8 length;
+> >                       u16 key;
+> >
+> >                       key = *desc++;
+> >                       key |= (u16)*desc++ << 8;
+> >                       length = *desc++;
+> >
+> >                       switch (key) {
+> >                       case 0x0200: { /* max_area */
+> >                               u32 max_area = *desc++;
+> >                               max_area |= (u32)*desc++ << 8;
+> >                               max_area |= (u32)*desc++ << 16;
+> >                               max_area |= (u32)*desc++ << 24;
+> >                               dev_warn(&intf->dev,
+> >                                        "DL chip limited to %d pixel modes\n",
+> >                                        max_area);
+> >                               dlfb->sku_pixel_limit = max_area;
+> >                               break;
+> >                       }
+> >                       default:
+> >                               break;
+> >                       }
+> >                       desc += length;
+> >               }
 >
-> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xe8/0x16e lib/dump_stack.c:113
->   print_address_description+0x6c/0x236 mm/kasan/report.c:187
->   kasan_report.cold+0x1a/0x3c mm/kasan/report.c:317
->   ds_probe+0x604/0x760 drivers/w1/masters/ds2490.c:1019
->   usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
->   really_probe+0x2da/0xb10 drivers/base/dd.c:509
->   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
->   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
->   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
->   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
->   device_add+0xad2/0x16e0 drivers/base/core.c:2106
->   usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
->   generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
->   usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
->   really_probe+0x2da/0xb10 drivers/base/dd.c:509
->   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
->   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
->   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
->   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
->   device_add+0xad2/0x16e0 drivers/base/core.c:2106
->   usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
->   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
->   port_event drivers/usb/core/hub.c:5350 [inline]
->   hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
->   process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
->   worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
->   kthread+0x313/0x420 kernel/kthread.c:253
->   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+> Quite right.  Please feel free to submit a patch fixing all these
+> problems.
 >
-> Allocated by task 4260:
->   set_track mm/kasan/common.c:87 [inline]
->   __kasan_kmalloc mm/kasan/common.c:497 [inline]
->   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:470
->   kmalloc include/linux/slab.h:552 [inline]
->   kzalloc include/linux/slab.h:742 [inline]
->   lsm_task_alloc security/security.c:544 [inline]
->   security_task_alloc+0x113/0x180 security/security.c:1456
->   copy_process.part.0+0x1c62/0x76b0 kernel/fork.c:1898
->   copy_process kernel/fork.c:1709 [inline]
->   _do_fork+0x234/0xed0 kernel/fork.c:2226
->   do_syscall_64+0xcf/0x4f0 arch/x86/entry/common.c:290
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > Also I couldn't help but notice it's also using 'char' rather than 'u8',
+> > so bytes >= 0x80 are read incorrectly as they're sign extended...
 >
-> Freed by task 1405:
->   set_track mm/kasan/common.c:87 [inline]
->   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
->   slab_free_hook mm/slub.c:1429 [inline]
->   slab_free_freelist_hook+0x5e/0x140 mm/slub.c:1456
->   slab_free mm/slub.c:3003 [inline]
->   kfree+0xce/0x290 mm/slub.c:3958
->   security_task_free+0x9a/0xf0 security/security.c:1470
->   __put_task_struct+0xec/0x4d0 kernel/fork.c:724
->   put_task_struct include/linux/sched/task.h:98 [inline]
->   delayed_put_task_struct+0x189/0x290 kernel/exit.c:181
->   __rcu_reclaim kernel/rcu/rcu.h:227 [inline]
->   rcu_do_batch kernel/rcu/tree.c:2475 [inline]
->   invoke_rcu_callbacks kernel/rcu/tree.c:2788 [inline]
->   rcu_core+0x83b/0x1a80 kernel/rcu/tree.c:2769
->   __do_softirq+0x22a/0x8cd kernel/softirq.c:293
->
-> The buggy address belongs to the object at ffff8880a7996840
->   which belongs to the cache kmalloc-64 of size 64
-> The buggy address is located 34 bytes inside of
->   64-byte region [ffff8880a7996840, ffff8880a7996880)
-> The buggy address belongs to the page:
-> page:ffffea00029e6580 count:1 mapcount:0 mapping:ffff88812c3f5600 index:0x0
-> flags: 0xfff00000000200(slab)
-> raw: 00fff00000000200 ffffea000273f740 0000000500000005 ffff88812c3f5600
-> raw: 0000000000000000 00000000002a002a 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->   ffff8880a7996700: fc fc fc fc fb fb fb fb fb fb fb fb fc fc fc fc
->   ffff8880a7996780: 00 00 00 00 00 00 fc fc fc fc fc fc 00 00 00 00
-> > ffff8880a7996800: 00 00 fc fc fc fc fc fc fb fb fb fb fb fb fb fb
->                                                         ^
->   ffff8880a7996880: fc fc fc fc fb fb fb fb fb fb fb fb fc fc fc fc
->   ffff8880a7996900: fb fb fb fb fb fb fb fb fc fc fc fc fb fb fb fb
-> ==================================================================
+> As I recall, the C standard doesn't specify whether char is signed or
+> unsigned; it can vary with the implementation.  However you are
+> certainly correct that to ensure there is no sign extension, the code
+> should use unsigned char or u8.
 
-#syz dup: KASAN: slab-out-of-bounds Read in ds_probe
+Hi Alan and Eric,
 
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+Have any of this fixes been submitted anywhere? This bug is still open
+on syzbot.
+
+Thanks!
