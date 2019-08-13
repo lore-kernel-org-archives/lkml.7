@@ -2,141 +2,129 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 392A4C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CDCC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E3EA2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DC402067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:36:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="agR9AvYO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lrApJRtm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbfHMMf7 (ORCPT
+        id S1728229AbfHMMgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 08:35:59 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43140 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726993AbfHMMf6 (ORCPT
+        Tue, 13 Aug 2019 08:36:20 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42688 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbfHMMgT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 08:35:58 -0400
-Received: by mail-qt1-f193.google.com with SMTP id b11so6331754qtp.10
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 05:35:58 -0700 (PDT)
+        Tue, 13 Aug 2019 08:36:19 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 15so9619515ljr.9;
+        Tue, 13 Aug 2019 05:36:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=S54lLa6bgYl50xMneQkBqoB3M0F5v0sM817U2bzthXY=;
-        b=agR9AvYOrhFisIq3zyRg4IM/ZRdhZf5/0lqKd2pNTQa5RoGvsDs5PPhxDI9RK9Ol3C
-         qf5Mt7bSLQVchVswI/LpN3Hdt+DjL7mwdWm1lQsCA1Hvf5dhov2H0jnYUWm8AOBJwhaD
-         aQy2Y5h7zApILOwcTVb/pK5XYc+Y03KG7nbm7a6wJjzBgu5tk4jTHz8a5qyha8hJ8yhJ
-         k38Z2rz1wQNMBxKbrr1vwAZyySgH7XW6ZSSj3keFjJ2+8Cw/Nc5nKW9dF0YTcWM8Y8GI
-         uCH4ArZP7E+cApAfFDOTSvvER6PZp4dC8dQQhKcwStWa123KCF/qCHrhqTDnceK27Sm7
-         YhoA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/4zbvSpEn2DpmCJ6tMtDBdGBohm95LMSJu2Rb3mH21k=;
+        b=lrApJRtm6GOhWs3fCFPJSlcSNogP0GznPdE24vcG3Z/F5ysBIyHK4jr3TmLyVAenyu
+         h+reeHqoCtu5DnUOonZfy2rp0wqpy0QvIWd1egLjw9T+fHOo9bX4D5YJplkiBANlzg+Z
+         YxoJvdWuGbwSks5nTFsOOCwSZvZqkTUwflPOvOlwIZSX4gGr1CPhFztABch0yEq1LGEz
+         niMncc0gUHJSPmGlCnp7eYd+vKKI1m13mmcPqKSQd33YlT2b2H8DFXOYUkcC6lFgsZvv
+         RCcC5ce0ZlXrJuUsDAAaXHftEs3Uc66lwJtN2oFXfWLTEOEySRPJVNo9EtMHQqBQljfF
+         I95w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=S54lLa6bgYl50xMneQkBqoB3M0F5v0sM817U2bzthXY=;
-        b=rvsOqQ1M6FZE4mrXdBkkwMkT7Qcf+UGc1wdFufndXItdNmh84zJKJlbg8rI++xnv9L
-         jpWTY90Gua2vLqAHu4AzgPhrz6MHd1SB07VuC4yx+FZEIXCJQeYGXaNGhHijyuJ4uEQ7
-         behXfuX/d25YVUkryESDwvl6nTkLRHjmHzgX/Gt0pD5+EYk24iVYtxZFFlLTybSpj/gw
-         qkCh1BkA70uSsRxHyi4O9cNGfLJ1r9saVlWZeci6wPFswqmExzyUd+uXvtTvCA3GmKC1
-         5gs4rfp/G0K+maszWgELoHE5dPVqZ6kICY4Bv/xr9NiUdH5b0GFZhhyk3skd7TANIvte
-         1Q+Q==
-X-Gm-Message-State: APjAAAWIS4Pd1lJ03mQvDIm/pFPiVg4Thnn3mPKXtv/U+SRB0196Xv2P
-        fxPZIaCRofbofhSiOvb6oVsf/g==
-X-Google-Smtp-Source: APXvYqxtXmnf0GGchCLA6EVm/YadIfQw8wWVCxKFsbu+A1RacfwS39mJeDS31/OUgGDLvtQ1S4X/rQ==
-X-Received: by 2002:a0c:fa02:: with SMTP id q2mr5488260qvn.28.1565699757517;
-        Tue, 13 Aug 2019 05:35:57 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id y25sm10208095qkj.35.2019.08.13.05.35.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 13 Aug 2019 05:35:56 -0700 (PDT)
-Message-ID: <1565699754.8572.8.camel@lca.pw>
-Subject: Re: [PATCH v3 3/3] mm: kmemleak: Use the memory pool for early
- allocations
-From:   Qian Cai <cai@lca.pw>
-To:     Catalin Marinas <catalin.marinas@arm.com>, linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/4zbvSpEn2DpmCJ6tMtDBdGBohm95LMSJu2Rb3mH21k=;
+        b=ombUIQlKZI4sna0UtPXjiTZdDEAjW09UgskoowRxZu6uQxgnjy0Or9pBdvwUOHwk5C
+         I1qGrcmx4z/wr1bRHgnJBdXj8C2u7dBkgnBOme5FKqsMI1U/Gb8cz9fdqOBCQWazB0s7
+         Oir1/T7cJwCnIKCzYWuFZcDB6IQJ8bfPzPnkYge9zt4x9qXNfnVTLVhETB9dNNmS+Qm1
+         i8HReInxcLZ1xzp6o2kbMv77R+bdZ1I9GDYs/4jxQ8LvH4gqun31BF1XL1+Y6saZHoKv
+         NVgCQuz0CRtId328AIkm/KT2+YFbYp0ZM24JRz2DMqGYCHKaiWPqRX2Caz6ccQAdWINH
+         7Nlw==
+X-Gm-Message-State: APjAAAUw0jGg8zSE+jLTDdABOj1U86GKjU0iDWivaBZyygEJFY4oI3cz
+        TDMhrET9Ik98e8WBwRYofDL+83XFhwRl+lqkZPI=
+X-Google-Smtp-Source: APXvYqw9QQj9Ti8WKyo8gjlKSpGsqLRG2B9QmRI3Fs3vQL04NHHaPG06xFKmK+ZntPzsDk7jUfioPFAqkeTU3Op2eJs=
+X-Received: by 2002:a2e:3a13:: with SMTP id h19mr21421766lja.220.1565699777265;
+ Tue, 13 Aug 2019 05:36:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190812215052.71840-1-ndesaulniers@google.com>
+ <20190812215052.71840-12-ndesaulniers@google.com> <20190813082744.xmzmm4j675rqiz47@willie-the-truck>
+In-Reply-To: <20190813082744.xmzmm4j675rqiz47@willie-the-truck>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Tue, 13 Aug 2019 14:36:06 +0200
+Message-ID: <CANiq72mAfJ23PyWzZAELgbKQDCX2nvY0z+dmOMe14qz=wa6eFg@mail.gmail.com>
+Subject: Re: [PATCH 12/16] arm64: prefer __section from compiler_attributes.h
+To:     Will Deacon <will@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>
-Date:   Tue, 13 Aug 2019 08:35:54 -0400
-In-Reply-To: <20190812160642.52134-4-catalin.marinas@arm.com>
-References: <20190812160642.52134-1-catalin.marinas@arm.com>
-         <20190812160642.52134-4-catalin.marinas@arm.com>
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, yhs@fb.com,
+        clang-built-linux@googlegroups.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-08-12 at 17:06 +0100, Catalin Marinas wrote:
-> Currently kmemleak uses a static early_log buffer to trace all memory
-> allocation/freeing before the slab allocator is initialised. Such early
-> log is replayed during kmemleak_init() to properly initialise the
-> kmemleak metadata for objects allocated up that point. With a memory
-> pool that does not rely on the slab allocator, it is possible to skip
-> this early log entirely.
-> 
-> In order to remove the early logging, consider kmemleak_enabled == 1 by
-> default while the kmem_cache availability is checked directly on the
-> object_cache and scan_area_cache variables. The RCU callback is only
-> invoked after object_cache has been initialised as we wouldn't have any
-> concurrent list traversal before this.
-> 
-> In order to reduce the number of callbacks before kmemleak is fully
-> initialised, move the kmemleak_init() call to mm_init().
-> 
-> Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-> ---
->  init/main.c       |   2 +-
->  lib/Kconfig.debug |  11 +-
->  mm/kmemleak.c     | 267 +++++-----------------------------------------
->  3 files changed, 35 insertions(+), 245 deletions(-)
-> 
-> diff --git a/init/main.c b/init/main.c
-> index 96f8d5af52d6..ca05e3cd7ef7 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -556,6 +556,7 @@ static void __init mm_init(void)
->  	report_meminit();
->  	mem_init();
->  	kmem_cache_init();
-> +	kmemleak_init();
->  	pgtable_init();
->  	debug_objects_mem_init();
->  	vmalloc_init();
-> @@ -740,7 +741,6 @@ asmlinkage __visible void __init start_kernel(void)
->  		initrd_start = 0;
->  	}
->  #endif
-> -	kmemleak_init();
->  	setup_per_cpu_pageset();
->  	numa_policy_init();
->  	acpi_early_init();
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 4d39540011e2..39df06ffd9f4 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -592,17 +592,18 @@ config DEBUG_KMEMLEAK
->  	  In order to access the kmemleak file, debugfs needs to be
->  	  mounted (usually at /sys/kernel/debug).
->  
-> -config DEBUG_KMEMLEAK_EARLY_LOG_SIZE
-> -	int "Maximum kmemleak early log entries"
-> +config DEBUG_KMEMLEAK_MEM_POOL_SIZE
-> +	int "Kmemleak memory pool size"
->  	depends on DEBUG_KMEMLEAK
->  	range 200 40000
->  	default 16000
+On Tue, Aug 13, 2019 at 10:27 AM Will Deacon <will@kernel.org> wrote:
+>
+> Hi Nick,
+>
+> On Mon, Aug 12, 2019 at 02:50:45PM -0700, Nick Desaulniers wrote:
+> > GCC unescapes escaped string section names while Clang does not. Because
+> > __section uses the `#` stringification operator for the section name, it
+> > doesn't need to be escaped.
+> >
+> > This antipattern was found with:
+> > $ grep -e __section\(\" -e __section__\(\" -r
+> >
+> > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> > ---
+> >  arch/arm64/include/asm/cache.h     | 2 +-
+> >  arch/arm64/kernel/smp_spin_table.c | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> Does this fix a build issue, or is it just cosmetic or do we end up with
+> duplicate sections or something else?
 
-Hmm, this seems way too small. My previous round of testing with
-kmemleak.mempool=524288 works quite well on all architectures.
+This should be cosmetic -- basically we are trying to move all users
+of current available __attribute__s in compiler_attributes.h to the
+__attr forms. I am also adding (slowly) new attributes that are
+already used but we don't have them yet in __attr form.
+
+> Happy to route it via arm64, just having trouble working out whether it's
+> 5.3 material!
+
+As you prefer! Those that are not taken by a maintainer I will pick up
+and send via compiler-attributes.
+
+I would go for 5.4, since there is no particular rush anyway.
+
+Cheers,
+Miguel
