@@ -2,143 +2,149 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA7FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B37C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5A3520679
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C4C020679
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:13:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hfRt+z+D"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W2oxF32q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbfHMJMe (ORCPT
+        id S1727727AbfHMJNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 05:12:34 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37944 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726974AbfHMJMe (ORCPT
+        Tue, 13 Aug 2019 05:13:10 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36758 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727615AbfHMJNJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:12:34 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r9so100863346ljg.5
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 02:12:33 -0700 (PDT)
+        Tue, 13 Aug 2019 05:13:09 -0400
+Received: by mail-lf1-f66.google.com with SMTP id j17so22236309lfp.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 02:13:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Fqm1qEXgId3LWA2NcOGNLytQeIXWcu4whGK205OK+oE=;
-        b=hfRt+z+D9yk1sJYudtDMXBHyY6D+2qiqV/Q0A5uC517NkQfhn84w03CEm+CUmcg/YO
-         xJPqvrGgLs16lDH/3dloHHlkGbp2h3r9rIgnDvmKfVTplppEulAeS2WQtVGZ8wWFs15M
-         R5qBYokxyKXI2Jfql/W33mwqvH+OuFprJVGNGTsHQu5VItj8aJMS6Ur6rJYb6Hy7WRn/
-         AX4hDuDNWmPdJr+yZFLhP6VsHFefhVLaK4WsyRhEk2D+tu0eVkerETdtQ8N8zpk4CR7G
-         z7+Z3ORP+em5lWvkHic+zqfbFKZVaZBuXDwrPHPXLdvyLr95YD3Zita8cZ6CQHogX55V
-         lS0A==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b9ILhd2aCjQh4oMSFsJoowCjN4C8D/s8MJgq4YAEBLc=;
+        b=W2oxF32qcEgwvRN+TzYXAddY5GIfE0TU07ZZEMjsnTdZHws8iAZ2t8Ultvl9YT7B9l
+         FcqQcsJALGn/N6C5ZuExhftHA8ZS8MNOrSUeIrQu3gBXXLe4ixyR8Oo5hmg4UUGyabxo
+         uWv09COtEGpqAdax3WCg5P2ubO3WE1ftRGYMB38Ed3fgj3xpruF/YDRjA5s4U1SsywTz
+         raOTZO3u1j8iOcpslIka2xJ8bkvq+QSToLsxoCLDTz8ppRJhCuL8ltvK/wB/IXN51+OA
+         Tmzcrff2zT5F1o2XfVqbtXnT9QaUbGOA7cZQ4WzLX6NEXNn++uTMldyauztGbKy/kIWW
+         PdfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=Fqm1qEXgId3LWA2NcOGNLytQeIXWcu4whGK205OK+oE=;
-        b=av1fwLR9TQhRjBckvjzlxhPhcphS7vfv3QWwuUc8H6BtzE0N1BRgnQuSFJM/MpzCeh
-         U6LYy4WDfxdfqz0BYsx1GyDUbaKymDbuMPhzlJ/T/0kjPoEjyeemklXH9i0vYEBdjYXe
-         3G7vvVWmzgnq4qo8atQVTwDFPu0TGfvgCw/QKXGLBGBAiFeAgLXTusI1dIMJcaEfQgb5
-         1by05FZ0tnCQ8Kf9y44pevRPp1pOdLDZ/S3ySDJjZJ4/C7LO7a5JNRb0b9R+slnSz/XQ
-         UgMGpBaCV8jqdhnBC79xKp2Hq0yC7HtEMdLO9BpJKT9VM3NHrhXINzByQTymi4lNT3+P
-         4MwQ==
-X-Gm-Message-State: APjAAAV90UihFgfs55ApArZWXux0HmrtpJBe3cFjPfKVEjAKftskteBQ
-        Jad0SpWtYdxiDfT64r/gYvw69w==
-X-Google-Smtp-Source: APXvYqyEmjV0GBixJh0DVshdyHJJIKyBEfQHcoHLxMsbb6J1S0HM71TOzoTAcNAvNIqYowflXLcs+w==
-X-Received: by 2002:a2e:3a13:: with SMTP id h19mr20948011lja.220.1565687552537;
-        Tue, 13 Aug 2019 02:12:32 -0700 (PDT)
-Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id l23sm21497274lje.106.2019.08.13.02.12.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 13 Aug 2019 02:12:31 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 12:12:29 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Magnus Karlsson <magnus.karlsson@gmail.com>
-Cc:     =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        linux-mm@kvack.org, Xdp <xdp-newbies@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org, Alexei Starovoitov <ast@kernel.org>,
-        "Karlsson, Magnus" <magnus.karlsson@intel.com>
-Subject: Re: [PATCH v2 bpf-next] mm: mmap: increase sockets maximum memory
- size pgoff for 32bits
-Message-ID: <20190813091228.GA6951@khorivan>
-Mail-Followup-To: Magnus Karlsson <magnus.karlsson@gmail.com>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        linux-mm@kvack.org, Xdp <xdp-newbies@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org, Alexei Starovoitov <ast@kernel.org>,
-        "Karlsson, Magnus" <magnus.karlsson@intel.com>
-References: <20190812113429.2488-1-ivan.khoronzhuk@linaro.org>
- <20190812124326.32146-1-ivan.khoronzhuk@linaro.org>
- <CAJ8uoz0bBhdQSocQz8Y9tvrGCsCE9TDf3m1u6=sL4Eo5tZ17YQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b9ILhd2aCjQh4oMSFsJoowCjN4C8D/s8MJgq4YAEBLc=;
+        b=EqItSK90klpsJL7AQFG6JvCPXj5jb1ECtmsufN6oNhEbOHj6V6A71t8gNFHIp7/i6Y
+         w4kc4IBtw9/Wfw4LRLTbAfuSSAms89IYcCuqy2qtBBGpg9muSpPY09oc51fiCEvy0zgO
+         Ol4vTlazawuc4Hh14jm/JIr03/IPnYHCSzZ5aWdV9R6MImxRg3X/Z+wmInhKnLOXR76p
+         unzUBSM+m//F/mPte82iLhZASj21gnHDHDIqTxACQZEdFZ4kHtObP4rypRQwhuUuaNSg
+         dgBAUyZMZ9Pj1ooAUzFGpRTly8gJdVoopxNHdsq+GEEwpMQszGxSFHp+/FoZTAVJfbmA
+         r/yg==
+X-Gm-Message-State: APjAAAWNglIL1CiljjlK0Pd8MRhG2SqEoJQh9bZXzsRqOFYN1Muf5NqF
+        H9qaZV/zjjbwAjIwnjN458ujXucPbA01Pg3qeJB/VA==
+X-Google-Smtp-Source: APXvYqwLnkbduPeN9fnl3i+lRRTsMYZatTj1IuJmhpqxnMiio1q0JfaKumMLZmtQt11+bQEG/iQwBN5AGKfhGyCW+Rs=
+X-Received: by 2002:ac2:5dd6:: with SMTP id x22mr21614482lfq.92.1565687586809;
+ Tue, 13 Aug 2019 02:13:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAJ8uoz0bBhdQSocQz8Y9tvrGCsCE9TDf3m1u6=sL4Eo5tZ17YQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190812182421.141150-1-brendanhiggins@google.com>
+ <20190812182421.141150-4-brendanhiggins@google.com> <20190812225520.5A67C206A2@mail.kernel.org>
+ <20190812233336.GA224410@google.com> <20190812235940.100842063F@mail.kernel.org>
+ <CAFd5g44xciLPBhH_J3zUcY3TedWTijdnWgF055qffF+dAguhPQ@mail.gmail.com>
+ <20190813045623.F3D9520842@mail.kernel.org> <CAFd5g46PJNTOUAA4GOOrW==74Zy7u1sRESTanL_BXBn6QykscA@mail.gmail.com>
+ <20190813053023.CC86120651@mail.kernel.org> <CAFd5g47v7410QRAizPV8zaHrKrc95-Sk-GNzRRVngN741OKnvg@mail.gmail.com>
+In-Reply-To: <CAFd5g47v7410QRAizPV8zaHrKrc95-Sk-GNzRRVngN741OKnvg@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 13 Aug 2019 02:12:54 -0700
+Message-ID: <CAFd5g452+-6m1eiVK0ccTDkJ2wH8GBwxRDw5owwC8h3NscE1ag@mail.gmail.com>
+Subject: Re: [PATCH v12 03/18] kunit: test: add string_stream a std::stream
+ like string builder
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 10:02:54AM +0200, Magnus Karlsson wrote:
->On Mon, Aug 12, 2019 at 2:45 PM Ivan Khoronzhuk
-><ivan.khoronzhuk@linaro.org> wrote:
->>
->> The AF_XDP sockets umem mapping interface uses XDP_UMEM_PGOFF_FILL_RING
->> and XDP_UMEM_PGOFF_COMPLETION_RING offsets. The offsets seems like are
->> established already and are part of configuration interface.
->>
->> But for 32-bit systems, while AF_XDP socket configuration, the values
->> are to large to pass maximum allowed file size verification.
->> The offsets can be tuned ofc, but instead of changing existent
->> interface - extend max allowed file size for sockets.
+On Tue, Aug 13, 2019 at 2:04 AM Brendan Higgins
+<brendanhiggins@google.com> wrote:
 >
->Can you use mmap2() instead that takes a larger offset (2^44) even on
->32-bit systems?
-
-That's for mmap2.
-
+> On Mon, Aug 12, 2019 at 10:30 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > Quoting Brendan Higgins (2019-08-12 22:02:59)
+> > > On Mon, Aug 12, 2019 at 9:56 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > > >
+> > > > Quoting Brendan Higgins (2019-08-12 17:41:05)
+> > > > > On Mon, Aug 12, 2019 at 4:59 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > > > > >
+> > > > > > > kunit_resource_destroy (respective equivalents to devm_kfree, and
+> > > > > > > devres_destroy) and use kunit_kfree here?
+> > > > > > >
+> > > > > >
+> > > > > > Yes, or drop the API entirely? Does anything need this functionality?
+> > > > >
+> > > > > Drop the kunit_resource API? I would strongly prefer not to.
+> > > >
+> > > > No. I mean this API, string_stream_clear(). Does anything use it?
+> > >
+> > > Oh, right. No.
+> > >
+> > > However, now that I added the kunit_resource_destroy, I thought it
+> > > might be good to free the string_stream after I use it in each call to
+> > > kunit_assert->format(...) in which case I will be using this logic.
+> > >
+> > > So I think the right thing to do is to expose string_stream_destroy so
+> > > kunit_do_assert can clean up when it's done, and then demote
+> > > string_stream_clear to static. Sound good?
+> >
+> > Ok, sure. I don't really see how clearing it explicitly when the
+> > assertion prints vs. never allocating it to begin with is really any
+> > different. Maybe I've missed something though.
 >
->/Magnus
->
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> ---
->>
->> Based on bpf-next/master
->>
->> v2..v1:
->>         removed not necessarily #ifdev as ULL and UL for 64 has same size
->>
->>  mm/mmap.c | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/mm/mmap.c b/mm/mmap.c
->> index 7e8c3e8ae75f..578f52812361 100644
->> --- a/mm/mmap.c
->> +++ b/mm/mmap.c
->> @@ -1358,6 +1358,9 @@ static inline u64 file_mmap_size_max(struct file *file, struct inode *inode)
->>         if (S_ISBLK(inode->i_mode))
->>                 return MAX_LFS_FILESIZE;
->>
->> +       if (S_ISSOCK(inode->i_mode))
->> +               return MAX_LFS_FILESIZE;
->> +
->>         /* Special "we do even unsigned file positions" case */
->>         if (file->f_mode & FMODE_UNSIGNED_OFFSET)
->>                 return 0;
->> --
->> 2.17.1
->>
+> It's for the case that we *do* print something out. Once we are doing
+> printing, we don't want the fragments anymore.
 
--- 
-Regards,
-Ivan Khoronzhuk
+Oops, sorry fat fingered: s/doing/done
