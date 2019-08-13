@@ -2,99 +2,114 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D10FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E41C6C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C491206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B13C8206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:58:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UnYXjBso";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IaI8Q6n2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="siHyO+zp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbfHMN6p (ORCPT
+        id S1729400AbfHMN6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:58:45 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:52166 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727407AbfHMN6o (ORCPT
+        Tue, 13 Aug 2019 09:58:48 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:32788 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727427AbfHMN6q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:58:44 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7880F608FF; Tue, 13 Aug 2019 13:58:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565704723;
-        bh=M8oAe1f6maG+IxzSwYrxoIVVdKazq93Sv32mx1kHDTk=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=UnYXjBsohipGcIhOiU7MbVsbLEx9berNqc16y6AT7dc/+7gM6zxDlknkaGartFwBs
-         wTmVznRdzrY7vbtfaxJW34Ni3lRNUiHaW/8eEfkCugzi5yqEM6ZWHdysjhRjB3oQgt
-         VkLtVzoHaMUKupIMsrs2eneH48+uRPOHZlasrHwI=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA5A560734;
-        Tue, 13 Aug 2019 13:58:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565704722;
-        bh=M8oAe1f6maG+IxzSwYrxoIVVdKazq93Sv32mx1kHDTk=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=IaI8Q6n2wPeQJAHwk4P9fPwbfo0nHJdPoiRlNZit9WBgBvAj3zU2/5X/WCuv732RX
-         vZFSpNsdsZs39QlwnnytW2C2fIDI61aQ+3GkJUV7EJzbTGFvac0y/PwRTQQFfQ5+Jl
-         a0EinvMjNaLJuO2Kne/S5kgkz5Rrrf8sqfsWTFiY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AA5A560734
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Ganapathi Bhat <gbhat@marvell.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+dc4127f950da51639216@syzkaller.appspotmail.com>,
-        "amitkarwar\@gmail.com" <amitkarwar@gmail.com>,
-        "davem\@davemloft.net" <davem@davemloft.net>,
-        "huxinming820\@gmail.com" <huxinming820@gmail.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-wireless\@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
-        "nishants\@marvell.com" <nishants@marvell.com>,
-        "syzkaller-bugs\@googlegroups.com" <syzkaller-bugs@googlegroups.com>
-Subject: Re: [EXT] INFO: trying to register non-static key in del_timer_sync (2)
-References: <000000000000927a7b0586561537@google.com>
-        <MN2PR18MB263783F52CAD4A335FD8BB34A01A0@MN2PR18MB2637.namprd18.prod.outlook.com>
-        <CACT4Y+aQzBkAq86Hx4jNFnAUzjXnq8cS2NZKfeCaFrZa__g-cg@mail.gmail.com>
-        <MN2PR18MB26372D98386D79736A7947EEA0140@MN2PR18MB2637.namprd18.prod.outlook.com>
-        <MN2PR18MB263710E8F1F8FFA06B2EDB3CA0EC0@MN2PR18MB2637.namprd18.prod.outlook.com>
-        <CAAeHK+z8MBNikw_x50Crf8ZhOhcF=uvPHakvBx44K77xHRUNfg@mail.gmail.com>
-Date:   Tue, 13 Aug 2019 16:58:36 +0300
-In-Reply-To: <CAAeHK+z8MBNikw_x50Crf8ZhOhcF=uvPHakvBx44K77xHRUNfg@mail.gmail.com>
-        (Andrey Konovalov's message of "Tue, 13 Aug 2019 15:36:33 +0200")
-Message-ID: <87k1bhb20j.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Tue, 13 Aug 2019 09:58:46 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n9so107968792wru.0;
+        Tue, 13 Aug 2019 06:58:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zfy6948lUCOH92chkbvQy5u5Vo5igoZFuLdDnErvh/A=;
+        b=siHyO+zpdjCbmYJUB8AsKVn3x5BCxwl2tdS+wgEd51z0mxogY/e7MqaZp7UtV2u/LY
+         Jo+scdY/Tuv1p39KbQOMUa++vBzRJk3ULd7ruis7M4CX1KZjBX6pDtErNC3BCJlMwiU6
+         wQ8T4006wJaBMfzGp1Xqg7BXzepb1zjn6q0SkD8Pmhw6t0Gdvw2gXduZ4slbwPlmWbW3
+         pOSMee4YOfv97mCHzkZLoIWy6XTmVbcpvu991oOjSQju5vrZjp3h2aDRxm8y3jbNsKt6
+         DeNxCbdboaTkvOyclEtebepz+KTExLHBv7Q2OBlbln72g/JSlDf+OWJDa+j7ZHbikQwu
+         t40w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zfy6948lUCOH92chkbvQy5u5Vo5igoZFuLdDnErvh/A=;
+        b=Qutms+zIMWRVuHPrMiFZBBH0Bvh2Vew7hdZmfKHJs1GFn5uCFanegyF5HlnGpW8vmi
+         Qb0+HrUGwIhnuz4zsDHPl5ajNXjKGgX+gNwKt3rE+/V9YHXvJRgy/DeTM1bZgTX0mKDY
+         HZMVCQb4u5UZtOK02leQ45HArcOSXy3DyXvkYNppeIbZMU5MyXBuCqQxsX28W6BvYUGz
+         616mI4kkcO2no7CDi/AmSn3H2fbgdGJ2e/FgKCef5jLbjbEmGiYH/LO7GjDJr0FMag7s
+         44uLWtcyjBBnhQrSznd7RSN1TNaQ3hh7mQHrwCjUcgP7wMv8dw87hRH52RRVQLjTEMpU
+         9JSg==
+X-Gm-Message-State: APjAAAWGAggU55QVz8ts00bqjjxQ7mloWCOvUe3ACu9sRqydQAeqnPbk
+        UX8eDa6fvu8Sya53Y74pI/xpvU6p+KDwFUZDn+A=
+X-Google-Smtp-Source: APXvYqxxFFU/uYf0Bs2fkypX/f2q7giWV1wCz2O0fpuwjUUfiCJon9Ab+ZGb6Su5aKytZMAno3nfTqkgLxpw3afkFuc=
+X-Received: by 2002:adf:f94a:: with SMTP id q10mr43676562wrr.341.1565704723878;
+ Tue, 13 Aug 2019 06:58:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190813103340.11051-1-colin.king@canonical.com>
+In-Reply-To: <20190813103340.11051-1-colin.king@canonical.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 13 Aug 2019 09:58:31 -0400
+Message-ID: <CADnq5_MihuON5NRn7gbjbD9br37=vL+ZtjNqqFE2XQGrA_P7Zw@mail.gmail.com>
+Subject: Re: [PATCH] drm/amdgpu/powerplay: fix spelling mistake "unsuported"
+ -> "unsupported"
+To:     Colin King <colin.king@canonical.com>
+Cc:     Rex Zhu <rex.zhu@amd.com>, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrey Konovalov <andreyknvl@google.com> writes:
+Applied.  Thanks!
 
-> On Wed, Jun 12, 2019 at 6:03 PM Ganapathi Bhat <gbhat@marvell.com> wrote:
->>
->> Hi Dmitry,
->>
->> We have a patch to fix this: https://patchwork.kernel.org/patch/10990275/
+Alex
+
+On Tue, Aug 13, 2019 at 6:33 AM Colin King <colin.king@canonical.com> wrote:
 >
-> Hi Ganapathi,
+> From: Colin Ian King <colin.king@canonical.com>
 >
-> Has this patch been accepted anywhere? This bug is still open on syzbot.
-
-The patch is in "Changes Requested" state which means that the author is
-supposed to send a new version based on the review comments.
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> There is a spelling mistake in a pr_err error message. Fix it. Also
+> add a space after a comma to clean up a checkpatch warning.
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/gpu/drm/amd/powerplay/smu_v11_0.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/powerplay/smu_v11_0.c b/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
+> index 8bbcf034799c..d324bd28934d 100644
+> --- a/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
+> +++ b/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
+> @@ -288,7 +288,7 @@ static int smu_v11_0_check_fw_version(struct smu_context *smu)
+>                 smu->smc_if_version = SMU11_DRIVER_IF_VERSION_NV14;
+>                 break;
+>         default:
+> -               pr_err("smu unsuported asic type:%d.\n",smu->adev->asic_type);
+> +               pr_err("smu unsupported asic type:%d.\n", smu->adev->asic_type);
+>                 smu->smc_if_version = SMU11_DRIVER_IF_VERSION_INV;
+>                 break;
+>         }
+> --
+> 2.20.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
