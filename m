@@ -2,99 +2,156 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2C1C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8415C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E477020663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9FEA20844
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:29:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bImk/Y4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730060AbfHMP2k (ORCPT
+        id S1728406AbfHMP3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 11:28:40 -0400
-Received: from 8bytes.org ([81.169.241.247]:48976 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727666AbfHMP2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 11:28:11 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 0D77041D; Tue, 13 Aug 2019 17:28:10 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 13 Aug 2019 11:29:37 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34054 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727869AbfHMP3h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 11:29:37 -0400
+Received: by mail-ot1-f68.google.com with SMTP id c7so1439262otp.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 08:29:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jMeI5ltMPEKZ0Tj88O24MXE9cWJp6pw2JTg4dO3y4Mo=;
+        b=bImk/Y4vshDj5gFBaBVzsjv6Rz+kwzqnWzrOBiLYKXqof3GfeusuSBS3ZiJ0pa2Biz
+         +tCSIZX2wDwVr22g3BeKZT3HzY/3F3KR5WgLqESzTmOD6PixUCsy4sgNyuiEqlGA2Bjp
+         O3h7Bxpj0KGCCfJLCDX5YuylzaDhD6YWh0+jnG/g8GPay7nwiIg92/zGE80yk/76C2Ir
+         tInAOj2kgN2/l0orZzstbjsX+QeiJpnBb75cjQr+tZH8sYPtvAJiOVQTMuMyxL1xu9O/
+         oCa/4Px4H0ZvIlllpY5mSai4UcuTIufdPCdutaJGOguKuqlkfxkxQaDhfVzv45rlbMpZ
+         AHIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jMeI5ltMPEKZ0Tj88O24MXE9cWJp6pw2JTg4dO3y4Mo=;
+        b=V70QVgn2BghRpZjegJfcpmB+lDwPe7IMKrvH0uF+0eD834WA7dQl3GAODfoYx+164G
+         RcCz/nK8RRhSyhpOJXomkj06mU53nGkWYxAWD9S8G+1riYscjYxxcPNkA3sOYc3w8mYe
+         DvRqGmuJgzObvY+nfOafggFsfs4KqnRnoe3ix0bGqsu5HNq79rIgdWVe5DfqAIxiIpNF
+         Pyc+uBDgbxZe+GIKgvVfY1KLcuMC5Jht6hSOzpOYhA5aztux03CQe+EtASkBq3GMzgPF
+         qyLBlsRcI4Mm2vpFxAF1gG8Um6yfFU6C038/vfbKC82jdz2Bm4BGxXgbJrVB+1i2Mc2y
+         JVFA==
+X-Gm-Message-State: APjAAAW7fC/WUUtxiEcJs7bOX+nuMSk0HjGSnmJa93VQQe59vSnZpM7s
+        Tp/SvpEX3ZfWO0sptzEEsiFBvrK5mYV/eBO/TL0rcw==
+X-Google-Smtp-Source: APXvYqxQEaHf3X4y40GcHw/mVHg70puR4hMjqYUOR1PPtguEpeRZ2mELIIydxgtCS2soxOtuvIFl0/ZHBeOF0COouWI=
+X-Received: by 2002:a9d:5a91:: with SMTP id w17mr35070043oth.32.1565710175793;
+ Tue, 13 Aug 2019 08:29:35 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190807171559.182301-1-joel@joelfernandes.org>
+ <CAG48ez0ysprvRiENhBkLeV9YPTN_MB18rbu2HDa2jsWo5FYR8g@mail.gmail.com> <20190813100856.GF17933@dhcp22.suse.cz>
+In-Reply-To: <20190813100856.GF17933@dhcp22.suse.cz>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 13 Aug 2019 17:29:09 +0200
+Message-ID: <CAG48ez2cuqe_VYhhaqw8Hcyswv47cmz2XmkqNdvkXEhokMVaXg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/6] mm/page_idle: Add per-pid idle page tracking using
+ virtual index
+To:     Michal Hocko <mhocko@kernel.org>,
+        Daniel Gruss <daniel.gruss@iaik.tugraz.at>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Hansen <chansen3@cisco.com>,
+        Daniel Colascione <dancol@google.com>, fmayer@google.com,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        kernel-team <kernel-team@android.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Minchan Kim <minchan@kernel.org>, namhyung@google.com,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Roman Gushchin <guro@fb.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Suren Baghdasaryan <surenb@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 3/3] mm/vmalloc: Sync unmappings in __purge_vmap_area_lazy()
-Date:   Tue, 13 Aug 2019 17:28:05 +0200
-Message-Id: <20190813152805.5251-4-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190813152805.5251-1-joro@8bytes.org>
-References: <20190813152805.5251-1-joro@8bytes.org>
+        Todd Kjos <tkjos@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On Tue, Aug 13, 2019 at 12:09 PM Michal Hocko <mhocko@kernel.org> wrote:
+> On Mon 12-08-19 20:14:38, Jann Horn wrote:
+> > On Wed, Aug 7, 2019 at 7:16 PM Joel Fernandes (Google)
+> > <joel@joelfernandes.org> wrote:
+> > > The page_idle tracking feature currently requires looking up the pagemap
+> > > for a process followed by interacting with /sys/kernel/mm/page_idle.
+> > > Looking up PFN from pagemap in Android devices is not supported by
+> > > unprivileged process and requires SYS_ADMIN and gives 0 for the PFN.
+> > >
+> > > This patch adds support to directly interact with page_idle tracking at
+> > > the PID level by introducing a /proc/<pid>/page_idle file.  It follows
+> > > the exact same semantics as the global /sys/kernel/mm/page_idle, but now
+> > > looking up PFN through pagemap is not needed since the interface uses
+> > > virtual frame numbers, and at the same time also does not require
+> > > SYS_ADMIN.
+> > >
+> > > In Android, we are using this for the heap profiler (heapprofd) which
+> > > profiles and pin points code paths which allocates and leaves memory
+> > > idle for long periods of time. This method solves the security issue
+> > > with userspace learning the PFN, and while at it is also shown to yield
+> > > better results than the pagemap lookup, the theory being that the window
+> > > where the address space can change is reduced by eliminating the
+> > > intermediate pagemap look up stage. In virtual address indexing, the
+> > > process's mmap_sem is held for the duration of the access.
+> >
+> > What happens when you use this interface on shared pages, like memory
+> > inherited from the zygote, library file mappings and so on? If two
+> > profilers ran concurrently for two different processes that both map
+> > the same libraries, would they end up messing up each other's data?
+>
+> Yup PageIdle state is shared. That is the page_idle semantic even now
+> IIRC.
+>
+> > Can this be used to observe which library pages other processes are
+> > accessing, even if you don't have access to those processes, as long
+> > as you can map the same libraries? I realize that there are already a
+> > bunch of ways to do that with side channels and such; but if you're
+> > adding an interface that allows this by design, it seems to me like
+> > something that should be gated behind some sort of privilege check.
+>
+> Hmm, you need to be priviledged to get the pfn now and without that you
+> cannot get to any page so the new interface is weakening the rules.
+> Maybe we should limit setting the idle state to processes with the write
+> status. Or do you think that even observing idle status is useful for
+> practical side channel attacks? If yes, is that a problem of the
+> profiler which does potentially dangerous things?
 
-commit 3f8fd02b1bf1d7ba964485a56f2f4b53ae88c167 upstream.
+I suppose read-only access isn't a real problem as long as the
+profiler isn't writing the idle state in a very tight loop... but I
+don't see a usecase where you'd actually want that? As far as I can
+tell, if you can't write the idle state, being able to read it is
+pretty much useless.
 
-On x86-32 with PTI enabled, parts of the kernel page-tables are not shared
-between processes. This can cause mappings in the vmalloc/ioremap area to
-persist in some page-tables after the region is unmapped and released.
-
-When the region is re-used the processes with the old mappings do not fault
-in the new mappings but still access the old ones.
-
-This causes undefined behavior, in reality often data corruption, kernel
-oopses and panics and even spontaneous reboots.
-
-Fix this problem by activly syncing unmaps in the vmalloc/ioremap area to
-all page-tables in the system before the regions can be re-used.
-
-References: https://bugzilla.suse.com/show_bug.cgi?id=1118689
-Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lkml.kernel.org/r/20190719184652.11391-4-joro@8bytes.org
----
- mm/vmalloc.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index a46ec261a44e..2bca8e439afa 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -665,6 +665,12 @@ static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end)
- 
- 	lockdep_assert_held(&vmap_purge_lock);
- 
-+	/*
-+	 * First make sure the mappings are removed from all page-tables
-+	 * before they are freed.
-+	 */
-+	vmalloc_sync_all();
-+
- 	valist = llist_del_all(&vmap_purge_list);
- 	llist_for_each_entry(va, valist, purge_list) {
- 		if (va->va_start < start)
-@@ -2296,6 +2302,9 @@ EXPORT_SYMBOL(remap_vmalloc_range);
- /*
-  * Implement a stub for vmalloc_sync_all() if the architecture chose not to
-  * have one.
-+ *
-+ * The purpose of this function is to make sure the vmalloc area
-+ * mappings are identical in all page-tables in the system.
-  */
- void __weak vmalloc_sync_all(void)
- {
--- 
-2.16.4
-
+If the profiler only wants to profile process-private memory, then
+that should be implementable in a safe way in principle, I think, but
+since Joel said that they want to profile CoW memory as well, I think
+that's inherently somewhat dangerous.
