@@ -2,178 +2,192 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65579C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE89C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CDE020578
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:28:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nWLJmN3X"
+	by mail.kernel.org (Postfix) with ESMTP id 2226220578
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 13:29:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565702983;
+	bh=KbXwbvfDyxPortbynicqAX31QoCJGz8DLcoW5bYu9FA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vv5eeMh5l4W4Gib+pFJh+RcReE6htKVXTiLAXiY0cCmPcQ+0mAzZXLZHHJDnLg9gM
+	 le056vHh7isz+hDuw+NYvQ5lA5OK+r95uDrn5YEPbdhQsR98GccsUNt1fEpQmHYW8T
+	 cu0XurrvfCXA7RX9aajm9BEUsMu10tEBVR7nRe2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbfHMN2I (ORCPT
+        id S1729090AbfHMN3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 09:28:08 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42192 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727311AbfHMN2H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:28:07 -0400
-Received: by mail-pf1-f196.google.com with SMTP id i30so2906938pfk.9
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 06:28:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:cc;
-        bh=OUnI5qShYtHQYww3X1RCBrfCURbBQ7wCunEPYxXRUns=;
-        b=nWLJmN3XZAPFpmXl7Lv98vYL2f5xide0ABgIuYQFZZy15vy2ONsAm/1UZ1JzukTcw8
-         BDL9RltV2YBhTQzX/UahXxHNWCr/8Keym9JDfL3ahYwsNuC4giB2KQKu7++6dUgM8TFE
-         P6qh+xMHedLkv8UeXIvk2EEtNRkgXTxPRyLvS0BFcTiKCe5pEJJKl2C9mC/eGEO3YITH
-         DhjzZKGkp2ZpBHONUrIyNRZT3nllrg8L7eJ5iJLoOJ0IzAtMZO7BcMylAdEVx6QlokCn
-         a0MZnqnB0LTfx2UOYhlbfsLSiPNmhvVBO8Kverf0iE+bOYedAXdiln/RagrrcmBCM8QZ
-         QwwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:cc;
-        bh=OUnI5qShYtHQYww3X1RCBrfCURbBQ7wCunEPYxXRUns=;
-        b=Byy2TR6FxBFB/VA1njlMNPZuWQG6A9W5+CZnHHs5o8WUbhknEGZBx8Vjp2AuMT7heO
-         WpUKMNRrOAtfpKrycdnN/F83aXhDqmRs5oge6H0CsVqxcEiIz9NlaeaG7slBw3sAm4kg
-         bUNaWa+WonjNuOg+jYikjc3EqUvhAq146r9z/JlGO1x7CYBMNyP7vpuD/Wfrz5xvje+x
-         U7xrb+BpXoPxEHNpUpDFPVTFYL5lD5d7ZRk/+0Mw8uT7f36bJ7YJPdHDPSAU97j0JA68
-         Vtl20nA+beSMroXu7c78aWdXrqEFwxEjazisowDVwrrBQNeZxQZdlAR2PvUCprZAmjuw
-         OI+w==
-X-Gm-Message-State: APjAAAUCvHqueuCPfPqegfJfRPWDAO8N8slRsNWuUMiW5nojJtp1QNWZ
-        N61CCIEnIhfnpB3+FVF9kSCUzXD+ht405lm4aE9z2w==
-X-Received: by 2002:a17:90a:a116:: with SMTP id s22mt2038033pjp.47.1565702886660;
- Tue, 13 Aug 2019 06:28:06 -0700 (PDT)
+        Tue, 13 Aug 2019 09:29:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54654 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728526AbfHMN3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 09:29:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 118D9AEF1;
+        Tue, 13 Aug 2019 13:29:39 +0000 (UTC)
+Date:   Tue, 13 Aug 2019 15:29:38 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm: vmscan: do not share cgroup iteration between
+ reclaimers
+Message-ID: <20190813132938.GJ17933@dhcp22.suse.cz>
+References: <20190812192316.13615-1-hannes@cmpxchg.org>
 MIME-Version: 1.0
-References: <000000000000f00cf1058bb7fb56@google.com> <Pine.LNX.4.44L0.1906201544001.1346-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1906201544001.1346-100000@iolanthe.rowland.org>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 13 Aug 2019 15:27:55 +0200
-Message-ID: <CAAeHK+zV84yDuXRL6TAiC9LW_kQQ0c1hgynNFw5aY+ofHAE85g@mail.gmail.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in p54u_load_firmware_cb
-Cc:     syzbot <syzbot+6d237e74cdc13f036473@syzkaller.appspotmail.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        linux-wireless@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Alan Stern <stern@rowland.harvard.edu>
-Content-Type: text/plain; charset="UTF-8"
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812192316.13615-1-hannes@cmpxchg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 9:46 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Wed, 19 Jun 2019, syzbot wrote:
->
-> > syzbot has found a reproducer for the following crash on:
-> >
-> > HEAD commit:    9939f56e usb-fuzzer: main usb gadget fuzzer driver
-> > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=135e29faa00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=df134eda130bb43a
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=6d237e74cdc13f036473
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=175d946ea00000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+6d237e74cdc13f036473@syzkaller.appspotmail.com
-> >
-> > usb 3-1: Direct firmware load for isl3887usb failed with error -2
-> > usb 3-1: Firmware not found.
-> > ==================================================================
-> > BUG: KASAN: slab-out-of-bounds in p54u_load_firmware_cb.cold+0x97/0x13d
-> > drivers/net/wireless/intersil/p54/p54usb.c:936
-> > Read of size 8 at addr ffff8881c9cf7588 by task kworker/1:5/2759
-> >
-> > CPU: 1 PID: 2759 Comm: kworker/1:5 Not tainted 5.2.0-rc5+ #11
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Workqueue: events request_firmware_work_func
-> > Call Trace:
-> >   __dump_stack lib/dump_stack.c:77 [inline]
-> >   dump_stack+0xca/0x13e lib/dump_stack.c:113
-> >   print_address_description+0x67/0x231 mm/kasan/report.c:188
-> >   __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
-> >   kasan_report+0xe/0x20 mm/kasan/common.c:614
-> >   p54u_load_firmware_cb.cold+0x97/0x13d
-> > drivers/net/wireless/intersil/p54/p54usb.c:936
-> >   request_firmware_work_func+0x126/0x242
-> > drivers/base/firmware_loader/main.c:785
-> >   process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-> >   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-> >   kthread+0x30b/0x410 kernel/kthread.c:255
-> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> >
-> > Allocated by task 1612:
-> >   save_stack+0x1b/0x80 mm/kasan/common.c:71
-> >   set_track mm/kasan/common.c:79 [inline]
-> >   __kasan_kmalloc mm/kasan/common.c:489 [inline]
-> >   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:462
-> >   kmalloc include/linux/slab.h:547 [inline]
-> >   syslog_print kernel/printk/printk.c:1346 [inline]
-> >   do_syslog kernel/printk/printk.c:1519 [inline]
-> >   do_syslog+0x4f4/0x12e0 kernel/printk/printk.c:1493
-> >   kmsg_read+0x8a/0xb0 fs/proc/kmsg.c:40
-> >   proc_reg_read+0x1c1/0x280 fs/proc/inode.c:221
-> >   __vfs_read+0x76/0x100 fs/read_write.c:425
-> >   vfs_read+0x18e/0x3d0 fs/read_write.c:461
-> >   ksys_read+0x127/0x250 fs/read_write.c:587
-> >   do_syscall_64+0xb7/0x560 arch/x86/entry/common.c:301
-> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >
-> > Freed by task 1612:
-> >   save_stack+0x1b/0x80 mm/kasan/common.c:71
-> >   set_track mm/kasan/common.c:79 [inline]
-> >   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:451
-> >   slab_free_hook mm/slub.c:1421 [inline]
-> >   slab_free_freelist_hook mm/slub.c:1448 [inline]
-> >   slab_free mm/slub.c:2994 [inline]
-> >   kfree+0xd7/0x280 mm/slub.c:3949
-> >   syslog_print kernel/printk/printk.c:1405 [inline]
-> >   do_syslog kernel/printk/printk.c:1519 [inline]
-> >   do_syslog+0xff3/0x12e0 kernel/printk/printk.c:1493
-> >   kmsg_read+0x8a/0xb0 fs/proc/kmsg.c:40
-> >   proc_reg_read+0x1c1/0x280 fs/proc/inode.c:221
-> >   __vfs_read+0x76/0x100 fs/read_write.c:425
-> >   vfs_read+0x18e/0x3d0 fs/read_write.c:461
-> >   ksys_read+0x127/0x250 fs/read_write.c:587
-> >   do_syscall_64+0xb7/0x560 arch/x86/entry/common.c:301
-> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >
-> > The buggy address belongs to the object at ffff8881c9cf7180
-> >   which belongs to the cache kmalloc-1k of size 1024
-> > The buggy address is located 8 bytes to the right of
-> >   1024-byte region [ffff8881c9cf7180, ffff8881c9cf7580)
-> > The buggy address belongs to the page:
-> > page:ffffea0007273d00 refcount:1 mapcount:0 mapping:ffff8881dac02a00
-> > index:0x0 compound_mapcount: 0
-> > flags: 0x200000000010200(slab|head)
-> > raw: 0200000000010200 dead000000000100 dead000000000200 ffff8881dac02a00
-> > raw: 0000000000000000 00000000000e000e 00000001ffffffff 0000000000000000
-> > page dumped because: kasan: bad access detected
-> >
-> > Memory state around the buggy address:
-> >   ffff8881c9cf7480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >   ffff8881c9cf7500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > > ffff8881c9cf7580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> >                        ^
-> >   ffff8881c9cf7600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >   ffff8881c9cf7680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > ==================================================================
->
-> Isn't this the same as syzkaller bug 200d4bb11b23d929335f ?  Doesn't
-> the same patch fix it?
+On Mon 12-08-19 15:23:16, Johannes Weiner wrote:
+> One of our services observed a high rate of cgroup OOM kills in the
+> presence of large amounts of clean cache. Debugging showed that the
+> culprit is the shared cgroup iteration in page reclaim.
+> 
+> Under high allocation concurrency, multiple threads enter reclaim at
+> the same time. Fearing overreclaim when we first switched from the
+> single global LRU to cgrouped LRU lists, we introduced a shared
+> iteration state for reclaim invocations - whether 1 or 20 reclaimers
+> are active concurrently, we only walk the cgroup tree once: the 1st
+> reclaimer reclaims the first cgroup, the second the second one etc.
+> With more reclaimers than cgroups, we start another walk from the top.
+> 
+> This sounded reasonable at the time, but the problem is that reclaim
+> concurrency doesn't scale with allocation concurrency. As reclaim
+> concurrency increases, the amount of memory individual reclaimers get
+> to scan gets smaller and smaller. Individual reclaimers may only see
+> one cgroup per cycle, and that may not have much reclaimable
+> memory. We see individual reclaimers declare OOM when there is plenty
+> of reclaimable memory available in cgroups they didn't visit.
+> 
+> This patch does away with the shared iterator, and every reclaimer is
+> allowed to scan the full cgroup tree and see all of reclaimable
+> memory, just like it would on a non-cgrouped system. This way, when
+> OOM is declared, we know that the reclaimer actually had a chance.
+> 
+> To still maintain fairness in reclaim pressure, disallow cgroup
+> reclaim from bailing out of the tree walk early. Kswapd and regular
+> direct reclaim already don't bail, so it's not clear why limit reclaim
+> would have to, especially since it only walks subtrees to begin with.
 
-#syz dup: KASAN: use-after-free Read in p54u_load_firmware_cb
+The code does bail out on any direct reclaim - be it limit or page
+allocator triggered. Check the !current_is_kswapd part of the condition.
+
+> This change completely eliminates the OOM kills on our service, while
+> showing no signs of overreclaim - no increased scan rates, %sys time,
+> or abrupt free memory spikes. I tested across 100 machines that have
+> 64G of RAM and host about 300 cgroups each.
+
+What is the usual direct reclaim involvement on those machines?
+
+> [ It's possible overreclaim never was a *practical* issue to begin
+>   with - it was simply a concern we had on the mailing lists at the
+>   time, with no real data to back it up. But we have also added more
+>   bail-out conditions deeper inside reclaim (e.g. the proportional
+>   exit in shrink_node_memcg) since. Regardless, now we have data that
+>   suggests full walks are more reliable and scale just fine. ]
+
+I do not see how shrink_node_memcg bail out helps here. We do scan up-to
+SWAP_CLUSTER_MAX pages for each LRU at least once. So we are getting to
+nr_memcgs_with_pages multiplier with the patch applied in the worst case.
+
+How much that matters is another question and it depends on the
+number of cgroups and the rate the direct reclaim happens. I do not
+remember exact numbers but even walking a very large memcg tree was
+noticeable.
+
+For the over reclaim part SWAP_CLUSTER_MAX is a relatively small number
+so even hundreds of memcgs on a "reasonably" sized system shouldn't be
+really observable (we are talking about 7MB per reclaim per reclaimer on
+1k memcgs with pages). This would get worse with many reclaimers. Maybe
+we will need something like the regular direct reclaim throttling of
+mmemcg limit reclaim as well in the future.
+
+That being said, I do agree that the oom side of the coin is causing
+real troubles and it is a real problem to be addressed first. Especially with
+cgroup v2 where we have likely more memcgs without any pages because
+inner nodes do not have any tasks and direct charges which makes some
+reclaimers hit memcgs without pages more likely.
+
+Let's see whether we see regression due to over-reclaim. 
+
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+
+With the direct reclaim bail out reference fixed - unless I am wrong
+there of course
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+It is sad to see this piece of fun not being used after that many years
+of bugs here and there and all the lockless fun but this is the life
+;)
+
+> ---
+>  mm/vmscan.c | 22 ++--------------------
+>  1 file changed, 2 insertions(+), 20 deletions(-)
+> 
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index dbdc46a84f63..b2f10fa49c88 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -2667,10 +2667,6 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+>  
+>  	do {
+>  		struct mem_cgroup *root = sc->target_mem_cgroup;
+> -		struct mem_cgroup_reclaim_cookie reclaim = {
+> -			.pgdat = pgdat,
+> -			.priority = sc->priority,
+> -		};
+>  		unsigned long node_lru_pages = 0;
+>  		struct mem_cgroup *memcg;
+>  
+> @@ -2679,7 +2675,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+>  		nr_reclaimed = sc->nr_reclaimed;
+>  		nr_scanned = sc->nr_scanned;
+>  
+> -		memcg = mem_cgroup_iter(root, NULL, &reclaim);
+> +		memcg = mem_cgroup_iter(root, NULL, NULL);
+>  		do {
+>  			unsigned long lru_pages;
+>  			unsigned long reclaimed;
+> @@ -2724,21 +2720,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+>  				   sc->nr_scanned - scanned,
+>  				   sc->nr_reclaimed - reclaimed);
+>  
+> -			/*
+> -			 * Kswapd have to scan all memory cgroups to fulfill
+> -			 * the overall scan target for the node.
+> -			 *
+> -			 * Limit reclaim, on the other hand, only cares about
+> -			 * nr_to_reclaim pages to be reclaimed and it will
+> -			 * retry with decreasing priority if one round over the
+> -			 * whole hierarchy is not sufficient.
+> -			 */
+> -			if (!current_is_kswapd() &&
+> -					sc->nr_reclaimed >= sc->nr_to_reclaim) {
+> -				mem_cgroup_iter_break(root, memcg);
+> -				break;
+> -			}
+> -		} while ((memcg = mem_cgroup_iter(root, memcg, &reclaim)));
+> +		} while ((memcg = mem_cgroup_iter(root, memcg, NULL)));
+>  
+>  		if (reclaim_state) {
+>  			sc->nr_reclaimed += reclaim_state->reclaimed_slab;
+> -- 
+> 2.22.0
+
+-- 
+Michal Hocko
+SUSE Labs
