@@ -2,111 +2,106 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC46C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D23C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 077EA2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5FFF20844
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:23:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZwfYN35Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729591AbfHMOXM (ORCPT
+        id S1729596AbfHMOXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 10:23:12 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25540 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729513AbfHMOXM (ORCPT
+        Tue, 13 Aug 2019 10:23:38 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37285 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729493AbfHMOXi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 10:23:12 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7DEJ7cq111818;
-        Tue, 13 Aug 2019 10:23:00 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ubxub09te-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Aug 2019 10:23:00 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7DEJjkL016478;
-        Tue, 13 Aug 2019 14:22:59 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma03dal.us.ibm.com with ESMTP id 2u9nj6x95n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Aug 2019 14:22:59 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7DEMwoa46530858
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 14:22:58 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B1968B2065;
-        Tue, 13 Aug 2019 14:22:58 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 95178B205F;
-        Tue, 13 Aug 2019 14:22:58 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 13 Aug 2019 14:22:58 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 6743E16C1293; Tue, 13 Aug 2019 07:22:59 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 07:22:59 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>, Greg KH <greg@kroah.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: Re: linux-next: manual merge of the driver-core tree with the rcu
- tree
-Message-ID: <20190813142259.GZ28441@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190813155048.59dd9bdf@canb.auug.org.au>
- <0d7ff624-dce3-3961-b9a6-7de8eba2bdee@intel.com>
+        Tue, 13 Aug 2019 10:23:38 -0400
+Received: by mail-qt1-f195.google.com with SMTP id y26so106521992qto.4
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 07:23:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=y1ZEdaOi94u94z+ebuqvGlapSogYpo4cbHAgruEQQ4U=;
+        b=ZwfYN35YX8mhQPQt5FZI9cTGY2XJPexvicmwAb0R96q1jswLieAfDhHUf0QRWTSw7D
+         584cBpiDhyJJDaJ1OrlpX4cuI+tGNmJZqthdp821BKzrY7NqRvw3DwUg+IGW5QUlAiLI
+         xSV8hl6oOSiBTYTR+rn1rzHCAw4Ij5z4Bwloris3UF+2Ty50XsRjfoyxhe0Ppx/sWlyW
+         QVNRF/tJGb7nK9gsDR7fyDkz2zX+uQfwsz/Uecv/1G7C1Z8RU2k1MgxUu6J6YyAYUBEM
+         FMrpDsIU5RGCPbPwpFataD3+hxuAQIif3ZHGXVOjr8KyxiUNNQapLtSyCmByZ25vaCJ0
+         aP0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=y1ZEdaOi94u94z+ebuqvGlapSogYpo4cbHAgruEQQ4U=;
+        b=VwGNFGaTyid7VTAsQElXmx2FezjXm9v4VEbRrkbbP5moJvWsz0nznEOWijzOEfeIVM
+         VZuDevPN2IlVZWjTPHW3JU2x13GJFFi/+fC9QI6vWIgsRwGLEXrnSHjwldQvEk3fpteN
+         Qp2LYG2nocQMvp8E96Kc0icxteMlLh0BQgtKcYXprvDX/afNEveY+ofgV/TRxsR8AD21
+         3ucYX/kAXm9LngoTGsLRthty4uOTtK27UWOhsXwsPCXV9J2zcKyg71NHWX9aaCi0Td/w
+         MmOZ2y3yjeuQNb6DGAgwK1VjqVBl19prWR74lFWu6fjyc27IYRt3lRiuNGB72aKwMwGE
+         IFJg==
+X-Gm-Message-State: APjAAAUamxPTKz8LVpKaRfJ0DXVSXIjZIXI0jSs5/t7furFFkLircz01
+        lArZBYo9KX/KQr4TLbql+mI=
+X-Google-Smtp-Source: APXvYqwYnUzFg0eKUYnOygTHC8dz6Jqi5NcJkttA4X9QYORBsBQO6e2yUiUBj30VabYZO64G2YewjQ==
+X-Received: by 2002:ac8:670a:: with SMTP id e10mr5673620qtp.244.1565706217217;
+        Tue, 13 Aug 2019 07:23:37 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id p59sm48730550qtd.75.2019.08.13.07.23.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 13 Aug 2019 07:23:36 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1E1A840340; Tue, 13 Aug 2019 11:23:34 -0300 (-03)
+Date:   Tue, 13 Aug 2019 11:23:34 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Tan Xiaojun <tanxiaojun@huawei.com>, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, songliubraving@fb.com, rostedt@goodmis.org,
+        kan.liang@linux.intel.com, tz.stoyanov@gmail.com,
+        alexey.budankov@linux.intel.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf record: Support aarch64 random socket_id assignment
+Message-ID: <20190813142334.GE12299@kernel.org>
+References: <1564717737-21602-1-git-send-email-tanxiaojun@huawei.com>
+ <20190802130926.GB27223@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0d7ff624-dce3-3961-b9a6-7de8eba2bdee@intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-13_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908130152
+In-Reply-To: <20190802130926.GB27223@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 10:50:05AM +0200, Rafael J. Wysocki wrote:
-> On 8/13/2019 7:50 AM, Stephen Rothwell wrote:
-> >Hi all,
-> >
-> >Today's linux-next merge of the driver-core tree got a conflict in:
-> >
-> >   drivers/base/power/runtime.c
-> >
-> >between commit:
-> >
-> >   4a3a5474b4c1 ("driver/core: Convert to use built-in RCU list checking")
-> >
-> >from the rcu tree and commit:
-> >
-> >   515db266a9da ("driver core: Remove device link creation limitation")
-> >
-> >from the driver-core tree.
-> >
-> >I fixed it up (see below) and can carry the fix as necessary. This
-> >is now fixed as far as linux-next is concerned, but any non trivial
-> >conflicts should be mentioned to your upstream maintainer when your tree
-> >is submitted for merging.  You may also want to consider cooperating
-> >with the maintainer of the conflicting tree to minimise any particularly
-> >complex conflicts.
-> >
-> The fix looks good to me, thanks!
+Em Fri, Aug 02, 2019 at 03:09:26PM +0200, Jiri Olsa escreveu:
+> On Fri, Aug 02, 2019 at 11:48:57AM +0800, Tan Xiaojun wrote:
+> > Same as the commit 01766229533f ("perf record: Support s390 random
+> > socket_id assignment"), aarch64 also have this problem.
+> > 
+> > Without this fix:
+> >   [root@localhost perf]# ./perf report --header -I -v
+> >   ...
+> >   socket_id number is too big.You may need to upgrade the perf tool.
+> > 
+> >   # ========
+> >   # captured on    : Thu Aug  1 22:58:38 2019
+> >   # header version : 1
+> >   ...
+> >   # Core ID and Socket ID information is not available
+> >   ...
+> > 
+> > With this fix:
+> >   [root@localhost perf]# ./perf report --header -I -v
 
-Same here, and thank you!
+Thanks, applied.
 
-							Thanx, Paul
+- Arnaldo
