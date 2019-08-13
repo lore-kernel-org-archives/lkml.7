@@ -2,187 +2,148 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C11EC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3B0C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6A7D20844
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:52:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="IcBJ7hke"
+	by mail.kernel.org (Postfix) with ESMTP id 69D57205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 14:52:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbfHMOwr (ORCPT
+        id S1729710AbfHMOwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 10:52:47 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36553 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbfHMOwr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 10:52:47 -0400
-Received: by mail-ed1-f66.google.com with SMTP id p28so1655092edi.3
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 07:52:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=RQ1QVx5o9SJIET1BWjWYbWKrgeBi7qgViw8kkVMCTvs=;
-        b=IcBJ7hkeGZvJTKoDJTcKpgH6kedD5Ys+UinOd9BoHC2xm6KrEn66kehAaodc2VXiBG
-         YsTebKuxTPKezkiq/+7mL3flXJfHL7kp2/L2BsHul3ZKwyuLOaV4o+fT9kWwHkE6lHvo
-         Is+KJZUcK0obXKg8OA6opSR4n1FFR9aR8OgRc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=RQ1QVx5o9SJIET1BWjWYbWKrgeBi7qgViw8kkVMCTvs=;
-        b=g1G3eo2krXc/vJMF0Ek/2o2VaIshk142hy2ciwvGZDbHLY0R04Iz+zffTJ7u672RlT
-         x6wOpXaSyv4CVuZ5m2OQecBqAL7WM3boBTtodoUs6qUyjkRK6ub8WKFhofO5aC8v27l1
-         HbWx6WINpKeZGOymb29NPSC+l77kidB4pZa7NZZMEZRcgFRaV1ntwbAkuh1pWDhOeN4T
-         bQHhnPOA38q1S+Msh8cHFVKsheqeDdu3L5CK229USH4eHvljkARtLOpPYAgDS6IsnQpF
-         KkC2cswloLiMuOJj4tKxKQxBZu2khZKRgXNPss3hyrmKBXK4qpULGBnQqCsj/F9PVyr6
-         0Rmw==
-X-Gm-Message-State: APjAAAWi5o+ox3VABymu79YYdS30Znkvl+asjV/9aFs0ytgK4TaX3nC9
-        aKZxBCjqyxE/GIalYkNOhZCQZw==
-X-Google-Smtp-Source: APXvYqzSFlhkSEYUKazTLMB6IcJ+/zeWaPQ1in9/DSpiokVlOE33cDm3eLAeQimuIReaivkPmW6ZFg==
-X-Received: by 2002:a50:9f81:: with SMTP id c1mr25767200edf.100.1565707965205;
-        Tue, 13 Aug 2019 07:52:45 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id c15sm17906654ejs.17.2019.08.13.07.52.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 07:52:44 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 16:52:42 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, Juston Li <juston.li@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/26] drm/dp_mst: Move PDT teardown for ports into
- destroy_connector_work
-Message-ID: <20190813145242.GW7444@phenom.ffwll.local>
-Mail-Followup-To: Lyude Paul <lyude@redhat.com>,
-        dri-devel@lists.freedesktop.org, Juston Li <juston.li@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
-        Harry Wentland <hwentlan@amd.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org
-References: <20190718014329.8107-1-lyude@redhat.com>
- <20190718014329.8107-7-lyude@redhat.com>
+        Tue, 13 Aug 2019 10:52:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37416 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727561AbfHMOws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 10:52:48 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 65C4D30BA084;
+        Tue, 13 Aug 2019 14:52:47 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E6DC228D02;
+        Tue, 13 Aug 2019 14:52:46 +0000 (UTC)
+Date:   Tue, 13 Aug 2019 08:52:46 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     Kirti Wankhede <kwankhede@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>
+Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+Message-ID: <20190813085246.1d642ae5@x1.home>
+In-Reply-To: <AM0PR05MB4866993536C0C8ACEA2F92DBD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190802065905.45239-1-parav@mellanox.com>
+        <20190808141255.45236-1-parav@mellanox.com>
+        <20190808170247.1fc2c4c4@x1.home>
+        <77ffb1f8-e050-fdf5-e306-0a81614f7a88@nvidia.com>
+        <AM0PR05MB4866993536C0C8ACEA2F92DBD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190718014329.8107-7-lyude@redhat.com>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 13 Aug 2019 14:52:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 09:42:29PM -0400, Lyude Paul wrote:
-> This will allow us to add some locking for port PDTs, which can't be
-> done from drm_dp_destroy_port() since we don't know what locks the
-> caller might be holding. Also, this gets rid of a good bit of unneeded
-> code.
-> 
-> Cc: Juston Li <juston.li@intel.com>
-> Cc: Imre Deak <imre.deak@intel.com>
-> Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> Cc: Harry Wentland <hwentlan@amd.com>
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> ---
->  drivers/gpu/drm/drm_dp_mst_topology.c | 42 +++++++++++----------------
->  1 file changed, 17 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index defc5e09fb9a..0295e007c836 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -1509,31 +1509,22 @@ static void drm_dp_destroy_port(struct kref *kref)
->  		container_of(kref, struct drm_dp_mst_port, topology_kref);
->  	struct drm_dp_mst_topology_mgr *mgr = port->mgr;
->  
-> -	if (!port->input) {
-> -		kfree(port->cached_edid);
-> -
-> -		/*
-> -		 * The only time we don't have a connector
-> -		 * on an output port is if the connector init
-> -		 * fails.
-> -		 */
-> -		if (port->connector) {
-> -			/* we can't destroy the connector here, as
-> -			 * we might be holding the mode_config.mutex
-> -			 * from an EDID retrieval */
-> -
-> -			mutex_lock(&mgr->destroy_connector_lock);
-> -			list_add(&port->next, &mgr->destroy_connector_list);
-> -			mutex_unlock(&mgr->destroy_connector_lock);
-> -			schedule_work(&mgr->destroy_connector_work);
-> -			return;
-> -		}
-> -		/* no need to clean up vcpi
-> -		 * as if we have no connector we never setup a vcpi */
-> -		drm_dp_port_teardown_pdt(port, port->pdt);
-> -		port->pdt = DP_PEER_DEVICE_NONE;
-> +	/* There's nothing that needs locking to destroy an input port yet */
-> +	if (port->input) {
-> +		drm_dp_mst_put_port_malloc(port);
-> +		return;
->  	}
-> -	drm_dp_mst_put_port_malloc(port);
-> +
-> +	kfree(port->cached_edid);
-> +
-> +	/*
-> +	 * we can't destroy the connector here, as we might be holding the
-> +	 * mode_config.mutex from an EDID retrieval
-> +	 */
-> +	mutex_lock(&mgr->destroy_connector_lock);
-> +	list_add(&port->next, &mgr->destroy_connector_list);
-> +	mutex_unlock(&mgr->destroy_connector_lock);
-> +	schedule_work(&mgr->destroy_connector_work);
+On Tue, 13 Aug 2019 14:40:02 +0000
+Parav Pandit <parav@mellanox.com> wrote:
 
-So if I'm not completely blind this just flattens the above code flow (by
-inverting the if (port->input)).
+> > -----Original Message-----
+> > From: Kirti Wankhede <kwankhede@nvidia.com>
+> > Sent: Monday, August 12, 2019 5:06 PM
+> > To: Alex Williamson <alex.williamson@redhat.com>; Parav Pandit
+> > <parav@mellanox.com>
+> > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org; cohuck@redhat.com;
+> > cjia@nvidia.com
+> > Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+> > 
+> > 
+> > 
+> > On 8/9/2019 4:32 AM, Alex Williamson wrote:  
+> > > On Thu,  8 Aug 2019 09:12:53 -0500
+> > > Parav Pandit <parav@mellanox.com> wrote:
+> > >  
+> > >> Currently mtty sample driver uses mdev state and UUID in convoluated
+> > >> way to generate an interrupt.
+> > >> It uses several translations from mdev_state to mdev_device to mdev uuid.
+> > >> After which it does linear search of long uuid comparision to find
+> > >> out mdev_state in mtty_trigger_interrupt().
+> > >> mdev_state is already available while generating interrupt from which
+> > >> all such translations are done to reach back to mdev_state.
+> > >>
+> > >> This translations are done during interrupt generation path.
+> > >> This is unnecessary and reduandant.  
+> > >
+> > > Is the interrupt handling efficiency of this particular sample driver
+> > > really relevant, or is its purpose more to illustrate the API and
+> > > provide a proof of concept?  If we go to the trouble to optimize the
+> > > sample driver and remove this interface from the API, what do we lose?
+> > >
+> > > This interface was added via commit:
+> > >
+> > > 99e3123e3d72 vfio-mdev: Make mdev_device private and abstract
+> > > interfaces
+> > >
+> > > Where the goal was to create a more formal interface and abstract
+> > > driver access to the struct mdev_device.  In part this served to make
+> > > out-of-tree mdev vendor drivers more supportable; the object is
+> > > considered opaque and access is provided via an API rather than
+> > > through direct structure fields.
+> > >
+> > > I believe that the NVIDIA GRID mdev driver does make use of this
+> > > interface and it's likely included in the sample driver specifically
+> > > so that there is an in-kernel user for it (ie. specifically to avoid
+> > > it being removed so casually).  An interesting feature of the NVIDIA
+> > > mdev driver is that I believe it has portions that run in userspace.
+> > > As we know, mdevs are named with a UUID, so I can imagine there are
+> > > some efficiencies to be gained in having direct access to the UUID for
+> > > a device when interacting with userspace, rather than repeatedly
+> > > parsing it from a device name.  
+> > 
+> > That's right.
+> >   
+> > >  Is that really something we want to make more difficult in order to
+> > > optimize a sample driver?  Knowing that an mdev device uses a UUID for
+> > > it's name, as tools like libvirt and mdevctl expect, is it really
+> > > worthwhile to remove such a trivial API?
+> > >  
+> > >> Hence,
+> > >> Patch-1 simplifies mtty sample driver to directly use mdev_state.
+> > >>
+> > >> Patch-2, Since no production driver uses mdev_uuid(), simplifies and
+> > >> removes redandant mdev_uuid() exported symbol.  
+> > >
+> > > s/no production driver/no in-kernel production driver/
+> > >
+> > > I'd be interested to hear how the NVIDIA folks make use of this API
+> > > interface.  Thanks,
+> > >  
+> > 
+> > Yes, NVIDIA mdev driver do use this interface. I don't agree on removing
+> > mdev_uuid() interface.
+> >   
+> We need to ask Greg or Linus on the kernel policy on whether an API
+> should exist without in-kernel driver. We don't add such API in
+> netdev, rdma and possibly other subsystem. Where can we find this
+> mdev driver in-tree?
 
->  }
->  
->  /**
-> @@ -3881,7 +3872,8 @@ drm_dp_finish_destroy_port(struct drm_dp_mst_port *port)
->  {
->  	INIT_LIST_HEAD(&port->next);
->  
-> -	port->mgr->cbs->destroy_connector(port->mgr, port->connector);
-> +	if (port->connector)
+We probably would not have added the API only for an out of tree
+driver, but we do have a sample driver that uses it, even if it's
+rather convoluted.  The sample driver is showing an example of using the
+API, which is rather its purpose more so than absolutely efficient
+interrupt handling.  Also, let's not overstate what this particular
+API callback provides, it's simply access to the uuid of the device,
+which is a fundamental property of a mediated device.  This API was
+added simply to provide data abstraction, allowing the struct
+mdev_device to be opaque to vendor drivers.  Thanks,
 
-And this here I can't connect with the commit message. I'm confused, did
-something go wrong with some rebase here, and this patch should have a
-different title/summary?
--Daniel
-
-> +		port->mgr->cbs->destroy_connector(port->mgr, port->connector);
->  
->  	drm_dp_port_teardown_pdt(port, port->pdt);
->  	port->pdt = DP_PEER_DEVICE_NONE;
-> -- 
-> 2.21.0
-> 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Alex
