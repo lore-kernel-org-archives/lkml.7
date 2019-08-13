@@ -6,109 +6,84 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5FAC32753
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CCBC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA40020663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B9620644
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 15:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbfHMPbZ (ORCPT
+        id S1729128AbfHMPde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 11:31:25 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57784 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728738AbfHMPbZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 11:31:25 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7DFCVG5064510;
-        Tue, 13 Aug 2019 11:31:15 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ubx5p5h7n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Aug 2019 11:31:15 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7DFULnj023572;
-        Tue, 13 Aug 2019 15:31:13 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma02dal.us.ibm.com with ESMTP id 2u9nj63gkb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Aug 2019 15:31:13 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7DFVDxu54133090
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Aug 2019 15:31:13 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 026FDB2064;
-        Tue, 13 Aug 2019 15:31:13 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DA024B205F;
-        Tue, 13 Aug 2019 15:31:12 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 13 Aug 2019 15:31:12 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id BF70E16C0E5D; Tue, 13 Aug 2019 08:31:13 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 08:31:13 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: linux-next: build failure after merge of the rcu tree
-Message-ID: <20190813153113.GD28441@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190813175732.2c97d412@canb.auug.org.au>
+        Tue, 13 Aug 2019 11:33:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38416 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728226AbfHMPde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 11:33:34 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2E3A730832DC;
+        Tue, 13 Aug 2019 15:33:34 +0000 (UTC)
+Received: from sandy.ghostprotocols.net (ovpn-112-35.phx2.redhat.com [10.3.112.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A735F80FD6;
+        Tue, 13 Aug 2019 15:33:33 +0000 (UTC)
+Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
+        id CAE4411E7; Tue, 13 Aug 2019 12:33:30 -0300 (BRT)
+Date:   Tue, 13 Aug 2019 12:33:30 -0300
+From:   Arnaldo Carvalho de Melo <acme@redhat.com>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>, acme@kernel.org
+Subject: Re: [PATCH v1] perf record: Add an option to take an AUX snapshot on
+ exit
+Message-ID: <20190813153330.GF2142@redhat.com>
+References: <20190806144101.62892-1-alexander.shishkin@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190813175732.2c97d412@canb.auug.org.au>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-13_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908130158
+In-Reply-To: <20190806144101.62892-1-alexander.shishkin@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.5.20 (2009-12-10)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 13 Aug 2019 15:33:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 05:57:32PM +1000, Stephen Rothwell wrote:
-> Hi all,
+Em Tue, Aug 06, 2019 at 05:41:01PM +0300, Alexander Shishkin escreveu:
+> It is sometimes useful to generate a snapshot when perf record exits;
+> I've been using a wrapper script around the workload that would do a
+> killall -USR2 perf when the workload exits.
 > 
-> After merging the rcu tree, today's linux-next build (powerpc allnoconfig)
-> failed like this:
-> 
-> drivers/base/core.c: In function 'device_links_read_lock_held':
-> drivers/base/core.c:106:9: error: implicit declaration of function 'lock_is_held'; did you mean 'lockref_get'? [-Werror=implicit-function-declaration]
->   return lock_is_held(&device_links_lock);
->          ^~~~~~~~~~~~
->          lockref_get
-> 
-> Caused by commit
-> 
->   4a3a5474b4c1 ("driver/core: Convert to use built-in RCU list checking")
-> 
-> lock_is_held() us only available if CONFIG_LOCKDEP is set.
+> @@ -654,7 +670,7 @@ int record__auxtrace_mmap_read(struct record *rec __maybe_unused,
+>  }
+>  
+>  static inline
+> -void record__read_auxtrace_snapshot(struct record *rec __maybe_unused)
+> +void record__read_auxtrace_snapshot(struct record *rec __maybe_unused, bool on_exit)
 
-Joel, one approach would be to make lock_is_held() variant of
-device_links_read_lock_held() be a macro rather than a function.
-Another would be to use #ifdef so as to invoke lock_is_held() only when
-lockdep is enabled.
+You forgot to add the __maybe_unused for the on_exit and later for the
+'rec' in record__auxtrace_snapshot_exit, which causes the build to fail
+when auxtrace isn't being built, I've fixed those.
 
-Or do you have a better approach?
+- Arnaldo
 
-							Thanx, Paul
-
-> I have reverted that commit for today.
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-
-
+>  {
+>  }
+>  
+> @@ -664,6 +680,12 @@ int auxtrace_record__snapshot_start(struct auxtrace_record *itr __maybe_unused)
+>  	return 0;
+>  }
+>  
+> +static inline
+> +int record__auxtrace_snapshot_exit(struct record *rec)
+> +{
+> +	return 0;
+> +}
+> +
+>  static int record__auxtrace_init(struct record *rec __maybe_unused)
+>  {
+>  	return 0;
+> @@ -1536,7 +1558,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
