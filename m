@@ -2,152 +2,149 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D77FEC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D87C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA71020840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23BF3206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 19:50:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ngzvhJZP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZIMtldci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfHMTsN (ORCPT
+        id S1726568AbfHMTun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 15:48:13 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:35183 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbfHMTsN (ORCPT
+        Tue, 13 Aug 2019 15:50:43 -0400
+Received: from mail-pl1-f170.google.com ([209.85.214.170]:34929 "EHLO
+        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725923AbfHMTum (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 15:48:13 -0400
-Received: by mail-qt1-f195.google.com with SMTP id u34so8329561qte.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Aug 2019 12:48:12 -0700 (PDT)
+        Tue, 13 Aug 2019 15:50:42 -0400
+Received: by mail-pl1-f170.google.com with SMTP id gn20so450949plb.2;
+        Tue, 13 Aug 2019 12:50:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DeGXme6+dwx5l6d8geNGR3pPKvRt8jf26dFTpmGE0LY=;
-        b=ngzvhJZPGSpuXsvCyrZ/WIJGposKw9+tpqCt10RopxmuLd2Pz7ulmHU4XhYHQyKvgI
-         kNKUU/nEO/MYESYLFIg0JZdcljHMOhFS+kDqMy57tl2/PA+RYIPXUUcd4YgFv1kQmKCl
-         AMeoc5qlmi7t1V4+jX/G8Bt9NKyN0ZeQavlf0s3/IA6QNjQOHkRhTgODV3NwZ11B39E5
-         SWB7IouQbfDIT3r1opkeM1DIjMwspCzdsNs97PlFNu/2JuoZIL+MjaRRxCIA3irCSH/b
-         PLaM/Jxgo7Hb0IdVoKyHOtHHNOkld5mkyNlbVlQ5qsM4W9t5lNHOHJh9EAzODnydV3un
-         dzRA==
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6W/vfARMPR+NhYh4QIIExddFhcCqi3b0nbQB7f6xRo4=;
+        b=ZIMtldcixKmTkqZGeLPvYhHKaVOovc6tLCF/NHO+12g8/adT6f7+beFInH5jM5rP6R
+         JRSZ/gPblWkt1yq+0oG1SV9ECImLuSWAzGH7GX3HL0SFAQTx2EPrUOG8xS3fVMhLJqoT
+         JMcj+yHOx9lgQrukxZJPRGjkqoJvrSTWj2OS+T0Uye/W9iMWQ9PrBRDpKrZhVhCn7gwk
+         eTapXBeFIN8ThGQoCISZAU9QWx4izIU7+S+bv3D21JSW+gxerARfD+sQROULC5IWDZZg
+         yQl3wmp04LjjjQ+Timy9JUEJ9qA6PZefqxuwnMJj10PnMwfG3VkWQrqhkeT3zl3z+31R
+         ZBTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DeGXme6+dwx5l6d8geNGR3pPKvRt8jf26dFTpmGE0LY=;
-        b=K+YsOFZiqulev9Yv0X4TJdWdz7YH8UuTad9rkGKc9uUBCMI/dkrgHYm2AhGKxl7zaF
-         5DGVoGjJluMnn2yNtvMvbyWrZqcszMSG4jZLdnsspN7P+cVJRfHoD5h69+kOC68RDslT
-         CQu+2YTS3mkd+eXrt+DNhgg7G6oIs0CaXxMk1OkHhpaBXFUm8n5MY+NxJwTkOzelb6ux
-         xl69CECzWXnMNkNZqmtrKw+dRMmV9PyO7XDjN45LsqbalJNbVqMZpHqz5F1vBGuRbXNf
-         CyTBhWlWI53LSfKe8y+SkSjVr+PyjADQ/iVVh4Cairliiq0nYi/HWbOqykxnMnTCPFek
-         Nseg==
-X-Gm-Message-State: APjAAAVSnrfmtB3n/yAi8MOPW2o4AXYZJr6YMpPXEg0eb17rV8TtTAAL
-        CYtIRPNI1aA/bYjz+MP2K+XzfidePad6/vBBxnZTg9DFzwPHaw==
-X-Google-Smtp-Source: APXvYqzEJl3HG1FRL7ajj/AJNzu2zpUea+aWnDGRaTX0rHteb+euaPWbhFg5Pay0bb/GPJUErSNfW95fjZLqXI4YCnY=
-X-Received: by 2002:ac8:32a1:: with SMTP id z30mr35337650qta.117.1565725691929;
- Tue, 13 Aug 2019 12:48:11 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=6W/vfARMPR+NhYh4QIIExddFhcCqi3b0nbQB7f6xRo4=;
+        b=AoJMWohnFPyr1pTlnD1JqZjuQs8z8U6FN+StubZfv0lSrnsItrvn8JSCtixAOS5qo8
+         uzm+cx8YcvufOlm68ktzEnRNVFs3IPi+E66zuPxKNZdCsThsELp3/KzJLCBBQnlHwLUC
+         SJZaZdirGJhC+O47YYZ5JOG1O1ftnkso0kurlCHYi6H47egB03yPV9CGVl3iNuHf/5yk
+         1pAlAojaRGKEv83hAOaAew1+U30dS+/cDOuJxQQiOnCyv0OqOgjum++UxOi0C5eMioFM
+         cb1jnnfXhrLo09K9k1hUipv7QUMV6HtpTtxLwYji6nd2aO5839PdSzPirHxZrd4/8JHU
+         B+AQ==
+X-Gm-Message-State: APjAAAUD45RnHcvGvMn8fb63pwEljC43fcjSB2QO0KKonGydNVDHehzf
+        W1kfHeoLdd+6AegB92Ouxgw=
+X-Google-Smtp-Source: APXvYqx31IfVs9OFARc2yDHqURnrSCVq6twCVN0+1PXuirggENOh2NglKwY60yUGcSAYM+dw6T30nQ==
+X-Received: by 2002:a17:902:7686:: with SMTP id m6mr39423124pll.239.1565725841254;
+        Tue, 13 Aug 2019 12:50:41 -0700 (PDT)
+Received: from [10.67.49.31] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id v21sm1137509pfe.131.2019.08.13.12.50.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 13 Aug 2019 12:50:40 -0700 (PDT)
+Subject: Re: [PATCH net] net: dsa: mv88e6xxx: drop adjust_link to enabled
+ phylink
+To:     Hubert Feurstein <h.feurstein@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20190731154239.19270-1-h.feurstein@gmail.com>
+ <20190804151013.GD6800@lunn.ch>
+ <CAFfN3gX6_dvAkRqRuXdR_+nfsFyBd2UNSzYo1H3am49xyb-hBQ@mail.gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <8ff3aca2-860b-e027-990d-fb6bdb9389c6@gmail.com>
+Date:   Tue, 13 Aug 2019 12:50:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190809214642.12078-1-dxu@dxuuu.xyz> <20190809214642.12078-2-dxu@dxuuu.xyz>
- <CAEf4Bzb0jBmsdeKZ_vN4w-z1tM8M2Ygz_CoBoO_2iV55tgL1Bg@mail.gmail.com> <7232f649-78f8-4a2d-a3df-0ce9293f9de8@www.fastmail.com>
-In-Reply-To: <7232f649-78f8-4a2d-a3df-0ce9293f9de8@www.fastmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 13 Aug 2019 12:48:00 -0700
-Message-ID: <CAEf4BzadWn+fWuxO9E0snn04BfFWXrWsakse2nHrTWSDG_rMmQ@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf-next 1/4] tracing/probe: Add PERF_EVENT_IOC_QUERY_PROBE
- ioctl
-To:     Daniel Xu <dxu@dxuuu.xyz>
-Cc:     Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, peterz@infraded.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexei Starovoitov <ast@fb.com>,
-        alexander.shishkin@linux.intel.com, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAFfN3gX6_dvAkRqRuXdR_+nfsFyBd2UNSzYo1H3am49xyb-hBQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 5:39 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
->
-> On Mon, Aug 12, 2019, at 8:57 AM, Andrii Nakryiko wrote:
-> > On Fri, Aug 9, 2019 at 2:47 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
-> > >
-> > > It's useful to know [uk]probe's nmissed and nhit stats. For example with
-> > > tracing tools, it's important to know when events may have been lost.
-> > > debugfs currently exposes a control file to get this information, but
-> > > it is not compatible with probes registered with the perf API.
-> > >
-> > > While bpf programs may be able to manually count nhit, there is no way
-> > > to gather nmissed. In other words, it is currently not possible to
-> > > retrieve information about FD-based probes.
-> > >
-> > > This patch adds a new ioctl that lets users query nmissed (as well as
-> > > nhit for completeness). We currently only add support for [uk]probes
-> > > but leave the possibility open for other probes like tracepoint.
-> > >
-> > > Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
-> > > ---
-> > >  include/linux/trace_events.h    | 12 ++++++++++++
-> > >  include/uapi/linux/perf_event.h | 19 +++++++++++++++++++
-> > >  kernel/events/core.c            | 20 ++++++++++++++++++++
-> > >  kernel/trace/trace_kprobe.c     | 23 +++++++++++++++++++++++
-> > >  kernel/trace/trace_uprobe.c     | 23 +++++++++++++++++++++++
-> > >  5 files changed, 97 insertions(+)
-> > >
-> [...]
-> > > +       struct trace_kprobe *tk = (struct trace_kprobe *)call->data;
-> > > +       u64 nmissed, nhit;
-> > > +
-> > > +       if (!capable(CAP_SYS_ADMIN))
-> > > +               return -EPERM;
-> > > +       if (copy_from_user(&query, uquery, sizeof(query)))
+On 8/5/19 1:49 AM, Hubert Feurstein wrote:
+> Hi Andrew,
+> 
+> It looks like some work is still needed in b53_phylink_mac_config to
+> take over the
+> functionality of the current adjust_link implementation.
 
-Not sure why we are reading that struct in, if we never use that? With
-size as a first argument (see below about compatiblity), I'd also read
-just first 4 or 8 bytes only.
-
-> >
-> > what about forward/backward compatibility? Didn't you have a size
-> > field for perf_event_query_probe?
->
-> I initially did, yes. But after thinking about it more, I'm not convinced it
-> is necessary. It seems the last change to the debugfs counterpart was in
-> the initial comit cd7e7bd5e4, ~10 years ago. I cannot think of any other
-> information that would be useful off the top of my head, so I figured it'd
-> be best if we didn't make more complicated something that doesn't seem
-> likely to change. If we really needed something else, I figured adding
-> another ioctl is pretty cheap.
->
-> If you (or anyone) feels strongly about adding it back, I can make it a
-> u64 so there's no holes.
-
-Debugfs is not stable API, so I guess that matters less. I think we
-should support this forward/backward compatibility mechanism that
-kernel implements for a lot of other stable APIs.
-
->
-> >
-> > > +               return -EFAULT;
-> > > +
-> > > +       nhit = trace_kprobe_nhit(tk);
-> > > +       nmissed = tk->rp.kp.nmissed;
-> > > +
-> > > +       if (put_user(nmissed, &uquery->nmissed) ||
-> > > +           put_user(nhit, &uquery->nhit))
-> >
-> > Wouldn't it be nicer to just do one user put for entire struct (or at
-> > least relevant part of it with backward/forward compatibility?).
->
-> Not sure how that didn't occur to me. Thanks.
-
-Once you add back size field for compatibility, doing it with one call
-will make it easier to write only first N requested bytes.
+Indeed, I will look into it in the next few weeks.
+-- 
+Florian
