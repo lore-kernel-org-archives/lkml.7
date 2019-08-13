@@ -2,116 +2,260 @@ Return-Path: <SRS0=Ecng=WJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51889C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 307DFC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E5DC20840
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:30:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565699426;
-	bh=0I7ATeXt7w4ddB3YVDDEftjVJR5fs+9vPsJx53S8d+w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aTWjVkDNz9PDd73q0V50VsgU1Dr7MgNrpokwQpVRznkG3qiu90rAdzRb02+SnnoVn
-	 dbo5a6/3OO9WvmhxULopjdCcZyZ9BcWRYfAsLRH/6x4TFHB23WKS2F9Qhb70Jo9q5h
-	 7mMVy4e9AxjKSQ2ahb5VImp697JAI4zpegiPPR74=
+	by mail.kernel.org (Postfix) with ESMTP id ED43920651
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 12:31:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbfHMMaY (ORCPT
+        id S1728149AbfHMMbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 08:30:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47834 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726903AbfHMMaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 08:30:23 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D76BC2067D;
-        Tue, 13 Aug 2019 12:30:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565699422;
-        bh=0I7ATeXt7w4ddB3YVDDEftjVJR5fs+9vPsJx53S8d+w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CXaUJivcYneepu+r62Nj97SyLpXnMF3NsnHndVCZnCIAzKlhdtJOJC8rkpvs8Fgpw
-         SVEyqmXrj70RmcwiWCnvw6T4GiOAjTTgsaMQ5vKMlng59cppq6uXmu4kV0pb9OfdDb
-         +6nw0O3mriBV+sb0SDiYaqQ7oi0yh/RXYnsJKEyk=
-Date:   Tue, 13 Aug 2019 14:30:19 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
-Subject: Re: [PATCH RFC tip/core/rcu 14/14] rcu/nohz: Make multi_cpu_stop()
- enable tick on all online CPUs
-Message-ID: <20190813123016.GA11455@lenoir>
-References: <20190802151435.GA1081@linux.ibm.com>
- <20190802151501.13069-14-paulmck@linux.ibm.com>
- <20190812210232.GA3648@lenoir>
- <20190812232316.GT28441@linux.ibm.com>
+        Tue, 13 Aug 2019 08:31:33 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:64249
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726903AbfHMMbc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 08:31:32 -0400
+X-IronPort-AV: E=Sophos;i="5.64,381,1559512800"; 
+   d="scan'208";a="316282409"
+Received: from portablejulia.rsr.lip6.fr ([132.227.76.63])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Aug 2019 14:31:18 +0200
+Date:   Tue, 13 Aug 2019 14:31:18 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: julia@hadrien
+To:     Matthias Maennich <maennich@google.com>
+cc:     linux-kernel@vger.kernel.org, maco@android.com,
+        kernel-team@android.com, arnd@arndb.de, geert@linux-m68k.org,
+        gregkh@linuxfoundation.org, hpa@zytor.com, jeyu@kernel.org,
+        joel@joelfernandes.org, kstewart@linuxfoundation.org,
+        linux-arch@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-m68k@vger.kernel.org, linux-modules@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
+        lucas.de.marchi@gmail.com, maco@google.com,
+        michal.lkml@markovi.net, mingo@redhat.com, oneukum@suse.com,
+        pombredanne@nexb.com, sam@ravnborg.org, sboyd@codeaurora.org,
+        sspatil@google.com, stern@rowland.harvard.edu, tglx@linutronix.de,
+        usb-storage@lists.one-eyed-alien.net, x86@kernel.org,
+        yamada.masahiro@socionext.com, Julia Lawall <Julia.Lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        cocci@systeme.lip6.fr
+Subject: Re: [PATCH v2 08/10] scripts: Coccinelle script for namespace
+ dependencies.
+In-Reply-To: <20190813121733.52480-9-maennich@google.com>
+Message-ID: <alpine.DEB.2.21.1908131430530.4608@hadrien>
+References: <20180716122125.175792-1-maco@android.com> <20190813121733.52480-1-maennich@google.com> <20190813121733.52480-9-maennich@google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812232316.GT28441@linux.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 04:23:16PM -0700, Paul E. McKenney wrote:
-> On Mon, Aug 12, 2019 at 11:02:33PM +0200, Frederic Weisbecker wrote:
-> > On Fri, Aug 02, 2019 at 08:15:01AM -0700, Paul E. McKenney wrote:
-> > Looks like it's not the right fix but, should you ever need to set an
-> > all-CPUs (system wide) tick dependency in the future, you can use tick_set_dep().
-> 
-> Indeed, I have dropped this patch, but I now do something similar in
-> RCU's CPU-hotplug notifiers.  Which does have an effect, especially on
-> the system that isn't subject to the insane-latency cpu_relax().
-> 
-> Plus I am having to put a similar workaround into RCU's quiescent-state
-> forcing logic.
-> 
-> But how should this really be done?
-> 
-> Isn't there some sort of monitoring of nohz_full CPUs for accounting
-> purposes?  If so, would it make sense for this monitoring to check for
-> long-duration kernel execution and enable the tick in this case?  The
-> RCU dyntick machinery can be used to remotely detect the long-duration
-> kernel execution using something like the following:
-> 
-> 	int nohz_in_kernel_snap = rcu_dynticks_snap_cpu(cpu);
-> 
-> 	...
-> 
-> 	if (rcu_dynticks_in_eqs_cpu(cpu, nohz_in_kernel_snap)
-> 		nohz_in_kernel_snap = rcu_dynticks_snap_cpu(cpu);
-> 	else
-> 		/* Turn on the tick! */
-> 
-> I would supply rcu_dynticks_snap_cpu() and rcu_dynticks_in_eqs_cpu(),
-> which would be simple wrappers around RCU's private rcu_dynticks_snap()
-> and rcu_dynticks_in_eqs() functions.
-> 
-> Would this make sense as a general solution, or am I missing a corner
-> case or three?
 
-Oh I see. Until now we considered than running into the kernel (between user/guest/idle)
-is supposed to be short but there can be specific places where it doesn't apply.
 
-I'm wondering if, more than just providing wrappers, this shouldn't be entirely
-driven by RCU using the tick_set_dep_cpu()/tick_clear_dep_cpu() at appropriate timings.
+On Tue, 13 Aug 2019, Matthias Maennich wrote:
 
-I don't want to sound like I'm trying to put all the work on you :p  It's just that
-the tick shouldn't know much about RCU, it's rather RCU that is a client for the tick and
-is probably better suited to determine when a CPU becomes annoying with its extended grace
-period.
+> A script that uses the '<module>.ns_deps' file generated by modpost to
+> automatically add the required symbol namespace dependencies to each
+> module.
+>
+> Usage:
+> 1) Move some symbols to a namespace with EXPORT_SYMBOL_NS() or define
+>    DEFAULT_SYMBOL_NAMESPACE
+> 2) Run 'make' (or 'make modules') and get warnings about modules not
+>    importing that namespace.
+> 3) Run 'make nsdeps' to automatically add required import statements
+>    to said modules.
+>
+> This makes it easer for subsystem maintainers to introduce and maintain
+> symbol namespaces into their codebase.
+>
+> Co-developed-by: Martijn Coenen <maco@android.com>
+> Signed-off-by: Martijn Coenen <maco@android.com>
+> Signed-off-by: Matthias Maennich <maennich@google.com>
 
-Arming a CPU timer could also be an alternative to tick_set_dep_cpu() for that.
+Acked-by: Julia Lawall <julia.lawall@lip6.fr>
 
-What do you think?
+
+> ---
+>  MAINTAINERS                                 |  5 ++
+>  Makefile                                    | 12 +++++
+>  scripts/Makefile.modpost                    |  4 +-
+>  scripts/coccinelle/misc/add_namespace.cocci | 23 +++++++++
+>  scripts/nsdeps                              | 54 +++++++++++++++++++++
+>  5 files changed, 97 insertions(+), 1 deletion(-)
+>  create mode 100644 scripts/coccinelle/misc/add_namespace.cocci
+>  create mode 100644 scripts/nsdeps
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e81e60bd7c26..aa169070a052 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11414,6 +11414,11 @@ S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/wtarreau/nolibc.git
+>  F:	tools/include/nolibc/
+>
+> +NSDEPS
+> +M:	Matthias Maennich <maennich@google.com>
+> +S:	Maintained
+> +F:	scripts/nsdeps
+> +
+>  NTB AMD DRIVER
+>  M:	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>  L:	linux-ntb@googlegroups.com
+> diff --git a/Makefile b/Makefile
+> index 1b23f95db176..c5c3356e133c 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1500,6 +1500,9 @@ help:
+>  	@echo  '  headerdep       - Detect inclusion cycles in headers'
+>  	@echo  '  coccicheck      - Check with Coccinelle'
+>  	@echo  ''
+> +	@echo  'Tools:'
+> +	@echo  '  nsdeps          - Generate missing symbol namespace dependencies'
+> +	@echo  ''
+>  	@echo  'Kernel selftest:'
+>  	@echo  '  kselftest       - Build and run kernel selftest (run as root)'
+>  	@echo  '                    Build, install, and boot kernel before'
+> @@ -1687,6 +1690,15 @@ quiet_cmd_tags = GEN     $@
+>  tags TAGS cscope gtags: FORCE
+>  	$(call cmd,tags)
+>
+> +# Script to generate missing namespace dependencies
+> +# ---------------------------------------------------------------------------
+> +
+> +PHONY += nsdeps
+> +
+> +nsdeps:
+> +	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost nsdeps
+> +	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/$@
+> +
+>  # Scripts to check various things for consistency
+>  # ---------------------------------------------------------------------------
+>
+> diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+> index 26e6574ecd08..743fe3a2e885 100644
+> --- a/scripts/Makefile.modpost
+> +++ b/scripts/Makefile.modpost
+> @@ -56,7 +56,8 @@ MODPOST = scripts/mod/modpost						\
+>  	$(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)))	\
+>  	$(if $(KBUILD_EXTMOD),-o $(modulesymfile))			\
+>  	$(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)			\
+> -	$(if $(KBUILD_MODPOST_WARN),-w)
+> +	$(if $(KBUILD_MODPOST_WARN),-w)					\
+> +	$(if $(filter nsdeps,$(MAKECMDGOALS)),-d)
+>
+>  ifdef MODPOST_VMLINUX
+>
+> @@ -134,6 +135,7 @@ $(modules): %.ko :%.o %.mod.o FORCE
+>
+>  targets += $(modules)
+>
+> +nsdeps: __modpost
+>
+>  # Add FORCE to the prequisites of a target to force it to be always rebuilt.
+>  # ---------------------------------------------------------------------------
+> diff --git a/scripts/coccinelle/misc/add_namespace.cocci b/scripts/coccinelle/misc/add_namespace.cocci
+> new file mode 100644
+> index 000000000000..c832bb6445a8
+> --- /dev/null
+> +++ b/scripts/coccinelle/misc/add_namespace.cocci
+> @@ -0,0 +1,23 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +//
+> +/// Adds missing MODULE_IMPORT_NS statements to source files
+> +///
+> +/// This script is usually called from scripts/nsdeps with -D ns=<namespace> to
+> +/// add a missing namespace tag to a module source file.
+> +///
+> +
+> +@has_ns_import@
+> +declarer name MODULE_IMPORT_NS;
+> +identifier virtual.ns;
+> +@@
+> +MODULE_IMPORT_NS(ns);
+> +
+> +// Add missing imports, but only adjacent to a MODULE_LICENSE statement.
+> +// That ensures we are adding it only to the main module source file.
+> +@do_import depends on !has_ns_import@
+> +declarer name MODULE_LICENSE;
+> +expression license;
+> +identifier virtual.ns;
+> +@@
+> +MODULE_LICENSE(license);
+> ++ MODULE_IMPORT_NS(ns);
+> diff --git a/scripts/nsdeps b/scripts/nsdeps
+> new file mode 100644
+> index 000000000000..148db65a830f
+> --- /dev/null
+> +++ b/scripts/nsdeps
+> @@ -0,0 +1,54 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Linux kernel symbol namespace import generator
+> +#
+> +# This script requires at least spatch
+> +# version 1.0.4.
+> +SPATCH_REQ_VERSION="1.0.4"
+> +
+> +DIR="$(dirname $(readlink -f $0))/.."
+> +SPATCH="`which ${SPATCH:=spatch}`"
+> +if [ ! -x "$SPATCH" ]; then
+> +    echo 'spatch is part of the Coccinelle project and is available at http://coccinelle.lip6.fr/'
+> +    exit 1
+> +fi
+> +
+> +SPATCH_REQ_VERSION_NUM=$(echo $SPATCH_REQ_VERSION | ${DIR}/scripts/ld-version.sh)
+> +SPATCH_VERSION=$($SPATCH --version | head -1 | awk '{print $3}')
+> +SPATCH_VERSION_NUM=$(echo $SPATCH_VERSION | ${DIR}/scripts/ld-version.sh)
+> +
+> +if [ "$SPATCH_VERSION_NUM" -lt "$SPATCH_REQ_VERSION_NUM" ] ; then
+> +    echo 'spatch needs to be version 1.06 or higher'
+> +    exit 1
+> +fi
+> +
+> +generate_deps_for_ns() {
+> +    $SPATCH --very-quiet --in-place --sp-file \
+> +	    $srctree/scripts/coccinelle/misc/add_namespace.cocci -D ns=$1 $2
+> +}
+> +
+> +generate_deps() {
+> +    local mod_file=`echo $@ | sed -e 's/\.ns_deps/\.mod/'`
+> +    local mod_name=`cat $mod_file | sed -n 1p | sed -e 's/\/[^.]*$//'`
+> +    local mod_source_files=`cat $mod_file | sed -n 2p | sed -e 's/\.o/\.c/g'`
+> +    for ns in `cat $@`; do
+> +	echo "Adding namespace $ns to module $mod_name (if needed)."
+> +        generate_deps_for_ns $ns $mod_source_files
+> +	# sort the imports
+> +        for source_file in $mod_source_files; do
+> +            sed '/MODULE_IMPORT_NS/Q' $source_file > ${source_file}.tmp
+> +            offset=$(wc -l ${source_file}.tmp | awk '{print $1;}')
+> +            cat $source_file | grep MODULE_IMPORT_NS | sort -u >> ${source_file}.tmp
+> +            tail -n +$((offset +1)) ${source_file} | grep -v MODULE_IMPORT_NS >> ${source_file}.tmp
+> +            if ! diff -q ${source_file} ${source_file}.tmp; then
+> +                mv ${source_file}.tmp ${source_file}
+> +            else
+> +                rm ${source_file}.tmp
+> +            fi
+> +        done
+> +    done
+> +}
+> +
+> +for f in `find $srctree/.tmp_versions/ -name *.ns_deps`; do
+> +    generate_deps $f
+> +done
+> --
+> 2.23.0.rc1.153.gdeed80330f-goog
+>
+>
