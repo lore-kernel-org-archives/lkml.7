@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C23C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB744C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C74A20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB3CC20840
+	for <linux-kernel@archiver.kernel.org>; Tue, 13 Aug 2019 09:14:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbfHMJOZ (ORCPT
+        id S1728458AbfHMJOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 13 Aug 2019 05:14:25 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4242 "EHLO huawei.com"
+        Tue, 13 Aug 2019 05:14:30 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4679 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728265AbfHMJOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:14:21 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C3FC9D680CAB9B1BBC23;
-        Tue, 13 Aug 2019 17:14:19 +0800 (CST)
+        id S1728265AbfHMJO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 13 Aug 2019 05:14:27 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E4F767265375E1AB4597;
+        Tue, 13 Aug 2019 17:14:24 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 13 Aug
- 2019 17:14:13 +0800
+ 2019 17:14:17 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
@@ -47,9 +47,9 @@ CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v7 10/24] erofs: update Kconfig and Makefile
-Date:   Tue, 13 Aug 2019 17:13:12 +0800
-Message-ID: <20190813091326.84652-11-gaoxiang25@huawei.com>
+Subject: [PATCH v7 12/24] erofs: introduce tagged pointer
+Date:   Tue, 13 Aug 2019 17:13:14 +0800
+Message-ID: <20190813091326.84652-13-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190813091326.84652-1-gaoxiang25@huawei.com>
 References: <20190813091326.84652-1-gaoxiang25@huawei.com>
@@ -62,96 +62,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds Makefile and Kconfig for erofs, and
-updates Makefile and Kconfig files in the fs directory.
+Currently kernel has scattered tagged pointer usages
+hacked by hand in plain code, without a unique and
+portable functionset to highlight the tagged pointer
+itself and wrap these hacked code in order to clean up
+all over meaningless magic masks.
+
+This patch introduces simple generic methods to fold
+tags into a pointer integer. Currently it supports
+the last n bits of the pointer for tags, which can be
+selected by users.
+
+In addition, it will also be used for the upcoming EROFS
+filesystem, which heavily uses tagged pointer pproach
+ to reduce extra memory allocation.
+
+Link: https://en.wikipedia.org/wiki/Tagged_pointer
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/Kconfig        |  1 +
- fs/Makefile       |  1 +
- fs/erofs/Kconfig  | 36 ++++++++++++++++++++++++++++++++++++
- fs/erofs/Makefile |  9 +++++++++
- 4 files changed, 47 insertions(+)
- create mode 100644 fs/erofs/Kconfig
- create mode 100644 fs/erofs/Makefile
+ fs/erofs/tagptr.h | 110 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 110 insertions(+)
+ create mode 100644 fs/erofs/tagptr.h
 
-diff --git a/fs/Kconfig b/fs/Kconfig
-index bfb1c6095c7a..669d46550e6d 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -261,6 +261,7 @@ source "fs/romfs/Kconfig"
- source "fs/pstore/Kconfig"
- source "fs/sysv/Kconfig"
- source "fs/ufs/Kconfig"
-+source "fs/erofs/Kconfig"
- 
- endif # MISC_FILESYSTEMS
- 
-diff --git a/fs/Makefile b/fs/Makefile
-index d60089fd689b..b2e4973a0bea 100644
---- a/fs/Makefile
-+++ b/fs/Makefile
-@@ -130,3 +130,4 @@ obj-$(CONFIG_F2FS_FS)		+= f2fs/
- obj-$(CONFIG_CEPH_FS)		+= ceph/
- obj-$(CONFIG_PSTORE)		+= pstore/
- obj-$(CONFIG_EFIVAR_FS)		+= efivarfs/
-+obj-$(CONFIG_EROFS_FS)		+= erofs/
-diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
+diff --git a/fs/erofs/tagptr.h b/fs/erofs/tagptr.h
 new file mode 100644
-index 000000000000..98f05043448a
+index 000000000000..a72897c86744
 --- /dev/null
-+++ b/fs/erofs/Kconfig
-@@ -0,0 +1,36 @@
-+# SPDX-License-Identifier: GPL-2.0-only
++++ b/fs/erofs/tagptr.h
+@@ -0,0 +1,110 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * A tagged pointer implementation
++ *
++ * Copyright (C) 2018 Gao Xiang <gaoxiang25@huawei.com>
++ */
++#ifndef __EROFS_FS_TAGPTR_H
++#define __EROFS_FS_TAGPTR_H
 +
-+config EROFS_FS
-+	tristate "EROFS filesystem support"
-+	depends on BLOCK
-+	help
-+	  EROFS (Enhanced Read-Only File System) is a lightweight
-+	  read-only file system with modern designs (eg. page-sized
-+	  blocks, inline xattrs/data, etc.) for scenarios which need
-+	  high-performance read-only requirements, e.g. Android OS
-+	  for mobile phones and LIVECDs.
++#include <linux/types.h>
++#include <linux/build_bug.h>
 +
-+	  It also provides fixed-sized output compression support,
-+	  which improves storage density, keeps relatively higher
-+	  compression ratios, which is more useful to achieve high
-+	  performance for embedded devices with limited memory.
++/*
++ * the name of tagged pointer types are tagptr{1, 2, 3...}_t
++ * avoid directly using the internal structs __tagptr{1, 2, 3...}
++ */
++#define __MAKE_TAGPTR(n) \
++typedef struct __tagptr##n {	\
++	uintptr_t v;	\
++} tagptr##n##_t;
 +
-+	  If unsure, say N.
++__MAKE_TAGPTR(1)
++__MAKE_TAGPTR(2)
++__MAKE_TAGPTR(3)
++__MAKE_TAGPTR(4)
 +
-+config EROFS_FS_DEBUG
-+	bool "EROFS debugging feature"
-+	depends on EROFS_FS
-+	help
-+	  Print debugging messages and enable more BUG_ONs which check
-+	  filesystem consistency and find potential issues aggressively,
-+	  which can be used for Android eng build, for example.
++#undef __MAKE_TAGPTR
 +
-+	  For daily use, say N.
++extern void __compiletime_error("bad tagptr tags")
++	__bad_tagptr_tags(void);
 +
-+config EROFS_FAULT_INJECTION
-+	bool "EROFS fault injection facility"
-+	depends on EROFS_FS
-+	help
-+	  Test EROFS to inject faults such as ENOMEM, EIO, and so on.
-+	  If unsure, say N.
++extern void __compiletime_error("bad tagptr type")
++	__bad_tagptr_type(void);
 +
-diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
-new file mode 100644
-index 000000000000..c3f4e549ef90
---- /dev/null
-+++ b/fs/erofs/Makefile
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0-only
++/* fix the broken usage of "#define tagptr2_t tagptr3_t" by users */
++#define __tagptr_mask_1(ptr, n)	\
++	__builtin_types_compatible_p(typeof(ptr), struct __tagptr##n) ? \
++		(1UL << (n)) - 1 :
 +
-+EROFS_VERSION = "1.0"
++#define __tagptr_mask(ptr)	(\
++	__tagptr_mask_1(ptr, 1) ( \
++	__tagptr_mask_1(ptr, 2) ( \
++	__tagptr_mask_1(ptr, 3) ( \
++	__tagptr_mask_1(ptr, 4) ( \
++	__bad_tagptr_type(), 0)))))
 +
-+ccflags-y += -DEROFS_VERSION=\"$(EROFS_VERSION)\"
++/* generate a tagged pointer from a raw value */
++#define tagptr_init(type, val) \
++	((typeof(type)){ .v = (uintptr_t)(val) })
 +
-+obj-$(CONFIG_EROFS_FS) += erofs.o
-+erofs-objs := super.o inode.o data.o namei.o dir.o
++/*
++ * directly cast a tagged pointer to the native pointer type, which
++ * could be used for backward compatibility of existing code.
++ */
++#define tagptr_cast_ptr(tptr) ((void *)(tptr).v)
++
++/* encode tagged pointers */
++#define tagptr_fold(type, ptr, _tags) ({ \
++	const typeof(_tags) tags = (_tags); \
++	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(type))) \
++		__bad_tagptr_tags(); \
++tagptr_init(type, (uintptr_t)(ptr) | tags); })
++
++/* decode tagged pointers */
++#define tagptr_unfold_ptr(tptr) \
++	((void *)((tptr).v & ~__tagptr_mask(tptr)))
++
++#define tagptr_unfold_tags(tptr) \
++	((tptr).v & __tagptr_mask(tptr))
++
++/* operations for the tagger pointer */
++#define tagptr_eq(_tptr1, _tptr2) ({ \
++	typeof(_tptr1) tptr1 = (_tptr1); \
++	typeof(_tptr2) tptr2 = (_tptr2); \
++	(void)(&tptr1 == &tptr2); \
++(tptr1).v == (tptr2).v; })
++
++/* lock-free CAS operation */
++#define tagptr_cmpxchg(_ptptr, _o, _n) ({ \
++	typeof(_ptptr) ptptr = (_ptptr); \
++	typeof(_o) o = (_o); \
++	typeof(_n) n = (_n); \
++	(void)(&o == &n); \
++	(void)(&o == ptptr); \
++tagptr_init(o, cmpxchg(&ptptr->v, o.v, n.v)); })
++
++/* wrap WRITE_ONCE if atomic update is needed */
++#define tagptr_replace_tags(_ptptr, tags) ({ \
++	typeof(_ptptr) ptptr = (_ptptr); \
++	*ptptr = tagptr_fold(*ptptr, tagptr_unfold_ptr(*ptptr), tags); \
++*ptptr; })
++
++#define tagptr_set_tags(_ptptr, _tags) ({ \
++	typeof(_ptptr) ptptr = (_ptptr); \
++	const typeof(_tags) tags = (_tags); \
++	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(*ptptr))) \
++		__bad_tagptr_tags(); \
++	ptptr->v |= tags; \
++*ptptr; })
++
++#define tagptr_clear_tags(_ptptr, _tags) ({ \
++	typeof(_ptptr) ptptr = (_ptptr); \
++	const typeof(_tags) tags = (_tags); \
++	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(*ptptr))) \
++		__bad_tagptr_tags(); \
++	ptptr->v &= ~tags; \
++*ptptr; })
++
++#endif	/* __EROFS_FS_TAGPTR_H */
 +
 -- 
 2.17.1
